@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privada"
+          public: "Pública"
+      reports:
+        reading_time:
+          title: Tempo de lectura
+        chat_usage:
+          messages: mensaxes
+          you: Vostede
+        invites:
+          title: Convites
+          invitee_posts: Publicacións creadas
+          invitee_likes: Gústames dados
+        new_user_interactions:
+          likes_given: Gústames dados
+          mentions: Mencións
+        writing_analysis:
+          menu_other: Outro

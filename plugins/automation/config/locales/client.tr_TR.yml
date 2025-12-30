@@ -10,6 +10,7 @@ tr_TR:
       logs:
         staff_actions:
           actions:
+            update_automation: otomasyonu güncelle
             delete_automation: otomasyonu sil
     discourse_automation:
       title: Otomasyon
@@ -65,6 +66,12 @@ tr_TR:
         text:
           label: Metin
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategoriler
+            tags:
+              label: Etiketler
         not_found: Otomasyon `%{automation}` için `%{trigger}` tetikleyicisi bulunamadı, ilgili eklentinin kurulu olduğundan emin olun
         user_badge_granted:
           fields:
@@ -422,6 +429,8 @@ tr_TR:
           fields:
             custom_field_name:
               label: "Kullanıcı Özel Alan adı"
+        set_topic_timer:
+          title: Konu Zamanlayıcısını ayarla
       unnamed_automation: "Adsız otomasyon"
       models:
         script:

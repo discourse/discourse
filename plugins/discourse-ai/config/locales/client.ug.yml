@@ -52,7 +52,7 @@ ug:
         groups: "گۇرۇپپا:"
         no_persona: "تەڭشەلمىدى"
         no_groups: "يوق"
-        edit: "تەھرىر"
+        edit: "تەڭشەك"
         expand_list:
           one: "(%{count} تېخىمۇ كۆپ)"
           other: "(%{count} تېخىمۇ كۆپ)"
@@ -88,6 +88,7 @@ ug:
         save_button: "ئۆزگەرتىشنى ساقلا"
         test_modal:
           result: "نەتىجە"
+          llm: "LLM"
           run: "سىناقنى ئىجرا قىل"
           spam: "ئەخلەت خەت"
       usage:
@@ -95,6 +96,7 @@ ug:
         summary: "خۇلاسە"
         username: "ئىشلەتكۈچى ئاتى"
         total_requests: "جەمئىي ئىلتىماس"
+        total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
       ai_persona:
@@ -173,6 +175,7 @@ ug:
         thumbnail_suggestions:
           select: "تاللا"
           selected: "تاللاندى"
+          try_again: "قايتا سىنا"
         image_caption:
           save_caption: "ساقلا"
       embeddings:

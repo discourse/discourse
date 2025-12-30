@@ -14,6 +14,7 @@ import { slugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
+import generateCurrentDateMarkup from "../lib/generate-current-date-markup";
 import LocalDateBuilder from "../lib/local-date-builder";
 import richEditorExtension from "../lib/rich-editor-extension";
 
@@ -93,10 +94,12 @@ function buildOptionsFromElement(element, siteSettings) {
     .split("|")
     .filter(Boolean);
   opts.timezone = dataset.timezone;
-  opts.calendar = (dataset.calendar || "on") === "on";
   opts.displayedTimezone = dataset.displayedTimezone;
   opts.format = dataset.format || (opts.time ? "LLL" : "LL");
   opts.countdown = dataset.countdown;
+  opts.calendar = dataset.calendar
+    ? dataset.calendar === "on"
+    : !dataset.format;
   return opts;
 }
 
@@ -176,10 +179,7 @@ function initializeDiscourseLocalDates(api) {
     alwaysShowShortcut: true,
     shortcutAction: (event) => {
       const timezone = api.getCurrentUser().user_option.timezone;
-      const time = moment().format("HH:mm:ss");
-      const date = moment().format("YYYY-MM-DD");
-
-      event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
+      event.addText(generateCurrentDateMarkup(timezone));
     },
   });
 

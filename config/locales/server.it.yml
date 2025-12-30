@@ -1134,11 +1134,10 @@ it:
       every_month: "ogni mese"
       every_six_months: "ogni sei mesi"
   user_api_key:
-    title: "Autorizza accesso dell'applicazione"
     authorize: "Autorizza"
+    deny: "Annulla"
     read: "lettura"
     read_write: "lettura/scrittura"
-    description: '"%{application_name}" richiede il seguente accesso al tuo account:'
     instructions: 'Abbiamo appena generato una nuova chiave API utente da usare con "%{application_name}", incolla la seguente chiave nella tua applicazione:'
     otp_description: 'Vuoi consentire a "%{application_name}" l''accesso al sito?'
     otp_confirmation:
@@ -1991,35 +1990,22 @@ it:
     tl3_requires_likes_given: "Numero minimo di mi piace che devono essere dati negli ultimi (tl3 time period) giorni per essere idonei alla promozione al livello di attendibilità 3."
     tl3_requires_likes_received: "Numero minimo di mi piace che devono essere ricevuti negli ultimi (tl3 time period) giorni per essere idonei alla promozione al livello di attendibilità 3."
     tl3_links_no_follow: "Non rimuovere rel=nofollow dai collegamenti pubblicati da utenti con livello di attendibilità 3."
-    tl4_delete_posts_and_topics: "Consenti agli utenti TL4 di eliminare messaggi e argomenti creati da altri utenti. Gli utenti TL4 potranno anche vedere argomenti e messaggi eliminati."
     delete_all_posts_and_topics_allowed_groups: "I gruppi sono autorizzati a eliminare messaggi e argomenti creati da altri utenti. Questi gruppi potranno anche vedere argomenti e messaggi eliminati."
     edit_all_topic_groups: "Consenti agli utenti di questo gruppo di modificare i titoli, i tag e le categorie degli argomenti di altri utenti"
     edit_all_post_groups: "Consenti agli utenti di questo gruppo di modificare i post di altri utenti"
-    min_trust_to_create_topic: "Livello minimo richiesto per creare un nuovo argomento."
     create_topic_allowed_groups: "Gruppi a cui è consentito creare nuovi argomenti. Ad amministratori e moderatori è sempre consentito creare argomenti."
     allow_flagging_staff: "Se abilitato, gli utenti possono segnalare i messaggi dagli account dello staff."
-    min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un argomento segnato come wiki."
     edit_wiki_post_allowed_groups: "Gruppi a cui è consentito modificare i messaggi contrassegnati come wiki. Ad amministratori e moderatori è sempre consentito modificare i messaggi contrassegnati come wiki."
-    min_trust_to_edit_post: "Il livello di attendibilità minimo richiesto per modificare i messaggi."
     edit_post_allowed_groups: "Gruppi a cui è consentito modificare i messaggi. Ad amministratori e moderatori è sempre consentito modificare messaggi."
-    min_trust_to_allow_self_wiki: "Il livello di attendibilità minimo richiesto per consentire agli utenti di pubblicare una propria wiki."
     self_wiki_allowed_groups: "Consenti agli utenti di questi gruppi di creare i propri post nella wiki. Amministratori e moderatori possono sempre creare i propri post sulla wiki."
     min_trust_to_send_messages: "Impostazione DEPRECATA, usare l'impostazione \"Gruppi abilitati per messaggi personali\" al suo posto. Il livello di attendibilità minimo richiesto per creare nuovi messaggi personali."
-    min_trust_to_send_email_messages: "Il livello di attendibilità minimo richiesto per inviare messaggi personali via email."
     send_email_messages_allowed_groups: "Gruppi a cui è consentito inviare messaggi personali via email. Ad amministratori e moderatori è sempre consentito inviare messaggi personali via email."
-    min_trust_to_flag_posts: "Il livello di attendibilità minimo richiesto per segnalare messaggi"
     flag_post_allowed_groups: "Gruppi a cui è consentito segnalare i messaggi. Ad amministratori e moderatori è sempre consentito segnalare i messaggi."
-    min_trust_to_post_links: "Il livello di attendibilità minimo richiesto per includere link nei messaggi"
     post_links_allowed_groups: "Gruppi a cui è consentito includere collegamenti nei messaggi. Ad amministratori e moderatori è sempre consentito includere collegamenti nei messaggi."
-    min_trust_to_post_embedded_media: "Il livello di attendibilità minimo richiesto per incorporare elementi multimediali in un messaggio"
     embedded_media_post_allowed_groups: "Agli utenti di questi gruppi è consentito incorporare elementi multimediali in un messaggio. Ad amministratori e moderatori è sempre consentito incorporare elementi multimediali nei messaggi."
-    min_trust_level_to_allow_profile_background: "Il livello di attendibilità minimo richiesto per caricare uno sfondo del profilo"
     profile_background_allowed_groups: "Gruppi a cui è consentito caricare uno sfondo del profilo. Ad amministratori e moderatori è sempre consentito caricare uno sfondo del profilo."
-    min_trust_level_to_allow_user_card_background: "Il livello di attendibilità minimo richiesto per caricare uno sfondo nella scheda utente"
     user_card_background_allowed_groups: "Gruppi a cui è consentito caricare uno sfondo della scheda utente. Ad amministratori e moderatori è sempre consentito caricare uno sfondo della scheda utente."
-    min_trust_level_to_allow_invite: "Il livello di attendibilità minimo richiesto per invitare gli utenti"
     invite_allowed_groups: "Gruppi a cui è consentito invitare utenti. Ad amministratori e moderatori è sempre consentito invitare utenti."
-    min_trust_level_to_allow_ignore: "Il livello di attendibilità minimo richiesto per ignorare utenti"
     ignore_allowed_groups: "Gruppi a cui è consentito ignorare altri utenti. Ad amministratori e moderatori è sempre consentito ignorare altri utenti."
     allowed_link_domains: "Domini che gli utenti possono collegare nei messaggi anche se non hanno il livello di attendibilità appropriato per pubblicare link"
     newuser_max_links: "Quanti collegamenti può aggiungere a un messaggio un nuovo utente ."
@@ -2032,7 +2018,6 @@ it:
     enable_mentions: "Consente agli utenti di etichettarsi o menzionarsi a vicenda nei messaggi col simbolo \"@\"."
     here_mention: "Nome utilizzato per una @menzione per consentire agli utenti privilegiati di avvisare fino a \"max_here_member\" persone che partecipano all'argomento. Non deve essere un nome utente esistente."
     max_here_mentioned: "Numero massimo di persone menzionate da @here."
-    min_trust_level_for_here_mention: "Il livello di attendibilità minimo richiesto per menzionare @here."
     here_mention_allowed_groups: "Gruppi a cui è consentito menzionare @here. Ad amministratori e moderatori è sempre consentito menzionare @here."
     create_thumbnails: "Crea anteprime e lightbox delle immagini che sono troppo grandi per essere contenute in un messaggio."
     email_time_window_mins: "Aspetta (n) minuti prima di inviare email di notifica, per dare agli utenti la possibilità di modificare e completare i loro messaggi."
@@ -2156,7 +2141,6 @@ it:
     pop3_polling_delete_from_server: "Elimina email dal server. NOTA: se disabiliti questa opzione, devi pulire manualmente la tua casella di posta"
     log_mail_processing_failures: "Registra tutti gli errori di elaborazione della posta elettronica in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Consenti agli utenti di pubblicare nuovi argomenti via email. Dopo aver abilitato questa impostazione, sarai in grado di configurare gli indirizzi email in entrata per gruppi e categorie."
-    email_in_min_trust: "Livello di attendibilità minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
     email_in_allowed_groups: "Gruppi a cui è consentito pubblicare nuovi argomenti via email. Ad amministratori e moderatori è sempre consentito pubblicare nuovi argomenti via email."
     email_in_authserv_id: "L'identificatore del servizio che esegue i controlli di autenticazione sulle e-mail in arrivo. Consulta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> per istruzioni su come configurare questa opzione."
     email_in_spam_header: "Selezione l'intestazione di email da utilizzare per individuare lo spam. L'opzione può essere X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict. L'email verrà contrassegnata come spam in base al valore della sua intestazione. Per esempio, se l'impostazione selezionata è X-Spam-Flag, un'email con intestazione impostata sul valore YES verrà classificata come spam."
@@ -2179,7 +2163,6 @@ it:
     username_change_period: "Il numero massimo di giorni dopo la registrazione entro i quali gli account possono cambiare il loro nome utente (0 per disabilitare la modifica del nome utente)."
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione."
     logout_redirect: "URL al quale reindirizzare il browser dopo la disconnessione (ad es. Https://example.com/logout)"
-    allow_uploaded_avatars: "Permetti agli utenti di caricare immagini di profilo personalizzate."
     uploaded_avatars_allowed_groups: "Specifica i gruppi autorizzati a caricare immagini di profilo personalizzate."
     default_avatars: "URL degli avatar che verranno utilizzati come predefiniti per i nuovi utenti, fintanto che non li cambieranno esplicitamente."
     automatically_download_gravatars: "Scarica i Gravatars per gli utenti quando viene creato l'account o quando viene modificata l'email."
@@ -2288,9 +2271,7 @@ it:
     enable_inline_emoji_translation: "Abilita la traduzione per gli emoji in linea (senza spazio o punteggiatura precedente)"
     emoji_deny_list: "Queste emoji non saranno disponibili per l'uso nei menu o nei codici brevi."
     approve_post_count: "La quantità di messaggi di un utente nuovo o di base che deve essere approvata"
-    approve_unless_trust_level: "I messaggi di utenti al di sotto di questo livello di attendibilità devono essere approvati"
     approve_unless_allowed_groups: "I messaggi di utenti non appartenenti a questi gruppi devono essere approvati. I messaggi di amministratori e moderatori sono sempre approvati."
-    approve_new_topics_unless_trust_level: "I nuovi argomenti di utenti al di sotto di questo livello di attendibilità devono essere approvati"
     approve_new_topics_unless_allowed_groups: "I nuovi argomenti di utenti non appartenenti a questi gruppi devono essere approvati. Gli argomenti creati da amministratori e moderatori sono sempre approvati."
     approve_unless_staged: "Nuovi argomenti e messaggi di utenti temporanei devono essere approvati"
     notify_about_queued_posts_after: "Se ci sono messaggi che sono in attesa di essere revisionati per più di questo numero di ore, invia una notifica a tutti i moderatori. Impostare su 0 per disabilitare queste notifiche."
@@ -2306,7 +2287,6 @@ it:
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
     returning_users_days: "Quanti giorni devono trascorrere prima che un utente venga considerato ritornato."
-    review_media_unless_trust_level: "Lo staff esaminerà i messaggi degli utenti con livelli di attendibilità più bassi se hanno contenuti multimediali incorporati."
     skip_review_media_groups: "I messaggi degli utenti che non appartengono ad alcuno di questi gruppi verranno inviati allo staff per la revisione se presentano contenuti multimediali incorporati. I messaggi di amministratori e moderatori sono sempre consentiti."
     blur_tl0_flagged_posts_media: "Oscura le immagini dei post segnalati per nascondere i contenuti potenzialmente NSFW."
     enable_page_publishing: "Permetti allo staff di pubblicare gli argomenti su nuovi URL in modo personalizzato."
@@ -2358,9 +2338,6 @@ it:
     revoke_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API prima che venga revocata automaticamente (0 per mai)"
     revoke_api_keys_maxlife_days: "Numero di giorni prima che una chiave API sia revocata automaticamente (0 per mai)"
     allow_user_api_key_scopes: "Elenco di ambiti consentiti per le chiavi API utente"
-    min_trust_level_for_user_api_key: |
-      Livello di attendibilità richiesto per la generazione di chiavi API utente.<br>
-      <b>AVVISO</b>: la modifica del livello di attendibilità impedirà agli utenti con un livello di attendibilità inferiore di accedere tramite Discourse Hub
     user_api_key_allowed_groups: |
       La generazione di chiavi API utente richiede l'appartenenza al gruppo.<br>
       <b>AVVISO</b>: modificando il livello di attendibilità, impedirai a utenti con un livello di attendibilità inferiore di accedere tramite Discourse Hub.<br>
@@ -2370,7 +2347,6 @@ it:
     revoke_user_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API utente prima che venga revocata automaticamente (0 per mai)"
     revoke_user_api_keys_maxlife_days: "Numero di giorni prima che una chiave API utente venga revocata automaticamente (0 per mai)"
     tagging_enabled: "Vuoi abilitare le etichette per gli argomenti? Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>la guida alle etichette per amministratori su Meta</a>."
-    min_trust_to_create_tag: "Il livello di attendibilità minimo per creare un'etichetta."
     create_tag_allowed_groups: "Gruppi a cui è consentito creare etichette. Ad amministratori e moderatori è sempre consentito creare etichette."
     edit_tags_allowed_groups: "Gruppi a cui è consentito modificare etichette, descrizioni di etichette e sinonimi di etichette."
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
@@ -2383,7 +2359,6 @@ it:
     tags_listed_by_group: "Elenca le Etichette per gruppo di Etichette nella <a href='%{base_path}/tags' target='_blank'>pagina delle Etichette</a> ."
     tag_style: "Definisci l'aspetto visivo dei distintivi relativi alle etichette sul sito. Questa impostazione consente di personalizzare come appaiono le etichette in tutte le aree del sito, per un layout più coesivo e una migliore accessibilità utente."
     pm_tags_allowed_for_groups: "Consenti ai membri dei gruppi inclusi di etichettare qualsiasi messaggio personale"
-    min_trust_level_to_tag_topics: "Livello di attendibilità minimo richiesto per etichettare argomenti"
     tag_topic_allowed_groups: "Gruppi a cui è consentito etichettare gli argomenti. Ad amministratori e moderatori è sempre consentito etichettare gli argomenti."
     suppress_overlapping_tags_in_list: "Se le etichette corrispondono alle esatte parole nei titoli degli argomenti, non mostrare l'etichetta"
     remove_muted_tags_from_latest: "Non mostrare argomenti etichettati solo con etichette silenziate nell'elenco degli argomenti più recenti."
@@ -2394,7 +2369,6 @@ it:
     governing_law: "Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività."
     city_for_disputes: "Specifica la città della giurisdizione a cui fare riferimento per la risoluzione di eventuali dispute in relazione all'uso del forum. Queste informazioni vengono solitamente incluse nella documentazione legale come i Termini di servizio del forum."
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
-    shared_drafts_min_trust_level: "Consenti agli utenti di visualizzare e modificare le bozze condivise."
     shared_drafts_allowed_groups: "Consenti agli utenti in questi gruppi di visualizzare e modificare le bozze condivise."
     push_notifications_prompt: "Mostra all'utente un banner per il consenso alle notifiche push. Questa impostazione attiva un prompt che chiede all'utente il permesso per inviare le notifiche push. Il prompt appare solo se le notifiche push non sono già abilitate, se sono supportate dal dispositivo in uso e se l'utente ha creato un messaggio o ha usato una Progressive Web App (PWA). Una vota dato/negato il consenso o ignorato, il prompt non comparirà più."
     push_notifications_icon: "L'icona del distintivo che appare nell'angolo delle notifiche. Si consiglia un'immagine PNG monocromatica 96×96 con trasparenza."
@@ -2511,7 +2485,6 @@ it:
         other: "L'elenco deve contenere esattamente %{count} valori."
       markdown_linkify_tlds: "Non è possibile includere il valore '*'."
       google_oauth2_hd_groups: "Prima di attivare questa impostazione, devi configurare le opzioni 'google oauth2 hd'."
-      discourse_id_credentials: "Prima di abilitare questa impostazione, è necessario configurare le credenziali Discourse ID ('discourse_id_client_id' e 'discourse_id_client_secret')."
       linkedin_oidc_credentials: "Per abilitare questa impostazione, configura prima le credenziali OIDC di LinkedIn (\"linkedin_oidc_client_id\" e \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
@@ -4328,18 +4301,12 @@ it:
     nice_share:
       name: Piacevole Condivisione
       description: Ha condiviso un messaggio con 25 visitatori diversi
-      long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 25 visitatori esterni. Grazie per aver fatto conoscere le nostre discussioni e questa comunità.
     good_share:
       name: Buona Condivisione
       description: Ha condiviso un messaggio con 300 visitatori diversi
-      long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 300 visitatori esterni. Ottimo lavoro! Hai mostrato una bella discussione a un bel mucchio di persone e aiutato la crescita della comunità.
     great_share:
       name: Grande Condivisione
       description: Ha condiviso un messaggio con 1000 visitatori diversi
-      long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 1000 visitatori esterni. Hai promosso un'interessante discussione per un'audience enorme, e aiutato tantissimo la crescita di questa comunità.
     first_like:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
@@ -4557,21 +4524,13 @@ it:
   wizard:
     title: "Configurazione Discourse"
     step:
-      introduction:
-        title: "Informazioni sul tuo sito"
-        description: "Queste informazioni verranno mostrate al tuo accesso e su qualsiasi pagina pubblica. Puoi sempre modificarle in seguito."
+      setup:
+        title: "Per iniziare"
         fields:
           title:
             label: "Nome community"
-            placeholder: "Il Ritrovo di Jane"
-          site_description:
-            label: "Descrivi la tua community in una frase"
-            placeholder: "Un posto per Jane e per i suoi amici dove discutere di cose forti"
           default_locale:
             label: "Lingua"
-      privacy:
-        title: "Accesso per i membri"
-        fields:
           login_required:
             label: "Visibilità"
             description: "La tua community è pubblica o privata?"
@@ -4595,82 +4554,6 @@ it:
                 label: "No, i nuovi membri possono iscriversi immediatamente"
               "yes":
                 label: "Sì, i nuovi membri devono essere approvati dai moderatori"
-          chat_enabled:
-            placeholder: "Abilita chat"
-            extra_description: "Coinvolgi i tuoi membri in tempo reale"
-      ready:
-        title: "Il tuo sito è pronto!"
-        description: "Ecco fatto! Hai messo le basi per configurare la tua community Ora puoi entrare e dare un'occhiata in giro, scrivere un argomento di benvenuto e inviare inviti!<br><br>Buon divertimento!"
-      styling:
-        title: "Aspetto e feeling"
-        fields:
-          color_scheme:
-            label: "Schema di colori"
-          body_font:
-            label: "Carattere del corpo"
-          site_font:
-            label: "Carattere"
-          heading_font:
-            label: "Carattere dell'intestazione"
-          styling_preview:
-            label: "Anteprima"
-          homepage_style:
-            label: "Stile homepage"
-            choices:
-              latest:
-                label: "Più recenti"
-                description: "Visualizza gli argomenti attivi più di recente in tutte le categorie, aiutando i membri a rimanere aggiornati sulle discussioni che li interessano"
-              hot:
-                label: "Novità"
-                description: "Evidenzia gli argomenti di tendenza combinando la popolarità recente e quella generale, mostrando di cosa stanno parlando i membri della tua community in questo momento"
-              categories_and_latest_topics:
-                label: "Categorie con argomenti recenti"
-                description: "Combina gli argomenti attivi di recente in tutte le categorie con un elenco di categorie, la loro descrizione e il totale degli argomenti"
-              categories_boxes:
-                label: "Riquadri di categorie"
-                description: "Visualizza le categorie e la loro descrizione in una griglia, ideale per i membri che desiderano visualizzare una panoramica delle sotto-community del tuo sito"
-      branding:
-        title: "Logo del sito"
-        fields:
-          logo:
-            label: "Logo primario"
-            description: "Dimensione consigliata: 600 x 200"
-          logo_small:
-            label: "Logo quadrato"
-            description: "Dimensioni consigliate: 512 x 512. Utilizzato anche come favicon e icona dell'app nella schermata iniziale su dispositivi mobili."
-      corporate:
-        title: "La tua organizzazione"
-        description: "Le seguenti informazioni verranno utilizzate nei Termini di servizio e nelle pagine Informazioni. Puoi saltarle se non esiste alcuna società."
-        fields:
-          company_name:
-            label: "Nome società"
-            placeholder: "Organizzazione Acme"
-          governing_law:
-            label: "Diritto applicabile"
-            placeholder: "Legge della California"
-          contact_url:
-            label: "Pagina web"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Sede per eventuali controversie"
-            placeholder: "San Francisco, California"
-          site_contact:
-            label: "Messaggi automatici"
-            description: "Tutti i messaggi personali automatici di Discourse, come avvisi di segnalazione e notifiche di completamento dei backup, saranno inviati da questo utente."
-          contact_email:
-            label: "Punto di contatto"
-            placeholder: "esempio@utente.com"
-            description: "Indirizzo email di contatto del principale responsabile di questo sito. Utilizzato per notifiche cruciali, nonché visualizzato sulla <a href='%{base_path}/about' target='_blank'>tua pagina informazioni</a> per questioni urgenti."
-      invites:
-        title: "Invita lo Staff"
-        description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."
-        disabled: "Poiché gli accessi locali sono disabilitati, non è possibile inviare inviti a nessuno. Per favore, prosegui con il passo successivo."
-      finished:
-        title: "Il tuo Discourse è Pronto!"
-        description: |
-          <p>Se vuoi cambiare queste impostazioni, <b>riesegui questa procedura guidata in qualsiasi momento</b>, o visita <a href='%{base_path}/admin' target='_blank'>il pannello di amministrazione</a>; lo trovi accanto all'icona della chiave inglese nel menu del sito.</p>
-          <p>È facile personalizzare il tuo Discourse ancora di più utilizzando il nostro potente sistema di temi. Per esempio, consulta i <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">temi e componenti principali</a> su <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>nel costruire la tua nuova comunità!</a></p>
   search_logs:
     graph_title: "Conteggio Ricerche"
   onebox:
@@ -4693,6 +4576,10 @@ it:
       review_by: "Revisione di"
       pr_summary: "%{commits} commit, %{changed_files} file modificati con %{additions} aggiunte e %{deletions} eliminazioni"
       no_description: "Contribuisci allo sviluppo di %{repo} creando un account su GitHub."
+      status_date:
+        open: "aperto"
+        approved: "approvato"
+        closed: "chiuso"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'

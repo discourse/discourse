@@ -425,12 +425,12 @@ class DiscoursePoll::Poll
 
     # TODO: we should fix the callback mess so that the cooked version is available
     # in the validators instead of cooking twice
-    raw = raw.sub(%r{\[quote.+/quote\]}m, "")
     cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
 
     Nokogiri
       .HTML5(cooked)
       .css("div.poll")
+      .reject { |p| p.ancestors("blockquote").any? }
       .map do |p|
         poll = { "options" => [], "name" => DiscoursePoll::DEFAULT_POLL_NAME }
 

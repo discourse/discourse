@@ -70,7 +70,7 @@ export default class SearchResultEntry extends Component {
         {{#if this.bulkSelectEnabled}}
           <TrackSelected
             @selectedList={{this.selected}}
-            @selectedId={{this.post.topic}}
+            @selectedId={{this.post}}
             class="bulk-select"
           />
         {{/if}}

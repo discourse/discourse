@@ -34,8 +34,20 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--rejected") }
       end
 
+      def has_rejected_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Rejected by") }
+      end
+
+      def has_reviewable_with_pending_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--pending") }
+      end
+
       def has_reviewable_with_approved_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
+      end
+
+      def has_approved_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Approved by") }
       end
 
       def has_reviewable_with_ignored_status?(reviewable)
@@ -62,6 +74,10 @@ module PageObjects
 
       def click_edit_post_button
         find(".reviewable-action.edit").click
+      end
+
+      def click_scrub_user_button
+        find(".user-scrub").click
       end
 
       def fill_post_content(content)
@@ -102,6 +118,33 @@ module PageObjects
 
       def has_account_in_modal?(username)
         within(".ip-lookup-other-accounts-modal") { page.has_text?(username) }
+      end
+
+      def click_claim_reviewable
+        find(".reviewable-claimed-topic .claim").click
+      end
+
+      def click_unclaim_reviewable
+        find(".reviewable-claimed-topic .unclaim").click
+      end
+
+      def has_created_at_history_item?
+        expect(page).to have_css(".timeline-event__icon .d-icon-pen-to-square")
+        expect(page).to have_text("Post created by")
+      end
+
+      def has_claimed_history_item?(user)
+        expect(page).to have_css(".timeline-event__icon .d-icon-user-plus")
+        expect(page).to have_text("Claimed by")
+      end
+
+      def has_unclaimed_history_item?(user)
+        expect(page).to have_css(".timeline-event__icon .d-icon-user-xmark")
+        expect(page).to have_text("Unclaimed by")
+      end
+
+      def has_history_items?(count:)
+        expect(page).to have_css(".timeline-event", count: count)
       end
 
       private

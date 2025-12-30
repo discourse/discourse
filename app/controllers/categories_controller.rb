@@ -135,9 +135,24 @@ class CategoriesController < ApplicationController
     render_serialized(@category, CategorySerializer)
   end
 
+  MAX_DESCRIPTION_PARAM_LENGTH = 1000
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
+
+    if category_params[:description].present? &&
+         category_params[:description].size > MAX_DESCRIPTION_PARAM_LENGTH
+      render json: {
+               errors: [
+                 I18n.t(
+                   "category.errors.description_too_long",
+                   count: MAX_DESCRIPTION_PARAM_LENGTH,
+                 ),
+               ],
+             },
+             status: :unprocessable_entity
+      return
+    end
 
     @category =
       begin
@@ -185,7 +200,7 @@ class CategoriesController < ApplicationController
       category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
-      old_permissions = { "everyone" => 1 } if old_permissions.empty?
+      old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
       if result = cat.update(category_params)
         Category.preload_user_fields!(guardian, [cat])
@@ -576,6 +591,7 @@ class CategoriesController < ApplicationController
           :slug,
           :allow_badges,
           :topic_template,
+          :description,
           :sort_order,
           :sort_ascending,
           :topic_featured_link_allowed,

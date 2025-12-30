@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Binafsi"
+          public: "Umma"
+      reports:
+        reading_time:
+          title: Mda wa kusoma
+        chat_usage:
+          messages: ujumbe
+          you: Wewe
+        invites:
+          title: Waliokaribishwa
+          invitee_posts: Machapisho Yaliotengenezwa
+          invitee_likes: Umetoa Likes
+        new_user_interactions:
+          likes_given: Umetoa Likes
+          mentions: Kutajwa
+        writing_analysis:
+          menu_other: Nyingine

@@ -207,13 +207,6 @@ RSpec.describe SiteSettings::TypeSupervisor do
       let(:true_val) { "t" }
       let(:false_val) { "f" }
 
-      it "returns nil value" do
-        expect(settings.type_supervisor.to_db_value(:type_null, nil)).to eq [
-             nil,
-             SiteSetting.types[:null],
-           ]
-      end
-
       it "gives a second chance to guess even told :null type" do
         expect(settings.type_supervisor.to_db_value(:type_null, 1)).to eq [
              1,
@@ -242,10 +235,6 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
       it "writes `f` if given not `true` value" do
         expect(settings.type_supervisor.to_db_value(:type_true, "")).to eq [
-             false_val,
-             SiteSetting.types[:bool],
-           ]
-        expect(settings.type_supervisor.to_db_value(:type_true, nil)).to eq [
              false_val,
              SiteSetting.types[:bool],
            ]
@@ -561,6 +550,103 @@ RSpec.describe SiteSettings::TypeSupervisor do
     it "returns int min/max values" do
       expect(settings.type_supervisor.type_hash(:type_int)[:min]).to eq(-10)
       expect(settings.type_supervisor.type_hash(:type_int)[:max]).to eq(10)
+    end
+  end
+
+  describe "list type with enum class" do
+    class TestListEnumClass
+      def self.valid_value?(v)
+        v.to_s.split("|").all? { |item| valid_items.include?(item) }
+      end
+
+      def self.valid_items
+        %w[item1 item2 item3]
+      end
+
+      def self.values
+        valid_items.map { |item| { name: item.titleize, value: item } }
+      end
+
+      def self.translate_names?
+        true
+      end
+    end
+
+    before do
+      settings.setting(:type_list_enum, "", type: "list", enum: "TestListEnumClass")
+      settings.setting(:type_list_no_enum, "", type: "list", choices: %w[a b c])
+      settings.setting(
+        :type_list_enum_with_choices,
+        "",
+        type: "list",
+        enum: "TestListEnumClass",
+        choices: %w[item1 item2],
+      )
+      settings.refresh!
+    end
+
+    describe "#type_hash" do
+      it "returns valid_values from enum class for list type" do
+        hash = settings.type_supervisor.type_hash(:type_list_enum)
+        expect(hash[:type]).to eq "list"
+        expect(hash[:valid_values]).to eq(
+          [
+            { name: "Item1", value: "item1" },
+            { name: "Item2", value: "item2" },
+            { name: "Item3", value: "item3" },
+          ],
+        )
+        expect(hash[:translate_names]).to eq true
+      end
+
+      it "does not return valid_values for list type without enum" do
+        hash = settings.type_supervisor.type_hash(:type_list_no_enum)
+        expect(hash[:type]).to eq "list"
+        expect(hash[:valid_values]).to be_nil
+        expect(hash[:choices]).to eq %w[a b c]
+      end
+
+      it "returns both valid_values and choices when both enum and choices are specified" do
+        hash = settings.type_supervisor.type_hash(:type_list_enum_with_choices)
+        expect(hash[:type]).to eq "list"
+        expect(hash[:valid_values]).to eq(
+          [
+            { name: "Item1", value: "item1" },
+            { name: "Item2", value: "item2" },
+            { name: "Item3", value: "item3" },
+          ],
+        )
+        expect(hash[:choices]).to eq %w[item1 item2]
+      end
+    end
+
+    describe "#to_db_value" do
+      it "validates list values using enum class" do
+        expect(settings.type_supervisor.to_db_value(:type_list_enum, "item1")).to eq [
+             "item1",
+             SiteSetting.types[:list],
+           ]
+        expect(settings.type_supervisor.to_db_value(:type_list_enum, "item1|item2")).to eq [
+             "item1|item2",
+             SiteSetting.types[:list],
+           ]
+      end
+
+      it "raises when list value is not valid according to enum class" do
+        expect { settings.type_supervisor.to_db_value(:type_list_enum, "invalid") }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+        expect {
+          settings.type_supervisor.to_db_value(:type_list_enum, "item1|invalid")
+        }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "allows empty value for list with enum" do
+        expect(settings.type_supervisor.to_db_value(:type_list_enum, "")).to eq [
+             "",
+             SiteSetting.types[:list],
+           ]
+      end
     end
   end
 end

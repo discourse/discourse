@@ -15,8 +15,12 @@ export default class SpamTestModal extends Component {
   @tracked testResult;
   @tracked isLoading = false;
   @tracked postUrl = "";
-  @tracked scanLog = "";
   @tracked isSpam;
+  @tracked reason;
+  @tracked llmName;
+  @tracked systemPrompt;
+  @tracked sentMessage;
+  @tracked scanHistory;
 
   @action
   async runTest() {
@@ -38,7 +42,11 @@ export default class SpamTestModal extends Component {
       this.testResult = response.is_spam
         ? i18n("discourse_ai.spam.test_modal.spam")
         : i18n("discourse_ai.spam.test_modal.not_spam");
-      this.scanLog = response.log;
+      this.reason = response.reason;
+      this.llmName = response.llm_name;
+      this.systemPrompt = response.system_prompt;
+      this.sentMessage = response.sent_message;
+      this.scanHistory = response.scan_history;
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -66,18 +74,78 @@ export default class SpamTestModal extends Component {
         </div>
 
         {{#if this.testResult}}
-          <div class="spam-test-modal__test-result">
-            <h3>{{i18n "discourse_ai.spam.test_modal.result"}}</h3>
+          <div class="spam-test-modal__results">
             <div
               class="spam-test-modal__verdict
                 {{if this.isSpam 'is-spam' 'not-spam'}}"
             >
               {{this.testResult}}
             </div>
-            {{#if this.scanLog}}
-              <div class="spam-test-modal__log">
-                <h4>{{i18n "discourse_ai.spam.test_modal.scan_log"}}</h4>
-                <pre>{{this.scanLog}}</pre>
+
+            {{#if this.reason}}
+              <div
+                class="spam-test-modal__info-box spam-test-modal__info-box--reason"
+              >
+                <h4 class="spam-test-modal__info-box-title">{{i18n
+                    "discourse_ai.spam.test_modal.reason"
+                  }}</h4>
+                <div class="spam-test-modal__info-box-content">
+                  <p>{{this.reason}}</p>
+                </div>
+              </div>
+            {{/if}}
+
+            <div class="spam-test-modal__info-grid">
+              {{#if this.llmName}}
+                <div
+                  class="spam-test-modal__info-box spam-test-modal__info-box--llm"
+                >
+                  <h4 class="spam-test-modal__info-box-title">{{i18n
+                      "discourse_ai.spam.test_modal.llm"
+                    }}</h4>
+                  <div class="spam-test-modal__info-box-content">
+                    {{this.llmName}}
+                  </div>
+                </div>
+              {{/if}}
+
+              {{#if this.scanHistory}}
+                <div
+                  class="spam-test-modal__info-box spam-test-modal__info-box--history"
+                >
+                  <h4 class="spam-test-modal__info-box-title">{{i18n
+                      "discourse_ai.spam.test_modal.scan_history"
+                    }}</h4>
+                  <div class="spam-test-modal__info-box-content">
+                    <pre>{{this.scanHistory}}</pre>
+                  </div>
+                </div>
+              {{/if}}
+            </div>
+
+            {{#if this.sentMessage}}
+              <div
+                class="spam-test-modal__info-box spam-test-modal__info-box--message"
+              >
+                <h4 class="spam-test-modal__info-box-title">{{i18n
+                    "discourse_ai.spam.test_modal.sent_message"
+                  }}</h4>
+                <div class="spam-test-modal__info-box-content">
+                  <pre>{{this.sentMessage}}</pre>
+                </div>
+              </div>
+            {{/if}}
+
+            {{#if this.systemPrompt}}
+              <div
+                class="spam-test-modal__info-box spam-test-modal__info-box--prompt"
+              >
+                <h4 class="spam-test-modal__info-box-title">{{i18n
+                    "discourse_ai.spam.test_modal.system_prompt"
+                  }}</h4>
+                <div class="spam-test-modal__info-box-content">
+                  <pre>{{this.systemPrompt}}</pre>
+                </div>
               </div>
             {{/if}}
           </div>

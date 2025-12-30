@@ -212,7 +212,7 @@ export default class SidebarSection extends Component {
                   {{on "click" headerAction.action}}
                   type="button"
                   title={{headerAction.title}}
-                  class="sidebar-section-header-button"
+                  class="sidebar-section-header-button btn-icon btn-flat"
                 >
                   {{icon @headerActionsIcon}}
                 </button>

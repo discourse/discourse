@@ -38,6 +38,8 @@ ru:
           title: "Шрифты"
         colors:
           title: "Цвета"
+        dialog:
+          title: "Диалог"
         icons:
           title: "Значки"
           full_list: "См. полный список значков Font Awesome"
@@ -60,7 +62,7 @@ ru:
         categories_list:
           title: "Список категорий"
         topic_link:
-          title: "Ссылка на тему"
+          title: "Ссылка на тему и её статус"
         topic_list_item:
           title: "Тема в списке тем"
         topic_statuses:

@@ -44,7 +44,7 @@ hu:
         groups: "Csoportok:"
         no_persona: "Nincs beállítva"
         no_groups: "Egyik sem"
-        edit: "Szerkesztés"
+        edit: "Beállítások"
         expand_list:
           one: "(%{count} további)"
           other: "(%{count} további)"
@@ -90,6 +90,7 @@ hu:
         summary: "Összefoglaló"
         username: "Felhasználónév"
         total_requests: "Összes kérés"
+        total: "Összesen"
         periods:
           last_day: "Elmúlt 24 óra"
           custom: "Egyéni…"
@@ -174,6 +175,7 @@ hu:
         thumbnail_suggestions:
           select: "Kiválasztás"
           selected: "Kiválasztott"
+          try_again: "Újrapróbálkozás"
         image_caption:
           save_caption: "Mentés"
       embeddings:

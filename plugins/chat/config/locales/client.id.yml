@@ -167,6 +167,7 @@ id:
           create_export: "Buat ekspor"
           export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       search:
+        short_title: Cari
         sort:
           latest: "Terbaru"
       direct_messages:

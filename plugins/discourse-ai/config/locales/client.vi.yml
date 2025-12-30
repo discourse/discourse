@@ -39,7 +39,7 @@ vi:
         disabled: "(vô hiệu hóa)"
         groups: "Nhóm:"
         no_groups: "Không có gì"
-        edit: "Sửa"
+        edit: "Cài đặt"
         expand_list:
           other: "(%{count} khác)"
         collapse_list: "(thu gọn)"
@@ -74,6 +74,7 @@ vi:
         summary: "Tóm tắt"
         username: "Tên tài khoản"
         total_requests: "Tổng số yêu cầu"
+        total: "Tổng số"
         periods:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."
@@ -149,6 +150,7 @@ vi:
           cancel: "Hủy"
         thumbnail_suggestions:
           select: "Chọn"
+          try_again: "Thử lại"
         image_caption:
           save_caption: "Lưu lại"
       embeddings:

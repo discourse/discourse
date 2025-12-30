@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin | Sidebar Navigation", type: :system do
-  UNFILTERED_LINK_COUNT = 41
+  UNFILTERED_LINK_COUNT = 42
 
   fab!(:admin)
   fab!(:moderator)
@@ -64,6 +64,7 @@ describe "Admin | Sidebar Navigation", type: :system do
         I18n.t("admin_js.admin.config.users.title"),
         I18n.t("admin_js.admin.config.groups.title"),
         I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("js.sidebar.sections.community.links.review.content"),
         I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
@@ -103,6 +104,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       I18n.t("admin_js.admin.config.users.title"),
       I18n.t("admin_js.admin.config.groups.title"),
       I18n.t("admin_js.admin.config.site_settings.title"),
+      I18n.t("js.sidebar.sections.community.links.review.content"),
       I18n.t("admin_js.admin.config.whats_new.title"),
     ]
     expect(page).to have_selector(
@@ -163,6 +165,7 @@ describe "Admin | Sidebar Navigation", type: :system do
         I18n.t("admin_js.admin.dashboard.title"),
         I18n.t("admin_js.admin.config.users.title"),
         I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("js.sidebar.sections.community.links.review.content"),
         I18n.t("admin_js.admin.config.whats_new.title"),
         I18n.t("admin_js.admin.config.reports.title"),
         I18n.t("admin_js.admin.config.watched_words.title"),

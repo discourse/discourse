@@ -1,0 +1,107 @@
+.--assignments {
+  .sticky-board {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 1em 0;
+    z-index: 9; // above the scanlines
+  }
+
+  .sticky-note {
+    width: 180px;
+    height: 180px;
+    box-shadow: 3px 3px 8px rgb(0 0 0 / 0.2);
+    position: relative;
+    font-family: "Brush Script MT", cursive, sans-serif;
+    transition: transform 0.2s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background: linear-gradient(to bottom, rgb(0 0 0 / 0.05), transparent);
+      z-index: 1;
+    }
+
+    &.--yellow {
+      background: linear-gradient(to bottom, #fef9c3 0%, #fde68a 100%);
+    }
+
+    &.--pink {
+      background: linear-gradient(to bottom, #fecaca 0%, #fca5a5 100%);
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 0 20px 20px;
+        border-color: transparent transparent #000 transparent;
+        box-shadow: -2px 2px 4px rgb(0 0 0 / 0.2);
+      }
+    }
+
+    &.--blue {
+      background: linear-gradient(to bottom, #bfdbfe 0%, #93c5fd 100%);
+    }
+
+    &.--green {
+      background: linear-gradient(to bottom, #bbf7d0 0%, #86efac 100%);
+    }
+
+    &.--orange {
+      background: linear-gradient(to bottom, #fed7aa 0%, #fdba74 100%);
+    }
+
+    &.--rotate-left {
+      transform: rotate(-4deg);
+    }
+
+    &.--rotate-right {
+      transform: rotate(3deg);
+    }
+
+    &.--rotate-left-small {
+      transform: rotate(-2deg);
+    }
+
+    &.--rotate-right-small {
+      transform: rotate(6deg);
+    }
+  }
+
+  .sticky-note__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+  }
+
+  .sticky-note__title {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 12px;
+    line-height: 1;
+    padding: 0 5em;
+  }
+
+  .sticky-note__value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #1a1a1a;
+
+    .number {
+      font-family: inherit;
+    }
+  }
+}

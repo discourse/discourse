@@ -100,6 +100,7 @@ module DiscourseAutomation
     def upsert_field!(name, component, metadata, target: "script")
       field = fields.find_or_initialize_by(name: name, component: component, target: target)
       field.update!(metadata: metadata)
+      field
     end
 
     def self.deserialize_context(context)

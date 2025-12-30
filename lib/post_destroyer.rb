@@ -195,7 +195,6 @@ class PostDestroyer
         clear_user_posted_flag
       end
 
-      Topic.reset_highest(@post.topic_id)
       trash_public_post_actions
       trash_revisions
       trash_user_actions
@@ -236,6 +235,8 @@ class PostDestroyer
       end
 
       DB.after_commit do
+        Topic.reset_highest(@post.topic_id)
+
         if @opts[:reviewable]
           notify_deletion(
             @opts[:reviewable],
@@ -288,6 +289,7 @@ class PostDestroyer
         @post.update_column(:user_deleted, true)
         @post.topic_links.each(&:destroy)
         @post.topic.update_column(:closed, true) if @post.is_first_post?
+        resolve_reviewables_for_author_deletion
       end
     end
   end
@@ -306,6 +308,8 @@ class PostDestroyer
     if last_revision.present? && last_revision.modifications["raw"].present?
       @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true)
     end
+
+    restore_reviewables_for_author_recovery if @user.id == @post.user_id
   end
 
   private
@@ -532,6 +536,39 @@ class PostDestroyer
           )
         end
       end
+    end
+  end
+
+  def resolve_reviewables_for_author_deletion
+    reviewables = Reviewable.where(target: @post, status: Reviewable.statuses[:pending])
+
+    reviewables.each do |reviewable|
+      reviewable.reviewable_notes.create!(
+        user: Discourse.system_user,
+        content: I18n.t("reviewables.post_deleted_by_author"),
+      )
+
+      reviewable.transition_to(:ignored, Discourse.system_user)
+    end
+  end
+
+  def restore_reviewables_for_author_recovery
+    # Only restore if it was reviewed by system user
+    reviewables =
+      Reviewable
+        .where(target: @post, status: Reviewable.statuses[:ignored])
+        .joins(
+          "LEFT JOIN reviewable_scores ON reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewed_by_id = #{Discourse::SYSTEM_USER_ID}",
+        )
+        .where("reviewable_scores.id IS NOT NULL")
+
+    reviewables.each do |reviewable|
+      reviewable.reviewable_notes.create!(
+        user: Discourse.system_user,
+        content: I18n.t("reviewables.post_restored_by_author"),
+      )
+
+      reviewable.transition_to(:pending, Discourse.system_user)
     end
   end
 end

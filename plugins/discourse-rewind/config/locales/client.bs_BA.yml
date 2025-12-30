@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privatno"
+          public: "Javno"
+      reports:
+        chat_usage:
+          messages: poruke
+          you: Vi
+        invites:
+          title: Pozivnice
+          invitee_posts: Posts Created
+          invitee_likes: Likes Given
+        new_user_interactions:
+          likes_given: Likes Given
+          mentions: Spomenuto
+        writing_analysis:
+          menu_other: Other

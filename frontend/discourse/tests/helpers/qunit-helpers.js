@@ -20,6 +20,7 @@ import {
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { clearPluginDocumentTitleCounters } from "discourse/components/d-document";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { resetHtmlDecorators } from "discourse/components/decorated-html";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
@@ -226,6 +227,7 @@ export function testCleanup(container, app) {
   clearTopicFooterDropdowns();
   clearTopicFooterButtons();
   clearDesktopNotificationHandlers();
+  clearPluginDocumentTitleCounters();
   cleanUpHashtagTypeClasses();
   resetLastEditNotificationClick();
   clearAuthMethods();

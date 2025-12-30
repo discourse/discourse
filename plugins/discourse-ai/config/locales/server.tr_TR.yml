@@ -276,7 +276,6 @@ tr_TR:
     ai_bot:
       reply_error: "Üzgünüz, sistemimiz yanıtlamaya çalışırken beklenmeyen bir sorunla karşılaşmış gibi görünüyor.\n\n[details='Hata ayrıntıları']\n%{details}\n[/details]"
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
-      thinking: "Düşünüyorum..."
       personas:
         default_llm_required: "Sohbeti etkinleştirmeden önce varsayılan LLM modeli gereklidir"
         cannot_delete_system_persona: "Sistem kişilikleri silinemez, lütfen bunun yerine devre dışı bırakın"
@@ -604,6 +603,3 @@ tr_TR:
       custom_tool_exists:
         one: "%{names} adlı bir özel araç zaten mevcut."
         other: "%{names} adlı özel araçlar zaten mevcut."
-  dashboard:
-    problem:
-      ai_llm_status: "LLM modeli: %{model_name} sorunlarla karşılaşıyor. Lütfen <a href='%{url}'>modelin yapılandırma sayfasını</a> kontrol edin."

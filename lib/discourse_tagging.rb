@@ -640,7 +640,21 @@ module DiscourseTagging
   end
 
   def self.hidden_tag_names(guardian = nil)
-    guardian&.is_staff? ? [] : Tag.where.not(id: visible_tags(guardian).select(:id)).pluck(:name)
+    if guardian&.is_staff?
+      []
+    else
+      # Hidden tags have at least one TagGroupPermission but must not have any for permitted groups
+      Tag
+        .where(id: TagGroupMembership.joins(tag_group: :tag_group_permissions).select(:tag_id))
+        .where.not(
+          id:
+            TagGroupPermission
+              .joins(tag_group: :tag_group_memberships)
+              .where(group_id: permitted_group_ids_query(guardian))
+              .select("tag_group_memberships.tag_id"),
+        )
+        .pluck(:name)
+    end
   end
 
   def self.permitted_group_ids_query(guardian = nil)
@@ -737,7 +751,8 @@ module DiscourseTagging
       tag_names.uniq!
     end
 
-    opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
+    saving_tags = opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
+    DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)
   end
 
   def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts = {})

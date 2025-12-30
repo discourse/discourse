@@ -799,11 +799,10 @@ gl:
       every_month: "cada mes"
       every_six_months: "cada seis meses"
   user_api_key:
-    title: "Autorizar acceso á aplicación"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "lectura"
     read_write: "lectura/escritura"
-    description: '"%{application_name}" está a solicitar o seguinte acceso á súa conta:'
     instructions: 'Acabamos de xerar unha nova chave API de usuario para que utilice con "%{application_name}"; pegue a seguinte chave na súa aplicación:'
     otp_description: 'Gustaríalle darlle permiso a "%{application_name}" para acceder a este sitio?'
     otp_confirmation:
@@ -1468,18 +1467,7 @@ gl:
     tl3_requires_likes_given: "Número mínimo de gústame que un usuario debe dar nos últimos (período nc3) días para poder ser promovido ao nivel de confianza 3."
     tl3_requires_likes_received: "Número mínimo de gústame que un usuario debe recibir nos últimos (período nc3) días para poder ser promovido ao nivel de confianza 3."
     tl3_links_no_follow: "Non retirar rel=nofollow das ligazóns publicadas por usuarios con nivel de confianza 3."
-    min_trust_to_create_topic: "O nivel de confianza mínimo requirido para crear un novo tema."
     allow_flagging_staff: "De estar activado, os usuarios poden denunciar publicacións feitas desde contas do equipo."
-    min_trust_to_edit_wiki_post: "O nivel de confianza mínimo requirido para editar unha publicación marcada como wiki."
-    min_trust_to_edit_post: "O nivel de confianza mínimo requirido para editar publicacións."
-    min_trust_to_allow_self_wiki: "O nivel de confianza mínimo requirido para facer que un usuario converta as súas publicacións a wiki."
-    min_trust_to_flag_posts: "O nivel de confianza mínimo requirido para denunciar publicacións"
-    min_trust_to_post_links: "O nivel de confianza mínimo requirido para incluír ligazóns nas publicacións"
-    min_trust_to_post_embedded_media: "O nivel de confianza mínimo requirido para incorporar elementos multimedia a unha publicación"
-    min_trust_level_to_allow_profile_background: "O nivel de confianza mínimo requirido para cargar un fondo de perfil"
-    min_trust_level_to_allow_user_card_background: "O nivel de confianza mínimo requirido para cargar un fondo de tarxeta de usuario"
-    min_trust_level_to_allow_invite: "O nivel de confianza mínimo requirido para invitar usuarios"
-    min_trust_level_to_allow_ignore: "O nivel de confianza mínimo requirido para ignorar usuarios"
     allowed_link_domains: "Dominios que os usuarios poden vincular mesmo se non teñen o nivel de confianza apropiado para publicar ligazóns"
     newuser_max_links: "Número de ligazóns que un novo usuario pode engadir nunha publicación."
     newuser_max_embedded_media: "Cantos elementos multimedia incorporados pode engadir un novo usuario a unha publicación."
@@ -1577,7 +1565,6 @@ gl:
     pop3_polling_password: "O contrasinal da conta POP3 na que recoller o correo."
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se desactiva isto, deberá limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in_min_trust: "O nivel de confianza mínimo requirido para poder publicar vía correo electrónico."
     email_in_authserv_id: "O identificador do servizo que realiza revisións de autenticación no correo entrante. Revisa <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instrucións sobre como configurar isto."
     enable_imap: "Activar IMAP para sincronizar mensaxes de grupo."
     enable_imap_write: "Activar a sincronización IMAP bidireccional. Se está desactivada, todas as operacións de escritura das contas IMAP están desactivadas."
@@ -1598,7 +1585,6 @@ gl:
     username_change_period: "Número máximo de días, despois do rexistro, durante os que se pode mudar de nome de usuario (0 para desactivar o cambio de nome de usuario)."
     email_editable: "Permitir que os usuarios cambien o seu enderezo electrónico despois de se rexistraren."
     logout_redirect: "Localización a onde redirixir o navegador despois de pechar sesión (ex.: https://example.com/logout)"
-    allow_uploaded_avatars: "Permitir que os usuarios suban imaxes de perfil personalizadas."
     default_avatars: "URL dos avatares que se utilizarán para os usuarios novos ata que estes os cambien."
     automatically_download_gravatars: "Descargar Gravatars para os usuarios ao crear unha conta ou cambiar de correo electrónico."
     digest_topics: "Número máximo de publicacións destacadas que se amosan no correo electrónico de resumo."
@@ -1675,7 +1661,6 @@ gl:
     new_user_notice_tl: "Nivel de confianza mínimo requirido para ver avisos de novos usuarios."
     returning_user_notice_tl: "Nivel de confianza mínimo requirido para ver avisos de usuarios que volven."
     returning_users_days: "Número de días que deben transcorrer para considerar que un usuario está de volta."
-    review_media_unless_trust_level: "O equipo revisará as publicacións de usuarios con niveis de confianza máis baixos se conteñen elementos multimedia inseridos."
     blur_tl0_flagged_posts_media: "Desenfocar imaxes con publicacións sinaladas para agochar contido potencialmente inapropiado (NSFW)."
     enable_page_publishing: "Permitirlles aos membros do equipo publicar temas en novos URL co seu propio estilo."
     show_published_pages_login_required: "Os usuarios anónimos poden ver as páxinas publicadas, aínda que se pida iniciar sesión."
@@ -1713,19 +1698,16 @@ gl:
     allow_user_api_key_scopes: "Listaxe de ámbitos permitidos para as chaves API de usuario"
     allowed_user_api_auth_redirects: "URL permitido para redireccionar a autenticación das chaves API de usuario. O símbolo do comodín pódese utilizar para que coincida calquera parte súa (ex.: www.exemplo.com/*)."
     allowed_user_api_push_urls: "Enderezos URL permitidos para que servidor envíe á API de usuario"
-    min_trust_to_create_tag: "O nivel de confianza mínimo para crear unha etiqueta."
     max_tags_per_topic: "O número máximo de etiquetas aplicables a un tema."
     max_tag_length: "O número máximo de caracteres que se poden utilizar nunha etiqueta."
     max_tag_search_results: "Nas buscas por etiquetas, o número máximo de resultados que se mostran."
     max_tags_in_filter_list: "Número máximo de etiquetas que se mostran na listaxe despregable do filtro. Móstranse primeiro as etiquetas máis usadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orde alfabética. Por defecto móstranse segundo a súa popularidade."
     tags_listed_by_group: "Listar etiquetas por grupos de etiquetas na <a href='%{base_path}/tags' target='_blank'>páxina de etiquetas</a>."
-    min_trust_level_to_tag_topics: "O nivel de confianza mínimo requirido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Se unha etiqueta coincide con palabras exactas do título dun tema, non se mostrará"
     remove_muted_tags_from_latest: "Non mostrar na listaxe de temas máis recentes aqueles etiquetados unicamente con etiquetas silenciadas."
     force_lowercase_tags: "Forzar que todas as etiquetas estean integramente en minúsculas."
     shared_drafts_category: "Active a funcionalidade Borradores compartidos designando unha categoría para os borradores de temas. Os temas desta categoría suprimiranse das listaxes de temas para os usuarios do equipo."
-    shared_drafts_min_trust_level: "Permitir que os usuarios vexan e editen borradores compartidos."
     push_notifications_icon: "A icona da insignia aparece na esquina da notificación. Recoméndase un PNG monocromático de 96x96 con transparencia."
     base_font: "Tipo de letra base para empregar na maioría dos textos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--font-family»."
     heading_font: "Tipo de letra para usar nos títulos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--heading-font-family»."
@@ -3224,18 +3206,12 @@ gl:
     nice_share:
       name: Boa compartición
       description: Compartiu unha publicación con 25 visitantes únicos
-      long_description: |
-        Esta insignia concédese por compartir unha ligazón en que premeron 25 veces visitantes externos. Grazas por difundir as nosas discusións e a comunidade en xeral.
     good_share:
       name: Moi boa compartición
       description: Compartiu unha publicación con 300 visitantes únicos
-      long_description: |
-        Esta insignia concédese por compartir unha ligazón que foi visitada 300 veces por visitantes externos. Bo traballo! Mostroulle unha conversa excelente a moitas persoas novas e axudou á comunidade a medrar.
     great_share:
       name: Gran compartición
       description: Compartiu unha publicación con 1000 visitantes únicos
-      long_description: |
-        Esta insignia concédese por compartir unha ligazón en que premeron 1000 veces por visitantes externos. Bravo! Difundiu unha conversa moi interesante entre unha grande audiencia e contribuíu enormemente a que a comunidade medrase!
     first_like:
       name: Primeiro gústame
       description: Premeu gústame nunha publicación
@@ -3433,16 +3409,10 @@ gl:
   wizard:
     title: "Configuración de Discourse"
     step:
-      introduction:
+      setup:
         fields:
-          title:
-            placeholder: "Reunión de Helena"
-          site_description:
-            placeholder: "Un lugar para que Helena e as súas amizades discutan sobre cousas interesantes"
           default_locale:
             label: "Idioma"
-      privacy:
-        fields:
           login_required:
             label: "Visibilidade"
             choices:
@@ -3450,43 +3420,14 @@ gl:
                 label: "Pública"
               private:
                 label: "Privada"
-      styling:
-        fields:
-          body_font:
-            label: "Tipo de letra do corpo"
-          heading_font:
-            label: "Tipo de letra de título"
-          styling_preview:
-            label: "Previsualizar"
-          homepage_style:
-            choices:
-              latest:
-                label: "Últimos"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Lei de California"
-          contact_url:
-            placeholder: "https://www.exemplo.com/contactanos"
-          city_for_disputes:
-            placeholder: "San Francisco, California"
-          site_contact:
-            description: "Todas as mensaxes privadas automáticas de Discourse serán enviadas deste este usuario, sexan advertencias de denuncias sexan apoios recibidos."
-      invites:
-        title: "Convidar o equipo"
-        description: "Xa case está! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a súa comunidade."
-        disabled: "Como os inicios de sesión locais están desactivados, non é posible enviar invitacións a ninguén. Vaia ao seguinte paso."
-      finished:
-        title: "O seu Discourse está listo!"
-        description: |
-          <p>Se xa comprende como cambiar esta configuración, <b>volva executar este asistente en calquera momento</b>, ou visite <a href='%{base_path}/admin' target='_blank'>a sección de administración</a>; atoparaa xunto á icona de chave inglesa no menú do sitio.</p>
-          <p>É doado personalizar Discourse aínda máis usando o noso poderoso sistema de temas. Para ver exemplos, consulte os <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">principais temas e compoñentes</a> en <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Páseo ben e moita sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>organizando a súa nova comunidade.</a></p>
   search_logs:
     graph_title: "Análise das buscas"
   onebox:
     github:
       closed: "pechado"
+      status_date:
+        approved: "aprobado"
+        closed: "pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'

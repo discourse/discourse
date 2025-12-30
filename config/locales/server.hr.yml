@@ -831,11 +831,10 @@ hr:
       every_month: "svaki mjesec"
       every_six_months: "svakih šest mjeseci"
   user_api_key:
-    title: "Odobrite pristup aplikaciji"
     authorize: "Odobriti"
+    deny: "Odustani"
     read: "pročitano"
     read_write: "čitati/pisati"
-    description: '"%{application_name}" zahtijeva sljedeći pristup vašem računu:'
     instructions: 'Upravo smo generirali novi korisnički API ključ za korištenje s "%{application_name}", zalijepite sljedeći ključ u svoju aplikaciju:'
     otp_description: 'Želite li dopustiti "%{application_name}" pristup ovoj stranici?'
     otp_confirmation:
@@ -1390,7 +1389,6 @@ hr:
     pop3_polling_password: "Lozinka za POP3 račun za anketu za e-poštu."
     pop3_polling_delete_from_server: "Izbrišite e-poštu s poslužitelja. NAPOMENA: Ako ovo onemogućite, trebali biste ručno očistiti svoj poštanski sandučić"
     log_mail_processing_failures: "Zabilježite sve pogreške obrade e-pošte na <a href='%{base_path}/logs' target='_blank'>/zapisi</a>"
-    email_in_min_trust: "Minimalna razina povjerenja koju korisnik mora imati da bi mu se omogućilo objavljivanje novih tema putem e-pošte."
     email_in_authserv_id: "Identifikator usluge koja vrši provjeru autentičnosti dolazne e-pošte. Pogledajte <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> za upute o tome kako to konfigurirati."
     enable_imap: "Omogućite IMAP za sinkronizaciju grupnih poruka."
     enable_imap_write: "Omogućite dvosmjernu IMAP sinkronizaciju. Ako je onemogućeno, sve operacije pisanja na IMAP računima su onemogućene."
@@ -1411,7 +1409,6 @@ hr:
     username_change_period: "Maksimalan broj dana nakon registracije u kojem računi mogu promijeniti svoje korisničko ime (0 za onemogućavanje promjene korisničkog imena)."
     email_editable: "Omogućite korisnicima promjenu svoje e-mail adrese nakon registracije."
     logout_redirect: "Lokacija za preusmjeravanje preglednika nakon odjave (npr.: https://example.com/logout)"
-    allow_uploaded_avatars: "Dopustite korisnicima da učitaju prilagođene profilne slike."
     default_avatars: "URL-ovi avatara koji će se prema zadanim postavkama koristiti za nove korisnike dok ih ne promijene."
     automatically_download_gravatars: "Preuzmite Gravatare za korisnike nakon izrade računa ili promjene e-pošte."
     digest_topics: "Najveći broj popularnih tema za prikaz u sažetku e-pošte."
@@ -1458,17 +1455,14 @@ hr:
     new_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o novim objavama korisnika."
     returning_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o objavama korisnika koji se vraćaju."
     returning_users_days: "Koliko dana treba proći prije nego što se smatra da se korisnik vraća."
-    review_media_unless_trust_level: "Osoblje će pregledati objave korisnika s nižim razinama povjerenja ako sadrže ugrađene medije."
     blur_tl0_flagged_posts_media: "Zamutite slike označenih objava kako biste sakrili potencijalno NSFW sadržaj."
     enable_page_publishing: "Dopustite članovima osoblja da objavljuju teme na novim URL-ovima s vlastitim stilom."
     show_published_pages_login_required: "Anonimni korisnici mogu vidjeti objavljene stranice, čak i kada je potrebna prijava."
     default_other_skip_new_user_tips: "Preskočite savjete i značke za uvođenje novih korisnika."
-    min_trust_level_to_tag_topics: "Minimalna razina povjerenja potrebna za označavanje tema"
     suppress_overlapping_tags_in_list: "Ako oznake odgovaraju točnim riječima u naslovima tema, nemojte prikazivati oznaku"
     remove_muted_tags_from_latest: "Ne prikazuj teme označene samo prigušenim oznakama na najnovijem popisu tema."
     force_lowercase_tags: "Prisilno navedite da sve nove oznake budu ispisane malim slovima."
     shared_drafts_category: "Omogućite značajku Dijeljene skice određivanjem kategorije za skice tema. Teme u ovoj kategoriji bit će potisnute s popisa tema za korisnike osoblja."
-    shared_drafts_min_trust_level: "Dopustite korisnicima da vide i uređuju dijeljene skice."
     push_notifications_prompt: "Prikaži banner pristanka korisnika za push obavijesti. Ova postavka pokreće upit koji od korisnika traži dopuštenje za slanje push obavijesti. Pojavljuje se samo kada push obavijesti nisu već omogućene, podržava ih korisnikov uređaj i korisnik je ili objavio objavu ili koristi progresivnu web-aplikaciju (PWA). Upit se neće ponovno prikazati ako ga je korisnik već odbacio ili dao/odbio dopuštenje."
     push_notifications_icon: "Ikona značke koja se pojavljuje u kutu obavijesti. Preporučuje se monokromatski PNG s prozirnošću veličine 96×96."
     enable_desktop_push_notifications: "Aktiviraj push obavijesti za sučelje radne površine. Ova značajka omogućuje upozorenja u stvarnom vremenu sa stranice izravno na vašu radnu površinu, povećavajući angažman i osiguravajući da su korisnici uvijek ažurirani. Međutim, učinkovitost ove značajke ovisi o podršci preglednika za push obavijesti."
@@ -1909,8 +1903,42 @@ hr:
     flags_agreed_and_post_deleted_for_responders:
       title: "Odgovor s prijavljene objave je uklonilo osoblje"
       subject_template: "Odgovor s prijavljene objave je uklonilo osoblje"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je [objava](%{base_url}%{url}) na koju ste odgovorili uklonjena.
+
+        %{flag_reason}
+
+        Ovu je objavu označila zajednica, a član osoblja odlučio ju je ukloniti.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Na što ste odgovorili
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        Za više detalja o razlogu uklanjanja, pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
+    usage_tips:
+      text_body_template: |
+        Za nekoliko brzih savjeta o početku rada kao novi korisnik, [pogledajte ovu objavu na blogu](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Kako ovdje sudjelujete, upoznavat ćemo vas i privremena ograničenja za nove korisnike bit će ukinuta. S vremenom ćete steći [razine povjerenja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) koje uključuju posebne sposobnosti koje će nam pomoći u zajedničkom upravljanju našom zajednicom.
     welcome_user:
+      title: "Dobrodošli"
       subject_template: "Dobrodošli na %{site_name}"
+      text_body_template: |
+        Hvala što ste se pridružili %{site_name}i dobrodošli!
+
+        %{new_user_tips}
+
+        Vjerujemo u [civilizirano ponašanje u zajednici](%{base_url}/smjernice) u svakom trenutku.
+
+        Uživajte u svom boravku!
     welcome_staff:
       subject_template: "Čestitamo, dobili ste status %{role} !"
       text_body_template: |
@@ -1921,6 +1949,20 @@ hr:
         S velikom moći dolazi i velika odgovornost. Ako ste novi u moderiranju, pogledajte [Vodič za moderiranje](https://meta.discourse.org/t/discourse-moderation-guide/63116) ili se obratite osoblju foruma za pomoć.
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
+      text_body_template: |
+        Hvala što ste prihvatili pozivnicu za %{site_name} -- dobrodošli!
+
+        - Izradili smo ovaj novi račun **%{username}** za vas. Promijenite svoje ime ili lozinku posjetom [vašem korisničkom profilu][prefs].
+
+        - Kada se prijavite, molimo vas da **koristite istu adresu e-pošte iz izvorne pozivnice** - inače nećemo moći prepoznati da ste to vi!
+
+        %{new_user_tips}
+
+        Vjerujemo u [civilizirano ponašanje u zajednici](%{base_url}/smjernice) u svakom trenutku.
+
+        Uživajte u boravku!
+
+        [prefs]: %{user_preferences_url}
     email_reject_post_too_short:
       subject_template: "[%{email_prefix}] Problem s e-mail porukom -- Objava je prekratka"
       text_body_template: |
@@ -2428,6 +2470,9 @@ hr:
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
+  color_schemes:
+    errors:
+      cannot_edit_remote_copies: "Uređivanje udaljenih kopija palete boja nije dopušteno"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
@@ -2606,18 +2651,12 @@ hr:
     nice_share:
       name: Korisno dijeljenje
       description: Podijelio/la objavu s 25 jedinstvenih posjetitelja.
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 25 vanjskih posjetitelja. Hvala što širite vijest o našim raspravama i ovoj zajednici.
     good_share:
       name: Sjajno dijeljenje
       description: Podijelio/la objavu s 300 jedinstvenih posjetitelja
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 300 vanjskih posjetitelja. Dobar posao! Pokazali ste sjajnu raspravu mnogim novim ljudima i pomogli ovoj zajednici da raste.
     great_share:
       name: Odlična podjela
       description: Podijelio/la objavu s 1000 jedinstvenih posjetitelja
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 1000 vanjskih posjetitelja. Vau! Promovirali ste zanimljivu raspravu pred ogromnom novom publikom i pomogli nam da značajno proširimo našu zajednicu!
     first_like:
       name: Prvi lajk
       description: Lajkao/la objavu
@@ -2718,12 +2757,13 @@ hr:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Početak rada"
         fields:
+          title:
+            label: "Naziv zajednice"
           default_locale:
             label: "Jezik"
-      privacy:
-        fields:
           login_required:
             label: "Vidljivost"
             choices:
@@ -2731,23 +2771,12 @@ hr:
                 label: "Javnost"
               private:
                 label: "Privatno"
-          chat_enabled:
-            placeholder: "Omogući chat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Pregled"
-          homepage_style:
-            choices:
-              latest:
-                label: "Posljednje"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     github:
       closed: "zatvoreno"
+      status_date:
+        approved: "odobrio/la"
+        closed: "zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'

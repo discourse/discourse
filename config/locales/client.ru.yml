@@ -214,7 +214,7 @@ ru:
       el:
         name: Греческий
       en:
-        name: Английский (США)
+        name: Английский
       en_GB:
         name: Английский (Великобритания)
       es:
@@ -341,16 +341,21 @@ ru:
       forwarded: "Переадресовал(а) вышеуказанное письмо"
     topic_admin_menu: "действия администратора над темой"
     skip_to_main_content: "Перейти к основному контенту"
+    skip_to_post: "Перейти к сообщению %{post_number}"
+    skip_to_where_you_left_off: "Перейти к тому месту, где вы остановились (сообщение %{post_number})"
+    skip_to_where_you_left_off_last: "Перейти к тому месту, где вы остановились (последний ответ, сообщение %{post_number})"
+    skip_to_last_reply: "Перейти к последнему ответу"
+    skip_to_top: "Перейти к началу"
     skip_user_nav: "Перейти к контенту профиля"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления по электронной почте отправляться не будут."
     emails_are_disabled_non_staff: "Отправка писем отключена для пользователей, не являющихся сотрудниками."
     software_update_prompt:
       message: "Мы обновили этот сайт. <span>Обновите страницу</span>, чтобы все работало гладко."
       dismiss: "Закрыть"
-    bootstrap_mode: "Начало работы"
     back_button: "Назад"
     welcome_banner:
       header:
+        new_members: "Добро пожаловать в %{preferred_display_name}!"
         logged_in_members: "С возвращением, %{preferred_display_name}!"
         anonymous_members: "Добро пожаловать на сайт %{site_name}!"
       search_placeholder: "Искать"
@@ -661,6 +666,8 @@ ru:
       resume: "Продолжить"
       remove: "Удалить"
       remove_confirmation: "Действительно удалить этот черновик?"
+      bulk_delete: "Удалить выбранное"
+      bulk_delete_confirmation: "Удалить черновики"
       new_topic: "Черновик новой темы"
       new_private_message: "Черновик нового личного сообщения"
       edit_topic: "Редактировать черновик темы"
@@ -816,7 +823,7 @@ ru:
       title: "Очередь проверки"
       topic: "Тема:"
       filtered_topic: "Вы отфильтровали проверяемый контент в рамках одной темы."
-      filtered_user: "Пользователь"
+      filtered_user: "Пользователь, на которого пожаловались"
       filtered_reviewed_by: "Кем проверена"
       show_all_topics: "показать все темы"
       deleted_post: "(сообщение удалено)"
@@ -965,7 +972,6 @@ ru:
           noun: "публикация"
       flagged_as: "Помечено как"
       user_label: "Пользователь"
-      assigned_to: "Назначено:"
       moderator_actions: "Действия модератора"
       timeline_and_notes: "Хронология и заметки"
       timeline:
@@ -976,7 +982,6 @@ ru:
         claimed: "Зарезервировано"
         claimed_by: "Зарезервировано пользователем %{username} · %{relativeDate}"
         reviewed: "Проверено"
-        reviewed_by: "Проверено пользователем %{username} · %{relativeDate}"
         view_conversation: "просмотреть ЛС"
         note_added: "Примечание модератора"
         note_added_by: "Примечание модератора %{username} · %{relativeDate}"
@@ -1004,18 +1009,20 @@ ru:
           few: "Жалобу подали %{count} уникальных пользователя"
           many: "Жалобу подали %{count} уникальных пользователей"
           other: "Жалобу подали столько уникальных пользователей: %{count}"
+        user_activity: "Информация о пользователе"
         activities:
-          new_account: "новый аккаунт"
+          joined_on: "присоединился: %{joinDate}"
           trust_level: "уровень доверия: %{trustLevelName}"
           posts:
             one: "%{count} публикация"
             few: "%{count} публикации"
             many: "%{count} публикаций"
             other: "%{count} публикации"
+        moderation_history:
+          label: "История модерации"
         solution_marked: "Отмечено как решение"
         topic_has_solution: "Тема содержит решение вопроса"
         visibility: "Видимость"
-        topic_unlisted: "Эта тема не опубликована. Доступна только по прямой ссылке, а не публично."
       help:
         moderation_guide: "Руководство по модерации Discourse"
         flag_priorities: "Управление репутацией пользователей и приоритетами жалоб"
@@ -1470,7 +1477,7 @@ ru:
         many: "Категории (ещё %{count})…"
         other: "Категории (ещё %{count})…"
     ip_lookup:
-      title: Поиск IP-адреса
+      title: IP-адрес
       hostname: Название хоста
       location: Местонахождение
       location_not_found: (расположение неизвестно)
@@ -1513,6 +1520,8 @@ ru:
       new_private_message: "Новое сообщение"
       private_message: "Сообщение"
       private_messages: "Сообщения"
+      upcoming_changes:
+        title: "Предстоящие изменения включены"
       user_notifications:
         filters:
           filter_by: "Фильтр"
@@ -3097,6 +3106,8 @@ ru:
       ulist_title: "Маркированный список"
       list_item: "Элемент списка"
       toggle_direction: "Переключить направление"
+      wrap_modal:
+        apply: "Применить"
       help: "Справка по форматированию (Markdown)"
       collapse: "Свернуть панель редактора"
       open: "Открыть панель редактора"
@@ -3163,6 +3174,8 @@ ru:
         zoom_out: "Уменьшить размер изображения"
         zoom_in: "Увеличить размер изображения"
         remove: "Удалить изображение"
+      image: "изображение"
+      grid_label: "Это будет отображаться в виде сетки."
       image_scale_button: "Масштабировать изображение до %{percent}%"
       delete_image_button: Удалить изображение
       toggle_image_grid: Сетка изображений
@@ -3172,6 +3185,7 @@ ru:
         remove: "Удалить ссылку"
         visit: "Открыть ссылку в новой вкладке"
         link_copied: "Ссылка скопирована!"
+      unsupported_token: "Расширенный текстовый редактор не поддерживает все функции, использованные в этом сообщении; в этом случае вам будет предложено переключиться на редактор Markdown."
     notifications:
       tooltip:
         regular:
@@ -3549,6 +3563,11 @@ ru:
         reset_bump_dates: "Сбросить даты поднятия"
         defer: "Отметить как непрочитанное"
         delete: "Удалить темы"
+        delete_topics_count:
+          one: "Удалить тему"
+          few: "Удалить темы"
+          many: "Удалить темы"
+          other: "Удалить темы"
         dismiss: "Отложить"
         dismiss_read: "Отложить все непрочитанные"
         dismiss_read_with_selected:
@@ -3627,6 +3646,7 @@ ru:
           few: "Выполнено: <strong>%{count}</strong> темы"
           many: "Выполнено: <strong>%{count}</strong> тем"
           other: "Выполнено: <strong>%{count}</strong> темы"
+        notify: "Уведомить пользователей об этом изменении."
         performing: "Выполняются массовые действия, подождите…"
         completed: "Массовые действия завершены!"
       none:
@@ -3810,12 +3830,15 @@ ru:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Просмотрите все категории</a>, <a href='%{basePath}/latest'>ознакомьтесь с последними</a> или самыми популярными темами:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Просмотрите все теги</a> или <a href='%{basePath}/latest'>ознакомьтесь с последними темами</a>."
       browse_latest_topics: "Просмотреть последние темы"
+      browse_new_replies: "Просмотреть новые ответы"
+      browse_new_topics: "Просмотрите новые темы"
       suggest_create_topic: Готовы <a href>начать новое обсуждение</a>?
       jump_reply: "Перейти к сообщению в исходном месте публикации"
       jump_reply_aria: "Перейти к сообщению пользователя @%{username} в исходном месте публикации"
       jump_reply_button: "Перейти к публикации"
       deleted: "Тема удалена"
       slow_mode_update:
+        title: "Медленный режим"
         select: "Пользователи могут публиковать сообщения в этой теме не чаще, чем раз в:"
         description: "Чтобы способствовать вдумчивому обсуждению в активных или спорных дискуссиях, пользователи должны подождать определенное время, прежде чем публиковать очередное сообщение в этой теме."
         enable: "Включить"
@@ -5140,6 +5163,7 @@ ru:
       add_to_calendar: "Добавить в календарь"
       google: "Календарь Google"
       ics: "ICS"
+      default_title: "Запланированное мероприятие"
     tagging:
       all_tags: "Все теги"
       other_tags: "Другие теги"
@@ -5210,6 +5234,7 @@ ru:
       upload_description: "Загрузить csv-файл для массового создания тегов"
       upload_instructions: "По одному в строке, с необязательным указанием группы тега в формате «tag_name,tag_group»."
       upload_successful: "Теги загружены"
+      bulk_create_button: "Создать"
       delete_unused_confirmation:
         one: "%{count} тег будет удалён: %{tags}"
         few: "%{count} тега будут удалены: %{tags}"
@@ -5368,7 +5393,6 @@ ru:
       tags_form_modal:
         title: "Измените навигацию по тегам"
         filter_placeholder: "Фильтрация тегов"
-        no_tags: "Нет тегов, соответствующих запросу."
         subtitle:
           text: "Мы автоматически покажем самые популярные теги сайта"
       edit_navigation_modal_form:
@@ -5757,9 +5781,18 @@ ru:
           title: "Дополнительно"
       upcoming_changes:
         name: "Название"
+        plugin: "Плагин"
+        metadata: "Метаданные"
         enabled: "Включено"
+        enabled_for: "Включено для..."
+        show_image: "Показать изображение"
         select_groups: "Выберите группы…"
         preview: "Предпросмотр"
+        enabled_for_options:
+          everyone: "Все"
+          staff: "Только для персонала"
+        statuses:
+          experimental: "Экспериментальная функция"
         impact_roles:
           admins: "Администраторы"
           moderators: "Модераторы"
@@ -5770,6 +5803,7 @@ ru:
           disabled: "Отключен"
           impact_type_feature: "Функция"
           impact_type_other: "Разное"
+          status_experimental: "Экспериментальная функция"
       config:
         about:
           title: "О вашем сайте"
@@ -5806,6 +5840,11 @@ ru:
           sub_pages:
             common_settings:
               title: "настроек"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Подробнее"
         logo:
           title: "Логотип"
           header_description: "Настройте логотипы и значки, используемые на вашем сайте."
@@ -5905,10 +5944,17 @@ ru:
               options:
                 above_topic_content: "Над контентом темы"
                 below_site_header: "Под заголовком сайта"
+            header_new_members:
+              placeholder: "Добро пожаловать в %{site_name}, %{preferred_display_name}!"
             header_logged_in:
+              label: "Заголовок для авторизованных пользователей"
               placeholder: "С возвращением, %{preferred_display_name}!"
             header_anonymous:
+              label: "Заголовок для анонимных посетителей"
               placeholder: "Добро пожаловать на сайт %{site_name}!"
+            subheader_logged_in:
+              label: "Подзаголовок для авторизованных пользователей"
+              description: "Вторичный текст, показанный ниже заголовка для вошедших пользователей."
         navigation:
           title: "Навигация"
           header_description: "Настрой навигационные ссылки и пункты меню для своего сайта. Сюда входит расположение и поведение основного навигационного меню, быстрых ссылок в верхней части главной страницы, а также боковой панели администратора"
@@ -7297,6 +7343,7 @@ ru:
           dark: "темная"
           title: "Цвета"
           edit: "Изменить"
+          view: "Вид"
           set_default_light: "Установить как светлую палитру в теме по умолчанию (%{theme})"
           set_default_dark: "Установить как темную палитру в теме по умолчанию (%{theme})"
           saved_refreshing: "Сохранено! Обновление цветов..."
@@ -8383,6 +8430,9 @@ ru:
           block_common_passwords:
             prompt: "Будет изменена политика паролей. С этого момента изменение будет влиять на всех пользователей, меняющих пароли. Действительно продолжить?"
             confirm: "Да, изменить политику паролей"
+        job_status:
+          completed: "Обновление завершено"
+          enqueued: "Выполняется обновление"
       badges:
         status: Статус
         title: Награды
@@ -8416,6 +8466,10 @@ ru:
         no_user_badges: "У %{name} нет ни одной награды."
         no_badges: Нет наград, которые можно было бы выдать.
         none_selected: "Выберите награду в списке слева"
+        sections:
+          design: Дизайн
+          query: Запрос
+          settings: настроек
         usage_heading: Использование
         allow_title: Разрешить использовать название награды в качестве титула
         multiple_grant: Может быть предоставлена несколько раз
@@ -8596,76 +8650,4 @@ ru:
           replace: "Заменить"
   wizard_js:
     wizard:
-      jump_in: "Приступим!"
-      finish: "Выйти из настройки"
-      back: "Назад"
-      next: "Далее"
-      configure_more: "Настроить больше…"
-      step-text: "Шаг"
-      step: "%{current} из %{total}"
-      upload: "Загрузить файл"
-      uploading: "Загрузка…"
-      upload_error: "Не удалось загрузить файл. Попробуйте ещё раз."
-      staff_count:
-        one: "В вашем сообществе %{count} сотрудник (это вы)."
-        few: "В вашем сообществе %{count} сотрудника, включая вас."
-        many: "В вашем сообществе %{count} сотрудников, включая вас."
-        other: "В вашем сообществе %{count} сотрудника, включая вас."
-      invites:
-        add_user: "Добавить"
-        none_added: "Вы ещё не пригласили сотрудников. Действительно продолжить?"
-        roles:
-          admin: "Администратор"
-          moderator: "Модератор"
-          regular: "Обычный пользователь"
-      homepage_choices:
-        custom:
-          label: "Настраиваемые"
-          description: "Показать главную страницу, ориентированную на %{type}, с переходом пользователей на %{landingPage}"
-        style_type:
-          categories: "категория"
-          topics: "тема"
-      top_menu_items:
-        new: "Новое"
-        unread: "Непрочитанные"
-        top: "Обсуждаемые"
-        latest: "Последние"
-        hot: "Горячие"
-        categories: "Категории"
-        unseen: "Непросмотренные"
-        read: "Прочитанные"
-        bookmarks: "Закладки"
-      previews:
-        topic_title: "Какие книги вы читаете?"
-        share_button: "Поделиться"
-        reply_button: "Ответить"
-        topic_preview: "Предпросмотр темы"
-        homepage_preview: "Предпросмотр главной страницы"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "все категории"
-        topic_titles:
-          what_books: "Какие книги вы читаете?"
-          what_movies: "Какие фильмы вы недавно посмотрели?"
-          random_fact: "Случайный факт дня"
-          tv_show: "Посоветуйте сериал или шоу"
-          what_hobbies: "Какие у вас хобби?"
-          what_music: "Что вы сейчас слушаете?"
-          funniest_thing: "Самое смешное, что вы увидели сегодня"
-          share_art: "Поделитесь своим творчеством!"
-        topic_ops:
-          what_books: |
-            Все мы обожаем книги! Давайте здесь делиться тем, что читаем сейчас или недавно прочитали. Я люблю фэнтези и снова перечитываю «Властелина колец» в сотый раз. А что читаете вы?
-        category_descriptions:
-          icebreakers: "Познакомьтесь с другими участниками сообщества через забавные вопросы."
-          news: "Обсудите последние новости и события."
-          site_feedback: "Поделитесь своими мыслями о сообществе и предложите улучшения."
-        category_names:
-          icebreakers: "Темы для знакомства"
-          news: "Новости"
-          site_feedback: "Отзывы по сайту"
-        table_headers:
-          topic: "Тема"
-          replies: "Ответы"
-          views: "Просмотры"
-          activity: "Активность"
+      jump_in: "Вперед!"

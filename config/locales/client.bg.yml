@@ -188,7 +188,6 @@ bg:
     emails_are_disabled_non_staff: "Изходящият имейл е деактивиран за потребители, които не са от екипа"
     software_update_prompt:
       dismiss: "Отмени"
-    bootstrap_mode: "Първи стъпки"
     back_button: "Назад"
     welcome_banner:
       header:
@@ -474,7 +473,6 @@ bg:
       title: "Преглед"
       topic: "Тема:"
       filtered_topic: "Филтрирахте съдържание, което може да бъде прегледано, в една тема."
-      filtered_user: "Потребител"
       filtered_reviewed_by: "Прегледан от"
       show_all_topics: "покажи всички теми"
       deleted_post: "(публикацията е изтрита)"
@@ -1003,7 +1001,6 @@ bg:
         one: "%{count}нова тема през последния месец."
         other: "%{count}през последния месец."
     ip_lookup:
-      title: Търсене по IP адрес
       hostname: Хост
       location: Локация
       location_not_found: (неизвестно)
@@ -2133,6 +2130,8 @@ bg:
       upload_title: "Качване"
       upload_description: "причина за качването"
       list_item: "Списък"
+      wrap_modal:
+        apply: "Приложи"
       help: "Помощ с Markdown"
       modal_ok: "Ок"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
@@ -2166,6 +2165,7 @@ bg:
           label: "Ново съобщение"
           desc: "Създайте ново лично съобщение"
       ignore: "Игнорирай"
+      image: "изображение"
     notifications:
       title: "уведомления за @name споменавания, отговори на вашите публикации и теми, лични съобщения, и т.н."
       none: "В момента не могат да бъдат заредени уведомленията."
@@ -2369,6 +2369,9 @@ bg:
         clear_all: "Изчисти всички"
         unlist_topics: "Непоказани теми"
         delete: "Изтрий темите"
+        delete_topics_count:
+          one: "Изтрий темата"
+          other: "Изтрий темите"
         dismiss: "Отмени"
         dismiss_read: "Отхвърли всички непрочетени"
         dismiss_button: "Отмени..."
@@ -3265,6 +3268,7 @@ bg:
       sort_by_count: "брой"
       sort_by_name: "име"
       manage_groups_description: "Дефинирай групи за организране на етикетите"
+      bulk_create_button: "Създай"
       filters:
         without_category: "%{filter} %{tag} теми"
       notifications:
@@ -3448,6 +3452,9 @@ bg:
         name: "Име"
         enabled: "Да е включен"
         preview: "Преглед"
+        enabled_for_options:
+          everyone: "Всички"
+          staff: "Само за екипа"
         impact_roles:
           admins: "Админи"
           moderators: "Модератори"
@@ -3470,6 +3477,8 @@ bg:
           sub_pages:
             common_settings:
               title: "Настройки"
+        discourse_id:
+          learn_more: "Научете повече"
         logo:
           form:
             mobile: "Мобилен"
@@ -4420,6 +4429,8 @@ bg:
         no_user_badges: "%{name} няма присъдени значки."
         no_badges: Няма значки които биха могли да се присъдят.
         none_selected: "Изберете значка за да започнете."
+        sections:
+          settings: Настройки
         allow_title: Позволете значките да бъдат ползвани като титли.
         multiple_grant: Може да бъде присъдена няколко пъти
         visibility_heading: Видимост
@@ -4517,44 +4528,3 @@ bg:
         modal:
           categories: "Категории"
           topics: "Теми"
-  wizard_js:
-    wizard:
-      back: "Назад"
-      next: "Напред"
-      step-text: "Стъпка"
-      uploading: "Качване…"
-      upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
-      invites:
-        add_user: "добавяне"
-        roles:
-          admin: "Администратор"
-          moderator: "Модератор"
-          regular: "Обикновен потребител"
-      homepage_choices:
-        custom:
-          label: "По избор"
-        style_type:
-          categories: "категория"
-          topics: "тема"
-      top_menu_items:
-        new: "Нова"
-        unread: "Непрочетени"
-        top: "Топ"
-        latest: "Последни"
-        categories: "Категории"
-        unseen: "Непрегледани"
-        read: "Прочети"
-        bookmarks: "Отметки"
-      previews:
-        share_button: "Споделяне"
-        reply_button: "Отговорете"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "всички категории"
-        category_names:
-          site_feedback: "Заявка към сайта"
-        table_headers:
-          topic: "Тема"
-          replies: "Отговори"
-          views: "Прегледи"
-          activity: "Активност"

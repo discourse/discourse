@@ -1059,11 +1059,10 @@ ja:
       every_month: "毎月"
       every_six_months: "6 か月毎"
   user_api_key:
-    title: "アプリケーションアクセスの承認"
     authorize: "承認"
+    deny: "キャンセル"
     read: "読み取り"
     read_write: "読み取り/書き込み"
-    description: '"%{application_name}" があなたのアカウントへの次のアクセス権を要求しています:'
     instructions: '"%{application_name}" で使用できる新しいユーザー API キーを生成しました。次のキーをアプリケーションに貼り付けてください。'
     otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
     otp_confirmation:
@@ -1921,35 +1920,22 @@ ja:
     tl3_requires_likes_given: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが過去 (tl3 time period) 日間で与える必要のある「いいね！」の最小数。"
     tl3_requires_likes_received: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが過去 (tl3 time period) 日間で得る必要のある「いいね！」の最小数。"
     tl3_links_no_follow: "信頼レベル 3 のユーザーが投稿したリンクから rel=nofolow を削除しない。"
-    tl4_delete_posts_and_topics: "TL4 ユーザーが他のユーザーによって作成された投稿とトピックを削除できるようにします。TL4 ユーザーは、削除されたトピックと投稿も表示できるようになります。"
     delete_all_posts_and_topics_allowed_groups: "他のユーザーが作成した投稿とトピックを作成できるグループ。これらのグループは、削除されたトピックと投稿の表示も可能です。"
     edit_all_topic_groups: "このグループのユーザーが他のユーザーのトピックタイトル、タグ、およびカテゴリを編集することを許可する"
     edit_all_post_groups: "このグループのユーザーが他のユーザーの投稿を編集することを許可する"
-    min_trust_to_create_topic: "新規トピックを作成するために必要な最低信頼レベル。"
     create_topic_allowed_groups: "新しいトピックを作成できるグループ。管理者とモデレーターはトピックをいつでも作成できます。"
     allow_flagging_staff: "有効にすると、ユーザーはスタッフアカウントの投稿を通報できるようになります。"
-    min_trust_to_edit_wiki_post: "ウィキとしてマークされた投稿を編集するために必要な最低信頼レベル。"
     edit_wiki_post_allowed_groups: "Wiki としてマークされた投稿を編集できるグループ。管理者とモデレーターは Wiki としてマークされた投稿をいつでも編集できます。"
-    min_trust_to_edit_post: "投稿を編集するために必要な最低信頼レベル。"
     edit_post_allowed_groups: "投稿を編集できるグループ。管理者とモデレーターは投稿をいつでも編集できます。"
-    min_trust_to_allow_self_wiki: "ユーザー自身の投稿をウィキにするために必要な最低信頼レベル。"
     self_wiki_allowed_groups: "これらのグループのユーザーが自分の投稿を Wiki に設定できるようにします。管理者とモデレーターは自分の投稿をいつでも Wiki に設定できます。"
     min_trust_to_send_messages: "非推奨。代わりに '個人メッセージが有効なグループ' 設定を使用してください。新しい個人メッセージを作成するのに必要な最低限の信頼レベルです。"
-    min_trust_to_send_email_messages: "メールで個人メッセージを送信するために必要な最低信頼レベル。"
     send_email_messages_allowed_groups: "メールで個人メッセージを送信できるグループ。管理者とモデレーターはいつでもメールで個人メッセージを送信できます。"
-    min_trust_to_flag_posts: "投稿を通報するために必要な最低信頼レベル"
     flag_post_allowed_groups: "投稿を通報できるグループ。管理者とモデレーターは投稿をいつでも通報できます。"
-    min_trust_to_post_links: "投稿にリンクを含めるために必要な最低信頼レベル"
     post_links_allowed_groups: "投稿にリンクを含められるグループ。管理者とモデレーターはいつでもリンクを投稿できます。"
-    min_trust_to_post_embedded_media: "投稿にメディア項目を埋め込むために必要な最低信頼レベル"
     embedded_media_post_allowed_groups: "これらのグループのユーザーは投稿にメディアアイテムを埋め込むことができます。管理者とモデレーターはメディアアイテムをいつでも埋め込むことができます。"
-    min_trust_level_to_allow_profile_background: "プロファイルの背景をアップロードするために必要な最低信頼レベル"
     profile_background_allowed_groups: "プロファイルの背景をアップロードできるグループ。管理者とモデレーターはプロファイル背景をいつでもアップロードできます。"
-    min_trust_level_to_allow_user_card_background: "ユーザーカードの背景をアップロードするために必要な最低信頼レベル"
     user_card_background_allowed_groups: "ユーザーカードの背景をアップロードできるグループ。管理者とモデレーターはユーザーカード背景をいつでもアップロードできます。"
-    min_trust_level_to_allow_invite: "ユーザーを招待するために必要な最低信頼レベル"
     invite_allowed_groups: "ユーザーを招待できるグループ。管理者とモデレーターはタグをいつでもユーザーを招待できます。"
-    min_trust_level_to_allow_ignore: "ユーザーを無視するために必要な最低信頼レベル"
     ignore_allowed_groups: "他のユーザーを無視できるグループ。管理者とモデレーターはタグをいつでも他のユーザーを無視できます。"
     allowed_link_domains: "リンクを投稿するための適切な信頼レベルに達していなくてもリンクできるドメイン"
     newuser_max_links: "新規ユーザーが投稿に追加できるリンクの数"
@@ -1962,7 +1948,6 @@ ja:
     enable_mentions: "ユーザーが投稿内で '@' 記号を使用して互いをタグ付けするか参照できるようにします。"
     here_mention: "特権ユーザーが最大 'max_here_mentioned' 人のトピック参加者に通知できるようにする、@メンションに使用される名前。既存のユーザー名は使用できません。"
     max_here_mentioned: "@here でメンションされるユーザーの最大数です。"
-    min_trust_level_for_here_mention: "@here をメンションできる最低信頼レベルです。"
     here_mention_allowed_groups: "@here をメンションできるグループ。管理者とモデレーターは @here をいつでもメンションできます。"
     create_thumbnails: "大きすぎて投稿に収まらないが画像のサムネイルを作成し、ライトボックスにします。"
     email_time_window_mins: "ユーザーが投稿を最終編集できるよう、(n) 分待機してから通知メールを送信する。"
@@ -2086,7 +2071,6 @@ ja:
     pop3_polling_delete_from_server: "サーバーからメールを削除する。注意: これを無効にした場合、メールの受信トレイを手動でクリーンアップする必要があります"
     log_mail_processing_failures: "すべてのメール処理の失敗を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
     email_in: "ユーザーがメール経由で新規トピックを作成できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
-    email_in_min_trust: "メールでのトピック作成を許可する最低信頼レベル"
     email_in_allowed_groups: "メールで新規トピックを投稿できるグループ。管理者とモデレーターはいつでもメールで新規トピックを投稿できます。"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑投稿を識別するために使用するを特定のメールヘッダーを選択します。このオプションは X-Spam-Flag、X-Spam-Status、または X-SES-Spam-Verdict のいずれかで、このヘッダー値が YES に設定されたメールは迷惑投稿として分類されます。"
@@ -2109,7 +2093,6 @@ ja:
     username_change_period: "アカウントがユーザー名を変更できる、登録後の最大日数 (0 に設定すると、ユーザー名の変更を禁止にします)。"
     email_editable: "登録後、ユーザーにメールアドレスの変更を許可します。"
     logout_redirect: "ログアウト後のブラウザのリダイレクト先 (例: https://example.com/logout)"
-    allow_uploaded_avatars: "ユーザーにカスタムプロファイル画像のアップロードを許可します。"
     uploaded_avatars_allowed_groups: "カスタムのプロファイル写真をアップロードできるグループを指定します。"
     default_avatars: "新規ユーザーが変更するまで使用されるデフォルトのアバターの URL です。"
     automatically_download_gravatars: "アカウントの作成時またはメールアドレスの変更時にユーザーの Gravatar をダウンロードします。"
@@ -2218,9 +2201,7 @@ ja:
     enable_inline_emoji_translation: "インライン絵文字の翻訳を有効にする (前にスペースや句読点を使用しない)"
     emoji_deny_list: "これらの絵文字はメニューやショートコードで使用できません。"
     approve_post_count: "承認が必要な新規またはベーシックユーザーの投稿数"
-    approve_unless_trust_level: "この信頼レベル以下のユーザーが作成した投稿には承認が必要"
     approve_unless_allowed_groups: "これらのグループに属していないユーザーが作成した投稿には承認が必要です。管理者とモデレーターが作成する投稿は必ず承認されます。"
-    approve_new_topics_unless_trust_level: "この信頼レベル以下のユーザーが作成した新規トピックには承認が必要"
     approve_new_topics_unless_allowed_groups: "これらのグループに属していないユーザーが作成した新規トピックには承認が必要です。管理者とモデレーターが作成するトピックは必ず承認されます。"
     approve_unless_staged: "ステージングユーザーが作成した新規トピックと投稿には承認が必要"
     notify_about_queued_posts_after: "この時間以上レビュー待ち状態の投稿がある場合、すべてのモデレーターに通知を送信する。0 に設定するとこれらの通知が無効になります。"
@@ -2236,7 +2217,6 @@ ja:
     new_user_notice_tl: "新しいユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_users_days: "ユーザーがリピートとみなされる経過日数。"
-    review_media_unless_trust_level: "スタッフは、信頼レベルの低いユーザーの投稿に埋め込みメディアが含まれているかどうかをレビューします。"
     skip_review_media_groups: "これらのグループのいずれにも属さないユーザーの投稿は、埋め込みメディアが含まれる場合、スタッフにレビュー目的で送信されます。管理者とモデレーターが作成する投稿は必ず許可されます。"
     blur_tl0_flagged_posts_media: "通報された投稿の画像をぼかして、潜在的に NSFW のコンテンツを非表示にする。"
     enable_page_publishing: "スタッフメンバーが独自のスタイルを使ったトピックを新しい URL に公開することを許可する。"
@@ -2288,9 +2268,6 @@ ja:
     revoke_api_keys_unused_days: "API キーが最後に使用されてから自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     revoke_api_keys_maxlife_days: "API キーが自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
-    min_trust_level_for_user_api_key: |
-      ユーザー API キーの生成に必要な信頼レベル。<br>
-      <b>警告</b>: 信頼レベルを変更すると、それより低い信頼レベルのユーザーは DiscourseHub からログインできなくなります。
     user_api_key_allowed_groups: |
       ユーザー API キーの生成に必要なグループメンバーシップ。<br>
       <b>警告</b>: 信頼レベルを変更すると、それより低い信頼レベルのユーザーは Discourse Hub 経由でログインできなくなります。<br>
@@ -2300,7 +2277,6 @@ ja:
     revoke_user_api_keys_unused_days: "ユーザー API キーが最後に使用されてから自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     revoke_user_api_keys_maxlife_days: "ユーザー API キーが自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     tagging_enabled: "トピックでタグを有効にしますか？詳細については、「<a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta のタグに関する管理者ガイド</a>」をご覧ください。"
-    min_trust_to_create_tag: "タグを作成するために必要な最低信頼レベル。"
     create_tag_allowed_groups: "タグを作成できるグループ。管理者とモデレーターはタグをいつでも作成できます。"
     edit_tags_allowed_groups: "タグ、タグの説明、およびタグの同義語を編集できるグループ。"
     max_tags_per_topic: "トピックに適用できる最大タグ数。"
@@ -2313,7 +2289,6 @@ ja:
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>タグページ</a>にタググループごとにタグをリストする。"
     tag_style: "サイトのタグバッジの外観を定義します。この設定により、サイトのすべてのエリアでのタグの外観をカスタマイズできるため、レイアウトの一貫性とユーザーアクセシビリティを強化できます。"
     pm_tags_allowed_for_groups: "含まれるグループのメンバーが任意の個人メッセージにタグ付けすることを許可する"
-    min_trust_level_to_tag_topics: "トピックのタグ付けに必要な最低信頼レベル"
     tag_topic_allowed_groups: "トピックにタグ付けできるグループ。管理者とモデレーターはトピックにいつでもタグ付けできます。"
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
@@ -2324,7 +2299,6 @@ ja:
     governing_law: "利用規約やプライバシーポリシーなど、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。"
     city_for_disputes: "このフォーラムの使用に関連する紛争を解決するための管轄として使用される都市を指定します。この情報は通常、フォーラムの利用規約などの法的文書に含まれます。"
     shared_drafts_category: "トピック下書き用のカテゴリを指定して、共有下書き機能を有効にする。このカテゴリのトピックは、スタッフユーザーのトピックリストから除外されます。"
-    shared_drafts_min_trust_level: "ユーザーが共有下書きを閲覧して編集することを許可する。"
     shared_drafts_allowed_groups: "これらのグループのユーザーが共有下書きを閲覧して編集することを許可します。"
     push_notifications_prompt: "プッシュ通知のユーザー同意バナーを表示します。この設定によって、プッシュ通知を送信する許可をユーザーに求めるプロンプトがトリガーされます。プッシュ通知がまだ有効になっていない場合、ユーザーのデバイスがサポートしている場合、およびユーザーが投稿を行ったかプログレッシブウェブアプリ (PWA) を使用している場合にのみ表示されます。このプロンプトをユーザーがすでに閉じた場合、または許可を付与/拒否した場合には、再度表示されることはありません。"
     push_notifications_icon: "通知コーナーに表示されるバッジアイコン。透明度が適用された 96x96 のモノクロ PNG が推奨されます。"
@@ -2439,7 +2413,6 @@ ja:
         other: "リストには正確に %{count} 個の値が含まれている必要があります。"
       markdown_linkify_tlds: "値 '*' を含めることはできません。"
       google_oauth2_hd_groups: "この設定を有効にする前に、すべての 'google oauth2 hd' 設定を構成する必要があります。"
-      discourse_id_credentials: "この設定を有効にする前に、Discourse ID 資格情報 ('discourse_id_client_id' と 'discourse_id_client_secret') を構成する必要があります。"
       linkedin_oidc_credentials: "この設定を有効にする前に、LinkedIn OIDC 資格情報 ('linkedin_oidc_client_id' および 'linkedin_oidc_client_secret') を構成する必要があります。"
       search_tokenize_chinese_enabled: "この設定を有効にする前に 'search_tokenize_chinese' を無効にする必要があります。"
       search_tokenize_japanese_enabled: "この設定を有効にする前に 'search_tokenize_japanese' を無効にする必要があります。"
@@ -4602,18 +4575,12 @@ ja:
     nice_share:
       name: ナイスな共有
       description: 25 人の訪問者に投稿を共有
-      long_description: |
-        このバッジは、共有したリンクを 25 人の外部訪問者がクリックすると付与されます。ディスカッションとこのコミュニティーの存在を伝えてくれ、ありがとう！
     good_share:
       name: イカした共有
       description: 300 人の訪問者に投稿を共有
-      long_description: |
-        このバッジは、300 人の外部訪問者がクリックしたリンクを共有したときに付与されます。よくできました！あなたはたくさんの新しい人々に素晴らしいディスカッションを披露し、このコミュニティーの成長を助けました。
     great_share:
       name: グレートな共有
       description: 1000 人の訪問者に投稿を共有
-      long_description: |
-        このバッジは、1000 人の外部訪問者がクリックしたリンクを共有したときに付与されます。わぉ！あなたは大勢の新しいオーディエンスに興味深いディスカッションを促進し、コミュニティーを大きく成長させることに役立ちました！
     first_like:
       name: 初めての「いいね！」
       description: 投稿に「いいね！」した
@@ -4825,21 +4792,13 @@ ja:
   wizard:
     title: "Discourse のセットアップ"
     step:
-      introduction:
-        title: "サイトについて"
-        description: "これらは、ログインとすべての公開ページに表示されます。後でいつでも変更できます。"
+      setup:
+        title: "はじめに"
         fields:
           title:
             label: "コミュニティー名"
-            placeholder: "純子のたまり場"
-          site_description:
-            label: "コミュニティーについて一文で説明してください"
-            placeholder: "純子と純子の仲間がワイワイする場所"
           default_locale:
             label: "言語"
-      privacy:
-        title: "メンバーアクセス"
-        fields:
           login_required:
             label: "表示状態"
             description: "コミュニティーは公開ですか、非公開ですか？"
@@ -4863,82 +4822,6 @@ ja:
                 label: "いいえ。新しいメンバーはすぐに参加できます"
               "yes":
                 label: "はい。新しいメンバーはモデレーターの承認が必要です"
-          chat_enabled:
-            placeholder: "チャットを有効にする"
-            extra_description: "メンバーとリアルタイムで交流"
-      ready:
-        title: "サイトの準備が整いました！"
-        description: "以上です！コミュニティーを設定するための基本を完了しました。後は、コミュニティーにアクセスして見て回り、ウェルカムトピックを書いて招待状を送信しましょう！<br><br>お楽しみください！"
-      styling:
-        title: "外観"
-        fields:
-          color_scheme:
-            label: "色パレット"
-          body_font:
-            label: "本文のフォント"
-          site_font:
-            label: "フォント"
-          heading_font:
-            label: "見出しのフォント"
-          styling_preview:
-            label: "プレビュー"
-          homepage_style:
-            label: "ホームページのスタイル"
-            choices:
-              latest:
-                label: "最新"
-                description: "すべてのカテゴリで直近のアクティブなトピックを表示し、メンバーが関心のあるディスカッションの最新情報を把握できるようにします。"
-              hot:
-                label: "ホット"
-                description: "最近の人気と全体的な人気を組み合わせてトレンド中のトピックを表示し、現在コミュニティーでメンバーが何について語っているのかを紹介します。"
-              categories_and_latest_topics:
-                label: "カテゴリと最新トピック"
-                description: "全カテゴリの最近アクティブなトピックとカテゴリのリスト、説明、および合計トピック数を合わせて表示します。"
-              categories_boxes:
-                label: "カテゴリボックス"
-                description: "カテゴリとその説明をグリッドに表示します。メンバーがサイトのサブコミュニティーの概要を確認するのに最適です。"
-      branding:
-        title: "サイトのロゴ"
-        fields:
-          logo:
-            label: "プライマリーロゴ"
-            description: "推奨サイズ: 600 x 200"
-          logo_small:
-            label: "正方形のロゴ"
-            description: "推奨サイズ: 512 x 512。ファビコンやモバイルホーム画面のアプリアイコンとしても使用されます。"
-      corporate:
-        title: "あなたの組織"
-        description: "次の情報は、利用規約と会社情報のページに使用されます。会社が存在しない場合は、スキップしてください。"
-        fields:
-          company_name:
-            label: "会社名"
-            placeholder: "Acme 組織"
-          governing_law:
-            label: "準拠法"
-            placeholder: "カリフォルニア州法"
-          contact_url:
-            label: "ウェブページ"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "紛争都市"
-            placeholder: "カリフォルニア州サンフランシスコ"
-          site_contact:
-            label: "自動メッセージ"
-            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
-          contact_email:
-            label: "連絡先"
-            placeholder: "example@user.com"
-            description: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、緊急事項の<a href='%{base_path}/about' target='_blank'>サイト情報</a>に表示されます。"
-      invites:
-        title: "スタッフの招待"
-        description: "ほぼ完了です！コミュニティーを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"
-        disabled: "ローカルログインが無効になっているため、誰にも招待を送れません。次のステップに進んでください。"
-      finished:
-        title: "あなたの Discourse の準備が整いました！"
-        description: |
-          <p>これらの設定を変更することがある場合は、<b>いつでもこのウィザードを実行</b>するか、<a href='%{base_path}/admin' target='_blank'>あなたの管理者セクション</a>にアクセスしてください。このセクションはサイトメニューのレンチアイコンの横にあります。</p>
-          <p>強力なテーマシステムを使用すると、Discourse をさらにカスタマイズすることができます。たとえば、<a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> で<a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">人気のテーマやコンポーネント</a>をご覧ください。</p>
-          <p>それでは、<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>新しいコミュニティーの構築</a>をお楽しみください！</p>
   search_logs:
     graph_title: "検索数"
   onebox:
@@ -4961,6 +4844,10 @@ ja:
       review_by: "レビュー担当者"
       pr_summary: "%{commits} 個のコミットにより %{changed_files} 個のファイルが変更されました。%{additions} 個が追加され、%{deletions} 個が削除されました。"
       no_description: "GitHub でアカウントを作成して %{repo} の開発に貢献してください。"
+      status_date:
+        open: "オープン"
+        approved: "承認"
+        closed: "閉鎖"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'

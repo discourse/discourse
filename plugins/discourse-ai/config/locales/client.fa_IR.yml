@@ -72,7 +72,7 @@ fa_IR:
         groups: "گروه‌ها:"
         no_persona: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
-        edit: "ویرایش"
+        edit: "تنظیم"
         expand_list:
           one: "(%{count} مورد دیگر)"
           other: "(%{count} مورد دیگر)"
@@ -116,6 +116,7 @@ fa_IR:
         model: "مدل"
         username: "نام‌کاربری"
         total_requests: "مجموع درخواست‌ها"
+        total: "مجموع"
         periods:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."
@@ -204,6 +205,7 @@ fa_IR:
         thumbnail_suggestions:
           select: "انتخاب"
           selected: "انتخاب شده"
+          try_again: "تلاش دوباره"
         image_caption:
           save_caption: "ذخیره"
       reviewables:
@@ -229,6 +231,7 @@ fa_IR:
       ai_bot:
         llm: "مدل"
         cancel_streaming: "توقف پاسخ"
+        try_again: "دوباره امتحان کنید"
         conversation_shared: "گفتگو کپی شد"
         debug_ai_modal:
           request: "درخواست"

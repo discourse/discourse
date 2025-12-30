@@ -672,6 +672,7 @@ vi:
       every_month: "mỗi tháng"
       every_six_months: "mỗi sáu tháng"
   user_api_key:
+    deny: "Hủy"
     read: "đã đọc"
     otp_confirmation:
       confirm_title: Tiếp tục tới %{site_name}
@@ -1156,9 +1157,6 @@ vi:
     tl3_requires_likes_given: "Số like tối thiểu phải thực hiện trong (tl3) ngày để được thăng lên độ tin cậy mức 3."
     tl3_requires_likes_received: "Số like tối thiểu nhận được trong (tl3) ngày để được thăng lên độ tin cậy mức 3."
     tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy cấp 3."
-    min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
-    min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
-    min_trust_to_allow_self_wiki: "Bậc tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
     min_trust_to_send_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Mức độ tin cậy tối thiểu cần thiết để tạo tin nhắn cá nhân mới."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
@@ -1219,7 +1217,6 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
-    email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
     email_in_authserv_id: "Mã định danh của dịch vụ đang thực hiện kiểm tra xác thực đối với các email đến. Xem <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> để biết hướng dẫn về cách định cấu hình."
     enable_imap_idle: "Sử dụng cơ chế IMAP IDLE để chờ email mới."
     imap_polling_period_mins: "Khoảng thời gian tính bằng phút giữa việc kiểm tra tài khoản IMAP cho email."
@@ -1234,7 +1231,6 @@ vi:
     delete_all_posts_max: "Số lượng tối đa bài viết có thể được xóa cùng một lúc khi sử dụng nút Xóa Tất Cả Bài Viết. Nếu thành viên có nhiều hơn số lượng bài viết này, các bài viết có thể không bị xóa cùng một lúc và cũng không thể xóa được thành viên đó."
     delete_user_self_max_post_count: "Số lượng bài đăng tối đa mà người dùng có thể có trong khi cho phép xóa tài khoản tự phục vụ. Đặt thành -1 để tắt tính năng xóa tài khoản tự phục vụ."
     email_editable: "Cho phép thành viên thay đổi địa chỉ email sau khi đăng kí"
-    allow_uploaded_avatars: "Cho phép người dùng tải lên hình hồ sơ."
     default_avatars: "URL avatar mặc định được sử dụng cho các thành viên mới cho đến khi họ tự sửa đổi."
     automatically_download_gravatars: "Download Gravatar cho thành viên khi họ tạo tài khoản hoặc thay đổi email."
     digest_topics: "Số lượng tối đa các chủ đề phổ biến để hiển thị trong phần tóm tắt email."
@@ -1273,7 +1269,6 @@ vi:
     auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
     returning_user_notice_tl: "Cần có mức độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
     returning_users_days: "Bao nhiêu ngày sẽ trôi qua trước khi người dùng được coi là trở lại."
-    review_media_unless_trust_level: "Nhân viên sẽ xem xét các bài đăng của người dùng có mức độ tin cậy thấp hơn nếu chúng chứa phương tiện được nhúng."
     enable_page_publishing: "Cho phép nhân viên xuất bản các chủ đề lên các URL mới với phong cách riêng của họ."
     skip_auto_delete_reply_likes: "Khi tự động xóa các trả lời cũ, bỏ qua việc xóa các bài đăng có số lượt thích này trở lên."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
@@ -1291,7 +1286,6 @@ vi:
     default_categories_muted: "Hiển thị danh sách chuyên mục đang im lặng theo mặc định."
     default_categories_normal: "Danh sách các danh mục không bị tắt tiếng theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
     allowed_user_api_auth_redirects: "URL được phép để chuyển hướng xác thực cho các khóa API của người dùng. Ký hiệu đại diện * có thể được sử dụng để khớp với bất kỳ phần nào của nó (ví dụ: www.example.com/*)."
-    shared_drafts_min_trust_level: "Cho phép người dùng xem và chỉnh sửa Thư nháp được chia sẻ."
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
@@ -1939,9 +1933,6 @@ vi:
     nice_share:
       name: Chia Sẻ Hay
       description: Chia sẻ một bài viết có 25 lượt truy cập
-      long_description: |2
-
-        Huy hiệu này được cấp khi liên kết chia sẻ của bạn nhận được 25 lượt truy cập. Cám ơn bạn đã giúp lan tỏa các cuộc thảo luận của cộng đồng.
     good_share:
       name: Chia Sẻ Tốt
       description: Chia sẻ một bài viết có 300 lượt truy cập
@@ -2065,12 +2056,11 @@ vi:
       title: "Gửi lại email kích hoạt"
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Bắt đầu"
         fields:
           default_locale:
             label: "Ngôn ngữ"
-      privacy:
-        fields:
           login_required:
             label: "Khả năng hiển thị"
             choices:
@@ -2078,21 +2068,12 @@ vi:
                 label: "Công khai"
               private:
                 label: "Riêng tư"
-      styling:
-        fields:
-          styling_preview:
-            label: "Xem trước"
-          homepage_style:
-            choices:
-              latest:
-                label: "Mới nhất"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     github:
       closed: "đã "
+      status_date:
+        approved: "đã duyệt"
+        closed: "đã "
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'

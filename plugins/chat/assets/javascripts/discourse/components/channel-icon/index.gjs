@@ -37,49 +37,36 @@ export default class ChatChannelIcon extends Component {
 
   <template>
     {{#if @channel.isDirectMessageChannel}}
-      <div class="chat-channel-icon">
-        {{#if @channel.iconUploadUrl}}
-          <span class="chat-channel-icon --avatar --custom-icon">
-            <img src={{@channel.iconUploadUrl}} />
-          </span>
-        {{else if this.groupDirectMessage}}
-          <span
-            class={{concatClass
-              "chat-channel-icon"
-              (unless @channel.emoji "--users-count")
-            }}
-          >
-            {{this.directChannelIcon}}
-          </span>
-        {{else}}
-          <div class="chat-channel-icon --avatar">
-            <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
-          </div>
+      {{#if this.groupDirectMessage}}
+        <div
+          class={{concatClass
+            "chat-channel-icon"
+            (unless @channel.emoji "--users-count" "--emoji")
+          }}
+        >
+          {{this.directChannelIcon}}
+        </div>
+      {{else}}
+        <div class="chat-channel-icon --avatar">
+          <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
+        </div>
+      {{/if}}
+    {{else if @channel.isCategoryChannel}}
+      <div class="chat-channel-icon --icon" style={{this.channelColorStyle}}>
+        {{this.categoryChannelIcon}}
+        {{#if @channel.chatable.read_restricted}}
+          {{icon "lock" class="chat-channel-icon__restricted-category-icon"}}
         {{/if}}
       </div>
-    {{else if @channel.isCategoryChannel}}
-      <div class="chat-channel-icon">
-        <span
-          class="chat-channel-icon --category-badge"
-          style={{this.channelColorStyle}}
-        >
-          {{this.categoryChannelIcon}}
-          {{#if @channel.chatable.read_restricted}}
-            {{icon "lock" class="chat-channel-icon__restricted-category-icon"}}
-          {{/if}}
-        </span>
-      </div>
     {{else if this.isThreadsList}}
-      <div class="chat-channel-icon">
-        <div class="chat-channel-icon --avatar">
-          <ChatUserAvatar
-            @user={{@thread.preview.lastReplyUser}}
-            @interactive={{true}}
-            @showPresence={{false}}
-          />
-          <div class="avatar-flair --threads">
-            {{icon "discourse-threads"}}
-          </div>
+      <div class="chat-channel-icon --avatar">
+        <ChatUserAvatar
+          @user={{@thread.preview.lastReplyUser}}
+          @interactive={{true}}
+          @showPresence={{false}}
+        />
+        <div class="avatar-flair --threads">
+          {{icon "discourse-threads"}}
         </div>
       </div>
     {{/if}}

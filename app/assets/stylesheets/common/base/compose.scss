@@ -9,14 +9,12 @@ html.composer-open:not(.has-full-page-chat) {
 
 :root {
   --composer-max-width--hide-preview: 740px;
+  --composer-popup-background: var(--secondary);
 }
 
 .grippie {
   cursor: row-resize;
-  padding: 0.25em 0;
-  background: var(--tertiary);
-  border-top-left-radius: var(--d-border-radius-large);
-  border-top-right-radius: var(--d-border-radius-large);
+  padding: var(--space-2) 0 0;
 
   @media (pointer: coarse) {
     padding: 0.35em 0;
@@ -25,13 +23,22 @@ html.composer-open:not(.has-full-page-chat) {
   &::before {
     content: "";
     display: block;
-    width: 1.5em;
-    margin: auto;
-    border-top: 3px double var(--tertiary-medium);
+    height: var(--space-1);
+    width: 3em;
+    margin-inline: auto;
+    background-color: var(--primary-low-mid);
+    border-radius: 3px;
+    border: none;
+    transition: background-color 0.15s ease;
+  }
+
+  &:hover::before {
+    background-color: var(--primary-high);
   }
 }
 
 #reply-control {
+  border: 1px solid var(--content-border-color);
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -229,10 +236,6 @@ html.composer-open:not(.has-full-page-chat) {
         }
       }
 
-      .d-icon {
-        margin-right: 8px;
-      }
-
       img.avatar {
         margin-right: 3px;
       }
@@ -252,13 +255,18 @@ html.composer-open:not(.has-full-page-chat) {
         flex-wrap: wrap;
       }
 
-      .display-edit-reason {
-        margin-top: 0.5em;
+      .display-edit-reason.--active {
+        width: 100%;
+      }
+
+      #edit-reason {
+        width: 100%;
+        margin-left: 0;
+        margin-top: var(--space-2);
       }
 
       .composer-controls {
         align-self: flex-start;
-        gap: 6px;
       }
     }
   }
@@ -880,10 +888,15 @@ html.composer-open:not(.has-full-page-chat) {
   right: 1rem;
   overflow-y: auto;
   z-index: z("composer", "dropdown") + 1;
-  padding: 1.5em 1.5rem 0.75em 1.5rem;
   box-shadow: var(--shadow-dropdown);
   border-radius: var(--d-border-radius-large);
-  background: var(--secondary);
+  background: var(--composer-popup-background);
+  display: flex;
+  flex-direction: column;
+
+  &__content {
+    padding: 0 2rem 2rem;
+  }
 
   .show-preview & {
     right: 1.5rem;
@@ -895,26 +908,30 @@ html.composer-open:not(.has-full-page-chat) {
     display: none;
   }
 
-  > p,
+  p,
   h3 {
     &:first-of-type {
       margin-top: 0;
-      margin-right: 3em;
+      margin-right: 3rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 
   &.urgent {
-    background: var(--danger-low);
+    --composer-popup-background: var(--danger-low);
   }
 
   &.education-message {
-    background-color: var(--tertiary-low);
+    --composer-popup-background: var(--tertiary-low);
   }
 
   &.dominating-topic-message,
   &.get-a-room {
     bottom: unset;
-    padding: 2.25em 6em 2.5em 2.25em;
+    top: 4rem;
 
     p {
       font-size: var(--font-up-1);
@@ -932,11 +949,13 @@ html.composer-open:not(.has-full-page-chat) {
   .btn.close {
     flex-direction: row-reverse;
     align-items: center;
-    position: absolute;
-    right: 0.5rem;
+    position: sticky;
     top: 0;
     color: var(--primary-medium);
     font-size: var(--font-0);
+    align-self: end;
+    background: var(--composer-popup-background);
+    border-radius: 0 0 0 var(--d-button-border-radius);
 
     .d-icon {
       color: currentcolor;
@@ -947,8 +966,6 @@ html.composer-open:not(.has-full-page-chat) {
     .discourse-no-touch & {
       &:active,
       &:focus {
-        background: transparent;
-
         .d-icon {
           color: var(--primary);
         }
@@ -972,10 +989,6 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
-  &:nth-of-type(2) {
-    width: calc(50% - 65px);
-  }
-
   .discourse-tags {
     font-size: var(--font-down-1);
   }
@@ -991,11 +1004,24 @@ html.composer-open:not(.has-full-page-chat) {
 
 .similar-topics {
   .similar-topic {
-    margin-bottom: 0.5em;
+    &:not(:last-child) {
+      margin-bottom: 0.5em;
+    }
   }
 
-  span.badge-wrapper {
-    margin-left: 0;
+  .topic {
+    display: flex;
+    flex-wrap: wrap;
+
+    .first-line {
+      width: 100%;
+    }
+
+    .second-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
   }
 
   .topic-title {
@@ -1005,29 +1031,6 @@ html.composer-open:not(.has-full-page-chat) {
 
     .d-icon {
       color: var(--primary-high);
-    }
-
-    span.topic {
-      display: flex;
-      flex-direction: column;
-
-      .first-line {
-        flex: 1;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-
-      .second-line {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        gap: 0.5em;
-
-        .discourse-tags {
-          font-size: var(--font-down-1);
-        }
-      }
     }
   }
 }

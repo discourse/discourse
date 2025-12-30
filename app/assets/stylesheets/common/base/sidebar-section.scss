@@ -23,14 +23,16 @@
         calc(var(--d-sidebar-row-horizontal-padding) / 3);
 
       .discourse-no-touch & {
-        transition: all 0.25s;
+        transition:
+          opacity 0.25s,
+          background 0.25s;
         opacity: 0;
 
         &:hover {
-          background: var(--d-sidebar-highlight-hover-background);
+          background: var(--d-sidebar-highlight-background);
 
           .d-icon {
-            color: var(--d-sidebar-highlight-hover-icon);
+            color: var(--d-sidebar-highlight-color);
           }
         }
 

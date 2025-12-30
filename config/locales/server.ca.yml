@@ -712,11 +712,10 @@ ca:
       every_month: "cada mes"
       every_six_months: "cada sis mesos"
   user_api_key:
-    title: "Autoritza l'accés a l'aplicació"
     authorize: "Autoritza"
+    deny: "Cancel·la"
     read: "llegeix"
     read_write: "llegeix/escriu"
-    description: '"%{application_name}" sol·licita el següent accés al vostre compte:'
     instructions: 'Hem generat una nova clau d''API d''usuari per a utilitzar amb "%{application_name}". Enganxeu la clau següent en la vostra aplicació:'
     otp_description: 'Voleu permetre que "%{application_name}" accedeixi a aquest lloc web?'
     otp_confirmation:
@@ -1315,13 +1314,7 @@ ca:
     tl3_requires_likes_given: "Nombre mínim de 'M'agrada' que cal donar durant els darrers dies (període de temps nivell 3) per a optar al nivell de confiança 3."
     tl3_requires_likes_received: "Nombre mínim de 'M'agrada' que cal rebre durant els darrers dies (període de temps nivell 3) per a optar al nivell de confiança 3."
     tl3_links_no_follow: "No elimineu l'atribut rel=\"nofollow\" dels enllaços publicats per usuaris de nivell de confiança 3."
-    min_trust_to_create_topic: "Nivell mínim de confiança necessària per a crear un tema nou."
     allow_flagging_staff: "Si està activat, els usuaris poden marcar amb bandera publicacions de comptes de l'equip responsable. "
-    min_trust_to_edit_wiki_post: "Nivell de confiança mínim necessari per a editar una publicació marcada com a wiki."
-    min_trust_to_edit_post: "Nivell de confiança mínim necessari per a editar publicacions."
-    min_trust_to_allow_self_wiki: "Nivell de confiança mínim necessari per a convertir en wiki les publicacions pròpies. "
-    min_trust_to_flag_posts: "Nivell de confiança mínim necessari per a marcar amb bandera les publicacions"
-    min_trust_to_post_links: "Nivell de confiança mínim necessari per a incloure enllaços en els missatges"
     allowed_link_domains: "Dominis als quals els usuaris poden enllaçar fins i tot si no tenen el nivell de confiança adequat per a publicar enllaços"
     newuser_max_links: "Quants enllaços pot afegir un usuari nou a una publicació."
     newuser_max_attachments: "Quants adjunts pot afegir un usuari nou a una publicació"
@@ -1412,7 +1405,6 @@ ca:
     pop3_polling_password: "Contrasenya del compte POP3 per a la consulta de correu."
     pop3_polling_delete_from_server: "Suprimeix els correus electrònics del servidor. NOTA: Si ho desactiveu, haureu de buidar manualment la vostra bústia de correu."
     log_mail_processing_failures: "Registra tots els errors de processament de correu electrònic en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in_min_trust: "El nivell de confiança mínim que un usuari necessita per a tenir permís per a publicar temes nous des del correu."
     email_prefix: "L'[etiqueta] utilitzada en l'assumpte dels correus. Per defecte serà 'títol'."
     email_site_title: "El títol del lloc web usat com a remitent de correus des del lloc web. Per defecte serà 'títol' si no es configura. Si el vostre 'títol' conté caràcters no permesos en correus electrònics, feu servir aquesta opció. "
     find_related_post_with_key: "Utilitza només la \"tecla de resposta\" per a trobar la publicació a què s'ha respost. ADVERTÈNCIA: desactivar-ho permet la suplantació d'usuaris basant-se en l'adreça de correu."
@@ -1423,7 +1415,6 @@ ca:
     username_change_period: "Nombre màxim de dies després del registre en què els comptes poden canviar el nom d'usuari (0 per a impedir el canvi de nom d'usuari)."
     email_editable: "Permet que els usuaris canviïn l'adreça de correu després del registre."
     logout_redirect: "Localització per a redirigir el navegador quan es tanca la sessió (p. ex.: https://example.com/logout)"
-    allow_uploaded_avatars: "Permet que els usuaris pugin imatges de perfil personalitzades."
     default_avatars: "URLs d'avatars que es faran servir per defecte per als usuaris nous fins que els canviïn."
     automatically_download_gravatars: "Descarrega Gravatars per a usuaris quan es crea un compte o es canvia el correu."
     digest_topics: "Nombre màxim de temes populars que es mostren en el resum per correu."
@@ -1518,14 +1509,12 @@ ca:
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
-    min_trust_to_create_tag: "Nivell mínim de confiança necessari per a crear una etiqueta."
     max_tags_per_topic: "Nombre màxim d'etiquetes que es poden aplicar a un tema."
     max_tag_length: "Nombre màxim de caràcters que es poden fer servir en una etiqueta."
     max_tag_search_results: "Nombre màxim de resultats que es mostren en cercar etiquetes."
     max_tags_in_filter_list: "Nombre màxim d'etiquetes que es mostren en el filtre desplegable. S'hi mostraran les etiquetes més emprades."
     tags_sort_alphabetically: "Mostra les etiquetes per ordre alfabètic. Per defecte es mostren ordenades per popularitat."
     tags_listed_by_group: "Llista les etiquetes per grups d'etiquetes en la <a href='%{base_path}/tags' target='_blank'>pàgina d'etiquetes</a>."
-    min_trust_level_to_tag_topics: "Nivell de confiança mínim necessari per a etiquetar temes"
     suppress_overlapping_tags_in_list: "Si les etiquetes coincideixen exactament amb paraules en els títols dels temes, no mostris l'etiqueta."
     remove_muted_tags_from_latest: "No mostris temes etiquetats sols amb etiquetes silenciades en la llista de temes més recents."
     force_lowercase_tags: "Obliga que totes les etiquetes noves siguin completament en minúscula."
@@ -2551,17 +2540,12 @@ ca:
     nice_share:
       name: Bonica compartició
       description: Ha compartit una publicació amb 25 visitants únics
-      long_description: "Aquesta insígnia es concedeix quan comparteixes un enllaç en el qual han fet clic 25 visitants. Gràcies per escampar la veu sobre les nostres discussions i sobre la comunitat. \n"
     good_share:
       name: Bona compartició
       description: Publicació compartida amb 300 visitants únics
-      long_description: |
-        Aquesta insígnia es concedeix per haver compartit un enllaç clicat per 300 visitants externs. Bona feina! Heu mostrat una gran discussió a un grup de persones noves i heu ajudat a fer créixer la comunitat.
     great_share:
       name: Gran compartició
       description: Publicació compartida amb 1.000 visites úniques
-      long_description: |
-        Aquesta insígnia es concedeix per haver compartit un enllaç en el qual han fet clic 1000 visitants externs. Molt bé! Heu promogut un debat interessant a un públic nou i enorme, i ens heu ajudat a fer créixer la comunitat en gran manera!
     first_like:
       name: Primer 'M'agrada'
       description: Ha fet 'M'agrada' a una publicació
@@ -2750,13 +2734,8 @@ ca:
   wizard:
     title: "Instal·lació de Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Cau de la Jane"
-          site_description:
-            placeholder: "Un lloc on la Jane i les seves amistats poden conversar sobre temes interessants"
-      privacy:
+      setup:
+        title: "Primers passos"
         fields:
           login_required:
             label: "Visibilitat"
@@ -2765,35 +2744,14 @@ ca:
                 label: "Públic"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Previsualitza"
-          homepage_style:
-            choices:
-              latest:
-                label: "Més recents"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Jurisdicció de Califòrnia"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            placeholder: "San Francisco, Califòrnia"
-          site_contact:
-            description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
-      invites:
-        title: "Convida l'equip responsable"
-        description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."
-        disabled: "Atès que els inicis de sessió locals no estan habilitats, no és possible enviar invitacions a ningú. Procediu al pas següent."
-      finished:
-        title: "El vostre Discourse està a punt!"
   search_logs:
     graph_title: "Recompte de cerques"
   onebox:
     github:
       closed: "tancat"
+      status_date:
+        approved: "aprovat"
+        closed: "tancat"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} us ha mencionat en "%{topic}" - %{site_title}'

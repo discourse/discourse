@@ -1195,7 +1195,7 @@ RSpec.describe SiteSettingExtension do
           {
             enable_upload_debug_mode: {
               impact: "other,developers",
-              status: :pre_alpha,
+              status: :experimental,
               impact_type: "other",
               impact_role: "developers",
             },
@@ -1392,6 +1392,11 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.personal_message_enabled_groups_map).to eq([1, 2])
     end
 
+    it "handles splitting category_list settings" do
+      SiteSetting.digest_suppress_categories = "3|4"
+      expect(SiteSetting.digest_suppress_categories_map).to eq([3, 4])
+    end
+
     it "handles splitting compact list settings" do
       SiteSetting.markdown_linkify_tlds = "com|net"
       expect(SiteSetting.markdown_linkify_tlds_map).to eq(%w[com net])
@@ -1422,10 +1427,10 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
     end
 
-    it "handles null values for settings" do
-      SiteSetting.ga_universal_auto_link_domains = nil
-      SiteSetting.pm_tags_allowed_for_groups = nil
-      SiteSetting.exclude_rel_nofollow_domains = nil
+    it "handles blank values for settings" do
+      SiteSetting.ga_universal_auto_link_domains = ""
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      SiteSetting.exclude_rel_nofollow_domains = ""
 
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])

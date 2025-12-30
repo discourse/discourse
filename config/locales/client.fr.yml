@@ -158,7 +158,7 @@ fr:
       el:
         name: Grec
       en:
-        name: Anglais (États-Unis)
+        name: Anglais
       en_GB:
         name: Anglais (Royaume-Uni)
       es:
@@ -292,7 +292,6 @@ fr:
     software_update_prompt:
       message: "Nous avons mis à jour ce site, <span>veuillez l'actualiser</span> pour que tout fonctionne correctement."
       dismiss: "Rejeter"
-    bootstrap_mode: "Pour commencer"
     back_button: "Retour"
     welcome_banner:
       header:
@@ -701,7 +700,7 @@ fr:
       title: "À examiner"
       topic: "Sujet :"
       filtered_topic: "Vous avez restreint le contenu à examiner à un seul sujet."
-      filtered_user: "Utilisateur"
+      filtered_user: "Utilisateur signalé"
       filtered_reviewed_by: "Examiné par"
       show_all_topics: "afficher tous les sujets"
       deleted_post: "(message supprimé)"
@@ -839,7 +838,6 @@ fr:
           noun: "message"
       flagged_as: "Signalé comme"
       user_label: "Utilisateur"
-      assigned_to: "Attribué à"
       moderator_actions: "Actions du modérateur"
       timeline_and_notes: "Chronologie et notes"
       timeline:
@@ -850,7 +848,6 @@ fr:
         claimed: "Réclamé"
         claimed_by: "Réclamé par %{username} · %{relativeDate}"
         reviewed: "Examiné"
-        reviewed_by: "Examiné par %{username} · %{relativeDate}"
         view_conversation: "voir PM"
         note_added: "Note du modérateur"
         note_added_by: "Note du modérateur par %{username} · %{relativeDate}"
@@ -880,7 +877,6 @@ fr:
           one: "%{count} marquage confirmé"
           other: "%{count} marquages confirmés"
         activities:
-          new_account: "nouveau compte"
           trust_level: "niveau de confiance : %{trustLevelName}"
           posts:
             one: "%{count} publication"
@@ -888,7 +884,6 @@ fr:
         solution_marked: "Solution marquée"
         topic_has_solution: "Ce sujet a une solution"
         visibility: "Visibilité"
-        topic_unlisted: "Ce sujet n'est pas répertorié. Accessible uniquement via un lien direct et non public."
       help:
         moderation_guide: "Guide de modération de Discourse"
         flag_priorities: "Gestion de la réputation des utilisateurs et des priorités des signalements"
@@ -1311,7 +1306,6 @@ fr:
         one: "Catégories (%{count} autres)…"
         other: "Catégories (%{count} autres)…"
     ip_lookup:
-      title: Localisation de l'adresse IP
       hostname: Nom de l'hôte
       location: Localisation
       location_not_found: (inconnu)
@@ -2816,6 +2810,8 @@ fr:
       ulist_title: "Liste à puces"
       list_item: "Élément"
       toggle_direction: "Basculer la section"
+      wrap_modal:
+        apply: "Appliquer"
       help: "Aide à l'édition Markdown"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
       modal_ok: "OK"
@@ -2874,6 +2870,7 @@ fr:
         zoom_out: "Réduire la taille de l'image"
         zoom_in: "Augmenter la taille de l'image"
         remove: "Supprimer l'image"
+      image: "image"
       image_scale_button: "Mettre l'image à l'échelle de %{percent} %"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images
@@ -3214,6 +3211,9 @@ fr:
         reset_bump_dates: "Réinitialiser la date d'actualisation"
         defer: "Marquer comme non lu"
         delete: "Supprimer les sujets"
+        delete_topics_count:
+          one: "Supprimer le sujet"
+          other: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
         dismiss_read_with_selected:
@@ -3781,8 +3781,6 @@ fr:
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
       localizations:
         title_edit_warning:
-          message: "Ceci est un titre de sujet traduit.<br><br>Voulez-vous modifier le titre original en %{language} ou modifier cette traduction spécifique ?"
-          action_original: "Modifier le titre original du sujet"
           action_translation: "Modifier le titre du sujet traduit"
     post_list:
       title: "Dernières publications"
@@ -4719,6 +4717,7 @@ fr:
       upload_description: "Téléverser un fichier CSV pour créer des étiquettes en bloc"
       upload_instructions: "Une par ligne, éventuellement avec un groupe d'étiquettes sous la forme « tag_name,tag_group »."
       upload_successful: "Étiquettes envoyées avec succès"
+      bulk_create_button: "Créer"
       delete_unused_confirmation:
         one: "%{count} étiquette sera supprimée : %{tags}"
         other: "%{count} étiquettes seront supprimées : %{tags}"
@@ -4869,7 +4868,6 @@ fr:
       tags_form_modal:
         title: "Modifier la navigation des étiquettes"
         filter_placeholder: "Filtrer les étiquettes"
-        no_tags: "Il n'y a pas d'étiquettes correspondant au terme donné."
         subtitle:
           text: "et nous afficherons automatiquement les meilleures étiquettes de ce site"
       edit_navigation_modal_form:
@@ -5237,6 +5235,11 @@ fr:
         enabled: "Activé"
         select_groups: "Sélectionnez des groupes…"
         preview: "Aperçu"
+        enabled_for_options:
+          everyone: "Tout le monde"
+          staff: "Responsables seulement"
+        statuses:
+          experimental: "Expérimental"
         impact_roles:
           admins: "Administrateurs "
           moderators: "Modérateurs"
@@ -5247,6 +5250,7 @@ fr:
           disabled: "Désactivé"
           impact_type_feature: "Fonctionnalité"
           impact_type_other: "Autre"
+          status_experimental: "Expérimental"
       config:
         about:
           title: "À propos de votre site"
@@ -5283,6 +5287,11 @@ fr:
           sub_pages:
             common_settings:
               title: "Paramètres"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "En savoir plus…"
         logo:
           title: "Logo"
           header_description: "Configurez les logos et les icônes utilisés sur votre site"
@@ -7794,6 +7803,9 @@ fr:
         no_user_badges: "%{name} ne s'est vu attribuer aucun badge."
         no_badges: Il n'y a aucun badge à attribuer.
         none_selected: "Sélectionnez un badge pour commencer"
+        sections:
+          query: Requête
+          settings: Paramètres
         usage_heading: Utilisation
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
         multiple_grant: Peut être attribué plusieurs fois
@@ -7968,75 +7980,4 @@ fr:
           replace: "Remplacer"
   wizard_js:
     wizard:
-      jump_in: "Commençons maintenant !"
-      finish: "Quitter la configuration"
-      back: "Retour"
-      next: "Suivant"
-      configure_more: "Configurer plus…"
-      step-text: "Étape"
-      step: "%{current} sur %{total}"
-      upload: "Téléverser un fichier"
-      uploading: "Téléversement…"
-      upload_error: "Nous sommes désolés, une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer."
-      staff_count:
-        one: "Votre communauté a %{count} responsable (vous)."
-        other: "Votre communauté a %{count} responsables, vous y compris."
-      invites:
-        add_user: "ajouter"
-        none_added: "Vous n'avez invité aucun responsable. Voulez-vous vraiment continuer ?"
-        roles:
-          admin: "Administrateur"
-          moderator: "Modérateur"
-          regular: "Utilisateur normal"
-      homepage_choices:
-        custom:
-          label: "Personnalisé"
-          description: "Afficher une page d'accueil axée sur %{type} avec les utilisateurs redirigés sur %{landingPage}"
-        style_type:
-          categories: "catégorie"
-          topics: "sujet"
-      top_menu_items:
-        new: "Nouveaux"
-        unread: "Non lus"
-        top: "Top"
-        latest: "Récents"
-        hot: "Populaires"
-        categories: "Catégories"
-        unseen: "Non lus"
-        read: "Lus"
-        bookmarks: "Signets"
-      previews:
-        topic_title: "Quels livres lisez-vous ?"
-        share_button: "Partager"
-        reply_button: "Répondre"
-        topic_preview: "Aperçu du sujet"
-        homepage_preview: "Aperçu de la page d'accueil"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "toutes les catégories"
-        topic_titles:
-          what_books: "Quels livres lisez-vous ?"
-          what_movies: "Quels films avez-vous vus récemment ?"
-          random_fact: "Fait aléatoire du jour"
-          tv_show: "Recommander une émission de télévision"
-          what_hobbies: "Quels sont vos loisirs ?"
-          what_music: "Qu'est-ce que vous écoutez en ce moment ?"
-          funniest_thing: "La chose la plus drôle que vous ayez vue aujourd'hui"
-          share_art: "Partagez votre art !"
-        topic_ops:
-          what_books: |
-            Nous aimons tous lire, profitons de ce sujet pour partager nos lectures actuelles ou récentes. Je suis fan de fantasy et je relis Le Seigneur des Anneaux pour la 100e fois.
-            Et vous ?
-        category_descriptions:
-          icebreakers: "Apprenez à connaître les autres membres de votre communauté grâce à des questions amusantes."
-          news: "Discutez des dernières actualités et événements."
-          site_feedback: "Partagez vos réflexions sur la communauté et suggérez des améliorations."
-        category_names:
-          icebreakers: "Brise-glaces"
-          news: "Actualités"
-          site_feedback: "Commentaires sur le site"
-        table_headers:
-          topic: "Sujet"
-          replies: "Réponses"
-          views: "Vues"
-          activity: "Activité"
+      jump_in: "Allons-y !"

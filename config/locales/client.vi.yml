@@ -161,7 +161,6 @@ vi:
     software_update_prompt:
       message: "Chúng tôi đã cập nhật trang này, <span>vui lòng tải lại trang</span> để cho mọi thứ hoạt động ổn định."
       dismiss: "Hủy bỏ"
-    bootstrap_mode: "Bắt đầu"
     back_button: "Quay lại"
     welcome_banner:
       header:
@@ -470,7 +469,6 @@ vi:
       title: "Review"
       topic: "Chủ đề:"
       filtered_topic: "Bạn đã lọc đến nội dung có thể xem lại trong một chủ đề."
-      filtered_user: "Người dùng"
       show_all_topics: "hiển thị toàn bộ chủ đề"
       deleted_post: "(bài viết đã bị xóa)"
       deleted_user: "(người dùng đã bị xóa)"
@@ -579,7 +577,6 @@ vi:
       view_source: "Xem mã nguồn"
       insights:
         activities:
-          new_account: "tài khoản mới"
           posts:
             other: "%{count} bài đăng"
         visibility: "Khả năng hiển thị"
@@ -972,7 +969,6 @@ vi:
       topic_stat_sentence_month:
         other: "%{count}chủ đề mới trong tháng qua."
     ip_lookup:
-      title: Tìm kiếm địa chỉ IP
       hostname: Hostname
       location: Vị trí
       location_not_found: (không biết)
@@ -2054,6 +2050,8 @@ vi:
       upload_title: "Tải lên"
       upload_description: "Nhập mô tả tải lên ở đây"
       list_item: "Danh sách các mục"
+      wrap_modal:
+        apply: "Áp dụng"
       help: "Trợ giúp soạn thảo bằng Markdown"
       modal_ok: "OK"
       cant_send_pm: "Xin lỗi, bạn không thể gởi tin nhắn đến %{username}."
@@ -2099,6 +2097,7 @@ vi:
       ignore: "Bỏ qua"
       image_alt_text:
         aria_label: Văn bản thay thế cho hình ảnh
+      image: "hình ảnh"
       delete_image_button: Xoá ảnh
     notifications:
       tooltip:
@@ -2378,6 +2377,8 @@ vi:
         unlist_topics: "Chủ đề không công khai"
         relist_topics: "Chủ đề liên quan"
         delete: "Xóa chủ đề"
+        delete_topics_count:
+          other: "Xóa chủ đề"
         dismiss: "Bỏ qua"
         dismiss_read: "Bỏ qua tất cả thư chưa đọc"
         dismiss_read_with_selected:
@@ -3521,6 +3522,7 @@ vi:
       upload_description: "Tải lên tệp csv để tạo hàng loạt thẻ"
       upload_instructions: "Một trên mỗi dòng, tùy chọn với một nhóm thẻ ở định dạng 'tag_name, tag_group'."
       upload_successful: "Các thẻ đã được tải lên thành công"
+      bulk_create_button: "Tạo"
       delete_unused_confirmation:
         other: "%{count} thẻ sẽ bị xóa: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -3776,6 +3778,9 @@ vi:
         name: "Tên"
         select_groups: "Chọn nhóm…"
         preview: "Xem trước"
+        enabled_for_options:
+          everyone: "Mọi người"
+          staff: "Chỉ nhân viên"
         impact_roles:
           admins: "Quản trị"
           moderators: "Điều hành viên"
@@ -3799,6 +3804,11 @@ vi:
           sub_pages:
             common_settings:
               title: "Cài đặt"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Tìm hiểu thêm"
         logo:
           form:
             mobile: "Điện thoại"
@@ -5295,6 +5305,8 @@ vi:
         no_user_badges: "%{name} chưa được cấp bất kỳ huy hiệu nào."
         no_badges: Không có huy hiệu có thể được cấp.
         none_selected: "Chọn một huy hiệu để bắt đầu"
+        sections:
+          settings: Cài đặt
         allow_title: Cho phép huy hiệu được sử dụng như là tên
         multiple_grant: Có thể được cấp nhiều lần
         visibility_heading: Khả năng hiển thị
@@ -5413,53 +5425,3 @@ vi:
           categories: "Thư mục"
           topics: "Chủ đề"
           replace: "Thay thế"
-  wizard_js:
-    wizard:
-      jump_in: "Nhay vào!"
-      finish: "Thoát thiết lập"
-      back: "Quay lại"
-      next: "Kế tiếp"
-      configure_more: "Cấu hình thêm…"
-      step-text: "Bước"
-      step: "%{current} trên %{total}"
-      uploading: "Đang tải lên…"
-      upload_error: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
-      staff_count:
-        other: "Cộng đồng của bạn có %{count} nhân viên, bao gồm cả bạn."
-      invites:
-        add_user: "thêm vào"
-        none_added: "Bạn chưa mời bất kỳ nhân viên nào. Bạn có chắc chắn muốn tiếp tục không?"
-        roles:
-          admin: "Quản trị"
-          moderator: "Điều hành"
-          regular: "Người sử dụng thường xuyên"
-      homepage_choices:
-        custom:
-          label: "Tùy biến"
-        style_type:
-          categories: "danh mục"
-          topics: "chủ đề"
-      top_menu_items:
-        new: "Mới"
-        unread: "Chưa đọc"
-        top: "Top"
-        latest: "Mới nhất"
-        categories: "Danh mục"
-        unseen: "Không nhìn thấy"
-        read: "Đọc"
-        bookmarks: "Các đánh dấu"
-      previews:
-        share_button: "Chia sẻ"
-        reply_button: "Trả lời "
-        topic_preview: "Xem trước chủ đề"
-        homepage_preview: "Xem trước trang chủ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "tất cả chuyên mục"
-        category_names:
-          site_feedback: "Phản hồi"
-        table_headers:
-          topic: "Chủ đề"
-          replies: "Trả lời"
-          views: "Lượt xem"
-          activity: "Hoạt động"

@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 
 export default class PolicyGroupInput extends Component {
@@ -14,7 +15,7 @@ export default class PolicyGroupInput extends Component {
     return (this.site.groups || [])
       .map((g) =>
         // prevents group "everyone" to be listed
-        g.id === 0 ? null : g.name
+        g.id === AUTO_GROUPS.everyone.id ? null : g.name
       )
       .filter(Boolean);
   }

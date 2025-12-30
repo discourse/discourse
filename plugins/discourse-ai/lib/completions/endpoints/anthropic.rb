@@ -5,8 +5,8 @@ module DiscourseAi
     module Endpoints
       class Anthropic < Base
         include AnthropicPromptCache
-        def self.can_contact?(model_provider)
-          model_provider == "anthropic"
+        def self.can_contact?(llm_model)
+          llm_model.provider == "anthropic"
         end
 
         def normalize_model_params(model_params)

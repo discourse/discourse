@@ -199,7 +199,7 @@ fi:
         no_llm: "LLM:ää ei ole valittu"
         no_persona: "Ei asetettu"
         no_groups: "Ei valittu"
-        edit: "Muokkaa"
+        edit: "Asetukset"
         expand_list:
           one: "(%{count} muuta)"
           other: "(%{count} muuta)"
@@ -317,6 +317,8 @@ fi:
           post_url_label: "Vistin URL tai tunnus"
           post_url_placeholder: "https://foorumisi.com/t/topic/123/4 tai viestin tunnus"
           result: "Tulos"
+          llm: "LLM"
+          system_prompt: "Järjestelmäkehote"
           scan_log: "Skannausloki"
           run: "Suorita testi"
           spam: "Roskaposti"
@@ -353,6 +355,7 @@ fi:
         no_users: "Käyttäjien käyttötietoja ei löytynyt"
         no_models: "Mallin käyttötietoja ei löytynyt"
         no_features: "Ominaisuuden käyttötietoja ei löytynyt"
+        total: "Yhteensä"
         subheader_description: "Saneet ovat perusyksiköitä, joita suuret kielimallit käyttävät tekstin ymmärtämiseen ja luomiseen. Käyttötiedot voivat vaikuttaa kustannuksiin"
         stat_tooltips:
           total_requests: "Kaikki suurille kielimalleille Discoursen kautta tehdyt pyynnöt"
@@ -536,7 +539,6 @@ fi:
         max_output_tokens: "Tuotossaneiden enimmäismäärä"
         url: "Mallia isännöivän palvelun URL-osoite"
         api_key: "Mallia isännöivän palvelun API-avain"
-        enabled_chat_bot: "Salli tekoälybotin valitsin"
         vision_enabled: "Näkö käytössä"
         ai_bot_user: "Tekoälybottikäyttäjä"
         cost_input: "Syötekustannukset"
@@ -548,7 +550,6 @@ fi:
         back: "Takaisin"
         confirm_delete: Oletko varma, että haluat poistaa tämän mallin?
         delete: Poista
-        seeded_warning: "Tämä malli on valmiiksi määritetty sivustollesi, eikä sitä voi muokata."
         quotas:
           title: "Käyttökiintiöt"
           add_title: "Luo uusi kiintiö"
@@ -583,7 +584,7 @@ fi:
           other: "Tätä mallia käyttää tällä hetkellä seuraavat: %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla. "
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
-          anthropic-claude-opus-4-1: "Anthropicin älykkäin malli"
+          anthropic-claude-opus-4-5: "Anthropicin älykkäin malli"
           anthropic-claude-sonnet-4-5: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
           anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
           google-gemini-2-5-pro: "Suuri multimodaalinen malli, joka pystyy suorittamaan monenlaisia tehtäviä"
@@ -620,7 +621,6 @@ fi:
           display_name: "Nimi, jota käytetään viittaamaan tähän malliin sivustosi käyttöliittymässä."
           name: "Sisällytämme tämän API-kutsuun määrittääksemme, mitä mallia käytämme"
           vision_enabled: "Jos tämä on käytössä, tekoäly yrittää ymmärtää kuvia. Tämä riippuu siitä, tukeeko käytettävä malli näköä. Anthropicin, Googlen ja OpenAI:n uusimmat mallit tukevat näköä."
-          enabled_chat_bot: "Jos tämä on käytössä, käyttäjät voivat valita tämän mallin luodessaan yksityisviestejä tekoälybotin kanssa"
           cost_input: "Tämän mallin syöttökustannukset miljoonaa sanetta kohden"
           cost_output: "Tämän mallin tuotoskustannukset miljoonaa sanetta kohden"
           cost_measure: "$/1 milj. sanetta"
@@ -656,7 +656,6 @@ fi:
           reasoning_tokens: "Päättelyyn käytettyjen saneiden määrä"
           disable_temperature: "Poista lämpötila käytöstä (jotkin ajattelumallit eivät tue lämpötilaa)"
           disable_top_p: "Poista top-p käytöstä (jotkin ajattelumallit eivät tue top-p:tä)"
-          enable_responses_api: "Ota vastaus-API käyttöön (vaaditaan tietyissä OpenAI:n malleissa)"
       related_topics:
         title: "Liittyvät ketjut"
         pill: "Liittyy aiheeseen"
@@ -701,6 +700,7 @@ fi:
           title: "Ehdotetut pikkukuvat"
           select: "Valitse"
           selected: "Valittu"
+          try_again: "Yritä uudelleen"
         image_caption:
           button_label: "Kuvateksti tekoälyllä"
           generating: "Luodaan kuvatekstiä..."
@@ -783,6 +783,7 @@ fi:
         llm: "Malli"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"
+        try_again: "Yritä uudelleen"
         default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
         shortcut_title: "Aloita yksityiskeskustelu tekoälybotin kanssa"
         shortcut_link: "Tekoälybotti"

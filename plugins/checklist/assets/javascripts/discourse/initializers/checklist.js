@@ -131,6 +131,11 @@ export function checklistSyntax(elem, postDecorator) {
               return match;
             }
 
+            // skip escaped opening bracket - "\[x]"
+            if (off > 0 && post.raw[off - 1] === "\\") {
+              return match;
+            }
+
             nth += blocks.every(
               (b) => b[0] >= off + match.length || off > b[1]
             );

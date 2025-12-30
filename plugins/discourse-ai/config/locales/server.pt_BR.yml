@@ -276,7 +276,6 @@ pt_BR:
     ai_bot:
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
-      thinking: "Pensando..."
       personas:
         default_llm_required: "É preciso de um modelo de LLM padrão para ativar o bate-papo"
         cannot_delete_system_persona: "Personas de sistema não podem ser excluídas, desative"
@@ -604,6 +603,3 @@ pt_BR:
       custom_tool_exists:
         one: "Já existe uma ferramenta personalizada chamada %{names}"
         other: "Já existem ferramentas personalizadas chamadas %{names}."
-  dashboard:
-    problem:
-      ai_llm_status: "O modelo de LLM %{model_name} está com problemas. Confira a <a href='%{url}'>página de configuração do modelo</a>."

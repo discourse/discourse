@@ -48,6 +48,7 @@ ro:
       joined: "înscris"
       email_frequency:
         never: "Niciodată"
+        title: "Trimite-mi un email când mi se trimite un mesaj direct de discuție sau o discuție de grup"
       header_indicator_preference:
         title: "Afișați indicatorul de activitate în antet"
         all_new: "Toate mesajele noi"
@@ -55,10 +56,8 @@ ro:
       send_shortcut:
         enter:
           label: "Trimite prin Enter"
-          description: "Linie nouă prin Shift + Enter"
         meta_enter:
           label: "Trimite prin %{meta_key} + Enter"
-          description: "Linie nouă prin Enter"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
       last_visit: "ultima vizită"
@@ -174,6 +173,7 @@ ro:
         history_label: "Istoric"
         members_label: "Membri"
       search:
+        short_title: Caută
         no_results: "Nu s-au găsit rezultate"
         sort:
           relevance: "Relevanță"

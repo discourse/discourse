@@ -2,8 +2,11 @@
 
 RSpec.describe DiscourseId::Register do
   describe "#call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, guardian:) }
 
+    fab!(:admin)
+
+    let(:guardian) { Guardian.new(admin) }
     let(:params) { { force: false } }
     let(:challenge_token) { "test_challenge_token_123" }
     let(:client_id) { "test_client_id" }
@@ -51,7 +54,7 @@ RSpec.describe DiscourseId::Register do
           allow(Rails.logger).to receive(:error)
           result
           expect(Rails.logger).to have_received(:error).with(
-            /Discourse ID registration failed.*request_challenge.*Network error/m,
+            %r{Discourse ID register failed.*/challenge.*Network error}m,
           )
         end
       end
@@ -70,7 +73,7 @@ RSpec.describe DiscourseId::Register do
           allow(Rails.logger).to receive(:error)
           result
           expect(Rails.logger).to have_received(:error).with(
-            /Discourse ID registration failed.*request_challenge.*400.*Bad Request/m,
+            %r{Discourse ID register failed.*/challenge.*400.*Bad Request}m,
           )
         end
       end
@@ -100,7 +103,7 @@ RSpec.describe DiscourseId::Register do
           allow(Rails.logger).to receive(:error)
           result
           expect(Rails.logger).to have_received(:error).with(
-            /Discourse ID registration failed.*request_challenge.*Domain mismatch.*expected.*#{Discourse.current_hostname}.*got.*wrong-domain\.com/m,
+            /Discourse ID register failed.*request_challenge.*Domain mismatch.*expected.*#{Discourse.current_hostname}.*got.*wrong-domain\.com/m,
           )
         end
       end
@@ -147,7 +150,7 @@ RSpec.describe DiscourseId::Register do
             allow(Rails.logger).to receive(:error)
             result
             expect(Rails.logger).to have_received(:error).with(
-              /Discourse ID registration failed.*register_with_challenge.*Connection timeout/m,
+              %r{Discourse ID register failed.*/register.*Connection timeout}m,
             )
           end
         end
@@ -215,8 +218,8 @@ RSpec.describe DiscourseId::Register do
 
           context "when site has no logo URLs" do
             before do
-              SiteSetting.logo = nil
-              SiteSetting.logo_small = nil
+              SiteSetting.logo = ""
+              SiteSetting.logo_small = ""
 
               stub_request(:post, "#{discourse_id_url}/register").with(
                 body: {
@@ -239,7 +242,7 @@ RSpec.describe DiscourseId::Register do
 
           context "when site has no description" do
             before do
-              SiteSetting.site_description = nil
+              SiteSetting.site_description = ""
 
               stub_request(:post, "#{discourse_id_url}/register").with(
                 body: {

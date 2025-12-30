@@ -14,7 +14,6 @@ sk:
     assign_self_regex: "Regex, ktorý je potrebné odovzdať pre vlastné priradenie. Príklad 'my list'"
     assign_other_regex: "Regex, ktorý musí prejsť na priradenie tém ostatným prostredníctvom zmienky. Príklad 'váš zoznam'."
     unassign_on_group_archive: "Keď je správa archivovaná skupinou, zrušte priradenie správy (opätovné priradenie, ak je presunutá späť do doručenej pošty)."
-    unassign_on_close: "Keď je téma uzavretá, zrušte priradenie témy"
     reassign_on_open: "Pri otvorení témy opätovne priradiť predtým priradených používateľov/skupiny"
     invite_on_assign: "Keď je osobná správa priradená používateľovi alebo skupine, pozvite ho do PM, ak ešte nie je účastníkom."
     assign_mailer: "Kedy odoslať e-mail s oznámením o priradení"

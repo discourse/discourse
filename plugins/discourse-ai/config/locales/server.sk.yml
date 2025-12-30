@@ -276,7 +276,6 @@ sk:
     ai_bot:
       reply_error: "Ospravedlňujeme sa, ale zdá sa, že náš systém narazil na neočakávaný problém pri pokuse o odpoveď.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Bez názvu AI bot PM]"
-      thinking: "Premýšľanie..."
       personas:
         default_llm_required: "Predvolený model LLM sa vyžaduje pred povolením funkcie Chat"
         cannot_delete_system_persona: "Systémové personas nie je možné odstrániť, radšej ich vypnite."
@@ -627,6 +626,3 @@ sk:
         few: "Vlastné nástroje s názvom %{names} už existujú."
         many: "Vlastné nástroje s názvom %{names} už existujú."
         other: "Vlastné nástroje s názvom %{names} už existujú."
-  dashboard:
-    problem:
-      ai_llm_status: "Model LLM: %{model_name} má problémy. Skontrolujte konfiguračnú stránku modelu <a href='%{url}'></a>."

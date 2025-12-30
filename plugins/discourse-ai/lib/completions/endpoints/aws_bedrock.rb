@@ -9,8 +9,8 @@ module DiscourseAi
         include AnthropicPromptCache
         attr_reader :dialect
 
-        def self.can_contact?(model_provider)
-          model_provider == "aws_bedrock"
+        def self.can_contact?(llm_model)
+          llm_model.provider == "aws_bedrock"
         end
 
         def normalize_model_params(model_params)

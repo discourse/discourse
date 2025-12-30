@@ -1724,8 +1724,8 @@ RSpec.describe User do
       expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
     end
 
-    it "uses the system user avatar if the logo is nil" do
-      SiteSetting.logo_small = nil
+    it "uses the system user avatar if the logo is blank" do
+      SiteSetting.logo_small = ""
       system_user = Discourse.system_user
       expected = User.avatar_template(system_user.username, system_user.uploaded_avatar_id)
 
@@ -2134,7 +2134,7 @@ RSpec.describe User do
           status: Reviewable.statuses[:approved],
         )
 
-        expect(user.number_of_rejected_posts).to eq(0)
+        expect(user.number_of_rejected_posts.to_i).to eq(0)
       end
     end
 
@@ -2158,6 +2158,10 @@ RSpec.describe User do
           Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
         end
         expect(user.number_of_silencings).to eq(3)
+
+        # ignores other users' history
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user])
+        expect(user.reload.number_of_silencings).to eq(3)
       end
     end
   end
@@ -2356,6 +2360,7 @@ RSpec.describe User do
   describe ".clear_global_notice_if_needed" do
     fab!(:user)
     fab!(:admin)
+    let!(:inactive_user) { Fabricate(:user, active: false) }
 
     before do
       SiteSetting.has_login_hint = true
@@ -2374,10 +2379,17 @@ RSpec.describe User do
       expect(SiteSetting.global_notice).to eq("some notice")
     end
 
-    it "clears the notice when the admin is saved" do
+    it "clears the notice when an active admin is saved" do
       admin.save
       expect(SiteSetting.has_login_hint).to eq(false)
       expect(SiteSetting.global_notice).to eq("")
+    end
+
+    it "does not clear the notice when an inactive admin is saved" do
+      inactive_user.admin = true
+      inactive_user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
     end
   end
 

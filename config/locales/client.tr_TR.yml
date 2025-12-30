@@ -158,7 +158,7 @@ tr_TR:
       el:
         name: Yunanca
       en:
-        name: İngilizce (ABD)
+        name: İngilizce
       en_GB:
         name: İngilizce (BK)
       es:
@@ -291,7 +291,6 @@ tr_TR:
     software_update_prompt:
       message: "Bu siteyi güncelledik, işlerin sorunsuz bir şekilde devam etmesi için <span>lütfen yenileyin</span>."
       dismiss: "Kapat"
-    bootstrap_mode: "Başlarken"
     back_button: "Geri"
     welcome_banner:
       header:
@@ -697,7 +696,7 @@ tr_TR:
       title: "İncele"
       topic: "Konu:"
       filtered_topic: "Tek bir konu içerisinde incelenebilir içerikleri filtrelediniz."
-      filtered_user: "Kullanıcı"
+      filtered_user: "Bayrak eklenen kullanıcı"
       filtered_reviewed_by: "İnceleyen:"
       show_all_topics: "bütün konuları göster"
       deleted_post: "(gönderi silindi)"
@@ -835,7 +834,6 @@ tr_TR:
           noun: "gönderi"
       flagged_as: "Bayrak ekleme nedeni:"
       user_label: "Kullanıcı"
-      assigned_to: "Şuraya atandı:"
       moderator_actions: "Moderatör eylemleri"
       timeline_and_notes: "Zaman çizelgesi ve notlar"
       timeline:
@@ -846,7 +844,6 @@ tr_TR:
         claimed: "Alındı"
         claimed_by: "%{username} tarafından alındı · %{relativeDate}"
         reviewed: "İncelendi"
-        reviewed_by: "%{username} tarafından incelendi · %{relativeDate}"
         view_conversation: "kişisel mesajı görüntüle"
         note_added: "Moderatör notu"
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
@@ -873,7 +870,6 @@ tr_TR:
           one: "%{count} benzersiz kullanıcı tarafından bayrak eklendi"
           other: "%{count} benzersiz kullanıcı tarafından bayrak eklendi"
         activities:
-          new_account: "yeni hesap"
           trust_level: "güven seviyesi: %{trustLevelName}"
           posts:
             one: "%{count} gönderi"
@@ -881,7 +877,6 @@ tr_TR:
         solution_marked: "Çözüm işaretlendi"
         topic_has_solution: "Bu konunun bir çözümü var"
         visibility: "Görünürlük"
-        topic_unlisted: "Bu konu listeden kaldırıldı. Yalnızca doğrudan bağlantı yoluyla erişilebilir; herkese açık değil."
       help:
         moderation_guide: "Discourse moderasyon kılavuzu"
         flag_priorities: "Kullanıcı itibarını ve bayrak önceliklerini yönetme"
@@ -1304,7 +1299,6 @@ tr_TR:
         one: "Kategoriler (%{count} tane daha)…"
         other: "Kategoriler (%{count} tane daha)…"
     ip_lookup:
-      title: IP Adresi Ara
       hostname: Sunucu Adı
       location: Konum
       location_not_found: (bilinmeyen)
@@ -2805,6 +2799,8 @@ tr_TR:
       ulist_title: "Madde işaretli liste"
       list_item: "Liste ögesi"
       toggle_direction: "Yönü aç/kapat"
+      wrap_modal:
+        apply: "Uygula"
       help: "Markdown Düzenleme Yardımı"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
       modal_ok: "Tamam"
@@ -2863,6 +2859,7 @@ tr_TR:
         zoom_out: "Görüntü boyutunu küçült"
         zoom_in: "Görüntü boyutunu artır"
         remove: "Görüntüyü kaldır"
+      image: "resim"
       image_scale_button: "Görüntüyü %%{percent} oranına ölçeklendir"
       delete_image_button: Görüntüyü Sil
       toggle_image_grid: Resim ızgarasını aç/kapat
@@ -3203,6 +3200,9 @@ tr_TR:
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
         defer: "Okunmamış olarak işaretle"
         delete: "Konuları sil"
+        delete_topics_count:
+          one: "Konuyu Sil"
+          other: "Konuları sil"
         dismiss: "Kapat"
         dismiss_read: "Tüm okunmamışları kapat"
         dismiss_read_with_selected:
@@ -4695,6 +4695,7 @@ tr_TR:
       upload_description: "Etiketleri toplu olarak oluşturmak için bir csv dosyası yükleyin"
       upload_instructions: "Satır başına bir tane, isteğe bağlı olarak \"tag_name,tag_group\" biçiminde bir etiket grubu ile."
       upload_successful: "Etiketler başarıyla yüklendi"
+      bulk_create_button: "Oluştur"
       delete_unused_confirmation:
         one: "%{count} etiket silinecek: %{tags}"
         other: "%{count} etiket silinecek: %{tags}"
@@ -4845,7 +4846,6 @@ tr_TR:
       tags_form_modal:
         title: "Etiketlerde gezinmeyi düzenle"
         filter_placeholder: "Etiketleri filtrele"
-        no_tags: "Verilen terimle eşleşen etiket yok."
         subtitle:
           text: "ve bu sitenin en popüler etiketlerini otomatik olarak gösteririz"
       edit_navigation_modal_form:
@@ -5213,6 +5213,11 @@ tr_TR:
         enabled: "Etkin mi"
         select_groups: "Grupları seç…"
         preview: "Ön izle"
+        enabled_for_options:
+          everyone: "Herkes"
+          staff: "Sadece personel"
+        statuses:
+          experimental: "Deneysel"
         impact_roles:
           admins: "Yöneticiler"
           moderators: "Moderatörler"
@@ -5223,6 +5228,7 @@ tr_TR:
           disabled: "Devre Dışı"
           impact_type_feature: "Özellik"
           impact_type_other: "Diğer"
+          status_experimental: "Deneysel"
       config:
         about:
           title: "Siteniz hakkında"
@@ -5259,6 +5265,11 @@ tr_TR:
           sub_pages:
             common_settings:
               title: "Ayarlar"
+            discourse_id:
+              title: "Discourse kimliği"
+        discourse_id:
+          title: "Discourse kimliği"
+          learn_more: "Daha fazla bilgi edin"
         logo:
           title: "Logo"
           header_description: "Sitenizde kullanılan logoları ve simgeleri yapılandırın"
@@ -7770,6 +7781,9 @@ tr_TR:
         no_user_badges: "%{name} adlı kullanıcıya hiç rozet verilmedi."
         no_badges: Verilebilecek rozet yok.
         none_selected: "Başlamak için bir rozet seçin"
+        sections:
+          query: Sorgu
+          settings: Ayarlar
         usage_heading: Kullanım
         allow_title: Rozetin başlık olarak kullanılmasına izin verin
         multiple_grant: Birden çok kez verilebilir
@@ -7944,78 +7958,4 @@ tr_TR:
           replace: "Değiştir"
   wizard_js:
     wizard:
-      jump_in: "Başlayın!"
-      finish: "Kurulumdan çık"
-      back: "Geri"
-      next: "İleri"
-      configure_more: "Daha fazla yapılandırın…"
-      step-text: "Adım"
-      step: "%{current} / %{total}"
-      upload: "Dosya yükle"
-      uploading: "Yükleniyor…"
-      upload_error: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
-      staff_count:
-        one: "Topluluğunuzda %{count} personel (siz) var."
-        other: "Topluluğunuzda siz dahil toplam %{count} personel var."
-      invites:
-        add_user: "ekle"
-        none_added: "Personel davet etmediniz. Devam etmek istediğinize emin misiniz?"
-        roles:
-          admin: "Yönetici"
-          moderator: "Moderatör"
-          regular: "Normal Kullanıcı"
-      homepage_choices:
-        custom:
-          label: "Özel"
-          description: "Kullanıcıların %{landingPage} üzerinde ulaştığı %{type} odaklı bir ana sayfa gösterin"
-        style_type:
-          categories: "kategori"
-          topics: "konu"
-      top_menu_items:
-        new: "Yeni"
-        unread: "Okunmamış"
-        top: "En iyi"
-        latest: "En son"
-        hot: "Popüler"
-        categories: "Kategoriler"
-        unseen: "Görülmemiş"
-        read: "Okunmuş"
-        bookmarks: "Yer imleri"
-      previews:
-        topic_title: "Hangi kitapları okuyorsunuz?"
-        share_button: "Paylaş"
-        reply_button: "Yanıtla"
-        topic_preview: "Konu ön izlemesi"
-        homepage_preview: "Ana sayfa ön izlemesi"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "tüm kategoriler"
-        topic_titles:
-          what_books: "Hangi kitapları okuyorsunuz?"
-          what_movies: "Son zamanlarda hangi filmleri izlediniz?"
-          random_fact: "Günün rastgele bilgisi"
-          tv_show: "TV programı öner"
-          what_hobbies: "Hobileriniz neler?"
-          what_music: "Şu anda ne dinliyorsunuz?"
-          funniest_thing: "Bugün gördüğünüz en komik şey"
-          share_art: "Sanatınızı paylaşın!"
-        topic_ops:
-          what_books: |
-            Hepimiz okumayı severiz, bu konuyu
-            bugünlerde veya yakın zamanda okuduklarımızı
-            paylaşmak için kullanalım. Ben bir fantastik kurgu severim
-            ve Yüzüklerin Efendisi'ni 100. kez tekrar okuyorum.
-            Peki ya siz?
-        category_descriptions:
-          icebreakers: "Eğlenceli sorularla topluluğunuzdaki diğer üyeleri tanıyın."
-          news: "En son haber ve olayları tartışın."
-          site_feedback: "Topluluk hakkındaki düşüncelerinizi paylaşın ve iyileştirmeler önerin."
-        category_names:
-          icebreakers: "Kaynaştırma soruları"
-          news: "Haberler"
-          site_feedback: "Site Geri Bildirimi"
-        table_headers:
-          topic: "Konu"
-          replies: "Yanıtlar"
-          views: "Görüntülemeler"
-          activity: "Aktivite"
+      jump_in: "Hadi başlayalım!"

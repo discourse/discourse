@@ -12,7 +12,7 @@ describe "Homepage", type: :system do
     # A workaround to avoid the global notice from interfering with the tests
     # It is coming from the ensure_login_hint.rb initializer and it gets
     # evaluated before the tests run (and it wrongly counts 0 admins defined)
-    SiteSetting.global_notice = nil
+    SiteSetting.global_notice = ""
   end
 
   it "shows a list of topics by default" do
@@ -136,14 +136,21 @@ describe "Homepage", type: :system do
         Fabricate(
           :theme_field,
           theme: theme,
-          type_id: ThemeField.types[:html],
-          target_id: Theme.targets[:common],
-          name: "head_tag",
-          value: <<~HTML,
-            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
-              <div class="new-home">Hi friends!</div>
-            </script>
-          HTML
+          type_id: ThemeField.types[:js],
+          target_id: Theme.targets[:extra_js],
+          name: "discourse/api-initializers/theme-initializer.gjs",
+          value: <<~GJS,
+            import { apiInitializer } from "discourse/lib/api";
+
+            export default apiInitializer((api) => {
+              api.renderInOutlet(
+                "custom-homepage",
+                <template>
+                  <div class="new-home">Hi friends!</div>
+                </template>
+              );
+            });
+          GJS
         )
       end
 
@@ -156,14 +163,21 @@ describe "Homepage", type: :system do
         Fabricate(
           :theme_field,
           theme: component,
-          type_id: ThemeField.types[:html],
-          target_id: Theme.targets[:common],
-          name: "head_tag",
-          value: <<~HTML,
-            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
-              <div class="new-home">Hi friends!</div>
-            </script>
-          HTML
+          type_id: ThemeField.types[:js],
+          target_id: Theme.targets[:extra_js],
+          name: "discourse/api-initializers/theme-initializer.gjs",
+          value: <<~GJS,
+            import { apiInitializer } from "discourse/lib/api";
+
+            export default apiInitializer((api) => {
+              api.renderInOutlet(
+                "custom-homepage",
+                <template>
+                  <div class="new-home">Hi friends!</div>
+                </template>
+              );
+            });
+          GJS
         )
       end
 
@@ -179,14 +193,21 @@ describe "Homepage", type: :system do
       Fabricate(
         :theme_field,
         theme: component,
-        type_id: ThemeField.types[:html],
-        target_id: Theme.targets[:common],
-        name: "head_tag",
-        value: <<~HTML,
-            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
-              <div class="new-home">Hi friends!</div>
-            </script>
-          HTML
+        type_id: ThemeField.types[:js],
+        target_id: Theme.targets[:extra_js],
+        name: "discourse/api-initializers/theme-initializer.gjs",
+        value: <<~GJS,
+          import { apiInitializer } from "discourse/lib/api";
+
+          export default apiInitializer((api) => {
+            api.renderInOutlet(
+              "custom-homepage",
+              <template>
+                <div class="new-home">Hi friends!</div>
+              </template>
+            );
+          });
+        GJS
       )
     end
 

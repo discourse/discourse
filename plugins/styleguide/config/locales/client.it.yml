@@ -59,8 +59,6 @@ it:
           title: "Navigazione Impilata"
         categories_list:
           title: "Lista Categorie"
-        topic_link:
-          title: "Link all'argomento"
         topic_list_item:
           title: "Elemento Elenco Argomenti"
         topic_statuses:

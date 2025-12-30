@@ -158,7 +158,7 @@ ur:
       el:
         name: یونانی
       en:
-        name: انگریزی (امریکی)
+        name: انگریزی
       en_GB:
         name: انگریزی (برطانیہ)
       es:
@@ -296,7 +296,6 @@ ur:
     software_update_prompt:
       message: "ہم نے اس سائٹ کو اپ ڈیٹ کر دیا ہے، اس کے آسانی سے کام کرنے کے لیے <span>براہ کرم ریفریش کریں</span>۔"
       dismiss: "بر خاست کریں"
-    bootstrap_mode: "شروعات"
     back_button: "واپس"
     welcome_banner:
       header:
@@ -716,7 +715,7 @@ ur:
       title: "جائزہ لیں"
       topic: "موضوع:"
       filtered_topic: "آپ نے ایک موضوع میں قابل تجدید مواد کو فِلٹر کر دیا ہے۔"
-      filtered_user: "رکن"
+      filtered_user: "نشان۔زدہ صارف"
       filtered_reviewed_by: "نے جائزہ لیا"
       show_all_topics: "تمام موضوعات دکھائیں"
       deleted_post: "(دھاگہ مٹا دیا)"
@@ -855,7 +854,6 @@ ur:
           noun: "پوسٹ"
       flagged_as: "کے طور پرفلَیگ"
       user_label: "رکن"
-      assigned_to: "کو تفویض کیا گیا"
       moderator_actions: "ناظم کی کاروائیاں"
       timeline_and_notes: "ٹائم لائن اور نوٹس"
       timeline:
@@ -866,7 +864,6 @@ ur:
         claimed: "دعویٰ کیا"
         claimed_by: "%{username} نے %{relativeDate}پر دعویٰ کیا"
         reviewed: "جائزہ لیا گیا"
-        reviewed_by: "%{username} نے%{relativeDate}پر جائزہ لیا"
         view_conversation: "ذاتی پیغام دیکھیں"
         note_added: "نگران کا نوٹ"
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
@@ -893,7 +890,6 @@ ur:
           one: "%{count} منفرد رکن کے ذریعے نشان دہی"
           other: "%{count} منفرد اراکین کے ذریعے نشان دہی"
         activities:
-          new_account: "نیا اکاؤنٹ"
           trust_level: "فعالیت کا درجہ: %{trustLevelName}"
           posts:
             one: "%{count} دھاگہ"
@@ -901,7 +897,6 @@ ur:
         solution_marked: "حل ہوا"
         topic_has_solution: "اس موضوع میں حل ہے"
         visibility: "نموداری"
-        topic_unlisted: "یہ موضوع غیر فہرست ہے۔ صرف براہ راست رابطہ کے ذریعے قابل رسائی - عوامی نہیں۔"
       help:
         moderation_guide: "گفتگو کے اعتدال کی رہنمائی"
         flag_priorities: "رکن کی ساکھ اور نشان دہی کی ترجیحات کا انتظام"
@@ -1324,7 +1319,6 @@ ur:
         one: "زمرہ جات (%{count} مزید)۔۔۔"
         other: "زمرہ جات (%{count} مزید)۔۔۔"
     ip_lookup:
-      title: IP ایڈریس کا سراغ
       hostname: ہوسٹ کا نام
       location: محل وقوع
       location_not_found: (نامعلوم)
@@ -2835,6 +2829,8 @@ ur:
       ulist_title: "گولیوں والی فہرست"
       list_item: "فہرست آئٹم"
       toggle_direction: "سمت ٹوگل کریں"
+      wrap_modal:
+        apply: "لاگو کریں"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"
@@ -2901,6 +2897,7 @@ ur:
         zoom_out: "تصویر کا سائز کم کریں"
         zoom_in: "تصویر کا سائز بڑھائیں"
         remove: "تصویر کو ہٹا دیں"
+      image: "تصویر"
       image_scale_button: "تصویر کو %{percent}% اسکیل کریں"
       delete_image_button: تصویر کو حذف کریں
       toggle_image_grid: تصویری گرڈ کو ٹوگل کریں
@@ -3242,6 +3239,9 @@ ur:
         reset_bump_dates: "ٹکرانے کی تاریخوں کی دوبارہ ترتیب"
         defer: "بغیر پڑھے نشان زد"
         delete: "موضوعات حذف کریں"
+        delete_topics_count:
+          one: "موضوع حذف کریں"
+          other: "موضوعات حذف کریں"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام بغیر پڑھے ہوئے بر خاست کریں"
         dismiss_read_with_selected:
@@ -4735,6 +4735,7 @@ ur:
       upload_description: "بَلک میں ٹیگز بنانے کیلئے ایک csv فائل اَپ لوڈ کریں"
       upload_instructions: "فی سطر ایک، اختیاری طور پر ایک ٹیگ گروپ کے ساتھ 'tag_name,tag_group' کے فارمیٹ میں۔"
       upload_successful: "ٹیگز کامیابی سے اپ لوڈ ہو گئے"
+      bulk_create_button: "بنائیں"
       delete_unused_confirmation:
         one: "%{count} ٹیگ کومٹادیا جائے گا: %{tags}"
         other: "%{count} ٹیگز کومٹادیا جائے گا: %{tags}"
@@ -4886,7 +4887,6 @@ ur:
       tags_form_modal:
         title: "دہجیوں کی نیویگیشن میں ترمیم کریں"
         filter_placeholder: "دہجیوں کو چھانیے"
-        no_tags: "دی گئی اصطلاح سے مماثل کوئی دہجی نہیں"
         subtitle:
           text: "اور ہم خود بخود اس سائٹ کے ٹاپ دہجیاں دکھائیں گے"
       edit_navigation_modal_form:
@@ -5256,6 +5256,11 @@ ur:
         enabled: "فعال شدہ"
         select_groups: "گروپس کا انتخاب"
         preview: "جھلک دیکھیں"
+        enabled_for_options:
+          everyone: "ہر کوئی"
+          staff: "صرف سٹاف کیلئے"
+        statuses:
+          experimental: "تجرباتی"
         impact_roles:
           admins: "منتظمین"
           moderators: "نگران"
@@ -5265,6 +5270,7 @@ ur:
           enabled: "فعال شدہ"
           disabled: "غیر فعال"
           impact_type_other: "دیگر"
+          status_experimental: "تجرباتی"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -5301,6 +5307,11 @@ ur:
           sub_pages:
             common_settings:
               title: "سیٹِنگ"
+            discourse_id:
+              title: "ڈسکورس آئی ڈی"
+        discourse_id:
+          title: "ڈسکورس آئی ڈی"
+          learn_more: "مزید جانیں"
         logo:
           title: "لوگو"
           header_description: "اپنی پوری سائٹ میں استعمال ہونے والے لوگو اور شبیہیں ترتیب دیں"
@@ -7445,6 +7456,9 @@ ur:
         no_user_badges: "%{name} کو کوئی تمغہ نہیں دیا گیا۔"
         no_badges: دیئے کے لیے کوئی تمغہ موجود نہیں۔
         none_selected: "شروع کرنے کے لئے ایک تمغہ منتخب کریں"
+        sections:
+          query: ڈیٹا کمانڈ
+          settings: سیٹِنگ
         allow_title: عنوان کے طور پر تمغوں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         visibility_heading: نموداری
@@ -7570,69 +7584,3 @@ ur:
           categories: "زمرہ جات"
           topics: "موضوعات"
           replace: "بدلیں"
-  wizard_js:
-    wizard:
-      back: "واپس"
-      next: "اگلا"
-      step-text: "قدم"
-      step: "%{total} میں سے %{current}"
-      upload_error: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
-      staff_count:
-        one: "آپ کی کمیونٹی میں %{count} اسٹاف کا رکن ہے (آپ)۔"
-        other: "آپ کی کمیونٹی میں آپ سمیت، %{count} سٹاف کے ارکان ہیں۔"
-      invites:
-        add_user: "شامل کریں"
-        none_added: "آپ نے کسی بھی سٹاف کو مدعو نہیں کیا۔ کیا آپ واقعی آگے جانا چاہتے ہیں؟"
-        roles:
-          admin: "منتظم"
-          moderator: "ماڈریٹر"
-          regular: "رَیگولر صارف"
-      homepage_choices:
-        custom:
-          label: "اپنی مرضی کا"
-        style_type:
-          categories: "زمرہ"
-          topics: "موضوع"
-      top_menu_items:
-        new: "نئی"
-        unread: "بغیر پڑھے"
-        top: "سب سے اوپر"
-        latest: "تازہ ترین"
-        hot: "گرما گرم"
-        categories: "اقسام"
-        unseen: "ان دیکھا"
-        read: "پڑھیں"
-        bookmarks: "بُک مارکس"
-      previews:
-        topic_title: "آپ کون سی کتابیں پڑھ رہے؟"
-        share_button: "اشتراک"
-        reply_button: "جواب"
-        topic_preview: "موضوع دکھائیں"
-        homepage_preview: "ہوم پیج دکھائیں"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "تمام زمرہ جات"
-        topic_titles:
-          what_books: "آپ کون سی کتابیں پڑھ رہے؟"
-          what_movies: "آپ نے حال ہی میں کون سی فلمیں دیکھیں؟"
-          random_fact: "دن کی بے ترتیب حقیقت"
-          tv_show: "ایک ٹیلی ویژن شو تجویز کریں"
-          what_hobbies: "آپ کے کون سےشوق ہیں؟"
-          what_music: "اس وقت آپ کیا سن رہے ہیں؟"
-          funniest_thing: "سب سے دلچسپ چیز جو آپ نے آج دیکھی"
-          share_art: "اپنے فن کا اشتراک کریں!"
-        topic_ops:
-          what_books: |
-            ہم سب کو پڑھنا پسند ہے، آئیے اپنے موجودہ یا حالیہ مطالعات کا اشتراک اس موضوع کو استعمال کر کے کرتے کریں۔ میں تصور کا ایک پرستار ہوں اور میں صد بار لارڈ آف دی رنگز کو پڑھ رہا ہوں۔
-            آپ کے بارے میں کیا خیال ہے؟
-        category_descriptions:
-          news: "تازہ ترین خبروں اور واقعات پر تبادلہ خیال کریں۔"
-          site_feedback: "کمیونٹی کے بارے میں اپنے خیالات کا اشتراک کریں اور بہتری کی تجاویز دیں۔"
-        category_names:
-          news: "خبریں"
-          site_feedback: "سائٹ کیلئے رائے"
-        table_headers:
-          topic: "موضوع"
-          replies: "جوابات"
-          views: "مشاهدات"
-          activity: "سرگرمی"

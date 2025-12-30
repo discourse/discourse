@@ -190,7 +190,6 @@ nb_NO:
     software_update_prompt:
       message: "Vi har oppdatert denne siden, <span>vennligst oppdater siden</span> for å sikre at alt fungerer som det skal."
       dismiss: "Avslå"
-    bootstrap_mode: "Kom godt i gang"
     back_button: "Forrige"
     welcome_banner:
       header:
@@ -547,7 +546,6 @@ nb_NO:
       title: "Gjennomgang"
       topic: "Emne:"
       filtered_topic: "Du har filtrert etter gjennomsyn i ett enkelt emne."
-      filtered_user: "Bruker"
       filtered_reviewed_by: "Gjennomgått av"
       show_all_topics: "vis alle emner"
       deleted_post: "(post slettet)"
@@ -1090,7 +1088,6 @@ nb_NO:
         one: "Kategorier (%{count} til)…"
         other: "Kategorier (%{count} til)…"
     ip_lookup:
-      title: Slå opp IP-adresse
       hostname: Vertsnavn
       location: Sted
       location_not_found: (ukjent)
@@ -2453,6 +2450,8 @@ nb_NO:
       upload_title: "Bilde"
       upload_description: "beskriv bildet her"
       list_item: "Listeelement"
+      wrap_modal:
+        apply: "Bruk"
       help: "Hjelp for redigering i Markdown"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
       modal_ok: "OK"
@@ -2505,6 +2504,7 @@ nb_NO:
         title: "Legg til bildebeskrivelse"
       image_toolbar:
         alt_text: "Legg til bildebeskrivelse"
+      image: "bilde"
       image_scale_button: "Skalere bildet til %{percent}%."
       delete_image_button: Slett bilde
       toggle_image_grid: Veksle mellom bilderutenett
@@ -2829,6 +2829,9 @@ nb_NO:
         reset_bump_dates: "Tilbakestill støtdatoer"
         defer: "Merk ulest"
         delete: "Slett emner"
+        delete_topics_count:
+          one: "Slett emne"
+          other: "Slett emner"
         dismiss: "Avvis"
         dismiss_read: "Avvis alle uleste"
         dismiss_read_with_selected:
@@ -4141,6 +4144,7 @@ nb_NO:
       upload_description: "Last opp en csv-fil for å opprette flere stikkort på én gang"
       upload_instructions: "En per linje, eventuelt med en tagggruppe i formatet 'tag_name,tag_group'."
       upload_successful: "Stikkordene ble lastet opp"
+      bulk_create_button: "Opprett"
       delete_unused_confirmation:
         one: "%{count} taggen vil bli slettet: %{tags}"
         other: "%{count} merkene vil bli slettet: %{tags}"
@@ -4368,6 +4372,9 @@ nb_NO:
         name: "Navn"
         enabled: "Aktivert"
         preview: "Forhåndsvis"
+        enabled_for_options:
+          everyone: "Alle"
+          staff: "Bare ansatte"
         impact_roles:
           admins: "Adminer"
           moderators: "Moderatorer"
@@ -4392,6 +4399,8 @@ nb_NO:
           sub_pages:
             common_settings:
               title: "Innstillinger"
+        discourse_id:
+          learn_more: "Finn ut mer"
         logo:
           form:
             mobile: "Mobil"
@@ -5662,6 +5671,8 @@ nb_NO:
         no_user_badges: "%{name} er ikke blitt tildelt noen merker."
         no_badges: Det er ingen merker som kan bli tildelt.
         none_selected: "Velg et merke for å komme i gang"
+        sections:
+          settings: Innstillinger
         allow_title: Tillat merke å bli benyttet som en tittel
         multiple_grant: Kan bli tildelt flere ganger
         visibility_heading: Synlighet
@@ -5754,49 +5765,3 @@ nb_NO:
         modal:
           categories: "Kategorier"
           topics: "Emner"
-  wizard_js:
-    wizard:
-      back: "Forrige"
-      next: "Neste"
-      step-text: "Steg"
-      step: "%{current} av %{total}"
-      uploading: "Laster opp…"
-      upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
-      staff_count:
-        one: "Din gemenskap har ett stabsmedlem (deg)."
-        other: " Ditt fellesskap har %{count} stab, inkludert deg selv."
-      invites:
-        add_user: "legg til"
-        none_added: "Du har ikke invitert noen til staben. Er du sikker på at du vil fortsette?"
-        roles:
-          admin: "Administrator"
-          moderator: "Moderator"
-          regular: "Aktivt medlem"
-      homepage_choices:
-        custom:
-          label: "Egendefinert"
-        style_type:
-          categories: "kategori"
-          topics: "emne"
-      top_menu_items:
-        new: "Ny"
-        unread: "Uleste"
-        top: "Aktive"
-        latest: "Siste"
-        categories: "Kategorier"
-        unseen: "Usette"
-        read: "Les"
-        bookmarks: "Bokmerker"
-      previews:
-        share_button: "Del"
-        reply_button: "Svar"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alle kategorier"
-        category_names:
-          site_feedback: "Tilbakemeldinger"
-        table_headers:
-          topic: "Emne"
-          replies: "Svar"
-          views: "Visninger"
-          activity: "Aktivitet"

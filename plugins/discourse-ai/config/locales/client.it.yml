@@ -199,7 +199,7 @@ it:
         no_llm: "Nessun LLM selezionato"
         no_persona: "Non impostato"
         no_groups: "Nessuna"
-        edit: "Modifica"
+        edit: "Impostazioni"
         expand_list:
           one: "(%{count} altro)"
           other: "(altri %{count})"
@@ -317,6 +317,8 @@ it:
           post_url_label: "URL o ID del messaggio"
           post_url_placeholder: "https://tuo-forum.com/t/topic/123/4 oppure l'ID del messaggio"
           result: "Risultato"
+          llm: "LLM"
+          system_prompt: "Comando di sistema"
           scan_log: "Registro di scansione"
           run: "Esegui test"
           spam: "Spam"
@@ -353,6 +355,7 @@ it:
         no_users: "Nessun dato trovato sull'utilizzo dell'utente"
         no_models: "Nessun dato trovato sull'utilizzo del modello"
         no_features: "Nessun dato trovato sull'utilizzo delle funzionalità"
+        total: "Totale"
         subheader_description: "I token sono le unità di base che gli LLM utilizzano per comprendere e generare testo; i dati di utilizzo possono incidere sui costi"
         stat_tooltips:
           total_requests: "Tutte le richieste inoltrate agli LLM tramite Discourse"
@@ -536,7 +539,6 @@ it:
         max_output_tokens: "Massimo token di output"
         url: "URL del servizio che ospita il modello"
         api_key: "Chiave API del servizio che ospita il modello"
-        enabled_chat_bot: "Consenti selettore bot IA"
         vision_enabled: "Visione abilitata"
         ai_bot_user: "Utente bot IA"
         cost_input: "Costo di input"
@@ -548,7 +550,6 @@ it:
         back: "Indietro"
         confirm_delete: Vuoi davvero eliminare questo modello?
         delete: Elimina
-        seeded_warning: "Questo modello è preconfigurato sul tuo sito e non può essere modificato."
         quotas:
           title: "Quote di utilizzo"
           add_title: "Crea nuova quota"
@@ -583,7 +584,7 @@ it:
           other: "Questo modello è attualmente utilizzato dai seguenti elementi: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
-          anthropic-claude-opus-4-1: "Il modello più intelligente di Anthropic"
+          anthropic-claude-opus-4-5: "Il modello più intelligente di Anthropic"
           anthropic-claude-sonnet-4-5: "Equilibrio ottimale tra velocità e costi"
           anthropic-claude-haiku-4-5: "Veloce e conveniente"
           google-gemini-2-5-pro: "Modello multimodale di grandi dimensioni in grado di svolgere un'ampia gamma di attività"
@@ -620,7 +621,6 @@ it:
           display_name: "Il nome utilizzato per fare riferimento a questo modello nell'interfaccia del sito."
           name: "Lo includiamo nella chiamata API per specificare quale modello utilizzeremo"
           vision_enabled: "Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini. Dipende dal modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI."
-          enabled_chat_bot: "Se abilitato, gli utenti possono selezionare questo modello quando creano messaggi privati con il bot IA"
           cost_input: "Il costo di input di 1 milione di token per questo modello"
           cost_output: "Il costo di output di 1 milione di token per questo modello"
           cost_measure: "$/milione token"
@@ -656,7 +656,6 @@ it:
           reasoning_tokens: "Numero di token utilizzati per il ragionamento"
           disable_temperature: "Disattiva la temperatura (alcuni modelli di pensiero non supportano la temperatura)"
           disable_top_p: "Disattiva la P superiore (alcuni modelli di pensiero non supportano la P superiore)"
-          enable_responses_api: "Abilita API risposte (richiesto da alcuni modelli OpenAI)"
       related_topics:
         title: "Argomenti correlati"
         pill: "Correlato"
@@ -701,6 +700,7 @@ it:
           title: "Miniature suggerite"
           select: "Seleziona"
           selected: "Selezionato"
+          try_again: "Riprova"
         image_caption:
           button_label: "Didascalia con IA"
           generating: "Generazione didascalia in corso..."
@@ -783,6 +783,7 @@ it:
         llm: "Modello"
         pm_warning: "I messaggi del chatbot IA vengono controllati regolarmente dai moderatori."
         cancel_streaming: "Interrompi risposta"
+        try_again: "Riprova"
         default_pm_prefix: "[MP di bot IA senza titolo]"
         shortcut_title: "Avvia un MP con un bot IA"
         shortcut_link: "Bot IA"

@@ -158,7 +158,7 @@ it:
       el:
         name: Greco
       en:
-        name: Inglese (Stati Uniti)
+        name: Inglese
       en_GB:
         name: Inglese (Regno Unito)
       es:
@@ -291,7 +291,6 @@ it:
     software_update_prompt:
       message: "Abbiamo aggiornato il sito. <span>Aggiorna la pagina</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
-    bootstrap_mode: "Per iniziare"
     back_button: "Indietro"
     welcome_banner:
       header:
@@ -697,7 +696,7 @@ it:
       title: "Revisiona"
       topic: "Argomento:"
       filtered_topic: "Hai filtrato il contenuto revisionabile in un singolo Argomento"
-      filtered_user: "Utente"
+      filtered_user: "Utente contrassegnato"
       filtered_reviewed_by: "Rivisto da"
       show_all_topics: "mostra tutti gli argomenti"
       deleted_post: "(messaggio eliminato)"
@@ -835,7 +834,6 @@ it:
           noun: "messaggio"
       flagged_as: "Contrassegnato come"
       user_label: "Utente"
-      assigned_to: "Assegnato a"
       moderator_actions: "Azioni del moderatore"
       timeline_and_notes: "Cronologia e note"
       timeline:
@@ -846,7 +844,6 @@ it:
         claimed: "Rivendicato"
         claimed_by: "Rivendicato da %{username} · %{relativeDate}"
         reviewed: "Rivisto"
-        reviewed_by: "Rivisto da %{username} · %{relativeDate}"
         view_conversation: "visualizza PM"
         note_added: "Note del moderatore"
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
@@ -873,7 +870,6 @@ it:
           one: "Segnalato da %{count} utente unico"
           other: "Segnalato da %{count} utenti diversi"
         activities:
-          new_account: "nuovo account"
           trust_level: "livello di attendibilità: %{trustLevelName}"
           posts:
             one: "%{count} messaggio"
@@ -881,7 +877,6 @@ it:
         solution_marked: "Soluzione contrassegnata"
         topic_has_solution: "Questo argomento ha una soluzione"
         visibility: "Visibilità"
-        topic_unlisted: "Questo argomento non è elencato. Accessibile solo tramite link diretto, non è pubblico."
       help:
         moderation_guide: "Guida alla moderazione di Discourse"
         flag_priorities: "Gestione della reputazione degli utenti e delle priorità delle segnalazioni"
@@ -1304,7 +1299,6 @@ it:
         one: "Categorie (%{count} altra)…"
         other: "Categorie (altre %{count})…"
     ip_lookup:
-      title: Ricerca Indirizzo IP
       hostname: Nome host
       location: Località
       location_not_found: (sconosciuto)
@@ -2802,6 +2796,8 @@ it:
       ulist_title: "Elenco puntato"
       list_item: "Elemento lista"
       toggle_direction: "Cambia direzione"
+      wrap_modal:
+        apply: "Applica"
       help: "Aiuto Inserimento Markdown"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       modal_ok: "OK"
@@ -2860,6 +2856,7 @@ it:
         zoom_out: "Riduci le dimensioni dell'immagine"
         zoom_in: "Aumenta le dimensioni dell'immagine"
         remove: "Rimuovi immagine"
+      image: "immagine"
       image_scale_button: "Ridimensiona l'immagine a %{percent}%"
       delete_image_button: Cancella immagine
       toggle_image_grid: Attiva/disattiva la griglia dell'immagine
@@ -3200,6 +3197,9 @@ it:
         reset_bump_dates: "Reimposta la date di riproposizione"
         defer: "Contrassegna come non letto"
         delete: "Elimina argomenti"
+        delete_topics_count:
+          one: "Cancella Argomento"
+          other: "Elimina argomenti"
         dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
         dismiss_read_with_selected:
@@ -4692,6 +4692,7 @@ it:
       upload_description: "Carica un file csv per creare numerose Etichette"
       upload_instructions: "Uno per riga, indicando opzionalmente un Gruppo di Etichette con il formato 'nome_etichetta,gruppo_etichetta'"
       upload_successful: "Etichette caricate con successo"
+      bulk_create_button: "Crea"
       delete_unused_confirmation:
         one: "%{count} etichetta sarà eliminata: %{tags}"
         other: "%{count} etichette saranno eliminate: %{tags}"
@@ -4842,7 +4843,6 @@ it:
       tags_form_modal:
         title: "Modifica la navigazione delle etichette"
         filter_placeholder: "Filtra etichette"
-        no_tags: "Non ci sono etichette corrispondenti al termine specificato."
         subtitle:
           text: "e mostreremo automaticamente le etichette principali di questo sito"
       edit_navigation_modal_form:
@@ -5210,6 +5210,11 @@ it:
         enabled: "Abilitato"
         select_groups: "Seleziona gruppi…"
         preview: "Anteprima"
+        enabled_for_options:
+          everyone: "Chiunque"
+          staff: "Solo staff"
+        statuses:
+          experimental: "Sperimentale"
         impact_roles:
           admins: "Amministratori"
           moderators: "Moderatori"
@@ -5220,6 +5225,7 @@ it:
           disabled: "Disabilitati"
           impact_type_feature: "Funzionalità"
           impact_type_other: "Altri"
+          status_experimental: "Sperimentale"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -5256,6 +5262,11 @@ it:
           sub_pages:
             common_settings:
               title: "Impostazioni"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Scopri di più"
         logo:
           title: "Logo"
           header_description: "Configura i loghi e le icone utilizzati nel tuo sito"
@@ -7767,6 +7778,9 @@ it:
         no_user_badges: "%{name} non ha ricevuto alcun distintivo."
         no_badges: Non ci sono distintivi da assegnare.
         none_selected: "Seleziona un distintivo per iniziare"
+        sections:
+          query: Query
+          settings: Impostazioni
         usage_heading: Utilizzo
         allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnato più volte
@@ -7941,73 +7955,4 @@ it:
           replace: "Sostituisci"
   wizard_js:
     wizard:
-      jump_in: "Buttati!"
-      finish: "Esci dalla configurazione"
-      back: "Indietro"
-      next: "Avanti"
-      configure_more: "Configura altro…"
-      step-text: "Intervallo"
-      step: "%{current} di %{total}"
-      upload: "Carica file"
-      uploading: "Caricamento…"
-      upload_error: "Spiacenti, c'è stato un errore caricando il file. Per favore, prova di nuovo."
-      staff_count:
-        one: "La tua comunità ha %{count} membro dello staff (sei tu)."
-        other: "La tua comunità ha %{count} membri dello staff, te compreso."
-      invites:
-        add_user: "aggiungi"
-        none_added: "Non hai invitato nessuno a far parte dello staff. Vuoi proseguire lo stesso?"
-        roles:
-          admin: "Amministratore"
-          moderator: "Moderatore"
-          regular: "Utente Normale"
-      homepage_choices:
-        custom:
-          label: "Personalizzato"
-          description: "Visualizza una homepage focalizzata su %{type} con gli utenti che atterrano su %{landingPage}"
-        style_type:
-          categories: "categoria"
-          topics: "argomento"
-      top_menu_items:
-        new: "Nuovo"
-        unread: "Non letti"
-        top: "Popolari"
-        latest: "Più recenti"
-        hot: "Novità"
-        categories: "Categorie"
-        unseen: "Non visualizzati"
-        read: "Letti"
-        bookmarks: "Segnalibri"
-      previews:
-        topic_title: "Quali libri stai leggendo?"
-        share_button: "Condividi"
-        reply_button: "Rispondi"
-        topic_preview: "Anteprima argomento"
-        homepage_preview: "Anteprima della home page"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "tutte le categorie"
-        topic_titles:
-          what_books: "Quali libri stai leggendo?"
-          what_movies: "Quali film hai visto di recente?"
-          random_fact: "Un fatto a caso di oggi"
-          tv_show: "Consiglia una serie"
-          what_hobbies: "Quali sono i tuoi hobby?"
-          what_music: "Cosa stai ascoltando in questo momento?"
-          funniest_thing: "La cosa più divertente che hai visto oggi"
-          share_art: "Mostra la tua arte!"
-        topic_ops:
-          what_books: "A tutti noi piace leggere, usiamo questo argomento per\ncondividere le nostre letture attuali o recenti. A me piacciono i \nfantasy e ho riletto Il Signore degli Anelli per la centesima volta.\nE tu?\n"
-        category_descriptions:
-          icebreakers: "Impara a conoscere gli altri membri della tua community ponendo domande divertenti."
-          news: "Discuti le ultime notizie ed eventi."
-          site_feedback: "Condividi i tuoi pensieri sulla community e suggerisci miglioramenti."
-        category_names:
-          icebreakers: "Rompighiaccio"
-          news: "Notizie"
-          site_feedback: "Feedback sito"
-        table_headers:
-          topic: "Argomento"
-          replies: "Risposte"
-          views: "Visualizzazioni"
-          activity: "Attività"
+      jump_in: "Andiamo!"

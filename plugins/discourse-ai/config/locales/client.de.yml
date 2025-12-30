@@ -235,7 +235,7 @@ de:
         no_llm: "Kein LLM ausgewählt"
         no_persona: "Nicht festgelegt"
         no_groups: "Keine"
-        edit: "Bearbeiten"
+        edit: "Einstellungen"
         expand_list:
           one: "(%{count} weitere)"
           other: "(%{count} weitere)"
@@ -368,6 +368,8 @@ de:
           post_url_label: "Beitrags-URL oder -ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 oder Beitrags-ID"
           result: "Ergebnis"
+          llm: "LLM"
+          system_prompt: "System-Eingabeaufforderung"
           scan_log: "Scan-Protokoll"
           run: "Test ausführen"
           spam: "Spam"
@@ -404,6 +406,7 @@ de:
         no_users: "Keine Benutzernutzungsdaten gefunden"
         no_models: "Keine Modellnutzungsdaten gefunden"
         no_features: "Keine Funktionsnutzungsdaten gefunden"
+        total: "Gesamt"
         subheader_description: "Token sind die Basiseinheiten, die LLM zum Verstehen und Generieren von Text verwenden. Nutzungsdaten können sich auf die Kosten auswirken"
         stat_tooltips:
           total_requests: "Alle Anfragen an LLMs über Discourse"
@@ -587,7 +590,6 @@ de:
         max_output_tokens: "Maximale Ausgabetoken"
         url: "URL des Dienstes, der das Modell hostet"
         api_key: "API-Schlüssel des Dienstes, der das Modell hostet"
-        enabled_chat_bot: "KI-Bot-Auswahl zulassen"
         vision_enabled: "Sehen aktiviert"
         ai_bot_user: "KI-Bot-Benutzer"
         cost_input: "Eingabekosten"
@@ -599,7 +601,6 @@ de:
         back: "Zurück"
         confirm_delete: Bist du sicher, dass du dieses Modell löschen willst?
         delete: Löschen
-        seeded_warning: "Dieses Modell ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         quotas:
           title: "Nutzungskontingente"
           add_title: "Neues Kontingent erstellen"
@@ -634,7 +635,7 @@ de:
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-1: "Das intelligenteste Modell von Anthropic"
+          anthropic-claude-opus-4-5: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-5: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-2-5-pro: "Großes multimodales Modell, das eine Vielzahl von Aufgaben bewältigen kann"
@@ -676,7 +677,6 @@ de:
           display_name: "Der Name, der verwendet wird, um dieses Modell in der Benutzeroberfläche deiner Website zu referenzieren."
           name: "Wir fügen dies in den API-Aufruf ein, um anzugeben, welches Modell wir verwenden werden"
           vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
-          enabled_chat_bot: "Wenn diese Option aktiviert ist, können Benutzer dieses Modell auswählen, wenn sie PN mit dem KI-Bot erstellen"
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
           cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
           cost_measure: "$/1M Token"
@@ -713,7 +713,6 @@ de:
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
-          enable_responses_api: "Aktiviere die Antwort-API (bei bestimmten OpenAI-Modellen erforderlich)"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -758,6 +757,7 @@ de:
           title: "Vorgeschlagene Miniaturansichten"
           select: "Auswählen"
           selected: "Ausgewählt"
+          try_again: "Erneut versuchen"
         image_caption:
           button_label: "Beschriftung mit KI"
           generating: "Beschriftung wird generiert …"
@@ -840,6 +840,7 @@ de:
         llm: "Modell"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
+        try_again: "Erneut versuchen"
         default_pm_prefix: "[KI-Bot-PN ohne Titel]"
         shortcut_title: "Starte eine PN mit einem KI-Bot"
         shortcut_link: "KI-Bot"

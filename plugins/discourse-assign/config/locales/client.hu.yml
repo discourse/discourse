@@ -30,7 +30,6 @@ hu:
       assigned: "Kiosztott"
       group_everyone: "Mindenki"
       assigned_to: "Kiosztva:"
-      assigned_to_w_ellipsis: "Kiosztva…"
       unassign:
         title: "Elvétel"
         title_w_ellipsis: "Elvétel…"

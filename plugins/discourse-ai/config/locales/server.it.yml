@@ -276,7 +276,6 @@ it:
     ai_bot:
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
       default_pm_prefix: "[MP di bot IA senza titolo]"
-      thinking: "Sto pensando..."
       personas:
         default_llm_required: "Il modello LLM predefinito è obbligatorio prima di abilitare la chat"
         cannot_delete_system_persona: "I personaggi di sistema non possono essere eliminati, vanno invece disattivati"
@@ -604,6 +603,3 @@ it:
       custom_tool_exists:
         one: "Esiste già uno strumento personalizzato dal nome %{names}."
         other: "Esistono già strumenti personalizzati dai nomi %{names}."
-  dashboard:
-    problem:
-      ai_llm_status: "Il modello LLM %{model_name} sta riscontrando problemi. Controlla la <a href='%{url}'>pagina di configurazione del modello </a>."

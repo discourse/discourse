@@ -280,7 +280,6 @@ ar:
     ai_bot:
       reply_error: "عذرًا، يبدو أن نظامنا واجه مشكلة غير متوقعة أثناء محاولة الرد.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
-      thinking: "التفكير..."
       personas:
         default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
         cannot_delete_system_persona: "لا يمكن حذف شخصيات النظام، يُرجى إيقافها بدلًا من ذلك"
@@ -655,6 +654,3 @@ ar:
         few: "هناك أدوات مخصصة تحمل الأسماء %{names} بالفعل."
         many: "هناك أدوات مخصصة تحمل الأسماء %{names} بالفعل."
         other: "هناك أدوات مخصصة تحمل الأسماء %{names} بالفعل."
-  dashboard:
-    problem:
-      ai_llm_status: "نموذج اللغة الكبير: %{model_name} يواجه مشكلات. يُرجى التحقق من <a href='%{url}'>صفحة إعدادات النموذج</a>."

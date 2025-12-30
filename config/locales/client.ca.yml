@@ -138,6 +138,9 @@ ca:
       placeholder: data
       from_placeholder: "des de la data"
       to_placeholder: "fins a la data"
+    languages:
+      en:
+        name: Anglès
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber} de @%{username}"
@@ -192,7 +195,6 @@ ca:
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau, refresqueu</span> per mantenir les coses funcionant sense problemes."
       dismiss: "Descarta-ho"
-    bootstrap_mode: "Primers passos"
     back_button: "Enrere"
     welcome_banner:
       header:
@@ -483,7 +485,6 @@ ca:
       title: "Revisa"
       topic: "Tema:"
       filtered_topic: "Heu filtrat a contingut revisable en un sol tema."
-      filtered_user: "Usuari"
       show_all_topics: "mostra tots els temes"
       deleted_post: "(publicació suprimida)"
       deleted_user: "(usuari suprimit)"
@@ -904,7 +905,6 @@ ca:
         one: "%{count} tema nou el mes passat."
         other: "%{count} temes nous el mes passat. "
     ip_lookup:
-      title: Explora adreça IP
       hostname: Nom d'amfitrió
       location: Ubicació
       location_not_found: (desconegut)
@@ -1726,6 +1726,8 @@ ca:
       upload_title: "Carrega"
       upload_description: "escriviu aquí una descripció del fitxer que es carrega"
       list_item: "Element de llista"
+      wrap_modal:
+        apply: "Aplica"
       help: "Ajuda d'edició Markdown"
       modal_ok: "D'acord"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
@@ -1757,6 +1759,7 @@ ca:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
       ignore: "Ignora"
+      image: "imatge"
     notifications:
       tooltip:
         regular:
@@ -1942,6 +1945,9 @@ ca:
         unlist_topics: "Fes temes invisibles"
         relist_topics: "Torna a llistar els temes"
         delete: "Suprimeix temes"
+        delete_topics_count:
+          one: "Suprimeix tema"
+          other: "Suprimeix temes"
         dismiss: "Descarta-ho"
         dismiss_read: "Descarta tots els llegits"
         dismiss_button: "Descarta-ho..."
@@ -2869,6 +2875,7 @@ ca:
       upload_description: "Carregueu un fitxer CSV per a crear etiquetes a l'engròs"
       upload_instructions: "Una per línia, opcionalment amb un grup d'etiquetes en el format 'tag_name,tag_group'."
       upload_successful: "S'han carregat les etiquetes correctament"
+      bulk_create_button: "Crea"
       delete_unused_confirmation:
         one: "Se suprimirà %{count} etiqueta: %{tags}"
         other: "Se suprimiran %{count}etiquetes: %{tags}"
@@ -3068,6 +3075,9 @@ ca:
         name: "Nom"
         enabled: "Activat"
         preview: "Previsualitza"
+        enabled_for_options:
+          everyone: "Tothom"
+          staff: "Només l'equip responsable"
         impact_roles:
           admins: "Administradors"
           moderators: "Moderadors"
@@ -3092,6 +3102,8 @@ ca:
           sub_pages:
             common_settings:
               title: "Configuració"
+        discourse_id:
+          learn_more: "Per a saber-ne més"
         logo:
           form:
             mobile: "Mòbil"
@@ -4369,6 +4381,9 @@ ca:
         no_user_badges: "No s'ha atorgat cap insígnia a %{name}."
         no_badges: No hi ha insígnies per a atorgar.
         none_selected: "Tria una insígnia per a començar"
+        sections:
+          query: Consulta
+          settings: Configuració
         allow_title: Permet que es faci servir la insígnia com a títol
         multiple_grant: Pot concedir-se moltes vegades
         visibility_heading: Visibilitat
@@ -4464,47 +4479,3 @@ ca:
           categories: "Categories"
           topics: "Temes"
           replace: "Reemplaça"
-  wizard_js:
-    wizard:
-      back: "Enrere"
-      next: "Següent"
-      step-text: "Pas"
-      step: "%{current} de %{total}"
-      upload_error: "S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
-      staff_count:
-        one: "La comunitat té %{count}membre responsable (vós inclòs)."
-        other: "La comunitat té %{count} membres responsables (vós inclòs)."
-      invites:
-        add_user: "afegeix"
-        none_added: "No heu convidat cap membre de l'equip responsable. Esteu segur que voleu continuar?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderador"
-          regular: "Usuari habitual"
-      homepage_choices:
-        custom:
-          label: "Personalitzat"
-        style_type:
-          categories: "categoria"
-          topics: "tema"
-      top_menu_items:
-        new: "Nou"
-        unread: "No llegits"
-        top: "Principals"
-        latest: "Més recents"
-        categories: "Categories"
-        read: "Llegit"
-        bookmarks: "Preferits"
-      previews:
-        share_button: "Comparteix"
-        reply_button: "Respon"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "totes les categories"
-        category_names:
-          site_feedback: "Comentaris sobre el lloc web"
-        table_headers:
-          topic: "Tema"
-          replies: "Respostes"
-          views: "Vistes"
-          activity: "Activitat"

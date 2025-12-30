@@ -353,7 +353,6 @@ th:
         other: "กระทู้นี้มี<b>%{count}</b>โพสต์ที่กำลังรอการอนุมัติ"
       title: "รีวิว"
       topic: "กระทู้:"
-      filtered_user: "ผู้ใช้"
       show_all_topics: "แสดงกระทู้ทั้งหมด"
       deleted_post: "(โพสต์ถูกลบ)"
       deleted_user: "(ผู้ใช้ถูกลบ)"
@@ -698,7 +697,6 @@ th:
       topic_stat_sentence_month:
         other: "%{count}กระทู้ใหม่ในเดือนที่ผ่านมา"
     ip_lookup:
-      title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
       location: สถานที่
       location_not_found: (ไม่ทราบ)
@@ -1423,6 +1421,8 @@ th:
       upload_title: "อัปโหลด"
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
       list_item: "รายการ"
+      wrap_modal:
+        apply: "นำไปใช้"
       help: "ช่วยเหลือการจัดรูปแบบ"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
@@ -1446,6 +1446,7 @@ th:
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
       ignore: "ไม่สนใจ"
+      image: "รูปภาพ"
     notifications:
       tooltip:
         regular:
@@ -1609,6 +1610,8 @@ th:
         clear_all: "ล้างทั้งหมด"
         unlist_topics: "กระทู้ที่ไม่ได้แสดง"
         delete: "ลบกระทู้"
+        delete_topics_count:
+          other: "ลบกระทู้"
         dismiss: "ซ่อน"
         dismiss_read: "ซ่อนทั้งหมดที่ไม่ได้อ่าน"
         dismiss_button: "ซ่อน..."
@@ -2387,6 +2390,7 @@ th:
       sort_by_name: "ชื่อ"
       upload: "อัปโหลดแท็ก"
       upload_successful: "แท็กถูกอัปโหลดสำเร็จแล้ว"
+      bulk_create_button: "สร้าง"
       delete_unused_confirmation:
         other: "%{count}แท็กจะถูกลบ: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -2549,6 +2553,8 @@ th:
       upcoming_changes:
         name: "ชื่อ"
         preview: "แสดงตัวอย่าง"
+        enabled_for_options:
+          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
@@ -2570,6 +2576,8 @@ th:
           sub_pages:
             common_settings:
               title: "การตั้งค่า"
+        discourse_id:
+          learn_more: "เรียนรู้เพิ่มเติม"
         logo:
           form:
             mobile: "โทรศัพท์"
@@ -3365,6 +3373,8 @@ th:
         revoke: เอาออก
         reason: เหตุผล
         edit_badges: แก้ไขเหรียญ
+        sections:
+          settings: การตั้งค่า
         disabled: ปิดใช้งานแล้ว
         icon: ไอคอน
         image: ภาพ
@@ -3428,40 +3438,3 @@ th:
         modal:
           categories: "หมวดหมู่"
           topics: "กระทู้"
-  wizard_js:
-    wizard:
-      back: "กลับ"
-      next: "ต่อไป"
-      upload_error: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ กรุณาลองใหม่อีกครั้ง"
-      staff_count:
-        other: "ชุมชนของคุณมีทีมงาน %{count}คน รวมถึงคุณด้วย"
-      invites:
-        add_user: "เพิ่ม"
-        none_added: "คุณยังไม่ได้เชิญทีมงาน คุณแน่ใจหรือว่าต้องการดำเนินการต่อ"
-        roles:
-          admin: "แอดมิน"
-          moderator: "ผู้ดูแล"
-          regular: "ผู้ใช้ทั่วไป"
-      homepage_choices:
-        style_type:
-          categories: "หมวดหมู่"
-          topics: "หัวข้อ"
-      top_menu_items:
-        new: "ใหม่"
-        unread: "ยังไม่อ่าน"
-        top: "บน"
-        latest: "ล่าสุด"
-        categories: "หมวดหมู่"
-        read: "อ่าน"
-        bookmarks: "บุ๊คมาร์ค"
-      previews:
-        share_button: "แบ่งปัน"
-        reply_button: "ตอบ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "ทุกหมวดหมู่"
-        table_headers:
-          topic: "หัวข้อ"
-          replies: "ตอบ"
-          views: "ดู"
-          activity: "กิจกรรม"

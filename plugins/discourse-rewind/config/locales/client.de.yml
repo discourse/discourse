@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Öffentlich"
+      reports:
+        reading_time:
+          title: Lesezeit
+        chat_usage:
+          messages: nachrichten
+          you: Du
+          status_online: "● online"
+        invites:
+          title: Einladungen
+          invitee_posts: Erstellte Beiträge
+          invitee_likes: Abgegebene „Gefällt mir“
+          label_invitations_sent: "Einladungen gesendet:"
+        new_user_interactions:
+          likes_given: Abgegebene „Gefällt mir“
+          mentions: Erwähnungen
+        writing_analysis:
+          menu_other: Sonstiges

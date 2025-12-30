@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "ส่วนตัว"
+          public: "สาธารณะ"
+      reports:
+        chat_usage:
+          messages: ข้อความ
+          you: คุณ
+        invites:
+          title: เชิญชวน
+          invitee_posts: โพสต์ที่สร้าง
+          invitee_likes: ได้ชอบ
+        new_user_interactions:
+          likes_given: ได้ชอบ
+          mentions: กล่าวถึง
+        writing_analysis:
+          menu_other: อื่นๆ

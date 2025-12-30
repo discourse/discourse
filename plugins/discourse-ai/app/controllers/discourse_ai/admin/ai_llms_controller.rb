@@ -130,8 +130,7 @@ module DiscourseAi
         }
 
         # Clean up companion users
-        llm_model.enabled_chat_bot = false
-        llm_model.toggle_companion_user
+        llm_model.cleanup_companion_user
 
         if llm_model.destroy
           log_llm_model_deletion(model_details)
@@ -211,11 +210,11 @@ module DiscourseAi
             :max_prompt_tokens,
             :max_output_tokens,
             :api_key,
-            :enabled_chat_bot,
             :vision_enabled,
             :input_cost,
             :cached_input_cost,
             :output_cost,
+            allowed_attachment_types: [],
           )
 
         provider = updating ? updating.provider : permitted[:provider]
@@ -258,8 +257,6 @@ module DiscourseAi
           max_prompt_tokens: {
           },
           max_output_tokens: {
-          },
-          enabled_chat_bot: {
           },
           vision_enabled: {
           },

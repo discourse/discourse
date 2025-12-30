@@ -10,6 +10,7 @@ ug:
       logs:
         staff_actions:
           actions:
+            update_automation: ئاپتوماتلاشتۇرۇشنى يېڭىلا
             delete_automation: ئاپتوماتلاشتۇرۇشنى ئۆچۈر
     discourse_automation:
       title: ئاپتوماتلاشتۇرۇش
@@ -65,6 +66,12 @@ ug:
         text:
           label: تېكىست
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: سەھىپە
+            tags:
+              label: بەلگە
         not_found: ئاپتوماتلاشتۇرۇشقا ئىشلىتىدىغان «%{automation}» نىڭ قوزغاتقۇچ «%{trigger}» نى تاپالمىدى، مۇناسىۋەتلىك قىستۇرمىنىڭ ئورنىتىلغانلىقىنى جەزملەڭ.
         user_badge_granted:
           fields:
@@ -379,10 +386,10 @@ ug:
             topic_id:
               label: تېما كىملىكى
             banner_until:
-              label: لوزۇنكا تېما دەپ تەڭشەيدىغان ۋاقىت
+              label: لەۋھە تېما دەپ تەڭشەيدىغان ۋاقىت
             user:
               label: ئىشلەتكۈچى
-              description: "لوزۇنكا قۇرغان ئىشلەتكۈچى (كۆڭۈلدىكى: سىستېما)"
+              description: "لەۋھە قۇرغان ئىشلەتكۈچى (كۆڭۈلدىكى: سىستېما)"
         flag_post_on_words:
           fields:
             words:
@@ -422,6 +429,8 @@ ug:
           fields:
             custom_field_name:
               label: "ئىشلەتكۈچى ئىختىيارى بۆلەك ئىسمى"
+        set_topic_timer:
+          title: تېما ۋاقىت خاتىرىلىگۈچ تەڭشىكى
       unnamed_automation: "ئاتسىز ئاپتوماتلاشتۇرۇش"
       models:
         script:

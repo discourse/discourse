@@ -148,7 +148,7 @@ fa_IR:
       de:
         name: آلمانی
       en:
-        name: انگلیسی (لهجه آمریکایی)
+        name: انگلیسی
       en_GB:
         name: انگلیسی (بریتانیا)
       es:
@@ -237,7 +237,6 @@ fa_IR:
     software_update_prompt:
       message: "ما این سایت را به روز کرده ایم، <span>لطفاً آن را بازخوانی کنید</span> تا همه چیز به خوبی کار کند."
       dismiss: "رد کردن"
-    bootstrap_mode: "شروع"
     back_button: "بازگشت"
     welcome_banner:
       header:
@@ -628,7 +627,6 @@ fa_IR:
       title: "بازنگری"
       topic: "موضوع:"
       filtered_topic: "شما یک مبحث را بر حسب محتوای قابل بازنگری فیلتر کرده‌اید"
-      filtered_user: "کاربر"
       filtered_reviewed_by: "بازبینی شده توسط"
       show_all_topics: "نمایش همه‌ی موضوعات"
       deleted_post: "(نوشته حذف شده)"
@@ -1187,7 +1185,6 @@ fa_IR:
         one: "دسته‌بندی‌ها (%{count} مورد بیشتر)…"
         other: "دسته‌بندی‌ها (%{count} مورد بیشتر)…"
     ip_lookup:
-      title: جستجوی نشانی IP
       hostname: نام میزبان
       location: موقعیت
       location_not_found: (ناشناس)
@@ -2612,6 +2609,8 @@ fa_IR:
       upload_title: "بارگذاری"
       upload_description: "توضیح بارگذاری را در اینجا بنویسید"
       list_item: "فهرست موارد"
+      wrap_modal:
+        apply: "اعمال کردن"
       help: "راهنمای ویرایش با Markdown"
       exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
       modal_ok: "تایید"
@@ -2663,6 +2662,7 @@ fa_IR:
         title: "توضیحات تصویر را اضافه کنید"
       image_toolbar:
         alt_text: "توضیحات تصویر را اضافه کنید"
+      image: "تصویر"
       image_scale_button: "تغییر مقیاس تصویر به %{percent}%"
       delete_image_button: حذف تصویر
       toggle_image_grid: تغییر وضعیت شبکه تصویر
@@ -2992,6 +2992,9 @@ fa_IR:
         reset_bump_dates: "بازنشانی تاریخ بالا آوردن"
         defer: "علامت گذاری به عنوان خوانده نشده"
         delete: "حذف موضوعات"
+        delete_topics_count:
+          one: "پاک کردن موضوع"
+          other: "حذف موضوعات"
         dismiss: "پنهان کردن"
         dismiss_read: "پنهان کردن تمامی خوانده نشده ها"
         dismiss_read_with_selected:
@@ -4435,6 +4438,7 @@ fa_IR:
       upload_description: "برای ایجاد تگ ها به صورت دسته جمعی یک فایل csv آپلود کنید"
       upload_instructions: "یکی در هر خط، به صورت اختیاری با یک گروه برچسب؛ در قالب 'نام_تگ, گروه_تگ'."
       upload_successful: "تگ‌ها با موفقیت بارگذاری شد"
+      bulk_create_button: "ایجاد"
       delete_unused_confirmation:
         one: "%{count} برچسب حذف خواهد شد:%{tags}"
         other: "%{count} برچسب حذف خواهد شد: %{tags}"
@@ -4584,7 +4588,6 @@ fa_IR:
       tags_form_modal:
         title: "ویرایش ناوبری برچسب‌ها"
         filter_placeholder: "فیلتر کردن برچسب‌ها"
-        no_tags: "هیچ برچسبی مطابق با عبارت داده شده وجود ندارد."
         subtitle:
           text: "و ما به طور خودکار برچسب‌های برتر این سایت را نشان خواهیم داد"
       edit_navigation_modal_form:
@@ -4881,6 +4884,11 @@ fa_IR:
         enabled: "فعال شده"
         select_groups: "انتخاب گروه‌ها"
         preview: "پیش‌نمایش"
+        enabled_for_options:
+          everyone: "همه"
+          staff: "فقط به تیم مدیریت"
+        statuses:
+          experimental: "آزمایشی"
         impact_roles:
           admins: "مدیران ارشد"
           moderators: "ناظران"
@@ -4890,6 +4898,7 @@ fa_IR:
           enabled: "فعال شده"
           disabled: "غیرفعال"
           impact_type_other: "دیگر"
+          status_experimental: "آزمایشی"
       config:
         about:
           title: "درباره سایت شما"
@@ -4920,6 +4929,8 @@ fa_IR:
           sub_pages:
             common_settings:
               title: "تنظیم"
+        discourse_id:
+          learn_more: "بیشتر بدانید"
         logo:
           form:
             logo:
@@ -7045,6 +7056,8 @@ fa_IR:
         no_user_badges: "%{name} هیچ نشانی دریافت نکرده است."
         no_badges: نشانی برای اعطا کردن وجود ندارد.
         none_selected: "برای شروع یک نشان رو انتخاب کنید"
+        sections:
+          settings: تنظیم
         usage_heading: استفاده
         allow_title: اجازه‌ی استفاده نشان برای عنوان
         multiple_grant: نمی توان چندین بار اعطا کرد
@@ -7192,75 +7205,3 @@ fa_IR:
           categories: "دسته‌بندی‌ها"
           topics: "موضوعات"
           replace: "جایگزینی"
-  wizard_js:
-    wizard:
-      jump_in: "بپر داخل!"
-      finish: "خروج از نصب"
-      back: "بازگشت"
-      next: "بعدی"
-      configure_more: "پیکربندی بیشتر…"
-      step-text: "مرحله"
-      step: "%{current} از %{total}"
-      upload: "بارگذاری پرونده"
-      uploading: "در حال بارگذاری…"
-      upload_error: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
-      staff_count:
-        one: "انجمن شما %{count} کارکن، شامل خودتان، دارد."
-        other: "انجمن شما %{count} کارکن، شامل خودتان، دارد."
-      invites:
-        add_user: "اضافه کردن"
-        none_added: "هیچ کدام از همکاران را دعوت نکردید. ادامه می‌دهید؟"
-        roles:
-          admin: "مدیر ارشد"
-          moderator: "ناظر"
-          regular: "کاربر عادی"
-      homepage_choices:
-        custom:
-          label: "سفارشی"
-        style_type:
-          categories: "دسته‌بندی"
-          topics: "موضوع"
-      top_menu_items:
-        new: "تازه"
-        unread: "خوانده‌ نشده‌"
-        top: "برترین‌ها"
-        latest: "آخرین"
-        hot: "داغ"
-        categories: "دسته‌بندی‌ها"
-        unseen: "دیده نشده"
-        read: "خواندن"
-        bookmarks: "نشانک‌ها"
-      previews:
-        topic_title: "چه کتاب هایی می خوانید؟"
-        share_button: "اشتراک‌گذاری"
-        reply_button: "پاسخ"
-        topic_preview: "پیش نمایش موضوع"
-        homepage_preview: "پیش نمایش صفحه اصلی"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "همه‌ی دسته‌بندی‌ها"
-        topic_titles:
-          what_books: "چه کتاب هایی می خوانید؟"
-          what_movies: "اخیرا چه فیلمهایی دیده اید؟"
-          random_fact: "واقعیت تصادفی روز"
-          tv_show: "یک برنامه تلویزیونی را توصیه کنید"
-          what_hobbies: "سرگرمی‌های شما چیست؟"
-          what_music: "الان داری به چی گوش میدی؟"
-          funniest_thing: "جالب‌ترین چیزی که امروز دیدی"
-          share_art: "هنر خود را به اشتراک بگذارید"
-        topic_ops:
-          what_books: |
-            همه ما عاشق خواندن هستیم، بیایید از این موضوع برای به اشتراک گذاشتن
-            خوانده های فعلی یا اخیر خود استفاده کنیم.
-        category_descriptions:
-          icebreakers: "با سوالات سرگرم‌کننده، اعضای جامعه خود را بشناسید."
-          news: "در مورد آخرین اخبار و رویدادها بحث کنید."
-          site_feedback: "نظرات خود را در مورد انجمن به اشتراک بگذارید و بهبودهایی را پیشنهاد دهید."
-        category_names:
-          news: "تازه‌ها"
-          site_feedback: "بازخورد از سایت"
-        table_headers:
-          topic: "موضوع"
-          replies: "پاسخ‌ها"
-          views: "بازدید"
-          activity: "فعالیت"

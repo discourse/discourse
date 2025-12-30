@@ -7,32 +7,282 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    Object.entries({
-      "local date": [
-        "[date=2021-01-01 time=12:00:00]",
-        '<p><span class="discourse-local-date cooked-date" data-date="2021-01-01" data-time="12:00:00" contenteditable="false">2021-01-01 12:00:00</span></p>',
-        "[date=2021-01-01 time=12:00:00]",
-      ],
-      "local date with timezone": [
-        '[date=2021-01-01 time=12:00:00 timezone="America/New_York"]',
-        '<p><span class="discourse-local-date cooked-date" data-date="2021-01-01" data-time="12:00:00" data-timezone="America/New_York" contenteditable="false">2021-01-01 12:00:00</span></p>',
-        '[date=2021-01-01 time=12:00:00 timezone="America/New_York"]',
-      ],
-      "local date range": [
-        "[date-range from=2021-01-01 to=2021-01-02]",
-        '<p><span class="discourse-local-date-range" contenteditable="false"><span class="discourse-local-date cooked-date" data-range="from" data-date="2021-01-01">2021-01-01</span> → <span class="discourse-local-date cooked-date" data-range="to" data-date="2021-01-02">2021-01-02</span></span></p>',
-        "[date-range from=2021-01-01 to=2021-01-02]",
-      ],
-      "local date range with time": [
-        '[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00 timezone="America/New_York"]',
-        '<p><span class="discourse-local-date-range" contenteditable="false"><span class="discourse-local-date cooked-date" data-range="from" data-date="2021-01-01" data-time="12:00:00" data-timezone="America/New_York">2021-01-01 12:00:00</span> → <span class="discourse-local-date cooked-date" data-range="to" data-date="2021-01-02" data-time="13:00:00" data-timezone="America/New_York">2021-01-02 13:00:00</span></span></p>',
-        '[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00 timezone="America/New_York"]',
-      ],
-    }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
-      test(name, async function (assert) {
-        this.siteSettings.rich_editor = true;
-        await testMarkdown(assert, markdown, html, expectedMarkdown);
-      });
+    hooks.beforeEach(function () {
+      this.siteSettings.rich_editor = true;
+    });
+
+    function findDate() {
+      return document.querySelector(".ProseMirror .discourse-local-date");
+    }
+
+    function findRange() {
+      return document.querySelector(".ProseMirror .discourse-local-date-range");
+    }
+
+    test("local date", async function (assert) {
+      const markdown = "[date=2021-01-01 time=12:00:00]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const span = findDate();
+          assert.dom(span).exists();
+          assert.strictEqual(span.dataset.date, "2021-01-01");
+          assert.strictEqual(span.dataset.time, "12:00:00");
+        },
+        markdown
+      );
+    });
+
+    test("local date without time", async function (assert) {
+      const markdown = "[date=2021-01-01]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const span = findDate();
+          assert.dom(span).exists();
+          assert.strictEqual(span.dataset.date, "2021-01-01");
+          assert.strictEqual(span.dataset.time, undefined);
+        },
+        markdown
+      );
+    });
+
+    test("local date with timezone", async function (assert) {
+      const markdown =
+        "[date=2021-01-01 time=12:00:00 timezone=America/New_York]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          assert.strictEqual(findDate().dataset.timezone, "America/New_York");
+        },
+        markdown
+      );
+    });
+
+    test("local date with format", async function (assert) {
+      const markdown =
+        '[date=2021-01-01 time=12:00:00 format="YYYY-MM-DD HH:mm"]';
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const span = findDate();
+          assert.strictEqual(span.dataset.format, "YYYY-MM-DD HH:mm");
+          assert.true(span.textContent.includes("2021-01-01"));
+        },
+        markdown
+      );
+    });
+
+    test("local date with recurring", async function (assert) {
+      const markdown = "[date=2021-01-01 time=12:00:00 recurring=1.weeks]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          assert.strictEqual(findDate().dataset.recurring, "1.weeks");
+        },
+        markdown
+      );
+    });
+
+    test("local date with timezones", async function (assert) {
+      const markdown =
+        "[date=2021-01-01 time=12:00:00 timezones=Europe/Paris|Asia/Tokyo]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          assert.strictEqual(
+            findDate().dataset.timezones,
+            "Europe/Paris|Asia/Tokyo"
+          );
+        },
+        markdown
+      );
+    });
+
+    test("local date with countdown", async function (assert) {
+      const markdown = "[date=2099-01-01 time=12:00:00 countdown=true]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          assert.strictEqual(findDate().dataset.countdown, "true");
+        },
+        markdown
+      );
+    });
+
+    test("local date with displayedTimezone", async function (assert) {
+      const markdown =
+        "[date=2021-01-01 time=12:00:00 displayedTimezone=Europe/London]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          assert.strictEqual(
+            findDate().dataset.displayedTimezone,
+            "Europe/London"
+          );
+        },
+        markdown
+      );
+    });
+
+    test("local date range", async function (assert) {
+      const markdown = "[date-range from=2021-01-01 to=2021-01-02]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const rangeSpan = findRange();
+          assert.dom(rangeSpan).exists();
+
+          const fromSpan = rangeSpan.querySelector('[data-range="from"]');
+          const toSpan = rangeSpan.querySelector('[data-range="to"]');
+          assert.strictEqual(fromSpan.dataset.date, "2021-01-01");
+          assert.strictEqual(toSpan.dataset.date, "2021-01-02");
+        },
+        markdown
+      );
+    });
+
+    test("local date range with time", async function (assert) {
+      const markdown =
+        "[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const rangeSpan = findRange();
+          const fromSpan = rangeSpan.querySelector('[data-range="from"]');
+          const toSpan = rangeSpan.querySelector('[data-range="to"]');
+
+          assert.strictEqual(fromSpan.dataset.date, "2021-01-01");
+          assert.strictEqual(fromSpan.dataset.time, "12:00:00");
+          assert.strictEqual(toSpan.dataset.date, "2021-01-02");
+          assert.strictEqual(toSpan.dataset.time, "13:00:00");
+        },
+        markdown
+      );
+    });
+
+    test("local date range with timezone", async function (assert) {
+      const markdown =
+        "[date-range from=2021-01-01 to=2021-01-02 timezone=America/New_York]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const rangeSpan = findRange();
+          const fromSpan = rangeSpan.querySelector('[data-range="from"]');
+          const toSpan = rangeSpan.querySelector('[data-range="to"]');
+
+          assert.strictEqual(fromSpan.dataset.timezone, "America/New_York");
+          assert.strictEqual(toSpan.dataset.timezone, "America/New_York");
+        },
+        markdown
+      );
+    });
+
+    test("local date range with format", async function (assert) {
+      const markdown =
+        "[date-range from=2021-01-01 to=2021-01-02 format=YYYY-MM-DD]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const rangeSpan = findRange();
+          const fromSpan = rangeSpan.querySelector('[data-range="from"]');
+          const toSpan = rangeSpan.querySelector('[data-range="to"]');
+
+          assert.strictEqual(fromSpan.dataset.format, "YYYY-MM-DD");
+          assert.strictEqual(toSpan.dataset.format, "YYYY-MM-DD");
+        },
+        markdown
+      );
+    });
+
+    test("local date range with timezones", async function (assert) {
+      const markdown =
+        "[date-range from=2021-01-01 to=2021-01-02 timezones=Europe/Paris|Asia/Tokyo]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const rangeSpan = findRange();
+          const fromSpan = rangeSpan.querySelector('[data-range="from"]');
+          const toSpan = rangeSpan.querySelector('[data-range="to"]');
+
+          assert.strictEqual(
+            fromSpan.dataset.timezones,
+            "Europe/Paris|Asia/Tokyo"
+          );
+          assert.strictEqual(
+            toSpan.dataset.timezones,
+            "Europe/Paris|Asia/Tokyo"
+          );
+        },
+        markdown
+      );
+    });
+
+    test("local date range with countdown", async function (assert) {
+      const markdown =
+        "[date-range from=2099-01-01 to=2099-01-02 countdown=true]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const rangeSpan = findRange();
+          const fromSpan = rangeSpan.querySelector('[data-range="from"]');
+          const toSpan = rangeSpan.querySelector('[data-range="to"]');
+
+          assert.strictEqual(fromSpan.dataset.countdown, "true");
+          assert.strictEqual(toSpan.dataset.countdown, "true");
+        },
+        markdown
+      );
+    });
+
+    test("local date range with displayedTimezone", async function (assert) {
+      const markdown =
+        "[date-range from=2021-01-01 to=2021-01-02 displayedTimezone=Europe/London]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          const rangeSpan = findRange();
+          const fromSpan = rangeSpan.querySelector('[data-range="from"]');
+          const toSpan = rangeSpan.querySelector('[data-range="to"]');
+
+          assert.strictEqual(
+            fromSpan.dataset.displayedTimezone,
+            "Europe/London"
+          );
+          assert.strictEqual(toSpan.dataset.displayedTimezone, "Europe/London");
+        },
+        markdown
+      );
     });
   }
 );

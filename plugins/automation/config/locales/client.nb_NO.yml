@@ -27,6 +27,12 @@ nb_NO:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Stikkord
         user_badge_granted:
           fields:
             badge:
@@ -132,6 +138,8 @@ nb_NO:
               label: Emne-ID
             user:
               label: Bruker
+        set_topic_timer:
+          title: Sett opp tidsbestemt handling for emne
       models:
         trigger:
           name:

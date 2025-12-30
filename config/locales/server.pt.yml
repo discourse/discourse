@@ -692,11 +692,10 @@ pt:
       every_month: "cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
-    title: "Autorizar o acesso da aplicação"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "ler"
     read_write: "ler/escrever"
-    description: '"%{application_name}" está a requerer o seguinte acesso à sua conta:'
     otp_confirmation:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Fazendo login como %{username}
@@ -1107,10 +1106,6 @@ pt:
     tl3_requires_likes_given: "Número mínimo de gostos que o utilizador deve ter atribuído nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3."
     tl3_requires_likes_received: "Número mínimo de gostos que o utilizador deve ter recebido nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3."
     tl3_links_no_follow: "Não remover rel=nofollow das hiperligações publicadas por utilizadores com Nível de Confiança 3."
-    min_trust_to_create_topic: "O Nível de Confiança mínimo necessário para criar um novo tópico."
-    min_trust_to_edit_wiki_post: "O nível mínimo de confiança necessário para editar mensagens marcadas como wiki."
-    min_trust_to_edit_post: "O nível mínimo de confiança necessário para editar publicações."
-    min_trust_to_allow_self_wiki: "O nível mínimo de confiança necessário para o utilizador criar as suas publicações wiki."
     newuser_max_links: "Quantas hiperligações um novo utilizador pode adicionar a uma mensagem."
     newuser_max_attachments: "Quantos anexos um novo utilizador pode adicionar a uma mensagem."
     newuser_max_mentions_per_post: "Número máximo de notificações @nome que um novo utilizador pode usar numa mensagem."
@@ -1179,7 +1174,6 @@ pt:
     pop3_polling_openssl_verify: "Verificar o certificado de TLS do server. (Por defeito: activado)"
     pop3_polling_username: "O nome de utilizador para a conta POP3 para obter e-mail."
     pop3_polling_password: "A palavra-passe para a conta POP3 obter e-mail."
-    email_in_min_trust: "Nível de Confiança mínimo que um utilizador necessita de ter para poder publicar novos tópicos por email."
     email_prefix: "A [etiqueta] usada no assunto dos emails. Se não estiver configurada, será 'Título' por defeito."
     email_site_title: "Título do sítio usado como remetente de emails. Se não for configurado, será 'título' por defeito. Se o seu 'título' contém caracteres que não são permitidos na string do remetente de email, utilize esta configuração."
     minimum_topics_similar: "Quantos tópicos precisam de existir antes de serem apresentados tópicos semelhantes ao compor novos tópicos."
@@ -1187,7 +1181,6 @@ pt:
     delete_user_max_post_age: "Não permitir eliminação de utilizadores cuja primeira mensagem é mais antiga que (x) dias."
     delete_all_posts_max: "Número máximo de mensagens que podem ser eliminadas de uma única vez com o botão Eliminar Todas as Mensagens. Se um utilizador tem mais mensagens do que este número, estas não podem ser eliminadas de uma única vez e o utilizador não pode ser eliminado."
     email_editable: "Permitir que os utilizadores alterem o seu endereço de email após o registo."
-    allow_uploaded_avatars: "Permitir que os utilizadores carreguem fotografias de perfil personalizadas."
     default_avatars: "URLs para avatars que serão usados por defeito para novos utilizadores até que estes o mudem."
     automatically_download_gravatars: "Transferir Gravatars para os utilizadores após a criação da conta ou alteração do seu endereço de correio eletrónico."
     digest_topics: "Número máximo de publicações populares a mostrar no email de resumo."
@@ -1246,13 +1239,11 @@ pt:
     default_categories_watching_first_post: "Lista de categorias em que a primeira publicação em cada novo tópico será vigiada por defeito."
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
     allowed_user_api_push_urls: "URLs permitidos para o servidor fazer push para a API de utilizador"
-    min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma etiqueta."
     max_tags_per_topic: "O número máximo de etiquetas que podem ser aplicadas a um tópico."
     max_tag_length: "O número máximo de carateres que pode ser utilizado numa etiqueta."
     max_tag_search_results: "Ao pesquisar por etiquetas, o número máximo de resultados a mostrar."
     max_tags_in_filter_list: "Número máximo de etiquetas a mostrar no filtro de etiquetas. Serão mostradas as etiquetas mais utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas por ordem alfabética. São, por omissão, ordenadas por popularidade."
-    min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
     create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
     show_preview_for_form_templates: "Ativar a pré-visualização para a funcionalidade de modelos de formulário"
@@ -1901,9 +1892,6 @@ pt:
     nice_share:
       name: Boa Partilha
       description: Partilhou uma publicação com 25 visitantes únicos
-      long_description: |2
-
-        Este distintivo é concedido por partilhar uma ligação que foi clicada por 25 visitantes externos. Obrigado por espalhar a palavra sobre as nossas discussões, e esta comunidade.
     good_share:
       name: Boa Partilha
       description: Partilhou uma publicação com 300 visitantes únicos
@@ -2045,13 +2033,8 @@ pt:
   wizard:
     title: "Configuração do Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Reduto da Joana"
-          site_description:
-            placeholder: "Um lugar para a Jona e os seus amigos falarem de coisas giras"
-      privacy:
+      setup:
+        title: "Começar"
         fields:
           login_required:
             label: "Visibilidade"
@@ -2060,25 +2043,12 @@ pt:
                 label: "Público"
               private:
                 label: "Privado"
-      styling:
-        fields:
-          styling_preview:
-            label: "Pré-visualização"
-          homepage_style:
-            choices:
-              latest:
-                label: "Mais Recente"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      invites:
-        title: "Convidar Equipa de Apoio"
-      finished:
-        title: "O seu Discourse está Pronto!"
   onebox:
     github:
       closed: "fechado"
+      status_date:
+        approved: "aprovado"
+        closed: "fechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'

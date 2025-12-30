@@ -396,7 +396,6 @@ lv:
       title: "Pārskats"
       topic: "Tēma:"
       filtered_topic: "Jūs esat filtrējis līdz pārskatāmam saturam vienā tēmā."
-      filtered_user: "Lietotājs"
       show_all_topics: "rādīt visas tēmas"
       deleted_post: "(ieraksts dzēsts)"
       deleted_user: "(lietotājs dzēsts)"
@@ -853,7 +852,6 @@ lv:
         week: "nedēļa"
         month: "mēnesis"
     ip_lookup:
-      title: IP adreses meklēšana
       hostname: Resursdatora nosaukums
       location: Atrašanās vieta
       location_not_found: (nezināms)
@@ -1717,6 +1715,8 @@ lv:
       upload_title: "Augšupielādēt"
       upload_description: "pievienojiet faila aprakstu"
       list_item: "Saraksta punkts"
+      wrap_modal:
+        apply: "Pielietot"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
@@ -1728,6 +1728,7 @@ lv:
         reply: Atbilde
         edit: Labot
       ignore: "Ignorēt"
+      image: "attēls"
     notifications:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
@@ -1876,6 +1877,10 @@ lv:
         unlist_topics: "Izņemt no sarakstiem tēmas"
         relist_topics: "Atkal padarīt tēmas redzamas sarakstiem"
         delete: "Dzēst tēmas"
+        delete_topics_count:
+          zero: "Dzēst tēmas"
+          one: "Dzēst tēmu"
+          other: "Dzēst tēmas"
         dismiss: "Nerādīt"
         dismiss_read: "Nerādīt visu neizlasīto"
         dismiss_button: "Nerādīt..."
@@ -2691,6 +2696,7 @@ lv:
       sort_by_name: "vārda"
       manage_groups: "Pārvaldīt tagu grupas"
       manage_groups_description: "Izveidot grupas, lai organizētu tagus"
+      bulk_create_button: "Izveidot"
       filters:
         without_category: "%{filter} %{tag} tēmas"
         with_category: "%{filter} %{tag} tēmas sadaļā %{category}"
@@ -2859,6 +2865,9 @@ lv:
         name: "Vārds"
         enabled: "Ieslēgts"
         preview: "Priekšskatījums"
+        enabled_for_options:
+          everyone: "Ikviens"
+          staff: "Tikai darbiniekiem"
         impact_roles:
           admins: "Administratori"
           moderators: "Moderātori"
@@ -2881,6 +2890,8 @@ lv:
           sub_pages:
             common_settings:
               title: "Iestatījumi"
+        discourse_id:
+          learn_more: "Uzzināt vairāk"
         logo:
           form:
             mobile: "Mobilais"
@@ -3826,6 +3837,8 @@ lv:
         no_user_badges: "%{name} nav piešķirts neviens žetons."
         no_badges: Nav žetonu, kas var tikt piešķirti.
         none_selected: "Izvēlieties žetonu, lai sāktu"
+        sections:
+          settings: Iestatījumi
         allow_title: Atļaut žetonam parādīties titulā
         multiple_grant: Var tikt piešķirts vairākas reizes
         listable: Rādīt žetonu publisko žeotnu lapā
@@ -3916,41 +3929,3 @@ lv:
         modal:
           categories: "Sadaļas"
           topics: "Tēmas"
-  wizard_js:
-    wizard:
-      back: "Atpakaļ"
-      next: "Nākamais"
-      step-text: "Solis"
-      step: "%{current} no %{total}"
-      upload_error: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
-      invites:
-        add_user: "Pievienot"
-        none_added: "Neesi nevienu uzaicinājis. Droši zini ka vēlies turpināt?"
-        roles:
-          admin: "Administrators"
-          moderator: "Moderātors"
-          regular: "Lietotājs"
-      homepage_choices:
-        style_type:
-          categories: "sadaļa"
-          topics: "tēmas"
-      top_menu_items:
-        new: "jauns"
-        unread: "Nelasīts"
-        top: "Populārākās"
-        latest: "Pēdējais"
-        categories: "Sadaļas"
-        unseen: "Neredzēts"
-        read: "Lasīts"
-        bookmarks: "Grāmatzīmes"
-      previews:
-        share_button: "Dalīties"
-        reply_button: "Atbilde"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "visas sadaļas"
-        table_headers:
-          topic: "Tēmas"
-          replies: "Atbildes"
-          views: "Skatījumi"
-          activity: "Aktivitāte"

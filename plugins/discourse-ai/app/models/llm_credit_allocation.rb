@@ -12,14 +12,18 @@ class LlmCreditAllocation < ActiveRecord::Base
     end
   end
 
-  DAILY_USAGE_RETENTION_DAYS = 90
-
   belongs_to :llm_model
+  has_many :daily_usages,
+           class_name: "LlmCreditDailyUsage",
+           foreign_key: :llm_model_id,
+           primary_key: :llm_model_id,
+           dependent: :destroy
 
-  # TODO: Remove once both column-dropping migrations have been promoted to pre-deploy:
+  # TODO: Remove once column-dropping migrations have been promoted to pre-deploy:
   #   - 20251105174003 (drops monthly_used, last_reset_at)
   #   - 20251117000003 (drops monthly_credits, monthly_usage)
-  self.ignored_columns = %w[monthly_used last_reset_at monthly_credits monthly_usage]
+  #   - 20251209180201 (drops daily_usage)
+  self.ignored_columns = %w[monthly_used last_reset_at monthly_credits monthly_usage daily_usage]
 
   validates :llm_model_id, presence: true, uniqueness: true
   validates :daily_credits, presence: true, numericality: { only_integer: true, greater_than: 0 }
@@ -31,17 +35,25 @@ class LlmCreditAllocation < ActiveRecord::Base
               less_than_or_equal_to: 100,
             }
 
-  def current_day_key
-    Time.current.utc.strftime("%Y-%m-%d")
-  end
-
   def daily_used
-    daily_usage[current_day_key].to_i
+    # Use llm_credit_daily_usages table
+    # Check if association is preloaded to avoid N+1 queries
+    if association(:daily_usages).loaded?
+      usage_record = daily_usages.find { |u| u.usage_date == Date.current }
+      return usage_record.credits_used if usage_record
+    else
+      usage_record =
+        LlmCreditDailyUsage.find_by(llm_model_id: llm_model_id, usage_date: Date.current)
+      return usage_record.credits_used if usage_record
+    end
+
+    0
   end
 
   def daily_used=(value)
-    day_key = current_day_key
-    self.daily_usage = (daily_usage || {}).merge(day_key => value.to_i)
+    usage_record =
+      LlmCreditDailyUsage.find_or_create_by!(llm_model_id: llm_model_id, usage_date: Date.current)
+    usage_record.update!(credits_used: value.to_i)
   end
 
   def credits_remaining
@@ -79,13 +91,7 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   def deduct_credits!(credits)
-    with_lock do
-      reload
-      day_key = current_day_key
-      self.daily_usage = daily_usage.merge(day_key => daily_used + credits)
-      cleanup_old_days!
-      save!
-    end
+    LlmCreditDailyUsage.increment_usage!(llm_model, credits)
   end
 
   def credits_available?
@@ -137,16 +143,6 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   private
-
-  def cleanup_old_days!
-    cutoff = DAILY_USAGE_RETENTION_DAYS.days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
-    self.daily_usage = daily_usage.select { |k, _| k >= cutoff }
-  end
-
-  def format_reset_time
-    return "" if next_reset_at.nil?
-    AgeWords.distance_of_time_in_words(next_reset_at, Time.now)
-  end
 end
 
 # == Schema Information
@@ -155,7 +151,6 @@ end
 #
 #  id                    :bigint           not null, primary key
 #  daily_credits         :bigint           default(0), not null
-#  daily_usage           :jsonb            not null
 #  soft_limit_percentage :integer          default(80), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null

@@ -22,7 +22,6 @@ import SelectedPosts from "discourse/components/selected-posts";
 import SharedDraftControls from "discourse/components/shared-draft-controls";
 import SignupCta from "discourse/components/signup-cta";
 import SlowModeInfo from "discourse/components/slow-mode-info";
-import TextField from "discourse/components/text-field";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import TopicCategory from "discourse/components/topic-category";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
@@ -35,13 +34,13 @@ import TopicStatus from "discourse/components/topic-status";
 import TopicTimeline from "discourse/components/topic-timeline";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
 import TopicTitle from "discourse/components/topic-title";
+import TopicTitleEditor from "discourse/components/topic-title-editor";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import autoFocus from "discourse/modifiers/auto-focus";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, eq } from "discourse/truth-helpers";
@@ -108,23 +107,14 @@ export default <template>
                 @shouldShow={{@controller.model.isPrivateMessage}}
               />
 
-              <div class="edit-title__wrapper">
-                <PluginOutlet
-                  @name="edit-topic-title"
-                  @outletArgs={{lazyHash
-                    model=@controller.model
-                    buffered=@controller.buffered
-                  }}
-                >
-                  <TextField
-                    @id="edit-title"
-                    @value={{@controller.buffered.title}}
-                    @maxlength={{@controller.siteSettings.max_topic_title_length}}
-                    @autofocus={{true}}
-                    {{autoFocus}}
-                  />
-                </PluginOutlet>
-              </div>
+              <TopicTitleEditor
+                @isEditingLocalization={{@controller.editingTopicLocalization}}
+                @translationTitle={{@controller.translationTitle}}
+                @translationLocale={{@controller.translationLocale}}
+                @bufferedTitle={{@controller.buffered.title}}
+                @model={{@controller.model}}
+                @buffered={{@controller.buffered}}
+              />
 
               {{#if @controller.showCategoryChooser}}
                 <div class="edit-category__wrapper">
@@ -234,11 +224,12 @@ export default <template>
                   {{on "click" @controller.handleTitleClick}}
                   class="fancy-title"
                 >
-                  {{htmlSafe @controller.model.fancyTitle}}
-
-                  {{#if @controller.model.details.can_edit}}
-                    {{icon "pencil" class="edit-topic"}}
-                  {{/if}}
+                  {{htmlSafe @controller.model.fancyTitle~}}
+                  {{~#if @controller.model.details.can_edit~}}
+                    <span class="edit-topic__wrapper">
+                      {{icon "pencil" class="edit-topic"}}
+                    </span>
+                  {{~/if}}
                 </a>
               {{/if}}
 

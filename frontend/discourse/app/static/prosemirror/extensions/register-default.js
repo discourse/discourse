@@ -26,6 +26,7 @@ import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
+import wrap from "./wrap";
 
 /**
  * List of default extensions
@@ -55,6 +56,7 @@ const defaultExtensions = [
   markdownPaste,
   orderedList,
   bulletList,
+  wrap,
   trailingInlineSpace,
   overrideDragGhost,
   hardBreak,

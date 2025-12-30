@@ -199,7 +199,7 @@ es:
         no_llm: "No hay LLM seleccionados"
         no_persona: "No establecido"
         no_groups: "Ninguna"
-        edit: "Editar"
+        edit: "Ajustes"
         expand_list:
           one: "(%{count} más)"
           other: "(%{count} más)"
@@ -321,6 +321,8 @@ es:
           post_url_label: "URL o ID de la publicación"
           post_url_placeholder: "https://tu-foro.com/t/topic/123/4 o ID de publicación"
           result: "Resultado"
+          llm: "LLM"
+          system_prompt: "Aviso del sistema"
           scan_log: "Registro de escaneo"
           run: "Ejecutar prueba"
           spam: "Spam"
@@ -357,6 +359,7 @@ es:
         no_users: "No se han encontrado datos de uso del usuario"
         no_models: "No se han encontrado datos de uso del modelo"
         no_features: "No se han encontrado datos de uso de características"
+        total: "Total"
         subheader_description: "Los tokens son las unidades básicas que utilizan los LLM para comprender y generar texto, los datos de uso pueden afectar a los costes"
         stat_tooltips:
           total_requests: "Todas las solicitudes realizadas a los LLM a través de Discourse"
@@ -540,7 +543,6 @@ es:
         max_output_tokens: "Máximo de tokens de salida"
         url: "URL del servicio que aloja el modelo"
         api_key: "Clave API del servicio que aloja el modelo"
-        enabled_chat_bot: "Permitir selector de bot de IA"
         vision_enabled: "Visión activada"
         ai_bot_user: "Usuario de bot de IA"
         cost_input: "Coste de entrada"
@@ -552,7 +554,6 @@ es:
         back: "Atrás"
         confirm_delete: '¿Seguro que quieres eliminar este modelo?'
         delete: Eliminar
-        seeded_warning: "Este modelo está preconfigurado en tu web y no se puede editar."
         quotas:
           title: "Cuotas de uso"
           add_title: "Crear nueva cuota"
@@ -587,7 +588,7 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-1: "El modelo antrópico más inteligente"
+          anthropic-claude-opus-4-5: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-5: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
           google-gemini-2-5-pro: "Modelo multimodal de tamaño grande capaz de realizar una amplia gama de tareas"
@@ -624,7 +625,6 @@ es:
           display_name: "El nombre utilizado para hacer referencia a este modelo en la interfaz de tu sitio."
           name: "Incluimos esto en la llamada a la API para especificar qué modelo utilizaremos"
           vision_enabled: "Si está activada, la IA intentará comprender las imágenes. Depende del modelo utilizado que soporte la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI."
-          enabled_chat_bot: "Si se activa, los usuarios pueden seleccionar este modelo al crear MP con el bot de IA"
           cost_input: "El coste de entrada por cada millón de tokens para este modelo"
           cost_output: "El coste de salida por cada millón de tokens para este modelo"
           cost_measure: "$/1M tokens"
@@ -660,7 +660,6 @@ es:
           reasoning_tokens: "Número de tokens utilizados para el razonamiento"
           disable_temperature: "Desactiva la temperatura (algunos modelos pensantes no admiten la temperatura)"
           disable_top_p: "Desactivar top P (algunos modelos no admiten top P)"
-          enable_responses_api: "Activa la API de respuestas (obligatoria en ciertos modelos de OpenAI)"
       related_topics:
         title: "Temas relacionados"
         pill: "Relacionados"
@@ -705,6 +704,7 @@ es:
           title: "Miniaturas sugeridas"
           select: "Seleccionar"
           selected: "Seleccionado"
+          try_again: "Intentar de nuevo"
         image_caption:
           button_label: "Subtítulo con IA"
           generating: "Generando subtítulo..."
@@ -787,6 +787,7 @@ es:
         llm: "Modelo"
         pm_warning: "Los moderadores supervisan periódicamente los mensajes del chatbot de IA."
         cancel_streaming: "Detener respuesta"
+        try_again: "Intentar de nuevo"
         default_pm_prefix: "[MP de bot de IA sin título]"
         shortcut_title: "Iniciar un MP con un bot de IA"
         shortcut_link: "Bot de IA"

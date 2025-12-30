@@ -294,7 +294,6 @@ de:
     ai_bot:
       reply_error: "Entschuldigung, es sieht so aus, als ob unser System beim Versuch, zu antworten, auf ein unerwartetes Problem gestoßen ist.\n\n[details='Fehlerdetails']\n%{details}\n[/details]"
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
-      thinking: "Ich denke …"
       personas:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
         cannot_delete_system_persona: "System-Personas können nicht gelöscht werden, bitte deaktiviere sie stattdessen"
@@ -629,6 +628,3 @@ de:
       custom_tool_exists:
         one: "Ein benutzerdefiniertes Tool mit dem Namen %{names} existiert bereits."
         other: "Benutzerdefinierte Tools mit dem Namen %{names} existieren bereits."
-  dashboard:
-    problem:
-      ai_llm_status: "Bei dem LLM-Modell: %{model_name} treten Probleme auf. Bitte überprüfe <a href='%{url}'>die Konfigurationsseite des Modells</a>."

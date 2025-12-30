@@ -202,7 +202,6 @@ sl:
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     software_update_prompt:
       dismiss: "Opusti"
-    bootstrap_mode: "Začetki"
     back_button: "Nazaj"
     welcome_banner:
       header:
@@ -499,7 +498,6 @@ sl:
       title: "Pregled"
       topic: "Tema:"
       filtered_topic: "V eni temi ste filtrirali vsebino, ki jo je mogoče pregledati."
-      filtered_user: "Uporabnik"
       show_all_topics: "prikaži vse teme"
       deleted_post: "(prispevek izbrisan)"
       deleted_user: "(uporabnik izbrisan)"
@@ -1020,7 +1018,6 @@ sl:
         few: "Kategorije (še %{count}) ..."
         other: "Kategorije (še %{count}) ..."
     ip_lookup:
-      title: Poizvedba IP naslova
       hostname: Ime gostitelja
       location: Lokacija
       location_not_found: (neznano)
@@ -2057,6 +2054,8 @@ sl:
       upload_title: "Naloži"
       upload_description: "vnesite opis prenosa tukaj"
       list_item: "Element seznama"
+      wrap_modal:
+        apply: "Uporabi"
       help: "pomoč pri Markdown urejanju"
       modal_ok: "V redu"
       cant_send_pm: "Ne moremo poslati sporočila %{username}."
@@ -2090,6 +2089,7 @@ sl:
           label: "Preklopi izpostavljanje teme"
           desc: "Odgovori brez da spremeniš čas zadnjega odgovora"
       ignore: "Prezri"
+      image: "slika"
       link_toolbar:
         link_copied: "Povezava kopirana!"
     notifications:
@@ -2308,6 +2308,11 @@ sl:
         unlist_topics: "Izloči temo iz seznamov"
         relist_topics: "Postavi temo nazaj na seznam"
         delete: "Izbriši teme"
+        delete_topics_count:
+          one: "Izbriši temo"
+          two: "Izbriši teme"
+          few: "Izbriši teme"
+          other: "Izbriši teme"
         dismiss: "Opusti"
         dismiss_read: "Opusti vse neprebrane"
         dismiss_button: "Opusti"
@@ -3473,6 +3478,7 @@ sl:
       upload_description: "Naloži datoteko CSV za množično ustvarjanje oznak"
       upload_instructions: "Ena na vrstico, po želji s skupino oznak v formatu 'tag_name,tag_group'."
       upload_successful: "Oznake so bile uspešno naložene"
+      bulk_create_button: "Ustvari"
       delete_unused_confirmation:
         one: "%{count} oznaka bod izbrisana: %{tags}"
         two: "%{count} oznaki bosta izbrisani: %{tags}"
@@ -3731,6 +3737,9 @@ sl:
         enabled: "Vključeno"
         select_groups: "Izberi skupine…"
         preview: "Predogled"
+        enabled_for_options:
+          everyone: "Vsi"
+          staff: "Samo osebje"
         impact_roles:
           admins: "Administratorji"
           moderators: "Moderatorji"
@@ -3755,6 +3764,8 @@ sl:
           sub_pages:
             common_settings:
               title: "Nastavitve"
+        discourse_id:
+          learn_more: "Več o tem"
         logo:
           form:
             mobile: "Mobilno"
@@ -4781,6 +4792,9 @@ sl:
         no_user_badges: "%{name} ni bila podeljena nobena značka."
         no_badges: Ni značk, ki bi lahko bile podeljene.
         none_selected: "Izberi značko za začetek"
+        sections:
+          query: Poizvedba
+          settings: Nastavitve
         allow_title: Dovoli da se značka uporablja kot naziv
         multiple_grant: Se lahko podeli večkrat
         visibility_heading: Vidljivost
@@ -4860,50 +4874,3 @@ sl:
           categories: "Kategorije"
           topics: "Tem"
           replace: "Zamenjaj"
-  wizard_js:
-    wizard:
-      back: "Nazaj"
-      next: "Naprej"
-      step-text: "Korak"
-      step: "%{current} od %{total}"
-      uploading: "Nalagam..."
-      upload_error: "Prišlo je do napake med nalaganjem te datoteke. Poskusite ponovno."
-      staff_count:
-        one: "Vaša skupnost ima %{count} člana osebja (vas)."
-        two: "Vaša skupnost ima %{count} člana osebja, vključno z vami."
-        few: "Vaša skupnost ima %{count} člane osebja, vključno z vami."
-        other: "Vaša skupnost ima %{count} članov osebja, vključno z vami."
-      invites:
-        add_user: "dodaj"
-        none_added: "Niste povabili še nobenega osebja. Ali ste prepričani da hočete nadaljevati?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Običajni uporabnik"
-      homepage_choices:
-        custom:
-          label: "Po meri"
-        style_type:
-          categories: "kategorija"
-          topics: "tema"
-      top_menu_items:
-        new: "Nova"
-        unread: "Neprebrane"
-        top: "Najboljše"
-        latest: "Najnovejše"
-        categories: "Kategorije"
-        read: "Prebrano"
-        bookmarks: "Zaznamki"
-      previews:
-        share_button: "Deli"
-        reply_button: "Odgovori"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "vse kategorije"
-        category_names:
-          site_feedback: "Povratne informacije spletnega mesta"
-        table_headers:
-          topic: "Tema"
-          replies: "Odgovori"
-          views: "Ogledov"
-          activity: "Aktivnost"

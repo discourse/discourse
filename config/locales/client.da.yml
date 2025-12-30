@@ -155,7 +155,7 @@ da:
       el:
         name: Græsk
       en:
-        name: Engelsk (US)
+        name: Engelsk
       en_GB:
         name: Engelsk (UK)
       es:
@@ -288,7 +288,6 @@ da:
     software_update_prompt:
       message: "Vi har opdateret dette websted. <span>Genopfrisk siden</span> for at undgå problemer."
       dismiss: "Afvis alle"
-    bootstrap_mode: "Sådan kommer du i gang"
     back_button: "Tilbage"
     welcome_banner:
       header:
@@ -651,7 +650,6 @@ da:
       title: "Anmeldelse"
       topic: "Emne:"
       filtered_topic: "Du har filtreret til indhold der kan andmeldes i ét enkelt emne."
-      filtered_user: "Bruger"
       filtered_reviewed_by: "Gennemgået af"
       show_all_topics: "vis alle emner"
       deleted_post: "(indlæg slettet)"
@@ -782,7 +780,6 @@ da:
           noun: "indlæg"
       flagged_as: "Anmeldt som"
       user_label: "Bruger"
-      assigned_to: "Tildelt til"
       moderator_actions: "Moderatorhandlinger"
       timeline_and_notes: "Tidslinje og noter"
       timeline:
@@ -793,7 +790,6 @@ da:
         claimed: "Påstået"
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
-        reviewed_by: "Gennemgået af %{username} · %{relativeDate}"
         note_added: "Moderator note"
       notes:
         add_note_button: "Tilføj note"
@@ -811,7 +807,6 @@ da:
       insights:
         title: "Indsigter"
         activities:
-          new_account: "ny konto"
           trust_level: "tillidsniveau: %{trustLevelName}"
           posts:
             one: "%{count} indlæg"
@@ -1228,7 +1223,6 @@ da:
         one: "Kategorier (%{count} mere)…"
         other: "Kategorier (%{count} mere)…"
     ip_lookup:
-      title: IP-adresse opslag
       hostname: Værtsnavn
       location: Sted
       location_not_found: (ukendt)
@@ -2444,6 +2438,8 @@ da:
       ulist_title: "Punktopstilling"
       list_item: "Listepunkt"
       toggle_direction: "Skift retning"
+      wrap_modal:
+        apply: "Anvend"
       help: "Hjælp til Markdown-redigering"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
@@ -2492,6 +2488,7 @@ da:
         title: "Tilføj billedbeskrivelse"
       image_toolbar:
         alt_text: "Tilføj billedbeskrivelse"
+      image: "billede"
       image_scale_button: "Skaler billedet til %{percent}%"
       delete_image_button: Slet Billede
       link_toolbar:
@@ -2754,6 +2751,9 @@ da:
         reset_bump_dates: "Nulstil bump datoer"
         defer: "Markér som ulæst"
         delete: "Slet emner"
+        delete_topics_count:
+          one: "Slet emne"
+          other: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
         dismiss_button: "Afvis..."
@@ -3997,6 +3997,7 @@ da:
       upload_description: "Overfør en csv-fil for at masseoprette tags"
       upload_instructions: "Én pr. linje, eventuelt med en mærkegruppe i formatet 'mærkenavn, mærkegruppe'"
       upload_successful: "Vellykket overførsel af tags"
+      bulk_create_button: "Opret"
       delete_unused_confirmation:
         one: "%{count}tag vil blive slettet: %{tags}"
         other: "%{count} tags bliver slettet: %{tags}"
@@ -4359,6 +4360,11 @@ da:
         enabled: "Aktiveret"
         select_groups: "Vælg grupper…"
         preview: "Forhåndsvisning"
+        enabled_for_options:
+          everyone: "Alle"
+          staff: "Kun personale"
+        statuses:
+          experimental: "Eksperimentel"
         impact_roles:
           admins: "Admins"
           moderators: "Moderatorer"
@@ -4368,6 +4374,7 @@ da:
           enabled: "Aktiveret"
           disabled: "Deaktiveret"
           impact_type_other: "Andre"
+          status_experimental: "Eksperimentel"
       config:
         about:
           title: "Om dit websted"
@@ -4390,6 +4397,11 @@ da:
           sub_pages:
             common_settings:
               title: "Indstillinger"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Lær mere"
         logo:
           title: "Logo"
           form:
@@ -6203,6 +6215,9 @@ da:
         no_user_badges: "%{name} er ikke blevet tildelt nogen emblemer."
         no_badges: Der er ikke nogen emblemer, der kan tildeles.
         none_selected: "Vælg et emblem for at komme igang"
+        sections:
+          query: Forespørgsel
+          settings: Indstillinger
         allow_title: Tillad at bruge dette emblem som titel
         multiple_grant: Kan tildeles flere gange
         visibility_heading: Synlighed
@@ -6333,62 +6348,3 @@ da:
           categories: "Kategorier"
           topics: "Emner"
           replace: "Erstat"
-  wizard_js:
-    wizard:
-      finish: "Afslut opsætning"
-      back: "Tilbage"
-      next: "Næste"
-      configure_more: "Konfigurer mere…"
-      step-text: "Trin"
-      step: "%{current} af %{total}"
-      upload: "Overfør en fil"
-      uploading: "Overfører…"
-      upload_error: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
-      staff_count:
-        one: "Dit fællesskab har %{count} personale medlem (dig)."
-        other: "Dit fællesskab har %{count} personale medlem, inklusive dig."
-      invites:
-        add_user: "tilføj"
-        none_added: "Du har ikke inviteret nogen til dit personale. Er du sikker på, at du vil fortsætte?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Fast bruger"
-      homepage_choices:
-        custom:
-          label: "Tilpasset"
-        style_type:
-          categories: "kategori"
-          topics: "emne"
-      top_menu_items:
-        new: "Nye"
-        unread: "Ulæste"
-        top: "Top"
-        latest: "Seneste"
-        categories: "Kategorier"
-        unseen: "Usete"
-        read: "Læs"
-        bookmarks: "Bogmærker"
-      previews:
-        topic_title: "Hvilke bøger læser du?"
-        share_button: "Del"
-        reply_button: "Svar"
-        topic_preview: "Forhåndsvisning af emne"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alle kategorier"
-        topic_titles:
-          what_books: "Hvilke bøger læser du?"
-          what_movies: "Hvilke film har du set for nylig?"
-          tv_show: "Anbefal et tv-program"
-          funniest_thing: "Sjovste ting, du har set i dag"
-          share_art: "Del din kunst!"
-        category_names:
-          icebreakers: "Isbrydere"
-          news: "Nyheder"
-          site_feedback: "Site Feedback"
-        table_headers:
-          topic: "Emne"
-          replies: "Svar"
-          views: "Visninger"
-          activity: "Aktivitet"

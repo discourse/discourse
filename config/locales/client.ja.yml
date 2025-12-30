@@ -130,7 +130,7 @@ ja:
       el:
         name: ギリシャ語
       en:
-        name: 英語 (米国)
+        name: 英語
       en_GB:
         name: 英語 (英国)
       es:
@@ -263,7 +263,6 @@ ja:
     software_update_prompt:
       message: "このサイトを更新しました。スムーズに動作するように<span>更新してください</span>。"
       dismiss: "閉じる"
-    bootstrap_mode: "はじめに"
     back_button: "戻る"
     welcome_banner:
       header:
@@ -639,7 +638,7 @@ ja:
       title: "レビュー"
       topic: "トピック:"
       filtered_topic: "1 つのトピックのレビュー待ちコンテンツにフィルターを適用しました。"
-      filtered_user: "ユーザー"
+      filtered_user: "通報されたユーザー"
       filtered_reviewed_by: "レビュー者:"
       show_all_topics: "すべてのトピックを表示"
       deleted_post: "(削除された投稿)"
@@ -771,7 +770,6 @@ ja:
           noun: "投稿"
       flagged_as: "通報:"
       user_label: "ユーザー"
-      assigned_to: "割り当て先"
       moderator_actions: "モデレーターのアクション"
       timeline_and_notes: "タイムラインとメモ"
       timeline:
@@ -782,7 +780,6 @@ ja:
         claimed: "引き受け"
         claimed_by: "%{username} が引き受け · %{relativeDate}"
         reviewed: "レビュー"
-        reviewed_by: "%{username} がレビュー · %{relativeDate}"
         view_conversation: "PM を見る"
         note_added: "モデレーターのメモ"
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
@@ -807,14 +804,12 @@ ja:
         flagged_by_users:
           other: "%{count} 人のユニークユーザーによる通報"
         activities:
-          new_account: "新規アカウント"
           trust_level: "信頼レベル: %{trustLevelName}"
           posts:
             other: "投稿 %{count} 件"
         solution_marked: "解決策に指定"
         topic_has_solution: "このトピックには解決策があります"
         visibility: "表示状態"
-        topic_unlisted: "このトピックは非表示です。ダイレクトリンクでのみアクセスできます。非公開。"
       help:
         moderation_guide: "Discourse モデレーションガイド"
         flag_priorities: "ユーザーの評判と通報の優先順位の管理"
@@ -1221,7 +1216,6 @@ ja:
       n_more:
         other: "カテゴリ (その他 %{count} 個)…"
     ip_lookup:
-      title: IP アドレスを検索
       hostname: ホスト名
       location: 場所
       location_not_found: (不明)
@@ -2661,6 +2655,8 @@ ja:
       ulist_title: "箇条書き"
       list_item: "リスト項目"
       toggle_direction: "方向の切り替え"
+      wrap_modal:
+        apply: "適用"
       help: "Markdown 編集のヘルプ"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> を押して全画面表示を終了"
       modal_ok: "OK"
@@ -2719,6 +2715,7 @@ ja:
         zoom_out: "画像を縮小"
         zoom_in: "画像を拡大"
         remove: "画像の削除"
+      image: "画像"
       image_scale_button: "画像の表示率を %{percent}% に変更"
       delete_image_button: 画像を削除
       toggle_image_grid: 画像グリッドを切り替える
@@ -3036,6 +3033,8 @@ ja:
         reset_bump_dates: "バンプ日をリセットする"
         defer: "未読にする"
         delete: "トピックを削除"
+        delete_topics_count:
+          other: "トピックを削除"
         dismiss: "閉じる"
         dismiss_read: "未読をすべて閉じる"
         dismiss_read_with_selected:
@@ -4445,6 +4444,7 @@ ja:
       upload_description: "csv ファイルをアップロードしてタグを一括作成します"
       upload_instructions: "1 行に 1 つ、オプションで 'タグ名,タググループ' の形式でタググループを使用します。"
       upload_successful: "タグを正常にアップロードしました"
+      bulk_create_button: "作成"
       delete_unused_confirmation:
         other: "%{count} 個のタグが削除されます: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -4591,7 +4591,6 @@ ja:
       tags_form_modal:
         title: "タグナビゲーションを編集する"
         filter_placeholder: "タグをフィルタする"
-        no_tags: "指定された用語に一致するタグはありません。"
         subtitle:
           text: "このサイトの上位タグを自動的に表示します"
       edit_navigation_modal_form:
@@ -4949,6 +4948,11 @@ ja:
         enabled: "有効"
         select_groups: "グループを選択…"
         preview: "プレビュー"
+        enabled_for_options:
+          everyone: "全員"
+          staff: "スタッフのみ"
+        statuses:
+          experimental: "実験的"
         impact_roles:
           admins: "管理者"
           moderators: "モデレーター"
@@ -4959,6 +4963,7 @@ ja:
           disabled: "無効"
           impact_type_feature: "機能"
           impact_type_other: "その他"
+          status_experimental: "実験的"
       config:
         about:
           title: "サイトについて"
@@ -4995,6 +5000,11 @@ ja:
           sub_pages:
             common_settings:
               title: "設定"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "もっと読む"
         logo:
           title: "ロゴ"
           header_description: "サイト全体で使用されるロゴとアイコンを構成します"
@@ -7480,6 +7490,9 @@ ja:
         no_user_badges: "%{name} はバッジを付与されていません。"
         no_badges: 付与できるバッジがありません。
         none_selected: "開始するにはバッジを選択してください"
+        sections:
+          query: クエリ
+          settings: 設定
         usage_heading: 使用方法
         allow_title: バッジをタグラインとして使用することを許可する
         multiple_grant: 何度でも付与できる
@@ -7651,76 +7664,4 @@ ja:
           replace: "置換"
   wizard_js:
     wizard:
-      jump_in: "始めましょう！"
-      finish: "セットアップを終了"
-      back: "戻る"
-      next: "次へ"
-      configure_more: "さらに構成…"
-      step-text: "手順"
-      step: "%{current} / %{total}"
-      upload: "ファイルのアップロード"
-      uploading: "アップロード中…"
-      upload_error: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
-      staff_count:
-        other: "あなたのコミュニティーには、あなたを含めて %{count} 名のスタッフがいます。"
-      invites:
-        add_user: "追加"
-        none_added: "あなたはスタッフを招待していません。 続行してもよろしいですか？"
-        roles:
-          admin: "管理者"
-          moderator: "モデレーター"
-          regular: "レギュラーユーザー"
-      homepage_choices:
-        custom:
-          label: "カスタム"
-          description: "ユーザーが %{landingPage} にアクセスする %{type} に焦点を当てたホームページを表示します"
-        style_type:
-          categories: "カテゴリ"
-          topics: "トピック"
-      top_menu_items:
-        new: "新規"
-        unread: "未読"
-        top: "人気"
-        latest: "最新"
-        hot: "ホット"
-        categories: "カテゴリ"
-        unseen: "未読"
-        read: "既読"
-        bookmarks: "ブックマーク"
-      previews:
-        topic_title: "どんな本を読んでいますか？"
-        share_button: "共有"
-        reply_button: "返信"
-        topic_preview: "トピックのプレビュー"
-        homepage_preview: "ホームページのプレビュー"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "すべてのカテゴリ"
-        topic_titles:
-          what_books: "どんな本を読んでいますか？"
-          what_movies: "最近どんな映画を見ましたか？"
-          random_fact: "今日のランダム情報"
-          tv_show: "テレビ番組を推奨する"
-          what_hobbies: "趣味は何ですか？"
-          what_music: "今何を聴いていますか？"
-          funniest_thing: "今日見た一番面白いもの"
-          share_art: "アートを共有しましょう！"
-        topic_ops:
-          what_books: |
-            読書は誰でも好きなことです。このトピックを使って
-            今または最近読んだものを共有しましょう。私は
-            ファンタジー系が好きで、100 回目の『指輪物語』を
-            読了中です。あなたはどうですか？
-        category_descriptions:
-          icebreakers: "楽しい質問を通じてコミュニティーメンバーをもっと知りましょう。"
-          news: "最新のニュースやイベントについて語り合います。"
-          site_feedback: "コミュニティーに対するあなたの考えを共有し、改善できることを提案します。"
-        category_names:
-          icebreakers: "アイスブレーカー"
-          news: "ニュース"
-          site_feedback: "サイトに関する意見"
-        table_headers:
-          topic: "トピック"
-          replies: "返信"
-          views: "ビュー"
-          activity: "アクティビティ"
+      jump_in: "はじめましょう！"

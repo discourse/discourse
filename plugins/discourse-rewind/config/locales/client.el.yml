@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Ιδιωτική"
+          public: "Δημόσια"
+      reports:
+        reading_time:
+          title: Χρόνος ανάγνωσης
+        chat_usage:
+          messages: μηνύματα
+          you: Εσείς
+          status_online: "● σε σύνδεση"
+        invites:
+          title: Προσκλήσεις
+          invitee_posts: Δημιουργημένες Αναρτήσεις
+          invitee_likes: Μου αρέσει που αποδόθηκαν
+          label_invitations_sent: "Οι προσκλήσεις στάλθηκαν:"
+        new_user_interactions:
+          likes_given: Μου αρέσει που αποδόθηκαν
+          mentions: Αναφορές
+        writing_analysis:
+          menu_other: Άλλα

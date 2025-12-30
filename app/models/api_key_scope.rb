@@ -55,6 +55,10 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[topics#status],
             params: %i[topic_id category_id status enabled],
           },
+          change_owner: {
+            actions: %w[topics#change_post_owners],
+            params: %i[topic_id],
+          },
         },
         posts: {
           edit: {
