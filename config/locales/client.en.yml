@@ -3623,20 +3623,6 @@ en:
           new_new: "Nothing new at the moment... check back soon!"
           new: "Nothing new at the moment... check back soon!"
 
-      bottom:
-        latest: "There are no more latest topics."
-        posted: "There are no more posted topics."
-        read: "There are no more read topics."
-        new: "There are no more new topics."
-        unread: "There are no more unread topics."
-        unseen: "There are no more unseen topics."
-        category: "There are no more %{category} topics."
-        tag: "There are no more %{tag} topics."
-        top: "There are no more top topics."
-        hot: "There are no more hot topics."
-        bookmarks: "There are no more bookmarked topics."
-        filter: "There are no more topics."
-
     topic_bulk_actions:
       dismiss:
         name: "Dismiss"
