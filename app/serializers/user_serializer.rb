@@ -356,7 +356,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def upcoming_changes_stats
-    object.upcoming_change_stats
+    object.upcoming_change_stats(scope)
   end
 
   def include_upcoming_changes_stats?
