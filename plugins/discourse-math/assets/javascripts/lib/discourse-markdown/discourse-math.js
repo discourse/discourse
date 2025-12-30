@@ -376,7 +376,7 @@ export function setup(helper) {
     opts.features.math = siteSettings.discourse_math_enabled;
     opts.features.asciimath = siteSettings.discourse_math_enable_asciimath;
     opts.features.strict_mathjax_markdown =
-      siteSettings.strict_mathjax_markdown;
+      siteSettings.discourse_math_strict_mathjax_markdown;
   });
 
   helper.registerPlugin((md) => {

@@ -9,7 +9,7 @@ plugins:
     choices:
       - mathjax
       - katex
-  strict_mathjax_markdown:
+  discourse_math_strict_mathjax_markdown:
     default: false
     client: true
   discourse_math_mathjax_output:
