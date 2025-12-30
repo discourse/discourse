@@ -1,6 +1,6 @@
 import { applyDataAttributes } from "./bbcode-block";
 
-const VALID_MODES = new Set(["grid", "focus", "stage"]);
+const VALID_MODES = new Set(["grid", "carousel"]);
 
 const gridRule = {
   tag: "grid",

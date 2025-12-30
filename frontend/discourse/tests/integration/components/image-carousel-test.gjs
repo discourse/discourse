@@ -28,7 +28,7 @@ module("Integration | Component | image-carousel", function (hooks) {
   ];
 
   test("it renders and navigates via buttons", async function (assert) {
-    this.set("data", { items, mode: "focus" });
+    this.set("data", { items, mode: "carousel" });
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 
@@ -47,8 +47,8 @@ module("Integration | Component | image-carousel", function (hooks) {
       .hasClass("is-active");
   });
 
-  test("it wraps around in focus mode", async function (assert) {
-    this.set("data", { items, mode: "focus" });
+  test("it wraps around in carousel mode", async function (assert) {
+    this.set("data", { items, mode: "carousel" });
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 
@@ -68,7 +68,7 @@ module("Integration | Component | image-carousel", function (hooks) {
   });
 
   test("it handles keyboard navigation", async function (assert) {
-    this.set("data", { items, mode: "focus" });
+    this.set("data", { items, mode: "carousel" });
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 
@@ -85,19 +85,5 @@ module("Integration | Component | image-carousel", function (hooks) {
     assert
       .dom(".d-image-carousel__slide[data-index='0']")
       .hasClass("is-active");
-  });
-
-  test("it does not wrap around in grid mode (if ever supported by carousel)", async function (assert) {
-    this.set("data", { items, mode: "grid" });
-
-    await render(hbs`<ImageCarousel @data={{this.data}} />`);
-
-    assert.dom(".d-image-carousel__nav--prev").isDisabled();
-
-    await click(".d-image-carousel__nav--next");
-    assert
-      .dom(".d-image-carousel__slide[data-index='1']")
-      .hasClass("is-active");
-    assert.dom(".d-image-carousel__nav--prev").isNotDisabled();
   });
 });

@@ -121,16 +121,10 @@
     &::-webkit-scrollbar {
       display: none;
     }
-
-    .--stage & {
-      padding-inline: 25%;
-      box-sizing: border-box;
-      gap: 10px; // Explicit 10px gap as requested // asked by who? we dont't use px anywhere else
-    }
   }
 
   &__slide {
-    .--focus & {
+    .--carousel & {
       flex: 0 0 100%;
       width: 100%;
       height: 100%;
@@ -139,31 +133,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .--stage & {
-      flex: 0 0 auto;
-      width: auto;
-
-      // max-width: 84%; // think this does nothing?
-      transition:
-        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-        filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      opacity: 0.7;
-      transform: scale(0.9);
-
-      // filter: brightness(0.9) saturate(0.9); // wouldnt do this, just stick w opacity
-      will-change: transform, opacity;
-
-      &.is-active {
-        opacity: 1;
-        transform: scale(1);
-
-        img {
-          box-shadow: 0 2px 16px 0 rgb(var(--always-black-rgb), 0.2);
-        }
-      }
     }
 
     img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
@@ -267,6 +236,16 @@
     }
   }
 
+  &__counter {
+    padding: 0.5rem 0.75rem;
+    background: var(--primary-very-low);
+    border-radius: 1rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    min-width: 3.5rem;
+    text-align: center;
+  }
+
   &__carousel--single {
     .d-image-carousel__controls {
       display: none;
@@ -274,7 +253,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .d-image-grid__track {
+    .d-image-carousel__track {
       scroll-behavior: auto;
     }
   }

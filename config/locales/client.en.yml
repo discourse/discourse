@@ -3177,8 +3177,7 @@ en:
 
       grid_label: "This will be displayed as a grid"
       grid_mode_grid: "Grid"
-      grid_mode_focus: "Focus"
-      grid_mode_stage: "Stage"
+      grid_mode_carousel: "Carousel"
       remove_grid: "Remove grid"
 
       image_scale_button: "Scale image to %{percent}%"

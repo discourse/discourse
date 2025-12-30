@@ -15,7 +15,7 @@ import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
-const CAROUSEL_MODES = new Set(["focus", "stage"]);
+const CAROUSEL_MODES = new Set(["carousel"]);
 
 export default {
   initialize(owner) {

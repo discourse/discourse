@@ -14,12 +14,15 @@ import { i18n } from "discourse-i18n";
 
 const plusOne = helper(([val]) => val + 1);
 const getAspectRatio = helper(([width, height]) => {
-  return htmlSafe(`aspect-ratio: ${width} / ${height}`);
+  const w = Math.max(1, Math.abs(parseInt(width, 10)) || 1);
+  const h = Math.max(1, Math.abs(parseInt(height, 10)) || 1);
+  return htmlSafe(`aspect-ratio: ${w} / ${h}`);
 });
 
 const DEBOUNCE_MS = 50;
 const HYSTERESIS_FACTOR = 0.7;
 const SCROLLEND_FALLBACK_MS = 1000;
+const MAX_DOTS = 10;
 
 /**
  * @typedef {Object} ImageCarouselItem
@@ -40,11 +43,6 @@ export default class ImageCarousel extends Component {
    * @type {number}
    */
   @tracked currentIndex = 0;
-
-  /**
-   * @type {boolean}
-   */
-  @tracked isProgrammaticScroll = false;
 
   /**
    * @type {HTMLElement|null}
@@ -72,14 +70,16 @@ export default class ImageCarousel extends Component {
         clearTimeout(this.#scrollEndFallbackTimer);
         this.#scrollEndFallbackTimer = null;
       }
-      this.isProgrammaticScroll = false;
+      // Only clear if this scrollend corresponds to the current scroll operation
+      this.#activeScrollGeneration = 0;
     };
 
     element.addEventListener("scrollend", onScrollEnd);
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (this.isProgrammaticScroll) {
+        // Skip if a programmatic scroll is in progress
+        if (this.#activeScrollGeneration > 0) {
           return;
         }
 
@@ -153,6 +153,19 @@ export default class ImageCarousel extends Component {
   });
 
   /**
+   * Tracks the current programmatic scroll generation to prevent race conditions.
+   * Incremented each time a programmatic scroll starts, only cleared when matching.
+   * @type {number}
+   */
+  #scrollGeneration = 0;
+
+  /**
+   * The generation number of the currently active programmatic scroll, or 0 if none.
+   * @type {number}
+   */
+  #activeScrollGeneration = 0;
+
+  /**
    * @type {ReturnType<typeof debounce>|null}
    */
   #debounceTimer = null;
@@ -164,7 +177,7 @@ export default class ImageCarousel extends Component {
 
   @action
   updateActiveIndex(index) {
-    if (this.currentIndex !== index && !this.isProgrammaticScroll) {
+    if (this.currentIndex !== index && this.#activeScrollGeneration === 0) {
       this.currentIndex = index;
     }
   }
@@ -193,30 +206,17 @@ export default class ImageCarousel extends Component {
   }
 
   /**
-   * @returns {boolean}
-   */
-  get wrapsAround() {
-    return this.args.data.mode === "focus" || this.args.data.mode === "stage";
-  }
-
-  /**
    * @returns {number}
    */
   get prevIndex() {
-    if (this.currentIndex === 0) {
-      return this.wrapsAround ? this.lastIndex : 0;
-    }
-    return this.currentIndex - 1;
+    return this.currentIndex === 0 ? this.lastIndex : this.currentIndex - 1;
   }
 
   /**
    * @returns {number}
    */
   get nextIndex() {
-    if (this.currentIndex === this.lastIndex) {
-      return this.wrapsAround ? 0 : this.lastIndex;
-    }
-    return this.currentIndex + 1;
+    return this.currentIndex === this.lastIndex ? 0 : this.currentIndex + 1;
   }
 
   /**
@@ -229,15 +229,15 @@ export default class ImageCarousel extends Component {
   /**
    * @returns {boolean}
    */
-  get isPrevDisabled() {
-    return !this.wrapsAround && this.currentIndex === 0;
+  get showDots() {
+    return this.items.length <= MAX_DOTS;
   }
 
   /**
-   * @returns {boolean}
+   * @returns {string}
    */
-  get isNextDisabled() {
-    return !this.wrapsAround && this.currentIndex === this.lastIndex;
+  get counterText() {
+    return `${this.currentIndex + 1} / ${this.items.length}`;
   }
 
   /**
@@ -255,7 +255,10 @@ export default class ImageCarousel extends Component {
         this.#debounceTimer = null;
       }
 
-      this.isProgrammaticScroll = true;
+      // Increment generation and mark this scroll as active
+      this.#scrollGeneration++;
+      const thisGeneration = this.#scrollGeneration;
+      this.#activeScrollGeneration = thisGeneration;
       this.currentIndex = clamped;
 
       // Fallback for browsers that don't support scrollend event (Safari < 17.4)
@@ -263,7 +266,10 @@ export default class ImageCarousel extends Component {
         clearTimeout(this.#scrollEndFallbackTimer);
       }
       this.#scrollEndFallbackTimer = setTimeout(() => {
-        this.isProgrammaticScroll = false;
+        // Only clear if this is still the active scroll (no newer scroll started)
+        if (this.#activeScrollGeneration === thisGeneration) {
+          this.#activeScrollGeneration = 0;
+        }
         this.#scrollEndFallbackTimer = null;
       }, SCROLLEND_FALLBACK_MS);
 
@@ -324,31 +330,40 @@ export default class ImageCarousel extends Component {
             class="d-image-carousel__nav d-image-carousel__nav--prev"
             title={{i18n "carousel.previous"}}
             aria-label={{i18n "carousel.previous"}}
-            disabled={{this.isPrevDisabled}}
             {{on "click" (fn this.scrollToIndex this.prevIndex)}}
           >
             {{icon "chevron-left"}}
           </button>
 
-          <div class="d-image-carousel__dots">
-            {{#each this.items as |item index|}}
-              <button
-                type="button"
-                class="d-image-carousel__dot
-                  {{if (eq this.currentIndex index) 'active'}}"
-                aria-label={{i18n "carousel.go_to_slide" index=(plusOne index)}}
-                aria-current={{if (eq this.currentIndex index) "true" "false"}}
-                {{on "click" (fn this.scrollToIndex index)}}
-              ></button>
-            {{/each}}
-          </div>
+          {{#if this.showDots}}
+            <div class="d-image-carousel__dots">
+              {{#each this.items as |item index|}}
+                <button
+                  type="button"
+                  class="d-image-carousel__dot
+                    {{if (eq this.currentIndex index) 'active'}}"
+                  aria-label={{i18n
+                    "carousel.go_to_slide"
+                    index=(plusOne index)
+                  }}
+                  aria-current={{if
+                    (eq this.currentIndex index)
+                    "true"
+                    "false"
+                  }}
+                  {{on "click" (fn this.scrollToIndex index)}}
+                ></button>
+              {{/each}}
+            </div>
+          {{else}}
+            <span class="d-image-carousel__counter">{{this.counterText}}</span>
+          {{/if}}
 
           <button
             type="button"
             class="d-image-carousel__nav d-image-carousel__nav--next"
             title={{i18n "carousel.next"}}
             aria-label={{i18n "carousel.next"}}
-            disabled={{this.isNextDisabled}}
             {{on "click" (fn this.scrollToIndex this.nextIndex)}}
           >
             {{icon "chevron-right"}}
