@@ -97,15 +97,11 @@ export default class Bookmark extends RestModel {
     return this.pinned ? "unpin" : "pin";
   }
 
-  @discourseComputed("highest_post_number", "bookmarkable_url", "topic_id")
-  lastPostUrl(highest_post_number, bookmarkable_url, topic_id) {
-    if (!topic_id) {
-      return bookmarkable_url;
-    }
-    return this.urlForPostNumber(highest_post_number);
+  @discourseComputed("topic_id", "highest_post_number", "bookmarkable_url")
+  lastPostUrl(topic_id, highest_post_number, bookmarkable_url) {
+    return topic_id ? this.urlForPostNumber(highest_post_number) : bookmarkable_url;
   }
 
-  // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
     let url = getURL(`/t/${this.topic_id}`);
     if (postNumber > 0) {
@@ -114,14 +110,9 @@ export default class Bookmark extends RestModel {
     return url;
   }
 
-  // returns createdAt if there's no bumped date
   @discourseComputed("bumped_at", "createdAt")
   bumpedAt(bumped_at, createdAt) {
-    if (bumped_at) {
-      return new Date(bumped_at);
-    } else {
-      return createdAt;
-    }
+    return bumped_at ? new Date(bumped_at) : createdAt;
   }
 
   @discourseComputed("bumpedAt", "createdAt")
