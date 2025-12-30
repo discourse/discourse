@@ -3,74 +3,24 @@ import { getURLWithCDN } from "discourse/lib/get-url";
 import loadKaTeX from "discourse/lib/load-katex";
 import loadMathJax from "discourse/lib/load-mathjax";
 
-/**
- * @typedef {Object} DiscourseMathOptions
- * @property {boolean} enabled - Whether math rendering is enabled
- * @property {"mathjax" | "katex"} provider - The math rendering provider
- * @property {boolean} enable_asciimath - Whether ASCII math is enabled
- * @property {boolean} enable_accessibility - Whether accessibility features are enabled
- * @property {"html" | "svg"} mathjax_output - MathJax output format
- * @property {boolean} zoom_on_hover - Whether to enable zoom on hover
- */
-
-/**
- * @typedef {Object} MathJaxConfig
- * @property {Object} tex - TeX configuration
- * @property {Object} asciimath - AsciiMath configuration
- * @property {Object} loader - Loader configuration
- * @property {Object} [chtml] - CHTML output configuration
- * @property {Object} [svg] - SVG output configuration
- * @property {Object} options - MathJax options
- * @property {Object} startup - Startup configuration
- */
-
-/**
- * @typedef {Object} MathJaxInstance
- * @property {function(Element[]): Promise<void>} typesetPromise - Typeset elements
- * @property {Object} startup - Startup object
- */
-
-/**
- * @typedef {Object} KaTeXOptions
- * @property {function(Object): boolean} trust - Trust callback for commands
- * @property {Object<string, string>} macros - Custom macros
- * @property {boolean} displayMode - Whether to render in display mode
- */
-
-/**
- * @typedef {Object} RenderOptions
- * @property {boolean} [force] - Force re-rendering even if already rendered
- */
-
-/** @type {boolean} */
 let initializedMathJax = false;
-
-/** @type {string|null} */
 let initializedMathJaxConfigHash = null;
 
-/**
- * CSS class names used for state management (avoid inline styles)
- */
+export function resetMathJaxState() {
+  initializedMathJax = false;
+  initializedMathJaxConfigHash = null;
+}
+
 const CSS_CLASSES = {
   HIDDEN: "math-hidden",
   APPLIED_MATHJAX: "math-applied-mathjax",
   APPLIED_KATEX: "math-applied-katex",
 };
 
-/**
- * Generate a simple hash of MathJax configuration to detect changes
- * @param {DiscourseMathOptions} opts
- * @returns {string}
- */
 function getConfigHash(opts) {
   return `${opts.mathjax_output}-${opts.enable_accessibility}-${opts.zoom_on_hover}-${opts.enable_asciimath}`;
 }
 
-/**
- * Build math options from site settings
- * @param {import("discourse/services/site-settings").default} siteSettings
- * @returns {DiscourseMathOptions}
- */
 export function buildDiscourseMathOptions(siteSettings) {
   return {
     enabled: siteSettings.discourse_math_enabled,
@@ -82,11 +32,6 @@ export function buildDiscourseMathOptions(siteSettings) {
   };
 }
 
-/**
- * Initialize MathJax configuration
- * @param {DiscourseMathOptions} opts
- * @returns {void}
- */
 function initMathJax(opts) {
   const configHash = getConfigHash(opts);
 
@@ -99,7 +44,6 @@ function initMathJax(opts) {
   const enableA11y =
     opts.enable_accessibility === true || opts.enable_accessibility === "true";
 
-  /** @type {Object} */
   const menuOptions = {};
 
   if (opts.zoom_on_hover) {
@@ -109,7 +53,6 @@ function initMathJax(opts) {
     };
   }
 
-  /** @type {MathJaxConfig} */
   const mathJaxConfig = {
     tex: {
       inlineMath: [["\\(", "\\)"]],
@@ -169,11 +112,6 @@ function initMathJax(opts) {
   initializedMathJaxConfigHash = configHash;
 }
 
-/**
- * Load MathJax and return the MathJax instance
- * @param {DiscourseMathOptions} opts
- * @returns {Promise<MathJaxInstance>}
- */
 async function ensureMathJax(opts) {
   initMathJax(opts);
 
@@ -191,17 +129,9 @@ async function ensureMathJax(opts) {
   }
 }
 
-/**
- * Build a wrapper element for MathJax rendering
- * @param {Element} elem - The original math element
- * @returns {HTMLElement | null} - The wrapper element or null if invalid
- */
 function buildMathJaxWrapper(elem) {
-  /** @type {string} */
   let tag;
-  /** @type {string} */
   let classList;
-  /** @type {string} */
   let content;
 
   if (elem.classList.contains("math")) {
@@ -227,12 +157,6 @@ function buildMathJaxWrapper(elem) {
   return mathWrapper;
 }
 
-/**
- * Reset MathJax rendering state on elements
- * @param {Element} elem - Container element
- * @param {DiscourseMathOptions} opts - Math options
- * @returns {void}
- */
 function resetMathJax(elem, opts) {
   const selector = opts.enable_asciimath ? ".math, .asciimath" : ".math";
 
@@ -245,13 +169,6 @@ function resetMathJax(elem, opts) {
     .forEach((wrapper) => wrapper.remove());
 }
 
-/**
- * Render math expressions using MathJax
- * @param {Element} elem - Container element to render math in
- * @param {DiscourseMathOptions} opts - Math rendering options
- * @param {RenderOptions} [renderOptions] - Additional render options
- * @returns {void}
- */
 export function renderMathJax(elem, opts, renderOptions = {}) {
   if (!elem) {
     return;
@@ -270,7 +187,6 @@ export function renderMathJax(elem, opts, renderOptions = {}) {
 
   const isPreview = elem.classList.contains("d-editor-preview");
 
-  /** @type {Array<{original: Element, wrapper: HTMLElement}>} */
   const wrappers = [];
 
   mathElems.forEach((mathElem) => {
@@ -334,14 +250,12 @@ export function renderMathJax(elem, opts, renderOptions = {}) {
         });
       }
     },
+    // Delay rendering in preview to debounce rapid typing and avoid
+    // layout thrashing while the user is still editing
     isPreview ? 200 : 0
   );
 }
 
-/**
- * Load KaTeX library
- * @returns {Promise<void>}
- */
 async function ensureKaTeX() {
   try {
     await loadKaTeX({
@@ -355,11 +269,6 @@ async function ensureKaTeX() {
   }
 }
 
-/**
- * Reset KaTeX rendering state on elements
- * @param {Element} elem - Container element
- * @returns {void}
- */
 function resetKatex(elem) {
   elem.querySelectorAll(".math").forEach((mathElem) => {
     mathElem.classList.remove(
@@ -372,16 +281,7 @@ function resetKatex(elem) {
   });
 }
 
-/**
- * Decorate an element with KaTeX rendering
- * @param {Element} elem - The math element to render
- * @param {KaTeXOptions} katexOpts - KaTeX options
- * @returns {void}
- */
 function decorateKatex(elem, katexOpts) {
-  const displayMode = elem.tagName === "DIV";
-  const opts = { ...katexOpts, displayMode };
-
   if (elem.classList.contains(CSS_CLASSES.APPLIED_KATEX)) {
     return;
   }
@@ -392,18 +292,17 @@ function decorateKatex(elem, katexOpts) {
 
   elem.classList.add(CSS_CLASSES.APPLIED_KATEX);
 
-  const tag = elem.tagName === "DIV" ? "div" : "span";
-  const displayClass = tag === "div" ? "block-math" : "inline-math";
+  const displayMode = elem.tagName === "DIV";
+  const displayClass = displayMode ? "block-math" : "inline-math";
   const text = elem.textContent;
   elem.classList.add("math-container", displayClass, "katex-math");
   elem.textContent = "";
 
   try {
-    window.katex.render(text, elem, opts);
+    window.katex.render(text, elem, { ...katexOpts, displayMode });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("KaTeX rendering failed for expression:", text, error);
-    // Restore original content on error
     elem.textContent = text;
     elem.classList.remove(
       CSS_CLASSES.APPLIED_KATEX,
@@ -414,12 +313,6 @@ function decorateKatex(elem, katexOpts) {
   }
 }
 
-/**
- * Render math expressions using KaTeX
- * @param {Element} elem - Container element to render math in
- * @param {RenderOptions} [renderOptions] - Additional render options
- * @returns {Promise<void>}
- */
 export async function renderKatex(elem, renderOptions = {}) {
   if (!elem) {
     return;
@@ -441,7 +334,6 @@ export async function renderKatex(elem, renderOptions = {}) {
     return;
   }
 
-  /** @type {KaTeXOptions} */
   const katexOpts = {
     trust: (context) => ["\\htmlId", "\\href"].includes(context.command),
     macros: {
@@ -455,13 +347,6 @@ export async function renderKatex(elem, renderOptions = {}) {
   mathElems.forEach((mathElem) => decorateKatex(mathElem, katexOpts));
 }
 
-/**
- * Render math in an element using the configured provider
- * @param {Element} elem - Container element to render math in
- * @param {DiscourseMathOptions} opts - Math rendering options
- * @param {RenderOptions} [renderOptions] - Additional render options
- * @returns {void}
- */
 export function renderMathInElement(elem, opts, renderOptions = {}) {
   if (!elem || !opts?.enabled) {
     return;

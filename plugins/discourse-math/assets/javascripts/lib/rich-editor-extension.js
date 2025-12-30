@@ -6,70 +6,21 @@ import {
   renderMathInElement,
 } from "./math-renderer";
 
-/**
- * @typedef {import("discourse/lib/composer/rich-editor-extensions").PluginContext} PluginContext
- */
-
-/**
- * @typedef {import("discourse/lib/composer/rich-editor-extensions").PluginParams} PluginParams
- */
-
-/**
- * @param {PluginParams} params
- * @returns {import("prosemirror-view").NodeViewConstructor}
- */
 const createMathNodeView =
   ({ getContext, pmState: { NodeSelection } }) =>
   (node, view, getPos) =>
     new MathNodeView({ node, view, getPos, getContext, NodeSelection });
 
-/**
- * @typedef {Object} MathAttrs
- * @property {string} text
- * @property {string} [mathType]
- */
-
-/**
- * @typedef MathNodeViewArgs
- * @property {import("prosemirror-model").Node} node
- * @property {import("prosemirror-view").EditorView} view
- * @property {() => number} getPos
- * @property {() => PluginContext} getContext
- * @property {typeof import("prosemirror-state").NodeSelection} NodeSelection
- */
-
-/**
- * NodeView for math nodes with an edit button.
- */
 class MathNodeView {
-  /** @type {import("prosemirror-model").Node} */
   node;
-
-  /** @type {import("prosemirror-view").EditorView} */
   view;
-
-  /** @type {() => number} */
   getPos;
-
-  /** @type {() => PluginContext} */
   getContext;
-
-  /** @type {typeof import("prosemirror-state").NodeSelection} */
   NodeSelection;
-
-  /** @type {HTMLElement} */
   dom;
-
-  /** @type {HTMLButtonElement} */
   editButton;
-
-  /** @type {HTMLElement} */
   content;
 
-  /**
-   * @param {MouseEvent} event
-   * @returns {void}
-   */
   openEditModal = (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -85,9 +36,6 @@ class MathNodeView {
     });
   };
 
-  /**
-   * @param {MathNodeViewArgs} args
-   */
   constructor({ node, view, getPos, getContext, NodeSelection }) {
     this.node = node;
     this.view = view;
@@ -122,10 +70,6 @@ class MathNodeView {
     this.#renderMath(true);
   }
 
-  /**
-   * @param {import("prosemirror-model").Node} node
-   * @returns {boolean}
-   */
   update(node) {
     const contentChanged =
       node.attrs.text !== this.node.attrs.text ||
@@ -140,47 +84,28 @@ class MathNodeView {
     return true;
   }
 
-  /**
-   * @returns {void}
-   */
   selectNode() {
     this.dom.classList.add("ProseMirror-selectednode");
   }
 
-  /**
-   * @returns {void}
-   */
   deselectNode() {
     this.dom.classList.remove("ProseMirror-selectednode");
   }
 
-  /**
-   * @param {Event} event
-   * @returns {boolean}
-   */
   stopEvent(event) {
     return event.target instanceof Node
       ? this.editButton.contains(event.target)
       : false;
   }
 
-  /**
-   * @returns {boolean}
-   */
   ignoreMutation() {
     return true;
   }
 
-  /**
-   * @returns {void}
-   */
   destroy() {
     this.editButton.removeEventListener("click", this.openEditModal);
   }
 
-  /**
-   * @returns {void}
-   */
   #syncContent() {
     const isAscii =
       this.node.isInline && this.node.attrs.mathType === "asciimath";
@@ -190,19 +115,11 @@ class MathNodeView {
     this.content.textContent = this.node.attrs.text ?? "";
   }
 
-  /**
-   * @param {boolean} [force]
-   * @returns {void}
-   */
   #renderMath(force = false) {
     const options = buildDiscourseMathOptions(this.getContext().siteSettings);
     renderMathInElement(this.dom, options, { force });
   }
 
-  /**
-   * @param {string} text
-   * @returns {void}
-   */
   #applyEdit(text) {
     const pos = this.getPos();
     const attrs = { ...this.node.attrs, text };
@@ -212,7 +129,6 @@ class MathNodeView {
   }
 }
 
-/** @type {RichEditorExtension} */
 const extension = {
   nodeViews: {
     math_inline: createMathNodeView,

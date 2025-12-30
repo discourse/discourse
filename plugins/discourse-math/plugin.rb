@@ -13,10 +13,6 @@ register_svg_icon "square-root-variable"
 
 enabled_site_setting :discourse_math_enabled
 
-module ::DiscourseMath
-  require_relative "lib/math_renderer"
-end
-
 after_initialize do
   if respond_to?(:chat) && SiteSetting.chat_enabled
     chat&.enable_markdown_feature("discourse-math")

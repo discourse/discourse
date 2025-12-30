@@ -1,8 +1,3 @@
-// inspired by https://github.com/classeur/markdown-it-mathjax/blob/master/markdown-it-mathjax.js
-//
-//
-//
-
 const additionalPunctuation = [
   // Chinese and Japanese punctuation
   0x3001, // 、
@@ -49,23 +44,12 @@ function isSafeBoundary(character_code, delimiter_code, md) {
   return false;
 }
 
-/**
- * @param {object} state
- * @param {string} content
- * @param {"tex" | "asciimath"} type
- * @returns {void}
- */
 function addInlineMathToken(state, content, type) {
   const token = state.push("math_inline", "", 0);
   token.content = content;
   token.meta = { mathType: type };
 }
 
-/**
- * @param {object} state
- * @param {string} content
- * @returns {void}
- */
 function addBlockMathToken(state, content) {
   const token = state.push("math_block", "", 0);
   token.content = content;
