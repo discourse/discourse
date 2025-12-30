@@ -4932,6 +4932,12 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      it "raises an error when a moderator doesn't have permission to convert topic" do
+        sign_in(moderator)
+        put "/t/#{topic.id}/convert-topic/public.json"
+        expect(response).to be_forbidden
+      end
+
       context "with success" do
         it "returns success and the new url" do
           sign_in(admin)
