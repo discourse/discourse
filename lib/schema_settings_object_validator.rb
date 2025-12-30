@@ -203,7 +203,14 @@ class SchemaSettingsObjectValidator
     when "datetime"
       return true if value.blank?
       begin
+        # DateTime.iso8601 checks the format but does not enforce timezone presence
+        # so we need to do an additional check for the presence of timezone info.
         DateTime.iso8601(value)
+        if value.include?("T") && (value.end_with?("Z") || value.match?(/[+-]\d{2}:\d{2}$/))
+          return true
+        end
+        add_error(property_name, :not_valid_datetime_value)
+        return false
       rescue ArgumentError, TypeError
         add_error(property_name, :not_valid_datetime_value)
         return false
