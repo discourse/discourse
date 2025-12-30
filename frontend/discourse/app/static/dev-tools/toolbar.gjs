@@ -8,7 +8,7 @@ import icon from "discourse/helpers/d-icon";
 import draggable from "discourse/modifiers/draggable";
 import onResize from "discourse/modifiers/on-resize";
 import I18n from "discourse-i18n";
-import BlockConditionDebugButton from "./block-condition-debug/button";
+import BlockDebugButton from "./block-debug/button";
 import MobileViewButton from "./mobile-view/button";
 import PluginOutletDebugButton from "./plugin-outlet-debug/button";
 import SafeModeButton from "./safe-mode/button";
@@ -65,7 +65,7 @@ export default class Toolbar extends Component {
       {{onResize this.onResize}}
     >
       <PluginOutletDebugButton />
-      <BlockConditionDebugButton />
+      <BlockDebugButton />
       <SafeModeButton />
       <VerboseLocalizationButton />
       {{#unless this.siteSettings.viewport_based_mobile_mode}}

@@ -26,6 +26,7 @@ import {
   validateArgsSchema,
   validateBlockArgs,
 } from "discourse/lib/blocks/arg-validation";
+import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
@@ -36,6 +37,24 @@ import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
  * @type {Map<string, {children: Array<Object>}>}
  */
 const blockConfigs = new Map();
+
+/**
+ * Debug callback for block rendering.
+ * Set by dev-tools to wrap blocks with debug overlays.
+ *
+ * @type {Function|null}
+ */
+let blockDebugCallback = null;
+
+/**
+ * Sets a callback for debug overlay injection.
+ * Called by dev-tools to wrap rendered blocks with debug info.
+ *
+ * @param {Function} callback - Callback receiving (blockData, context)
+ */
+export function _setBlockDebugCallback(callback) {
+  blockDebugCallback = callback;
+}
 
 /**
  * Clears all registered block configurations.
@@ -206,6 +225,8 @@ export function block(name, options = {}) {
        * with all necessary args pre-bound.
        *
        * Blocks with conditions are filtered based on condition evaluation.
+       * When visual debug overlay is enabled, ghost blocks are included for
+       * blocks that fail their conditions.
        *
        * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>|undefined}
        */
@@ -218,18 +239,54 @@ export function block(name, options = {}) {
 
         const owner = getOwner(this);
         const blocksService = owner.lookup("service:blocks");
+        const debug = blocksService.isDebugEnabled();
+        const outletName = this.args.outletName || name;
+        const result = [];
 
-        // Filter children by conditions, then create renderable components
-        return rawChildren
-          .filter((blockConfig) => {
-            // No conditions means always render
-            if (!blockConfig.conditions) {
-              return true;
+        for (const blockConfig of rawChildren) {
+          const blockName = blockConfig.block?.blockName || "unknown";
+          let conditionsPassed = true;
+
+          // Evaluate conditions if present
+          if (blockConfig.conditions) {
+            if (debug) {
+              blockDebugLogger.startGroup(blockName, outletName);
             }
-            // Evaluate conditions - only render if they pass
-            return blocksService.evaluate(blockConfig.conditions);
-          })
-          .map((blockConfig) => this.#createChildBlock(blockConfig, owner));
+
+            conditionsPassed = blocksService.evaluate(blockConfig.conditions);
+
+            if (debug) {
+              blockDebugLogger.endGroup(conditionsPassed);
+            }
+          }
+
+          if (conditionsPassed) {
+            // Block passed conditions - render it
+            result.push(
+              this.#createChildBlock(blockConfig, owner, {
+                outletName,
+                conditions: blockConfig.conditions,
+              })
+            );
+          } else if (blockDebugCallback) {
+            // Block failed conditions - show ghost if debug overlay is enabled
+            const ghostData = blockDebugCallback(
+              {
+                name: blockName,
+                Component: null,
+                args: blockConfig.args,
+                conditions: blockConfig.conditions,
+                conditionsPassed: false,
+              },
+              { outletName }
+            );
+            if (ghostData?.Component) {
+              result.push(ghostData);
+            }
+          }
+        }
+
+        return result;
       }
 
       /**
@@ -252,9 +309,12 @@ export function block(name, options = {}) {
        * @param {string} [blockConfig.classNames] - Additional CSS classes
        * @param {Array<Object>} [blockConfig.children] - Nested block configs
        * @param {import("@ember/owner").default} owner - The application owner
+       * @param {Object} [debugContext] - Debug context for visual overlay
+       * @param {string} [debugContext.outletName] - The outlet name
+       * @param {Object} [debugContext.conditions] - The block's conditions
        * @returns {{Component: import("ember-curry-component").CurriedComponent}}
        */
-      #createChildBlock(blockConfig, owner) {
+      #createChildBlock(blockConfig, owner, debugContext = {}) {
         const {
           block: ComponentClass,
           args = {},
@@ -278,21 +338,36 @@ export function block(name, options = {}) {
         // without knowing its configuration details
         const curried = curryComponent(ComponentClass, blockArgs, owner);
 
-        return {
-          // Container blocks handle their own layout wrapper (they need access
-          // to classNames for their container element). Non-container blocks
-          // get wrapped in WrappedBlockLayout for consistent block styling.
-          Component: isChildContainer
-            ? curried
-            : wrapBlockLayout(
-                {
-                  classNames,
-                  name: ComponentClass.blockName,
-                  Component: curried,
-                },
-                owner
-              ),
-        };
+        // Wrap the component appropriately
+        let wrappedComponent = isChildContainer
+          ? curried
+          : wrapBlockLayout(
+              {
+                classNames,
+                name: ComponentClass.blockName,
+                Component: curried,
+              },
+              owner
+            );
+
+        // Apply debug callback if present (for visual overlay)
+        if (blockDebugCallback) {
+          const debugResult = blockDebugCallback(
+            {
+              name: ComponentClass.blockName,
+              Component: wrappedComponent,
+              args: argsWithDefaults,
+              conditions: debugContext.conditions,
+              conditionsPassed: true,
+            },
+            { outletName: debugContext.outletName }
+          );
+          if (debugResult?.Component) {
+            wrappedComponent = debugResult.Component;
+          }
+        }
+
+        return { Component: wrappedComponent };
       }
 
       /**

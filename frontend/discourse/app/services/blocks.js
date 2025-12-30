@@ -1,6 +1,8 @@
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 import * as conditions from "discourse/blocks/conditions";
+import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
+import blockDebugState from "discourse/lib/blocks/debug-state";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import { blockRegistry } from "discourse/lib/blocks/registration";
 
@@ -271,10 +273,12 @@ export default class Blocks extends Service {
    * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to evaluate
    * @param {Object} [context] - Evaluation context
    * @param {boolean} [context.debug] - Override debug mode (defaults to dev tools state)
+   * @param {number} [context._depth] - Internal: nesting depth for logging
    * @returns {boolean} True if conditions pass, false otherwise
    */
   evaluate(conditionSpec, context = {}) {
     const debug = context.debug ?? this.#isDebugEnabled();
+    const depth = context._depth ?? 0;
 
     if (!conditionSpec) {
       return true;
@@ -282,46 +286,66 @@ export default class Blocks extends Service {
 
     // Array of conditions (AND logic - all must pass)
     if (Array.isArray(conditionSpec)) {
+      if (debug) {
+        blockDebugLogger.logCondition({
+          type: "AND",
+          args: `${conditionSpec.length} conditions`,
+          result: true,
+          depth,
+        });
+      }
+
       for (const condition of conditionSpec) {
-        const result = this.evaluate(condition, { debug });
+        const result = this.evaluate(condition, { debug, _depth: depth + 1 });
         if (!result) {
-          if (debug) {
-            this.#logCondition("AND failed at", condition, false);
-          }
           return false;
         }
-      }
-      if (debug) {
-        this.#logCondition(
-          "AND passed",
-          `${conditionSpec.length} conditions`,
-          true
-        );
       }
       return true;
     }
 
     // OR combinator (at least one must pass)
     if (conditionSpec.any !== undefined) {
-      const passed = conditionSpec.any.some((c) => this.evaluate(c, { debug }));
       if (debug) {
-        this.#logCondition(
-          passed ? "OR passed" : "OR failed (all branches)",
-          `${conditionSpec.any.length} conditions`,
-          passed
-        );
+        blockDebugLogger.logCondition({
+          type: "OR",
+          args: `${conditionSpec.any.length} conditions`,
+          result: true,
+          depth,
+        });
+      }
+
+      const passed = conditionSpec.any.some((c) =>
+        this.evaluate(c, { debug, _depth: depth + 1 })
+      );
+
+      if (debug && !passed) {
+        blockDebugLogger.logCondition({
+          type: "OR",
+          args: "all branches failed",
+          result: false,
+          depth,
+        });
       }
       return passed;
     }
 
     // NOT combinator (must fail)
     if (conditionSpec.not !== undefined) {
-      const innerResult = this.evaluate(conditionSpec.not, { debug });
-      const result = !innerResult;
       if (debug) {
-        this.#logCondition("NOT", conditionSpec.not, result);
+        blockDebugLogger.logCondition({
+          type: "NOT",
+          args: null,
+          result: true,
+          depth,
+        });
       }
-      return result;
+
+      const innerResult = this.evaluate(conditionSpec.not, {
+        debug,
+        _depth: depth + 1,
+      });
+      return !innerResult;
     }
 
     // Single condition with type
@@ -329,44 +353,40 @@ export default class Blocks extends Service {
     const conditionInstance = this.#conditionTypes.get(type);
 
     if (!conditionInstance) {
-      // This shouldn't happen if validate() was called first
-      // but fail closed (don't render) if it does
       if (debug) {
-        this.#logCondition(`unknown type "${type}"`, args, false);
+        blockDebugLogger.logCondition({
+          type: `unknown "${type}"`,
+          args,
+          result: false,
+          depth,
+        });
       }
       return false;
     }
 
     const result = conditionInstance.evaluate(args);
     if (debug) {
-      this.#logCondition(type, args, result);
+      blockDebugLogger.logCondition({ type, args, result, depth });
     }
     return result;
   }
 
   /**
-   * Checks if debug mode is enabled via dev tools.
+   * Checks if debug mode is enabled.
    *
    * @returns {boolean}
    */
   #isDebugEnabled() {
-    if (typeof window !== "undefined" && window.__DEV_TOOLS_STATE__) {
-      return window.__DEV_TOOLS_STATE__.blockConditionDebug;
-    }
-    return false;
+    return blockDebugState.enabled;
   }
 
   /**
-   * Logs a condition evaluation result to the console.
+   * Checks if debug mode is enabled (public accessor for block-outlet).
    *
-   * @param {string} label - Description of the condition
-   * @param {*} spec - The condition spec or args
-   * @param {boolean} result - Whether the condition passed
+   * @returns {boolean}
    */
-  #logCondition(label, spec, result) {
-    const status = result ? "\u2713" : "\u2717";
-    // eslint-disable-next-line no-console
-    console.debug(`[Blocks] ${status} ${label}:`, spec);
+  isDebugEnabled() {
+    return this.#isDebugEnabled();
   }
 
   /**

@@ -124,3 +124,274 @@
     }
   }
 }
+
+/* Block Debug Overlay */
+.block-debug-info {
+  position: relative;
+  border: 2px solid #9c27b0;
+  margin: 2px;
+
+  &.--rendered {
+    border-color: #4caf50;
+  }
+}
+
+.block-debug-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  background: #4caf50;
+  color: white;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 0 0 4px 0;
+  cursor: pointer;
+
+  .d-icon {
+    color: white !important;
+    font-size: 11px !important;
+    width: 11px !important;
+  }
+
+  &:hover {
+    background: #388e3c;
+  }
+}
+
+.block-debug-ghost {
+  position: relative;
+  border: 2px dashed #f44336;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(244, 67, 54, 0.05) 10px,
+    rgba(244, 67, 54, 0.05) 20px
+  );
+  padding: 8px;
+  margin: 2px;
+  min-height: 30px;
+}
+
+.block-debug-ghost__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  color: #f44336;
+  font-size: 11px;
+  font-style: italic;
+  cursor: pointer;
+
+  .d-icon {
+    color: #f44336 !important;
+    font-size: 11px !important;
+  }
+}
+
+.block-debug-ghost__status {
+  opacity: 0.7;
+}
+
+/* Block Debug Tooltip */
+.block-debug-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13px;
+  min-width: 280px;
+  max-width: 450px;
+
+  &.--ghost {
+    .block-debug-tooltip__header {
+      color: #f44336;
+    }
+  }
+}
+
+.block-debug-tooltip__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  color: #4caf50;
+
+  &.--failed {
+    color: #f44336;
+  }
+
+  .d-icon {
+    font-size: 14px !important;
+  }
+}
+
+.block-debug-tooltip__title {
+  font-size: 14px;
+}
+
+.block-debug-tooltip__outlet {
+  font-weight: normal;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.block-debug-tooltip__status {
+  font-size: 10px;
+  padding: 1px 4px;
+  background: #f44336;
+  color: white;
+  border-radius: 2px;
+}
+
+.block-debug-tooltip__section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.block-debug-tooltip__section-title {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.block-debug-tooltip__empty {
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.block-debug-tooltip__hint {
+  font-size: 11px;
+  font-style: italic;
+  opacity: 0.7;
+  border-top: 1px solid var(--primary-low);
+  padding-top: 8px;
+}
+
+/* Block Debug Args Table */
+.block-debug-args {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.--empty {
+    font-style: italic;
+    opacity: 0.6;
+  }
+}
+
+.block-debug-args__row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+
+  &:hover {
+    background: var(--primary-very-low);
+  }
+}
+
+.block-debug-args__key {
+  font-weight: bold;
+  color: #2196f3;
+  white-space: nowrap;
+}
+
+.block-debug-args__value {
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.block-debug-args__type {
+  font-size: 10px;
+  opacity: 0.5;
+  margin-right: 4px;
+}
+
+/* Block Debug Conditions Tree */
+.block-debug-conditions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+
+  &.--passed {
+    .block-debug-condition__type {
+      color: #4caf50;
+    }
+  }
+
+  &.--failed {
+    .block-debug-condition__type {
+      color: #f44336;
+    }
+  }
+}
+
+.block-debug-condition {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &.--combinator {
+    .block-debug-condition__type {
+      font-weight: bold;
+    }
+  }
+}
+
+.block-debug-condition__type {
+  &.--combinator {
+    color: #607d8b;
+  }
+}
+
+.block-debug-condition__args {
+  opacity: 0.7;
+  font-size: 11px;
+}
+
+/* Block Debug Menu (for dropdown button) */
+.block-debug-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  min-width: 160px;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    input[type="checkbox"] {
+      margin: 0;
+    }
+  }
+}
