@@ -24,41 +24,14 @@ const HYSTERESIS_FACTOR = 0.7;
 const SCROLLEND_FALLBACK_MS = 1000;
 const MAX_DOTS = 10;
 
-/**
- * @typedef {Object} ImageCarouselItem
- * @property {HTMLElement} element
- * @property {HTMLImageElement} img
- * @property {number} width
- * @property {number} height
- */
-
-/**
- * @component image-carousel
- * @param {Object} @data
- * @param {Array<ImageCarouselItem>} @data.items
- * @param {string} @data.mode
- */
 export default class ImageCarousel extends Component {
-  /**
-   * @type {number}
-   */
   @tracked currentIndex = 0;
-
-  /**
-   * @type {HTMLElement|null}
-   */
   trackElement = null;
 
-  /**
-   * @type {ReturnType<typeof modifier>}
-   */
   mountItem = modifier((element, [itemElement]) => {
     element.appendChild(itemElement);
   });
 
-  /**
-   * @type {ReturnType<typeof modifier>}
-   */
   setupTrack = modifier((element) => {
     this.trackElement = element;
 
@@ -70,7 +43,6 @@ export default class ImageCarousel extends Component {
         clearTimeout(this.#scrollEndFallbackTimer);
         this.#scrollEndFallbackTimer = null;
       }
-      // Only clear if this scrollend corresponds to the current scroll operation
       this.#activeScrollGeneration = 0;
     };
 
@@ -78,7 +50,6 @@ export default class ImageCarousel extends Component {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Skip if a programmatic scroll is in progress
         if (this.#activeScrollGeneration > 0) {
           return;
         }
@@ -96,20 +67,14 @@ export default class ImageCarousel extends Component {
         slides.forEach((slide, index) => {
           const ratio = ratios.get(slide) || 0;
           if (ratio > 0) {
-            // Calculate where this slide *wants* to be scrolled to in order to be centered
             const idealScroll =
               slide.offsetLeft +
               slide.offsetWidth / 2 -
               element.clientWidth / 2;
-
-            // Clamp to actual possible scroll range so boundaries (start/end) work correctly
             const clampedTarget = Math.max(0, Math.min(idealScroll, maxScroll));
-
             let diff = Math.abs(clampedTarget - currentScroll);
 
-            // Selection Hysteresis: Bias the calculation to favor the current slide.
-            // Other slides must be significantly closer to "win" focus. Dividing by
-            // HYSTERESIS_FACTOR (0.7) means they need ~43% less distance to take over.
+            // Hysteresis: bias toward current slide, others must be significantly closer
             if (index !== this.currentIndex) {
               diff = diff / HYSTERESIS_FACTOR;
             }
@@ -152,27 +117,10 @@ export default class ImageCarousel extends Component {
     };
   });
 
-  /**
-   * Tracks the current programmatic scroll generation to prevent race conditions.
-   * Incremented each time a programmatic scroll starts, only cleared when matching.
-   * @type {number}
-   */
+  // Scroll generation counter prevents race conditions with rapid navigation
   #scrollGeneration = 0;
-
-  /**
-   * The generation number of the currently active programmatic scroll, or 0 if none.
-   * @type {number}
-   */
   #activeScrollGeneration = 0;
-
-  /**
-   * @type {ReturnType<typeof debounce>|null}
-   */
   #debounceTimer = null;
-
-  /**
-   * @type {ReturnType<typeof setTimeout>|null}
-   */
   #scrollEndFallbackTimer = null;
 
   @action
@@ -182,67 +130,40 @@ export default class ImageCarousel extends Component {
     }
   }
 
-  /**
-   * @returns {Array<ImageCarouselItem>}
-   */
   get items() {
     return this.args.data.items || [];
   }
 
-  /**
-   * @returns {boolean}
-   */
   get isSingle() {
     return this.items.length < 2;
   }
 
-  /**
-   * @returns {string}
-   */
   get scrollBehavior() {
     return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
       ? "auto"
       : "smooth";
   }
 
-  /**
-   * @returns {number}
-   */
   get prevIndex() {
     return this.currentIndex === 0 ? this.lastIndex : this.currentIndex - 1;
   }
 
-  /**
-   * @returns {number}
-   */
   get nextIndex() {
     return this.currentIndex === this.lastIndex ? 0 : this.currentIndex + 1;
   }
 
-  /**
-   * @returns {number}
-   */
   get lastIndex() {
     return this.items.length - 1;
   }
 
-  /**
-   * @returns {boolean}
-   */
   get showDots() {
     return this.items.length <= MAX_DOTS;
   }
 
-  /**
-   * @returns {string}
-   */
   get counterText() {
     return `${this.currentIndex + 1} / ${this.items.length}`;
   }
 
-  /**
-   * @param {number} index
-   */
   @action
   scrollToIndex(index) {
     const clamped = Math.max(0, Math.min(index, this.items.length - 1));
@@ -255,18 +176,16 @@ export default class ImageCarousel extends Component {
         this.#debounceTimer = null;
       }
 
-      // Increment generation and mark this scroll as active
       this.#scrollGeneration++;
       const thisGeneration = this.#scrollGeneration;
       this.#activeScrollGeneration = thisGeneration;
       this.currentIndex = clamped;
 
-      // Fallback for browsers that don't support scrollend event (Safari < 17.4)
+      // Fallback for browsers without scrollend (Safari < 17.4)
       if (this.#scrollEndFallbackTimer) {
         clearTimeout(this.#scrollEndFallbackTimer);
       }
       this.#scrollEndFallbackTimer = setTimeout(() => {
-        // Only clear if this is still the active scroll (no newer scroll started)
         if (this.#activeScrollGeneration === thisGeneration) {
           this.#activeScrollGeneration = 0;
         }
@@ -281,9 +200,6 @@ export default class ImageCarousel extends Component {
     }
   }
 
-  /**
-   * @param {KeyboardEvent} event
-   */
   @action
   onKeyDown(event) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
