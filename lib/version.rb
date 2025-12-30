@@ -7,7 +7,7 @@ module Discourse
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
       # Use the `version_bump:*` rake tasks to update this value
-      STRING = "2025.11.0"
+      STRING = "2025.11.1"
 
       PARTS = STRING.split(".")
       private_constant :PARTS
