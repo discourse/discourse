@@ -590,6 +590,250 @@ RSpec.describe Middleware::RequestTracker do
         expect(ApplicationRequest.page_view_anon.first).to eq(nil)
       end
     end
+
+    describe "browser page view logging" do
+      before { SiteSetting.enable_page_view_logging = true }
+
+      it "logs page views for explicit track view requests" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_PATH" => "/t/test-topic/123",
+            ),
+            ["200", {}],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          BrowserPageView.count
+        }.by(1)
+
+        log = BrowserPageView.order(:created_at).last
+        expect(log.is_mobile).to eq(false)
+        expect(log.path).to eq("/t/test-topic/123")
+      end
+
+      it "logs page views for deferred track view requests" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          BrowserPageView.count
+        }.by(1)
+      end
+
+      it "extracts session_id for deferred views" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              :path => "/message-bus/abc12345-1234-5678-9abc-def012345678/poll",
+              "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_SESSION_ID" =>
+                "abc12345-1234-5678-9abc-def012345678",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        log = BrowserPageView.order(:created_at).last
+        expect(log.session_id).to eq("abc12345-1234-5678-9abc-def012345678")
+      end
+
+      it "extracts session_id from header for explicit views" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => "session-id-from-header",
+            ),
+            ["200", {}],
+            0.1,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        log = BrowserPageView.order(:created_at).last
+        expect(log.session_id).to eq("session-id-from-header")
+      end
+
+      it "captures route_name from headers for explicit views" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_ROUTE_NAME" => "topic.fromParamsNear",
+            ),
+            ["200", {}],
+            0.1,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        log = BrowserPageView.order(:created_at).last
+        expect(log.route_name).to eq("topic.fromParamsNear")
+      end
+
+      it "captures route_name from headers for deferred views" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              :path => "/message-bus/abcde/poll",
+              "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_ROUTE_NAME" => "discovery.latest",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        log = BrowserPageView.order(:created_at).last
+        expect(log.route_name).to eq("discovery.latest")
+      end
+
+      it "captures referrer from headers" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://google.com",
+            ),
+            ["200", {}],
+            0.1,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        log = BrowserPageView.order(:created_at).last
+        expect(log.referrer).to eq("https://google.com")
+      end
+
+      it "does not log for API requests" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("_DISCOURSE_API" => "1"),
+            ["200", { "Content-Type" => "text/json" }],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.not_to change {
+          BrowserPageView.count
+        }
+      end
+
+      it "does not log for crawlers" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.not_to change {
+          BrowserPageView.count
+        }
+      end
+
+      it "does not log when setting is disabled" do
+        SiteSetting.enable_page_view_logging = false
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
+            ["200", {}],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.not_to change {
+          BrowserPageView.count
+        }
+      end
+    end
+
+    describe "API request logging" do
+      before { SiteSetting.enable_api_request_logging = true }
+
+      it "logs for API key requests" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("_DISCOURSE_API" => "1"),
+            ["200", { "Content-Type" => "text/json" }],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          ApiRequestLog.count
+        }.by(1)
+
+        log = ApiRequestLog.order(:created_at).last
+        expect(log.is_user_api).to eq(false)
+      end
+
+      it "logs for User API key requests" do
+        data =
+          Middleware::RequestTracker.get_data(env("_DISCOURSE_USER_API" => "1"), ["200", {}], 0.1)
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          ApiRequestLog.count
+        }.by(1)
+
+        log = ApiRequestLog.order(:created_at).last
+        expect(log.is_user_api).to eq(true)
+      end
+
+      it "captures HTTP method" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("_DISCOURSE_API" => "1", "REQUEST_METHOD" => "POST"),
+            ["200", {}],
+            0.1,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        log = ApiRequestLog.order(:created_at).last
+        expect(log.http_method).to eq("POST")
+      end
+
+      it "captures response timing" do
+        data = Middleware::RequestTracker.get_data(env("_DISCOURSE_API" => "1"), ["200", {}], 0.456)
+
+        Middleware::RequestTracker.log_request(data)
+
+        log = ApiRequestLog.order(:created_at).last
+        expect(log.response_time).to eq(0.456)
+      end
+
+      it "does not log for browser page views" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
+            ["200", {}],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.not_to change {
+          ApiRequestLog.count
+        }
+      end
+
+      it "does not log when setting is disabled" do
+        SiteSetting.enable_api_request_logging = false
+
+        data = Middleware::RequestTracker.get_data(env("_DISCOURSE_API" => "1"), ["200", {}], 0.1)
+
+        expect { Middleware::RequestTracker.log_request(data) }.not_to change {
+          ApiRequestLog.count
+        }
+      end
+    end
   end
 
   describe "rate limiting" do

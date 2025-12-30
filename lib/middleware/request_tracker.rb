@@ -83,10 +83,15 @@ class Middleware::RequestTracker
   end
 
   def self.log_request(data)
+    log_browser_page_view = false
+    log_api_request = false
+
     if data[:is_api]
       ApplicationRequest.increment!(:api)
+      log_api_request = true
     elsif data[:is_user_api]
       ApplicationRequest.increment!(:user_api)
+      log_api_request = true
     elsif data[:track_view]
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
@@ -96,6 +101,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
 
         if data[:explicit_track_view]
+          log_browser_page_view = true
           # Must be a browser if it had this header from our ajax implementation
           ApplicationRequest.increment!(:page_view_logged_in_browser)
           ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -113,6 +119,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
 
         if data[:explicit_track_view]
+          log_browser_page_view = true
           # Must be a browser if it had this header from our ajax implementation
           ApplicationRequest.increment!(:page_view_anon_browser)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
@@ -128,6 +135,7 @@ class Middleware::RequestTracker
     # 'real browser' views.
     if data[:deferred_track_view] && !data[:is_crawler]
       if data[:has_auth_cookie]
+        log_browser_page_view = true
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
@@ -139,6 +147,7 @@ class Middleware::RequestTracker
           )
         end
       elsif !SiteSetting.login_required
+        log_browser_page_view = true
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
@@ -162,6 +171,9 @@ class Middleware::RequestTracker
     elsif status >= 200
       ApplicationRequest.increment!(:http_2xx)
     end
+
+    BrowserPageView.log!(data) if log_browser_page_view && SiteSetting.enable_page_view_logging
+    ApiRequestLog.log!(data) if log_api_request && SiteSetting.enable_api_request_logging
   end
 
   def self.get_data(env, result, timing, request = nil)
@@ -208,23 +220,65 @@ class Middleware::RequestTracker
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
-    # current user based on env variables.
-    #
-    # We only care about this for topic views, other pageviews it's enough to know if the user is
-    # logged in or not, and we have separate pageview tracking for API views.
+    # current user based on env variables. Note: find_v0_auth_cookie returns a string (just the token),
+    # while find_v1_auth_cookie returns a hash with :user_id, so we check if it's a hash first.
+    # We only call CurrentUser.lookup_from_env for API requests to avoid requiring rack.input.
     current_user_id =
-      if topic_id.present?
-        begin
-          (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
-        rescue Discourse::InvalidAccess => err
-          # This error is raised when the API key is invalid, no need to stop the show.
-          Discourse.warn_exception(
-            err,
-            message: "RequestTracker.get_data failed with an invalid API key error",
-          )
-          nil
+      begin
+        if auth_cookie.is_a?(Hash)
+          auth_cookie[:user_id]
+        elsif is_api || is_user_api
+          CurrentUser.lookup_from_env(env)&.id
         end
+      rescue Discourse::InvalidAccess, RateLimiter::LimitExceeded
+        # default_current_user_provider will raise invalid access on bad token (and potentially on rate limiting)
+        # we don't want to fail the entire request logging for that
+        # we should consider a new .lookup_existing_from_env to avoid potential repeat calls on lookup_from_env logic
+        nil
       end
+
+    user_agent = env["HTTP_USER_AGENT"]
+    user_agent = HttpUserAgentEncoder.ensure_utf8(user_agent) if user_agent
+
+    path_params = env[ActionDispatch::Http::Parameters::PARAMETERS_KEY] || {}
+    route = "#{path_params[:controller]}##{path_params[:action]}"
+    # cheaper than doing multiple hash lookups
+    route = nil if route == "#"
+
+    # For deferred track view requests, use the original page's path/referrer/query_string
+    # sent via headers instead of the current request's data (which would be /message-bus or /pageview)
+    # Also extract session_id and route_name for page view logging
+    session_id = nil
+    route_name = nil
+
+    # Sam: I am not sure if we need two concepts here.
+    # Deferred track view and explicit track view are essentially the same
+    # having the explosion of headers makes code a bit more complex than what we need
+    if view_tracking_data[:deferred_track_view]
+      session_id = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_SESSION_ID"]
+      request_path = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_PATH"].presence
+      request_query_string = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_QUERY_STRING"].presence
+      request_referrer = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_REFERRER"].presence
+      route_name = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_ROUTE_NAME"]
+      # message bus return a 418, we override to 200 here
+      # we are going to need to consider total counts here to see this
+      # header
+      status = 200
+    elsif view_tracking_data[:explicit_track_view]
+      session_id = env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]
+      request_path = env["HTTP_DISCOURSE_TRACK_VIEW_PATH"].presence
+      request_query_string = env["HTTP_DISCOURSE_TRACK_VIEW_QUERY_STRING"].presence
+      request_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"].presence
+      route_name = env["HTTP_DISCOURSE_TRACK_VIEW_ROUTE_NAME"]
+      # status is "sort of correct" in this case given it is a result of ajax that often (but not always) will match what user sees.
+    else
+      request_path = view_tracking_data[:path] || request.path
+      request_query_string = request.query_string.presence
+      request_referrer = env["HTTP_REFERER"]
+    end
+
+    # For API requests, capture the HTTP method
+    http_method = request.request_method if is_api || is_user_api
 
     request_data = {
       status: status,
@@ -239,7 +293,15 @@ class Middleware::RequestTracker
       timing: timing,
       queue_seconds: env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY],
       request_remote_ip: request_remote_ip,
-    }.merge(view_tracking_data)
+      path: request_path,
+      query_string: request_query_string,
+      referrer: request_referrer,
+      user_agent: user_agent,
+      route: route,
+      session_id: session_id,
+      route_name: route_name,
+      http_method: http_method,
+    }.merge(view_tracking_data.except(:path))
 
     if request_data[:is_background]
       request_data[:background_type] = if is_message_bus
@@ -253,12 +315,6 @@ class Middleware::RequestTracker
       else
         "topic-timings"
       end
-    end
-
-    if request_data[:is_crawler]
-      user_agent = env["HTTP_USER_AGENT"]
-      user_agent = HttpUserAgentEncoder.ensure_utf8(user_agent) if user_agent
-      request_data[:user_agent] = user_agent
     end
 
     if cache = headers["X-Discourse-Cached"]
@@ -593,12 +649,15 @@ class Middleware::RequestTracker
     track_view = !!(explicit_track_view || implicit_track_view)
     browser_page_view = !!(explicit_track_view || deferred_track_view)
 
+    path = env["HTTP_DISCOURSE_TRACK_VIEW_PATH"]
+
     {
       track_view: track_view,
       explicit_track_view: explicit_track_view,
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
+      path: path,
     }
   end
 end

@@ -4136,6 +4136,22 @@ dashboard:
     hidden: true
     default: false
     client: true
+  enable_page_view_logging:
+    hidden: true
+    default: false
+  page_view_logging_retention_days:
+    hidden: true
+    default: 30
+    min: 1
+    max: 365
+  enable_api_request_logging:
+    hidden: true
+    default: false
+  api_request_logging_retention_days:
+    hidden: true
+    default: 30
+    min: 1
+    max: 365
 
 experimental:
   experimental_auto_grid_images:
