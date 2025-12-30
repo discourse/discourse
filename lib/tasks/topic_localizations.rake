@@ -19,14 +19,7 @@ task "topic_localizations:backfill_excerpts" => :environment do
       topic_localization.topic.first_post&.localizations&.find_by(locale: topic_localization.locale)
 
     if post_localization
-      excerpt =
-        Post.excerpt(
-          post_localization.cooked,
-          SiteSetting.topic_excerpt_maxlength,
-          strip_links: true,
-          strip_images: true,
-        )
-      topic_localization.update_column(:excerpt, excerpt)
+      topic_localization.update_excerpt(cooked: post_localization.cooked)
       updated += 1
     end
 
