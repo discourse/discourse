@@ -70,6 +70,97 @@ RSpec.describe "Drawer - starred channels", type: :system do
     end
   end
 
+  context "when a channel is starred" do
+    fab!(:user_1) { Fabricate(:user, username: "alice") }
+
+    before { channel_1.membership_for(current_user).update!(starred: true) }
+
+    it "shows the starred channel in both the starred tab AND the channels tab" do
+      visit("/")
+      chat_page.open_from_header
+      drawer_page.click_starred_channels
+
+      expect(page).to have_css(
+        ".starred-channels .chat-channel-row[data-chat-channel-id='#{channel_1.id}']",
+      )
+
+      drawer_page.click_channels
+
+      expect(page).to have_css(
+        ".public-channels .chat-channel-row[data-chat-channel-id='#{channel_1.id}']",
+      )
+    end
+
+    it "shows unread indicator on channel row in both tabs when channel has unreads" do
+      Fabricate(:chat_message, chat_channel: channel_1, user: user_1)
+      channel_1.membership_for(current_user).update!(last_viewed_at: 1.minute.ago)
+
+      visit("/")
+      chat_page.open_from_header
+      drawer_page.click_starred_channels
+
+      expect(page).to have_css(
+        ".starred-channels .chat-channel-row[data-chat-channel-id='#{channel_1.id}'] .chat-channel-unread-indicator",
+      )
+
+      drawer_page.click_channels
+
+      expect(page).to have_css(
+        ".public-channels .chat-channel-row[data-chat-channel-id='#{channel_1.id}'] .chat-channel-unread-indicator",
+      )
+    end
+
+    it "only shows footer unread indicator on starred tab, not on channels tab" do
+      Fabricate(
+        :chat_message,
+        chat_channel: channel_1,
+        user: user_1,
+        message: "hey @#{current_user.username}",
+      )
+      channel_1.membership_for(current_user).update!(last_viewed_at: 1.minute.ago)
+
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_css("#c-footer-starred .c-unread-indicator")
+      expect(page).to have_no_css("#c-footer-channels .c-unread-indicator")
+    end
+  end
+
+  context "when a DM channel is starred" do
+    fab!(:user_1) { Fabricate(:user, username: "alice") }
+    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
+
+    before { dm_channel.membership_for(current_user).update!(starred: true) }
+
+    it "shows the starred DM in both the starred tab AND the DMs tab" do
+      visit("/")
+      chat_page.open_from_header
+      drawer_page.click_starred_channels
+
+      expect(page).to have_css(
+        ".starred-channels .chat-channel-row[data-chat-channel-id='#{dm_channel.id}']",
+      )
+
+      drawer_page.click_direct_messages
+
+      expect(page).to have_css(
+        ".direct-message-channels .chat-channel-row[data-chat-channel-id='#{dm_channel.id}']",
+      )
+    end
+
+    it "only shows footer unread indicator on starred tab, not on DMs tab" do
+      Fabricate(:chat_message, chat_channel: dm_channel, user: user_1)
+      dm_channel.membership_for(current_user).update!(last_viewed_at: 1.minute.ago)
+
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_css("#c-footer-starred .c-unread-indicator")
+      expect(page).to have_no_css("#c-footer-direct-messages .c-unread-indicator")
+    end
+  end
+
   context "when navigating back from a channel" do
     before { channel_1.membership_for(current_user).update!(starred: true) }
 
