@@ -134,6 +134,10 @@ RSpec.describe Chat::SearchChatable do
           expect(result.groups).to include(group_1, group_2)
         end
 
+        it "does not preload group users" do
+          expect(result.groups.first.association(:users).loaded?).to eq(false)
+        end
+
         it "can filter groups by name" do
           params[:term] = "awesome-group"
           expect(result.groups).to contain_exactly(group_1)
