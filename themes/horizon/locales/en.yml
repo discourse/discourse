@@ -1,3 +1,12 @@
 en:
+  solved: "Solved"
+  unsolved: "Unsolved"
   theme_metadata:
     description: "A simple, beautiful theme that improves the out of the box experience for Discourse sites."
+    settings:
+      topic_card_detail:
+        label: "Topic Card Detail Level"
+        description: "Controls the amount of information displayed on topic cards. 'Simple' shows minimal info. 'Detailed' includes tags, solved status, assigned users, and vote counts."
+        choices:
+          simple: "Simple"
+          detailed: "Detailed"

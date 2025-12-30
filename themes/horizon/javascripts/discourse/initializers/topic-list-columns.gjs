@@ -1,4 +1,6 @@
+import { settings } from "virtual:theme";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import DetailedTopicCard from "../components/card/detailed-topic-card";
 import TopicActivityColumn from "../components/card/topic-activity-column";
 import TopicCategoryColumn from "../components/card/topic-category-column";
 import TopicCreatorColumn from "../components/card/topic-creator-column";
@@ -35,15 +37,47 @@ const TopicCreator = <template>
   </td>
 </template>;
 
+const DetailedCard = <template>
+  <DetailedTopicCard
+    @topic={{@topic}}
+    @hideCategory={{@hideCategory}}
+    @bulkSelectEnabled={{@bulkSelectEnabled}}
+    @isSelected={{@isSelected}}
+  />
+</template>;
+
 export default {
   name: "topic-list-customizations",
 
   initialize(container) {
     const router = container.lookup("service:router");
+    const isDetailed = settings.topic_card_detail === "detailed";
+
     withPluginApi((api) => {
       api.registerValueTransformer(
         "topic-list-columns",
         ({ value: columns }) => {
+          if (isDetailed) {
+            // DETAILED MODE: Single column with full card
+            const hasBulkSelect = columns.has("bulk-select");
+
+            // Clear all columns except bulk-select
+            for (const [key] of columns.entries()) {
+              if (key !== "bulk-select") {
+                columns.delete(key);
+              }
+            }
+
+            // Add detailed card
+            columns.add("detailed-card", {
+              item: DetailedCard,
+              after: hasBulkSelect ? "bulk-select" : undefined,
+            });
+
+            return columns;
+          }
+
+          // SIMPLE MODE: Existing implementation
           columns.add("topic-status", {
             item: TopicStatus,
             after: "topic-author",
@@ -78,6 +112,10 @@ export default {
       api.registerValueTransformer(
         "topic-list-item-class",
         ({ value: classes, context }) => {
+          if (isDetailed) {
+            classes.push("detailed-card-item");
+          }
+
           if (
             context.topic.is_hot ||
             context.topic.pinned ||
