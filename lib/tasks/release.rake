@@ -226,6 +226,12 @@ namespace :release do
         puts "Target version #{current_version} is already >= #{target_version_number}. Incrementing instead."
         major, minor, patch_and_pre = current_version.split(".")
         minor = (minor.to_i + 1).to_s.rjust(2, "0")
+
+        if minor.to_i > 12 && Time.now.month == 12
+          major = (major.to_i + 1).to_s
+          minor = "01"
+        end
+
         target_version_number = "#{major}.#{minor}.#{patch_and_pre}"
       end
 
