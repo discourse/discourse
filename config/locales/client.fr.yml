@@ -4484,6 +4484,7 @@ fr:
         this_month: "Mois"
         this_week: "Semaine"
         today: "Aujourd'hui"
+        custom: "Personnalisé"
     custom_homepage:
       admin_message: 'L''un de vos thèmes a activé le modificateur « custom_homepage », mais il n''affiche rien dans le connecteur [custom-homepage]. (Ce message s''adresse uniquement aux administrateurs du site.)'
     browser_update: 'Malheureusement, <a href="https://discourse.org/about#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
@@ -7759,16 +7760,12 @@ fr:
             prompt: "La modification de ce paramètre peut avoir des conséquences importantes ou inattendues pour votre site. Voulez-vous vraiment continuer ?"
             confirm: "Oui, continuer"
           min_password_length:
-            prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les utilisateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           min_admin_password_length:
-            prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les administrateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           password_unique_charactes:
-            prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les utilisateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           block_common_passwords:
-            prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les utilisateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
       badges:
         status: Statut

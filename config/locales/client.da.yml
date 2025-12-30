@@ -3792,6 +3792,7 @@ da:
         this_month: "Måned"
         this_week: "Uge"
         today: "I dag"
+        custom: "Tilpasset"
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"

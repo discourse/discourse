@@ -4462,6 +4462,7 @@ pt_BR:
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
+        custom: "Personalizados(as)"
     custom_homepage:
       admin_message: 'Um dos seus temas ativou o modificador "custom_homepage" sem gerar nada no conector [custom-homepage]. (Esta mensagem é exibida apenas para administradores(as) do site.)'
     browser_update: 'Infelizmente, <a href="https://discourse.org/about#browser">seu navegador não é compatível</a>. <a href="https://browsehappy.com">Mude para um navegador compatível</a> para visualizar o conteúdo avançado, fazer login e responder.'
@@ -7736,16 +7737,12 @@ pt_BR:
             prompt: "A alteração desta configuração pode ter consequências inesperadas em diversas áreas do seu site. Deseja mesmo prosseguir?"
             confirm: "Sim, claro"
           min_password_length:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           min_admin_password_length:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) administradores(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           password_unique_charactes:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           block_common_passwords:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
       badges:
         status: Status

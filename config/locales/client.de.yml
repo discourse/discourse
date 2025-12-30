@@ -4526,6 +4526,7 @@ de:
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
+        custom: "Benutzerdefiniert"
     custom_homepage:
       admin_message: 'Eines deiner Themes hat den Modifikator "custom_homepage" aktiviert, aber es gibt nichts im [custom-homepage]-Connector aus. (Diese Meldung wird nur für Website-Administratoren angezeigt.)'
     browser_update: 'Leider wird <a href="https://discourse.org/about#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a>, um die Inhalte in vollem Umfang zu sehen, dich anzumelden und zu antworten.'
@@ -7860,16 +7861,12 @@ de:
             prompt: "Das Ändern dieser Einstellung kann weitreichende oder unbeabsichtigte Folgen für deine Website haben. Bist du sicher, dass du fortfahren willst?"
             confirm: "Ja, ich bin sicher"
           min_password_length:
-            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
           min_admin_password_length:
-            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Administratoren betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
           password_unique_charactes:
-            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
           block_common_passwords:
-            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
         job_status:
           completed: "Update abgeschlossen"
