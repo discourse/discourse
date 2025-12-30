@@ -192,7 +192,7 @@ RSpec.describe "tasks/version_bump" do
     end
 
     it "creates version-bump/main branch with proper commit message and PR" do
-      allow(ReleaseUtils).to receive(:gh).with("pr", "create", any_args).and_return(false)
+      allow(ReleaseUtils).to receive(:gh).with("pr", "create", any_args).and_return(true)
 
       Dir.chdir(local_path) do
         File.write("lib/version.rb", fake_version_rb("2025.05.0-latest"))
