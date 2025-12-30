@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module ReleaseUtils
+  PRIMARY_RELEASE_TAG = "release"
+  RELEASE_TAGS = [PRIMARY_RELEASE_TAG, "beta", "latest-release"].freeze
+
   def self.dry_run?
     !!ENV["DRY_RUN"]
   end
@@ -161,11 +164,22 @@ namespace :release do
       end
 
       if existing_releases.last && Gem::Version.new(current_version) > existing_releases.last
-        ReleaseUtils.git "tag", "-a", "release", "-m", "latest release"
+        ReleaseUtils::RELEASE_TAGS.each do |synonym_tag|
+          message =
+            if synonym_tag == ReleaseUtils::PRIMARY_RELEASE_TAG
+              "latest release"
+            else
+              "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_RELEASE_TAG}` tag"
+            end
+          ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+        end
         if ReleaseUtils.dry_run?
-          puts "[DRY RUN] Skipping pushing 'release' tag to origin"
+          puts "[DRY RUN] Skipping pushing #{ReleaseUtils::RELEASE_TAGS.inspect} tags to origin"
         else
-          ReleaseUtils.git "push", "origin", "-f", "refs/tags/release"
+          ReleaseUtils.git "push",
+                           "origin",
+                           "-f",
+                           *ReleaseUtils::RELEASE_TAGS.map { |tag| "refs/tags/#{tag}" }
         end
       end
     end
