@@ -103,8 +103,10 @@ RSpec.describe "tasks/version_bump" do
         expect(output).to include("Tag v2025.05.0 already exists, skipping")
       end
     end
+  end
 
-    it "creates all release alias tags when version is latest" do
+  describe "release:update_release_tags" do
+    it "creates release alias tags when version >= latest release" do
       Dir.chdir(local_path) do
         run "git", "tag", "-a", "v2025.01.0", "-m", "version 2025.01.0"
 
@@ -112,9 +114,58 @@ RSpec.describe "tasks/version_bump" do
         run "git", "add", "."
         run "git", "commit", "-m", "release 2025.06.0"
         commit_hash = run("git", "rev-parse", "HEAD").strip
-        run "git", "branch", "release/2025.06"
 
-        capture_stdout { invoke_rake_task("release:maybe_tag_release", commit_hash) }
+        capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
+
+        tags = run("git", "tag").lines.map(&:strip)
+        ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).to include(tag) }
+      end
+    end
+
+    it "creates release alias tags when version equals latest release" do
+      Dir.chdir(local_path) do
+        run "git", "tag", "-a", "v2025.06.0", "-m", "version 2025.06.0"
+
+        File.write("lib/version.rb", fake_version_rb("2025.06.0"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "another commit on 2025.06.0"
+        commit_hash = run("git", "rev-parse", "HEAD").strip
+
+        capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
+
+        tags = run("git", "tag").lines.map(&:strip)
+        ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).to include(tag) }
+      end
+    end
+
+    it "skips when version is older than latest release" do
+      Dir.chdir(local_path) do
+        run "git", "tag", "-a", "v2025.06.0", "-m", "version 2025.06.0"
+
+        File.write("lib/version.rb", fake_version_rb("2025.01.0"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "old release"
+        commit_hash = run("git", "rev-parse", "HEAD").strip
+
+        output = capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
+
+        expect(output).to include("older than latest release")
+        tags = run("git", "tag").lines.map(&:strip)
+        ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).not_to include(tag) }
+      end
+    end
+
+    it "ignores -latest prereleases when determining latest release" do
+      Dir.chdir(local_path) do
+        run "git", "tag", "-a", "v2025.01.0", "-m", "version 2025.01.0"
+        run "git", "tag", "-a", "v2025.12.0-latest", "-m", "prerelease"
+
+        File.write("lib/version.rb", fake_version_rb("2025.06.0"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "release 2025.06.0"
+        commit_hash = run("git", "rev-parse", "HEAD").strip
+
+        capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
 
         tags = run("git", "tag").lines.map(&:strip)
         ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).to include(tag) }

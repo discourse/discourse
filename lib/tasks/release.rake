@@ -149,13 +149,6 @@ namespace :release do
 
     tag_name = "v#{current_version}"
 
-    existing_releases =
-      ReleaseUtils
-        .git("tag", "-l", "v*")
-        .lines
-        .map { |tag| Gem::Version.new(tag.strip.delete_prefix("v")) }
-        .sort
-
     if ReleaseUtils.ref_exists?(tag_name)
       puts "Tag #{tag_name} already exists, skipping"
     else
@@ -167,26 +160,50 @@ namespace :release do
       else
         ReleaseUtils.git "push", "origin", "refs/tags/#{tag_name}"
       end
+    end
 
-      if existing_releases.last && Gem::Version.new(current_version) > existing_releases.last
-        ReleaseUtils::RELEASE_TAGS.each do |synonym_tag|
-          message =
-            if synonym_tag == ReleaseUtils::PRIMARY_RELEASE_TAG
-              "latest release"
-            else
-              "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_RELEASE_TAG}` tag"
-            end
-          ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
-        end
-        if ReleaseUtils.dry_run?
-          puts "[DRY RUN] Skipping pushing #{ReleaseUtils::RELEASE_TAGS.inspect} tags to origin"
-        else
-          ReleaseUtils.git "push",
-                           "origin",
-                           "-f",
-                           *ReleaseUtils::RELEASE_TAGS.map { |tag| "refs/tags/#{tag}" }
-        end
+    puts "Done!"
+  end
+
+  desc "Update release/beta/latest-release tags to track latest release"
+  task "update_release_tags", [:check_ref] do |t, args|
+    check_ref = args[:check_ref]
+
+    current_version =
+      ReleaseUtils.with_clean_worktree("main") do
+        ReleaseUtils.git "checkout", check_ref.to_s
+        ReleaseUtils.parse_current_version
       end
+
+    existing_releases =
+      ReleaseUtils
+        .git("tag", "-l", "v*")
+        .lines
+        .map { |tag| tag.strip.delete_prefix("v") }
+        .map { |v| Gem::Version.new(v) }
+        .reject(&:prerelease?)
+        .sort
+
+    if existing_releases.empty? || Gem::Version.new(current_version) >= existing_releases.last
+      ReleaseUtils::RELEASE_TAGS.each do |synonym_tag|
+        message =
+          if synonym_tag == ReleaseUtils::PRIMARY_RELEASE_TAG
+            "latest release"
+          else
+            "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_RELEASE_TAG}` tag"
+          end
+        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+      end
+      if ReleaseUtils.dry_run?
+        puts "[DRY RUN] Skipping pushing #{ReleaseUtils::RELEASE_TAGS.inspect} tags to origin"
+      else
+        ReleaseUtils.git "push",
+                         "origin",
+                         "-f",
+                         *ReleaseUtils::RELEASE_TAGS.map { |tag| "refs/tags/#{tag}" }
+      end
+    else
+      puts "Current version #{current_version} is older than latest release #{existing_releases.last}. Skipping."
     end
 
     puts "Done!"
