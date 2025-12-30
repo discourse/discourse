@@ -285,60 +285,66 @@ export default class Blocks extends Service {
 
     // Array of conditions (AND logic - all must pass)
     if (Array.isArray(conditionSpec)) {
+      // Log combinator BEFORE children (result=null as placeholder)
       if (isLoggingEnabled) {
         blockDebugLogger.logCondition({
           type: "AND",
           args: `${conditionSpec.length} conditions`,
-          result: true,
+          result: null,
           depth,
         });
       }
 
+      let andResult = true;
       for (const condition of conditionSpec) {
         const result = this.evaluate(condition, {
           debug: isLoggingEnabled,
           _depth: depth + 1,
         });
         if (!result) {
-          return false;
+          andResult = false;
+          break;
         }
       }
-      return true;
+
+      // Update combinator with actual result
+      if (isLoggingEnabled) {
+        blockDebugLogger.updateCombinatorResult(andResult, depth);
+      }
+      return andResult;
     }
 
     // OR combinator (at least one must pass)
     if (conditionSpec.any !== undefined) {
+      // Log combinator BEFORE children (result=null as placeholder)
       if (isLoggingEnabled) {
         blockDebugLogger.logCondition({
           type: "OR",
           args: `${conditionSpec.any.length} conditions`,
-          result: true,
+          result: null,
           depth,
         });
       }
 
-      const passed = conditionSpec.any.some((c) =>
+      const orResult = conditionSpec.any.some((c) =>
         this.evaluate(c, { debug: isLoggingEnabled, _depth: depth + 1 })
       );
 
-      if (isLoggingEnabled && !passed) {
-        blockDebugLogger.logCondition({
-          type: "OR",
-          args: "all branches failed",
-          result: false,
-          depth,
-        });
+      // Update combinator with actual result
+      if (isLoggingEnabled) {
+        blockDebugLogger.updateCombinatorResult(orResult, depth);
       }
-      return passed;
+      return orResult;
     }
 
     // NOT combinator (must fail)
     if (conditionSpec.not !== undefined) {
+      // Log combinator BEFORE children (result=null as placeholder)
       if (isLoggingEnabled) {
         blockDebugLogger.logCondition({
           type: "NOT",
           args: null,
-          result: true,
+          result: null,
           depth,
         });
       }
@@ -347,7 +353,13 @@ export default class Blocks extends Service {
         debug: isLoggingEnabled,
         _depth: depth + 1,
       });
-      return !innerResult;
+      const notResult = !innerResult;
+
+      // Update combinator with actual result
+      if (isLoggingEnabled) {
+        blockDebugLogger.updateCombinatorResult(notResult, depth);
+      }
+      return notResult;
     }
 
     // Single condition with type

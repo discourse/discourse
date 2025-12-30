@@ -277,7 +277,16 @@ export function block(name, options = {}) {
         const blocksService = owner.lookup("service:blocks");
         // Use callback to check logging state (set by dev-tools via closure)
         const isLoggingEnabled = blockLoggingCallback?.() ?? false;
-        const outletName = this.args.outletName || name;
+        // For root blocks (BlockOutlet), use the actual outlet name
+        // For nested container blocks, use the outletName passed from parent
+        const outletName = this.isRoot
+          ? this.outletName
+          : this.args.outletName || name;
+        // Build hierarchy path for debug logging (e.g., "outlet-name/parent-block")
+        // For nested blocks, include this container's name in the path
+        const hierarchy = this.isRoot
+          ? this.outletName
+          : `${this.args._hierarchy || this.args.outletName}/${name}`;
         const result = [];
 
         for (const blockConfig of rawChildren) {
@@ -287,7 +296,7 @@ export function block(name, options = {}) {
           // Evaluate conditions if present
           if (blockConfig.conditions) {
             if (isLoggingEnabled) {
-              blockDebugLogger.startGroup(blockName, outletName);
+              blockDebugLogger.startGroup(blockName, hierarchy);
             }
 
             conditionsPassed = blocksService.evaluate(blockConfig.conditions, {
@@ -444,12 +453,19 @@ export function block(name, options = {}) {
        * @returns {Object} The complete args object for the child block
        */
       #buildBlockArgs(args, children, extra = {}) {
+        // Build hierarchy for nested blocks
+        // Root BlockOutlet doesn't add itself to the hierarchy (it's just the outlet name)
+        // Nested container blocks append their name to form the path
+        const childHierarchy = this.isRoot
+          ? this.outletName
+          : `${this.args._hierarchy || this.args.outletName}/${name}`;
+
         return {
           ...args,
           children,
           outletName: this.args.outletName,
-          // Pass the secret symbol to authorize child block instantiation
-          $block$: __BLOCK_CONTAINER_FLAG,
+          _hierarchy: childHierarchy, // Pass hierarchy to children for debug logging
+          $block$: __BLOCK_CONTAINER_FLAG, // Pass the secret symbol to authorize child block instantiation
           ...extra,
         };
       }

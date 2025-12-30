@@ -3,17 +3,14 @@
   It is not part of our normal CSS build process, so SCSS variables are not available.
   Native CSS nesting can be used safely, because developers who use this tool are expected to have modern browsers.
 */
+
 .plugin-outlet-info {
   --plugin-outlet-info-border-color: #080;
   --plugin-outlet-info-background-color: #0c0;
-
   margin: 1px;
   border: 1px solid var(--plugin-outlet-info-border-color);
-  display: inline-block;
-
   background-color: var(--plugin-outlet-info-background-color);
   color: white;
-
   text-align: center;
   font-size: 14px !important;
   font-weight: normal;
@@ -42,7 +39,6 @@
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 10px;
-
   display: flex;
   gap: 5px;
 
@@ -59,7 +55,7 @@
   display: grid;
   grid-template-columns: min-content 1fr;
   font-size: 14px;
-  grid-gap: 10px;
+  gap: 10px;
   min-width: 300px;
   max-width: 100%;
   width: 100%;
@@ -70,8 +66,7 @@
   }
 
   .fw {
-    font-family:
-      "Courier New", "Courier", "Lucida Console", "Monaco", monospace;
+    font-family: "Courier New", Courier, "Lucida Console", Monaco, monospace;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -95,12 +90,10 @@
 .dev-tools-toolbar {
   position: fixed;
   z-index: 999999;
-
   display: flex;
   flex-direction: column;
-
   background-color: var(--primary-low);
-  border-radius: 0px 5px 5px 0px;
+  border-radius: 0 5px 5px 0;
 
   button {
     background: none;
@@ -141,11 +134,9 @@
   top: 0;
   left: 0;
   z-index: 1000;
-
   display: inline-flex;
   align-items: center;
   gap: 4px;
-
   background: #d97706;
   color: white;
   padding: 2px 6px;
@@ -173,8 +164,8 @@
     45deg,
     transparent,
     transparent 10px,
-    rgba(220, 38, 38, 0.05) 10px,
-    rgba(220, 38, 38, 0.05) 20px
+    rgb(220, 38, 38, 0.05) 10px,
+    rgb(220, 38, 38, 0.05) 20px
   );
   padding: 8px;
   margin: 2px;
@@ -182,23 +173,30 @@
 }
 
 .block-debug-ghost__badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-
-  color: #dc2626;
+  background: #dc2626;
+  color: white;
+  padding: 2px 6px;
   font-size: 11px;
-  font-style: italic;
+  font-weight: bold;
+  border-radius: 0 0 4px 0;
   cursor: pointer;
 
   .d-icon {
-    color: #dc2626 !important;
+    color: white !important;
     font-size: 11px !important;
+    width: 11px !important;
   }
-}
 
-.block-debug-ghost__status {
-  opacity: 0.7;
+  &:hover {
+    background: #b91c1c;
+  }
 }
 
 /* Block Outlet boundaries - yellow/gold */

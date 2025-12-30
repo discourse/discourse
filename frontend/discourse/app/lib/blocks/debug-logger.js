@@ -7,22 +7,19 @@
  * @module discourse/lib/blocks/debug-logger
  */
 
-// Pastel color palette for console output
+// Console output styles
 const STYLES = {
-  blockName: "color: #7c6f9b; font-weight: bold", // pastel purple
-  outletName: "color: #6b9b94", // pastel teal
-  passed: "color: #7a9b6b; font-weight: bold", // pastel green
-  failed: "color: #b08080; font-weight: bold", // pastel red/rose
-  conditionType: "color: #9b8f6b", // pastel tan/olive
-  combinator: "color: #6b7a9b; font-weight: bold", // pastel slate blue
+  blockName: "font-weight: bold", // bold only, no color
+  passed: "color: #50c050; font-weight: bold", // bright green for RENDERED
+  failed: "color: #e05050; font-weight: bold", // vivid red for SKIPPED
+  combinator: "color: #3070c0; font-weight: bold", // bold blue for operators
   indent: "color: #a0a0a0", // light gray
   args: "color: #8b8b8b", // medium gray
 };
 
 const ICONS = {
-  passed: "\u2713",
-  failed: "\u2717",
-  block: "\u25A0",
+  passed: "\u2713", // checkmark
+  failed: "\u2717", // X (failed)
 };
 
 /**
@@ -33,7 +30,7 @@ class BlockDebugLogger {
   /**
    * Current evaluation group context.
    *
-   * @type {{blockName: string, outletName: string, logs: Array}|null}
+   * @type {{blockName: string, hierarchy: string, logs: Array}|null}
    */
   #currentGroup = null;
 
@@ -43,10 +40,10 @@ class BlockDebugLogger {
    * until endGroup is called.
    *
    * @param {string} blockName - The block being evaluated
-   * @param {string} outletName - The outlet context
+   * @param {string} hierarchy - The outlet/parent hierarchy path (e.g., "outlet-name/parent-block")
    */
-  startGroup(blockName, outletName) {
-    this.#currentGroup = { blockName, outletName, logs: [] };
+  startGroup(blockName, hierarchy) {
+    this.#currentGroup = { blockName, hierarchy, logs: [] };
   }
 
   /**
@@ -69,6 +66,31 @@ class BlockDebugLogger {
   }
 
   /**
+   * Update the result of the last combinator (AND/OR/NOT) at the given depth.
+   * Used to set the actual result after children have been evaluated.
+   *
+   * @param {boolean} result - The actual result
+   * @param {number} depth - The depth of the combinator to update
+   */
+  updateCombinatorResult(result, depth) {
+    if (!this.#currentGroup) {
+      return;
+    }
+
+    // Find the combinator at this depth (should be before its children)
+    for (const log of this.#currentGroup.logs) {
+      if (
+        log.depth === depth &&
+        ["AND", "OR", "NOT"].includes(log.type) &&
+        log.result === null
+      ) {
+        log.result = result;
+        break;
+      }
+    }
+  }
+
+  /**
    * End the current group and flush logs to console.
    * Uses console.groupCollapsed for a clean, expandable view.
    *
@@ -79,7 +101,7 @@ class BlockDebugLogger {
       return;
     }
 
-    const { blockName, outletName, logs } = this.#currentGroup;
+    const { blockName, hierarchy, logs } = this.#currentGroup;
 
     if (logs.length === 0) {
       this.#currentGroup = null;
@@ -90,16 +112,14 @@ class BlockDebugLogger {
     const statusStyle = finalResult ? STYLES.passed : STYLES.failed;
     const icon = finalResult ? ICONS.passed : ICONS.failed;
 
+    // Format: [Blocks] {icon} {STATUS} {blockName} in {hierarchy}
     // eslint-disable-next-line no-console
     console.groupCollapsed(
-      `%c[Blocks]%c ${ICONS.block} %c${blockName}%c ${icon} %c${status}%c in %c${outletName}`,
-      STYLES.conditionType,
-      "",
-      STYLES.blockName,
-      "",
-      statusStyle,
-      "",
-      STYLES.outletName
+      `[Blocks] %c${icon} ${status}%c %c${blockName}%c in ${hierarchy}`,
+      statusStyle, // icon + status - same color
+      "", // reset
+      STYLES.blockName, // block name - bold
+      "font-weight: normal" // "in {hierarchy}" - explicitly reset bold
     );
 
     for (const log of logs) {
@@ -137,14 +157,13 @@ class BlockDebugLogger {
         args ? `(${args})` : ""
       );
     } else {
+      // Condition type has no special formatting
       // eslint-disable-next-line no-console
       console.log(
-        `%c${indent}%c${icon}%c %c${type}%c`,
+        `%c${indent}%c${icon}%c ${type}`,
         STYLES.indent,
         iconStyle,
         "",
-        STYLES.conditionType,
-        STYLES.args,
         args && Object.keys(args).length > 0 ? args : ""
       );
     }
