@@ -3,6 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
 import BooleanField from "discourse/admin/components/schema-setting/types/boolean";
 import CategoriesField from "discourse/admin/components/schema-setting/types/categories";
+import DatetimeField from "discourse/admin/components/schema-setting/types/datetime";
 import EnumField from "discourse/admin/components/schema-setting/types/enum";
 import FloatField from "discourse/admin/components/schema-setting/types/float";
 import GroupsField from "discourse/admin/components/schema-setting/types/groups";
@@ -34,6 +35,8 @@ export default class SchemaSettingField extends Component {
         return GroupsField;
       case "upload":
         return UploadField;
+      case "datetime":
+        return DatetimeField;
       default:
         throw new Error(`unknown type ${type}`);
     }

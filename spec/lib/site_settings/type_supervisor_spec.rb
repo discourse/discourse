@@ -99,6 +99,9 @@ RSpec.describe SiteSettings::TypeSupervisor do
       it "'file_size_restriction' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:file_size_restriction]).to eq(27)
       end
+      it "'datetime' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:datetime]).to eq(31)
+      end
     end
   end
 
