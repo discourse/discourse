@@ -288,8 +288,11 @@ export default class ChatChannelsManager extends Service {
 
   /**
    * Returns all starred channels sorted by activity (unreads first).
-   * Channels with urgent notifications (mentions, DM unreads) come first,
-   * then channels with regular unreads, then by most recent message.
+   * Prioritizes unread status over channel type:
+   * 1. Unread public channels (sorted by activity)
+   * 2. Unread DMs/Groups (sorted by activity)
+   * 3. Read public channels (sorted by activity)
+   * 4. Read DMs/Groups (sorted by activity)
    *
    * @returns {ChatChannel[]} Array of starred channels sorted by activity
    */
@@ -301,30 +304,39 @@ export default class ChatChannelsManager extends Service {
     );
 
     return starredChannels.sort((a, b) => {
+      const aUrgent = this.#getChannelUrgentCount(a);
+      const bUrgent = this.#getChannelUrgentCount(b);
+      const aUnread = this.#getChannelUnreadCount(a);
+      const bUnread = this.#getChannelUnreadCount(b);
+
+      const aHasActivity = aUrgent > 0 || aUnread > 0;
+      const bHasActivity = bUrgent > 0 || bUnread > 0;
+
+      // First: prioritize channels with activity over those without
+      if (aHasActivity !== bHasActivity) {
+        return aHasActivity ? -1 : 1;
+      }
+
+      // Within the same activity state, sort by channel type (public first)
       if (a.isDirectMessageChannel !== b.isDirectMessageChannel) {
         return a.isDirectMessageChannel ? 1 : -1;
       }
 
-      const aUrgent = this.#getChannelUrgentCount(a);
-      const bUrgent = this.#getChannelUrgentCount(b);
-
-      // Channels with urgent notifications come first
-      if (aUrgent > 0 && bUrgent > 0) {
-        return this.#compareByLastActivity(a, b);
-      }
-      if (aUrgent > 0 || bUrgent > 0) {
-        return aUrgent > bUrgent ? -1 : 1;
-      }
-
-      const aUnread = this.#getChannelUnreadCount(a);
-      const bUnread = this.#getChannelUnreadCount(b);
-
-      // Channels with unreads come next
-      if (aUnread > 0 && bUnread > 0) {
-        return this.#compareByLastActivity(a, b);
-      }
-      if (aUnread > 0 || bUnread > 0) {
-        return aUnread > bUnread ? -1 : 1;
+      // Within the same channel type and activity state:
+      // If both have activity, prioritize by urgent then unread
+      if (aHasActivity && bHasActivity) {
+        if (aUrgent > 0 && bUrgent > 0) {
+          return this.#compareByLastActivity(a, b);
+        }
+        if (aUrgent > 0 || bUrgent > 0) {
+          return aUrgent > bUrgent ? -1 : 1;
+        }
+        if (aUnread > 0 && bUnread > 0) {
+          return this.#compareByLastActivity(a, b);
+        }
+        if (aUnread > 0 || bUnread > 0) {
+          return aUnread > bUnread ? -1 : 1;
+        }
       }
 
       // Sort remaining by last activity

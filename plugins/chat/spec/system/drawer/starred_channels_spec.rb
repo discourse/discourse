@@ -53,7 +53,7 @@ RSpec.describe "Drawer - starred channels", type: :system do
       dm_channel_2.membership_for(current_user).update!(starred: true)
     end
 
-    it "sorts by unreads first, then public channels before DMs" do
+    it "sorts by activity: unread public, unread DMs, read public, read DMs" do
       Fabricate(:chat_message, chat_channel: channel_2, user: user_1)
       Fabricate(:chat_message, chat_channel: dm_channel_1, user: user_1)
       channel_2.membership_for(current_user).update!(last_viewed_at: 1.minute.ago)
@@ -65,7 +65,7 @@ RSpec.describe "Drawer - starred channels", type: :system do
 
       channels = page.all(".chat-channel-row")
       expect(channels.map { |c| c["data-chat-channel-id"] }).to eq(
-        [channel_2.id, channel_1.id, dm_channel_1.id, dm_channel_2.id].map(&:to_s),
+        [channel_2.id, dm_channel_1.id, channel_1.id, dm_channel_2.id].map(&:to_s),
       )
     end
   end
