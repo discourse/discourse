@@ -384,5 +384,26 @@ module("Unit | Lib | blocks/arg-validation", function () {
         undefined
       );
     });
+
+    test("throws for unknown args not declared in schema", function (assert) {
+      @block("known-args-block", {
+        args: {
+          title: { type: "string" },
+        },
+      })
+      class KnownArgsBlock extends Component {}
+
+      assert.throws(
+        () =>
+          validateBlockArgs(
+            {
+              block: KnownArgsBlock,
+              args: { title: "valid", unknownArg: "bad" },
+            },
+            "test-outlet"
+          ),
+        /received unknown arg "unknownArg"/
+      );
+    });
   });
 });

@@ -257,4 +257,14 @@ export function validateBlockArgs(config, outletName) {
       }
     }
   }
+
+  // Check for unknown args (args provided but not in schema)
+  for (const argName of Object.keys(providedArgs)) {
+    if (!Object.hasOwn(argsSchema, argName)) {
+      raiseBlockError(
+        `Block "${blockName}" in outlet "${outletName}" received unknown arg "${argName}". ` +
+          `Declared args are: ${Object.keys(argsSchema).join(", ") || "none"}.`
+      );
+    }
+  }
 }

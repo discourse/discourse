@@ -8,10 +8,12 @@ import { DEBUG } from "@glimmer/env";
  * @throws {Error} In DEBUG mode
  */
 export function raiseBlockError(message) {
+  const errorMessage = `[Blocks] ${message}`;
+
   if (DEBUG) {
-    throw new Error(message);
+    throw new Error(errorMessage);
   } else {
     // eslint-disable-next-line no-console
-    console.warn(`[Blocks] ${message}`);
+    console.warn(errorMessage);
   }
 }
