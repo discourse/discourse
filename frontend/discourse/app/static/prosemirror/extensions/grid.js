@@ -26,14 +26,9 @@ class GridNodeView {
         icon: "table-cells",
       },
       {
-        value: "focus",
-        label: i18n("composer.grid_mode_focus"),
+        value: "carousel",
+        label: i18n("composer.grid_mode_carousel"),
         icon: "image",
-      },
-      {
-        value: "stage",
-        label: i18n("composer.grid_mode_stage"),
-        icon: "images",
       },
     ];
 

@@ -20,7 +20,7 @@ describe "Image Carousel", type: :system do
 
   it "renders a carousel in the post stream" do
     post = create_post(raw: <<~MD)
-      [grid mode=focus]
+      [grid mode=carousel]
       ![logo|100x100](#{upload1.short_url})
       ![logo|100x100](#{upload2.short_url})
       [/grid]
@@ -30,29 +30,14 @@ describe "Image Carousel", type: :system do
     carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
 
     expect(carousel).to have_carousel
-    expect(carousel).to have_mode("focus")
+    expect(carousel).to have_mode("carousel")
     expect(carousel).to have_track
     expect(carousel).to have_slides(count: 2)
   end
 
-  it "supports stage mode" do
+  it "wraps around in carousel mode" do
     post = create_post(raw: <<~MD)
-      [grid mode=stage]
-      ![logo|100x100](#{upload1.short_url})
-      ![logo|100x100](#{upload2.short_url})
-      [/grid]
-    MD
-
-    topic_page.visit_topic(post.topic, post_number: post.post_number)
-    carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
-
-    expect(carousel).to have_mode("stage")
-    expect(carousel).to have_active_slide
-  end
-
-  it "wraps around in focus mode" do
-    post = create_post(raw: <<~MD)
-      [grid mode=focus]
+      [grid mode=carousel]
       ![logo|100x100](#{upload1.short_url})
       ![logo|100x100](#{upload2.short_url})
       [/grid]
@@ -62,7 +47,6 @@ describe "Image Carousel", type: :system do
     carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
 
     expect(carousel).to have_active_slide_index(0)
-    expect(carousel).not_to be_prev_button_disabled
 
     carousel.click_prev
     expect(carousel).to have_active_slide_index(1)
@@ -73,35 +57,13 @@ describe "Image Carousel", type: :system do
     carousel.click_next
     expect(carousel).to have_active_slide_index(1)
 
-    expect(carousel).not_to be_next_button_disabled
     carousel.click_next
     expect(carousel).to have_active_slide_index(0)
   end
 
-  it "wraps around in stage mode" do
+  it "keyboard navigation wraps around in carousel mode" do
     post = create_post(raw: <<~MD)
-      [grid mode=stage]
-      ![logo|100x100](#{upload1.short_url})
-      ![logo|100x100](#{upload2.short_url})
-      [/grid]
-    MD
-
-    topic_page.visit_topic(post.topic, post_number: post.post_number)
-    carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
-
-    expect(carousel).to have_active_slide_index(0)
-    expect(carousel).not_to be_prev_button_disabled
-
-    carousel.click_prev
-    expect(carousel).to have_active_slide_index(1)
-
-    carousel.click_next
-    expect(carousel).to have_active_slide_index(0)
-  end
-
-  it "keyboard navigation wraps around in focus mode" do
-    post = create_post(raw: <<~MD)
-      [grid mode=focus]
+      [grid mode=carousel]
       ![logo|100x100](#{upload1.short_url})
       ![logo|100x100](#{upload2.short_url})
       [/grid]
@@ -125,7 +87,7 @@ describe "Image Carousel", type: :system do
     current_user.user_option.update!(composition_mode: 1)
 
     post = create_post(raw: <<~MD)
-      [grid mode=focus]
+      [grid mode=carousel]
       ![logo|100x100](#{upload1.short_url})
       [/grid]
     MD
@@ -138,10 +100,10 @@ describe "Image Carousel", type: :system do
     expect(composer).to have_rich_editor_active
     expect(composer.image_grid).to have_mode_select
 
-    composer.image_grid.select_mode("Stage")
-    expect(composer.image_grid).to have_selected_mode("stage")
+    composer.image_grid.select_mode("Grid")
+    expect(composer.image_grid).to have_selected_mode("grid")
 
     composer.toggle_rich_editor
-    expect(composer.composer_input.value).to include("[grid mode=stage]")
+    expect(composer.composer_input.value).to include("[grid]")
   end
 end
