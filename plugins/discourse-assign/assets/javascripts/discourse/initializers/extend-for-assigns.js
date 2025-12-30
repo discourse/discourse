@@ -43,59 +43,59 @@ function defaultTitle(topic) {
 function registerTopicFooterButtons(api) {
   registerTopicFooterDropdown(TopicLevelAssignMenu);
 
-  api.registerTopicFooterButton({
-    id: "assign",
-    icon() {
-      return this.topic.isAssigned()
-        ? this.site.mobileView
-          ? "user-xmark"
-          : null
-        : "user-plus";
-    },
-    priority: 250,
-    translatedTitle() {
-      return defaultTitle(this.topic);
-    },
-    translatedAriaLabel() {
-      return defaultTitle(this.topic);
-    },
-    translatedLabel() {
-      return i18n("discourse_assign.assign.title");
-    },
-    async action() {
-      if (!this.currentUser?.can_assign) {
-        return;
-      }
+  // api.registerTopicFooterButton({
+  //   id: "assign",
+  //   icon() {
+  //     return this.topic.isAssigned()
+  //       ? this.site.mobileView
+  //         ? "user-xmark"
+  //         : null
+  //       : "user-plus";
+  //   },
+  //   priority: 250,
+  //   translatedTitle() {
+  //     return defaultTitle(this.topic);
+  //   },
+  //   translatedAriaLabel() {
+  //     return defaultTitle(this.topic);
+  //   },
+  //   translatedLabel() {
+  //     return i18n("discourse_assign.assign.title");
+  //   },
+  //   async action() {
+  //     if (!this.currentUser?.can_assign) {
+  //       return;
+  //     }
 
-      const taskActions = getOwner(this).lookup("service:task-actions");
-      const modal = getOwner(this).lookup("service:modal");
+  //     const taskActions = getOwner(this).lookup("service:task-actions");
+  //     const modal = getOwner(this).lookup("service:modal");
 
-      if (this.topic.isAssigned()) {
-        this.topic.assigned_to_user = null;
-        this.topic.assigned_to_group = null;
+  //     if (this.topic.isAssigned()) {
+  //       this.topic.assigned_to_user = null;
+  //       this.topic.assigned_to_group = null;
 
-        await taskActions.unassign(this.topic.id, "Topic");
-      } else {
-        await modal.show(EditTopicAssignments, {
-          model: {
-            topic: this.topic,
-          },
-        });
-      }
-    },
-    dropdown() {
-      return this.site.mobileView;
-    },
-    classNames: ["assign"],
-    dependentKeys: DEPENDENT_KEYS,
-    displayed() {
-      return (
-        this.currentUser?.can_assign &&
-        !this.topic.isAssigned() &&
-        !this.topic.hasAssignedPosts()
-      );
-    },
-  });
+  //       await taskActions.unassign(this.topic.id, "Topic");
+  //     } else {
+  //       await modal.show(EditTopicAssignments, {
+  //         model: {
+  //           topic: this.topic,
+  //         },
+  //       });
+  //     }
+  //   },
+  //   dropdown() {
+  //     return this.site.mobileView;
+  //   },
+  //   classNames: ["assign"],
+  //   dependentKeys: DEPENDENT_KEYS,
+  //   displayed() {
+  //     return (
+  //       this.currentUser?.can_assign &&
+  //       !this.topic.isAssigned() &&
+  //       !this.topic.hasAssignedPosts()
+  //     );
+  //   },
+  // });
 
   api.registerTopicFooterButton({
     id: "unassign-mobile-header",

@@ -1,0 +1,1713 @@
+// ============================================================================
+// D-Sheet Component Styles
+// Based on Silk's Sheet component CSS
+//
+// Silk Element Mapping (element names -> data-d-sheet attribute values):
+//   root (a0)                  -> sheet-root
+//   view (a1)                  -> view
+//   backdrop (a2)              -> backdrop
+//   primary-scroll-trap-root (a4)   -> primary-scroll-trap + scroll-trap-root
+//   secondary-scroll-trap-root (a5) -> secondary-scroll-trap + scroll-trap-root
+//   scroll-container (a6)      -> scroll-container
+//   front-spacer (a7)          -> front-spacer
+//   back-spacer (a8)           -> back-spacer
+//   detent-marker (a9)         -> detent-marker
+//   content-wrapper (a10)      -> content-wrapper
+//   content (a11)              -> content
+//   bleeding-background (a12)  -> bleeding-background
+//   left-edge (a15)            -> left-edge
+//   trigger (a16)              -> (uses DButton, no data attribute)
+//   handle (a17)               -> handle
+//   outlet (a18)               -> (uses Outlet component with modifier)
+//
+// Intentionally Omitted Silk Elements:
+//   backdrop-trap (a3)         - Not needed; backdrop click handling done via JS
+//   sticky-container (a13)     - Not implemented; use CSS position:sticky directly
+//   sticky (a14)               - Not implemented; use CSS position:sticky directly
+//
+// Scroll-trap Element Mapping (ScrollTrap component):
+//   root (b0)                  -> scroll-trap-root
+//   stabiliser (b1)            -> scroll-trap-stabilizer (American spelling)
+//
+// ============================================================================
+
+// ============================================================================
+// Scoped Resets (prevents CSS bleed into non-sheet elements)
+// ============================================================================
+[data-d-sheet],
+[data-d-sheet] * {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+}
+
+// ============================================================================
+// Swipe Trap - Like Silk's swipeTrap prop
+// Applies overscroll-behavior to contain swipes within the view
+// ============================================================================
+[data-d-sheet~="swipe-trap-x"] {
+  overscroll-behavior-x: contain !important;
+}
+
+[data-d-sheet~="swipe-trap-y"] {
+  overscroll-behavior-y: contain !important;
+}
+
+[data-d-sheet~="swipe-trap-both"] {
+  overscroll-behavior: contain !important;
+}
+
+// ============================================================================
+// Native Page Scroll Replacement - Like Silk's nativePageScrollReplacement prop
+// This is a static page-level feature set once at View mount (not toggled)
+// ============================================================================
+
+// When native page scroll is replaced (true)
+html[data-d-sheet-native-page-scroll-replaced="true"] {
+  width: 100dvw !important;
+  height: 100dvh !important;
+  overflow: hidden !important;
+}
+
+html[data-d-sheet-native-page-scroll-replaced="true"] > body {
+  width: 100dvw !important;
+  height: 100dvh !important;
+  overflow: hidden !important;
+}
+
+// Standalone mode adjustments (PWA)
+[data-standalone="true"][data-d-sheet-native-page-scroll-replaced="true"] {
+  overscroll-behavior: none !important;
+  height: 100vh !important;
+}
+
+[data-standalone="true"][data-d-sheet-native-page-scroll-replaced="true"]
+  > body {
+  overscroll-behavior: none !important;
+  height: 100vh !important;
+}
+
+// Non-standalone mode needs fixed body to prevent iOS Safari issues
+[data-standalone="false"][data-d-sheet-native-page-scroll-replaced="true"]
+  > body {
+  position: fixed !important;
+  top: 0 !important;
+}
+
+// When native page scroll is NOT replaced - styles based on sheet presence
+html[data-d-sheet-native-page-scroll-replaced="false"]:has(
+    [data-d-sheet~="scroll-container"]
+  ) {
+  overscroll-behavior-y: none !important;
+}
+
+// ============================================================================
+// SECTION 1: Scroll-trap-root (b0) - Like Silk lines 1-157
+// ============================================================================
+
+// Like Silk (b0): scroll-trap-root base
+:where([data-d-sheet~="scroll-trap-root"]:not([data-d-sheet~="fixed"])) {
+  --d-sheet-defaults: initial;
+  position: var(--d-sheet-defaults, relative);
+}
+
+// Like Silk (b0 bBf): scroll-vertical overflow
+[data-d-sheet~="scroll-trap-root"][data-d-sheet~="scroll-vertical"] {
+  overscroll-behavior-y: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+// Like Silk (b0 bBe): scroll-horizontal overflow
+[data-d-sheet~="scroll-trap-root"][data-d-sheet~="scroll-horizontal"] {
+  overscroll-behavior-x: none !important;
+  overflow-y: hidden !important;
+  overflow-x: auto !important;
+}
+
+// Like Silk (b0 bBg): scroll-both overflow
+[data-d-sheet~="scroll-trap-root"][data-d-sheet~="scroll-both"] {
+  overscroll-behavior: none !important;
+  overflow: auto !important;
+}
+
+// Like Silk (b0): scrollbar-width
+[data-d-sheet~="scroll-trap-root"] {
+  scrollbar-width: none !important;
+}
+
+// Like Silk (b0): webkit-scrollbar
+[data-d-sheet~="scroll-trap-root"]::-webkit-scrollbar {
+  display: none !important;
+}
+
+// Like Silk (b0::before, lines 136-143): creates 600x600px scrollable area for scroll trapping.
+// The ::before creates scroll space so scrollTo(300, 300) can trap scroll gestures.
+[data-d-sheet~="scroll-trap-root"]::before {
+  content: "" !important;
+  width: calc(100% + 600px) !important;
+  height: calc(100% + 600px) !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+// Like Silk (bAb, lines 145-148): Hide ::before when scroll-trap is inactive.
+// This is used when active=false (non-WebKit browsers where CSS overscroll-behavior works).
+[data-d-sheet~="scroll-trap-root"][data-d-sheet~="scroll-trap-inactive"]::before {
+  display: none !important;
+}
+
+// Like Silk (0aj + bCa, lines 116-118): During animation with optimization, use overflow:clip.
+// This prevents scroll events during animations for better performance.
+// 0aj = animating (when staging is not "none")
+[data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
+  [data-d-sheet~="scroll-trap-root"][data-d-sheet~="scroll-trap-optimised"] {
+  overflow: clip !important;
+}
+
+// Like Silk (0aj + bCa, lines 145-148): During animation with optimization, hide ::before.
+// Combined with overflow:clip, this fully disables scroll-trap during animations.
+[data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
+  [data-d-sheet~="scroll-trap-root"][data-d-sheet~="scroll-trap-optimised"]::before {
+  display: none !important;
+}
+
+// Like Silk (0aj + a6, line 401-403): During animation, disable scrolling on scroll-container.
+// This prevents scroll events from interfering with programmatic animations.
+// Uses [data-d-sheet] for extra specificity (0,3,0) to override track-specific overflow rules.
+[data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
+  [data-d-sheet~="scroll-container"][data-d-sheet] {
+  overflow: hidden;
+}
+
+// Like Silk (0aj + a5 + aNp, lines 302-305): During animation, secondary scroll trap captures touch events.
+// This prevents touch events from propagating to body when sheet isn't ready.
+[data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
+  [data-d-sheet~="secondary-scroll-trap"][data-d-sheet~="no-pointer-events"] {
+  z-index: 1;
+  pointer-events: auto !important;
+}
+
+// Like Silk (b1): scroll-trap-stabilizer
+[data-d-sheet~="scroll-trap-stabilizer"] {
+  width: 100% !important;
+  height: 100% !important;
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+// ============================================================================
+// SECTION 2: View (a1) - Like Silk lines 14-252
+// ============================================================================
+
+// Like Silk (a1 :where): view base with defaults
+:where([data-d-sheet~="view"]) {
+  --d-sheet-defaults: initial;
+  position: var(--d-sheet-defaults, fixed);
+  top: var(--d-sheet-defaults, var(--d-sheet-default-top, initial));
+  bottom: var(--d-sheet-defaults, var(--d-sheet-default-bottom, initial));
+  left: var(--d-sheet-defaults, var(--d-sheet-default-left, initial));
+  right: var(--d-sheet-defaults, var(--d-sheet-default-right, initial));
+  height: var(--d-sheet-defaults, 100%);
+  width: var(--d-sheet-defaults, 100%);
+  outline: none;
+
+  --x-collapsed-scrollbar-thickness: 0px;
+  --y-collapsed-scrollbar-thickness: 0px;
+}
+
+// Like Silk (a1 > *): children defaults
+:where([data-d-sheet~="view"] > *) {
+  --d-sheet-default-top: initial;
+  --d-sheet-default-bottom: initial;
+  --d-sheet-default-left: initial;
+  --d-sheet-default-right: initial;
+}
+
+// Like Silk (a1:not(aBaj) *): Hide caret during animations
+// When staging is NOT "none" (i.e., opening/closing/stepping), hide the text cursor
+// This prevents flickering caret during sheet transitions
+[data-d-sheet~="view"]:not([data-d-sheet~="staging-none"]) * {
+  caret-color: transparent;
+}
+
+// Like Silk (a1 aGf/aGg/etc): view track defaults
+// Use :where() for track-specific positioning to allow component overrides (like Toast)
+:where([data-d-sheet~="view"][data-d-sheet~="bottom"]) {
+  --d-sheet-default-bottom: 0;
+  --d-sheet-default-left: 0;
+}
+
+// Top track: content slides in from top
+:where([data-d-sheet~="view"][data-d-sheet~="top"]) {
+  --d-sheet-default-top: 0;
+  --d-sheet-default-left: 0;
+}
+
+// Left track: content slides in from left
+:where([data-d-sheet~="view"][data-d-sheet~="left"]) {
+  --d-sheet-default-top: 0;
+  --d-sheet-default-left: 0;
+  height: 100%;
+  width: 100vw;
+}
+
+// Right track: content slides in from right
+:where([data-d-sheet~="view"][data-d-sheet~="right"]) {
+  --d-sheet-default-top: 0;
+  --d-sheet-default-right: 0;
+  height: 100%;
+  width: 100vw;
+}
+
+// Like Silk (a1): CSS variables block
+[data-d-sheet~="view"] {
+  --d-sheet-minimum-snap-distance: var(
+    --d-sheet-minimum-snap-distance-from-props,
+    1px
+  );
+  --d-sheet-viewport-height: 100vh;
+  --d-sheet-snap-accelerator: 1px;
+  --d-sheet-edge-padding: 10px;
+  --d-sheet-view-travel-axis: initial; // aD
+  --d-sheet-view-cross-axis: initial; // aE
+  --d-sheet-content-travel-axis: initial; // aF
+  --d-sheet-content-cross-axis: initial; // aG
+  --d-sheet-front-spacer: initial; // aH
+  --d-sheet-back-spacer: initial; // aI
+  --d-sheet-first-detent-size: initial; // aK
+  --d-sheet-travel-size: var(--d-sheet-view-travel-axis, 100%);
+  --d-sheet-cross-size: var(--d-sheet-view-cross-axis, 100%);
+  --d-sheet-max-overshoot-distance: min(300px, var(--d-sheet-travel-size));
+  --d-sheet-snap-margin: 2px;
+  --d-sheet-content-wrapper-overshoot-offset: calc(
+    -1 * (var(--d-sheet-max-overshoot-distance) - var(--d-sheet-snap-margin))
+  );
+  border-width: 0 !important;
+  overflow: clip !important;
+}
+
+// Like Silk (a1 aAc): hidden state
+[data-d-sheet~="view"][data-d-sheet~="hidden"] {
+  opacity: 0 !important;
+}
+
+// Like Silk (a1 aCs): closed state
+[data-d-sheet~="view"][data-d-sheet~="closed"] {
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  overflow: hidden !important;
+}
+
+// Like Silk (a1 aNo): view with no-pointer-events allows clicks to pass through
+// to page content behind the sheet. Content inside re-enables pointer-events.
+[data-d-sheet~="view"][data-d-sheet~="no-pointer-events"] {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+// Like Silk (a1 > *): All direct children of view must be absolutely positioned
+[data-d-sheet~="view"] > * {
+  position: absolute;
+}
+
+// ============================================================================
+// SECTION 3: Backdrop (a2) - Like Silk lines 36-44, 254-264
+// ============================================================================
+
+// Like Silk (a2 :where): backdrop base
+:where([data-d-sheet~="backdrop"]) {
+  --d-sheet-defaults: initial;
+  left: var(--d-sheet-defaults, 0);
+  right: var(--d-sheet-defaults, 0);
+  top: var(--d-sheet-defaults, 0);
+  bottom: var(--d-sheet-defaults, 0);
+  background-color: var(--d-sheet-defaults, #000);
+  opacity: var(--d-sheet-defaults, 0.5);
+}
+
+// Like Silk (a2): z-index, position
+[data-d-sheet~="backdrop"] {
+  z-index: -1 !important;
+  position: absolute !important;
+  user-select: none;
+}
+
+// Like Silk (a2 aNo): backdrop no-pointer-events
+[data-d-sheet~="backdrop"][data-d-sheet~="no-pointer-events"] {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+// ============================================================================
+// SECTION 4: Content base (a11) - Like Silk lines 46-59
+// ============================================================================
+
+// Like Silk (a11 :where): content base with defaults
+:where([data-d-sheet~="content"]) {
+  --d-sheet-defaults: initial;
+  width: var(--d-sheet-defaults, var(--d-sheet-default-width, initial));
+  height: var(--d-sheet-defaults, var(--d-sheet-default-height, initial));
+  background-color: var(--d-sheet-defaults, #fff);
+}
+
+// Like Silk (a11:has(a12)): bleeding background reset - when bleeding-background present, content has no bg
+[data-d-sheet~="content"]:has(:where([data-d-sheet~="bleeding-background"])) {
+  background-color: initial;
+}
+
+// Like Silk (0af): no-bleeding-background
+[data-d-sheet~="no-bleeding-background"] {
+  background-color: initial;
+}
+
+// Like Silk (a12, lines 67-71): bleeding-background DEFAULT styles with low specificity
+// These provide fallback background-color and border-radius that can be overridden by custom classes
+:where([data-d-sheet~="bleeding-background"]) {
+  --d-sheet-defaults: initial;
+  border-radius: var(--d-sheet-defaults, inherit);
+  background-color: var(--d-sheet-defaults, #fff);
+}
+
+// Like Silk (a12, lines 700-763): bleeding-background - extends beyond content during overshoot
+// Key: Uses z-index: -1 and extends dimensions (not inset), positioned at origin then extends in travel direction
+[data-d-sheet~="bleeding-background"] {
+  box-sizing: border-box !important;
+  z-index: -1 !important;
+  position: absolute !important;
+}
+
+// Like Silk (aFh/aFi, lines 706-710 + 728-732): Horizontal tracks - extend width
+// Uses --d-sheet-max-overshoot-distance (like Silk's --silk-aQ) to cover full overscroll distance
+[data-d-sheet~="bleeding-background"][data-d-sheet~="right"],
+[data-d-sheet~="bleeding-background"][data-d-sheet~="left"] {
+  width: calc(100% + var(--d-sheet-max-overshoot-distance)) !important;
+  height: 100% !important;
+}
+
+// Like Silk (aFh, line 717): Right track positioning
+[data-d-sheet~="bleeding-background"][data-d-sheet~="right"] {
+  top: 0 !important;
+  right: 0 !important;
+}
+
+// Like Silk (aFi, lines 722-726): Left track positioning
+// Also applies to center alignment with horizontal track (aFr + aGj)
+[data-d-sheet~="bleeding-background"][data-d-sheet~="left"],
+[data-d-sheet~="bleeding-background"][data-d-sheet~="center"][data-d-sheet~="horizontal"] {
+  top: 0 !important;
+  left: 0 !important;
+}
+
+// Like Silk (aFf/aFg, lines 728-732): start/end placement - extend height
+// Uses --d-sheet-max-overshoot-distance (like Silk's --silk-aQ) to cover full overscroll distance
+[data-d-sheet~="bleeding-background"][data-d-sheet~="start"],
+[data-d-sheet~="bleeding-background"][data-d-sheet~="end"] {
+  height: calc(100% + var(--d-sheet-max-overshoot-distance)) !important;
+  width: 100% !important;
+}
+
+// Like Silk (aFf, lines 739-742): start placement positioning
+[data-d-sheet~="bleeding-background"][data-d-sheet~="start"] {
+  bottom: 0 !important;
+  left: 0 !important;
+}
+
+// Like Silk (aFg, lines 744-748): end placement positioning
+// Also applies to center alignment with vertical track (aFr + aGk)
+[data-d-sheet~="bleeding-background"][data-d-sheet~="end"],
+[data-d-sheet~="bleeding-background"][data-d-sheet~="center"][data-d-sheet~="vertical"] {
+  top: 0 !important;
+  left: 0 !important;
+}
+
+// Like Silk (aFr, lines 750-753): Center alignment - fills parent
+[data-d-sheet~="bleeding-background"][data-d-sheet~="center"] {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+// ============================================================================
+// SECTION 5: SpecialWrapper (f0) - Custom
+// ============================================================================
+
+// Like Silk (f0, lines 61-65): SpecialWrapper.Root fills its parent container
+:where([data-d-sheet~="special-wrapper-root"]) {
+  --d-sheet-defaults: initial;
+  width: var(--d-sheet-defaults, 100%);
+  height: var(--d-sheet-defaults, 100%);
+}
+
+// SpecialWrapper uses scroll-trap-root and scroll-trap-stabilizer
+// which already have the necessary styles (position: sticky, etc.)
+// This rule ensures children have pointer-events enabled
+[data-d-sheet~="special-wrapper-content"] > * {
+  pointer-events: auto;
+}
+
+// ============================================================================
+// SECTION 6: Primary scroll-trap (a4) - Like Silk lines 266-291
+// ============================================================================
+
+// Like Silk (a4): primary-scroll-trap has position: absolute
+[data-d-sheet~="primary-scroll-trap"] {
+  position: absolute;
+}
+
+// Like Silk (a4 track): Vertical tracks (top/bottom/vertical): width = cross-size, height = travel-size
+[data-d-sheet~="primary-scroll-trap"][data-d-sheet~="top"],
+[data-d-sheet~="primary-scroll-trap"][data-d-sheet~="bottom"],
+[data-d-sheet~="primary-scroll-trap"][data-d-sheet~="vertical"] {
+  width: var(--d-sheet-cross-size);
+  height: var(--d-sheet-travel-size);
+}
+
+// Like Silk (a4 track): Horizontal tracks (left/right/horizontal): height = cross-size, width = travel-size
+[data-d-sheet~="primary-scroll-trap"][data-d-sheet~="left"],
+[data-d-sheet~="primary-scroll-trap"][data-d-sheet~="right"],
+[data-d-sheet~="primary-scroll-trap"][data-d-sheet~="horizontal"] {
+  height: var(--d-sheet-cross-size);
+  width: var(--d-sheet-travel-size);
+}
+
+// Like Silk (lines 284-291): When scrollContainerShouldBePassThrough is true,
+// give pointer-events: auto to children of scroll-trap-stabilizer.
+// The scroll-container's own rule (below) will override this via cascade order.
+[data-d-sheet~="primary-scroll-trap"][data-d-sheet~="pass-through"]
+  > [data-d-sheet~="scroll-trap-stabilizer"]
+  > * {
+  pointer-events: auto;
+  user-select: initial;
+}
+
+// ============================================================================
+// SECTION 7: Secondary scroll-trap (a5) - Like Silk lines 293-305
+// ============================================================================
+
+// Like Silk (a5): secondary-scroll-trap positioning
+[data-d-sheet~="secondary-scroll-trap"] {
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+// Like Silk (a5): secondary-scroll-trap with no-pointer-events
+[data-d-sheet~="secondary-scroll-trap"][data-d-sheet~="no-pointer-events"] {
+  pointer-events: none !important;
+}
+
+// ============================================================================
+// SECTION 8: Scroll-container (a6) - Like Silk lines 307-417
+// ============================================================================
+
+// Like Silk (a6): scroll-container base
+[data-d-sheet~="scroll-container"] {
+  --d-sheet-scroll-container-height: calc(2 * var(--d-sheet-travel-size));
+  z-index: 1;
+  flex-wrap: nowrap;
+  place-items: center;
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  scrollbar-width: none;
+}
+
+// Like Silk (a6 track): vertical tracks use column layout with y scroll
+[data-d-sheet~="scroll-container"][data-d-sheet~="top"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="bottom"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="vertical"] {
+  height: var(--d-sheet-scroll-container-height);
+  scroll-snap-type: y mandatory;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+// Like Silk (a6 track): horizontal tracks use row layout with x scroll
+[data-d-sheet~="scroll-container"][data-d-sheet~="left"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="right"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="horizontal"] {
+  width: var(--d-sheet-scroll-container-height);
+  scroll-snap-type: x mandatory;
+  flex-direction: row;
+  height: 100%;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+// Like Silk (a6 aGf): top track - scroll extends above viewport
+[data-d-sheet~="scroll-container"][data-d-sheet~="top"] {
+  top: calc(-1 * var(--d-sheet-travel-size));
+}
+
+// Like Silk (a6 aGg): bottom track - scroll extends below viewport
+[data-d-sheet~="scroll-container"][data-d-sheet~="bottom"] {
+  bottom: calc(-1 * var(--d-sheet-travel-size));
+}
+
+// Like Silk (a6 aGh): left track - scroll extends left of viewport
+[data-d-sheet~="scroll-container"][data-d-sheet~="left"] {
+  left: calc(-1 * var(--d-sheet-travel-size));
+}
+
+// Like Silk (a6 aGi): right track - scroll extends right of viewport
+[data-d-sheet~="scroll-container"][data-d-sheet~="right"] {
+  right: calc(-1 * var(--d-sheet-travel-size));
+}
+
+// Like Silk (a6 aGj): horizontal centered - half offset positioning
+[data-d-sheet~="scroll-container"][data-d-sheet~="horizontal"] {
+  left: calc(-0.5 * var(--d-sheet-travel-size));
+}
+
+// Like Silk (a6 aGk): vertical centered - half offset positioning
+[data-d-sheet~="scroll-container"][data-d-sheet~="vertical"] {
+  top: calc(-0.5 * var(--d-sheet-travel-size));
+}
+
+// Like Silk (line 366-371): scroll-container with no-pointer-events
+// Like Silk, uses 3 attribute selectors for specificity 0,3,0 to match pass-through rule
+// Then wins via cascade order (this rule comes after pass-through)
+[data-d-sheet~="scroll-container"][data-d-sheet~="no-pointer-events"][data-d-sheet] {
+  pointer-events: none;
+  user-select: none;
+}
+
+// Like Silk (a6 aMk): overscroll-contain
+[data-d-sheet~="scroll-container"][data-d-sheet~="overscroll-contain"] {
+  overscroll-behavior-y: contain;
+}
+
+// Like Silk (a6 aJo aGf/aGg/aGk): overshoot-inactive with vertical tracks
+// Prevents scrolling past max into back-spacer for sheets with swipeOvershoot=false
+[data-d-sheet~="scroll-container"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="top"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="bottom"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="vertical"] {
+  overscroll-behavior-y: none;
+}
+
+// Like Silk (a6 aJo aGh/aGi/aGj): overshoot-inactive with horizontal tracks
+[data-d-sheet~="scroll-container"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="left"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="right"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="horizontal"] {
+  overscroll-behavior-x: none;
+}
+
+// Center content on main axis for centered tracks
+[data-d-sheet~="scroll-container"][data-d-sheet~="vertical"][data-d-sheet~="center"],
+[data-d-sheet~="scroll-container"][data-d-sheet~="horizontal"][data-d-sheet~="center"] {
+  justify-content: center;
+}
+
+// Like Silk (a6): scrollbar-width: none
+[data-d-sheet~="scroll-container"]::-webkit-scrollbar {
+  display: none;
+}
+
+// Like Silk (a6 > *): children
+[data-d-sheet~="scroll-container"] > * {
+  --d-sheet-travel-size: var(--d-sheet-view-travel-axis, 50%);
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+// ============================================================================
+// SECTION 9: Front-spacer (a7) - Like Silk lines 442-485
+// ============================================================================
+[data-d-sheet~="front-spacer"] {
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+// Like Silk (a7 aGf/aGh): top and left use end snap and order: 3
+[data-d-sheet~="front-spacer"][data-d-sheet~="top"],
+[data-d-sheet~="front-spacer"][data-d-sheet~="left"] {
+  scroll-snap-align: end;
+  order: 3;
+}
+
+// Like Silk (a7 aGg/aGi/aGj/aGk): bottom, right, horizontal, vertical use start snap and order: 1
+[data-d-sheet~="front-spacer"][data-d-sheet~="bottom"],
+[data-d-sheet~="front-spacer"][data-d-sheet~="right"],
+[data-d-sheet~="front-spacer"][data-d-sheet~="horizontal"],
+[data-d-sheet~="front-spacer"][data-d-sheet~="vertical"] {
+  scroll-snap-align: start;
+  order: 1;
+}
+
+// Like Silk: edge tracks (top, bottom) have spacer height from CSS variable
+[data-d-sheet~="front-spacer"][data-d-sheet~="top"],
+[data-d-sheet~="front-spacer"][data-d-sheet~="bottom"] {
+  height: var(--d-sheet-front-spacer);
+  width: 1px;
+}
+
+// Like Silk: edge tracks (left, right) have spacer width from CSS variable
+[data-d-sheet~="front-spacer"][data-d-sheet~="left"],
+[data-d-sheet~="front-spacer"][data-d-sheet~="right"] {
+  width: var(--d-sheet-front-spacer);
+  height: 1px;
+}
+
+// Like Silk (cAd): centered tracks (horizontal, vertical) have 0-size spacers
+[data-d-sheet~="front-spacer"][data-d-sheet~="vertical"] {
+  height: 0;
+  width: 1px;
+}
+
+[data-d-sheet~="front-spacer"][data-d-sheet~="horizontal"] {
+  width: 0;
+  height: 1px;
+}
+
+// ============================================================================
+// SECTION 10: Content-wrapper (a10) - Like Silk lines 487-639
+// ============================================================================
+[data-d-sheet~="content-wrapper"] {
+  z-index: 1;
+  pointer-events: none;
+  user-select: text;
+  order: 2;
+  display: flex;
+  position: sticky;
+}
+
+// Like Silk (a10 aFr aGj/aGk): position relative for centered tracks with center placement
+[data-d-sheet~="content-wrapper"][data-d-sheet~="center"][data-d-sheet~="horizontal"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="center"][data-d-sheet~="vertical"] {
+  position: relative;
+}
+
+// Like Silk (a10 aGh/aGi/aGj): horizontal tracks have width = travel size
+[data-d-sheet~="content-wrapper"][data-d-sheet~="left"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="right"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="horizontal"] {
+  --d-sheet-content-wrapper-offset: calc(
+    var(--d-sheet-travel-size) - var(--d-sheet-content-travel-axis) - var(
+        --d-sheet-minimum-snap-distance
+      )
+  );
+  width: var(--d-sheet-travel-size);
+  align-items: center;
+  height: 100%;
+}
+
+// Like Silk (a10 aGf/aGg/aGk): vertical tracks have height = travel size
+[data-d-sheet~="content-wrapper"][data-d-sheet~="top"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="bottom"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="vertical"] {
+  --d-sheet-content-wrapper-offset: calc(
+    var(--d-sheet-travel-size) - var(--d-sheet-content-travel-axis) - var(
+        --d-sheet-minimum-snap-distance
+      )
+  );
+  height: var(--d-sheet-travel-size);
+  justify-content: center;
+  width: 100%;
+}
+
+// Like Silk (a10 aFh): left placement justifies content to flex-start
+[data-d-sheet~="content-wrapper"][data-d-sheet~="left"] {
+  justify-content: flex-start;
+  left: var(--d-sheet-content-wrapper-offset);
+}
+
+// Like Silk (a10 aFi): right placement justifies content to flex-end
+[data-d-sheet~="content-wrapper"][data-d-sheet~="right"] {
+  justify-content: flex-end;
+  right: var(--d-sheet-content-wrapper-offset);
+}
+
+// Like Silk (a10 aFf): start placement uses top positioning
+[data-d-sheet~="content-wrapper"][data-d-sheet~="start"] {
+  top: var(--d-sheet-content-wrapper-offset);
+  align-items: flex-start;
+}
+
+// Like Silk (a10 aFg): end placement uses bottom positioning
+[data-d-sheet~="content-wrapper"][data-d-sheet~="end"] {
+  bottom: var(--d-sheet-content-wrapper-offset);
+  align-items: flex-end;
+}
+
+// Like Silk (a10 aFr): center placement centers both axes
+[data-d-sheet~="content-wrapper"][data-d-sheet~="center"] {
+  justify-content: center;
+  align-items: center;
+}
+
+// Like Silk (a10 aGj/aGk): centering offset variable for centered tracks
+[data-d-sheet~="content-wrapper"][data-d-sheet~="horizontal"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="vertical"] {
+  --d-sheet-content-wrapper-centered-offset: calc(
+    (var(--d-sheet-view-travel-axis) - var(--d-sheet-content-travel-axis)) /
+      2 - var(--d-sheet-view-travel-axis) /
+      2 - var(--d-sheet-minimum-snap-distance)
+  );
+}
+
+// Like Silk: top/bottom positioning for vertical track without center placement
+[data-d-sheet~="content-wrapper"][data-d-sheet~="vertical"]:not(
+    [data-d-sheet~="center"]
+  ) {
+  top: var(--d-sheet-content-wrapper-centered-offset);
+  bottom: var(--d-sheet-content-wrapper-centered-offset);
+}
+
+// Like Silk: left/right positioning for horizontal track without center placement
+[data-d-sheet~="content-wrapper"][data-d-sheet~="horizontal"]:not(
+    [data-d-sheet~="center"]
+  ) {
+  left: var(--d-sheet-content-wrapper-centered-offset);
+  right: var(--d-sheet-content-wrapper-centered-offset);
+}
+
+// Like Silk (a10 aJo aGh): left track with overshoot inactive
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="left"] {
+  right: 0;
+}
+
+// Like Silk (a10 aJo aGi): right track with overshoot inactive
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="right"] {
+  left: 0;
+}
+
+// Like Silk (a10 aJo aGf): top track with overshoot inactive
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="top"] {
+  bottom: 0;
+}
+
+// Like Silk (a10 aJo aGg): bottom track with overshoot inactive
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="bottom"] {
+  top: 0;
+}
+
+// Like Silk (a10 aJo aIo): swipe-out-disabled with overshoot-inactive
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="swipe-out-disabled"] {
+  --d-sheet-content-wrapper-offset: calc(
+    var(--d-sheet-travel-size) - var(--d-sheet-content-travel-axis) +
+      var(--d-sheet-first-detent-size)
+  );
+}
+
+// Like Silk (a10 aJp aGh): left track with overshoot active
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-active"][data-d-sheet~="left"] {
+  left: auto;
+  right: var(--d-sheet-content-wrapper-overshoot-offset);
+}
+
+// Like Silk (a10 aJp aGi): right track with overshoot active
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-active"][data-d-sheet~="right"] {
+  right: auto;
+  left: var(--d-sheet-content-wrapper-overshoot-offset);
+}
+
+// Like Silk (a10 aJp aGf): top track with overshoot active
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-active"][data-d-sheet~="top"] {
+  bottom: var(--d-sheet-content-wrapper-overshoot-offset);
+}
+
+// Like Silk (a10 aJp aGg): bottom track with overshoot active
+[data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-active"][data-d-sheet~="bottom"] {
+  top: var(--d-sheet-content-wrapper-overshoot-offset);
+}
+
+// ============================================================================
+// SECTION 11: Left-edge (a15) - Like Silk lines 588-619
+// ============================================================================
+
+// Like Silk (a15): This element prevents "swipe from edge to go back" on iOS
+[data-d-sheet~="left-edge"] {
+  pointer-events: auto;
+  user-select: none;
+  will-change: transform;
+  width: 30px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+}
+
+// Like Silk (a15 aGf/aGg/aGk): Vertical tracks extend height
+[data-d-sheet~="left-edge"][data-d-sheet~="top"],
+[data-d-sheet~="left-edge"][data-d-sheet~="bottom"],
+[data-d-sheet~="left-edge"][data-d-sheet~="vertical"] {
+  height: calc(100% + var(--d-sheet-front-spacer) + var(--d-sheet-back-spacer));
+}
+
+// Like Silk (a15 aGg/aGk): bottom and vertical tracks offset top/bottom
+[data-d-sheet~="left-edge"][data-d-sheet~="bottom"],
+[data-d-sheet~="left-edge"][data-d-sheet~="vertical"] {
+  top: calc(-1 * var(--d-sheet-front-spacer));
+  bottom: calc(-1 * var(--d-sheet-back-spacer));
+}
+
+// Like Silk (a15 aGf): top track has inverted offsets
+[data-d-sheet~="left-edge"][data-d-sheet~="top"] {
+  top: calc(-1 * var(--d-sheet-back-spacer));
+  bottom: calc(-1 * var(--d-sheet-front-spacer));
+}
+
+// ============================================================================
+// SECTION 11b: Touch Target Expander (a16) - Expands gesture hit area
+// ============================================================================
+[data-d-sheet~="touch-target-expander"] {
+  position: absolute;
+  pointer-events: auto;
+  user-select: none;
+}
+
+// Bottom track: expands hit area above the content
+[data-d-sheet~="touch-target-expander"][data-d-sheet~="bottom"] {
+  top: -20px;
+  left: 0;
+  right: 0;
+  height: 40px;
+}
+
+// Top track: expands hit area below the content
+[data-d-sheet~="touch-target-expander"][data-d-sheet~="top"] {
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 40px;
+}
+
+// Left track: expands hit area to the right of the content
+[data-d-sheet~="touch-target-expander"][data-d-sheet~="left"] {
+  right: -20px;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+}
+
+// Right track: expands hit area to the left of the content
+[data-d-sheet~="touch-target-expander"][data-d-sheet~="right"] {
+  left: -20px;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+}
+
+// Centered tracks (horizontal/vertical): similar to edge tracks
+[data-d-sheet~="touch-target-expander"][data-d-sheet~="horizontal"] {
+  left: -20px;
+  right: -20px;
+  top: 0;
+  bottom: 0;
+}
+
+[data-d-sheet~="touch-target-expander"][data-d-sheet~="vertical"] {
+  top: -20px;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+}
+
+// ============================================================================
+// SECTION 12: Content (a11) - Like Silk lines 657-698
+// ============================================================================
+
+// Like Silk (a11 aFf/aFg): default dimensions for start/end placement (vertical tracks)
+// aFf = start placement, aFg = end placement, aFr = center placement
+// aGf = top track, aGg = bottom track
+[data-d-sheet~="content"][data-d-sheet~="start"],
+[data-d-sheet~="content"][data-d-sheet~="end"],
+[data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="top"],
+[data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="bottom"] {
+  --d-sheet-default-width: 100%;
+  --d-sheet-default-height: 50%;
+}
+
+// Like Silk (a11 aFr aGk): centered vertical track with center placement
+[data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="vertical"] {
+  --d-sheet-default-width: 100%;
+  --d-sheet-default-height: 50%;
+}
+
+// Like Silk (a11 aFh/aFi): default dimensions for start/end placement (horizontal tracks)
+// For horizontal tracks, the start/end placement also applies
+// aFh = start placement (left), aFi = end placement (right)
+[data-d-sheet~="content"][data-d-sheet~="start"][data-d-sheet~="left"],
+[data-d-sheet~="content"][data-d-sheet~="start"][data-d-sheet~="right"],
+[data-d-sheet~="content"][data-d-sheet~="end"][data-d-sheet~="left"],
+[data-d-sheet~="content"][data-d-sheet~="end"][data-d-sheet~="right"],
+[data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="left"],
+[data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="right"] {
+  --d-sheet-default-width: 50%;
+  --d-sheet-default-height: 100%;
+}
+
+// Like Silk (a11 aFr aGj): centered horizontal track with center placement
+[data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="horizontal"] {
+  --d-sheet-default-width: 50%;
+  --d-sheet-default-height: 100%;
+}
+
+// Like Silk (a11): content styles
+[data-d-sheet~="content"] {
+  user-select: initial;
+  user-select: auto;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  position: relative !important;
+  overflow: visible !important;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+// Like Silk (a11, a11 aNo): content always has pointer-events: auto, even with no-pointer-events
+[data-d-sheet~="content"],
+[data-d-sheet~="content"][data-d-sheet~="no-pointer-events"] {
+  pointer-events: auto;
+}
+
+// Like Silk (a11 > *): children defaults
+[data-d-sheet~="content"] > * {
+  --d-sheet-default-width: initial;
+  --d-sheet-default-height: initial;
+}
+
+// ============================================================================
+// SECTION 13: Back-spacer (a8) - Like Silk lines 765-803
+// ============================================================================
+[data-d-sheet~="back-spacer"] {
+  position: relative;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+// Like Silk (a8 aGf/aGh): top and left use start snap and order: 1
+[data-d-sheet~="back-spacer"][data-d-sheet~="top"],
+[data-d-sheet~="back-spacer"][data-d-sheet~="left"] {
+  scroll-snap-align: start;
+  order: 1;
+}
+
+// Like Silk (a8 aGg/aGi/aGj/aGk): bottom, right, horizontal, vertical use end snap and order: 3
+[data-d-sheet~="back-spacer"][data-d-sheet~="bottom"],
+[data-d-sheet~="back-spacer"][data-d-sheet~="right"],
+[data-d-sheet~="back-spacer"][data-d-sheet~="horizontal"],
+[data-d-sheet~="back-spacer"][data-d-sheet~="vertical"] {
+  scroll-snap-align: end;
+  order: 3;
+}
+
+// Like Silk: edge tracks (top, bottom) have spacer height from CSS variable
+[data-d-sheet~="back-spacer"][data-d-sheet~="top"],
+[data-d-sheet~="back-spacer"][data-d-sheet~="bottom"] {
+  height: var(--d-sheet-back-spacer);
+  width: 1px;
+}
+
+// Like Silk: edge tracks (left, right) have spacer width from CSS variable
+[data-d-sheet~="back-spacer"][data-d-sheet~="left"],
+[data-d-sheet~="back-spacer"][data-d-sheet~="right"] {
+  width: var(--d-sheet-back-spacer);
+  height: 1px;
+}
+
+// Like Silk (cAd): centered tracks (horizontal, vertical) have 0-size spacers
+[data-d-sheet~="back-spacer"][data-d-sheet~="vertical"] {
+  height: 0;
+  width: 1px;
+}
+
+[data-d-sheet~="back-spacer"][data-d-sheet~="horizontal"] {
+  width: 0;
+  height: 1px;
+}
+
+// ============================================================================
+// SECTION 14: Detent-marker (a9) - Like Silk lines 805-921
+// ============================================================================
+[data-d-sheet~="detent-marker"] {
+  --d-sheet-detent-marker-position: calc(
+    100% + var(--d-sheet-content-travel-axis) - var(--d-sheet-marker-current)
+  );
+  --d-sheet-detent-marker-scroll-margin: calc(
+    var(--d-sheet-travel-size) - var(--d-sheet-marker-current) +
+      var(--d-sheet-marker-prev)
+  );
+  place-items: center;
+  display: grid;
+  position: absolute;
+}
+
+// Like Silk (a9 aGf/aGg/aGk): Height for vertical tracks
+[data-d-sheet~="detent-marker"][data-d-sheet~="top"],
+[data-d-sheet~="detent-marker"][data-d-sheet~="bottom"],
+[data-d-sheet~="detent-marker"][data-d-sheet~="vertical"] {
+  height: calc(var(--d-sheet-marker-current) - var(--d-sheet-marker-prev));
+  width: 1px;
+}
+
+// Like Silk (a9 aGh/aGi/aGj): horizontal tracks have width, 1px height
+[data-d-sheet~="detent-marker"][data-d-sheet~="left"],
+[data-d-sheet~="detent-marker"][data-d-sheet~="right"],
+[data-d-sheet~="detent-marker"][data-d-sheet~="horizontal"] {
+  width: calc(var(--d-sheet-marker-current) - var(--d-sheet-marker-prev));
+  height: 1px;
+}
+
+// Like Silk (a9 aGf/aGh): top and left use end snap
+[data-d-sheet~="detent-marker"][data-d-sheet~="top"],
+[data-d-sheet~="detent-marker"][data-d-sheet~="left"] {
+  scroll-snap-align: end;
+}
+
+// Like Silk (a9 aGg/aGi): bottom and right use start snap
+[data-d-sheet~="detent-marker"][data-d-sheet~="bottom"],
+[data-d-sheet~="detent-marker"][data-d-sheet~="right"] {
+  scroll-snap-align: start;
+}
+
+// Like Silk (a9 aGj/aGk): horizontal and vertical centered use center snap
+[data-d-sheet~="detent-marker"][data-d-sheet~="horizontal"],
+[data-d-sheet~="detent-marker"][data-d-sheet~="vertical"] {
+  scroll-snap-align: center;
+}
+
+// Like Silk (a9 aGf): Top track positioning
+[data-d-sheet~="detent-marker"][data-d-sheet~="top"] {
+  top: var(--d-sheet-detent-marker-position);
+  scroll-margin-bottom: var(--d-sheet-detent-marker-scroll-margin);
+  left: calc(var(--d-sheet-marker-index) * 10px);
+}
+
+// Like Silk (a9 aGg): Bottom track positioning
+[data-d-sheet~="detent-marker"][data-d-sheet~="bottom"] {
+  bottom: var(--d-sheet-detent-marker-position);
+  scroll-margin-top: var(--d-sheet-detent-marker-scroll-margin);
+  left: calc(var(--d-sheet-marker-index) * 10px);
+}
+
+// Like Silk (a9 aGh): Left track positioning
+[data-d-sheet~="detent-marker"][data-d-sheet~="left"] {
+  left: var(--d-sheet-detent-marker-position);
+  scroll-margin-right: var(--d-sheet-detent-marker-scroll-margin);
+  top: calc(var(--d-sheet-marker-index) * 10px);
+}
+
+// Like Silk (a9 aGi): Right track positioning
+[data-d-sheet~="detent-marker"][data-d-sheet~="right"] {
+  right: var(--d-sheet-detent-marker-position);
+  scroll-margin-left: var(--d-sheet-detent-marker-scroll-margin);
+  top: calc(var(--d-sheet-marker-index) * 10px);
+}
+
+// Like Silk (a9 aGj): Horizontal centered positioning
+[data-d-sheet~="detent-marker"][data-d-sheet~="horizontal"] {
+  right: calc(
+    100% + (var(--d-sheet-travel-size) - var(--d-sheet-marker-current)) / 2
+  );
+  top: calc(var(--d-sheet-marker-index) * 10px);
+}
+
+// Like Silk (a9 aGk): Vertical centered positioning
+[data-d-sheet~="detent-marker"][data-d-sheet~="vertical"] {
+  bottom: calc(
+    100% + (var(--d-sheet-travel-size) - var(--d-sheet-marker-current)) / 2
+  );
+  left: calc(var(--d-sheet-marker-index) * 10px);
+}
+
+// Like Silk: scroll-margin fallbacks
+@supports not (scroll-margin-bottom: 1px) {
+  [data-d-sheet~="detent-marker"][data-d-sheet~="top"] {
+    scroll-snap-margin-bottom: var(--d-sheet-detent-marker-scroll-margin);
+  }
+}
+
+@supports not (scroll-margin-top: 1px) {
+  [data-d-sheet~="detent-marker"][data-d-sheet~="bottom"] {
+    scroll-snap-margin-top: var(--d-sheet-detent-marker-scroll-margin);
+  }
+}
+
+@supports not (scroll-margin-right: 1px) {
+  [data-d-sheet~="detent-marker"][data-d-sheet~="left"] {
+    scroll-snap-margin-right: var(--d-sheet-detent-marker-scroll-margin);
+  }
+}
+
+@supports not (scroll-margin-left: 1px) {
+  [data-d-sheet~="detent-marker"][data-d-sheet~="right"] {
+    scroll-snap-margin-left: var(--d-sheet-detent-marker-scroll-margin);
+  }
+}
+
+// Like Silk (lines 901-908): scroll-snap-align: none for certain cases
+// - :not(:only-child):last-child = last of multiple markers (replaced with full-height dimensions)
+// - [track]:only-child = single marker (replaced with full-height dimensions in JS)
+// - swipe-out-disabled:first-child = first marker when swipe-out is disabled
+[data-d-sheet~="detent-marker"]:not(:only-child):last-child,
+[data-d-sheet~="detent-marker"][data-d-sheet~="top"]:only-child,
+[data-d-sheet~="detent-marker"][data-d-sheet~="bottom"]:only-child,
+[data-d-sheet~="detent-marker"][data-d-sheet~="left"]:only-child,
+[data-d-sheet~="detent-marker"][data-d-sheet~="right"]:only-child,
+[data-d-sheet~="detent-marker"][data-d-sheet~="swipe-out-disabled"]:first-child {
+  scroll-snap-align: none;
+}
+
+// ============================================================================
+// SECTION 15: Utility classes
+// ============================================================================
+[data-d-sheet~="snap-align-start"] {
+  scroll-snap-align: start !important;
+}
+
+// ============================================================================
+// SECTION 16a: Touch Target Expander for buttons (a16)
+// Ensures minimum 48x48px hit area via ::before pseudo-element
+// ============================================================================
+[data-d-sheet~="touch-target-expander"][data-d-sheet~="handle"] {
+  position: relative;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: calc(-1 * max(100%, 48px) / 2 + 50%);
+    top: calc(-1 * max(100%, 48px) / 2 + 50%);
+    width: max(100%, 48px);
+    height: max(100%, 48px);
+  }
+}
+
+// ============================================================================
+// SECTION 16b: Handle visual (a17)
+// ============================================================================
+[data-d-sheet~="handle"] {
+  width: 50px;
+  height: 6px;
+  margin: 12px auto;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background-color: var(--primary-low-mid);
+  cursor: pointer;
+  user-select: none;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+// ============================================================================
+// SECTION 17: Stack styles
+// ============================================================================
+
+// DSheetStack.Root wrapper class
+.d-sheet-stack-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+// ============================================================================
+// SECTION 19: Example/Component-specific styles (at END)
+// ============================================================================
+.my-view {
+  z-index: 2000;
+  height: calc(max(100dvh, 100lvh) + 60px);
+}
+
+.ExampleBottomSheet-content {
+  max-width: 700px;
+  min-width: 500px;
+  padding-inline: var(--size-10);
+  padding-bottom: max(
+    calc(env(safe-area-inset-bottom, 0px) + 12px),
+    var(--size-10)
+  );
+  display: grid;
+  justify-items: center;
+}
+
+// Like Silk: Content has NO background when using BleedingBackground
+.BottomSheet-content {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 500px;
+}
+
+// Like Silk (BottomSheet.css lines 15-20): BleedingBackground has the visual styling
+.BottomSheet-bleedingBackground {
+  border-radius: 24px;
+  background-color: var(--secondary);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -4px rgb(0 0 0 / 10%);
+}
+
+.BottomSheet-handle {
+  width: 50px;
+  height: 6px;
+  border: 0;
+  border-radius: var(--d-border-radius-full, 9999px);
+  background-color: var(--primary-low-mid);
+  cursor: pointer;
+}
+
+.ExampleBottomSheet-handle {
+  grid-area: 1 / -1;
+  justify-self: center;
+  align-self: start;
+  margin-top: 1rem;
+}
+
+// ============================================================================
+// SheetWithDetent styles
+// ============================================================================
+.SheetWithDetent-view {
+  z-index: 9999;
+  top: 0;
+  bottom: initial;
+  height: calc(max(100dvh, 100lvh) + 60px);
+}
+
+.SheetWithDetent-content {
+  box-sizing: border-box;
+  height: calc(100% - max(env(safe-area-inset-top), 6px));
+  max-width: 800px;
+  border-radius: 24px 24px 0 0;
+  overflow: hidden;
+  background-color: var(--secondary);
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+@media (width >= 800px) {
+  .SheetWithDetent-content {
+    height: calc(100% - max(env(safe-area-inset-top), 5vh));
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 10%),
+      0 4px 6px -4px rgb(0 0 0 / 10%);
+    border-radius: 24px;
+  }
+}
+
+.SheetWithDetent-handle {
+  justify-self: center;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.SheetWithDetent-backdrop {
+  background-color: #000;
+}
+
+.sheet-with-detent-example-content {
+  padding: 1.5rem;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.5rem;
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.SheetWithDetent-scrollRoot {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.SheetWithDetent-scrollView {
+  min-height: 0;
+}
+
+.SheetWithDetent-scrollContent {
+  // Allow content to expand
+}
+
+// ============================================================================
+// SheetWithStacking styles (following Silk's SheetWithStacking.css)
+// ============================================================================
+.SheetWithStacking-view {
+  z-index: 9999;
+  height: calc(max(100dvh, 100lvh) + 60px);
+}
+
+.SheetWithStacking-view.tracks-right {
+  height: 100%;
+}
+
+.SheetWithStacking-content {
+  box-sizing: border-box;
+  height: calc(min(500px, 90svh) + env(safe-area-inset-bottom, 0px));
+  background-color: transparent;
+  padding-inline: 0.5rem;
+  padding-block: 0.5rem max(env(safe-area-inset-bottom, 0px), 0.5rem);
+  display: grid;
+  max-width: 300px;
+  min-width: 300px;
+}
+
+.SheetWithStacking-content.tracks-right {
+  height: 100%;
+  width: min(80%, 700px);
+  padding: 0.75rem;
+}
+
+.SheetWithStacking-innerContent {
+  height: 100%;
+  min-height: 0;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -4px rgb(0 0 0 / 10%);
+  overflow: hidden;
+  overflow: clip;
+  border-radius: 24px;
+  background-color: var(--secondary);
+}
+
+.SheetWithStacking-backdrop {
+  background-color: #000;
+}
+
+.sheet-with-stacking-example-content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  height: 100%;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  ul {
+    margin: 0 0 1.5rem;
+    padding-left: 1.5rem;
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+// ============================================================================
+// SheetWithKeyboard styles (following Silk's SheetWithKeyboard.css)
+// ============================================================================
+.SheetWithKeyboard-view {
+  --sheetWithKeyboard-radius: 24px;
+  z-index: 9999;
+  top: 0;
+  bottom: initial;
+  height: calc(max(100dvh, 100lvh) + 60px);
+}
+
+@media (width >= 800px) {
+  .SheetWithKeyboard-view {
+    height: 100%;
+  }
+}
+
+.SheetWithKeyboard-content {
+  box-sizing: border-box;
+  height: calc(100% - max(env(safe-area-inset-top), 6px));
+  border-radius: var(--sheetWithKeyboard-radius) var(--sheetWithKeyboard-radius)
+    0 0;
+  overflow: clip;
+  overflow: hidden;
+  background-color: var(--secondary);
+}
+
+@media (width >= 800px) {
+  .SheetWithKeyboard-content {
+    width: calc(800px - 1.25rem);
+    height: calc(100% - 2rem * 2);
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 10%),
+      0 4px 6px -4px rgb(0 0 0 / 10%);
+    border-radius: var(--sheetWithKeyboard-radius);
+  }
+}
+
+.SheetWithKeyboard-backdrop {
+  background-color: #000;
+}
+
+.SheetWithKeyboard-scrollView {
+  min-height: 0;
+  overflow: clip;
+  overflow: hidden;
+  border-radius: 0 0 var(--sheetWithKeyboard-radius)
+    var(--sheetWithKeyboard-radius);
+  background-color: var(--primary-very-low);
+}
+
+.SheetWithKeyboard-scrollContent {
+  --padding: 1.25rem;
+  display: grid;
+  align-content: start;
+}
+
+@container (width >= 780px) {
+  .SheetWithKeyboard-scrollContent {
+    --padding: 1.5rem;
+  }
+}
+
+// ============================================================================
+// SheetWithKeyboard Example styles
+// ============================================================================
+.ExampleSheetWithKeyboard-presentTrigger {
+  height: 2.75rem;
+  border-radius: 9999px;
+  appearance: none;
+  border: none;
+  background-color: rgb(31 41 55);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -4px rgb(0 0 0 / 10%);
+  cursor: pointer;
+  padding-inline: 1.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.ExampleSheetWithKeyboard-content {
+  container-type: size;
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+}
+
+.ExampleSheetWithKeyboard-header {
+  height: 57px;
+  border-bottom: 1px solid var(--primary-low);
+  position: relative;
+  padding-inline: 1.25rem;
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (width >= 800px) {
+  .ExampleSheetWithKeyboard-header {
+    height: 53px;
+  }
+}
+
+.ExampleSheetWithKeyboard-cancelButton {
+  justify-self: start;
+  border-radius: 6px;
+  outline-offset: 5px;
+  border: none;
+  appearance: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-size: 17.25px;
+  font-weight: 500;
+  color: var(--tertiary);
+}
+
+.ExampleSheetWithKeyboard-title {
+  margin: 0;
+  justify-self: center;
+  font-size: 17.25px;
+  font-weight: 620;
+  color: var(--primary);
+}
+
+.ExampleSheetWithKeyboard-saveButton {
+  justify-self: end;
+  border-radius: 6px;
+  outline-offset: 5px;
+  border: none;
+  appearance: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-size: 17.25px;
+  font-weight: 600;
+  color: var(--tertiary);
+}
+
+.ExampleSheetWithKeyboard-info {
+  border-top: 1px solid var(--primary-low);
+  padding-top: 1.25rem;
+  padding-bottom: 2rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+@container (width >= 780px) {
+  .ExampleSheetWithKeyboard-info {
+    padding-bottom: var(--padding);
+    gap: 1.5rem;
+  }
+}
+
+.ExampleSheetWithKeyboard-details {
+  margin: 0;
+  padding-inline: var(--padding);
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+@container (width >= 780px) {
+  .ExampleSheetWithKeyboard-details {
+    font-size: 2.25rem;
+  }
+}
+
+.ExampleSheetWithKeyboard-form {
+  padding-inline: var(--padding);
+  display: grid;
+  gap: 1.25rem;
+}
+
+@container (width >= 780px) {
+  .ExampleSheetWithKeyboard-form {
+    box-sizing: border-box;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.ExampleSheetWithKeyboard-field {
+  display: grid;
+  user-select: none;
+}
+
+@container (width >= 780px) {
+  .ExampleSheetWithKeyboard-field.fieldType-color {
+    order: 1;
+  }
+}
+
+@container (width >= 780px) {
+  .ExampleSheetWithKeyboard-field.fieldType-description {
+    order: 2;
+    grid-column: 1 / -1;
+  }
+}
+
+.ExampleSheetWithKeyboard-label {
+  margin-bottom: 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--primary-high);
+  pointer-events: none;
+}
+
+.ExampleSheetWithKeyboard-labelDescription {
+  margin-top: 0;
+  margin-bottom: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--primary-medium);
+}
+
+.ExampleSheetWithKeyboard-input {
+  height: 2.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--primary-low);
+  background-color: var(--secondary);
+  padding: 0 0.75rem;
+  appearance: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--primary-high);
+  caret-color: var(--tertiary);
+}
+
+.ExampleSheetWithKeyboard-input::placeholder {
+  color: var(--primary-medium);
+}
+
+.ExampleSheetWithKeyboard-colorInputWrapper {
+  height: min-content;
+  width: min-content;
+  position: relative;
+}
+
+.ExampleSheetWithKeyboard-colorInputs {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  gap: 0.625rem;
+}
+
+.ExampleSheetWithKeyboard-colorInput {
+  height: 1.75rem;
+  width: 1.75rem;
+  appearance: none;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.ExampleSheetWithKeyboard-colorInputReplacement {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: var(--color);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 15%);
+  pointer-events: none;
+}
+
+.ExampleSheetWithKeyboard-textarea {
+  border-radius: 12px;
+  border: 1px solid var(--primary-low);
+  background-color: var(--secondary);
+  padding: 0.75rem;
+  appearance: none;
+  font-size: 1rem;
+  color: var(--primary);
+  caret-color: var(--tertiary);
+  resize: none;
+}
+
+.ExampleSheetWithKeyboard-textarea::placeholder {
+  color: var(--primary-medium);
+}

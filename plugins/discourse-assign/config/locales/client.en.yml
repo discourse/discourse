@@ -24,6 +24,7 @@ en:
       note_change: "Changed assignment note for %{who} %{when}"
       status_change: "Changed assignment status for %{who} %{when}"
     discourse_assign:
+      assign_to: Assign to...
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
       cant_act_unclaimed: "You must claim this topic before acting on flags."

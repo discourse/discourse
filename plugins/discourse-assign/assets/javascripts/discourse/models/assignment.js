@@ -6,6 +6,7 @@ export class Assignment extends EmberObject {
     const assignment = new Assignment();
     assignment.id = 0;
     assignment.username = topic.assigned_to_user?.username;
+    assignment.avatar_template = topic.assigned_to_user?.avatar_template;
     assignment.groupName = topic.assigned_to_group?.name;
     assignment.status = topic.assignment_status;
     assignment.note = topic.assignment_note;
@@ -17,6 +18,7 @@ export class Assignment extends EmberObject {
   static fromPost(post) {
     const assignment = new Assignment();
     assignment.username = post.assigned_to.username;
+    assignment.avatar_template = post.assigned_to.avatar_template;
     assignment.name = post.assigned_to.name;
     assignment.groupName = post.assigned_to.name;
     assignment.status = post.assignment_status;
@@ -36,6 +38,7 @@ export class Assignment extends EmberObject {
   @tracked note;
   @tracked status;
   @tracked username;
+  @tracked avatar_template;
   targetId;
   targetType;
   postNumber;

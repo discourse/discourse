@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .form-kit__control-textarea {
   // prevents firefox/chrome to add spacing under textarea
   display: block;
@@ -7,5 +9,13 @@
     height: 150px;
     min-width: auto !important;
     padding: 0.5em !important;
+  }
+
+  @include viewport.until(sm) {
+    height: 100px;
+  }
+
+  &.--no-resize {
+    resize: none;
   }
 }

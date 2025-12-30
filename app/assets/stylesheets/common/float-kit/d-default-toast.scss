@@ -1,119 +1,128 @@
+@use "lib/viewport";
+
 .fk-d-default-toast {
   display: flex;
-  flex: 1 1 auto;
-  padding: 0.5rem;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  position: relative;
+  border-radius: var(--toast-border-radius);
+  background-color: var(--toast-background-color);
+  box-shadow: var(--toast-box-shadow);
 
-  &__close-container {
-    width: calc(40px - 0.5rem);
-    height: calc(1em + (2 * 0.65em));
+  &--has-progress {
+    padding-block-end: var(--space-4);
   }
 
-  &__icon-container {
-    flex: 1 0 auto;
-    display: flex;
-    width: calc(40px - 0.5rem);
-    height: calc(1em + (2 * 0.65em));
-    align-items: center;
-    justify-content: center;
-
-    &.alert-success {
-      background-color: var(--success-low);
-      color: var(--primary);
-    }
-
-    &.alert-error {
-      background-color: var(--danger-low);
-      color: var(--primary);
-    }
-
-    &.alert-warning {
-      background-color: var(--highlight-bg);
-      color: var(--primary);
-    }
-
-    &.alert-info {
-      background-color: var(--tertiary-low);
-      color: var(--primary);
-
-      &.clickable {
-        color: var(--tertiary);
-        z-index: z("base");
-      }
-    }
-
-    .-success & {
-      .d-icon {
-        color: var(--success);
-      }
-    }
-
-    .-error & {
-      .d-icon {
-        color: var(--danger);
-      }
-    }
-
-    .-warning & {
-      .d-icon {
-        color: var(--highlight);
-      }
-    }
-
-    .-info & {
-      .d-icon {
-        color: var(--tertiary);
-      }
-    }
-  }
-
-  &__main-container {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: calc(1em + (2 * 0.65em));
-  }
-
-  &__progress-bar {
-    width: 100%;
-    height: 5px;
-    top: 0;
-    left: 0;
+  &__close-btn {
     position: absolute;
-    background-color: var(--success);
-    transform-origin: 0 0;
-  }
-
-  .fk-d-default-toast:has(&__progress-bar) {
-    padding-top: 15px;
-  }
-
-  &__texts {
-    min-height: inherit;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    transform: translate(45%, -45%);
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+    border-radius: 50%;
+    padding: var(--space-1);
+    font-size: var(--font-down-3);
+    color: var(--primary);
+    border: none;
+    background: var(--secondary-very-high);
+
+    @include viewport.until(sm) {
+      display: none;
+    }
   }
 
-  &__actions {
+  &__icon {
     display: flex;
-    flex-wrap: wrap;
-    padding-top: 1rem;
-    margin-bottom: -0.5rem;
+    justify-content: center;
+    align-items: center;
+    inline-size: 1rem;
+    block-size: 1rem;
+    flex-shrink: 0;
 
-    .btn {
-      margin-right: 0.5rem;
-      margin-bottom: 0.5rem;
+    .d-icon {
+      inline-size: 1rem;
+      block-size: 1rem;
     }
+
+    .fk-d-default-toast--success & .d-icon {
+      color: var(--success);
+    }
+
+    .fk-d-default-toast--error & .d-icon {
+      color: var(--danger);
+    }
+
+    .fk-d-default-toast--warning & .d-icon {
+      color: var(--highlight);
+    }
+
+    .fk-d-default-toast--info & .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-inline-size: 0;
   }
 
   &__title {
-    display: flex;
-    font-weight: 700;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--primary);
   }
 
-  &__message {
-    display: flex;
+  &__description {
+    font-weight: 400;
+    line-height: 1.4;
     color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  &__action-btn {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+
+  &__cancel-btn {
+    flex-shrink: 0;
+  }
+
+  &__progress-wrapper {
+    position: absolute;
+    inset-block-end: 4px;
+    inset-inline: 8px;
+    block-size: 3px;
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius-large);
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  &__progress-bar {
+    inline-size: 100%;
+    block-size: 100%;
+    background: var(--primary-low);
+    border-radius: inherit;
+    transform-origin: 0 0;
+    animation-name: d-toast-progress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes d-toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }

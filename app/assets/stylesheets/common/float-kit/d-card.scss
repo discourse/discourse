@@ -1,0 +1,17 @@
+.d-card {
+  --card-border-radius: var(--d-border-radius);
+  --card-background: var(--secondary);
+  --card-box-shadow: var(--shadow-dropdown);
+  z-index: z("max");
+}
+
+.d-card-content {
+  box-sizing: border-box;
+  width: min(600px, calc(100% - 2 * 1rem));
+  box-shadow: var(--card-box-shadow);
+  border-radius: var(--card-border-radius);
+  background-color: var(--card-background);
+  height: auto;
+  max-width: 580px;
+  aspect-ratio: 8 / 10;
+}

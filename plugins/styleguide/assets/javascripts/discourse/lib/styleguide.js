@@ -20,6 +20,7 @@ import multiselect from "../components/sections/molecules/multi-select";
 import navigationBar from "../components/sections/molecules/navigation-bar";
 import navigationStacked from "../components/sections/molecules/navigation-stacked";
 import postMenu from "../components/sections/molecules/post-menu";
+import sheets from "../components/sections/molecules/sheets";
 import signupCta from "../components/sections/molecules/signup-cta";
 import toasts from "../components/sections/molecules/toasts";
 import tooltips from "../components/sections/molecules/tooltips";
@@ -75,6 +76,7 @@ const SECTIONS = [
   },
   { component: postMenu, category: "molecules", id: "post-menu" },
   { component: tooltips, category: "molecules", id: "tooltips" },
+  { component: sheets, category: "molecules", id: "sheets" },
   { component: menus, category: "molecules", id: "menus" },
   { component: multiselect, category: "molecules", id: "multi-select" },
   { component: toasts, category: "molecules", id: "toasts" },
