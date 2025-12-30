@@ -1484,10 +1484,10 @@ en:
           enabled: "Enabled?"
           why: "Why?"
         why_reasons:
-          not_in_specific_groups: "You are not in the specific groups required for this change."
-          in_specific_groups: "You are in the specific groups required for this change."
-          enabled_for_everyone: "This change is being enabled for everyone."
-          enabled_for_no_one: "This change is being disabled for everyone."
+          not_in_specific_groups: "You are not in the specific groups required for this change"
+          in_specific_groups: "You are in the specific groups required for this change:"
+          enabled_for_everyone: "This change is being enabled for everyone"
+          enabled_for_no_one: "This change is being disabled for everyone"
 
       user_notifications:
         filters:
