@@ -6,66 +6,31 @@ import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { i18n } from "discourse-i18n";
 
-/**
- * @typedef MathEditModalArgs
- * @property {{ initialText: string, isBlock: boolean, mathType: string, onApply: (text: string) => void }} model
- * @property {() => void} closeModal
- */
-
-/**
- * @typedef MathEditModalSignature
- * @property {MathEditModalArgs} Args
- */
-
-/**
- * @component math-edit-modal
- * @param {{ initialText: string, isBlock: boolean, mathType: string, onApply: (text: string) => void }} @model
- * @param {() => void} @closeModal
- * @extends {Component<MathEditModalSignature>}
- */
 export default class MathEditModal extends Component {
-  /** @type {unknown} */
   @tracked formApi;
 
-  /**
-   * @returns {{ text: string }}
-   */
   get initialData() {
     return {
       text: this.args.model?.initialText ?? "",
     };
   }
 
-  /**
-   * Handles form submission from the modal.
-   * @param {{ text: string }} data
-   */
   @action
   onSubmit(data) {
     this.args.model?.onApply?.(data.text ?? "");
     this.args.closeModal();
   }
 
-  /**
-   * Stores the form API for later submissions.
-   * @param {unknown} api
-   */
   @action
   onRegisterApi(api) {
     this.formApi = api;
   }
 
-  /**
-   * Submits the form programmatically.
-   */
   @action
   submitForm() {
     this.formApi?.submit();
   }
 
-  /**
-   * Cancels the modal without applying changes.
-   */
   @action
   cancel() {
     this.args.closeModal();

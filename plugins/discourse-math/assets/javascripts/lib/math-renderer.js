@@ -3,22 +3,46 @@ import { getURLWithCDN } from "discourse/lib/get-url";
 import loadKaTeX from "discourse/lib/load-katex";
 import loadMathJax from "discourse/lib/load-mathjax";
 
-let initializedMathJax = false;
-let initializedMathJaxConfigHash = null;
-
-export function resetMathJaxState() {
-  initializedMathJax = false;
-  initializedMathJaxConfigHash = null;
-}
-
 const CSS_CLASSES = {
   HIDDEN: "math-hidden",
   APPLIED_MATHJAX: "math-applied-mathjax",
   APPLIED_KATEX: "math-applied-katex",
 };
 
+const PREVIEW_RENDER_DELAY = 200;
+
+class MathJaxState {
+  #initialized = false;
+  #configHash = null;
+
+  reset() {
+    this.#initialized = false;
+    this.#configHash = null;
+  }
+
+  isInitializedWith(configHash) {
+    return this.#initialized && this.#configHash === configHash;
+  }
+
+  markInitialized(configHash) {
+    this.#initialized = true;
+    this.#configHash = configHash;
+  }
+}
+
+const mathJaxState = new MathJaxState();
+
+export function resetMathJaxState() {
+  mathJaxState.reset();
+}
+
 function getConfigHash(opts) {
-  return `${opts.mathjax_output}-${opts.enable_accessibility}-${opts.zoom_on_hover}-${opts.enable_asciimath}`;
+  return JSON.stringify({
+    output: opts.mathjax_output,
+    a11y: opts.enable_accessibility,
+    zoom: opts.zoom_on_hover,
+    ascii: opts.enable_asciimath,
+  });
 }
 
 export function buildDiscourseMathOptions(siteSettings) {
@@ -32,28 +56,36 @@ export function buildDiscourseMathOptions(siteSettings) {
   };
 }
 
-function initMathJax(opts) {
-  const configHash = getConfigHash(opts);
-
-  // Skip if already initialized with the same configuration
-  if (initializedMathJax && initializedMathJaxConfigHash === configHash) {
-    return;
-  }
-
+function buildMathJaxConfig(opts) {
   const output = opts.mathjax_output === "svg" ? "svg" : "html";
   const enableA11y =
     opts.enable_accessibility === true || opts.enable_accessibility === "true";
 
-  const menuOptions = {};
+  const menuOptions = opts.zoom_on_hover
+    ? { settings: { zoom: "Hover", zscale: "200%" } }
+    : {};
 
-  if (opts.zoom_on_hover) {
-    menuOptions.settings = {
-      zoom: "Hover",
-      zscale: "200%",
-    };
-  }
+  const outputConfig =
+    output === "html"
+      ? { chtml: { fontURL: getURLWithCDN("/assets/mathjax/woff-v2") } }
+      : { svg: { fontCache: "global" } };
 
-  const mathJaxConfig = {
+  const a11yConfig = enableA11y
+    ? {
+        enableAssistiveMml: true,
+        enableExplorer: true,
+        enableSpeech: true,
+        enableBraille: true,
+        enableEnrichment: true,
+        sre: {
+          path: getURLWithCDN("/assets/mathjax/sre"),
+          maps: getURLWithCDN("/assets/mathjax/sre/mathmaps"),
+        },
+        a11y: { speech: true, braille: true },
+      }
+    : {};
+
+  return {
     tex: {
       inlineMath: [["\\(", "\\)"]],
       displayMath: [["\\[", "\\]"]],
@@ -63,98 +95,78 @@ function initMathJax(opts) {
     },
     loader: {
       load: [],
-      paths: {
-        mathjax: getURLWithCDN("/assets/mathjax"),
-      },
+      paths: { mathjax: getURLWithCDN("/assets/mathjax") },
     },
-    ...(output === "html"
-      ? {
-          chtml: {
-            fontURL: getURLWithCDN("/assets/mathjax/woff-v2"),
-          },
-        }
-      : {
-          svg: {
-            fontCache: "global",
-          },
-        }),
+    ...outputConfig,
     options: {
-      ...(enableA11y
-        ? {
-            enableAssistiveMml: true,
-            enableExplorer: true,
-            enableSpeech: true,
-            enableBraille: true,
-            enableEnrichment: true,
-            sre: {
-              path: getURLWithCDN("/assets/mathjax/sre"),
-              maps: getURLWithCDN("/assets/mathjax/sre/mathmaps"),
-            },
-            a11y: {
-              speech: true,
-              braille: true,
-            },
-          }
-        : {}),
+      ...a11yConfig,
       ...(Object.keys(menuOptions).length ? { menuOptions } : {}),
     },
     startup: {
       typeset: false,
       ready() {
-        const MathJax = window.MathJax;
-        return MathJax?.startup?.defaultReady?.();
+        return window.MathJax?.startup?.defaultReady?.();
       },
     },
   };
+}
 
-  window.MathJax = mathJaxConfig;
-  initializedMathJax = true;
-  initializedMathJaxConfigHash = configHash;
+function initMathJax(opts) {
+  const configHash = getConfigHash(opts);
+
+  if (mathJaxState.isInitializedWith(configHash)) {
+    return;
+  }
+
+  window.MathJax = buildMathJaxConfig(opts);
+  mathJaxState.markInitialized(configHash);
 }
 
 async function ensureMathJax(opts) {
   initMathJax(opts);
 
-  try {
-    const MathJax = await loadMathJax({
-      enableAsciimath: opts.enable_asciimath,
-      enableAccessibility: opts.enable_accessibility,
-      output: opts.mathjax_output,
-    });
-    return MathJax;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Failed to load MathJax:", error);
-    throw error;
-  }
+  return await loadMathJax({
+    enableAsciimath: opts.enable_asciimath,
+    enableAccessibility: opts.enable_accessibility,
+    output: opts.mathjax_output,
+  });
+}
+
+function createHiddenWrapper(tag, className, content) {
+  const wrapper = document.createElement(tag);
+  wrapper.className = `${className} ${CSS_CLASSES.HIDDEN}`;
+  wrapper.setAttribute("hidden", "");
+  wrapper.textContent = content;
+  return wrapper;
 }
 
 function buildMathJaxWrapper(elem) {
-  let tag;
-  let classList;
-  let content;
-
   if (elem.classList.contains("math")) {
-    tag = elem.tagName === "DIV" ? "div" : "span";
+    const tag = elem.tagName === "DIV" ? "div" : "span";
     const displayClass = tag === "div" ? "block-math" : "inline-math";
-    classList = `math-container ${displayClass} mathjax-math`;
     const delimiter = tag === "div" ? ["\\[", "\\]"] : ["\\(", "\\)"];
-    content = `${delimiter[0]}${elem.textContent}${delimiter[1]}`;
-  } else if (elem.classList.contains("asciimath")) {
-    tag = "span";
-    classList = "math-container inline-math ascii-math mathjax-math";
-    content = `%${elem.textContent}%`;
-  } else {
-    return null;
+    const content = `${delimiter[0]}${elem.textContent}${delimiter[1]}`;
+
+    const wrapper = createHiddenWrapper(
+      tag,
+      `math-container ${displayClass} mathjax-math`,
+      content
+    );
+    elem.after(wrapper);
+    return wrapper;
   }
 
-  const mathWrapper = document.createElement(tag);
-  mathWrapper.classList.add(...classList.split(" "), CSS_CLASSES.HIDDEN);
-  mathWrapper.textContent = content;
+  if (elem.classList.contains("asciimath")) {
+    const wrapper = createHiddenWrapper(
+      "span",
+      "math-container inline-math ascii-math mathjax-math",
+      `%${elem.textContent}%`
+    );
+    elem.after(wrapper);
+    return wrapper;
+  }
 
-  elem.after(mathWrapper);
-
-  return mathWrapper;
+  return null;
 }
 
 function resetMathJax(elem, opts) {
@@ -162,6 +174,7 @@ function resetMathJax(elem, opts) {
 
   elem.querySelectorAll(selector).forEach((mathElem) => {
     mathElem.classList.remove(CSS_CLASSES.APPLIED_MATHJAX, CSS_CLASSES.HIDDEN);
+    mathElem.removeAttribute("hidden");
   });
 
   elem
@@ -169,24 +182,9 @@ function resetMathJax(elem, opts) {
     .forEach((wrapper) => wrapper.remove());
 }
 
-export function renderMathJax(elem, opts, renderOptions = {}) {
-  if (!elem) {
-    return;
-  }
-
-  if (renderOptions.force) {
-    resetMathJax(elem, opts);
-  }
-
+function collectMathWrappers(elem, opts) {
   const selector = opts.enable_asciimath ? ".math, .asciimath" : ".math";
   const mathElems = elem.querySelectorAll(selector);
-
-  if (mathElems.length === 0) {
-    return;
-  }
-
-  const isPreview = elem.classList.contains("d-editor-preview");
-
   const wrappers = [];
 
   mathElems.forEach((mathElem) => {
@@ -202,71 +200,103 @@ export function renderMathJax(elem, opts, renderOptions = {}) {
     }
   });
 
+  return wrappers;
+}
+
+function filterActiveWrappers(wrappers) {
+  return wrappers.filter(
+    ({ original, wrapper }) =>
+      wrapper?.isConnected && original?.parentElement?.offsetParent !== null
+  );
+}
+
+function hideElement(elem) {
+  if (elem?.isConnected) {
+    elem.classList.add(CSS_CLASSES.HIDDEN);
+    elem.setAttribute("hidden", "");
+  }
+}
+
+function showElement(elem) {
+  if (elem?.isConnected) {
+    elem.classList.remove(CSS_CLASSES.HIDDEN);
+    elem.removeAttribute("hidden");
+  }
+}
+
+function stripMathJaxInlineStyles(wrapper) {
+  wrapper.querySelectorAll("mjx-container").forEach((container) => {
+    container.style.removeProperty("display");
+  });
+}
+
+function showRenderedMath(active) {
+  active.forEach(({ original, wrapper }) => {
+    hideElement(original);
+    if (wrapper?.isConnected) {
+      stripMathJaxInlineStyles(wrapper);
+      showElement(wrapper);
+    }
+  });
+}
+
+function revertFailedMathRendering(wrappers) {
+  wrappers.forEach(({ original, wrapper }) => {
+    if (original?.isConnected) {
+      original.classList.remove(
+        CSS_CLASSES.HIDDEN,
+        CSS_CLASSES.APPLIED_MATHJAX
+      );
+      original.removeAttribute("hidden");
+    }
+    if (wrapper?.isConnected) {
+      wrapper.remove();
+    }
+  });
+}
+
+async function typesetMathJax(wrappers, opts) {
+  try {
+    const MathJax = await ensureMathJax(opts);
+    const active = filterActiveWrappers(wrappers);
+
+    if (active.length === 0 || !MathJax?.typesetPromise) {
+      return;
+    }
+
+    await MathJax.typesetPromise(active.map(({ wrapper }) => wrapper));
+    showRenderedMath(active);
+  } catch {
+    revertFailedMathRendering(wrappers);
+  }
+}
+
+export function renderMathJax(elem, opts, renderOptions = {}) {
+  if (!elem) {
+    return;
+  }
+
+  if (renderOptions.force) {
+    resetMathJax(elem, opts);
+  }
+
+  const wrappers = collectMathWrappers(elem, opts);
+
   if (wrappers.length === 0) {
     return;
   }
 
-  later(
-    async () => {
-      try {
-        const MathJax = await ensureMathJax(opts);
+  const isPreview = elem.classList.contains("d-editor-preview");
+  const delay = isPreview ? PREVIEW_RENDER_DELAY : 0;
 
-        const active = wrappers.filter(
-          ({ original, wrapper }) =>
-            wrapper?.isConnected &&
-            original?.parentElement?.offsetParent !== null
-        );
-
-        if (active.length === 0 || !MathJax?.typesetPromise) {
-          return;
-        }
-
-        await MathJax.typesetPromise(active.map(({ wrapper }) => wrapper));
-
-        active.forEach(({ original, wrapper }) => {
-          if (original?.isConnected) {
-            original.classList.add(CSS_CLASSES.HIDDEN);
-          }
-
-          if (wrapper?.isConnected) {
-            wrapper.classList.remove(CSS_CLASSES.HIDDEN);
-          }
-        });
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error("MathJax rendering failed:", error);
-
-        // On error, show original elements and remove failed wrappers
-        wrappers.forEach(({ original, wrapper }) => {
-          if (original?.isConnected) {
-            original.classList.remove(
-              CSS_CLASSES.HIDDEN,
-              CSS_CLASSES.APPLIED_MATHJAX
-            );
-          }
-          if (wrapper?.isConnected) {
-            wrapper.remove();
-          }
-        });
-      }
-    },
-    // Delay rendering in preview to debounce rapid typing and avoid
-    // layout thrashing while the user is still editing
-    isPreview ? 200 : 0
-  );
+  later(() => typesetMathJax(wrappers, opts), delay);
 }
 
 async function ensureKaTeX() {
-  try {
-    await loadKaTeX({
-      enableMhchem: true,
-      enableCopyTex: true,
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Failed to load KaTeX dependencies:", error);
-    throw error;
-  }
+  await loadKaTeX({
+    enableMhchem: true,
+    enableCopyTex: true,
+  });
 }
 
 function resetKatex(elem) {
@@ -300,9 +330,7 @@ function decorateKatex(elem, katexOpts) {
 
   try {
     window.katex.render(text, elem, { ...katexOpts, displayMode });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("KaTeX rendering failed for expression:", text, error);
+  } catch {
     elem.textContent = text;
     elem.classList.remove(
       CSS_CLASSES.APPLIED_KATEX,
@@ -330,7 +358,6 @@ export async function renderKatex(elem, renderOptions = {}) {
   try {
     await ensureKaTeX();
   } catch {
-    // Error already logged in ensureKaTeX
     return;
   }
 

@@ -1,3 +1,16 @@
+const CHAR_CODES = {
+  DOLLAR: 36,
+  PERCENT: 37,
+  BACKSLASH: 92,
+  OPEN_BRACKET: 91,
+  CLOSE_BRACKET: 93,
+};
+
+const MATH_TYPES = {
+  TEX: "tex",
+  ASCIIMATH: "asciimath",
+};
+
 const additionalPunctuation = [
   // Chinese and Japanese punctuation
   0x3001, // 、
@@ -44,10 +57,10 @@ function isSafeBoundary(character_code, delimiter_code, md) {
   return false;
 }
 
-function addInlineMathToken(state, content, type) {
+function addInlineMathToken(state, content, mathType) {
   const token = state.push("math_inline", "", 0);
   token.content = content;
-  token.meta = { mathType: type };
+  token.meta = { mathType };
 }
 
 function addBlockMathToken(state, content) {
@@ -56,60 +69,72 @@ function addBlockMathToken(state, content) {
   token.block = true;
 }
 
-function math_input(state, silent, delimiter_code) {
-  let pos = state.pos,
-    posMax = state.posMax;
+function findClosingInlineDelimiter(src, start, posMax, delimiterCode) {
+  for (let i = start; i < posMax; i++) {
+    const code = src.charCodeAt(i);
+    if (
+      code === delimiterCode &&
+      src.charCodeAt(i - 1) !== CHAR_CODES.BACKSLASH
+    ) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function math_input(state, silent, delimiterCode) {
+  const pos = state.pos;
+  const posMax = state.posMax;
 
   if (
     silent ||
-    state.src.charCodeAt(pos) !== delimiter_code ||
+    state.src.charCodeAt(pos) !== delimiterCode ||
     posMax < pos + 2
   ) {
     return false;
   }
 
-  // too short
-  if (state.src.charCodeAt(pos + 1) === delimiter_code) {
+  if (state.src.charCodeAt(pos + 1) === delimiterCode) {
     return false;
   }
 
   const strict = state.md.options.discourse.features.strict_mathjax_markdown;
 
   if (pos > 0) {
-    let prev = state.src.charCodeAt(pos - 1);
-    if (strict && !isSafeBoundary(prev, delimiter_code, state.md)) {
+    const prev = state.src.charCodeAt(pos - 1);
+    if (strict && !isSafeBoundary(prev, delimiterCode, state.md)) {
       return false;
     }
-    if (prev === delimiter_code) {
+    if (prev === delimiterCode) {
       return false;
     }
   }
 
-  let found;
-  for (let i = pos + 1; i < posMax; i++) {
-    let code = state.src.charCodeAt(i);
-    if (code === delimiter_code && state.src.charCodeAt(i - 1) !== 92 /* \ */) {
-      found = i;
-      break;
-    }
-  }
+  const found = findClosingInlineDelimiter(
+    state.src,
+    pos + 1,
+    posMax,
+    delimiterCode
+  );
 
-  if (!found) {
+  if (found === -1) {
     return false;
   }
 
   if (found + 1 <= posMax) {
-    let next = state.src.charCodeAt(found + 1);
-    if (strict && next && !isSafeBoundary(next, delimiter_code, state.md)) {
+    const next = state.src.charCodeAt(found + 1);
+    if (strict && next && !isSafeBoundary(next, delimiterCode, state.md)) {
       return false;
     }
-    if (next === delimiter_code) {
+    if (next === delimiterCode) {
       return false;
     }
   }
 
-  let data = state.src.slice(pos + 1, found);
-  addInlineMathToken(state, data, delimiter_code === 36 ? "tex" : "asciimath");
+  const data = state.src.slice(pos + 1, found);
+  const mathType =
+    delimiterCode === CHAR_CODES.DOLLAR ? MATH_TYPES.TEX : MATH_TYPES.ASCIIMATH;
+  addInlineMathToken(state, data, mathType);
   state.pos = found + 1;
   return true;
 }
@@ -124,7 +149,7 @@ function findClosingDelimiter(src, start, close) {
 
     let backslashes = 0;
     let j = i - 1;
-    while (j >= 0 && src.charCodeAt(j) === 92 /* \ */) {
+    while (j >= 0 && src.charCodeAt(j) === CHAR_CODES.BACKSLASH) {
       backslashes++;
       j--;
     }
@@ -138,8 +163,8 @@ function findClosingDelimiter(src, start, close) {
 }
 
 function math_input_delimited(state, silent, open, close) {
-  let pos = state.pos;
-  let posMax = state.posMax;
+  const pos = state.pos;
+  const posMax = state.posMax;
 
   if (silent || posMax < pos + open.length) {
     return false;
@@ -156,18 +181,18 @@ function math_input_delimited(state, silent, open, close) {
     return false;
   }
 
-  let data = state.src.slice(start, end);
+  const data = state.src.slice(start, end);
   if (!data) {
     return false;
   }
 
-  addInlineMathToken(state, data, "tex");
+  addInlineMathToken(state, data, MATH_TYPES.TEX);
   state.pos = end + close.length;
   return true;
 }
 
 function inlineMath(state, silent) {
-  return math_input(state, silent, 36 /* $ */);
+  return math_input(state, silent, CHAR_CODES.DOLLAR);
 }
 
 function inlineMathParen(state, silent) {
@@ -175,203 +200,169 @@ function inlineMathParen(state, silent) {
 }
 
 function asciiMath(state, silent) {
-  return math_input(state, silent, 37 /* % */);
+  return math_input(state, silent, CHAR_CODES.PERCENT);
 }
 
-function isBlockMarker(state, start, max, md) {
-  if (state.src.charCodeAt(start) !== 36 /* $ */) {
-    return false;
-  }
-
-  start++;
-
-  if (state.src.charCodeAt(start) !== 36 /* $ */) {
-    return false;
-  }
-
-  start++;
-
-  // ensure we only have newlines after our $$
+function hasOnlyWhitespaceAfter(src, start, max, md) {
   for (let i = start; i < max; i++) {
-    if (!md.utils.isSpace(state.src.charCodeAt(i))) {
+    if (!md.utils.isSpace(src.charCodeAt(i))) {
       return false;
     }
   }
-
   return true;
+}
+
+function isDollarBlockMarker(state, start, max, md) {
+  if (state.src.charCodeAt(start) !== CHAR_CODES.DOLLAR) {
+    return false;
+  }
+  if (state.src.charCodeAt(start + 1) !== CHAR_CODES.DOLLAR) {
+    return false;
+  }
+  return hasOnlyWhitespaceAfter(state.src, start + 2, max, md);
 }
 
 function isBracketBlockMarker(state, start, max, md) {
-  if (state.src.charCodeAt(start) !== 92 /* \ */) {
+  if (state.src.charCodeAt(start) !== CHAR_CODES.BACKSLASH) {
     return false;
   }
-
-  if (state.src.charCodeAt(start + 1) !== 91 /* [ */) {
+  if (state.src.charCodeAt(start + 1) !== CHAR_CODES.OPEN_BRACKET) {
     return false;
   }
-
-  start += 2;
-
-  // ensure we only have newlines after our \[
-  for (let i = start; i < max; i++) {
-    if (!md.utils.isSpace(state.src.charCodeAt(i))) {
-      return false;
-    }
-  }
-
-  return true;
+  return hasOnlyWhitespaceAfter(state.src, start + 2, max, md);
 }
 
 function isBracketBlockEnd(state, start, max, md) {
-  if (state.src.charCodeAt(start) !== 92 /* \ */) {
+  if (state.src.charCodeAt(start) !== CHAR_CODES.BACKSLASH) {
     return false;
   }
-
-  if (state.src.charCodeAt(start + 1) !== 93 /* ] */) {
+  if (state.src.charCodeAt(start + 1) !== CHAR_CODES.CLOSE_BRACKET) {
     return false;
   }
+  return hasOnlyWhitespaceAfter(state.src, start + 2, max, md);
+}
 
-  start += 2;
+function trySingleLineBlockMath(state, startLine, line, silent) {
+  const patterns = [
+    { start: "$$", end: "$$" },
+    { start: "\\[", end: "\\]" },
+  ];
 
-  for (let i = start; i < max; i++) {
-    if (!md.utils.isSpace(state.src.charCodeAt(i))) {
-      return false;
+  for (const { start, end } of patterns) {
+    if (
+      line.startsWith(start) &&
+      line.endsWith(end) &&
+      line.length > start.length + end.length
+    ) {
+      if (silent) {
+        return true;
+      }
+
+      const content = line.slice(start.length, -end.length).trim();
+      if (!content) {
+        return false;
+      }
+
+      addBlockMathToken(state, content);
+      state.line = startLine + 1;
+      return true;
     }
   }
+
+  return null;
+}
+
+function findClosingBlockLine(state, startLine, endLine, isEndMarker) {
+  let nextLine = startLine;
+
+  for (;;) {
+    nextLine++;
+
+    if (nextLine >= endLine) {
+      return { nextLine, closed: false };
+    }
+
+    const lineStart = state.bMarks[nextLine] + state.tShift[nextLine];
+    const lineEnd = state.eMarks[nextLine];
+
+    if (isEndMarker(state, lineStart, lineEnd, state.md)) {
+      return { nextLine, closed: true };
+    }
+  }
+}
+
+function extractMultilineBlockContent(state, startLine, nextLine, closed) {
+  const contentStart =
+    state.bMarks[startLine + 1] + state.tShift[startLine + 1];
+  const contentEnd = closed
+    ? state.eMarks[nextLine - 1]
+    : state.eMarks[nextLine];
+  return state.src.slice(contentStart, contentEnd);
+}
+
+function processMultilineBlock(state, startLine, endLine, silent, isEndMarker) {
+  if (silent) {
+    return true;
+  }
+
+  const { nextLine, closed } = findClosingBlockLine(
+    state,
+    startLine,
+    endLine,
+    isEndMarker
+  );
+  const content = extractMultilineBlockContent(
+    state,
+    startLine,
+    nextLine,
+    closed
+  );
+
+  addBlockMathToken(state, content);
+  state.line = closed ? nextLine + 1 : nextLine;
 
   return true;
 }
 
 function blockMath(state, startLine, endLine, silent) {
-  let start = state.bMarks[startLine] + state.tShift[startLine],
-    max = state.eMarks[startLine];
-
+  const start = state.bMarks[startLine] + state.tShift[startLine];
+  const max = state.eMarks[startLine];
   const strict = state.md.options.discourse.features.strict_mathjax_markdown;
   const line = state.src.slice(start, max).trim();
 
-  if (
-    !strict &&
-    line.startsWith("$$") &&
-    line.endsWith("$$") &&
-    line.length > 4
-  ) {
-    if (silent) {
-      return true;
-    }
-
-    const content = line.slice(2, -2).trim();
-    if (!content) {
-      return false;
-    }
-
-    addBlockMathToken(state, content);
-    state.line = startLine + 1;
-    return true;
-  }
-
-  if (
-    !strict &&
-    line.startsWith("\\[") &&
-    line.endsWith("\\]") &&
-    line.length > 4
-  ) {
-    if (silent) {
-      return true;
-    }
-
-    const content = line.slice(2, -2).trim();
-    if (!content) {
-      return false;
-    }
-
-    addBlockMathToken(state, content);
-    state.line = startLine + 1;
-    return true;
-  }
-
-  if (!isBlockMarker(state, start, max, state.md)) {
-    if (!strict && isBracketBlockMarker(state, start, max, state.md)) {
-      if (silent) {
-        return true;
-      }
-
-      let nextLine = startLine;
-      let closed = false;
-      for (;;) {
-        nextLine++;
-
-        if (nextLine >= endLine) {
-          break;
-        }
-
-        if (
-          isBracketBlockEnd(
-            state,
-            state.bMarks[nextLine] + state.tShift[nextLine],
-            state.eMarks[nextLine],
-            state.md
-          )
-        ) {
-          closed = true;
-          break;
-        }
-      }
-
-      let endContent = closed
-        ? state.eMarks[nextLine - 1]
-        : state.eMarks[nextLine];
-      let content = state.src.slice(
-        state.bMarks[startLine + 1] + state.tShift[startLine + 1],
-        endContent
-      );
-
-      addBlockMathToken(state, content);
-      state.line = closed ? nextLine + 1 : nextLine;
-
-      return true;
-    }
-
-    return false;
-  }
-
-  if (silent) {
-    return true;
-  }
-
-  let nextLine = startLine;
-  let closed = false;
-  for (;;) {
-    nextLine++;
-
-    // unclosed $$ is considered math
-    if (nextLine >= endLine) {
-      break;
-    }
-
-    if (
-      isBlockMarker(
-        state,
-        state.bMarks[nextLine] + state.tShift[nextLine],
-        state.eMarks[nextLine],
-        state.md
-      )
-    ) {
-      closed = true;
-      break;
+  if (!strict) {
+    const singleLineResult = trySingleLineBlockMath(
+      state,
+      startLine,
+      line,
+      silent
+    );
+    if (singleLineResult !== null) {
+      return singleLineResult;
     }
   }
 
-  let endContent = closed ? state.eMarks[nextLine - 1] : state.eMarks[nextLine];
-  let content = state.src.slice(
-    state.bMarks[startLine + 1] + state.tShift[startLine + 1],
-    endContent
-  );
+  if (isDollarBlockMarker(state, start, max, state.md)) {
+    return processMultilineBlock(
+      state,
+      startLine,
+      endLine,
+      silent,
+      isDollarBlockMarker
+    );
+  }
 
-  addBlockMathToken(state, content);
+  if (!strict && isBracketBlockMarker(state, start, max, state.md)) {
+    return processMultilineBlock(
+      state,
+      startLine,
+      endLine,
+      silent,
+      isBracketBlockEnd
+    );
+  }
 
-  state.line = closed ? nextLine + 1 : nextLine;
-
-  return true;
+  return false;
 }
 
 export function setup(helper) {

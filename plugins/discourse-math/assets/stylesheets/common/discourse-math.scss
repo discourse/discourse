@@ -1,6 +1,6 @@
-// Hidden state for math elements during rendering
-.math-hidden {
-  display: none !important;
+// Hidden state controlled via hidden attribute set by JavaScript
+[hidden].math-hidden {
+  display: none;
 }
 
 .math-container {
@@ -8,19 +8,16 @@
   &.ascii-math {
     display: block;
 
-    // we use tag selectors because MathJax does not provide helpful classes
-    // and the possible combinations a bit absurd. The styles are scoped by the
-    // parent selector. So they don't affect any other elements.
+    // MathJax container styling - inline styles are stripped by JavaScript
+    // after rendering to allow these CSS rules to take effect
     > {
       div,
       span,
       mjx-container {
-        // Mathjax ships with !important inline;
-        display: block !important;
+        display: block;
         max-width: 100%;
         margin-bottom: 1em;
 
-        // special handling for katex
         .katex-html {
           display: block;
           overflow-x: auto;
@@ -31,7 +28,6 @@
         }
       }
 
-      // MathJax 4 container - overflow only on the container itself
       mjx-container {
         overflow-x: auto;
         overflow-y: hidden;
