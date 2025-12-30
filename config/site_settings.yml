@@ -1095,6 +1095,7 @@ users:
     min: 0
     max: 36500
     area: "users"
+    requires_confirmation: "simple"
   clean_up_unused_staged_users_after_days:
     default: 365
     min: 0
