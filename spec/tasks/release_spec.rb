@@ -191,7 +191,9 @@ RSpec.describe "tasks/version_bump" do
       end
     end
 
-    it "creates version-bump/main branch with proper commit message" do
+    it "creates version-bump/main branch with proper commit message and PR" do
+      allow(ReleaseUtils).to receive(:gh).with("pr", "create", any_args).and_return(true)
+
       Dir.chdir(local_path) do
         File.write("lib/version.rb", fake_version_rb("2025.05.0-latest"))
         run "git", "add", "."
@@ -215,6 +217,49 @@ RSpec.describe "tasks/version_bump" do
           "Merging this will trigger the creation of a `release/2025.05` branch on the preceding commit.",
         )
       end
+
+      expect(ReleaseUtils).to have_received(:gh).with(
+        "pr",
+        "create",
+        "--base",
+        "main",
+        "--head",
+        "version-bump/main",
+        "--title",
+        "DEV: Begin development of v2025.10.0-latest",
+        "--body",
+        a_string_including("Merging this will trigger the creation of a `release/2025.05` branch"),
+        "--label",
+        ReleaseUtils::PR_LABEL,
+      )
+    end
+
+    it "falls back to editing PR if create fails" do
+      allow(ReleaseUtils).to receive(:gh).with("pr", "create", any_args).and_return(false)
+      allow(ReleaseUtils).to receive(:gh).with("pr", "edit", any_args).and_return(true)
+
+      Dir.chdir(local_path) do
+        File.write("lib/version.rb", fake_version_rb("2025.05.0-latest"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "previous version"
+        run "git", "push", "origin", "main"
+
+        freeze_time Time.utc(2025, 10, 15) do
+          capture_stdout { invoke_rake_task("release:prepare_next_version") }
+        end
+      end
+
+      expect(ReleaseUtils).to have_received(:gh).with(
+        "pr",
+        "edit",
+        "version-bump/main",
+        "--title",
+        "DEV: Begin development of v2025.10.0-latest",
+        "--body",
+        a_string_including("Merging this will trigger the creation of a `release/2025.05` branch"),
+        "--add-label",
+        ReleaseUtils::PR_LABEL,
+      )
     end
   end
 end
