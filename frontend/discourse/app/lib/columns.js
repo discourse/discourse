@@ -1,10 +1,3 @@
-/**
- * Turns an element containing multiple children into a grid of columns.
- * Can be used to arrange images or media in a grid.
- *
- * Inspired/adapted from https://github.com/mladenilic/columns.js
- *
- */
 export default class Columns {
   constructor(container, options = {}) {
     this.container = container;
@@ -25,7 +18,6 @@ export default class Columns {
   }
 
   count() {
-    // 2x2 grid looks better for 2 or 4 items
     return [2, 4].includes(this.items.length) ? 2 : this.options.columns;
   }
 
@@ -53,7 +45,6 @@ export default class Columns {
 
     const children = [...this.container.children];
     for (let child of children) {
-      // sometimes children are wrapped in a paragraph
       if (child.nodeName === "P" && child.children.length > 0) {
         for (let c of [...child.children]) {
           if (!["BR", "P"].includes(c.nodeName)) {
@@ -76,19 +67,11 @@ export default class Columns {
     }
 
     if (item.nodeName !== "IMG") {
-      // If it's already a lightbox wrapper, return it as is
-      if (
-        item.classList.contains("lightbox-wrapper") ||
-        item.classList.contains("lightbox")
-      ) {
-        return item;
-      }
       return item;
     }
 
     const wrapper = document.createElement("span");
     wrapper.classList.add("image-wrapper");
-    // Move the original node to preserve listeners
     wrapper.appendChild(item);
     return wrapper;
   }
@@ -107,8 +90,6 @@ export default class Columns {
         }
       }
 
-      // use aspect ratio to compare heights and append to shortest column
-      // if element is not an image, assume ratio is 1:1
       const img =
         item.querySelector("img") || (item.nodeName === "IMG" ? item : null);
       heights[shortest] += img && img.width > 0 ? img.height / img.width : 1;

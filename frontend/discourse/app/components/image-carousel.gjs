@@ -74,7 +74,6 @@ export default class ImageCarousel extends Component {
             const clampedTarget = Math.max(0, Math.min(idealScroll, maxScroll));
             let diff = Math.abs(clampedTarget - currentScroll);
 
-            // Hysteresis: bias toward current slide, others must be significantly closer
             if (index !== this.currentIndex) {
               diff = diff / HYSTERESIS_FACTOR;
             }
@@ -117,7 +116,6 @@ export default class ImageCarousel extends Component {
     };
   });
 
-  // Scroll generation counter prevents race conditions with rapid navigation
   #scrollGeneration = 0;
   #activeScrollGeneration = 0;
   #debounceTimer = null;
@@ -181,7 +179,6 @@ export default class ImageCarousel extends Component {
       this.#activeScrollGeneration = thisGeneration;
       this.currentIndex = clamped;
 
-      // Fallback for browsers without scrollend (Safari < 17.4)
       if (this.#scrollEndFallbackTimer) {
         clearTimeout(this.#scrollEndFallbackTimer);
       }
@@ -253,7 +250,7 @@ export default class ImageCarousel extends Component {
 
           {{#if this.showDots}}
             <div class="d-image-carousel__dots">
-              {{#each this.items as |item index|}}
+              {{#each this.items as |_item index|}}
                 <button
                   type="button"
                   class="d-image-carousel__dot
