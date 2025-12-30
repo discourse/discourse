@@ -37,6 +37,12 @@ module ReleaseUtils
     stdout
   end
 
+  def self.gh(*args)
+    puts "> gh #{args.inspect}"
+    return true if test_mode?
+    system "gh", *args
+  end
+
   def self.ref_exists?(ref)
     git "rev-parse", "--verify", ref
     true
@@ -45,8 +51,6 @@ module ReleaseUtils
   end
 
   def self.make_pr(base:, branch:)
-    return if test_mode?
-
     title_and_body = [
       "--title",
       git("log", "-1", branch, "--pretty=%s").strip,
@@ -55,22 +59,8 @@ module ReleaseUtils
     ]
 
     success =
-      system(
-        "gh",
-        "pr",
-        "create",
-        "--base",
-        base,
-        "--head",
-        branch,
-        *title_and_body,
-        "--label",
-        PR_LABEL,
-      )
-
-    if !success
-      success = system("gh", "pr", "edit", branch, *title_and_body, "--add-label", PR_LABEL)
-    end
+      gh("pr", "create", "--base", base, "--head", branch, *title_and_body, "--label", PR_LABEL) ||
+        gh("pr", "edit", branch, *title_and_body, "--add-label", PR_LABEL)
 
     raise "Failed to create or update PR" unless success
   end
