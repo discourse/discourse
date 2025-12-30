@@ -770,6 +770,15 @@ login:
   auth_require_interaction:
     default: true
     area: "authenticators"
+  jmespath_group_mapping_enabled:
+    default: false
+    area: "authenticators"
+  jmes_group_mapping_rules_by_attributes:
+    default: "[]"
+    type: json_schema
+    json_schema: Auth::JmespathGroupMappingRulesSchema
+    textarea: true
+    area: "authenticators"
   enable_discourse_connect:
     client: true
     default: false
