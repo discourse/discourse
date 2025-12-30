@@ -202,13 +202,6 @@ class SchemaSettingsObjectValidator
       end
     when "datetime"
       return true if value.blank?
-
-      # Must contain 'T' (date/time separator) and timezone indicator (Z or offset)
-      if !value.include?("T") || !(value.end_with?("Z") || value.match?(/[+-]\d{2}:\d{2}$/))
-        add_error(property_name, :not_valid_datetime_value)
-        return false
-      end
-
       begin
         DateTime.iso8601(value)
       rescue ArgumentError, TypeError
