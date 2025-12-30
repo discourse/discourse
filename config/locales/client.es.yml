@@ -4461,6 +4461,7 @@ es:
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoy"
+        custom: "Personalizado"
     custom_homepage:
       admin_message: 'Uno de tus temas ha activado el modificador «custom_homepage», pero no muestra nada en el conector [custom-homepage]. (Este mensaje solo se muestra a los administradores del sitio).'
     browser_update: 'Por desgracia, <a href="https://discourse.org/about#browser">tu navegador no es compatible</a>. Por favor, <a href="https://browsehappy.com">usa otro navegador</a> para ver el contenido completo, iniciar sesión y responder.'
@@ -7754,16 +7755,12 @@ es:
             prompt: "Cambiar esta configuración puede tener consecuencias de largo alcance o no deseadas para tu sitio. ¿Seguro que quieres proceder?"
             confirm: "Sí, seguro"
           min_password_length:
-            prompt: "Estás a punto de cambiar tu política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres proceder?"
             confirm: "Sí, actualizar la política de contraseñas"
           min_admin_password_length:
-            prompt: "Estás a punto de cambiar tu política de contraseñas. Esto afectará a todos los administradores que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres proceder?"
             confirm: "Sí, actualizar la política de contraseñas"
           password_unique_charactes:
-            prompt: "Estás a punto de cambiar tu política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres proceder?"
             confirm: "Sí, actualizar la política de contraseñas"
           block_common_passwords:
-            prompt: "Estás a punto de cambiar tu política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres proceder?"
             confirm: "Sí, actualizar la política de contraseñas"
       badges:
         status: Estado

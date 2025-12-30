@@ -3338,6 +3338,7 @@ vi:
         this_month: "Tháng"
         this_week: "Tuần"
         today: "Ngày"
+        custom: "Tùy biến"
     permission_types:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"

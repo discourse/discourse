@@ -5102,6 +5102,7 @@ pl_PL:
         this_month: "Miesiąc"
         this_week: "Tydzień"
         today: "Dzisiaj"
+        custom: "Niestandardowy"
     custom_homepage:
       admin_message: 'Jeden z Twoich motywów włączył modyfikator „custom_homepage”, ale nie wyświetla on niczego w łączniku [custom-homepage]. (Ta wiadomość jest wyświetlana tylko administratorom strony.)'
     browser_update: 'Niestety, <a href="https://discourse.org/about#browser">Twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby wyświetlać pełną zawartość, zalogować się i odpowiedzieć.'
@@ -8693,17 +8694,20 @@ pl_PL:
             prompt: "Zmiana tego ustawienia może mieć daleko idące lub niezamierzone konsekwencje dla Twojej witryny. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, jestem pewny/a"
           min_password_length:
-            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
+            prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Będzie to miało wpływ na wszystkich użytkowników, którzy od tej pory będą zmieniać swoje hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           min_admin_password_length:
-            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Od teraz będzie to dotyczyć wszystkich administratorów zmieniających hasła. Czy na pewno chcesz kontynuować?"
+            prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Od teraz będzie to dotyczyć wszystkich administratorów zmieniających hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           password_unique_charactes:
-            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
+            prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Będzie to miało wpływ na wszystkich użytkowników, którzy od tej pory będą zmieniać swoje hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           block_common_passwords:
-            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
+            prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Będzie to miało wpływ na wszystkich użytkowników, którzy od tej pory będą zmieniać swoje hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
+          clean_up_inactive_users_after_days:
+            prompt: "Ustawienie tej wartości na inną niż 0 spowoduje trwałe usunięcie użytkowników, którzy nie będą aktywni przez określoną liczbę dni. Czy na pewno chcesz kontynuować?"
+            confirm: "Tak, rozumiem, że nieaktywni użytkownicy zostaną trwale usunięci, chyba że ustawię tę wartość na 0"
         job_status:
           completed: "Aktualizacja ukończona"
           enqueued: "Aktualizacja w toku"

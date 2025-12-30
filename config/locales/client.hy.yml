@@ -3444,6 +3444,7 @@ hy:
         this_month: "Ամիս"
         this_week: "Շաբաթ"
         today: "Այսօր"
+        custom: "Մասնավոր"
     permission_types:
       full: "Ստեղծել/Պատասխանել/Դիտել"
       create_post: "Պատասխանել/Դիտել"

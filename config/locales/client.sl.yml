@@ -3295,6 +3295,7 @@ sl:
         this_month: "Mesec"
         this_week: "Teden"
         today: "Danes"
+        custom: "Po meri"
     permission_types:
       full: "Ustvari / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
