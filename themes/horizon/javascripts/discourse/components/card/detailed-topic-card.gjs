@@ -103,6 +103,10 @@ export default class DetailedTopicCard extends Component {
     };
   }
 
+  get topicTimestamp() {
+    return this.args.topic.created_at;
+  }
+
   @action
   onTitleFocus(event) {
     event.target.closest(".topic-list-item").classList.add("selected");
@@ -124,6 +128,9 @@ export default class DetailedTopicCard extends Component {
           <span
             class="dc-card__creator-name"
           >{{this.topicCreator.username}}</span>
+          <span>
+            {{formatDate this.topicTimestamp format="tiny"}}
+          </span>
 
           {{#if this.hasSolved}}
             <span class="dc-card__solved">
