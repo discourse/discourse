@@ -103,6 +103,23 @@ RSpec.describe "tasks/version_bump" do
         expect(output).to include("Tag v2025.05.0 already exists, skipping")
       end
     end
+
+    it "creates all release alias tags when version is latest" do
+      Dir.chdir(local_path) do
+        run "git", "tag", "-a", "v2025.01.0", "-m", "version 2025.01.0"
+
+        File.write("lib/version.rb", fake_version_rb("2025.06.0"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "release 2025.06.0"
+        commit_hash = run("git", "rev-parse", "HEAD").strip
+        run "git", "branch", "release/2025.06"
+
+        capture_stdout { invoke_rake_task("release:maybe_tag_release", commit_hash) }
+
+        tags = run("git", "tag").lines.map(&:strip)
+        ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).to include(tag) }
+      end
+    end
   end
 
   it "can create a new release branch" do
