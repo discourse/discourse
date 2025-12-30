@@ -3392,8 +3392,11 @@ en:
 
     post_hidden:
       title: "Post Hidden"
+      preview: "Post hidden due to flags by community members."
       subject_template: "Post hidden by community flags"
       text_body_template: |
+        %{email_preview}
+
         Hello,
 
         This is an automated message from %{site_name} to let you know that your post was hidden.
@@ -3456,8 +3459,11 @@ en:
 
     post_hidden_again:
       title: "Post Hidden again"
+      preview: "Post hidden again by community members."
       subject_template: "Post hidden by community flags, staff notified"
       text_body_template: |
+        %{email_preview}
+
         Hello,
 
         This is an automated message from %{site_name} to let you know that your post was hidden again.
@@ -3550,8 +3556,11 @@ en:
 
     welcome_user:
       title: "Welcome User"
+      preview: "Welcome to %{site_name}!"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
+        %{email_preview}
+
         Thanks for joining %{site_name}, and welcome!
 
         %{new_user_tips}
@@ -3579,8 +3588,11 @@ en:
         With great power comes great responsibility. If you’re new to moderating, please refer to the [Moderation Guide](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Welcome Invite"
+      preview: "Welcome to %{site_name}!"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
+        %{email_preview}
+
         Thanks for accepting your invitation to %{site_name} -- welcome!
 
         - We've created this new account **%{username}** for you. Change your name or password by visiting [your user profile][prefs].
@@ -3987,8 +3999,11 @@ en:
 
     too_many_spam_flags:
       title: "Too Many Spam Flags"
+      preview: "Posts temporarily hidden due to spam flags."
       subject_template: "New account on hold"
       text_body_template: |
+        %{email_preview}
+
         Hello,
 
         This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
@@ -4009,8 +4024,11 @@ en:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Silenced by Staff"
+      preview: "Account temporarily placed on hold."
       subject_template: "Account temporarily on hold"
       text_body_template: |
+        %{email_preview}
+
         Hello,
 
         This is an automated message from %{site_name} to let you know that your account has been temporarily placed on hold as a precautionary measure.
@@ -4058,8 +4076,11 @@ en:
 
     unsilenced:
       title: "Unsilenced"
+      preview: "Account no longer on hold."
       subject_template: "Account no longer on hold"
       text_body_template: |
+        %{email_preview}
+
         Hello,
 
         This is an automated message from %{site_name} to let you know that your account is no longer on hold after staff review.
@@ -4232,8 +4253,11 @@ en:
 
     user_replied:
       title: "User Replied"
+      preview: "Someone replied to your post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
+        %{email_preview}
+
         %{header_instructions}
 
         %{message}
@@ -4246,6 +4270,8 @@ en:
       title: "User Replied PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
+        %{email_preview}
+
         %{header_instructions}
 
         %{message}
@@ -4256,8 +4282,11 @@ en:
 
     user_quoted:
       title: "User Quoted"
+      preview: "Someone quoted you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
+        %{email_preview}
+
         %{header_instructions}
 
         %{message}
@@ -4268,8 +4297,11 @@ en:
 
     user_linked:
       title: "User Linked"
+      preview: "Post linked in another topic."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
+        %{email_preview}
+
         %{header_instructions}
 
         %{message}
@@ -4280,8 +4312,11 @@ en:
 
     user_mentioned:
       title: "User Mentioned"
+      preview: "Someone mentioned you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
+        %{email_preview}
+
         %{header_instructions}
 
         %{message}
@@ -4340,8 +4375,11 @@ en:
 
     user_posted:
       title: "User Posted"
+      preview: "Someone replied to a topic you are Watching."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
+        %{email_preview}
+
         %{header_instructions}
 
         %{message}
@@ -4376,8 +4414,11 @@ en:
 
     user_posted_pm:
       title: "User Posted PM"
+      preview: "Someone sent you a PM."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
+        %{email_preview}
+
         %{header_instructions}
 
         %{message}
@@ -4502,8 +4543,11 @@ en:
 
     forgot_password:
       title: "Forgot Password"
+      preview: "Reset your password."
       subject_template: "[%{email_prefix}] Password reset"
       text_body_template: |
+        %{email_preview}
+
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
         If it was not you, you can safely ignore this email.
@@ -4513,8 +4557,11 @@ en:
 
     email_login:
       title: "Log in via link"
+      preview: "Log in via link."
       subject_template: "[%{email_prefix}] Log in via link"
       text_body_template: |
+        %{email_preview}
+
         Here's your link to log in at [%{site_name}](%{base_url}).
 
         If you did not request this link, you can safely ignore this email.
@@ -4524,8 +4571,11 @@ en:
 
     set_password:
       title: "Set Password"
+      preview: "Set account password."
       subject_template: "[%{email_prefix}] Set Password"
       text_body_template: |
+        %{email_preview}
+
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
         If you did not make this request, you can safely ignore this email.
@@ -4535,8 +4585,11 @@ en:
 
     admin_login:
       title: "Admin Login"
+      preview: "Admin login requested."
       subject_template: "[%{email_prefix}] Login"
       text_body_template: |
+        %{email_preview}
+
         Somebody asked to log in to your account on [%{site_name}](%{base_url}).
 
         If you did not make this request, you can safely ignore this email.
@@ -4546,8 +4599,11 @@ en:
 
     account_created:
       title: "Account Created"
+      preview: "New account created for you."
       subject_template: "[%{email_prefix}] Your New Account"
       text_body_template: |
+        %{email_preview}
+
         A new account was created for you at %{site_name}
 
         Click the following link to choose a password for your new account:
@@ -4599,8 +4655,11 @@ en:
 
     notify_old_email:
       title: "Notify Old Email"
+      preview: "Email address updated."
       subject_template: "[%{email_prefix}] Your email address has been changed"
       text_body_template: |
+        %{email_preview}
+
         This is an automated message to let you know that your email address for
         %{site_name} has been changed. If this was done in error, please contact
         a site administrator.
@@ -4623,8 +4682,11 @@ en:
 
     signup_after_approval:
       title: "Signup After Approval"
+      preview: "New account approved."
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
+        %{email_preview}
+
         Welcome to %{site_name}!
 
         A staff member approved your account on %{site_name}.
@@ -4650,8 +4712,11 @@ en:
 
     signup:
       title: "Signup"
+      preview: "Confirm your account."
       subject_template: "[%{email_prefix}] Confirm your new account"
       text_body_template: |
+        %{email_preview}
+
         Welcome to %{site_name}!
 
         Click the following link to confirm and activate your new account:
@@ -4674,8 +4739,11 @@ en:
 
     suspicious_login:
       title: "New Login Alert"
+      preview: "Verify your device."
       subject_template: "[%{site_name}] New Login from %{location}"
       text_body_template: |
+        %{email_preview}
+
         Hello,
 
         We noticed a login from a device or location you don’t usually use. Was this you?
