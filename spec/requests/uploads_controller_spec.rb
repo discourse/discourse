@@ -400,7 +400,7 @@ RSpec.describe UploadsController do
       expect(response.status).to eq(200)
 
       expect(response.headers["Content-Disposition"]).to eq(
-        %Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|,
+        %Q|inline; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|,
       )
     end
 
@@ -418,7 +418,7 @@ RSpec.describe UploadsController do
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
       expect(response.headers["Content-Disposition"]).to eq(
-        %Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|,
+        %Q|inline; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|,
       )
     end
 
@@ -446,15 +446,29 @@ RSpec.describe UploadsController do
   end
 
   describe "#show_short" do
-    it "inlines only supported image files" do
+    it "inlines images and safe text files" do
       upload = upload_file("smallest.png")
-      get upload.short_path, params: { inline: true }
+
+      get upload.short_path
       expect(response.header["Content-Type"]).to eq("image/png")
       expect(response.header["Content-Disposition"]).to include("inline;")
 
-      upload.update!(original_filename: "test.xml")
-      get upload.short_path, params: { inline: true }
-      expect(response.header["Content-Type"]).to eq("application/xml")
+      upload.update!(original_filename: "llms.txt")
+      get upload.short_path
+      expect(response.header["Content-Type"]).to eq("text/plain")
+      expect(response.header["Content-Disposition"]).to include("inline;")
+
+      upload.update!(original_filename: "readme.md")
+      get upload.short_path
+      expect(response.header["Content-Type"]).to eq("text/markdown")
+      expect(response.header["Content-Disposition"]).to include("inline;")
+
+      upload.update!(original_filename: "image.svg")
+      get upload.short_path
+      expect(response.header["Content-Disposition"]).to include("attachment;")
+
+      upload.update!(original_filename: "document.pdf")
+      get upload.short_path
       expect(response.header["Content-Disposition"]).to include("attachment;")
     end
 
@@ -463,16 +477,6 @@ RSpec.describe UploadsController do
 
       it "returns the right response" do
         get image_upload.short_path
-
-        expect(response.status).to eq(200)
-
-        expect(response.headers["Content-Disposition"]).to include(
-          "attachment; filename=\"#{image_upload.original_filename}\"",
-        )
-      end
-
-      it "returns the right response when `inline` param is given" do
-        get "#{image_upload.short_path}?inline=1"
 
         expect(response.status).to eq(200)
 
