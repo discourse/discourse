@@ -242,6 +242,26 @@ RSpec.describe "tasks/version_bump" do
       end
     end
 
+    it "rolls over to next year when incrementing past December" do
+      Dir.chdir(local_path) do
+        File.write("lib/version.rb", fake_version_rb("2025.12.0-latest"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "December version"
+        run "git", "push", "origin", "main"
+
+        freeze_time Time.utc(2025, 12, 15) do
+          capture_stdout { invoke_rake_task("release:prepare_next_version") }
+        end
+      end
+
+      Dir.chdir(origin_path) do
+        run "git", "reset", "--hard"
+        run "git", "checkout", "version-bump/main"
+        version_rb_content = File.read("lib/version.rb")
+        expect(version_rb_content).to include('STRING = "2026.01.0-latest"')
+      end
+    end
+
     it "creates version-bump/main branch with proper commit message and PR" do
       allow(ReleaseUtils).to receive(:gh).with("pr", "create", any_args).and_return(true)
 
