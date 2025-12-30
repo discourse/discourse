@@ -1,17 +1,25 @@
-// It makes sense to use prosemirror-tables for some of the table functionality,
-// but it has some differences from our structure (e.g. no thead/tbody).
-//
-// The main missing part of this extension for now is a UI companion
-
-// Example:
+// Markdown Table Example:
 //
 // | Left-aligned | Center-aligned | Right-aligned |
 // | :---         |     :---:      |          ---: |
 // | git status   | git status     | git status    |
 // | git diff     | git diff       | git diff      |
 
-/** @type {RichEditorExtension} */
+class TableNodeView {
+  constructor() {
+    const div = document.createElement("div");
+    div.classList.add("md-table");
+    const table = document.createElement("table");
+    div.appendChild(table);
+
+    this.dom = div;
+    this.contentDOM = table;
+  }
+}
+
+/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
+  nodeViews: { table: TableNodeView },
   nodeSpec: {
     table: {
       content: "table_head? table_body",
