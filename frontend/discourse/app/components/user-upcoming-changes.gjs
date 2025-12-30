@@ -1,5 +1,6 @@
 import { concat } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { UPCOMING_CHANGES_USER_ENABLED_REASONS } from "discourse/lib/constants";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -33,7 +34,12 @@ const UserUpcomingChanges = <template>
                 "user.upcoming_changes.why_reasons." upcomingChange.reason
               )
             }}
-            {{#if (eq upcomingChange.reason "in_specific_groups")}}
+            {{#if
+              (eq
+                upcomingChange.reason
+                UPCOMING_CHANGES_USER_ENABLED_REASONS.in_specific_groups
+              )
+            }}
               {{#each upcomingChange.specific_groups as |group|}}
                 <LinkTo @route="group.index" @model={{group}}>{{group}}</LinkTo>
               {{/each}}

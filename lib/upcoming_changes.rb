@@ -1,9 +1,19 @@
 # frozen_string_literal: true
 
 module UpcomingChanges
+  def self.user_enabled_reasons
+    @user_enabled_reasons ||=
+      ::Enum.new(
+        enabled_for_everyone: :enabled_for_everyone,
+        enabled_for_no_one: :enabled_for_no_one,
+        in_specific_groups: :in_specific_groups,
+        not_in_specific_groups: :not_in_specific_groups,
+      )
+  end
+
   def self.statuses
     @statuses ||=
-      Enum.new(experimental: 0, alpha: 100, beta: 200, stable: 300, permanent: 500, never: 9999)
+      ::Enum.new(experimental: 0, alpha: 100, beta: 200, stable: 300, permanent: 500, never: 9999)
   end
 
   def self.image_exists?(change_setting_name)

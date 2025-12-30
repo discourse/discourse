@@ -1980,16 +1980,16 @@ class User < ActiveRecord::Base
         ).pluck(:name)
 
         if !hash[:enabled]
-          hash[:reason] = :not_in_specific_groups
+          hash[:reason] = UpcomingChanges.user_enabled_reasons[:not_in_specific_groups]
         else
-          hash[:reason] = :in_specific_groups
+          hash[:reason] = UpcomingChanges.user_enabled_reasons[:in_specific_groups]
         end
       else
         hash[:reason] = (
           if hash[:enabled]
-            :enabled_for_everyone
+            UpcomingChanges.user_enabled_reasons[:enabled_for_everyone]
           else
-            :enabled_for_no_one
+            UpcomingChanges.user_enabled_reasons[:enabled_for_no_one]
           end
         )
       end
