@@ -493,3 +493,10 @@ en:
       invite_user_or_group:
         title: "Notify user(s) or group(s)"
         invite: "Send"
+      team_availability:
+        tab_title: "Availability"
+        today: "Today"
+        search: "Search..."
+        all_groups: "All groups"
+        no_topic_configured: "No team availability topic configured."
+        failed_to_load: "Failed to load team availability data."
