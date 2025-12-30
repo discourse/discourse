@@ -18,8 +18,9 @@ export default {
     const isErrorPage =
       document.querySelector("meta#discourse-error")?.dataset.discourseError ===
       "true";
+
     if (!isErrorPage) {
-      sendDeferredPageview();
+      sendDeferredPageview(document.referrer);
     }
 
     // Tell our AJAX system to track a page transition
@@ -89,7 +90,7 @@ export default {
       return;
     }
 
-    trackNextAjaxAsPageview();
+    trackNextAjaxAsPageview(window.location.href);
 
     if (
       transition.to.name === "topic.fromParamsNear" ||
