@@ -99,7 +99,9 @@ export default class Bookmark extends RestModel {
 
   @discourseComputed("topic_id", "highest_post_number", "bookmarkable_url")
   lastPostUrl(topic_id, highest_post_number, bookmarkable_url) {
-    return topic_id ? this.urlForPostNumber(highest_post_number) : bookmarkable_url;
+    return topic_id
+      ? this.urlForPostNumber(highest_post_number)
+      : bookmarkable_url;
   }
 
   urlForPostNumber(postNumber) {
