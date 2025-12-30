@@ -301,6 +301,198 @@ module(
 
         assert.strictEqual(result.length, 2, "returns both channels");
       });
+
+      test("prioritizes unread status over channel type", function (assert) {
+        const readPublicChannel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "read-public",
+          }),
+        });
+        const unreadDmChannel = this.fabricators.channel({
+          chatable: this.fabricators.directMessage(),
+          title: "Unread DM",
+        });
+
+        readPublicChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+        unreadDmChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+
+        readPublicChannel.tracking.unreadCount = 0;
+        unreadDmChannel.tracking.unreadCount = 3;
+
+        this.subject.store(readPublicChannel);
+        this.subject.store(unreadDmChannel);
+
+        const result = this.subject.starredChannelsByActivity;
+
+        assert.strictEqual(
+          result[0].id,
+          unreadDmChannel.id,
+          "unread DM comes before read public channel"
+        );
+        assert.strictEqual(
+          result[1].id,
+          readPublicChannel.id,
+          "read public channel comes after unread DM"
+        );
+      });
+
+      test("sorts unread public channels before unread DMs", function (assert) {
+        const unreadPublicChannel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "unread-public",
+          }),
+        });
+        const unreadDmChannel = this.fabricators.channel({
+          chatable: this.fabricators.directMessage(),
+          title: "Unread DM",
+        });
+
+        unreadPublicChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+        unreadDmChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+
+        unreadPublicChannel.tracking.unreadCount = 2;
+        unreadDmChannel.tracking.unreadCount = 5;
+
+        this.subject.store(unreadDmChannel);
+        this.subject.store(unreadPublicChannel);
+
+        const result = this.subject.starredChannelsByActivity;
+
+        assert.strictEqual(
+          result[0].id,
+          unreadPublicChannel.id,
+          "unread public channel comes first"
+        );
+        assert.strictEqual(
+          result[1].id,
+          unreadDmChannel.id,
+          "unread DM comes second"
+        );
+      });
+
+      test("sorts read public channels before read DMs", function (assert) {
+        const readPublicChannel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "read-public",
+          }),
+        });
+        const readDmChannel = this.fabricators.channel({
+          chatable: this.fabricators.directMessage(),
+          title: "Read DM",
+        });
+
+        readPublicChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+        readDmChannel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: true,
+        });
+
+        readPublicChannel.tracking.unreadCount = 0;
+        readDmChannel.tracking.unreadCount = 0;
+
+        this.subject.store(readDmChannel);
+        this.subject.store(readPublicChannel);
+
+        const result = this.subject.starredChannelsByActivity;
+
+        assert.strictEqual(
+          result[0].id,
+          readPublicChannel.id,
+          "read public channel comes first"
+        );
+        assert.strictEqual(
+          result[1].id,
+          readDmChannel.id,
+          "read DM comes second"
+        );
+      });
+
+      test("complete ordering: unread public, unread DM, read public, read DM", function (assert) {
+        const readPublicChannel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "read-public",
+          }),
+        });
+        const unreadPublicChannel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "unread-public",
+          }),
+        });
+        const readDmChannel = this.fabricators.channel({
+          chatable: this.fabricators.directMessage(),
+          title: "Read DM",
+        });
+        const unreadDmChannel = this.fabricators.channel({
+          chatable: this.fabricators.directMessage(),
+          title: "Unread DM",
+        });
+
+        readPublicChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+        unreadPublicChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+        readDmChannel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: true,
+        });
+        unreadDmChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+
+        readPublicChannel.tracking.unreadCount = 0;
+        unreadPublicChannel.tracking.unreadCount = 2;
+        readDmChannel.tracking.unreadCount = 0;
+        unreadDmChannel.tracking.unreadCount = 3;
+
+        this.subject.store(readDmChannel);
+        this.subject.store(unreadDmChannel);
+        this.subject.store(readPublicChannel);
+        this.subject.store(unreadPublicChannel);
+
+        const result = this.subject.starredChannelsByActivity;
+
+        assert.strictEqual(result.length, 4, "returns all 4 channels");
+        assert.strictEqual(
+          result[0].id,
+          unreadPublicChannel.id,
+          "1st: unread public channel"
+        );
+        assert.strictEqual(result[1].id, unreadDmChannel.id, "2nd: unread DM");
+        assert.strictEqual(
+          result[2].id,
+          readPublicChannel.id,
+          "3rd: read public channel"
+        );
+        assert.strictEqual(result[3].id, readDmChannel.id, "4th: read DM");
+      });
     });
 
     module("#sortDirectMessageChannels with starred channels", function () {
