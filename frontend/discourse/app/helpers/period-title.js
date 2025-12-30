@@ -33,9 +33,9 @@ export default function periodTitle(
     case "custom":
       if (startDate && endDate) {
         dateString =
-          moment(startDate).format(i18n("dates.long_with_year_no_time")) +
+          moment.utc(startDate).format(i18n("dates.long_with_year_no_time")) +
           " – " +
-          moment(endDate).format(i18n("dates.long_with_year_no_time"));
+          moment.utc(endDate).format(i18n("dates.long_with_year_no_time"));
       }
       break;
     case "yearly":
