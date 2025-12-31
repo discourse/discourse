@@ -388,9 +388,16 @@ export default class Blocks extends Service {
       return false;
     }
 
-    const result = conditionInstance.evaluate(args);
+    // Log condition BEFORE evaluate so nested logs appear underneath
     if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({ type, args, result, depth });
+      blockDebugLogger.logCondition({ type, args, result: null, depth });
+    }
+
+    const result = conditionInstance.evaluate(args);
+
+    // Update the condition's result after evaluate
+    if (isLoggingEnabled) {
+      blockDebugLogger.updateConditionResult(type, result, depth);
     }
     return result;
   }

@@ -2,7 +2,7 @@ import { service } from "@ember/service";
 import { BlockCondition, raiseBlockValidationError } from "./base";
 
 /**
- * A condition that evaluates based on site setting values.
+ * A condition that evaluates based on site setting or custom settings object values.
  *
  * Supports multiple condition types for different setting formats:
  * - `enabled` - For boolean settings (truthy/falsy check)
@@ -18,15 +18,20 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * | `includes` | Single value (enum/string) | Is the setting value IN my list? |
  * | `contains` | List (pipe-separated) | Does the setting list CONTAIN my value? |
  *
+ * **Theme Settings Support:**
+ * Pass a custom `settings` object (e.g., from `import { settings } from "virtual:theme"`)
+ * to check theme-specific settings instead of site settings.
+ *
  * @class BlockSettingCondition
  * @extends BlockCondition
  *
- * @param {string} setting - The site setting name to check (required, must have `client: true`)
- * @param {boolean} [enabled] - If true, passes when setting is truthy; if false, passes when falsy
- * @param {*} [equals] - Passes when setting exactly equals this value
- * @param {Array<*>} [includes] - For single-value settings: passes when setting value is in this array
- * @param {string} [contains] - For list settings: passes when the setting list contains this value
- * @param {Array<string>} [containsAny] - For list settings: passes when setting list contains ANY of these
+ * @param {string} setting - The setting key to check (required).
+ * @param {Object} [settings] - Custom settings object (e.g., theme settings). If not provided, uses siteSettings.
+ * @param {boolean} [enabled] - If true, passes when setting is truthy; if false, passes when falsy.
+ * @param {*} [equals] - Passes when setting exactly equals this value.
+ * @param {Array<*>} [includes] - For single-value settings: passes when setting value is in this array.
+ * @param {string} [contains] - For list settings: passes when the setting list contains this value.
+ * @param {Array<string>} [containsAny] - For list settings: passes when setting list contains ANY of these.
  *
  * @example
  * // Boolean setting check
@@ -47,6 +52,11 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * @example
  * // List setting contains any of values
  * { type: "setting", setting: "share_links", containsAny: ["twitter", "facebook"] }
+ *
+ * @example
+ * // Theme setting check (pass settings object from "virtual:theme")
+ * import { settings } from "virtual:theme";
+ * { type: "setting", settings, setting: "show_sidebar", enabled: true }
  */
 export default class BlockSettingCondition extends BlockCondition {
   static type = "setting";
@@ -54,7 +64,15 @@ export default class BlockSettingCondition extends BlockCondition {
   @service siteSettings;
 
   validate(args) {
-    const { setting, enabled, equals, includes, contains, containsAny } = args;
+    const {
+      setting,
+      settings,
+      enabled,
+      equals,
+      includes,
+      contains,
+      containsAny,
+    } = args;
 
     if (!setting) {
       raiseBlockValidationError(
@@ -62,8 +80,9 @@ export default class BlockSettingCondition extends BlockCondition {
       );
     }
 
-    // Check that setting exists (only client: true settings are available)
-    if (!(setting in this.siteSettings)) {
+    // Skip site settings check if custom settings object is provided
+    // (e.g., theme settings from "virtual:theme")
+    if (!settings && !(setting in this.siteSettings)) {
       raiseBlockValidationError(
         `BlockSettingCondition: Unknown site setting "${setting}". ` +
           `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`
@@ -88,8 +107,18 @@ export default class BlockSettingCondition extends BlockCondition {
   }
 
   evaluate(args) {
-    const { setting, enabled, equals, includes, contains, containsAny } = args;
-    const value = this.siteSettings[setting];
+    const {
+      setting,
+      settings,
+      enabled,
+      equals,
+      includes,
+      contains,
+      containsAny,
+    } = args;
+    // Use custom settings object if provided, otherwise fall back to siteSettings
+    const settingsSource = settings ?? this.siteSettings;
+    const value = settingsSource[setting];
 
     // Check enabled/disabled (boolean check)
     if (enabled !== undefined) {

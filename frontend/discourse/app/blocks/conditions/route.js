@@ -1,4 +1,6 @@
 import { service } from "@ember/service";
+import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
+import { matchParams } from "discourse/lib/blocks/value-matcher";
 import { BlockCondition, raiseBlockValidationError } from "./base";
 
 /**
@@ -20,7 +22,7 @@ export const BlockRouteConditionShortcuts = Object.freeze({
 });
 
 /**
- * A condition that evaluates based on the current route.
+ * A condition that evaluates based on the current route, route parameters, and query parameters.
  *
  * Route patterns support:
  * - Exact match: `"discovery.latest"`
@@ -31,11 +33,19 @@ export const BlockRouteConditionShortcuts = Object.freeze({
  * When using `routes`, the condition passes if the current route matches ANY pattern (OR logic).
  * When using `excludeRoutes`, the condition passes if the current route matches NONE of the patterns.
  *
+ * Params and queryParams support AND/OR/NOT logic:
+ * - Object with keys: AND logic (all keys must match)
+ * - `{ any: [...] }`: OR logic (any must match)
+ * - `{ not: {...} }`: NOT logic (must NOT match)
+ * - Keys starting with `\` are escaped (e.g., `"\\any"` matches literal param `"any"`)
+ *
  * @class BlockRouteCondition
  * @extends BlockCondition
  *
- * @param {Array<string|RegExp|Symbol>} [routes] - Route patterns to match (passes if ANY match)
- * @param {Array<string|RegExp|Symbol>} [excludeRoutes] - Route patterns to exclude (passes if NONE match)
+ * @param {Array<string|RegExp|Symbol>} [routes] - Route patterns to match (passes if ANY match).
+ * @param {Array<string|RegExp|Symbol>} [excludeRoutes] - Route patterns to exclude (passes if NONE match).
+ * @param {Object} [params] - Route parameters to match (from `router.currentRoute.params`).
+ * @param {Object} [queryParams] - Query parameters to match (from `router.currentRoute.queryParams`).
  *
  * @example
  * // Match specific routes
@@ -52,6 +62,18 @@ export const BlockRouteConditionShortcuts = Object.freeze({
  * @example
  * // Exclude routes
  * { type: "route", excludeRoutes: ["discovery.custom"] }
+ *
+ * @example
+ * // Match route with specific params
+ * { type: "route", routes: ["topic.show"], params: { id: 123 } }
+ *
+ * @example
+ * // Match route with query params
+ * { type: "route", routes: ["discovery.latest"], queryParams: { filter: "solved" } }
+ *
+ * @example
+ * // Match with OR logic on params
+ * { type: "route", routes: ["topic.show"], params: { any: [{ id: 123 }, { slug: /^help-/ }] } }
  */
 export default class BlockRouteCondition extends BlockCondition {
   static type = "route";
@@ -82,14 +104,66 @@ export default class BlockRouteCondition extends BlockCondition {
       return false;
     }
 
-    const { routes, excludeRoutes } = args;
+    const { routes, excludeRoutes, params, queryParams } = args;
 
+    // Check excludeRoutes first (passes if NONE match)
     if (excludeRoutes?.length) {
-      return !this.#matchesAny(currentRoute, excludeRoutes);
+      if (this.#matchesAny(currentRoute, excludeRoutes)) {
+        return false;
+      }
     }
 
+    // Check routes (passes if ANY match)
     if (routes?.length) {
-      return this.#matchesAny(currentRoute, routes);
+      if (!this.#matchesAny(currentRoute, routes)) {
+        return false;
+      }
+    }
+
+    // Debug context for params matching - nested under route condition (depth=1)
+    const isDebugging = blockDebugLogger.hasActiveGroup();
+    const debugContext = { debug: isDebugging, _depth: 1 };
+
+    // Get actual params/queryParams for debug output
+    const actualParams = this.router.currentRoute?.params;
+    const actualQueryParams = this.router.currentRoute?.queryParams;
+
+    // Log current route state when debugging
+    if (isDebugging && (params || queryParams)) {
+      blockDebugLogger.logRouteState({
+        currentRoute,
+        actualParams,
+        actualQueryParams,
+        depth: 1,
+      });
+    }
+
+    // Check params (uses shared matcher with AND/OR/NOT support)
+    if (params) {
+      if (
+        !matchParams({
+          actualParams,
+          expectedParams: params,
+          context: debugContext,
+          label: "params",
+        })
+      ) {
+        return false;
+      }
+    }
+
+    // Check query params (uses shared matcher with AND/OR/NOT support)
+    if (queryParams) {
+      if (
+        !matchParams({
+          actualParams: actualQueryParams,
+          expectedParams: queryParams,
+          context: debugContext,
+          label: "queryParams",
+        })
+      ) {
+        return false;
+      }
     }
 
     return true;

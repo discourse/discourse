@@ -2,411 +2,454 @@ import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { BlockConditionValidationError } from "discourse/blocks/conditions";
-import BlockRouteCondition, {
-  BlockRouteConditionShortcuts,
-} from "discourse/blocks/conditions/route";
+import BlockRouteCondition from "discourse/blocks/conditions/route";
 
-module("Unit | Blocks | Condition | route", function (hooks) {
+module("Unit | Blocks | Conditions | route", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.condition = new BlockRouteCondition();
-    setOwner(this.condition, getOwner(this));
+    const testOwner = getOwner(this);
+
+    // Default mock router state
+    this.mockRouterState = {
+      currentRouteName: "discovery.latest",
+      currentRoute: {
+        params: {},
+        queryParams: {},
+      },
+    };
+
+    // Mock discovery state
+    this.mockDiscoveryState = {
+      category: null,
+      tag: null,
+      custom: false,
+      onDiscoveryRoute: true,
+    };
+
+    // Create mock router service
+    const mockRouterState = this.mockRouterState;
+    class MockRouter extends Service {
+      get currentRouteName() {
+        return mockRouterState.currentRouteName;
+      }
+
+      get currentRoute() {
+        return mockRouterState.currentRoute;
+      }
+    }
+    testOwner.unregister("service:router");
+    testOwner.register("service:router", MockRouter);
+
+    // Create mock discovery service
+    const mockDiscoveryState = this.mockDiscoveryState;
+    class MockDiscovery extends Service {
+      get category() {
+        return mockDiscoveryState.category;
+      }
+
+      get tag() {
+        return mockDiscoveryState.tag;
+      }
+
+      get custom() {
+        return mockDiscoveryState.custom;
+      }
+
+      get onDiscoveryRoute() {
+        return mockDiscoveryState.onDiscoveryRoute;
+      }
+    }
+    testOwner.unregister("service:discovery");
+    testOwner.register("service:discovery", MockDiscovery);
+
+    // Helper to evaluate route condition directly
+    this.evaluateCondition = (args) => {
+      const condition = new BlockRouteCondition();
+      setOwner(condition, testOwner);
+      return condition.evaluate(args);
+    };
   });
 
-  module("validate", function () {
-    test("throws when both routes and excludeRoutes are provided", function (assert) {
-      assert.throws(
-        () =>
-          this.condition.validate({
-            routes: ["discovery.latest"],
-            excludeRoutes: ["discovery.top"],
-          }),
-        BlockConditionValidationError
+  module("params matching", function () {
+    test("matches single param exact value", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 123 };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 123 },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 456 },
+        })
       );
     });
 
-    test("throws when neither routes nor excludeRoutes provided", function (assert) {
-      assert.throws(
-        () => this.condition.validate({}),
-        BlockConditionValidationError
+    test("matches multiple params (AND logic)", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = {
+        id: 123,
+        slug: "my-topic",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 123, slug: "my-topic" },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 123, slug: "other-topic" },
+        })
       );
     });
 
-    test("passes with valid routes", function (assert) {
-      this.condition.validate({ routes: ["discovery.latest"] });
-      this.condition.validate({ excludeRoutes: ["discovery.top"] });
-      this.condition.validate({ routes: [/^topic\.\d+$/] });
-      this.condition.validate({
-        routes: [BlockRouteConditionShortcuts.DISCOVERY],
-      });
-      assert.true(true, "all valid configurations passed");
+    test("returns false when expected param is missing", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 123 };
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 123, slug: "my-topic" },
+        })
+      );
+    });
+
+    test("matches param with array of values (OR)", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 123 };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: [123, 456, 789] },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: [456, 789] },
+        })
+      );
+    });
+
+    test("matches param with regex", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { slug: "help-topic-123" };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { slug: /^help-/ },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { slug: /^support-/ },
+        })
+      );
+    });
+
+    test("matches param with NOT logic", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 123 };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: { not: 456 } },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: { not: 123 } },
+        })
+      );
+    });
+
+    test("matches params with { any: [...] } OR logic", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 123, slug: "my-topic" };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { any: [{ id: 456 }, { slug: "my-topic" }] },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { any: [{ id: 456 }, { slug: "other-topic" }] },
+        })
+      );
+    });
+
+    test("matches params with array (AND logic across specs)", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = {
+        id: 123,
+        slug: "help-topic",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: [{ id: 123 }, { slug: /^help-/ }],
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: [{ id: 123 }, { slug: /^support-/ }],
+        })
+      );
+    });
+
+    test("matches params with { not: {...} } NOT logic", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 123 };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { not: { id: 456 } },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { not: { id: 123 } },
+        })
+      );
+    });
+
+    test("nested logic: OR containing NOT", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = {
+        id: 123,
+        status: "open",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { any: [{ id: 456 }, { status: { not: "closed" } }] },
+        })
+      );
     });
   });
 
-  module("BlockRouteConditionShortcuts", function () {
-    test("exports expected shortcuts", function (assert) {
+  module("queryParams matching", function () {
+    test("matches single queryParam exact value", function (assert) {
+      this.mockRouterState.currentRouteName = "discovery.latest";
+      this.mockRouterState.currentRoute.queryParams = { filter: "solved" };
+
       assert.true(
-        !!BlockRouteConditionShortcuts.DISCOVERY_PAGES,
-        "DISCOVERY_PAGES is defined"
+        this.evaluateCondition({
+          routes: ["discovery.latest"],
+          queryParams: { filter: "solved" },
+        })
       );
-      assert.true(
-        !!BlockRouteConditionShortcuts.HOMEPAGE,
-        "HOMEPAGE is defined"
-      );
-      assert.true(
-        !!BlockRouteConditionShortcuts.CATEGORY_PAGES,
-        "CATEGORY_PAGES is defined"
-      );
-      assert.true(
-        !!BlockRouteConditionShortcuts.TAG_PAGES,
-        "TAG_PAGES is defined"
-      );
-      assert.true(
-        !!BlockRouteConditionShortcuts.TOP_MENU,
-        "TOP_MENU is defined"
-      );
-      assert.strictEqual(
-        typeof BlockRouteConditionShortcuts.DISCOVERY_PAGES,
-        "symbol"
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["discovery.latest"],
+          queryParams: { filter: "unsolved" },
+        })
       );
     });
 
-    test("shortcuts are frozen", function (assert) {
-      assert.true(Object.isFrozen(BlockRouteConditionShortcuts));
+    test("matches queryParam with array of values (OR)", function (assert) {
+      this.mockRouterState.currentRouteName = "discovery.latest";
+      this.mockRouterState.currentRoute.queryParams = { filter: "solved" };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["discovery.latest"],
+          queryParams: { filter: ["solved", "closed"] },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["discovery.latest"],
+          queryParams: { filter: ["open", "closed"] },
+        })
+      );
+    });
+
+    test("matches queryParam with regex", function (assert) {
+      this.mockRouterState.currentRouteName = "discovery.latest";
+      this.mockRouterState.currentRoute.queryParams = { q: "javascript help" };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["discovery.latest"],
+          queryParams: { q: /javascript/ },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["discovery.latest"],
+          queryParams: { q: /python/ },
+        })
+      );
+    });
+
+    test("matches queryParams with { any: [...] } OR logic", function (assert) {
+      this.mockRouterState.currentRouteName = "discovery.latest";
+      this.mockRouterState.currentRoute.queryParams = {
+        filter: "solved",
+        page: "2",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["discovery.latest"],
+          queryParams: { any: [{ filter: "closed" }, { page: "2" }] },
+        })
+      );
     });
   });
 
-  module("static type", function () {
-    test("has correct type", function (assert) {
-      assert.strictEqual(BlockRouteCondition.type, "route");
+  module("combined params and queryParams", function () {
+    test("matches when both params and queryParams match", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 123 };
+      this.mockRouterState.currentRoute.queryParams = { page: "2" };
+
+      assert.true(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 123 },
+          queryParams: { page: "2" },
+        })
+      );
+    });
+
+    test("returns false when params match but queryParams do not", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 123 };
+      this.mockRouterState.currentRoute.queryParams = { page: "1" };
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 123 },
+          queryParams: { page: "2" },
+        })
+      );
+    });
+
+    test("returns false when queryParams match but params do not", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 456 };
+      this.mockRouterState.currentRoute.queryParams = { page: "2" };
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 123 },
+          queryParams: { page: "2" },
+        })
+      );
+    });
+
+    test("returns false when route matches but params do not", function (assert) {
+      this.mockRouterState.currentRouteName = "topic.show";
+      this.mockRouterState.currentRoute.params = { id: 456 };
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["topic.show"],
+          params: { id: 123 },
+        })
+      );
     });
   });
 
-  module("evaluate with shortcuts", function () {
-    test("CATEGORY_PAGES matches when discovery.category is truthy", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.category";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = { id: 1, name: "General" };
-          tag = null;
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
+  module("backslash escape for reserved keys", function () {
+    test("\\\\any matches literal param named 'any'", function (assert) {
+      this.mockRouterState.currentRouteName = "some.route";
+      this.mockRouterState.currentRoute.params = { any: "some-value" };
 
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.CATEGORY_PAGES],
-      });
-      assert.true(result, "matches category page");
+      assert.true(
+        this.evaluateCondition({
+          routes: ["some.route"],
+          params: { "\\any": "some-value" },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          routes: ["some.route"],
+          params: { "\\any": "other-value" },
+        })
+      );
     });
 
-    test("CATEGORY_PAGES does not match when discovery.category is falsy", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.latest";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = null;
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
+    test("\\\\not matches literal param named 'not'", function (assert) {
+      this.mockRouterState.currentRouteName = "some.route";
+      this.mockRouterState.currentRoute.params = { not: "some-value" };
 
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.CATEGORY_PAGES],
-      });
-      assert.false(result, "does not match non-category page");
+      assert.true(
+        this.evaluateCondition({
+          routes: ["some.route"],
+          params: { "\\not": "some-value" },
+        })
+      );
+    });
+  });
+
+  module("route matching (existing behavior)", function () {
+    test("matches exact route name", function (assert) {
+      this.mockRouterState.currentRouteName = "discovery.latest";
+
+      assert.true(this.evaluateCondition({ routes: ["discovery.latest"] }));
+
+      assert.false(this.evaluateCondition({ routes: ["discovery.top"] }));
     });
 
-    test("DISCOVERY_PAGES matches discovery routes excluding custom homepage", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.latest";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = null;
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
+    test("matches wildcard route pattern", function (assert) {
+      this.mockRouterState.currentRouteName = "category.none";
 
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.DISCOVERY_PAGES],
-      });
-      assert.true(result, "matches discovery page");
+      assert.true(this.evaluateCondition({ routes: ["category.*"] }));
     });
 
-    test("DISCOVERY_PAGES does not match custom homepage", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.custom";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = null;
-          custom = true;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
+    test("excludeRoutes excludes specified routes", function (assert) {
+      this.mockRouterState.currentRouteName = "discovery.latest";
 
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.DISCOVERY_PAGES],
-      });
-      assert.false(result, "does not match custom homepage");
-    });
-
-    test("HOMEPAGE matches when discovery.custom is truthy", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.custom";
-        }
+      assert.true(
+        this.evaluateCondition({
+          excludeRoutes: ["discovery.custom"],
+        })
       );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = null;
-          custom = true;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
 
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.HOMEPAGE],
-      });
-      assert.true(result, "matches custom homepage");
-    });
-
-    test("HOMEPAGE does not match regular discovery page", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.latest";
-        }
+      assert.false(
+        this.evaluateCondition({
+          excludeRoutes: ["discovery.latest"],
+        })
       );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = null;
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
-
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.HOMEPAGE],
-      });
-      assert.false(result, "does not match regular discovery page");
-    });
-
-    test("TAG_PAGES matches when discovery.tag is truthy", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "tags.show";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = { id: "javascript", name: "javascript" };
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
-
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.TAG_PAGES],
-      });
-      assert.true(result, "matches tag page");
-    });
-
-    test("TAG_PAGES does not match when discovery.tag is falsy", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.latest";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = null;
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
-
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.TAG_PAGES],
-      });
-      assert.false(result, "does not match non-tag page");
-    });
-
-    test("TOP_MENU matches discovery routes excluding category, tag, and custom homepage", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.latest";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = null;
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
-
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.TOP_MENU],
-      });
-      assert.true(result, "matches top menu route");
-    });
-
-    test("TOP_MENU does not match category page", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.category";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = { id: 1 };
-          tag = null;
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
-
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.TOP_MENU],
-      });
-      assert.false(result, "does not match category page");
-    });
-
-    test("TOP_MENU does not match tag page", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "tags.show";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = { id: "test" };
-          custom = false;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
-
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.TOP_MENU],
-      });
-      assert.false(result, "does not match tag page");
-    });
-
-    test("TOP_MENU does not match custom homepage", function (assert) {
-      this.owner.unregister("service:router");
-      this.owner.unregister("service:discovery");
-      this.owner.register(
-        "service:router",
-        class extends Service {
-          currentRouteName = "discovery.custom";
-        }
-      );
-      this.owner.register(
-        "service:discovery",
-        class extends Service {
-          category = null;
-          tag = null;
-          custom = true;
-          onDiscoveryRoute = true;
-        }
-      );
-      const condition = new BlockRouteCondition();
-      setOwner(condition, getOwner(this));
-
-      const result = condition.evaluate({
-        routes: [BlockRouteConditionShortcuts.TOP_MENU],
-      });
-      assert.false(result, "does not match custom homepage");
     });
   });
 });

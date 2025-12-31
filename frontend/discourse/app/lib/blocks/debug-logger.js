@@ -66,6 +66,52 @@ class BlockDebugLogger {
   }
 
   /**
+   * Log a param group with all matches as a nested expandable group.
+   * Used for params/queryParams matching in route conditions.
+   *
+   * @param {Object} options - Log options.
+   * @param {string} options.label - Group label ("params" or "queryParams").
+   * @param {Array<{key: string, expected: *, actual: *, result: boolean}>} options.matches - Match results.
+   * @param {boolean} options.result - Overall result (all passed).
+   * @param {number} options.depth - Nesting depth for indentation.
+   */
+  logParamGroup({ label, matches, result, depth }) {
+    if (!this.#currentGroup) {
+      return;
+    }
+    this.#currentGroup.logs.push({
+      type: "param-group",
+      label,
+      matches,
+      result,
+      depth,
+    });
+  }
+
+  /**
+   * Log current route state for debugging route conditions with params/queryParams.
+   * Shows the actual values available for matching.
+   *
+   * @param {Object} options - Log options.
+   * @param {string} options.currentRoute - The current route name.
+   * @param {Object} options.actualParams - Current route params.
+   * @param {Object} options.actualQueryParams - Current query params.
+   * @param {number} options.depth - Nesting depth for indentation.
+   */
+  logRouteState({ currentRoute, actualParams, actualQueryParams, depth }) {
+    if (!this.#currentGroup) {
+      return;
+    }
+    this.#currentGroup.logs.push({
+      type: "route-state",
+      currentRoute,
+      actualParams,
+      actualQueryParams,
+      depth,
+    });
+  }
+
+  /**
    * Update the result of the last combinator (AND/OR/NOT) at the given depth.
    * Used to set the actual result after children have been evaluated.
    *
@@ -91,8 +137,31 @@ class BlockDebugLogger {
   }
 
   /**
+   * Update the result of the last condition of a given type at a given depth.
+   * Used when the condition needs to log nested items before knowing its final result.
+   *
+   * @param {string} type - The condition type to update
+   * @param {boolean} result - The actual result
+   * @param {number} depth - The depth of the condition to update
+   */
+  updateConditionResult(type, result, depth) {
+    if (!this.#currentGroup) {
+      return;
+    }
+
+    // Find the condition at this depth with matching type and null result
+    for (const log of this.#currentGroup.logs) {
+      if (log.depth === depth && log.type === type && log.result === null) {
+        log.result = result;
+        break;
+      }
+    }
+  }
+
+  /**
    * End the current group and flush logs to console.
    * Uses console.groupCollapsed for a clean, expandable view.
+   * Conditions with nested children are rendered as collapsible groups.
    *
    * @param {boolean} finalResult - Whether the block will render
    */
@@ -122,8 +191,39 @@ class BlockDebugLogger {
       "font-weight: normal" // "in {hierarchy}" - explicitly reset bold
     );
 
-    for (const log of logs) {
-      this.#logTreeNode(log);
+    // Track open groups by their depth so we can close them when needed
+    const openGroupDepths = [];
+
+    for (let i = 0; i < logs.length; i++) {
+      const log = logs[i];
+      const nextLog = logs[i + 1];
+
+      // Close any groups at same or deeper depth before rendering this log
+      while (
+        openGroupDepths.length > 0 &&
+        openGroupDepths[openGroupDepths.length - 1] >= log.depth
+      ) {
+        // eslint-disable-next-line no-console
+        console.groupEnd();
+        openGroupDepths.pop();
+      }
+
+      // Check if this log has children (next log is deeper)
+      const hasChildren = nextLog && nextLog.depth > log.depth;
+
+      this.#logTreeNode(log, hasChildren);
+
+      // If we opened a group for this log, track it
+      if (hasChildren && this.#isGroupableLog(log)) {
+        openGroupDepths.push(log.depth);
+      }
+    }
+
+    // Close any remaining open groups
+    while (openGroupDepths.length > 0) {
+      // eslint-disable-next-line no-console
+      console.groupEnd();
+      openGroupDepths.pop();
     }
 
     // eslint-disable-next-line no-console
@@ -132,23 +232,104 @@ class BlockDebugLogger {
   }
 
   /**
-   * Log a single node in the condition tree.
+   * Check if a log entry should be rendered as a collapsible group when it has children.
+   * Combinators (AND/OR/NOT) are not grouped since their children are inline.
+   * Param groups and route state handle their own grouping.
    *
    * @param {Object} log - The log entry
-   * @param {string} log.type - Condition type
-   * @param {Object} [log.args] - Condition arguments
-   * @param {boolean} log.result - Pass/fail
-   * @param {number} log.depth - Indentation depth
+   * @returns {boolean} True if this log should be a group when it has children
    */
-  #logTreeNode({ type, args, result, depth }) {
+  #isGroupableLog(log) {
+    const isCombinator = ["AND", "OR", "NOT"].includes(log.type);
+    const isSpecialType = ["param-group", "route-state"].includes(log.type);
+    return !isCombinator && !isSpecialType;
+  }
+
+  /**
+   * Log a single node in the condition tree.
+   *
+   * @param {Object} log - The log entry.
+   * @param {string} log.type - Condition type.
+   * @param {Object} [log.args] - Condition arguments.
+   * @param {boolean} log.result - Pass/fail.
+   * @param {number} log.depth - Indentation depth.
+   * @param {string} [log.label] - Label for param groups.
+   * @param {Array} [log.matches] - Match results for param groups.
+   * @param {boolean} [hasChildren=false] - Whether this node has nested children.
+   */
+  #logTreeNode(log, hasChildren = false) {
+    const { type, args, result, depth } = log;
     const indent = "  ".repeat(depth);
+
+    // Handle route state (shows current route and params/queryParams values)
+    if (type === "route-state") {
+      const { currentRoute, actualParams, actualQueryParams } = log;
+
+      // eslint-disable-next-line no-console
+      console.groupCollapsed(
+        `%c${indent}%c✓%c current route: %c${currentRoute}`,
+        STYLES.indent,
+        STYLES.passed,
+        "",
+        "font-weight: bold"
+      );
+      if (actualParams && Object.keys(actualParams).length > 0) {
+        // eslint-disable-next-line no-console
+        console.log("params:", actualParams);
+      }
+      if (actualQueryParams && Object.keys(actualQueryParams).length > 0) {
+        // eslint-disable-next-line no-console
+        console.log("queryParams:", actualQueryParams);
+      }
+      // eslint-disable-next-line no-console
+      console.groupEnd();
+      return;
+    }
+
     const icon = result ? ICONS.passed : ICONS.failed;
     const iconStyle = result ? STYLES.passed : STYLES.failed;
+
+    // Handle param group (params/queryParams)
+    if (type === "param-group") {
+      const { label, matches } = log;
+      const keyCount = matches.length;
+      const keyLabel = keyCount === 1 ? "key" : "keys";
+
+      // eslint-disable-next-line no-console
+      console.groupCollapsed(
+        `%c${indent}%c${icon}%c ${label} (${keyCount} ${keyLabel})`,
+        STYLES.indent,
+        iconStyle,
+        ""
+      );
+
+      for (const match of matches) {
+        const matchIcon = match.result ? ICONS.passed : ICONS.failed;
+        const matchStyle = match.result ? STYLES.passed : STYLES.failed;
+        // eslint-disable-next-line no-console
+        console.log(
+          `%c  %c${matchIcon}%c ${match.key}`,
+          STYLES.indent,
+          matchStyle,
+          "",
+          { expected: match.expected, actual: match.actual }
+        );
+      }
+
+      // eslint-disable-next-line no-console
+      console.groupEnd();
+      return;
+    }
+
     const isCombinator = ["AND", "OR", "NOT"].includes(type);
 
+    // Use groupCollapsed for conditions with children, log for others
+    // eslint-disable-next-line no-console
+    const logFn = hasChildren ? console.groupCollapsed : console.log;
+
     if (isCombinator) {
-      // eslint-disable-next-line no-console
-      console.log(
+      logFn.call(
+        console,
         `%c${indent}%c${icon}%c %c${type}`,
         STYLES.indent,
         iconStyle,
@@ -158,8 +339,8 @@ class BlockDebugLogger {
       );
     } else {
       // Condition type has no special formatting
-      // eslint-disable-next-line no-console
-      console.log(
+      logFn.call(
+        console,
         `%c${indent}%c${icon}%c ${type}`,
         STYLES.indent,
         iconStyle,
