@@ -107,7 +107,12 @@ export default class OutletInfoComponent extends Component {
         </:trigger>
         <:content>
           <div class="plugin-outlet-info__wrapper">
-            <div class="plugin-outlet-info__heading">
+            <div
+              class={{concatClass
+                "plugin-outlet-info__heading"
+                (if this.partOfWrapper "--wrapper")
+              }}
+            >
               <span class="title">
                 {{icon "plug"}}
                 {{this.displayName}}

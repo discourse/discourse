@@ -64,6 +64,14 @@ let blockLoggingCallback = null;
 let blockOutletBoundaryCallback = null;
 
 /**
+ * Component to render for outlet boundary debug overlay.
+ * Set by dev-tools to provide the OutletInfo component.
+ *
+ * @type {typeof Component|null}
+ */
+let blockOutletInfoComponent = null;
+
+/**
  * Sets a callback for debug overlay injection.
  * Called by dev-tools to wrap rendered blocks with debug info.
  *
@@ -91,6 +99,16 @@ export function _setBlockLoggingCallback(callback) {
  */
 export function _setBlockOutletBoundaryCallback(callback) {
   blockOutletBoundaryCallback = callback;
+}
+
+/**
+ * Sets the component to render for outlet boundary debug overlay.
+ * Called by dev-tools to provide the OutletInfo component.
+ *
+ * @param {typeof Component} component - The OutletInfo component
+ */
+export function _setBlockOutletInfoComponent(component) {
+  blockOutletInfoComponent = component;
 }
 
 /**
@@ -794,15 +812,43 @@ export default class BlockOutlet extends Component {
     return blockOutletBoundaryCallback?.() ?? false;
   }
 
+  /**
+   * The component to render for outlet boundary debug info.
+   * Set by dev-tools via _setBlockOutletInfoComponent.
+   *
+   * @returns {typeof Component|null}
+   */
+  get OutletInfoComponent() {
+    return blockOutletInfoComponent;
+  }
+
+  /**
+   * Number of blocks registered for this outlet.
+   * Used in debug overlay to show block count.
+   *
+   * @returns {number}
+   */
+  get blockCount() {
+    return this.children?.length ?? 0;
+  }
+
   <template>
     {{! Yield to :before block with hasConfig boolean for conditional rendering }}
     {{yield (hasConfig this.outletName) to="before"}}
 
     {{#if this.showOutletBoundary}}
       <div class="block-outlet-debug">
-        <span class="block-outlet-debug__badge">{{icon "cubes"}}
-          {{this.outletName}}
-        </span>
+        {{#if this.OutletInfoComponent}}
+          <this.OutletInfoComponent
+            @outletName={{this.outletName}}
+            @hasBlocks={{this.blockCount}}
+            @blockCount={{this.blockCount}}
+          />
+        {{else}}
+          <span class="block-outlet-debug__badge">{{icon "cubes"}}
+            {{this.outletName}}
+          </span>
+        {{/if}}
         {{#if this.children}}
           <div class={{this.outletName}}>
             <div class="{{this.outletName}}__container">

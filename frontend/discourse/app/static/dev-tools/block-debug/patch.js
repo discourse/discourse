@@ -3,11 +3,13 @@ import {
   _setBlockDebugCallback,
   _setBlockLoggingCallback,
   _setBlockOutletBoundaryCallback,
+  _setBlockOutletInfoComponent,
 } from "discourse/components/block-outlet";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import devToolsState from "../state";
 import BlockInfo from "./block-info";
 import GhostBlock from "./ghost-block";
+import OutletInfo from "./outlet-info";
 
 /**
  * Patches the block system to inject debug overlay components.
@@ -67,4 +69,6 @@ export function patchBlockRendering() {
   _setBlockLoggingCallback(() => devToolsState.blockDebug);
   // Callback for outlet boundaries
   _setBlockOutletBoundaryCallback(() => devToolsState.blockOutletBoundaries);
+  // Component for outlet info tooltip
+  _setBlockOutletInfoComponent(OutletInfo);
 }

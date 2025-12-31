@@ -157,6 +157,11 @@
   margin-bottom: 10px;
   display: flex;
   gap: 5px;
+  color: var(--dev-tools-plugin-outlet-color);
+
+  &.--wrapper {
+    color: var(--dev-tools-wrapper-outlet-color);
+  }
 
   .title {
     flex-grow: 1;
@@ -225,6 +230,48 @@
 
 .block-outlet-debug__badge {
   background: var(--dev-tools-block-outlet-color);
+}
+
+/* Block Outlet Info Tooltip */
+.block-outlet-info__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.block-outlet-info__heading {
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  gap: 5px;
+  color: var(--dev-tools-block-outlet-color);
+
+  .title {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .github-link {
+    color: var(--primary-medium);
+  }
+}
+
+.block-outlet-info__content {
+  font-size: 13px;
+}
+
+.block-outlet-info__stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-high);
+}
+
+.block-outlet-info__empty {
+  font-style: italic;
+  color: var(--primary-medium);
 }
 
 /* Block Debug Tooltip */
