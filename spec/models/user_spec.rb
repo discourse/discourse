@@ -3786,4 +3786,168 @@ RSpec.describe User do
       expect(user.effective_locale).to eq(SiteSetting.default_locale)
     end
   end
+
+  describe ".upcoming_change_stats" do
+    fab!(:target_user, :user)
+    fab!(:guardian_user, :user)
+    fab!(:admin_user, :admin)
+    fab!(:group1) { Fabricate(:group, name: "test_group_1") }
+    fab!(:group2) { Fabricate(:group, name: "test_group_2") }
+    fab!(:hidden_group) do
+      Fabricate(:group, name: "hidden_group", visibility_level: Group.visibility_levels[:owners])
+    end
+
+    let(:guardian) { Guardian.new(guardian_user) }
+    let(:admin_guardian) { Guardian.new(admin_user) }
+
+    before do
+      SiteSetting.enable_upcoming_changes = true
+
+      mock_upcoming_change_metadata(
+        {
+          fake_upcoming_change: {
+            impact: "feature,all_members",
+            status: :beta,
+            impact_type: "feature",
+            impact_role: "all_members",
+          },
+        },
+      )
+    end
+
+    context "when the change is enabled for all users" do
+      before { SiteSetting.fake_upcoming_change = true }
+
+      it "returns enabled as true and reason as enabled_for_everyone" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:enabled_for_everyone],
+        )
+        expect(change_stat[:specific_groups]).to eq([])
+      end
+    end
+
+    context "when the change is enabled for no users" do
+      before { SiteSetting.fake_upcoming_change = false }
+
+      it "returns enabled as false and reason as enabled_for_no_one" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+
+        expect(change_stat[:enabled]).to be(false)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:enabled_for_no_one],
+        )
+        expect(change_stat[:specific_groups]).to eq([])
+      end
+    end
+
+    context "when the change is enabled for specific groups" do
+      before do
+        SiteSetting.fake_upcoming_change = true
+        Fabricate(
+          :site_setting_group,
+          name: "fake_upcoming_change",
+          group_ids: "#{group1.id}|#{group2.id}",
+        )
+      end
+
+      context "when the target user belongs to one of those groups" do
+        before { group1.add(target_user) }
+
+        it "returns enabled as true and reason as in_specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+
+          expect(change_stat[:enabled]).to be(true)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to contain_exactly("test_group_1")
+        end
+      end
+
+      context "when the target user belongs to multiple groups" do
+        before do
+          group1.add(target_user)
+          group2.add(target_user)
+        end
+
+        it "returns enabled as true with all groups in specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+
+          expect(change_stat[:enabled]).to be(true)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to contain_exactly("test_group_1", "test_group_2")
+        end
+      end
+
+      context "when the target user does NOT belong to any of those groups" do
+        it "returns enabled as false and reason as not_in_specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+
+          expect(change_stat[:enabled]).to be(false)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:not_in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to eq([])
+        end
+      end
+    end
+
+    context "when guardian user visibility is restricted" do
+      before do
+        SiteSetting.fake_upcoming_change = true
+        group1.add(target_user)
+        hidden_group.add(target_user)
+        Fabricate(
+          :site_setting_group,
+          name: "fake_upcoming_change",
+          group_ids: "#{group1.id}|#{hidden_group.id}",
+        )
+      end
+
+      it "only shows groups the guardian user is allowed to see in specific_groups" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+        )
+        expect(change_stat[:specific_groups]).to contain_exactly("test_group_1")
+        expect(change_stat[:specific_groups]).not_to include("hidden_group")
+      end
+
+      it "shows all groups when guardian is admin" do
+        stats = target_user.upcoming_change_stats(admin_guardian)
+        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:specific_groups]).to contain_exactly("test_group_1", "hidden_group")
+      end
+    end
+
+    describe "metadata fields" do
+      before { SiteSetting.fake_upcoming_change = true }
+
+      it "includes correct name, humanized_name, and description" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+
+        expect(change_stat[:name]).to eq(:fake_upcoming_change)
+        expect(change_stat[:humanized_name]).to eq(
+          SiteSetting.humanized_name(:fake_upcoming_change),
+        )
+        expect(change_stat[:description]).to eq(SiteSetting.description(:fake_upcoming_change))
+      end
+    end
+  end
 end
