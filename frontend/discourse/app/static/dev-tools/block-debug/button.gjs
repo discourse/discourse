@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import element from "discourse/helpers/element";
+import { i18n } from "discourse-i18n";
 import devToolsState from "../state";
 
 /**
@@ -43,7 +45,9 @@ export default class BlockDebugButton extends Component {
         "toggle-blocks"
         (if this.isActive "--active")
       }}
+      @triggerComponent={{element "button"}}
       @modalForMobile={{false}}
+      @title={{i18n "dev_tools.toggle_block_debug"}}
     >
       <:trigger>
         {{icon "cubes"}}

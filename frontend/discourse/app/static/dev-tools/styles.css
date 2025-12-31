@@ -12,7 +12,7 @@
   background-color: var(--plugin-outlet-info-background-color);
   color: white;
   text-align: center;
-  font-size: 14px !important;
+  font-size: 0.75rem !important;
   font-weight: normal;
   padding: 1px 5px;
   display: inline-flex;
@@ -20,8 +20,8 @@
 
   .d-icon {
     color: white !important;
-    font-size: 14px !important;
-    width: 14px !important;
+    font-size: 0.75rem !important;
+    width: 0.75rem !important;
   }
 
   &.--wrapper {
@@ -92,28 +92,44 @@
   z-index: 999999;
   display: flex;
   flex-direction: column;
-  background-color: var(--primary-low);
+  background-color: var(--primary-200);
   border-radius: 0 5px 5px 0;
+  box-shadow: 1px 1px 2px rgb(0, 0, 0, 0.25);
+  opacity: 0.8;
+  transition: opacity 0.2s ease-in-out;
+
+  &.--dragging {
+    opacity: 0.5;
+  }
 
   button {
     background: none;
     border: none;
     padding: 5px;
-    color: var(--primary-medium);
+    color: var(--primary-700);
+
+    .d-icon {
+      color: inherit !important;
+    }
 
     &:hover:not(.gripper) {
-      background-color: var(--primary-very-low);
+      background-color: var(--primary-50);
     }
 
     &.gripper {
       cursor: grab;
-      padding-bottom: 0;
-      padding-top: 0;
-      color: var(--primary-400);
+      padding-block: 0;
+      border-bottom: 1px dotted var(--primary-low-mid);
+      color: var(--primary-500);
     }
 
     &.--active {
-      color: var(--success);
+      background-color: var(--primary-100);
+      color: var(--tertiary);
+
+      .d-icon {
+        font-weight: bold;
+      }
     }
   }
 }
@@ -121,7 +137,7 @@
 /* Block Debug Overlay - warm amber/orange tones (distinct from plugin outlets which use green/blue) */
 .block-debug-info {
   position: relative;
-  border: 2px solid #d97706;
+  border: 1px dotted #d97706;
   margin: 2px;
 
   &.--rendered {
@@ -131,24 +147,24 @@
 
 .block-debug-badge {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -1px;
+  left: -1px;
   z-index: 1000;
   display: inline-flex;
   align-items: center;
   gap: 4px;
   background: #d97706;
-  color: white;
-  padding: 2px 6px;
-  font-size: 11px;
+  color: white !important;
+  padding: 2px 5px !important;
+  font-size: 0.75rem !important;
   font-weight: bold;
   border-radius: 0 0 4px 0;
   cursor: pointer;
 
   .d-icon {
     color: white !important;
-    font-size: 11px !important;
-    width: 11px !important;
+    font-size: 0.75rem !important;
+    width: 0.75rem !important;
   }
 
   &:hover {
@@ -159,7 +175,7 @@
 /* Ghost blocks - red for hidden/failed conditions */
 .block-debug-ghost {
   position: relative;
-  border: 2px dashed #dc2626;
+  border: 1px dashed #dc2626;
   background: repeating-linear-gradient(
     45deg,
     transparent,
@@ -174,24 +190,24 @@
 
 .block-debug-ghost__badge {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -1px;
+  left: -1px;
   z-index: 1000;
   display: inline-flex;
   align-items: center;
   gap: 4px;
   background: #dc2626;
-  color: white;
-  padding: 2px 6px;
-  font-size: 11px;
+  color: white !important;
+  padding: 2px 5px !important;
+  font-size: 0.75rem !important;
   font-weight: bold;
   border-radius: 0 0 4px 0;
   cursor: pointer;
 
   .d-icon {
     color: white !important;
-    font-size: 11px !important;
-    width: 11px !important;
+    font-size: 0.75rem !important;
+    width: 0.75rem !important;
   }
 
   &:hover {
@@ -202,7 +218,7 @@
 /* Block Outlet boundaries - yellow/gold */
 .block-outlet-debug {
   position: relative;
-  border: 2px dashed #f59e0b;
+  border: 1px dashed #f59e0b;
   margin: 2px;
   padding: 4px;
   min-height: 20px;
@@ -212,12 +228,21 @@
   position: absolute;
   top: -1px;
   left: -1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   background: #f59e0b;
-  color: white;
-  padding: 1px 4px;
-  font-size: 10px;
+  color: white !important;
+  padding: 2px 5px !important;
+  font-size: 0.75rem !important;
   font-weight: bold;
   border-radius: 0 0 4px 0;
+
+  .d-icon {
+    color: white !important;
+    font-size: 0.75rem !important;
+    width: 0.75rem !important;
+  }
 }
 
 /* Block Debug Tooltip */
@@ -248,7 +273,7 @@
   }
 
   .d-icon {
-    font-size: 14px !important;
+    font-size: 0.75rem !important;
   }
 }
 

@@ -22,6 +22,7 @@ import { concat } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import {
   validateArgsSchema,
   validateBlockArgs,
@@ -797,7 +798,9 @@ export default class BlockOutlet extends Component {
 
     {{#if this.showOutletBoundary}}
       <div class="block-outlet-debug">
-        <span class="block-outlet-debug__badge">{{this.outletName}}</span>
+        <span class="block-outlet-debug__badge">{{icon "cubes"}}
+          {{this.outletName}}
+        </span>
         {{#if this.children}}
           <div class={{this.outletName}}>
             <div class="{{this.outletName}}__container">
