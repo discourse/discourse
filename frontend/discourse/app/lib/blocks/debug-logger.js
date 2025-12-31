@@ -13,8 +13,6 @@ const STYLES = {
   passed: "color: #50c050; font-weight: bold", // bright green for RENDERED
   failed: "color: #e05050; font-weight: bold", // vivid red for SKIPPED
   combinator: "color: #3070c0; font-weight: bold", // bold blue for operators
-  indent: "color: #a0a0a0", // light gray
-  args: "color: #8b8b8b", // medium gray
 };
 
 const ICONS = {
@@ -258,8 +256,7 @@ class BlockDebugLogger {
    * @param {boolean} [hasChildren=false] - Whether this node has nested children.
    */
   #logTreeNode(log, hasChildren = false) {
-    const { type, args, result, depth } = log;
-    const indent = "  ".repeat(depth);
+    const { type, args, result } = log;
 
     // Handle route state (shows current route and params/queryParams values)
     if (type === "route-state") {
@@ -267,8 +264,7 @@ class BlockDebugLogger {
 
       // eslint-disable-next-line no-console
       console.groupCollapsed(
-        `%c${indent}%c✓%c current route: %c${currentRoute}`,
-        STYLES.indent,
+        `%c✓%c current route: %c${currentRoute}`,
         STYLES.passed,
         "",
         "font-weight: bold"
@@ -292,13 +288,22 @@ class BlockDebugLogger {
     // Handle param group (params/queryParams)
     if (type === "param-group") {
       const { label, matches } = log;
-      const keyCount = matches.length;
-      const keyLabel = keyCount === 1 ? "key" : "keys";
 
+      // Single key: print directly without group wrapper
+      if (matches.length === 1) {
+        const match = matches[0];
+        // eslint-disable-next-line no-console
+        console.log(`%c${icon}%c ${label}: ${match.key}`, iconStyle, "", {
+          expected: match.expected,
+          actual: match.actual,
+        });
+        return;
+      }
+
+      // Multiple keys: use collapsible group
       // eslint-disable-next-line no-console
       console.groupCollapsed(
-        `%c${indent}%c${icon}%c ${label} (${keyCount} ${keyLabel})`,
-        STYLES.indent,
+        `%c${icon}%c ${label} (${matches.length} keys)`,
         iconStyle,
         ""
       );
@@ -307,13 +312,10 @@ class BlockDebugLogger {
         const matchIcon = match.result ? ICONS.passed : ICONS.failed;
         const matchStyle = match.result ? STYLES.passed : STYLES.failed;
         // eslint-disable-next-line no-console
-        console.log(
-          `%c  %c${matchIcon}%c ${match.key}`,
-          STYLES.indent,
-          matchStyle,
-          "",
-          { expected: match.expected, actual: match.actual }
-        );
+        console.log(`%c${matchIcon}%c ${match.key}`, matchStyle, "", {
+          expected: match.expected,
+          actual: match.actual,
+        });
       }
 
       // eslint-disable-next-line no-console
@@ -330,8 +332,7 @@ class BlockDebugLogger {
     if (isCombinator) {
       logFn.call(
         console,
-        `%c${indent}%c${icon}%c %c${type}`,
-        STYLES.indent,
+        `%c${icon}%c %c${type}`,
         iconStyle,
         "",
         STYLES.combinator,
@@ -341,8 +342,7 @@ class BlockDebugLogger {
       // Condition type has no special formatting
       logFn.call(
         console,
-        `%c${indent}%c${icon}%c ${type}`,
-        STYLES.indent,
+        `%c${icon}%c ${type}`,
         iconStyle,
         "",
         args && Object.keys(args).length > 0 ? args : ""

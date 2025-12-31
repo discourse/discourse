@@ -119,6 +119,16 @@ export function matchParams({
 
   // Array of param specs = AND logic (all must match)
   if (Array.isArray(expectedParams)) {
+    // Log combinator BEFORE children so it appears first in tree
+    if (isLoggingEnabled) {
+      blockDebugLogger.logCondition({
+        type: "AND",
+        args: `${expectedParams.length} ${label} specs`,
+        result: null,
+        depth,
+      });
+    }
+
     const results = expectedParams.map((spec, i) =>
       matchParams({
         actualParams,
@@ -129,13 +139,9 @@ export function matchParams({
     );
     const allPassed = results.every(Boolean);
 
+    // Update combinator result after children evaluated
     if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({
-        type: "AND",
-        args: `${expectedParams.length} ${label} specs`,
-        result: allPassed,
-        depth,
-      });
+      blockDebugLogger.updateCombinatorResult(allPassed, depth);
     }
     return allPassed;
   }
@@ -143,6 +149,17 @@ export function matchParams({
   // OR logic: { any: [...] }
   if (expectedParams.any !== undefined) {
     const specs = expectedParams.any;
+
+    // Log combinator BEFORE children so it appears first in tree
+    if (isLoggingEnabled) {
+      blockDebugLogger.logCondition({
+        type: "OR",
+        args: `${specs.length} ${label} specs`,
+        result: null,
+        depth,
+      });
+    }
+
     const results = specs.map((spec, i) =>
       matchParams({
         actualParams,
@@ -153,19 +170,25 @@ export function matchParams({
     );
     const anyPassed = results.some(Boolean);
 
+    // Update combinator result after children evaluated
     if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({
-        type: "OR",
-        args: `${specs.length} ${label} specs`,
-        result: anyPassed,
-        depth,
-      });
+      blockDebugLogger.updateCombinatorResult(anyPassed, depth);
     }
     return anyPassed;
   }
 
   // NOT logic: { not: {...} }
   if (expectedParams.not !== undefined) {
+    // Log combinator BEFORE children so it appears first in tree
+    if (isLoggingEnabled) {
+      blockDebugLogger.logCondition({
+        type: "NOT",
+        args: null,
+        result: null,
+        depth,
+      });
+    }
+
     const innerResult = matchParams({
       actualParams,
       expectedParams: expectedParams.not,
@@ -174,13 +197,9 @@ export function matchParams({
     });
     const result = !innerResult;
 
+    // Update combinator result after children evaluated
     if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({
-        type: "NOT",
-        args: null,
-        result,
-        depth,
-      });
+      blockDebugLogger.updateCombinatorResult(result, depth);
     }
     return result;
   }
