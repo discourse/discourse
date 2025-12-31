@@ -424,11 +424,51 @@ RSpec.describe PostSerializer do
       before { post_action.created_at = 20.minutes.ago }
 
       it "disallows anonymous users from unliking posts" do
-        # There are no other post actions available to anonymous users so the action_summary will be an empty array
-        expect(serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }).to eq(
-          nil,
-        )
+        like_actions_summary =
+          serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+        expect(like_actions_summary[:acted]).to eq(true)
+        expect(like_actions_summary[:can_act]).to be_nil
       end
+    end
+  end
+
+  context "when user has liked a post but like count is 0 and undo window passed" do
+    fab!(:user)
+    fab!(:poster, :user)
+    fab!(:topic) { Fabricate(:topic, user: poster) }
+    fab!(:post) { Fabricate(:post, topic:, user: poster, like_count: 0) }
+    fab!(:like_action) do
+      Fabricate(
+        :post_action,
+        user:,
+        post:,
+        post_action_type_id: PostActionType.types[:like],
+        created_at: 1.day.ago,
+      )
+    end
+
+    before { SiteSetting.post_undo_action_window_mins = 10 }
+
+    let(:serializer) do
+      PostSerializer.new(
+        post,
+        scope: Guardian.new(user),
+        root: false,
+        post_actions: {
+          PostActionType.types[:like] => like_action,
+        },
+      )
+    end
+
+    it "includes the like action in actions_summary with acted flag" do
+      like_actions_summary =
+        serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+      expect(like_actions_summary).to be_present
+      expect(like_actions_summary[:acted]).to eq(true)
+      expect(like_actions_summary[:can_act]).to be_nil
+      expect(like_actions_summary[:can_undo]).to be_nil
     end
   end
 
