@@ -160,8 +160,6 @@ class Middleware::RequestTracker
 
     view_tracking_data = extract_view_tracking_data(env, status, headers)
 
-    topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
-
     auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request)
     auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
     has_auth_cookie = auth_cookie.present?
@@ -191,7 +189,6 @@ class Middleware::RequestTracker
       is_crawler: helper.is_crawler?,
       has_auth_cookie: has_auth_cookie,
       current_user_id: current_user_id,
-      topic_id: topic_id,
       is_api: is_api,
       is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
@@ -553,16 +550,23 @@ class Middleware::RequestTracker
     track_view = !!(explicit_track_view || implicit_track_view)
     browser_page_view = !!(explicit_track_view || deferred_track_view)
 
+    topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
+    tracking_url = env["HTTP_DISCOURSE_TRACK_VIEW_URL"]
+    tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]
+    tracking_session_id = env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]
+    user_agent = env["HTTP_USER_AGENT"]
+
     {
       track_view: track_view,
       explicit_track_view: explicit_track_view,
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
-      tracking_url: env["HTTP_DISCOURSE_TRACK_VIEW_URL"],
-      tracking_referrer: env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"],
-      tracking_session_id: env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"],
-      user_agent: env["HTTP_USER_AGENT"],
+      topic_id: topic_id,
+      tracking_url: tracking_url,
+      tracking_referrer: tracking_referrer,
+      tracking_session_id: tracking_session_id,
+      user_agent: user_agent,
     }
   end
 
