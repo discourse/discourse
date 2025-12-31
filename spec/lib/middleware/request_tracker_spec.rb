@@ -132,7 +132,7 @@ RSpec.describe Middleware::RequestTracker do
 
     it "adds the appropriate response header based on deferred tracking (MiniProfiler piggyback, BPVs)" do
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      status, headers = middleware.call(env("HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"))
+      status, headers = middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1"))
 
       expect(status).to eq(200)
       expect(headers["X-Discourse-TrackView"]).to eq(nil)
@@ -150,7 +150,7 @@ RSpec.describe Middleware::RequestTracker do
 
       status, headers =
         middleware.call(
-          env("HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1", :path => "/message-bus/abcde/poll"),
+          env("HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1", :path => "/message-bus/abcde/poll"),
         )
 
       expect(status).to eq(200)
@@ -255,7 +255,7 @@ RSpec.describe Middleware::RequestTracker do
     it "logs deferred pageviews correctly" do
       data =
         Middleware::RequestTracker.get_data(
-          env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"),
+          env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1"),
           ["200", { "Content-Type" => "text/html" }],
           0.1,
         )
@@ -352,12 +352,13 @@ RSpec.describe Middleware::RequestTracker do
         headers["HTTP_COOKIE"] = "_t=#{auth_cookie};" if authenticated
 
         if deferred
-          headers["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"] = "1"
-          headers["HTTP_DISCOURSE_TRACKING_TOPIC_ID"] = topic.id
+          headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
+          headers["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"] = "1"
+          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
           path = "/message-bus/abcde/poll"
         else
           headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
-          headers["HTTP_DISCOURSE_TRACKING_TOPIC_ID"] = topic.id
+          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
           path = URI.parse(topic.url).path
         end
 
@@ -604,9 +605,9 @@ RSpec.describe Middleware::RequestTracker do
           Middleware::RequestTracker.get_data(
             env(
               "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-              "HTTP_DISCOURSE_TRACKING_SESSION_ID" => session_id,
-              "HTTP_DISCOURSE_TRACKING_URL" => "https://discourse.org",
-              "HTTP_DISCOURSE_TRACKING_REFERRER" => "https://example.com",
+              "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+              "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
             ),
             ["200", { "Content-Type" => "text/html" }],
             0.2,
@@ -642,8 +643,8 @@ RSpec.describe Middleware::RequestTracker do
             env(
               "HTTP_DISCOURSE_TRACK_VIEW" => "1",
               "HTTP_COOKIE" => "_t=#{cookie};",
-              "HTTP_DISCOURSE_TRACKING_URL" => "https://discourse.org",
-              "HTTP_DISCOURSE_TRACKING_REFERRER" => "https://example.com",
+              "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
             ),
             ["200", { "Content-Type" => "text/html" }],
             0.2,

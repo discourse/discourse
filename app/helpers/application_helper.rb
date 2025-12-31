@@ -395,9 +395,9 @@ module ApplicationHelper
     end
   end
 
-  def discourse_tracking_session_tag
+  def discourse_track_view_session_tag
     <<~HTML.html_safe
-      <meta name="discourse-tracking-session-id" content="#{SecureRandom.uuid}">
+      <meta name="discourse-track-view-session-id" content="#{SecureRandom.uuid}">
     HTML
   end
 

@@ -160,7 +160,7 @@ class Middleware::RequestTracker
 
     view_tracking_data = extract_view_tracking_data(env, status, headers)
 
-    topic_id = env["HTTP_DISCOURSE_TRACKING_TOPIC_ID"]
+    topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
 
     auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request)
     auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
@@ -535,7 +535,7 @@ class Middleware::RequestTracker
     # versions of a page.
     #
     # See `scripts/pageview.js` and `instance-initializers/page-tracking.js`
-    env_deferred_track_view = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"]
+    env_deferred_track_view = env["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"]
     deferred_track_view = %w[1 true].include?(env_deferred_track_view)
 
     # This only indicates that we are tracking a page view of some kind, not
@@ -559,9 +559,9 @@ class Middleware::RequestTracker
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
-      tracking_url: env["HTTP_DISCOURSE_TRACKING_URL"],
-      tracking_referrer: env["HTTP_DISCOURSE_TRACKING_REFERRER"],
-      tracking_session_id: env["HTTP_DISCOURSE_TRACKING_SESSION_ID"],
+      tracking_url: env["HTTP_DISCOURSE_TRACK_VIEW_URL"],
+      tracking_referrer: env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"],
+      tracking_session_id: env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"],
       user_agent: env["HTTP_USER_AGENT"],
     }
   end

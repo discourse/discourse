@@ -118,22 +118,22 @@ export function ajax() {
       args.headers["Discourse-Track-View"] = "true";
 
       if (_trackingSessionId) {
-        args.headers["Discourse-Tracking-Session-Id"] = _trackingSessionId;
+        args.headers["Discourse-Track-View-Session-Id"] = _trackingSessionId;
         _trackingSessionId = null;
       }
 
       if (_trackingUrl) {
-        args.headers["Discourse-Tracking-Url"] = _trackingUrl;
+        args.headers["Discourse-Track-View-Url"] = _trackingUrl;
         _trackingUrl = null;
       }
 
       if (_trackingReferrer) {
-        args.headers["Discourse-Tracking-Referrer"] = _trackingReferrer;
+        args.headers["Discourse-Track-View-Referrer"] = _trackingReferrer;
         _trackingReferrer = null;
       }
 
       if (_topicId) {
-        args.headers["Discourse-Tracking-Topic-Id"] = _topicId;
+        args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
         _topicId = null;
       }
     }

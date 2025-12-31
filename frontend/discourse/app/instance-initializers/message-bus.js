@@ -31,18 +31,19 @@ function mbAjax(messageBus, opts) {
   }
 
   if (_sendDeferredPageview) {
-    opts.headers["Discourse-Deferred-Track-View"] = "true";
-    opts.headers["Discourse-Tracking-Session-Id"] = document.querySelector(
-      "meta[name=discourse-tracking-session-id]"
+    opts.headers["Discourse-Track-View"] = "true";
+    opts.headers["Discourse-Track-View-Deferred"] = "true";
+    opts.headers["Discourse-Track-View-Session-Id"] = document.querySelector(
+      "meta[name=discourse-track-view-session-id]"
     )?.content;
-    opts.headers["Discourse-Tracking-Url"] = window.location.href;
-    opts.headers["Discourse-Tracking-Referrer"] = document.referrer.slice(
+    opts.headers["Discourse-Track-View-Url"] = window.location.href;
+    opts.headers["Discourse-Track-View-Referrer"] = document.referrer.slice(
       0,
       MAX_REFERRER_LENGTH
     );
 
     if (_deferredViewTopicId) {
-      opts.headers["Discourse-Tracking-Topic-Id"] = _deferredViewTopicId;
+      opts.headers["Discourse-Track-View-Topic-Id"] = _deferredViewTopicId;
     }
 
     _sendDeferredPageview = false;
