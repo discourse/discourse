@@ -96,8 +96,21 @@ class ConditionNode extends Component {
       return null;
     }
     return Object.entries(args)
-      .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
+      .map(([k, v]) => `${k}: ${this.#formatValue(v)}`)
       .join(", ");
+  }
+
+  #formatValue(value) {
+    if (typeof value === "symbol") {
+      return value.description || "Symbol()";
+    }
+    if (Array.isArray(value)) {
+      return `[${value.map((v) => this.#formatValue(v)).join(", ")}]`;
+    }
+    if (value instanceof RegExp) {
+      return value.toString();
+    }
+    return JSON.stringify(value);
   }
 
   <template>

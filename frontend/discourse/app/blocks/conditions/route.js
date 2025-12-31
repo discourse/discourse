@@ -5,16 +5,18 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * Route shortcut symbols for common route conditions.
  * Use these with BlockRouteCondition's `routes` or `excludeRoutes` args.
  *
- * @property {Symbol} DISCOVERY - Any discovery route (latest, top, etc.) excluding custom homepage
+ * @property {Symbol} CATEGORY_PAGES - Any category route
+ * @property {Symbol} DISCOVERY_PAGES - Any discovery route (latest, top, etc.) excluding custom homepage
  * @property {Symbol} HOMEPAGE - Custom homepage route only
- * @property {Symbol} CATEGORY - Any category route
+ * @property {Symbol} TAG_PAGES - Any tag route
  * @property {Symbol} TOP_MENU - Discovery routes excluding category, tag, and custom homepage
  */
 export const BlockRouteConditionShortcuts = Object.freeze({
-  DISCOVERY: Symbol("route:discovery"),
-  HOMEPAGE: Symbol("route:homepage"),
-  CATEGORY: Symbol("route:category"),
-  TOP_MENU: Symbol("route:top-menu"),
+  CATEGORY_PAGES: Symbol("Shortcuts::CATEGORY_PAGES"),
+  DISCOVERY_PAGES: Symbol("Shortcuts::DISCOVERY_PAGES"),
+  HOMEPAGE: Symbol("Shortcuts::HOMEPAGE"),
+  TAG_PAGES: Symbol("Shortcuts::TAG_PAGES"),
+  TOP_MENU: Symbol("Shortcuts::TOP_MENU"),
 });
 
 /**
@@ -24,7 +26,7 @@ export const BlockRouteConditionShortcuts = Object.freeze({
  * - Exact match: `"discovery.latest"`
  * - Wildcard suffix: `"category.*"` matches `"category.none"`, `"category.all"`, etc.
  * - Regular expression: `/^topic\.\d+$/` for advanced matching
- * - Route shortcuts: `BlockRouteConditionShortcuts.DISCOVERY`, `BlockRouteConditionShortcuts.HOMEPAGE`, etc.
+ * - Route shortcuts: `BlockRouteConditionShortcuts.DISCOVERY_PAGES`, `BlockRouteConditionShortcuts.HOMEPAGE`, etc.
  *
  * When using `routes`, the condition passes if the current route matches ANY pattern (OR logic).
  * When using `excludeRoutes`, the condition passes if the current route matches NONE of the patterns.
@@ -45,7 +47,7 @@ export const BlockRouteConditionShortcuts = Object.freeze({
  *
  * @example
  * // Match with shortcut
- * { type: "route", routes: [BlockRouteConditionShortcuts.DISCOVERY] }
+ * { type: "route", routes: [BlockRouteConditionShortcuts.DISCOVERY_PAGES] }
  *
  * @example
  * // Exclude routes
@@ -122,14 +124,17 @@ export default class BlockRouteCondition extends BlockCondition {
 
   #matchesShortcut(shortcut) {
     switch (shortcut) {
-      case BlockRouteConditionShortcuts.DISCOVERY:
+      case BlockRouteConditionShortcuts.CATEGORY_PAGES:
+        return !!this.discovery.category;
+
+      case BlockRouteConditionShortcuts.DISCOVERY_PAGES:
         return this.discovery.onDiscoveryRoute && !this.discovery.custom;
 
       case BlockRouteConditionShortcuts.HOMEPAGE:
         return this.discovery.custom;
 
-      case BlockRouteConditionShortcuts.CATEGORY:
-        return !!this.discovery.category;
+      case BlockRouteConditionShortcuts.TAG_PAGES:
+        return !!this.discovery.tag;
 
       case BlockRouteConditionShortcuts.TOP_MENU:
         return (
