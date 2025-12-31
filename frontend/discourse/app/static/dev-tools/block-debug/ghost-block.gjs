@@ -23,7 +23,7 @@ const GhostBlock = <template>
     >
       <:trigger>
         <span class="block-debug-ghost__badge">
-          {{icon "eye-slash"}}
+          {{icon "cube"}}
           <span class="block-debug-ghost__name">{{@blockName}}</span>
           <span class="block-debug-ghost__status">(hidden)</span>
         </span>
@@ -31,7 +31,7 @@ const GhostBlock = <template>
       <:content>
         <div class="block-debug-tooltip --ghost">
           <div class="block-debug-tooltip__header --failed">
-            {{icon "eye-slash"}}
+            {{icon "cube"}}
             <span class="block-debug-tooltip__title">{{@blockName}}</span>
             <span class="block-debug-tooltip__status">HIDDEN</span>
           </div>

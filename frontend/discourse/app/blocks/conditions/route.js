@@ -12,11 +12,11 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * @property {Symbol} TOP_MENU - Discovery routes excluding category, tag, and custom homepage
  */
 export const BlockRouteConditionShortcuts = Object.freeze({
-  CATEGORY_PAGES: Symbol("Shortcuts::CATEGORY_PAGES"),
-  DISCOVERY_PAGES: Symbol("Shortcuts::DISCOVERY_PAGES"),
-  HOMEPAGE: Symbol("Shortcuts::HOMEPAGE"),
-  TAG_PAGES: Symbol("Shortcuts::TAG_PAGES"),
-  TOP_MENU: Symbol("Shortcuts::TOP_MENU"),
+  CATEGORY_PAGES: Symbol("CATEGORY_PAGES"),
+  DISCOVERY_PAGES: Symbol("DISCOVERY_PAGES"),
+  HOMEPAGE: Symbol("HOMEPAGE"),
+  TAG_PAGES: Symbol("TAG_PAGES"),
+  TOP_MENU: Symbol("TOP_MENU"),
 });
 
 /**

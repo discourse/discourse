@@ -102,7 +102,7 @@ class ConditionNode extends Component {
 
   #formatValue(value) {
     if (typeof value === "symbol") {
-      return value.description || "Symbol()";
+      return `Symbol(${value.description || ""})`;
     }
     if (Array.isArray(value)) {
       return `[${value.map((v) => this.#formatValue(v)).join(", ")}]`;
