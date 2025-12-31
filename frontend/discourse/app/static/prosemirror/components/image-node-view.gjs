@@ -647,6 +647,27 @@ async function openLightbox(editorElement, currentImage) {
     },
   });
 
+  lightbox.on("uiRegister", function () {
+    lightbox.pswp.ui.registerElement({
+      name: "caption",
+      order: 11,
+      isButton: false,
+      appendTo: "root",
+      html: "",
+      onInit: (caption, pswp) => {
+        pswp.on("change", () => {
+          const slideData = pswp.getItemData(pswp.currIndex);
+          const alt = slideData?.alt;
+          if (alt) {
+            caption.innerHTML = `<div class='pswp__caption-title'>${alt}</div>`;
+          } else {
+            caption.innerHTML = "";
+          }
+        });
+      },
+    });
+  });
+
   return new Promise((resolve) => {
     lightbox.addFilter("thumbEl", (thumbEl, itemData) => itemData.element);
     lightbox.on("close", resolve);

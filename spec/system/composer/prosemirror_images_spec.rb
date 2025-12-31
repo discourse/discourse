@@ -230,7 +230,7 @@ describe "Composer - ProseMirror - Images", type: :system do
       click_selected_image_to_open_lightbox
 
       expect(lightbox).to be_visible
-      expect(lightbox).to have_counter("1 / 2")
+      expect(lightbox).to have_css(".pswp__counter", text: "1 / 2")
       expect(lightbox).to have_next_button
       expect(lightbox).to have_prev_button
 
@@ -245,19 +245,16 @@ describe "Composer - ProseMirror - Images", type: :system do
       open_composer
       composer.type_content("![first](upload://test1.png)\n\n![second](upload://test2.png)")
 
-      rich.all(".composer-image-node img").first.click
+      rich.find(".composer-image-node img[alt='first']").click
       click_selected_image_to_open_lightbox
 
       expect(lightbox).to be_visible
-      expect(lightbox).to have_counter("1 / 2")
       expect(lightbox).to have_caption_title("first")
 
       lightbox.next_button.click
-      expect(lightbox).to have_counter("2 / 2")
       expect(lightbox).to have_caption_title("second")
 
       lightbox.prev_button.click
-      expect(lightbox).to have_counter("1 / 2")
       expect(lightbox).to have_caption_title("first")
     end
   end
