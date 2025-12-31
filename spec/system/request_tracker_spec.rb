@@ -11,27 +11,26 @@ describe "Request tracking", type: :system do
     CachedCounting.reset
     ApplicationRequest.disable
     CachedCounting.disable
-    DiscourseEvent.all_off(:page_visited)
   end
 
   describe "pageviews" do
     it "tracks an anonymous visit correctly" do
-      events = []
-      DiscourseEvent.on(:page_visited) { |payload| events << payload }
+      events =
+        DiscourseEvent.track_events(:page_visited) do
+          visit "/"
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 1,
+              "page_view_anon_browser_total" => 1,
+              "page_view_logged_in_total" => 0,
+              "page_view_crawler_total" => 0,
+            )
+          end
+        end
 
-      visit "/"
-      try_until_success do
-        CachedCounting.flush
-        expect(ApplicationRequest.stats).to include(
-          "page_view_anon_total" => 1,
-          "page_view_anon_browser_total" => 1,
-          "page_view_logged_in_total" => 0,
-          "page_view_crawler_total" => 0,
-        )
-      end
-
-      expect(events.size).to eq(1)
-      event = events.last
+      expect(events.length).to eq(1)
+      event = events[0][:params].last
 
       expect(event[:user_id]).to be_nil
       expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
@@ -39,46 +38,49 @@ describe "Request tracking", type: :system do
       expect(event[:referrer]).to be_blank
       expect(event[:session_id]).to be_present
 
-      find(".nav-item_categories a").click
+      events =
+        DiscourseEvent.track_events(:page_visited) do
+          find(".nav-item_categories a").click
 
-      try_until_success do
-        CachedCounting.flush
-        expect(ApplicationRequest.stats).to include(
-          "page_view_anon_total" => 2,
-          "page_view_anon_browser_total" => 2,
-          "page_view_logged_in_total" => 0,
-          "page_view_crawler_total" => 0,
-        )
-      end
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 2,
+              "page_view_anon_browser_total" => 2,
+              "page_view_logged_in_total" => 0,
+              "page_view_crawler_total" => 0,
+            )
+          end
+        end
 
-      expect(events.size).to eq(2)
-      event = events.last
+      expect(events.length).to eq(1)
+      event_2 = events[0][:params].last
 
-      expect(event[:user_id]).to be_nil
-      expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
-      expect(event[:ip_address]).to eq("::1")
-      expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
-      expect(event[:session_id]).to eq(events.first[:session_id])
+      expect(event_2[:user_id]).to be_nil
+      expect(event_2[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
+      expect(event_2[:ip_address]).to eq("::1")
+      expect(event_2[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
+      expect(event_2[:session_id]).to eq(event[:session_id])
     end
 
     it "tracks a crawler visit correctly" do
       # Can't change playwright user agent for now... so change site settings to make Discourse detect chrome as a crawler
       SiteSetting.crawler_user_agents += "|chrome"
 
-      events = []
-      DiscourseEvent.on(:page_visited) { |payload| events << payload }
+      events =
+        DiscourseEvent.track_events(:page_visited) do
+          visit "/"
 
-      visit "/"
-
-      try_until_success do
-        CachedCounting.flush
-        expect(ApplicationRequest.stats).to include(
-          "page_view_anon_total" => 0,
-          "page_view_anon_browser_total" => 0,
-          "page_view_logged_in_total" => 0,
-          "page_view_crawler_total" => 1,
-        )
-      end
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 0,
+              "page_view_anon_browser_total" => 0,
+              "page_view_logged_in_total" => 0,
+              "page_view_crawler_total" => 1,
+            )
+          end
+        end
 
       expect(events).to be_blank
     end
@@ -87,24 +89,24 @@ describe "Request tracking", type: :system do
       user = Fabricate(:user)
       sign_in user
 
-      events = []
-      DiscourseEvent.on(:page_visited) { |payload| events << payload }
+      events =
+        DiscourseEvent.track_events(:page_visited) do
+          visit "/"
 
-      visit "/"
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 0,
+              "page_view_anon_browser_total" => 0,
+              "page_view_logged_in_total" => 1,
+              "page_view_crawler_total" => 0,
+              "page_view_logged_in_browser_total" => 1,
+            )
+          end
+        end
 
-      try_until_success do
-        CachedCounting.flush
-        expect(ApplicationRequest.stats).to include(
-          "page_view_anon_total" => 0,
-          "page_view_anon_browser_total" => 0,
-          "page_view_logged_in_total" => 1,
-          "page_view_crawler_total" => 0,
-          "page_view_logged_in_browser_total" => 1,
-        )
-      end
-
-      expect(events.size).to eq(1)
-      event = events.last
+      expect(events.length).to eq(1)
+      event = events[0][:params].last
 
       expect(event[:user_id]).to eq(user.id)
       expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
@@ -113,51 +115,51 @@ describe "Request tracking", type: :system do
       expect(event[:session_id]).to be_present
       expect(event[:topic_id]).to be_blank
 
-      expect(events.size).to eq(1)
-      event = events.last
+      events =
+        DiscourseEvent.track_events(:page_visited) do
+          find(".nav-item_categories a").click
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 0,
+              "page_view_anon_browser_total" => 0,
+              "page_view_logged_in_total" => 2,
+              "page_view_crawler_total" => 0,
+              "page_view_logged_in_browser_total" => 2,
+            )
+          end
+        end
 
-      find(".nav-item_categories a").click
-      try_until_success do
-        CachedCounting.flush
-        expect(ApplicationRequest.stats).to include(
-          "page_view_anon_total" => 0,
-          "page_view_anon_browser_total" => 0,
-          "page_view_logged_in_total" => 2,
-          "page_view_crawler_total" => 0,
-          "page_view_logged_in_browser_total" => 2,
-        )
-      end
+      expect(events.length).to eq(1)
+      event_2 = events[0][:params].last
 
-      expect(events.size).to eq(2)
-      event = events.last
-
-      expect(event[:user_id]).to eq(user.id)
-      expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
-      expect(event[:ip_address]).to eq("::1")
-      expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
-      expect(event[:session_id]).to eq(events.first[:session_id])
+      expect(event_2[:user_id]).to eq(user.id)
+      expect(event_2[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
+      expect(event_2[:ip_address]).to eq("::1")
+      expect(event_2[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
+      expect(event_2[:session_id]).to eq(event[:session_id])
     end
 
     it "tracks normal error pages correctly" do
       SiteSetting.bootstrap_error_pages = false
 
-      events = []
-      DiscourseEvent.on(:page_visited) { |payload| events << payload }
+      events =
+        DiscourseEvent.track_events(:page_visited) do
+          visit "/foobar"
 
-      visit "/foobar"
+          try_until_success do
+            CachedCounting.flush
 
-      try_until_success do
-        CachedCounting.flush
-
-        # Does not count error as a pageview
-        expect(ApplicationRequest.stats).to include(
-          "http_4xx_total" => 1,
-          "page_view_anon_total" => 0,
-          "page_view_anon_browser_total" => 0,
-          "page_view_logged_in_total" => 0,
-          "page_view_crawler_total" => 0,
-        )
-      end
+            # Does not count error as a pageview
+            expect(ApplicationRequest.stats).to include(
+              "http_4xx_total" => 1,
+              "page_view_anon_total" => 0,
+              "page_view_anon_browser_total" => 0,
+              "page_view_logged_in_total" => 0,
+              "page_view_crawler_total" => 0,
+            )
+          end
+        end
 
       expect(events).to be_blank
 
@@ -176,25 +178,25 @@ describe "Request tracking", type: :system do
     end
 
     it "tracks non-ember pages correctly" do
-      events = []
-      DiscourseEvent.on(:page_visited) { |payload| events << payload }
+      events =
+        DiscourseEvent.track_events(:page_visited) do
+          visit "/safe-mode"
 
-      visit "/safe-mode"
+          try_until_success do
+            CachedCounting.flush
 
-      try_until_success do
-        CachedCounting.flush
+            # Does not count error as a pageview
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 1,
+              "page_view_anon_browser_total" => 1,
+              "page_view_logged_in_total" => 0,
+              "page_view_crawler_total" => 0,
+            )
+          end
+        end
 
-        # Does not count error as a pageview
-        expect(ApplicationRequest.stats).to include(
-          "page_view_anon_total" => 1,
-          "page_view_anon_browser_total" => 1,
-          "page_view_logged_in_total" => 0,
-          "page_view_crawler_total" => 0,
-        )
-      end
-
-      expect(events.size).to eq(1)
-      event = events.last
+      expect(events.length).to eq(1)
+      event = events[0][:params].last
 
       expect(event[:user_id]).to be_nil
       expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/safe-mode")
@@ -237,28 +239,27 @@ describe "Request tracking", type: :system do
 
     it "tracks published pages correctly" do
       SiteSetting.enable_page_publishing = true
-      page =
-        Fabricate(:published_page, public: true, slug: "some-page", topic: Fabricate(:post).topic)
+      Fabricate(:published_page, public: true, slug: "some-page", topic: Fabricate(:post).topic)
 
-      events = []
-      DiscourseEvent.on(:page_visited) { |payload| events << payload }
+      events =
+        DiscourseEvent.track_events(:page_visited) do
+          visit "/pub/some-page"
 
-      visit "/pub/some-page"
+          try_until_success do
+            CachedCounting.flush
 
-      try_until_success do
-        CachedCounting.flush
+            # Does not count error as a pageview
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 1,
+              "page_view_anon_browser_total" => 1,
+              "page_view_logged_in_total" => 0,
+              "page_view_crawler_total" => 0,
+            )
+          end
+        end
 
-        # Does not count error as a pageview
-        expect(ApplicationRequest.stats).to include(
-          "page_view_anon_total" => 1,
-          "page_view_anon_browser_total" => 1,
-          "page_view_logged_in_total" => 0,
-          "page_view_crawler_total" => 0,
-        )
-      end
-
-      expect(events.size).to eq(1)
-      event = events.last
+      expect(events.length).to eq(1)
+      event = events[0][:params].last
 
       expect(event[:user_id]).to be_nil
       expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/pub/some-page")
@@ -277,26 +278,28 @@ describe "Request tracking", type: :system do
       before { sign_in(current_user) }
 
       it "tracks user viewing a topic correctly with deferred tracking" do
-        events = []
-        DiscourseEvent.on(:page_visited) { |payload| events << payload }
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            visit topic.url
 
-        visit topic.url
+            try_until_success do
+              CachedCounting.flush
+              expect(TopicViewItem.exists?(topic_id: topic.id, user_id: current_user.id)).to eq(
+                true,
+              )
+              expect(
+                TopicViewStat.exists?(
+                  topic_id: topic.id,
+                  viewed_at: Time.zone.now.to_date,
+                  anonymous_views: 0,
+                  logged_in_views: 1,
+                ),
+              ).to eq(true)
+            end
+          end
 
-        try_until_success do
-          CachedCounting.flush
-          expect(TopicViewItem.exists?(topic_id: topic.id, user_id: current_user.id)).to eq(true)
-          expect(
-            TopicViewStat.exists?(
-              topic_id: topic.id,
-              viewed_at: Time.zone.now.to_date,
-              anonymous_views: 0,
-              logged_in_views: 1,
-            ),
-          ).to eq(true)
-        end
-
-        expect(events.size).to eq(1)
-        event = events.last
+        expect(events.length).to eq(1)
+        event = events[0][:params].last
 
         expect(event[:user_id]).to eq(current_user.id)
         expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
@@ -309,26 +312,27 @@ describe "Request tracking", type: :system do
       it "tracks user viewing a topic correctly with explicit tracking" do
         visit "/"
 
-        events = []
-        DiscourseEvent.on(:page_visited) { |payload| events << payload }
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
-        find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+            try_until_success do
+              CachedCounting.flush
+              expect(TopicViewItem.exists?(topic_id: topic.id, user_id: current_user.id)).to eq(
+                true,
+              )
+              expect(
+                TopicViewStat.exists?(
+                  topic_id: topic.id,
+                  viewed_at: Time.zone.now.to_date,
+                  anonymous_views: 0,
+                  logged_in_views: 1,
+                ),
+              ).to eq(true)
+            end
+          end
 
-        try_until_success do
-          CachedCounting.flush
-          expect(TopicViewItem.exists?(topic_id: topic.id, user_id: current_user.id)).to eq(true)
-          expect(
-            TopicViewStat.exists?(
-              topic_id: topic.id,
-              viewed_at: Time.zone.now.to_date,
-              anonymous_views: 0,
-              logged_in_views: 1,
-            ),
-          ).to eq(true)
-        end
-
-        expect(events.size).to eq(1)
-        event = events.last
+        event = events[0][:params].last
 
         expect(event[:user_id]).to eq(current_user.id)
         expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
@@ -340,26 +344,25 @@ describe "Request tracking", type: :system do
 
     context "when anonymous" do
       it "tracks an anonymous user viewing a topic correctly with deferred tracking" do
-        events = []
-        DiscourseEvent.on(:page_visited) { |payload| events << payload }
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            visit topic.url
 
-        visit topic.url
+            try_until_success do
+              CachedCounting.flush
+              expect(TopicViewItem.exists?(topic_id: topic.id, user_id: nil)).to eq(true)
+              expect(
+                TopicViewStat.exists?(
+                  topic_id: topic.id,
+                  viewed_at: Time.zone.now.to_date,
+                  anonymous_views: 1,
+                  logged_in_views: 0,
+                ),
+              ).to eq(true)
+            end
+          end
 
-        try_until_success do
-          CachedCounting.flush
-          expect(TopicViewItem.exists?(topic_id: topic.id, user_id: nil)).to eq(true)
-          expect(
-            TopicViewStat.exists?(
-              topic_id: topic.id,
-              viewed_at: Time.zone.now.to_date,
-              anonymous_views: 1,
-              logged_in_views: 0,
-            ),
-          ).to eq(true)
-        end
-
-        expect(events.size).to eq(1)
-        event = events.last
+        event = events[0][:params].last
 
         expect(event[:user_id]).to be_blank
         expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
@@ -371,26 +374,26 @@ describe "Request tracking", type: :system do
       it "tracks an anonymous user viewing a topic correctly with explicit tracking" do
         visit "/"
 
-        events = []
-        DiscourseEvent.on(:page_visited) { |payload| events << payload }
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
-        find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+            try_until_success do
+              CachedCounting.flush
+              expect(TopicViewItem.exists?(topic_id: topic.id, user_id: nil)).to eq(true)
+              expect(
+                TopicViewStat.exists?(
+                  topic_id: topic.id,
+                  viewed_at: Time.zone.now.to_date,
+                  anonymous_views: 1,
+                  logged_in_views: 0,
+                ),
+              ).to eq(true)
+            end
+          end
 
-        try_until_success do
-          CachedCounting.flush
-          expect(TopicViewItem.exists?(topic_id: topic.id, user_id: nil)).to eq(true)
-          expect(
-            TopicViewStat.exists?(
-              topic_id: topic.id,
-              viewed_at: Time.zone.now.to_date,
-              anonymous_views: 1,
-              logged_in_views: 0,
-            ),
-          ).to eq(true)
-        end
-
-        expect(events.size).to eq(1)
-        event = events.last
+        expect(events.length).to eq(1)
+        event = events[0][:params].last
 
         expect(event[:user_id]).to be_blank
         expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")

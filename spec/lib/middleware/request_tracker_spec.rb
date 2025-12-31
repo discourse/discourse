@@ -593,12 +593,7 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     describe "page_visited event" do
-      after { DiscourseEvent.all_off(:page_visited) }
-
       it "triggers event for anonymous user page views" do
-        events = []
-        DiscourseEvent.on(:page_visited) { |payload| events << payload }
-
         session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
 
         data =
@@ -613,21 +608,22 @@ RSpec.describe Middleware::RequestTracker do
             0.2,
           )
 
-        Middleware::RequestTracker.log_request(data)
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            Middleware::RequestTracker.log_request(data)
+          end
 
         expect(events.length).to eq(1)
-        expect(events[0][:user_id]).to be_nil
-        expect(events[0][:session_id]).to eq(session_id)
-        expect(events[0][:url]).to eq("https://discourse.org")
-        expect(events[0][:referrer]).to eq("https://example.com")
-        expect(events[0]).to have_key(:ip_address)
-        expect(events[0][:user_agent]).to be_present
+        event = events[0][:params].first
+        expect(event[:user_id]).to be_nil
+        expect(event[:session_id]).to eq(session_id)
+        expect(event[:url]).to eq("https://discourse.org")
+        expect(event[:referrer]).to eq("https://example.com")
+        expect(event).to have_key(:ip_address)
+        expect(event[:user_agent]).to be_present
       end
 
       it "triggers event for logged-in user page views" do
-        events = []
-        DiscourseEvent.on(:page_visited) { |payload| events << payload }
-
         user = Fabricate(:user, active: true)
         token = UserAuthToken.generate!(user_id: user.id)
         cookie =
@@ -650,20 +646,21 @@ RSpec.describe Middleware::RequestTracker do
             0.2,
           )
 
-        Middleware::RequestTracker.log_request(data)
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            Middleware::RequestTracker.log_request(data)
+          end
 
         expect(events.length).to eq(1)
-        expect(events[0][:user_id]).to eq(user.id)
-        expect(events[0][:url]).to eq("https://discourse.org")
-        expect(events[0][:referrer]).to eq("https://example.com")
-        expect(events[0]).to have_key(:ip_address)
-        expect(events[0][:user_agent]).to be_present
+        event = events[0][:params].first
+        expect(event[:user_id]).to eq(user.id)
+        expect(event[:url]).to eq("https://discourse.org")
+        expect(event[:referrer]).to eq("https://example.com")
+        expect(event).to have_key(:ip_address)
+        expect(event[:user_agent]).to be_present
       end
 
       it "does not trigger event for crawler page views" do
-        events = []
-        DiscourseEvent.on(:page_visited) { |payload| events << payload }
-
         data =
           Middleware::RequestTracker.get_data(
             env("HTTP_USER_AGENT" => "Googlebot"),
@@ -671,7 +668,10 @@ RSpec.describe Middleware::RequestTracker do
             0.2,
           )
 
-        Middleware::RequestTracker.log_request(data)
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            Middleware::RequestTracker.log_request(data)
+          end
 
         expect(events.length).to eq(0)
       end
