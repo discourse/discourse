@@ -4,7 +4,7 @@ module UserNameSuggester
   GENERIC_NAMES = %w[i me info support admin webmaster hello mail office contact team]
   LAST_RESORT_USERNAME = "user"
 
-  def self.suggest(*input, current_username: nil)
+  def self.suggest(*input, current_username: nil, allow_generic_fallback: true)
     name =
       input.find do |item|
         if !SiteSetting.use_email_for_username_and_name_suggestions
@@ -14,7 +14,8 @@ module UserNameSuggester
         break parsed_name if sanitize_username(parsed_name).present?
       end
 
-    name = fix_username(name)
+    name = fix_username(name, allow_generic_fallback:)
+    return nil if name.blank?
     find_available_username_based_on(name, current_username)
   end
 
@@ -101,9 +102,10 @@ module UserNameSuggester
     end
   end
 
-  def self.fix_username(name)
+  def self.fix_username(name, allow_generic_fallback: true)
     fixed_username = sanitize_username(name)
-    if fixed_username.empty?
+    if fixed_username.blank?
+      return nil unless allow_generic_fallback
       fixed_username << sanitize_username(I18n.t("fallback_username"))
       fixed_username << LAST_RESORT_USERNAME if fixed_username.empty?
     end

@@ -203,6 +203,10 @@ class Auth::Result
       end
     end
 
-    UserNameSuggester.suggest(*username_suggester_attributes, current_username: user&.username)
+    UserNameSuggester.suggest(
+      *username_suggester_attributes,
+      current_username: user&.username,
+      allow_generic_fallback: false,
+    )
   end
 end
