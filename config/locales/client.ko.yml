@@ -2478,7 +2478,7 @@ ko:
       slow_mode_update:
         title: "느린 모드"
         select: "사용자는 이 글에서 다음을 기준으로 한 번만 게시할 수 있습니다:"
-        description: "빠르게 진행되거나 논쟁이 되는 토론에서 신중한 대화를 유도하기 위해 사용자는 이 주제에 추가로 글을 게시하려면 기다려야 합니다."
+        description: "빠르게 진행되거나 논쟁이되는 대화에서 신중한 대화를 유도하기 위해 사용자는이 글에 추가로 글을 작성하기 위해서는 기다려야합니다."
         enable: "활성화"
         update: "업데이트"
         enabled_until: "다음 기간까지 활성화됨:"
@@ -2499,9 +2499,9 @@ ko:
           24_hours: "24시간"
           custom: "사용자 지정 기간"
       slow_mode_notice:
-        duration: "%{duration} 후 이 주제에 추가로 게시할 수 있습니다."
+        duration: "%{duration} 후 이 글에 추가로 게시할 수 있습니다."
       topic_status_update:
-        title: "주제 타이머"
+        title: "글 타이머"
         save: "타이머 설정"
         num_of_hours: "시간:"
         num_of_days: "일 수:"
@@ -2517,36 +2517,36 @@ ko:
       temp_open:
         title: "임시로 열기"
       auto_reopen:
-        title: "주제 자동 열기"
+        title: "글 자동 열기"
       temp_close:
         title: "임시로 종료"
       auto_close:
-        title: "주제 자동 종료"
-        label: "다음 이후 주제 자동 종료:"
+        title: "글 자동 잠금"
+        label: "자동으로 글 닫기 시간:"
         error: "유효한 값을 입력하세요."
-        based_on_last_post: "주제의 마지막 게시물이 이 기간보다 오래될 때까지 닫지 마세요."
+        based_on_last_post: "글의 마지막 게시물이 이 기간보다 오래될 때까지 닫지 마세요."
       auto_close_after_last_post:
-        title: "마지막 게시물 후 주제 자동 종료"
+        title: "마지막 댓글 이후 글 자동 닫기"
       auto_delete:
-        title: "주제 자동 삭제"
+        title: "글 자동 삭제"
       auto_bump:
-        title: "주제 자동 끌어 올림"
+        title: "글 자동 끌어 올림"
       reminder:
         title: "알림 받기"
       auto_delete_replies:
         title: "댓글 자동 삭제"
       status_update_notice:
-        auto_open: "이 주제는 %{timeLeft} 후 자동으로 열립니다."
-        auto_close: "이 주제는 %{timeLeft} 후 자동으로 종료됩니다."
-        auto_publish_to_category: "이 주제는 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
-        auto_close_after_last_post: "이 주제는 마지막 댓글이 달리고 %{duration} 후 종료됩니다."
-        auto_delete: "이 주제는 %{timeLeft} 후 자동으로 삭제됩니다."
-        auto_bump: "이 주제는 %{timeLeft} 후 자동으로 끌어 올림 됩니다."
-        auto_reminder: "%{timeLeft} 후 이 주제에 대한 알림을 받습니다."
-        auto_delete_replies: "이 주제의 댓글은 %{duration} 후에 자동으로 삭제됩니다."
+        auto_open: "이 글은 %{timeLeft}후 자동으로 열립니다."
+        auto_close: "이 글은 %{timeLeft}후 자동으로 닫힙니다."
+        auto_publish_to_category: "이 글은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
+        auto_close_after_last_post: "이 글은 마지막 댓글이 달리고 %{duration} 후 닫힙니다."
+        auto_delete: "이 글은 %{timeLeft}후 자동으로 삭제됩니다."
+        auto_bump: "이 글은 %{timeLeft}후 자동으로 끌어 올림 됩니다."
+        auto_reminder: "%{timeLeft}후 이 글에 대해 알림을 받게 됩니다."
+        auto_delete_replies: "이 글에 대한 댓글은 %{duration}후에 자동으로 삭제됩니다."
       auto_close_title: "자동 종료 설정"
       auto_close_immediate:
-        other: "주제의 마지막 게시물은 이미 %{count} 시간이 지났으므로 이 주제는 즉시 종료됩니다."
+        other: "글의 마지막 게시물은 이미 %{count}시간이 지났으므로 해당 글은 즉시 닫힙니다."
       auto_close_momentarily:
         other: "주제의 마지막 게시물은 이미 %{count} 시간이 지났으므로 이 주제는 일시적으로 종료됩니다."
       timeline:
@@ -2560,33 +2560,33 @@ ko:
         jump_prompt_to_date: "현재까지"
         jump_prompt_or: "또는"
       notifications:
-        title: 이 주제에 대한 알림을 받는 빈도 변경
+        title: 이 글에 대한 알림을 받는 빈도 변경
         reasons:
-          mailing_list_mode: "메일링 리스트 모드가 활성화되어 있으므로 메일로 이 주제의 댓글 알림을 받게 됩니다."
-          "3_10": "이 주제에 대한 태그를 구독 중이므로 알림을 받게 됩니다."
-          "3_10_stale": "과거에 이 주제의 태그를 구독했기 때문에 알림을 받게 됩니다."
+          mailing_list_mode: "메일링 리스트 모드가 활성화되어 있으므로 메일로 이 글의 댓글 알림을 받게 됩니다."
+          "3_10": "이 글에 대한 태그를 구독 중이므로 알림을 받게 됩니다."
+          "3_10_stale": "과거에 이 글의 태그를 구독했기 때문에 알림을 받게 됩니다."
           "3_6": "이 카테고리를 구독 중이므로 알림을 받게 됩니다."
           "3_6_stale": "과거에 이 카테고리를 구독했기 때문에 알림을 받게 됩니다."
-          "3_5": "이 주제를 자동으로 구독하기 시작했으므로 알림을 받게 됩니다."
-          "3_2": "이 주제를 구독 중이므로 알림을 받게 됩니다."
-          "3_1": "이 주제를 생성했으므로 알림을 받게 됩니다."
-          "3": "이 주제를 구독 중이므로 알림을 받게 됩니다."
+          "3_5": "이 글을 자동으로 구독하기 시작했으므로 알림을 받게 됩니다."
+          "3_2": "이 글을 구독 중이므로 알림을 받게 됩니다."
+          "3_1": "이 글을 작성 했으므로 알림을 받게됩니다."
+          "3": "이 글을 구독 중이므로 알림을 받게 됩니다."
           "2_8": "이 카테고리를 추적 중이므로 새 댓글 수가 표시됩니다."
           "2_8_stale": "과거에 이 카테고리를 추적했으므로 새 댓글 수가 표시됩니다."
-          "2_4": "이 주제에 댓글을 달았으므로 새 댓글 수가 표시됩니다."
-          "2_2": "이 주제를 추적 중이므로 새 댓글 수가 표시됩니다."
-          "2": '<a href="%{basePath}/u/%{username}/preferences/notifications">이 주제를 읽었으므로</a> 새 댓글 수가 표시됩니다.'
+          "2_4": "이 글에 댓글을 작성했기 때문에 새 글 수가 표시됩니다."
+          "2_2": "이 글을 팔로우 중이므로 새 댓글 수가 표시됩니다."
+          "2": '<a href="%{basePath}/u/%{username}/preferences/notifications">이 글을 읽었으므로</a> 새 댓글 수가 표시됩니다.'
           "1_2": "누군가 나를 @이름 형식으로 멘션하거나 나에게 댓글을 달면 알림을 받습니다."
           "1": "누군가 나를 @이름 형식으로 멘션하거나 나에게 댓글을 달면 알림을 받습니다."
           "0_7": "이 카테고리의 모든 알림을 무시하고 있습니다."
-          "0_2": "이 주제에 대한 모든 알림을 무시하고 있습니다."
-          "0": "이 주제에 대한 모든 알림을 무시하고 있습니다."
+          "0_2": "이 글에 대한 모든 알림을 무시하고 있습니다."
+          "0": "이 글에 대한 모든 알림을 무시하고 있습니다."
         watching_pm:
           title: "구독"
           description: "이 메시지의 모든 새 댓글에 대한 알림을 받으며 새 댓글 수가 표시됩니다."
         watching:
           title: "구독"
-          description: "이 주제의 모든 새 댓글에 대한 알림을 받으며 새 댓글 수가 표시됩니다."
+          description: "이 글의 모든 새 댓글에 대한 알림을 받으며 새 댓글 수가 표시됩니다."
         tracking_pm:
           title: "추적"
           description: "이 메시지의 새 댓글 수가 표시됩니다. 누군가가 @이름 형식으로 나를 멘션하거나 나에게 댓글을 달면 알림을 받게 됩니다."
