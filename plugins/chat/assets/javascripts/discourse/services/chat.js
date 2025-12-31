@@ -253,10 +253,14 @@ export default class Chat extends Service {
   }
 
   getDocumentTitleCount() {
-    return (
-      this.chatTrackingStateManager.allChannelUrgentCount +
-      this.chatPanePendingManager.totalPendingMessageCount
-    );
+    const urgentCount = this.chatTrackingStateManager.allChannelUrgentCount;
+    const pendingCount = this.chatPanePendingManager.totalPendingMessageCount;
+
+    if (this.currentUser?.user_option?.title_count_mode === "notifications") {
+      return urgentCount;
+    }
+
+    return urgentCount + pendingCount;
   }
 
   switchChannelUpOrDown(direction, unreadOnly = false) {
