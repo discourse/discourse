@@ -1,0 +1,29 @@
+import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
+import { block } from "discourse/components/block-outlet";
+import concatClass from "discourse/helpers/concat-class";
+
+/**
+ * A container block that groups multiple children blocks together.
+ * Rendered children are created by the @block decorator and passed via the children getter.
+ *
+ * @param {string} @outletName - The outlet identifier this group belongs to (passed from parent)
+ * @param {string} [@classNames] - Additional CSS classes for the group wrapper
+ * @param {string} [@group] - Group identifier for BEM class naming (block__group-{group})
+ */
+@block("group", { container: true })
+export default class GroupedBlocks extends Component {
+  <template>
+    <div
+      class={{concatClass
+        (concat "block__group-" @group)
+        (concat @outletName "__group")
+        @classNames
+      }}
+    >
+      {{#each this.children as |child|}}
+        <child.Component @outletName={{@outletName}} />
+      {{/each}}
+    </div>
+  </template>
+}

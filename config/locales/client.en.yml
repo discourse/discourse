@@ -355,6 +355,15 @@ en:
       plugin_source: "Plugin '%{name}'"
       unknown_source: "One of your themes or plugins"
 
+    dev_tools:
+      drag_to_move: "Drag to move"
+      toggle_plugin_outlet_debug: "Toggle plugin outlet debug"
+      toggle_block_debug: "Toggle block debug"
+      toggle_safe_mode: "Toggle safe mode"
+      toggle_verbose_localization: "Toggle verbose localization"
+      toggle_mobile_view: "Toggle mobile view"
+      disable_dev_tools: "Disable dev tools"
+
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"

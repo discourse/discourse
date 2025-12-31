@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { addAboutPageActivity } from "discourse/components/about-page";
+import { renderBlocks } from "discourse/components/block-outlet";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -54,6 +55,7 @@ import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/a
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
+import { _registerBlock } from "discourse/lib/blocks/registration";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -3312,6 +3314,166 @@ class _PluginApi {
    */
   registerCategorySaveProperty(property) {
     _addCategoryPropertyForSave(property);
+  }
+
+  /**
+   * Registers block components to render in a designated outlet.
+   *
+   * Block outlets are extension points where themes and plugins can render custom
+   * content layouts. Each block must be decorated with `@block` from "discourse/blocks".
+   *
+   * Blocks can have conditions that determine when they render. Conditions support
+   * AND logic (array), OR logic (`any`), and NOT logic (`not`).
+   *
+   * @param {string} outletName - The block outlet identifier
+   * @param {Array<Object>} blocks - Array of block configurations
+   * @param {typeof Component} blocks[].block - Component class decorated with @block
+   * @param {Object} [blocks[].args] - Arguments to pass to the block component
+   * @param {string} [blocks[].classNames] - Additional CSS classes for the block wrapper
+   * @param {Array<Object>} [blocks[].children] - Nested blocks (only for container blocks)
+   * @param {Array<Object>|Object} [blocks[].conditions] - Conditions for rendering the block
+   *
+   * @example
+   * ```javascript
+   * import { block } from "discourse/blocks";
+   * import { RouteShortcuts } from "discourse/blocks/conditions";
+   *
+   * @block("my-banner")
+   * class MyBanner extends Component {
+   *   <template>
+   *     <h1>{{@title}}</h1>
+   *   </template>
+   * }
+   *
+   * api.renderBlocks("homepage-blocks", [
+   *   // Simple block without conditions
+   *   {
+   *     block: MyBanner,
+   *     args: { title: "Welcome!" },
+   *   },
+   *   // Block with conditions (AND logic - all must pass)
+   *   {
+   *     block: MyBanner,
+   *     args: { title: "Admin Banner" },
+   *     conditions: [
+   *       { type: "route", routes: [RouteShortcuts.DISCOVERY] },
+   *       { type: "user", admin: true }
+   *     ],
+   *   },
+   *   // Block with OR conditions
+   *   {
+   *     block: MyBanner,
+   *     args: { title: "Staff Banner" },
+   *     conditions: [
+   *       { any: [
+   *         { type: "user", admin: true },
+   *         { type: "user", moderator: true }
+   *       ]}
+   *     ],
+   *   },
+   * ]);
+   * ```
+   */
+  renderBlocks(outletName, blocks) {
+    renderBlocks(outletName, blocks, this.container);
+  }
+
+  /**
+   * Registers a block component for use with `renderBlocks()`.
+   *
+   * **IMPORTANT:** Must be called in a pre-initializer before any `renderBlocks()`
+   * calls. The block registry is locked on the first `renderBlocks()` call, preventing
+   * late registrations.
+   *
+   * The block component must be decorated with `@block` decorator.
+   *
+   * @param {typeof import("@glimmer/component").default} BlockClass - The block component class
+   *
+   * @example
+   * ```javascript
+   * // themes/my-theme/javascripts/discourse/pre-initializers/register-blocks.js
+   * import { withPluginApi } from "discourse/lib/plugin-api";
+   * import HeroBanner from "../blocks/hero-banner";
+   * import FeaturedTopics from "../blocks/featured-topics";
+   *
+   * export default {
+   *   initialize() {
+   *     withPluginApi((api) => {
+   *       api.registerBlock(HeroBanner);
+   *       api.registerBlock(FeaturedTopics);
+   *     });
+   *   },
+   * };
+   * ```
+   *
+   * @example
+   * ```javascript
+   * // Block component with metadata
+   * import Component from "@glimmer/component";
+   * import { block } from "discourse/blocks";
+   *
+   * @block("hero-banner", {
+   *   description: "A hero banner with customizable title and call-to-action",
+   *   args: {
+   *     title: { type: "string", required: true },
+   *     ctaText: { type: "string", default: "Learn More" },
+   *     count: { type: "number" },
+   *     showImage: { type: "boolean" },
+   *     tags: { type: "array", itemType: "string" },
+   *   }
+   * })
+   * export default class HeroBanner extends Component {
+   *   // ...
+   * }
+   * ```
+   */
+  registerBlock(BlockClass) {
+    _registerBlock(BlockClass);
+  }
+
+  /**
+   * Registers a custom block condition type.
+   *
+   * Custom conditions must extend `BlockCondition` from "discourse/blocks/conditions"
+   * and implement the `evaluate(args)` method.
+   *
+   * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class
+   *
+   * @example
+   * ```javascript
+   * import { BlockCondition } from "discourse/blocks/conditions";
+   *
+   * class BlockFeatureFlagCondition extends BlockCondition {
+   *   static type = "feature-flag";
+   *
+   *   @service currentUser;
+   *
+   *   validate(args) {
+   *     if (!args.flag) {
+   *       throw new Error("feature-flag condition requires 'flag' argument");
+   *     }
+   *   }
+   *
+   *   evaluate(args) {
+   *     return this.currentUser?.feature_flags?.[args.flag] === true;
+   *   }
+   * }
+   *
+   * api.registerBlockConditionType(BlockFeatureFlagCondition);
+   *
+   * // Then use it in renderBlocks:
+   * api.renderBlocks("homepage-blocks", [
+   *   {
+   *     block: MyBlock,
+   *     conditions: [{ type: "feature-flag", flag: "new_feature" }]
+   *   }
+   * ]);
+   * ```
+   */
+  registerBlockConditionType(ConditionClass) {
+    this.container
+      .lookup("service:blocks")
+      .registerConditionType(ConditionClass);
   }
 
   // eslint-disable-next-line no-unused-vars

@@ -79,13 +79,12 @@ export default class OutletInfoComponent extends Component {
   <template>
     <div
       class={{concatClass
-        "plugin-outlet-info"
+        "plugin-outlet-debug"
         (if this.partOfWrapper "--wrapper")
         (if this.isHidden "hidden")
       }}
       {{didInsert this.checkIsWrapper}}
       data-outlet-name={{@outletName}}
-      title={{@outletName}}
     >
       <DTooltip
         @maxWidth={{600}}
@@ -94,7 +93,7 @@ export default class OutletInfoComponent extends Component {
         @identifier="plugin-outlet-info"
       >
         <:trigger>
-          <span class="name">
+          <span class="plugin-outlet-debug__badge">
             {{#if this.partOfWrapper}}
               &lt;{{if this.isAfter "/"}}{{if
                 this.showName
@@ -108,7 +107,12 @@ export default class OutletInfoComponent extends Component {
         </:trigger>
         <:content>
           <div class="plugin-outlet-info__wrapper">
-            <div class="plugin-outlet-info__heading">
+            <div
+              class={{concatClass
+                "plugin-outlet-info__heading"
+                (if this.partOfWrapper "--wrapper")
+              }}
+            >
               <span class="title">
                 {{icon "plug"}}
                 {{this.displayName}}

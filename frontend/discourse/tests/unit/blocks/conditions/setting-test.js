@@ -1,0 +1,326 @@
+import { getOwner, setOwner } from "@ember/owner";
+import Service from "@ember/service";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import BlockSettingCondition from "discourse/blocks/conditions/setting";
+
+module("Unit | Blocks | Conditions | setting", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    const testOwner = getOwner(this);
+
+    // Mock site settings
+    this.mockSiteSettings = {
+      enable_badges: true,
+      enable_whispers: false,
+      desktop_category_page_style: "categories_and_latest_topics",
+      top_menu: "latest|new|unread|categories",
+      share_links: "twitter|facebook|email",
+    };
+
+    // Create mock site settings service
+    const mockSiteSettings = this.mockSiteSettings;
+    class MockSiteSettings extends Service {
+      get enable_badges() {
+        return mockSiteSettings.enable_badges;
+      }
+
+      get enable_whispers() {
+        return mockSiteSettings.enable_whispers;
+      }
+
+      get desktop_category_page_style() {
+        return mockSiteSettings.desktop_category_page_style;
+      }
+
+      get top_menu() {
+        return mockSiteSettings.top_menu;
+      }
+
+      get share_links() {
+        return mockSiteSettings.share_links;
+      }
+    }
+    testOwner.unregister("service:site-settings");
+    testOwner.register("service:site-settings", MockSiteSettings);
+
+    // Store owner for creating condition instances
+    this.testOwner = testOwner;
+
+    // Helper to evaluate setting condition directly
+    this.evaluateCondition = (args) => {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, testOwner);
+      return condition.evaluate(args);
+    };
+  });
+
+  module("with site settings (existing behavior)", function () {
+    test("enabled: true passes when setting is truthy", function (assert) {
+      assert.true(
+        this.evaluateCondition({
+          setting: "enable_badges",
+          enabled: true,
+        })
+      );
+    });
+
+    test("enabled: true fails when setting is falsy", function (assert) {
+      assert.false(
+        this.evaluateCondition({
+          setting: "enable_whispers",
+          enabled: true,
+        })
+      );
+    });
+
+    test("enabled: false passes when setting is falsy", function (assert) {
+      assert.true(
+        this.evaluateCondition({
+          setting: "enable_whispers",
+          enabled: false,
+        })
+      );
+    });
+
+    test("equals matches exact value", function (assert) {
+      assert.true(
+        this.evaluateCondition({
+          setting: "desktop_category_page_style",
+          equals: "categories_and_latest_topics",
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          setting: "desktop_category_page_style",
+          equals: "categories_only",
+        })
+      );
+    });
+
+    test("includes matches if setting is in array", function (assert) {
+      assert.true(
+        this.evaluateCondition({
+          setting: "desktop_category_page_style",
+          includes: [
+            "categories_and_latest_topics",
+            "categories_and_top_topics",
+          ],
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          setting: "desktop_category_page_style",
+          includes: ["categories_only", "categories_boxes"],
+        })
+      );
+    });
+
+    test("contains matches if list setting contains value", function (assert) {
+      assert.true(
+        this.evaluateCondition({
+          setting: "top_menu",
+          contains: "latest",
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          setting: "top_menu",
+          contains: "hot",
+        })
+      );
+    });
+
+    test("containsAny matches if list setting contains any value", function (assert) {
+      assert.true(
+        this.evaluateCondition({
+          setting: "share_links",
+          containsAny: ["twitter", "linkedin"],
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          setting: "share_links",
+          containsAny: ["linkedin", "reddit"],
+        })
+      );
+    });
+  });
+
+  module("with explicit settings object (theme settings)", function () {
+    test("enabled: true passes when custom setting is truthy", function (assert) {
+      const themeSettings = {
+        show_sidebar: true,
+        enable_animations: false,
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "show_sidebar",
+          enabled: true,
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "enable_animations",
+          enabled: true,
+        })
+      );
+    });
+
+    test("enabled: false passes when custom setting is falsy", function (assert) {
+      const themeSettings = {
+        show_sidebar: true,
+        enable_animations: false,
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "enable_animations",
+          enabled: false,
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "show_sidebar",
+          enabled: false,
+        })
+      );
+    });
+
+    test("equals matches exact value in custom settings", function (assert) {
+      const themeSettings = {
+        theme_color: "dark",
+        layout_style: "compact",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "theme_color",
+          equals: "dark",
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "theme_color",
+          equals: "light",
+        })
+      );
+    });
+
+    test("includes matches if custom setting is in array", function (assert) {
+      const themeSettings = {
+        icon_style: "outline",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "icon_style",
+          includes: ["outline", "filled"],
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "icon_style",
+          includes: ["filled", "duotone"],
+        })
+      );
+    });
+
+    test("contains matches if custom list setting contains value", function (assert) {
+      const themeSettings = {
+        enabled_features: "sidebar|dark-mode|animations",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "enabled_features",
+          contains: "dark-mode",
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "enabled_features",
+          contains: "tooltips",
+        })
+      );
+    });
+
+    test("containsAny matches if custom list setting contains any value", function (assert) {
+      const themeSettings = {
+        enabled_modules: "header|footer|sidebar",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "enabled_modules",
+          containsAny: ["header", "navigation"],
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "enabled_modules",
+          containsAny: ["navigation", "search"],
+        })
+      );
+    });
+
+    test("handles missing setting key in custom settings", function (assert) {
+      const themeSettings = {
+        existing_key: true,
+      };
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "missing_key",
+          enabled: true,
+        })
+      );
+    });
+
+    test("evaluates truthy by default when no condition type specified", function (assert) {
+      const themeSettings = {
+        some_setting: "has-value",
+        empty_setting: "",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "some_setting",
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "empty_setting",
+        })
+      );
+    });
+  });
+});

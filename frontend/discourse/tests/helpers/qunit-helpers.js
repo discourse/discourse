@@ -14,6 +14,7 @@ import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { clearAboutPageActivities } from "discourse/components/about-page";
+import { resetBlockConfigsForTesting } from "discourse/components/block-outlet";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
   cleanUpComposerUploadHandler,
@@ -39,6 +40,7 @@ import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializer
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
+import { resetBlockRegistryForTesting } from "discourse/lib/blocks/registration";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
@@ -267,6 +269,8 @@ export function testCleanup(container, app) {
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
   resetHtmlDecorators();
+  resetBlockConfigsForTesting();
+  resetBlockRegistryForTesting();
 }
 
 function cleanupCssGeneratorTags() {

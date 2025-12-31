@@ -1,75 +1,125 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
+import { action } from "@ember/object";
+import { logArgToConsole } from "../lib/console-logger";
 
-let globalI = 1;
+/**
+ * Displays plugin outlet arguments in a formatted table.
+ * Similar to block-debug args-table but with plugin outlet context prefix.
+ *
+ * @param {Object} outletArgs - The outlet arguments to display.
+ */
+export default class ArgsTable extends Component {
+  /**
+   * Transforms the raw outletArgs object into an array of entry objects for display.
+   * Each entry contains the original key/value plus formatted display representations.
+   *
+   * @returns {Array<{key: string, value: any, displayValue: string, typeInfo: string}>}
+   */
+  get entries() {
+    const args = this.args.outletArgs;
+    if (!args || typeof args !== "object") {
+      return [];
+    }
+    return Object.entries(args).map(([key, value]) => ({
+      key,
+      value,
+      displayValue: this.#formatValue(value),
+      typeInfo: this.#getTypeInfo(value),
+    }));
+  }
 
-function stringifyValue(value) {
-  try {
+  /**
+   * Formats a value for display in the debug table. Each type is handled differently
+   * to provide a concise yet informative representation that fits in the UI.
+   *
+   * @param {any} value - The value to format.
+   * @returns {string} A human-readable string representation of the value.
+   */
+  #formatValue(value) {
+    if (value === null) {
+      return "null";
+    }
     if (value === undefined) {
       return "undefined";
-    } else if (value === null) {
-      return "null";
-    } else if (["string", "number"].includes(typeof value)) {
-      return JSON.stringify(value);
-    } else if (typeof value === "boolean") {
-      return String(value);
-    } else if (Array.isArray(value)) {
-      return `Array (${value.length} items)`;
-    } else if (String(value).startsWith("class ")) {
-      return `class ${value.name} {}`;
-    } else if (value.constructor?.name === "function") {
-      return `ƒ ${value.name || "function"}(...)`;
-    } else if (value.id) {
-      return `${value.constructor?.name} { id: ${value.id} }`;
-    } else {
-      return `${value.constructor?.name} {}`;
     }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error("Unable to stringify value:", value, e);
-    return "(unable to stringify)";
+    if (typeof value === "string") {
+      return `"${value.length > 50 ? value.slice(0, 50) + "..." : value}"`;
+    }
+    if (typeof value === "number" || typeof value === "boolean") {
+      return String(value);
+    }
+    if (Array.isArray(value)) {
+      return `Array(${value.length})`;
+    }
+    if (typeof value === "function") {
+      return `fn ${value.name || "anonymous"}()`;
+    }
+    if (typeof value === "object") {
+      const name = value.constructor?.name;
+      if (name && name !== "Object") {
+        return `${name} {...}`;
+      }
+      return "{...}";
+    }
+    return String(value);
   }
-}
 
-export default class ArgsTable extends Component {
-  get renderArgs() {
-    return Object.entries(this.args.outletArgs).map(([key, value]) => {
-      return {
-        key,
-        value: stringifyValue(value),
-        originalValue: value,
-      };
+  /**
+   * Determines the type label to display for a value.
+   *
+   * @param {any} value - The value to get the type info for.
+   * @returns {string} A type label (e.g., "string", "number", "array", "object").
+   */
+  #getTypeInfo(value) {
+    if (value === null) {
+      return "null";
+    }
+    if (value === undefined) {
+      return "undefined";
+    }
+    if (Array.isArray(value)) {
+      return "array";
+    }
+    return typeof value;
+  }
+
+  /**
+   * Logs the argument value to the console and stores it in a global variable
+   * for easy inspection. The variable is named `arg1`, `arg2`, etc.
+   *
+   * @param {{key: string, value: any}} entry - The entry to log.
+   */
+  @action
+  logValue(entry) {
+    logArgToConsole({
+      key: entry.key,
+      value: entry.value,
+      prefix: "plugin outlet",
     });
   }
 
-  writeToConsole(key, value, event) {
-    event.preventDefault();
-    window[`arg${globalI}`] = value;
-    /* eslint-disable no-console */
-    console.log(
-      `[plugin outlet debug] \`@${key}\` saved to global \`arg${globalI}\`, and logged below:`
-    );
-    console.log(value);
-    /* eslint-enable no-console */
-
-    globalI++;
-  }
-
   <template>
-    {{#each this.renderArgs as |arg|}}
-      <div class="key"><span class="fw">@{{arg.key}}</span>:</div>
-      <div class="value">
-        <span class="fw">{{arg.value}}</span>
-        <a
-          title="Write to console"
-          href=""
-          {{on "click" (fn this.writeToConsole arg.key arg.originalValue)}}
-        >{{icon "code"}}</a>
+    {{#if this.entries.length}}
+      <div class="block-debug-args">
+        {{#each this.entries as |entry|}}
+          <button
+            type="button"
+            class="block-debug-args__row"
+            title="Save to global variable"
+            {{on "click" (fn this.logValue entry)}}
+          >
+            <span class="block-debug-args__key">@{{entry.key}}</span>
+            <span class="block-debug-args__value">
+              <span class="block-debug-args__type">{{entry.typeInfo}}</span>
+              {{entry.displayValue}}
+            </span>
+          </button>
+        {{/each}}
       </div>
     {{else}}
-      <div class="no-arguments">(no arguments)</div>
-    {{/each}}
+      <div class="block-debug-args --empty">No arguments</div>
+    {{/if}}
   </template>
 }
