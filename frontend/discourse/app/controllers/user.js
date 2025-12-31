@@ -149,10 +149,6 @@ export default class UserController extends Controller {
     return this.siteSettings.enable_badges && badgeCount > 0;
   }
 
-  showUpcomingChanges() {
-    return this.siteSettings.enable_upcoming_changes;
-  }
-
   @discourseComputed()
   canInviteToForum() {
     return this.currentUser?.get("can_invite_to_forum");

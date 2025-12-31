@@ -136,7 +136,6 @@ export default function () {
 
     this.route("badges");
     this.route("deletedPosts", { path: "/deleted-posts" });
-    this.route("upcomingChanges", { path: "/upcoming-changes" });
 
     this.route(
       "userPrivateMessages",

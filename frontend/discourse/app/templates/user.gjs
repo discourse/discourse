@@ -492,7 +492,6 @@ export default <template>
           @showRead={{@controller.showRead}}
           @showDrafts={{@controller.showDrafts}}
           @showBookmarks={{@controller.showBookmarks}}
-          @showUpcomingChanges={{@controller.showUpcomingChanges}}
         />
 
         <div class="new-user-content-wrapper">

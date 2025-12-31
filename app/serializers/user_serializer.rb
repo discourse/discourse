@@ -355,14 +355,6 @@ class UserSerializer < UserCardSerializer
     !object.has_password?
   end
 
-  def upcoming_changes_stats
-    object.upcoming_change_stats(scope)
-  end
-
-  def include_upcoming_changes_stats?
-    SiteSetting.enable_upcoming_changes && (scope.is_admin? || user_is_current_user)
-  end
-
   private
 
   def custom_field_keys

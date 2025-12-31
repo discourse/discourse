@@ -3,11 +3,13 @@ import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import AdminEditableField from "discourse/admin/components/admin-editable-field";
 import AdminUserExportsTable from "discourse/admin/components/admin-user-exports-table";
+import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
 import IpLookup from "discourse/admin/components/ip-lookup";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import avatar from "discourse/helpers/avatar";
+import basePath from "discourse/helpers/base-path";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
@@ -929,6 +931,18 @@ export default <template>
         {{/if}}
       {{/let}}
     </section>
+  {{/if}}
+
+  {{#if @controller.currentUser.staff}}
+    {{#if @controller.model.upcoming_changes_stats}}
+      <section class="details">
+        <h1>{{i18n "admin.user.upcoming_changes.title"}}</h1>
+        <p>{{htmlSafe
+            (i18n "admin.user.upcoming_changes.description" basePath=basePath)
+          }}</p>
+        <AdminUserUpcomingChanges @user={{@controller.model}} />
+      </section>
+    {{/if}}
   {{/if}}
 
   {{#if @controller.currentUser.admin}}

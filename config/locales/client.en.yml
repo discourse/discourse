@@ -1484,13 +1484,10 @@ en:
           enabled: "Enabled?"
           why: "Why?"
         why_reasons:
-          not_in_specific_groups: "You are not in the specific groups required for this change"
-          in_specific_groups: "You are in the specific groups required for this change"
-          enabled_for_everyone: "This change is being enabled for everyone"
-          enabled_for_no_one: "This change is being disabled for everyone"
-          viewing_other_user:
-            in_specific_groups: "%{username} is in the specific groups required for this change"
-            not_in_specific_groups: "%{username} is not in the specific groups required for this change"
+          not_in_specific_groups: "The user is not in the specific groups required for this change"
+          in_specific_groups: "The user is in the specific groups required for this change"
+          enabled_for_everyone: "This change is enabled for all members"
+          enabled_for_no_one: "This change is disabled for all members"
 
       user_notifications:
         filters:
@@ -8164,6 +8161,10 @@ en:
         approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
         post_edits_count: "Post Edits"
+        upcoming_changes:
+          title: "User upcoming changes"
+          description: "To modify groups or to enable or disable upcoming changes, please visit the <a href='%{basePath}/admin/config/upcoming-changes'>upcoming changes config page</a>."
+          filter_placeholder: "Filter upcoming changes by name or description"
         exports:
           title: User exports
           download:

@@ -70,16 +70,6 @@ const UserNav = <template>
         </DNavigationItem>
       {{/if}}
 
-      {{#if @showUpcomingChanges}}
-        <DNavigationItem
-          @route="user.upcomingChanges"
-          class="user-nav__upcoming-changes"
-        >
-          {{icon "flask"}}
-          <span>{{i18n "user.upcoming_changes.title"}}</span>
-        </DNavigationItem>
-      {{/if}}
-
       <PluginOutlet
         @name="user-main-nav"
         @connectorTagName="li"
