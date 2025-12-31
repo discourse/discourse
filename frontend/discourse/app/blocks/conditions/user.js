@@ -22,7 +22,7 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * @param {boolean} [staff] - If true, passes only for staff members
  * @param {number} [minTrustLevel] - Minimum trust level required (0-4)
  * @param {number} [maxTrustLevel] - Maximum trust level allowed (0-4)
- * @param {Array<string>} [groups] - User must be member of at least ONE of these groups (OR logic)
+ * @param {Array<string>} [groups] - User must be a member of at least one of these groups (OR logic)
  *
  * @example
  * // Logged-in users only
@@ -154,8 +154,18 @@ export default class BlockUserCondition extends BlockCondition {
     return true;
   }
 
+  /**
+   * Checks if the current user is a member of at least one of the specified groups.
+   * This implements OR logic for group membership: if the user belongs to any of
+   * the provided groups, the check passes.
+   *
+   * @param {Array<string>} groupNames - Array of group names to check membership against.
+   * @returns {boolean} True if the user is in at least one of the specified groups.
+   */
   #isInAnyGroup(groupNames) {
+    // Extract the names of all groups the current user belongs to
     const userGroups = this.currentUser.groups?.map((g) => g.name) || [];
+    // Check if any of the required group names appear in the user's groups
     return groupNames.some((name) => userGroups.includes(name));
   }
 }

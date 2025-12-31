@@ -249,8 +249,10 @@ export function block(name, options = {}) {
 
       /**
        * Returns the raw block configuration. Only meaningful for root blocks.
+       * For child blocks (non-root), this returns an empty array because their
+       * configuration is managed by their parent block.
        *
-       * @returns {Array<Object>}
+       * @returns {Array<Object>} The block configurations, or an empty array for non-root blocks.
        */
       get config() {
         return this.isRoot ? super.config : [];

@@ -15,6 +15,12 @@ import devToolsState from "../state";
  * @component BlockDebugButton
  */
 export default class BlockDebugButton extends Component {
+  /**
+   * Determines if any block debug feature is currently enabled.
+   * Used to highlight the toolbar button when debugging is active.
+   *
+   * @returns {boolean} True if any block debug mode is enabled.
+   */
   get isActive() {
     return (
       devToolsState.blockDebug ||
@@ -23,16 +29,34 @@ export default class BlockDebugButton extends Component {
     );
   }
 
+  /**
+   * Toggles console logging for block condition evaluation.
+   * When enabled, logs detailed information about each block's condition checks.
+   *
+   * @param {Event} event - The checkbox change event.
+   */
   @action
   toggleConsoleLogging(event) {
     devToolsState.blockDebug = event.target.checked;
   }
 
+  /**
+   * Toggles visual overlay that displays block information on the page.
+   * When enabled, shows badges and tooltips on rendered blocks.
+   *
+   * @param {Event} event - The checkbox change event.
+   */
   @action
   toggleVisualOverlay(event) {
     devToolsState.blockVisualOverlay = event.target.checked;
   }
 
+  /**
+   * Toggles outlet boundary indicators around block outlets.
+   * When enabled, shows visual borders around each block outlet area.
+   *
+   * @param {Event} event - The checkbox change event.
+   */
   @action
   toggleOutletBoundaries(event) {
     devToolsState.blockOutletBoundaries = event.target.checked;

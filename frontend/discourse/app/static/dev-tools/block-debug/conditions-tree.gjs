@@ -9,10 +9,28 @@ import concatClass from "discourse/helpers/concat-class";
  * @param {boolean} passed - Whether the conditions passed overall
  */
 export default class ConditionsTree extends Component {
+  /**
+   * Transforms the raw conditions object/array into a flat array of formatted
+   * nodes for rendering. This is the entry point for the recursive formatting.
+   *
+   * @returns {Array<Object>} An array of condition nodes ready for rendering.
+   */
   get formattedConditions() {
     return this.#formatCondition(this.args.conditions, 0);
   }
 
+  /**
+   * Recursively transforms a condition structure into a flat array of renderable nodes.
+   * Handles four types of input:
+   * - Array: Treated as AND logic, wraps children in an AND combinator node.
+   * - Object with `any`: OR combinator, children are the `any` array items.
+   * - Object with `not`: NOT combinator, child is the negated condition.
+   * - Object with `type`: Leaf condition node with optional arguments.
+   *
+   * @param {Object|Array|null} condition - The condition to format.
+   * @param {number} depth - The nesting depth for indentation calculation.
+   * @returns {Array<Object>} An array of formatted condition nodes.
+   */
   #formatCondition(condition, depth) {
     if (!condition) {
       return [];
@@ -20,7 +38,7 @@ export default class ConditionsTree extends Component {
 
     const items = [];
 
-    // Array of conditions (AND logic)
+    // Array of conditions (AND logic) - all conditions must pass
     if (Array.isArray(condition)) {
       items.push({
         type: "AND",
@@ -30,7 +48,7 @@ export default class ConditionsTree extends Component {
       return items;
     }
 
-    // OR combinator
+    // OR combinator - at least one condition must pass
     if (condition.any !== undefined) {
       items.push({
         type: "OR",
@@ -42,7 +60,7 @@ export default class ConditionsTree extends Component {
       return items;
     }
 
-    // NOT combinator
+    // NOT combinator - inverts the result of the nested condition
     if (condition.not !== undefined) {
       items.push({
         type: "NOT",
@@ -52,7 +70,7 @@ export default class ConditionsTree extends Component {
       return items;
     }
 
-    // Single condition with type
+    // Single condition with type (leaf node) - extract type and remaining args
     const { type, ...args } = condition;
     items.push({
       type,
@@ -80,16 +98,38 @@ export default class ConditionsTree extends Component {
 
 /**
  * Renders a single condition node in the tree.
+ * Handles both combinator nodes (AND, OR, NOT) and leaf condition nodes.
+ *
+ * @param {Object} item - The condition node data from #formatCondition.
+ * @param {boolean} passed - Whether the overall conditions passed.
  */
 class ConditionNode extends Component {
+  /**
+   * Calculates the CSS padding for indentation based on the node's depth.
+   * Each level adds 12px of left padding.
+   *
+   * @returns {string} CSS style string for padding.
+   */
   get indentStyle() {
     return `padding-left: ${this.args.item.depth * 12}px`;
   }
 
+  /**
+   * Checks if this node is a boolean combinator (AND, OR, NOT) rather than
+   * a leaf condition. Combinators are styled differently in the UI.
+   *
+   * @returns {boolean} True if this is a combinator node.
+   */
   get isCombinator() {
     return ["AND", "OR", "NOT"].includes(this.args.item.type);
   }
 
+  /**
+   * Formats the condition's arguments as a comma-separated string for display.
+   * Returns null if there are no arguments to display.
+   *
+   * @returns {string|null} Formatted arguments string, or null if no arguments.
+   */
   get argsDisplay() {
     const args = this.args.item.args;
     if (!args) {
@@ -100,16 +140,27 @@ class ConditionNode extends Component {
       .join(", ");
   }
 
+  /**
+   * Formats a single argument value for display. Handles special cases like
+   * Symbols, Arrays, and RegExp to produce readable output.
+   *
+   * @param {any} value - The value to format.
+   * @returns {string} A human-readable string representation.
+   */
   #formatValue(value) {
+    // Symbols show their description (e.g., Symbol(DISCOVERY_PAGES))
     if (typeof value === "symbol") {
       return `Symbol(${value.description || ""})`;
     }
+    // Arrays are formatted recursively with brackets
     if (Array.isArray(value)) {
       return `[${value.map((v) => this.#formatValue(v)).join(", ")}]`;
     }
+    // RegExp instances show their pattern
     if (value instanceof RegExp) {
       return value.toString();
     }
+    // Everything else uses JSON serialization
     return JSON.stringify(value);
   }
 

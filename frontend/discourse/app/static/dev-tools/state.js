@@ -1,14 +1,26 @@
 import { tracked } from "@glimmer/tracking";
 
+/**
+ * Singleton class that manages the state of developer tools.
+ * State is persisted to sessionStorage so it survives page refreshes
+ * but not browser restarts. Each property is tracked for reactivity.
+ *
+ * @class DevToolsState
+ */
 class DevToolsState {
   static #SESSION_STORAGE_KEY = "discourse__dev_tools_state";
 
-  // Private backing fields for tracked properties
+  // Private backing fields for tracked properties.
+  // These are @tracked so that Glimmer re-renders when values change.
   @tracked _pluginOutletDebug;
   @tracked _blockDebug;
   @tracked _blockVisualOverlay;
   @tracked _blockOutletBoundaries;
 
+  /**
+   * Initializes the state by loading persisted values from sessionStorage.
+   * Falls back to false for any missing values.
+   */
   constructor() {
     const persisted = this.#loadPersistedState();
     this._pluginOutletDebug = persisted.pluginOutletDebug ?? false;
@@ -52,6 +64,12 @@ class DevToolsState {
     }
   }
 
+  /**
+   * Enable visual overlay showing plugin outlet debug information.
+   * When enabled, plugin outlets display badges and tooltips with outlet details.
+   *
+   * @type {boolean}
+   */
   get pluginOutletDebug() {
     return this._pluginOutletDebug;
   }

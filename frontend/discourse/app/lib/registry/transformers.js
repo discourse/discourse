@@ -1,7 +1,7 @@
 /**
  * Registry of available behavior transformers in the application.
- * Behavior transformers allow plugins and themes to modify or enhance specific behaviors and interactions.
- * These transformers are invoked at key points to allow customization of application behavior.
+ * Behavior transformers allow plugins and themes to modify or enhance the specific behaviors and interactions.
+ * These transformers are invoked at key points to allow customization of the application behavior.
  *
  * USE ONLY lowercase names
  *
@@ -20,7 +20,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 
 /**
  * Registry of available value transformers in the application.
- * Value transformers allow plugins and themes to modify or replace specific values before they are used.
+ * Value transformers allow plugins and themes to modify or replace specific values before they are used by the application.
  * Each transformer represents a specific value or computation that can be customized.
  *
  * USE ONLY lowercase names

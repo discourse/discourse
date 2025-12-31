@@ -101,42 +101,79 @@ export default class BlockRouteCondition extends BlockCondition {
     );
   }
 
+  /**
+   * Checks if a route matches a given pattern. Supports four pattern types:
+   *
+   * 1. **Symbol shortcuts** - Predefined shortcuts like `CATEGORY_PAGES` that match
+   *    multiple related routes.
+   * 2. **RegExp** - Regular expression for advanced pattern matching.
+   * 3. **Wildcard** - String ending with `.*` that matches any route with that prefix
+   *    (e.g., `"category.*"` matches `"category"`, `"category.none"`, `"category.all"`).
+   * 4. **Exact match** - String that must match the route name exactly.
+   *
+   * @param {string} route - The current route name to test.
+   * @param {string|RegExp|Symbol} pattern - The pattern to match against.
+   * @returns {boolean} True if the route matches the pattern.
+   */
   #matchesPattern(route, pattern) {
-    // Symbol shortcut pattern
+    // Symbol shortcut pattern (e.g., BlockRouteConditionShortcuts.CATEGORY_PAGES)
     if (typeof pattern === "symbol") {
       return this.#matchesShortcut(pattern);
     }
 
-    // RegExp pattern
+    // RegExp pattern for advanced matching (e.g., /^topic\.\d+$/)
     if (pattern instanceof RegExp) {
       return pattern.test(route);
     }
 
-    // Wildcard pattern: "category.*" matches "category.none", "category.all", etc.
+    // Wildcard pattern: "category.*" matches "category", "category.none", "category.all", etc.
+    // This provides glob-style matching for route hierarchies.
     if (pattern.endsWith(".*")) {
       const prefix = pattern.slice(0, -2);
       return route === prefix || route.startsWith(`${prefix}.`);
     }
 
-    // Exact match
+    // Exact match: route name must equal the pattern string exactly
     return route === pattern;
   }
 
+  /**
+   * Evaluates a route shortcut symbol against the current discovery service state.
+   * Shortcuts provide semantic route matching based on page context rather than
+   * route name patterns.
+   *
+   * - `CATEGORY_PAGES` - True when viewing any category (category is set).
+   * - `DISCOVERY_PAGES` - True on discovery routes (latest, top, etc.) but NOT on
+   *   custom homepage.
+   * - `HOMEPAGE` - True only on the custom homepage route.
+   * - `TAG_PAGES` - True when viewing any tag page (tag is set).
+   * - `TOP_MENU` - True on discovery routes excluding category, tag, and custom
+   *   homepage (i.e., the main navigation menu items).
+   *
+   * @param {Symbol} shortcut - A symbol from BlockRouteConditionShortcuts.
+   * @returns {boolean} True if the current route matches the shortcut's criteria.
+   */
   #matchesShortcut(shortcut) {
     switch (shortcut) {
       case BlockRouteConditionShortcuts.CATEGORY_PAGES:
+        // True when viewing any category page
         return !!this.discovery.category;
 
       case BlockRouteConditionShortcuts.DISCOVERY_PAGES:
+        // True on discovery routes (latest, top, new, etc.) excluding custom homepage
         return this.discovery.onDiscoveryRoute && !this.discovery.custom;
 
       case BlockRouteConditionShortcuts.HOMEPAGE:
+        // True only on the custom homepage route
         return this.discovery.custom;
 
       case BlockRouteConditionShortcuts.TAG_PAGES:
+        // True when viewing any tag page
         return !!this.discovery.tag;
 
       case BlockRouteConditionShortcuts.TOP_MENU:
+        // True on discovery routes that appear in the top navigation menu
+        // (excludes category pages, tag pages, and custom homepage)
         return (
           this.discovery.onDiscoveryRoute &&
           !this.discovery.category &&
@@ -145,6 +182,7 @@ export default class BlockRouteCondition extends BlockCondition {
         );
 
       default:
+        // Unknown shortcuts never match
         return false;
     }
   }

@@ -17,10 +17,22 @@ import ConditionsTree from "./conditions-tree";
  * @param {Component} WrappedComponent - The actual block component to render
  */
 export default class BlockInfo extends Component {
+  /**
+   * Checks whether this block has any conditions configured.
+   * Used to conditionally render the conditions section in the tooltip.
+   *
+   * @returns {boolean} True if the block has conditions defined.
+   */
   get hasConditions() {
     return this.args.conditions != null;
   }
 
+  /**
+   * Checks whether this block has any arguments passed to it.
+   * Used to conditionally render the arguments section in the tooltip.
+   *
+   * @returns {boolean} True if the block has at least one argument.
+   */
   get hasArgs() {
     return (
       this.args.blockArgs != null && Object.keys(this.args.blockArgs).length > 0

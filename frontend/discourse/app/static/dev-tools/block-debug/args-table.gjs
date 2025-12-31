@@ -11,8 +11,19 @@ import { action } from "@ember/object";
  * @param {Object} args - The arguments to display
  */
 export default class ArgsTable extends Component {
+  /**
+   * Counter for generating unique variable names when logging values to the console.
+   *
+   * @type {number}
+   */
   #logCounter = 0;
 
+  /**
+   * Transforms the raw args object into an array of entry objects for display.
+   * Each entry contains the original key/value plus formatted display representations.
+   *
+   * @returns {Array<{key: string, value: any, displayValue: string, typeInfo: string}>}
+   */
   get entries() {
     const args = this.args.args;
     if (!args || typeof args !== "object") {
@@ -26,25 +37,43 @@ export default class ArgsTable extends Component {
     }));
   }
 
+  /**
+   * Formats a value for display in the debug table. Each type is handled differently
+   * to provide a concise yet informative representation that fits in the UI.
+   *
+   * @param {any} value - The value to format.
+   * @returns {string} A human-readable string representation of the value.
+   */
   #formatValue(value) {
+    // Null and undefined are displayed as literal keywords
     if (value === null) {
       return "null";
     }
     if (value === undefined) {
       return "undefined";
     }
+
+    // Strings are quoted and truncated to prevent UI overflow
     if (typeof value === "string") {
       return `"${value.length > 50 ? value.slice(0, 50) + "..." : value}"`;
     }
+
+    // Numbers and booleans can be displayed directly as their string representation
     if (typeof value === "number" || typeof value === "boolean") {
       return String(value);
     }
+
+    // Arrays show their length since contents may be large
     if (Array.isArray(value)) {
       return `Array(${value.length})`;
     }
+
+    // Functions show their name to help identify callbacks
     if (typeof value === "function") {
       return `fn ${value.name || "anonymous"}()`;
     }
+
+    // Objects show their constructor name (e.g., "User {...}") or just "{...}"
     if (typeof value === "object") {
       const name = value.constructor?.name;
       if (name && name !== "Object") {
@@ -52,9 +81,18 @@ export default class ArgsTable extends Component {
       }
       return "{...}";
     }
+
+    // Fallback for any other types (symbols, bigints, etc.)
     return String(value);
   }
 
+  /**
+   * Determines the type label to display for a value. This provides a quick
+   * visual indicator of what kind of data is in each argument.
+   *
+   * @param {any} value - The value to get the type info for.
+   * @returns {string} A type label (e.g., "string", "number", "array", "object").
+   */
   #getTypeInfo(value) {
     if (value === null) {
       return "null";
@@ -62,12 +100,19 @@ export default class ArgsTable extends Component {
     if (value === undefined) {
       return "undefined";
     }
+    // Arrays are identified separately since typeof returns "object" for arrays
     if (Array.isArray(value)) {
       return "array";
     }
     return typeof value;
   }
 
+  /**
+   * Logs the argument value to the console and stores it in a global variable
+   * for easy inspection. The variable is named `arg0`, `arg1`, etc.
+   *
+   * @param {{key: string, value: any}} entry - The entry to log.
+   */
   @action
   logValue(entry) {
     const varName = `arg${this.#logCounter++}`;
