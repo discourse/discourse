@@ -311,6 +311,66 @@ RSpec.describe BadgeGranter do
         UserBadge.exists?(user_id: user.id, badge_id: badge_for_having_cool_username.id),
       ).to eq(false)
     end
+
+    it "does not revoke manually granted badges even when user no longer satisfies the query" do
+      badge_for_having_cool_username =
+        Fabricate(
+          :badge,
+          query:
+            "SELECT users.id user_id, CURRENT_TIMESTAMP granted_at FROM users WHERE users.username = 'cool_username'",
+          auto_revoke: true,
+        )
+
+      BadgeGranter.grant(badge_for_having_cool_username, user, granted_by: Fabricate(:admin))
+
+      expect(
+        UserBadge.exists?(user_id: user.id, badge_id: badge_for_having_cool_username.id),
+      ).to eq(true)
+
+      revoked_user_ids = []
+
+      BadgeGranter.backfill(
+        badge_for_having_cool_username,
+        revoked_callback: ->(user_ids) { revoked_user_ids.concat(user_ids) },
+      )
+
+      expect(revoked_user_ids).to be_empty
+
+      expect(
+        UserBadge.exists?(user_id: user.id, badge_id: badge_for_having_cool_username.id),
+      ).to eq(true)
+    end
+
+    it "revokes only auto-granted badges when user has both auto and manual grants of a multiple_grant badge" do
+      user.update!(username: "cool_username")
+
+      multiple_grant_badge =
+        Fabricate(
+          :badge,
+          multiple_grant: true,
+          query:
+            "SELECT users.id user_id, CURRENT_TIMESTAMP granted_at FROM users WHERE users.username = 'cool_username'",
+          auto_revoke: true,
+        )
+
+      BadgeGranter.backfill(multiple_grant_badge)
+
+      auto_granted =
+        UserBadge.find_by(user_id: user.id, badge_id: multiple_grant_badge.id, granted_by_id: -1)
+      expect(auto_granted).to be_present
+
+      BadgeGranter.grant(multiple_grant_badge, user, granted_by: Fabricate(:admin))
+
+      expect(UserBadge.where(user_id: user.id, badge_id: multiple_grant_badge.id).count).to eq(2)
+
+      user.update!(username: "not_cool_username")
+
+      BadgeGranter.backfill(multiple_grant_badge)
+
+      remaining_badges = UserBadge.where(user_id: user.id, badge_id: multiple_grant_badge.id)
+      expect(remaining_badges.count).to eq(1)
+      expect(remaining_badges.first.granted_by_id).not_to eq(-1)
+    end
   end
 
   describe "grant" do

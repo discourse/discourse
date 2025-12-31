@@ -88,11 +88,11 @@ RSpec.describe Badge do
 
     context "when has query" do
       before { badge.query = "SELECT id FROM users" }
-      it { is_expected.to be false }
+      it { is_expected.to be true }
     end
 
-    context "when neither system nor has query" do
-      before { badge.update_columns(system: false, query: nil) }
+    context "when not a system badge" do
+      before { badge.update_columns(system: false) }
       it { is_expected.to be true }
     end
   end
