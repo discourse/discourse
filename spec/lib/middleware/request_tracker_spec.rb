@@ -353,11 +353,11 @@ RSpec.describe Middleware::RequestTracker do
 
         if deferred
           headers["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"] = "1"
-          headers["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_TOPIC_ID"] = topic.id
+          headers["HTTP_DISCOURSE_TRACKING_TOPIC_ID"] = topic.id
           path = "/message-bus/abcde/poll"
         else
           headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
-          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
+          headers["HTTP_DISCOURSE_TRACKING_TOPIC_ID"] = topic.id
           path = URI.parse(topic.url).path
         end
 

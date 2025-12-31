@@ -111,6 +111,7 @@ describe "Request tracking", type: :system do
       expect(event[:ip_address]).to eq("::1")
       expect(event[:referrer]).to be_blank
       expect(event[:session_id]).to be_present
+      expect(event[:topic_id]).to be_blank
 
       expect(events.size).to eq(1)
       event = events.last
@@ -302,6 +303,7 @@ describe "Request tracking", type: :system do
         expect(event[:ip_address]).to eq("::1")
         expect(event[:referrer]).to be_blank
         expect(event[:session_id]).to be_present
+        expect(event[:topic_id]).to eq(topic.id)
       end
 
       it "tracks user viewing a topic correctly with explicit tracking" do

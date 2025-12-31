@@ -578,6 +578,7 @@ class Middleware::RequestTracker
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
       session_id: data[:tracking_session_id],
+      topic_id: data[:topic_id],
     }
   end
 end
