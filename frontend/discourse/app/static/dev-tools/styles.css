@@ -168,39 +168,11 @@
 }
 
 .plugin-outlet-info__content {
-  display: grid;
-  grid-template-columns: min-content 1fr;
   font-size: 14px;
-  gap: 10px;
   min-width: 300px;
   max-width: 100%;
   width: 100%;
   overflow: hidden;
-
-  & > div {
-    min-width: 0;
-  }
-
-  .fw {
-    font-family: var(--dev-tools-mono-font);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background: var(--primary-very-low);
-  }
-
-  .value {
-    display: flex;
-    gap: 5px;
-  }
-
-  .no-arguments {
-    grid-column: span 2;
-  }
-
-  a {
-    color: var(--primary-medium);
-  }
 }
 
 /* Block Debug Overlay */

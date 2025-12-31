@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { logArgToConsole } from "../lib/console-logger";
 
 /**
  * Displays block arguments in a formatted table.
@@ -11,13 +12,6 @@ import { action } from "@ember/object";
  * @param {Object} args - The arguments to display
  */
 export default class ArgsTable extends Component {
-  /**
-   * Counter for generating unique variable names when logging values to the console.
-   *
-   * @type {number}
-   */
-  #logCounter = 0;
-
   /**
    * Transforms the raw args object into an array of entry objects for display.
    * Each entry contains the original key/value plus formatted display representations.
@@ -109,23 +103,13 @@ export default class ArgsTable extends Component {
 
   /**
    * Logs the argument value to the console and stores it in a global variable
-   * for easy inspection. The variable is named `arg0`, `arg1`, etc.
+   * for easy inspection. The variable is named `arg1`, `arg2`, etc.
    *
    * @param {{key: string, value: any}} entry - The entry to log.
    */
   @action
   logValue(entry) {
-    const varName = `arg${this.#logCounter++}`;
-    window[varName] = entry.value;
-    // eslint-disable-next-line no-console
-    console.log(
-      `%c${varName}%c = %c${entry.key}%c`,
-      "color: #9c27b0; font-weight: bold",
-      "",
-      "color: #2196f3",
-      "",
-      entry.value
-    );
+    logArgToConsole({ key: entry.key, value: entry.value });
   }
 
   <template>
@@ -135,7 +119,7 @@ export default class ArgsTable extends Component {
           <button
             type="button"
             class="block-debug-args__row"
-            title="Click to log to console"
+            title="Save to global variable"
             {{on "click" (fn this.logValue entry)}}
           >
             <span class="block-debug-args__key">{{entry.key}}</span>
