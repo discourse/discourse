@@ -15,6 +15,7 @@
 <% end %>
 <%= canonical_link_tag %>
 <%= render_sitelinks_search_tag %>
+<%= discourse_tracking_session_tag %>
 <% if SiteSetting.google_site_verification_token.present? %>
   <meta name="google-site-verification" content="<%= SiteSetting.google_site_verification_token %>">
 <% end %>

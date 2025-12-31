@@ -133,7 +133,7 @@ export function ajax() {
       }
 
       if (_topicId) {
-        args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
+        args.headers["Discourse-Tracking-Topic-Id"] = _topicId;
         _topicId = null;
       }
     }

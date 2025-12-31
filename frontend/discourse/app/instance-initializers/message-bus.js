@@ -3,6 +3,7 @@ import { handleLogoff } from "discourse/lib/ajax";
 import { isProduction, isTesting } from "discourse/lib/environment";
 // Initialize the message bus to receive messages.
 import getURL from "discourse/lib/get-url";
+import { MAX_REFERRER_LENGTH } from "discourse/lib/page-tracker";
 import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
@@ -31,13 +32,17 @@ function mbAjax(messageBus, opts) {
 
   if (_sendDeferredPageview) {
     opts.headers["Discourse-Deferred-Track-View"] = "true";
-    opts.headers["Discourse-Tracking-Session-Id"] = messageBus.clientId;
+    opts.headers["Discourse-Tracking-Session-Id"] = document.querySelector(
+      "meta[name=discourse-tracking-session-id]"
+    ).content;
     opts.headers["Discourse-Tracking-Url"] = window.location.href;
-    opts.headers["Discourse-Tracking-Referrer"] = document.referrer;
+    opts.headers["Discourse-Tracking-Referrer"] = document.referrer.slice(
+      0,
+      MAX_REFERRER_LENGTH
+    );
 
     if (_deferredViewTopicId) {
-      opts.headers["Discourse-Deferred-Track-View-Topic-Id"] =
-        _deferredViewTopicId;
+      opts.headers["Discourse-Tracking-Topic-Id"] = _deferredViewTopicId;
     }
 
     _sendDeferredPageview = false;

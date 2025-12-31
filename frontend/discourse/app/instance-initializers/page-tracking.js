@@ -6,6 +6,7 @@ import {
 } from "discourse/lib/ajax";
 import {
   googleTagManagerPageChanged,
+  MAX_REFERRER_LENGTH,
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
@@ -91,7 +92,6 @@ export default {
     }
 
     const owner = getOwner(this);
-    const messageBus = owner.lookup("service:message-bus");
     const router = owner.lookup("service:router");
 
     let path = transition.intent?.url;
@@ -111,9 +111,10 @@ export default {
     }
 
     trackNextAjaxAsPageview(
-      messageBus.clientId,
+      document.querySelector("meta[name=discourse-tracking-session-id]")
+        .content,
       new URL(path, window.location.origin).href,
-      window.location.href
+      window.location.href.slice(0, MAX_REFERRER_LENGTH)
     );
 
     if (

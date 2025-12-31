@@ -101,27 +101,29 @@ class Middleware::RequestTracker
     end
 
     if data[:browser_page_view] && !data[:is_crawler]
-      DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
-    end
-
-    if data[:browser_track_view] && !data[:is_crawler]
       if data[:has_auth_cookie]
-        ApplicationRequest.increment!(:page_view_logged_in_browser)
-        ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+        ActiveRecord::Base.transaction do
+          ApplicationRequest.increment!(:page_view_logged_in_browser)
+          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+          DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
 
-        if data[:topic_id].present? && data[:current_user_id].present?
-          TopicsController.defer_topic_view(
-            data[:topic_id],
-            data[:request_remote_ip],
-            data[:current_user_id],
-          )
+          if data[:topic_id].present? && data[:current_user_id].present?
+            TopicsController.defer_topic_view(
+              data[:topic_id],
+              data[:request_remote_ip],
+              data[:current_user_id],
+            )
+          end
         end
       elsif !SiteSetting.login_required
-        ApplicationRequest.increment!(:page_view_anon_browser)
-        ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+        ActiveRecord::Base.transaction do
+          ApplicationRequest.increment!(:page_view_anon_browser)
+          ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+          DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
 
-        if data[:topic_id].present?
-          TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
+          if data[:topic_id].present?
+            TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
+          end
         end
       end
     end
@@ -162,18 +164,7 @@ class Middleware::RequestTracker
 
     view_tracking_data = extract_view_tracking_data(env, status, headers)
 
-    # Discourse-Deferred-Track-View-Topic-ID is set in the same place as
-    # Discourse-Deferred-Track-View, piggybacked on MessageBus on initial
-    # page load.
-    #
-    # Discourse-Track-View-Topic-ID is set when navigating to a topic on
-    # Ember route change in ajax.js
-    topic_id =
-      if view_tracking_data[:deferred_track_view]
-        env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_TOPIC_ID"]
-      elsif view_tracking_data[:explicit_track_view] || view_tracking_data[:implicit_track_view]
-        env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
-      end
+    topic_id = env["HTTP_DISCOURSE_TRACKING_TOPIC_ID"]
 
     auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request)
     auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
@@ -186,8 +177,7 @@ class Middleware::RequestTracker
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
     current_user_id =
-      if view_tracking_data[:deferred_track_view] || view_tracking_data[:explicit_track_view] ||
-           view_tracking_data[:implicit_track_view]
+      if view_tracking_data[:deferred_track_view] || view_tracking_data[:explicit_track_view]
         begin
           (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
         rescue Discourse::InvalidAccess => err

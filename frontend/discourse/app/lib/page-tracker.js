@@ -5,6 +5,8 @@ let _started = false;
 let cache = {};
 let transitionCount = 0;
 
+export const MAX_REFERRER_LENGTH = 2000;
+
 export function setTransient(key, data, count) {
   cache[key] = { data, target: transitionCount + count };
 }

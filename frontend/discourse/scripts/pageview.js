@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
         "Discourse-Deferred-Track-View": "true",
         "Discourse-Tracking-Url": window.location.href,
         "Discourse-Tracking-Referrer": document.referrer,
-        "Discourse-Tracking-Session-Id": self.crypto
-          .randomUUID()
-          .replace(/-/g, ""),
+        "Discourse-Tracking-Session-Id": document.querySelector(
+          "meta[name=discourse-tracking-session-id]"
+        ).content,
       },
     });
   }

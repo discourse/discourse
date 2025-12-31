@@ -395,6 +395,12 @@ module ApplicationHelper
     end
   end
 
+  def discourse_tracking_session_tag
+    <<~HTML.html_safe
+      <meta name="discourse-tracking-session-id" content="#{SecureRandom.uuid}">
+    HTML
+  end
+
   def gsub_emoji_to_unicode(str)
     Emoji.gsub_emoji_to_unicode(str)
   end
