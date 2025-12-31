@@ -4,19 +4,45 @@
   Native CSS nesting can be used safely, because developers who use this tool are expected to have modern browsers.
 */
 
-.plugin-outlet-info {
-  --plugin-outlet-info-border-color: #080;
-  --plugin-outlet-info-background-color: #0c0;
-  margin: 1px;
-  border: 1px solid var(--plugin-outlet-info-border-color);
-  background-color: var(--plugin-outlet-info-background-color);
-  color: white;
-  text-align: center;
-  font-size: 0.75rem !important;
-  font-weight: normal;
-  padding: 1px 5px;
+/* Plugin Outlet Debug - green tones (distinct from block outlets which use amber/orange) */
+.plugin-outlet-debug {
+  position: relative;
+  border: 1px dashed #16a34a;
+  margin: 2px;
+  background: rgb(22, 163, 74, 0.05);
+
+  /* Wrapper outlets are compact inline markers */
+  &.--wrapper {
+    border-color: #2563eb;
+    background: rgb(37, 99, 235, 0.05);
+
+    .plugin-outlet-debug__badge {
+      position: static;
+      background: #2563eb;
+      border-radius: 4px;
+
+      &:hover {
+        background: #1d4ed8;
+      }
+    }
+  }
+}
+
+.plugin-outlet-debug__badge {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  z-index: 1000;
   display: inline-flex;
   align-items: center;
+  gap: 4px;
+  background: #16a34a;
+  color: white !important;
+  padding: 2px 5px !important;
+  font-size: 0.75rem !important;
+  font-weight: bold;
+  border-radius: 0 0 4px 0;
+  cursor: pointer;
 
   .d-icon {
     color: white !important;
@@ -24,9 +50,8 @@
     width: 0.75rem !important;
   }
 
-  &.--wrapper {
-    --plugin-outlet-info-border-color: #00c;
-    --plugin-outlet-info-background-color: #88f;
+  &:hover {
+    background: #15803d;
   }
 }
 
