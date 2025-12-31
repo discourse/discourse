@@ -150,6 +150,8 @@ pl_PL:
         invalid_type: "%{type} nie jest prawidłowym typem"
         humanize_not_valid_string_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być ciągiem znaków."
         not_valid_string_value: "musi być ciągiem znaków"
+        humanize_not_valid_datetime_value: "Właściwość wskaźnika JSON „%{property_json_pointer}” musi być prawidłową wartością daty i godziny."
+        not_valid_datetime_value: "musi być prawidłową datą i godziną"
         humanize_not_valid_integer_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być liczbą całkowitą."
         not_valid_integer_value: "musi być liczbą całkowitą"
         humanize_not_valid_float_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być typu float."
@@ -2635,6 +2637,7 @@ pl_PL:
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
+      invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
       invalid_email: "Nieprawidłowy adres e-mail."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
       valid_username: "Istnieje użytkownik o tej nazwie."
