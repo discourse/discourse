@@ -34,7 +34,7 @@ function mbAjax(messageBus, opts) {
     opts.headers["Discourse-Deferred-Track-View"] = "true";
     opts.headers["Discourse-Tracking-Session-Id"] = document.querySelector(
       "meta[name=discourse-tracking-session-id]"
-    ).content;
+    )?.content;
     opts.headers["Discourse-Tracking-Url"] = window.location.href;
     opts.headers["Discourse-Tracking-Referrer"] = document.referrer.slice(
       0,

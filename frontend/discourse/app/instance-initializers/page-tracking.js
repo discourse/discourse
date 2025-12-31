@@ -112,7 +112,7 @@ export default {
 
     trackNextAjaxAsPageview(
       document.querySelector("meta[name=discourse-tracking-session-id]")
-        .content,
+        ?.content,
       new URL(path, window.location.origin).href,
       window.location.href.slice(0, MAX_REFERRER_LENGTH)
     );
