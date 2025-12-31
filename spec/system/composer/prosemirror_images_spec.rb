@@ -193,4 +193,67 @@ describe "Composer - ProseMirror - Images", type: :system do
       expect(composer.image_grid).to have_single_grid_with_images(5)
     end
   end
+
+  describe "image lightbox" do
+    def click_image_to_open_lightbox
+      page.execute_script(<<~JS)
+        document.querySelector('.composer-image-node img.ProseMirror-selectednode')?.click();
+      JS
+      expect(page).to have_css(".pswp--open")
+    end
+
+    def close_lightbox
+      find(".pswp__button--close").click
+      expect(page).to have_no_css(".pswp--open")
+    end
+
+    it "opens lightbox with single image" do
+      open_composer
+      paste_and_click_image
+
+      click_image_to_open_lightbox
+
+      expect(page).to have_no_css(".pswp__counter")
+      expect(page).to have_no_css(".pswp__button--arrow--next")
+      expect(page).to have_no_css(".pswp__button--arrow--prev")
+
+      close_lightbox
+
+      expect(rich).to have_css(".composer-image-node img.ProseMirror-selectednode")
+      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+    end
+
+    it "opens lightbox with gallery when multiple images are present" do
+      open_composer
+      composer.type_content("![image1](upload://test1.png)\n\n![image2](upload://test2.png)")
+
+      rich.all(".composer-image-node img").first.click
+      click_image_to_open_lightbox
+
+      expect(page).to have_css(".pswp__counter", text: "1 / 2")
+      expect(page).to have_css(".pswp__button--arrow--next")
+      expect(page).to have_css(".pswp__button--arrow--prev")
+
+      close_lightbox
+
+      expect(rich).to have_css(".composer-image-node img.ProseMirror-selectednode")
+      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+    end
+
+    it "navigates between images using arrow buttons" do
+      open_composer
+      composer.type_content("![first](upload://test1.png)\n\n![second](upload://test2.png)")
+
+      rich.all(".composer-image-node img").first.click
+      click_image_to_open_lightbox
+
+      expect(page).to have_css(".pswp__counter", text: "1 / 2")
+
+      find(".pswp__button--arrow--next").click
+      expect(page).to have_css(".pswp__counter", text: "2 / 2")
+
+      find(".pswp__button--arrow--prev").click
+      expect(page).to have_css(".pswp__counter", text: "1 / 2")
+    end
+  end
 end
