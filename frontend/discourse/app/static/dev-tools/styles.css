@@ -13,8 +13,8 @@
 
   /* Wrapper outlets are compact inline markers */
   &.--wrapper {
-    border-color: #2563eb;
-    background: rgb(37, 99, 235, 0.05);
+    border: none;
+    background: none;
 
     .plugin-outlet-debug__badge {
       position: static;
@@ -43,11 +43,14 @@
   font-weight: bold;
   border-radius: 0 0 4px 0;
   cursor: pointer;
+  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.5);
 
   .d-icon {
     color: white !important;
     font-size: 0.75rem !important;
+    font-weight: bold;
     width: 0.75rem !important;
+    filter: drop-shadow(1px 1px 2px rgb(0, 0, 0, 0.5));
   }
 
   &:hover {
@@ -164,6 +167,7 @@
   position: relative;
   border: 1px dotted #d97706;
   margin: 2px;
+  background: rgb(217, 119, 6, 0.05);
 
   &.--rendered {
     border-color: #d97706;
@@ -185,11 +189,14 @@
   font-weight: bold;
   border-radius: 0 0 4px 0;
   cursor: pointer;
+  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.5);
 
   .d-icon {
     color: white !important;
     font-size: 0.75rem !important;
+    font-weight: bold;
     width: 0.75rem !important;
+    filter: drop-shadow(1px 1px 2px rgb(0, 0, 0, 0.5));
   }
 
   &:hover {
@@ -228,11 +235,14 @@
   font-weight: bold;
   border-radius: 0 0 4px 0;
   cursor: pointer;
+  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.5);
 
   .d-icon {
     color: white !important;
     font-size: 0.75rem !important;
+    font-weight: bold;
     width: 0.75rem !important;
+    filter: drop-shadow(1px 1px 2px rgb(0, 0, 0, 0.5));
   }
 
   &:hover {
@@ -247,6 +257,7 @@
   margin: 2px;
   padding: 4px;
   min-height: 20px;
+  background: rgb(245, 158, 11, 0.05);
 }
 
 .block-outlet-debug__badge {
@@ -262,11 +273,14 @@
   font-size: 0.75rem !important;
   font-weight: bold;
   border-radius: 0 0 4px 0;
+  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.5);
 
   .d-icon {
     color: white !important;
     font-size: 0.75rem !important;
+    font-weight: bold;
     width: 0.75rem !important;
+    filter: drop-shadow(1px 1px 2px rgb(0, 0, 0, 0.5));
   }
 }
 
