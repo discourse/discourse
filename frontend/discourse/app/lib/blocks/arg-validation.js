@@ -1,6 +1,13 @@
 import { raiseBlockError } from "discourse/lib/blocks/error";
 
 /**
+ * Valid arg name pattern: must be a valid JavaScript identifier.
+ * Starts with a letter, followed by letters, numbers, or underscores.
+ * Note: Names starting with underscore are reserved for internal use.
+ */
+const VALID_ARG_NAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+
+/**
  * Valid arg types for block metadata schema.
  */
 export const VALID_ARG_TYPES = Object.freeze([
@@ -39,6 +46,15 @@ export function validateArgsSchema(argsSchema, blockName) {
   }
 
   for (const [argName, argDef] of Object.entries(argsSchema)) {
+    // Validate arg name format
+    if (!VALID_ARG_NAME_PATTERN.test(argName)) {
+      raiseBlockError(
+        `Block "${blockName}": arg name "${argName}" is invalid. ` +
+          `Arg names must start with a letter and contain only letters, numbers, and underscores.`
+      );
+      continue;
+    }
+
     if (!argDef || typeof argDef !== "object") {
       raiseBlockError(
         `Block "${blockName}": arg "${argName}" must be an object with a "type" property.`

@@ -285,6 +285,11 @@ export default class Blocks extends Service {
 
     // Array of conditions (AND logic - all must pass)
     if (Array.isArray(conditionSpec)) {
+      // Empty array is vacuous truth - no conditions to fail
+      if (conditionSpec.length === 0) {
+        return true;
+      }
+
       // Log combinator BEFORE children (result=null as placeholder)
       if (isLoggingEnabled) {
         blockDebugLogger.logCondition({
@@ -316,6 +321,11 @@ export default class Blocks extends Service {
 
     // OR combinator (at least one must pass)
     if (conditionSpec.any !== undefined) {
+      // Empty OR array means no conditions can pass
+      if (conditionSpec.any.length === 0) {
+        return false;
+      }
+
       // Log combinator BEFORE children (result=null as placeholder)
       if (isLoggingEnabled) {
         blockDebugLogger.logCondition({

@@ -8,6 +8,11 @@ import {
   isBlock,
   renderBlocks,
 } from "discourse/components/block-outlet";
+import {
+  _registerBlock,
+  blockRegistry,
+  withTestBlockRegistration,
+} from "discourse/lib/blocks/registration";
 
 module("Unit | Lib | block-outlet", function (hooks) {
   setupTest(hooks);
@@ -158,6 +163,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("valid-block")
       class ValidBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(ValidBlock));
+
       assert.throws(
         () => renderBlocks("unknown-outlet", [{ block: ValidBlock }]),
         /Unknown block outlet/
@@ -188,6 +195,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("child-block")
       class ChildBlock extends Component {}
 
+      withTestBlockRegistration(() => {
+        _registerBlock(LeafBlock);
+        _registerBlock(ChildBlock);
+      });
+
       assert.throws(
         () =>
           renderBlocks("hero-blocks", [
@@ -211,6 +223,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("reserved-test")
       class ReservedTestBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(ReservedTestBlock));
+
       assert.throws(
         () =>
           renderBlocks("hero-blocks", [
@@ -226,6 +240,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
     test("throws for reserved arg name: outletName", function (assert) {
       @block("reserved-outlet")
       class ReservedOutletBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(ReservedOutletBlock));
 
       assert.throws(
         () =>
@@ -243,6 +259,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("reserved-children")
       class ReservedChildrenBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(ReservedChildrenBlock));
+
       assert.throws(
         () =>
           renderBlocks("hero-blocks", [
@@ -258,6 +276,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
     test("throws for reserved arg name: conditions", function (assert) {
       @block("reserved-conditions")
       class ReservedConditionsBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(ReservedConditionsBlock));
 
       assert.throws(
         () =>
@@ -275,6 +295,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("reserved-block-symbol")
       class ReservedBlockSymbolBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(ReservedBlockSymbolBlock));
+
       assert.throws(
         () =>
           renderBlocks("hero-blocks", [
@@ -288,14 +310,18 @@ module("Unit | Lib | block-outlet", function (hooks) {
     });
 
     test("throws for underscore-prefixed arg names", function (assert) {
-      @block("underscore-arg")
-      class UnderscoreArgBlock extends Component {}
+      @block("underscore-arg-reserved")
+      class UnderscoreArgReservedBlock extends Component {}
+
+      withTestBlockRegistration(() =>
+        _registerBlock(UnderscoreArgReservedBlock)
+      );
 
       assert.throws(
         () =>
           renderBlocks("hero-blocks", [
             {
-              block: UnderscoreArgBlock,
+              block: UnderscoreArgReservedBlock,
               args: { _privateArg: "value" },
             },
           ]),
@@ -309,6 +335,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       // eslint-disable-next-line ember/no-empty-glimmer-component-classes
       class NotABlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(NestedChildBlock));
 
       assert.throws(
         () =>
@@ -325,6 +353,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
     test("validates conditions via evaluator service", function (assert) {
       @block("condition-validation")
       class ConditionValidationBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(ConditionValidationBlock));
 
       const owner = getOwner(this);
 
@@ -348,6 +378,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("valid-config")
       class ValidConfigBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(ValidConfigBlock));
+
       renderBlocks("sidebar-blocks", [
         { block: ValidConfigBlock, args: { title: "Test" } },
       ]);
@@ -358,6 +390,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
     test("accepts container block with children", function (assert) {
       @block("container-child")
       class ContainerChildBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(ContainerChildBlock));
 
       renderBlocks("main-outlet-blocks", [
         {
@@ -372,6 +406,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
     test("accepts block with valid conditions", function (assert) {
       @block("valid-conditions")
       class ValidConditionsBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(ValidConditionsBlock));
 
       const owner = getOwner(this);
 
@@ -397,6 +433,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class RequiredArgBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(RequiredArgBlock));
+
       assert.throws(
         () =>
           renderBlocks("hero-blocks", [{ block: RequiredArgBlock, args: {} }]),
@@ -411,6 +449,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
         },
       })
       class StringArgBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(StringArgBlock));
 
       assert.throws(
         () =>
@@ -429,6 +469,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class NumberArgBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(NumberArgBlock));
+
       assert.throws(
         () =>
           renderBlocks("hero-blocks", [
@@ -445,6 +487,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
         },
       })
       class BooleanArgBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(BooleanArgBlock));
 
       assert.throws(
         () =>
@@ -463,6 +507,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class ArrayArgBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(ArrayArgBlock));
+
       assert.throws(
         () =>
           renderBlocks("hero-blocks", [
@@ -479,6 +525,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
         },
       })
       class ArrayItemTypeBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(ArrayItemTypeBlock));
 
       assert.throws(
         () =>
@@ -502,6 +550,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
         },
       })
       class ValidSchemaArgsBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(ValidSchemaArgsBlock));
 
       renderBlocks("hero-blocks", [
         {
@@ -527,6 +577,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class OptionalArgsBlock extends Component {}
 
+      withTestBlockRegistration(() => _registerBlock(OptionalArgsBlock));
+
       renderBlocks("hero-blocks", [
         {
           block: OptionalArgsBlock,
@@ -535,6 +587,125 @@ module("Unit | Lib | block-outlet", function (hooks) {
       ]);
 
       assert.true(true, "no error thrown when optional args missing");
+    });
+  });
+
+  module("edge cases", function () {
+    test("block names with invalid characters throw error", function (assert) {
+      assert.throws(() => {
+        @block("Invalid_Name")
+        class InvalidNameBlock extends Component {}
+
+        withTestBlockRegistration(() => _registerBlock(InvalidNameBlock));
+      }, /Block name .* is invalid/);
+    });
+
+    test("block names starting with number throw error", function (assert) {
+      assert.throws(() => {
+        @block("123-block")
+        class NumericStartBlock extends Component {}
+
+        withTestBlockRegistration(() => _registerBlock(NumericStartBlock));
+      }, /Block name .* is invalid/);
+    });
+
+    test("block names with uppercase throw error", function (assert) {
+      assert.throws(() => {
+        @block("MyBlock")
+        class UppercaseBlock extends Component {}
+
+        withTestBlockRegistration(() => _registerBlock(UppercaseBlock));
+      }, /Block name .* is invalid/);
+    });
+
+    test("valid block names with hyphens and numbers work", function (assert) {
+      @block("my-block-1")
+      class ValidBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(ValidBlock));
+
+      assert.true(blockRegistry.has("my-block-1"));
+    });
+
+    test("unicode in block args works correctly", function (assert) {
+      @block("unicode-args-block", {
+        args: {
+          title: { type: "string" },
+        },
+      })
+      class UnicodeArgsBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(UnicodeArgsBlock));
+
+      renderBlocks(
+        "hero-blocks",
+        [
+          {
+            block: UnicodeArgsBlock,
+            args: { title: "日本語テスト 🎉 émoji" },
+          },
+        ],
+        getOwner(this)
+      );
+
+      assert.true(true, "unicode args accepted without error");
+    });
+
+    test("arg names with special characters in schema throw error", function (assert) {
+      assert.throws(() => {
+        @block("special-arg-names-block", {
+          args: {
+            "my@arg": { type: "string" },
+          },
+        })
+        class SpecialArgNamesBlock extends Component {}
+
+        return SpecialArgNamesBlock;
+      }, /arg name .* is invalid/);
+    });
+
+    test("arg names starting with number in schema throw error", function (assert) {
+      assert.throws(() => {
+        @block("numeric-arg-names-block", {
+          args: {
+            "123title": { type: "string" },
+          },
+        })
+        class NumericArgNamesBlock extends Component {}
+
+        return NumericArgNamesBlock;
+      }, /arg name .* is invalid/);
+    });
+
+    test("valid arg names with underscores work", function (assert) {
+      @block("underscore-arg-block", {
+        args: {
+          my_arg_name: { type: "string" },
+        },
+      })
+      class UnderscoreArgBlock extends Component {}
+
+      assert.deepEqual(UnderscoreArgBlock.blockMetadata.args, {
+        my_arg_name: { type: "string" },
+      });
+    });
+  });
+
+  module("condition edge cases", function () {
+    test("empty conditions array renders block (vacuous truth)", function (assert) {
+      const blocksService = this.owner.lookup("service:blocks");
+
+      const result = blocksService.evaluate([]);
+
+      assert.true(result, "empty AND array returns true");
+    });
+
+    test("empty any array does not render block", function (assert) {
+      const blocksService = this.owner.lookup("service:blocks");
+
+      const result = blocksService.evaluate({ any: [] });
+
+      assert.false(result, "empty OR array returns false");
     });
   });
 });

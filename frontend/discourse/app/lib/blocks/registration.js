@@ -3,6 +3,12 @@ import * as coreBlocks from "discourse/blocks/core";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 
 /**
+ * Valid block name pattern: lowercase letters, numbers, and hyphens.
+ * Must start with a letter. Examples: "hero-banner", "my-block-1"
+ */
+const VALID_BLOCK_NAME_PATTERN = /^[a-z][a-z0-9-]*$/;
+
+/**
  * Registry of block components registered via `@block` decorator and `api.registerBlock()`.
  * Maps block names to their component classes.
  *
@@ -87,6 +93,15 @@ export function _registerBlock(BlockClass) {
   if (!BlockClass?.blockName) {
     raiseBlockError(
       `Block class "${BlockClass?.name}" must be decorated with @block to be registered.`
+    );
+    return;
+  }
+
+  // Validate block name format
+  if (!VALID_BLOCK_NAME_PATTERN.test(BlockClass.blockName)) {
+    raiseBlockError(
+      `Block name "${BlockClass.blockName}" is invalid. ` +
+        `Block names must start with a letter and contain only lowercase letters, numbers, and hyphens.`
     );
     return;
   }

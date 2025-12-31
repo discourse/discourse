@@ -3382,7 +3382,8 @@ class _PluginApi {
    * Registers a block component for use with `renderBlocks()`.
    *
    * **IMPORTANT:** Must be called in a pre-initializer before any `renderBlocks()`
-   * configuration is set up. The registry is locked on first configuration.
+   * calls. The block registry locks on the first `renderBlocks()` call, preventing
+   * late registrations.
    *
    * The block component must be decorated with `@block` decorator.
    *
