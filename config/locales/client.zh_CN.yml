@@ -7742,13 +7742,20 @@ zh_CN:
             prompt: "更改此设置可能会对您的网站产生深远或意想不到的后果。确定要继续吗？"
             confirm: "是，我确定"
           min_password_length:
+            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
           min_admin_password_length:
+            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的管理员。确定要继续吗？"
             confirm: "是，更新密码策略"
           password_unique_charactes:
+            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
           block_common_passwords:
+            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
+          clean_up_inactive_users_after_days:
+            prompt: "将此值设置为 0 以外的任何值，都会导致在该天数内不再活跃的用户被永久删除。您确定要继续吗？"
+            confirm: "是的，我明白除非我将此值设置为 0，否则不活跃用户将被永久删除。"
         job_status:
           completed: "更新完成"
           enqueued: "正在更新"
