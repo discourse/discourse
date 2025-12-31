@@ -69,7 +69,7 @@ export default class BlockInfo extends Component {
             {{#if this.hasConditions}}
               <div class="block-debug-tooltip__section">
                 <div class="block-debug-tooltip__section-title">Conditions
-                  (passed)</div>
+                  <span class="--passed">(passed)</span></div>
                 <ConditionsTree @conditions={{@conditions}} @passed={{true}} />
               </div>
             {{/if}}

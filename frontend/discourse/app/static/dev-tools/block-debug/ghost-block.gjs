@@ -38,7 +38,8 @@ const GhostBlock = <template>
 
           <div class="block-debug-tooltip__section">
             <div class="block-debug-tooltip__section-title">
-              Failed Conditions
+              Conditions
+              <span class="--failed">(failed)</span>
             </div>
             <ConditionsTree @conditions={{@conditions}} @passed={{false}} />
           </div>

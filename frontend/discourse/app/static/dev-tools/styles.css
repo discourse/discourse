@@ -316,6 +316,14 @@
   font-weight: bold;
   text-transform: uppercase;
   opacity: 0.6;
+
+  .--passed {
+    color: var(--success);
+  }
+
+  .--failed {
+    color: var(--danger);
+  }
 }
 
 .block-debug-tooltip__empty {
@@ -392,13 +400,13 @@
 
   &.--passed {
     .block-debug-condition__type {
-      color: var(--dev-tools-block-color);
+      color: var(--success);
     }
   }
 
   &.--failed {
     .block-debug-condition__type {
-      color: var(--dev-tools-ghost-color);
+      color: var(--danger);
     }
   }
 }
