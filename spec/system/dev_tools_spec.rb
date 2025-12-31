@@ -1,42 +1,62 @@
 # frozen_string_literal: true
 
 describe "Discourse dev tools", type: :system do
-  it "works" do
-    # Open site and check it loads successfully, with no dev-tools
-    visit("/latest")
-    expect(page).to have_css("#site-logo")
-    expect(page).not_to have_css(".dev-tools-toolbar")
+  let(:toolbar) { PageObjects::Components::DevTools::Toolbar.new }
+  let(:plugin_outlet_debug) { PageObjects::Components::DevTools::PluginOutletDebug.new }
+  let(:block_debug) { PageObjects::Components::DevTools::BlockDebug.new }
 
-    # Enable dev tools, and wait for page to reload
-    page.driver.with_playwright_page { |pw_page| pw_page.evaluate("window.enableDevTools()") }
+  describe "toolbar" do
+    it "can be enabled and disabled" do
+      visit("/latest")
+      expect(page).to have_css("#site-logo")
+      expect(toolbar).to have_no_toolbar
 
-    expect(page).to have_css(".dev-tools-toolbar")
+      toolbar.enable
+      expect(toolbar).to have_toolbar
 
-    # Turn on plugin outlet debugging, and check they appear
-    find(".dev-tools-toolbar .toggle-plugin-outlets").click
-    expect(page).to have_css(".plugin-outlet-debug", minimum: 10)
+      toolbar.disable
+      expect(toolbar).to have_no_toolbar
+      expect(page).to have_css("#site-logo")
+    end
+  end
 
-    # Open a tooltip
-    find(".plugin-outlet-debug[data-outlet-name=home-logo-contents__before]").hover
-    expect(page).to have_css(".plugin-outlet-info__wrapper")
+  describe "plugin outlet debugging" do
+    it "shows plugin outlet overlays with tooltips" do
+      visit("/latest")
+      toolbar.enable
+      toolbar.toggle_plugin_outlets
 
-    # Check the outletArgs are shown
-    expect(page).to have_css(".plugin-outlet-info__wrapper .block-debug-args__key", text: "@title")
-    expect(page).to have_css(
-      ".plugin-outlet-info__wrapper .block-debug-args__value",
-      text: "\"#{SiteSetting.title}\"",
-    )
+      expect(plugin_outlet_debug).to have_outlets(minimum: 10)
 
-    # Turn off plugin outlet debugging, and check they disappeared
-    find(".dev-tools-toolbar .toggle-plugin-outlets").click
-    expect(page).not_to have_css(".plugin-outlet-debug")
+      plugin_outlet_debug.hover_outlet("home-logo-contents__before")
+      expect(plugin_outlet_debug).to have_tooltip
+      expect(plugin_outlet_debug).to have_arg(key: "@title")
+      expect(plugin_outlet_debug).to have_arg_value(value: "\"#{SiteSetting.title}\"")
+      expect(plugin_outlet_debug).to have_github_link
 
-    # Disable dev tools
-    find(".dev-tools-toolbar .disable-dev-tools").click
+      toolbar.toggle_plugin_outlets
+      expect(plugin_outlet_debug).to have_no_outlets
+    end
 
-    # Check reloaded successfully
-    expect(page).not_to have_css(".dev-tools-toolbar")
-    expect(page).to have_css("#site-logo")
-    expect(page).not_to have_css(".dev-tools-toolbar")
+    it "shows wrapper outlet indicator" do
+      visit("/latest")
+      toolbar.enable
+      toolbar.toggle_plugin_outlets
+
+      expect(plugin_outlet_debug).to have_wrapper_outlet
+    end
+  end
+
+  describe "block debugging" do
+    it "shows block outlet boundaries with tooltip" do
+      visit("/latest")
+      toolbar.enable
+      toolbar.toggle_block_outlet_boundaries
+
+      expect(block_debug).to have_outlet_boundary
+      block_debug.hover_outlet_badge
+      expect(block_debug).to have_outlet_tooltip
+      expect(block_debug).to have_outlet_github_link
+    end
   end
 end
