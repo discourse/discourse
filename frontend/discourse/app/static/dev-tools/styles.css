@@ -1,120 +1,33 @@
-/**
+/*
   This CSS file is loaded dynamically when loadDevTools() is run in the console.
   It is not part of our normal CSS build process, so SCSS variables are not available.
   Native CSS nesting can be used safely, because developers who use this tool are expected to have modern browsers.
 */
 
-/* Plugin Outlet Debug - green tones (distinct from block outlets which use amber/orange) */
-.plugin-outlet-debug {
-  position: relative;
-  border: 1px dashed #16a34a;
-  margin: 2px;
-  background: rgb(22, 163, 74, 0.05);
+:root {
+  /* Colors by usage */
+  --dev-tools-plugin-outlet-color: #16a34a;
+  --dev-tools-plugin-outlet-hover-color: #15803d;
+  --dev-tools-wrapper-outlet-color: #2563eb;
+  --dev-tools-wrapper-outlet-hover-color: #1d4ed8;
+  --dev-tools-block-color: #d97706;
+  --dev-tools-block-hover-color: #b45309;
+  --dev-tools-ghost-color: #dc2626;
+  --dev-tools-ghost-hover-color: #b91c1c;
+  --dev-tools-block-outlet-color: #f59e0b;
 
-  /* Wrapper outlets are compact inline markers */
-  &.--wrapper {
-    border: none;
-    background: none;
-
-    .plugin-outlet-debug__badge {
-      position: static;
-      background: #2563eb;
-      border-radius: 4px;
-
-      &:hover {
-        background: #1d4ed8;
-      }
-    }
-  }
+  /* Shared values */
+  --dev-tools-badge-font-size: 0.75rem;
+  --dev-tools-badge-padding: 2px 5px;
+  --dev-tools-badge-radius: 0 0 4px 0;
+  --dev-tools-shadow: 1px 1px 2px rgb(0 0 0 / 0.5);
+  --dev-tools-bg-opacity: 0.05;
+  --dev-tools-container-margin: 2px;
+  --dev-tools-mono-font:
+    "Courier New", courier, "Lucida Console", monaco, monospace;
 }
 
-.plugin-outlet-debug__badge {
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  z-index: 1000;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: #16a34a;
-  color: white !important;
-  padding: 2px 5px !important;
-  font-size: 0.75rem !important;
-  font-weight: bold;
-  border-radius: 0 0 4px 0;
-  cursor: pointer;
-  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.5);
-
-  .d-icon {
-    color: white !important;
-    font-size: 0.75rem !important;
-    font-weight: bold;
-    width: 0.75rem !important;
-    filter: drop-shadow(1px 1px 2px rgb(0, 0, 0, 0.5));
-  }
-
-  &:hover {
-    background: #15803d;
-  }
-}
-
-.plugin-outlet-info__wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.plugin-outlet-info__heading {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  display: flex;
-  gap: 5px;
-
-  .title {
-    flex-grow: 1;
-  }
-
-  .github-link {
-    color: var(--primary-medium);
-  }
-}
-
-.plugin-outlet-info__content {
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  font-size: 14px;
-  gap: 10px;
-  min-width: 300px;
-  max-width: 100%;
-  width: 100%;
-  overflow: hidden;
-
-  & > div {
-    min-width: 0;
-  }
-
-  .fw {
-    font-family: "Courier New", Courier, "Lucida Console", Monaco, monospace;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background: var(--primary-very-low);
-  }
-
-  .value {
-    display: flex;
-    gap: 5px;
-  }
-
-  .no-arguments {
-    grid-column: span 2;
-  }
-
-  a {
-    color: var(--primary-medium);
-  }
-}
-
+/* Dev Tools Toolbar */
 .dev-tools-toolbar {
   position: fixed;
   z-index: 999999;
@@ -122,7 +35,7 @@
   flex-direction: column;
   background-color: var(--primary-200);
   border-radius: 0 5px 5px 0;
-  box-shadow: 1px 1px 2px rgb(0, 0, 0, 0.25);
+  box-shadow: var(--dev-tools-shadow);
   opacity: 0.8;
   transition: opacity 0.2s ease-in-out;
 
@@ -162,126 +75,184 @@
   }
 }
 
-/* Block Debug Overlay - warm amber/orange tones (distinct from plugin outlets which use green/blue) */
-.block-debug-info {
-  position: relative;
-  border: 1px dotted #d97706;
-  margin: 2px;
-  background: rgb(217, 119, 6, 0.05);
+/* Shared Base Styles */
 
-  &.--rendered {
-    border-color: #d97706;
-  }
-}
-
-.block-debug-badge {
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  z-index: 1000;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: #d97706;
-  color: white !important;
-  padding: 2px 5px !important;
-  font-size: 0.75rem !important;
-  font-weight: bold;
-  border-radius: 0 0 4px 0;
-  cursor: pointer;
-  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.5);
-
-  .d-icon {
-    color: white !important;
-    font-size: 0.75rem !important;
-    font-weight: bold;
-    width: 0.75rem !important;
-    filter: drop-shadow(1px 1px 2px rgb(0, 0, 0, 0.5));
-  }
-
-  &:hover {
-    background: #b45309;
-  }
-}
-
-/* Ghost blocks - red for hidden/failed conditions */
-.block-debug-ghost {
-  position: relative;
-  border: 1px dashed #dc2626;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 10px,
-    rgb(220, 38, 38, 0.05) 10px,
-    rgb(220, 38, 38, 0.05) 20px
-  );
-  padding: 8px;
-  margin: 2px;
-  min-height: 30px;
-}
-
-.block-debug-ghost__badge {
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  z-index: 1000;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: #dc2626;
-  color: white !important;
-  padding: 2px 5px !important;
-  font-size: 0.75rem !important;
-  font-weight: bold;
-  border-radius: 0 0 4px 0;
-  cursor: pointer;
-  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.5);
-
-  .d-icon {
-    color: white !important;
-    font-size: 0.75rem !important;
-    font-weight: bold;
-    width: 0.75rem !important;
-    filter: drop-shadow(1px 1px 2px rgb(0, 0, 0, 0.5));
-  }
-
-  &:hover {
-    background: #b91c1c;
-  }
-}
-
-/* Block Outlet boundaries - yellow/gold */
+/* Base styles for all debug container boundaries */
+.plugin-outlet-debug,
+.block-debug-info,
+.block-debug-ghost,
 .block-outlet-debug {
   position: relative;
-  border: 1px dashed #f59e0b;
-  margin: 2px;
-  padding: 4px;
-  min-height: 20px;
-  background: rgb(245, 158, 11, 0.05);
+  margin: var(--dev-tools-container-margin);
 }
 
+/* Base styles for all debug badges */
+.plugin-outlet-debug__badge,
+.block-debug-badge,
+.block-debug-ghost__badge,
 .block-outlet-debug__badge {
   position: absolute;
   top: -1px;
   left: -1px;
+  z-index: 1000;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #f59e0b;
   color: white !important;
-  padding: 2px 5px !important;
-  font-size: 0.75rem !important;
+  padding: var(--dev-tools-badge-padding) !important;
+  font-size: var(--dev-tools-badge-font-size) !important;
   font-weight: bold;
-  border-radius: 0 0 4px 0;
-  text-shadow: 1px 1px 2px rgb(0, 0, 0, 0.5);
+  border-radius: var(--dev-tools-badge-radius);
+  cursor: pointer;
+  text-shadow: var(--dev-tools-shadow);
 
   .d-icon {
     color: white !important;
-    font-size: 0.75rem !important;
+    font-size: var(--dev-tools-badge-font-size) !important;
     font-weight: bold;
-    width: 0.75rem !important;
-    filter: drop-shadow(1px 1px 2px rgb(0, 0, 0, 0.5));
+    width: var(--dev-tools-badge-font-size) !important;
+    filter: drop-shadow(var(--dev-tools-shadow));
   }
+}
+
+/* Plugin Outlet Debug */
+.plugin-outlet-debug {
+  border: 1px dashed var(--dev-tools-plugin-outlet-color);
+  background: rgb(22 163 74 / var(--dev-tools-bg-opacity));
+
+  /* Wrapper outlets are compact inline markers */
+  &.--wrapper {
+    border: none;
+    background: none;
+
+    .plugin-outlet-debug__badge {
+      position: static;
+      background: var(--dev-tools-wrapper-outlet-color);
+      border-radius: 4px;
+
+      &:hover {
+        background: var(--dev-tools-wrapper-outlet-hover-color);
+      }
+    }
+  }
+}
+
+.plugin-outlet-debug__badge {
+  background: var(--dev-tools-plugin-outlet-color);
+
+  &:hover {
+    background: var(--dev-tools-plugin-outlet-hover-color);
+  }
+}
+
+/* Plugin Outlet Info Popup */
+.plugin-outlet-info__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.plugin-outlet-info__heading {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 5px;
+
+  .title {
+    flex-grow: 1;
+  }
+
+  .github-link {
+    color: var(--primary-medium);
+  }
+}
+
+.plugin-outlet-info__content {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  font-size: 14px;
+  gap: 10px;
+  min-width: 300px;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  & > div {
+    min-width: 0;
+  }
+
+  .fw {
+    font-family: var(--dev-tools-mono-font);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: var(--primary-very-low);
+  }
+
+  .value {
+    display: flex;
+    gap: 5px;
+  }
+
+  .no-arguments {
+    grid-column: span 2;
+  }
+
+  a {
+    color: var(--primary-medium);
+  }
+}
+
+/* Block Debug Overlay */
+.block-debug-info {
+  border: 1px dotted var(--dev-tools-block-color);
+  background: rgb(217 119 6 / var(--dev-tools-bg-opacity));
+
+  &.--rendered {
+    border-color: var(--dev-tools-block-color);
+  }
+}
+
+.block-debug-badge {
+  background: var(--dev-tools-block-color);
+
+  &:hover {
+    background: var(--dev-tools-block-hover-color);
+  }
+}
+
+/* Ghost blocks (hidden/failed conditions) */
+.block-debug-ghost {
+  border: 1px dashed var(--dev-tools-ghost-color);
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
+  );
+  padding: 8px;
+  min-height: 30px;
+}
+
+.block-debug-ghost__badge {
+  background: var(--dev-tools-ghost-color);
+
+  &:hover {
+    background: var(--dev-tools-ghost-hover-color);
+  }
+}
+
+/* Block Outlet boundaries */
+.block-outlet-debug {
+  border: 1px dashed var(--dev-tools-block-outlet-color);
+  padding: 4px;
+  min-height: 20px;
+  background: rgb(245 158 11 / var(--dev-tools-bg-opacity));
+}
+
+.block-outlet-debug__badge {
+  background: var(--dev-tools-block-outlet-color);
 }
 
 /* Block Debug Tooltip */
@@ -305,14 +276,14 @@
   align-items: center;
   gap: 6px;
   font-weight: bold;
-  color: #d97706;
+  color: var(--dev-tools-block-color);
 
   &.--failed {
-    color: #dc2626;
+    color: var(--dev-tools-ghost-color);
   }
 
   .d-icon {
-    font-size: 0.75rem !important;
+    font-size: var(--dev-tools-badge-font-size) !important;
   }
 }
 
@@ -329,7 +300,7 @@
 .block-debug-tooltip__status {
   font-size: 10px;
   padding: 1px 4px;
-  background: #dc2626;
+  background: var(--dev-tools-ghost-color);
   color: white;
   border-radius: 2px;
 }
@@ -397,7 +368,7 @@
 }
 
 .block-debug-args__value {
-  font-family: "Courier New", monospace;
+  font-family: var(--dev-tools-mono-font);
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -416,18 +387,18 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-family: "Courier New", monospace;
+  font-family: var(--dev-tools-mono-font);
   font-size: 12px;
 
   &.--passed {
     .block-debug-condition__type {
-      color: #d97706;
+      color: var(--dev-tools-block-color);
     }
   }
 
   &.--failed {
     .block-debug-condition__type {
-      color: #dc2626;
+      color: var(--dev-tools-ghost-color);
     }
   }
 }
@@ -455,7 +426,7 @@
   font-size: 11px;
 }
 
-/* Block Debug Menu (for dropdown button) */
+/* Block Debug Menu (dropdown button) */
 .block-debug-menu {
   display: flex;
   flex-direction: column;
