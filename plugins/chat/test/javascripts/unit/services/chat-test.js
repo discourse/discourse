@@ -38,27 +38,19 @@ acceptance("Discourse Chat | Unit | Service | chat", function (needs) {
     );
   });
 
-  test("getDocumentTitleCount returns urgent + pending count when title_count_mode is 'contextual'", function (assert) {
+  test("getDocumentTitleCount returns pending count when title_count_mode is 'contextual'", function (assert) {
     this.currentUser.user_option.title_count_mode = "contextual";
 
     const count = this.chat.getDocumentTitleCount();
 
-    assert.strictEqual(
-      count,
-      15,
-      "returns urgent + pending count (all chat activity)"
-    );
+    assert.strictEqual(count, 10, "returns pending count");
   });
 
-  test("getDocumentTitleCount returns urgent + pending count when user_option is null", function (assert) {
+  test("getDocumentTitleCount returns pending count when user_option is null", function (assert) {
     this.currentUser.user_option = null;
 
     const count = this.chat.getDocumentTitleCount();
 
-    assert.strictEqual(
-      count,
-      15,
-      "returns full count when user_option is not set"
-    );
+    assert.strictEqual(count, 10, "returns pending count");
   });
 });
