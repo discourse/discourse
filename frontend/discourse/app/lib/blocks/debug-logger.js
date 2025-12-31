@@ -7,12 +7,15 @@
  * @module discourse/lib/blocks/debug-logger
  */
 
+import { isTypeMismatch } from "./value-matcher";
+
 // Console output styles
 const STYLES = {
   blockName: "font-weight: bold", // bold only, no color
   passed: "color: #50c050; font-weight: bold", // bright green for RENDERED
   failed: "color: #e05050; font-weight: bold", // vivid red for SKIPPED
   combinator: "color: #3070c0; font-weight: bold", // bold blue for operators
+  hint: "color: #d4a000; font-style: italic", // yellow/orange for hints
 };
 
 const ICONS = {
@@ -292,11 +295,7 @@ class BlockDebugLogger {
       // Single key: print directly without group wrapper
       if (matches.length === 1) {
         const match = matches[0];
-        // eslint-disable-next-line no-console
-        console.log(`%c${icon}%c ${label}: ${match.key}`, iconStyle, "", {
-          expected: match.expected,
-          actual: match.actual,
-        });
+        this.#logParamMatch(match, `${label}: ${match.key}`, icon, iconStyle);
         return;
       }
 
@@ -311,11 +310,7 @@ class BlockDebugLogger {
       for (const match of matches) {
         const matchIcon = match.result ? ICONS.passed : ICONS.failed;
         const matchStyle = match.result ? STYLES.passed : STYLES.failed;
-        // eslint-disable-next-line no-console
-        console.log(`%c${matchIcon}%c ${match.key}`, matchStyle, "", {
-          expected: match.expected,
-          actual: match.actual,
-        });
+        this.#logParamMatch(match, match.key, matchIcon, matchStyle);
       }
 
       // eslint-disable-next-line no-console
@@ -348,6 +343,54 @@ class BlockDebugLogger {
         args && Object.keys(args).length > 0 ? args : ""
       );
     }
+  }
+
+  /**
+   * Log a single param match with optional type mismatch hint.
+   *
+   * @param {Object} match - The match object with expected, actual, result.
+   * @param {string} label - Display label for the param.
+   * @param {string} icon - Pass/fail icon.
+   * @param {string} iconStyle - CSS style for the icon.
+   */
+  #logParamMatch(match, label, icon, iconStyle) {
+    const { expected, actual, result } = match;
+
+    // Check for type mismatch on failed matches
+    if (!result && isTypeMismatch(actual, expected)) {
+      const expectedType = this.#getExpectedValueType(expected);
+      // eslint-disable-next-line no-console
+      console.log(
+        `%c${icon}%c ${label} %c⚠ type mismatch: actual is ${typeof actual}, expected ${expectedType}`,
+        iconStyle,
+        "",
+        STYLES.hint,
+        { expected, actual }
+      );
+      return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.log(`%c${icon}%c ${label}`, iconStyle, "", { expected, actual });
+  }
+
+  /**
+   * Get the type of value expected, unwrapping { any: [...] } and arrays.
+   * Shows all unique types if mixed (e.g., "number/string").
+   *
+   * @param {*} expected - The expected value spec.
+   * @returns {string} The type description.
+   */
+  #getExpectedValueType(expected) {
+    // Unwrap { any: [...] } or arrays
+    const values = expected?.any ?? (Array.isArray(expected) ? expected : null);
+
+    if (values && values.length > 0) {
+      const types = [...new Set(values.map((v) => typeof v))];
+      return types.join("/");
+    }
+
+    return typeof expected;
   }
 
   /**

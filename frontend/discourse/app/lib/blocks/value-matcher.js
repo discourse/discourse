@@ -80,8 +80,43 @@ function matchSimpleValue(actual, expected) {
     return expected.some((exp) => matchSimpleValue(actual, exp));
   }
 
-  // Exact match
+  // Exact match (strict equality)
   return actual === expected;
+}
+
+/**
+ * Checks if a failed match is due to a string/number type mismatch.
+ * Used to provide helpful debug hints.
+ *
+ * @param {*} actual - The actual value.
+ * @param {*} expected - The expected value.
+ * @returns {boolean} True if the values would match with type coercion.
+ */
+export function isTypeMismatch(actual, expected) {
+  // Already matches - not a mismatch
+  if (actual === expected) {
+    return false;
+  }
+
+  // Check if string/number coercion would make them equal
+  if (
+    (typeof actual === "string" && typeof expected === "number") ||
+    (typeof actual === "number" && typeof expected === "string")
+  ) {
+    return String(actual) === String(expected);
+  }
+
+  // Check arrays for type mismatches
+  if (Array.isArray(expected)) {
+    return expected.some((exp) => isTypeMismatch(actual, exp));
+  }
+
+  // Check { any: [...] } for type mismatches
+  if (expected?.any !== undefined) {
+    return expected.any.some((exp) => isTypeMismatch(actual, exp));
+  }
+
+  return false;
 }
 
 /**

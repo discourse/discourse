@@ -1,9 +1,43 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { matchParams, matchValue } from "discourse/lib/blocks/value-matcher";
+import {
+  isTypeMismatch,
+  matchParams,
+  matchValue,
+} from "discourse/lib/blocks/value-matcher";
 
 module("Unit | Lib | Blocks | value-matcher", function (hooks) {
   setupTest(hooks);
+
+  module("isTypeMismatch", function () {
+    test("detects string/number mismatch", function (assert) {
+      assert.true(isTypeMismatch("3", 3));
+      assert.true(isTypeMismatch(3, "3"));
+      assert.true(isTypeMismatch("123", 123));
+    });
+
+    test("returns false when values actually match", function (assert) {
+      assert.false(isTypeMismatch("foo", "foo"));
+      assert.false(isTypeMismatch(123, 123));
+    });
+
+    test("returns false when values differ and no coercion would help", function (assert) {
+      assert.false(isTypeMismatch("3", 4));
+      assert.false(isTypeMismatch("foo", "bar"));
+      assert.false(isTypeMismatch("foo", 123));
+    });
+
+    test("detects mismatch in arrays", function (assert) {
+      assert.true(isTypeMismatch("3", [3, 4, 5]));
+      assert.true(isTypeMismatch(3, ["3", "4", "5"]));
+      assert.false(isTypeMismatch("6", [3, 4, 5]));
+    });
+
+    test("detects mismatch in { any: [...] }", function (assert) {
+      assert.true(isTypeMismatch("3", { any: [3, 4, 5] }));
+      assert.false(isTypeMismatch("6", { any: [3, 4, 5] }));
+    });
+  });
 
   module("matchValue", function () {
     module("exact matching", function () {
@@ -21,6 +55,11 @@ module("Unit | Lib | Blocks | value-matcher", function (hooks) {
         assert.true(matchValue({ actual: null, expected: null }));
         assert.true(matchValue({ actual: undefined, expected: undefined }));
         assert.false(matchValue({ actual: null, expected: undefined }));
+      });
+
+      test("no type coercion: string does not match number", function (assert) {
+        assert.false(matchValue({ actual: "3", expected: 3 }));
+        assert.false(matchValue({ actual: 3, expected: "3" }));
       });
     });
 
@@ -173,6 +212,22 @@ module("Unit | Lib | Blocks | value-matcher", function (hooks) {
         );
         assert.false(
           matchParams({ actualParams, expectedParams: { id: [456, 789] } })
+        );
+      });
+
+      test("supports { any: [...] } OR for values", function (assert) {
+        const actualParams = { id: 123 };
+        assert.true(
+          matchParams({
+            actualParams,
+            expectedParams: { id: { any: [123, 456] } },
+          })
+        );
+        assert.false(
+          matchParams({
+            actualParams,
+            expectedParams: { id: { any: [456, 789] } },
+          })
         );
       });
 
