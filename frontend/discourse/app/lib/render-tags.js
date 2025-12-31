@@ -71,8 +71,8 @@ export default function (topic, params) {
   const hasContent = (tags && tags.length > 0) || callbackResults.length > 0;
 
   if (hasContent) {
-    buffer = `<div class='discourse-tags' 
-                   role='list' 
+    buffer = `<div class='discourse-tags'
+                   role='list'
                    aria-label=${i18n("tagging.tags")}>`;
 
     let currentIndex = 0;
@@ -80,14 +80,15 @@ export default function (topic, params) {
     if (tags && tags.length > 0) {
       for (let i = 0; i < tags.length; i++) {
         const tag = tags[i];
+        const tagStr = typeof tag === "string" ? tag : tag.name;
         const tagParams = params ? { ...params } : {};
 
-        if (params?.tagClasses && params?.tagClasses[tag]) {
-          tagParams.extraClass = params.tagClasses[tag];
+        if (params?.tagClasses && params?.tagClasses[tagStr]) {
+          tagParams.extraClass = params.tagClasses[tagStr];
         }
 
         buffer += renderTag(tag, {
-          description: topic?.tags_descriptions?.[tag],
+          description: topic?.tags_descriptions?.[tagStr],
           isPrivateMessage,
           tagsForUser,
           tagName,

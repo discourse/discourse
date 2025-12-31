@@ -316,7 +316,8 @@ class SiteSerializer < ApplicationSerializer
 
   def navigation_menu_site_top_tags
     if top_tags.present?
-      tag_names = top_tags[0...SIDEBAR_TOP_TAGS_TO_SHOW]
+      top_tag_objects = top_tags[0...SIDEBAR_TOP_TAGS_TO_SHOW]
+      tag_names = top_tag_objects.map { |t| t[:name] }
       serialized = serialize_tags(Tag.where(name: tag_names))
 
       # Ensures order of top tags is preserved
