@@ -14,10 +14,22 @@ ug:
       reports:
         activity_calendar:
           title: پائالىيەت يىلنامەسى
+          cell_title:
+            visited_no_posts: "سىز %{date} زىيارەتكە كېلىپ يوشۇرنۇپ تۇردىڭىز ئەمما ھېچقانداق يازما يوللىمىدىڭىز."
+            visited_with_posts:
+              one: "سىز %{date} دا %{count} يازما يازدىڭىز."
+              other: "سىز %{date} دا %{count} يازما يازدىڭىز."
+            no_activity: "سىز %{date} دا يوق ئىدىڭىز."
         top_words:
           title: سۆز ئىشلىتىش
         reading_time:
           title: ئوقۇش ۋاقتى
+          book_comparison: "سىز تور بېكىتىمىزدە <code>%{readingTitme}</code> ئوقۇدىڭىز! بۇ <i>%{bookTitle}</i> كىتابنى ئوقۇشقا كەتكەن ۋاقىتقا تەڭ"
+        post_used_reactions:
+          title: تېمىدا ئەڭ كۆپ ئىشلىتىلگەن ئىنكاس
+          total_number: "جەمئىي ئىنكاس سانى: %{count}"
+        post_received_reactions:
+          title: تېمىدا ئەڭ كۆپ تاپشۇرۇۋالغان ئىنكاس
         fbff:
           title: يېقىن دوستىڭىز (مۇنبەردىكى ئەڭ يېقىن دوستىڭىز)
         most_viewed_categories:

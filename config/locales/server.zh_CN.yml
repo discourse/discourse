@@ -141,6 +141,8 @@ zh_CN:
         invalid_type: "%{type}不是有效类型"
         humanize_not_valid_string_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是字符串。"
         not_valid_string_value: "必须是字符串"
+        humanize_not_valid_datetime_value: "JSON 指针 “%{property_json_pointer}” 处的属性必须是有效的日期时间。"
+        not_valid_datetime_value: "必须是有效的日期时间"
         humanize_not_valid_integer_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是整数。"
         not_valid_integer_value: "必须是整数"
         humanize_not_valid_float_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是浮点数。"
@@ -2404,6 +2406,7 @@ zh_CN:
     fake_upcoming_change: "这是为测试目的即将进行的虚假更改。无需翻译此字符串。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
+      invalid_datetime: "日期时间格式无效。请确保您输入的日期和时间有效。"
       invalid_email: "无效的电子邮件地址。"
       invalid_username: "没有使用该用户名的用户。"
       valid_username: "存在一个使用该用户名的用户。"

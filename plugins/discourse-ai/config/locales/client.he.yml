@@ -304,6 +304,12 @@ he:
           post_raw_translator: "מתרגם פוסטים גולמי"
           topic_title_translator: "מתרגם כותרות נושאים"
           short_text_translator: "מתרגם טקסטים קצרים"
+          schedule_untranslated: "תזמון תרגומים"
+          schedule_topic_success:
+            one: "תזמון תרגום לפוסט שלא תורגם."
+            two: "תזמון תרגום של שני פוסטים לא מתורגמים."
+            many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
+            other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
         spam:
           name: "ספאם"
           inspect_posts: "בדיקת פוסטים"
