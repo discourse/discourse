@@ -38,7 +38,6 @@ describe "Composer - ProseMirror - Images", type: :system do
       open_composer
       image = Fabricate(:image_upload)
       composer.type_content("![alt text](#{image.url})")
-      find(".composer-image-node img").click
       expect(rich).to have_no_css(".composer-image-node img[width]")
       expect(rich).to have_no_css(".composer-image-node img[height]")
       find(".composer-image-toolbar__zoom-out").click
@@ -152,7 +151,6 @@ describe "Composer - ProseMirror - Images", type: :system do
       it "moves image outside grid" do
         open_composer
         composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
-        composer.image_grid.select_first_grid_image
         composer.image_grid.move_image_outside_grid
         expect(composer.image_grid).to have_grid_images(1)
         expect(composer.image_grid).to have_images(2) # One in grid, one standalone
@@ -195,29 +193,27 @@ describe "Composer - ProseMirror - Images", type: :system do
   end
 
   describe "image lightbox" do
-    def click_image_to_open_lightbox
+    let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
+
+    def click_selected_image_to_open_lightbox
       page.execute_script(<<~JS)
         document.querySelector('.composer-image-node img.ProseMirror-selectednode')?.click();
       JS
-      expect(page).to have_css(".pswp--open")
-    end
-
-    def close_lightbox
-      find(".pswp__button--close").click
-      expect(page).to have_no_css(".pswp--open")
     end
 
     it "opens lightbox with single image" do
       open_composer
       paste_and_click_image
 
-      click_image_to_open_lightbox
+      click_selected_image_to_open_lightbox
 
-      expect(page).to have_no_css(".pswp__counter")
-      expect(page).to have_no_css(".pswp__button--arrow--next")
-      expect(page).to have_no_css(".pswp__button--arrow--prev")
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_no_counter
+      expect(lightbox).to have_no_next_button
+      expect(lightbox).to have_no_prev_button
 
-      close_lightbox
+      lightbox.close_button.click
+      expect(lightbox).to be_hidden
 
       expect(rich).to have_css(".composer-image-node img.ProseMirror-selectednode")
       expect(page).to have_css("[data-identifier='composer-image-toolbar']")
@@ -227,33 +223,42 @@ describe "Composer - ProseMirror - Images", type: :system do
       open_composer
       composer.type_content("![image1](upload://test1.png)\n\n![image2](upload://test2.png)")
 
-      rich.all(".composer-image-node img").first.click
-      click_image_to_open_lightbox
+      first_image = rich.all(".composer-image-node img").first
+      first_image.click
+      expect(first_image[:class]).to include("ProseMirror-selectednode")
 
-      expect(page).to have_css(".pswp__counter", text: "1 / 2")
-      expect(page).to have_css(".pswp__button--arrow--next")
-      expect(page).to have_css(".pswp__button--arrow--prev")
+      click_selected_image_to_open_lightbox
 
-      close_lightbox
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_counter("1 / 2")
+      expect(lightbox).to have_next_button
+      expect(lightbox).to have_prev_button
+
+      lightbox.close_button.click
+      expect(lightbox).to be_hidden
 
       expect(rich).to have_css(".composer-image-node img.ProseMirror-selectednode")
       expect(page).to have_css("[data-identifier='composer-image-toolbar']")
     end
 
-    it "navigates between images using arrow buttons" do
+    it "navigates between images using prev/next buttons" do
       open_composer
       composer.type_content("![first](upload://test1.png)\n\n![second](upload://test2.png)")
 
       rich.all(".composer-image-node img").first.click
-      click_image_to_open_lightbox
+      click_selected_image_to_open_lightbox
 
-      expect(page).to have_css(".pswp__counter", text: "1 / 2")
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_counter("1 / 2")
+      expect(lightbox).to have_caption_title("first")
 
-      find(".pswp__button--arrow--next").click
-      expect(page).to have_css(".pswp__counter", text: "2 / 2")
+      lightbox.next_button.click
+      expect(lightbox).to have_counter("2 / 2")
+      expect(lightbox).to have_caption_title("second")
 
-      find(".pswp__button--arrow--prev").click
-      expect(page).to have_css(".pswp__counter", text: "1 / 2")
+      lightbox.prev_button.click
+      expect(lightbox).to have_counter("1 / 2")
+      expect(lightbox).to have_caption_title("first")
     end
   end
 end
