@@ -14,7 +14,7 @@ module AdPlugin
     has_many :routes,
              class_name: "AdPlugin::HouseAdRoute",
              foreign_key: "ad_plugin_house_ad_id",
-             dependent: :destroy
+             dependent: :delete_all
 
     has_and_belongs_to_many :groups,
                             join_table: "ad_plugin_house_ads_groups",
