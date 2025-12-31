@@ -102,28 +102,24 @@ class Middleware::RequestTracker
 
     if data[:browser_page_view] && !data[:is_crawler]
       if data[:has_auth_cookie]
-        ActiveRecord::Base.transaction do
-          ApplicationRequest.increment!(:page_view_logged_in_browser)
-          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
-          DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
+        ApplicationRequest.increment!(:page_view_logged_in_browser)
+        ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+        DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
 
-          if data[:topic_id].present? && data[:current_user_id].present?
-            TopicsController.defer_topic_view(
-              data[:topic_id],
-              data[:request_remote_ip],
-              data[:current_user_id],
-            )
-          end
+        if data[:topic_id].present? && data[:current_user_id].present?
+          TopicsController.defer_topic_view(
+            data[:topic_id],
+            data[:request_remote_ip],
+            data[:current_user_id],
+          )
         end
       elsif !SiteSetting.login_required
-        ActiveRecord::Base.transaction do
-          ApplicationRequest.increment!(:page_view_anon_browser)
-          ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
-          DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
+        ApplicationRequest.increment!(:page_view_anon_browser)
+        ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+        DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
 
-          if data[:topic_id].present?
-            TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
-          end
+        if data[:topic_id].present?
+          TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
         end
       end
     end
