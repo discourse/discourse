@@ -21,8 +21,7 @@ class UserSerializer < UserCardSerializer
              :profile_background_upload_url,
              :can_upload_profile_header,
              :can_upload_user_card_background,
-             :no_password,
-             :upcoming_changes_stats
+             :no_password
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer

@@ -44,7 +44,10 @@ export default class AdminUserUpcomingChanges extends Component {
           </thead>
           <tbody class="d-table__body">
             {{#each filteredChanges as |upcomingChange|}}
-              <tr class="d-table__row">
+              <tr
+                class="d-table__row"
+                data-upcoming-change-name={{upcomingChange.name}}
+              >
                 <td class="d-table__cell --overview">
                   <div class="d-table__overview-name">
                     {{upcomingChange.humanized_name}}
@@ -55,15 +58,30 @@ export default class AdminUserUpcomingChanges extends Component {
                     </div>
                   {{/if}}
                 </td>
-                <td class="d-table__cell">{{if
-                    upcomingChange.enabled
-                    (i18n "yes_value")
-                    (i18n "no_value")
-                  }}</td>
-                <td class="d-table__cell">{{i18n
-                    (this.reasonKey upcomingChange.reason)
-                    username=@user.username
-                  }}
+                <td class="d-table__cell">
+                  <div class="d-admin-row__mobile-label">
+                    {{i18n "user.upcoming_changes.for_user.enabled"}}
+                  </div>
+
+                  <span class="upcoming-change-enabled-status">
+                    {{if
+                      upcomingChange.enabled
+                      (i18n "yes_value")
+                      (i18n "no_value")
+                    }}
+                  </span>
+                </td>
+                <td class="d-table__cell">
+                  <div class="d-admin-row__mobile-label">
+                    {{i18n "user.upcoming_changes.for_user.why"}}
+                  </div>
+
+                  <span class="upcoming-change-reason">
+                    {{i18n
+                      (this.reasonKey upcomingChange.reason)
+                      username=@user.username
+                    }}
+                  </span>
                   {{#if
                     (and
                       (eq
@@ -73,9 +91,11 @@ export default class AdminUserUpcomingChanges extends Component {
                       upcomingChange.specific_groups.length
                     )
                   }}
-                    {{htmlSafe
-                      (this.getGroupLinks upcomingChange.specific_groups)
-                    }}
+                    <span class="upcoming-change-groups">
+                      {{htmlSafe
+                        (this.getGroupLinks upcomingChange.specific_groups)
+                      }}
+                    </span>
                   {{/if}}
                 </td>
               </tr>
