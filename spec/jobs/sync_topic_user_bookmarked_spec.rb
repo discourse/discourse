@@ -1,48 +1,53 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::SyncTopicUserBookmarked do
-  subject(:job) { described_class.new }
-
   fab!(:topic)
-  fab!(:post1) { Fabricate(:post, topic: topic) }
-  fab!(:post2) { Fabricate(:post, topic: topic) }
-  fab!(:post3) { Fabricate(:post, topic: topic) }
+  fab!(:post) { Fabricate(:post, topic:) }
 
-  fab!(:tu1) { Fabricate(:topic_user, topic: topic, bookmarked: false) }
-  fab!(:tu2) { Fabricate(:topic_user, topic: topic, bookmarked: false) }
-  fab!(:tu3) { Fabricate(:topic_user, topic: topic, bookmarked: true) }
-  fab!(:tu4) { Fabricate(:topic_user, topic: topic, bookmarked: true) }
-  fab!(:tu5) { Fabricate(:topic_user, topic: topic, bookmarked: true) }
+  fab!(:tu1) { Fabricate(:topic_user, topic:, bookmarked: false) }
+  fab!(:tu2) { Fabricate(:topic_user, topic:, bookmarked: false) }
+  fab!(:tu3) { Fabricate(:topic_user, topic:, bookmarked: true) }
+  fab!(:tu4) { Fabricate(:topic_user, topic:, bookmarked: true) }
 
-  it "corrects all topic_users.bookmarked records for the topic" do
-    Fabricate(:bookmark, user: tu1.user, bookmarkable: topic.posts.sample)
-    Fabricate(:bookmark, user: tu4.user, bookmarkable: topic.posts.sample)
+  def execute
+    described_class.new.execute(topic_id: topic.id)
+  end
 
-    job.execute(topic_id: topic.id)
+  it "syncs bookmarked to true for users with Post bookmarks and false for those without" do
+    Fabricate(:bookmark, user: tu1.user, bookmarkable: post)
+
+    execute
 
     expect(tu1.reload.bookmarked).to eq(true)
     expect(tu2.reload.bookmarked).to eq(false)
     expect(tu3.reload.bookmarked).to eq(false)
-    expect(tu4.reload.bookmarked).to eq(true)
-    expect(tu5.reload.bookmarked).to eq(false)
+    expect(tu4.reload.bookmarked).to eq(false)
   end
 
-  it "does not consider topic as bookmarked if the bookmarked post is deleted" do
-    Fabricate(:bookmark, user: tu1.user, bookmarkable: post1)
-    Fabricate(:bookmark, user: tu2.user, bookmarkable: post1)
-
-    post1.trash!
-
-    job.execute(topic_id: topic.id)
-
-    expect(tu1.reload.bookmarked).to eq(false)
-    expect(tu2.reload.bookmarked).to eq(false)
-  end
-
-  it "still considers the topic bookmarked if it has a Topic bookmarkable" do
-    expect(tu1.reload.bookmarked).to eq(false)
+  it "syncs bookmarked to true for users with Topic bookmarks" do
     Fabricate(:bookmark, user: tu1.user, bookmarkable: topic)
-    job.execute(topic_id: topic.id)
+
+    execute
+
     expect(tu1.reload.bookmarked).to eq(true)
+  end
+
+  it "syncs bookmarked to false when bookmarked post is deleted" do
+    Fabricate(:bookmark, user: tu1.user, bookmarkable: post)
+    post.trash!
+
+    execute
+
+    expect(tu1.reload.bookmarked).to eq(false)
+  end
+
+  it "handles Topic and Post bookmarks from different users correctly" do
+    Fabricate(:bookmark, user: tu3.user, bookmarkable: topic)
+    Fabricate(:bookmark, user: tu4.user, bookmarkable: post)
+
+    execute
+
+    expect(tu3.reload.bookmarked).to eq(true)
+    expect(tu4.reload.bookmarked).to eq(true)
   end
 end
