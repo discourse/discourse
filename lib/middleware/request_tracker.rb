@@ -94,39 +94,13 @@ class Middleware::RequestTracker
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
-
-        if data[:explicit_track_view]
-          # Must be a browser if it had this header from our ajax implementation
-          ApplicationRequest.increment!(:page_view_logged_in_browser)
-          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
-
-          if data[:topic_id].present? && data[:current_user_id].present?
-            TopicsController.defer_topic_view(
-              data[:topic_id],
-              data[:request_remote_ip],
-              data[:current_user_id],
-            )
-          end
-        end
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon)
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
-
-        if data[:explicit_track_view]
-          # Must be a browser if it had this header from our ajax implementation
-          ApplicationRequest.increment!(:page_view_anon_browser)
-          ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
-
-          if data[:topic_id].present?
-            TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
-          end
-        end
       end
     end
 
-    # Message-bus requests may include this 'deferred track' header which we use to detect
-    # 'real browser' views.
-    if data[:deferred_track_view] && !data[:is_crawler]
+    if data[:browser_page_view] && !data[:is_crawler]
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
