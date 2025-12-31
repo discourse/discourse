@@ -34,7 +34,7 @@ describe "Request tracking", type: :system do
       event = events.last
 
       expect(event[:user_id]).to be_nil
-      expect(event[:url]).to eq("http://localhost:31337/")
+      expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event[:ip_address]).to eq("::1")
       expect(event[:referrer]).to be_blank
       expect(event[:session_id]).to be_present
@@ -55,9 +55,9 @@ describe "Request tracking", type: :system do
       event = events.last
 
       expect(event[:user_id]).to be_nil
-      expect(event[:url]).to eq("http://localhost:31337/categories")
+      expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
       expect(event[:ip_address]).to eq("::1")
-      expect(event[:referrer]).to eq("http://localhost:31337/")
+      expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event[:session_id]).to eq(events.first[:session_id])
     end
 
@@ -107,7 +107,7 @@ describe "Request tracking", type: :system do
       event = events.last
 
       expect(event[:user_id]).to eq(user.id)
-      expect(event[:url]).to eq("http://localhost:31337/")
+      expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event[:ip_address]).to eq("::1")
       expect(event[:referrer]).to be_blank
       expect(event[:session_id]).to be_present
@@ -132,9 +132,9 @@ describe "Request tracking", type: :system do
       event = events.last
 
       expect(event[:user_id]).to eq(user.id)
-      expect(event[:url]).to eq("http://localhost:31337/categories")
+      expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
       expect(event[:ip_address]).to eq("::1")
-      expect(event[:referrer]).to eq("http://localhost:31337/")
+      expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event[:session_id]).to eq(events.first[:session_id])
     end
 
@@ -197,7 +197,7 @@ describe "Request tracking", type: :system do
       event = events.last
 
       expect(event[:user_id]).to be_nil
-      expect(event[:url]).to eq("http://localhost:31337/safe-mode")
+      expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/safe-mode")
       expect(event[:ip_address]).to eq("::1")
       expect(event[:referrer]).to be_blank
       expect(event[:session_id]).to be_present
@@ -261,7 +261,7 @@ describe "Request tracking", type: :system do
       event = events.last
 
       expect(event[:user_id]).to be_nil
-      expect(event[:url]).to eq("http://localhost:31337/pub/some-page")
+      expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/pub/some-page")
       expect(event[:ip_address]).to eq("::1")
       expect(event[:referrer]).to be_blank
       expect(event[:session_id]).to be_present
@@ -299,7 +299,7 @@ describe "Request tracking", type: :system do
         event = events.last
 
         expect(event[:user_id]).to eq(current_user.id)
-        expect(event[:url]).to eq("http://localhost:31337/t/#{topic.slug}/#{topic.id}")
+        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
         expect(event[:ip_address]).to eq("::1")
         expect(event[:referrer]).to be_blank
         expect(event[:session_id]).to be_present
@@ -331,9 +331,9 @@ describe "Request tracking", type: :system do
         event = events.last
 
         expect(event[:user_id]).to eq(current_user.id)
-        expect(event[:url]).to eq("http://localhost:31337/t/#{topic.slug}/#{topic.id}")
+        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
         expect(event[:ip_address]).to eq("::1")
-        expect(event[:referrer]).to eq("http://localhost:31337/")
+        expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
         expect(event[:session_id]).to be_present
       end
     end
@@ -362,7 +362,7 @@ describe "Request tracking", type: :system do
         event = events.last
 
         expect(event[:user_id]).to be_blank
-        expect(event[:url]).to eq("http://localhost:31337/t/#{topic.slug}/#{topic.id}")
+        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
         expect(event[:ip_address]).to eq("::1")
         expect(event[:referrer]).to be_blank
         expect(event[:session_id]).to be_present
@@ -393,9 +393,9 @@ describe "Request tracking", type: :system do
         event = events.last
 
         expect(event[:user_id]).to be_blank
-        expect(event[:url]).to eq("http://localhost:31337/t/#{topic.slug}/#{topic.id}")
+        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
         expect(event[:ip_address]).to eq("::1")
-        expect(event[:referrer]).to eq("http://localhost:31337/")
+        expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
         expect(event[:session_id]).to be_present
       end
     end
