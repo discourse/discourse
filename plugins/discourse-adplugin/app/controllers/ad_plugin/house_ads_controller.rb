@@ -48,7 +48,7 @@ module AdPlugin
       ad = HouseAd.find_by(id: house_ad_params[:id])
 
       if ad.nil?
-        ad = HouseAd.new(house_ad_params.except(:id))
+        ad = HouseAd.new(house_ad_params.except(:id, :routes))
         if ad.save
           sync_routes(ad, house_ad_params[:routes])
           render_json_dump(
@@ -62,7 +62,7 @@ module AdPlugin
           render_json_error(ad)
         end
       else
-        if ad.update(house_ad_params.except(:id))
+        if ad.update(house_ad_params.except(:id, :routes))
           sync_routes(ad, house_ad_params[:routes])
           render_json_dump(
             serialize_data(
