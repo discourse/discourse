@@ -23,6 +23,7 @@ export default class ChatChannelsManager extends Service {
   @service chatDraftsManager;
   @service siteSettings;
 
+  @tracked hasThreads = false;
   @tracked _cached = new TrackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
@@ -148,6 +149,10 @@ export default class ChatChannelsManager extends Service {
   @cached
   get hasThreadedChannels() {
     return this.allChannels?.some((channel) => channel.threadingEnabled);
+  }
+
+  get shouldShowMyThreads() {
+    return this.hasThreadedChannels && this.hasThreads;
   }
 
   get allChannels() {

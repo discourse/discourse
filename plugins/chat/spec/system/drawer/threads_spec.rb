@@ -3,12 +3,15 @@
 RSpec.describe "Drawer - threads", type: :system do
   fab!(:current_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
+  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
+  fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1, original_message: message_1) }
 
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
     SiteSetting.chat_threads_enabled = true
     channel_1.add(current_user)
+    thread_1.add(current_user)
     chat_system_bootstrap
     sign_in(current_user)
   end

@@ -44,14 +44,18 @@ module Chat
     before_create { self.last_message_id = self.original_message_id }
 
     def add(user, notification_level: Chat::NotificationLevels.all[:tracking])
-      membership = Chat::UserChatThreadMembership.find_by(user: user, thread: self)
+      membership = Chat::UserChatThreadMembership.find_by(user:, thread: self)
       return membership if membership
 
-      Chat::UserChatThreadMembership.create!(
-        user: user,
-        thread: self,
-        notification_level: notification_level,
-      )
+      is_first = channel.threading_enabled && !Chat::ChannelFetcher.user_has_threads?(user)
+
+      membership = Chat::UserChatThreadMembership.create!(user:, thread: self, notification_level:)
+
+      if is_first && !membership.muted?
+        DB.after_commit { Chat::Publisher.publish_user_has_threads!(user) }
+      end
+
+      membership
     end
 
     def remove(user)

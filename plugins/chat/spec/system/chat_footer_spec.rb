@@ -43,6 +43,8 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
     context "when user is a member of at least one channel with threads" do
       it "shows threads tab when user has threads" do
         SiteSetting.chat_threads_enabled = true
+        thread = Fabricate(:chat_thread, channel:, original_message: message)
+        thread.add(current_user)
 
         visit("/")
         chat_page.open_from_header

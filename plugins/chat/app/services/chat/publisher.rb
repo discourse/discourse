@@ -343,6 +343,18 @@ module Chat
       )
     end
 
+    def self.user_thread_memberships_message_bus_channel(user_id)
+      "/chat/user-thread-memberships/#{user_id}"
+    end
+
+    def self.publish_user_has_threads!(user)
+      MessageBus.publish(
+        user_thread_memberships_message_bus_channel(user.id),
+        { has_threads: true },
+        user_ids: [user.id],
+      )
+    end
+
     def self.new_mentions_message_bus_channel(chat_channel_id)
       "/chat/#{chat_channel_id}/new-mentions"
     end

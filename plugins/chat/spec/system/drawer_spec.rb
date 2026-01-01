@@ -275,10 +275,13 @@ RSpec.describe "Drawer", type: :system do
 
     context "when clicking footer nav items" do
       fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
+      fab!(:thread) { Fabricate(:chat_thread, channel:, original_message: message) }
 
       before do
         SiteSetting.chat_threads_enabled = true
         channel.add(current_user)
+        thread.add(current_user)
       end
 
       it "shows active state" do

@@ -2,6 +2,7 @@
 
 RSpec.describe "User threads", type: :system do
   fab!(:current_user, :user)
+  fab!(:other_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -9,6 +10,7 @@ RSpec.describe "User threads", type: :system do
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
   let(:user_threads_page) { PageObjects::Pages::UserThreads.new }
 
   before do
@@ -17,13 +19,23 @@ RSpec.describe "User threads", type: :system do
   end
 
   context "when in sidebar" do
-    context "when user is a member of at least one channel with threads" do
-      before { channel_1.add(current_user) }
+    context "when user has threads" do
+      before { chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, other_user]) }
 
       it "shows a link to user threads" do
         visit("/")
 
         expect(sidebar_page).to have_user_threads_section
+      end
+    end
+
+    context "when user has no threads" do
+      before { channel_1.add(current_user) }
+
+      it "does not show a link to user threads" do
+        visit("/")
+
+        expect(sidebar_page).to have_no_user_threads_section
       end
     end
 
@@ -135,13 +147,24 @@ RSpec.describe "User threads", type: :system do
   context "when in drawer" do
     before { SiteSetting.chat_threads_enabled = true }
 
-    context "when user is a member of at least one channel with threads" do
-      before { channel_1.add(current_user) }
+    context "when user has threads" do
+      before { chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, other_user]) }
 
       it "shows the user threads tab" do
         visit("/")
         chat_page.open_from_header
         expect(drawer_page).to have_user_threads_section
+      end
+    end
+
+    context "when user has no threads" do
+      before { channel_1.add(current_user) }
+
+      it "does not show the user threads tab" do
+        visit("/")
+        chat_page.open_from_header
+
+        expect(drawer_page).to have_no_user_threads_section
       end
     end
 
@@ -269,6 +292,106 @@ RSpec.describe "User threads", type: :system do
       expect(user_threads_page).to have_css(".c-user-thread .relative-date")
 
       expect(user_threads_page.excerpt_text).to eq("How's everyone doing?")
+    end
+  end
+
+  context "when user gets their first thread" do
+    before do
+      SiteSetting.chat_threads_enabled = true
+      channel_1.add(current_user)
+      channel_1.add(other_user)
+    end
+
+    context "when user starts a new thread by replying to a message" do
+      fab!(:message_1) do
+        Fabricate(:chat_message, chat_channel: channel_1, user: other_user, use_service: true)
+      end
+
+      it "shows My Threads section after starting a thread" do
+        visit("/")
+        expect(sidebar_page).to have_no_user_threads_section
+
+        chat_page.visit_channel(channel_1)
+        channel_page.reply_to(message_1)
+        thread_page.fill_composer("starting a new thread")
+        thread_page.click_send_message
+
+        expect(thread_page.messages).to have_message(text: "starting a new thread")
+
+        visit("/")
+        expect(sidebar_page).to have_user_threads_section
+      end
+    end
+
+    context "when user replies to an existing thread" do
+      fab!(:thread_1) do
+        Fabricate(
+          :chat_thread,
+          channel: channel_1,
+          original_message: Fabricate(:chat_message, chat_channel: channel_1, user: other_user),
+        )
+      end
+
+      before { Fabricate(:chat_message, thread: thread_1, user: other_user, use_service: true) }
+
+      it "shows My Threads section after replying to a thread" do
+        visit("/")
+        expect(sidebar_page).to have_no_user_threads_section
+
+        chat_page.visit_thread(thread_1)
+        thread_page.send_message("replying to thread")
+
+        expect(thread_page.messages).to have_message(text: "replying to thread")
+
+        visit("/")
+        expect(sidebar_page).to have_user_threads_section
+      end
+    end
+
+    context "when someone replies to the user's message creating a thread" do
+      fab!(:user_message) do
+        Fabricate(:chat_message, chat_channel: channel_1, user: current_user, use_service: true)
+      end
+
+      it "shows My Threads section when someone starts a thread on user's message" do
+        visit("/")
+        expect(sidebar_page).to have_no_user_threads_section
+
+        using_session(:other_user) do
+          sign_in(other_user)
+          chat_page.visit_channel(channel_1)
+          channel_page.reply_to(user_message)
+          thread_page.fill_composer("replying to your message")
+          thread_page.click_send_message
+        end
+
+        expect(sidebar_page).to have_user_threads_section
+      end
+    end
+
+    context "when user is @mentioned in a thread" do
+      fab!(:thread_1) do
+        Fabricate(
+          :chat_thread,
+          channel: channel_1,
+          original_message: Fabricate(:chat_message, chat_channel: channel_1, user: other_user),
+        )
+      end
+
+      before { Fabricate(:chat_message, thread: thread_1, user: other_user, use_service: true) }
+
+      it "shows My Threads section when mentioned in a thread" do
+        visit("/")
+        expect(sidebar_page).to have_no_user_threads_section
+
+        using_session(:other_user) do
+          sign_in(other_user)
+          chat_page.visit_thread(thread_1)
+          thread_page.send_message("hey @#{current_user.username} check this out")
+        end
+
+        expect(sidebar_page).to have_user_threads_section
+      end
     end
   end
 end

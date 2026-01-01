@@ -15,12 +15,17 @@ module Chat
 
     model :structured
     step :inject_unread_thread_overview
+    step :inject_has_threads
     model :post_allowed_category_ids, optional: true
 
     private
 
     def fetch_structured(guardian:)
       ::Chat::ChannelFetcher.structured(guardian)
+    end
+
+    def inject_has_threads(structured:, guardian:)
+      structured[:has_threads] = ::Chat::ChannelFetcher.user_has_threads?(guardian.user)
     end
 
     def inject_unread_thread_overview(structured:, guardian:)

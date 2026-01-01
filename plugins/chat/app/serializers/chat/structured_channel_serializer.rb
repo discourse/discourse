@@ -2,7 +2,12 @@
 
 module Chat
   class StructuredChannelSerializer < ApplicationSerializer
-    attributes :public_channels, :direct_message_channels, :tracking, :meta, :unread_thread_overview
+    attributes :public_channels,
+               :direct_message_channels,
+               :tracking,
+               :meta,
+               :unread_thread_overview,
+               :has_threads
 
     def tracking
       object[:tracking]
@@ -10,6 +15,10 @@ module Chat
 
     def unread_thread_overview
       object[:unread_thread_overview]
+    end
+
+    def has_threads
+      object[:has_threads]
     end
 
     def public_channels
@@ -77,7 +86,15 @@ module Chat
             Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id)
           ]
 
+        user_thread_memberships_last_id =
+          chat_message_bus_last_ids[
+            Chat::Publisher.user_thread_memberships_message_bus_channel(scope.user.id)
+          ]
+
         last_ids[:user_tracking_state] = user_tracking_state_last_id if user_tracking_state_last_id
+        last_ids[
+          :user_thread_memberships
+        ] = user_thread_memberships_last_id if user_thread_memberships_last_id
       end
 
       { message_bus_last_ids: last_ids }
@@ -99,6 +116,7 @@ module Chat
           if !scope.anonymous?
             message_bus_channels.push(
               Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id),
+              Chat::Publisher.user_thread_memberships_message_bus_channel(scope.user.id),
             )
           end
 

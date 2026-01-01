@@ -215,6 +215,8 @@ export default class Chat extends Service {
     );
     this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
 
+    this.chatChannelsManager.hasThreads = channelsView.has_threads ?? false;
+
     [
       ...channelsView.public_channels,
       ...channelsView.direct_message_channels,

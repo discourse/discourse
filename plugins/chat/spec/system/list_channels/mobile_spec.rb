@@ -238,6 +238,9 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     it "redirects to threads" do
       channel = Fabricate(:chat_channel, threading_enabled: true)
       channel.add(current_user)
+      message = Fabricate(:chat_message, chat_channel: channel, user: current_user)
+      thread = Fabricate(:chat_thread, channel:, original_message: message)
+      thread.add(current_user)
 
       visit("/chat")
 

@@ -291,5 +291,16 @@ module Chat
       raise Discourse::InvalidAccess if !guardian.can_join_chat_channel?(chat_channel)
       chat_channel
     end
+
+    def self.user_has_threads?(user)
+      return false if user.blank?
+
+      Chat::UserChatThreadMembership
+        .joins(thread: :channel)
+        .where(user_id: user.id)
+        .where.not(notification_level: Chat::NotificationLevels.all[:muted])
+        .where(chat_channels: { threading_enabled: true, status: :open })
+        .exists?
+    end
   end
 end
