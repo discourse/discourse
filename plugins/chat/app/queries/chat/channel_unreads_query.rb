@@ -27,11 +27,22 @@ module Chat
           INNER JOIN chat_channels ON chat_channels.id = chat_messages.chat_channel_id
           INNER JOIN user_chat_channel_memberships ON user_chat_channel_memberships.chat_channel_id = chat_channels.id
           LEFT JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
+          LEFT JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_messages.thread_id AND user_chat_thread_memberships.user_id = :user_id
           WHERE chat_channels.id = memberships.chat_channel_id
           AND user_chat_channel_memberships.user_id = :user_id
           AND chat_messages.id > COALESCE(user_chat_channel_memberships.last_read_message_id, 0)
           AND chat_messages.deleted_at IS NULL
-          AND (chat_messages.thread_id IS NULL OR chat_messages.id = chat_threads.original_message_id)
+          AND (
+            chat_messages.thread_id IS NULL
+            OR chat_messages.id = chat_threads.original_message_id
+            OR (
+              chat_channels.chatable_type = 'DirectMessage'
+              AND NOT chat_channels.threading_enabled
+              AND user_chat_thread_memberships.id IS NOT NULL
+              AND chat_messages.id > COALESCE(user_chat_thread_memberships.last_read_message_id, 0)
+              AND chat_messages.user_id != :user_id
+            )
+          )
           AND NOT user_chat_channel_memberships.muted
         ) AS unread_count,
         (
