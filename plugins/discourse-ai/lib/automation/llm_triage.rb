@@ -185,7 +185,7 @@ module DiscourseAi
             # Check if another triage rule already created a reviewable for this post.
             # We'll later use it to avoid sending multiple PMs to the user.
             # We are doing this now before we create another flag.
-            already_flagged = flagged_by_another_triage_rule?(post) || flagged_by_tool
+            already_flagged = flagged_by_another_triage_rule?(post)
 
             score_reason =
               I18n.t(
@@ -253,7 +253,7 @@ module DiscourseAi
             end
           end
 
-          if notify_author_pm && action != :edit && !already_flagged && !flagged_by_tool
+          if notify_author_pm && action != :edit && !already_flagged
             begin
               pm_sender =
                 if notify_author_pm_user.present?

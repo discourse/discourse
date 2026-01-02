@@ -35,11 +35,7 @@ module DiscourseAi
         end
 
         def self.accepted_options
-          [
-            option(:flag_type, type: :enum, values: FLAG_TYPES, default: "review"),
-            option(:notify_author_pm, type: :boolean, default: false),
-            option(:notify_author_pm_message, type: :text),
-          ]
+          [option(:flag_type, type: :enum, values: FLAG_TYPES, default: "review")]
         end
 
         def self.name
@@ -57,28 +53,6 @@ module DiscourseAi
         def flag_type
           persona_flag_type = persona_option(:flag_type)
           (persona_flag_type.presence || feature_context[:flag_type].presence || "review").to_s
-        end
-
-        def notify_author_pm?
-          if persona_options.is_a?(Hash) && persona_options.key?(:notify_author_pm)
-            return ActiveModel::Type::Boolean.new.cast(persona_options[:notify_author_pm])
-          end
-          return !!feature_context[:notify_author_pm] if feature_context.key?(:notify_author_pm)
-
-          false
-        end
-
-        def notify_author_pm_message
-          persona_message = persona_option(:notify_author_pm_message)
-          persona_message.presence || feature_context[:notify_author_pm_message].presence || nil
-        end
-
-        def notify_author_pm_user
-          feature_context[:notify_author_pm_user]
-        end
-
-        def action
-          feature_context[:action].to_s
         end
 
         def invoke
@@ -154,8 +128,6 @@ module DiscourseAi
             end
           end
 
-          send_author_pm if flag_success && notify_author_pm? && action != "edit"
-
           { status: "flagged", message: I18n.t("discourse_ai.ai_bot.flag_post.flagged") }
         end
 
@@ -200,43 +172,6 @@ module DiscourseAi
 
         def error_response(message)
           { status: "error", error: message }
-        end
-
-        def send_author_pm
-          subject = I18n.t("discourse_automation.scriptables.llm_triage.notify_author_pm.subject")
-
-          default_body =
-            I18n.t(
-              "discourse_automation.scriptables.llm_triage.notify_author_pm.body",
-              username: post.user.username,
-              topic_title: post.topic.title,
-              post_url: post.url,
-            )
-
-          body = notify_author_pm_message.presence || default_body
-
-          sender =
-            if notify_author_pm_user.present?
-              User.find_by_username(notify_author_pm_user)
-            else
-              nil
-            end
-          sender ||= Discourse.system_user
-
-          PostCreator.create!(
-            sender,
-            title: subject,
-            raw: body,
-            archetype: Archetype.private_message,
-            target_usernames: post.user.username,
-            skip_validations: true,
-          )
-        rescue StandardError => e
-          Discourse.warn_exception(
-            e,
-            message: "Error sending PM notification from flag_post tool for #{post&.url}",
-          )
-          raise e if Rails.env.test?
         end
 
         def feature_context

@@ -509,12 +509,6 @@ en:
           flag_type:
             name: "Flag Type"
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
-          notify_author_pm:
-            name: "Notify Author"
-            description: "Send a personal message to the author after flagging."
-          notify_author_pm_message:
-            name: "Notify Author Message"
-            description: "Custom message to send to the author."
       tool_summary:
         read_artifact: "Read a web artifact"
         update_artifact: "Update a web artifact"
