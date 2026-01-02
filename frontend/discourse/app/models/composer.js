@@ -262,6 +262,46 @@ export default class Composer extends RestModel {
     return replyDirty || titleDirty || hasMetaData;
   }
 
+  @discourseComputed(
+    "anyDirty",
+    "replyingToTopic",
+    "creatingTopic",
+    "creatingPrivateMessage",
+    "reply",
+    "title",
+    "hasMetaData"
+  )
+  anyContentToSave(
+    anyDirty,
+    replyingToTopic,
+    creatingTopic,
+    creatingPrivateMessage,
+    reply,
+    title,
+    hasMetaData
+  ) {
+    if (anyDirty) {
+      return true;
+    }
+
+    if (replyingToTopic && !isEmpty(reply)) {
+      return true;
+    }
+
+    if (creatingTopic && (!isEmpty(title) || hasMetaData || !isEmpty(reply))) {
+      return true;
+    }
+
+    if (
+      creatingPrivateMessage &&
+      (!isEmpty(title) || hasMetaData || !isEmpty(reply))
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   @dependentKeyCompat
   get categoryId() {
     return this._categoryId;
@@ -961,6 +1001,7 @@ export default class Composer extends RestModel {
       archetypeId: opts.archetypeId || this.site.default_archetype,
       metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
       reply: opts.reply || this.reply || "",
+      originalText: opts.reply || this.reply || "",
     });
 
     // We set the category id separately for topic templates on opening of composer
@@ -1012,7 +1053,11 @@ export default class Composer extends RestModel {
       });
     } else if (opts.action === REPLY && opts.quote) {
       this.set("reply", opts.quote);
-      this.set("originalText", opts.quote);
+
+      // Set originalText to an empty string so that the reply is considered dirty
+      // even if the user doesn't modify the quoted text. We want to save drafts
+      // when there are only quotes in the reply.
+      this.set("originalText", "");
     }
 
     if (opts.title) {
@@ -1347,6 +1392,10 @@ export default class Composer extends RestModel {
       }
     }
 
+    if (!this.anyDirty) {
+      return false;
+    }
+
     return true;
   }
 
@@ -1361,6 +1410,12 @@ export default class Composer extends RestModel {
 
     const draftSequence = this.draftSequence;
     this.set("draftSequence", this.draftSequence + 1);
+
+    // Original text only applies when editing posts since it
+    // is used to check for edit conflicts.
+    if (!this.editingPost) {
+      delete data.original_text;
+    }
 
     return Draft.save(
       this.draftKey,
