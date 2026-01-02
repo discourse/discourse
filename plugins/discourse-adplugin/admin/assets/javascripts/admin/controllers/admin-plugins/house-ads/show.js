@@ -13,11 +13,13 @@ import Preview from "../../../components/modal/preview";
 export default class adminPluginsHouseAdsShow extends Controller {
   @service router;
   @service modal;
+  @service siteSettings;
 
   @controller("adminPlugins.houseAds") houseAdsController;
 
   @tracked selectedCategories = [];
   @tracked selectedGroups = [];
+  @tracked selectedRoutes = [];
   @tracked saving = false;
   @tracked savingStatus = "";
   @tracked buffered;
@@ -27,6 +29,7 @@ export default class adminPluginsHouseAdsShow extends Controller {
     this.buffered = new TrackedObject({ ...this.model });
     this.selectedCategories = this.model.categories || [];
     this.selectedGroups = this.model.groups || [];
+    this.selectedRoutes = this.model.routes || [];
   }
 
   get disabledSave() {
@@ -36,6 +39,10 @@ export default class adminPluginsHouseAdsShow extends Controller {
       }
     }
     return true;
+  }
+
+  get routesEnabled() {
+    return this.siteSettings.ad_plugin_routes_enabled;
   }
 
   @action
@@ -59,6 +66,7 @@ export default class adminPluginsHouseAdsShow extends Controller {
       data.group_ids = this.buffered.groups
         ? this.buffered.groups.map((g) => g.id)
         : [];
+      data.routes = this.buffered.routes || [];
       try {
         const ajaxData = await ajax(
           newRecord
@@ -105,6 +113,12 @@ export default class adminPluginsHouseAdsShow extends Controller {
   setGroupIds(groupIds) {
     this.selectedGroups = groupIds;
     this.buffered.groups = groupIds;
+  }
+
+  @action
+  setRoutes(routes) {
+    this.selectedRoutes = routes;
+    this.buffered.routes = routes;
   }
 
   @action

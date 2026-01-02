@@ -190,4 +190,30 @@ describe AdPlugin::HouseAd do
       expect(ad.errors.count).to eq(2)
     end
   end
+
+  describe "routes" do
+    let(:ad) { AdPlugin::HouseAd.create(valid_attrs) }
+
+    it "returns route names" do
+      ad.routes.create!(route_name: "discovery.latest")
+      ad.routes.create!(route_name: "topic.show")
+
+      expect(ad.route_names).to contain_exactly("discovery.latest", "topic.show")
+    end
+
+    it "replaces routes cleanly" do
+      ad.routes.create!(route_name: "discovery.latest")
+
+      ad.routes.delete_all
+      ad.routes.create!(route_name: "discovery.top")
+
+      expect(ad.reload.route_names).to eq(["discovery.top"])
+    end
+
+    it "deletes routes when the ad is destroyed" do
+      ad.routes.create!(route_name: "discovery.latest")
+
+      expect { ad.destroy }.to change { AdPlugin::HouseAdRoute.count }.by(-1)
+    end
+  end
 end
