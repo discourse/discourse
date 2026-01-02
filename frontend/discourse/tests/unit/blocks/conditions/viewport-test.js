@@ -1,8 +1,8 @@
 import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { BlockConditionValidationError } from "discourse/blocks/conditions";
 import BlockViewportCondition from "discourse/blocks/conditions/viewport";
+import { BlockError } from "discourse/lib/blocks/error";
 
 module("Unit | Blocks | Condition | viewport", function (hooks) {
   setupTest(hooks);
@@ -14,23 +14,20 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
 
   module("validate", function () {
     test("throws for invalid min breakpoint", function (assert) {
-      assert.throws(
-        () => this.condition.validate({ min: "xxl" }),
-        BlockConditionValidationError
-      );
+      assert.throws(() => this.condition.validate({ min: "xxl" }), BlockError);
     });
 
     test("throws for invalid max breakpoint", function (assert) {
       assert.throws(
         () => this.condition.validate({ max: "invalid" }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 
     test("throws when min > max", function (assert) {
       assert.throws(
         () => this.condition.validate({ min: "xl", max: "sm" }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 

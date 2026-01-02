@@ -2,10 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import {
-  BlockCondition,
-  BlockConditionValidationError,
-} from "discourse/blocks/conditions";
+import { BlockCondition } from "discourse/blocks/conditions";
 import { block } from "discourse/components/block-outlet";
 import {
   _registerBlock,
@@ -377,13 +374,5 @@ module("Unit | Service | blocks", function (hooks) {
       assert.true(!!injectedSiteSettings, "siteSettings was injected");
       assert.strictEqual(typeof injectedSiteSettings.title, "string");
     });
-  });
-});
-
-module("Unit | Conditions | BlockConditionValidationError", function () {
-  test("has correct name property", function (assert) {
-    const error = new BlockConditionValidationError("test message");
-    assert.strictEqual(error.name, "BlockConditionValidationError");
-    assert.strictEqual(error.message, "test message");
   });
 });

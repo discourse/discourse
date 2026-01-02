@@ -12,8 +12,8 @@
 export { block } from "discourse/components/block-outlet";
 export {
   BlockCondition,
-  BlockConditionValidationError,
   BlockRouteConditionShortcuts,
+  raiseBlockValidationError,
 } from "discourse/blocks/conditions";
 
 // Core block components (auto-discovered by Blocks service via isBlock check)

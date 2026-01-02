@@ -1,8 +1,8 @@
 import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { BlockConditionValidationError } from "discourse/blocks/conditions";
 import BlockUserCondition from "discourse/blocks/conditions/user";
+import { BlockError } from "discourse/lib/blocks/error";
 
 module("Unit | Blocks | Condition | user", function (hooks) {
   setupTest(hooks);
@@ -16,35 +16,35 @@ module("Unit | Blocks | Condition | user", function (hooks) {
     test("throws when loggedIn: false combined with admin", function (assert) {
       assert.throws(
         () => this.condition.validate({ loggedIn: false, admin: true }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 
     test("throws when loggedIn: false combined with moderator", function (assert) {
       assert.throws(
         () => this.condition.validate({ loggedIn: false, moderator: true }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 
     test("throws when loggedIn: false combined with staff", function (assert) {
       assert.throws(
         () => this.condition.validate({ loggedIn: false, staff: true }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 
     test("throws when loggedIn: false combined with minTrustLevel", function (assert) {
       assert.throws(
         () => this.condition.validate({ loggedIn: false, minTrustLevel: 2 }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 
     test("throws when loggedIn: false combined with maxTrustLevel", function (assert) {
       assert.throws(
         () => this.condition.validate({ loggedIn: false, maxTrustLevel: 2 }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 
@@ -52,14 +52,14 @@ module("Unit | Blocks | Condition | user", function (hooks) {
       assert.throws(
         () =>
           this.condition.validate({ loggedIn: false, groups: ["some-group"] }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 
     test("throws when minTrustLevel > maxTrustLevel", function (assert) {
       assert.throws(
         () => this.condition.validate({ minTrustLevel: 3, maxTrustLevel: 1 }),
-        BlockConditionValidationError
+        BlockError
       );
     });
 

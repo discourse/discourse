@@ -28,7 +28,11 @@ import {
   validateBlockArgs,
 } from "discourse/lib/blocks/arg-validation";
 import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import {
+  clearBlockErrorContext,
+  raiseBlockError,
+  setBlockErrorContext,
+} from "discourse/lib/blocks/error";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
 /**
@@ -678,18 +682,31 @@ export function renderBlocks(outletName, config, owner) {
  * @param {Array<Object>} blocksConfig - Block configurations to validate
  * @param {string} outletName - The outlet these blocks belong to
  * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions
+ * @param {string} [parentPath="blocks"] - JSON-path style parent location for error context
  * @throws {Error} If any block configuration is invalid
  */
-function validateConfig(blocksConfig, outletName, blocksService) {
-  for (const blockConfig of blocksConfig) {
+function validateConfig(
+  blocksConfig,
+  outletName,
+  blocksService,
+  parentPath = "blocks"
+) {
+  blocksConfig.forEach((blockConfig, index) => {
+    const currentPath = `${parentPath}[${index}]`;
+
     // Validate the block itself (whether it has children or not)
-    validateBlock(blockConfig, outletName, blocksService);
+    validateBlock(blockConfig, outletName, blocksService, currentPath);
 
     // Recursively validate nested children
     if (blockConfig.children) {
-      validateConfig(blockConfig.children, outletName, blocksService);
+      validateConfig(
+        blockConfig.children,
+        outletName,
+        blocksService,
+        `${currentPath}.children`
+      );
     }
-  }
+  });
 }
 
 /**
@@ -720,9 +737,10 @@ function hasConfig(outletName) {
  * @param {Array<Object>|Object} [config.conditions] - Conditions for rendering
  * @param {string} outletName - The outlet this block belongs to
  * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions
+ * @param {string} [path] - JSON-path style location in config (e.g., "blocks[3].children[0]")
  * @throws {Error} If validation fails
  */
-function validateBlock(config, outletName, blocksService) {
+function validateBlock(config, outletName, blocksService, path) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
     raiseBlockError(`Unknown block outlet: ${outletName}`);
     return;
@@ -754,38 +772,58 @@ function validateBlock(config, outletName, blocksService) {
     return;
   }
 
-  const hasChildren = config.children?.length > 0;
-  const isContainer = isContainerBlock(config.block);
+  // Set error context for all subsequent validation errors
+  setBlockErrorContext({
+    outletName,
+    blockName,
+    path,
+    config,
+  });
 
-  if (hasChildren && !isContainer) {
-    raiseBlockError(
-      `Block component ${config.name} (${config.block}) in layout ${outletName} cannot have children`
-    );
-    return;
-  }
+  try {
+    const hasChildren = config.children?.length > 0;
+    const isContainer = isContainerBlock(config.block);
 
-  if (isContainer && !hasChildren) {
-    raiseBlockError(
-      `Block component ${config.name} (${config.block}) in layout ${outletName} must have children`
-    );
-    return;
-  }
-
-  validateReservedArgs(config, outletName);
-
-  // Validate block args against metadata schema
-  validateBlockArgs(config, outletName);
-
-  // Validate conditions if service is available
-  // In production, blocksService.validate() logs warnings instead of throwing
-  if (config.conditions && blocksService) {
-    try {
-      blocksService.validate(config.conditions);
-    } catch (error) {
+    if (hasChildren && !isContainer) {
       raiseBlockError(
-        `Invalid conditions for block "${config.block.blockName || config.name}" in outlet "${outletName}": ${error.message}`
+        `Block component ${config.name} (${config.block}) in layout ${outletName} cannot have children`
       );
+      return;
     }
+
+    if (isContainer && !hasChildren) {
+      raiseBlockError(
+        `Block component ${config.name} (${config.block}) in layout ${outletName} must have children`
+      );
+      return;
+    }
+
+    validateReservedArgs(config, outletName);
+
+    // Validate block args against metadata schema
+    validateBlockArgs(config, outletName);
+
+    // Validate conditions if service is available
+    // In production, blocksService.validate() logs warnings instead of throwing
+    if (config.conditions && blocksService) {
+      // Update context to include conditions for better error messages
+      setBlockErrorContext({
+        outletName,
+        blockName,
+        path,
+        conditions: config.conditions,
+      });
+
+      try {
+        blocksService.validate(config.conditions);
+      } catch (error) {
+        raiseBlockError(
+          `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`
+        );
+      }
+    }
+  } finally {
+    clearBlockErrorContext();
   }
 }
 

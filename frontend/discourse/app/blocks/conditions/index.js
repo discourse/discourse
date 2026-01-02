@@ -1,9 +1,5 @@
-// Base class, error, and validation helper
-export {
-  BlockCondition,
-  BlockConditionValidationError,
-  raiseBlockValidationError,
-} from "./base";
+// Base class and error helper
+export { BlockCondition, raiseBlockValidationError } from "./base";
 
 // Built-in condition classes
 // The BlockConditionEvaluator service discovers these via `import *` and inheritance check

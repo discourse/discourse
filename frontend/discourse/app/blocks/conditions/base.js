@@ -1,4 +1,4 @@
-import { DEBUG } from "@glimmer/env";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 
 /**
  * Base class for all block conditions.
@@ -49,8 +49,8 @@ export class BlockCondition {
    * Override this method to check for required args, conflicting args,
    * or invalid values.
    *
-   * @param {Object} args - The condition arguments from the block config
-   * @throws {BlockConditionValidationError} If validation fails
+   * @param {Object} args - The condition arguments from the block config.
+   * @throws {BlockError} If validation fails.
    */
   // eslint-disable-next-line no-unused-vars
   validate(args) {
@@ -62,11 +62,11 @@ export class BlockCondition {
    * Evaluates whether the condition passes.
    * Called at render time to determine if a block should be shown.
    *
-   * @param {Object} args - The condition arguments from the block config
-   * @param {Object} [context] - Evaluation context from the blocks service
-   * @param {boolean} [context.debug] - Whether debug logging is enabled
-   * @param {number} [context._depth] - Current nesting depth for logging
-   * @returns {boolean} True if condition passes, false otherwise
+   * @param {Object} args - The condition arguments from the block config.
+   * @param {Object} [context] - Evaluation context from the blocks service.
+   * @param {boolean} [context.debug] - Whether debug logging is enabled.
+   * @param {number} [context._depth] - Current nesting depth for logging.
+   * @returns {boolean} True if condition passes, false otherwise.
    */
   // eslint-disable-next-line no-unused-vars
   evaluate(args, context) {
@@ -75,44 +75,18 @@ export class BlockCondition {
 }
 
 /**
- * Error thrown when condition validation fails.
- * Used by condition classes in their `validate()` method to report
- * configuration errors at registration time.
- *
- * @class BlockConditionValidationError
- * @extends Error
- */
-export class BlockConditionValidationError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "BlockConditionValidationError";
-  }
-}
-
-/**
  * Raises a block validation error.
  *
- * In development/test environments, throws a `BlockConditionValidationError`.
+ * In development/test environments, throws a `BlockError`.
  * In production, dispatches a `discourse-error` event that surfaces the error
  * to admin users via a banner (handled by `ClientErrorHandlerService`).
  *
+ * If an error context has been set via `setBlockErrorContext()`, the error
+ * message will include the block hierarchy and conditions config for debugging.
+ *
  * @param {string} message - The error message describing the validation failure.
- * @throws {BlockConditionValidationError} In development/test environments.
+ * @throws {BlockError} In development/test environments.
  */
 export function raiseBlockValidationError(message) {
-  const error = new BlockConditionValidationError(message);
-
-  if (DEBUG) {
-    throw error;
-  } else {
-    // Surface to admins via error banner (only visible to admin users)
-    document.dispatchEvent(
-      new CustomEvent("discourse-error", {
-        detail: {
-          messageKey: "broken_block_condition_alert",
-          error,
-        },
-      })
-    );
-  }
+  raiseBlockError(message);
 }
