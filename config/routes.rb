@@ -71,6 +71,7 @@ Discourse::Application.routes.draw do
     get "finish-installation" => "finish_installation#index"
     get "finish-installation/register" => "finish_installation#register"
     post "finish-installation/register" => "finish_installation#register"
+    get "finish-installation/redirect-discourse-id" => "finish_installation#redirect_discourse_id"
     get "finish-installation/confirm-email" => "finish_installation#confirm_email"
     put "finish-installation/resend-email" => "finish_installation#resend_email"
 
@@ -725,7 +726,7 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
             group_name: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/tags/:tag_id" => "list#private_messages_tag",
+      get "#{root_path}/:username/messages/tags/:tag_name" => "list#private_messages_tag",
           :constraints => {
             username: RouteFormat.username,
           }
@@ -1274,8 +1275,13 @@ Discourse::Application.routes.draw do
     post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
     delete "/post_localizations/destroy", to: "post_localizations#destroy"
 
+    get "topic_localizations/:topic_id/:locale" => "topic_localizations#show"
     post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
     delete "topic_localizations/destroy", to: "topic_localizations#destroy"
+
+    get "/tag_localizations/:id" => "tag_localizations#show"
+    post "tag_localizations/create_or_update", to: "tag_localizations#create_or_update"
+    delete "tag_localizations/destroy", to: "tag_localizations#destroy"
 
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"
@@ -1447,7 +1453,7 @@ Discourse::Application.routes.draw do
           :defaults => {
             format: :json,
           }
-      get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag",
+      get "private-messages-tags/:username/:tag_name.json" => "list#private_messages_tag",
           :as => "topics_private_messages_tag",
           :defaults => {
             format: :json,
@@ -1651,7 +1657,7 @@ Discourse::Application.routes.draw do
     get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
-    scope "/tag/:tag_id" do
+    scope "/tag/:tag_name" do
       constraints format: :json do
         get "/" => "tags#show", :as => "tag_show"
         get "/info" => "tags#info"
@@ -1686,44 +1692,45 @@ Discourse::Application.routes.draw do
       get "/unused" => "tags#list_unused"
       delete "/unused" => "tags#destroy_unused"
 
-      constraints(tag_id: %r{[^/]+?}, format: /json|rss/) do
+      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
-            get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_none_show_#{filter}",
                 :defaults => {
                   no_subcategories: true,
                 }
-            get "/all/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/all/:tag_name/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_all_show_#{filter}",
                 :defaults => {
                   no_subcategories: false,
                 }
           end
 
-          get "/none/:tag_id" => "tags#show",
+          get "/none/:tag_name" => "tags#show",
               :as => "tag_category_none_show",
               :defaults => {
                 no_subcategories: true,
               }
-          get "/all/:tag_id" => "tags#show",
+          get "/all/:tag_name" => "tags#show",
               :as => "tag_category_all_show",
               :defaults => {
                 no_subcategories: false,
               }
 
           Discourse.filters.each do |filter|
-            get "/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/:tag_name/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_show_#{filter}"
           end
 
-          get "/:tag_id" => "tags#show", :as => "tag_category_show"
+          get "/:tag_name" => "tags#show", :as => "tag_category_show"
         end
 
-        get "/intersection/:tag_id/*additional_tag_ids" => "tags#show", :as => "tag_intersection"
+        get "/intersection/:tag_name/*additional_tag_names" => "tags#show",
+            :as => "tag_intersection"
       end
 
-      get "*tag_id", to: redirect(relative_url_root + "tag/%{tag_id}")
+      get "*tag_name", to: redirect(relative_url_root + "tag/%{tag_name}")
     end
 
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]

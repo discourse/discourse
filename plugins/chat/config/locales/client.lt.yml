@@ -126,8 +126,6 @@ lt:
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
       no_public_channels_cta: "Naršyti kanalus"
-      ignore_channel_wide_mention:
-        description: "Nesiųsti pranešimų apie paminėjimus visame kanale (@here ir @all)"
       show_thread_title_prompts:
         title: "Rodyti temos pavadinimo raginimus"
         description: "Rodyti raginimus nustatyti naujų gijų pavadinimą"
@@ -202,6 +200,7 @@ lt:
       admin:
         title: "Pokalbis"
       search:
+        short_title: Paieška
         no_results: "Nerasta jokių rezultatų"
         sort:
           relevance: "Tinkamumas"

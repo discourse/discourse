@@ -158,7 +158,7 @@ fi:
       el:
         name: Kreikka
       en:
-        name: Englanti (Yhdysvallat)
+        name: Englanti
       en_GB:
         name: Englanti (Britannia)
       es:
@@ -4462,6 +4462,7 @@ fi:
         this_month: "Kuukausi"
         this_week: "Viikko"
         today: "Tänään"
+        custom: "Mukautettu"
     custom_homepage:
       admin_message: 'Yksi teemoistasi on ottanut käyttöön "custom_homepage"-muuntimen, mutta se ei tuota mitään [custom-homepage]-liittimessä. (Tämä viesti näytetään vain sivuston ylläpitäjille.)'
     browser_update: 'Valitettavasti <a href="https://discourse.org/about#browser">selaintasi ei tueta</a>. <a href="https://browsehappy.com">Vaihda tuettuun selaimeen</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
@@ -4846,7 +4847,6 @@ fi:
       tags_form_modal:
         title: "Muokkaa tunnisteiden navigointia"
         filter_placeholder: "Suodata tunnisteita"
-        no_tags: "Annettua termiä vastaavia tunnisteita ei ole."
         subtitle:
           text: "ja näytämme automaattisesti tämän sivuston suosituimmat tunnisteet"
       edit_navigation_modal_form:
@@ -7753,16 +7753,12 @@ fi:
             prompt: "Tämän asetuksen muuttamisella voi olla merkittäviä tai tahattomia seurauksia sivustollesi. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, olen varma"
           min_password_length:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           min_admin_password_length:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin ylläpitäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           password_unique_charactes:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           block_common_passwords:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
       badges:
         status: Tila

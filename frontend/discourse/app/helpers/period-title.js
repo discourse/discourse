@@ -7,9 +7,13 @@ const TITLE_SUBS = {
   quarterly: "this_quarter",
   monthly: "this_month",
   daily: "today",
+  custom: "custom",
 };
 
-export default function periodTitle(period, { showDateRange, fullDay } = {}) {
+export default function periodTitle(
+  period,
+  { showDateRange, fullDay, startDate, endDate } = {}
+) {
   const title = i18n("filters.top." + (TITLE_SUBS[period] || "this_week"));
 
   if (!showDateRange) {
@@ -26,6 +30,14 @@ export default function periodTitle(period, { showDateRange, fullDay } = {}) {
   }
 
   switch (period) {
+    case "custom":
+      if (startDate && endDate) {
+        dateString =
+          moment.utc(startDate).format(i18n("dates.long_with_year_no_time")) +
+          " – " +
+          moment.utc(endDate).format(i18n("dates.long_with_year_no_time"));
+      }
+      break;
     case "yearly":
       dateString =
         finish

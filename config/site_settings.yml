@@ -1095,6 +1095,7 @@ users:
     min: 0
     max: 36500
     area: "users"
+    requires_confirmation: "simple"
   clean_up_unused_staged_users_after_days:
     default: 365
     min: 0
@@ -4190,6 +4191,10 @@ experimental:
     type: group_list
     default: ""
     area: "experimental"
+    hidden: true
+  force_old_reviewable_ui:
+    client: true
+    default: false
     hidden: true
   reviewable_old_moderator_actions:
     default: true

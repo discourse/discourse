@@ -145,12 +145,11 @@ en:
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
       send_shortcut:
+        title: "Send shortcut"
         enter:
           label: "Send by Enter"
-          description: "New line by Shift + Enter"
         meta_enter:
           label: "Send by %{meta_key} + Enter"
-          description: "New line by Enter"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"
@@ -248,12 +247,12 @@ en:
       no_public_channels: "You have not joined any channels yet!"
       no_public_channels_cta: "Browse channels"
       kicked_from_channel: "You can no longer access this channel."
+      chat_notifications_title: "Chat notifications"
       only_chat_push_notifications:
         title: "Only send chat push notifications"
-        description: "Block all non-chat push notifications from being sent"
+      personalization_title: "Personalization"
       ignore_channel_wide_mention:
         title: "Ignore channel-wide mentions"
-        description: "Do not send notifications for channel-wide mentions (@here and @all)"
       show_thread_title_prompts:
         title: "Show thread title prompts"
         description: "Show prompts to set a title for new threads"
@@ -539,6 +538,7 @@ en:
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       search:
+        short_title: Search
         title: Search chat
         aria_label: "Switch to chat search"
         no_results: "No results found"

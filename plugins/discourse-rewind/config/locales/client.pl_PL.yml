@@ -21,7 +21,7 @@ pl_PL:
       cannot_view_rewind: >
         Nie możesz wyświetlić tego raportu Discourse Rewind. Być może właściciel nie udostępnił go publicznie?<br><br> $> _<br><br>
       preferences:
-        disable_rewind: "Wyłącz funkcję Discourse Rewind. Spowoduje to ukrycie podsumowania aktywności na koniec roku w Twoim profilu i awatarze."
+        enable_rewind: "Włącz funkcję Discourse Rewind. Dzięki temu podsumowanie aktywności na koniec roku będzie widoczne w Twoim profilu i awatarze."
         share_publicly: "Udostępnij podsumowanie Discourse Rewind innym członkom forum. Każdy członek forum będzie mógł zobaczyć Twoje podsumowanie Discourse Rewind."
         cannot_share_when_profile_hidden: "Aby udostępnić Rewind musisz zezwolić innym na oglądanie Twojego profilu publicznego."
       profile_link: "Zobacz swój %{rewindYear} Discourse Rewind"

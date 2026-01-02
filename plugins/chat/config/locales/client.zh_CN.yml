@@ -57,6 +57,9 @@ zh_CN:
       cancel: "取消"
       cancel_reply: "取消回复"
       chat_channels: "频道"
+      starred: "收藏"
+      starred_channels: "收藏的频道"
+      starred_channels_empty: "您未收藏任何频道，收藏一些频道，以便在此快速访问它们。"
       browse_all_channels: "浏览所有频道"
       see_in: "参见"
       move_to_channel:
@@ -71,6 +74,8 @@ zh_CN:
         title: "频道设置"
         edit: "编辑"
         add: "添加"
+        star_channel: "收藏频道"
+        unstar_channel: "取消收藏"
         close_channel: "关闭频道"
         open_channel: "打开频道"
         archive_channel: "归档频道"
@@ -124,6 +129,7 @@ zh_CN:
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"
+        title: "向我发送聊天直通消息或群聊时向我发送电子邮件"
         when_away: "仅在离开时"
       header_indicator_preference:
         title: "在标题中显示活动指示器"
@@ -134,12 +140,11 @@ zh_CN:
       separate_sidebar_mode:
         title: "为论坛和聊天显示单独的边栏模式"
       send_shortcut:
+        title: "发送快捷方式"
         enter:
           label: "按 Enter 发送"
-          description: "按 Shift + Enter 换行"
         meta_enter:
           label: "按 %{meta_key} + Enter 发送"
-          description: "按 Enter 换行"
       enable: "启用聊天"
       flag: "举报"
       emoji: "插入表情符号"
@@ -224,12 +229,12 @@ zh_CN:
       no_public_channels: "您还没有加入任何频道！"
       no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
+      chat_notifications_title: "聊天通知"
       only_chat_push_notifications:
         title: "只发送聊天推送通知"
-        description: "阻止发送所有非聊天推送通知"
+      personalization_title: "个性化"
       ignore_channel_wide_mention:
         title: "忽略频道范围内的提及"
-        description: "不发送频道范围内提及（@here 和 @all）的通知"
       show_thread_title_prompts:
         title: "显示消息串标题提示"
         description: "显示为新消息串设置标题的提示"
@@ -311,6 +316,10 @@ zh_CN:
         yesterday: 昨天
       search_view:
         filter_placeholder: 搜索消息
+        message_result_label: "来自 %{username}的聊天消息： %{preview} %{threadInfo}"
+        in_thread: "在线程 %{title}"
+        sr_instructions: "按 Enter 或空格键打开消息。使用 Tab 在结果之间导航。"
+        results_list_label: "聊天消息搜索结果"
       members_view:
         filter_placeholder: 查找成员
         add_member: 添加成员
@@ -353,6 +362,8 @@ zh_CN:
         slug_description: 在 URL 中使用频道缩略名而不是频道名称
         name: 频道名称
         slug: 频道缩略名（可选）
+        emoji: 频道表情符号（可选）
+        reset_emoji: 重置表情符号
       channel_edit_description_modal:
         title: 编辑描述
         input_placeholder: 添加描述
@@ -405,6 +416,9 @@ zh_CN:
         types:
           category: "类别"
           topic: "话题"
+        emoji:
+          label: "频道表情符号（可选）"
+          reset: "重置表情符号"
       reviewable:
         type: "聊天消息"
         message_in_channel: "频道"
@@ -469,6 +483,10 @@ zh_CN:
           confirm_export: "这会从所有频道中导出所有消息，并通过私信将结果发送给您。确定要导出吗？"
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
       search:
+        short_title: 搜索
+        title: 搜索聊天
+        aria_label: "切换到聊天搜索"
+        no_results: "无搜索结果"
         sort:
           relevance: "相关性"
           latest: "最新"

@@ -384,6 +384,7 @@ bs_BA:
       every_month: "svaki mjesec"
       every_six_months: "svakih šest mjeseci"
   user_api_key:
+    deny: "Odustani"
     read: "čitaj"
     otp_confirmation:
       confirm_title: Nastavi ka %{site_name}

@@ -47,10 +47,14 @@ module PageObjects
         container
           .all(".user-info")
           .map do |node|
+            name_first = node.find(".name-line")[:class].include?("--name-first")
+            name_text = node.find(".name-line .name").text
+            username_text = node.find(".name-line .username").text
+
             {
               username: node["data-username"],
-              displayed_username: node.find(".name-line .username").text,
-              displayed_name: node.find(".name-line .name").text,
+              displayed_username: name_first ? name_text : username_text,
+              displayed_name: name_first ? username_text : name_text,
               node:,
             }
           end

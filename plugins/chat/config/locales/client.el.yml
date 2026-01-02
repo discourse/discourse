@@ -89,10 +89,8 @@ el:
       send_shortcut:
         enter:
           label: "Αποστολή με Enter"
-          description: "Νέα γραμμή με Shift + Enter"
         meta_enter:
           label: "Αποστολή με %{meta_key} + Enter"
-          description: "Νέα γραμμή με Enter"
       enable: "Ενεργοποίηση συνομιλίας"
       flag: "Αναφορά"
       emoji: "Εισαγωγή emoji"
@@ -217,6 +215,7 @@ el:
         history_label: "Ιστορικό"
         members_label: "Μέλη"
       search:
+        short_title: Αναζήτηση
         no_results: "Δεν βρέθηκαν αποτελέσματα"
         sort:
           relevance: "Συνάφεια"

@@ -158,7 +158,7 @@ nl:
       el:
         name: Grieks
       en:
-        name: Engels (VS)
+        name: Engels
       en_GB:
         name: Engels (VK)
       es:
@@ -4462,6 +4462,7 @@ nl:
         this_month: "Maand"
         this_week: "Week"
         today: "Vandaag"
+        custom: "Aangepast"
     custom_homepage:
       admin_message: 'Een van je thema''s heeft de modificator "custom_homepage" ingeschakeld, maar voert niets uit naar de connector [custom-homepage]. (Deze melding wordt alleen weergegeven voor sitebeheerders.)'
     browser_update: '<a href="https://discourse.org/about#browser">Je browser wordt helaas niet ondersteund</a>. <a href="https://browsehappy.com">Schakel over naar een ondersteunde browser</a> om rijke inhoud te bekijken, je aan te melden en te antwoorden.'
@@ -4846,7 +4847,6 @@ nl:
       tags_form_modal:
         title: "Tagsnavigatie bewerken"
         filter_placeholder: "Filter tags"
-        no_tags: "Er zijn geen tags die overeenkomen met de opgegeven term."
         subtitle:
           text: "en we geven automatisch de toptags van deze site weer"
       edit_navigation_modal_form:
@@ -7738,16 +7738,12 @@ nl:
             prompt: "Het wijzigen van deze instelling kan verstrekkende of onbedoelde gevolgen hebben voor je site. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, ik weet het zeker"
           min_password_length:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           min_admin_password_length:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle beheerders die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           password_unique_charactes:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           block_common_passwords:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
       badges:
         status: Status

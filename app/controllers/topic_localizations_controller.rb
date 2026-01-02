@@ -3,6 +3,18 @@
 class TopicLocalizationsController < ApplicationController
   before_action :ensure_logged_in
 
+  def show
+    topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::NotFound unless topic
+
+    guardian.ensure_can_see!(topic)
+
+    localization = TopicLocalization.find_by(topic_id: topic.id, locale: params[:locale])
+    raise Discourse::NotFound unless localization
+
+    render json: TopicLocalizationSerializer.new(localization, root: false)
+  end
+
   def create_or_update
     topic_id, locale, title = params.require(%i[topic_id locale title])
 

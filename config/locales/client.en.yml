@@ -175,7 +175,7 @@ en:
       el:
         name: Greek
       en:
-        name: English (US)
+        name: English
       en_GB:
         name: English (UK)
       es:
@@ -1152,6 +1152,7 @@ en:
           title: Interaction
           posting: Posting
           notification: Notification
+          self_lockout: "You are about to change group visibility in a way that will remove your own access. Are you sure you want to proceed?"
         email:
           title: "Email"
           status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
@@ -1298,6 +1299,8 @@ en:
         make_owner_description: "Make <b>%{username}</b> an owner of this group"
         remove_owner: "Remove as Owner"
         remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
+        remove_member_self_lockout: "Removing yourself from this group will revoke your access to manage it. Are you sure you want to proceed?"
+        remove_owner_self_lockout: "Removing yourself as owner will revoke your access to manage this group. Are you sure you want to proceed?"
         make_primary: "Make Primary"
         make_primary_description: "Make this the primary group for <b>%{username}</b>"
         remove_primary: "Remove as Primary"
@@ -4154,9 +4157,10 @@ en:
       deleted_by_author_simple: "(topic deleted by author)"
       localizations:
         title_edit_warning:
-          message: "This is a translated topic title.<br><br>Do you want to edit the original title in %{language} or edit this specific translation?"
-          action_original: "Edit original topic title"
+          message: "This is a translated topic title.<br><br>Do you want to edit the <b>original</b> category, tags, and title in %{language} or edit this specific <b>translation</b>?"
+          action_original: "Edit original"
           action_translation: "Edit translated topic title"
+        editing_translation: "Editing %{language} translation"
 
     post_list:
       title: "Latest posts"
@@ -4538,6 +4542,8 @@ en:
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
+      errors:
+        self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4939,6 +4945,7 @@ en:
         this_month: "Month"
         this_week: "Week"
         today: "Today"
+        custom: "Custom"
 
     custom_homepage:
       admin_message: 'One of your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'
@@ -5373,7 +5380,7 @@ en:
       tags_form_modal:
         title: "Edit tags navigation"
         filter_placeholder: "Filter tags"
-        no_tags: "There are no tags matching the given term."
+        no_tags: "There are no tags matching the current filters."
         subtitle:
           text: "and we'll automatically show this site's top tags"
       edit_navigation_modal_form:
@@ -6548,6 +6555,7 @@ en:
               recover: Recover a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
+              change_owner: Change the ownership of posts in a topic.
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
@@ -8501,17 +8509,20 @@ en:
             prompt: "Changing this setting may have far-reaching or unintended consequences for your site. Are you sure you want to proceed?"
             confirm: "Yes, I'm sure"
           min_password_length:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           min_admin_password_length:
-            prompt: "You’re about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           password_unique_charactes:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           block_common_passwords:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
+          clean_up_inactive_users_after_days:
+            prompt: "Setting this value to anything other than 0 will cause users who are no longer active for that many days to be permanently deleted. Are you sure you want to proceed?"
+            confirm: "Yes, I understand that inactive users will be permanently deleted unless I set this value to 0"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

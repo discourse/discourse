@@ -649,11 +649,10 @@ zh_TW:
       every_month: "每個月"
       every_six_months: "每半年"
   user_api_key:
-    title: "授權應用訪問"
     authorize: "授權"
+    deny: "取消"
     read: "閲讀"
     read_write: "讀/寫"
-    description: '“%{application_name}”要求存取您帳號中的以下權限：'
     instructions: '系統熱騰騰產生了新的使用者API鑰匙給您使用，請將以下API鑰匙貼到您的應用程式裡。'
     otp_description: '你要允許進入%{application_name}這個網站嗎？'
     otp_confirmation:

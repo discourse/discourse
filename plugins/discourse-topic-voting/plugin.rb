@@ -22,6 +22,7 @@ Discourse.anonymous_filters.push(:votes)
 
 module ::DiscourseTopicVoting
   PLUGIN_NAME = "discourse-topic-voting"
+  ENABLE_TOPIC_VOTING_SETTING = "enable_topic_voting"
 end
 
 require_relative "lib/discourse_topic_voting/engine"
@@ -80,15 +81,8 @@ after_initialize do
     result
   end
 
-  register_category_custom_field_type("enable_topic_voting", :boolean)
-  add_to_serializer(:category, :custom_fields, respect_plugin_enabled: false) do
-    return object.custom_fields if !SiteSetting.topic_voting_enabled
-
-    object.custom_fields.merge(
-      enable_topic_voting:
-        DiscourseTopicVoting::CategorySetting.find_by(category_id: object.id).present?,
-    )
-  end
+  register_category_custom_field_type(DiscourseTopicVoting::ENABLE_TOPIC_VOTING_SETTING, :boolean)
+  register_preloaded_category_custom_fields DiscourseTopicVoting::ENABLE_TOPIC_VOTING_SETTING
 
   add_to_serializer(:topic_list_item, :vote_count, include_condition: -> { object.can_vote? }) do
     object.vote_count

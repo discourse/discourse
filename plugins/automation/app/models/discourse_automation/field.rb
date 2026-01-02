@@ -240,6 +240,11 @@ module DiscourseAutomation
           },
         },
       },
+      "relative_time" => {
+        "value" => {
+          "type" => "integer",
+        },
+      },
     }
 
     private

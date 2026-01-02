@@ -154,7 +154,7 @@ el:
       el:
         name: Ελληνικά
       en:
-        name: Αγγλικά (ΗΠΑ)
+        name: Αγγλικά
       en_GB:
         name: Αγγλικά (Ηνωμένο Βασίλειο)
       es:
@@ -4047,6 +4047,7 @@ el:
         this_month: "Μήνας"
         this_week: "Εβδομάδα"
         today: "Σήμερα"
+        custom: "Προσαρμοσμένο"
     permission_types:
       full: "Δημιούργησε / Απάντησε / Δες"
       create_post: "Απάντησε / Δες"

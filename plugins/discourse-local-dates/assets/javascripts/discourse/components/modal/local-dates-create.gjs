@@ -127,7 +127,7 @@ export default class LocalDatesCreate extends Component {
     }
 
     let format = options.format;
-    if (timeInferred && this.formats.includes(format)) {
+    if (timeInferred && (format === "LLL" || format === "LLLL")) {
       format = "LL";
     }
 
@@ -160,7 +160,7 @@ export default class LocalDatesCreate extends Component {
     }
 
     let format = options.format;
-    if (timeInferred && this.formats.includes(format)) {
+    if (timeInferred && (format === "LLL" || format === "LLLL")) {
       format = "LL";
     }
 
