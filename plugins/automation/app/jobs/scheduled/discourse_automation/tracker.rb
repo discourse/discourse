@@ -17,8 +17,8 @@ module Jobs
           .find_each do |pending_automation|
             run_pending_automation(pending_automation)
           rescue => e
-            Rails.logger.error(
-              "Error running automation #{pending_automation.automation.name}: #{e}",
+            ::DiscourseAutomation::Logger.error(
+              "Error running automation '#{pending_automation.automation.name}': #{e.message}",
             )
           end
 
@@ -26,11 +26,7 @@ module Jobs
           .includes(:automation)
           .limit(BATCH_LIMIT)
           .where("execute_at < ?", Time.now)
-          .find_each do |pending_pm|
-            send_pending_pm(pending_pm)
-          rescue => e
-            Rails.logger.error("Error sending PM for #{pending_pm.automation.name}: #{e}")
-          end
+          .find_each { |pending_pm| send_pending_pm(pending_pm) }
       end
 
       def send_pending_pm(pending_pm)
@@ -48,6 +44,15 @@ module Jobs
 
           pending_pm.destroy!
         end
+      rescue ActiveRecord::RecordNotSaved => e
+        ::DiscourseAutomation::Logger.error(
+          "Failed to send pending PM '#{pending_pm.title}': #{e.message}",
+        )
+        pending_pm.destroy!
+      rescue => e
+        ::DiscourseAutomation::Logger.error(
+          "Error sending pending PM '#{pending_pm.title}': #{e.message}",
+        )
       end
 
       def run_pending_automation(pending_automation)

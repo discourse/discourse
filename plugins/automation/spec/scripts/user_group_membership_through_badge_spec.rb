@@ -47,7 +47,7 @@ describe "UserGroupMembershipThroughBadge" do
 
       it "logs warning message and does nothing" do
         expect(fake_logger.warnings).to include(
-          "[discourse-automation] Couldn’t find badge with id #{unknown_badge_id}",
+          "[discourse-automation] Couldn't find badge with id #{unknown_badge_id}",
         )
         expect(user.reload.groups).to be_empty
       end
@@ -68,7 +68,7 @@ describe "UserGroupMembershipThroughBadge" do
         )
 
         expect(fake_logger.warnings).to include(
-          "[discourse-automation] Couldn’t find group with id #{target_group.id}",
+          "[discourse-automation] Couldn't find group with id #{target_group.id}",
         )
         expect(user.reload.groups).to be_empty
       end

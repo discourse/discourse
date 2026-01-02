@@ -10,6 +10,12 @@
       font-size: var(--font-down-1);
     }
 
+    &__errors {
+      display: block;
+      font-size: var(--font-down-1);
+      color: var(--danger);
+    }
+
     td[role="button"] {
       cursor: pointer;
     }

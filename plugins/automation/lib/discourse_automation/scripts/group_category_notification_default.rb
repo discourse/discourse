@@ -17,7 +17,7 @@ DiscourseAutomation::Scriptable.add(
     notification_level = fields.dig("notification_level", "value")
 
     unless group = Group.find_by(id: group_id)
-      Rails.logger.warn "[discourse-automation] Couldn’t find group with id #{group_id}"
+      DiscourseAutomation::Logger.warn("Couldn't find group with id #{group_id}")
       next
     end
 

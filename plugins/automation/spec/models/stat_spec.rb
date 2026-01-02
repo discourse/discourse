@@ -11,7 +11,7 @@ RSpec.describe DiscourseAutomation::Stat do
     before do
       freeze_time today
 
-      # Last day: 2 runs
+      # Last day: 2 runs, 1 error
       DiscourseAutomation::Stat.create!(
         automation_id: automation_id,
         date: today - 1.day,
@@ -21,6 +21,7 @@ RSpec.describe DiscourseAutomation::Stat do
         min_run_time: 1.0,
         max_run_time: 2.0,
         total_runs: 2,
+        total_errors: 1,
       )
 
       # Same day, different automation
@@ -33,9 +34,10 @@ RSpec.describe DiscourseAutomation::Stat do
         min_run_time: 1.0,
         max_run_time: 1.0,
         total_runs: 1,
+        total_errors: 0,
       )
 
-      # Last week: 3 runs (including the day above)
+      # Last week: 2 runs, 1 error (not including the day above which has its own stats)
       DiscourseAutomation::Stat.create!(
         automation_id: automation_id,
         date: today - 5.days,
@@ -45,9 +47,10 @@ RSpec.describe DiscourseAutomation::Stat do
         min_run_time: 0.5,
         max_run_time: 2.0,
         total_runs: 2,
+        total_errors: 1,
       )
 
-      # Last month: 5 runs (including the week above)
+      # Last month: 2 runs, 0 errors (not including the week above)
       DiscourseAutomation::Stat.create!(
         automation_id: automation_id,
         date: today - 20.days,
@@ -57,6 +60,7 @@ RSpec.describe DiscourseAutomation::Stat do
         min_run_time: 1.5,
         max_run_time: 2.5,
         total_runs: 2,
+        total_errors: 0,
       )
     end
 
@@ -75,6 +79,7 @@ RSpec.describe DiscourseAutomation::Stat do
           :average_run_time,
           :min_run_time,
           :max_run_time,
+          :total_errors,
         )
       end
     end
@@ -88,6 +93,7 @@ RSpec.describe DiscourseAutomation::Stat do
         min_run_time: 1.0,
         max_run_time: 2.0,
         average_run_time: 1.5,
+        total_errors: 1,
       )
 
       expect(auto_summary[:last_week]).to include(
@@ -95,6 +101,7 @@ RSpec.describe DiscourseAutomation::Stat do
         total_time: 5.5,
         min_run_time: 0.5,
         max_run_time: 2.0,
+        total_errors: 2,
       )
 
       expect(auto_summary[:last_month]).to include(
@@ -102,6 +109,7 @@ RSpec.describe DiscourseAutomation::Stat do
         total_time: 9.5,
         min_run_time: 0.5,
         max_run_time: 2.5,
+        total_errors: 2,
       )
     end
 
@@ -112,6 +120,7 @@ RSpec.describe DiscourseAutomation::Stat do
       other_summary = summaries[another_automation_id]
       expect(other_summary[:last_day][:total_runs]).to eq(1)
       expect(other_summary[:last_day][:total_time]).to eq(1.0)
+      expect(other_summary[:last_day][:total_errors]).to eq(0)
       expect(other_summary[:last_run_at].to_date).to eq((today - 1.day).to_date)
     end
 
@@ -132,6 +141,7 @@ RSpec.describe DiscourseAutomation::Stat do
         min_run_time: 1.0,
         max_run_time: 1.0,
         total_runs: 1,
+        total_errors: 0,
       )
 
       summaries = DiscourseAutomation::Stat.fetch_period_summaries
@@ -156,10 +166,11 @@ RSpec.describe DiscourseAutomation::Stat do
         expect(stat.min_run_time).to eq(0.75)
         expect(stat.max_run_time).to eq(0.75)
         expect(stat.total_runs).to eq(1)
+        expect(stat.total_errors).to eq(0)
       end
 
       context "when an error occurs" do
-        it "yields the correct error and records it" do
+        it "re-raises the error and records the run time" do
           allow(Process).to receive(:clock_gettime).from_described_class.and_return(10.0, 10.75)
 
           expect { DiscourseAutomation::Stat.log(automation_id) { raise } }.to raise_error(
@@ -172,6 +183,45 @@ RSpec.describe DiscourseAutomation::Stat do
           expect(stat.min_run_time).to eq(0.75)
           expect(stat.max_run_time).to eq(0.75)
           expect(stat.total_runs).to eq(1)
+        end
+
+        it "increments the error count" do
+          allow(Process).to receive(:clock_gettime).from_described_class.and_return(10.0, 10.75)
+
+          expect { DiscourseAutomation::Stat.log(automation_id) { raise } }.to raise_error(
+            RuntimeError,
+          )
+
+          stat = DiscourseAutomation::Stat.find_by(automation_id: automation_id)
+          expect(stat.total_errors).to eq(1)
+        end
+
+        it "accumulates errors across multiple runs" do
+          allow(Process).to receive(:clock_gettime).from_described_class.and_return(
+            10.0,
+            10.5,
+            11.0,
+            11.5,
+            12.0,
+            12.5,
+          )
+
+          # First run: success
+          DiscourseAutomation::Stat.log(automation_id) { "ok" }
+
+          # Second run: error
+          expect {
+            DiscourseAutomation::Stat.log(automation_id) { raise "error 1" }
+          }.to raise_error(RuntimeError)
+
+          # Third run: error
+          expect {
+            DiscourseAutomation::Stat.log(automation_id) { raise "error 2" }
+          }.to raise_error(RuntimeError)
+
+          stat = DiscourseAutomation::Stat.find_by(automation_id: automation_id)
+          expect(stat.total_runs).to eq(3)
+          expect(stat.total_errors).to eq(2)
         end
       end
     end
@@ -186,6 +236,7 @@ RSpec.describe DiscourseAutomation::Stat do
         expect(stat.min_run_time).to eq(run_time)
         expect(stat.max_run_time).to eq(run_time)
         expect(stat.total_runs).to eq(1)
+        expect(stat.total_errors).to eq(0)
       end
     end
 

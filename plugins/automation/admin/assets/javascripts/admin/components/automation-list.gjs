@@ -78,6 +78,10 @@ export default class AutomationList extends Component {
     });
   }
 
+  recentErrorsCount(stats) {
+    return stats?.last_day?.total_errors || 0;
+  }
+
   <template>
     <section class="discourse-automations-table">
       <DPageSubheader @titleLabel={{i18n "discourse_automation.table_title"}}>
@@ -181,6 +185,18 @@ export default class AutomationList extends Component {
                     <span class="automations__stats">
                       {{this.statsText automation.stats}}
                     </span>
+                    {{#if (this.recentErrorsCount automation.stats)}}
+                      <a
+                        href="/logs?search=discourse-automation"
+                        class="automations__errors"
+                        data-auto-route="true"
+                      >
+                        {{i18n
+                          "discourse_automation.models.automation.recent_errors"
+                          count=(this.recentErrorsCount automation.stats)
+                        }}
+                      </a>
+                    {{/if}}
                   </td>
                   <td class="d-admin-row__detail automations__last-run">
                     <div class="d-admin-row__mobile-label">

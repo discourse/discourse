@@ -459,12 +459,42 @@ describe DiscourseAutomation::AdminAutomationsController do
           expect(automation1_response["stats"]["last_day"]["average_run_time"]).to eq(1.0)
           expect(automation1_response["stats"]["last_day"]["min_run_time"]).to eq(0.5)
           expect(automation1_response["stats"]["last_day"]["max_run_time"]).to eq(1.5)
+          expect(automation1_response["stats"]["last_day"]["total_errors"]).to eq(0)
 
           expect(automation1_response["stats"]["last_week"]["total_runs"]).to eq(3)
 
           # Verify specific values for automation2
           expect(automation2_response["stats"]["last_month"]["total_runs"]).to eq(1)
           expect(automation2_response["stats"]["last_month"]["total_time"]).to eq(3.0)
+          expect(automation2_response["stats"]["last_month"]["total_errors"]).to eq(0)
+        end
+
+        context "when automation has errors" do
+          before do
+            freeze_time DateTime.parse("2023-01-01")
+
+            # Simulate 3 runs with 2 errors for automation1
+            DiscourseAutomation::Stat.log(automation1.id) { "success" }
+            expect {
+              DiscourseAutomation::Stat.log(automation1.id) { raise "error 1" }
+            }.to raise_error(RuntimeError)
+            expect {
+              DiscourseAutomation::Stat.log(automation1.id) { raise "error 2" }
+            }.to raise_error(RuntimeError)
+          end
+
+          it "includes error counts in the response" do
+            get "/admin/plugins/automation/automations.json"
+
+            expect(response.status).to eq(200)
+
+            parsed_response = response.parsed_body
+            automation1_response =
+              parsed_response["automations"].find { |a| a["id"] == automation1.id }
+
+            expect(automation1_response["stats"]["last_day"]["total_runs"]).to eq(5) # 2 from before + 3 new
+            expect(automation1_response["stats"]["last_day"]["total_errors"]).to eq(2)
+          end
         end
       end
     end
