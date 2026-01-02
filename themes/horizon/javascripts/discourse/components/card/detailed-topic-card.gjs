@@ -10,6 +10,7 @@ import { categoryLinkHTML } from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
+import emoji from "discourse/helpers/emoji";
 import formatDate from "discourse/helpers/format-date";
 import number from "discourse/helpers/number";
 import { shortDateNoYear } from "discourse/lib/formatter";
@@ -141,19 +142,19 @@ export default class DetailedTopicCard extends Component {
         <div class="hc-topic-card__status-tags">
           {{#if this.hasSolved}}
             <span class="hc-topic-card__solved">
-              {{icon "far-square-check"}}
               {{i18n (themePrefix "solved")}}
+              {{icon "check"}}
             </span>
-          {{else if this.canHaveAnswer}}
+            {{!-- {{else if this.canHaveAnswer}}
             <span class="hc-topic-card__unsolved">
-              {{icon "far-square"}}
               {{i18n (themePrefix "unsolved")}}
-            </span>
+            </span> --}}
           {{/if}}
 
           {{#if this.hasVotes}}
             <span class="hc-topic-card__votes">
               {{i18n "topic_voting.votes" count=this.voteCount}}
+              {{icon "stamp"}}
             </span>
           {{/if}}
 
@@ -249,7 +250,7 @@ export default class DetailedTopicCard extends Component {
         <div class="hc-topic-card__stats">
           {{#if this.hasReplies}}
             <span class="hc-topic-card__replies">
-              {{icon "reply"}}
+              {{emoji "speech_balloon"}}
               <span class="hc-topic-card__count">{{number
                   @topic.posts_count
                 }}</span>
@@ -258,7 +259,7 @@ export default class DetailedTopicCard extends Component {
 
           {{#if this.hasLikes}}
             <span class="hc-topic-card__likes">
-              {{icon "heart"}}
+              {{emoji "heart"}}
               <span class="hc-topic-card__count">{{number
                   @topic.like_count
                 }}</span>
