@@ -91,17 +91,28 @@ export class BlockConditionValidationError extends Error {
 
 /**
  * Raises a block validation error.
- * In development/test environments, throws a BlockConditionValidationError.
- * In production, logs a warning to the console instead of throwing.
  *
- * @param {string} message - The error message
- * @throws {BlockConditionValidationError} In development/test environments
+ * In development/test environments, throws a `BlockConditionValidationError`.
+ * In production, dispatches a `discourse-error` event that surfaces the error
+ * to admin users via a banner (handled by `ClientErrorHandlerService`).
+ *
+ * @param {string} message - The error message describing the validation failure.
+ * @throws {BlockConditionValidationError} In development/test environments.
  */
 export function raiseBlockValidationError(message) {
+  const error = new BlockConditionValidationError(message);
+
   if (DEBUG) {
-    throw new BlockConditionValidationError(message);
+    throw error;
   } else {
-    // eslint-disable-next-line no-console
-    console.warn(`[Blocks] ${message}`);
+    // Surface to admins via error banner (only visible to admin users)
+    document.dispatchEvent(
+      new CustomEvent("discourse-error", {
+        detail: {
+          messageKey: "broken_block_condition_alert",
+          error,
+        },
+      })
+    );
   }
 }

@@ -87,11 +87,12 @@ export default class OutletInfoComponent extends Component {
       data-outlet-name={{@outletName}}
     >
       <DTooltip
-        @maxWidth={{600}}
+        @identifier="plugin-outlet-info"
+        @interactive={{true}}
         @placement="bottom-start"
+        @maxWidth={{600}}
         @triggers={{hash mobile=(array "click") desktop=(array "hover")}}
         @untriggers={{hash mobile=(array "click") desktop=(array "click")}}
-        @identifier="plugin-outlet-info"
       >
         <:trigger>
           <span class="plugin-outlet-debug__badge">

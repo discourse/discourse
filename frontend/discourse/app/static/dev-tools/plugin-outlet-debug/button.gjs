@@ -6,6 +6,12 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import devToolsState from "../state";
 
+/**
+ * Toggle button for the plugin outlet debug mode in the dev-tools toolbar.
+ * Shows plugin outlet boundaries and arg information when active.
+ *
+ * @component PluginOutletDebugButton
+ */
 export default class PluginOutletDebugButton extends Component {
   @action
   togglePluginOutlets() {

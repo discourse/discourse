@@ -2,7 +2,9 @@ import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import BlockRouteCondition from "discourse/blocks/conditions/route";
+import BlockRouteCondition, {
+  BlockRouteConditionShortcuts,
+} from "discourse/blocks/conditions/route";
 
 module("Unit | Blocks | Conditions | route", function (hooks) {
   setupTest(hooks);
@@ -68,6 +70,13 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       const condition = new BlockRouteCondition();
       setOwner(condition, testOwner);
       return condition.evaluate(args);
+    };
+
+    // Helper to validate route condition
+    this.validateCondition = (args) => {
+      const condition = new BlockRouteCondition();
+      setOwner(condition, testOwner);
+      return condition.validate(args);
     };
   });
 
@@ -448,6 +457,178 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.false(
         this.evaluateCondition({
           excludeRoutes: ["discovery.latest"],
+        })
+      );
+    });
+  });
+
+  module("validate", function () {
+    test("throws when both routes and excludeRoutes are provided", function (assert) {
+      assert.throws(
+        () =>
+          this.validateCondition({
+            routes: ["discovery.latest"],
+            excludeRoutes: ["topic.show"],
+          }),
+        /Cannot use both/
+      );
+    });
+
+    test("throws when neither routes nor excludeRoutes are provided", function (assert) {
+      assert.throws(() => this.validateCondition({}), /Must provide either/);
+    });
+
+    test("throws for unknown symbol shortcuts", function (assert) {
+      assert.throws(
+        () => this.validateCondition({ routes: [Symbol("UNKNOWN")] }),
+        /Unknown route shortcut/
+      );
+    });
+
+    test("accepts valid symbol shortcuts", function (assert) {
+      this.validateCondition({
+        routes: [BlockRouteConditionShortcuts.CATEGORY_PAGES],
+      });
+      assert.true(true);
+    });
+
+    test("accepts valid symbol shortcuts in excludeRoutes", function (assert) {
+      this.validateCondition({
+        excludeRoutes: [BlockRouteConditionShortcuts.HOMEPAGE],
+      });
+      assert.true(true);
+    });
+  });
+
+  module("shortcuts", function () {
+    test("CATEGORY_PAGES matches when discovery.category is set", function (assert) {
+      this.mockDiscoveryState.category = { id: 1, name: "test" };
+      this.mockRouterState.currentRouteName = "discovery.category";
+
+      assert.true(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.CATEGORY_PAGES],
+        })
+      );
+    });
+
+    test("CATEGORY_PAGES does not match when category is null", function (assert) {
+      this.mockDiscoveryState.category = null;
+      this.mockRouterState.currentRouteName = "discovery.latest";
+
+      assert.false(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.CATEGORY_PAGES],
+        })
+      );
+    });
+
+    test("DISCOVERY_PAGES matches on discovery routes excluding custom", function (assert) {
+      this.mockDiscoveryState.onDiscoveryRoute = true;
+      this.mockDiscoveryState.custom = false;
+      this.mockRouterState.currentRouteName = "discovery.latest";
+
+      assert.true(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.DISCOVERY_PAGES],
+        })
+      );
+    });
+
+    test("DISCOVERY_PAGES does not match on custom homepage", function (assert) {
+      this.mockDiscoveryState.onDiscoveryRoute = true;
+      this.mockDiscoveryState.custom = true;
+      this.mockRouterState.currentRouteName = "discovery.custom";
+
+      assert.false(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.DISCOVERY_PAGES],
+        })
+      );
+    });
+
+    test("HOMEPAGE matches only on custom homepage", function (assert) {
+      this.mockDiscoveryState.custom = true;
+      this.mockRouterState.currentRouteName = "discovery.custom";
+
+      assert.true(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.HOMEPAGE],
+        })
+      );
+    });
+
+    test("HOMEPAGE does not match on regular discovery routes", function (assert) {
+      this.mockDiscoveryState.custom = false;
+      this.mockRouterState.currentRouteName = "discovery.latest";
+
+      assert.false(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.HOMEPAGE],
+        })
+      );
+    });
+
+    test("TAG_PAGES matches when discovery.tag is set", function (assert) {
+      this.mockDiscoveryState.tag = { id: 1, name: "javascript" };
+      this.mockRouterState.currentRouteName = "tag.show";
+
+      assert.true(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.TAG_PAGES],
+        })
+      );
+    });
+
+    test("TAG_PAGES does not match when tag is null", function (assert) {
+      this.mockDiscoveryState.tag = null;
+      this.mockRouterState.currentRouteName = "discovery.latest";
+
+      assert.false(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.TAG_PAGES],
+        })
+      );
+    });
+
+    test("TOP_MENU matches on main navigation discovery routes", function (assert) {
+      this.mockDiscoveryState.onDiscoveryRoute = true;
+      this.mockDiscoveryState.category = null;
+      this.mockDiscoveryState.tag = null;
+      this.mockDiscoveryState.custom = false;
+      this.mockRouterState.currentRouteName = "discovery.latest";
+
+      assert.true(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.TOP_MENU],
+        })
+      );
+    });
+
+    test("TOP_MENU does not match on category pages", function (assert) {
+      this.mockDiscoveryState.onDiscoveryRoute = true;
+      this.mockDiscoveryState.category = { id: 1, name: "test" };
+      this.mockDiscoveryState.tag = null;
+      this.mockDiscoveryState.custom = false;
+      this.mockRouterState.currentRouteName = "discovery.category";
+
+      assert.false(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.TOP_MENU],
+        })
+      );
+    });
+
+    test("TOP_MENU does not match on tag pages", function (assert) {
+      this.mockDiscoveryState.onDiscoveryRoute = true;
+      this.mockDiscoveryState.category = null;
+      this.mockDiscoveryState.tag = { id: 1, name: "javascript" };
+      this.mockDiscoveryState.custom = false;
+      this.mockRouterState.currentRouteName = "tag.show";
+
+      assert.false(
+        this.evaluateCondition({
+          routes: [BlockRouteConditionShortcuts.TOP_MENU],
         })
       );
     });

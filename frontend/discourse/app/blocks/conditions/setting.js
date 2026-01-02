@@ -13,10 +13,10 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  *
  * **`includes` vs `contains` - Key Difference:**
  *
- * | Condition | Setting type | Question answered |
- * |-----------|--------------|-------------------|
- * | `includes` | Single value (enum/string) | Is the setting value IN my list? |
- * | `contains` | List (pipe-separated) | Does the setting list CONTAIN my value? |
+ * | Condition    | Setting type               | Question answered                        |
+ * |--------------|----------------------------|------------------------------------------|
+ * | `includes`   | Single value (enum/string) | Is the setting value IN my list?         |
+ * | `contains`   | List (pipe-separated)      | Does the setting list CONTAIN my value?  |
  *
  * **Theme Settings Support:**
  * Pass a custom `settings` object (e.g., from `import { settings } from "virtual:theme"`)
@@ -153,19 +153,24 @@ export default class BlockSettingCondition extends BlockCondition {
    * Checks if a list setting contains a specific value.
    * Handles both array and pipe-separated string formats.
    *
-   * @param {string|Array} settingValue - The setting value (may be "a|b|c" or ["a", "b", "c"])
-   * @param {string} searchValue - The value to search for
-   * @returns {boolean}
+   * Values are converted to strings before comparison to handle cases where
+   * `searchValue` might be a number but the setting stores string values
+   * (e.g., checking for `123` in `"123|456"`).
+   *
+   * @param {string|Array} settingValue - The setting value (may be "a|b|c" or ["a", "b", "c"]).
+   * @param {string|number} searchValue - The value to search for.
+   * @returns {boolean} True if the setting contains the search value.
    */
   #settingContains(settingValue, searchValue) {
     if (Array.isArray(settingValue)) {
-      return settingValue.includes(searchValue);
+      // Convert all values to strings for consistent matching
+      return settingValue.map(String).includes(String(searchValue));
     }
 
     if (typeof settingValue === "string") {
       // List settings are often pipe-separated strings like "latest|new|unread"
       const items = settingValue.split("|").map((s) => s.trim());
-      return items.includes(searchValue);
+      return items.includes(String(searchValue));
     }
 
     return false;

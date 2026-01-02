@@ -18,11 +18,12 @@ export default class OutletInfo extends Component {
 
   <template>
     <DTooltip
+      @identifier="block-outlet-info"
+      @interactive={{true}}
       @placement="bottom-start"
       @maxWidth={{400}}
       @triggers={{hash mobile=(array "click") desktop=(array "hover")}}
       @untriggers={{hash mobile=(array "click") desktop=(array "click")}}
-      @identifier="block-outlet-info"
     >
       <:trigger>
         <span class="block-outlet-debug__badge">

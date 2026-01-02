@@ -64,6 +64,84 @@ let blockLoggingCallback = null;
 let blockOutletBoundaryCallback = null;
 
 /**
+ * Safely stringifies a block config object for error messages.
+ * Handles circular references, limits depth, and truncates output.
+ *
+ * @param {Object} config - The config object to stringify.
+ * @param {number} [maxDepth=2] - Maximum nesting depth to serialize.
+ * @param {number} [maxLength=200] - Maximum output string length.
+ * @returns {string} A safe string representation of the config.
+ */
+function safeStringifyConfig(config, maxDepth = 2, maxLength = 200) {
+  const seen = new WeakSet();
+
+  function serialize(value, depth) {
+    if (depth > maxDepth) {
+      return "[...]";
+    }
+
+    if (value === null) {
+      return "null";
+    }
+    if (value === undefined) {
+      return "undefined";
+    }
+    if (typeof value === "string") {
+      return `"${value.length > 30 ? value.slice(0, 30) + "..." : value}"`;
+    }
+    if (typeof value === "number" || typeof value === "boolean") {
+      return String(value);
+    }
+    if (typeof value === "function") {
+      return `[Function: ${value.name || "anonymous"}]`;
+    }
+    if (typeof value === "symbol") {
+      return `[Symbol: ${value.description || ""}]`;
+    }
+
+    if (typeof value === "object") {
+      if (seen.has(value)) {
+        return "[Circular]";
+      }
+      seen.add(value);
+
+      if (Array.isArray(value)) {
+        if (value.length === 0) {
+          return "[]";
+        }
+        const items = value.slice(0, 3).map((v) => serialize(v, depth + 1));
+        if (value.length > 3) {
+          items.push(`... ${value.length - 3} more`);
+        }
+        return `[${items.join(", ")}]`;
+      }
+
+      const keys = Object.keys(value).slice(0, 5);
+      if (keys.length === 0) {
+        return "{}";
+      }
+      const pairs = keys.map((k) => `${k}: ${serialize(value[k], depth + 1)}`);
+      if (Object.keys(value).length > 5) {
+        pairs.push("...");
+      }
+      return `{${pairs.join(", ")}}`;
+    }
+
+    return String(value);
+  }
+
+  try {
+    const result = serialize(config, 0);
+    if (result.length > maxLength) {
+      return result.slice(0, maxLength) + "...";
+    }
+    return result;
+  } catch {
+    return "[Object]";
+  }
+}
+
+/**
  * Component to render for outlet boundary debug overlay.
  * Set by dev-tools to provide the OutletInfo component.
  *
@@ -570,15 +648,12 @@ function isContainerBlock(component) {
  * ```
  */
 export function renderBlocks(outletName, config, owner) {
-  // Lock the block registry on first renderBlocks call.
-  // This prevents themes/plugins from registering new blocks after
-  // the first configuration is set up.
-  const { _lockBlockRegistry } = require("discourse/lib/blocks/registration");
-  _lockBlockRegistry();
-
   // Get blocks service for condition validation if owner is provided
   const blocksService = owner?.lookup("service:blocks");
 
+  // Validate config BEFORE locking the registry.
+  // This ensures the registry isn't locked if validation fails,
+  // allowing subsequent registrations to proceed.
   validateConfig(config, outletName, blocksService);
 
   if (blockConfigs.has(outletName)) {
@@ -586,6 +661,12 @@ export function renderBlocks(outletName, config, owner) {
       `Block outlet "${outletName}" already has a configuration registered.`
     );
   }
+
+  // Lock the block registry AFTER successful validation.
+  // This prevents themes/plugins from registering new blocks after
+  // the first configuration is set up.
+  const { _lockBlockRegistry } = require("discourse/lib/blocks/registration");
+  _lockBlockRegistry();
 
   blockConfigs.set(outletName, { children: config });
 }
@@ -649,7 +730,7 @@ function validateBlock(config, outletName, blocksService) {
 
   if (!config.block) {
     raiseBlockError(
-      `Block in layout for \`${outletName}\` is missing a component: ${JSON.stringify(config)}`
+      `Block in layout for \`${outletName}\` is missing a component: ${safeStringifyConfig(config)}`
     );
     return;
   }

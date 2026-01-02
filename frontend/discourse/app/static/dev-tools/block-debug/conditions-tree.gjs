@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
+import { formatValue } from "../lib/value-formatter";
 
 /**
  * Displays condition hierarchy with pass/fail indicators.
@@ -106,6 +107,18 @@ export default class ConditionsTree extends Component {
  */
 class ConditionNode extends Component {
   /**
+   * Formatting options for condition argument values.
+   * Enables expanded arrays, symbols, and RegExp handling for readable output.
+   *
+   * @constant {Object}
+   */
+  static FORMAT_OPTIONS = {
+    expandArrays: true,
+    handleSymbols: true,
+    handleRegExp: true,
+  };
+
+  /**
    * Calculates the CSS padding for indentation based on the node's depth.
    * Each level adds 12px of left padding.
    *
@@ -137,32 +150,8 @@ class ConditionNode extends Component {
       return null;
     }
     return Object.entries(args)
-      .map(([k, v]) => `${k}: ${this.#formatValue(v)}`)
+      .map(([k, v]) => `${k}: ${formatValue(v, ConditionNode.FORMAT_OPTIONS)}`)
       .join(", ");
-  }
-
-  /**
-   * Formats a single argument value for display. Handles special cases like
-   * Symbols, Arrays, and RegExp to produce readable output.
-   *
-   * @param {any} value - The value to format.
-   * @returns {string} A human-readable string representation.
-   */
-  #formatValue(value) {
-    // Symbols show their description (e.g., Symbol(DISCOVERY_PAGES))
-    if (typeof value === "symbol") {
-      return `Symbol(${value.description || ""})`;
-    }
-    // Arrays are formatted recursively with brackets
-    if (Array.isArray(value)) {
-      return `[${value.map((v) => this.#formatValue(v)).join(", ")}]`;
-    }
-    // RegExp instances show their pattern
-    if (value instanceof RegExp) {
-      return value.toString();
-    }
-    // Everything else uses JSON serialization
-    return JSON.stringify(value);
   }
 
   <template>

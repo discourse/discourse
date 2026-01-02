@@ -36,6 +36,13 @@ const STYLES = {
  */
 export function logArgToConsole({ key, value, prefix }) {
   const varName = `arg${globalArgCounter++}`;
+
+  // Warn if overwriting an existing global variable
+  if (varName in window && window[varName] !== undefined) {
+    // eslint-disable-next-line no-console
+    console.warn(`DevTools: Overwriting existing global "${varName}"`);
+  }
+
   window[varName] = value;
 
   const prefixStr = prefix ? `[${prefix}] ` : "";

@@ -54,6 +54,13 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       setOwner(condition, testOwner);
       return condition.evaluate(args);
     };
+
+    // Helper to validate setting condition
+    this.validateCondition = (args) => {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, testOwner);
+      return condition.validate(args);
+    };
   });
 
   module("with site settings (existing behavior)", function () {
@@ -319,6 +326,119 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         this.evaluateCondition({
           settings: themeSettings,
           setting: "empty_setting",
+        })
+      );
+    });
+  });
+
+  module("validate", function () {
+    test("throws when setting argument is missing", function (assert) {
+      assert.throws(
+        () => this.validateCondition({}),
+        /`setting` argument is required/
+      );
+    });
+
+    test("throws when multiple condition types are provided", function (assert) {
+      assert.throws(
+        () =>
+          this.validateCondition({
+            setting: "enable_badges",
+            enabled: true,
+            equals: "some-value",
+          }),
+        /Cannot use multiple condition types/
+      );
+    });
+
+    test("throws when enabled and includes are both provided", function (assert) {
+      assert.throws(
+        () =>
+          this.validateCondition({
+            setting: "enable_badges",
+            enabled: true,
+            includes: ["value1", "value2"],
+          }),
+        /Cannot use multiple condition types/
+      );
+    });
+
+    test("throws for unknown site setting", function (assert) {
+      assert.throws(
+        () => this.validateCondition({ setting: "nonexistent_setting" }),
+        /Unknown site setting/
+      );
+    });
+
+    test("does not throw for unknown setting when custom settings provided", function (assert) {
+      this.validateCondition({
+        settings: { custom_key: true },
+        setting: "custom_key",
+      });
+      assert.true(true);
+    });
+
+    test("accepts valid site setting", function (assert) {
+      this.validateCondition({ setting: "enable_badges", enabled: true });
+      assert.true(true);
+    });
+  });
+
+  module("type coercion", function () {
+    test("contains matches number searchValue against string list", function (assert) {
+      const themeSettings = {
+        allowed_ids: "123|456|789",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "allowed_ids",
+          contains: 123,
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "allowed_ids",
+          contains: 999,
+        })
+      );
+    });
+
+    test("containsAny matches number searchValues against string list", function (assert) {
+      const themeSettings = {
+        allowed_ids: "123|456|789",
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "allowed_ids",
+          containsAny: [123, 999],
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "allowed_ids",
+          containsAny: [111, 222],
+        })
+      );
+    });
+
+    test("contains matches number searchValue against array setting", function (assert) {
+      const themeSettings = {
+        allowed_ids: [123, 456, 789],
+      };
+
+      assert.true(
+        this.evaluateCondition({
+          settings: themeSettings,
+          setting: "allowed_ids",
+          contains: "123",
         })
       );
     });

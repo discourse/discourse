@@ -16,13 +16,19 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * @class BlockUserCondition
  * @extends BlockCondition
  *
- * @param {boolean} [loggedIn] - If true, passes only for logged-in users; if false, only for anonymous
- * @param {boolean} [admin] - If true, passes only for admin users
- * @param {boolean} [moderator] - If true, passes only for moderators (includes admins)
- * @param {boolean} [staff] - If true, passes only for staff members
- * @param {number} [minTrustLevel] - Minimum trust level required (0-4)
- * @param {number} [maxTrustLevel] - Maximum trust level allowed (0-4)
- * @param {Array<string>} [groups] - User must be a member of at least one of these groups (OR logic)
+ * ## Condition Configuration Properties
+ *
+ * These properties are passed as an args object to `validate()` and `evaluate()`:
+ *
+ * | Property        | Type       | Description                                                           |
+ * |-----------------|------------|-----------------------------------------------------------------------|
+ * | `loggedIn`      | `boolean`  | If true, passes only for logged-in users; if false, only for anon     |
+ * | `admin`         | `boolean`  | If true, passes only for admin users                                  |
+ * | `moderator`     | `boolean`  | If true, passes only for moderators (includes admins)                 |
+ * | `staff`         | `boolean`  | If true, passes only for staff members                                |
+ * | `minTrustLevel` | `number`   | Minimum trust level required (0-4)                                    |
+ * | `maxTrustLevel` | `number`   | Maximum trust level allowed (0-4)                                     |
+ * | `groups`        | `string[]` | User must be in at least one of these groups (OR logic)               |
  *
  * @example
  * // Logged-in users only
@@ -71,6 +77,30 @@ export default class BlockUserCondition extends BlockCondition {
           "BlockUserCondition: Cannot use `loggedIn: false` with user-specific conditions " +
             "(admin, moderator, staff, minTrustLevel, maxTrustLevel, groups). " +
             "Anonymous users cannot have these properties."
+        );
+      }
+    }
+
+    // Validate trust level values are numbers in valid range (0-4)
+    if (minTrustLevel !== undefined) {
+      if (
+        typeof minTrustLevel !== "number" ||
+        minTrustLevel < 0 ||
+        minTrustLevel > 4
+      ) {
+        raiseBlockValidationError(
+          "BlockUserCondition: `minTrustLevel` must be a number between 0 and 4."
+        );
+      }
+    }
+    if (maxTrustLevel !== undefined) {
+      if (
+        typeof maxTrustLevel !== "number" ||
+        maxTrustLevel < 0 ||
+        maxTrustLevel > 4
+      ) {
+        raiseBlockValidationError(
+          "BlockUserCondition: `maxTrustLevel` must be a number between 0 and 4."
         );
       }
     }

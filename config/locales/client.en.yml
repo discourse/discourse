@@ -347,6 +347,7 @@ en:
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
     broken_transformer_alert: "There was an error. Your site may not work properly."
+    broken_block_condition_alert: "A block condition configuration error was detected. Check browser console for details."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"

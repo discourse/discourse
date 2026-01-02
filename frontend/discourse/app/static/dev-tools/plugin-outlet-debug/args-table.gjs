@@ -3,11 +3,13 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { logArgToConsole } from "../lib/console-logger";
+import { formatValue, getTypeInfo } from "../lib/value-formatter";
 
 /**
  * Displays plugin outlet arguments in a formatted table.
  * Similar to block-debug args-table but with plugin outlet context prefix.
  *
+ * @component ArgsTable
  * @param {Object} outletArgs - The outlet arguments to display.
  */
 export default class ArgsTable extends Component {
@@ -25,64 +27,9 @@ export default class ArgsTable extends Component {
     return Object.entries(args).map(([key, value]) => ({
       key,
       value,
-      displayValue: this.#formatValue(value),
-      typeInfo: this.#getTypeInfo(value),
+      displayValue: formatValue(value),
+      typeInfo: getTypeInfo(value),
     }));
-  }
-
-  /**
-   * Formats a value for display in the debug table. Each type is handled differently
-   * to provide a concise yet informative representation that fits in the UI.
-   *
-   * @param {any} value - The value to format.
-   * @returns {string} A human-readable string representation of the value.
-   */
-  #formatValue(value) {
-    if (value === null) {
-      return "null";
-    }
-    if (value === undefined) {
-      return "undefined";
-    }
-    if (typeof value === "string") {
-      return `"${value.length > 50 ? value.slice(0, 50) + "..." : value}"`;
-    }
-    if (typeof value === "number" || typeof value === "boolean") {
-      return String(value);
-    }
-    if (Array.isArray(value)) {
-      return `Array(${value.length})`;
-    }
-    if (typeof value === "function") {
-      return `fn ${value.name || "anonymous"}()`;
-    }
-    if (typeof value === "object") {
-      const name = value.constructor?.name;
-      if (name && name !== "Object") {
-        return `${name} {...}`;
-      }
-      return "{...}";
-    }
-    return String(value);
-  }
-
-  /**
-   * Determines the type label to display for a value.
-   *
-   * @param {any} value - The value to get the type info for.
-   * @returns {string} A type label (e.g., "string", "number", "array", "object").
-   */
-  #getTypeInfo(value) {
-    if (value === null) {
-      return "null";
-    }
-    if (value === undefined) {
-      return "undefined";
-    }
-    if (Array.isArray(value)) {
-      return "array";
-    }
-    return typeof value;
   }
 
   /**

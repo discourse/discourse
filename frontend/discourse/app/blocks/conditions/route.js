@@ -95,6 +95,20 @@ export default class BlockRouteCondition extends BlockCondition {
         "BlockRouteCondition: Must provide either `routes` or `excludeRoutes` argument."
       );
     }
+
+    // Validate symbol patterns are valid shortcuts
+    const validShortcuts = Object.values(BlockRouteConditionShortcuts);
+    const allPatterns = [...(routes || []), ...(excludeRoutes || [])];
+    for (const pattern of allPatterns) {
+      if (typeof pattern === "symbol" && !validShortcuts.includes(pattern)) {
+        // Generate list dynamically so it stays in sync with BlockRouteConditionShortcuts
+        const validNames = Object.keys(BlockRouteConditionShortcuts).join(", ");
+        raiseBlockValidationError(
+          `BlockRouteCondition: Unknown route shortcut symbol. ` +
+            `Valid shortcuts are: ${validNames}.`
+        );
+      }
+    }
   }
 
   evaluate(args, context = {}) {
