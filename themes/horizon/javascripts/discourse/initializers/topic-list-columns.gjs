@@ -113,7 +113,7 @@ export default {
         "topic-list-item-class",
         ({ value: classes, context }) => {
           if (isDetailed) {
-            classes.push("detailed-card-item");
+            classes.push("--high-context");
           }
 
           if (
