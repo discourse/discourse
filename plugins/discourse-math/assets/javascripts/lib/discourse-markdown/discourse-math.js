@@ -98,11 +98,9 @@ function math_input(state, silent, delimiterCode) {
     return false;
   }
 
-  const strict = state.md.options.discourse.features.strict_mathjax_markdown;
-
   if (pos > 0) {
     const prev = state.src.charCodeAt(pos - 1);
-    if (strict && !isSafeBoundary(prev, delimiterCode, state.md)) {
+    if (!isSafeBoundary(prev, delimiterCode, state.md)) {
       return false;
     }
     if (prev === delimiterCode) {
@@ -123,7 +121,7 @@ function math_input(state, silent, delimiterCode) {
 
   if (found + 1 <= posMax) {
     const next = state.src.charCodeAt(found + 1);
-    if (strict && next && !isSafeBoundary(next, delimiterCode, state.md)) {
+    if (next && !isSafeBoundary(next, delimiterCode, state.md)) {
       return false;
     }
     if (next === delimiterCode) {
@@ -182,7 +180,7 @@ function math_input_delimited(state, silent, open, close) {
   }
 
   const data = state.src.slice(start, end);
-  if (!data) {
+  if (!data || data.includes("\n")) {
     return false;
   }
 
@@ -242,11 +240,18 @@ function isBracketBlockEnd(state, start, max, md) {
   return hasOnlyWhitespaceAfter(state.src, start + 2, max, md);
 }
 
-function trySingleLineBlockMath(state, startLine, line, silent) {
-  const patterns = [
-    { start: "$$", end: "$$" },
-    { start: "\\[", end: "\\]" },
-  ];
+function trySingleLineBlockMath(
+  state,
+  startLine,
+  line,
+  silent,
+  enableLatexDelimiters
+) {
+  const patterns = [{ start: "$$", end: "$$" }];
+
+  if (enableLatexDelimiters) {
+    patterns.push({ start: "\\[", end: "\\]" });
+  }
 
   for (const { start, end } of patterns) {
     if (
@@ -327,19 +332,19 @@ function processMultilineBlock(state, startLine, endLine, silent, isEndMarker) {
 function blockMath(state, startLine, endLine, silent) {
   const start = state.bMarks[startLine] + state.tShift[startLine];
   const max = state.eMarks[startLine];
-  const strict = state.md.options.discourse.features.strict_mathjax_markdown;
+  const enableLatexDelimiters =
+    state.md.options.discourse.features.enable_latex_delimiters;
   const line = state.src.slice(start, max).trim();
 
-  if (!strict) {
-    const singleLineResult = trySingleLineBlockMath(
-      state,
-      startLine,
-      line,
-      silent
-    );
-    if (singleLineResult !== null) {
-      return singleLineResult;
-    }
+  const singleLineResult = trySingleLineBlockMath(
+    state,
+    startLine,
+    line,
+    silent,
+    enableLatexDelimiters
+  );
+  if (singleLineResult !== null) {
+    return singleLineResult;
   }
 
   if (isDollarBlockMarker(state, start, max, state.md)) {
@@ -352,7 +357,10 @@ function blockMath(state, startLine, endLine, silent) {
     );
   }
 
-  if (!strict && isBracketBlockMarker(state, start, max, state.md)) {
+  if (
+    enableLatexDelimiters &&
+    isBracketBlockMarker(state, start, max, state.md)
+  ) {
     return processMultilineBlock(
       state,
       startLine,
@@ -375,8 +383,8 @@ export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
     opts.features.math = siteSettings.discourse_math_enabled;
     opts.features.asciimath = siteSettings.discourse_math_enable_asciimath;
-    opts.features.strict_mathjax_markdown =
-      siteSettings.discourse_math_strict_mathjax_markdown;
+    opts.features.enable_latex_delimiters =
+      siteSettings.discourse_math_enable_latex_delimiters;
   });
 
   helper.registerPlugin((md) => {
@@ -398,7 +406,7 @@ export function setup(helper) {
       if (md.options.discourse.features.asciimath) {
         md.inline.ruler.after("escape", "asciimath", asciiMath);
       }
-      if (!md.options.discourse.features.strict_mathjax_markdown) {
+      if (md.options.discourse.features.enable_latex_delimiters) {
         md.inline.ruler.before("text", "math-paren", inlineMathParen);
       }
       md.inline.ruler.after("escape", "math", inlineMath);

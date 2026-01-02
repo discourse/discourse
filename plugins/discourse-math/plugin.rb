@@ -19,14 +19,14 @@ begin
   plugin_public = File.join(__dir__, "public")
   FileUtils.mkdir_p(plugin_public)
 
-  mathjax_link = File.join(plugin_public, mathjax)
+  mathjax_link = File.join(plugin_public, "mathjax")
   mathjax_target = DiscourseMathBundle.mathjax_path
   if !File.symlink?(mathjax_link) || (File.readlink(mathjax_link) != mathjax_target)
     FileUtils.rm_f(mathjax_link)
     FileUtils.ln_s(mathjax_target, mathjax_link)
   end
 
-  katex_link = File.join(plugin_public, katex)
+  katex_link = File.join(plugin_public, "katex")
   katex_target = DiscourseMathBundle.katex_path
   if !File.symlink?(katex_link) || (File.readlink(katex_link) != katex_target)
     FileUtils.rm_f(katex_link)
