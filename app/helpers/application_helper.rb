@@ -397,7 +397,7 @@ module ApplicationHelper
 
   def discourse_track_view_session_tag
     <<~HTML.html_safe
-      <meta name="discourse-track-view-session-id" content="#{SecureRandom.uuid}">
+      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
     HTML
   end
 
