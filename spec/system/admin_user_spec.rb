@@ -70,7 +70,7 @@ describe "Admin User Page", type: :system do
 
         mock_upcoming_change_metadata(
           {
-            fake_upcoming_change: {
+            enable_upload_debug_mode: {
               impact: "feature,all_members",
               status: :beta,
               impact_type: "feature",
@@ -81,39 +81,43 @@ describe "Admin User Page", type: :system do
       end
 
       context "when the change is enabled for everyone" do
-        before { SiteSetting.fake_upcoming_change = true }
+        before { SiteSetting.enable_upload_debug_mode = true }
 
         it "displays the upcoming change with enabled status and correct reason" do
           admin_user_page.visit(user)
-          expect(admin_user_page).to have_upcoming_change("fake_upcoming_change")
-          expect(admin_user_page.upcoming_change("fake_upcoming_change")).to be_enabled
-          expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_reason(
+          expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
             "enabled_for_everyone",
           )
-          expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_no_specific_groups
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to have_no_specific_groups
         end
       end
 
       context "when the change is disabled for everyone" do
-        before { SiteSetting.fake_upcoming_change = false }
+        before { SiteSetting.enable_upload_debug_mode = false }
 
         it "displays the upcoming change with disabled status and correct reason" do
           admin_user_page.visit(user)
-          expect(admin_user_page).to have_upcoming_change("fake_upcoming_change")
-          expect(admin_user_page.upcoming_change("fake_upcoming_change")).to be_disabled
-          expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_reason(
+          expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
             "enabled_for_no_one",
           )
-          expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_no_specific_groups
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to have_no_specific_groups
         end
       end
 
       context "when the change is enabled for specific groups" do
         before do
-          SiteSetting.fake_upcoming_change = true
+          SiteSetting.enable_upload_debug_mode = true
           Fabricate(
             :site_setting_group,
-            name: "fake_upcoming_change",
+            name: "enable_upload_debug_mode",
             group_ids: "#{group1.id}|#{group2.id}",
           )
         end
@@ -123,14 +127,14 @@ describe "Admin User Page", type: :system do
 
           it "displays the upcoming change with enabled status, correct reason, and specific groups" do
             admin_user_page.visit(user)
-            expect(admin_user_page).to have_upcoming_change("fake_upcoming_change")
-            expect(admin_user_page.upcoming_change("fake_upcoming_change")).to be_enabled
-            expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_reason(
+            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "in_specific_groups",
             )
-            expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_specific_groups(
-              ["test_group_1"],
-            )
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to have_specific_groups(["test_group_1"])
           end
         end
 
@@ -142,27 +146,27 @@ describe "Admin User Page", type: :system do
 
           it "displays the upcoming change with all groups" do
             admin_user_page.visit(user)
-            expect(admin_user_page).to have_upcoming_change("fake_upcoming_change")
-            expect(admin_user_page.upcoming_change("fake_upcoming_change")).to be_enabled
-            expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_reason(
+            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "in_specific_groups",
             )
-            expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_specific_groups(
-              %w[test_group_1 test_group_2],
-            )
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to have_specific_groups(%w[test_group_1 test_group_2])
           end
         end
 
         context "when the user does not belong to any of those groups" do
           it "displays the upcoming change with disabled status, correct reason, and no specific groups" do
             admin_user_page.visit(user)
-            expect(admin_user_page).to have_upcoming_change("fake_upcoming_change")
-            expect(admin_user_page.upcoming_change("fake_upcoming_change")).to be_disabled
-            expect(admin_user_page.upcoming_change("fake_upcoming_change")).to have_reason(
+            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "not_in_specific_groups",
             )
             expect(
-              admin_user_page.upcoming_change("fake_upcoming_change"),
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
             ).to have_no_specific_groups
           end
         end

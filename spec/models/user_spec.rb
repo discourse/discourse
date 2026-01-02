@@ -3805,7 +3805,7 @@ RSpec.describe User do
 
       mock_upcoming_change_metadata(
         {
-          fake_upcoming_change: {
+          enable_upload_debug_mode: {
             impact: "feature,all_members",
             status: :beta,
             impact_type: "feature",
@@ -3816,11 +3816,11 @@ RSpec.describe User do
     end
 
     context "when the change is enabled for all users" do
-      before { SiteSetting.fake_upcoming_change = true }
+      before { SiteSetting.enable_upload_debug_mode = true }
 
       it "returns enabled as true and reason as enabled_for_everyone" do
         stats = target_user.upcoming_change_stats(guardian)
-        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
 
         expect(change_stat[:enabled]).to be(true)
         expect(change_stat[:reason]).to eq(
@@ -3831,11 +3831,11 @@ RSpec.describe User do
     end
 
     context "when the change is enabled for no users" do
-      before { SiteSetting.fake_upcoming_change = false }
+      before { SiteSetting.enable_upload_debug_mode = false }
 
       it "returns enabled as false and reason as enabled_for_no_one" do
         stats = target_user.upcoming_change_stats(guardian)
-        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
 
         expect(change_stat[:enabled]).to be(false)
         expect(change_stat[:reason]).to eq(
@@ -3847,10 +3847,10 @@ RSpec.describe User do
 
     context "when the change is enabled for specific groups" do
       before do
-        SiteSetting.fake_upcoming_change = true
+        SiteSetting.enable_upload_debug_mode = true
         Fabricate(
           :site_setting_group,
-          name: "fake_upcoming_change",
+          name: "enable_upload_debug_mode",
           group_ids: "#{group1.id}|#{group2.id}",
         )
       end
@@ -3860,7 +3860,7 @@ RSpec.describe User do
 
         it "returns enabled as true and reason as in_specific_groups" do
           stats = target_user.upcoming_change_stats(admin_guardian)
-          change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
 
           expect(change_stat[:enabled]).to be(true)
           expect(change_stat[:reason]).to eq(
@@ -3878,7 +3878,7 @@ RSpec.describe User do
 
         it "returns enabled as true with all groups in specific_groups" do
           stats = target_user.upcoming_change_stats(admin_guardian)
-          change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
 
           expect(change_stat[:enabled]).to be(true)
           expect(change_stat[:reason]).to eq(
@@ -3891,7 +3891,7 @@ RSpec.describe User do
       context "when the target user does NOT belong to any of those groups" do
         it "returns enabled as false and reason as not_in_specific_groups" do
           stats = target_user.upcoming_change_stats(admin_guardian)
-          change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
 
           expect(change_stat[:enabled]).to be(false)
           expect(change_stat[:reason]).to eq(
@@ -3904,19 +3904,19 @@ RSpec.describe User do
 
     context "when guardian user visibility is restricted" do
       before do
-        SiteSetting.fake_upcoming_change = true
+        SiteSetting.enable_upload_debug_mode = true
         group1.add(target_user)
         hidden_group.add(target_user)
         Fabricate(
           :site_setting_group,
-          name: "fake_upcoming_change",
+          name: "enable_upload_debug_mode",
           group_ids: "#{group1.id}|#{hidden_group.id}",
         )
       end
 
       it "only shows groups the guardian user is allowed to see in specific_groups" do
         stats = target_user.upcoming_change_stats(guardian)
-        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
 
         expect(change_stat[:enabled]).to be(true)
         expect(change_stat[:reason]).to eq(
@@ -3928,7 +3928,7 @@ RSpec.describe User do
 
       it "shows all groups when guardian is admin" do
         stats = target_user.upcoming_change_stats(admin_guardian)
-        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
 
         expect(change_stat[:enabled]).to be(true)
         expect(change_stat[:specific_groups]).to contain_exactly("test_group_1", "hidden_group")
@@ -3936,17 +3936,17 @@ RSpec.describe User do
     end
 
     describe "metadata fields" do
-      before { SiteSetting.fake_upcoming_change = true }
+      before { SiteSetting.enable_upload_debug_mode = true }
 
       it "includes correct name, humanized_name, and description" do
         stats = target_user.upcoming_change_stats(guardian)
-        change_stat = stats.find { |s| s[:name] == :fake_upcoming_change }
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
 
-        expect(change_stat[:name]).to eq(:fake_upcoming_change)
+        expect(change_stat[:name]).to eq(:enable_upload_debug_mode)
         expect(change_stat[:humanized_name]).to eq(
-          SiteSetting.humanized_name(:fake_upcoming_change),
+          SiteSetting.humanized_name(:enable_upload_debug_mode),
         )
-        expect(change_stat[:description]).to eq(SiteSetting.description(:fake_upcoming_change))
+        expect(change_stat[:description]).to eq(SiteSetting.description(:enable_upload_debug_mode))
       end
     end
   end
