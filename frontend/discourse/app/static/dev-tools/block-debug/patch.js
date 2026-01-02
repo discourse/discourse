@@ -4,7 +4,7 @@ import {
   _setBlockLoggingCallback,
   _setBlockOutletBoundaryCallback,
   _setBlockOutletInfoComponent,
-} from "discourse/components/block-outlet";
+} from "discourse/lib/blocks/debug-hooks";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import devToolsState from "../state";
 import BlockInfo from "./block-info";

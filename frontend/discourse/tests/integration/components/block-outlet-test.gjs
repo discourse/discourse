@@ -5,12 +5,14 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import BlockGroup from "discourse/blocks/block-group";
 import BlockOutlet, {
-  _setBlockDebugCallback,
-  _setBlockLoggingCallback,
-  _setBlockOutletBoundaryCallback,
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
+import {
+  _setBlockDebugCallback,
+  _setBlockLoggingCallback,
+  _setBlockOutletBoundaryCallback,
+} from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,
   withTestBlockRegistration,

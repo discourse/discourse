@@ -23,16 +23,16 @@ import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { validateArgsSchema } from "discourse/lib/blocks/arg-validation";
+import { validateConfig } from "discourse/lib/blocks/config-validation";
 import {
-  validateArgsSchema,
-  validateBlockArgs,
-} from "discourse/lib/blocks/arg-validation";
+  getBlockDebugCallback,
+  getOutletInfoComponent,
+  isBlockLoggingEnabled,
+  isOutletBoundaryEnabled,
+} from "discourse/lib/blocks/debug-hooks";
 import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
-import {
-  clearBlockErrorContext,
-  raiseBlockError,
-  setBlockErrorContext,
-} from "discourse/lib/blocks/error";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
 /**
@@ -44,156 +44,6 @@ import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 const blockConfigs = new Map();
 
 /**
- * Debug callback for block rendering.
- * Set by dev-tools to wrap blocks with debug overlays.
- *
- * @type {Function|null}
- */
-let blockDebugCallback = null;
-
-/**
- * Callback for checking if console logging is enabled.
- * Set by dev-tools, returns true when block debug logging is active.
- *
- * @type {Function|null}
- */
-let blockLoggingCallback = null;
-
-/**
- * Callback for checking if outlet boundaries should be shown.
- * Set by dev-tools, returns true when outlet boundary overlay is active.
- *
- * @type {Function|null}
- */
-let blockOutletBoundaryCallback = null;
-
-/**
- * Safely stringifies a block config object for error messages.
- * Handles circular references, limits depth, and truncates output.
- *
- * @param {Object} config - The config object to stringify.
- * @param {number} [maxDepth=2] - Maximum nesting depth to serialize.
- * @param {number} [maxLength=200] - Maximum output string length.
- * @returns {string} A safe string representation of the config.
- */
-function safeStringifyConfig(config, maxDepth = 2, maxLength = 200) {
-  const seen = new WeakSet();
-
-  function serialize(value, depth) {
-    if (depth > maxDepth) {
-      return "[...]";
-    }
-
-    if (value === null) {
-      return "null";
-    }
-    if (value === undefined) {
-      return "undefined";
-    }
-    if (typeof value === "string") {
-      return `"${value.length > 30 ? value.slice(0, 30) + "..." : value}"`;
-    }
-    if (typeof value === "number" || typeof value === "boolean") {
-      return String(value);
-    }
-    if (typeof value === "function") {
-      return `[Function: ${value.name || "anonymous"}]`;
-    }
-    if (typeof value === "symbol") {
-      return `[Symbol: ${value.description || ""}]`;
-    }
-
-    if (typeof value === "object") {
-      if (seen.has(value)) {
-        return "[Circular]";
-      }
-      seen.add(value);
-
-      if (Array.isArray(value)) {
-        if (value.length === 0) {
-          return "[]";
-        }
-        const items = value.slice(0, 3).map((v) => serialize(v, depth + 1));
-        if (value.length > 3) {
-          items.push(`... ${value.length - 3} more`);
-        }
-        return `[${items.join(", ")}]`;
-      }
-
-      const keys = Object.keys(value).slice(0, 5);
-      if (keys.length === 0) {
-        return "{}";
-      }
-      const pairs = keys.map((k) => `${k}: ${serialize(value[k], depth + 1)}`);
-      if (Object.keys(value).length > 5) {
-        pairs.push("...");
-      }
-      return `{${pairs.join(", ")}}`;
-    }
-
-    return String(value);
-  }
-
-  try {
-    const result = serialize(config, 0);
-    if (result.length > maxLength) {
-      return result.slice(0, maxLength) + "...";
-    }
-    return result;
-  } catch {
-    return "[Object]";
-  }
-}
-
-/**
- * Component to render for outlet boundary debug overlay.
- * Set by dev-tools to provide the OutletInfo component.
- *
- * @type {typeof Component|null}
- */
-let blockOutletInfoComponent = null;
-
-/**
- * Sets a callback for debug overlay injection.
- * Called by dev-tools to wrap rendered blocks with debug info.
- *
- * @param {Function} callback - Callback receiving (blockData, context)
- */
-export function _setBlockDebugCallback(callback) {
-  blockDebugCallback = callback;
-}
-
-/**
- * Sets a callback for checking if console logging is enabled.
- * Called by dev-tools to provide state access without window globals.
- *
- * @param {Function} callback - Callback returning boolean
- */
-export function _setBlockLoggingCallback(callback) {
-  blockLoggingCallback = callback;
-}
-
-/**
- * Sets a callback for checking if outlet boundaries should be shown.
- * Called by dev-tools to provide state access without window globals.
- *
- * @param {Function} callback - Callback returning boolean
- */
-export function _setBlockOutletBoundaryCallback(callback) {
-  blockOutletBoundaryCallback = callback;
-}
-
-/**
- * Sets the component to render for outlet boundary debug overlay.
- * Called by dev-tools to provide the OutletInfo component.
- *
- * @param {typeof Component} component - The OutletInfo component
- */
-export function _setBlockOutletInfoComponent(component) {
-  blockOutletInfoComponent = component;
-}
-
-/**
  * Clears all registered block configurations.
  *
  * USE ONLY FOR TESTING PURPOSES.
@@ -203,19 +53,6 @@ export function resetBlockConfigsForTesting() {
     blockConfigs.clear();
   }
 }
-
-/**
- * Reserved argument names that cannot be used in block configurations.
- * These are used internally by the block system and would conflict with
- * user-provided args. Names starting with underscore are also reserved.
- */
-const RESERVED_ARG_NAMES = Object.freeze([
-  "classNames",
-  "outletName",
-  "children",
-  "conditions",
-  "$block$",
-]);
 
 // ============================================================================
 // Security Symbols
@@ -379,7 +216,7 @@ export function block(name, options = {}) {
         const owner = getOwner(this);
         const blocksService = owner.lookup("service:blocks");
         // Use callback to check logging state (set by dev-tools via closure)
-        const isLoggingEnabled = blockLoggingCallback?.() ?? false;
+        const isLoggingEnabled = isBlockLoggingEnabled();
         // Build base hierarchy path for this container
         // (e.g., "outlet-name" for root, "outlet-name/parent-block" for nested)
         const baseHierarchy = this.isRoot
@@ -431,9 +268,9 @@ export function block(name, options = {}) {
                 conditions: blockConfig.conditions,
               })
             );
-          } else if (blockDebugCallback) {
+          } else if (getBlockDebugCallback()) {
             // Block failed conditions - show ghost if debug overlay is enabled
-            const ghostData = blockDebugCallback(
+            const ghostData = getBlockDebugCallback()(
               {
                 name: blockName,
                 Component: null,
@@ -525,8 +362,9 @@ export function block(name, options = {}) {
             );
 
         // Apply debug callback if present (for visual overlay)
-        if (blockDebugCallback) {
-          const debugResult = blockDebugCallback(
+        const debugCallback = getBlockDebugCallback();
+        if (debugCallback) {
+          const debugResult = debugCallback(
             {
               name: ComponentClass.blockName,
               Component: wrappedComponent,
@@ -602,11 +440,13 @@ export function isBlock(component) {
 
 /**
  * Checks if a component is registered as a container block.
+ * Note: This function is exported for validation but should not be used
+ * to bypass block security. It only returns a boolean, not the symbol itself.
  *
  * @param {Function} component - The component to check
  * @returns {boolean} True if the component is registered as a container block, false otherwise
  */
-function isContainerBlock(component) {
+export function isContainerBlock(component) {
   return !!component?.[__BLOCK_CONTAINER_FLAG];
 }
 
@@ -658,7 +498,7 @@ export function renderBlocks(outletName, config, owner) {
   // Validate config BEFORE locking the registry.
   // This ensures the registry isn't locked if validation fails,
   // allowing subsequent registrations to proceed.
-  validateConfig(config, outletName, blocksService);
+  validateConfig(config, outletName, blocksService, isBlock, isContainerBlock);
 
   if (blockConfigs.has(outletName)) {
     raiseBlockError(
@@ -676,40 +516,6 @@ export function renderBlocks(outletName, config, owner) {
 }
 
 /**
- * Recursively validates an array of block configurations.
- * Validates each block and traverses nested children configurations.
- *
- * @param {Array<Object>} blocksConfig - Block configurations to validate
- * @param {string} outletName - The outlet these blocks belong to
- * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions
- * @param {string} [parentPath="blocks"] - JSON-path style parent location for error context
- * @throws {Error} If any block configuration is invalid
- */
-function validateConfig(
-  blocksConfig,
-  outletName,
-  blocksService,
-  parentPath = "blocks"
-) {
-  blocksConfig.forEach((blockConfig, index) => {
-    const currentPath = `${parentPath}[${index}]`;
-
-    // Validate the block itself (whether it has children or not)
-    validateBlock(blockConfig, outletName, blocksService, currentPath);
-
-    // Recursively validate nested children
-    if (blockConfig.children) {
-      validateConfig(
-        blockConfig.children,
-        outletName,
-        blocksService,
-        `${currentPath}.children`
-      );
-    }
-  });
-}
-
-/**
  * Checks if blocks have been registered for a given outlet.
  * Used in templates to conditionally render content based on block presence.
  *
@@ -718,149 +524,6 @@ function validateConfig(
  */
 function hasConfig(outletName) {
   return blockConfigs.has(outletName);
-}
-
-/**
- * Validates a single block configuration object.
- * Performs comprehensive validation including:
- * - Outlet name is registered in BLOCK_OUTLETS
- * - Block component exists and is decorated with @block
- * - Container/children relationship is valid
- * - No reserved arg names are used
- * - Conditions are valid (if blocksService is provided)
- *
- * @param {Object} config - The block configuration object
- * @param {typeof Component} config.block - The block component class
- * @param {string} [config.name] - Display name for error messages
- * @param {Object} [config.args] - Args to pass to the block
- * @param {Array<Object>} [config.children] - Nested block configurations
- * @param {Array<Object>|Object} [config.conditions] - Conditions for rendering
- * @param {string} outletName - The outlet this block belongs to
- * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions
- * @param {string} [path] - JSON-path style location in config (e.g., "blocks[3].children[0]")
- * @throws {Error} If validation fails
- */
-function validateBlock(config, outletName, blocksService, path) {
-  if (!BLOCK_OUTLETS.includes(outletName)) {
-    raiseBlockError(`Unknown block outlet: ${outletName}`);
-    return;
-  }
-
-  if (!config.block) {
-    raiseBlockError(
-      `Block in layout for \`${outletName}\` is missing a component: ${safeStringifyConfig(config)}`
-    );
-    return;
-  }
-
-  if (!isBlock(config.block)) {
-    raiseBlockError(
-      `Block component ${config.name} (${config.block}) in layout ${outletName} is not a valid block`
-    );
-    return;
-  }
-
-  // Verify block is registered (security check - prevents use of unregistered blocks)
-  // Import lazily to avoid circular dependency at module load time
-  const { blockRegistry } = require("discourse/lib/blocks/registration");
-  const blockName = config.block.blockName;
-  if (!blockRegistry.has(blockName)) {
-    raiseBlockError(
-      `Block "${blockName}" is not registered. ` +
-        `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`
-    );
-    return;
-  }
-
-  // Set error context for all subsequent validation errors
-  setBlockErrorContext({
-    outletName,
-    blockName,
-    path,
-    config,
-  });
-
-  try {
-    const hasChildren = config.children?.length > 0;
-    const isContainer = isContainerBlock(config.block);
-
-    if (hasChildren && !isContainer) {
-      raiseBlockError(
-        `Block component ${config.name} (${config.block}) in layout ${outletName} cannot have children`
-      );
-      return;
-    }
-
-    if (isContainer && !hasChildren) {
-      raiseBlockError(
-        `Block component ${config.name} (${config.block}) in layout ${outletName} must have children`
-      );
-      return;
-    }
-
-    validateReservedArgs(config, outletName);
-
-    // Validate block args against metadata schema
-    validateBlockArgs(config, outletName);
-
-    // Validate conditions if service is available
-    // In production, blocksService.validate() logs warnings instead of throwing
-    if (config.conditions && blocksService) {
-      // Update context to include conditions for better error messages
-      setBlockErrorContext({
-        outletName,
-        blockName,
-        path,
-        conditions: config.conditions,
-      });
-
-      try {
-        blocksService.validate(config.conditions);
-      } catch (error) {
-        raiseBlockError(
-          `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`
-        );
-      }
-    }
-  } finally {
-    clearBlockErrorContext();
-  }
-}
-
-/**
- * Checks if an argument name is reserved for internal use.
- * Reserved names include explicit names in RESERVED_ARG_NAMES and
- * any name starting with underscore (private by convention).
- *
- * @param {string} argName - The argument name to check
- * @returns {boolean} True if the name is reserved
- */
-function isReservedArgName(argName) {
-  return RESERVED_ARG_NAMES.includes(argName) || argName.startsWith("_");
-}
-
-/**
- * Validates that block config args don't use reserved names.
- * Throws an error if any arg name is reserved (either explicitly listed
- * or prefixed with underscore).
- *
- * @param {Object} config - The block configuration
- * @param {string} outletName - The outlet name for error messages
- * @throws {Error} If reserved arg names are used
- */
-function validateReservedArgs(config, outletName) {
-  if (!config.args) {
-    return;
-  }
-
-  const usedReservedArgs = Object.keys(config.args).filter(isReservedArgName);
-
-  if (usedReservedArgs.length > 0) {
-    raiseBlockError(
-      `Block ${config.name} in layout ${outletName} uses reserved arg names: ${usedReservedArgs.join(", ")}. ` +
-        `Names starting with underscore are reserved for internal use.`
-    );
-  }
 }
 
 /**
@@ -942,7 +605,7 @@ export default class BlockOutlet extends Component {
    * @returns {boolean}
    */
   get showOutletBoundary() {
-    return blockOutletBoundaryCallback?.() ?? false;
+    return isOutletBoundaryEnabled();
   }
 
   /**
@@ -952,7 +615,7 @@ export default class BlockOutlet extends Component {
    * @returns {typeof Component|null}
    */
   get OutletInfoComponent() {
-    return blockOutletInfoComponent;
+    return getOutletInfoComponent();
   }
 
   /**
