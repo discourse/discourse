@@ -30,6 +30,7 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "required",
   "default",
   "itemType",
+  "pattern",
 ]);
 
 /**
@@ -107,6 +108,21 @@ export function validateArgsSchema(argsSchema, blockName) {
       }
     }
 
+    // pattern is only valid for string type
+    if (argDef.pattern !== undefined && argDef.type !== "string") {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has "pattern" but type is "${argDef.type}". ` +
+          `"pattern" is only valid for string type.`
+      );
+    }
+
+    // Validate pattern is a RegExp
+    if (argDef.pattern !== undefined && !(argDef.pattern instanceof RegExp)) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has invalid "pattern" value. Must be a RegExp.`
+      );
+    }
+
     // Validate required is boolean
     if (argDef.required !== undefined && typeof argDef.required !== "boolean") {
       raiseBlockError(
@@ -141,7 +157,7 @@ export function validateArgsSchema(argsSchema, blockName) {
  * @returns {string|null} Error message if validation fails, null otherwise
  */
 export function validateArgValue(value, argSchema, argName, blockName) {
-  const { type, itemType } = argSchema;
+  const { type, itemType, pattern } = argSchema;
 
   // Skip validation if value is undefined (handled by required check)
   if (value === undefined) {
@@ -152,6 +168,10 @@ export function validateArgValue(value, argSchema, argName, blockName) {
     case "string":
       if (typeof value !== "string") {
         return `Block "${blockName}": arg "${argName}" must be a string, got ${typeof value}.`;
+      }
+      // Validate against pattern if specified
+      if (pattern && !pattern.test(value)) {
+        return `Block "${blockName}": arg "${argName}" value "${value}" does not match required pattern ${pattern}.`;
       }
       break;
 

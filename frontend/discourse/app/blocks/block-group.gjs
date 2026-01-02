@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { block } from "discourse/components/block-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
 
 /**
  * A container block that groups multiple children blocks together.
@@ -11,7 +12,12 @@ import concatClass from "discourse/helpers/concat-class";
  * @param {string} [@classNames] - Additional CSS classes for the group wrapper
  * @param {string} [@name] - Group identifier for BEM class naming (block__group-{name})
  */
-@block("group", { container: true })
+@block("group", {
+  container: true,
+  args: {
+    name: { type: "string", pattern: VALID_BLOCK_NAME_PATTERN },
+  },
+})
 export default class GroupedBlocks extends Component {
   <template>
     <div

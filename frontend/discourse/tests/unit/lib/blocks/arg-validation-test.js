@@ -99,6 +99,55 @@ module("Unit | Lib | blocks/arg-validation", function () {
       );
     });
 
+    test("throws for pattern on non-string type", function (assert) {
+      const schema = {
+        count: { type: "number", pattern: /^\d+$/ },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /"pattern" is only valid for string type/
+      );
+    });
+
+    test("throws for non-RegExp pattern", function (assert) {
+      const schema = {
+        name: { type: "string", pattern: "^[a-z]+$" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "pattern" value. Must be a RegExp/
+      );
+    });
+
+    test("accepts valid pattern on string type", function (assert) {
+      const schema = {
+        name: { type: "string", pattern: /^[a-z][a-z0-9-]*$/ },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default value not matching pattern", function (assert) {
+      const schema = {
+        name: {
+          type: "string",
+          pattern: /^[a-z][a-z0-9-]*$/,
+          default: "Invalid_Name",
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*does not match required pattern/
+      );
+    });
+
     test("throws for default value with wrong type - string expected", function (assert) {
       const schema = {
         title: { type: "string", default: 123 },
@@ -195,6 +244,28 @@ module("Unit | Lib | blocks/arg-validation", function () {
           "test-block"
         )?.includes("must be a string")
       );
+    });
+
+    test("validates string with pattern - valid value", function (assert) {
+      assert.strictEqual(
+        validateArgValue(
+          "valid-name",
+          { type: "string", pattern: /^[a-z][a-z0-9-]*$/ },
+          "name",
+          "test-block"
+        ),
+        null
+      );
+    });
+
+    test("validates string with pattern - invalid value", function (assert) {
+      const result = validateArgValue(
+        "Invalid_Name",
+        { type: "string", pattern: /^[a-z][a-z0-9-]*$/ },
+        "name",
+        "test-block"
+      );
+      assert.true(result?.includes("does not match required pattern"));
     });
 
     test("validates number type", function (assert) {

@@ -1,12 +1,10 @@
 import { DEBUG } from "@glimmer/env";
 import * as coreBlocks from "discourse/blocks/core";
 import { raiseBlockError } from "discourse/lib/blocks/error";
+import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
 
-/**
- * Valid block name pattern: lowercase letters, numbers, and hyphens.
- * Must start with a letter. Examples: "hero-banner", "my-block-1"
- */
-const VALID_BLOCK_NAME_PATTERN = /^[a-z][a-z0-9-]*$/;
+// Re-export for backwards compatibility
+export { VALID_BLOCK_NAME_PATTERN };
 
 /**
  * Registry of block components registered via `@block` decorator and `api.registerBlock()`.
