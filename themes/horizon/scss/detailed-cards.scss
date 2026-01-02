@@ -42,7 +42,11 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
   @include viewport.until(sm) {
     gap: var(--space-3);
-    padding: var(--space-4) var(--space-2);
+    padding: var(--space-4) 0;
+
+    > *:not(.hc-topic-card__footer) {
+      padding-inline: var(--space-4);
+    }
   }
 
   @include viewport.from(sm) {
@@ -121,6 +125,11 @@ $padding-pills-small: var(--space-half) var(--space-2);
   &__votes {
     border: 1px solid var(--tertiary);
     color: var(--tertiary);
+
+    @include viewport.until(sm) {
+      line-height: 1;
+      gap: var(--space-1);
+    }
   }
 
   &__header-right {
@@ -251,6 +260,22 @@ $padding-pills-small: var(--space-half) var(--space-2);
     @include viewport.from(sm) {
       border-top: 1px solid var(--primary-low);
     }
+
+    @include viewport.until(sm) {
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          to right,
+          var(--secondary) 0,
+          transparent 1rem,
+          transparent calc(100% - 1rem),
+          var(--secondary) 100%
+        );
+      }
+    }
   }
 
   &__category-tags {
@@ -258,6 +283,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     align-items: center;
     gap: var(--space-2);
     overflow: auto;
+    padding-inline: var(--space-4);
 
     &::-webkit-scrollbar {
       display: none; // Chrome/Safari
@@ -273,6 +299,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     align-items: center;
     gap: var(--space-4);
     margin-left: auto;
+    padding-inline: var(--space-4);
     flex-shrink: 0;
   }
 
