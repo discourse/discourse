@@ -13,25 +13,25 @@ const TopicLabelButton = <template>
       <div class="topic-title__top-line">
         <span class="topic-statuses">
           {{#if (eq @topic.archetype "private_message")}}
-            <span class="topic-status">
+            <span class="topic-status --private-message">
               {{icon "envelope"}}
             </span>
           {{/if}}
 
           {{#if @topic.bookmarked}}
-            <span class="topic-status">
+            <span class="topic-status --bookmarked">
               {{icon "bookmark"}}
             </span>
           {{/if}}
 
           {{#if @topic.closed}}
-            <span class="topic-status">
+            <span class="topic-status --closed">
               {{icon "topic.closed"}}
             </span>
           {{/if}}
 
           {{#if @topic.pinned}}
-            <span class="topic-status">
+            <span class="topic-status --pinned">
               {{icon "thumbtack"}}
             </span>
           {{/if}}

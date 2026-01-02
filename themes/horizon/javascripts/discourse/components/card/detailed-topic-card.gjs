@@ -3,8 +3,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { themePrefix } from "virtual:theme";
+import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
+import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
+import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import avatar from "discourse/helpers/avatar";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
@@ -14,6 +17,7 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import emoji from "discourse/helpers/emoji";
 import formatDate from "discourse/helpers/format-date";
 import number from "discourse/helpers/number";
+import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -144,20 +148,20 @@ export default class DetailedTopicCard extends Component {
         </div>
         <div class="hc-topic-card__status-tags">
           {{#if this.hasSolved}}
-            <span class="hc-topic-card__solved">
+            <span class="hc-topic-card__status --solved">
               {{#if this.capabilities.viewport.sm}}
                 {{i18n (themePrefix "solved")}}
               {{/if}}
               {{icon "check"}}
             </span>
             {{!-- {{else if this.canHaveAnswer}}
-            <span class="hc-topic-card__unsolved">
+            <span class="hc-topic-card__status --unsolved">
               {{i18n (themePrefix "unsolved")}}
             </span> --}}
           {{/if}}
 
           {{#if this.hasVotes}}
-            <span class="hc-topic-card__votes">
+            <span class="hc-topic-card__status --votes">
               {{#if this.capabilities.viewport.sm}}
                 {{i18n "topic_voting.votes" count=this.voteCount}}
               {{else}}
@@ -189,12 +193,29 @@ export default class DetailedTopicCard extends Component {
       {{! ROW 2: Title + Excerpt }}
       <div class="hc-topic-card__content">
         <div class="hc-topic-card__title">
+          {{#if @bulkSelectEnabled}}
+            <BulkSelectCheckbox
+              @topic={{@topic}}
+              @isSelected={{@isSelected}}
+              @onToggle={{@onBulkSelectToggle}}
+              class="hc-topic-card__bulk-select"
+            />
+          {{/if}}
           <TopicStatus @topic={{@topic}} @context="topic-list" />
           <TopicLink
             {{on "focus" this.onTitleFocus}}
             {{on "blur" this.onTitleBlur}}
             @topic={{@topic}}
             class="topic-card__title raw-link raw-topic-link"
+          />
+          {{~#if @topic.featured_link~}}
+            &nbsp;{{topicFeaturedLink @topic}}
+          {{~/if~}}
+          <UnreadIndicator @topic={{@topic}} />
+          <TopicPostBadges
+            @unreadPosts={{@topic.unread_posts}}
+            @unseen={{@topic.unseen}}
+            @url={{@topic.lastUnreadUrl}}
           />
         </div>
 
@@ -255,9 +276,7 @@ export default class DetailedTopicCard extends Component {
           {{/unless}}
 
           {{#if this.hasTags}}
-            <div class="hc-topic-card__tags">
-              {{discourseTags @topic mode="list"}}
-            </div>
+            {{discourseTags @topic mode="list" className="hc-topic-card__tags"}}
           {{/if}}
         </div>
 
