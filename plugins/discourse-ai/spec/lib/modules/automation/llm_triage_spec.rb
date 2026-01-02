@@ -96,6 +96,35 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(reviewable.reviewable_scores.first.reason).to include("bad")
   end
 
+  it "flags via tool call when the persona invokes flag_post" do
+    ai_persona.update!(tools: ["FlagPost"])
+    tool_call =
+      DiscourseAi::Completions::ToolCall.new(
+        name: "flag_post",
+        parameters: {
+          verdict: true,
+          reason: "Looks unsafe",
+        },
+        id: "tool_call_1",
+      )
+
+    DiscourseAi::Completions::Llm.with_prepared_responses([tool_call, "all good"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        automation: nil,
+      )
+    end
+
+    reviewable = ReviewablePost.last
+
+    expect(reviewable.target_id).to eq(post.id)
+    expect(reviewable.target_type).to eq("Post")
+    expect(reviewable.reviewable_scores.first.reason).to include("Looks unsafe")
+  end
+
   it "can handle spam flags" do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
