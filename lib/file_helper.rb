@@ -24,12 +24,20 @@ class FileHelper
     filename.match?(supported_audio_regexp)
   end
 
-  def self.is_inline_image?(filename)
-    filename.match?(inline_images_regexp)
-  end
-
   def self.is_svg?(filename)
     filename.match?(/\.svg\z/i)
+  end
+
+  def self.is_safe_inline_image?(filename)
+    is_supported_image?(filename) && !is_svg?(filename)
+  end
+
+  def self.is_safe_inline_text?(filename)
+    filename.match?(/\.(txt|log|md|markdown)\z/i)
+  end
+
+  def self.is_safe_inline?(filename)
+    is_safe_inline_image?(filename) || is_safe_inline_text?(filename)
   end
 
   def self.is_supported_media?(filename)
@@ -183,11 +191,6 @@ class FileHelper
     @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp avif]
   end
 
-  def self.inline_images
-    # SVG cannot safely be shown as a document
-    @@inline_images ||= supported_images - %w[svg]
-  end
-
   def self.supported_audio
     @@supported_audio ||= Set.new %w[mp3 ogg oga opus wav m4a m4b m4p m4r aac flac]
   end
@@ -206,10 +209,6 @@ class FileHelper
 
   def self.supported_images_regexp
     @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})\z/i
-  end
-
-  def self.inline_images_regexp
-    @@inline_images_regexp ||= /\.(#{inline_images.to_a.join("|")})\z/i
   end
 
   def self.supported_media_regexp

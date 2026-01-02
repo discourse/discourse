@@ -353,16 +353,11 @@ class UploadsController < ApplicationController
   end
 
   def send_file_local_upload(upload)
-    opts = {
-      filename: upload.original_filename,
-      content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type,
-    }
+    filename = upload.original_filename
 
-    if !FileHelper.is_inline_image?(upload.original_filename)
-      opts[:disposition] = "attachment"
-    elsif params[:inline]
-      opts[:disposition] = "inline"
-    end
+    opts = { filename:, content_type: MiniMime.lookup_by_filename(filename)&.content_type }
+
+    opts[:disposition] = FileHelper.is_safe_inline?(filename) ? "inline" : "attachment"
 
     file_path = Discourse.store.path_for(upload)
     return render_404 unless file_path
