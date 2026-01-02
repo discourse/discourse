@@ -1,33 +1,45 @@
 import { getURLWithCDN } from "discourse/lib/get-url";
 import loadScript from "discourse/lib/load-script";
 
+const BASE_PATH = "/plugins/discourse-math/katex";
+
 let katexPromise;
 let cssPromise;
+let mhchemPromise;
+let copyTexPromise;
 
 export async function loadKaTeX() {
-  // Load CSS first (required for proper rendering)
   if (!cssPromise) {
-    cssPromise = loadScript(getURLWithCDN("/assets/katex/katex.min.css"), {
+    cssPromise = loadScript(getURLWithCDN(`${BASE_PATH}/katex.min.css`), {
       css: true,
     });
   }
   await cssPromise;
 
-  // Load KaTeX JavaScript via dynamic import
   if (!katexPromise) {
-    katexPromise = import("katex");
+    katexPromise = loadScript(getURLWithCDN(`${BASE_PATH}/katex.min.js`));
   }
-  const katexModule = await katexPromise;
-  window.katex = katexModule.default;
-  return katexModule.default;
+  await katexPromise;
+
+  return window.katex;
 }
 
 export function loadMhchem() {
-  return import("katex/contrib/mhchem");
+  if (!mhchemPromise) {
+    mhchemPromise = loadScript(
+      getURLWithCDN(`${BASE_PATH}/contrib/mhchem.min.js`)
+    );
+  }
+  return mhchemPromise;
 }
 
 export function loadCopyTex() {
-  return import("katex/contrib/copy-tex");
+  if (!copyTexPromise) {
+    copyTexPromise = loadScript(
+      getURLWithCDN(`${BASE_PATH}/contrib/copy-tex.min.js`)
+    );
+  }
+  return copyTexPromise;
 }
 
 export function getKaTeX() {
