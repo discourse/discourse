@@ -132,3 +132,10 @@
     font-family: var(--d-font-family--monospace);
   }
 }
+
+// Fix zoom problem with MathJax.
+// See https://github.com/mathjax/MathJax/issues/3489
+.mjx-dialog {
+  position: fixed ! important;
+}
+
