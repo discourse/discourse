@@ -78,7 +78,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   &__solved {
-    background: color-mix(in srgb, var(--success) 15%, transparent);
     color: var(--success);
     font-weight: 700;
     border-color: var(--success);
@@ -86,10 +85,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
   &__unsolved {
     color: var(--primary-medium);
-
-    .d-icon {
-      display: none;
-    }
   }
 
   .--pinned {
