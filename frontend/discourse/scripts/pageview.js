@@ -10,7 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`${root}/pageview`, {
       method: "POST",
       headers: {
-        "Discourse-Deferred-Track-View": "true",
+        "Discourse-Track-View-Deferred": "true",
+        "Discourse-Track-View-Url": window.location.href,
+        "Discourse-Track-View-Referrer": document.referrer,
+        "Discourse-Track-View-Session-Id": document.querySelector(
+          "meta[name=discourse-track-view-session-id]"
+        )?.content,
       },
     });
   }
