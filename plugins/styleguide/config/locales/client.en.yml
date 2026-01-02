@@ -67,8 +67,6 @@ en:
           title: "Topic List"
         basic_topic_list:
           title: "Basic Topic List"
-        footer_message:
-          title: "Footer Message"
         signup_cta:
           title: "Signup CTA"
         topic_timer_info:
