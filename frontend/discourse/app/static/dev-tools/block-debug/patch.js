@@ -40,7 +40,8 @@ export function patchBlockRendering() {
           GhostBlock,
           {
             blockName: name,
-            outletName,
+            // Use debugLocation to avoid being overwritten by template's @outletName
+            debugLocation: outletName,
             conditions,
           },
           owner
@@ -55,7 +56,8 @@ export function patchBlockRendering() {
         BlockInfo,
         {
           blockName: name,
-          outletName,
+          // Use debugLocation to avoid being overwritten by template's @outletName
+          debugLocation: outletName,
           blockArgs: args,
           conditions,
           WrappedComponent: Component,

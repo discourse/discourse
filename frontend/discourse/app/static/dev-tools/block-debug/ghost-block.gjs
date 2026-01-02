@@ -9,7 +9,7 @@ import ConditionsTree from "./conditions-tree";
  *
  * @component GhostBlock
  * @param {string} blockName - The name of the hidden block
- * @param {string} outletName - The outlet where the block would render
+ * @param {string} debugLocation - The hierarchy path where the block would render
  * @param {Object} conditions - Conditions that failed evaluation
  */
 const GhostBlock = <template>
@@ -34,6 +34,8 @@ const GhostBlock = <template>
           <div class="block-debug-tooltip__header --failed">
             {{icon "cube"}}
             <span class="block-debug-tooltip__title">{{@blockName}}</span>
+            <span class="block-debug-tooltip__outlet">in
+              {{@debugLocation}}</span>
             <span class="block-debug-tooltip__status">HIDDEN</span>
           </div>
 

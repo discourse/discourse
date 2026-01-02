@@ -390,6 +390,289 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.strictEqual(callCount, 0, "callback not called after clearing");
       assert.dom(".clear-content").exists("block still renders");
     });
+
+    test("_setBlockDebugCallback receives correct hierarchy for direct children", async function (assert) {
+      @block("direct-child-block")
+      class DirectChildBlock extends Component {
+        <template>
+          <div class="direct-child">Direct Child</div>
+        </template>
+      }
+
+      const receivedContexts = [];
+
+      _setBlockDebugCallback((blockData, context) => {
+        receivedContexts.push({
+          name: blockData.name,
+          outletName: context.outletName,
+        });
+        return { Component: blockData.Component };
+      });
+
+      withTestBlockRegistration(() => _registerBlock(DirectChildBlock));
+      renderBlocks(
+        "homepage-blocks",
+        [{ block: DirectChildBlock }],
+        getOwner(this)
+      );
+
+      await render(
+        <template><BlockOutlet @name="homepage-blocks" /></template>
+      );
+
+      assert.strictEqual(receivedContexts.length, 1, "callback called once");
+      assert.strictEqual(
+        receivedContexts[0].name,
+        "direct-child-block",
+        "received correct block name"
+      );
+      assert.strictEqual(
+        receivedContexts[0].outletName,
+        "homepage-blocks",
+        "direct child receives outlet name as hierarchy"
+      );
+    });
+
+    test("_setBlockDebugCallback receives correct hierarchy for children of container blocks", async function (assert) {
+      @block("nested-child-block")
+      class NestedChildBlock extends Component {
+        <template>
+          <div class="nested-child">Nested Child</div>
+        </template>
+      }
+
+      const receivedContexts = [];
+
+      _setBlockDebugCallback((blockData, context) => {
+        receivedContexts.push({
+          name: blockData.name,
+          outletName: context?.outletName,
+        });
+        return { Component: blockData.Component };
+      });
+
+      withTestBlockRegistration(() => _registerBlock(NestedChildBlock));
+      renderBlocks(
+        "sidebar-blocks",
+        [
+          {
+            block: BlockGroup,
+            args: { group: "test-group" },
+            children: [{ block: NestedChildBlock }],
+          },
+        ],
+        getOwner(this)
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      // BlockGroup is decorated with @block("group", { container: true })
+      const groupContext = receivedContexts.find((c) => c.name === "group");
+      const childContext = receivedContexts.find(
+        (c) => c.name === "nested-child-block"
+      );
+
+      assert.strictEqual(
+        groupContext.outletName,
+        "sidebar-blocks",
+        "container block receives outlet name as hierarchy"
+      );
+      assert.strictEqual(
+        childContext.outletName,
+        "sidebar-blocks/group[0]",
+        "nested child receives parent container path with index"
+      );
+    });
+
+    test("_setBlockDebugCallback receives correct hierarchy for deeply nested children", async function (assert) {
+      @block("deep-nested-block")
+      class DeepNestedBlock extends Component {
+        <template>
+          <div class="deep-nested">Deep Nested</div>
+        </template>
+      }
+
+      const receivedContexts = [];
+
+      _setBlockDebugCallback((blockData, context) => {
+        receivedContexts.push({
+          name: blockData.name,
+          outletName: context?.outletName,
+        });
+        return { Component: blockData.Component };
+      });
+
+      withTestBlockRegistration(() => _registerBlock(DeepNestedBlock));
+      renderBlocks(
+        "hero-blocks",
+        [
+          {
+            block: BlockGroup,
+            args: { group: "outer" },
+            children: [
+              {
+                block: BlockGroup,
+                args: { group: "inner" },
+                children: [{ block: DeepNestedBlock }],
+              },
+            ],
+          },
+        ],
+        getOwner(this)
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      // BlockGroup is decorated with @block("group", { container: true })
+      const outerContext = receivedContexts.find(
+        (c) => c.name === "group" && c.outletName === "hero-blocks"
+      );
+      const innerContext = receivedContexts.find(
+        (c) => c.name === "group" && c.outletName === "hero-blocks/group[0]"
+      );
+      const deepContext = receivedContexts.find(
+        (c) => c.name === "deep-nested-block"
+      );
+
+      assert.strictEqual(
+        outerContext.outletName,
+        "hero-blocks",
+        "outer container receives outlet name"
+      );
+      assert.strictEqual(
+        innerContext.outletName,
+        "hero-blocks/group[0]",
+        "inner container receives parent path with index"
+      );
+      assert.strictEqual(
+        deepContext.outletName,
+        "hero-blocks/group[0]/group[0]",
+        "deeply nested child receives full hierarchy path"
+      );
+    });
+
+    test("_setBlockDebugCallback includes index for multiple containers at same level", async function (assert) {
+      @block("multi-container-child")
+      class MultiContainerChild extends Component {
+        <template>
+          <div class="multi-child">Multi Child</div>
+        </template>
+      }
+
+      const receivedContexts = [];
+
+      _setBlockDebugCallback((blockData, context) => {
+        receivedContexts.push({
+          name: blockData.name,
+          outletName: context?.outletName,
+        });
+        return { Component: blockData.Component };
+      });
+
+      withTestBlockRegistration(() => _registerBlock(MultiContainerChild));
+      renderBlocks(
+        "main-outlet-blocks",
+        [
+          {
+            block: BlockGroup,
+            args: { group: "first" },
+            children: [{ block: MultiContainerChild }],
+          },
+          {
+            block: BlockGroup,
+            args: { group: "second" },
+            children: [{ block: MultiContainerChild }],
+          },
+        ],
+        getOwner(this)
+      );
+
+      await render(
+        <template><BlockOutlet @name="main-outlet-blocks" /></template>
+      );
+
+      // BlockGroup is decorated with @block("group", { container: true })
+      const childContexts = receivedContexts.filter(
+        (c) => c.name === "multi-container-child"
+      );
+
+      assert.strictEqual(childContexts.length, 2, "two children rendered");
+      assert.strictEqual(
+        childContexts[0].outletName,
+        "main-outlet-blocks/group[0]",
+        "first container child has index 0"
+      );
+      assert.strictEqual(
+        childContexts[1].outletName,
+        "main-outlet-blocks/group[1]",
+        "second container child has index 1"
+      );
+    });
+
+    test("debug overlay displays correct hierarchy for nested children (not overwritten by template)", async function (assert) {
+      // This test ensures the debugLocation prop is not overwritten by the
+      // template's @outletName when rendering children. The debug wrapper
+      // must use a separate prop (debugLocation) to avoid this collision.
+      @block("hierarchy-display-block")
+      class HierarchyDisplayBlock extends Component {
+        <template>
+          <div class="hierarchy-display">Content</div>
+        </template>
+      }
+
+      _setBlockDebugCallback((blockData, context) => {
+        // Wrap with a component that displays the hierarchy, simulating BlockInfo
+        const debugLocation = context?.outletName;
+        return {
+          Component: <template>
+            <div
+              class="debug-wrapper"
+              data-block-name={{blockData.name}}
+              data-debug-location={{debugLocation}}
+            >
+              <blockData.Component />
+            </div>
+          </template>,
+        };
+      });
+
+      withTestBlockRegistration(() => _registerBlock(HierarchyDisplayBlock));
+      renderBlocks(
+        "header-blocks",
+        [
+          {
+            block: BlockGroup,
+            args: { group: "test" },
+            children: [{ block: HierarchyDisplayBlock }],
+          },
+        ],
+        getOwner(this)
+      );
+
+      await render(<template><BlockOutlet @name="header-blocks" /></template>);
+
+      // The nested child should have the full hierarchy path, NOT just "header-blocks"
+      const nestedChildWrapper = document.querySelector(
+        '.debug-wrapper[data-block-name="hierarchy-display-block"]'
+      );
+
+      assert.strictEqual(
+        nestedChildWrapper.dataset.debugLocation,
+        "header-blocks/group[0]",
+        "nested child displays full hierarchy path (not overwritten by template's @outletName)"
+      );
+
+      // The container itself should show the outlet name
+      const containerWrapper = document.querySelector(
+        '.debug-wrapper[data-block-name="group"]'
+      );
+
+      assert.strictEqual(
+        containerWrapper.dataset.debugLocation,
+        "header-blocks",
+        "container displays outlet name as its location"
+      );
+    });
   });
 
   module("logging callbacks", function () {

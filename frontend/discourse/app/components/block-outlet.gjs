@@ -298,26 +298,35 @@ export function block(name, options = {}) {
         const blocksService = owner.lookup("service:blocks");
         // Use callback to check logging state (set by dev-tools via closure)
         const isLoggingEnabled = blockLoggingCallback?.() ?? false;
-        // For root blocks (BlockOutlet), use the actual outlet name
-        // For nested container blocks, use the outletName passed from parent
-        const outletName = this.isRoot
+        // Build base hierarchy path for this container
+        // (e.g., "outlet-name" for root, "outlet-name/parent-block" for nested)
+        const baseHierarchy = this.isRoot
           ? this.outletName
-          : this.args.outletName || name;
-        // Build hierarchy path for debug logging (e.g., "outlet-name/parent-block")
-        // For nested blocks, include this container's name in the path
-        const hierarchy = this.isRoot
-          ? this.outletName
-          : `${this.args._hierarchy || this.args.outletName}/${name}`;
+          : this.args._hierarchy;
         const result = [];
+
+        // Track container counts for indexing (e.g., group[0], group[1])
+        const containerCounts = new Map();
 
         for (const blockConfig of rawChildren) {
           const blockName = blockConfig.block?.blockName || "unknown";
+          const isChildContainer =
+            blockConfig.block?.[__BLOCK_CONTAINER_FLAG] ?? false;
           let conditionsPassed = true;
+
+          // For containers, build their full path (used for their children's hierarchy)
+          // e.g., "homepage-blocks/group[0]"
+          let containerPath;
+          if (isChildContainer) {
+            const count = containerCounts.get(blockName) ?? 0;
+            containerCounts.set(blockName, count + 1);
+            containerPath = `${baseHierarchy}/${blockName}[${count}]`;
+          }
 
           // Evaluate conditions if present
           if (blockConfig.conditions) {
             if (isLoggingEnabled) {
-              blockDebugLogger.startGroup(blockName, hierarchy);
+              blockDebugLogger.startGroup(blockName, baseHierarchy);
             }
 
             conditionsPassed = blocksService.evaluate(blockConfig.conditions, {
@@ -331,9 +340,12 @@ export function block(name, options = {}) {
 
           if (conditionsPassed) {
             // Block passed conditions - render it
+            // Pass baseHierarchy for debug display (where block is rendered)
+            // Pass containerPath for container's children hierarchy
             result.push(
               this.#createChildBlock(blockConfig, owner, {
-                outletName,
+                displayHierarchy: baseHierarchy,
+                containerPath,
                 conditions: blockConfig.conditions,
               })
             );
@@ -347,7 +359,7 @@ export function block(name, options = {}) {
                 conditions: blockConfig.conditions,
                 conditionsPassed: false,
               },
-              { outletName }
+              { outletName: baseHierarchy }
             );
             if (ghostData?.Component) {
               result.push(ghostData);
@@ -379,7 +391,8 @@ export function block(name, options = {}) {
        * @param {Array<Object>} [blockConfig.children] - Nested block configs
        * @param {import("@ember/owner").default} owner - The application owner
        * @param {Object} [debugContext] - Debug context for visual overlay
-       * @param {string} [debugContext.outletName] - The outlet name
+       * @param {string} [debugContext.displayHierarchy] - Where the block is rendered (for tooltip display)
+       * @param {string} [debugContext.containerPath] - Container's full path (for children's _hierarchy)
        * @param {Object} [debugContext.conditions] - The block's conditions
        * @returns {{Component: import("ember-curry-component").CurriedComponent}}
        */
@@ -397,11 +410,19 @@ export function block(name, options = {}) {
 
         // Container blocks receive classNames directly (they handle their own wrapper).
         // Non-container blocks get classNames passed to wrapBlockLayout instead.
+        // Pass containerPath so nested containers know their full path for debug logging.
         const blockArgs = isChildContainer
-          ? this.#buildBlockArgs(argsWithDefaults, nestedChildren, {
-              classNames,
-            })
-          : this.#buildBlockArgs(argsWithDefaults, nestedChildren);
+          ? this.#buildBlockArgs(
+              argsWithDefaults,
+              nestedChildren,
+              debugContext.containerPath,
+              { classNames }
+            )
+          : this.#buildBlockArgs(
+              argsWithDefaults,
+              nestedChildren,
+              debugContext.displayHierarchy
+            );
 
         // Curry the component with pre-bound args so it can be rendered
         // without knowing its configuration details
@@ -431,7 +452,7 @@ export function block(name, options = {}) {
               conditions: debugContext.conditions,
               conditionsPassed: true,
             },
-            { outletName: debugContext.outletName }
+            { outletName: debugContext.displayHierarchy }
           );
           if (debugResult?.Component) {
             wrappedComponent = debugResult.Component;
@@ -470,22 +491,15 @@ export function block(name, options = {}) {
        *
        * @param {Object} args - User-provided args from block config
        * @param {Array<Object>|undefined} children - Nested children configs
+       * @param {string} hierarchy - The hierarchy path for this child block
        * @param {Object} [extra] - Additional properties to include (e.g., { classNames })
        * @returns {Object} The complete args object for the child block
        */
-      #buildBlockArgs(args, children, extra = {}) {
-        // Build hierarchy for nested blocks
-        // Root BlockOutlet doesn't add itself to the hierarchy (it's just the outlet name)
-        // Nested container blocks append their name to form the path
-        const childHierarchy = this.isRoot
-          ? this.outletName
-          : `${this.args._hierarchy || this.args.outletName}/${name}`;
-
+      #buildBlockArgs(args, children, hierarchy, extra = {}) {
         return {
           ...args,
           children,
-          outletName: this.args.outletName,
-          _hierarchy: childHierarchy, // Pass hierarchy to children for debug logging
+          _hierarchy: hierarchy, // Pass hierarchy to children for debug logging
           $block$: __BLOCK_CONTAINER_FLAG, // Pass the secret symbol to authorize child block instantiation
           ...extra,
         };

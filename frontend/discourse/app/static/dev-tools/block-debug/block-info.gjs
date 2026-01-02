@@ -11,7 +11,7 @@ import ConditionsTree from "./conditions-tree";
  *
  * @component BlockInfo
  * @param {string} blockName - The name of the block
- * @param {string} outletName - The outlet where the block is rendered
+ * @param {string} debugLocation - The hierarchy path where the block is rendered
  * @param {Object} blockArgs - Arguments passed to the block
  * @param {Object} conditions - Conditions that were evaluated
  * @param {Component} WrappedComponent - The actual block component to render
@@ -64,7 +64,7 @@ export default class BlockInfo extends Component {
               {{icon "cube"}}
               <span class="block-debug-tooltip__title">{{@blockName}}</span>
               <span class="block-debug-tooltip__outlet">in
-                {{@outletName}}</span>
+                {{@debugLocation}}</span>
             </div>
 
             {{#if this.hasConditions}}
