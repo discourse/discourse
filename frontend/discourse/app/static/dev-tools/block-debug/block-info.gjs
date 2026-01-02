@@ -44,6 +44,7 @@ export default class BlockInfo extends Component {
       <DTooltip
         @identifier="block-debug-info"
         @interactive={{true}}
+        @placement="bottom-start"
         @maxWidth={{500}}
         @triggers={{hash
           mobile=(array "click")

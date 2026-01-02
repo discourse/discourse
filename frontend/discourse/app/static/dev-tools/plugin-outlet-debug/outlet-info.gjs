@@ -88,6 +88,7 @@ export default class OutletInfoComponent extends Component {
     >
       <DTooltip
         @maxWidth={{600}}
+        @placement="bottom-start"
         @triggers={{hash mobile=(array "click") desktop=(array "hover")}}
         @untriggers={{hash mobile=(array "click") desktop=(array "click")}}
         @identifier="plugin-outlet-info"

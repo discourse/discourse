@@ -17,6 +17,7 @@ const GhostBlock = <template>
     <DTooltip
       @identifier="block-debug-ghost"
       @interactive={{true}}
+      @placement="bottom-start"
       @maxWidth={{500}}
       @triggers={{hash mobile=(array "click") desktop=(array "hover" "click")}}
       @untriggers={{hash mobile=(array "click") desktop=(array "mouseleave")}}
