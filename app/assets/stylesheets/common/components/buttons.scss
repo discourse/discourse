@@ -83,10 +83,6 @@
   transition: var(--d-button-transition);
   border: $border;
 
-  > * {
-    pointer-events: none;
-  }
-
   &:visited {
     /* covers cases where we add button classes to links */
     color: $text-color;

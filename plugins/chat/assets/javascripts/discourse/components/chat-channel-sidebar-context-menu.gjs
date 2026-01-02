@@ -120,7 +120,7 @@ export default class ChatChannelSidebarContextMenu extends Component {
   }
 
   <template>
-    <DropdownMenu as |dropdown|>
+    <DropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
       <dropdown.item>
         <DButton
           @action={{this.openNotificationSettings}}
