@@ -1,4 +1,5 @@
 import { settings } from "virtual:theme";
+import SortableColumn from "discourse/components/topic-list/header/sortable-column";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DetailedTopicCard from "../components/card/detailed-topic-card";
 import TopicActivityColumn from "../components/card/topic-activity-column";
@@ -43,6 +44,23 @@ const DetailedCard = <template>
     @hideCategory={{@hideCategory}}
     @bulkSelectEnabled={{@bulkSelectEnabled}}
     @isSelected={{@isSelected}}
+    @onBulkSelectToggle={{@onBulkSelectToggle}}
+  />
+</template>;
+
+const DetailedCardHeader = <template>
+  <SortableColumn
+    @order="default"
+    @category={{@category}}
+    @activeOrder={{@activeOrder}}
+    @changeSort={{@changeSort}}
+    @ascending={{@ascending}}
+    @name={{@name}}
+    @bulkSelectEnabled={{@bulkSelectEnabled}}
+    @showBulkToggle={{@showBulkToggle}}
+    @canBulkSelect={{@canBulkSelect}}
+    @canDoBulkActions={{@canDoBulkActions}}
+    @bulkSelectHelper={{@bulkSelectHelper}}
   />
 </template>;
 
@@ -70,6 +88,7 @@ export default {
 
             // Add detailed card
             columns.add("detailed-card", {
+              header: DetailedCardHeader,
               item: DetailedCard,
               after: hasBulkSelect ? "bulk-select" : undefined,
             });
