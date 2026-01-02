@@ -106,20 +106,6 @@ export default class BlockRouteCondition extends BlockCondition {
 
     const { routes, excludeRoutes, params, queryParams } = args;
 
-    // Check excludeRoutes first (passes if NONE match)
-    if (excludeRoutes?.length) {
-      if (this.#matchesAny(currentRoute, excludeRoutes)) {
-        return false;
-      }
-    }
-
-    // Check routes (passes if ANY match)
-    if (routes?.length) {
-      if (!this.#matchesAny(currentRoute, routes)) {
-        return false;
-      }
-    }
-
     // Debug context for params matching - nested under route condition
     const isDebugging = context.debug ?? blockDebugLogger.hasActiveGroup();
     const childDepth = (context._depth ?? 0) + 1;
@@ -129,14 +115,39 @@ export default class BlockRouteCondition extends BlockCondition {
     const actualParams = this.router.currentRoute?.params;
     const actualQueryParams = this.router.currentRoute?.queryParams;
 
-    // Log current route state when debugging
+    // Check route matching BEFORE logging so we can show the correct icon
+    // Check excludeRoutes first (passes if NONE match)
+    let routeMatched = true;
+    if (excludeRoutes?.length) {
+      if (this.#matchesAny(currentRoute, excludeRoutes)) {
+        routeMatched = false;
+      }
+    }
+
+    // Check routes (passes if ANY match)
+    if (routeMatched && routes?.length) {
+      if (!this.#matchesAny(currentRoute, routes)) {
+        routeMatched = false;
+      }
+    }
+
+    // Log current route state when debugging (always log if debugging, so users
+    // can see the current route even when it doesn't match)
     if (isDebugging && (params || queryParams)) {
       blockDebugLogger.logRouteState({
         currentRoute,
+        expectedRoutes: routes,
+        excludeRoutes,
         actualParams,
         actualQueryParams,
         depth: childDepth,
+        result: routeMatched,
       });
+    }
+
+    // Return early if route didn't match
+    if (!routeMatched) {
+      return false;
     }
 
     // Check params (uses shared matcher with AND/OR/NOT support)

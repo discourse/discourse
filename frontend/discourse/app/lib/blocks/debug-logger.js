@@ -95,20 +95,34 @@ class BlockDebugLogger {
    *
    * @param {Object} options - Log options.
    * @param {string} options.currentRoute - The current route name.
+   * @param {Array} [options.expectedRoutes] - Routes that should match (if using routes).
+   * @param {Array} [options.excludeRoutes] - Routes that should not match (if using excludeRoutes).
    * @param {Object} options.actualParams - Current route params.
    * @param {Object} options.actualQueryParams - Current query params.
    * @param {number} options.depth - Nesting depth for indentation.
+   * @param {boolean} options.result - Whether the route matched (true) or not (false).
    */
-  logRouteState({ currentRoute, actualParams, actualQueryParams, depth }) {
+  logRouteState({
+    currentRoute,
+    expectedRoutes,
+    excludeRoutes,
+    actualParams,
+    actualQueryParams,
+    depth,
+    result,
+  }) {
     if (!this.#currentGroup) {
       return;
     }
     this.#currentGroup.logs.push({
       type: "route-state",
       currentRoute,
+      expectedRoutes,
+      excludeRoutes,
       actualParams,
       actualQueryParams,
       depth,
+      result,
     });
   }
 
@@ -260,16 +274,29 @@ class BlockDebugLogger {
     const { type, args, result } = log;
 
     // Handle route state (shows current route and params/queryParams values)
+    // Uses checkmark/X to show whether route matched
     if (type === "route-state") {
-      const { currentRoute, actualParams, actualQueryParams } = log;
+      const {
+        currentRoute,
+        expectedRoutes,
+        excludeRoutes: excludedRoutes,
+        actualParams,
+        actualQueryParams,
+        result: routeResult,
+      } = log;
+      const routeIcon = routeResult ? ICONS.passed : ICONS.failed;
+      const routeStyle = routeResult ? STYLES.passed : STYLES.failed;
+
+      // Build expected value based on whether routes or excludeRoutes was used
+      const expected = excludedRoutes
+        ? { excludeRoutes: excludedRoutes }
+        : expectedRoutes;
 
       // eslint-disable-next-line no-console
-      console.groupCollapsed(
-        `%c✓%c current route: %c${currentRoute}`,
-        STYLES.passed,
-        "",
-        "font-weight: bold"
-      );
+      console.groupCollapsed(`%c${routeIcon}%c current route`, routeStyle, "", {
+        actual: currentRoute,
+        expected,
+      });
       if (actualParams && Object.keys(actualParams).length > 0) {
         // eslint-disable-next-line no-console
         console.log("params:", actualParams);

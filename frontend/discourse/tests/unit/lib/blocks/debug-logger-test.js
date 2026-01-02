@@ -282,9 +282,12 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       // route-state logged by route condition
       blockDebugLogger.logRouteState({
         currentRoute: "discovery.category",
+        expectedRoutes: ["discovery.category"],
+        excludeRoutes: undefined,
         actualParams: { slug: "general" },
         actualQueryParams: { preview_theme_id: "3" },
         depth: 2,
+        result: true,
       });
 
       // OR combinator for queryParams { any: [...] }
@@ -380,6 +383,170 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       assert.true(blockDebugLogger.hasActiveGroup());
       blockDebugLogger.endGroup(true);
+    });
+  });
+
+  module("logRouteState", function () {
+    test("displays checkmark when route matches", function (assert) {
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { routes: ["discovery.latest"] },
+        result: true,
+        depth: 0,
+      });
+      blockDebugLogger.logRouteState({
+        currentRoute: "discovery.latest",
+        expectedRoutes: ["discovery.latest"],
+        excludeRoutes: undefined,
+        actualParams: {},
+        actualQueryParams: {},
+        depth: 1,
+        result: true,
+      });
+      blockDebugLogger.endGroup(true);
+
+      // Find the route-state groupCollapsed call (second one after main block)
+      const routeStateCall = this.consoleStub.groupCollapsed
+        .getCalls()
+        .find((call) => call.args[0]?.includes("current route"));
+      assert.true(!!routeStateCall, "route-state groupCollapsed was called");
+      assert.true(
+        routeStateCall.args[0].includes("\u2713"),
+        "displays checkmark for matching route"
+      );
+    });
+
+    test("displays X when route does not match", function (assert) {
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { routes: ["discovery.category"] },
+        result: false,
+        depth: 0,
+      });
+      blockDebugLogger.logRouteState({
+        currentRoute: "discovery.latest",
+        expectedRoutes: ["discovery.category"],
+        excludeRoutes: undefined,
+        actualParams: {},
+        actualQueryParams: {},
+        depth: 1,
+        result: false,
+      });
+      blockDebugLogger.endGroup(false);
+
+      const routeStateCall = this.consoleStub.groupCollapsed
+        .getCalls()
+        .find((call) => call.args[0]?.includes("current route"));
+      assert.true(!!routeStateCall, "route-state groupCollapsed was called");
+      assert.true(
+        routeStateCall.args[0].includes("\u2717"),
+        "displays X for non-matching route"
+      );
+    });
+
+    test("includes actual and expected routes in output", function (assert) {
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { routes: ["discovery.category"] },
+        result: false,
+        depth: 0,
+      });
+      blockDebugLogger.logRouteState({
+        currentRoute: "discovery.latest",
+        expectedRoutes: ["discovery.category"],
+        excludeRoutes: undefined,
+        actualParams: {},
+        actualQueryParams: {},
+        depth: 1,
+        result: false,
+      });
+      blockDebugLogger.endGroup(false);
+
+      const routeStateCall = this.consoleStub.groupCollapsed
+        .getCalls()
+        .find((call) => call.args[0]?.includes("current route"));
+      // The last argument should be an object with actual and expected
+      const dataArg = routeStateCall.args[routeStateCall.args.length - 1];
+      assert.strictEqual(
+        dataArg.actual,
+        "discovery.latest",
+        "includes actual route"
+      );
+      assert.deepEqual(
+        dataArg.expected,
+        ["discovery.category"],
+        "includes expected routes"
+      );
+    });
+
+    test("includes excludeRoutes in expected when using exclusion", function (assert) {
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { excludeRoutes: ["discovery.custom"] },
+        result: true,
+        depth: 0,
+      });
+      blockDebugLogger.logRouteState({
+        currentRoute: "discovery.latest",
+        expectedRoutes: undefined,
+        excludeRoutes: ["discovery.custom"],
+        actualParams: {},
+        actualQueryParams: {},
+        depth: 1,
+        result: true,
+      });
+      blockDebugLogger.endGroup(true);
+
+      const routeStateCall = this.consoleStub.groupCollapsed
+        .getCalls()
+        .find((call) => call.args[0]?.includes("current route"));
+      const dataArg = routeStateCall.args[routeStateCall.args.length - 1];
+      assert.strictEqual(
+        dataArg.actual,
+        "discovery.latest",
+        "includes actual route"
+      );
+      assert.deepEqual(
+        dataArg.expected,
+        { excludeRoutes: ["discovery.custom"] },
+        "wraps excludeRoutes in object for clarity"
+      );
+    });
+
+    test("logs params and queryParams inside group", function (assert) {
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { routes: ["topic.show"], params: { id: 123 } },
+        result: true,
+        depth: 0,
+      });
+      blockDebugLogger.logRouteState({
+        currentRoute: "topic.show",
+        expectedRoutes: ["topic.show"],
+        excludeRoutes: undefined,
+        actualParams: { id: 123, slug: "my-topic" },
+        actualQueryParams: { page: "2" },
+        depth: 1,
+        result: true,
+      });
+      blockDebugLogger.endGroup(true);
+
+      // Check that params and queryParams were logged
+      const logCalls = this.consoleStub.log.getCalls();
+      const paramsCall = logCalls.find((call) =>
+        call.args[0]?.includes?.("params:")
+      );
+      const queryParamsCall = logCalls.find((call) =>
+        call.args[0]?.includes?.("queryParams:")
+      );
+
+      assert.true(!!paramsCall, "params were logged");
+      assert.true(!!queryParamsCall, "queryParams were logged");
     });
   });
 });
