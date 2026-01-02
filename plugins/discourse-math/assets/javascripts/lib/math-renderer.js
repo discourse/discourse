@@ -67,7 +67,11 @@ function buildMathJaxConfig(opts) {
 
   const outputConfig =
     output === "html"
-      ? { chtml: { fontURL: getURLWithCDN("/assets/mathjax/woff-v2") } }
+      ? {
+          chtml: {
+            fontURL: getURLWithCDN("/plugins/discourse-math/mathjax/woff-v2"),
+          },
+        }
       : { svg: { fontCache: "global" } };
 
   const a11yConfig = enableA11y
@@ -78,8 +82,8 @@ function buildMathJaxConfig(opts) {
         enableBraille: true,
         enableEnrichment: true,
         sre: {
-          path: getURLWithCDN("/assets/mathjax/sre"),
-          maps: getURLWithCDN("/assets/mathjax/sre/mathmaps"),
+          path: getURLWithCDN("/plugins/discourse-math/mathjax/sre"),
+          maps: getURLWithCDN("/plugins/discourse-math/mathjax/sre/mathmaps"),
         },
         a11y: { speech: true, braille: true },
       }
@@ -95,7 +99,7 @@ function buildMathJaxConfig(opts) {
     },
     loader: {
       load: [],
-      paths: { mathjax: getURLWithCDN("/assets/mathjax") },
+      paths: { mathjax: getURLWithCDN("/plugins/discourse-math/mathjax") },
     },
     ...outputConfig,
     options: {

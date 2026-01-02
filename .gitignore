@@ -54,6 +54,8 @@
 !/plugins/discourse-graphviz
 !/plugins/discourse-rss-polling
 !/plugins/discourse-math
+/plugins/discourse-math/public/katex
+/plugins/discourse-math/public/mathjax
 !/plugins/discourse-chat-integration
 !/plugins/discourse-data-explorer
 !/plugins/discourse-post-voting
