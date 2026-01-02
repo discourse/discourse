@@ -4159,6 +4159,7 @@ pt:
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
+        custom: "Personalizar"
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"

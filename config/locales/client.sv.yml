@@ -3776,6 +3776,7 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
+        custom: "Anpassad"
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"

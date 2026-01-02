@@ -3171,6 +3171,7 @@ bg:
         this_month: "Месец"
         this_week: "Седмица"
         today: "Днес"
+        custom: "По избор"
     permission_types:
       full: "Създай / Отговори / Виж"
       create_post: "Отговари / Виж"

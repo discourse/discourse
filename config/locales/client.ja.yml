@@ -4223,6 +4223,7 @@ ja:
         this_month: "今月"
         this_week: "今週"
         today: "今日"
+        custom: "カスタム"
     custom_homepage:
       admin_message: 'テーマの 1 つで "custom_homepage" 修飾子が有効になっていますが、[custom-homepage] コネクタには何も出力されません。(このメッセージはサイト管理者にのみ表示されます。)'
     browser_update: '残念ながら、<a href="https://discourse.org/about#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
@@ -7446,16 +7447,12 @@ ja:
             prompt: "この設定を変更すると、サイトに広範に適用されるか意図しない結果が生じる可能性があります。続行してもよろしいですか？"
             confirm: "はい"
           min_password_length:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           min_admin_password_length:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべての管理者のパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           password_unique_charactes:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           block_common_passwords:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
       badges:
         status: ステータス

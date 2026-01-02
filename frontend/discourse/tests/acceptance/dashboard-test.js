@@ -88,9 +88,9 @@ acceptance("Dashboard", function (needs) {
     const periodChooser = selectKit(".period-chooser");
     assert.strictEqual(periodChooser.header().value(), "custom");
     assert.dom(".period-chooser-header .date-section").hasText("Custom");
-    // The date range from query params should be displayed (dates may vary slightly due to UTC)
-    assert.dom(".period-chooser-header .top-date-string").exists();
-    assert.dom(".period-chooser-header .top-date-string").includesText("–");
+    assert
+      .dom(".period-chooser-header .top-date-string")
+      .hasText("Jan 1, 2024 – Jan 31, 2024");
   });
 
   test("moderation tab", async function (assert) {

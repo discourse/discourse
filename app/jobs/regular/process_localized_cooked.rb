@@ -21,16 +21,7 @@ module Jobs
 
         if post.is_first_post?
           topic_localization = post.topic.localizations.find_by(locale: post_localization.locale)
-          if topic_localization
-            excerpt =
-              Post.excerpt(
-                cooked,
-                SiteSetting.topic_excerpt_maxlength,
-                strip_links: true,
-                strip_images: true,
-              )
-            topic_localization.update_column(:excerpt, excerpt)
-          end
+          topic_localization.update_excerpt(cooked:) if topic_localization
         end
 
         MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)

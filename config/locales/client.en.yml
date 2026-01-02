@@ -8524,17 +8524,20 @@ en:
             prompt: "Changing this setting may have far-reaching or unintended consequences for your site. Are you sure you want to proceed?"
             confirm: "Yes, I'm sure"
           min_password_length:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           min_admin_password_length:
-            prompt: "You’re about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           password_unique_charactes:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           block_common_passwords:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
+          clean_up_inactive_users_after_days:
+            prompt: "Setting this value to anything other than 0 will cause users who are no longer active for that many days to be permanently deleted. Are you sure you want to proceed?"
+            confirm: "Yes, I understand that inactive users will be permanently deleted unless I set this value to 0"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

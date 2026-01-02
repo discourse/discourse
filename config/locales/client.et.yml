@@ -2453,6 +2453,7 @@ et:
         this_month: "Kuu"
         this_week: "Nädal"
         today: "Täna"
+        custom: "Individuaalne"
     permission_types:
       full: "Loo / vasta / vaata"
       create_post: "Vasta / vaata"

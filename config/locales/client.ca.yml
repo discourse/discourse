@@ -2750,6 +2750,7 @@ ca:
         this_month: "Mes"
         this_week: "Setmana"
         today: "Avui"
+        custom: "Personalitzat"
     permission_types:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
