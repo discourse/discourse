@@ -71,9 +71,13 @@ export default function (topic, params) {
   const hasContent = (tags && tags.length > 0) || callbackResults.length > 0;
 
   if (hasContent) {
-    buffer = `<div class='discourse-tags' 
-                   role='list' 
-                   aria-label=${i18n("tagging.tags")}>`;
+    const classNames = ["discourse-tags"];
+
+    if (params?.className) {
+      classNames.push(params.className);
+    }
+
+    buffer = `<div class='${classNames.join(" ")}' role='list' aria-label=${i18n("tagging.tags")}>`;
 
     let currentIndex = 0;
 
