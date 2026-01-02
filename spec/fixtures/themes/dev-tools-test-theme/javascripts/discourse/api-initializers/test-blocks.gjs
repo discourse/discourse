@@ -24,6 +24,6 @@ export default apiInitializer((api) => {
 
   api.renderBlocks("hero-blocks", [
     { block: TestBlock, args: { title: "Test Title" } },
-    { block: ConditionalBlock, conditions: [{ type: "user", admin: true }] },
+    { block: ConditionalBlock, conditions: [{ type: "user", loggedIn: true, admin: true }] },
   ]);
 });

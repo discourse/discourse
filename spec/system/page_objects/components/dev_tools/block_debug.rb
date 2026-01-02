@@ -38,7 +38,8 @@ module PageObjects
         def hover_block_badge(block_name = nil)
           selector =
             block_name ? ".block-debug-info[data-block-name='#{block_name}']" : ".block-debug-info"
-          find("#{selector} .block-debug-badge").hover
+          # Use JavaScript click to bypass any overlapping tooltip elements
+          page.execute_script("document.querySelector(\"#{selector} .block-debug-badge\").click()")
           self
         end
 
@@ -80,7 +81,10 @@ module PageObjects
                 ".block-debug-ghost"
               end
             )
-          find("#{selector} .block-debug-ghost__badge").hover
+          # Use JavaScript click to bypass any overlapping tooltip elements
+          page.execute_script(
+            "document.querySelector(\"#{selector} .block-debug-ghost__badge\").click()",
+          )
           self
         end
 

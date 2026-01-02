@@ -25,15 +25,22 @@ module PageObjects
           self
         end
 
+        def close_blocks_menu
+          find(".dev-tools-toolbar .toggle-blocks").click if page.has_css?(".block-debug-menu")
+          self
+        end
+
         def toggle_block_visual_overlay
           open_blocks_menu
           find(".block-debug-menu label", text: "Visual overlay").click
+          close_blocks_menu
           self
         end
 
         def toggle_block_outlet_boundaries
           open_blocks_menu
           find(".block-debug-menu label", text: "Outlet boundaries").click
+          close_blocks_menu
           self
         end
 

@@ -58,5 +58,38 @@ describe "Discourse dev tools", type: :system do
       expect(block_debug).to have_outlet_tooltip
       expect(block_debug).to have_outlet_github_link
     end
+
+    context "with test theme blocks" do
+      fab!(:theme) do
+        theme_dir = "#{Rails.root}/spec/fixtures/themes/dev-tools-test-theme"
+        theme = RemoteTheme.import_theme_from_directory(theme_dir)
+        Theme.find(SiteSetting.default_theme_id).child_themes << theme
+        theme
+      end
+
+      it "shows block visual overlay with tooltip" do
+        visit("/latest")
+        toolbar.enable
+        toolbar.toggle_block_visual_overlay
+
+        expect(block_debug).to have_block_info("dev-tools-test-block")
+        block_debug.hover_block_badge("dev-tools-test-block")
+        expect(block_debug).to have_block_tooltip
+        expect(block_debug).to have_block_title("dev-tools-test-block")
+        expect(block_debug).to have_block_outlet("hero-blocks")
+        expect(block_debug).to have_block_arg(key: "title")
+      end
+
+      it "shows ghost blocks for failed conditions" do
+        visit("/latest") # Anonymous user, admin condition fails
+        toolbar.enable
+        toolbar.toggle_block_visual_overlay
+
+        expect(block_debug).to have_ghost_block("dev-tools-conditional-block")
+        block_debug.hover_ghost_badge("dev-tools-conditional-block")
+        expect(block_debug).to have_ghost_tooltip
+        expect(block_debug).to have_conditions
+      end
+    end
   end
 end
