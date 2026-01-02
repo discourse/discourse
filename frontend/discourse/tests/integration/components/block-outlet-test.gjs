@@ -459,7 +459,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         [
           {
             block: BlockGroup,
-            args: { group: "test-group" },
+            args: { name: "test-group" },
             children: [{ block: NestedChildBlock }],
           },
         ],
@@ -510,11 +510,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         [
           {
             block: BlockGroup,
-            args: { group: "outer" },
+            args: { name: "outer" },
             children: [
               {
                 block: BlockGroup,
-                args: { group: "inner" },
+                args: { name: "inner" },
                 children: [{ block: DeepNestedBlock }],
               },
             ],
@@ -577,12 +577,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         [
           {
             block: BlockGroup,
-            args: { group: "first" },
+            args: { name: "first" },
             children: [{ block: MultiContainerChild }],
           },
           {
             block: BlockGroup,
-            args: { group: "second" },
+            args: { name: "second" },
             children: [{ block: MultiContainerChild }],
           },
         ],
@@ -644,7 +644,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         [
           {
             block: BlockGroup,
-            args: { group: "test" },
+            args: { name: "test" },
             children: [{ block: HierarchyDisplayBlock }],
           },
         ],
@@ -846,12 +846,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         return [
           {
             block: BlockGroup,
-            args: { group: `level-${depth}` },
+            args: { name: `level-${depth}` },
             children: buildNestedConfig(depth + 1, maxDepth),
           },
           {
             block: BlockGroup,
-            args: { group: `level-${depth}-alt` },
+            args: { name: `level-${depth}-alt` },
             children: buildNestedConfig(depth + 1, maxDepth),
           },
         ];
@@ -908,7 +908,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         return [
           {
             block: BlockGroup,
-            args: { group: `deep-${depth}` },
+            args: { name: `deep-${depth}` },
             children: buildDeeplyNestedConfig(depth - 1),
           },
         ];
@@ -943,11 +943,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       renderBlocks("main-outlet-blocks", [
         {
           block: BlockGroup,
-          args: { group: "outer" },
+          args: { name: "outer" },
           children: [
             {
               block: BlockGroup,
-              args: { group: "middle-1" },
+              args: { name: "middle-1" },
               children: [
                 {
                   block: ConditionalLeaf,
@@ -962,7 +962,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
             },
             {
               block: BlockGroup,
-              args: { group: "middle-2" },
+              args: { name: "middle-2" },
               conditions: { type: "user", loggedIn: false },
               children: [{ block: ConditionalLeaf, args: { level: "3c" } }],
             },

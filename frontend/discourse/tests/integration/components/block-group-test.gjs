@@ -37,7 +37,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     renderBlocks("hero-blocks", [
       {
         block: BlockGroup,
-        args: { group: "features" },
+        args: { name: "features" },
         classNames: "custom-group-class",
         children: [{ block: GroupChild1 }, { block: GroupChild2 }],
       },
@@ -134,11 +134,11 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     renderBlocks("main-outlet-blocks", [
       {
         block: BlockGroup,
-        args: { group: "outer" },
+        args: { name: "outer" },
         children: [
           {
             block: BlockGroup,
-            args: { group: "inner" },
+            args: { name: "inner" },
             children: [{ block: NestedLeaf }],
           },
         ],

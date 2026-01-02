@@ -9,14 +9,14 @@ import concatClass from "discourse/helpers/concat-class";
  *
  * @param {string} @outletName - The outlet identifier this group belongs to (passed from parent)
  * @param {string} [@classNames] - Additional CSS classes for the group wrapper
- * @param {string} [@group] - Group identifier for BEM class naming (block__group-{group})
+ * @param {string} [@name] - Group identifier for BEM class naming (block__group-{name})
  */
 @block("group", { container: true })
 export default class GroupedBlocks extends Component {
   <template>
     <div
       class={{concatClass
-        (concat "block__group-" @group)
+        (concat "block__group-" @name)
         (concat @outletName "__group")
         @classNames
       }}
