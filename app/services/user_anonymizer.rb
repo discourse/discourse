@@ -91,6 +91,7 @@ class UserAnonymizer
       :anonymize_user,
       user_id: @user.id,
       prev_email: @prev_email,
+      prev_username: @prev_username,
       anonymize_ip: @opts[:anonymize_ip],
     )
 
