@@ -472,6 +472,7 @@ class BulkImport::Generic < BulkImport::Base
 
       {
         imported_id: row["id"],
+        existing_id: row["existing_id"],
         name: row["name"],
         full_name: row["full_name"],
         public_admission: row["public_admission"] || false,
