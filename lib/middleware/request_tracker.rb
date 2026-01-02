@@ -19,6 +19,8 @@ class Middleware::RequestTracker
   STATIC_IP_SKIPPER =
     ENV["DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS"]&.split&.map { |ip| IPAddr.new(ip) }
 
+  MAX_REFERRER_LENGTH = 2000
+
   # register callbacks for detailed request loggers called on every request
   # example:
   #
@@ -552,7 +554,7 @@ class Middleware::RequestTracker
 
     topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
     tracking_url = env["HTTP_DISCOURSE_TRACK_VIEW_URL"]
-    tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]
+    tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]&.slice(0, MAX_REFERRER_LENGTH)
     tracking_session_id = env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]
     user_agent = env["HTTP_USER_AGENT"]
 
