@@ -1378,5 +1378,38 @@ RSpec.describe PostDestroyer do
         expect(topic.bumped_at).to eq_time(second_last_reply.created_at)
       end
     end
+
+    context "when recovering a deleted reply" do
+      it "restores bumped_at when the last reply is recovered" do
+        PostDestroyer.new(moderator, last_reply).destroy
+        PostDestroyer.new(moderator, last_reply.reload).recover
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      it "restores bumped_at when a user-deleted reply is recovered" do
+        PostDestroyer.new(user, last_reply).destroy
+        PostDestroyer.new(user, last_reply.reload).recover
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      context "when the recovered post is not the last reply" do
+        let!(:newer_reply) do
+          freeze_time 3.days.from_now
+          create_post(topic:, user: coding_horror)
+        end
+
+        it "does not change bumped_at" do
+          PostDestroyer.new(moderator, second_last_reply).destroy
+          PostDestroyer.new(moderator, second_last_reply.reload).recover
+          topic.reload
+
+          expect(topic.bumped_at).to eq_time(newer_reply.created_at)
+        end
+      end
+    end
   end
 end
