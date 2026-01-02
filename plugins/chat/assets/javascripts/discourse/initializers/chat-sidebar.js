@@ -419,7 +419,6 @@ export default {
                     ? "chat-direct-message-channel-menu"
                     : "chat-channel-menu",
                   component: ChatChannelSidebarContextMenu,
-                  modalForMobile: true,
                   placement: "right",
                   data: { channel: this.channel },
                   onClose: onMenuClose,
@@ -592,7 +591,6 @@ export default {
                   this.menuService.show(event.target, {
                     identifier: "chat-channel-menu",
                     component: ChatChannelSidebarContextMenu,
-                    modalForMobile: true,
                     placement: "right",
                     data: { channel: this.channel },
                     onClose: onMenuClose,
@@ -857,7 +855,6 @@ export default {
                   this.menuService.show(event.target, {
                     identifier: "chat-direct-message-channel-menu",
                     component: ChatChannelSidebarContextMenu,
-                    modalForMobile: true,
                     placement: "right",
                     data: { channel: this.channel },
                     onClose: onMenuClose,
