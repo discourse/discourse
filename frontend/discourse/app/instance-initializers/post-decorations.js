@@ -15,8 +15,6 @@ import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
-const CAROUSEL_MODES = new Set(["carousel"]);
-
 export default {
   initialize(owner) {
     withPluginApi((api) => {
@@ -36,7 +34,7 @@ export default {
 
         if (grids.length) {
           grids.forEach((grid) => {
-            if (CAROUSEL_MODES.has(grid.dataset.mode)) {
+            if (grid.dataset.mode === "carousel") {
               if (setupImageGridCarousel(grid, helper)) {
                 needsLightboxAfterRender = true;
               }
