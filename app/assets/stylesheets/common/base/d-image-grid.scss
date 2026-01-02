@@ -142,7 +142,6 @@
       height: auto !important;
       object-fit: contain !important;
       border-radius: var(--d-border-radius);
-      transition: box-shadow 0.4s ease;
     }
 
     .lightbox-wrapper {
@@ -162,12 +161,6 @@
         justify-content: center;
         max-width: 100%;
         max-height: 100%;
-        overflow: visible; // for box-shadow on active
-        height: min-content; // for caption glass effect
-
-        &:hover {
-          box-shadow: none;
-        }
       }
     }
   }

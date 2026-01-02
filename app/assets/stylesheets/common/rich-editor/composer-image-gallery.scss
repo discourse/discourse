@@ -6,6 +6,7 @@
     right: var(--space-2);
     top: var(--space-2);
     display: flex;
+    z-index: 1;
 
     @include viewport.until(sm) {
       flex-direction: column;
