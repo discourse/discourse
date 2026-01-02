@@ -245,17 +245,19 @@ export default class DetailedTopicCard extends Component {
 
       {{! ROW 4: Stats + Last Reply }}
       <div class="hc-topic-card__footer">
-        {{#unless @hideCategory}}
-          <div class="hc-topic-card__category">
-            {{categoryLinkHTML @topic.category}}
-          </div>
-        {{/unless}}
+        <div class="hc-topic-card__category-tags">
+          {{#unless @hideCategory}}
+            <div class="hc-topic-card__category">
+              {{categoryLinkHTML @topic.category}}
+            </div>
+          {{/unless}}
 
-        {{#if this.hasTags}}
-          <div class="hc-topic-card__tags">
-            {{discourseTags @topic mode="list"}}
-          </div>
-        {{/if}}
+          {{#if this.hasTags}}
+            <div class="hc-topic-card__tags">
+              {{discourseTags @topic mode="list"}}
+            </div>
+          {{/if}}
+        </div>
 
         <div class="hc-topic-card__stats">
           {{#if this.hasReplies}}
