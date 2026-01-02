@@ -99,6 +99,10 @@ export default function () {
           path: "/robots",
           resetNamespace: true,
         });
+        this.route("adminCustomizeLlmsTxt", {
+          path: "/llms",
+          resetNamespace: true,
+        });
         this.route(
           "adminCustomizeEmailStyle",
           { path: "/email_style", resetNamespace: true },

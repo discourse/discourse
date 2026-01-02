@@ -79,7 +79,6 @@ module SiteSettings
       ).freeze
 
     HUMANIZED_MIXED_CASE = [
-      ["llms txt", "/llms.txt"],
       ["adobe analytics", "Adobe Analytics"],
       ["amazon web services", "Amazon Web Services"],
       %w[android Android],

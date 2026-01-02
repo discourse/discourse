@@ -821,14 +821,16 @@
   }
 }
 
-.robots-txt-edit {
+.robots-txt-edit,
+.llms-txt-edit {
   div.overridden {
     background: var(--highlight-bg);
     padding: 7px;
     margin-bottom: 7px;
   }
 
-  .robots-txt-input {
+  .robots-txt-input,
+  .llms-txt-input {
     width: 100%;
     box-sizing: border-box;
     height: 55vh;

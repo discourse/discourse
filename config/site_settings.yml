@@ -2635,10 +2635,6 @@ security:
     regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
-  llms_txt:
-    default: ""
-    type: text
-    textarea: true
   allow_indexing_non_canonical_urls:
     default: true
     hidden: true
@@ -3702,6 +3698,10 @@ uncategorized:
     hidden: true
 
   overridden_robots_txt:
+    default: ""
+    hidden: true
+
+  llms_txt_content:
     default: ""
     hidden: true
 

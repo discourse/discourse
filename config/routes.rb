@@ -305,6 +305,10 @@ Discourse::Application.routes.draw do
         put "robots.json" => "robots_txt#update"
         delete "robots.json" => "robots_txt#reset"
 
+        get "llms" => "llms_txt#show"
+        put "llms.json" => "llms_txt#update"
+        delete "llms.json" => "llms_txt#reset"
+
         resource :email_style, only: %i[show update]
         get "email_style/:field" => "email_styles#show", :constraints => { field: /html|css/ }
       end
