@@ -84,6 +84,46 @@ module("Unit | Blocks | Condition | user", function (hooks) {
     });
   });
 
+  module("evaluate", function () {
+    module("anonymous users", function () {
+      test("passes with no conditions", function (assert) {
+        assert.true(this.condition.evaluate({}));
+      });
+
+      test("fails with loggedIn: true", function (assert) {
+        assert.false(this.condition.evaluate({ loggedIn: true }));
+      });
+
+      test("passes with loggedIn: false", function (assert) {
+        assert.true(this.condition.evaluate({ loggedIn: false }));
+      });
+
+      test("fails with admin: true", function (assert) {
+        assert.false(this.condition.evaluate({ admin: true }));
+      });
+
+      test("fails with moderator: true", function (assert) {
+        assert.false(this.condition.evaluate({ moderator: true }));
+      });
+
+      test("fails with staff: true", function (assert) {
+        assert.false(this.condition.evaluate({ staff: true }));
+      });
+
+      test("fails with minTrustLevel", function (assert) {
+        assert.false(this.condition.evaluate({ minTrustLevel: 1 }));
+      });
+
+      test("fails with maxTrustLevel", function (assert) {
+        assert.false(this.condition.evaluate({ maxTrustLevel: 4 }));
+      });
+
+      test("fails with groups", function (assert) {
+        assert.false(this.condition.evaluate({ groups: ["some-group"] }));
+      });
+    });
+  });
+
   module("static type", function () {
     test("has correct type", function (assert) {
       assert.strictEqual(BlockUserCondition.type, "user");

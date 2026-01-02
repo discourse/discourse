@@ -109,7 +109,25 @@ export default class BlockUserCondition extends BlockCondition {
 
     // All other checks require a logged-in user
     if (!this.currentUser) {
-      // No conditions specified, pass for anonymous
+      // If loggedIn: false was specified, anonymous users pass
+      if (loggedIn === false) {
+        return true;
+      }
+
+      // If user-specific conditions are specified, anonymous users cannot satisfy them
+      const hasUserSpecificConditions =
+        admin !== undefined ||
+        moderator !== undefined ||
+        staff !== undefined ||
+        minTrustLevel !== undefined ||
+        maxTrustLevel !== undefined ||
+        groups?.length;
+
+      if (hasUserSpecificConditions) {
+        return false;
+      }
+
+      // No user-specific conditions, pass for anonymous if loggedIn wasn't explicitly required
       return loggedIn === undefined;
     }
 
