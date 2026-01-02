@@ -15,17 +15,27 @@ register_svg_icon "square-root-variable"
 
 enabled_site_setting :discourse_math_enabled
 
-# Create symlinks to math library assets from the gem
-plugin_public = File.join(__dir__, "public")
-FileUtils.mkdir_p(plugin_public)
+begin
+  plugin_public = File.join(__dir__, "public")
+  FileUtils.mkdir_p(plugin_public)
 
-mathjax_link = File.join(plugin_public, "mathjax")
-FileUtils.rm_f(mathjax_link) if File.symlink?(mathjax_link)
-FileUtils.ln_s(DiscourseMathBundle.mathjax_path, mathjax_link)
+  mathjax_link = File.join(plugin_public, mathjax)
+  mathjax_target = DiscourseMathBundle.mathjax_path
+  if !File.symlink?(mathjax_link) || (File.readlink(mathjax_link) != mathjax_target)
+    FileUtils.rm_f(mathjax_link)
+    FileUtils.ln_s(mathjax_target, mathjax_link)
+  end
 
-katex_link = File.join(plugin_public, "katex")
-FileUtils.rm_f(katex_link) if File.symlink?(katex_link)
-FileUtils.ln_s(DiscourseMathBundle.katex_path, katex_link)
+  katex_link = File.join(plugin_public, katex)
+  katex_target = DiscourseMathBundle.katex_path
+  if !File.symlink?(katex_link) || (File.readlink(katex_link) != katex_target)
+    FileUtils.rm_f(katex_link)
+    FileUtils.ln_s(katex_target, katex_link)
+  end
+rescue => e
+  # the alternative of failing to boot is worse
+  Discourse.warn_exception(e, message: "Failed to create symlinks for discourse-math assets")
+end
 
 after_initialize do
   if respond_to?(:chat) && SiteSetting.chat_enabled
