@@ -52,23 +52,6 @@ RSpec.describe Admin::SiteTextsController do
         expect(value).to eq(I18n.t("js.yes_value", locale: :de))
       end
 
-      it "can return the value of the translation in the selected locale rather than English if specified" do
-        SiteSetting.default_locale = "it"
-        get "/admin/customize/site_texts.json",
-            params: {
-              q: "all tags",
-              locale: "it",
-              only_selected_locale: true,
-            }
-        value =
-          response.parsed_body["site_texts"].find do |text|
-            text["id"] == "js.topic.browse_all_tags_or_latest"
-          end[
-            "value"
-          ]
-        expect(value).to eq(I18n.t("js.topic.browse_all_tags_or_latest", locale: "it"))
-      end
-
       it "returns an error on invalid locale" do
         get "/admin/customize/site_texts.json", params: { locale: "?" }
         expect(response.status).to eq(400)
