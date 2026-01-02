@@ -54,6 +54,10 @@ export default class Rewind extends Component {
     return this.currentUser.id === this.args.user.id;
   }
 
+  get isOwnRewind() {
+    return this.currentUser?.id === this.args.user.id;
+  }
+
   @action
   registerScrollWrapper(element) {
     this.scrollWrapper = element;
@@ -376,7 +380,11 @@ export default class Rewind extends Component {
               }}
                 {{#if ReportComponent}}
                   <div class={{concatClass "rewind-report" report.identifier}}>
-                    <ReportComponent @report={{report}} @user={{@user}} />
+                    <ReportComponent
+                      @report={{report}}
+                      @user={{@user}}
+                      @isOwnRewind={{this.isOwnRewind}}
+                    />
                   </div>
                 {{/if}}
               {{/let}}

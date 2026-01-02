@@ -5,20 +5,29 @@ import concatClass from "discourse/helpers/concat-class";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class BestTopics extends Component {
   rankClass(idx) {
     return `rank-${idx + 1}`;
   }
 
+  get titleText() {
+    return i18nForOwner(
+      "discourse_rewind.reports.best_topics.title",
+      this.args.isOwnRewind,
+      {
+        count: this.args.report.data.length,
+        username: this.args.user?.username,
+      }
+    );
+  }
+
   <template>
     {{#if @report.data.length}}
       <div class="rewind-report-page --best-topics">
         <h2 class="rewind-report-title">
-          {{i18n
-            "discourse_rewind.reports.best_topics.title"
-            count=@report.data.length
-          }}
+          {{this.titleText}}
         </h2>
         <div class="rewind-report-container">
           <div class="rewind-card">
