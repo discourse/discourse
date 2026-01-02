@@ -234,16 +234,14 @@ class BlockDebugLogger {
 
   /**
    * Check if a log entry should be rendered as a collapsible group when it has children.
-   * Combinators (AND/OR/NOT) are not grouped since their children are inline.
-   * Param groups and route state handle their own grouping.
+   * Param groups and route state handle their own grouping internally.
    *
    * @param {Object} log - The log entry
    * @returns {boolean} True if this log should be a group when it has children
    */
   #isGroupableLog(log) {
-    const isCombinator = ["AND", "OR", "NOT"].includes(log.type);
     const isSpecialType = ["param-group", "route-state"].includes(log.type);
-    return !isCombinator && !isSpecialType;
+    return !isSpecialType;
   }
 
   /**

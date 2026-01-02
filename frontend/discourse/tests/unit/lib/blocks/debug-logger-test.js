@@ -71,6 +71,9 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
   module("updateCombinatorResult", function () {
     test("updates pending combinator result", function (assert) {
+      // Simulates a simple condition tree:
+      // AND (depth 0)
+      //   user (depth 1)
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
         type: "AND",
@@ -87,14 +90,17 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       blockDebugLogger.updateCombinatorResult(true, 0);
       blockDebugLogger.endGroup(true);
 
-      assert.true(
-        this.consoleStub.groupCollapsed.calledOnce,
-        "console.groupCollapsed called"
+      // groupCollapsed called twice: once for main block, once for AND (has children)
+      assert.strictEqual(
+        this.consoleStub.groupCollapsed.callCount,
+        2,
+        "console.groupCollapsed called for main block and AND combinator"
       );
+      // log called once for user condition (no children)
       assert.strictEqual(
         this.consoleStub.log.callCount,
-        2,
-        "two conditions logged"
+        1,
+        "one condition logged with console.log"
       );
     });
 
@@ -193,6 +199,11 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
   module("nested groups", function () {
     test("maintains correct hierarchy with nested conditions", function (assert) {
+      // Simulates a condition tree with sibling combinators:
+      // AND (depth 0)
+      //   user (depth 1)
+      //   OR (depth 1)
+      //     route (depth 2)
       blockDebugLogger.startGroup("outer-block", "outlet-name");
 
       blockDebugLogger.logCondition({
@@ -224,10 +235,138 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
       blockDebugLogger.endGroup(true);
 
+      // AND (depth 0) has children (user at depth 1) → groupCollapsed
+      // user (depth 1) has no children (OR is at same depth) → log
+      // OR (depth 1) has children (route at depth 2) → groupCollapsed
+      // route (depth 2) has no children → log
+      // Plus the main block group → total groupCollapsed = 3
+      assert.strictEqual(
+        this.consoleStub.groupCollapsed.callCount,
+        3,
+        "three groups collapsed (main + AND + OR)"
+      );
       assert.strictEqual(
         this.consoleStub.log.callCount,
-        4,
-        "four conditions logged"
+        2,
+        "two conditions logged with console.log (user + route)"
+      );
+    });
+
+    test("deeply nested conditions maintain proper group hierarchy", function (assert) {
+      // Simulates a complex condition tree like:
+      // AND (depth 0)
+      //   route (depth 1)
+      //     route-state (depth 2)
+      //     OR (depth 2) - queryParams with { any: [...] }
+      //       param-group (depth 3)
+      //       param-group (depth 3)
+      //   setting (depth 1)
+      blockDebugLogger.startGroup("complex-block", "main-outlet");
+
+      // Top-level AND combinator
+      blockDebugLogger.logCondition({
+        type: "AND",
+        args: "2 conditions",
+        result: null,
+        depth: 0,
+      });
+
+      // First child: route condition with nested children
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { routes: ["discovery.category"], queryParams: { any: [] } },
+        result: null,
+        depth: 1,
+      });
+
+      // route-state logged by route condition
+      blockDebugLogger.logRouteState({
+        currentRoute: "discovery.category",
+        actualParams: { slug: "general" },
+        actualQueryParams: { preview_theme_id: "3" },
+        depth: 2,
+      });
+
+      // OR combinator for queryParams { any: [...] }
+      blockDebugLogger.logCondition({
+        type: "OR",
+        args: "2 queryParams specs",
+        result: null,
+        depth: 2,
+      });
+
+      // First queryParams spec
+      blockDebugLogger.logParamGroup({
+        label: "queryParams[0]",
+        matches: [
+          {
+            key: "preview_theme_id",
+            expected: { any: ["3", "4"] },
+            actual: "3",
+            result: true,
+          },
+        ],
+        result: true,
+        depth: 3,
+      });
+
+      // Second queryParams spec
+      blockDebugLogger.logParamGroup({
+        label: "queryParams[1]",
+        matches: [
+          {
+            key: "preview_theme_id",
+            expected: { any: ["6", "7"] },
+            actual: "3",
+            result: false,
+          },
+        ],
+        result: false,
+        depth: 3,
+      });
+
+      blockDebugLogger.updateCombinatorResult(true, 2); // OR passed
+      blockDebugLogger.updateConditionResult("route", true, 1); // route passed
+
+      // Second child of AND: simple setting condition
+      blockDebugLogger.logCondition({
+        type: "setting",
+        args: { name: "enable_feature" },
+        result: true,
+        depth: 1,
+      });
+
+      blockDebugLogger.updateCombinatorResult(true, 0); // AND passed
+
+      blockDebugLogger.endGroup(true);
+
+      // Expected groupCollapsed calls:
+      // 1. Main block group
+      // 2. AND (depth 0) - has children at depth 1
+      // 3. route (depth 1) - has children at depth 2
+      // 4. route-state (depth 2) - handles its own grouping internally
+      // 5. OR (depth 2) - has children at depth 3
+      assert.strictEqual(
+        this.consoleStub.groupCollapsed.callCount,
+        5,
+        "five groups collapsed (main + AND + route + route-state + OR)"
+      );
+
+      // Expected groupEnd calls should match groupCollapsed
+      assert.strictEqual(
+        this.consoleStub.groupEnd.callCount,
+        5,
+        "five groups ended (main + AND + route + route-state + OR)"
+      );
+
+      // Expected console.log calls:
+      // 1. setting (depth 1) - no children
+      // 2. queryParams[0] param-group (single key, logs directly)
+      // 3. queryParams[1] param-group (single key, logs directly)
+      // 4. route-state internal logs (params, queryParams)
+      assert.true(
+        this.consoleStub.log.callCount >= 3,
+        "at least three log calls for leaf conditions"
       );
     });
   });

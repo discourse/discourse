@@ -63,10 +63,13 @@ export class BlockCondition {
    * Called at render time to determine if a block should be shown.
    *
    * @param {Object} args - The condition arguments from the block config
+   * @param {Object} [context] - Evaluation context from the blocks service
+   * @param {boolean} [context.debug] - Whether debug logging is enabled
+   * @param {number} [context._depth] - Current nesting depth for logging
    * @returns {boolean} True if condition passes, false otherwise
    */
   // eslint-disable-next-line no-unused-vars
-  evaluate(args) {
+  evaluate(args, context) {
     throw new Error(`${this.constructor.name} must implement evaluate()`);
   }
 }

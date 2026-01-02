@@ -393,7 +393,9 @@ export default class Blocks extends Service {
       blockDebugLogger.logCondition({ type, args, result: null, depth });
     }
 
-    const result = conditionInstance.evaluate(args);
+    // Pass context to evaluate so conditions can log nested items at correct depth
+    const evalContext = { debug: isLoggingEnabled, _depth: depth };
+    const result = conditionInstance.evaluate(args, evalContext);
 
     // Update the condition's result after evaluate
     if (isLoggingEnabled) {

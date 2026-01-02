@@ -97,7 +97,7 @@ export default class BlockRouteCondition extends BlockCondition {
     }
   }
 
-  evaluate(args) {
+  evaluate(args, context = {}) {
     const currentRoute = this.router.currentRouteName;
 
     if (!currentRoute) {
@@ -120,9 +120,10 @@ export default class BlockRouteCondition extends BlockCondition {
       }
     }
 
-    // Debug context for params matching - nested under route condition (depth=1)
-    const isDebugging = blockDebugLogger.hasActiveGroup();
-    const debugContext = { debug: isDebugging, _depth: 1 };
+    // Debug context for params matching - nested under route condition
+    const isDebugging = context.debug ?? blockDebugLogger.hasActiveGroup();
+    const childDepth = (context._depth ?? 0) + 1;
+    const debugContext = { debug: isDebugging, _depth: childDepth };
 
     // Get actual params/queryParams for debug output
     const actualParams = this.router.currentRoute?.params;
@@ -134,7 +135,7 @@ export default class BlockRouteCondition extends BlockCondition {
         currentRoute,
         actualParams,
         actualQueryParams,
-        depth: 1,
+        depth: childDepth,
       });
     }
 
