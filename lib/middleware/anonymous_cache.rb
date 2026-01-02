@@ -68,6 +68,8 @@ module Middleware
       ACCEPT_ENCODING = "HTTP_ACCEPT_ENCODING"
       DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
 
+      ALLOWED_CRAWLER_PATHS = %w[robots.txt llms.txt srv/status].freeze
+
       REDIS_STORE_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
         local current = redis.call("incr", KEYS[1])
         redis.call("expire",KEYS[1],ARGV[1])
@@ -85,12 +87,14 @@ module Middleware
       end
 
       def blocked_crawler?
-        @request.get? && !@request.xhr? && !@request.path.ends_with?("robots.txt") &&
-          !@request.path.ends_with?("srv/status") &&
-          @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
-          @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
-          @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
-          CrawlerDetection.is_blocked_crawler?(crawler_identifier)
+        return false if !@request.get?
+        return false if @request.xhr?
+        return false if ALLOWED_CRAWLER_PATHS.any? { |path| @request.path.ends_with?(path) }
+        return false if @request[Auth::DefaultCurrentUserProvider::API_KEY]
+        return false if @env[Auth::DefaultCurrentUserProvider::USER_API_KEY]
+        return false if @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
+
+        CrawlerDetection.is_blocked_crawler?(crawler_identifier)
       end
 
       # rubocop:disable Lint/BooleanSymbol

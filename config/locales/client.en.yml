@@ -7494,6 +7494,9 @@ en:
           title: "Override your site's robots.txt file:"
           warning: "This will permanently override any related site settings."
           overridden: Your site's default robots.txt file is overridden.
+        llms:
+          title: "Customize your site's /llms.txt file:"
+          description: "This file helps LLMs understand your site's structure and content. See <a href='https://llmstxt.org' target='_blank'>llmstxt.org</a> for the format specification."
         email_style:
           title: "Email Style"
           heading: "Customize email style"
