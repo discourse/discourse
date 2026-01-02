@@ -40,7 +40,7 @@ function getConfigHash(opts) {
   return JSON.stringify({
     output: opts.mathjax_output,
     a11y: opts.enable_accessibility,
-    zoom: opts.zoom_on_hover,
+    zoom: opts.zoom_on_click,
     ascii: opts.enable_asciimath,
   });
 }
@@ -52,7 +52,7 @@ export function buildDiscourseMathOptions(siteSettings) {
     enable_asciimath: siteSettings.discourse_math_enable_asciimath,
     enable_accessibility: siteSettings.discourse_math_enable_accessibility,
     mathjax_output: siteSettings.discourse_math_mathjax_output,
-    zoom_on_hover: siteSettings.discourse_math_zoom_on_hover,
+    zoom_on_click: siteSettings.discourse_math_zoom_on_click,
   };
 }
 
@@ -61,8 +61,8 @@ function buildMathJaxConfig(opts) {
   const enableA11y =
     opts.enable_accessibility === true || opts.enable_accessibility === "true";
 
-  const menuOptions = opts.zoom_on_hover
-    ? { settings: { zoom: "Hover", zscale: "200%" } }
+  const menuOptions = opts.zoom_on_click
+    ? { settings: { zoom: "Click", zscale: "175%" } }
     : {};
 
   const outputConfig =
