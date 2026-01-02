@@ -11,6 +11,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
 import {
   CHAT_PANEL,
@@ -386,13 +387,45 @@ export default {
 
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-          const SidebarChatStarredChannelLink = createChannelLink(
+          const BaseStarredChannelLink = createChannelLink(
             BaseCustomSidebarSectionLink,
             {
               showSuffix: false,
               enableHoverForPublicChannels: false,
             }
           );
+
+          const SidebarChatStarredChannelLink = class extends BaseStarredChannelLink {
+            constructor({ menuService }) {
+              super(...arguments);
+              this.menuService = menuService;
+            }
+
+            get hoverValue() {
+              return "ellipsis";
+            }
+
+            get hoverTitle() {
+              return i18n("chat.open_channel_menu");
+            }
+
+            get hoverAction() {
+              return (event, onMenuClose) => {
+                event.stopPropagation();
+                event.preventDefault();
+
+                this.menuService.show(event.target, {
+                  identifier: this.isDM
+                    ? "chat-direct-message-channel-menu"
+                    : "chat-channel-menu",
+                  component: ChatChannelSidebarContextMenu,
+                  placement: "right",
+                  data: { channel: this.channel },
+                  onClose: onMenuClose,
+                });
+              };
+            }
+          };
 
           const SidebarChatStarredChannelsSection = class extends BaseCustomSidebarSection {
             @service currentUser;
@@ -409,6 +442,7 @@ export default {
               this.chatChannelsManager = container.lookup(
                 "service:chat-channels-manager"
               );
+              this.menuService = container.lookup("service:menu");
             }
 
             get sectionLinks() {
@@ -420,6 +454,7 @@ export default {
                     currentUser: this.currentUser,
                     siteSettings: this.siteSettings,
                     chatStateManager: this.chatStateManager,
+                    menuService: this.menuService,
                   })
               );
             }
@@ -457,10 +492,15 @@ export default {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatChannelsSectionLink = class extends BaseCustomSidebarSectionLink {
-              constructor({ channel, chatService, siteSettings }) {
+              hoverType = "icon";
+              hoverValue = "ellipsis";
+              hoverTitle = i18n("chat.open_channel_menu");
+
+              constructor({ channel, chatService, siteSettings, menuService }) {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
+                this.menuService = menuService;
                 this.chatStateManager = chatStateManager;
                 this.siteSettings = siteSettings;
               }
@@ -542,6 +582,21 @@ export default {
                   isDirectMessageChannel: false,
                 };
               }
+
+              get hoverAction() {
+                return (event, onMenuClose) => {
+                  event.stopPropagation();
+                  event.preventDefault();
+
+                  this.menuService.show(event.target, {
+                    identifier: "chat-channel-menu",
+                    component: ChatChannelSidebarContextMenu,
+                    placement: "right",
+                    data: { channel: this.channel },
+                    onClose: onMenuClose,
+                  });
+                };
+              }
             };
 
             const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
@@ -566,6 +621,7 @@ export default {
                   "service:chat-channels-manager"
                 );
                 this.router = container.lookup("service:router");
+                this.menuService = container.lookup("service:menu");
               }
 
               get sectionLinks() {
@@ -574,6 +630,7 @@ export default {
                     new SidebarChatChannelsSectionLink({
                       channel,
                       chatService: this.chatService,
+                      menuService: this.menuService,
                       siteSettings: this.siteSettings,
                     })
                 );
@@ -640,16 +697,23 @@ export default {
               route = "chat.channel";
               suffixType = "icon";
               hoverType = "icon";
-              hoverValue = "xmark";
-              hoverTitle = i18n("chat.direct_messages.close");
+              hoverValue = "ellipsis";
+              hoverTitle = i18n("chat.open_channel_menu");
 
-              constructor({ channel, chatService, currentUser, siteSettings }) {
+              constructor({
+                channel,
+                chatService,
+                currentUser,
+                menuService,
+                siteSettings,
+              }) {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
                 this.siteSettings = siteSettings;
                 this.currentUser = currentUser;
                 this.chatStateManager = chatStateManager;
+                this.menuService = menuService;
 
                 if (this.oneOnOneMessage) {
                   const user = this.channel.chatable.users[0];
@@ -784,10 +848,17 @@ export default {
               }
 
               get hoverAction() {
-                return (event) => {
+                return (event, onMenuClose) => {
                   event.stopPropagation();
                   event.preventDefault();
-                  this.chatService.unfollowChannel(this.channel);
+
+                  this.menuService.show(event.target, {
+                    identifier: "chat-direct-message-channel-menu",
+                    component: ChatChannelSidebarContextMenu,
+                    placement: "right",
+                    data: { channel: this.channel },
+                    onClose: onMenuClose,
+                  });
                 };
               }
             };
@@ -811,6 +882,7 @@ export default {
                 this.chatChannelsManager = container.lookup(
                   "service:chat-channels-manager"
                 );
+                this.menuService = container.lookup("service:menu");
               }
 
               get hideSectionHeader() {
@@ -832,6 +904,7 @@ export default {
                         channel,
                         chatService: this.chatService,
                         currentUser: this.currentUser,
+                        menuService: this.menuService,
                         siteSettings: this.siteSettings,
                       })
                   );
@@ -882,7 +955,7 @@ export default {
 
             return SidebarChatDirectMessagesSection;
           },
-          "chat"
+          CHAT_PANEL
         );
       }
     });

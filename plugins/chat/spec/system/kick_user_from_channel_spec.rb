@@ -8,7 +8,7 @@ describe "Kick user from chat channel", type: :system do
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
