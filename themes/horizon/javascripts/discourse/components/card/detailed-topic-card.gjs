@@ -12,6 +12,7 @@ import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import number from "discourse/helpers/number";
+import { shortDateNoYear } from "discourse/lib/formatter";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -104,7 +105,8 @@ export default class DetailedTopicCard extends Component {
   }
 
   get topicTimestamp() {
-    return this.args.topic.created_at;
+    // return this.args.topic.created_at;
+    return shortDateNoYear(new Date(this.args.topic.created_at));
   }
 
   @action
@@ -118,52 +120,52 @@ export default class DetailedTopicCard extends Component {
   }
 
   <template>
-    <td class="detailed-card" colspan="6">
+    <td class="hc-topic-card">
       {{! ROW 1: Creator info + Category + Status }}
-      <div class="dc-card__header">
-        <div class="dc-card__creator">
-          <div class="dc-card__avatar">
-            {{avatar this.topicCreator imageSize="medium"}}
+      <div class="hc-topic-card__header">
+        <div class="hc-topic-card__op">
+          <div class="hc-topic-card__avatar">
+            {{avatar this.topicCreator imageSize="large"}}
           </div>
-          <span
-            class="dc-card__creator-name"
-          >{{this.topicCreator.username}}</span>
-          <span>
-            {{formatDate this.topicTimestamp format="tiny"}}
-          </span>
+          <div class="hc-topic-card__op-info">
+            <span class="hc-topic-card__op-timestamp">
+              posted
+              {{this.topicTimestamp}}
+            </span>
+            <span class="hc-topic-card__op-name">
+              by @{{this.topicCreator.username}}</span>
 
+          </div>
+
+        </div>
+        <div class="hc-topic-card__status-tags">
           {{#if this.hasSolved}}
-            <span class="dc-card__solved">
+            <span class="hc-topic-card__solved">
               {{icon "far-square-check"}}
               {{i18n (themePrefix "solved")}}
             </span>
           {{else if this.canHaveAnswer}}
-            <span class="dc-card__unsolved">
+            <span class="hc-topic-card__unsolved">
               {{icon "far-square"}}
               {{i18n (themePrefix "unsolved")}}
             </span>
           {{/if}}
 
           {{#if this.hasVotes}}
-            <span class="dc-card__votes">
+            <span class="hc-topic-card__votes">
               {{i18n "topic_voting.votes" count=this.voteCount}}
             </span>
           {{/if}}
-        </div>
-
-        <div class="dc-card__header-right">
-          {{#unless @hideCategory}}
-            <div class="dc-card__category">
-              {{categoryLinkHTML @topic.category}}
-            </div>
-          {{/unless}}
 
           {{#if this.statusBadge}}
             <span
-              class={{concatClass "dc-card__status" this.statusBadge.className}}
+              class={{concatClass
+                "hc-topic-card__status"
+                this.statusBadge.className
+              }}
             >
               {{icon this.statusBadge.icon}}
-              <span class="dc-card__status-text">{{i18n
+              <span class="hc-topic-card__status-text">{{i18n
                   this.statusBadge.text
                 }}</span>
             </span>
@@ -172,86 +174,96 @@ export default class DetailedTopicCard extends Component {
       </div>
 
       {{! ROW 2: Title + Excerpt }}
-      <div class="dc-card__content">
-        <div class="dc-card__title-row">
+      <div class="hc-topic-card__content">
+        <div class="hc-topic-card__title">
           <TopicStatus @topic={{@topic}} @context="topic-list" />
           <TopicLink
             {{on "focus" this.onTitleFocus}}
             {{on "blur" this.onTitleBlur}}
             @topic={{@topic}}
-            class="dc-card__title raw-link raw-topic-link"
+            class="topic-card__title raw-link raw-topic-link"
           />
         </div>
 
         {{#if this.hasExcerpt}}
-          <TopicExcerpt @topic={{@topic}} class="dc-card__excerpt" />
+          <TopicExcerpt @topic={{@topic}} class="hc-topic-card__excerpt" />
         {{/if}}
       </div>
 
       {{! ROW 3: Assigned + Tags }}
+
       {{#if (or this.hasAssigned this.hasTags)}}
-        <div class="dc-card__context">
+        <div class="hc-topic-card__context">
+          <div class="hc-topic-card__last-reply">
+            {{avatar this.lastPoster.user imageSize="tiny"}}
+            <span
+              class="hc-topic-card__last-reply-name"
+            >{{this.lastPoster.username}}</span>
+            <span>replied</span>
+            <span class="hc-topic-card__time">
+              {{formatDate @topic.bumpedAt leaveAgo="true"}}
+            </span>
+          </div>
           {{#if this.hasAssigned}}
-            <div class="dc-card__assignments">
+            <div class="hc-topic-card__assignments">
               {{#if this.assignedUser}}
-                <div class="dc-card__assigned">
+                <div class="hc-topic-card__assigned">
                   {{icon "user-plus"}}
-                  {{avatar this.assignedUser imageSize="tiny"}}
+                  {{!-- {{avatar this.assignedUser imageSize="tiny"}} --}}
                   <span
-                    class="dc-card__assigned-name"
+                    class="hc-topic-card__assigned-name"
                   >{{this.assignedUser.username}}</span>
                 </div>
               {{/if}}
               {{#each this.indirectAssignees as |assignment|}}
-                <div class="dc-card__assigned dc-card__assigned--indirect">
+                <div class="hc-topic-card__assigned">
                   {{icon "user-plus"}}
-                  {{avatar assignment.user imageSize="tiny"}}
+                  {{!-- {{avatar assignment.user imageSize="tiny"}} --}}
                   <span
-                    class="dc-card__assigned-name"
+                    class="hc-topic-card__assigned-name"
                   >{{assignment.user.username}}</span>
                   <span
-                    class="dc-card__assigned-post"
+                    class="hc-topic-card__assigned-post"
                   >#{{assignment.postNumber}}</span>
                 </div>
               {{/each}}
-            </div>
-          {{/if}}
-
-          {{#if this.hasTags}}
-            <div class="dc-card__tags">
-              {{discourseTags @topic mode="list"}}
             </div>
           {{/if}}
         </div>
       {{/if}}
 
       {{! ROW 4: Stats + Last Reply }}
-      <div class="dc-card__footer">
-        <div class="dc-card__stats">
+      <div class="hc-topic-card__footer">
+        {{#unless @hideCategory}}
+          <div class="hc-topic-card__category">
+            {{categoryLinkHTML @topic.category}}
+          </div>
+        {{/unless}}
+
+        {{#if this.hasTags}}
+          <div class="hc-topic-card__tags">
+            {{discourseTags @topic mode="list"}}
+          </div>
+        {{/if}}
+
+        <div class="hc-topic-card__stats">
           {{#if this.hasReplies}}
-            <span class="dc-card__replies">
+            <span class="hc-topic-card__replies">
               {{icon "reply"}}
-              <span class="dc-card__count">{{number @topic.posts_count}}</span>
+              <span class="hc-topic-card__count">{{number
+                  @topic.posts_count
+                }}</span>
             </span>
           {{/if}}
 
           {{#if this.hasLikes}}
-            <span class="dc-card__likes">
+            <span class="hc-topic-card__likes">
               {{icon "heart"}}
-              <span class="dc-card__count">{{number @topic.like_count}}</span>
+              <span class="hc-topic-card__count">{{number
+                  @topic.like_count
+                }}</span>
             </span>
           {{/if}}
-        </div>
-
-        <div class="dc-card__last-reply">
-          {{avatar this.lastPoster.user imageSize="tiny"}}
-          <span
-            class="dc-card__last-reply-name"
-          >{{this.lastPoster.username}}</span>
-          <span class="dc-card__dot-separator"></span>
-          <span class="dc-card__time">
-            {{formatDate @topic.bumpedAt format="tiny" noTitle="true"}}
-          </span>
         </div>
       </div>
     </td>
