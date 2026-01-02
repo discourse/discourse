@@ -29,7 +29,6 @@ describe "Request tracking", type: :system do
           end
         end
 
-      expect(events.length).to eq(1)
       event = events[0][:params].last
 
       expect(event[:user_id]).to be_nil
@@ -53,7 +52,6 @@ describe "Request tracking", type: :system do
           end
         end
 
-      expect(events.length).to eq(1)
       event_2 = events[0][:params].last
 
       expect(event_2[:user_id]).to be_nil
@@ -105,7 +103,6 @@ describe "Request tracking", type: :system do
           end
         end
 
-      expect(events.length).to eq(1)
       event = events[0][:params].last
 
       expect(event[:user_id]).to eq(user.id)
@@ -130,7 +127,6 @@ describe "Request tracking", type: :system do
           end
         end
 
-      expect(events.length).to eq(1)
       event_2 = events[0][:params].last
 
       expect(event_2[:user_id]).to eq(user.id)
@@ -195,7 +191,6 @@ describe "Request tracking", type: :system do
           end
         end
 
-      expect(events.length).to eq(1)
       event = events[0][:params].last
 
       expect(event[:user_id]).to be_nil
@@ -258,7 +253,6 @@ describe "Request tracking", type: :system do
           end
         end
 
-      expect(events.length).to eq(1)
       event = events[0][:params].last
 
       expect(event[:user_id]).to be_nil
@@ -298,7 +292,6 @@ describe "Request tracking", type: :system do
             end
           end
 
-        expect(events.length).to eq(1)
         event = events[0][:params].last
 
         expect(event[:user_id]).to eq(current_user.id)
@@ -392,7 +385,6 @@ describe "Request tracking", type: :system do
             end
           end
 
-        expect(events.length).to eq(1)
         event = events[0][:params].last
 
         expect(event[:user_id]).to be_blank

@@ -9,6 +9,9 @@ import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
 let _sendDeferredPageview = false;
+let _deferredURL = null;
+let _deferredSessionId = null;
+let _deferredReferrer = null;
 let _deferredViewTopicId = null;
 
 export function sendDeferredPageview() {
@@ -31,22 +34,19 @@ function mbAjax(messageBus, opts) {
   }
 
   if (_sendDeferredPageview) {
-    opts.headers["Discourse-Track-View"] = "true";
     opts.headers["Discourse-Track-View-Deferred"] = "true";
-    opts.headers["Discourse-Track-View-Session-Id"] = document.querySelector(
-      "meta[name=discourse-track-view-session-id]"
-    )?.content;
-    opts.headers["Discourse-Track-View-Url"] = window.location.href;
-    opts.headers["Discourse-Track-View-Referrer"] = document.referrer.slice(
-      0,
-      MAX_REFERRER_LENGTH
-    );
+    opts.headers["Discourse-Track-View-Session-Id"] = _deferredSessionId;
+    opts.headers["Discourse-Track-View-Url"] = _deferredURL;
+    opts.headers["Discourse-Track-View-Referrer"] = _deferredReferrer;
 
     if (_deferredViewTopicId) {
       opts.headers["Discourse-Track-View-Topic-Id"] = _deferredViewTopicId;
     }
 
     _sendDeferredPageview = false;
+    _deferredURL = null;
+    _deferredSessionId = null;
+    _deferredReferrer = null;
     _deferredViewTopicId = null;
   }
 
@@ -110,6 +110,12 @@ export default {
         ) {
           _deferredViewTopicId = router.currentRoute.parent.params.id;
         }
+
+        _deferredSessionId = document.querySelector(
+          "meta[name=discourse-track-view-session-id]"
+        )?.content;
+        _deferredURL = window.location.href;
+        _deferredReferrer = document.referrer.slice(0, MAX_REFERRER_LENGTH);
 
         clearInterval(interval);
         messageBus.start();
