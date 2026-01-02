@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { themePrefix } from "virtual:theme";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
@@ -18,6 +19,8 @@ import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class DetailedTopicCard extends Component {
+  @service capabilities;
+
   get hasSolved() {
     return (
       this.args.topic.has_accepted_answer || this.args.topic.accepted_answer
@@ -142,7 +145,9 @@ export default class DetailedTopicCard extends Component {
         <div class="hc-topic-card__status-tags">
           {{#if this.hasSolved}}
             <span class="hc-topic-card__solved">
-              {{i18n (themePrefix "solved")}}
+              {{#if this.capabilities.viewport.sm}}
+                {{i18n (themePrefix "solved")}}
+              {{/if}}
               {{icon "check"}}
             </span>
             {{!-- {{else if this.canHaveAnswer}}
@@ -153,7 +158,9 @@ export default class DetailedTopicCard extends Component {
 
           {{#if this.hasVotes}}
             <span class="hc-topic-card__votes">
-              {{i18n "topic_voting.votes" count=this.voteCount}}
+              {{#if this.capabilities.viewport.sm}}
+                {{i18n "topic_voting.votes" count=this.voteCount}}
+              {{/if}}
               {{icon "stamp"}}
             </span>
           {{/if}}
@@ -166,9 +173,12 @@ export default class DetailedTopicCard extends Component {
               }}
             >
               {{icon this.statusBadge.icon}}
-              <span class="hc-topic-card__status-text">{{i18n
-                  this.statusBadge.text
-                }}</span>
+
+              {{#if this.capabilities.viewport.sm}}
+                <span class="hc-topic-card__status-text">{{i18n
+                    this.statusBadge.text
+                  }}</span>
+              {{/if}}
             </span>
           {{/if}}
         </div>
@@ -206,29 +216,29 @@ export default class DetailedTopicCard extends Component {
             </span>
           </div>
           {{#if this.hasAssigned}}
-            <div class="hc-topic-card__assignments">
-              {{#if this.assignedUser}}
-                <div class="hc-topic-card__assigned">
-                  {{icon "user-plus"}}
-                  {{!-- {{avatar this.assignedUser imageSize="tiny"}} --}}
-                  <span
-                    class="hc-topic-card__assigned-name"
-                  >{{this.assignedUser.username}}</span>
-                </div>
-              {{/if}}
-              {{#each this.indirectAssignees as |assignment|}}
-                <div class="hc-topic-card__assigned">
-                  {{icon "user-plus"}}
-                  {{!-- {{avatar assignment.user imageSize="tiny"}} --}}
-                  <span
-                    class="hc-topic-card__assigned-name"
-                  >{{assignment.user.username}}</span>
-                  <span
-                    class="hc-topic-card__assigned-post"
-                  >#{{assignment.postNumber}}</span>
-                </div>
-              {{/each}}
-            </div>
+            {{! <div class="hc-topic-card__assignments"> }}
+            {{#if this.assignedUser}}
+              <div class="hc-topic-card__assigned">
+                {{icon "user-plus"}}
+                {{!-- {{avatar this.assignedUser imageSize="tiny"}} --}}
+                <span
+                  class="hc-topic-card__assigned-name"
+                >{{this.assignedUser.username}}</span>
+              </div>
+            {{/if}}
+            {{#each this.indirectAssignees as |assignment|}}
+              <div class="hc-topic-card__assigned">
+                {{icon "user-plus"}}
+                {{!-- {{avatar assignment.user imageSize="tiny"}} --}}
+                <span
+                  class="hc-topic-card__assigned-name"
+                >{{assignment.user.username}}</span>
+                <span
+                  class="hc-topic-card__assigned-post"
+                >#{{assignment.postNumber}}</span>
+              </div>
+            {{/each}}
+            {{! </div> }}
           {{/if}}
         </div>
       {{/if}}
