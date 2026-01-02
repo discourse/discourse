@@ -1,10 +1,3 @@
-/**
- * Turns an element containing multiple children into a grid of columns.
- * Can be used to arrange images or media in a grid.
- *
- * Inspired/adapted from https://github.com/mladenilic/columns.js
- *
- */
 export default class Columns {
   constructor(container, options = {}) {
     this.container = container;
@@ -25,7 +18,6 @@ export default class Columns {
   }
 
   count() {
-    // 2x2 grid looks better for 2 or 4 items
     return [2, 4].includes(this.items.length) ? 2 : this.options.columns;
   }
 
@@ -51,28 +43,36 @@ export default class Columns {
   _prepareItems() {
     let targets = [];
 
-    for (let child of this.container.children) {
-      // sometimes children are wrapped in a paragraph
+    const children = [...this.container.children];
+    for (let child of children) {
       if (child.nodeName === "P" && child.children.length > 0) {
-        for (let c of child.children) {
-          targets.push(this._wrapDirectImage(c));
+        for (let c of [...child.children]) {
+          if (!["BR", "P"].includes(c.nodeName)) {
+            targets.push(c);
+          }
         }
       } else {
-        targets.push(this._wrapDirectImage(child));
+        if (!["BR", "P"].includes(child.nodeName)) {
+          targets.push(child);
+        }
       }
     }
 
-    return targets.filter((item) => !["BR", "P"].includes(item.nodeName));
+    return targets;
   }
 
   _wrapDirectImage(item) {
+    if (["BR", "P"].includes(item.nodeName)) {
+      return null;
+    }
+
     if (item.nodeName !== "IMG") {
       return item;
     }
 
     const wrapper = document.createElement("span");
     wrapper.classList.add("image-wrapper");
-    wrapper.appendChild(item.cloneNode());
+    wrapper.appendChild(item);
     return wrapper;
   }
 
@@ -90,11 +90,12 @@ export default class Columns {
         }
       }
 
-      // use aspect ratio to compare heights and append to shortest column
-      // if element is not an image, assume ratio is 1:1
-      const img = item.querySelector("img") || item;
-      heights[shortest] += img.nodeName === "IMG" ? img.height / img.width : 1;
-      columns[shortest].append(item);
+      const img =
+        item.querySelector("img") || (item.nodeName === "IMG" ? item : null);
+      heights[shortest] += img && img.width > 0 ? img.height / img.width : 1;
+
+      const wrappedItem = this._wrapDirectImage(item);
+      columns[shortest].append(wrappedItem);
     });
 
     return columns;

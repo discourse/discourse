@@ -1,0 +1,62 @@
+@use "lib/viewport";
+
+.composer-image-gallery {
+  &__mode-buttons {
+    position: absolute;
+    right: var(--space-2);
+    top: var(--space-2);
+    display: flex;
+    z-index: 1;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+  }
+
+  &__mode-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: 1px solid var(--primary-low);
+    background: var(--secondary);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+    padding: var(--space-1) var(--space-2);
+
+    @include viewport.until(sm) {
+      padding: var(--space-2) var(--space-4);
+    }
+
+    @include viewport.from(sm) {
+      &:first-child {
+        border-top-left-radius: var(--d-border-radius);
+        border-bottom-left-radius: var(--d-border-radius);
+      }
+
+      &:last-child {
+        border-top-right-radius: var(--d-border-radius);
+        border-bottom-right-radius: var(--d-border-radius);
+      }
+
+      &:not(:first-child) {
+        border-left: none;
+      }
+
+      &:hover {
+        color: var(--primary);
+        background-color: var(--d-hover);
+      }
+    }
+
+    &.is-active {
+      background-color: var(--tertiary-low);
+      color: var(--tertiary);
+      border-color: var(--tertiary-low);
+    }
+
+    &:focus-visible {
+      outline: 1px auto var(--tertiary);
+    }
+  }
+}
