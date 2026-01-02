@@ -8,6 +8,10 @@ import BlockOutlet, {
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
+import {
+  _registerBlock,
+  withTestBlockRegistration,
+} from "discourse/lib/blocks/registration";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 let testOwner;
@@ -52,6 +56,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(NoConditionBlock));
     renderBlocks("hero-blocks", [{ block: NoConditionBlock }], testOwner);
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
@@ -67,6 +72,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(PassingConditionBlock));
     renderBlocks(
       "homepage-blocks",
       [
@@ -91,6 +97,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(FailingConditionBlock));
     renderBlocks(
       "sidebar-blocks",
       [
@@ -115,6 +122,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(AndLogicBlock));
     renderBlocks(
       "main-outlet-blocks",
       [
@@ -141,6 +149,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(AllPassBlock));
     renderBlocks(
       "header-blocks",
       [
@@ -165,6 +174,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(OrLogicPassBlock));
     renderBlocks(
       "hero-blocks",
       [
@@ -191,6 +201,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(OrLogicFailBlock));
     renderBlocks(
       "homepage-blocks",
       [
@@ -217,6 +228,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(NotTrueBlock));
     renderBlocks(
       "sidebar-blocks",
       [
@@ -241,6 +253,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(NotFalseBlock));
     renderBlocks(
       "main-outlet-blocks",
       [
@@ -274,6 +287,10 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => {
+      _registerBlock(NestedVisibleBlock);
+      _registerBlock(NestedHiddenBlock);
+    });
     renderBlocks(
       "header-blocks",
       [
@@ -322,6 +339,11 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => {
+      _registerBlock(MixedVisible1);
+      _registerBlock(MixedVisible2);
+      _registerBlock(MixedHidden);
+    });
     renderBlocks(
       "hero-blocks",
       [
@@ -347,6 +369,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(NotWithinOrBlock));
     renderBlocks(
       "sidebar-blocks",
       [
@@ -373,6 +396,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(OrWithinAndBlock));
     renderBlocks(
       "main-outlet-blocks",
       [
@@ -402,6 +426,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(OrWithinAndPassBlock));
     renderBlocks(
       "header-blocks",
       [
@@ -429,6 +454,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(DeepNestedBlock));
     renderBlocks(
       "homepage-blocks",
       [

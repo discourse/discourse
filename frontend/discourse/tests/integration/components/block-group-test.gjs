@@ -6,6 +6,10 @@ import BlockOutlet, {
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
+import {
+  _registerBlock,
+  withTestBlockRegistration,
+} from "discourse/lib/blocks/registration";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockGroup", function (hooks) {
@@ -26,6 +30,10 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => {
+      _registerBlock(GroupChild1);
+      _registerBlock(GroupChild2);
+    });
     renderBlocks("hero-blocks", [
       {
         block: BlockGroup,
@@ -64,6 +72,11 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => {
+      _registerBlock(MultiChildA);
+      _registerBlock(MultiChildB);
+      _registerBlock(MultiChildC);
+    });
     renderBlocks("homepage-blocks", [
       {
         block: BlockGroup,
@@ -90,6 +103,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(ArgsChild));
     renderBlocks("sidebar-blocks", [
       {
         block: BlockGroup,
@@ -116,6 +130,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
+    withTestBlockRegistration(() => _registerBlock(NestedLeaf));
     renderBlocks("main-outlet-blocks", [
       {
         block: BlockGroup,
