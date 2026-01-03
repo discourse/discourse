@@ -98,7 +98,7 @@ function buildMathJaxConfig(opts) {
       delimiters: [["%", "%"]],
     },
     loader: {
-      load: [],
+      load: opts.enable_asciimath ? ["input/asciimath"] : [],
       paths: { mathjax: getURLWithCDN("/plugins/discourse-math/mathjax") },
     },
     ...outputConfig,
@@ -130,8 +130,8 @@ async function ensureMathJax(opts) {
   initMathJax(opts);
 
   return await loadMathJax({
-    enableAsciimath: opts.enable_asciimath,
-    enableAccessibility: opts.enable_accessibility,
+    // enableAsciimath: opts.enable_asciimath,
+    // enableAccessibility: opts.enable_accessibility,
     output: opts.mathjax_output,
   });
 }
