@@ -4,8 +4,7 @@
 }
 
 .math-container {
-  &.block-math,
-  &.ascii-math {
+  &.block-math {
     display: block;
 
     // MathJax container styling - inline styles are stripped by JavaScript
@@ -136,6 +135,5 @@
 // Fix zoom problem with MathJax.
 // See https://github.com/mathjax/MathJax/issues/3489
 .mjx-dialog {
-  position: fixed ! important;
+  position: fixed !important;
 }
-
