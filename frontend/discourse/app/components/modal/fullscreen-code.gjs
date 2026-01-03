@@ -42,18 +42,15 @@ export default class FullscreenCode extends Component {
     >
       <:body>
         <PluginOutlet
-          @name="before-codeblock-code"
+          @name="codeblock-code"
           @outletArgs={{lazyHash code=@model.code}}
-        />
+        >
         <pre>
           <code
             class={{@model.codeClasses}}
           >{{@model.code}}</code>
         </pre>
-        <PluginOutlet
-          @name="after-codeblock-code"
-          @outletArgs={{lazyHash code=@model.code}}
-        />
+        </PluginOutlet>
       </:body>
     </DModal>
   </template>
