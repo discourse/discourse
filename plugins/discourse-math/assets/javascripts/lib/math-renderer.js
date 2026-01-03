@@ -58,39 +58,22 @@ export function buildDiscourseMathOptions(siteSettings) {
 }
 
 function buildMathJaxConfig(opts) {
-  const output = opts.mathjax_output === "svg" ? "svg" : "html";
-  const enableA11y =
-    opts.enable_accessibility === true || opts.enable_accessibility === "true";
-
-  const menuOptions = opts.zoom_on_click
-    ? { settings: { zoom: "Click", zscale: "175%" } }
-    : {};
-
-  const outputConfig =
-    output === "html"
-      ? {
-          chtml: {
-            fontURL: getURLWithCDN("/plugins/discourse-math/mathjax/woff-v2"),
-          },
-        }
-      : { svg: { fontCache: "global" } };
-
-  const a11yConfig = enableA11y
-    ? {
-        enableAssistiveMml: true,
-        enableExplorer: true,
-        enableSpeech: true,
-        enableBraille: true,
-        enableEnrichment: true,
-        sre: {
-          path: getURLWithCDN("/plugins/discourse-math/mathjax/sre"),
-          maps: getURLWithCDN("/plugins/discourse-math/mathjax/sre/mathmaps"),
-        },
-        a11y: { speech: true, braille: true },
-      }
-    : {};
-
-  return {
+  const MathJaxInitConfig = {
+    startup: {
+      typeset: false,
+      ready() {
+        return window.MathJax?.startup?.defaultReady?.();
+      },
+    },
+    chtml: {},
+    svg: {},
+    loader: {
+      load: ["ui/safe"],
+      paths: { mathjax: getURLWithCDN("/plugins/discourse-math/mathjax") },
+    },
+    options: {
+      menuOptions: { settings: {} },
+    },
     tex: {
       inlineMath: [["\\(", "\\)"]],
       displayMath: [["\\[", "\\]"]],
@@ -98,24 +81,35 @@ function buildMathJaxConfig(opts) {
     asciimath: {
       delimiters: [["%", "%"]],
     },
-    loader: {
-      load: opts.enable_asciimath
-        ? ["ui/safe", "input/asciimath"]
-        : ["ui/safe"],
-      paths: { mathjax: getURLWithCDN("/plugins/discourse-math/mathjax") },
-    },
-    ...outputConfig,
-    options: {
-      ...a11yConfig,
-      ...(Object.keys(menuOptions).length ? { menuOptions } : {}),
-    },
-    startup: {
-      typeset: false,
-      ready() {
-        return window.MathJax?.startup?.defaultReady?.();
-      },
-    },
   };
+  if (opts.mathjax_output === "html") {
+    MathJaxInitConfig.chtml.fontURL = getURLWithCDN(
+      "/plugins/discourse-math/mathjax/woff-v2"
+    );
+  } else if (opts.mathjax_output === "svg") {
+    MathJaxInitConfig.svg.fontCache = "global";
+  }
+  if (opts.enable_menu) {
+    MathJaxInitConfig.options.enableMenu = true;
+  } else {
+    MathJaxInitConfig.options.enableMenu = false;
+  }
+  if (
+    opts.enable_accessibility === true ||
+    opts.enable_accessibility === "true"
+  ) {
+    MathJaxInitConfig.options.menuOptions.settings = { enrich: true };
+  } else {
+    MathJaxInitConfig.options.menuOptions.settings = { enrich: false };
+  }
+  if (opts.zoom_on_click) {
+    MathJaxInitConfig.options.menuOptions.settings.zoom = "Click";
+    MathJaxInitConfig.options.menuOptions.settings.zscale = "175%";
+  }
+  if (opts.enable_asciimath) {
+    MathJaxInitConfig.loader.load.push("input/asciimath");
+  }
+  return MathJaxInitConfig;
 }
 
 function initMathJax(opts) {
