@@ -189,5 +189,20 @@ describe "Local dates", type: :system do
       expect(bookmark_modal).to be_open
       expect(bookmark_modal).to have_no_preset(:post_local_date)
     end
+
+    it "shows the same time in the post and bookmark 'Date in post' option" do
+      topic_page.visit_topic(topic)
+
+      displayed_time = find("span.discourse-local-date .relative-time", match: :first).text
+      expect(displayed_time).to include("2:19 PM")
+
+      topic_page.expand_post_actions(topic.first_post)
+      topic_page.click_post_action_button(topic.first_post, :bookmark)
+      bookmark_menu.click_menu_option("custom")
+      expect(bookmark_modal).to be_open
+
+      bookmark_time = find("#tap_tile_post_local_date .tap-tile-date").text
+      expect(bookmark_time.downcase).to include("2:19 pm")
+    end
   end
 end
