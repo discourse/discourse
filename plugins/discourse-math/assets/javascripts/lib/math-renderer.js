@@ -49,6 +49,7 @@ export function buildDiscourseMathOptions(siteSettings) {
   return {
     enabled: siteSettings.discourse_math_enabled,
     provider: siteSettings.discourse_math_provider,
+    enable_menu: siteSettings.discourse_math_enable_menu,
     enable_asciimath: siteSettings.discourse_math_enable_asciimath,
     enable_accessibility: siteSettings.discourse_math_enable_accessibility,
     mathjax_output: siteSettings.discourse_math_mathjax_output,
@@ -98,7 +99,9 @@ function buildMathJaxConfig(opts) {
       delimiters: [["%", "%"]],
     },
     loader: {
-      load: opts.enable_asciimath ? ["input/asciimath"] : [],
+      load: opts.enable_asciimath
+        ? ["ui/safe", "input/asciimath"]
+        : ["ui/safe"],
       paths: { mathjax: getURLWithCDN("/plugins/discourse-math/mathjax") },
     },
     ...outputConfig,
