@@ -49,7 +49,7 @@ RSpec.describe(DiscourseRewind::FetchReports) do
 
       it "returns the cached reports" do
         initial_count = result.reports.length
-        expect(initial_count).to be > 0
+        expect(initial_count).to eq(DiscourseRewind::FetchReports::INITIAL_REPORT_COUNT)
 
         allow(DiscourseRewind::Action::TopWords).to receive(:call)
         expect(result.reports.length).to eq(initial_count)
@@ -61,9 +61,24 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       before { freeze_time DateTime.parse("2021-01-22") }
 
       it "returns the reports" do
-        allow(DiscourseRewind::Action::TopWords).to receive(:call)
-        expect(result.reports.length).to be > 0
-        expect(DiscourseRewind::Action::TopWords).to have_received(:call)
+        expect(result.reports.length).to eq(DiscourseRewind::FetchReports::INITIAL_REPORT_COUNT)
+      end
+
+      it "only actually calls the first INITIAL_REPORT_COUNT reports" do
+        DiscourseRewind::Action::TopWords.expects(:call).once
+        DiscourseRewind::Action::ReadingTime.expects(:call).once
+        DiscourseRewind::Action::WritingAnalysis.expects(:call).once
+        DiscourseRewind::Action::Reactions.expects(:call).never
+        result
+      end
+    end
+
+    context "when checking total_available" do
+      before { freeze_time DateTime.parse("2021-12-22") }
+
+      it "returns the total number of available reports" do
+        expect(result.total_available).to eq(DiscourseRewind::FetchReports::REPORTS.size)
+        expect(result.total_available).to be > result.reports.length
       end
     end
 

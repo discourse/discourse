@@ -51,7 +51,6 @@ module DiscourseRewind
     model :for_user # see FetchReportsHelper#fetch_for_user
     model :year # see FetchReportsHelper#fetch_year
     model :date
-    model :all_reports
     model :reports
     model :total_available
 
@@ -61,28 +60,26 @@ module DiscourseRewind
       Date.new(year).all_year
     end
 
-    def fetch_all_reports(date:, for_user:, year:)
+    def fetch_reports(date:, for_user:, year:)
       reports = load_reports_from_cache(for_user.username, year)
 
       if !reports
         reports =
-          REPORTS.filter_map do |report|
-            report.call(date:, user: for_user)
-          rescue StandardError
-            nil
-          end
+          REPORTS
+            .first(INITIAL_REPORT_COUNT)
+            .filter_map do |report|
+              report.call(date:, user: for_user)
+            rescue StandardError
+              nil
+            end
         cache_reports(for_user.username, year, reports)
       end
 
       reports
     end
 
-    def fetch_reports(all_reports:)
-      all_reports.first(INITIAL_REPORT_COUNT)
-    end
-
-    def fetch_total_available(all_reports:)
-      all_reports.size
+    def fetch_total_available
+      REPORTS.size
     end
   end
 end
