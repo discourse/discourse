@@ -69,7 +69,8 @@ module DiscourseAi
         )
           @parameters = parameters
           @tool_call_id = tool_call_id
-          @persona_options = persona_options
+          @persona_options =
+            persona_options.is_a?(Hash) ? persona_options.with_indifferent_access : persona_options
           @bot_user = bot_user
           @llm = llm
           @context = context.nil? ? DiscourseAi::Personas::BotContext.new(messages: []) : context
