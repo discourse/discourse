@@ -69,13 +69,19 @@ export default class ProsemirrorTextManipulation {
   }
 
   getSelected() {
-    const start = this.view.state.selection.from;
-    const end = this.view.state.selection.to;
-    const value = this.convertToMarkdown(this.view.state.selection.content());
+    const { state } = this.view;
+    const { from, to } = state.selection;
+    const value = this.convertToMarkdown(state.selection.content());
+
+    // Get text before cursor in current block
+    const $from = state.doc.resolve(from);
+    const blockStart = $from.start($from.depth);
+    const pre = state.doc.textBetween(blockStart, from, "\n", "\n");
+
     return {
-      start,
-      end,
-      pre: "",
+      start: from,
+      end: to,
+      pre,
       value,
       post: "",
     };

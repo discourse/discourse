@@ -1,0 +1,17 @@
+en:
+  js:
+    discourse_math:
+      edit_math: "Edit math"
+      edit_modal:
+        title: "Edit math"
+        label: "Math"
+        apply: "Apply"
+      composer:
+        insert_math: "Insert Math"
+      insert_modal:
+        title_inline: "Insert Inline Math"
+        title_block: "Insert Block Math"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "Insert"
+        block_mode: "Block mode (displayed equation)"
