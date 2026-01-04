@@ -101,17 +101,6 @@ RSpec.describe DiscourseRewind::RewindsController do
     context "when in valid month" do
       before { freeze_time DateTime.parse("2022-12-24") }
 
-      context "when reports are not cached" do
-        it "returns 404 with message" do
-          get "/rewinds/0.json"
-
-          expect(response.status).to eq(404)
-          expect(response.parsed_body["errors"].first).to eq(
-            I18n.t("discourse_rewind.reports_not_cached"),
-          )
-        end
-      end
-
       context "when reports are cached" do
         before { get "/rewinds.json" }
 

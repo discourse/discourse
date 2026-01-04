@@ -33,17 +33,26 @@ module DiscourseRewind
 
     model :for_user # see FetchReportsHelper#fetch_for_user
     model :year # see FetchReportsHelper#fetch_year
-    model :all_reports
+    model :date
     model :report
 
     private
 
-    def fetch_all_reports(for_user:, year:)
-      load_reports_from_cache(for_user.username, year)
+    def fetch_date(params:, year:)
+      Date.new(year).all_year
     end
 
-    def fetch_report(all_reports:, params:)
-      all_reports[params.index]
+    def fetch_report(params:, for_user:, year:, date:)
+      report_class = FetchReports::REPORTS[params.index]
+      return if !report_class
+
+      report_name = report_class.name.demodulize
+      report = load_single_report_from_cache(for_user.username, year, report_name)
+      if !report
+        report = report_class.call(date:, user: for_user)
+        cache_single_report(for_user.username, year, report_name, report.as_json)
+      end
+      report
     end
   end
 end
