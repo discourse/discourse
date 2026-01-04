@@ -1,7 +1,6 @@
 import { run } from "@ember/runloop";
 import { buildWaiter } from "@ember/test-waiters";
 import { Promise } from "rsvp";
-import { ajax } from "discourse/lib/ajax";
 import getURL, { getURLWithCDN } from "discourse/lib/get-url";
 
 const WAITER = buildWaiter("load-script");
@@ -49,8 +48,7 @@ export default function loadScript(url, opts = {}) {
     return Promise.resolve();
   }
 
-  // Scripts should always load from CDN
-  // CSS is type text, to accept it from a CDN we would need to handle CORS
+  // Scripts load from CDN, CSS loads from same origin to avoid CORS issues with fonts
   const fullUrl = opts.css ? getURL(url) : getURLWithCDN(url);
 
   document.querySelectorAll("script").forEach((element) => {
@@ -80,13 +78,7 @@ export default function loadScript(url, opts = {}) {
       delete _loading[fullUrl];
     });
 
-    const cb = function (data) {
-      if (opts?.css) {
-        const style = document.createElement("style");
-        style.innerText = data;
-        document.querySelector("head").appendChild(style);
-      }
-
+    const cb = function () {
       done();
       resolve();
       _loaded[url] = true;
@@ -94,10 +86,23 @@ export default function loadScript(url, opts = {}) {
     };
 
     if (opts.css) {
-      ajax({
-        url: fullUrl,
-        dataType: "text",
-      }).then(cb);
+      // Use <link> tag for CSS to preserve URL context for relative paths (e.g., fonts)
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = fullUrl;
+
+      const token = WAITER.beginAsync();
+
+      link.onerror = function () {
+        WAITER.endAsync(token);
+      };
+
+      link.onload = function () {
+        run(null, cb);
+        WAITER.endAsync(token);
+      };
+
+      document.querySelector("head").appendChild(link);
     } else {
       // Always load JavaScript with script tag to avoid Content Security Policy inline violations
       loadWithTag(fullUrl, cb);
