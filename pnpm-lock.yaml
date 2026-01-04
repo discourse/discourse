@@ -579,8 +579,8 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0
       make-plural:
-        specifier: ^7.4.0
-        version: 7.4.0
+        specifier: ^8.0.0
+        version: 8.0.0
       message-bus-client:
         specifier: ^4.4.1
         version: 4.4.1
@@ -630,8 +630,8 @@ importers:
         specifier: ^1.9.0
         version: 1.10.2
       make-plural:
-        specifier: ^7.4.0
-        version: 7.4.0
+        specifier: ^8.0.0
+        version: 8.0.0
 
   frontend/discourse-markdown-it:
     dependencies:
@@ -6652,8 +6652,11 @@ packages:
     resolution: {integrity: sha512-cKTUFc/rbKUd/9meOvgrpJ2WrNzymt6jfRDdwg5UCnVzv9dTpEj9JS5m3wtziXVCjluIXyL8pcaukYqezIzZQA==}
     engines: {node: ^16.14.0 || >=18.0.0}
 
-  make-plural@7.4.0:
-    resolution: {integrity: sha512-4/gC9KVNTV6pvYg2gFeQYTW3mWaoJt7WZE5vrp1KnQDgW92JtYZnzmZT81oj/dUTqAIu0ufI2x3dkgu3bB1tYg==}
+  make-plural@7.5.0:
+    resolution: {integrity: sha512-0booA+aVYyVFoR67JBHdfVk0U08HmrBH2FrtmBqBa+NldlqXv/G2Z9VQuQq6Wgp2jDWdybEWGfBkk1cq5264WA==}
+
+  make-plural@8.0.0:
+    resolution: {integrity: sha512-uIHnF+aZQ6L19BDhNbJfQgXvXsC4vGDavSeSXEQYXVAzTZSfTGBvHzLx45VQxIllG7uaSrmf3wu/lKlipAIiRA==}
 
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
@@ -9210,6 +9213,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
@@ -11250,7 +11254,7 @@ snapshots:
       '@messageformat/number-skeleton': 1.2.0
       '@messageformat/parser': 5.1.0
       '@messageformat/runtime': 3.0.2
-      make-plural: 7.4.0
+      make-plural: 7.5.0
       safe-identifier: 0.4.2
 
   '@messageformat/date-skeleton@1.0.1': {}
@@ -11263,7 +11267,7 @@ snapshots:
 
   '@messageformat/runtime@3.0.2':
     dependencies:
-      make-plural: 7.4.0
+      make-plural: 7.5.0
 
   '@mrmlnc/readdir-enhanced@2.2.1':
     dependencies:
@@ -16519,7 +16523,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  make-plural@7.4.0: {}
+  make-plural@7.5.0: {}
+
+  make-plural@8.0.0: {}
 
   makeerror@1.0.12:
     dependencies:
