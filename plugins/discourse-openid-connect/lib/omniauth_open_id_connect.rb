@@ -73,6 +73,11 @@ module OmniAuth
              )
           options[:client_options][:auth_scheme] = :request_body
         end
+
+        # If we're using PKCE _and_ there is no client_secret, use the request_body auth_scheme.
+        if options[:pkce] && (options[:client_secret].nil? || options[:client_secret].empty?)
+          options[:client_options][:auth_scheme] = :request_body
+        end
       end
 
       def request_phase
