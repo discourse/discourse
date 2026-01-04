@@ -13,7 +13,7 @@ module("Unit | Lib | math-renderer", function (hooks) {
         discourse_math_enable_asciimath: false,
         discourse_math_enable_accessibility: true,
         discourse_math_mathjax_output: "svg",
-        discourse_math_zoom_on_hover: true,
+        discourse_math_zoom_on_click: true,
       };
 
       const options = buildDiscourseMathOptions(mockSiteSettings);
@@ -37,7 +37,7 @@ module("Unit | Lib | math-renderer", function (hooks) {
         "svg",
         "mathjax_output is set correctly"
       );
-      assert.true(options.zoom_on_hover, "zoom_on_hover is set correctly");
+      assert.true(options.zoom_on_click, "zoom_on_click is set correctly");
     });
 
     test("builds options with katex provider", function (assert) {
@@ -47,7 +47,7 @@ module("Unit | Lib | math-renderer", function (hooks) {
         discourse_math_enable_asciimath: true,
         discourse_math_enable_accessibility: false,
         discourse_math_mathjax_output: "html",
-        discourse_math_zoom_on_hover: false,
+        discourse_math_zoom_on_click: false,
       };
 
       const options = buildDiscourseMathOptions(mockSiteSettings);
@@ -63,7 +63,7 @@ module("Unit | Lib | math-renderer", function (hooks) {
         discourse_math_enable_asciimath: false,
         discourse_math_enable_accessibility: false,
         discourse_math_mathjax_output: "html",
-        discourse_math_zoom_on_hover: false,
+        discourse_math_zoom_on_click: false,
       };
 
       const options = buildDiscourseMathOptions(mockSiteSettings);
