@@ -253,7 +253,7 @@ module DiscourseAi
       def self.format_row(topic:, post: nil, hidden_tags: nil)
         row = {
           title: topic.title,
-          url: Discourse.base_path + (post ? post.url : topic.relative_url),
+          url: post ? post.full_url : topic.url,
           username: post ? post.user&.username : topic.user&.username,
           excerpt: post ? post.excerpt : topic.excerpt,
           created: post ? post.created_at : topic.created_at,
