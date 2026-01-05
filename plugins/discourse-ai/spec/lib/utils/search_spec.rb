@@ -334,7 +334,7 @@ RSpec.describe DiscourseAi::Utils::Search do
       end
 
       it "properly handles subfolder URLs in filter-only queries" do
-        Discourse.stubs(:base_path).returns("/subfolder")
+        set_subfolder("/subfolder")
 
         results = described_class.perform_search(user: post1.user.username, current_user: admin)
 
