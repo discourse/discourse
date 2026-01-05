@@ -1,135 +1,18 @@
-import { bind } from "discourse/lib/decorators";
-import { iconElement } from "discourse/lib/icon-library";
-import { i18n } from "discourse-i18n";
+import GridNodeView from "../components/grid-node-view";
+import GlimmerNodeView from "../lib/glimmer-node-view";
 
-class GridNodeView {
-  constructor(node, view, getPos) {
-    this.node = node;
-    this.view = view;
-    this.getPos = getPos;
-
-    const div = document.createElement("div");
-    div.className = "composer-image-grid";
-
-    const modeGroup = document.createElement("div");
-    modeGroup.className = "composer-image-gallery__mode-buttons";
-    modeGroup.setAttribute("role", "group");
-    modeGroup.contentEditable = false;
-
-    const modes = [
-      {
-        value: "grid",
-        label: i18n("composer.grid_mode_grid"),
-        icon: "table-cells",
-      },
-      {
-        value: "carousel",
-        label: i18n("composer.grid_mode_carousel"),
-        icon: "image",
-      },
-    ];
-
-    modes.forEach((opt) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "composer-image-gallery__mode-btn";
-      button.dataset.mode = opt.value;
-      button.appendChild(iconElement(opt.icon));
-      const textLabel = document.createElement("span");
-      textLabel.textContent = opt.label;
-      button.appendChild(textLabel);
-      button.ariaLabel = opt.label;
-      button.title = i18n("composer.grid_mode_title", { mode: opt.label });
-      if (node.attrs.mode === opt.value) {
-        button.classList.add("is-active");
-        button.setAttribute("aria-pressed", "true");
-      } else {
-        button.setAttribute("aria-pressed", "false");
-      }
-
-      button.addEventListener("click", (e) => {
-        e.preventDefault();
-        const mode = opt.value;
-        const pos = this.getPos();
-        this.view.dispatch(
-          this.view.state.tr.setNodeMarkup(pos, null, {
-            ...this.node.attrs,
-            mode,
-          })
-        );
-      });
-
-      modeGroup.appendChild(button);
+const createGridNodeView =
+  ({ getContext }) =>
+  (node, view, getPos) =>
+    new GlimmerNodeView({
+      node,
+      view,
+      getPos,
+      getContext,
+      component: GridNodeView,
+      name: "grid",
+      hasContent: true,
     });
-
-    div.appendChild(modeGroup);
-
-    const contentDiv = document.createElement("div");
-    div.appendChild(contentDiv);
-    this.contentDOM = contentDiv;
-
-    this.removeBtn = document.createElement("button");
-    this.removeBtn.className = "composer-image-grid__remove-btn";
-    const removeLabel = document.createElement("span");
-    removeLabel.textContent = i18n("composer.remove_grid");
-    this.removeBtn.appendChild(removeLabel);
-    this.removeBtn.title = i18n("composer.remove_grid");
-    this.removeBtn.type = "button";
-    this.removeBtn.contentEditable = false;
-    this.removeBtn.addEventListener("click", this.removeClickHandler);
-
-    div.appendChild(this.removeBtn);
-
-    this.dom = div;
-  }
-
-  destroy() {
-    this.removeBtn.removeEventListener("click", this.removeClickHandler);
-  }
-
-  @bind
-  removeClickHandler(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const pos = this.getPos();
-    const currentNode = this.view.state.doc.nodeAt(pos);
-    const tr = this.view.state.tr;
-
-    tr.replaceWith(pos, pos + currentNode.nodeSize, currentNode.content);
-    this.view.dispatch(tr);
-  }
-
-  selectNode() {
-    this.dom.classList.add("ProseMirror-selectednode");
-  }
-
-  deselectNode() {
-    this.dom.classList.remove("ProseMirror-selectednode");
-  }
-
-  update(node) {
-    if (node.type !== this.node.type) {
-      return false;
-    }
-    this.node = node;
-
-    const buttons = this.dom.querySelectorAll(
-      ".composer-image-gallery__mode-btn"
-    );
-    buttons.forEach((btn) => {
-      if (btn.dataset.mode === node.attrs.mode) {
-        btn.classList.add("is-active");
-        btn.setAttribute("aria-pressed", "true");
-      } else {
-        btn.classList.remove("is-active");
-        btn.setAttribute("aria-pressed", "false");
-      }
-    });
-
-    return true;
-  }
-}
 
 const extension = {
   nodeSpec: {
@@ -172,7 +55,7 @@ const extension = {
   },
 
   nodeViews: {
-    grid: GridNodeView,
+    grid: createGridNodeView,
   },
 
   parse: {

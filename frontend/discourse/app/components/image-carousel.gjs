@@ -1,14 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { helper } from "@ember/component/helper";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import debounce from "discourse/lib/debounce";
+import discourseLater from "discourse/lib/later";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -27,6 +29,14 @@ const MAX_DOTS = 10;
 export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
   trackElement = null;
+  slides = [];
+
+  registerSlide = modifier((element, [index]) => {
+    this.slides[index] = element;
+    return () => {
+      this.slides[index] = null;
+    };
+  });
 
   mountItem = modifier((element, [itemElement]) => {
     element.appendChild(itemElement);
@@ -34,14 +44,11 @@ export default class ImageCarousel extends Component {
 
   setupTrack = modifier((element) => {
     this.trackElement = element;
-
-    const slides = element.querySelectorAll(".d-image-carousel__slide");
     const ratios = new Map();
 
     const onScrollEnd = () => {
       if (this.#scrollEndFallbackTimer) {
-        clearTimeout(this.#scrollEndFallbackTimer);
-        this.#scrollEndFallbackTimer = null;
+        cancel(this.#scrollEndFallbackTimer);
       }
       this.#activeScrollGeneration = 0;
     };
@@ -64,7 +71,7 @@ export default class ImageCarousel extends Component {
         let bestIndex = this.currentIndex;
         let minDiff = Infinity;
 
-        slides.forEach((slide, index) => {
+        this.slides.forEach((slide, index) => {
           const ratio = ratios.get(slide) || 0;
           if (ratio > 0) {
             const idealScroll =
@@ -98,21 +105,13 @@ export default class ImageCarousel extends Component {
       }
     );
 
-    slides.forEach((slide) => observer.observe(slide));
+    this.slides.forEach((slide) => observer.observe(slide));
 
     return () => {
       observer.disconnect();
       element.removeEventListener("scrollend", onScrollEnd);
-
-      if (this.#debounceTimer) {
-        cancel(this.#debounceTimer);
-        this.#debounceTimer = null;
-      }
-
-      if (this.#scrollEndFallbackTimer) {
-        clearTimeout(this.#scrollEndFallbackTimer);
-        this.#scrollEndFallbackTimer = null;
-      }
+      cancel(this.#debounceTimer);
+      cancel(this.#scrollEndFallbackTimer);
     };
   });
 
@@ -165,10 +164,8 @@ export default class ImageCarousel extends Component {
   @action
   scrollToIndex(index) {
     const clamped = Math.max(0, Math.min(index, this.items.length - 1));
-    const slides = this.trackElement?.querySelectorAll(
-      ".d-image-carousel__slide"
-    );
-    if (slides && slides[clamped]) {
+    const slide = this.slides[clamped];
+    if (slide) {
       if (this.#debounceTimer) {
         cancel(this.#debounceTimer);
         this.#debounceTimer = null;
@@ -179,17 +176,14 @@ export default class ImageCarousel extends Component {
       this.#activeScrollGeneration = thisGeneration;
       this.currentIndex = clamped;
 
-      if (this.#scrollEndFallbackTimer) {
-        clearTimeout(this.#scrollEndFallbackTimer);
-      }
-      this.#scrollEndFallbackTimer = setTimeout(() => {
+      cancel(this.#scrollEndFallbackTimer);
+      this.#scrollEndFallbackTimer = discourseLater(() => {
         if (this.#activeScrollGeneration === thisGeneration) {
           this.#activeScrollGeneration = 0;
         }
-        this.#scrollEndFallbackTimer = null;
       }, SCROLLEND_FALLBACK_MS);
 
-      slides[clamped].scrollIntoView({
+      slide.scrollIntoView({
         behavior: this.scrollBehavior,
         block: "nearest",
         inline: "center",
@@ -215,8 +209,11 @@ export default class ImageCarousel extends Component {
 
   <template>
     <div
-      class="d-image-carousel --{{@data.mode}}
-        {{if this.isSingle 'd-image-carousel__carousel--single'}}"
+      class={{concatClass
+        "d-image-carousel"
+        (if @data.mode (concat "--" @data.mode))
+        (if this.isSingle "d-image-carousel__carousel--single")
+      }}
     >
       <div
         class="d-image-carousel__track"
@@ -226,13 +223,15 @@ export default class ImageCarousel extends Component {
       >
         {{#each this.items as |item index|}}
           <div
-            class="d-image-carousel__slide
-              {{if (eq this.currentIndex index) 'is-active'}}"
+            class={{concatClass
+              "d-image-carousel__slide"
+              (if (eq this.currentIndex index) "is-active")
+            }}
             data-index={{index}}
             style={{getAspectRatio item.width item.height}}
+            {{this.registerSlide index}}
             {{this.mountItem item.element}}
-          >
-          </div>
+          ></div>
         {{/each}}
       </div>
 
@@ -253,8 +252,10 @@ export default class ImageCarousel extends Component {
               {{#each this.items as |_item index|}}
                 <button
                   type="button"
-                  class="d-image-carousel__dot
-                    {{if (eq this.currentIndex index) 'active'}}"
+                  class={{concatClass
+                    "d-image-carousel__dot"
+                    (if (eq this.currentIndex index) "active")
+                  }}
                   aria-label={{i18n
                     "carousel.go_to_slide"
                     index=(plusOne index)
