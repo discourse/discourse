@@ -33,6 +33,11 @@ import {
 } from "discourse/lib/blocks/debug-hooks";
 import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
 import { raiseBlockError } from "discourse/lib/blocks/error";
+import {
+  detectPatternConflicts,
+  validateOutletPatterns,
+  warnUnknownOutletPatterns,
+} from "discourse/lib/blocks/outlet-matcher";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
 /**
@@ -79,11 +84,39 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * - They cannot be used directly in templates
  * - They receive special args for authorization and hierarchy management
  *
- * @param {string} name - Unique identifier for the block (e.g., "hero-banner", "sidebar-panel")
- * @param {Object} [options] - Configuration options
- * @param {boolean} [options.container=false] - If true, this block can contain nested child blocks
- * @param {string} [options.description] - Human-readable description of the block
- * @param {Object.<string, ArgSchema>} [options.args] - Schema for block arguments
+ * @param {string} name - Unique identifier for the block (e.g., "hero-banner", "sidebar-panel").
+ *   Must match pattern: lowercase letters, numbers, hyphens.
+ *
+ * @param {Object} [options] - Configuration options for the block.
+ *
+ * @param {boolean} [options.container=false] - If true, this block can contain nested child blocks.
+ *   Container blocks MUST have children in their config.
+ *
+ * @param {string} [options.description] - Human-readable description of the block.
+ *   Used for documentation and dev tools.
+ *
+ * @param {Object.<string, ArgSchema>} [options.args] - Schema for block arguments.
+ *
+ * @param {string[]} [options.allowedOutlets] - Glob patterns specifying which outlets
+ *   this block CAN be rendered in. If specified, the block can ONLY render in outlets
+ *   matching at least one pattern. Uses picomatch syntax:
+ *   - Exact match: `"sidebar-blocks"` - only this specific outlet
+ *   - Wildcard: `"sidebar-*"` - matches sidebar-left, sidebar-right, etc.
+ *   - Brace expansion: `"{sidebar,footer}-*"` - matches sidebar-* OR footer-*
+ *   - Character class: `"modal-[0-9]"` - matches modal-1, modal-2, etc.
+ *   - Negation: `"!(*-debug)"` - matches anything NOT ending in -debug
+ *   Namespaced outlets (containing `:`) bypass known-outlet validation:
+ *   - `"my-plugin:custom-outlet"` - plugin-defined outlet
+ *   - `"my-theme:hero-section"` - theme-defined outlet
+ *
+ * @param {string[]} [options.deniedOutlets] - Glob patterns specifying which outlets
+ *   this block CANNOT be rendered in. If an outlet matches any denied pattern, the
+ *   block will not render there. Uses the same picomatch syntax as allowedOutlets.
+ *   When both allowedOutlets and deniedOutlets are specified:
+ *   - Outlet must match at least one allowed pattern
+ *   - Outlet must NOT match any denied pattern
+ *   - Conflicting patterns (same outlet in both) cause decoration-time errors
+ *
  * @returns {function(typeof Component): typeof Component} Decorator function
  *
  * @typedef {Object} ArgSchema
@@ -93,7 +126,7 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * @property {"string"|"number"|"boolean"} [itemType] - Item type for array arguments (no nested arrays)
  *
  * @example
- * // Simple block
+ * // Simple block with no restrictions
  * @block("my-card")
  * class MyCard extends Component {
  *   <template>
@@ -127,14 +160,66 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  *   }
  * })
  * class HeroBanner extends Component { ... }
+ *
+ * @example
+ * // Block restricted to sidebar outlets only
+ * @block("sidebar-widget", {
+ *   description: "A widget designed for sidebar placement",
+ *   allowedOutlets: ["sidebar-*"],
+ *   args: { title: { type: "string", required: true } }
+ * })
+ * class SidebarWidget extends Component { ... }
+ *
+ * @example
+ * // Block denied from specific outlets
+ * @block("full-width-banner", {
+ *   description: "Full-width banner that doesn't fit in narrow containers",
+ *   deniedOutlets: ["sidebar-*", "modal-*", "tooltip-*"]
+ * })
+ * class FullWidthBanner extends Component { ... }
+ *
+ * @example
+ * // Block for plugin-defined outlets (namespaced)
+ * @block("plugin-dashboard-widget", {
+ *   allowedOutlets: ["my-plugin:dashboard", "sidebar-*"]
+ * })
+ * class PluginDashboardWidget extends Component { ... }
  */
 export function block(name, options = {}) {
+  // Extract all options with defaults
   const isContainer = options?.container ?? false;
   const description = options?.description ?? "";
   const argsSchema = options?.args ?? null;
+  const allowedOutlets = options?.allowedOutlets ?? null;
+  const deniedOutlets = options?.deniedOutlets ?? null;
 
-  // Validate arg schema at decoration time
+  // === Decoration-time validation ===
+  // All validation happens here (not at render time) for fail-fast behavior.
+
+  // Validate arg schema structure and types
   validateArgsSchema(argsSchema, name);
+
+  // Validate outlet patterns are valid picomatch syntax (arrays of strings)
+  validateOutletPatterns(allowedOutlets, name, "allowedOutlets");
+  validateOutletPatterns(deniedOutlets, name, "deniedOutlets");
+
+  // Detect conflicts between allowed and denied patterns.
+  // This prevents configurations where a block is both allowed AND denied
+  // in the same outlet, which would be confusing and likely a mistake.
+  const conflict = detectPatternConflicts(allowedOutlets, deniedOutlets);
+  if (conflict.conflict) {
+    raiseBlockError(
+      `Block "${name}": outlet "${conflict.details.outlet}" matches both ` +
+        `allowedOutlets pattern "${conflict.details.allowed}" and ` +
+        `deniedOutlets pattern "${conflict.details.denied}".`
+    );
+  }
+
+  // Warn if patterns don't match any known outlet (possible typos).
+  // Namespaced patterns (containing `:`) are skipped since they target
+  // plugin/theme-defined outlets not in the core registry.
+  warnUnknownOutletPatterns(allowedOutlets, name, "allowedOutlets");
+  warnUnknownOutletPatterns(deniedOutlets, name, "deniedOutlets");
 
   return function (target) {
     if (!(target.prototype instanceof Component)) {
@@ -145,15 +230,28 @@ export function block(name, options = {}) {
     return class extends target {
       static blockName = name;
       /**
-       * Block metadata including description, container status, and args schema.
-       * Used for introspection, documentation, and runtime validation.
+       * Block metadata including description, container status, args schema,
+       * and outlet restrictions. Used for introspection, documentation, and
+       * runtime validation.
        *
-       * @type {{description: string, container: boolean, args: Object|null}}
+       * @type {{
+       *   description: string,
+       *   container: boolean,
+       *   args: Object|null,
+       *   allowedOutlets: ReadonlyArray<string>|null,
+       *   deniedOutlets: ReadonlyArray<string>|null
+       * }}
        */
       static blockMetadata = Object.freeze({
         description,
         container: isContainer,
         args: argsSchema ? Object.freeze(argsSchema) : null,
+        // Freeze metadata and arrays to prevent runtime mutations.
+        // Spread into new arrays before freezing to avoid freezing caller's arrays.
+        allowedOutlets: allowedOutlets
+          ? Object.freeze([...allowedOutlets])
+          : null,
+        deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
       });
       static [__BLOCK_FLAG] = true;
       static [__BLOCK_CONTAINER_FLAG] = isContainer;

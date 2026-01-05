@@ -14,6 +14,7 @@ import {
   raiseBlockError,
   setBlockErrorContext,
 } from "discourse/lib/blocks/error";
+import { isBlockPermittedInOutlet } from "discourse/lib/blocks/outlet-matcher";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
 /**
@@ -249,6 +250,28 @@ export function validateBlock(
         `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`
     );
     return;
+  }
+
+  // === Outlet permission validation ===
+  // Check if the block is allowed to render in this specific outlet.
+  // This runs at renderBlocks() time, after the block is confirmed to be registered.
+  const metadata = config.block?.blockMetadata;
+  if (metadata?.allowedOutlets || metadata?.deniedOutlets) {
+    const permission = isBlockPermittedInOutlet(
+      outletName,
+      metadata.allowedOutlets,
+      metadata.deniedOutlets
+    );
+
+    if (!permission.permitted) {
+      // permission.reason explains WHY it was denied:
+      // - "outlet X matches deniedOutlets pattern Y"
+      // - "outlet X does not match any allowedOutlets pattern"
+      raiseBlockError(
+        `Block "${blockName}" cannot be rendered in outlet "${outletName}": ${permission.reason}.`
+      );
+      return;
+    }
   }
 
   // Set error context for all subsequent validation errors

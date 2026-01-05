@@ -76,6 +76,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
         description: "",
         container: false,
         args: null,
+        allowedOutlets: null,
+        deniedOutlets: null,
       });
     });
 
@@ -122,6 +124,90 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       assert.true(Object.isFrozen(MetadataFrozenBlock.blockMetadata));
       assert.true(Object.isFrozen(MetadataFrozenBlock.blockMetadata.args));
+    });
+
+    test("sets blockMetadata with allowedOutlets", function (assert) {
+      @block("metadata-allowed-outlets", {
+        allowedOutlets: ["sidebar-*", "homepage-blocks"],
+      })
+      class AllowedOutletsBlock extends Component {}
+
+      assert.deepEqual(AllowedOutletsBlock.blockMetadata.allowedOutlets, [
+        "sidebar-*",
+        "homepage-blocks",
+      ]);
+    });
+
+    test("sets blockMetadata with deniedOutlets", function (assert) {
+      @block("metadata-denied-outlets", {
+        deniedOutlets: ["modal-*", "tooltip-*"],
+      })
+      class DeniedOutletsBlock extends Component {}
+
+      assert.deepEqual(DeniedOutletsBlock.blockMetadata.deniedOutlets, [
+        "modal-*",
+        "tooltip-*",
+      ]);
+    });
+
+    test("freezes allowedOutlets and deniedOutlets arrays", function (assert) {
+      @block("metadata-frozen-outlets", {
+        allowedOutlets: ["sidebar-*"],
+        deniedOutlets: ["modal-*"],
+      })
+      class FrozenOutletsBlock extends Component {}
+
+      assert.true(
+        Object.isFrozen(FrozenOutletsBlock.blockMetadata.allowedOutlets)
+      );
+      assert.true(
+        Object.isFrozen(FrozenOutletsBlock.blockMetadata.deniedOutlets)
+      );
+    });
+
+    test("throws for conflicting outlet patterns", function (assert) {
+      assert.throws(() => {
+        @block("conflicting-outlets-block", {
+          allowedOutlets: ["sidebar-*"],
+          deniedOutlets: ["sidebar-blocks"],
+        })
+        class ConflictingOutletsBlock extends Component {}
+
+        return ConflictingOutletsBlock;
+      }, /matches both.*allowedOutlets.*deniedOutlets/);
+    });
+
+    test("throws for invalid allowedOutlets type", function (assert) {
+      assert.throws(() => {
+        @block("invalid-allowed-type-block", {
+          allowedOutlets: "sidebar-*",
+        })
+        class InvalidAllowedTypeBlock extends Component {}
+
+        return InvalidAllowedTypeBlock;
+      }, /must be an array of strings/);
+    });
+
+    test("throws for invalid deniedOutlets type", function (assert) {
+      assert.throws(() => {
+        @block("invalid-denied-type-block", {
+          deniedOutlets: { pattern: "sidebar-*" },
+        })
+        class InvalidDeniedTypeBlock extends Component {}
+
+        return InvalidDeniedTypeBlock;
+      }, /must be an array of strings/);
+    });
+
+    test("throws for invalid glob pattern syntax", function (assert) {
+      assert.throws(() => {
+        @block("invalid-glob-block", {
+          allowedOutlets: ["[unclosed"],
+        })
+        class InvalidGlobBlock extends Component {}
+
+        return InvalidGlobBlock;
+      }, /not valid glob syntax/);
     });
 
     test("throws for invalid arg schema - missing type", function (assert) {
@@ -587,6 +673,59 @@ module("Unit | Lib | block-outlet", function (hooks) {
       ]);
 
       assert.true(true, "no error thrown when optional args missing");
+    });
+
+    test("throws when block is in denied outlet", function (assert) {
+      @block("denied-outlet-block", {
+        deniedOutlets: ["hero-*"],
+      })
+      class DeniedOutletBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(DeniedOutletBlock));
+
+      assert.throws(
+        () => renderBlocks("hero-blocks", [{ block: DeniedOutletBlock }]),
+        /cannot be rendered in outlet.*matches deniedOutlets pattern/
+      );
+    });
+
+    test("throws when block is not in allowed outlet", function (assert) {
+      @block("not-allowed-outlet-block", {
+        allowedOutlets: ["sidebar-*"],
+      })
+      class NotAllowedOutletBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(NotAllowedOutletBlock));
+
+      assert.throws(
+        () => renderBlocks("hero-blocks", [{ block: NotAllowedOutletBlock }]),
+        /cannot be rendered in outlet.*does not match any allowedOutlets/
+      );
+    });
+
+    test("permits block in allowed outlet", function (assert) {
+      @block("allowed-outlet-block", {
+        allowedOutlets: ["sidebar-*"],
+      })
+      class AllowedOutletBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(AllowedOutletBlock));
+
+      renderBlocks("sidebar-blocks", [{ block: AllowedOutletBlock }]);
+
+      assert.true(true, "no error thrown for block in allowed outlet");
+    });
+
+    test("permits unrestricted block in any outlet", function (assert) {
+      @block("unrestricted-outlet-block")
+      class UnrestrictedOutletBlock extends Component {}
+
+      withTestBlockRegistration(() => _registerBlock(UnrestrictedOutletBlock));
+
+      renderBlocks("hero-blocks", [{ block: UnrestrictedOutletBlock }]);
+      renderBlocks("sidebar-blocks", [{ block: UnrestrictedOutletBlock }]);
+
+      assert.true(true, "unrestricted block renders in any outlet");
     });
   });
 
