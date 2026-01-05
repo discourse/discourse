@@ -15,7 +15,6 @@ import {
 } from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,
-  _registerBlockByName,
   _registerBlockFactory,
   withTestBlockRegistration,
 } from "discourse/lib/blocks/registration";
@@ -1013,30 +1012,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert
         .dom(".string-ref-content")
         .hasText("String Referenced Block", "string-referenced block renders");
-    });
-
-    test("renders block registered with explicit name", async function (assert) {
-      @block("original-name-block")
-      class OriginalNameBlock extends Component {
-        <template>
-          <div class="explicit-name-content">Explicit Name Block</div>
-        </template>
-      }
-
-      withTestBlockRegistration(() =>
-        _registerBlockByName("custom-alias", OriginalNameBlock)
-      );
-      renderBlocks("sidebar-blocks", [{ block: "custom-alias" }]);
-
-      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
-
-      assert.dom(".sidebar-blocks").exists("outlet renders");
-      assert
-        .dom(".explicit-name-content")
-        .hasText(
-          "Explicit Name Block",
-          "block registered with explicit name renders"
-        );
     });
 
     test("passes args to string-referenced block", async function (assert) {

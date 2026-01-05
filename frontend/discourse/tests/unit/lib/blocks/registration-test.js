@@ -5,7 +5,6 @@ import { block } from "discourse/components/block-outlet";
 import {
   _lockBlockRegistry,
   _registerBlock,
-  _registerBlockByName,
   _registerBlockFactory,
   blockRegistry,
   hasBlock,
@@ -104,65 +103,6 @@ module("Unit | Lib | blocks/registration", function (hooks) {
   // ========================================================================
   // Dynamic Block Names (Feature 2)
   // ========================================================================
-
-  module("_registerBlockByName", function () {
-    test("registers a block with explicit name", function (assert) {
-      @block("original-name")
-      class MyBlock extends Component {}
-
-      _registerBlockByName("custom-name", MyBlock);
-
-      assert.true(blockRegistry.has("custom-name"));
-      assert.strictEqual(blockRegistry.get("custom-name"), MyBlock);
-    });
-
-    test("throws for invalid name format", function (assert) {
-      @block("valid-block")
-      class ValidBlock extends Component {}
-
-      assert.throws(
-        () => _registerBlockByName("Invalid_Name", ValidBlock),
-        /is invalid.*lowercase/
-      );
-    });
-
-    test("throws for class without @block decorator", function (assert) {
-      // eslint-disable-next-line ember/no-empty-glimmer-component-classes
-      class PlainComponent extends Component {}
-
-      assert.throws(
-        () => _registerBlockByName("plain-block", PlainComponent),
-        /must be decorated with @block/
-      );
-    });
-
-    test("throws for duplicate name", function (assert) {
-      @block("first-block")
-      class FirstBlock extends Component {}
-
-      @block("second-block")
-      class SecondBlock extends Component {}
-
-      _registerBlockByName("same-name", FirstBlock);
-
-      assert.throws(
-        () => _registerBlockByName("same-name", SecondBlock),
-        /already registered/
-      );
-    });
-
-    test("throws after registry is locked", function (assert) {
-      @block("locked-block")
-      class LockedBlock extends Component {}
-
-      _lockBlockRegistry();
-
-      assert.throws(
-        () => _registerBlockByName("locked-name", LockedBlock),
-        /registry is locked/
-      );
-    });
-  });
 
   module("_registerBlockFactory", function () {
     test("registers a factory function", function (assert) {
@@ -271,13 +211,15 @@ module("Unit | Lib | blocks/registration", function (hooks) {
       assert.true(isBlockResolved("resolved-direct"));
     });
 
-    test("returns true for class registered by name", function (assert) {
-      @block("original-resolved")
-      class OriginalResolved extends Component {}
+    test("returns true after factory resolution", async function (assert) {
+      @block("factory-resolved")
+      class FactoryResolved extends Component {}
 
-      _registerBlockByName("custom-resolved", OriginalResolved);
+      _registerBlockFactory("factory-resolved", async () => FactoryResolved);
 
-      assert.true(isBlockResolved("custom-resolved"));
+      assert.false(isBlockResolved("factory-resolved"), "Before resolution");
+      await resolveBlock("factory-resolved");
+      assert.true(isBlockResolved("factory-resolved"), "After resolution");
     });
 
     test("returns false for unresolved factory", function (assert) {
@@ -368,6 +310,18 @@ module("Unit | Lib | blocks/registration", function (hooks) {
       await assert.rejects(
         resolveBlock("not-a-block"),
         /did not return a valid @block-decorated class/
+      );
+    });
+
+    test("throws if factory returns block with mismatched name", async function (assert) {
+      @block("actual-name")
+      class MismatchedBlock extends Component {}
+
+      _registerBlockFactory("registered-name", async () => MismatchedBlock);
+
+      await assert.rejects(
+        resolveBlock("registered-name"),
+        /registered as "registered-name" resolved to a block with blockName "actual-name"/
       );
     });
 

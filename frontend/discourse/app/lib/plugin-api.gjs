@@ -57,7 +57,6 @@ import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import {
   _registerBlock,
-  _registerBlockByName,
   _registerBlockFactory,
 } from "discourse/lib/blocks/registration";
 import classPrepend, {
@@ -3389,20 +3388,18 @@ class _PluginApi {
    * calls. The block registry is locked on the first `renderBlocks()` call, preventing
    * late registrations.
    *
-   * Supports three registration patterns:
+   * Supports two registration patterns:
    *
    * 1. **Direct class registration**: `registerBlock(BlockClass)`
    *    Registers using the block's own `blockName` from its `@block` decorator.
    *
-   * 2. **Sync registration with explicit name**: `registerBlock("name", BlockClass)`
-   *    Registers the class under a custom name (e.g., for aliasing or namespacing).
-   *
-   * 3. **Lazy loading with factory**: `registerBlock("name", () => import(...))`
+   * 2. **Lazy loading with factory**: `registerBlock("name", () => import(...))`
    *    Registers a factory function for lazy loading. The block module won't be
-   *    loaded until actually needed.
+   *    loaded until actually needed. The resolved block's `blockName` must match
+   *    the registered name.
    *
-   * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string.
-   * @param {typeof import("@glimmer/component").default | Function} [classOrFactory] - Block class or factory function (when first arg is name).
+   * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string for lazy loading.
+   * @param {Function} [factory] - Factory function returning Promise<BlockClass> (required when first arg is name).
    *
    * @example Direct class registration
    * ```javascript
@@ -3410,31 +3407,20 @@ class _PluginApi {
    * api.registerBlock(HeroBanner);
    * ```
    *
-   * @example Sync registration with explicit name
-   * ```javascript
-   * import FeaturedTopics from "../blocks/featured-topics";
-   * api.registerBlock("featured-topics", FeaturedTopics);
-   * ```
-   *
    * @example Lazy loading with factory
    * ```javascript
    * api.registerBlock("sidebar-widget", () => import("../blocks/sidebar-widget"));
    * ```
    */
-  registerBlock(blockOrName, classOrFactory) {
+  registerBlock(blockOrName, factory) {
     if (typeof blockOrName === "string") {
-      // String name provided - check second argument
-      if (classOrFactory?.blockName) {
-        // Sync: registerBlock("name", BlockClass)
-        _registerBlockByName(blockOrName, classOrFactory);
-      } else if (typeof classOrFactory === "function") {
-        // Async: registerBlock("name", () => import(...))
-        _registerBlockFactory(blockOrName, classOrFactory);
-      } else {
+      // Lazy loading: registerBlock("name", () => import(...))
+      if (typeof factory !== "function") {
         throw new Error(
-          `registerBlock("${blockOrName}", ...) requires a BlockClass or factory function as second argument.`
+          `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
+      _registerBlockFactory(blockOrName, factory);
     } else {
       // Direct class: registerBlock(BlockClass)
       _registerBlock(blockOrName);

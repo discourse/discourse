@@ -137,57 +137,6 @@ export function isBlockFactory(entry) {
 }
 
 /**
- * Registers a block class with an explicit name.
- *
- * This allows registering a block under a different name than its `blockName`,
- * useful for aliasing or namespacing. The class must still be decorated with `@block`.
- *
- * @param {string} name - The name to register the block under.
- * @param {BlockClass} BlockClass - The block component class.
- * @throws {Error} If registry is locked, name is invalid, or class is not a valid block.
- *
- * @example
- * ```javascript
- * api.registerBlock("my-hero", HeroBanner);
- * // Now usable as { block: "my-hero" }
- * ```
- *
- * @internal
- */
-export function _registerBlockByName(name, BlockClass) {
-  if (registryLocked) {
-    raiseBlockError(
-      `Cannot register block "${name}": ` +
-        `the block registry is locked. Blocks must be registered before ` +
-        `any renderBlocks() configuration is set up.`
-    );
-    return;
-  }
-
-  if (!VALID_BLOCK_NAME_PATTERN.test(name)) {
-    raiseBlockError(
-      `Block name "${name}" is invalid. ` +
-        `Block names must start with a letter and contain only lowercase letters, numbers, and hyphens.`
-    );
-    return;
-  }
-
-  if (!BlockClass?.blockName) {
-    raiseBlockError(
-      `Block class "${BlockClass?.name}" must be decorated with @block to be registered.`
-    );
-    return;
-  }
-
-  if (blockRegistry.has(name)) {
-    raiseBlockError(`Block "${name}" is already registered.`);
-    return;
-  }
-
-  blockRegistry.set(name, BlockClass);
-}
-
-/**
  * Registers a factory function for lazy loading a block.
  *
  * The factory will be called when the block is first needed. It must return
@@ -331,6 +280,15 @@ export async function resolveBlock(nameOrClass) {
     if (!BlockClass?.blockName) {
       raiseBlockError(
         `Block factory for "${name}" did not return a valid @block-decorated class.`
+      );
+    }
+
+    // Validate that the resolved block's name matches the registered name
+    if (BlockClass.blockName !== name) {
+      raiseBlockError(
+        `Block factory registered as "${name}" resolved to a block with ` +
+          `blockName "${BlockClass.blockName}". The registered name must match ` +
+          `the block's @block decorator name.`
       );
     }
 
