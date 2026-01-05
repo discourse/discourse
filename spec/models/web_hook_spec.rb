@@ -236,7 +236,7 @@ RSpec.describe WebHook do
       expect(job_args["event_name"]).to eq("topic_edited")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(topic_id)
-      expect(payload["tags"]).to contain_exactly(tag.name)
+      expect(payload["tags"]).to contain_exactly({ "id" => tag.id, "name" => tag.name })
     end
 
     it "should enqueue granular hooks for topic" do

@@ -231,7 +231,9 @@ RSpec.describe ListController do
           body = response.parsed_body
 
           expect(body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(topic.id)
-          expect(body["topic_list"]["topics"][0]["tags"]).to contain_exactly(tag.name)
+          expect(body["topic_list"]["topics"][0]["tags"]).to contain_exactly(
+            { "id" => tag.id, "name" => tag.name },
+          )
         end.count
 
       tag2 = Fabricate(:tag)
@@ -250,8 +252,12 @@ RSpec.describe ListController do
             topic2.id,
           )
 
-          expect(body["topic_list"]["topics"][0]["tags"]).to contain_exactly(tag2.name)
-          expect(body["topic_list"]["topics"][1]["tags"]).to contain_exactly(tag.name)
+          expect(body["topic_list"]["topics"][0]["tags"]).to contain_exactly(
+            { "id" => tag2.id, "name" => tag2.name },
+          )
+          expect(body["topic_list"]["topics"][1]["tags"]).to contain_exactly(
+            { "id" => tag.id, "name" => tag.name },
+          )
         end.count
 
       expect(new_sql_queries_count).to eq(initial_sql_queries_count)

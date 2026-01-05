@@ -217,7 +217,7 @@ RSpec.describe TopicViewSerializer do
     it "should include the tag for staff users" do
       [moderator, admin].each do |user|
         json = serialize_topic(pm, user)
-        expect(json[:tags]).to eq([tag.name])
+        expect(json[:tags]).to eq([{ id: tag.id, name: tag.name }])
       end
     end
 
@@ -226,7 +226,7 @@ RSpec.describe TopicViewSerializer do
 
       user.group_users << Fabricate(:group_user, group: group, user: user)
       json = serialize_topic(pm_between_reg_users, user)
-      expect(json[:tags]).to eq([tag.name])
+      expect(json[:tags]).to eq([{ id: tag.id, name: tag.name }])
 
       json = serialize_topic(pm_between_reg_users, user_2)
       expect(json[:tags]).to eq(nil)
@@ -252,7 +252,7 @@ RSpec.describe TopicViewSerializer do
 
     it "returns hidden tag to staff" do
       json = serialize_topic(topic, admin)
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq([{ id: hidden_tag.id, name: hidden_tag.name }])
     end
 
     it "does not return hidden tag to non-staff" do
@@ -298,7 +298,13 @@ RSpec.describe TopicViewSerializer do
 
     it "tags are automatically sorted by tag popularity" do
       json = serialize_topic(topic, user)
-      expect(json[:tags]).to eq(%w[btag ctag atag])
+      expect(json[:tags]).to eq(
+        [
+          { id: tag2.id, name: "btag" },
+          { id: tag1.id, name: "ctag" },
+          { id: tag3.id, name: "atag" },
+        ],
+      )
       expect(json[:tags_descriptions]).to eq(
         { btag: "b description", ctag: "c description", atag: "a description" },
       )
@@ -307,7 +313,13 @@ RSpec.describe TopicViewSerializer do
     it "tags can be sorted alphabetically" do
       SiteSetting.tags_sort_alphabetically = true
       json = serialize_topic(topic, user)
-      expect(json[:tags]).to eq(%w[atag btag ctag])
+      expect(json[:tags]).to eq(
+        [
+          { id: tag3.id, name: "atag" },
+          { id: tag2.id, name: "btag" },
+          { id: tag1.id, name: "ctag" },
+        ],
+      )
     end
   end
 
