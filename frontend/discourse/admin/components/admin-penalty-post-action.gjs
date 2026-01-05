@@ -7,7 +7,7 @@ import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const ACTIONS = ["delete", "delete_all", "delete_replies", "edit", "none"];
 
@@ -42,6 +42,16 @@ export default class AdminPenaltyPostAction extends Component {
 
   get readyToDeleteAll() {
     return this.canSubmitDeleteAll();
+  }
+
+  get postTotalMessage() {
+    return I18n.messageFormat(
+      "admin.user.penalty_post_delete_all_confirmation_MF",
+      {
+        TOPICS: this.topicsCount,
+        REPLIES: this.repliesCount,
+      }
+    );
   }
 
   @action
@@ -96,13 +106,7 @@ export default class AdminPenaltyPostAction extends Component {
           @checked={{this.confirmDeleteAll}}
           {{on "click" this.toggleConfirmDeleteAll}}
         />
-        {{htmlSafe
-          (i18n
-            "admin.user.penalty_post_delete_all_confirmation"
-            topics=this.topicsCount
-            replies=this.repliesCount
-          )
-        }}
+        {{htmlSafe this.postTotalMessage}}
       </label>
     {{/if}}
   </template>

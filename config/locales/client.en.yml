@@ -8074,7 +8074,16 @@ en:
         penalty_post_delete: "Delete the post"
         penalty_post_delete_replies: "Delete the post + any replies"
         penalty_post_delete_all: "Delete all topics by user + any replies"
-        penalty_post_delete_all_confirmation: "<span>This will delete %{topics} topics and %{replies} replies. <b>This cannot be undone!</b> Are you sure you would like to do this?</span>"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>This will delete
+          { TOPICS, plural,
+              one {# topic}
+            other {# topics}
+          } and
+          { REPLIES, plural,
+              one {# reply}
+            other {# replies}
+          }. <b>This cannot be undone!</b> Are you sure you would like to do this?</span>
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
