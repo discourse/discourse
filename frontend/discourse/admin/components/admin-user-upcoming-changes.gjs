@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { array, concat } from "@ember/helper";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
+import SeparatedList from "discourse/components/separated-list";
 import { UPCOMING_CHANGES_USER_ENABLED_REASONS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { and, eq } from "discourse/truth-helpers";
@@ -13,19 +13,6 @@ export default class AdminUserUpcomingChanges extends Component {
     return `user.upcoming_changes.why_reasons.${reason}`;
   }
 
-  @bind
-  getGroupLinks(groups) {
-    return (
-      "(" +
-      groups
-        .map((group) => {
-          return `<a href="/g/${group}">${group}</a>`;
-        })
-        .join(", ") +
-      ")"
-    );
-  }
-
   <template>
     <AdminFilterControls
       @array={{@user.upcoming_changes_stats}}
@@ -33,7 +20,7 @@ export default class AdminUserUpcomingChanges extends Component {
       @inputPlaceholder={{i18n
         "admin.user.upcoming_changes.filter_placeholder"
       }}
-      @noResultsMessage={{i18n "admin.user.upcoming_changes.no_results"}}
+      @noResultsMessage={{i18n "admin.user.upcoming_changes.filter_no_results"}}
     >
       <:content as |filteredChanges|>
         <table class="d-table user-upcoming-changes-table">
@@ -91,11 +78,14 @@ export default class AdminUserUpcomingChanges extends Component {
                       upcomingChange.specific_groups.length
                     )
                   }}
-                    <span class="upcoming-change-groups">
-                      {{htmlSafe
-                        (this.getGroupLinks upcomingChange.specific_groups)
-                      }}
-                    </span>
+                    (<SeparatedList
+                      @items={{upcomingChange.specific_groups}}
+                      @separator=", "
+                      class="upcoming-change-groups"
+                      as |group|
+                    >
+                      <a href={{concat "/g/" group}}>{{group}}</a>
+                    </SeparatedList>)
                   {{/if}}
                 </td>
               </tr>

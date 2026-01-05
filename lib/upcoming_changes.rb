@@ -94,4 +94,44 @@ module UpcomingChanges
 
     setting_enabled
   end
+
+  def self.stats_for_user(user:, acting_guardian:)
+    guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
+    user_belonging_to_group_ids = user.belonging_to_group_ids
+
+    SiteSetting.upcoming_change_site_settings.map do |upcoming_change|
+      enabled = user.upcoming_change_enabled?(upcoming_change)
+      has_groups = UpcomingChanges.has_groups?(upcoming_change)
+
+      specific_groups = []
+      reason =
+        if has_groups
+          visible_group_ids =
+            UpcomingChanges.group_ids_for(upcoming_change) & guardian_visible_group_ids &
+              user_belonging_to_group_ids
+
+          specific_groups = Group.where(id: visible_group_ids).pluck(:name)
+          if enabled
+            UpcomingChanges.user_enabled_reasons[:in_specific_groups]
+          else
+            UpcomingChanges.user_enabled_reasons[:not_in_specific_groups]
+          end
+        else
+          if enabled
+            UpcomingChanges.user_enabled_reasons[:enabled_for_everyone]
+          else
+            UpcomingChanges.user_enabled_reasons[:enabled_for_no_one]
+          end
+        end
+
+      {
+        name: upcoming_change,
+        humanized_name: SiteSetting.humanized_name(upcoming_change),
+        description: SiteSetting.description(upcoming_change),
+        enabled: enabled,
+        specific_groups: specific_groups,
+        reason: reason,
+      }
+    end
+  end
 end

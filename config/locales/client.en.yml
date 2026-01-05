@@ -8148,6 +8148,7 @@ en:
           title: "User upcoming changes"
           description: "To modify groups or to enable or disable upcoming changes, please visit the <a href='%{basePath}/admin/config/upcoming-changes'>upcoming changes config page</a>."
           filter_placeholder: "Filter upcoming changes by name or description"
+          filter_no_results: "No upcoming changes found"
         exports:
           title: User exports
           download:
