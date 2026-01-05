@@ -363,14 +363,15 @@ export default class ProsemirrorEditor extends Component {
       {{forceScrollingElementPosition}}
     ></div>
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
-      {{~#in-element nodeView.dom insertBefore=null~}}
+      {{~#in-element nodeView.dom insertBefore=nodeView.contentDOM~}}
         <nodeView.component
           @node={{nodeView.node}}
           @view={{nodeView.view}}
           @getPos={{nodeView.getPos}}
           @dom={{nodeView.dom}}
+          @contentDOM={{nodeView.contentDOM}}
           @onSetup={{nodeView.setComponentInstance}}
-        >{{nodeView.contentDOM}}</nodeView.component>
+        />
       {{~/in-element~}}
     {{/each}}
   </template>

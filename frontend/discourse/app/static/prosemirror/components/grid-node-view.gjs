@@ -2,12 +2,20 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class GridNodeView extends Component {
+  mountContent = modifier((element) => {
+    const contentDOM = this.args.contentDOM;
+    if (contentDOM) {
+      element.appendChild(contentDOM);
+    }
+  });
+
   constructor() {
     super(...arguments);
     this.args.dom?.classList.add("composer-image-grid");
@@ -89,7 +97,7 @@ export default class GridNodeView extends Component {
       >{{icon "image"}}<span>{{i18n
             "composer.grid_mode_carousel"
           }}</span></button>
-    </div>{{~yield~}}<button
+    </div><div {{this.mountContent}}></div><button
       type="button"
       class="composer-image-grid__remove-btn"
       title={{i18n "composer.remove_grid"}}
