@@ -7,6 +7,69 @@ import ChatChatable from "discourse/plugins/chat/discourse/models/chat-chatable"
 
 const MAX_RESULTS = 10;
 
+const MATCH_PRIORITY = {
+  EXACT: 0,
+  PREFIX: 1,
+  PARTIAL: 2,
+};
+
+const TYPE_PRIORITY = {
+  CHANNEL: 0,
+  ENABLED: 1,
+  DISABLED: 2,
+};
+
+function getChatatableName(chatable) {
+  switch (chatable.type) {
+    case "user":
+      return chatable.model.username?.toLowerCase();
+    case "group":
+      return chatable.model.name?.toLowerCase();
+    case "channel":
+      return (
+        chatable.model.slug?.toLowerCase() ||
+        chatable.model.title?.toLowerCase()
+      );
+    default:
+      return "";
+  }
+}
+
+function matchPriority(chatable, term) {
+  const name = getChatatableName(chatable);
+  const lowerTerm = term.toLowerCase();
+
+  if (name === lowerTerm) {
+    return MATCH_PRIORITY.EXACT;
+  }
+  if (name?.startsWith(lowerTerm)) {
+    return MATCH_PRIORITY.PREFIX;
+  }
+  return MATCH_PRIORITY.PARTIAL;
+}
+
+function typePriority(chatable) {
+  if (chatable.type === "channel") {
+    return TYPE_PRIORITY.CHANNEL;
+  }
+  if (chatable.enabled) {
+    return TYPE_PRIORITY.ENABLED;
+  }
+  return TYPE_PRIORITY.DISABLED;
+}
+
+export function sortChatables(chatables, term) {
+  return chatables.sort((a, b) => {
+    const matchA = matchPriority(a, term);
+    const matchB = matchPriority(b, term);
+    if (matchA !== matchB) {
+      return matchA - matchB;
+    }
+
+    return typePriority(a) - typePriority(b);
+  });
+}
+
 export default class ChatablesLoader {
   @service chatChannelsManager;
   @service loadingSlider;
@@ -23,7 +86,6 @@ export default class ChatablesLoader {
       includeGroups: true,
       includeCategoryChannels: true,
       includeDirectMessageChannels: true,
-      excludedUserIds: null,
       preloadChannels: false,
     }
   ) {
@@ -51,25 +113,25 @@ export default class ChatablesLoader {
       const results = await this.request;
       this.loadingSlider.transitionEnded();
 
-      return [
+      const chatables = [
         ...results.users,
         ...results.groups,
         ...results.direct_message_channels,
         ...results.category_channels,
-      ]
-        .map((item) => {
-          const chatable = ChatChatable.create(item);
-          const channel = this.#findChannel(chatable);
+      ].map((item) => {
+        const chatable = ChatChatable.create(item);
+        const channel = this.#findChannel(chatable);
 
-          if (channel) {
-            chatable.tracking = channel.tracking;
-            chatable.unread_thread_count =
-              channel.unreadThreadsCountSinceLastViewed;
-          }
+        if (channel) {
+          chatable.tracking = channel.tracking;
+          chatable.unread_thread_count =
+            channel.unreadThreadsCountSinceLastViewed;
+        }
 
-          return chatable;
-        })
-        .slice(0, MAX_RESULTS);
+        return chatable;
+      });
+
+      return sortChatables(chatables, term).slice(0, MAX_RESULTS);
     } catch (e) {
       popupAjaxError(e);
     }
