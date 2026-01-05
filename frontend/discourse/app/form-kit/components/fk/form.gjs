@@ -50,6 +50,7 @@ class FKForm extends Component {
       reset: this.onReset,
       addError: this.addError,
       removeError: this.removeError,
+      removeErrors: this.removeErrors,
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
@@ -139,6 +140,11 @@ class FKForm extends Component {
   @action
   removeError(name) {
     this.formData.removeError(name);
+  }
+
+  @action
+  removeErrors() {
+    this.formData.removeErrors();
   }
 
   @action
