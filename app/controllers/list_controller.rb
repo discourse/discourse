@@ -483,9 +483,13 @@ class ListController < ApplicationController
     url = public_send(method, opts.merge(page_params)).sub(".json?", "?")
 
     # Unicode usernames need to be encoded when calling Rails' path helper. However, it means that the already
-    # encoded username are encoded again which we do not want. As such, we unencode the url once when unicode usernames
+    # encoded username are encoded again which we do not want. As such, we unencode the path once when unicode usernames
     # have been enabled.
-    url = UrlHelper.unencode(url) if SiteSetting.unicode_usernames
+    if SiteSetting.unicode_usernames
+      uri = URI.parse(url)
+      uri.path = UrlHelper.unencode(uri.path)
+      url = uri.to_s
+    end
 
     url
   end
