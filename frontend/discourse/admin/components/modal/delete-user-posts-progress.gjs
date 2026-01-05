@@ -6,7 +6,7 @@ import { htmlSafe } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 export default class DeleteUserPostsProgress extends Component {
   @tracked deletedPosts = 0;
@@ -27,6 +27,16 @@ export default class DeleteUserPostsProgress extends Component {
 
   get deletedPercentage() {
     return Math.floor((this.totalDeletedPosts * 100) / this.originalPostCount);
+  }
+
+  get deletedDescription() {
+    return I18n.messageFormat(
+      "admin.user.delete_posts.progress.description_MF",
+      {
+        POSTS: this.originalPostCount,
+        username: this.args.model.user.username,
+      }
+    );
   }
 
   @action
@@ -57,13 +67,7 @@ export default class DeleteUserPostsProgress extends Component {
       @dismissable={{false}}
     >
       <:body>
-        <p>{{htmlSafe
-            (i18n
-              "admin.user.delete_posts.progress.description"
-              post_count=this.originalPostCount
-              username=@model.user.username
-            )
-          }}</p>
+        <p>{{htmlSafe this.deletedDescription}}</p>
         <div class="progress-bar">
           <span
             style={{htmlSafe (concat "width: " this.deletedPercentage "%")}}
