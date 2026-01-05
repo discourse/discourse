@@ -6,8 +6,6 @@ module DiscourseAi
       class Search < Tool
         attr_reader :last_query
 
-        MIN_SEMANTIC_RESULTS = 5
-
         class << self
           def signature
             {
@@ -135,17 +133,22 @@ module DiscourseAi
             )
 
           @last_num_results = results[:rows]&.length || 0
+          @last_filter_query = results[:filter_query]
           results
         end
 
         protected
 
         def description_args
-          {
-            count: @last_num_results || 0,
-            query: @last_query || "",
-            url: "#{Discourse.base_path}/search?q=#{CGI.escape(@last_query || "")}",
-          }
+          # Use /filter when we fell back to TopicsFilter, otherwise use /search
+          url =
+            if @last_filter_query.present?
+              "#{Discourse.base_path}/filter?q=#{CGI.escape(@last_filter_query)}"
+            else
+              "#{Discourse.base_path}/search?q=#{CGI.escape(@last_query || "")}"
+            end
+
+          { count: @last_num_results || 0, query: @last_query || "", url: url }
         end
 
         private
