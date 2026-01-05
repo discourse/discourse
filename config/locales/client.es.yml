@@ -298,6 +298,8 @@ es:
         logged_in_members: "¡Te damos la bienvenida de nuevo, %{preferred_display_name}!"
         anonymous_members: "¡Te damos la bienvenida a %{site_name}!"
       search: "Buscar"
+    impersonation:
+      stop: "Deja de suplantar"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Es posible que tu sitio no funcione porque un tema o componente tenga errores. Comprueba la consola del navegador para obtener más información."
