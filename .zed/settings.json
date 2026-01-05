@@ -1,0 +1,105 @@
+{
+  "tab_size": 2,
+  "hard_tabs": false,
+  "ensure_final_newline_on_save": true,
+  "remove_trailing_whitespace_on_save": true,
+  "formatter": "auto",
+  "format_on_save": "on",
+
+  "languages": {
+    "JavaScript": {
+      "tab_size": 2,
+      "formatter": "prettier",
+      "language_servers": ["eslint", "typescript-language-server"],
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "TypeScript": {
+      "tab_size": 2,
+      "formatter": "prettier",
+      "language_servers": ["eslint", "typescript-language-server"],
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "Ruby": {
+      "tab_size": 2,
+      "language_servers": ["ruby-lsp", "!solargraph", "!sorbet", "!steep"]
+    },
+    "SCSS": {
+      "tab_size": 2,
+      "formatter": "prettier",
+      "language_servers": ["stylelint"]
+    },
+    "CSS": {
+      "tab_size": 2,
+      "formatter": "prettier"
+    },
+    "Handlebars": {
+      "tab_size": 2,
+      "formatter": "prettier",
+      "ensure_final_newline_on_save": false
+    },
+    "Markdown": {
+      "remove_trailing_whitespace_on_save": false
+    },
+    "YAML": {
+      "tab_size": 2
+    },
+    "JSON": {
+      "tab_size": 2
+    },
+    "Glimmer (JavaScript)": {
+      "tab_size": 2,
+      "language_servers": ["eslint", "typescript-language-server"],
+      "formatter": {
+        "external": {
+          "command": "pnpm",
+          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+        }
+      },
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "Glimmer (TypeScript)": {
+      "tab_size": 2,
+      "language_servers": ["eslint", "typescript-language-server"],
+      "formatter": {
+        "external": {
+          "command": "pnpm",
+          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+        }
+      },
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    }
+  },
+
+  "lsp": {
+    "eslint": {
+      "settings": {
+        "workingDirectory": { "mode": "auto" },
+        "validate": ["javascript", "typescript", "glimmer-js", "glimmer-ts"]
+      }
+    },
+    "ruby-lsp": {
+      "initialization_options": {
+        "formatter": "syntax_tree",
+        "linters": ["rubocop"]
+      }
+    },
+    "stylelint": {
+      "settings": {
+        "validate": ["css", "scss"]
+      }
+    }
+  },
+
+  "file_types": {
+    "Glimmer (JavaScript)": ["gjs"],
+    "Glimmer (TypeScript)": ["gts"]
+  }
+}
