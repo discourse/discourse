@@ -2605,6 +2605,22 @@ RSpec.describe Admin::UsersController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
       include_examples "delete_posts_decider accessible", :moderator
+
+      context "when user has too many posts to delete" do
+        fab!(:target_user) do
+          user = Fabricate(:user)
+          Fabricate.times(16, :post, user: user)
+          user.reload
+          user.user_stat.update!(post_count: 16)
+          user
+        end
+
+        it "denies access with a 403 response due to insufficient permissions" do
+          post "/admin/users/#{target_user.id}/delete_posts_decider.json"
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+      end
     end
 
     context "when logged in as a non-staff user" do
