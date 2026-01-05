@@ -58,7 +58,7 @@ RSpec.describe TopicListItemSerializer do
     it "returns hidden tag to staff" do
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
 
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq([{ id: hidden_tag.id, name: hidden_tag.name }])
     end
 
     it "trucates description" do

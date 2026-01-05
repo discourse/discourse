@@ -56,7 +56,7 @@ RSpec.describe SuggestedTopicSerializer do
 
     it "returns hidden tag to staff" do
       json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq([{ id: hidden_tag.id, name: hidden_tag.name }])
     end
 
     it "does not return hidden tag to non-staff" do
