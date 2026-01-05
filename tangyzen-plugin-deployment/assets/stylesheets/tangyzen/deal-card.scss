@@ -1,0 +1,363 @@
+// TangyZen Deal Card Styles
+
+.tangyzen-deal-card {
+  background: var(--secondary);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--primary-low);
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary-medium);
+  }
+  
+  &-featured {
+    border: 2px solid var(--tz-deal-color);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    
+    &::before {
+      content: "⭐";
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 24px;
+      z-index: 2;
+    }
+  }
+  
+  &-expired {
+    opacity: 0.6;
+    filter: grayscale(0.5);
+    
+    .tangyzen-deal-card-price {
+      text-decoration: line-through;
+    }
+    
+    .tangyzen-deal-card-badge {
+      background: var(--danger);
+    }
+  }
+}
+
+.tangyzen-deal-card-image {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: var(--primary-low);
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+  
+  .tangyzen-deal-card-store-logo {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: white;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.tangyzen-deal-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--tz-deal-color);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.tangyzen-deal-card-expiry {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: center;
+  
+  .expiry-timer {
+    background: rgba(255, 59, 48, 0.95);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    backdrop-filter: blur(4px);
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.tangyzen-deal-card-body {
+  padding: 20px;
+}
+
+.tangyzen-deal-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+    
+    &:hover {
+      color: var(--primary-high);
+      text-decoration: underline;
+    }
+  }
+}
+
+.tangyzen-deal-card-prices {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tangyzen-deal-card-price {
+  &-current {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--tz-deal-color);
+    line-height: 1;
+  }
+  
+  &-original {
+    font-size: 18px;
+    color: var(--primary-medium);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+  
+  &-save {
+    font-size: 14px;
+    color: var(--danger);
+    font-weight: 600;
+    background: rgba(239, 68, 68, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+}
+
+.tangyzen-deal-card-store {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  
+  .store-name {
+    font-weight: 600;
+    color: var(--primary-high);
+  }
+}
+
+.tangyzen-deal-card-coupon {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .coupon-code {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  
+  .coupon-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+  
+  .copy-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+.tangyzen-deal-card-stats {
+  display: flex;
+  gap: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--primary-low);
+  
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--primary-medium);
+    
+    .count {
+      font-weight: 700;
+      color: var(--primary-high);
+    }
+  }
+}
+
+.tangyzen-deal-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  
+  .btn {
+    flex: 1;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    
+    &.btn-primary {
+      background: var(--tz-deal-color);
+      color: white;
+      
+      &:hover {
+        background: #059669;
+        transform: scale(1.02);
+      }
+    }
+    
+    &.btn-secondary {
+      background: var(--primary-low);
+      color: var(--primary-high);
+      
+      &:hover {
+        background: var(--primary-medium);
+      }
+      
+      &.active {
+        background: var(--primary);
+        color: white;
+      }
+    }
+    
+    &.btn-discuss {
+      background: var(--primary);
+      color: white;
+      
+      &:hover {
+        background: var(--primary-high);
+      }
+    }
+  }
+}
+
+.tangyzen-deal-card-description {
+  font-size: 14px;
+  color: var(--primary-medium);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  
+  p {
+    margin: 0;
+    
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.tangyzen-deal-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  
+  .tag {
+    background: var(--primary-low);
+    color: var(--primary-high);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .tangyzen-deal-card-image {
+    height: 160px;
+  }
+  
+  .tangyzen-deal-card-price-current {
+    font-size: 28px;
+  }
+  
+  .tangyzen-deal-card-actions {
+    flex-direction: column;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+// Dark mode
+.d-dark .tangyzen-deal-card {
+  background: var(--secondary);
+  border-color: var(--primary-medium);
+  
+  .tangyzen-deal-card-store-logo {
+    background: var(--primary);
+  }
+  
+  .tangyzen-deal-card-save {
+    background: rgba(239, 68, 68, 0.2);
+  }
+  
+  .tangyzen-deal-card-tags .tag {
+    background: var(--primary-medium);
+  }
+}

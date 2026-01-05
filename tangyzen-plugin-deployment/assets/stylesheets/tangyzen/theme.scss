@@ -1,0 +1,438 @@
+// TangyZen Theme Styles
+// TangyZen 主题样式
+
+// ===== CSS Variables =====
+:root {
+  // Brand colors
+  --tz-primary: #6366f1;
+  --tz-primary-dark: #4f46e5;
+  --tz-primary-light: #818cf8;
+  
+  // Content type colors
+  --tz-deal-color: #10b981;
+  --tz-deal-bg: #ecfdf5;
+  --tz-music-color: #8b5cf6;
+  --tz-music-bg: #f5f3ff;
+  --tz-movie-color: #f59e0b;
+  --tz-movie-bg: #fffbeb;
+  --tz-review-color: #ef4444;
+  --tz-review-bg: #fef2f2;
+  --tz-art-color: #06b6d4;
+  --tz-art-bg: #ecfeff;
+  --tz-blog-color: #3b82f6;
+  --tz-blog-bg: #eff6ff;
+  
+  // Typography
+  --tz-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --tz-font-size-base: 14px;
+  --tz-font-size-sm: 12px;
+  --tz-font-size-lg: 16px;
+  --tz-font-size-xl: 20px;
+  --tz-font-size-2xl: 24px;
+  
+  // Spacing
+  --tz-spacing-xs: 4px;
+  --tz-spacing-sm: 8px;
+  --tz-spacing-md: 16px;
+  --tz-spacing-lg: 24px;
+  --tz-spacing-xl: 32px;
+  
+  // Border radius
+  --tz-radius-sm: 4px;
+  --tz-radius-md: 8px;
+  --tz-radius-lg: 12px;
+  --tz-radius-xl: 16px;
+  --tz-radius-full: 9999px;
+  
+  // Shadows
+  --tz-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --tz-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --tz-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --tz-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+}
+
+// ===== Dark Mode =====
+.d-dark {
+  --tz-deal-bg: rgba(16, 185, 129, 0.1);
+  --tz-music-bg: rgba(139, 92, 246, 0.1);
+  --tz-movie-bg: rgba(245, 158, 11, 0.1);
+  --tz-review-bg: rgba(239, 68, 68, 0.1);
+  --tz-art-bg: rgba(6, 182, 212, 0.1);
+  --tz-blog-bg: rgba(59, 130, 246, 0.1);
+}
+
+// ===== Navigation =====
+.tangyzen-nav {
+  display: flex;
+  gap: var(--tz-spacing-md);
+  padding: var(--tz-spacing-md) 0;
+  border-bottom: 1px solid var(--primary-low);
+  margin-bottom: var(--tz-spacing-lg);
+  
+  .tangyzen-nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--tz-spacing-sm);
+    padding: var(--tz-spacing-sm) var(--tz-spacing-md);
+    border-radius: var(--tz-radius-md);
+    font-weight: 600;
+    font-size: var(--tz-font-size-base);
+    color: var(--primary-medium);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--primary-low);
+      color: var(--primary-high);
+    }
+    
+    &.active {
+      background: var(--primary);
+      color: white;
+    }
+  }
+}
+
+// ===== Section Titles =====
+.tangyzen-section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--tz-spacing-sm);
+  font-size: var(--tz-font-size-2xl);
+  font-weight: 700;
+  color: var(--primary);
+  margin: var(--tz-spacing-xl) 0 var(--tz-spacing-lg);
+}
+
+// ===== Content Type Badges =====
+.tangyzen-topic-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  margin-left: var(--tz-spacing-sm);
+}
+
+.tangyzen-deal-badge {
+  background: var(--tz-deal-bg);
+  color: var(--tz-deal-color);
+}
+
+.tangyzen-music-badge {
+  background: var(--tz-music-bg);
+  color: var(--tz-music-color);
+}
+
+.tangyzen-movie-badge {
+  background: var(--tz-movie-bg);
+  color: var(--tz-movie-color);
+}
+
+.tangyzen-review-badge {
+  background: var(--tz-review-bg);
+  color: var(--tz-review-color);
+}
+
+.tangyzen-art-badge {
+  background: var(--tz-art-bg);
+  color: var(--tz-art-color);
+}
+
+.tangyzen-blog-badge {
+  background: var(--tz-blog-bg);
+  color: var(--tz-blog-color);
+}
+
+// ===== Post Header =====
+.tangyzen-post-header {
+  display: flex;
+  align-items: center;
+  gap: var(--tz-spacing-sm);
+  padding: var(--tz-spacing-md);
+  margin-bottom: var(--tz-spacing-md);
+  background: var(--secondary);
+  border-left: 4px solid var(--tz-primary);
+  border-radius: var(--tz-radius-md);
+  font-size: var(--tz-font-size-sm);
+  font-weight: 600;
+  color: var(--primary-high);
+}
+
+// ===== Cards =====
+.tangyzen-content-card {
+  background: var(--secondary);
+  border-radius: var(--tz-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--primary-low);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--tz-shadow-lg);
+    border-color: var(--primary-medium);
+  }
+}
+
+.tangyzen-card-image {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: var(--primary-low);
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.tangyzen-card-body {
+  padding: var(--tz-spacing-md);
+}
+
+.tangyzen-card-title {
+  font-size: var(--tz-font-size-lg);
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 var(--tz-spacing-sm);
+  line-height: 1.4;
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+    
+    &:hover {
+      color: var(--primary-high);
+      text-decoration: underline;
+    }
+  }
+}
+
+.tangyzen-card-meta {
+  display: flex;
+  gap: var(--tz-spacing-md);
+  font-size: var(--tz-font-size-sm);
+  color: var(--primary-medium);
+}
+
+.tangyzen-card-likes,
+.tangyzen-card-comments {
+  display: flex;
+  align-items: center;
+  gap: var(--tz-spacing-xs);
+  
+  .count {
+    font-weight: 700;
+    color: var(--primary-high);
+  }
+}
+
+// ===== Grid Layouts =====
+.tangyzen-deals-grid,
+.tangyzen-content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--tz-spacing-lg);
+}
+
+// ===== Tabs =====
+.tangyzen-tabs {
+  display: flex;
+  gap: var(--tz-spacing-sm);
+  margin-bottom: var(--tz-spacing-lg);
+  flex-wrap: wrap;
+  
+  .tangyzen-tab {
+    padding: var(--tz-spacing-sm) var(--tz-spacing-md);
+    border-radius: var(--tz-radius-full);
+    border: 2px solid var(--primary-low);
+    background: transparent;
+    color: var(--primary-medium);
+    font-weight: 600;
+    font-size: var(--tz-font-size-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    &.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+  }
+}
+
+// ===== Loading States =====
+.tangyzen-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tz-spacing-xl);
+  color: var(--primary-medium);
+  font-size: var(--tz-font-size-sm);
+  
+  &::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-low);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: tangyzen-spin 0.6s linear infinite;
+    margin-right: var(--tz-spacing-sm);
+  }
+}
+
+@keyframes tangyzen-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ===== Empty States =====
+.tangyzen-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tz-spacing-xl);
+  color: var(--primary-medium);
+  text-align: center;
+  
+  .icon {
+    font-size: 48px;
+    margin-bottom: var(--tz-spacing-md);
+    opacity: 0.5;
+  }
+  
+  .title {
+    font-size: var(--tz-font-size-lg);
+    font-weight: 700;
+    color: var(--primary-high);
+    margin-bottom: var(--tz-spacing-sm);
+  }
+  
+  .description {
+    font-size: var(--tz-font-size-base);
+    color: var(--primary-medium);
+    max-width: 400px;
+  }
+}
+
+// ===== Pagination =====
+.tangyzen-pagination {
+  display: flex;
+  justify-content: center;
+  gap: var(--tz-spacing-sm);
+  margin-top: var(--tz-spacing-xl);
+  
+  .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 var(--tz-spacing-md);
+    border-radius: var(--tz-radius-md);
+    border: 1px solid var(--primary-low);
+    background: var(--secondary);
+    color: var(--primary-medium);
+    font-weight: 600;
+    font-size: var(--tz-font-size-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover:not(.disabled) {
+      background: var(--primary-low);
+      color: var(--primary-high);
+      border-color: var(--primary);
+    }
+    
+    &.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ===== Responsive Design =====
+@media (max-width: 768px) {
+  .tangyzen-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    
+    .tangyzen-nav-link {
+      font-size: var(--tz-font-size-sm);
+      padding: var(--tz-spacing-xs) var(--tz-spacing-sm);
+    }
+  }
+  
+  .tangyzen-section-title {
+    font-size: var(--tz-font-size-xl);
+  }
+  
+  .tangyzen-deals-grid,
+  .tangyzen-content-grid {
+    grid-template-columns: 1fr;
+    gap: var(--tz-spacing-md);
+  }
+  
+  .tangyzen-tabs {
+    gap: var(--tz-spacing-xs);
+    
+    .tangyzen-tab {
+      font-size: var(--tz-font-size-xs);
+      padding: var(--tz-spacing-xs) var(--tz-spacing-sm);
+    }
+  }
+}
+
+// ===== Animations =====
+.tangyzen-fade-in {
+  animation: tangyzenFadeIn 0.3s ease-out;
+}
+
+@keyframes tangyzenFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tangyzen-slide-up {
+  animation: tangyzenSlideUp 0.4s ease-out;
+}
+
+@keyframes tangyzenSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

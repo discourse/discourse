@@ -1,0 +1,108 @@
+<div class="tangyzen-admin-overview">
+  {{#if this.loading}}
+    <div class="tangyzen-admin-loading">
+      {{d-icon "spinner" size="large"}}
+      <span>{{i18n "tangyzen.admin.loading"}}</span>
+    </div>
+  {{else if this.error}}
+    <div class="tangyzen-admin-error">
+      {{d-icon "exclamation-triangle"}}
+      <span>{{i18n "tangyzen.admin.error_loading"}}: {{this.error.message}}</span>
+      <button class="btn btn-default" {{on "click" this.refreshData}}>
+        {{i18n "tangyzen.admin.retry"}}
+      </button>
+    </div>
+  {{else}}
+    <div class="tangyzen-admin-header">
+      <h2>{{i18n "tangyzen.admin.title"}}</h2>
+      <div class="admin-actions">
+        <button 
+          class="btn btn-primary" 
+          {{on "click" this.syncWeb3Data}}
+          disabled={{this.syncInProgress}}
+        >
+          {{#if this.syncInProgress}}
+            {{d-icon "spinner" size="small"}}
+          {{/if}}
+          {{d-icon "sync"}}
+          {{i18n "tangyzen.admin.sync_web3"}}
+        </button>
+        <button class="btn btn-default" {{on "click" this.refreshData}}>
+          {{d-icon "refresh"}}
+          {{i18n "tangyzen.admin.refresh"}}
+        </button>
+      </div>
+    </div>
+
+    <div class="tangyzen-admin-content">
+      <!-- Stats Overview -->
+      <div class="stats-section">
+        <h3>{{i18n "tangyzen.admin.stats_overview"}}</h3>
+        <div class="stats-grid">
+          {{#each this.statCards as |stat|}}
+            <div class="stat-card" style="--stat-color: {{stat.color}}">
+              <div class="stat-icon">
+                {{d-icon stat.icon}}
+              </div>
+              <div class="stat-value">{{stat.value}}</div>
+              <div class="stat-label">{{stat.label}}</div>
+            </div>
+          {{/each}}
+        </div>
+        
+        <div class="stats-summary">
+          <div class="summary-card">
+            <div class="summary-label">{{i18n "tangyzen.admin.total_views"}}</div>
+            <div class="summary-value">{{this.totalViews}}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">{{i18n "tangyzen.admin.total_likes"}}</div>
+            <div class="summary-value">{{this.totalLikes}}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="activity-section">
+        <h3>{{i18n "tangyzen.admin.recent_activity"}}</h3>
+        {{#if this.recentActivity.length}}
+          <ul class="activity-list">
+            {{#each this.recentActivity as |activity|}}
+              <li class="activity-item">
+                <span class="activity-icon">{{activity.icon}}</span>
+                <span class="activity-text">{{activity.text}}</span>
+                <span class="activity-time">{{activity.time}}</span>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class="no-activity">
+            {{d-icon "clock"}}
+            <span>{{i18n "tangyzen.admin.no_recent_activity"}}</span>
+          </div>
+        {{/if}}
+      </div>
+
+      <!-- Trending Content -->
+      <div class="trending-section">
+        <h3>{{i18n "tangyzen.admin.trending_content"}}</h3>
+        {{#if this.trendingContent.length}}
+          <div class="trending-list">
+            {{#each this.trendingContent as |content|}}
+              <div class="trending-item">
+                <span class="trending-rank">{{content.rank}}</span>
+                <span class="trending-title">{{content.title}}</span>
+                <span class="trending-views">{{format-number content.views}}</span>
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          <div class="no-trending">
+            {{d-icon "fire"}}
+            <span>{{i18n "tangyzen.admin.no_trending_content"}}</span>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+</div>

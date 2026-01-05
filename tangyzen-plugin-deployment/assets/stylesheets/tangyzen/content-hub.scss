@@ -1,0 +1,469 @@
+// Content Hub Styles
+.content-hub {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+
+  .content-hub-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid #e5e7eb;
+
+    .title {
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-actions {
+      .sort-filters {
+        display: flex;
+        gap: 8px;
+
+        .filter-btn {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 8px;
+          background: #f3f4f6;
+          color: #6b7280;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &.active {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+          }
+
+          &:hover:not(.active) {
+            background: #e5e7eb;
+          }
+        }
+      }
+    }
+  }
+
+  .content-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+
+    .tab-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      background: #f3f4f6;
+      color: #6b7280;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &.active {
+        background: linear-gradient(135deg, #10b981, #3b82f6);
+        color: white;
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        transform: translateY(-2px);
+      }
+
+      &:hover:not(.active) {
+        background: #e5e7eb;
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  .content-grid {
+    min-height: 400px;
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+
+      .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+      }
+
+      p {
+        margin: 8px 0;
+        font-size: 16px;
+        color: #9ca3af;
+
+        &.hint {
+          font-size: 14px;
+          color: #6b7280;
+        }
+      }
+    }
+
+    .loading-spinner {
+      text-align: center;
+      padding: 80px 20px;
+      font-size: 18px;
+      color: #9ca3af;
+    }
+  }
+}
+
+// Music Card
+.music-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .music-cover {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f3f4f6;
+    position: relative;
+  }
+
+  .music-content {
+    padding: 16px;
+
+    .music-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 8px 0;
+    }
+
+    .artist {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0 0 4px 0;
+    }
+
+    .genre {
+      font-size: 12px;
+      color: #9ca3af;
+      margin: 0 0 12px 0;
+    }
+
+    .music-actions {
+      display: flex;
+      gap: 8px;
+
+      a {
+        flex: 1;
+        padding: 8px;
+        text-align: center;
+        background: #f3f4f6;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 20px;
+        transition: background 0.2s;
+
+        &:hover {
+          background: #e5e7eb;
+        }
+      }
+    }
+  }
+}
+
+// Movie Card
+.movie-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .movie-poster {
+    height: 280px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f3f4f6;
+  }
+
+  .movie-content {
+    padding: 16px;
+
+    .movie-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 8px 0;
+    }
+
+    .director {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0 0 4px 0;
+    }
+
+    .rating-stars {
+      font-size: 16px;
+      margin: 0 0 8px 0;
+    }
+
+    .year {
+      font-size: 13px;
+      color: #9ca3af;
+      margin: 0 0 12px 0;
+    }
+
+    .streaming-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      .streaming-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+
+        &.netflix {
+          background: #e50914;
+          color: white;
+        }
+
+        &.amazon {
+          background: #00a8e1;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Review Card
+.review-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 12px;
+
+    .product-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0;
+    }
+
+    .verified-badge {
+      padding: 4px 8px;
+      background: #d1fae5;
+      color: #065f46;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+  }
+
+  .rating {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .pros, .cons {
+    font-size: 14px;
+    color: #4b5563;
+    margin: 8px 0;
+    line-height: 1.5;
+  }
+
+  .pros {
+    color: #059669;
+  }
+
+  .cons {
+    color: #dc2626;
+  }
+
+  .price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #10b981;
+    margin: 12px 0;
+  }
+
+  .review-footer {
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+
+    .helpful {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+  }
+}
+
+// Art Card
+.art-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .art-image {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f3f4f6;
+  }
+
+  .art-content {
+    padding: 16px;
+
+    .art-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 8px 0;
+    }
+
+    .medium {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0 0 4px 0;
+    }
+
+    .dimensions {
+      font-size: 13px;
+      color: #9ca3af;
+      margin: 0 0 4px 0;
+    }
+
+    .tools {
+      font-size: 12px;
+      color: #9ca3af;
+      margin: 0;
+    }
+  }
+}
+
+// Blog Card
+.blog-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .blog-featured-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f3f4f6;
+  }
+
+  .blog-content {
+    padding: 16px;
+
+    .blog-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 12px 0;
+      line-height: 1.4;
+    }
+
+    .excerpt {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin: 0 0 16px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .blog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: #9ca3af;
+
+      .author {
+        font-weight: 500;
+        color: #4b5563;
+      }
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+
+      .tag {
+        padding: 4px 10px;
+        background: #f3f4f6;
+        border-radius: 12px;
+        font-size: 11px;
+        color: #6b7280;
+        font-weight: 500;
+      }
+    }
+  }
+}

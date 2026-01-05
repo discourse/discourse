@@ -1,0 +1,545 @@
+// Gaming Card Styles
+.gaming-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .gaming-cover {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f0f0f0;
+    position: relative;
+  }
+
+  .gaming-content {
+    padding: 16px;
+
+    .genre-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      color: white;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .gaming-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 8px 0;
+    }
+
+    .gaming-description {
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0 0 12px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .gaming-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 12px;
+
+      .platform, .developer, .rating, .playtime {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+
+    .gaming-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+
+      .badge {
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &.multiplayer {
+          background: #dbeafe;
+          color: #1e40af;
+        }
+
+        &.coop {
+          background: #fce7f3;
+          color: #9d174d;
+        }
+
+        &.cross-platform {
+          background: #d1fae5;
+          color: #065f46;
+        }
+
+        &.free {
+          background: #fef3c7;
+          color: #92400e;
+        }
+
+        &.dlc {
+          background: #e0e7ff;
+          color: #3730a3;
+        }
+      }
+    }
+
+    .gaming-footer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+
+      button {
+        flex: 1;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &.like-btn, &.save-btn {
+          background: #f3f4f6;
+          color: #6b7280;
+
+          &.active {
+            background: #fee2e2;
+            color: #dc2626;
+          }
+        }
+      }
+
+      .views {
+        font-size: 13px;
+        color: #9ca3af;
+      }
+    }
+  }
+}
+
+// NFT Card Styles
+.nft-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .nft-image-container {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+
+    .nft-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    &:hover .nft-image {
+      transform: scale(1.05);
+    }
+
+    .nft-overlay {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      gap: 6px;
+
+      .chain-badge {
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+      }
+
+      .verified-badge {
+        padding: 4px 8px;
+        background: rgba(16, 185, 129, 0.9);
+        color: white;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+      }
+    }
+  }
+
+  .nft-content {
+    padding: 12px;
+
+    .nft-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 4px 0;
+    }
+
+    .nft-collection {
+      font-size: 12px;
+      color: #6b7280;
+      margin: 0 0 8px 0;
+    }
+
+    .nft-price {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      .current-price {
+        font-size: 16px;
+        font-weight: 700;
+        color: #10b981;
+      }
+
+      .discount {
+        padding: 2px 6px;
+        background: #fee2e2;
+        color: #dc2626;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+    }
+
+    .nft-traits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 12px;
+
+      .trait {
+        padding: 2px 6px;
+        background: #f3f4f6;
+        border-radius: 4px;
+        font-size: 10px;
+
+        .trait-type {
+          font-weight: 600;
+          color: #9ca3af;
+        }
+
+        .trait-value {
+          color: #4b5563;
+        }
+      }
+
+      .more-traits {
+        padding: 2px 6px;
+        color: #9ca3af;
+        font-size: 10px;
+      }
+    }
+
+    .nft-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #e5e7eb;
+
+      a.view-on-opensea {
+        flex: 1;
+        padding: 6px;
+        background: #f3f4f6;
+        color: #4b5563;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        text-align: center;
+        transition: background 0.2s;
+
+        &:hover {
+          background: #e5e7eb;
+        }
+      }
+
+      button.like-btn {
+        padding: 6px 10px;
+        border: none;
+        border-radius: 6px;
+        background: #f3f4f6;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &.active {
+          background: #fee2e2;
+        }
+      }
+    }
+  }
+}
+
+// Web3 Dashboard Styles
+.web3-dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+
+  .web3-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .title {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .wallet-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .wallet-address {
+        padding: 8px 12px;
+        background: #f3f4f6;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 13px;
+      }
+
+      button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &.connect-btn {
+          background: linear-gradient(135deg, #10b981, #3b82f6);
+          color: white;
+
+          &:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+          }
+        }
+
+        &.disconnect-btn {
+          background: #f3f4f6;
+          color: #6b7280;
+
+          &:hover {
+            background: #e5e7eb;
+          }
+        }
+      }
+    }
+  }
+
+  .web3-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+
+    .tab-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #f3f4f6;
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+
+      &.active {
+        background: linear-gradient(135deg, #10b981, #3b82f6);
+        color: white;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      &:hover:not(.active) {
+        background: #e5e7eb;
+      }
+    }
+  }
+
+  .web3-content {
+    min-height: 400px;
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #9ca3af;
+      font-size: 16px;
+    }
+
+    .wallet-required {
+      text-align: center;
+      padding: 60px 20px;
+      color: #6b7280;
+    }
+
+    .trending-grid,
+    .collections-grid,
+    .nfts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+
+      .collection-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+
+        &:hover {
+          transform: translateY(-4px);
+        }
+
+        .collection-img {
+          width: 100%;
+          aspect-ratio: 1;
+          object-fit: cover;
+        }
+
+        .collection-name {
+          padding: 12px;
+          font-size: 14px;
+          font-weight: 700;
+          margin: 0;
+          color: #1f2937;
+        }
+
+        .collection-stats,
+        .collection-description {
+          padding: 0 12px 12px;
+          font-size: 12px;
+          color: #6b7280;
+          margin: 0;
+        }
+
+        .collection-stats {
+          display: flex;
+          gap: 12px;
+        }
+      }
+    }
+  }
+
+  .search-container {
+    max-width: 600px;
+    margin: 0 auto;
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: #3b82f6;
+      }
+    }
+
+    .search-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .loading-spinner {
+    text-align: center;
+    padding: 40px;
+    color: #9ca3af;
+    font-size: 16px;
+  }
+
+  .nft-card-preview {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .nft-info {
+      padding: 12px;
+
+      h4 {
+        margin: 0 0 4px 0;
+        font-size: 14px;
+        color: #1f2937;
+      }
+
+      p {
+        margin: 0;
+        font-size: 12px;
+        color: #10b981;
+      }
+    }
+  }
+}

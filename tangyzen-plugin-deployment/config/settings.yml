@@ -1,0 +1,167 @@
+plugins:
+  tangyzen_plugin:
+    default: ""
+    client: true
+    type: "list"
+    list_type: "compact"
+    refresh: true
+    valid_values: "tangyzen_plugin"
+    hidden: false
+
+  tangyzen_api_key:
+    default: ""
+    client: false
+    hidden: true
+
+  tangyzen_admin_url:
+    default: "https://tangyzen.com/admin"
+    client: false
+    hidden: true
+
+  tangyzen_opensea_enabled:
+    default: true
+    client: true
+
+  tangyzen_opensea_api_key:
+    default: "3bfaca9964d74c08b42958d9319208e3"
+    client: false
+    hidden: true
+
+  tangyzen_web3_enabled:
+    default: true
+    client: true
+
+  tangyzen_web3_auto_sync:
+    default: true
+    client: true
+
+  tangyzen_web3_sync_interval:
+    default: 3600
+    client: false
+
+  tangyzen_web3_featured_collections:
+    default: "bored-ape-yacht-club,azuki,doodles-official"
+    client: false
+    type: "list"
+    list_type: "simple"
+
+  tangyzen_require_moderation:
+    default: false
+    client: true
+
+  tangyzen_moderation_queue_enabled:
+    default: true
+    client: true
+
+  tangyzen_auto_flag_threshold:
+    default: 3
+    client: false
+
+  # Content type settings - Deals
+  tangyzen_deals_enabled:
+    default: true
+    client: true
+
+  tangyzen_deals_auto_approve:
+    default: false
+    client: true
+
+  # Content type settings - Gaming
+  tangyzen_gaming_enabled:
+    default: true
+    client: true
+
+  tangyzen_gaming_auto_approve:
+    default: false
+    client: true
+
+  tangyzen_gaming_max_rating:
+    default: 10
+    client: false
+
+  # Content type settings - Music
+  tangyzen_music_enabled:
+    default: true
+    client: true
+
+  tangyzen_music_auto_approve:
+    default: false
+    client: true
+
+  tangyzen_music_require_cover:
+    default: true
+    client: true
+
+  # Content type settings - Movies
+  tangyzen_movies_enabled:
+    default: true
+    client: true
+
+  tangyzen_movies_auto_approve:
+    default: false
+    client: true
+
+  tangyzen_movies_require_poster:
+    default: true
+    client: true
+
+  # Content type settings - Reviews
+  tangyzen_reviews_enabled:
+    default: true
+    client: true
+
+  tangyzen_reviews_auto_approve:
+    default: false
+    client: true
+
+  tangyzen_reviews_min_rating:
+    default: 1
+    client: false
+
+  tangyzen_reviews_max_rating:
+    default: 5
+    client: false
+
+  # Content type settings - Art
+  tangyzen_art_enabled:
+    default: true
+    client: true
+
+  tangyzen_art_auto_approve:
+    default: false
+    client: true
+
+  tangyzen_art_max_images:
+    default: 10
+    client: false
+
+  # Content type settings - Blogs
+  tangyzen_blogs_enabled:
+    default: true
+    client: true
+
+  tangyzen_blogs_auto_approve:
+    default: false
+    client: true
+
+  tangyzen_blogs_min_words:
+    default: 100
+    client: false
+
+  # API Rate Limiting
+  tangyzen_api_rate_limit_enabled:
+    default: true
+    client: false
+
+  tangyzen_api_rate_limit_per_hour:
+    default: 1000
+    client: false
+
+  # Analytics
+  tangyzen_analytics_enabled:
+    default: true
+    client: true
+
+  tangyzen_analytics_retention_days:
+    default: 90
+    client: false
