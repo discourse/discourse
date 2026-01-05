@@ -10,6 +10,7 @@ import { i18n } from "discourse-i18n";
 
 export default class DeleteUserPostsProgress extends Component {
   @tracked deletedPosts = 0;
+  @tracked totalDeletedPosts = 0;
   @tracked flash;
 
   originalPostCount = 0;
@@ -25,7 +26,7 @@ export default class DeleteUserPostsProgress extends Component {
   }
 
   get deletedPercentage() {
-    return Math.floor((this.deletedPosts * 100) / this.userPostCount);
+    return Math.floor((this.totalDeletedPosts * 100) / this.originalPostCount);
   }
 
   @action
@@ -33,6 +34,7 @@ export default class DeleteUserPostsProgress extends Component {
     try {
       const progress = await this.args.model.user.deleteAllPosts();
       this.deletedPosts = progress.posts_deleted;
+      this.totalDeletedPosts += progress.posts_deleted;
       this.args.model.updateUserPostCount(
         this.userPostCount - this.deletedPosts
       );
