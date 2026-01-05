@@ -53,7 +53,9 @@ export function isTrackedTopic(topic) {
     const tags = User.current().trackedTags;
 
     for (const tag of tags) {
-      if (topic.tags.includes(tag)) {
+      if (
+        topic.tags.some((t) => (typeof t === "string" ? t : t.name) === tag)
+      ) {
         return true;
       }
     }
