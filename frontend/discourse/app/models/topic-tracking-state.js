@@ -279,7 +279,12 @@ export default class TopicTrackingState extends EmberObject {
       }
     }
 
-    if (filterTag && !data.payload.tags?.includes(filterTag)) {
+    if (
+      filterTag &&
+      !data.payload.tags?.some(
+        (t) => (typeof t === "string" ? t : t.name) === filterTag
+      )
+    ) {
       return;
     }
 
@@ -604,7 +609,10 @@ export default class TopicTrackingState extends EmberObject {
         return false;
       }
 
-      if (tagId && !topic.tags?.includes(tagId)) {
+      if (
+        tagId &&
+        !topic.tags?.some((t) => (typeof t === "string" ? t : t.name) === tagId)
+      ) {
         return false;
       }
 
@@ -677,7 +685,10 @@ export default class TopicTrackingState extends EmberObject {
       if (
         topic.category_id === category_id &&
         !topic.deleted &&
-        (!tagId || topic.tags?.includes(tagId))
+        (!tagId ||
+          topic.tags?.some(
+            (t) => (typeof t === "string" ? t : t.name) === tagId
+          ))
       ) {
         sum +=
           topic.last_read_post_number === null ||
