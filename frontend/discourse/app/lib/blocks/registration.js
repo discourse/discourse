@@ -46,44 +46,12 @@ const resolvedFactoryCache = new Map();
 let registryLocked = false;
 
 /**
- * Whether core blocks have been discovered.
- * @type {boolean}
- */
-let coreBlocksDiscovered = false;
-
-/**
- * Lazily discovers and registers core blocks.
- *
- * This function is called lazily to avoid circular dependencies:
- * - `block-outlet.gjs` imports from `registration.js`
- * - `registration.js` imports from `blocks/core.js`
- * - `blocks/core.js` imports from `block-group.gjs`
- * - `block-group.gjs` imports from `block-outlet.gjs`
- *
- * By deferring the import, we break the cycle.
- */
-function discoverCoreBlocks() {
-  if (coreBlocksDiscovered) {
-    return;
-  }
-  coreBlocksDiscovered = true;
-
-  const coreBlocks = require("discourse/blocks/core");
-  for (const exported of Object.values(coreBlocks)) {
-    if (typeof exported === "function" && exported.blockName) {
-      blockRegistry.set(exported.blockName, exported);
-    }
-  }
-}
-
-/**
  * Locks the registry, preventing further registrations.
  * Called when the first renderBlocks() config is registered.
  *
  * @internal
  */
 export function _lockBlockRegistry() {
-  discoverCoreBlocks();
   registryLocked = true;
 }
 
@@ -280,7 +248,6 @@ export function _registerBlockFactory(name, factory) {
  * @returns {boolean} True if the block is registered.
  */
 export function hasBlock(nameOrClass) {
-  discoverCoreBlocks();
   if (typeof nameOrClass === "string") {
     return blockRegistry.has(nameOrClass);
   }
@@ -297,7 +264,6 @@ export function hasBlock(nameOrClass) {
  * @returns {boolean} True if registered and resolved.
  */
 export function isBlockResolved(name) {
-  discoverCoreBlocks();
   if (!blockRegistry.has(name)) {
     return false;
   }
@@ -323,8 +289,6 @@ export function isBlockResolved(name) {
  * ```
  */
 export async function resolveBlock(nameOrClass) {
-  discoverCoreBlocks();
-
   // If already a class, return it directly
   if (typeof nameOrClass !== "string") {
     if (!nameOrClass?.blockName) {
@@ -427,11 +391,6 @@ export function resetBlockRegistryForTesting() {
 
   blockRegistry.clear();
   resolvedFactoryCache.clear();
-
-  // Reset core blocks discovery flag so they can be rediscovered
-  coreBlocksDiscovered = false;
-  // Re-discover core blocks
-  discoverCoreBlocks();
 
   if (testRegistryLockedState !== null) {
     registryLocked = testRegistryLockedState;

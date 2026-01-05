@@ -69,6 +69,7 @@ export function resetBlockConfigsForTesting() {
 // ============================================================================
 //
 // IMPORTANT: These symbols MUST NOT be exported.
+// DO NOT REFACTOR TO EXTRACT THESE SYMBOLS INTO ANOTHER FILE
 //
 // These secret symbols form the core of the block security model. They allow
 // the system to verify that:
