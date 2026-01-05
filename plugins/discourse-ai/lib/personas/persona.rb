@@ -113,6 +113,7 @@ module DiscourseAi
             Tools::Time,
             Tools::Search,
             Tools::Read,
+            Tools::FlagPost,
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,

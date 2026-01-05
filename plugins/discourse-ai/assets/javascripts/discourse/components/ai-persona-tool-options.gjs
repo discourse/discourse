@@ -91,6 +91,8 @@ export default class AiPersonaToolOptions extends Component {
                           </field.Custom>
                         {{else if (eq optionMeta.type "boolean")}}
                           <field.Checkbox />
+                        {{else if (eq optionMeta.type "text")}}
+                          <field.Textarea />
                         {{else}}
                           <field.Input />
                         {{/if}}
