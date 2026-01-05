@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
@@ -40,6 +42,9 @@ export function isHex(input) {
 export default class SectionLink extends Component {
   @service currentUser;
 
+  @tracked hovering = false;
+  @tracked hoverActionActive = false;
+
   constructor() {
     super(...arguments);
     this.args.didInsert?.();
@@ -56,6 +61,16 @@ export default class SectionLink extends Component {
     }
 
     return this.args.shouldDisplay;
+  }
+
+  get wrapperClass() {
+    let classNames = ["sidebar-section-link-wrapper"];
+
+    if (this.hovering || this.hoverActionActive) {
+      classNames.push("--hovering");
+    }
+
+    return classNames.join(" ");
   }
 
   get linkClass() {
@@ -126,6 +141,31 @@ export default class SectionLink extends Component {
     }
   }
 
+  @action
+  hoveringSectionLink() {
+    if (this.hoverActionActive) {
+      return;
+    }
+    this.hovering = true;
+  }
+
+  @action
+  stopHoveringSectionLink() {
+    if (this.hoverActionActive) {
+      return;
+    }
+    this.hovering = false;
+  }
+
+  @action
+  runHoverAction(event) {
+    this.hoverActionActive = true;
+    this.args.hoverAction(event, () => {
+      this.hoverActionActive = false;
+      this.hovering = false;
+    });
+  }
+
   @bind
   maybeScrollIntoView(element) {
     if (!this.args.scrollIntoView) {
@@ -150,8 +190,10 @@ export default class SectionLink extends Component {
       <li
         {{didInsert this.maybeScrollIntoView}}
         {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
+        {{on "mouseenter" this.hoveringSectionLink}}
+        {{on "mouseleave" this.stopHoveringSectionLink}}
         data-list-item-name={{@linkName}}
-        class="sidebar-section-link-wrapper"
+        class={{this.wrapperClass}}
         ...attributes
       >
         {{#if @href}}
@@ -230,7 +272,7 @@ export default class SectionLink extends Component {
             {{#if @hoverValue}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" @hoverAction}}
+                  {{on "click" this.runHoverAction}}
                   type="button"
                   title={{@hoverTitle}}
                   class="sidebar-section-hover-button"

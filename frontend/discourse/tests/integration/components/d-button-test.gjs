@@ -250,4 +250,19 @@ module("Integration | Component | d-button", function (hooks) {
 
     assert.dom(".d-button-label").hasText("test label…");
   });
+
+  test("suffix icon", async function (assert) {
+    await render(
+      <template>
+        <DButton @translatedLabel="Open menu" @suffixIcon="angle-right" />
+      </template>
+    );
+
+    assert
+      .dom("button .d-button__suffix-icon")
+      .exists("has the suffix icon wrapper");
+    assert
+      .dom("button .d-button__suffix-icon .d-icon-angle-right")
+      .exists("has the suffix icon");
+  });
 });

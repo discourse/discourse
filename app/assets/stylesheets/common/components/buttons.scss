@@ -196,6 +196,14 @@
   padding: $vpad $hpad;
   cursor: pointer;
   line-height: normal;
+
+  .d-button__suffix-icon {
+    margin-left: auto;
+
+    .d-icon {
+      margin-right: 0;
+    }
+  }
 }
 
 /* link button */
