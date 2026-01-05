@@ -1,3 +1,13 @@
+# Dev Experience (Block API, Dev Tools, Registry, Plugin API)
+/frontend/discourse/app/blocks/ @discourse/dev-xp
+/frontend/discourse/app/components/block-outlet.gjs @discourse/dev-xp
+/frontend/discourse/app/lib/blocks/ @discourse/dev-xp
+/frontend/discourse/app/services/blocks.js @discourse/dev-xp
+/frontend/discourse/app/static/dev-tools/ @discourse/dev-xp
+/frontend/discourse/app/lib/registry/ @discourse/dev-xp
+/frontend/discourse/app/lib/plugin-api.gjs @discourse/dev-xp
+
+# Migrations tooling
 /migrations/ @discourse/migrations-tooling
 /script/bulk_import/ @discourse/migrations-tooling
 /script/import_scripts/ @discourse/migrations-tooling
