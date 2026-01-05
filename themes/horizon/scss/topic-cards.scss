@@ -144,7 +144,7 @@
 
   &:hover {
     .discourse-no-touch & {
-      border-color: var(--accent-color);
+      box-shadow: 1px 1px 12px 2px rgb(var(--tertiary-rgb), 0.1);
       background: var(--d-content-background);
     }
   }
