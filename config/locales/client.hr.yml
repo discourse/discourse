@@ -3470,19 +3470,6 @@ hr:
           unread: "Ništa nije ostalo nepročitano... impresivno!"
           new_new: "Trenutno ništa nova... provjerite uskoro!"
           new: "Trenutno ništa nova... provjerite uskoro!"
-      bottom:
-        latest: "Nema više najnovijih tema."
-        posted: "Nema više objavljenih članaka."
-        read: "Nema više pročitanih tema."
-        new: "Nema više novih tema."
-        unread: "Nema više nepročitanih tema."
-        unseen: "Nema više nepročitanih tema."
-        category: "Nema više tema u kategoriji %{category}."
-        tag: "Nema više tema s oznakom %{tag}."
-        top: "Nema više glavnih tema."
-        hot: "Nema više vrućih tema."
-        bookmarks: "U oznakama nema više spremljenih tema."
-        filter: "Nema više tema."
     topic_bulk_actions:
       dismiss:
         name: "Skloni"
@@ -3620,9 +3607,6 @@ hr:
         other: "%{count} odgovora, idite na prvu objavu"
       created_at: "Kreirano: %{date}"
       bumped_at: "Najnovije: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a>, <a href='%{basePath}/latest'>pogledajte najnovije teme</a> ili pogledajte vrh:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Pregledajte sve oznake</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
       browse_latest_topics: "Pregledajte najnovije teme"
       suggest_create_topic: Jeste li spremni <a href>započeti novu temu?</a>
       jump_reply: "Idite na izvornu lokaciju objave"

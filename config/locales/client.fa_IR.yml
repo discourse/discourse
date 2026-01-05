@@ -3067,19 +3067,6 @@ fa_IR:
         top: "موضوع برتری وجود ندارد."
         hot: "هیچ موضوع داغی وجود ندارد."
         filter: "هنوز هیچ موضوعی وجود ندارد."
-      bottom:
-        latest: "موضوع تازه‌ی دیگری وجود ندارد."
-        posted: "هیچ موضوعات نوشته شده ای وجود ندارد"
-        read: "موضوع خوانده شده‌ی دیگری نیست."
-        new: "موضوع تازه‌ی دیگری وجود ندارد."
-        unread: "موضوع خوانده نشده‌ی دیگری وجود ندارد."
-        unseen: "دیگر هیچ موضوع دیده نشده‌ای وجود ندارد."
-        category: "هیچ موضوع دیگری در %{category} نیست."
-        tag: "هیچ موضوع دیگری در %{tag} نیست."
-        top: "موضوع برتر دیگری وجود ندارد"
-        hot: "دیگر هیچ موضوع داغی وجود ندارد."
-        bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
-        filter: "هیچ موضوع بیشتری وجود ندارد."
     topic_bulk_actions:
       dismiss:
         name: "رد کردن"
@@ -3204,9 +3191,6 @@ fa_IR:
         }
       created_at: "تاریخ ایجاد: %{date}"
       bumped_at: "جدیدترین: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>همه دسته‌ها</a> را مرور کنید یا <a href='%{basePath}/latest'> آخرین موضوعات</a> را مشاهده نمایید."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>همه دسته‌ها</a> را مرور کنید، <a href='%{basePath}/latest'>آخرین موضوعات</a> را مشاهده کنید؛ یا موضوعات برتر را ببینید:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>همه برچسب‌ها</a> را مرور کنید یا <a href='%{basePath}/latest'>آخرین موضوعات</a> را مشاهده نمایید."
       suggest_create_topic: برای <a href>شروع یک موضوع جدید آماده‌اید؟</a>
       jump_reply: "به مکان اصلی پست بروید"
       jump_reply_aria: "به پست کاربر: %{username}@ در مکان اصلی خود بروید"

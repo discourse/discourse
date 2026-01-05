@@ -16,7 +16,8 @@ hu:
           title: Olvasási Idő
         chat_usage:
           messages: üzenetek
-          you: Ön
+          author: Ön
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Meghívók

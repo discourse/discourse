@@ -81,6 +81,7 @@ hu:
         join_channel: "Csatlakozás a csatornához"
         leave_channel: "Csatorna elhagyása"
         leave_groupchat_info: "Ha kilép ebből a csoportos csevegésből, többé nem lesz hozzáférése hozzá, és nem fog vele kapcsolatos értesítéseket kapni. Az újbóli csatlakozáshoz a csoportos csevegés egyik tagjának újbóli meghívására lesz szüksége."
+        notification_settings_context: "Értesítések"
         join: "Belépés"
         leave: "Elhagyás"
         save_label:

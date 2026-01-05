@@ -58,8 +58,6 @@ sv:
           title: "Ämneslista"
         basic_topic_list:
           title: "Grundläggande ämneslista"
-        footer_message:
-          title: "Sidfotsmeddelande"
         signup_cta:
           title: "Registrera CTA"
         topic_timer_info:

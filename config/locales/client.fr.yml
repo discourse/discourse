@@ -3291,19 +3291,6 @@ fr:
           unread: "Rien n'a été oublié... impressionnant !"
           new_new: "Rien de nouveau pour le moment... revenez bientôt !"
           new: "Rien de nouveau pour le moment... revenez bientôt !"
-      bottom:
-        latest: "Il n'y a pas d'autres sujets récents à consulter."
-        posted: "Il n'y a pas d'autres sujets publiés à consulter."
-        read: "Il n'y a pas d'autres sujets déjà lus à consulter."
-        new: "Il n'y a pas d'autres nouveaux sujets à consulter."
-        unread: "Il n'y a pas d'autres sujets non lus à consulter."
-        unseen: "Il n'y a pas d'autres sujets non lus à consulter."
-        category: "Il n'y a pas d'autres sujets à consulter dans %{category}."
-        tag: "Il n'y a pas d'autres sujets à consulter dans %{tag}."
-        top: "Il n'y a pas d'autres meilleurs sujets à consulter."
-        hot: "Il n'y a plus de sujets populaires."
-        bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
-        filter: "Il n'y a plus de sujets."
     topic_bulk_actions:
       dismiss:
         name: "Rejeter"
@@ -3431,9 +3418,6 @@ fr:
         other: "%{count} réponses. Passer à la première publication"
       created_at: "Date de création : %{date}"
       bumped_at: "Plus récent : %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a>, <a href='%{basePath}/latest'>consultez les derniers sujets</a> ou consultez les principaux sujets :"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Parcourez toutes les étiquettes</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
       browse_latest_topics: "Parcourir les sujets les plus récents"
       browse_new_topics: "Parcourir les nouveaux sujets"
       suggest_create_topic: Prêt à <a href>démarrer une nouvelle conversation ?</a>

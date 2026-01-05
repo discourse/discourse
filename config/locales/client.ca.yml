@@ -1976,16 +1976,6 @@ ca:
         bookmarks: "Encara no heu marcat temes com a preferits."
         category: "No hi ha temes de %{category}."
         top: "No hi ha temes principals."
-      bottom:
-        latest: "No hi ha més temes recents."
-        posted: "No hi ha més temes publicats."
-        read: "No hi ha més temes llegits."
-        new: "No hi ha més temes nous."
-        unread: "No hi ha més temes no llegits. "
-        category: "No hi ha més temes de %{category}."
-        tag: "No hi ha més temes de %{tag}."
-        top: "No hi ha més temes destacats."
-        bookmarks: "No hi ha més temes marcats com a preferits."
     topic_bulk_actions:
       dismiss:
         name: "Descarta-ho"
