@@ -103,6 +103,31 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
       expect(results[:rows]).to eq([])
     end
 
+    it "uses /filter URL for filter-only queries" do
+      Fabricate(:post, topic: topic_with_tags)
+
+      search = described_class.new({ order: "latest" }, bot_user: bot_user, llm: llm)
+      search.invoke(&progress_blk)
+
+      description_args = search.send(:description_args)
+      expect(description_args[:url]).to eq("/filter?q=order%3Aactivity")
+    end
+
+    it "uses /search URL for queries with search terms" do
+      post1 = Fabricate(:post, topic: topic_with_tags)
+
+      search =
+        described_class.new(
+          { search_query: post1.raw, order: "latest" },
+          bot_user: bot_user,
+          llm: llm,
+        )
+      search.invoke(&progress_blk)
+
+      description_args = search.send(:description_args)
+      expect(description_args[:url]).to eq("/search?q=Hello+world+order%3Alatest")
+    end
+
     describe "semantic search" do
       let(:query) { "this is an expanded search" }
 
@@ -168,10 +193,14 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
       post1 = Fabricate(:post, topic: topic_with_tags)
 
       search =
-        described_class.new({ limit: 1, user: post1.user.username }, bot_user: bot_user, llm: llm)
+        described_class.new(
+          { search_query: post1.raw, limit: 1, user: post1.user.username },
+          bot_user: bot_user,
+          llm:,
+        )
 
       results = search.invoke(&progress_blk)
-      expect(results[:rows].to_s).to include("/subfolder" + post1.url)
+      expect(results[:rows].to_s).to include("/subfolder#{post1.url}")
     end
 
     it "passes on all search params" do
@@ -196,7 +225,12 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
 
     it "returns rich topic information" do
       post1 = Fabricate(:post, like_count: 1, topic: topic_with_tags)
-      search = described_class.new({ user: post1.user.username }, bot_user: bot_user, llm: llm)
+      search =
+        described_class.new(
+          { search_query: post1.raw, user: post1.user.username },
+          bot_user: bot_user,
+          llm: llm,
+        )
       post1.topic.update!(views: 100, posts_count: 2, like_count: 10)
 
       results = search.invoke(&progress_blk)
