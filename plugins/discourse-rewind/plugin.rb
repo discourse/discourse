@@ -45,12 +45,8 @@ require_relative "lib/discourse_rewind/engine"
 after_initialize do
   UserUpdater::OPTION_ATTR.push(:discourse_rewind_enabled, :discourse_rewind_share_publicly)
 
-  # TODO: Rename the `discourse_rewind_disabled` column to `discourse_rewind_enabled` and remove these
-  add_to_class(:user_option, :discourse_rewind_enabled) { !discourse_rewind_disabled }
-
-  add_to_class(:user_option, :discourse_rewind_enabled=) do |value|
-    self.discourse_rewind_disabled = !ActiveModel::Type::Boolean.new.cast(value)
-  end
+  # TODO: Remove once 20260105171115_rename_discourse_rewind_disabled_to_enabled has been promoted to pre-deploy
+  UserOption.ignored_columns += %i[discourse_rewind_disabled]
 
   add_to_class(:user, :discourse_rewind_and_profile_public?) do
     self.user_option.discourse_rewind_share_publicly && !self.user_option.hide_profile
