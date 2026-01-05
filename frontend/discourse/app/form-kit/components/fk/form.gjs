@@ -54,6 +54,7 @@ class FKForm extends Component {
       addError: this.addError,
       removeError: this.removeError,
       patches: this.formData.patches,
+      removeErrors: this.removeErrors,
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
@@ -69,10 +70,14 @@ class FKForm extends Component {
   async checkIsDirty(transition) {
     let triggerConfirm = false;
 
+    // In some cases (e.g., subroute -> parent),
+    // queryParamsOnly is true even though the route name changes
+    const routeChanging = transition.to?.name !== transition.from?.name;
+
     const shouldCheck =
       this.formData.isDirty &&
       !transition.isAborted &&
-      !transition.queryParamsOnly;
+      (!transition.queryParamsOnly || routeChanging);
 
     if (this.args.onDirtyCheck) {
       triggerConfirm = shouldCheck && this.args.onDirtyCheck(transition);
@@ -167,6 +172,11 @@ class FKForm extends Component {
   @action
   removeError(name) {
     this.formData.removeError(name);
+  }
+
+  @action
+  removeErrors() {
+    this.formData.removeErrors();
   }
 
   @action

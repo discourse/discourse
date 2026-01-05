@@ -48,13 +48,15 @@ RSpec.describe "Admin AI features configuration", type: :system do
     expect(ai_features_page).to have_feature_groups("topic_summaries", [group_1.name, group_2.name])
   end
 
-  it "shows edit page with settings" do
+  it "shows edit page with grouped settings" do
     ai_features_page.visit
 
     ai_features_page.click_edit_module("summarization")
 
     expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-features/1/edit")
 
-    expect(page).to have_css(".setting")
+    expect(page).to have_css(".ai-feature-editor")
+    expect(page).to have_css(".form-kit__section")
+    expect(page).to have_css(".form-kit__field")
   end
 end
