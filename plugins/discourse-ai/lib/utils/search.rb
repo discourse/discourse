@@ -186,7 +186,7 @@ module DiscourseAi
         current_user:,
         result_style:
       )
-        guardian = current_user ? Guardian.new(current_user) : Guardian.new
+        guardian = Guardian.new(current_user)
 
         query_parts = []
         query_parts << "category:#{category}" if category.present?
