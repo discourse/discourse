@@ -69,7 +69,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   @include viewport.from(sm) {
-    padding: var(--space-2);
+    padding: var(--space-4);
   }
 
   &__header {
@@ -274,7 +274,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     flex-shrink: 0;
     display: flex;
     gap: var(--space-2);
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
 
     .discourse-tags__tag-separator {
       display: none;
@@ -303,6 +303,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     gap: var(--space-3);
 
     @include viewport.from(sm) {
+      padding-top: var(--space-3);
       border-top: 1px solid var(--primary-low);
       padding-top: var(--space-3);
     }
@@ -330,6 +331,10 @@ $padding-pills-small: var(--space-half) var(--space-2);
     gap: var(--space-2);
     overflow: auto;
 
+    @include viewport.until(sm) {
+      padding-inline: var(--space-4);
+    }
+
     &::-webkit-scrollbar {
       display: none; // Chrome/Safari
     }
@@ -344,8 +349,11 @@ $padding-pills-small: var(--space-half) var(--space-2);
     align-items: center;
     gap: var(--space-4);
     margin-left: auto;
-    padding-inline: var(--space-4);
     flex-shrink: 0;
+
+    @include viewport.until(sm) {
+      padding-inline: var(--space-4);
+    }
   }
 
   &__replies,
