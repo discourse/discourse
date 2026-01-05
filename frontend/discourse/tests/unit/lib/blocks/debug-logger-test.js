@@ -226,7 +226,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       });
       blockDebugLogger.logCondition({
         type: "route",
-        args: { routes: ["index"] },
+        args: { urls: ["/"] },
         result: true,
         depth: 2,
       });
@@ -274,16 +274,16 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       // First child: route condition with nested children
       blockDebugLogger.logCondition({
         type: "route",
-        args: { routes: ["discovery.category"], queryParams: { any: [] } },
+        args: { urls: ["/c/**"], queryParams: { any: [] } },
         result: null,
         depth: 1,
       });
 
       // route-state logged by route condition
       blockDebugLogger.logRouteState({
-        currentRoute: "discovery.category",
-        expectedRoutes: ["discovery.category"],
-        excludeRoutes: undefined,
+        currentPath: "/c/general",
+        expectedUrls: ["/c/**"],
+        excludeUrls: undefined,
         actualParams: { slug: "general" },
         actualQueryParams: { preview_theme_id: "3" },
         depth: 2,
@@ -387,18 +387,18 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
   });
 
   module("logRouteState", function () {
-    test("displays checkmark when route matches", function (assert) {
+    test("displays checkmark when URL matches", function (assert) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
-        args: { routes: ["discovery.latest"] },
+        args: { urls: ["/latest"] },
         result: true,
         depth: 0,
       });
       blockDebugLogger.logRouteState({
-        currentRoute: "discovery.latest",
-        expectedRoutes: ["discovery.latest"],
-        excludeRoutes: undefined,
+        currentPath: "/latest",
+        expectedUrls: ["/latest"],
+        excludeUrls: undefined,
         actualParams: {},
         actualQueryParams: {},
         depth: 1,
@@ -409,26 +409,26 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       // Find the route-state groupCollapsed call (second one after main block)
       const routeStateCall = this.consoleStub.groupCollapsed
         .getCalls()
-        .find((call) => call.args[0]?.includes("current route"));
+        .find((call) => call.args[0]?.includes("current URL"));
       assert.true(!!routeStateCall, "route-state groupCollapsed was called");
       assert.true(
         routeStateCall.args[0].includes("\u2713"),
-        "displays checkmark for matching route"
+        "displays checkmark for matching URL"
       );
     });
 
-    test("displays X when route does not match", function (assert) {
+    test("displays X when URL does not match", function (assert) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
-        args: { routes: ["discovery.category"] },
+        args: { urls: ["/c/**"] },
         result: false,
         depth: 0,
       });
       blockDebugLogger.logRouteState({
-        currentRoute: "discovery.latest",
-        expectedRoutes: ["discovery.category"],
-        excludeRoutes: undefined,
+        currentPath: "/latest",
+        expectedUrls: ["/c/**"],
+        excludeUrls: undefined,
         actualParams: {},
         actualQueryParams: {},
         depth: 1,
@@ -438,26 +438,26 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
       const routeStateCall = this.consoleStub.groupCollapsed
         .getCalls()
-        .find((call) => call.args[0]?.includes("current route"));
+        .find((call) => call.args[0]?.includes("current URL"));
       assert.true(!!routeStateCall, "route-state groupCollapsed was called");
       assert.true(
         routeStateCall.args[0].includes("\u2717"),
-        "displays X for non-matching route"
+        "displays X for non-matching URL"
       );
     });
 
-    test("includes actual and expected routes in output", function (assert) {
+    test("includes actual and expected URLs in output", function (assert) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
-        args: { routes: ["discovery.category"] },
+        args: { urls: ["/c/**"] },
         result: false,
         depth: 0,
       });
       blockDebugLogger.logRouteState({
-        currentRoute: "discovery.latest",
-        expectedRoutes: ["discovery.category"],
-        excludeRoutes: undefined,
+        currentPath: "/latest",
+        expectedUrls: ["/c/**"],
+        excludeUrls: undefined,
         actualParams: {},
         actualQueryParams: {},
         depth: 1,
@@ -467,33 +467,29 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
       const routeStateCall = this.consoleStub.groupCollapsed
         .getCalls()
-        .find((call) => call.args[0]?.includes("current route"));
-      // The last argument should be an object with actual and expected
+        .find((call) => call.args[0]?.includes("current URL"));
+      // The last argument should be an object with actual and configured
       const dataArg = routeStateCall.args[routeStateCall.args.length - 1];
-      assert.strictEqual(
-        dataArg.actual,
-        "discovery.latest",
-        "includes actual route"
-      );
+      assert.strictEqual(dataArg.actual, "/latest", "includes actual URL");
       assert.deepEqual(
-        dataArg.expected,
-        ["discovery.category"],
-        "includes expected routes"
+        dataArg.configured,
+        ["/c/**"],
+        "includes configured URL patterns"
       );
     });
 
-    test("includes excludeRoutes in expected when using exclusion", function (assert) {
+    test("includes excludeUrls in configured when using exclusion", function (assert) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
-        args: { excludeRoutes: ["discovery.custom"] },
+        args: { excludeUrls: ["$HOMEPAGE"] },
         result: true,
         depth: 0,
       });
       blockDebugLogger.logRouteState({
-        currentRoute: "discovery.latest",
-        expectedRoutes: undefined,
-        excludeRoutes: ["discovery.custom"],
+        currentPath: "/latest",
+        expectedUrls: undefined,
+        excludeUrls: ["$HOMEPAGE"],
         actualParams: {},
         actualQueryParams: {},
         depth: 1,
@@ -503,17 +499,13 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
       const routeStateCall = this.consoleStub.groupCollapsed
         .getCalls()
-        .find((call) => call.args[0]?.includes("current route"));
+        .find((call) => call.args[0]?.includes("current URL"));
       const dataArg = routeStateCall.args[routeStateCall.args.length - 1];
-      assert.strictEqual(
-        dataArg.actual,
-        "discovery.latest",
-        "includes actual route"
-      );
+      assert.strictEqual(dataArg.actual, "/latest", "includes actual URL");
       assert.deepEqual(
-        dataArg.expected,
-        { excludeRoutes: ["discovery.custom"] },
-        "wraps excludeRoutes in object for clarity"
+        dataArg.configured,
+        { excludeUrls: ["$HOMEPAGE"] },
+        "wraps excludeUrls in object for clarity"
       );
     });
 
@@ -521,14 +513,14 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
-        args: { routes: ["topic.show"], params: { id: 123 } },
+        args: { urls: ["/t/**"], params: { id: 123 } },
         result: true,
         depth: 0,
       });
       blockDebugLogger.logRouteState({
-        currentRoute: "topic.show",
-        expectedRoutes: ["topic.show"],
-        excludeRoutes: undefined,
+        currentPath: "/t/my-topic/123",
+        expectedUrls: ["/t/**"],
+        excludeUrls: undefined,
         actualParams: { id: 123, slug: "my-topic" },
         actualQueryParams: { page: "2" },
         depth: 1,

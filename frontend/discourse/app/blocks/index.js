@@ -12,7 +12,6 @@
 export { block } from "discourse/components/block-outlet";
 export {
   BlockCondition,
-  BlockRouteConditionShortcuts,
   raiseBlockValidationError,
 } from "discourse/blocks/conditions";
 

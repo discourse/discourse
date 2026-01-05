@@ -90,22 +90,22 @@ class BlockDebugLogger {
   }
 
   /**
-   * Log current route state for debugging route conditions with params/queryParams.
+   * Log current URL state for debugging route conditions with params/queryParams.
    * Shows the actual values available for matching.
    *
    * @param {Object} options - Log options.
-   * @param {string} options.currentRoute - The current route name.
-   * @param {Array} [options.expectedRoutes] - Routes that should match (if using routes).
-   * @param {Array} [options.excludeRoutes] - Routes that should not match (if using excludeRoutes).
+   * @param {string} options.currentPath - The current URL path (normalized).
+   * @param {Array} [options.expectedUrls] - URL patterns to match (if using urls).
+   * @param {Array} [options.excludeUrls] - URL patterns to exclude (if using excludeUrls).
    * @param {Object} options.actualParams - Current route params.
    * @param {Object} options.actualQueryParams - Current query params.
    * @param {number} options.depth - Nesting depth for indentation.
-   * @param {boolean} options.result - Whether the route matched (true) or not (false).
+   * @param {boolean} options.result - Whether the URL matched (true) or not (false).
    */
   logRouteState({
-    currentRoute,
-    expectedRoutes,
-    excludeRoutes,
+    currentPath,
+    expectedUrls,
+    excludeUrls,
     actualParams,
     actualQueryParams,
     depth,
@@ -116,9 +116,9 @@ class BlockDebugLogger {
     }
     this.#currentGroup.logs.push({
       type: "route-state",
-      currentRoute,
-      expectedRoutes,
-      excludeRoutes,
+      currentPath,
+      expectedUrls,
+      excludeUrls,
       actualParams,
       actualQueryParams,
       depth,
@@ -273,13 +273,13 @@ class BlockDebugLogger {
   #logTreeNode(log, hasChildren = false) {
     const { type, args, result } = log;
 
-    // Handle route state (shows current route and params/queryParams values)
-    // Uses checkmark/X to show whether route matched
+    // Handle route state (shows current URL and params/queryParams values)
+    // Uses checkmark/X to show whether URL matched
     if (type === "route-state") {
       const {
-        currentRoute,
-        expectedRoutes,
-        excludeRoutes: excludedRoutes,
+        currentPath,
+        expectedUrls,
+        excludeUrls: excludedUrls,
         actualParams,
         actualQueryParams,
         result: routeResult,
@@ -287,15 +287,15 @@ class BlockDebugLogger {
       const routeIcon = routeResult ? ICONS.passed : ICONS.failed;
       const routeStyle = routeResult ? STYLES.passed : STYLES.failed;
 
-      // Build expected value based on whether routes or excludeRoutes was used
-      const expected = excludedRoutes
-        ? { excludeRoutes: excludedRoutes }
-        : expectedRoutes;
+      // Build configured value based on whether urls or excludeUrls was used
+      const configured = excludedUrls
+        ? { excludeUrls: excludedUrls }
+        : expectedUrls;
 
       // eslint-disable-next-line no-console
-      console.groupCollapsed(`%c${routeIcon}%c current route`, routeStyle, "", {
-        actual: currentRoute,
-        expected,
+      console.groupCollapsed(`%c${routeIcon}%c current URL`, routeStyle, "", {
+        actual: currentPath,
+        configured,
       });
       if (actualParams && Object.keys(actualParams).length > 0) {
         // eslint-disable-next-line no-console
@@ -373,37 +373,37 @@ class BlockDebugLogger {
   /**
    * Log a single param match with optional type mismatch hint.
    *
-   * @param {Object} match - The match object with expected, actual, result.
+   * @param {Object} match - The match object with configured (expected), actual, result.
    * @param {string} label - Display label for the param.
    * @param {string} icon - Pass/fail icon.
    * @param {string} iconStyle - CSS style for the icon.
    */
   #logParamMatch(match, label, icon, iconStyle) {
-    const { expected, actual, result } = match;
+    const { expected: configured, actual, result } = match;
 
     // Check for type mismatch on failed matches
-    if (!result && isTypeMismatch(actual, expected)) {
-      const expectedType = this.#getExpectedValueType(expected);
+    if (!result && isTypeMismatch(actual, configured)) {
+      const configuredType = this.#getExpectedValueType(configured);
       // eslint-disable-next-line no-console
       console.log(
-        `%c${icon}%c ${label} %c⚠ type mismatch: actual is ${typeof actual}, expected ${expectedType}`,
+        `%c${icon}%c ${label} %c⚠ type mismatch: actual is ${typeof actual}, condition specifies ${configuredType}`,
         iconStyle,
         "",
         STYLES.hint,
-        { expected, actual }
+        { actual, configured }
       );
       return;
     }
 
     // eslint-disable-next-line no-console
-    console.log(`%c${icon}%c ${label}`, iconStyle, "", { expected, actual });
+    console.log(`%c${icon}%c ${label}`, iconStyle, "", { actual, configured });
   }
 
   /**
-   * Get the type of value expected, unwrapping { any: [...] } and arrays.
+   * Get the type of value configured in the condition, unwrapping `{ any: [...] }` and arrays.
    * Shows all unique types if mixed (e.g., "number/string").
    *
-   * @param {*} expected - The expected value spec.
+   * @param {*} expected - The configured value spec from the condition.
    * @returns {string} The type description.
    */
   #getExpectedValueType(expected) {

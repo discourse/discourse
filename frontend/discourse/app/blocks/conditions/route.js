@@ -1,79 +1,70 @@
 import { service } from "@ember/service";
 import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
+import {
+  getShortcutName,
+  isShortcut,
+  isValidUrlPattern,
+  matchesAnyPattern,
+  normalizePath,
+  VALID_SHORTCUTS,
+} from "discourse/lib/blocks/url-matcher";
 import { matchParams } from "discourse/lib/blocks/value-matcher";
 import { BlockCondition, raiseBlockValidationError } from "./base";
 
 /**
- * Route shortcut symbols for common route conditions.
- * Use these with BlockRouteCondition's `routes` or `excludeRoutes` args.
+ * A condition that evaluates based on the current URL path, semantic shortcuts,
+ * route parameters, and query parameters.
  *
- * @property {Symbol} CATEGORY_PAGES - Any category route
- * @property {Symbol} DISCOVERY_PAGES - Any discovery route (latest, top, etc.) excluding custom homepage
- * @property {Symbol} HOMEPAGE - Custom homepage route only
- * @property {Symbol} TAG_PAGES - Any tag route
- * @property {Symbol} TOP_MENU - Discovery routes excluding category, tag, and custom homepage
- */
-export const BlockRouteConditionShortcuts = Object.freeze({
-  CATEGORY_PAGES: Symbol("CATEGORY_PAGES"),
-  DISCOVERY_PAGES: Symbol("DISCOVERY_PAGES"),
-  HOMEPAGE: Symbol("HOMEPAGE"),
-  TAG_PAGES: Symbol("TAG_PAGES"),
-  TOP_MENU: Symbol("TOP_MENU"),
-});
-
-/**
- * A condition that evaluates based on the current route, route parameters, and query parameters.
+ * URL patterns use picomatch glob syntax:
+ * - `*` matches a single path segment (no slashes)
+ * - `**` matches zero or more path segments
+ * - `?` matches a single character
+ * - `[abc]` matches any character in the brackets
+ * - `{a,b}` matches any of the comma-separated patterns
  *
- * Route patterns support:
- * - Exact match: `"discovery.latest"`
- * - Wildcard suffix: `"category.*"` matches `"category.none"`, `"category.all"`, etc.
- * - Regular expression: `/^topic\.\d+$/` for advanced matching
- * - Route shortcuts: `BlockRouteConditionShortcuts.DISCOVERY_PAGES`, `BlockRouteConditionShortcuts.HOMEPAGE`, etc.
+ * Shortcuts (prefixed with `$`) match semantic page types without requiring
+ * knowledge of URL structure:
+ * - `$CATEGORY_PAGES` - any category page (when `discovery.category` is set)
+ * - `$DISCOVERY_PAGES` - discovery routes (latest, top, etc.) excluding custom homepage
+ * - `$HOMEPAGE` - custom homepage only
+ * - `$TAG_PAGES` - any tag page (when `discovery.tag` is set)
+ * - `$TOP_MENU` - discovery routes that appear in the top navigation menu
  *
- * When using `routes`, the condition passes if the current route matches ANY pattern (OR logic).
- * When using `excludeRoutes`, the condition passes if the current route matches NONE of the patterns.
- *
- * Params and queryParams support AND/OR/NOT logic:
- * - Object with keys: AND logic (all keys must match)
- * - `{ any: [...] }`: OR logic (any must match)
- * - `{ not: {...} }`: NOT logic (must NOT match)
- * - Keys starting with `\` are escaped (e.g., `"\\any"` matches literal param `"any"`)
+ * URL matching automatically handles Discourse subfolder installations by
+ * normalizing URLs before matching. Theme authors don't need to know if
+ * Discourse runs on `/forum` or root - patterns like `/c/**` work everywhere.
  *
  * @class BlockRouteCondition
  * @extends BlockCondition
  *
- * @param {Array<string|RegExp|Symbol>} [routes] - Route patterns to match (passes if ANY match).
- * @param {Array<string|RegExp|Symbol>} [excludeRoutes] - Route patterns to exclude (passes if NONE match).
+ * @param {string[]} [urls] - URL patterns or shortcuts to match (passes if ANY match).
+ * @param {string[]} [excludeUrls] - URL patterns or shortcuts to exclude (passes if NONE match).
  * @param {Object} [params] - Route parameters to match (from `router.currentRoute.params`).
  * @param {Object} [queryParams] - Query parameters to match (from `router.currentRoute.queryParams`).
  *
  * @example
- * // Match specific routes
- * { type: "route", routes: ["discovery.latest", "discovery.top"] }
+ * // Match category pages using shortcut
+ * { type: "route", urls: ["$CATEGORY_PAGES"] }
  *
  * @example
- * // Match with wildcard
- * { type: "route", routes: ["category.*"] }
+ * // Match category pages using URL pattern
+ * { type: "route", urls: ["/c/**"] }
  *
  * @example
- * // Match with shortcut
- * { type: "route", routes: [BlockRouteConditionShortcuts.DISCOVERY_PAGES] }
+ * // Match multiple patterns (OR logic)
+ * { type: "route", urls: ["$CATEGORY_PAGES", "/custom/**", "/tag/*"] }
  *
  * @example
- * // Exclude routes
- * { type: "route", excludeRoutes: ["discovery.custom"] }
+ * // Match all except admin pages
+ * { type: "route", excludeUrls: ["/admin/**"] }
  *
  * @example
- * // Match route with specific params
- * { type: "route", routes: ["topic.show"], params: { id: 123 } }
+ * // Match with query params
+ * { type: "route", urls: ["/latest"], queryParams: { filter: "solved" } }
  *
  * @example
- * // Match route with query params
- * { type: "route", routes: ["discovery.latest"], queryParams: { filter: "solved" } }
- *
- * @example
- * // Match with OR logic on params
- * { type: "route", routes: ["topic.show"], params: { any: [{ id: 123 }, { slug: /^help-/ }] } }
+ * // Match discovery pages with specific query params using OR logic
+ * { type: "route", urls: ["$DISCOVERY_PAGES"], queryParams: { any: [{ filter: "solved" }, { filter: "open" }] } }
  */
 export default class BlockRouteCondition extends BlockCondition {
   static type = "route";
@@ -81,77 +72,116 @@ export default class BlockRouteCondition extends BlockCondition {
   @service router;
   @service discovery;
 
+  /**
+   * Returns the current URL path, normalized for matching.
+   *
+   * Normalization strips the subfolder prefix, query strings, hash fragments,
+   * and trailing slashes. This allows patterns to work consistently regardless
+   * of Discourse's installation configuration.
+   *
+   * @returns {string} The normalized URL path.
+   */
+  get currentPath() {
+    return normalizePath(this.router.currentURL);
+  }
+
+  /**
+   * Validates the route condition arguments.
+   *
+   * @param {Object} args - The condition arguments.
+   * @throws {Error} If validation fails.
+   */
   validate(args) {
-    const { routes, excludeRoutes } = args;
+    const { urls, excludeUrls } = args;
 
-    if (routes?.length && excludeRoutes?.length) {
+    if (!urls?.length && !excludeUrls?.length) {
       raiseBlockValidationError(
-        "BlockRouteCondition: Cannot use both `routes` and `excludeRoutes` arguments. Use one or the other."
+        "BlockRouteCondition: Must provide `urls` or `excludeUrls`."
       );
     }
 
-    if (!routes?.length && !excludeRoutes?.length) {
+    if (urls?.length && excludeUrls?.length) {
       raiseBlockValidationError(
-        "BlockRouteCondition: Must provide either `routes` or `excludeRoutes` argument."
+        "BlockRouteCondition: Cannot use both `urls` and `excludeUrls`. Use one or the other."
       );
     }
 
-    // Validate symbol patterns are valid shortcuts
-    const validShortcuts = Object.values(BlockRouteConditionShortcuts);
-    const allPatterns = [...(routes || []), ...(excludeRoutes || [])];
+    // Validate all shortcuts are recognized and glob patterns are valid
+    const allPatterns = [...(urls || []), ...(excludeUrls || [])];
     for (const pattern of allPatterns) {
-      if (typeof pattern === "symbol" && !validShortcuts.includes(pattern)) {
-        // Generate list dynamically so it stays in sync with BlockRouteConditionShortcuts
-        const validNames = Object.keys(BlockRouteConditionShortcuts).join(", ");
+      if (isShortcut(pattern)) {
+        const name = getShortcutName(pattern);
+        if (!VALID_SHORTCUTS.includes(name)) {
+          const validList = VALID_SHORTCUTS.map((s) => "$" + s).join(", ");
+          raiseBlockValidationError(
+            `BlockRouteCondition: Unknown shortcut "$${name}". ` +
+              `Valid shortcuts: ${validList}`
+          );
+        }
+      } else if (!isValidUrlPattern(pattern)) {
+        // Validate glob pattern syntax (non-shortcuts only)
         raiseBlockValidationError(
-          `BlockRouteCondition: Unknown route shortcut symbol. ` +
-            `Valid shortcuts are: ${validNames}.`
+          `BlockRouteCondition: Invalid glob pattern "${pattern}". ` +
+            `Check for unbalanced brackets or braces.`
         );
       }
     }
   }
 
+  /**
+   * Evaluates whether the current route matches the condition.
+   *
+   * Evaluation logic:
+   * - With `urls`: passes if ANY URL pattern OR shortcut matches
+   * - With `excludeUrls`: passes if NO URL pattern AND NO shortcut matches
+   * - With `params`: additionally requires all params to match
+   * - With `queryParams`: additionally requires all query params to match
+   *
+   * @param {Object} args - The condition arguments.
+   * @param {Object} [context={}] - Evaluation context (for debugging).
+   * @returns {boolean} True if the condition passes.
+   */
   evaluate(args, context = {}) {
-    const currentRoute = this.router.currentRouteName;
+    const { urls, excludeUrls, params, queryParams } = args;
+    const currentPath = this.currentPath;
 
-    if (!currentRoute) {
-      return false;
-    }
-
-    const { routes, excludeRoutes, params, queryParams } = args;
-
-    // Debug context for params matching - nested under route condition
+    // Debug context for nested logging
     const isDebugging = context.debug ?? blockDebugLogger.hasActiveGroup();
     const childDepth = (context._depth ?? 0) + 1;
     const debugContext = { debug: isDebugging, _depth: childDepth };
 
-    // Get actual params/queryParams for debug output
+    // Get actual params for debugging output
     const actualParams = this.router.currentRoute?.params;
     const actualQueryParams = this.router.currentRoute?.queryParams;
 
-    // Check route matching BEFORE logging so we can show the correct icon
-    // Check excludeRoutes first (passes if NONE match)
     let routeMatched = true;
-    if (excludeRoutes?.length) {
-      if (this.#matchesAny(currentRoute, excludeRoutes)) {
+
+    // Check excludeUrls (passes if NONE match)
+    if (excludeUrls?.length) {
+      const patternMatch = matchesAnyPattern(currentPath, excludeUrls);
+      const shortcutMatch = this.#matchesAnyShortcut(excludeUrls);
+
+      if (patternMatch || shortcutMatch) {
         routeMatched = false;
       }
     }
 
-    // Check routes (passes if ANY match)
-    if (routeMatched && routes?.length) {
-      if (!this.#matchesAny(currentRoute, routes)) {
+    // Check urls (passes if ANY match)
+    if (routeMatched && urls?.length) {
+      const patternMatch = matchesAnyPattern(currentPath, urls);
+      const shortcutMatch = this.#matchesAnyShortcut(urls);
+
+      if (!patternMatch && !shortcutMatch) {
         routeMatched = false;
       }
     }
 
-    // Log current route state when debugging (always log if debugging, so users
-    // can see the current route even when it doesn't match)
+    // Log URL state when debugging (only when params/queryParams present)
     if (isDebugging && (params || queryParams)) {
       blockDebugLogger.logRouteState({
-        currentRoute,
-        expectedRoutes: routes,
-        excludeRoutes,
+        currentPath,
+        expectedUrls: urls,
+        excludeUrls,
         actualParams,
         actualQueryParams,
         depth: childDepth,
@@ -159,7 +189,7 @@ export default class BlockRouteCondition extends BlockCondition {
       });
     }
 
-    // Return early if route didn't match
+    // Return early if URL/shortcut didn't match
     if (!routeMatched) {
       return false;
     }
@@ -195,83 +225,47 @@ export default class BlockRouteCondition extends BlockCondition {
     return true;
   }
 
-  #matchesAny(currentRoute, patterns) {
-    return patterns.some((pattern) =>
-      this.#matchesPattern(currentRoute, pattern)
-    );
-  }
-
   /**
-   * Checks if a route matches a given pattern. Supports four pattern types:
+   * Checks if any shortcut in the patterns array matches the current route.
    *
-   * 1. **Symbol shortcuts** - Predefined shortcuts like `CATEGORY_PAGES` that match
-   *    multiple related routes.
-   * 2. **RegExp** - Regular expression for advanced pattern matching.
-   * 3. **Wildcard** - String ending with `.*` that matches any route with that prefix
-   *    (e.g., `"category.*"` matches `"category"`, `"category.none"`, `"category.all"`).
-   * 4. **Exact match** - String that must match the route name exactly.
-   *
-   * @param {string} route - The current route name to test.
-   * @param {string|RegExp|Symbol} pattern - The pattern to match against.
-   * @returns {boolean} True if the route matches the pattern.
+   * @param {string[]} patterns - Array of patterns (filters to shortcuts only).
+   * @returns {boolean} True if any shortcut matches.
    */
-  #matchesPattern(route, pattern) {
-    // Symbol shortcut pattern (e.g., BlockRouteConditionShortcuts.CATEGORY_PAGES)
-    if (typeof pattern === "symbol") {
-      return this.#matchesShortcut(pattern);
-    }
-
-    // RegExp pattern for advanced matching (e.g., /^topic\.\d+$/)
-    if (pattern instanceof RegExp) {
-      return pattern.test(route);
-    }
-
-    // Wildcard pattern: "category.*" matches "category", "category.none", "category.all", etc.
-    // This provides glob-style matching for route hierarchies.
-    if (pattern.endsWith(".*")) {
-      const prefix = pattern.slice(0, -2);
-      return route === prefix || route.startsWith(`${prefix}.`);
-    }
-
-    // Exact match: route name must equal the pattern string exactly
-    return route === pattern;
+  #matchesAnyShortcut(patterns) {
+    return patterns
+      .filter((p) => isShortcut(p))
+      .some((p) => this.#matchesShortcut(getShortcutName(p)));
   }
 
   /**
-   * Evaluates a route shortcut symbol against the current discovery service state.
+   * Evaluates a shortcut against the current discovery service state.
+   *
    * Shortcuts provide semantic route matching based on page context rather than
-   * route name patterns.
+   * URL patterns. This allows theme authors to target logical page types without
+   * knowing the internal URL structure.
    *
-   * - `CATEGORY_PAGES` - True when viewing any category (category is set).
-   * - `DISCOVERY_PAGES` - True on discovery routes (latest, top, etc.) but NOT on
-   *   custom homepage.
-   * - `HOMEPAGE` - True only on the custom homepage route.
-   * - `TAG_PAGES` - True when viewing any tag page (tag is set).
-   * - `TOP_MENU` - True on discovery routes excluding category, tag, and custom
-   *   homepage (i.e., the main navigation menu items).
-   *
-   * @param {Symbol} shortcut - A symbol from BlockRouteConditionShortcuts.
+   * @param {string} shortcut - The shortcut name (without $ prefix).
    * @returns {boolean} True if the current route matches the shortcut's criteria.
    */
   #matchesShortcut(shortcut) {
     switch (shortcut) {
-      case BlockRouteConditionShortcuts.CATEGORY_PAGES:
+      case "CATEGORY_PAGES":
         // True when viewing any category page
         return !!this.discovery.category;
 
-      case BlockRouteConditionShortcuts.DISCOVERY_PAGES:
+      case "DISCOVERY_PAGES":
         // True on discovery routes (latest, top, new, etc.) excluding custom homepage
         return this.discovery.onDiscoveryRoute && !this.discovery.custom;
 
-      case BlockRouteConditionShortcuts.HOMEPAGE:
+      case "HOMEPAGE":
         // True only on the custom homepage route
         return this.discovery.custom;
 
-      case BlockRouteConditionShortcuts.TAG_PAGES:
+      case "TAG_PAGES":
         // True when viewing any tag page
         return !!this.discovery.tag;
 
-      case BlockRouteConditionShortcuts.TOP_MENU:
+      case "TOP_MENU":
         // True on discovery routes that appear in the top navigation menu
         // (excludes category pages, tag pages, and custom homepage)
         return (
@@ -282,7 +276,7 @@ export default class BlockRouteCondition extends BlockCondition {
         );
 
       default:
-        // Unknown shortcuts never match
+        // Unknown shortcuts never match (should be caught by validation)
         return false;
     }
   }

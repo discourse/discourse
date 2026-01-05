@@ -334,6 +334,9 @@ importers:
       photoswipe:
         specifier: 5.4.4
         version: 5.4.4
+      picomatch:
+        specifier: ^4.0.3
+        version: 4.0.3
       pikaday:
         specifier: ^1.8.2
         version: 1.8.2

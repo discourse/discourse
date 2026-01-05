@@ -61,6 +61,7 @@
     "orderedmap": "^2.1.1",
     "photoswipe": "5.4.4",
     "pikaday": "^1.8.2",
+    "picomatch": "^4.0.3",
     "pretty-text": "workspace:1.0.0",
     "prosemirror-codemark": "^0.4.2",
     "prosemirror-commands": "^1.7.1",
