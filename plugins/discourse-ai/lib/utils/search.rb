@@ -261,7 +261,7 @@ module DiscourseAi
           likes: post ? post.like_count : topic.like_count,
           topic_views: topic.views,
           topic_likes: topic.like_count,
-          topic_replies: topic.posts_count - 1,
+          topic_replies: topic.reply_count,
         }
 
         if SiteSetting.tagging_enabled
