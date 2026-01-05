@@ -265,7 +265,7 @@ module DiscourseAi
           title: topic.title,
           # this is deliberate, we don't want to repeat https://example.com/ in every result, but we need subfolder
           # note: topic.relative_url already includes base_path, but post.url does not
-          url: post ? "#{Discourse.base_path}#{post.url}" : topic.relative_url,
+          url: post ? post.relative_url : topic.relative_url,
           username: post ? post.user&.username : topic.user&.username,
           excerpt: post ? post.excerpt : topic.excerpt,
           created: post ? post.created_at : topic.created_at,
