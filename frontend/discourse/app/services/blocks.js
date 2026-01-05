@@ -3,7 +3,11 @@ import Service from "@ember/service";
 import * as conditions from "discourse/blocks/conditions";
 import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
 import { raiseBlockError } from "discourse/lib/blocks/error";
-import { blockRegistry } from "discourse/lib/blocks/registration";
+import {
+  blockRegistry,
+  isBlockFactory,
+  resolveBlock,
+} from "discourse/lib/blocks/registration";
 
 /**
  * Unified service for block registry and condition evaluation.
@@ -119,6 +123,64 @@ export default class Blocks extends Service {
       component,
       metadata: component.blockMetadata,
     }));
+  }
+
+  /**
+   * Asynchronously gets a registered block by name, resolving factories if needed.
+   *
+   * Unlike `getBlock()` which returns the raw registry entry (which may be a factory),
+   * this method ensures the returned value is always a resolved BlockClass.
+   *
+   * @param {string} name - The block name (e.g., "hero-banner").
+   * @returns {Promise<typeof import("@glimmer/component").default|undefined>}
+   *   The resolved block class, or undefined if not found.
+   *
+   * @example
+   * ```javascript
+   * const HeroBanner = await this.blocks.getBlockAsync("hero-banner");
+   * if (HeroBanner) {
+   *   // Block is ready to use
+   * }
+   * ```
+   */
+  async getBlockAsync(name) {
+    if (!blockRegistry.has(name)) {
+      return undefined;
+    }
+    try {
+      return await resolveBlock(name);
+    } catch {
+      return undefined;
+    }
+  }
+
+  /**
+   * Checks if a block is registered and fully resolved (not a pending factory).
+   *
+   * Use this to check if a block is immediately available without needing async resolution.
+   * Returns false for unregistered blocks or blocks that are registered as factory functions
+   * but haven't been resolved yet.
+   *
+   * @param {string} name - The block name.
+   * @returns {boolean} True if registered and immediately available.
+   *
+   * @example
+   * ```javascript
+   * if (this.blocks.isBlockReady("hero-banner")) {
+   *   // Block is available synchronously
+   *   const HeroBanner = this.blocks.getBlock("hero-banner");
+   * } else {
+   *   // Block needs async resolution
+   *   const HeroBanner = await this.blocks.getBlockAsync("hero-banner");
+   * }
+   * ```
+   */
+  isBlockReady(name) {
+    if (!blockRegistry.has(name)) {
+      return false;
+    }
+    const entry = blockRegistry.get(name);
+    return !isBlockFactory(entry);
   }
 
   // ============================================================================

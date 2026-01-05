@@ -15,6 +15,8 @@ import {
 } from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,
+  _registerBlockByName,
+  _registerBlockFactory,
   withTestBlockRegistration,
 } from "discourse/lib/blocks/registration";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -988,6 +990,189 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert
         .dom('.conditional-leaf[data-level="3c"]')
         .doesNotExist("leaf 3c hidden (parent hidden)");
+    });
+  });
+
+  module("string block references", function () {
+    test("renders block using string name reference", async function (assert) {
+      @block("string-ref-block")
+      class StringRefBlock extends Component {
+        <template>
+          <div class="string-ref-content">String Referenced Block</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(StringRefBlock));
+      renderBlocks("homepage-blocks", [{ block: "string-ref-block" }]);
+
+      await render(
+        <template><BlockOutlet @name="homepage-blocks" /></template>
+      );
+
+      assert.dom(".homepage-blocks").exists("outlet renders");
+      assert
+        .dom(".string-ref-content")
+        .hasText("String Referenced Block", "string-referenced block renders");
+    });
+
+    test("renders block registered with explicit name", async function (assert) {
+      @block("original-name-block")
+      class OriginalNameBlock extends Component {
+        <template>
+          <div class="explicit-name-content">Explicit Name Block</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() =>
+        _registerBlockByName("custom-alias", OriginalNameBlock)
+      );
+      renderBlocks("sidebar-blocks", [{ block: "custom-alias" }]);
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert.dom(".sidebar-blocks").exists("outlet renders");
+      assert
+        .dom(".explicit-name-content")
+        .hasText(
+          "Explicit Name Block",
+          "block registered with explicit name renders"
+        );
+    });
+
+    test("passes args to string-referenced block", async function (assert) {
+      @block("string-args-block")
+      class StringArgsBlock extends Component {
+        <template>
+          <div class="string-args-content">
+            <span class="title">{{@title}}</span>
+            <span class="count">{{@count}}</span>
+          </div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(StringArgsBlock));
+      renderBlocks("header-blocks", [
+        { block: "string-args-block", args: { title: "Hello", count: 42 } },
+      ]);
+
+      await render(<template><BlockOutlet @name="header-blocks" /></template>);
+
+      assert.dom(".string-args-content .title").hasText("Hello");
+      assert.dom(".string-args-content .count").hasText("42");
+    });
+
+    test("mixed class and string references work together", async function (assert) {
+      @block("class-ref-block")
+      class ClassRefBlock extends Component {
+        <template>
+          <div class="class-ref-content">Class Reference</div>
+        </template>
+      }
+
+      @block("string-mixed-block")
+      class StringMixedBlock extends Component {
+        <template>
+          <div class="string-mixed-content">String Reference</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => {
+        _registerBlock(ClassRefBlock);
+        _registerBlock(StringMixedBlock);
+      });
+
+      renderBlocks("hero-blocks", [
+        { block: ClassRefBlock },
+        { block: "string-mixed-block" },
+      ]);
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      assert.dom(".hero-blocks").exists("outlet renders");
+      assert
+        .dom(".class-ref-content")
+        .hasText("Class Reference", "class-referenced block renders");
+      assert
+        .dom(".string-mixed-content")
+        .hasText("String Reference", "string-referenced block renders");
+    });
+
+    test("string reference in nested container children", async function (assert) {
+      @block("nested-string-block")
+      class NestedStringBlock extends Component {
+        <template>
+          <div class="nested-string-content">Nested String Block</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(NestedStringBlock));
+
+      renderBlocks("main-outlet-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "container" },
+          children: [{ block: "nested-string-block" }],
+        },
+      ]);
+
+      await render(
+        <template><BlockOutlet @name="main-outlet-blocks" /></template>
+      );
+
+      assert.dom(".block__group-container").exists("container renders");
+      assert
+        .dom(".nested-string-content")
+        .hasText(
+          "Nested String Block",
+          "nested string-referenced block renders"
+        );
+    });
+
+    test("renders block from factory function", async function (assert) {
+      @block("factory-render-block")
+      class FactoryRenderBlock extends Component {
+        <template>
+          <div class="factory-render-content">Factory Loaded Block</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() =>
+        _registerBlockFactory(
+          "factory-render-block",
+          async () => FactoryRenderBlock
+        )
+      );
+      renderBlocks("sidebar-blocks", [{ block: "factory-render-block" }]);
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert.dom(".sidebar-blocks").exists("outlet renders");
+      assert
+        .dom(".factory-render-content")
+        .hasText("Factory Loaded Block", "factory-registered block renders");
+    });
+
+    test("handles factory returning module with default export", async function (assert) {
+      @block("default-export-block")
+      class DefaultExportBlock extends Component {
+        <template>
+          <div class="default-export-content">Default Export Block</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() =>
+        _registerBlockFactory("default-export-block", async () => ({
+          default: DefaultExportBlock,
+        }))
+      );
+      renderBlocks("hero-blocks", [{ block: "default-export-block" }]);
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      assert.dom(".hero-blocks").exists("outlet renders");
+      assert
+        .dom(".default-export-content")
+        .hasText("Default Export Block", "block from default export renders");
     });
   });
 });

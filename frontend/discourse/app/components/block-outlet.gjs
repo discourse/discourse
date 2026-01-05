@@ -38,6 +38,11 @@ import {
   validateOutletPatterns,
   warnUnknownOutletPatterns,
 } from "discourse/lib/blocks/outlet-matcher";
+import {
+  blockRegistry,
+  isBlockFactory,
+  resolveBlock,
+} from "discourse/lib/blocks/registration";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
 /**
@@ -326,9 +331,18 @@ export function block(name, options = {}) {
         const containerCounts = new Map();
 
         for (const blockConfig of rawChildren) {
-          const blockName = blockConfig.block?.blockName || "unknown";
+          // Resolve block reference (string name or class)
+          const resolvedBlock = this.#resolveBlockSync(blockConfig.block);
+
+          // If block couldn't be resolved (unresolved factory), skip it
+          // Async resolution has been triggered and block will appear on next render
+          if (!resolvedBlock) {
+            continue;
+          }
+
+          const blockName = resolvedBlock.blockName || "unknown";
           const isChildContainer =
-            blockConfig.block?.[__BLOCK_CONTAINER_FLAG] ?? false;
+            resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
           let conditionsPassed = true;
 
           // For containers, build their full path (used for their children's hierarchy)
@@ -359,12 +373,17 @@ export function block(name, options = {}) {
             // Block passed conditions - render it
             // Pass baseHierarchy for debug display (where block is rendered)
             // Pass containerPath for container's children hierarchy
+            // Use resolved block class instead of original config.block
             result.push(
-              this.#createChildBlock(blockConfig, owner, {
-                displayHierarchy: baseHierarchy,
-                containerPath,
-                conditions: blockConfig.conditions,
-              })
+              this.#createChildBlock(
+                { ...blockConfig, block: resolvedBlock },
+                owner,
+                {
+                  displayHierarchy: baseHierarchy,
+                  containerPath,
+                  conditions: blockConfig.conditions,
+                }
+              )
             );
           } else if (getBlockDebugCallback()) {
             // Block failed conditions - show ghost if debug overlay is enabled
@@ -522,6 +541,54 @@ export function block(name, options = {}) {
           ...extra,
         };
       }
+
+      /**
+       * Synchronously resolves a block reference to a BlockClass.
+       *
+       * - If given a class, returns it directly.
+       * - If given a string and the block is resolved, returns the class.
+       * - If given a string and the block is an unresolved factory, triggers
+       *   async resolution and returns null (block will appear on next render).
+       *
+       * @param {string | typeof Component} blockRef - Block name or class.
+       * @returns {typeof Component | null} Resolved block class, or null if pending.
+       */
+      #resolveBlockSync(blockRef) {
+        // Class reference - return directly
+        if (typeof blockRef !== "string") {
+          return blockRef;
+        }
+
+        // String reference - check if registered
+        if (!blockRegistry.has(blockRef)) {
+          // Block not registered - this is an error, but validation should have caught it
+          // eslint-disable-next-line no-console
+          console.error(`[Blocks] Block "${blockRef}" is not registered.`);
+          return null;
+        }
+
+        const entry = blockRegistry.get(blockRef);
+
+        // If already resolved (not a factory), return the class
+        if (!isBlockFactory(entry)) {
+          return entry;
+        }
+
+        // Factory needs async resolution - trigger it and return null for now
+        // The block will appear on the next render after resolution completes
+        if (!DEBUG) {
+          // Only in production - in dev, factories are already resolved during validation
+          resolveBlock(blockRef).catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error(
+              `[Blocks] Failed to resolve block "${blockRef}":`,
+              error
+            );
+          });
+        }
+
+        return null;
+      }
     };
   };
 }
@@ -593,24 +660,43 @@ export function renderBlocks(outletName, config, owner) {
   // Get blocks service for condition validation if owner is provided
   const blocksService = owner?.lookup("service:blocks");
 
-  // Validate config BEFORE locking the registry.
-  // This ensures the registry isn't locked if validation fails,
-  // allowing subsequent registrations to proceed.
-  validateConfig(config, outletName, blocksService, isBlock, isContainerBlock);
-
+  // Check for duplicate registration before anything else
   if (blockConfigs.has(outletName)) {
     raiseBlockError(
       `Block outlet "${outletName}" already has a configuration registered.`
     );
   }
 
-  // Lock the block registry AFTER successful validation.
+  // Lock the block registry immediately.
   // This prevents themes/plugins from registering new blocks after
-  // the first configuration is set up.
+  // the first renderBlocks() call.
   const { _lockBlockRegistry } = require("discourse/lib/blocks/registration");
   _lockBlockRegistry();
 
-  blockConfigs.set(outletName, { children: config });
+  // Start async validation. In dev mode, this eagerly resolves all factories
+  // for early error detection. In prod, it defers factory resolution.
+  const validationPromise = validateConfig(
+    config,
+    outletName,
+    blocksService,
+    isBlock,
+    isContainerBlock
+  );
+
+  // Handle validation errors
+  validationPromise.catch((error) => {
+    // In dev mode, re-throw to surface errors prominently
+    if (DEBUG) {
+      // Use setTimeout to throw outside the promise chain for better stack traces
+      setTimeout(() => {
+        throw error;
+      }, 0);
+    }
+    // In prod, errors are handled by raiseBlockError (dispatches event)
+  });
+
+  // Store config with validation promise for potential future use
+  blockConfigs.set(outletName, { children: config, validationPromise });
 }
 
 /**

@@ -8,6 +8,7 @@
  * @module discourse/lib/blocks/config-validation
  */
 
+import { DEBUG } from "@glimmer/env";
 import { validateBlockArgs } from "discourse/lib/blocks/arg-validation";
 import {
   clearBlockErrorContext,
@@ -15,7 +16,59 @@ import {
   setBlockErrorContext,
 } from "discourse/lib/blocks/error";
 import { isBlockPermittedInOutlet } from "discourse/lib/blocks/outlet-matcher";
+import {
+  hasBlock,
+  isBlockResolved,
+  resolveBlock,
+} from "discourse/lib/blocks/registration";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
+
+/**
+ * Resolves a block reference (string or class) to a BlockClass for validation.
+ *
+ * This function handles the dual-mode resolution strategy:
+ *
+ * - **Development/Test mode**: Eagerly resolves all block references including
+ *   factory functions. This ensures errors surface early at boot time with clear
+ *   stack traces.
+ *
+ * - **Production mode**: Only resolves if the block is already resolved (not a
+ *   pending factory). Factories are left unresolved, with validation deferred to
+ *   render time. This enables true lazy loading.
+ *
+ * @param {string | Object} blockRef - Block name string or BlockClass.
+ * @param {string} outletName - Outlet name for error messages.
+ * @returns {Promise<Object | string>} Resolved BlockClass, or string name if deferred.
+ * @throws {Error} If block is not registered.
+ */
+export async function resolveBlockForValidation(blockRef, outletName) {
+  // Class reference - return as-is
+  if (typeof blockRef !== "string") {
+    return blockRef;
+  }
+
+  // String reference - check registration
+  if (!hasBlock(blockRef)) {
+    raiseBlockError(
+      `Block "${blockRef}" in layout for \`${outletName}\` is not registered. ` +
+        `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`
+    );
+    return null;
+  }
+
+  if (DEBUG) {
+    // In dev/test, eagerly resolve to catch factory errors early
+    return await resolveBlock(blockRef);
+  }
+
+  // In production, only resolve if already resolved (avoid triggering lazy load)
+  if (isBlockResolved(blockRef)) {
+    return await resolveBlock(blockRef);
+  }
+
+  // Return the string name - full validation deferred to render time
+  return blockRef;
+}
 
 /**
  * Reserved argument names that cannot be used in block configurations.
@@ -148,15 +201,20 @@ export function validateReservedArgs(config, outletName) {
  * Recursively validates an array of block configurations.
  * Validates each block and traverses nested children configurations.
  *
- * @param {Array<Object>} blocksConfig - Block configurations to validate
- * @param {string} outletName - The outlet these blocks belong to
- * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions
- * @param {Function} isBlockFn - Function to check if component is a block
- * @param {Function} isContainerBlockFn - Function to check if component is a container block
- * @param {string} [parentPath="blocks"] - JSON-path style parent location for error context
- * @throws {Error} If any block configuration is invalid
+ * This function is async to support lazy-loaded blocks:
+ * - In dev/test: Eagerly resolves all factories for early error detection.
+ * - In production: Defers factory resolution to render time.
+ *
+ * @param {Array<Object>} blocksConfig - Block configurations to validate.
+ * @param {string} outletName - The outlet these blocks belong to.
+ * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions.
+ * @param {Function} isBlockFn - Function to check if component is a block.
+ * @param {Function} isContainerBlockFn - Function to check if component is a container block.
+ * @param {string} [parentPath="blocks"] - JSON-path style parent location for error context.
+ * @returns {Promise<void>} Resolves when validation completes.
+ * @throws {Error} If any block configuration is invalid.
  */
-export function validateConfig(
+export async function validateConfig(
   blocksConfig,
   outletName,
   blocksService,
@@ -164,11 +222,12 @@ export function validateConfig(
   isContainerBlockFn,
   parentPath = "blocks"
 ) {
-  blocksConfig.forEach((blockConfig, index) => {
+  // Use Promise.all for parallel validation (faster in dev when resolving factories)
+  const validationPromises = blocksConfig.map(async (blockConfig, index) => {
     const currentPath = `${parentPath}[${index}]`;
 
     // Validate the block itself (whether it has children or not)
-    validateBlock(
+    await validateBlock(
       blockConfig,
       outletName,
       blocksService,
@@ -179,7 +238,7 @@ export function validateConfig(
 
     // Recursively validate nested children
     if (blockConfig.children) {
-      validateConfig(
+      await validateConfig(
         blockConfig.children,
         outletName,
         blocksService,
@@ -189,31 +248,40 @@ export function validateConfig(
       );
     }
   });
+
+  await Promise.all(validationPromises);
 }
 
 /**
  * Validates a single block configuration object.
+ *
  * Performs comprehensive validation including:
  * - Outlet name is registered in BLOCK_OUTLETS
- * - Block component exists and is decorated with @block
+ * - Block reference is valid (string name or @block-decorated class)
+ * - Block is registered in the registry
  * - Container/children relationship is valid
  * - No reserved arg names are used
  * - Conditions are valid (if blocksService is provided)
  *
- * @param {Object} config - The block configuration object
- * @param {typeof import("@glimmer/component").default} config.block - The block component class
- * @param {string} [config.name] - Display name for error messages
- * @param {Object} [config.args] - Args to pass to the block
- * @param {Array<Object>} [config.children] - Nested block configurations
- * @param {Array<Object>|Object} [config.conditions] - Conditions for rendering
- * @param {string} outletName - The outlet this block belongs to
- * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions
- * @param {Function} isBlockFn - Function to check if component is a block
- * @param {Function} isContainerBlockFn - Function to check if component is a container block
- * @param {string} [path] - JSON-path style location in config (e.g., "blocks[3].children[0]")
- * @throws {Error} If validation fails
+ * This function is async to support lazy-loaded blocks. In production mode,
+ * if a block reference is a string pointing to an unresolved factory, full
+ * validation is deferred to render time.
+ *
+ * @param {Object} config - The block configuration object.
+ * @param {typeof import("@glimmer/component").default | string} config.block - Block class or name string.
+ * @param {string} [config.name] - Display name for error messages.
+ * @param {Object} [config.args] - Args to pass to the block.
+ * @param {Array<Object>} [config.children] - Nested block configurations.
+ * @param {Array<Object>|Object} [config.conditions] - Conditions for rendering.
+ * @param {string} outletName - The outlet this block belongs to.
+ * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions.
+ * @param {Function} isBlockFn - Function to check if component is a block.
+ * @param {Function} isContainerBlockFn - Function to check if component is a container block.
+ * @param {string} [path] - JSON-path style location in config (e.g., "blocks[3].children[0]").
+ * @returns {Promise<void>} Resolves when validation completes.
+ * @throws {Error} If validation fails.
  */
-export function validateBlock(
+export async function validateBlock(
   config,
   outletName,
   blocksService,
@@ -233,29 +301,61 @@ export function validateBlock(
     return;
   }
 
-  if (!isBlockFn(config.block)) {
+  // Resolve block reference (string name or class)
+  // In dev: eagerly resolves factories
+  // In prod: returns string if factory is unresolved (defers to render time)
+  const resolvedBlock = await resolveBlockForValidation(
+    config.block,
+    outletName
+  );
+
+  // If resolution returned null (error was raised), exit early
+  if (resolvedBlock === null) {
+    return;
+  }
+
+  // In production with unresolved factory, defer full validation to render time
+  // We've already verified the block name is registered in resolveBlockForValidation
+  if (typeof resolvedBlock === "string") {
+    const blockName = resolvedBlock;
+
+    // Still validate conditions since they don't depend on the block class
+    if (config.conditions && blocksService) {
+      setBlockErrorContext({
+        outletName,
+        blockName,
+        path,
+        conditions: config.conditions,
+      });
+
+      try {
+        blocksService.validate(config.conditions);
+      } catch (error) {
+        raiseBlockError(
+          `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`
+        );
+      } finally {
+        clearBlockErrorContext();
+      }
+    }
+
+    // Skip class-specific validation (will happen at render time)
+    return;
+  }
+
+  // Full validation with resolved class
+  if (!isBlockFn(resolvedBlock)) {
     raiseBlockError(
-      `Block component ${config.name} (${config.block}) in layout ${outletName} is not a valid block`
+      `Block component ${config.name || resolvedBlock?.blockName} in layout ${outletName} is not a valid block`
     );
     return;
   }
 
-  // Verify block is registered (security check - prevents use of unregistered blocks)
-  // Import lazily to avoid circular dependency at module load time
-  const { blockRegistry } = require("discourse/lib/blocks/registration");
-  const blockName = config.block.blockName;
-  if (!blockRegistry.has(blockName)) {
-    raiseBlockError(
-      `Block "${blockName}" is not registered. ` +
-        `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`
-    );
-    return;
-  }
+  const blockName = resolvedBlock.blockName;
 
   // === Outlet permission validation ===
   // Check if the block is allowed to render in this specific outlet.
-  // This runs at renderBlocks() time, after the block is confirmed to be registered.
-  const metadata = config.block?.blockMetadata;
+  const metadata = resolvedBlock.blockMetadata;
   if (metadata?.allowedOutlets || metadata?.deniedOutlets) {
     const permission = isBlockPermittedInOutlet(
       outletName,
@@ -264,9 +364,6 @@ export function validateBlock(
     );
 
     if (!permission.permitted) {
-      // permission.reason explains WHY it was denied:
-      // - "outlet X matches deniedOutlets pattern Y"
-      // - "outlet X does not match any allowedOutlets pattern"
       raiseBlockError(
         `Block "${blockName}" cannot be rendered in outlet "${outletName}": ${permission.reason}.`
       );
@@ -284,18 +381,18 @@ export function validateBlock(
 
   try {
     const hasChildren = config.children?.length > 0;
-    const isContainer = isContainerBlockFn(config.block);
+    const isContainer = isContainerBlockFn(resolvedBlock);
 
     if (hasChildren && !isContainer) {
       raiseBlockError(
-        `Block component ${config.name} (${config.block}) in layout ${outletName} cannot have children`
+        `Block component ${config.name || blockName} in layout ${outletName} cannot have children`
       );
       return;
     }
 
     if (isContainer && !hasChildren) {
       raiseBlockError(
-        `Block component ${config.name} (${config.block}) in layout ${outletName} must have children`
+        `Block component ${config.name || blockName} in layout ${outletName} must have children`
       );
       return;
     }
@@ -306,7 +403,6 @@ export function validateBlock(
     validateBlockArgs(config, outletName);
 
     // Validate conditions if service is available
-    // In production, blocksService.validate() logs warnings instead of throwing
     if (config.conditions && blocksService) {
       // Update context to include conditions for better error messages
       setBlockErrorContext({

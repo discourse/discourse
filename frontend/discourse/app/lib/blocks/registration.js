@@ -1,5 +1,4 @@
 import { DEBUG } from "@glimmer/env";
-import * as coreBlocks from "discourse/blocks/core";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
 
@@ -7,12 +6,38 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
 export { VALID_BLOCK_NAME_PATTERN };
 
 /**
- * Registry of block components registered via `@block` decorator and `api.registerBlock()`.
- * Maps block names to their component classes.
+ * A block class decorated with `@block`.
  *
- * @type {Map<string, typeof import("@glimmer/component").default>}
+ * @typedef {typeof import("@glimmer/component").default & { blockName: string, blockMetadata: Object }} BlockClass
+ */
+
+/**
+ * A factory function that returns a Promise resolving to a BlockClass or module with default export.
+ *
+ * @typedef {() => Promise<BlockClass | { default: BlockClass }>} BlockFactory
+ */
+
+/**
+ * Registry entry: either a resolved BlockClass or a factory function for lazy loading.
+ *
+ * @typedef {BlockClass | BlockFactory} BlockRegistryEntry
+ */
+
+/**
+ * Registry of block components registered via `@block` decorator and `api.registerBlock()`.
+ * Maps block names to their component classes or factory functions.
+ *
+ * @type {Map<string, BlockRegistryEntry>}
  */
 export const blockRegistry = new Map();
+
+/**
+ * Cache for resolved factory functions.
+ * Once a factory is resolved, the result is stored here to avoid re-resolving.
+ *
+ * @type {Map<string, BlockClass>}
+ */
+const resolvedFactoryCache = new Map();
 
 /**
  * Whether the block registry is locked (no new registrations allowed).
@@ -21,16 +46,33 @@ export const blockRegistry = new Map();
 let registryLocked = false;
 
 /**
- * Core block auto-discovery at module load time.
- * Similar to how transformers initialize validTransformerNames.
- *
- * This runs before any initializers, ensuring core blocks are
- * available immediately when the module is imported.
+ * Whether core blocks have been discovered.
+ * @type {boolean}
  */
-for (const exported of Object.values(coreBlocks)) {
-  // Check if it's a @block-decorated component (has blockName set by decorator)
-  if (typeof exported === "function" && exported.blockName) {
-    blockRegistry.set(exported.blockName, exported);
+let coreBlocksDiscovered = false;
+
+/**
+ * Lazily discovers and registers core blocks.
+ *
+ * This function is called lazily to avoid circular dependencies:
+ * - `block-outlet.gjs` imports from `registration.js`
+ * - `registration.js` imports from `blocks/core.js`
+ * - `blocks/core.js` imports from `block-group.gjs`
+ * - `block-group.gjs` imports from `block-outlet.gjs`
+ *
+ * By deferring the import, we break the cycle.
+ */
+function discoverCoreBlocks() {
+  if (coreBlocksDiscovered) {
+    return;
+  }
+  coreBlocksDiscovered = true;
+
+  const coreBlocks = require("discourse/blocks/core");
+  for (const exported of Object.values(coreBlocks)) {
+    if (typeof exported === "function" && exported.blockName) {
+      blockRegistry.set(exported.blockName, exported);
+    }
   }
 }
 
@@ -41,6 +83,7 @@ for (const exported of Object.values(coreBlocks)) {
  * @internal
  */
 export function _lockBlockRegistry() {
+  discoverCoreBlocks();
   registryLocked = true;
 }
 
@@ -113,6 +156,238 @@ export function _registerBlock(BlockClass) {
 }
 
 /**
+ * Checks if a registry entry is a factory function (not a resolved class).
+ *
+ * Factory functions are plain functions without a `blockName` property.
+ * BlockClasses have `blockName` set by the `@block` decorator.
+ *
+ * @param {BlockRegistryEntry} entry - The registry entry to check.
+ * @returns {boolean} True if the entry is a factory function.
+ */
+export function isBlockFactory(entry) {
+  return typeof entry === "function" && !entry.blockName;
+}
+
+/**
+ * Registers a block class with an explicit name.
+ *
+ * This allows registering a block under a different name than its `blockName`,
+ * useful for aliasing or namespacing. The class must still be decorated with `@block`.
+ *
+ * @param {string} name - The name to register the block under.
+ * @param {BlockClass} BlockClass - The block component class.
+ * @throws {Error} If registry is locked, name is invalid, or class is not a valid block.
+ *
+ * @example
+ * ```javascript
+ * api.registerBlock("my-hero", HeroBanner);
+ * // Now usable as { block: "my-hero" }
+ * ```
+ *
+ * @internal
+ */
+export function _registerBlockByName(name, BlockClass) {
+  if (registryLocked) {
+    raiseBlockError(
+      `Cannot register block "${name}": ` +
+        `the block registry is locked. Blocks must be registered before ` +
+        `any renderBlocks() configuration is set up.`
+    );
+    return;
+  }
+
+  if (!VALID_BLOCK_NAME_PATTERN.test(name)) {
+    raiseBlockError(
+      `Block name "${name}" is invalid. ` +
+        `Block names must start with a letter and contain only lowercase letters, numbers, and hyphens.`
+    );
+    return;
+  }
+
+  if (!BlockClass?.blockName) {
+    raiseBlockError(
+      `Block class "${BlockClass?.name}" must be decorated with @block to be registered.`
+    );
+    return;
+  }
+
+  if (blockRegistry.has(name)) {
+    raiseBlockError(`Block "${name}" is already registered.`);
+    return;
+  }
+
+  blockRegistry.set(name, BlockClass);
+}
+
+/**
+ * Registers a factory function for lazy loading a block.
+ *
+ * The factory will be called when the block is first needed. It must return
+ * a Promise that resolves to a BlockClass (or a module with a default export).
+ *
+ * @param {string} name - The name to register the block under.
+ * @param {BlockFactory} factory - Factory function returning Promise<BlockClass>.
+ * @throws {Error} If registry is locked, name is invalid, or factory is not a function.
+ *
+ * @example
+ * ```javascript
+ * api.registerBlock("hero-banner", () => import("../blocks/hero-banner"));
+ * // Block will be loaded when first used
+ * ```
+ *
+ * @internal
+ */
+export function _registerBlockFactory(name, factory) {
+  if (registryLocked) {
+    raiseBlockError(
+      `Cannot register block "${name}": ` +
+        `the block registry is locked. Blocks must be registered before ` +
+        `any renderBlocks() configuration is set up.`
+    );
+    return;
+  }
+
+  if (!VALID_BLOCK_NAME_PATTERN.test(name)) {
+    raiseBlockError(
+      `Block name "${name}" is invalid. ` +
+        `Block names must start with a letter and contain only lowercase letters, numbers, and hyphens.`
+    );
+    return;
+  }
+
+  if (typeof factory !== "function") {
+    raiseBlockError(
+      `Block factory for "${name}" must be a function that returns a Promise<BlockClass>.`
+    );
+    return;
+  }
+
+  if (blockRegistry.has(name)) {
+    raiseBlockError(`Block "${name}" is already registered.`);
+    return;
+  }
+
+  blockRegistry.set(name, factory);
+}
+
+/**
+ * Checks if a block is registered (by name or class reference).
+ *
+ * This is a synchronous check that does not resolve factory functions.
+ * Use this to verify a block exists before attempting resolution.
+ *
+ * @param {string | BlockClass} nameOrClass - Block name string or BlockClass.
+ * @returns {boolean} True if the block is registered.
+ */
+export function hasBlock(nameOrClass) {
+  discoverCoreBlocks();
+  if (typeof nameOrClass === "string") {
+    return blockRegistry.has(nameOrClass);
+  }
+  return nameOrClass?.blockName && blockRegistry.has(nameOrClass.blockName);
+}
+
+/**
+ * Checks if a block is registered and fully resolved (not a pending factory).
+ *
+ * Returns false for unregistered blocks or blocks that are registered
+ * as factory functions but haven't been resolved yet.
+ *
+ * @param {string} name - The block name to check.
+ * @returns {boolean} True if registered and resolved.
+ */
+export function isBlockResolved(name) {
+  discoverCoreBlocks();
+  if (!blockRegistry.has(name)) {
+    return false;
+  }
+  const entry = blockRegistry.get(name);
+  return !isBlockFactory(entry);
+}
+
+/**
+ * Resolves a block reference (string name or class) to a BlockClass.
+ *
+ * - If given a BlockClass, returns it directly.
+ * - If given a string, looks up in registry and resolves factory if needed.
+ * - Caches resolved factories to avoid re-resolving.
+ *
+ * @param {string | BlockClass} nameOrClass - Block name string or BlockClass.
+ * @returns {Promise<BlockClass>} The resolved block class.
+ * @throws {Error} If block not found or factory resolution fails.
+ *
+ * @example
+ * ```javascript
+ * const BlockClass = await resolveBlock("hero-banner");
+ * const BlockClass = await resolveBlock(HeroBanner); // Returns directly
+ * ```
+ */
+export async function resolveBlock(nameOrClass) {
+  discoverCoreBlocks();
+
+  // If already a class, return it directly
+  if (typeof nameOrClass !== "string") {
+    if (!nameOrClass?.blockName) {
+      raiseBlockError(
+        `Invalid block reference: expected string name or @block-decorated class, ` +
+          `got ${typeof nameOrClass}.`
+      );
+    }
+    return nameOrClass;
+  }
+
+  const name = nameOrClass;
+
+  // Check resolved cache first
+  if (resolvedFactoryCache.has(name)) {
+    return resolvedFactoryCache.get(name);
+  }
+
+  // Look up in registry
+  if (!blockRegistry.has(name)) {
+    raiseBlockError(
+      `Block "${name}" is not registered. ` +
+        `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`
+    );
+  }
+
+  const entry = blockRegistry.get(name);
+
+  // If already a class (not a factory), return it
+  if (!isBlockFactory(entry)) {
+    return entry;
+  }
+
+  // Resolve factory
+  try {
+    const result = await entry();
+    // Handle both direct class and module with default export
+    const BlockClass = result?.default ?? result;
+
+    if (!BlockClass?.blockName) {
+      raiseBlockError(
+        `Block factory for "${name}" did not return a valid @block-decorated class.`
+      );
+    }
+
+    // Cache the resolved class
+    resolvedFactoryCache.set(name, BlockClass);
+
+    // Update the main registry for future sync lookups
+    blockRegistry.set(name, BlockClass);
+
+    return BlockClass;
+  } catch (error) {
+    if (error.name === "BlockError") {
+      throw error;
+    }
+    raiseBlockError(
+      `Failed to resolve block factory for "${name}": ${error.message}`
+    );
+  }
+}
+
+/**
  * Stores the initial locked state to allow correct reset after tests.
  * @type {boolean | null}
  */
@@ -151,13 +426,12 @@ export function resetBlockRegistryForTesting() {
   }
 
   blockRegistry.clear();
+  resolvedFactoryCache.clear();
 
-  // Re-register core blocks
-  for (const exported of Object.values(coreBlocks)) {
-    if (typeof exported === "function" && exported.blockName) {
-      blockRegistry.set(exported.blockName, exported);
-    }
-  }
+  // Reset core blocks discovery flag so they can be rediscovered
+  coreBlocksDiscovered = false;
+  // Re-discover core blocks
+  discoverCoreBlocks();
 
   if (testRegistryLockedState !== null) {
     registryLocked = testRegistryLockedState;
