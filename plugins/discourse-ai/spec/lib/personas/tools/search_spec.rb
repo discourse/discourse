@@ -196,11 +196,11 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
         described_class.new(
           { search_query: post1.raw, limit: 1, user: post1.user.username },
           bot_user: bot_user,
-          llm: llm,
+          llm:,
         )
 
       results = search.invoke(&progress_blk)
-      expect(results[:rows].to_s).to include("/subfolder/t/#{post1.topic.slug}/#{post1.topic.id}")
+      expect(results[:rows].to_s).to include("/subfolder#{post1.url}")
     end
 
     it "passes on all search params" do
