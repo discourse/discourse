@@ -1,5 +1,4 @@
 import { settings } from "virtual:theme";
-import SortableColumn from "discourse/components/topic-list/header/sortable-column";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DetailedTopicCard from "../components/card/detailed-topic-card";
 import TopicActivityColumn from "../components/card/topic-activity-column";
@@ -40,27 +39,11 @@ const TopicCreator = <template>
 
 const DetailedCard = <template>
   <DetailedTopicCard
-    @topic={{@topic}}
-    @hideCategory={{@hideCategory}}
-    @bulkSelectEnabled={{@bulkSelectEnabled}}
-    @isSelected={{@isSelected}}
-    @onBulkSelectToggle={{@onBulkSelectToggle}}
-  />
-</template>;
-
-const DetailedCardHeader = <template>
-  <SortableColumn
-    @order="default"
-    @category={{@category}}
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name={{@name}}
-    @bulkSelectEnabled={{@bulkSelectEnabled}}
-    @showBulkToggle={{@showBulkToggle}}
-    @canBulkSelect={{@canBulkSelect}}
-    @canDoBulkActions={{@canDoBulkActions}}
-    @bulkSelectHelper={{@bulkSelectHelper}}
+    @topic={{@outletArgs.topic}}
+    @hideCategory={{@outletArgs.hideCategory}}
+    @bulkSelectEnabled={{@outletArgs.bulkSelectEnabled}}
+    @isSelected={{@outletArgs.isSelected}}
+    @onBulkSelectToggle={{@outletArgs.onBulkSelectToggle}}
   />
 </template>;
 
@@ -68,65 +51,51 @@ export default {
   name: "topic-list-customizations",
 
   initialize(container) {
-    const router = container.lookup("service:router");
     const isDetailed = settings.topic_card_detail === "detailed";
 
     withPluginApi((api) => {
-      api.registerValueTransformer(
-        "topic-list-columns",
-        ({ value: columns }) => {
-          if (isDetailed) {
-            // DETAILED MODE: Single column with full card
-            const hasBulkSelect = columns.has("bulk-select");
-
-            // Clear all columns except bulk-select
-            for (const [key] of columns.entries()) {
-              if (key !== "bulk-select") {
-                columns.delete(key);
-              }
-            }
-
-            // Add detailed card
-            columns.add("detailed-card", {
-              header: DetailedCardHeader,
-              item: DetailedCard,
-              after: hasBulkSelect ? "bulk-select" : undefined,
+      if (isDetailed) {
+        // DETAILED MODE: Use wrapper outlet to replace entire topic list item
+        api.renderInOutlet("topic-list-item", DetailedCard);
+      } else {
+        // SIMPLE MODE: Modify columns
+        const router = container.lookup("service:router");
+        api.registerValueTransformer(
+          "topic-list-columns",
+          ({ value: columns }) => {
+            columns.add("topic-status", {
+              item: TopicStatus,
+              after: "topic-author",
             });
+            columns.add("topic-category", {
+              item: TopicCategory,
+              after: "topic-status",
+            });
+            columns.add("topic-likes-replies", {
+              item: TopicReplies,
+              after: "topic-author-avatar",
+            });
+            columns.add("topic-creator", {
+              item: TopicCreator,
+              after: "topic-author-avatar",
+            });
+
+            columns.delete("views");
+            columns.delete("replies");
+
+            if (!router.currentRouteName.includes("userPrivateMessages")) {
+              columns.add("topic-activity", {
+                item: TopicActivity,
+                after: "title",
+              });
+              columns.delete("posters");
+              columns.delete("activity");
+            }
 
             return columns;
           }
-
-          // SIMPLE MODE: Existing implementation
-          columns.add("topic-status", {
-            item: TopicStatus,
-            after: "topic-author",
-          });
-          columns.add("topic-category", {
-            item: TopicCategory,
-            after: "topic-status",
-          });
-
-          columns.add("topic-likes-replies", {
-            item: TopicReplies,
-            after: "topic-author-avatar",
-          });
-          columns.add("topic-creator", {
-            item: TopicCreator,
-            after: "topic-author-avatar",
-          });
-          columns.delete("views");
-          columns.delete("replies");
-          if (!router.currentRouteName.includes("userPrivateMessages")) {
-            columns.add("topic-activity", {
-              item: TopicActivity,
-              after: "title",
-            });
-            columns.delete("posters");
-            columns.delete("activity");
-          }
-          return columns;
-        }
-      );
+        );
+      }
 
       api.registerValueTransformer(
         "topic-list-item-class",

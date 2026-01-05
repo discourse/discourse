@@ -18,4 +18,4 @@ en:
         description: "Controls the amount of information displayed on topic cards. 'Simple' shows minimal info. 'Detailed' includes tags, solved status, assigned users, and vote counts."
         choices:
           simple: "Simple"
-          detailed: "Detailed"
+          detailed: "Detailed (experimental)"
