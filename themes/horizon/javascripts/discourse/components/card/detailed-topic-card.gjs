@@ -165,7 +165,9 @@ export default class DetailedTopicCard extends Component {
               {{#if this.capabilities.viewport.sm}}
                 {{i18n "topic_voting.votes" count=this.voteCount}}
               {{else}}
-                {{this.voteCount}}
+                <span
+                  class="hc-topic-card__votes-count"
+                >{{this.voteCount}}</span>
               {{/if}}
               {{icon "stamp"}}
             </span>

@@ -100,6 +100,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   &__status {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
@@ -145,6 +146,22 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
     &.--hot {
       color: var(--danger);
+    }
+  }
+
+  &__votes-count {
+    @include viewport.until(sm) {
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(55%, -60%);
+      font-size: var(--font-down-3);
+      border-radius: 100%;
+      padding: 0.25em;
+      background: var(--tertiary-very-low);
+      height: 1em;
+      min-width: 1em;
+      text-align: center;
     }
   }
 
@@ -203,7 +220,8 @@ $padding-pills-small: var(--space-half) var(--space-2);
     }
 
     .topic-status.--pinned,
-    .topic-status.--solved {
+    .topic-status.--solved,
+    .topic-status.--unsolved {
       display: none;
     }
   }
@@ -274,6 +292,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   &__footer {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
