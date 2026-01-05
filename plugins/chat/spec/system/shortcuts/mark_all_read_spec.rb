@@ -6,7 +6,7 @@ RSpec.describe "Shortcuts | mark all read", type: :system do
   fab!(:channel_2, :chat_channel)
   fab!(:channel_3, :chat_channel)
 
-  let(:chat_sidebar) { PageObjects::Pages::Sidebar.new }
+  let(:chat_sidebar) { PageObjects::Pages::ChatSidebar.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer) { PageObjects::Pages::ChatDrawer.new }
 

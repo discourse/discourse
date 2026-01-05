@@ -58,6 +58,7 @@ en:
       starred_channels_empty: "You haven't starred any channels yet. Star channels to see them here for quick access."
       browse_all_channels: "Browse all channels"
       see_in: "See in"
+      open_channel_menu: "Open channel menu"
       move_to_channel:
         title: "Move messages to channel"
         instructions:
@@ -81,6 +82,8 @@ en:
         join_channel: "Join channel"
         leave_channel: "Leave channel"
         leave_groupchat_info: "By leaving this group chat, you will no longer have access to it and won’t receive notifications related to it. To rejoin, you will need to be re-invited by a member of the group chat."
+        notification_settings: "Notification settings"
+        notification_settings_context: "Notifications"
         join: "Join"
         leave: "Leave"
         save_label:
@@ -508,6 +511,7 @@ en:
         follow: "Join"
         followed: "Joined"
         mute: "Mute channel"
+        unmute: "Unmute channel"
         threading_enabled: "Enabled"
         threading_disabled: "Disabled"
         muted_on: "On"
