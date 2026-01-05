@@ -872,6 +872,7 @@ hu:
       view_source: "Forráskód megtekintése"
       insights:
         title: "Betekintések"
+        flag_volume: "Megjelölések száma"
         flagged_by_users:
           one: "%{count} egyedi felhasználó jelölte meg"
           other: "%{count} egyedi felhasználó jelölte meg"
