@@ -2569,7 +2569,7 @@ RSpec.describe Admin::UsersController do
 
             expect(Jobs).to have_received(:enqueue).with(
               :delete_user_posts,
-              include(user_id: target_user.id, admin_id: acting_user.id),
+              include(user_id: target_user.id, acting_user_id: acting_user.id),
             )
 
             expect(response.status).to eq(200)

@@ -6,12 +6,9 @@ module Jobs
 
     def execute(args)
       user = User.find(args[:user_id])
-      admin_user = User.find(args[:admin_id]) if args[:admin_id]
+      acting_user = User.find(args[:acting_user_id]) if args[:acting_user_id]
 
-      raise Discourse::InvalidAccess unless admin_user&.admin?
-
-      guardian = Guardian.new(admin_user)
-
+      guardian = Guardian.new(acting_user)
       raise Discourse::InvalidAccess unless guardian.can_delete_all_posts?(user)
 
       deleted_count = 0
@@ -24,14 +21,14 @@ module Jobs
 
       post =
         SystemMessage.create_from_system_user(
-          admin_user,
+          acting_user,
           :user_posts_deleted,
           user: user.username,
-          staff_user: admin_user.username,
+          staff_user: acting_user.username,
           deleted_posts_count: deleted_count,
         )
 
-      post.topic.invite_group(admin_user, Group[:admins])
+      post.topic.invite_group(acting_user, Group[:admins])
     end
   end
 end

@@ -87,7 +87,7 @@ class Admin::UsersController < Admin::StaffController
     threshold = SiteSetting.delete_all_posts_background_threshold.to_i
 
     if threshold > 0 && post_count > threshold
-      Jobs.enqueue(:delete_user_posts, user_id: @user.id, admin_id: current_user.id)
+      Jobs.enqueue(:delete_user_posts, user_id: @user.id, acting_user_id: current_user.id)
       render json: { job_enqueued: true, post_count: post_count }
     else
       render json: { job_enqueued: false, post_count: post_count }
