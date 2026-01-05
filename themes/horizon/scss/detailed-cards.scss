@@ -41,6 +41,10 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   .bulk-select-enabled & {
+    &.bulk-selected {
+      background: var(--secondary);
+    }
+
     > .bulk-select {
       display: none;
     }
@@ -156,7 +160,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
       right: 0;
       transform: translate(55%, -60%);
       font-size: var(--font-down-3);
-      border-radius: 100%;
+      border-radius: 1em;
       padding: 0.25em;
       background: var(--tertiary-very-low);
       height: 1em;
@@ -387,37 +391,4 @@ $padding-pills-small: var(--space-half) var(--space-2);
   &__time {
     color: var(--primary-medium);
   }
-
-  .bulk-select-enabled .detailed-card-item .detailed-card {
-    padding-left: var(--space-2);
-  }
-
-  // .topic-list:has(.detailed-card-item) {
-  //   width: 100%;
-  //   table-layout: fixed;
-
-  //   .topic-list-header {
-  //     border-bottom: none;
-  //   }
-
-  //   .topic-list-body {
-  //     display: block;
-  //     padding: var(--space-3);
-  //     padding-top: var(--space-4);
-
-  //     @include viewport.until(sm) {
-  //       padding: var(--space-2);
-  //       padding-top: var(--space-3);
-  //     }
-
-  //     .detailed-card-item {
-  //       max-width: 100%;
-  //       box-sizing: border-box;
-
-  //       &:first-child {
-  //         margin-top: var(--space-2);
-  //       }
-  //     }
-  //   }
-  // }
 }
