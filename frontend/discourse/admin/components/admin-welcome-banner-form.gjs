@@ -119,15 +119,26 @@ export default class AdminWelcomeBannerForm extends Component {
   }
 
   async fetchSiteTexts(locale) {
-    const response = await ajax("/admin/customize/site_texts.json", {
-      data: {
-        q: "welcome_banner",
-        locale,
-      },
-    });
+    const keys = [
+      "js.welcome_banner.header.new_members",
+      "js.welcome_banner.header.logged_in_members",
+      "js.welcome_banner.header.anonymous_members",
+      "js.welcome_banner.subheader.logged_in_members",
+      "js.welcome_banner.subheader.anonymous_members",
+      "js.welcome_banner.search_placeholder",
+    ];
+
+    const responses = await Promise.all(
+      keys.map((key) =>
+        ajax(`/admin/customize/site_texts/${key}.json`, {
+          data: { locale },
+        }).catch(() => ({ site_text: { id: key, value: "" } }))
+      )
+    );
 
     const textData = {};
-    response.site_texts.forEach((text) => {
+    responses.forEach((response) => {
+      const text = response.site_text;
       switch (text.id) {
         case "js.welcome_banner.header.new_members":
           textData.headerNewMembers = text.value;
