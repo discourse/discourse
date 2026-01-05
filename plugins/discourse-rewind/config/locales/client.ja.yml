@@ -16,7 +16,8 @@ ja:
           title: 閲覧時間
         chat_usage:
           messages: メッセージ
-          you: あなた
+          author: あなた
+          author_others: "%{username}"
           status_online: "● オンライン"
         invites:
           title: 招待

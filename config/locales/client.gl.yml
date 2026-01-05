@@ -2143,16 +2143,6 @@ gl:
         bookmarks: "Aínda non marcou este tema."
         category: "Non hai temas en %{category}."
         top: "Non hai temas destacados."
-      bottom:
-        latest: "Non hai máis temas."
-        posted: "Non hai máis temas publicados."
-        read: "Non hai máis temas lidos."
-        new: "Non hai máis temas novos."
-        unread: "Non hai máis temas pendentes de lectura."
-        category: "Non hai máis temas en %{category}."
-        tag: "Non hai máis temas en %{tag}."
-        top: "Non hai máis temas destacados."
-        bookmarks: "Non hai máis temas marcados."
     topic_bulk_actions:
       dismiss:
         name: "Desbotar"

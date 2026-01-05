@@ -2423,17 +2423,6 @@ vi:
         bookmarks: "Bạn chưa chủ đề nào được đánh dấu."
         category: "Không có chủ đề nào trong %{category} ."
         top: "Không có chủ đề top."
-      bottom:
-        latest: "Không còn thêm chủ đề nào nữa."
-        posted: "Ở đây không có thêm chủ đề nào được đăng."
-        read: "Không còn thêm chủ đề chưa đọc nào nữa."
-        new: "Không còn thêm chủ đề mới nào nữa."
-        unread: "Không còn thêm chủ đề chưa đọc nào nữa."
-        unseen: "Không còn chủ đề nào chưa từng thấy."
-        category: "Không còn thêm chủ đề nào trong %{category} ."
-        tag: "Không có thêm %{tag} chủ đề."
-        top: "Không còn của đề top nào nữa."
-        bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     topic_bulk_actions:
       dismiss:
         name: "Bỏ qua"

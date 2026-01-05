@@ -2394,17 +2394,6 @@ ko:
         bookmarks: "아직 북마크된 글이 없습니다."
         category: "%{category}에 글이 없습니다."
         top: "주요 글이 없습니다."
-      bottom:
-        latest: "더 이상 최근 글이 없습니다."
-        posted: "더 이상 작성한 글이 없습니다."
-        read: "더 이상 읽을 글이 없습니다."
-        new: "더 이상 새로운 글이 없습니다."
-        unread: "더 이상 읽지 않은 글이 없습니다."
-        unseen: "더 이상 확인하지 않은 글이 없습니다."
-        category: "더 이상 %{category}에 글이 없습니다."
-        tag: "더 이상 %{tag}의 글이 없습니다."
-        top: "더 이상 주요 글이 없습니다."
-        bookmarks: "더이상 북마크한 글이 없습니다."
     topic_bulk_actions:
       dismiss:
         name: "무시"

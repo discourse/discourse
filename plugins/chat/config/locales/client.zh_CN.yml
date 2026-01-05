@@ -62,6 +62,7 @@ zh_CN:
       starred_channels_empty: "您未收藏任何频道，收藏一些频道，以便在此快速访问它们。"
       browse_all_channels: "浏览所有频道"
       see_in: "参见"
+      open_channel_menu: "打开频道菜单"
       move_to_channel:
         title: "将消息移至频道"
         instructions:
@@ -83,6 +84,8 @@ zh_CN:
         join_channel: "加入频道"
         leave_channel: "离开频道"
         leave_groupchat_info: "离开此群组聊天后，您将无法再访问它，也不会收到与之相关的通知。要重新加入，需要群组聊天成员再次向您发送邀请。"
+        notification_settings: "通知设置"
+        notification_settings_context: "通知"
         join: "加入"
         leave: "离开"
         save_label:
@@ -459,6 +462,7 @@ zh_CN:
         follow: "加入"
         followed: "已加入"
         mute: "将频道设为免打扰"
+        unmute: "取消频道静音"
         threading_enabled: "已启用"
         threading_disabled: "已禁用"
         muted_on: "开"
