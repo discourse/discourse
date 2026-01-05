@@ -220,8 +220,12 @@ RSpec.describe DiscourseAi::Utils::Search do
     end
 
     context "with filter-only queries (no search term)" do
-      fab!(:topic1) { Fabricate(:topic, category: category, views: 100, like_count: 10) }
-      fab!(:topic2) { Fabricate(:topic, category: category, views: 50, like_count: 20) }
+      fab!(:topic1) do
+        Fabricate(:topic, category: category, views: 100, like_count: 10, bumped_at: 1.day.ago)
+      end
+      fab!(:topic2) do
+        Fabricate(:topic, category: category, views: 50, like_count: 20, bumped_at: 1.hour.ago)
+      end
       fab!(:topic3) { Fabricate(:topic, tags: [tag_funny]) }
       fab!(:post1) { Fabricate(:post, topic: topic1) }
       fab!(:post2) { Fabricate(:post, topic: topic2) }
@@ -236,10 +240,15 @@ RSpec.describe DiscourseAi::Utils::Search do
         url_index = results[:column_names].index("url")
         topic_urls = results[:rows].map { |row| row[url_index] }
 
-        expect(topic_urls).to include(topic3.relative_url, topic2.relative_url, topic1.relative_url)
+        expected_urls = [topic3.relative_url, topic2.relative_url, topic1.relative_url]
+
+        # keep only topics we expect (ignore any other fabricated topics)
+        topic_urls &= expected_urls
+
+        expect(topic_urls).to eq(expected_urls)
       end
 
-      it "returns posts filtered by category with order" do
+      it "returns topics filtered by category with order" do
         results =
           described_class.perform_search(
             category: category.slug,
@@ -252,11 +261,12 @@ RSpec.describe DiscourseAi::Utils::Search do
         url_index = results[:column_names].index("url")
         topic_urls = results[:rows].map { |row| row[url_index] }
 
-        expected_urls = Topic.where(category: category).map(&:relative_url)
-        expect(topic_urls).to contain_exactly(*expected_urls)
+        expected_urls =
+          Topic.order("views desc, bumped_at desc").where(category: category).map(&:relative_url)
+        expect(topic_urls).to eq(expected_urls)
       end
 
-      it "returns posts filtered by tags" do
+      it "returns topics filtered by tags" do
         results = described_class.perform_search(tags: tag_funny.name, current_user: admin)
 
         expect(results[:rows]).to be_present
@@ -266,7 +276,7 @@ RSpec.describe DiscourseAi::Utils::Search do
         expect(topic_urls).to contain_exactly(topic_with_tags.relative_url, topic3.relative_url)
       end
 
-      it "returns posts filtered by user" do
+      it "returns topics filtered by user" do
         results = described_class.perform_search(user: post1.user.username, current_user: admin)
 
         url_index = results[:column_names].index("url")

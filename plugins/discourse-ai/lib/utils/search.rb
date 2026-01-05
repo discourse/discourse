@@ -3,6 +3,9 @@
 module DiscourseAi
   module Utils
     class Search
+      # arbitrary but we need something safe here
+      MAX_RESULTS_LIMIT = 200
+
       def self.perform_search(
         search_query: nil,
         category: nil,
@@ -18,20 +21,24 @@ module DiscourseAi
         current_user: nil,
         result_style: :compact
       )
+        max_results = max_results.to_i
+        raise ArgumentError, "max_results must be a positive integer" if max_results <= 0
+        max_results = MAX_RESULTS_LIMIT if max_results > MAX_RESULTS_LIMIT
+
         if search_query.blank? &&
              has_any_filter?(category, user, order, tags, before, after, status)
           return(
             fallback_to_filter(
-              category: category,
-              user: user,
-              order: order,
-              tags: tags,
-              before: before,
-              after: after,
-              status: status,
-              max_results: max_results,
-              current_user: current_user,
-              result_style: result_style,
+              category:,
+              user:,
+              order:,
+              tags:,
+              before:,
+              after:,
+              status:,
+              max_results:,
+              current_user:,
+              result_style:,
             )
           )
         end
@@ -58,16 +65,16 @@ module DiscourseAi
           return(
             {
               args: {
-                search_query: search_query,
-                category: category,
-                user: user,
-                order: order,
-                max_posts: max_posts,
-                tags: tags,
-                before: before,
-                after: after,
-                status: status,
-                max_results: max_results,
+                search_query:,
+                category:,
+                user:,
+                order:,
+                max_posts:,
+                tags:,
+                before:,
+                after:,
+                status:,
+                max_results:,
               }.compact,
               rows: [],
               instruction: I18n.t("invalid_access"),
@@ -117,16 +124,16 @@ module DiscourseAi
 
         # Construct search_args hash for consistent return format
         search_args = {
-          search_query: search_query,
-          category: category,
-          user: user,
-          order: order,
-          max_posts: max_posts,
-          tags: tags,
-          before: before,
-          after: after,
-          status: status,
-          max_results: max_results,
+          search_query:,
+          category:,
+          user:,
+          order:,
+          max_posts:,
+          tags:,
+          before:,
+          after:,
+          status:,
+          max_results:,
         }.compact
 
         if posts.blank?
@@ -186,21 +193,24 @@ module DiscourseAi
         scope = TopicQuery.new(guardian.user).latest_results(skip_ordering: true)
         filter = TopicsFilter.new(guardian:, scope: scope)
         topics = filter.filter_from_query_string(query_parts.join(" "))
-        topics =
-          topics.includes(:category, :user, :tags).limit(max_results.to_i) if max_results.to_i > 0
+
+        # may be uneeded with goldiloader
+        topics = topics.includes(:category, :user)
+        topics = topics.includes(:tags) if SiteSetting.tagging_enabled
+        topics = topics.limit(max_results)
 
         format_filter_results(
           topics,
           query_string: query_parts.join(" "),
-          result_style: result_style,
-          category: category,
-          user: user,
-          order: order,
-          tags: tags,
-          before: before,
-          after: after,
-          status: status,
-          max_results: max_results,
+          result_style:,
+          category:,
+          user:,
+          order:,
+          tags:,
+          before:,
+          after:,
+          status:,
+          max_results:,
         )
       end
 
@@ -218,14 +228,14 @@ module DiscourseAi
         max_results:
       )
         search_args = {
-          category: category,
-          user: user,
-          order: order,
-          tags: tags,
-          before: before,
-          after: after,
-          status: status,
-          max_results: max_results,
+          category:,
+          user:,
+          order:,
+          tags:,
+          before:,
+          after:,
+          status:,
+          max_results:,
         }.compact
 
         if topics.blank?
@@ -253,7 +263,8 @@ module DiscourseAi
       def self.format_row(topic:, post: nil, hidden_tags: nil)
         row = {
           title: topic.title,
-          url: post ? post.full_url : topic.url,
+          # this is deliberate, we don't want to repeat https://example.com/ in every result, but we need subfolder
+          url: Discourse.base_path + (post ? post.url : topic.relative_url),
           username: post ? post.user&.username : topic.user&.username,
           excerpt: post ? post.excerpt : topic.excerpt,
           created: post ? post.created_at : topic.created_at,
@@ -261,7 +272,8 @@ module DiscourseAi
           likes: post ? post.like_count : topic.like_count,
           topic_views: topic.views,
           topic_likes: topic.like_count,
-          topic_replies: topic.reply_count,
+          # deliberate - we don't want the number of "replies" in the Discourse sense, this is total number or replies to topic
+          topic_replies: topic.posts_count - 1,
         }
 
         if SiteSetting.tagging_enabled
