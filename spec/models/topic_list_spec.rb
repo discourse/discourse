@@ -56,6 +56,64 @@ RSpec.describe TopicList do
 
       expect(topic.category_user_data).to eq(category_user)
     end
+
+    context "when serialize_topic_op_likes_data modifier is enabled" do
+      let(:theme) { Fabricate(:theme, enabled: true, user_selectable: true) }
+      let(:plugin) { Plugin::Instance.new }
+
+      before do
+        theme.theme_modifier_set.update!(serialize_topic_op_likes_data: true)
+        Theme.clear_cache!
+      end
+
+      after { Theme.clear_cache! }
+
+      it "preloads first_post association" do
+        first_post = Fabricate(:post, topic: topic, post_number: 1)
+        topic.update!(first_post: first_post)
+
+        loaded_topic = topic_list.load_topics.first
+
+        expect(loaded_topic.association(:first_post).loaded?).to eq(true)
+        expect(loaded_topic.first_post).to eq(first_post)
+      end
+
+      it "preloads first_post when plugin modifier is enabled" do
+        theme.theme_modifier_set.update!(serialize_topic_op_likes_data: false)
+        Theme.clear_cache!
+
+        modifier = :serialize_topic_op_likes_data
+        proc = Proc.new { true }
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+
+        first_post = Fabricate(:post, topic: topic, post_number: 1)
+        topic.update!(first_post: first_post)
+
+        loaded_topic = topic_list.load_topics.first
+
+        expect(loaded_topic.association(:first_post).loaded?).to eq(true)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+        Theme.clear_cache!
+      end
+
+      it "does not preload first_post when modifier is disabled" do
+        theme.theme_modifier_set.update_column(:serialize_topic_op_likes_data, nil)
+        ThemeModifierSet
+          .where.not(theme_id: theme.id)
+          .where.not(serialize_topic_op_likes_data: nil)
+          .update_all(serialize_topic_op_likes_data: nil)
+        Theme.clear_cache!
+
+        first_post = Fabricate(:post, topic: topic, post_number: 1)
+        topic.update!(first_post: first_post)
+        topic.association(:first_post).reset
+
+        loaded_topic = topic_list.load_topics.first
+
+        expect(loaded_topic.association(:first_post).loaded?).to eq(false)
+      end
+    end
   end
 
   describe "#top_tags" do
