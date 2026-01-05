@@ -332,6 +332,15 @@ RSpec.describe DiscourseAi::Utils::Search do
 
         expect(results[:rows].length).to be <= 1
       end
+
+      it "properly handles subfolder URLs in filter-only queries" do
+        Discourse.stubs(:base_path).returns("/subfolder")
+
+        results = described_class.perform_search(user: post1.user.username, current_user: admin)
+
+        url_index = results[:column_names].index("url")
+        expect(results[:rows][0][url_index]).to eq("/subfolder/t/#{topic1.slug}/#{topic1.id}")
+      end
     end
   end
 end
