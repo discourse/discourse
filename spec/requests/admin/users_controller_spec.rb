@@ -2540,7 +2540,7 @@ RSpec.describe Admin::UsersController do
   describe "#delete_posts_decider" do
     shared_examples "delete_posts_decider accessible" do |acting_user_role|
       let(:acting_user) { send(acting_user_role) }
-      context "when user exits" do
+      context "when user exists" do
         fab!(:target_user, :user)
 
         context "when post count is below or equal to threshold" do
