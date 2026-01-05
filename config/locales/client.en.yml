@@ -8176,7 +8176,7 @@ en:
           button: "Delete all posts"
           progress:
             title: "Progress of deleting posts"
-            description: "Deleting posts…"
+            description: "Deleting %{post_count} posts by @%{username}..."
           confirmation:
             title: "Delete all posts by @%{username}"
             description: |

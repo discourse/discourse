@@ -12,8 +12,11 @@ export default class DeleteUserPostsProgress extends Component {
   @tracked deletedPosts = 0;
   @tracked flash;
 
+  originalPostCount = 0;
+
   constructor() {
     super(...arguments);
+    this.originalPostCount = this.userPostCount;
     this.deletePosts();
   }
 
@@ -52,7 +55,13 @@ export default class DeleteUserPostsProgress extends Component {
       @dismissable={{false}}
     >
       <:body>
-        <p>{{i18n "admin.user.delete_posts.progress.description"}}</p>
+        <p>{{htmlSafe
+            (i18n
+              "admin.user.delete_posts.progress.description"
+              post_count=this.originalPostCount
+              username=@model.user.username
+            )
+          }}</p>
         <div class="progress-bar">
           <span
             style={{htmlSafe (concat "width: " this.deletedPercentage "%")}}
