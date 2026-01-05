@@ -2766,17 +2766,6 @@ lt:
         bookmarks: "Jūs dar neturite pažymėtų temų."
         category: "Nėra jokių temų kategorijoje %{category}."
         top: "Nėra jokių TOP temų."
-      bottom:
-        latest: "Daugiau nėra jokių naujausių temų."
-        posted: "Daugiau nėra jokių paskelbtų temų."
-        read: "Daugiau nėra jokių perskaitytų temų."
-        new: "Daugiau nėra jokių naujų temų."
-        unread: "Daugiau nėra jokių neperskaitytų temų."
-        unseen: "Nebėra nematytų temų."
-        category: "Daugiau nėra jokių temų kategorijoje %{category}."
-        tag: "Daugiau nėra jokių temų kategorijoje %{tag}."
-        top: "Daugiau nėra jokių populiarių temų."
-        bookmarks: "Daugiau pažymėtų temų nėra"
     topic_bulk_actions:
       dismiss:
         name: "Praleisti"

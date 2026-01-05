@@ -59,6 +59,7 @@ el:
         delete_channel: "Διαγραφή καναλιού"
         join_channel: "Εγγραφή στο κανάλι"
         leave_channel: "Αποχώρηση από το κανάλι"
+        notification_settings_context: "Ειδοποιήσεις"
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
       channel_archive:

@@ -51,8 +51,6 @@ hr:
           title: "Popis tema"
         basic_topic_list:
           title: "Popis osnovnih tema"
-        footer_message:
-          title: "Poruka podnožja"
         signup_cta:
           title: "Registracija CTA"
         topic_timer_info:

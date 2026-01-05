@@ -16,7 +16,8 @@ it:
           title: Tempo di lettura
         chat_usage:
           messages: messaggi
-          you: Tu
+          author: Tu
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Inviti

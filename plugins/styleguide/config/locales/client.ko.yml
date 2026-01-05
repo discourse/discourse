@@ -51,8 +51,6 @@ ko:
           title: "글 목록"
         basic_topic_list:
           title: "기본 글 목록"
-        footer_message:
-          title: "하단 메시지"
         signup_cta:
           title: "가입 CTA"
         topic_timer_info:

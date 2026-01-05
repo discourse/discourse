@@ -2585,16 +2585,6 @@ ro:
           unread: "Nimic rămas necitit... impresionant!"
           new_new: "Nimic nou în acest moment... revino în curând!"
           new: "Nimic nou în acest moment... revino în curând!"
-      bottom:
-        latest: "Nu mai există niciun subiect recent."
-        posted: "Nu mai există subiecte postate."
-        read: "Nu mai există subiecte citite."
-        new: "Nu mai există subiecte noi."
-        unread: "Nu mai există subiecte necitite."
-        category: "Nu mai există subiecte din categoria %{category}."
-        tag: "Nu mai există subiecte din categoria %{tag}."
-        top: "Nu mai există subiecte de top."
-        bookmarks: "Nu mai sunt semne de carte."
     topic_bulk_actions:
       dismiss:
         name: "Respinge"

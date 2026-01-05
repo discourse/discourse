@@ -16,7 +16,8 @@ et:
           title: Lugemise aeg
         chat_usage:
           messages: sõnumid
-          you: Sina
+          author: Sina
+          author_others: "%{username}"
         invites:
           title: kutsed
           invitee_posts: Postitusi loodud

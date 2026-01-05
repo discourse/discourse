@@ -81,6 +81,7 @@ pt_BR:
         join_channel: "Entrar no canal"
         leave_channel: "Sair do canal"
         leave_groupchat_info: "Ao sair do chat em grupo, você não terá mais acesso a ele nem receberá as notificações relacionadas. Para entrar novamente, você precisa ser convidado(a) novamente por um membro do chat em grupo."
+        notification_settings_context: "Notificações"
         join: "Participar"
         leave: "Sair"
         save_label:

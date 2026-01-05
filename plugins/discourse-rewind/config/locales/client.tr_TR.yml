@@ -16,7 +16,8 @@ tr_TR:
           title: Okuma süresi
         chat_usage:
           messages: i̇letiler
-          you: Siz
+          author: Siz
+          author_others: "%{username}"
           status_online: "● çevrimiçi"
         invites:
           title: Davetler

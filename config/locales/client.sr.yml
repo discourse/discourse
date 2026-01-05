@@ -1894,16 +1894,6 @@ sr:
         bookmarks: "Nemate markiranih tema još."
         category: "Nema tema u %{category}."
         top: "Nema glavnih tema."
-      bottom:
-        latest: "Nema više najnovijih tema."
-        posted: "Nema više objavljenih tema."
-        read: "Nema više pročitanih tema."
-        new: "Nema više novih tema."
-        unread: "Nema više nepročitanih tema."
-        category: "Nema više %{category} tema."
-        tag: "Nema više %{tag} tema."
-        top: "Nema više glavnih tema."
-        bookmarks: "Nema više markiranih tema."
     topic_bulk_actions:
       dismiss:
         name: "Odbaci"

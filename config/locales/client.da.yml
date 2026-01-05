@@ -2802,18 +2802,6 @@ da:
         category: "Der er ingen emner i kategorien %{category}."
         top: "Der er ingen top emner"
         filter: "Der er ingen emner."
-      bottom:
-        latest: "Der er ikke flere populære emner."
-        posted: "Der er ikke flere emner."
-        read: "Der er ikke flere læste emner."
-        new: "Der er ikke flere nye emner."
-        unread: "Der er ikke flere ulæste emner."
-        unseen: "Der er ikke flere usete emner."
-        category: "Der er ikke flere emner i kategorien %{category}."
-        tag: "Der er ikke flere %{tag} emner."
-        top: "Der er ikke flere top emner"
-        bookmarks: "Der er ikke flere bogmærkede emner."
-        filter: "Der er ikke flere emner."
     topic_bulk_actions:
       dismiss:
         name: "Ignorer Alle"

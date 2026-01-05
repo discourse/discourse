@@ -81,6 +81,7 @@ nl:
         join_channel: "Deelnemen aan kanaal"
         leave_channel: "Kanaal verlaten"
         leave_groupchat_info: "Als je deze groepschat verlaat, heb je er geen toegang meer toe en ontvang je geen meldingen meer. Om weer deel te kunnen nemen, moet je opnieuw worden uitgenodigd door een lid van de groepschat."
+        notification_settings_context: "Meldingen"
         join: "Deelnemen"
         leave: "Verlaten"
         save_label:

@@ -1777,8 +1777,6 @@ id:
       none:
         new: "Anda tidak memiliki topik baru"
         filter: "Tidak ada topik."
-      bottom:
-        new: "Tidak ada topik baru lagi"
     topic_bulk_actions:
       dismiss:
         name: "Bubar"

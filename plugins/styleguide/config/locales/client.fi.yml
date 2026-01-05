@@ -67,8 +67,6 @@ fi:
           title: "Ketjulistaus"
         basic_topic_list:
           title: "Tavallinen ketjulistaus"
-        footer_message:
-          title: "Alatunnisteen viesti"
         signup_cta:
           title: "Rekisteröitymisen CTA"
         topic_timer_info:

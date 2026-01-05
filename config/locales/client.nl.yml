@@ -3280,19 +3280,6 @@ nl:
           unread: "Niets ongelezen gelaten... indrukwekkend!"
           new_new: "Momenteel niets nieuws. Kom snel terug!"
           new: "Momenteel niets nieuws. Kom snel terug!"
-      bottom:
-        latest: "Er zijn verder geen nieuwste topics."
-        posted: "Er zijn verder geen geplaatste topics."
-        read: "Er zijn verder geen gelezen topics."
-        new: "Er zijn verder geen nieuwe topics."
-        unread: "Er zijn verder geen ongelezen topics."
-        unseen: "Er zijn verder geen ongeziene topics."
-        category: "Er zijn verder geen topics in %{category}."
-        tag: "Er zijn verder geen topics over %{tag}."
-        top: "Er zijn verder geen toptopics."
-        hot: "Er zijn geen populaire topics meer."
-        bookmarks: "Er zijn verder geen topics met bladwijzers."
-        filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
       dismiss:
         name: "Sluiten"
@@ -3420,9 +3407,6 @@ nl:
         other: "%{count} antwoorden, ga naar eerste bericht"
       created_at: "Gemaakt: %{date}"
       bumped_at: "Nieuwste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Blader door alle categorieën</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Blader door alle categorieën</a>, <a href='%{basePath}/latest'>bekijk de nieuwste topics</a> of zie de top:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Blader door alle tags</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
       browse_latest_topics: "Nieuwste topics bekijken"
       suggest_create_topic: Klaar om <a href>een nieuw gesprek te beginnen?</a>
       jump_reply: "Naar oorspronkelijke locatie van bericht"

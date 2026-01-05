@@ -285,6 +285,9 @@ es:
       forwarded: "Reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
     skip_to_main_content: "Saltar al contenido principal"
+    skip_to_post: "saltar a la publicación %{post_number}"
+    skip_to_last_reply: "Saltar a la última respuesta"
+    skip_to_top: "Saltar al principio"
     skip_user_nav: "Saltar al contenido del perfil"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
@@ -297,6 +300,8 @@ es:
         logged_in_members: "¡Te damos la bienvenida de nuevo, %{preferred_display_name}!"
         anonymous_members: "¡Te damos la bienvenida a %{site_name}!"
       search_placeholder: "Buscar"
+    impersonation:
+      stop: "Deja de suplantar"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Es posible que tu sitio no funcione porque un tema o componente tenga errores. Comprueba la consola del navegador para obtener más información."
@@ -627,6 +632,7 @@ es:
     review:
       show_more: "Mostrar más"
       show_less: "Mostrar menos"
+      back_to_queue: "Volver a la cola"
       order_by: "Ordenar por"
       date_filter: "Publicado entre"
       in_reply_to: "en respuesta a"
@@ -677,6 +683,10 @@ es:
         claimed_by_you: "Has reclamado este elemento y puedes revisarlo."
         claimed_by_other: "Este elemento solo puede ser revisado por <b>%{username}</b>."
         automatically_claimed_by: "<b>%{username}</b> ya está revisando este elemento."
+      claim:
+        title: "Asignarme este tema"
+      unclaim:
+        help: "Desasignar"
       awaiting_approval: "Esperando aprobación"
       delete: "Eliminar"
       settings:
@@ -698,6 +708,7 @@ es:
       filtered_topic: "Has filtrado a contenido revisable en un solo tema."
       filtered_user: "Usuario denunciado"
       filtered_reviewed_by: "Revisado por"
+      filtered_claimed_by: "Denuncia asignada a"
       show_all_topics: "mostrar todos los temas"
       deleted_post: "(publicación eliminada)"
       deleted_user: "(usuario eliminado)"
@@ -769,10 +780,13 @@ es:
           created_at: "Creado el"
           created_at_asc: "Creado el (inverso)"
         priority:
+          title: "Prioridad mínima"
           any: "(cualquiera)"
           low: "Baja"
           medium: "Media"
           high: "Alta"
+        active_filters: "Filtros activos:"
+        clear_filter: "Quitar %{filter}"
       conversation:
         view_full: "ver conversación completa"
       scores:
@@ -833,7 +847,12 @@ es:
           title: "Publicación"
           noun: "publicación"
       flagged_as: "Marcado como"
+      post_flagged_as: "Publicación denunciada: "
+      chat_flagged_as: "Mensaje de chat denunciado: "
+      queued_post_label: "Publicación en la cola"
+      queued_topic_label: "Tema en la cola"
       user_label: "Usuario"
+      assigned_to: "Publicación asignada a"
       moderator_actions: "Acciones del moderador"
       timeline_and_notes: "Cronología y notas"
       timeline:
@@ -843,12 +862,17 @@ es:
         flagged_as_by: "Marcado como %{flagReason} por %{username} · %{relativeDate}"
         claimed: "Reclamado"
         claimed_by: "Reclamado por %{username} · %{relativeDate}"
+        unclaimed_by: "Desasignado por %{username} · %{relativeDate}"
         reviewed: "Revisado"
+        approved_by: "Aprobado por %{username} · %{relativeDate}"
+        rejected_by: "Rechazado por %{username} · %{relativeDate}"
+        ignored_by: "Ignorado por %{username} · %{relativeDate}"
         view_conversation: "ver PM"
         note_added: "Nota del moderador"
         note_added_by: "Nota del moderador creada por %{username} · %{relativeDate}"
         no_events: "No hay eventos que mostrar en la línea de tiempo"
       notes:
+        add_note_description: "Añadir una nota ayuda a que otros moderadores entiendan el contexto."
         add_note_button: "Añadir nota"
         placeholder: "Escribe tu nota aquí..."
         chars_remaining: "Quedan %{count} caracteres..."
@@ -861,6 +885,8 @@ es:
       review_user: "Usuario"
       need_help: "¿Necesitas ayuda?"
       copy_link: "Copiar enlace"
+      copy_permalink_title: "copiar un enlace a este elemento revisable"
+      copy_link_feedback: "Enlace copiado"
       view_source: "Ver fuente"
       insights:
         title: "Información"
@@ -868,15 +894,25 @@ es:
         flagged_by_users:
           one: "Denunciado por %{count} usuario único"
           other: "Denunciado por %{count} usuarios únicos"
+        similar_posts: "Infracciones anteriores"
+        user_activity: "Info del usuario"
         activities:
+          joined_on: "se registró: %{joinDate}"
           trust_level: "nivel de confianza: %{trustLevelName}"
           posts:
             one: "%{count} publicación"
             other: "%{count} publicaciones"
+        moderation_history:
+          label: "Histórico de moderación"
+          silenced: "Veces silenciado: %{count}"
+          suspended: "Veces suspendido: %{count}"
+          rejected_posts: "Publicaciones rechazadas: %{count}"
         solution_marked: "Solución marcada"
         topic_has_solution: "Este tema tiene una solución"
         visibility: "Visibilidad"
+        topic_unlisted: "Solo se puede acceder a este tema a través de su enlace directo."
       help:
+        community_moderation_guide: "Guía de moderación de la comunidad"
         moderation_guide: "Guía de moderación de Discourse"
         flag_priorities: "Gestión de la reputación del usuario y prioridades"
         spam_detection: "Detección de spam"
@@ -1298,6 +1334,7 @@ es:
         one: "Categorías (%{count} más)…"
         other: "Categorías (%{count} más)…"
     ip_lookup:
+      title: Dirección IP
       hostname: Nombre del host
       location: Ubicación
       location_not_found: (desconocido)
@@ -1338,6 +1375,8 @@ es:
       new_private_message: "Nuevo mensaje"
       private_message: "Mensaje"
       private_messages: "Mensajes"
+      upcoming_changes:
+        title: "Cambio próximo activado"
       user_notifications:
         filters:
           filter_by: "Filtrar por"
@@ -1938,6 +1977,7 @@ es:
         first_time_and_daily: "Cuando mi publicación reciba el primer me gusta y luego diariamente si recibe más"
         first_time: "Cuando mi publicación reciba el primer me gusta"
         never: "Nunca"
+      notify_on_linked_posts: "Notificarme cuando alguien comparta un enlace a mis publicaciones"
       email_previous_replies:
         title: "Incluir respuestas previas en la parte inferior de los correos electrónicos"
         unless_emailed: "a menos que se hayan enviado previamente"
@@ -3260,6 +3300,7 @@ es:
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
+        notify: "Notificar a los usuarios afectados por el cambio."
         performing: "Realizando operaciones en bloque, espera…"
         completed: "¡Operaciones en bloque completadas con éxito!"
       none:
@@ -3279,19 +3320,6 @@ es:
           unread: "No tienes nada por leer... ¡Impresionante!"
           new_new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
           new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
-      bottom:
-        latest: "No hay más temas recientes."
-        posted: "No hay más temas publicados."
-        read: "No hay más temas leídos."
-        new: "No hay más temas nuevos."
-        unread: "No hay más temas que no hayas leído."
-        unseen: "Ya no hay más temas que no hayas visto."
-        category: "No hay más temas de la categoría %{category}."
-        tag: "No hay más temas con la etiqueta %{tag}."
-        top: "No hay más temas destacados."
-        hot: "Ya no hay temas candentes."
-        bookmarks: "No hay más temas guardados en marcadores."
-        filter: "No hay más temas."
     topic_bulk_actions:
       dismiss:
         name: "Descartar"
@@ -3419,16 +3447,16 @@ es:
         other: "%{count} respuestas, ve a la primera publicación"
       created_at: "Creado: %{date}"
       bumped_at: "Recientes: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Explorar todas las categorías</a> o <a href='%{basePath}/latest'>ver los temas más recientes</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Explorar todas las categorías</a>, <a href='%{basePath}/latest'>ver los temas más recientes</a> o ver la parte superior:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Explorar todas las etiquetas</a> o <a href='%{basePath}/latest'>ver los temas más recientes</a>."
       browse_latest_topics: "Explorar los temas recientes"
+      browse_new_replies: "Ver nuevas respuestas"
+      browse_new_topics: "Ver nuevos temas"
       suggest_create_topic: '¿Listo para <a href>iniciar una nueva conversación?</a>'
       jump_reply: "Saltar a la ubicación original del mensaje"
       jump_reply_aria: "Saltar al mensaje de @%{username} en su ubicación original"
       jump_reply_button: "Saltar a la publicación"
       deleted: "El tema ha sido eliminado"
       slow_mode_update:
+        title: "Modo lento"
         select: "Los usuarios solo pueden publicar en este tema una vez cada:"
         description: "Para promover un debate considerado en temas con mucho tráfico o controvertidos, los usuarios deberán esperar antes de volver a publicar en este tema."
         enable: "Activar"
@@ -3587,6 +3615,8 @@ es:
       reply:
         title: "Responder"
         help: "comienza a escribir un mensaje en este tema"
+      footer_buttons:
+        region_label: "Acciones del tema"
       share:
         title: "Compartir tema"
         extended_title: "Compartir un enlace"
@@ -3766,14 +3796,23 @@ es:
           one: Has seleccionado <b>%{count}</b> publicación.
           other: "Has seleccionado <b>%{count}</b> publicaciones."
       deleted_by_author_simple: "(tema eliminado por su autor/a)"
+      localizations:
+        title_edit_warning:
+          message: "El título del tema está traducido.<br><br>¿Quieres editar las categorías, etiquetas y título <b>originales</b> en %{language} o editar esta <b>traducción</b> en concreto?"
+          action_original: "Editar original"
+          action_translation: "Editar título del tema traducido"
+        editing_translation: "Editando la traducción al %{language}"
     post_list:
       title: "Últimas publicaciones"
       empty: "No hay publicaciones"
       aria_post_number: "%{title}, publicación n.º %{postNumber}"
       bulk:
+        select_all: "Seleccionar todo"
         clear_all: "Limpiar todo"
         actions: "Acciones en bloque"
     post:
+      accessible_heading: "publicación por %{username} %{date}"
+      heading_anchor: "Enlace a encabezado"
       confirm_delete: "¿Seguro que quieres eliminar esta publicación?"
       quote_reply: "Citar"
       quote_reply_shortcut: "Citar (o pulsa q)"
@@ -3797,8 +3836,13 @@ es:
       deleted_by_author_simple: "(publicación eliminada por su autor/a)"
       collapse: "contraer"
       load_more_replies: "cargar más respuestas"
+      load_more_posts_above: "Cargar más publicaciones encima"
+      load_more_posts_below: "Cargar más publicaciones debajo"
       sr_collapse_replies: "Contraer respuestas inscrustadas"
       sr_load_more_replies: "Cargar más respuestas incrustadas"
+      loading_more_posts_above: "Cargando más publicaciones encima…"
+      loading_more_posts_below: "Cargando más publicaciones debajo…"
+      loading_complete: "Carga completa"
       sr_date: "Fecha de publicación"
       sr_expand_replies:
         one: "Este mensaje tiene %{count} respuesta"
@@ -3853,6 +3897,7 @@ es:
           edit: "Editar"
           delete: "Eliminar"
         add: "Añadir nueva traducción"
+        manage: "Gestionar traducciones (%{count} existente(s))"
         view:
           one: "Ver %{count} traducción a idioma local"
           other: "Ver %{count} traducciones a idiomas locales"
@@ -3863,6 +3908,7 @@ es:
         post_language_selector:
           none: "Ninguno"
         edit_warning:
+          message: "Esta publicación ha sido traducida.<br><br>¿Quieres editar la original en %{language} o editar esta traducción específica?"
           action_original: "Editar publicación original"
           action_translation: "Editar esta traducción"
       errors:
@@ -3883,6 +3929,7 @@ es:
         attachment_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir archivos adjuntos."
         attachment_download_requires_login: "Lo sentimos, necesitas haber iniciado sesión para descargar archivos adjuntos."
       cancel_composer:
+        confirm: "¿Quieres descartar tu publicación?"
         discard: "Descartar"
       via_email: "esta publicación llegó por correo electrónico"
       via_auto_generated_email: "esta publicación llegó a través de un correo electrónico generado automáticamente"
@@ -3955,6 +4002,7 @@ es:
         delete_post_notice: "Eliminar Aviso oficial"
         remove_timer: "quitar temporizador"
         edit_timer: "editar temporizador"
+        remove_yourself_from_pm: "¿De verdad te quieres quitar de este mensaje? Ya no podrás verlo ni podrás responder."
       actions:
         people:
           like:
@@ -4097,17 +4145,31 @@ es:
         add: "Añadir grupo de etiquetas obligado"
         placeholder: "Selecciona un grupo de etiquetas…"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
+      delete: "Eliminar categoría"
+      create: "Crear categoría"
       create_long: "Crear una nueva categoría"
+      save: "Guardar categoría"
+      slug: "Identificador de URL de la categoría"
       slug_placeholder: "(Opcional) palabras-separadas-por-guiones para URL"
       creation_error: Se produjo un error al crear la categoría.
       save_error: Se produjo un error al guardar la categoría
+      errors:
+        self_lockout: "Estás a punto de cambiar los permisos de la categoría de una forma que perderías tu propio acceso. ¿De verdad quieres continuar?"
+      name: "Nombre de la categoría"
+      untitled: "Categoría sin nombre"
       description: "Descripción"
+      logo: "Logotipo de la categoría"
+      logo_dark: "Logotipo de la categoría para el modo oscuro"
       logo_description: "Se recomienda la relación de aspecto 1:1 con un tamaño mínimo de 200 px. Si se deja en blanco, no se mostrará ninguna imagen."
+      background_image: "Imagen de fondo de la categoría"
+      background_image_dark: "Imagen de la categoría para el modo oscuro"
       style: "Estilos"
       background_color: "Color"
       foreground_color: "Color del texto"
       color_validations:
         cant_be_empty: "no puede estar vacío"
+        incorrect_length: "debe coincidir con el formato de color #RRGGBB o #RGB"
+        non_hexdecimal: "solo puede contener caracteres hexadecimales (0-9, A-F)"
       styles:
         type: "Estilo"
         icon: "Icono"
@@ -4155,15 +4217,23 @@ es:
       all_topics_wiki: "Hacer que los temas nuevos tengan formato wiki por defecto"
       allow_unlimited_owner_edits_on_first_post: "Permitir que el propietario edite de forma ilimitada en su primera publicación"
       subcategory_list_style: "Estilo de lista de subcategorías:"
+      sort_order: "Ordenar lista de temas:"
+      default_view: "Orden por defecto de la lista de temas:"
+      default_top_period: "Periodo de tiempo por defecto para la lista de temas destacados:"
+      default_list_filter: "Filtro de lista por defecto:"
       allow_badges_label: "Permitir que se concedan medallas en esta categoría"
+      edit_permissions: "Editar permisos"
       reviewable_by_group: "Además del personal, los siguientes grupos también pueden revisar el contenido de esta categoría:"
       review_group_name: "nombre del grupo"
       require_topic_approval: "Requiere aprobación del moderador para todos los temas nuevos"
       require_reply_approval: "Requiere aprobación del moderador para todas las respuestas nuevas"
       this_year: "este año"
       position: "Posición en la página de categorías:"
+      default_position: "Posición por defecto"
       position_disabled: "Las categorías se mostrarán por orden de actividad. Para controlar el orden de las categorías en las listas, activa el ajuste <a href='%{url}'>«posiciones fijas de las categorías»</a>."
       minimum_required_tags: "Número mínimo de etiquetas requeridas en un tema:"
+      default_slow_mode: 'Activar el "modo lento" en los nuevos temas de esta categoría.'
+      parent: "Categoría padre"
       num_auto_bump_daily: "Número de temas abiertos que se reflotarán diariamente de forma automática:"
       auto_bump_cooldown_days: "Mínimo de días antes de reactivar el mismo tema:"
       navigate_to_first_post_after_read: "Ir a la primera publicación después de haber leído los temas"
@@ -4185,14 +4255,18 @@ es:
           title: "Silenciado"
           description: "No recibirás notificaciones sobre novedades de temas en esta categoría, y no aparecerán en la lista de temas recientes."
       search_priority:
+        label: "Prioridad en la búsqueda"
         options:
           normal: "Normal"
           ignore: "Ignorar"
+          very_low: "Muy baja"
           low: "Baja"
           high: "Alta"
+          very_high: "Muy alta"
       sort_options:
         default: "por defecto"
         likes: "Me gusta"
+        op_likes: "Me gusta en el primer mensaje"
         views: "Vistas"
         posts: "Publicaciones"
         activity: "Actividad"
@@ -4213,6 +4287,7 @@ es:
         email: "Correo electrónico"
       list_filters:
         all: "Todos los temas"
+        none: "Sin subcategorías"
       colors_disabled: "No puedes seleccionar colores porque tienes no tienes activados los estilos de categoría."
     anonymous_flagging:
       title: "Denunciar contenido ilegal"
@@ -4472,6 +4547,7 @@ es:
     preloader_text: "Cargando"
     lightbox:
       download: "Descargar"
+      open: "Imagen original"
       previous: "Anterior (flecha izquierda)"
       next: "Siguiente (flecha derecha)"
       counter: "%curr% de %total%"
@@ -5218,17 +5294,29 @@ es:
           staff: "Solo personal"
         statuses:
           experimental: "Experimental"
+          permanent: "Permanente"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
           staff: "Personal"
+          all_members: "Todos los miembros"
+          developers: "Desarrolladores"
         filter:
+          search_placeholder: "Filtrar por nombre, descripción o plugin..."
+          no_results: "No hay cambios próximos que coincidan con tu filtro"
           all: "Todo"
+          enabled_all: "Activado o desactivado"
           enabled: "Activado"
           disabled: "Desactivado"
+          impact_type_all: "Todos los tipos de impacto"
           impact_type_feature: "Característica"
           impact_type_other: "Otros"
+          status_all: "Todos los estados"
           status_experimental: "Experimental"
+          status_alpha: "Alfa"
+          status_beta: "Beta"
+          status_stable: "Estable"
+          status_permanent: "Permanente"
       config:
         about:
           title: "Acerca de tu sitio"
@@ -5259,16 +5347,27 @@ es:
           title: "Localización"
           header_description: "Configura el idioma de la interfaz de tu comunidad y otras opciones de localización para tus miembros"
           keywords: "idioma local|idioma|zona horaria|unicode|ltr"
+        upcoming_changes:
+          title: "Próximos cambios"
         login:
           title: "Inicio de sesión y autenticación"
           header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
           sub_pages:
             common_settings:
               title: "Ajustes"
+            authenticators:
+              title: "Inicios de sesión sociales"
+            discourseconnect:
+              title: "Discourse Connect"
             discourse_id:
               title: "Discourse ID"
         discourse_id:
           title: "Discourse ID"
+          stats:
+            total_users: "Total de usuarios"
+            signups_30_days: "Registros (30 días)"
+            logins_30_days: "Inicios de sesión (30 días)"
+          regenerate_credentials: "Regenerar credenciales"
           learn_more: "Más información"
         logo:
           title: "Logo"
@@ -5357,22 +5456,46 @@ es:
             modal_yes: "Sí"
             modal_no: "No, aplicar solo a partir de ahora"
         welcome_banner:
+          title: "Banner de bienvenida"
           form:
+            enabled_themes:
+              label: "Activado en los temas..."
+              select_label: "Seleccionar temas"
+            background_image:
+              label: "Imagen de fondo"
             text_color:
               label: "Color del texto"
             page_visibility:
+              label: "Visibilidad en la página"
+              description: "Elige dónde debe mostrarse el banner."
               options:
                 top_menu_pages: "Páginas del menú principal"
+                homepage: "Sólo en la página de inicio"
+                discovery: "Páginas de descubrimiento"
                 all_pages: "Todas las páginas"
             location:
               label: "Ubicación"
+              description: "Elija dónde debe aparecer el banner en la página."
               options:
                 above_topic_content: "Sobre el contenido del tema"
                 below_site_header: "Bajo el encabezado del sitio"
+            text_section:
+              title: "Texto personalizable"
+            header_new_members:
+              label: "Cabecera para nuevos miembros"
+              placeholder: "Te damos la bienvenida a %{site_name}, %{preferred_display_name}"
             header_logged_in:
+              label: "Cabecera para miembros registrados"
               placeholder: "¡Te damos la bienvenida de nuevo, %{preferred_display_name}!"
             header_anonymous:
+              label: "Cabecera para visitantes anónimos"
               placeholder: "¡Te damos la bienvenida a %{site_name}!"
+            subheader_logged_in:
+              label: "Subtítulo para miembros registrados"
+            subheader_anonymous:
+              placeholder: "Únete a nuestra comunidad para participar"
+            search_placeholder:
+              label: "Texto a mostrar en la caja de búsqueda si está vacía"
         navigation:
           title: "Navegación"
           header_description: "Configura los enlaces de navegación y los elementos de menú de tu sitio. Esto incluye la ubicación y el comportamiento del menú de navegación principal, los enlaces rápidos de la parte superior de la página de inicio, así como la barra lateral de administración."
@@ -7762,6 +7885,9 @@ es:
             confirm: "Sí, actualizar la política de contraseñas"
           block_common_passwords:
             confirm: "Sí, actualizar la política de contraseñas"
+        job_status:
+          completed: "Actualización completada"
+          enqueued: "Actualización en curso"
       badges:
         status: Estado
         title: Medallas
@@ -7796,6 +7922,7 @@ es:
         no_badges: No hay medallas que se puedan conceder.
         none_selected: "Selecciona una medalla para empezar"
         sections:
+          design: Diseño
           query: Consulta
           settings: Ajustes
         usage_heading: Uso

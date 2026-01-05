@@ -67,8 +67,6 @@ de:
           title: "Themenliste"
         basic_topic_list:
           title: "Grundlegende Themenliste"
-        footer_message:
-          title: "Fußzeile"
         signup_cta:
           title: "Aufforderung zur Registrierung"
         topic_timer_info:

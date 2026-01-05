@@ -20,6 +20,7 @@ vi:
       channel_settings:
         edit: "Sửa"
         add: "Thêm"
+        notification_settings_context: "Thông báo"
         join: "Tham gia"
         leave: "Rời nhóm"
       close: "Đóng"

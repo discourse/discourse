@@ -14,7 +14,8 @@ lv:
       reports:
         chat_usage:
           messages: ziņās
-          you: Tu
+          author: Tu
+          author_others: "%{username}"
         invites:
           title: Ielūgumi
           invitee_posts: Ieraksti

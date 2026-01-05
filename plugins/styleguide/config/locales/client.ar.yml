@@ -67,8 +67,6 @@ ar:
           title: "قائمة الموضوعات"
         basic_topic_list:
           title: "قائمة الموضوعات الأساسية"
-        footer_message:
-          title: "رسالة التذييل"
         signup_cta:
           title: "عبارة الحث على الاشتراك"
         topic_timer_info:

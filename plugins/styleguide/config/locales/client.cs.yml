@@ -71,8 +71,6 @@ cs:
           title: "Seznam témat"
         basic_topic_list:
           title: "Seznam základních témat"
-        footer_message:
-          title: "Zpráva v zápatí"
         signup_cta:
           title: "CTA registrace"
         topic_timer_info:

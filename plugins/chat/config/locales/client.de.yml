@@ -81,6 +81,7 @@ de:
         join_channel: "Kanal beitreten"
         leave_channel: "Kanal verlassen"
         leave_groupchat_info: "Wenn du den Gruppenchat verlässt, hast du keinen Zugriff mehr darauf und erhältst keine Benachrichtigungen mehr. Um wieder teilzunehmen, musst du von einem Mitglied des Gruppenchats erneut eingeladen werden."
+        notification_settings_context: "Benachrichtigungen"
         join: "Beitreten"
         leave: "Verlassen"
         save_label:

@@ -45,6 +45,7 @@ ko:
         delete_channel: "채널 삭제"
         join_channel: "채널 참여"
         leave_channel: "채널 나가기"
+        notification_settings_context: "알림"
         join: "가입"
         leave: "나가기"
       channel_archive:

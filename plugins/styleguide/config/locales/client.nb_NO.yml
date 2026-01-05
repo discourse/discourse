@@ -51,8 +51,6 @@ nb_NO:
           title: "Emne liste"
         basic_topic_list:
           title: "Enkel Emneliste"
-        footer_message:
-          title: "Bunntekst Melding"
         signup_cta:
           title: "Registrering av CTA"
         topic_timer_info:

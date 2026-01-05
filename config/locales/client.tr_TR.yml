@@ -3280,19 +3280,6 @@ tr_TR:
           unread: "Okunmamış bir şey kalmadı... Etkileyici!"
           new_new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
           new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
-      bottom:
-        latest: "Başka en son konu yok."
-        posted: "Başka gönderi yapılan konu yok."
-        read: "Başka okunmuş konu yok."
-        new: "Başka yeni konu yok."
-        unread: "Başka okunmamış konu yok."
-        unseen: "Başka görülmemiş konu yok."
-        category: "Başka %{category} konusu yok."
-        tag: "Başka %{tag} konusu yok."
-        top: "Başka popüler konu yok."
-        hot: "Başka popüler konu yok."
-        bookmarks: "Başka yer imli konu yok."
-        filter: "Başka konu kalmadı."
     topic_bulk_actions:
       dismiss:
         name: "Kapat"
@@ -3420,9 +3407,6 @@ tr_TR:
         other: "%{count} yanıt, ilk gönderiye atla"
       created_at: "Oluşturulma: %{date}"
       bumped_at: "En Son: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a>, <a href='%{basePath}/latest'>en son konuları görüntüleyin</a> veya en üste bakın:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Tüm etiketlere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
       browse_latest_topics: "En son konulara göz atın"
       suggest_create_topic: <a href>Yeni bir konuşma başlatmaya</a> hazır mısınız?
       jump_reply: "Gönderinin orijinal konumuna atla"

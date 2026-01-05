@@ -71,8 +71,6 @@ pl_PL:
           title: "Lista tematów"
         basic_topic_list:
           title: "Podstawowa lista tematów"
-        footer_message:
-          title: "Wiadomość w stopce"
         signup_cta:
           title: "Zarejestruj CTA"
         topic_timer_info:

@@ -2983,19 +2983,6 @@ sq:
         top: "Nuk ka tema popullore."
         hot: "Nuk ka tema të nxehta."
         filter: "Nuk ka tema."
-      bottom:
-        latest: "Nuk ka më tema të reja."
-        posted: "Nuk ka më tema të publikuara."
-        read: "Nuk ka më tema të lexuara."
-        new: "Nuk ka më tema të reja."
-        unread: "Nuk ka më tema të palexuara."
-        unseen: "Nuk ka më tema të palexuara."
-        category: "Nuk ka më tema nga %{category}."
-        tag: "Nuk ka më tema nga %{tag}."
-        top: "Nuk ka më tema popullore."
-        hot: "Nuk ka më tema popullore."
-        bookmarks: "Nuk ka më tema të preferuara."
-        filter: "Nuk ka më tema."
     topic_bulk_actions:
       dismiss:
         name: "Hiqe"
@@ -3087,9 +3074,6 @@ sq:
       participant_groups: "Grupet e pjesëmarrësve"
       created_at: "Krijuar: %{date}"
       bumped_at: "E fundit: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Shfletoni të gjitha kategoritë</a> ose <a href='%{basePath}/latest'>shikoni temat më të fundit</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Shfletoni të gjitha kategoritë</a>, <a href='%{basePath}/latest'>shikoni temat më të fundit</a> ose shihni krye:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Shfletoni të gjitha etiketat</a> ose <a href='%{basePath}/latest'>shikoni temat më të fundit</a>."
       suggest_create_topic: Gati për të filluar <a href>një bisedë të re?</a>
       jump_reply: "Shko në vendndodhjen origjinale të postimit"
       jump_reply_aria: "Shko te postimi i @%{username}në vendndodhjen e tij origjinale"

@@ -67,8 +67,6 @@ hu:
           title: "Témalista"
         basic_topic_list:
           title: "Alapvető témakörlista"
-        footer_message:
-          title: "Lábléc üzenet"
         signup_cta:
           title: "Regisztrációs felhívás"
         topic_timer_info:

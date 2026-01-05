@@ -45,8 +45,6 @@ lt:
           title: "Temų sąrašas"
         basic_topic_list:
           title: "Pagrindinis temų sąrašas"
-        footer_message:
-          title: "Poraštės žinutė"
         signup_cta:
           title: "Registracijos CTA"
         topic_timer_info:

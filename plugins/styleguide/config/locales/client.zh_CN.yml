@@ -71,8 +71,6 @@ zh_CN:
           title: "话题列表"
         basic_topic_list:
           title: "基本话题列表"
-        footer_message:
-          title: "页脚消息"
         signup_cta:
           title: "注册号召性用语"
         topic_timer_info:

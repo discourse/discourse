@@ -150,6 +150,8 @@ uk:
         invalid_type: "%{type} не є допустимим типом"
         humanize_not_valid_string_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути рядком."
         not_valid_string_value: "має бути рядком"
+        humanize_not_valid_datetime_value: "Властивість у вказівнику JSON '%{property_json_pointer}' має бути дійсною датою та часом."
+        not_valid_datetime_value: "має бути дійсна дата й час"
         humanize_not_valid_integer_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути цілим числом."
         not_valid_integer_value: "має бути цілим числом"
         humanize_not_valid_float_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути числом з плаваючою комою."
@@ -2635,6 +2637,7 @@ uk:
     fake_upcoming_change: "Це фальшива майбутня зміна для тестових цілей. Немає потреби перекладати цей рядок."
     errors:
       invalid_css_color: "Недійсний колір. Введіть назву кольору або шістнадцяткове значення."
+      invalid_datetime: "Неправильний формат дати і часу. Будь ласка, переконайтеся, що ви ввели правильну дату та час."
       invalid_email: "Невірна адреса електронної пошти."
       invalid_username: "Немає користувача з таким псевдонімом."
       valid_username: "Існує користувач з таким ім'ям."

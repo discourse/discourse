@@ -1505,16 +1505,6 @@ sw:
         bookmarks: "Hauja alamisha mada yoyote."
         category: "Hakuna %{category} mada."
         top: "Hakuna mada za juu."
-      bottom:
-        latest: "Hakuna mada mpya zingine."
-        posted: "Hakuna mada mpya zilizochapishwa."
-        read: "Hakuna mada zingine zilizosomwa."
-        new: "Hakuna mada mpya zingine."
-        unread: "Hakuna mada zingine ambazo hazijasomwa."
-        category: "Hakuna %{category} mada zingine."
-        tag: "Hakuna %{tag} mada zingine."
-        top: "Hakuna mada za juu zingine."
-        bookmarks: "Hakuna mada zingine zilizoalamishwa."
     topic_bulk_actions:
       dismiss:
         name: "Ondosha..."

@@ -71,8 +71,6 @@ uk:
           title: "Список тем"
         basic_topic_list:
           title: "Основний список тем"
-        footer_message:
-          title: "Повідомлення нижнього колонтитула"
         signup_cta:
           title: "Реєстрація CTA"
         topic_timer_info:

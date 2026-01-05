@@ -179,6 +179,10 @@ es:
             max_output_tokens:
               label: "Máximo de tokens de salida"
               description: "Cuando se especifica, establece un límite superior para el número máximo de tokens que el modelo puede generar. Respeta el límite máximo de tokens de salida del LLM."
+        llm_tagger:
+          fields:
+            tagger_persona:
+              label: "Personaje de IA"
     discourse_ai:
       title: "IA"
       default_llm:
