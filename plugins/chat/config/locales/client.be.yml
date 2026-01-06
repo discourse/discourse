@@ -20,6 +20,7 @@ be:
       channel_settings:
         edit: "рэдагаваць"
         add: "дадаць"
+        notification_settings_context: "Апавяшчэнні"
       close: "зачыніць"
       remove: "выдаліць"
       delete: "выдаляць"
@@ -86,6 +87,7 @@ be:
         history_label: "гісторыя"
         members_label: "Удзельнікі"
       search:
+        short_title: Пошук
         no_results: "Няма вынікаў"
         sort:
           latest: "апошняя"

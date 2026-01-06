@@ -36,6 +36,7 @@ ro:
         edit: "Modifică"
         add: "Adaugă"
         leave_groupchat_info: "Dacă părăsești această discuție de grup, nu vei mai avea acces la ea și nu vei mai primi notificări legate de ea. Pentru a reveni, va trebui să te re-invite un membru al discuției de grup."
+        notification_settings_context: "Notificări"
         join: "Alătură-te"
         leave: "Părăsește"
       channel_delete:
@@ -56,10 +57,8 @@ ro:
       send_shortcut:
         enter:
           label: "Trimite prin Enter"
-          description: "Linie nouă prin Shift + Enter"
         meta_enter:
           label: "Trimite prin %{meta_key} + Enter"
-          description: "Linie nouă prin Enter"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
       last_visit: "ultima vizită"
@@ -175,6 +174,7 @@ ro:
         history_label: "Istoric"
         members_label: "Membri"
       search:
+        short_title: Caută
         no_results: "Nu s-au găsit rezultate"
         sort:
           relevance: "Relevanță"

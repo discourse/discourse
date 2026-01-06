@@ -158,3 +158,5 @@ pt_BR:
       random_assign:
         title: "Atribuição aleatória"
         description: "Atribua tópicos a um grupo aleatoriamente"
+      set_topic_timer:
+        title: "Definir timer do tópico"

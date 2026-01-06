@@ -49,6 +49,7 @@ bg:
       channel_settings:
         edit: "Редактирай"
         add: "Добави "
+        notification_settings_context: "Известия"
         join: "Влизане"
         leave: "Напусни"
       channel_delete:
@@ -140,6 +141,7 @@ bg:
       admin:
         title: "Чат"
       search:
+        short_title: Търсене
         sort:
           relevance: "Приложимост"
           latest: "Последни"

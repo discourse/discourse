@@ -72,8 +72,7 @@ RSpec.describe DiscourseAi::Utils::Search do
       results = described_class.perform_search(search_query: private_post.raw, current_user: user)
       expect(results[:rows].length).to eq(0)
 
-      # Add user to group with access
-      GroupUser.create!(group: group, user: user)
+      group.add(user)
 
       # Now should find the private post
       results =
@@ -218,6 +217,130 @@ RSpec.describe DiscourseAi::Utils::Search do
       results = described_class.perform_search(**search_params, current_user: admin)
 
       expect(results[:args]).to include(search_params)
+    end
+
+    context "with filter-only queries (no search term)" do
+      fab!(:topic1) do
+        Fabricate(:topic, category: category, views: 100, like_count: 10, bumped_at: 1.day.ago)
+      end
+      fab!(:topic2) do
+        Fabricate(:topic, category: category, views: 50, like_count: 20, bumped_at: 1.hour.ago)
+      end
+      fab!(:topic3) { Fabricate(:topic, tags: [tag_funny]) }
+      fab!(:post1) { Fabricate(:post, topic: topic1) }
+      fab!(:post2) { Fabricate(:post, topic: topic2) }
+      fab!(:post3) { Fabricate(:post, topic: topic3) }
+
+      it "returns topics with order:latest filter only (uses TopicsFilter fallback)" do
+        results = described_class.perform_search(order: "latest", current_user: admin)
+
+        expect(results[:rows]).to be_present
+        expect(results[:args][:order]).to eq("latest")
+
+        url_index = results[:column_names].index("url")
+        topic_urls = results[:rows].map { |row| row[url_index] }
+
+        expected_urls = [topic3.relative_url, topic2.relative_url, topic1.relative_url]
+
+        # keep only topics we expect (ignore any other fabricated topics)
+        topic_urls &= expected_urls
+
+        expect(topic_urls).to eq(expected_urls)
+      end
+
+      it "returns topics filtered by category with order" do
+        results =
+          described_class.perform_search(
+            category: category.slug,
+            order: "views",
+            current_user: admin,
+          )
+
+        expect(results[:rows]).to be_present
+
+        url_index = results[:column_names].index("url")
+        topic_urls = results[:rows].map { |row| row[url_index] }
+
+        expected_urls =
+          Topic.order("views desc, bumped_at desc").where(category: category).map(&:relative_url)
+        expect(topic_urls).to eq(expected_urls)
+      end
+
+      it "returns topics filtered by tags" do
+        results = described_class.perform_search(tags: tag_funny.name, current_user: admin)
+
+        expect(results[:rows]).to be_present
+
+        url_index = results[:column_names].index("url")
+        topic_urls = results[:rows].map { |row| row[url_index] }
+        expect(topic_urls).to contain_exactly(topic_with_tags.relative_url, topic3.relative_url)
+      end
+
+      it "returns topics filtered by user" do
+        results = described_class.perform_search(user: post1.user.username, current_user: admin)
+
+        url_index = results[:column_names].index("url")
+        topic_urls = results[:rows].map { |row| row[url_index] }
+
+        expect(topic_urls).to contain_exactly(topic1.relative_url)
+      end
+
+      it "returns empty results when no filters are provided and no search query" do
+        results = described_class.perform_search(current_user: admin)
+
+        expect(results[:rows]).to eq([])
+      end
+
+      it "respects category permissions" do
+        private_topic = Fabricate(:topic, category: private_category)
+        Fabricate(:post, topic: private_topic)
+
+        results = described_class.perform_search(order: "latest", current_user: user)
+        url_index = results[:column_names].index("url")
+        topic_urls = results[:rows].map { |row| row[url_index] }.join
+        expect(topic_urls).not_to include("/t/#{private_topic.slug}/#{private_topic.id}")
+
+        GroupUser.create!(group: group, user: user)
+        results = described_class.perform_search(order: "latest", current_user: user)
+        url_index = results[:column_names].index("url")
+        topic_urls = results[:rows].map { |row| row[url_index] }.join
+        expect(topic_urls).to include("/t/#{private_topic.slug}/#{private_topic.id}")
+      end
+
+      it "returns correct result structure for filter-only queries with category" do
+        results =
+          described_class.perform_search(
+            category: category.slug,
+            order: "latest",
+            current_user: admin,
+          )
+
+        expect(results).to have_key(:args)
+        expect(results).to have_key(:rows)
+        expect(results).to have_key(:column_names)
+        expect(results[:column_names]).to include("title", "url", "username", "category")
+      end
+
+      it "respects max_results for filter-only queries" do
+        results =
+          described_class.perform_search(
+            category: category.slug,
+            order: "latest",
+            max_results: 1,
+            current_user: admin,
+          )
+
+        expect(results[:rows].length).to be <= 1
+      end
+
+      it "properly handles subfolder URLs in filter-only queries" do
+        set_subfolder("/subfolder")
+
+        results = described_class.perform_search(user: post1.user.username, current_user: admin)
+
+        url_index = results[:column_names].index("url")
+        expect(results[:rows][0][url_index]).to eq("/subfolder/t/#{topic1.slug}/#{topic1.id}")
+      end
     end
   end
 end

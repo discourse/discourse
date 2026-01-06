@@ -304,6 +304,12 @@ he:
           post_raw_translator: "מתרגם פוסטים גולמי"
           topic_title_translator: "מתרגם כותרות נושאים"
           short_text_translator: "מתרגם טקסטים קצרים"
+          schedule_untranslated: "תזמון תרגומים"
+          schedule_topic_success:
+            one: "תזמון תרגום לפוסט שלא תורגם."
+            two: "תזמון תרגום של שני פוסטים לא מתורגמים."
+            many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
+            other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
         spam:
           name: "ספאם"
           inspect_posts: "בדיקת פוסטים"
@@ -385,6 +391,7 @@ he:
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 או מזהה פוסט"
           result: "תוצאה"
           llm: "LLM"
+          scan_history: "היסטוריית סריקה"
           sent_message: "הודעה שנשלחה"
           system_prompt: "בקשת מערכת"
           scan_log: "יומן סריקה"
@@ -408,6 +415,7 @@ he:
         feature: "יכולת"
         usage_count: "כמות שימושים"
         model: "מודל"
+        credits_remaining: "קרדיטים שנותרו"
         models_breakdown: "שימוש לפי מודל"
         users_breakdown: "שימוש לפי משתמש"
         all_features: "כל היכולות"
@@ -723,6 +731,7 @@ he:
           fake: "מותאם"
         provider_fields:
           access_key_id: "מזהה מפתח גישה ל־AWS Bedrock"
+          role_arn: "ARN של AWS Bedrock"
           region: "אזור של AWS Bedrock"
           organization: "מזהה ארגון OpenAI כרשות"
           disable_system_prompt: "השבתת הודעת מערכת בבקשות"

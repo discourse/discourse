@@ -351,6 +351,7 @@ zh_CN:
             title: "将这篇帖子翻译成所有支持的语言"
             confirm: "这将更新此帖子的所有现有翻译。你确定吗？"
             success: "帖子已发送供翻译"
+        credit_limit_warning: "由于额度限制，翻译已暂停。额度重置后将自动恢复 (%{reset_time})。"
         credit_limit_warning_no_time: "由于额度限制，翻译已暂停。额度重置后将自动恢复。"
       spam:
         short_title: "垃圾信息"
@@ -377,7 +378,10 @@ zh_CN:
           post_url_label: "帖子 URL 或 ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 或帖子 ID"
           result: "结果"
+          reason: "推理"
           llm: "LLM"
+          scan_history: "扫描历史记录"
+          sent_message: "发送消息"
           system_prompt: "系统提示"
           scan_log: "扫描日志"
           run: "运行测试"
@@ -419,6 +423,10 @@ zh_CN:
         no_models: "找不到模型使用数据"
         no_features: "找不到功能使用数据"
         total: "总计"
+        included_in_plan: "包含在计划中"
+        included_models: "包含使用量"
+        billed_models: "计费用量"
+        cost: "费用"
         subheader_description: "词元是 LLM 用来理解和生成文本的基本单位，使用数据可能会影响成本"
         stat_tooltips:
           total_requests: "通过 Discourse 向 LLM 提出的所有请求"
@@ -606,6 +614,8 @@ zh_CN:
         url: "托管模型的服务的 URL"
         api_key: "托管模型的服务的 API 密钥"
         vision_enabled: "启用视觉"
+        allowed_attachment_types: "允许的附件"
+        attachment_types_placeholder: "选择或输入文件扩展名（例如，pdf、txt、docx）"
         ai_bot_user: "AI 机器人用户"
         cost_input: "输入成本"
         cost_cached_input: "缓存输入成本"
@@ -699,6 +709,7 @@ zh_CN:
           display_name: "用于在您的站点界面上引用此模型的名称。"
           name: "我们将其包含在 API 调用中以指定我们将使用哪个模型"
           vision_enabled: "如果启用，AI 将尝试理解图片，这取决于使用的模型是否支持视觉。Anthropic、Google 和 OpenAI 的最新模型支持该功能。"
+          allowed_attachment_types: "选择要转发给模型的附件类型。留空则禁止附件。图像通过视觉控制。"
           cost_input: "此模型每 100 万个词元的输入成本"
           cost_cached_input: "该模型每 100 万个词元的缓存输入成本（从提示缓存读取时）"
           cost_cache_write: "该模型每写入 100 万个词元的缓存写入成本（从提示缓存写入时）"
@@ -796,6 +807,8 @@ zh_CN:
       errors:
         credit_limit_dialog:
           title: "已达到 AI 额度限制"
+          message_user: "该社区今天已达到其AI信用额度。请在 %{reset_time} 之后重试或联系您的站点管理员以获取更多信息。"
+          message_without_time_user: "该社区已达到今天的人工智能信用上限。在您的限额重置之前，将无法回复。更多信息请联系您的网站管理员。"
           message_admin: "您已达到当前方案的 AI 额度上限。在额度于 %{reset_time} 重置之前，系统将无法提供回复。"
           message_without_time_admin: "您已达到当前方案的 AI 额度上限。在额度重置之前，系统将无法提供回复。"
       reviewables:

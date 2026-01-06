@@ -535,8 +535,8 @@ be:
       every_month: "кожны месяц"
       every_six_months: "кожныя шэсць месяцаў"
   user_api_key:
-    title: "Дазволіць доступ да дадатку"
     authorize: "санкцыянаваць"
+    deny: "Скасаваць"
     read: "счытванне"
     read_write: "счытванне"
     otp_confirmation:

@@ -3280,19 +3280,6 @@ nl:
           unread: "Niets ongelezen gelaten... indrukwekkend!"
           new_new: "Momenteel niets nieuws. Kom snel terug!"
           new: "Momenteel niets nieuws. Kom snel terug!"
-      bottom:
-        latest: "Er zijn verder geen nieuwste topics."
-        posted: "Er zijn verder geen geplaatste topics."
-        read: "Er zijn verder geen gelezen topics."
-        new: "Er zijn verder geen nieuwe topics."
-        unread: "Er zijn verder geen ongelezen topics."
-        unseen: "Er zijn verder geen ongeziene topics."
-        category: "Er zijn verder geen topics in %{category}."
-        tag: "Er zijn verder geen topics over %{tag}."
-        top: "Er zijn verder geen toptopics."
-        hot: "Er zijn geen populaire topics meer."
-        bookmarks: "Er zijn verder geen topics met bladwijzers."
-        filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
       dismiss:
         name: "Sluiten"
@@ -3420,9 +3407,6 @@ nl:
         other: "%{count} antwoorden, ga naar eerste bericht"
       created_at: "Gemaakt: %{date}"
       bumped_at: "Nieuwste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Blader door alle categorieën</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Blader door alle categorieën</a>, <a href='%{basePath}/latest'>bekijk de nieuwste topics</a> of zie de top:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Blader door alle tags</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
       browse_latest_topics: "Nieuwste topics bekijken"
       suggest_create_topic: Klaar om <a href>een nieuw gesprek te beginnen?</a>
       jump_reply: "Naar oorspronkelijke locatie van bericht"
@@ -4462,6 +4446,7 @@ nl:
         this_month: "Maand"
         this_week: "Week"
         today: "Vandaag"
+        custom: "Aangepast"
     custom_homepage:
       admin_message: 'Een van je thema''s heeft de modificator "custom_homepage" ingeschakeld, maar voert niets uit naar de connector [custom-homepage]. (Deze melding wordt alleen weergegeven voor sitebeheerders.)'
     browser_update: '<a href="https://discourse.org/about#browser">Je browser wordt helaas niet ondersteund</a>. <a href="https://browsehappy.com">Schakel over naar een ondersteunde browser</a> om rijke inhoud te bekijken, je aan te melden en te antwoorden.'
@@ -7737,16 +7722,12 @@ nl:
             prompt: "Het wijzigen van deze instelling kan verstrekkende of onbedoelde gevolgen hebben voor je site. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, ik weet het zeker"
           min_password_length:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           min_admin_password_length:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle beheerders die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           password_unique_charactes:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           block_common_passwords:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
       badges:
         status: Status

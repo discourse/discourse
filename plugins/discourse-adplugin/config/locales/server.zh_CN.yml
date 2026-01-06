@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: 广告插件房屋广告展示次数
+      description: "房屋广告展示次数报告"
+    ad_plugin_ad_impressions:
+      title: 广告插件广告展示次数
+      description: "广告展示次数报告"
+    ad_plugin_impressions_by_user:
+      title: 用户的广告插件曝光量
+      description: "按用户分组的广告曝光量"
+    ad_plugin_click_through_rate:
+      title: 广告插件转化率
+      description: "按广告和位置分列的广告效果报告"
+    ad_plugin_click_through_rate_by_placement:
+      title: 按展示位置划分的广告效果
+      description: "按展示位置划分的广告效果报告"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: 按广告类型划分的广告效果
+      description: "按广告类型划分的广告效果报告"
+  errors:
+    already_clicked: "点击已录制"
   site_settings:
     discourse_adplugin_enabled: 启用 discourse-adplugin。
     no_ads_for_personal_messages: "查看个人消息时不显示广告"

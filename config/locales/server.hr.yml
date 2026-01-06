@@ -831,11 +831,10 @@ hr:
       every_month: "svaki mjesec"
       every_six_months: "svakih šest mjeseci"
   user_api_key:
-    title: "Odobrite pristup aplikaciji"
     authorize: "Odobriti"
+    deny: "Odustani"
     read: "pročitano"
     read_write: "čitati/pisati"
-    description: '"%{application_name}" zahtijeva sljedeći pristup vašem računu:'
     instructions: 'Upravo smo generirali novi korisnički API ključ za korištenje s "%{application_name}", zalijepite sljedeći ključ u svoju aplikaciju:'
     otp_description: 'Želite li dopustiti "%{application_name}" pristup ovoj stranici?'
     otp_confirmation:

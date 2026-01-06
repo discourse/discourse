@@ -442,6 +442,13 @@ uk:
           fields:
             custom_field_name:
               label: "Назва користувальницького поля"
+        set_topic_timer:
+          title: Встановити таймер теми
+          fields:
+            type:
+              label: Тип таймера
+            duration:
+              label: Тривалість таймера
       unnamed_automation: "Неназвана автоматизація"
       models:
         script:

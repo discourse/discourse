@@ -202,6 +202,18 @@ module PageObjects
         find("#topic-title .submit-edit").click
       end
 
+      def click_topic_title_cancel_edit
+        find("#topic-title .cancel-edit").click
+      end
+
+      def has_editing_localization_indicator?
+        has_css?("#topic-title .editing-localization-indicator")
+      end
+
+      def has_no_editing_localization_indicator?
+        has_no_css?("#topic-title .editing-localization-indicator")
+      end
+
       def has_topic_bookmarked?(topic)
         within_topic_footer_buttons do
           has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit Bookmark")

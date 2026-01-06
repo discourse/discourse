@@ -67,8 +67,6 @@ sk:
           title: "Zoznam tém"
         basic_topic_list:
           title: "Základný zoznam tém"
-        footer_message:
-          title: "Správa v päte"
         signup_cta:
           title: "Tlačidlo pre registráciu"
         topic_timer_info:

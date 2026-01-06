@@ -3277,19 +3277,6 @@ it:
           unread: "Non è rimasto nulla da leggere... impressionante!"
           new_new: "Al momento non ci sono novità... torna presto a trovarci!"
           new: "Al momento non ci sono novità... torna presto a trovarci!"
-      bottom:
-        latest: "Non ci sono altri argomenti più recenti."
-        posted: "Non ci sono altri argomenti pubblicati."
-        read: "Non ci sono altri argomenti letti."
-        new: "Non ci sono altri argomenti nuovi."
-        unread: "Non ci sono altri argomenti non letti."
-        unseen: "Non ci sono altri argomenti non letti."
-        category: "Non ci sono altri argomenti nella categoria %{category}."
-        tag: "Non ci sono altri argomenti con l'etichetta %{tag}."
-        top: "Non ci sono altri argomenti popolari."
-        hot: "Non ci sono altri argomenti popolari."
-        bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
-        filter: "Non ci sono altri argomenti."
     topic_bulk_actions:
       dismiss:
         name: "Ignora"
@@ -3417,9 +3404,6 @@ it:
         other: "%{count} risposte, vai al primo messaggio"
       created_at: "Creazione: %{date}"
       bumped_at: "Più recente: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Sfoglia tutte le categorie</a> o <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Sfoglia tutte le categorie</a>, <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a> oppure guarda dall'inizio:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Sfoglia tutte le etichette</a> o <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a>."
       browse_latest_topics: "Sfoglia gli ultimi argomenti"
       suggest_create_topic: Pronto per <a href>iniziare una nuova conversazione?</a>
       jump_reply: "Passa alla posizione originale del messaggio"
@@ -4459,6 +4443,7 @@ it:
         this_month: "Mese"
         this_week: "Settimana"
         today: "Oggi"
+        custom: "Personalizzato"
     custom_homepage:
       admin_message: 'Uno dei tuoi argomenti ha abilitato il modificatore "custom_homepage", ma non invia alcun risultato al connettore [custom-homepage]. (Messaggio visibile solo agli amministratori del sito)'
     browser_update: 'Purtroppo, <a href="https://discourse.org/about#browser">il tuo browser non è supportato</a>. <a href="https://browsehappy.com">Passa a un browser supportato</a> per visualizzare contenuti avanzati, accedere e rispondere.'
@@ -7734,16 +7719,12 @@ it:
             prompt: "Modificare questa impostazione potrebbe risultare in conseguenze rilevanti o comunque indesiderate per il sito. Intendi procedere?"
             confirm: "Sì, procedi"
           min_password_length:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           min_admin_password_length:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà tutti gli amministratore che modificheranno la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           password_unique_charactes:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           block_common_passwords:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
       badges:
         status: Stato

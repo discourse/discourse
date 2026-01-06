@@ -2960,19 +2960,6 @@ zh_TW:
         top: "沒有精選話題。"
         hot: "沒有熱門話題。"
         filter: "沒有主題。"
-      bottom:
-        latest: "已經沒有其它最近的話題了。"
-        posted: "已經沒有其它話題了。"
-        read: "已經沒有其它已讀的話題了。"
-        new: "已經沒有其它新話題了。"
-        unread: "已經沒有其它未讀的話題了。"
-        unseen: "<p>您的新主題會出現在這裡。預設情況下，主題會被視為新主題，如果是在過去兩天內建立，則會顯示<span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> 指示符。</p><p>請造訪您的<a href=\"%{userPrefsUrl}\">偏好設定</a>來變更。</p>"
-        category: "%{category} 分類已經沒有其它話題了。"
-        tag: "%{tag} 分類已經沒有其它話題了。"
-        top: "沒有更多精選話題。"
-        hot: "沒有更多熱門主題。"
-        bookmarks: "書籤裡沒有更多的話題了。"
-        filter: " 分類已經沒有其它話題了。"
     topic_bulk_actions:
       dismiss:
         name: "忽略"
@@ -3088,9 +3075,6 @@ zh_TW:
         }
       created_at: "創建日期： %{date}"
       bumped_at: "最新：%{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>瀏覽所有類別</a>或<a href='%{basePath}/latest'>檢視最新主題</a>。"
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>瀏覽所有類別</a>、<a href='%{basePath}/latest'>檢視最新主題</a>或查看頂端："
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>瀏覽所有標記</a>或<a href='%{basePath}/latest'>查看最新話題</a>。"
       suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
       jump_reply: "跳到貼文的原始位置"
       jump_reply_aria: "跳到 @%{username} 的貼文的原始位置"
@@ -4050,6 +4034,7 @@ zh_TW:
         this_month: "月"
         this_week: "週"
         today: "今天"
+        custom: "客製"
     custom_homepage:
       admin_message: '您的一個佈景主題已啟用「custom_homepage」修改器，但在 [custom-homepage] 連接器中沒有輸出任何內容。（此消息只顯示給網站管理員。）'
     permission_types:
@@ -6938,16 +6923,12 @@ zh_TW:
             prompt: "更改此設定可能會對您的網站產生深遠或意想不到的後果。確定要繼續嗎？"
             confirm: "是的，我確定"
           min_password_length:
-            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
             confirm: "是的，更新密碼原則"
           min_admin_password_length:
-            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的管理者。確定要繼續嗎？"
             confirm: "是的，更新密碼原則"
           password_unique_charactes:
-            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
             confirm: "是的，更新密碼原則"
           block_common_passwords:
-            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
             confirm: "是的，更新密碼原則"
       badges:
         status: 狀態

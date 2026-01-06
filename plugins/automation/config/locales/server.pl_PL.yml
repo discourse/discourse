@@ -188,3 +188,6 @@ pl_PL:
       random_assign:
         title: "Przypisanie losowe"
         description: "Losowo przypisuje tematy do grupy"
+      set_topic_timer:
+        title: "Ustaw minutnik tematu"
+        description: "Ustaw minutnik dla tematu"

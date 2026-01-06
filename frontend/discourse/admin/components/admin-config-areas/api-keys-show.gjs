@@ -223,8 +223,12 @@ export default class AdminConfigAreasApiKeysShow extends Component {
                   {{#each scope.parameters as |p|}}
                     <div>
                       <b>{{p}}:</b>
-                      {{#if (get scope.allowed_parameters p)}}
-                        {{get scope.allowed_parameters p}}
+                      {{#if scope.allowed_parameters}}
+                        {{#if (get scope.allowed_parameters p)}}
+                          {{get scope.allowed_parameters p}}
+                        {{else}}
+                          {{i18n "admin.api.scopes.any_parameter"}}
+                        {{/if}}
                       {{else}}
                         {{i18n "admin.api.scopes.any_parameter"}}
                       {{/if}}

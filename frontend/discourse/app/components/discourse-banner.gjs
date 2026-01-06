@@ -5,9 +5,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import DecoratedHtml, { applyHtmlDecorators } from "./decorated-html";
+import DecoratedHtml from "./decorated-html";
 
 export default class DiscourseBanner extends Component {
   @service currentUser;
@@ -45,11 +44,6 @@ export default class DiscourseBanner extends Component {
     }
 
     return !this.hide && bannerKey && dismissedBannerKey !== bannerKey;
-  }
-
-  @bind
-  decorateContent(element, helper) {
-    applyHtmlDecorators(element, helper);
   }
 
   @action
@@ -91,11 +85,7 @@ export default class DiscourseBanner extends Component {
               />
             </div>
 
-            <DecoratedHtml
-              @html={{this.content}}
-              @decorate={{this.decorateContent}}
-              @id="banner-content"
-            />
+            <DecoratedHtml @html={{this.content}} @id="banner-content" />
           </div>
         </div>
       </div>

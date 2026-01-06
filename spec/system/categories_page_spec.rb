@@ -8,6 +8,24 @@ RSpec.describe "Categories Page" do
   let(:category_page) { PageObjects::Pages::Category.new }
   before { CategoryFeaturedTopic.feature_topics }
 
+  describe "hashtag icons in category descriptions" do
+    fab!(:tag) { Fabricate(:tag, name: "important") }
+    fab!(:category_with_hashtag) do
+      Fabricate(:category_with_definition, description: "Check out #important for more info")
+    end
+
+    it "renders hashtag icons in category descriptions" do
+      category_page.visit_categories
+
+      within(
+        ".category-list tr[data-category-id='#{category_with_hashtag.id}'] .category-description",
+      ) do
+        expect(page).to have_css(".hashtag-cooked", text: "important")
+        expect(page).to have_css(".hashtag-cooked .d-icon")
+      end
+    end
+  end
+
   describe "subcategories_with_featured_topics" do
     before { SiteSetting.desktop_category_page_style = "subcategories_with_featured_topics" }
     it "displays subcategories and topics" do

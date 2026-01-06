@@ -2,7 +2,7 @@
 
 RSpec.describe "Separate sidebar mode", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
   let(:header_component) { PageObjects::Components::Chat::Header.new }

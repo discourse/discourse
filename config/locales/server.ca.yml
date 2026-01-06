@@ -712,11 +712,10 @@ ca:
       every_month: "cada mes"
       every_six_months: "cada sis mesos"
   user_api_key:
-    title: "Autoritza l'accés a l'aplicació"
     authorize: "Autoritza"
+    deny: "Cancel·la"
     read: "llegeix"
     read_write: "llegeix/escriu"
-    description: '"%{application_name}" sol·licita el següent accés al vostre compte:'
     instructions: 'Hem generat una nova clau d''API d''usuari per a utilitzar amb "%{application_name}". Enganxeu la clau següent en la vostra aplicació:'
     otp_description: 'Voleu permetre que "%{application_name}" accedeixi a aquest lloc web?'
     otp_confirmation:

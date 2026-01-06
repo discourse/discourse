@@ -138,6 +138,8 @@ lt:
               label: Temos ID
             user:
               label: Narys
+        set_topic_timer:
+          title: Nustatyti temos laikmatį
       models:
         trigger:
           name:

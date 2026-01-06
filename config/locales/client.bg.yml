@@ -2401,17 +2401,6 @@ bg:
         category: "Няма теми в категория %{category}."
         top: "Няма топ теми."
         filter: "Няма теми."
-      bottom:
-        latest: "Няма повече теми в Последни."
-        posted: "Няма повече публикувани теми."
-        read: "Няма повече прочетени теми."
-        new: "Няма повече нови теми."
-        unread: "Няма повече непрочетени теми."
-        category: "Няма повече теми в %{category}"
-        tag: "Няма повече теми в %{tag}"
-        top: "Няма повече топ теми."
-        bookmarks: "Няма теми в Отметки"
-        filter: "Няма повече теми."
     topic_bulk_actions:
       dismiss:
         name: "Отмени"
@@ -3171,6 +3160,7 @@ bg:
         this_month: "Месец"
         this_week: "Седмица"
         today: "Днес"
+        custom: "По избор"
     permission_types:
       full: "Създай / Отговори / Виж"
       create_post: "Отговари / Виж"

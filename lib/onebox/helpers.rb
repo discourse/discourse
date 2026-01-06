@@ -251,7 +251,7 @@ module Onebox
           query:
             Addressable::URI.encode_component(
               uri.query,
-              "a-zA-Z0-9\\-\\.\\_\\~\\$\\&\\*\\,\\=\\:\\@\\?\\%",
+              "a-zA-Z0-9\\-\\.\\_\\~\\$\\&\\*\\,\\=\\:\\@\\?\\%\\+",
             ),
           fragment:
             Addressable::URI.encode_component(

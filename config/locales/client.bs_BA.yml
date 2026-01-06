@@ -1982,16 +1982,6 @@ bs_BA:
         bookmarks: "Još nemate zabilježenih tema."
         category: "Nema tema u %{category}."
         top: "Nema top tema."
-      bottom:
-        latest: "Nema više aktuelnih tema."
-        posted: "There are no more posted topics."
-        read: "Nema više pročitanih tema."
-        new: "Nema više novih tema."
-        unread: "Nema više nepročitanih tema."
-        category: "Nema više %{category} tema."
-        tag: "Nema više %{tag} tema."
-        top: "Nema više top tema."
-        bookmarks: "U zabilješkama više nema spremljenih tema."
     topic_bulk_actions:
       dismiss:
         name: "Odbaci"
@@ -2790,6 +2780,7 @@ bs_BA:
         this_month: "Mjesec"
         this_week: "Sedmica"
         today: "Danas"
+        custom: "Custom"
     permission_types:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"

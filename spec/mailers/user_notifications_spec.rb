@@ -520,7 +520,7 @@ RSpec.describe UserNotifications do
         )
 
       # from should include full user name
-      expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
+      expect(mail[:from].display_names).to eql(["John Doe"])
 
       # subject should include category name
       expect(mail.subject).to match(/India/)
@@ -750,7 +750,7 @@ RSpec.describe UserNotifications do
       expect(mail[:from].display_names).to_not eql(["John Doe"])
 
       # from should include username if "show user full names" is disabled
-      expect(mail[:from].display_names).to eql(["john via Discourse"])
+      expect(mail[:from].display_names).to eql(["john"])
 
       # subject should not include category name
       expect(mail.subject).not_to match(/Uncategorized/)
@@ -842,7 +842,7 @@ RSpec.describe UserNotifications do
         )
 
       # from should include username if full user name is not provided
-      expect(mail[:from].display_names).to eql(["john via Discourse"])
+      expect(mail[:from].display_names).to eql(["john"])
 
       # subject should include "[PM]"
       expect(mail.subject).to include("[PM] ")
@@ -1156,13 +1156,13 @@ RSpec.describe UserNotifications do
       it "should have user name as from_alias" do
         SiteSetting.enable_names = true
         SiteSetting.display_name_on_posts = true
-        expects_build_with(has_entry(:from_alias, "#{user.name} via Discourse"))
+        expects_build_with(has_entry(:from_alias, user.name))
       end
 
       it "should not have user name as from_alias if display_name_on_posts is disabled" do
         SiteSetting.enable_names = false
         SiteSetting.display_name_on_posts = false
-        expects_build_with(has_entry(:from_alias, "walterwhite via Discourse"))
+        expects_build_with(has_entry(:from_alias, "walterwhite"))
       end
 
       it "should explain how to respond" do
@@ -1332,13 +1332,13 @@ RSpec.describe UserNotifications do
         SiteSetting.enable_names = false
 
         expect(mailer.message.to_s).to include(
-          "From: #{inviter.username} via #{SiteSetting.title} <#{SiteSetting.notification_email}>",
+          "From: #{inviter.username} <#{SiteSetting.notification_email}>",
         )
       end
 
       it "sends the email as the inviter" do
         expect(mailer.message.to_s).to include(
-          "From: #{inviter.name} via #{SiteSetting.title} <#{SiteSetting.notification_email}>",
+          "From: #{inviter.name} <#{SiteSetting.notification_email}>",
         )
       end
     end

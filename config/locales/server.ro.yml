@@ -640,11 +640,10 @@ ro:
       every_month: "în fiecare lună"
       every_six_months: "la fiecare șase luni"
   user_api_key:
-    title: "Autorizează accesul aplicației"
     authorize: "Autorizează"
+    deny: "Anulează"
     read: "citire"
     read_write: "citire/scriere"
-    description: '„%{application_name}” cere accesul la contul tău de:'
     otp_confirmation:
       confirm_title: Continuă la %{site_name}
       logging_in_as: Autentificare ca %{username}

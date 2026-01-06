@@ -156,6 +156,9 @@ en:
         humanize_not_valid_string_value: "The property at JSON Pointer '%{property_json_pointer}' must be a string."
         not_valid_string_value: "must be a string"
 
+        humanize_not_valid_datetime_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid datetime."
+        not_valid_datetime_value: "must be a valid datetime"
+
         humanize_not_valid_integer_value: "The property at JSON Pointer '%{property_json_pointer}' must be an integer."
         not_valid_integer_value: "must be an integer"
 
@@ -870,6 +873,9 @@ en:
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       description_incomplete: "The category description post must have at least one paragraph."
+      description_too_long:
+        one: "Description is too long (maximum is %{count} character)."
+        other: "Description is too long (maximum is %{count} characters)."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
@@ -1233,11 +1239,14 @@ en:
       every_six_months: "every six months"
 
   user_api_key:
-    title: "Authorize application access"
+    title: 'Authorize "%{application_name}"'
     authorize: "Authorize"
+    deny: "Cancel"
     read: "read"
     read_write: "read/write"
-    description: '"%{application_name}" is requesting the following access to your account:'
+    logged_in_as: "Logged in as"
+    permissions_header: 'This will allow "%{application_name}" to:'
+    redirect_warning: "Authorizing will redirect you to"
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
@@ -2751,6 +2760,7 @@ en:
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
+      invalid_datetime: "Invalid datetime format. Please ensure you've entered a valid date and time."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
@@ -4108,8 +4118,6 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -5482,6 +5490,9 @@ en:
 
   finish_installation:
     congratulations: "Congratulations, you installed Discourse!"
+    login_with_discourse_id: "Login with Discourse ID"
+    discourse_id_help: "Please log in with Discourse ID using the button below. <br/><br/>Make sure you use a Discourse ID account with a primary email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable."
+    discourse_id_error_help: "You have opted to skip setting up email for now. Unfortunately due to the error message above, the setup cannot continue. Please report this issue on <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Register"
       title: "Register Admin Account"
@@ -5493,6 +5504,10 @@ en:
     resend_email:
       title: "Resend Activation Email"
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
+    discourse_id:
+      help: "We are now setting up Discourse ID for you."
+      no_allowed_emails: "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup."
+      global_notice: "No admins have logged in yet. Please log in using a Discourse ID account with an email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable to complete the installation."
 
   safe_mode:
     title: "Enter safe mode"

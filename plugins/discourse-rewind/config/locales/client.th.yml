@@ -14,7 +14,8 @@ th:
       reports:
         chat_usage:
           messages: ข้อความ
-          you: คุณ
+          author: คุณ
+          author_others: "%{username}"
         invites:
           title: เชิญชวน
           invitee_posts: โพสต์ที่สร้าง

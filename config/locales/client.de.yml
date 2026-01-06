@@ -3326,19 +3326,6 @@ de:
           unread: "Nichts ungelesen … beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
-      bottom:
-        latest: "Das waren die aktuellen Themen."
-        posted: "Das waren alle Themen."
-        read: "Das waren alle gelesenen Themen."
-        new: "Das waren alle neuen Themen."
-        unread: "Das waren alle ungelesen Themen."
-        unseen: "Es gibt keine ungesehenen Themen mehr."
-        category: "Das waren alle Themen in der Kategorie „%{category}“."
-        tag: "Das waren alle Themen mit dem Schlagwort „%{tag}“."
-        top: "Das waren alle angesagten Themen."
-        hot: "Das waren alle heißen Themen."
-        bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
-        filter: "Es gibt keine weiteren Themen."
     topic_bulk_actions:
       dismiss:
         name: "Verwerfen"
@@ -3466,9 +3453,6 @@ de:
         other: "%{count} Antworten, zum ersten Beitrag springen"
       created_at: "Erstellt: %{date}"
       bumped_at: "Letztes: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       browse_latest_topics: "Aktuelle Themen durchstöbern"
       browse_new_replies: "Neue Antworten durchstöbern"
       browse_new_topics: "Neue Themen durchstöbern"
@@ -4526,6 +4510,7 @@ de:
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
+        custom: "Benutzerdefiniert"
     custom_homepage:
       admin_message: 'Eines deiner Themes hat den Modifikator "custom_homepage" aktiviert, aber es gibt nichts im [custom-homepage]-Connector aus. (Diese Meldung wird nur für Website-Administratoren angezeigt.)'
     browser_update: 'Leider wird <a href="https://discourse.org/about#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a>, um die Inhalte in vollem Umfang zu sehen, dich anzumelden und zu antworten.'
@@ -7860,16 +7845,12 @@ de:
             prompt: "Das Ändern dieser Einstellung kann weitreichende oder unbeabsichtigte Folgen für deine Website haben. Bist du sicher, dass du fortfahren willst?"
             confirm: "Ja, ich bin sicher"
           min_password_length:
-            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
           min_admin_password_length:
-            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Administratoren betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
           password_unique_charactes:
-            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
           block_common_passwords:
-            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
         job_status:
           completed: "Update abgeschlossen"

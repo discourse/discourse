@@ -45,6 +45,7 @@ if defined?(DiscourseAutomation)
           whisper: whisper,
           automation: self.automation,
           silent_mode: silent_mode,
+          action: context["action"],
         )
       rescue => e
         Discourse.warn_exception(

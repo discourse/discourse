@@ -8,9 +8,14 @@ export default <template>
   {{#if @controller.showTopNav}}
     <div class="d-page-header">
       <DBreadcrumbsContainer />
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path="/admin"
+        @route="admin"
+        @label={{i18n "admin_title"}}
+      />
       <DBreadcrumbsItem
         @path="/admin/plugins"
+        @route="adminPlugins"
         @label={{i18n "admin.config.plugins.title"}}
       />
       <div class="d-nav-submenu">

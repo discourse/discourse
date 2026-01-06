@@ -3280,19 +3280,6 @@ pt_BR:
           unread: "Nada ficou sem ser lido... impressionante!"
           new_new: "Nada de novo no momento... volte em breve!"
           new: "Nada de novo no momento... volte em breve!"
-      bottom:
-        latest: "Não há mais últimos tópicos."
-        posted: "Não há mais tópicos postados."
-        read: "Não há mais tópicos lidos."
-        new: "Não há mais tópicos novos."
-        unread: "Não há mais tópicos não lidos."
-        unseen: "Não há mais tópicos não vistos."
-        category: "Não há mais tópicos na categoria %{category}."
-        tag: "Não há mais tópicos na categoria %{tag}."
-        top: "Não há mais melhores tópicos."
-        hot: "Não há mais tópicos principais."
-        bookmarks: "Não há mais tópicos favoritos."
-        filter: "Não existem mais tópicos."
     topic_bulk_actions:
       dismiss:
         name: "Descartar"
@@ -3420,9 +3407,6 @@ pt_BR:
         other: "%{count} respostas, pular para a primeira postagem"
       created_at: "Criação: %{date}"
       bumped_at: "Mais recentes: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Navegue por todas as categorias</a> ou <a href='%{basePath}/latest'>veja os tópicos mais recentes</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Navegue por todas as categorias</a>, <a href='%{basePath}/latest'>veja os tópicos mais recentes</a> ou veja os principais:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
       browse_latest_topics: "Navegue pelos tópicos mais recentes"
       suggest_create_topic: Tudo pronto para <a href>começar uma nova conversa?</a>
       jump_reply: "Ir para o local da postagem original"
@@ -4462,6 +4446,7 @@ pt_BR:
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
+        custom: "Personalizados(as)"
     custom_homepage:
       admin_message: 'Um dos seus temas ativou o modificador "custom_homepage" sem gerar nada no conector [custom-homepage]. (Esta mensagem é exibida apenas para administradores(as) do site.)'
     browser_update: 'Infelizmente, <a href="https://discourse.org/about#browser">seu navegador não é compatível</a>. <a href="https://browsehappy.com">Mude para um navegador compatível</a> para visualizar o conteúdo avançado, fazer login e responder.'
@@ -7736,16 +7721,12 @@ pt_BR:
             prompt: "A alteração desta configuração pode ter consequências inesperadas em diversas áreas do seu site. Deseja mesmo prosseguir?"
             confirm: "Sim, claro"
           min_password_length:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           min_admin_password_length:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) administradores(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           password_unique_charactes:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           block_common_passwords:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
       badges:
         status: Status

@@ -921,11 +921,10 @@ ur:
       every_month: "ہر ماہ"
       every_six_months: "ہر چھ ماہ"
   user_api_key:
-    title: "ایپلیکیشن ایکسَیس کی اجازت دیں"
     authorize: "اجازت دیں"
+    deny: "منسوخ کریں"
     read: "رِیڈ"
     read_write: "رِیڈ/رائیٹ"
-    description: '"%{application_name}" آپ کے اکاؤنٹ سے مندرجہ ذیل رسائی کی درخواست کر رہا ہے:'
     instructions: '"%{application_name}" کے ساتھ استعمال کیلئے ہم نے آپ کیلئے ایک نئی صارف API کِی بنائی ہے، براہ مہربانی اپنی ایپلیکیشن میں مندرجہ ذیل کِی پیسٹ کریں:'
     otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
     otp_confirmation:

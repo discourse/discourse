@@ -20,6 +20,7 @@ vi:
       channel_settings:
         edit: "Sửa"
         add: "Thêm"
+        notification_settings_context: "Thông báo"
         join: "Tham gia"
         leave: "Rời nhóm"
       close: "Đóng"
@@ -107,6 +108,7 @@ vi:
         history_label: "Lịch sử"
         members_label: "Các thành viên"
       search:
+        short_title: Tìm kiếm
         no_results: "Không tìm thấy kết quả"
         sort:
           relevance: "Độ phù hợp"
