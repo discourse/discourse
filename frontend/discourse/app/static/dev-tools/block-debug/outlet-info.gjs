@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
-import ArgsTable from "./args-table";
+import ArgsTable from "../shared/args-table";
 
 /**
  * Debug overlay for BlockOutlet components.
@@ -11,6 +11,7 @@ import ArgsTable from "./args-table";
  * @param {string} outletName - The name of the block outlet.
  * @param {number} blockCount - Number of blocks registered.
  * @param {Object} [outletArgs] - Arguments passed to the outlet.
+ * @param {Object} [deprecatedArgs] - Deprecated arguments created with `deprecatedOutletArgument`.
  */
 export default class OutletInfo extends Component {
   get blockLabel() {
@@ -25,8 +26,10 @@ export default class OutletInfo extends Component {
    */
   get hasOutletArgs() {
     return (
-      this.args.outletArgs != null &&
-      Object.keys(this.args.outletArgs).length > 0
+      (this.args.outletArgs != null &&
+        Object.keys(this.args.outletArgs).length > 0) ||
+      (this.args.deprecatedArgs != null &&
+        Object.keys(this.args.deprecatedArgs).length > 0)
     );
   }
 
@@ -46,8 +49,8 @@ export default class OutletInfo extends Component {
         </span>
       </:trigger>
       <:content>
-        <div class="block-outlet-info__wrapper">
-          <div class="block-outlet-info__heading">
+        <div class="outlet-info__wrapper">
+          <div class="outlet-info__heading --block-outlet">
             <span class="title">
               {{icon "cubes"}}
               {{@outletName}}
@@ -60,22 +63,29 @@ export default class OutletInfo extends Component {
               title="Find on GitHub"
             >{{icon "fab-github"}}</a>
           </div>
-          <div class="block-outlet-info__content">
+          <div class="outlet-info__content">
             {{#if @blockCount}}
-              <div class="block-outlet-info__stat">
-                {{icon "cube"}}
-                <span>{{this.blockLabel}} registered</span>
+              <div class="outlet-info__section">
+                <div class="outlet-info__section-title">Blocks Registered</div>
+                <div class="outlet-info__stat">
+                  {{icon "cube"}}
+                  <span>{{this.blockLabel}}</span>
+                </div>
               </div>
             {{else}}
-              <div class="block-outlet-info__empty">
+              <div class="outlet-info__empty">
                 No blocks registered for this outlet
               </div>
             {{/if}}
 
             {{#if this.hasOutletArgs}}
-              <div class="block-outlet-info__section">
-                <div class="block-outlet-info__section-title">Outlet Args</div>
-                <ArgsTable @args={{@outletArgs}} />
+              <div class="outlet-info__section">
+                <div class="outlet-info__section-title">Outlet Args</div>
+                <ArgsTable
+                  @args={{@outletArgs}}
+                  @deprecatedArgs={{@deprecatedArgs}}
+                  @prefix="block outlet"
+                />
               </div>
             {{/if}}
           </div>

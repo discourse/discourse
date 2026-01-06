@@ -145,48 +145,6 @@
   }
 }
 
-/* Plugin Outlet Info Popup */
-.plugin-outlet-info__wrapper {
-  display: flex;
-  flex-direction: column;
-  min-width: 250px;
-}
-
-.plugin-outlet-info__heading {
-  font-size: 14px;
-  font-weight: bold;
-  display: flex;
-  gap: 5px;
-  color: var(--dev-tools-plugin-outlet-color);
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--primary-low);
-  margin-bottom: 8px;
-
-  &.--wrapper {
-    color: var(--dev-tools-wrapper-outlet-color);
-  }
-
-  .title {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .github-link {
-    color: var(--primary-medium);
-  }
-}
-
-.plugin-outlet-info__content {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-size: 13px;
-  max-width: 100%;
-  overflow: hidden;
-}
-
 /* Block Debug Overlay */
 .block-debug-info {
   border: 1px dotted var(--dev-tools-block-color);
@@ -237,68 +195,6 @@
 
 .block-outlet-debug__badge {
   background: var(--dev-tools-block-outlet-color);
-}
-
-/* Block Outlet Info Tooltip */
-.block-outlet-info__wrapper {
-  display: flex;
-  flex-direction: column;
-  min-width: 250px;
-}
-
-.block-outlet-info__heading {
-  font-size: 14px;
-  font-weight: bold;
-  display: flex;
-  gap: 5px;
-  color: var(--dev-tools-block-outlet-color);
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--primary-low);
-  margin-bottom: 8px;
-
-  .title {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .github-link {
-    color: var(--primary-medium);
-  }
-}
-
-.block-outlet-info__content {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-size: 13px;
-}
-
-.block-outlet-info__stat {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--primary-high);
-}
-
-.block-outlet-info__empty {
-  font-style: italic;
-  color: var(--primary-medium);
-}
-
-.block-outlet-info__section {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.block-outlet-info__section-title {
-  font-size: 11px;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: var(--primary-medium);
-  letter-spacing: 0.5px;
 }
 
 /* Block Debug Tooltip */
@@ -385,57 +281,6 @@
   padding-top: 8px;
 }
 
-/* Block Debug Args Table */
-.block-debug-args {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  &.--empty {
-    font-style: italic;
-    opacity: 0.6;
-  }
-}
-
-.block-debug-args__row {
-  display: flex;
-  gap: 8px;
-  padding: 2px 4px;
-  border-radius: 2px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  width: 100%;
-  text-align: left;
-  font: inherit;
-  color: inherit;
-
-  &:hover {
-    background: var(--primary-very-low);
-  }
-}
-
-.block-debug-args__key {
-  font-weight: bold;
-  color: #2196f3;
-  white-space: nowrap;
-}
-
-.block-debug-args__value {
-  font-family: var(--dev-tools-mono-font);
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-}
-
-.block-debug-args__type {
-  font-size: 10px;
-  opacity: 0.5;
-  margin-right: 4px;
-}
-
 /* Block Debug Conditions Tree */
 .block-debug-conditions {
   display: flex;
@@ -503,4 +348,169 @@
       margin: 0;
     }
   }
+}
+
+/*
+ * Shared Outlet Components
+ * Used by both PluginOutlet and BlockOutlet debug overlays.
+ */
+
+/* Shared Outlet Info Tooltip Structure */
+.outlet-info__wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
+}
+
+.outlet-info__heading {
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  gap: 5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--primary-low);
+  margin-bottom: 8px;
+
+  .title {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .github-link {
+    color: var(--primary-medium);
+  }
+
+  /* Type-specific heading colors */
+  &.--plugin-outlet {
+    color: var(--dev-tools-plugin-outlet-color);
+  }
+
+  &.--wrapper-outlet {
+    color: var(--dev-tools-wrapper-outlet-color);
+  }
+
+  &.--block-outlet {
+    color: var(--dev-tools-block-outlet-color);
+  }
+}
+
+.outlet-info__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.outlet-info__section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.outlet-info__section-title {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--primary-medium);
+  letter-spacing: 0.5px;
+}
+
+.outlet-info__stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-high);
+}
+
+.outlet-info__empty {
+  font-style: italic;
+  color: var(--primary-medium);
+}
+
+/* Shared Outlet Args Table */
+.outlet-args-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.--empty {
+    font-style: italic;
+    color: var(--primary-medium);
+  }
+}
+
+.outlet-args-table__row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+
+  &:hover {
+    background: var(--primary-very-low);
+  }
+
+  &.--deprecated {
+    .outlet-args-table__key {
+      color: var(--tertiary);
+      text-decoration: line-through;
+    }
+  }
+}
+
+.outlet-args-table__key {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  color: #2196f3;
+  white-space: nowrap;
+}
+
+.outlet-args-table__deprecated-badge {
+  color: var(--tertiary);
+  font-size: 10px;
+
+  .d-icon {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+.outlet-args-table__value {
+  font-family: var(--dev-tools-mono-font);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.outlet-args-table__type {
+  font-size: 10px;
+  opacity: 0.5;
+  margin-right: 4px;
+}
+
+.outlet-args-table__deprecation-info {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--tertiary);
+  padding-left: 8px;
+  margin-top: -2px;
+  margin-bottom: 4px;
+}
+
+.outlet-args-table__deprecation-version {
+  opacity: 0.7;
 }

@@ -6,8 +6,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import ArgsTable from "../shared/args-table";
 import devToolsState from "../state";
-import ArgsTable from "./args-table";
 
 // Outlets matching these patterns will be displayed with an icon only.
 // Feel free to add more if it improves the layout.
@@ -23,6 +23,14 @@ const SMALL_OUTLETS = [
   "after-breadcrumbs",
 ];
 
+/**
+ * Debug overlay for PluginOutlet components.
+ * Shows outlet name badge with a tooltip containing outlet info, args, and GitHub search link.
+ *
+ * @param {string} outletName - The name of the plugin outlet.
+ * @param {Object} [outletArgs] - Arguments passed to the outlet.
+ * @param {Object} [deprecatedArgs] - Deprecated arguments created with `deprecatedOutletArgument`.
+ */
 export default class OutletInfoComponent extends Component {
   static shouldRender() {
     return devToolsState.pluginOutletDebug;
@@ -76,6 +84,29 @@ export default class OutletInfoComponent extends Component {
     );
   }
 
+  /**
+   * Checks whether this outlet has any args passed to it.
+   *
+   * @returns {boolean} True if outlet has at least one arg.
+   */
+  get hasOutletArgs() {
+    return (
+      (this.args.outletArgs != null &&
+        Object.keys(this.args.outletArgs).length > 0) ||
+      (this.args.deprecatedArgs != null &&
+        Object.keys(this.args.deprecatedArgs).length > 0)
+    );
+  }
+
+  /**
+   * Returns the heading modifier class based on outlet type.
+   *
+   * @returns {string} The CSS modifier class for the heading.
+   */
+  get headingModifier() {
+    return this.partOfWrapper ? "--wrapper-outlet" : "--plugin-outlet";
+  }
+
   <template>
     <div
       class={{concatClass
@@ -108,12 +139,9 @@ export default class OutletInfoComponent extends Component {
           </span>
         </:trigger>
         <:content>
-          <div class="plugin-outlet-info__wrapper">
+          <div class="outlet-info__wrapper">
             <div
-              class={{concatClass
-                "plugin-outlet-info__heading"
-                (if this.partOfWrapper "--wrapper")
-              }}
+              class={{concatClass "outlet-info__heading" this.headingModifier}}
             >
               <span class="title">
                 {{icon "plug"}}
@@ -130,8 +158,21 @@ export default class OutletInfoComponent extends Component {
                 title="Find on GitHub"
               >{{icon "fab-github"}}</a>
             </div>
-            <div class="plugin-outlet-info__content">
-              <ArgsTable @outletArgs={{@outletArgs}} />
+            <div class="outlet-info__content">
+              {{#if this.hasOutletArgs}}
+                <div class="outlet-info__section">
+                  <div class="outlet-info__section-title">Outlet Args</div>
+                  <ArgsTable
+                    @args={{@outletArgs}}
+                    @deprecatedArgs={{@deprecatedArgs}}
+                    @prefix="plugin outlet"
+                  />
+                </div>
+              {{else}}
+                <div class="outlet-info__empty">
+                  No outlet args passed to this outlet
+                </div>
+              {{/if}}
             </div>
           </div>
         </:content>

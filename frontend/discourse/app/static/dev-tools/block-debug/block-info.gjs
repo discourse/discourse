@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
-import ArgsTable from "./args-table";
+import ArgsTable from "../shared/args-table";
 import ConditionsTree from "./conditions-tree";
 
 /**

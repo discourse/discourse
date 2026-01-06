@@ -35,6 +35,7 @@ export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
   if (args) {
     Object.keys(args).forEach((key) => {
       Object.defineProperty(output, key, {
+        enumerable: true,
         get() {
           return args[key];
         },
@@ -45,6 +46,7 @@ export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
   if (deprecatedArgs) {
     Object.keys(deprecatedArgs).forEach((argumentName) => {
       Object.defineProperty(output, argumentName, {
+        enumerable: true,
         get() {
           const deprecatedArg = deprecatedArgs[argumentName];
 
