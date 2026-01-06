@@ -60,7 +60,7 @@ export default class ReviewableIpLookup extends Component {
 
   @action
   async loadIpData() {
-    if (!this.target) {
+    if (!this.currentUser.staff || !this.target) {
       this.loading = false;
       return;
     }
