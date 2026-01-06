@@ -279,7 +279,7 @@
       color: var(--d-sidebar-highlight-color);
       border: none;
       background: transparent;
-      padding: 0 0.5em;
+      padding: 0 0 0 var(--space-2);
       height: 100%;
 
       &:focus,
