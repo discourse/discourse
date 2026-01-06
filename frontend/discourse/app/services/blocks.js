@@ -58,9 +58,9 @@ export default class Blocks extends Service {
     this.#discoverBuiltInConditions();
   }
 
-  // ============================================================================
-  // Block Registry Methods
-  // ============================================================================
+  /*
+   * Block Registry Methods
+   */
 
   /**
    * Gets a registered block by name.
@@ -188,9 +188,9 @@ export default class Blocks extends Service {
     return !isBlockFactory(entry);
   }
 
-  // ============================================================================
-  // Condition Evaluation Methods (moved from BlockConditionEvaluator)
-  // ============================================================================
+  /*
+   * Condition Evaluation Methods
+   */
 
   /**
    * Auto-discover and register built-in condition classes.

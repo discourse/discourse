@@ -405,7 +405,7 @@ export async function validateBlock(
 
   const blockName = resolvedBlock.blockName;
 
-  // === Outlet permission validation ===
+  // Outlet permission validation
   // Check if the block is allowed to render in this specific outlet.
   const metadata = resolvedBlock.blockMetadata;
   if (metadata?.allowedOutlets || metadata?.deniedOutlets) {
