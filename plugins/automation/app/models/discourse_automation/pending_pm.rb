@@ -2,6 +2,9 @@
 
 module DiscourseAutomation
   class PendingPm < ActiveRecord::Base
+    # TODO: Remove after 20260106102330_drop_prefers_encrypt_from_pending_pms has been promoted
+    self.ignored_columns = %w[prefers_encrypt]
+
     self.table_name = "discourse_automation_pending_pms"
 
     belongs_to :automation, class_name: "DiscourseAutomation::Automation"
