@@ -1,4 +1,6 @@
-/** @type {RichEditorExtension} */
+// @ts-check
+
+/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
   markSpec: {
     strikethrough: {
