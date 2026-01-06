@@ -64,7 +64,8 @@ class StaticController < ApplicationController
       return redirect_to path("/login")
     end
 
-    rename_faq = SiteSetting.experimental_rename_faq_to_guidelines
+    rename_faq =
+      UpcomingChanges.enabled_for_user?(:experimental_rename_faq_to_guidelines, current_user)
 
     if rename_faq
       redirect_paths = %w[/rules /conduct]
