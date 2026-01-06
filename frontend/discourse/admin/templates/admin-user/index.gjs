@@ -933,16 +933,20 @@ export default <template>
     </section>
   {{/if}}
 
-  {{#if @controller.currentUser.staff}}
-    {{#if @controller.model.upcoming_changes_stats}}
-      <section class="details">
-        <h1>{{i18n "admin.user.upcoming_changes.title"}}</h1>
-        <p>{{htmlSafe
-            (i18n "admin.user.upcoming_changes.description" basePath=basePath)
-          }}</p>
-        <AdminUserUpcomingChanges @user={{@controller.model}} />
-      </section>
-    {{/if}}
+  {{#if
+    (and
+      @controller.currentUser.staff
+      @controller.model.upcoming_changes_stats
+      @controller.siteSettings.enable_upcoming_changes
+    )
+  }}
+    <section class="details">
+      <h1>{{i18n "admin.user.upcoming_changes.title"}}</h1>
+      <p>{{htmlSafe
+          (i18n "admin.user.upcoming_changes.description" basePath=basePath)
+        }}</p>
+      <AdminUserUpcomingChanges @user={{@controller.model}} />
+    </section>
   {{/if}}
 
   {{#if @controller.currentUser.admin}}
