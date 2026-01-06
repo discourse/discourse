@@ -19,14 +19,14 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * | `contains`   | List (pipe-separated)      | Does the setting list CONTAIN my value?  |
  *
  * **Theme Settings Support:**
- * Pass a custom `settings` object (e.g., from `import { settings } from "virtual:theme"`)
+ * Pass a custom settings object via `source` (e.g., from `import { settings } from "virtual:theme"`)
  * to check theme-specific settings instead of site settings.
  *
  * @class BlockSettingCondition
  * @extends BlockCondition
  *
  * @param {string} setting - The setting key to check (required).
- * @param {Object} [settings] - Custom settings object (e.g., theme settings). If not provided, uses siteSettings.
+ * @param {Object} [source] - Custom settings object (e.g., theme settings). If not provided, uses siteSettings.
  * @param {boolean} [enabled] - If true, passes when setting is truthy; if false, passes when falsy.
  * @param {*} [equals] - Passes when setting exactly equals this value.
  * @param {Array<*>} [includes] - For single-value settings: passes when setting value is in this array.
@@ -56,17 +56,20 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * @example
  * // Theme setting check (pass settings object from "virtual:theme")
  * import { settings } from "virtual:theme";
- * { type: "setting", settings, setting: "show_sidebar", enabled: true }
+ * { type: "setting", source: settings, setting: "show_sidebar", enabled: true }
  */
 export default class BlockSettingCondition extends BlockCondition {
   static type = "setting";
+  static sourceType = "object";
 
   @service siteSettings;
 
   validate(args) {
+    super.validate(args);
+
     const {
       setting,
-      settings,
+      source,
       enabled,
       equals,
       includes,
@@ -80,9 +83,9 @@ export default class BlockSettingCondition extends BlockCondition {
       );
     }
 
-    // Skip site settings check if custom settings object is provided
+    // Skip site settings check if custom settings object is provided via source
     // (e.g., theme settings from "virtual:theme")
-    if (!settings && !(setting in this.siteSettings)) {
+    if (!source && !(setting in this.siteSettings)) {
       raiseBlockValidationError(
         `BlockSettingCondition: Unknown site setting "${setting}". ` +
           `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`
@@ -106,19 +109,17 @@ export default class BlockSettingCondition extends BlockCondition {
     }
   }
 
-  evaluate(args) {
-    const {
-      setting,
-      settings,
-      enabled,
-      equals,
-      includes,
-      contains,
-      containsAny,
-    } = args;
-    // Use custom settings object if provided, otherwise fall back to siteSettings
-    const settingsSource = settings ?? this.siteSettings;
-    const value = settingsSource[setting];
+  evaluate(args, context) {
+    const { setting, enabled, equals, includes, contains, containsAny } = args;
+
+    // Determine settings source:
+    // 1. If source is provided, use it (even if it resolves to null/undefined - no fallback)
+    // 2. If source is NOT provided, use siteSettings
+    const settingsSource =
+      args.source !== undefined
+        ? this.resolveSource(args, context)
+        : this.siteSettings;
+    const value = settingsSource?.[setting];
 
     // Check enabled/disabled (boolean check)
     if (enabled !== undefined) {

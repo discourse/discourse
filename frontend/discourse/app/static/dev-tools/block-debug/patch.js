@@ -68,6 +68,7 @@ export function patchBlockRendering() {
           debugLocation: outletName,
           blockArgs: args,
           conditions,
+          outletArgs: context.outletArgs,
           WrappedComponent: Component,
         },
         owner

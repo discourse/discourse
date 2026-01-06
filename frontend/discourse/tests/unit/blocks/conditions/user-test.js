@@ -333,6 +333,187 @@ module("Unit | Blocks | Condition | user", function (hooks) {
     });
   });
 
+  module("source parameter", function () {
+    test("has sourceType of outletArgs", function (assert) {
+      assert.strictEqual(BlockUserCondition.sourceType, "outletArgs");
+    });
+
+    test("validate passes with valid source format", function (assert) {
+      assert.strictEqual(
+        this.condition.validate({ source: "@outletArgs.user" }),
+        undefined
+      );
+    });
+
+    test("validate throws with invalid source format", function (assert) {
+      assert.throws(
+        () => this.condition.validate({ source: "user" }),
+        BlockError,
+        "must be in format"
+      );
+    });
+
+    test("uses user from source when provided", function (assert) {
+      const outletUser = {
+        admin: true,
+        moderator: true,
+        staff: true,
+        trust_level: 4,
+      };
+
+      const context = { outletArgs: { customUser: outletUser } };
+      const result = this.condition.evaluate(
+        { source: "@outletArgs.customUser", admin: true },
+        context
+      );
+
+      assert.true(result);
+    });
+
+    test("does NOT fall back to currentUser when source resolves to undefined", function (assert) {
+      this.condition.currentUser = {
+        admin: true,
+        trust_level: 2,
+      };
+
+      const context = { outletArgs: {} };
+      // Source is provided but resolves to undefined - should use undefined, not currentUser
+      const result = this.condition.evaluate(
+        { source: "@outletArgs.user", admin: true },
+        context
+      );
+
+      // No user found at source path, so admin check fails
+      assert.false(result);
+    });
+
+    test("checks source user properties correctly", function (assert) {
+      const outletUser = {
+        admin: false,
+        moderator: true,
+        staff: true,
+        trust_level: 3,
+      };
+
+      const context = { outletArgs: { topicAuthor: outletUser } };
+
+      // Should fail admin check on source user
+      assert.false(
+        this.condition.evaluate(
+          { source: "@outletArgs.topicAuthor", admin: true },
+          context
+        )
+      );
+
+      // Should pass moderator check on source user
+      assert.true(
+        this.condition.evaluate(
+          { source: "@outletArgs.topicAuthor", moderator: true },
+          context
+        )
+      );
+
+      // Should pass trust level check on source user
+      assert.true(
+        this.condition.evaluate(
+          { source: "@outletArgs.topicAuthor", minTrustLevel: 2 },
+          context
+        )
+      );
+    });
+
+    test("handles nested source paths", function (assert) {
+      const topicCreator = {
+        admin: true,
+        trust_level: 4,
+      };
+
+      const context = { outletArgs: { topic: { creator: topicCreator } } };
+      const result = this.condition.evaluate(
+        { source: "@outletArgs.topic.creator", admin: true },
+        context
+      );
+
+      assert.true(result);
+    });
+
+    module("nested source path error handling", function () {
+      test("handles null intermediate value in source path", function (assert) {
+        const context = { outletArgs: { topic: null } };
+        const result = this.condition.evaluate(
+          { source: "@outletArgs.topic.creator", admin: true },
+          context
+        );
+        assert.false(result);
+      });
+
+      test("handles undefined intermediate value in source path", function (assert) {
+        const context = { outletArgs: { topic: { creator: undefined } } };
+        const result = this.condition.evaluate(
+          { source: "@outletArgs.topic.creator", admin: true },
+          context
+        );
+        assert.false(result);
+      });
+
+      test("handles missing root property in source path", function (assert) {
+        const context = { outletArgs: {} };
+        const result = this.condition.evaluate(
+          { source: "@outletArgs.topic.creator", admin: true },
+          context
+        );
+        assert.false(result);
+      });
+
+      test("handles deeply nested source path with null at various levels", function (assert) {
+        // null at first level
+        let context = { outletArgs: { a: null } };
+        assert.false(
+          this.condition.evaluate(
+            { source: "@outletArgs.a.b.c", admin: true },
+            context
+          ),
+          "null at first level"
+        );
+
+        // null at second level
+        context = { outletArgs: { a: { b: null } } };
+        assert.false(
+          this.condition.evaluate(
+            { source: "@outletArgs.a.b.c", admin: true },
+            context
+          ),
+          "null at second level"
+        );
+      });
+
+      test("handles source resolving to non-user object gracefully", function (assert) {
+        const context = { outletArgs: { topic: { creator: "not-a-user" } } };
+        const result = this.condition.evaluate(
+          { source: "@outletArgs.topic.creator", admin: true },
+          context
+        );
+        assert.false(result);
+      });
+
+      test("handles missing outletArgs in context", function (assert) {
+        const result = this.condition.evaluate(
+          { source: "@outletArgs.user", admin: true },
+          {}
+        );
+        assert.false(result);
+      });
+
+      test("handles null outletArgs in context", function (assert) {
+        const result = this.condition.evaluate(
+          { source: "@outletArgs.user", admin: true },
+          { outletArgs: null }
+        );
+        assert.false(result);
+      });
+    });
+  });
+
   module("static type", function () {
     test("has correct type", function (assert) {
       assert.strictEqual(BlockUserCondition.type, "user");

@@ -56,14 +56,15 @@ class BlockDebugLogger {
    * @param {Object} [options.args] - Condition arguments
    * @param {boolean} options.result - Whether condition passed
    * @param {number} [options.depth=0] - Nesting depth for indentation
+   * @param {*} [options.sourceValue] - Resolved source value (when condition uses source parameter)
    */
-  logCondition({ type, args, result, depth = 0 }) {
+  logCondition({ type, args, result, depth = 0, sourceValue }) {
     if (!this.#currentGroup) {
       this.#logStandalone(type, args, result);
       return;
     }
 
-    this.#currentGroup.logs.push({ type, args, result, depth });
+    this.#currentGroup.logs.push({ type, args, result, depth, sourceValue });
   }
 
   /**
@@ -268,10 +269,11 @@ class BlockDebugLogger {
    * @param {number} log.depth - Indentation depth.
    * @param {string} [log.label] - Label for param groups.
    * @param {Array} [log.matches] - Match results for param groups.
+   * @param {*} [log.sourceValue] - Resolved source value when condition uses source parameter.
    * @param {boolean} [hasChildren=false] - Whether this node has nested children.
    */
   #logTreeNode(log, hasChildren = false) {
-    const { type, args, result } = log;
+    const { type, args, result, sourceValue } = log;
 
     // Handle route state (shows current URL and params/queryParams values)
     // Uses checkmark/X to show whether URL matched
@@ -360,13 +362,16 @@ class BlockDebugLogger {
       );
     } else {
       // Condition type has no special formatting
-      logFn.call(
-        console,
-        `%c${icon}%c ${type}`,
-        iconStyle,
-        "",
-        args && Object.keys(args).length > 0 ? args : ""
-      );
+      // Include sourceValue in logged object if present
+      const loggedArgs =
+        args && Object.keys(args).length > 0
+          ? sourceValue !== undefined
+            ? { ...args, _resolved: sourceValue }
+            : args
+          : sourceValue !== undefined
+            ? { _resolved: sourceValue }
+            : "";
+      logFn.call(console, `%c${icon}%c ${type}`, iconStyle, "", loggedArgs);
     }
   }
 

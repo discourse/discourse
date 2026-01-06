@@ -14,6 +14,7 @@ import ConditionsTree from "./conditions-tree";
  * @param {string} debugLocation - The hierarchy path where the block is rendered
  * @param {Object} blockArgs - Arguments passed to the block
  * @param {Object} conditions - Conditions that were evaluated
+ * @param {Object} [outletArgs] - Outlet arguments available to the block
  * @param {Component} WrappedComponent - The actual block component to render
  */
 export default class BlockInfo extends Component {
@@ -36,6 +37,19 @@ export default class BlockInfo extends Component {
   get hasArgs() {
     return (
       this.args.blockArgs != null && Object.keys(this.args.blockArgs).length > 0
+    );
+  }
+
+  /**
+   * Checks whether this block has outlet args available.
+   * Used to conditionally render the outlet args section in the tooltip.
+   *
+   * @returns {boolean} True if outlet args are available.
+   */
+  get hasOutletArgs() {
+    return (
+      this.args.outletArgs != null &&
+      Object.keys(this.args.outletArgs).length > 0
     );
   }
 
@@ -82,11 +96,20 @@ export default class BlockInfo extends Component {
               </div>
             {{/if}}
 
+            {{#if this.hasOutletArgs}}
+              <div class="block-debug-tooltip__section">
+                <div class="block-debug-tooltip__section-title">Outlet Args</div>
+                <ArgsTable @args={{@outletArgs}} />
+              </div>
+            {{/if}}
+
             {{#unless this.hasConditions}}
               {{#unless this.hasArgs}}
-                <div class="block-debug-tooltip__empty">
-                  No conditions or arguments
-                </div>
+                {{#unless this.hasOutletArgs}}
+                  <div class="block-debug-tooltip__empty">
+                    No conditions or arguments
+                  </div>
+                {{/unless}}
               {{/unless}}
             {{/unless}}
           </div>

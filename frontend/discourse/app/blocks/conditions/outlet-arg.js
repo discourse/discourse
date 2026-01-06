@@ -1,0 +1,137 @@
+import { matchValue } from "discourse/lib/blocks/value-matcher";
+import { BlockCondition, raiseBlockValidationError } from "./base";
+
+/**
+ * A condition that evaluates based on outlet arg values.
+ *
+ * Checks properties passed via `@outletArgs` on the BlockOutlet. Supports
+ * dot-notation paths for nested properties and flexible value matching.
+ *
+ * @class BlockOutletArgCondition
+ * @extends BlockCondition
+ *
+ * @param {string} path - Dot-notation path to the property (required).
+ *   E.g., `"topic.closed"`, `"user.trust_level"`, `"category.id"`.
+ * @param {*} [value] - Value to match against (see matching rules below).
+ * @param {boolean} [exists] - If true, passes when property exists (not undefined);
+ *   if false, passes when property is undefined.
+ *
+ * ## Value Matching Rules
+ *
+ * Uses the shared `matchValue` utility from `value-matcher.js`:
+ *
+ * - **undefined**: Passes if `targetValue` is truthy
+ * - **Array**: Passes if `targetValue` matches ANY array element (OR logic)
+ * - **Object with `not`**: Passes if `targetValue` does NOT match `not` value
+ * - **Other**: Passes if `targetValue === value`
+ *
+ * @example
+ * // Check if topic is closed
+ * { type: "outletArg", path: "topic.closed", value: true }
+ *
+ * @example
+ * // Check user trust level is 2 or higher
+ * { type: "outletArg", path: "user.trust_level", value: [2, 3, 4] }
+ *
+ * @example
+ * // Check category is one of several IDs
+ * { type: "outletArg", path: "category.id", value: [1, 2, 3] }
+ *
+ * @example
+ * // Check if topic property exists
+ * { type: "outletArg", path: "topic", exists: true }
+ *
+ * @example
+ * // Check topic is NOT closed
+ * { type: "outletArg", path: "topic.closed", value: { not: true } }
+ */
+export default class BlockOutletArgCondition extends BlockCondition {
+  static type = "outletArg";
+
+  // This condition reads directly from context.outletArgs, no source parameter needed
+  static sourceType = "none";
+
+  validate(args) {
+    super.validate(args);
+
+    const { path, value, exists } = args;
+
+    if (!path) {
+      raiseBlockValidationError(
+        "BlockOutletArgCondition: `path` argument is required."
+      );
+    }
+
+    if (typeof path !== "string") {
+      raiseBlockValidationError(
+        "BlockOutletArgCondition: `path` must be a string."
+      );
+    }
+
+    // Validate path format (alphanumeric, underscores, dots)
+    if (!/^[\w.]+$/.test(path)) {
+      raiseBlockValidationError(
+        `BlockOutletArgCondition: \`path\` "${path}" is invalid. ` +
+          `Use dot-notation with alphanumeric characters (e.g., "user.trust_level").`
+      );
+    }
+
+    // Check for conflicting conditions
+    if (value !== undefined && exists !== undefined) {
+      raiseBlockValidationError(
+        "BlockOutletArgCondition: Cannot use both `value` and `exists` together."
+      );
+    }
+  }
+
+  evaluate(args, context) {
+    const { path, value, exists } = args;
+    const outletArgs = context?.outletArgs;
+
+    // Get the value at the path
+    const targetValue = getByPath(outletArgs, path);
+
+    // Check existence if specified
+    if (exists !== undefined) {
+      const doesExist = targetValue !== undefined;
+      return exists ? doesExist : !doesExist;
+    }
+
+    // When no value is specified, check truthiness
+    if (value === undefined) {
+      return !!targetValue;
+    }
+
+    // Use shared value matching with named parameters
+    return matchValue({
+      actual: targetValue,
+      expected: value,
+      paramName: path,
+    });
+  }
+}
+
+/**
+ * Gets a nested property value from an object using dot notation path.
+ *
+ * @param {Object} obj - The object to get the value from.
+ * @param {string} path - Dot-notation path (e.g., "user.trust_level").
+ * @returns {*} The value at the path, or undefined if not found.
+ */
+function getByPath(obj, path) {
+  if (!obj || !path) {
+    return undefined;
+  }
+
+  const parts = path.split(".");
+  let current = obj;
+
+  for (const part of parts) {
+    if (current === null || current === undefined) {
+      return undefined;
+    }
+    current = current[part];
+  }
+
+  return current;
+}

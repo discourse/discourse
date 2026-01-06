@@ -1340,4 +1340,266 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
     });
   });
+
+  module("outlet args", function () {
+    test("blocks receive @outletArgs separately from config args", async function (assert) {
+      let receivedArgs = null;
+      let receivedOutletArgs = null;
+
+      @block("outlet-args-test-block")
+      class OutletArgsTestBlock extends Component {
+        constructor() {
+          super(...arguments);
+          receivedArgs = { title: this.args.title, count: this.args.count };
+          receivedOutletArgs = this.args.outletArgs;
+        }
+
+        <template>
+          <div class="outlet-args-test">
+            <span class="title">{{@title}}</span>
+            <span class="topic">{{@outletArgs.topic.title}}</span>
+          </div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(OutletArgsTestBlock));
+      renderBlocks("homepage-blocks", [
+        { block: OutletArgsTestBlock, args: { title: "Hello", count: 42 } },
+      ]);
+
+      const outletArgs = {
+        topic: { title: "Test Topic" },
+        category: { id: 5 },
+      };
+
+      await render(
+        <template>
+          <BlockOutlet @name="homepage-blocks" @outletArgs={{outletArgs}} />
+        </template>
+      );
+
+      assert.strictEqual(receivedArgs.title, "Hello", "config arg received");
+      assert.strictEqual(receivedArgs.count, 42, "config arg received");
+      assert.strictEqual(
+        receivedOutletArgs.topic.title,
+        "Test Topic",
+        "outlet arg accessible"
+      );
+      assert.strictEqual(
+        receivedOutletArgs.category.id,
+        5,
+        "outlet arg accessible"
+      );
+      assert.dom(".outlet-args-test .title").hasText("Hello");
+      assert.dom(".outlet-args-test .topic").hasText("Test Topic");
+    });
+
+    test("BlockGroup forwards @outletArgs to children", async function (assert) {
+      let receivedOutletArgs = null;
+
+      @block("group-child-block")
+      class GroupChildBlock extends Component {
+        constructor() {
+          super(...arguments);
+          receivedOutletArgs = this.args.outletArgs;
+        }
+
+        <template>
+          <div class="group-child-content">
+            {{@outletArgs.topic.title}}
+          </div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(GroupChildBlock));
+      renderBlocks(
+        "sidebar-blocks",
+        [
+          {
+            block: BlockGroup,
+            args: { name: "test" },
+            children: [{ block: GroupChildBlock }],
+          },
+        ],
+        getOwner(this)
+      );
+
+      const outletArgs = { topic: { title: "Forwarded Topic" } };
+
+      await render(
+        <template>
+          <BlockOutlet @name="sidebar-blocks" @outletArgs={{outletArgs}} />
+        </template>
+      );
+
+      assert.strictEqual(
+        receivedOutletArgs.topic.title,
+        "Forwarded Topic",
+        "outlet args forwarded through BlockGroup"
+      );
+      assert.dom(".group-child-content").hasText("Forwarded Topic");
+    });
+
+    test("nested containers forward @outletArgs through hierarchy", async function (assert) {
+      let receivedOutletArgs = null;
+
+      @block("deep-nested-outlet-args-block")
+      class DeepNestedBlock extends Component {
+        constructor() {
+          super(...arguments);
+          receivedOutletArgs = this.args.outletArgs;
+        }
+
+        <template>
+          <div class="deep-nested-content">
+            {{@outletArgs.user.name}}
+          </div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(DeepNestedBlock));
+      renderBlocks(
+        "hero-blocks",
+        [
+          {
+            block: BlockGroup,
+            args: { name: "outer" },
+            children: [
+              {
+                block: BlockGroup,
+                args: { name: "inner" },
+                children: [{ block: DeepNestedBlock }],
+              },
+            ],
+          },
+        ],
+        getOwner(this)
+      );
+
+      const outletArgs = { user: { name: "Deep User" } };
+
+      await render(
+        <template>
+          <BlockOutlet @name="hero-blocks" @outletArgs={{outletArgs}} />
+        </template>
+      );
+
+      assert.strictEqual(
+        receivedOutletArgs.user.name,
+        "Deep User",
+        "outlet args passed through nested containers"
+      );
+      assert.dom(".deep-nested-content").hasText("Deep User");
+    });
+
+    test("outlet args are available for condition evaluation", async function (assert) {
+      @block("conditional-outlet-args-block")
+      class ConditionalBlock extends Component {
+        <template>
+          <div class="conditional-content">Conditional</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(ConditionalBlock));
+      renderBlocks(
+        "main-outlet-blocks",
+        [
+          {
+            block: ConditionalBlock,
+            conditions: {
+              type: "outletArg",
+              path: "topic.closed",
+              value: true,
+            },
+          },
+        ],
+        getOwner(this)
+      );
+
+      // Condition should pass - topic is closed
+      const closedTopicArgs = { topic: { closed: true } };
+      await render(
+        <template>
+          <BlockOutlet
+            @name="main-outlet-blocks"
+            @outletArgs={{closedTopicArgs}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".conditional-content")
+        .exists("block renders when outletArg condition passes");
+    });
+
+    test("outlet args condition can fail", async function (assert) {
+      @block("failing-condition-block")
+      class FailingConditionBlock extends Component {
+        <template>
+          <div class="failing-condition-content">Should not render</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(FailingConditionBlock));
+      renderBlocks(
+        "header-blocks",
+        [
+          {
+            block: FailingConditionBlock,
+            conditions: {
+              type: "outletArg",
+              path: "topic.closed",
+              value: true,
+            },
+          },
+        ],
+        getOwner(this)
+      );
+
+      // Condition should fail - topic is not closed
+      const openTopicArgs = { topic: { closed: false } };
+      await render(
+        <template>
+          <BlockOutlet @name="header-blocks" @outletArgs={{openTopicArgs}} />
+        </template>
+      );
+
+      assert
+        .dom(".failing-condition-content")
+        .doesNotExist("block does not render when outletArg condition fails");
+    });
+
+    test("debug callback receives outletArgs in context", async function (assert) {
+      let receivedContext = null;
+
+      _setBlockDebugCallback((blockData, context) => {
+        receivedContext = context;
+        return { Component: blockData.Component };
+      });
+
+      @block("debug-outlet-args-block")
+      class DebugOutletArgsBlock extends Component {
+        <template>
+          <div class="debug-outlet-args-content">Debug</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(DebugOutletArgsBlock));
+      renderBlocks("sidebar-blocks", [{ block: DebugOutletArgsBlock }]);
+
+      const outletArgs = { topic: { id: 123 }, user: { name: "Test" } };
+
+      await render(
+        <template>
+          <BlockOutlet @name="sidebar-blocks" @outletArgs={{outletArgs}} />
+        </template>
+      );
+
+      assert.deepEqual(
+        receivedContext.outletArgs,
+        outletArgs,
+        "debug callback receives outletArgs in context"
+      );
+    });
+  });
 });

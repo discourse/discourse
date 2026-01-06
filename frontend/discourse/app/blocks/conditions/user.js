@@ -5,6 +5,8 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * A condition that evaluates based on user state.
  *
  * Supports checking login status, trust level, admin/moderator status, and group membership.
+ * By default, checks the current logged-in user. Use `source` to check a different user
+ * object from outlet args.
  *
  * **Important: Multiple conditions use AND logic.** All specified conditions must be satisfied
  * for the condition to pass. For example, `{ minTrustLevel: 2, groups: ["beta-testers"] }` requires
@@ -22,6 +24,7 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  *
  * | Property        | Type       | Description                                                           |
  * |-----------------|------------|-----------------------------------------------------------------------|
+ * | `source`        | `string`   | Optional. Path to user object in outlet args (e.g., `@outletArgs.user`)|
  * | `loggedIn`      | `boolean`  | If true, passes only for logged-in users; if false, only for anon     |
  * | `admin`         | `boolean`  | If true, passes only for admin users                                  |
  * | `moderator`     | `boolean`  | If true, passes only for moderators (includes admins)                 |
@@ -45,13 +48,20 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * @example
  * // Trust level 2+ AND in specific groups
  * { type: "user", minTrustLevel: 2, groups: ["beta-testers", "power-users"] }
+ *
+ * @example
+ * // Check a user from outlet args instead of currentUser
+ * { type: "user", source: "@outletArgs.topicAuthor", admin: true }
  */
 export default class BlockUserCondition extends BlockCondition {
   static type = "user";
+  static sourceType = "outletArgs";
 
   @service currentUser;
 
   validate(args) {
+    super.validate(args);
+
     const {
       loggedIn,
       admin,
@@ -118,7 +128,7 @@ export default class BlockUserCondition extends BlockCondition {
     }
   }
 
-  evaluate(args) {
+  evaluate(args, context) {
     const {
       loggedIn,
       admin,
@@ -129,22 +139,29 @@ export default class BlockUserCondition extends BlockCondition {
       groups,
     } = args;
 
-    // Check login state
-    if (loggedIn === true && !this.currentUser) {
+    // Get user from source (outlet args) if provided, otherwise use currentUser.
+    // Important: If source is provided but resolves to undefined, we use undefined (don't fall back)
+    const user =
+      args.source !== undefined
+        ? this.resolveSource(args, context)
+        : this.currentUser;
+
+    // Check login state (only meaningful for currentUser, not source users)
+    if (loggedIn === true && !user) {
       return false;
     }
-    if (loggedIn === false && this.currentUser) {
+    if (loggedIn === false && user) {
       return false;
     }
 
-    // All other checks require a logged-in user
-    if (!this.currentUser) {
-      // If loggedIn: false was specified, anonymous users pass
+    // All other checks require a user
+    if (!user) {
+      // If loggedIn: false was specified, no user passes
       if (loggedIn === false) {
         return true;
       }
 
-      // If user-specific conditions are specified, anonymous users cannot satisfy them
+      // If user-specific conditions are specified, no user cannot satisfy them
       const hasUserSpecificConditions =
         admin !== undefined ||
         moderator !== undefined ||
@@ -157,45 +174,35 @@ export default class BlockUserCondition extends BlockCondition {
         return false;
       }
 
-      // No user-specific conditions, pass for anonymous if loggedIn wasn't explicitly required
+      // No user-specific conditions, pass if loggedIn wasn't explicitly required
       return loggedIn === undefined;
     }
 
     // Check admin status
-    if (admin === true && !this.currentUser.admin) {
+    if (admin === true && !user.admin) {
       return false;
     }
 
     // Check moderator status (admins are also moderators)
-    if (
-      moderator === true &&
-      !this.currentUser.moderator &&
-      !this.currentUser.admin
-    ) {
+    if (moderator === true && !user.moderator && !user.admin) {
       return false;
     }
 
     // Check staff status
-    if (staff === true && !this.currentUser.staff) {
+    if (staff === true && !user.staff) {
       return false;
     }
 
     // Check trust level range
-    if (
-      minTrustLevel !== undefined &&
-      this.currentUser.trust_level < minTrustLevel
-    ) {
+    if (minTrustLevel !== undefined && user.trust_level < minTrustLevel) {
       return false;
     }
-    if (
-      maxTrustLevel !== undefined &&
-      this.currentUser.trust_level > maxTrustLevel
-    ) {
+    if (maxTrustLevel !== undefined && user.trust_level > maxTrustLevel) {
       return false;
     }
 
     // Check group membership
-    if (groups?.length && !this.#isInAnyGroup(groups)) {
+    if (groups?.length && !this.#isInAnyGroup(user, groups)) {
       return false;
     }
 
@@ -203,16 +210,17 @@ export default class BlockUserCondition extends BlockCondition {
   }
 
   /**
-   * Checks if the current user is a member of at least one of the specified groups.
+   * Checks if a user is a member of at least one of the specified groups.
    * This implements OR logic for group membership: if the user belongs to any of
    * the provided groups, the check passes.
    *
+   * @param {Object} user - The user object to check.
    * @param {Array<string>} groupNames - Array of group names to check membership against.
    * @returns {boolean} True if the user is in at least one of the specified groups.
    */
-  #isInAnyGroup(groupNames) {
-    // Extract the names of all groups the current user belongs to
-    const userGroups = this.currentUser.groups?.map((g) => g.name) || [];
+  #isInAnyGroup(user, groupNames) {
+    // Extract the names of all groups the user belongs to
+    const userGroups = user.groups?.map((g) => g.name) || [];
     // Check if any of the required group names appear in the user's groups
     return groupNames.some((name) => userGroups.includes(name));
   }

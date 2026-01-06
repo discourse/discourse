@@ -159,7 +159,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     });
   });
 
-  module("with explicit settings object (theme settings)", function () {
+  module("with explicit source object (theme settings)", function () {
     test("enabled: true passes when custom setting is truthy", function (assert) {
       const themeSettings = {
         show_sidebar: true,
@@ -168,7 +168,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "show_sidebar",
           enabled: true,
         })
@@ -176,7 +176,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "enable_animations",
           enabled: true,
         })
@@ -191,7 +191,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "enable_animations",
           enabled: false,
         })
@@ -199,7 +199,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "show_sidebar",
           enabled: false,
         })
@@ -214,7 +214,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "theme_color",
           equals: "dark",
         })
@@ -222,7 +222,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "theme_color",
           equals: "light",
         })
@@ -236,7 +236,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "icon_style",
           includes: ["outline", "filled"],
         })
@@ -244,7 +244,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "icon_style",
           includes: ["filled", "duotone"],
         })
@@ -258,7 +258,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "enabled_features",
           contains: "dark-mode",
         })
@@ -266,7 +266,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "enabled_features",
           contains: "tooltips",
         })
@@ -280,7 +280,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "enabled_modules",
           containsAny: ["header", "navigation"],
         })
@@ -288,7 +288,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "enabled_modules",
           containsAny: ["navigation", "search"],
         })
@@ -302,7 +302,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "missing_key",
           enabled: true,
         })
@@ -317,14 +317,14 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "some_setting",
         })
       );
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "empty_setting",
         })
       );
@@ -370,9 +370,9 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       );
     });
 
-    test("does not throw for unknown setting when custom settings provided", function (assert) {
+    test("does not throw for unknown setting when custom source provided", function (assert) {
       this.validateCondition({
-        settings: { custom_key: true },
+        source: { custom_key: true },
         setting: "custom_key",
       });
       assert.true(true);
@@ -392,7 +392,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "allowed_ids",
           contains: 123,
         })
@@ -400,7 +400,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "allowed_ids",
           contains: 999,
         })
@@ -414,7 +414,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "allowed_ids",
           containsAny: [123, 999],
         })
@@ -422,7 +422,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "allowed_ids",
           containsAny: [111, 222],
         })
@@ -436,7 +436,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.true(
         this.evaluateCondition({
-          settings: themeSettings,
+          source: themeSettings,
           setting: "allowed_ids",
           contains: "123",
         })

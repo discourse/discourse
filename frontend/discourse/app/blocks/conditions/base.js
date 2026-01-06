@@ -1,16 +1,34 @@
 import { raiseBlockError } from "discourse/lib/blocks/error";
 
 /**
+ * Regex for validating source path format: `@outletArgs.propertyName` or
+ * `@outletArgs.nested.path`.
+ */
+const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
+
+/**
  * Base class for all block conditions.
  *
  * Subclasses must:
  * - Define a static `type` property (unique string identifier)
  * - Implement the `evaluate(args)` method
  * - Optionally implement the `validate(args)` method for registration-time validation
+ * - Optionally define a static `sourceType` property to enable `source` parameter support
  *
  * Condition classes can inject services using `@service` decorator.
  * The BlockConditionEvaluator service sets the owner on condition instances,
  * enabling dependency injection.
+ *
+ * ## Source Parameter Support
+ *
+ * Conditions can declare support for the `source` parameter via `static sourceType`:
+ *
+ * - `"none"` (default): `source` parameter is disallowed
+ * - `"outletArgs"`: `source` must be `@outletArgs.propertyPath`; base class resolves it
+ * - `"object"`: `source` is passed directly as an object (e.g., for settings)
+ *
+ * When `sourceType` is `"outletArgs"`, use `resolveSource(args, context)` to get the
+ * resolved value from outlet args.
  *
  * @class BlockCondition
  *
@@ -20,6 +38,7 @@ import { raiseBlockError } from "discourse/lib/blocks/error";
  *
  * export default class BlockMyCondition extends BlockCondition {
  *   static type = "my-condition";
+ *   static sourceType = "outletArgs"; // Enable source parameter
  *
  *   @service myService;
  *
@@ -29,8 +48,10 @@ import { raiseBlockError } from "discourse/lib/blocks/error";
  *     }
  *   }
  *
- *   evaluate(args) {
- *     return this.myService.someCheck(args.requiredArg);
+ *   evaluate(args, context) {
+ *     // Get value from source (outlet args) or fall back to service
+ *     const value = this.resolveSource(args, context) ?? this.myService.defaultValue;
+ *     return this.myService.someCheck(value, args.requiredArg);
  *   }
  * }
  * ```
@@ -45,17 +66,114 @@ export class BlockCondition {
   static type;
 
   /**
+   * Declares how this condition handles the `source` parameter.
+   *
+   * - `"none"` (default): `source` parameter is disallowed
+   * - `"outletArgs"`: `source` must be `@outletArgs.property`; base class resolves it
+   * - `"object"`: `source` is passed directly as an object (e.g., settings object)
+   *
+   * @type {"none" | "outletArgs" | "object"}
+   */
+  static sourceType = "none";
+
+  /**
    * Validates condition arguments at block registration time.
    * Override this method to check for required args, conflicting args,
    * or invalid values.
    *
+   * Note: Base class validation for `source` parameter is handled automatically
+   * via `validateSource()`. Subclasses should call `super.validate(args)` if
+   * they override this method.
+   *
    * @param {Object} args - The condition arguments from the block config.
    * @throws {BlockError} If validation fails.
    */
-  // eslint-disable-next-line no-unused-vars
+
   validate(args) {
-    // Default implementation: no validation
-    // Subclasses should override to add validation logic
+    // Validate source parameter based on sourceType
+    this.validateSource(args);
+  }
+
+  /**
+   * Validates the `source` parameter based on the condition's `sourceType`.
+   *
+   * - `sourceType: "none"`: Throws if `source` is provided
+   * - `sourceType: "outletArgs"`: Validates format is `@outletArgs.propertyPath`
+   * - `sourceType: "object"`: Validates `source` is an object if provided
+   *
+   * @param {Object} args - The condition arguments from the block config.
+   * @throws {BlockError} If source validation fails.
+   */
+  validateSource(args) {
+    const { source } = args;
+    const sourceType = this.constructor.sourceType;
+
+    if (source === undefined) {
+      return; // source is always optional
+    }
+
+    switch (sourceType) {
+      case "none":
+        raiseBlockError(
+          `${this.constructor.name}: \`source\` parameter is not supported for this condition type.`
+        );
+        break;
+
+      case "outletArgs":
+        if (typeof source !== "string") {
+          raiseBlockError(
+            `${this.constructor.name}: \`source\` must be a string in format "@outletArgs.propertyName".`
+          );
+        }
+        if (!OUTLET_ARGS_SOURCE_PATTERN.test(source)) {
+          raiseBlockError(
+            `${this.constructor.name}: \`source\` must be in format "@outletArgs.propertyName", ` +
+              `got "${source}".`
+          );
+        }
+        break;
+
+      case "object":
+        if (source !== null && typeof source !== "object") {
+          raiseBlockError(
+            `${this.constructor.name}: \`source\` must be an object.`
+          );
+        }
+        break;
+    }
+  }
+
+  /**
+   * Resolves the `source` parameter value for conditions with `sourceType: "outletArgs"`.
+   *
+   * Extracts the property path from `@outletArgs.path.to.value` and retrieves
+   * the corresponding value from `context.outletArgs`.
+   *
+   * @param {Object} args - The condition arguments containing `source`.
+   * @param {Object} context - Evaluation context containing `outletArgs`.
+   * @param {Object} [context.outletArgs] - The outlet args passed to the block.
+   * @returns {*} The resolved value from outlet args, or undefined if not found.
+   */
+  resolveSource(args, context) {
+    const { source } = args;
+
+    if (!source) {
+      return undefined;
+    }
+
+    const sourceType = this.constructor.sourceType;
+
+    if (sourceType === "object") {
+      return source;
+    }
+
+    if (sourceType === "outletArgs") {
+      // Extract path after "@outletArgs."
+      const path = source.replace(/^@outletArgs\./, "");
+      return getByPath(context?.outletArgs, path);
+    }
+
+    return undefined;
   }
 
   /**
@@ -65,6 +183,7 @@ export class BlockCondition {
    * @param {Object} args - The condition arguments from the block config.
    * @param {Object} [context] - Evaluation context from the blocks service.
    * @param {boolean} [context.debug] - Whether debug logging is enabled.
+   * @param {Object} [context.outletArgs] - Outlet args for source resolution.
    * @param {number} [context._depth] - Current nesting depth for logging.
    * @returns {boolean} True if condition passes, false otherwise.
    */
@@ -72,6 +191,31 @@ export class BlockCondition {
   evaluate(args, context) {
     throw new Error(`${this.constructor.name} must implement evaluate()`);
   }
+}
+
+/**
+ * Gets a nested property value from an object using dot notation path.
+ *
+ * @param {Object} obj - The object to get the value from.
+ * @param {string} path - Dot-notation path (e.g., "user.trust_level").
+ * @returns {*} The value at the path, or undefined if not found.
+ */
+function getByPath(obj, path) {
+  if (!obj || !path) {
+    return undefined;
+  }
+
+  const parts = path.split(".");
+  let current = obj;
+
+  for (const part of parts) {
+    if (current === null || current === undefined) {
+      return undefined;
+    }
+    current = current[part];
+  }
+
+  return current;
 }
 
 /**

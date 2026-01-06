@@ -49,6 +49,7 @@ import {
   isBlockFactory,
   resolveBlock,
 } from "discourse/lib/blocks/registration";
+import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
 /**
@@ -369,6 +370,12 @@ export function block(name, options = {}) {
         const baseHierarchy = this.isRoot
           ? this.outletName
           : this.args._hierarchy;
+        // Get outlet args for condition evaluation.
+        // Root blocks (BlockOutlet) have the combined getter with deprecation support.
+        // Nested containers receive outlet args via @outletArgs from their parent.
+        const outletArgs = this.isRoot
+          ? this.outletArgsWithDeprecations
+          : this.args.outletArgs;
         const result = [];
 
         // Track container counts for indexing (e.g., group[0], group[1])
@@ -438,6 +445,7 @@ export function block(name, options = {}) {
 
             conditionsPassed = blocksService.evaluate(blockConfig.conditions, {
               debug: isLoggingEnabled,
+              outletArgs,
             });
 
             if (isLoggingEnabled) {
@@ -458,6 +466,7 @@ export function block(name, options = {}) {
                   displayHierarchy: baseHierarchy,
                   containerPath,
                   conditions: blockConfig.conditions,
+                  outletArgs,
                 }
               )
             );
@@ -506,6 +515,7 @@ export function block(name, options = {}) {
        * @param {string} [debugContext.displayHierarchy] - Where the block is rendered (for tooltip display)
        * @param {string} [debugContext.containerPath] - Container's full path (for children's _hierarchy)
        * @param {Object} [debugContext.conditions] - The block's conditions
+       * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
        * @returns {{Component: import("ember-curry-component").CurriedComponent}}
        */
       #createChildBlock(blockConfig, owner, debugContext = {}) {
@@ -565,7 +575,10 @@ export function block(name, options = {}) {
               conditions: debugContext.conditions,
               conditionsPassed: true,
             },
-            { outletName: debugContext.displayHierarchy }
+            {
+              outletName: debugContext.displayHierarchy,
+              outletArgs: debugContext.outletArgs,
+            }
           );
           if (debugResult?.Component) {
             wrappedComponent = debugResult.Component;
@@ -901,6 +914,30 @@ export default class BlockOutlet extends Component {
     return this.children?.length ?? 0;
   }
 
+  /**
+   * Combines `@outletArgs` with `@deprecatedArgs` for lazy evaluation.
+   *
+   * Outlet args are values passed from the parent template to blocks rendered
+   * in this outlet. They are separate from block config args and accessed via
+   * `@outletArgs` in block components.
+   *
+   * Deprecated args trigger a deprecation warning when accessed, helping
+   * migrate consumers away from renamed or removed outlet args.
+   *
+   * @returns {Object} Combined args object with lazy property getters
+   */
+  @cached
+  get outletArgsWithDeprecations() {
+    if (!this.args.deprecatedArgs) {
+      return this.args.outletArgs || {};
+    }
+    return buildArgsWithDeprecations(
+      this.args.outletArgs || {},
+      this.args.deprecatedArgs,
+      { outletName: this.#name }
+    );
+  }
+
   <template>
     {{! Yield to :before block with hasConfig boolean for conditional rendering }}
     {{yield (hasConfig this.outletName) to="before"}}
@@ -912,6 +949,7 @@ export default class BlockOutlet extends Component {
             @outletName={{this.outletName}}
             @hasBlocks={{this.blockCount}}
             @blockCount={{this.blockCount}}
+            @outletArgs={{this.outletArgsWithDeprecations}}
           />
         {{else}}
           <span class="block-outlet-debug__badge">{{icon "cubes"}}
@@ -923,7 +961,10 @@ export default class BlockOutlet extends Component {
             <div class="{{this.outletName}}__container">
               <div class="{{this.outletName}}__layout">
                 {{#each this.children as |item|}}
-                  <item.Component @outletName={{this.outletName}} />
+                  <item.Component
+                    @outletName={{this.outletName}}
+                    @outletArgs={{this.outletArgsWithDeprecations}}
+                  />
                 {{/each}}
               </div>
             </div>
@@ -935,7 +976,10 @@ export default class BlockOutlet extends Component {
         <div class="{{this.outletName}}__container">
           <div class="{{this.outletName}}__layout">
             {{#each this.children as |item|}}
-              <item.Component @outletName={{this.outletName}} />
+              <item.Component
+                @outletName={{this.outletName}}
+                @outletArgs={{this.outletArgsWithDeprecations}}
+              />
             {{/each}}
           </div>
         </div>

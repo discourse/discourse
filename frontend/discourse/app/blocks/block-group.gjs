@@ -9,6 +9,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
  * Rendered children are created by the @block decorator and passed via the children getter.
  *
  * @param {string} @outletName - The outlet identifier this group belongs to (passed from parent)
+ * @param {Object} [@outletArgs] - Outlet args to forward to children (for condition evaluation and access)
  * @param {string} [@classNames] - Additional CSS classes for the group wrapper
  * @param {string} [@name] - Group identifier for BEM class naming (block__group-{name})
  */
@@ -28,7 +29,10 @@ export default class GroupedBlocks extends Component {
       }}
     >
       {{#each this.children as |child|}}
-        <child.Component @outletName={{@outletName}} />
+        <child.Component
+          @outletName={{@outletName}}
+          @outletArgs={{@outletArgs}}
+        />
       {{/each}}
     </div>
   </template>

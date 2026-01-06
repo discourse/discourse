@@ -450,13 +450,29 @@ export default class Blocks extends Service {
       return false;
     }
 
-    // Log condition BEFORE evaluate so nested logs appear underneath
-    if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({ type, args, result: null, depth });
+    // Resolve source value for logging if present
+    let sourceValue;
+    if (args.source && isLoggingEnabled) {
+      sourceValue = conditionInstance.resolveSource(args, context);
     }
 
-    // Pass context to evaluate so conditions can log nested items at correct depth
-    const evalContext = { debug: isLoggingEnabled, _depth: depth };
+    // Log condition BEFORE evaluate so nested logs appear underneath
+    if (isLoggingEnabled) {
+      blockDebugLogger.logCondition({
+        type,
+        args,
+        result: null,
+        depth,
+        sourceValue,
+      });
+    }
+
+    // Pass context to evaluate so conditions can access outletArgs and log nested items
+    const evalContext = {
+      debug: isLoggingEnabled,
+      _depth: depth,
+      outletArgs: context.outletArgs,
+    };
     const result = conditionInstance.evaluate(args, evalContext);
 
     // Update the condition's result after evaluate

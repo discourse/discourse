@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
+import ArgsTable from "./args-table";
 
 /**
  * Debug overlay for BlockOutlet components.
@@ -9,11 +10,24 @@ import icon from "discourse/helpers/d-icon";
  *
  * @param {string} outletName - The name of the block outlet.
  * @param {number} blockCount - Number of blocks registered.
+ * @param {Object} [outletArgs] - Arguments passed to the outlet.
  */
 export default class OutletInfo extends Component {
   get blockLabel() {
     const count = this.args.blockCount;
     return count === 1 ? "1 block" : `${count} blocks`;
+  }
+
+  /**
+   * Checks whether this outlet has any args passed to it.
+   *
+   * @returns {boolean} True if outlet has at least one arg.
+   */
+  get hasOutletArgs() {
+    return (
+      this.args.outletArgs != null &&
+      Object.keys(this.args.outletArgs).length > 0
+    );
   }
 
   <template>
@@ -55,6 +69,13 @@ export default class OutletInfo extends Component {
             {{else}}
               <div class="block-outlet-info__empty">
                 No blocks registered for this outlet
+              </div>
+            {{/if}}
+
+            {{#if this.hasOutletArgs}}
+              <div class="block-outlet-info__section">
+                <div class="block-outlet-info__section-title">Outlet Args</div>
+                <ArgsTable @args={{@outletArgs}} />
               </div>
             {{/if}}
           </div>
