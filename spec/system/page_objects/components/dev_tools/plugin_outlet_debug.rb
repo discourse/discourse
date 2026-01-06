@@ -18,7 +18,7 @@ module PageObjects
         end
 
         def has_tooltip?
-          page.has_css?(".plugin-outlet-info__wrapper")
+          page.has_css?(".outlet-info__wrapper")
         end
 
         def has_wrapper_outlet?
@@ -26,19 +26,19 @@ module PageObjects
         end
 
         def has_github_link?
-          page.has_css?(".plugin-outlet-info__heading .github-link")
+          page.has_css?(".outlet-info__heading .github-link")
         end
 
         def has_arg?(key:)
-          page.has_css?(".block-debug-args__key", text: key)
+          page.has_css?(".outlet-args-table__key", text: key)
         end
 
         def has_arg_value?(value:)
-          page.has_css?(".block-debug-args__value", text: value)
+          page.has_css?(".outlet-args-table__value", text: value)
         end
 
         def has_wrapper_label?
-          page.has_css?(".plugin-outlet-info__wrapper", text: "(wrapper)")
+          page.has_css?(".outlet-info__heading", text: "(wrapper)")
         end
       end
     end

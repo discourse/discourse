@@ -203,4 +203,42 @@ describe "Block conditions", type: :system do
       expect(blocks).to have_block("or-admin-or-moderator")
     end
   end
+
+  describe "block ordering" do
+    before { sign_in(trust_level_2_user) }
+
+    it "renders blocks in the order they were configured" do
+      visit("/latest")
+
+      expect(blocks).to have_block("order-first")
+      expect(blocks).to have_block("order-second")
+      expect(blocks).to have_block("order-third")
+      expect(blocks).to have_block("order-fourth")
+      expect(blocks).to have_block("order-fifth")
+
+      expect(blocks.has_blocks_in_order?([1, 2, 3, 4, 5])).to be true
+    end
+  end
+
+  describe "viewport conditions" do
+    before { sign_in(trust_level_2_user) }
+
+    context "when on desktop viewport (default)" do
+      it "shows desktop-only blocks and hides mobile-only blocks" do
+        visit("/latest")
+
+        expect(blocks).to have_block("viewport-desktop")
+        expect(blocks).to have_no_block("viewport-mobile")
+      end
+    end
+
+    context "when on mobile viewport", mobile: true do
+      it "shows mobile-only blocks and hides desktop-only blocks" do
+        visit("/latest")
+
+        expect(blocks).to have_block("viewport-mobile")
+        expect(blocks).to have_no_block("viewport-desktop")
+      end
+    end
+  end
 end

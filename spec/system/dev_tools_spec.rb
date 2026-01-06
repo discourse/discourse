@@ -90,6 +90,30 @@ describe "Discourse dev tools", type: :system do
         expect(block_debug).to have_ghost_tooltip
         expect(block_debug).to have_conditions
       end
+
+      it "shows block args values in tooltip" do
+        visit("/latest")
+        toolbar.enable
+        toolbar.toggle_block_visual_overlay
+
+        expect(block_debug).to have_block_info("debug-args-block")
+        block_debug.hover_block_badge("debug-args-block")
+        expect(block_debug).to have_block_tooltip
+        expect(block_debug).to have_block_arg(key: "title")
+        expect(block_debug).to have_block_arg(key: "count")
+        expect(block_debug).to have_block_arg(key: "enabled")
+      end
+
+      it "shows ghost blocks with combined conditions" do
+        visit("/latest") # Anonymous user, admin + TL2 condition fails
+        toolbar.enable
+        toolbar.toggle_block_visual_overlay
+
+        expect(block_debug).to have_ghost_block("debug-conditions-block")
+        block_debug.hover_ghost_badge("debug-conditions-block")
+        expect(block_debug).to have_ghost_tooltip
+        expect(block_debug).to have_conditions
+      end
     end
   end
 end

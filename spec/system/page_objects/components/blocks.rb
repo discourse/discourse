@@ -18,6 +18,15 @@ module PageObjects
       def block_count(outlet_name)
         page.all("[class*='#{outlet_name}__block']").count
       end
+
+      def ordered_blocks_in_outlet(outlet_name)
+        page.all(".#{outlet_name}__block [data-order]").map { |el| el["data-order"].to_i }
+      end
+
+      def has_blocks_in_order?(expected_order)
+        actual = ordered_blocks_in_outlet("hero-blocks")
+        actual == expected_order
+      end
     end
   end
 end

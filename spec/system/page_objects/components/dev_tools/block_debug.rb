@@ -21,11 +21,11 @@ module PageObjects
         end
 
         def has_outlet_tooltip?
-          page.has_css?(".block-outlet-info__wrapper")
+          page.has_css?(".outlet-info__wrapper")
         end
 
         def has_outlet_github_link?
-          page.has_css?(".block-outlet-info__heading .github-link")
+          page.has_css?(".outlet-info__heading .github-link")
         end
 
         # Block visual overlay methods
@@ -56,7 +56,7 @@ module PageObjects
         end
 
         def has_block_arg?(key:)
-          page.has_css?(".block-debug-args__key", text: key)
+          page.has_css?(".outlet-args-table__key", text: "@#{key}")
         end
 
         # Ghost block methods
