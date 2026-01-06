@@ -8185,11 +8185,9 @@ en:
           button: "Delete all posts"
           progress:
             title: "Progress of deleting posts"
-            description_MF: |
-              Deleting { POSTS, plural,
-                  one {# post}
-                other {# posts}
-              } by @{username}...
+            description:
+              one: "Deleting %{count} post by @%{username}..."
+              other: "Deleting %{count} posts by @%{username}..."
           confirmation:
             title: "Delete all posts by @%{username}"
             description: |

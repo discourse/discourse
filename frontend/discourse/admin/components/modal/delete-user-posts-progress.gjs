@@ -6,7 +6,7 @@ import { htmlSafe } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
-import I18n, { i18n } from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class DeleteUserPostsProgress extends Component {
   @tracked deletedPosts = 0;
@@ -30,13 +30,10 @@ export default class DeleteUserPostsProgress extends Component {
   }
 
   get deletedDescription() {
-    return I18n.messageFormat(
-      "admin.user.delete_posts.progress.description_MF",
-      {
-        POSTS: this.originalPostCount,
-        username: this.args.model.user.username,
-      }
-    );
+    return i18n("admin.user.delete_posts.progress.description", {
+      count: this.originalPostCount,
+      username: this.args.model.user.username,
+    });
   }
 
   @action
