@@ -28,7 +28,7 @@ const MAX_DOTS = 10;
 
 export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
-  trackElement = null;
+  trackDirection = null;
   slides = [];
 
   registerSlide = modifier((element, [index]) => {
@@ -39,7 +39,8 @@ export default class ImageCarousel extends Component {
   });
 
   setupTrack = modifier((element) => {
-    this.trackElement = element;
+    this.trackDirection =
+      getComputedStyle(element).direction === "rtl" ? -1 : 1;
     const ratios = new Map();
 
     const onScrollEnd = () => {
@@ -193,13 +194,14 @@ export default class ImageCarousel extends Component {
       return;
     }
 
-    const direction =
-      getComputedStyle(this.trackElement).direction === "rtl" ? -1 : 1;
-
     if (event.key === "ArrowLeft") {
-      this.scrollToIndex(direction === 1 ? this.prevIndex : this.nextIndex);
+      this.scrollToIndex(
+        this.trackDirection === 1 ? this.prevIndex : this.nextIndex
+      );
     } else {
-      this.scrollToIndex(direction === 1 ? this.nextIndex : this.prevIndex);
+      this.scrollToIndex(
+        this.trackDirection === 1 ? this.nextIndex : this.prevIndex
+      );
     }
   }
 
