@@ -38,10 +38,6 @@ export default class ImageCarousel extends Component {
     };
   });
 
-  mountItem = modifier((element, [itemElement]) => {
-    element.appendChild(itemElement);
-  });
-
   setupTrack = modifier((element) => {
     this.trackElement = element;
     const ratios = new Map();
@@ -230,8 +226,9 @@ export default class ImageCarousel extends Component {
             data-index={{index}}
             style={{getAspectRatio item.width item.height}}
             {{this.registerSlide index}}
-            {{this.mountItem item.element}}
-          ></div>
+          >
+            {{item.element}}
+          </div>
         {{/each}}
       </div>
 
