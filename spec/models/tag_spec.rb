@@ -397,6 +397,69 @@ RSpec.describe Tag do
     end
   end
 
+  describe "slug" do
+    it "generates slug from name on create" do
+      tag = Fabricate(:tag, name: "Hello World")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "uses name-tag format for numeric-only names" do
+      tag = Fabricate(:tag, name: "123")
+      expect(tag.slug).to eq("123-tag")
+    end
+
+    it "removes apostrophes from names" do
+      tag = Fabricate(:tag, name: "Ruby's Best")
+      expect(tag.slug).to eq("rubys-best")
+    end
+
+    it "converts special characters to dashes" do
+      tag = Fabricate(:tag, name: "hello@world!")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "handles unicode by converting to dashes" do
+      tag = Fabricate(:tag, name: "hello字world")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "uses tag-tag format for unicode-only names" do
+      tag = Fabricate(:tag, name: "字")
+      expect(tag.slug).to eq("tag-tag")
+    end
+
+    it "resolves conflicts by appending -tag" do
+      tag1 = Fabricate(:tag, name: "test")
+      tag2 = Fabricate(:tag, name: "Test!")
+
+      expect(tag1.slug).to eq("test")
+      expect(tag2.slug).to eq("test-tag")
+    end
+
+    it "preserves existing slug when name unchanged" do
+      tag = Fabricate(:tag, name: "original")
+      original_slug = tag.slug
+      tag.update!(description: "new description")
+      expect(tag.slug).to eq(original_slug)
+    end
+
+    it "regenerates slug when name changes" do
+      tag = Fabricate(:tag, name: "original")
+      tag.update!(name: "new-name")
+      expect(tag.slug).to eq("new-name")
+    end
+
+    it "squeezes consecutive dashes and spaces" do
+      tag = Fabricate(:tag, name: "hello   world--test")
+      expect(tag.slug).to eq("hello-world-test")
+    end
+
+    it "trims leading and trailing dashes" do
+      tag = Fabricate(:tag, name: "--hello--")
+      expect(tag.slug).to eq("hello")
+    end
+  end
+
   describe "description" do
     it "uses the HTMLSanitizer to remove unsafe tags and attributes" do
       tag.description =

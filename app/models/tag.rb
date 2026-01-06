@@ -12,11 +12,14 @@ class Tag < ActiveRecord::Base
   ]
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :slug, presence: true, uniqueness: { case_sensitive: false }
 
   validate :target_tag_validator,
            if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
   validates :description, length: { maximum: 1000 }
+
+  before_validation :ensure_slug
 
   scope :where_name,
         ->(name) do
@@ -260,6 +263,24 @@ class Tag < ActiveRecord::Base
   end
 
   private
+
+  def ensure_slug
+    return if name.blank?
+
+    if slug.blank? || will_save_change_to_name?
+      self.slug = Slug.for(name, "")
+      self.slug = "#{name.parameterize.presence || "tag"}-tag" if slug.blank?
+    end
+
+    self.slug = "#{slug}-tag" if duplicate_slug?
+  end
+
+  def duplicate_slug?
+    return false if slug.blank?
+    scope = Tag.where("lower(slug) = ?", slug.downcase)
+    scope = scope.where.not(id: id) if id.present?
+    scope.exists?
+  end
 
   def sanitize_description
     self.description = sanitize_field(self.description) if description_changed?
