@@ -77,6 +77,8 @@ describe "Image Carousel", type: :system do
     send_keys(:left)
     expect(carousel).to have_active_slide_index(1)
 
+    wait_for_timeout(150) # we throttle keyboard actions
+
     send_keys(:right)
     expect(carousel).to have_active_slide_index(0)
   end
