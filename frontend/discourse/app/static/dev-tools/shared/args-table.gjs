@@ -16,11 +16,10 @@ import { formatValue, getTypeInfo } from "../lib/value-formatter";
  * Supports deprecated arguments marked with the `deprecatedOutletArgument` helper,
  * showing a visual indicator and deprecation info. Deprecated args are read from
  * `args.__deprecatedArgs__` (set by `buildArgsWithDeprecations` when dev-tools outlet
- * debugging is enabled), with fallback to the explicit `@deprecatedArgs` prop.
+ * debugging is enabled).
  *
  * @param {Object} args - The arguments to display. May contain a non-enumerable
  *   `__deprecatedArgs__` property with the raw deprecated args.
- * @param {Object} [deprecatedArgs] - Deprecated arguments (fallback for backwards compatibility).
  * @param {string} [prefix] - Prefix for console logging context (e.g., "plugin outlet").
  */
 export default class ArgsTable extends Component {
@@ -35,10 +34,8 @@ export default class ArgsTable extends Component {
     const args = this.args.args;
 
     // Read deprecatedArgs from the non-enumerable property on args (set by
-    // buildArgsWithDeprecations when dev-tools outlet debugging is enabled),
-    // or fall back to the explicit @deprecatedArgs prop for backwards compatibility.
-    const deprecatedArgs =
-      args?.[DEPRECATED_ARGS_KEY] || this.args.deprecatedArgs;
+    // buildArgsWithDeprecations when dev-tools outlet debugging is enabled).
+    const deprecatedArgs = args?.[DEPRECATED_ARGS_KEY];
 
     const deprecatedKeys = new Set(
       deprecatedArgs && typeof deprecatedArgs === "object"

@@ -949,8 +949,7 @@ export default class BlockOutlet extends Component {
             @outletName={{this.outletName}}
             @hasBlocks={{this.blockCount}}
             @blockCount={{this.blockCount}}
-            @outletArgs={{@outletArgs}}
-            @deprecatedArgs={{@deprecatedArgs}}
+            @outletArgs={{this.outletArgsWithDeprecations}}
           />
         {{else}}
           <span class="block-outlet-debug__badge">{{icon "cubes"}}

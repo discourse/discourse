@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
+import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import ArgsTable from "../shared/args-table";
 
 /**
@@ -10,8 +11,8 @@ import ArgsTable from "../shared/args-table";
  *
  * @param {string} outletName - The name of the block outlet.
  * @param {number} blockCount - Number of blocks registered.
- * @param {Object} [outletArgs] - Arguments passed to the outlet.
- * @param {Object} [deprecatedArgs] - Deprecated arguments created with `deprecatedOutletArgument`.
+ * @param {Object} [outletArgs] - Arguments passed to the outlet. May contain a non-enumerable
+ *   `__deprecatedArgs__` property with the raw deprecated args for display in the debug tooltip.
  */
 export default class OutletInfo extends Component {
   get blockLabel() {
@@ -25,11 +26,12 @@ export default class OutletInfo extends Component {
    * @returns {boolean} True if outlet has at least one arg.
    */
   get hasOutletArgs() {
+    const outletArgs = this.args.outletArgs;
+    const deprecatedArgs = outletArgs?.[DEPRECATED_ARGS_KEY];
+
     return (
-      (this.args.outletArgs != null &&
-        Object.keys(this.args.outletArgs).length > 0) ||
-      (this.args.deprecatedArgs != null &&
-        Object.keys(this.args.deprecatedArgs).length > 0)
+      (outletArgs != null && Object.keys(outletArgs).length > 0) ||
+      (deprecatedArgs != null && Object.keys(deprecatedArgs).length > 0)
     );
   }
 
@@ -81,11 +83,7 @@ export default class OutletInfo extends Component {
             {{#if this.hasOutletArgs}}
               <div class="outlet-info__section">
                 <div class="outlet-info__section-title">Outlet Args</div>
-                <ArgsTable
-                  @args={{@outletArgs}}
-                  @deprecatedArgs={{@deprecatedArgs}}
-                  @prefix="block outlet"
-                />
+                <ArgsTable @args={{@outletArgs}} @prefix="block outlet" />
               </div>
             {{/if}}
           </div>
