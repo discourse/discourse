@@ -247,6 +247,15 @@ export function block(name, options = {}) {
   warnUnknownOutletPatterns(allowedOutlets, name, "allowedOutlets");
   warnUnknownOutletPatterns(deniedOutlets, name, "deniedOutlets");
 
+  // Create metadata object once (returned by getter)
+  const metadata = Object.freeze({
+    description,
+    container: isContainer,
+    args: argsSchema ? Object.freeze(argsSchema) : null,
+    allowedOutlets: allowedOutlets ? Object.freeze([...allowedOutlets]) : null,
+    deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
+  });
+
   return function (target) {
     if (!(target.prototype instanceof Component)) {
       raiseBlockError("@block target must be a Glimmer component class");
@@ -255,16 +264,24 @@ export function block(name, options = {}) {
 
     return class extends target {
       /** Full namespaced block name (e.g., "theme:tactile:hero-banner") */
-      static blockName = name;
+      static get blockName() {
+        return name;
+      }
 
       /** Short block name without namespace (e.g., "hero-banner") */
-      static blockShortName = parsed.name;
+      static get blockShortName() {
+        return parsed.name;
+      }
 
       /** Namespace portion of the name, or null for core blocks */
-      static blockNamespace = parsed.namespace;
+      static get blockNamespace() {
+        return parsed.namespace;
+      }
 
       /** Block type: "core", "plugin", or "theme" */
-      static blockType = parsed.type;
+      static get blockType() {
+        return parsed.type;
+      }
 
       /**
        * Block metadata including description, container status, args schema,
@@ -279,17 +296,10 @@ export function block(name, options = {}) {
        *   deniedOutlets: ReadonlyArray<string>|null
        * }}
        */
-      static blockMetadata = Object.freeze({
-        description,
-        container: isContainer,
-        args: argsSchema ? Object.freeze(argsSchema) : null,
-        // Freeze metadata and arrays to prevent runtime mutations.
-        // Spread into new arrays before freezing to avoid freezing caller's arrays.
-        allowedOutlets: allowedOutlets
-          ? Object.freeze([...allowedOutlets])
-          : null,
-        deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
-      });
+      static get blockMetadata() {
+        return metadata;
+      }
+
       static [__BLOCK_FLAG] = true;
       static [__BLOCK_CONTAINER_FLAG] = isContainer;
 
