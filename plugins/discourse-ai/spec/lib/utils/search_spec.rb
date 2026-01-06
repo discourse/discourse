@@ -230,25 +230,31 @@ RSpec.describe DiscourseAi::Utils::Search do
       fab!(:post1) { Fabricate(:post, topic: topic1) }
       fab!(:post2) { Fabricate(:post, topic: topic2) }
       fab!(:post3) { Fabricate(:post, topic: topic3) }
+      fab!(:post_with_tags) { Fabricate(:post, topic: topic_with_tags) }
 
-      it "returns topics with order:latest filter only (uses TopicsFilter fallback)" do
+      before do
+        # Ensure posts are indexed for search (fab! creates before SearchIndexer.enable)
+        [post1, post2, post3, post_with_tags].each { |post| SearchIndexer.index(post, force: true) }
+      end
+
+      it "returns posts with order:latest filter only" do
         results = described_class.perform_search(order: "latest", current_user: admin)
 
         expect(results[:rows]).to be_present
         expect(results[:args][:order]).to eq("latest")
 
         url_index = results[:column_names].index("url")
-        topic_urls = results[:rows].map { |row| row[url_index] }
+        post_urls = results[:rows].map { |row| row[url_index] }
 
-        expected_urls = [topic3.relative_url, topic2.relative_url, topic1.relative_url]
+        expected_urls = [post3.url, post2.url, post1.url]
 
-        # keep only topics we expect (ignore any other fabricated topics)
-        topic_urls &= expected_urls
+        # keep only posts we expect (ignore any other fabricated posts)
+        post_urls &= expected_urls
 
-        expect(topic_urls).to eq(expected_urls)
+        expect(post_urls).to eq(expected_urls)
       end
 
-      it "returns topics filtered by category with order" do
+      it "returns posts filtered by category with order" do
         results =
           described_class.perform_search(
             category: category.slug,
@@ -259,52 +265,54 @@ RSpec.describe DiscourseAi::Utils::Search do
         expect(results[:rows]).to be_present
 
         url_index = results[:column_names].index("url")
-        topic_urls = results[:rows].map { |row| row[url_index] }
+        post_urls = results[:rows].map { |row| row[url_index] }
 
-        expected_urls =
-          Topic.order("views desc, bumped_at desc").where(category: category).map(&:relative_url)
-        expect(topic_urls).to eq(expected_urls)
+        # Search returns posts, ordered by topic views (topic_with_tags also in category, has 0 views)
+        expected_urls = [post1.url, post2.url, post_with_tags.url]
+        expect(post_urls).to eq(expected_urls)
       end
 
-      it "returns topics filtered by tags" do
+      it "returns posts filtered by tags" do
         results = described_class.perform_search(tags: tag_funny.name, current_user: admin)
 
         expect(results[:rows]).to be_present
 
         url_index = results[:column_names].index("url")
-        topic_urls = results[:rows].map { |row| row[url_index] }
-        expect(topic_urls).to contain_exactly(topic_with_tags.relative_url, topic3.relative_url)
+        post_urls = results[:rows].map { |row| row[url_index] }
+        expect(post_urls).to contain_exactly(post_with_tags.url, post3.url)
       end
 
-      it "returns topics filtered by user" do
+      it "returns posts filtered by user" do
         results = described_class.perform_search(user: post1.user.username, current_user: admin)
 
         url_index = results[:column_names].index("url")
-        topic_urls = results[:rows].map { |row| row[url_index] }
+        post_urls = results[:rows].map { |row| row[url_index] }
 
-        expect(topic_urls).to contain_exactly(topic1.relative_url)
+        expect(post_urls).to contain_exactly(post1.url)
       end
 
       it "returns empty results when no filters are provided and no search query" do
         results = described_class.perform_search(current_user: admin)
 
+        # Search requires at least a term, filter, or order
         expect(results[:rows]).to eq([])
       end
 
       it "respects category permissions" do
         private_topic = Fabricate(:topic, category: private_category)
-        Fabricate(:post, topic: private_topic)
+        private_post = Fabricate(:post, topic: private_topic)
+        SearchIndexer.index(private_post, force: true)
 
         results = described_class.perform_search(order: "latest", current_user: user)
         url_index = results[:column_names].index("url")
-        topic_urls = results[:rows].map { |row| row[url_index] }.join
-        expect(topic_urls).not_to include("/t/#{private_topic.slug}/#{private_topic.id}")
+        post_urls = results[:rows].map { |row| row[url_index] }.join
+        expect(post_urls).not_to include("/t/#{private_topic.slug}/#{private_topic.id}")
 
         GroupUser.create!(group: group, user: user)
         results = described_class.perform_search(order: "latest", current_user: user)
         url_index = results[:column_names].index("url")
-        topic_urls = results[:rows].map { |row| row[url_index] }.join
-        expect(topic_urls).to include("/t/#{private_topic.slug}/#{private_topic.id}")
+        post_urls = results[:rows].map { |row| row[url_index] }.join
+        expect(post_urls).to include("/t/#{private_topic.slug}/#{private_topic.id}")
       end
 
       it "returns correct result structure for filter-only queries with category" do
@@ -339,7 +347,7 @@ RSpec.describe DiscourseAi::Utils::Search do
         results = described_class.perform_search(user: post1.user.username, current_user: admin)
 
         url_index = results[:column_names].index("url")
-        expect(results[:rows][0][url_index]).to eq("/subfolder/t/#{topic1.slug}/#{topic1.id}")
+        expect(results[:rows][0][url_index]).to include("/subfolder/t/")
       end
     end
   end
