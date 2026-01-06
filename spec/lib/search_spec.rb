@@ -517,11 +517,43 @@ RSpec.describe Search do
     expect(search.term).to eq('"a b c d"')
   end
 
-  it "searches for short terms if one hits the length" do
+  it "strips short terms but keeps valid ones" do
     search = Search.new("a b c okaylength", min_search_term_length: 5)
     search.execute
     expect(search.valid?).to eq(true)
-    expect(search.term).to eq("a b c okaylength")
+    expect(search.term).to eq("okaylength")
+  end
+
+  describe "min_search_term_length with filters" do
+    it "strips short terms even when filters are present" do
+      search = Search.new("status:open ab", min_search_term_length: 3)
+      search.execute
+      expect(search.valid?).to eq(true)
+      expect(search.term).to eq("")
+    end
+
+    it "keeps valid terms when filters are present" do
+      search = Search.new("status:open valid", min_search_term_length: 3)
+      search.execute
+      expect(search.valid?).to eq(true)
+      expect(search.term).to eq("valid")
+    end
+
+    it "strips short terms with order present" do
+      search = Search.new("order:latest ab", min_search_term_length: 3)
+      search.execute
+      expect(search.valid?).to eq(true)
+      expect(search.term).to eq("")
+    end
+
+    it "allows short terms for in-topic search" do
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic, raw: "hello world")
+      search = Search.new("a", min_search_term_length: 3, search_context: topic)
+      search.execute
+      expect(search.valid?).to eq(true)
+      expect(search.term).to eq("a")
+    end
   end
 
   describe "query sanitization" do
@@ -1469,6 +1501,39 @@ RSpec.describe Search do
             )
           expect(result.posts.length).to eq(1)
         end
+      end
+    end
+
+    context "with order-only searches" do
+      it "returns results when searching with order and category filters" do
+        result =
+          Search.execute("order:latest category:#{topic.category.slug}", type_filter: "topic")
+
+        expect(result.posts).to be_present
+        expect(result.posts.map(&:topic_id)).to include(topic.id)
+      end
+
+      it "returns results when searching with only order filter" do
+        post # ensure post is created
+
+        result = Search.execute("order:latest", type_filter: "topic")
+
+        expect(result.posts).to be_present
+      end
+
+      it "returns results when using 'l' shortcut for order:latest" do
+        post # ensure post is created
+
+        result = Search.execute("l", type_filter: "topic")
+
+        expect(result.posts).to be_present
+      end
+
+      it "marks search as invalid when no term, filters, or order provided" do
+        search = Search.new("", type_filter: "topic")
+        search.execute
+
+        expect(search.valid?).to eq(false)
       end
     end
 
