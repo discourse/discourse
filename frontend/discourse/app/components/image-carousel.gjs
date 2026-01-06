@@ -83,7 +83,6 @@ export default class ImageCarousel extends Component {
   #endNavigation() {
     this.#isNavigating = false;
     cancel(this.#fallbackTimer);
-    this.#fallbackTimer = null;
   }
 
   get #scrollBehavior() {
