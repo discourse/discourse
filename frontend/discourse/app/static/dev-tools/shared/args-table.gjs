@@ -44,13 +44,18 @@ export default class ArgsTable extends Component {
     );
 
     // Process regular args first, but skip keys that are in deprecatedArgs
-    // (those will be handled in the second loop with proper deprecation info)
+    // (those will be handled in the second loop with proper deprecation info).
+    // Use Object.keys() instead of Object.entries() to avoid triggering the
+    // deprecation warning getters for deprecated args.
     if (args && typeof args === "object") {
-      for (const [key, rawValue] of Object.entries(args)) {
-        // Skip if this key exists in deprecatedArgs - it will be processed below
+      for (const key of Object.keys(args)) {
+        // Skip deprecated keys - accessing them would trigger deprecation warnings.
+        // They'll be processed below from the raw deprecatedArgs object.
         if (deprecatedKeys.has(key)) {
           continue;
         }
+
+        const rawValue = args[key];
 
         // Check if this is a deprecated arg that was merged into args
         const isDeprecated = isDeprecatedOutletArgument(rawValue);
