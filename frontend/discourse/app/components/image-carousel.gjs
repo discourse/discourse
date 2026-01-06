@@ -22,6 +22,7 @@ const getAspectRatio = helper(([width, height]) => {
 
 const FALLBACK_TIMEOUT_MS = 1000;
 const KEYBOARD_THROTTLE_MS = 150;
+const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 10;
 
 export default class ImageCarousel extends Component {
@@ -38,6 +39,12 @@ export default class ImageCarousel extends Component {
     this.#trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
+    const onScroll = () => {
+      if (!this.#isNavigating) {
+        throttle(this, this.#updateIndexFromScroll, element, SCROLL_THROTTLE_MS);
+      }
+    };
+
     const onScrollEnd = () => {
       if (this.#isNavigating) {
         this.#endNavigation();
@@ -46,9 +53,11 @@ export default class ImageCarousel extends Component {
       }
     };
 
+    element.addEventListener("scroll", onScroll, { passive: true });
     element.addEventListener("scrollend", onScrollEnd);
 
     return () => {
+      element.removeEventListener("scroll", onScroll);
       element.removeEventListener("scrollend", onScrollEnd);
       cancel(this.#fallbackTimer);
     };
@@ -83,6 +92,13 @@ export default class ImageCarousel extends Component {
   #endNavigation() {
     this.#isNavigating = false;
     cancel(this.#fallbackTimer);
+  }
+
+  #updateIndexFromScroll(track) {
+    const newIndex = this.#calculateNearestIndex(track);
+    if (newIndex !== this.currentIndex) {
+      this.currentIndex = newIndex;
+    }
   }
 
   get #scrollBehavior() {
