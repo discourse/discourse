@@ -91,6 +91,10 @@
 !/.vscode/extensions.json
 !/.vscode/*.sample
 
+# Same for Zed config
+/.zed/*
+!/.zed/*.sample
+
 # Front-end
 dist
 node_modules
