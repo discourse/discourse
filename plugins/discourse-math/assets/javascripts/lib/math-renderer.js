@@ -2,6 +2,7 @@ import { later } from "@ember/runloop";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import loadKaTeX from "discourse/lib/load-katex";
 import loadMathJax from "discourse/lib/load-mathjax";
+import { getMathJaxBasePath } from "discourse/plugins/discourse-math/lib/math-bundle-paths";
 
 const CSS_CLASSES = {
   HIDDEN: "math-hidden",
@@ -58,6 +59,7 @@ export function buildDiscourseMathOptions(siteSettings) {
 }
 
 function buildMathJaxConfig(opts) {
+  const mathJaxBasePath = getMathJaxBasePath();
   const MathJaxInitConfig = {
     startup: {
       typeset: false,
@@ -69,7 +71,7 @@ function buildMathJaxConfig(opts) {
     svg: {},
     loader: {
       load: ["ui/safe"],
-      paths: { mathjax: getURLWithCDN("/plugins/discourse-math/mathjax") },
+      paths: { mathjax: getURLWithCDN(mathJaxBasePath) },
     },
     options: {
       menuOptions: { settings: {} },
@@ -84,7 +86,7 @@ function buildMathJaxConfig(opts) {
   };
   if (opts.mathjax_output === "html") {
     MathJaxInitConfig.chtml.fontURL = getURLWithCDN(
-      "/plugins/discourse-math/mathjax/woff-v2"
+      `${mathJaxBasePath}/woff-v2`
     );
   } else if (opts.mathjax_output === "svg") {
     MathJaxInitConfig.svg.fontCache = "global";

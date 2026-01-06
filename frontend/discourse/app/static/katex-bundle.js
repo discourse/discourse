@@ -1,7 +1,10 @@
 import { getURLWithCDN } from "discourse/lib/get-url";
 import loadScript from "discourse/lib/load-script";
+import { getKaTeXBasePath } from "discourse/plugins/discourse-math/lib/math-bundle-paths";
 
-const BASE_PATH = "/plugins/discourse-math/katex";
+function getBasePath() {
+  return getKaTeXBasePath();
+}
 
 let katexPromise;
 let cssPromise;
@@ -10,14 +13,14 @@ let copyTexPromise;
 
 export async function loadKaTeX() {
   if (!cssPromise) {
-    cssPromise = loadScript(getURLWithCDN(`${BASE_PATH}/katex.min.css`), {
+    cssPromise = loadScript(getURLWithCDN(`${getBasePath()}/katex.min.css`), {
       css: true,
     });
   }
   await cssPromise;
 
   if (!katexPromise) {
-    katexPromise = loadScript(getURLWithCDN(`${BASE_PATH}/katex.min.js`));
+    katexPromise = loadScript(getURLWithCDN(`${getBasePath()}/katex.min.js`));
   }
   await katexPromise;
 
@@ -27,7 +30,7 @@ export async function loadKaTeX() {
 export function loadMhchem() {
   if (!mhchemPromise) {
     mhchemPromise = loadScript(
-      getURLWithCDN(`${BASE_PATH}/contrib/mhchem.min.js`)
+      getURLWithCDN(`${getBasePath()}/contrib/mhchem.min.js`)
     );
   }
   return mhchemPromise;
@@ -36,7 +39,7 @@ export function loadMhchem() {
 export function loadCopyTex() {
   if (!copyTexPromise) {
     copyTexPromise = loadScript(
-      getURLWithCDN(`${BASE_PATH}/contrib/copy-tex.min.js`)
+      getURLWithCDN(`${getBasePath()}/contrib/copy-tex.min.js`)
     );
   }
   return copyTexPromise;
