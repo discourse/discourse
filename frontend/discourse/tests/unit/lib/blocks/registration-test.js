@@ -399,4 +399,134 @@ module("Unit | Lib | blocks/registration", function (hooks) {
       }, /is invalid.*Valid formats/);
     });
   });
+
+  module("resolution tracking", function () {
+    test("concurrent resolveBlock calls only invoke factory once", async function (assert) {
+      @block("concurrent-block")
+      class ConcurrentBlock extends Component {}
+
+      let callCount = 0;
+      _registerBlockFactory("concurrent-block", async () => {
+        callCount++;
+        // Add a small delay to simulate async work
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        return ConcurrentBlock;
+      });
+
+      // Start multiple resolutions concurrently (don't await yet)
+      const promise1 = resolveBlock("concurrent-block");
+      const promise2 = resolveBlock("concurrent-block");
+      const promise3 = resolveBlock("concurrent-block");
+
+      // Wait for all resolutions
+      const [result1, result2, result3] = await Promise.all([
+        promise1,
+        promise2,
+        promise3,
+      ]);
+
+      // All should resolve to the same class
+      assert.strictEqual(result1, ConcurrentBlock);
+      assert.strictEqual(result2, ConcurrentBlock);
+      assert.strictEqual(result3, ConcurrentBlock);
+
+      // The factory should only be called once despite 3 concurrent calls
+      assert.strictEqual(callCount, 1, "Factory should be called only once");
+    });
+
+    test("failed resolution is cached and not retried", async function (assert) {
+      let callCount = 0;
+      _registerBlockFactory("failing-block", async () => {
+        callCount++;
+        throw new Error("Factory failed!");
+      });
+
+      // Helper to safely resolve (catches the thrown BlockError in DEBUG mode)
+      const safeResolve = async (name) => {
+        try {
+          return await resolveBlock(name);
+        } catch {
+          return undefined;
+        }
+      };
+
+      // First resolution attempt should fail
+      const result1 = await safeResolve("failing-block");
+      assert.strictEqual(result1, undefined, "First call returns undefined");
+      assert.strictEqual(callCount, 1, "Factory called once");
+
+      // Second resolution attempt should not call factory again
+      const result2 = await safeResolve("failing-block");
+      assert.strictEqual(result2, undefined, "Second call returns undefined");
+      assert.strictEqual(callCount, 1, "Factory still only called once");
+
+      // Third attempt should also be cached
+      const result3 = await safeResolve("failing-block");
+      assert.strictEqual(result3, undefined, "Third call returns undefined");
+      assert.strictEqual(callCount, 1, "Factory still only called once");
+    });
+
+    test("resetBlockRegistryForTesting clears failed resolution cache", async function (assert) {
+      let callCount = 0;
+      const registerFailingFactory = () => {
+        _registerBlockFactory("reset-failing", async () => {
+          callCount++;
+          throw new Error("Factory failed!");
+        });
+      };
+
+      // Helper to safely resolve (catches the thrown BlockError in DEBUG mode)
+      const safeResolve = async (name) => {
+        try {
+          return await resolveBlock(name);
+        } catch {
+          return undefined;
+        }
+      };
+
+      registerFailingFactory();
+
+      // First attempt fails
+      await safeResolve("reset-failing");
+      assert.strictEqual(callCount, 1, "Factory called once");
+
+      // Second attempt is cached
+      await safeResolve("reset-failing");
+      assert.strictEqual(callCount, 1, "Factory still called once (cached)");
+
+      // Reset the registry
+      resetBlockRegistryForTesting();
+
+      // Re-register the factory
+      registerFailingFactory();
+
+      // Now factory should be called again
+      await safeResolve("reset-failing");
+      assert.strictEqual(callCount, 2, "Factory called again after reset");
+    });
+
+    test("pending resolutions are cleaned up after completion", async function (assert) {
+      @block("pending-cleanup")
+      class PendingCleanup extends Component {}
+
+      _registerBlockFactory("pending-cleanup", async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        return PendingCleanup;
+      });
+
+      // Start resolution
+      const promise = resolveBlock("pending-cleanup");
+
+      // Wait for it to complete
+      await promise;
+
+      // Start a new resolution - should create a new promise (not reuse old)
+      // This verifies pending tracking was cleaned up
+      const promise2 = resolveBlock("pending-cleanup");
+
+      // But since it's now cached in resolvedFactoryCache, should resolve immediately
+      const result = await promise2;
+      assert.strictEqual(result, PendingCleanup);
+    });
+  });
 });

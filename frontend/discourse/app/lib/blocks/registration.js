@@ -45,6 +45,24 @@ export const blockRegistry = new Map();
 const resolvedFactoryCache = new Map();
 
 /**
+ * Tracks in-flight resolution promises to prevent duplicate concurrent attempts.
+ * When a factory is being resolved, the promise is stored here so subsequent
+ * callers can await the same promise instead of triggering a new resolution.
+ *
+ * @type {Map<string, Promise<BlockClass|undefined>>}
+ */
+const pendingResolutions = new Map();
+
+/**
+ * Caches failed resolution attempts to prevent infinite retry loops.
+ * When a factory fails to resolve, the block name is added here to prevent
+ * subsequent render cycles from triggering new resolution attempts.
+ *
+ * @type {Set<string>}
+ */
+const failedResolutions = new Set();
+
+/**
  * Tracks which namespace each source (theme/plugin) has used.
  * Enforces that each source can only register blocks with a single namespace.
  *
@@ -362,6 +380,16 @@ export async function resolveBlock(nameOrClass) {
     return resolvedFactoryCache.get(name);
   }
 
+  // Check if resolution previously failed - don't retry
+  if (failedResolutions.has(name)) {
+    return undefined;
+  }
+
+  // Check if resolution is already in-flight - reuse the same promise
+  if (pendingResolutions.has(name)) {
+    return pendingResolutions.get(name);
+  }
+
   // Look up in registry
   if (!blockRegistry.has(name)) {
     raiseBlockError(
@@ -377,9 +405,23 @@ export async function resolveBlock(nameOrClass) {
     return entry;
   }
 
-  // Resolve factory
+  // Track the resolution promise to prevent duplicate concurrent attempts
+  const resolutionPromise = resolveFactory(name, entry);
+  pendingResolutions.set(name, resolutionPromise);
+  return resolutionPromise;
+}
+
+/**
+ * Resolves a factory function and caches the result.
+ * Handles cleanup of pending tracking regardless of success or failure.
+ *
+ * @param {string} name - The block name.
+ * @param {BlockFactory} factory - The factory function to resolve.
+ * @returns {Promise<BlockClass|undefined>} The resolved block class, or undefined on failure.
+ */
+async function resolveFactory(name, factory) {
   try {
-    const result = await entry();
+    const result = await factory();
     // Handle both direct class and module with default export
     const BlockClass = result?.default ?? result;
 
@@ -406,6 +448,9 @@ export async function resolveBlock(nameOrClass) {
 
     return BlockClass;
   } catch (error) {
+    // Cache the failure to prevent infinite retry loops
+    failedResolutions.add(name);
+
     if (error.name === "BlockError") {
       throw error;
     }
@@ -416,6 +461,9 @@ export async function resolveBlock(nameOrClass) {
     // Return undefined explicitly for graceful degradation - callers can
     // handle this by skipping rendering of the block.
     return undefined;
+  } finally {
+    // Clean up pending tracking once resolution completes (success or failure)
+    pendingResolutions.delete(name);
   }
 }
 
@@ -459,6 +507,8 @@ export function resetBlockRegistryForTesting() {
 
   blockRegistry.clear();
   resolvedFactoryCache.clear();
+  pendingResolutions.clear();
+  failedResolutions.clear();
   sourceNamespaceMap.clear();
 
   if (testRegistryLockedState !== null) {
