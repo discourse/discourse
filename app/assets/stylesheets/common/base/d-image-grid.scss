@@ -185,6 +185,7 @@
     color: var(--primary-medium);
     cursor: pointer;
     font-size: var(--font-down-1);
+    touch-action: manipulation;
 
     &:hover {
       background: none;
@@ -218,6 +219,7 @@
       width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
       background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.15s ease-out;
+    touch-action: manipulation;
 
     &:hover {
       transform: scale(1.2);
