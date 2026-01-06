@@ -285,6 +285,176 @@ export function createData(store) {
 
   postModel.set("topic", store.createRecord("topic", transformedPost.topic));
 
+  // Onebox post examples
+  const wikipediaOneboxCooked = `<p>Check out this Wikipedia article:</p>
+<aside class="onebox allowlistedgeneric" data-onebox-src="https://en.wikipedia.org/wiki/Discourse_(software)">
+  <header class="source">
+    <img src="https://en.wikipedia.org/static/favicon/wikipedia.ico" class="site-icon" width="16" height="16" />
+    <a href="https://en.wikipedia.org/wiki/Discourse_(software)" target="_blank" rel="noopener">en.wikipedia.org</a>
+  </header>
+  <article class="onebox-body">
+    <img src="/plugins/styleguide/images/hubble-orion-nebula-bg.jpg" class="thumbnail" width="200" height="200" />
+    <h3><a href="https://en.wikipedia.org/wiki/Discourse_(software)" target="_blank" rel="noopener">Discourse (software)</a></h3>
+    <p>Discourse is an open source Internet forum and mailing list management software application founded in 2013 by Jeff Atwood, Robin Ward, and Sam Saffron.</p>
+  </article>
+</aside>`;
+
+  const githubPrOpenCooked = `<p>Here's the PR I mentioned:</p>
+<aside class="onebox githubpullrequest" data-onebox-src="https://github.com/discourse/discourse/pull/1234">
+  <header class="source">
+    <a href="https://github.com/discourse/discourse/pull/1234" target="_blank" rel="noopener">github.com/discourse/discourse</a>
+  </header>
+  <article class="onebox-body">
+    <div class="github-row --gh-status-open">
+      <div class="github-icon-container" title="Open">
+        <svg width="60" height="60" class="github-icon" viewBox="0 0 12 16" aria-hidden="true"><path fill-rule="evenodd" d="M11 11.28V5c-.03-.78-.34-1.47-.94-2.06C9.46 2.35 8.78 2.03 8 2H7V0L4 3l3 3V4h1c.27.02.48.11.69.31.21.2.3.42.31.69v6.28A1.993 1.993 0 0 0 10 15a1.993 1.993 0 0 0 1-3.72zm-1 2.92c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zM4 3c0-1.11-.89-2-2-2a1.993 1.993 0 0 0-1 3.72v6.56A1.993 1.993 0 0 0 2 15a1.993 1.993 0 0 0 1-3.72V4.72c.59-.34 1-.98 1-1.72zm-.8 10c0 .66-.55 1.2-1.2 1.2-.65 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+      </div>
+      <div class="github-info-container">
+        <h4><a href="https://github.com/discourse/discourse/pull/1234" target="_blank" rel="noopener">FIX: Improve loading state for topic lists</a></h4>
+        <div class="branches"><code>discourse:main</code> ← <code>username:fix-loading-state</code></div>
+        <div class="github-info">
+          <div class="date"><span class="status-label">opened Jan 5, 2026</div>
+          <div class="user"><img alt="" src="/images/avatar.png" class="onebox-avatar-inline" width="20" height="20" /> username</div>
+          <div class="lines"><span class="added">+42</span> <span class="removed">-15</span></div>
+        </div>
+      </div>
+    </div>
+  </article>
+</aside>`;
+
+  const githubPrApprovedCooked = `<p>This one is ready to merge:</p>
+<aside class="onebox githubpullrequest" data-onebox-src="https://github.com/discourse/discourse/pull/1235">
+  <header class="source">
+    <a href="https://github.com/discourse/discourse/pull/1235" target="_blank" rel="noopener">github.com/discourse/discourse</a>
+  </header>
+  <article class="onebox-body">
+    <div class="github-row --gh-status-approved">
+      <div class="github-icon-container" title="Approved">
+        <svg width="60" height="60" class="github-icon" viewBox="0 0 12 16" aria-hidden="true"><path fill-rule="evenodd" d="M11 11.28V5c-.03-.78-.34-1.47-.94-2.06C9.46 2.35 8.78 2.03 8 2H7V0L4 3l3 3V4h1c.27.02.48.11.69.31.21.2.3.42.31.69v6.28A1.993 1.993 0 0 0 10 15a1.993 1.993 0 0 0 1-3.72zm-1 2.92c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zM4 3c0-1.11-.89-2-2-2a1.993 1.993 0 0 0-1 3.72v6.56A1.993 1.993 0 0 0 2 15a1.993 1.993 0 0 0 1-3.72V4.72c.59-.34 1-.98 1-1.72zm-.8 10c0 .66-.55 1.2-1.2 1.2-.65 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+      </div>
+      <div class="github-info-container">
+        <h4><a href="https://github.com/discourse/discourse/pull/1235" target="_blank" rel="noopener">FEATURE: Add dark mode support for composer</a></h4>
+        <div class="branches"><code>discourse:main</code> ← <code>contributor:dark-mode-composer</code></div>
+        <div class="github-info">
+          <div class="date">approved Jan 4, 2026</div>
+          <div class="user"><img alt="" src="/images/avatar.png" class="onebox-avatar-inline" width="20" height="20" /> contributor</div>
+          <div class="lines"><span class="added">+156</span> <span class="removed">-23</span></div>
+        </div>
+      </div>
+    </div>
+  </article>
+</aside>`;
+
+  const githubPrChangesRequestedCooked = `<p>Needs some changes:</p>
+<aside class="onebox githubpullrequest" data-onebox-src="https://github.com/discourse/discourse/pull/1236">
+  <header class="source">
+    <a href="https://github.com/discourse/discourse/pull/1236" target="_blank" rel="noopener">github.com/discourse/discourse</a>
+  </header>
+  <article class="onebox-body">
+    <div class="github-row --gh-status-changes_requested">
+      <div class="github-icon-container" title="Changes Requested">
+        <svg width="60" height="60" class="github-icon" viewBox="0 0 12 16" aria-hidden="true"><path fill-rule="evenodd" d="M11 11.28V5c-.03-.78-.34-1.47-.94-2.06C9.46 2.35 8.78 2.03 8 2H7V0L4 3l3 3V4h1c.27.02.48.11.69.31.21.2.3.42.31.69v6.28A1.993 1.993 0 0 0 10 15a1.993 1.993 0 0 0 1-3.72zm-1 2.92c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zM4 3c0-1.11-.89-2-2-2a1.993 1.993 0 0 0-1 3.72v6.56A1.993 1.993 0 0 0 2 15a1.993 1.993 0 0 0 1-3.72V4.72c.59-.34 1-.98 1-1.72zm-.8 10c0 .66-.55 1.2-1.2 1.2-.65 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+      </div>
+      <div class="github-info-container">
+        <h4><a href="https://github.com/discourse/discourse/pull/1236" target="_blank" rel="noopener">DEV: Refactor user preferences controller</a></h4>
+        <div class="branches"><code>discourse:main</code> ← <code>developer:refactor-prefs</code></div>
+        <div class="github-info">
+          <div class="date">changes requested Jan 3, 2026</div>
+          <div class="user"><img alt="" src="/images/avatar.png" class="onebox-avatar-inline" width="20" height="20" /> developer</div>
+          <div class="lines"><span class="added">+89</span> <span class="removed">-234</span></div>
+        </div>
+      </div>
+    </div>
+  </article>
+</aside>`;
+
+  const githubPrMergedCooked = `<p>This was merged yesterday:</p>
+<aside class="onebox githubpullrequest" data-onebox-src="https://github.com/discourse/discourse/pull/1237">
+  <header class="source">
+    <a href="https://github.com/discourse/discourse/pull/1237" target="_blank" rel="noopener">github.com/discourse/discourse</a>
+  </header>
+  <article class="onebox-body">
+    <div class="github-row --gh-status-merged">
+      <div class="github-icon-container" title="Merged">
+        <svg width="60" height="60" class="github-icon" viewBox="0 0 12 16" aria-hidden="true"><path fill-rule="evenodd" d="M11 11.28V5c-.03-.78-.34-1.47-.94-2.06C9.46 2.35 8.78 2.03 8 2H7V0L4 3l3 3V4h1c.27.02.48.11.69.31.21.2.3.42.31.69v6.28A1.993 1.993 0 0 0 10 15a1.993 1.993 0 0 0 1-3.72zm-1 2.92c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zM4 3c0-1.11-.89-2-2-2a1.993 1.993 0 0 0-1 3.72v6.56A1.993 1.993 0 0 0 2 15a1.993 1.993 0 0 0 1-3.72V4.72c.59-.34 1-.98 1-1.72zm-.8 10c0 .66-.55 1.2-1.2 1.2-.65 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+      </div>
+      <div class="github-info-container">
+        <h4><a href="https://github.com/discourse/discourse/pull/1237" target="_blank" rel="noopener">SECURITY: Sanitize user input in search queries</a></h4>
+        <div class="branches"><code>discourse:main</code> ← <code>security-team:sanitize-search</code></div>
+        <div class="github-info">
+          <div class="date">merged Jan 2, 2026</div>
+          <div class="user"><img alt="" src="/images/avatar.png" class="onebox-avatar-inline" width="20" height="20" /> security-team</div>
+          <div class="lines"><span class="added">+12</span> <span class="removed">-5</span></div>
+        </div>
+      </div>
+    </div>
+  </article>
+</aside>`;
+
+  const createOneboxPost = (id, cookedContent) => ({
+    id,
+    topic,
+    user: {
+      avatar_template: user.avatar_template,
+      id: user.id,
+      username: user.username,
+      name: user.name,
+    },
+    name: user.name,
+    username: user.username,
+    avatar_template: user.avatar_template,
+    created_at: "2024-11-13T21:12:37.835Z",
+    displayDate: moment().subtract(3, "days"),
+    cooked: cookedContent,
+    post_number: 1,
+    post_type: 1,
+    updated_at: moment().subtract(2, "days"),
+    reply_count: 0,
+    reply_to_post_number: null,
+    quote_count: 0,
+    incoming_link_count: 0,
+    reads: 1,
+    readers_count: 0,
+    score: 0,
+    yours: false,
+    topic_id: topic.id,
+    topic_slug: topic.slug,
+    display_username: user.name,
+    primary_group_name: null,
+    version: 1,
+    can_edit: true,
+    can_delete: true,
+    can_recover: true,
+    can_see_hidden_post: true,
+    can_wiki: true,
+    read: true,
+    user_title: "",
+    bookmarked: false,
+    actions_summary: [],
+    moderator: false,
+    admin: true,
+    staff: true,
+    user_id: user.id,
+    hidden: false,
+    trust_level: user.trust_level,
+    deleted_at: null,
+    user_deleted: false,
+    edit_reason: null,
+    can_view_edit_history: true,
+    wiki: false,
+  });
+
+  const oneboxPosts = {
+    wikipedia: createOneboxPost(2001, wikipediaOneboxCooked),
+    githubPrOpen: createOneboxPost(2002, githubPrOpenCooked),
+    githubPrApproved: createOneboxPost(2003, githubPrApprovedCooked),
+    githubPrChangesRequested: createOneboxPost(
+      2004,
+      githubPrChangesRequestedCooked
+    ),
+    githubPrMerged: createOneboxPost(2005, githubPrMergedCooked),
+  };
+
   const postList = [
     transformedPost,
     {
@@ -394,6 +564,7 @@ export function createData(store) {
     transformedPost,
     postModel,
     postList,
+    oneboxPosts,
 
     user,
 
