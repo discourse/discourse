@@ -367,10 +367,14 @@ export default class Blocks extends Service {
         const result = this.evaluate(condition, {
           debug: isLoggingEnabled,
           _depth: depth + 1,
+          outletArgs: context.outletArgs,
         });
         if (!result) {
           andResult = false;
-          break;
+          // Short-circuit only when not debugging - evaluate all for debug visibility
+          if (!isLoggingEnabled) {
+            break;
+          }
         }
       }
 
@@ -398,9 +402,21 @@ export default class Blocks extends Service {
         });
       }
 
-      const orResult = conditionSpec.any.some((c) =>
-        this.evaluate(c, { debug: isLoggingEnabled, _depth: depth + 1 })
-      );
+      let orResult = false;
+      for (const condition of conditionSpec.any) {
+        const result = this.evaluate(condition, {
+          debug: isLoggingEnabled,
+          _depth: depth + 1,
+          outletArgs: context.outletArgs,
+        });
+        if (result) {
+          orResult = true;
+          // Short-circuit only when not debugging - evaluate all for debug visibility
+          if (!isLoggingEnabled) {
+            break;
+          }
+        }
+      }
 
       // Update combinator with actual result
       if (isLoggingEnabled) {
