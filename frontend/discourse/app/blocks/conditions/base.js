@@ -191,6 +191,27 @@ export class BlockCondition {
   evaluate(args, context) {
     throw new Error(`${this.constructor.name} must implement evaluate()`);
   }
+
+  /**
+   * Returns the resolved value for debug logging purposes.
+   *
+   * Override this method in subclasses to provide custom resolved values
+   * for conditions that don't use the standard `source` parameter.
+   * For example, the `outletArg` condition uses a `path` parameter
+   * to resolve values from outlet args.
+   *
+   * @param {Object} args - The condition arguments from the block config.
+   * @param {Object} [context] - Evaluation context containing outletArgs.
+   * @returns {{ value: *, hasValue: true }|undefined} Object with resolved value,
+   *   or undefined if this condition doesn't resolve values.
+   */
+  getResolvedValueForLogging(args, context) {
+    // Default implementation returns resolved source if present
+    if (args.source !== undefined) {
+      return { value: this.resolveSource(args, context), hasValue: true };
+    }
+    return undefined;
+  }
 }
 
 /**

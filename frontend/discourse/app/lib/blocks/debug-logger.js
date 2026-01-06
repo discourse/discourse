@@ -56,15 +56,15 @@ class BlockDebugLogger {
    * @param {Object} [options.args] - Condition arguments
    * @param {boolean} options.result - Whether condition passed
    * @param {number} [options.depth=0] - Nesting depth for indentation
-   * @param {*} [options.sourceValue] - Resolved source value (when condition uses source parameter)
+   * @param {{ value: *, hasValue: true }|undefined} [options.resolvedValue] - Resolved value object
    */
-  logCondition({ type, args, result, depth = 0, sourceValue }) {
+  logCondition({ type, args, result, depth = 0, resolvedValue }) {
     if (!this.#currentGroup) {
       this.#logStandalone(type, args, result);
       return;
     }
 
-    this.#currentGroup.logs.push({ type, args, result, depth, sourceValue });
+    this.#currentGroup.logs.push({ type, args, result, depth, resolvedValue });
   }
 
   /**
@@ -269,11 +269,11 @@ class BlockDebugLogger {
    * @param {number} log.depth - Indentation depth.
    * @param {string} [log.label] - Label for param groups.
    * @param {Array} [log.matches] - Match results for param groups.
-   * @param {*} [log.sourceValue] - Resolved source value when condition uses source parameter.
+   * @param {{ value: *, hasValue: true }|undefined} [log.resolvedValue] - Resolved value object.
    * @param {boolean} [hasChildren=false] - Whether this node has nested children.
    */
   #logTreeNode(log, hasChildren = false) {
-    const { type, args, result, sourceValue } = log;
+    const { type, args, result, resolvedValue } = log;
 
     // Handle route state (shows current URL and params/queryParams values)
     // Uses checkmark/X to show whether URL matched
@@ -362,15 +362,19 @@ class BlockDebugLogger {
       );
     } else {
       // Condition type has no special formatting
-      // Include sourceValue in logged object if present
-      const loggedArgs =
-        args && Object.keys(args).length > 0
-          ? sourceValue !== undefined
-            ? { ...args, _resolved: sourceValue }
-            : args
-          : sourceValue !== undefined
-            ? { _resolved: sourceValue }
-            : "";
+      // Use formatted object if provided, otherwise add actual to args
+      const hasResolved = resolvedValue?.hasValue;
+      let loggedArgs;
+      if (hasResolved && resolvedValue.formatted) {
+        loggedArgs = resolvedValue.formatted;
+      } else if (hasResolved) {
+        loggedArgs =
+          args && Object.keys(args).length > 0
+            ? { ...args, actual: resolvedValue.value }
+            : { actual: resolvedValue.value };
+      } else {
+        loggedArgs = args && Object.keys(args).length > 0 ? args : "";
+      }
       logFn.call(console, `%c${icon}%c ${type}`, iconStyle, "", loggedArgs);
     }
   }

@@ -450,10 +450,13 @@ export default class Blocks extends Service {
       return false;
     }
 
-    // Resolve source value for logging if present
-    let sourceValue;
-    if (args.source && isLoggingEnabled) {
-      sourceValue = conditionInstance.resolveSource(args, context);
+    // Resolve value for logging (handles source, path, and other condition-specific values)
+    let resolvedValue;
+    if (isLoggingEnabled) {
+      resolvedValue = conditionInstance.getResolvedValueForLogging(
+        args,
+        context
+      );
     }
 
     // Log condition BEFORE evaluate so nested logs appear underneath
@@ -463,7 +466,7 @@ export default class Blocks extends Service {
         args,
         result: null,
         depth,
-        sourceValue,
+        resolvedValue,
       });
     }
 

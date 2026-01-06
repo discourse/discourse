@@ -109,6 +109,25 @@ export default class BlockOutletArgCondition extends BlockCondition {
       paramName: path,
     });
   }
+
+  /**
+   * Returns the resolved value at the path for debug logging.
+   *
+   * @param {Object} args - The condition arguments containing `path`, `value`, `exists`.
+   * @param {Object} [context] - Evaluation context containing outletArgs.
+   * @returns {{ hasValue: true, formatted: Object }} Object with formatted log data.
+   */
+  getResolvedValueForLogging(args, context) {
+    const { path, value, exists } = args;
+    return {
+      hasValue: true,
+      formatted: {
+        path,
+        actual: getByPath(context?.outletArgs, path),
+        configured: exists !== undefined ? { exists } : value,
+      },
+    };
+  }
 }
 
 /**
