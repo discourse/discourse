@@ -4,11 +4,12 @@ import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
+import noop from "discourse/helpers/noop";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { bind } from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, isiPad } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
@@ -21,7 +22,7 @@ import {
 const CHAT_STARRED_CHANNELS_SECTION = "chat-starred-channels";
 
 function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
-  const { showSuffix = true, enableHoverForPublicChannels = false } = options;
+  const { showSuffix = true } = options;
 
   return class extends BaseCustomSidebarSectionLink {
     route = "chat.channel";
@@ -225,28 +226,6 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
     get suffixCSSClass() {
       return showSuffix ? "" : "";
     }
-
-    get hoverValue() {
-      if (this.isDM) {
-        return "xmark";
-      }
-      return enableHoverForPublicChannels ? "" : "";
-    }
-
-    get hoverTitle() {
-      return this.isDM ? i18n("chat.direct_messages.close") : "";
-    }
-
-    get hoverAction() {
-      if (this.isDM) {
-        return (event) => {
-          event.stopPropagation();
-          event.preventDefault();
-          this.chatService.unfollowChannel(this.channel);
-        };
-      }
-      return null;
-    }
   };
 }
 
@@ -391,7 +370,6 @@ export default {
             BaseCustomSidebarSectionLink,
             {
               showSuffix: false,
-              enableHoverForPublicChannels: false,
             }
           );
 
@@ -402,7 +380,11 @@ export default {
             }
 
             get hoverValue() {
-              return "ellipsis";
+              if (isiPad()) {
+                return;
+              }
+
+              return "ellipsis-vertical";
             }
 
             get hoverTitle() {
@@ -410,6 +392,10 @@ export default {
             }
 
             get hoverAction() {
+              if (isiPad()) {
+                return noop;
+              }
+
               return (event, onMenuClose) => {
                 event.stopPropagation();
                 event.preventDefault();
@@ -493,7 +479,7 @@ export default {
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatChannelsSectionLink = class extends BaseCustomSidebarSectionLink {
               hoverType = "icon";
-              hoverValue = "ellipsis";
+              hoverValue = isiPad() ? null : "ellipsis-vertical";
               hoverTitle = i18n("chat.open_channel_menu");
 
               constructor({ channel, chatService, siteSettings, menuService }) {
@@ -584,6 +570,10 @@ export default {
               }
 
               get hoverAction() {
+                if (isiPad()) {
+                  return noop;
+                }
+
                 return (event, onMenuClose) => {
                   event.stopPropagation();
                   event.preventDefault();
@@ -697,7 +687,7 @@ export default {
               route = "chat.channel";
               suffixType = "icon";
               hoverType = "icon";
-              hoverValue = "ellipsis";
+              hoverValue = isiPad() ? null : "ellipsis-vertical";
               hoverTitle = i18n("chat.open_channel_menu");
 
               constructor({
@@ -848,6 +838,10 @@ export default {
               }
 
               get hoverAction() {
+                if (isiPad()) {
+                  return noop;
+                }
+
                 return (event, onMenuClose) => {
                   event.stopPropagation();
                   event.preventDefault();
