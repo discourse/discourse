@@ -218,18 +218,20 @@ export function connectorsExist(outletName) {
   return Boolean(_connectorCache[outletName] || debugOutletCallback);
 }
 
-export function connectorsFor(outletName) {
+export function connectorsFor(outletName, outletArgs) {
   if (!_connectorCache) {
     buildConnectorCache();
   }
   if (debugOutletCallback) {
-    return debugOutletCallback(outletName, _connectorCache[outletName]);
+    return debugOutletCallback(outletName, _connectorCache[outletName], {
+      outletArgs,
+    });
   }
   return _connectorCache[outletName] || [];
 }
 
 export function renderedConnectorsFor(outletName, args, context, owner) {
-  return connectorsFor(outletName).filter((con) => {
+  return connectorsFor(outletName, args).filter((con) => {
     return (
       !con.connectorClass?.shouldRender ||
       con.connectorClass?.shouldRender(args, context, owner)

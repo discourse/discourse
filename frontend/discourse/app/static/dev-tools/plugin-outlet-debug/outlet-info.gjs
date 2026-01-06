@@ -6,6 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import ArgsTable from "../shared/args-table";
 import devToolsState from "../state";
 
@@ -28,8 +29,8 @@ const SMALL_OUTLETS = [
  * Shows outlet name badge with a tooltip containing outlet info, args, and GitHub search link.
  *
  * @param {string} outletName - The name of the plugin outlet.
- * @param {Object} [outletArgs] - Arguments passed to the outlet.
- * @param {Object} [deprecatedArgs] - Deprecated arguments created with `deprecatedOutletArgument`.
+ * @param {Object} [outletArgs] - Arguments passed to the outlet. May contain a non-enumerable
+ *   `__deprecatedArgs__` property with the raw deprecated args for display in the debug tooltip.
  */
 export default class OutletInfoComponent extends Component {
   static shouldRender() {
@@ -90,11 +91,12 @@ export default class OutletInfoComponent extends Component {
    * @returns {boolean} True if outlet has at least one arg.
    */
   get hasOutletArgs() {
+    const outletArgs = this.args.outletArgs;
+    const deprecatedArgs = outletArgs?.[DEPRECATED_ARGS_KEY];
+
     return (
-      (this.args.outletArgs != null &&
-        Object.keys(this.args.outletArgs).length > 0) ||
-      (this.args.deprecatedArgs != null &&
-        Object.keys(this.args.deprecatedArgs).length > 0)
+      (outletArgs != null && Object.keys(outletArgs).length > 0) ||
+      (deprecatedArgs != null && Object.keys(deprecatedArgs).length > 0)
     );
   }
 
@@ -162,11 +164,7 @@ export default class OutletInfoComponent extends Component {
               {{#if this.hasOutletArgs}}
                 <div class="outlet-info__section">
                   <div class="outlet-info__section-title">Outlet Args</div>
-                  <ArgsTable
-                    @args={{@outletArgs}}
-                    @deprecatedArgs={{@deprecatedArgs}}
-                    @prefix="plugin outlet"
-                  />
+                  <ArgsTable @args={{@outletArgs}} @prefix="plugin outlet" />
                 </div>
               {{else}}
                 <div class="outlet-info__empty">

@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
+import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import { logArgToConsole } from "../lib/console-logger";
 import { formatValue, getTypeInfo } from "../lib/value-formatter";
 
@@ -13,11 +14,13 @@ import { formatValue, getTypeInfo } from "../lib/value-formatter";
  * Used by both PluginOutlet and BlockOutlet debug tooltips.
  *
  * Supports deprecated arguments marked with the `deprecatedOutletArgument` helper,
- * showing a visual indicator and deprecation info.
+ * showing a visual indicator and deprecation info. Deprecated args are read from
+ * `args.__deprecatedArgs__` (set by `buildArgsWithDeprecations` when dev-tools outlet
+ * debugging is enabled), with fallback to the explicit `@deprecatedArgs` prop.
  *
- * @component ArgsTable
- * @param {Object} args - The arguments to display.
- * @param {Object} [deprecatedArgs] - Deprecated arguments created with `deprecatedOutletArgument`.
+ * @param {Object} args - The arguments to display. May contain a non-enumerable
+ *   `__deprecatedArgs__` property with the raw deprecated args.
+ * @param {Object} [deprecatedArgs] - Deprecated arguments (fallback for backwards compatibility).
  * @param {string} [prefix] - Prefix for console logging context (e.g., "plugin outlet").
  */
 export default class ArgsTable extends Component {
@@ -29,11 +32,29 @@ export default class ArgsTable extends Component {
    */
   get entries() {
     const entries = [];
-
-    // Process regular args
     const args = this.args.args;
+
+    // Read deprecatedArgs from the non-enumerable property on args (set by
+    // buildArgsWithDeprecations when dev-tools outlet debugging is enabled),
+    // or fall back to the explicit @deprecatedArgs prop for backwards compatibility.
+    const deprecatedArgs =
+      args?.[DEPRECATED_ARGS_KEY] || this.args.deprecatedArgs;
+
+    const deprecatedKeys = new Set(
+      deprecatedArgs && typeof deprecatedArgs === "object"
+        ? Object.keys(deprecatedArgs)
+        : []
+    );
+
+    // Process regular args first, but skip keys that are in deprecatedArgs
+    // (those will be handled in the second loop with proper deprecation info)
     if (args && typeof args === "object") {
       for (const [key, rawValue] of Object.entries(args)) {
+        // Skip if this key exists in deprecatedArgs - it will be processed below
+        if (deprecatedKeys.has(key)) {
+          continue;
+        }
+
         // Check if this is a deprecated arg that was merged into args
         const isDeprecated = isDeprecatedOutletArgument(rawValue);
         const value = isDeprecated ? rawValue.value : rawValue;
@@ -52,14 +73,8 @@ export default class ArgsTable extends Component {
     }
 
     // Process deprecated args (if passed separately)
-    const deprecatedArgs = this.args.deprecatedArgs;
     if (deprecatedArgs && typeof deprecatedArgs === "object") {
       for (const [key, deprecatedArg] of Object.entries(deprecatedArgs)) {
-        // Skip if already in entries (it was merged)
-        if (entries.some((e) => e.key === key)) {
-          continue;
-        }
-
         if (isDeprecatedOutletArgument(deprecatedArg)) {
           const value = deprecatedArg.value;
           entries.push({

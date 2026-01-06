@@ -11,6 +11,30 @@ import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 
 /**
+ * Symbol used to store the raw deprecatedArgs object as a non-enumerable
+ * property on the combined args object. This is used by dev-tools to display
+ * deprecation info without triggering the deprecation warnings.
+ */
+export const DEPRECATED_ARGS_KEY = "__deprecatedArgs__";
+
+/**
+ * Flag to control whether buildArgsWithDeprecations includes the raw
+ * deprecatedArgs object as a non-enumerable property. This is enabled
+ * by dev-tools when outlet debugging is active.
+ */
+let _includeDeprecatedArgsProperty = false;
+
+/**
+ * Enables or disables including the raw deprecatedArgs object as a
+ * non-enumerable property in buildArgsWithDeprecations output.
+ *
+ * @param {boolean} value - Whether to include the property.
+ */
+export function _setIncludeDeprecatedArgsProperty(value) {
+  _includeDeprecatedArgsProperty = value;
+}
+
+/**
  * Builds an args object that combines current args with deprecated args.
  *
  * Both current and deprecated args are accessed via property getters for lazy
@@ -45,6 +69,12 @@ export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
 
   if (deprecatedArgs) {
     Object.keys(deprecatedArgs).forEach((argumentName) => {
+      // Skip if this key already exists in args (e.g., from a parent outlet's
+      // outletArgsWithDeprecations that already includes deprecatedArgs)
+      if (args && argumentName in args) {
+        return;
+      }
+
       Object.defineProperty(output, argumentName, {
         enumerable: true,
         get() {
@@ -57,6 +87,15 @@ export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
         },
       });
     });
+
+    // When dev-tools outlet debugging is enabled, include the raw deprecatedArgs
+    // as a non-enumerable property so ArgsTable can display deprecation info.
+    if (_includeDeprecatedArgsProperty) {
+      Object.defineProperty(output, DEPRECATED_ARGS_KEY, {
+        enumerable: false,
+        value: deprecatedArgs,
+      });
+    }
   }
 
   return output;
