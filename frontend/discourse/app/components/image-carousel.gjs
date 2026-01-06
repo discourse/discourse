@@ -40,6 +40,17 @@ export default class ImageCarousel extends Component {
     this.#trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
+    const onScrollEnd = () => {
+      if (this.#isNavigating) {
+        this.#endNavigation();
+      } else {
+        this.currentIndex = this.#calculateNearestIndex(element);
+      }
+    };
+
+    const supportsScrollEnd = "onscrollend" in window;
+    let scrollStopTimer;
+
     const onScroll = () => {
       if (!this.#isNavigating) {
         throttle(
@@ -49,22 +60,26 @@ export default class ImageCarousel extends Component {
           SCROLL_THROTTLE_MS
         );
       }
-    };
 
-    const onScrollEnd = () => {
-      if (this.#isNavigating) {
-        this.#endNavigation();
-      } else {
-        this.currentIndex = this.#calculateNearestIndex(element);
+      // Fallback for browsers without scrollend support (Safari < 17.4)
+      if (!supportsScrollEnd) {
+        clearTimeout(scrollStopTimer);
+        scrollStopTimer = setTimeout(onScrollEnd, 150);
       }
     };
 
     element.addEventListener("scroll", onScroll, { passive: true });
-    element.addEventListener("scrollend", onScrollEnd);
+
+    if (supportsScrollEnd) {
+      element.addEventListener("scrollend", onScrollEnd);
+    }
 
     return () => {
       element.removeEventListener("scroll", onScroll);
-      element.removeEventListener("scrollend", onScrollEnd);
+      if (supportsScrollEnd) {
+        element.removeEventListener("scrollend", onScrollEnd);
+      }
+      clearTimeout(scrollStopTimer);
       cancel(this.#fallbackTimer);
     };
   });
@@ -73,6 +88,11 @@ export default class ImageCarousel extends Component {
   #fallbackTimer = null;
   #trackDirection = 1;
   #slides = new Map();
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this.#fallbackTimer);
+  }
 
   #calculateNearestIndex(track) {
     if (!track) {
@@ -192,8 +212,8 @@ export default class ImageCarousel extends Component {
     <div
       class={{concatClass
         "d-image-carousel"
-        (if @data.mode (concat "--" @data.mode))
-        (if this.isSingle "d-image-carousel__carousel--single")
+        (if @data.mode (concat "d-image-carousel--" @data.mode))
+        (if this.isSingle "d-image-carousel--single")
       }}
     >
       <div
@@ -242,11 +262,7 @@ export default class ImageCarousel extends Component {
                     "carousel.go_to_slide"
                     index=(plusOne index)
                   }}
-                  aria-current={{if
-                    (eq this.currentIndex index)
-                    "true"
-                    "false"
-                  }}
+                  aria-current={{if (eq this.currentIndex index) "true"}}
                   {{on "click" (fn this.scrollToIndex index)}}
                 ></button>
               {{/each}}

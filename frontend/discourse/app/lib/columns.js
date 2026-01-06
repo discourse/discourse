@@ -62,10 +62,6 @@ export default class Columns {
   }
 
   _wrapDirectImage(item) {
-    if (["BR", "P"].includes(item.nodeName)) {
-      return null;
-    }
-
     if (item.nodeName !== "IMG") {
       return item;
     }
