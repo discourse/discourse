@@ -19,6 +19,7 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
   @service appEvents;
   @service currentUser;
   @service modal;
+  @service router;
 
   constructor() {
     super(...arguments);
@@ -68,7 +69,13 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
 
   @action
   showModal() {
+    Category.clearAsyncHierarchicalSearchCache();
     this.modal.show(EditNavigationMenuCategoriesModal);
+  }
+
+  @action
+  newCategory() {
+    this.router.transitionTo("newCategory");
   }
 
   <template>
@@ -77,11 +84,19 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
       @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
       @headerActions={{array
         (hash
+          id="new-category"
+          action=this.newCategory
+          title="New Category"
+          icon="plus"
+        )
+        (hash
+          id="edit-categories"
           action=this.showModal
-          title=(i18n "sidebar.sections.categories.header_action_title")
+          title="Edit sidebar categories"
+          icon="pencil"
         )
       }}
-      @headerActionsIcon="pencil"
+      @headerActionsIcon="ellipsis-vertical"
       @collapsable={{@collapsable}}
     >
 

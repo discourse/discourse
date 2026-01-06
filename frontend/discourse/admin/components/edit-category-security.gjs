@@ -66,18 +66,20 @@ export default class EditCategorySecurity extends buildCategoryPanel(
   }
 
   <template>
-    <section class="field">
-      {{#if this.category.is_special}}
-        {{#if this.category.isUncategorizedCategory}}
-          <p class="warning">{{i18n
-              "category.uncategorized_security_warning"
-            }}</p>
-        {{else}}
-          <p class="warning">{{i18n "category.special_warning"}}</p>
-        {{/if}}
+    {{#if this.category.is_special}}
+      {{#if this.category.isUncategorizedCategory}}
+        <@form.Alert @type="warning">
+          {{i18n "category.uncategorized_security_warning"}}
+        </@form.Alert>
+      {{else}}
+        <@form.Alert @type="warning">
+          {{i18n "category.special_warning"}}
+        </@form.Alert>
       {{/if}}
+    {{/if}}
 
-      {{#unless this.category.is_special}}
+    {{#unless this.category.is_special}}
+      <@form.Container>
         <div class="category-permissions-table">
           <div class="permission-row row-header">
             <span class="group-name">{{i18n
@@ -125,18 +127,16 @@ export default class EditCategorySecurity extends buildCategoryPanel(
         </div>
 
         {{#if this.everyoneGrantedFull}}
-          <p class="warning">{{i18n
-              "category.permissions.everyone_has_access"
-            }}</p>
+          <@form.Alert @type="warning">
+            {{i18n "category.permissions.everyone_has_access"}}
+          </@form.Alert>
         {{/if}}
-      {{/unless}}
-    </section>
+      </@form.Container>
+    {{/unless}}
 
-    <section>
-      <PluginOutlet
-        @name="category-custom-security"
-        @outletArgs={{lazyHash category=this.category}}
-      />
-    </section>
+    <PluginOutlet
+      @name="category-custom-security"
+      @outletArgs={{lazyHash category=this.category}}
+    />
   </template>
 }

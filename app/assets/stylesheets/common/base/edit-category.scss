@@ -4,19 +4,52 @@
 $category-settings-width: string.unquote("min(600px, 90%)");
 $number-input-width: 75px;
 
-div.edit-category {
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  grid-template-rows: auto auto auto;
-  row-gap: 1em;
-  column-gap: 1.5em;
-  grid-template-areas: "header header" "sidebar content" "sidebar warning" "sidebar footer";
+.edit-category-title-bar-actions {
+  .advanced-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-weight: normal;
+  }
+}
 
-  @include viewport.until(sm) {
-    display: block;
+.edit-category {
+  .add-required-tag-group {
+    align-self: start;
   }
 
+  .form-kit__control-icon {
+    .select-kit-row .d-icon,
+    .select-kit-header .d-icon,
+    .select-kit-header-wrapper .d-icon:first-of-type {
+      color: var(--icon-color, currentColor);
+    }
+
+    .select-kit-header-wrapper {
+      gap: var(--space-2);
+    }
+  }
+
+  .form-kit__control-icon .formatted-selection {
+    display: flex !important;
+  }
+}
+
+.discourse-no-touch
+  .form-kit__control-icon
+  .select-kit-header:hover:not(:disabled)
+  .d-icon {
+  color: var(--icon-color, currentColor);
+}
+
+div.edit-category {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
   .edit-category-title-bar {
+    box-sizing: border-box;
+    width: 100%;
     grid-area: header;
     grid-column: 1 / span 2;
     display: flex;
@@ -50,11 +83,22 @@ div.edit-category {
 
   .edit-category-title {
     min-width: 0;
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .btn-back {
+      margin-top: -0.5em;
+      margin-left: -0.5em;
+      margin-bottom: 0.5em;
+    }
   }
 
   .edit-category-nav {
     grid-area: sidebar;
     grid-row: 2 / span 3;
+    border-bottom: 1px solid var(--content-border-color);
 
     @include viewport.until(sm) {
       width: 100%;
@@ -103,11 +147,7 @@ div.edit-category {
   }
 
   .edit-category-content {
-    grid-area: content;
-
-    @include viewport.until(sm) {
-      padding-top: 1em;
-    }
+    margin-top: 2em;
 
     .edit-category-tab {
       display: none;
@@ -149,6 +189,10 @@ div.edit-category {
   }
 
   .edit-category-tab-security {
+    .form-kit__container-content {
+      width: 100%;
+    }
+
     .permission-selector {
       margin-right: 0.25em;
     }
@@ -248,7 +292,6 @@ div.edit-category {
   .edit-category-footer {
     grid-area: footer;
     display: flex;
-    justify-content: space-between;
     align-self: start;
     padding: 0 1.5em 2em 0;
   }
@@ -283,6 +326,7 @@ div.edit-category {
 }
 
 .category-permissions-table {
+  width: 100%;
   max-width: 450px;
   margin-bottom: 2em;
 

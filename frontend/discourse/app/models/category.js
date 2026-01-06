@@ -434,6 +434,12 @@ export default class Category extends RestModel {
     );
   }
 
+  static clearAsyncHierarchicalSearchCache() {
+    Object.keys(CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE).forEach((key) => {
+      delete CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[key];
+    });
+  }
+
   static async asyncSearch(term, opts) {
     opts ||= {};
 

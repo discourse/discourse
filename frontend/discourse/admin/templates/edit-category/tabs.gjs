@@ -1,3 +1,5 @@
+import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import EditCategoryGeneral from "discourse/admin/components/edit-category-general";
 import EditCategoryImages from "discourse/admin/components/edit-category-images";
@@ -9,8 +11,11 @@ import EditCategoryTags from "discourse/admin/components/edit-category-tags";
 import EditCategoryTopicTemplate from "discourse/admin/components/edit-category-topic-template";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import DButton from "discourse/components/d-button";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
 import Form from "discourse/components/form";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import { and, not } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 
 const TAB_COMPONENTS = {
   general: EditCategoryGeneral,
@@ -35,6 +40,14 @@ export default <template>
   <div class="edit-category {{if @controller.expandedMenu 'expanded-menu'}}">
     <div class="edit-category-title-bar">
       <div class="edit-category-title">
+        {{#if (and @controller.site.desktopView @controller.model.id)}}
+          <DButton
+            @action={{@controller.goBack}}
+            @label="category.back"
+            @icon="chevron-left"
+            class="btn-transparent btn-back"
+          />
+        {{/if}}
         <h2>{{@controller.title}}</h2>
         {{#if @controller.model.id}}
           <BreadCrumbs
@@ -45,19 +58,25 @@ export default <template>
             @editingCategoryTab={{@controller.selectedTab}}
           />
         {{/if}}
+
       </div>
-      {{#if (and @controller.site.desktopView @controller.model.id)}}
-        <DButton
-          @action={{@controller.goBack}}
-          @label="category.back"
-          @icon="caret-left"
-          class="category-back"
-        />
-      {{/if}}
+      <div class="edit-category-title-bar-actions">
+        <label class="advanced-toggle-label">
+          {{i18n "category.show_advanced"}}
+          <DToggleSwitch
+            @state={{@controller.showAdvancedTabs}}
+            {{on "click" @controller.toggleAdvancedTabs}}
+          />
+        </label>
+
+      </div>
     </div>
 
-    <div class="edit-category-nav">
-      <ul class="nav nav-stacked">
+    {{#if @controller.showAdvancedTabs}}
+      <HorizontalOverflowNav
+        @ariaLabel="Category navigation"
+        class="edit-category-nav"
+      >
         <EditCategoryTab
           @panels={{@controller.panels}}
           @selectedTab={{@controller.selectedTab}}
@@ -105,8 +124,8 @@ export default <template>
             @tab="localizations"
           />
         {{/if}}
-      </ul>
-    </div>
+      </HorizontalOverflowNav>
+    {{/if}}
 
     <Form
       @data={{@controller.formData}}
@@ -115,20 +134,20 @@ export default <template>
       as |form transientData|
     >
       <form.Section
-        @title={{@controller.selectedTabTitle}}
-        class="edit-category-content"
+        class="edit-category-content edit-category-tab-{{@controller.selectedTab}}"
       >
-        {{#each @controller.panels as |tabName|}}
-          {{#let (componentFor tabName) as |Tab|}}
-            <Tab
-              @selectedTab={{@controller.selectedTab}}
-              @category={{@controller.model}}
-              @registerValidator={{@controller.registerValidator}}
-              @transientData={{transientData}}
-              @form={{form}}
-            />
-          {{/let}}
-        {{/each}}
+        {{#let
+          (componentFor (concat "edit-category-" @controller.selectedTab))
+          as |Tab|
+        }}
+          <Tab
+            @selectedTab={{@controller.selectedTab}}
+            @category={{@controller.model}}
+            @registerValidator={{@controller.registerValidator}}
+            @transientData={{transientData}}
+            @form={{form}}
+          />
+        {{/let}}
       </form.Section>
 
       {{#if @controller.showDeleteReason}}

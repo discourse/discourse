@@ -2,8 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
@@ -24,18 +24,45 @@ const FIELD_LIST = [
   "emoji",
   "icon",
   "localizations",
+  "position",
+  "num_featured_topics",
+  "search_priority",
+  "allow_badges",
+  "topic_featured_link_allowed",
+  "navigate_to_first_post_after_read",
+  "all_topics_wiki",
+  "allow_unlimited_owner_edits_on_first_post",
+  "moderating_group_ids",
+  "auto_close_hours",
+  "auto_close_based_on_last_post",
+  "default_view",
+  "default_top_period",
+  "sort_order",
+  "sort_ascending",
+  "default_list_filter",
+  "show_subcategory_list",
+  "subcategory_list_style",
+  "read_only_banner",
+  "email_in",
+  "email_in_allow_strangers",
+  "mailinglist_mirror",
 ];
+
+const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 
 export default class EditCategoryTabsController extends Controller {
   @service currentUser;
   @service dialog;
   @service site;
   @service router;
+  @service keyValueStore;
 
   @tracked breadcrumbCategories = this.site.get("categoriesList");
+  @tracked
+  showAdvancedTabs =
+    this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
+  @tracked selectedTab = "general";
   @trackedArray panels = [];
-
-  selectedTab = "general";
   saving = false;
   deleting = false;
   showTooltip = false;
@@ -51,7 +78,7 @@ export default class EditCategoryTabsController extends Controller {
     const data = getProperties(this.model, ...FIELD_LIST);
 
     if (!this.model.styleType) {
-      data.style_type = "square";
+      data.style_type = "icon";
     }
 
     return data;
@@ -98,11 +125,6 @@ export default class EditCategoryTabsController extends Controller {
       : i18n("category.create");
   }
 
-  @discourseComputed("selectedTab")
-  selectedTabTitle(tab) {
-    return i18n(`category.${underscore(tab)}`);
-  }
-
   @action
   registerValidator(validator) {
     this.validators.push(validator);
@@ -138,6 +160,11 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     this.model.setProperties(data);
+
+    // If permissions is empty or not set, ensure it's an empty array (public category)
+    if (!this.model.permissions || this.model.permissions.length === 0) {
+      this.model.set("permissions", []);
+    }
 
     const lostAccess = this._wouldLoseAccess();
 
@@ -213,5 +240,21 @@ export default class EditCategoryTabsController extends Controller {
   @action
   goBack() {
     DiscourseURL.routeTo(this.model.url);
+  }
+
+  @action
+  toggleAdvancedTabs() {
+    this.showAdvancedTabs = !this.showAdvancedTabs;
+
+    // Save preference to localStorage
+    this.keyValueStore.setItem(
+      SHOW_ADVANCED_TABS_KEY,
+      this.showAdvancedTabs.toString()
+    );
+
+    // Always ensure we're on general tab after toggling
+    next(() => {
+      this.selectedTab = "general";
+    });
   }
 }

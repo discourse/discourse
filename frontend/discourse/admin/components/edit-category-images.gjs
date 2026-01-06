@@ -88,8 +88,10 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
   }
 
   <template>
-    <section class="field category-logo">
-      <label>{{i18n "category.logo"}}</label>
+    <@form.Container
+      @title={{i18n "category.logo"}}
+      @subtitle={{i18n "category.logo_description"}}
+    >
       <UppyImageUploader
         @imageUrl={{this.logoImageUrl}}
         @onUploadDone={{this.logoUploadDone}}
@@ -98,13 +100,12 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
         @id="category-logo-uploader"
         class="no-repeat contain-image"
       />
-      <div class="category-logo-description">
-        {{i18n "category.logo_description"}}
-      </div>
-    </section>
+    </@form.Container>
 
-    <section class="field category-logo">
-      <label>{{i18n "category.logo_dark"}}</label>
+    <@form.Container
+      @title={{i18n "category.logo_dark"}}
+      @subtitle={{i18n "category.logo_description"}}
+    >
       <UppyImageUploader
         @imageUrl={{this.logoImageDarkUrl}}
         @onUploadDone={{this.logoDarkUploadDone}}
@@ -113,13 +114,9 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
         @id="category-dark-logo-uploader"
         class="no-repeat contain-image"
       />
-      <div class="category-logo-description">
-        {{i18n "category.logo_description"}}
-      </div>
-    </section>
+    </@form.Container>
 
-    <section class="field category-background-image">
-      <label>{{i18n "category.background_image"}}</label>
+    <@form.Container @title={{i18n "category.background_image"}}>
       <UppyImageUploader
         @imageUrl={{this.backgroundImageUrl}}
         @onUploadDone={{this.backgroundUploadDone}}
@@ -127,10 +124,9 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
         @type="category_background"
         @id="category-background-uploader"
       />
-    </section>
+    </@form.Container>
 
-    <section class="field category-background-image">
-      <label>{{i18n "category.background_image_dark"}}</label>
+    <@form.Container @title={{i18n "category.background_image_dark"}}>
       <UppyImageUploader
         @imageUrl={{this.backgroundDarkImageUrl}}
         @onUploadDone={{this.backgroundDarkUploadDone}}
@@ -138,7 +134,7 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
         @type="category_background_dark"
         @id="category-dark-background-uploader"
       />
-    </section>
+    </@form.Container>
 
     <PluginOutlet
       @name="category-custom-images"

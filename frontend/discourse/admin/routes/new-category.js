@@ -49,6 +49,8 @@ export default class NewCategory extends DiscourseRoute {
     return this.store.createRecord("category", {
       color: backgroundColor,
       text_color: textColor,
+      style_type: "icon",
+      icon: "square-full",
       group_permissions,
       available_groups: this.site.groups.map((g) => g.name),
       allow_badges: true,

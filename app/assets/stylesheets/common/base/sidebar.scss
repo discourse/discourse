@@ -155,6 +155,16 @@
         color: var(--d-sidebar-link-icon-color);
       }
     }
+
+    .select-kit.single-select.dropdown-select-box .select-kit-row {
+      .icons .d-icon {
+        font-size: var(--font-0);
+      }
+
+      .texts .name {
+        font-weight: normal;
+      }
+    }
   }
 }
 
