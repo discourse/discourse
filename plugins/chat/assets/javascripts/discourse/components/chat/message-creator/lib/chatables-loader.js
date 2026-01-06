@@ -42,7 +42,7 @@ function matchPriority(chatable, term) {
   if (name === lowerTerm) {
     return MATCH_PRIORITY.EXACT;
   }
-  if (name?.startsWith(lowerTerm)) {
+  if (name.startsWith(lowerTerm)) {
     return MATCH_PRIORITY.PREFIX;
   }
   return MATCH_PRIORITY.PARTIAL;
