@@ -39,8 +39,10 @@ export default class DetailedTopicCard extends Component {
     return this.args.topic.can_vote && this.args.topic.vote_count > 0;
   }
 
-  get voteCount() {
-    return this.args.topic.vote_count || 0;
+  get voteCountLabel() {
+    return i18n(themePrefix("vote_count"), {
+      count: this.args.topic.vote_count,
+    });
   }
 
   get hasAssigned() {
@@ -77,6 +79,18 @@ export default class DetailedTopicCard extends Component {
 
   get hasLikes() {
     return this.args.topic.like_count > 0;
+  }
+
+  get replyCountLabel() {
+    return i18n(themePrefix("reply_count"), {
+      count: this.args.topic.posts_count,
+    });
+  }
+
+  get likeCountLabel() {
+    return i18n(themePrefix("like_count"), {
+      count: this.args.topic.like_count,
+    });
   }
 
   get hasExcerpt() {
@@ -152,24 +166,7 @@ export default class DetailedTopicCard extends Component {
               {{#if this.capabilities.viewport.sm}}
                 {{i18n (themePrefix "solved")}}
               {{/if}}
-              {{icon "check"}}
-            </span>
-            {{!-- {{else if this.canHaveAnswer}}
-            <span class="hc-topic-card__status --unsolved">
-              {{i18n (themePrefix "unsolved")}}
-            </span> --}}
-          {{/if}}
-
-          {{#if this.hasVotes}}
-            <span class="hc-topic-card__status --votes">
-              {{#if this.capabilities.viewport.sm}}
-                {{i18n "topic_voting.votes" count=this.voteCount}}
-              {{else}}
-                <span
-                  class="hc-topic-card__votes-count"
-                >{{this.voteCount}}</span>
-              {{/if}}
-              {{icon "stamp"}}
+              {{icon "square-check"}}
             </span>
           {{/if}}
 
@@ -283,9 +280,26 @@ export default class DetailedTopicCard extends Component {
         </div>
 
         <div class="hc-topic-card__stats">
+          {{#if this.hasVotes}}
+            <span
+              class="hc-topic-card__votes"
+              aria-label={{this.voteCountLabel}}
+              title={{this.voteCountLabel}}
+            >
+              {{emoji "ballot_box" skipTitle=true}}
+              <span class="hc-topic-card__votes-count">{{number
+                  @topic.vote_count
+                }}</span>
+            </span>
+          {{/if}}
+
           {{#if this.hasReplies}}
-            <span class="hc-topic-card__replies">
-              {{emoji "speech_balloon"}}
+            <span
+              class="hc-topic-card__replies"
+              aria-label={{this.replyCountLabel}}
+              title={{this.replyCountLabel}}
+            >
+              {{emoji "speech_balloon" skipTitle=true}}
               <span class="hc-topic-card__count">{{number
                   @topic.posts_count
                 }}</span>
@@ -293,8 +307,12 @@ export default class DetailedTopicCard extends Component {
           {{/if}}
 
           {{#if this.hasLikes}}
-            <span class="hc-topic-card__likes">
-              {{emoji "heart"}}
+            <span
+              class="hc-topic-card__likes"
+              aria-label={{this.likeCountLabel}}
+              title={{this.likeCountLabel}}
+            >
+              {{emoji "heart" skipTitle=true}}
               <span class="hc-topic-card__count">{{number
                   @topic.like_count
                 }}</span>
