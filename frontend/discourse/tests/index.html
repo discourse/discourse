@@ -67,23 +67,9 @@
       import "/extra-locales/0000000000000000000000000000000000000000/en/wizard.js";
     
       import "./set-test-env";
-      import "./test-boot-ember-cli";
+      import { startTests } from "./test-boot-ember-cli";
 
-      (function () {
-        if (window.unsupportedBrowser) {
-          throw "Unsupported browser detected";
-        }
-
-        // let element = document.querySelector(
-        //   `meta[name="discourse/config/environment"]`
-        // );
-        // const config = JSON.parse(
-        //   decodeURIComponent(element.getAttribute("content"))
-        // );
-        const config = {};
-        const event = new CustomEvent("discourse-init", { detail: config });
-        document.dispatchEvent(event);
-      })();
+      startTests();
     </script>
 
     <!-- <template id="dynamic-test-js">

@@ -1,331 +1,335 @@
-const TapReporter = require("testem/lib/reporters/tap_reporter");
-const fs = require("fs");
-const displayUtils = require("testem/lib/utils/displayutils");
-const colors = require("@colors/colors/safe");
+if (typeof module !== "undefined") {
+  const TapReporter = require("testem/lib/reporters/tap_reporter");
+  const fs = require("fs");
+  const displayUtils = require("testem/lib/utils/displayutils");
+  const colors = require("@colors/colors/safe");
 
-const SANDBOX_DISABLE_VALUES = ["1", "true"];
-const sandboxDisabled =
-  process.env.CI ||
-  SANDBOX_DISABLE_VALUES.includes(
-    (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
-  );
+  const SANDBOX_DISABLE_VALUES = ["1", "true"];
+  const sandboxDisabled =
+    process.env.CI ||
+    SANDBOX_DISABLE_VALUES.includes(
+      (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
+    );
 
-class Reporter extends TapReporter {
-  failReports = [];
-  deprecationCounts = new Map();
-  deprecationCountsByOrigin = new Map();
+  class Reporter extends TapReporter {
+    failReports = [];
+    deprecationCounts = new Map();
+    deprecationCountsByOrigin = new Map();
 
-  constructor() {
-    super(...arguments);
+    constructor() {
+      super(...arguments);
 
-    // Colors are enabled automatically in dev env, just need to toggle them on in GH
-    if (process.env.GITHUB_ACTIONS) {
-      colors.enable();
-    }
-
-    if (process.env.GITHUB_ACTIONS) {
-      this.out.write("::group:: Verbose QUnit test output\n");
-    }
-  }
-
-  reportMetadata(tag, metadata) {
-    if (tag === "increment-deprecation") {
-      const { id, origin } = metadata;
-
-      const currentCount = this.deprecationCounts.get(id) || 0;
-      this.deprecationCounts.set(id, currentCount + 1);
-
-      const originKey = origin || "unknown";
-      if (!this.deprecationCountsByOrigin.has(originKey)) {
-        this.deprecationCountsByOrigin.set(originKey, new Map());
+      // Colors are enabled automatically in dev env, just need to toggle them on in GH
+      if (process.env.GITHUB_ACTIONS) {
+        colors.enable();
       }
-      const originMap = this.deprecationCountsByOrigin.get(originKey);
-      const originCount = originMap.get(id) || 0;
-      originMap.set(id, originCount + 1);
-    } else if (tag === "summary-line") {
-      this.out.write(`\n${metadata.message}\n`);
-    } else {
-      super.reportMetadata(...arguments);
-    }
-  }
 
-  report(prefix, data) {
-    if (data.failed) {
-      this.failReports.push([prefix, data, this.id]);
+      if (process.env.GITHUB_ACTIONS) {
+        this.out.write("::group:: Verbose QUnit test output\n");
+      }
     }
 
-    super.report(prefix, data);
-  }
+    reportMetadata(tag, metadata) {
+      if (tag === "increment-deprecation") {
+        const { id, origin } = metadata;
 
-  display(prefix, result) {
-    if (this.willDisplay(result)) {
-      const string = displayUtils.resultString(
-        this.id++,
-        prefix,
-        result,
-        this.quietLogs,
-        this.strictSpecCompliance
+        const currentCount = this.deprecationCounts.get(id) || 0;
+        this.deprecationCounts.set(id, currentCount + 1);
+
+        const originKey = origin || "unknown";
+        if (!this.deprecationCountsByOrigin.has(originKey)) {
+          this.deprecationCountsByOrigin.set(originKey, new Map());
+        }
+        const originMap = this.deprecationCountsByOrigin.get(originKey);
+        const originCount = originMap.get(id) || 0;
+        originMap.set(id, originCount + 1);
+      } else if (tag === "summary-line") {
+        this.out.write(`\n${metadata.message}\n`);
+      } else {
+        super.reportMetadata(...arguments);
+      }
+    }
+
+    report(prefix, data) {
+      if (data.failed) {
+        this.failReports.push([prefix, data, this.id]);
+      }
+
+      super.report(prefix, data);
+    }
+
+    display(prefix, result) {
+      if (this.willDisplay(result)) {
+        const string = displayUtils.resultString(
+          this.id++,
+          prefix,
+          result,
+          this.quietLogs,
+          this.strictSpecCompliance
+        );
+
+        const color = this.colorForResult(result);
+        const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
+
+        if (matches) {
+          this.out.write(color(matches[1]));
+          this.out.write(colors.cyan(matches[2]));
+        } else {
+          this.out.write(color(string));
+        }
+      }
+    }
+
+    colorForResult(result) {
+      if (result.todo || result.skipped) {
+        return colors.yellow;
+      } else if (result.passed) {
+        return colors.green;
+      } else {
+        return colors.red;
+      }
+    }
+
+    generateDeprecationTable() {
+      const maxIdLength = Math.max(
+        ...Array.from(this.deprecationCounts.keys()).map((k) => k.length)
       );
 
-      const color = this.colorForResult(result);
-      const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
+      let msg = this.buildTableHeader(["id", "count"], [maxIdLength, 5]);
 
-      if (matches) {
-        this.out.write(color(matches[1]));
-        this.out.write(colors.cyan(matches[2]));
-      } else {
-        this.out.write(color(string));
-      }
-    }
-  }
-
-  colorForResult(result) {
-    if (result.todo || result.skipped) {
-      return colors.yellow;
-    } else if (result.passed) {
-      return colors.green;
-    } else {
-      return colors.red;
-    }
-  }
-
-  generateDeprecationTable() {
-    const maxIdLength = Math.max(
-      ...Array.from(this.deprecationCounts.keys()).map((k) => k.length)
-    );
-
-    let msg = this.buildTableHeader(["id", "count"], [maxIdLength, 5]);
-
-    for (const [id, count] of this.deprecationCounts.entries()) {
-      const countString = count.toString();
-      msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
-    }
-
-    return msg;
-  }
-
-  generateDeprecationsByOriginTable() {
-    const allDeprecationIds = this.collectAllDeprecationIds();
-    const maxIdLength = Math.max(
-      ...Array.from(allDeprecationIds).map((id) => id.length)
-    );
-    const origins = Array.from(this.deprecationCountsByOrigin.keys()).sort();
-    const maxOriginLength = Math.max(...origins.map((o) => o.length), 6);
-
-    let msg = this.buildTableHeader(
-      ["origin", "id", "count"],
-      [maxOriginLength, maxIdLength, 5]
-    );
-
-    for (const origin of origins) {
-      const originMap = this.deprecationCountsByOrigin.get(origin);
-      const sortedIds = Array.from(originMap.keys()).sort();
-
-      for (const id of sortedIds) {
-        const count = originMap.get(id);
+      for (const [id, count] of this.deprecationCounts.entries()) {
         const countString = count.toString();
-        msg += `| ${origin.padEnd(maxOriginLength)} | ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
+        msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
       }
+
+      return msg;
     }
 
-    return msg;
-  }
+    generateDeprecationsByOriginTable() {
+      const allDeprecationIds = this.collectAllDeprecationIds();
+      const maxIdLength = Math.max(
+        ...Array.from(allDeprecationIds).map((id) => id.length)
+      );
+      const origins = Array.from(this.deprecationCountsByOrigin.keys()).sort();
+      const maxOriginLength = Math.max(...origins.map((o) => o.length), 6);
 
-  collectAllDeprecationIds() {
-    const allIds = new Set();
-    for (const originMap of this.deprecationCountsByOrigin.values()) {
-      for (const id of originMap.keys()) {
-        allIds.add(id);
-      }
-    }
-    return allIds;
-  }
+      let msg = this.buildTableHeader(
+        ["origin", "id", "count"],
+        [maxOriginLength, maxIdLength, 5]
+      );
 
-  buildTableHeader(columnNames, columnWidths) {
-    let header = "| ";
-    let separator = "| ";
+      for (const origin of origins) {
+        const originMap = this.deprecationCountsByOrigin.get(origin);
+        const sortedIds = Array.from(originMap.keys()).sort();
 
-    for (let i = 0; i < columnNames.length; i++) {
-      const name = columnNames[i];
-      const width = columnWidths[i];
-      header += `${name.padEnd(width)} | `;
-      separator += `${"".padEnd(width, "-")} | `;
-    }
-
-    return header + "\n" + separator + "\n";
-  }
-
-  reportDeprecations() {
-    if (this.deprecationCounts.size === 0) {
-      this.out.write("\n[Deprecation Counter] No deprecations logged\n\n");
-      return;
-    }
-
-    const table = this.generateDeprecationTable();
-    let deprecationMessage =
-      "[Deprecation Counter] Test run completed with deprecations:\n\n" + table;
-
-    let originTable = null;
-    if (this.deprecationCountsByOrigin.size > 0) {
-      originTable = this.generateDeprecationsByOriginTable();
-      deprecationMessage += "\nDeprecations by test origin:\n\n" + originTable;
-    }
-
-    this.writeGitHubSummary(table, originTable);
-    this.out.write(`\n${deprecationMessage}\n\n`);
-  }
-
-  writeGitHubSummary(table, originTable) {
-    if (!process.env.GITHUB_ACTIONS || !process.env.GITHUB_STEP_SUMMARY) {
-      return;
-    }
-
-    let jobSummary =
-      "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n";
-    jobSummary += table;
-
-    if (originTable) {
-      jobSummary += "\n\nDeprecations by test origin:\n\n" + originTable;
-    }
-
-    jobSummary += "\n\n";
-
-    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
-  }
-
-  finish() {
-    if (process.env.GITHUB_ACTIONS) {
-      this.out.write("::endgroup::");
-    }
-
-    super.finish();
-
-    this.reportDeprecations();
-
-    if (this.failReports.length > 0) {
-      this.out.write("\nFailures:\n\n");
-
-      this.failReports.forEach(([prefix, data, id]) => {
-        if (process.env.GITHUB_ACTIONS) {
-          this.out.write(`::error ::QUnit Test Failure: ${data.name}\n`);
+        for (const id of sortedIds) {
+          const count = originMap.get(id);
+          const countString = count.toString();
+          msg += `| ${origin.padEnd(maxOriginLength)} | ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
         }
+      }
 
-        this.id = id;
-        super.report(prefix, data);
-      });
+      return msg;
+    }
+
+    collectAllDeprecationIds() {
+      const allIds = new Set();
+      for (const originMap of this.deprecationCountsByOrigin.values()) {
+        for (const id of originMap.keys()) {
+          allIds.add(id);
+        }
+      }
+      return allIds;
+    }
+
+    buildTableHeader(columnNames, columnWidths) {
+      let header = "| ";
+      let separator = "| ";
+
+      for (let i = 0; i < columnNames.length; i++) {
+        const name = columnNames[i];
+        const width = columnWidths[i];
+        header += `${name.padEnd(width)} | `;
+        separator += `${"".padEnd(width, "-")} | `;
+      }
+
+      return header + "\n" + separator + "\n";
+    }
+
+    reportDeprecations() {
+      if (this.deprecationCounts.size === 0) {
+        this.out.write("\n[Deprecation Counter] No deprecations logged\n\n");
+        return;
+      }
+
+      const table = this.generateDeprecationTable();
+      let deprecationMessage =
+        "[Deprecation Counter] Test run completed with deprecations:\n\n" +
+        table;
+
+      let originTable = null;
+      if (this.deprecationCountsByOrigin.size > 0) {
+        originTable = this.generateDeprecationsByOriginTable();
+        deprecationMessage +=
+          "\nDeprecations by test origin:\n\n" + originTable;
+      }
+
+      this.writeGitHubSummary(table, originTable);
+      this.out.write(`\n${deprecationMessage}\n\n`);
+    }
+
+    writeGitHubSummary(table, originTable) {
+      if (!process.env.GITHUB_ACTIONS || !process.env.GITHUB_STEP_SUMMARY) {
+        return;
+      }
+
+      let jobSummary =
+        "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n";
+      jobSummary += table;
+
+      if (originTable) {
+        jobSummary += "\n\nDeprecations by test origin:\n\n" + originTable;
+      }
+
+      jobSummary += "\n\n";
+
+      fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
+    }
+
+    finish() {
+      if (process.env.GITHUB_ACTIONS) {
+        this.out.write("::endgroup::");
+      }
+
+      super.finish();
+
+      this.reportDeprecations();
+
+      if (this.failReports.length > 0) {
+        this.out.write("\nFailures:\n\n");
+
+        this.failReports.forEach(([prefix, data, id]) => {
+          if (process.env.GITHUB_ACTIONS) {
+            this.out.write(`::error ::QUnit Test Failure: ${data.name}\n`);
+          }
+
+          this.id = id;
+          super.report(prefix, data);
+        });
+      }
     }
   }
-}
 
-module.exports = {
-  test_page: "tests/index.html?hidepassed",
-  disable_watching: true,
-  launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
-  tap_failed_tests_only: false,
-  parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
-  socket_server_options: {
-    maxHttpBufferSize: 1e8, // 100MB
-  },
-  browser_start_timeout: 120,
-  browser_args: {
-    Chromium: [
-      // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
-      sandboxDisabled ? "--no-sandbox" : null,
-      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
-      "--disable-dev-shm-usage",
-      "--disable-software-rasterizer",
-      "--disable-search-engine-choice-screen",
-      "--mute-audio",
-      "--remote-debugging-port=4201",
-      "--window-size=1440,900",
-      "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
-    ].filter(Boolean),
-    Chrome: [
-      // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
-      sandboxDisabled ? "--no-sandbox" : null,
-      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
-      "--disable-dev-shm-usage",
-      "--disable-software-rasterizer",
-      "--disable-search-engine-choice-screen",
-      "--mute-audio",
-      "--remote-debugging-port=4201",
-      "--window-size=1440,900",
-      "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
-    ].filter(Boolean),
-    Firefox: ["-headless", "--width=1440", "--height=900"],
-  },
-  reporter: Reporter,
-};
+  module.exports = {
+    test_page: "tests/index.html?hidepassed",
+    disable_watching: true,
+    launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
+    tap_failed_tests_only: false,
+    parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
+    socket_server_options: {
+      maxHttpBufferSize: 1e8, // 100MB
+    },
+    browser_start_timeout: 120,
+    browser_args: {
+      Chromium: [
+        // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
+        sandboxDisabled ? "--no-sandbox" : null,
+        process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
+        "--disable-dev-shm-usage",
+        "--disable-software-rasterizer",
+        "--disable-search-engine-choice-screen",
+        "--mute-audio",
+        "--remote-debugging-port=4201",
+        "--window-size=1440,900",
+        "--enable-precise-memory-info",
+        "--js-flags=--max_old_space_size=4096",
+      ].filter(Boolean),
+      Chrome: [
+        // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
+        sandboxDisabled ? "--no-sandbox" : null,
+        process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
+        "--disable-dev-shm-usage",
+        "--disable-software-rasterizer",
+        "--disable-search-engine-choice-screen",
+        "--mute-audio",
+        "--remote-debugging-port=4201",
+        "--window-size=1440,900",
+        "--enable-precise-memory-info",
+        "--js-flags=--max_old_space_size=4096",
+      ].filter(Boolean),
+      Firefox: ["-headless", "--width=1440", "--height=900"],
+    },
+    reporter: Reporter,
+  };
 
-if (process.env.TESTEM_FIREFOX_PATH) {
-  module.exports.browser_paths ||= {};
-  module.exports.browser_paths["Firefox"] = process.env.TESTEM_FIREFOX_PATH;
-}
+  if (process.env.TESTEM_FIREFOX_PATH) {
+    module.exports.browser_paths ||= {};
+    module.exports.browser_paths["Firefox"] = process.env.TESTEM_FIREFOX_PATH;
+  }
 
-const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
+  const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
 
-fetch(`${target}/about.json`).catch(() => {
-  // eslint-disable-next-line no-console
-  console.error(
-    colors.red(
-      `Error connecting to Rails server on ${target}. Is it running? Use 'bin/qunit --standalone' or 'plugin:qunit' to start automatically.`
-    )
-  );
-});
-
-const pluginTestPages = process.env.PLUGIN_TARGETS;
-if (pluginTestPages) {
-  module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
-    return `tests/index.html?hidepassed&target=${plugin}`;
+  fetch(`${target}/about.json`).catch(() => {
+    // eslint-disable-next-line no-console
+    console.error(
+      colors.red(
+        `Error connecting to Rails server on ${target}. Is it running? Use 'bin/qunit --standalone' or 'plugin:qunit' to start automatically.`
+      )
+    );
   });
-}
 
-const themeTestPages = process.env.THEME_TEST_PAGES;
+  const pluginTestPages = process.env.PLUGIN_TARGETS;
+  if (pluginTestPages) {
+    module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
+      return `tests/index.html?hidepassed&target=${plugin}`;
+    });
+  }
 
-if (themeTestPages) {
-  module.exports.test_page = themeTestPages.split(",");
-  module.exports.proxies = {};
+  const themeTestPages = process.env.THEME_TEST_PAGES;
 
-  // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
-  // requests. This is required because testem prepends a string to the path of the `test_page` option when it makes
-  // the request and there is no easy way for us to strip the string from the path through the proxy. As such, we let the
-  // destination server handle the request base on the prefix instead.
-  module.exports.proxies[`/*/theme-qunit`] = {
-    target: `${target}/testem-theme-qunit`,
-    xfwd: true,
-  };
+  if (themeTestPages) {
+    module.exports.test_page = themeTestPages.split(",");
+    module.exports.proxies = {};
 
-  module.exports.proxies["/*/*"] = { target, xfwd: true };
+    // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
+    // requests. This is required because testem prepends a string to the path of the `test_page` option when it makes
+    // the request and there is no easy way for us to strip the string from the path through the proxy. As such, we let the
+    // destination server handle the request base on the prefix instead.
+    module.exports.proxies[`/*/theme-qunit`] = {
+      target: `${target}/testem-theme-qunit`,
+      xfwd: true,
+    };
 
-  module.exports.middleware = [
-    function (app) {
-      // Make the testem.js file available under /assets
-      // so it's within the app's CSP
-      app.get("/assets/testem.js", function (req, res, next) {
-        req.url = "/testem.js";
-        next();
-      });
-    },
-  ];
-} else {
-  // Running with ember cli, but we want to pass through plugin request to Rails
-  module.exports.proxies = {
-    "/assets/plugins/*_extra.js": {
-      target,
-    },
-    "/plugins/": {
-      target,
-    },
-    "/bootstrap/": {
-      target,
-    },
-    "/stylesheets/": {
-      target,
-    },
-    "/extra-locales/": {
-      target,
-    },
-  };
+    module.exports.proxies["/*/*"] = { target, xfwd: true };
+
+    module.exports.middleware = [
+      function (app) {
+        // Make the testem.js file available under /assets
+        // so it's within the app's CSP
+        app.get("/assets/testem.js", function (req, res, next) {
+          req.url = "/testem.js";
+          next();
+        });
+      },
+    ];
+  } else {
+    // Running with ember cli, but we want to pass through plugin request to Rails
+    module.exports.proxies = {
+      "/assets/plugins/*_extra.js": {
+        target,
+      },
+      "/plugins/": {
+        target,
+      },
+      "/bootstrap/": {
+        target,
+      },
+      "/stylesheets/": {
+        target,
+      },
+      "/extra-locales/": {
+        target,
+      },
+    };
+  }
 }
