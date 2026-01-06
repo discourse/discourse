@@ -144,6 +144,11 @@ export default class ImageCarousel extends Component {
   @action
   scrollToIndex(index) {
     const clamped = Math.max(0, Math.min(index, this.items.length - 1));
+
+    if (this.#isNavigating || clamped === this.currentIndex) {
+      return;
+    }
+
     const slide = this.#slides.get(clamped);
 
     if (!slide) {
