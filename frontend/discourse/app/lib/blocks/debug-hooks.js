@@ -43,11 +43,12 @@ let blockOutletBoundaryCallback = null;
  */
 let blockOutletInfoComponent = null;
 
-// ============================================================================
-// Logging Callbacks
-// ============================================================================
-// These callbacks enable moving the debug logger to the dev-tools bundle.
-// When dev tools are not loaded, these remain null and logging is a no-op.
+/*
+ * Logging Callbacks
+ *
+ * These callbacks enable moving the debug logger to the dev-tools bundle.
+ * When dev tools are not loaded, these remain null and logging is a no-op.
+ */
 
 /**
  * Callback for logging a condition evaluation.
@@ -158,9 +159,9 @@ export function getOutletInfoComponent() {
   return blockOutletInfoComponent;
 }
 
-// ============================================================================
-// Logging Callback Getters
-// ============================================================================
+/*
+ * Logging Callback Getters
+ */
 
 /**
  * Returns the callback for logging condition evaluations, or null if not set.
@@ -285,9 +286,9 @@ export function _setBlockOutletInfoComponent(component) {
   blockOutletInfoComponent = component;
 }
 
-// ============================================================================
-// Logging Callback Setters
-// ============================================================================
+/*
+ * Logging Callback Setters
+ */
 
 /**
  * Sets the callback for logging condition evaluations.

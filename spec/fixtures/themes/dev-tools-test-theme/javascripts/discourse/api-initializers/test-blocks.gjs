@@ -22,9 +22,9 @@ class ConditionalBlock extends Component {
   </template>
 }
 
-// =============================================================================
-// User Condition Test Blocks
-// =============================================================================
+/*
+ * User Condition Test Blocks
+ */
 
 @block("user-logged-in-block")
 class UserLoggedInBlock extends Component {
@@ -54,9 +54,9 @@ class UserTrustLevel2Block extends Component {
   </template>
 }
 
-// =============================================================================
-// Route Condition Test Blocks
-// =============================================================================
+/*
+ * Route Condition Test Blocks
+ */
 
 @block("route-category-block")
 class RouteCategoryBlock extends Component {
@@ -79,9 +79,9 @@ class RouteDiscoveryBlock extends Component {
   </template>
 }
 
-// =============================================================================
-// Setting Condition Test Blocks
-// =============================================================================
+/*
+ * Setting Condition Test Blocks
+ */
 
 @block("setting-badges-enabled-block")
 class SettingBadgesEnabledBlock extends Component {
@@ -90,9 +90,9 @@ class SettingBadgesEnabledBlock extends Component {
   </template>
 }
 
-// =============================================================================
-// Combined Condition Test Blocks
-// =============================================================================
+/*
+ * Combined Condition Test Blocks
+ */
 
 @block("combined-logged-in-tl1-block")
 class CombinedLoggedInTL1Block extends Component {
@@ -108,9 +108,9 @@ class CombinedAdminCategoryBlock extends Component {
   </template>
 }
 
-// =============================================================================
-// OR Condition Test Block
-// =============================================================================
+/*
+ * OR Condition Test Block
+ */
 
 @block("or-admin-or-moderator-block")
 class OrAdminOrModeratorBlock extends Component {
@@ -119,9 +119,9 @@ class OrAdminOrModeratorBlock extends Component {
   </template>
 }
 
-// =============================================================================
-// Block Ordering Test Blocks
-// =============================================================================
+/*
+ * Block Ordering Test Blocks
+ */
 
 @block("order-first-block")
 class OrderFirstBlock extends Component {
@@ -158,9 +158,9 @@ class OrderFifthBlock extends Component {
   </template>
 }
 
-// =============================================================================
-// Viewport Condition Test Blocks
-// =============================================================================
+/*
+ * Viewport Condition Test Blocks
+ */
 
 @block("viewport-mobile-block")
 class ViewportMobileBlock extends Component {
@@ -176,9 +176,9 @@ class ViewportDesktopBlock extends Component {
   </template>
 }
 
-// =============================================================================
-// Debug Tools Test Blocks (enhanced)
-// =============================================================================
+/*
+ * Debug Tools Test Blocks (enhanced)
+ */
 
 @block("debug-args-block", {
   args: {

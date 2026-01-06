@@ -73,21 +73,21 @@ export function resetBlockConfigsForTesting() {
   }
 }
 
-// ============================================================================
-// Security Symbols
-// ============================================================================
-//
-// IMPORTANT: These symbols MUST NOT be exported.
-// DO NOT REFACTOR TO EXTRACT THESE SYMBOLS INTO ANOTHER FILE
-//
-// These secret symbols form the core of the block security model. They allow
-// the system to verify that:
-// 1. A component was decorated with @block (has __BLOCK_FLAG)
-// 2. A component is authorized to contain children (has __BLOCK_CONTAINER_FLAG)
-// 3. A block is being rendered in an authorized context (via $block$ arg)
-//
-// By keeping these symbols private, we prevent external code from spoofing
-// block authorization or bypassing validation.
+/*
+ * Security Symbols
+ *
+ * IMPORTANT: These symbols MUST NOT be exported.
+ * DO NOT REFACTOR TO EXTRACT THESE SYMBOLS INTO ANOTHER FILE
+ *
+ * These secret symbols form the core of the block security model. They allow
+ * the system to verify that:
+ * 1. A component was decorated with @block (has __BLOCK_FLAG)
+ * 2. A component is authorized to contain children (has __BLOCK_CONTAINER_FLAG)
+ * 3. A block is being rendered in an authorized context (via $block$ arg)
+ *
+ * By keeping these symbols private, we prevent external code from spoofing
+ * block authorization or bypassing validation.
+ */
 const __BLOCK_FLAG = Symbol("block");
 const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
 
