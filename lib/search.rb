@@ -338,12 +338,12 @@ class Search
       @results.search_log_id = search_log_id unless status == :error
     end
 
-    unless @filters.present? || @order.present? || @opts[:search_for_id]
-      min_length = min_search_term_length
-      terms = (@term || "").split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject { |t| t.length < min_length }
+    is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
 
-      if terms.blank?
-        @term = ""
+    if !@opts[:search_for_id] && !is_topic_search
+      @term = filter_short_terms(@term)
+
+      if @term.blank? && @filters.blank? && @order.blank?
         @valid = false
         return
       end
@@ -1636,6 +1636,19 @@ class Search
   def log_query?(readonly_mode)
     SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode &&
       @opts[:type_filter] != "exclude_topics"
+  end
+
+  def filter_short_terms(term_string)
+    return "" if term_string.blank?
+
+    min_length = min_search_term_length
+    # Split on spaces but respect quoted phrases
+    terms = term_string.split(/\s(?=(?:[^"]|"[^"]*")*$)/)
+
+    # Keep quoted phrases regardless of length, filter others by min_length
+    valid_terms = terms.select { |t| t.start_with?('"') || t.length >= min_length }
+
+    valid_terms.join(" ")
   end
 
   def min_search_term_length
