@@ -60,7 +60,7 @@ for (const module of Object.values(
       if (fixtureUrl[0] !== "/") {
         fixtureUrl = "/" + fixtureUrl;
       }
-      fixturesByUrl[url] = obj[url];
+      fixturesByUrl[fixtureUrl] = obj[url];
     });
   }
 }
