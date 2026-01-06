@@ -161,8 +161,8 @@ export default class ImageCarousel extends Component {
     });
   }
 
-  #navigateByKey(direction) {
-    const goNext = (direction === "right") === (this.#trackDirection === 1);
+  #navigateByKey(key) {
+    const goNext = (key === "ArrowRight") === (this.#trackDirection === 1);
     this.scrollToIndex(goNext ? this.nextIndex : this.prevIndex);
   }
 
@@ -173,9 +173,7 @@ export default class ImageCarousel extends Component {
     }
 
     event.preventDefault();
-
-    const direction = event.key === "ArrowLeft" ? "left" : "right";
-    throttle(this, this.#navigateByKey, direction, KEYBOARD_THROTTLE_MS);
+    throttle(this, this.#navigateByKey, event.key, KEYBOARD_THROTTLE_MS);
   }
 
   <template>
