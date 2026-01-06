@@ -309,6 +309,47 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       );
     });
 
+    test("handles null source object gracefully", function (assert) {
+      assert.false(
+        this.evaluateCondition({
+          source: null,
+          setting: "any_setting",
+          enabled: true,
+        }),
+        "enabled: true fails with null source"
+      );
+
+      assert.true(
+        this.evaluateCondition({
+          source: null,
+          setting: "any_setting",
+          enabled: false,
+        }),
+        "enabled: false passes with null source (setting is undefined/falsy)"
+      );
+    });
+
+    test("handles undefined source value gracefully", function (assert) {
+      const themeSettings = {};
+
+      assert.false(
+        this.evaluateCondition({
+          source: themeSettings,
+          setting: "undefined_setting",
+        }),
+        "undefined setting value is falsy"
+      );
+
+      assert.true(
+        this.evaluateCondition({
+          source: themeSettings,
+          setting: "undefined_setting",
+          enabled: false,
+        }),
+        "enabled: false passes for undefined setting"
+      );
+    });
+
     test("evaluates truthy by default when no condition type specified", function (assert) {
       const themeSettings = {
         some_setting: "has-value",

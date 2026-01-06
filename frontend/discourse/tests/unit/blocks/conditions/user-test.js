@@ -204,6 +204,19 @@ module("Unit | Blocks | Condition | user", function (hooks) {
           this.condition.currentUser.admin = true;
           assert.true(this.condition.evaluate({ admin: true }));
         });
+
+        test("admin: false is a no-op (passes for any user)", function (assert) {
+          assert.true(
+            this.condition.evaluate({ admin: false }),
+            "non-admin user passes"
+          );
+
+          this.condition.currentUser.admin = true;
+          assert.true(
+            this.condition.evaluate({ admin: false }),
+            "admin user also passes"
+          );
+        });
       });
 
       module("moderator condition", function () {
@@ -220,6 +233,19 @@ module("Unit | Blocks | Condition | user", function (hooks) {
           this.condition.currentUser.admin = true;
           assert.true(this.condition.evaluate({ moderator: true }));
         });
+
+        test("moderator: false is a no-op (passes for any user)", function (assert) {
+          assert.true(
+            this.condition.evaluate({ moderator: false }),
+            "non-moderator user passes"
+          );
+
+          this.condition.currentUser.moderator = true;
+          assert.true(
+            this.condition.evaluate({ moderator: false }),
+            "moderator user also passes"
+          );
+        });
       });
 
       module("staff condition", function () {
@@ -230,6 +256,19 @@ module("Unit | Blocks | Condition | user", function (hooks) {
         test("passes when user is staff", function (assert) {
           this.condition.currentUser.staff = true;
           assert.true(this.condition.evaluate({ staff: true }));
+        });
+
+        test("staff: false is a no-op (passes for any user)", function (assert) {
+          assert.true(
+            this.condition.evaluate({ staff: false }),
+            "non-staff user passes"
+          );
+
+          this.condition.currentUser.staff = true;
+          assert.true(
+            this.condition.evaluate({ staff: false }),
+            "staff user also passes"
+          );
         });
       });
 

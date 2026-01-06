@@ -342,6 +342,146 @@ module("Unit | Service | blocks", function (hooks) {
 
       assert.deepEqual(receivedArgs, { foo: "bar", baz: 123 });
     });
+
+    test("returns true for empty AND array (vacuous truth)", function (assert) {
+      assert.true(this.blocks.evaluate([]));
+    });
+
+    test("returns false for empty OR array (any)", function (assert) {
+      assert.false(this.blocks.evaluate({ any: [] }));
+    });
+
+    test("evaluates nested combinators (NOT within OR within AND)", function (assert) {
+      class BlockNestedTrue extends BlockCondition {
+        static type = "nested-true";
+
+        evaluate() {
+          return true;
+        }
+      }
+
+      class BlockNestedFalse extends BlockCondition {
+        static type = "nested-false";
+
+        evaluate() {
+          return false;
+        }
+      }
+
+      this.blocks.registerConditionType(BlockNestedTrue);
+      this.blocks.registerConditionType(BlockNestedFalse);
+
+      // AND with OR inside: [{ any: [false, true] }] => true
+      assert.true(
+        this.blocks.evaluate([
+          {
+            any: [{ type: "nested-false" }, { type: "nested-true" }],
+          },
+        ])
+      );
+
+      // AND with NOT inside OR: [{ any: [{ not: { type: "nested-true" } }] }] => false
+      assert.false(
+        this.blocks.evaluate([
+          {
+            any: [{ not: { type: "nested-true" } }],
+          },
+        ])
+      );
+
+      // Complex: AND[ OR[NOT(false), false], true ] => AND[ OR[true, false], true ] => AND[true, true] => true
+      assert.true(
+        this.blocks.evaluate([
+          {
+            any: [{ not: { type: "nested-false" } }, { type: "nested-false" }],
+          },
+          { type: "nested-true" },
+        ])
+      );
+    });
+
+    test("passes outletArgs to condition evaluate context", function (assert) {
+      let receivedContext;
+
+      class BlockContextCapturing extends BlockCondition {
+        static type = "context-capturing";
+
+        evaluate(args, context) {
+          receivedContext = context;
+          return true;
+        }
+      }
+
+      this.blocks.registerConditionType(BlockContextCapturing);
+
+      const outletArgs = { topic: { id: 123 }, user: { admin: true } };
+      this.blocks.evaluate({ type: "context-capturing" }, { outletArgs });
+
+      assert.deepEqual(receivedContext.outletArgs, outletArgs);
+    });
+
+    test("passes outletArgs through NOT combinator", function (assert) {
+      let receivedOutletArgs;
+
+      class BlockNotOutletArgs extends BlockCondition {
+        static type = "not-outlet-args";
+
+        evaluate(args, context) {
+          receivedOutletArgs = context?.outletArgs;
+          return false;
+        }
+      }
+
+      this.blocks.registerConditionType(BlockNotOutletArgs);
+
+      const outletArgs = { topic: { closed: true } };
+      this.blocks.evaluate(
+        { not: { type: "not-outlet-args" } },
+        { outletArgs }
+      );
+
+      assert.deepEqual(
+        receivedOutletArgs,
+        outletArgs,
+        "outletArgs should be passed through NOT combinator"
+      );
+    });
+
+    test("passes outletArgs through nested AND/OR/NOT combinators", function (assert) {
+      let callCount = 0;
+      const receivedOutletArgs = [];
+
+      class BlockDeepOutletArgs extends BlockCondition {
+        static type = "deep-outlet-args";
+
+        evaluate(args, context) {
+          callCount++;
+          receivedOutletArgs.push(context?.outletArgs);
+          return true;
+        }
+      }
+
+      this.blocks.registerConditionType(BlockDeepOutletArgs);
+
+      const outletArgs = { data: "test-value" };
+
+      // Complex nested: AND[ OR[ NOT(condition) ] ]
+      this.blocks.evaluate(
+        [
+          {
+            any: [{ not: { type: "deep-outlet-args" } }],
+          },
+        ],
+        { outletArgs }
+      );
+
+      assert.strictEqual(callCount, 1, "condition should be called once");
+      assert.deepEqual(
+        receivedOutletArgs[0],
+        outletArgs,
+        "outletArgs should be passed through all combinator levels"
+      );
+    });
   });
 
   module("condition service injection", function () {

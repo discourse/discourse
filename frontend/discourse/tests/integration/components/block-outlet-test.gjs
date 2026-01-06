@@ -1602,4 +1602,113 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
     });
   });
+
+  module("error handling", function () {
+    test("outlet continues rendering other blocks when one block throws", async function (assert) {
+      let errorCaught = null;
+      setupOnerror((error) => {
+        errorCaught = error;
+      });
+
+      @block("throwing-block")
+      class ThrowingBlock extends Component {
+        constructor() {
+          super(...arguments);
+          throw new Error("Block render error");
+        }
+
+        <template>
+          <div class="throwing-content">Should not render</div>
+        </template>
+      }
+
+      @block("safe-block")
+      class SafeBlock extends Component {
+        <template>
+          <div class="safe-content">Safe Content</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => {
+        _registerBlock(ThrowingBlock);
+        _registerBlock(SafeBlock);
+      });
+      renderBlocks("homepage-blocks", [
+        { block: SafeBlock },
+        { block: ThrowingBlock },
+      ]);
+
+      await render(
+        <template><BlockOutlet @name="homepage-blocks" /></template>
+      );
+
+      assert.notStrictEqual(errorCaught, null, "error was caught");
+      assert.true(
+        errorCaught?.message?.includes("Block render error"),
+        "error message is correct"
+      );
+
+      setupOnerror();
+    });
+
+    test("block with invalid condition type shows warning in dev mode", async function (assert) {
+      @block("invalid-condition-block")
+      class InvalidConditionBlock extends Component {
+        <template>
+          <div class="invalid-condition-content">Content</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(InvalidConditionBlock));
+
+      const blocks = getOwner(this).lookup("service:blocks");
+
+      // Using an unknown condition type should return false (fail silently)
+      const result = blocks.evaluate({ type: "unknown-condition-type" });
+      assert.false(
+        result,
+        "unknown condition type evaluates to false (fails closed)"
+      );
+    });
+
+    test("block with null conditions renders normally", async function (assert) {
+      @block("null-conditions-block")
+      class NullConditionsBlock extends Component {
+        <template>
+          <div class="null-conditions-content">Renders</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(NullConditionsBlock));
+      renderBlocks("sidebar-blocks", [
+        { block: NullConditionsBlock, conditions: null },
+      ]);
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert
+        .dom(".null-conditions-content")
+        .exists("block renders with null conditions");
+    });
+
+    test("block with undefined conditions renders normally", async function (assert) {
+      @block("undefined-conditions-block")
+      class UndefinedConditionsBlock extends Component {
+        <template>
+          <div class="undefined-conditions-content">Renders</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(UndefinedConditionsBlock));
+      renderBlocks("hero-blocks", [
+        { block: UndefinedConditionsBlock, conditions: undefined },
+      ]);
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      assert
+        .dom(".undefined-conditions-content")
+        .exists("block renders with undefined conditions");
+    });
+  });
 });
