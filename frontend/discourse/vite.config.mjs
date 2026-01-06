@@ -23,6 +23,8 @@ writeResolverConfig(
   }
 );
 
+const BUNDLED_DEV = false;
+
 export default defineConfig(({ mode, command }) => {
   const aliases = [
     { find: "pretty-text", replacement: "/../pretty-text/addon" },
@@ -60,6 +62,9 @@ export default defineConfig(({ mode, command }) => {
       extensions,
       alias: aliases,
     },
+    experimental: {
+      bundledDev: BUNDLED_DEV,
+    },
     plugins: [
       // Standard Ember stuff
 
@@ -92,7 +97,7 @@ export default defineConfig(({ mode, command }) => {
       strictPort: true,
 
       proxy: {
-        "/": customProxy(),
+        "/": customProxy({ bundledDev: BUNDLED_DEV }),
       },
 
       warmup: {

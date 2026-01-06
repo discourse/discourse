@@ -7,6 +7,7 @@ function updateScriptReferences({
   attribute,
   baseURL,
   distAssets,
+  bundledDev,
 }) {
   const handledEntrypoints = new Set();
 
@@ -41,6 +42,13 @@ function updateScriptReferences({
         "start-discourse": "/start-discourse.js",
         // admin: "/@vite/admin.js",
       };
+
+      if (bundledDev) {
+        // bundled dev mode
+        for (const [key, value] of Object.entries(entrypoints)) {
+          entrypoints[key] = "/assets" + value;
+        }
+      }
 
       if (!entrypoints[entrypointName]) {
         return;
@@ -104,7 +112,10 @@ function updateScriptReferences({
   });
 }
 
-export default function customProxy({ rewriteHtml = true } = {}) {
+export default function customProxy({
+  rewriteHtml = true,
+  bundledDev = false,
+} = {}) {
   return {
     target: "http://localhost:3000",
     headers: {
@@ -142,12 +153,14 @@ export default function customProxy({ rewriteHtml = true } = {}) {
             rewriter,
             selector: "script[data-discourse-entrypoint]",
             attribute: "src",
+            bundledDev,
           });
 
           updateScriptReferences({
             rewriter,
             selector: "link[rel=preload][data-discourse-entrypoint]",
             attribute: "href",
+            bundledDev,
           });
 
           proxyRes.on("data", function (chunk) {
