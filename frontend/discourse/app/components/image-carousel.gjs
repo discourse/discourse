@@ -41,7 +41,12 @@ export default class ImageCarousel extends Component {
 
     const onScroll = () => {
       if (!this.#isNavigating) {
-        throttle(this, this.#updateIndexFromScroll, element, SCROLL_THROTTLE_MS);
+        throttle(
+          this,
+          this.#updateIndexFromScroll,
+          element,
+          SCROLL_THROTTLE_MS
+        );
       }
     };
 
