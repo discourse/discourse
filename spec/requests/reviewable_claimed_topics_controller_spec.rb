@@ -234,5 +234,21 @@ RSpec.describe ReviewableClaimedTopicsController do
         expect(response.status).to eq(200)
       end
     end
+
+    it "does not log unclaimed history when topic was not claimed" do
+      SiteSetting.reviewable_claiming = "optional"
+      claimed.destroy!
+
+      delete "/reviewable_claimed_topics/#{topic.id}.json"
+      expect(response.status).to eq(200)
+      expect(
+        topic
+          .reviewables
+          .first
+          .history
+          .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
+          .size,
+      ).to eq(0)
+    end
   end
 end

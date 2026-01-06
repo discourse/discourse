@@ -26,8 +26,10 @@ class ReviewableClaimedTopicsController < ApplicationController
     raise Discourse::NotFound if topic.blank?
 
     guardian.ensure_can_claim_reviewable_topic!(topic, automatic)
-    ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
-    topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
+    deleted_count = ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
+    if deleted_count > 0
+      topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
+    end
 
     notify_users(topic, current_user, automatic, claimed: false)
     render json: success_json
