@@ -1472,6 +1472,39 @@ RSpec.describe Search do
       end
     end
 
+    context "with order-only searches" do
+      it "returns results when searching with order and category filters" do
+        result =
+          Search.execute("order:latest category:#{topic.category.slug}", type_filter: "topic")
+
+        expect(result.posts).to be_present
+        expect(result.posts.map(&:topic_id)).to include(topic.id)
+      end
+
+      it "returns results when searching with only order filter" do
+        post # ensure post is created
+
+        result = Search.execute("order:latest", type_filter: "topic")
+
+        expect(result.posts).to be_present
+      end
+
+      it "returns results when using 'l' shortcut for order:latest" do
+        post # ensure post is created
+
+        result = Search.execute("l", type_filter: "topic")
+
+        expect(result.posts).to be_present
+      end
+
+      it "marks search as invalid when no term, filters, or order provided" do
+        search = Search.new("", type_filter: "topic")
+        search.execute
+
+        expect(search.valid?).to eq(false)
+      end
+    end
+
     context "with security" do
       def result(current_user)
         Search.execute("hello", guardian: Guardian.new(current_user))

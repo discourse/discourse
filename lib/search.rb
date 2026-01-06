@@ -27,6 +27,16 @@ class Search
     %w[topic category user private_messages tags all_topics exclude_topics]
   end
 
+  # Patterns that indicate a valid search even without meeting minimum term length
+  # Includes shortcuts (l, r, t) and advanced filter syntax
+  VALID_SEARCH_SHORTCUT_PATTERN =
+    /\A[lrt]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
+
+  def self.valid_search_shortcut?(term)
+    return false if term.blank?
+    VALID_SEARCH_SHORTCUT_PATTERN.match?(term)
+  end
+
   def self.ts_config(locale = SiteSetting.default_locale)
     # if adding a text search configuration, you should check PG beforehand:
     # SELECT cfgname FROM pg_ts_config;
@@ -328,7 +338,7 @@ class Search
       @results.search_log_id = search_log_id unless status == :error
     end
 
-    unless @filters.present? || @opts[:search_for_id]
+    unless @filters.present? || @order.present? || @opts[:search_for_id]
       min_length = min_search_term_length
       terms = (@term || "").split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject { |t| t.length < min_length }
 
