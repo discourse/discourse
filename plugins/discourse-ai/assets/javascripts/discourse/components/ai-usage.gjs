@@ -40,11 +40,11 @@ export default class AiUsage extends Component {
 
   constructor() {
     super(...arguments);
-    this.fetchData({ clearCache: true });
+    this.fetchData();
   }
 
   @action
-  async fetchData({ clearCache = false } = {}) {
+  async fetchData() {
     const response = await ajax(
       "/admin/plugins/discourse-ai/ai-usage-report.json",
       {
@@ -58,13 +58,9 @@ export default class AiUsage extends Component {
         },
       }
     );
+
     this.data = response;
     this.loadingData = false;
-
-    if (clearCache) {
-      this._cachedFeatures = null;
-      this._cachedModels = null;
-    }
   }
 
   @action
@@ -403,25 +399,35 @@ export default class AiUsage extends Component {
   }
 
   get availableFeatures() {
-    this._cachedFeatures =
-      this._cachedFeatures ||
-      (this.data?.features || []).map((f) => ({
+    if (this._cachedFeatures) {
+      return this._cachedFeatures;
+    }
+
+    const features = this.data?.features;
+    if (features?.length) {
+      this._cachedFeatures = features.map((f) => ({
         id: f.feature_name,
         name: f.feature_name,
       }));
+    }
 
-    return this._cachedFeatures;
+    return this._cachedFeatures || [];
   }
 
   get availableModels() {
-    this._cachedModels =
-      this._cachedModels ||
-      (this.data?.models || []).map((m) => ({
+    if (this._cachedModels) {
+      return this._cachedModels;
+    }
+
+    const models = this.data?.models;
+    if (models?.length) {
+      this._cachedModels = models.map((m) => ({
         id: m.id,
         name: m.llm,
       }));
+    }
 
-    return this._cachedModels;
+    return this._cachedModels || [];
   }
 
   get periodOptions() {
@@ -454,10 +460,12 @@ export default class AiUsage extends Component {
 
   @action
   onPeriodSelect(period) {
+    this._cachedFeatures = null;
+    this._cachedModels = null;
     this.selectedPeriod = period;
     this.isCustomDateActive = false;
     this.setPeriodDates(period);
-    this.fetchData({ clearCache: true });
+    this.fetchData();
   }
 
   @action
@@ -470,9 +478,11 @@ export default class AiUsage extends Component {
 
   @action
   onDateChange() {
+    this._cachedFeatures = null;
+    this._cachedModels = null;
     this.isCustomDateActive = true;
     this.selectedPeriod = null;
-    this.fetchData({ clearCache: true });
+    this.fetchData();
   }
 
   @action
@@ -483,9 +493,11 @@ export default class AiUsage extends Component {
 
   @action
   onRefreshDateRange() {
+    this._cachedFeatures = null;
+    this._cachedModels = null;
     this.startDate = this._startDate;
     this.endDate = this._endDate;
-    this.fetchData({ clearCache: true });
+    this.fetchData();
     this._startDate = null;
     this._endDate = null;
   }
