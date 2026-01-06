@@ -51,8 +51,6 @@ lv:
           title: "Tēmu saraksts"
         basic_topic_list:
           title: "Pamata tēmu saraksts"
-        footer_message:
-          title: "Kājenes ziņojums"
         signup_cta:
           title: "Uzaicinājums reģistrēties"
         topic_timer_info:

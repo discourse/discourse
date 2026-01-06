@@ -1698,16 +1698,6 @@ et:
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemat."
         category: "Kategoorias %{category} teemad puuduvad."
         top: "Tippteemad puuduvad."
-      bottom:
-        latest: "Rohkem värskeid teemasid pole."
-        posted: "Rohkem uute postitustega teemasid pole."
-        read: "Rohkem loetud teemasid pole."
-        new: "Rohkem uusi teemasid pole."
-        unread: "Rohkem lugemata teemasid pole."
-        category: "Kategoorias %{category} rohkem teemasid pole."
-        tag: "Rohkem teemasid sildiga %{tag} pole."
-        top: "Rohkem tippteemasid pole."
-        bookmarks: "Rohkem järjehoidjaga teemasid pole."
     topic_bulk_actions:
       dismiss:
         name: "Ignoreeri"

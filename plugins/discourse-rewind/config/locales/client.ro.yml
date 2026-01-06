@@ -16,7 +16,8 @@ ro:
           title: Durata citirii
         chat_usage:
           messages: mesaje
-          you: Tu
+          author: Tu
+          author_others: "%{username}"
           status_online: "● conectat"
         invites:
           title: Invitații

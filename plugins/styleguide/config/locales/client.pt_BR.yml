@@ -67,8 +67,6 @@ pt_BR:
           title: "Lista de tópicos"
         basic_topic_list:
           title: "Lista de tópicos básicos"
-        footer_message:
-          title: "Mensagem de rodapé"
         signup_cta:
           title: "CTA de cadastro"
         topic_timer_info:
