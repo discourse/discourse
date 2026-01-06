@@ -149,15 +149,18 @@
 .plugin-outlet-info__wrapper {
   display: flex;
   flex-direction: column;
+  min-width: 250px;
 }
 
 .plugin-outlet-info__heading {
   font-size: 14px;
   font-weight: bold;
-  margin-bottom: 10px;
   display: flex;
   gap: 5px;
   color: var(--dev-tools-plugin-outlet-color);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--primary-low);
+  margin-bottom: 8px;
 
   &.--wrapper {
     color: var(--dev-tools-wrapper-outlet-color);
@@ -165,6 +168,9 @@
 
   .title {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
 
   .github-link {
@@ -173,10 +179,11 @@
 }
 
 .plugin-outlet-info__content {
-  font-size: 14px;
-  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13px;
   max-width: 100%;
-  width: 100%;
   overflow: hidden;
 }
 
@@ -236,7 +243,7 @@
 .block-outlet-info__wrapper {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  min-width: 250px;
 }
 
 .block-outlet-info__heading {
@@ -245,6 +252,9 @@
   display: flex;
   gap: 5px;
   color: var(--dev-tools-block-outlet-color);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--primary-low);
+  margin-bottom: 8px;
 
   .title {
     flex-grow: 1;
@@ -259,6 +269,9 @@
 }
 
 .block-outlet-info__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   font-size: 13px;
 }
 
@@ -272,6 +285,20 @@
 .block-outlet-info__empty {
   font-style: italic;
   color: var(--primary-medium);
+}
+
+.block-outlet-info__section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.block-outlet-info__section-title {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--primary-medium);
+  letter-spacing: 0.5px;
 }
 
 /* Block Debug Tooltip */
