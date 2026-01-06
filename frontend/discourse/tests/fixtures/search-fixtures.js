@@ -57,7 +57,7 @@ export default {
       group_ids: [],
     },
   },
-  "/search/query": {
+  "search/query": {
     posts: [
       {
         id: 3833,

@@ -25,14 +25,14 @@ module("Integration | Component | search-menu", function (hooks) {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
         // posts/topics are not present in the payload by default
         return response({
-          users: searchFixtures["/search/query"]["users"],
-          categories: searchFixtures["/search/query"]["categories"],
-          groups: searchFixtures["/search/query"]["groups"],
+          users: searchFixtures["search/query"]["users"],
+          categories: searchFixtures["search/query"]["categories"],
+          groups: searchFixtures["search/query"]["groups"],
           grouped_search_result:
-            searchFixtures["/search/query"]["grouped_search_result"],
+            searchFixtures["search/query"]["grouped_search_result"],
         });
       }
-      return response(searchFixtures["/search/query"]);
+      return response(searchFixtures["search/query"]);
     });
 
     await render(
