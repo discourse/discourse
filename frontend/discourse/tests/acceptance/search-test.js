@@ -28,14 +28,14 @@ acceptance("Search - Anonymous", function (needs) {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
         // posts/topics are not present in the payload by default
         return helper.response({
-          users: searchFixtures["search/query"]["users"],
-          categories: searchFixtures["search/query"]["categories"],
-          groups: searchFixtures["search/query"]["groups"],
+          users: searchFixtures["/search/query"]["users"],
+          categories: searchFixtures["/search/query"]["categories"],
+          groups: searchFixtures["/search/query"]["groups"],
           grouped_search_result:
-            searchFixtures["search/query"]["grouped_search_result"],
+            searchFixtures["/search/query"]["grouped_search_result"],
         });
       }
-      return helper.response(searchFixtures["search/query"]);
+      return helper.response(searchFixtures["/search/query"]);
     });
 
     server.get("/u/search/users", () => {
@@ -414,11 +414,11 @@ acceptance("Search - Authenticated", function (needs) {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
         // posts/topics are not present in the payload by default
         return helper.response({
-          users: searchFixtures["search/query"]["users"],
-          categories: searchFixtures["search/query"]["categories"],
-          groups: searchFixtures["search/query"]["groups"],
+          users: searchFixtures["/search/query"]["users"],
+          categories: searchFixtures["/search/query"]["categories"],
+          groups: searchFixtures["/search/query"]["groups"],
           grouped_search_result:
-            searchFixtures["search/query"]["grouped_search_result"],
+            searchFixtures["/search/query"]["grouped_search_result"],
         });
       } else if (request.queryParams.term.includes("empty")) {
         return helper.response({
@@ -445,7 +445,7 @@ acceptance("Search - Authenticated", function (needs) {
           },
         });
       } else {
-        return helper.response(searchFixtures["search/query"]);
+        return helper.response(searchFixtures["/search/query"]);
       }
     });
 
@@ -454,7 +454,7 @@ acceptance("Search - Authenticated", function (needs) {
         "inline-oneboxes": [
           {
             url: "http://www.something.com",
-            title: searchFixtures["search/query"].topics[0].title,
+            title: searchFixtures["/search/query"].topics[0].title,
           },
         ],
       })
@@ -623,7 +623,7 @@ acceptance("Search - Authenticated", function (needs) {
     assert
       .dom(".d-editor-input")
       .includesValue(
-        searchFixtures["search/query"].topics[0].slug,
+        searchFixtures["/search/query"].topics[0].slug,
         "adds link from search to composer"
       );
   });
@@ -797,14 +797,14 @@ acceptance("Search - with tagging enabled", function (needs) {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
         // posts/topics are not present in the payload by default
         return helper.response({
-          users: searchFixtures["search/query"]["users"],
-          categories: searchFixtures["search/query"]["categories"],
-          groups: searchFixtures["search/query"]["groups"],
+          users: searchFixtures["/search/query"]["users"],
+          categories: searchFixtures["/search/query"]["categories"],
+          groups: searchFixtures["/search/query"]["groups"],
           grouped_search_result:
-            searchFixtures["search/query"]["grouped_search_result"],
+            searchFixtures["/search/query"]["grouped_search_result"],
         });
       }
-      return helper.response(searchFixtures["search/query"]);
+      return helper.response(searchFixtures["/search/query"]);
     });
 
     server.get("/tag/dev/notifications", () => {
@@ -1116,7 +1116,7 @@ acceptance("Search - assistant", function (needs) {
           },
         });
       }
-      return helper.response(searchFixtures["search/query"]);
+      return helper.response(searchFixtures["/search/query"]);
     });
 
     server.get("/u/search/users", () => {
