@@ -4,12 +4,11 @@ import { helper } from "@ember/component/helper";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { cancel } from "@ember/runloop";
+import { cancel, throttle } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import debounce from "discourse/lib/debounce";
 import discourseLater from "discourse/lib/later";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -21,107 +20,88 @@ const getAspectRatio = helper(([width, height]) => {
   return htmlSafe(`aspect-ratio: ${w} / ${h}`);
 });
 
-const DEBOUNCE_MS = 50;
-const HYSTERESIS_FACTOR = 0.7;
-const SCROLLEND_FALLBACK_MS = 1000;
+const FALLBACK_TIMEOUT_MS = 1000;
+const KEYBOARD_THROTTLE_MS = 150;
 const MAX_DOTS = 10;
 
 export default class ImageCarousel extends Component {
   @tracked currentIndex = 0;
-  trackDirection = null;
-  slides = [];
 
   registerSlide = modifier((element, [index]) => {
-    this.slides[index] = element;
+    this.#slides.set(index, element);
     return () => {
-      this.slides[index] = null;
+      this.#slides.delete(index);
     };
   });
 
   setupTrack = modifier((element) => {
-    this.trackDirection =
+    this.#trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
-    const ratios = new Map();
 
     const onScrollEnd = () => {
-      if (this.#scrollEndFallbackTimer) {
-        cancel(this.#scrollEndFallbackTimer);
+      if (this.#isNavigating) {
+        this.#endNavigation();
+      } else {
+        const nearestIndex = this.#calculateNearestIndex(element);
+        if (nearestIndex !== this.currentIndex) {
+          this.currentIndex = nearestIndex;
+          this.#snapToSlide(nearestIndex);
+        }
       }
-      this.#activeScrollGeneration = 0;
     };
 
     element.addEventListener("scrollend", onScrollEnd);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (this.#activeScrollGeneration > 0) {
-          return;
-        }
-
-        entries.forEach((entry) => {
-          ratios.set(entry.target, entry.intersectionRatio);
-        });
-
-        const currentScroll = element.scrollLeft;
-        const maxScroll = element.scrollWidth - element.clientWidth;
-
-        let bestIndex = this.currentIndex;
-        let minDiff = Infinity;
-
-        this.slides.forEach((slide, index) => {
-          const ratio = ratios.get(slide) || 0;
-          if (ratio > 0) {
-            const idealScroll =
-              slide.offsetLeft +
-              slide.offsetWidth / 2 -
-              element.clientWidth / 2;
-            const clampedTarget = Math.max(0, Math.min(idealScroll, maxScroll));
-            let diff = Math.abs(clampedTarget - currentScroll);
-
-            if (index !== this.currentIndex) {
-              diff = diff / HYSTERESIS_FACTOR;
-            }
-
-            if (diff < minDiff) {
-              minDiff = diff;
-              bestIndex = index;
-            }
-          }
-        });
-
-        this.#debounceTimer = debounce(
-          this,
-          this.updateActiveIndex,
-          bestIndex,
-          DEBOUNCE_MS
-        );
-      },
-      {
-        root: element,
-        threshold: [0, 0.25, 0.5, 0.75, 1],
-      }
-    );
-
-    this.slides.forEach((slide) => observer.observe(slide));
-
     return () => {
-      observer.disconnect();
       element.removeEventListener("scrollend", onScrollEnd);
-      cancel(this.#debounceTimer);
-      cancel(this.#scrollEndFallbackTimer);
+      cancel(this.#fallbackTimer);
     };
   });
 
-  #scrollGeneration = 0;
-  #activeScrollGeneration = 0;
-  #debounceTimer = null;
-  #scrollEndFallbackTimer = null;
+  #isNavigating = false;
+  #fallbackTimer = null;
+  #trackDirection = 1;
+  #slides = new Map();
 
-  @action
-  updateActiveIndex(index) {
-    if (this.currentIndex !== index && this.#activeScrollGeneration === 0) {
-      this.currentIndex = index;
+  #calculateNearestIndex(track) {
+    if (!track) {
+      return this.currentIndex;
     }
+
+    const trackCenter = track.scrollLeft + track.clientWidth / 2;
+    let bestIndex = 0;
+    let minDistance = Infinity;
+
+    this.#slides.forEach((slide, index) => {
+      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+      const distance = Math.abs(slideCenter - trackCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        bestIndex = index;
+      }
+    });
+
+    return bestIndex;
+  }
+
+  #snapToSlide(index) {
+    this.#slides.get(index)?.scrollIntoView({
+      behavior: this.#scrollBehavior,
+      block: "nearest",
+      inline: "center",
+    });
+  }
+
+  #endNavigation() {
+    this.#isNavigating = false;
+    cancel(this.#fallbackTimer);
+    this.#fallbackTimer = null;
+  }
+
+  get #scrollBehavior() {
+    return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
+      ? "auto"
+      : "smooth";
   }
 
   get items() {
@@ -130,12 +110,6 @@ export default class ImageCarousel extends Component {
 
   get isSingle() {
     return this.items.length < 2;
-  }
-
-  get scrollBehavior() {
-    return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
-      ? "auto"
-      : "smooth";
   }
 
   get prevIndex() {
@@ -161,31 +135,39 @@ export default class ImageCarousel extends Component {
   @action
   scrollToIndex(index) {
     const clamped = Math.max(0, Math.min(index, this.items.length - 1));
-    const slide = this.slides[clamped];
-    if (slide) {
-      if (this.#debounceTimer) {
-        cancel(this.#debounceTimer);
-        this.#debounceTimer = null;
-      }
+    const slide = this.#slides.get(clamped);
 
-      this.#scrollGeneration++;
-      const thisGeneration = this.#scrollGeneration;
-      this.#activeScrollGeneration = thisGeneration;
-      this.currentIndex = clamped;
-
-      cancel(this.#scrollEndFallbackTimer);
-      this.#scrollEndFallbackTimer = discourseLater(() => {
-        if (this.#activeScrollGeneration === thisGeneration) {
-          this.#activeScrollGeneration = 0;
-        }
-      }, SCROLLEND_FALLBACK_MS);
-
-      slide.scrollIntoView({
-        behavior: this.scrollBehavior,
-        block: "nearest",
-        inline: "center",
-      });
+    if (!slide) {
+      return;
     }
+
+    this.#isNavigating = true;
+    this.currentIndex = clamped;
+
+    cancel(this.#fallbackTimer);
+    this.#fallbackTimer = discourseLater(() => {
+      if (this.#isNavigating) {
+        this.#endNavigation();
+      }
+    }, FALLBACK_TIMEOUT_MS);
+
+    slide.scrollIntoView({
+      behavior: this.#scrollBehavior,
+      block: "nearest",
+      inline: "center",
+    });
+  }
+
+  #navigateByKey(direction) {
+    const index =
+      direction === "left"
+        ? this.#trackDirection === 1
+          ? this.prevIndex
+          : this.nextIndex
+        : this.#trackDirection === 1
+          ? this.nextIndex
+          : this.prevIndex;
+    this.scrollToIndex(index);
   }
 
   @action
@@ -194,15 +176,10 @@ export default class ImageCarousel extends Component {
       return;
     }
 
-    if (event.key === "ArrowLeft") {
-      this.scrollToIndex(
-        this.trackDirection === 1 ? this.prevIndex : this.nextIndex
-      );
-    } else {
-      this.scrollToIndex(
-        this.trackDirection === 1 ? this.nextIndex : this.prevIndex
-      );
-    }
+    event.preventDefault();
+
+    const direction = event.key === "ArrowLeft" ? "left" : "right";
+    throttle(this, this.#navigateByKey, direction, KEYBOARD_THROTTLE_MS);
   }
 
   <template>
