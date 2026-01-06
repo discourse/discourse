@@ -15,8 +15,8 @@ import { i18n } from "discourse-i18n";
 
 const plusOne = helper(([val]) => val + 1);
 const getAspectRatio = helper(([width, height]) => {
-  const w = Math.max(1, Math.abs(parseInt(width, 10)) || 1);
-  const h = Math.max(1, Math.abs(parseInt(height, 10)) || 1);
+  const w = parseInt(width, 10) || 1;
+  const h = parseInt(height, 10) || 1;
   return htmlSafe(`aspect-ratio: ${w} / ${h}`);
 });
 
