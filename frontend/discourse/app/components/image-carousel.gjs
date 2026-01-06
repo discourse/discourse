@@ -42,11 +42,7 @@ export default class ImageCarousel extends Component {
       if (this.#isNavigating) {
         this.#endNavigation();
       } else {
-        const nearestIndex = this.#calculateNearestIndex(element);
-        if (nearestIndex !== this.currentIndex) {
-          this.currentIndex = nearestIndex;
-          this.#snapToSlide(nearestIndex);
-        }
+        this.currentIndex = this.#calculateNearestIndex(element);
       }
     };
 
@@ -82,14 +78,6 @@ export default class ImageCarousel extends Component {
     });
 
     return bestIndex;
-  }
-
-  #snapToSlide(index) {
-    this.#slides.get(index)?.scrollIntoView({
-      behavior: this.#scrollBehavior,
-      block: "nearest",
-      inline: "center",
-    });
   }
 
   #endNavigation() {
