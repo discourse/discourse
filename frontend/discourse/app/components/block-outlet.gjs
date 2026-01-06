@@ -39,6 +39,10 @@ import {
   warnUnknownOutletPatterns,
 } from "discourse/lib/blocks/outlet-matcher";
 import {
+  parseBlockName,
+  VALID_NAMESPACED_BLOCK_PATTERN,
+} from "discourse/lib/blocks/patterns";
+import {
   blockRegistry,
   isBlockFactory,
   resolveBlock,
@@ -202,6 +206,22 @@ export function block(name, options = {}) {
   // === Decoration-time validation ===
   // All validation happens here (not at render time) for fail-fast behavior.
 
+  // Validate block name format (supports namespaced names)
+  if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {
+    raiseBlockError(
+      `Block name "${name}" is invalid. ` +
+        `Valid formats: "block-name" (core), "plugin:block-name" (plugin), ` +
+        `"theme:namespace:block-name" (theme).`
+    );
+  }
+
+  // Parse name to extract components (type, namespace, shortName)
+  const parsed = parseBlockName(name);
+  if (!parsed) {
+    // This shouldn't happen if VALID_NAMESPACED_BLOCK_PATTERN passed, but be defensive
+    raiseBlockError(`Block name "${name}" could not be parsed.`);
+  }
+
   // Validate arg schema structure and types
   validateArgsSchema(argsSchema, name);
 
@@ -234,7 +254,18 @@ export function block(name, options = {}) {
     }
 
     return class extends target {
+      /** Full namespaced block name (e.g., "theme:tactile:hero-banner") */
       static blockName = name;
+
+      /** Short block name without namespace (e.g., "hero-banner") */
+      static blockShortName = parsed.name;
+
+      /** Namespace portion of the name, or null for core blocks */
+      static blockNamespace = parsed.namespace;
+
+      /** Block type: "core", "plugin", or "theme" */
+      static blockType = parsed.type;
+
       /**
        * Block metadata including description, container status, args schema,
        * and outlet restrictions. Used for introspection, documentation, and

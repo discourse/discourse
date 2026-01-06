@@ -100,10 +100,6 @@ module("Unit | Lib | blocks/registration", function (hooks) {
     });
   });
 
-  // ========================================================================
-  // Dynamic Block Names (Feature 2)
-  // ========================================================================
-
   module("_registerBlockFactory", function () {
     test("registers a factory function", function (assert) {
       const factory = async () => {
@@ -121,7 +117,7 @@ module("Unit | Lib | blocks/registration", function (hooks) {
     test("throws for invalid name format", function (assert) {
       assert.throws(
         () => _registerBlockFactory("Invalid_Name", async () => ({})),
-        /is invalid.*lowercase/
+        /is invalid.*Valid formats/
       );
     });
 
@@ -330,6 +326,77 @@ module("Unit | Lib | blocks/registration", function (hooks) {
         resolveBlock(null),
         /Invalid block reference.*expected string name or @block-decorated class/
       );
+    });
+  });
+
+  module("namespaced blocks", function () {
+    test("registers core block (no namespace)", function (assert) {
+      @block("core-block")
+      class CoreBlock extends Component {}
+
+      _registerBlock(CoreBlock);
+
+      assert.true(blockRegistry.has("core-block"));
+      assert.strictEqual(CoreBlock.blockName, "core-block");
+      assert.strictEqual(CoreBlock.blockShortName, "core-block");
+      assert.strictEqual(CoreBlock.blockNamespace, null);
+      assert.strictEqual(CoreBlock.blockType, "core");
+    });
+
+    test("registers plugin block (namespace:name)", function (assert) {
+      @block("chat:message-widget")
+      class MessageWidget extends Component {}
+
+      _registerBlock(MessageWidget);
+
+      assert.true(blockRegistry.has("chat:message-widget"));
+      assert.strictEqual(MessageWidget.blockName, "chat:message-widget");
+      assert.strictEqual(MessageWidget.blockShortName, "message-widget");
+      assert.strictEqual(MessageWidget.blockNamespace, "chat");
+      assert.strictEqual(MessageWidget.blockType, "plugin");
+    });
+
+    test("registers theme block (theme:namespace:name)", function (assert) {
+      @block("theme:tactile:hero-banner")
+      class HeroBanner extends Component {}
+
+      _registerBlock(HeroBanner);
+
+      assert.true(blockRegistry.has("theme:tactile:hero-banner"));
+      assert.strictEqual(HeroBanner.blockName, "theme:tactile:hero-banner");
+      assert.strictEqual(HeroBanner.blockShortName, "hero-banner");
+      assert.strictEqual(HeroBanner.blockNamespace, "tactile");
+      assert.strictEqual(HeroBanner.blockType, "theme");
+    });
+
+    test("registers factory with namespaced name", function (assert) {
+      _registerBlockFactory("chat:lazy-widget", async () => {
+        @block("chat:lazy-widget")
+        class LazyWidget extends Component {}
+        return LazyWidget;
+      });
+
+      assert.true(blockRegistry.has("chat:lazy-widget"));
+    });
+
+    test("resolves factory with namespaced name", async function (assert) {
+      @block("theme:test:lazy-block")
+      class LazyBlock extends Component {}
+
+      _registerBlockFactory("theme:test:lazy-block", async () => LazyBlock);
+
+      const resolved = await resolveBlock("theme:test:lazy-block");
+      assert.strictEqual(resolved, LazyBlock);
+      assert.strictEqual(resolved.blockType, "theme");
+    });
+
+    test("throws for invalid namespaced format", function (assert) {
+      // theme: requires namespace segment
+      assert.throws(() => {
+        @block("theme:invalid")
+        class InvalidTheme extends Component {}
+        _registerBlock(InvalidTheme);
+      }, /is invalid.*Valid formats/);
     });
   });
 });

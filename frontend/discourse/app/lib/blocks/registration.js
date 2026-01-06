@@ -1,6 +1,11 @@
 import { DEBUG } from "@glimmer/env";
 import { raiseBlockError } from "discourse/lib/blocks/error";
-import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
+import {
+  parseBlockName,
+  VALID_BLOCK_NAME_PATTERN,
+  VALID_NAMESPACED_BLOCK_PATTERN,
+} from "discourse/lib/blocks/patterns";
+import identifySource from "discourse/lib/source-identifier";
 
 // Re-export for backwards compatibility
 export { VALID_BLOCK_NAME_PATTERN };
@@ -40,10 +45,66 @@ export const blockRegistry = new Map();
 const resolvedFactoryCache = new Map();
 
 /**
+ * Tracks which namespace each source (theme/plugin) has used.
+ * Enforces that each source can only register blocks with a single namespace.
+ *
+ * Key: source identifier (e.g., "theme:Tactile Theme" or "plugin:chat")
+ * Value: the namespace prefix used (e.g., "theme:tactile" or "chat")
+ *
+ * @type {Map<string, string|null>}
+ */
+const sourceNamespaceMap = new Map();
+
+/**
  * Whether the block registry is locked (no new registrations allowed).
  * Gets locked when the first renderBlocks() config is registered.
  */
 let registryLocked = false;
+
+/**
+ * Gets a unique identifier for the current source from the call stack.
+ * Returns null for core code (no theme or plugin detected).
+ *
+ * @returns {string|null} Source identifier like "theme:Tactile" or "plugin:chat"
+ */
+function getSourceIdentifier() {
+  const source = identifySource();
+  if (!source) {
+    return null;
+  }
+  if (source.type === "theme") {
+    return `theme:${source.name}`;
+  }
+  if (source.type === "plugin") {
+    return `plugin:${source.name}`;
+  }
+  return null;
+}
+
+/**
+ * Extracts the namespace prefix from a block name.
+ *
+ * @param {string} blockName - The full block name.
+ * @returns {string|null} The namespace prefix, or null for core blocks.
+ *
+ * @example
+ * getNamespacePrefix("theme:tactile:banner") // => "theme:tactile"
+ * getNamespacePrefix("chat:widget")          // => "chat"
+ * getNamespacePrefix("group")                // => null (core)
+ */
+function getNamespacePrefix(blockName) {
+  const parsed = parseBlockName(blockName);
+  if (!parsed) {
+    return null;
+  }
+  if (parsed.type === "theme") {
+    return `theme:${parsed.namespace}`;
+  }
+  if (parsed.type === "plugin") {
+    return parsed.namespace;
+  }
+  return null; // core
+}
 
 /**
  * Locks the registry, preventing further registrations.
@@ -106,21 +167,44 @@ export function _registerBlock(BlockClass) {
     return;
   }
 
-  // Validate block name format
-  if (!VALID_BLOCK_NAME_PATTERN.test(BlockClass.blockName)) {
+  const blockName = BlockClass.blockName;
+
+  // Validate full namespaced block name format
+  if (!VALID_NAMESPACED_BLOCK_PATTERN.test(blockName)) {
     raiseBlockError(
-      `Block name "${BlockClass.blockName}" is invalid. ` +
-        `Block names must start with a letter and contain only lowercase letters, numbers, and hyphens.`
+      `Block name "${blockName}" is invalid. ` +
+        `Valid formats: "block-name" (core), "plugin:block-name" (plugin), ` +
+        `"theme:namespace:block-name" (theme).`
     );
     return;
   }
 
-  if (blockRegistry.has(BlockClass.blockName)) {
-    raiseBlockError(`Block "${BlockClass.blockName}" is already registered.`);
+  // Enforce single namespace per source (theme/plugin)
+  const sourceId = getSourceIdentifier();
+  const namespacePrefix = getNamespacePrefix(blockName);
+
+  if (sourceId) {
+    const existingNamespace = sourceNamespaceMap.get(sourceId);
+    if (
+      existingNamespace !== undefined &&
+      existingNamespace !== namespacePrefix
+    ) {
+      raiseBlockError(
+        `Block "${blockName}" uses namespace "${namespacePrefix ?? "(core)"}" but ` +
+          `${sourceId} already registered blocks with namespace "${existingNamespace ?? "(core)"}". ` +
+          `Each theme/plugin must use a single consistent namespace.`
+      );
+      return;
+    }
+    sourceNamespaceMap.set(sourceId, namespacePrefix);
+  }
+
+  if (blockRegistry.has(blockName)) {
+    raiseBlockError(`Block "${blockName}" is already registered.`);
     return;
   }
 
-  blockRegistry.set(BlockClass.blockName, BlockClass);
+  blockRegistry.set(blockName, BlockClass);
 }
 
 /**
@@ -164,10 +248,12 @@ export function _registerBlockFactory(name, factory) {
     return;
   }
 
-  if (!VALID_BLOCK_NAME_PATTERN.test(name)) {
+  // Validate full namespaced block name format
+  if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {
     raiseBlockError(
       `Block name "${name}" is invalid. ` +
-        `Block names must start with a letter and contain only lowercase letters, numbers, and hyphens.`
+        `Valid formats: "block-name" (core), "plugin:block-name" (plugin), ` +
+        `"theme:namespace:block-name" (theme).`
     );
     return;
   }
@@ -177,6 +263,26 @@ export function _registerBlockFactory(name, factory) {
       `Block factory for "${name}" must be a function that returns a Promise<BlockClass>.`
     );
     return;
+  }
+
+  // Enforce single namespace per source (theme/plugin)
+  const sourceId = getSourceIdentifier();
+  const namespacePrefix = getNamespacePrefix(name);
+
+  if (sourceId) {
+    const existingNamespace = sourceNamespaceMap.get(sourceId);
+    if (
+      existingNamespace !== undefined &&
+      existingNamespace !== namespacePrefix
+    ) {
+      raiseBlockError(
+        `Block "${name}" uses namespace "${namespacePrefix ?? "(core)"}" but ` +
+          `${sourceId} already registered blocks with namespace "${existingNamespace ?? "(core)"}". ` +
+          `Each theme/plugin must use a single consistent namespace.`
+      );
+      return;
+    }
+    sourceNamespaceMap.set(sourceId, namespacePrefix);
   }
 
   if (blockRegistry.has(name)) {
@@ -349,6 +455,7 @@ export function resetBlockRegistryForTesting() {
 
   blockRegistry.clear();
   resolvedFactoryCache.clear();
+  sourceNamespaceMap.clear();
 
   if (testRegistryLockedState !== null) {
     registryLocked = testRegistryLockedState;
