@@ -318,8 +318,10 @@ class ReviewableFlaggedPost < Reviewable
   def unassign_topic(performed_by, post)
     topic = post.topic
     return unless topic && performed_by && SiteSetting.reviewable_claiming != "disabled"
-    ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
-    topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
+    deleted_count = ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
+    if deleted_count > 0
+      topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
+    end
 
     user_ids = User.staff.pluck(:id)
 
