@@ -1,7 +1,11 @@
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 import * as conditions from "discourse/blocks/conditions";
-import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
+import {
+  getCombinatorLogCallback,
+  getConditionLogCallback,
+  getLoggerInterface,
+} from "discourse/lib/blocks/debug-hooks";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import {
   blockRegistry,
@@ -341,6 +345,12 @@ export default class Blocks extends Service {
     const isLoggingEnabled = context.debug ?? false;
     const depth = context._depth ?? 0;
 
+    // Get logging callbacks (null if dev tools not loaded or logging disabled)
+    const conditionLog = isLoggingEnabled ? getConditionLogCallback() : null;
+    const combinatorLog = isLoggingEnabled ? getCombinatorLogCallback() : null;
+    // Get logger interface for conditions (e.g., route condition needs to log params)
+    const logger = isLoggingEnabled ? getLoggerInterface() : null;
+
     if (!conditionSpec) {
       return true;
     }
@@ -353,14 +363,12 @@ export default class Blocks extends Service {
       }
 
       // Log combinator BEFORE children (result=null as placeholder)
-      if (isLoggingEnabled) {
-        blockDebugLogger.logCondition({
-          type: "AND",
-          args: `${conditionSpec.length} conditions`,
-          result: null,
-          depth,
-        });
-      }
+      conditionLog?.({
+        type: "AND",
+        args: `${conditionSpec.length} conditions`,
+        result: null,
+        depth,
+      });
 
       let andResult = true;
       for (const condition of conditionSpec) {
@@ -379,9 +387,7 @@ export default class Blocks extends Service {
       }
 
       // Update combinator with actual result
-      if (isLoggingEnabled) {
-        blockDebugLogger.updateCombinatorResult(andResult, depth);
-      }
+      combinatorLog?.({ type: "AND", result: andResult, depth });
       return andResult;
     }
 
@@ -393,14 +399,12 @@ export default class Blocks extends Service {
       }
 
       // Log combinator BEFORE children (result=null as placeholder)
-      if (isLoggingEnabled) {
-        blockDebugLogger.logCondition({
-          type: "OR",
-          args: `${conditionSpec.any.length} conditions`,
-          result: null,
-          depth,
-        });
-      }
+      conditionLog?.({
+        type: "OR",
+        args: `${conditionSpec.any.length} conditions`,
+        result: null,
+        depth,
+      });
 
       let orResult = false;
       for (const condition of conditionSpec.any) {
@@ -419,23 +423,19 @@ export default class Blocks extends Service {
       }
 
       // Update combinator with actual result
-      if (isLoggingEnabled) {
-        blockDebugLogger.updateCombinatorResult(orResult, depth);
-      }
+      combinatorLog?.({ type: "OR", result: orResult, depth });
       return orResult;
     }
 
     // NOT combinator (must fail)
     if (conditionSpec.not !== undefined) {
       // Log combinator BEFORE children (result=null as placeholder)
-      if (isLoggingEnabled) {
-        blockDebugLogger.logCondition({
-          type: "NOT",
-          args: null,
-          result: null,
-          depth,
-        });
-      }
+      conditionLog?.({
+        type: "NOT",
+        args: null,
+        result: null,
+        depth,
+      });
 
       const innerResult = this.evaluate(conditionSpec.not, {
         debug: isLoggingEnabled,
@@ -444,9 +444,7 @@ export default class Blocks extends Service {
       const notResult = !innerResult;
 
       // Update combinator with actual result
-      if (isLoggingEnabled) {
-        blockDebugLogger.updateCombinatorResult(notResult, depth);
-      }
+      combinatorLog?.({ type: "NOT", result: notResult, depth });
       return notResult;
     }
 
@@ -455,14 +453,12 @@ export default class Blocks extends Service {
     const conditionInstance = this.#conditionTypes.get(type);
 
     if (!conditionInstance) {
-      if (isLoggingEnabled) {
-        blockDebugLogger.logCondition({
-          type: `unknown "${type}"`,
-          args,
-          result: false,
-          depth,
-        });
-      }
+      conditionLog?.({
+        type: `unknown "${type}"`,
+        args,
+        result: false,
+        depth,
+      });
       return false;
     }
 
@@ -476,28 +472,25 @@ export default class Blocks extends Service {
     }
 
     // Log condition BEFORE evaluate so nested logs appear underneath
-    if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({
-        type,
-        args,
-        result: null,
-        depth,
-        resolvedValue,
-      });
-    }
+    conditionLog?.({
+      type,
+      args,
+      result: null,
+      depth,
+      resolvedValue,
+    });
 
     // Pass context to evaluate so conditions can access outletArgs and log nested items
     const evalContext = {
       debug: isLoggingEnabled,
       _depth: depth,
       outletArgs: context.outletArgs,
+      logger,
     };
     const result = conditionInstance.evaluate(args, evalContext);
 
     // Update the condition's result after evaluate
-    if (isLoggingEnabled) {
-      blockDebugLogger.updateConditionResult(type, result, depth);
-    }
+    combinatorLog?.({ type, result, depth, isCondition: true });
     return result;
   }
 

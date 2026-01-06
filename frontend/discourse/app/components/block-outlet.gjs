@@ -27,11 +27,13 @@ import { validateArgsSchema } from "discourse/lib/blocks/arg-validation";
 import { validateConfig } from "discourse/lib/blocks/config-validation";
 import {
   getBlockDebugCallback,
+  getEndGroupCallback,
+  getOptionalMissingLogCallback,
   getOutletInfoComponent,
+  getStartGroupCallback,
   isBlockLoggingEnabled,
   isOutletBoundaryEnabled,
 } from "discourse/lib/blocks/debug-hooks";
-import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import {
   detectPatternConflicts,
@@ -391,7 +393,7 @@ export function block(name, options = {}) {
 
             // Log if debug logging is enabled
             if (isLoggingEnabled) {
-              blockDebugLogger.logOptionalMissing(
+              getOptionalMissingLogCallback()?.(
                 missingBlockName,
                 baseHierarchy
               );
@@ -440,7 +442,7 @@ export function block(name, options = {}) {
           // Evaluate conditions if present
           if (blockConfig.conditions) {
             if (isLoggingEnabled) {
-              blockDebugLogger.startGroup(blockName, baseHierarchy);
+              getStartGroupCallback()?.(blockName, baseHierarchy);
             }
 
             conditionsPassed = blocksService.evaluate(blockConfig.conditions, {
@@ -449,7 +451,7 @@ export function block(name, options = {}) {
             });
 
             if (isLoggingEnabled) {
-              blockDebugLogger.endGroup(conditionsPassed);
+              getEndGroupCallback()?.(conditionsPassed);
             }
           }
 

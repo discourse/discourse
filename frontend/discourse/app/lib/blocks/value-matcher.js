@@ -1,5 +1,3 @@
-import { blockDebugLogger } from "./debug-logger";
-
 /**
  * Evaluates a value matcher spec against an actual value.
  * Supports the same AND/OR/NOT logic as condition evaluation.
@@ -136,6 +134,7 @@ export function isTypeMismatch(actual, expected) {
  * @param {Object} [options.context] - Debug context.
  * @param {boolean} [options.context.debug] - Enable debug logging.
  * @param {number} [options.context._depth] - Nesting depth for logging.
+ * @param {Object} [options.context.logger] - Logger interface from dev-tools (optional).
  * @param {string} [options.label] - Label for debug output (e.g., "params", "queryParams").
  * @returns {boolean} True if params match.
  */
@@ -147,6 +146,7 @@ export function matchParams({
 }) {
   const isLoggingEnabled = context.debug ?? false;
   const depth = context._depth ?? 0;
+  const logger = context.logger;
 
   if (!expectedParams) {
     return true; // No expected params, always pass
@@ -155,29 +155,25 @@ export function matchParams({
   // Array of param specs = AND logic (all must match)
   if (Array.isArray(expectedParams)) {
     // Log combinator BEFORE children so it appears first in tree
-    if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({
-        type: "AND",
-        args: `${expectedParams.length} ${label} specs`,
-        result: null,
-        depth,
-      });
-    }
+    logger?.logCondition?.({
+      type: "AND",
+      args: `${expectedParams.length} ${label} specs`,
+      result: null,
+      depth,
+    });
 
     const results = expectedParams.map((spec, i) =>
       matchParams({
         actualParams,
         expectedParams: spec,
-        context: { debug: isLoggingEnabled, _depth: depth + 1 },
+        context: { debug: isLoggingEnabled, _depth: depth + 1, logger },
         label: `${label}[${i}]`,
       })
     );
     const allPassed = results.every(Boolean);
 
     // Update combinator result after children evaluated
-    if (isLoggingEnabled) {
-      blockDebugLogger.updateCombinatorResult(allPassed, depth);
-    }
+    logger?.updateCombinatorResult?.(allPassed, depth);
     return allPassed;
   }
 
@@ -186,56 +182,48 @@ export function matchParams({
     const specs = expectedParams.any;
 
     // Log combinator BEFORE children so it appears first in tree
-    if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({
-        type: "OR",
-        args: `${specs.length} ${label} specs`,
-        result: null,
-        depth,
-      });
-    }
+    logger?.logCondition?.({
+      type: "OR",
+      args: `${specs.length} ${label} specs`,
+      result: null,
+      depth,
+    });
 
     const results = specs.map((spec, i) =>
       matchParams({
         actualParams,
         expectedParams: spec,
-        context: { debug: isLoggingEnabled, _depth: depth + 1 },
+        context: { debug: isLoggingEnabled, _depth: depth + 1, logger },
         label: `${label}[${i}]`,
       })
     );
     const anyPassed = results.some(Boolean);
 
     // Update combinator result after children evaluated
-    if (isLoggingEnabled) {
-      blockDebugLogger.updateCombinatorResult(anyPassed, depth);
-    }
+    logger?.updateCombinatorResult?.(anyPassed, depth);
     return anyPassed;
   }
 
   // NOT logic: { not: {...} }
   if (expectedParams.not !== undefined) {
     // Log combinator BEFORE children so it appears first in tree
-    if (isLoggingEnabled) {
-      blockDebugLogger.logCondition({
-        type: "NOT",
-        args: null,
-        result: null,
-        depth,
-      });
-    }
+    logger?.logCondition?.({
+      type: "NOT",
+      args: null,
+      result: null,
+      depth,
+    });
 
     const innerResult = matchParams({
       actualParams,
       expectedParams: expectedParams.not,
-      context: { debug: isLoggingEnabled, _depth: depth + 1 },
+      context: { debug: isLoggingEnabled, _depth: depth + 1, logger },
       label,
     });
     const result = !innerResult;
 
     // Update combinator result after children evaluated
-    if (isLoggingEnabled) {
-      blockDebugLogger.updateCombinatorResult(result, depth);
-    }
+    logger?.updateCombinatorResult?.(result, depth);
     return result;
   }
 
@@ -261,14 +249,12 @@ export function matchParams({
   const allPassed = matches.every((m) => m.result);
 
   // Log as a nested group with all param matches
-  if (isLoggingEnabled) {
-    blockDebugLogger.logParamGroup({
-      label,
-      matches,
-      result: allPassed,
-      depth,
-    });
-  }
+  logger?.logParamGroup?.({
+    label,
+    matches,
+    result: allPassed,
+    depth,
+  });
 
   return allPassed;
 }

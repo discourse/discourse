@@ -43,6 +43,77 @@ let blockOutletBoundaryCallback = null;
  */
 let blockOutletInfoComponent = null;
 
+// ============================================================================
+// Logging Callbacks
+// ============================================================================
+// These callbacks enable moving the debug logger to the dev-tools bundle.
+// When dev tools are not loaded, these remain null and logging is a no-op.
+
+/**
+ * Callback for logging a condition evaluation.
+ * Receives: { type, args, result, depth, resolvedValue }
+ *
+ * @type {Function|null}
+ */
+let conditionLogCallback = null;
+
+/**
+ * Callback for updating a combinator's result after children evaluated.
+ * Receives: { result, depth }
+ *
+ * @type {Function|null}
+ */
+let combinatorLogCallback = null;
+
+/**
+ * Callback for logging param group matches.
+ * Receives: { label, matches, result, depth }
+ *
+ * @type {Function|null}
+ */
+let paramGroupLogCallback = null;
+
+/**
+ * Callback for logging current route state.
+ * Receives: { currentPath, expectedUrls, excludeUrls, actualParams, actualQueryParams, depth, result }
+ *
+ * @type {Function|null}
+ */
+let routeStateLogCallback = null;
+
+/**
+ * Callback for logging optional missing blocks.
+ * Receives: (blockName, hierarchy)
+ *
+ * @type {Function|null}
+ */
+let optionalMissingLogCallback = null;
+
+/**
+ * Callback for starting a logging group for a block.
+ * Receives: (blockName, hierarchy)
+ *
+ * @type {Function|null}
+ */
+let startGroupCallback = null;
+
+/**
+ * Callback for ending a logging group and flushing to console.
+ * Receives: (finalResult)
+ *
+ * @type {Function|null}
+ */
+let endGroupCallback = null;
+
+/**
+ * Callback that returns the logger interface for conditions.
+ * Returns an object with methods: logCondition, updateCombinatorResult,
+ * logParamGroup, logRouteState.
+ *
+ * @type {Function|null}
+ */
+let loggerInterfaceCallback = null;
+
 /**
  * Returns the current debug callback for block rendering.
  *
@@ -77,6 +148,84 @@ export function isOutletBoundaryEnabled() {
  */
 export function getOutletInfoComponent() {
   return blockOutletInfoComponent;
+}
+
+// ============================================================================
+// Logging Callback Getters
+// ============================================================================
+
+/**
+ * Returns the callback for logging condition evaluations, or null if not set.
+ *
+ * @returns {Function|null}
+ */
+export function getConditionLogCallback() {
+  return conditionLogCallback;
+}
+
+/**
+ * Returns the callback for updating combinator results, or null if not set.
+ *
+ * @returns {Function|null}
+ */
+export function getCombinatorLogCallback() {
+  return combinatorLogCallback;
+}
+
+/**
+ * Returns the callback for logging param group matches, or null if not set.
+ *
+ * @returns {Function|null}
+ */
+export function getParamGroupLogCallback() {
+  return paramGroupLogCallback;
+}
+
+/**
+ * Returns the callback for logging route state, or null if not set.
+ *
+ * @returns {Function|null}
+ */
+export function getRouteStateLogCallback() {
+  return routeStateLogCallback;
+}
+
+/**
+ * Returns the callback for logging optional missing blocks, or null if not set.
+ *
+ * @returns {Function|null}
+ */
+export function getOptionalMissingLogCallback() {
+  return optionalMissingLogCallback;
+}
+
+/**
+ * Returns the callback for starting a logging group, or null if not set.
+ *
+ * @returns {Function|null}
+ */
+export function getStartGroupCallback() {
+  return startGroupCallback;
+}
+
+/**
+ * Returns the callback for ending a logging group, or null if not set.
+ *
+ * @returns {Function|null}
+ */
+export function getEndGroupCallback() {
+  return endGroupCallback;
+}
+
+/**
+ * Returns the logger interface for conditions to use.
+ * The interface has methods: logCondition, updateCombinatorResult,
+ * logParamGroup, logRouteState.
+ *
+ * @returns {Object|null} The logger interface, or null if not available
+ */
+export function getLoggerInterface() {
+  return loggerInterfaceCallback?.() ?? null;
 }
 
 /**
@@ -117,4 +266,88 @@ export function _setBlockOutletBoundaryCallback(callback) {
  */
 export function _setBlockOutletInfoComponent(component) {
   blockOutletInfoComponent = component;
+}
+
+// ============================================================================
+// Logging Callback Setters
+// ============================================================================
+
+/**
+ * Sets the callback for logging condition evaluations.
+ * Called by dev-tools to register the logger.
+ *
+ * @param {Function} callback - Callback receiving { type, args, result, depth, resolvedValue }
+ */
+export function _setConditionLogCallback(callback) {
+  conditionLogCallback = callback;
+}
+
+/**
+ * Sets the callback for updating combinator results.
+ * Called by dev-tools to register the logger.
+ *
+ * @param {Function} callback - Callback receiving { result, depth }
+ */
+export function _setCombinatorLogCallback(callback) {
+  combinatorLogCallback = callback;
+}
+
+/**
+ * Sets the callback for logging param group matches.
+ * Called by dev-tools to register the logger.
+ *
+ * @param {Function} callback - Callback receiving { label, matches, result, depth }
+ */
+export function _setParamGroupLogCallback(callback) {
+  paramGroupLogCallback = callback;
+}
+
+/**
+ * Sets the callback for logging route state.
+ * Called by dev-tools to register the logger.
+ *
+ * @param {Function} callback - Callback receiving route state object
+ */
+export function _setRouteStateLogCallback(callback) {
+  routeStateLogCallback = callback;
+}
+
+/**
+ * Sets the callback for logging optional missing blocks.
+ * Called by dev-tools to register the logger.
+ *
+ * @param {Function} callback - Callback receiving (blockName, hierarchy)
+ */
+export function _setOptionalMissingLogCallback(callback) {
+  optionalMissingLogCallback = callback;
+}
+
+/**
+ * Sets the callback for starting a logging group.
+ * Called by dev-tools to register the logger.
+ *
+ * @param {Function} callback - Callback receiving (blockName, hierarchy)
+ */
+export function _setStartGroupCallback(callback) {
+  startGroupCallback = callback;
+}
+
+/**
+ * Sets the callback for ending a logging group.
+ * Called by dev-tools to register the logger.
+ *
+ * @param {Function} callback - Callback receiving (finalResult)
+ */
+export function _setEndGroupCallback(callback) {
+  endGroupCallback = callback;
+}
+
+/**
+ * Sets the callback for getting the logger interface.
+ * Called by dev-tools to provide the logger interface for conditions.
+ *
+ * @param {Function} callback - Callback returning the logger interface object
+ */
+export function _setLoggerInterfaceCallback(callback) {
+  loggerInterfaceCallback = callback;
 }

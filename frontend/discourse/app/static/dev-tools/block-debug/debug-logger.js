@@ -4,10 +4,13 @@
  * Provides grouped, hierarchical logging for condition evaluations.
  * Logs are grouped by block, showing condition trees with pass/fail status.
  *
- * @module discourse/lib/blocks/debug-logger
+ * This module lives in the dev-tools bundle and is only loaded when dev tools
+ * are enabled, reducing the main application bundle size.
+ *
+ * @module discourse/static/dev-tools/block-debug/debug-logger
  */
 
-import { isTypeMismatch } from "./value-matcher";
+import { isTypeMismatch } from "discourse/lib/blocks/value-matcher";
 
 // Console output styles
 const STYLES = {

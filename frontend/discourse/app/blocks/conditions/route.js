@@ -1,5 +1,4 @@
 import { service } from "@ember/service";
-import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
 import {
   getShortcutName,
   isShortcut,
@@ -146,9 +145,10 @@ export default class BlockRouteCondition extends BlockCondition {
     const currentPath = this.currentPath;
 
     // Debug context for nested logging
-    const isDebugging = context.debug ?? blockDebugLogger.hasActiveGroup();
+    const isDebugging = context.debug ?? false;
+    const logger = context.logger;
     const childDepth = (context._depth ?? 0) + 1;
-    const debugContext = { debug: isDebugging, _depth: childDepth };
+    const debugContext = { debug: isDebugging, _depth: childDepth, logger };
 
     // Get actual params for debugging output
     const actualParams = this.router.currentRoute?.params;
@@ -178,7 +178,7 @@ export default class BlockRouteCondition extends BlockCondition {
 
     // Log URL state when debugging (only when params/queryParams present)
     if (isDebugging && (params || queryParams)) {
-      blockDebugLogger.logRouteState({
+      logger?.logRouteState?.({
         currentPath,
         expectedUrls: urls,
         excludeUrls,
