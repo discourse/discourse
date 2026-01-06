@@ -63,12 +63,16 @@ function isSimpleValueArray(arr) {
 /**
  * Matches a simple value (exact, array of primitives, or regex).
  *
+ * Note: When `expected` is a RegExp, `actual` is converted to a string before
+ * testing. This means numeric values like `123` will match patterns like `/1/`
+ * (because 123 is converted to "123").
+ *
  * @param {*} actual - The actual value.
  * @param {*} expected - The expected value (primitive, array of primitives, or RegExp).
  * @returns {boolean} True if matches.
  */
 function matchSimpleValue(actual, expected) {
-  // RegExp pattern
+  // RegExp pattern - coerce actual to string for testing
   if (expected instanceof RegExp) {
     return expected.test(String(actual));
   }

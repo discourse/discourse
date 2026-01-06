@@ -412,6 +412,10 @@ export async function resolveBlock(nameOrClass) {
     raiseBlockError(
       `Failed to resolve block factory for "${name}": ${error.message}`
     );
+    // In production, raiseBlockError dispatches an event but doesn't throw.
+    // Return undefined explicitly for graceful degradation - callers can
+    // handle this by skipping rendering of the block.
+    return undefined;
   }
 }
 

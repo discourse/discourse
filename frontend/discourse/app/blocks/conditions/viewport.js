@@ -57,6 +57,18 @@ export default class BlockViewportCondition extends BlockCondition {
 
   @service capabilities;
 
+  /**
+   * Validates viewport condition arguments at block registration time.
+   *
+   * Checks that min/max breakpoints are valid values from the BREAKPOINTS array
+   * and that min is not larger than max when both are specified.
+   *
+   * @param {Object} args - The condition arguments.
+   * @param {string} [args.min] - Minimum breakpoint (viewport must be at least this size).
+   * @param {string} [args.max] - Maximum breakpoint (viewport must be at most this size).
+   * @param {boolean} [args.touch] - Whether to check for touch capability.
+   * @throws {BlockError} If validation fails.
+   */
   validate(args) {
     const { min, max } = args;
 

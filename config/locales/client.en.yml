@@ -360,6 +360,10 @@ en:
       drag_to_move: "Drag to move"
       toggle_plugin_outlet_debug: "Toggle plugin outlet debug"
       toggle_block_debug: "Toggle block debug"
+      block_debug:
+        console_logging: "Console logging"
+        visual_overlay: "Visual overlay"
+        outlet_boundaries: "Outlet boundaries"
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
       toggle_mobile_view: "Toggle mobile view"

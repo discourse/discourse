@@ -59,11 +59,19 @@ let conditionLogCallback = null;
 
 /**
  * Callback for updating a combinator's result after children evaluated.
- * Receives: { result, depth }
+ * Receives: { conditionSpec, result }
  *
  * @type {Function|null}
  */
 let combinatorLogCallback = null;
+
+/**
+ * Callback for updating a single condition's result after evaluation.
+ * Receives: { conditionSpec, result }
+ *
+ * @type {Function|null}
+ */
+let conditionResultCallback = null;
 
 /**
  * Callback for logging param group matches.
@@ -170,6 +178,15 @@ export function getConditionLogCallback() {
  */
 export function getCombinatorLogCallback() {
   return combinatorLogCallback;
+}
+
+/**
+ * Returns the callback for updating single condition results, or null if not set.
+ *
+ * @returns {Function|null}
+ */
+export function getConditionResultCallback() {
+  return conditionResultCallback;
 }
 
 /**
@@ -286,10 +303,20 @@ export function _setConditionLogCallback(callback) {
  * Sets the callback for updating combinator results.
  * Called by dev-tools to register the logger.
  *
- * @param {Function} callback - Callback receiving { result, depth }
+ * @param {Function} callback - Callback receiving { conditionSpec, result }
  */
 export function _setCombinatorLogCallback(callback) {
   combinatorLogCallback = callback;
+}
+
+/**
+ * Sets the callback for updating single condition results.
+ * Called by dev-tools to register the logger.
+ *
+ * @param {Function} callback - Callback receiving { conditionSpec, result }
+ */
+export function _setConditionResultCallback(callback) {
+  conditionResultCallback = callback;
 }
 
 /**

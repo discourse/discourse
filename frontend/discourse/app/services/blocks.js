@@ -4,6 +4,7 @@ import * as conditions from "discourse/blocks/conditions";
 import {
   getCombinatorLogCallback,
   getConditionLogCallback,
+  getConditionResultCallback,
   getLoggerInterface,
 } from "discourse/lib/blocks/debug-hooks";
 import { raiseBlockError } from "discourse/lib/blocks/error";
@@ -348,6 +349,9 @@ export default class Blocks extends Service {
     // Get logging callbacks (null if dev tools not loaded or logging disabled)
     const conditionLog = isLoggingEnabled ? getConditionLogCallback() : null;
     const combinatorLog = isLoggingEnabled ? getCombinatorLogCallback() : null;
+    const conditionResultLog = isLoggingEnabled
+      ? getConditionResultCallback()
+      : null;
     // Get logger interface for conditions (e.g., route condition needs to log params)
     const logger = isLoggingEnabled ? getLoggerInterface() : null;
 
@@ -368,6 +372,7 @@ export default class Blocks extends Service {
         args: `${conditionSpec.length} conditions`,
         result: null,
         depth,
+        conditionSpec,
       });
 
       let andResult = true;
@@ -387,7 +392,7 @@ export default class Blocks extends Service {
       }
 
       // Update combinator with actual result
-      combinatorLog?.({ type: "AND", result: andResult, depth });
+      combinatorLog?.({ conditionSpec, result: andResult });
       return andResult;
     }
 
@@ -404,6 +409,7 @@ export default class Blocks extends Service {
         args: `${conditionSpec.any.length} conditions`,
         result: null,
         depth,
+        conditionSpec,
       });
 
       let orResult = false;
@@ -423,7 +429,7 @@ export default class Blocks extends Service {
       }
 
       // Update combinator with actual result
-      combinatorLog?.({ type: "OR", result: orResult, depth });
+      combinatorLog?.({ conditionSpec, result: orResult });
       return orResult;
     }
 
@@ -435,16 +441,18 @@ export default class Blocks extends Service {
         args: null,
         result: null,
         depth,
+        conditionSpec,
       });
 
       const innerResult = this.evaluate(conditionSpec.not, {
         debug: isLoggingEnabled,
         _depth: depth + 1,
+        outletArgs: context.outletArgs,
       });
       const notResult = !innerResult;
 
       // Update combinator with actual result
-      combinatorLog?.({ type: "NOT", result: notResult, depth });
+      combinatorLog?.({ conditionSpec, result: notResult });
       return notResult;
     }
 
@@ -478,6 +486,7 @@ export default class Blocks extends Service {
       result: null,
       depth,
       resolvedValue,
+      conditionSpec,
     });
 
     // Pass context to evaluate so conditions can access outletArgs and log nested items
@@ -490,7 +499,7 @@ export default class Blocks extends Service {
     const result = conditionInstance.evaluate(args, evalContext);
 
     // Update the condition's result after evaluate
-    combinatorLog?.({ type, result, depth, isCondition: true });
+    conditionResultLog?.({ conditionSpec, result });
     return result;
   }
 

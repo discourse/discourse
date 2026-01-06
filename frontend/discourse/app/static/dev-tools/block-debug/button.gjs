@@ -84,7 +84,7 @@ export default class BlockDebugButton extends Component {
               checked={{devToolsState.blockDebug}}
               {{on "change" this.toggleConsoleLogging}}
             />
-            Console logging
+            {{i18n "dev_tools.block_debug.console_logging"}}
           </label>
           <label>
             <input
@@ -92,7 +92,7 @@ export default class BlockDebugButton extends Component {
               checked={{devToolsState.blockVisualOverlay}}
               {{on "change" this.toggleVisualOverlay}}
             />
-            Visual overlay
+            {{i18n "dev_tools.block_debug.visual_overlay"}}
           </label>
           <label>
             <input
@@ -100,7 +100,7 @@ export default class BlockDebugButton extends Component {
               checked={{devToolsState.blockOutletBoundaries}}
               {{on "change" this.toggleOutletBoundaries}}
             />
-            Outlet boundaries
+            {{i18n "dev_tools.block_debug.outlet_boundaries"}}
           </label>
         </div>
       </:content>

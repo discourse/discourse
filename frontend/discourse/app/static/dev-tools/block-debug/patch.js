@@ -6,6 +6,7 @@ import {
   _setBlockOutletInfoComponent,
   _setCombinatorLogCallback,
   _setConditionLogCallback,
+  _setConditionResultCallback,
   _setEndGroupCallback,
   _setLoggerInterfaceCallback,
   _setOptionalMissingLogCallback,
@@ -19,6 +20,23 @@ import BlockInfo from "./block-info";
 import { blockDebugLogger } from "./debug-logger";
 import GhostBlock from "./ghost-block";
 import OutletInfo from "./outlet-info";
+
+/**
+ * Creates a wrapper callback that only executes when block debug is enabled.
+ *
+ * This factory eliminates the repeated `if (devToolsState.blockDebug)` checks
+ * across all logging callbacks.
+ *
+ * @param {Function} fn - The callback function to wrap.
+ * @returns {Function} A wrapper that calls `fn` only when debug is enabled.
+ */
+function makeDebugCallback(fn) {
+  return (...args) => {
+    if (devToolsState.blockDebug) {
+      fn(...args);
+    }
+  };
+}
 
 /**
  * Patches the block system to inject debug overlay components.
@@ -93,66 +111,64 @@ export function patchBlockRendering() {
   _setBlockOutletInfoComponent(OutletInfo);
 
   // === Logging Callbacks ===
-  // These bridge the main bundle to the debug logger in dev-tools
+  // These bridge the main bundle to the debug logger in dev-tools.
+  // All use makeDebugCallback to centralize the devToolsState.blockDebug check.
 
-  // Callback for logging condition evaluations
-  _setConditionLogCallback((opts) => {
-    if (devToolsState.blockDebug) {
+  // Callback for logging condition evaluations (before result is known)
+  _setConditionLogCallback(
+    makeDebugCallback((opts) => {
       blockDebugLogger.logCondition(opts);
-    }
-  });
+    })
+  );
 
-  // Callback for updating combinator/condition results
-  _setCombinatorLogCallback((opts) => {
-    if (devToolsState.blockDebug) {
-      if (opts.isCondition) {
-        // Single condition result update
-        blockDebugLogger.updateConditionResult(
-          opts.type,
-          opts.result,
-          opts.depth
-        );
-      } else {
-        // Combinator (AND/OR/NOT) result update
-        blockDebugLogger.updateCombinatorResult(opts.result, opts.depth);
-      }
-    }
-  });
+  // Callback for updating combinator (AND/OR/NOT) results
+  _setCombinatorLogCallback(
+    makeDebugCallback((opts) => {
+      blockDebugLogger.updateCombinatorResult(opts.conditionSpec, opts.result);
+    })
+  );
+
+  // Callback for updating single condition results
+  _setConditionResultCallback(
+    makeDebugCallback((opts) => {
+      blockDebugLogger.updateConditionResult(opts.conditionSpec, opts.result);
+    })
+  );
 
   // Callback for logging param group matches
-  _setParamGroupLogCallback((opts) => {
-    if (devToolsState.blockDebug) {
+  _setParamGroupLogCallback(
+    makeDebugCallback((opts) => {
       blockDebugLogger.logParamGroup(opts);
-    }
-  });
+    })
+  );
 
   // Callback for logging route state
-  _setRouteStateLogCallback((opts) => {
-    if (devToolsState.blockDebug) {
+  _setRouteStateLogCallback(
+    makeDebugCallback((opts) => {
       blockDebugLogger.logRouteState(opts);
-    }
-  });
+    })
+  );
 
   // Callback for logging optional missing blocks
-  _setOptionalMissingLogCallback((blockName, hierarchy) => {
-    if (devToolsState.blockDebug) {
+  _setOptionalMissingLogCallback(
+    makeDebugCallback((blockName, hierarchy) => {
       blockDebugLogger.logOptionalMissing(blockName, hierarchy);
-    }
-  });
+    })
+  );
 
   // Callback for starting a logging group
-  _setStartGroupCallback((blockName, hierarchy) => {
-    if (devToolsState.blockDebug) {
+  _setStartGroupCallback(
+    makeDebugCallback((blockName, hierarchy) => {
       blockDebugLogger.startGroup(blockName, hierarchy);
-    }
-  });
+    })
+  );
 
   // Callback for ending a logging group
-  _setEndGroupCallback((finalResult) => {
-    if (devToolsState.blockDebug) {
+  _setEndGroupCallback(
+    makeDebugCallback((finalResult) => {
       blockDebugLogger.endGroup(finalResult);
-    }
-  });
+    })
+  );
 
   // Callback that returns the logger interface for conditions
   _setLoggerInterfaceCallback(() => {

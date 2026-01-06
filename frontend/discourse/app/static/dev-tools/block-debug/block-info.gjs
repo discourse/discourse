@@ -53,6 +53,16 @@ export default class BlockInfo extends Component {
     );
   }
 
+  /**
+   * Checks whether the tooltip has no content to display.
+   * Used to show an "empty" message when there are no conditions, args, or outlet args.
+   *
+   * @returns {boolean} True if there is nothing to display in the tooltip.
+   */
+  get isEmpty() {
+    return !this.hasConditions && !this.hasArgs && !this.hasOutletArgs;
+  }
+
   <template>
     <div class="block-debug-info --rendered" data-block-name={{@blockName}}>
       <DTooltip
@@ -103,15 +113,11 @@ export default class BlockInfo extends Component {
               </div>
             {{/if}}
 
-            {{#unless this.hasConditions}}
-              {{#unless this.hasArgs}}
-                {{#unless this.hasOutletArgs}}
-                  <div class="block-debug-tooltip__empty">
-                    No conditions or arguments
-                  </div>
-                {{/unless}}
-              {{/unless}}
-            {{/unless}}
+            {{#if this.isEmpty}}
+              <div class="block-debug-tooltip__empty">
+                No conditions or arguments
+              </div>
+            {{/if}}
           </div>
         </:content>
       </DTooltip>

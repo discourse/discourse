@@ -1,3 +1,4 @@
+import { getByPath } from "discourse/lib/blocks/path-resolver";
 import { matchValue } from "discourse/lib/blocks/value-matcher";
 import { BlockCondition, raiseBlockValidationError } from "./base";
 
@@ -115,7 +116,14 @@ export default class BlockOutletArgCondition extends BlockCondition {
    *
    * @param {Object} args - The condition arguments containing `path`, `value`, `exists`.
    * @param {Object} [context] - Evaluation context containing outletArgs.
-   * @returns {{ hasValue: true, formatted: Object }} Object with formatted log data.
+   * @returns {{
+   *   hasValue: true,
+   *   formatted: {
+   *     path: string,
+   *     actual: *,
+   *     configured: * | { exists: boolean }
+   *   }
+   * }} Object with formatted log data showing path, actual value, and configured expectation.
    */
   getResolvedValueForLogging(args, context) {
     const { path, value, exists } = args;
@@ -128,29 +136,4 @@ export default class BlockOutletArgCondition extends BlockCondition {
       },
     };
   }
-}
-
-/**
- * Gets a nested property value from an object using dot notation path.
- *
- * @param {Object} obj - The object to get the value from.
- * @param {string} path - Dot-notation path (e.g., "user.trust_level").
- * @returns {*} The value at the path, or undefined if not found.
- */
-function getByPath(obj, path) {
-  if (!obj || !path) {
-    return undefined;
-  }
-
-  const parts = path.split(".");
-  let current = obj;
-
-  for (const part of parts) {
-    if (current === null || current === undefined) {
-      return undefined;
-    }
-    current = current[part];
-  }
-
-  return current;
 }

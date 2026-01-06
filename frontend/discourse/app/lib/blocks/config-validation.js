@@ -28,6 +28,53 @@ import {
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
 /**
+ * Validates block conditions with proper error context.
+ *
+ * This helper encapsulates the common pattern of setting error context,
+ * validating conditions, and handling errors with proper cleanup.
+ *
+ * @param {Object} blocksService - The blocks service with validate method.
+ * @param {Object} config - The block config containing conditions.
+ * @param {string} outletName - The outlet name for error messages.
+ * @param {string} blockName - The block name for error messages.
+ * @param {string} path - The path in the config tree for error messages.
+ * @param {Object} [options] - Additional options.
+ * @param {boolean} [options.clearContext=true] - Whether to clear error context in finally.
+ *   Set to false when nested inside another try/finally that handles cleanup.
+ */
+function validateBlockConditions(
+  blocksService,
+  config,
+  outletName,
+  blockName,
+  path,
+  { clearContext = true } = {}
+) {
+  if (!config.conditions || !blocksService) {
+    return;
+  }
+
+  setBlockErrorContext({
+    outletName,
+    blockName,
+    path,
+    conditions: config.conditions,
+  });
+
+  try {
+    blocksService.validate(config.conditions);
+  } catch (error) {
+    raiseBlockError(
+      `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`
+    );
+  } finally {
+    if (clearContext) {
+      clearBlockErrorContext();
+    }
+  }
+}
+
+/**
  * Resolves a block reference (string or class) to a BlockClass for validation.
  *
  * This function handles the dual-mode resolution strategy:
@@ -342,24 +389,7 @@ export async function validateBlock(
     const blockName = resolvedBlock;
 
     // Still validate conditions since they don't depend on the block class
-    if (config.conditions && blocksService) {
-      setBlockErrorContext({
-        outletName,
-        blockName,
-        path,
-        conditions: config.conditions,
-      });
-
-      try {
-        blocksService.validate(config.conditions);
-      } catch (error) {
-        raiseBlockError(
-          `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`
-        );
-      } finally {
-        clearBlockErrorContext();
-      }
-    }
+    validateBlockConditions(blocksService, config, outletName, blockName, path);
 
     // Skip class-specific validation (will happen at render time)
     return;
@@ -424,24 +454,18 @@ export async function validateBlock(
     // Validate block args against metadata schema
     validateBlockArgs(config, outletName);
 
-    // Validate conditions if service is available
-    if (config.conditions && blocksService) {
-      // Update context to include conditions for better error messages
-      setBlockErrorContext({
-        outletName,
-        blockName,
-        path,
-        conditions: config.conditions,
-      });
-
-      try {
-        blocksService.validate(config.conditions);
-      } catch (error) {
-        raiseBlockError(
-          `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`
-        );
+    // Validate conditions if service is available.
+    // Use clearContext: false since the outer finally handles cleanup.
+    validateBlockConditions(
+      blocksService,
+      config,
+      outletName,
+      blockName,
+      path,
+      {
+        clearContext: false,
       }
-    }
+    );
   } finally {
     clearBlockErrorContext();
   }

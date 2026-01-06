@@ -104,9 +104,11 @@ export function parseBlockName(fullName) {
  * - Plugin: `"plugin:block"` or `"plugin:block?"`
  * - Theme: `"theme:namespace:block"` or `"theme:namespace:block?"`
  *
- * @param {string} blockRef - The block reference string (possibly with `?` suffix).
- * @returns {{ name: string, optional: boolean }} Parsed result with the clean
- *   block name and whether it's optional.
+ * @param {string|Object} blockRef - The block reference. If a string, may have an
+ *   optional `?` suffix. Non-string references (e.g., component classes) are
+ *   returned as-is in the `name` property with `optional: false`.
+ * @returns {{ name: string|Object, optional: boolean }} Parsed result with the clean
+ *   block name (or original reference) and whether it's optional.
  *
  * @example
  * parseBlockReference("chat:widget?")

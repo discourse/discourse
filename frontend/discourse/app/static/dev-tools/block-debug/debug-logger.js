@@ -39,6 +39,15 @@ class BlockDebugLogger {
   #currentGroup = null;
 
   /**
+   * WeakMap to track pending log entries by condition spec object.
+   * This allows updating log entries by reference rather than by depth/type lookup,
+   * which is more robust for complex nested conditions.
+   *
+   * @type {WeakMap<Object, Object>}
+   */
+  #pendingLogs = new WeakMap();
+
+  /**
    * Start a new evaluation group for a block render.
    * All subsequent logCondition calls will be collected in this group
    * until endGroup is called.
@@ -60,14 +69,31 @@ class BlockDebugLogger {
    * @param {boolean} options.result - Whether condition passed
    * @param {number} [options.depth=0] - Nesting depth for indentation
    * @param {{ value: *, hasValue: true }|undefined} [options.resolvedValue] - Resolved value object
+   * @param {Object} [options.conditionSpec] - The condition spec object, used to track
+   *   pending results for combinators/conditions that log before evaluation completes.
    */
-  logCondition({ type, args, result, depth = 0, resolvedValue }) {
+  logCondition({
+    type,
+    args,
+    result,
+    depth = 0,
+    resolvedValue,
+    conditionSpec,
+  }) {
     if (!this.#currentGroup) {
       this.#logStandalone(type, args, result);
       return;
     }
 
-    this.#currentGroup.logs.push({ type, args, result, depth, resolvedValue });
+    const logEntry = { type, args, result, depth, resolvedValue };
+    this.#currentGroup.logs.push(logEntry);
+
+    // Track pending logs by conditionSpec for later result updates.
+    // This is used for combinators (AND/OR/NOT) and conditions that need to
+    // log nested items before knowing their final result.
+    if (conditionSpec && result === null) {
+      this.#pendingLogs.set(conditionSpec, logEntry);
+    }
   }
 
   /**
@@ -131,49 +157,40 @@ class BlockDebugLogger {
   }
 
   /**
-   * Update the result of the last combinator (AND/OR/NOT) at the given depth.
+   * Update the result of a combinator (AND/OR/NOT) by its condition spec.
    * Used to set the actual result after children have been evaluated.
    *
-   * @param {boolean} result - The actual result
-   * @param {number} depth - The depth of the combinator to update
+   * @param {Object} conditionSpec - The condition spec object used when logging.
+   * @param {boolean} result - The actual result.
    */
-  updateCombinatorResult(result, depth) {
-    if (!this.#currentGroup) {
+  updateCombinatorResult(conditionSpec, result) {
+    if (!this.#currentGroup || !conditionSpec) {
       return;
     }
 
-    // Find the combinator at this depth (should be before its children)
-    for (const log of this.#currentGroup.logs) {
-      if (
-        log.depth === depth &&
-        ["AND", "OR", "NOT"].includes(log.type) &&
-        log.result === null
-      ) {
-        log.result = result;
-        break;
-      }
+    const logEntry = this.#pendingLogs.get(conditionSpec);
+    if (logEntry) {
+      logEntry.result = result;
+      this.#pendingLogs.delete(conditionSpec);
     }
   }
 
   /**
-   * Update the result of the last condition of a given type at a given depth.
+   * Update the result of a condition by its condition spec.
    * Used when the condition needs to log nested items before knowing its final result.
    *
-   * @param {string} type - The condition type to update
-   * @param {boolean} result - The actual result
-   * @param {number} depth - The depth of the condition to update
+   * @param {Object} conditionSpec - The condition spec object used when logging.
+   * @param {boolean} result - The actual result.
    */
-  updateConditionResult(type, result, depth) {
-    if (!this.#currentGroup) {
+  updateConditionResult(conditionSpec, result) {
+    if (!this.#currentGroup || !conditionSpec) {
       return;
     }
 
-    // Find the condition at this depth with matching type and null result
-    for (const log of this.#currentGroup.logs) {
-      if (log.depth === depth && log.type === type && log.result === null) {
-        log.result = result;
-        break;
-      }
+    const logEntry = this.#pendingLogs.get(conditionSpec);
+    if (logEntry) {
+      logEntry.result = result;
+      this.#pendingLogs.delete(conditionSpec);
     }
   }
 

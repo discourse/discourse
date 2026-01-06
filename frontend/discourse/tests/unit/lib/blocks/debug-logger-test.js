@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
+import { blockDebugLogger } from "discourse/static/dev-tools/block-debug/debug-logger";
 
 module("Unit | Lib | blocks/debug-logger", function (hooks) {
   setupTest(hooks);
