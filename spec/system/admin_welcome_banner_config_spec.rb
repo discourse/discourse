@@ -54,7 +54,7 @@ describe "Admin Welcome Banner Config", type: :system do
           locale: "fr",
           translation_key: "js.welcome_banner.header.new_members",
         )
-      expect(french_override&.value).to eq("Bonjour %{preferred_display_name}!")
+      expect(french_override.value).to eq("Bonjour %{preferred_display_name}!")
 
       config_page.visit
       expect(config_page.header_new_members_value).to eq("Welcome, %{preferred_display_name}!")
