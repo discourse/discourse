@@ -9,6 +9,7 @@ import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -21,7 +22,7 @@ const getAspectRatio = helper(([width, height]) => {
 });
 
 const FALLBACK_TIMEOUT_MS = 1000;
-const KEYBOARD_THROTTLE_MS = 150;
+const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 10;
 
