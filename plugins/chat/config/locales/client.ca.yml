@@ -20,6 +20,7 @@ ca:
       channel_settings:
         edit: "Edita"
         add: "Afegeix"
+        notification_settings_context: "Notificacions"
         join: "Registre"
         leave: "Abandona"
       close: "Tanca"

@@ -3,6 +3,9 @@
 module DiscourseAi
   module Utils
     class Search
+      # arbitrary but we need something safe here
+      MAX_RESULTS_LIMIT = 200
+
       def self.perform_search(
         search_query: nil,
         category: nil,
@@ -18,6 +21,28 @@ module DiscourseAi
         current_user: nil,
         result_style: :compact
       )
+        max_results = max_results.to_i
+        raise ArgumentError, "max_results must be a positive integer" if max_results <= 0
+        max_results = MAX_RESULTS_LIMIT if max_results > MAX_RESULTS_LIMIT
+
+        if search_query.blank? &&
+             has_any_filter?(category, user, order, tags, before, after, status)
+          return(
+            fallback_to_filter(
+              category:,
+              user:,
+              order:,
+              tags:,
+              before:,
+              after:,
+              status:,
+              max_results:,
+              current_user:,
+              result_style:,
+            )
+          )
+        end
+
         search_terms = []
 
         search_terms << search_query.strip if search_query.present?
@@ -40,16 +65,16 @@ module DiscourseAi
           return(
             {
               args: {
-                search_query: search_query,
-                category: category,
-                user: user,
-                order: order,
-                max_posts: max_posts,
-                tags: tags,
-                before: before,
-                after: after,
-                status: status,
-                max_results: max_results,
+                search_query:,
+                category:,
+                user:,
+                order:,
+                max_posts:,
+                tags:,
+                before:,
+                after:,
+                status:,
+                max_results:,
               }.compact,
               rows: [],
               instruction: I18n.t("invalid_access"),
@@ -97,55 +122,178 @@ module DiscourseAi
           end
         end
 
-        hidden_tags = nil
-
         # Construct search_args hash for consistent return format
         search_args = {
-          search_query: search_query,
-          category: category,
-          user: user,
-          order: order,
-          max_posts: max_posts,
-          tags: tags,
-          before: before,
-          after: after,
-          status: status,
-          max_results: max_results,
+          search_query:,
+          category:,
+          user:,
+          order:,
+          max_posts:,
+          tags:,
+          before:,
+          after:,
+          status:,
+          max_results:,
         }.compact
 
         if posts.blank?
           { args: search_args, rows: [], instruction: "nothing was found, expand your search" }
         else
+          hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
           format_results(posts, args: search_args, result_style: result_style) do |post|
-            category_names = [
-              post.topic.category&.parent_category&.name,
-              post.topic.category&.name,
-            ].compact.join(" > ")
-            row = {
-              title: post.topic.title,
-              url: Discourse.base_path + post.url,
-              username: post.user&.username,
-              excerpt: post.excerpt,
-              created: post.created_at,
-              category: category_names,
-              likes: post.like_count,
-              topic_views: post.topic.views,
-              topic_likes: post.topic.like_count,
-              topic_replies: post.topic.posts_count - 1,
-            }
-
-            if SiteSetting.tagging_enabled
-              hidden_tags ||= DiscourseTagging.hidden_tag_names
-              tags = post.topic.tags.map(&:name) - hidden_tags
-              row[:tags] = tags.join(", ") if tags.present?
-            end
-
-            row
+            format_row(topic: post.topic, post:, hidden_tags:)
           end
         end
       end
 
-      private
+      def self.order_to_filter_syntax(order)
+        case order&.to_s
+        when "latest", "latest_topic"
+          "order:activity"
+        when "oldest"
+          "order:created-asc"
+        when "views"
+          "order:views"
+        when "likes"
+          "order:likes"
+        end
+      end
+
+      def self.has_any_filter?(category, user, order, tags, before, after, status)
+        [category, user, order, tags, before, after, status].any?(&:present?)
+      end
+
+      def self.fallback_to_filter(
+        category:,
+        user:,
+        order:,
+        tags:,
+        before:,
+        after:,
+        status:,
+        max_results:,
+        current_user:,
+        result_style:
+      )
+        guardian = Guardian.new(current_user)
+
+        query_parts = []
+        query_parts << "category:#{category}" if category.present?
+        if order.present? && order_to_filter_syntax(order)
+          query_parts << order_to_filter_syntax(order)
+        end
+        query_parts << "tags:#{tags}" if tags.present?
+        query_parts << "users:#{user}" if user.present?
+        query_parts << "created-before:#{before}" if before.present?
+        query_parts << "created-after:#{after}" if after.present?
+        query_parts << "status:#{status}" if status.present?
+
+        return empty_results if query_parts.blank?
+
+        scope = TopicQuery.new(guardian.user).latest_results(skip_ordering: true)
+        filter = TopicsFilter.new(guardian:, scope: scope)
+        topics = filter.filter_from_query_string(query_parts.join(" "))
+
+        # may be uneeded with goldiloader
+        topics = topics.includes(:category, :user)
+        topics = topics.includes(:tags) if SiteSetting.tagging_enabled
+        topics = topics.limit(max_results)
+
+        format_filter_results(
+          topics,
+          query_string: query_parts.join(" "),
+          result_style:,
+          category:,
+          user:,
+          order:,
+          tags:,
+          before:,
+          after:,
+          status:,
+          max_results:,
+        )
+      end
+
+      def self.format_filter_results(
+        topics,
+        query_string:,
+        result_style:,
+        category:,
+        user:,
+        order:,
+        tags:,
+        before:,
+        after:,
+        status:,
+        max_results:
+      )
+        search_args = {
+          category:,
+          user:,
+          order:,
+          tags:,
+          before:,
+          after:,
+          status:,
+          max_results:,
+        }.compact
+
+        if topics.blank?
+          {
+            args: search_args,
+            rows: [],
+            instruction: "nothing was found, expand your search",
+            filter_query: query_string,
+          }
+        else
+          hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
+          result =
+            format_results(topics, args: search_args, result_style: result_style) do |topic|
+              format_row(topic: topic, hidden_tags:)
+            end
+          result[:filter_query] = query_string
+          result
+        end
+      end
+
+      def self.empty_results
+        { args: {}, rows: [], instruction: "nothing was found, expand your search" }
+      end
+
+      def self.format_row(topic:, post: nil, hidden_tags: nil)
+        row = {
+          title: topic.title,
+          # this is deliberate, we don't want to repeat https://example.com/ in every result, but we need subfolder
+          url: post ? post.relative_url : topic.relative_url,
+          username: post ? post.user&.username : topic.user&.username,
+          excerpt: post ? post.excerpt : topic.excerpt,
+          created: post ? post.created_at : topic.created_at,
+          category: category_breadcrumb(topic.category),
+          likes: post ? post.like_count : topic.like_count,
+          topic_views: topic.views,
+          topic_likes: topic.like_count,
+          # deliberate - we don't want the number of "replies" in the Discourse sense, this is total number or replies to topic
+          topic_replies: topic.posts_count - 1,
+        }
+
+        if SiteSetting.tagging_enabled
+          hidden_tags ||= DiscourseTagging.hidden_tag_names
+          tag_names = visible_tag_names(topic.tags, hidden_tags)
+          row[:tags] = tag_names if tag_names
+        end
+
+        row
+      end
+
+      def self.category_breadcrumb(category)
+        [category&.parent_category&.name, category&.name].compact.join(" > ")
+      end
+
+      def self.visible_tag_names(tags, hidden_tags)
+        return nil unless SiteSetting.tagging_enabled && tags.present?
+        visible = tags.map(&:name) - hidden_tags
+        visible.presence&.join(", ")
+      end
 
       def self.format_results(rows, args: nil, result_style:)
         rows = rows&.map { |row| yield row } if block_given?

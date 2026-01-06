@@ -2350,16 +2350,6 @@ sl:
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji %{category} ."
         top: "Ni najboljših tem."
-      bottom:
-        latest: "Ni več najnovejših tem."
-        posted: "Ni več objavljenih tem."
-        read: "Ni več prebranih tem."
-        new: "Ni več novih tem."
-        unread: "Ni več neprebranih tem."
-        category: "Ni več tem v kategoriji %{category}."
-        tag: "Ni več tem z oznako %{tag}."
-        top: "Ni več najboljših tem."
-        bookmarks: "Ni več tem z zaznamki."
     topic_bulk_actions:
       dismiss:
         name: "Opusti"

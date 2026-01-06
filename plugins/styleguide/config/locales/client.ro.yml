@@ -59,8 +59,6 @@ ro:
           title: "Statusuri pentru subiecte"
         topic_list:
           title: "Listă de subiecte"
-        footer_message:
-          title: "Mesaj subsol"
         signup_cta:
           title: "Îndemn la înregistrare"
         topic_timer_info:

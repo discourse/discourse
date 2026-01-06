@@ -2904,19 +2904,6 @@ nb_NO:
         top: "Det finnes ingen populære emner."
         hot: "Det finnes ingen aktuelle temaer."
         filter: "Det finnes ingen emner."
-      bottom:
-        latest: "Det finnes ingen flere siste emner."
-        posted: "Det finnes ingen flere emner med innlegg."
-        read: "Det finnes ingen flere leste emner."
-        new: "Det finnes ingen flere nye emner."
-        unread: "Det finnes ingen flere uleste emner."
-        unseen: "Det finnes ikke flere usette emner."
-        category: "Det finnes ingen %{category}-emner igjen."
-        tag: "Det finnes ingen %{tag}-emner igjen."
-        top: "Det finnes ingen flere populære emner."
-        hot: "Det finnes ingen flere aktuelle emner."
-        bookmarks: "Det finnes ingen flere bokmerkede emner."
-        filter: "Det finnes ikke flere emner."
     topic_bulk_actions:
       dismiss:
         name: "Avslå"
@@ -3041,9 +3028,6 @@ nb_NO:
         }
       created_at: "Opprettet: %{date}"
       bumped_at: "Siste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Se alle kategorier</a> eller <a href='%{basePath}/latest'>se de nyeste emnene</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bla gjennom alle kategorier</a>, <a href='%{basePath}/latest'>se de nyeste emnene</a> eller se toppen:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Se alle stikkord</a> eller <a href='%{basePath}/latest'>se de nyeste emnene</a>."
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
       jump_reply: "Gå til innleggets opprinnelige plassering"
       jump_reply_aria: "Gå til @%{username}s innlegg på dets opprinnelige plassering"

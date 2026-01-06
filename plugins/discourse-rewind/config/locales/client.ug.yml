@@ -24,7 +24,7 @@ ug:
           title: سۆز ئىشلىتىش
         reading_time:
           title: ئوقۇش ۋاقتى
-          book_comparison: "سىز تور بېكىتىمىزدە <code>%{readingTitme}</code> ئوقۇدىڭىز! بۇ <i>%{bookTitle}</i> كىتابنى ئوقۇشقا كەتكەن ۋاقىتقا تەڭ"
+          book_comparison: "سىز تور بېكىتىمىزدە <code>%{readingTime}</code> ئوقۇدىڭىز! بۇ <i>%{bookTitle}</i> كىتابنى ئوقۇشقا كەتكەن ۋاقىتقا تەڭ"
         post_used_reactions:
           title: تېمىدا ئەڭ كۆپ ئىشلىتىلگەن ئىنكاس
           total_number: "جەمئىي ئىنكاس سانى: %{count}"
@@ -40,6 +40,9 @@ ug:
           title:
             one: سىز ئەڭ كۆپ زىيارەت قىلىدىغان بەلگە
             other: سىز ئەڭ كۆپ زىيارەت قىلىدىغان %{count} سەھىپە
+          title_others:
+            one: "%{username} نىڭ ئەڭ كۆپ كۆرۈلگەن بەلگىسى"
+            other: "%{username} نىڭ ئەڭ كۆپ كۆرۈلگەن %{count} بەلگىسى"
         best_topics:
           view_topic: تېما كۆرسەت
           title:
@@ -78,7 +81,8 @@ ug:
           favorite_channels: ياقتۇرىدىغان قانال
           messages: ئۇچۇر
           bot_name: XxRewindBotxX
-          you: سىز
+          author: سىز
+          author_others: "%{username}"
           channel_title: "#سۆھبەت پائالىيىتى"
           status_online: "● توردا"
           message_1: "سىز بۇ يىل <strong>%{count}</strong> ئۇچۇر يوللىدىڭىز!"
@@ -132,7 +136,7 @@ ug:
           replies: يازمىغا جاۋاب
           mentions: ئاتاش
           topics_with_new_users: يېڭى ئىشلەتكۈچىنىڭ تېمىسى
-          your_contributions_helped: تۆھپىڭىز ياردەم قىلدى
+          contributions_helped: تۆھپىڭىز ياردەم قىلدى
         time_of_day_activity:
           title: كۈندىلىك پائالىيەت رېتىمى
           play_button: پائالىيىتىڭىزنى ئاۋازلىق ياڭرىتىدۇ
