@@ -384,7 +384,7 @@ export default {
                 return;
               }
 
-              return "ellipsis";
+              return "ellipsis-vertical";
             }
 
             get hoverTitle() {
@@ -479,7 +479,7 @@ export default {
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatChannelsSectionLink = class extends BaseCustomSidebarSectionLink {
               hoverType = "icon";
-              hoverValue = isiPad() ? null : "ellipsis";
+              hoverValue = isiPad() ? null : "ellipsis-vertical";
               hoverTitle = i18n("chat.open_channel_menu");
 
               constructor({ channel, chatService, siteSettings, menuService }) {
@@ -687,7 +687,7 @@ export default {
               route = "chat.channel";
               suffixType = "icon";
               hoverType = "icon";
-              hoverValue = isiPad() ? null : "ellipsis";
+              hoverValue = isiPad() ? null : "ellipsis-vertical";
               hoverTitle = i18n("chat.open_channel_menu");
 
               constructor({
