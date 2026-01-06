@@ -3,7 +3,6 @@ import { handleLogoff } from "discourse/lib/ajax";
 import { isProduction, isTesting } from "discourse/lib/environment";
 // Initialize the message bus to receive messages.
 import getURL from "discourse/lib/get-url";
-import { MAX_REFERRER_LENGTH } from "discourse/lib/page-tracker";
 import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
@@ -115,7 +114,7 @@ export default {
           "meta[name=discourse-track-view-session-id]"
         )?.content;
         _deferredURL = window.location.href;
-        _deferredReferrer = document.referrer.slice(0, MAX_REFERRER_LENGTH);
+        _deferredReferrer = document.referrer;
 
         clearInterval(interval);
         messageBus.start();

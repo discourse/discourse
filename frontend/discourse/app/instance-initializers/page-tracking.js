@@ -6,7 +6,6 @@ import {
 } from "discourse/lib/ajax";
 import {
   googleTagManagerPageChanged,
-  MAX_REFERRER_LENGTH,
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
@@ -114,7 +113,7 @@ export default {
       document.querySelector("meta[name=discourse-track-view-session-id]")
         ?.content,
       new URL(path, window.location.origin).href,
-      window.location.href.slice(0, MAX_REFERRER_LENGTH)
+      window.location.href
     );
 
     if (

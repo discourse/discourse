@@ -593,7 +593,7 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     describe "page_visited event" do
-      it "triggers event for anonymous user page views" do
+      it "triggers event for anonymous user page views when `login_required` site setting is false" do
         session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
 
         data =
@@ -621,6 +621,55 @@ RSpec.describe Middleware::RequestTracker do
         expect(event[:referrer]).to eq("https://example.com")
         expect(event).to have_key(:ip_address)
         expect(event[:user_agent]).to be_present
+      end
+
+      it "does not trigger event for anonymous user page views when `login_required` site setting is true" do
+        SiteSetting.login_required = true
+        session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+              "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.2,
+          )
+
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            Middleware::RequestTracker.log_request(data)
+          end
+
+        expect(events).to be_empty
+      end
+
+      it "truncates session id, url and referred" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => "A" * 50,
+              "HTTP_DISCOURSE_TRACK_VIEW_URL" => "A" * 5000,
+              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "A" * 5000,
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.2,
+          )
+
+        events =
+          DiscourseEvent.track_events(:page_visited) do
+            Middleware::RequestTracker.log_request(data)
+          end
+
+        expect(events.length).to eq(1)
+        event = events[0][:params].first
+        expect(event[:url].length).to eq(Middleware::RequestTracker::MAX_URL_LENGTH)
+        expect(event[:referrer].length).to eq(Middleware::RequestTracker::MAX_URL_LENGTH)
+        expect(event[:session_id].length).to eq(Middleware::RequestTracker::MAX_SESSION_ID_LENGTH)
       end
 
       it "triggers event for logged-in user page views" do
