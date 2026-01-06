@@ -4,13 +4,18 @@ import icon from "discourse/helpers/d-icon";
 import ConditionsTree from "./conditions-tree";
 
 /**
- * Ghost placeholder for blocks that fail their conditions.
+ * Ghost placeholder for blocks that are hidden.
  * Shows a dashed outline indicating where the block would render.
  *
+ * Blocks can be hidden for two reasons:
+ * - **Optional missing**: Block reference uses `?` suffix but isn't registered
+ * - **Conditions failed**: Block is registered but conditions evaluated to false
+ *
  * @component GhostBlock
- * @param {string} blockName - The name of the hidden block
- * @param {string} debugLocation - The hierarchy path where the block would render
- * @param {Object} conditions - Conditions that failed evaluation
+ * @param {string} blockName - The name of the hidden block.
+ * @param {string} debugLocation - The hierarchy path where the block would render.
+ * @param {Object} [conditions] - Conditions that failed evaluation (not present for optional missing).
+ * @param {boolean} [optionalMissing] - True if block is optional and not registered.
  */
 const GhostBlock = <template>
   <div class="block-debug-ghost" data-block-name={{@blockName}}>
@@ -39,17 +44,30 @@ const GhostBlock = <template>
             <span class="block-debug-tooltip__status">HIDDEN</span>
           </div>
 
-          <div class="block-debug-tooltip__section">
-            <div class="block-debug-tooltip__section-title">
-              Conditions
-              <span class="--failed">(failed)</span>
+          {{#if @optionalMissing}}
+            <div class="block-debug-tooltip__section">
+              <div class="block-debug-tooltip__section-title">
+                Status
+                <span class="--failed">(not registered)</span>
+              </div>
             </div>
-            <ConditionsTree @conditions={{@conditions}} @passed={{false}} />
-          </div>
 
-          <div class="block-debug-tooltip__hint">
-            This block is not rendered because its conditions failed.
-          </div>
+            <div class="block-debug-tooltip__hint">
+              This optional block is not rendered because it's not registered.
+            </div>
+          {{else}}
+            <div class="block-debug-tooltip__section">
+              <div class="block-debug-tooltip__section-title">
+                Conditions
+                <span class="--failed">(failed)</span>
+              </div>
+              <ConditionsTree @conditions={{@conditions}} @passed={{false}} />
+            </div>
+
+            <div class="block-debug-tooltip__hint">
+              This block is not rendered because its conditions failed.
+            </div>
+          {{/if}}
         </div>
       </:content>
     </DTooltip>

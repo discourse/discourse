@@ -432,6 +432,26 @@ class BlockDebugLogger {
   }
 
   /**
+   * Log that an optional block was skipped because it's not registered.
+   * Uses standalone log (no group needed since there are no conditions to show).
+   * Format matches endGroup header: `[Blocks] ✗ SKIPPED {blockName} in {hierarchy}`
+   *
+   * @param {string} blockName - The name of the missing optional block.
+   * @param {string} hierarchy - The outlet/container hierarchy path.
+   */
+  logOptionalMissing(blockName, hierarchy) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[Blocks] %c${ICONS.failed} SKIPPED%c %c${blockName}%c in ${hierarchy} %c(optional, not registered)`,
+      STYLES.failed,
+      "",
+      STYLES.blockName,
+      "font-weight: normal",
+      STYLES.hint
+    );
+  }
+
+  /**
    * Check if a group is currently active.
    *
    * @returns {boolean}

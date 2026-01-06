@@ -39,7 +39,9 @@ import {
   warnUnknownOutletPatterns,
 } from "discourse/lib/blocks/outlet-matcher";
 import {
+  OPTIONAL_MISSING,
   parseBlockName,
+  parseBlockReference,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/patterns";
 import {
@@ -376,6 +378,38 @@ export function block(name, options = {}) {
           // Resolve block reference (string name or class)
           const resolvedBlock = this.#resolveBlockSync(blockConfig.block);
 
+          // Handle optional missing block (block ref ended with `?` but not registered)
+          if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
+            const missingBlockName = resolvedBlock.name;
+
+            // Log if debug logging is enabled
+            if (isLoggingEnabled) {
+              blockDebugLogger.logOptionalMissing(
+                missingBlockName,
+                baseHierarchy
+              );
+            }
+
+            // Show ghost if visual overlay is enabled
+            if (getBlockDebugCallback()) {
+              const ghostData = getBlockDebugCallback()(
+                {
+                  name: missingBlockName,
+                  Component: null,
+                  args: blockConfig.args,
+                  conditions: blockConfig.conditions,
+                  conditionsPassed: false,
+                  optionalMissing: true,
+                },
+                { outletName: baseHierarchy }
+              );
+              if (ghostData?.Component) {
+                result.push(ghostData);
+              }
+            }
+            continue;
+          }
+
           // If block couldn't be resolved (unresolved factory), skip it
           // Async resolution has been triggered and block will appear on next render
           if (!resolvedBlock) {
@@ -591,25 +625,38 @@ export function block(name, options = {}) {
        * - If given a string and the block is resolved, returns the class.
        * - If given a string and the block is an unresolved factory, triggers
        *   async resolution and returns null (block will appear on next render).
+       * - If given an optional block name (ending with `?`) that is not registered,
+       *   returns a marker object instead of logging an error.
        *
-       * @param {string | typeof Component} blockRef - Block name or class.
-       * @returns {typeof Component | null} Resolved block class, or null if pending.
+       * @param {string | typeof Component} blockRef - Block name (possibly with `?` suffix) or class.
+       * @returns {typeof Component | null | { optionalMissing: symbol, name: string }}
+       *   Resolved block class, null if pending, or optional missing marker.
        */
       #resolveBlockSync(blockRef) {
-        // Class reference - return directly
+        // Class reference - return directly (classes always exist)
         if (typeof blockRef !== "string") {
           return blockRef;
         }
 
+        // Parse optional suffix from block reference
+        const { name: blockName, optional } = parseBlockReference(blockRef);
+
         // String reference - check if registered
-        if (!blockRegistry.has(blockRef)) {
+        if (!blockRegistry.has(blockName)) {
+          if (optional) {
+            // Optional block not registered - return marker for caller to handle
+            return {
+              optionalMissing: OPTIONAL_MISSING,
+              name: blockName,
+            };
+          }
           // Block not registered - this is an error, but validation should have caught it
           // eslint-disable-next-line no-console
-          console.error(`[Blocks] Block "${blockRef}" is not registered.`);
+          console.error(`[Blocks] Block "${blockName}" is not registered.`);
           return null;
         }
 
-        const entry = blockRegistry.get(blockRef);
+        const entry = blockRegistry.get(blockName);
 
         // If already resolved (not a factory), return the class
         if (!isBlockFactory(entry)) {
@@ -620,10 +667,10 @@ export function block(name, options = {}) {
         // The block will appear on the next render after resolution completes
         if (!DEBUG) {
           // Only in production - in dev, factories are already resolved during validation
-          resolveBlock(blockRef).catch((error) => {
+          resolveBlock(blockName).catch((error) => {
             // eslint-disable-next-line no-console
             console.error(
-              `[Blocks] Failed to resolve block "${blockRef}":`,
+              `[Blocks] Failed to resolve block "${blockName}":`,
               error
             );
           });

@@ -29,12 +29,19 @@ export function patchBlockRendering() {
       return blockData;
     }
 
-    const { name, Component, args, conditions, conditionsPassed } = blockData;
+    const {
+      name,
+      Component,
+      args,
+      conditions,
+      conditionsPassed,
+      optionalMissing,
+    } = blockData;
     const { outletName } = context;
     const owner = getOwnerWithFallback();
 
-    // If conditions failed, return a ghost block
-    if (conditionsPassed === false) {
+    // If conditions failed or block is optional and missing, return a ghost block
+    if (conditionsPassed === false || optionalMissing) {
       return {
         Component: curryComponent(
           GhostBlock,
@@ -43,6 +50,7 @@ export function patchBlockRendering() {
             // Use debugLocation to avoid being overwritten by template's @outletName
             debugLocation: outletName,
             conditions,
+            optionalMissing,
           },
           owner
         ),

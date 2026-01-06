@@ -1150,4 +1150,194 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         .hasText("Default Export Block", "block from default export renders");
     });
   });
+
+  module("optional blocks", function () {
+    test("missing optional block is silently skipped (no error)", async function (assert) {
+      @block("required-block")
+      class RequiredBlock extends Component {
+        <template>
+          <div class="required-content">Required Block</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(RequiredBlock));
+
+      // Configure with one required block and one optional missing block
+      renderBlocks("hero-blocks", [
+        { block: RequiredBlock },
+        { block: "non-existent-block?" }, // Optional - should silently skip
+      ]);
+
+      // Should not throw error
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      assert.dom(".hero-blocks").exists("outlet renders");
+      assert.dom(".required-content").hasText("Required Block");
+    });
+
+    test("present optional block renders normally", async function (assert) {
+      @block("present-optional-block")
+      class PresentOptionalBlock extends Component {
+        <template>
+          <div class="present-optional-content">Present Optional</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(PresentOptionalBlock));
+
+      renderBlocks("sidebar-blocks", [
+        { block: "present-optional-block?" }, // Optional but present
+      ]);
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert.dom(".sidebar-blocks").exists("outlet renders");
+      assert
+        .dom(".present-optional-content")
+        .hasText("Present Optional", "optional block renders when present");
+    });
+
+    test("mix of required and optional blocks renders correctly", async function (assert) {
+      @block("mix-required-block")
+      class MixRequiredBlock extends Component {
+        <template>
+          <div class="mix-required">Required</div>
+        </template>
+      }
+
+      @block("mix-optional-present")
+      class MixOptionalPresent extends Component {
+        <template>
+          <div class="mix-optional-present">Optional Present</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => {
+        _registerBlock(MixRequiredBlock);
+        _registerBlock(MixOptionalPresent);
+      });
+
+      renderBlocks("main-outlet-blocks", [
+        { block: MixRequiredBlock },
+        { block: "missing-optional-block?" }, // Optional missing - skipped
+        { block: "mix-optional-present?" }, // Optional present - rendered
+      ]);
+
+      await render(
+        <template><BlockOutlet @name="main-outlet-blocks" /></template>
+      );
+
+      assert.dom(".main-outlet-blocks").exists("outlet renders");
+      assert.dom(".mix-required").exists("required block renders");
+      assert
+        .dom(".mix-optional-present")
+        .exists("optional present block renders");
+    });
+
+    test("multiple missing optional blocks all skipped", async function (assert) {
+      @block("single-required")
+      class SingleRequired extends Component {
+        <template>
+          <div class="single-required-content">Only Required</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(SingleRequired));
+
+      renderBlocks("homepage-blocks", [
+        { block: "missing-1?" },
+        { block: "missing-2?" },
+        { block: SingleRequired },
+        { block: "missing-3?" },
+      ]);
+
+      await render(
+        <template><BlockOutlet @name="homepage-blocks" /></template>
+      );
+
+      assert.dom(".homepage-blocks").exists("outlet renders");
+      assert
+        .dom(".single-required-content")
+        .hasText(
+          "Only Required",
+          "required block renders among multiple optional missing"
+        );
+    });
+
+    test("optional namespaced blocks work correctly", async function (assert) {
+      @block("chat:optional-widget")
+      class OptionalWidget extends Component {
+        <template>
+          <div class="optional-widget-content">Namespaced Optional</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(OptionalWidget));
+
+      renderBlocks("header-blocks", [
+        { block: "chat:optional-widget?" }, // Present namespaced optional
+        { block: "chat:missing-widget?" }, // Missing namespaced optional
+      ]);
+
+      await render(<template><BlockOutlet @name="header-blocks" /></template>);
+
+      assert.dom(".header-blocks").exists("outlet renders");
+      assert
+        .dom(".optional-widget-content")
+        .hasText("Namespaced Optional", "present namespaced optional renders");
+    });
+
+    test("optional missing block shows ghost when debug callback enabled", async function (assert) {
+      @block("ghost-test-block")
+      class GhostTestBlock extends Component {
+        <template>
+          <div class="ghost-test-content">Ghost Test</div>
+        </template>
+      }
+
+      let ghostBlockData = null;
+
+      _setBlockDebugCallback((blockData, context) => {
+        if (blockData.optionalMissing) {
+          ghostBlockData = { ...blockData, context };
+          return {
+            Component: <template>
+              <div class="ghost-block" data-name={{blockData.name}}>Ghost</div>
+            </template>,
+          };
+        }
+        return { Component: blockData.Component };
+      });
+
+      withTestBlockRegistration(() => _registerBlock(GhostTestBlock));
+
+      renderBlocks("sidebar-blocks", [
+        { block: GhostTestBlock },
+        { block: "missing-optional-block?", args: { foo: "bar" } },
+      ]);
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert.dom(".sidebar-blocks").exists("outlet renders");
+      assert.dom(".ghost-test-content").exists("required block renders");
+      assert
+        .dom('.ghost-block[data-name="missing-optional-block"]')
+        .exists("ghost block shown for optional missing");
+
+      assert.strictEqual(
+        ghostBlockData.name,
+        "missing-optional-block",
+        "ghost receives correct block name"
+      );
+      assert.true(
+        ghostBlockData.optionalMissing,
+        "ghost receives optionalMissing flag"
+      );
+      assert.deepEqual(
+        ghostBlockData.args,
+        { foo: "bar" },
+        "ghost receives original args"
+      );
+    });
+  });
 });

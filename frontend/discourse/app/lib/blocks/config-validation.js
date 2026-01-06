@@ -17,6 +17,10 @@ import {
 } from "discourse/lib/blocks/error";
 import { isBlockPermittedInOutlet } from "discourse/lib/blocks/outlet-matcher";
 import {
+  OPTIONAL_MISSING,
+  parseBlockReference,
+} from "discourse/lib/blocks/patterns";
+import {
   hasBlock,
   isBlockResolved,
   resolveBlock,
@@ -36,21 +40,34 @@ import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
  *   pending factory). Factories are left unresolved, with validation deferred to
  *   render time. This enables true lazy loading.
  *
- * @param {string | Object} blockRef - Block name string or BlockClass.
+ * **Optional blocks**: Block references ending with `?` are treated as optional.
+ * If an optional block is not registered, an object with `OPTIONAL_MISSING`
+ * is returned instead of throwing an error. The calling code should check for this
+ * marker and skip validation/rendering for the block.
+ *
+ * @param {string | Object} blockRef - Block name string (possibly with `?` suffix) or BlockClass.
  * @param {string} outletName - Outlet name for error messages.
- * @returns {Promise<Object | string>} Resolved BlockClass, or string name if deferred.
- * @throws {Error} If block is not registered.
+ * @returns {Promise<Object | string | { [OPTIONAL_MISSING]: true, name: string }>}
+ *   Resolved BlockClass, string name if deferred, or optional missing marker object.
+ * @throws {Error} If required block is not registered.
  */
 export async function resolveBlockForValidation(blockRef, outletName) {
-  // Class reference - return as-is
+  // Class reference - return as-is (classes always exist)
   if (typeof blockRef !== "string") {
     return blockRef;
   }
 
+  // Parse optional suffix from block reference
+  const { name, optional } = parseBlockReference(blockRef);
+
   // String reference - check registration
-  if (!hasBlock(blockRef)) {
+  if (!hasBlock(name)) {
+    if (optional) {
+      // Optional block not registered - return marker to skip validation
+      return { [OPTIONAL_MISSING]: true, name };
+    }
     raiseBlockError(
-      `Block "${blockRef}" in layout for \`${outletName}\` is not registered. ` +
+      `Block "${name}" in layout for \`${outletName}\` is not registered. ` +
         `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`
     );
     return null;
@@ -58,16 +75,16 @@ export async function resolveBlockForValidation(blockRef, outletName) {
 
   if (DEBUG) {
     // In dev/test, eagerly resolve to catch factory errors early
-    return await resolveBlock(blockRef);
+    return await resolveBlock(name);
   }
 
   // In production, only resolve if already resolved (avoid triggering lazy load)
-  if (isBlockResolved(blockRef)) {
-    return await resolveBlock(blockRef);
+  if (isBlockResolved(name)) {
+    return await resolveBlock(name);
   }
 
   // Return the string name - full validation deferred to render time
-  return blockRef;
+  return name;
 }
 
 /**
@@ -311,6 +328,11 @@ export async function validateBlock(
 
   // If resolution returned null (error was raised), exit early
   if (resolvedBlock === null) {
+    return;
+  }
+
+  // Optional block not registered - skip validation entirely
+  if (resolvedBlock?.[OPTIONAL_MISSING]) {
     return;
   }
 

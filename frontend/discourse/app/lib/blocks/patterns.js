@@ -5,6 +5,18 @@
  */
 
 /**
+ * Symbol used to mark a block reference as optional and missing from the registry.
+ * When this marker is returned from resolution functions, it signals that the block
+ * should be silently skipped rather than throwing an error.
+ *
+ * Used in both config-validation.js and block-outlet.gjs to identify optional
+ * blocks that aren't registered and should be skipped during validation and rendering.
+ *
+ * @type {symbol}
+ */
+export const OPTIONAL_MISSING = Symbol("optional-missing");
+
+/**
  * Valid block name pattern: lowercase letters, numbers, and hyphens.
  * Must start with a letter. Examples: "hero-banner", "sidebar-blocks", "my-block-1"
  *
@@ -78,4 +90,34 @@ export function parseBlockName(fullName) {
   }
 
   return null;
+}
+
+/**
+ * Parses a block reference string to extract the block name and optional flag.
+ *
+ * Block references can be marked as optional by appending a `?` suffix to the
+ * name. Optional blocks that are not registered will be silently skipped
+ * instead of throwing an error.
+ *
+ * Supports all namespaced formats:
+ * - Core: `"block-name"` or `"block-name?"`
+ * - Plugin: `"plugin:block"` or `"plugin:block?"`
+ * - Theme: `"theme:namespace:block"` or `"theme:namespace:block?"`
+ *
+ * @param {string} blockRef - The block reference string (possibly with `?` suffix).
+ * @returns {{ name: string, optional: boolean }} Parsed result with the clean
+ *   block name and whether it's optional.
+ *
+ * @example
+ * parseBlockReference("chat:widget?")
+ * // => { name: "chat:widget", optional: true }
+ *
+ * parseBlockReference("hero-banner")
+ * // => { name: "hero-banner", optional: false }
+ */
+export function parseBlockReference(blockRef) {
+  if (typeof blockRef === "string" && blockRef.endsWith("?")) {
+    return { name: blockRef.slice(0, -1), optional: true };
+  }
+  return { name: blockRef, optional: false };
 }

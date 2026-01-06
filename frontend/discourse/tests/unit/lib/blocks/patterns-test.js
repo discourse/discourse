@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import {
   parseBlockName,
+  parseBlockReference,
   VALID_BLOCK_NAME_PATTERN,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/patterns";
@@ -138,6 +139,72 @@ module("Unit | Lib | blocks/patterns", function () {
       assert.strictEqual(parseBlockName("Theme:name:block"), null);
       assert.strictEqual(parseBlockName("123:block"), null);
       assert.strictEqual(parseBlockName("theme:block"), null);
+    });
+  });
+
+  module("parseBlockReference", function () {
+    test("parses required block reference (no ? suffix)", function (assert) {
+      const result = parseBlockReference("hero-banner");
+
+      assert.deepEqual(result, {
+        name: "hero-banner",
+        optional: false,
+      });
+    });
+
+    test("parses optional block reference (with ? suffix)", function (assert) {
+      const result = parseBlockReference("hero-banner?");
+
+      assert.deepEqual(result, {
+        name: "hero-banner",
+        optional: true,
+      });
+    });
+
+    test("parses optional namespaced plugin block", function (assert) {
+      const result = parseBlockReference("chat:widget?");
+
+      assert.deepEqual(result, {
+        name: "chat:widget",
+        optional: true,
+      });
+    });
+
+    test("parses optional namespaced theme block", function (assert) {
+      const result = parseBlockReference("theme:tactile:banner?");
+
+      assert.deepEqual(result, {
+        name: "theme:tactile:banner",
+        optional: true,
+      });
+    });
+
+    test("parses required namespaced plugin block", function (assert) {
+      const result = parseBlockReference("chat:widget");
+
+      assert.deepEqual(result, {
+        name: "chat:widget",
+        optional: false,
+      });
+    });
+
+    test("parses required namespaced theme block", function (assert) {
+      const result = parseBlockReference("theme:tactile:banner");
+
+      assert.deepEqual(result, {
+        name: "theme:tactile:banner",
+        optional: false,
+      });
+    });
+
+    test("handles non-string input", function (assert) {
+      const classRef = { blockName: "test" };
+      const result = parseBlockReference(classRef);
+
+      assert.deepEqual(result, {
+        name: classRef,
+        optional: false,
+      });
     });
   });
 });
