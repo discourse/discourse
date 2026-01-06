@@ -181,6 +181,10 @@ export class BlockCondition {
    * Evaluates whether the condition passes.
    * Called at render time to determine if a block should be shown.
    *
+   * **Note: This method MUST be pure and idempotent.** It may be called
+   * multiple times during a single render cycle (e.g., when debug logging
+   * is enabled), and should not have side effects.
+   *
    * @param {Object} args - The condition arguments from the block config.
    * @param {Object} [context] - Evaluation context from the blocks service.
    * @param {boolean} [context.debug] - Whether debug logging is enabled.

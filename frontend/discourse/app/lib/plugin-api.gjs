@@ -3433,6 +3433,10 @@ class _PluginApi {
    * Custom conditions must extend `BlockCondition` from "discourse/blocks/conditions"
    * and implement the `evaluate(args)` method.
    *
+   * **Note: The `evaluate()` method MUST be pure and idempotent.** It may be called
+   * multiple times during a single render cycle, especially when debug logging
+   * is enabled, and should not perform any side effects or state mutations.
+   *
    * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class
    *
    * @example
