@@ -3,6 +3,7 @@
 :root {
   --topic-title-font-weight--visited: 500;
   --title-color--read: var(--primary-800);
+  --topic-card-shadow: rgb(var(--tertiary-rgb), 0.1);
 }
 
 $padding-pills-small: var(--space-half) var(--space-2);
@@ -138,34 +139,8 @@ $padding-pills-small: var(--space-half) var(--space-2);
       font-weight: 700;
     }
 
-    &.--votes {
-      border: 1px solid var(--tertiary);
-      color: var(--tertiary);
-
-      @include viewport.until(sm) {
-        line-height: 1;
-        gap: var(--space-1);
-      }
-    }
-
     &.--hot {
       color: var(--danger);
-    }
-  }
-
-  &__votes-count {
-    @include viewport.until(sm) {
-      position: absolute;
-      top: 0;
-      right: 0;
-      transform: translate(55%, -60%);
-      font-size: var(--font-down-3);
-      border-radius: 1em;
-      padding: 0.25em;
-      background: var(--tertiary-very-low);
-      height: 1em;
-      min-width: 1em;
-      text-align: center;
     }
   }
 
@@ -224,6 +199,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     }
 
     .topic-status.--pinned,
+    .topic-status.--unpinned,
     .topic-status.--solved,
     .topic-status.--unsolved {
       display: none;
@@ -240,11 +216,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
       overflow: hidden;
       font-size: var(--font-0);
     }
-  }
-
-  .detailed-card .topic-excerpt-more {
-    color: var(--tertiary);
-    font-weight: 600;
   }
 
   &__context {
@@ -356,14 +327,34 @@ $padding-pills-small: var(--space-half) var(--space-2);
     }
   }
 
+  // {
+  //   border: 1px solid var(--tertiary);
+  //   color: var(--tertiary);
+
+  //   @include viewport.until(sm) {
+  //     line-height: 1;
+  //     gap: var(--space-1);
+  //   }
   &__replies,
-  &__likes {
+  &__likes,
+  &__votes {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
     color: var(--primary-medium);
   }
 
+  // &__votes-count {
+
+  //     transform: translate(55%, -60%);
+  //     font-size: var(--font-down-3);
+  //     border-radius: 1em;
+  //     padding: 0.25em;
+  //     background: var(--tertiary-very-low);
+  //     height: 1em;
+  //     min-width: 1em;
+  //     text-align: center;
+  // }
   &__last-reply {
     display: inline-flex;
     align-items: center;
