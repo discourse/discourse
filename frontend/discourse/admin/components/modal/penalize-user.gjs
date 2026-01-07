@@ -27,6 +27,7 @@ export default class PenalizeUser extends Component {
   @tracked flash;
   @tracked reason;
   @tracked message;
+  @tracked readyToDeleteAll = false;
 
   constructor() {
     super(...arguments);
@@ -72,7 +73,8 @@ export default class PenalizeUser extends Component {
       this.penalizing ||
       isEmpty(this.penalizeUntil) ||
       !this.reason ||
-      this.reason.length < 1
+      this.reason.length < 1 ||
+      (this.postAction === "delete_all" && !this.readyToDeleteAll)
     );
   }
 
@@ -110,8 +112,12 @@ export default class PenalizeUser extends Component {
         console.error("Unknown penalty type:", this.args.model.penaltyType);
       }
       this.args.closeModal({ success: true });
-      if (this.successCallback) {
-        await this.successCallback(result);
+      if (this.args.model.successCallback) {
+        await this.args.model.successCallback({
+          ...result,
+          shouldDeleteAllPosts:
+            this.postAction === "delete_all" && this.readyToDeleteAll,
+        });
       }
     } catch (error) {
       this.flash = result ? extractError(result) : extractError(error);
@@ -136,6 +142,11 @@ export default class PenalizeUser extends Component {
   @action
   similarUsersChanged(userIds) {
     this.otherUserIds = userIds;
+  }
+
+  @action
+  updateReadyToDeleteAll(flag) {
+    this.readyToDeleteAll = flag;
   }
 
   <template>
@@ -185,6 +196,8 @@ export default class PenalizeUser extends Component {
               @postId={{@model.postId}}
               @postAction={{this.postAction}}
               @postEdit={{this.postEdit}}
+              @user={{@model.user}}
+              @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
             />
           {{/if}}
           {{#if @model.user.similar_users_count}}
