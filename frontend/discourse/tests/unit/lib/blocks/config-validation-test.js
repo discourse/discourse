@@ -3,6 +3,8 @@ import {
   isReservedArgName,
   RESERVED_ARG_NAMES,
   safeStringifyConfig,
+  VALID_CONFIG_KEYS,
+  validateConfigKeys,
 } from "discourse/lib/blocks/config-validation";
 
 module("Unit | Lib | blocks/config-validation", function () {
@@ -17,6 +19,257 @@ module("Unit | Lib | blocks/config-validation", function () {
 
     test("is frozen", function (assert) {
       assert.true(Object.isFrozen(RESERVED_ARG_NAMES));
+    });
+  });
+
+  module("VALID_CONFIG_KEYS", function () {
+    test("includes expected config keys", function (assert) {
+      assert.true(VALID_CONFIG_KEYS.includes("block"));
+      assert.true(VALID_CONFIG_KEYS.includes("args"));
+      assert.true(VALID_CONFIG_KEYS.includes("children"));
+      assert.true(VALID_CONFIG_KEYS.includes("conditions"));
+      assert.true(VALID_CONFIG_KEYS.includes("name"));
+      assert.true(VALID_CONFIG_KEYS.includes("classNames"));
+    });
+
+    test("is frozen", function (assert) {
+      assert.true(Object.isFrozen(VALID_CONFIG_KEYS));
+    });
+
+    test("has exactly 6 keys", function (assert) {
+      assert.strictEqual(VALID_CONFIG_KEYS.length, 6);
+    });
+  });
+
+  module("validateConfigKeys", function () {
+    test("passes validation for config with all valid keys", function (assert) {
+      const config = {
+        block: "my-block",
+        args: { title: "Hello" },
+        children: [],
+        conditions: [{ type: "user" }],
+        name: "My Block",
+        classNames: "custom-class",
+      };
+
+      // Should not throw
+      validateConfigKeys(config, "test-outlet", "blocks[0]");
+      assert.true(true, "validation passed without error");
+    });
+
+    test("passes validation for config with only required key", function (assert) {
+      const config = { block: "my-block" };
+
+      validateConfigKeys(config, "test-outlet", "blocks[0]");
+      assert.true(true, "validation passed without error");
+    });
+
+    test("throws error for unknown key with suggestion for 'condition' typo", function (assert) {
+      const config = {
+        block: "my-block",
+        condition: { type: "user" }, // typo: should be "conditions"
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) => {
+          return (
+            error.message.includes('"condition"') &&
+            error.message.includes('did you mean "conditions"?') &&
+            error.message.includes("test-outlet") &&
+            error.message.includes("blocks[0]")
+          );
+        },
+        "error message suggests correction and includes context"
+      );
+    });
+
+    test("throws error for unknown key with suggestion for 'arg' typo", function (assert) {
+      const config = {
+        block: "my-block",
+        arg: { title: "Hello" }, // typo: should be "args"
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) =>
+          error.message.includes('"arg"') &&
+          error.message.includes('did you mean "args"?'),
+        "error message suggests 'args'"
+      );
+    });
+
+    test("throws error for unknown key with suggestion for 'child' typo", function (assert) {
+      const config = {
+        block: "my-block",
+        child: [], // typo: should be "children"
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) =>
+          error.message.includes('"child"') &&
+          error.message.includes('did you mean "children"?'),
+        "error message suggests 'children'"
+      );
+    });
+
+    test("throws error for unknown key with suggestion for 'className' typo", function (assert) {
+      const config = {
+        block: "my-block",
+        className: "custom", // typo: should be "classNames"
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) =>
+          error.message.includes('"className"') &&
+          error.message.includes('did you mean "classNames"?'),
+        "error message suggests 'classNames'"
+      );
+    });
+
+    test("throws error for completely unknown key without suggestion", function (assert) {
+      const config = {
+        block: "my-block",
+        foo: "bar", // unknown key - too different from any valid key
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) => {
+          return (
+            error.message.includes('"foo"') &&
+            !error.message.includes("did you mean")
+          );
+        },
+        "error message includes unknown key without suggestion"
+      );
+    });
+
+    test("reports all unknown keys in single error message", function (assert) {
+      const config = {
+        block: "my-block",
+        condition: { type: "user" }, // typo
+        foo: "bar", // unknown
+        arg: { title: "Hello" }, // typo
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) => {
+          return (
+            error.message.includes('did you mean "conditions"?') &&
+            error.message.includes('did you mean "args"?') &&
+            error.message.includes('"foo"')
+          );
+        },
+        "error message includes all unknown keys with suggestions"
+      );
+    });
+
+    test("fuzzy matching: 'codition' suggests 'conditions'", function (assert) {
+      const config = {
+        block: "my-block",
+        codition: { type: "user" }, // 1 char different
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) =>
+          error.message.includes('"codition"') &&
+          error.message.includes('did you mean "conditions"?'),
+        "fuzzy matching finds close match"
+      );
+    });
+
+    test("fuzzy matching: 'conditons' (transposition) suggests 'conditions'", function (assert) {
+      const config = {
+        block: "my-block",
+        conditons: { type: "user" }, // transposed 'o' and 'n'
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) =>
+          error.message.includes('"conditons"') &&
+          error.message.includes('did you mean "conditions"?'),
+        "fuzzy matching handles transpositions"
+      );
+    });
+
+    test("fuzzy matching: 'condtions' (missing char) suggests 'conditions'", function (assert) {
+      const config = {
+        block: "my-block",
+        condtions: { type: "user" }, // missing 'i'
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) =>
+          error.message.includes('"condtions"') &&
+          error.message.includes('did you mean "conditions"?'),
+        "fuzzy matching handles missing characters"
+      );
+    });
+
+    test("singular/plural grammar: single key uses 'key'", function (assert) {
+      const config = {
+        block: "my-block",
+        condition: {}, // one unknown key
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) => error.message.includes("Unknown config key "),
+        "uses singular 'key' for one unknown key"
+      );
+    });
+
+    test("singular/plural grammar: multiple keys uses 'keys'", function (assert) {
+      const config = {
+        block: "my-block",
+        condition: {},
+        arg: {}, // two unknown keys
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) => error.message.includes("Unknown config keys "),
+        "uses plural 'keys' for multiple unknown keys"
+      );
+    });
+
+    test("uses 'root' as path when path is not provided", function (assert) {
+      const config = {
+        block: "my-block",
+        foo: "bar",
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet"),
+        (error) => error.message.includes("block at root"),
+        "error message uses 'root' as path"
+      );
+    });
+
+    test("includes valid keys in error message", function (assert) {
+      const config = {
+        block: "my-block",
+        unknown: "value",
+      };
+
+      assert.throws(
+        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        (error) => {
+          return (
+            error.message.includes("Valid keys are:") &&
+            error.message.includes("block") &&
+            error.message.includes("conditions")
+          );
+        },
+        "error message lists valid keys"
+      );
     });
   });
 

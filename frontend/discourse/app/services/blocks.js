@@ -13,6 +13,7 @@ import {
   isBlockFactory,
   resolveBlock,
 } from "discourse/lib/blocks/registration";
+import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
  * Unified service for block registry and condition evaluation.
@@ -321,9 +322,10 @@ export default class Blocks extends Service {
     const conditionInstance = this.#conditionTypes.get(type);
 
     if (!conditionInstance) {
-      const availableTypes = [...this.#conditionTypes.keys()].join(", ");
+      const availableTypes = [...this.#conditionTypes.keys()];
+      const suggestion = formatWithSuggestion(type, availableTypes);
       raiseBlockError(
-        `Unknown block condition type: "${type}". Available types: ${availableTypes}`
+        `Unknown block condition type: ${suggestion}. Available types: ${availableTypes.join(", ")}`
       );
       return;
     }

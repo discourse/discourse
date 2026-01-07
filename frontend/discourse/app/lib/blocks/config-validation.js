@@ -26,6 +26,7 @@ import {
   resolveBlock,
 } from "discourse/lib/blocks/registration";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
+import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
  * Validates block conditions with proper error context.
@@ -149,6 +150,50 @@ export const RESERVED_ARG_NAMES = Object.freeze([
   "__visible",
   "__failureReason",
 ]);
+
+/**
+ * Valid top-level keys in block configuration objects.
+ * Any key not in this list will trigger a validation error, helping catch
+ * common typos like `condition` instead of `conditions`.
+ */
+export const VALID_CONFIG_KEYS = Object.freeze([
+  "block", // Block class or name (required)
+  "args", // Arguments to pass to the block
+  "children", // Nested block configurations
+  "conditions", // Conditions for rendering
+  "name", // Display name for error messages
+  "classNames", // CSS classes to add to wrapper
+]);
+
+/**
+ * Validates that a block config only uses known keys.
+ * Uses fuzzy matching to suggest corrections for typos like "condition",
+ * "codition", or "conditons" instead of "conditions".
+ *
+ * @param {Object} config - The block configuration object.
+ * @param {string} outletName - The outlet name for error messages.
+ * @param {string} [path] - JSON-path style location for error context.
+ * @throws {BlockError} If unknown keys are found.
+ */
+export function validateConfigKeys(config, outletName, path) {
+  const unknownKeys = Object.keys(config).filter(
+    (key) => !VALID_CONFIG_KEYS.includes(key)
+  );
+
+  if (unknownKeys.length > 0) {
+    // Build helpful suggestions using fuzzy matching from shared lib
+    const suggestions = unknownKeys.map((key) =>
+      formatWithSuggestion(key, VALID_CONFIG_KEYS)
+    );
+
+    const keyWord = unknownKeys.length > 1 ? "keys" : "key";
+    raiseBlockError(
+      `Unknown config ${keyWord} in block at ${path || "root"} for outlet "${outletName}": ` +
+        `${suggestions.join(", ")}. ` +
+        `Valid keys are: ${VALID_CONFIG_KEYS.join(", ")}.`
+    );
+  }
+}
 
 /**
  * Safely stringifies a block config object for error messages.
@@ -357,9 +402,16 @@ export async function validateBlock(
   path
 ) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
-    raiseBlockError(`Unknown block outlet: ${outletName}`);
+    const suggestion = formatWithSuggestion(outletName, BLOCK_OUTLETS);
+    raiseBlockError(
+      `Unknown block outlet: ${suggestion}. ` +
+        `Available outlets: ${BLOCK_OUTLETS.join(", ")}`
+    );
     return;
   }
+
+  // Validate config keys first (catches typos like "condition" vs "conditions")
+  validateConfigKeys(config, outletName, path);
 
   if (!config.block) {
     raiseBlockError(

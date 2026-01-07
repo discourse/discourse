@@ -1,4 +1,5 @@
 import { service } from "@ember/service";
+import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import { BlockCondition, raiseBlockValidationError } from "./base";
 
 /**
@@ -73,15 +74,17 @@ export default class BlockViewportCondition extends BlockCondition {
     const { min, max } = args;
 
     if (min && !BREAKPOINTS.includes(min)) {
+      const suggestion = formatWithSuggestion(min, BREAKPOINTS);
       raiseBlockValidationError(
-        `BlockViewportCondition: Invalid \`min\` breakpoint "${min}". ` +
+        `BlockViewportCondition: Invalid \`min\` breakpoint ${suggestion}. ` +
           `Valid breakpoints are: ${BREAKPOINTS.join(", ")}.`
       );
     }
 
     if (max && !BREAKPOINTS.includes(max)) {
+      const suggestion = formatWithSuggestion(max, BREAKPOINTS);
       raiseBlockValidationError(
-        `BlockViewportCondition: Invalid \`max\` breakpoint "${max}". ` +
+        `BlockViewportCondition: Invalid \`max\` breakpoint ${suggestion}. ` +
           `Valid breakpoints are: ${BREAKPOINTS.join(", ")}.`
       );
     }

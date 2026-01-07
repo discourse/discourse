@@ -62,7 +62,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
 
       assert.throws(
         () => validateArgsSchema(schema, "test-block"),
-        /unknown properties: unknownProp/
+        /unknown properties: "unknownProp"/
       );
     });
 

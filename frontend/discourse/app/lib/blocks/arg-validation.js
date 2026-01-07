@@ -1,4 +1,5 @@
 import { raiseBlockError } from "discourse/lib/blocks/error";
+import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
  * Valid arg name pattern: must be a valid JavaScript identifier.
@@ -68,8 +69,11 @@ export function validateArgsSchema(argsSchema, blockName) {
       (prop) => !VALID_ARG_SCHEMA_PROPERTIES.includes(prop)
     );
     if (unknownProps.length > 0) {
+      const suggestions = unknownProps.map((prop) =>
+        formatWithSuggestion(prop, VALID_ARG_SCHEMA_PROPERTIES)
+      );
       raiseBlockError(
-        `Block "${blockName}": arg "${argName}" has unknown properties: ${unknownProps.join(", ")}. ` +
+        `Block "${blockName}": arg "${argName}" has unknown properties: ${suggestions.join(", ")}. ` +
           `Valid properties are: ${VALID_ARG_SCHEMA_PROPERTIES.join(", ")}.`
       );
     }
@@ -84,8 +88,9 @@ export function validateArgsSchema(argsSchema, blockName) {
 
     // Validate type
     if (!VALID_ARG_TYPES.includes(argDef.type)) {
+      const suggestion = formatWithSuggestion(argDef.type, VALID_ARG_TYPES);
       raiseBlockError(
-        `Block "${blockName}": arg "${argName}" has invalid type "${argDef.type}". ` +
+        `Block "${blockName}": arg "${argName}" has invalid type ${suggestion}. ` +
           `Valid types are: ${VALID_ARG_TYPES.join(", ")}.`
       );
     }
@@ -101,8 +106,12 @@ export function validateArgsSchema(argsSchema, blockName) {
     // Validate itemType for arrays
     if (argDef.type === "array" && argDef.itemType !== undefined) {
       if (!VALID_ITEM_TYPES.includes(argDef.itemType)) {
+        const suggestion = formatWithSuggestion(
+          argDef.itemType,
+          VALID_ITEM_TYPES
+        );
         raiseBlockError(
-          `Block "${blockName}": arg "${argName}" has invalid itemType "${argDef.itemType}". ` +
+          `Block "${blockName}": arg "${argName}" has invalid itemType ${suggestion}. ` +
             `Valid item types are: ${VALID_ITEM_TYPES.join(", ")}.`
         );
       }

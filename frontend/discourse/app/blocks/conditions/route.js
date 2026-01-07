@@ -8,6 +8,7 @@ import {
   VALID_SHORTCUTS,
 } from "discourse/lib/blocks/url-matcher";
 import { matchParams } from "discourse/lib/blocks/value-matcher";
+import { findClosestMatch } from "discourse/lib/string-similarity";
 import { BlockCondition, raiseBlockValidationError } from "./base";
 
 /**
@@ -112,8 +113,12 @@ export default class BlockRouteCondition extends BlockCondition {
         const name = getShortcutName(pattern);
         if (!VALID_SHORTCUTS.includes(name)) {
           const validList = VALID_SHORTCUTS.map((s) => "$" + s).join(", ");
+          const suggestion = findClosestMatch(name, VALID_SHORTCUTS);
+          const formatted = suggestion
+            ? `"$${name}" (did you mean "$${suggestion}"?)`
+            : `"$${name}"`;
           raiseBlockValidationError(
-            `BlockRouteCondition: Unknown shortcut "$${name}". ` +
+            `BlockRouteCondition: Unknown shortcut ${formatted}. ` +
               `Valid shortcuts: ${validList}`
           );
         }
