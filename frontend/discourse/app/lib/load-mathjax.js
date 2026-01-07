@@ -1,5 +1,7 @@
 import { waitForPromise } from "@ember/test-waiters";
 
+// MathJax can only be initialized once per page load with a single output format.
+// The output format is locked to whichever value is passed on the first call.
 let basePromise;
 
 export default async function loadMathJax(options = {}) {
