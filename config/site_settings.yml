@@ -568,6 +568,9 @@ basic:
     default: false
     hidden: true
     client: true
+  trigger_browser_pageview_events:
+    default: false
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"

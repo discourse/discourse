@@ -34,10 +34,15 @@ function mbAjax(messageBus, opts) {
 
   if (_sendDeferredPageview) {
     opts.headers["Discourse-Track-View-Deferred"] = "true";
-    opts.headers["Discourse-Track-View-Session-Id"] = _deferredSessionId;
-    opts.headers["Discourse-Track-View-Url"] = _deferredURL;
-    opts.headers["Discourse-Track-View-Referrer"] = _deferredReferrer;
-
+    if (_deferredSessionId) {
+      opts.headers["Discourse-Track-View-Session-Id"] = _deferredSessionId;
+    }
+    if (_deferredURL) {
+      opts.headers["Discourse-Track-View-Url"] = _deferredURL;
+    }
+    if (_deferredReferrer) {
+      opts.headers["Discourse-Track-View-Referrer"] = _deferredReferrer;
+    }
     if (_deferredViewTopicId) {
       opts.headers["Discourse-Track-View-Topic-Id"] = _deferredViewTopicId;
     }
@@ -113,8 +118,11 @@ export default {
         _deferredSessionId = document.querySelector(
           "meta[name=discourse-track-view-session-id]"
         )?.content;
-        _deferredURL = window.location.href;
-        _deferredReferrer = document.referrer;
+
+        if (_deferredSessionId) {
+          _deferredURL = window.location.href;
+          _deferredReferrer = document.referrer;
+        }
 
         clearInterval(interval);
         messageBus.start();
