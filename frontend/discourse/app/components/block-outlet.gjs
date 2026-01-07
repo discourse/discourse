@@ -46,7 +46,10 @@ import {
   parseBlockName,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/patterns";
-import { resolveBlockSync } from "discourse/lib/blocks/registration";
+import {
+  isBlockRegistryFrozen,
+  resolveBlockSync,
+} from "discourse/lib/blocks/registration";
 import { applyArgDefaults } from "discourse/lib/blocks/utils";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
@@ -710,11 +713,15 @@ export function renderBlocks(outletName, config, owner) {
     raiseBlockError(`Unknown block outlet: ${outletName}`);
   }
 
-  // Lock the block registry immediately.
-  // This prevents themes/plugins from registering new blocks after
-  // the first renderBlocks() call.
-  const { _lockBlockRegistry } = require("discourse/lib/blocks/registration");
-  _lockBlockRegistry();
+  // Verify registry is frozen before allowing renderBlocks().
+  // This ensures all blocks are registered before any layout configuration.
+  if (!isBlockRegistryFrozen()) {
+    raiseBlockError(
+      `api.renderBlocks() was called before the block registry was frozen. ` +
+        `Move your code to an initializer that runs after "freeze-block-registry". ` +
+        `Outlet: "${outletName}"`
+    );
+  }
 
   // All block validation is async (handles both class refs and string refs).
   // In dev mode, this eagerly resolves all factories for early error detection.

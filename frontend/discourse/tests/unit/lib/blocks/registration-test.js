@@ -7,6 +7,7 @@ import {
   _freezeBlockRegistry,
   _registerBlock,
   _registerBlockFactory,
+  _setTestSourceIdentifier,
   blockRegistry,
   hasBlock,
   isBlockFactory,
@@ -399,6 +400,87 @@ module("Unit | Lib | blocks/registration", function (hooks) {
         class InvalidTheme extends Component {}
         _registerBlock(InvalidTheme);
       }, /is invalid.*Valid formats/);
+    });
+  });
+
+  module("namespace enforcement", function (nestedHooks) {
+    nestedHooks.afterEach(function () {
+      _setTestSourceIdentifier(undefined);
+    });
+
+    test("theme source must use theme:namespace:name format", function (assert) {
+      _setTestSourceIdentifier("theme:My Theme");
+
+      @block("unnamespaced-block")
+      class UnamespacedBlock extends Component {}
+
+      assert.throws(
+        () => _registerBlock(UnamespacedBlock),
+        /Theme blocks must use the "theme:namespace:block-name" format/
+      );
+    });
+
+    test("theme source allows properly namespaced blocks", function (assert) {
+      _setTestSourceIdentifier("theme:My Theme");
+
+      @block("theme:mytheme:my-block")
+      class NamespacedBlock extends Component {}
+
+      _registerBlock(NamespacedBlock);
+
+      assert.true(blockRegistry.has("theme:mytheme:my-block"));
+    });
+
+    test("plugin source must use namespace:name format", function (assert) {
+      _setTestSourceIdentifier("plugin:my-plugin");
+
+      @block("unnamespaced-plugin-block")
+      class UnamespacedPluginBlock extends Component {}
+
+      assert.throws(
+        () => _registerBlock(UnamespacedPluginBlock),
+        /Plugin blocks must use the "namespace:block-name" format/
+      );
+    });
+
+    test("plugin source allows properly namespaced blocks", function (assert) {
+      _setTestSourceIdentifier("plugin:chat");
+
+      @block("chat:message-widget")
+      class ChatWidget extends Component {}
+
+      _registerBlock(ChatWidget);
+
+      assert.true(blockRegistry.has("chat:message-widget"));
+    });
+
+    test("factory registration enforces theme namespace", function (assert) {
+      _setTestSourceIdentifier("theme:My Theme");
+
+      assert.throws(
+        () => _registerBlockFactory("my-factory-block", async () => ({})),
+        /Theme blocks must use the "theme:namespace:block-name" format/
+      );
+    });
+
+    test("factory registration enforces plugin namespace", function (assert) {
+      _setTestSourceIdentifier("plugin:my-plugin");
+
+      assert.throws(
+        () => _registerBlockFactory("my-factory-block", async () => ({})),
+        /Plugin blocks must use the "namespace:block-name" format/
+      );
+    });
+
+    test("core source (null) allows unnamespaced blocks", function (assert) {
+      _setTestSourceIdentifier(null);
+
+      @block("core-block")
+      class CoreBlock extends Component {}
+
+      _registerBlock(CoreBlock);
+
+      assert.true(blockRegistry.has("core-block"));
     });
   });
 

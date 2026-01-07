@@ -82,12 +82,36 @@ const sourceNamespaceMap = new Map();
 let registryFrozen = false;
 
 /**
+ * Override for source identifier in tests.
+ * @type {string|null|undefined}
+ */
+let testSourceIdentifier;
+
+/**
+ * Sets a test override for the source identifier.
+ * Only available in DEBUG mode.
+ *
+ * @param {string|null} sourceId - Source identifier to use, or null to clear.
+ */
+export function _setTestSourceIdentifier(sourceId) {
+  if (!DEBUG) {
+    return;
+  }
+  testSourceIdentifier = sourceId;
+}
+
+/**
  * Gets a unique identifier for the current source from the call stack.
  * Returns null for core code (no theme or plugin detected).
  *
  * @returns {string|null} Source identifier like "theme:Tactile" or "plugin:chat"
  */
 function getSourceIdentifier() {
+  // Allow test override
+  if (DEBUG && testSourceIdentifier !== undefined) {
+    return testSourceIdentifier;
+  }
+
   const source = identifySource();
   if (!source) {
     return null;
@@ -203,11 +227,34 @@ export function _registerBlock(BlockClass) {
     return;
   }
 
-  // Enforce single namespace per source (theme/plugin)
+  // Enforce namespace requirements for themes and plugins
   const sourceId = getSourceIdentifier();
   const namespacePrefix = getNamespacePrefix(blockName);
 
   if (sourceId) {
+    // Themes must use theme:namespace:name format
+    if (
+      sourceId.startsWith("theme:") &&
+      !namespacePrefix?.startsWith("theme:")
+    ) {
+      raiseBlockError(
+        `Theme blocks must use the "theme:namespace:block-name" format. ` +
+          `Block "${blockName}" should be renamed to "theme:<your-theme>:${blockName}".`
+      );
+      return;
+    }
+
+    // Plugins must use namespace:name format
+    if (sourceId.startsWith("plugin:") && !namespacePrefix) {
+      const pluginName = sourceId.replace("plugin:", "");
+      raiseBlockError(
+        `Plugin blocks must use the "namespace:block-name" format. ` +
+          `Block "${blockName}" should be renamed to "${pluginName}:${blockName}".`
+      );
+      return;
+    }
+
+    // Enforce single namespace per source (consistency check)
     const existingNamespace = sourceNamespaceMap.get(sourceId);
     if (
       existingNamespace !== undefined &&
@@ -289,11 +336,34 @@ export function _registerBlockFactory(name, factory) {
     return;
   }
 
-  // Enforce single namespace per source (theme/plugin)
+  // Enforce namespace requirements for themes and plugins
   const sourceId = getSourceIdentifier();
   const namespacePrefix = getNamespacePrefix(name);
 
   if (sourceId) {
+    // Themes must use theme:namespace:name format
+    if (
+      sourceId.startsWith("theme:") &&
+      !namespacePrefix?.startsWith("theme:")
+    ) {
+      raiseBlockError(
+        `Theme blocks must use the "theme:namespace:block-name" format. ` +
+          `Block "${name}" should be renamed to "theme:<your-theme>:${name}".`
+      );
+      return;
+    }
+
+    // Plugins must use namespace:name format
+    if (sourceId.startsWith("plugin:") && !namespacePrefix) {
+      const pluginName = sourceId.replace("plugin:", "");
+      raiseBlockError(
+        `Plugin blocks must use the "namespace:block-name" format. ` +
+          `Block "${name}" should be renamed to "${pluginName}:${name}".`
+      );
+      return;
+    }
+
+    // Enforce single namespace per source (consistency check)
     const existingNamespace = sourceNamespaceMap.get(sourceId);
     if (
       existingNamespace !== undefined &&
@@ -571,6 +641,7 @@ export function resetBlockRegistryForTesting() {
   pendingResolutions.clear();
   failedResolutions.clear();
   sourceNamespaceMap.clear();
+  testSourceIdentifier = undefined;
 
   if (testRegistryFrozenState !== null) {
     registryFrozen = testRegistryFrozenState;
