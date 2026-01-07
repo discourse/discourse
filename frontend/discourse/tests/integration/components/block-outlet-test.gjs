@@ -12,6 +12,7 @@ import {
   _setBlockDebugCallback,
   _setBlockLoggingCallback,
   _setBlockOutletBoundaryCallback,
+  _setStartGroupCallback,
 } from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,
@@ -27,6 +28,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
     _setBlockDebugCallback(null);
     _setBlockLoggingCallback(null);
     _setBlockOutletBoundaryCallback(null);
+    _setStartGroupCallback(null);
   });
 
   module("basic rendering", function () {
@@ -690,6 +692,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       const consoleStub = sinon.stub(console, "groupCollapsed");
 
       _setBlockLoggingCallback(() => true);
+      // Set up the start group callback to call console.groupCollapsed
+      // This is what dev-tools does when loaded
+      _setStartGroupCallback(() => {
+        // eslint-disable-next-line no-console
+        console.groupCollapsed("[Blocks] test");
+      });
 
       withTestBlockRegistration(() => _registerBlock(LoggingTestBlock));
       renderBlocks(
@@ -709,6 +717,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert.true(consoleStub.called, "console logging was enabled");
       consoleStub.restore();
+      _setStartGroupCallback(null);
     });
 
     test("_setBlockLoggingCallback disables logging when returns false", async function (assert) {
