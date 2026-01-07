@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Finish Installation", type: :system do
+  include OmniauthHelpers
+
   let(:finish_installation_page) { PageObjects::Pages::FinishInstallation.new }
 
   context "when has_login_hint is false" do
@@ -67,6 +69,51 @@ RSpec.describe "Finish Installation", type: :system do
           finish_installation_page.click_login_with_discourse_id
 
           expect(User.count).to eq(initial_user_count)
+        end
+
+        it "lands the first admin user on wizard" do
+          OmniAuth.config.test_mode = true
+          OmniAuth.config.mock_auth[:discourse_id] = OmniAuth::AuthHash.new(
+            provider: "discourse_id",
+            uid: "12345",
+            info: OmniAuth::AuthHash::InfoHash.new(email: "dev1@example.com", nickname: "dev1"),
+          )
+
+          finish_installation_page.visit_page
+          finish_installation_page.click_login_with_discourse_id
+
+          expect(page).to have_current_path("/wizard")
+        ensure
+          reset_omniauth_config(:discourse_id)
+        end
+
+        context "when installed in a subfolder" do
+          before do
+            set_subfolder "/discuss"
+
+            stub_request(:post, "https://id.discourse.com/challenge").to_return(
+              status: 200,
+              body: {
+                domain: Discourse.current_hostname,
+                path: Discourse.base_path,
+                token: "test_token",
+              }.to_json,
+            )
+          end
+
+          it "logs in the first admin user and lands them on the wizard" do
+            OmniAuth.config.test_mode = true
+            OmniAuth.config.mock_auth[:discourse_id] = OmniAuth::AuthHash.new(
+              provider: "discourse_id",
+              uid: "12345",
+              info: OmniAuth::AuthHash::InfoHash.new(email: "dev1@example.com", nickname: "dev1"),
+            )
+            finish_installation_page.visit("/discuss/finish-installation")
+            finish_installation_page.click_login_with_discourse_id
+            expect(page).to have_current_path("/discuss/wizard")
+          ensure
+            reset_omniauth_config(:discourse_id)
+          end
         end
       end
 
@@ -190,6 +237,32 @@ RSpec.describe "Finish Installation", type: :system do
             .fill_password("supersecurepassword")
             .submit
         }.not_to change { Jobs::CriticalUserEmail.jobs.size }
+      end
+
+      it "redirects to the wizard after admin confirms their email" do
+        Jobs.run_immediately!
+
+        finish_installation_page
+          .visit_register
+          .select_email("admin@example.com")
+          .fill_username("newadmin")
+          .fill_password("supersecurepassword")
+          .submit
+
+        expect(finish_installation_page).to be_redirected_to_confirm_email
+
+        user = User.find_by(username: "newadmin")
+        user.grant_admin!
+
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.to).to contain_exactly("admin@example.com")
+        activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
+
+        activate_account_page = PageObjects::Pages::ActivateAccount.new
+        visit activation_link
+        activate_account_page.click_activate_account
+
+        expect(page).to have_current_path("/wizard")
       end
     end
   end
