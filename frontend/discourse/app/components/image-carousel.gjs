@@ -21,6 +21,7 @@ const getAspectRatio = helper(([width, height]) => {
 });
 
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
+const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 10;
 
 export default class ImageCarousel extends Component {
@@ -38,13 +39,21 @@ export default class ImageCarousel extends Component {
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
     const updateIndex = () => {
-      this.currentIndex = this.#calculateNearestIndex(element);
+      const newIndex = this.#calculateNearestIndex(element);
+      if (newIndex !== this.currentIndex) {
+        this.currentIndex = newIndex;
+      }
     };
 
     const supportsScrollEnd = "onscrollend" in window;
     let scrollStopTimer;
 
     const onScroll = () => {
+      // Optimistic update while scrolling for real-time dot feedback
+      if (!isTesting()) {
+        throttle(this, updateIndex, SCROLL_THROTTLE_MS);
+      }
+
       // Fallback for browsers without scrollend support (Safari < 17.4)
       if (!supportsScrollEnd) {
         clearTimeout(scrollStopTimer);
