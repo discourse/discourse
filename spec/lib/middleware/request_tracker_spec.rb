@@ -592,7 +592,7 @@ RSpec.describe Middleware::RequestTracker do
       end
     end
 
-    describe "page_visited event" do
+    describe "browser_pageview event" do
       it "triggers event for anonymous user page views when `login_required` site setting is false" do
         session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
 
@@ -609,7 +609,7 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             Middleware::RequestTracker.log_request(data)
           end
 
@@ -640,7 +640,7 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             Middleware::RequestTracker.log_request(data)
           end
 
@@ -661,7 +661,7 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             Middleware::RequestTracker.log_request(data)
           end
 
@@ -696,7 +696,7 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             Middleware::RequestTracker.log_request(data)
           end
 
@@ -718,7 +718,7 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             Middleware::RequestTracker.log_request(data)
           end
 

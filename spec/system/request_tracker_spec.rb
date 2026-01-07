@@ -16,7 +16,7 @@ describe "Request tracking", type: :system do
   describe "pageviews" do
     it "tracks an anonymous visit correctly" do
       events =
-        DiscourseEvent.track_events(:page_visited) do
+        DiscourseEvent.track_events(:browser_pageview) do
           visit "/"
           try_until_success do
             CachedCounting.flush
@@ -38,7 +38,7 @@ describe "Request tracking", type: :system do
       expect(event[:session_id]).to be_present
 
       events =
-        DiscourseEvent.track_events(:page_visited) do
+        DiscourseEvent.track_events(:browser_pageview) do
           find(".nav-item_categories a").click
 
           try_until_success do
@@ -66,7 +66,7 @@ describe "Request tracking", type: :system do
       SiteSetting.crawler_user_agents += "|chrome"
 
       events =
-        DiscourseEvent.track_events(:page_visited) do
+        DiscourseEvent.track_events(:browser_pageview) do
           visit "/"
 
           try_until_success do
@@ -88,7 +88,7 @@ describe "Request tracking", type: :system do
       sign_in user
 
       events =
-        DiscourseEvent.track_events(:page_visited) do
+        DiscourseEvent.track_events(:browser_pageview) do
           visit "/"
 
           try_until_success do
@@ -113,7 +113,7 @@ describe "Request tracking", type: :system do
       expect(event[:topic_id]).to be_blank
 
       events =
-        DiscourseEvent.track_events(:page_visited) do
+        DiscourseEvent.track_events(:browser_pageview) do
           find(".nav-item_categories a").click
           try_until_success do
             CachedCounting.flush
@@ -140,7 +140,7 @@ describe "Request tracking", type: :system do
       SiteSetting.bootstrap_error_pages = false
 
       events =
-        DiscourseEvent.track_events(:page_visited) do
+        DiscourseEvent.track_events(:browser_pageview) do
           visit "/foobar"
 
           try_until_success do
@@ -175,7 +175,7 @@ describe "Request tracking", type: :system do
 
     it "tracks non-ember pages correctly" do
       events =
-        DiscourseEvent.track_events(:page_visited) do
+        DiscourseEvent.track_events(:browser_pageview) do
           visit "/safe-mode"
 
           try_until_success do
@@ -237,7 +237,7 @@ describe "Request tracking", type: :system do
       Fabricate(:published_page, public: true, slug: "some-page", topic: Fabricate(:post).topic)
 
       events =
-        DiscourseEvent.track_events(:page_visited) do
+        DiscourseEvent.track_events(:browser_pageview) do
           visit "/pub/some-page"
 
           try_until_success do
@@ -273,7 +273,7 @@ describe "Request tracking", type: :system do
 
       it "tracks user viewing a topic correctly with deferred tracking" do
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             visit topic.url
 
             try_until_success do
@@ -306,7 +306,7 @@ describe "Request tracking", type: :system do
         visit "/"
 
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
             try_until_success do
@@ -338,7 +338,7 @@ describe "Request tracking", type: :system do
     context "when anonymous" do
       it "tracks an anonymous user viewing a topic correctly with deferred tracking" do
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             visit topic.url
 
             try_until_success do
@@ -368,7 +368,7 @@ describe "Request tracking", type: :system do
         visit "/"
 
         events =
-          DiscourseEvent.track_events(:page_visited) do
+          DiscourseEvent.track_events(:browser_pageview) do
             find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
             try_until_success do
