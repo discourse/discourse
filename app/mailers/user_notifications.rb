@@ -351,14 +351,12 @@ class UserNotifications < ActionMailer::Base
 
       @preheader_text = I18n.t("user_notifications.digest.preheader", since: @since)
 
+      subject_key =
+        "user_notifications.digest.#{SiteSetting.simple_email_subject ? "subject_template_improved" : "subject_template"}"
+
       opts = {
         from_alias: I18n.t("user_notifications.digest.from", site_name: Email.site_title),
-        subject:
-          I18n.t(
-            "user_notifications.digest.subject_template",
-            email_prefix: @email_prefix,
-            date: short_date(Time.now),
-          ),
+        subject: I18n.t(subject_key, email_prefix: @email_prefix, date: short_date(Time.now)),
         add_unsubscribe_link: true,
         unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
         topic_ids: topics_for_digest.pluck(:id),
@@ -645,9 +643,9 @@ class UserNotifications < ActionMailer::Base
       subject_pm =
         if opts[:show_group_in_subject] && group.present?
           if group.full_name
-            "#{group.full_name}: "
+            SiteSetting.simple_email_subject ? "#{group.full_name}: " : "[#{group.full_name}] "
           else
-            "#{group.name}: "
+            SiteSetting.simple_email_subject ? "#{group.name}: " : "[#{group.name}] "
           end
         else
           I18n.t("subject_pm")
