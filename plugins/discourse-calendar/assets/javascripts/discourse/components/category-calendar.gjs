@@ -148,7 +148,7 @@ export default class CategoryCalendar extends Component {
       <FullCalendar
         @onLoadEvents={{this.loadEvents}}
         @height="650px"
-        @initialView={{this.categorySetting?.defaultView}}
+        @initialView={{this.categorySetting.defaultView}}
         @weekends={{this.renderWeekends}}
         @refreshKey={{this.category.id}}
       />
