@@ -1,5 +1,6 @@
 import picomatch from "picomatch";
 import { withoutPrefix } from "discourse/lib/get-url";
+import { findClosestMatch } from "discourse/lib/string-similarity";
 
 /**
  * Valid shortcut patterns for semantic URL matching.
@@ -33,6 +34,55 @@ export const VALID_SHORTCUTS = Object.freeze([
  */
 export function isShortcut(pattern) {
   return typeof pattern === "string" && pattern.startsWith("$");
+}
+
+/**
+ * Checks if a URL pattern looks like it might be a shortcut typo.
+ *
+ * This function detects patterns like "CATEGORIES", "CATEGORY_PAGES", or
+ * "homepage" that look like they were meant to be shortcuts but are missing
+ * the `$` prefix. It uses fuzzy matching against the shortcut names.
+ *
+ * @param {string} pattern - The URL pattern to check.
+ * @returns {string|null} The likely intended shortcut (with `$`), or null.
+ *
+ * @example
+ * looksLikeShortcutTypo("CATEGORY_PAGES"); // "$CATEGORY_PAGES"
+ * looksLikeShortcutTypo("CATEGORIES");     // "$CATEGORY_PAGES"
+ * looksLikeShortcutTypo("homepage");       // "$HOMEPAGE"
+ * looksLikeShortcutTypo("/c/**");          // null
+ */
+export function looksLikeShortcutTypo(pattern) {
+  if (typeof pattern !== "string" || isShortcut(pattern)) {
+    return null;
+  }
+
+  // Skip patterns that look like actual URL paths
+  if (
+    pattern.startsWith("/") ||
+    pattern.includes("*") ||
+    pattern.includes("?")
+  ) {
+    return null;
+  }
+
+  // Only consider patterns that look like shortcut attempts:
+  // - All uppercase (HOMEPAGE, CATEGORY_PAGES)
+  // - Has underscores (category_pages)
+  // - Matches shortcut word patterns (e.g., "categories" matches "category")
+  const upperPattern = pattern.toUpperCase();
+  const looksLikeShortcut =
+    pattern === upperPattern || // All uppercase
+    pattern.includes("_") || // Has underscores
+    /^[A-Za-z]+$/.test(pattern); // Single word (might be abbreviated shortcut)
+
+  if (!looksLikeShortcut) {
+    return null;
+  }
+
+  // Check if pattern matches a shortcut name (Jaro-Winkler handles prefixes naturally)
+  const normalizedPattern = `$${upperPattern}`;
+  return findClosestMatch(normalizedPattern, VALID_SHORTCUTS);
 }
 
 /**

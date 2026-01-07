@@ -1,7 +1,9 @@
+import { DEBUG } from "@glimmer/env";
 import { service } from "@ember/service";
 import {
   isShortcut,
   isValidUrlPattern,
+  looksLikeShortcutTypo,
   matchesAnyPattern,
   normalizePath,
   VALID_SHORTCUTS,
@@ -122,6 +124,16 @@ export default class BlockRouteCondition extends BlockCondition {
           `BlockRouteCondition: Invalid glob pattern "${pattern}". ` +
             `Check for unbalanced brackets or braces.`
         );
+      } else if (DEBUG) {
+        // Warn if URL pattern looks like a shortcut typo (dev only)
+        const likelyShortcut = looksLikeShortcutTypo(pattern);
+        if (likelyShortcut) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `[Blocks] BlockRouteCondition: URL pattern "${pattern}" looks like ` +
+              `it might be a shortcut typo. Did you mean "${likelyShortcut}"?`
+          );
+        }
       }
     }
   }

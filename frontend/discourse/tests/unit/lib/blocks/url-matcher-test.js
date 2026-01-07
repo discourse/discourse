@@ -2,6 +2,7 @@ import { module, test } from "qunit";
 import {
   isShortcut,
   isValidUrlPattern,
+  looksLikeShortcutTypo,
   matchesAnyPattern,
   matchUrlPattern,
   normalizePath,
@@ -53,6 +54,71 @@ module("Unit | Lib | Blocks | url-matcher", function (hooks) {
 
     test("returns false for empty string", function (assert) {
       assert.false(isShortcut(""));
+    });
+  });
+
+  module("looksLikeShortcutTypo", function () {
+    test("returns shortcut for exact name without $ prefix", function (assert) {
+      assert.strictEqual(
+        looksLikeShortcutTypo("CATEGORY_PAGES"),
+        "$CATEGORY_PAGES"
+      );
+      assert.strictEqual(looksLikeShortcutTypo("HOMEPAGE"), "$HOMEPAGE");
+      assert.strictEqual(looksLikeShortcutTypo("TOP_MENU"), "$TOP_MENU");
+    });
+
+    test("returns shortcut for case-insensitive match", function (assert) {
+      assert.strictEqual(looksLikeShortcutTypo("homepage"), "$HOMEPAGE");
+      assert.strictEqual(
+        looksLikeShortcutTypo("category_pages"),
+        "$CATEGORY_PAGES"
+      );
+    });
+
+    test("returns shortcut for prefix match (Jaro-Winkler bonus)", function (assert) {
+      // These are prefix matches - Jaro-Winkler gives bonus for shared prefix
+      assert.strictEqual(
+        looksLikeShortcutTypo("DISCOVERY"),
+        "$DISCOVERY_PAGES"
+      );
+      assert.strictEqual(looksLikeShortcutTypo("CATEGORY"), "$CATEGORY_PAGES");
+      assert.strictEqual(looksLikeShortcutTypo("TAG"), "$TAG_PAGES");
+    });
+
+    test("returns shortcut for fuzzy match", function (assert) {
+      // These aren't exact prefixes but are similar enough
+      assert.strictEqual(
+        looksLikeShortcutTypo("CATEGORIES"),
+        "$CATEGORY_PAGES"
+      );
+      assert.strictEqual(looksLikeShortcutTypo("TAGS"), "$TAG_PAGES");
+    });
+
+    test("returns null for URL patterns", function (assert) {
+      assert.strictEqual(looksLikeShortcutTypo("/c/**"), null);
+      assert.strictEqual(looksLikeShortcutTypo("/latest"), null);
+      assert.strictEqual(looksLikeShortcutTypo("/t/*/123"), null);
+    });
+
+    test("returns null for patterns with wildcards", function (assert) {
+      assert.strictEqual(looksLikeShortcutTypo("foo*"), null);
+      assert.strictEqual(looksLikeShortcutTypo("bar?"), null);
+    });
+
+    test("returns null for actual shortcuts", function (assert) {
+      assert.strictEqual(looksLikeShortcutTypo("$CATEGORY_PAGES"), null);
+      assert.strictEqual(looksLikeShortcutTypo("$HOMEPAGE"), null);
+    });
+
+    test("returns null for completely unrelated strings", function (assert) {
+      assert.strictEqual(looksLikeShortcutTypo("foobar"), null);
+      assert.strictEqual(looksLikeShortcutTypo("xyz123"), null);
+    });
+
+    test("returns null for non-strings", function (assert) {
+      assert.strictEqual(looksLikeShortcutTypo(null), null);
+      assert.strictEqual(looksLikeShortcutTypo(undefined), null);
+      assert.strictEqual(looksLikeShortcutTypo(123), null);
     });
   });
 
