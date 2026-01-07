@@ -178,7 +178,7 @@ module("Unit | Service | blocks", function (hooks) {
     test("throws for unknown type", function (assert) {
       assert.throws(
         () => this.blocks.validate({ type: "unknown-type" }),
-        /Unknown block condition type/
+        /Unknown condition type/
       );
     });
 
@@ -189,7 +189,7 @@ module("Unit | Service | blocks", function (hooks) {
             { type: "user", loggedIn: true },
             { type: "unknown" },
           ]),
-        /Unknown block condition type/
+        /Unknown condition type/
       );
     });
 
@@ -204,7 +204,7 @@ module("Unit | Service | blocks", function (hooks) {
           this.blocks.validate({
             any: [{ type: "user" }, { type: "unknown" }],
           }),
-        /Unknown block condition type/
+        /Unknown condition type/
       );
     });
 
@@ -216,7 +216,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       assert.throws(
         () => this.blocks.validate({ not: { type: "unknown" } }),
-        /Unknown block condition type/
+        /Unknown condition type/
       );
     });
 

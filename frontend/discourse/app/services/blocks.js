@@ -8,7 +8,10 @@ import {
   getConditionResultCallback,
   getLoggerInterface,
 } from "discourse/lib/blocks/debug-hooks";
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import {
+  BlockValidationError,
+  raiseBlockError,
+} from "discourse/lib/blocks/error";
 import {
   blockRegistry,
   isBlockFactory,
@@ -247,8 +250,10 @@ export default class Blocks extends Service {
    * @param {import("discourse/blocks/conditions").BlockCondition} instance - The condition instance.
    * @param {string} type - The condition type name.
    * @param {Object} args - The args provided to the condition.
+   * @param {string} path - The path to this condition in the config tree.
+   * @throws {Error} If an unrecognized arg key is found.
    */
-  #validateConditionArgKeys(instance, type, args) {
+  #validateConditionArgKeys(instance, type, args, path) {
     const validKeys = instance.constructor.validArgKeys;
 
     // source is always valid if sourceType allows it
@@ -260,9 +265,10 @@ export default class Blocks extends Service {
     for (const key of Object.keys(args)) {
       if (!allValidKeys.includes(key)) {
         const suggestion = formatWithSuggestion(key, allValidKeys);
-        raiseBlockError(
-          `Condition type "${type}": Unknown arg ${suggestion}. ` +
-            `Valid args: ${allValidKeys.join(", ")}`
+        throw new BlockValidationError(
+          `Condition type "${type}": unknown arg ${suggestion}. ` +
+            `Valid args: ${allValidKeys.join(", ")}`,
+          `${path}.${key}`
         );
       }
     }
@@ -299,18 +305,23 @@ export default class Blocks extends Service {
    * Validates condition specs at block registration time.
    * Recursively validates nested conditions in `any` and `not` combinators.
    *
-   * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to validate
-   * @throws {Error} If validation fails
+   * Throws regular Error objects (not BlockError) so callers can decide how to
+   * format the final error with appropriate context. The error object includes
+   * a `conditionPath` property indicating where in the config the error occurred.
+   *
+   * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to validate.
+   * @param {string} [path="conditions"] - The path to this condition in the config tree.
+   * @throws {Error} If validation fails.
    */
-  validate(conditionSpec) {
+  validate(conditionSpec, path = "conditions") {
     if (!conditionSpec) {
       return;
     }
 
     // Array of conditions (AND logic)
     if (Array.isArray(conditionSpec)) {
-      for (const condition of conditionSpec) {
-        this.validate(condition);
+      for (let i = 0; i < conditionSpec.length; i++) {
+        this.validate(conditionSpec[i], `${path}[${i}]`);
       }
       return;
     }
@@ -320,21 +331,21 @@ export default class Blocks extends Service {
       // Validate no extra keys alongside "any"
       const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "any");
       if (extraKeys.length > 0) {
-        raiseBlockError(
-          `Block condition with "any" combinator has extra keys: ${extraKeys.join(", ")}. ` +
-            `Only "any" is allowed.`
+        throw new BlockValidationError(
+          `"any" combinator has extra keys: ${extraKeys.join(", ")}. ` +
+            `Only "any" is allowed.`,
+          path
         );
-        return;
       }
 
       if (!Array.isArray(conditionSpec.any)) {
-        raiseBlockError(
-          'Block condition: "any" must be an array of conditions'
+        throw new BlockValidationError(
+          '"any" must be an array of conditions',
+          `${path}.any`
         );
-        return;
       }
-      for (const condition of conditionSpec.any) {
-        this.validate(condition);
+      for (let i = 0; i < conditionSpec.any.length; i++) {
+        this.validate(conditionSpec.any[i], `${path}.any[${i}]`);
       }
       return;
     }
@@ -344,23 +355,23 @@ export default class Blocks extends Service {
       // Validate no extra keys alongside "not"
       const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "not");
       if (extraKeys.length > 0) {
-        raiseBlockError(
-          `Block condition with "not" combinator has extra keys: ${extraKeys.join(", ")}. ` +
-            `Only "not" is allowed.`
+        throw new BlockValidationError(
+          `"not" combinator has extra keys: ${extraKeys.join(", ")}. ` +
+            `Only "not" is allowed.`,
+          path
         );
-        return;
       }
 
       if (
         typeof conditionSpec.not !== "object" ||
         Array.isArray(conditionSpec.not)
       ) {
-        raiseBlockError(
-          'Block condition: "not" must be a single condition object'
+        throw new BlockValidationError(
+          '"not" must be a single condition object',
+          `${path}.not`
         );
-        return;
       }
-      this.validate(conditionSpec.not);
+      this.validate(conditionSpec.not, `${path}.not`);
       return;
     }
 
@@ -368,10 +379,10 @@ export default class Blocks extends Service {
     const { type, ...args } = conditionSpec;
 
     if (!type) {
-      raiseBlockError(
-        `Block condition is missing "type" property: ${JSON.stringify(conditionSpec)}`
+      throw new BlockValidationError(
+        `Condition is missing "type" property: ${JSON.stringify(conditionSpec)}`,
+        path
       );
-      return;
     }
 
     const conditionInstance = this.#conditionTypes.get(type);
@@ -379,14 +390,14 @@ export default class Blocks extends Service {
     if (!conditionInstance) {
       const availableTypes = [...this.#conditionTypes.keys()];
       const suggestion = formatWithSuggestion(type, availableTypes);
-      raiseBlockError(
-        `Unknown block condition type: ${suggestion}. Available types: ${availableTypes.join(", ")}`
+      throw new BlockValidationError(
+        `Unknown condition type: ${suggestion}. Available types: ${availableTypes.join(", ")}`,
+        `${path}.type`
       );
-      return;
     }
 
     // Validate arg keys (catches typos like "querParams" instead of "queryParams")
-    this.#validateConditionArgKeys(conditionInstance, type, args);
+    this.#validateConditionArgKeys(conditionInstance, type, args, path);
 
     // Run the condition's own validation
     conditionInstance.validate(args);

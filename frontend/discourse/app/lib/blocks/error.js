@@ -4,7 +4,7 @@ import { DEBUG } from "@glimmer/env";
  * Current error context, set by the caller before raising errors.
  * Contains block configuration info for better error messages.
  *
- * @type {{ outletName: string, blockName: string, path: string, config: Object, conditions: Object } | null}
+ * @type {{ outletName: string, blockName: string, path: string, config: Object, conditions: Object, errorPath: string } | null}
  */
 let errorContext = null;
 
@@ -19,6 +19,7 @@ let errorContext = null;
  * @param {string} [context.path] - JSON-path style location in config (e.g., "blocks[3].children[0]").
  * @param {Object} [context.config] - The full block config being validated.
  * @param {Object} [context.conditions] - The conditions config being validated.
+ * @param {string} [context.errorPath] - Path within the config to the error (e.g., "conditions.any[0].type").
  */
 export function setBlockErrorContext(context) {
   errorContext = context;
@@ -30,6 +31,174 @@ export function setBlockErrorContext(context) {
  */
 export function clearBlockErrorContext() {
   errorContext = null;
+}
+
+/**
+ * Parses a condition path string into path segments.
+ * Handles both dot notation (`.key`) and bracket notation (`[0]`).
+ *
+ * @param {string} path - The path string (e.g., "conditions.any[0][1].querParams").
+ * @returns {Array<string|number>} Array of path segments.
+ *
+ * @example
+ * parseConditionPath("conditions.any[0][1].type")
+ * // Returns: ["conditions", "any", 0, 1, "type"]
+ */
+function parseConditionPath(path) {
+  const segments = [];
+  let current = "";
+
+  for (let i = 0; i < path.length; i++) {
+    const char = path[i];
+
+    if (char === ".") {
+      if (current) {
+        segments.push(current);
+        current = "";
+      }
+    } else if (char === "[") {
+      if (current) {
+        segments.push(current);
+        current = "";
+      }
+      // Find closing bracket
+      let j = i + 1;
+      while (j < path.length && path[j] !== "]") {
+        j++;
+      }
+      const index = path.slice(i + 1, j);
+      segments.push(parseInt(index, 10));
+      i = j; // Skip to after the closing bracket
+    } else {
+      current += char;
+    }
+  }
+
+  if (current) {
+    segments.push(current);
+  }
+
+  return segments;
+}
+
+/**
+ * Renders a conditions config with the error path highlighted.
+ * Shows the structure with proper indentation and adds a comment marker
+ * to indicate where the error occurred.
+ *
+ * @param {Object|Array} conditions - The conditions config object.
+ * @param {string} errorPath - The path to the error (e.g., "conditions.any[0][0].querParams").
+ * @returns {string} Formatted string with the error location highlighted.
+ */
+function formatConditionsWithErrorPath(conditions, errorPath) {
+  const pathSegments = parseConditionPath(errorPath);
+
+  // Skip "conditions" prefix if present (it's implicit)
+  const startIndex = pathSegments[0] === "conditions" ? 1 : 0;
+  const errorSegments = pathSegments.slice(startIndex);
+  const errorKey = errorSegments[errorSegments.length - 1];
+
+  /**
+   * Recursively renders the config object with highlighting.
+   *
+   * @param {*} obj - The object to render.
+   * @param {number} depth - Current indentation depth.
+   * @param {Array<string|number>} currentPath - Path segments to current location.
+   * @returns {string} Rendered string.
+   */
+  function render(obj, depth, currentPath) {
+    const indent = "  ".repeat(depth);
+    const isOnErrorPath = currentPath.every(
+      (seg, i) => i >= errorSegments.length || seg === errorSegments[i]
+    );
+    const isPastErrorLocation = currentPath.length > errorSegments.length;
+
+    // Truncate values past the error location
+    if (isPastErrorLocation) {
+      if (obj === null) {
+        return "null";
+      }
+      if (typeof obj !== "object") {
+        return JSON.stringify(obj);
+      }
+      return Array.isArray(obj) ? "[ ... ]" : "{ ... }";
+    }
+
+    if (obj === null) {
+      return "null";
+    }
+
+    if (typeof obj !== "object") {
+      return JSON.stringify(obj);
+    }
+
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) {
+        return "[]";
+      }
+
+      const lines = ["["];
+      for (let i = 0; i < obj.length; i++) {
+        const itemPath = [...currentPath, i];
+        const isItemOnPath = itemPath.every(
+          (seg, j) => j >= errorSegments.length || seg === errorSegments[j]
+        );
+
+        if (isItemOnPath || currentPath.length < errorSegments.length) {
+          const value = render(obj[i], depth + 1, itemPath);
+          const comma = i < obj.length - 1 ? "," : "";
+          lines.push(`${indent}  ${value}${comma}`);
+        } else if (i === 0) {
+          // Show ellipsis for items not on path
+          lines.push(`${indent}  ...`);
+        }
+      }
+      lines.push(`${indent}]`);
+      return lines.join("\n");
+    }
+
+    // Object
+    const keys = Object.keys(obj);
+    if (keys.length === 0) {
+      return "{}";
+    }
+
+    const lines = ["{"];
+    let shownEllipsis = false;
+
+    for (const key of keys) {
+      const keyPath = [...currentPath, key];
+      const isKeyOnPath = keyPath.every(
+        (seg, j) => j >= errorSegments.length || seg === errorSegments[j]
+      );
+      const isKeyTheError =
+        isOnErrorPath &&
+        currentPath.length === errorSegments.length - 1 &&
+        key === errorKey;
+
+      if (isKeyOnPath || isKeyTheError) {
+        const value = render(obj[key], depth + 1, keyPath);
+        const errorMarker = isKeyTheError ? " // <-- error here" : "";
+
+        // Handle multiline values - put error marker on the key line, not after the value
+        if (value.includes("\n")) {
+          const firstLine = value.split("\n")[0];
+          const restLines = value.split("\n").slice(1).join("\n");
+          lines.push(`${indent}  ${key}: ${firstLine}${errorMarker}`);
+          lines.push(`${restLines},`);
+        } else {
+          lines.push(`${indent}  ${key}: ${value},${errorMarker}`);
+        }
+      } else if (!shownEllipsis) {
+        lines.push(`${indent}  ...`);
+        shownEllipsis = true;
+      }
+    }
+    lines.push(`${indent}}`);
+    return lines.join("\n");
+  }
+
+  return `conditions: ${render(conditions, 0, [])}`;
 }
 
 /**
@@ -87,6 +256,9 @@ function truncateForDisplay(obj, maxDepth = 2, maxKeys = 5) {
 /**
  * Formats the error context into a human-readable string for console output.
  *
+ * When a `conditionPath` is provided, uses the path-aware formatter to show
+ * the error location within the conditions config with a comment marker.
+ *
  * @param {Object} context - The error context.
  * @returns {string} Formatted context string, or empty string if no context.
  */
@@ -97,19 +269,27 @@ function formatErrorContext(context) {
 
   const parts = [];
 
-  if (context.outletName) {
-    parts.push(`Outlet: "${context.outletName}"`);
+  // If we have an errorPath, show the full location path
+  if (context.errorPath) {
+    const fullPath = context.path
+      ? `${context.path}.${context.errorPath}`
+      : context.errorPath;
+    parts.push(`Location: ${fullPath}`);
   }
 
-  if (context.blockName) {
-    parts.push(`Block: "${context.blockName}"`);
-  }
-
-  if (context.path) {
-    parts.push(`Path: ${context.path}`);
-  }
-
-  if (context.conditions) {
+  // If we have conditions and an errorPath, use the path-aware formatter
+  if (context.conditions && context.errorPath) {
+    try {
+      const conditionsStr = formatConditionsWithErrorPath(
+        context.conditions,
+        context.errorPath
+      );
+      parts.push(`\nContext:\n${conditionsStr}`);
+    } catch {
+      parts.push("Context: [unable to format]");
+    }
+  } else if (context.conditions) {
+    // Fallback to simple display without path highlighting
     try {
       const conditionsStr = JSON.stringify(
         truncateForDisplay(context.conditions),
@@ -148,6 +328,32 @@ export class BlockError extends Error {
   constructor(message) {
     super(message);
     this.name = "BlockError";
+  }
+}
+
+/**
+ * Error thrown during block configuration validation.
+ * Includes a path indicating where in the config the error occurred,
+ * enabling precise error location display.
+ *
+ * Used for validation errors in conditions, args, and other nested config
+ * structures where path tracking is valuable.
+ *
+ * @class BlockValidationError
+ * @extends Error
+ */
+export class BlockValidationError extends Error {
+  /**
+   * Creates a new BlockValidationError.
+   *
+   * @param {string} message - The error message describing the validation failure.
+   * @param {string} path - The path to the error within the config
+   *   (e.g., "conditions.any[0][0].querParams" or "args.showIcon").
+   */
+  constructor(message, path) {
+    super(message);
+    this.name = "BlockValidationError";
+    this.path = path;
   }
 }
 

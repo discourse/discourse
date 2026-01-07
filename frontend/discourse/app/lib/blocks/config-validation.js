@@ -11,6 +11,7 @@
 import { DEBUG } from "@glimmer/env";
 import { validateBlockArgs } from "discourse/lib/blocks/arg-validation";
 import {
+  BlockValidationError,
   clearBlockErrorContext,
   raiseBlockError,
   setBlockErrorContext,
@@ -65,6 +66,16 @@ function validateBlockConditions(
   try {
     blocksService.validate(config.conditions);
   } catch (error) {
+    // If error has a path (from BlockValidationError), include it for precise location
+    if (error instanceof BlockValidationError) {
+      setBlockErrorContext({
+        outletName,
+        blockName,
+        path,
+        conditions: config.conditions,
+        errorPath: error.path,
+      });
+    }
     raiseBlockError(
       `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`
     );
