@@ -107,7 +107,7 @@ class Middleware::RequestTracker
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
-        DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
+        DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
 
         if data[:topic_id].present? && data[:current_user_id].present?
           TopicsController.defer_topic_view(
@@ -119,7 +119,7 @@ class Middleware::RequestTracker
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
-        DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
+        DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
 
         if data[:topic_id].present?
           TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
@@ -574,7 +574,7 @@ class Middleware::RequestTracker
     }
   end
 
-  def self.build_page_visited_payload(data)
+  def self.build_browser_pageview_event_payload(data)
     {
       user_id: data[:current_user_id],
       url: data[:tracking_url],
