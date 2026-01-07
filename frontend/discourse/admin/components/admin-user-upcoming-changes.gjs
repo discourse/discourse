@@ -93,9 +93,11 @@ export default class AdminUserUpcomingChanges extends Component {
                       upcomingChange.specific_groups.length
                     )
                   }}
-                    {{htmlSafe
-                      (this.getGroupLinks upcomingChange.specific_groups)
-                    }}
+                    <span class="upcoming-change-groups">
+                      {{htmlSafe
+                        (this.getGroupLinks upcomingChange.specific_groups)
+                      }}
+                    </span>
                   {{/if}}
                 </td>
               </tr>

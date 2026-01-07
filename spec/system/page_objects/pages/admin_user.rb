@@ -82,7 +82,7 @@ module PageObjects
 
         def specific_groups
           within element.find(".upcoming-change-groups") do
-            all("a[href^='/g/']").map(&:text).sort
+            all("a").map(&:text).sort
           end
         end
 
