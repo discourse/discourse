@@ -170,7 +170,7 @@ module("Unit | Lib | math-renderer", function (hooks) {
       const options = buildDiscourseMathOptions(mockSiteSettings);
 
       assert.strictEqual(options.provider, "katex", "provider is set to katex");
-      assert.true(options.enable_asciimath, "asciimath is enabled");
+      assert.false(options.enable_asciimath, "asciimath is disabled for katex");
     });
 
     test("handles disabled math", function (assert) {

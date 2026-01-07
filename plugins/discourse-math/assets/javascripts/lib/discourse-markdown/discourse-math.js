@@ -82,14 +82,21 @@ function addBlockMathToken(state, content) {
 function findClosingInlineDelimiter(src, start, posMax, delimiterCode) {
   for (let i = start; i < posMax; i++) {
     const code = src.charCodeAt(i);
-    if (
-      code === delimiterCode &&
-      src.charCodeAt(i - 1) !== CHAR_CODES.BACKSLASH
-    ) {
+    if (code === delimiterCode && !isEscaped(src, i)) {
       return i;
     }
   }
   return -1;
+}
+
+function isEscaped(src, index) {
+  let backslashes = 0;
+  let i = index - 1;
+  while (i >= 0 && src.charCodeAt(i) === CHAR_CODES.BACKSLASH) {
+    backslashes++;
+    i--;
+  }
+  return backslashes % 2 === 1;
 }
 
 function math_input(state, silent, delimiterCode) {
@@ -140,6 +147,9 @@ function math_input(state, silent, delimiterCode) {
   }
 
   const data = state.src.slice(pos + 1, found);
+  if (data.includes("\n")) {
+    return false;
+  }
   const mathType =
     delimiterCode === CHAR_CODES.DOLLAR ? MATH_TYPES.TEX : MATH_TYPES.ASCIIMATH;
   addInlineMathToken(state, data, mathType);
@@ -396,7 +406,9 @@ export function setup(helper) {
 
   helper.registerOptions((opts, siteSettings) => {
     opts.features.math = siteSettings.discourse_math_enabled;
-    opts.features.asciimath = siteSettings.discourse_math_enable_asciimath;
+    opts.features.asciimath =
+      siteSettings.discourse_math_enable_asciimath &&
+      siteSettings.discourse_math_provider === "mathjax";
     opts.features.enable_latex_delimiters =
       siteSettings.discourse_math_enable_latex_delimiters;
   });

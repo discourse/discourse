@@ -1,7 +1,10 @@
-import { later } from "@ember/runloop";
+import { warn } from "@ember/debug";
+import { cancel, later } from "@ember/runloop";
+import { isTesting } from "discourse/lib/environment";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import loadKaTeX from "discourse/lib/load-katex";
 import loadMathJax from "discourse/lib/load-mathjax";
+import { sanitize } from "discourse/lib/text";
 import { getMathJaxBasePath } from "discourse/plugins/discourse-math/lib/math-bundle-paths";
 
 const CSS_CLASSES = {
@@ -11,6 +14,56 @@ const CSS_CLASSES = {
 };
 
 const PREVIEW_RENDER_DELAY = 200;
+const ORIGINAL_TEXT_ATTR = "data-math-original";
+const pendingMathJaxTypesets = new WeakMap();
+const SAFE_HTML_ID_REGEX = /^[A-Za-z_][A-Za-z0-9_.:-]*$/;
+
+function isSafeHtmlId(value) {
+  return Boolean(value) && SAFE_HTML_ID_REGEX.test(value);
+}
+
+function sanitizeHref(url) {
+  if (!url || /[<>"']/.test(url)) {
+    return null;
+  }
+
+  try {
+    const parsedUrl = new URL(url, window.location.origin);
+    const isRelative = url.startsWith("/") || url.startsWith("#");
+    const isAllowedProtocol = ["http:", "https:", "mailto:"].includes(
+      parsedUrl.protocol
+    );
+
+    if (!isRelative && !isAllowedProtocol) {
+      return null;
+    }
+
+    const sanitized = sanitize(url);
+    if (
+      !sanitized ||
+      sanitized.trim() === "" ||
+      sanitized.includes("&gt;") ||
+      sanitized.includes("&lt;")
+    ) {
+      return null;
+    }
+
+    return sanitized;
+  } catch {
+    return null;
+  }
+}
+
+function warnMathRender(message, error) {
+  if (isTesting()) {
+    return;
+  }
+
+  const suffix = error?.message ? ` (${error.message})` : "";
+  warn(`discourse-math: ${message}${suffix}`, false, {
+    id: "discourse-math.render",
+  });
+}
 
 class MathJaxState {
   #initialized = false;
@@ -43,15 +96,18 @@ function getConfigHash(opts) {
     a11y: opts.enable_accessibility,
     zoom: opts.zoom_on_click,
     ascii: opts.enable_asciimath,
+    menu: opts.enable_menu,
   });
 }
 
 export function buildDiscourseMathOptions(siteSettings) {
+  const provider = siteSettings.discourse_math_provider;
   return {
     enabled: siteSettings.discourse_math_enabled,
-    provider: siteSettings.discourse_math_provider,
+    provider,
     enable_menu: siteSettings.discourse_math_enable_menu,
-    enable_asciimath: siteSettings.discourse_math_enable_asciimath,
+    enable_asciimath:
+      siteSettings.discourse_math_enable_asciimath && provider === "mathjax",
     enable_accessibility: siteSettings.discourse_math_enable_accessibility,
     mathjax_output: siteSettings.discourse_math_mathjax_output,
     zoom_on_click: siteSettings.discourse_math_zoom_on_click,
@@ -200,8 +256,21 @@ function collectMathWrappers(elem, opts) {
 function filterActiveWrappers(wrappers) {
   return wrappers.filter(
     ({ original, wrapper }) =>
-      wrapper?.isConnected && original?.parentElement?.offsetParent !== null
+      wrapper?.isConnected && isElementVisible(original)
   );
+}
+
+function isElementVisible(elem) {
+  if (!elem?.isConnected) {
+    return false;
+  }
+
+  if (elem.closest("[hidden]")) {
+    return false;
+  }
+
+  const style = window.getComputedStyle(elem);
+  return style.display !== "none" && style.visibility !== "hidden";
 }
 
 function hideElement(elem) {
@@ -260,9 +329,49 @@ async function typesetMathJax(wrappers, opts) {
 
     await MathJax.typesetPromise(active.map(({ wrapper }) => wrapper));
     showRenderedMath(active);
-  } catch {
+  } catch (error) {
+    warnMathRender("MathJax rendering failed", error);
     revertFailedMathRendering(wrappers);
   }
+}
+
+function cancelPendingMathJaxTypeset(elem) {
+  const pending = pendingMathJaxTypesets.get(elem);
+  if (pending) {
+    cancel(pending.timer);
+    pendingMathJaxTypesets.delete(elem);
+  }
+}
+
+function scheduleMathJaxTypeset(elem, wrappers, opts, delay) {
+  const pending = pendingMathJaxTypesets.get(elem);
+
+  if (pending) {
+    cancel(pending.timer);
+
+    const wrapperSet = new Set(pending.wrappers.map(({ wrapper }) => wrapper));
+    wrappers.forEach((item) => {
+      if (!wrapperSet.has(item.wrapper)) {
+        pending.wrappers.push(item);
+        wrapperSet.add(item.wrapper);
+      }
+    });
+    pending.opts = opts;
+
+    pending.timer = later(() => {
+      pendingMathJaxTypesets.delete(elem);
+      typesetMathJax(pending.wrappers, pending.opts);
+    }, delay);
+    return;
+  }
+
+  const entry = { wrappers: [...wrappers], opts, timer: null };
+  entry.timer = later(() => {
+    pendingMathJaxTypesets.delete(elem);
+    typesetMathJax(entry.wrappers, entry.opts);
+  }, delay);
+
+  pendingMathJaxTypesets.set(elem, entry);
 }
 
 export function renderMathJax(elem, opts, renderOptions = {}) {
@@ -271,6 +380,7 @@ export function renderMathJax(elem, opts, renderOptions = {}) {
   }
 
   if (renderOptions.force) {
+    cancelPendingMathJaxTypeset(elem);
     resetMathJax(elem, opts);
   }
 
@@ -283,7 +393,7 @@ export function renderMathJax(elem, opts, renderOptions = {}) {
   const isPreview = elem.classList.contains("d-editor-preview");
   const delay = isPreview ? PREVIEW_RENDER_DELAY : 0;
 
-  later(() => typesetMathJax(wrappers, opts), delay);
+  scheduleMathJaxTypeset(elem, wrappers, opts, delay);
 }
 
 async function ensureKaTeX() {
@@ -295,6 +405,12 @@ async function ensureKaTeX() {
 
 function resetKatex(elem) {
   elem.querySelectorAll(".math").forEach((mathElem) => {
+    const originalText = mathElem.getAttribute(ORIGINAL_TEXT_ATTR);
+    const hasKatexContent = !!mathElem.querySelector(".katex");
+    if (originalText && hasKatexContent) {
+      mathElem.textContent = originalText;
+    }
+    mathElem.removeAttribute(ORIGINAL_TEXT_ATTR);
     mathElem.classList.remove(
       CSS_CLASSES.APPLIED_KATEX,
       "math-container",
@@ -318,14 +434,24 @@ function decorateKatex(elem, katexOpts) {
 
   const displayMode = elem.tagName === "DIV";
   const displayClass = displayMode ? "block-math" : "inline-math";
-  const text = elem.textContent;
+  const hasKatexContent = !!elem.querySelector(".katex");
+  const text = hasKatexContent
+    ? elem.getAttribute(ORIGINAL_TEXT_ATTR)
+    : elem.textContent;
+  const annotationText = elem.querySelector(
+    "annotation[encoding='application/x-tex']"
+  )?.textContent;
+  const rawText = text ?? annotationText ?? elem.textContent ?? "";
+  elem.setAttribute(ORIGINAL_TEXT_ATTR, rawText);
   elem.classList.add("math-container", displayClass, "katex-math");
   elem.textContent = "";
 
   try {
-    window.katex.render(text, elem, { ...katexOpts, displayMode });
-  } catch {
-    elem.textContent = text;
+    window.katex.render(rawText, elem, { ...katexOpts, displayMode });
+  } catch (error) {
+    warnMathRender("KaTeX rendering failed", error);
+    elem.textContent = rawText;
+    elem.removeAttribute(ORIGINAL_TEXT_ATTR);
     elem.classList.remove(
       CSS_CLASSES.APPLIED_KATEX,
       "math-container",
@@ -351,12 +477,24 @@ export async function renderKatex(elem, renderOptions = {}) {
 
   try {
     await ensureKaTeX();
-  } catch {
+  } catch (error) {
+    warnMathRender("KaTeX failed to load", error);
     return;
   }
 
   const katexOpts = {
-    trust: (context) => ["\\htmlId", "\\href"].includes(context.command),
+    trust: (context) => {
+      if (context.command === "\\href") {
+        return Boolean(sanitizeHref(context.url));
+      }
+
+      if (context.command === "\\htmlId") {
+        const htmlId = context.url || context.text || context.id;
+        return isSafeHtmlId(htmlId);
+      }
+
+      return false;
+    },
     macros: {
       "\\eqref": "\\href{###1}{(\\text{#1})}",
       "\\ref": "\\href{###1}{\\text{#1}}",

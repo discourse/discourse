@@ -11,6 +11,32 @@ const createMathNodeView =
   (node, view, getPos) =>
     new MathNodeView({ node, view, getPos, getContext, NodeSelection });
 
+function escapeDelimiter(text, delimiter) {
+  if (!text) {
+    return "";
+  }
+
+  let result = "";
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === delimiter) {
+      let backslashes = 0;
+      let j = i - 1;
+      while (j >= 0 && text[j] === "\\") {
+        backslashes++;
+        j--;
+      }
+      if (backslashes % 2 === 0) {
+        result += "\\";
+      }
+    }
+    result += char;
+  }
+
+  return result;
+}
+
 class MathNodeView {
   node;
   view;
@@ -214,7 +240,8 @@ const extension = {
         }
 
         const delimiter = node.attrs.mathType === "asciimath" ? "%" : "$";
-        state.write(`${delimiter}${node.attrs.text}${delimiter}`);
+        const content = escapeDelimiter(node.attrs.text ?? "", delimiter);
+        state.write(`${delimiter}${content}${delimiter}`);
 
         const nextSibling =
           parent.childCount > index + 1 ? parent.child(index + 1) : null;
@@ -224,8 +251,9 @@ const extension = {
       },
       math_block(state, node) {
         state.ensureNewLine();
+        const content = escapeDelimiter(node.attrs.text ?? "", "$");
         state.write("$$\n");
-        state.write(node.attrs.text);
+        state.write(content);
         state.write("\n$$\n\n");
       },
     };

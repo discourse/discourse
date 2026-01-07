@@ -55,6 +55,10 @@ describe PrettyText do
         expect(PrettyText.cook("200$ + 500$")).to match_html("<p>200$ + 500$</p>")
         expect(PrettyText.cook("costs $50 to $100")).to match_html("<p>costs $50 to $100</p>")
       end
+
+      it "does not render inline math across multiple lines" do
+        expect(PrettyText.cook("test $a\nb$ test")).to match_html("<p>test $a<br>\nb$ test</p>")
+      end
     end
   end
 
