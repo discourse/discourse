@@ -28,6 +28,7 @@ import { validateConfig } from "discourse/lib/blocks/config-validation";
 import {
   getBlockDebugCallback,
   getEndGroupCallback,
+  getGhostChildrenCreator,
   getOptionalMissingLogCallback,
   getOutletInfoComponent,
   getStartGroupCallback,
@@ -43,14 +44,10 @@ import {
 import {
   OPTIONAL_MISSING,
   parseBlockName,
-  parseBlockReference,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/patterns";
-import {
-  blockRegistry,
-  isBlockFactory,
-  resolveBlock,
-} from "discourse/lib/blocks/registration";
+import { resolveBlockSync } from "discourse/lib/blocks/registration";
+import { applyArgDefaults } from "discourse/lib/blocks/utils";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 
@@ -475,7 +472,8 @@ export function block(name, options = {}) {
               blockConfig.__failureReason === "no-visible-children"
             ) {
               // Recursively process children to create ghost components.
-              ghostChildren = createGhostChildren(
+              // Use the ghost children creator from dev-tools if available.
+              ghostChildren = getGhostChildrenCreator()?.(
                 blockConfig.children,
                 owner,
                 containerPath,
@@ -516,194 +514,6 @@ export function block(name, options = {}) {
       }
     };
   };
-}
-
-/**
- * Creates ghost components for children of a container ghost block.
- *
- * When a container block is rendered as a ghost (due to no visible children),
- * this function recursively processes its children to create ghost components
- * so they appear nested inside the container ghost in the debug overlay.
- *
- * This is a module-level function used by both BlockOutlet (for root preprocessing)
- * and nested containers (for their own ghost children).
- *
- * @param {Array<Object>} childConfigs - Child block configurations (already preprocessed with __visible)
- * @param {import("@ember/owner").default} owner - The application owner
- * @param {string} containerPath - The container's hierarchy path (e.g., "outlet/group[0]")
- * @param {Object} outletArgs - Outlet arguments for context
- * @param {boolean} isLoggingEnabled - Whether logging is enabled
- * @param {Function} resolveBlockFn - Function to resolve block references to classes
- * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>} Array of ghost components
- */
-function createGhostChildren(
-  childConfigs,
-  owner,
-  containerPath,
-  outletArgs,
-  isLoggingEnabled,
-  resolveBlockFn
-) {
-  const result = [];
-  const containerCounts = new Map();
-
-  for (const childConfig of childConfigs) {
-    const resolvedBlock = resolveBlockFn(childConfig.block);
-
-    // Handle optional missing block
-    if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
-      const ghostData = getBlockDebugCallback()(
-        {
-          name: resolvedBlock.name,
-          Component: null,
-          args: childConfig.args,
-          conditions: childConfig.conditions,
-          conditionsPassed: false,
-          optionalMissing: true,
-        },
-        { outletName: containerPath }
-      );
-      if (ghostData?.Component) {
-        result.push(ghostData);
-      }
-      continue;
-    }
-
-    // Skip unresolved blocks
-    if (!resolvedBlock) {
-      continue;
-    }
-
-    const blockName = resolvedBlock.blockName || "unknown";
-    const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
-
-    // Build container path for nested containers
-    let nestedContainerPath;
-    if (isChildContainer) {
-      const count = containerCounts.get(blockName) ?? 0;
-      containerCounts.set(blockName, count + 1);
-      nestedContainerPath = `${containerPath}/${blockName}[${count}]`;
-    }
-
-    // Recursively create ghost children for nested containers
-    let nestedGhostChildren = null;
-    if (
-      isChildContainer &&
-      childConfig.children?.length &&
-      childConfig.__failureReason === "no-visible-children"
-    ) {
-      nestedGhostChildren = createGhostChildren(
-        childConfig.children,
-        owner,
-        nestedContainerPath,
-        outletArgs,
-        isLoggingEnabled,
-        resolveBlockFn
-      );
-    }
-
-    const ghostData = getBlockDebugCallback()(
-      {
-        name: blockName,
-        Component: null,
-        args: childConfig.args,
-        conditions: childConfig.conditions,
-        conditionsPassed: false,
-        failureReason: childConfig.__failureReason,
-        children: nestedGhostChildren,
-      },
-      { outletName: containerPath }
-    );
-    if (ghostData?.Component) {
-      result.push(ghostData);
-    }
-  }
-
-  return result;
-}
-
-/**
- * Synchronously resolves a block reference to a BlockClass.
- *
- * - If given a class, returns it directly.
- * - If given a string and the block is resolved, returns the class.
- * - If given a string and the block is an unresolved factory, triggers
- *   async resolution and returns null (block will appear on next render).
- * - If given an optional block name (ending with `?`) that is not registered,
- *   returns a marker object instead of logging an error.
- *
- * This is a module-level function used by both the decorator (for nested containers)
- * and BlockOutlet (for root preprocessing).
- *
- * @param {string | typeof Component} blockRef - Block name (possibly with `?` suffix) or class.
- * @returns {typeof Component | null | { optionalMissing: symbol, name: string }}
- *   Resolved block class, null if pending, or optional missing marker.
- */
-function resolveBlockSync(blockRef) {
-  // Class reference - return directly (classes always exist)
-  if (typeof blockRef !== "string") {
-    return blockRef;
-  }
-
-  // Parse optional suffix from block reference
-  const { name: blockName, optional } = parseBlockReference(blockRef);
-
-  // String reference - check if registered
-  if (!blockRegistry.has(blockName)) {
-    if (optional) {
-      // Optional block not registered - return marker for caller to handle
-      return {
-        optionalMissing: OPTIONAL_MISSING,
-        name: blockName,
-      };
-    }
-    // Block not registered - this is an error, but validation should have caught it
-    // eslint-disable-next-line no-console
-    console.error(`[Blocks] Block "${blockName}" is not registered.`);
-    return null;
-  }
-
-  const entry = blockRegistry.get(blockName);
-
-  // If already resolved (not a factory), return the class
-  if (!isBlockFactory(entry)) {
-    return entry;
-  }
-
-  // Factory needs async resolution - trigger it and return null for now
-  // The block will appear on the next render after resolution completes
-  if (!DEBUG) {
-    // Only in production - in dev, factories are already resolved during validation
-    resolveBlock(blockName).catch((error) => {
-      // eslint-disable-next-line no-console
-      console.error(`[Blocks] Failed to resolve block "${blockName}":`, error);
-    });
-  }
-
-  return null;
-}
-
-/**
- * Applies default values from block metadata to provided args.
- * Only applies defaults for args that are undefined.
- *
- * @param {typeof Component} ComponentClass - The block component class
- * @param {Object} providedArgs - User-provided args from block config
- * @returns {Object} Args with defaults applied
- */
-function applyArgDefaults(ComponentClass, providedArgs) {
-  const schema = ComponentClass.blockMetadata?.args;
-  if (!schema) {
-    return providedArgs;
-  }
-
-  const result = { ...providedArgs };
-  for (const [argName, argDef] of Object.entries(schema)) {
-    if (result[argName] === undefined && argDef.default !== undefined) {
-      result[argName] = argDef.default;
-    }
-  }
-  return result;
 }
 
 /**
@@ -1097,7 +907,8 @@ export default class BlockOutlet extends Component {
           blockConfig.children?.length &&
           blockConfig.__failureReason === "no-visible-children"
         ) {
-          ghostChildren = createGhostChildren(
+          // Use the ghost children creator from dev-tools if available.
+          ghostChildren = getGhostChildrenCreator()?.(
             blockConfig.children,
             owner,
             containerPath,

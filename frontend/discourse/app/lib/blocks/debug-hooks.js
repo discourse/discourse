@@ -124,6 +124,14 @@ let endGroupCallback = null;
 let loggerInterfaceCallback = null;
 
 /**
+ * Function for creating ghost children components.
+ * Set by dev-tools to provide the createGhostChildren implementation.
+ *
+ * @type {Function|null}
+ */
+let ghostChildrenCreator = null;
+
+/**
  * Returns the current debug callback for block rendering.
  *
  * @returns {Function|null} The callback or null if not set
@@ -244,6 +252,16 @@ export function getEndGroupCallback() {
  */
 export function getLoggerInterface() {
   return loggerInterfaceCallback?.() ?? null;
+}
+
+/**
+ * Returns the function for creating ghost children components.
+ * Used by block-outlet to create ghost components for nested containers.
+ *
+ * @returns {Function|null} The createGhostChildren function, or null if not set
+ */
+export function getGhostChildrenCreator() {
+  return ghostChildrenCreator;
 }
 
 /**
@@ -378,4 +396,14 @@ export function _setEndGroupCallback(callback) {
  */
 export function _setLoggerInterfaceCallback(callback) {
   loggerInterfaceCallback = callback;
+}
+
+/**
+ * Sets the function for creating ghost children components.
+ * Called by dev-tools to provide the createGhostChildren implementation.
+ *
+ * @param {Function} fn - The createGhostChildren function
+ */
+export function _setGhostChildrenCreator(fn) {
+  ghostChildrenCreator = fn;
 }

@@ -1,4 +1,5 @@
 import curryComponent from "ember-curry-component";
+import { isContainerBlock } from "discourse/components/block-outlet";
 import {
   _setBlockDebugCallback,
   _setBlockLoggingCallback,
@@ -8,12 +9,15 @@ import {
   _setConditionLogCallback,
   _setConditionResultCallback,
   _setEndGroupCallback,
+  _setGhostChildrenCreator,
   _setLoggerInterfaceCallback,
   _setOptionalMissingLogCallback,
   _setParamGroupLogCallback,
   _setRouteStateLogCallback,
   _setStartGroupCallback,
+  getBlockDebugCallback,
 } from "discourse/lib/blocks/debug-hooks";
+import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import devToolsState from "../state";
 import BlockInfo from "./block-info";
@@ -36,6 +40,107 @@ function makeDebugCallback(fn) {
       fn(...args);
     }
   };
+}
+
+/**
+ * Creates ghost components for children of a container ghost block.
+ *
+ * When a container block is rendered as a ghost (due to no visible children),
+ * this function recursively processes its children to create ghost components
+ * so they appear nested inside the container ghost in the debug overlay.
+ *
+ * @param {Array<Object>} childConfigs - Child block configurations (already preprocessed with __visible)
+ * @param {import("@ember/owner").default} owner - The application owner
+ * @param {string} containerPath - The container's hierarchy path (e.g., "outlet/group[0]")
+ * @param {Object} outletArgs - Outlet arguments for context
+ * @param {boolean} isLoggingEnabled - Whether logging is enabled (unused, kept for API compatibility)
+ * @param {Function} resolveBlockFn - Function to resolve block references to classes
+ * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>} Array of ghost components
+ */
+function createGhostChildren(
+  childConfigs,
+  owner,
+  containerPath,
+  outletArgs,
+  isLoggingEnabled,
+  resolveBlockFn
+) {
+  const result = [];
+  const containerCounts = new Map();
+
+  for (const childConfig of childConfigs) {
+    const resolvedBlock = resolveBlockFn(childConfig.block);
+
+    // Handle optional missing block
+    if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
+      const ghostData = getBlockDebugCallback()(
+        {
+          name: resolvedBlock.name,
+          Component: null,
+          args: childConfig.args,
+          conditions: childConfig.conditions,
+          conditionsPassed: false,
+          optionalMissing: true,
+        },
+        { outletName: containerPath }
+      );
+      if (ghostData?.Component) {
+        result.push(ghostData);
+      }
+      continue;
+    }
+
+    // Skip unresolved blocks
+    if (!resolvedBlock) {
+      continue;
+    }
+
+    const blockName = resolvedBlock.blockName || "unknown";
+    const isChildContainer = isContainerBlock(resolvedBlock);
+
+    // Build container path for nested containers
+    let nestedContainerPath;
+    if (isChildContainer) {
+      const count = containerCounts.get(blockName) ?? 0;
+      containerCounts.set(blockName, count + 1);
+      nestedContainerPath = `${containerPath}/${blockName}[${count}]`;
+    }
+
+    // Recursively create ghost children for nested containers
+    let nestedGhostChildren = null;
+    if (
+      isChildContainer &&
+      childConfig.children?.length &&
+      childConfig.__failureReason === "no-visible-children"
+    ) {
+      nestedGhostChildren = createGhostChildren(
+        childConfig.children,
+        owner,
+        nestedContainerPath,
+        outletArgs,
+        isLoggingEnabled,
+        resolveBlockFn
+      );
+    }
+
+    const ghostData = getBlockDebugCallback()(
+      {
+        name: blockName,
+        Component: null,
+        args: childConfig.args,
+        conditions: childConfig.conditions,
+        conditionsPassed: false,
+        failureReason: childConfig.__failureReason,
+        children: nestedGhostChildren,
+      },
+      { outletName: containerPath }
+    );
+    if (ghostData?.Component) {
+      result.push(ghostData);
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -188,4 +293,7 @@ export function patchBlockRendering() {
       logRouteState: (opts) => blockDebugLogger.logRouteState(opts),
     };
   });
+
+  // Register the ghost children creator function
+  _setGhostChildrenCreator(createGhostChildren);
 }

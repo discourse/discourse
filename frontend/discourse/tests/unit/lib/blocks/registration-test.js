@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/components/block-outlet";
+import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 import {
   _lockBlockRegistry,
   _registerBlock,
@@ -13,6 +14,7 @@ import {
   isBlockResolved,
   resetBlockRegistryForTesting,
   resolveBlock,
+  resolveBlockSync,
 } from "discourse/lib/blocks/registration";
 
 module("Unit | Lib | blocks/registration", function (hooks) {
@@ -527,6 +529,88 @@ module("Unit | Lib | blocks/registration", function (hooks) {
       // But since it's now cached in resolvedFactoryCache, should resolve immediately
       const result = await promise2;
       assert.strictEqual(result, PendingCleanup);
+    });
+  });
+
+  module("resolveBlockSync", function () {
+    test("returns class directly for class references", function (assert) {
+      @block("sync-class-ref")
+      class SyncClassRef extends Component {}
+
+      _registerBlock(SyncClassRef);
+
+      const result = resolveBlockSync(SyncClassRef);
+      assert.strictEqual(result, SyncClassRef);
+    });
+
+    test("returns class for registered block by string name", function (assert) {
+      @block("sync-string-lookup")
+      class SyncStringLookup extends Component {}
+
+      _registerBlock(SyncStringLookup);
+
+      const result = resolveBlockSync("sync-string-lookup");
+      assert.strictEqual(result, SyncStringLookup);
+    });
+
+    test("returns optional missing marker for optional block not registered", function (assert) {
+      const result = resolveBlockSync("nonexistent-block?");
+
+      assert.strictEqual(result.optionalMissing, OPTIONAL_MISSING);
+      assert.strictEqual(result.name, "nonexistent-block");
+    });
+
+    test("logs error and returns null for non-optional block not registered", function (assert) {
+      // eslint-disable-next-line no-console
+      const originalError = console.error;
+      let errorLogged = false;
+      // eslint-disable-next-line no-console
+      console.error = () => (errorLogged = true);
+
+      try {
+        const result = resolveBlockSync("nonexistent-required");
+
+        assert.strictEqual(result, null);
+        assert.true(errorLogged, "Should log an error");
+      } finally {
+        // eslint-disable-next-line no-console
+        console.error = originalError;
+      }
+    });
+
+    test("returns null for unresolved factory", function (assert) {
+      _registerBlockFactory("sync-unresolved-factory", async () => {
+        @block("sync-unresolved-factory")
+        class UnresolvedFactory extends Component {}
+        return UnresolvedFactory;
+      });
+
+      const result = resolveBlockSync("sync-unresolved-factory");
+
+      assert.strictEqual(
+        result,
+        null,
+        "Should return null for pending factory"
+      );
+      assert.true(
+        hasBlock("sync-unresolved-factory"),
+        "Factory should still be registered"
+      );
+    });
+
+    test("returns class for already-resolved factory", async function (assert) {
+      @block("sync-resolved-factory")
+      class ResolvedFactory extends Component {}
+
+      _registerBlockFactory(
+        "sync-resolved-factory",
+        async () => ResolvedFactory
+      );
+
+      await resolveBlock("sync-resolved-factory");
+
+      const result = resolveBlockSync("sync-resolved-factory");
+      assert.strictEqual(result, ResolvedFactory);
     });
   });
 });

@@ -1,7 +1,9 @@
 import { DEBUG } from "@glimmer/env";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import {
+  OPTIONAL_MISSING,
   parseBlockName,
+  parseBlockReference,
   VALID_BLOCK_NAME_PATTERN,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/patterns";
@@ -465,6 +467,61 @@ async function resolveFactory(name, factory) {
     // Clean up pending tracking once resolution completes (success or failure)
     pendingResolutions.delete(name);
   }
+}
+
+/**
+ * Synchronously resolves a block reference to a BlockClass.
+ *
+ * Unlike `resolveBlock`, this function is synchronous and handles the case
+ * where a factory function hasn't been resolved yet. If a factory is
+ * encountered, it triggers async resolution but returns null for the current
+ * render cycle (the component will re-render when the factory resolves).
+ *
+ * @param {string | BlockClass} blockRef - Block reference (string name or class).
+ *   String names may include a trailing "?" to mark the block as optional.
+ * @returns {BlockClass | { optionalMissing: symbol, name: string } | null}
+ *   - The BlockClass if found and resolved
+ *   - An object with `optionalMissing` marker if the block is optional and not registered
+ *   - null if the block is not registered (non-optional) or is a pending factory
+ */
+export function resolveBlockSync(blockRef) {
+  // If already a class, return it directly
+  if (typeof blockRef !== "string") {
+    return blockRef;
+  }
+
+  // Parse the block reference to extract name and optional flag
+  const { name: blockName, optional } = parseBlockReference(blockRef);
+
+  // Check if block is registered
+  if (!blockRegistry.has(blockName)) {
+    if (optional) {
+      // Return a marker object so callers can distinguish optional missing blocks
+      return { optionalMissing: OPTIONAL_MISSING, name: blockName };
+    }
+    // eslint-disable-next-line no-console
+    console.error(`[Blocks] Block "${blockName}" is not registered.`);
+    return null;
+  }
+
+  const entry = blockRegistry.get(blockName);
+
+  // If not a factory, return the class directly
+  if (!isBlockFactory(entry)) {
+    return entry;
+  }
+
+  // It's a factory that hasn't been resolved yet.
+  // Trigger async resolution but return null for this render cycle.
+  // The component will re-render when the factory resolves.
+  if (!DEBUG) {
+    resolveBlock(blockName).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error(`[Blocks] Failed to resolve block "${blockName}":`, error);
+    });
+  }
+
+  return null;
 }
 
 /**
