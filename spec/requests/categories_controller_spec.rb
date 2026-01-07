@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoriesController do
-  let(:admin) { Fabricate(:admin) }
+  let!(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
   fab!(:user)
 
@@ -1782,33 +1782,55 @@ RSpec.describe CategoriesController do
     end
   end
 
-  describe "#hierachical_search" do
+  describe "#hierarchical_search" do
+    fab!(:category) { Fabricate(:category, name: "Parent Category") }
+    fab!(:category_child_2) { Fabricate(:category, name: "Child Two", parent_category: category) }
+    fab!(:category_child_1) { Fabricate(:category, name: "Child One", parent_category: category) }
+
     before { sign_in(user) }
 
-    it "produces categories with an empty term" do
-      get "/categories/hierarchical_search.json", params: { term: "" }
+    it "returns the right categories when term param is present" do
+      get "/categories/hierarchical_search.json", params: { term: "Child One" }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["categories"].length).not_to eq(0)
+
+      categories = response.parsed_body["categories"]
+
+      expect(categories.length).to eq(2)
+      expect(categories.map { |c| c["id"] }).to eq([category.id, category_child_1.id])
     end
 
-    it "produces exactly 5 subcategories" do
-      subcategories = Fabricate.times(6, :category, parent_category: category)
-      subcategories[3].update!(read_restricted: true)
-
-      get "/categories/hierarchical_search.json"
+    it "returns the right categories when except param is present" do
+      get "/categories/hierarchical_search.json", params: { except: [category_child_1.id] }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["categories"].length).to eq(7)
-      expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
-        category.id,
-        subcategories[0].id,
-        subcategories[1].id,
-        subcategories[2].id,
-        subcategories[4].id,
-        subcategories[5].id,
-        SiteSetting.uncategorized_category_id,
+
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq(
+        [category.id, category_child_2.id],
       )
+    end
+
+    it "returns the right categories when only param is present" do
+      get "/categories/hierarchical_search.json", params: { only: [category_child_1.id] }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq(
+        [category.id, category_child_1.id],
+      )
+    end
+
+    it "returns the right categories when page param is present" do
+      stub_const(CategoriesController, "MAX_CATEGORIES_LIMIT", 1) do
+        get "/categories/hierarchical_search.json", params: { page: 2 }
+
+        expect(response.status).to eq(200)
+
+        categories = response.parsed_body["categories"]
+
+        expect(categories.length).to eq(1)
+        expect(categories[0]["id"]).to eq(category_child_1.id)
+      end
     end
 
     it "doesn't produce categories with a very specific term" do

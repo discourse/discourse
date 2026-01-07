@@ -184,193 +184,6 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     )
   end
 
-  context "when loading more subcategories via scrolling" do
-    fab!(:parent_category) { Fabricate(:category, name: "parent category") }
-
-    # Create 4 subcategories initially (under the threshold of 5)
-    fab!(:subcategory1) do
-      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 1")
-    end
-
-    fab!(:subcategory2) do
-      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 2")
-    end
-
-    fab!(:subcategory3) do
-      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 3")
-    end
-
-    fab!(:subcategory4) do
-      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 4")
-    end
-
-    # Create additional subcategories that will be loaded via intersection observer
-    fab!(:subcategory5) do
-      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 5")
-    end
-
-    fab!(:subcategory6) do
-      Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 6")
-    end
-
-    # Test stub to force pagination in the category search
-    around(:each) do |example|
-      stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
-    end
-
-    it "shows the 'Show more' link after loading additional subcategories via intersection observer and hides it after loading all subcategories" do
-      visit "/latest"
-
-      modal = sidebar.click_edit_categories_button
-
-      expect(modal).to have_category_row(parent_category)
-      expect(modal).to have_category_row(subcategory1)
-      expect(modal).to have_category_row(subcategory2)
-      expect(modal).to have_category_row(subcategory3)
-      modal.scroll_to_category(subcategory3)
-
-      expect(modal).to have_category_row(subcategory4)
-      expect(modal).to have_category_row(subcategory5)
-
-      modal.click_show_more_button(parent_category)
-
-      expect(page).to have_content(subcategory6.name)
-      # The 'Show more' button should disappear after loading all subcategories
-      expect(modal).to have_no_show_more_button(parent_category)
-    end
-  end
-
-  context "when loading more subcategories with 3-level hierarchy" do
-    before_all { SiteSetting.max_category_nesting = 3 }
-
-    before { SiteSetting.max_category_nesting = 3 }
-
-    fab!(:grandparent_category) { Fabricate(:category, name: "grandparent category") }
-
-    fab!(:parent1) do
-      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 1")
-    end
-
-    fab!(:parent2) do
-      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 2")
-    end
-
-    fab!(:parent3) do
-      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 3")
-    end
-
-    fab!(:parent4) do
-      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 4")
-    end
-
-    fab!(:parent5) do
-      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 5")
-    end
-
-    fab!(:parent6) do
-      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 6")
-    end
-
-    fab!(:child1_1) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-1") }
-    fab!(:child1_2) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-2") }
-    fab!(:child1_3) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-3") }
-    fab!(:child1_4) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-4") }
-    fab!(:child1_5) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-5") }
-    fab!(:child1_6) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-6") }
-
-    around(:each) do |example|
-      stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
-    end
-
-    it "shows 'Show more' button at grandparent level and loads additional parent categories" do
-      visit "/latest"
-
-      modal = sidebar.click_edit_categories_button
-
-      # Should show grandparent category and first 5 parent categories
-      expect(modal).to have_category_row(grandparent_category)
-      modal.scroll_to_category(grandparent_category)
-      expect(modal).to have_category_row(parent1)
-      expect(modal).to have_category_row(parent2)
-      expect(modal).to have_category_row(parent3)
-      modal.scroll_to_category(parent3)
-      expect(modal).to have_category_row(parent4)
-      expect(modal).to have_category_row(parent5)
-      expect(modal).to have_no_category_row(parent6)
-
-      modal.click_show_more_button(grandparent_category)
-
-      expect(modal).to have_category_row(parent6)
-      expect(modal).to have_no_show_more_button(grandparent_category)
-    end
-  end
-
-  context "when loading more subcategories with specific sub-subcategory configuration" do
-    before_all { SiteSetting.max_category_nesting = 3 }
-
-    before { SiteSetting.max_category_nesting = 3 }
-
-    fab!(:top_category) { Fabricate(:category, name: "top category") }
-
-    fab!(:sub1) { Fabricate(:category, parent_category_id: top_category.id, name: "sub 1") }
-    fab!(:sub2) { Fabricate(:category, parent_category_id: top_category.id, name: "sub 2") }
-    fab!(:sub3) { Fabricate(:category, parent_category_id: top_category.id, name: "sub 3") }
-    fab!(:sub4) { Fabricate(:category, parent_category_id: top_category.id, name: "sub 4") }
-    fab!(:sub5) { Fabricate(:category, parent_category_id: top_category.id, name: "sub 5") }
-    fab!(:sub6) { Fabricate(:category, parent_category_id: top_category.id, name: "sub 6") }
-
-    # 5 sub-subcategories under the first subcategory
-    fab!(:subsub1_1) { Fabricate(:category, parent_category_id: sub1.id, name: "subsub 1-1") }
-    fab!(:subsub1_2) { Fabricate(:category, parent_category_id: sub1.id, name: "subsub 1-2") }
-    fab!(:subsub1_3) { Fabricate(:category, parent_category_id: sub1.id, name: "subsub 1-3") }
-    fab!(:subsub1_4) { Fabricate(:category, parent_category_id: sub1.id, name: "subsub 1-4") }
-    fab!(:subsub1_5) { Fabricate(:category, parent_category_id: sub1.id, name: "subsub 1-5") }
-
-    # 5 sub-subcategories under the last (5th) subcategory
-    fab!(:subsub5_1) { Fabricate(:category, parent_category_id: sub5.id, name: "subsub 5-1") }
-    fab!(:subsub5_2) { Fabricate(:category, parent_category_id: sub5.id, name: "subsub 5-2") }
-    fab!(:subsub5_3) { Fabricate(:category, parent_category_id: sub5.id, name: "subsub 5-3") }
-    fab!(:subsub5_4) { Fabricate(:category, parent_category_id: sub5.id, name: "subsub 5-4") }
-    fab!(:subsub5_5) { Fabricate(:category, parent_category_id: sub5.id, name: "subsub 5-5") }
-
-    around(:each) do |example|
-      stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
-    end
-
-    it "shows 'Show more' button for top-level category with more subcategories after intersection observer loads sub-subcategories" do
-      visit "/latest"
-
-      modal = sidebar.click_edit_categories_button
-
-      # Initial load (page 1, limit=5) should show:
-      # top_category, sub1, subsub1_1, subsub1_2, subsub1_3 (depth-first hierarchical order)
-      expect(modal).to have_category_row(top_category)
-      expect(modal).to have_category_row(sub1)
-      expect(modal).to have_category_row(subsub1_1)
-      expect(modal).to have_no_category_row(sub6)
-
-      # No Show more button initially since top_category doesn't have 5 direct children yet
-      expect(modal).to have_no_show_more_button(top_category)
-
-      # Scroll down to trigger intersection observer to load more pages
-      # We need to load until top_category has exactly 5 direct children (sub1-sub5)
-      # This happens after loading sub5, which comes in page 3
-      modal.scroll_to_category(subsub1_1)
-      modal.scroll_to_category(sub2)
-      modal.scroll_to_category(sub4)
-      modal.scroll_to_category(sub5)
-
-      # After loading enough pages, top_category should have 5 direct children (sub1-sub5)
-      # and the "Show more" button should appear
-      expect(modal).to have_category_row(sub5)
-
-      # Click the "Show more" button to load sub6
-      modal.click_show_more_button(top_category)
-
-      expect(modal).to have_category_row(sub6)
-    end
-  end
-
   describe "when max_category_nesting has been set to 3" do
     before_all { SiteSetting.max_category_nesting = 3 }
 
@@ -428,19 +241,55 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(sidebar).to have_categories_section
 
       modal = sidebar.click_edit_categories_button
+
       modal.filter("category 2 subcategory subcategory")
 
       expect(modal).to have_categories(
         [
-          category2,
-          category2_subcategory,
-          category2_subcategory_subcategory,
           category,
           category_subcategory,
           category_subcategory_subcategory2,
           category_subcategory2,
+          category2,
+          category2_subcategory,
+          category2_subcategory_subcategory,
         ],
       )
+    end
+
+    it "loads categories in multiple pages correctly" do
+      resize_window(height: 500) do
+        stub_const(CategoriesController, "MAX_CATEGORIES_LIMIT", 5) do
+          visit "/latest"
+
+          modal = sidebar.click_edit_categories_button
+
+          expect(modal).to have_categories(
+            [
+              category,
+              category_subcategory,
+              category_subcategory_subcategory,
+              category_subcategory_subcategory2,
+              category_subcategory2,
+            ],
+          )
+
+          modal.scroll_to_category(category_subcategory2)
+
+          expect(modal).to have_categories(
+            [
+              category,
+              category_subcategory,
+              category_subcategory_subcategory,
+              category_subcategory_subcategory2,
+              category_subcategory2,
+              category2,
+              category2_subcategory,
+              category2_subcategory_subcategory,
+            ],
+          )
+        end
+      end
     end
   end
 end
