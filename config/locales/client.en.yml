@@ -8200,7 +8200,7 @@ en:
             text: "delete posts by @%{username}"
             delete: "Delete posts by @%{username}"
             cancel: "Cancel"
-          all_enqueued: "All of @%{username}'s posts have been queued for deletion."
+          all_enqueued: "All of @%{username}'s posts have been queued for deletion"
         merge:
           button: "Merge"
           prompt:
