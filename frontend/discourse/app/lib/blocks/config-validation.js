@@ -141,6 +141,7 @@ export async function resolveBlockForValidation(blockRef, outletName) {
  */
 export const RESERVED_ARG_NAMES = Object.freeze([
   "classNames",
+  "outletArgs",
   "outletName",
   "children",
   "conditions",
