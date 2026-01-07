@@ -553,7 +553,7 @@ class Middleware::RequestTracker
     track_view = !!(explicit_track_view || implicit_track_view)
     browser_page_view = !!(explicit_track_view || deferred_track_view)
 
-    topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"].to_i
+    topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]&.to_i
     tracking_url = env["HTTP_DISCOURSE_TRACK_VIEW_URL"]&.slice(0, MAX_URL_LENGTH)
     tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]&.slice(0, MAX_URL_LENGTH)
     tracking_session_id =
