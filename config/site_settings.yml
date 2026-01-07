@@ -3106,6 +3106,10 @@ developer:
   viewport_based_mobile_mode:
     default: true
     client: true
+  site_setting_verbose_client_logging:
+    default: false
+    client: true
+    hidden: true
 
 navigation:
   navigation_menu:
