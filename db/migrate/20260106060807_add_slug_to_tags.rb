@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AddSlugToTags < ActiveRecord::Migration[7.2]
+  disable_ddl_transaction!
+
   BATCH_SIZE = 1000
 
   def up

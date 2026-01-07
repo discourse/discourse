@@ -272,7 +272,7 @@ class Tag < ActiveRecord::Base
     self.slug ||= ""
     return if name.blank?
 
-    if slug.blank? || will_save_change_to_name?
+    if self.slug.blank? || will_save_change_to_name?
       self.slug = Slug.for(name, "")
       self.slug = "" if slug.blank? || duplicate_slug?
     end
