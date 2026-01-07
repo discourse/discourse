@@ -90,7 +90,7 @@ export function blockCondition(config) {
       .map((key) => formatWithSuggestion(key, VALID_CONFIG_KEYS))
       .join(", ");
     throw new Error(
-      `blockCondition: Unknown config key(s): ${suggestions}. ` +
+      `blockCondition: unknown config key(s): ${suggestions}. ` +
         `Valid keys are: ${VALID_CONFIG_KEYS.join(", ")}.`
     );
   }

@@ -97,7 +97,7 @@ export default class BlockSettingCondition extends BlockCondition {
     // (e.g., theme settings from "virtual:theme")
     if (!source && !(setting in this.siteSettings)) {
       raiseBlockValidationError(
-        `BlockSettingCondition: Unknown site setting "${setting}". ` +
+        `BlockSettingCondition: unknown site setting "${setting}". ` +
           `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`
       );
     }

@@ -634,14 +634,14 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
     test("throws for unknown shortcut", function (assert) {
       assert.throws(
         () => this.validateCondition({ urls: ["$INVALID_SHORTCUT"] }),
-        /Unknown shortcut "\$INVALID_SHORTCUT"/
+        /unknown shortcut "\$INVALID_SHORTCUT"/
       );
     });
 
     test("throws for unknown shortcut in excludeUrls", function (assert) {
       assert.throws(
         () => this.validateCondition({ excludeUrls: ["$UNKNOWN"] }),
-        /Unknown shortcut "\$UNKNOWN"/
+        /unknown shortcut "\$UNKNOWN"/
       );
     });
 

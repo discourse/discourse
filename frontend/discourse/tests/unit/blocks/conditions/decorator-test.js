@@ -132,7 +132,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
             sourceType: "none",
             validArgKey: [],
           }),
-        /Unknown config key.*"validArgKey".*did you mean.*"validArgKeys"/
+        /unknown config key.*"validArgKey".*did you mean.*"validArgKeys"/
       );
     });
 
@@ -145,7 +145,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
             sourceTyp: "none",
             typo: true,
           }),
-        /Unknown config key.*"sourceTyp".*"typo".*Valid keys are: type, sourceType, validArgKeys/
+        /unknown config key.*"sourceTyp".*"typo".*Valid keys are: type, sourceType, validArgKeys/
       );
     });
 
@@ -157,7 +157,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
             validArgKeys: [],
             sourcetype: "outletArgs",
           }),
-        /Unknown config key.*"sourcetype".*did you mean.*"sourceType"/
+        /unknown config key.*"sourcetype".*did you mean.*"sourceType"/
       );
     });
 

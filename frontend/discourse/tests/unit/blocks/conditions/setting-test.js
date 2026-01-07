@@ -407,7 +407,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("throws for unknown site setting", function (assert) {
       assert.throws(
         () => this.validateCondition({ setting: "nonexistent_setting" }),
-        /Unknown site setting/
+        /unknown site setting/
       );
     });
 

@@ -119,7 +119,7 @@ export default class BlockRouteCondition extends BlockCondition {
         if (!VALID_SHORTCUTS.includes(pattern)) {
           const suggestion = formatWithSuggestion(pattern, VALID_SHORTCUTS);
           raiseBlockValidationError(
-            `BlockRouteCondition: Unknown shortcut ${suggestion}. ` +
+            `BlockRouteCondition: unknown shortcut ${suggestion}. ` +
               `Valid shortcuts: ${VALID_SHORTCUTS.join(", ")}`
           );
         }

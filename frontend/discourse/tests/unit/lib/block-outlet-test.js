@@ -218,7 +218,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         class UnknownOptionBlock extends Component {}
 
         return UnknownOptionBlock;
-      }, /Unknown option.*"containers".*did you mean.*"container"/);
+      }, /unknown option.*"containers".*did you mean.*"container"/);
     });
 
     test("throws for multiple unknown option keys", function (assert) {
@@ -230,7 +230,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         class MultipleUnknownBlock extends Component {}
 
         return MultipleUnknownBlock;
-      }, /Unknown option.*"desc".*"containers".*Valid options are/);
+      }, /unknown option.*"desc".*"containers".*Valid options are/);
     });
 
     test("throws for typo in deniedOutlets", function (assert) {
@@ -241,7 +241,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         class TypoDeniedBlock extends Component {}
 
         return TypoDeniedBlock;
-      }, /Unknown option.*"deniedOutlet".*did you mean.*"deniedOutlets"/);
+      }, /unknown option.*"deniedOutlet".*did you mean.*"deniedOutlets"/);
     });
 
     test("accepts only valid option keys", function (assert) {

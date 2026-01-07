@@ -227,7 +227,7 @@ export function block(name, options = {}) {
         .map((key) => formatWithSuggestion(key, VALID_BLOCK_OPTIONS))
         .join(", ");
       raiseBlockError(
-        `@block("${name}"): Unknown option(s): ${suggestions}. ` +
+        `@block("${name}"): unknown option(s): ${suggestions}. ` +
           `Valid options are: ${VALID_BLOCK_OPTIONS.join(", ")}.`
       );
     }
