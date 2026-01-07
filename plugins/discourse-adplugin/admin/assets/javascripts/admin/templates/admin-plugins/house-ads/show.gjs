@@ -51,7 +51,13 @@ export default <template>
           class="house-ads-categories"
         />
         <div class="description">
-          {{i18n "admin.adplugin.house_ads.category_chooser_description"}}
+          {{#if @controller.routesEnabled}}
+            {{i18n
+              "admin.adplugin.house_ads.category_chooser_description_with_routes"
+            }}
+          {{else}}
+            {{i18n "admin.adplugin.house_ads.category_chooser_description"}}
+          {{/if}}
         </div>
 
         {{#if @controller.routesEnabled}}
