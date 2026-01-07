@@ -196,6 +196,70 @@ export function validateConfigKeys(config, outletName, path) {
 }
 
 /**
+ * Validates the types of optional config fields.
+ * Ensures each field, if provided, has the correct type.
+ *
+ * @param {Object} config - The block configuration object.
+ * @param {string} outletName - The outlet name for error messages.
+ * @param {string} [path] - JSON-path style location for error context.
+ * @throws {BlockError} If any field has an invalid type.
+ */
+export function validateConfigTypes(config, outletName, path) {
+  const location = path ? ` at ${path}` : "";
+
+  // Validate `args` is a plain object (not array)
+  if (
+    config.args != null &&
+    (typeof config.args !== "object" || Array.isArray(config.args))
+  ) {
+    raiseBlockError(
+      `Block${location} for outlet "${outletName}": "args" must be an object, ` +
+        `got ${Array.isArray(config.args) ? "array" : typeof config.args}.`
+    );
+  }
+
+  // Validate `children` is an array
+  if (config.children != null && !Array.isArray(config.children)) {
+    raiseBlockError(
+      `Block${location} for outlet "${outletName}": "children" must be an array, ` +
+        `got ${typeof config.children}.`
+    );
+  }
+
+  // Validate `classNames` is a string or array of strings
+  if (config.classNames != null) {
+    const isValid =
+      typeof config.classNames === "string" ||
+      (Array.isArray(config.classNames) &&
+        config.classNames.every((item) => typeof item === "string"));
+
+    if (!isValid) {
+      raiseBlockError(
+        `Block${location} for outlet "${outletName}": "classNames" must be a string ` +
+          `or array of strings, got ${Array.isArray(config.classNames) ? "array with non-string items" : typeof config.classNames}.`
+      );
+    }
+  }
+
+  // Validate `name` is a string
+  if (config.name != null && typeof config.name !== "string") {
+    raiseBlockError(
+      `Block${location} for outlet "${outletName}": "name" must be a string, ` +
+        `got ${typeof config.name}.`
+    );
+  }
+
+  // Validate `conditions` is an object or array (not a primitive)
+  // Arrays are objects in JS, so typeof === "object" covers both
+  if (config.conditions != null && typeof config.conditions !== "object") {
+    raiseBlockError(
+      `Block${location} for outlet "${outletName}": "conditions" must be an object ` +
+        `or array, got ${typeof config.conditions}.`
+    );
+  }
+}
+
+/**
  * Safely stringifies a block config object for error messages.
  * Handles circular references, limits depth, and truncates output.
  *
@@ -412,6 +476,9 @@ export async function validateBlock(
 
   // Validate config keys first (catches typos like "condition" vs "conditions")
   validateConfigKeys(config, outletName, path);
+
+  // Validate types of optional fields (args, children, classNames, name, conditions)
+  validateConfigTypes(config, outletName, path);
 
   if (!config.block) {
     raiseBlockError(

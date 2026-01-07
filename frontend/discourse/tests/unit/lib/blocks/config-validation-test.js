@@ -5,6 +5,7 @@ import {
   safeStringifyConfig,
   VALID_CONFIG_KEYS,
   validateConfigKeys,
+  validateConfigTypes,
 } from "discourse/lib/blocks/config-validation";
 
 module("Unit | Lib | blocks/config-validation", function () {
@@ -269,6 +270,215 @@ module("Unit | Lib | blocks/config-validation", function () {
           );
         },
         "error message lists valid keys"
+      );
+    });
+  });
+
+  module("validateConfigTypes", function () {
+    test("passes for config with valid types", function (assert) {
+      const config = {
+        block: "my-block",
+        args: { title: "Hello" },
+        children: [{ block: "child" }],
+        conditions: { type: "user" },
+        name: "My Block",
+        classNames: "custom-class",
+      };
+
+      validateConfigTypes(config, "test-outlet", "blocks[0]");
+      assert.true(true, "validation passed without error");
+    });
+
+    test("passes for config with no optional fields", function (assert) {
+      const config = { block: "my-block" };
+
+      validateConfigTypes(config, "test-outlet", "blocks[0]");
+      assert.true(true, "validation passed without error");
+    });
+
+    test("throws for args as string", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", args: "not-an-object" },
+            "test-outlet",
+            "blocks[0]"
+          ),
+        /"args" must be an object.*got string/
+      );
+    });
+
+    test("throws for args as array", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", args: ["not", "an", "object"] },
+            "test-outlet",
+            "blocks[0]"
+          ),
+        /"args" must be an object.*got array/
+      );
+    });
+
+    test("allows args as null", function (assert) {
+      validateConfigTypes(
+        { block: "my-block", args: null },
+        "test-outlet",
+        "blocks[0]"
+      );
+      assert.true(true, "null args are allowed");
+    });
+
+    test("throws for children as string", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", children: "not-an-array" },
+            "test-outlet",
+            "blocks[0]"
+          ),
+        /"children" must be an array.*got string/
+      );
+    });
+
+    test("throws for children as object", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", children: { block: "child" } },
+            "test-outlet",
+            "blocks[0]"
+          ),
+        /"children" must be an array.*got object/
+      );
+    });
+
+    test("passes for classNames as string", function (assert) {
+      validateConfigTypes(
+        { block: "my-block", classNames: "custom-class" },
+        "test-outlet"
+      );
+      assert.true(true, "validation passed for string classNames");
+    });
+
+    test("passes for classNames as array of strings", function (assert) {
+      validateConfigTypes(
+        { block: "my-block", classNames: ["class-one", "class-two"] },
+        "test-outlet"
+      );
+      assert.true(true, "validation passed for string array classNames");
+    });
+
+    test("throws for classNames as number", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", classNames: 123 },
+            "test-outlet"
+          ),
+        /"classNames" must be a string or array of strings.*got number/
+      );
+    });
+
+    test("throws for classNames as array with non-strings", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", classNames: ["valid", 123, "also-valid"] },
+            "test-outlet"
+          ),
+        /"classNames" must be a string or array of strings.*array with non-string items/
+      );
+    });
+
+    test("throws for name as number", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes({ block: "my-block", name: 123 }, "test-outlet"),
+        /"name" must be a string.*got number/
+      );
+    });
+
+    test("throws for name as object", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", name: { label: "test" } },
+            "test-outlet"
+          ),
+        /"name" must be a string.*got object/
+      );
+    });
+
+    test("passes for conditions as object", function (assert) {
+      validateConfigTypes(
+        { block: "my-block", conditions: { type: "user" } },
+        "test-outlet"
+      );
+      assert.true(true, "validation passed for object conditions");
+    });
+
+    test("passes for conditions as array", function (assert) {
+      validateConfigTypes(
+        { block: "my-block", conditions: [{ type: "user" }] },
+        "test-outlet"
+      );
+      assert.true(true, "validation passed for array conditions");
+    });
+
+    test("throws for conditions as string", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", conditions: "user" },
+            "test-outlet"
+          ),
+        /"conditions" must be an object or array.*got string/
+      );
+    });
+
+    test("throws for conditions as number", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", conditions: 123 },
+            "test-outlet"
+          ),
+        /"conditions" must be an object or array.*got number/
+      );
+    });
+
+    test("throws for conditions as boolean", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", conditions: true },
+            "test-outlet"
+          ),
+        /"conditions" must be an object or array.*got boolean/
+      );
+    });
+
+    test("includes path in error message", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", args: "invalid" },
+            "test-outlet",
+            "blocks[2].children[1]"
+          ),
+        /at blocks\[2\]\.children\[1\]/
+      );
+    });
+
+    test("includes outlet name in error message", function (assert) {
+      assert.throws(
+        () =>
+          validateConfigTypes(
+            { block: "my-block", args: "invalid" },
+            "sidebar-blocks"
+          ),
+        /outlet "sidebar-blocks"/
       );
     });
   });
