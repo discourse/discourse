@@ -4,6 +4,8 @@ import { htmlSafe } from "@ember/template";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { UPCOMING_CHANGES_USER_ENABLED_REASONS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
+import { escapeExpression } from "discourse/lib/utilities";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -19,7 +21,7 @@ export default class AdminUserUpcomingChanges extends Component {
       "(" +
       groups
         .map((group) => {
-          return `<a href="/g/${group}">${group}</a>`;
+          return `<a href="${getUrl(`/groups/${encodeURIComponent(group)}`)}">${escapeExpression(group)}</a>`;
         })
         .join(", ") +
       ")"
