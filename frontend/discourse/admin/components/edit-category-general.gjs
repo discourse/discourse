@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import ColorInput from "discourse/admin/components/color-input";
 import ColorPicker from "discourse/components/color-picker";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import EmojiPicker from "discourse/components/emoji-picker";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
@@ -14,6 +15,7 @@ import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import IconPicker from "discourse/select-kit/components/icon-picker";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryGeneral extends Component {
@@ -380,32 +382,77 @@ export default class EditCategoryGeneral extends Component {
         </@form.Field>
       {{/unless}}
 
-      <@form.Field
-        @name="icon"
-        @title={{i18n "category.styles.icon"}}
-        @format="large"
-        @validation="required"
-        as |field|
-      >
-        <field.Custom>
-          <IconPicker
-            @value={{readonly field.value}}
-            @onlyAvailable={{true}}
-            @options={{hash
-              maximum=1
-              disabled=field.disabled
-              caretDownIcon="angle-down"
-              caretUpIcon="angle-up"
-              icons=field.value
-            }}
-            @onChange={{field.set}}
-            class="form-kit__control-icon"
-            style={{htmlSafe
-              (concat "--icon-color: #" @transientData.color ";")
-            }}
-          />
-        </field.Custom>
-      </@form.Field>
+      <@form.Container @title={{i18n "category.style"}}>
+        <@form.ConditionalContent
+          @activeName={{or @category.styleType "square"}}
+          as |cc|
+        >
+          <cc.Conditions as |Condition|>
+            <Condition @name="icon">
+              {{i18n "category.styles.icon"}}
+            </Condition>
+            <Condition @name="emoji">
+              {{i18n "category.styles.emoji"}}
+            </Condition>
+            <Condition @name="square">
+              {{i18n "category.styles.square"}}
+            </Condition>
+          </cc.Conditions>
+
+          <cc.Contents as |Content|>
+            <Content @name="icon">
+              <@form.Field
+                @name="icon"
+                @title={{i18n "category.icon"}}
+                @showTitle={{false}}
+                @format="large"
+                as |field|
+              >
+                <field.Custom>
+                  <IconPicker
+                    @value={{readonly field.value}}
+                    @onlyAvailable={{true}}
+                    @options={{hash
+                      maximum=1
+                      disabled=field.disabled
+                      caretDownIcon="angle-down"
+                      caretUpIcon="angle-up"
+                      icons=field.value
+                    }}
+                    @onChange={{field.set}}
+                    class="form-kit__control-icon"
+                    style={{htmlSafe
+                      (concat "--icon-color: #" @transientData.color ";")
+                    }}
+                  />
+                </field.Custom>
+              </@form.Field>
+            </Content>
+
+            <Content @name="emoji">
+              <@form.Field
+                @name="emoji"
+                @title={{i18n "category.emoji"}}
+                @showTitle={{false}}
+                @format="large"
+                as |field|
+              >
+                <field.Custom>
+                  <EmojiPicker
+                    @emoji={{field.value}}
+                    @didSelectEmoji={{field.set}}
+                    @modalForMobile={{false}}
+                    @btnClass="btn-emoji"
+                    @label={{unless field.value (i18n "category.select_emoji")}}
+                  />
+                </field.Custom>
+              </@form.Field>
+            </Content>
+
+            <Content @name="square" />
+          </cc.Contents>
+        </@form.ConditionalContent>
+      </@form.Container>
 
       <@form.Field
         @name="color"

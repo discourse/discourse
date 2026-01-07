@@ -4538,7 +4538,10 @@ en:
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category background image"
       background_image_dark: "Dark category background image"
-      style: "Styles"
+      style: "Style"
+      icon: "Icon"
+      emoji: "Emoji"
+      select_emoji: "Select emoji"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
@@ -4549,6 +4552,7 @@ en:
         type: "Style"
         icon: "Icon"
         emoji: "Emoji"
+        square: "Square"
         options:
           square: "Square"
           icon: "Icon"

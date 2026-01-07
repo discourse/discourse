@@ -31,7 +31,14 @@ $number-input-width: 75px;
   }
 
   .form-kit__control-icon .formatted-selection {
-    display: flex !important;
+    display: flex !important; // overrides another important
+    flex: 0 1 auto;
+  }
+
+  #control-emoji {
+    &.form-kit__field .form-kit__container-content {
+      width: auto;
+    }
   }
 }
 
