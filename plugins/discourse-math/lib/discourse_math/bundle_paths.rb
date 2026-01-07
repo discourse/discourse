@@ -21,12 +21,8 @@ module DiscourseMath
 
     def self.ensure_public_symlinks
       FileUtils.mkdir_p(public_version_dir)
-
       ensure_symlink(File.join(public_version_dir, "mathjax"), DiscourseMathBundle.mathjax_path)
       ensure_symlink(File.join(public_version_dir, "katex"), DiscourseMathBundle.katex_path)
-
-      ensure_symlink(File.join(PUBLIC_DIR, "mathjax"), DiscourseMathBundle.mathjax_path)
-      ensure_symlink(File.join(PUBLIC_DIR, "katex"), DiscourseMathBundle.katex_path)
     end
 
     def self.ensure_symlink(link_path, target_path)
