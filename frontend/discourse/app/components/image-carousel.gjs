@@ -4,13 +4,12 @@ import { helper } from "@ember/component/helper";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { cancel, throttle } from "@ember/runloop";
+import { throttle } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { isTesting } from "discourse/lib/environment";
-import discourseLater from "discourse/lib/later";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -21,7 +20,6 @@ const getAspectRatio = helper(([width, height]) => {
   return htmlSafe(`aspect-ratio: ${w} / ${h}`);
 });
 
-const FALLBACK_TIMEOUT_MS = 1000;
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
 const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 10;
@@ -40,11 +38,10 @@ export default class ImageCarousel extends Component {
     this.#trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
-    const onScrollEnd = () => {
-      if (this.#isNavigating) {
-        this.#endNavigation();
-      } else {
-        this.currentIndex = this.#calculateNearestIndex(element);
+    const updateIndex = () => {
+      const newIndex = this.#calculateNearestIndex(element);
+      if (newIndex !== this.currentIndex) {
+        this.currentIndex = newIndex;
       }
     };
 
@@ -52,47 +49,35 @@ export default class ImageCarousel extends Component {
     let scrollStopTimer;
 
     const onScroll = () => {
-      if (!this.#isNavigating) {
-        throttle(
-          this,
-          this.#updateIndexFromScroll,
-          element,
-          SCROLL_THROTTLE_MS
-        );
+      // Optimistic update while scrolling for real-time dot feedback
+      if (!isTesting()) {
+        throttle(this, updateIndex, SCROLL_THROTTLE_MS);
       }
 
       // Fallback for browsers without scrollend support (Safari < 17.4)
       if (!supportsScrollEnd) {
         clearTimeout(scrollStopTimer);
-        scrollStopTimer = setTimeout(onScrollEnd, 150);
+        scrollStopTimer = setTimeout(updateIndex, 150);
       }
     };
 
     element.addEventListener("scroll", onScroll, { passive: true });
 
     if (supportsScrollEnd) {
-      element.addEventListener("scrollend", onScrollEnd);
+      element.addEventListener("scrollend", updateIndex);
     }
 
     return () => {
       element.removeEventListener("scroll", onScroll);
       if (supportsScrollEnd) {
-        element.removeEventListener("scrollend", onScrollEnd);
+        element.removeEventListener("scrollend", updateIndex);
       }
       clearTimeout(scrollStopTimer);
-      cancel(this.#fallbackTimer);
     };
   });
 
-  #isNavigating = false;
-  #fallbackTimer = null;
   #trackDirection = 1;
   #slides = new Map();
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    cancel(this.#fallbackTimer);
-  }
 
   #calculateNearestIndex(track) {
     if (!track) {
@@ -113,18 +98,6 @@ export default class ImageCarousel extends Component {
     });
 
     return bestIndex;
-  }
-
-  #endNavigation() {
-    this.#isNavigating = false;
-    cancel(this.#fallbackTimer);
-  }
-
-  #updateIndexFromScroll(track) {
-    const newIndex = this.#calculateNearestIndex(track);
-    if (newIndex !== this.currentIndex) {
-      this.currentIndex = newIndex;
-    }
   }
 
   get #scrollBehavior() {
@@ -163,33 +136,15 @@ export default class ImageCarousel extends Component {
 
   @action
   scrollToIndex(index) {
-    const clamped = Math.max(0, Math.min(index, this.items.length - 1));
-
-    if (this.#isNavigating || clamped === this.currentIndex) {
-      return;
+    const slide = this.#slides.get(index);
+    if (slide) {
+      this.currentIndex = index;
+      slide.scrollIntoView({
+        behavior: this.#scrollBehavior,
+        block: "nearest",
+        inline: "center",
+      });
     }
-
-    const slide = this.#slides.get(clamped);
-
-    if (!slide) {
-      return;
-    }
-
-    this.#isNavigating = true;
-    this.currentIndex = clamped;
-
-    cancel(this.#fallbackTimer);
-    this.#fallbackTimer = discourseLater(() => {
-      if (this.#isNavigating) {
-        this.#endNavigation();
-      }
-    }, FALLBACK_TIMEOUT_MS);
-
-    slide.scrollIntoView({
-      behavior: this.#scrollBehavior,
-      block: "nearest",
-      inline: "center",
-    });
   }
 
   #navigateByKey(direction) {
