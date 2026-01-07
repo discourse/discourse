@@ -207,46 +207,9 @@ RSpec.describe TopicListItemSerializer do
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
     end
 
-    it "serializes op_like_count when theme modifies the serialize_topic_op_likes_data to true and first_post is loaded" do
-      allow_any_instance_of(ThemeModifierHelper).to receive(
-        :serialize_topic_op_likes_data,
-      ).and_return(true)
-      topic.first_post
+    it "serializes op_like_count" do
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
-
       expect(json[:op_like_count]).to eq(first_post.like_count)
-    end
-
-    it "does not include op_like_count when theme modifier disallows" do
-      allow_any_instance_of(ThemeModifierHelper).to receive(
-        :serialize_topic_op_likes_data,
-      ).and_return(false)
-      topic.first_post
-      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
-
-      expect(json.key?(:op_like_count)).to eq(false)
-    end
-
-    it "does not include op_like_count when first_post is not loaded even if modifier is enabled" do
-      allow_any_instance_of(ThemeModifierHelper).to receive(
-        :serialize_topic_op_likes_data,
-      ).and_return(true)
-      topic.association(:first_post).reset
-      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
-
-      expect(json.key?(:op_like_count)).to eq(false)
-    end
-
-    it "serializes op_like_count when plugin modifies the serialize_topic_op_likes_data to true and first_post is loaded" do
-      modifier = :serialize_topic_op_likes_data
-      proc = Proc.new { true }
-      DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
-      topic.first_post
-      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
-
-      expect(json[:op_like_count]).to eq(first_post.like_count)
-    ensure
-      DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
     end
   end
 
