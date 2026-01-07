@@ -241,6 +241,28 @@ class Notification < ActiveRecord::Base
     notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
   end
 
+  def self.filter_disabled_badge_notifications(notifications)
+    return notifications if notifications.blank?
+
+    if !SiteSetting.enable_badges
+      return notifications.reject { |n| n.notification_type == types[:granted_badge] }
+    end
+
+    badge_ids =
+      notifications.filter_map do |n|
+        n.data_hash[:badge_id] if n.notification_type == types[:granted_badge]
+      end
+
+    return notifications if badge_ids.empty?
+
+    disabled_badge_ids = Badge.where(id: badge_ids, enabled: false).distinct.pluck(:id)
+
+    notifications.reject do |n|
+      n.notification_type == types[:granted_badge] &&
+        disabled_badge_ids.include?(n.data_hash[:badge_id])
+    end
+  end
+
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||=
