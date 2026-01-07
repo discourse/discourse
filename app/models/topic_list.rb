@@ -145,6 +145,8 @@ class TopicList
 
     topic_preloader_associations << :localizations if SiteSetting.content_localization_enabled
 
+    topic_preloader_associations << :first_post
+
     DiscoursePluginRegistry.topic_preloader_associations.each do |a|
       fields = a[:fields]
       condition = a[:condition]
