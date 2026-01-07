@@ -21,6 +21,8 @@ class Middleware::RequestTracker
 
   MAX_URL_LENGTH = 2000
   MAX_SESSION_ID_LENGTH = 32
+  MAX_USER_AGENT_LENGTH = 1000
+  MAX_IP_ADDRESS_LENGTH = 45
 
   # register callbacks for detailed request loggers called on every request
   # example:
@@ -107,7 +109,10 @@ class Middleware::RequestTracker
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
-        DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
+
+        if SiteSetting.trigger_browser_pageview_events
+          DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
+        end
 
         if data[:topic_id].present? && data[:current_user_id].present?
           TopicsController.defer_topic_view(
@@ -119,7 +124,10 @@ class Middleware::RequestTracker
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
-        DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
+
+        if SiteSetting.trigger_browser_pageview_events
+          DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
+        end
 
         if data[:topic_id].present?
           TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
@@ -159,7 +167,7 @@ class Middleware::RequestTracker
     # NOTE: Locally with MessageBus requests, the remote IP ends up as ::1 because
     # of the X-Forwarded-For header set...somewhere, whereas all other requests
     # end up as 127.0.0.1.
-    request_remote_ip = env["action_dispatch.remote_ip"].to_s
+    request_remote_ip = env["action_dispatch.remote_ip"].to_s.slice(0, MAX_IP_ADDRESS_LENGTH)
 
     view_tracking_data = extract_view_tracking_data(env, status, headers)
 
@@ -558,7 +566,7 @@ class Middleware::RequestTracker
     tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]&.slice(0, MAX_URL_LENGTH)
     tracking_session_id =
       env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]&.slice(0, MAX_SESSION_ID_LENGTH)
-    user_agent = env["HTTP_USER_AGENT"]
+    user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
 
     {
       track_view: track_view,

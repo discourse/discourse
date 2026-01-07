@@ -5,6 +5,7 @@ describe "Request tracking", type: :system do
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable
+    SiteSetting.trigger_browser_pageview_events = true
   end
 
   after do

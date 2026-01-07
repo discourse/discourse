@@ -23,15 +23,18 @@ export function trackNextAjaxAsTopicView(topicId) {
   _topicId = topicId;
 }
 
-export function trackNextAjaxAsPageview(
+export function trackNextAjaxAsBrowserPageview(
   trackingSessionId,
   trackingUrl,
   trackingReferrer
 ) {
-  _trackView = true;
   _trackingSessionId = trackingSessionId;
   _trackingUrl = trackingUrl;
   _trackingReferrer = trackingReferrer;
+}
+
+export function trackNextAjaxAsPageview() {
+  _trackView = true;
 }
 
 export function resetAjax() {

@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import {
   resetAjax,
+  trackNextAjaxAsBrowserPageview,
   trackNextAjaxAsPageview,
   trackNextAjaxAsTopicView,
 } from "discourse/lib/ajax";
@@ -90,31 +91,35 @@ export default {
       return;
     }
 
-    const owner = getOwner(this);
-    const router = owner.lookup("service:router");
+    const sessionId = document.querySelector(
+      "meta[name=discourse-track-view-session-id]"
+    )?.content;
 
-    let path = transition.intent?.url;
-    if (!path) {
-      try {
-        path = router.urlFor(
-          transition.to.name,
-          ...Object.values(transition.to.params)
-        );
-      } catch {}
+    if (sessionId) {
+      const owner = getOwner(this);
+      const router = owner.lookup("service:router");
+      let path = transition.intent?.url;
+      if (!path) {
+        try {
+          path = router.urlFor(
+            transition.to.name,
+            ...Object.values(transition.to.params)
+          );
+        } catch {}
+      }
+
+      // The path may not be generated when there is a middle transition leading to another path.
+      // That should not be counted as a page view.
+      if (!path) {
+        return;
+      }
+      trackNextAjaxAsBrowserPageview(
+        sessionId,
+        new URL(path, window.location.origin).href,
+        window.location.href
+      );
     }
-
-    // The path may not be generated when there is a middle transition leading to another path.
-    // That should not be counted as a page view.
-    if (!path) {
-      return;
-    }
-
-    trackNextAjaxAsPageview(
-      document.querySelector("meta[name=discourse-track-view-session-id]")
-        ?.content,
-      new URL(path, window.location.origin).href,
-      window.location.href
-    );
+    trackNextAjaxAsPageview();
 
     if (
       transition.to.name === "topic.fromParamsNear" ||

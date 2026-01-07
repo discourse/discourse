@@ -593,136 +593,168 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     describe "browser_pageview event" do
-      it "triggers event for anonymous user page views when `login_required` site setting is false" do
-        session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+      context "when SiteSetting.trigger_browser_pageview_events is true" do
+        before { SiteSetting.trigger_browser_pageview_events = true }
+        it "triggers event for anonymous user page views when `login_required` site setting is false" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
 
-        data =
-          Middleware::RequestTracker.get_data(
-            env(
-              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-              "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
-              "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
-              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
-            ),
-            ["200", { "Content-Type" => "text/html" }],
-            0.2,
-          )
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
 
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
-            Middleware::RequestTracker.log_request(data)
-          end
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              Middleware::RequestTracker.log_request(data)
+            end
 
-        expect(events.length).to eq(1)
-        event = events[0][:params].first
-        expect(event[:user_id]).to be_nil
-        expect(event[:session_id]).to eq(session_id)
-        expect(event[:url]).to eq("https://discourse.org")
-        expect(event[:referrer]).to eq("https://example.com")
-        expect(event).to have_key(:ip_address)
-        expect(event[:user_agent]).to be_present
+          expect(events.length).to eq(1)
+          event = events[0][:params].first
+          expect(event[:user_id]).to be_nil
+          expect(event[:session_id]).to eq(session_id)
+          expect(event[:url]).to eq("https://discourse.org")
+          expect(event[:referrer]).to eq("https://example.com")
+          expect(event).to have_key(:ip_address)
+          expect(event[:user_agent]).to be_present
+        end
+
+        it "does not trigger event for anonymous user page views when `login_required` site setting is true" do
+          SiteSetting.login_required = true
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              Middleware::RequestTracker.log_request(data)
+            end
+
+          expect(events).to be_empty
+        end
+
+        it "truncates session id, url, referrer, ip address and user agent" do
+          Middleware::AnonymousCache::Helper.any_instance.expects(:is_crawler?).returns(false)
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => "A" * 50,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "A" * 5000,
+                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "A" * 5000,
+                "HTTP_USER_AGENT" => "A" * 5000,
+                "action_dispatch.remote_ip" => "1" * 50,
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              Middleware::RequestTracker.log_request(data)
+            end
+
+          expect(events.length).to eq(1)
+          event = events[0][:params].first
+          expect(event[:url].length).to eq(Middleware::RequestTracker::MAX_URL_LENGTH)
+          expect(event[:referrer].length).to eq(Middleware::RequestTracker::MAX_URL_LENGTH)
+          expect(event[:session_id].length).to eq(Middleware::RequestTracker::MAX_SESSION_ID_LENGTH)
+          expect(event[:user_agent].length).to eq(Middleware::RequestTracker::MAX_USER_AGENT_LENGTH)
+          expect(event[:ip_address].length).to eq(Middleware::RequestTracker::MAX_IP_ADDRESS_LENGTH)
+        end
+
+        it "triggers event for logged-in user page views" do
+          user = Fabricate(:user, active: true)
+          token = UserAuthToken.generate!(user_id: user.id)
+          cookie =
+            create_auth_cookie(
+              token: token.unhashed_auth_token,
+              user_id: user.id,
+              trust_level: user.trust_level,
+              issued_at: 5.minutes.ago,
+            )
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_COOKIE" => "_t=#{cookie};",
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              Middleware::RequestTracker.log_request(data)
+            end
+
+          expect(events.length).to eq(1)
+          event = events[0][:params].first
+          expect(event[:user_id]).to eq(user.id)
+          expect(event[:url]).to eq("https://discourse.org")
+          expect(event[:referrer]).to eq("https://example.com")
+          expect(event).to have_key(:ip_address)
+          expect(event[:user_agent]).to be_present
+        end
+
+        it "does not trigger event for crawler page views" do
+          data =
+            Middleware::RequestTracker.get_data(
+              env("HTTP_USER_AGENT" => "Googlebot"),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              Middleware::RequestTracker.log_request(data)
+            end
+
+          expect(events.length).to eq(0)
+        end
       end
+      context "when SiteSetting.trigger_browser_pageview_events is false" do
+        it "does not trigger events" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
 
-      it "does not trigger event for anonymous user page views when `login_required` site setting is true" do
-        SiteSetting.login_required = true
-        session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
 
-        data =
-          Middleware::RequestTracker.get_data(
-            env(
-              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-              "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
-              "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
-              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
-            ),
-            ["200", { "Content-Type" => "text/html" }],
-            0.2,
-          )
+          events =
+            DiscourseEvent.track_events(:browser_pageview) do
+              Middleware::RequestTracker.log_request(data)
+            end
 
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
-            Middleware::RequestTracker.log_request(data)
-          end
-
-        expect(events).to be_empty
-      end
-
-      it "truncates session id, url and referred" do
-        data =
-          Middleware::RequestTracker.get_data(
-            env(
-              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-              "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => "A" * 50,
-              "HTTP_DISCOURSE_TRACK_VIEW_URL" => "A" * 5000,
-              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "A" * 5000,
-            ),
-            ["200", { "Content-Type" => "text/html" }],
-            0.2,
-          )
-
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
-            Middleware::RequestTracker.log_request(data)
-          end
-
-        expect(events.length).to eq(1)
-        event = events[0][:params].first
-        expect(event[:url].length).to eq(Middleware::RequestTracker::MAX_URL_LENGTH)
-        expect(event[:referrer].length).to eq(Middleware::RequestTracker::MAX_URL_LENGTH)
-        expect(event[:session_id].length).to eq(Middleware::RequestTracker::MAX_SESSION_ID_LENGTH)
-      end
-
-      it "triggers event for logged-in user page views" do
-        user = Fabricate(:user, active: true)
-        token = UserAuthToken.generate!(user_id: user.id)
-        cookie =
-          create_auth_cookie(
-            token: token.unhashed_auth_token,
-            user_id: user.id,
-            trust_level: user.trust_level,
-            issued_at: 5.minutes.ago,
-          )
-
-        data =
-          Middleware::RequestTracker.get_data(
-            env(
-              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-              "HTTP_COOKIE" => "_t=#{cookie};",
-              "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
-              "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
-            ),
-            ["200", { "Content-Type" => "text/html" }],
-            0.2,
-          )
-
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
-            Middleware::RequestTracker.log_request(data)
-          end
-
-        expect(events.length).to eq(1)
-        event = events[0][:params].first
-        expect(event[:user_id]).to eq(user.id)
-        expect(event[:url]).to eq("https://discourse.org")
-        expect(event[:referrer]).to eq("https://example.com")
-        expect(event).to have_key(:ip_address)
-        expect(event[:user_agent]).to be_present
-      end
-
-      it "does not trigger event for crawler page views" do
-        data =
-          Middleware::RequestTracker.get_data(
-            env("HTTP_USER_AGENT" => "Googlebot"),
-            ["200", { "Content-Type" => "text/html" }],
-            0.2,
-          )
-
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
-            Middleware::RequestTracker.log_request(data)
-          end
-
-        expect(events.length).to eq(0)
+          expect(events.length).to eq(0)
+        end
       end
     end
   end
