@@ -417,10 +417,7 @@ export default class Category extends RestModel {
       page: opts.page,
     };
 
-    const result = await ajax("/categories/hierarchical_search", {
-      method: "GET",
-      data,
-    });
+    const result = await ajax("/categories/hierarchical_search", { data });
 
     return result["categories"].map((category) =>
       Site.current().updateCategory(category)

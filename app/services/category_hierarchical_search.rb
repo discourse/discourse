@@ -62,6 +62,8 @@ class CategoryHierarchicalSearch
         ""
       end
 
+    # Note that we are setting the `allowed_categories` CTE as `NOT MATERIALIZED` since materializing the CTE degrades
+    # performance of the query significantly on sites with a large number of rows in the categories table
     sql = <<~SQL
       WITH RECURSIVE
       allowed_categories AS NOT MATERIALIZED (

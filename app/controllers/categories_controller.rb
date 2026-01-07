@@ -344,9 +344,9 @@ class CategoriesController < ApplicationController
       CategoryHierarchicalSearch.call(
         guardian: guardian,
         params: {
-          term: term,
-          only_ids: only_ids,
-          except_ids: except_ids,
+          term:,
+          only_ids:,
+          except_ids:,
           limit: MAX_CATEGORIES_LIMIT,
           offset: (page - 1) * MAX_CATEGORIES_LIMIT,
         },
