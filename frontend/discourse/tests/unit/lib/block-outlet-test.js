@@ -257,24 +257,24 @@ module("Unit | Lib | block-outlet", function (hooks) {
       );
     });
 
-    test("throws for missing block component", function (assert) {
-      assert.throws(
-        () => renderBlocks("hero-blocks", [{ args: { title: "test" } }]),
+    test("throws for missing block component", async function (assert) {
+      await assert.rejects(
+        renderBlocks("hero-blocks", [{ args: { title: "test" } }]),
         /missing a component/
       );
     });
 
-    test("throws for non-@block decorated components", function (assert) {
+    test("throws for non-@block decorated components", async function (assert) {
       // eslint-disable-next-line ember/no-empty-glimmer-component-classes
       class PlainComponent extends Component {}
 
-      assert.throws(
-        () => renderBlocks("hero-blocks", [{ block: PlainComponent }]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [{ block: PlainComponent }]),
         /not a valid block/
       );
     });
 
-    test("throws for non-container block with children", function (assert) {
+    test("throws for non-container block with children", async function (assert) {
       @block("leaf-block")
       class LeafBlock extends Component {}
 
@@ -286,116 +286,110 @@ module("Unit | Lib | block-outlet", function (hooks) {
         _registerBlock(ChildBlock);
       });
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: LeafBlock,
-              children: [{ block: ChildBlock }],
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: LeafBlock,
+            children: [{ block: ChildBlock }],
+          },
+        ]),
         /cannot have children/
       );
     });
 
-    test("throws for container block without children", function (assert) {
-      assert.throws(
-        () => renderBlocks("hero-blocks", [{ block: BlockGroup }]),
+    test("throws for container block without children", async function (assert) {
+      await assert.rejects(
+        renderBlocks("hero-blocks", [{ block: BlockGroup }]),
         /must have children/
       );
     });
 
-    test("throws for reserved arg name: classNames", function (assert) {
+    test("throws for reserved arg name: classNames", async function (assert) {
       @block("reserved-test")
       class ReservedTestBlock extends Component {}
 
       withTestBlockRegistration(() => _registerBlock(ReservedTestBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: ReservedTestBlock,
-              args: { classNames: "custom" },
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: ReservedTestBlock,
+            args: { classNames: "custom" },
+          },
+        ]),
         /reserved arg names/
       );
     });
 
-    test("throws for reserved arg name: outletName", function (assert) {
+    test("throws for reserved arg name: outletName", async function (assert) {
       @block("reserved-outlet")
       class ReservedOutletBlock extends Component {}
 
       withTestBlockRegistration(() => _registerBlock(ReservedOutletBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: ReservedOutletBlock,
-              args: { outletName: "test" },
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: ReservedOutletBlock,
+            args: { outletName: "test" },
+          },
+        ]),
         /reserved arg names/
       );
     });
 
-    test("throws for reserved arg name: children", function (assert) {
+    test("throws for reserved arg name: children", async function (assert) {
       @block("reserved-children")
       class ReservedChildrenBlock extends Component {}
 
       withTestBlockRegistration(() => _registerBlock(ReservedChildrenBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: ReservedChildrenBlock,
-              args: { children: [] },
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: ReservedChildrenBlock,
+            args: { children: [] },
+          },
+        ]),
         /reserved arg names/
       );
     });
 
-    test("throws for reserved arg name: conditions", function (assert) {
+    test("throws for reserved arg name: conditions", async function (assert) {
       @block("reserved-conditions")
       class ReservedConditionsBlock extends Component {}
 
       withTestBlockRegistration(() => _registerBlock(ReservedConditionsBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: ReservedConditionsBlock,
-              args: { conditions: {} },
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: ReservedConditionsBlock,
+            args: { conditions: {} },
+          },
+        ]),
         /reserved arg names/
       );
     });
 
-    test("throws for reserved arg name: $block$", function (assert) {
+    test("throws for reserved arg name: $block$", async function (assert) {
       @block("reserved-block-symbol")
       class ReservedBlockSymbolBlock extends Component {}
 
       withTestBlockRegistration(() => _registerBlock(ReservedBlockSymbolBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: ReservedBlockSymbolBlock,
-              args: { $block$: "test" },
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: ReservedBlockSymbolBlock,
+            args: { $block$: "test" },
+          },
+        ]),
         /reserved arg names/
       );
     });
 
-    test("throws for underscore-prefixed arg names", function (assert) {
+    test("throws for underscore-prefixed arg names", async function (assert) {
       @block("underscore-arg-reserved")
       class UnderscoreArgReservedBlock extends Component {}
 
@@ -403,19 +397,18 @@ module("Unit | Lib | block-outlet", function (hooks) {
         _registerBlock(UnderscoreArgReservedBlock)
       );
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: UnderscoreArgReservedBlock,
-              args: { _privateArg: "value" },
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: UnderscoreArgReservedBlock,
+            args: { _privateArg: "value" },
+          },
+        ]),
         /reserved arg names/
       );
     });
 
-    test("validates nested children recursively", function (assert) {
+    test("validates nested children recursively", async function (assert) {
       @block("nested-child")
       class NestedChildBlock extends Component {}
 
@@ -424,19 +417,18 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(NestedChildBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: BlockGroup,
-              children: [{ block: NestedChildBlock }, { block: NotABlock }],
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: BlockGroup,
+            children: [{ block: NestedChildBlock }, { block: NotABlock }],
+          },
+        ]),
         /not a valid block/
       );
     });
 
-    test("validates conditions via evaluator service", function (assert) {
+    test("validates conditions via evaluator service", async function (assert) {
       @block("condition-validation")
       class ConditionValidationBlock extends Component {}
 
@@ -444,18 +436,17 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       const owner = getOwner(this);
 
-      assert.throws(
-        () =>
-          renderBlocks(
-            "hero-blocks",
-            [
-              {
-                block: ConditionValidationBlock,
-                conditions: { type: "unknown-condition-type" },
-              },
-            ],
-            owner
-          ),
+      await assert.rejects(
+        renderBlocks(
+          "hero-blocks",
+          [
+            {
+              block: ConditionValidationBlock,
+              conditions: { type: "unknown-condition-type" },
+            },
+          ],
+          owner
+        ),
         /Unknown block condition type|Invalid conditions/
       );
     });
@@ -511,7 +502,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.true(true, "no error thrown for valid conditions");
     });
 
-    test("throws for missing required arg", function (assert) {
+    test("throws for missing required arg", async function (assert) {
       @block("required-arg-block", {
         args: {
           title: { type: "string", required: true },
@@ -521,14 +512,13 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(RequiredArgBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [{ block: RequiredArgBlock, args: {} }]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [{ block: RequiredArgBlock, args: {} }]),
         /missing required arg "title"/
       );
     });
 
-    test("throws for invalid arg type - string expected", function (assert) {
+    test("throws for invalid arg type - string expected", async function (assert) {
       @block("string-arg-block", {
         args: {
           title: { type: "string" },
@@ -538,16 +528,15 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(StringArgBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            { block: StringArgBlock, args: { title: 123 } },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          { block: StringArgBlock, args: { title: 123 } },
+        ]),
         /must be a string/
       );
     });
 
-    test("throws for invalid arg type - number expected", function (assert) {
+    test("throws for invalid arg type - number expected", async function (assert) {
       @block("number-arg-block", {
         args: {
           count: { type: "number" },
@@ -557,16 +546,15 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(NumberArgBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            { block: NumberArgBlock, args: { count: "five" } },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          { block: NumberArgBlock, args: { count: "five" } },
+        ]),
         /must be a number/
       );
     });
 
-    test("throws for invalid arg type - boolean expected", function (assert) {
+    test("throws for invalid arg type - boolean expected", async function (assert) {
       @block("boolean-arg-block", {
         args: {
           enabled: { type: "boolean" },
@@ -576,16 +564,15 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(BooleanArgBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            { block: BooleanArgBlock, args: { enabled: "yes" } },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          { block: BooleanArgBlock, args: { enabled: "yes" } },
+        ]),
         /must be a boolean/
       );
     });
 
-    test("throws for invalid arg type - array expected", function (assert) {
+    test("throws for invalid arg type - array expected", async function (assert) {
       @block("array-arg-block", {
         args: {
           tags: { type: "array" },
@@ -595,16 +582,15 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(ArrayArgBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            { block: ArrayArgBlock, args: { tags: "tag1,tag2" } },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          { block: ArrayArgBlock, args: { tags: "tag1,tag2" } },
+        ]),
         /must be an array/
       );
     });
 
-    test("throws for invalid array item type", function (assert) {
+    test("throws for invalid array item type", async function (assert) {
       @block("array-item-type-block", {
         args: {
           tags: { type: "array", itemType: "string" },
@@ -614,14 +600,13 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(ArrayItemTypeBlock));
 
-      assert.throws(
-        () =>
-          renderBlocks("hero-blocks", [
-            {
-              block: ArrayItemTypeBlock,
-              args: { tags: ["valid", 123, "also-valid"] },
-            },
-          ]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [
+          {
+            block: ArrayItemTypeBlock,
+            args: { tags: ["valid", 123, "also-valid"] },
+          },
+        ]),
         /must be a string/
       );
     });
@@ -675,7 +660,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.true(true, "no error thrown when optional args missing");
     });
 
-    test("throws when block is in denied outlet", function (assert) {
+    test("throws when block is in denied outlet", async function (assert) {
       @block("denied-outlet-block", {
         deniedOutlets: ["hero-*"],
       })
@@ -683,13 +668,13 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(DeniedOutletBlock));
 
-      assert.throws(
-        () => renderBlocks("hero-blocks", [{ block: DeniedOutletBlock }]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [{ block: DeniedOutletBlock }]),
         /cannot be rendered in outlet.*matches deniedOutlets pattern/
       );
     });
 
-    test("throws when block is not in allowed outlet", function (assert) {
+    test("throws when block is not in allowed outlet", async function (assert) {
       @block("not-allowed-outlet-block", {
         allowedOutlets: ["sidebar-*"],
       })
@@ -697,8 +682,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(NotAllowedOutletBlock));
 
-      assert.throws(
-        () => renderBlocks("hero-blocks", [{ block: NotAllowedOutletBlock }]),
+      await assert.rejects(
+        renderBlocks("hero-blocks", [{ block: NotAllowedOutletBlock }]),
         /cannot be rendered in outlet.*does not match any allowedOutlets/
       );
     });

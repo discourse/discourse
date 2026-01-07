@@ -695,11 +695,19 @@ export function renderBlocks(outletName, config, owner) {
   // Get blocks service for condition validation if owner is provided
   const blocksService = owner?.lookup("service:blocks");
 
+  // === Synchronous validation for outlet-level checks ===
+  // These don't depend on block resolution and can fail fast.
+
   // Check for duplicate registration before anything else
   if (blockConfigs.has(outletName)) {
     raiseBlockError(
       `Block outlet "${outletName}" already has a configuration registered.`
     );
+  }
+
+  // Validate outlet name is known
+  if (!BLOCK_OUTLETS.includes(outletName)) {
+    raiseBlockError(`Unknown block outlet: ${outletName}`);
   }
 
   // Lock the block registry immediately.
@@ -708,8 +716,15 @@ export function renderBlocks(outletName, config, owner) {
   const { _lockBlockRegistry } = require("discourse/lib/blocks/registration");
   _lockBlockRegistry();
 
-  // Start async validation. In dev mode, this eagerly resolves all factories
-  // for early error detection. In prod, it defers factory resolution.
+  // All block validation is async (handles both class refs and string refs).
+  // In dev mode, this eagerly resolves all factories for early error detection.
+  // In prod, it defers factory resolution to render time.
+  //
+  // Validation errors are reported via raiseBlockError() which:
+  // - In DEBUG: throws (surfacing as unhandled rejection in console)
+  // - In prod: dispatches a 'block-error' event
+  //
+  // The promise is returned so tests can await and catch errors.
   const validationPromise = validateConfig(
     config,
     outletName,
@@ -718,20 +733,10 @@ export function renderBlocks(outletName, config, owner) {
     isContainerBlock
   );
 
-  // Handle validation errors
-  validationPromise.catch((error) => {
-    // In dev mode, re-throw to surface errors prominently
-    if (DEBUG) {
-      // Use setTimeout to throw outside the promise chain for better stack traces
-      setTimeout(() => {
-        throw error;
-      }, 0);
-    }
-    // In prod, errors are handled by raiseBlockError (dispatches event)
-  });
-
   // Store config with validation promise for potential future use
   blockConfigs.set(outletName, { children: config, validationPromise });
+
+  return validationPromise;
 }
 
 /**
