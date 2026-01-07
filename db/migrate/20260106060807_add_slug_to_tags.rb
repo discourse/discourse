@@ -22,7 +22,7 @@ class AddSlugToTags < ActiveRecord::Migration[7.2]
     # - spaces to dashes
     # - squeeze consecutive dashes
     # - trim leading/trailing dashes
-    # - if empty or numeric-only, use <id>-tag
+    # - if empty or numeric-only, set to empty (slug_for_url will use id-tag)
     last_id = 0
 
     loop do
@@ -53,8 +53,8 @@ class AddSlugToTags < ActiveRecord::Migration[7.2]
         )
         UPDATE tags
         SET slug = CASE
-          WHEN generated.generated_slug = '' THEN tags.id::text || '-tag'
-          WHEN generated.generated_slug ~ '^[0-9]+$' THEN tags.id::text || '-tag'
+          WHEN generated.generated_slug = '' THEN ''
+          WHEN generated.generated_slug ~ '^[0-9]+$' THEN ''
           ELSE generated.generated_slug
         END
         FROM generated

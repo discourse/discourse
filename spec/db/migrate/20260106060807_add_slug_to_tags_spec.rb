@@ -25,7 +25,7 @@ describe AddSlugToTags do
     expect(slug).to eq("hello-world")
   end
 
-  it "uses id-tag format for numeric-only names" do
+  it "uses empty slug for numeric-only names" do
     reset_slug_column
     tag_id =
       DB.query_single(
@@ -37,7 +37,7 @@ describe AddSlugToTags do
     AddSlugToTags.new.up
 
     slug = DB.query_single("SELECT slug FROM tags WHERE id = ?", tag_id)[0]
-    expect(slug).to eq("#{tag_id}-tag")
+    expect(slug).to eq("")
   end
 
   it "removes apostrophes from names" do
@@ -85,7 +85,7 @@ describe AddSlugToTags do
     expect(slug).to eq("hello-world")
   end
 
-  it "uses id-tag format for unicode-only names" do
+  it "uses empty slug for unicode-only names" do
     reset_slug_column
     tag_id =
       DB.query_single(
@@ -97,7 +97,7 @@ describe AddSlugToTags do
     AddSlugToTags.new.up
 
     slug = DB.query_single("SELECT slug FROM tags WHERE id = ?", tag_id)[0]
-    expect(slug).to eq("#{tag_id}-tag")
+    expect(slug).to eq("")
   end
 
   it "resolves conflicts by setting newer tag slug to empty" do
@@ -123,7 +123,7 @@ describe AddSlugToTags do
     expect(slug2).to eq("")
   end
 
-  it "handles special character only names" do
+  it "uses empty slug for special character only names" do
     reset_slug_column
     tag_id =
       DB.query_single(
@@ -135,10 +135,10 @@ describe AddSlugToTags do
     AddSlugToTags.new.up
 
     slug = DB.query_single("SELECT slug FROM tags WHERE id = ?", tag_id)[0]
-    expect(slug).to eq("#{tag_id}-tag")
+    expect(slug).to eq("")
   end
 
-  it "handles empty/whitespace names" do
+  it "uses empty slug for whitespace names" do
     reset_slug_column
     tag_id =
       DB.query_single(
@@ -150,7 +150,7 @@ describe AddSlugToTags do
     AddSlugToTags.new.up
 
     slug = DB.query_single("SELECT slug FROM tags WHERE id = ?", tag_id)[0]
-    expect(slug).to eq("#{tag_id}-tag")
+    expect(slug).to eq("")
   end
 
   it "squeezes consecutive dashes and spaces" do

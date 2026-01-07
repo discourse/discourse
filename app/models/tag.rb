@@ -306,6 +306,7 @@ end
 #  target_tag_id      :integer
 #  description        :string(1000)
 #  public_topic_count :integer          default(0), not null
+#  slug               :string           not null
 #  staff_topic_count  :integer          default(0), not null
 #
 # Indexes
