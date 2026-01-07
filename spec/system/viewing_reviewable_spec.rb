@@ -258,6 +258,32 @@ describe "Viewing reviewable item", type: :system do
           expect(refreshed_review_page).to have_ip_lookup_modal
           expect(refreshed_review_page).to have_account_in_modal(other_user.username)
         end
+
+        context "when category moderator" do
+          fab!(:category)
+          fab!(:trust_level_1_user, :trust_level_1)
+          fab!(:category_moderation_group) do
+            Fabricate(
+              :category_moderation_group,
+              category: category,
+              group: trust_level_1_user.groups.last,
+            )
+          end
+
+          before do
+            SiteSetting.enable_category_group_moderation = true
+            reviewable_flagged_post.topic.change_category_to_id(category.id)
+            sign_in trust_level_1_user
+          end
+
+          it "does not show IP information" do
+            visit "/"
+            refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+            refreshed_review_page.click_insights_tab
+
+            expect(page).not_to have_text("The requested URL or resource could not be found.")
+          end
+        end
       end
     end
 
