@@ -1482,7 +1482,17 @@ en:
       private_message: "Message"
       private_messages: "Messages"
       upcoming_changes:
-        title: "Upcoming change enabled"
+        title: "Upcoming changes"
+        for_user:
+          upcoming_change: "Upcoming change"
+          enabled: "Enabled?"
+          why: "Why?"
+        why_reasons:
+          not_in_specific_groups: "The user is not in the specific groups required for this change"
+          in_specific_groups: "The user is in the specific groups required for this change"
+          enabled_for_everyone: "This change is enabled for all members"
+          enabled_for_no_one: "This change is disabled for all members"
+
       user_notifications:
         filters:
           filter_by: "Filter By"
@@ -1826,7 +1836,8 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        navigation_menu: "Navigation Menu"
+        navigation_menu: "Navigation menu"
+        upcoming_changes: "Upcoming changes"
 
       change_password:
         success: "(email sent)"
@@ -8144,6 +8155,11 @@ en:
         approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
         post_edits_count: "Post Edits"
+        upcoming_changes:
+          title: "User upcoming changes"
+          description: "To modify groups or to enable or disable upcoming changes, please visit the <a href='%{basePath}/admin/config/upcoming-changes'>upcoming changes config page</a>."
+          filter_placeholder: "Filter upcoming changes by name or description"
+          filter_no_results: "No upcoming changes found"
         exports:
           title: User exports
           download:
