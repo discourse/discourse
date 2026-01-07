@@ -76,10 +76,10 @@ const failedResolutions = new Set();
 const sourceNamespaceMap = new Map();
 
 /**
- * Whether the block registry is locked (no new registrations allowed).
- * Gets locked when the first renderBlocks() config is registered.
+ * Whether the block registry is frozen (no new registrations allowed).
+ * Frozen by the "freeze-block-registry" initializer during app boot.
  */
-let registryLocked = false;
+let registryFrozen = false;
 
 /**
  * Gets a unique identifier for the current source from the call stack.
@@ -127,23 +127,27 @@ function getNamespacePrefix(blockName) {
 }
 
 /**
- * Locks the registry, preventing further registrations.
- * Called when the first renderBlocks() config is registered.
+ * Freezes the registry, preventing further registrations.
+ * Called by the "freeze-block-registry" initializer during app boot.
  *
  * @internal
  */
-export function _lockBlockRegistry() {
-  registryLocked = true;
+export function _freezeBlockRegistry() {
+  registryFrozen = true;
 }
 
 /**
- * Returns whether the block registry is locked.
+ * Returns whether the block registry is frozen.
  *
  * @returns {boolean}
  */
-export function isBlockRegistryLocked() {
-  return registryLocked;
+export function isBlockRegistryFrozen() {
+  return registryFrozen;
 }
+
+// Backwards compatibility aliases
+export const _lockBlockRegistry = _freezeBlockRegistry;
+export const isBlockRegistryLocked = isBlockRegistryFrozen;
 
 /**
  * Registers a block component in the registry.
@@ -171,11 +175,11 @@ export function isBlockRegistryLocked() {
  * ```
  */
 export function _registerBlock(BlockClass) {
-  if (registryLocked) {
+  if (registryFrozen) {
     raiseBlockError(
-      `Cannot register block "${BlockClass?.blockName || BlockClass?.name}": ` +
-        `the block registry is locked. Blocks must be registered before ` +
-        `any renderBlocks() configuration is set up.`
+      `api.registerBlock() was called after the block registry was frozen. ` +
+        `Move your code to a pre-initializer that runs before "freeze-block-registry". ` +
+        `Block: "${BlockClass?.blockName || BlockClass?.name}"`
     );
     return;
   }
@@ -259,11 +263,11 @@ export function isBlockFactory(entry) {
  * @internal
  */
 export function _registerBlockFactory(name, factory) {
-  if (registryLocked) {
+  if (registryFrozen) {
     raiseBlockError(
-      `Cannot register block "${name}": ` +
-        `the block registry is locked. Blocks must be registered before ` +
-        `any renderBlocks() configuration is set up.`
+      `api.registerBlock() was called after the block registry was frozen. ` +
+        `Move your code to a pre-initializer that runs before "freeze-block-registry". ` +
+        `Block: "${name}"`
     );
     return;
   }
@@ -525,13 +529,13 @@ export function resolveBlockSync(blockRef) {
 }
 
 /**
- * Stores the initial locked state to allow correct reset after tests.
+ * Stores the initial frozen state to allow correct reset after tests.
  * @type {boolean | null}
  */
-let testRegistryLockedState = null;
+let testRegistryFrozenState = null;
 
 /**
- * Unlocks the block registry for testing purposes.
+ * Temporarily unfreezes the block registry for testing purposes.
  * Call this before registering blocks in tests.
  * Only available in DEBUG mode.
  */
@@ -540,21 +544,21 @@ export function withTestBlockRegistration(callback) {
     return;
   }
 
-  if (testRegistryLockedState === null) {
-    testRegistryLockedState = registryLocked;
+  if (testRegistryFrozenState === null) {
+    testRegistryFrozenState = registryFrozen;
   }
 
-  registryLocked = false;
+  registryFrozen = false;
   try {
     callback();
   } finally {
-    registryLocked = testRegistryLockedState;
+    registryFrozen = testRegistryFrozenState;
   }
 }
 
 /**
  * Resets the block registry for testing purposes.
- * Clears all registered blocks and restores the original locked state.
+ * Clears all registered blocks and restores the original frozen state.
  * Only available in DEBUG mode.
  */
 export function resetBlockRegistryForTesting() {
@@ -568,10 +572,10 @@ export function resetBlockRegistryForTesting() {
   failedResolutions.clear();
   sourceNamespaceMap.clear();
 
-  if (testRegistryLockedState !== null) {
-    registryLocked = testRegistryLockedState;
-    testRegistryLockedState = null;
+  if (testRegistryFrozenState !== null) {
+    registryFrozen = testRegistryFrozenState;
+    testRegistryFrozenState = null;
   } else {
-    registryLocked = false;
+    registryFrozen = false;
   }
 }

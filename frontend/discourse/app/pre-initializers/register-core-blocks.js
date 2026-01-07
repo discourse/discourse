@@ -4,10 +4,12 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 /**
  * Registers core blocks from the registry.
  *
- * This runs after all modules are loaded, safely avoiding the circular
- * dependency between block-outlet.gjs and registration.js.
+ * This pre-initializer runs before "freeze-block-registry" to ensure
+ * core blocks are available before the registry is frozen.
  */
 export default {
+  before: "freeze-block-registry",
+
   initialize() {
     withPluginApi((api) => {
       for (const BlockClass of Object.values(CoreBlocks)) {

@@ -3322,6 +3322,9 @@ class _PluginApi {
   /**
    * Registers block components to render in a designated outlet.
    *
+   * **IMPORTANT:** Must be called in an initializer that runs after "freeze-block-registry".
+   * All blocks must be registered via `registerBlock()` before this is called.
+   *
    * Block outlets are extension points where themes and plugins can render custom
    * content layouts. Each block must be decorated with `@block` from "discourse/blocks".
    *
@@ -3384,8 +3387,8 @@ class _PluginApi {
   /**
    * Registers a block component for use with `renderBlocks()`.
    *
-   * **IMPORTANT:** Must be called in a pre-initializer before any `renderBlocks()`
-   * calls. The block registry is locked on the first `renderBlocks()` call, preventing
+   * **IMPORTANT:** Must be called in a pre-initializer that runs before "freeze-block-registry".
+   * The block registry is frozen by the "freeze-block-registry" initializer, preventing
    * late registrations.
    *
    * Supports two registration patterns:

@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -107,6 +108,16 @@ export default class HomeLogo extends Component {
               mobileLogoUrlDark=this.mobileLogoUrlDark
               showMobileLogo=this.showMobileLogo
               title=this.title
+            }}
+            @deprecatedArgs={{lazyHash
+              test=(deprecatedOutletArgument
+                value=true
+                message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
+                id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
+                since="3.3.0.beta4-dev"
+                dropFrom="3.4.0"
+                silence="discourse.header-service-topic"
+              )
             }}
           >
             <HomeLogoContents
