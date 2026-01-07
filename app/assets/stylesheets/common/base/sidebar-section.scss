@@ -17,10 +17,6 @@
     .btn.dropdown-select-box-header,
     .sidebar-section-header-button {
       background: transparent;
-      border: none;
-      margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 3 * -1);
-      padding: calc(var(--d-sidebar-row-horizontal-padding) / 5)
-        calc(var(--d-sidebar-row-horizontal-padding) / 3);
 
       .discourse-no-touch & {
         transition:
@@ -29,8 +25,6 @@
         opacity: 0;
 
         &:hover {
-          background: var(--d-sidebar-highlight-background);
-
           .d-icon {
             color: var(--d-sidebar-highlight-color);
           }
