@@ -1,3 +1,17 @@
+import { formatWithSuggestion } from "discourse/lib/string-similarity";
+
+/**
+ * Valid sourceType values for the decorator config.
+ * @constant {ReadonlyArray<string>}
+ */
+const VALID_SOURCE_TYPES = Object.freeze(["none", "outletArgs", "object"]);
+
+/**
+ * Valid config keys for the decorator.
+ * @constant {ReadonlyArray<string>}
+ */
+const VALID_CONFIG_KEYS = Object.freeze(["type", "sourceType", "validArgKeys"]);
+
 /**
  * WeakSet tracking decorated classes.
  * Private - only accessible via isDecoratedCondition().
@@ -55,6 +69,29 @@ export function blockCondition(config) {
     throw new Error(
       "blockCondition: Do not include 'source' in validArgKeys. " +
         "It is added automatically when sourceType !== 'none'."
+    );
+  }
+
+  // Validate sourceType is one of the allowed values
+  if (!VALID_SOURCE_TYPES.includes(sourceType)) {
+    const suggestion = formatWithSuggestion(sourceType, VALID_SOURCE_TYPES);
+    throw new Error(
+      `blockCondition: Invalid \`sourceType\` ${suggestion}. ` +
+        `Valid values are: ${VALID_SOURCE_TYPES.join(", ")}.`
+    );
+  }
+
+  // Validate no unknown config keys (catches typos like "validArgKey" or "sourcetype")
+  const unknownKeys = Object.keys(config).filter(
+    (key) => !VALID_CONFIG_KEYS.includes(key)
+  );
+  if (unknownKeys.length > 0) {
+    const suggestions = unknownKeys
+      .map((key) => formatWithSuggestion(key, VALID_CONFIG_KEYS))
+      .join(", ");
+    throw new Error(
+      `blockCondition: Unknown config key(s): ${suggestions}. ` +
+        `Valid keys are: ${VALID_CONFIG_KEYS.join(", ")}.`
     );
   }
 
