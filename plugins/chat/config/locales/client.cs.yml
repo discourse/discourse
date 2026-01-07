@@ -92,6 +92,7 @@ cs:
         join_channel: "Připojit se k kanálu"
         leave_channel: "Opustit kanál"
         leave_groupchat_info: "Opuštěním této skupinové konverzace k ní již nebudete mít přístup a nebudete dostávat s ní spojená upozornění. Chcete-li se do ní znovu připojit, musíte být znovu pozváni některým ze členů skupinové konverzace."
+        notification_settings_context: "Upozornění"
         join: "Přidat se ke skupině"
         leave: "Opustit"
         save_label:

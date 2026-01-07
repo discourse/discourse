@@ -46,8 +46,6 @@ vi:
           title: "Danh sách chủ đề"
         basic_topic_list:
           title: "Danh sách chủ đề cơ bản"
-        footer_message:
-          title: "Tin nhắn chân trang"
         signup_cta:
           title: "Đăng ký CTA"
         topic_timer_info:

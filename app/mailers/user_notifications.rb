@@ -555,7 +555,7 @@ class UserNotifications < ActionMailer::Base
       title: topic_title,
       post: post,
       username: original_username,
-      from_alias: I18n.t("email_from", user_name: user_name, site_name: Email.site_title),
+      from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: opts[:use_site_subject],
       add_re_to_subject: opts[:add_re_to_subject],

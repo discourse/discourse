@@ -16,7 +16,8 @@ el:
           title: Χρόνος ανάγνωσης
         chat_usage:
           messages: μηνύματα
-          you: Εσείς
+          author: Εσείς
+          author_others: "%{username}"
           status_online: "● σε σύνδεση"
         invites:
           title: Προσκλήσεις

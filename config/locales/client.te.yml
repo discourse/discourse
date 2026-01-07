@@ -2700,19 +2700,6 @@ te:
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
         hot: "ఏవి అగ్ర విషయాలూ లేవు."
         filter: "విషయాలూ లేవు."
-      bottom:
-        latest: "ఇంకా కొత్త విషయాలు లేవు."
-        posted: "ఇంకా రాసిన విషయాలు లేవు."
-        read: "ఇంకా చదవని విషయాలు లేవు."
-        new: "కొత్త విషయాలు లేవు."
-        unread: "ఇంకా చదవని విషయాలు లేవు."
-        unseen: "ఇంక చదవని విషయాలు లేవు."
-        category: "ఇంకా %{category} విషయాలు లేవు."
-        tag: "ఇంకా %{tag} విషయాలు లేవు."
-        top: "ఇంకా అగ్ర విషయాలు లేవు."
-        hot: "ఇంక అగ్ర విషయాలు లేవు."
-        bookmarks: "బుక్‌మార్క్ చేయబడిన విషయాలు ఏవీ లేవు."
-        filter: "ఇక విషయాలు లేవు."
     topic_bulk_actions:
       dismiss:
         name: "రద్దుచేయండి"
@@ -2826,9 +2813,6 @@ te:
         }
       created_at: "సృష్టించబడింది: %{date}"
       bumped_at: "తాజాది: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a> లేదా <a href='%{basePath}/latest'>తాజా విషయాలను వీక్షించండి</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a>, <a href='%{basePath}/latest'>తాజా అంశాలను వీక్షించండి</a> లేదా అగ్ర విషయాలను చూడండి:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>అన్ని ట్యాగ్‌లను బ్రౌజ్ చేయండి</a> లేదా <a href='%{basePath}/latest'>తాజా విషయాలను వీక్షించండి</a>."
       suggest_create_topic: <a href>కొత్త సంభాషణను ప్రారంభించడానికి</a> సిద్ధంగా ఉన్నారా?
       jump_reply: "పోస్ట్ యొక్క అసలు స్థానానికి వెళ్లండి"
       jump_reply_aria: "@%{username}యొక్క పోస్ట్‌ అసలు స్థానం కి వెళ్లండి"

@@ -157,7 +157,7 @@ export default class ChatChannelSidebarContextMenu extends Component {
           @icon="xmark"
           @label="chat.channel_settings.leave_channel"
           @title="chat.channel_settings.leave_channel"
-          class="chat-channel-sidebar-link-menu__leave-channel btn-danger"
+          class="chat-channel-sidebar-link-menu__leave-channel --danger"
         />
       </dropdown.item>
     </DropdownMenu>

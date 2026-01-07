@@ -71,8 +71,6 @@ ru:
           title: "Список тем"
         basic_topic_list:
           title: "Список тем"
-        footer_message:
-          title: "Содержимое нижнего колонтитула"
         signup_cta:
           title: "Кнопка регистрации (CTA)"
         topic_timer_info:

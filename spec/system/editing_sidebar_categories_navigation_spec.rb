@@ -21,19 +21,6 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  before_all do
-    Jobs.with_immediate_jobs do
-      SearchIndexer.with_indexing do
-        category2.index_search
-        category2_subcategory.index_search
-
-        category.index_search
-        category_subcategory2.index_search
-        category_subcategory.index_search
-      end
-    end
-  end
-
   before { sign_in(user) }
 
   shared_examples "a user can edit the sidebar categories navigation" do |mobile|
@@ -226,25 +213,9 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       Fabricate(:category, parent_category_id: parent_category.id, name: "subcategory 6")
     end
 
-    before_all do
-      Jobs.with_immediate_jobs do
-        SearchIndexer.with_indexing do
-          parent_category.index_search
-          subcategory1.index_search
-          subcategory2.index_search
-          subcategory3.index_search
-          subcategory4.index_search
-          subcategory5.index_search
-          subcategory6.index_search
-        end
-      end
-    end
-
     # Test stub to force pagination in the category search
     around(:each) do |example|
-      stub_const(Object, :CategoriesController, CategoriesController.clone) do
-        stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
-      end
+      stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
     end
 
     it "shows the 'Show more' link after loading additional subcategories via intersection observer and hides it after loading all subcategories" do
@@ -272,26 +243,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
   context "when loading more subcategories with 3-level hierarchy" do
     before_all { SiteSetting.max_category_nesting = 3 }
 
-    before do
-      SiteSetting.max_category_nesting = 3
-      Jobs.with_immediate_jobs do
-        SearchIndexer.with_indexing do
-          grandparent_category.index_search
-          parent1.index_search
-          parent2.index_search
-          parent3.index_search
-          parent4.index_search
-          parent5.index_search
-          parent6.index_search
-          child1_1.index_search
-          child1_2.index_search
-          child1_3.index_search
-          child1_4.index_search
-          child1_5.index_search
-          child1_6.index_search
-        end
-      end
-    end
+    before { SiteSetting.max_category_nesting = 3 }
 
     fab!(:grandparent_category) { Fabricate(:category, name: "grandparent category") }
 
@@ -327,9 +279,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     fab!(:child1_6) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-6") }
 
     around(:each) do |example|
-      stub_const(Object, :CategoriesController, CategoriesController.clone) do
-        stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
-      end
+      stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
     end
 
     it "shows 'Show more' button at grandparent level and loads additional parent categories" do
@@ -358,30 +308,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
   context "when loading more subcategories with specific sub-subcategory configuration" do
     before_all { SiteSetting.max_category_nesting = 3 }
 
-    before do
-      SiteSetting.max_category_nesting = 3
-      Jobs.with_immediate_jobs do
-        SearchIndexer.with_indexing do
-          top_category.index_search
-          sub1.index_search
-          sub2.index_search
-          sub3.index_search
-          sub4.index_search
-          sub5.index_search
-          sub6.index_search
-          subsub1_1.index_search
-          subsub1_2.index_search
-          subsub1_3.index_search
-          subsub1_4.index_search
-          subsub1_5.index_search
-          subsub5_1.index_search
-          subsub5_2.index_search
-          subsub5_3.index_search
-          subsub5_4.index_search
-          subsub5_5.index_search
-        end
-      end
-    end
+    before { SiteSetting.max_category_nesting = 3 }
 
     fab!(:top_category) { Fabricate(:category, name: "top category") }
 
@@ -407,9 +334,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     fab!(:subsub5_5) { Fabricate(:category, parent_category_id: sub5.id, name: "subsub 5-5") }
 
     around(:each) do |example|
-      stub_const(Object, :CategoriesController, CategoriesController.clone) do
-        stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
-      end
+      stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
     end
 
     it "shows 'Show more' button for top-level category with more subcategories after intersection observer loads sub-subcategories" do
@@ -446,43 +371,6 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     end
   end
 
-  context "when there are more categories than the page limit" do
-    around(:each) do |example|
-      search_calls = 0
-
-      spy =
-        CategoriesController.clone.prepend(
-          Module.new do
-            define_method :search do
-              search_calls += 1
-              super()
-            end
-          end,
-        )
-
-      @get_search_calls = lambda { search_calls }
-
-      stub_const(Object, :CategoriesController, spy) do
-        stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 1) { example.run }
-      end
-    end
-
-    xit "loads all the categories eventually" do
-      visit "/latest"
-
-      expect(sidebar).to have_categories_section
-
-      modal = sidebar.click_edit_categories_button
-      modal.filter("category")
-
-      expect(modal).to have_categories(
-        [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
-      )
-
-      expect(@get_search_calls.call).to eq(6)
-    end
-  end
-
   describe "when max_category_nesting has been set to 3" do
     before_all { SiteSetting.max_category_nesting = 3 }
 
@@ -510,16 +398,6 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
         parent_category_id: category2_subcategory.id,
         name: "category 2 subcategory subcategory",
       )
-    end
-
-    before_all do
-      Jobs.with_immediate_jobs do
-        SearchIndexer.with_indexing do
-          category_subcategory_subcategory.index_search
-          category_subcategory_subcategory2.index_search
-          category2_subcategory_subcategory.index_search
-        end
-      end
     end
 
     it "allows a user to edit sub-subcategories to be included in the sidebar categories section" do

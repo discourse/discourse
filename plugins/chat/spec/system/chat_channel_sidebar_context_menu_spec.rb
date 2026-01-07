@@ -66,24 +66,23 @@ RSpec.describe "Chat channel sidebar context menu", type: :system do
         chat_page.visit_channel(dm_channel)
         chat_sidebar_page.remove_channel(dm_channel)
 
+        expect(chat_sidebar_page).to have_no_channel(dm_channel)
         expect(page).to have_current_path("/chat/browse/open")
       end
     end
 
-    context "when removing a channel with a last chat channel set" do
+    context "when removing a channel with another public channel available" do
       fab!(:dm_channel) do
         Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
       end
 
-      before do
-        current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_1.id)
-        channel_1.add(current_user)
-      end
+      before { channel_2.membership_for(current_user).update!(following: false) }
 
-      it "redirects to the last chat channel" do
+      it "redirects to the remaining public channel" do
         chat_page.visit_channel(dm_channel)
         chat_sidebar_page.remove_channel(dm_channel)
 
+        expect(chat_sidebar_page).to have_no_channel(dm_channel)
         expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
       end
     end

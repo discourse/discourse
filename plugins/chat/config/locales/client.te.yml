@@ -21,6 +21,7 @@ te:
       channel_settings:
         edit: "సవరణ"
         add: "కలుపు"
+        notification_settings_context: "ప్రకటనలు"
         join: "చేరండి"
         leave: "వదిలేయండి"
       close: "మూసివేయి"

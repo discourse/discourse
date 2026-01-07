@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 de:
+  site_settings:
+    discourse_rewind_enabled: "Aktiviere Discourse Rückblick für eine lustige Zusammenfassung der Aktivitäten der Mitglieder in der Community zum Jahresende."
+  discourse_rewind:
+    report_failed: "Der Bericht für den Discourse Rückblick konnte nicht erstellt werden."
+    invalid_year: "Der Rückblick kann nur im Januar oder Dezember erstellt werden."
+    user_not_found: "Der Benutzer wurde nicht gefunden oder kann nicht angezeigt werden."
+    reports_not_cached: "Es wurden noch keine Berichte erstellt. Bitte aktualisiere die Seite."
+    report_not_found: "Bericht nicht gefunden."
+    cannot_share_when_profile_hidden: "Um den Rückblick zu teilen, musst du anderen erlauben, dein öffentliches Profil anzusehen."

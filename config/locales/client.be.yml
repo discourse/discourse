@@ -1447,16 +1447,6 @@ be:
         bookmarks: "У вас пакуль няма тэмаў у закладках."
         category: "У катэгорыі %{category} няма тэм."
         top: "There are no top topics."
-      bottom:
-        latest: "Усе апошнія тэмы адлюстраваныя."
-        posted: "There are no more posted topics."
-        read: "Больш няма прачытаных тэм."
-        new: "Больш няма новых тэм."
-        unread: "Больш няма непрачытаных тэм."
-        category: "Больш няма тым у катэгорыі %{category}."
-        tag: "Больш няма тым у катэгорыі %{tag}."
-        top: "There are no more top topics."
-        bookmarks: "Тэмы ў закладках адсутнічаюць."
     topic_bulk_actions:
       close_topics:
         name: "зачыніць"

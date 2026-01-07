@@ -9,6 +9,7 @@ module DiscourseAi
                     :private_message,
                     :custom_instructions,
                     :user,
+                    :feature_context,
                     :skip_show_thinking,
                     :participants,
                     :chosen_tools,
@@ -32,6 +33,7 @@ module DiscourseAi
         skip_show_thinking: nil,
         messages: [],
         custom_instructions: nil,
+        feature_context: nil,
         site_url: nil,
         site_title: nil,
         site_description: nil,
@@ -51,6 +53,7 @@ module DiscourseAi
         @skip_show_thinking = skip_show_thinking
         @messages = messages
         @custom_instructions = custom_instructions
+        @feature_context = feature_context || {}
         @format_dates = format_dates
 
         @message_id = message_id
@@ -158,6 +161,7 @@ module DiscourseAi
           site_description: @site_description,
           skip_show_thinking: @skip_show_thinking,
           feature_name: @feature_name,
+          feature_context: @feature_context,
           resource_url: @resource_url,
           inferred_concepts: @inferred_concepts,
           user_language: @user_language,
