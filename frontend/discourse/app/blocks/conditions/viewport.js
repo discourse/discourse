@@ -1,6 +1,7 @@
 import { service } from "@ember/service";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
-import { BlockCondition, raiseBlockValidationError } from "./base";
+import { BlockCondition, raiseBlockValidationError } from "./condition";
+import { blockCondition } from "./decorator";
 
 /**
  * Available viewport breakpoint names.
@@ -53,9 +54,11 @@ const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
  * // Touch devices only
  * { type: "viewport", touch: true }
  */
+@blockCondition({
+  type: "viewport",
+  validArgKeys: ["min", "max", "mobile", "touch"],
+})
 export default class BlockViewportCondition extends BlockCondition {
-  static type = "viewport";
-
   @service capabilities;
 
   /**

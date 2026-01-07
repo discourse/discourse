@@ -1,3 +1,5 @@
+import { findClosestMatch } from "discourse/lib/string-similarity";
+
 /**
  * Evaluates a value matcher spec against an actual value.
  * Supports the same AND/OR/NOT logic as condition evaluation.
@@ -261,4 +263,62 @@ export function matchParams({
   });
 
   return allPassed;
+}
+
+/**
+ * Valid operator keys for param/queryParam specs.
+ * These are the only keys with special meaning in param matching.
+ */
+const VALID_OPERATOR_KEYS = Object.freeze(["any", "not"]);
+
+/**
+ * Validates a param spec for typos in operator keys.
+ *
+ * Recursively checks that any object key that looks like an operator typo
+ * (e.g., "an" instead of "any", "nto" instead of "not") is flagged.
+ *
+ * @param {*} spec - The param spec to validate.
+ * @param {string} path - Current path for error messages.
+ * @param {Function} raiseError - Function to call with error message.
+ */
+export function validateParamSpec(spec, path, raiseError) {
+  if (spec === null || spec === undefined) {
+    return;
+  }
+
+  // Skip primitives and RegExp - they're just values
+  if (typeof spec !== "object" || spec instanceof RegExp) {
+    return;
+  }
+
+  // Arrays: validate each item
+  if (Array.isArray(spec)) {
+    spec.forEach((item, i) => {
+      validateParamSpec(item, `${path}[${i}]`, raiseError);
+    });
+    return;
+  }
+
+  // Objects: check keys for operator typos
+  const keys = Object.keys(spec);
+
+  for (const key of keys) {
+    // Check if this key looks like a typo of a valid operator
+    // Skip if it's a valid operator or an escaped key (starts with \)
+    if (!VALID_OPERATOR_KEYS.includes(key) && !key.startsWith("\\")) {
+      // Use Jaro-Winkler to check if it's similar to an operator
+      const suggestion = findClosestMatch(key, VALID_OPERATOR_KEYS, {
+        minSimilarity: 0.7,
+      });
+
+      if (suggestion) {
+        raiseError(
+          `Unknown key "${key}" at ${path}. Did you mean "${suggestion}"?`
+        );
+      }
+    }
+
+    // Recursively validate the value
+    validateParamSpec(spec[key], `${path}.${key}`, raiseError);
+  }
 }

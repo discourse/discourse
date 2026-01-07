@@ -1,4 +1,3 @@
-import { DEBUG } from "@glimmer/env";
 import { service } from "@ember/service";
 import {
   isShortcut,
@@ -8,9 +7,13 @@ import {
   normalizePath,
   VALID_SHORTCUTS,
 } from "discourse/lib/blocks/url-matcher";
-import { matchParams } from "discourse/lib/blocks/value-matcher";
+import {
+  matchParams,
+  validateParamSpec,
+} from "discourse/lib/blocks/value-matcher";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
-import { BlockCondition, raiseBlockValidationError } from "./base";
+import { BlockCondition, raiseBlockValidationError } from "./condition";
+import { blockCondition } from "./decorator";
 
 /**
  * A condition that evaluates based on the current URL path, semantic shortcuts,
@@ -67,9 +70,11 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * // Match discovery pages with specific query params using OR logic
  * { type: "route", urls: ["$DISCOVERY_PAGES"], queryParams: { any: [{ filter: "solved" }, { filter: "open" }] } }
  */
+@blockCondition({
+  type: "route",
+  validArgKeys: ["urls", "excludeUrls", "params", "queryParams"],
+})
 export default class BlockRouteCondition extends BlockCondition {
-  static type = "route";
-
   @service router;
   @service discovery;
 
@@ -124,8 +129,8 @@ export default class BlockRouteCondition extends BlockCondition {
           `BlockRouteCondition: Invalid glob pattern "${pattern}". ` +
             `Check for unbalanced brackets or braces.`
         );
-      } else if (DEBUG) {
-        // Warn if URL pattern looks like a shortcut typo (dev only)
+      } else {
+        // Warn if URL pattern looks like a shortcut typo
         const likelyShortcut = looksLikeShortcutTypo(pattern);
         if (likelyShortcut) {
           // eslint-disable-next-line no-console
@@ -135,6 +140,19 @@ export default class BlockRouteCondition extends BlockCondition {
           );
         }
       }
+    }
+
+    // Validate params and queryParams for operator typos (e.g., "an" vs "any")
+    const { params, queryParams } = args;
+    if (params) {
+      validateParamSpec(params, "params", (msg) => {
+        raiseBlockValidationError(`BlockRouteCondition: ${msg}`);
+      });
+    }
+    if (queryParams) {
+      validateParamSpec(queryParams, "queryParams", (msg) => {
+        raiseBlockValidationError(`BlockRouteCondition: ${msg}`);
+      });
     }
   }
 

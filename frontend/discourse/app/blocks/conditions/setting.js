@@ -1,5 +1,6 @@
 import { service } from "@ember/service";
-import { BlockCondition, raiseBlockValidationError } from "./base";
+import { BlockCondition, raiseBlockValidationError } from "./condition";
+import { blockCondition } from "./decorator";
 
 /**
  * A condition that evaluates based on site setting or custom settings object values.
@@ -58,10 +59,19 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * import { settings } from "virtual:theme";
  * { type: "setting", source: settings, setting: "show_sidebar", enabled: true }
  */
+@blockCondition({
+  type: "setting",
+  sourceType: "object",
+  validArgKeys: [
+    "setting",
+    "enabled",
+    "equals",
+    "includes",
+    "contains",
+    "containsAny",
+  ],
+})
 export default class BlockSettingCondition extends BlockCondition {
-  static type = "setting";
-  static sourceType = "object";
-
   @service siteSettings;
 
   validate(args) {

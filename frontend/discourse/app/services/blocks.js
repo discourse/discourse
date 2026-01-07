@@ -1,6 +1,7 @@
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 import * as conditions from "discourse/blocks/conditions";
+import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
 import {
   getCombinatorLogCallback,
   getConditionLogCallback,
@@ -212,19 +213,17 @@ export default class Blocks extends Service {
 
   /**
    * Internal registration method for condition types.
-   * Validates the condition class and creates an instance with owner set.
+   * Validates that the class was decorated with `@blockCondition` and creates
+   * an instance with owner set.
    *
    * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass
    */
   #registerConditionType(ConditionClass) {
-    if (!(ConditionClass.prototype instanceof conditions.BlockCondition)) {
-      raiseBlockError(`${ConditionClass.name} must extend BlockCondition`);
-      return;
-    }
-
-    if (!ConditionClass.type || typeof ConditionClass.type !== "string") {
+    // Ensure the class was created by the @blockCondition decorator
+    if (!isDecoratedCondition(ConditionClass)) {
       raiseBlockError(
-        `${ConditionClass.name} must define a static 'type' property`
+        `${ConditionClass.name} must use the @blockCondition decorator. ` +
+          `Manual inheritance from BlockCondition is not allowed.`
       );
       return;
     }
@@ -242,16 +241,52 @@ export default class Blocks extends Service {
   }
 
   /**
+   * Validates that all provided args are recognized by the condition.
+   * Uses Jaro-Winkler similarity to suggest corrections for typos.
+   *
+   * @param {import("discourse/blocks/conditions").BlockCondition} instance - The condition instance.
+   * @param {string} type - The condition type name.
+   * @param {Object} args - The args provided to the condition.
+   */
+  #validateConditionArgKeys(instance, type, args) {
+    const validKeys = instance.constructor.validArgKeys;
+
+    // source is always valid if sourceType allows it
+    const allValidKeys =
+      instance.constructor.sourceType !== "none"
+        ? [...validKeys, "source"]
+        : validKeys;
+
+    for (const key of Object.keys(args)) {
+      if (!allValidKeys.includes(key)) {
+        const suggestion = formatWithSuggestion(key, allValidKeys);
+        raiseBlockError(
+          `Condition type "${type}": Unknown arg ${suggestion}. ` +
+            `Valid args: ${allValidKeys.join(", ")}`
+        );
+      }
+    }
+  }
+
+  /**
    * Register a custom condition type.
    * Used by plugins via `api.registerBlockConditionType()`.
+   *
+   * The condition class must be decorated with `@blockCondition` and extend
+   * `BlockCondition`.
    *
    * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass
    *
    * @example
    * ```javascript
+   * import { blockCondition, BlockCondition } from "discourse/blocks/conditions";
+   *
+   * @blockCondition({
+   *   type: "my-condition",
+   *   validArgKeys: ["enabled"],
+   * })
    * class BlockMyCondition extends BlockCondition {
-   *   static type = "my-condition";
-   *   evaluate(args) { return true; }
+   *   evaluate(args) { return args.enabled ?? true; }
    * }
    * api.registerBlockConditionType(BlockMyCondition);
    * ```
@@ -329,6 +364,9 @@ export default class Blocks extends Service {
       );
       return;
     }
+
+    // Validate arg keys (catches typos like "querParams" instead of "queryParams")
+    this.#validateConditionArgKeys(conditionInstance, type, args);
 
     // Run the condition's own validation
     conditionInstance.validate(args);

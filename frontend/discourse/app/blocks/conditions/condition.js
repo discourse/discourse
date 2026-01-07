@@ -78,6 +78,20 @@ export class BlockCondition {
   static sourceType = "none";
 
   /**
+   * Valid argument keys for this condition.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly. The decorator creates a non-configurable getter
+   * that returns a frozen array.
+   *
+   * The `source` key is automatically added by the decorator when
+   * `sourceType !== "none"`.
+   *
+   * @type {readonly string[]}
+   */
+  static validArgKeys;
+
+  /**
    * Validates condition arguments at block registration time.
    * Override this method to check for required args, conflicting args,
    * or invalid values.

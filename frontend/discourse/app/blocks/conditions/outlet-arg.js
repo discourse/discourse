@@ -1,6 +1,7 @@
 import { getByPath } from "discourse/lib/blocks/path-resolver";
 import { matchValue } from "discourse/lib/blocks/value-matcher";
-import { BlockCondition, raiseBlockValidationError } from "./base";
+import { BlockCondition, raiseBlockValidationError } from "./condition";
+import { blockCondition } from "./decorator";
 
 /**
  * A condition that evaluates based on outlet arg values.
@@ -46,12 +47,11 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * // Check topic is NOT closed
  * { type: "outletArg", path: "topic.closed", value: { not: true } }
  */
+@blockCondition({
+  type: "outletArg",
+  validArgKeys: ["path", "value", "exists"],
+})
 export default class BlockOutletArgCondition extends BlockCondition {
-  static type = "outletArg";
-
-  // This condition reads directly from context.outletArgs, no source parameter needed
-  static sourceType = "none";
-
   validate(args) {
     super.validate(args);
 

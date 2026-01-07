@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { BlockCondition } from "discourse/blocks/conditions";
+import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { block } from "discourse/components/block-outlet";
 import {
   _registerBlock,
@@ -115,9 +115,11 @@ module("Unit | Service | blocks", function (hooks) {
 
   module("registerConditionType", function () {
     test("registers a custom condition type", function (assert) {
+      @blockCondition({
+        type: "test-custom",
+        validArgKeys: [],
+      })
       class BlockTestCondition extends BlockCondition {
-        static type = "test-custom";
-
         evaluate() {
           return true;
         }
@@ -127,34 +129,27 @@ module("Unit | Service | blocks", function (hooks) {
       assert.true(this.blocks.hasConditionType("test-custom"));
     });
 
-    test("throws if class does not extend BlockCondition", function (assert) {
-      class NotACondition {
-        static type = "not-a-condition";
-      }
+    test("throws if class does not use decorator", function (assert) {
+      class NotDecoratedCondition extends BlockCondition {
+        static type = "not-decorated";
 
-      assert.throws(
-        () => this.blocks.registerConditionType(NotACondition),
-        /must extend BlockCondition/
-      );
-    });
-
-    test("throws if class does not define static type", function (assert) {
-      class BlockNoTypeCondition extends BlockCondition {
         evaluate() {
           return true;
         }
       }
 
       assert.throws(
-        () => this.blocks.registerConditionType(BlockNoTypeCondition),
-        /must define a static 'type' property/
+        () => this.blocks.registerConditionType(NotDecoratedCondition),
+        /must use the @blockCondition decorator/
       );
     });
 
     test("throws if type is already registered", function (assert) {
+      @blockCondition({
+        type: "route",
+        validArgKeys: [],
+      })
       class BlockDuplicateCondition extends BlockCondition {
-        static type = "route";
-
         evaluate() {
           return true;
         }
@@ -237,17 +232,21 @@ module("Unit | Service | blocks", function (hooks) {
     });
 
     test("evaluates array of conditions with AND logic", function (assert) {
+      @blockCondition({
+        type: "always-true",
+        validArgKeys: [],
+      })
       class BlockAlwaysTrueCondition extends BlockCondition {
-        static type = "always-true";
-
         evaluate() {
           return true;
         }
       }
 
+      @blockCondition({
+        type: "always-false",
+        validArgKeys: [],
+      })
       class BlockAlwaysFalseCondition extends BlockCondition {
-        static type = "always-false";
-
         evaluate() {
           return false;
         }
@@ -269,17 +268,21 @@ module("Unit | Service | blocks", function (hooks) {
     });
 
     test("evaluates 'any' combinator with OR logic", function (assert) {
+      @blockCondition({
+        type: "always-true-2",
+        validArgKeys: [],
+      })
       class BlockAlwaysTrueCondition2 extends BlockCondition {
-        static type = "always-true-2";
-
         evaluate() {
           return true;
         }
       }
 
+      @blockCondition({
+        type: "always-false-2",
+        validArgKeys: [],
+      })
       class BlockAlwaysFalseCondition2 extends BlockCondition {
-        static type = "always-false-2";
-
         evaluate() {
           return false;
         }
@@ -302,17 +305,21 @@ module("Unit | Service | blocks", function (hooks) {
     });
 
     test("evaluates 'not' combinator", function (assert) {
+      @blockCondition({
+        type: "always-true-3",
+        validArgKeys: [],
+      })
       class BlockAlwaysTrueCondition3 extends BlockCondition {
-        static type = "always-true-3";
-
         evaluate() {
           return true;
         }
       }
 
+      @blockCondition({
+        type: "always-false-3",
+        validArgKeys: [],
+      })
       class BlockAlwaysFalseCondition3 extends BlockCondition {
-        static type = "always-false-3";
-
         evaluate() {
           return false;
         }
@@ -328,9 +335,11 @@ module("Unit | Service | blocks", function (hooks) {
     test("passes args to condition evaluate method", function (assert) {
       let receivedArgs;
 
+      @blockCondition({
+        type: "arg-capturing",
+        validArgKeys: ["foo", "baz"],
+      })
       class BlockArgCapturingCondition extends BlockCondition {
-        static type = "arg-capturing";
-
         evaluate(args) {
           receivedArgs = args;
           return true;
@@ -352,17 +361,21 @@ module("Unit | Service | blocks", function (hooks) {
     });
 
     test("evaluates nested combinators (NOT within OR within AND)", function (assert) {
+      @blockCondition({
+        type: "nested-true",
+        validArgKeys: [],
+      })
       class BlockNestedTrue extends BlockCondition {
-        static type = "nested-true";
-
         evaluate() {
           return true;
         }
       }
 
+      @blockCondition({
+        type: "nested-false",
+        validArgKeys: [],
+      })
       class BlockNestedFalse extends BlockCondition {
-        static type = "nested-false";
-
         evaluate() {
           return false;
         }
@@ -403,9 +416,11 @@ module("Unit | Service | blocks", function (hooks) {
     test("passes outletArgs to condition evaluate context", function (assert) {
       let receivedContext;
 
+      @blockCondition({
+        type: "context-capturing",
+        validArgKeys: [],
+      })
       class BlockContextCapturing extends BlockCondition {
-        static type = "context-capturing";
-
         evaluate(args, context) {
           receivedContext = context;
           return true;
@@ -423,9 +438,11 @@ module("Unit | Service | blocks", function (hooks) {
     test("passes outletArgs through NOT combinator", function (assert) {
       let receivedOutletArgs;
 
+      @blockCondition({
+        type: "not-outlet-args",
+        validArgKeys: [],
+      })
       class BlockNotOutletArgs extends BlockCondition {
-        static type = "not-outlet-args";
-
         evaluate(args, context) {
           receivedOutletArgs = context?.outletArgs;
           return false;
@@ -451,9 +468,11 @@ module("Unit | Service | blocks", function (hooks) {
       let callCount = 0;
       const receivedOutletArgs = [];
 
+      @blockCondition({
+        type: "deep-outlet-args",
+        validArgKeys: [],
+      })
       class BlockDeepOutletArgs extends BlockCondition {
-        static type = "deep-outlet-args";
-
         evaluate(args, context) {
           callCount++;
           receivedOutletArgs.push(context?.outletArgs);
@@ -488,16 +507,18 @@ module("Unit | Service | blocks", function (hooks) {
     test("conditions can inject services", function (assert) {
       let injectedSiteSettings;
 
+      @blockCondition({
+        type: "service-injection-test",
+        validArgKeys: [],
+      })
       class BlockServiceInjectionCondition extends BlockCondition {
-        static type = "service-injection-test";
-
         evaluate() {
           injectedSiteSettings = this.siteSettings;
           return true;
         }
       }
 
-      // Manually inject service since we can't use decorator in test
+      // Manually inject service since we can't use @service decorator in test
       Object.defineProperty(
         BlockServiceInjectionCondition.prototype,
         "siteSettings",

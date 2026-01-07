@@ -3,7 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { BlockCondition } from "discourse/blocks/conditions";
 
-module("Unit | Blocks | Conditions | base", function (hooks) {
+module("Unit | Blocks | Conditions | condition", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {

@@ -1,5 +1,6 @@
 import { service } from "@ember/service";
-import { BlockCondition, raiseBlockValidationError } from "./base";
+import { BlockCondition, raiseBlockValidationError } from "./condition";
+import { blockCondition } from "./decorator";
 
 /**
  * A condition that evaluates based on user state.
@@ -53,10 +54,20 @@ import { BlockCondition, raiseBlockValidationError } from "./base";
  * // Check a user from outlet args instead of currentUser
  * { type: "user", source: "@outletArgs.topicAuthor", admin: true }
  */
+@blockCondition({
+  type: "user",
+  sourceType: "outletArgs",
+  validArgKeys: [
+    "loggedIn",
+    "admin",
+    "moderator",
+    "staff",
+    "minTrustLevel",
+    "maxTrustLevel",
+    "groups",
+  ],
+})
 export default class BlockUserCondition extends BlockCondition {
-  static type = "user";
-  static sourceType = "outletArgs";
-
   @service currentUser;
 
   validate(args) {

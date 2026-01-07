@@ -4,6 +4,7 @@ import {
   isTypeMismatch,
   matchParams,
   matchValue,
+  validateParamSpec,
 } from "discourse/lib/blocks/value-matcher";
 
 module("Unit | Lib | Blocks | value-matcher", function (hooks) {
@@ -363,6 +364,69 @@ module("Unit | Lib | Blocks | value-matcher", function (hooks) {
           matchParams({ actualParams, expectedParams: { "\\\\id": 456 } })
         );
       });
+    });
+  });
+
+  module("validateParamSpec", function () {
+    test("raises error for operator typos like 'an' instead of 'any'", function (assert) {
+      const errors = [];
+      validateParamSpec({ an: [1, 2, 3] }, "queryParams", (msg) =>
+        errors.push(msg)
+      );
+      assert.strictEqual(errors.length, 1);
+      assert.true(errors[0].includes('"an"'));
+      assert.true(errors[0].includes('Did you mean "any"'));
+    });
+
+    test("raises error for operator typos like 'nto' instead of 'not'", function (assert) {
+      const errors = [];
+      // Note: 'nto' has Jaro-Winkler ~0.6 with 'not', below 0.7 threshold
+      // So this won't trigger a suggestion - only very close typos do
+      validateParamSpec({ nto: { foo: "bar" } }, "params", (msg) =>
+        errors.push(msg)
+      );
+      // 'nto' isn't close enough to 'not' at 0.7 threshold
+      assert.strictEqual(errors.length, 0);
+    });
+
+    test("does not raise error for valid operator keys", function (assert) {
+      const errors = [];
+      validateParamSpec({ any: [1, 2, 3] }, "queryParams", (msg) =>
+        errors.push(msg)
+      );
+      validateParamSpec({ not: { foo: "bar" } }, "params", (msg) =>
+        errors.push(msg)
+      );
+      assert.strictEqual(errors.length, 0);
+    });
+
+    test("does not raise error for regular param keys", function (assert) {
+      const errors = [];
+      validateParamSpec(
+        { preview_theme_id: 3, filter: "solved" },
+        "queryParams",
+        (msg) => errors.push(msg)
+      );
+      assert.strictEqual(errors.length, 0);
+    });
+
+    test("validates nested specs recursively", function (assert) {
+      const errors = [];
+      validateParamSpec(
+        { any: [{ an: [1, 2] }, { filter: "solved" }] },
+        "queryParams",
+        (msg) => errors.push(msg)
+      );
+      assert.strictEqual(errors.length, 1);
+      assert.true(errors[0].includes("queryParams.any[0]"));
+    });
+
+    test("does not raise error for escaped keys", function (assert) {
+      const errors = [];
+      validateParamSpec({ "\\any": "literal-value" }, "params", (msg) =>
+        errors.push(msg)
+      );
+      assert.strictEqual(errors.length, 0);
     });
   });
 });
