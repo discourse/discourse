@@ -14,14 +14,9 @@ class AddSlugIndexesToTags < ActiveRecord::Migration[7.2]
               where: "slug <> ''",
               algorithm: :concurrently
     add_index :tags, :slug, where: "slug <> ''", algorithm: :concurrently
-
-    change_column_null :tags, :slug, false
   end
 
   def down
-    remove_index :tags, name: "index_tags_on_lower_slug", if_exists: true
-    remove_index :tags, :slug, if_exists: true
-
-    change_column_null :tags, :slug, true
+    raise ActiveRecord::IrreversibleMigration
   end
 end

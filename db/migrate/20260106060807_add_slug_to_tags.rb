@@ -4,14 +4,14 @@ class AddSlugToTags < ActiveRecord::Migration[7.2]
   BATCH_SIZE = 1000
 
   def up
-    add_column :tags, :slug, :string, default: "", null: true unless column_exists?(:tags, :slug)
+    add_column :tags, :slug, :string, default: "", null: false unless column_exists?(:tags, :slug)
 
     backfill_slugs
     resolve_conflicts
   end
 
   def down
-    remove_column :tags, :slug
+    raise ActiveRecord::IrreversibleMigration
   end
 
   private
