@@ -119,14 +119,6 @@ class TopicListItemSerializer < ListableTopicSerializer
     object.private_message?
   end
 
-  def include_op_like_count?
-    # PERF: long term we probably want a cheaper way of looking stuff up
-    # this is rather odd code, but we need to have op_likes loaded somehow
-    # simplest optimisation is adding a cache column on topic.
-    return false unless serialize_topic_op_likes_data_enabled?
-    object.association(:first_post).loaded?
-  end
-
   def include_featured_link?
     SiteSetting.topic_featured_link_enabled
   end

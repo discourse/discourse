@@ -145,7 +145,7 @@ class TopicList
 
     topic_preloader_associations << :localizations if SiteSetting.content_localization_enabled
 
-    topic_preloader_associations << :first_post if serialize_topic_op_likes_data_enabled?
+    topic_preloader_associations << :first_post
 
     DiscoursePluginRegistry.topic_preloader_associations.each do |a|
       fields = a[:fields]
@@ -186,15 +186,5 @@ class TopicList
           []
         end
       end
-  end
-
-  def serialize_topic_op_likes_data_enabled?
-    plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_op_likes_data, false)
-    return true if plugin_enabled
-
-    theme_ids = Theme.enabled_theme_and_component_ids
-    return false if theme_ids.empty?
-
-    Theme.lookup_modifier(theme_ids, :serialize_topic_op_likes_data) == true
   end
 end
