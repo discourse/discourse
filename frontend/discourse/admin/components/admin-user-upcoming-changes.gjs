@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { array, concat } from "@ember/helper";
+import { array } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import SeparatedList from "discourse/components/separated-list";
 import { UPCOMING_CHANGES_USER_ENABLED_REASONS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { and, eq } from "discourse/truth-helpers";
@@ -11,6 +11,19 @@ export default class AdminUserUpcomingChanges extends Component {
   @bind
   reasonKey(reason) {
     return `user.upcoming_changes.why_reasons.${reason}`;
+  }
+
+  @bind
+  getGroupLinks(groups) {
+    return (
+      "(" +
+      groups
+        .map((group) => {
+          return `<a href="/g/${group}">${group}</a>`;
+        })
+        .join(", ") +
+      ")"
+    );
   }
 
   <template>
@@ -78,14 +91,9 @@ export default class AdminUserUpcomingChanges extends Component {
                       upcomingChange.specific_groups.length
                     )
                   }}
-                    (<SeparatedList
-                      @items={{upcomingChange.specific_groups}}
-                      @separator=", "
-                      class="upcoming-change-groups"
-                      as |group|
-                    >
-                      <a href={{concat "/g/" group}}>{{group}}</a>
-                    </SeparatedList>)
+                    {{htmlSafe
+                      (this.getGroupLinks upcomingChange.specific_groups)
+                    }}
                   {{/if}}
                 </td>
               </tr>
