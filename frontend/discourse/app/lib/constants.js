@@ -115,6 +115,13 @@ export const INVITE_DESCRIPTION_MAX_LENGTH = 100;
 
 export const USER_OPTION_COMPOSITION_MODES = { markdown: 0, rich: 1 };
 
+export const UPCOMING_CHANGES_USER_ENABLED_REASONS = {
+  enabled_for_everyone: "enabled_for_everyone",
+  enabled_for_no_one: "enabled_for_no_one",
+  in_specific_groups: "in_specific_groups",
+  not_in_specific_groups: "not_in_specific_groups",
+};
+
 export const INTERFACE_COLOR_MODES = {
   AUTO: 1,
   LIGHT: 2,

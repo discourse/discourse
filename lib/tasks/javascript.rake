@@ -97,6 +97,8 @@ task "javascript:update_constants" => :environment do
 
     export const USER_OPTION_COMPOSITION_MODES = #{UserOption.composition_mode_types.to_json};
 
+    export const UPCOMING_CHANGES_USER_ENABLED_REASONS = #{UpcomingChanges.user_enabled_reasons.to_json};
+
     export const INTERFACE_COLOR_MODES = {
       AUTO: #{UserOption::AUTO_MODE},
       LIGHT: #{UserOption::LIGHT_MODE},

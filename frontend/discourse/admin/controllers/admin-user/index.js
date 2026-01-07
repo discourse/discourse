@@ -22,6 +22,7 @@ export default class AdminUserIndexController extends Controller {
   @service router;
   @service dialog;
   @service adminTools;
+  @service siteSettings;
   @service modal;
 
   originalPrimaryGroupId = null;
