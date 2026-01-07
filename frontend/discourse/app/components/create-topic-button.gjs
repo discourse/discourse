@@ -15,14 +15,22 @@ export default class CreateTopicButton extends Component {
   btnId = this.args.btnId ?? "create-topic";
 
   get btnClasses() {
-    const permission = applyValueTransformer("create-topic-button-class", "", {
-      disabled: this.args.disabled,
-      canCreateTopic: this.args.canCreateTopic,
-      category: this.router.currentRoute?.attributes?.category,
-      tag: this.router.currentRoute?.attributes?.tag,
-    });
+    const additionalClasses = applyValueTransformer(
+      "create-topic-button-class",
+      [],
+      {
+        disabled: this.args.disabled,
+        canCreateTopic: this.args.canCreateTopic,
+        category: this.router.currentRoute?.attributes?.category,
+        tag: this.router.currentRoute?.attributes?.tag,
+      }
+    );
 
-    return concatClass(this.args.btnClass, this.btnTypeClass, permission);
+    return concatClass(
+      this.args.btnClass,
+      this.btnTypeClass,
+      ...additionalClasses
+    );
   }
 
   <template>
