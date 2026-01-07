@@ -217,7 +217,7 @@ class Tag < ActiveRecord::Base
   end
 
   def slug_for_url
-    (slug.presence || "#{id}-tag")
+    slug.presence || "#{id}-tag"
   end
 
   def index_search
@@ -274,7 +274,7 @@ class Tag < ActiveRecord::Base
 
     if self.slug.blank? || will_save_change_to_name?
       self.slug = Slug.for(name, "")
-      self.slug = "" if slug.blank? || duplicate_slug?
+      self.slug = "" if self.slug.blank? || duplicate_slug?
     end
   end
 
@@ -313,7 +313,6 @@ end
 # Indexes
 #
 #  index_tags_on_lower_name  (lower((name)::text)) UNIQUE
-#  index_tags_on_lower_slug  (lower((slug)::text)) UNIQUE WHERE ((slug)::text <> ''::text)
 #  index_tags_on_name        (name) UNIQUE
 #  index_tags_on_slug        (slug) WHERE ((slug)::text <> ''::text)
 #
