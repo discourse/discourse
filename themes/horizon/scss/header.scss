@@ -3,10 +3,6 @@
 .d-header {
   box-shadow: none;
   background: var(--background-color);
-
-  @include viewport.from(xl) {
-    padding-bottom: var(--main-grid-gap);
-  }
 }
 
 .search-menu .search-input,
