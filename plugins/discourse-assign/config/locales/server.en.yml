@@ -55,7 +55,8 @@ en:
       quarterly: "quarterly"
   assign_mailer:
     title: "Assign Mailer"
-    subject_template: "%{email_prefix}: %{assignee_name} assigned you to '%{topic_title}'!"
+    subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"
+    subject_template_improved: "%{email_prefix}: %{assignee_name} assigned you to '%{topic_title}'!"
     text_body_template: |
       Hey, %{assignee_name} **assigned** you to a discussion
       > **%{topic_title}**
