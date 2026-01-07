@@ -110,9 +110,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
-        if SiteSetting.trigger_browser_pageview_events
-          DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
-        end
+        trigger_browser_pageview_event(data)
 
         if data[:topic_id].present? && data[:current_user_id].present?
           TopicsController.defer_topic_view(
@@ -125,9 +123,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
-        if SiteSetting.trigger_browser_pageview_events
-          DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
-        end
+        trigger_browser_pageview_event(data)
 
         if data[:topic_id].present?
           TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
@@ -582,6 +578,13 @@ class Middleware::RequestTracker
     }
   end
 
+  def self.trigger_browser_pageview_event(data)
+    if SiteSetting.trigger_browser_pageview_events
+      DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
+    end
+  end
+  private_class_method :trigger_browser_pageview_event
+
   def self.build_browser_pageview_event_payload(data)
     {
       user_id: data[:current_user_id],
@@ -593,4 +596,5 @@ class Middleware::RequestTracker
       topic_id: data[:topic_id],
     }
   end
+  private_class_method :build_browser_pageview_event_payload
 end
