@@ -13,7 +13,7 @@ RSpec.describe User::Suspend do
     end
     it do
       is_expected.to validate_inclusion_of(:post_action).in_array(
-        %w[delete delete_replies edit none],
+        %w[delete delete_replies delete_all edit none],
       ).allow_blank
     end
   end

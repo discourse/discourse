@@ -108,6 +108,12 @@ export default class AdminUser extends User {
     });
   }
 
+  deleteAllPostsDecider() {
+    return ajax(`/admin/users/${this.get("id")}/delete_posts_decider`, {
+      type: "POST",
+    });
+  }
+
   revokeAdmin() {
     return ajax(`/admin/users/${this.id}/revoke_admin`, {
       type: "PUT",
