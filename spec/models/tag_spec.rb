@@ -403,9 +403,10 @@ RSpec.describe Tag do
       expect(tag.slug).to eq("hello-world")
     end
 
-    it "uses name-tag format for numeric-only names" do
+    it "uses empty slug for numeric-only names" do
       tag = Fabricate(:tag, name: "123")
-      expect(tag.slug).to eq("123-tag")
+      expect(tag.slug).to eq("")
+      expect(tag.slug_for_url).to eq("#{tag.id}-tag")
     end
 
     it "removes apostrophes from names" do
@@ -423,17 +424,26 @@ RSpec.describe Tag do
       expect(tag.slug).to eq("hello-world")
     end
 
-    it "uses tag-tag format for unicode-only names" do
+    it "uses empty slug for unicode-only names" do
       tag = Fabricate(:tag, name: "字")
-      expect(tag.slug).to eq("tag-tag")
+      expect(tag.slug).to eq("")
+      expect(tag.slug_for_url).to eq("#{tag.id}-tag")
     end
 
-    it "resolves conflicts by appending -tag" do
+    it "resolves conflicts by setting slug to empty" do
       tag1 = Fabricate(:tag, name: "test")
       tag2 = Fabricate(:tag, name: "Test!")
 
       expect(tag1.slug).to eq("test")
-      expect(tag2.slug).to eq("test-tag")
+      expect(tag2.slug).to eq("")
+    end
+
+    it "uses slug_for_url for display when slug is empty" do
+      tag1 = Fabricate(:tag, name: "test")
+      tag2 = Fabricate(:tag, name: "Test!")
+
+      expect(tag1.slug_for_url).to eq("test")
+      expect(tag2.slug_for_url).to eq("#{tag2.id}-tag")
     end
 
     it "preserves existing slug when name unchanged" do

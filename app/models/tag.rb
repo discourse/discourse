@@ -12,7 +12,7 @@ class Tag < ActiveRecord::Base
   ]
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
-  validates :slug, presence: true, uniqueness: { case_sensitive: false }
+  validates :slug, uniqueness: { case_sensitive: false }, allow_blank: true
 
   validate :target_tag_validator,
            if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
@@ -216,6 +216,10 @@ class Tag < ActiveRecord::Base
     "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
   end
 
+  def slug_for_url
+    (slug.presence || "#{id}-tag")
+  end
+
   def index_search
     SearchIndexer.index(self)
   end
@@ -269,10 +273,8 @@ class Tag < ActiveRecord::Base
 
     if slug.blank? || will_save_change_to_name?
       self.slug = Slug.for(name, "")
-      self.slug = "#{name.parameterize.presence || "tag"}-tag" if slug.blank?
+      self.slug = "" if slug.blank? || duplicate_slug?
     end
-
-    self.slug = "#{slug}-tag" if duplicate_slug?
   end
 
   def duplicate_slug?

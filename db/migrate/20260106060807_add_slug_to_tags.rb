@@ -17,7 +17,7 @@ class AddSlugToTags < ActiveRecord::Migration[7.2]
   private
 
   def backfill_slugs
-    # - remove non-alphanumeric except spaces/dashes
+    # - replace non-alphanumeric (except spaces/dashes) with dashes
     # - lowercase
     # - spaces to dashes
     # - squeeze consecutive dashes
@@ -43,7 +43,7 @@ class AddSlugToTags < ActiveRecord::Migration[7.2]
                     lower(COALESCE(NULLIF(TRIM(tags.name), ''), '')),
                     '''', '', 'g'
                   ),
-                  '[^a-z0-9\\s-]', '', 'g'
+                  '[^a-z0-9\\s-]+', '-', 'g'
                 ),
                 '[\\s-]+', '-', 'g'
               )
@@ -68,33 +68,14 @@ class AddSlugToTags < ActiveRecord::Migration[7.2]
   end
 
   def resolve_conflicts
-    # - for duplicate slugs, append -tag to the newer tag (higher id)
-    # - single-level conflict resolution only
-    last_id = 0
-
-    loop do
-      result = DB.query(<<~SQL, last_id: last_id, batch_size: BATCH_SIZE)
-        WITH conflicts AS (
-          SELECT t1.id
-          FROM tags t1
-          WHERE t1.id > :last_id
-            AND EXISTS (
-              SELECT 1 FROM tags t2
-              WHERE lower(t2.slug) = lower(t1.slug)
-                AND t2.id < t1.id
-            )
-          ORDER BY t1.id
-          LIMIT :batch_size
-        )
-        UPDATE tags
-        SET slug = tags.slug || '-tag'
-        FROM conflicts
-        WHERE tags.id = conflicts.id
-        RETURNING tags.id
-      SQL
-
-      break if result.empty?
-      last_id = result.max_by(&:id).id
-    end
+    # set conflicting slugs to empty string (slug_for_url will use id-tag)
+    DB.exec(<<~SQL)
+      UPDATE tags
+      SET slug = ''
+      WHERE EXISTS (
+        SELECT 1 FROM tags t2
+        WHERE lower(t2.slug) = lower(tags.slug) AND t2.id < tags.id
+      )
+    SQL
   end
 end
