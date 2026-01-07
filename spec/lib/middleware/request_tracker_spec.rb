@@ -732,6 +732,7 @@ RSpec.describe Middleware::RequestTracker do
           expect(events.length).to eq(0)
         end
       end
+
       context "when SiteSetting.trigger_browser_pageview_events is false" do
         it "does not trigger events" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
