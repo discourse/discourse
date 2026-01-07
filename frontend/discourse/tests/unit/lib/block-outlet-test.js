@@ -368,7 +368,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { classNames: "custom" },
           },
         ]),
-        /reserved arg names/
+        /Reserved arg names/i
       );
     });
 
@@ -385,7 +385,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { outletName: "test" },
           },
         ]),
-        /reserved arg names/
+        /Reserved arg names/i
       );
     });
 
@@ -402,7 +402,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { children: [] },
           },
         ]),
-        /reserved arg names/
+        /Reserved arg names/i
       );
     });
 
@@ -419,7 +419,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { conditions: {} },
           },
         ]),
-        /reserved arg names/
+        /Reserved arg names/i
       );
     });
 
@@ -436,7 +436,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { $block$: "test" },
           },
         ]),
-        /reserved arg names/
+        /Reserved arg names/i
       );
     });
 
@@ -455,7 +455,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { _privateArg: "value" },
           },
         ]),
-        /reserved arg names/
+        /Reserved arg names/i
       );
     });
 

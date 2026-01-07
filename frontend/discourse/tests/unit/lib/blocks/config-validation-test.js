@@ -54,14 +54,14 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       // Should not throw
-      validateConfigKeys(config, "test-outlet", "blocks[0]");
+      validateConfigKeys(config);
       assert.true(true, "validation passed without error");
     });
 
     test("passes validation for config with only required key", function (assert) {
       const config = { block: "my-block" };
 
-      validateConfigKeys(config, "test-outlet", "blocks[0]");
+      validateConfigKeys(config);
       assert.true(true, "validation passed without error");
     });
 
@@ -72,16 +72,15 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) => {
           return (
             error.message.includes('"condition"') &&
             error.message.includes('did you mean "conditions"?') &&
-            error.message.includes("test-outlet") &&
-            error.message.includes("blocks[0]")
+            error.path === "condition"
           );
         },
-        "error message suggests correction and includes context"
+        "error message suggests correction and error path points to key"
       );
     });
 
@@ -92,7 +91,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) =>
           error.message.includes('"arg"') &&
           error.message.includes('did you mean "args"?'),
@@ -107,7 +106,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) =>
           error.message.includes('"child"') &&
           error.message.includes('did you mean "children"?'),
@@ -122,7 +121,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) =>
           error.message.includes('"className"') &&
           error.message.includes('did you mean "classNames"?'),
@@ -137,7 +136,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) => {
           return (
             error.message.includes('"foo"') &&
@@ -157,7 +156,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) => {
           return (
             error.message.includes('did you mean "conditions"?') &&
@@ -176,7 +175,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) =>
           error.message.includes('"codition"') &&
           error.message.includes('did you mean "conditions"?'),
@@ -191,7 +190,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) =>
           error.message.includes('"conditons"') &&
           error.message.includes('did you mean "conditions"?'),
@@ -206,7 +205,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) =>
           error.message.includes('"condtions"') &&
           error.message.includes('did you mean "conditions"?'),
@@ -221,8 +220,8 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
-        (error) => error.message.includes("Unknown config key "),
+        () => validateConfigKeys(config),
+        (error) => error.message.includes("Unknown config key:"),
         "uses singular 'key' for one unknown key"
       );
     });
@@ -235,22 +234,22 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
-        (error) => error.message.includes("Unknown config keys "),
+        () => validateConfigKeys(config),
+        (error) => error.message.includes("Unknown config keys:"),
         "uses plural 'keys' for multiple unknown keys"
       );
     });
 
-    test("uses 'root' as path when path is not provided", function (assert) {
+    test("error includes the path to the unknown key", function (assert) {
       const config = {
         block: "my-block",
         foo: "bar",
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet"),
-        (error) => error.message.includes("block at root"),
-        "error message uses 'root' as path"
+        () => validateConfigKeys(config),
+        (error) => error.path === "foo",
+        "error path points to the unknown key"
       );
     });
 
@@ -261,7 +260,7 @@ module("Unit | Lib | blocks/config-validation", function () {
       };
 
       assert.throws(
-        () => validateConfigKeys(config, "test-outlet", "blocks[0]"),
+        () => validateConfigKeys(config),
         (error) => {
           return (
             error.message.includes("Valid keys are:") &&
@@ -285,25 +284,20 @@ module("Unit | Lib | blocks/config-validation", function () {
         classNames: "custom-class",
       };
 
-      validateConfigTypes(config, "test-outlet", "blocks[0]");
+      validateConfigTypes(config);
       assert.true(true, "validation passed without error");
     });
 
     test("passes for config with no optional fields", function (assert) {
       const config = { block: "my-block" };
 
-      validateConfigTypes(config, "test-outlet", "blocks[0]");
+      validateConfigTypes(config);
       assert.true(true, "validation passed without error");
     });
 
     test("throws for args as string", function (assert) {
       assert.throws(
-        () =>
-          validateConfigTypes(
-            { block: "my-block", args: "not-an-object" },
-            "test-outlet",
-            "blocks[0]"
-          ),
+        () => validateConfigTypes({ block: "my-block", args: "not-an-object" }),
         /"args" must be an object.*got string/
       );
     });
@@ -311,32 +305,23 @@ module("Unit | Lib | blocks/config-validation", function () {
     test("throws for args as array", function (assert) {
       assert.throws(
         () =>
-          validateConfigTypes(
-            { block: "my-block", args: ["not", "an", "object"] },
-            "test-outlet",
-            "blocks[0]"
-          ),
+          validateConfigTypes({
+            block: "my-block",
+            args: ["not", "an", "object"],
+          }),
         /"args" must be an object.*got array/
       );
     });
 
     test("allows args as null", function (assert) {
-      validateConfigTypes(
-        { block: "my-block", args: null },
-        "test-outlet",
-        "blocks[0]"
-      );
+      validateConfigTypes({ block: "my-block", args: null });
       assert.true(true, "null args are allowed");
     });
 
     test("throws for children as string", function (assert) {
       assert.throws(
         () =>
-          validateConfigTypes(
-            { block: "my-block", children: "not-an-array" },
-            "test-outlet",
-            "blocks[0]"
-          ),
+          validateConfigTypes({ block: "my-block", children: "not-an-array" }),
         /"children" must be an array.*got string/
       );
     });
@@ -344,38 +329,30 @@ module("Unit | Lib | blocks/config-validation", function () {
     test("throws for children as object", function (assert) {
       assert.throws(
         () =>
-          validateConfigTypes(
-            { block: "my-block", children: { block: "child" } },
-            "test-outlet",
-            "blocks[0]"
-          ),
+          validateConfigTypes({
+            block: "my-block",
+            children: { block: "child" },
+          }),
         /"children" must be an array.*got object/
       );
     });
 
     test("passes for classNames as string", function (assert) {
-      validateConfigTypes(
-        { block: "my-block", classNames: "custom-class" },
-        "test-outlet"
-      );
+      validateConfigTypes({ block: "my-block", classNames: "custom-class" });
       assert.true(true, "validation passed for string classNames");
     });
 
     test("passes for classNames as array of strings", function (assert) {
-      validateConfigTypes(
-        { block: "my-block", classNames: ["class-one", "class-two"] },
-        "test-outlet"
-      );
+      validateConfigTypes({
+        block: "my-block",
+        classNames: ["class-one", "class-two"],
+      });
       assert.true(true, "validation passed for string array classNames");
     });
 
     test("throws for classNames as number", function (assert) {
       assert.throws(
-        () =>
-          validateConfigTypes(
-            { block: "my-block", classNames: 123 },
-            "test-outlet"
-          ),
+        () => validateConfigTypes({ block: "my-block", classNames: 123 }),
         /"classNames" must be a string or array of strings.*got number/
       );
     });
@@ -383,18 +360,17 @@ module("Unit | Lib | blocks/config-validation", function () {
     test("throws for classNames as array with non-strings", function (assert) {
       assert.throws(
         () =>
-          validateConfigTypes(
-            { block: "my-block", classNames: ["valid", 123, "also-valid"] },
-            "test-outlet"
-          ),
+          validateConfigTypes({
+            block: "my-block",
+            classNames: ["valid", 123, "also-valid"],
+          }),
         /"classNames" must be a string or array of strings.*array with non-string items/
       );
     });
 
     test("throws for name as number", function (assert) {
       assert.throws(
-        () =>
-          validateConfigTypes({ block: "my-block", name: 123 }, "test-outlet"),
+        () => validateConfigTypes({ block: "my-block", name: 123 }),
         /"name" must be a string.*got number/
       );
     });
@@ -402,83 +378,58 @@ module("Unit | Lib | blocks/config-validation", function () {
     test("throws for name as object", function (assert) {
       assert.throws(
         () =>
-          validateConfigTypes(
-            { block: "my-block", name: { label: "test" } },
-            "test-outlet"
-          ),
+          validateConfigTypes({ block: "my-block", name: { label: "test" } }),
         /"name" must be a string.*got object/
       );
     });
 
     test("passes for conditions as object", function (assert) {
-      validateConfigTypes(
-        { block: "my-block", conditions: { type: "user" } },
-        "test-outlet"
-      );
+      validateConfigTypes({ block: "my-block", conditions: { type: "user" } });
       assert.true(true, "validation passed for object conditions");
     });
 
     test("passes for conditions as array", function (assert) {
-      validateConfigTypes(
-        { block: "my-block", conditions: [{ type: "user" }] },
-        "test-outlet"
-      );
+      validateConfigTypes({
+        block: "my-block",
+        conditions: [{ type: "user" }],
+      });
       assert.true(true, "validation passed for array conditions");
     });
 
     test("throws for conditions as string", function (assert) {
       assert.throws(
-        () =>
-          validateConfigTypes(
-            { block: "my-block", conditions: "user" },
-            "test-outlet"
-          ),
+        () => validateConfigTypes({ block: "my-block", conditions: "user" }),
         /"conditions" must be an object or array.*got string/
       );
     });
 
     test("throws for conditions as number", function (assert) {
       assert.throws(
-        () =>
-          validateConfigTypes(
-            { block: "my-block", conditions: 123 },
-            "test-outlet"
-          ),
+        () => validateConfigTypes({ block: "my-block", conditions: 123 }),
         /"conditions" must be an object or array.*got number/
       );
     });
 
     test("throws for conditions as boolean", function (assert) {
       assert.throws(
-        () =>
-          validateConfigTypes(
-            { block: "my-block", conditions: true },
-            "test-outlet"
-          ),
+        () => validateConfigTypes({ block: "my-block", conditions: true }),
         /"conditions" must be an object or array.*got boolean/
       );
     });
 
-    test("includes path in error message", function (assert) {
+    test("error includes the path to the invalid field", function (assert) {
       assert.throws(
-        () =>
-          validateConfigTypes(
-            { block: "my-block", args: "invalid" },
-            "test-outlet",
-            "blocks[2].children[1]"
-          ),
-        /at blocks\[2\]\.children\[1\]/
+        () => validateConfigTypes({ block: "my-block", args: "invalid" }),
+        (error) => error.path === "args",
+        "error path points to the invalid field"
       );
     });
 
-    test("includes outlet name in error message", function (assert) {
+    test("error path for classNames", function (assert) {
       assert.throws(
-        () =>
-          validateConfigTypes(
-            { block: "my-block", args: "invalid" },
-            "sidebar-blocks"
-          ),
-        /outlet "sidebar-blocks"/
+        () => validateConfigTypes({ block: "my-block", classNames: 123 }),
+        (error) => error.path === "classNames",
+        "error path points to classNames"
       );
     });
   });

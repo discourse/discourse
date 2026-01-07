@@ -35,7 +35,7 @@ import {
   isBlockLoggingEnabled,
   isOutletBoundaryEnabled,
 } from "discourse/lib/blocks/debug-hooks";
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import { captureCallSite, raiseBlockError } from "discourse/lib/blocks/error";
 import {
   detectPatternConflicts,
   validateOutletPatterns,
@@ -723,7 +723,14 @@ export function isContainerBlock(component) {
  * ]);
  * ```
  */
-export function renderBlocks(outletName, config, owner) {
+export function renderBlocks(outletName, config, owner, callSiteError = null) {
+  // Use provided call site error, or capture one here as fallback.
+  // When called via api.renderBlocks(), the call site is captured there
+  // to exclude the PluginApi wrapper from the stack trace.
+  if (!callSiteError) {
+    callSiteError = captureCallSite(renderBlocks);
+  }
+
   // Get blocks service for condition validation if owner is provided
   const blocksService = owner?.lookup("service:blocks");
 
@@ -766,7 +773,9 @@ export function renderBlocks(outletName, config, owner) {
     outletName,
     blocksService,
     isBlock,
-    isContainerBlock
+    isContainerBlock,
+    "blocks", // parentPath
+    callSiteError // Error object for source-mapped call site
   );
 
   // Store config with validation promise for potential future use

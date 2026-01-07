@@ -4,9 +4,34 @@ import { DEBUG } from "@glimmer/env";
  * Current error context, set by the caller before raising errors.
  * Contains block configuration info for better error messages.
  *
- * @type {{ outletName: string, blockName: string, path: string, config: Object, conditions: Object, errorPath: string } | null}
+ * @type {{ outletName: string, blockName: string, path: string, config: Object, conditions: Object, errorPath: string, callSiteError: Error | null } | null}
  */
 let errorContext = null;
+
+/**
+ * Captures the current call site as an Error object, excluding internal frames.
+ * Call this at the entry point (e.g., renderBlocks) to capture where
+ * the user's code called into the block system.
+ *
+ * Uses `Error.captureStackTrace` (V8-specific) to exclude the calling function
+ * and everything above it from the stack trace. This means the stack will
+ * point directly to the user's code, not to internal block system functions.
+ *
+ * @param {Function} callerFn - The function to exclude from the stack trace.
+ *   Pass the function that calls `captureCallSite` (e.g., `renderBlocks`).
+ * @returns {Error} An Error object with stack trace starting from callerFn's caller.
+ */
+export function captureCallSite(callerFn) {
+  const error = new Error();
+
+  // V8-specific: exclude callerFn and everything above from the stack trace.
+  // In non-V8 browsers, this is a no-op and the full stack is preserved.
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(error, callerFn);
+  }
+
+  return error;
+}
 
 /**
  * Sets the error context for the current validation operation.
@@ -20,6 +45,7 @@ let errorContext = null;
  * @param {Object} [context.config] - The full block config being validated.
  * @param {Object} [context.conditions] - The conditions config being validated.
  * @param {string} [context.errorPath] - Path within the config to the error (e.g., "conditions.any[0].type").
+ * @param {Error | null} [context.callSiteError] - Error object capturing where renderBlocks() was called.
  */
 export function setBlockErrorContext(context) {
   errorContext = context;
@@ -82,19 +108,23 @@ function parseConditionPath(path) {
 }
 
 /**
- * Renders a conditions config with the error path highlighted.
+ * Renders a config object with the error path highlighted.
  * Shows the structure with proper indentation and adds a comment marker
  * to indicate where the error occurred.
  *
- * @param {Object|Array} conditions - The conditions config object.
+ * @param {Object|Array} config - The config object to render.
  * @param {string} errorPath - The path to the error (e.g., "conditions.any[0][0].querParams").
+ * @param {Object} [options] - Formatting options.
+ * @param {string} [options.prefix] - Optional prefix to skip in the path (e.g., "conditions").
+ * @param {string} [options.label] - Label to show before the config (e.g., "conditions:").
  * @returns {string} Formatted string with the error location highlighted.
  */
-function formatConditionsWithErrorPath(conditions, errorPath) {
+function formatConfigWithErrorPath(config, errorPath, options = {}) {
+  const { prefix, label } = options;
   const pathSegments = parseConditionPath(errorPath);
 
-  // Skip "conditions" prefix if present (it's implicit)
-  const startIndex = pathSegments[0] === "conditions" ? 1 : 0;
+  // Skip prefix if present (it's implicit in the label)
+  const startIndex = prefix && pathSegments[0] === prefix ? 1 : 0;
   const errorSegments = pathSegments.slice(startIndex);
   const errorKey = errorSegments[errorSegments.length - 1];
 
@@ -130,6 +160,11 @@ function formatConditionsWithErrorPath(conditions, errorPath) {
 
     if (typeof obj !== "object") {
       return JSON.stringify(obj);
+    }
+
+    // Handle block component references specially
+    if (obj.blockName || (typeof obj === "function" && obj.name)) {
+      return `<${obj.blockName || obj.name || "Component"}>`;
     }
 
     if (Array.isArray(obj)) {
@@ -198,7 +233,8 @@ function formatConditionsWithErrorPath(conditions, errorPath) {
     return lines.join("\n");
   }
 
-  return `conditions: ${render(conditions, 0, [])}`;
+  const rendered = render(config, 0, []);
+  return label ? `${label} ${rendered}` : rendered;
 }
 
 /**
@@ -280,11 +316,23 @@ function formatErrorContext(context) {
   // If we have conditions and an errorPath, use the path-aware formatter
   if (context.conditions && context.errorPath) {
     try {
-      const conditionsStr = formatConditionsWithErrorPath(
+      const conditionsStr = formatConfigWithErrorPath(
         context.conditions,
-        context.errorPath
+        context.errorPath,
+        { prefix: "conditions", label: "conditions:" }
       );
       parts.push(`\nContext:\n${conditionsStr}`);
+    } catch {
+      parts.push("Context: [unable to format]");
+    }
+  } else if (context.config && context.errorPath) {
+    // Block config with error path - use path-aware formatter
+    try {
+      const configStr = formatConfigWithErrorPath(
+        context.config,
+        context.errorPath
+      );
+      parts.push(`\nContext:\n${configStr}`);
     } catch {
       parts.push("Context: [unable to format]");
     }
@@ -321,12 +369,24 @@ function formatErrorContext(context) {
  * Used by block configuration and condition validation to report
  * errors at registration time.
  *
+ * Supports the `cause` option to chain errors together. When a `cause` is
+ * provided (typically the call site Error from `captureCallSite()`), browsers
+ * will display both stack traces together, allowing developers to see both
+ * where the error occurred and where the block was registered.
+ *
  * @class BlockError
  * @extends Error
  */
 export class BlockError extends Error {
-  constructor(message) {
-    super(message);
+  /**
+   * Creates a new BlockError.
+   *
+   * @param {string} message - The error message.
+   * @param {Object} [options] - Error options.
+   * @param {Error} [options.cause] - The underlying cause of this error.
+   */
+  constructor(message, options) {
+    super(message, options);
     this.name = "BlockError";
   }
 }
@@ -367,6 +427,11 @@ export class BlockValidationError extends Error {
  * If an error context has been set via `setBlockErrorContext()`, the error
  * message will include the block configuration for debugging.
  *
+ * If a `callSiteError` is present in the error context, it is reused with the
+ * new message. This preserves the original stack trace pointing to where
+ * `renderBlocks()` was called, which is more useful than pointing to this
+ * function. Source maps are applied automatically by the browser.
+ *
  * @param {string} message - The error message.
  * @throws {BlockError} In DEBUG mode.
  */
@@ -375,7 +440,18 @@ export function raiseBlockError(message) {
   const contextInfo = formatErrorContext(errorContext);
   const fullMessage = `[Blocks] ${message}${contextInfo}`;
 
-  const error = new BlockError(fullMessage);
+  let error;
+
+  // If we have a call site error, reuse it with updated message.
+  // This preserves the stack trace pointing to where renderBlocks() was called,
+  // which is more useful than pointing to raiseBlockError().
+  if (errorContext?.callSiteError) {
+    error = errorContext.callSiteError;
+    error.name = "BlockError";
+    error.message = fullMessage;
+  } else {
+    error = new BlockError(fullMessage);
+  }
 
   if (DEBUG) {
     throw error;

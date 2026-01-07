@@ -55,6 +55,7 @@ import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/a
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
+import { captureCallSite } from "discourse/lib/blocks/error";
 import {
   _registerBlock,
   _registerBlockFactory,
@@ -3381,7 +3382,10 @@ class _PluginApi {
    * ```
    */
   renderBlocks(outletName, blocks) {
-    renderBlocks(outletName, blocks, this.container);
+    // Capture call site here, excluding this method, so the stack trace
+    // points directly to the user's code that called api.renderBlocks().
+    const callSiteError = captureCallSite(this.renderBlocks);
+    renderBlocks(outletName, blocks, this.container, callSiteError);
   }
 
   /**

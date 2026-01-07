@@ -43,6 +43,7 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
  * @param {Object} [options] - Additional options.
  * @param {boolean} [options.clearContext=true] - Whether to clear error context in finally.
  *   Set to false when nested inside another try/finally that handles cleanup.
+ * @param {Error | null} [options.callSiteErrorError] - Error object capturing where renderBlocks() was called.
  */
 function validateBlockConditions(
   blocksService,
@@ -50,7 +51,7 @@ function validateBlockConditions(
   outletName,
   blockName,
   path,
-  { clearContext = true } = {}
+  { clearContext = true, callSiteErrorError = null } = {}
 ) {
   if (!config.conditions || !blocksService) {
     return;
@@ -61,6 +62,7 @@ function validateBlockConditions(
     blockName,
     path,
     conditions: config.conditions,
+    callSiteErrorError,
   });
 
   try {
@@ -74,6 +76,7 @@ function validateBlockConditions(
         path,
         conditions: config.conditions,
         errorPath: error.path,
+        callSiteErrorError,
       });
     }
     raiseBlockError(
@@ -182,11 +185,9 @@ export const VALID_CONFIG_KEYS = Object.freeze([
  * "codition", or "conditons" instead of "conditions".
  *
  * @param {Object} config - The block configuration object.
- * @param {string} outletName - The outlet name for error messages.
- * @param {string} [path] - JSON-path style location for error context.
- * @throws {BlockError} If unknown keys are found.
+ * @throws {BlockValidationError} If unknown keys are found.
  */
-export function validateConfigKeys(config, outletName, path) {
+export function validateConfigKeys(config) {
   const unknownKeys = Object.keys(config).filter(
     (key) => !VALID_CONFIG_KEYS.includes(key)
   );
@@ -198,10 +199,11 @@ export function validateConfigKeys(config, outletName, path) {
     );
 
     const keyWord = unknownKeys.length > 1 ? "keys" : "key";
-    raiseBlockError(
-      `Unknown config ${keyWord} in block at ${path || "root"} for outlet "${outletName}": ` +
-        `${suggestions.join(", ")}. ` +
-        `Valid keys are: ${VALID_CONFIG_KEYS.join(", ")}.`
+    // Use first unknown key for the error path
+    throw new BlockValidationError(
+      `Unknown config ${keyWord}: ${suggestions.join(", ")}. ` +
+        `Valid keys are: ${VALID_CONFIG_KEYS.join(", ")}.`,
+      unknownKeys[0]
     );
   }
 }
@@ -211,29 +213,25 @@ export function validateConfigKeys(config, outletName, path) {
  * Ensures each field, if provided, has the correct type.
  *
  * @param {Object} config - The block configuration object.
- * @param {string} outletName - The outlet name for error messages.
- * @param {string} [path] - JSON-path style location for error context.
- * @throws {BlockError} If any field has an invalid type.
+ * @throws {BlockValidationError} If any field has an invalid type.
  */
-export function validateConfigTypes(config, outletName, path) {
-  const location = path ? ` at ${path}` : "";
-
+export function validateConfigTypes(config) {
   // Validate `args` is a plain object (not array)
   if (
     config.args != null &&
     (typeof config.args !== "object" || Array.isArray(config.args))
   ) {
-    raiseBlockError(
-      `Block${location} for outlet "${outletName}": "args" must be an object, ` +
-        `got ${Array.isArray(config.args) ? "array" : typeof config.args}.`
+    throw new BlockValidationError(
+      `"args" must be an object, got ${Array.isArray(config.args) ? "array" : typeof config.args}.`,
+      "args"
     );
   }
 
   // Validate `children` is an array
   if (config.children != null && !Array.isArray(config.children)) {
-    raiseBlockError(
-      `Block${location} for outlet "${outletName}": "children" must be an array, ` +
-        `got ${typeof config.children}.`
+    throw new BlockValidationError(
+      `"children" must be an array, got ${typeof config.children}.`,
+      "children"
     );
   }
 
@@ -245,27 +243,27 @@ export function validateConfigTypes(config, outletName, path) {
         config.classNames.every((item) => typeof item === "string"));
 
     if (!isValid) {
-      raiseBlockError(
-        `Block${location} for outlet "${outletName}": "classNames" must be a string ` +
-          `or array of strings, got ${Array.isArray(config.classNames) ? "array with non-string items" : typeof config.classNames}.`
+      throw new BlockValidationError(
+        `"classNames" must be a string or array of strings, got ${Array.isArray(config.classNames) ? "array with non-string items" : typeof config.classNames}.`,
+        "classNames"
       );
     }
   }
 
   // Validate `name` is a string
   if (config.name != null && typeof config.name !== "string") {
-    raiseBlockError(
-      `Block${location} for outlet "${outletName}": "name" must be a string, ` +
-        `got ${typeof config.name}.`
+    throw new BlockValidationError(
+      `"name" must be a string, got ${typeof config.name}.`,
+      "name"
     );
   }
 
   // Validate `conditions` is an object or array (not a primitive)
   // Arrays are objects in JS, so typeof === "object" covers both
   if (config.conditions != null && typeof config.conditions !== "object") {
-    raiseBlockError(
-      `Block${location} for outlet "${outletName}": "conditions" must be an object ` +
-        `or array, got ${typeof config.conditions}.`
+    throw new BlockValidationError(
+      `"conditions" must be an object or array, got ${typeof config.conditions}.`,
+      "conditions"
     );
   }
 }
@@ -366,10 +364,9 @@ export function isReservedArgName(argName) {
  * or prefixed with underscore).
  *
  * @param {Object} config - The block configuration
- * @param {string} outletName - The outlet name for error messages
- * @throws {Error} If reserved arg names are used
+ * @throws {BlockValidationError} If reserved arg names are used
  */
-export function validateReservedArgs(config, outletName) {
+export function validateReservedArgs(config) {
   if (!config.args) {
     return;
   }
@@ -377,9 +374,10 @@ export function validateReservedArgs(config, outletName) {
   const usedReservedArgs = Object.keys(config.args).filter(isReservedArgName);
 
   if (usedReservedArgs.length > 0) {
-    raiseBlockError(
-      `Block ${config.name} in layout ${outletName} uses reserved arg names: ${usedReservedArgs.join(", ")}. ` +
-        `Names starting with underscore are reserved for internal use.`
+    throw new BlockValidationError(
+      `Reserved arg names: ${usedReservedArgs.join(", ")}. ` +
+        `Names starting with underscore are reserved for internal use.`,
+      `args.${usedReservedArgs[0]}`
     );
   }
 }
@@ -398,6 +396,7 @@ export function validateReservedArgs(config, outletName) {
  * @param {Function} isBlockFn - Function to check if component is a block.
  * @param {Function} isContainerBlockFn - Function to check if component is a container block.
  * @param {string} [parentPath="blocks"] - JSON-path style parent location for error context.
+ * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
  * @returns {Promise<void>} Resolves when validation completes.
  * @throws {Error} If any block configuration is invalid.
  */
@@ -407,7 +406,8 @@ export async function validateConfig(
   blocksService,
   isBlockFn,
   isContainerBlockFn,
-  parentPath = "blocks"
+  parentPath = "blocks",
+  callSiteError = null
 ) {
   // Use Promise.all for parallel validation (faster in dev when resolving factories)
   const validationPromises = blocksConfig.map(async (blockConfig, index) => {
@@ -420,7 +420,8 @@ export async function validateConfig(
       blocksService,
       isBlockFn,
       isContainerBlockFn,
-      currentPath
+      currentPath,
+      callSiteError
     );
 
     // Recursively validate nested children
@@ -431,7 +432,8 @@ export async function validateConfig(
         blocksService,
         isBlockFn,
         isContainerBlockFn,
-        `${currentPath}.children`
+        `${currentPath}.children`,
+        callSiteError
       );
     }
   });
@@ -465,6 +467,7 @@ export async function validateConfig(
  * @param {Function} isBlockFn - Function to check if component is a block.
  * @param {Function} isContainerBlockFn - Function to check if component is a container block.
  * @param {string} [path] - JSON-path style location in config (e.g., "blocks[3].children[0]").
+ * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
  * @returns {Promise<void>} Resolves when validation completes.
  * @throws {Error} If validation fails.
  */
@@ -474,7 +477,8 @@ export async function validateBlock(
   blocksService,
   isBlockFn,
   isContainerBlockFn,
-  path
+  path,
+  callSiteError = null
 ) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
     const suggestion = formatWithSuggestion(outletName, BLOCK_OUTLETS);
@@ -485,11 +489,28 @@ export async function validateBlock(
     return;
   }
 
-  // Validate config keys first (catches typos like "condition" vs "conditions")
-  validateConfigKeys(config, outletName, path);
+  // Validate config structure (keys and types) with error tracing
+  try {
+    // Validate config keys first (catches typos like "condition" vs "conditions")
+    validateConfigKeys(config);
 
-  // Validate types of optional fields (args, children, classNames, name, conditions)
-  validateConfigTypes(config, outletName, path);
+    // Validate types of optional fields (args, children, classNames, name, conditions)
+    validateConfigTypes(config);
+  } catch (error) {
+    if (error instanceof BlockValidationError) {
+      setBlockErrorContext({
+        outletName,
+        path,
+        config,
+        errorPath: error.path,
+        callSiteError,
+      });
+      raiseBlockError(
+        `Invalid block config at ${path} for outlet "${outletName}": ${error.message}`
+      );
+    }
+    throw error;
+  }
 
   if (!config.block) {
     raiseBlockError(
@@ -522,7 +543,16 @@ export async function validateBlock(
     const blockName = resolvedBlock;
 
     // Still validate conditions since they don't depend on the block class
-    validateBlockConditions(blocksService, config, outletName, blockName, path);
+    validateBlockConditions(
+      blocksService,
+      config,
+      outletName,
+      blockName,
+      path,
+      {
+        callSiteError,
+      }
+    );
 
     // Skip class-specific validation (will happen at render time)
     return;
@@ -562,6 +592,7 @@ export async function validateBlock(
     blockName,
     path,
     config,
+    callSiteError,
   });
 
   try {
@@ -582,7 +613,24 @@ export async function validateBlock(
       return;
     }
 
-    validateReservedArgs(config, outletName);
+    try {
+      validateReservedArgs(config);
+    } catch (error) {
+      if (error instanceof BlockValidationError) {
+        setBlockErrorContext({
+          outletName,
+          blockName,
+          path,
+          config,
+          errorPath: error.path,
+          callSiteError,
+        });
+        raiseBlockError(
+          `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${error.message}`
+        );
+      }
+      throw error;
+    }
 
     // Validate block args against metadata schema
     validateBlockArgs(config, outletName);
@@ -597,6 +645,7 @@ export async function validateBlock(
       path,
       {
         clearContext: false,
+        callSiteError,
       }
     );
   } finally {
