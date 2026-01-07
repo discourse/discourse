@@ -56,6 +56,7 @@ RSpec.describe TopicList do
 
       expect(topic.category_user_data).to eq(category_user)
     end
+
     it "preloads first_post association" do
       first_post = Fabricate(:post, topic: topic, post_number: 1)
       topic.update!(first_post: first_post)
