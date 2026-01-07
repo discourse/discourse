@@ -1,6 +1,5 @@
 import { module, test } from "qunit";
 import {
-  getShortcutName,
   isShortcut,
   isValidUrlPattern,
   matchesAnyPattern,
@@ -17,13 +16,13 @@ module("Unit | Lib | Blocks | url-matcher", function (hooks) {
   });
 
   module("VALID_SHORTCUTS", function () {
-    test("contains expected shortcuts", function (assert) {
+    test("contains expected shortcuts with $ prefix", function (assert) {
       assert.deepEqual(VALID_SHORTCUTS, [
-        "CATEGORY_PAGES",
-        "DISCOVERY_PAGES",
-        "HOMEPAGE",
-        "TAG_PAGES",
-        "TOP_MENU",
+        "$CATEGORY_PAGES",
+        "$DISCOVERY_PAGES",
+        "$HOMEPAGE",
+        "$TAG_PAGES",
+        "$TOP_MENU",
       ]);
     });
 
@@ -54,18 +53,6 @@ module("Unit | Lib | Blocks | url-matcher", function (hooks) {
 
     test("returns false for empty string", function (assert) {
       assert.false(isShortcut(""));
-    });
-  });
-
-  module("getShortcutName", function () {
-    test("removes $ prefix from shortcut", function (assert) {
-      assert.strictEqual(getShortcutName("$CATEGORY_PAGES"), "CATEGORY_PAGES");
-      assert.strictEqual(getShortcutName("$HOMEPAGE"), "HOMEPAGE");
-      assert.strictEqual(getShortcutName("$TOP_MENU"), "TOP_MENU");
-    });
-
-    test("handles single character after $", function (assert) {
-      assert.strictEqual(getShortcutName("$X"), "X");
     });
   });
 

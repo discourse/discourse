@@ -2,20 +2,20 @@ import picomatch from "picomatch";
 import { withoutPrefix } from "discourse/lib/get-url";
 
 /**
- * Valid shortcut names (without the $ prefix).
+ * Valid shortcut patterns for semantic URL matching.
  *
  * Shortcuts provide semantic URL matching based on page context rather than
- * explicit URL patterns. They are identified by a leading `$` character in
- * the pattern string (e.g., `$CATEGORY_PAGES`).
+ * explicit URL patterns. They are identified by a leading `$` character
+ * (e.g., `$CATEGORY_PAGES`).
  *
  * @constant {ReadonlyArray<string>}
  */
 export const VALID_SHORTCUTS = Object.freeze([
-  "CATEGORY_PAGES",
-  "DISCOVERY_PAGES",
-  "HOMEPAGE",
-  "TAG_PAGES",
-  "TOP_MENU",
+  "$CATEGORY_PAGES",
+  "$DISCOVERY_PAGES",
+  "$HOMEPAGE",
+  "$TAG_PAGES",
+  "$TOP_MENU",
 ]);
 
 /**
@@ -33,19 +33,6 @@ export const VALID_SHORTCUTS = Object.freeze([
  */
 export function isShortcut(pattern) {
   return typeof pattern === "string" && pattern.startsWith("$");
-}
-
-/**
- * Extracts the shortcut name from a shortcut pattern by removing the `$` prefix.
- *
- * @param {string} pattern - The shortcut pattern (e.g., `$CATEGORY_PAGES`).
- * @returns {string} The shortcut name without the prefix (e.g., `CATEGORY_PAGES`).
- *
- * @example
- * getShortcutName("$CATEGORY_PAGES"); // "CATEGORY_PAGES"
- */
-export function getShortcutName(pattern) {
-  return pattern.slice(1);
 }
 
 /**

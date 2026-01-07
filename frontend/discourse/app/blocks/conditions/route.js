@@ -1,6 +1,5 @@
 import { service } from "@ember/service";
 import {
-  getShortcutName,
   isShortcut,
   isValidUrlPattern,
   matchesAnyPattern,
@@ -8,7 +7,7 @@ import {
   VALID_SHORTCUTS,
 } from "discourse/lib/blocks/url-matcher";
 import { matchParams } from "discourse/lib/blocks/value-matcher";
-import { findClosestMatch } from "discourse/lib/string-similarity";
+import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import { BlockCondition, raiseBlockValidationError } from "./base";
 
 /**
@@ -110,16 +109,11 @@ export default class BlockRouteCondition extends BlockCondition {
     const allPatterns = [...(urls || []), ...(excludeUrls || [])];
     for (const pattern of allPatterns) {
       if (isShortcut(pattern)) {
-        const name = getShortcutName(pattern);
-        if (!VALID_SHORTCUTS.includes(name)) {
-          const validList = VALID_SHORTCUTS.map((s) => "$" + s).join(", ");
-          const suggestion = findClosestMatch(name, VALID_SHORTCUTS);
-          const formatted = suggestion
-            ? `"$${name}" (did you mean "$${suggestion}"?)`
-            : `"$${name}"`;
+        if (!VALID_SHORTCUTS.includes(pattern)) {
+          const suggestion = formatWithSuggestion(pattern, VALID_SHORTCUTS);
           raiseBlockValidationError(
-            `BlockRouteCondition: Unknown shortcut ${formatted}. ` +
-              `Valid shortcuts: ${validList}`
+            `BlockRouteCondition: Unknown shortcut ${suggestion}. ` +
+              `Valid shortcuts: ${VALID_SHORTCUTS.join(", ")}`
           );
         }
       } else if (!isValidUrlPattern(pattern)) {
@@ -239,7 +233,7 @@ export default class BlockRouteCondition extends BlockCondition {
   #matchesAnyShortcut(patterns) {
     return patterns
       .filter((p) => isShortcut(p))
-      .some((p) => this.#matchesShortcut(getShortcutName(p)));
+      .some((p) => this.#matchesShortcut(p));
   }
 
   /**
@@ -249,28 +243,28 @@ export default class BlockRouteCondition extends BlockCondition {
    * URL patterns. This allows theme authors to target logical page types without
    * knowing the internal URL structure.
    *
-   * @param {string} shortcut - The shortcut name (without $ prefix).
+   * @param {string} shortcut - The shortcut pattern (e.g., "$CATEGORY_PAGES").
    * @returns {boolean} True if the current route matches the shortcut's criteria.
    */
   #matchesShortcut(shortcut) {
     switch (shortcut) {
-      case "CATEGORY_PAGES":
+      case "$CATEGORY_PAGES":
         // True when viewing any category page
         return !!this.discovery.category;
 
-      case "DISCOVERY_PAGES":
+      case "$DISCOVERY_PAGES":
         // True on discovery routes (latest, top, new, etc.) excluding custom homepage
         return this.discovery.onDiscoveryRoute && !this.discovery.custom;
 
-      case "HOMEPAGE":
+      case "$HOMEPAGE":
         // True only on the custom homepage route
         return this.discovery.custom;
 
-      case "TAG_PAGES":
+      case "$TAG_PAGES":
         // True when viewing any tag page
         return !!this.discovery.tag;
 
-      case "TOP_MENU":
+      case "$TOP_MENU":
         // True on discovery routes that appear in the top navigation menu
         // (excludes category pages, tag pages, and custom homepage)
         return (
