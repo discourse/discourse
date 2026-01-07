@@ -219,6 +219,47 @@ module("Unit | Service | blocks", function (hooks) {
         /Unknown block condition type/
       );
     });
+
+    test("throws for extra keys alongside 'any' combinator", function (assert) {
+      assert.throws(
+        () =>
+          this.blocks.validate({
+            any: [{ type: "user" }],
+            extraKey: "value",
+          }),
+        /extra keys.*extraKey.*Only "any" is allowed/
+      );
+
+      assert.throws(
+        () =>
+          this.blocks.validate({
+            any: [{ type: "user" }],
+            type: "user",
+            loggedIn: true,
+          }),
+        /extra keys.*type.*loggedIn.*Only "any" is allowed/
+      );
+    });
+
+    test("throws for extra keys alongside 'not' combinator", function (assert) {
+      assert.throws(
+        () =>
+          this.blocks.validate({
+            not: { type: "user" },
+            extraKey: "value",
+          }),
+        /extra keys.*extraKey.*Only "not" is allowed/
+      );
+
+      assert.throws(
+        () =>
+          this.blocks.validate({
+            not: { type: "user" },
+            type: "user",
+          }),
+        /extra keys.*type.*Only "not" is allowed/
+      );
+    });
   });
 
   module("evaluate", function () {

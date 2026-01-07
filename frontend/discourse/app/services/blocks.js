@@ -317,6 +317,16 @@ export default class Blocks extends Service {
 
     // OR combinator
     if (conditionSpec.any !== undefined) {
+      // Validate no extra keys alongside "any"
+      const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "any");
+      if (extraKeys.length > 0) {
+        raiseBlockError(
+          `Block condition with "any" combinator has extra keys: ${extraKeys.join(", ")}. ` +
+            `Only "any" is allowed.`
+        );
+        return;
+      }
+
       if (!Array.isArray(conditionSpec.any)) {
         raiseBlockError(
           'Block condition: "any" must be an array of conditions'
@@ -331,6 +341,16 @@ export default class Blocks extends Service {
 
     // NOT combinator
     if (conditionSpec.not !== undefined) {
+      // Validate no extra keys alongside "not"
+      const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "not");
+      if (extraKeys.length > 0) {
+        raiseBlockError(
+          `Block condition with "not" combinator has extra keys: ${extraKeys.join(", ")}. ` +
+            `Only "not" is allowed.`
+        );
+        return;
+      }
+
       if (
         typeof conditionSpec.not !== "object" ||
         Array.isArray(conditionSpec.not)
