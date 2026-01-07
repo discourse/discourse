@@ -63,6 +63,8 @@ export function patchBlockRendering() {
       conditions,
       conditionsPassed,
       optionalMissing,
+      failureReason,
+      children,
     } = blockData;
     const { outletName } = context;
     const owner = getOwnerWithFallback();
@@ -78,6 +80,9 @@ export function patchBlockRendering() {
             debugLocation: outletName,
             conditions,
             optionalMissing,
+            failureReason,
+            // Children are ghost components for container blocks with no visible children
+            children,
           },
           owner
         ),

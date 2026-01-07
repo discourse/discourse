@@ -173,7 +173,7 @@
     rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
     rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
   );
-  padding: 8px;
+  padding: 4px;
   min-height: 30px;
 }
 
@@ -183,6 +183,40 @@
   &:hover {
     background: var(--dev-tools-ghost-hover-color);
   }
+}
+
+.block-debug-ghost__children {
+  margin-top: 4px;
+}
+
+/* Nested ghost blocks: reduced padding */
+.block-debug-ghost__children .block-debug-ghost {
+  padding: 4px;
+}
+
+/* Odd depth levels: flip stripe direction */
+.block-debug-ghost__children > .block-debug-ghost {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
+  );
+}
+
+/* Even depth levels: original stripe direction */
+.block-debug-ghost__children
+  > .block-debug-ghost
+  > .block-debug-ghost__children
+  > .block-debug-ghost {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
+  );
 }
 
 /* Block Outlet boundaries */

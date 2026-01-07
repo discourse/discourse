@@ -145,6 +145,8 @@ export const RESERVED_ARG_NAMES = Object.freeze([
   "children",
   "conditions",
   "$block$",
+  "__visible",
+  "__failureReason",
 ]);
 
 /**

@@ -351,8 +351,11 @@ export function block(name, options = {}) {
        * with all necessary args pre-bound.
        *
        * Blocks with conditions are filtered based on condition evaluation.
+       * Container blocks have an implicit condition: they must have at least
+       * one visible child to be rendered.
+       *
        * When visual debug overlay is enabled, ghost blocks are included for
-       * blocks that fail their conditions.
+       * blocks that fail their conditions (including containers with no visible children).
        *
        * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>|undefined}
        */
@@ -367,6 +370,8 @@ export function block(name, options = {}) {
         const blocksService = owner.lookup("service:blocks");
         // Use callback to check logging state (set by dev-tools via closure)
         const isLoggingEnabled = isBlockLoggingEnabled();
+        // Check if visual debug overlay is enabled (for ghost blocks)
+        const showGhosts = !!getBlockDebugCallback();
         // Build base hierarchy path for this container
         // (e.g., "outlet-name" for root, "outlet-name/parent-block" for nested)
         const baseHierarchy = this.isRoot
@@ -378,13 +383,28 @@ export function block(name, options = {}) {
         const outletArgs = this.isRoot
           ? this.outletArgsWithDeprecations
           : this.args.outletArgs;
-        const result = [];
 
+        // Pre-process configs to compute visibility for all blocks.
+        // This evaluates conditions once and handles container visibility (containers
+        // must have at least one visible child to be rendered).
+        // In debug mode, all blocks are kept with __failureReason; otherwise invisible
+        // blocks are filtered out.
+        const processedConfigs = this.#preprocessConfigs(
+          rawChildren,
+          outletArgs,
+          blocksService,
+          showGhosts,
+          isLoggingEnabled,
+          baseHierarchy
+        );
+
+        const result = [];
         // Track container counts for indexing (e.g., group[0], group[1])
         const containerCounts = new Map();
 
-        for (const blockConfig of rawChildren) {
+        for (const blockConfig of processedConfigs) {
           // Resolve block reference (string name or class)
+          // Note: Already resolved during preprocessing, but need the reference here
           const resolvedBlock = this.#resolveBlockSync(blockConfig.block);
 
           // Handle optional missing block (block ref ended with `?` but not registered)
@@ -400,7 +420,7 @@ export function block(name, options = {}) {
             }
 
             // Show ghost if visual overlay is enabled
-            if (getBlockDebugCallback()) {
+            if (showGhosts) {
               const ghostData = getBlockDebugCallback()(
                 {
                   name: missingBlockName,
@@ -428,7 +448,6 @@ export function block(name, options = {}) {
           const blockName = resolvedBlock.blockName || "unknown";
           const isChildContainer =
             resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
-          let conditionsPassed = true;
 
           // For containers, build their full path (used for their children's hierarchy)
           // e.g., "homepage-blocks/group[0]"
@@ -439,24 +458,9 @@ export function block(name, options = {}) {
             containerPath = `${baseHierarchy}/${blockName}[${count}]`;
           }
 
-          // Evaluate conditions if present
-          if (blockConfig.conditions) {
-            if (isLoggingEnabled) {
-              getStartGroupCallback()?.(blockName, baseHierarchy);
-            }
-
-            conditionsPassed = blocksService.evaluate(blockConfig.conditions, {
-              debug: isLoggingEnabled,
-              outletArgs,
-            });
-
-            if (isLoggingEnabled) {
-              getEndGroupCallback()?.(conditionsPassed);
-            }
-          }
-
-          if (conditionsPassed) {
-            // Block passed conditions - render it
+          // Check pre-computed visibility from preprocessing step
+          if (blockConfig.__visible) {
+            // Block is visible - render it
             // Pass baseHierarchy for debug display (where block is rendered)
             // Pass containerPath for container's children hierarchy
             // Use resolved block class instead of original config.block
@@ -472,8 +476,27 @@ export function block(name, options = {}) {
                 }
               )
             );
-          } else if (getBlockDebugCallback()) {
-            // Block failed conditions - show ghost if debug overlay is enabled
+          } else if (showGhosts) {
+            // Block is not visible - show ghost if debug overlay is enabled.
+            // For container blocks with children, recursively create ghost children
+            // so they appear nested inside the container ghost.
+            let ghostChildren = null;
+            if (
+              isChildContainer &&
+              blockConfig.children?.length &&
+              blockConfig.__failureReason === "no-visible-children"
+            ) {
+              // Recursively process children to create ghost components.
+              // This reuses the same children getter logic but for ghost-only rendering.
+              ghostChildren = this.#createGhostChildren(
+                blockConfig.children,
+                owner,
+                containerPath,
+                outletArgs,
+                isLoggingEnabled
+              );
+            }
+
             const ghostData = getBlockDebugCallback()(
               {
                 name: blockName,
@@ -481,12 +504,228 @@ export function block(name, options = {}) {
                 args: blockConfig.args,
                 conditions: blockConfig.conditions,
                 conditionsPassed: false,
+                failureReason: blockConfig.__failureReason,
+                children: ghostChildren,
               },
               { outletName: baseHierarchy }
             );
             if (ghostData?.Component) {
               result.push(ghostData);
             }
+          }
+        }
+
+        return result;
+      }
+
+      /**
+       * Pre-processes block configurations to compute visibility for all blocks.
+       *
+       * This method evaluates conditions for all blocks in the tree and adds
+       * visibility metadata to each config:
+       * - `__visible`: Whether the block should be rendered
+       * - `__failureReason`: Why the block is hidden (debug mode only)
+       *
+       * Container blocks have an implicit condition: they must have at least
+       * one visible child. This is evaluated bottom-up (children first).
+       *
+       * @param {Array<Object>} configs - Array of block configurations to process
+       * @param {Object} outletArgs - Outlet arguments for condition evaluation
+       * @param {Object} blocksService - Blocks service for condition evaluation
+       * @param {boolean} showGhosts - If true, keep all blocks for ghost rendering; if false, filter invisible
+       * @param {boolean} isLoggingEnabled - If true, log condition evaluation
+       * @param {string} baseHierarchy - Base hierarchy path for logging
+       * @returns {Array<Object>} Processed configs with visibility metadata (filtered in non-debug mode)
+       */
+      #preprocessConfigs(
+        configs,
+        outletArgs,
+        blocksService,
+        showGhosts,
+        isLoggingEnabled,
+        baseHierarchy
+      ) {
+        const result = [];
+
+        for (const config of configs) {
+          const resolvedBlock = this.#resolveBlockSync(config.block);
+
+          // Skip unresolved blocks (optional missing or pending factory resolution)
+          if (
+            !resolvedBlock ||
+            resolvedBlock.optionalMissing === OPTIONAL_MISSING
+          ) {
+            // Keep the config for ghost handling in the main loop
+            if (
+              showGhosts ||
+              resolvedBlock?.optionalMissing === OPTIONAL_MISSING
+            ) {
+              result.push(config);
+            }
+            continue;
+          }
+
+          const blockName = resolvedBlock.blockName || "unknown";
+          const isChildContainer =
+            resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
+
+          // Evaluate this block's own conditions
+          let conditionsPassed = true;
+          if (config.conditions) {
+            if (isLoggingEnabled) {
+              getStartGroupCallback()?.(blockName, baseHierarchy);
+            }
+
+            conditionsPassed = blocksService.evaluate(config.conditions, {
+              debug: isLoggingEnabled,
+              outletArgs,
+            });
+
+            if (isLoggingEnabled) {
+              getEndGroupCallback()?.(conditionsPassed);
+            }
+          }
+
+          // For containers: recursively process children first (bottom-up evaluation)
+          // This determines which children are visible before we check if container has any
+          let hasVisibleChildren = true; // Non-containers always "have" visible children
+          if (isChildContainer && config.children?.length) {
+            // Recursively preprocess children - this computes their visibility
+            const processedChildren = this.#preprocessConfigs(
+              config.children,
+              outletArgs,
+              blocksService,
+              showGhosts,
+              isLoggingEnabled,
+              `${baseHierarchy}/${blockName}`
+            );
+
+            // Check if any child is visible
+            // In debug mode: check __visible property since all children are kept
+            // In prod mode: check if filtered result has any items
+            hasVisibleChildren = showGhosts
+              ? config.children.some((c) => c.__visible)
+              : processedChildren.length > 0;
+
+            // Update config's children with the processed (and possibly filtered) result
+            config.children = processedChildren;
+          }
+
+          // Final visibility: own conditions must pass AND (not container OR has visible children)
+          // This implements the implicit "container must have visible children" condition
+          const visible = conditionsPassed && hasVisibleChildren;
+          config.__visible = visible;
+
+          // In debug mode, record why the block is hidden for the ghost tooltip
+          if (showGhosts && !visible) {
+            config.__failureReason = !conditionsPassed
+              ? "condition-failed"
+              : "no-visible-children";
+          }
+
+          // In production mode, filter out invisible blocks
+          // In debug mode, keep all blocks for ghost rendering
+          if (visible || showGhosts) {
+            result.push(config);
+          }
+        }
+
+        return result;
+      }
+
+      /**
+       * Creates ghost components for children of a container ghost block.
+       *
+       * When a container block is rendered as a ghost (due to no visible children),
+       * this method recursively processes its children to create ghost components
+       * so they appear nested inside the container ghost in the debug overlay.
+       *
+       * @param {Array<Object>} childConfigs - Child block configurations (already preprocessed with __visible)
+       * @param {import("@ember/owner").default} owner - The application owner
+       * @param {string} containerPath - The container's hierarchy path (e.g., "outlet/group[0]")
+       * @param {Object} outletArgs - Outlet arguments for context
+       * @param {boolean} isLoggingEnabled - Whether logging is enabled
+       * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>} Array of ghost components
+       */
+      #createGhostChildren(
+        childConfigs,
+        owner,
+        containerPath,
+        outletArgs,
+        isLoggingEnabled
+      ) {
+        const result = [];
+        const containerCounts = new Map();
+
+        for (const childConfig of childConfigs) {
+          const resolvedBlock = this.#resolveBlockSync(childConfig.block);
+
+          // Handle optional missing block
+          if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
+            const ghostData = getBlockDebugCallback()(
+              {
+                name: resolvedBlock.name,
+                Component: null,
+                args: childConfig.args,
+                conditions: childConfig.conditions,
+                conditionsPassed: false,
+                optionalMissing: true,
+              },
+              { outletName: containerPath }
+            );
+            if (ghostData?.Component) {
+              result.push(ghostData);
+            }
+            continue;
+          }
+
+          // Skip unresolved blocks
+          if (!resolvedBlock) {
+            continue;
+          }
+
+          const blockName = resolvedBlock.blockName || "unknown";
+          const isChildContainer =
+            resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
+
+          // Build container path for nested containers
+          let nestedContainerPath;
+          if (isChildContainer) {
+            const count = containerCounts.get(blockName) ?? 0;
+            containerCounts.set(blockName, count + 1);
+            nestedContainerPath = `${containerPath}/${blockName}[${count}]`;
+          }
+
+          // Recursively create ghost children for nested containers
+          let nestedGhostChildren = null;
+          if (
+            isChildContainer &&
+            childConfig.children?.length &&
+            childConfig.__failureReason === "no-visible-children"
+          ) {
+            nestedGhostChildren = this.#createGhostChildren(
+              childConfig.children,
+              owner,
+              nestedContainerPath,
+              outletArgs,
+              isLoggingEnabled
+            );
+          }
+
+          const ghostData = getBlockDebugCallback()(
+            {
+              name: blockName,
+              Component: null,
+              args: childConfig.args,
+              conditions: childConfig.conditions,
+              conditionsPassed: false,
+              failureReason: childConfig.__failureReason,
+              children: nestedGhostChildren,
+            },
+            { outletName: containerPath }
+          );
+          if (ghostData?.Component) {
+            result.push(ghostData);
           }
         }
 

@@ -478,4 +478,222 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
 
     assert.dom(".deep-nested").exists();
   });
+
+  test("container with all children failing conditions does not render", async function (assert) {
+    @block("child-hidden-1")
+    class ChildHidden1 extends Component {
+      <template>
+        <div class="child-hidden-1">Hidden 1</div>
+      </template>
+    }
+
+    @block("child-hidden-2")
+    class ChildHidden2 extends Component {
+      <template>
+        <div class="child-hidden-2">Hidden 2</div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => {
+      _registerBlock(ChildHidden1);
+      _registerBlock(ChildHidden2);
+    });
+    renderBlocks(
+      "hero-blocks",
+      [
+        {
+          block: BlockGroup,
+          classNames: "admin-only-group",
+          children: [
+            {
+              block: ChildHidden1,
+              conditions: { type: "always-false" },
+            },
+            {
+              block: ChildHidden2,
+              conditions: { type: "always-false" },
+            },
+          ],
+        },
+      ],
+      testOwner
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    // Container should not render because no children are visible
+    assert.dom(".admin-only-group").doesNotExist();
+    assert.dom(".child-hidden-1").doesNotExist();
+    assert.dom(".child-hidden-2").doesNotExist();
+  });
+
+  test("container with at least one visible child renders", async function (assert) {
+    @block("child-visible-container")
+    class ChildVisibleContainer extends Component {
+      <template>
+        <div class="child-visible-container">Visible</div>
+      </template>
+    }
+
+    @block("child-hidden-container")
+    class ChildHiddenContainer extends Component {
+      <template>
+        <div class="child-hidden-container">Hidden</div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => {
+      _registerBlock(ChildVisibleContainer);
+      _registerBlock(ChildHiddenContainer);
+    });
+    renderBlocks(
+      "sidebar-blocks",
+      [
+        {
+          block: BlockGroup,
+          classNames: "mixed-group",
+          children: [
+            {
+              block: ChildVisibleContainer,
+              conditions: { type: "always-true" },
+            },
+            {
+              block: ChildHiddenContainer,
+              conditions: { type: "always-false" },
+            },
+          ],
+        },
+      ],
+      testOwner
+    );
+
+    await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+    // Container should render because at least one child is visible
+    assert.dom(".mixed-group").exists();
+    assert.dom(".child-visible-container").exists();
+    assert.dom(".child-hidden-container").doesNotExist();
+  });
+
+  test("nested containers: inner container without visible children hides outer container", async function (assert) {
+    @block("deeply-hidden-child")
+    class DeeplyHiddenChild extends Component {
+      <template>
+        <div class="deeply-hidden-child">Hidden</div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => {
+      _registerBlock(DeeplyHiddenChild);
+    });
+    renderBlocks(
+      "main-outlet-blocks",
+      [
+        {
+          block: BlockGroup,
+          classNames: "outer-group",
+          children: [
+            {
+              block: BlockGroup,
+              classNames: "inner-group",
+              children: [
+                {
+                  block: DeeplyHiddenChild,
+                  conditions: { type: "always-false" },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      testOwner
+    );
+
+    await render(
+      <template><BlockOutlet @name="main-outlet-blocks" /></template>
+    );
+
+    // Both containers should not render because the deepest child fails
+    assert.dom(".outer-group").doesNotExist();
+    assert.dom(".inner-group").doesNotExist();
+    assert.dom(".deeply-hidden-child").doesNotExist();
+  });
+
+  test("nested containers: outer renders when inner has visible children", async function (assert) {
+    @block("deeply-visible-child")
+    class DeeplyVisibleChild extends Component {
+      <template>
+        <div class="deeply-visible-child">Visible</div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => {
+      _registerBlock(DeeplyVisibleChild);
+    });
+    renderBlocks(
+      "header-blocks",
+      [
+        {
+          block: BlockGroup,
+          classNames: "outer-visible-group",
+          children: [
+            {
+              block: BlockGroup,
+              classNames: "inner-visible-group",
+              children: [
+                {
+                  block: DeeplyVisibleChild,
+                  conditions: { type: "always-true" },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      testOwner
+    );
+
+    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+
+    // Both containers should render because the deepest child is visible
+    assert.dom(".outer-visible-group").exists();
+    assert.dom(".inner-visible-group").exists();
+    assert.dom(".deeply-visible-child").exists();
+  });
+
+  test("container with own failing condition does not render even with visible children", async function (assert) {
+    @block("child-would-be-visible")
+    class ChildWouldBeVisible extends Component {
+      <template>
+        <div class="child-would-be-visible">Would be visible</div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => {
+      _registerBlock(ChildWouldBeVisible);
+    });
+    renderBlocks(
+      "homepage-blocks",
+      [
+        {
+          block: BlockGroup,
+          classNames: "failing-container",
+          conditions: { type: "always-false" },
+          children: [
+            {
+              block: ChildWouldBeVisible,
+              conditions: { type: "always-true" },
+            },
+          ],
+        },
+      ],
+      testOwner
+    );
+
+    await render(<template><BlockOutlet @name="homepage-blocks" /></template>);
+
+    // Container should not render because its own condition fails
+    assert.dom(".failing-container").doesNotExist();
+    assert.dom(".child-would-be-visible").doesNotExist();
+  });
 });
