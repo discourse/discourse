@@ -28,8 +28,7 @@ module DiscourseMath
     def self.ensure_symlink(link_path, target_path)
       return if File.symlink?(link_path) && File.readlink(link_path) == target_path
 
-      FileUtils.rm_f(link_path)
-      FileUtils.ln_s(target_path, link_path)
+      Discourse::Utils.atomic_ln_s(target_path, link_path)
     end
   end
 end
