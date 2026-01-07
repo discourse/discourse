@@ -1,14 +1,18 @@
+import { isTesting } from "discourse/lib/environment";
 import { updateRelativeAge } from "discourse/lib/formatter";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 
 // Updates the relative ages of dates on the screen.
 export default {
-  initialize() {
-    this._interval = setInterval(function () {
+  initialize(owner) {
+    if (isTesting()) {
+      return;
+    }
+
+    const a11y = owner.lookup("service:a11y");
+
+    this._interval = setInterval(() => {
       updateRelativeAge(document.querySelectorAll(".relative-date"));
-      getOwnerWithFallback(this).lookup(
-        "service:a11y"
-      ).autoUpdatingRelativeDateRef = new Date();
+      a11y.autoUpdatingRelativeDateRef = new Date();
     }, 60 * 1000);
   },
 
