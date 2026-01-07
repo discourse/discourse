@@ -1,7 +1,6 @@
 import { getOwner } from "@ember/owner";
 import {
   resetAjax,
-  trackNextAjaxAsBrowserPageview,
   trackNextAjaxAsPageview,
   trackNextAjaxAsTopicView,
 } from "discourse/lib/ajax";
@@ -91,11 +90,12 @@ export default {
       return;
     }
 
-    const sessionId = document.querySelector(
+    const trackingSessionId = document.querySelector(
       "meta[name=discourse-track-view-session-id]"
     )?.content;
+    let trackingUrl, trackingReferrer;
 
-    if (sessionId) {
+    if (trackingSessionId) {
       const owner = getOwner(this);
       const router = owner.lookup("service:router");
       let path = transition.intent?.url;
@@ -113,13 +113,10 @@ export default {
       if (!path) {
         return;
       }
-      trackNextAjaxAsBrowserPageview(
-        sessionId,
-        new URL(path, window.location.origin).href,
-        window.location.href
-      );
+      trackingUrl = new URL(path, window.location.origin).href;
+      trackingReferrer = window.location.href;
     }
-    trackNextAjaxAsPageview();
+    trackNextAjaxAsPageview(trackingSessionId, trackingUrl, trackingReferrer);
 
     if (
       transition.to.name === "topic.fromParamsNear" ||
