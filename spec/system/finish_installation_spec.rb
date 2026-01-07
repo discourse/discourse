@@ -86,6 +86,35 @@ RSpec.describe "Finish Installation", type: :system do
         ensure
           reset_omniauth_config(:discourse_id)
         end
+
+        context "when installed in a subfolder" do
+          before do
+            set_subfolder "/discuss"
+
+            stub_request(:post, "https://id.discourse.com/challenge").to_return(
+              status: 200,
+              body: {
+                domain: Discourse.current_hostname,
+                path: Discourse.base_path,
+                token: "test_token",
+              }.to_json,
+            )
+          end
+
+          it "logs in the first admin user and lands them on the wizard" do
+            OmniAuth.config.test_mode = true
+            OmniAuth.config.mock_auth[:discourse_id] = OmniAuth::AuthHash.new(
+              provider: "discourse_id",
+              uid: "12345",
+              info: OmniAuth::AuthHash::InfoHash.new(email: "dev1@example.com", nickname: "dev1"),
+            )
+            finish_installation_page.visit("/discuss/finish-installation")
+            finish_installation_page.click_login_with_discourse_id
+            expect(page).to have_current_path("/discuss/wizard")
+          ensure
+            reset_omniauth_config(:discourse_id)
+          end
+        end
       end
 
       context "when developer_emails is empty" do
