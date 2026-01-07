@@ -308,13 +308,14 @@ export default class DiscourseReactionsActions extends Component {
       const scales = [1.0, 1.75];
       return new Promise((resolve) => {
         if (!pickedReaction) {
+          const savedState = this._captureState(this.data);
           this.toggleReaction(params);
 
           CustomReaction.toggle(this.data, params.reaction, this.appEvents)
             .then(resolve)
             .catch((err) => {
               this.dialog.alert(this._extractErrors(err));
-              this._rollbackState(this.data);
+              this._rollbackState(this.data, savedState);
             });
         } else {
           scaleReactionAnimation(pickedReaction, scales[0], scales[1], () => {
@@ -325,6 +326,7 @@ export default class DiscourseReactionsActions extends Component {
                 this.data.current_user_reaction &&
                 this.data.current_user_reaction.id === params.reaction
               ) {
+                const savedState = this._captureState(this.data);
                 this.toggleReaction(params);
 
                 later(() => {
@@ -337,11 +339,12 @@ export default class DiscourseReactionsActions extends Component {
                       .then(resolve)
                       .catch((err) => {
                         this.dialog.alert(this._extractErrors(err));
-                        this._rollbackState(this.data);
+                        this._rollbackState(this.data, savedState);
                       });
                   });
                 }, 100);
               } else {
+                const savedState = this._captureState(this.data);
                 addReaction(postContainer, params.reaction, () => {
                   this.toggleReaction(params);
 
@@ -353,7 +356,7 @@ export default class DiscourseReactionsActions extends Component {
                     .then(resolve)
                     .catch((err) => {
                       this.dialog.alert(this._extractErrors(err));
-                      this._rollbackState(this.data);
+                      this._rollbackState(this.data, savedState);
                     });
                 });
               }
@@ -511,6 +514,7 @@ export default class DiscourseReactionsActions extends Component {
     }
 
     if (current_user_reaction && current_user_reaction.id === attrs.reaction) {
+      const savedState = this._captureState(this.data);
       this.toggleReaction(attrs);
       return CustomReaction.toggle(
         this.data,
@@ -518,7 +522,7 @@ export default class DiscourseReactionsActions extends Component {
         this.appEvents
       ).catch((e) => {
         this.dialog.alert(this._extractErrors(e));
-        this._rollbackState(this.data);
+        this._rollbackState(this.data, savedState);
       });
     }
 
@@ -540,6 +544,7 @@ export default class DiscourseReactionsActions extends Component {
     const mainReaction = this.containerElement?.querySelector(selector);
 
     const scales = [1.0, 1.5];
+    const savedState = this._captureState(this.data);
     return new Promise((resolve) => {
       scaleReactionAnimation(mainReaction, scales[0], scales[1], () => {
         scaleReactionAnimation(mainReaction, scales[1], scales[0], () => {
@@ -554,7 +559,7 @@ export default class DiscourseReactionsActions extends Component {
             .then(resolve)
             .catch((err) => {
               this.dialog.alert(this._extractErrors(err));
-              this._rollbackState(this.data);
+              this._rollbackState(this.data, savedState);
             });
         });
       });
@@ -700,17 +705,23 @@ export default class DiscourseReactionsActions extends Component {
     });
   }
 
-  _rollbackState(post) {
-    const current_user_reaction = post.current_user_reaction;
-    const current_user_used_main_reaction =
-      post.current_user_used_main_reaction;
-    const reactions = Object.assign([], post.reactions);
-    const reaction_users_count = post.reaction_users_count;
+  _captureState(post) {
+    return {
+      current_user_reaction: post.current_user_reaction
+        ? { ...post.current_user_reaction }
+        : null,
+      current_user_used_main_reaction: post.current_user_used_main_reaction,
+      reactions: post.reactions.map((r) => ({ ...r })),
+      reaction_users_count: post.reaction_users_count,
+    };
+  }
 
-    post.current_user_reaction = current_user_reaction;
-    post.current_user_used_main_reaction = current_user_used_main_reaction;
-    post.reactions = reactions;
-    post.reaction_users_count = reaction_users_count;
+  _rollbackState(post, savedState) {
+    post.current_user_reaction = savedState.current_user_reaction;
+    post.current_user_used_main_reaction =
+      savedState.current_user_used_main_reaction;
+    post.reactions = savedState.reactions;
+    post.reaction_users_count = savedState.reaction_users_count;
   }
 
   _extractErrors(e) {
