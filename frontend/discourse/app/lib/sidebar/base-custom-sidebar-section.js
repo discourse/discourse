@@ -18,28 +18,6 @@ export default class BaseCustomSidebarSection {
 
   /**
    * @returns {Array} Actions for header options button
-   *
-   * @example
-   * // Return multiple actions for a dropdown menu
-   * get actions() {
-   *   return [
-   *     {
-   *       id: "edit",
-   *       title: "Edit Section",
-   *       action: () => this.editSection()
-   *     },
-   *     {
-   *       id: "add",
-   *       title: "Add Item",
-   *       action: () => this.addItem()
-   *     },
-   *     {
-   *       id: "refresh",
-   *       title: "Refresh",
-   *       action: () => this.refresh()
-   *     }
-   *   ];
-   * }
    */
   get actions() {}
 
