@@ -77,10 +77,6 @@
       .sidebar-section-link-suffix.icon.unread svg {
         color: var(--d-sidebar-active-suffix-color);
       }
-
-      .sidebar-section-link-hover:hover .sidebar-section-hover-button {
-        background-color: var(--d-sidebar-active-background);
-      }
     }
 
     &--muted {
@@ -279,7 +275,7 @@
       color: var(--d-sidebar-highlight-color);
       border: none;
       background: transparent;
-      padding: 0 0.5em;
+      padding: 0 0 0 var(--space-2);
       height: 100%;
 
       &:focus,
@@ -297,6 +293,5 @@
 
   &.--hovering .sidebar-section-hover-button {
     display: block;
-    background: var(--d-sidebar-highlight-background);
   }
 }
