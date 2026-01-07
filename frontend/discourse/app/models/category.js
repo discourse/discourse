@@ -422,12 +422,15 @@ export default class Category extends RestModel {
       include_uncategorized: opts.includeUncategorized,
     };
 
-    const result = (CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[
-      JSON.stringify(data)
-    ] ||= await ajax("/categories/hierarchical_search", {
-      method: "GET",
-      data,
-    }));
+    const cacheKey = JSON.stringify(data);
+    CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[cacheKey] ||= await ajax(
+      "/categories/hierarchical_search",
+      {
+        method: "GET",
+        data,
+      }
+    );
+    const result = CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[cacheKey];
 
     return result["categories"].map((category) =>
       Site.current().updateCategory(category)

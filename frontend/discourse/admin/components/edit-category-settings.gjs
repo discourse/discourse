@@ -4,7 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import ColorInput from "discourse/admin/components/color-input";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
+import ColorPicker from "discourse/components/color-picker";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -359,6 +361,31 @@ export default class EditCategorySettings extends buildCategoryPanel(
     </@form.Section>
 
     <@form.Section @title={{i18n "category.settings_sections.appearance"}}>
+      <@form.Field
+        @name="text_color"
+        @title={{i18n "category.foreground_color"}}
+        @format="large"
+        as |field|
+      >
+        <field.Custom>
+          <div class="category-color-editor">
+            <div class="colorpicker-wrapper">
+              <ColorInput
+                @hexValue={{readonly field.value}}
+                @ariaLabelledby="text-color-label"
+                @onChangeColor={{field.set}}
+                @skipNormalize={{true}}
+              />
+              <ColorPicker
+                @value={{readonly field.value}}
+                @ariaLabel={{i18n "category.predefined_colors"}}
+                @onSelectColor={{field.set}}
+              />
+            </div>
+          </div>
+        </field.Custom>
+      </@form.Field>
+
       <@form.Field
         @name="default_view"
         @title={{i18n "category.default_view"}}
