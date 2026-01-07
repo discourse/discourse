@@ -59,7 +59,7 @@ class FinishInstallationController < ApplicationController
     # This gets cleared when an admin successfully actives their account
     SiteSetting.global_notice = I18n.t("finish_installation.discourse_id.global_notice")
 
-    redirect_to("/auth/discourse_id")
+    redirect_to("/auth/discourse_id?origin=/wizard")
   end
 
   protected
