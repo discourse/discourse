@@ -53,6 +53,7 @@ import {
 import { applyArgDefaults } from "discourse/lib/blocks/utils";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
+import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
  * Maps outlet names to their registered block configurations.
@@ -72,6 +73,18 @@ export function resetBlockConfigsForTesting() {
     blockConfigs.clear();
   }
 }
+
+/**
+ * Valid config keys for the @block decorator options.
+ * @constant {ReadonlyArray<string>}
+ */
+const VALID_BLOCK_OPTIONS = Object.freeze([
+  "container",
+  "description",
+  "args",
+  "allowedOutlets",
+  "deniedOutlets",
+]);
 
 /*
  * Security Symbols
@@ -201,15 +214,31 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * class PluginDashboardWidget extends Component { ... }
  */
 export function block(name, options = {}) {
+  // === Decoration-time validation ===
+  // All validation happens here (not at render time) for fail-fast behavior.
+
+  // Validate no unknown options keys (catches typos like "containers" or "allowedOutlet")
+  if (options && typeof options === "object") {
+    const unknownKeys = Object.keys(options).filter(
+      (key) => !VALID_BLOCK_OPTIONS.includes(key)
+    );
+    if (unknownKeys.length > 0) {
+      const suggestions = unknownKeys
+        .map((key) => formatWithSuggestion(key, VALID_BLOCK_OPTIONS))
+        .join(", ");
+      raiseBlockError(
+        `@block("${name}"): Unknown option(s): ${suggestions}. ` +
+          `Valid options are: ${VALID_BLOCK_OPTIONS.join(", ")}.`
+      );
+    }
+  }
+
   // Extract all options with defaults
   const isContainer = options?.container ?? false;
   const description = options?.description ?? "";
   const argsSchema = options?.args ?? null;
   const allowedOutlets = options?.allowedOutlets ?? null;
   const deniedOutlets = options?.deniedOutlets ?? null;
-
-  // === Decoration-time validation ===
-  // All validation happens here (not at render time) for fail-fast behavior.
 
   // Validate block name format (supports namespaced names)
   if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {

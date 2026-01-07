@@ -210,6 +210,57 @@ module("Unit | Lib | block-outlet", function (hooks) {
       }, /not valid glob syntax/);
     });
 
+    test("throws for unknown option key with suggestion", function (assert) {
+      assert.throws(() => {
+        @block("unknown-option-block", {
+          containers: true,
+        })
+        class UnknownOptionBlock extends Component {}
+
+        return UnknownOptionBlock;
+      }, /Unknown option.*"containers".*did you mean.*"container"/);
+    });
+
+    test("throws for multiple unknown option keys", function (assert) {
+      assert.throws(() => {
+        @block("multiple-unknown-block", {
+          desc: "Test",
+          containers: true,
+        })
+        class MultipleUnknownBlock extends Component {}
+
+        return MultipleUnknownBlock;
+      }, /Unknown option.*"desc".*"containers".*Valid options are/);
+    });
+
+    test("throws for typo in deniedOutlets", function (assert) {
+      assert.throws(() => {
+        @block("typo-denied-block", {
+          deniedOutlet: ["sidebar-*"],
+        })
+        class TypoDeniedBlock extends Component {}
+
+        return TypoDeniedBlock;
+      }, /Unknown option.*"deniedOutlet".*did you mean.*"deniedOutlets"/);
+    });
+
+    test("accepts only valid option keys", function (assert) {
+      @block("valid-options-block", {
+        container: true,
+        description: "Test block",
+        args: { title: { type: "string" } },
+        allowedOutlets: ["sidebar-*"],
+        deniedOutlets: ["modal-*"],
+      })
+      class ValidOptionsBlock extends Component {}
+
+      assert.true(ValidOptionsBlock.blockMetadata.container);
+      assert.strictEqual(
+        ValidOptionsBlock.blockMetadata.description,
+        "Test block"
+      );
+    });
+
     test("throws for invalid arg schema - missing type", function (assert) {
       assert.throws(() => {
         @block("invalid-schema-no-type", {
