@@ -2757,6 +2757,7 @@ en:
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
     enable_upcoming_changes: "Enable upcoming changes"
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
+    experimental_rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -4125,8 +4126,6 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
