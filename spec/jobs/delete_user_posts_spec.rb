@@ -21,18 +21,16 @@ RSpec.describe Jobs::DeleteUserPosts do
     expect(system_message.topic.allowed_groups).to include(Group[:admins])
   end
 
-  it "raises Discourse::InvalidAccess if admin is not an admin" do
+  it "does nothing if not authorized to delete posts" do
     non_admin = Fabricate(:user)
     expect {
       described_class.new.execute(user_id: user.id, acting_user_id: non_admin.id)
-    }.to raise_error(Discourse::InvalidAccess)
-  end
+    }.not_to change { user.posts.count }
 
-  it "raises Discourse::InvalidAccess if admin cannot delete all posts for the user" do
     allow_any_instance_of(Guardian).to receive(:can_delete_all_posts?).and_return(false)
     expect {
       described_class.new.execute(user_id: user.id, acting_user_id: admin.id)
-    }.to raise_error(Discourse::InvalidAccess)
+    }.not_to change { user.posts.count }
   end
 
   it "does nothing if user has no posts" do

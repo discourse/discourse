@@ -6,10 +6,13 @@ module Jobs
 
     def execute(args)
       user = User.find(args[:user_id])
+      return if user.nil?
+
       acting_user = User.find(args[:acting_user_id]) if args[:acting_user_id]
+      return if acting_user.nil?
 
       guardian = Guardian.new(acting_user)
-      raise Discourse::InvalidAccess unless guardian.can_delete_all_posts?(user)
+      return unless guardian.can_delete_all_posts?(user)
 
       deleted_count = 0
 
