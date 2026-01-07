@@ -3,4 +3,4 @@ topic_card_detail:
   default: simple
   choices:
     - simple
-    - detailed
+    - "detailed (experimental)"

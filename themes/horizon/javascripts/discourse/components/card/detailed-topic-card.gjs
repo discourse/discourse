@@ -31,10 +31,6 @@ export default class DetailedTopicCard extends Component {
     );
   }
 
-  get canHaveAnswer() {
-    return this.args.topic.can_have_answer;
-  }
-
   get hasVotes() {
     return this.args.topic.can_vote && this.args.topic.vote_count > 0;
   }
@@ -127,7 +123,6 @@ export default class DetailedTopicCard extends Component {
   }
 
   get topicTimestamp() {
-    // return this.args.topic.created_at;
     return shortDateNoYear(new Date(this.args.topic.created_at));
   }
 
@@ -151,12 +146,14 @@ export default class DetailedTopicCard extends Component {
           </div>
           <div class="hc-topic-card__op-info">
             <span class="hc-topic-card__op-timestamp">
-              posted
+              {{i18n (themePrefix "posted")}}
               {{this.topicTimestamp}}
             </span>
             <span class="hc-topic-card__op-name">
-              by @{{this.topicCreator.username}}</span>
-
+              {{i18n
+                (themePrefix "by_username")
+                username=this.topicCreator.username
+              }}</span>
           </div>
 
         </div>
@@ -232,17 +229,15 @@ export default class DetailedTopicCard extends Component {
             <span
               class="hc-topic-card__last-reply-name"
             >{{this.lastPoster.username}}</span>
-            <span>replied</span>
+            <span>{{i18n (themePrefix "replied")}}</span>
             <span class="hc-topic-card__time">
               {{formatDate @topic.bumpedAt leaveAgo="true"}}
             </span>
           </div>
           {{#if this.hasAssigned}}
-            {{! <div class="hc-topic-card__assignments"> }}
             {{#if this.assignedUser}}
               <div class="hc-topic-card__assigned">
                 {{icon "user-plus"}}
-                {{!-- {{avatar this.assignedUser imageSize="tiny"}} --}}
                 <span
                   class="hc-topic-card__assigned-name"
                 >{{this.assignedUser.username}}</span>
@@ -251,7 +246,6 @@ export default class DetailedTopicCard extends Component {
             {{#each this.indirectAssignees as |assignment|}}
               <div class="hc-topic-card__assigned">
                 {{icon "user-plus"}}
-                {{!-- {{avatar assignment.user imageSize="tiny"}} --}}
                 <span
                   class="hc-topic-card__assigned-name"
                 >{{assignment.user.username}}</span>
@@ -260,7 +254,6 @@ export default class DetailedTopicCard extends Component {
                 >#{{assignment.postNumber}}</span>
               </div>
             {{/each}}
-            {{! </div> }}
           {{/if}}
         </div>
       {{/if}}

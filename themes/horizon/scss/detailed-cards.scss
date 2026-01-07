@@ -1,8 +1,6 @@
 @use "lib/viewport";
 
 :root {
-  --topic-title-font-weight--visited: 500;
-  --title-color--read: var(--primary-800);
   --topic-card-shadow: rgb(var(--tertiary-rgb), 0.1);
 }
 
@@ -61,7 +59,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
   box-sizing: border-box;
 
   @include viewport.until(sm) {
-    gap: var(--space-3);
     padding: var(--space-4) 0;
 
     > *:not(.hc-topic-card__footer) {
@@ -130,11 +127,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
       border-color: var(--success);
     }
 
-    &.--unsolved {
-      color: var(--primary-medium);
-      font-weight: normal;
-    }
-
     &.--pinned {
       font-weight: 700;
     }
@@ -142,14 +134,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
     &.--hot {
       color: var(--danger);
     }
-  }
-
-  &__header-right {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    flex-shrink: 1;
-    min-width: 0;
   }
 
   &__category .badge-category__wrapper {
@@ -224,12 +208,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
     flex-wrap: wrap;
   }
 
-  &__assignments {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-  }
-
   &__assigned {
     display: inline-flex;
     align-items: center;
@@ -274,7 +252,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
     gap: var(--space-3);
 
     @include viewport.from(sm) {
-      padding-top: var(--space-3);
       border-top: 1px solid var(--primary-low);
       padding-top: var(--space-3);
     }
@@ -327,14 +304,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
     }
   }
 
-  // {
-  //   border: 1px solid var(--tertiary);
-  //   color: var(--tertiary);
-
-  //   @include viewport.until(sm) {
-  //     line-height: 1;
-  //     gap: var(--space-1);
-  //   }
   &__replies,
   &__likes,
   &__votes {
@@ -344,17 +313,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
     color: var(--primary-medium);
   }
 
-  // &__votes-count {
-
-  //     transform: translate(55%, -60%);
-  //     font-size: var(--font-down-3);
-  //     border-radius: 1em;
-  //     padding: 0.25em;
-  //     background: var(--tertiary-very-low);
-  //     height: 1em;
-  //     min-width: 1em;
-  //     text-align: center;
-  // }
   &__last-reply {
     display: inline-flex;
     align-items: center;
@@ -377,14 +335,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
         height: 18px;
       }
     }
-  }
-
-  &__dot-separator {
-    width: 3px;
-    height: 3px;
-    background-color: var(--primary-low-mid);
-    border-radius: 50%;
-    flex-shrink: 0;
   }
 
   &__time {

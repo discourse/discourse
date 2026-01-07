@@ -51,7 +51,7 @@ export default {
   name: "topic-list-customizations",
 
   initialize(container) {
-    const isDetailed = settings.topic_card_detail === "detailed";
+    const isDetailed = settings.topic_card_detail === "detailed (experimental)";
 
     withPluginApi((api) => {
       if (isDetailed) {
