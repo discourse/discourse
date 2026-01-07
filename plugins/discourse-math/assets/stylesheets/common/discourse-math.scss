@@ -11,8 +11,7 @@
     // after rendering to allow these CSS rules to take effect
     > {
       div,
-      span,
-      mjx-container {
+      span {
         display: block;
         max-width: 100%;
         margin-bottom: 1em;
@@ -28,9 +27,11 @@
       }
 
       mjx-container {
+        display: block;
+        max-width: 100%;
+        margin-bottom: 1em;
         overflow-x: auto;
         overflow-y: hidden;
-        max-width: 100%;
         padding: 0.25em 0.5em;
         box-sizing: border-box;
       }

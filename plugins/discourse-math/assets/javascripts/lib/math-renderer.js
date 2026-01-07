@@ -96,14 +96,9 @@ function buildMathJaxConfig(opts) {
   } else {
     MathJaxInitConfig.options.enableMenu = false;
   }
-  if (
-    opts.enable_accessibility === true ||
-    opts.enable_accessibility === "true"
-  ) {
-    MathJaxInitConfig.options.menuOptions.settings = { enrich: true };
-  } else {
-    MathJaxInitConfig.options.menuOptions.settings = { enrich: false };
-  }
+  MathJaxInitConfig.options.menuOptions.settings = {
+    enrich: Boolean(opts.enable_accessibility),
+  };
   if (opts.zoom_on_click) {
     MathJaxInitConfig.options.menuOptions.settings.zoom = "Click";
     MathJaxInitConfig.options.menuOptions.settings.zscale = "175%";
@@ -128,11 +123,7 @@ function initMathJax(opts) {
 async function ensureMathJax(opts) {
   initMathJax(opts);
 
-  return await loadMathJax({
-    // enableAsciimath: opts.enable_asciimath,
-    // enableAccessibility: opts.enable_accessibility,
-    output: opts.mathjax_output,
-  });
+  return await loadMathJax({ output: opts.mathjax_output });
 }
 
 function createHiddenWrapper(tag, className, content) {

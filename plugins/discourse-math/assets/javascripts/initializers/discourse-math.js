@@ -1,4 +1,4 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { apiInitializer } from "discourse/lib/api";
 import MathInsertModal from "discourse/plugins/discourse-math/discourse/components/modal/math-insert";
 import {
   buildDiscourseMathOptions,
@@ -58,16 +58,13 @@ function initializeMath(api, options) {
   });
 }
 
-export default {
-  name: "apply-math",
-  initialize(container) {
-    const siteSettings = container.lookup("service:site-settings");
-    const options = buildDiscourseMathOptions(siteSettings);
+export default apiInitializer((api) => {
+  const siteSettings = api.container.lookup("service:site-settings");
+  const options = buildDiscourseMathOptions(siteSettings);
 
-    if (!options.enabled) {
-      return;
-    }
+  if (!options.enabled) {
+    return;
+  }
 
-    withPluginApi((api) => initializeMath(api, options));
-  },
-};
+  initializeMath(api, options);
+});

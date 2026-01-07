@@ -1,9 +1,126 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { buildDiscourseMathOptions } from "discourse/plugins/discourse-math/lib/math-renderer";
+import {
+  buildDiscourseMathOptions,
+  renderKatex,
+} from "discourse/plugins/discourse-math/lib/math-renderer";
 
 module("Unit | Lib | math-renderer", function (hooks) {
   setupTest(hooks);
+
+  module("renderKatex", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.container = document.createElement("div");
+      document.body.appendChild(this.container);
+
+      this.originalKatex = window.katex;
+      window.katex = {
+        render: (text, elem) => {
+          if (text === "invalid\\syntax\\that\\fails") {
+            throw new Error("KaTeX parse error");
+          }
+          elem.innerHTML = `<span class="katex">${text}</span>`;
+        },
+      };
+    });
+
+    nestedHooks.afterEach(function () {
+      this.container.remove();
+      window.katex = this.originalKatex;
+    });
+
+    test("renders valid math and applies correct classes", async function (assert) {
+      this.container.innerHTML = '<span class="math">x^2</span>';
+
+      await renderKatex(this.container);
+
+      const mathElem = this.container.querySelector(".math");
+      assert.true(
+        mathElem.classList.contains("math-container"),
+        "adds math-container class"
+      );
+      assert.true(
+        mathElem.classList.contains("inline-math"),
+        "adds inline-math class for span"
+      );
+      assert.true(
+        mathElem.classList.contains("katex-math"),
+        "adds katex-math class"
+      );
+      assert.true(
+        !!mathElem.querySelector(".katex"),
+        "renders KaTeX content inside element"
+      );
+    });
+
+    test("renders block math with correct display class", async function (assert) {
+      this.container.innerHTML = '<div class="math">\\frac{a}{b}</div>';
+
+      await renderKatex(this.container);
+
+      const mathElem = this.container.querySelector(".math");
+      assert.true(
+        mathElem.classList.contains("block-math"),
+        "adds block-math class for div"
+      );
+    });
+
+    test("recovers gracefully when KaTeX throws error", async function (assert) {
+      this.container.innerHTML =
+        '<span class="math">invalid\\syntax\\that\\fails</span>';
+
+      await renderKatex(this.container);
+
+      const mathElem = this.container.querySelector(".math");
+      assert.strictEqual(
+        mathElem.textContent,
+        "invalid\\syntax\\that\\fails",
+        "restores original text content"
+      );
+      assert.false(
+        mathElem.classList.contains("katex-math"),
+        "removes katex-math class on error"
+      );
+      assert.false(
+        mathElem.classList.contains("math-container"),
+        "removes math-container class on error"
+      );
+    });
+
+    test("skips elements that are not .math", async function (assert) {
+      this.container.innerHTML = '<span class="not-math">x^2</span>';
+
+      await renderKatex(this.container);
+
+      const elem = this.container.querySelector(".not-math");
+      assert.false(
+        elem.classList.contains("katex-math"),
+        "does not process non-math elements"
+      );
+    });
+
+    test("does nothing when container is null", async function (assert) {
+      await renderKatex(null);
+      assert.true(true, "does not throw when container is null");
+    });
+
+    test("force option re-renders already processed elements", async function (assert) {
+      this.container.innerHTML = '<span class="math">x^2</span>';
+
+      await renderKatex(this.container);
+      const firstRender = this.container.querySelector(".katex").innerHTML;
+
+      this.container.querySelector(".math").textContent = "y^3";
+      await renderKatex(this.container, { force: true });
+
+      const secondRender = this.container.querySelector(".katex")?.innerHTML;
+      assert.notStrictEqual(
+        firstRender,
+        secondRender,
+        "re-renders with new content when force is true"
+      );
+    });
+  });
 
   module("buildDiscourseMathOptions", function () {
     test("builds options from site settings", function (assert) {

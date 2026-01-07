@@ -11,6 +11,16 @@ const MATH_TYPES = {
   ASCIIMATH: "asciimath",
 };
 
+const TOKEN_TYPES = {
+  INLINE: "math_inline",
+  BLOCK: "math_block",
+};
+
+const CSS_CLASSES = {
+  MATH: "math",
+  ASCIIMATH: "asciimath",
+};
+
 const additionalPunctuation = [
   // Chinese and Japanese punctuation
   0x3001, // 、
@@ -58,13 +68,13 @@ function isSafeBoundary(character_code, delimiter_code, md) {
 }
 
 function addInlineMathToken(state, content, mathType) {
-  const token = state.push("math_inline", "", 0);
+  const token = state.push(TOKEN_TYPES.INLINE, "", 0);
   token.content = content;
   token.meta = { mathType };
 }
 
 function addBlockMathToken(state, content) {
-  const token = state.push("math_block", "", 0);
+  const token = state.push(TOKEN_TYPES.BLOCK, "", 0);
   token.content = content;
   token.block = true;
 }
@@ -378,7 +388,11 @@ export function setup(helper) {
     return;
   }
 
-  helper.allowList(["span.math", "span.asciimath", "div.math"]);
+  helper.allowList([
+    `span.${CSS_CLASSES.MATH}`,
+    `span.${CSS_CLASSES.ASCIIMATH}`,
+    `div.${CSS_CLASSES.MATH}`,
+  ]);
 
   helper.registerOptions((opts, siteSettings) => {
     opts.features.math = siteSettings.discourse_math_enabled;
@@ -389,28 +403,31 @@ export function setup(helper) {
 
   helper.registerPlugin((md) => {
     if (md.options.discourse.features.math) {
-      md.renderer.rules.math_inline = (tokens, idx) => {
+      md.renderer.rules[TOKEN_TYPES.INLINE] = (tokens, idx) => {
         const token = tokens[idx];
         const mathType = token.meta?.mathType;
-        const className = mathType === "asciimath" ? "asciimath" : "math";
+        const className =
+          mathType === MATH_TYPES.ASCIIMATH
+            ? CSS_CLASSES.ASCIIMATH
+            : CSS_CLASSES.MATH;
         const escaped = md.utils.escapeHtml(token.content);
         return `<span class='${className}'>${escaped}</span>`;
       };
 
-      md.renderer.rules.math_block = (tokens, idx) => {
+      md.renderer.rules[TOKEN_TYPES.BLOCK] = (tokens, idx) => {
         const token = tokens[idx];
         const escaped = md.utils.escapeHtml(token.content);
-        return `<div class='math'>\n${escaped}\n</div>\n`;
+        return `<div class='${CSS_CLASSES.MATH}'>\n${escaped}\n</div>\n`;
       };
 
       if (md.options.discourse.features.asciimath) {
-        md.inline.ruler.after("escape", "asciimath", asciiMath);
+        md.inline.ruler.after("escape", CSS_CLASSES.ASCIIMATH, asciiMath);
       }
       if (md.options.discourse.features.enable_latex_delimiters) {
         md.inline.ruler.before("text", "math-paren", inlineMathParen);
       }
-      md.inline.ruler.after("escape", "math", inlineMath);
-      md.block.ruler.after("code", "math", blockMath, {
+      md.inline.ruler.after("escape", CSS_CLASSES.MATH, inlineMath);
+      md.block.ruler.after("code", CSS_CLASSES.MATH, blockMath, {
         alt: ["paragraph", "reference", "blockquote", "list"],
       });
     }
