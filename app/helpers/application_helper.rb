@@ -396,6 +396,7 @@ module ApplicationHelper
   end
 
   def discourse_track_view_session_tag
+    return if !SiteSetting.trigger_browser_pageview_events
     <<~HTML.html_safe
       <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
     HTML
