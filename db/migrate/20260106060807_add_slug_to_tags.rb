@@ -4,7 +4,7 @@ class AddSlugToTags < ActiveRecord::Migration[7.2]
   BATCH_SIZE = 1000
 
   def up
-    add_column :tags, :slug, :string, null: true unless column_exists?(:tags, :slug)
+    add_column :tags, :slug, :string, default: "", null: true unless column_exists?(:tags, :slug)
 
     backfill_slugs
     resolve_conflicts
@@ -29,7 +29,7 @@ class AddSlugToTags < ActiveRecord::Migration[7.2]
       result = DB.query(<<~SQL, last_id: last_id, batch_size: BATCH_SIZE)
         WITH batch AS (
           SELECT id FROM tags
-          WHERE slug IS NULL AND id > :last_id
+          WHERE (slug IS NULL OR slug = '') AND id > :last_id
           ORDER BY id
           LIMIT :batch_size
         ),

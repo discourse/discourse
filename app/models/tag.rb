@@ -269,6 +269,7 @@ class Tag < ActiveRecord::Base
   private
 
   def ensure_slug
+    self.slug ||= ""
     return if name.blank?
 
     if slug.blank? || will_save_change_to_name?
@@ -306,7 +307,7 @@ end
 #  target_tag_id      :integer
 #  description        :string(1000)
 #  public_topic_count :integer          default(0), not null
-#  slug               :string           not null
+#  slug               :string           default(""), not null
 #  staff_topic_count  :integer          default(0), not null
 #
 # Indexes
