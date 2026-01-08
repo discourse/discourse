@@ -2,21 +2,18 @@ import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 import * as conditions from "discourse/blocks/conditions";
 import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
+import { validateConditions } from "discourse/lib/blocks/condition-validation";
 import {
   DEBUG_CALLBACK,
   getDebugCallback,
   getLoggerInterface,
 } from "discourse/lib/blocks/debug-hooks";
-import {
-  BlockValidationError,
-  raiseBlockError,
-} from "discourse/lib/blocks/error";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 import {
   blockRegistry,
   isBlockFactory,
   resolveBlock,
 } from "discourse/lib/blocks/registration";
-import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
  * Unified service for block registry and condition evaluation.
@@ -243,37 +240,6 @@ export default class Blocks extends Service {
   }
 
   /**
-   * Validates that all provided args are recognized by the condition.
-   * Uses Jaro-Winkler similarity to suggest corrections for typos.
-   *
-   * @param {import("discourse/blocks/conditions").BlockCondition} instance - The condition instance.
-   * @param {string} type - The condition type name.
-   * @param {Object} args - The args provided to the condition.
-   * @param {string} path - The path to this condition in the config tree.
-   * @throws {Error} If an unrecognized arg key is found.
-   */
-  #validateConditionArgKeys(instance, type, args, path) {
-    const validKeys = instance.constructor.validArgKeys;
-
-    // source is always valid if sourceType allows it
-    const allValidKeys =
-      instance.constructor.sourceType !== "none"
-        ? [...validKeys, "source"]
-        : validKeys;
-
-    for (const key of Object.keys(args)) {
-      if (!allValidKeys.includes(key)) {
-        const suggestion = formatWithSuggestion(key, allValidKeys);
-        throw new BlockValidationError(
-          `Condition type "${type}": unknown arg ${suggestion}. ` +
-            `Valid args: ${allValidKeys.join(", ")}`,
-          `${path}.${key}`
-        );
-      }
-    }
-  }
-
-  /**
    * Register a custom condition type.
    * Used by plugins via `api.registerBlockConditionType()`.
    *
@@ -304,102 +270,16 @@ export default class Blocks extends Service {
    * Validates condition specs at block registration time.
    * Recursively validates nested conditions in `any` and `not` combinators.
    *
-   * Throws regular Error objects (not BlockError) so callers can decide how to
-   * format the final error with appropriate context. The error object includes
-   * a `conditionPath` property indicating where in the config the error occurred.
+   * Throws BlockValidationError objects so callers can decide how to format
+   * the final error with appropriate context. The error object includes a
+   * `conditionPath` property indicating where in the config the error occurred.
    *
    * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to validate.
    * @param {string} [path="conditions"] - The path to this condition in the config tree.
-   * @throws {Error} If validation fails.
+   * @throws {BlockValidationError} If validation fails.
    */
   validate(conditionSpec, path = "conditions") {
-    if (!conditionSpec) {
-      return;
-    }
-
-    // Array of conditions (AND logic)
-    if (Array.isArray(conditionSpec)) {
-      for (let i = 0; i < conditionSpec.length; i++) {
-        this.validate(conditionSpec[i], `${path}[${i}]`);
-      }
-      return;
-    }
-
-    // OR combinator
-    if (conditionSpec.any !== undefined) {
-      // Validate no extra keys alongside "any"
-      const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "any");
-      if (extraKeys.length > 0) {
-        throw new BlockValidationError(
-          `"any" combinator has extra keys: ${extraKeys.join(", ")}. ` +
-            `Only "any" is allowed.`,
-          path
-        );
-      }
-
-      if (!Array.isArray(conditionSpec.any)) {
-        throw new BlockValidationError(
-          '"any" must be an array of conditions',
-          `${path}.any`
-        );
-      }
-      for (let i = 0; i < conditionSpec.any.length; i++) {
-        this.validate(conditionSpec.any[i], `${path}.any[${i}]`);
-      }
-      return;
-    }
-
-    // NOT combinator
-    if (conditionSpec.not !== undefined) {
-      // Validate no extra keys alongside "not"
-      const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "not");
-      if (extraKeys.length > 0) {
-        throw new BlockValidationError(
-          `"not" combinator has extra keys: ${extraKeys.join(", ")}. ` +
-            `Only "not" is allowed.`,
-          path
-        );
-      }
-
-      if (
-        typeof conditionSpec.not !== "object" ||
-        Array.isArray(conditionSpec.not)
-      ) {
-        throw new BlockValidationError(
-          '"not" must be a single condition object',
-          `${path}.not`
-        );
-      }
-      this.validate(conditionSpec.not, `${path}.not`);
-      return;
-    }
-
-    // Single condition with type
-    const { type, ...args } = conditionSpec;
-
-    if (!type) {
-      throw new BlockValidationError(
-        `Condition is missing "type" property: ${JSON.stringify(conditionSpec)}`,
-        path
-      );
-    }
-
-    const conditionInstance = this.#conditionTypes.get(type);
-
-    if (!conditionInstance) {
-      const availableTypes = [...this.#conditionTypes.keys()];
-      const suggestion = formatWithSuggestion(type, availableTypes);
-      throw new BlockValidationError(
-        `Unknown condition type: ${suggestion}. Available types: ${availableTypes.join(", ")}`,
-        `${path}.type`
-      );
-    }
-
-    // Validate arg keys (catches typos like "querParams" instead of "queryParams")
-    this.#validateConditionArgKeys(conditionInstance, type, args, path);
-
-    // Run the condition's own validation
-    conditionInstance.validate(args);
+    validateConditions(conditionSpec, this.#conditionTypes, path);
   }
 
   /**
