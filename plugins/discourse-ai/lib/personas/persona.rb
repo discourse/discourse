@@ -120,7 +120,7 @@ module DiscourseAi
             Tools::RandomPicker,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
-            Tools::GithubPullRequestDiff,
+            Tools::GithubDiff,
             Tools::GithubSearchFiles,
             Tools::WebBrowser,
             Tools::JavascriptEvaluator,
