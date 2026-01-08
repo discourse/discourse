@@ -2,6 +2,7 @@ performance.mark("discourse-init");
 const initEvent = new CustomEvent("discourse-init");
 document.dispatchEvent(initEvent);
 
+import "./set-env";
 import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
