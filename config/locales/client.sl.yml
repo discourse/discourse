@@ -1050,6 +1050,9 @@ sl:
       new_private_message: "Novo ZS"
       private_message: "Zasebno sporočilo"
       private_messages: "Zasebna sporočila"
+      upcoming_changes:
+        for_user:
+          enabled: "Vključeno?"
       user_notifications:
         filters:
           filter_by: "Filtriraj po"
@@ -3768,6 +3771,8 @@ sl:
           form:
             location:
               label: "Lokacija"
+            text_section:
+              locale_label: "Jezik"
             header_anonymous:
               placeholder: "Dobrodošli na %{site_name}!"
         navigation:
@@ -4580,7 +4585,6 @@ sl:
           button: "Izbriši vse prispevke"
           progress:
             title: "Napredek pri brisanju objav"
-            description: "Brišem objave…"
           confirmation:
             cancel: "Prekliči"
         merge:

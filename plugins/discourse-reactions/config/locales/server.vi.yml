@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 vi:
+  badges:
+    first_reaction:
+      name: Cảm Xúc Đầu Tiên
   reports:
     reactions:
       labels:

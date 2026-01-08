@@ -3145,6 +3145,7 @@ tr_TR:
         Siz buraya katıldıkça sizi tanıyacağız ve geçici yeni kullanıcı sınırlamaları kaldırılacak. Zamanla, topluluğumuzu birlikte yönetmemize yardımcı olacak özel beceriler içeren [güven seviyeleri](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) kazanacaksınız.
     welcome_user:
       title: "Hoş Geldiniz Kullanıcı"
+      preview: "%{site_name}'a hoş geldiniz!"
       subject_template: "%{site_name}'a hoş geldiniz!"
       text_body_template: |
         %{site_name}'a katıldığınız için teşekkürler ve hoş geldiniz!
@@ -3172,6 +3173,7 @@ tr_TR:
         Büyük güç, büyük sorumluluk getirir. Moderatörlük konusunda yeniyseniz lütfen [Moderasyon Kılavuzunu](https://meta.discourse.org/t/discourse-moderation-guide/63116) inceleyin.
     welcome_invite:
       title: "Hoş Geldiniz Davet"
+      preview: "%{site_name}'a hoş geldiniz!"
       subject_template: "%{site_name}'a hoş geldiniz!"
       text_body_template: |
         %{site_name} davetinizi kabul ettiğiniz için teşekkürler; hoş geldiniz!
@@ -3589,6 +3591,7 @@ tr_TR:
         Bu, "newuser_spam_host_threshold" ve "allowed_spam_host_domains" site ayarları aracılığıyla değiştirilebilir. Muaf tutulmaları gerekiyorsa %{domains} adresini izin verilenler listesine eklemeyi düşünün.
     unsilenced:
       title: "Susturulmamış"
+      preview: "Hesap artık beklemede değil."
       subject_template: "Hesap artık beklemede değil"
       text_body_template: |
         Merhaba,
@@ -3637,8 +3640,6 @@ tr_TR:
     Bu e-posta aboneliğinden çıkmak için [buraya tıklayın](%{unsubscribe_url}).
   subject_re: "Ynt: "
   subject_pm: "[Kişisel Mesaj] "
-  email_from: "%{user_name} ile %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Önceki Yanıtlar"
     reached_limit:
@@ -3972,6 +3973,7 @@ tr_TR:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Bağlantı yoluyla giriş yapın"
+      preview: "Bağlantı yoluyla giriş yapın."
       subject_template: "[%{email_prefix}] Bağlantı yoluyla giriş yapın"
       text_body_template: |
         İşte [%{site_name}](%{base_url}) üzerinde giriş yapmak için bağlantınız.

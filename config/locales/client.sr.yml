@@ -1134,6 +1134,9 @@ sr:
       new_private_message: "Nova privatna poruka"
       private_message: "Privatna poruka"
       private_messages: "Poruke"
+      upcoming_changes:
+        for_user:
+          enabled: "Omgućeno"
       user_notifications:
         filters:
           all: "Sve"

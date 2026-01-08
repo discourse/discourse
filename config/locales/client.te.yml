@@ -1069,6 +1069,9 @@ te:
       new_private_message: "కొత్త సందేశం"
       private_message: "సందేశం"
       private_messages: "సందేశాలు"
+      upcoming_changes:
+        for_user:
+          enabled: "ప్రారంభించబడిందా?"
       user_notifications:
         filters:
           filter_by: "ద్వారా ఫిల్టర్"
@@ -1315,7 +1318,6 @@ te:
         tags: "ట్యాగులు"
         interface: "ప్రదర్శన"
         apps: "యాప్‌లు"
-        navigation_menu: "నావిగేషన్ మెను"
       change_password:
         success: "(ఈమెయిల్ పంపిన)"
         in_progress: "(ఈమెయిల్ పంపుతోన్నాం)"
@@ -4418,6 +4420,8 @@ te:
           form:
             location:
               label: "ప్రాంతం"
+            text_section:
+              locale_label: "భాష"
             header_anonymous:
               placeholder: "%{site_name} కు సుస్వాగతం!"
         navigation:
@@ -5871,7 +5875,6 @@ te:
           button: "అన్ని పోస్ట్‌లను తొలగించండి"
           progress:
             title: "పోస్ట్‌లను తొలగించడంలో పురోగతి"
-            description: "పోస్ట్‌లను తొలగిస్తోంది…"
           confirmation:
             title: "@%{username} ద్వారా అన్ని పోస్ట్‌లను తొలగించండి"
             description: |

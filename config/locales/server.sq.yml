@@ -912,6 +912,7 @@ sq:
     queued_by_staff:
       title: "Postimi ka nevojë për aprovim"
     welcome_user:
+      preview: "Mirë se vini tek %{site_name}!"
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome!
@@ -922,6 +923,7 @@ sq:
 
         Enjoy your stay!
     welcome_invite:
+      preview: "Mirë se vini tek %{site_name}!"
       subject_template: "Mirë se vini tek %{site_name}!"
     backup_succeeded:
       subject_template: "Backup completed successfully"

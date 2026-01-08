@@ -1026,9 +1026,15 @@ ko:
       profile: "프로필"
       mute: "뮤트"
       edit: "환경설정 편집"
+      download_archive:
+        title: "데이터 내보내기"
+        description: "계정 활동 및 환경 설정 기록을 다운로드합니다."
       new_private_message: "새 메시지"
       private_message: "메시지"
       private_messages: "메시지"
+      upcoming_changes:
+        for_user:
+          enabled: "활성화?"
       user_notifications:
         filters:
           filter_by: "필터 기준"
@@ -1326,7 +1332,16 @@ ko:
           edit_description: "물리적 보안 키 이름"
           name_required_error: "보안 키의 이름을 제공해야 합니다."
       passkeys:
+        rename_passkey: "패스키 이름 변경"
+        add_passkey: "패스키 추가"
+        confirm_delete_passkey: "정말로 이 패스키를 삭제하시겠습니까?"
+        passkey_successfully_created: "새로운 패스키가 만들어졌습니다!"
         save: "저장"
+        title: "패스키"
+        added_date: "%{date}에 추가됨"
+        last_used_date: "마지막 사용 %{date}"
+        never_used: "사용 안 함"
+        already_added_error: "이미 이 패스키를 등록했습니다. 다시 등록할 필요가 없습니다."
       change_about:
         title: "내 정보 변경"
         error: "이 값을 변경하는 중에 오류가 발생했습니다."
@@ -1786,6 +1801,7 @@ ko:
       title: "회원가입"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
       associate: "이미 계정이 있나요? <a href='%{associate_link}'>로그인</a>하여 %{provider} 계정을 연결하세요."
+      already_have_account: "이미 계정이 있으신가요?"
       progress_bar:
         signup: "회원가입"
         approve: "승인"
@@ -1843,6 +1859,7 @@ ko:
       blank_username: "이메일 또는 아이디를 입력하세요."
       blank_username_or_password: "이메일 또는 아이디, 비밀번호를 입력하세요."
       reset_password: "비밀번호 리셋"
+      previous_sign_up: "이미 계정이 있으신가요?"
       or: "또는"
       awaiting_activation: "계정이 아직 활성 대기 중입니다. 활성화 메일을 다시 보내려면 비밀번호 찾기 링크를 사용하세요."
       awaiting_approval: "계정이 아직 운영진의 승인을 받지 않았습니다. 승인되면 이메일이 전송됩니다."
@@ -2010,7 +2027,7 @@ ko:
       create_shared_draft: "공유 초안 생성"
       edit_shared_draft: "공유 초안 편집"
       title: "또는 %{modifier}Enter를 누르세요"
-      discard: "포기"
+      discard: "취소"
       users_placeholder: "사용자 또는 그룹 추가"
       title_placeholder: "토론 주제를 한 문장으로 적으세요"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요"
@@ -2271,7 +2288,7 @@ ko:
           created: 내가 생성함
           watching: 내가 구독 중
           tracking: 내가 추적 중
-          private: 내 메시지 내
+          private: 내 메시지에서
           bookmarks: 내가 북마크함
           first: 첫 게시물
           pinned: 고정됨
@@ -2419,7 +2436,7 @@ ko:
     topic:
       filter_to:
         other: "이 글의 댓글 %{count}개"
-      create: "새 글"
+      create: "글쓰기"
       open_draft: "초안 열기"
       private_message: "메시지 시작"
       archive_message:
@@ -3198,7 +3215,7 @@ ko:
     original_post: "원본 게시물"
     views: "조회수"
     views_lowercase:
-      other: "조회수"
+      other: "조회"
     replies: "댓글"
     views_long:
       other: "이 주제는 %{number}번 조회되었습니다"
@@ -3565,6 +3582,7 @@ ko:
       unsupported_file_picked: "지원되지 않는 파일을 선택했습니다. 지원되는 파일 형식 – %{types}."
     user_activity:
       no_activity_title: "아직 활동 없음"
+      no_activity_body: "저희 커뮤니티에 오신 것을 환영합니다! 아직 대화에 참여하지 않으셨군요. 첫 단계로, <a href='%{topUrl}'>인기 글</a>이나 <a href='%{categoriesUrl}'>카테고리</a>별 글을 읽어보시는 건 어떠세요? 마음에 드는 %{heartIcon} 글이나 더 자세히 알고 싶은 글을 선택해서 읽어보세요. 참여하시면 활동 내역이 여기에 표시됩니다.\n\n현재 게시물이 없습니다."
       no_replies_title: "어떤 주제에도 댓글을 달지 않았습니다."
       no_drafts_title: "초안을 시작하지 않았습니다."
       no_drafts_body: "아직 게시할 준비가 되지 않았나요? 주제, 댓글 또는 개인 메시지 작성을 시작할 때마다 새 초안을 자동으로 저장하고 여기에 나열합니다. 초안을 버리려면 취소 버튼을 누르고 나중에 이어서 작성하려면 초안을 저장하세요."
@@ -3658,6 +3676,8 @@ ko:
             invite:
               content: "초대"
               title: "새로운 멤버 초대"
+            my_messages:
+              content: " 메시지"
       no_results:
         title: "결과 없음"
       search: "검색"
@@ -3779,6 +3799,8 @@ ko:
           form:
             location:
               label: "위치"
+            text_section:
+              locale_label: "언어"
             header_logged_in:
               placeholder: "어서오세요, %{preferred_display_name}님!"
             header_anonymous:
@@ -4232,9 +4254,11 @@ ko:
           install: "설치"
           themes:
             title: "테마"
+            themes_intro: "새 테마를 설치하여 시작하거나 다음 리소스를 사용하여 처음부터 나만의 테마를 만드세요."
             install: "설치"
           components:
             title: "구성 요소"
+            components_intro: "새 컴포넌트를 설치하여 시작하거나 다음 리소스를 사용하여 처음부터 직접 만들 수 있습니다."
             install: "설치"
             name: "그룹명"
             enabled: "활성화?"
@@ -4883,6 +4907,7 @@ ko:
             confirmation_modal:
               close: "닫기"
               confirm: "삭제하기"
+              bulk_delete_starting: "일괄 삭제 시작 중…"
         nav:
           new: "신규"
           active: "활성"

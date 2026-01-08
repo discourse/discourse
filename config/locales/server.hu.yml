@@ -3192,6 +3192,7 @@ hu:
         Ahogy itt részt vesz, megismerjük Önt, és az ideiglenes új felhasználói korlátozások megszűnnek. Idővel [bizalmi szinteket] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) szerezhet, amelyek különleges képességeket tartalmaznak, amelyek segítenek nekünk közösen irányítani közösségünket.
     welcome_user:
       title: "Üdvözöljük felhasználó"
+      preview: "Üdvözöljük a(z) %{site_name} oldalon."
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
       text_body_template: |
         Köszönjük, hogy csatlakoztál a %{site_name}hoz, és üdvözlünk!
@@ -3219,6 +3220,7 @@ hu:
         A nagyobb hatalom nagyobb felelősséggel is jár. Ha még nem voltál soha moderátor, olvasd el a következő [moderációs útmutatót](https://meta.discourse.org/t/discourse-moderation-guide/63116), és bármikor, bármilyen kérdéssel keresd a tapasztaltabb moderátorokat bizalommal!
     welcome_invite:
       title: "Üdvözöljük Meghívó"
+      preview: "Üdvözöljük a(z) %{site_name} oldalon."
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
       text_body_template: |
         Köszönjük, hogy elfogadtad a %{site_name}ra szóló meghívót - üdvözlünk!
@@ -3570,6 +3572,7 @@ hu:
         Ez a beállítás módosítható az `newuser_spam_host_threshold` és az `allowed_spam_host_domains` beállításokon keresztül. Fontol meg %{domains}ek hozzáadását at az engedélylistához.
     unsilenced:
       title: "Némítás feloldva"
+      preview: "A fiók már nincs felfüggesztve."
       subject_template: "A fiók már nincs felfüggesztve"
       text_body_template: |
         Szia!
@@ -3618,8 +3621,6 @@ hu:
     Ha le szeretne iratkozni ezekről az e-mailekről, [kattintson ide] (%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PÜ]"
-  email_from: "%{user_name} a %{site_name} oldalon keresztül"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Régebbi válaszok"
     reached_limit:
@@ -3970,6 +3971,7 @@ hu:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Bejelentkezés a linken keresztül"
+      preview: "Bejelentkezés a linken keresztül."
       subject_template: "[%{email_prefix}] Bejelentkezés a linken keresztül"
       text_body_template: |
         Itt van a link a bejelentkezéshez a [%{site_name}](%{base_url}) címen.

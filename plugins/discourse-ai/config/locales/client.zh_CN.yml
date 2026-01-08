@@ -229,6 +229,7 @@ zh_CN:
         short_title: "功能"
         description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的角色和 LLM，并按群组控制访问权限。"
         back: "返回"
+        settings_save_error: "部分设置无法保存。"
         disabled: "（已禁用）"
         persona:
           other: "角色："
@@ -246,6 +247,11 @@ zh_CN:
           bot: "聊天机器人"
           name: "机器人"
           description: "可以回答问题以及帮助用户回复个人消息、论坛和聊天的聊天机器人"
+          setting_groups:
+            settings: "基本设置"
+            access_control: "访问控制"
+            ui_settings: "UI 设置"
+            integrations: "集成"
         nav:
           configured: "已配置"
           unconfigured: "未配置"
@@ -260,6 +266,8 @@ zh_CN:
           description: "提供总结按钮，允许访客总结话题"
           topic_summaries: "话题总结"
           gists: "话题列表的简短总结"
+          setting_groups:
+            settings: "基本设置"
         search:
           name: "搜索"
           description: "通过提供 AI 生成的查询回答来增强搜索体验"
@@ -268,6 +276,8 @@ zh_CN:
           name: "嵌入向量"
           description: "通过生成文本的语义表示来支持“相关话题”和“AI 搜索”等功能"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "相关话题"
         discord:
           name: "Discord 集成"
           description: "增加了搜索 Discord 频道的功能"
@@ -278,6 +288,8 @@ zh_CN:
           generate_concepts: "概念推理"
           match_concepts: "概念匹配"
           deduplicate_concepts: "概念去重"
+          setting_groups:
+            personas: "角色"
         ai_helper:
           name: "助手"
           description: "协助用户进行社区互动，例如创建话题、撰写帖子和阅读内容"
@@ -292,6 +304,9 @@ zh_CN:
           image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建器"
+          setting_groups:
+            automation: "自动化"
+            personas: "角色"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -303,6 +318,8 @@ zh_CN:
           schedule_topic_success:
             other: "已定时翻译 %{count} 未翻译的帖子。"
           schedule_topic_error: "定时翻译失败。请重试。"
+          setting_groups:
+            personas: "角色"
         spam:
           name: "垃圾信息"
           description: "使用所选 LLM 识别潜在垃圾信息，并进行标记，使其进入审核队列，以便站点版主可以进行检查"

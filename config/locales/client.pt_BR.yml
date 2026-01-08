@@ -1339,6 +1339,9 @@ pt_BR:
       new_private_message: "Nova mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
+      upcoming_changes:
+        for_user:
+          enabled: "Ativado(a)?"
       user_notifications:
         filters:
           filter_by: "Filtrar por"
@@ -1661,7 +1664,7 @@ pt_BR:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicativos"
-        navigation_menu: "Menu de Navegação"
+        navigation_menu: "Menu de navegação"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -5353,6 +5356,8 @@ pt_BR:
               options:
                 above_topic_content: "Conteúdo acima do tópico"
                 below_site_header: "Abaixo do cabeçalho do site"
+            text_section:
+              locale_label: "Idioma"
             header_logged_in:
               placeholder: "Boas-vindas novamente, %{preferred_display_name}!"
             header_anonymous:
@@ -7402,7 +7407,6 @@ pt_BR:
           button: "Excluir todas postagens"
           progress:
             title: "Progresso da exclusão de postagens"
-            description: "Excluindo postagens…"
           confirmation:
             title: "Excluir todas as postagens de @%{username}"
             description: |

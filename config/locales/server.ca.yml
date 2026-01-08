@@ -1808,6 +1808,7 @@ ca:
       text_body_template: "Per a obtenir uns quants consells ràpids sobre com començar com a usuari nou, [consulteu aquesta entrada del bloc](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/). \n\nA mesura que hi participeu, us coneixerem i es retiraran les limitacions temporals d'usuari nou. Amb el pas del temps guanyareu [nivells de confiança](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclouen capacitats especials per a ajudar-nos a gestionar la comunitat junts.\n"
     welcome_user:
       title: "Benvinguda a l'usuari"
+      preview: "Benvingut a %{site_name}!"
       subject_template: "Benvingut a %{site_name}!"
       text_body_template: |
         Gràcies per unir-vos a %{site_name}! Benvingut!
@@ -1829,6 +1830,7 @@ ca:
       subject_template: "Enhorabona, se us ha concedit estatus de: %{role}!"
     welcome_invite:
       title: "Benvingut convidat"
+      preview: "Benvingut a %{site_name}!"
       subject_template: "Benvingut a %{site_name}!"
       text_body_template: "Gràcies per acceptar la invitació a %{site_name}. Benvingut!\n\n- Us hem creat el compte **%{username}**. Canvieu el nom o la contrasenya visitant [el perfil d'usuari][prefs]. \n\n- Quan inicieu sessió, **utilitzeu la mateixa adreça de correu de la invitació original**. En cas contrari, no podrem dir que sou vós. \n\n%{new_user_tips} \n\nCreiem en un [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
@@ -2030,6 +2032,7 @@ ca:
       subject_template: "L'usuari nou %{username} té entrades blocades a causa d'enllaços repetits."
     unsilenced:
       title: "Desfet el silenciament"
+      preview: "El compte ja no està en espera."
       subject_template: "El compte ja no està en espera"
       text_body_template: "Bon dia, \n\nAixò és un missatge automàtic de %{site_name} per a fer-vos saber que el vostre compte ja no està retingut després de la revisió de l'equip responsable. \n\nAra podeu crear respostes i temes nous. Gràcies per la vostra paciència.\n"
     pending_users_reminder:
@@ -2067,7 +2070,6 @@ ca:
     Per a cancel·lar la subscripció a aquests correus, [feu clic aquí](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[MP]"
-  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "Respostes anteriors"
     reached_limit:
@@ -2330,6 +2332,7 @@ ca:
       text_body_template: "Algú ha demanat restablir la contrasenya en [%{site_name}] (%{base_url}). \n\nSi no heu estat vós, podeu ignorar aquest correu de manera segura. \n\nFeu clic en l'enllaç següent per a triar una contrasenya nova: \n%{base_url}/u/password-reset/%{email_token}\n"
     email_login:
       title: "Inicia la sessió mitjançant enllaç"
+      preview: "Inicia la sessió mitjançant enllaç."
       subject_template: "[%{email_prefix}] Inicia sessió mitjançant enllaç"
       text_body_template: "L'enllaç per a iniciar sessió en [%{site_name}](%{base_url}). \n\nSi no heu sol·licitat aquest enllaç, podeu ignorar el correu de manera segura. \n\nFeu clic en l'enllaç següent per a iniciar sessió: \n%{base_url}/session/email-login/%{email_token}\n"
     set_password:
