@@ -10,10 +10,14 @@ import { i18n } from "discourse-i18n";
 
 export default class DeleteUserPostsProgress extends Component {
   @tracked deletedPosts = 0;
+  @tracked totalDeletedPosts = 0;
   @tracked flash;
+
+  originalPostCount = 0;
 
   constructor() {
     super(...arguments);
+    this.originalPostCount = this.userPostCount;
     this.deletePosts();
   }
 
@@ -22,7 +26,14 @@ export default class DeleteUserPostsProgress extends Component {
   }
 
   get deletedPercentage() {
-    return Math.floor((this.deletedPosts * 100) / this.userPostCount);
+    return Math.floor((this.totalDeletedPosts * 100) / this.originalPostCount);
+  }
+
+  get deletedDescription() {
+    return i18n("admin.user.delete_posts.progress.description", {
+      count: this.originalPostCount,
+      username: this.args.model.user.username,
+    });
   }
 
   @action
@@ -30,6 +41,7 @@ export default class DeleteUserPostsProgress extends Component {
     try {
       const progress = await this.args.model.user.deleteAllPosts();
       this.deletedPosts = progress.posts_deleted;
+      this.totalDeletedPosts += progress.posts_deleted;
       this.args.model.updateUserPostCount(
         this.userPostCount - this.deletedPosts
       );
@@ -52,7 +64,7 @@ export default class DeleteUserPostsProgress extends Component {
       @dismissable={{false}}
     >
       <:body>
-        <p>{{i18n "admin.user.delete_posts.progress.description"}}</p>
+        <p>{{htmlSafe this.deletedDescription}}</p>
         <div class="progress-bar">
           <span
             style={{htmlSafe (concat "width: " this.deletedPercentage "%")}}

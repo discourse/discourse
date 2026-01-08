@@ -2537,6 +2537,104 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#delete_posts_decider" do
+    shared_examples "delete_posts_decider accessible" do |acting_user_role|
+      let(:acting_user) { send(acting_user_role) }
+      context "when user exists" do
+        fab!(:target_user, :user)
+
+        context "when post count is below or equal to threshold" do
+          before { SiteSetting.delete_all_posts_background_threshold = 10 }
+
+          it "returns job_enqueued: false with correct post_count" do
+            post "/admin/users/#{target_user.id}/delete_posts_decider.json"
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["job_enqueued"]).to eq(false)
+            expect(response.parsed_body["post_count"]).to eq(0)
+          end
+        end
+
+        context "when post count exceeds threshold" do
+          before do
+            SiteSetting.delete_all_posts_background_threshold = 1
+            Fabricate.times(2, :post, user: target_user)
+            target_user.reload
+            target_user.user_stat.update!(post_count: 2)
+
+            allow(Jobs).to receive(:enqueue)
+          end
+
+          it "enqueues the delete_user_posts job and returns job_enqueued: true with correct post_count" do
+            post "/admin/users/#{target_user.id}/delete_posts_decider.json"
+
+            expect(Jobs).to have_received(:enqueue).with(
+              :delete_user_posts,
+              include(user_id: target_user.id, acting_user_id: acting_user.id),
+            )
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["job_enqueued"]).to eq(true)
+            expect(response.parsed_body["post_count"]).to eq(2)
+          end
+        end
+
+        context "when threshold is 0" do
+          it "does not allow threshold to be set to 0" do
+            expect { SiteSetting.delete_all_posts_background_threshold = 0 }.to raise_error(
+              Discourse::InvalidParameters,
+            )
+          end
+        end
+      end
+
+      context "when user does not exist" do
+        it "returns 404 not found" do
+          post "/admin/users/999999/delete_posts_decider.json"
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        end
+      end
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+      include_examples "delete_posts_decider accessible", :admin
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+      include_examples "delete_posts_decider accessible", :moderator
+
+      context "when user has too many posts to delete" do
+        fab!(:target_user) do
+          user = Fabricate(:user)
+          Fabricate.times(16, :post, user: user)
+          user.reload
+          user.user_stat.update!(post_count: 16)
+          user
+        end
+
+        it "denies access with a 403 response due to insufficient permissions" do
+          post "/admin/users/#{target_user.id}/delete_posts_decider.json"
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "denies access with a 404 response" do
+        post "/admin/users/#{user.id}/delete_posts_decider.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+  end
+
   describe "#merge" do
     fab!(:target_user, :user)
     fab!(:topic) { Fabricate(:topic, user: user) }

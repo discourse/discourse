@@ -889,6 +889,62 @@ RSpec.describe DiscourseTagging do
           ).to be_empty
         end
       end
+
+      context "with tags in multiple groups" do
+        fab!(:shared_tag1) { Fabricate(:tag, name: "shared1") }
+        fab!(:shared_tag2) { Fabricate(:tag, name: "shared2") }
+        fab!(:unrestricted_tag_group) { Fabricate(:tag_group, tags: [shared_tag1, shared_tag2]) }
+        fab!(:category_tag_group) { Fabricate(:tag_group, tags: [shared_tag1, shared_tag2]) }
+        fab!(:category) { Fabricate(:category, allowed_tag_groups: [category_tag_group.name]) }
+
+        it "correctly respects enabled one_per_topic option from tag_group that is restricted to a category" do
+          category_tag_group.update!(one_per_topic: true)
+          unrestricted_tag_group.update!(one_per_topic: false)
+
+          allowed =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            )
+
+          expect(allowed.map(&:name)).to contain_exactly("shared1", "shared2")
+
+          allowed_after_selection =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: ["shared1"],
+            )
+
+          expect(allowed_after_selection.map(&:name)).to be_empty
+        end
+
+        it "does not apply enabled one_per_topic option from other tag groups when category restricts to a tag group that disables one_per_topic option" do
+          category_tag_group.update!(one_per_topic: false)
+          unrestricted_tag_group.update!(one_per_topic: true)
+
+          allowed =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            )
+
+          expect(allowed.map(&:name)).to contain_exactly("shared1", "shared2")
+
+          allowed_after_selection =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: ["shared1"],
+            )
+
+          expect(allowed_after_selection.map(&:name)).to contain_exactly("shared2")
+        end
+      end
     end
   end
 

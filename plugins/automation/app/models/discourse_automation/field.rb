@@ -222,9 +222,6 @@ module DiscourseAutomation
               "delay" => {
                 "type" => "integer",
               },
-              "prefers_encrypt" => {
-                "type" => "boolean",
-              },
             },
           },
         ],

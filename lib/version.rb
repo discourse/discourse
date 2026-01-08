@@ -15,8 +15,8 @@ module Discourse
       MAJOR = PARTS[0].to_i
       MINOR = PARTS[1].to_i
       TINY = PARTS[2].to_i
-      PRE = PARTS[3]&.split("-", 2)&.[](0)
-      DEV = PARTS[3]&.split("-", 2)&.[](1)
+      PRE = nil
+      DEV = PARTS[2]&.split("-", 2)&.[](1)
     end
   end
 
