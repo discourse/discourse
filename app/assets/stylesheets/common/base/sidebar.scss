@@ -119,7 +119,7 @@
     // custom scrollbar styling
     --scrollbarBg: transparent;
     --scrollbarThumbBg: var(--primary-low);
-    --scrollbarWidth: 0.5em;
+    --scrollbarWidth: var(--space-2);
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
     transition-delay: 0.5s;

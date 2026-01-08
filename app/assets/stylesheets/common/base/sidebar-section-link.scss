@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 :root {
-  --d-sidebar-section-link-prefix-margin-right: var(--space-3);
+  --d-sidebar-section-link-prefix-margin-right: var(--space-2);
   --d-sidebar-section-link-prefix-width: var(--space-6);
   --d-sidebar-section-link-icon-size: 1em;
   --d-sidebar-section-link-emoji-size: 1em;
@@ -173,6 +173,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    width: var(--d-sidebar-section-link-prefix-width);
 
     #sidebar-section-content-chat-dms & {
       @include viewport.from(sm) {
@@ -258,6 +259,7 @@
       color: var(--d-sidebar-highlight-color);
       border: none;
       height: 100%;
+      padding-right: 0;
 
       &:focus,
       .discourse-no-touch & {

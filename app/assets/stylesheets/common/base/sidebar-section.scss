@@ -8,6 +8,7 @@
 
     .sidebar-section-header-button {
       font-size: var(--font-down-1);
+      padding-right: 0;
 
       > * {
         pointer-events: none;
@@ -62,6 +63,7 @@
     font-weight: var(--d-sidebar-header-font-weight);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    gap: var(--d-sidebar-section-link-prefix-margin-right);
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
@@ -100,8 +102,6 @@
     display: flex;
     flex: 0 0 auto;
     width: var(--d-sidebar-section-link-prefix-width);
-    height: var(--d-sidebar-section-link-prefix-width);
-    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
     align-items: center;
     justify-content: center;
 
