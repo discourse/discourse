@@ -583,9 +583,6 @@ importers:
       ember-cli-terser:
         specifier: ^4.0.2
         version: 4.0.2
-      ember-decorators:
-        specifier: ^6.1.1
-        version: 6.1.1
       ember-exam:
         specifier: ^10.0.1
         version: 10.0.1(@glint/template@1.7.3)(ember-qunit@9.0.4(@ember/test-helpers@5.4.1(@babel/core@7.28.5)(@glint/template@1.7.3))(@glint/template@1.7.3)(qunit@2.24.3))(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.3)(webpack@5.99.9(@swc/core@1.15.7)(esbuild@0.25.12))
@@ -4903,10 +4900,6 @@ packages:
 
   ember-curry-component@0.3.1:
     resolution: {integrity: sha512-cIfGQ4p2oP8AHPWsf6KGciMJJW4BeaaFKOn+PF+6W8Gk5/BDj/JbalR0Txuko0Zr9OXUfUH6ZWfMsvdZaPoViw==}
-
-  ember-decorators@6.1.1:
-    resolution: {integrity: sha512-63vZPntPn1aqMyeNRLoYjJD+8A8obd+c2iZkJflswpDRNVIsp2m7aQdSCtPt4G0U/TEq2251g+N10maHX3rnJQ==}
-    engines: {node: '>= 8.*'}
 
   ember-disable-prototype-extensions@1.1.3:
     resolution: {integrity: sha512-SB9NcZ27OtoUk+gfalsc3QU17+54OoqR668qHcuvHByk4KAhGxCKlkm9EBlKJcGr7yceOOAJqohTcCEBqfRw9g==}
@@ -14431,14 +14424,6 @@ snapshots:
       decorator-transforms: 2.3.0(@babel/core@7.28.5)
     transitivePeerDependencies:
       - '@babel/core'
-      - supports-color
-
-  ember-decorators@6.1.1:
-    dependencies:
-      '@ember-decorators/component': 6.1.1
-      '@ember-decorators/object': 6.1.1
-      ember-cli-babel: 7.26.11
-    transitivePeerDependencies:
       - supports-color
 
   ember-disable-prototype-extensions@1.1.3: {}
