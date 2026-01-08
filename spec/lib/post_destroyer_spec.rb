@@ -536,6 +536,36 @@ RSpec.describe PostDestroyer do
       expect(reviewable.reload).to be_pending
     end
 
+    it "auto-ignores reviewable when author was silenced but is no longer silenced" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+
+      UserSilencer.silence(reply.user, moderator, post_id: reply.id)
+      UserSilencer.unsilence(reply.user, moderator)
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_ignored
+    end
+
+    it "auto-ignores reviewable when author was suspended but is no longer suspended" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+
+      UserSuspender.new(
+        reply.user,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+        post_id: reply.id,
+      ).suspend
+      reply.user.update!(suspended_till: nil, suspended_at: nil)
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_ignored
+    end
+
     it "when topic is destroyed, it updates user_stats correctly" do
       SiteSetting.min_topic_title_length = 5
       post.topic.update_column(:title, "xyz")

@@ -83,12 +83,17 @@ RSpec.describe ReviewableSerializer do
 
     it "serializes when post was user-deleted" do
       fp = Fabricate(:reviewable_flagged_post)
-      fp.target.update!(user_deleted: true)
-      fp.reload
+      post = fp.target
 
-      json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json
-      expect(json[:target_deleted_by_id]).to eq(fp.target.user.id)
-      expect(json[:target_deleted_at]).to eq(fp.target.updated_at)
+      freeze_time do
+        revision = post.revisions.create!(user: post.user, modifications: {})
+        post.update!(user_deleted: true)
+        fp.reload
+
+        json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json
+        expect(json[:target_deleted_by_id]).to eq(post.user.id)
+        expect(json[:target_deleted_at]).to eq(revision.created_at)
+      end
     end
   end
 end

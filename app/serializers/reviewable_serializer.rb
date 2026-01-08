@@ -159,7 +159,7 @@ class ReviewableSerializer < ApplicationSerializer
   def target_deleted_at
     target = target_post_with_deleted
     return target.deleted_at if target&.deleted_at.present?
-    target.updated_at if target&.user_deleted?
+    target.revisions.order(created_at: :desc).pick(:created_at) if target&.user_deleted?
   end
 
   def include_target_deleted_at?

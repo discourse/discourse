@@ -552,6 +552,8 @@ class PostDestroyer
   end
 
   def user_penalized_for_post?
+    return false unless @post.user.silenced? || @post.user.suspended?
+
     UserHistory.exists?(
       action: [UserHistory.actions[:silence_user], UserHistory.actions[:suspend_user]],
       post: @post,
