@@ -1,8 +1,22 @@
 # frozen_string_literal: true
 
-require "net/imap"
-
 class Group < ActiveRecord::Base
+  # NOTE (martin): Remove after 2026.02.0
+  # and drop columns.
+  self.ignored_columns += %w[
+    imap_server
+    imap_port
+    imap_ssl
+    imap_mailbox_name
+    imap_uid_validity
+    imap_last_uid
+    imap_last_error
+    imap_old_emails
+    imap_new_emails
+    imap_enabled
+    imap_updated_at
+    imap_updated_by_id
+  ]
   # Maximum 255 characters including terminator.
   # https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.4
   MAX_EMAIL_DOMAIN_LENGTH = 253
@@ -39,7 +53,6 @@ class Group < ActiveRecord::Base
   has_many :upload_references, as: :target, dependent: :destroy
 
   belongs_to :smtp_updated_by, class_name: "User"
-  belongs_to :imap_updated_by, class_name: "User"
 
   has_and_belongs_to_many :web_hooks
 
@@ -72,11 +85,6 @@ class Group < ActiveRecord::Base
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
-    expire_imap_mailbox_cache
-  end
-
-  def expire_imap_mailbox_cache
-    Discourse.cache.delete("group_imap_mailboxes_#{self.id}")
   end
 
   validate :name_format_validator
@@ -108,19 +116,10 @@ class Group < ActiveRecord::Base
   AUTO_GROUPS_ADD = "add"
   AUTO_GROUPS_REMOVE = "remove"
 
-  IMAP_SETTING_ATTRIBUTES = %w[
-    imap_server
-    imap_port
-    imap_ssl
-    imap_mailbox_name
-    email_username
-    email_password
-  ]
-
   SMTP_SETTING_ATTRIBUTES = %w[
-    imap_server
-    imap_port
-    imap_ssl
+    smtp_server
+    smtp_port
+    smtp_ssl_mode
     email_username
     email_password
     email_from_alias
@@ -157,7 +156,6 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :with_imap_configured, -> { where(imap_enabled: true).where.not(imap_mailbox_name: "") }
   scope :with_smtp_configured, -> { where(smtp_enabled: true) }
 
   scope :visible_groups,
@@ -360,11 +358,6 @@ class Group < ActiveRecord::Base
   end
 
   def record_email_setting_changes!(user)
-    if (self.previous_changes.keys & IMAP_SETTING_ATTRIBUTES).any?
-      self.imap_updated_at = Time.zone.now
-      self.imap_updated_by_id = user.id
-    end
-
     if (self.previous_changes.keys & SMTP_SETTING_ATTRIBUTES).any?
       self.smtp_updated_at = Time.zone.now
       self.smtp_updated_by_id = user.id
@@ -373,12 +366,6 @@ class Group < ActiveRecord::Base
     self.smtp_enabled = [
       self.smtp_port,
       self.smtp_server,
-      self.email_password,
-      self.email_username,
-    ].all?(&:present?)
-    self.imap_enabled = [
-      self.imap_port,
-      self.imap_server,
       self.email_password,
       self.email_username,
     ].all?(&:present?)
@@ -1046,43 +1033,6 @@ class Group < ActiveRecord::Base
         GroupTagNotificationDefault.batch_set(self, level, tag_names)
       end
     end
-  end
-
-  def imap_mailboxes
-    return [] if !self.imap_enabled || !SiteSetting.enable_imap
-
-    Discourse
-      .cache
-      .fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
-        Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
-        mailboxes = []
-
-        begin
-          imap_provider = Imap::Providers::Detector.init_with_detected_provider(self.imap_config)
-          imap_provider.connect!
-          mailboxes = imap_provider.filter_mailboxes(imap_provider.list_mailboxes_with_attributes)
-          imap_provider.disconnect!
-
-          update_columns(imap_last_error: nil)
-        rescue => ex
-          Rails.logger.warn(
-            "[IMAP] Mailbox refresh failed for group #{self.name} with error: #{ex}",
-          )
-          update_columns(imap_last_error: ex.message)
-        end
-
-        mailboxes
-      end
-  end
-
-  def imap_config
-    {
-      server: self.imap_server,
-      port: self.imap_port,
-      ssl: self.imap_ssl,
-      username: self.email_username,
-      password: self.email_password,
-    }
   end
 
   def email_username_domain

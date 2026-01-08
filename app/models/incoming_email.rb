@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class IncomingEmail < ActiveRecord::Base
+  self.ignored_columns += %w[imap_missing imap_sync imap_uid imap_uid_validity imap_group_id]
+
   belongs_to :user
   belongs_to :topic
   belongs_to :post
-  belongs_to :group, foreign_key: :imap_group_id, class_name: "Group"
 
   validates :created_via, presence: true
 
