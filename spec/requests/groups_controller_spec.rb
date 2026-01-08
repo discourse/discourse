@@ -2852,7 +2852,7 @@ RSpec.describe GroupsController do
         it "raises an invalid params error" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
           expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"].first).to match(/Valid protocols to test are smtp/)
+          expect(response.parsed_body["errors"].first).to match(/Valid protocol to test is smtp/)
         end
       end
 

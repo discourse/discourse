@@ -1595,34 +1595,6 @@ RSpec.describe Group do
       expect(group.smtp_updated_at).not_to eq(nil)
       expect(group.smtp_updated_by).to eq(user)
     end
-
-    it "disables imap and records the change" do
-      group.update(
-        imap_port: 587,
-        imap_ssl: true,
-        imap_server: "imap.gmail.com",
-        email_username: "test@gmail.com",
-        email_password: "password",
-      )
-
-      group.record_email_setting_changes!(user)
-      group.reload
-
-      group.update(
-        imap_port: nil,
-        imap_ssl: false,
-        imap_server: nil,
-        email_username: nil,
-        email_password: nil,
-      )
-
-      group.record_email_setting_changes!(user)
-      group.reload
-
-      expect(group.imap_enabled).to eq(false)
-      expect(group.imap_updated_at).not_to eq(nil)
-      expect(group.imap_updated_by).to eq(user)
-    end
   end
 
   describe "#find_by_email" do

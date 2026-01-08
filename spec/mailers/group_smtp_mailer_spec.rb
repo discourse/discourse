@@ -128,7 +128,7 @@ RSpec.describe GroupSmtpMailer do
       SiteSetting.reply_by_email_enabled = true
     end
 
-    it "uses the correct IMAP/SMTP reply to address and does not create a post reply key" do
+    it "uses the correct SMTP reply to address and does not create a post reply key" do
       post = PostCreator.create(user, topic_id: receiver.incoming_email.topic.id, raw: raw)
 
       expect(ActionMailer::Base.deliveries.size).to eq(1)
@@ -138,16 +138,6 @@ RSpec.describe GroupSmtpMailer do
       sent_mail = ActionMailer::Base.deliveries[0]
       expect(sent_mail.reply_to).to eq(nil)
       expect(sent_mail.from).to contain_exactly("bugs@gmail.com")
-    end
-
-    context "when IMAP is disabled for the group" do
-      before { group.update(imap_enabled: false) }
-
-      it "does send the email" do
-        post = PostCreator.create(user, topic_id: receiver.incoming_email.topic.id, raw: raw)
-
-        expect(ActionMailer::Base.deliveries.size).to eq(1)
-      end
     end
 
     context "when SMTP is disabled for the group" do
