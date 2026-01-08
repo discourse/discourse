@@ -225,11 +225,11 @@ namespace :release do
       if Gem::Version.new(target_version_number) <= Gem::Version.new(current_version)
         puts "Target version #{current_version} is already >= #{target_version_number}. Incrementing instead."
         major, minor, patch_and_pre = current_version.split(".")
-        minor = (minor.to_i + 1).to_s.rjust(2, "0")
+        minor = (minor.to_i + 1).to_s
 
         if minor.to_i > 12 && Time.now.month == 12
           major = (major.to_i + 1).to_s
-          minor = "01"
+          minor = "1"
         end
 
         target_version_number = "#{major}.#{minor}.#{patch_and_pre}"
