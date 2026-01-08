@@ -92,7 +92,7 @@ RSpec.describe ReviewableSerializer do
 
         json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json
         expect(json[:target_deleted_by_id]).to eq(post.user.id)
-        expect(json[:target_deleted_at]).to eq(revision.created_at)
+        expect(json[:target_deleted_at]).to eq_time(revision.created_at)
       end
     end
   end
