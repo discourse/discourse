@@ -444,14 +444,29 @@ module("Unit | Lib | blocks/arg-validation", function () {
       );
     });
 
-    test("skips validation for blocks without metadata", function (assert) {
-      @block("no-metadata-block")
-      class NoMetadataBlock extends Component {}
+    test("throws when args provided but no schema declared", function (assert) {
+      @block("no-schema-block")
+      class NoSchemaBlock extends Component {}
+
+      try {
+        validateBlockArgs({ args: { anything: "goes" } }, NoSchemaBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockValidationError);
+        assert.true(error.message.includes("does not declare an args schema"));
+        assert.strictEqual(error.path, "args");
+      }
+    });
+
+    test("passes when no args and no schema", function (assert) {
+      @block("no-args-no-schema-block")
+      class NoArgsNoSchemaBlock extends Component {}
 
       assert.strictEqual(
-        validateBlockArgs({ args: { anything: "goes" } }, NoMetadataBlock),
+        validateBlockArgs({ args: {} }, NoArgsNoSchemaBlock),
         undefined
       );
+      assert.strictEqual(validateBlockArgs({}, NoArgsNoSchemaBlock), undefined);
     });
 
     test("throws for unknown args not declared in schema", function (assert) {

@@ -276,14 +276,24 @@ export function validateArrayItemType(
  */
 export function validateBlockArgs(config, blockClass) {
   const metadata = blockClass?.blockMetadata;
+  const providedArgs = config.args || {};
+  const hasProvidedArgs = Object.keys(providedArgs).length > 0;
+  const argsSchema = metadata?.args;
 
-  // No metadata or no args schema means nothing to validate
-  if (!metadata?.args) {
-    return;
+  // If args are provided but no schema exists, reject them
+  if (hasProvidedArgs && !argsSchema) {
+    const argNames = Object.keys(providedArgs).join(", ");
+    throw new BlockValidationError(
+      `args were provided (${argNames}) but this block does not declare an args schema. ` +
+        `Add an args schema to the @block decorator or remove the args.`,
+      "args"
+    );
   }
 
-  const argsSchema = metadata.args;
-  const providedArgs = config.args || {};
+  // No schema and no args - nothing to validate
+  if (!argsSchema) {
+    return;
+  }
 
   for (const [argName, argDef] of Object.entries(argsSchema)) {
     const value = providedArgs[argName];
