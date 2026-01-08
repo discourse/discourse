@@ -12,9 +12,7 @@ import { DEBUG } from "@glimmer/env";
 import { validateBlockArgs } from "discourse/lib/blocks/arg-validation";
 import {
   BlockValidationError,
-  clearBlockErrorContext,
   raiseBlockError,
-  setBlockErrorContext,
 } from "discourse/lib/blocks/error";
 import { isBlockPermittedInOutlet } from "discourse/lib/blocks/outlet-matcher";
 import {
@@ -30,20 +28,14 @@ import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
- * Validates block conditions with proper error context.
- *
- * This helper encapsulates the common pattern of setting error context,
- * validating conditions, and handling errors with proper cleanup.
+ * Validates block conditions and raises errors with proper context.
  *
  * @param {Object} blocksService - The blocks service with validate method.
  * @param {Object} config - The block config containing conditions.
  * @param {string} outletName - The outlet name for error messages.
  * @param {string} blockName - The block name for error messages.
  * @param {string} path - The path in the config tree for error messages.
- * @param {Object} [options] - Additional options.
- * @param {boolean} [options.clearContext=true] - Whether to clear error context in finally.
- *   Set to false when nested inside another try/finally that handles cleanup.
- * @param {Error | null} [options.callSiteErrorError] - Error object capturing where renderBlocks() was called.
+ * @param {Error | null} [callSiteError] - Error object capturing where renderBlocks() was called.
  */
 function validateBlockConditions(
   blocksService,
@@ -51,41 +43,33 @@ function validateBlockConditions(
   outletName,
   blockName,
   path,
-  { clearContext = true, callSiteErrorError = null } = {}
+  callSiteError = null
 ) {
   if (!config.conditions || !blocksService) {
     return;
   }
 
-  setBlockErrorContext({
-    outletName,
-    blockName,
-    path,
-    conditions: config.conditions,
-    callSiteErrorError,
-  });
-
   try {
     blocksService.validate(config.conditions);
   } catch (error) {
+    // Build context for error message, including path if available
+    const context = {
+      outletName,
+      blockName,
+      path,
+      conditions: config.conditions,
+      callSiteError,
+    };
+
     // If error has a path (from BlockValidationError), include it for precise location
     if (error instanceof BlockValidationError) {
-      setBlockErrorContext({
-        outletName,
-        blockName,
-        path,
-        conditions: config.conditions,
-        errorPath: error.path,
-        callSiteErrorError,
-      });
+      context.errorPath = error.path;
     }
+
     raiseBlockError(
-      `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`
+      `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`,
+      context
     );
-  } finally {
-    if (clearContext) {
-      clearBlockErrorContext();
-    }
   }
 }
 
@@ -498,15 +482,15 @@ export async function validateBlock(
     validateConfigTypes(config);
   } catch (error) {
     if (error instanceof BlockValidationError) {
-      setBlockErrorContext({
-        outletName,
-        path,
-        config,
-        errorPath: error.path,
-        callSiteError,
-      });
       raiseBlockError(
-        `Invalid block config at ${path} for outlet "${outletName}": ${error.message}`
+        `Invalid block config at ${path} for outlet "${outletName}": ${error.message}`,
+        {
+          outletName,
+          path,
+          config,
+          errorPath: error.path,
+          callSiteError,
+        }
       );
     }
     throw error;
@@ -549,9 +533,7 @@ export async function validateBlock(
       outletName,
       blockName,
       path,
-      {
-        callSiteError,
-      }
+      callSiteError
     );
 
     // Skip class-specific validation (will happen at render time)
@@ -586,69 +568,56 @@ export async function validateBlock(
     }
   }
 
-  // Set error context for all subsequent validation errors
-  setBlockErrorContext({
+  // Build base context for all validation errors in this block
+  const baseContext = {
     outletName,
     blockName,
     path,
     config,
     callSiteError,
-  });
+  };
+
+  const hasChildren = config.children?.length > 0;
+  const isContainer = isContainerBlockFn(resolvedBlock);
+
+  if (hasChildren && !isContainer) {
+    raiseBlockError(
+      `Block component ${config.name || blockName} in layout ${outletName} cannot have children`,
+      baseContext
+    );
+    return;
+  }
+
+  if (isContainer && !hasChildren) {
+    raiseBlockError(
+      `Block component ${config.name || blockName} in layout ${outletName} must have children`,
+      baseContext
+    );
+    return;
+  }
 
   try {
-    const hasChildren = config.children?.length > 0;
-    const isContainer = isContainerBlockFn(resolvedBlock);
-
-    if (hasChildren && !isContainer) {
+    validateReservedArgs(config);
+  } catch (error) {
+    if (error instanceof BlockValidationError) {
       raiseBlockError(
-        `Block component ${config.name || blockName} in layout ${outletName} cannot have children`
+        `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${error.message}`,
+        { ...baseContext, errorPath: error.path }
       );
-      return;
     }
-
-    if (isContainer && !hasChildren) {
-      raiseBlockError(
-        `Block component ${config.name || blockName} in layout ${outletName} must have children`
-      );
-      return;
-    }
-
-    try {
-      validateReservedArgs(config);
-    } catch (error) {
-      if (error instanceof BlockValidationError) {
-        setBlockErrorContext({
-          outletName,
-          blockName,
-          path,
-          config,
-          errorPath: error.path,
-          callSiteError,
-        });
-        raiseBlockError(
-          `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${error.message}`
-        );
-      }
-      throw error;
-    }
-
-    // Validate block args against metadata schema
-    validateBlockArgs(config, outletName);
-
-    // Validate conditions if service is available.
-    // Use clearContext: false since the outer finally handles cleanup.
-    validateBlockConditions(
-      blocksService,
-      config,
-      outletName,
-      blockName,
-      path,
-      {
-        clearContext: false,
-        callSiteError,
-      }
-    );
-  } finally {
-    clearBlockErrorContext();
+    throw error;
   }
+
+  // Validate block args against metadata schema
+  validateBlockArgs(config, outletName);
+
+  // Validate conditions if service is available
+  validateBlockConditions(
+    blocksService,
+    config,
+    outletName,
+    blockName,
+    path,
+    callSiteError
+  );
 }

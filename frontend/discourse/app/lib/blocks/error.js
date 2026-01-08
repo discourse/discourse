@@ -1,14 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 
 /**
- * Current error context, set by the caller before raising errors.
- * Contains block configuration info for better error messages.
- *
- * @type {{ outletName: string, blockName: string, path: string, config: Object, conditions: Object, errorPath: string, callSiteError: Error | null } | null}
- */
-let errorContext = null;
-
-/**
  * Captures the current call site as an Error object, excluding internal frames.
  * Call this at the entry point (e.g., renderBlocks) to capture where
  * the user's code called into the block system.
@@ -31,32 +23,6 @@ export function captureCallSite(callerFn) {
   }
 
   return error;
-}
-
-/**
- * Sets the error context for the current validation operation.
- * Call this before validating block configuration to provide context
- * for error messages.
- *
- * @param {Object} context - The error context.
- * @param {string} [context.outletName] - The outlet name where the block is registered.
- * @param {string} [context.blockName] - The name of the block being validated.
- * @param {string} [context.path] - JSON-path style location in config (e.g., "blocks[3].children[0]").
- * @param {Object} [context.config] - The full block config being validated.
- * @param {Object} [context.conditions] - The conditions config being validated.
- * @param {string} [context.errorPath] - Path within the config to the error (e.g., "conditions.any[0].type").
- * @param {Error | null} [context.callSiteError] - Error object capturing where renderBlocks() was called.
- */
-export function setBlockErrorContext(context) {
-  errorContext = context;
-}
-
-/**
- * Clears the current error context.
- * Call this in a finally block after validation completes.
- */
-export function clearBlockErrorContext() {
-  errorContext = null;
 }
 
 /**
@@ -424,20 +390,28 @@ export class BlockValidationError extends Error {
  * In production, dispatches a `discourse-error` event that surfaces the error
  * to admin users via a banner (handled by `ClientErrorHandlerService`).
  *
- * If an error context has been set via `setBlockErrorContext()`, the error
- * message will include the block configuration for debugging.
+ * If context is provided, the error message will include the block
+ * configuration for debugging.
  *
- * If a `callSiteError` is present in the error context, it is reused with the
+ * If a `callSiteError` is present in the context, it is reused with the
  * new message. This preserves the original stack trace pointing to where
  * `renderBlocks()` was called, which is more useful than pointing to this
  * function. Source maps are applied automatically by the browser.
  *
  * @param {string} message - The error message.
+ * @param {Object} [context] - Optional error context for better error messages.
+ * @param {string} [context.outletName] - The outlet name where the block is registered.
+ * @param {string} [context.blockName] - The name of the block being validated.
+ * @param {string} [context.path] - JSON-path style location in config (e.g., "blocks[3].children[0]").
+ * @param {Object} [context.config] - The full block config being validated.
+ * @param {Object} [context.conditions] - The conditions config being validated.
+ * @param {string} [context.errorPath] - Path within the config to the error (e.g., "conditions.any[0].type").
+ * @param {Error | null} [context.callSiteError] - Error object capturing where renderBlocks() was called.
  * @throws {BlockError} In DEBUG mode.
  */
-export function raiseBlockError(message) {
+export function raiseBlockError(message, context = null) {
   // Append context info to the message if available
-  const contextInfo = formatErrorContext(errorContext);
+  const contextInfo = formatErrorContext(context);
   const fullMessage = `[Blocks] ${message}${contextInfo}`;
 
   let error;
@@ -445,8 +419,8 @@ export function raiseBlockError(message) {
   // If we have a call site error, reuse it with updated message.
   // This preserves the stack trace pointing to where renderBlocks() was called,
   // which is more useful than pointing to raiseBlockError().
-  if (errorContext?.callSiteError) {
-    error = errorContext.callSiteError;
+  if (context?.callSiteError) {
+    error = context.callSiteError;
     error.name = "BlockError";
     error.message = fullMessage;
   } else {

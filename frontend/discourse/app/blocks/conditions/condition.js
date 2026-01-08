@@ -240,9 +240,6 @@ export class BlockCondition {
  * In production, dispatches a `discourse-error` event that surfaces the error
  * to admin users via a banner (handled by `ClientErrorHandlerService`).
  *
- * If an error context has been set via `setBlockErrorContext()`, the error
- * message will include the block hierarchy and conditions config for debugging.
- *
  * @param {string} message - The error message describing the validation failure.
  * @throws {BlockError} In development/test environments.
  */
