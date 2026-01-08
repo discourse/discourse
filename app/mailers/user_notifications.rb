@@ -356,7 +356,7 @@ class UserNotifications < ActionMailer::Base
       if SiteSetting.simple_email_subject &&
            TranslationOverride.exists?(
              locale: I18n.locale,
-             translation_key: "#{@opts[:template]}.subject_template_improved",
+             translation_key: "#{subject_key}_improved",
            )
         subject_key += "_improved"
       end
