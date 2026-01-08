@@ -17,7 +17,10 @@ module(
     });
 
     test("displays tags", async function (assert) {
-      this.set("value", ["foo", "bar"]);
+      this.set("value", [
+        { id: "foo", name: "foo", slug: "foo" },
+        { id: "bar", name: "bar", slug: "bar" },
+      ]);
 
       await render(
         <template><MiniTagChooser @value={{this.value}} /></template>
@@ -27,7 +30,10 @@ module(
     });
 
     test("create a tag", async function (assert) {
-      this.set("value", ["foo", "bar"]);
+      this.set("value", [
+        { id: "foo", name: "foo", slug: "foo" },
+        { id: "bar", name: "bar", slug: "bar" },
+      ]);
 
       await render(
         <template><MiniTagChooser @value={{this.value}} /></template>
@@ -52,7 +58,10 @@ module(
     });
 
     test("max_tags_per_topic", async function (assert) {
-      this.set("value", ["foo", "bar"]);
+      this.set("value", [
+        { id: "foo", name: "foo", slug: "foo" },
+        { id: "bar", name: "bar", slug: "bar" },
+      ]);
       this.siteSettings.max_tags_per_topic = 2;
 
       await render(
@@ -73,7 +82,10 @@ module(
     });
 
     test("disables search and shows limit when max_tags_per_topic is zero", async function (assert) {
-      this.set("value", ["cat", "kit"]);
+      this.set("value", [
+        { id: "cat", name: "cat", slug: "cat" },
+        { id: "kit", name: "kit", slug: "kit" },
+      ]);
       this.siteSettings.max_tags_per_topic = 0;
 
       await render(
@@ -95,7 +107,10 @@ module(
     });
 
     test("required_tag_group", async function (assert) {
-      this.set("value", ["foo", "bar"]);
+      this.set("value", [
+        { id: "foo", name: "foo", slug: "foo" },
+        { id: "bar", name: "bar", slug: "bar" },
+      ]);
 
       await render(
         <template>
@@ -159,7 +174,10 @@ module(
     });
 
     test("values in hiddenFromPreview will not display in preview", async function (assert) {
-      this.set("value", ["foo", "bar"]);
+      this.set("value", [
+        { id: "foo", name: "foo", slug: "foo" },
+        { id: "bar", name: "bar", slug: "bar" },
+      ]);
       this.set("hiddenValues", ["foo"]);
 
       await render(
@@ -193,7 +211,11 @@ module(
     });
 
     test("displays tags and filter in header", async function (assert) {
-      this.set("value", ["apple", "orange", "potato"]);
+      this.set("value", [
+        { id: "apple", name: "apple", slug: "apple" },
+        { id: "orange", name: "orange", slug: "orange" },
+        { id: "potato", name: "potato", slug: "potato" },
+      ]);
 
       await render(
         <template>
@@ -232,7 +254,11 @@ module(
     });
 
     test("removing a tag does not display the dropdown", async function (assert) {
-      this.set("value", ["apple", "orange", "potato"]);
+      this.set("value", [
+        { id: "apple", name: "apple", slug: "apple" },
+        { id: "orange", name: "orange", slug: "orange" },
+        { id: "potato", name: "potato", slug: "potato" },
+      ]);
 
       await render(
         <template>

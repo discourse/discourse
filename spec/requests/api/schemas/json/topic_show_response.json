@@ -397,9 +397,12 @@
                 },
                 "name": {
                   "type": "string"
+                },
+                "slug": {
+                  "type": "string"
                 }
               },
-              "required": ["id", "name"]
+              "required": ["id", "name", "slug"]
             }
           },
           "tags_descriptions": {
@@ -510,9 +513,12 @@
           },
           "name": {
             "type": "string"
+          },
+          "slug": {
+            "type": "string"
           }
         },
-        "required": ["id", "name"]
+        "required": ["id", "name", "slug"]
       }
     },
     "tags_descriptions": {

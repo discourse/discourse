@@ -94,6 +94,12 @@ export default class Topic extends RestModel {
     }
 
     const data = { ...props };
+
+    // SHOULD NOT normalize tags to names - backend expects string array
+    if (Array.isArray(data.tags)) {
+      data.tags = data.tags.map((t) => (typeof t === "string" ? t : t.name));
+    }
+
     if (opts.fastEdit) {
       data.keep_existing_draft = true;
     }
@@ -955,6 +961,9 @@ export default class Topic extends RestModel {
   updateTags(tags) {
     if (!tags || tags.length === 0) {
       tags = [""];
+    } else {
+      // SHOULD NOT normalize to tag names - tags may be objects {id, name} or strings
+      tags = tags.map((t) => (typeof t === "string" ? t : t.name));
     }
 
     return ajax(`/t/${this.id}/tags`, {

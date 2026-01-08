@@ -110,7 +110,7 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def topic_tags
-    object.topic.tags.map(&:name)
+    object.topic.tags.map { |tag| { id: tag.id, name: tag.name, slug: tag.slug } }
   end
 
   def include_topic_tags?
