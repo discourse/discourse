@@ -1,6 +1,6 @@
 import picomatch from "picomatch";
 import { raiseBlockError } from "discourse/lib/blocks/error";
-import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
+import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 
 /**
  * Checks if a pattern targets a namespaced outlet.

@@ -52,7 +52,7 @@ import {
 } from "discourse/lib/blocks/registration";
 import { applyArgDefaults } from "discourse/lib/blocks/utils";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
-import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
+import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
