@@ -219,11 +219,39 @@ The args schema serves three purposes:
 - `type` (required) - The argument type
 - `required` (optional) - Whether the argument must be provided
 - `default` (optional) - Default value if not provided
-- `itemType` (optional, for arrays) - Type of items in the array
-- `pattern` (optional, for strings) - Regex pattern for validation
-- `min` (optional, for numbers) - Minimum value (inclusive)
-- `max` (optional, for numbers) - Maximum value (inclusive)
-- `integer` (optional, for numbers) - Must be a whole number
+
+**Type-specific properties:**
+
+| Property | Types | Description |
+|----------|-------|-------------|
+| `itemType` | `array` | Type of items (`"string"`, `"number"`, `"boolean"`) |
+| `pattern` | `string` | Regex pattern for validation |
+| `minLength` | `string`, `array` | Minimum length (characters or items) |
+| `maxLength` | `string`, `array` | Maximum length (characters or items) |
+| `min` | `number` | Minimum value (inclusive) |
+| `max` | `number` | Maximum value (inclusive) |
+| `integer` | `number` | Must be a whole number |
+| `enum` | `string`, `number` | Restrict to specific values |
+
+**Examples:**
+```javascript
+args: {
+  // String with length constraints
+  title: { type: "string", minLength: 1, maxLength: 100 },
+
+  // String with enum (dropdown-like)
+  size: { type: "string", enum: ["small", "medium", "large"] },
+
+  // Number with range and integer constraint
+  page: { type: "number", min: 1, integer: true },
+
+  // Number with enum (specific values)
+  priority: { type: "number", enum: [1, 2, 3, 5, 8] },
+
+  // Array with length constraints
+  tags: { type: "array", itemType: "string", minLength: 1, maxLength: 10 },
+}
+```
 
 > :bulb: **Tip:** Use `required` OR `default`, not both—an arg with a default is never missing.
 
@@ -2012,11 +2040,18 @@ api.registerBlockConditionType(ConditionClass)
   type: "string" | "number" | "boolean" | "array",
   required?: boolean,
   default?: any,
-  itemType?: "string" | "number" | "boolean",  // For arrays
-  pattern?: RegExp,                             // For strings
-  min?: number,                                 // For numbers
-  max?: number,                                 // For numbers
-  integer?: boolean,                            // For numbers
+  // For arrays:
+  itemType?: "string" | "number" | "boolean",
+  // For strings:
+  pattern?: RegExp,
+  minLength?: number,                           // Also for arrays
+  maxLength?: number,                           // Also for arrays
+  // For numbers:
+  min?: number,
+  max?: number,
+  integer?: boolean,
+  // For strings and numbers:
+  enum?: string[] | number[],
 }
 
 // ConstraintSpec:

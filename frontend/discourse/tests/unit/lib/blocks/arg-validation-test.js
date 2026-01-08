@@ -356,6 +356,247 @@ module("Unit | Lib | blocks/arg-validation", function () {
         /invalid default value.*must be an integer/
       );
     });
+
+    test("throws for minLength on non-string/array type", function (assert) {
+      const schema = {
+        count: { type: "number", minLength: 1 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "minLength" but type is "number".*only valid for string or array type/
+      );
+    });
+
+    test("throws for maxLength on non-string/array type", function (assert) {
+      const schema = {
+        enabled: { type: "boolean", maxLength: 10 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "maxLength" but type is "boolean".*only valid for string or array type/
+      );
+    });
+
+    test("throws for non-integer minLength value", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: 1.5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "minLength" value.*Must be a non-negative integer/
+      );
+    });
+
+    test("throws for negative minLength value", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: -1 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "minLength" value.*Must be a non-negative integer/
+      );
+    });
+
+    test("throws for non-integer maxLength value", function (assert) {
+      const schema = {
+        title: { type: "string", maxLength: "10" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "maxLength" value.*Must be a non-negative integer/
+      );
+    });
+
+    test("throws for minLength greater than maxLength", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: 10, maxLength: 5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has minLength \(10\) greater than maxLength \(5\)/
+      );
+    });
+
+    test("accepts valid minLength/maxLength on string type", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: 1, maxLength: 100 },
+        name: { type: "string", minLength: 0 },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts valid minLength/maxLength on array type", function (assert) {
+      const schema = {
+        tags: { type: "array", minLength: 1, maxLength: 10 },
+        items: { type: "array", minLength: 0 },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for enum on non-string/number type", function (assert) {
+      const schema = {
+        enabled: { type: "boolean", enum: [true, false] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "enum" but type is "boolean".*only valid for string or number type/
+      );
+    });
+
+    test("throws for enum that is not an array", function (assert) {
+      const schema = {
+        size: { type: "string", enum: "small" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "enum" value.*Must be an array with at least one element/
+      );
+    });
+
+    test("throws for empty enum array", function (assert) {
+      const schema = {
+        size: { type: "string", enum: [] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "enum" value.*Must be an array with at least one element/
+      );
+    });
+
+    test("throws for enum with wrong value types - string", function (assert) {
+      const schema = {
+        size: { type: "string", enum: ["small", 123] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /enum contains invalid value.*All values must be strings/
+      );
+    });
+
+    test("throws for enum with wrong value types - number", function (assert) {
+      const schema = {
+        priority: { type: "number", enum: [1, 2, "high"] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /enum contains invalid value.*All values must be numbers/
+      );
+    });
+
+    test("accepts valid string enum", function (assert) {
+      const schema = {
+        size: { type: "string", enum: ["small", "medium", "large"] },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts valid number enum", function (assert) {
+      const schema = {
+        priority: { type: "number", enum: [1, 2, 3, 5, 8] },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default value not in enum - string", function (assert) {
+      const schema = {
+        size: {
+          type: "string",
+          enum: ["small", "medium", "large"],
+          default: "huge",
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be one of/
+      );
+    });
+
+    test("throws for default value not in enum - number", function (assert) {
+      const schema = {
+        priority: { type: "number", enum: [1, 2, 3], default: 5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be one of/
+      );
+    });
+
+    test("throws for default string below minLength", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: 5, default: "Hi" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be at least 5 characters/
+      );
+    });
+
+    test("throws for default string above maxLength", function (assert) {
+      const schema = {
+        code: { type: "string", maxLength: 3, default: "TOOLONG" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be at most 3 characters/
+      );
+    });
+
+    test("throws for default array below minLength", function (assert) {
+      const schema = {
+        tags: { type: "array", minLength: 2, default: ["one"] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must have at least 2 items/
+      );
+    });
+
+    test("throws for default array above maxLength", function (assert) {
+      const schema = {
+        tags: { type: "array", maxLength: 2, default: ["a", "b", "c"] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must have at most 2 items/
+      );
+    });
   });
 
   module("validateArgValue", function () {
@@ -405,6 +646,75 @@ module("Unit | Lib | blocks/arg-validation", function () {
         "test-block"
       );
       assert.true(result?.includes("does not match required pattern"));
+    });
+
+    test("validates string with minLength constraint", function (assert) {
+      const schema = { type: "string", minLength: 3 };
+
+      assert.strictEqual(
+        validateArgValue("abc", schema, "title", "test-block"),
+        null,
+        "exact minLength passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue("abcdef", schema, "title", "test-block"),
+        null,
+        "above minLength passes"
+      );
+
+      assert.true(
+        validateArgValue("ab", schema, "title", "test-block")?.includes(
+          "must be at least 3 characters"
+        ),
+        "below minLength fails"
+      );
+    });
+
+    test("validates string with maxLength constraint", function (assert) {
+      const schema = { type: "string", maxLength: 5 };
+
+      assert.strictEqual(
+        validateArgValue("abcde", schema, "title", "test-block"),
+        null,
+        "exact maxLength passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue("abc", schema, "title", "test-block"),
+        null,
+        "below maxLength passes"
+      );
+
+      assert.true(
+        validateArgValue("abcdef", schema, "title", "test-block")?.includes(
+          "must be at most 5 characters"
+        ),
+        "above maxLength fails"
+      );
+    });
+
+    test("validates string with enum constraint", function (assert) {
+      const schema = { type: "string", enum: ["small", "medium", "large"] };
+
+      assert.strictEqual(
+        validateArgValue("small", schema, "size", "test-block"),
+        null,
+        "valid enum value passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue("large", schema, "size", "test-block"),
+        null,
+        "another valid enum value passes"
+      );
+
+      assert.true(
+        validateArgValue("huge", schema, "size", "test-block")?.includes(
+          'must be one of: "small", "medium", "large"'
+        ),
+        "invalid enum value fails"
+      );
     });
 
     test("validates number type", function (assert) {
@@ -538,6 +848,29 @@ module("Unit | Lib | blocks/arg-validation", function () {
       );
     });
 
+    test("validates number with enum constraint", function (assert) {
+      const schema = { type: "number", enum: [1, 2, 3, 5, 8] };
+
+      assert.strictEqual(
+        validateArgValue(1, schema, "priority", "test-block"),
+        null,
+        "valid enum value passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(8, schema, "priority", "test-block"),
+        null,
+        "another valid enum value passes"
+      );
+
+      assert.true(
+        validateArgValue(4, schema, "priority", "test-block")?.includes(
+          "must be one of: 1, 2, 3, 5, 8"
+        ),
+        "invalid enum value fails"
+      );
+    });
+
     test("validates boolean type", function (assert) {
       assert.strictEqual(
         validateArgValue(true, { type: "boolean" }, "enabled", "test-block"),
@@ -588,6 +921,97 @@ module("Unit | Lib | blocks/arg-validation", function () {
           "tags",
           "test-block"
         )?.includes("must be a string")
+      );
+    });
+
+    test("validates array with minLength constraint", function (assert) {
+      const schema = { type: "array", minLength: 2 };
+
+      assert.strictEqual(
+        validateArgValue(["a", "b"], schema, "tags", "test-block"),
+        null,
+        "exact minLength passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(["a", "b", "c"], schema, "tags", "test-block"),
+        null,
+        "above minLength passes"
+      );
+
+      assert.true(
+        validateArgValue(["a"], schema, "tags", "test-block")?.includes(
+          "must have at least 2 items"
+        ),
+        "below minLength fails"
+      );
+    });
+
+    test("validates array with maxLength constraint", function (assert) {
+      const schema = { type: "array", maxLength: 3 };
+
+      assert.strictEqual(
+        validateArgValue(["a", "b", "c"], schema, "tags", "test-block"),
+        null,
+        "exact maxLength passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(["a"], schema, "tags", "test-block"),
+        null,
+        "below maxLength passes"
+      );
+
+      assert.true(
+        validateArgValue(
+          ["a", "b", "c", "d"],
+          schema,
+          "tags",
+          "test-block"
+        )?.includes("must have at most 3 items"),
+        "above maxLength fails"
+      );
+    });
+
+    test("validates array with combined constraints", function (assert) {
+      const schema = {
+        type: "array",
+        minLength: 1,
+        maxLength: 5,
+        itemType: "string",
+      };
+
+      assert.strictEqual(
+        validateArgValue(["a", "b", "c"], schema, "tags", "test-block"),
+        null,
+        "valid array passes"
+      );
+
+      assert.true(
+        validateArgValue([], schema, "tags", "test-block")?.includes(
+          "must have at least 1 items"
+        ),
+        "empty array fails"
+      );
+
+      assert.true(
+        validateArgValue(
+          ["a", "b", "c", "d", "e", "f"],
+          schema,
+          "tags",
+          "test-block"
+        )?.includes("must have at most 5 items"),
+        "too many items fails"
+      );
+
+      assert.true(
+        validateArgValue(
+          ["a", 123, "c"],
+          schema,
+          "tags",
+          "test-block"
+        )?.includes("must be a string"),
+        "wrong item type fails"
       );
     });
   });

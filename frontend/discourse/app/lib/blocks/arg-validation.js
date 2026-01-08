@@ -35,9 +35,12 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "default",
   "itemType",
   "pattern",
+  "minLength",
+  "maxLength",
   "min",
   "max",
   "integer",
+  "enum",
 ]);
 
 /**
@@ -203,6 +206,92 @@ export function validateArgsSchema(argsSchema, blockName) {
       );
     }
 
+    // minLength is only valid for string or array type
+    if (
+      argDef.minLength !== undefined &&
+      argDef.type !== "string" &&
+      argDef.type !== "array"
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has "minLength" but type is "${argDef.type}". ` +
+          `"minLength" is only valid for string or array type.`
+      );
+    }
+
+    // Validate minLength is a non-negative integer
+    if (
+      argDef.minLength !== undefined &&
+      (!Number.isInteger(argDef.minLength) || argDef.minLength < 0)
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has invalid "minLength" value. Must be a non-negative integer.`
+      );
+    }
+
+    // maxLength is only valid for string or array type
+    if (
+      argDef.maxLength !== undefined &&
+      argDef.type !== "string" &&
+      argDef.type !== "array"
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has "maxLength" but type is "${argDef.type}". ` +
+          `"maxLength" is only valid for string or array type.`
+      );
+    }
+
+    // Validate maxLength is a non-negative integer
+    if (
+      argDef.maxLength !== undefined &&
+      (!Number.isInteger(argDef.maxLength) || argDef.maxLength < 0)
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has invalid "maxLength" value. Must be a non-negative integer.`
+      );
+    }
+
+    // Validate minLength <= maxLength
+    if (
+      argDef.minLength !== undefined &&
+      argDef.maxLength !== undefined &&
+      argDef.minLength > argDef.maxLength
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has minLength (${argDef.minLength}) greater than maxLength (${argDef.maxLength}).`
+      );
+    }
+
+    // enum is only valid for string or number type
+    if (
+      argDef.enum !== undefined &&
+      argDef.type !== "string" &&
+      argDef.type !== "number"
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has "enum" but type is "${argDef.type}". ` +
+          `"enum" is only valid for string or number type.`
+      );
+    }
+
+    // Validate enum is an array with at least one element
+    if (argDef.enum !== undefined) {
+      if (!Array.isArray(argDef.enum) || argDef.enum.length === 0) {
+        raiseBlockError(
+          `Block "${blockName}": arg "${argName}" has invalid "enum" value. Must be an array with at least one element.`
+        );
+      } else {
+        // Validate all enum values match the arg type
+        const expectedType = argDef.type === "string" ? "string" : "number";
+        for (const enumValue of argDef.enum) {
+          if (typeof enumValue !== expectedType) {
+            raiseBlockError(
+              `Block "${blockName}": arg "${argName}" enum contains invalid value "${enumValue}". All values must be ${expectedType}s.`
+            );
+          }
+        }
+      }
+    }
+
     // Validate required is boolean
     if (argDef.required !== undefined && typeof argDef.required !== "boolean") {
       raiseBlockError(
@@ -245,7 +334,17 @@ export function validateArgsSchema(argsSchema, blockName) {
  * @returns {string|null} Error message if validation fails, null otherwise
  */
 export function validateArgValue(value, argSchema, argName, blockName) {
-  const { type, itemType, pattern, min, max, integer } = argSchema;
+  const {
+    type,
+    itemType,
+    pattern,
+    minLength,
+    maxLength,
+    min,
+    max,
+    integer,
+    enum: enumValues,
+  } = argSchema;
 
   // Skip validation if value is undefined (handled by required check)
   if (value === undefined) {
@@ -260,6 +359,18 @@ export function validateArgValue(value, argSchema, argName, blockName) {
       // Validate against pattern if specified
       if (pattern && !pattern.test(value)) {
         return `Block "${blockName}": arg "${argName}" value "${value}" does not match required pattern ${pattern}.`;
+      }
+      // Validate minLength constraint
+      if (minLength !== undefined && value.length < minLength) {
+        return `Block "${blockName}": arg "${argName}" must be at least ${minLength} characters, got ${value.length}.`;
+      }
+      // Validate maxLength constraint
+      if (maxLength !== undefined && value.length > maxLength) {
+        return `Block "${blockName}": arg "${argName}" must be at most ${maxLength} characters, got ${value.length}.`;
+      }
+      // Validate enum constraint
+      if (enumValues !== undefined && !enumValues.includes(value)) {
+        return `Block "${blockName}": arg "${argName}" must be one of: ${enumValues.map((v) => `"${v}"`).join(", ")}. Got "${value}".`;
       }
       break;
 
@@ -279,6 +390,10 @@ export function validateArgValue(value, argSchema, argName, blockName) {
       if (max !== undefined && value > max) {
         return `Block "${blockName}": arg "${argName}" must be at most ${max}, got ${value}.`;
       }
+      // Validate enum constraint
+      if (enumValues !== undefined && !enumValues.includes(value)) {
+        return `Block "${blockName}": arg "${argName}" must be one of: ${enumValues.join(", ")}. Got ${value}.`;
+      }
       break;
 
     case "boolean":
@@ -290,6 +405,14 @@ export function validateArgValue(value, argSchema, argName, blockName) {
     case "array":
       if (!Array.isArray(value)) {
         return `Block "${blockName}": arg "${argName}" must be an array, got ${typeof value}.`;
+      }
+      // Validate minLength constraint
+      if (minLength !== undefined && value.length < minLength) {
+        return `Block "${blockName}": arg "${argName}" must have at least ${minLength} items, got ${value.length}.`;
+      }
+      // Validate maxLength constraint
+      if (maxLength !== undefined && value.length > maxLength) {
+        return `Block "${blockName}": arg "${argName}" must have at most ${maxLength} items, got ${value.length}.`;
       }
 
       // Validate item types if specified
@@ -426,7 +549,17 @@ export function validateBlockArgs(config, blockClass) {
  * @returns {string | null} Error message if validation fails, null otherwise.
  */
 function validateArgValueForSchema(value, argSchema, argName) {
-  const { type, itemType, pattern, min, max, integer } = argSchema;
+  const {
+    type,
+    itemType,
+    pattern,
+    minLength,
+    maxLength,
+    min,
+    max,
+    integer,
+    enum: enumValues,
+  } = argSchema;
 
   switch (type) {
     case "string":
@@ -435,6 +568,15 @@ function validateArgValueForSchema(value, argSchema, argName) {
       }
       if (pattern && !pattern.test(value)) {
         return `Arg "${argName}" value "${value}" does not match required pattern ${pattern}.`;
+      }
+      if (minLength !== undefined && value.length < minLength) {
+        return `Arg "${argName}" must be at least ${minLength} characters, got ${value.length}.`;
+      }
+      if (maxLength !== undefined && value.length > maxLength) {
+        return `Arg "${argName}" must be at most ${maxLength} characters, got ${value.length}.`;
+      }
+      if (enumValues !== undefined && !enumValues.includes(value)) {
+        return `Arg "${argName}" must be one of: ${enumValues.map((v) => `"${v}"`).join(", ")}. Got "${value}".`;
       }
       break;
 
@@ -451,6 +593,9 @@ function validateArgValueForSchema(value, argSchema, argName) {
       if (max !== undefined && value > max) {
         return `Arg "${argName}" must be at most ${max}, got ${value}.`;
       }
+      if (enumValues !== undefined && !enumValues.includes(value)) {
+        return `Arg "${argName}" must be one of: ${enumValues.join(", ")}. Got ${value}.`;
+      }
       break;
 
     case "boolean":
@@ -462,6 +607,12 @@ function validateArgValueForSchema(value, argSchema, argName) {
     case "array":
       if (!Array.isArray(value)) {
         return `Arg "${argName}" must be an array, got ${typeof value}.`;
+      }
+      if (minLength !== undefined && value.length < minLength) {
+        return `Arg "${argName}" must have at least ${minLength} items, got ${value.length}.`;
+      }
+      if (maxLength !== undefined && value.length > maxLength) {
+        return `Arg "${argName}" must have at most ${maxLength} items, got ${value.length}.`;
       }
       if (itemType) {
         for (let i = 0; i < value.length; i++) {
