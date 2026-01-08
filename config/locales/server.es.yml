@@ -3162,6 +3162,7 @@ es:
         Conforme vayas participando, te iremos conociendo más y se irán levantando tus limitaciones temporales como usuario nuevo. Con el tiempo ganarás [niveles de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que incluyen capacidades especiales para ayudarnos a gestionar la comunidad juntos.
     welcome_user:
       title: "Bienvenida al usuario"
+      preview: "¡Te damos la bienvenida a %{site_name}!"
       subject_template: "¡Te damos la bienvenida a %{site_name}!"
       text_body_template: |
         ¡Gracias por unirte a %{site_name}! ¡Te damos la bienvenida!
@@ -3189,6 +3190,7 @@ es:
         Un gran poder conlleva una gran responsabilidad. Si no tienes experiencia moderando, consulta la [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Bienvenida al invitado"
+      preview: "¡Te damos la bienvenida a %{site_name}!"
       subject_template: "¡Te damos la bienvenida a %{site_name}!"
       text_body_template: |
         Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
@@ -3608,6 +3610,7 @@ es:
         Puedes cambiar este comportamiento a través de los ajustes «newuser_spam_host_threshold» y «allowed_spam_host_domains». Considera añadir %{domains} a la lista de dominios permitidos si deberían estar exentos.
     unsilenced:
       title: "Ha dejado de estar silenciado"
+      preview: "Cuenta reestablecida."
       subject_template: "Cuenta reestablecida"
       text_body_template: |
         Hola,
@@ -3656,8 +3659,6 @@ es:
     Para cancelar estos correos, [haz clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
-  email_from: "%{user_name} vía %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
@@ -3991,6 +3992,7 @@ es:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Iniciar sesión con un enlace"
+      preview: "Iniciar sesión con un enlace."
       subject_template: "[%{email_prefix}] Iniciar sesión con un enlace"
       text_body_template: |
         Aquí tienes tu enlace para iniciar sesión en [%{site_name}](%{base_url}).

@@ -40,7 +40,7 @@ ko:
   title: "Discourse"
   topics: "토픽"
   posts: "포스트"
-  views: "조회수"
+  views: "조회"
   loading: "로드 중"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a>를 사용합니다. JavaScript가 활성화된 상태에서 가장 잘 보입니다.'
   sign_up: "회원가입"
@@ -2214,6 +2214,7 @@ ko:
         여기를 확인하면 일시적인 신규 사용자 제한이 해제됩니다. 시간이 지남에 따라 [신뢰 레벨](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)이 부여되어 함께 커뮤니티를 관리하는 데 유용한 특수 기능을 사용하실 수 있습니다.
     welcome_user:
       title: "사용자 환영"
+      preview: "%{site_name}에 오신 것을 환영합니다!"
       subject_template: "%{site_name}에 오신 것을 환영합니다!"
       text_body_template: |
         %{site_name}에 가입해 주셔서 감사합니다. 환영합니다!
@@ -2241,6 +2242,7 @@ ko:
         이런 권한에는 책임이 따르기 마련입니다. 운영이 처음이라면 [관리 가이드](https://meta.discourse.org/t/discourse-moderation-guide/63116)를 참조하세요.
     welcome_invite:
       title: "초대 환영"
+      preview: "%{site_name}에 오신 것을 환영합니다!"
       subject_template: "%{site_name}에 오신 것을 환영합니다!"
       text_body_template: |
         %{site_name} 초대를 수락해 주셔서 감사합니다. 환영합니다!
@@ -2602,6 +2604,7 @@ ko:
         이는 `newuser_spam_host_threshold` 및 `allowed_spam_host_domains` 사이트 설정에서 수정할 수 있습니다. 도메인에 문제가 없다면 허용 목록에 %{domains} 도메인을 추가하세요.
     unsilenced:
       title: "차단 해제됨"
+      preview: "계정의 대기가 해제되었습니다."
       subject_template: "계정 보류 해제됨"
       text_body_template: |
         안녕하세요,
@@ -2648,7 +2651,6 @@ ko:
     이러한 이메일을 구독 해제하려면 [여기를 클릭하세요](%{unsubscribe_url}).
   subject_re: "덧: "
   subject_pm: "[PM] "
-  email_from: "%{site_name}의 %{user_name} 님"
   user_notifications:
     previous_discussion: "이전 답장"
     reached_limit:
@@ -2970,6 +2972,7 @@ ko:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "링크를 통해 로그인"
+      preview: "링크를 통해 로그인."
       subject_template: "[%{email_prefix}] 링크를 통해 로그인"
       text_body_template: |
         다음은 [%{site_name}](%{base_url})에 로그인할 수 있는 링크입니다.

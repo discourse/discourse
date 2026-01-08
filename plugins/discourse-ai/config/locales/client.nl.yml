@@ -230,6 +230,8 @@ nl:
           name: "Insluitingen"
           description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Gerelateerde topics"
         discord:
           name: "Discord-integratie"
           description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"
@@ -240,6 +242,8 @@ nl:
           generate_concepts: "Conceptenafleiding"
           match_concepts: "Conceptenmatching"
           deduplicate_concepts: "Conceptendeduplicatie"
+          setting_groups:
+            personas: "Persona's"
         ai_helper:
           name: "Helper"
           description: "Helpt gebruikers bij de interactie met de community, zoals het maken van topics, het schrijven van berichten en het lezen van content"
@@ -254,6 +258,9 @@ nl:
           image_caption: "Afbeeldingen bijschriften geven"
           translator: "Vertaler"
           post_illustrator: "Berichtillustrator"
+          setting_groups:
+            automation: "Automatisering"
+            personas: "Persona's"
         translation:
           name: "Vertaling"
           description: "Vertaalt content in ondersteunde talen"
@@ -261,6 +268,8 @@ nl:
           post_raw_translator: "Ruwe berichtvertaler"
           topic_title_translator: "Topictitelvertaler"
           short_text_translator: "Kortetekstvertaler"
+          setting_groups:
+            personas: "Persona's"
         spam:
           name: "Spam"
           description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"

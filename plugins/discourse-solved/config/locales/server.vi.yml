@@ -11,4 +11,10 @@ vi:
       yaxis: "Tổng số"
   badges:
     solved_1:
-      name: "Đã xử lý!"
+      name: "Đã Giải Quyết!"
+    solved_2:
+      name: "Cố Vấn"
+    solved_3:
+      name: "Biết Tuốt"
+    solved_4:
+      name: "Chuyên Gia Giải Pháp"

@@ -1163,6 +1163,9 @@ sq:
       new_private_message: "Mesazh i ri"
       private_message: "Mesazh"
       private_messages: "Mesazhet"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktivizuar?"
       user_notifications:
         filters:
           filter_by: "Filtro sipas"
@@ -1472,7 +1475,6 @@ sq:
         tags: "Etiketat"
         interface: "Ndërfaqja"
         apps: "Aplikimet"
-        navigation_menu: "Menuja e navigimit"
       change_password:
         success: "(emaili u dërgua)"
         in_progress: "(duke dërguar emailin)"

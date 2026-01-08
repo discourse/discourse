@@ -241,6 +241,8 @@ sk:
           generate_concepts: "Inferencia konceptov"
           match_concepts: "Zhoda konceptov"
           deduplicate_concepts: "Deduplikácia konceptov"
+          setting_groups:
+            personas: "Personas"
         ai_helper:
           name: "Pomocník"
           description: "Pomáha používateľom pri interakcii s komunitou, ako je vytváranie tém, písanie príspevkov a čítanie obsahu"
@@ -255,6 +257,9 @@ sk:
           image_caption: "Obrázky s popismi"
           translator: "Prekladač"
           post_illustrator: "Ilustrátor príspevkov"
+          setting_groups:
+            automation: "Automatizácia"
+            personas: "Personas"
         translation:
           name: "Preklad"
           description: "Prekladá obsah do podporovaných jazykov"
@@ -262,6 +267,8 @@ sk:
           post_raw_translator: "Prekladač RAW"
           topic_title_translator: "Prekladač názvov tém"
           short_text_translator: "Prekladač krátkych textov"
+          setting_groups:
+            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifikuje potenciálny spam pomocou vybranej metódy LLM a označí ho moderátorom stránok na kontrolu v zozname kontrol."

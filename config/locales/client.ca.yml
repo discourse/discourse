@@ -933,6 +933,9 @@ ca:
       new_private_message: "Missatge nou"
       private_message: "Missatge"
       private_messages: "Missatges"
+      upcoming_changes:
+        for_user:
+          enabled: "Activat?"
       user_notifications:
         filters:
           all: "Tot"

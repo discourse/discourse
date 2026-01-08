@@ -1263,6 +1263,9 @@ lt:
       new_private_message: "Nauja žinutė"
       private_message: "Žinutės"
       private_messages: "Žinutės"
+      upcoming_changes:
+        for_user:
+          enabled: "Galimas?"
       user_notifications:
         filters:
           filter_by: "Filtruoti pagal"
@@ -4142,6 +4145,8 @@ lt:
           form:
             location:
               label: "Vieta"
+            text_section:
+              locale_label: "Kalba"
             header_logged_in:
               placeholder: "Sveikas sugrįžęs, %{preferred_display_name}!"
             header_anonymous:

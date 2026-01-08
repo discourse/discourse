@@ -1126,6 +1126,9 @@ nb_NO:
       new_private_message: "Ny melding"
       private_message: "Melding"
       private_messages: "Meldinger"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktivert?"
       user_notifications:
         filters:
           filter_by: "Filtrer etter"
@@ -1436,7 +1439,6 @@ nb_NO:
         tags: "Stikkord"
         interface: "Grensesnitt"
         apps: "Programmer"
-        navigation_menu: "Navigasjonsmeny"
       change_password:
         success: "(e-post sendt)"
         in_progress: "(sender e-post)"

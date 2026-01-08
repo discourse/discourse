@@ -6,6 +6,10 @@
 
 zh_CN:
   js:
+    carousel:
+      go_to_slide: "转到幻灯片 %{index}"
+      previous: "上一张幻灯片"
+      next: "下一张幻灯片"
     number:
       format:
         separator: "."
@@ -1309,7 +1313,16 @@ zh_CN:
       private_message: "私信"
       private_messages: "消息"
       upcoming_changes:
-        title: "即将发布的更新"
+        title: "即将推出的更改"
+        for_user:
+          upcoming_change: "即将推出的变化"
+          enabled: "已启用？"
+          why: "为什么？"
+        why_reasons:
+          not_in_specific_groups: "该用户不属于此次更改所需的特定群组"
+          in_specific_groups: "用户属于此更改所需的特定群组"
+          enabled_for_everyone: "此更改已对所有成员启用"
+          enabled_for_no_one: "此更改对所有成员均未启用"
       user_notifications:
         filters:
           filter_by: "筛选依据"
@@ -1616,6 +1629,7 @@ zh_CN:
         interface: "界面"
         apps: "应用"
         navigation_menu: "导航菜单"
+        upcoming_changes: "即将推出的更改"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -2793,6 +2807,10 @@ zh_CN:
         move_outside_grid: "移出网格"
       image: "图片"
       grid_label: "这将以网格形式显示"
+      grid_mode_grid: "网格"
+      grid_mode_carousel: "轮播"
+      grid_mode_title: "将图片库样式设置为 %{mode}"
+      remove_grid: "移除网格"
       image_scale_button: "将图片缩放至 %{percent}%"
       delete_image_button: 删除图片
       toggle_image_grid: 切换图片网格
@@ -5325,15 +5343,18 @@ zh_CN:
                 below_site_header: "站点标题下方"
             text_section:
               title: "自定义文本"
-              variables: "您可以在文本中使用这些变量： <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "语言"
             header_new_members:
               label: "新成员标题"
-              placeholder: "%{preferred_display_name}，欢迎来到 %{site_name}！"
+              description: "可用变量：<code>&percnt;{preferred_display_name}</code>"
+              placeholder: "欢迎， %{preferred_display_name}！"
             header_logged_in:
               label: "已登录成员的标题"
+              description: "可用变量： <code>&percnt;{preferred_display_name}</code>"
               placeholder: "欢迎回来，%{preferred_display_name}！"
             header_anonymous:
               label: "匿名访客标题"
+              description: "可用变量： <code>&percnt;{site_name}</code>"
               placeholder: "欢迎来到 %{site_name}！"
             subheader_logged_in:
               label: "已登录成员的子标题"
@@ -7387,6 +7408,11 @@ zh_CN:
         approve_bulk_success: "成功！所有选定用户已被批准并通知。"
         time_read: "阅读时间"
         post_edits_count: "帖子编辑"
+        upcoming_changes:
+          title: "用户即将推出的变化"
+          description: "要修改群组或启用或禁用即将推出的更改，请访问 <a href='%{basePath}/admin/config/upcoming-changes'>即将推出的更改配置页面</a>。"
+          filter_placeholder: "按名称或描述筛选即将推出的更改"
+          filter_no_results: "未发现即将推出的更改"
         exports:
           title: 用户导出
           download:
@@ -7410,7 +7436,6 @@ zh_CN:
           button: "删除所有帖子"
           progress:
             title: "删除帖子的进度"
-            description: "正在删除帖子…"
           confirmation:
             title: "删除 @%{username} 发布的所有帖子"
             description: |

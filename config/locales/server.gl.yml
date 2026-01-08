@@ -2164,6 +2164,7 @@ gl:
         A medida que participe aquí, irémolo coñecendo e as limitacións temporais como novo usuario irán desaparecendo. Co tempo gañará [niveis de confianza] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclúen funcionalidades especiais para axudarnos a xestionar xuntos esta comunidade.
     welcome_user:
       title: "Benvida ao usuario"
+      preview: "Dámoslle a benvida a %{site_name}!"
       subject_template: "Dámoslle a benvida a %{site_name}!"
       text_body_template: |
         Grazas por se unir a %{site_name} e benvido/a!
@@ -2191,6 +2192,7 @@ gl:
         Canda o poder vén a responsabilidade. Se non ten experiencia moderando, visite a [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Convite de benvida"
+      preview: "Dámoslle a benvida a %{site_name}!"
       subject_template: "Dámoslle a benvida a %{site_name}!"
       text_body_template: |
         Grazas por aceptar a invitación a %{site_name} -- dámoslle a benvida!
@@ -2533,6 +2535,7 @@ gl:
         Isto pode modificarse nos axustes do sitio `newuser_spam_host_threshold` e `white_listed_spam_host_domains`. Considere a opción de engadir %{domains} á listaxe de permitidos se quere estabelecer unha excepción con eles.
     unsilenced:
       title: "Sen silenciar"
+      preview: "Conta restabelecida."
       subject_template: "Conta restabelecida"
       text_body_template: |
         Ola,
@@ -2581,7 +2584,6 @@ gl:
     Para se dar de baixa destes correos electrónicos, [prema aquí](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[MP] "
-  email_from: "%{user_name} vía %{site_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:
@@ -2882,6 +2884,7 @@ gl:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Iniciar sesión vía ligazón"
+      preview: "Iniciar sesión vía ligazón."
       subject_template: "[%{email_prefix}] Iniciar sesión vía ligazón"
       text_body_template: |
         Velaquí a súa ligazón para iniciar sesión en [%{site_name}](%{base_url}).

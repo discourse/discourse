@@ -1392,7 +1392,9 @@ ug:
       private_message: "ئۇچۇر"
       private_messages: "ئۇچۇر"
       upcoming_changes:
-        title: "كەلگۈسىدىكى ئۆزگىرىش قوزغىتىلدى"
+        title: "كەلگۈسى ئۆزگىرىش"
+        for_user:
+          enabled: "قوزغىتىلدى؟"
       user_notifications:
         filters:
           filter_by: "سۈزگۈچى"
@@ -1716,6 +1718,7 @@ ug:
         interface: "ئارايۈز"
         apps: "ئەپ"
         navigation_menu: "يولباشچى تىزىملىك"
+        upcoming_changes: "كەلگۈسى ئۆزگىرىش"
       change_password:
         success: "(ئېلخەت يوللاندى)"
         in_progress: "(ئېلخەت يوللاۋاتىدۇ…)"
@@ -5577,6 +5580,9 @@ ug:
                 below_site_header: "بېكەت بەت قېشىنىڭ ئاستىدا"
             text_section:
               title: "ئىختىيارى تېكىست"
+              locale_label: "تىل"
+            header_new_members:
+              placeholder: "%{preferred_display_name} غا خۇش كەلدىڭىز!"
             header_logged_in:
               placeholder: "قايتا خۇش كەلدىڭىز، %{preferred_display_name}!"
             header_anonymous:
@@ -7653,7 +7659,6 @@ ug:
           button: "ھەممە يازمىنى ئۆچۈر"
           progress:
             title: "يازما ئۆچۈرۈشنىڭ ئىلگىرىلىشى"
-            description: "يازما ئۆچۈرۈۋاتىدۇ…"
           confirmation:
             title: "@%{username} نىڭ ھەممە يازمىسىنى ئۆچۈر"
             description: |

@@ -6,6 +6,10 @@
 
 uk:
   js:
+    carousel:
+      go_to_slide: "Перейти до слайда %{index}"
+      previous: "Попередній слайд"
+      next: "Наступний слайд"
     number:
       format:
         separator: "."
@@ -1567,7 +1571,16 @@ uk:
       private_message: "Повідомлення"
       private_messages: "Повідомлення"
       upcoming_changes:
-        title: "Майбутні зміни ввімкнено"
+        title: "Майбутні зміни"
+        for_user:
+          upcoming_change: "Майбутні зміни"
+          enabled: "Включено?"
+          why: "Чому?"
+        why_reasons:
+          not_in_specific_groups: "Користувач не належить до певних груп, необхідних для цієї зміни"
+          in_specific_groups: "Користувач належить до певних груп, необхідних для цієї зміни."
+          enabled_for_everyone: "Ця зміна доступна для всіх учасників"
+          enabled_for_no_one: "Ця зміна вимкнена для всіх учасників"
       user_notifications:
         filters:
           filter_by: "Фільтрувати за"
@@ -1924,7 +1937,8 @@ uk:
         tags: "Теґи"
         interface: "Інтерфейс"
         apps: "Застосунки"
-        navigation_menu: "Навігаційне меню"
+        navigation_menu: "Меню навігації"
+        upcoming_changes: "Майбутні зміни"
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
@@ -3248,6 +3262,10 @@ uk:
         move_outside_grid: "Переміщення за межі сітки"
       image: "зображення"
       grid_label: "Це відображатиметься у вигляді сітки"
+      grid_mode_grid: "Сітка"
+      grid_mode_carousel: "Карусель"
+      grid_mode_title: "Встановіть стиль галереї зображень на %{mode}"
+      remove_grid: "Видалити сітку"
       image_scale_button: "Масштабувати зображення до %{percent}%"
       delete_image_button: Видалити зображення
       toggle_image_grid: Перемкнути сітку зображень
@@ -6164,15 +6182,18 @@ uk:
                 below_site_header: "Нижче заголовка сайту"
             text_section:
               title: "Текст, який налаштовується"
-              variables: "Ви можете використовувати ці змінні у своєму тексті: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Мова"
             header_new_members:
               label: "Заголовок для нових учасників"
-              placeholder: "Ласкаво просимо на %{site_name}, %{preferred_display_name}!"
+              description: "Доступна змінна: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Ласкаво просимо, %{preferred_display_name}!"
             header_logged_in:
               label: "Заголовок для зареєстрованих учасників"
+              description: "Доступна змінна: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "З поверненням, %{preferred_display_name}!"
             header_anonymous:
               label: "Заголовок для анонімних відвідувачів"
+              description: "Доступна змінна: <code>&percnt;{site_name}</code>"
               placeholder: "Ласкаво просимо до сайту %{site_name}!"
             subheader_logged_in:
               label: "Підзаголовок для зареєстрованих учасників"
@@ -8313,6 +8334,11 @@ uk:
         approve_bulk_success: "Успіх! Всіх обраних користувачів було схвалено та сповіщено про це."
         time_read: "Час читання"
         post_edits_count: "Редагувати допис"
+        upcoming_changes:
+          title: "Майбутні зміни для користувачів"
+          description: "Щоб змінити групи або увімкнути чи вимкнути майбутні зміни, відвідайте <a href='%{basePath}/admin/config/upcoming-changes'>сторінку конфігурації майбутніх змін</a>."
+          filter_placeholder: "Фільтрувати майбутні зміни за назвою або описом"
+          filter_no_results: "Майбутніх змін не знайдено"
         exports:
           title: Експорт користувачів
           download:
@@ -8339,7 +8365,6 @@ uk:
           button: "Видалити всі дописи"
           progress:
             title: "Хід видалення дописів"
-            description: "Видалення дописів…"
           confirmation:
             title: "Видалити всі дописи від @%{username}"
             description: |

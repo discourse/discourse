@@ -10,5 +10,5 @@ vi:
       rss_polling:
         author: Tác giả
         feed_url: URL
-        discourse_category: Danh mục
+        discourse_category: Chuyên mục
         discourse_tags: Thẻ

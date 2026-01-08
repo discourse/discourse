@@ -1558,7 +1558,9 @@ he:
       private_message: "הודעה"
       private_messages: "הודעות"
       upcoming_changes:
-        title: "שינוי קרוב פעיל"
+        title: "שינויים צפויים"
+        for_user:
+          enabled: "מאופשר?"
       user_notifications:
         filters:
           filter_by: "סינון לפי"
@@ -1916,6 +1918,7 @@ he:
         interface: "מנשק"
         apps: "יישומים"
         navigation_menu: "תפריט ניווט"
+        upcoming_changes: "שינויים צפויים"
       change_password:
         success: "(דוא״ל נשלח)"
         in_progress: "(דוא״ל בשליחה)"
@@ -6134,10 +6137,10 @@ he:
                 below_site_header: "מתחת לכותרת האתר"
             text_section:
               title: "טקסט לבחירה"
-              variables: "אפשר להשתמש במשתנים האלה בטקסט שלך: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "שפה"
             header_new_members:
               label: "כותרת עליונה לחברים חדשים"
-              placeholder: "ברוך בואך אל %{site_name}, %{preferred_display_name}!"
+              placeholder: "ברוך בואך, %{preferred_display_name}!"
             header_logged_in:
               label: "כותרת עליונה לחברים שנכנסו למערכת"
               placeholder: "ברוך שובך, %{preferred_display_name}!"
@@ -8297,7 +8300,6 @@ he:
           button: "מחיקת כל הפוסטים"
           progress:
             title: "התקדמות מחיקת הפוסטים"
-            description: "פוסטים נמחקים…"
           confirmation:
             title: "למחוק את כל הפוסטים מאת ‎@%{username}"
             description: |

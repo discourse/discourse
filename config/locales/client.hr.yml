@@ -1425,6 +1425,9 @@ hr:
       new_private_message: "Nova poruka"
       private_message: "Poruka"
       private_messages: "Poruke"
+      upcoming_changes:
+        for_user:
+          enabled: "Omogućeno?"
       user_notifications:
         filters:
           filter_by: "Filtriraj po"
@@ -5623,6 +5626,8 @@ hr:
               options:
                 above_topic_content: "Sadržaj iznad teme"
                 below_site_header: "Ispod zaglavlja stranice"
+            text_section:
+              locale_label: "Jezik"
             header_logged_in:
               placeholder: "Dobrodošli natrag, %{preferred_display_name}!"
             header_anonymous:
@@ -7148,7 +7153,6 @@ hr:
           button: "Izbriši sve objave"
           progress:
             title: "Napredak brisanja objava"
-            description: "Brisanje objava…"
           confirmation:
             title: "Izbriši sve objave korisnika @%{username}"
             description: |

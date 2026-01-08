@@ -230,6 +230,8 @@ fr:
           name: "Intégrations"
           description: "Alimente des fonctionnalités telles que les sujets connexes et la recherche IA en générant des représentations sémantiques du texte"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Sujets connexes"
         discord:
           name: "Intégration à Discord"
           description: "Ajoute la possibilité de rechercher des chaînes Discord"
@@ -240,6 +242,8 @@ fr:
           generate_concepts: "Inférence de concepts"
           match_concepts: "Correspondance de concepts"
           deduplicate_concepts: "Déduplication des concepts"
+          setting_groups:
+            personas: "Personnages"
         ai_helper:
           name: "Assistant"
           description: "Permet aux utilisateurs d'interagir avec la communauté, par exemple en créant des sujets, en rédigeant des articles et en lisant du contenu"
@@ -254,6 +258,9 @@ fr:
           image_caption: "Images de légende"
           translator: "Traducteur"
           post_illustrator: "Illustrateur de publications"
+          setting_groups:
+            automation: "Automatisation"
+            personas: "Personnages"
         translation:
           name: "Traduction"
           description: "Traduit le contenu dans les langues prises en charge"
@@ -261,6 +268,8 @@ fr:
           post_raw_translator: "Traducteur du contenu brut de la publication"
           topic_title_translator: "Traducteur de titre de sujet"
           short_text_translator: "Traducteur de textes courts"
+          setting_groups:
+            personas: "Personnages"
         spam:
           name: "Contenu indésirable"
           description: "Identifie les contenus indésirables potentiels à l'aide du LLM sélectionné et les signale aux modérateurs du site afin qu'ils les inspectent dans la file d'attente de révision"

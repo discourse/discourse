@@ -801,8 +801,10 @@ et:
     queued_by_staff:
       title: "Postitus vajab kinnitust"
     welcome_user:
+      preview: "Tere tulemast saidile %{site_name}!"
       subject_template: "Tere tulemast %{site_name}!"
     welcome_invite:
+      preview: "Tere tulemast saidile %{site_name}!"
       subject_template: "Tere tulemast %{site_name}!"
     backup_failed:
       subject_template: "Varundamine ebaõnnestus"

@@ -227,6 +227,8 @@ ja:
           name: "埋め込み"
           description: "テキストのセマンティック表現を生成することで、関連トピックや AI 検索などの機能を強化します"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "関連トピック"
         discord:
           name: "Discord 統合"
           description: "Discord チャンネルを検索する機能を追加します"
@@ -237,6 +239,8 @@ ja:
           generate_concepts: "概念の推論"
           match_concepts: "概念の照合"
           deduplicate_concepts: "概念の重複排除"
+          setting_groups:
+            personas: "ペルソナ"
         ai_helper:
           name: "ヘルパー"
           description: "トピックの作成、投稿の作成、コンテンツの閲覧など、ユーザーのコミュニティー操作を支援します"
@@ -251,6 +255,9 @@ ja:
           image_caption: "画像のキャプション設定"
           translator: "翻訳ツール"
           post_illustrator: "イラスト投稿ツール"
+          setting_groups:
+            automation: "自動化"
+            personas: "ペルソナ"
         translation:
           name: "翻訳"
           description: "コンテンツをサポートされている言語で翻訳します"
@@ -258,6 +265,8 @@ ja:
           post_raw_translator: "投稿の生の翻訳ツール"
           topic_title_translator: "トピックタイトルの翻訳ツール"
           short_text_translator: "短いテキストの翻訳ツール"
+          setting_groups:
+            personas: "ペルソナ"
         spam:
           name: "迷惑"
           description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで調査できるように通報します"

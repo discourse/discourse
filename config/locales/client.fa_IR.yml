@@ -1224,6 +1224,9 @@ fa_IR:
       new_private_message: "پیام جدید"
       private_message: "پیام"
       private_messages: "پیام‌ها"
+      upcoming_changes:
+        for_user:
+          enabled: "فعال شده؟"
       user_notifications:
         filters:
           filter_by: "فیلتر توسط"
@@ -1537,7 +1540,6 @@ fa_IR:
         tags: "برچسب‌‌ها"
         interface: "رابط"
         apps: "برنامه‌ها"
-        navigation_menu: "منوی ناوبری"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
@@ -4929,6 +4931,8 @@ fa_IR:
           form:
             location:
               label: "موقعیت"
+            text_section:
+              locale_label: "زبان"
             header_logged_in:
               placeholder: "خوش آمدید، %{preferred_display_name}!"
             header_anonymous:
@@ -6720,7 +6724,6 @@ fa_IR:
           button: "پاک کردن همه‌ی نوشته‌ها"
           progress:
             title: "پیشرفت در حذف فرسته‌ها"
-            description: "در حال حذف فرسته‌ها…"
           confirmation:
             title: "حذف همه فرسته‌های @%{username}"
             text: "حذف فرسته‌های @%{username}"

@@ -266,6 +266,9 @@ de:
           name: "Einbettungen"
           description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Verwandte Themen"
+            semantic_search: "Semantische Suche"
         discord:
           name: "Discord-Integration"
           description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
@@ -276,6 +279,8 @@ de:
           generate_concepts: "Konzepterkennung"
           match_concepts: "Passende Konzepte"
           deduplicate_concepts: "Deduplizierung von Konzepten"
+          setting_groups:
+            personas: "Personas"
         ai_helper:
           name: "Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
@@ -290,6 +295,9 @@ de:
           image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
+          setting_groups:
+            automation: "Automatisierung"
+            personas: "Personas"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -297,6 +305,8 @@ de:
           post_raw_translator: "Übersetzer für die Roheingabe des Beitrags"
           topic_title_translator: "Thementitel-Übersetzer"
           short_text_translator: "Kurztext-Übersetzer"
+          setting_groups:
+            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."

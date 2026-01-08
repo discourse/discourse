@@ -1346,6 +1346,9 @@ fr:
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
+      upcoming_changes:
+        for_user:
+          enabled: "Activé ?"
       user_notifications:
         filters:
           filter_by: "Filtrer par"
@@ -5376,6 +5379,8 @@ fr:
               options:
                 above_topic_content: "Au-dessus du contenu du sujet"
                 below_site_header: "Sous l'en-tête du site"
+            text_section:
+              locale_label: "Langue "
             header_logged_in:
               placeholder: "Bienvenue, %{preferred_display_name} !"
             header_anonymous:
@@ -7425,7 +7430,6 @@ fr:
           button: "Supprimer tous les messages"
           progress:
             title: "Progression de la suppression des messages"
-            description: "Suppression des messages…"
           confirmation:
             title: "Supprimer tous les messages de @%{username}"
             description: |

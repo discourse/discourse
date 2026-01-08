@@ -49,7 +49,6 @@ de:
     all_day_event_start_time: "Ereignisse, für die keine Startzeit angegeben ist, beginnen zu dieser Zeit. Das Format lautet HH:mm. Gib „06:00“ für 6 Uhr morgens ein"
     all_day_event_end_time: "Ereignisse, für die keine Endzeit angegeben ist, enden zu dieser Zeit. Das Format lautet HH:mm. Gib „18:00“ für 6 Uhr abends ein"
     all_day_event_time_error: "Ungültige Zeit. Format muss HH:mm sein (Beispiel: 08:00)."
-    calendar_categories: "Zeigt einen Kalender oben in einer Kategorie an. Erforderliche Einstellungen sind categoryId und postId. Zum Beispiel: categoryId=6;postId=453\n Andere gültige Einstellungen: tzPicker, weekends und defaultView."
     calendar_categories_outlet: "Hier kannst du einstellen, welches Outlet den Kategoriekalender anzeigen soll."
     working_days: "Lege Arbeitstage fest. Du kannst die Verfügbarkeit einer Gruppe mit dem `timezones`-Tag in einem Beitrag anzeigen, z. B.: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Startzeit des Arbeitstages."

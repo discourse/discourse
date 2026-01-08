@@ -1742,6 +1742,7 @@ hy:
         Քանի որ Դուք այստեղի մասնակից եք, մենք կճանաչենք Ձեզ, և նոր օգտատիրոջ ժամանակավոր սահմանափակումները կհանվեն: Ժամանակի ընթացքում Դուք կվաստակեք [վստահության մակարդակներ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), որոնք պարունակում են հատուկ կարողություններ՝ մեզ օգնելու մեր համայնքը կառավարել միասին:
     welcome_user:
       title: "Ողջունել Օգտատիրոջը"
+      preview: "Բարի գալուստ %{site_name}!"
       subject_template: "Բարի գալուստ %{site_name}!"
       text_body_template: |
         Շնորհակալ ենք %{site_name} -ին միանալու համար և բարի գալուստ!
@@ -1760,6 +1761,7 @@ hy:
         Մենք իսկապես ուրախ ենք, որ Դուք ժամանակ եք անցկացնում մեզ հետ, և մենք կցանկանայինք ավելին իմանալ Ձեր մասին: Գտեք մի պահ և [լրացրեք Ձեր պրոֆիլը](%{base_url}/my/preferences/profile) կամ ազատ [սկսեք նոր թեմա](%{base_url}/categories):
     welcome_invite:
       title: "Ողջույնի Հրավեր"
+      preview: "Բարի գալուստ %{site_name}!"
       subject_template: "Բարի գալուստ %{site_name}!"
       text_body_template: |
         Շնորհակալ ենք %{site_name} -ին հրավերը ընդունելու համար -- բարի գալուստ!
@@ -2031,6 +2033,7 @@ hy:
       subject_template: " %{username} նոր օգտատիրոջ գիառումները արդելափակվել են կրկնվող հղումների պատճառով:"
     unsilenced:
       title: "Միացված"
+      preview: "Հաշիվը այլևս սպասման մեջ չէ."
       subject_template: "Հաշիվը այլևս սպասման մեջ չէ"
       text_body_template: |
         Ողջույն,
@@ -2075,7 +2078,6 @@ hy:
     Այս էլ. նամակների բաժանորդագրումից դուրս գալու համար, [սեղմեք այստեղ](%{unsubscribe_url}):
   subject_re: "Re: "
   subject_pm: "[Անձնական Նամակ] "
-  email_from: "%{user_name} -ը %{site_name} -ի միջոցով"
   user_notifications:
     previous_discussion: "Նախորդ Պատասխանները"
     reached_limit:
@@ -2314,6 +2316,7 @@ hy:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Մուտք գործեք հղման միջոցով"
+      preview: "Մուտք գործեք հղման միջոցով."
       subject_template: "[%{email_prefix}] Մուտք գործեք հղման միջոցով"
       text_body_template: |
         Ահա Ձեր մուտքի հղումը այստեղ՝ [%{site_name}](%{base_url}).

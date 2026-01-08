@@ -3049,6 +3049,7 @@ ja:
         ここで参加すると、あなたのことを知れるようになり、新規ユーザーの制限が一時的に解除されます。時間が経つにつれ、共にコミュニティーを管理するための特別な機能が含まれた[信頼レベル](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)を獲得できるようになります。
     welcome_user:
       title: "ようこそ"
+      preview: "%{site_name} へようこそ！"
       subject_template: "%{site_name} へようこそ！"
       text_body_template: |
         %{site_name} に参加していただきありがとうございます！
@@ -3076,6 +3077,7 @@ ja:
         偉大な力には大きな責任が伴います。介入に新しい方は、[介入ガイド](https://meta.discourse.org/t/discourse-moderation-guide/63116)をご覧ください。
     welcome_invite:
       title: "ようこそ - 招待"
+      preview: "%{site_name} へようこそ！"
       subject_template: "%{site_name} へようこそ！"
       text_body_template: |
         %{site_name} への招待を承諾していただき、ありがとうございます -- ようこそ！
@@ -3493,6 +3495,7 @@ ja:
         これは、`newuser_spam_host_threshold` および `allowed_spam_host_domains` サイト設定から変更できます。例外である場合は、ホワイトリストに %{domains} を追加することを検討してください。
     unsilenced:
       title: "投稿禁止が解除されました"
+      preview: "アカウントは保留状態でなくなりました."
       subject_template: "アカウントは保留状態でなくなりました"
       text_body_template: |
         こんにちは。
@@ -3539,8 +3542,6 @@ ja:
     メールの購読を解除するには、[こちらをクリック](%{unsubscribe_url})してください。
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{site_name} 経由の %{user_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "以前の返信"
     reached_limit:
@@ -3872,6 +3873,7 @@ ja:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "リンク経由のログイン"
+      preview: "リンク経由のログイン."
       subject_template: "[%{email_prefix}] リンク経由のログイン"
       text_body_template: |
         これは、[%{site_name}](%{base_url}) にログインするためのリンクです。

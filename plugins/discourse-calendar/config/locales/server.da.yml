@@ -36,7 +36,6 @@ da:
     all_day_event_start_time: "Begivenheder, der ikke har et angivet starttidspunkt, starter på dette tidspunkt. Format er HH: mm. For 6:00 am, indtast 06:00"
     all_day_event_end_time: "Begivenheder, der ikke har en bestemt sluttid, slutter på dette tidspunkt. Format er HH: mm. Kl. 18:00 skal du indtaste 18:00"
     all_day_event_time_error: "Ugyldig tid. Formatet skal være HH:mm (eks: 08:00)."
-    calendar_categories: "Vis en kalender øverst i en kategori. Obligatoriske indstillinger er kategoriId og postId. fx: categoryId=6;postId=453\n Andre gyldige indstillinger: tzPicker, weekends og defaultView."
     calendar_categories_outlet: "Giver mulighed for at ændre, hvilken tilslutning der skal vise kategorikalenderen."
     working_days: "Angiv arbejdsdage. Du kan vise tilgængeligheden af en gruppe ved hjælp af 'tidszoner'-mærket i et indlæg, fx: '[timezones group=admins][timezones]`"
     working_day_start_hour: "Starttidspunkt for arbejdsdagstiderne."

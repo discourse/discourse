@@ -1550,6 +1550,7 @@ ro:
     queued_by_staff:
       title: "Necesită aprobare"
     welcome_user:
+      preview: "Bine ai venit pe %{site_name}!"
       subject_template: "Bine ai venit pe %{site_name}!"
     welcome_tl1_user:
       subject_template: "Îți mulțumim că petreci timp cu noi"
@@ -1558,6 +1559,7 @@ ro:
 
         Ne place mult că petreci timp în comunitate și am vrea să te cunoaștem mai bine. Acordă-ne câteva minute și [completează-ți profilul](%{base_url}/my/preferences/profile), sau [pornește o discuție nouă](%{base_url}/categories) dacă vrei.
     welcome_invite:
+      preview: "Bine ai venit pe %{site_name}!"
       subject_template: "Bine ai venit pe %{site_name}!"
     backup_succeeded:
       subject_template: "Backup terminat cu succes"
@@ -1675,6 +1677,7 @@ ro:
     spam_post_blocked:
       subject_template: "Utilizatorul nou %{username} are postările blocate datorită adreselor repetate"
     unsilenced:
+      preview: "Contul nu mai este în așteptare."
       subject_template: "Contul nu mai este în așteptare"
       text_body_template: |
         Salut,

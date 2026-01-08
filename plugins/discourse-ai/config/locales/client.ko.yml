@@ -136,6 +136,8 @@ ko:
         usage:
           ai_summarization: "요약하기"
           ai_spam: "스팸"
+        preconfigured:
+          title_no_llms: "시작하려면 템플릿을 선택하세요."
         next:
           title: "다음"
         tests:

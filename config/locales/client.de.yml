@@ -1362,6 +1362,9 @@ de:
       new_private_message: "Neue Nachricht"
       private_message: "Nachricht"
       private_messages: "Nachrichten"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktiviert?"
       user_notifications:
         filters:
           filter_by: "Filtern nach"
@@ -5439,6 +5442,10 @@ de:
               options:
                 above_topic_content: "Über dem Themeninhalt"
                 below_site_header: "Unter der Kopfzeile"
+            text_section:
+              locale_label: "Sprache"
+            header_new_members:
+              placeholder: "Willkommen, %{preferred_display_name}!"
             header_logged_in:
               placeholder: "Willkommen zurück, %{preferred_display_name}!"
             header_anonymous:
@@ -7521,7 +7528,6 @@ de:
           button: "Alle Beiträge löschen"
           progress:
             title: "Fortschritt beim Löschen von Beiträgen"
-            description: "Beiträge werden gelöscht …"
           confirmation:
             title: "Alle Beiträge von @%{username} löschen"
             description: |

@@ -3412,6 +3412,7 @@ he:
         השתתפותך כאן, מאפשרת לנו להכיר אותך, כך שמגבלות המשתמשים החדשים יוסרו. עם הזמן [דרגות האמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) בך תתקדמנה ותתווספנה לך יכולות כדי לסייע לנו לנהל את הקהילה שלנו ביחד.
     welcome_user:
       title: "ברוך בואך למשתמשים"
+      preview: "ברוכים הבאים ל %{site_name}!"
       subject_template: "ברוך בואך אל %{site_name}!"
       text_body_template: |
         תודה שהצטרפת אל %{site_name}, וברוך בואך!
@@ -3438,6 +3439,7 @@ he:
         כוח רב טומן בחובו אחריות רבה. אם תחום הפיקוח זר לך, ניתן לפנות אל [המדריך למפקחים](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "הזמנת קבלת פנים"
+      preview: "ברוכים הבאים ל %{site_name}!"
       subject_template: "ברוך בואך אל %{site_name}!"
       text_body_template: |
         תודה שאישרת את הזמנתך אל %{site_name} -- ברוך בואך!
@@ -3855,6 +3857,7 @@ he:
         ניתן לכוון זאת בהגדרות האתר `newuser_spam_host_threshold` (סף ספאם מארח למשתמש חדש) ו־`allowed_spam_host_domains` (שמות מתחם מורשים לספאם). מוטב להוסיף את %{domains} לרשימת ההיתר אם אין סיבה לחסום אותם.
     unsilenced:
       title: "השתקה בוטלה"
+      preview: "החשבון כבר לא מושהה."
       subject_template: "החשבון כבר לא מושהה"
       text_body_template: |
         שלום,
@@ -3907,8 +3910,6 @@ he:
     כדי לבטל את המינוי על ההודעות האלו, יש [ללחוץ כאן](%{unsubscribe_url}).
   subject_re: "תגובה: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} דרך %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "תגובות קודמות"
     reached_limit:
@@ -4233,6 +4234,7 @@ he:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "כניסה דרך קישור"
+      preview: "כניסה דרך קישור."
       subject_template: "[%{email_prefix}] כניסה דרך קישור"
       text_body_template: |
         להלן קישור הכניסה שלך אל [%{site_name}](%{base_url}).

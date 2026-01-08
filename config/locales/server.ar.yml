@@ -3564,6 +3564,7 @@ ar:
         سنتعرَّف عليك في أثناء مشاركتك هنا، وسيتم رفع قيود المستخدم الجديد المؤقتة. وبمرور الوقت، ستحصل على [مستويات الثقة](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) التي تتضمَّن قدرات خاصة لمساعدتنا في إدارة مجتمعنا معًا.
     welcome_user:
       title: "مرحبًا بالمستخدم"
+      preview: "مرحبًا بك في %{site_name}!"
       subject_template: "مرحبًا بك في %{site_name}!"
       text_body_template: |
         شكرًا على انضمامك إلى %{site_name}، ومرحبًا بك!
@@ -3591,6 +3592,7 @@ ar:
         مع القوة تأتي المسؤولية. إذا كنت حديث العهد بالإشراف، يُرجى الرجوع إلى [دليل الإشراف](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "مرحبًا بالمدعو"
+      preview: "مرحبًا بك في %{site_name}!"
       subject_template: "مرحبًا بك في %{site_name}!"
       text_body_template: |
         شكرًا على قبولك الدعوة إلى %{site_name} - مرحبًا!
@@ -4000,6 +4002,7 @@ ar:
         يمكن تعديل ذلك من خلال إعدادات الموقع `newuser_spam_host_threshold` و`allowed_spam_host_domains`. يُرجى النظر في إضافة %{domains} إلى قائمة السماح إذا كان يجب استثناؤها.
     unsilenced:
       title: "تم إلغاء الكتم"
+      preview: "لم يعُد الحساب معلقًا."
       subject_template: "لم يعُد الحساب معلقًا"
       text_body_template: |
         مرحبًا،
@@ -4056,8 +4059,6 @@ ar:
     لإلغاء الاشتراك من هذه الرسائل الإلكترونية، [انقر هنا](%{unsubscribe_url}).
   subject_re: "بخصوص: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} عبر %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "الردود السابقة"
     reached_limit:
@@ -4399,6 +4400,7 @@ ar:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "تسجيل الدخول عبر رابط"
+      preview: "تسجيل الدخول عبر رابط."
       subject_template: "[%{email_prefix}] تسجيل الدخول عبر رابط"
       text_body_template: |
         إليك الرابط الخاص بك لتسجيل الدخول على [%{site_name}](%{base_url}).

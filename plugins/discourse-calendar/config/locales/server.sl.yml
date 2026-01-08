@@ -36,7 +36,6 @@ sl:
     all_day_event_start_time: "Dogodki, ki nimajo časa začetka, se bodo začeli ob tem času. Oblika je HH:mm (06:00 in 18:00)"
     all_day_event_end_time: "Dogodki, ki nimajo časa zaključka, se bodo končali ob tem času. Oblika je HH:mm (06:00 in 18:00)"
     all_day_event_time_error: "Nepravilna oblika. Čas mora biti oblike HH:mm (npr.: 08:00)."
-    calendar_categories: "Prikaži koledar na vrhu kategorije. Obvezni nastavitvi sta categoryId in postId. npr.: categoryId=6;postId=453\n Ostale veljavne nastavitve: tzPicker, weekends in defaultView."
     calendar_categories_outlet: "Omogoča spremembo mesta prikaza za koledar kategorije."
     working_day_start_hour: "Začetna ura delovnega dne."
     working_day_end_hour: "Končna ura delovnega dne."

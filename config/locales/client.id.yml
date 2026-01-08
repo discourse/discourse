@@ -966,6 +966,9 @@ id:
       new_private_message: "Pesan Baru"
       private_message: "pesan"
       private_messages: "Messages"
+      upcoming_changes:
+        for_user:
+          enabled: "Diaktifkan?"
       user_notifications:
         filters:
           filter_by: "Filter Menurut"
@@ -1154,7 +1157,6 @@ id:
         tags: "Label"
         interface: "Antarmuka"
         apps: "Aplikasi"
-        navigation_menu: "Menu Navigasi"
       change_password:
         success: "(surel terkirim)"
         in_progress: "(mengirimkan surel)"

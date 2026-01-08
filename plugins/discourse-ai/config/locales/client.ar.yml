@@ -242,6 +242,8 @@ ar:
           name: "التضمينات"
           description: "يدعم ميزات مثل الموضوعات ذات الصلة والبحث بالذكاء الاصطناعي عن طريق إنشاء تمثيلات دلالية للنصوص"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "الموضوعات ذات الصلة"
         discord:
           name: "التكامل مع Discord"
           description: "يُمكّن من إجراء عمليات البحث داخل قنوات Discord"
@@ -252,6 +254,8 @@ ar:
           generate_concepts: "استنتاج المفاهيم"
           match_concepts: "مطابقة المفاهيم"
           deduplicate_concepts: "إزالة التكرارات بين المفاهيم"
+          setting_groups:
+            personas: "الشخصيات"
         ai_helper:
           name: "المساعد"
           description: "يُسهم في دعم تفاعل المستخدمين في المجتمع، بما يشمل إنشاء الموضوعات، وكتابة المنشورات، وقراءة المحتوى"
@@ -266,6 +270,9 @@ ar:
           image_caption: "وضع تسميات توضيحية للصور"
           translator: "مترجم"
           post_illustrator: "مُوضِّح المنشورات"
+          setting_groups:
+            automation: "الأتمتة"
+            personas: "الشخصيات"
         translation:
           name: "ترجمة"
           description: "يترجم المحتوى إلى اللغات المدعومة"
@@ -273,6 +280,8 @@ ar:
           post_raw_translator: "مترجم المنشور الخام"
           topic_title_translator: "مترجم عنوان الموضوع"
           short_text_translator: "مترجم النصوص القصيرة"
+          setting_groups:
+            personas: "الشخصيات"
         spam:
           name: "عشوائي"
           description: "يحدِّد المحتوى العشوائي المُحتمَل باستخدام نموذج اللغة الكبير المُحدَّد، ويبلغ عنه مشرفو الموقع لفحصه في قائمة انتظار المراجعة"

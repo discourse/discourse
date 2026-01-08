@@ -1255,6 +1255,9 @@ ja:
       new_private_message: "新規メッセージ"
       private_message: "メッセージ"
       private_messages: "メッセージ"
+      upcoming_changes:
+        for_user:
+          enabled: "有効ですか？"
       user_notifications:
         filters:
           filter_by: "フィルタ基準:"
@@ -5088,6 +5091,8 @@ ja:
               options:
                 above_topic_content: "トピックコンテンツの上"
                 below_site_header: "サイトヘッダーの下"
+            text_section:
+              locale_label: "言語"
             header_logged_in:
               placeholder: "%{preferred_display_name}、おかえりなさい！"
             header_anonymous:
@@ -7122,7 +7127,6 @@ ja:
           button: "すべての投稿を削除する"
           progress:
             title: "投稿の削除状況"
-            description: "投稿を削除中…"
           confirmation:
             title: "@%{username} のすべての投稿を削除"
             description: |

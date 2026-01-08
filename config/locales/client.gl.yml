@@ -917,6 +917,9 @@ gl:
       new_private_message: "Nova mensaxe"
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
+      upcoming_changes:
+        for_user:
+          enabled: "Activado?"
       user_notifications:
         filters:
           filter_by: "Filtrar por"
@@ -3459,6 +3462,8 @@ gl:
           form:
             location:
               label: "Localización"
+            text_section:
+              locale_label: "Idioma"
             header_anonymous:
               placeholder: "Dámoslle a benvida a %{site_name}!"
         navigation:

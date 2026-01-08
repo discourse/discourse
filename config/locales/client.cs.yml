@@ -6,6 +6,10 @@
 
 cs:
   js:
+    carousel:
+      go_to_slide: "Přejít na snímek č. %{index}"
+      previous: "Předchozí snímek"
+      next: "Další snímek"
     number:
       format:
         separator: "."
@@ -1567,7 +1571,16 @@ cs:
       private_message: "Zpráva"
       private_messages: "Zprávy"
       upcoming_changes:
-        title: "Nadcházející změna povolena"
+        title: "Nadcházející změny"
+        for_user:
+          upcoming_change: "Nadcházející změna"
+          enabled: "Zapnuto?"
+          why: "Proč?"
+        why_reasons:
+          not_in_specific_groups: "Uživatel není zahrnut v konkrétních skupinách požadovaných pro tuto změnu."
+          in_specific_groups: "Uživatel je zahrnut v konkrétních skupinách požadovaných pro tuto změnu."
+          enabled_for_everyone: "Tato změna je povolena pro všechny členy"
+          enabled_for_no_one: "Tato změna je zakázána pro všechny členy."
       user_notifications:
         filters:
           filter_by: "Filtrovat podle"
@@ -1920,7 +1933,8 @@ cs:
         tags: "Štítky"
         interface: "Vzhled"
         apps: "Aplikace"
-        navigation_menu: "Navigace"
+        navigation_menu: "Navigační nabídka"
+        upcoming_changes: "Nadcházející změny"
       change_password:
         success: "(email odeslán)"
         in_progress: "(odesílám)"
@@ -3254,6 +3268,10 @@ cs:
         move_outside_grid: "Přesunout mimo mřížku"
       image: "obrázek"
       grid_label: "Tyto obrázky se zobrazí v mřížce"
+      grid_mode_grid: "Mřížka"
+      grid_mode_carousel: "Karusel"
+      grid_mode_title: "Nastavit styl galerie obrázků na %{mode}"
+      remove_grid: "Odebrat mřížku"
       image_scale_button: "Změnit velikost obrázku na %{percent}%"
       delete_image_button: Odstranit obrázek
       toggle_image_grid: Přepnout mřížku obrázku
@@ -3965,6 +3983,8 @@ cs:
         title: "Automaticky zavřít téma po posledním příspěvku"
       auto_delete:
         title: "Automaticky odstranit téma"
+      auto_delete_after_last_post:
+        title: "Automaticky odstranit téma po posledním příspěvku"
       auto_bump:
         title: "Automaticky pošťouchnout téma"
       reminder:
@@ -3976,6 +3996,7 @@ cs:
         auto_close: "Toto téma se automaticky zavře %{timeLeft}."
         auto_publish_to_category: "Toto téma bude zveřejněno v <a href=%{categoryUrl}>%{categoryName}</a>%{timeLeft}# ."
         auto_close_after_last_post: "Toto téma se zavře %{duration} po poslední odpovědi."
+        auto_delete_after_last_post: "Toto téma bude smazáno %{duration} po poslední odpovědi."
         auto_delete: "Toto téma bude automaticky smazáno %{timeLeft}."
         auto_bump: "Toto téma bude automaticky pošťouchnuto %{timeLeft}."
         auto_reminder: "Toto téma ti připomeneme %{timeLeft}."
@@ -6180,15 +6201,18 @@ cs:
                 below_site_header: "Pod záhlavím webu"
             text_section:
               title: "Přizpůsobitelný text"
-              variables: "V textu můžete použít tyto proměnné: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Jazyk"
             header_new_members:
               label: "Záhlaví pro nové členy"
-              placeholder: "Vítejte na %{site_name}, %{preferred_display_name}!"
+              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Vítejte, %{preferred_display_name}!"
             header_logged_in:
               label: "Záhlaví pro přihlášené členy"
+              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte zpět, %{preferred_display_name}!"
             header_anonymous:
               label: "Záhlaví pro anonymní návštěvníky"
+              description: "Dostupná proměnná: <code>&percnt;{site_name}</code>"
               placeholder: "Vítejte v %{site_name}!"
             subheader_logged_in:
               label: "Podtitulek pro přihlášené členy"
@@ -6366,7 +6390,7 @@ cs:
           title: "Vzhled"
           header_description: "Přizpůsobte šablonu, ve které se vykreslují všechny e-maily ve formátu HTML, a upravte styl pomocí CSS"
         staff_action_logs:
-          title: "Protokoly a minitoring"
+          title: "Protokoly a monitoring"
           header_description: "Protokoly a monitoring vám umožňují monitorovat a spravovat vaši komunitu a zajistit, že zůstane bezpečná a respektující. Můžete zobrazit protokoly všech akcí provedených redaktory, protokoly vyhledávání a konfiguraci monitorování uživatelů"
           keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
           sub_pages:
@@ -8339,6 +8363,11 @@ cs:
         approve_bulk_success: "Povedlo se! Všichni uživatelé byli schváleni a byla jim rozeslána upozornění."
         time_read: "Čas čtení"
         post_edits_count: "Úpravy příspěvků"
+        upcoming_changes:
+          title: "Nadcházející změny uživatele"
+          description: "Chcete-li upravit skupiny nebo povolit či zakázat nadcházející změny, navštivte <a href='%{basePath}/admin/config/upcoming-changes'>stránku konfigurace nadcházejících změn</a>."
+          filter_placeholder: "Vyhledejte nadcházející změny podle názvu nebo popisu"
+          filter_no_results: "Nebyly nalezeny žádné nadcházející změny"
         exports:
           title: Export uživatelů
           download:
@@ -8365,7 +8394,6 @@ cs:
           button: "Smazat všechny příspěvky"
           progress:
             title: "Průběh mazání příspěvků"
-            description: "Mazání příspěvků…"
           confirmation:
             title: "Smazat všechny příspěvky od @%{username}"
             description: |
@@ -8711,13 +8739,20 @@ cs:
             prompt: "Změna tohoto nastavení může mít pro váš web dalekosáhlé nebo nezamýšlené důsledky. Opravdu chcete pokračovat?"
             confirm: "Ano, jsem si jistý/á"
           min_password_length:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           min_admin_password_length:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech správců, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           password_unique_charactes:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           block_common_passwords:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
+          clean_up_inactive_users_after_days:
+            prompt: "Nastavení této hodnoty na jinou hodnotu než 0 způsobí, že uživatelé, kteří již nejsou aktivní po tento počet dní, budou trvale odstraněni. Jste si jisti, že chcete pokračovat?"
+            confirm: "Ano, rozumím, že pokud tuto hodnotu nenastavím na 0, budou neaktivní uživatelé trvale smazáni."
         job_status:
           completed: "Aktualizace dokončena"
           enqueued: "Probíhá aktualizace"

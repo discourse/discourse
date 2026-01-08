@@ -10,12 +10,15 @@ el:
     chat_integration_rocketchat_webhook_url: "Το URL για το webhook ενσωμάτωσης του Rocket Chat"
   chat_integration:
     all_categories: "(όλες οι κατηγορίες)"
+    group_mention_template: "επισημάνσεις της ομάδας: @%{name}"
     topic_tag_changed:
       added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
       added: "Προστέθηκε %{added}"
       removed: "Αφαιρέθηκε %{removed}"
     provider:
       slack:
+        transcript:
+          post_to_discourse: "Πατήστε εδώ για να συντάξετε μια ανάρτηση στο Discourse με μεταγραφή"
         messaging:
           topic_tag_changed:
             added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"

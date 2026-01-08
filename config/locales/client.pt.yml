@@ -1354,6 +1354,9 @@ pt:
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
+      upcoming_changes:
+        for_user:
+          enabled: "Ativado?"
       user_notifications:
         filters:
           filter_by: "Filtrar por"
@@ -1677,7 +1680,7 @@ pt:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicações"
-        navigation_menu: "Barra de Navegação"
+        navigation_menu: "Menu de Navegação"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -4627,6 +4630,8 @@ pt:
               options:
                 above_topic_content: "Por cima do conteúdo do tópico"
                 below_site_header: "Por debaixo do cabeçalho do site"
+            header_new_members:
+              placeholder: "Bem-vindo(a), %{preferred_display_name}!"
             header_logged_in:
               placeholder: "Seja bem-vindo, %{preferred_display_name}!"
             header_anonymous:

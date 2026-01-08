@@ -49,7 +49,7 @@ uk:
     all_day_event_start_time: "Події, у яких не вказано час початку, почнуться в цей час. Формат HH:мм. На 6:00 ранку введіть 06:00"
     all_day_event_end_time: "Події, у яких не вказано час закінчення, закінчуються в цей час. Формат HH:мм. Для 18:00 введіть 18:00"
     all_day_event_time_error: "Неправильний час. Формат має бути HH:mm (наприклад: 08:00)."
-    calendar_categories: "Відображати календар у верхній частині категорії. Обов’язковими параметрами є categoryId і postId. наприклад: categoryId=6;postId=453\n Інші дійсні налаштування: tzPicker, вихідні та defaultView."
+    calendar_categories: "Відображати календар у верхній частині категорії. categoryId обов’язковий. Наприклад: categoryId=6;weekends=false;defaultView=year;\n Інші дійсні налаштування: weekends(true/false) та defaultView(day,week,month,year)."
     calendar_categories_outlet: "Дозволяє змінити точку, де повинен відображатись календар категорій."
     working_days: "Встановіть робочі дні. Ви можете відобразити доступність групи за допомогою тегу `timezones` у повідомленні, наприклад: `[timezones group=admins]`[timezones]"
     working_day_start_hour: "Час початку робочого дня."

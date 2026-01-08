@@ -10,7 +10,6 @@ ur:
       labels:
         username: اسمِ صارف
   site_settings:
-    calendar_categories: "زمرہ کے اوپری حصے میں کیلنڈر دیکھائیں۔ لازمی ترتیبات زمرہ آئی ڈی اور پوسٹ آئی ڈی ہیں۔ مثال کے طور پر: categoryId=6;postId=453\n دیگر درست ترتیبات: tzPicker، ویک اینڈز اور طے شدہ مشاهده۔"
     working_days: "کام کے دن مقرر کریں۔ آپ پوسٹ میں `خطہ کے اوقات` ٹیگ کا استعمال کرتے ہوئے گروپ کی دستیابی کو ظاہر کر سکتے ہیں، جیسے: `[timezones group=admins][timezones]`"
     close_to_working_day_hours_extension: "خطہ کے اوقات کو نمایاں کرنے کے لیے کام کے دن کے اوقات میں توسیع کا وقت سیٹ کریں۔"
   discourse_post_event:

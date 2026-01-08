@@ -26,6 +26,6 @@ el:
           label_invitations_sent: "Οι προσκλήσεις στάλθηκαν:"
         new_user_interactions:
           likes_given: Μου αρέσει που αποδόθηκαν
-          mentions: Αναφορές
+          mentions: Επισημάνσεις
         writing_analysis:
           menu_other: Άλλα

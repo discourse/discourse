@@ -49,7 +49,6 @@ ar:
     all_day_event_start_time: "ستبدأ الأحداث التي ليس بها وقت محدَّد للبدء في هذا الوقت. التنسيق هو HH:mm. للساعة 6 صباحًا، أدخل 06:00."
     all_day_event_end_time: "ستنتهي الأحداث التي ليس بها وقت محدَّد للانتهاء في هذا الوقت. التنسيق هو HH:mm. للساعة 6 مساءً، أدخل 18:00."
     all_day_event_time_error: "الوقت غير صالح. يجب كتابة الوقت بالتنسيق HH:mm (مثال: 08:00)."
-    calendar_categories: "عرض تقويم في أعلى الفئة. الإعدادات الإلزامية هي categoryId وpostId. مثال: categoryId=6;postId=453\n الإعدادات الصالحة الأخرى: tzPicker وweekends وdefaultView."
     calendar_categories_outlet: "يسمح بتغيير المنفذ المفترض أن يعرض تقويم الفئة."
     working_days: "تحديد أيام العمل. يمكنك عرض مدى توافر مجموعة باستخدام علامة `timezones` في منشور: مثال: `[timezones group=admins][timezones]`"
     working_day_start_hour: "وقت البدء لساعات يوم العمل"

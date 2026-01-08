@@ -2404,6 +2404,7 @@ zh_CN:
     content_localization_allow_author_localization: "允许作者通过帖子菜单更新自己主题和帖子的本地化内容。"
     enable_upcoming_changes: "启用即将到来的更改"
     fake_upcoming_change: "这是为测试目的即将进行的虚假更改。无需翻译此字符串。"
+    experimental_rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保您输入的日期和时间有效。"
@@ -3126,6 +3127,7 @@ zh_CN:
         当您在这里参与时，我们将了解您，并且临时的新用户限制将被取消。随着时间的推移，您将获得[信任级别](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)，其中包括帮助我们共同管理社区的特殊权限。
     welcome_user:
       title: "欢迎用户"
+      preview: "欢迎来到 %{site_name}！"
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
         感谢您加入%{site_name}，欢迎！
@@ -3153,6 +3155,7 @@ zh_CN:
         拥有权利的同时也需要承担重大责任。如果您不熟悉审核，请参阅[审核指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
     welcome_invite:
       title: "欢迎邀请"
+      preview: "欢迎来到 %{site_name}！"
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
         感谢您接受邀请加入 %{site_name} - 欢迎！
@@ -3586,6 +3589,7 @@ zh_CN:
         可以通过 `newuser_spam_host_threshold` 和 `allowed_spam_host_domains` 网站设置对此进行修改。如果他们应该被豁免，请考虑将 %{domains} 添加到许可名单中。
     unsilenced:
       title: "已被取消禁言"
+      preview: "帐户不再处于暂停状态."
       subject_template: "帐户不再处于暂停状态"
       text_body_template: |
         您好，
@@ -3632,8 +3636,6 @@ zh_CN:
     要退订这些电子邮件，请[点击此处](%{unsubscribe_url})。
   subject_re: "回复："
   subject_pm: "[私信]"
-  email_from: "%{user_name} 通过 %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "以前的回复"
     reached_limit:
@@ -3971,6 +3973,7 @@ zh_CN:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "通过链接登录"
+      preview: "通过链接登录."
       subject_template: "[%{email_prefix}] 通过链接登录"
       text_body_template: |
         这是您用于登录 [%{site_name}](%{base_url}) 的链接

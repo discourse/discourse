@@ -234,6 +234,8 @@ es:
           name: "Incrustaciones"
           description: "Impulsa características como Temas relacionados y Búsqueda de IA al generar representaciones semánticas de texto"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Temas relacionados"
         discord:
           name: "Integración de Discord"
           description: "Añade la posibilidad de buscar canales de Discord"
@@ -244,6 +246,8 @@ es:
           generate_concepts: "Inferencia de conceptos"
           match_concepts: "Coincidencia de conceptos"
           deduplicate_concepts: "Duplicación de conceptos"
+          setting_groups:
+            personas: "Personas"
         ai_helper:
           name: "Ayudante"
           description: "Ayuda a los usuarios a interactuar con la comunidad, como crear temas, escribir publicaciones y leer contenido"
@@ -258,6 +262,9 @@ es:
           image_caption: "Añadir pie de foto"
           translator: "Traductor"
           post_illustrator: "Ilustrador de publicaciones"
+          setting_groups:
+            automation: "Automatización"
+            personas: "Personas"
         translation:
           name: "Traducción"
           description: "Traduce el contenido a los idiomas compatibles"
@@ -265,6 +272,8 @@ es:
           post_raw_translator: "Traductor de publicaciones"
           topic_title_translator: "Traductor de títulos de temas"
           short_text_translator: "Traductor de textos cortos"
+          setting_groups:
+            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"

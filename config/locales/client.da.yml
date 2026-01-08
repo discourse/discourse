@@ -1263,6 +1263,9 @@ da:
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktiveret?"
       user_notifications:
         filters:
           filter_by: "Filtrer efter"
@@ -1270,7 +1273,7 @@ da:
           read: "Læste"
           unread: "Ulæste"
           unseen: "Usete"
-        ignore_duration_title: "Ignorer Bruger"
+        ignore_duration_title: "Ignorer bruger"
         ignore_duration_username: "Brugernavn"
         ignore_duration_when: "Varighed:"
         ignore_duration_save: "Ignorér"
@@ -1491,7 +1494,6 @@ da:
         tags: "Tags"
         interface: "Grænseflade"
         apps: "Apps"
-        navigation_menu: "Navigationsmenu"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
@@ -4431,6 +4433,8 @@ da:
                 all_pages: "Alle sider"
             location:
               label: "Sted"
+            text_section:
+              locale_label: "Sprog"
             header_logged_in:
               placeholder: "Velkommen tilbage, %{preferred_display_name}!"
             header_anonymous:
@@ -5900,7 +5904,6 @@ da:
           button: "Slet alle indlæg"
           progress:
             title: "Fremskridt med sletning af indlæg"
-            description: "Sletter indlæg…"
           confirmation:
             title: "Slet alle indlæg af @%{username}"
             text: "slet indlæg af @%{username}"

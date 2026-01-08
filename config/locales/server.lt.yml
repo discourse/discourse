@@ -1613,6 +1613,7 @@ lt:
         Kai dalyvausite čia, mes su jumis susipažinsime ir bus panaikinti laikini naujų naudotojų apribojimai. Laikui bėgant įgysite [patikimumo lygius](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), kurie apima specialius gebėjimus, padėsiančius mums kartu valdyti bendruomenę.
     welcome_user:
       title: "Sveikas narį"
+      preview: "Sveiki atvykę į %{site_name}!"
       subject_template: "Sveiki atvykę į %{site_name}!"
       text_body_template: |
         Ačiū, kad prisijungėte prie %{site_name}ir sveiki atvykę!
@@ -1626,6 +1627,7 @@ lt:
       title: "Sveikas TL1 Narį"
       subject_template: "Dėkojeme jog praleidžiate laika su mumis"
     welcome_invite:
+      preview: "Sveiki atvykę į %{site_name}!"
       subject_template: "Sveiki atvykę į %{site_name}!"
       text_body_template: |
         Dėkojame, kad priėmėte kvietimą į %{site_name} – sveiki!
@@ -1764,6 +1766,7 @@ lt:
       subject_template: "Naujas naudotojo %{username} įrašas užblokuotas dėl pakartotinių nuorodų"
     unsilenced:
       title: "Nebenutildytas"
+      preview: "Paskyra nebesulaikyta."
       subject_template: "Paskyra nebesulaikyta"
       text_body_template: |
         Sveiki,
@@ -1786,7 +1789,6 @@ lt:
     Norėdami atsisakyti šių el. laiškų prenumeratos, [spustelėkite čia](%{unsubscribe_url}).
   subject_re: "Dar kartą:"
   subject_pm: "[AŽ]"
-  email_from: "%{user_name} per %{site_name}"
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"
@@ -2014,6 +2016,7 @@ lt:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Prisijungti per nuorodą"
+      preview: "Prisijungti per nuorodą."
       subject_template: "[%{email_prefix}] Prisijunk per nuorodą"
       text_body_template: |
         Čia yra jūsų nuoroda prisijungti adresu [%{site_name}] (%{base_url}).

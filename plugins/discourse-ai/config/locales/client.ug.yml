@@ -62,6 +62,9 @@ ug:
           reset: "ئەسلىگە قايتۇر"
         search:
           name: "ئىزدە"
+        ai_helper:
+          setting_groups:
+            automation: "ئاپتوماتلاشتۇرۇش"
         spam:
           name: "ئەخلەت خەت"
       modals:

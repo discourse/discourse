@@ -230,6 +230,8 @@ tr_TR:
           name: "Gömmeler"
           description: "Metnin anlamsal temsillerini oluşturarak İlgili Konular ve YZ Arama gibi özellikleri güçlendirir"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "İlgili Konular"
         discord:
           name: "Discord entegrasyonu"
           description: "Discord kanallarında arama yapma özelliğini ekler"
@@ -240,6 +242,8 @@ tr_TR:
           generate_concepts: "Kavram çıkarımı"
           match_concepts: "Kavram eşleştirme"
           deduplicate_concepts: "Kavram tekilleştirme"
+          setting_groups:
+            personas: "Kişilikler"
         ai_helper:
           name: "Yardımcı"
           description: "Kullanıcıların konu oluşturma, gönderi yazma ve içerik okuma gibi topluluk etkileşiminde bulunmasına yardımcı olur"
@@ -254,6 +258,9 @@ tr_TR:
           image_caption: "Görüntülere alt yazı ekle"
           translator: "Çevirmen"
           post_illustrator: "Gönderi illüstratörü"
+          setting_groups:
+            automation: "Otomasyon"
+            personas: "Kişilikler"
         translation:
           name: "Çeviri"
           description: "İçeriği desteklenen dillere çevirir"
@@ -261,6 +268,8 @@ tr_TR:
           post_raw_translator: "Gönderi ham çevirmeni"
           topic_title_translator: "Konu başlığı çevirmeni"
           short_text_translator: "Kısa metin çevirmeni"
+          setting_groups:
+            personas: "Kişilikler"
         spam:
           name: "İstenmeyen içerik"
           description: "Seçili LLM'i kullanarak potansiyel istenmeyen içerikleri belirler ve inceleme kuyruğunda site moderatörlerinin incelemesi için işaretler"

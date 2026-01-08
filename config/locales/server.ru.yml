@@ -3380,6 +3380,7 @@ ru:
         В процессе общения мы узнаем вас лучше, и ограничения, временно установленные для вас как для нового пользователя, будут сняты. Со временем вам будут присваиваться различные [уровни доверия](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), которые дают специальные возможности, помогающие эффективно работать с сообществом.
     welcome_user:
       title: "Приветствуем нового пользователя форума"
+      preview: "Добро пожаловать на сайт %{site_name}!"
       subject_template: "Добро пожаловать на сайт %{site_name}!"
       text_body_template: |
         Спасибо, что зарегистрировались на сайте %{site_name}, и добро пожаловать!
@@ -3407,6 +3408,7 @@ ru:
         С большой силой приходит большая ответственность. Если роль модератора для вас в новинку, ознакомьтесь с [Руководством модератора](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Приветствуем приглашённого пользователя форума"
+      preview: "Добро пожаловать на сайт %{site_name}!"
       subject_template: "Добро пожаловать на сайт %{site_name}!"
       text_body_template: |
         Благодарим вас за принятие приглашения на сайт %{site_name}, и добро пожаловать!
@@ -3824,6 +3826,7 @@ ru:
         Параметры блокировки можно изменить через настройки сайта `newuser_spam_host_threshold` и `allowed_spam_host_domains`. Если подобные сообщения не должны блокироваться, можно добавить %{domains} в белый список.
     unsilenced:
       title: "Аккаунт разморожен"
+      preview: "Аккаунт разблокирован."
       subject_template: "Аккаунт разблокирован"
       text_body_template: |
         Здравствуйте!
@@ -3876,8 +3879,6 @@ ru:
     [Нажмите сюда](%{unsubscribe_url}), чтобы отписаться от таких писем.
   subject_re: "Re: "
   subject_pm: "[ЛС] "
-  email_from: "%{user_name} через %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Предыдущие ответы"
     reached_limit:
@@ -4215,6 +4216,7 @@ ru:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Вход по ссылке"
+      preview: "Вход по ссылке."
       subject_template: "[%{email_prefix}] Вход по ссылке"
       text_body_template: |
         Ниже приведена ссылка для входа на форум [%{site_name}](%{base_url}).

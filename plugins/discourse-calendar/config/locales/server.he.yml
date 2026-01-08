@@ -49,7 +49,6 @@ he:
     all_day_event_start_time: "אירועים שלא צוינה להם שעת התחלה יתחילו בשעה הזאת. התבנית היא HH:mm. ל־6:00 בבוקר יש להקליד 06:00"
     all_day_event_end_time: "אירועים שלא צוינה להם שעת סיום יסתיימו בשעה הזאת. התבנית היא HH:mm. ל־6:00 בערב יש להקליד 18:00"
     all_day_event_time_error: "שעה שגויה. התבנית צריכה להיות HH:mm (למשל: 08:00)."
-    calendar_categories: "הצג לוח שנה בראש קטגוריה. הגדרות חובה הן categoryId ו־postId. למשל: categoryId=6;postId=453\n הגדרות תקפות נוספות: tzPicker,‏ weekends ו־defaultView."
     calendar_categories_outlet: "מאפשר לך לשנות איזה מתאם תצוגה יציג את לוח השנה של הקטגוריה."
     working_days: "הגדרת ימי עבודה. ניתן להציג את זמינות הקבוצה באמצעות תגית `timezones` (אזורי זמן) בפוסט, למשל: `‎[timezones group=admins][timezones]‎`"
     working_day_start_hour: "שעת תחילת יום העבודה."

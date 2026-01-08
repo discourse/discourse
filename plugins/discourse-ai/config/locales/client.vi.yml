@@ -22,13 +22,13 @@ vi:
             title:
               label: "Tiêu đề"
             categories:
-              label: "Danh mục"
+              label: "Chuyên mục"
             tags:
               label: "Thẻ"
         llm_triage:
           fields:
             category:
-              label: "Danh mục"
+              label: "Chuyên mục"
             tags:
               label: "Thẻ"
             canned_reply:
@@ -183,7 +183,7 @@ vi:
           filter_types:
             all: "Tất cả"
           group_types:
-            category: "Danh mục"
+            category: "Chuyên mục"
           table:
             total_count: "Tổng số"
       summarization:

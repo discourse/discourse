@@ -82,6 +82,9 @@ fa_IR:
           reset: "بازنشانی"
         search:
           name: "جستجو"
+        embeddings:
+          setting_groups:
+            related_topics: "موضوعات مرتبط"
         spam:
           name: "هرز‌نامه"
       modals:

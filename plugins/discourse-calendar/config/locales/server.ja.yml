@@ -49,7 +49,6 @@ ja:
     all_day_event_start_time: "開始時刻が指定されていないイベントはこの時刻に開始します。フォーマットは HH:mm です。午前 6 時の場合は、06:00 と入力します"
     all_day_event_end_time: "終了時刻が指定されていないイベントはこの時刻に終了します。フォーマットは HH:mm です。午後 6 時の場合は、18:00 と入力します"
     all_day_event_time_error: "無効な時刻です。フォーマットは HH:mm である必要があります（例: 08:00）。"
-    calendar_categories: "カテゴリの先頭にカレンダーを表示します。categoriId と postId は必須の設定です。例: categoryId=6;postId=453\n 他の有効な設定: tzPicker、weekends、defaultView。"
     calendar_categories_outlet: "カテゴリカレンダーを表示する場所を変更できるようにします。"
     working_days: "稼働日を設定します。投稿に `timezones` タグを使用して、グループの空き状況を表示できます。例: `[timezones group=admins][timezones]`"
     working_day_start_hour: "稼働時間の開始時刻。"

@@ -1365,12 +1365,14 @@ be:
       subject_template: "Пазначаныя пост выдалены супрацоўнікамі"
     welcome_user:
       title: "Сардэчна запрашаем карыстальніка"
+      preview: "Вітае на %{site_name}!"
       subject_template: "Сардэчна запрашаем да сайта %{site_name}!"
     welcome_tl1_user:
       title: "Сардэчна запрашаем TL1 Карыстальнік"
       subject_template: "Дзякуй за праводзіць час з намі"
     welcome_invite:
       title: "Сардэчна запрашаем Запрасіць"
+      preview: "Вітае на %{site_name}!"
       subject_template: "Сардэчна запрашаем да сайта %{site_name}!"
     backup_succeeded:
       title: "Рэзервовае капіраванне Пераемнік"
@@ -1568,6 +1570,7 @@ be:
       subject_template: "Новы карыстальнік% {імя карыстальніка} паведамленняў заблякаваныя з-за паўтаральных звёнаў"
     unsilenced:
       title: "Unsilenced"
+      preview: "Кошт больш не на ўтрыманне."
       subject_template: "Кошт больш не на ўтрыманне"
       text_body_template: |
         Добры дзень,Гэта аўтаматычнае паведамленне ад% {SITE_NAME}, каб вы ведаеце, што ваш уліковы запіс больш не на ўтрыманне пасля праверкі персаналу.Цяпер вы можаце ствараць новыя адказы і тэмы зноў. Дзякуй за ваша цярпенне.
@@ -1603,7 +1606,6 @@ be:
   unsubscribe_mailing_list: "Вы атрымліваеце гэта таму, што вы ўключылі рэжым спісу \n\nрассылання. Каб адмовіцца ад гэтых лістоў, [націсніце тут]%{unsubscribe_url}).\n"
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "папярэднія адказы"
     in_reply_to: "У адказ на"
@@ -1839,6 +1841,7 @@ be:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Увайсці па спасылцы"
+      preview: "Увайсці па спасылцы."
       subject_template: "[%{email_prefix}] Уваход па спасылцы"
       text_body_template: |
         Вось ваша спасылка каб ўвайсці на [%{site_name}](%{base_url}).

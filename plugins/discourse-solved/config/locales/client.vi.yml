@@ -21,4 +21,4 @@ vi:
         first_accepted_solution:
           fields:
             maximum_trust_level:
-              label: Bậc tin tưởng
+              label: Độ tin cậy

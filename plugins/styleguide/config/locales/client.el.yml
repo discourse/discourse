@@ -41,7 +41,7 @@ el:
         categories_list:
           title: "Λίστα Κατηγοριών"
         topic_timer_info:
-          title: "Χρονοδιακόπτες Νημάτων"
+          title: "Χρονοδιακόπτες Θεμάτων"
         post:
           title: "Ανάρτηση"
         topic_map:

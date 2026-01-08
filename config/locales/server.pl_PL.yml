@@ -2354,6 +2354,7 @@ pl_PL:
     relative_date_duration: "Liczba dni od wysłania wpisu gdy wyświetlana jest data relatywna (7d) zamiast absolutnej (20 Lut)."
     delete_user_max_post_age: "Nie pozwalaj na usuwanie użytkowników których pierwszy wpis jest starszy niż (x) dni."
     delete_all_posts_max: "Maksymalna liczba wpisów jaka może zostać usunięta jednorazowo przyciskiem \"Usuń Wszystkie Wpisy\". Jeśli użytkownik ma więcej wpisów, ani one ani użytkownik nie mogą one być usunięte.1\n"
+    delete_all_posts_background_threshold: "Maksymalna liczba wpisów, które można usunąć jednocześnie za pomocą przycisku „Usuń wszystkie wpisy”, zanim usunięcie zostanie przetworzone w tle."
     delete_user_self_max_post_count: "Maksymalna liczba wpisów, jaką może posiadać użytkownik, umożliwiając usunięcie konta samoobsługowego. Ustaw na -1, aby wyłączyć usuwanie konta samoobsługowego."
     username_change_period: "Maksymalna liczba dni po rejestracji, w których konta mogą zmienić swoją nazwę użytkownika (0, aby uniemożliwić zmianę nazwy użytkownika)."
     email_editable: "Zezwól użytkownikom na zmianę adresu e-mail po rejestracji."
@@ -2635,6 +2636,7 @@ pl_PL:
     content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i wpisów poprzez menu wpisów."
     enable_upcoming_changes: "Włącz nadchodzące zmiany"
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
+    experimental_rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
@@ -3443,6 +3445,7 @@ pl_PL:
         Gdy będziesz uczestniczyć w dyskusji, poznamy Cię i tymczasowe ograniczenia dla nowych użytkowników zostaną zniesione. Z biegiem czasu zyskasz [poziomy zaufania](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), które obejmują specjalne umiejętności pomagające nam wspólnie zarządzać naszą społecznością.
     welcome_user:
       title: "Witaj Użytkowniku"
+      preview: "Witaj na %{site_name}!"
       subject_template: "Witaj na %{site_name}!"
       text_body_template: |
         Dziękujemy za rejestrację na %{site_name} i witamy!
@@ -3470,6 +3473,7 @@ pl_PL:
         Z wielką mocą wiąże się wielka odpowiedzialność. Jeśli nie masz doświadczenia w moderowaniu, zapoznaj się z [przewodnikiem moderacji](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Zaproszenie powitalne"
+      preview: "Witaj na %{site_name}!"
       subject_template: "Witaj na %{site_name}!"
       text_body_template: |
         Dziękujemy za przyjęcie zaproszenia do %{site_name} – witamy!
@@ -3908,6 +3912,7 @@ pl_PL:
         To może być modyfikowana poprzez zmodyfikowanie `newuser_spam_host_threshold` oraz `allowed_spam_host_domains` w ustawieniach serwisu. Rozważ dodanie %{domains} do dozwolonej listy, jeśli powinny być zwolnione z ręcznej weryfikacji.
     unsilenced:
       title: "Niewyciszony"
+      preview: "Konto odblokowane."
       subject_template: "Konto odblokowane"
       text_body_template: |
         Witaj!
@@ -3950,6 +3955,11 @@ pl_PL:
         Witaj!
 
         Wpisy od nowych użytkowników zostały przekazane do moderacji i obecnie czekają na przejrzenie. [Zatwierdź lub odrzuć je tutaj](%{base_url}/review?type=ReviewableQueuedPost).
+    user_posts_deleted:
+      title: "Usunięto wpisy użytkownika"
+      subject_template: "Wszystkie wpisy użytkownika %{user} zostały usunięte"
+      text_body_template: |
+        %{deleted_posts_count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}.
   unsubscribe_link: |
     Aby zrezygnować z otrzymywania tych e-maili, [kliknij tutaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -3960,8 +3970,6 @@ pl_PL:
     Aby zrezygnować z tych e-maili, [kliknij tutaj](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PW] "
-  email_from: "%{user_name} z %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Poprzednie odpowiedzi"
     reached_limit:
@@ -4305,6 +4313,7 @@ pl_PL:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Zaloguj za pomocą linku"
+      preview: "Zaloguj za pomocą linku."
       subject_template: "[%{email_prefix}] Zaloguj się przez link"
       text_body_template: |
         Oto Twój link do logowania się na [%{site_name}](%{base_url}).

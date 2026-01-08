@@ -96,6 +96,8 @@ ko:
         header: "채팅 헤더"
         composer: "채팅 작성기"
         channels_list: "채팅 채널 목록"
+      no_direct_message_channels: "아직 개인 메시지가 없습니다!"
+      no_direct_message_channels_cta: "대화 시작하기"
       no_public_channels_cta: "채널 찾아보기"
       kicked_from_channel: "더 이상 이 채널에 접근할 수 없습니다."
       chat_notifications_title: "채팅 알림"
@@ -159,6 +161,10 @@ ko:
         yesterday: 어제
       search_view:
         filter_placeholder: 메시지 검색
+        message_result_label: "%{username}님의 채팅 메시지: %{preview} %{threadInfo}"
+        in_thread: "글 %{title}에서"
+        sr_instructions: "Enter 키 또는 스페이스 키를 눌러 메시지를 엽니다. Tab 키를 사용하여 결과를 탐색할 수 있습니다."
+        results_list_label: "채팅 메시지 검색 결과"
       members_view:
         filter_placeholder: 회원 찾기
       about_view:
@@ -180,6 +186,7 @@ ko:
         default_search_placeholder: "#채널, @사용자 또는 아무거나"
         default_channel_search_placeholder: "#채널"
         default_user_search_placeholder: "@누군가"
+        user_search_placeholder: "...사용자 추가"
         disabled_user: "채팅 비활성화됨"
         no_items: "항목이 없습니다"
         filter: "필터"
@@ -253,6 +260,8 @@ ko:
           export_has_started: "내보내기가 시작되었습니다. 준비가 되면 메시지를 받을 것입니다."
       search:
         short_title: 검색
+        title: 채팅 검색
+        aria_label: "채팅 검색으로 전환"
         no_results: "검색된 결과가 없습니다"
         sort:
           relevance: "관련성"

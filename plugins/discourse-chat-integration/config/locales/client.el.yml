@@ -8,6 +8,7 @@ el:
   js:
     chat_integration:
       settings: "Ρυθμίσεις"
+      group_mention_template: "Επισημάνσεις της ομάδας: @%{name}"
       all_categories: "(όλες οι κατηγορίες)"
       all_tags: "(όλες οι ετικέτες)"
       delete_channel: "Σβήσιμο"
@@ -36,6 +37,8 @@ el:
         category: Κατηγορία
         group: Ομάδα
         tags: Ετικέτες
+        instructions:
+          type: "Αλλάξτε τον τύπο για την ενεργοποίηση ειδοποιήσεων για ομαδικά μηνύματα ή επισημάνσεις"
       provider:
         slack:
           param:
