@@ -73,17 +73,16 @@ export default class ProsemirrorTextManipulation {
     const { from, to } = state.selection;
     const value = this.convertToMarkdown(state.selection.content());
 
-    // Get text before cursor in current block
-    const $from = state.doc.resolve(from);
-    const blockStart = $from.start($from.depth);
-    const pre = state.doc.textBetween(blockStart, from, "\n", "\n");
+    // Document-absolute pre/post to match textarea semantics
+    const pre = state.doc.textBetween(0, from, "\n", "\n");
+    const post = state.doc.textBetween(to, state.doc.content.size, "\n", "\n");
 
     return {
       start: from,
       end: to,
       pre,
       value,
-      post: "",
+      post,
     };
   }
 
