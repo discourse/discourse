@@ -26,7 +26,7 @@ import { blockCondition } from "./decorator";
  * @class BlockSettingCondition
  * @extends BlockCondition
  *
- * @param {string} setting - The setting key to check (required).
+ * @param {string} name - The setting key to check (required).
  * @param {Object} [source] - Custom settings object (e.g., theme settings). If not provided, uses siteSettings.
  * @param {boolean} [enabled] - If true, passes when setting is truthy; if false, passes when falsy.
  * @param {*} [equals] - Passes when setting exactly equals this value.
@@ -36,34 +36,34 @@ import { blockCondition } from "./decorator";
  *
  * @example
  * // Boolean setting check
- * { type: "setting", setting: "enable_badges", enabled: true }
+ * { type: "setting", name: "enable_badges", enabled: true }
  *
  * @example
  * // Exact value match
- * { type: "setting", setting: "desktop_category_page_style", equals: "categories_and_latest_topics" }
+ * { type: "setting", name: "desktop_category_page_style", equals: "categories_and_latest_topics" }
  *
  * @example
  * // Setting is one of several values
- * { type: "setting", setting: "desktop_category_page_style", includes: ["categories_and_latest_topics", "categories_and_top_topics"] }
+ * { type: "setting", name: "desktop_category_page_style", includes: ["categories_and_latest_topics", "categories_and_top_topics"] }
  *
  * @example
  * // List setting contains value
- * { type: "setting", setting: "top_menu", contains: "hot" }
+ * { type: "setting", name: "top_menu", contains: "hot" }
  *
  * @example
  * // List setting contains any of values
- * { type: "setting", setting: "share_links", containsAny: ["twitter", "facebook"] }
+ * { type: "setting", name: "share_links", containsAny: ["twitter", "facebook"] }
  *
  * @example
  * // Theme setting check (pass settings object from "virtual:theme")
  * import { settings } from "virtual:theme";
- * { type: "setting", source: settings, setting: "show_sidebar", enabled: true }
+ * { type: "setting", source: settings, name: "show_sidebar", enabled: true }
  */
 @blockCondition({
   type: "setting",
   sourceType: "object",
   validArgKeys: [
-    "setting",
+    "name",
     "enabled",
     "equals",
     "includes",
@@ -77,27 +77,20 @@ export default class BlockSettingCondition extends BlockCondition {
   validate(args) {
     super.validate(args);
 
-    const {
-      setting,
-      source,
-      enabled,
-      equals,
-      includes,
-      contains,
-      containsAny,
-    } = args;
+    const { name, source, enabled, equals, includes, contains, containsAny } =
+      args;
 
-    if (!setting) {
+    if (!name) {
       raiseBlockValidationError(
-        "BlockSettingCondition: `setting` argument is required."
+        "BlockSettingCondition: `name` argument is required."
       );
     }
 
     // Skip site settings check if custom settings object is provided via source
     // (e.g., theme settings from "virtual:theme")
-    if (!source && !(setting in this.siteSettings)) {
+    if (!source && !(name in this.siteSettings)) {
       raiseBlockValidationError(
-        `BlockSettingCondition: unknown site setting "${setting}". ` +
+        `BlockSettingCondition: unknown site setting "${name}". ` +
           `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`
       );
     }
@@ -120,7 +113,7 @@ export default class BlockSettingCondition extends BlockCondition {
   }
 
   evaluate(args, context) {
-    const { setting, enabled, equals, includes, contains, containsAny } = args;
+    const { name, enabled, equals, includes, contains, containsAny } = args;
 
     // Determine settings source:
     // 1. If source is provided, use it (even if it resolves to null/undefined - no fallback)
@@ -129,7 +122,7 @@ export default class BlockSettingCondition extends BlockCondition {
       args.source !== undefined
         ? this.resolveSource(args, context)
         : this.siteSettings;
-    const value = settingsSource?.[setting];
+    const value = settingsSource?.[name];
 
     // Check enabled/disabled (boolean check)
     if (enabled !== undefined) {

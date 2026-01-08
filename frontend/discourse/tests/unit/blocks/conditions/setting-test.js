@@ -67,7 +67,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("enabled: true passes when setting is truthy", function (assert) {
       assert.true(
         this.evaluateCondition({
-          setting: "enable_badges",
+          name: "enable_badges",
           enabled: true,
         })
       );
@@ -76,7 +76,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("enabled: true fails when setting is falsy", function (assert) {
       assert.false(
         this.evaluateCondition({
-          setting: "enable_whispers",
+          name: "enable_whispers",
           enabled: true,
         })
       );
@@ -85,7 +85,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("enabled: false passes when setting is falsy", function (assert) {
       assert.true(
         this.evaluateCondition({
-          setting: "enable_whispers",
+          name: "enable_whispers",
           enabled: false,
         })
       );
@@ -94,14 +94,14 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("equals matches exact value", function (assert) {
       assert.true(
         this.evaluateCondition({
-          setting: "desktop_category_page_style",
+          name: "desktop_category_page_style",
           equals: "categories_and_latest_topics",
         })
       );
 
       assert.false(
         this.evaluateCondition({
-          setting: "desktop_category_page_style",
+          name: "desktop_category_page_style",
           equals: "categories_only",
         })
       );
@@ -110,7 +110,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("includes matches if setting is in array", function (assert) {
       assert.true(
         this.evaluateCondition({
-          setting: "desktop_category_page_style",
+          name: "desktop_category_page_style",
           includes: [
             "categories_and_latest_topics",
             "categories_and_top_topics",
@@ -120,7 +120,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.false(
         this.evaluateCondition({
-          setting: "desktop_category_page_style",
+          name: "desktop_category_page_style",
           includes: ["categories_only", "categories_boxes"],
         })
       );
@@ -129,14 +129,14 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("contains matches if list setting contains value", function (assert) {
       assert.true(
         this.evaluateCondition({
-          setting: "top_menu",
+          name: "top_menu",
           contains: "latest",
         })
       );
 
       assert.false(
         this.evaluateCondition({
-          setting: "top_menu",
+          name: "top_menu",
           contains: "hot",
         })
       );
@@ -145,14 +145,14 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("containsAny matches if list setting contains any value", function (assert) {
       assert.true(
         this.evaluateCondition({
-          setting: "share_links",
+          name: "share_links",
           containsAny: ["twitter", "linkedin"],
         })
       );
 
       assert.false(
         this.evaluateCondition({
-          setting: "share_links",
+          name: "share_links",
           containsAny: ["linkedin", "reddit"],
         })
       );
@@ -169,7 +169,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "show_sidebar",
+          name: "show_sidebar",
           enabled: true,
         })
       );
@@ -177,7 +177,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "enable_animations",
+          name: "enable_animations",
           enabled: true,
         })
       );
@@ -192,7 +192,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "enable_animations",
+          name: "enable_animations",
           enabled: false,
         })
       );
@@ -200,7 +200,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "show_sidebar",
+          name: "show_sidebar",
           enabled: false,
         })
       );
@@ -215,7 +215,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "theme_color",
+          name: "theme_color",
           equals: "dark",
         })
       );
@@ -223,7 +223,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "theme_color",
+          name: "theme_color",
           equals: "light",
         })
       );
@@ -237,7 +237,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "icon_style",
+          name: "icon_style",
           includes: ["outline", "filled"],
         })
       );
@@ -245,7 +245,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "icon_style",
+          name: "icon_style",
           includes: ["filled", "duotone"],
         })
       );
@@ -259,7 +259,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "enabled_features",
+          name: "enabled_features",
           contains: "dark-mode",
         })
       );
@@ -267,7 +267,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "enabled_features",
+          name: "enabled_features",
           contains: "tooltips",
         })
       );
@@ -281,7 +281,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "enabled_modules",
+          name: "enabled_modules",
           containsAny: ["header", "navigation"],
         })
       );
@@ -289,7 +289,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "enabled_modules",
+          name: "enabled_modules",
           containsAny: ["navigation", "search"],
         })
       );
@@ -303,7 +303,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "missing_key",
+          name: "missing_key",
           enabled: true,
         })
       );
@@ -313,7 +313,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: null,
-          setting: "any_setting",
+          name: "any_setting",
           enabled: true,
         }),
         "enabled: true fails with null source"
@@ -322,7 +322,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: null,
-          setting: "any_setting",
+          name: "any_setting",
           enabled: false,
         }),
         "enabled: false passes with null source (setting is undefined/falsy)"
@@ -335,7 +335,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "undefined_setting",
+          name: "undefined_setting",
         }),
         "undefined setting value is falsy"
       );
@@ -343,7 +343,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "undefined_setting",
+          name: "undefined_setting",
           enabled: false,
         }),
         "enabled: false passes for undefined setting"
@@ -359,24 +359,24 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "some_setting",
+          name: "some_setting",
         })
       );
 
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "empty_setting",
+          name: "empty_setting",
         })
       );
     });
   });
 
   module("validate", function () {
-    test("throws when setting argument is missing", function (assert) {
+    test("throws when name argument is missing", function (assert) {
       assert.throws(
         () => this.validateCondition({}),
-        /`setting` argument is required/
+        /`name` argument is required/
       );
     });
 
@@ -384,7 +384,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.throws(
         () =>
           this.validateCondition({
-            setting: "enable_badges",
+            name: "enable_badges",
             enabled: true,
             equals: "some-value",
           }),
@@ -396,7 +396,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.throws(
         () =>
           this.validateCondition({
-            setting: "enable_badges",
+            name: "enable_badges",
             enabled: true,
             includes: ["value1", "value2"],
           }),
@@ -406,7 +406,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
     test("throws for unknown site setting", function (assert) {
       assert.throws(
-        () => this.validateCondition({ setting: "nonexistent_setting" }),
+        () => this.validateCondition({ name: "nonexistent_setting" }),
         /unknown site setting/
       );
     });
@@ -414,13 +414,13 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("does not throw for unknown setting when custom source provided", function (assert) {
       this.validateCondition({
         source: { custom_key: true },
-        setting: "custom_key",
+        name: "custom_key",
       });
       assert.true(true);
     });
 
     test("accepts valid site setting", function (assert) {
-      this.validateCondition({ setting: "enable_badges", enabled: true });
+      this.validateCondition({ name: "enable_badges", enabled: true });
       assert.true(true);
     });
   });
@@ -434,7 +434,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "allowed_ids",
+          name: "allowed_ids",
           contains: 123,
         })
       );
@@ -442,7 +442,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "allowed_ids",
+          name: "allowed_ids",
           contains: 999,
         })
       );
@@ -456,7 +456,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "allowed_ids",
+          name: "allowed_ids",
           containsAny: [123, 999],
         })
       );
@@ -464,7 +464,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.false(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "allowed_ids",
+          name: "allowed_ids",
           containsAny: [111, 222],
         })
       );
@@ -478,7 +478,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(
         this.evaluateCondition({
           source: themeSettings,
-          setting: "allowed_ids",
+          name: "allowed_ids",
           contains: "123",
         })
       );
