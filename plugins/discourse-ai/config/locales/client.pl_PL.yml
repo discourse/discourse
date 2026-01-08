@@ -229,6 +229,7 @@ pl_PL:
         short_title: "Cechy"
         description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych person i LLM, a dostęp do nich może być kontrolowany przez grupy."
         back: "Wstecz"
+        settings_save_error: "Niektórych ustawień nie udało się zapisać."
         disabled: "(wyłączone)"
         persona:
           one: "Osobowość:"
@@ -255,6 +256,11 @@ pl_PL:
           bot: "Czatbot"
           name: "Bot"
           description: "Bot czatu, który może odpowiadać na pytania i pomagać użytkownikom w wiadomościach prywatnych, na forum i na czacie"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
+            access_control: "Kontrola dostępu"
+            ui_settings: "Ustawienia interfejsu użytkownika"
+            integrations: "Integracje"
         nav:
           configured: "Skonfigurowany"
           unconfigured: "Nieskonfigurowany"
@@ -269,24 +275,42 @@ pl_PL:
           description: "Udostępnia przycisk podsumowania, który umożliwia odwiedzającym podsumowanie tematów"
           topic_summaries: "Podsumowania tematów"
           gists: "Krótkie podsumowania listy tematów"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
+            gists: "Gisty"
+            backfill: "Uzupełnianie"
         search:
           name: "Szukaj"
           description: "Ulepsza wyszukiwanie, zapewniając odpowiedzi na zapytania generowane przez sztuczną inteligencję"
           discoveries: "Odkrycia"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
         embeddings:
           name: "Osadzenia"
           description: "Umożliwia korzystanie z funkcji takich jak Powiązane tematy i wyszukiwanie AI poprzez generowanie semantycznych reprezentacji tekstu"
           hyde: "HyDE"
+          setting_groups:
+            model_settings: "Ustawienia modelu"
+            related_topics: "Powiązane tematy"
+            semantic_search: "Wyszukiwanie semantyczne"
         discord:
           name: "Integracja z Discordem"
           description: "Dodaje możliwość wyszukiwania kanałów Discord"
           search: "Wyszukiwanie Discord"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
+            discord_configuration: "Konfiguracja Discorda"
         inference:
           name: "Koncepcje wnioskowane"
           description: "Klasyfikuje tematy i posty według obszarów zainteresowań/etykiet."
           generate_concepts: "Wnioskowanie konceptualne"
           match_concepts: "Dopasowywanie pojęć"
           deduplicate_concepts: "Koncepcje deduplikacji"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
+            topic_criteria: "Kryteria tematów"
+            post_criteria: "Kryteria wpisów"
+            personas: "Persony"
         ai_helper:
           name: "Pomocnik"
           description: "Pomaga użytkownikom w interakcji ze społecznością, np. w tworzeniu tematów, pisaniu postów i czytaniu treści"
@@ -301,6 +325,11 @@ pl_PL:
           image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
           post_illustrator: "Ilustrator postów"
+          setting_groups:
+            access_permissions: "Dostęp i uprawnienia"
+            enabled_features: "Włączone funkcje"
+            automation: "Automatyzacja"
+            personas: "Persony"
         translation:
           name: "Tłumaczenie"
           description: "Tłumaczy treści na obsługiwane języki"
@@ -315,6 +344,10 @@ pl_PL:
             many: "Zaplanowane tłumaczenie %{count} nieprzetłumaczonych wpisów."
             other: "Zaplanowane tłumaczenie %{count} nieprzetłumaczonych wpisów."
           schedule_topic_error: "Nie udało się zaplanować tłumaczeń. Spróbuj ponownie."
+          setting_groups:
+            settings: "Ustawienia podstawowe"
+            personas: "Persony"
+            backfill_and_limits: "Uzupełnienie i ograniczenia"
         spam:
           name: "Spam"
           description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."

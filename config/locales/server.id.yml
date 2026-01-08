@@ -1327,8 +1327,10 @@ id:
     queued_by_staff:
       title: "Pesan Membutuhkan Persetujuan"
     welcome_user:
+      preview: "Selamat datang ke %{site_name}!"
       subject_template: "Selamat datang ke %{site_name}!"
     welcome_invite:
+      preview: "Selamat datang ke %{site_name}!"
       subject_template: "Selamat datang ke %{site_name}!"
     tl2_promotion_message:
       subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"

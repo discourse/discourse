@@ -17,6 +17,7 @@ el:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
       tool_summary:
+        flag_post: "Αναφορά ανάρτησης"
         search: "Αναζήτηση"
         time: "Ώρα"
         summarize: "Συνοψίστε"

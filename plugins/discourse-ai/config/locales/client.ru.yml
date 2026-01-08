@@ -270,12 +270,16 @@ ru:
         embeddings:
           name: "Встраивания"
           description: "Обеспечивает работу функций, таких как «Связанные темы» и «AI-поиск», создавая семантические представления текста"
+          setting_groups:
+            related_topics: "Связанные темы"
         discord:
           name: "Интеграция с Discord"
           description: "Добавляет возможность поиска по каналам Discord"
           search: "Поиск в Discord"
         inference:
           description: "Классифицирует темы и сообщения по областям интереса/меткам."
+          setting_groups:
+            personas: "Персоны"
         ai_helper:
           name: "Помощник"
           description: "Помогает пользователям во взаимодействии с сообществом, например при создании тем, написании сообщений и чтении контента."
@@ -290,6 +294,9 @@ ru:
           image_caption: "Создание подписей к изображениям"
           translator: "Переводчик"
           post_illustrator: "AI-иллюстратор публикаций"
+          setting_groups:
+            automation: "Автоматизация"
+            personas: "Персоны"
         translation:
           name: "Перевод"
           description: "Переводит контент на поддерживаемые языки"
@@ -297,6 +304,8 @@ ru:
           post_raw_translator: "Переводчик исходной публикации"
           topic_title_translator: "Переводчик заголовков тем"
           short_text_translator: "Переводчик коротких текстов"
+          setting_groups:
+            personas: "Персоны"
         spam:
           name: "Спам"
           description: "С помощью выбранной LLM определяет потенциальный спам и отправляет его модераторам сайта в очередь проверки"

@@ -3156,6 +3156,7 @@ fi:
         Sitä mukaa kun toimit täällä, opimme tuntemaan sinut, ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) ja saat valtuuksia, joiden avulla voit osallistua yhteisömme ylläpitoon.
     welcome_user:
       title: "Tervetuloa käyttäjä"
+      preview: "Tervetuloa sivustolle %{site_name}!"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
         Kiitos kun liityit sivustolle %{site_name}, ja tervetuloa!
@@ -3183,6 +3184,7 @@ fi:
         Suuri voima tuo mukanaan suuren vastuun. Jos valvonta on sinulle uutta, tutustu [valvontaoppaaseen](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Tervetuloa kutsuttu"
+      preview: "Tervetuloa sivustolle %{site_name}!"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
         Kiitos kun liityit sivustolle %{site_name}, ja tervetuloa!
@@ -3600,6 +3602,7 @@ fi:
         Tätä voi muuttaa sivustoasetuksilla "newuser_spam_host_threshold" ja "allowed_spam_host_domains". Harkitse kohteiden %{domains} lisäämistä sallittujen luetteloon, jos niiden ei pidä aiheuttaa toimenpiteitä.
     unsilenced:
       title: "Hiljennys kumottu"
+      preview: "Käyttäjätili ei ole enää pidossa."
       subject_template: "Käyttäjätili ei ole enää pidossa"
       text_body_template: |
         Hei,
@@ -3648,8 +3651,6 @@ fi:
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   subject_re: "VS:"
   subject_pm: "[YV]"
-  email_from: "%{user_name} sivustolta %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Edelliset vastaukset"
     reached_limit:
@@ -3983,6 +3984,7 @@ fi:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Kirjaudu linkin avulla"
+      preview: "Kirjaudu linkin avulla."
       subject_template: "%{email_prefix} Kirjautuminen linkin avulla"
       text_body_template: |
         Tässä linkki, jolla voit kirjautua sivustolle [%{site_name}](%{base_url}).

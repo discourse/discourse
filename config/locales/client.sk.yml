@@ -1405,6 +1405,9 @@ sk:
       new_private_message: "Nová správa"
       private_message: "Správa"
       private_messages: "Správy"
+      upcoming_changes:
+        for_user:
+          enabled: "Povolené?"
       user_notifications:
         filters:
           filter_by: "Triediť podľa"
@@ -5762,6 +5765,8 @@ sk:
               options:
                 above_topic_content: "Obsah vyššie uvedenej témy"
                 below_site_header: "Pod hlavičkou stránky"
+            text_section:
+              locale_label: "Jazyk"
             header_logged_in:
               placeholder: "Vitaj späť, %{preferred_display_name}!"
             header_anonymous:
@@ -7868,7 +7873,6 @@ sk:
           button: "Zmazať všetky príspevky"
           progress:
             title: "Priebeh odstraňovania príspevkov"
-            description: "Odstránenie príspevkov…"
           confirmation:
             title: "Odstrániť všetky príspevky od @%{username}"
             description: |

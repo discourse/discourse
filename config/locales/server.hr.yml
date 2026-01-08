@@ -1930,6 +1930,7 @@ hr:
         Kako ovdje sudjelujete, upoznavat ćemo vas i privremena ograničenja za nove korisnike bit će ukinuta. S vremenom ćete steći [razine povjerenja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) koje uključuju posebne sposobnosti koje će nam pomoći u zajedničkom upravljanju našom zajednicom.
     welcome_user:
       title: "Dobrodošli"
+      preview: "Dobrodošli na %{site_name}"
       subject_template: "Dobrodošli na %{site_name}"
       text_body_template: |
         Hvala što ste se pridružili %{site_name}i dobrodošli!
@@ -1948,6 +1949,7 @@ hr:
 
         S velikom moći dolazi i velika odgovornost. Ako ste novi u moderiranju, pogledajte [Vodič za moderiranje](https://meta.discourse.org/t/discourse-moderation-guide/63116) ili se obratite osoblju foruma za pomoć.
     welcome_invite:
+      preview: "Dobrodošli na %{site_name}"
       subject_template: "Dobrodošli na %{site_name}"
       text_body_template: |
         Hvala što ste prihvatili pozivnicu za %{site_name} -- dobrodošli!
@@ -2299,6 +2301,7 @@ hr:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Prijavite se putem poveznice"
+      preview: "Prijavite se putem poveznice."
       subject_template: "[%{email_prefix}] Prijavite se putem poveznice"
       text_body_template: |
         Ovdje je vaša poveznica za prijavu na [%{site_name}](%{base_url}).

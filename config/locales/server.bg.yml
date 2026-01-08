@@ -1078,8 +1078,10 @@ bg:
     queued_by_staff:
       title: "Публикацията изисква одобрение"
     welcome_user:
+      preview: "Добре дошли в %{site_name}!"
       subject_template: "Добре дошли в %{site_name}!"
     welcome_invite:
+      preview: "Добре дошли в %{site_name}!"
       subject_template: "Добре дошли в %{site_name}!"
     backup_succeeded:
       subject_template: "Бекъпа завърши успещно."

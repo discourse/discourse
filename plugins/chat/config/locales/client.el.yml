@@ -81,6 +81,9 @@ el:
       edited: "επεξεργάστηκε"
       muted: "σε σίγαση"
       joined: "έγινε μέλος"
+      empty_state:
+        direct_message_cta: "Ξεκινήστε μια προσωπική συνομιλία"
+        direct_message: "Μπορείτε επίσης να ξεκινήσετε μια προσωπική συνομιλία με έναν ή περισσότερους χρήστες."
       email_frequency:
         never: "Ποτέ"
       header_indicator_preference:
@@ -133,8 +136,9 @@ el:
       retry_staged_message:
         title: "Σφάλμα δικτύου"
         action: "Αποστολή ξανά;"
+      unreliable_network: "Το δίκτυο είναι αναξιόπιστο, η αποστολή μηνυμάτων και η αποθήκευση προσχεδίου ενδέχεται να μην λειτουργήσουν"
       bookmark_message: "Σελιδοδείκτης"
-      bookmark_message_edit: "Επεξεργασία Σελιδοδείκτη"
+      bookmark_message_edit: "Επεξεργασία σελιδοδείκτη"
       restore: "Επαναφορά διαγραμμένου μηνύματος"
       save: "Αποθήκευση"
       select: "Επιλογή"
@@ -179,9 +183,15 @@ el:
         no_items: "Δεν υπάρχουν στοιχεία"
         filter: "Φίλτρο"
       direct_message_creator:
+        add_to_channel: "Προσθήκη στο κανάλι"
         title: Νέο Μήνυμα
         prefix: "Προς:"
         no_results: Δεν υπάρχουν αποτελέσματα
+        selected_user_title: "Αποεπιλογή %{username}"
+        group_name: "Όνομα ομαδικής συνομιλίας (προαιρετικό)"
+        members_counter:
+          one: "%{count}/%{max} μέλος"
+          other: "%{count}/%{max} μέλη"
       channel:
         memberships_count:
           one: "%{count} μέλος"
@@ -200,6 +210,7 @@ el:
         send: "Αποστολή"
       notification_levels:
         never: "Ποτέ"
+        mention: "Μόνο για επισημάνεις"
       settings:
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
@@ -221,6 +232,10 @@ el:
         sort:
           relevance: "Συνάφεια"
           latest: "Πρόσφατα"
+      direct_messages:
+        new: "Δημιουργήστε μια προσωπική συνομιλία"
+        leave: "Αποχωρήστε από την προσωπική συνομιλία"
+        close: "Κλείστε την προσωπική συνομιλία"
       incoming_webhooks:
         back: "Πίσω"
         channel_placeholder: "Επιλέξτε ένα κανάλι"
@@ -275,8 +290,10 @@ el:
         notifications:
           regular:
             title: "Φυσιολογικό"
+            description: "Λάβετε ειδοποίηση όταν κάποιος σας επισημάνει σε αυτό το νήμα."
           tracking:
             title: "Παρακολουθείται"
+            description: "Λάβετε ειδοποίηση όταν κάποιος σας επισημάνει σε αυτό το νήμα και δείτε τον αριθμό των νέων απαντήσεων στη λίστα των νημάτων."
           watching:
             title: "Επιτηρείται"
       draft_channel_screen:
@@ -288,6 +305,9 @@ el:
         one: "%{username} και %{username2}"
         other: "%{username} και %{count} ακόμη"
       popup:
+        chat_mention:
+          direct: 'σας επισήμανε στο "%{channel}"'
+          direct_html: '<span>%{username}</span> <span>σας επισήμανε στο "%{channel}"</span>'
         direct_message_chat_mention:
           direct: "σας επισήμανε σε προσωπική συνομιλία"
           direct_html: "<span>%{username}</span> <span>σας επισήμανε σε προσωπική συνομιλία</span>"

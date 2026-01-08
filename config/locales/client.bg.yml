@@ -1038,6 +1038,9 @@ bg:
       new_private_message: "Ново Съобщение"
       private_message: "Съобщение"
       private_messages: "Съобщения"
+      upcoming_changes:
+        for_user:
+          enabled: "Да е включен?"
       user_notifications:
         filters:
           filter_by: "Филтриране по"
@@ -1281,7 +1284,6 @@ bg:
         tags: "Етикети"
         interface: "Интерфейс"
         apps: "Апликации"
-        navigation_menu: "Меню за навигация"
       change_password:
         success: "(имейлът е изпратен)"
         in_progress: "(изпраща се имейл)"

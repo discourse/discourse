@@ -899,6 +899,9 @@ bs_BA:
       new_private_message: "Nova poruka"
       private_message: "Poruka"
       private_messages: "Poruke"
+      upcoming_changes:
+        for_user:
+          enabled: "Omogućen?"
       user_notifications:
         filters:
           filter_by: "Filtriraj po"

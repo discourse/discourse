@@ -49,7 +49,6 @@ cs:
     all_day_event_start_time: "Události, které nemají určený čas začátku, začnou v tento čas. Formát je HH:mm. Pro 6:00 zadejte 06:00"
     all_day_event_end_time: "Události, které nemají určený čas konce, skončí v tento čas. Formát je HH:mm. Pro 18:00 zadejte 18:00"
     all_day_event_time_error: "Neplatný čas. Formát musí být HH:mm (např. 08:00)."
-    calendar_categories: "Zobrazit kalendář nahoře kategorie. Povinné volby jsou `categoryId` a `postId`. Např.: `categoryId=6;postId=453`\n Další platné volby: `tzPicker`, `weekends` a `defaultView`."
     calendar_categories_outlet: "Umožňuje změnit, ve které zásuvce se zobrazí kalendář kategorie."
     working_days: "Nastavení pracovních dnů. Dostupnost skupiny můžete zobrazit pomocí značky `timezones` v příspěvku, např.: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Čas, kdy začíná pracovní doba."

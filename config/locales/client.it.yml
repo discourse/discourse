@@ -1339,6 +1339,9 @@ it:
       new_private_message: "Nuovo Messaggio"
       private_message: "Messaggio"
       private_messages: "Messaggi"
+      upcoming_changes:
+        for_user:
+          enabled: "Abilitato?"
       user_notifications:
         filters:
           filter_by: "Filtra per"
@@ -5351,6 +5354,8 @@ it:
               options:
                 above_topic_content: "Sopra il contenuto dell'argomento"
                 below_site_header: "Sotto l'intestazione del sito"
+            text_section:
+              locale_label: "Lingua"
             header_logged_in:
               placeholder: "Rieccoti, %{preferred_display_name}!"
             header_anonymous:
@@ -7400,7 +7405,6 @@ it:
           button: "Cancella tutti i messaggi"
           progress:
             title: "Avanzamento dell'eliminazione dei messaggi"
-            description: "Eliminazione dei messaggi…"
           confirmation:
             title: "Elimina tutti i messaggi di @%{username}"
             description: |

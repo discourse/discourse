@@ -1339,6 +1339,9 @@ fi:
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
+      upcoming_changes:
+        for_user:
+          enabled: "Otettu käyttöön?"
       user_notifications:
         filters:
           filter_by: "Suodata"
@@ -5354,6 +5357,8 @@ fi:
               options:
                 above_topic_content: "Ketjun sisällön yläpuolella"
                 below_site_header: "Sivuston yläpalkin alapuolella"
+            text_section:
+              locale_label: "Kieli"
             header_logged_in:
               placeholder: "Tervetuloa takaisin, %{preferred_display_name}!"
             header_anonymous:
@@ -7418,7 +7423,6 @@ fi:
           button: "Poista kaikki viestit"
           progress:
             title: "Viestien poistamisen eteneminen"
-            description: "Poistetaan viestejä…"
           confirmation:
             title: "Poista kaikki käyttäjän @%{username} viestit"
             description: |

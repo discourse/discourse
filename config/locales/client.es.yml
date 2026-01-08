@@ -1376,7 +1376,9 @@ es:
       private_message: "Mensaje"
       private_messages: "Mensajes"
       upcoming_changes:
-        title: "Cambio próximo activado"
+        title: "Próximos cambios"
+        for_user:
+          enabled: "¿Activado?"
       user_notifications:
         filters:
           filter_by: "Filtrar por"
@@ -1700,6 +1702,7 @@ es:
         interface: "Interfaz"
         apps: "Aplicaciones"
         navigation_menu: "Menú de navegación"
+        upcoming_changes: "Próximos cambios"
       change_password:
         success: "(correo electrónico enviado)"
         in_progress: "(enviando correo electrónico)"
@@ -5481,9 +5484,9 @@ es:
                 below_site_header: "Bajo el encabezado del sitio"
             text_section:
               title: "Texto personalizable"
+              locale_label: "Idioma"
             header_new_members:
               label: "Cabecera para nuevos miembros"
-              placeholder: "Te damos la bienvenida a %{site_name}, %{preferred_display_name}"
             header_logged_in:
               label: "Cabecera para miembros registrados"
               placeholder: "¡Te damos la bienvenida de nuevo, %{preferred_display_name}!"
@@ -7559,7 +7562,6 @@ es:
           button: "Eliminar todas las publicaciones"
           progress:
             title: "Progreso de la eliminación de publicaciones"
-            description: "Eliminando publicaciones…"
           confirmation:
             title: "Eliminar todas las publicaciones de @%{username}"
             description: |

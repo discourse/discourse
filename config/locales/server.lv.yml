@@ -449,8 +449,10 @@ lv:
     queued_by_staff:
       title: "Ieraksts gaida apstiprinājumu"
     welcome_user:
+      preview: "Laipni lūdzam %{site_name}!"
       subject_template: "Laipni lūdzam %{site_name}!"
     welcome_invite:
+      preview: "Laipni lūdzam %{site_name}!"
       subject_template: "Laipni lūdzam %{site_name}!"
   user_notifications:
     digest:
