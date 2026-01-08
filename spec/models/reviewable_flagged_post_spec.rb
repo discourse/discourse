@@ -265,7 +265,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         ActionMailer::Base.deliveries.count
       }
       expect(ActionMailer::Base.deliveries.last.subject).to include(
-        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+        I18n.t("user_notifications.account_deleted.subject_template_improved"),
       )
     end
 
@@ -282,7 +282,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         ActionMailer::Base.deliveries.count
       }
       expect(ActionMailer::Base.deliveries.last.subject).to include(
-        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+        I18n.t("user_notifications.account_deleted.subject_template_improved"),
       )
     end
 

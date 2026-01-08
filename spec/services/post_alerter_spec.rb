@@ -2628,7 +2628,7 @@ RSpec.describe PostAlerter do
       expect(email.from).to eq([SiteSetting.notification_email])
       expect(email.to).to contain_exactly(group_user1.user.email)
       expect(email.cc).to eq(nil)
-      expect(email.subject).to eq("[Discourse] #{topic.title}")
+      expect(email.subject).to eq("Discourse: #{topic.title}")
     end
 
     it "skips sending a notification email to the cc address that was added on the same post with an incoming email" do
