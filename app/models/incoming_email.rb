@@ -79,10 +79,6 @@ end
 #  created_via       :integer          default(0), not null
 #  error             :text
 #  from_address      :text
-#  imap_missing      :boolean          default(FALSE), not null
-#  imap_sync         :boolean
-#  imap_uid          :integer
-#  imap_uid_validity :integer
 #  is_auto_generated :boolean          default(FALSE)
 #  is_bounce         :boolean          default(FALSE), not null
 #  raw               :text
@@ -91,7 +87,6 @@ end
 #  to_addresses      :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  imap_group_id     :bigint
 #  message_id        :text
 #  post_id           :integer
 #  topic_id          :integer
