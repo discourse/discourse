@@ -69,6 +69,8 @@ class UpcomingChanges::Promote
     end
   end
 
+  # TODO (martin) Need to send notifications to admins here when
+  # the change is automatically enabled
   def log_promotion(params:, guardian:)
     context =
       I18n.t(

@@ -37,6 +37,8 @@ class UpcomingChanges::Toggle
       previous_value = SiteSetting.public_send(params.setting_name)
       SiteSetting.send("#{params.setting_name}=", params.enabled)
 
+      # TODO (martin) Add UpcomingChangeEvent with event_type: manual_opt_in (3)
+      # or manual_opt_out (4) appropriately here. Include the acting_user_id.
       if options.log_change
         StaffActionLogger.new(guardian.user).log_upcoming_change_toggle(
           params.setting_name,
