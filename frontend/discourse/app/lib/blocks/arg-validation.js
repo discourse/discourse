@@ -151,6 +151,14 @@ export function validateArgsSchema(argsSchema, blockName) {
       );
     }
 
+    // required + default is contradictory - default makes required meaningless
+    if (argDef.required === true && argDef.default !== undefined) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has both "required: true" and "default". ` +
+          `These options are contradictory - an arg with a default value is never missing.`
+      );
+    }
+
     // Validate default value matches type
     if (argDef.default !== undefined) {
       const defaultError = validateArgValue(

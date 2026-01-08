@@ -152,6 +152,17 @@ module("Unit | Lib | blocks/arg-validation", function () {
       );
     });
 
+    test("throws for required with default - contradictory options", function (assert) {
+      const schema = {
+        title: { type: "string", required: true, default: "Hello" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has both "required: true" and "default".*contradictory/
+      );
+    });
+
     test("throws for default value with wrong type - string expected", function (assert) {
       const schema = {
         title: { type: "string", default: 123 },
