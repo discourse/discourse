@@ -22,6 +22,26 @@ module PageObjects
         revision_numbers.find("strong:nth-child(3)")
       end
 
+      def has_tag_changes?
+        body.has_css?(".-tag-revisions")
+      end
+
+      def previous_tags
+        body.find(".-tag-revisions .tag-revision__wrapper:first-child")
+      end
+
+      def current_tags
+        body.find(".-tag-revisions .tag-revision__wrapper:last-child")
+      end
+
+      def deleted_tags
+        body.all(".-tag-revisions .discourse-tag.diff-del").map(&:text)
+      end
+
+      def inserted_tags
+        body.all(".-tag-revisions .discourse-tag.diff-ins").map(&:text)
+      end
+
       private
 
       def revision_numbers
