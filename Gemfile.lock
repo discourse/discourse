@@ -150,6 +150,7 @@ GEM
     discourse_dev_assets (0.0.6)
       faker (~> 3.5.1)
       literate_randomizer
+    discourse_math_bundle (1.0.1)
     docile (1.4.1)
     drb (2.2.3)
     dry-initializer (3.2.0)
@@ -777,6 +778,7 @@ DEPENDENCIES
   discourse-seed-fu
   discourse_ai-tokenizers
   discourse_dev_assets
+  discourse_math_bundle
   dry-initializer (~> 3.1)
   ed25519
   email_reply_trimmer
@@ -963,6 +965,7 @@ CHECKSUMS
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
   discourse_ai-tokenizers (0.3.2) sha256=eba14edf6ac94c5ebe68866bd6eaf1a119bc8019e150e5c4c767b8907e907b21
   discourse_dev_assets (0.0.6) sha256=4dfe7946927aa3d61a4ba89b5aef39d6daaeb70e35d7125dc481806a5c0aea4e
+  discourse_math_bundle (1.0.1) sha256=c7d82fa65c9680cab2f77daeba32c1b89e500faccd2269e050ab27d5e1bc8337
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dry-initializer (3.2.0) sha256=37d59798f912dc0a1efe14a4db4a9306989007b302dcd5f25d0a2a20c166c4e3
