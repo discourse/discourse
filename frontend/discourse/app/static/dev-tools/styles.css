@@ -149,6 +149,7 @@
 .block-debug-info {
   border: 1px dotted var(--dev-tools-block-color);
   background: rgb(217 119 6 / var(--dev-tools-bg-opacity));
+  padding: 2px;
 
   &.--rendered {
     border-color: var(--dev-tools-block-color);
@@ -173,6 +174,7 @@
     rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
     rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
   );
+  padding: 2px;
   min-height: 30px;
 }
 
@@ -190,7 +192,7 @@
 
 /* Nested ghost blocks: reduced padding */
 .block-debug-ghost__children .block-debug-ghost {
-  padding: 4px;
+  padding: 2px;
 }
 
 /* Odd depth levels: flip stripe direction */
@@ -221,7 +223,7 @@
 /* Block Outlet boundaries */
 .block-outlet-debug {
   border: 1px dashed var(--dev-tools-block-outlet-color);
-  padding: 4px;
+  padding: 2px;
   min-height: 20px;
   background: rgb(245 158 11 / var(--dev-tools-bg-opacity));
 }
