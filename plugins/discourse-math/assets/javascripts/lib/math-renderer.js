@@ -2,9 +2,9 @@ import { warn } from "@ember/debug";
 import { cancel, later } from "@ember/runloop";
 import { isTesting } from "discourse/lib/environment";
 import { getURLWithCDN } from "discourse/lib/get-url";
-import loadKaTeX from "discourse/lib/load-katex";
-import loadMathJax from "discourse/lib/load-mathjax";
 import { sanitize } from "discourse/lib/text";
+import loadKaTeX from "discourse/plugins/discourse-math/lib/load-katex";
+import loadMathJax from "discourse/plugins/discourse-math/lib/load-mathjax";
 import { getMathJaxBasePath } from "discourse/plugins/discourse-math/lib/math-bundle-paths";
 
 const CSS_CLASSES = {
@@ -397,6 +397,11 @@ export function renderMathJax(elem, opts, renderOptions = {}) {
 }
 
 async function ensureKaTeX() {
+  // In tests, skip loading if katex is already mocked
+  if (isTesting() && window.katex) {
+    return;
+  }
+
   await loadKaTeX({
     enableMhchem: true,
     enableCopyTex: true,
