@@ -158,7 +158,8 @@ export default class ReviewableItem extends Component {
     "claimOptional",
     "claimRequired",
     "reviewable.claimed_by",
-    "siteSettings.reviewable_old_moderator_actions"
+    "siteSettings.reviewable_old_moderator_actions",
+    "isAiReviewable"
   )
   displayContextQuestion(
     createdFromFlag,
@@ -166,13 +167,15 @@ export default class ReviewableItem extends Component {
     claimOptional,
     claimRequired,
     claimedBy,
-    oldModeratorActions
+    oldModeratorActions,
+    isAiReviewable
   ) {
     return (
-      oldModeratorActions &&
-      createdFromFlag &&
-      status === 0 &&
-      (claimOptional || (claimRequired && claimedBy !== null))
+      (oldModeratorActions &&
+        createdFromFlag &&
+        status === 0 &&
+        (claimOptional || (claimRequired && claimedBy !== null))) ||
+      isAiReviewable
     );
   }
 
@@ -842,8 +845,6 @@ export default class ReviewableItem extends Component {
                     {{i18n "review.editing_post"}}
                   {{else if (eq this.reviewable.status PENDING)}}
                     {{#if this.displayContextQuestion}}
-                      {{this.reviewable.flaggedReviewableContextQuestion}}
-                    {{else if this.isAiReviewable}}
                       {{this.reviewable.flaggedReviewableContextQuestion}}
                     {{else if this.reviewable.userReviewableContextQuestion}}
                       {{this.reviewable.userReviewableContextQuestion}}
