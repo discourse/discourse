@@ -23,7 +23,10 @@ import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { validateArgsSchema } from "discourse/lib/blocks/arg-validation";
+import {
+  validateArgsSchema,
+  validateConstraintsSchema,
+} from "discourse/lib/blocks/arg-validation";
 import { validateConfig } from "discourse/lib/blocks/config-validation";
 import {
   getBlockDebugCallback,
@@ -82,6 +85,8 @@ const VALID_BLOCK_OPTIONS = Object.freeze([
   "container",
   "description",
   "args",
+  "constraints",
+  "validate",
   "allowedOutlets",
   "deniedOutlets",
 ]);
@@ -237,6 +242,8 @@ export function block(name, options = {}) {
   const isContainer = options?.container ?? false;
   const description = options?.description ?? "";
   const argsSchema = options?.args ?? null;
+  const constraints = options?.constraints ?? null;
+  const validateFn = options?.validate ?? null;
   const allowedOutlets = options?.allowedOutlets ?? null;
   const deniedOutlets = options?.deniedOutlets ?? null;
 
@@ -258,6 +265,16 @@ export function block(name, options = {}) {
 
   // Validate arg schema structure and types
   validateArgsSchema(argsSchema, name);
+
+  // Validate constraints schema (references to args, incompatible constraints, vacuous constraints)
+  validateConstraintsSchema(constraints, argsSchema, name);
+
+  // Validate that validate is a function if provided
+  if (validateFn !== null && typeof validateFn !== "function") {
+    raiseBlockError(
+      `Block "${name}": "validate" must be a function, got ${typeof validateFn}.`
+    );
+  }
 
   // Validate outlet patterns are valid picomatch syntax (arrays of strings)
   validateOutletPatterns(allowedOutlets, name, "allowedOutlets");
@@ -286,6 +303,8 @@ export function block(name, options = {}) {
     description,
     container: isContainer,
     args: argsSchema ? Object.freeze(argsSchema) : null,
+    constraints: constraints ? Object.freeze(constraints) : null,
+    validate: validateFn,
     allowedOutlets: allowedOutlets ? Object.freeze([...allowedOutlets]) : null,
     deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
   });
@@ -319,13 +338,15 @@ export function block(name, options = {}) {
 
       /**
        * Block metadata including description, container status, args schema,
-       * and outlet restrictions. Used for introspection, documentation, and
-       * runtime validation.
+       * constraints, validate function, and outlet restrictions. Used for
+       * introspection, documentation, and runtime validation.
        *
        * @type {{
        *   description: string,
        *   container: boolean,
        *   args: Object|null,
+       *   constraints: Object|null,
+       *   validate: Function|null,
        *   allowedOutlets: ReadonlyArray<string>|null,
        *   deniedOutlets: ReadonlyArray<string>|null
        * }}

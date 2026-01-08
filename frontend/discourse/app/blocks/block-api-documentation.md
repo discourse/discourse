@@ -100,12 +100,26 @@ import { block } from "discourse/components/block-outlet";
       type: "array",
       itemType: "string"
     },
+    categoryId: { type: "number" },
+    tagName: { type: "string" },
   },
 
-  // (D) Outlet restrictions - where can this block render?
+  // (D) Cross-arg constraints - validation rules across multiple args
+  constraints: {
+    atLeastOne: ["categoryId", "tagName"],  // At least one must be provided
+  },
+
+  // (E) Custom validation - bespoke validation logic
+  validate(args) {
+    if (args.ctaText && !args.ctaUrl) {
+      return "ctaUrl is required when ctaText is provided";
+    }
+  },
+
+  // (F) Outlet restrictions - where can this block render?
   allowedOutlets: ["homepage-blocks", "hero-*"],
 
-  // (E) Outlet exclusions - where should this block never render?
+  // (G) Outlet exclusions - where should this block never render?
   deniedOutlets: ["sidebar-*"],
 })
 export default class HeroBanner extends Component {
@@ -207,7 +221,63 @@ The args schema serves three purposes:
 - `itemType` (optional, for arrays) - Type of items in the array
 - `pattern` (optional, for strings) - Regex pattern for validation
 
-#### (D) Allowed Outlets
+#### (D) Constraints
+
+```javascript
+constraints: {
+  atLeastOne: ["categoryId", "tagName"],
+}
+```
+
+Constraints define validation rules across multiple arguments. They're checked at runtime after defaults are applied, and errors are caught at boot time when `renderBlocks()` is called.
+
+**Constraint types:**
+
+| Constraint | Meaning | Example |
+|------------|---------|---------|
+| `atLeastOne` | At least one arg must be provided | `atLeastOne: ["id", "tag"]` |
+| `exactlyOne` | Exactly one arg must be provided (mutual exclusion + required) | `exactlyOne: ["id", "tag"]` |
+| `allOrNone` | Either all are provided or none | `allOrNone: ["width", "height"]` |
+
+**Error messages:**
+
+```
+Block "featured-list": at least one of "id", "tag" must be provided.
+Block "featured-list": exactly one of "id", "tag" must be provided, but got both.
+Block "featured-list": exactly one of "id", "tag" must be provided, but got none.
+Block "featured-list": args "width", "height" must be provided together or not at all.
+```
+
+**Vacuous constraint detection:** The system detects constraints that are always true or always false due to default values. For example:
+
+- `atLeastOne: ["id", "tag"]` where `id` has a default → always true (error at decoration time)
+- `exactlyOne: ["id", "tag"]` where both have defaults → always false (error at decoration time)
+- `allOrNone: ["width", "height"]` where only `width` has a default → always false (error at decoration time)
+
+**Incompatible constraints:** Some constraint combinations on the same args are errors:
+
+- `exactlyOne` + `allOrNone` → conflict (XOR vs all-or-nothing)
+- `exactlyOne` + `atLeastOne` → redundant (exactlyOne implies atLeastOne)
+
+#### (E) Custom Validation
+
+```javascript
+validate(args) {
+  if (args.min !== undefined && args.max !== undefined && args.min > args.max) {
+    return "min must be less than or equal to max";
+  }
+}
+```
+
+For validation logic that can't be expressed with declarative constraints, use a `validate` function. It receives the args object (with defaults applied) and should return:
+
+- `undefined` or `null` if valid
+- A `string` error message if invalid
+- An `array` of error messages for multiple issues
+
+The `validate` function runs after declarative constraints pass.
+
+#### (F) Allowed Outlets
 
 ```javascript
 allowedOutlets: ["homepage-blocks", "hero-*"],
@@ -222,7 +292,7 @@ Restricts where this block can render. Uses [picomatch](https://github.com/micro
 
 **What if someone tries to use this block in `sidebar-blocks`?** They get a validation error: `Block "theme:my-theme:hero-banner" cannot be rendered in outlet "sidebar-blocks": denied by deniedOutlets pattern "sidebar-*".`
 
-#### (E) Denied Outlets
+#### (G) Denied Outlets
 
 ```javascript
 deniedOutlets: ["sidebar-*"],
@@ -1925,6 +1995,8 @@ api.registerBlockConditionType(ConditionClass)
   container: boolean,           // Can contain child blocks
   description: string,          // Human-readable description
   args: { [key]: ArgSchema },   // Argument definitions
+  constraints: ConstraintSpec,  // Cross-arg validation rules
+  validate: (args) => string | string[] | undefined,  // Custom validation
   allowedOutlets: string[],     // Glob patterns for allowed outlets
   deniedOutlets: string[],      // Glob patterns for denied outlets
 }
@@ -1936,6 +2008,13 @@ api.registerBlockConditionType(ConditionClass)
   default?: any,
   itemType?: "string" | "number" | "boolean",  // For arrays
   pattern?: RegExp,                             // For strings
+}
+
+// ConstraintSpec:
+{
+  atLeastOne?: string[],   // At least one must be provided
+  exactlyOne?: string[],   // Exactly one must be provided
+  allOrNone?: string[],    // All or none must be provided
 }
 ```
 

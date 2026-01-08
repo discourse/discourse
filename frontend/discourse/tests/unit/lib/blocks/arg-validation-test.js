@@ -2,10 +2,13 @@ import Component from "@glimmer/component";
 import { module, test } from "qunit";
 import { block } from "discourse/components/block-outlet";
 import {
+  runCustomValidation,
   validateArgsSchema,
   validateArgValue,
   validateArrayItemType,
   validateBlockArgs,
+  validateConstraints,
+  validateConstraintsSchema,
 } from "discourse/lib/blocks/arg-validation";
 import { BlockValidationError } from "discourse/lib/blocks/error";
 
@@ -507,6 +510,532 @@ module("Unit | Lib | blocks/arg-validation", function () {
         assert.true(error.message.includes('did you mean "showDescription"'));
         assert.strictEqual(error.path, "args.shoDescription");
       }
+    });
+  });
+
+  module("validateConstraintsSchema", function () {
+    test("accepts valid constraints", function (assert) {
+      const constraints = {
+        atLeastOne: ["id", "tag"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.strictEqual(
+        validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        undefined
+      );
+    });
+
+    test("accepts null/undefined constraints", function (assert) {
+      assert.strictEqual(
+        validateConstraintsSchema(null, {}, "test-block"),
+        undefined
+      );
+      assert.strictEqual(
+        validateConstraintsSchema(undefined, {}, "test-block"),
+        undefined
+      );
+    });
+
+    test("throws for unknown constraint type", function (assert) {
+      const constraints = {
+        invalidConstraint: ["id", "tag"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /unknown constraint type "invalidConstraint"/
+      );
+    });
+
+    test("suggests similar constraint type for typos", function (assert) {
+      const constraints = {
+        atleastOne: ["id", "tag"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /did you mean "atLeastOne"/
+      );
+    });
+
+    test("throws if constraint value is not an array", function (assert) {
+      const constraints = {
+        atLeastOne: "id",
+      };
+      const argsSchema = {
+        id: { type: "number" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /must be an array of arg names/
+      );
+    });
+
+    test("throws if constraint has fewer than 2 args", function (assert) {
+      const constraints = {
+        atLeastOne: ["id"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /must reference at least 2 args/
+      );
+    });
+
+    test("throws if constraint references unknown arg", function (assert) {
+      const constraints = {
+        atLeastOne: ["id", "unknownArg"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /references unknown arg "unknownArg"/
+      );
+    });
+
+    test("suggests similar arg name for typos in constraint", function (assert) {
+      const constraints = {
+        atLeastOne: ["id", "tagh"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /did you mean "tag"/
+      );
+    });
+
+    test("throws if constraint contains non-string value", function (assert) {
+      const constraints = {
+        atLeastOne: ["id", 123],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /contains non-string value/
+      );
+    });
+
+    module("vacuous constraint detection", function () {
+      test("atLeastOne is vacuous when arg has default", function (assert) {
+        const constraints = {
+          atLeastOne: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number", default: 1 },
+          tag: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /atLeastOne.*is always true because "id" has a default value/
+        );
+      });
+
+      test("exactlyOne is vacuous when multiple args have defaults", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number", default: 1 },
+          tag: { type: "string", default: "foo" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /exactlyOne.*is always false because multiple args have default values/
+        );
+      });
+
+      test("exactlyOne is valid when only one arg has default", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number", default: 1 },
+          tag: { type: "string" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+
+      test("allOrNone is vacuous when some but not all have defaults", function (assert) {
+        const constraints = {
+          allOrNone: ["width", "height"],
+        };
+        const argsSchema = {
+          width: { type: "number", default: 100 },
+          height: { type: "number" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /allOrNone.*is always false because only some args have defaults/
+        );
+      });
+
+      test("allOrNone is valid when all have defaults", function (assert) {
+        const constraints = {
+          allOrNone: ["width", "height"],
+        };
+        const argsSchema = {
+          width: { type: "number", default: 100 },
+          height: { type: "number", default: 200 },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+
+      test("allOrNone is valid when none have defaults", function (assert) {
+        const constraints = {
+          allOrNone: ["width", "height"],
+        };
+        const argsSchema = {
+          width: { type: "number" },
+          height: { type: "number" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+    });
+
+    module("incompatible constraint detection", function () {
+      test("exactlyOne + allOrNone on same args is an error", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+          allOrNone: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number" },
+          tag: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /"exactlyOne" and "allOrNone" conflict/
+        );
+      });
+
+      test("exactlyOne + atLeastOne on same args is an error", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+          atLeastOne: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number" },
+          tag: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /"atLeastOne" is redundant with "exactlyOne"/
+        );
+      });
+
+      test("different constraints on different args is valid", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+          allOrNone: ["width", "height"],
+        };
+        const argsSchema = {
+          id: { type: "number" },
+          tag: { type: "string" },
+          width: { type: "number" },
+          height: { type: "number" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+    });
+  });
+
+  module("validateConstraints", function () {
+    module("atLeastOne", function () {
+      test("passes when one arg is provided", function (assert) {
+        const constraints = { atLeastOne: ["id", "tag"] };
+        const args = { id: 123 };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("passes when multiple args are provided", function (assert) {
+        const constraints = { atLeastOne: ["id", "tag"] };
+        const args = { id: 123, tag: "foo" };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("fails when no args are provided", function (assert) {
+        const constraints = { atLeastOne: ["id", "tag"] };
+        const args = {};
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('at least one of "id", "tag"'));
+        assert.true(error.includes("must be provided"));
+      });
+    });
+
+    module("exactlyOne", function () {
+      test("passes when exactly one arg is provided", function (assert) {
+        const constraints = { exactlyOne: ["id", "tag"] };
+        const args = { id: 123 };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("fails when no args are provided", function (assert) {
+        const constraints = { exactlyOne: ["id", "tag"] };
+        const args = {};
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('exactly one of "id", "tag"'));
+        assert.true(error.includes("but got none"));
+      });
+
+      test("fails when multiple args are provided", function (assert) {
+        const constraints = { exactlyOne: ["id", "tag"] };
+        const args = { id: 123, tag: "foo" };
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('exactly one of "id", "tag"'));
+        assert.true(error.includes("but got 2"));
+      });
+    });
+
+    module("allOrNone", function () {
+      test("passes when all args are provided", function (assert) {
+        const constraints = { allOrNone: ["width", "height"] };
+        const args = { width: 100, height: 200 };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("passes when no args are provided", function (assert) {
+        const constraints = { allOrNone: ["width", "height"] };
+        const args = {};
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("fails when some but not all args are provided", function (assert) {
+        const constraints = { allOrNone: ["width", "height"] };
+        const args = { width: 100 };
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('"width", "height"'));
+        assert.true(error.includes("must be provided together or not at all"));
+        assert.true(error.includes('missing "height"'));
+      });
+    });
+
+    test("accepts null/undefined constraints", function (assert) {
+      assert.strictEqual(validateConstraints(null, {}, "test-block"), null);
+      assert.strictEqual(
+        validateConstraints(undefined, {}, "test-block"),
+        null
+      );
+    });
+
+    test("validates multiple constraints", function (assert) {
+      const constraints = {
+        atLeastOne: ["a", "b"],
+        allOrNone: ["x", "y"],
+      };
+      const args = { a: 1, x: 10 };
+
+      const error = validateConstraints(constraints, args, "test-block");
+      assert.true(error.includes('missing "y"'));
+    });
+  });
+
+  module("runCustomValidation", function () {
+    test("returns null when validate returns undefined", function (assert) {
+      const validateFn = () => undefined;
+
+      assert.strictEqual(runCustomValidation(validateFn, {}), null);
+    });
+
+    test("returns null when validate returns null", function (assert) {
+      const validateFn = () => null;
+
+      assert.strictEqual(runCustomValidation(validateFn, {}), null);
+    });
+
+    test("returns array with single error when validate returns string", function (assert) {
+      const validateFn = () => "min must be less than max";
+
+      const errors = runCustomValidation(validateFn, {});
+      assert.deepEqual(errors, ["min must be less than max"]);
+    });
+
+    test("returns array when validate returns array of strings", function (assert) {
+      const validateFn = () => ["error 1", "error 2"];
+
+      const errors = runCustomValidation(validateFn, {});
+      assert.deepEqual(errors, ["error 1", "error 2"]);
+    });
+
+    test("filters out non-string and empty values from array", function (assert) {
+      const validateFn = () => ["valid error", "", 123, null, "another error"];
+
+      const errors = runCustomValidation(validateFn, {});
+      assert.deepEqual(errors, ["valid error", "another error"]);
+    });
+
+    test("returns null for empty array", function (assert) {
+      const validateFn = () => [];
+
+      assert.strictEqual(runCustomValidation(validateFn, {}), null);
+    });
+
+    test("returns null for non-function validateFn", function (assert) {
+      assert.strictEqual(runCustomValidation(null, {}), null);
+      assert.strictEqual(runCustomValidation(undefined, {}), null);
+      assert.strictEqual(runCustomValidation("not a function", {}), null);
+    });
+
+    test("passes args to validate function", function (assert) {
+      let receivedArgs;
+      const validateFn = (args) => {
+        receivedArgs = args;
+        return null;
+      };
+
+      const testArgs = { min: 5, max: 10 };
+      runCustomValidation(validateFn, testArgs);
+
+      assert.strictEqual(receivedArgs, testArgs);
+    });
+
+    test("can validate args relationships", function (assert) {
+      const validateFn = (args) => {
+        if (args.min > args.max) {
+          return "min must be less than or equal to max";
+        }
+      };
+
+      assert.strictEqual(
+        runCustomValidation(validateFn, { min: 5, max: 10 }),
+        null
+      );
+      assert.deepEqual(runCustomValidation(validateFn, { min: 15, max: 10 }), [
+        "min must be less than or equal to max",
+      ]);
+    });
+  });
+
+  module("@block decorator with constraints", function () {
+    test("stores constraints in block metadata", function (assert) {
+      @block("constraint-metadata-block", {
+        args: {
+          id: { type: "number" },
+          tag: { type: "string" },
+        },
+        constraints: {
+          atLeastOne: ["id", "tag"],
+        },
+      })
+      class ConstraintMetadataBlock extends Component {}
+
+      assert.deepEqual(ConstraintMetadataBlock.blockMetadata.constraints, {
+        atLeastOne: ["id", "tag"],
+      });
+    });
+
+    test("stores validate function in block metadata", function (assert) {
+      const validateFn = (args) => {
+        if (args.min > args.max) {
+          return "min must be less than max";
+        }
+      };
+
+      @block("validate-fn-block", {
+        args: {
+          min: { type: "number" },
+          max: { type: "number" },
+        },
+        validate: validateFn,
+      })
+      class ValidateFnBlock extends Component {}
+
+      assert.strictEqual(
+        ValidateFnBlock.blockMetadata.validate,
+        validateFn,
+        "validate function is stored"
+      );
+    });
+
+    test("throws at decoration time for invalid constraints", function (assert) {
+      assert.throws(() => {
+        @block("invalid-constraint-block", {
+          args: {
+            id: { type: "number" },
+          },
+          constraints: {
+            unknownConstraint: ["id", "other"],
+          },
+        })
+        class InvalidConstraintBlock extends Component {}
+        return InvalidConstraintBlock;
+      }, /unknown constraint type/);
     });
   });
 });

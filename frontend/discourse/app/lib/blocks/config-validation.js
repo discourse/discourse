@@ -9,7 +9,11 @@
  */
 
 import { DEBUG } from "@glimmer/env";
-import { validateBlockArgs } from "discourse/lib/blocks/arg-validation";
+import {
+  runCustomValidation,
+  validateBlockArgs,
+  validateConstraints,
+} from "discourse/lib/blocks/arg-validation";
 import {
   BlockValidationError,
   raiseBlockError,
@@ -26,6 +30,7 @@ import {
   isValidOutlet,
   resolveBlock,
 } from "discourse/lib/blocks/registration";
+import { applyArgDefaults } from "discourse/lib/blocks/utils";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -639,6 +644,44 @@ export async function validateBlock(
       );
     }
     throw error;
+  }
+
+  // Validate constraints and custom validation (after applying defaults)
+  if (metadata?.constraints || metadata?.validate) {
+    const argsWithDefaults = applyArgDefaults(resolvedBlock, config.args || {});
+
+    // Validate declarative constraints
+    if (metadata.constraints) {
+      const constraintError = validateConstraints(
+        metadata.constraints,
+        argsWithDefaults,
+        blockName
+      );
+      if (constraintError) {
+        raiseBlockError(
+          `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${constraintError}`,
+          { ...baseContext, errorPath: "constraints" }
+        );
+      }
+    }
+
+    // Run custom validation function
+    if (metadata.validate) {
+      const customErrors = runCustomValidation(
+        metadata.validate,
+        argsWithDefaults
+      );
+      if (customErrors && customErrors.length > 0) {
+        const errorMessage =
+          customErrors.length === 1
+            ? customErrors[0]
+            : customErrors.map((e) => `  - ${e}`).join("\n");
+        raiseBlockError(
+          `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${errorMessage}`,
+          { ...baseContext, errorPath: "validate" }
+        );
+      }
+    }
   }
 
   // Validate conditions if service is available

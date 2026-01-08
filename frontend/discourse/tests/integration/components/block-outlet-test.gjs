@@ -1024,7 +1024,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
     });
 
     test("passes args to string-referenced block", async function (assert) {
-      @block("string-args-block")
+      @block("string-args-block", {
+        args: {
+          title: { type: "string" },
+          count: { type: "number" },
+        },
+      })
       class StringArgsBlock extends Component {
         <template>
           <div class="string-args-content">
