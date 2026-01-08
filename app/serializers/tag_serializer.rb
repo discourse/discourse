@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TagSerializer < ApplicationSerializer
-  attributes :id, :name, :topic_count, :staff, :description
+  attributes :id, :name, :slug, :topic_count, :staff, :description
 
   has_many :localizations, serializer: TagLocalizationSerializer, embed: :objects
 

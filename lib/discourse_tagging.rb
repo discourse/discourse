@@ -410,14 +410,22 @@ module DiscourseTagging
   #   category: a Category to which the object being tagged belongs
   #   for_input: result is for an input field, so only show permitted tags
   #   for_topic: results are for tagging a topic
-  #   selected_tags: an array of tag names that are in the current selection
+  #   selected_tags: an array of tag names that are in the current selection (legacy)
+  #   selected_tag_ids: an array of tag ids that are in the current selection
   #   only_tag_names: limit results to tags with these names
   #   exclude_synonyms: exclude synonyms from results
   #   order_search_results: result should be ordered for name search results
   #   order_popularity: order result by topic_count
   #   excluded_tag_names: an array of tag names not to include in the results
   def self.filter_allowed_tags(guardian, opts = {})
-    selected_tag_ids = opts[:selected_tags] ? Tag.where_name(opts[:selected_tags]).pluck(:id) : []
+    selected_tag_ids =
+      if opts[:selected_tag_ids].present?
+        opts[:selected_tag_ids].map(&:to_i)
+      elsif opts[:selected_tags].present?
+        Tag.where_name(opts[:selected_tags]).pluck(:id)
+      else
+        []
+      end
     category = opts[:category]
     category_has_tag_groups = category && category.tag_groups.count > 0
     category_has_restricted_tags = category_has_tag_groups || (category && category.tags.count > 0)

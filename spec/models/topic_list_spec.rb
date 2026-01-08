@@ -73,7 +73,10 @@ RSpec.describe TopicList do
       tag = Fabricate(:tag, topics: [topic])
       other_tag = Fabricate(:tag, topics: [topic], name: "use-anywhere")
       expect(topic_list.top_tags).to eq(
-        [{ id: tag.id, name: tag.name }, { id: other_tag.id, name: other_tag.name }],
+        [
+          { id: tag.id, name: tag.name, slug: tag.slug },
+          { id: other_tag.id, name: other_tag.name, slug: other_tag.slug },
+        ],
       )
     end
 
@@ -95,13 +98,19 @@ RSpec.describe TopicList do
 
       it "should return tags used in the category" do
         expect(topic_list.top_tags).to eq(
-          [{ id: tag.id, name: tag.name }, { id: other_tag.id, name: other_tag.name }],
+          [
+            { id: tag.id, name: tag.name, slug: tag.slug },
+            { id: other_tag.id, name: other_tag.name, slug: other_tag.slug },
+          ],
         )
       end
 
       it "with no category, should return all tags" do
         expect(TopicList.new("latest", other_topic.user, [other_topic]).top_tags).to eq(
-          [{ id: tag.id, name: tag.name }, { id: other_tag.id, name: other_tag.name }],
+          [
+            { id: tag.id, name: tag.name, slug: tag.slug },
+            { id: other_tag.id, name: other_tag.name, slug: other_tag.slug },
+          ],
         )
       end
 

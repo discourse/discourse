@@ -29,9 +29,12 @@
           },
           "name": {
             "type": "string"
+          },
+          "slug": {
+            "type": "string"
           }
         },
-        "required": ["id", "name"]
+        "required": ["id", "name", "slug"]
       }
     },
     "groups": {

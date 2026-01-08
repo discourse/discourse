@@ -40,6 +40,10 @@ export default function selectKitPropUtils(target) {
       return options.definedOnly ? null : item;
     }
     if (typeof property === "string") {
+      // primitives don't have properties, return the value directly
+      if (typeof item !== "object" || item === null) {
+        return item;
+      }
       return get(item, property);
     }
 

@@ -58,7 +58,7 @@ RSpec.describe SiteSerializer do
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     c1 = serialized[:categories].find { |c| c[:id] == category.id }
 
-    expect(c1[:allowed_tags]).to contain_exactly(tag.name)
+    expect(c1[:allowed_tags]).to contain_exactly({ id: tag.id, name: tag.name, slug: tag.slug })
     expect(c1[:allowed_tag_groups]).to contain_exactly(tag_group.name)
     expect(c1[:required_tag_groups]).to eq([{ name: tag_group_2.name, min_count: 1 }])
   end
@@ -309,7 +309,10 @@ RSpec.describe SiteSerializer do
         serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
         expect(serialized[:top_tags]).to eq(
-          [{ id: tag3.id, name: tag3.name }, { id: tag2.id, name: tag2.name }],
+          [
+            { id: tag3.id, name: tag3.name, slug: tag3.slug },
+            { id: tag2.id, name: tag2.name, slug: tag2.slug },
+          ],
         )
       end
     end

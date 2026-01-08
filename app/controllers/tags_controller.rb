@@ -341,6 +341,7 @@ class TagsController < ::ApplicationController
     filter_params = {
       for_input: params[:filterForInput],
       selected_tags: params[:selected_tags],
+      selected_tag_ids: params[:selected_tag_ids],
       exclude_synonyms: params[:excludeSynonyms],
       exclude_has_synonyms: params[:excludeHasSynonyms],
     }

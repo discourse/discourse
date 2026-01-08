@@ -208,7 +208,7 @@ export function applyDefaultHandlers(pretender) {
     if (
       request.queryParams.categoryId === "1" &&
       request.queryParams.q === "" &&
-      !request.queryParams.selected_tags.includes("monkey")
+      !request.queryParams.selected_tag_ids?.includes("monkey")
     ) {
       responseBody["required_tag_group"] = {
         name: "monkey group",

@@ -21,6 +21,8 @@ RSpec.describe TagGroupSerializer do
     synonym = Fabricate(:tag, target_tag: tag)
     tag_group = Fabricate(:tag_group, tags: [tag, synonym])
     serialized = TagGroupSerializer.new(tag_group, root: false).as_json
-    expect(serialized[:tag_names]).to contain_exactly(tag.name)
+    expect(serialized[:tag_names]).to contain_exactly(
+      { id: tag.id, name: tag.name, slug: tag.slug },
+    )
   end
 end

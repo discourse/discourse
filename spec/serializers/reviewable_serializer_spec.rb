@@ -68,4 +68,14 @@ RSpec.describe ReviewableSerializer do
       expect(json[:target_created_by_id]).to eq(reviewable_user.target.id)
     end
   end
+
+  describe "topic_tags" do
+    it "returns tag objects with id, name, and slug" do
+      SiteSetting.tagging_enabled = true
+      tag = Fabricate(:tag)
+      reviewable.topic.tags = [tag]
+      json = described_class.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:topic_tags]).to eq([{ id: tag.id, name: tag.name, slug: tag.slug }])
+    end
+  end
 end

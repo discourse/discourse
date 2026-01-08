@@ -20,13 +20,13 @@ import TagChooserRow from "./tag-chooser-row";
   limit: null,
   allowAny: "canCreateTag",
   maximum: "maximumTagCount",
-  valueProperty: "name",
+  valueProperty: "id",
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent {
   @service tagUtils;
 
-  valueProperty = "name";
+  valueProperty = "id";
   nameProperty = "name";
 
   blockedTags = null;
@@ -72,13 +72,20 @@ export default class TagChooser extends MultiSelectComponent {
 
   @computed("tags.[]")
   get value() {
-    return uniqueItemsFromArray(makeArray(this.tags));
+    return uniqueItemsFromArray(
+      makeArray(this.tags).map((t) => (typeof t === "string" ? t : t.id))
+    );
   }
 
   @computed("tags.[]")
   get content() {
-    return uniqueItemsFromArray(makeArray(this.tags)).map((t) =>
-      this.defaultItem(t, t)
+    return uniqueItemsFromArray(
+      makeArray(this.tags).map((t) => {
+        if (typeof t === "string") {
+          return this.defaultItem(t, t);
+        }
+        return this.defaultItem(t.id, t.name);
+      })
     );
   }
 
@@ -92,6 +99,11 @@ export default class TagChooser extends MultiSelectComponent {
   }
 
   validateCreate(filter, content) {
+    // Get tag names for validation (not IDs)
+    const selectedTagNames = makeArray(this.tags)
+      .filter(Boolean)
+      .map((t) => (typeof t === "string" ? t : t.name));
+
     return this.tagUtils.validateCreate(
       filter,
       content,
@@ -99,7 +111,7 @@ export default class TagChooser extends MultiSelectComponent {
       (e) => this.addError(e),
       this.termMatchesForbidden,
       (value) => this.getValue(value),
-      this.value
+      selectedTagNames
     );
   }
 
@@ -117,9 +129,22 @@ export default class TagChooser extends MultiSelectComponent {
     };
 
     if (selectedTags.length || this.blockedTags.length) {
-      data.selected_tags = uniqueItemsFromArray(
+      const allTags = uniqueItemsFromArray(
         selectedTags.concat(this.blockedTags)
       ).slice(0, 100);
+
+      // Extract IDs for objects, keep strings for legacy/blocked tags
+      const ids = allTags
+        .map((t) => (typeof t === "string" ? null : t.id))
+        .filter((id) => id !== null);
+      const names = allTags.filter((t) => typeof t === "string");
+
+      if (ids.length) {
+        data.selected_tag_ids = ids;
+      }
+      if (names.length) {
+        data.selected_tags = names;
+      }
     }
 
     if (!this.everyTag) {
