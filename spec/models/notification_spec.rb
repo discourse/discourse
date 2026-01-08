@@ -892,5 +892,13 @@ RSpec.describe Notification do
 
       expect(result).to contain_exactly(enabled_badge_notification, regular_notification)
     end
+
+    it "filters badge notifications for badges that do not exist" do
+      enabled_badge.destroy!
+
+      result = Notification.filter_disabled_badge_notifications([enabled_badge_notification])
+
+      expect(result).to eq([])
+    end
   end
 end
