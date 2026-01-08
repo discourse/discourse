@@ -1014,6 +1014,17 @@ RSpec.describe PostDestroyer do
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
 
+    context "when the flagged post is potentially illegal" do
+      before { ReviewableFlaggedPost.pending.update_all(potentially_illegal: true) }
+
+      it "does not automatically mark it as ignored or approved" do
+        expect { PostDestroyer.new(moderator, second_post).destroy }.not_to change {
+          ReviewableFlaggedPost.pending.count
+        }
+        expect(Jobs::SendSystemMessage.jobs).to be_empty
+      end
+    end
+
     context "when custom flags" do
       fab!(:custom_flag) { Fabricate(:flag, name: "custom flag", notify_type: true) }
       let(:third_post) { Fabricate(:post, topic_id: post.topic_id) }
