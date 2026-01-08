@@ -326,7 +326,10 @@ describe "Request tracking", type: :system do
             end
           end
 
-        event = events[0][:params].last
+        # Find the event for the topic we navigated to (by topic_id) to avoid flakiness
+        # from potential timing issues with multiple events
+        event = events.find { |e| e[:params].last[:topic_id] == topic.id }&.dig(:params)&.last
+        expect(event).to be_present
 
         expect(event[:user_id]).to eq(current_user.id)
         expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
@@ -386,7 +389,10 @@ describe "Request tracking", type: :system do
             end
           end
 
-        event = events[0][:params].last
+        # Find the event for the topic we navigated to (by topic_id) to avoid flakiness
+        # from potential timing issues with multiple events
+        event = events.find { |e| e[:params].last[:topic_id] == topic.id }&.dig(:params)&.last
+        expect(event).to be_present
 
         expect(event[:user_id]).to be_blank
         expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
