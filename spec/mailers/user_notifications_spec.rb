@@ -148,6 +148,8 @@ RSpec.describe UserNotifications do
 
     let(:email_html) { Email::Renderer.new(email).html }
 
+    before { SiteSetting.simple_email_subject = false }
+
     it "generates the right email" do
       expect(email.to).to eq([user.email])
       expect(email.from).to eq([SiteSetting.notification_email])
@@ -253,9 +255,15 @@ RSpec.describe UserNotifications do
       it "includes email_prefix in email subject instead of site title" do
         SiteSetting.email_prefix = "Try Discourse"
         SiteSetting.title = "Discourse Meta"
+        SiteSetting.simple_email_subject = false
 
         expect(email.subject).to match(/Try Discourse/)
         expect(email.subject).not_to match(/Discourse Meta/)
+      end
+
+      it "does not include site name or email prefix in simple email subject" do
+        SiteSetting.simple_email_subject = true
+        expect(email.subject).to eq(I18n.t("user_notifications.digest.subject_template_improved"))
       end
 
       it "includes unread likes received count within the since date" do
