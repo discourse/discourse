@@ -1,8 +1,8 @@
 @use "lib/viewport";
 
 :root {
-  --d-sidebar-section-link-prefix-margin-right: 0.75em;
-  --d-sidebar-section-link-prefix-width: 1.75rem;
+  --d-sidebar-section-link-prefix-margin-right: var(--space-3);
+  --d-sidebar-section-link-prefix-width: var(--space-6);
   --d-sidebar-section-link-icon-size: 1em;
   --d-sidebar-section-link-emoji-size: 1em;
 }
@@ -37,6 +37,7 @@
     align-items: center;
     color: var(--d-sidebar-link-color);
     border-radius: var(--d-border-radius);
+    gap: var(--d-sidebar-section-link-prefix-margin-right);
 
     &:focus-visible,
     &:hover {
@@ -161,21 +162,6 @@
     background: inherit;
   }
 
-  .sidebar-section-link[data-link-name="personal-messages-sent"],
-  .sidebar-section-link[data-link-name="personal-messages-new"],
-  .sidebar-section-link[data-link-name="personal-messages-archive"],
-  .sidebar-section-link[data-link-name="personal-messages-unread"],
-  .sidebar-section-link[data-link-name="group-messages-new"],
-  .sidebar-section-link[data-link-name="group-messages-unread"],
-  .sidebar-section-link[data-link-name="group-messages-archive"] {
-    .sidebar-section-link-content-text {
-      margin-left: calc(
-        var(--d-sidebar-section-link-prefix-margin-right) +
-          var(--d-sidebar-section-link-prefix-width)
-      );
-    }
-  }
-
   .sidebar-section-link-review {
     .sidebar-section-link-content-badge {
       color: var(--danger);
@@ -187,9 +173,6 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: var(--d-sidebar-section-link-prefix-width);
-    height: var(--d-sidebar-section-link-prefix-width);
-    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
 
     #sidebar-section-content-chat-dms & {
       @include viewport.from(sm) {
@@ -271,11 +254,9 @@
     margin-left: auto;
 
     .sidebar-section-hover-button {
-      display: none;
+      opacity: 0;
       color: var(--d-sidebar-highlight-color);
       border: none;
-      background: transparent;
-      padding: 0 0 0 var(--space-2);
       height: 100%;
 
       &:focus,
@@ -287,11 +268,12 @@
 
       svg {
         font-size: var(--font-down-1);
+        margin: 0;
       }
     }
   }
 
   &.--hovering .sidebar-section-hover-button {
-    display: block;
+    opacity: 1;
   }
 }

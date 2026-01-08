@@ -66,9 +66,9 @@ export default class SectionLink extends Component {
   get wrapperClass() {
     let classNames = ["sidebar-section-link-wrapper"];
 
-    if (this.hovering || this.hoverActionActive) {
-      classNames.push("--hovering");
-    }
+    // if (this.hovering || this.hoverActionActive) {
+    classNames.push("--hovering");
+    // }
 
     return classNames.join(" ");
   }
@@ -275,7 +275,7 @@ export default class SectionLink extends Component {
                   {{on "click" this.runHoverAction}}
                   type="button"
                   title={{@hoverTitle}}
-                  class="sidebar-section-hover-button"
+                  class="sidebar-section-hover-button btn-flat"
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{icon @hoverValue class="hover-icon"}}

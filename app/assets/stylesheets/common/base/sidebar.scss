@@ -2,10 +2,10 @@
 
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
-  --d-sidebar-row-horizontal-padding: var(--space-1);
+  --d-sidebar-row-horizontal-padding: var(--space-2);
 
   @include viewport.until(sm) {
-    --d-sidebar-row-horizontal-padding: var(--space-2);
+    --d-sidebar-row-horizontal-padding: var(--space-1);
   }
 
   --d-sidebar-vertical-gap: var(--space-half);
@@ -72,6 +72,7 @@
   height: var(--d-sidebar-row-height);
   padding: 0 var(--d-sidebar-row-horizontal-padding);
   align-items: center;
+  gap: var(--d-sidebar-section-link-prefix-margin-right);
 }
 
 .sidebar-wrapper {
