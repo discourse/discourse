@@ -138,10 +138,7 @@ module Email
         subject_key = "#{@opts[:template]}.subject_template"
 
         if SiteSetting.simple_email_subject &&
-             TranslationOverride.exists?(
-               locale: I18n.locale,
-               translation_key: "#{subject_key}_improved",
-             )
+             I18n.exists?(locale: I18n.locale, translation_key: "#{subject_key}_improved")
           subject_key += "_improved"
         end
 
