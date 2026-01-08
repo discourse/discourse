@@ -4613,9 +4613,9 @@ en:
       minimum_required_tags: "Minimum number of tags required in a topic:"
       default_slow_mode: 'Enable "Slow mode" for new topics in this category.'
       position:
-        title: "Location"
+        title: "Category level"
         top_level: "Top-level"
-        within_existing: "Within existing category"
+        within_existing: "Within another category"
       parent_category_chooser: "Select parent category"
       visibility:
         title: "Access"
