@@ -27,12 +27,8 @@ import { validateArgsSchema } from "discourse/lib/blocks/arg-validation";
 import { validateConfig } from "discourse/lib/blocks/config-validation";
 import { validateConstraintsSchema } from "discourse/lib/blocks/constraint-validation";
 import {
-  getBlockDebugCallback,
-  getEndGroupCallback,
-  getGhostChildrenCreator,
-  getOptionalMissingLogCallback,
-  getOutletInfoComponent,
-  getStartGroupCallback,
+  DEBUG_CALLBACK,
+  getDebugCallback,
   isBlockLoggingEnabled,
   isOutletBoundaryEnabled,
 } from "discourse/lib/blocks/debug-hooks";
@@ -424,7 +420,7 @@ export function block(name, options = {}) {
         }
 
         const owner = getOwner(this);
-        const showGhosts = !!getBlockDebugCallback();
+        const showGhosts = !!getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
         const baseHierarchy = this.args._hierarchy;
         const outletArgs = this.args.outletArgs;
         // Logging already done during root preprocessing
@@ -449,7 +445,7 @@ export function block(name, options = {}) {
 
             // Log if debug logging is enabled
             if (isLoggingEnabled) {
-              getOptionalMissingLogCallback()?.(
+              getDebugCallback(DEBUG_CALLBACK.OPTIONAL_MISSING_LOG)?.(
                 missingBlockName,
                 baseHierarchy
               );
@@ -457,7 +453,7 @@ export function block(name, options = {}) {
 
             // Show ghost if visual overlay is enabled
             if (showGhosts) {
-              const ghostData = getBlockDebugCallback()(
+              const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
                 {
                   name: missingBlockName,
                   Component: null,
@@ -524,7 +520,9 @@ export function block(name, options = {}) {
             ) {
               // Recursively process children to create ghost components.
               // Use the ghost children creator from dev-tools if available.
-              ghostChildren = getGhostChildrenCreator()?.(
+              ghostChildren = getDebugCallback(
+                DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
+              )?.(
                 blockConfig.children,
                 owner,
                 containerPath,
@@ -534,7 +532,7 @@ export function block(name, options = {}) {
               );
             }
 
-            const ghostData = getBlockDebugCallback()(
+            const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
               {
                 name: blockName,
                 Component: null,
@@ -656,7 +654,7 @@ function createChildBlock(blockConfig, owner, debugContext = {}) {
       );
 
   // Apply debug callback if present (for visual overlay)
-  const debugCallback = getBlockDebugCallback();
+  const debugCallback = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
   if (debugCallback) {
     const debugResult = debugCallback(
       {
@@ -892,7 +890,7 @@ export default class BlockOutlet extends Component {
     const owner = getOwner(this);
     const blocksService = owner.lookup("service:blocks");
     const isLoggingEnabled = isBlockLoggingEnabled();
-    const showGhosts = !!getBlockDebugCallback();
+    const showGhosts = !!getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
     const outletArgs = this.outletArgsWithDeprecations;
     const baseHierarchy = this.#name;
 
@@ -919,12 +917,15 @@ export default class BlockOutlet extends Component {
 
         // Log if debug logging is enabled
         if (isLoggingEnabled) {
-          getOptionalMissingLogCallback()?.(missingBlockName, baseHierarchy);
+          getDebugCallback(DEBUG_CALLBACK.OPTIONAL_MISSING_LOG)?.(
+            missingBlockName,
+            baseHierarchy
+          );
         }
 
         // Show ghost if visual overlay is enabled
         if (showGhosts) {
-          const ghostData = getBlockDebugCallback()(
+          const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
             {
               name: missingBlockName,
               Component: null,
@@ -977,7 +978,9 @@ export default class BlockOutlet extends Component {
           blockConfig.__failureReason === "no-visible-children"
         ) {
           // Use the ghost children creator from dev-tools if available.
-          ghostChildren = getGhostChildrenCreator()?.(
+          ghostChildren = getDebugCallback(
+            DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
+          )?.(
             blockConfig.children,
             owner,
             containerPath,
@@ -987,7 +990,7 @@ export default class BlockOutlet extends Component {
           );
         }
 
-        const ghostData = getBlockDebugCallback()(
+        const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
           {
             name: blockName,
             Component: null,
@@ -1059,7 +1062,10 @@ export default class BlockOutlet extends Component {
       let conditionsPassed = true;
       if (config.conditions) {
         if (isLoggingEnabled) {
-          getStartGroupCallback()?.(blockName, baseHierarchy);
+          getDebugCallback(DEBUG_CALLBACK.START_GROUP)?.(
+            blockName,
+            baseHierarchy
+          );
         }
 
         conditionsPassed = blocksService.evaluate(config.conditions, {
@@ -1068,7 +1074,7 @@ export default class BlockOutlet extends Component {
         });
 
         if (isLoggingEnabled) {
-          getEndGroupCallback()?.(conditionsPassed);
+          getDebugCallback(DEBUG_CALLBACK.END_GROUP)?.(conditionsPassed);
         }
       }
 
@@ -1145,7 +1151,7 @@ export default class BlockOutlet extends Component {
    * @returns {typeof Component|null}
    */
   get OutletInfoComponent() {
-    return getOutletInfoComponent();
+    return getDebugCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);
   }
 
   /**

@@ -1,21 +1,9 @@
 import curryComponent from "ember-curry-component";
 import { isContainerBlock } from "discourse/components/block-outlet";
 import {
-  _setBlockDebugCallback,
-  _setBlockLoggingCallback,
-  _setBlockOutletBoundaryCallback,
-  _setBlockOutletInfoComponent,
-  _setCombinatorLogCallback,
-  _setConditionLogCallback,
-  _setConditionResultCallback,
-  _setEndGroupCallback,
-  _setGhostChildrenCreator,
-  _setLoggerInterfaceCallback,
-  _setOptionalMissingLogCallback,
-  _setParamGroupLogCallback,
-  _setRouteStateLogCallback,
-  _setStartGroupCallback,
-  getBlockDebugCallback,
+  DEBUG_CALLBACK,
+  getDebugCallback,
+  setDebugCallback,
 } from "discourse/lib/blocks/debug-hooks";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -73,7 +61,7 @@ function createGhostChildren(
 
     // Handle optional missing block
     if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
-      const ghostData = getBlockDebugCallback()(
+      const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
         {
           name: resolvedBlock.name,
           Component: null,
@@ -123,7 +111,7 @@ function createGhostChildren(
       );
     }
 
-    const ghostData = getBlockDebugCallback()(
+    const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
       {
         name: blockName,
         Component: null,
@@ -155,7 +143,7 @@ function createGhostChildren(
  */
 export function patchBlockRendering() {
   // Callback for visual overlay - wraps blocks with debug info
-  _setBlockDebugCallback((blockData, context) => {
+  setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
     // Check state at invocation time (devToolsState is captured in closure)
     if (!devToolsState.blockVisualOverlay) {
       return blockData;
@@ -214,74 +202,88 @@ export function patchBlockRendering() {
   });
 
   // Callback for console logging
-  _setBlockLoggingCallback(() => devToolsState.blockDebug);
+  setDebugCallback(
+    DEBUG_CALLBACK.BLOCK_LOGGING,
+    () => devToolsState.blockDebug
+  );
   // Callback for outlet boundaries
-  _setBlockOutletBoundaryCallback(() => devToolsState.blockOutletBoundaries);
+  setDebugCallback(
+    DEBUG_CALLBACK.OUTLET_BOUNDARY,
+    () => devToolsState.blockOutletBoundaries
+  );
   // Component for outlet info tooltip
-  _setBlockOutletInfoComponent(OutletInfo);
+  setDebugCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, OutletInfo);
 
   // === Logging Callbacks ===
   // These bridge the main bundle to the debug logger in dev-tools.
   // All use makeDebugCallback to centralize the devToolsState.blockDebug check.
 
   // Callback for logging condition evaluations (before result is known)
-  _setConditionLogCallback(
+  setDebugCallback(
+    DEBUG_CALLBACK.CONDITION_LOG,
     makeDebugCallback((opts) => {
       blockDebugLogger.logCondition(opts);
     })
   );
 
   // Callback for updating combinator (AND/OR/NOT) results
-  _setCombinatorLogCallback(
+  setDebugCallback(
+    DEBUG_CALLBACK.COMBINATOR_LOG,
     makeDebugCallback((opts) => {
       blockDebugLogger.updateCombinatorResult(opts.conditionSpec, opts.result);
     })
   );
 
   // Callback for updating single condition results
-  _setConditionResultCallback(
+  setDebugCallback(
+    DEBUG_CALLBACK.CONDITION_RESULT,
     makeDebugCallback((opts) => {
       blockDebugLogger.updateConditionResult(opts.conditionSpec, opts.result);
     })
   );
 
   // Callback for logging param group matches
-  _setParamGroupLogCallback(
+  setDebugCallback(
+    DEBUG_CALLBACK.PARAM_GROUP_LOG,
     makeDebugCallback((opts) => {
       blockDebugLogger.logParamGroup(opts);
     })
   );
 
   // Callback for logging route state
-  _setRouteStateLogCallback(
+  setDebugCallback(
+    DEBUG_CALLBACK.ROUTE_STATE_LOG,
     makeDebugCallback((opts) => {
       blockDebugLogger.logRouteState(opts);
     })
   );
 
   // Callback for logging optional missing blocks
-  _setOptionalMissingLogCallback(
+  setDebugCallback(
+    DEBUG_CALLBACK.OPTIONAL_MISSING_LOG,
     makeDebugCallback((blockName, hierarchy) => {
       blockDebugLogger.logOptionalMissing(blockName, hierarchy);
     })
   );
 
   // Callback for starting a logging group
-  _setStartGroupCallback(
+  setDebugCallback(
+    DEBUG_CALLBACK.START_GROUP,
     makeDebugCallback((blockName, hierarchy) => {
       blockDebugLogger.startGroup(blockName, hierarchy);
     })
   );
 
   // Callback for ending a logging group
-  _setEndGroupCallback(
+  setDebugCallback(
+    DEBUG_CALLBACK.END_GROUP,
     makeDebugCallback((finalResult) => {
       blockDebugLogger.endGroup(finalResult);
     })
   );
 
   // Callback that returns the logger interface for conditions
-  _setLoggerInterfaceCallback(() => {
+  setDebugCallback(DEBUG_CALLBACK.LOGGER_INTERFACE, () => {
     if (!devToolsState.blockDebug) {
       return null;
     }
@@ -295,5 +297,5 @@ export function patchBlockRendering() {
   });
 
   // Register the ghost children creator function
-  _setGhostChildrenCreator(createGhostChildren);
+  setDebugCallback(DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR, createGhostChildren);
 }

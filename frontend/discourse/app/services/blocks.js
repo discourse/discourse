@@ -3,9 +3,8 @@ import Service from "@ember/service";
 import * as conditions from "discourse/blocks/conditions";
 import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
 import {
-  getCombinatorLogCallback,
-  getConditionLogCallback,
-  getConditionResultCallback,
+  DEBUG_CALLBACK,
+  getDebugCallback,
   getLoggerInterface,
 } from "discourse/lib/blocks/debug-hooks";
 import {
@@ -418,10 +417,14 @@ export default class Blocks extends Service {
     const depth = context._depth ?? 0;
 
     // Get logging callbacks (null if dev tools not loaded or logging disabled)
-    const conditionLog = isLoggingEnabled ? getConditionLogCallback() : null;
-    const combinatorLog = isLoggingEnabled ? getCombinatorLogCallback() : null;
+    const conditionLog = isLoggingEnabled
+      ? getDebugCallback(DEBUG_CALLBACK.CONDITION_LOG)
+      : null;
+    const combinatorLog = isLoggingEnabled
+      ? getDebugCallback(DEBUG_CALLBACK.COMBINATOR_LOG)
+      : null;
     const conditionResultLog = isLoggingEnabled
-      ? getConditionResultCallback()
+      ? getDebugCallback(DEBUG_CALLBACK.CONDITION_RESULT)
       : null;
     // Get logger interface for conditions (e.g., route condition needs to log params)
     const logger = isLoggingEnabled ? getLoggerInterface() : null;
