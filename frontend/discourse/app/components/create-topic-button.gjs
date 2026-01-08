@@ -9,10 +9,13 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 export default class CreateTopicButton extends Component {
   @service router;
 
-  @tracked btnTypeClass = this.args.btnTypeClass || "btn-default";
   @tracked label = this.args.label ?? "topic.create";
 
   btnId = this.args.btnId ?? "create-topic";
+
+  get btnTypeClass() {
+    return this.args.btnTypeClass || "btn-default";
+  }
 
   get btnClasses() {
     const additionalClasses = applyValueTransformer(
@@ -26,11 +29,7 @@ export default class CreateTopicButton extends Component {
       }
     );
 
-    return concatClass(
-      this.args.btnClass,
-      this.btnTypeClass,
-      ...additionalClasses
-    );
+    return concatClass(this.btnTypeClass, ...additionalClasses);
   }
 
   <template>
