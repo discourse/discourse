@@ -114,7 +114,6 @@ gem "addressable"
 gem "json_schemer"
 
 gem "net-smtp", require: false
-gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
 

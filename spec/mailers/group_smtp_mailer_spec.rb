@@ -12,10 +12,6 @@ RSpec.describe GroupSmtpMailer do
       smtp_port: 587,
       smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
       smtp_enabled: true,
-      imap_server: "imap.gmail.com",
-      imap_port: 993,
-      imap_ssl: true,
-      imap_enabled: true,
       email_username: "bugs@gmail.com",
       email_password: "super$secret$password",
     )
@@ -53,33 +49,10 @@ RSpec.describe GroupSmtpMailer do
 
   before do
     SiteSetting.enable_smtp = true
-    SiteSetting.enable_imap = true
     Jobs.run_immediately!
     SiteSetting.manual_polling_enabled = true
     SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
     SiteSetting.reply_by_email_enabled = true
-  end
-
-  it "sends an email for first post when IMAP is disabled" do
-    staged = Fabricate(:staged)
-    group.update(imap_enabled: false)
-
-    PostCreator.create!(
-      user,
-      skip_validations: true,
-      title: "Hello from John",
-      archetype: Archetype.private_message,
-      target_usernames: staged.username,
-      target_group_names: group.name,
-      raw: raw,
-    )
-
-    expect(ActionMailer::Base.deliveries.size).to eq(1)
-
-    sent_mail = ActionMailer::Base.deliveries[0]
-    expect(sent_mail.to).to contain_exactly(staged.email)
-    expect(sent_mail.subject).to eq("Hello from John")
-    expect(sent_mail.to_s).to include(raw)
   end
 
   it "sends an email as reply" do
