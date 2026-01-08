@@ -341,10 +341,18 @@ export default class EmojiPicker extends Component {
 
     next(() => {
       schedule("afterRender", () => {
-        const targetEmoji = document.querySelector(
+        const targetSection = document.querySelector(
           `.emoji-picker__section[data-section="${section}"]`
         );
-        targetEmoji.scrollIntoView({ block: "nearest" });
+
+        if (targetSection && this.scrollableNode) {
+          const titleContainer = targetSection.querySelector(
+            ".emoji-picker__section-title-container"
+          );
+          const titleHeight = titleContainer?.offsetHeight ?? 0;
+          this.scrollableNode.scrollTop = targetSection.offsetTop - titleHeight;
+        }
+
         this.scrollObserverEnabled = true;
       });
     });
