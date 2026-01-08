@@ -152,6 +152,74 @@ function getNamespacePrefix(blockName) {
 }
 
 /**
+ * Validates that a block or outlet name follows namespace requirements for themes and plugins.
+ *
+ * This helper enforces the following rules:
+ * - Themes must use `theme:namespace:name` format
+ * - Plugins must use `namespace:name` format
+ * - Optionally enforces that each source uses a consistent namespace across all registrations
+ *
+ * @param {Object} options - Validation options.
+ * @param {string} options.name - The name being registered.
+ * @param {"block"|"outlet"} options.entityType - Type of entity for error messages.
+ * @param {boolean} [options.enforceConsistency=true] - Whether to enforce single namespace per source.
+ * @returns {boolean} True if validation passes, false if it failed (error was raised).
+ */
+function validateSourceNamespace({
+  name,
+  entityType,
+  enforceConsistency = true,
+}) {
+  const sourceId = getSourceIdentifier();
+  if (!sourceId) {
+    return true; // Core code - no namespace validation needed
+  }
+
+  const namespacePrefix = getNamespacePrefix(name);
+  const entityPlural = entityType === "block" ? "blocks" : "outlets";
+  const entityCapitalized =
+    entityType.charAt(0).toUpperCase() + entityType.slice(1);
+
+  // Themes must use theme:namespace:name format
+  if (sourceId.startsWith("theme:") && !namespacePrefix?.startsWith("theme:")) {
+    raiseBlockError(
+      `Theme ${entityPlural} must use the "theme:namespace:${entityType}-name" format. ` +
+        `${entityCapitalized} "${name}" should be renamed to "theme:<your-theme>:${name}".`
+    );
+    return false;
+  }
+
+  // Plugins must use namespace:name format
+  if (sourceId.startsWith("plugin:") && !namespacePrefix) {
+    const pluginName = sourceId.replace("plugin:", "");
+    raiseBlockError(
+      `Plugin ${entityPlural} must use the "namespace:${entityType}-name" format. ` +
+        `${entityCapitalized} "${name}" should be renamed to "${pluginName}:${name}".`
+    );
+    return false;
+  }
+
+  // Enforce single namespace per source (only for blocks, not outlets)
+  if (enforceConsistency) {
+    const existingNamespace = sourceNamespaceMap.get(sourceId);
+    if (
+      existingNamespace !== undefined &&
+      existingNamespace !== namespacePrefix
+    ) {
+      raiseBlockError(
+        `${entityCapitalized} "${name}" uses namespace "${namespacePrefix ?? "(core)"}" but ` +
+          `${sourceId} already registered ${entityPlural} with namespace "${existingNamespace ?? "(core)"}". ` +
+          `Each theme/plugin must use a single consistent namespace.`
+      );
+      return false;
+    }
+    sourceNamespaceMap.set(sourceId, namespacePrefix);
+  }
+
+  return true;
+}
+
+/**
  * Freezes the registry, preventing further registrations.
  * Called by the "freeze-block-registry" initializer during app boot.
  *
@@ -228,47 +296,9 @@ export function _registerBlock(BlockClass) {
     return;
   }
 
-  // Enforce namespace requirements for themes and plugins
-  const sourceId = getSourceIdentifier();
-  const namespacePrefix = getNamespacePrefix(blockName);
-
-  if (sourceId) {
-    // Themes must use theme:namespace:name format
-    if (
-      sourceId.startsWith("theme:") &&
-      !namespacePrefix?.startsWith("theme:")
-    ) {
-      raiseBlockError(
-        `Theme blocks must use the "theme:namespace:block-name" format. ` +
-          `Block "${blockName}" should be renamed to "theme:<your-theme>:${blockName}".`
-      );
-      return;
-    }
-
-    // Plugins must use namespace:name format
-    if (sourceId.startsWith("plugin:") && !namespacePrefix) {
-      const pluginName = sourceId.replace("plugin:", "");
-      raiseBlockError(
-        `Plugin blocks must use the "namespace:block-name" format. ` +
-          `Block "${blockName}" should be renamed to "${pluginName}:${blockName}".`
-      );
-      return;
-    }
-
-    // Enforce single namespace per source (consistency check)
-    const existingNamespace = sourceNamespaceMap.get(sourceId);
-    if (
-      existingNamespace !== undefined &&
-      existingNamespace !== namespacePrefix
-    ) {
-      raiseBlockError(
-        `Block "${blockName}" uses namespace "${namespacePrefix ?? "(core)"}" but ` +
-          `${sourceId} already registered blocks with namespace "${existingNamespace ?? "(core)"}". ` +
-          `Each theme/plugin must use a single consistent namespace.`
-      );
-      return;
-    }
-    sourceNamespaceMap.set(sourceId, namespacePrefix);
+  // Validate namespace requirements for themes and plugins
+  if (!validateSourceNamespace({ name: blockName, entityType: "block" })) {
+    return;
   }
 
   if (blockRegistry.has(blockName)) {
@@ -337,47 +367,9 @@ export function _registerBlockFactory(name, factory) {
     return;
   }
 
-  // Enforce namespace requirements for themes and plugins
-  const sourceId = getSourceIdentifier();
-  const namespacePrefix = getNamespacePrefix(name);
-
-  if (sourceId) {
-    // Themes must use theme:namespace:name format
-    if (
-      sourceId.startsWith("theme:") &&
-      !namespacePrefix?.startsWith("theme:")
-    ) {
-      raiseBlockError(
-        `Theme blocks must use the "theme:namespace:block-name" format. ` +
-          `Block "${name}" should be renamed to "theme:<your-theme>:${name}".`
-      );
-      return;
-    }
-
-    // Plugins must use namespace:name format
-    if (sourceId.startsWith("plugin:") && !namespacePrefix) {
-      const pluginName = sourceId.replace("plugin:", "");
-      raiseBlockError(
-        `Plugin blocks must use the "namespace:block-name" format. ` +
-          `Block "${name}" should be renamed to "${pluginName}:${name}".`
-      );
-      return;
-    }
-
-    // Enforce single namespace per source (consistency check)
-    const existingNamespace = sourceNamespaceMap.get(sourceId);
-    if (
-      existingNamespace !== undefined &&
-      existingNamespace !== namespacePrefix
-    ) {
-      raiseBlockError(
-        `Block "${name}" uses namespace "${namespacePrefix ?? "(core)"}" but ` +
-          `${sourceId} already registered blocks with namespace "${existingNamespace ?? "(core)"}". ` +
-          `Each theme/plugin must use a single consistent namespace.`
-      );
-      return;
-    }
-    sourceNamespaceMap.set(sourceId, namespacePrefix);
+  // Validate namespace requirements for themes and plugins
+  if (!validateSourceNamespace({ name, entityType: "block" })) {
+    return;
   }
 
   if (blockRegistry.has(name)) {
@@ -721,32 +713,15 @@ export function _registerOutlet(outletName, options = {}) {
     return;
   }
 
-  // Enforce namespace requirements for themes and plugins (same as blocks)
-  const sourceId = getSourceIdentifier();
-  const namespacePrefix = getNamespacePrefix(outletName);
-
-  if (sourceId) {
-    // Themes must use theme:namespace:name format
-    if (
-      sourceId.startsWith("theme:") &&
-      !namespacePrefix?.startsWith("theme:")
-    ) {
-      raiseBlockError(
-        `Theme outlets must use the "theme:namespace:outlet-name" format. ` +
-          `Outlet "${outletName}" should be renamed to "theme:<your-theme>:${outletName}".`
-      );
-      return;
-    }
-
-    // Plugins must use namespace:name format
-    if (sourceId.startsWith("plugin:") && !namespacePrefix) {
-      const pluginName = sourceId.replace("plugin:", "");
-      raiseBlockError(
-        `Plugin outlets must use the "namespace:outlet-name" format. ` +
-          `Outlet "${outletName}" should be renamed to "${pluginName}:${outletName}".`
-      );
-      return;
-    }
+  // Validate namespace requirements for themes and plugins (no consistency check for outlets)
+  if (
+    !validateSourceNamespace({
+      name: outletName,
+      entityType: "outlet",
+      enforceConsistency: false,
+    })
+  ) {
+    return;
   }
 
   customOutletRegistry.set(outletName, {
