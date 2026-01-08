@@ -135,8 +135,16 @@ module Email
         subject = @opts[:add_re_to_subject] ? I18n.t("subject_re") : ""
         subject = "#{subject}#{@template_args[:topic_title]}"
       elsif @opts[:template]
-        subject_key =
-          SiteSetting.simple_email_subject ? "subject_template_improved" : "subject_template"
+        subject_key = "subject_template"
+
+        if SiteSetting.simple_email_subject &&
+             TranslationOverride.exists?(
+               locale: I18n.locale,
+               translation_key: "#{@opts[:template]}.subject_template_improved",
+             )
+          subject_key += "_improved"
+        end
+
         subject = I18n.t("#{@opts[:template]}.#{subject_key}", @template_args)
       else
         subject = @opts[:subject]

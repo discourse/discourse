@@ -351,8 +351,15 @@ class UserNotifications < ActionMailer::Base
 
       @preheader_text = I18n.t("user_notifications.digest.preheader", since: @since)
 
-      subject_key =
-        "user_notifications.digest.#{SiteSetting.simple_email_subject ? "subject_template_improved" : "subject_template"}"
+      subject_key = "user_notifications.digest.subject_template"
+
+      if SiteSetting.simple_email_subject &&
+           TranslationOverride.exists?(
+             locale: I18n.locale,
+             translation_key: "#{@opts[:template]}.subject_template_improved",
+           )
+        subject_key += "_improved"
+      end
 
       opts = {
         from_alias: I18n.t("user_notifications.digest.from", site_name: Email.site_title),
