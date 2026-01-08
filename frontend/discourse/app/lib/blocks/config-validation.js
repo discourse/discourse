@@ -179,6 +179,47 @@ export const VALID_CONFIG_KEYS = Object.freeze([
 ]);
 
 /**
+ * Declarative type validation rules for config fields.
+ * Each rule specifies how to validate a field's type and generate error messages.
+ *
+ * @type {Object<string, {
+ *   validate: (value: any) => boolean,
+ *   expected: string,
+ *   actual?: (value: any) => string
+ * }>}
+ */
+const CONFIG_TYPE_RULES = {
+  args: {
+    validate: (v) => typeof v === "object" && !Array.isArray(v),
+    expected: "an object",
+    actual: (v) => (Array.isArray(v) ? "array" : typeof v),
+  },
+  children: {
+    validate: (v) => Array.isArray(v),
+    expected: "an array",
+    actual: (v) => typeof v,
+  },
+  classNames: {
+    validate: (v) =>
+      typeof v === "string" ||
+      (Array.isArray(v) && v.every((item) => typeof item === "string")),
+    expected: "a string or array of strings",
+    actual: (v) =>
+      Array.isArray(v) ? "array with non-string items" : typeof v,
+  },
+  name: {
+    validate: (v) => typeof v === "string",
+    expected: "a string",
+    actual: (v) => typeof v,
+  },
+  conditions: {
+    validate: (v) => typeof v === "object",
+    expected: "an object or array",
+    actual: (v) => typeof v,
+  },
+};
+
+/**
  * Validates that a block config only uses known keys.
  * Uses fuzzy matching to suggest corrections for typos like "condition",
  * "codition", or "conditons" instead of "conditions".
@@ -212,61 +253,21 @@ export function validateConfigKeys(config) {
 
 /**
  * Validates the types of optional config fields.
- * Ensures each field, if provided, has the correct type.
+ * Iterates over CONFIG_TYPE_RULES to check each field's type.
  *
  * @param {Object} config - The block configuration object.
  * @throws {BlockValidationError} If any field has an invalid type.
  */
 export function validateConfigTypes(config) {
-  // Validate `args` is a plain object (not array)
-  if (
-    config.args != null &&
-    (typeof config.args !== "object" || Array.isArray(config.args))
-  ) {
-    throw new BlockValidationError(
-      `"args" must be an object, got ${Array.isArray(config.args) ? "array" : typeof config.args}.`,
-      "args"
-    );
-  }
-
-  // Validate `children` is an array
-  if (config.children != null && !Array.isArray(config.children)) {
-    throw new BlockValidationError(
-      `"children" must be an array, got ${typeof config.children}.`,
-      "children"
-    );
-  }
-
-  // Validate `classNames` is a string or array of strings
-  if (config.classNames != null) {
-    const isValid =
-      typeof config.classNames === "string" ||
-      (Array.isArray(config.classNames) &&
-        config.classNames.every((item) => typeof item === "string"));
-
-    if (!isValid) {
+  for (const [field, rule] of Object.entries(CONFIG_TYPE_RULES)) {
+    const value = config[field];
+    if (value != null && !rule.validate(value)) {
+      const actualType = rule.actual?.(value) ?? typeof value;
       throw new BlockValidationError(
-        `"classNames" must be a string or array of strings, got ${Array.isArray(config.classNames) ? "array with non-string items" : typeof config.classNames}.`,
-        "classNames"
+        `"${field}" must be ${rule.expected}, got ${actualType}.`,
+        field
       );
     }
-  }
-
-  // Validate `name` is a string
-  if (config.name != null && typeof config.name !== "string") {
-    throw new BlockValidationError(
-      `"name" must be a string, got ${typeof config.name}.`,
-      "name"
-    );
-  }
-
-  // Validate `conditions` is an object or array (not a primitive)
-  // Arrays are objects in JS, so typeof === "object" covers both
-  if (config.conditions != null && typeof config.conditions !== "object") {
-    throw new BlockValidationError(
-      `"conditions" must be an object or array, got ${typeof config.conditions}.`,
-      "conditions"
-    );
   }
 }
 
