@@ -244,7 +244,7 @@ describe "Admin Color Palettes Config Area Page", type: :system do
         ),
       )
 
-      expect(page).to have_no_css(".fk-d-default-toast.-success")
+      expect(page).to have_no_css(".fk-d-default-toast--success")
     end
 
     it "shows toast when admin cannot see live preview" do

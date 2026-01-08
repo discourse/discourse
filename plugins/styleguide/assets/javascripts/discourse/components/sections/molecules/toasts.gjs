@@ -9,22 +9,31 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { TOAST } from "discourse/float-kit/lib/constants";
 import withEventValue from "discourse/helpers/with-event-value";
 import IconPicker from "discourse/select-kit/components/icon-picker";
-import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+
+const ToastCustomComponent = <template>
+  <div
+    style="background-color: var(--secondary); padding: var(--space-4); border-radius: var(--d-border-radius-large); box-shadow: var(--shadow-card);"
+  >
+    My custom component with foo:
+    {{@toast.options.data.foo}}
+  </div>
+</template>;
 
 export default class Toasts extends Component {
   @service toasts;
 
   @tracked title = "Title";
   @tracked message = "Message";
-  @tracked duration = TOAST.options.duration;
+  @tracked duration = 3000;
   @tracked autoClose = TOAST.options.autoClose;
   @tracked showProgressBar = TOAST.options.showProgressBar;
   @tracked class;
   @tracked action = true;
+  @tracked cancel = false;
   @tracked icon;
 
   @action
@@ -33,7 +42,7 @@ export default class Toasts extends Component {
       duration: this.duration,
       autoClose: this.autoClose,
       class: this.class,
-      component: DummyComponent,
+      component: ToastCustomComponent,
       data: {
         foo: 1,
       },
@@ -51,9 +60,18 @@ export default class Toasts extends Component {
         action: (args) => {
           // eslint-disable-next-line no-alert
           alert("Closing toast:" + args.data.title);
-          args.close();
         },
       });
+    }
+
+    let cancel;
+    if (this.cancel) {
+      cancel = {
+        label: "Cancel",
+        onClick: () => {
+          alert("Cancelled toast");
+        },
+      };
     }
 
     this.toasts[theme]({
@@ -66,6 +84,7 @@ export default class Toasts extends Component {
         message: this.message,
         icon: this.icon,
         actions,
+        cancel,
       },
     });
   }
@@ -76,6 +95,11 @@ export default class Toasts extends Component {
   }
 
   @action
+  toggleCancel() {
+    this.cancel = !this.cancel;
+  }
+
+  @action
   toggleAutoClose() {
     this.autoClose = !this.autoClose;
   }
@@ -83,6 +107,11 @@ export default class Toasts extends Component {
   @action
   toggleShowProgressBar() {
     this.showProgressBar = !this.showProgressBar;
+  }
+
+  @action
+  updateDuration(value) {
+    this.duration = parseInt(value, 10);
   }
 
   <template>
@@ -158,7 +187,7 @@ export default class Toasts extends Component {
         {{#if this.autoClose}}
           <Row @name="[@options.duration] ms">
             <input
-              {{on "input" (withEventValue (fn (mut this.duration)))}}
+              {{on "input" (withEventValue this.updateDuration)}}
               type="number"
               value={{this.duration}}
             />
@@ -200,6 +229,12 @@ export default class Toasts extends Component {
           <DToggleSwitch
             @state={{this.action}}
             {{on "click" this.toggleAction}}
+          />
+        </Row>
+        <Row @name="With a cancel">
+          <DToggleSwitch
+            @state={{this.cancel}}
+            {{on "click" this.toggleCancel}}
           />
         </Row>
       </Controls>

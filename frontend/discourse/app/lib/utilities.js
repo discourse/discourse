@@ -432,6 +432,21 @@ export function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+export function isKeyboardVisible() {
+  const visualHeight = window.visualViewport?.height ?? window.innerHeight;
+  return window.innerHeight - 200 > visualHeight;
+}
+
+export function getScrollBehavior() {
+  if (prefersReducedMotion()) {
+    return "instant";
+  }
+  if (capabilities.isAndroid) {
+    return "instant";
+  }
+  return "smooth";
+}
+
 export function postRNWebviewMessage(prop, value) {
   if (window.ReactNativeWebView !== undefined) {
     window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));

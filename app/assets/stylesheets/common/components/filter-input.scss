@@ -12,12 +12,18 @@
     @include default-focus;
   }
 
+  .d-icon + .filter-input {
+    padding-left: 0;
+  }
+
   .filter-input,
   .filter-input:focus {
     width: 100%;
     margin: 0;
     border: none;
     outline: none;
+    border-radius: 0;
+    clip-path: fill-box;
 
     @include viewport.from(md) {
       .chat-browse-view__actions & {

@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
+import concatClass from "discourse/helpers/concat-class";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default class FKControlTextarea extends Component {
@@ -55,7 +56,10 @@ export default class FKControlTextarea extends Component {
 
   <template>
     <textarea
-      class="form-kit__control-textarea"
+      class={{concatClass
+        "form-kit__control-textarea"
+        (if @noResize "--no-resize")
+      }}
       style={{this.style}}
       disabled={{@field.disabled}}
       value={{@field.value}}

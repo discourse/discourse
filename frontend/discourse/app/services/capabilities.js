@@ -18,6 +18,7 @@ class Capabilities {
   isWinphone = ua.includes("Windows Phone");
   isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
   isIOS = (/iPhone|iPod/.test(ua) || this.isIpadOS) && !window.MSStream;
+  isAppleMobile = this.isIOS || this.isIpadOS;
   isApple =
     APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
     (navigator.userAgentData &&
@@ -30,6 +31,20 @@ class Capabilities {
     /Constructor/.test(window.HTMLElement) ||
     window.safari?.pushNotification?.toString() ===
       "[object SafariRemoteNotification]";
+
+  isChromium =
+    navigator.userAgentData?.brands?.some((b) => b.brand === "Chromium") ||
+    ua.includes("Chrome");
+
+  isWebKit = !this.isChromium && /Safari|iPhone/.test(ua);
+
+  browserEngine = this.isChromium
+    ? "chromium"
+    : this.isFirefox
+      ? "gecko"
+      : this.isWebKit
+        ? "webkit"
+        : "unknown";
 
   hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
 
@@ -126,6 +141,50 @@ class Capabilities {
       !this.isAppWebview &&
       navigator.serviceWorker.controller &&
       navigator.serviceWorker.controller.state === "activated"
+    );
+  }
+
+  get detectedPlatform() {
+    if (this.isIOS) {
+      return "ios";
+    }
+    if (this.isIpadOS) {
+      return "ipados";
+    }
+    if (this.isAndroid) {
+      return "android";
+    }
+    if (ua.includes("Macintosh")) {
+      return "macos";
+    }
+    return "unknown";
+  }
+
+  get isAndroidChromiumBrowser() {
+    return (
+      this.isAndroid &&
+      this.isChromium &&
+      !window.matchMedia(
+        "(display-mode: standalone), (display-mode: minimal-ui), (display-mode: fullscreen)"
+      ).matches
+    );
+  }
+
+  get isStandaloneWithBlackTranslucent() {
+    if (!window.navigator.standalone) {
+      return false;
+    }
+    const viewport = document.querySelector("meta[name='viewport']");
+    const webAppCapable = document.querySelector(
+      "meta[name='apple-mobile-web-app-capable']"
+    );
+    const statusBarStyle = document.querySelector(
+      "meta[name='apple-mobile-web-app-status-bar-style']"
+    );
+    return (
+      viewport?.content?.includes("viewport-fit=cover") &&
+      webAppCapable?.content === "yes" &&
+      statusBarStyle?.content === "black-translucent"
     );
   }
 }

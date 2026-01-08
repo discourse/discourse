@@ -1,0 +1,307 @@
+// ============================================================================
+// D-Scroll Component Styles
+// Based on Silk's Scroll component CSS from source.css (lines 1035-1629)
+//
+// Silk Element Mapping (element names -> data-d-scroll attribute values):
+//   root (c0)                  -> root
+//   view (c1)                  -> view
+//   scroll-container (c2)      -> scroll-container
+//   content (c3)               -> content
+//   spy (c5)                   -> spy (spy-start, spy-end)
+//   start-spacer (c6)          -> start-spacer
+//   end-spacer (c7)            -> end-spacer
+//
+// Intentionally Omitted Silk Elements:
+//   ua-scrollbar-measurer (c4) - Not needed; scrollbar measurement done via JS
+//
+// ============================================================================
+
+// ============================================================================
+// SECTION 1: View wrapper (c1) - Like Silk lines 1044-1080
+// ============================================================================
+
+// Like Silk (c1): view base
+[data-d-scroll~="view"] {
+  // Silk: --NOTE: "`display` can only be set to `none` or `grid`"
+  display: grid;
+  position: relative;
+}
+
+// Like Silk (c1 > *): All direct children are positioned absolutely
+[data-d-scroll~="view"] > * {
+  position: absolute !important;
+}
+
+// Like Silk (c1 cQa): Hide caret during scroll to avoid visual glitches
+[data-d-scroll~="view"][data-d-scroll~="scroll-ongoing"]
+  [contenteditable="true"],
+[data-d-scroll~="view"][data-d-scroll~="scroll-ongoing"] input,
+[data-d-scroll~="view"][data-d-scroll~="scroll-ongoing"] textarea {
+  caret-color: transparent !important;
+}
+
+// ============================================================================
+// SECTION 2: Scroll-container (c2) - Like Silk lines 1082-1505
+// ============================================================================
+
+// Like Silk (c2): scroll-container base with grid-template
+[data-d-scroll~="scroll-container"] {
+  --grid-template: 0px max-content 0px max-content 0px max-content 0px !important;
+  scrollbar-color: inherit;
+  scrollbar-gutter: inherit;
+  outline: none !important;
+  padding: 0 !important;
+  display: grid !important;
+  position: relative !important;
+}
+
+[data-d-scroll~="scroll-container"]:focus {
+  outline: none;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="axis-y"] {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  grid-template-rows: var(--grid-template);
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="axis-x"] {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  grid-template-columns: var(--grid-template);
+}
+
+// Like Silk (c2 cEb): overshoot prevention
+[data-d-scroll~="scroll-container"][data-d-scroll~="no-overshoot"] {
+  overscroll-behavior: none !important;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="trap-x"] {
+  overscroll-behavior-x: contain !important;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="trap-y"] {
+  overscroll-behavior-y: contain !important;
+}
+
+// Like Silk (c2 cFa): scrollGesture disabled
+// When scrollGesture={false}, make element non-scrollable so touches pass through to parent
+[data-d-scroll~="scroll-container"][data-d-scroll~="no-scroll-gesture"] {
+  overflow-anchor: none;
+  overflow: hidden !important;
+}
+
+// Like Silk (c2 cKa/cKb/cKk): scroll-behavior
+[data-d-scroll~="scroll-container"][data-d-scroll~="scroll-skip"] {
+  scroll-behavior: auto;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="scroll-smooth"] {
+  scroll-behavior: smooth;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="scroll-auto"] {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-d-scroll~="scroll-container"][data-d-scroll~="scroll-auto"] {
+    scroll-behavior: auto;
+  }
+}
+
+// Like Silk (c2 cLb): scroll-anchoring
+[data-d-scroll~="scroll-container"][data-d-scroll~="no-anchoring"] {
+  overflow-anchor: none;
+}
+
+// Like Silk (c2 cMq/cMp/cMo/cMn): scroll-snap
+[data-d-scroll~="scroll-container"][data-d-scroll~="snap-proximity"][data-d-scroll~="axis-y"] {
+  scroll-snap-type: y proximity;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="snap-proximity"][data-d-scroll~="axis-x"] {
+  scroll-snap-type: x proximity;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="snap-mandatory"][data-d-scroll~="axis-y"] {
+  scroll-snap-type: y mandatory;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="snap-mandatory"][data-d-scroll~="axis-x"] {
+  scroll-snap-type: x mandatory;
+}
+
+// Like Silk (c2 cPb): scrollbar visibility
+[data-d-scroll~="scroll-container"][data-d-scroll~="no-scrollbar"] {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Like Silk (c2 cHa): page-scroll-replacement
+[data-d-scroll~="scroll-container"][data-d-scroll~="page-scroll-replacement"] {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// Like Silk (c2 cCa cIb cJb / c2 cDa cIb cJb): scrollbar hiding when both traps active
+// Per Silk source.css lines 1497-1505
+[data-d-scroll~="scroll-container"][data-d-scroll~="overflow-x"][data-d-scroll~="trap-x"][data-d-scroll~="trap-y"],
+[data-d-scroll~="scroll-container"][data-d-scroll~="overflow-y"][data-d-scroll~="trap-x"][data-d-scroll~="trap-y"] {
+  scrollbar-width: none !important;
+
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+// Like Silk (c2 cCa cIb cJb::before / c2 cDa cIb cJb::after): trap pseudo-elements
+// Per Silk source.css lines 1507-1527 - create minimal overflow to ensure trap works
+[data-d-scroll~="scroll-container"][data-d-scroll~="overflow-x"][data-d-scroll~="trap-x"][data-d-scroll~="trap-y"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 101%;
+  height: 1px;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+[data-d-scroll~="scroll-container"][data-d-scroll~="overflow-y"][data-d-scroll~="trap-x"][data-d-scroll~="trap-y"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 101%;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+// ============================================================================
+// SECTION 3: Spy (c5) - Like Silk lines 1529-1554
+// ============================================================================
+[data-d-scroll~="spy"] {
+  width: 1px;
+  height: 1px;
+  margin-bottom: -1px;
+  margin-right: -1px;
+}
+
+// Like Silk (c5 cAd cGh): spy-start for y-axis
+[data-d-scroll~="spy"][data-d-scroll~="spy-start"][data-d-scroll~="axis-y"] {
+  grid-row: 1;
+}
+
+// Like Silk (c5 cAd cGi): spy-end for y-axis
+[data-d-scroll~="spy"][data-d-scroll~="spy-end"][data-d-scroll~="axis-y"] {
+  grid-row: -1;
+  margin-top: -2px;
+}
+
+// Like Silk (c5 cAc cGh): spy-start for x-axis
+[data-d-scroll~="spy"][data-d-scroll~="spy-start"][data-d-scroll~="axis-x"] {
+  grid-column: 1;
+}
+
+// Like Silk (c5 cAc cGi): spy-end for x-axis
+[data-d-scroll~="spy"][data-d-scroll~="spy-end"][data-d-scroll~="axis-x"] {
+  grid-column: -1;
+  margin-left: -2px;
+}
+
+// ============================================================================
+// SECTION 4: Start-spacer (c6) - Like Silk lines 1556-1578
+// ============================================================================
+[data-d-scroll~="start-spacer"][data-d-scroll~="axis-y"] {
+  width: 1px;
+  height: 0;
+  grid-row: 2;
+}
+
+[data-d-scroll~="start-spacer"][data-d-scroll~="axis-x"] {
+  width: 0;
+  height: 1px;
+  grid-column: 2;
+}
+
+// ============================================================================
+// SECTION 5: End-spacer (c7) - Like Silk lines 1580-1602
+// ============================================================================
+[data-d-scroll~="end-spacer"][data-d-scroll~="axis-y"] {
+  width: 1px;
+  grid-row: 6;
+}
+
+[data-d-scroll~="end-spacer"][data-d-scroll~="axis-x"] {
+  height: 1px;
+  grid-column: 6;
+}
+
+// ============================================================================
+// SECTION 6: Content (c3) - Like Silk lines 1604-1628
+// ============================================================================
+[data-d-scroll~="content"] {
+  position: relative !important;
+}
+
+// Like Silk (c3 cAd): content is placed in grid row 4 for y-axis
+[data-d-scroll~="scroll-container"][data-d-scroll~="axis-y"]
+  [data-d-scroll~="content"] {
+  grid-row: 4 !important;
+}
+
+// Like Silk (c3 cAc): content is placed in grid column 4 for x-axis
+[data-d-scroll~="scroll-container"][data-d-scroll~="axis-x"]
+  [data-d-scroll~="content"] {
+  grid-column: 4 !important;
+}
+
+// Like Silk (c3 cCa cIb): content sticky positioning when NO overflow-x AND trap-x active
+// cCa = scrollTrapX:true, cIb = overflowX:false
+// Sticky prevents content shift during overscroll when content is smaller than container
+// Per Silk source.css lines 1616-1620
+[data-d-scroll~="content"][data-d-scroll~="no-overflow-x"][data-d-scroll~="trap-x"] {
+  position: sticky !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+// Like Silk (c3 cDa cJb): content sticky positioning when NO overflow-y AND trap-y active
+// cDa = scrollTrapY:true, cJb = overflowY:false
+// Sticky prevents content shift during overscroll when content is smaller than container
+// Per Silk source.css lines 1623-1628
+[data-d-scroll~="content"][data-d-scroll~="no-overflow-y"][data-d-scroll~="trap-y"] {
+  position: sticky !important;
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
+// ============================================================================
+// SECTION 7: Trigger (custom - not in Silk)
+// ============================================================================
+[data-d-scroll~="trigger"] {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+  }
+}
