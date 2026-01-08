@@ -24,6 +24,12 @@ import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { validateArgsSchema } from "discourse/lib/blocks/arg-validation";
+import {
+  buildContainerPath,
+  createGhostBlock,
+  handleOptionalMissingBlock,
+  isOptionalMissing,
+} from "discourse/lib/blocks/block-processing";
 import { validateConfig } from "discourse/lib/blocks/config-validation";
 import { validateConstraintsSchema } from "discourse/lib/blocks/constraint-validation";
 import {
@@ -39,7 +45,6 @@ import {
   warnUnknownOutletPatterns,
 } from "discourse/lib/blocks/outlet-matcher";
 import {
-  OPTIONAL_MISSING,
   parseBlockName,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/patterns";
@@ -436,43 +441,24 @@ export function block(name, options = {}) {
 
         for (const blockConfig of processedConfigs) {
           // Resolve block reference (string name or class)
-          // Note: Already resolved during preprocessing, but need the reference here
           const resolvedBlock = resolveBlockSync(blockConfig.block);
 
           // Handle optional missing block (block ref ended with `?` but not registered)
-          if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
-            const missingBlockName = resolvedBlock.name;
-
-            // Log if debug logging is enabled
-            if (isLoggingEnabled) {
-              getDebugCallback(DEBUG_CALLBACK.OPTIONAL_MISSING_LOG)?.(
-                missingBlockName,
-                baseHierarchy
-              );
-            }
-
-            // Show ghost if visual overlay is enabled
-            if (showGhosts) {
-              const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
-                {
-                  name: missingBlockName,
-                  Component: null,
-                  args: blockConfig.args,
-                  conditions: blockConfig.conditions,
-                  conditionsPassed: false,
-                  optionalMissing: true,
-                },
-                { outletName: baseHierarchy }
-              );
-              if (ghostData?.Component) {
-                result.push(ghostData);
-              }
+          if (isOptionalMissing(resolvedBlock)) {
+            const ghostData = handleOptionalMissingBlock({
+              blockName: resolvedBlock.name,
+              blockConfig,
+              hierarchy: baseHierarchy,
+              isLoggingEnabled,
+              showGhosts,
+            });
+            if (ghostData) {
+              result.push(ghostData);
             }
             continue;
           }
 
-          // If block couldn't be resolved (unresolved factory), skip it
-          // Async resolution has been triggered and block will appear on next render
+          // Skip unresolved blocks (pending factory resolution)
           if (!resolvedBlock) {
             continue;
           }
@@ -481,21 +467,13 @@ export function block(name, options = {}) {
           const isChildContainer =
             resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
 
-          // For containers, build their full path (used for their children's hierarchy)
-          // e.g., "homepage-blocks/group[0]"
-          let containerPath;
-          if (isChildContainer) {
-            const count = containerCounts.get(blockName) ?? 0;
-            containerCounts.set(blockName, count + 1);
-            containerPath = `${baseHierarchy}/${blockName}[${count}]`;
-          }
+          // For containers, build their full path for children's hierarchy
+          const containerPath = isChildContainer
+            ? buildContainerPath(blockName, baseHierarchy, containerCounts)
+            : undefined;
 
-          // Check pre-computed visibility from preprocessing step
+          // Render visible blocks
           if (blockConfig.__visible) {
-            // Block is visible - render it
-            // Pass baseHierarchy for debug display (where block is rendered)
-            // Pass containerPath for container's children hierarchy
-            // Use resolved block class instead of original config.block
             result.push(
               createChildBlock(
                 { ...blockConfig, block: resolvedBlock },
@@ -509,42 +487,19 @@ export function block(name, options = {}) {
               )
             );
           } else if (showGhosts) {
-            // Block is not visible - show ghost if debug overlay is enabled.
-            // For container blocks with children, recursively create ghost children
-            // so they appear nested inside the container ghost.
-            let ghostChildren = null;
-            if (
-              isChildContainer &&
-              blockConfig.children?.length &&
-              blockConfig.__failureReason === "no-visible-children"
-            ) {
-              // Recursively process children to create ghost components.
-              // Use the ghost children creator from dev-tools if available.
-              ghostChildren = getDebugCallback(
-                DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
-              )?.(
-                blockConfig.children,
-                owner,
-                containerPath,
-                outletArgs,
-                isLoggingEnabled,
-                resolveBlockSync
-              );
-            }
-
-            const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
-              {
-                name: blockName,
-                Component: null,
-                args: blockConfig.args,
-                conditions: blockConfig.conditions,
-                conditionsPassed: false,
-                failureReason: blockConfig.__failureReason,
-                children: ghostChildren,
-              },
-              { outletName: baseHierarchy }
-            );
-            if (ghostData?.Component) {
+            // Show ghost for invisible blocks in debug mode
+            const ghostData = createGhostBlock({
+              blockName,
+              blockConfig,
+              hierarchy: baseHierarchy,
+              containerPath,
+              isContainer: isChildContainer,
+              owner,
+              outletArgs,
+              isLoggingEnabled,
+              resolveBlockFn: resolveBlockSync,
+            });
+            if (ghostData) {
               result.push(ghostData);
             }
           }
@@ -912,33 +867,16 @@ export default class BlockOutlet extends Component {
       const resolvedBlock = resolveBlockSync(blockConfig.block);
 
       // Handle optional missing block (block ref ended with `?` but not registered)
-      if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
-        const missingBlockName = resolvedBlock.name;
-
-        // Log if debug logging is enabled
-        if (isLoggingEnabled) {
-          getDebugCallback(DEBUG_CALLBACK.OPTIONAL_MISSING_LOG)?.(
-            missingBlockName,
-            baseHierarchy
-          );
-        }
-
-        // Show ghost if visual overlay is enabled
-        if (showGhosts) {
-          const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
-            {
-              name: missingBlockName,
-              Component: null,
-              args: blockConfig.args,
-              conditions: blockConfig.conditions,
-              conditionsPassed: false,
-              optionalMissing: true,
-            },
-            { outletName: baseHierarchy }
-          );
-          if (ghostData?.Component) {
-            result.push(ghostData);
-          }
+      if (isOptionalMissing(resolvedBlock)) {
+        const ghostData = handleOptionalMissingBlock({
+          blockName: resolvedBlock.name,
+          blockConfig,
+          hierarchy: baseHierarchy,
+          isLoggingEnabled,
+          showGhosts,
+        });
+        if (ghostData) {
+          result.push(ghostData);
         }
         continue;
       }
@@ -952,12 +890,9 @@ export default class BlockOutlet extends Component {
       const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
 
       // For containers, build their full path (used for their children's hierarchy)
-      let containerPath;
-      if (isChildContainer) {
-        const count = containerCounts.get(blockName) ?? 0;
-        containerCounts.set(blockName, count + 1);
-        containerPath = `${baseHierarchy}/${blockName}[${count}]`;
-      }
+      const containerPath = isChildContainer
+        ? buildContainerPath(blockName, baseHierarchy, containerCounts)
+        : undefined;
 
       // Check pre-computed visibility from preprocessing step
       if (blockConfig.__visible) {
@@ -971,38 +906,18 @@ export default class BlockOutlet extends Component {
         );
       } else if (showGhosts) {
         // Create ghost for invisible block
-        let ghostChildren = null;
-        if (
-          isChildContainer &&
-          blockConfig.children?.length &&
-          blockConfig.__failureReason === "no-visible-children"
-        ) {
-          // Use the ghost children creator from dev-tools if available.
-          ghostChildren = getDebugCallback(
-            DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
-          )?.(
-            blockConfig.children,
-            owner,
-            containerPath,
-            outletArgs,
-            isLoggingEnabled,
-            resolveBlockSync
-          );
-        }
-
-        const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
-          {
-            name: blockName,
-            Component: null,
-            args: blockConfig.args,
-            conditions: blockConfig.conditions,
-            conditionsPassed: false,
-            failureReason: blockConfig.__failureReason,
-            children: ghostChildren,
-          },
-          { outletName: baseHierarchy }
-        );
-        if (ghostData?.Component) {
+        const ghostData = createGhostBlock({
+          blockName,
+          blockConfig,
+          hierarchy: baseHierarchy,
+          containerPath,
+          isContainer: isChildContainer,
+          owner,
+          outletArgs,
+          isLoggingEnabled,
+          resolveBlockFn: resolveBlockSync,
+        });
+        if (ghostData) {
           result.push(ghostData);
         }
       }
@@ -1044,12 +959,9 @@ export default class BlockOutlet extends Component {
       const resolvedBlock = resolveBlockSync(config.block);
 
       // Skip unresolved blocks (optional missing or pending factory resolution)
-      if (
-        !resolvedBlock ||
-        resolvedBlock.optionalMissing === OPTIONAL_MISSING
-      ) {
+      if (!resolvedBlock || isOptionalMissing(resolvedBlock)) {
         // Keep the config for ghost handling in the main loop
-        if (showGhosts || resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
+        if (showGhosts || isOptionalMissing(resolvedBlock)) {
           result.push(config);
         }
         continue;
