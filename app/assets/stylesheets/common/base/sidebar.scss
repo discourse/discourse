@@ -2,7 +2,7 @@
 
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
-  --d-sidebar-row-horizontal-padding: var(--space-2);
+  --d-sidebar-row-horizontal-padding: var(--space-1);
 
   @include viewport.until(sm) {
     --d-sidebar-row-horizontal-padding: var(--space-1);
