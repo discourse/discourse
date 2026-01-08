@@ -173,7 +173,6 @@
     rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
     rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
   );
-  padding: 4px;
   min-height: 30px;
 }
 
