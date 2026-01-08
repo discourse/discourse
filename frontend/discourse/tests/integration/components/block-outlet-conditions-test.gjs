@@ -3,7 +3,7 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockGroup from "discourse/blocks/block-group";
-import { BlockCondition } from "discourse/blocks/conditions";
+import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import BlockOutlet, {
   block,
   renderBlocks,
@@ -16,6 +16,22 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 let testOwner;
 
+/* Test condition classes - defined at module scope to use with decorator */
+
+@blockCondition({ type: "always-true", validArgKeys: [] })
+class BlockAlwaysTrueCondition extends BlockCondition {
+  evaluate() {
+    return true;
+  }
+}
+
+@blockCondition({ type: "always-false", validArgKeys: [] })
+class BlockAlwaysFalseCondition extends BlockCondition {
+  evaluate() {
+    return false;
+  }
+}
+
 module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -23,22 +39,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     testOwner = getOwner(this);
 
     const blocks = testOwner.lookup("service:blocks");
-
-    class BlockAlwaysTrueCondition extends BlockCondition {
-      static type = "always-true";
-
-      evaluate() {
-        return true;
-      }
-    }
-
-    class BlockAlwaysFalseCondition extends BlockCondition {
-      static type = "always-false";
-
-      evaluate() {
-        return false;
-      }
-    }
 
     if (!blocks.hasConditionType("always-true")) {
       blocks.registerConditionType(BlockAlwaysTrueCondition);

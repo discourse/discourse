@@ -1,6 +1,6 @@
 import picomatch from "picomatch";
 import { raiseBlockError } from "discourse/lib/blocks/error";
-import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
+import { getAllOutlets } from "discourse/lib/blocks/registration";
 
 /**
  * Checks if a pattern targets a namespaced outlet.
@@ -149,8 +149,9 @@ export function validateOutletPatterns(patterns, blockName, propertyName) {
  *
  * This function uses two strategies to detect conflicts:
  *
- * 1. **Known outlets check**: Tests each outlet in `BLOCK_OUTLETS` against both
- *    pattern lists. This catches conflicts for outlets that actually exist.
+ * 1. **Known outlets check**: Tests each registered outlet (core and custom)
+ *    against both pattern lists. This catches conflicts for outlets that
+ *    actually exist.
  *
  * 2. **Synthetic test strings**: Generates test strings by replacing wildcards
  *    in patterns with concrete characters. This catches conflicts for outlets
@@ -177,9 +178,10 @@ export function detectPatternConflicts(allowedPatterns, deniedPatterns) {
     return { conflict: false };
   }
 
-  // Strategy 1: Check against known outlets (catches most practical conflicts)
+  // Strategy 1: Check against all registered outlets (core and custom)
   // This is fast and catches conflicts for outlets that actually exist.
-  for (const outlet of BLOCK_OUTLETS) {
+  const allOutlets = getAllOutlets();
+  for (const outlet of allOutlets) {
     const allowedMatch = allowedPatterns.find((p) =>
       matchOutletPattern(outlet, p)
     );
@@ -317,8 +319,8 @@ export function isBlockPermittedInOutlet(
  * Warns if patterns don't match any known outlet (helps catch typos).
  *
  * This function is called at decoration time to help developers catch
- * configuration mistakes. It skips namespaced patterns since they target
- * plugin/theme outlets that aren't in the core `BLOCK_OUTLETS` registry.
+ * configuration mistakes. It checks patterns against all registered outlets
+ * (both core and custom).
  *
  * @param {string[]|null} patterns - The patterns to check.
  * @param {string} blockName - Block name for warning messages.
@@ -328,26 +330,17 @@ export function isBlockPermittedInOutlet(
  * // Warns about typo
  * warnUnknownOutletPatterns(["sidbar-*"], "my-block", "allowedOutlets");
  * // Console: [Blocks] Block "my-block": allowedOutlets pattern "sidbar-*" does not match any known outlet...
- *
- * @example
- * // No warning for namespaced patterns
- * warnUnknownOutletPatterns(["my-plugin:custom-outlet"], "my-block", "allowedOutlets");
- * // No warning (namespaced patterns are skipped)
  */
 export function warnUnknownOutletPatterns(patterns, blockName, propertyName) {
   if (!patterns?.length) {
     return;
   }
 
-  for (const pattern of patterns) {
-    // Skip namespaced patterns - they reference plugin/theme outlets
-    // that aren't in BLOCK_OUTLETS
-    if (isNamespacedPattern(pattern)) {
-      continue;
-    }
+  const allOutlets = getAllOutlets();
 
-    // Check if pattern matches at least one known outlet
-    const matchesKnown = BLOCK_OUTLETS.some((outlet) =>
+  for (const pattern of patterns) {
+    // Check if pattern matches at least one registered outlet
+    const matchesKnown = allOutlets.some((outlet) =>
       matchOutletPattern(outlet, pattern)
     );
 
@@ -355,8 +348,8 @@ export function warnUnknownOutletPatterns(patterns, blockName, propertyName) {
       // eslint-disable-next-line no-console
       console.warn(
         `[Blocks] Block "${blockName}": ${propertyName} pattern "${pattern}" ` +
-          `does not match any known outlet. This may be a typo. ` +
-          `Known outlets: ${BLOCK_OUTLETS.join(", ")}`
+          `does not match any registered outlet. This may be a typo. ` +
+          `Registered outlets: ${allOutlets.join(", ")}`
       );
     }
   }

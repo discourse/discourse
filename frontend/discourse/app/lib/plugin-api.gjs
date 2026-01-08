@@ -59,6 +59,7 @@ import { captureCallSite } from "discourse/lib/blocks/error";
 import {
   _registerBlock,
   _registerBlockFactory,
+  _registerOutlet,
 } from "discourse/lib/blocks/registration";
 import classPrepend, {
   withPrependsRolledBack,
@@ -3432,6 +3433,36 @@ class _PluginApi {
       // Direct class: registerBlock(BlockClass)
       _registerBlock(blockOrName);
     }
+  }
+
+  /**
+   * Registers a custom block outlet where blocks can be rendered.
+   *
+   * This allows plugins and themes to define their own block outlets that can be
+   * used with `renderBlocks()`. Custom outlets must follow naming conventions:
+   * - Core outlets: `outlet-name` (kebab-case)
+   * - Plugin outlets: `namespace:outlet-name` (e.g., `chat:message-actions`)
+   * - Theme outlets: `theme:namespace:outlet-name` (e.g., `theme:my-theme:hero`)
+   *
+   * **IMPORTANT:** Must be called in a pre-initializer before "freeze-block-registry".
+   *
+   * @param {string} outletName - The outlet name (must follow naming conventions).
+   * @param {Object} [options] - Outlet configuration options.
+   * @param {string} [options.description] - Human-readable description of the outlet.
+   *
+   * @example
+   * ```javascript
+   * // In a pre-initializer
+   * api.registerBlockOutlet("chat:message-actions", {
+   *   description: "Actions displayed below chat messages",
+   * });
+   *
+   * // Later, in an api-initializer
+   * api.renderBlocks("chat:message-actions", [...]);
+   * ```
+   */
+  registerBlockOutlet(outletName, options = {}) {
+    _registerOutlet(outletName, options);
   }
 
   /**

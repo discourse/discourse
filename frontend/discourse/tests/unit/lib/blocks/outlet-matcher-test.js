@@ -446,16 +446,22 @@ module("Unit | Lib | Blocks | outlet-matcher", function () {
       assert.false(consoleSpy.called);
     });
 
-    test("does not warn for namespaced patterns (escape hatch)", function (assert) {
+    test("warns for unregistered namespaced patterns", function (assert) {
+      // Namespaced patterns are now validated against registered outlets
+      // If a custom outlet is not registered, a warning is issued
       warnUnknownOutletPatterns(
         ["my-plugin:custom-outlet", "my-theme:hero"],
         "test-block",
         "allowedOutlets"
       );
-      assert.false(consoleSpy.called);
+      assert.strictEqual(
+        consoleSpy.callCount,
+        2,
+        "warns for each unregistered namespaced pattern"
+      );
     });
 
-    test("warns for patterns not matching any known outlet", function (assert) {
+    test("warns for patterns not matching any registered outlet", function (assert) {
       warnUnknownOutletPatterns(
         ["unknown-outlet-*"],
         "test-block",
@@ -463,7 +469,9 @@ module("Unit | Lib | Blocks | outlet-matcher", function () {
       );
       assert.true(consoleSpy.calledOnce);
       assert.true(
-        consoleSpy.firstCall.args[0].includes("does not match any known outlet")
+        consoleSpy.firstCall.args[0].includes(
+          "does not match any registered outlet"
+        )
       );
       assert.true(consoleSpy.firstCall.args[0].includes("test-block"));
       assert.true(consoleSpy.firstCall.args[0].includes("allowedOutlets"));

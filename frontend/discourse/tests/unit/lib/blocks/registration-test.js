@@ -5,18 +5,25 @@ import { block } from "discourse/components/block-outlet";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 import {
   _freezeBlockRegistry,
+  _freezeOutletRegistry,
   _registerBlock,
   _registerBlockFactory,
+  _registerOutlet,
   _setTestSourceIdentifier,
   blockRegistry,
+  getAllOutlets,
+  getCustomOutlet,
   hasBlock,
   isBlockFactory,
   isBlockRegistryFrozen,
   isBlockResolved,
+  isOutletRegistryFrozen,
+  isValidOutlet,
   resetBlockRegistryForTesting,
   resolveBlock,
   resolveBlockSync,
 } from "discourse/lib/blocks/registration";
+import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 
 module("Unit | Lib | blocks/registration", function (hooks) {
   setupTest(hooks);
@@ -693,6 +700,242 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       const result = resolveBlockSync("sync-resolved-factory");
       assert.strictEqual(result, ResolvedFactory);
+    });
+  });
+
+  /* Outlet Registration */
+
+  module("_registerOutlet", function () {
+    test("registers a valid core outlet", function (assert) {
+      _registerOutlet("custom-outlet");
+
+      assert.true(isValidOutlet("custom-outlet"));
+      assert.deepEqual(getCustomOutlet("custom-outlet"), {
+        name: "custom-outlet",
+        description: undefined,
+      });
+    });
+
+    test("registers outlet with description", function (assert) {
+      _registerOutlet("described-outlet", {
+        description: "A test outlet for descriptions",
+      });
+
+      const outlet = getCustomOutlet("described-outlet");
+      assert.strictEqual(outlet.description, "A test outlet for descriptions");
+    });
+
+    test("registers plugin outlet (namespace:name)", function (assert) {
+      _setTestSourceIdentifier("plugin:chat");
+
+      _registerOutlet("chat:message-actions");
+
+      assert.true(isValidOutlet("chat:message-actions"));
+      const outlet = getCustomOutlet("chat:message-actions");
+      assert.strictEqual(outlet.name, "chat:message-actions");
+    });
+
+    test("registers theme outlet (theme:namespace:name)", function (assert) {
+      _setTestSourceIdentifier("theme:My Theme");
+
+      _registerOutlet("theme:mytheme:hero-section");
+
+      assert.true(isValidOutlet("theme:mytheme:hero-section"));
+      const outlet = getCustomOutlet("theme:mytheme:hero-section");
+      assert.strictEqual(outlet.name, "theme:mytheme:hero-section");
+    });
+
+    test("throws for invalid name format", function (assert) {
+      assert.throws(
+        () => _registerOutlet("Invalid_Name"),
+        /is invalid.*Valid formats/
+      );
+    });
+
+    test("throws for duplicate outlet name", function (assert) {
+      _registerOutlet("dup-outlet");
+
+      assert.throws(() => _registerOutlet("dup-outlet"), /already registered/);
+    });
+
+    test("throws for outlet name matching core outlet", function (assert) {
+      const coreOutlet = BLOCK_OUTLETS[0];
+
+      assert.throws(
+        () => _registerOutlet(coreOutlet),
+        /already registered as a core outlet/
+      );
+    });
+
+    test("throws after registry is frozen", function (assert) {
+      _freezeOutletRegistry();
+
+      assert.throws(
+        () => _registerOutlet("frozen-outlet"),
+        /registry was frozen/
+      );
+    });
+  });
+
+  module("outlet namespace enforcement", function (nestedHooks) {
+    nestedHooks.afterEach(function () {
+      _setTestSourceIdentifier(undefined);
+    });
+
+    test("theme source must use theme:namespace:name format", function (assert) {
+      _setTestSourceIdentifier("theme:My Theme");
+
+      assert.throws(
+        () => _registerOutlet("unnamespaced-outlet"),
+        /Theme outlets must use the "theme:namespace:outlet-name" format/
+      );
+    });
+
+    test("theme source allows properly namespaced outlets", function (assert) {
+      _setTestSourceIdentifier("theme:My Theme");
+
+      _registerOutlet("theme:mytheme:custom-outlet");
+
+      assert.true(isValidOutlet("theme:mytheme:custom-outlet"));
+    });
+
+    test("plugin source must use namespace:name format", function (assert) {
+      _setTestSourceIdentifier("plugin:my-plugin");
+
+      assert.throws(
+        () => _registerOutlet("unnamespaced-plugin-outlet"),
+        /Plugin outlets must use the "namespace:outlet-name" format/
+      );
+    });
+
+    test("plugin source allows properly namespaced outlets", function (assert) {
+      _setTestSourceIdentifier("plugin:chat");
+
+      _registerOutlet("chat:sidebar-outlet");
+
+      assert.true(isValidOutlet("chat:sidebar-outlet"));
+    });
+
+    test("core source (null) allows unnamespaced outlets", function (assert) {
+      _setTestSourceIdentifier(null);
+
+      _registerOutlet("core-outlet");
+
+      assert.true(isValidOutlet("core-outlet"));
+    });
+  });
+
+  module("_freezeOutletRegistry", function () {
+    test("freezes the outlet registry", function (assert) {
+      assert.false(isOutletRegistryFrozen());
+
+      _freezeOutletRegistry();
+
+      assert.true(isOutletRegistryFrozen());
+    });
+  });
+
+  module("getAllOutlets", function () {
+    test("includes core outlets", function (assert) {
+      const allOutlets = getAllOutlets();
+
+      BLOCK_OUTLETS.forEach((coreOutlet) => {
+        assert.true(
+          allOutlets.includes(coreOutlet),
+          `should include core outlet: ${coreOutlet}`
+        );
+      });
+    });
+
+    test("includes custom registered outlets", function (assert) {
+      _registerOutlet("custom-test-outlet");
+
+      const allOutlets = getAllOutlets();
+
+      assert.true(allOutlets.includes("custom-test-outlet"));
+    });
+
+    test("returns combined list of core and custom outlets", function (assert) {
+      _registerOutlet("first-custom");
+      _registerOutlet("second-custom");
+
+      const allOutlets = getAllOutlets();
+
+      assert.strictEqual(
+        allOutlets.length,
+        BLOCK_OUTLETS.length + 2,
+        "should have core outlets plus 2 custom"
+      );
+      assert.true(allOutlets.includes("first-custom"));
+      assert.true(allOutlets.includes("second-custom"));
+    });
+  });
+
+  module("isValidOutlet", function () {
+    test("returns true for core outlets", function (assert) {
+      BLOCK_OUTLETS.forEach((coreOutlet) => {
+        assert.true(
+          isValidOutlet(coreOutlet),
+          `should validate core outlet: ${coreOutlet}`
+        );
+      });
+    });
+
+    test("returns true for custom registered outlets", function (assert) {
+      _registerOutlet("valid-custom-outlet");
+
+      assert.true(isValidOutlet("valid-custom-outlet"));
+    });
+
+    test("returns false for unregistered outlets", function (assert) {
+      assert.false(isValidOutlet("nonexistent-outlet"));
+      assert.false(isValidOutlet("random:namespaced-outlet"));
+    });
+  });
+
+  module("getCustomOutlet", function () {
+    test("returns outlet data for registered custom outlet", function (assert) {
+      _registerOutlet("data-outlet", { description: "Test description" });
+
+      const outlet = getCustomOutlet("data-outlet");
+
+      assert.strictEqual(outlet.name, "data-outlet");
+      assert.strictEqual(outlet.description, "Test description");
+    });
+
+    test("returns undefined for core outlets", function (assert) {
+      const coreOutlet = BLOCK_OUTLETS[0];
+
+      assert.strictEqual(getCustomOutlet(coreOutlet), undefined);
+    });
+
+    test("returns undefined for unregistered outlets", function (assert) {
+      assert.strictEqual(getCustomOutlet("not-registered"), undefined);
+    });
+  });
+
+  module("resetBlockRegistryForTesting clears outlets", function () {
+    test("clears custom outlets and unfreezes outlet registry", function (assert) {
+      _registerOutlet("reset-test-outlet");
+      _freezeOutletRegistry();
+
+      assert.true(isValidOutlet("reset-test-outlet"));
+      assert.true(isOutletRegistryFrozen());
+
+      resetBlockRegistryForTesting();
+
+      assert.false(
+        isValidOutlet("reset-test-outlet"),
+        "custom outlet should be cleared"
+      );
+      assert.false(
+        isOutletRegistryFrozen(),
+        "outlet registry should be unfrozen"
+      );
+      assert.true(
+        isValidOutlet(BLOCK_OUTLETS[0]),
+        "core outlets should still be valid"
+      );
     });
   });
 });

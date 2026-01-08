@@ -7,6 +7,7 @@ import {
   VALID_BLOCK_NAME_PATTERN,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/patterns";
+import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import identifySource from "discourse/lib/source-identifier";
 
 // Re-export for backwards compatibility
@@ -604,6 +605,24 @@ export function resolveBlockSync(blockRef) {
  */
 let testRegistryFrozenState = null;
 
+/*
+ * Outlet Registration
+ */
+
+/**
+ * Registry of custom block outlets registered by plugins and themes.
+ * Maps outlet names to their metadata.
+ *
+ * @type {Map<string, { name: string, description?: string }>}
+ */
+const customOutletRegistry = new Map();
+
+/**
+ * Whether the outlet registry is frozen (no new registrations allowed).
+ * Frozen by the "freeze-block-registry" initializer during app boot.
+ */
+let outletRegistryFrozen = false;
+
 /**
  * Temporarily unfreezes the block registry for testing purposes.
  * Call this before registering blocks in tests.
@@ -649,4 +668,137 @@ export function resetBlockRegistryForTesting() {
   } else {
     registryFrozen = false;
   }
+
+  // Reset outlet registry
+  customOutletRegistry.clear();
+  outletRegistryFrozen = false;
+}
+
+/**
+ * Registers a custom block outlet.
+ *
+ * Custom outlets follow the same naming conventions as blocks:
+ * - Core outlets: `outlet-name` (kebab-case)
+ * - Plugin outlets: `namespace:outlet-name`
+ * - Theme outlets: `theme:namespace:outlet-name`
+ *
+ * @param {string} outletName - The outlet name (must follow naming conventions).
+ * @param {Object} [options] - Outlet options.
+ * @param {string} [options.description] - Human-readable description.
+ *
+ * @internal
+ */
+export function _registerOutlet(outletName, options = {}) {
+  if (outletRegistryFrozen) {
+    raiseBlockError(
+      `api.registerBlockOutlet() was called after the outlet registry was frozen. ` +
+        `Move your code to a pre-initializer that runs before "freeze-block-registry". ` +
+        `Outlet: "${outletName}"`
+    );
+    return;
+  }
+
+  // Validate name format (same pattern as blocks)
+  if (!VALID_NAMESPACED_BLOCK_PATTERN.test(outletName)) {
+    raiseBlockError(
+      `Outlet name "${outletName}" is invalid. ` +
+        `Valid formats: "outlet-name" (core), "plugin:outlet-name" (plugin), ` +
+        `"theme:namespace:outlet-name" (theme).`
+    );
+    return;
+  }
+
+  // Check for duplicates against both core and custom outlets
+  if (BLOCK_OUTLETS.includes(outletName)) {
+    raiseBlockError(
+      `Outlet "${outletName}" is already registered as a core outlet.`
+    );
+    return;
+  }
+
+  if (customOutletRegistry.has(outletName)) {
+    raiseBlockError(`Outlet "${outletName}" is already registered.`);
+    return;
+  }
+
+  // Enforce namespace requirements for themes and plugins (same as blocks)
+  const sourceId = getSourceIdentifier();
+  const namespacePrefix = getNamespacePrefix(outletName);
+
+  if (sourceId) {
+    // Themes must use theme:namespace:name format
+    if (
+      sourceId.startsWith("theme:") &&
+      !namespacePrefix?.startsWith("theme:")
+    ) {
+      raiseBlockError(
+        `Theme outlets must use the "theme:namespace:outlet-name" format. ` +
+          `Outlet "${outletName}" should be renamed to "theme:<your-theme>:${outletName}".`
+      );
+      return;
+    }
+
+    // Plugins must use namespace:name format
+    if (sourceId.startsWith("plugin:") && !namespacePrefix) {
+      const pluginName = sourceId.replace("plugin:", "");
+      raiseBlockError(
+        `Plugin outlets must use the "namespace:outlet-name" format. ` +
+          `Outlet "${outletName}" should be renamed to "${pluginName}:${outletName}".`
+      );
+      return;
+    }
+  }
+
+  customOutletRegistry.set(outletName, {
+    name: outletName,
+    description: options.description,
+  });
+}
+
+/**
+ * Freezes the outlet registry, preventing further registrations.
+ * Called by the "freeze-block-registry" initializer during app boot.
+ *
+ * @internal
+ */
+export function _freezeOutletRegistry() {
+  outletRegistryFrozen = true;
+}
+
+/**
+ * Returns whether the outlet registry is frozen.
+ *
+ * @returns {boolean}
+ */
+export function isOutletRegistryFrozen() {
+  return outletRegistryFrozen;
+}
+
+/**
+ * Returns all valid outlet names (both core and custom).
+ *
+ * @returns {string[]} Array of all outlet names.
+ */
+export function getAllOutlets() {
+  return [...BLOCK_OUTLETS, ...customOutletRegistry.keys()];
+}
+
+/**
+ * Checks if an outlet name is valid (registered as core or custom).
+ *
+ * @param {string} name - The outlet name to check.
+ * @returns {boolean} True if the outlet is registered.
+ */
+export function isValidOutlet(name) {
+  return BLOCK_OUTLETS.includes(name) || customOutletRegistry.has(name);
+}
+
+/**
+ * Gets metadata for a custom outlet.
+ *
+ * @param {string} name - The outlet name.
+ * @returns {{ name: string, description?: string } | undefined} Outlet metadata or undefined.
+ */
+export function getCustomOutlet(name) {
+  return customOutletRegistry.get(name);
 }

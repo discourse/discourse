@@ -20,11 +20,12 @@ import {
   parseBlockReference,
 } from "discourse/lib/blocks/patterns";
 import {
+  getAllOutlets,
   hasBlock,
   isBlockResolved,
+  isValidOutlet,
   resolveBlock,
 } from "discourse/lib/blocks/registration";
-import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -429,7 +430,7 @@ export async function validateConfig(
  * Validates a single block configuration object.
  *
  * Performs comprehensive validation including:
- * - Outlet name is registered in BLOCK_OUTLETS
+ * - Outlet name is a valid registered outlet (core or custom)
  * - Block reference is valid (string name or @block-decorated class)
  * - Block is registered in the registry
  * - Container/children relationship is valid
@@ -464,11 +465,13 @@ export async function validateBlock(
   path,
   callSiteError = null
 ) {
-  if (!BLOCK_OUTLETS.includes(outletName)) {
-    const suggestion = formatWithSuggestion(outletName, BLOCK_OUTLETS);
+  if (!isValidOutlet(outletName)) {
+    const allOutlets = getAllOutlets();
+    const suggestion = formatWithSuggestion(outletName, allOutlets);
     raiseBlockError(
       `Unknown block outlet: ${suggestion}. ` +
-        `Available outlets: ${BLOCK_OUTLETS.join(", ")}`
+        `Register custom outlets with api.registerBlockOutlet() in a pre-initializer. ` +
+        `Available outlets: ${allOutlets.join(", ")}`
     );
     return;
   }
