@@ -34,6 +34,155 @@ import { applyArgDefaults } from "discourse/lib/blocks/utils";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
+ * Wraps a validation function call with BlockValidationError handling.
+ * Catches BlockValidationError and re-raises with full context via raiseBlockError.
+ *
+ * @param {Function} validationFn - The validation function to call.
+ * @param {string} errorPrefix - Prefix for the error message.
+ * @param {Object} context - Error context including outletName, blockName, path, etc.
+ */
+function wrapValidationError(validationFn, errorPrefix, context) {
+  try {
+    validationFn();
+  } catch (error) {
+    if (error instanceof BlockValidationError) {
+      raiseBlockError(`${errorPrefix}: ${error.message}`, {
+        ...context,
+        errorPath: error.path,
+      });
+    }
+    throw error;
+  }
+}
+
+/**
+ * Validates that a block is permitted in the specified outlet.
+ * Checks allowedOutlets and deniedOutlets metadata if present.
+ *
+ * @param {Object} metadata - Block metadata with outlet restrictions.
+ * @param {string} outletName - The outlet being validated.
+ * @param {string} blockName - The block name for error messages.
+ * @param {Object} context - Error context for raiseBlockError.
+ * @returns {boolean} True if validation passed, false if error was raised.
+ */
+function validateOutletPermission(metadata, outletName, blockName, context) {
+  if (!metadata?.allowedOutlets && !metadata?.deniedOutlets) {
+    return true;
+  }
+
+  const permission = isBlockPermittedInOutlet(
+    outletName,
+    metadata.allowedOutlets,
+    metadata.deniedOutlets
+  );
+
+  if (!permission.permitted) {
+    raiseBlockError(
+      `Block "${blockName}" at ${context.path} cannot be rendered in outlet "${outletName}": ${permission.reason}.`,
+      context
+    );
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Validates container/children relationship.
+ * Containers must have children, non-containers cannot have children.
+ *
+ * @param {Object} config - The block configuration.
+ * @param {boolean} isContainer - Whether the block is a container.
+ * @param {string} blockName - The block name for error messages.
+ * @param {string} outletName - The outlet name for error messages.
+ * @param {Object} context - Error context for raiseBlockError.
+ * @returns {boolean} True if validation passed, false if error was raised.
+ */
+function validateContainerChildren(
+  config,
+  isContainer,
+  blockName,
+  outletName,
+  context
+) {
+  const hasChildren = config.children?.length > 0;
+  const displayName = config.name || blockName;
+
+  if (hasChildren && !isContainer) {
+    raiseBlockError(
+      `Block component ${displayName} in layout ${outletName} cannot have children`,
+      context
+    );
+    return false;
+  }
+
+  if (isContainer && !hasChildren) {
+    raiseBlockError(
+      `Block component ${displayName} in layout ${outletName} must have children`,
+      context
+    );
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Validates block constraints and custom validation functions.
+ * Applies arg defaults before validation.
+ *
+ * @param {Object} metadata - Block metadata with constraints/validate.
+ * @param {Object} resolvedBlock - The resolved block class.
+ * @param {Object} config - The block configuration.
+ * @param {string} blockName - The block name for error messages.
+ * @param {Object} context - Error context for raiseBlockError.
+ */
+function validateBlockConstraints(
+  metadata,
+  resolvedBlock,
+  config,
+  blockName,
+  context
+) {
+  if (!metadata?.constraints && !metadata?.validate) {
+    return;
+  }
+
+  const argsWithDefaults = applyArgDefaults(resolvedBlock, config.args || {});
+
+  // Validate declarative constraints
+  if (metadata.constraints) {
+    const constraintError = validateConstraints(
+      metadata.constraints,
+      argsWithDefaults,
+      blockName
+    );
+    if (constraintError) {
+      raiseBlockError(
+        `Invalid block "${blockName}" at ${context.path} for outlet "${context.outletName}": ${constraintError}`,
+        { ...context, errorPath: "constraints" }
+      );
+    }
+  }
+
+  // Run custom validation function
+  if (metadata.validate) {
+    const customErrors = runCustomValidation(
+      metadata.validate,
+      argsWithDefaults
+    );
+    if (customErrors?.length > 0) {
+      const errorMessage =
+        customErrors.length === 1
+          ? customErrors[0]
+          : customErrors.map((e) => `  - ${e}`).join("\n");
+      raiseBlockError(
+        `Invalid block "${blockName}" at ${context.path} for outlet "${context.outletName}": ${errorMessage}`,
+        { ...context, errorPath: "validate" }
+      );
+    }
+  }
+}
+
+/**
  * Validates block conditions and raises errors with proper context.
  *
  * @param {Object} blocksService - The blocks service with validate method.
@@ -496,27 +645,14 @@ export async function validateBlock(
   }
 
   // Validate config structure (keys and types) with error tracing
-  try {
-    // Validate config keys first (catches typos like "condition" vs "conditions")
-    validateConfigKeys(config);
-
-    // Validate types of optional fields (args, children, classNames, name, conditions)
-    validateConfigTypes(config);
-  } catch (error) {
-    if (error instanceof BlockValidationError) {
-      raiseBlockError(
-        `Invalid block config at ${path} for outlet "${outletName}": ${error.message}`,
-        {
-          outletName,
-          path,
-          config,
-          errorPath: error.path,
-          callSiteError,
-        }
-      );
-    }
-    throw error;
-  }
+  wrapValidationError(
+    () => {
+      validateConfigKeys(config);
+      validateConfigTypes(config);
+    },
+    `Invalid block config at ${path} for outlet "${outletName}"`,
+    { outletName, path, config, callSiteError }
+  );
 
   if (!config.block) {
     raiseBlockError(
@@ -574,25 +710,7 @@ export async function validateBlock(
   }
 
   const blockName = resolvedBlock.blockName;
-
-  // Outlet permission validation
-  // Check if the block is allowed to render in this specific outlet.
   const metadata = resolvedBlock.blockMetadata;
-  if (metadata?.allowedOutlets || metadata?.deniedOutlets) {
-    const permission = isBlockPermittedInOutlet(
-      outletName,
-      metadata.allowedOutlets,
-      metadata.deniedOutlets
-    );
-
-    if (!permission.permitted) {
-      raiseBlockError(
-        `Block "${blockName}" at ${path} cannot be rendered in outlet "${outletName}": ${permission.reason}.`,
-        { outletName, blockName, path, config, callSiteError }
-      );
-      return;
-    }
-  }
 
   // Build base context for all validation errors in this block
   const baseContext = {
@@ -603,87 +721,46 @@ export async function validateBlock(
     callSiteError,
   };
 
-  const hasChildren = config.children?.length > 0;
+  // Validate outlet permission (allowedOutlets/deniedOutlets)
+  if (!validateOutletPermission(metadata, outletName, blockName, baseContext)) {
+    return;
+  }
+
+  // Validate container/children relationship
   const isContainer = isContainerBlockFn(resolvedBlock);
-
-  if (hasChildren && !isContainer) {
-    raiseBlockError(
-      `Block component ${config.name || blockName} in layout ${outletName} cannot have children`,
+  if (
+    !validateContainerChildren(
+      config,
+      isContainer,
+      blockName,
+      outletName,
       baseContext
-    );
+    )
+  ) {
     return;
   }
 
-  if (isContainer && !hasChildren) {
-    raiseBlockError(
-      `Block component ${config.name || blockName} in layout ${outletName} must have children`,
-      baseContext
-    );
-    return;
-  }
-
-  try {
-    validateReservedArgs(config);
-  } catch (error) {
-    if (error instanceof BlockValidationError) {
-      raiseBlockError(
-        `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${error.message}`,
-        { ...baseContext, errorPath: error.path }
-      );
-    }
-    throw error;
-  }
-
-  // Validate block args against metadata schema
-  try {
-    validateBlockArgs(config, resolvedBlock);
-  } catch (error) {
-    if (error instanceof BlockValidationError) {
-      raiseBlockError(
-        `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${error.message}`,
-        { ...baseContext, errorPath: error.path }
-      );
-    }
-    throw error;
-  }
+  // Validate reserved args and block args against schema
+  const errorPrefix = `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`;
+  wrapValidationError(
+    () => validateReservedArgs(config),
+    errorPrefix,
+    baseContext
+  );
+  wrapValidationError(
+    () => validateBlockArgs(config, resolvedBlock),
+    errorPrefix,
+    baseContext
+  );
 
   // Validate constraints and custom validation (after applying defaults)
-  if (metadata?.constraints || metadata?.validate) {
-    const argsWithDefaults = applyArgDefaults(resolvedBlock, config.args || {});
-
-    // Validate declarative constraints
-    if (metadata.constraints) {
-      const constraintError = validateConstraints(
-        metadata.constraints,
-        argsWithDefaults,
-        blockName
-      );
-      if (constraintError) {
-        raiseBlockError(
-          `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${constraintError}`,
-          { ...baseContext, errorPath: "constraints" }
-        );
-      }
-    }
-
-    // Run custom validation function
-    if (metadata.validate) {
-      const customErrors = runCustomValidation(
-        metadata.validate,
-        argsWithDefaults
-      );
-      if (customErrors && customErrors.length > 0) {
-        const errorMessage =
-          customErrors.length === 1
-            ? customErrors[0]
-            : customErrors.map((e) => `  - ${e}`).join("\n");
-        raiseBlockError(
-          `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${errorMessage}`,
-          { ...baseContext, errorPath: "validate" }
-        );
-      }
-    }
-  }
+  validateBlockConstraints(
+    metadata,
+    resolvedBlock,
+    config,
+    blockName,
+    baseContext
+  );
 
   // Validate conditions if service is available
   validateBlockConditions(
