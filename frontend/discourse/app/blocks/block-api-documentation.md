@@ -100,8 +100,9 @@ import { block } from "discourse/components/block-outlet";
       type: "array",
       itemType: "string"
     },
-    categoryId: { type: "number" },
+    categoryId: { type: "number", min: 1, integer: true },
     tagName: { type: "string" },
+    maxItems: { type: "number", min: 1, max: 100, default: 10 },
   },
 
   // (D) Cross-arg constraints - validation rules across multiple args
@@ -220,6 +221,11 @@ The args schema serves three purposes:
 - `default` (optional) - Default value if not provided
 - `itemType` (optional, for arrays) - Type of items in the array
 - `pattern` (optional, for strings) - Regex pattern for validation
+- `min` (optional, for numbers) - Minimum value (inclusive)
+- `max` (optional, for numbers) - Maximum value (inclusive)
+- `integer` (optional, for numbers) - Must be a whole number
+
+> :bulb: **Tip:** Use `required` OR `default`, not both—an arg with a default is never missing.
 
 #### (D) Constraints
 
@@ -2008,6 +2014,9 @@ api.registerBlockConditionType(ConditionClass)
   default?: any,
   itemType?: "string" | "number" | "boolean",  // For arrays
   pattern?: RegExp,                             // For strings
+  min?: number,                                 // For numbers
+  max?: number,                                 // For numbers
+  integer?: boolean,                            // For numbers
 }
 
 // ConstraintSpec:

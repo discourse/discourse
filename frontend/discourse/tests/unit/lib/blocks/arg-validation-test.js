@@ -232,6 +232,130 @@ module("Unit | Lib | blocks/arg-validation", function () {
         "no error thrown"
       );
     });
+
+    test("throws for min on non-number type", function (assert) {
+      const schema = {
+        title: { type: "string", min: 0 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "min" but type is "string".*only valid for number type/
+      );
+    });
+
+    test("throws for max on non-number type", function (assert) {
+      const schema = {
+        title: { type: "string", max: 100 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "max" but type is "string".*only valid for number type/
+      );
+    });
+
+    test("throws for integer on non-number type", function (assert) {
+      const schema = {
+        title: { type: "string", integer: true },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "integer" but type is "string".*only valid for number type/
+      );
+    });
+
+    test("throws for non-number min value", function (assert) {
+      const schema = {
+        count: { type: "number", min: "0" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "min" value.*Must be a number/
+      );
+    });
+
+    test("throws for non-number max value", function (assert) {
+      const schema = {
+        count: { type: "number", max: "100" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "max" value.*Must be a number/
+      );
+    });
+
+    test("throws for non-boolean integer value", function (assert) {
+      const schema = {
+        count: { type: "number", integer: "true" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "integer" value.*Must be a boolean/
+      );
+    });
+
+    test("throws for min greater than max", function (assert) {
+      const schema = {
+        count: { type: "number", min: 100, max: 0 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has min \(100\) greater than max \(0\)/
+      );
+    });
+
+    test("accepts valid min/max/integer on number type", function (assert) {
+      const schema = {
+        count: { type: "number", min: 0, max: 100 },
+        page: { type: "number", min: 1, integer: true },
+        percentage: { type: "number", min: 0, max: 1 },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default value below min", function (assert) {
+      const schema = {
+        count: { type: "number", min: 0, default: -5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be at least 0/
+      );
+    });
+
+    test("throws for default value above max", function (assert) {
+      const schema = {
+        count: { type: "number", max: 100, default: 150 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be at most 100/
+      );
+    });
+
+    test("throws for non-integer default with integer constraint", function (assert) {
+      const schema = {
+        count: { type: "number", integer: true, default: 5.5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be an integer/
+      );
+    });
   });
 
   module("validateArgValue", function () {
@@ -305,6 +429,112 @@ module("Unit | Lib | blocks/arg-validation", function () {
           "count",
           "test-block"
         )?.includes("must be a number")
+      );
+    });
+
+    test("validates number with min constraint", function (assert) {
+      const schema = { type: "number", min: 0 };
+
+      assert.strictEqual(
+        validateArgValue(0, schema, "count", "test-block"),
+        null,
+        "min boundary passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(100, schema, "count", "test-block"),
+        null,
+        "above min passes"
+      );
+
+      assert.true(
+        validateArgValue(-1, schema, "count", "test-block")?.includes(
+          "must be at least 0"
+        ),
+        "below min fails"
+      );
+    });
+
+    test("validates number with max constraint", function (assert) {
+      const schema = { type: "number", max: 100 };
+
+      assert.strictEqual(
+        validateArgValue(100, schema, "count", "test-block"),
+        null,
+        "max boundary passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(0, schema, "count", "test-block"),
+        null,
+        "below max passes"
+      );
+
+      assert.true(
+        validateArgValue(101, schema, "count", "test-block")?.includes(
+          "must be at most 100"
+        ),
+        "above max fails"
+      );
+    });
+
+    test("validates number with integer constraint", function (assert) {
+      const schema = { type: "number", integer: true };
+
+      assert.strictEqual(
+        validateArgValue(42, schema, "count", "test-block"),
+        null,
+        "integer passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(0, schema, "count", "test-block"),
+        null,
+        "zero passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(-5, schema, "count", "test-block"),
+        null,
+        "negative integer passes"
+      );
+
+      assert.true(
+        validateArgValue(3.14, schema, "count", "test-block")?.includes(
+          "must be an integer"
+        ),
+        "float fails"
+      );
+    });
+
+    test("validates number with combined constraints", function (assert) {
+      const schema = { type: "number", min: 1, max: 10, integer: true };
+
+      assert.strictEqual(
+        validateArgValue(5, schema, "page", "test-block"),
+        null,
+        "valid value passes"
+      );
+
+      assert.true(
+        validateArgValue(0, schema, "page", "test-block")?.includes(
+          "must be at least 1"
+        ),
+        "below min fails"
+      );
+
+      assert.true(
+        validateArgValue(11, schema, "page", "test-block")?.includes(
+          "must be at most 10"
+        ),
+        "above max fails"
+      );
+
+      assert.true(
+        validateArgValue(5.5, schema, "page", "test-block")?.includes(
+          "must be an integer"
+        ),
+        "non-integer fails"
       );
     });
 

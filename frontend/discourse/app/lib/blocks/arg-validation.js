@@ -35,6 +35,9 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "default",
   "itemType",
   "pattern",
+  "min",
+  "max",
+  "integer",
 ]);
 
 /**
@@ -144,6 +147,62 @@ export function validateArgsSchema(argsSchema, blockName) {
       );
     }
 
+    // min is only valid for number type
+    if (argDef.min !== undefined && argDef.type !== "number") {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has "min" but type is "${argDef.type}". ` +
+          `"min" is only valid for number type.`
+      );
+    }
+
+    // Validate min is a number
+    if (argDef.min !== undefined && typeof argDef.min !== "number") {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has invalid "min" value. Must be a number.`
+      );
+    }
+
+    // max is only valid for number type
+    if (argDef.max !== undefined && argDef.type !== "number") {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has "max" but type is "${argDef.type}". ` +
+          `"max" is only valid for number type.`
+      );
+    }
+
+    // Validate max is a number
+    if (argDef.max !== undefined && typeof argDef.max !== "number") {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has invalid "max" value. Must be a number.`
+      );
+    }
+
+    // Validate min <= max
+    if (
+      argDef.min !== undefined &&
+      argDef.max !== undefined &&
+      argDef.min > argDef.max
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has min (${argDef.min}) greater than max (${argDef.max}).`
+      );
+    }
+
+    // integer is only valid for number type
+    if (argDef.integer !== undefined && argDef.type !== "number") {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has "integer" but type is "${argDef.type}". ` +
+          `"integer" is only valid for number type.`
+      );
+    }
+
+    // Validate integer is a boolean
+    if (argDef.integer !== undefined && typeof argDef.integer !== "boolean") {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has invalid "integer" value. Must be a boolean.`
+      );
+    }
+
     // Validate required is boolean
     if (argDef.required !== undefined && typeof argDef.required !== "boolean") {
       raiseBlockError(
@@ -186,7 +245,7 @@ export function validateArgsSchema(argsSchema, blockName) {
  * @returns {string|null} Error message if validation fails, null otherwise
  */
 export function validateArgValue(value, argSchema, argName, blockName) {
-  const { type, itemType, pattern } = argSchema;
+  const { type, itemType, pattern, min, max, integer } = argSchema;
 
   // Skip validation if value is undefined (handled by required check)
   if (value === undefined) {
@@ -207,6 +266,18 @@ export function validateArgValue(value, argSchema, argName, blockName) {
     case "number":
       if (typeof value !== "number" || Number.isNaN(value)) {
         return `Block "${blockName}": arg "${argName}" must be a number, got ${typeof value}.`;
+      }
+      // Validate integer constraint
+      if (integer && !Number.isInteger(value)) {
+        return `Block "${blockName}": arg "${argName}" must be an integer, got ${value}.`;
+      }
+      // Validate min constraint
+      if (min !== undefined && value < min) {
+        return `Block "${blockName}": arg "${argName}" must be at least ${min}, got ${value}.`;
+      }
+      // Validate max constraint
+      if (max !== undefined && value > max) {
+        return `Block "${blockName}": arg "${argName}" must be at most ${max}, got ${value}.`;
       }
       break;
 
@@ -355,7 +426,7 @@ export function validateBlockArgs(config, blockClass) {
  * @returns {string | null} Error message if validation fails, null otherwise.
  */
 function validateArgValueForSchema(value, argSchema, argName) {
-  const { type, itemType, pattern } = argSchema;
+  const { type, itemType, pattern, min, max, integer } = argSchema;
 
   switch (type) {
     case "string":
@@ -370,6 +441,15 @@ function validateArgValueForSchema(value, argSchema, argName) {
     case "number":
       if (typeof value !== "number" || Number.isNaN(value)) {
         return `Arg "${argName}" must be a number, got ${typeof value}.`;
+      }
+      if (integer && !Number.isInteger(value)) {
+        return `Arg "${argName}" must be an integer, got ${value}.`;
+      }
+      if (min !== undefined && value < min) {
+        return `Arg "${argName}" must be at least ${min}, got ${value}.`;
+      }
+      if (max !== undefined && value > max) {
+        return `Arg "${argName}" must be at most ${max}, got ${value}.`;
       }
       break;
 
