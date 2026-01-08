@@ -1777,8 +1777,6 @@ id:
       none:
         new: "Anda tidak memiliki topik baru"
         filter: "Tidak ada topik."
-      bottom:
-        new: "Tidak ada topik baru lagi"
     topic_bulk_actions:
       dismiss:
         name: "Bubar"
@@ -2132,6 +2130,7 @@ id:
       description: "Deskripsi (maks 1000 karakter)"
       sort_by_count: "menghitung"
       sort_by_name: "nama"
+      bulk_create_button: "Buat"
       filters:
         without_category: "%{filter} %{tag} topik"
         with_category: "%{filter} %{tag} topik dalam %{category}"
@@ -2180,7 +2179,6 @@ id:
       tags_form_modal:
         title: "Edit navigasi tag"
         filter_placeholder: "Filter tag"
-        no_tags: "Tidak ada tag yang cocok dengan istilah yang diberikan."
         subtitle:
           text: "dan kami akan menampilkan tag teratas situs ini secara otomatis"
       edit_navigation_modal_form:
@@ -2890,6 +2888,8 @@ id:
         revoke: Cabut
         reason: Alasan
         expand: Perluas &hellip;
+        sections:
+          settings: Pengaturan
         enabled: diaktifkan
         disabled: dinonaktifkan
         select_an_icon: "Pilih ikon"

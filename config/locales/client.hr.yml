@@ -186,7 +186,7 @@ hr:
       el:
         name: grčki
       en:
-        name: engleski (US)
+        name: engleski
       en_GB:
         name: engleski (UK)
       es:
@@ -3470,19 +3470,6 @@ hr:
           unread: "Ništa nije ostalo nepročitano... impresivno!"
           new_new: "Trenutno ništa nova... provjerite uskoro!"
           new: "Trenutno ništa nova... provjerite uskoro!"
-      bottom:
-        latest: "Nema više najnovijih tema."
-        posted: "Nema više objavljenih članaka."
-        read: "Nema više pročitanih tema."
-        new: "Nema više novih tema."
-        unread: "Nema više nepročitanih tema."
-        unseen: "Nema više nepročitanih tema."
-        category: "Nema više tema u kategoriji %{category}."
-        tag: "Nema više tema s oznakom %{tag}."
-        top: "Nema više glavnih tema."
-        hot: "Nema više vrućih tema."
-        bookmarks: "U oznakama nema više spremljenih tema."
-        filter: "Nema više tema."
     topic_bulk_actions:
       dismiss:
         name: "Skloni"
@@ -3620,9 +3607,6 @@ hr:
         other: "%{count} odgovora, idite na prvu objavu"
       created_at: "Kreirano: %{date}"
       bumped_at: "Najnovije: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a>, <a href='%{basePath}/latest'>pogledajte najnovije teme</a> ili pogledajte vrh:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Pregledajte sve oznake</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
       browse_latest_topics: "Pregledajte najnovije teme"
       suggest_create_topic: Jeste li spremni <a href>započeti novu temu?</a>
       jump_reply: "Idite na izvornu lokaciju objave"
@@ -4711,6 +4695,7 @@ hr:
         this_month: "Mjesec"
         this_week: "Tjedan"
         today: "Danas"
+        custom: "Posebna"
     custom_homepage:
       admin_message: 'Jedna od vaših tema omogućila je modifikator "custom_homepage", ali ne ispisuje ništa u konektoru [custom-homepage]. (Ova poruka se prikazuje samo administratorima web stranice.)'
     browser_update: 'Nažalost, <a href="https://discourse.org/about#browser">vaš preglednik nije podržan</a>. Molimo <a href="https://browsehappy.com">prebacite se na podržani preglednik</a> kako biste pregledali bogati sadržaj, prijavili se i odgovorili.'
@@ -4956,6 +4941,7 @@ hr:
       upload_description: "Prenesite CSV datoteku za skupno stvaranje oznaka"
       upload_instructions: "Jedna u retku, po želji s grupom oznaka u formatu 'tag_name, tag_group'."
       upload_successful: "Oznake su uspješno prenesene"
+      bulk_create_button: "Stvorite"
       delete_unused_confirmation:
         one: "%{count} bit će izbrisana: %{tags}"
         few: "%{count} bit će izbrisana: %{tags}"
@@ -5110,7 +5096,6 @@ hr:
       tags_form_modal:
         title: "Uredite navigaciju oznaka"
         filter_placeholder: "Filtrirajte oznake"
-        no_tags: "Nema oznaka koje odgovaraju zadanom pojmu."
         subtitle:
           text: "i automatski ćemo prikazati najčešće oznake ove stranice"
       edit_navigation_modal_form:
@@ -7465,6 +7450,8 @@ hr:
         no_user_badges: "%{name} nije dodijeljena ni jedna značka"
         no_badges: Nema znački za dodijeliti.
         none_selected: "Odaberite značku da počnete"
+        sections:
+          settings: Postavke
         usage_heading: Upotreba
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodijeljena više puta

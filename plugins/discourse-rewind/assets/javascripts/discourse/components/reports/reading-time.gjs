@@ -3,6 +3,7 @@ import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class ReadingTime extends Component {
   get readTimeString() {
@@ -19,6 +20,18 @@ export default class ReadingTime extends Component {
     }
   }
 
+  get bookComparisonText() {
+    return i18nForOwner(
+      "discourse_rewind.reports.reading_time.book_comparison",
+      this.args.isOwnRewind,
+      {
+        readingTime: this.readTimeString,
+        bookTitle: this.args.report.data.book,
+        username: this.args.user?.username,
+      }
+    );
+  }
+
   <template>
     {{#if @report.data}}
       <div class="rewind-report-page --reading-time">
@@ -27,13 +40,7 @@ export default class ReadingTime extends Component {
         </h2>
         <div class="rewind-card">
           <p class="reading-time__text">
-            {{htmlSafe
-              (i18n
-                "discourse_rewind.reports.reading_time.book_comparison"
-                readingTitme=this.readTimeString
-                bookTitle=@report.data.book
-              )
-            }}
+            {{htmlSafe this.bookComparisonText}}
           </p>
           <div class="reading-time__book">
             <div class="book">

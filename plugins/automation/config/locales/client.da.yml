@@ -308,6 +308,8 @@ da:
             user:
               label: Bruger
               description: "Brugeren, der lukker emnet (standard: system)"
+        set_topic_timer:
+          title: Indstil timerfunktion for emne
       unnamed_automation: "Unavngiven automatisering"
       models:
         script:

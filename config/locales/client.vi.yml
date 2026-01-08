@@ -2423,17 +2423,6 @@ vi:
         bookmarks: "Bạn chưa chủ đề nào được đánh dấu."
         category: "Không có chủ đề nào trong %{category} ."
         top: "Không có chủ đề top."
-      bottom:
-        latest: "Không còn thêm chủ đề nào nữa."
-        posted: "Ở đây không có thêm chủ đề nào được đăng."
-        read: "Không còn thêm chủ đề chưa đọc nào nữa."
-        new: "Không còn thêm chủ đề mới nào nữa."
-        unread: "Không còn thêm chủ đề chưa đọc nào nữa."
-        unseen: "Không còn chủ đề nào chưa từng thấy."
-        category: "Không còn thêm chủ đề nào trong %{category} ."
-        tag: "Không có thêm %{tag} chủ đề."
-        top: "Không còn của đề top nào nữa."
-        bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     topic_bulk_actions:
       dismiss:
         name: "Bỏ qua"
@@ -3338,6 +3327,7 @@ vi:
         this_month: "Tháng"
         this_week: "Tuần"
         today: "Ngày"
+        custom: "Tùy biến"
     permission_types:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
@@ -3522,6 +3512,7 @@ vi:
       upload_description: "Tải lên tệp csv để tạo hàng loạt thẻ"
       upload_instructions: "Một trên mỗi dòng, tùy chọn với một nhóm thẻ ở định dạng 'tag_name, tag_group'."
       upload_successful: "Các thẻ đã được tải lên thành công"
+      bulk_create_button: "Tạo"
       delete_unused_confirmation:
         other: "%{count} thẻ sẽ bị xóa: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -5304,6 +5295,8 @@ vi:
         no_user_badges: "%{name} chưa được cấp bất kỳ huy hiệu nào."
         no_badges: Không có huy hiệu có thể được cấp.
         none_selected: "Chọn một huy hiệu để bắt đầu"
+        sections:
+          settings: Cài đặt
         allow_title: Cho phép huy hiệu được sử dụng như là tên
         multiple_grant: Có thể được cấp nhiều lần
         visibility_heading: Khả năng hiển thị

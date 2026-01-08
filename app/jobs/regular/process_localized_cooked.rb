@@ -18,6 +18,12 @@ module Jobs
         cooked = processor.html.strip
 
         post_localization.update_column(:cooked, cooked) if cooked.present?
+
+        if post.is_first_post?
+          topic_localization = post.topic.localizations.find_by(locale: post_localization.locale)
+          topic_localization.update_excerpt(cooked:) if topic_localization
+        end
+
         MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
       end
     end

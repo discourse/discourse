@@ -65,6 +65,7 @@ pl_PL:
       starred_channels_empty: "Nie wyróżniono jeszcze żadnego kanału. Wyróżnij kanały, aby je tu zobaczyć i mieć do nich szybki dostęp."
       browse_all_channels: "Przeglądaj wszystkie kanały"
       see_in: "Zobacz w"
+      open_channel_menu: "Otwórz menu kanału"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
         instructions:
@@ -92,6 +93,8 @@ pl_PL:
         join_channel: "Dołącz do kanału"
         leave_channel: "Opuść kanał"
         leave_groupchat_info: "Opuszczając ten czat grupowy, nie będziesz już mieć do niego dostępu i nie będziesz otrzymywać związanych z nim powiadomień. Aby ponownie dołączyć, musisz otrzymać ponowne zaproszenie od członka czatu grupowego."
+        notification_settings: "Ustawienia powiadomień"
+        notification_settings_context: "Powiadomienia"
         join: "Dołącz"
         leave: "Opuść"
         save_label:
@@ -152,12 +155,11 @@ pl_PL:
       separate_sidebar_mode:
         title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
       send_shortcut:
+        title: "Wyślij skrót"
         enter:
           label: "Wyślij przez Enter"
-          description: "Nowa linia przez Shift + Enter"
         meta_enter:
           label: "Wyślij przez %{meta_key} + Enter"
-          description: "Nowa linia przez Enter"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
@@ -260,12 +262,12 @@ pl_PL:
       no_public_channels: "Nie dołączyłeś jeszcze do żadnego kanału!"
       no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
+      chat_notifications_title: "Powiadomienia czatu"
       only_chat_push_notifications:
         title: "Wysyłaj tylko powiadomienia push czatu"
-        description: "Zablokuj wysyłanie wszystkich powiadomień push niezwiązanych z czatem"
+      personalization_title: "Personalizacja"
       ignore_channel_wide_mention:
         title: "Ignoruj wzmianki dotyczące całego kanału"
-        description: "Nie wysyłaj powiadomień dla wzmianek dotyczących całego kanału (@here i @all)"
       show_thread_title_prompts:
         title: "Pokaż podpowiedzi tytułu wątku"
         description: "Wyświetlaj podpowiedzi o ustawienie tytułu dla nowych wątków."
@@ -528,6 +530,7 @@ pl_PL:
         follow: "Dołącz"
         followed: "Dołączył"
         mute: "Wycisz kanał"
+        unmute: "Wyłącz wyciszenie kanału"
         threading_enabled: "Włączona"
         threading_disabled: "Wyłączone"
         muted_on: "Wł"
@@ -552,6 +555,7 @@ pl_PL:
           confirm_export: "Eksportuje wszystkie wiadomości ze wszystkich kanałów i wysyła wynik do Ciebie w wiadomości prywatnej. Czy na pewno chcesz eksportować?"
           export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
       search:
+        short_title: Szukaj
         title: Wyszukaj czat
         aria_label: "Przejdź do wyszukiwania czatu"
         no_results: "Brak wyników wyszukiwania"

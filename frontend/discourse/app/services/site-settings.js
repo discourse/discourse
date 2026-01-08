@@ -15,11 +15,14 @@ export function createSiteSettingsFromPreloaded(
     for (const [key, value] of Object.entries(themeSiteSettingOverrides)) {
       settings[key] = value;
     }
-    // eslint-disable-next-line no-console
-    console.debug(
-      "[SiteSettings] Overriding site settings with theme overrides:",
-      themeSiteSettingOverrides
-    );
+
+    if (siteSettings.site_setting_verbose_client_logging) {
+      // eslint-disable-next-line no-console
+      console.debug(
+        "[SiteSettings] Overriding site settings with theme overrides:",
+        themeSiteSettingOverrides
+      );
+    }
 
     settings.themeSiteSettingOverrides = themeSiteSettingOverrides;
   }
@@ -28,17 +31,22 @@ export function createSiteSettingsFromPreloaded(
     for (const [key, value] of Object.entries(upcomingChanges)) {
       settings[key] = value;
     }
-    // eslint-disable-next-line no-console
-    console.debug(
-      "[SiteSettings] Overriding site settings with upcoming changes based on user group permissions:",
-      upcomingChanges
-    );
+
+    if (siteSettings.site_setting_verbose_client_logging) {
+      // eslint-disable-next-line no-console
+      console.debug(
+        "[SiteSettings] Overriding site settings with upcoming changes based on user group permissions:",
+        upcomingChanges
+      );
+    }
 
     // Includes upcoming changes which apply to the anon user (Everyone changes)
     settings.currentUserUpcomingChanges = upcomingChanges;
+  } else {
+    settings.currentUserUpcomingChanges = {};
   }
 
-  // localize locale names here as they are not localized in the backend
+  // Localize locale names here as they are not localized in the backend
   // due to initialization order and caching
   if (settings.available_locales) {
     const locales = JSON.parse(settings.available_locales);

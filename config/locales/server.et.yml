@@ -505,8 +505,8 @@ et:
       every_month: "iga kuu"
       every_six_months: "iga kuue kuu tagant"
   user_api_key:
-    title: "Autoriseeri rakenduse ligipääs"
     authorize: "Autoriseeri"
+    deny: "Loobu"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
     otp_confirmation:

@@ -10,7 +10,6 @@ on:
   push:
     branches:
       - main
-      - release/*
     paths:
       - "lib/version.rb"
 
@@ -41,7 +40,7 @@ jobs:
 
       - name: Maybe trigger prepare next version
         if: steps.maybe-cut-branch.outputs.new_branch_name
-        run: gh workflow run release-prepare-bump.yml -f branch="${{ steps.maybe-cut-branch.outputs.new_branch_name }}"
+        run: gh workflow run release-branch-handler.yml -f branch="${{ steps.maybe-cut-branch.outputs.new_branch_name }}"
         env:
           GH_TOKEN: ${{ github.token }}
 

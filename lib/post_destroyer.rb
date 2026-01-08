@@ -124,6 +124,9 @@ class PostDestroyer
     @topic.update_statistics
     Topic.publish_stats_to_clients!(@topic.id, :recovered)
 
+    @topic.reload
+    @topic.reset_bumped_at(@post) if @post.is_last_reply? && !@post.whisper?
+
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @topic.id) if @topic
@@ -195,7 +198,6 @@ class PostDestroyer
         clear_user_posted_flag
       end
 
-      Topic.reset_highest(@post.topic_id)
       trash_public_post_actions
       trash_revisions
       trash_user_actions
@@ -236,6 +238,8 @@ class PostDestroyer
       end
 
       DB.after_commit do
+        Topic.reset_highest(@post.topic_id)
+
         if @opts[:reviewable]
           notify_deletion(
             @opts[:reviewable],

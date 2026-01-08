@@ -158,7 +158,7 @@ ur:
       el:
         name: یونانی
       en:
-        name: انگریزی (امریکی)
+        name: انگریزی
       en_GB:
         name: انگریزی (برطانیہ)
       es:
@@ -3319,19 +3319,6 @@ ur:
           unread: "کچھ بھی بغیر پڑھا نہیں بچا... متاثر کن!"
           new_new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
           new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
-      bottom:
-        latest: "کوئی مزید تازہ ترین موضوع موجود نہیں۔"
-        posted: "کوئی مزید پوسٹ کیے گئے موضوعات موجود نہیں۔"
-        read: "کوئی مزید پڑھ لیے گئے موضوعات موجود نہیں۔"
-        new: "کوئی مزید نئے موضوعات موجود نہیں۔"
-        unread: "کوئی مزید بغیر پڑھے موضوعات موجود نہیں۔"
-        unseen: "مزید ان دیکھے موضوعات نہیں ہیں۔"
-        category: "مزید کوئی %{category} کے موضوعات موجود نہیں۔"
-        tag: "مزید کوئی %{tag} کے موضوعات موجود نہیں۔"
-        top: "مزید کوئی سرفہرست موضوعات موجود نہیں۔"
-        hot: "مزید گرما گرم موضوعات نہیں۔"
-        bookmarks: "مزید کوئی بک مارک کیے ہوئے موضوعات موجود نہیں۔"
-        filter: "مزید موضوعات نہیں۔"
     topic_bulk_actions:
       dismiss:
         name: "بر خاست کریں"
@@ -3459,9 +3446,6 @@ ur:
         other: "%{count} جوابات،، پہلے دھاگہ پر جائیں"
       created_at: "پر بنا: %{date}"
       bumped_at: "تازہ ترین: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>تمام زمروں کو براؤز کریں</a> یا <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a>۔"
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>تمام زمروں کو براؤز کریں</a>, <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a> یا اوپر دیکھیں:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>تمام ٹیگز براؤز کریں</a> یا <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a>۔"
       browse_latest_topics: "تازہ ترین موضوعات کو براؤز کریں"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       jump_reply: "دھاگہ کے اصل مقام پر جائیں"
@@ -4500,6 +4484,7 @@ ur:
         this_month: "ماہ"
         this_week: "ہفتہ"
         today: "آج"
+        custom: "اپنی مرضی کا"
     custom_homepage:
       admin_message: 'آپ کے تھیموں میں سے ایک نے "custom_homepage" ترمیم کرنے والے کو فعال کیا ہے لیکن یہ [custom-homepage] جوڈنے میں کچھ بھی آؤٹ پٹ نہیں کرتا ہے۔ (یہ پیغام صرف سائٹ کے منتظمین کو دکھایا گیا ہے۔)'
     browser_update: 'بدقسمتی سے، <a href="https://discourse.org/about#browser">آپ کا براؤزر غیر تعاون یافتہ ہے</a>۔ بھرپور مواد دیکھنے، لاگ ان کرنے اور جواب دینے کے لیے براہ کرم <a href="https://browsehappy.com">معاون براؤزر</a> پر سوئچ کریں۔'
@@ -4735,6 +4720,7 @@ ur:
       upload_description: "بَلک میں ٹیگز بنانے کیلئے ایک csv فائل اَپ لوڈ کریں"
       upload_instructions: "فی سطر ایک، اختیاری طور پر ایک ٹیگ گروپ کے ساتھ 'tag_name,tag_group' کے فارمیٹ میں۔"
       upload_successful: "ٹیگز کامیابی سے اپ لوڈ ہو گئے"
+      bulk_create_button: "بنائیں"
       delete_unused_confirmation:
         one: "%{count} ٹیگ کومٹادیا جائے گا: %{tags}"
         other: "%{count} ٹیگز کومٹادیا جائے گا: %{tags}"
@@ -4886,7 +4872,6 @@ ur:
       tags_form_modal:
         title: "دہجیوں کی نیویگیشن میں ترمیم کریں"
         filter_placeholder: "دہجیوں کو چھانیے"
-        no_tags: "دی گئی اصطلاح سے مماثل کوئی دہجی نہیں"
         subtitle:
           text: "اور ہم خود بخود اس سائٹ کے ٹاپ دہجیاں دکھائیں گے"
       edit_navigation_modal_form:
@@ -7416,15 +7401,6 @@ ur:
         file_types_list:
           add_image_types: "تصاویر"
           add_types_title: "ایکسٹینشنز کی اجازت دیں %{types}"
-        requires_confirmation_messages:
-          min_password_length:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          min_admin_password_length:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈز تبدیل کرنے والے تمام منتظمین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          password_unique_charactes:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          block_common_passwords:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
       badges:
         status: سٹیٹس
         title: تمغات
@@ -7456,6 +7432,9 @@ ur:
         no_user_badges: "%{name} کو کوئی تمغہ نہیں دیا گیا۔"
         no_badges: دیئے کے لیے کوئی تمغہ موجود نہیں۔
         none_selected: "شروع کرنے کے لئے ایک تمغہ منتخب کریں"
+        sections:
+          query: ڈیٹا کمانڈ
+          settings: سیٹِنگ
         allow_title: عنوان کے طور پر تمغوں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         visibility_heading: نموداری

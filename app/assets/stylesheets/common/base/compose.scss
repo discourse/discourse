@@ -14,10 +14,7 @@ html.composer-open:not(.has-full-page-chat) {
 
 .grippie {
   cursor: row-resize;
-  padding: 0.25em 0;
-  background: var(--tertiary);
-  border-top-left-radius: var(--d-border-radius-large);
-  border-top-right-radius: var(--d-border-radius-large);
+  padding: var(--space-2) 0 0;
 
   @media (pointer: coarse) {
     padding: 0.35em 0;
@@ -26,13 +23,22 @@ html.composer-open:not(.has-full-page-chat) {
   &::before {
     content: "";
     display: block;
-    width: 1.5em;
-    margin: auto;
-    border-top: 3px double var(--tertiary-medium);
+    height: var(--space-1);
+    width: 3em;
+    margin-inline: auto;
+    background-color: var(--primary-low-mid);
+    border-radius: 3px;
+    border: none;
+    transition: background-color 0.15s ease;
+  }
+
+  &:hover::before {
+    background-color: var(--primary-high);
   }
 }
 
 #reply-control {
+  border: 1px solid var(--content-border-color);
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -230,10 +236,6 @@ html.composer-open:not(.has-full-page-chat) {
         }
       }
 
-      .d-icon {
-        margin-right: 8px;
-      }
-
       img.avatar {
         margin-right: 3px;
       }
@@ -253,13 +255,18 @@ html.composer-open:not(.has-full-page-chat) {
         flex-wrap: wrap;
       }
 
-      .display-edit-reason {
-        margin-top: 0.5em;
+      .display-edit-reason.--active {
+        width: 100%;
+      }
+
+      #edit-reason {
+        width: 100%;
+        margin-left: 0;
+        margin-top: var(--space-2);
       }
 
       .composer-controls {
         align-self: flex-start;
-        gap: 6px;
       }
     }
   }

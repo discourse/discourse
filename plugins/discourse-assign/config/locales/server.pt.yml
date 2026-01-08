@@ -14,7 +14,6 @@ pt:
     assign_self_regex: "Regex que é preciso passar para autoatribuição. Por exemplo: \"minha lista\""
     assign_other_regex: "Regex que é preciso passar para atribuir tópicos aos(às) outros(as) através de menção. Por exemplo: \"sua lista\"."
     unassign_on_group_archive: "Quando uma mensagem for arquivada por grupo, cancelar atribuição da mensagem (reatribuir se for movida de volta para a caixa de entrada)"
-    unassign_on_close: "Quando um tópico for fechado, cancelar atribuição do tópico"
     reassign_on_open: "Quando um tópico for aberto, reatribuir grupos/usuários(as) atribuídos(as) anteriormente"
     invite_on_assign: "Quando uma mensagem pessoal for atribuída a um(a) usuário(a) ou gurpo, convidar para MP caos ainda não seja um(a) participante."
     assign_mailer: "Quadno enviar e-mail de notificação para atribuições"

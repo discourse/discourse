@@ -2766,17 +2766,6 @@ lt:
         bookmarks: "Jūs dar neturite pažymėtų temų."
         category: "Nėra jokių temų kategorijoje %{category}."
         top: "Nėra jokių TOP temų."
-      bottom:
-        latest: "Daugiau nėra jokių naujausių temų."
-        posted: "Daugiau nėra jokių paskelbtų temų."
-        read: "Daugiau nėra jokių perskaitytų temų."
-        new: "Daugiau nėra jokių naujų temų."
-        unread: "Daugiau nėra jokių neperskaitytų temų."
-        unseen: "Nebėra nematytų temų."
-        category: "Daugiau nėra jokių temų kategorijoje %{category}."
-        tag: "Daugiau nėra jokių temų kategorijoje %{tag}."
-        top: "Daugiau nėra jokių populiarių temų."
-        bookmarks: "Daugiau pažymėtų temų nėra"
     topic_bulk_actions:
       dismiss:
         name: "Praleisti"
@@ -3700,6 +3689,7 @@ lt:
         this_month: "Per mėnesį"
         this_week: "Per savaitę"
         today: "Šandien"
+        custom: "Išskirtinės"
     permission_types:
       full: "Kurti / Atsakyti / Peržiūrėti"
       create_post: "Atsakyti / Peržiūrėti"
@@ -3862,6 +3852,7 @@ lt:
       upload: "Įkelti žymas"
       upload_description: "Įkelkite csv failą, kad sukurtumėte masines žymas"
       upload_successful: "Žymos sėkmingai įkeltos"
+      bulk_create_button: "Sukurti"
       delete_no_unused_tags: "Nėra nepanaudotų žymių."
       tag_list_joiner: ", "
       delete_unused: "Ištrinkite nepanaudotas žymas"
@@ -5510,6 +5501,8 @@ lt:
         no_user_badges: "%{name} dar negavo jokių trofėjų"
         no_badges: Nėra jokių trofėjų, kuriuos galima suteikti.
         none_selected: "Pasirinkite ženklelį, kad pradėtumėt"
+        sections:
+          settings: Nustatymai
         allow_title: Leisti naudoti ženklelį kaip antraštę
         multiple_grant: Gali būti suteikta keleta kartų
         visibility_heading: Matomumas

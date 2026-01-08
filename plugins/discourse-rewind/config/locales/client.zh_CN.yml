@@ -15,25 +15,44 @@ zh_CN:
       placeholder: Discourse Rewind
       title: 回顾
       loading: "正在重构样条曲线中…"
+      viewing_other_user: "您正在查看<strong>%{username}</strong>的Discourse Rewind。"
+      cannot_view_rewind_gibberish: >
+        [访问被拒绝::主机子程序回滚失败]<br><br> 引导异常日志...<br><br> &nbsp;&nbsp;>> 量子缓冲区欠载 ⧛<br> &nbsp;&nbsp;>> 跨节点奇偶校验漂移 (Δ=004.33)<br> &nbsp;&nbsp;>> 数据包 ϟ 分片偏移量 ∇47<br> &nbsp;&nbsp;>> 通量导管握手超时<br><br>
+      cannot_view_rewind: >
+        您无权访问该用户的 Discourse Rewind，可能该用户选择不公开他的回顾内容。<br><br> $> _<br><br>
       preferences:
-        disable_rewind: "禁用 Discourse Rewind。这将在您的个人资料和头像中隐藏年终活动总结。"
+        enable_rewind: "开启 Discourse Rewind。这将在您的个人资料和您的头像框中展示当年度的活动总结。"
+        share_publicly: "与其他论坛成员分享 Discourse Rewind 总结。任何论坛成员都可以查看您的 Discourse Rewind 总结。"
+        cannot_share_when_profile_hidden: "要分享 Rewind，您必须允许其他人查看您的公开个人资料。"
+      profile_link: "查看您 %{rewindYear} 年度的 Discourse Rewind"
       share:
         toggle_label:
           private: "不公开"
           public: "公开"
+        confirm: "在分享您的回顾记录前请仔细检查，这可能包含您的隐私信息。您可以随时将其设为私有。"
+        confirm_button:
+          enable: "设为公开"
+          disable: "设为私有"
+        enabled_success: "你的回顾内容现在可与其他论坛成员分享了。"
+        disabled_success: "已设为私有。"
       reports:
         activity_calendar:
           title: 活动日历
           cell_title:
             visited_no_posts: "你在 %{date} 来潜水了，但没有发帖。"
+            visited_no_posts_others: "%{username} 在 %{date} 访问并潜水，但没有发过帖子。"
             visited_with_posts:
               other: "你在 %{date} 发了 %{count} 篇帖子。"
+            visited_with_posts_others:
+              other: "%{username} 在 %{date} 发布了 %{count} 条帖子。"
             no_activity: "你在 %{date} 没来过。"
+            no_activity_others: "%{username} 在 %{date} 没有活动"
         top_words:
           title: 词语使用
         reading_time:
           title: 阅读时间
-          book_comparison: "您在本站上阅读了 <code>%{readingTitme}</code> ！这相当于您阅读完 <i>%{bookTitle}</i> 所需要的时间。"
+          book_comparison: "您在本站上阅读了 <code>%{readingTime}</code> ！这相当于您阅读完 <i>%{bookTitle}</i> 所需要的时间。"
+          book_comparison_others: "%{username} 在我们网站上花了 <code>%{readingTime}</code> 阅读时间！这相当于阅读完 <i>%{bookTitle}</i> 这本书所需的时间。"
         post_used_reactions:
           title: 话题中最常用的回应
           total_number: "回应总数： %{count}"
@@ -41,20 +60,29 @@ zh_CN:
           title: 收到最多回应的主题
         fbff:
           title: 你的论坛挚友 (Forum Best FriendForever)
+          title_others: "%{username} 的论坛挚友"
         most_viewed_categories:
           title:
             other: 你最常浏览的 %{count} 个分类
+          title_others:
+            other: "%{username} 的 %{count} 个最常浏览的分类"
         most_viewed_tags:
           title:
             other: 你最常浏览的 %{count} 个标签
+          title_others:
+            other: "%{username} 的 %{count} 个最常浏览的标签"
         best_topics:
           view_topic: 查看话题
           title:
             other: 你最优秀的 %{count} 个话题
+          title_others:
+            other: "%{username} 的 %{count} 个最佳话题"
         best_posts:
           view_post: 查看帖子
           title:
             other: 你最优秀的 %{count} 个帖子
+          title_others:
+            other: "%{username} 的 %{count} 个最佳帖子"
         ai_usage:
           title: AI 使用
           total_requests: 总请求数
@@ -69,6 +97,7 @@ zh_CN:
         assignments:
           title: 指定
           total_assigned: 指定给我
+          total_assigned_others: 分配给他们
           completed: 指定已完成
           pending: 待指定的任务
           assigned_by_user: 已指定的任务
@@ -83,20 +112,29 @@ zh_CN:
           favorite_channels: 最喜欢的频道
           messages: 消息
           bot_name: XxRewindBotxX
-          you: 您
+          author: 您
+          author_others: "%{username}"
           channel_title: "#聊天活动"
           status_online: "● 在线"
           message_1: "今年你发送了 <strong>%{count}</strong> 条消息！"
+          message_1_others: "%{username} 今年发送了 <strong>%{count}</strong> 条消息！"
           reply_1: "lol 超棒的 B-)"
+          message_2: "你与 <strong>%{channel_count}</strong> 位不同的人进行过 <strong>%{dm_count}</strong> 次 DM 对话"
+          message_2_others: "%{username} 与 <strong>%{channel_count}</strong> 个不同的人或群组进行了 <strong>%{dm_count}</strong> 次 DM 对话"
           reply_2: "酷毙了 :D"
           message_3: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
+          message_3_others: "大家都很喜欢这些消息！他们获得了 <strong>%{count}</strong> 个回应 ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "你的平均消息长度为 <strong>%{length}</strong> 个字符"
+          message_4_others: "他们的平均消息长度为 <strong>%{length}</strong> 个字符"
           message_5: "你最喜欢的频道："
+          message_5_others: "他们最喜欢的频道："
           dancing_baby_alt: "跳舞宝宝（Dancing Baby）"
         favorite_gifs:
           title:
             other: 你最喜欢的 %{count} GIF
+          title_others:
+            other: "%{username} 最喜欢的 %{count} 个 GIF"
           total_usage:
             other: 共使用 %{count} 次
         invites:
@@ -106,12 +144,14 @@ zh_CN:
           redemption_rate: 接受率
           avg_trust_level: 平均信任级别
           invitee_impact: 你的受邀者带来的影响
+          invitee_impact_others: 受邀者的影响
           invitee_posts: 创建的帖子
           invitee_topics: 发起的话题数
           invitee_likes: 点赞
           most_active_invitee: 最活跃的受邀者
           guest_book_title: 留言簿
           guest_book_subtitle: 你的社区邀请
+          guest_book_subtitle_others: "%{username} 的社区邀请"
           label_invitations_sent: "已发送邀请:"
           label_guests_joined: "已接受邀请："
           label_acceptance_rate: "接受率:"
@@ -124,6 +164,8 @@ zh_CN:
           title: 指导新用户
           subtitle:
             other: 今年你帮助了 %{count} 位新用户
+          subtitle_others:
+            other: "%{username} 今年帮助了 %{count} 个新用户"
           new_member:
             other: "%{count} 个新成员"
           total_interactions: 总互动次数
@@ -132,10 +174,12 @@ zh_CN:
           replies: 回复帖子
           mentions: 提及
           topics_with_new_users: 有新用户的话题
-          your_contributions_helped: 你的贡献很有帮助
+          contributions_helped: 你的贡献很有帮助
+          contributions_helped_others: 他们的贡献很有帮助
         time_of_day_activity:
           title: 每日活动节奏
           play_button: 以声音播放你的活动
+          play_button_others: 播放他们的活动声音
           stop_button: 停止音频播放
         writing_analysis:
           title: 写作分析

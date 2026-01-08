@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import number from "discourse/helpers/number";
 import { i18n } from "discourse-i18n";
+import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class Assignments extends Component {
   get minimumDataThresholdMet() {
@@ -8,6 +9,14 @@ export default class Assignments extends Component {
       (this.args.report.data.completed > 0 ||
         this.args.report.data.pending > 0) &&
       this.args.report.data.total_assigned > 0
+    );
+  }
+
+  get totalAssignedText() {
+    return i18nForOwner(
+      "discourse_rewind.reports.assignments.total_assigned",
+      this.args.isOwnRewind,
+      { username: this.args.user?.username }
     );
   }
 
@@ -40,7 +49,7 @@ export default class Assignments extends Component {
           <div class="sticky-note --blue --rotate-left-small">
             <div class="sticky-note__content">
               <div class="sticky-note__title">
-                {{i18n "discourse_rewind.reports.assignments.total_assigned"}}
+                {{this.totalAssignedText}}
               </div>
               <div class="sticky-note__value">
                 {{number @report.data.total_assigned}}

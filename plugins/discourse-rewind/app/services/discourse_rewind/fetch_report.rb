@@ -3,14 +3,19 @@
 module DiscourseRewind
   # Service responsible to fetch a single report by index.
   #
+  # NOTE: When changing any report implementations, please
+  # also update FetchReportsHelper::REWIND_REPORT_VERSION
+  # to invalidate caches.
+  #
   # @example
   #  ::DiscourseRewind::FetchReport.call(
   #    guardian: guardian,
-  #    params: { index: 3 }
+  #    params: { index: 3, for_user_username: 'codinghorror' }
   #  )
   #
   class FetchReport
     include Service::Base
+    include DiscourseRewind::FetchReportsHelper
 
     # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
@@ -26,57 +31,28 @@ module DiscourseRewind
       validates :index, presence: true, numericality: { greater_than_or_equal_to: 0 }
     end
 
-    model :for_user
-    model :year
-    model :all_reports
+    model :for_user # see FetchReportsHelper#fetch_for_user
+    model :year # see FetchReportsHelper#fetch_year
+    model :date
     model :report
 
     private
 
-    def fetch_for_user(params:, guardian:)
-      return guardian.user if params.for_user_username.blank?
+    def fetch_date(params:, year:)
+      Date.new(year).all_year
+    end
 
-      user = User.find_by(username: params.for_user_username)
-      return if user.nil?
+    def fetch_report(params:, for_user:, year:, date:)
+      report_class = FetchReports::REPORTS[params.index]
+      return if !report_class
 
-      if guardian.user.id != user.id
-        if !user.discourse_rewind_and_profile_public?
-          return if !guardian.user.admin?
-        end
+      report_name = report_class.name.demodulize
+      report = load_single_report_from_cache(for_user.username, year, report_name)
+      if !report
+        report = report_class.call(date:, user: for_user)
+        cache_single_report(for_user.username, year, report_name, report.as_json)
       end
-
-      user
-    end
-
-    def fetch_year
-      current_date = Time.zone.now
-      current_month = current_date.month
-      current_year = current_date.year
-
-      case current_month
-      when 1
-        current_year - 1
-      when 12
-        current_year
-      else
-        if Rails.env.development?
-          current_year
-        else
-          false
-        end
-      end
-    end
-
-    def fetch_all_reports(for_user:, year:)
-      key = "rewind:#{for_user.username}:#{year}"
-      reports = Discourse.redis.get(key)
-      return nil unless reports
-
-      MultiJson.load(reports, symbolize_keys: true)
-    end
-
-    def fetch_report(all_reports:, params:)
-      all_reports[params.index]
+      report
     end
   end
 end

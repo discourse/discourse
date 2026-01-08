@@ -47,7 +47,7 @@ da:
         disabled: "(deaktiveret)"
         groups: "Grupper:"
         no_groups: "Ingen"
-        edit: "Rediger"
+        edit: "Indstillinger"
         expand_list:
           one: "(%{count} mere)"
           other: "(%{count} mere)"

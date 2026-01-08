@@ -179,6 +179,10 @@ es:
             max_output_tokens:
               label: "Máximo de tokens de salida"
               description: "Cuando se especifica, establece un límite superior para el número máximo de tokens que el modelo puede generar. Respeta el límite máximo de tokens de salida del LLM."
+        llm_tagger:
+          fields:
+            tagger_persona:
+              label: "Personaje de IA"
     discourse_ai:
       title: "IA"
       default_llm:
@@ -199,7 +203,7 @@ es:
         no_llm: "No hay LLM seleccionados"
         no_persona: "No establecido"
         no_groups: "Ninguna"
-        edit: "Editar"
+        edit: "Ajustes"
         expand_list:
           one: "(%{count} más)"
           other: "(%{count} más)"
@@ -543,7 +547,6 @@ es:
         max_output_tokens: "Máximo de tokens de salida"
         url: "URL del servicio que aloja el modelo"
         api_key: "Clave API del servicio que aloja el modelo"
-        enabled_chat_bot: "Permitir selector de bot de IA"
         vision_enabled: "Visión activada"
         ai_bot_user: "Usuario de bot de IA"
         cost_input: "Coste de entrada"
@@ -626,7 +629,6 @@ es:
           display_name: "El nombre utilizado para hacer referencia a este modelo en la interfaz de tu sitio."
           name: "Incluimos esto en la llamada a la API para especificar qué modelo utilizaremos"
           vision_enabled: "Si está activada, la IA intentará comprender las imágenes. Depende del modelo utilizado que soporte la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI."
-          enabled_chat_bot: "Si se activa, los usuarios pueden seleccionar este modelo al crear MP con el bot de IA"
           cost_input: "El coste de entrada por cada millón de tokens para este modelo"
           cost_output: "El coste de salida por cada millón de tokens para este modelo"
           cost_measure: "$/1M tokens"

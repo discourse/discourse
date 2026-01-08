@@ -38,6 +38,8 @@ ru:
           title: "Шрифты"
         colors:
           title: "Цвета"
+        dialog:
+          title: "Диалог"
         icons:
           title: "Значки"
           full_list: "См. полный список значков Font Awesome"
@@ -59,6 +61,8 @@ ru:
           title: "Панель выбора настроек"
         categories_list:
           title: "Список категорий"
+        topic_link:
+          title: "Ссылка на тему и её статус"
         topic_list_item:
           title: "Тема в списке тем"
         topic_statuses:
@@ -67,8 +71,6 @@ ru:
           title: "Список тем"
         basic_topic_list:
           title: "Список тем"
-        footer_message:
-          title: "Содержимое нижнего колонтитула"
         signup_cta:
           title: "Кнопка регистрации (CTA)"
         topic_timer_info:

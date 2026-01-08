@@ -67,8 +67,6 @@ ja:
           title: "トピックリスト"
         basic_topic_list:
           title: "基本トピックリスト"
-        footer_message:
-          title: "フッターメッセージ"
         signup_cta:
           title: "アカウント登録 CTA"
         topic_timer_info:

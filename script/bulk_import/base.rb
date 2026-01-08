@@ -1233,6 +1233,21 @@ class BulkImport::Base
   end
 
   def process_group(group)
+    if (existing_group_id = group[:existing_id]).present?
+      if existing_group_id.is_a?(String) && existing_group_id !~ /^\d+$/
+        existing_group = Group.find_by(name: existing_group_id)
+        existing_group_id = existing_group&.id
+      else
+        existing_group_id = existing_group_id.to_i
+      end
+
+      if existing_group_id && Group.exists?(id: existing_group_id)
+        @groups[group[:imported_id].to_i] = existing_group_id
+        group[:skip] = true
+        return group
+      end
+    end
+
     @groups[group[:imported_id].to_i] = group[:id] = @last_group_id += 1
 
     group[:name] = fix_name(group[:name])
@@ -1454,8 +1469,10 @@ class BulkImport::Base
 
   def process_category(category)
     if (existing_category_id = category[:existing_id]).present?
-      if existing_category_id.is_a?(String)
-        existing_category_id = SiteSetting.get(category[:existing_id])
+      if existing_category_id.is_a?(String) && existing_category_id !~ /^\d+$/
+        existing_category_id = SiteSetting.get(existing_category_id)
+      else
+        existing_category_id = existing_category_id.to_i
       end
 
       @categories[category[:imported_id].to_i] = existing_category_id

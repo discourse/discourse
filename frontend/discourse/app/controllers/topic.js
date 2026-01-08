@@ -34,6 +34,7 @@ import { deepMerge } from "discourse/lib/object";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -43,6 +44,7 @@ import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
+import TopicLocalization from "discourse/models/topic-localization";
 import TopicTimer from "discourse/models/topic-timer";
 import { i18n } from "discourse-i18n";
 
@@ -82,6 +84,9 @@ export default class TopicController extends Controller {
 
   @tracked multiSelect = false;
   @tracked hasScrolled = null;
+  @tracked translationLocale = null;
+  @tracked translationTitle = null;
+  @tracked editingTopicLocalization = false;
   @trackedArray bookmarks = [];
   @trackedArray selectedPostIds = [];
 
@@ -109,6 +114,8 @@ export default class TopicController extends Controller {
   currentPostId = null;
   userLastReadPostNumber = null;
   highestPostNumber = null;
+  _localizationFetchPromise = null;
+  _originalTranslationTitle = null;
   _progressIndex = null;
   _retryInProgress = false;
   _retryRateLimited = false;
@@ -379,24 +386,29 @@ export default class TopicController extends Controller {
       return this.set("editingTopic", true);
     }
 
-    if (this.composer.isOpen) {
-      return;
-    }
-
     const topic = this.model;
-    const firstPost = await topic.firstPost();
 
     if (canEditTitle && !canLocalize) {
-      return this._openComposerForEdit(topic, firstPost);
+      return this.set("editingTopic", true);
     }
 
     if (titleLocalized && !canEditTitle) {
-      return this._openComposerForEditTranslation(topic, firstPost);
+      this._localizationFetchPromise = TopicLocalization.fetch(
+        topic.id,
+        this.currentUser.effective_locale
+      );
+      return this._startEditingTranslation();
     }
 
     if (titleLocalized) {
       const topicLocale = topic.locale;
       const language = this.languageNameLookup.getLanguageName(topicLocale);
+
+      this._localizationFetchPromise = TopicLocalization.fetch(
+        topic.id,
+        this.currentUser.effective_locale
+      );
+
       return this.dialog.alert({
         message: i18n("topic.localizations.title_edit_warning.message", {
           language,
@@ -407,19 +419,34 @@ export default class TopicController extends Controller {
               "topic.localizations.title_edit_warning.action_original"
             ),
             class: "btn-primary",
-            action: () => this._openComposerForEdit(topic, firstPost),
+            action: () => this.set("editingTopic", true),
           },
           {
             label: i18n(
               "topic.localizations.title_edit_warning.action_translation"
             ),
             class: "btn-default",
-            action: () =>
-              this._openComposerForEditTranslation(topic, firstPost),
+            action: () => this._startEditingTranslation(),
           },
         ],
       });
     }
+  }
+
+  async _startEditingTranslation() {
+    this.translationLocale = this.currentUser.effective_locale;
+
+    try {
+      const localization = await this._localizationFetchPromise;
+      this.translationTitle = localization?.title || "";
+      this._originalTranslationTitle = this.translationTitle;
+    } catch {
+      this.translationTitle = "";
+      this._originalTranslationTitle = "";
+    }
+
+    this.editingTopicLocalization = true;
+    this.set("editingTopic", true);
   }
 
   @action
@@ -1209,24 +1236,65 @@ export default class TopicController extends Controller {
   cancelEditingTopic() {
     this.set("editingTopic", false);
     this.buffered.discardChanges();
+    this._resetTranslationState();
   }
 
   @action
-  finishedEditingTopic() {
+  async finishedEditingTopic() {
     if (!this.editingTopic) {
       return;
     }
-
-    // save the modifications
     const props = this.get("buffered.buffer");
+    const hasCategoryOrTagChanges =
+      props.category_id !== undefined || props.tags !== undefined;
 
-    Topic.update(this.model, props, { fastEdit: true })
-      .then(() => {
-        // We roll back on success here because `update` saves the properties to the topic
-        this.buffered.discardChanges();
-        this.set("editingTopic", false);
-      })
-      .catch(popupAjaxError);
+    try {
+      if (this.editingTopicLocalization) {
+        await this._saveTopicLocalization();
+      }
+
+      if (hasCategoryOrTagChanges || !this.editingTopicLocalization) {
+        await Topic.update(this.model, props, { fastEdit: true });
+      }
+
+      this.buffered.discardChanges();
+      this._resetTranslationState();
+      this.set("editingTopic", false);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  async _saveTopicLocalization() {
+    const titleChanged =
+      this.translationTitle !== this._originalTranslationTitle;
+
+    if (!titleChanged) {
+      return;
+    }
+
+    await TopicLocalization.createOrUpdate(
+      this.model.id,
+      this.translationLocale,
+      this.translationTitle
+    );
+
+    if (this.model.fancy_title_localized) {
+      this.model.set(
+        "fancy_title",
+        fancyTitle(
+          this.translationTitle,
+          this.siteSettings.support_mixed_text_direction
+        )
+      );
+    }
+  }
+
+  _resetTranslationState() {
+    this.editingTopicLocalization = false;
+    this.translationLocale = null;
+    this.translationTitle = null;
+    this._localizationFetchPromise = null;
   }
 
   @action

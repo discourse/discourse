@@ -58,8 +58,6 @@ da:
           title: "Emneliste"
         basic_topic_list:
           title: "Grundlæggende Emneliste"
-        footer_message:
-          title: "Sidefod Besked"
         signup_cta:
           title: "Tilmeld CTA"
         topic_timer_info:

@@ -117,7 +117,7 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/ai_helper"
-  ai_helper_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_helper_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     allow_any: false
     type: enum
@@ -155,7 +155,7 @@ discourse_ai:
       - "context_menu"
       - "image_caption"
     area: "ai-features/ai_helper"
-  ai_helper_image_caption_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_helper_image_caption_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     type: enum
     enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
@@ -263,7 +263,7 @@ discourse_ai:
     default: false
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/embeddings"
-  ai_embeddings_semantic_search_hyde_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_embeddings_semantic_search_hyde_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     hidden: true
     default: ""
     type: enum
@@ -365,6 +365,15 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  ai_bot_enabled_llms:
+    default: ""
+    client: true
+    type: list
+    list_type: compact
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    refresh: true
+    area: "ai-features/bot"
   ai_bot_enable_chat_warning:
     default: false
     client: true
@@ -455,6 +464,19 @@ discourse_ai:
   ai_spam_detection_user_id:
     default: ""
     hidden: true
+  ai_spam_detection_max_post_count:
+    default: 3
+    min: 1
+    max: 100
+  ai_spam_detection_max_trust_level:
+    default: 1
+    type: enum
+    choices:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
   ai_rag_images_enabled:
     default: false
     hidden: true
@@ -491,7 +513,7 @@ discourse_ai:
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/translation"
   ai_translation_backfill_hourly_rate:
-    default: 0
+    default: 50
     min: 0
     max: 100000
     client: false

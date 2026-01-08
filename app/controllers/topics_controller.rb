@@ -1119,7 +1119,7 @@ class TopicsController < ApplicationController
       else
         TopicQuery.new(current_user).new_results(limit: false)
       end
-    if tag_name = params[:tag_id]
+    if tag_name = params[:tag_name]
       tag_name = DiscourseTagging.visible_tags(guardian).where(name: tag_name).pluck(:name).first
     end
 

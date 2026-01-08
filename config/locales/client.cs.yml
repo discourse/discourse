@@ -214,7 +214,7 @@ cs:
       el:
         name: Řečtina
       en:
-        name: Angličtina (USA)
+        name: Angličtina
       en_GB:
         name: Angličtina (Velká Británie)
       es:
@@ -1224,6 +1224,7 @@ cs:
           title: Interakce
           posting: Přispívání
           notification: Upozornění
+          self_lockout: "Chystáte se změnit viditelnost skupiny způsobem, který vám odebere přístup. Opravdu chcete pokračovat?"
         email:
           title: "Email"
           status: "Synchronizováno %{old_emails} / %{total_emails} e-mailů přes IMAP."
@@ -1372,6 +1373,8 @@ cs:
         make_owner_description: "Udělat z <b>%{username}</b> vlastníka této skupiny"
         remove_owner: "Odstranit vlastníka"
         remove_owner_description: "Odstranit <b>%{username}</b> z role vlastníka této skupiny"
+        remove_member_self_lockout: "Odebráním se z této skupiny zrušíte svůj přístup k její správě. Opravdu chcete pokračovat?"
+        remove_owner_self_lockout: "Odebráním sebe jako vlastníka zrušíte svůj přístup ke správě této skupiny. Opravdu chcete pokračovat?"
         make_primary: "Nastavit jako primární"
         make_primary_description: "Nastavit jako primární skupinu pro <b>%{username}</b>"
         remove_primary: "Odebrat jako primární"
@@ -3508,6 +3511,7 @@ cs:
           aria_label: Filtrování pomocí štítků
         filters:
           label: Pouze v tématech/příspěvcích, které...
+          all: Zahrnout zprávy
           title: mají hledaný text pouze v názvu
           likes: se mi líbí
           posted: obsahují můj příspěvek
@@ -3752,19 +3756,6 @@ cs:
           unread: "Všechno přečteno... působivé!"
           new_new: "V tuto chvíli nic nového... vraťte se brzy!"
           new: "V tuto chvíli nic nového... vraťte se brzy!"
-      bottom:
-        latest: "Nejsou tu žádná další nejnovější témata."
-        posted: "Nejsou tu žádná další zaslaná témata k přečtení."
-        read: "Nejsou tu žádná další přečtená témata."
-        new: "Nejsou tu žádná další nová témata k přečtení."
-        unread: "Nejsou tu žádná další nepřečtená témata."
-        unseen: "Neexistují žádná další neshlédnutá témata."
-        category: "V kategorii %{category} nejsou žádná další témata."
-        tag: "V kategorii %{tag} nejsou žádná další témata."
-        top: "Nejsou tu žádná další populární témata."
-        hot: "Nejsou tu žádná další žhavá témata."
-        bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
-        filter: "Nejsou zde žádná další témata."
     topic_bulk_actions:
       dismiss:
         name: "Označit jako přečtené"
@@ -3912,9 +3903,6 @@ cs:
         other: "%{count} odpovědí, přejít na první příspěvek"
       created_at: "Vytvořeno: %{date}"
       bumped_at: "Poslední: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Projděte všechny kategorie</a> nebo <a href='%{basePath}/latest'>zobrazte nejnovější témata</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Projděte všechny kategorie</a>, <a href='%{basePath}/latest'>zobrazte nejnovější témata</a> nebo si prohlédněte nejlepší:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Projděte všechny štítky</a> nebo <a href='%{basePath}/latest'>zobrazte nejnovější témata</a>."
       browse_latest_topics: "Procházet nejnovější témata"
       browse_new_replies: "Procházet nové odpovědi"
       browse_new_topics: "Procházet nová témata"
@@ -4294,9 +4282,10 @@ cs:
       deleted_by_author_simple: "(téma smazáno autorem)"
       localizations:
         title_edit_warning:
-          message: "Tento název tématu je přeložený.<br><br>Chcete upravit původní název v jazyce %{language} nebo upravit tento konkrétní překlad?"
-          action_original: "Upravit původní název tématu"
+          message: "Toto je přeložený název tématu.<br><br>Chcete upravit <b>původní</b> kategorii, štítky a název v jazyce %{language}, nebo upravit tento konkrétní <b>překlad</b>?"
+          action_original: "Upravit originál"
           action_translation: "Upravit přeložený název tématu"
+        editing_translation: "Úprava překladu do %{language}"
     post_list:
       title: "Nejnovější příspěvky"
       empty: "Nejsou zde žádné příspěvky"
@@ -4695,6 +4684,8 @@ cs:
       slug_placeholder: "(Nepovinné) slova s pomlčkou pro URL"
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
+      errors:
+        self_lockout: "Chystáte se změnit oprávnění kategorie tak, že odeberete svůj vlastní přístup. Opravdu chcete pokračovat?"
       name: "Název kategorie"
       untitled: "Nepojmenovaná kategorie"
       description: "Popis"
@@ -5118,6 +5109,7 @@ cs:
         this_month: "Měsíc"
         this_week: "Týden"
         today: "Dnes"
+        custom: "Přizpůsobené"
     custom_homepage:
       admin_message: 'Jeden z vašich motivů má povolený modifikátor "custom_homepage", ale do konektoru [custom-homepage] nic neprodukuje. (Tato zpráva se zobrazuje pouze správcům webu.)'
     browser_update: 'Bohužel, <a href="https://discourse.org/about#browser">váš prohlížeč není podporován</a>. Pro zobrazení bohatého obsahu prosím <a href="https://browsehappy.com">přepněte na podporovaný prohlížeč</a>, přihlaste se a odpovězte.'
@@ -5384,6 +5376,19 @@ cs:
       upload_description: "Nahrajte soubor csv a vytvořte štítky hromadně"
       upload_instructions: "Jeden na řádek, případně se skupinou štítků ve formátu 'název_štítku,skupina_štítků'."
       upload_successful: "Štítky byly úspěšně nahrány"
+      bulk_create_inline_placeholder: "Vytvořte štítky (oddělené čárkami)"
+      bulk_create_button: "Vytvořit"
+      bulk_create_success:
+        one: "Vytvořen %{count} štítek:"
+        few: "Vytvořeny %{count} štítky:"
+        many: "Vytvořeno %{count} štítků:"
+        other: "Vytvořeno %{count} štítků:"
+      bulk_create_already_exist:
+        one: "%{count} štítek již existuje:"
+        few: "%{count} štítky již existují:"
+        many: "%{count} štítků již existuje:"
+        other: "%{count} štítků již existuje:"
+      bulk_create_some_failed: "Některé štítky se nepodařilo vytvořit:"
       delete_unused_confirmation:
         one: "Bude vymazán %{count} štítek: %{tags}"
         few: "Budou vymazány %{count} štítky: %{tags}"
@@ -5548,7 +5553,7 @@ cs:
       tags_form_modal:
         title: "Úprava štítků v postranním panelu"
         filter_placeholder: "Filtrovat štítky"
-        no_tags: "Nebyly nalezeny žádné štítky odpovídající danému výrazu."
+        no_tags: "Aktuálním filtrům neodpovídají žádné štítky."
         subtitle:
           text: "a automaticky zobrazíme nejlepší štítky tohoto webu"
       edit_navigation_modal_form:
@@ -5901,6 +5906,8 @@ cs:
       toggle_localized:
         translated: "Stránka je strojově přeložena. Klepnutím zobrazíte originál."
         not_translated: "Stránka není přeložena. Kepnutím ji přeložíte."
+    language_switcher:
+      title: "Změna jazyka webu"
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
@@ -6738,6 +6745,7 @@ cs:
               recover: Obnovit téma.
               read_lists: Čtěte seznamy témat, jako jsou nejlepší, nové, nejnovější atd. Podporována je také služba RSS.
               status: "Aktualizujte stav tématu. Stav: uzavřeno, archivováno, viditelné, připnuto. Povoleno: true, false. Zadejte category_id zde a v datové části požadavku, abyste povolili změny stavu pouze u témat v dané kategorii."
+              change_owner: Změna vlastnictví příspěvků v tématu.
             posts:
               edit: Upravte jakýkoli příspěvek nebo konkrétní příspěvek.
               delete: Odstranit příspěvek.
@@ -7497,7 +7505,7 @@ cs:
             error: "Tento motiv byl automaticky deaktivován, protože není kompatibilní s touto verzí Discourse."
             minimum: "Vyžaduje Discourse verze %{version} nebo vyšší."
             maximum: "Vyžaduje verzi Discourse %{version} nebo nižší."
-          update_to_latest: "Aktualizace na nejnovější verzi"
+          update_to_latest: "Aktualizovat na nejnovější verzi"
           check_for_updates: "Zkontrolovat aktualizace"
           updating: "Probíhá aktualizace…"
           update_success: "Aktualizace %{theme} dokončena"
@@ -8703,16 +8711,12 @@ cs:
             prompt: "Změna tohoto nastavení může mít pro váš web dalekosáhlé nebo nezamýšlené důsledky. Opravdu chcete pokračovat?"
             confirm: "Ano, jsem si jistý/á"
           min_password_length:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           min_admin_password_length:
-            prompt: "Chystáte se změnit zásady pro hesla. To bude mít vliv na všechny administrátory, kteří si od nynějška změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           password_unique_charactes:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           block_common_passwords:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
         job_status:
           completed: "Aktualizace dokončena"
@@ -8750,6 +8754,10 @@ cs:
         no_user_badges: "%{name} nezískal/a žádné oznaky."
         no_badges: Nejsou tu žádné odznaky, které by se daly udělit.
         none_selected: "Vyberte odznak, abyste mohli začít"
+        sections:
+          design: Vzhled
+          query: Dotaz
+          settings: Nastavení
         usage_heading: Použití
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát

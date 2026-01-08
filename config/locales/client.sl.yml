@@ -2350,16 +2350,6 @@ sl:
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji %{category} ."
         top: "Ni najboljših tem."
-      bottom:
-        latest: "Ni več najnovejših tem."
-        posted: "Ni več objavljenih tem."
-        read: "Ni več prebranih tem."
-        new: "Ni več novih tem."
-        unread: "Ni več neprebranih tem."
-        category: "Ni več tem v kategoriji %{category}."
-        tag: "Ni več tem z oznako %{tag}."
-        top: "Ni več najboljših tem."
-        bookmarks: "Ni več tem z zaznamki."
     topic_bulk_actions:
       dismiss:
         name: "Opusti"
@@ -3295,6 +3285,7 @@ sl:
         this_month: "Mesec"
         this_week: "Teden"
         today: "Danes"
+        custom: "Po meri"
     permission_types:
       full: "Ustvari / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
@@ -3478,6 +3469,7 @@ sl:
       upload_description: "Naloži datoteko CSV za množično ustvarjanje oznak"
       upload_instructions: "Ena na vrstico, po želji s skupino oznak v formatu 'tag_name,tag_group'."
       upload_successful: "Oznake so bile uspešno naložene"
+      bulk_create_button: "Ustvari"
       delete_unused_confirmation:
         one: "%{count} oznaka bod izbrisana: %{tags}"
         two: "%{count} oznaki bosta izbrisani: %{tags}"
@@ -4791,6 +4783,9 @@ sl:
         no_user_badges: "%{name} ni bila podeljena nobena značka."
         no_badges: Ni značk, ki bi lahko bile podeljene.
         none_selected: "Izberi značko za začetek"
+        sections:
+          query: Poizvedba
+          settings: Nastavitve
         allow_title: Dovoli da se značka uporablja kot naziv
         multiple_grant: Se lahko podeli večkrat
         visibility_heading: Vidljivost

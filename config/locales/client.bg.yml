@@ -2401,17 +2401,6 @@ bg:
         category: "Няма теми в категория %{category}."
         top: "Няма топ теми."
         filter: "Няма теми."
-      bottom:
-        latest: "Няма повече теми в Последни."
-        posted: "Няма повече публикувани теми."
-        read: "Няма повече прочетени теми."
-        new: "Няма повече нови теми."
-        unread: "Няма повече непрочетени теми."
-        category: "Няма повече теми в %{category}"
-        tag: "Няма повече теми в %{tag}"
-        top: "Няма повече топ теми."
-        bookmarks: "Няма теми в Отметки"
-        filter: "Няма повече теми."
     topic_bulk_actions:
       dismiss:
         name: "Отмени"
@@ -3171,6 +3160,7 @@ bg:
         this_month: "Месец"
         this_week: "Седмица"
         today: "Днес"
+        custom: "По избор"
     permission_types:
       full: "Създай / Отговори / Виж"
       create_post: "Отговари / Виж"
@@ -3268,6 +3258,7 @@ bg:
       sort_by_count: "брой"
       sort_by_name: "име"
       manage_groups_description: "Дефинирай групи за организране на етикетите"
+      bulk_create_button: "Създай"
       filters:
         without_category: "%{filter} %{tag} теми"
       notifications:
@@ -4428,6 +4419,8 @@ bg:
         no_user_badges: "%{name} няма присъдени значки."
         no_badges: Няма значки които биха могли да се присъдят.
         none_selected: "Изберете значка за да започнете."
+        sections:
+          settings: Настройки
         allow_title: Позволете значките да бъдат ползвани като титли.
         multiple_grant: Може да бъде присъдена няколко пъти
         visibility_heading: Видимост

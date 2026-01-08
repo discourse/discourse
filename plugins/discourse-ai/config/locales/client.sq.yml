@@ -40,7 +40,7 @@ sq:
         groups: "Grupet:"
         no_persona: "Nuk është vendosur"
         no_groups: "Asnjë"
-        edit: "Redaktoni"
+        edit: "Rregullimet"
         expand_list:
           one: "(%{count} tjetër)"
           other: "(%{count} të tjera)"

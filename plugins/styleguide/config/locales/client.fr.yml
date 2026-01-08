@@ -67,8 +67,6 @@ fr:
           title: "Liste des sujets"
         basic_topic_list:
           title: "Liste des sujets de base"
-        footer_message:
-          title: "Message de pied de page"
         signup_cta:
           title: "CTA d'inscription"
         topic_timer_info:

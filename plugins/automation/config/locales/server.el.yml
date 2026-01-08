@@ -41,3 +41,5 @@ el:
         text: "Τελευταίος έλεγχος από @%{username} %{date_time}"
         summary: Έλεγχος εγγράφου
         button_text: Ολοκληρώθηκε
+      set_topic_timer:
+        title: "Θέσε Χρονοδιακόπτη Νήματος"

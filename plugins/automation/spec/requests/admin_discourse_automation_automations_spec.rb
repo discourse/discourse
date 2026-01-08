@@ -78,9 +78,10 @@ describe DiscourseAutomation::AdminAutomationsController do
           post "/admin/plugins/automation/automations.json", params: { automation: { script: } }
         }.to change { UserHistory.where(custom_type: "create_automation").count }.by(1)
 
-        user_history = UserHistory.last
-        expect(user_history.custom_type).to eq("create_automation")
-        expect(user_history.details).to include("script: #{script}")
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "create_automation",
+          details: a_string_including("script: #{script}"),
+        )
       end
     end
 
@@ -128,11 +129,15 @@ describe DiscourseAutomation::AdminAutomationsController do
               }
         }.to change { UserHistory.where(custom_type: "update_automation").count }.by(1)
 
-        user_history = UserHistory.last
-        expect(user_history.custom_type).to eq("update_automation")
-        expect(user_history.details).to include("id: #{automation.id}")
-        expect(user_history.details).to include("name: #{original_name} → new-name")
-        expect(user_history.details).to include("enabled: true → false")
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "update_automation",
+          details:
+            a_string_including(
+              "id: #{automation.id}",
+              "name: #{original_name} → new-name",
+              "enabled: true → false",
+            ),
+        )
       end
 
       it "logs field changes" do
@@ -168,8 +173,9 @@ describe DiscourseAutomation::AdminAutomationsController do
               }
         }.to change { UserHistory.where(custom_type: "update_automation").count }.by(1)
 
-        user_history = UserHistory.last
-        expect(user_history.details).to include("execute_at: #{original_time} → #{new_time}")
+        expect(UserHistory.last).to have_attributes(
+          details: a_string_including("execute_at: #{original_time} → #{new_time}"),
+        )
       end
 
       it "does not log a staff action when no changes are made" do

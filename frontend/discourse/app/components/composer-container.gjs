@@ -175,7 +175,8 @@ export default class ComposerContainer extends Component {
                       @onClick={{this.composer.displayEditReason}}
                       @showInput={{this.composer.showEditReason}}
                       @icon="circle-info"
-                      class="display-edit-reason"
+                      class="display-edit-reason
+                        {{if this.composer.showEditReason '--active'}}"
                     >
                       <TextField
                         @value={{this.composer.editReason}}

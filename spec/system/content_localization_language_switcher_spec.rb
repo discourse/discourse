@@ -53,7 +53,7 @@ describe "Content localization language switcher", type: :system do
 
     page.refresh
     switcher.expand
-    expect(switcher).to have_content("English (US)")
+    expect(switcher).to have_content("English")
     expect(switcher).to have_content("Japanese (日本語)")
     expect(switcher).to have_content("Spanish (Español)")
 
@@ -160,6 +160,25 @@ describe "Content localization language switcher", type: :system do
         I18n.t("js.content_localization.toggle_localized.translated"),
       )
     end
+  end
+
+  it "marks the current language as selected in the dropdown" do
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/")
+    switcher.expand
+
+    expect(page).to have_css("[data-menu-option-id='en'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='ja'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
+
+    switcher.collapse
+    select_language("ja")
+    switcher.expand
+
+    expect(page).to have_css("[data-menu-option-id='ja'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='en'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
   end
 
   def select_language(locale)

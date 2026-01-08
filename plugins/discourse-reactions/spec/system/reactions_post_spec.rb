@@ -18,6 +18,30 @@ describe "Reactions | Post reactions" do
     sign_in(current_user)
   end
 
+  context "when user has reacted but like_count is 0 and undo window passed" do
+    fab!(:reaction) { Fabricate(:reaction, post: post_2) }
+    fab!(:reaction_user) { Fabricate(:reaction_user, reaction:, user: current_user, post: post_2) }
+    fab!(:post_action) do
+      Fabricate(
+        :post_action,
+        user: current_user,
+        post: post_2,
+        post_action_type_id: PostActionType.types[:like],
+        created_at: 1.day.ago,
+      )
+    end
+
+    before do
+      SiteSetting.post_undo_action_window_mins = 10
+      post_2.update_column(:like_count, 0)
+    end
+
+    it "displays the user's reaction" do
+      visit post_2.url
+      expect(reactions_list).to have_reaction(reaction.reaction_value)
+    end
+  end
+
   it "can do a basic post reaction with a default reaction" do
     visit post_2.url
     reactions_button.hover_like_button(post_2.id)

@@ -35,6 +35,10 @@ export function splitString(str, separator = ",") {
   }
 }
 
+export function stripDiscoursePrefix(text) {
+  return (text || "").replace(/^discourse[\s-]+/i, "");
+}
+
 export function escapeExpression(string) {
   if (!string) {
     return "";

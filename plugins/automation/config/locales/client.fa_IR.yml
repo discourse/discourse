@@ -186,6 +186,8 @@ fa_IR:
           fields:
             custom_field_name:
               label: "نام فیلد سفارشی کاربر"
+        set_topic_timer:
+          title: تنظیم تایمر موضوع
       models:
         script:
           name:

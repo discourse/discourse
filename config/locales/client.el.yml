@@ -154,7 +154,7 @@ el:
       el:
         name: Ελληνικά
       en:
-        name: Αγγλικά (ΗΠΑ)
+        name: Αγγλικά
       en_GB:
         name: Αγγλικά (Ηνωμένο Βασίλειο)
       es:
@@ -2983,19 +2983,6 @@ el:
         top: "Δεν υπάρχουν κορυφαία θέματα."
         hot: "Δεν υπάρχουν καυτά θέματα."
         filter: "Δεν υπάρχουν θέματα."
-      bottom:
-        latest: "Δεν υπάρχουν άλλα πρόσφατα θέματα."
-        posted: "Δεν υπάρχουν άλλα αναρτημένα θέματα."
-        read: "Δεν υπάρχουν άλλα διαβασμένα θέματα."
-        new: "Δεν υπάρχουν άλλα νέα θέματα."
-        unread: "Δεν υπάρχουν άλλα αδιάβαστα θέματα."
-        unseen: "Δεν υπάρχουν άλλα αδιάβαστα θέματα."
-        category: "Δεν υπάρχουν άλλα θέματα στην κατηγορία %{category}."
-        tag: "Δεν υπάρχουν άλλα θέματα με ετικέτα %{tag}."
-        top: "Δεν υπάρχουν άλλα δημοφιλή θέματα."
-        hot: "Δεν υπάρχουν άλλα καυτά θέματα."
-        bookmarks: "Δεν υπάρχουν άλλα θέματα με σελιδοδείκτη."
-        filter: "Δεν υπάρχουν άλλα θέματα."
     topic_bulk_actions:
       dismiss:
         name: "Απόρριψη"
@@ -3114,9 +3101,6 @@ el:
         other: "%{count} απαντήσεις, μετάβαση στην πρώτη ανάρτηση"
       created_at: "Δημιουργήθηκε: %{date}"
       bumped_at: "Πρόσφατα: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Περιηγηθείτε σε όλες τις κατηγορίες</a> ή <a href='%{basePath}/latest'>δείτε τα τελευταία θέματα</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Περιηγηθείτε σε όλες τις κατηγορίες</a>, <a href='%{basePath}/latest'>δείτε τα τελευταία θέματα</a> ή δείτε τα κορυφαία:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Περιηγηθείτε σε όλες τις ετικέτες</a> ή <a href='%{basePath}/latest'>δείτε τα τελευταία θέματα</a>."
       browse_latest_topics: "Περιηγηθείτε στα πιο πρόσφατα θέματα"
       browse_new_replies: "Περιήγηση νέων απαντήσεων"
       browse_new_topics: "Περιήγηση νέων θεμάτων"
@@ -4047,6 +4031,7 @@ el:
         this_month: "Μήνας"
         this_week: "Εβδομάδα"
         today: "Σήμερα"
+        custom: "Προσαρμοσμένο"
     permission_types:
       full: "Δημιούργησε / Απάντησε / Δες"
       create_post: "Απάντησε / Δες"
@@ -4278,6 +4263,7 @@ el:
       upload_description: "Επιφορτώστε ένα αρχείο csv για να δημιουργήσετε ετικέτες μαζικά"
       upload_instructions: "Μία ανά γραμμή, προαιρετικά με μια ομάδα ετικετών με τη μορφή «tag_name, tag_group»."
       upload_successful: "Οι ετικέτες επιφορτώθηκαν με επιτυχία"
+      bulk_create_button: "Δημιουργία"
       delete_unused_confirmation:
         one: "%{count} ετικέτα θα διαγραφεί: %{tags}"
         other: "%{count} ετικέτες θα διαγραφούν: %{tags}"
@@ -6242,6 +6228,8 @@ el:
         no_user_badges: "Στο χρήστη %{name} δεν έχουν απονεμηθεί παράσημα."
         no_badges: Δεν υπάρχουν παράσημα που να μπορούν να απονεμηθούν.
         none_selected: "Διάλεξε ένα παράσημο για να ξεκινήσεις"
+        sections:
+          settings: Ρυθμίσεις
         allow_title: Το παράσημο μπορεί να χρησιμοποιηθεί σαν τίτλος
         multiple_grant: Μπορεί να απονεμηθεί πολλές φορές
         visibility_heading: Ορατότητα

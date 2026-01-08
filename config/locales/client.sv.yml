@@ -2714,19 +2714,6 @@ sv:
         top: "Det finns inga toppämnen."
         hot: "Det finns inga heta ämnen."
         filter: "Det finns inga ämnen."
-      bottom:
-        latest: "Det finns inga fler senaste ämnen."
-        posted: "Det finns inga fler postade ämnen."
-        read: "Det finns inga fler lästa ämnen."
-        new: "Det finns inga fler nya ämnen."
-        unread: "Det finns inga fler olästa ämnen."
-        unseen: "Det finns inga fler osedda ämnen."
-        category: "Det finns inga fler ämnen i %{category}."
-        tag: "Det finns inga fler %{tag}-ämnen."
-        top: "Det finns inga fler toppämnen."
-        hot: "Det finns inte fler heta ämnen."
-        bookmarks: "Inga fler bokmärkta ämnen hittades."
-        filter: "Det finns inga fler ämnen."
     topic_bulk_actions:
       dismiss:
         name: "Avfärda"
@@ -2832,9 +2819,6 @@ sv:
         }
       created_at: "Skapad: %{date}"
       bumped_at: "Senaste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
       jump_reply: "Hoppa till inläggets ursprungliga plats"
       jump_reply_aria: "Hoppa till @%{username}s inlägg på dess ursprungliga plats"
@@ -3776,6 +3760,7 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
+        custom: "Anpassad"
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -3978,6 +3963,7 @@ sv:
       upload_description: "Ladda upp en csv-fil för att skapa taggar på bulk."
       upload_instructions: "En per rad, alternativt med en tagg-grupp i formatet 'tag_name,tag_group'."
       upload_successful: "Lyckad uppladdning av taggar"
+      bulk_create_button: "Skapa"
       delete_unused_confirmation:
         one: "%{count} tagg kommer att raderas: %{tags}"
         other: "%{count} taggar kommer att raderas: %{tags}"
@@ -4121,7 +4107,6 @@ sv:
       tags_form_modal:
         title: "Redigera taggnavigering"
         filter_placeholder: "Filtrera taggar"
-        no_tags: "Det finns inga taggar som matchar den angivna termen."
         subtitle:
           text: "så visar vi automatiskt den här webbplatsens topptaggar"
       edit_navigation_modal_form:
@@ -6192,6 +6177,9 @@ sv:
         no_user_badges: "%{name} har inte beviljats några utmärkelser."
         no_badges: Det finns inga utmärkelser som kan utfärdas.
         none_selected: "Välj en utmärkelse för att komma igång"
+        sections:
+          query: Sökning
+          settings: Inställningar
         allow_title: Tillåt att utmärkelse används som titel
         multiple_grant: Kan utfärdas flera gånger
         visibility_heading: Synlighet

@@ -158,3 +158,5 @@ ar:
       random_assign:
         title: "تعيين عشوائي"
         description: "تعيين الموضوعات عشوائيًا إلى مجموعة"
+      set_topic_timer:
+        title: "تعيين مؤقِّت للموضوع"

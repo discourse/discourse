@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { not } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import CategoryPermissionRow from "discourse/components/category-permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -13,6 +14,8 @@ import { i18n } from "discourse-i18n";
 export default class EditCategorySecurity extends buildCategoryPanel(
   "security"
 ) {
+  @service site;
+
   selectedGroup = null;
 
   @not("selectedGroup") noGroupSelected;
@@ -38,9 +41,10 @@ export default class EditCategorySecurity extends buildCategoryPanel(
 
   @action
   onSelectGroup(group_name) {
+    const group = this.site.groups.find((g) => g.name === group_name);
     this.category.addPermission({
       group_name,
-      group_id: AUTO_GROUPS[group_name]?.id,
+      group_id: group?.id,
       permission_type: this.minimumPermission,
     });
   }

@@ -573,6 +573,9 @@ basic:
     default: false
     hidden: true
     client: true
+  trigger_browser_pageview_events:
+    default: false
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
@@ -994,6 +997,11 @@ users:
     default: 15
     min: 1
     area: "users"
+  delete_all_posts_background_threshold:
+    client: true
+    default: 200
+    min: 1
+    area: "users"
   delete_user_self_max_post_count:
     default: 1
     min: -1
@@ -1100,6 +1108,7 @@ users:
     min: 0
     max: 36500
     area: "users"
+    requires_confirmation: "simple"
   clean_up_unused_staged_users_after_days:
     default: 365
     min: 0
@@ -3110,6 +3119,10 @@ developer:
   viewport_based_mobile_mode:
     default: true
     client: true
+  site_setting_verbose_client_logging:
+    default: false
+    client: true
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -4151,6 +4164,9 @@ experimental:
     hidden: true
     client: true
     area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -4195,6 +4211,10 @@ experimental:
     type: group_list
     default: ""
     area: "experimental"
+    hidden: true
+  force_old_reviewable_ui:
+    client: true
+    default: false
     hidden: true
   reviewable_old_moderator_actions:
     default: true

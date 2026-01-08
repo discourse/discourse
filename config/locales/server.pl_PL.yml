@@ -150,6 +150,8 @@ pl_PL:
         invalid_type: "%{type} nie jest prawidłowym typem"
         humanize_not_valid_string_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być ciągiem znaków."
         not_valid_string_value: "musi być ciągiem znaków"
+        humanize_not_valid_datetime_value: "Właściwość wskaźnika JSON „%{property_json_pointer}” musi być prawidłową wartością daty i godziny."
+        not_valid_datetime_value: "musi być prawidłową datą i godziną"
         humanize_not_valid_integer_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być liczbą całkowitą."
         not_valid_integer_value: "musi być liczbą całkowitą"
         humanize_not_valid_float_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być typu float."
@@ -893,6 +895,11 @@ pl_PL:
       email_already_used_in_group: "'%{email}' jest już używany przez grupę '%{group_name}'."
       email_already_used_in_category: "'%{email}' jest już używany przez kategorię '%{category_name}'."
       description_incomplete: "Wpis opisujący kategorię musi mieć przynajmniej jeden paragraf."
+      description_too_long:
+        one: "Opis jest zbyt długi (maksymalnie %{count} znak)."
+        few: "Opis jest zbyt długi (maksymalnie %{count} znaki)."
+        many: "Opis jest zbyt długi (maksymalnie %{count} znaków)."
+        other: "Opis jest zbyt długi (maksymalnie %{count} znaków)."
       permission_conflict: "Grupa posiadająca dostęp do podkategorii musi mieć także dostęp do jej kategorii nadrzędnej. Grupy %{group_names} mają dostęp do jednej z podkategorii, ale nie do grupy nadrzędnej."
       disallowed_topic_tags: "Ten temat zawiera tagi %{tags}, które nie są dozwolone w tej kategorii"
       disallowed_tags_generic: "W tym temacie niedozwolone są tagi."
@@ -1285,11 +1292,14 @@ pl_PL:
       every_month: "każdego miesiąca"
       every_six_months: "co 6 miesięcy"
   user_api_key:
-    title: "Zezwolić na dostęp aplikacji"
+    title: 'Autoryzuj "%{application_name}"'
     authorize: "Autoryzuj"
+    deny: "Anuluj"
     read: "odczyt"
     read_write: "odzczyt/zapis"
-    description: '"%{application_name}" prosi o następujący dostęp do twojego konta:'
+    logged_in_as: "Zalogowano jako"
+    permissions_header: 'Pozwoli to "%{application_name}" na:'
+    redirect_warning: "Autoryzacja przekieruje Cię do"
     instructions: 'Wygenerowaliśmy nowy klucz API użytkownika do korzystania z "%{application_name}", skopiuj następujący klucz do swoje aplikacji:'
     otp_description: 'Czy zezwalasz "%{application_name}" na dostęp do tej strony?'
     otp_confirmation:
@@ -2627,6 +2637,7 @@ pl_PL:
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
+      invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
       invalid_email: "Nieprawidłowy adres e-mail."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
       valid_username: "Istnieje użytkownik o tej nazwie."
@@ -5199,6 +5210,11 @@ pl_PL:
       many: "Musisz wybrać co najmniej %{count} tagów."
       other: "Musisz wybrać co najmniej %{count} tagów."
     upload_row_too_long: "Plik CSV powinien zawierać jeden tag w każdym wierszu. Opcjonalnie po tagu można umieścić przecinek, a następnie nazwę grupy tagów."
+    bulk_create:
+      invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
+      invalid_name: "Nieprawidłowa nazwa tagu."
+      tag_too_long: "Tag jest za długi (maksymalnie %{max} znaków)."
+      too_many_tags: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{max} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
     forbidden:
       invalid:
         one: "Nie można użyć wybranego tagu"
@@ -5235,6 +5251,9 @@ pl_PL:
   rss_by_tag: "Tematy otagowane %{tag}"
   finish_installation:
     congratulations: "Gratulacje, zainstalowałeś/łaś Discourse!"
+    login_with_discourse_id: "Zaloguj się przez Discourse ID"
+    discourse_id_help: "Zaloguj się przy użyciu identyfikatora Discourse ID, korzystając z poniższego przycisku. <br/><br/>Upewnij się, że używasz konta Discourse ID z głównym adresem e-mail, który odpowiada zmiennej środowiskowej `DISCOURSE_DEVELOPER_EMAILS`."
+    discourse_id_error_help: "Zdecydowałeś się na razie pominąć konfigurację poczty e-mail. Niestety, z powodu powyższego komunikatu o błędzie, konfiguracja nie może być kontynuowana. Zgłoś ten problem na <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Zarejestruj"
       title: "Zarejestrowano konto administratora"
@@ -5246,6 +5265,10 @@ pl_PL:
     resend_email:
       title: "Ponowne przesyłanie emaila aktywacyjnego"
       message: "<p>Powtórnie przesłaliśmy e-maila aktywacyjnego do <b>%{email}</b>"
+    discourse_id:
+      help: "Konfigurujemy teraz Discourse ID."
+      no_allowed_emails: "Brak dozwolonych adresów e-mail skonfigurowanych w DISCOURSE_DEVELOPER_EMAILS. Nie można kontynuować konfiguracji witryny."
+      global_notice: "Żaden administrator jeszcze się nie zalogował. Zaloguj się, używając konta Discourse ID i adresu e-mail zgodnego ze zmienną środowiskową `DISCOURSE_DEVELOPER_EMAILS`, aby dokończyć instalację."
   safe_mode:
     title: "Wejście w tryb bezpieczny"
     description: "Tryb bezpieczny umożliwia testowanie witryny bez ładowania motywów i wtyczek po stronie klienta. Wtyczki po stronie serwera pozostają włączone."

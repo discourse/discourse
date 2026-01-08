@@ -1698,16 +1698,6 @@ et:
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemat."
         category: "Kategoorias %{category} teemad puuduvad."
         top: "Tippteemad puuduvad."
-      bottom:
-        latest: "Rohkem värskeid teemasid pole."
-        posted: "Rohkem uute postitustega teemasid pole."
-        read: "Rohkem loetud teemasid pole."
-        new: "Rohkem uusi teemasid pole."
-        unread: "Rohkem lugemata teemasid pole."
-        category: "Kategoorias %{category} rohkem teemasid pole."
-        tag: "Rohkem teemasid sildiga %{tag} pole."
-        top: "Rohkem tippteemasid pole."
-        bookmarks: "Rohkem järjehoidjaga teemasid pole."
     topic_bulk_actions:
       dismiss:
         name: "Ignoreeri"
@@ -2453,6 +2443,7 @@ et:
         this_month: "Kuu"
         this_week: "Nädal"
         today: "Täna"
+        custom: "Individuaalne"
     permission_types:
       full: "Loo / vasta / vaata"
       create_post: "Vasta / vaata"
@@ -2550,6 +2541,7 @@ et:
       sort_by_name: "nimi"
       manage_groups: "Halda sildirühmi"
       manage_groups_description: "Määra siltide organiseerimiseks rühmad"
+      bulk_create_button: "Loo"
       filters:
         without_category: "%{filter} %{tag} teemat"
         with_category: "%{filter} teemad sildiga %{tag} kategoorias %{category}"
@@ -3803,6 +3795,8 @@ et:
         no_user_badges: "%{name} ei ole saanud veel ühtegi märgist."
         no_badges: Ei ole ühtegi märgist, mida saaks anda.
         none_selected: "Vali märgis, et alustada"
+        sections:
+          settings: Seaded
         allow_title: Luba märgise kasutamist tiitlina
         multiple_grant: Võib olla määratud mitmeid kordi
         visibility_heading: Nähtavus

@@ -35,6 +35,8 @@ RSpec.describe DiscourseAutomation::Update do
     end
 
     context "when everything's ok" do
+      it { is_expected.to run_successfully }
+
       it "updates the automation" do
         expect { result }.to change { automation.reload.name }.from("Original Name").to("New Name")
       end
@@ -43,15 +45,13 @@ RSpec.describe DiscourseAutomation::Update do
         expect { result }.to change {
           UserHistory.where(custom_type: "update_automation").count
         }.by(1)
-
-        user_history = UserHistory.last
-        expect(user_history.details).to include("id: #{automation.id}")
-        expect(user_history.details).to include("name: Original Name → New Name")
+        expect(UserHistory.last).to have_attributes(
+          details: a_string_including("id: #{automation.id}", "name: Original Name → New Name"),
+        )
       end
 
       it "does not log when no changes are made" do
         params[:name] = automation.name
-
         expect { result }.not_to change {
           UserHistory.where(custom_type: "update_automation").count
         }
@@ -61,14 +61,17 @@ RSpec.describe DiscourseAutomation::Update do
     context "when changing enabled state" do
       let(:params) { { automation_id: automation.id, enabled: false } }
 
+      it { is_expected.to run_successfully }
+
       it "updates the enabled state" do
         expect { result }.to change { automation.reload.enabled }.from(true).to(false)
       end
 
       it "logs the change" do
         result
-        user_history = UserHistory.last
-        expect(user_history.details).to include("enabled: true → false")
+        expect(UserHistory.last).to have_attributes(
+          details: a_string_including("enabled: true → false"),
+        )
       end
     end
 
@@ -90,12 +93,8 @@ RSpec.describe DiscourseAutomation::Update do
 
       it "clears fields and disables automation" do
         expect(automation.fields).not_to be_empty
-
         result
-        automation.reload
-        expect(automation.enabled).to eq(false)
-        expect(automation.fields).to be_empty
-        expect(automation.trigger).to be_nil
+        expect(automation.reload).to have_attributes(enabled: false, trigger: nil, fields: [])
       end
     end
 
@@ -131,6 +130,8 @@ RSpec.describe DiscourseAutomation::Update do
         )
       end
 
+      it { is_expected.to run_successfully }
+
       it "updates the field" do
         result
         automation.reload
@@ -139,8 +140,9 @@ RSpec.describe DiscourseAutomation::Update do
 
       it "logs field changes" do
         result
-        user_history = UserHistory.last
-        expect(user_history.details).to include("execute_at: #{original_time} → #{new_time}")
+        expect(UserHistory.last).to have_attributes(
+          details: a_string_including("execute_at: #{original_time} → #{new_time}"),
+        )
       end
     end
   end

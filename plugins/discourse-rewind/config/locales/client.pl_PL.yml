@@ -21,7 +21,7 @@ pl_PL:
       cannot_view_rewind: >
         Nie możesz wyświetlić tego raportu Discourse Rewind. Być może właściciel nie udostępnił go publicznie?<br><br> $> _<br><br>
       preferences:
-        disable_rewind: "Wyłącz funkcję Discourse Rewind. Spowoduje to ukrycie podsumowania aktywności na koniec roku w Twoim profilu i awatarze."
+        enable_rewind: "Włącz funkcję Discourse Rewind. Dzięki temu podsumowanie aktywności na koniec roku będzie widoczne w Twoim profilu i awatarze."
         share_publicly: "Udostępnij podsumowanie Discourse Rewind innym członkom forum. Każdy członek forum będzie mógł zobaczyć Twoje podsumowanie Discourse Rewind."
         cannot_share_when_profile_hidden: "Aby udostępnić Rewind musisz zezwolić innym na oglądanie Twojego profilu publicznego."
       profile_link: "Zobacz swój %{rewindYear} Discourse Rewind"
@@ -40,17 +40,25 @@ pl_PL:
           title: Kalendarz aktywności
           cell_title:
             visited_no_posts: "Odwiedziłeś i śledziłeś %{date}, ale nie zamieściłeś żadnych postów."
+            visited_no_posts_others: "%{username} odwiedził i obserwował %{date}, ale nie zamieścił żadnych wpisów."
             visited_with_posts:
               one: "Dodałeś %{count} wpis w dniu %{date}."
               few: "Dodałeś %{count} wpisy w dniu %{date}."
               many: "Dodałeś %{count} wpisów w dniu %{date}."
               other: "Dodałeś %{count} wpisów w dniu %{date}."
+            visited_with_posts_others:
+              one: "%{username} dodał(a) %{count} wpis w dniu %{date}."
+              few: "%{username} dodał(a) %{count} wpisy w dniu %{date}."
+              many: "%{username} dodał(a) %{count} wpisów w dniu %{date}."
+              other: "%{username} dodał(a) %{count} wpisów w dniu %{date}."
             no_activity: "Nie było Cię dnia %{date}."
+            no_activity_others: "%{username} nie było w dniu %{date}."
         top_words:
           title: Użycie słów
         reading_time:
           title: Czas odczytu
-          book_comparison: "Spędziłeś <code>%{readingTitme}</code> czytając na naszej stronie! Tyle czasu zajęłoby przeczytanie <i>%{bookTitle}</i>"
+          book_comparison: "Spędziłeś <code>%{readingTime}</code> czytając na naszej stronie! Tyle czasu zajęłoby przeczytanie <i>%{bookTitle}</i>"
+          book_comparison_others: "%{username} spędził(a) <code>%{readingTime}</code> czytając na naszej stronie! Tyle czasu zajęłoby przeczytanie <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Najczęściej używane reakcje w tematach
           total_number: "Całkowita liczba reakcji: %{count}"
@@ -58,18 +66,29 @@ pl_PL:
           title: Najczęściej otrzymywane reakcje w tematach
         fbff:
           title: Twój FBFF (forumowy najlepszy przyjaciel na zawsze)
+          title_others: "%{username} to FBFF (Forum Best Friend Forever)"
         most_viewed_categories:
           title:
             one: Twoja najczęściej oglądana kategoria
             few: Twoje %{count} najczęściej oglądane kategorie
             many: Twoje %{count} najczęściej oglądanych kategorii
             other: Twoje %{count} najczęściej oglądanych kategorii
+          title_others:
+            one: "Najchętniej oglądana kategoria %{username}"
+            few: "%{count} najchętniej oglądane kategorie %{username}"
+            many: "%{count} najchętniej oglądanych kategorii %{username}"
+            other: "%{count} najchętniej oglądanych kategorii %{username}"
         most_viewed_tags:
           title:
             one: Twój najczęściej oglądany tag
             few: Twoje %{count} najczęściej oglądane tagi
             many: Twoich %{count} najczęściej oglądanych tagów
             other: Twoich %{count} najczęściej oglądanych tagów
+          title_others:
+            one: "Najchętniej oglądany tag %{username}"
+            few: "%{count} najchętniej oglądane tagi %{username}"
+            many: "%{count} najchętniej oglądanych tagów %{username}"
+            other: "%{count} najchętniej oglądanych tagów %{username}"
         best_topics:
           view_topic: Zobacz temat
           title:
@@ -77,6 +96,11 @@ pl_PL:
             few: Twoje %{count} najlepsze tematy
             many: Twoich %{count} najlepszych tematów
             other: Twoich %{count} najlepszych tematów
+          title_others:
+            one: "Najlepszy temat %{username}"
+            few: "%{count} najlepsze tematy %{username}"
+            many: "%{count} najlepszych tematów %{username}"
+            other: "%{count} najlepszych tematów %{username}"
         best_posts:
           view_post: Zobacz wpis
           title:
@@ -84,6 +108,11 @@ pl_PL:
             few: Twoje %{count} najlepsze wpisy
             many: Twoich %{count} najlepszych wpisów
             other: Twoich %{count} najlepszych wpisów
+          title_others:
+            one: "Najlepszy wpis %{username}"
+            few: "%{count} najlepsze wpisy %{username}"
+            many: "%{count} najlepszych wpisów %{username}"
+            other: "%{count} najlepszych wpisów %{username}"
         ai_usage:
           title: Wykorzystanie AI
           total_requests: Łączna liczba żądań
@@ -98,6 +127,7 @@ pl_PL:
         assignments:
           title: Przypisania
           total_assigned: Przypisane do mnie
+          total_assigned_others: Przypisane do nich
           completed: Przypisania zakończone
           pending: Przypisania oczekujące
           assigned_by_user: Przypisania przydzielone
@@ -112,17 +142,23 @@ pl_PL:
           favorite_channels: Ulubione kanały
           messages: wiadomości
           bot_name: XxRewindBotxX
-          you: Ty
+          author: Ty
+          author_others: "%{username}"
           channel_title: "#chat-activity"
           status_online: "● dostępny"
           message_1: "W tym roku wysłałeś <strong>%{count}</strong> wiadomości!"
+          message_1_others: "%{username} wysłał(a) <strong>%{count}</strong> wiadomości w tym roku!"
           reply_1: "lol super B-)"
           message_2: "Prowadziłeś <strong>%{dm_count}</strong> rozmowy na PW z <strong>%{channel_count}</strong> różnymi osobami lub grupami"
+          message_2_others: "%{username} miał(a) <strong>%{dm_count}</strong> rozmowy na DM z <strong>%{channel_count}</strong> różnymi osobami lub grupami"
           reply_2: "super :D"
           message_3: "Ludzie uwielbiali Twoje wiadomości! Otrzymałeś <strong>%{count}</strong> reakcji ❤️"
+          message_3_others: "Ludzie pokochali ich wiadomości! Otrzymali <strong>%{count}</strong> reakcji ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "Twoja średnia długość wiadomości wynosiła <strong>%{length}</strong> znaków"
+          message_4_others: "Ich średnia długość wiadomości wynosiła <strong>%{length}</strong> znaków"
           message_5: "Twoje ulubione kanały:"
+          message_5_others: "Ich ulubione kanały:"
           dancing_baby_alt: "Tańczące dziecko"
         favorite_gifs:
           title:
@@ -130,6 +166,11 @@ pl_PL:
             few: Twoje %{count} ulubione GIF-y
             many: Twoich %{count} ulubionych GIF-ów
             other: Twoich %{count} ulubionych GIF-ów
+          title_others:
+            one: "Ulubiony GIF %{username}"
+            few: "%{count} ulubione GIF-y %{username}"
+            many: "%{count} ulubionych GIF-ów %{username}"
+            other: "%{count} ulubionych GIF-ów %{username}"
           total_usage:
             one: Wykorzystano %{count} raz
             few: Wykorzystano %{count} razy
@@ -142,12 +183,14 @@ pl_PL:
           redemption_rate: Współczynnik akceptacji
           avg_trust_level: Średni poziom zaufania
           invitee_impact: Wpływ zaproszonych osób
+          invitee_impact_others: Wpływ zaproszonych osób
           invitee_posts: Napisane wpisy
           invitee_topics: Rozpoczęte tematy
           invitee_likes: Polubienia
           most_active_invitee: Najbardziej aktywny zaproszony
           guest_book_title: Księga gości
           guest_book_subtitle: Zaproszenia do Twojej społeczności
+          guest_book_subtitle_others: "Zaproszenia społecznościowe użytkownika %{username}"
           label_invitations_sent: "Zaproszenia wysłane:"
           label_guests_joined: "Przyjęte zaproszenia:"
           label_acceptance_rate: "Współczynnik akceptacji:"
@@ -163,6 +206,11 @@ pl_PL:
             few: Pomogłeś %{count} nowym użytkownikom w tym roku
             many: Pomogłeś %{count} nowym użytkownikom w tym roku
             other: Pomogłeś %{count} nowym użytkownikom w tym roku
+          subtitle_others:
+            one: "%{username} pomógł %{count} nowemu użytkownikowi w tym roku"
+            few: "%{username} pomógł %{count} nowym użytkownikom w tym roku"
+            many: "%{username} pomógł %{count} nowym użytkownikom w tym roku"
+            other: "%{username} pomógł %{count} nowym użytkownikom w tym roku"
           new_member:
             one: "%{count} nowy członek"
             few: "%{count} nowych członków"
@@ -174,10 +222,12 @@ pl_PL:
           replies: Odpowiedzi na wpisy
           mentions: Wzmianki
           topics_with_new_users: Tematy z nowymi użytkownikami
-          your_contributions_helped: twój wkład pomógł
+          contributions_helped: twój wkład pomógł
+          contributions_helped_others: ich wkład pomógł
         time_of_day_activity:
           title: Codzienny rytm aktywności
           play_button: Odtwórz swoją aktywność jako dźwięk
+          play_button_others: Odtwórz ich aktywność jako dźwięk
           stop_button: Zatrzymaj odtwarzanie dźwięku
         writing_analysis:
           title: Analiza pisemna
