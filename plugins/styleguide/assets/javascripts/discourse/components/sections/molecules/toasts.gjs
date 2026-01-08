@@ -15,9 +15,15 @@ import Row from "discourse/plugins/styleguide/discourse/components/styleguide/co
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 const ToastCustomComponent = <template>
-  <div
-    style="background-color: var(--secondary); padding: var(--space-4); border-radius: var(--d-border-radius-large); box-shadow: var(--shadow-card);"
-  >
+  <style>
+    .my-custom-component {
+      background-color: var(--secondary);
+      padding: var(--space-4);
+      border-radius: var(--d-border-radius-large);
+      box-shadow: var(--shadow-card);
+    }
+  </style>
+  <div class="my-custom-component" ...attributes>
     My custom component with foo: My custom component with foo:
     {{@toast.options.data.foo}}
   </div>

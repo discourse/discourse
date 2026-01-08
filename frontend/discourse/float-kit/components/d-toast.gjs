@@ -32,6 +32,10 @@ export default class DToast extends Component {
    * This allows the service to know the height of the front toast at all times.
    */
   measureHeight = modifier((element) => {
+    if (!this.isFront) {
+      return;
+    }
+
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         this.toasts.heights.set(this.args.toast.id, entry.target.offsetHeight);
@@ -123,7 +127,7 @@ export default class DToast extends Component {
   get clampingStyles() {
     if (!this.isFront && this.toasts.frontToastHeight > 0) {
       return htmlSafe(
-        `height: ${this.toasts.frontToastHeight}px; overflow: hidden;`
+        `max-height: ${this.toasts.frontToastHeight}px; overflow: hidden;`
       );
     }
     return htmlSafe("");
@@ -262,11 +266,7 @@ export default class DToast extends Component {
           }}
           style={{this.toastStyles}}
         >
-          <DSheet.Content
-            @sheet={{sheet}}
-            @asChild={{true}}
-            as |contentAttrs|
-          >
+          <DSheet.Content @sheet={{sheet}} @asChild={{true}} as |contentAttrs|>
             <DSheet.SpecialWrapper.Root
               @sheet={{sheet}}
               @contentAttrs={{contentAttrs}}
@@ -279,22 +279,22 @@ export default class DToast extends Component {
                 data-presented={{if this.presented "true" "false"}}
                 data-pointer-over={{if this.pointerOver "true" "false"}}
                 data-theme={{or @toast.options.data?.theme "default"}}
-                style={{concat this.innerStyles "; " this.clampingStyles}}
+                style={{this.innerStyles}}
                 {{on "pointerenter" this.handlePointerEnter}}
                 {{on "pointerleave" this.handlePointerLeave}}
                 {{on "pointerdown" this.handlePointerDown}}
                 {{on "pointerup" this.handlePointerUp}}
                 {{on "pointercancel" this.handlePointerUp}}
               >
-                <div style={{this.clampingStyles}} {{this.measureHeight}}>
-                  <@toast.options.component
-                    @toast={{@toast}}
-                    @close={{sheet.close}}
-                    @isFront={{this.isFront}}
-                    @progressBarStyle={{this.progressBarStyle}}
-                    @onProgressComplete={{this.handleProgressComplete}}
-                  />
-                </div>
+                <@toast.options.component
+                  @toast={{@toast}}
+                  @close={{sheet.close}}
+                  @isFront={{this.isFront}}
+                  @progressBarStyle={{this.progressBarStyle}}
+                  @onProgressComplete={{this.handleProgressComplete}}
+                  {{this.measureHeight}}
+                  style={{this.clampingStyles}}
+                />
               </DSheet.SpecialWrapper.Content>
             </DSheet.SpecialWrapper.Root>
           </DSheet.Content>
