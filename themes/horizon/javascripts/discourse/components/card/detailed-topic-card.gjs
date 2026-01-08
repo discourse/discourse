@@ -142,7 +142,7 @@ export default class DetailedTopicCard extends Component {
       <div class="hc-topic-card__header">
         <div class="hc-topic-card__op">
           <div class="hc-topic-card__avatar">
-            {{avatar this.topicCreator imageSize="large"}}
+            {{avatar this.topicCreator imageSize="medium"}}
           </div>
           <div class="hc-topic-card__op-info">
             <span class="hc-topic-card__op-timestamp">

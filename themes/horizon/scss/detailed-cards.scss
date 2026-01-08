@@ -6,6 +6,10 @@
 
 $padding-pills-small: var(--space-half) var(--space-2);
 
+.topic-list-data {
+  display: none;
+}
+
 .topic-list-body:has(.--high-context) {
   @include viewport.from(sm) {
     gap: var(--space-4);
@@ -97,7 +101,9 @@ $padding-pills-small: var(--space-half) var(--space-2);
     flex-shrink: 0;
 
     .avatar {
-      border-radius: 25%;
+      border-radius: var(--d-border-radius);
+      height: 32px;
+      width: 32px;
     }
   }
 
@@ -132,12 +138,13 @@ $padding-pills-small: var(--space-half) var(--space-2);
     }
 
     &.--hot {
+      border: 1px solid var(--danger);
       color: var(--danger);
     }
   }
 
   &__category .badge-category__wrapper {
-    padding: var(--space-half) var(--space-2);
+    padding: var(--space-half) var(--space-2) !important;
     font-size: var(--font-0);
   }
 
@@ -232,10 +239,11 @@ $padding-pills-small: var(--space-half) var(--space-2);
     .discourse-tag {
       padding: var(--space-half) var(--space-2);
       border-radius: var(--d-border-radius);
-      border: 1px solid var(--primary-low-mid);
+      border: 1px solid var(--primary-low);
       background: var(--secondary);
       color: var(--primary-high);
       white-space: nowrap;
+      font-size: var(--font-down-1);
 
       &.assigned-to,
       &.list-vote-count {
@@ -317,7 +325,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    padding: var(--space-1) var(--space-3);
+    padding: var(--space-half) var(--space-3);
     border-radius: var(--d-border-radius);
     background: var(--primary-very-low);
     font-size: var(--font-down-1);
@@ -325,6 +333,8 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
     .avatar {
       border-radius: 50%;
+      height: 1rem;
+      width: 1rem;
     }
 
     @include viewport.until(sm) {
