@@ -6,12 +6,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
 import categoryBadge from "discourse/helpers/category-badge";
 import concatClass from "discourse/helpers/concat-class";
 import dirSpan from "discourse/helpers/dir-span";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -27,6 +27,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   @tracked initialLoad = true;
   @tracked filtered = false;
   @tracked fetchedCategoriesGroupings = [];
+  @tracked loadingMore = false;
   @tracked
   selectedCategoryIds = new TrackedSet([
     ...this.currentUser.sidebar_category_ids,
@@ -76,8 +77,13 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @action
   didInsert(element) {
-    this.observer.disconnect();
-    this.observer.observe(element);
+    const categoryId = parseInt(element.dataset.categoryId, 10);
+    const lastCategoryId = this.fetchedCategories.at(-1)?.id;
+
+    if (categoryId === lastCategoryId) {
+      this.observer.disconnect();
+      this.observer.observe(element);
+    }
   }
 
   searchOpts() {
@@ -111,6 +117,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     ) {
       // The shown categories are up-to-date, so we can do elaboration
       if (this.loadAnotherPage && !this.lastPage) {
+        this.loadingMore = true;
         const requestedPage = this.loadedPage + 1;
         const opts = { page: requestedPage, ...this.searchOpts() };
 
@@ -127,6 +134,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
         this.loadAnotherPage = false;
         this.loadedPage = requestedPage;
+        this.loadingMore = false;
       }
     } else {
       // The shown categories are stale, refresh everything
@@ -256,17 +264,13 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       @closeModal={{@closeModal}}
       class="sidebar__edit-navigation-menu__categories-modal"
     >
-      <form
-        class={{concatClass
-          "sidebar-categories-form"
-          (if this.filtered "--filtered")
-        }}
-      >
-        {{#if this.initialLoad}}
-          <div class="sidebar-categories-form__loading">
-            {{loadingSpinner size="small"}}
-          </div>
-        {{else}}
+      <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
+        <form
+          class={{concatClass
+            "sidebar-categories-form"
+            (if this.filtered "--filtered")
+          }}
+        >
           {{#each this.fetchedCategoriesGroupings as |categories|}}
             <div
               style={{borderColor (get categories "0.color") "left"}}
@@ -322,8 +326,10 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
               {{i18n "sidebar.categories_form_modal.no_categories"}}
             </div>
           {{/each}}
-        {{/if}}
-      </form>
+        </form>
+      </ConditionalLoadingSpinner>
+
+      <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
     </EditNavigationMenuModal>
   </template>
 }
