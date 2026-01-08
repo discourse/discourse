@@ -94,11 +94,19 @@ function validateBlockConditions(
  *
  * @param {string | Object} blockRef - Block name string (possibly with `?` suffix) or BlockClass.
  * @param {string} outletName - Outlet name for error messages.
+ * @param {Object} [context] - Context for error messages.
+ * @param {string} [context.path] - Path to this config in the block tree.
+ * @param {Object} [context.config] - The block config object.
+ * @param {Error} [context.callSiteError] - Error capturing call site location.
  * @returns {Promise<Object | string | { [OPTIONAL_MISSING]: true, name: string }>}
  *   Resolved BlockClass, string name if deferred, or optional missing marker object.
  * @throws {Error} If required block is not registered.
  */
-export async function resolveBlockForValidation(blockRef, outletName) {
+export async function resolveBlockForValidation(
+  blockRef,
+  outletName,
+  context = {}
+) {
   // Class reference - return as-is (classes always exist)
   if (typeof blockRef !== "string") {
     return blockRef;
@@ -114,8 +122,9 @@ export async function resolveBlockForValidation(blockRef, outletName) {
       return { [OPTIONAL_MISSING]: true, name };
     }
     raiseBlockError(
-      `Block "${name}" in layout for \`${outletName}\` is not registered. ` +
-        `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`
+      `Block "${name}" at ${context.path || "unknown"} for outlet "${outletName}" is not registered. ` +
+        `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`,
+      { outletName, blockName: name, ...context }
     );
     return null;
   }
@@ -474,7 +483,8 @@ export async function validateBlock(
     raiseBlockError(
       `Unknown block outlet: ${suggestion}. ` +
         `Register custom outlets with api.registerBlockOutlet() in a pre-initializer. ` +
-        `Available outlets: ${allOutlets.join(", ")}`
+        `Available outlets: ${allOutlets.join(", ")}`,
+      { outletName, path, config, callSiteError }
     );
     return;
   }
@@ -504,7 +514,8 @@ export async function validateBlock(
 
   if (!config.block) {
     raiseBlockError(
-      `Block in layout for \`${outletName}\` is missing a component: ${safeStringifyConfig(config)}`
+      `Block config at ${path} for outlet "${outletName}" is missing required "block" property.`,
+      { outletName, path, config, callSiteError }
     );
     return;
   }
@@ -514,7 +525,8 @@ export async function validateBlock(
   // In prod: returns string if factory is unresolved (defers to render time)
   const resolvedBlock = await resolveBlockForValidation(
     config.block,
-    outletName
+    outletName,
+    { path, config, callSiteError }
   );
 
   // If resolution returned null (error was raised), exit early
@@ -549,7 +561,8 @@ export async function validateBlock(
   // Full validation with resolved class
   if (!isBlockFn(resolvedBlock)) {
     raiseBlockError(
-      `Block component ${config.name || resolvedBlock?.blockName} in layout ${outletName} is not a valid block`
+      `Block "${config.name || resolvedBlock?.blockName}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
+      { outletName, path, config, callSiteError }
     );
     return;
   }
@@ -568,7 +581,8 @@ export async function validateBlock(
 
     if (!permission.permitted) {
       raiseBlockError(
-        `Block "${blockName}" cannot be rendered in outlet "${outletName}": ${permission.reason}.`
+        `Block "${blockName}" at ${path} cannot be rendered in outlet "${outletName}": ${permission.reason}.`,
+        { outletName, blockName, path, config, callSiteError }
       );
       return;
     }
@@ -615,7 +629,17 @@ export async function validateBlock(
   }
 
   // Validate block args against metadata schema
-  validateBlockArgs(config, outletName);
+  try {
+    validateBlockArgs(config, resolvedBlock);
+  } catch (error) {
+    if (error instanceof BlockValidationError) {
+      raiseBlockError(
+        `Invalid block "${blockName}" at ${path} for outlet "${outletName}": ${error.message}`,
+        { ...baseContext, errorPath: error.path }
+      );
+    }
+    throw error;
+  }
 
   // Validate conditions if service is available
   validateBlockConditions(

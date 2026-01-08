@@ -1,4 +1,7 @@
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import {
+  BlockValidationError,
+  raiseBlockError,
+} from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -267,12 +270,11 @@ export function validateArrayItemType(
  * Validates block arguments against the block's metadata arg schema.
  * Checks for required args and validates types.
  *
- * @param {Object} config - The block configuration
- * @param {string} outletName - The outlet name for error messages
+ * @param {Object} config - The block configuration.
+ * @param {Object} blockClass - The resolved block class (must be a class, not a string reference).
+ * @throws {BlockValidationError} If args are invalid.
  */
-export function validateBlockArgs(config, outletName) {
-  const blockClass = config.block;
-  const blockName = blockClass?.blockName || "unknown";
+export function validateBlockArgs(config, blockClass) {
   const metadata = blockClass?.blockMetadata;
 
   // No metadata or no args schema means nothing to validate
@@ -288,28 +290,122 @@ export function validateBlockArgs(config, outletName) {
 
     // Check required args
     if (argDef.required && value === undefined) {
-      raiseBlockError(
-        `Block "${blockName}" in outlet "${outletName}" is missing required arg "${argName}".`
+      throw new BlockValidationError(
+        `missing required arg "${argName}".`,
+        `args.${argName}`
       );
-      continue;
     }
 
     // Validate type if value is provided
     if (value !== undefined) {
-      const typeError = validateArgValue(value, argDef, argName, blockName);
+      const typeError = validateArgValueForSchema(value, argDef, argName);
       if (typeError) {
-        raiseBlockError(typeError);
+        throw new BlockValidationError(typeError, `args.${argName}`);
       }
     }
   }
 
   // Check for unknown args (args provided but not in schema)
+  const declaredArgs = Object.keys(argsSchema);
   for (const argName of Object.keys(providedArgs)) {
     if (!Object.hasOwn(argsSchema, argName)) {
-      raiseBlockError(
-        `Block "${blockName}" in outlet "${outletName}" received unknown arg "${argName}". ` +
-          `Declared args are: ${Object.keys(argsSchema).join(", ") || "none"}.`
+      const suggestion = formatWithSuggestion(argName, declaredArgs);
+      throw new BlockValidationError(
+        `unknown arg ${suggestion}. Declared args are: ${declaredArgs.join(", ") || "none"}.`,
+        `args.${argName}`
       );
     }
   }
+}
+
+/**
+ * Validates a single argument value against its schema definition.
+ * Returns an error message string (for use with BlockValidationError).
+ *
+ * @param {*} value - The argument value.
+ * @param {Object} argSchema - The schema definition for this arg.
+ * @param {string} argName - The argument name for error messages.
+ * @returns {string | null} Error message if validation fails, null otherwise.
+ */
+function validateArgValueForSchema(value, argSchema, argName) {
+  const { type, itemType, pattern } = argSchema;
+
+  switch (type) {
+    case "string":
+      if (typeof value !== "string") {
+        return `Arg "${argName}" must be a string, got ${typeof value}.`;
+      }
+      if (pattern && !pattern.test(value)) {
+        return `Arg "${argName}" value "${value}" does not match required pattern ${pattern}.`;
+      }
+      break;
+
+    case "number":
+      if (typeof value !== "number" || Number.isNaN(value)) {
+        return `Arg "${argName}" must be a number, got ${typeof value}.`;
+      }
+      break;
+
+    case "boolean":
+      if (typeof value !== "boolean") {
+        return `Arg "${argName}" must be a boolean, got ${typeof value}.`;
+      }
+      break;
+
+    case "array":
+      if (!Array.isArray(value)) {
+        return `Arg "${argName}" must be an array, got ${typeof value}.`;
+      }
+      if (itemType) {
+        for (let i = 0; i < value.length; i++) {
+          const item = value[i];
+          const itemError = validateArrayItemTypeForSchema(
+            item,
+            itemType,
+            argName,
+            i
+          );
+          if (itemError) {
+            return itemError;
+          }
+        }
+      }
+      break;
+  }
+
+  return null;
+}
+
+/**
+ * Validates an array item against the specified item type.
+ * Returns an error message string (for use with BlockValidationError).
+ *
+ * @param {*} item - The array item.
+ * @param {string} itemType - The expected type ("string", "number", "boolean").
+ * @param {string} argName - The argument name for error messages.
+ * @param {number} index - The array index for error messages.
+ * @returns {string | null} Error message if validation fails, null otherwise.
+ */
+function validateArrayItemTypeForSchema(item, itemType, argName, index) {
+  switch (itemType) {
+    case "string":
+      if (typeof item !== "string") {
+        return `Arg "${argName}[${index}]" must be a string, got ${typeof item}.`;
+      }
+      break;
+
+    case "number":
+      if (typeof item !== "number" || Number.isNaN(item)) {
+        return `Arg "${argName}[${index}]" must be a number, got ${typeof item}.`;
+      }
+      break;
+
+    case "boolean":
+      if (typeof item !== "boolean") {
+        return `Arg "${argName}[${index}]" must be a boolean, got ${typeof item}.`;
+      }
+      break;
+  }
+
+  return null;
 }

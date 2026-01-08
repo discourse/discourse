@@ -311,7 +311,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
     test("throws for missing block component", async function (assert) {
       await assert.rejects(
         renderBlocks("hero-blocks", [{ args: { title: "test" } }]),
-        /missing a component/
+        /missing required "block" property/
       );
     });
 
@@ -321,7 +321,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       await assert.rejects(
         renderBlocks("hero-blocks", [{ block: PlainComponent }]),
-        /not a valid block/
+        /not a valid @block-decorated component/
       );
     });
 
@@ -475,7 +475,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
             children: [{ block: NestedChildBlock }, { block: NotABlock }],
           },
         ]),
-        /not a valid block/
+        /not a valid @block-decorated component/
       );
     });
 

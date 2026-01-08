@@ -7,6 +7,7 @@ import {
   validateArrayItemType,
   validateBlockArgs,
 } from "discourse/lib/blocks/arg-validation";
+import { BlockValidationError } from "discourse/lib/blocks/error";
 
 module("Unit | Lib | blocks/arg-validation", function () {
   module("validateArgsSchema", function () {
@@ -397,14 +398,14 @@ module("Unit | Lib | blocks/arg-validation", function () {
       })
       class RequiredArgsBlock extends Component {}
 
-      assert.throws(
-        () =>
-          validateBlockArgs(
-            { block: RequiredArgsBlock, args: {} },
-            "test-outlet"
-          ),
-        /missing required arg "title"/
-      );
+      try {
+        validateBlockArgs({ args: {} }, RequiredArgsBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockValidationError);
+        assert.true(error.message.includes('missing required arg "title"'));
+        assert.strictEqual(error.path, "args.title");
+      }
     });
 
     test("validates arg types", function (assert) {
@@ -415,14 +416,14 @@ module("Unit | Lib | blocks/arg-validation", function () {
       })
       class TypedArgsBlock extends Component {}
 
-      assert.throws(
-        () =>
-          validateBlockArgs(
-            { block: TypedArgsBlock, args: { count: "not-a-number" } },
-            "test-outlet"
-          ),
-        /must be a number/
-      );
+      try {
+        validateBlockArgs({ args: { count: "not-a-number" } }, TypedArgsBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockValidationError);
+        assert.true(error.message.includes("must be a number"));
+        assert.strictEqual(error.path, "args.count");
+      }
     });
 
     test("passes for valid args", function (assert) {
@@ -436,8 +437,8 @@ module("Unit | Lib | blocks/arg-validation", function () {
 
       assert.strictEqual(
         validateBlockArgs(
-          { block: ValidArgsBlock, args: { title: "Hello", count: 5 } },
-          "test-outlet"
+          { args: { title: "Hello", count: 5 } },
+          ValidArgsBlock
         ),
         undefined
       );
@@ -448,10 +449,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
       class NoMetadataBlock extends Component {}
 
       assert.strictEqual(
-        validateBlockArgs(
-          { block: NoMetadataBlock, args: { anything: "goes" } },
-          "test-outlet"
-        ),
+        validateBlockArgs({ args: { anything: "goes" } }, NoMetadataBlock),
         undefined
       );
     });
@@ -464,17 +462,36 @@ module("Unit | Lib | blocks/arg-validation", function () {
       })
       class KnownArgsBlock extends Component {}
 
-      assert.throws(
-        () =>
-          validateBlockArgs(
-            {
-              block: KnownArgsBlock,
-              args: { title: "valid", unknownArg: "bad" },
-            },
-            "test-outlet"
-          ),
-        /received unknown arg "unknownArg"/
-      );
+      try {
+        validateBlockArgs(
+          { args: { title: "valid", unknownArg: "bad" } },
+          KnownArgsBlock
+        );
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockValidationError);
+        assert.true(error.message.includes('unknown arg "unknownArg"'));
+        assert.strictEqual(error.path, "args.unknownArg");
+      }
+    });
+
+    test("suggests correct arg name for typos", function (assert) {
+      @block("typo-args-block", {
+        args: {
+          showDescription: { type: "boolean" },
+        },
+      })
+      class TypoArgsBlock extends Component {}
+
+      try {
+        validateBlockArgs({ args: { shoDescription: true } }, TypoArgsBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockValidationError);
+        assert.true(error.message.includes("shoDescription"));
+        assert.true(error.message.includes('did you mean "showDescription"'));
+        assert.strictEqual(error.path, "args.shoDescription");
+      }
     });
   });
 });
