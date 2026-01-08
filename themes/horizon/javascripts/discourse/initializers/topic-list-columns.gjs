@@ -37,13 +37,32 @@ const TopicCreator = <template>
   </td>
 </template>;
 
+function isDetailedCardsRoute(routeName) {
+  if (!routeName) {
+    return false;
+  }
+
+  // Only show detailed cards on public topic list routes
+  // Discovery routes: /latest, /new, /unread, /top, /hot, /c/:category
+  if (routeName.startsWith("discovery")) {
+    return true;
+  }
+
+  // Tag routes: /tag/:tag_name
+  if (routeName.startsWith("tag")) {
+    return true;
+  }
+
+  return false;
+}
+
 const DetailedCard = <template>
   <DetailedTopicCard
-    @topic={{@outletArgs.topic}}
-    @hideCategory={{@outletArgs.hideCategory}}
-    @bulkSelectEnabled={{@outletArgs.bulkSelectEnabled}}
-    @isSelected={{@outletArgs.isSelected}}
-    @onBulkSelectToggle={{@outletArgs.onBulkSelectToggle}}
+    @topic={{@topic}}
+    @hideCategory={{@hideCategory}}
+    @bulkSelectEnabled={{@bulkSelectEnabled}}
+    @isSelected={{@isSelected}}
+    @onBulkSelectToggle={{@onBulkSelectToggle}}
   />
 </template>;
 
@@ -51,55 +70,78 @@ export default {
   name: "topic-list-customizations",
 
   initialize(container) {
-    const isDetailed = settings.topic_card_detail === "detailed (experimental)";
+    const isDetailed = settings.topic_card_detail.startsWith("detailed");
+    const router = container.lookup("service:router");
+
+    function applySimpleLayout(columns) {
+      columns.add("topic-status", {
+        item: TopicStatus,
+        after: "topic-author",
+      });
+      columns.add("topic-category", {
+        item: TopicCategory,
+        after: "topic-status",
+      });
+      columns.add("topic-likes-replies", {
+        item: TopicReplies,
+        after: "topic-author-avatar",
+      });
+      columns.add("topic-creator", {
+        item: TopicCreator,
+        after: "topic-author-avatar",
+      });
+
+      columns.delete("views");
+      columns.delete("replies");
+
+      if (!router.currentRouteName.includes("userPrivateMessages")) {
+        columns.add("topic-activity", {
+          item: TopicActivity,
+          after: "title",
+        });
+        columns.delete("posters");
+        columns.delete("activity");
+      }
+    }
+
+    function applyDetailedLayout(columns) {
+      columns.delete("bulk-select");
+      columns.delete("topic");
+      columns.delete("posters");
+      columns.delete("replies");
+      columns.delete("views");
+      columns.delete("activity");
+      columns.add("detailed-card", {
+        item: DetailedCard,
+      });
+    }
 
     withPluginApi((api) => {
-      if (isDetailed) {
-        // DETAILED MODE: Use wrapper outlet to replace entire topic list item
-        api.renderInOutlet("topic-list-item", DetailedCard);
-      } else {
-        // SIMPLE MODE: Modify columns
-        const router = container.lookup("service:router");
-        api.registerValueTransformer(
-          "topic-list-columns",
-          ({ value: columns }) => {
-            columns.add("topic-status", {
-              item: TopicStatus,
-              after: "topic-author",
-            });
-            columns.add("topic-category", {
-              item: TopicCategory,
-              after: "topic-status",
-            });
-            columns.add("topic-likes-replies", {
-              item: TopicReplies,
-              after: "topic-author-avatar",
-            });
-            columns.add("topic-creator", {
-              item: TopicCreator,
-              after: "topic-author-avatar",
-            });
-
-            columns.delete("views");
-            columns.delete("replies");
-
-            if (!router.currentRouteName.includes("userPrivateMessages")) {
-              columns.add("topic-activity", {
-                item: TopicActivity,
-                after: "title",
-              });
-              columns.delete("posters");
-              columns.delete("activity");
-            }
-
-            return columns;
+      api.registerValueTransformer(
+        "topic-list-columns",
+        ({ value: columns }) => {
+          if (isDetailed && isDetailedCardsRoute(router.currentRouteName)) {
+            applyDetailedLayout(columns);
+          } else {
+            applySimpleLayout(columns);
           }
-        );
-      }
+          return columns;
+        }
+      );
 
       api.registerValueTransformer(
         "topic-list-item-class",
         ({ value: classes, context }) => {
+          // has-replies is needed for grid layout on all routes (including PMs)
+          if (context.topic.replyCount > 1) {
+            classes.push("has-replies");
+          }
+
+          // The rest only applies to public topic list routes
+          if (!isDetailedCardsRoute(router.currentRouteName)) {
+            return classes;
+          }
+
           if (isDetailed) {
             classes.push("--high-context");
           }
@@ -111,20 +153,26 @@ export default {
           ) {
             classes.push("--has-status-card");
           }
-          if (context.topic.replyCount > 1) {
-            classes.push("has-replies");
-          }
+
           return classes;
         }
       );
 
+      // Force desktop layout on public topic lists for Horizon card styling.
+      // Return undefined on other routes to preserve default mobile/desktop behavior.
       api.registerValueTransformer("topic-list-item-mobile-layout", () => {
-        return false;
+        if (isDetailedCardsRoute(router.currentRouteName)) {
+          return false;
+        }
       });
 
       api.registerBehaviorTransformer(
         "topic-list-item-click",
         ({ context: { event }, next }) => {
+          if (!isDetailedCardsRoute(router.currentRouteName)) {
+            return next(); // Use default behavior on non-public routes
+          }
+
           if (event.target.closest("a, button, input")) {
             return next();
           }
@@ -136,7 +184,7 @@ export default {
             .closest("tr")
             .querySelector("a.raw-topic-link");
 
-          // Redespatch the click on the topic link, so that all key-handing is sorted
+          // Redispatch the click on the topic link, so that all key-handing is sorted
           topicLink.dispatchEvent(
             new MouseEvent("click", {
               ctrlKey: event.ctrlKey,
