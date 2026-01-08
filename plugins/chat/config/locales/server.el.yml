@@ -8,11 +8,13 @@ el:
   site_settings:
     chat_enabled: "Ενεργοποίηση συνομιλίας."
     enable_public_channels: "Ενεργοποίηση δημόσιων καναλιών με βάση τις κατηγορίες."
+    max_mentions_per_chat_message: "Μέγιστος αριθμός @ονομαστικών ειδοποιήσεων που ένας χρήστης μπορεί να χρησιμοποιήσει σε ένα μήνυμα συνομιλίας."
   system_messages:
     private_channel_title: "Κανάλι %{id}"
   chat:
     deleted_chat_username: διεγράφη
     errors:
+      draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο."
       not_accepting_dms: "Λυπούμαστε, ο/η %{username} δεν δέχεται μηνύματα αυτή τη στιγμή."
     reviewables:
       message_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το μήνυμα και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
@@ -39,6 +41,10 @@ el:
         one: "Η πρόσκληση στάλθηκε"
         other: "Οι προσκλήσεις στάλθηκαν"
       invite: "Πρόσκληση στο κανάλι"
+      group_mentions_disabled: "%{first_identifier} δεν επιτρέπει επισημάνσεις."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} και %{count} άλλη ομάδα δεν επιτρέπουν τις επισημάνσεις."
+        other: "%{first_identifier} και %{count} άλλες ομάδες δεν επιτρέπουν τις επισημάνσεις."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "περιέχει χαρακτήρες που δεν είναι ascii"

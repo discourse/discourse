@@ -41,7 +41,7 @@ el:
         topic_link:
           title: "Σύνδεσμος θέματος"
         topic_timer_info:
-          title: "Χρονοδιακόπτες Νημάτων"
+          title: "Χρονοδιακόπτες Θεμάτων"
         post:
           title: "Ανάρτηση"
         topic_map:

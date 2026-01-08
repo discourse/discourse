@@ -61,7 +61,7 @@ vi:
             restricted_tags:
               label: Thẻ
             restricted_categories:
-              label: Danh mục
+              label: Chuyên mục
           created: Tạo bởi
           with_images: Hình ảnh
           with_links: Liên kết
@@ -80,7 +80,7 @@ vi:
         after_post_cook:
           fields:
             restricted_category:
-              label: Danh mục
+              label: Chuyên mục
             restricted_tags:
               label: Thẻ
       scriptables:

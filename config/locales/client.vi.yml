@@ -165,7 +165,7 @@ vi:
     back_button: "Quay lại"
     welcome_banner:
       header:
-        logged_in_members: "Chào mừng %{preferred_display_name} đã trở lại đây!"
+        logged_in_members: "Chào mừng %{preferred_display_name} đã trở lại!"
         anonymous_members: "Chào mừng đến với %{site_name}!"
       search: "Tìm kiếm"
     themes:
@@ -294,9 +294,9 @@ vi:
           today: "hôm nay"
           all_time: "từ trước tới nay"
       site_age:
-        less_than_one_month: "Được tạo < 1 tháng trước"
+        less_than_one_month: "Đã tạo < 1 tháng trước"
     bookmarked:
-      title: "Dấu trang"
+      title: "Lưu"
       edit_bookmark: "Chỉnh sửa Dấu trang"
       clear_bookmarks: "Xoá dấu trang"
       help:
@@ -318,13 +318,13 @@ vi:
       remove_reminder_keep_bookmark: "Xóa lời nhắc và giữ lại dấu trang"
       created_with_reminder: "Bạn đã đánh dấu bài đăng này với lời nhắc %{date}. %{name}"
       created_with_reminder_generic: "Bạn đã đánh dấu trang này với lời nhắc %{date}. %{name}"
-      delete: "Xóa chỉ mục"
+      delete: "Xóa mục lưu"
       confirm_delete: "Bạn có chắc chắn muốn xóa dấu trang này không? Lời nhắc cũng sẽ bị xóa."
       confirm_clear: "Bạn có chắc muốn xóa toàn bộ đánh dấu trong chủ đề này?"
       save: "Lưu"
       no_timezone: 'Bạn chưa đặt múi giờ. Bạn sẽ không thể đặt lời nhắc. Thiết lập một <a href="%{basePath}/my/preferences/profile">trong hồ sơ của bạn</a> .'
       invalid_custom_datetime: "Ngày và giờ bạn cung cấp không hợp lệ, vui lòng thử lại."
-      list_permission_denied: "Bạn không có quyền xem chỉ mục của người dùng này"
+      list_permission_denied: "Bạn không có quyền xem mục đã lưu của người dùng này."
       no_user_bookmarks: "Bạn không có bài viết nào được đánh dấu; dấu trang cho phép bạn nhanh chóng tham khảo các bài viết cụ thể."
       auto_delete_preference:
         label: "Sau khi bạn được thông báo"
@@ -336,7 +336,7 @@ vi:
         after_reminder_checkbox: "Đặt làm mặc định cho tất cả các lời nhắc dấu trang lần sau"
       search_placeholder: "Tìm kiếm dấu trang theo tên, tiêu đề chủ đề hoặc nội dung bài đăng"
       search: "Tìm kiếm"
-      bookmark: "Đánh dấu chỉ mục"
+      bookmark: "Lưu"
       bulk:
         select_all: "Chọn hết"
         clear_all: "Xoá hết"
@@ -351,7 +351,7 @@ vi:
       clear_reminders:
         name: "Xóa Lời nhắc"
       delete_bookmarks:
-        name: "Xóa chỉ mục"
+        name: "Xóa mục lưu"
     copy_codeblock:
       copied: "đã sao chép!"
       copy: "sao chép mã vào khay nhớ tạm"
@@ -435,8 +435,8 @@ vi:
           name: "độ chính xác của người dùng"
           title: "Người dùng có cờ đã được đồng ý trong lịch sử được tặng tiền thưởng."
         trust_level_bonus:
-          name: "mức độ tin cậy"
-          title: "Các mục có thể xem lại được tạo bởi người dùng có mức độ tin cậy cao hơn có điểm cao hơn."
+          name: "độ tin cậy"
+          title: "Các mục có thể xem lại được tạo bởi người dùng có độ tin cậy cao hơn có điểm cao hơn."
         type_bonus:
           name: "loại tiền thưởng"
           title: "Một số loại có thể xem lại có thể được nhân viên chỉ định một phần thưởng để làm cho chúng có mức độ ưu tiên cao hơn."
@@ -515,14 +515,14 @@ vi:
       cancel: "Hủy"
       new_topic: "Phê duyệt mục này sẽ tạo một chủ đề mới"
       filters:
-        all_categories: "(tất cả danh mục)"
+        all_categories: "(tất cả chuyên mục)"
         type:
           title: "Loại"
           all: "(tất cả các loại)"
         minimum_score: "Điểm tối thiểu:"
         refresh: "Tải lại"
         status: "Trạng thái"
-        category: "Danh mục"
+        category: "Chuyên mục"
         score_type:
           title: "Lý do"
         orders:
@@ -539,7 +539,7 @@ vi:
       conversation:
         view_full: "xem toàn bộ hội thoại"
       scores:
-        about: "Điểm số này được tính toán dựa trên mức độ tin cậy của người báo cáo, độ chính xác của những gắn cờ trước đó, và mức độ ưu tiên của mục được báo cáo."
+        about: "Điểm số này được tính toán dựa trên độ tin cậy của người báo cáo, độ chính xác của những gắn cờ trước đó, và mức độ ưu tiên của mục được báo cáo."
         score: "Điểm số"
         type: "Lý do"
         status: "Trạng thái"
@@ -627,7 +627,7 @@ vi:
       start_of_next_business_week_alt: "Thứ hai tới"
       next_week: "Tuần tới"
       two_weeks: "Hai tuần"
-      next_month: "Tháng t"
+      next_month: "Tháng tiếp theo"
       two_months: "Hai tháng"
       three_months: "Ba tháng"
       four_months: "Bốn tháng"
@@ -670,7 +670,7 @@ vi:
       post_count_long: "Trả lời đã đăng"
       no_results_with_search: "Không tìm thấy kết quả."
       days_visited: "Ghé thăm"
-      days_visited_long: "Ngày đã ghé thăm"
+      days_visited_long: "ngày truy cập"
       posts_read: "Đã đọc"
       posts_read_long: "Bài đăng đã đọc"
       last_updated: "Cập nhật lần cuối:"
@@ -722,7 +722,7 @@ vi:
           title: Hồ sơ
         interaction:
           title: Tương tác
-          posting: Gửi bài
+          posting: Đăng bài
           notification: Thông báo
         email:
           title: "Email"
@@ -778,7 +778,7 @@ vi:
           title: Thành viên
           access: Truy cập
         categories:
-          title: Danh mục
+          title: Chuyên mục
           long_title: "Thông báo mặc định của danh mục"
           description: "Khi người dùng được thêm vào nhóm này, cài đặt thông báo danh mục của họ sẽ được đặt thành các giá trị mặc định này. Sau đó, họ có thể thay đổi chúng."
           watched_categories_instructions: "Tự động xem tất cả các chủ đề trong các danh mục này. Các thành viên trong nhóm sẽ được thông báo về tất cả các bài đăng và chủ đề mới, và một số bài đăng mới cũng sẽ xuất hiện bên cạnh chủ đề."
@@ -882,7 +882,7 @@ vi:
         no_filter_matches: "Không có thành viên nào phù hợp với tìm kiếm đó."
       topics: "Chủ đề"
       posts: "Các bài viết"
-      mentions: "Được nhắc đến"
+      mentions: "Lượt nhắc đến"
       messages: "Tin nhắn"
       notification_level: "Mức độ thông báo mặc định cho các tin nhắn trong nhóm"
       alias_levels:
@@ -929,21 +929,21 @@ vi:
         modal_no: "Không, chỉ áp dụng thay đổi về sau"
     user_action_groups:
       "1": "Lượt thích"
-      "2": "Lần được thích"
-      "3": "Chỉ mục"
-      "4": "Các chủ đề"
+      "2": "Lượt thích"
+      "3": "Đã lưu"
+      "4": "Chủ đề"
       "5": "Trả lời"
       "6": "Phản hồi"
-      "7": "Được nhắc đến"
-      "9": "Lời trích dẫn"
-      "11": "Biên tập"
-      "12": "Bài đã gửi"
+      "7": "Lượt nhắc đến"
+      "9": "Trích dẫn"
+      "11": "Lượt sửa"
+      "12": "Bài đã đăng"
       "13": "Hộp thư"
       "14": "Đang chờ xử lý"
       "15": "Nháp"
       "17": "Liên kết"
     categories:
-      categories_label: "danh mục"
+      categories_label: "chuyên mục"
       subcategories_label: "phân loại phụ"
       no_subcategories: "không có danh mục phụ"
       remove_filter: "bỏ đièu kiện lọc"
@@ -987,7 +987,7 @@ vi:
       delete_other_accounts:
         other: "Xoá %{count}"
       username: "tên đăng nhập"
-      trust_level: "mức độ tin cậy"
+      trust_level: "độ tin cậy"
       read_time: "thời gian đọc"
       topics_entered: "chủ để đã xem"
       post_count: "bài viết"
@@ -1000,12 +1000,13 @@ vi:
       optional: (tùy chọn)
     user:
       said: "%{username}:"
-      profile: "Tiểu sử"
+      profile: "Hồ sơ"
       mute: "Im lặng"
-      edit: "Tùy chỉnh"
+      edit: "Sửa thiết lập"
       download_archive:
         title: "Xuất dữ liệu của bạn"
-        button_text: "Yêu cầu bản lưu trữ"
+        description: "Tải xuống một bản sao lưu hoạt động và thiết lập tài khoản của bạn."
+        button_text: "Yêu cầu bản sao"
       new_private_message: "Tin nhắn mới"
       private_message: "Tin nhắn"
       private_messages: "Tin nhắn"
@@ -1045,7 +1046,7 @@ vi:
       read: "Đã đọc"
       read_help: "Các chủ đề đã đọc gần đây"
       preferences:
-        title: "Tùy chỉnh"
+        title: "Thiết lập"
       feature_topic_on_profile:
         open_search: "Chọn chủ đề mới"
         title: "Chọn chủ đề"
@@ -1057,7 +1058,7 @@ vi:
       use_current_timezone: "Sử dụng múi giờ hiện tại"
       profile_hidden: "Hồ sơ công khai của người dùng này bị ẩn."
       inactive_user: "Người dùng này không còn hoạt động nữa."
-      expand_profile: "Mở"
+      expand_profile: "Mở rộng"
       sr_expand_profile: "Mở rộng chi tiết hồ sơ"
       collapse_profile: "Thu gọn"
       sr_collapse_profile: "Thu gọn chi tiết hồ sơ"
@@ -1065,7 +1066,7 @@ vi:
       bio: "Về tôi"
       timezone: "Múi giờ"
       invited_by: "Được mời bởi"
-      trust_level: "Độ tin tưởng"
+      trust_level: "Độ tin cậy"
       notifications: "Thông báo"
       statistics: "Thống kê"
       desktop_notifications:
@@ -1083,14 +1084,14 @@ vi:
       no_messages_title: "Bạn không có bất kỳ tin nhắn nào"
       no_messages_body: >
         Bạn cần trò chuyện cá nhân trực tiếp với ai đó, ngoài luồng trò chuyện thông thường? Nhắn tin cho họ bằng cách chọn hình đại diện của họ và sử dụng nút %{icon} tin nhắn.<br><br> Nếu bạn cần giúp đỡ, <a href='%{aboutUrl}'>bạn có thể nhắn tin cho nhân viên</a>.
-      no_bookmarks_title: "Bạn chưa đánh dấu bất cứ thứ gì"
+      no_bookmarks_title: "Bạn chưa lưu gì"
       no_bookmarks_body: >
-        Bắt đầu đánh dấu bài viết bằng nút %{icon} và chúng sẽ được liệt kê ở đây để dễ dàng tham khảo. Bạn cũng có thể lên lịch nhắc nhở!
+        Dùng nút %{icon} để lưu bài viết. Chúng sẽ được liệt kê ở đây để tiện tham khảo. Bạn cũng có thể lên lịch nhắc nhở!
       no_bookmarks_search: "Không tìm thấy dấu trang nào với truy vấn tìm kiếm được cung cấp."
-      no_notifications_title: "Bạn chưa có bất kỳ thông báo nào"
+      no_notifications_title: "Bạn chưa có thông báo nào"
       no_notifications_body: >
-        Bạn sẽ được thông báo trong bảng điều khiển này về hoạt động liên quan trực tiếp đến bạn, bao gồm các câu trả lời cho các chủ đề và bài đăng của bạn, khi ai đó <b>@mentions</b> bạn hoặc trích dẫn bạn và trả lời các chủ đề bạn đang xem. Thông báo cũng sẽ được gửi đến email của bạn khi bạn không đăng nhập trong một thời gian. <br><br> Tìm %{icon} để quyết định chủ đề, danh mục và thẻ cụ thể mà bạn muốn được thông báo. Để biết thêm, hãy xem <a href='%{preferencesUrl}'>tùy chọn thông báo của bạn</a>.
-      no_notifications_page_title: "Bạn chưa có bất kỳ thông báo nào"
+        Bảng điều khiển này hiện thông báo về hoạt động liên quan trực tiếp đến bạn, bao gồm các lượt trả lời chủ đề và bài đăng của bạn, khi ai đó <b>@bạn</b> hoặc trích dẫn bạn, cũng như trả lời các chủ đề bạn đang xem. Thông báo cũng sẽ được gửi đến email của bạn nếu bạn không đăng nhập trong một thời gian. <br><br>Nhấn %{icon} để chọn những chủ đề, chuyên mục và thẻ mà bạn muốn được thông báo. Để biết thêm, xem <a href='%{preferencesUrl}'>thiết lập thông báo</a>.
+      no_notifications_page_title: "Bạn chưa có thông báo nào"
       no_notifications_page_body: >
         Bạn sẽ được thông báo về hoạt động liên quan trực tiếp đến bạn, bao gồm các câu trả lời cho các chủ đề và bài đăng của bạn, khi ai đó <b>@mentions</b> bạn hoặc trích dẫn bạn và trả lời các chủ đề bạn đang xem. Thông báo cũng sẽ được gửi đến email của bạn khi bạn không đăng nhập trong một thời gian. <br><br> Tìm %{icon} để quyết định chủ đề, danh mục và thẻ cụ thể mà bạn muốn được thông báo. Để biết thêm, hãy xem <a href='%{preferencesUrl}'>tùy chọn thông báo của bạn</a>.
       dynamic_favicon: "Hiển thị đếm  trên icon trình duyệt"
@@ -1102,6 +1103,10 @@ vi:
         default_description: "Chủ đề mặc định"
         undo: "Cài lại"
         dark: "Chế độ tối"
+        interface_modes:
+          auto: "Tự động"
+          light: "Sáng"
+          dark: "Tối"
         picker:
           active: "Kích hoạt"
       dark_mode: "Chế độ tối"
@@ -1161,7 +1166,7 @@ vi:
       regular_categories: "Bình thường"
       regular_categories_instructions: "Bạn sẽ thấy các danh mục này trong danh sách chủ đề \"Mới nhất\" và \"Hàng đầu\"."
       no_category_access: "Với tư cách là người kiểm duyệt, bạn có quyền truy cập danh mục hạn chế, tính năng lưu bị tắt."
-      delete_account: "Xoá Tài khoản của tôi"
+      delete_account: "Xóa tài khoản"
       delete_account_confirm: "Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản của bạn? Hành động này không thể được hoàn tác!"
       deleted_yourself: "Tài khoản của bạn đã được xóa thành công."
       delete_yourself_not_allowed: "Vui lòng liên hệ với nhân viên nếu bạn muốn tài khoản của mình được xóa."
@@ -1288,7 +1293,7 @@ vi:
         title: "Thay đổi thông tin về tôi"
         error: "Có lỗi xảy ra khi thay đổi giá trị này."
       change_username:
-        title: "Thay Username"
+        title: "Đổi tên người dùng"
         confirm: "Bạn có chắc chắn muốn thay đổi tên người dùng của mình không?"
         taken: "Xin lỗi, đã có username này."
         invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự là chữ cái và chữ số. "
@@ -1344,6 +1349,7 @@ vi:
         add_email: "Thêm email thay thế"
         auth_override_instructions: "Email có thể được cập nhật từ nhà cung cấp xác thực."
         no_secondary: "Không có email thứ hai"
+        instructions: "Không bao giờ hiển thị công khai"
         admin_note: "Lưu ý: Quản trị viên thay đổi email của người không phải là quản trị viên tức là người dùng đã mất quyền truy cập vào tài khoản email ban đầu của họ, do đó, email đặt lại mật khẩu sẽ được gửi đến địa chỉ mới của họ. Email của người dùng sẽ không thay đổi cho đến khi họ hoàn tất quá trình đặt lại mật khẩu."
         ok: "Chúng tôi sẽ gửi thư điện tử xác nhận đến cho bạn"
         required: "Vui lòng nhập một địa chỉ email"
@@ -1374,13 +1380,13 @@ vi:
       name:
         title: "Tên"
         title_optional: "Tên (tùy chọn)"
-        instructions: "Tên đầy đủ của bạn (tuỳ chọn)"
+        instructions: "Tên đầy đủ của bạn (tùy chọn)"
         instructions_required: "Tên đầy đủ của bạn"
         required: "Vui lòng nhập tên"
         too_short: "Tên của bạn quá ngắn"
         ok: "Tên của bạn có vẻ ổn"
       username:
-        title: "Username"
+        title: "Tên người dùng"
         short_instructions: "Mọi người có thể nhắc tới bạn bằng @%{username}"
         available: "Tên đăng nhập của bạn có sẵn"
         not_available: "Chưa có sẵn. Thử %{suggestion}?"
@@ -1418,9 +1424,9 @@ vi:
         browser_active: '%{browser} | <span class="active">kích hoạt</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Bài viết cuối cùng"
-      last_seen: "được thấy"
+      last_seen: "Lần cuối online"
       created: "Đã tham gia"
-      log_out: "Log Out"
+      log_out: "Đăng xuất"
       location: "Vị trí"
       website: "Web Site"
       email_settings: "Email"
@@ -1543,6 +1549,7 @@ vi:
         invite:
           expires_in_time: "Hết hạn trong %{time}"
           expired_at_time: "Đã hết hạn vào lúc %{time}"
+          link_copied: "Đã sao chép liên kết!"
           show_advanced: "Hiển thị các tùy chọn nâng cao"
           hide_advanced: "Ẩn các tùy chọn nâng cao"
           description: "Mô tả"
@@ -1581,39 +1588,39 @@ vi:
       summary:
         title: "Tóm tắt"
         stats: "Thống kê"
-        time_read: "thời gian đọc"
+        time_read: "đọc"
         time_read_title: "%{duration} (mọi lúc)"
         recent_time_read: "đã đọc gần đây"
         recent_time_read_title: "%{duration} (trong 60 ngày qua)"
         topic_count:
-          other: "Chủ đề đã được tạo"
+          other: "chủ đề đã tạo"
         post_count:
-          other: "Bài viết đã được tạo"
+          other: "bài viết đã tạo"
         likes_given:
-          other: "nhận"
+          other: "trao"
         likes_received:
-          other: "Đã nhận"
+          other: "nhận"
         days_visited:
-          other: "Ngày đã ghé thăm"
+          other: "ngày truy cập"
         topics_entered:
-          other: "chủ đề đã xem"
+          other: "chủ đề đã đọc"
         posts_read:
-          other: "Bài viết đã đọc"
+          other: "bài viết đã đọc"
         bookmark_count:
           other: "Dấu trang"
         top_replies: "Top trả lời"
         no_replies: "Chưa có trả lời."
         more_replies: "Thêm trả lời"
         top_topics: "Top chủ đề"
-        no_topics: "Chưa có chủ đề nào."
+        no_topics: "Chưa có chủ đề."
         more_topics: "Thêm chủ đề"
         top_badges: "Top huy hiệu"
-        no_badges: "Chưa có huy hiệu nào."
+        no_badges: "Chưa có huy hiệu."
         more_badges: "Thêm huy hiệu"
-        top_links: "Liên kết đầu"
-        no_links: "Không có liên kết"
+        top_links: "Top liên kết"
+        no_links: "Chưa có liên kết."
         most_liked_by: "Được thích nhiều nhất bởi"
-        most_liked_users: "Like nhiều nhất"
+        most_liked_users: "Đã thích nhiều nhất"
         most_replied_to_users: "Trả lời nhiều nhất"
         no_likes: "Chưa có lượt thích."
         top_categories: "Danh mục hàng đầu"
@@ -1625,6 +1632,7 @@ vi:
         title: "Địa chỉ IP đăng ký"
       avatar:
         title: "Ảnh đại diện"
+        header_title: "Thông báo và Tài khoản"
         name_and_description: "%{name} - %{description}"
         edit: "Chỉnh sửa ảnh đại diện"
       title:
@@ -1734,9 +1742,9 @@ vi:
       buttons:
         generate: "Tóm tắt"
         regenerate: "Khởi tạo lại"
-      enable: "Hiển thị các trả lời hàng đầu"
+      enable: "Hiển thị các trả lời hay nhất"
       disable: "HIển thị tất cả các bài viết"
-      short_label: "Trả lời hàng đầu"
+      short_label: "Trả lời hay nhất"
       show_all_label: "Hiển thị tất cả"
     deleted_filter:
       enabled_description: "Chủ để này có chứa các bài viết bị xoá, chúng đã bị ẩn đi"
@@ -1758,7 +1766,7 @@ vi:
     last_seen: "Đã xem"
     created: "Tạo bởi"
     created_lowercase: "ngày tạo"
-    trust_level: "Độ tin tưởng"
+    trust_level: "Độ tin cậy"
     search_hint: "username, email or IP address"
     create_account:
       header_title: "Chào mừng!"
@@ -1975,6 +1983,7 @@ vi:
       unlist: "chưa được liệt kê"
       add_warning: "Đây là một cảnh báo chính thức"
       toggle_whisper: "Chuyển đổi nói thầm"
+      insert_table: "Chèn bảng"
       posting_not_on_topic: "Bài viết nào bạn muốn trả lời "
       saved_local_draft_tip: "Đã lưu locally"
       drafts_offline: "Nháp offline"
@@ -2026,6 +2035,8 @@ vi:
       remove_featured_link: "Xóa liên kết khỏi chủ đề."
       reply_placeholder: "Gõ ở đây. Sử dụng Markdown, BBCode, hoặc HTML để định dạng. Kéo hoặc dán ảnh."
       reply_placeholder_no_images: "Nhập ở đây. Sử dụng Markdown, BBCode hoặc HTML để định dạng."
+      reply_placeholder_rte: "Nhập nội dung vào đây. Sử dụng thanh công cụ hoặc Markdown để định dạng. Kéo hoặc dán hình ảnh."
+      reply_placeholder_rte_no_images: "Nhập nội dung vào đây. Sử dụng thanh công cụ hoặc Markdown để định dạng."
       reply_placeholder_choose_category: "Chọn một danh mục trước khi nhập vào đây."
       view_new_post: "Xem bài đăng mới của bạn. "
       saving: "Đang lưu"
@@ -2039,8 +2050,8 @@ vi:
       bold_title: "In đậm"
       bold_text: "chữ in đậm"
       italic_label: "I"
-      italic_title: "Nhấn mạnh"
-      italic_text: "văn bản nhấn mạnh"
+      italic_title: "In nghiêng"
+      italic_text: "in nghiêng văn bản"
       link_title: "Liên kết"
       link_description: "Nhập mô tả liên kết ở đây"
       link_dialog_title: "Chèn liên kết"
@@ -2108,6 +2119,8 @@ vi:
       image_alt_text:
         aria_label: Văn bản thay thế cho hình ảnh
       delete_image_button: Xoá ảnh
+      link_toolbar:
+        link_copied: "Đã sao chép liên kết!"
     notifications:
       tooltip:
         regular:
@@ -2216,7 +2229,7 @@ vi:
       latest_post: "Bài viết mới nhất"
       latest_topic: "Chủ đề mới"
       most_viewed: "Xem nhiều nhất"
-      most_liked: "Thích nhiều nhất"
+      most_liked: "Đã thích nhiều nhất"
       select_all: "Chọn tất cả"
       clear_all: "Xóa tất cả"
       too_short: "Từ khoá tìm kiếm của bạn quá ngắn."
@@ -2256,19 +2269,20 @@ vi:
         default: "Chủ đề/Bài viết"
         users: "Người dùng"
         categories: "Chuyên mục"
-        categories_and_tags: "Danh mục / thẻ"
+        categories_and_tags: "Chuyên mục/thẻ"
       context:
         user: "Tìm bài viết của @%{username}"
-        category: "Tìm kiếm danh mục #%{category}"
+        category: "Tìm kiếm chuyên mục #%{category}"
         tag: "Tìm kiếm thẻ #%{tag}"
         topic: "Tìm trong chủ đề này"
         private_messages: "Tìm tin nhắn"
       tips:
-        category_tag: "bộ lọc theo danh mục hoặc thẻ"
+        category_tag: "lọc theo chuyên mục hoặc thẻ"
         author: "bộ lọc theo tác giả bài đăng"
         in: "lọc theo siêu dữ liệu (ví dụ: in: title, in: personal, in: pinned)"
         status: "bộ lọc theo trạng thái chủ đề"
         full_search: "khởi chạy tìm kiếm toàn trang"
+        full_search_key: "%{modifier} + Enter"
       advanced:
         title: Bộ lọc nâng cao
         posted_by:
@@ -2346,7 +2360,7 @@ vi:
         replies: "Trả lời"
         replies_with_unread:
           other: "Trả lời - %{count} trả lời chưa đọc"
-        mentions: "Được nhắc đến"
+        mentions: "Lượt nhắc đến"
         mentions_with_unread:
           other: "Đề cập - %{count} đề cập chưa đọc"
         likes: "Lượt Thích"
@@ -2367,7 +2381,7 @@ vi:
         other_notifications: "Các thông báo khác"
         other_notifications_with_unread:
           other: "Các thông báo khác - %{count} thông báo chưa đọc"
-        profile: "Tiểu sử"
+        profile: "Hồ sơ"
       reviewable:
         view_all: "xem tất cả các mục đánh giá"
         queue: "Hàng đợi"
@@ -2505,6 +2519,7 @@ vi:
       show_links: "Hiển thị liên kết trong chủ đề này"
       collapse_details: "thu gọn chi tiết chủ đề"
       expand_details: "mở rộng chi tiết chủ đề"
+      read_more_in_category: "Muốn đọc thêm? Duyệt những chủ đề khác trong %{categoryLink} hoặc <a href='%{latestLink}'>xem những chủ đề mới nhất</a>."
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
       created_at: "Ngày tạo: %{date}"
       bumped_at: "Mới nhất: %{date}"
@@ -2613,8 +2628,8 @@ vi:
           "2_4": "Bạn sẽ thấy một số câu trả lời mới vì bạn đã đăng câu trả lời cho chủ đề này."
           "2_2": "Bạn sẽ thấy nhiều câu trả lời mới vì bạn đang theo dõi chủ đề này."
           "2": 'Bạn sẽ thấy nhiều câu trả lời mới vì bạn <a href="%{basePath}/u/%{username}/preferences/notifications">đã đọc chủ đề này</a>.'
-          "1_2": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
-          "1": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
+          "1_2": "Bạn sẽ được thông báo nếu ai đó nhắc đến @bạn hoặc trả lời bạn."
+          "1": "Bạn sẽ được thông báo nếu ai đó nhắc đến @bạn hoặc trả lời bạn."
           "0_7": "Bạn đang bỏ qua tất cả các tin báo trong chuyên mục này."
           "0_2": "Bạn đang bỏ qua tất cả các thông báo trong chủ đề này"
           "0": "Bạn đang bỏ qua tất cả các thông báo trong chủ đề này"
@@ -2833,6 +2848,7 @@ vi:
       deleted_by_author_simple: "(chủ đề bị xóa bởi tác giả)"
     post_list:
       title: "Bài viết mới nhất"
+      empty: "Chưa có bài đăng"
     post:
       confirm_delete: "Bạn có chắc chắn muốn xóa bài đăng này không?"
       quote_reply: "Trích dẫn"
@@ -2926,6 +2942,8 @@ vi:
         undelete: "hủy xóa bài viết này"
         share_action: "Chia sẻ"
         share: "chia sẻ liên kết đến bài viết này"
+        copy_title: "Sao chép liên kết của bài đăng này vào clipboard"
+        link_copied: "Đã sao chép liên kết!"
         more: "Thêm"
         delete_replies:
           confirm: "Bạn cũng muốn xóa các câu trả lời cho bài đăng này?"
@@ -3046,13 +3064,13 @@ vi:
         title: "Chia sẻ bài đăng #%{post_number}"
         instructions: "Chia sẻ một liên kết đến bài đăng này:"
     category:
-      none: "(không danh mục)"
-      all: "Tất cả danh mục"
-      choose: "danh mục&hellip;"
+      none: "(chưa có chuyên mục)"
+      all: "Tất cả chuyên mục"
+      choose: "chuyênmục&hellip;"
       edit: "Sửa"
       edit_dialog_title: "Chỉnh sửa: %{categoryName}"
-      view: "Xem Chủ đề trong Danh mục"
-      back: "Quay lại danh mục"
+      view: "Xem Chủ đề trong Chuyên mục"
+      back: "Quay lại chuyên mục"
       general: "Chung"
       settings: "Cấu hình"
       tags: "Thẻ"
@@ -3142,7 +3160,7 @@ vi:
       default_position: "vị trí mặc định"
       minimum_required_tags: "Số lượng thẻ tối thiểu được yêu cầu trong một chủ đề:"
       default_slow_mode: 'Bật "Chế độ chậm" cho các chủ đề mới trong danh mục này.'
-      parent: "Danh mục cha"
+      parent: "Chuyên mục mẹ"
       num_auto_bump_daily: "Số lượng chủ đề mở tự động tăng hàng ngày:"
       navigate_to_first_post_after_read: "Chuyển đến bài đăng đầu tiên sau khi chủ đề được đọc"
       notifications:
@@ -3175,12 +3193,12 @@ vi:
         default: "mặc định"
         likes: "Thích"
         op_likes: "Lượt thích bài viết gốc"
-        views: "Lượt xem"
+        views: "Xem"
         posts: "Bài viết"
         activity: "Hoạt động"
-        posters: "Người gửi"
+        posters: "Người đăng"
         category: "Chuyên mục"
-        created: "Được tạo"
+        created: "Đã tạo"
       sort_ascending: "Tăng dần"
       sort_descending: "Giảm dần"
       subcategory_list_styles:
@@ -3242,7 +3260,7 @@ vi:
         other: "%{count} nhấp chuột"
       views: "Lượt xem"
       read: đọc
-      minutes: tối thiểu
+      minutes: phút
     post_links:
       about: "mở rộng nhiều liên kết hơn cho bài đăng này"
       title:
@@ -3259,7 +3277,7 @@ vi:
       locked_and_archived:
         help: "Chủ đề này đã đóng và lưu trữ, không cho phép trả lời mới và sửa đổi nữa"
       unpinned:
-        title: "Hủy gắn"
+        title: "Bỏ ghim"
         help: "Chủ đề này không còn được ghim nữa, nó sẽ hiển thị theo thứ tự thông thường"
       pinned_globally:
         title: "Ghim toàn trang"
@@ -3278,24 +3296,24 @@ vi:
     original_post: "Bài viết gốc"
     views: "Lượt xem"
     views_lowercase:
-      other: "lượt xem"
+      other: "xem"
     replies: "Trả lời"
     views_long:
       other: "chủ đề này đã được xem %{number} lần"
     activity: "Hoạt động"
     likes: "Lượt thích"
     likes_lowercase:
-      other: "lượt thích"
+      other: "thích"
     users: "Người dùng"
     users_lowercase:
-      other: "người dùng"
-    category_title: "Danh mục"
+      other: "tham gia"
+    category_title: "Chuyên mục"
     history_capped_revisions: "Lịch sử, 100 bản sửa đổi gần đây nhất"
     history: "Lịch sử"
     raw_email:
       title: "Email đến"
       not_available: "Không sẵn sàng!"
-    categories_list: "Danh sách Danh mục"
+    categories_list: "Danh sách chuyên mục"
     filters:
       with_topics: "%{filter} chủ đề"
       with_category: "%{filter} %{category} chủ đề"
@@ -3311,8 +3329,8 @@ vi:
         title: "Đọc"
         help: "chủ đề bạn đã đọc, theo thứ tự bạn đọc lần cuối cùng"
       categories:
-        title: "Danh mục"
-        title_in: "Danh mục - %{categoryName}"
+        title: "Chuyên mục"
+        title_in: "Chuyên mục - %{categoryName}"
         help: "tất cả các chủ đề được nhóm theo chuyên mục"
       unread:
         title: "Chưa đọc"
@@ -3333,7 +3351,7 @@ vi:
         title_with_count:
           other: "Mới (%{count})"
         help: "chủ đề đã tạo cách đây vài ngày"
-        all: "All"
+        all: "Tất cả"
         all_with_count: "Tất cả (%{count})"
         topics: "Các chủ đề"
         topics_with_count: "Chủ đề (%{count})"
@@ -3356,18 +3374,18 @@ vi:
         all:
           title: "Từ trước tới nay"
         yearly:
-          title: "Hàng năm"
+          title: "Theo năm"
         quarterly:
-          title: "Hàng quý"
+          title: "Theo quý"
         monthly:
-          title: "Hàng tháng"
+          title: "Theo tháng"
         weekly:
-          title: "Hàng tuần"
+          title: "Theo tuần"
         daily:
-          title: "Hàng ngày"
+          title: "Theo ngày"
         all_time: "Từ trước tới nay"
         this_year: "Năm"
-        this_quarter: "Quý"
+        this_quarter: "Qúy"
         this_month: "Tháng"
         this_week: "Tuần"
         today: "Ngày"
@@ -3400,7 +3418,7 @@ vi:
         latest: "%{shortcut} Cuối cùng"
         new: "%{shortcut} Mới"
         unread: "%{shortcut} Chưa đọc"
-        categories: "%{shortcut} Danh mục"
+        categories: "%{shortcut} Chuyên mục"
         top: "%{shortcut} Trên"
         bookmarks: "%{shortcut} Đánh dấu"
         profile: "%{shortcut} Hồ sơ"
@@ -3474,7 +3492,9 @@ vi:
     badges:
       earned_n_times:
         other: "Đã giành được huy hiệu này %{count} lần"
-      granted_on: "Cấp ngày %{date}"
+      granted_on: "Đã trao %{date}"
+      others_count:
+        other: "Đã trao cho những người khác %{count} lần"
       title: Huy hiệu
       allow_title: "Bạn có thể sử dụng huy hiệu này làm tiêu đề"
       multiple_grant: "Bạn có thể có được nhiều lần"
@@ -3482,20 +3502,22 @@ vi:
         other: "%{count} huy hiệu"
       more_badges:
         other: "+%{count} Khác"
+      awarded:
+        other: "%{number} người được trao"
       select_badge_for_title: Chọn huy hiệu để sử dụng như là tên
-      none: "(không có gì)"
+      none: "(chưa có)"
       successfully_granted: "Đã cấp %{badge} cho %{username}"
       badge_grouping:
         getting_started:
-          name: Bắt đầu
+          name: Dành cho người mới
         community:
           name: Cộng đồng
         trust_level:
-          name: Cấp độ tin tưởng
+          name: Độ tin cậy
         other:
           name: Khác
         posting:
-          name: Gửi bài
+          name: Đăng bài
       favorite_max_reached: "Bạn không thể yêu thích nhiều huy hiệu hơn."
       favorite_max_not_reached: "Đánh dấu huy hiệu này là yêu thích"
       favorite_count: "%{count}/%{max} huy hiệu được đánh dấu là yêu thích"
@@ -3524,7 +3546,7 @@ vi:
       choose_for_topic_required_group:
         other: "chọn %{count} thẻ từ “%{name}”…"
       info: "Thông tin"
-      default_info: "Thẻ này không bị giới hạn đối với bất kỳ danh mục nào và không có từ đồng nghĩa."
+      default_info: "Thẻ này không bị hạn chế với bất kỳ chuyên mục nào, và không có từ đồng nghĩa."
       staff_info: "Để thêm các hạn chế, hãy đặt thẻ này vào <a href=%{basePath}/tag_groups>nhóm thẻ</a>."
       category_restricted: "Thẻ này bị hạn chế đối với các danh mục bạn không có quyền truy cập."
       synonyms: "Từ đồng nghĩa"
@@ -3640,6 +3662,7 @@ vi:
     image_removed: "(hình ảnh đã bị xóa)"
     pause_notifications:
       title: "Tạm dừng thông báo trong…"
+      label: "Tạm dừng thông báo"
       options:
         half_hour: "30 phút"
         one_hour: "1 tiếng"
@@ -3652,13 +3675,13 @@ vi:
         basic: "thành viên cơ bản"
         member: "thành viên"
         regular: "thường xuyên"
-        leader: "người khởi xướng"
+        leader: "thủ lĩnh"
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Bạn đã chọn một tệp không được hỗ trợ. Các loại tệp được hỗ trợ - %{types}."
     user_activity:
-      no_activity_title: "Chưa có hoạt động nào"
-      no_activity_body: "Chào mừng đến với cộng đồng của chúng tôi! Bạn là thương hiệu mới ở đây và chưa đóng góp vào các cuộc thảo luận. Bước đầu tiên, hãy truy cập <a href='%{topUrl}'>Top</a> hoặc <a href='%{categoriesUrl}'>Chuyên mục</a> và chỉ cần bắt đầu đọc! Chọn %{heartIcon} trên các bài đăng mà bạn thích hoặc muốn tìm hiểu thêm. Khi bạn tham gia, hoạt động của bạn sẽ được liệt kê ở đây."
+      no_activity_title: "Chưa có hoạt động"
+      no_activity_body: "Chào mừng đến với cộng đồng của chúng tôi! Bạn là thành viên mới và chưa đóng góp vào các cuộc thảo luận. Đầu tiên, hãy truy cập <a href='%{topUrl}'>Top</a> hoặc <a href='%{categoriesUrl}'>Chuyên mục</a> và bắt đầu đọc! Chọn %{heartIcon} trên các bài đăng mà bạn thích hoặc muốn tìm hiểu thêm. Khi bạn tham gia, hoạt động của bạn sẽ được liệt kê ở đây."
       no_replies_title: "Bạn chưa trả lời bất kỳ chủ đề nào"
       no_replies_title_others: "%{username} chưa trả lời bất kỳ chủ đề nào"
       no_drafts_title: "Bạn chưa bắt đầu bất kỳ bản nháp nào"
@@ -3684,14 +3707,16 @@ vi:
         other: "%{count} chưa đọc"
       new_count:
         other: "%{count} mới"
+      toggle_section: "Mở rộng phần"
       more: "Thêm"
-      all_categories: "Tất cả danh mục"
+      all_categories: "Tất cả chuyên mục"
       all_tags: "Tất cả các thẻ"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "All"
       sections:
         custom:
+          add: "Thêm phần tùy chỉnh"
           save: "Lưu lại"
           delete: "Xóa"
           links:
@@ -3721,7 +3746,7 @@ vi:
         categories:
           none: "Bạn chưa thêm bất kỳ danh mục nào."
           click_to_get_started: "Bấm vào đây để bắt đầu."
-          header_link_text: "Thư mục"
+          header_link_text: "Chuyên mục"
         community:
           edit_section:
             header_dropdown: "Tùy biến"
@@ -3754,6 +3779,11 @@ vi:
             invite:
               content: "Mời"
       search: "Tìm kiếm"
+      footer:
+        interface_color_selector:
+          light: "Sáng"
+          dark: "Tối"
+          auto: "Tự động"
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -3775,12 +3805,13 @@ vi:
       spreadsheet:
         show: "Hiển thị"
         about: "Giới thiệu"
+    powered_by_discourse: "Được vận hành bởi Discourse"
     filter:
       description:
         yesterday: "Hôm qua"
     discovery:
       headings:
-        categories: "Tất cả danh mục"
+        categories: "Tất cả chuyên mục"
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
@@ -4002,7 +4033,7 @@ vi:
             group:
               label: Nhóm
             category:
-              label: Danh mục
+              label: Chuyên mục
             include_subcategories:
               label: "Bao gồm các danh mục phụ"
       flags:
@@ -4039,7 +4070,7 @@ vi:
             publish_read_state: "Trên tin nhắn nhóm đăng trạng thái nhóm"
           membership:
             automatic: Tự động
-            trust_levels_title: "Cấp độ tin tưởng tự động tăng cho thành viên khi họ thêm:"
+            trust_levels_title: "Độ tin cậy tự động tăng cho thành viên khi họ thêm:"
             effects: Các hiệu ứng
             trust_levels_none: "Không có gì"
             automatic_membership_email_domains: "Các thành viên đã đăng ký với đuôi email khớp với một trong danh sách này sẽ được tự động thêm vào nhóm:"
@@ -4640,6 +4671,9 @@ vi:
             name: "đáng yêu"
           selected:
             name: "đã chọn"
+          editor:
+            light: "Sáng"
+            dark: "Tối"
         robots:
           title: "Ghi đè tệp robots.txt của trang web của bạn:"
           warning: "Điều này sẽ ghi đè vĩnh viễn mọi cài đặt trang web liên quan."
@@ -4724,7 +4758,7 @@ vi:
         ip_address: "IP"
         topic_id: "ID Chủ đề"
         post_id: "ID Bài viết"
-        category_id: "ID Danh mục"
+        category_id: "ID Chuyên mục"
         delete: "Xoá"
         edit: "Sửa"
         save: "Lưu"
@@ -4748,7 +4782,7 @@ vi:
           deleted: "Không có giá trị mới, bản ghi đã được xóa."
           actions:
             delete_user: "xóa người dùng"
-            change_trust_level: "thay đổi cấp tin cậy"
+            change_trust_level: "thay đổi độ tin cậy"
             change_username: "thay đổi username"
             change_site_setting: "thay đổi cấu hình trang"
             change_theme: "thay đổi chủ đề"
@@ -4782,8 +4816,8 @@ vi:
             deleted_unused_tags: "đã xóa các thẻ không sử dụng"
             renamed_tag: "đã đổi tên thẻ"
             revoke_email: "thu hồi email"
-            lock_trust_level: "khóa mức độ tin cậy"
-            unlock_trust_level: "mở khóa mức độ tin cậy"
+            lock_trust_level: "khóa độ tin cậy"
+            unlock_trust_level: "mở khóa độ tin cậy"
             activate_user: "kích hoạt thành viên"
             deactivate_user: "hủy kích hoạt người dùng"
             change_readonly_mode: "thay đổi chế độ chỉ đọc"
@@ -4954,11 +4988,11 @@ vi:
         titles:
           active: "Thành viên đang hoạt động"
           pending: "Hoãn Xem xét Tài khoản"
-          newuser: "Tài khoản ở Cấp độ Tin tưởng 0 (Tài khoản mới)"
-          basic: "Tài khoản ở Cấp độ Tin tưởng 1 (Tài khoản Cơ bản)"
-          member: "Tài khoản ở Độ tin cậy mức 2 (Member)"
-          regular: "Tài khoản ở Độ tin cậy mức 3 (Regular)"
-          leader: "Tài khoản ở Độ tin cậy mức 4 (Leader)"
+          newuser: "Người dùng ở Độ Tin cậy 0 (Người dùng mới)"
+          basic: "Người dùng ở Độ Tin cậy 1 (Người dùng Cơ bản)"
+          member: "Người dùng ở Độ Tin cậy 2 (Thành viên)"
+          regular: "Người dùng ở Độ tin cậy 3 (Thường xuyên)"
+          leader: "Người dùng ở Độ tin cậy 4 (Thủ lĩnh)"
           staff: "Nhân viên"
           moderators: "Điều hành viên"
         not_verified: "Chưa xác thực"
@@ -5126,24 +5160,24 @@ vi:
           none: "Không có thư trả lại nào được nhận gần đây từ email đó."
           some: "Một số thư trả lại đã được nhận gần đây từ email đó."
           threshold_reached: "Đã nhận được quá nhiều thư trả lại từ email đó."
-        trust_level_change_failed: "Có lỗi xảy ra khi thay đổi mức độ tin tưởng của tài khoản."
+        trust_level_change_failed: "Có lỗi xảy ra khi thay đổi độ tin cậy của người dùng."
         suspend_modal_title: "Tạm khóa Thành viên"
         confirm_cancel_penalty: "Bạn có chắc chắn muốn loại bỏ hình phạt không?"
-        trust_level_2_users: "Độ tin cậy tài khoản mức 2"
-        trust_level_3_requirements: "Độ tin cậy bắt buộc mức 3"
-        trust_level_locked_tip: "mức độ tin cậy đang khóa, hệ thống sẽ không thể thăng hoặc giáng chức người dùng"
-        lock_trust_level: "Khóa Cấp độ Tin tưởng"
-        unlock_trust_level: "Mở khóa độ tin cậy"
+        trust_level_2_users: "Người dùng Độ tin cậy 2"
+        trust_level_3_requirements: "Yêu cầu Độ tin cậy 3"
+        trust_level_locked_tip: "độ tin cậy đang khóa, hệ thống sẽ không thể thăng hoặc giáng chức người dùng"
+        lock_trust_level: "Khóa Độ tin cậy"
+        unlock_trust_level: "Mở khóa Độ tin cậy"
         silenced_count: "Im lặng"
         suspended_count: "Đã tạm khóa"
         last_six_months: "6 tháng qua"
         other_matches_list:
           username: "Tên tài khoản"
-          trust_level: "Bậc tin tưởng"
+          trust_level: "Độ tin cậy"
           read_time: "Thời gian đọc"
           posts: "Bài viết"
         tl3_requirements:
-          title: "Yêu cầu Cấp độ tin tưởng 3"
+          title: "Yêu cầu Độ tin cậy 3"
           table_title:
             other: "Trong %{count} ngày qua:"
           value_heading: "Giá trị"
@@ -5162,12 +5196,12 @@ vi:
           likes_received_users: "Like nhận được: tài khoản độc nhất"
           suspended: "Bị tạm ngưng (6 tháng qua)"
           silenced: "Im lặng (6 tháng qua)"
-          qualifies: "Đủ điều kiện cho độ tin cậy mức 3."
-          does_not_qualify: "Không đủ điều kiện cho độ tin cậy mức 3."
+          qualifies: "Đạt yêu cầu Độ tin cậy 3."
+          does_not_qualify: "Chưa đạt yêu cầu Độ tin cậy 3."
           will_be_promoted: "Sẽ sớm được thăng chức."
           will_be_demoted: "Sẽ sớm bị giáng chức."
           on_grace_period: "Hiện đang trong khoảng thời gian gia hạn thăng chức, sẽ không thể giáng chức."
-          locked_will_not_be_promoted: "Mức độ tin cậy đang khóa, sẽ không thể thăng chức."
+          locked_will_not_be_promoted: "Độ tin cậy đang khóa, sẽ không thể thăng chức."
           locked_will_not_be_demoted: "Mức độ tin cậy đang khóa, sẽ không thể giáng chức."
         discourse_connect:
           external_id: "ID Bên ngoài"
@@ -5181,7 +5215,7 @@ vi:
         name: "Tên Trường"
         type: "Loại Trường"
         description: "Trường mô tả"
-        preferences: "Tùy chỉnh"
+        preferences: "Thiết lập"
         save: "Lưu"
         edit: "Sửa"
         delete: "Xoá"
@@ -5252,7 +5286,7 @@ vi:
           posting: "Đang đăng bài"
           email: "Email"
           files: "Tập tin"
-          trust: "Độ tin tưởng"
+          trust: "Độ tin cậy"
           security: "Bảo mật"
           onebox: "Onebox"
           seo: "SEO"
@@ -5267,7 +5301,7 @@ vi:
           backups: "Sao lưu"
           login: "Đăng nhập"
           plugins: "Plugins"
-          user_preferences: "Tùy chỉnh Tài khoản"
+          user_preferences: "Thiết lập người dùng"
           tags: "Thẻ"
           search: "Tìm kiếm"
           groups: "Nhóm"
@@ -5337,7 +5371,7 @@ vi:
           none: "Cập nhật hàng ngày"
           post_action: "Khi người dùng hoạt động trên bài viết"
           post_revision: "Khi người dùng sửa hoặc tạo bài viết"
-          trust_level_change: "Khi người dùng thay đổi mức độ tin cậy"
+          trust_level_change: "Khi người dùng thay đổi độ tin cậy"
           user_change: "Khi người dùng được sửa hoặc được tạo"
         preview:
           link_text: "Xem trước cấp huy hiệu"
@@ -5409,8 +5443,8 @@ vi:
         topic_title: "Chủ đề"
         post_id: "ID Bài viết"
         post_title: "Bài viết"
-        category_id: "ID Danh mục"
-        category_title: "Danh mục"
+        category_id: "ID Chuyên mục"
+        category_title: "Chuyên mục"
         tag_name: "Tên thẻ"
         external_url: "URL bên ngoài hoặc tương đối"
         user_title: "Người dùng"
@@ -5431,7 +5465,7 @@ vi:
         modal:
           title: "Thay thế Văn bản"
           subtitle: "Thay thế văn bản của các danh mục và chủ đề do hệ thống tạo bằng các bản dịch mới nhất"
-          categories: "Thư mục"
+          categories: "Chuyên mục"
           topics: "Chủ đề"
           replace: "Thay thế"
   wizard_js:
@@ -5458,14 +5492,14 @@ vi:
         custom:
           label: "Tùy biến"
         style_type:
-          categories: "danh mục"
+          categories: "chuyên mục"
           topics: "chủ đề"
       top_menu_items:
         new: "Mới"
         unread: "Chưa đọc"
         top: "Top"
         latest: "Mới nhất"
-        categories: "Danh mục"
+        categories: "Chuyên mục"
         unseen: "Không nhìn thấy"
         read: "Đọc"
         bookmarks: "Các đánh dấu"

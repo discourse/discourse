@@ -114,7 +114,7 @@ vi:
         silenced_user_error: "Xảy ra khi người gửi đã được tắt tiếng."
         bad_destination_address: "Xảy ra khi không có địa chỉ email nào trong trường To/Cc khớp với địa chỉ email đến đã được định cấu hình."
         strangers_not_allowed_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ không phải là thành viên."
-        insufficient_trust_level_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ chưa đủ cấp độ tin cậy."
+        insufficient_trust_level_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ chưa đủ độ tin cậy."
         reply_user_not_matching_error: "Xảy ra khi trả lời đến từ một địa chỉ email khác với thông báo được gửi đến."
         topic_not_found_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã bị xóa."
         topic_closed_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã được đóng lại."
@@ -361,7 +361,7 @@ vi:
       bulk_add:
         other: "%{count} người dùng đã được thêm vào nhóm."
     errors:
-      grant_trust_level_not_valid: "'%{trust_level}' không phải là mức tin cậy hợp lệ."
+      grant_trust_level_not_valid: "'%{trust_level}' không phải là độ tin cậy hợp lệ."
       can_not_modify_automatic: "Bạn không thể sửa một nhóm tự động"
       member_already_exist:
         other: "Những người dùng sau đã là thành viên của nhóm này: %{username}"
@@ -394,7 +394,7 @@ vi:
         name: "Tên chuyên mục"
       topic:
         title: "Tiêu đề"
-        category_id: "Danh mục"
+        category_id: "Chuyên mục"
       post:
         raw: "Thân"
       user_profile:
@@ -503,9 +503,9 @@ vi:
       topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count} chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."
   trust_levels:
-    admin: "Quản trị"
+    admin: "Quản trị viên"
     staff: "Nhân viên"
-    change_failed_explanation: "Bạn đã cố gắng để giảm hạng %{user_name} xuống '%{new_trust_level}'. Tuy nhiên cấp độ tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở cấp độ '%{current_trust_level}' - nếu bạn muốn giảm hạng thành viên, trước tiên hãy khóa cấp độ tin cậy"
+    change_failed_explanation: "Bạn đã cố gắng để giáng chức %{user_name} xuống '%{new_trust_level}'. Tuy nhiên độ tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở độ '%{current_trust_level}' - nếu bạn muốn giáng chức thành viên, trước tiên hãy khóa độ tin cậy"
   post:
     image_placeholder:
       broken: "Hình ảnh này bị hỏng"
@@ -516,7 +516,7 @@ vi:
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
     by_type:
       first_day_replies_per_day: "Chúng tôi đánh giá cao sự nhiệt tình của bạn, hãy duy trì nó! Điều đó có nghĩa là, vì sự an toàn của cộng đồng của chúng tôi, bạn đã đạt đến số lượng câu trả lời tối đa mà người dùng mới có thể tạo vào ngày đầu tiên của họ. Vui lòng đợi %{time_left} và bạn sẽ có thể tạo thêm câu trả lời."
-      create_like: "Ồ! Bạn đã chia sẻ rất nhiều tình yêu thương! Bạn đã đạt đến số lượt thích tối đa trong khoảng thời gian 24 giờ, nhưng khi bạn đạt được mức độ tin cậy, bạn sẽ kiếm được nhiều lượt thích hàng ngày hơn. Bạn sẽ có thể thích lại các bài đăng sau %{time_left}."
+      create_like: "Ồ! Bạn đã chia sẻ rất nhiều yêu thương! Bạn đã đạt đến số lượt thích tối đa trong khoảng thời gian 24 giờ, nhưng khi bạn đạt được độ tin cậy, bạn sẽ được phép gửi nhiều lượt thích hàng ngày hơn. Bạn sẽ có thể thích lại các bài đăng sau %{time_left}."
       live_post_counts: "Bạn đang yêu cầu số lượng bài đăng trực tiếp quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
       unsubscribe_via_email: "Bạn đã đạt đến số lượng người hủy đăng ký tối đa qua email. Vui lòng đợi %{time_left} trước khi thử lại."
     hours:
@@ -738,7 +738,7 @@ vi:
       description: "Số thành viên thực hiện bài đăng đầu tiên của họ trong giai đoạn này."
     trust_level_growth:
       yaxis: "Ngày"
-      description: "Số lượng người dùng đã tăng Mức độ tin cậy của họ trong khoảng thời gian này."
+      description: "Số lượng người dùng đã tăng Độ tin cậy của họ trong khoảng thời gian này."
     consolidated_page_views:
       title_legacy: "Số lần xem trang tổng hợp"
       xaxis:
@@ -793,10 +793,10 @@ vi:
       yaxis: "Số đánh dấu mới"
       description: "Số chủ đề và bài viết mới được đánh dấu."
     users_by_trust_level:
-      title: "Người dùng trên mỗi cấp độ tin cậy"
-      xaxis: "Bậc tin tưởng"
+      title: "Người dùng trên mỗi độ tin cậy"
+      xaxis: "Độ tin cậy"
       yaxis: "Số thành viên"
-      description: "Số lượng thành viên được nhóm theo mức độ tin cậy."
+      description: "Số lượng thành viên được nhóm theo độ tin cậy."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Người dùng mỗi loại"
@@ -1133,35 +1133,35 @@ vi:
     s3_cdn_url: "CDN URL được sử dụng cho tất cả các tài nguyên S3 (vd: https://cdn.somewhere.com). CHÚ Ý: sau khi thay đổi thiết lập này bạn phải tạo lại các bài viết cũ."
     avatar_sizes: "Danh sách những kích thước hình đại diện tự động khởi tạo."
     allow_all_attachments_for_group_messages: "Cho phép các email có đính kèm trong tin nhắn nhóm."
-    default_invitee_trust_level: "Bậc tin tưởng mặc định (0-4) cho thành viên được mời."
-    default_trust_level: "Cấp độ tin cậy mặc định (0-4) cho tất cả các thành viên mới. CHÚ Ý! Thay đổi thiết lập này sẽ đặt bạn vào nguy cơ spam cao."
-    tl1_requires_topics_entered: "Số chủ đề một thành viên mới phải truy cập trước khi được lên bậc tin tưởng 1"
-    tl1_requires_read_posts: "Số chủ đề một thành viên mới phải đọc trước khi được lên bậc tin tưởng 1"
-    tl1_requires_time_spent_mins: "Số phút một thành viên mới phải đọc trước khi được lên bậc tin tưởng 1"
-    tl2_requires_topics_entered: "Số chủ đề một thành viên mới phải truy cập trước khi được lên bậc tin tưởng 2"
-    tl2_requires_read_posts: "Số chủ đề một thành viên mới phải đọc trước khi được lên bậc tin tưởng 2"
-    tl2_requires_time_spent_mins: "Số phút một thành viên mới phải đọc trước khi được lên bậc tin tưởng 2"
-    tl2_requires_days_visited: "Số ngày một thành viên phải ghé thăm site trước khi được thăng lên bậc tin cậy cấp 2."
+    default_invitee_trust_level: "Độ tin cậy mặc định (0-4) cho thành viên được mời."
+    default_trust_level: "Độ tin cậy mặc định (0-4) cho tất cả các thành viên mới. CHÚ Ý! Thay đổi thiết lập này sẽ đặt bạn vào nguy cơ spam cao."
+    tl1_requires_topics_entered: "Số chủ đề một thành viên mới phải truy cập trước khi được lên độ tin cậy 1."
+    tl1_requires_read_posts: "Số chủ đề một thành viên mới phải đọc trước khi được lên độ tin cậy 1."
+    tl1_requires_time_spent_mins: "Số phút một thành viên mới phải đọc trước khi được lên độ tin cậy 1."
+    tl2_requires_topics_entered: "Số chủ đề một thành viên mới phải truy cập trước khi được lên độ tin cậy 2."
+    tl2_requires_read_posts: "Số chủ đề một thành viên mới phải đọc trước khi được lên độ tin cậy 2."
+    tl2_requires_time_spent_mins: "Số phút một thành viên mới phải đọc trước khi được lên độ tin cậy 2."
+    tl2_requires_days_visited: "Số ngày một thành viên phải ghé thăm site trước khi được thăng lên độ tin cậy 2."
     tl2_requires_likes_received: "Số like một thành viên phải nhận được trước khi được thăng lên bậc tin cậy cấp 2."
-    tl2_requires_likes_given: "Số like một thành viên phải thực hiện trước khi được thăng lên bậc tin cậy cấp 2."
-    tl2_requires_topic_reply_count: "Số chủ đề thành viên phải trả lời trước khi được thăng lên bậc tin cậy cấp 2."
-    tl3_time_period: "Độ tin cậy mức 3 yêu cầu khoảng thời gian (theo ngày)"
-    tl3_requires_days_visited: "Số ngày tối thiểu mà thành viên cần phải truy cập website trong (tl3) ngày để được thăng lên độ tin cậy mức 3. Đặt cao hơn khoảng thời gian tl3 để tắt thăng hạng cho tl3. (0 hoặc cao hơn)"
-    tl3_requires_topics_replied_to: "Số lượng chủ đề tối thiểu mà thành viên cần phải trả lời trong (tl3) ngày để được thăng lên độ tin cậy mức 3. (0 hoặc cao hơn)"
-    tl3_requires_topics_viewed: "Phần trăm số chủ đề được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy mức 3. (0 tới 100)"
-    tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy mức 3. (0 tới 100)"
+    tl2_requires_likes_given: "Số like một thành viên phải thực hiện trước khi được thăng lên độ tin cậy 2."
+    tl2_requires_topic_reply_count: "Số chủ đề thành viên phải trả lời trước khi được thăng lên độ tin cậy 2."
+    tl3_time_period: "Độ tin cậy 3 yêu cầu khoảng thời gian (theo ngày)"
+    tl3_requires_days_visited: "Số ngày tối thiểu mà thành viên cần phải truy cập website trong (tl3) ngày để được thăng lên độ tin cậy 3. Đặt cao hơn khoảng thời gian tl3 để tắt thăng hạng cho tl3. (0 hoặc cao hơn)"
+    tl3_requires_topics_replied_to: "Số lượng chủ đề tối thiểu mà thành viên cần phải trả lời trong (tl3) ngày để được thăng lên độ tin cậy 3. (0 hoặc cao hơn)"
+    tl3_requires_topics_viewed: "Phần trăm số chủ đề được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy 3. (0 tới 100)"
+    tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy 3. (0 tới 100)"
     tl3_requires_posts_read_cap: "Số lượng bài đăng được yêu cầu tối đa được đọc trong (khoảng thời gian tl3) ngày qua."
-    tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy cấp 3."
-    tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy cấp 3."
-    tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn X bài viết được đánh dấu bởi X thành viên khác trong (tl3) ngày để được thăng lên độ tin cậy mức 3, khi X là giá trị thiết lập. (0 hoặc cao hơn)"
-    tl3_promotion_min_duration: "Số ngày tối thiểu chương trình thăng hạng cấp 3 kéo dài trước khi thành viên có thể bị giáng cấp xuống độ tin cậy cấp 2."
-    tl3_requires_likes_given: "Số like tối thiểu phải thực hiện trong (tl3) ngày để được thăng lên độ tin cậy mức 3."
-    tl3_requires_likes_received: "Số like tối thiểu nhận được trong (tl3) ngày để được thăng lên độ tin cậy mức 3."
-    tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy cấp 3."
-    min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
-    min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
-    min_trust_to_allow_self_wiki: "Bậc tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
-    min_trust_to_send_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Mức độ tin cậy tối thiểu cần thiết để tạo tin nhắn cá nhân mới."
+    tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy 3."
+    tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy 3."
+    tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn X bài viết được đánh dấu bởi X thành viên khác trong (tl3) ngày để được thăng lên độ tin cậy 3, khi X là giá trị thiết lập. (0 hoặc cao hơn)"
+    tl3_promotion_min_duration: "Số ngày tối thiểu chương trình thăng hạng cấp 3 kéo dài trước khi thành viên có thể bị giáng cấp xuống độ tin cậy 2."
+    tl3_requires_likes_given: "Số like tối thiểu phải thực hiện trong (tl3) ngày để được thăng lên độ tin cậy 3."
+    tl3_requires_likes_received: "Số like tối thiểu nhận được trong (tl3) ngày để được thăng lên độ tin cậy 3."
+    tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy 3."
+    min_trust_to_create_topic: "Độ tin cậy tối thiểu để tạo một chủ đề mới."
+    min_trust_to_edit_wiki_post: "Độ tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
+    min_trust_to_allow_self_wiki: "Độ tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
+    min_trust_to_send_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Độ tin cậy tối thiểu cần thiết để tạo tin nhắn cá nhân mới."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
     newuser_max_mentions_per_post: "Số tối đa thông báo @name mà thành viên mới có thể sử dụng trong bài viết."
@@ -1221,7 +1221,7 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
-    email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
+    email_in_min_trust: "Độ tin cậy tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
     email_in_authserv_id: "Mã định danh của dịch vụ đang thực hiện kiểm tra xác thực đối với các email đến. Xem <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> để biết hướng dẫn về cách định cấu hình."
     enable_imap_idle: "Sử dụng cơ chế IMAP IDLE để chờ email mới."
     imap_polling_period_mins: "Khoảng thời gian tính bằng phút giữa việc kiểm tra tài khoản IMAP cho email."
@@ -1250,7 +1250,7 @@ vi:
     log_personal_messages_views: "Ghi nhật ký lượt xem tin nhắn cá nhân của Admin cho người dùng / nhóm khác."
     ignored_users_count_message_threshold: "Thông báo cho người kiểm duyệt nếu một người dùng cụ thể bị bỏ qua bởi nhiều người dùng khác này."
     ignored_users_message_gap_days: "Phải đợi bao lâu trước khi thông báo lại cho người kiểm duyệt về một người dùng đã bị nhiều người khác bỏ qua."
-    clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (mức độ tin cậy 0 không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
+    clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (độ tin cậy 0 không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     clean_up_unused_staged_users_after_days: "Số ngày trước khi người dùng theo giai đoạn không sử dụng (không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     allow_profile_backgrounds: "Cho phép người dùng tải lên ảnh nền"
     get_a_room_threshold: "Số lượng bài viết mà người dùng phải thực hiện với cùng một người trong cùng một chủ đề trước khi bị cảnh báo."
@@ -1274,9 +1274,9 @@ vi:
     notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
     auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
     auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
-    returning_user_notice_tl: "Cần có mức độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
+    returning_user_notice_tl: "Cần có độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
     returning_users_days: "Bao nhiêu ngày sẽ trôi qua trước khi người dùng được coi là trở lại."
-    review_media_unless_trust_level: "Nhân viên sẽ xem xét các bài đăng của người dùng có mức độ tin cậy thấp hơn nếu chúng chứa phương tiện được nhúng."
+    review_media_unless_trust_level: "Nhân viên sẽ xem xét các bài đăng của người dùng có độ tin cậy thấp hơn nếu chúng chứa phương tiện được nhúng."
     enable_page_publishing: "Cho phép nhân viên xuất bản các chủ đề lên các URL mới với phong cách riêng của họ."
     skip_auto_delete_reply_likes: "Khi tự động xóa các trả lời cũ, bỏ qua việc xóa các bài đăng có số lượt thích này trở lên."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
@@ -1330,7 +1330,7 @@ vi:
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:
-      category: "Thư mục"
+      category: "Chuyên mục"
       topic: "Kết quả"
       user: "Thành viên"
     results_page: "Search results for '%{term}'"
@@ -1579,7 +1579,7 @@ vi:
     welcome_invite:
       subject_template: "Chào mừng đến với %{site_name}!"
     tl2_promotion_message:
-      subject_template: "Chúc mừng bạn đã thăng cấp mức độ tin cậy!"
+      subject_template: "Chúc mừng bạn đã tăng độ tin cậy!"
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
     backup_failed:
@@ -1621,12 +1621,12 @@ vi:
       subject_template: "Xuất dữ liệu thất bại"
       text_body_template: "Rất tiếc, quá trình xuất dữ liệu của bạn không thành công. Vui lòng kiểm tra nhật ký hoặc [liên hệ với nhân viên](%{base_url}/about)."
     email_reject_insufficient_trust_level:
-      title: "Từ chối email không đủ mức độ tin cậy"
-      subject_template: "[%{email_prefix}] Vấn đề về email - Mức độ tin cậy không đủ"
+      title: "Từ chối email không đủ độ tin cậy"
+      subject_template: "[%{email_prefix}] Vấn đề về email - Độ tin cậy không đủ"
       text_body_template: |
         Rất tiếc, email của bạn gửi đến %{destination} (có tiêu đề %{former_title}) không hoạt động.
 
-        Tài khoản của bạn không có mức độ tin cậy cần thiết để đăng các chủ đề mới lên địa chỉ email này. Nếu bạn cho rằng đây là lỗi, hãy [liên hệ với nhân viên](%{base_url}/about).
+        Tài khoản của bạn không có độ tin cậy cần thiết để đăng các chủ đề mới lên địa chỉ email này. Nếu bạn cho rằng đây là lỗi, hãy [liên hệ với nhân viên](%{base_url}/about).
     email_reject_inactive_user:
       text_body_template: |2
 
@@ -1912,43 +1912,48 @@ vi:
     title: "Chính sách Riêng tư"
   badges:
     editor:
-      name: Biên tập
+      name: Chỉnh Sửa
       description: Sửa lần đầu
+    wiki_editor:
+      name: Biên Tập Viên Wiki
     basic_user:
       name: Cơ bản
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> tất cả tính năng thiết yếu
     member:
       name: Thành viên
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">cấp</a> lời mời, nhắn tin nhóm, nhiều lượt thích hơn
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> lời mời, nhắn tin nhóm, nhiều lượt thích hơn
     regular:
       name: Thường xuyên
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> xếp lại danh mục, đổi tên, theo dõi các liên kết, wiki, nhiều lượt thích hơn
     leader:
       name: Lãnh đạo
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> chỉnh sửa toàn cầu, ghim, đóng, lưu trữ, tách và gộp, nhiều lượt thích hơn
     welcome:
-      name: Chào mừng
+      name: Chào Mừng
       description: Đã nhận 1 like
     autobiographer:
-      name: Tự truyện
+      name: Viết Mô Tả
     anniversary:
-      name: Ngày kỷ niệm
+      name: Kỷ Niệm
       description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
     nice_post:
       name: Trả Lời Hay
-      description: Nhận được 10 like cho một trả lời
+      description: Đăng một trả lời nhận được 10 lượt thích
     good_post:
       name: Trả Lời Tốt
-      description: Nhận được 25 like cho một trả lời
+      description: Đăng một trả lời nhận được 25 lượt thích
     great_post:
       name: Trả Lời Tuyệt Vời
-      description: Nhận được 50 like cho một trả lời
+      description: Đăng một trả lời nhận được 50 lượt thích
     nice_topic:
       name: Chủ Đề Hay
-      description: Nhận được 10 like cho một chủ đề
+      description: Đăng một chủ đề nhận được 10 lượt thích
     good_topic:
       name: Chủ Đề Tốt
-      description: Nhận được 25 like cho một chủ đề
+      description: Đăng một chủ đề nhận được 25 lượt thích
     great_topic:
       name: Chủ Đề Tuyệt Vời
-      description: Nhận được 50 like cho một chủ đề
+      description: Đăng một chủ đề nhận được 50 lượt thích
     nice_share:
       name: Chia Sẻ Hay
       description: Chia sẻ một bài viết có 25 lượt truy cập
@@ -1962,22 +1967,22 @@ vi:
       name: Chia Sẻ Tuyệt Vời
       description: Chia sẻ một bài viết có 1000 lượt truy cập
     first_like:
-      name: Like Đầu Tiên
+      name: Lượt Thích Đầu Tiên
       description: Đã like một bài viết
       long_description: |2
 
         Huy hiệu này được cấp cho lần đầu tiên bạn like một bài đăng bằng sử dụng nút :heart:. Like bài viết là một cách tuyệt vời để cho các thành viên của cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ tình yêu!
     first_flag:
-      name: Gắn Cờ Đầu Tiên
+      name: Báo Cáo Đầu Tiên
       description: Đã gắn cờ một bài viết
     promoter:
-      name: Người Khởi Xướng
+      name: Khởi Xướng
       description: Đã mời 1 người dùng
     campaigner:
-      name: Người Vận Động
+      name: Vận Động
       description: Đã mời 3 người dùng
     champion:
-      name: Quán Quân
+      name: Vô Địch
       description: Đã mời 5 thành viên
     first_share:
       name: Chia Sẻ Đầu Tiên
@@ -1995,73 +2000,82 @@ vi:
       name: Trích Dẫn Đầu Tiên
       description: Trích dẫn một bài viết
     read_guidelines:
-      name: Xem hướng dẫn
+      name: Đọc Hướng Dẫn
     reader:
-      name: Người xem
+      name: Độc Giả
       description: Đọc từng trả lời trong một chủ đề có hơn 100 trả lời
       long_description: |2
 
         Huy hiệu này được cấp cho lần đầu tiên bạn đọc một chủ đề dài với hơn 100 trả lời. Theo dõi sát sao một cuộc hội thoại giúp bạn hiểu được những quan điểm khác nhau, và giúp cho cuộc trò chuyện thú vị hơn. Bạn càng đọc, càng trò chuyện được tốt hơn. :slight_smile:
     popular_link:
-      name: Liên kết phổ biến
-      description: Đăng một liên kết ngoài được 50 click
+      name: Liên Kết Phổ Biến
+      description: Đăng một liên kết ngoài nhận được 50 lượt click
       long_description: |2
 
         Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 50 click. Cám ơn bạn đã đăng một liên kết hữu ích!
     hot_link:
-      name: Liên kết hấp dẫn
-      description: Đăng một liên kết ngoài được 300 click
+      name: Liên Kết Hot
+      description: Đăng một liên kết ngoài nhận được 300 lượt click
       long_description: |2
 
         Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 300 click. Cám ơn đã đăng một liên kết hấp dẫn giúp kéo cuộc trò chuyện về phía trước!
     famous_link:
-      name: Liên kết nổi tiếng
-      description: Đăng một liên kết ngoài được 1000 click
+      name: Liên Kết Nổi Tiếng
+      description: Đăng một liên kết ngoài nhận được 1000 lượt click
     appreciated:
-      name: Được đánh giá cao
-      description: Nhận được 1 like cho 20 bài viết
+      name: Cảm Kích
+      description: Đăng 20 bài đăng nhận được 1 lượt thích
       long_description: |2
 
         Huy hiệu này được cấp khi bạn nhận được ít nhất 1 like cho 20 bài viết khác nhau. Cộng đồng thích thú với các đóng góp của bạn trong các cuộc đối thoại!
     respected:
-      name: Được tôn trọng
-      description: Nhận được 2 like cho 100 bài viết
+      name: Khả Mến
+      description: Đăng 100 bài đăng nhận được 2 lượt thích
       long_description: |2
 
         Huy hiệu này được cấp khi bạn nhận được ít nhất 2 like cho 100 bài viết khác nhau. Cộng đồng đang hướng tới tôn trọng những đóng góp của bạn trong các cuộc đối thoại.
     admired:
-      name: Được ngưỡng mộ
-      description: Nhận được 5 like cho 300 bài viết
+      name: Ngưỡng Mộ
+      description: Đăng 300 bài đăng nhận được 5 lượt thích
       long_description: |2
 
         Huy hiệu này được cấp khi bạn nhận được ít nhất 5 like cho 300 bài viết khác nhau. Tuyệt vời! Cộng đồng rất ngưỡng mộ các đóng góp thường xuyên có chất lượng cao của bạn trong các cuộc đối thoại.
     out_of_love:
-      name: Vì yêu thích
+      name: Yêu Hết Con Tim
     higher_love:
-      name: Thích nhiều hơn
+      name: Cao Thượng
     crazy_in_love:
-      name: Thích nhiệt tình
+      name: Thích Nhiệt Tình
     thank_you:
-      name: Cám ơn bạn
+      name: Cảm Ơn
       description: Nhận được 20 like và đã like 10 lần
       long_description: |
         Huy hiệu này được cấp khi bạn có 20 lượt thích bài đăng và đổi lại được 10 lượt thích trở lên. Khi ai đó thích bài đăng của bạn, bạn cũng tìm thấy thời gian để thích những gì người khác đang đăng.
     gives_back:
-      name: Tặng lại
+      name: Đóng Góp
       description: Nhận được 100 like và đã like 100 lần
     empathetic:
       name: Cảm thông
       description: Nhận được 500 like và đã like 1000 lần
     first_emoji:
-      name: Emoji đầu tiên
+      name: Emoji Đầu Tiên
       description: Sử dụng Emoji trong bài viết
     first_mention:
-      name: Đề cập đầu tiên
+      name: Lượt Nhắc Đầu Tiên
+    first_onebox:
+      name: Onebox Đầu Tiên
+    first_reply_by_email:
+      name: Trả Lời Đầu Tiên Qua Email
     new_user_of_the_month:
-      name: "Thành viên mới của tháng"
+      name: "Thành Viên Mới Của Tháng"
+    enthusiast:
+      name: Hăng Hái
     aficionado:
+      name: Đam Mê
       long_description: |
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
+    devotee:
+      name: Phụng Vụ
     badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
     email_input: "Email quản trị"
