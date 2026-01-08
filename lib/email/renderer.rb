@@ -15,6 +15,7 @@ module Email
     end
 
     def html
+      email_preview = @message.header["X-Discourse-Email-Preview"]&.value
       style =
         if @message.html_part
           Email::Styles.new(@message.html_part.body.to_s, @opts)
@@ -25,6 +26,7 @@ module Email
               format: :html,
               locals: {
                 html_body: PrettyText.cook(text).html_safe,
+                email_preview: email_preview,
               },
             )
           Email::Styles.new(unstyled, @opts)
