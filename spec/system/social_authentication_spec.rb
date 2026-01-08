@@ -282,6 +282,17 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("google_oauth2")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
+
+      it "shows signup form when no username can be derived" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        mock_google_auth(name: "")
+        visit("/")
+
+        signup_page.open.click_social_button("google_oauth2")
+        expect(signup_page).to be_open
+        expect(signup_page).to have_no_password_input
+        expect(page).to have_field("new-account-username", with: "")
+      end
     end
 
     context "when there is only one external login method enabled" do

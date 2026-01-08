@@ -15,7 +15,7 @@ describe "discourse login client auth" do
       info:
         OmniAuth::AuthHash::InfoHash.new(
           email: OmniauthHelpers::EMAIL,
-          username: OmniauthHelpers::USERNAME,
+          nickname: OmniauthHelpers::USERNAME,
         ),
     )
   end
