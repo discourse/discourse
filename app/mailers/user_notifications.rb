@@ -353,8 +353,7 @@ class UserNotifications < ActionMailer::Base
 
       subject_key = "user_notifications.digest.subject_template"
 
-      if SiteSetting.simple_email_subject &&
-           I18n.exists?(locale: I18n.locale, translation_key: "#{subject_key}_improved")
+      if SiteSetting.simple_email_subject && I18n.exists?("#{subject_key}_improved")
         subject_key += "_improved"
       end
 

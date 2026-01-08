@@ -137,8 +137,7 @@ module Email
       elsif @opts[:template]
         subject_key = "#{@opts[:template]}.subject_template"
 
-        if SiteSetting.simple_email_subject &&
-             I18n.exists?(locale: I18n.locale, translation_key: "#{subject_key}_improved")
+        if SiteSetting.simple_email_subject && I18n.exists?("#{subject_key}_improved")
           subject_key += "_improved"
         end
 
