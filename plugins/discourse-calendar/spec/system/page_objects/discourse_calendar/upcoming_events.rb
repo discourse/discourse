@@ -6,50 +6,77 @@ module PageObjects
       class UpcomingEvents < PageObjects::Pages::Base
         def visit
           super("/upcoming-events")
+          self
         end
 
         def next
           find(".fc-next-button").click
+          self
         end
 
         def prev
           find(".fc-prev-button").click
+          self
         end
 
         def today
           find(".fc-today-button").click
+          self
         end
 
         def open_year_view
           find(".fc-listYear-button").click
-          expect(page).to have_css(".fc-listYear-view")
-          wait_for_timeout
+          has_css?(".fc-listYear-view", wait: 5)
+          self
         end
 
         def open_day_view
           find(".fc-timeGridDay-button").click
-          expect(page).to have_css(".fc-timeGridDay-view")
-          wait_for_timeout
+          has_css?(".fc-timeGridDay-view", wait: 5)
+          self
         end
 
         def open_week_view
           find(".fc-timeGridWeek-button").click
-          expect(page).to have_css(".fc-timeGridWeek-view")
-          wait_for_timeout
+          has_css?(".fc-timeGridWeek-view", wait: 5)
+          self
         end
 
         def open_month_view
           find(".fc-dayGridMonth-button").click
-          expect(page).to have_css(".fc-dayGridMonth-view")
-          wait_for_timeout
+          has_css?(".fc-dayGridMonth-view", wait: 5)
+          self
         end
 
         def open_mine_events
           find(".fc-mineEvents-button").click
+          self
         end
 
         def open_all_events
           find(".fc-allEvents-button").click
+          self
+        end
+
+        def click_event(title)
+          find("a", text: title).click
+          self
+        end
+
+        def click_recurring_event(occurrence:, title: nil)
+          row = occurrence * 2
+          selector = "tr.fc-list-event:nth-child(#{row}) .fc-list-event-title a"
+          if title
+            find(selector, text: title).click
+          else
+            find(selector).click
+          end
+          self
+        end
+
+        def close_event_modal
+          page.send_keys(:escape)
+          self
         end
 
         def has_calendar?
@@ -65,31 +92,11 @@ module PageObjects
         end
 
         def has_event_count?(count)
-          has_css?(".fc-daygrid-event-harness", count: count)
+          has_css?(".fc-daygrid-event-harness", count:)
         end
 
         def has_content_in_calendar?(text)
-          has_css?("#upcoming-events-calendar .fc", text: text)
-        end
-
-        def has_event_at_position?(title, row:, col:)
-          has_css?(".fc tr:nth-child(#{row}) td:nth-child(#{col}) .fc-event-title", text: title)
-        end
-
-        def find_event_by_position(position)
-          find(".fc-event:nth-child(#{position})")
-        end
-
-        def event_time_text(event_element)
-          event_element.find(".fc-list-event-time").text
-        end
-
-        def event_title_text(event_element)
-          event_element.find(".fc-list-event-title").text
-        end
-
-        def current_view_title
-          find(".fc-toolbar-title").text
+          has_css?("#upcoming-events-calendar .fc", text:)
         end
 
         def has_current_path?(path)
@@ -100,54 +107,37 @@ module PageObjects
           page.has_content?(text)
         end
 
-        def expect_to_be_on_path(path)
-          expect(self).to have_current_path(path)
-        end
-
-        def expect_content(text)
-          expect(self).to have_content(text)
-        end
-
-        def expect_event_visible(title)
-          expect(self).to have_event(title)
-        end
-
-        def expect_event_not_visible(title)
-          expect(self).to have_no_event(title)
-        end
-
-        def expect_event_count(count)
-          expect(self).to have_event_count(count)
-        end
-
-        def expect_event_at_position(title, row:, col:)
-          expect(self).to have_event_at_position(title, row: row, col: col)
-        end
-
-        def find_event_by_title(title)
-          find(".fc-event", text: title)
-        end
-
         def has_event_with_time?(title, time)
-          event = find_event_by_title(title)
-          event.has_css?(".fc-list-event-time", text: time)
+          has_css?(".fc-event", text: title) &&
+            find(".fc-event", text: title).has_css?(".fc-list-event-time", text: time)
         end
 
-        def get_event_height(title)
-          find_event_by_title(title).native.bounding_box["height"]
+        def has_event_dates?(text)
+          has_css?(".event__section.event-dates", text:)
         end
 
-        def find_all_events_by_title(title)
-          all(".fc-event", text: title)
+        def has_recurring_event_time?(occurrence:, time:)
+          # occurrence 1 = nth-child(2), occurrence 2 = nth-child(4), etc.
+          row = occurrence * 2
+          has_css?("tr.fc-list-event:nth-child(#{row}) .fc-list-event-time", text: time)
         end
 
         def has_event_height?(title, expected_height)
-          height = get_event_height(title)
+          height = find(".fc-event", text: title).native.bounding_box["height"]
           height >= expected_height - 1 && height <= expected_height + 1
         end
 
-        def first_weekday_header_text
-          find(".fc-col-header .fc-col-header-cell:nth-child(1) .fc-col-header-cell-cushion").text
+        def has_block_event_style?
+          has_css?(".fc-daygrid-block-event")
+        end
+
+        def has_dot_event_style?
+          has_css?(".fc-daygrid-dot-event")
+        end
+
+        def has_event_dot_color?(color)
+          has_css?(".fc-daygrid-event-dot") &&
+            get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor") == color
         end
 
         def has_first_column_as_sunday?

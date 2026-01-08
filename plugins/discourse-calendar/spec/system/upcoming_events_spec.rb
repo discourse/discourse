@@ -2,11 +2,7 @@
 
 describe "Upcoming Events", type: :system do
   fab!(:admin)
-  fab!(:user)
-  fab!(:category)
 
-  let(:composer) { PageObjects::Components::Composer.new }
-  let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:upcoming_events) { PageObjects::Pages::DiscourseCalendar::UpcomingEvents.new }
 
   before do
@@ -16,14 +12,30 @@ describe "Upcoming Events", type: :system do
     sign_in(admin)
   end
 
+  def create_event(title:, start:, end_time: nil, **options)
+    attrs = ["start=\"#{start}\""]
+    attrs << "end=\"#{end_time}\"" if end_time
+    attrs << "timezone=\"#{options[:timezone]}\"" if options[:timezone]
+    attrs << "recurrence=#{options[:recurrence]}" if options[:recurrence]
+    attrs << "recurrenceUntil=\"#{options[:recurrence_until]}\"" if options[:recurrence_until]
+    attrs << "showLocalTime=#{options[:show_local_time]}" if options[:show_local_time]
+    attrs << "status=\"#{options[:status]}\"" if options[:status]
+
+    create_post(
+      user: admin,
+      category: Fabricate(:category),
+      title:,
+      raw: "[event #{attrs.join(" ")}]\n[/event]",
+    )
+  end
+
   describe "basic functionality" do
     it "displays events in the calendar", time: Time.utc(2025, 9, 10, 12, 0) do
       post =
-        create_post(
-          user: admin,
-          category: Fabricate(:category),
-          title: "A great event to join",
-          raw: "[event  start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\n[/event]",
+        create_event(
+          title: "Company planning meeting for Q4",
+          start: "2025-09-11 08:05",
+          end_time: "2025-09-11 10:05",
         )
 
       upcoming_events.visit
@@ -33,563 +45,385 @@ describe "Upcoming Events", type: :system do
   end
 
   describe "event display and formatting" do
-    before { admin.user_option.update!(timezone: "America/New_York") }
+    # To avoid flaky tests, each test sets the profile timezone to match
+    # the browser timezone (set via `timezone:` metadata).
 
-    describe "non-recurring events" do
-      describe "with local time enabled" do
-        it "displays event time in event timezone with (Local time) suffix",
-           timezone: "Australia/Brisbane",
-           time: Time.utc(2025, 9, 10, 12, 0) do
-          create_post(
-            user: admin,
-            category: Fabricate(:category),
-            title: "Local time event",
-            raw:
-              "[event showLocalTime=true timezone=CET start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\n[/event]",
-          )
+    describe "with showLocalTime enabled" do
+      it "displays time in event timezone with suffix",
+         timezone: "Australia/Brisbane",
+         time: Time.utc(2025, 9, 10, 12, 0) do
+        admin.user_option.update!(timezone: "Australia/Brisbane")
 
-          upcoming_events.visit
-          upcoming_events.open_year_view
+        create_event(
+          title: "European conference call with partners",
+          start: "2025-09-11 08:05",
+          end_time: "2025-09-11 10:05",
+          timezone: "CET",
+          show_local_time: true,
+        )
 
-          expect(upcoming_events).to have_event_with_time(
-            "Local time event (Local time)",
-            "8:05am - 10:05am",
-          )
+        upcoming_events.visit
+        upcoming_events.open_year_view
 
-          find("a", text: "Local time event (Local time)").click
+        expect(upcoming_events).to have_event_with_time(
+          "European conference call with partners (Local time)",
+          "8:05am - 10:05am",
+        )
 
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Thu, Sep 11 8:05 AM (CET) → 10:05 AM (CET)",
-          )
-        end
+        upcoming_events.click_event("European conference call with partners (Local time)")
+
+        expect(upcoming_events).to have_event_dates("Thu, Sep 11 8:05 AM (CET) → 10:05 AM (CET)")
       end
+    end
 
-      describe "without local time" do
-        it "displays event time converted to user timezone",
-           timezone: "Australia/Brisbane",
-           time: Time.utc(2025, 9, 10, 12, 0) do
-          create_post(
-            user: admin,
-            category: Fabricate(:category),
-            title: "Event with CET time",
-            raw:
-              "[event timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 21:00\"]\n[/event]",
-          )
+    describe "without showLocalTime" do
+      it "converts time to browser timezone",
+         timezone: "Australia/Brisbane",
+         time: Time.utc(2025, 9, 10, 12, 0) do
+        admin.user_option.update!(timezone: "Australia/Brisbane")
 
-          upcoming_events.visit
-          upcoming_events.open_year_view
+        create_event(
+          title: "Berlin team sync meeting",
+          start: "2025-09-11 19:00",
+          end_time: "2025-09-11 21:00",
+          timezone: "CET",
+        )
 
-          expect(upcoming_events).to have_event_with_time("Event with CET time", "1:00pm - 3:00pm")
+        upcoming_events.visit
+        upcoming_events.open_year_view
 
-          find("a", text: "Event with CET time").click
+        # 19:00 CET = 03:00+1 Brisbane
+        expect(upcoming_events).to have_event_with_time(
+          "Berlin team sync meeting",
+          "3:00am - 5:00am",
+        )
 
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Tomorrow 1:00 PM → 3:00 PM",
-          )
-        end
+        upcoming_events.click_event("Berlin team sync meeting")
+
+        expect(upcoming_events).to have_event_dates("Friday at 3:00 AM → 5:00 AM (Brisbane)")
       end
+    end
 
-      describe "with same timezone as user" do
-        it "displays event time normally when event timezone matches user timezone",
-           time: Time.utc(2025, 9, 10, 12, 0) do
-          create_post(
-            user: admin,
-            category: Fabricate(:category),
-            title: "Same timezone event",
-            raw:
-              "[event showLocalTime=true timezone=\"America/New_York\" start=\"2025-09-12 08:05\" end=\"2025-09-12 09:05\"]\n[/event]",
-          )
+    describe "when event timezone matches user timezone" do
+      it "displays time without conversion",
+         timezone: "America/New_York",
+         time: Time.utc(2025, 9, 10, 12, 0) do
+        admin.user_option.update!(timezone: "America/New_York")
 
-          upcoming_events.visit
-          upcoming_events.open_year_view
+        create_event(
+          title: "New York office standup meeting",
+          start: "2025-09-12 08:05",
+          end_time: "2025-09-12 09:05",
+          timezone: "America/New_York",
+          show_local_time: true,
+        )
 
-          expect(upcoming_events).to have_event_with_time("Same timezone event", "8:05am - 9:05am")
+        upcoming_events.visit
+        upcoming_events.open_year_view
 
-          find("a", text: "Same timezone event").click
+        expect(upcoming_events).to have_event_with_time(
+          "New York office standup meeting",
+          "8:05am - 9:05am",
+        )
 
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Fri, Sep 12 8:05 AM → 9:05 AM",
-          )
-        end
+        upcoming_events.click_event("New York office standup meeting")
+
+        expect(upcoming_events).to have_event_dates("Fri, Sep 12 8:05 AM → 9:05 AM")
       end
     end
 
     describe "recurring events" do
-      describe "with local time enabled" do
-        it "displays multiple occurrences with correct local time",
-           timezone: "Australia/Brisbane",
-           time: Time.utc(2025, 9, 10, 12, 0) do
-          create_post(
-            user: admin,
-            category: Fabricate(:category),
-            title: "Recurring local event",
-            raw:
-              "[event recurrence=every_week showLocalTime=true timezone=CET start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\n[/event]",
-          )
+      it "displays multiple occurrences with showLocalTime",
+         timezone: "Australia/Brisbane",
+         time: Time.utc(2025, 9, 10, 12, 0) do
+        admin.user_option.update!(timezone: "Australia/Brisbane")
 
-          upcoming_events.visit
-          upcoming_events.open_year_view
+        create_event(
+          title: "Weekly European team standup",
+          start: "2025-09-11 08:05",
+          end_time: "2025-09-11 10:05",
+          timezone: "CET",
+          recurrence: "every_week",
+          show_local_time: true,
+        )
 
-          expect(page).to have_css(
-            "tr.fc-list-event:nth-child(2) .fc-list-event-time",
-            text: "8:05am - 10:05am",
-          )
-          expect(page).to have_css(
-            "tr.fc-list-event:nth-child(4) .fc-list-event-time",
-            text: "8:05am - 10:05am",
-          )
+        upcoming_events.visit
+        upcoming_events.open_year_view
 
-          find("tr.fc-list-event:nth-child(2) .fc-list-event-title a").click
+        expect(upcoming_events).to have_recurring_event_time(
+          occurrence: 1,
+          time: "8:05am - 10:05am",
+        )
+        expect(upcoming_events).to have_recurring_event_time(
+          occurrence: 2,
+          time: "8:05am - 10:05am",
+        )
 
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Thu, Sep 11 8:05 AM (CET) → 10:05 AM (CET)",
-          )
+        upcoming_events.click_recurring_event(occurrence: 1)
 
-          page.send_keys(:escape)
+        expect(upcoming_events).to have_event_dates("Thu, Sep 11 8:05 AM (CET) → 10:05 AM (CET)")
 
-          find("tr.fc-list-event:nth-child(4) .fc-list-event-title a").click
+        upcoming_events.close_event_modal
+        upcoming_events.click_recurring_event(occurrence: 2)
 
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Thu, Sep 18 8:05 AM (CET) → 10:05 AM (CET)",
-          )
-        end
+        expect(upcoming_events).to have_event_dates("Thu, Sep 18 8:05 AM (CET) → 10:05 AM (CET)")
       end
 
-      describe "without local time" do
-        it "displays multiple occurrences converted to user timezone",
-           timezone: "Australia/Brisbane",
-           time: Time.utc(2025, 9, 10, 12, 0) do
-          create_post(
-            user: admin,
-            category: Fabricate(:category),
-            title: "Recurring CET event",
-            raw:
-              "[event recurrence=every_week timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 20:00\"]\n[/event]",
-          )
-          upcoming_events.visit
-          upcoming_events.open_year_view
+      it "displays multiple occurrences converted to browser timezone",
+         timezone: "Australia/Brisbane",
+         time: Time.utc(2025, 9, 10, 12, 0) do
+        admin.user_option.update!(timezone: "Australia/Brisbane")
 
-          expect(page).to have_css(
-            "tr.fc-list-event:nth-child(2) .fc-list-event-time",
-            text: "1:00pm - 2:00pm",
-          )
-          expect(page).to have_css(
-            "tr.fc-list-event:nth-child(4) .fc-list-event-time",
-            text: "1:00pm - 2:00pm",
-          )
+        create_event(
+          title: "Weekly Berlin evening sync",
+          start: "2025-09-11 19:00",
+          end_time: "2025-09-11 20:00",
+          timezone: "CET",
+          recurrence: "every_week",
+        )
 
-          find(
-            "tr.fc-list-event:nth-child(2) .fc-list-event-title a",
-            text: "Recurring CET event",
-          ).click
+        upcoming_events.visit
+        upcoming_events.open_year_view
 
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Tomorrow 1:00 PM → 2:00 PM (New York)",
-          )
+        # 19:00 CET = 03:00+1 Brisbane
+        expect(upcoming_events).to have_recurring_event_time(occurrence: 1, time: "3:00am - 4:00am")
+        expect(upcoming_events).to have_recurring_event_time(occurrence: 2, time: "3:00am - 4:00am")
 
-          page.send_keys(:escape)
+        upcoming_events.click_recurring_event(occurrence: 1, title: "Weekly Berlin evening sync")
 
-          find(
-            "tr.fc-list-event:nth-child(4) .fc-list-event-title a",
-            text: "Recurring CET event",
-          ).click
+        expect(upcoming_events).to have_event_dates("Friday at 3:00 AM → 4:00 AM (Brisbane)")
 
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Thu, Sep 18 1:00 PM → 2:00 PM",
-          )
-        end
+        upcoming_events.close_event_modal
+        upcoming_events.click_recurring_event(occurrence: 2, title: "Weekly Berlin evening sync")
+
+        expect(upcoming_events).to have_event_dates("Fri, Sep 19 3:00 AM → 4:00 AM (Brisbane)")
       end
 
-      describe "with same timezone as user" do
-        it "displays multiple occurrences without timezone conversion issues",
-           timezone: "Australia/Brisbane",
-           time: Time.utc(2025, 9, 10, 12, 0) do
-          create_post(
-            user: admin,
-            category: Fabricate(:category),
-            title: "Recurring same TZ event",
-            raw:
-              "[event recurrence=every_week showLocalTime=true timezone=\"America/New_York\" start=\"2025-09-12 08:05\" end=\"2025-09-12 10:05\"]\n[/event]",
-          )
-
-          upcoming_events.visit
-          upcoming_events.open_year_view
-
-          expect(page).to have_css(
-            "tr.fc-list-event:nth-child(2) .fc-list-event-time",
-            text: "8:05am - 10:05am",
-          )
-          expect(page).to have_css(
-            "tr.fc-list-event:nth-child(4) .fc-list-event-time",
-            text: "8:05am - 10:05am",
-          )
-
-          find("tr.fc-list-event:nth-child(2) .fc-list-event-title a").click
-
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Fri, Sep 12 8:05 AM → 10:05 AM (New York)",
-          )
-
-          page.send_keys(:escape)
-
-          find("tr.fc-list-event:nth-child(4) .fc-list-event-title a").click
-
-          expect(page).to have_css(
-            ".event__section.event-dates",
-            text: "Fri, Sep 19 8:05 AM → 10:05 AM",
-          )
-        end
-      end
-    end
-
-    describe "recurring events" do
-      it "displays recurring events until the specified end date",
-         time: Time.utc(2025, 6, 2, 19, 00) do
-        post =
-          create_post(
-            user: admin,
-            category: Fabricate(:category),
-            title: "A recurring post event",
-            raw:
-              "[event recurrenceUntil=\"#{30.days.from_now.iso8601}\" timezone=\"Australia\/Brisbane\" recurrence=\"every_week\" status=\"public\" start=\"2025-06-11 08:05\"]\n[/event]",
-          )
+      it "respects recurrenceUntil", time: Time.utc(2025, 6, 2, 19, 00) do
+        create_event(
+          title: "Monthly book club with limited occurrences",
+          start: "2025-06-11 08:05",
+          timezone: "Australia/Brisbane",
+          recurrence: "every_week",
+          recurrence_until: 30.days.from_now.iso8601,
+          status: "public",
+        )
 
         upcoming_events.visit
 
-        upcoming_events.expect_event_count(4)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 3, col: 2)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 4, col: 2)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 5, col: 2)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 6, col: 2)
+        expect(upcoming_events).to have_event_count(4)
       end
     end
   end
 
   describe "event filtering" do
-    it "loads the correct range of dates", time: Time.utc(2025, 9, 1, 12, 0) do
-      create_post(
-        user: admin,
-        category: Fabricate(:category),
-        title: "going to the zoo",
-        raw:
-          "[event start=\"2025-09-07 18:30\" status=\"public\" timezone=\"Europe/Prague\" end=\"2025-09-07 21:00\"]\n[/event]",
+    it "loads events for the visible date range", time: Time.utc(2025, 9, 1, 12, 0) do
+      create_event(
+        title: "Company trip to the Prague zoo",
+        start: "2025-09-07 18:30",
+        end_time: "2025-09-07 21:00",
+        timezone: "Europe/Prague",
+        status: "public",
+      )
+      create_event(
+        title: "October team offsite planning retreat",
+        start: "2025-10-15 09:00",
+        end_time: "2025-10-15 17:00",
+        timezone: "Europe/Prague",
+        status: "public",
       )
 
       visit("/upcoming-events/week/2025/9/1")
 
-      upcoming_events.expect_event_visible("zoo")
+      expect(upcoming_events).to have_event("Prague zoo")
+      expect(upcoming_events).to have_no_event("October team offsite")
     end
 
-    it "shows only events the user is attending when filtered",
-       time: Time.utc(2025, 6, 2, 19, 00) do
-      attending_event =
-        create_post(
-          user: admin,
-          category: Fabricate(:category),
-          title: "Attending post event",
-          raw: "[event status=\"public\" start=\"2025-06-11 08:05\"]\n[/event]",
+    it "filters to only attending events", time: Time.utc(2025, 6, 2, 19, 00) do
+      attending =
+        create_event(
+          title: "Conference I am attending this week",
+          start: "2025-06-11 08:05",
+          status: "public",
         )
-      create_post(
-        user: admin,
-        category: Fabricate(:category),
-        title: "Non attending post event",
-        raw: "[event start=\"2025-06-12 08:05\"]\n[/event]",
-      )
-      DiscoursePostEvent::Event.find(attending_event.id).create_invitees(
+      create_event(title: "Workshop I will not attend", start: "2025-06-12 08:05")
+
+      DiscoursePostEvent::Event.find(attending.id).create_invitees(
         [{ user_id: admin.id, status: 0 }],
       )
 
       upcoming_events.visit
 
-      upcoming_events.expect_event_visible("Attending post event")
-      upcoming_events.expect_event_visible("Non attending post event")
+      expect(upcoming_events).to have_event("Conference I am attending")
+      expect(upcoming_events).to have_event("Workshop I will not attend")
 
       upcoming_events.open_mine_events
 
-      upcoming_events.expect_event_visible("Attending post event")
-      upcoming_events.expect_event_not_visible("Non attending post event")
+      expect(upcoming_events).to have_event("Conference I am attending")
+      expect(upcoming_events).to have_no_event("Workshop I will not attend")
     end
   end
 
-  describe "calendar navigation and views" do
-    describe "navigation buttons" do
-      describe "today button" do
-        it "navigates to current date", time: Time.utc(2025, 6, 2, 19, 00) do
-          visit("/upcoming-events/month/2025/8/1")
+  describe "calendar navigation" do
+    describe "today button" do
+      it "navigates to current date", time: Time.utc(2025, 6, 2, 19, 00) do
+        visit("/upcoming-events/month/2025/8/1")
 
-          upcoming_events.today
+        upcoming_events.today
 
-          upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/6/1")
-        end
-
-        context "in different timezone", timezone: "Europe/London" do
-          it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
-            visit("/upcoming-events/day/2025/8/1")
-
-            upcoming_events.today
-
-            upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/6/2")
-          end
-        end
+        expect(upcoming_events).to have_current_path("/upcoming-events/month/2025/6/1")
       end
 
-      describe "next button" do
-        it "navigates to next month" do
-          visit("/upcoming-events/month/2025/8/1")
+      it "respects browser timezone for day view",
+         timezone: "Europe/London",
+         time: Time.utc(2025, 6, 2, 19, 00) do
+        visit("/upcoming-events/day/2025/8/1")
 
-          upcoming_events.next
+        upcoming_events.today
 
-          expect(page).to have_content("September 2025")
-          upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/9/1")
-        end
-
-        it "navigates to next week" do
-          visit("/upcoming-events/week/2025/8/4")
-
-          upcoming_events.next
-
-          expect(page).to have_content("Aug 11 – 17, 2025")
-          upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/8/11")
-        end
-
-        context "in different timezone", timezone: "Europe/London" do
-          it "navigates to next day" do
-            visit("/upcoming-events/day/2025/8/4")
-
-            upcoming_events.next
-
-            expect(page).to have_content("August 5, 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/8/5")
-          end
-
-          it "navigates to next week" do
-            visit("/upcoming-events/week/2025/8/4")
-
-            upcoming_events.next
-
-            expect(page).to have_content("Aug 11 – 17, 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/8/11")
-          end
-        end
-      end
-
-      describe "prev button" do
-        it "navigates to previous day" do
-          visit("/upcoming-events/day/2025/8/1")
-
-          upcoming_events.prev
-
-          expect(page).to have_content("July 31, 2025")
-          upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/7/31")
-        end
-
-        it "navigates to previous month" do
-          visit("/upcoming-events/month/2025/8/1")
-
-          upcoming_events.prev
-
-          expect(page).to have_content("July 2025")
-          upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/7/1")
-        end
-
-        it "navigates to previous week" do
-          visit("/upcoming-events/week/2025/8/4")
-
-          upcoming_events.prev
-
-          expect(page).to have_content("Jul 28 – Aug 3, 2025")
-          upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/7/28")
-        end
-
-        context "in different timezone", timezone: "Europe/London" do
-          it "navigates to previous day" do
-            visit("/upcoming-events/day/2025/8/1")
-
-            upcoming_events.prev
-
-            expect(page).to have_content("July 31, 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/7/31")
-          end
-
-          it "navigates to previous month" do
-            visit("/upcoming-events/month/2025/8/1")
-
-            upcoming_events.prev
-
-            expect(page).to have_content("July 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/7/1")
-          end
-
-          it "navigates to previous week" do
-            visit("/upcoming-events/week/2025/8/4")
-
-            upcoming_events.prev
-
-            expect(page).to have_content("Jul 28 – Aug 3, 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/7/28")
-          end
-        end
-      end
-
-      describe "event duration display" do
-        context "with recurring event" do
-          it "displays longer events with appropriate visual height in time grid view",
-             time: Time.utc(2025, 6, 2, 19, 00) do
-            create_post(
-              user: admin,
-              category: Fabricate(:category),
-              title: "This is a short meeting",
-              raw:
-                "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
-            )
-
-            create_post(
-              user: admin,
-              category: Fabricate(:category),
-              title: "This is a long workshop",
-              raw:
-                "[event recurrence=\"every_week\" start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
-            )
-
-            upcoming_events.visit
-            visit("/upcoming-events/week/2025/6/2")
-
-            expect(upcoming_events).to have_event_height("This is a short meeting", 47)
-            expect(upcoming_events).to have_event_height("This is a long workshop", 143)
-          end
-        end
-
-        context "with non recurring event" do
-          it "displays longer events with appropriate visual height in time grid view",
-             time: Time.utc(2025, 6, 2, 19, 00) do
-            create_post(
-              user: admin,
-              category: Fabricate(:category),
-              title: "This is a short meeting",
-              raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
-            )
-
-            create_post(
-              user: admin,
-              category: Fabricate(:category),
-              title: "This is a long workshop",
-              raw: "[event start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
-            )
-
-            upcoming_events.visit
-            visit("/upcoming-events/week/2025/6/2")
-
-            expect(upcoming_events).to have_event_height("This is a short meeting", 47)
-            expect(upcoming_events).to have_event_height("This is a long workshop", 143)
-          end
-        end
+        expect(upcoming_events).to have_current_path("/upcoming-events/day/2025/6/2")
       end
     end
 
-    describe "configurable view" do
-      before { SiteSetting.calendar_upcoming_events_default_view = "day" }
+    describe "next/prev buttons" do
+      it "navigates between months" do
+        visit("/upcoming-events/month/2025/8/1")
 
-      it "default view is controlled by calendar_upcoming_events_default_view setting",
-         time: Time.utc(2025, 9, 15) do
-        upcoming_events.visit
+        upcoming_events.next
 
-        upcoming_events.expect_content("September 15, 2025")
-        upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/9/15")
+        expect(upcoming_events).to have_content("September 2025")
+
+        upcoming_events.prev.prev
+
+        expect(upcoming_events).to have_content("July 2025")
       end
-    end
 
-    describe "view switching" do
-      it "switching from month to week view keeps the same day" do
-        visit("/upcoming-events/month/2025/9/16")
+      it "navigates between weeks" do
+        visit("/upcoming-events/week/2025/8/4")
 
-        upcoming_events.open_week_view
+        upcoming_events.next
 
-        upcoming_events.expect_content("Sep 15 – 21, 2025")
-        upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/9/15")
+        expect(upcoming_events).to have_content("Aug 11 – 17, 2025")
+
+        upcoming_events.prev.prev
+
+        expect(upcoming_events).to have_content("Jul 28 – Aug 3, 2025")
+      end
+
+      it "navigates between days" do
+        visit("/upcoming-events/day/2025/8/1")
+
+        upcoming_events.next
+
+        expect(upcoming_events).to have_content("August 2, 2025")
+
+        upcoming_events.prev.prev
+
+        expect(upcoming_events).to have_content("July 31, 2025")
       end
     end
   end
 
-  describe "with calendar_event_display setting", time: Time.utc(2025, 6, 2, 19, 00) do
+  describe "view configuration" do
+    it "uses calendar_upcoming_events_default_view setting", time: Time.utc(2025, 9, 15) do
+      SiteSetting.calendar_upcoming_events_default_view = "day"
+
+      upcoming_events.visit
+
+      expect(upcoming_events).to have_content("September 15, 2025")
+      expect(upcoming_events).to have_current_path("/upcoming-events/day/2025/9/15")
+    end
+
+    it "preserves date when switching views" do
+      visit("/upcoming-events/month/2025/9/16")
+
+      upcoming_events.open_week_view
+
+      expect(upcoming_events).to have_content("Sep 15 – 21, 2025")
+    end
+  end
+
+  describe "event duration display", time: Time.utc(2025, 6, 2, 19, 00) do
+    it "reflects duration in visual height" do
+      create_event(
+        title: "Quick daily standup meeting",
+        start: "2025-06-03 10:00",
+        end_time: "2025-06-03 11:00",
+      )
+      create_event(
+        title: "Full day architecture workshop",
+        start: "2025-06-03 14:00",
+        end_time: "2025-06-03 17:00",
+      )
+
+      visit("/upcoming-events/week/2025/6/2")
+
+      expect(upcoming_events).to have_event_height("Quick daily standup meeting", 47)
+      expect(upcoming_events).to have_event_height("Full day architecture workshop", 143)
+    end
+  end
+
+  describe "calendar_event_display setting", time: Time.utc(2025, 6, 2, 19, 00) do
     before do
-      create_post(
-        user: admin,
-        category: Fabricate(:category),
-        title: "This is a short meeting",
-        raw:
-          "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      create_event(
+        title: "Weekly team planning session",
+        start: "2025-06-03 10:00",
+        end_time: "2025-06-03 11:00",
+        recurrence: "every_week",
       )
     end
 
-    context "with block" do
-      before { SiteSetting.calendar_event_display = "block" }
+    it "renders block style when set to block" do
+      SiteSetting.calendar_event_display = "block"
 
-      it "renders block" do
-        visit("/upcoming-events/month/2025/9/16")
+      visit("/upcoming-events/month/2025/9/16")
 
-        expect(page).to have_selector(".fc-daygrid-block-event")
-      end
+      expect(upcoming_events).to have_block_event_style
     end
 
-    context "with auto" do
-      before { SiteSetting.calendar_event_display = "auto" }
+    it "renders dot style when set to auto" do
+      SiteSetting.calendar_event_display = "auto"
 
-      it "renders dot" do
-        visit("/upcoming-events/month/2025/9/16")
+      visit("/upcoming-events/month/2025/9/16")
 
-        expect(page).to have_selector(".fc-daygrid-dot-event")
-      end
+      expect(upcoming_events).to have_dot_event_style
     end
   end
 
-  context "with tag color", time: Time.utc(2025, 6, 2, 19, 00) do
-    before do
+  describe "event color mapping", time: Time.utc(2025, 6, 2, 19, 00) do
+    it "colors events by tag" do
       SiteSetting.map_events_to_color = [
-        { type: "tag", color: "rgb(231, 76, 60)", slug: "awesome-tag" },
+        { type: "tag", color: "rgb(231, 76, 60)", slug: "red-tag" },
       ].to_json
 
       create_post(
         user: admin,
         category: Fabricate(:category),
-        topic: Fabricate(:topic, tags: [Fabricate(:tag, name: "awesome-tag")]),
-        title: "This is a short meeting",
+        topic: Fabricate(:topic, tags: [Fabricate(:tag, name: "red-tag")]),
+        title: "Important quarterly review meeting",
         raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
       )
-    end
 
-    it "display the event with the correct color" do
       visit("/upcoming-events/month/2025/6/16")
 
-      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
+      expect(upcoming_events).to have_event_dot_color("rgb(231, 76, 60)")
     end
-  end
 
-  context "with category color", time: Time.utc(2025, 6, 2, 19, 00) do
-    before do
+    it "colors events by category" do
       SiteSetting.map_events_to_color = [
-        { type: "category", color: "rgb(231, 76, 60)", slug: "awesome-category" },
+        { type: "category", color: "rgb(231, 76, 60)", slug: "red-cat" },
       ].to_json
 
       create_post(
         user: admin,
-        category: Fabricate(:category, slug: "awesome-category"),
-        title: "This is a short meeting",
+        category: Fabricate(:category, slug: "red-cat"),
+        title: "Annual company celebration dinner",
         raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
       )
-    end
 
-    it "display the event with the correct color" do
       visit("/upcoming-events/month/2025/6/16")
 
-      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
+      expect(upcoming_events).to have_event_dot_color("rgb(231, 76, 60)")
     end
   end
 end

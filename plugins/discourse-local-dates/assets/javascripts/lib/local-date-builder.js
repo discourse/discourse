@@ -3,6 +3,18 @@ import { renderIcon } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
 
+export function isEqualZones(timezoneA, timezoneB) {
+  if (timezoneA === timezoneB) {
+    return true;
+  }
+
+  if (!timezoneA || !timezoneB) {
+    return false;
+  }
+
+  return moment.tz(timezoneA).utcOffset() === moment.tz(timezoneB).utcOffset();
+}
+
 const DATETIME_FORMAT = "LLL";
 const DATE_FORMAT = "LL";
 const FULL_DATETIME_FORMAT = "LLLL";
@@ -13,7 +25,7 @@ const TIME_ICON = "clock";
 const SHORT_FORMAT_DAYS_PERIOD = 1;
 
 export default class LocalDateBuilder {
-  constructor(params = {}, localTimezone) {
+  constructor(params = {}, localTimezone, options = {}) {
     this.time = params.time;
     this.date = params.date;
     this.recurring = params.recurring;
@@ -29,6 +41,7 @@ export default class LocalDateBuilder {
     this.countdown = params.countdown;
     this.duration = params.duration;
     this.localTimezone = localTimezone;
+    this.profileTimezone = options.profileTimezone;
   }
 
   build() {
@@ -92,7 +105,7 @@ export default class LocalDateBuilder {
     const previewedTimezones = [];
 
     const timezones = this.timezones.filter(
-      (timezone) => !this._isEqualZones(timezone, this.localTimezone)
+      (timezone) => !isEqualZones(timezone, this.localTimezone)
     );
 
     previewedTimezones.push({
@@ -113,18 +126,18 @@ export default class LocalDateBuilder {
       this.timezone &&
       displayedTimezone === this.localTimezone &&
       this.timezone !== displayedTimezone &&
-      !this._isEqualZones(displayedTimezone, this.timezone) &&
-      !this.timezones.some((t) => this._isEqualZones(t, this.timezone))
+      !isEqualZones(displayedTimezone, this.timezone) &&
+      !this.timezones.some((t) => isEqualZones(t, this.timezone))
     ) {
       timezones.unshift(this.timezone);
     }
 
     timezones.forEach((timezone) => {
-      if (this._isEqualZones(timezone, displayedTimezone)) {
+      if (isEqualZones(timezone, displayedTimezone)) {
         return;
       }
 
-      if (this._isEqualZones(timezone, this.localTimezone)) {
+      if (isEqualZones(timezone, this.localTimezone)) {
         timezone = this.localTimezone;
       }
 
@@ -145,18 +158,11 @@ export default class LocalDateBuilder {
     return uniqueItemsFromArray(previewedTimezones, "timezone");
   }
 
-  _isEqualZones(timezoneA, timezoneB) {
-    if ((timezoneA || timezoneB) && (!timezoneA || !timezoneB)) {
+  _hasProfileTimezoneMismatch() {
+    if (!this.profileTimezone) {
       return false;
     }
-
-    if (timezoneA.includes(timezoneB) || timezoneB.includes(timezoneA)) {
-      return true;
-    }
-
-    return (
-      moment.tz(timezoneA).utcOffset() === moment.tz(timezoneB).utcOffset()
-    );
+    return !isEqualZones(this.profileTimezone, this.localTimezone);
   }
 
   _createDateTimeRange(startRange, time, duration) {
@@ -222,10 +228,8 @@ export default class LocalDateBuilder {
       }
     }
 
-    const sameTimezone = this._isEqualZones(
-      displayedTimezone,
-      this.localTimezone
-    );
+    const sameTimezone = isEqualZones(displayedTimezone, this.localTimezone);
+    const forceShowTimezone = this._hasProfileTimezoneMismatch();
 
     if (this.calendar) {
       const inCalendarRange = moment
@@ -239,7 +243,7 @@ export default class LocalDateBuilder {
         return this._timeOnlyFormat(localDate, displayedTimezone);
       }
 
-      if (inCalendarRange && sameTimezone) {
+      if (inCalendarRange && sameTimezone && !forceShowTimezone) {
         const date = localDate.datetimeWithZone(this.localTimezone);
 
         if (hasTime && date.hours() === 0 && date.minutes() === 0) {
@@ -253,7 +257,7 @@ export default class LocalDateBuilder {
       }
     }
 
-    if (!sameTimezone) {
+    if (!sameTimezone || forceShowTimezone) {
       return this._formatWithZone(localDate, displayedTimezone, this.format);
     }
 

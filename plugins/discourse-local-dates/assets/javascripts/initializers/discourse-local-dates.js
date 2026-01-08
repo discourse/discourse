@@ -19,12 +19,12 @@ import LocalDateBuilder from "../lib/local-date-builder";
 import richEditorExtension from "../lib/rich-editor-extension";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
-export function applyLocalDates(dates, siteSettings, timezone) {
+export function applyLocalDates(dates, siteSettings, profileTimezone) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
   }
 
-  const currentUserTZ = timezone || moment.tz.guess();
+  const browserTimezone = moment.tz.guess();
 
   dates.forEach((element, index, arr) => {
     const opts = buildOptionsFromElement(element, siteSettings);
@@ -40,7 +40,9 @@ export function applyLocalDates(dates, siteSettings, timezone) {
       }
     }
 
-    const localDateBuilder = new LocalDateBuilder(opts, currentUserTZ).build();
+    const localDateBuilder = new LocalDateBuilder(opts, browserTimezone, {
+      profileTimezone,
+    }).build();
 
     element.innerText = "";
     element.insertAdjacentHTML(
@@ -158,8 +160,9 @@ function initializeDiscourseLocalDates(api) {
 
   api.decorateCookedElement((elem, helper) => {
     const dates = elem.querySelectorAll(".discourse-local-date");
+    const currentUser = api.getCurrentUser();
 
-    applyLocalDates(dates, siteSettings);
+    applyLocalDates(dates, siteSettings, currentUser?.user_option?.timezone);
 
     const topicTitle = helper?.getModel()?.topic?.title;
     dates.forEach((date) => {
@@ -238,12 +241,11 @@ function initializeDiscourseLocalDates(api) {
   });
 }
 
-function buildHtmlPreview(element, siteSettings) {
+function buildHtmlPreview(element, siteSettings, profileTimezone) {
   const opts = buildOptionsFromElement(element, siteSettings);
-  const localDateBuilder = new LocalDateBuilder(
-    opts,
-    moment.tz.guess()
-  ).build();
+  const localDateBuilder = new LocalDateBuilder(opts, moment.tz.guess(), {
+    profileTimezone,
+  }).build();
 
   const htmlPreviews = localDateBuilder.previews.map((preview) => {
     const previewNode = document.createElement("div");
@@ -349,6 +351,7 @@ function _calculateDuration(element) {
 }
 
 class LocalDatesInit {
+  @service currentUser;
   @service siteSettings;
   @service tooltip;
 
@@ -407,7 +410,13 @@ class LocalDatesInit {
 
     return this.tooltip.show(event.target, {
       identifier: "local-date",
-      content: htmlSafe(buildHtmlPreview(event.target, this.siteSettings)),
+      content: htmlSafe(
+        buildHtmlPreview(
+          event.target,
+          this.siteSettings,
+          this.currentUser?.user_option?.timezone
+        )
+      ),
     });
   }
 

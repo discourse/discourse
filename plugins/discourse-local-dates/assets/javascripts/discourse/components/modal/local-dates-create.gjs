@@ -78,7 +78,8 @@ export default class LocalDatesCreate extends Component {
       schedule("afterRender", () => {
         applyLocalDates(
           document.querySelectorAll(".preview .discourse-local-date"),
-          this.siteSettings
+          this.siteSettings,
+          this.currentUser?.user_option?.timezone
         );
       });
     }
