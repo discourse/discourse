@@ -100,7 +100,7 @@ vi:
         unfollow: "Rời nhóm"
         admin_title: "Quản trị"
         settings_title: "Cài đặt"
-        category_label: "Danh mục"
+        category_label: "Chuyên mục"
         history_label: "Lịch sử"
         members_label: "Các thành viên"
       direct_messages:

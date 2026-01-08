@@ -96,6 +96,8 @@ ko:
         header: "채팅 헤더"
         composer: "채팅 작성기"
         channels_list: "채팅 채널 목록"
+      no_direct_message_channels: "아직 개인 메시지가 없습니다!"
+      no_direct_message_channels_cta: "대화 시작하기"
       no_public_channels_cta: "채널 찾아보기"
       kicked_from_channel: "더 이상 이 채널에 접근할 수 없습니다."
       only_chat_push_notifications:
@@ -176,6 +178,7 @@ ko:
         default_search_placeholder: "#채널, @사용자 또는 아무거나"
         default_channel_search_placeholder: "#채널"
         default_user_search_placeholder: "@누군가"
+        user_search_placeholder: "...사용자 추가"
         disabled_user: "채팅 비활성화됨"
         no_items: "항목이 없습니다"
         filter: "필터"

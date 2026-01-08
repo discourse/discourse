@@ -15,7 +15,7 @@ da:
           agree_and_suspend:
             title: "Suspendér Bruger"
           agree_and_silence:
-            title: "Ignorer Bruger"
+            title: "Ignorer bruger"
           disagree:
             title: "Uenig"
           ignore:

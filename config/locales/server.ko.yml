@@ -40,7 +40,7 @@ ko:
   title: "Discourse"
   topics: "토픽"
   posts: "포스트"
-  views: "조회수"
+  views: "조회"
   loading: "로드 중"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a>를 사용합니다. JavaScript가 활성화된 상태에서 가장 잘 보입니다.'
   sign_up: "회원가입"

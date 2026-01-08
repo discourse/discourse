@@ -30,7 +30,7 @@ el:
         fields_section:
           title: Επιλογές σεναρίου
       destroy_automation:
-        confirm: "Είστε βέβαιοι ότι θέλετε να διαγράψετε το `%{name}`;"
+        confirm: "Σίγουρα θέλετε να διαγράψετε το `%{name}`;"
       fields:
         key_value:
           label_without_count: "Διαμόρφωση"

@@ -6085,7 +6085,7 @@ cs:
           title: "Vzhled"
           header_description: "Přizpůsobte šablonu, ve které se vykreslují všechny e-maily ve formátu HTML, a upravte styl pomocí CSS"
         staff_action_logs:
-          title: "Protokoly a minitoring"
+          title: "Protokoly a monitoring"
           header_description: "Protokoly a monitoring vám umožňují monitorovat a spravovat vaši komunitu a zajistit, že zůstane bezpečná a respektující. Můžete zobrazit protokoly všech akcí provedených redaktory, protokoly vyhledávání a konfiguraci monitorování uživatelů"
           keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
           sub_pages:

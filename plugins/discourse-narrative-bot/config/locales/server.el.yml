@@ -185,7 +185,7 @@ el:
 
           - ή απλά πατήστε τα κουμπια <kbd><b>B</b></kbd> ή <kbd><i>I</i></kbd> στον επεξεργαστή κειμένου
         reply: |-
-          Καλή δουλειά! Η HTML και το BBCode λειτουργούν επίσης για τη μορφοποίηση - για να μάθετε περισσότερα, [δοκιμάστε αυτό το σεμινάριο] (https://commonmark.org/help) :nerd:
+          Καλή δουλειά! Η HTML και το BBCode λειτουργούν επίσης για τη μορφοποίηση - για να μάθετε περισσότερα, [δοκιμάστε αυτό το σεμινάριο](https://commonmark.org/help) :nerd:
         not_found: |-
           Ωωω, δε βρήκα μορφοποιημένο κείμενο στην απάντησή σας. :pencil2:
 
@@ -213,7 +213,7 @@ el:
         instructions: |-
           Αν θέλετε να μάθετε περισσότερα, επιλέξτε <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> παρακάτω και <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **προσθέστε σελιδοδείκτη σε αυτό το προσωπικό μήνυμα**. Εάν το κάνετε, μπορεί να υπάρχει ένα :gift: στο μέλλον σας!
         not_found: |-
-          Ωχ, δεν βλέπω να έχουν προστεθεί σελιδοδείκτες σε αυτό το νήμα. Βλέπετε το κουμπί σελιδοδείκτη κάτω από κάθε ανάρτηση; Πατήστε στο περισσότερα <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> για να εμφανιστούν οι επιπλέον λειτουργίες.
+          Ωχ, δεν βλέπω να έχουν προστεθεί σελιδοδείκτες σε αυτό το θέμα. Βλέπετε το κουμπί σελιδοδείκτη κάτω από κάθε ανάρτηση; Πατήστε στο περισσότερα <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> για να εμφανιστούν οι επιπλέον λειτουργίες αν χρειάζεται.
       emoji:
         instructions: |-
           Πιθανώς με έχετε ήδη δει να χρησιμοποιώ μικρές εικόνες στις απαντήσεις μου :blue_car::dash: αυτά λέγονται [emoji](https://en.wikipedia.org/wiki/Emoji). Μπορείτε να **προσθέσετε ένα emoji** σε μια απάντησή σας; Οποιοδήποτε από αυτά μου κάνει:
@@ -245,6 +245,8 @@ el:
 
           (Και ναι, το όνομα χρήστη μου γράφεται _disco_, όπως η χορευτική τρέλα των 1970s. Λατρεύω [τη νυχτερινή ζωή!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        reply: |-
+          [Το προσωπικό μας](%{group_url})θα ειδοποιηθεί ιδιωτικά για την αναφορά σας. Εάν αρκετά μέλη της κοινότητας αναφέρουν μια ανάρτηση, θα κρυφτεί επίσης αυτόματα ως προφύλαξη. (Δεδομένου ότι δεν έγραψα πραγματικά μια άσχημη ανάρτηση :angel:, έχω προχωρήσει και αφαίρεσα την αναφορά προς το παρόν.)
         not_found: |-
           Ω όχι, η κακόβουλη ανάρτησή μου δεν έχει ακόμα αναφερθεί. :worried: Μπορείτε να την αναφέρετε ως ανάρμοστη πατώντας στη **σημαία** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">; Μην ξεχάσετε να κάνετε πρώτα κλικ στο κουμπί «περισσότερα» <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> για να εμφανιστούν επιπλέον ενέργειες για κάθε ανάρτηση.
       search:

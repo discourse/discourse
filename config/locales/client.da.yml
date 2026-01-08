@@ -1279,7 +1279,7 @@ da:
           read: "Læste"
           unread: "Ulæste"
           unseen: "Usete"
-        ignore_duration_title: "Ignorer Bruger"
+        ignore_duration_title: "Ignorer bruger"
         ignore_duration_username: "Brugernavn"
         ignore_duration_when: "Varighed:"
         ignore_duration_save: "Ignorér"
