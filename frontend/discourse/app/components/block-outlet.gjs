@@ -23,11 +23,9 @@ import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import {
-  validateArgsSchema,
-  validateConstraintsSchema,
-} from "discourse/lib/blocks/arg-validation";
+import { validateArgsSchema } from "discourse/lib/blocks/arg-validation";
 import { validateConfig } from "discourse/lib/blocks/config-validation";
+import { validateConstraintsSchema } from "discourse/lib/blocks/constraint-validation";
 import {
   getBlockDebugCallback,
   getEndGroupCallback,

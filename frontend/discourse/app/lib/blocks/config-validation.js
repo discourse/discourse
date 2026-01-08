@@ -9,11 +9,11 @@
  */
 
 import { DEBUG } from "@glimmer/env";
+import { validateBlockArgs } from "discourse/lib/blocks/arg-validation";
 import {
   runCustomValidation,
-  validateBlockArgs,
   validateConstraints,
-} from "discourse/lib/blocks/arg-validation";
+} from "discourse/lib/blocks/constraint-validation";
 import {
   BlockValidationError,
   raiseBlockError,
