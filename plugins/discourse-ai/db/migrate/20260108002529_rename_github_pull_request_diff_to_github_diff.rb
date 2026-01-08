@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RenameGithubPullRequestDiffToGithubDiff < ActiveRecord::Migration[7.2]
+class RenameGithubPullRequestDiffToGithubDiff < ActiveRecord::Migration[8.0]
   def up
     execute <<~SQL
       UPDATE ai_personas
