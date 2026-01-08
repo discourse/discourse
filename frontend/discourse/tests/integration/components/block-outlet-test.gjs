@@ -98,7 +98,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
     });
 
     test("passes args to block components", async function (assert) {
-      @block("args-test-block")
+      @block("args-test-block", {
+        args: { title: { type: "string" }, count: { type: "number" } },
+      })
       class ArgsTestBlock extends Component {
         <template>
           <div class="args-test">
@@ -831,7 +833,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
   module("deeply nested containers", function () {
     test("renders 5+ levels of nested container blocks", async function (assert) {
-      @block("leaf-block")
+      @block("leaf-block", { args: { depth: { type: "string" } } })
       class LeafBlock extends Component {
         <template>
           <div class="leaf-block" data-depth={{@depth}}>
@@ -936,7 +938,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
     });
 
     test("nested containers with conditions at multiple levels", async function (assert) {
-      @block("conditional-leaf")
+      @block("conditional-leaf", { args: { level: { type: "string" } } })
       class ConditionalLeaf extends Component {
         <template>
           <div class="conditional-leaf" data-level={{@level}}>
@@ -1360,7 +1362,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       let receivedArgs = null;
       let receivedOutletArgs = null;
 
-      @block("outlet-args-test-block")
+      @block("outlet-args-test-block", {
+        args: { title: { type: "string" }, count: { type: "number" } },
+      })
       class OutletArgsTestBlock extends Component {
         constructor() {
           super(...arguments);

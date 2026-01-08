@@ -96,7 +96,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
   });
 
   test("passes args to children blocks", async function (assert) {
-    @block("args-child")
+    @block("args-child", { args: { title: { type: "string" } } })
     class ArgsChild extends Component {
       <template>
         <div class="args-child-content">{{@title}}</div>
