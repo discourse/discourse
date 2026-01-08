@@ -23,7 +23,7 @@ export default class DToasts extends Component {
   }
 
   <template>
-    <section class="fk-d-toasts" aria-label="Notifications">
+    <section class="fk-d-toasts" role="status" aria-live="polite" aria-label="Notifications">
       {{#each this.visibleToasts key="id" as |toast|}}
         <DToast @toasts={{this.toasts.activeToasts}} @toast={{toast}} />
       {{/each}}

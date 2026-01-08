@@ -243,64 +243,62 @@ export default class DToast extends Component {
       as |sheet|
     >
       <DSheet.Portal @sheet={{sheet}} @container={{this.toastsContainers}}>
-        <div role="status" aria-live="polite">
-          <DSheet.View
+        <DSheet.View
+          @sheet={{sheet}}
+          @contentPlacement={{this.contentPlacement}}
+          @tracks={{this.tracks}}
+          @inertOutside={{false}}
+          @onClickOutside={{hash dismiss=false stopOverlayPropagation=false}}
+          @onTravelStatusChange={{this.handleTravelStatusChange}}
+          @enteringAnimationSettings={{this.enteringAnimationSettings}}
+          class={{concatClass
+            "d-toast"
+            (concat "d-toast--" this.contentPlacement)
+            (if
+              @toast.options.data?.theme
+              (concat "d-toast--" @toast.options.data.theme)
+            )
+            @toast.options.class
+          }}
+          style={{this.toastStyles}}
+        >
+          <DSheet.Content
             @sheet={{sheet}}
-            @contentPlacement={{this.contentPlacement}}
-            @tracks={{this.tracks}}
-            @inertOutside={{false}}
-            @onClickOutside={{hash dismiss=false stopOverlayPropagation=false}}
-            @onTravelStatusChange={{this.handleTravelStatusChange}}
-            @enteringAnimationSettings={{this.enteringAnimationSettings}}
-            class={{concatClass
-              "d-toast"
-              (concat "d-toast--" this.contentPlacement)
-              (if
-                @toast.options.data?.theme
-                (concat "d-toast--" @toast.options.data.theme)
-              )
-              @toast.options.class
-            }}
-            style={{this.toastStyles}}
+            @asChild={{true}}
+            as |contentAttrs|
           >
-            <DSheet.Content
+            <DSheet.SpecialWrapper.Root
               @sheet={{sheet}}
-              @asChild={{true}}
-              as |contentAttrs|
+              @contentAttrs={{contentAttrs}}
+              class="d-toast__content"
             >
-              <DSheet.SpecialWrapper.Root
-                @sheet={{sheet}}
-                @contentAttrs={{contentAttrs}}
-                class="d-toast__content"
+              <DSheet.SpecialWrapper.Content
+                class="d-toast__inner-content"
+                data-index={{this.args.toast.stackOrder}}
+                data-front={{if this.isFront "true" "false"}}
+                data-presented={{if this.presented "true" "false"}}
+                data-pointer-over={{if this.pointerOver "true" "false"}}
+                data-theme={{or @toast.options.data?.theme "default"}}
+                style={{concat this.innerStyles "; " this.clampingStyles}}
+                {{on "pointerenter" this.handlePointerEnter}}
+                {{on "pointerleave" this.handlePointerLeave}}
+                {{on "pointerdown" this.handlePointerDown}}
+                {{on "pointerup" this.handlePointerUp}}
+                {{on "pointercancel" this.handlePointerUp}}
               >
-                <DSheet.SpecialWrapper.Content
-                  class="d-toast__inner-content"
-                  data-index={{this.args.toast.stackOrder}}
-                  data-front={{if this.isFront "true" "false"}}
-                  data-presented={{if this.presented "true" "false"}}
-                  data-pointer-over={{if this.pointerOver "true" "false"}}
-                  data-theme={{or @toast.options.data?.theme "default"}}
-                  style={{concat this.innerStyles "; " this.clampingStyles}}
-                  {{on "pointerenter" this.handlePointerEnter}}
-                  {{on "pointerleave" this.handlePointerLeave}}
-                  {{on "pointerdown" this.handlePointerDown}}
-                  {{on "pointerup" this.handlePointerUp}}
-                  {{on "pointercancel" this.handlePointerUp}}
-                >
-                  <div style={{this.clampingStyles}} {{this.measureHeight}}>
-                    <@toast.options.component
-                      @toast={{@toast}}
-                      @close={{sheet.close}}
-                      @isFront={{this.isFront}}
-                      @progressBarStyle={{this.progressBarStyle}}
-                      @onProgressComplete={{this.handleProgressComplete}}
-                    />
-                  </div>
-                </DSheet.SpecialWrapper.Content>
-              </DSheet.SpecialWrapper.Root>
-            </DSheet.Content>
-          </DSheet.View>
-        </div>
+                <div style={{this.clampingStyles}} {{this.measureHeight}}>
+                  <@toast.options.component
+                    @toast={{@toast}}
+                    @close={{sheet.close}}
+                    @isFront={{this.isFront}}
+                    @progressBarStyle={{this.progressBarStyle}}
+                    @onProgressComplete={{this.handleProgressComplete}}
+                  />
+                </div>
+              </DSheet.SpecialWrapper.Content>
+            </DSheet.SpecialWrapper.Root>
+          </DSheet.Content>
+        </DSheet.View>
       </DSheet.Portal>
     </DSheet.Root>
   </template>
