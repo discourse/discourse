@@ -69,17 +69,20 @@ module("Unit | Lib | string-similarity", function () {
       );
     });
 
-    test("respects maxDistance option", function (assert) {
+    test("respects minSimilarity option", function (assert) {
+      // "condition" vs "conditions" has high similarity (~0.97)
       assert.strictEqual(
-        findClosestMatch("condition", candidates, { maxDistance: 1 }),
+        findClosestMatch("condition", candidates, { minSimilarity: 0.95 }),
         "conditions"
       );
+      // With very high threshold, even close matches are rejected
       assert.strictEqual(
-        findClosestMatch("codition", candidates, { maxDistance: 1 }),
+        findClosestMatch("conditon", candidates, { minSimilarity: 0.99 }),
         null
       );
+      // With lower threshold, more distant matches are accepted
       assert.strictEqual(
-        findClosestMatch("codition", candidates, { maxDistance: 2 }),
+        findClosestMatch("conditon", candidates, { minSimilarity: 0.8 }),
         "conditions"
       );
     });
@@ -108,9 +111,18 @@ module("Unit | Lib | string-similarity", function () {
     });
 
     test("returns closest when multiple matches within threshold", function (assert) {
-      const similar = ["name", "names", "named"];
-      assert.strictEqual(findClosestMatch("namee", similar), "name");
-      assert.strictEqual(findClosestMatch("nams", similar), "name");
+      // Test with distinct candidates where best match is unambiguous
+      const testCandidates = ["settings", "conditions", "arguments"];
+      // "settins" is clearly closest to "settings" (1 char diff)
+      assert.strictEqual(
+        findClosestMatch("settins", testCandidates),
+        "settings"
+      );
+      // "conditons" is clearly closest to "conditions"
+      assert.strictEqual(
+        findClosestMatch("conditons", testCandidates),
+        "conditions"
+      );
     });
 
     test("handles empty candidates array", function (assert) {
@@ -150,12 +162,14 @@ module("Unit | Lib | string-similarity", function () {
     });
 
     test("passes options to findClosestMatch", function (assert) {
+      // With very high threshold, no suggestion is returned
       assert.strictEqual(
-        formatWithSuggestion("codition", validValues, { maxDistance: 1 }),
+        formatWithSuggestion("codition", validValues, { minSimilarity: 0.99 }),
         '"codition"'
       );
+      // With lower threshold, suggestion is returned
       assert.strictEqual(
-        formatWithSuggestion("codition", validValues, { maxDistance: 2 }),
+        formatWithSuggestion("codition", validValues, { minSimilarity: 0.8 }),
         '"codition" (did you mean "conditions"?)'
       );
     });

@@ -169,12 +169,15 @@ export const VALID_CONFIG_KEYS = Object.freeze([
  * Uses fuzzy matching to suggest corrections for typos like "condition",
  * "codition", or "conditons" instead of "conditions".
  *
+ * Internal keys (starting with `__`) are skipped as they are added by the
+ * system during preprocessing (e.g., `__visible`, `__failureReason`).
+ *
  * @param {Object} config - The block configuration object.
  * @throws {BlockValidationError} If unknown keys are found.
  */
 export function validateConfigKeys(config) {
   const unknownKeys = Object.keys(config).filter(
-    (key) => !VALID_CONFIG_KEYS.includes(key)
+    (key) => !key.startsWith("__") && !VALID_CONFIG_KEYS.includes(key)
   );
 
   if (unknownKeys.length > 0) {

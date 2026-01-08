@@ -65,7 +65,7 @@ export default apiInitializer((api) => {
     // Setting condition blocks
     {
       block: SettingBadgesEnabledBlock,
-      conditions: [{ type: "setting", setting: "enable_badges", enabled: true }],
+      conditions: [{ type: "setting", name: "enable_badges", enabled: true }],
     },
 
     // Combined condition blocks (AND logic)
