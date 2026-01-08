@@ -12,6 +12,7 @@ const FKControlConditionalContentOption = <template>
         id={{uuid}}
         value={{@name}}
         checked={{eq @name @activeName}}
+        disabled={{@disabled}}
         class="form-kit__control-radio"
         {{on "change" (fn @setCondition @name)}}
       />

@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import ColorInput from "discourse/admin/components/color-input";
 import ColorPicker from "discourse/components/color-picker";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import EmojiPicker from "discourse/components/emoji-picker";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
@@ -19,12 +18,39 @@ import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryGeneral extends Component {
+  @service siteSettings;
+
+  @tracked categoryVisibilityState = null;
+  @tracked categoryPositionState = null;
+  @tracked userModifiedPermissions = false;
+
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
   );
   customizeTextContentLink = getURL(
     "/admin/customize/site_texts?q=uncategorized"
   );
+
+  get parentIsRestricted() {
+    // Check the parent category directly instead of caching
+    const parentId = this.args.transientData.parent_category_id;
+    if (!parentId) {
+      return false;
+    }
+
+    const parentCategory = Category.findById(parentId);
+    if (!parentCategory?.permissions?.length) {
+      return false;
+    }
+
+    // A category is restricted if it's NOT the case that the only permission is "everyone"
+    const onlyEveryone =
+      parentCategory.permissions.length === 1 &&
+      (parentCategory.permissions[0].group_id === AUTO_GROUPS.everyone.id ||
+        parentCategory.permissions[0].group_name === "everyone");
+
+    return !onlyEveryone;
+  }
 
   get isPrivateCategory() {
     const permissions = this.args.category.permissions;
@@ -44,12 +70,9 @@ export default class EditCategoryGeneral extends Component {
   }
 
   set isPrivateCategory(value) {
-    // This setter is called when the toggle is clicked
     if (value) {
-      // User toggled ON - make category private with no groups selected
       this.args.category.set("permissions", []);
     } else {
-      // User toggled OFF - make category public by setting "everyone" permission
       const site = this.args.category.site;
       const everyoneGroup = site.groups.find(
         (g) => g.id === AUTO_GROUPS.everyone.id
@@ -66,7 +89,6 @@ export default class EditCategoryGeneral extends Component {
   }
 
   get visibilityGroups() {
-    // Groups that can see the category (any permission level)
     // FULL=1, CREATE_POST=2, READONLY=3 (lower number = higher permission)
     const permissions = this.args.category.permissions || [];
     return permissions
@@ -75,7 +97,6 @@ export default class EditCategoryGeneral extends Component {
   }
 
   get postingGroups() {
-    // Groups that can post (FULL or CREATE_POST, not READONLY)
     // FULL=1, CREATE_POST=2, READONLY=3 (lower number = higher permission)
     const permissions = this.args.category.permissions || [];
     return permissions
@@ -85,17 +106,14 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   onChangeVisibilityGroups(groupIds) {
-    // Set permissions: groups in this list get "see" permission
     // If a group is removed from visibility, they lose all permissions (including posting)
     const site = this.args.category.site;
     const currentPermissions = this.args.category.permissions || [];
 
-    // Get current posting group IDs (groups with FULL or CREATE_POST permission)
     const postingGroupIds = currentPermissions
       .filter((p) => p.permission_type <= PermissionType.CREATE_POST)
       .map((p) => p.group_id);
 
-    // Build new permissions list - only groups in the visibility list
     const newPermissions = [];
 
     groupIds.forEach((groupId) => {
@@ -112,23 +130,18 @@ export default class EditCategoryGeneral extends Component {
       });
     });
 
+    this.userModifiedPermissions = true;
     this.args.category.set("permissions", newPermissions);
   }
 
   @action
   onChangePostingGroups(groupIds) {
-    // Set permissions: groups in this list get "create/reply" permission
     // Posting groups automatically get visibility (if they can post, they can see)
     const site = this.args.category.site;
     const currentPermissions = this.args.category.permissions || [];
-
-    // Get all current group IDs with any permission (for visibility)
     const currentVisibilityGroupIds = currentPermissions.map((p) => p.group_id);
-
-    // Build new permissions list
     const newPermissions = [];
 
-    // Add all posting groups with CREATE_POST permission
     groupIds.forEach((groupId) => {
       const group = site.groups.find((g) => g.id === groupId);
       newPermissions.push({
@@ -138,11 +151,9 @@ export default class EditCategoryGeneral extends Component {
       });
     });
 
-    // For groups that were removed from posting but still have visibility,
-    // downgrade them to READONLY instead of removing completely
+    // Downgrade removed posting groups to READONLY instead of removing completely
     currentVisibilityGroupIds.forEach((groupId) => {
       if (!groupIds.includes(groupId)) {
-        // This group was removed from posting, keep as read-only
         const group = site.groups.find((g) => g.id === groupId);
         newPermissions.push({
           group_name: group?.name,
@@ -152,59 +163,125 @@ export default class EditCategoryGeneral extends Component {
       }
     });
 
+    this.userModifiedPermissions = true;
     this.args.category.set("permissions", newPermissions);
+  }
+
+  get categoryPosition() {
+    if (this.categoryPositionState) {
+      return this.categoryPositionState;
+    }
+    return this.args.transientData.parent_category_id
+      ? "within_existing"
+      : "top_level";
+  }
+
+  get allowSubCategoriesAsParent() {
+    // If max_category_nesting is 2, only top-level categories can be parents
+    // If max_category_nesting is 3+, subcategories can also be parents
+    return this.siteSettings.max_category_nesting > 2;
+  }
+
+  get categoryVisibility() {
+    if (this.categoryVisibilityState) {
+      return this.categoryVisibilityState;
+    }
+
+    if (this.parentIsRestricted) {
+      return "group_restricted";
+    }
+
+    return this.isPrivateCategory ? "group_restricted" : "public";
+  }
+
+  get publicVisibilityLabel() {
+    return this.siteSettings.login_required
+      ? "category.visibility.all_members"
+      : "category.visibility.public";
+  }
+
+  get isParentCategoryRestricted() {
+    return this.parentIsRestricted;
+  }
+
+  @action
+  onConditionChange(name) {
+    this.categoryPositionState = name;
+    if (name === "top_level") {
+      this.args.category.set("parent_category_id", null);
+
+      if (!this.userModifiedPermissions) {
+        const site = this.args.category.site;
+        const everyoneGroup = site.groups.find(
+          (g) => g.id === AUTO_GROUPS.everyone.id
+        );
+        this.args.category.set("permissions", [
+          {
+            group_name: everyoneGroup?.name || "everyone",
+            group_id: AUTO_GROUPS.everyone.id,
+            permission_type: PermissionType.FULL,
+          },
+        ]);
+      }
+    }
+  }
+
+  @action
+  onVisibilityChange(value) {
+    this.categoryVisibilityState = value;
+    this.userModifiedPermissions = true;
+    if (value === "public") {
+      this.isPrivateCategory = false;
+    } else if (value === "group_restricted") {
+      this.isPrivateCategory = true;
+    }
   }
 
   @action
   async onParentCategoryChange(parentCategoryId) {
-    // First, update the parent_category_id
     this.args.category.set("parent_category_id", parentCategoryId);
 
-    // Check if parent has restricted permissions
-    if (parentCategoryId) {
-      // Fetch the full category with permissions
-      const result = await Category.reloadById(parentCategoryId);
-      const site = this.args.category.site;
-      const parentCategory = site.updateCategory(result.category);
-      parentCategory.setupGroupsAndPermissions();
+    if (!parentCategoryId) {
+      return;
+    }
 
-      if (parentCategory?.permissions?.length > 0) {
-        // A category is private if it's NOT the case that the only permission is "everyone"
-        const onlyEveryone =
-          parentCategory.permissions.length === 1 &&
-          (parentCategory.permissions[0].group_id === AUTO_GROUPS.everyone.id ||
-            parentCategory.permissions[0].group_name === "everyone");
+    const result = await Category.reloadById(parentCategoryId);
+    const site = this.args.category.site;
+    const parentCategory = site.updateCategory(result.category);
+    parentCategory.setupGroupsAndPermissions();
 
-        if (!onlyEveryone) {
-          // Parent is private - copy permissions (toggle will auto-update via getter)
-          const newPermissions = parentCategory.permissions.map((p) => ({
-            group_name: p.group_name,
-            group_id: p.group_id,
-            permission_type: p.permission_type,
-          }));
+    if (parentCategory?.permissions?.length > 0) {
+      const onlyEveryone =
+        parentCategory.permissions.length === 1 &&
+        (parentCategory.permissions[0].group_id === AUTO_GROUPS.everyone.id ||
+          parentCategory.permissions[0].group_name === "everyone");
 
-          this.args.category.set("permissions", newPermissions);
-        } else {
-          // Parent is public - reset to public state (toggle will auto-update via getter)
-          const everyoneGroup = site.groups.find(
-            (g) => g.id === AUTO_GROUPS.everyone.id
-          );
+      if (!onlyEveryone) {
+        const newPermissions = parentCategory.permissions.map((p) => ({
+          group_name: p.group_name,
+          group_id: p.group_id,
+          permission_type: p.permission_type,
+        }));
 
-          this.args.category.set("permissions", [
-            {
-              group_name: everyoneGroup?.name || "everyone",
-              group_id: AUTO_GROUPS.everyone.id,
-              permission_type: PermissionType.FULL,
-            },
-          ]);
-        }
+        this.args.category.set("permissions", newPermissions);
+      } else {
+        const everyoneGroup = site.groups.find(
+          (g) => g.id === AUTO_GROUPS.everyone.id
+        );
+
+        this.args.category.set("permissions", [
+          {
+            group_name: everyoneGroup?.name || "everyone",
+            group_id: AUTO_GROUPS.everyone.id,
+            permission_type: PermissionType.FULL,
+          },
+        ]);
       }
     }
   }
 
   @action
   togglePrivateCategory() {
-    // Toggle the value (this calls the setter)
     this.isPrivateCategory = !this.isPrivateCategory;
   }
 
@@ -212,7 +289,6 @@ export default class EditCategoryGeneral extends Component {
     return this.args.category.isUncategorizedCategory;
   }
 
-  // We can change the parent if there are no children
   @cached
   get subCategories() {
     if (this.args.category.isNew) {
@@ -357,30 +433,31 @@ export default class EditCategoryGeneral extends Component {
         </@form.Field>
       {{/unless}}
 
-      {{#unless @category.isUncategorizedCategory}}
-        <@form.Field
-          @name="parent_category_id"
-          @title={{i18n "category.parent"}}
-          @format="large"
-          class="parent-category"
-          as |field|
-        >
-          <field.Custom>
-            <CategoryChooser
-              @value={{@transientData.parent_category_id}}
-              @allowSubCategories={{true}}
-              @allowRestrictedCategories={{true}}
-              @onChange={{this.onParentCategoryChange}}
-              @options={{hash
-                allowUncategorized=false
-                excludeCategoryId=@category.id
-                autoInsertNoneItem=true
-                none=true
-              }}
-            />
-          </field.Custom>
-        </@form.Field>
-      {{/unless}}
+      <@form.Field
+        @name="color"
+        @title={{i18n "category.background_color"}}
+        @format="large"
+        @validation="required"
+        as |field|
+      >
+        <field.Custom>
+          <div class="category-color-editor">
+            <div class="colorpicker-wrapper edit-background-color">
+              <ColorInput
+                @hexValue={{readonly field.value}}
+                @ariaLabelledby="background-color-label"
+                @onChangeColor={{fn this.updateColor field}}
+                @skipNormalize={{true}}
+              />
+              <ColorPicker
+                @value={{readonly field.value}}
+                @ariaLabel={{i18n "category.predefined_colors"}}
+                @onSelectColor={{fn this.updateColor field}}
+              />
+            </div>
+          </div>
+        </field.Custom>
+      </@form.Field>
 
       <@form.Container @title={{i18n "category.style"}}>
         <@form.ConditionalContent
@@ -448,62 +525,98 @@ export default class EditCategoryGeneral extends Component {
                 </field.Custom>
               </@form.Field>
             </Content>
-
-            <Content @name="square" />
           </cc.Contents>
         </@form.ConditionalContent>
       </@form.Container>
 
-      <@form.Field
-        @name="color"
-        @title={{i18n "category.background_color"}}
-        @format="large"
-        @validation="required"
-        as |field|
-      >
-        <field.Custom>
-          <div class="category-color-editor">
-            <div class="colorpicker-wrapper edit-background-color">
-              <ColorInput
-                @hexValue={{readonly field.value}}
-                @ariaLabelledby="background-color-label"
-                @onChangeColor={{fn this.updateColor field}}
-                @skipNormalize={{true}}
-              />
-              <ColorPicker
-                @value={{readonly field.value}}
-                @ariaLabel={{i18n "category.predefined_colors"}}
-                @onSelectColor={{fn this.updateColor field}}
-              />
-            </div>
-          </div>
-        </field.Custom>
-      </@form.Field>
+      {{#unless @category.isUncategorizedCategory}}
+        <@form.Container @title={{i18n "category.position.title"}}>
+          <@form.ConditionalContent
+            @activeName={{this.categoryPosition}}
+            @onChange={{this.onConditionChange}}
+            as |cc|
+          >
+            <cc.Conditions as |Condition|>
+              <Condition @name="top_level">
+                {{i18n "category.position.top_level"}}
+              </Condition>
+              <Condition @name="within_existing">
+                {{i18n "category.position.within_existing"}}
+              </Condition>
+            </cc.Conditions>
 
-      <@form.Container @title="Private category">
-        <DToggleSwitch
-          @state={{this.isPrivateCategory}}
-          {{on "click" this.togglePrivateCategory}}
-        />
+            <cc.Contents as |Content|>
+              <Content @name="within_existing">
+                <@form.Field
+                  @name="parent_category_id"
+                  @title={{i18n "category.parent_category_chooser"}}
+                  @showTitle={{false}}
+                  @format="large"
+                  class="parent-category"
+                  as |field|
+                >
+                  <field.Custom>
+                    <CategoryChooser
+                      @value={{@transientData.parent_category_id}}
+                      @onChange={{this.onParentCategoryChange}}
+                      @options={{hash
+                        allowSubCategories=this.allowSubCategoriesAsParent
+                        allowRestrictedCategories=true
+                        allowUncategorized=false
+                        excludeCategoryId=@category.id
+                        none="category.choose"
+                      }}
+                    />
+                  </field.Custom>
+                </@form.Field>
+              </Content>
+            </cc.Contents>
+          </@form.ConditionalContent>
+        </@form.Container>
+      {{/unless}}
+
+      <@form.Container @title={{i18n "category.visibility.title"}}>
+        <@form.ConditionalContent
+          @activeName={{this.categoryVisibility}}
+          @onChange={{this.onVisibilityChange}}
+          as |cc|
+        >
+          <cc.Conditions as |Condition|>
+            {{#if this.parentIsRestricted}}
+              <Condition @name="public" @disabled={{true}}>
+                {{i18n this.publicVisibilityLabel}}
+              </Condition>
+            {{else}}
+              <Condition @name="public">
+                {{i18n this.publicVisibilityLabel}}
+              </Condition>
+            {{/if}}
+            <Condition @name="group_restricted">
+              {{i18n "category.visibility.group_restricted"}}
+            </Condition>
+          </cc.Conditions>
+
+          <cc.Contents as |Content|>
+            <Content @name="group_restricted">
+              <@form.Container @title="Who can see this category">
+                <GroupChooser
+                  @content={{@category.site.groups}}
+                  @value={{this.visibilityGroups}}
+                  @onChange={{this.onChangeVisibilityGroups}}
+                />
+              </@form.Container>
+
+              <@form.Container @title="Who can post in this category">
+                <GroupChooser
+                  @content={{@category.site.groups}}
+                  @value={{this.postingGroups}}
+                  @onChange={{this.onChangePostingGroups}}
+                />
+              </@form.Container>
+            </Content>
+          </cc.Contents>
+        </@form.ConditionalContent>
       </@form.Container>
-
-      {{#if this.isPrivateCategory}}
-        <@form.Container @title="Who can see this category">
-          <GroupChooser
-            @content={{@category.site.groups}}
-            @value={{this.visibilityGroups}}
-            @onChange={{this.onChangeVisibilityGroups}}
-          />
-        </@form.Container>
-
-        <@form.Container @title="Who can post in this category">
-          <GroupChooser
-            @content={{@category.site.groups}}
-            @value={{this.postingGroups}}
-            @onChange={{this.onChangePostingGroups}}
-          />
-        </@form.Container>
-      {{/if}}
 
     </div>
   </template>
