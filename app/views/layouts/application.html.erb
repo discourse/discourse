@@ -22,6 +22,12 @@
     <%- end %>
 
     <%= build_plugin_html 'server:before-script-load' %>
+
+    <script nonce="<%= csp_nonce_placeholder %>">
+      window.EmberENV = {
+        _DEFAULT_ASYNC_OBSERVERS: true,
+      };
+    </script>
     
     <%= preload_script "vendor", type_module: true %>
     <%= preload_script "discourse", type_module: true %>

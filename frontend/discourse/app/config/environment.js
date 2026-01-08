@@ -12,6 +12,9 @@ if (isTesting()) {
       autoboot: false,
       rootElement: "#ember-testing",
     },
+    EmberENV: {
+      _DEFAULT_ASYNC_OBSERVERS: true,
+    },
   };
 } else {
   output = loadConfigFromMeta("discourse");
