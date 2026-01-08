@@ -166,6 +166,7 @@ export function matchParams({
       args: `${expectedParams.length} ${label} specs`,
       result: null,
       depth,
+      conditionSpec: expectedParams,
     });
 
     const results = expectedParams.map((spec, i) =>
@@ -179,7 +180,7 @@ export function matchParams({
     const allPassed = results.every(Boolean);
 
     // Update combinator result after children evaluated
-    logger?.updateCombinatorResult?.(allPassed, depth);
+    logger?.updateCombinatorResult?.(expectedParams, allPassed);
     return allPassed;
   }
 
@@ -193,6 +194,7 @@ export function matchParams({
       args: `${specs.length} ${label} specs`,
       result: null,
       depth,
+      conditionSpec: expectedParams,
     });
 
     const results = specs.map((spec, i) =>
@@ -206,7 +208,7 @@ export function matchParams({
     const anyPassed = results.some(Boolean);
 
     // Update combinator result after children evaluated
-    logger?.updateCombinatorResult?.(anyPassed, depth);
+    logger?.updateCombinatorResult?.(expectedParams, anyPassed);
     return anyPassed;
   }
 
@@ -218,6 +220,7 @@ export function matchParams({
       args: null,
       result: null,
       depth,
+      conditionSpec: expectedParams,
     });
 
     const innerResult = matchParams({
@@ -229,7 +232,7 @@ export function matchParams({
     const result = !innerResult;
 
     // Update combinator result after children evaluated
-    logger?.updateCombinatorResult?.(result, depth);
+    logger?.updateCombinatorResult?.(expectedParams, result);
     return result;
   }
 
