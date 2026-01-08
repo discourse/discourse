@@ -217,6 +217,7 @@ export default class Root extends Component {
       onActiveDetentChange: this.args.onActiveDetentChange,
       onSafeToUnmountChange: this.args.onSafeToUnmountChange,
       role: this.args.role,
+      inertOutside: this.args.inertOutside,
       themeColorManager: this.themeColorManager,
       sheetStackRegistry: this.sheetStackRegistry,
       sheetRegistry: this.sheetRegistry,

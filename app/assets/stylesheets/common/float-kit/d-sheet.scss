@@ -61,50 +61,6 @@
 }
 
 // ============================================================================
-// Native Page Scroll Replacement - Like Silk's nativePageScrollReplacement prop
-// This is a static page-level feature set once at View mount (not toggled)
-// ============================================================================
-
-// When native page scroll is replaced (true)
-html[data-d-sheet-native-page-scroll-replaced="true"] {
-  width: 100dvw !important;
-  height: 100dvh !important;
-  overflow: hidden !important;
-}
-
-html[data-d-sheet-native-page-scroll-replaced="true"] > body {
-  width: 100dvw !important;
-  height: 100dvh !important;
-  overflow: hidden !important;
-}
-
-// Standalone mode adjustments (PWA)
-[data-standalone="true"][data-d-sheet-native-page-scroll-replaced="true"] {
-  overscroll-behavior: none !important;
-  height: 100vh !important;
-}
-
-[data-standalone="true"][data-d-sheet-native-page-scroll-replaced="true"]
-  > body {
-  overscroll-behavior: none !important;
-  height: 100vh !important;
-}
-
-// Non-standalone mode needs fixed body to prevent iOS Safari issues
-[data-standalone="false"][data-d-sheet-native-page-scroll-replaced="true"]
-  > body {
-  position: fixed !important;
-  top: 0 !important;
-}
-
-// When native page scroll is NOT replaced - styles based on sheet presence
-html[data-d-sheet-native-page-scroll-replaced="false"]:has(
-    [data-d-sheet~="scroll-container"]
-  ) {
-  overscroll-behavior-y: none !important;
-}
-
-// ============================================================================
 // SECTION 1: Scroll-trap-root (b0) - Like Silk lines 1-157
 // ============================================================================
 
@@ -1136,25 +1092,25 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
 // Like Silk: scroll-margin fallbacks
 @supports not (scroll-margin-bottom: 1px) {
   [data-d-sheet~="detent-marker"][data-d-sheet~="top"] {
-    scroll-snap-margin-bottom: var(--d-sheet-detent-marker-scroll-margin);
+    scroll-margin-bottom: var(--d-sheet-detent-marker-scroll-margin);
   }
 }
 
 @supports not (scroll-margin-top: 1px) {
   [data-d-sheet~="detent-marker"][data-d-sheet~="bottom"] {
-    scroll-snap-margin-top: var(--d-sheet-detent-marker-scroll-margin);
+    scroll-margin-top: var(--d-sheet-detent-marker-scroll-margin);
   }
 }
 
 @supports not (scroll-margin-right: 1px) {
   [data-d-sheet~="detent-marker"][data-d-sheet~="left"] {
-    scroll-snap-margin-right: var(--d-sheet-detent-marker-scroll-margin);
+    scroll-margin-right: var(--d-sheet-detent-marker-scroll-margin);
   }
 }
 
 @supports not (scroll-margin-left: 1px) {
   [data-d-sheet~="detent-marker"][data-d-sheet~="right"] {
-    scroll-snap-margin-left: var(--d-sheet-detent-marker-scroll-margin);
+    scroll-margin-left: var(--d-sheet-detent-marker-scroll-margin);
   }
 }
 

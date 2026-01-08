@@ -238,6 +238,7 @@ export default class DToast extends Component {
       @presented={{this.presented}}
       @onPresentedChange={{this.handlePresentedChange}}
       @onClosed={{this.handleClosed}}
+      @inertOutside={{false}}
       @role=""
       as |sheet|
     >
