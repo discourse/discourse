@@ -125,6 +125,9 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     server.get("/new.json", () => {
       return helper.response(topicList);
     });
+    server.get("/unseen.json", () => {
+      return helper.response(topicList);
+    });
     server.put("/topics/reset-new", () => {
       resetNewCalled += 1;
       return helper.response({});
@@ -269,6 +272,13 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     assert.dom("#discourse-modal-title").hasText(i18n("topic.share.title"));
 
     await click(".modal-close");
+  });
+
+  test("g y navigates to /unseen", async function (assert) {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "G");
+    await triggerKeyEvent(document, "keypress", "Y");
+    assert.strictEqual(currentURL(), "/unseen");
   });
 
   module("context aware create new shortcuts", function () {
