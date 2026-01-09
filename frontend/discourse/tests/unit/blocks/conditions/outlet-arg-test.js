@@ -9,43 +9,34 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
   hooks.beforeEach(function () {
     this.condition = new BlockOutletArgCondition();
     setOwner(this.condition, getOwner(this));
-
-    // Helper that throws if validation returns an error (for assert.throws tests)
-    this.validateOrThrow = (args) => {
-      const error = this.condition.validate(args);
-      if (error) {
-        throw new Error(error.message);
-      }
-    };
   });
 
   module("validate", function () {
-    test("throws when path is missing", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({}),
-        /`path` argument is required/
-      );
+    test("returns error when path is missing", function (assert) {
+      const error = this.condition.validate({});
+      assert.true(error?.message.includes("`path` argument is required"));
+      assert.strictEqual(error.path, "path");
     });
 
-    test("throws when path is not a string", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ path: 123 }),
-        /`path` must be a string/
-      );
+    test("returns error when path is not a string", function (assert) {
+      const error = this.condition.validate({ path: 123 });
+      assert.true(error?.message.includes("`path` must be a string"));
+      assert.strictEqual(error.path, "path");
     });
 
-    test("throws when path contains invalid characters", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ path: "user-name" }),
-        /is invalid/
-      );
+    test("returns error when path contains invalid characters", function (assert) {
+      const error = this.condition.validate({ path: "user-name" });
+      assert.true(error?.message.includes("is invalid"));
+      assert.strictEqual(error.path, "path");
     });
 
-    test("throws when both value and exists are specified", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ path: "user", value: true, exists: true }),
-        /Cannot use both/
-      );
+    test("returns error when both value and exists are specified", function (assert) {
+      const error = this.condition.validate({
+        path: "user",
+        value: true,
+        exists: true,
+      });
+      assert.true(error?.message.includes("Cannot use both"));
     });
 
     test("accepts valid path with value", function (assert) {

@@ -9,123 +9,101 @@ module("Unit | Blocks | Condition | user", function (hooks) {
   hooks.beforeEach(function () {
     this.condition = new BlockUserCondition();
     setOwner(this.condition, getOwner(this));
-
-    // Helper that throws if validation returns an error (for assert.throws tests)
-    this.validateOrThrow = (args) => {
-      const error = this.condition.validate(args);
-      if (error) {
-        throw new Error(error.message);
-      }
-    };
   });
 
   module("validate", function () {
-    test("throws when loggedIn: false combined with admin", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ loggedIn: false, admin: true }),
-        /loggedIn: false/
-      );
+    test("returns error when loggedIn: false combined with admin", function (assert) {
+      const error = this.condition.validate({ loggedIn: false, admin: true });
+      assert.true(error?.message.includes("loggedIn: false"));
     });
 
-    test("throws when loggedIn: false combined with moderator", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ loggedIn: false, moderator: true }),
-        /loggedIn: false/
-      );
+    test("returns error when loggedIn: false combined with moderator", function (assert) {
+      const error = this.condition.validate({
+        loggedIn: false,
+        moderator: true,
+      });
+      assert.true(error?.message.includes("loggedIn: false"));
     });
 
-    test("throws when loggedIn: false combined with staff", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ loggedIn: false, staff: true }),
-        /loggedIn: false/
-      );
+    test("returns error when loggedIn: false combined with staff", function (assert) {
+      const error = this.condition.validate({ loggedIn: false, staff: true });
+      assert.true(error?.message.includes("loggedIn: false"));
     });
 
-    test("throws when loggedIn: false combined with minTrustLevel", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ loggedIn: false, minTrustLevel: 2 }),
-        /loggedIn: false/
-      );
+    test("returns error when loggedIn: false combined with minTrustLevel", function (assert) {
+      const error = this.condition.validate({
+        loggedIn: false,
+        minTrustLevel: 2,
+      });
+      assert.true(error?.message.includes("loggedIn: false"));
     });
 
-    test("throws when loggedIn: false combined with maxTrustLevel", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ loggedIn: false, maxTrustLevel: 2 }),
-        /loggedIn: false/
-      );
+    test("returns error when loggedIn: false combined with maxTrustLevel", function (assert) {
+      const error = this.condition.validate({
+        loggedIn: false,
+        maxTrustLevel: 2,
+      });
+      assert.true(error?.message.includes("loggedIn: false"));
     });
 
-    test("throws when loggedIn: false combined with groups", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ loggedIn: false, groups: ["some-group"] }),
-        /loggedIn: false/
-      );
+    test("returns error when loggedIn: false combined with groups", function (assert) {
+      const error = this.condition.validate({
+        loggedIn: false,
+        groups: ["some-group"],
+      });
+      assert.true(error?.message.includes("loggedIn: false"));
     });
 
-    test("throws when minTrustLevel > maxTrustLevel", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ minTrustLevel: 3, maxTrustLevel: 1 }),
-        /minTrustLevel.*cannot be greater than.*maxTrustLevel/
-      );
+    test("returns error when minTrustLevel > maxTrustLevel", function (assert) {
+      const error = this.condition.validate({
+        minTrustLevel: 3,
+        maxTrustLevel: 1,
+      });
+      assert.true(error?.message.includes("cannot be greater than"));
     });
 
-    test("throws when minTrustLevel is negative", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ minTrustLevel: -1 }),
-        /must be a number between 0 and 4/
-      );
+    test("returns error when minTrustLevel is negative", function (assert) {
+      const error = this.condition.validate({ minTrustLevel: -1 });
+      assert.true(error?.message.includes("must be a number between 0 and 4"));
+      assert.strictEqual(error.path, "minTrustLevel");
     });
 
-    test("throws when maxTrustLevel is negative", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ maxTrustLevel: -1 }),
-        /must be a number between 0 and 4/
-      );
+    test("returns error when maxTrustLevel is negative", function (assert) {
+      const error = this.condition.validate({ maxTrustLevel: -1 });
+      assert.true(error?.message.includes("must be a number between 0 and 4"));
+      assert.strictEqual(error.path, "maxTrustLevel");
     });
 
-    test("throws when minTrustLevel exceeds 4", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ minTrustLevel: 5 }),
-        /must be a number between 0 and 4/
-      );
+    test("returns error when minTrustLevel exceeds 4", function (assert) {
+      const error = this.condition.validate({ minTrustLevel: 5 });
+      assert.true(error?.message.includes("must be a number between 0 and 4"));
+      assert.strictEqual(error.path, "minTrustLevel");
     });
 
-    test("throws when maxTrustLevel exceeds 4", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ maxTrustLevel: 5 }),
-        /must be a number between 0 and 4/
-      );
+    test("returns error when maxTrustLevel exceeds 4", function (assert) {
+      const error = this.condition.validate({ maxTrustLevel: 5 });
+      assert.true(error?.message.includes("must be a number between 0 and 4"));
+      assert.strictEqual(error.path, "maxTrustLevel");
     });
 
-    test("throws when minTrustLevel is not a number", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ minTrustLevel: "2" }),
-        /must be a number between 0 and 4/
-      );
+    test("returns error when minTrustLevel is not a number", function (assert) {
+      const error = this.condition.validate({ minTrustLevel: "2" });
+      assert.true(error?.message.includes("must be a number between 0 and 4"));
+      assert.strictEqual(error.path, "minTrustLevel");
     });
 
-    test("throws when maxTrustLevel is not a number", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ maxTrustLevel: "3" }),
-        /must be a number between 0 and 4/
-      );
+    test("returns error when maxTrustLevel is not a number", function (assert) {
+      const error = this.condition.validate({ maxTrustLevel: "3" });
+      assert.true(error?.message.includes("must be a number between 0 and 4"));
+      assert.strictEqual(error.path, "maxTrustLevel");
     });
 
     test("accepts boundary trust levels 0 and 4", function (assert) {
-      assert.strictEqual(
-        this.condition.validate({ minTrustLevel: 0 }),
-        null,
-        "minTrustLevel: 0 is valid"
-      );
-      assert.strictEqual(
-        this.condition.validate({ maxTrustLevel: 4 }),
-        null,
-        "maxTrustLevel: 4 is valid"
-      );
+      assert.strictEqual(this.condition.validate({ minTrustLevel: 0 }), null);
+      assert.strictEqual(this.condition.validate({ maxTrustLevel: 4 }), null);
       assert.strictEqual(
         this.condition.validate({ minTrustLevel: 0, maxTrustLevel: 4 }),
-        null,
-        "range 0-4 is valid"
+        null
       );
     });
 
@@ -161,7 +139,6 @@ module("Unit | Blocks | Condition | user", function (hooks) {
         }),
         null
       );
-      assert.true(true, "all valid configurations passed");
     });
   });
 

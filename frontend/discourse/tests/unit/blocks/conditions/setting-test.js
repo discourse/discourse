@@ -55,14 +55,11 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       return condition.evaluate(args);
     };
 
-    // Helper to validate setting condition (throws if validation fails)
+    // Helper to validate setting condition (returns error or null)
     this.validateCondition = (args) => {
       const condition = new BlockSettingCondition();
       setOwner(condition, testOwner);
-      const error = condition.validate(args);
-      if (error) {
-        throw new Error(error.message);
-      }
+      return condition.validate(args);
     };
   });
 
@@ -376,55 +373,55 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
   });
 
   module("validate", function () {
-    test("throws when name argument is missing", function (assert) {
-      assert.throws(
-        () => this.validateCondition({}),
-        /`name` argument is required/
-      );
+    test("returns error when name argument is missing", function (assert) {
+      const error = this.validateCondition({});
+      assert.true(error?.message.includes("`name` argument is required"));
+      assert.strictEqual(error.path, "name");
     });
 
-    test("throws when multiple condition types are provided", function (assert) {
-      assert.throws(
-        () =>
-          this.validateCondition({
-            name: "enable_badges",
-            enabled: true,
-            equals: "some-value",
-          }),
-        /Cannot use multiple condition types/
-      );
-    });
-
-    test("throws when enabled and includes are both provided", function (assert) {
-      assert.throws(
-        () =>
-          this.validateCondition({
-            name: "enable_badges",
-            enabled: true,
-            includes: ["value1", "value2"],
-          }),
-        /Cannot use multiple condition types/
-      );
-    });
-
-    test("throws for unknown site setting", function (assert) {
-      assert.throws(
-        () => this.validateCondition({ name: "nonexistent_setting" }),
-        /Unknown site setting/
-      );
-    });
-
-    test("does not throw for unknown setting when custom source provided", function (assert) {
-      this.validateCondition({
-        source: { custom_key: true },
-        name: "custom_key",
+    test("returns error when multiple condition types are provided", function (assert) {
+      const error = this.validateCondition({
+        name: "enable_badges",
+        enabled: true,
+        equals: "some-value",
       });
-      assert.true(true);
+      assert.true(
+        error?.message.includes("Cannot use multiple condition types")
+      );
+    });
+
+    test("returns error when enabled and includes are both provided", function (assert) {
+      const error = this.validateCondition({
+        name: "enable_badges",
+        enabled: true,
+        includes: ["value1", "value2"],
+      });
+      assert.true(
+        error?.message.includes("Cannot use multiple condition types")
+      );
+    });
+
+    test("returns error for unknown site setting", function (assert) {
+      const error = this.validateCondition({ name: "nonexistent_setting" });
+      assert.true(error?.message.includes("Unknown site setting"));
+      assert.strictEqual(error.path, "name");
+    });
+
+    test("does not return error for unknown setting when custom source provided", function (assert) {
+      assert.strictEqual(
+        this.validateCondition({
+          source: { custom_key: true },
+          name: "custom_key",
+        }),
+        null
+      );
     });
 
     test("accepts valid site setting", function (assert) {
-      this.validateCondition({ name: "enable_badges", enabled: true });
-      assert.true(true);
+      assert.strictEqual(
+        this.validateCondition({ name: "enable_badges", enabled: true }),
+        null
+      );
     });
   });
 

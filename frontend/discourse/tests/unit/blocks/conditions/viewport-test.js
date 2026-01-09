@@ -9,36 +9,24 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
   hooks.beforeEach(function () {
     this.condition = new BlockViewportCondition();
     setOwner(this.condition, getOwner(this));
-
-    // Helper that throws if validation returns an error (for assert.throws tests)
-    this.validateOrThrow = (args) => {
-      const error = this.condition.validate(args);
-      if (error) {
-        throw new Error(error.message);
-      }
-    };
   });
 
   module("validate", function () {
-    test("throws for invalid min breakpoint", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ min: "xxl" }),
-        /Invalid.*breakpoint/
-      );
+    test("returns error for invalid min breakpoint", function (assert) {
+      const error = this.condition.validate({ min: "xxl" });
+      assert.true(error?.message.includes("Invalid"), "returns error");
+      assert.strictEqual(error.path, "min");
     });
 
-    test("throws for invalid max breakpoint", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ max: "invalid" }),
-        /Invalid.*breakpoint/
-      );
+    test("returns error for invalid max breakpoint", function (assert) {
+      const error = this.condition.validate({ max: "invalid" });
+      assert.true(error?.message.includes("Invalid"), "returns error");
+      assert.strictEqual(error.path, "max");
     });
 
-    test("throws when min > max", function (assert) {
-      assert.throws(
-        () => this.validateOrThrow({ min: "xl", max: "sm" }),
-        /min.*breakpoint.*larger than.*max/
-      );
+    test("returns error when min > max", function (assert) {
+      const error = this.condition.validate({ min: "xl", max: "sm" });
+      assert.true(error?.message.includes("larger than"), "returns error");
     });
 
     test("passes valid breakpoint configurations", function (assert) {

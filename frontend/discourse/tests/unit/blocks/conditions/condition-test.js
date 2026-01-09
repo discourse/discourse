@@ -3,19 +3,6 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { BlockCondition } from "discourse/blocks/conditions";
 
-/**
- * Helper that throws if validation returns an error (for assert.throws tests).
- *
- * @param {BlockCondition} condition - The condition instance.
- * @param {Object} args - The arguments to validate.
- */
-function validateOrThrow(condition, args) {
-  const error = condition.validate(args);
-  if (error) {
-    throw new Error(error.message);
-  }
-}
-
 module("Unit | Blocks | Conditions | condition", function (hooks) {
   setupTest(hooks);
 
@@ -73,11 +60,11 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
       }
 
       const condition = new NoSourceCondition();
+      const error = condition.validate({ source: "@outletArgs.foo" });
 
-      assert.throws(
-        () => validateOrThrow(condition, { source: "@outletArgs.foo" }),
-        /source.*parameter is not supported/
-      );
+      assert.true(error?.message.includes("source"));
+      assert.true(error?.message.includes("not supported"));
+      assert.strictEqual(error.path, "source");
     });
 
     test("validates source format for sourceType 'outletArgs'", function (assert) {
@@ -106,26 +93,25 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
         null
       );
 
-      // Invalid formats should return errors
-      assert.throws(
-        () => validateOrThrow(condition, { source: "foo" }),
-        /must be in format "@outletArgs.propertyName"/
+      // Invalid formats should return errors with path
+      let error = condition.validate({ source: "foo" });
+      assert.true(
+        error?.message.includes('must be in format "@outletArgs.propertyName"')
+      );
+      assert.strictEqual(error.path, "source");
+
+      error = condition.validate({ source: "outletArgs.foo" });
+      assert.true(
+        error?.message.includes('must be in format "@outletArgs.propertyName"')
       );
 
-      assert.throws(
-        () => validateOrThrow(condition, { source: "outletArgs.foo" }),
-        /must be in format "@outletArgs.propertyName"/
+      error = condition.validate({ source: "@outletArgs" });
+      assert.true(
+        error?.message.includes('must be in format "@outletArgs.propertyName"')
       );
 
-      assert.throws(
-        () => validateOrThrow(condition, { source: "@outletArgs" }),
-        /must be in format "@outletArgs.propertyName"/
-      );
-
-      assert.throws(
-        () => validateOrThrow(condition, { source: 123 }),
-        /must be a string/
-      );
+      error = condition.validate({ source: 123 });
+      assert.true(error?.message.includes("must be a string"));
     });
 
     test("validates source is object for sourceType 'object'", function (assert) {
@@ -149,20 +135,15 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
       assert.strictEqual(condition.validate({ source: null }), null);
 
       // Invalid types should return errors
-      assert.throws(
-        () => validateOrThrow(condition, { source: "string" }),
-        /must be an object/
-      );
+      let error = condition.validate({ source: "string" });
+      assert.true(error?.message.includes("must be an object"));
+      assert.strictEqual(error.path, "source");
 
-      assert.throws(
-        () => validateOrThrow(condition, { source: 123 }),
-        /must be an object/
-      );
+      error = condition.validate({ source: 123 });
+      assert.true(error?.message.includes("must be an object"));
 
-      assert.throws(
-        () => validateOrThrow(condition, { source: true }),
-        /must be an object/
-      );
+      error = condition.validate({ source: true });
+      assert.true(error?.message.includes("must be an object"));
     });
   });
 

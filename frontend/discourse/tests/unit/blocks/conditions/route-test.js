@@ -79,14 +79,11 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       return condition.evaluate(args);
     };
 
-    // Helper to validate route condition (throws if validation fails)
+    // Helper to validate route condition (returns error or null)
     this.validateCondition = (args) => {
       const condition = new BlockRouteCondition();
       setOwner(condition, testOwner);
-      const error = condition.validate(args);
-      if (error) {
-        throw new Error(error.message);
-      }
+      return condition.validate(args);
     };
   });
 
@@ -840,155 +837,182 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
   });
 
   module("validate", function () {
-    test("throws when neither urls nor pages provided", function (assert) {
-      assert.throws(
-        () => this.validateCondition({}),
-        /Must provide `urls` or `pages`/
-      );
+    test("returns error when neither urls nor pages provided", function (assert) {
+      const error = this.validateCondition({});
+      assert.true(error?.message.includes("Must provide `urls` or `pages`"));
     });
 
-    test("throws for unknown page type", function (assert) {
-      assert.throws(
-        () => this.validateCondition({ pages: ["INVALID_PAGE"] }),
-        /Unknown page type 'INVALID_PAGE'/
-      );
+    test("returns error for unknown page type", function (assert) {
+      const error = this.validateCondition({ pages: ["INVALID_PAGE"] });
+      assert.true(error?.message.includes("Unknown page type 'INVALID_PAGE'"));
+      assert.strictEqual(error.path, "pages[0]");
     });
 
     test("suggests correction for typo in page type", function (assert) {
-      assert.throws(
-        () => this.validateCondition({ pages: ["CATEGORY_PAGE"] }),
-        /Did you mean 'CATEGORY_PAGES'/
-      );
+      const error = this.validateCondition({ pages: ["CATEGORY_PAGE"] });
+      assert.true(error?.message.includes("Did you mean 'CATEGORY_PAGES'"));
     });
 
-    test("throws when params used without pages", function (assert) {
-      assert.throws(
-        () =>
-          this.validateCondition({
-            urls: ["/c/**"],
-            params: { id: 5 },
-          }),
-        /`params` requires `pages` to be specified/
+    test("returns error when params used without pages", function (assert) {
+      const error = this.validateCondition({
+        urls: ["/c/**"],
+        params: { id: 5 },
+      });
+      assert.true(
+        error?.message.includes("`params` requires `pages` to be specified")
       );
+      assert.strictEqual(error.path, "params");
     });
 
-    test("throws when params used with urls", function (assert) {
-      assert.throws(
-        () =>
-          this.validateCondition({
-            pages: ["CATEGORY_PAGES"],
-            urls: ["/c/**"],
-            params: { id: 5 },
-          }),
-        /`params` cannot be used with `urls`/
+    test("returns error when params used with urls", function (assert) {
+      const error = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        urls: ["/c/**"],
+        params: { id: 5 },
+      });
+      assert.true(
+        error?.message.includes("`params` cannot be used with `urls`")
       );
+      assert.strictEqual(error.path, "params");
     });
 
-    test("throws for invalid param for page type", function (assert) {
-      assert.throws(
-        () =>
-          this.validateCondition({
-            pages: ["CATEGORY_PAGES"],
-            params: { filter: "latest" },
-          }),
-        /Parameter 'filter' is not valid for any of the listed page types/
+    test("returns error for invalid param for page type", function (assert) {
+      const error = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        params: { filter: "latest" },
+      });
+      assert.true(
+        error?.message.includes(
+          "Parameter 'filter' is not valid for any of the listed page types"
+        )
       );
+      assert.strictEqual(error.path, "params");
     });
 
-    test("throws for param type mismatch (number expected, string given)", function (assert) {
-      assert.throws(
-        () =>
-          this.validateCondition({
-            pages: ["CATEGORY_PAGES"],
-            params: { categoryId: "5" },
-          }),
-        /Parameter 'categoryId' must be a number, got string '5'/
+    test("returns error for param type mismatch (number expected, string given)", function (assert) {
+      const error = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        params: { categoryId: "5" },
+      });
+      assert.true(
+        error?.message.includes(
+          "Parameter 'categoryId' must be a number, got string '5'"
+        )
       );
+      assert.strictEqual(error.path, "params.categoryId");
     });
 
-    test("throws for param type mismatch (string expected, number given)", function (assert) {
-      assert.throws(
-        () =>
-          this.validateCondition({
-            pages: ["TAG_PAGES"],
-            params: { tagId: 123 },
-          }),
-        /Parameter 'tagId' must be a string, got number '123'/
+    test("returns error for param type mismatch (string expected, number given)", function (assert) {
+      const error = this.validateCondition({
+        pages: ["TAG_PAGES"],
+        params: { tagId: 123 },
+      });
+      assert.true(
+        error?.message.includes(
+          "Parameter 'tagId' must be a string, got number '123'"
+        )
       );
+      assert.strictEqual(error.path, "params.tagId");
     });
 
-    test("throws when param not valid for all listed page types", function (assert) {
-      assert.throws(
-        () =>
-          this.validateCondition({
-            pages: ["TAG_PAGES", "DISCOVERY_PAGES"],
-            params: { tagId: "javascript" },
-          }),
-        /Parameter 'tagId' is not valid for all listed page types/
+    test("returns error when param not valid for all listed page types", function (assert) {
+      const error = this.validateCondition({
+        pages: ["TAG_PAGES", "DISCOVERY_PAGES"],
+        params: { tagId: "javascript" },
+      });
+      assert.true(
+        error?.message.includes(
+          "Parameter 'tagId' is not valid for all listed page types"
+        )
       );
     });
 
     test("accepts params valid for all listed page types", function (assert) {
-      this.validateCondition({
-        pages: ["DISCOVERY_PAGES", "TOP_MENU"],
-        params: { filter: "latest" },
-      });
-      assert.true(true);
+      assert.strictEqual(
+        this.validateCondition({
+          pages: ["DISCOVERY_PAGES", "TOP_MENU"],
+          params: { filter: "latest" },
+        }),
+        null
+      );
     });
 
     test("accepts categoryId param valid for both CATEGORY_PAGES and TAG_PAGES", function (assert) {
-      this.validateCondition({
-        pages: ["CATEGORY_PAGES", "TAG_PAGES"],
-        params: { categoryId: 5 },
-      });
-      assert.true(true);
+      assert.strictEqual(
+        this.validateCondition({
+          pages: ["CATEGORY_PAGES", "TAG_PAGES"],
+          params: { categoryId: 5 },
+        }),
+        null
+      );
     });
 
-    test("throws for old shortcut syntax in urls", function (assert) {
-      assert.throws(
-        () => this.validateCondition({ urls: ["$CATEGORY_PAGES"] }),
-        /Shortcuts like '\$CATEGORY_PAGES' are not supported in `urls`/
+    test("returns error for old shortcut syntax in urls", function (assert) {
+      const error = this.validateCondition({ urls: ["$CATEGORY_PAGES"] });
+      assert.true(
+        error?.message.includes(
+          "Shortcuts like '$CATEGORY_PAGES' are not supported in `urls`"
+        )
       );
+      assert.strictEqual(error.path, "urls[0]");
     });
 
     test("accepts valid page types", function (assert) {
-      this.validateCondition({ pages: ["CATEGORY_PAGES"] });
-      this.validateCondition({ pages: ["TAG_PAGES"] });
-      this.validateCondition({ pages: ["DISCOVERY_PAGES"] });
-      this.validateCondition({ pages: ["HOMEPAGE"] });
-      this.validateCondition({ pages: ["TOP_MENU"] });
-      this.validateCondition({ pages: ["TOPIC_PAGES"] });
-      this.validateCondition({ pages: ["USER_PAGES"] });
-      this.validateCondition({ pages: ["ADMIN_PAGES"] });
-      this.validateCondition({ pages: ["GROUP_PAGES"] });
-      assert.true(true);
+      assert.strictEqual(
+        this.validateCondition({ pages: ["CATEGORY_PAGES"] }),
+        null
+      );
+      assert.strictEqual(
+        this.validateCondition({ pages: ["TAG_PAGES"] }),
+        null
+      );
+      assert.strictEqual(
+        this.validateCondition({ pages: ["DISCOVERY_PAGES"] }),
+        null
+      );
+      assert.strictEqual(this.validateCondition({ pages: ["HOMEPAGE"] }), null);
+      assert.strictEqual(this.validateCondition({ pages: ["TOP_MENU"] }), null);
+      assert.strictEqual(
+        this.validateCondition({ pages: ["TOPIC_PAGES"] }),
+        null
+      );
+      assert.strictEqual(
+        this.validateCondition({ pages: ["USER_PAGES"] }),
+        null
+      );
+      assert.strictEqual(
+        this.validateCondition({ pages: ["ADMIN_PAGES"] }),
+        null
+      );
+      assert.strictEqual(
+        this.validateCondition({ pages: ["GROUP_PAGES"] }),
+        null
+      );
     });
 
     test("accepts valid URL patterns", function (assert) {
-      this.validateCondition({ urls: ["/c/**"] });
-      this.validateCondition({ urls: ["/t/*"] });
-      assert.true(true);
+      assert.strictEqual(this.validateCondition({ urls: ["/c/**"] }), null);
+      assert.strictEqual(this.validateCondition({ urls: ["/t/*"] }), null);
     });
 
-    test("throws for invalid glob pattern in urls", function (assert) {
-      assert.throws(
-        () => this.validateCondition({ urls: ["[unclosed"] }),
-        /Invalid glob pattern "\[unclosed"/
-      );
+    test("returns error for invalid glob pattern in urls", function (assert) {
+      const error = this.validateCondition({ urls: ["[unclosed"] });
+      assert.true(error?.message.includes('Invalid glob pattern "[unclosed"'));
+      assert.strictEqual(error.path, "urls[0]");
     });
 
     test("pages must be an array", function (assert) {
-      assert.throws(
-        () => this.validateCondition({ pages: "CATEGORY_PAGES" }),
-        /`pages` must be an array of page type strings/
+      const error = this.validateCondition({ pages: "CATEGORY_PAGES" });
+      assert.true(
+        error?.message.includes("`pages` must be an array of page type strings")
       );
+      assert.strictEqual(error.path, "pages");
     });
 
     test("each page type must be a string", function (assert) {
-      assert.throws(
-        () => this.validateCondition({ pages: [123] }),
-        /Each page type must be a string/
-      );
+      const error = this.validateCondition({ pages: [123] });
+      assert.true(error?.message.includes("Each page type must be a string"));
+      assert.strictEqual(error.path, "pages[0]");
     });
   });
 
