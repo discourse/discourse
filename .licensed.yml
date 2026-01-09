@@ -67,6 +67,7 @@ reviewed:
     - jwt # MIT
     - kgio # LGPL-2.1+
     - logstash-event # Apache-2.0
+    - net-imap # Ruby (bundled gem)
     - net-pop # Ruby (bundled gem)
     - net-smtp # Ruby (bundled gem)
     - nio4r # MIT + BSD
