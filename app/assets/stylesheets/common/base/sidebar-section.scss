@@ -1,6 +1,7 @@
 .sidebar-section-wrapper {
   .sidebar-section-header-wrapper {
     display: flex;
+    border-radius: var(--d-border-radius);
 
     &:focus-within {
       background: var(--d-sidebar-highlight-background);
@@ -8,6 +9,7 @@
 
     .sidebar-section-header-button {
       font-size: var(--font-down-1);
+      padding-inline: var(--space-1);
 
       > * {
         pointer-events: none;
@@ -17,10 +19,6 @@
     .btn.dropdown-select-box-header,
     .sidebar-section-header-button {
       background: transparent;
-      border: none;
-      margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 3 * -1);
-      padding: calc(var(--d-sidebar-row-horizontal-padding) / 5)
-        calc(var(--d-sidebar-row-horizontal-padding) / 3);
 
       .discourse-no-touch & {
         transition:
@@ -29,8 +27,6 @@
         opacity: 0;
 
         &:hover {
-          background: var(--d-sidebar-highlight-background);
-
           .d-icon {
             color: var(--d-sidebar-highlight-color);
           }
@@ -48,12 +44,7 @@
       }
 
       &:focus {
-        outline: none;
-        background: var(--d-sidebar-highlight-hover-background);
-
-        .d-icon {
-          color: var(--d-sidebar-highlight-hover-icon);
-        }
+        outline: 2px solid var(--tertiary);
       }
     }
   }
@@ -68,6 +59,7 @@
     font-weight: var(--d-sidebar-header-font-weight);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    gap: var(--d-sidebar-section-link-prefix-margin-right);
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
@@ -106,8 +98,6 @@
     display: flex;
     flex: 0 0 auto;
     width: var(--d-sidebar-section-link-prefix-width);
-    height: var(--d-sidebar-section-link-prefix-width);
-    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
     align-items: center;
     justify-content: center;
 

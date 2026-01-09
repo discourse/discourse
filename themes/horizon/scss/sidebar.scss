@@ -1,5 +1,10 @@
 @use "lib/viewport";
 
+:root {
+  --sidebar-section-wrapper-padding: 0 var(--space-2) var(--space-4)
+    var(--space-4);
+}
+
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
   @include viewport.until(lg) {
@@ -21,10 +26,6 @@
 
   .sidebar-container {
     border-right: none;
-  }
-
-  .sidebar-sections {
-    padding: 0;
   }
 
   .sidebar-section-link {
@@ -67,7 +68,6 @@
 
 .sidebar-wrapper .sidebar-sections {
   --scrollbarThumbBg: var(--d-selected);
-  padding: 0 1rem;
 }
 
 .sidebar-section-link-wrapper .sidebar-section-link:focus,
@@ -78,7 +78,7 @@
 }
 
 .sidebar-new-topic-button__wrapper {
-  margin: 0 var(--space-4) var(--space-6);
+  margin: 0 var(--space-2) var(--space-4) var(--space-4);
 
   .sidebar-new-topic-button .d-icon {
     display: none;
