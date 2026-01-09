@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import concatClass from "discourse/helpers/concat-class";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
@@ -10,7 +10,10 @@ import formatUsername from "discourse/helpers/format-username";
 export default class AssigneeRow extends Component {
   <template>
     <DButton
-      class="btn-default assign-sheet__assignee-row"
+      class={{concatClass
+        "btn-default assign-sheet__assignee-row"
+        (if @selected "--selected")
+      }}
       {{on "click" (fn @onPress @assignee)}}
     >
       <span class="assign-sheet__assignee-avatar">

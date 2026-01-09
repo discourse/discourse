@@ -45,9 +45,9 @@ export default class AssignTopicSheet extends Component {
         avatar_template: this.assignment.avatar_template,
         is_user: true,
       };
-    } else if (this.assignment?.name) {
+    } else if (this.assignment?.groupName) {
       data.assignee = {
-        name: this.assignment.name,
+        name: this.assignment.groupName,
         is_group: true,
       };
     }
@@ -144,12 +144,13 @@ export default class AssignTopicSheet extends Component {
 
     await this.taskActions.putAssignment(payload);
 
-    this.sheetPresented = false;
+    this.nestedSheetPresented = false;
   }
 
   @action
-  onSelectAssignment(assignment) {
+  onEditAssignment(assignment) {
     this.assignment = assignment;
+    this.nestedSheetPresented = true;
   }
 
   @action
@@ -240,7 +241,7 @@ export default class AssignTopicSheet extends Component {
                   <AssignmentsList
                     @assignments={{this.assignments}}
                     @topic={{@topic}}
-                    @onEditAssignment={{this.onSelectAssignment}}
+                    @onEditAssignment={{this.onEditAssignment}}
                     @onRemoveAssignment={{this.unassign}}
                   />
 
@@ -270,19 +271,16 @@ export default class AssignTopicSheet extends Component {
                                 <Button.Cancel />
                               </:left>
                               <:title>
-                                Assign
+                                Edit Assignment
                               </:title>
                               <:right as |Button|>
-                                <Button
-                                  @action={{fn
-                                    this.assign
-                                    this.selectedAssignee
-                                  }}
-                                />
+                                <Button @action={{form.submit}}>
+                                  Save
+                                </Button>
                               </:right>
                             </DSheet.Header>
 
-                            <AssigneesList
+                            <AssignmentForm
                               @assignment={{this.assignment}}
                               @sheet={{nestedSheet}}
                               @form={{form}}

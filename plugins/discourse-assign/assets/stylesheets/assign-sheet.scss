@@ -29,14 +29,13 @@
   height: 100%;
   padding: var(--space-2);
 
-  .assign-sheet__note-textarea {
+  .filter-input,
+  .assign-sheet__assignees-list {
     width: 100%;
-    height: 250px;
-    resize: none;
-    box-sizing: border-box;
-    border-radius: var(--d-border-radius);
-    border-color: var(--content-border-color);
-    font-size: var(--font-down-1);
+  }
+
+  .assign-sheet__assignees-list {
+    padding: 0;
   }
 
   .assign-sheet__full-width-btn {
@@ -44,6 +43,10 @@
     justify-content: center;
     margin: 0;
   }
+}
+
+.assign-sheet__note-field {
+  width: 100%;
 }
 
 .assign-sheet__content {
@@ -172,7 +175,8 @@
       visibility: hidden;
     }
 
-    &:hover {
+    &:hover,
+    &.--selected {
       .disclosure-indicator-icon {
         visibility: visible;
       }
