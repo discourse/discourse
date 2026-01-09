@@ -2,9 +2,15 @@
 
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
-  --d-sidebar-row-horizontal-padding: 1rem;
+  --d-sidebar-row-horizontal-padding: var(--space-1);
+
+  @include viewport.until(sm) {
+    --d-sidebar-row-horizontal-padding: var(--space-2);
+  }
+
   --d-sidebar-vertical-gap: var(--space-half);
-  --sidebar-section-wrapper-padding: 1.5rem 1rem 1rem;
+  --sidebar-section-wrapper-padding: var(--space-6) var(--space-2)
+    var(--space-4);
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;

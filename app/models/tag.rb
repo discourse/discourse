@@ -12,11 +12,14 @@ class Tag < ActiveRecord::Base
   ]
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :slug, uniqueness: { case_sensitive: false }, allow_blank: true
 
   validate :target_tag_validator,
            if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
   validates :description, length: { maximum: 1000 }
+
+  before_validation :ensure_slug
 
   scope :where_name,
         ->(name) do
@@ -213,6 +216,10 @@ class Tag < ActiveRecord::Base
     "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
   end
 
+  def slug_for_url
+    slug.presence || "#{id}-tag"
+  end
+
   def index_search
     SearchIndexer.index(self)
   end
@@ -261,6 +268,23 @@ class Tag < ActiveRecord::Base
 
   private
 
+  def ensure_slug
+    self.slug ||= ""
+    return if name.blank?
+
+    if self.slug.blank? || will_save_change_to_name?
+      self.slug = Slug.for(name, "")
+      self.slug = "" if self.slug.blank? || duplicate_slug?
+    end
+  end
+
+  def duplicate_slug?
+    return false if slug.blank?
+    scope = Tag.where("lower(slug) = ?", slug.downcase)
+    scope = scope.where.not(id: id) if id.present?
+    scope.exists?
+  end
+
   def sanitize_description
     self.description = sanitize_field(self.description) if description_changed?
   end
@@ -283,10 +307,12 @@ end
 #  target_tag_id      :integer
 #  description        :string(1000)
 #  public_topic_count :integer          default(0), not null
+#  slug               :string           default(""), not null
 #  staff_topic_count  :integer          default(0), not null
 #
 # Indexes
 #
 #  index_tags_on_lower_name  (lower((name)::text)) UNIQUE
 #  index_tags_on_name        (name) UNIQUE
+#  index_tags_on_slug        (slug) WHERE ((slug)::text <> ''::text)
 #

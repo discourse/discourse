@@ -10,15 +10,27 @@ vi:
       alt:
         solved:
           accepted_notification: "đã chấp nhận"
+    solutions: "Những giải pháp"
     solved:
       title: "Đã xử lý"
+      accepted_answer: "Giải pháp"
+      solution: "Giải pháp"
+      solution_summary:
+        other: "giải pháp"
+      accepted_answer_solver_info: "%{user} đã giúp trong %{post}"
       accepted_answer_post_number: "bài viết %{post_number}"
       topic_status_filter:
         all: "Tất cả"
         solved: "đã xử lý"
+      marked_solved_by: "Đã đánh dấu là giải pháp bởi %{user}"
+    topic_statuses:
+      solved:
+        help: "Chủ đề này có giải pháp"
     discourse_automation:
       triggerables:
         first_accepted_solution:
+          max_trust_level:
+            any: Bất kỳ
           fields:
             maximum_trust_level:
-              label: Bậc tin tưởng
+              label: Độ tin cậy

@@ -413,13 +413,9 @@ export default class Category extends RestModel {
 
     const data = {
       term,
-      parent_category_id: opts.parentCategoryId,
-      limit: opts.limit,
       only: opts.only,
       except: opts.except,
       page: opts.page,
-      offset: opts.offset,
-      include_uncategorized: opts.includeUncategorized,
     };
 
     const cacheKey = JSON.stringify(data);

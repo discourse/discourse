@@ -1301,7 +1301,8 @@ ro:
       private_message: "Mesaj"
       private_messages: "Mesaje"
       upcoming_changes:
-        title: "Modificare viitoare activată"
+        for_user:
+          enabled: "Activată?"
       user_notifications:
         filters:
           filter_by: "Filtrează după"
@@ -1520,6 +1521,7 @@ ro:
         tags: "Etichete"
         interface: "Interfață"
         apps: "Aplicații"
+        navigation_menu: "Meniu de navigare"
       change_password:
         success: "(e-mail trimis)"
         in_progress: "(se trimite e-mail)"
@@ -4025,6 +4027,8 @@ ro:
               options:
                 above_topic_content: "Deasupra conținutului subiectului"
                 below_site_header: "Sub antetul site-ului"
+            header_new_members:
+              placeholder: "Bine ai venit, %{preferred_display_name}!"
             header_logged_in:
               placeholder: "Bine ai revenit, %{preferred_display_name}!"
             header_anonymous:

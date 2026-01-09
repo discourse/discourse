@@ -95,6 +95,9 @@ el:
           reset: "Επαναφορά"
         search:
           name: "Αναζήτηση"
+        ai_helper:
+          setting_groups:
+            automation: "Αυτοματισμός"
         spam:
           name: "Ανεπιθύμητα"
       modals:
@@ -139,7 +142,10 @@ el:
         export: "Εξαγωγή"
         import: "Εισαγωγή"
         description: "Περιγραφή"
+        mentionable: Να επιτρέπονται επισημάνσεις
         user: Χρήστης
+        allow_chat_channel_mentions: "Να επιτρέπονται επισημάνσεις καναλιών συνομιλίας"
+        allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
         enabled: "Ενεργοποιημένο;"
         allowed_groups: "Επιτρεπόμενες ομάδες"

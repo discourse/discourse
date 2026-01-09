@@ -443,8 +443,10 @@ sr:
 
         Dok budete učestvovali ovde, mi ćemo vas upoznati, a privremena nova korisnička ograničenja će biti ukinuta. Vremenom ćete steći [nivoe poverenja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) koji uključuju posebne sposobnosti koje nam pomažu da zajedno upravljamo zajednicom.
     welcome_user:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošao na %{site_name}!"
     welcome_invite:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošao na %{site_name}!"
   user_notifications:
     user_posted_pm_staged:

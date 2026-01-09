@@ -314,7 +314,7 @@ class Badge < ActiveRecord::Base
   end
 
   def manually_grantable?
-    query.blank? && !system?
+    !system?
   end
 
   def i18n_name

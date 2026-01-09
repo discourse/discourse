@@ -428,6 +428,69 @@ RSpec.describe NotificationsController do
           end
         end
 
+        context "with notifications for disabled badges" do
+          fab!(:enabled_badge) { Fabricate(:badge, enabled: true) }
+          fab!(:disabled_badge) { Fabricate(:badge, enabled: false) }
+
+          fab!(:enabled_badge_notification) do
+            BadgeGranter.send_notification(user.id, user.username, user.locale, enabled_badge)
+          end
+
+          fab!(:disabled_badge_notification) do
+            BadgeGranter.send_notification(user.id, user.username, user.locale, disabled_badge)
+          end
+
+          context "with 'recent' filter" do
+            it "filters badge notifications for badges that are disabled" do
+              get "/notifications.json", params: { recent: true }
+
+              expect(response.status).to eq(200)
+
+              expect(response.parsed_body["notifications"].map { |n| n["id"] }).to contain_exactly(
+                notification.id,
+                enabled_badge_notification.id,
+              )
+            end
+
+            it "filters all badge notifications when `enable_badges` site setting is false" do
+              SiteSetting.enable_badges = false
+
+              get "/notifications.json", params: { recent: true }
+
+              expect(response.status).to eq(200)
+
+              expect(response.parsed_body["notifications"].map { |n| n["id"] }).to contain_exactly(
+                notification.id,
+              )
+            end
+          end
+
+          context "without 'recent' filter" do
+            it "filters badge notifications for badges that are disabled" do
+              get "/notifications.json"
+
+              expect(response.status).to eq(200)
+
+              expect(response.parsed_body["notifications"].map { |n| n["id"] }).to contain_exactly(
+                notification.id,
+                enabled_badge_notification.id,
+              )
+            end
+
+            it "filters all badge notifications when `enable_badges` site setting is false" do
+              SiteSetting.enable_badges = false
+
+              get "/notifications.json"
+
+              expect(response.status).to eq(200)
+
+              expect(response.parsed_body["notifications"].map { |n| n["id"] }).to contain_exactly(
+                notification.id,
+              )
+            end
+          end
+        end
+
         context "with `show_user_menu_avatars` setting enabled" do
           before { SiteSetting.show_user_menu_avatars = true }
 

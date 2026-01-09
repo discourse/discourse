@@ -6,6 +6,10 @@
 
 de:
   js:
+    carousel:
+      go_to_slide: "Gehe zu Folie %{index}"
+      previous: "Vorherige Folie"
+      next: "Nächste Folie"
     number:
       format:
         separator: ","
@@ -711,6 +715,7 @@ de:
       filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
       filtered_user: "Gemeldeter Benutzer"
       filtered_reviewed_by: "Überprüft von"
+      filtered_claimed_by: "Meldung übernommen von"
       show_all_topics: "alle Themen zeigen"
       deleted_post: "(Beitrag gelöscht)"
       deleted_user: "(Benutzer gelöscht)"
@@ -787,6 +792,8 @@ de:
           low: "Niedrig"
           medium: "Mittel"
           high: "Hoch"
+        active_filters: "Aktive Filter:"
+        clear_filter: "%{filter} entfernen"
       conversation:
         view_full: "zeige vollständige Unterhaltung"
       scores:
@@ -893,6 +900,7 @@ de:
           one: "%{count} bestätigte Meldung"
           other: "%{count} bestätigte Meldungen"
         activities:
+          joined_on: "beigetreten: %{joinDate}"
           trust_level: "Vertrauensstufe: %{trustLevelName}"
           posts:
             one: "%{count} Beitrag"
@@ -1322,6 +1330,7 @@ de:
         one: "Kategorien (%{count} weitere) …"
         other: "Kategorien (%{count} weitere) …"
     ip_lookup:
+      title: IP-Adresse
       hostname: Hostname
       location: Standort
       location_not_found: (unbekannt)
@@ -1362,6 +1371,10 @@ de:
       new_private_message: "Neue Nachricht"
       private_message: "Nachricht"
       private_messages: "Nachrichten"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktiviert?"
+          why: "Warum?"
       user_notifications:
         filters:
           filter_by: "Filtern nach"
@@ -2903,6 +2916,8 @@ de:
         zoom_in: "Bildgröße vergrößern"
         remove: "Bild entfernen"
       image: "Bild"
+      grid_mode_title: "Setze den Stil der Bildergalerie auf %{mode}"
+      remove_grid: "Raster entfernen"
       image_scale_button: "Bild auf %{percent} % skalieren"
       delete_image_button: Bild löschen
       toggle_image_grid: Bildraster umschalten
@@ -3130,6 +3145,7 @@ de:
           aria_label: Nach Schlagwörtern filtern
         filters:
           label: Nur Themen/Beiträge zurückgeben …
+          all: Nachrichten einschließen
           title: Mit Treffer im Titel
           likes: Themen/Beiträge, die mir gefallen
           posted: Themen mit Beiträgen von mir
@@ -3248,6 +3264,12 @@ de:
         delete_topics_count:
           one: "Thema löschen"
           other: "Themen löschen"
+        delete_posts_count:
+          one: "Beitrag löschen"
+          other: "Beiträge löschen"
+        delete_posts_confirmation:
+          one: "Möchtest du den Beitrag wirklich löschen?"
+          other: "Möchtest du die %{count} Beiträge wirklich löschen?"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
         dismiss_read_with_selected:
@@ -3462,6 +3484,7 @@ de:
       jump_reply_button: "Zum Beitrag springen"
       deleted: "Das Thema wurde gelöscht"
       slow_mode_update:
+        title: "Langsamer Modus"
         select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
         description: "Um in schnellen oder umstrittenen Diskussionen eine durchdachte Diskussion zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut einen Beitrag verfassen können."
         enable: "Aktivieren"
@@ -3514,6 +3537,8 @@ de:
         title: "Thema nach dem letzten Beitrag automatisch schließen"
       auto_delete:
         title: "Thema automatisch löschen"
+      auto_delete_after_last_post:
+        title: "Thema nach dem letzten Beitrag automatisch löschen"
       auto_bump:
         title: "Thema automatisch nach oben verschieben"
       reminder:
@@ -3525,6 +3550,7 @@ de:
         auto_close: "Dieses Thema wird automatisch geschlossen %{timeLeft}."
         auto_publish_to_category: "Dieses Thema wird %{timeLeft} in <a href=%{categoryUrl}>#%{categoryName}</a> veröffentlicht."
         auto_close_after_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort geschlossen."
+        auto_delete_after_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort gelöscht."
         auto_delete: "Dieses Thema wird automatisch gelöscht %{timeLeft}."
         auto_bump: "Dieses Thema wird automatisch nach oben verschoben %{timeLeft}."
         auto_reminder: "Du wirst über dieses Thema erinnert %{timeLeft}."
@@ -3801,6 +3827,11 @@ de:
           one: Du hast <b>%{count}</b> Beitrag ausgewählt.
           other: "Du hast <b>%{count}</b> Beiträge ausgewählt."
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
+      localizations:
+        title_edit_warning:
+          message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagworte und den Titel in %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
+          action_original: "Original bearbeiten"
+          action_translation: "Übersetzten Thementitel bearbeiten"
     post_list:
       title: "Letzte Beiträge"
       empty: "Es gibt keine Beiträge"
@@ -3908,6 +3939,7 @@ de:
         post_language_selector:
           none: "Keine"
         edit_warning:
+          message: "Dies ist ein übersetzter Beitrag.<br><br>Willst du den Originalbeitrag auf %{language} bearbeiten oder diese spezielle Übersetzung bearbeiten?"
           action_original: "Originalbeitrag bearbeiten"
           action_translation: "Diese Übersetzung bearbeiten"
       errors:
@@ -4144,12 +4176,22 @@ de:
         add: "Erforderliche Schlagwortgruppe hinzufügen"
         placeholder: "Schlagwortgruppe auswählen …"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
+      delete: "Kategorie löschen"
+      create: "Neue Kategorie"
       create_long: "Eine neue Kategorie erstellen"
+      save: "Kategorie speichern"
+      slug: "Sprechender Name für URL der Kategorie"
       slug_placeholder: "(Optional) durch Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
+      name: "Name der Kategorie"
+      untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
+      logo: "Logo für Kategorie"
+      logo_dark: "Logo der Kategorie im „dunklen Modus“"
       logo_description: "Empfohlenes Seitenverhältnis 1:1 mit einer Mindestgröße von 200 px. Wenn du nichts angibst, wird kein Bild angezeigt."
+      background_image: "Hintergrundbild für Kategorie"
+      background_image_dark: "Hintergrundbild für Kategorie im „dunklen Modus“"
       style: "Stile"
       background_color: "Farbe"
       foreground_color: "Textfarbe"
@@ -4204,15 +4246,23 @@ de:
       all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
       allow_unlimited_owner_edits_on_first_post: "Erlaube unbegrenzte Änderungen des Eigentümers am ersten Beitrag"
       subcategory_list_style: "Listenstil für Unterkategorien:"
+      sort_order: "Themenliste sortieren nach:"
+      default_view: "Standard-Themenliste:"
+      default_top_period: "Standard-Zeitraum für angesagte Themen:"
+      default_list_filter: "Standard-Listenfilter:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
+      edit_permissions: "Berechtigungen bearbeiten"
       reviewable_by_group: "Zusätzlich zum Team können Inhalte in dieser Kategorie auch überprüft werden von:"
       review_group_name: "Gruppenname"
       require_topic_approval: "Erfordere Moderator-Genehmigung für alle neuen Themen"
       require_reply_approval: "Erfordere Moderator-Genehmigung für alle neuen Antworten"
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
+      default_position: "Standardposition"
       position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
+      default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
+      parent: "Übergeordnete Kategorie"
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       auto_bump_cooldown_days: "Mindestanzahl an Tagen, bevor das gleiche Thema erneut angesprochen wird:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
@@ -4234,14 +4284,18 @@ de:
           title: "Stummgeschaltet"
           description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       search_priority:
+        label: "Suchpriorität"
         options:
           normal: "Normal"
           ignore: "Ignorieren"
+          very_low: "Sehr niedrig"
           low: "Niedrig"
           high: "Hoch"
+          very_high: "Sehr hoch"
       sort_options:
         default: "Standard"
         likes: "„Gefällt mir“"
+        op_likes: "„Gefällt mir“ des Originalbeitrags"
         views: "Aufrufe"
         posts: "Beiträge"
         activity: "Aktivität"
@@ -4262,6 +4316,7 @@ de:
         email: "E-Mail"
       list_filters:
         all: "Alle Themen"
+        none: "Keine Unterkategorien"
       colors_disabled: "Du kannst keine Farben auswählen, weil du den „category style“ „none“ verwendest."
     anonymous_flagging:
       title: "Illegale Inhalte melden"
@@ -4523,6 +4578,7 @@ de:
       download: "Herunterladen"
       open: "Originalbild"
       image_info: "Bildinformationen"
+      quote: "Bild zitieren"
       previous: "Zurück (linke Pfeiltaste)"
       next: "Weiter (rechte Pfeiltaste)"
       counter: "%curr% von %total%"
@@ -4568,6 +4624,7 @@ de:
         go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag springen"
       application:
         title: "Anwendung"
+        create: "%{shortcut} Neues Thema oder persönliche Nachricht erstellen"
         notifications: "%{shortcut} Benachrichtigungen öffnen"
         hamburger_menu: "%{shortcut} Navigationsmenü öffnen"
         user_profile_menu: "%{shortcut} Benutzermenü öffnen"
@@ -4750,7 +4807,15 @@ de:
       upload_description: "Lade eine CSV-Datei hoch, um mehrere Schlagwörter auf einmal zu erstellen"
       upload_instructions: "Ein Schlagwort pro Zeile, optional mit einer Schlagwortgruppe nach dem Schema „tag_name,tag_group“."
       upload_successful: "Schlagwörter erfolgreich hochgeladen"
+      bulk_create_inline_placeholder: "Schlagwörter erstellen (durch Kommas getrennt)"
       bulk_create_button: "Erstellen"
+      bulk_create_success:
+        one: "%{count} Schlagwort erstellt:"
+        other: "%{count} Schlagwörter erstellt:"
+      bulk_create_already_exist:
+        one: "%{count} Schlagwort existiert bereits:"
+        other: "%{count} Schlagwörter existieren bereits:"
+      bulk_create_some_failed: "Einige Schlagwörter konnten nicht erstellt werden:"
       delete_unused_confirmation:
         one: "%{count} Schlagwort wird gelöscht: %{tags}"
         other: "%{count} Schlagwörter werden gelöscht: %{tags}"
@@ -4784,9 +4849,13 @@ de:
           description: "Du wirst nicht über neue Themen mit diesem Schlagwort benachrichtigt und sie werden nicht unter „Ungelesen“ auftauchen."
       groups:
         back_btn: "Zurück zu allen Schlagwörtern"
+        title: "Schlagwortgruppen"
         about_heading: "Wähle eine Schlagwortgruppe oder erstelle eine neue."
         about_heading_empty: "Erstelle eine neue Schlagwortgruppe, um loszulegen"
         about_description: "Schlagwortgruppen helfen dir, Berechtigungen für viele Schlagwörter an einem Ort zu verwalten."
+        new: "Neue Gruppe"
+        new_title: "Neue Gruppe erstellen"
+        edit_title: "Schlagwortgruppe bearbeiten"
         tags_label: "Schlagwörter in dieser Gruppe"
         parent_tag_label: "Übergeordnetes Schlagwort"
         parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort vorhanden ist."
@@ -5439,6 +5508,10 @@ de:
               options:
                 above_topic_content: "Über dem Themeninhalt"
                 below_site_header: "Unter der Kopfzeile"
+            text_section:
+              locale_label: "Sprache"
+            header_new_members:
+              placeholder: "Willkommen, %{preferred_display_name}!"
             header_logged_in:
               placeholder: "Willkommen zurück, %{preferred_display_name}!"
             header_anonymous:
@@ -7521,7 +7594,6 @@ de:
           button: "Alle Beiträge löschen"
           progress:
             title: "Fortschritt beim Löschen von Beiträgen"
-            description: "Beiträge werden gelöscht …"
           confirmation:
             title: "Alle Beiträge von @%{username} löschen"
             description: |

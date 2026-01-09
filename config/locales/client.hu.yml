@@ -1380,7 +1380,8 @@ hu:
       private_message: "Üzenet"
       private_messages: "Üzenetek"
       upcoming_changes:
-        title: "Közelgő változás engedélyezve"
+        for_user:
+          enabled: "Engedélyezve?"
       user_notifications:
         filters:
           filter_by: "Szűrés:"
@@ -5506,10 +5507,10 @@ hu:
                 below_site_header: "A webhely fejléce alatt"
             text_section:
               title: "Testreszabható szöveg"
-              variables: "A következő változókat használhatod a szövegedben: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Nyelv"
             header_new_members:
               label: "Fejléc új tagoknak"
-              placeholder: "Üdvözöljük a %{site_name}, %{preferred_display_name}!"
+              placeholder: "Üdvözöljük, %{preferred_display_name}!"
             header_logged_in:
               label: "Fejléc bejelentkezett tagoknak"
               placeholder: "Üdv újra itt, %{preferred_display_name}!"
@@ -7617,7 +7618,6 @@ hu:
           button: "Összes bejegyzés törlése"
           progress:
             title: "A bejegyzések törlésének folyamata"
-            description: "Bejegyzések törlése…"
           confirmation:
             title: "@%{username} összes bejegyzésének törlése"
             description: |

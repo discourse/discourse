@@ -103,14 +103,14 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
       expect(results[:rows]).to eq([])
     end
 
-    it "uses /filter URL for filter-only queries" do
+    it "uses /search URL for filter-only queries" do
       Fabricate(:post, topic: topic_with_tags)
 
       search = described_class.new({ order: "latest" }, bot_user: bot_user, llm: llm)
       search.invoke(&progress_blk)
 
       description_args = search.send(:description_args)
-      expect(description_args[:url]).to eq("/filter?q=order%3Aactivity")
+      expect(description_args[:url]).to eq("/search?q=order%3Alatest")
     end
 
     it "uses /search URL for queries with search terms" do

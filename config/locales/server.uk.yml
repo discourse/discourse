@@ -2635,6 +2635,7 @@ uk:
     content_localization_allow_author_localization: "Дозволити авторам оновлювати локалізації власних тем і публікацій через меню публікацій."
     enable_upcoming_changes: "Увімкнути майбутні зміни"
     fake_upcoming_change: "Це фальшива майбутня зміна для тестових цілей. Немає потреби перекладати цей рядок."
+    experimental_rename_faq_to_guidelines: "Ця зміна перейменовує сторінку поширених запитань на «Правила». Сторінка поширених запитань все ще буде доступна за адресою /faq. Налаштування «faq url» працює як і раніше."
     errors:
       invalid_css_color: "Недійсний колір. Введіть назву кольору або шістнадцяткове значення."
       invalid_datetime: "Неправильний формат дати і часу. Будь ласка, переконайтеся, що ви ввели правильну дату та час."
@@ -3428,6 +3429,7 @@ uk:
         Коли ви будете брати участь тут, ми познайомимося з вами, а тимчасові обмеження щодо нових користувачів буде знято. З часом ви отримаєте [рівень довіри](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), який додаватиме спеціальні можливості, які допоможуть нам спільно керувати спільнотою.
     welcome_user:
       title: "Ласкаво просимо,  користувач"
+      preview: "Ласкаво просимо до сайту %{site_name}!"
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
       text_body_template: "Дякуємо за приєднання до %{site_name} і ласкаво просимо!\n\n%{new_user_tips}\n\nМи завжди сподіваємось на [цивілізовану поведінку](%{base_url}/guidelines). \n\nПриємного перебування!\n"
     welcome_tl1_user:
@@ -3448,6 +3450,7 @@ uk:
         З великою владою приходить велика відповідальність. Якщо ви новачок, зверніться до [Посібника з модерування](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Ласкаво просимо"
+      preview: "Ласкаво просимо до сайту %{site_name}!"
       subject_template: "Ласкаво просимо до сайту %{site_name}!"
       text_body_template: "Дякуємо, що прийняли наше запрошення на %{site_name} -- ласкаво просимо! \n\n- Ми створили для вас цей новий акаунт **%{username}**. Змініть своє ім’я або пароль, відвідавши [your user profile][prefs].\n\n- Коли ви входите в систему, будь ласка **використовуйте ту саму адресу електронної пошти від свого початкового запрошення** -- інакше ми не зможемо сказати, що це ви! \n\n%{new_user_tips} Ми віримо в [civilized community behavior](%{base_url}/guidelines) у всі часи. \n\nНасолоджуйтеся своїм перебуванням! \n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
@@ -3868,6 +3871,7 @@ uk:
         Це можна змінити за допомогою параметрів сайту `newuser_spam_host_threshold` і `allowed_spam_host_domains`. Подумайте про додавання %{domains} до білого списку, якщо їх потрібно виключити.
     unsilenced:
       title: "Розблоковані"
+      preview: "Обліковий запис більше не призупинено."
       subject_template: "Обліковий запис більше не призупинено"
       text_body_template: |
         Привіт,
@@ -3918,8 +3922,6 @@ uk:
     Ви отримуєте це, тому що ви ввімкнули режим списку розсилки. Щоб скасувати підписку на ці електронні листи, [натисніть тут](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} на %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Попередні відповіді"
     reached_limit:
@@ -4250,6 +4252,7 @@ uk:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Увійдіть за посиланням"
+      preview: "Увійдіть за посиланням."
       subject_template: "[%{email_prefix}] Увійти за посиланням"
       text_body_template: |
         Ось ваше посилання для входу на [%{site_name}](%{base_url}).

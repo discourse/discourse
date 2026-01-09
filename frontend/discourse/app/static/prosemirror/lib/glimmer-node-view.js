@@ -40,6 +40,7 @@ export default class GlimmerNodeView {
     this.dom.classList.add(`composer-${name}-node`);
     if (hasContent) {
       this.contentDOM = document.createElement(node.isInline ? "span" : "div");
+      this.dom.appendChild(this.contentDOM);
     }
   }
 

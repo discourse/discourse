@@ -1210,6 +1210,9 @@ zh_TW:
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
+      upcoming_changes:
+        for_user:
+          enabled: "啟用?"
       user_notifications:
         filters:
           filter_by: "篩選依據"
@@ -1507,7 +1510,6 @@ zh_TW:
         tags: "標籤"
         interface: "界面"
         apps: "應用"
-        navigation_menu: "導覽選單"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"
@@ -4789,6 +4791,8 @@ zh_TW:
           form:
             location:
               label: "位置"
+            text_section:
+              locale_label: "語言"
             header_logged_in:
               placeholder: "%{preferred_display_name} 歡迎回來！"
             header_anonymous:
@@ -6622,7 +6626,6 @@ zh_TW:
           button: "刪除所有貼文"
           progress:
             title: "刪除帖文的進度"
-            description: "刪除貼文中⋯"
           confirmation:
             title: "刪除 @%{username} 發布的所有帖文"
             description: |

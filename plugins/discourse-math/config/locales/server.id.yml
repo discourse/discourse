@@ -5,6 +5,3 @@
 # https://translate.discourse.org/
 
 id:
-  site_settings:
-    discourse_math_zoom_on_hover: "Zoom 200% pada hover (hanya MathJax)"
-    discourse_math_enable_accessibility: "Aktifkan fitur aksesibilitas (hanya MathJax)"

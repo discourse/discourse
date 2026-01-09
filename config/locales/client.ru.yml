@@ -1521,7 +1521,8 @@ ru:
       private_message: "Сообщение"
       private_messages: "Сообщения"
       upcoming_changes:
-        title: "Предстоящие изменения включены"
+        for_user:
+          enabled: "Включено?"
       user_notifications:
         filters:
           filter_by: "Фильтр"
@@ -5929,8 +5930,10 @@ ru:
               options:
                 above_topic_content: "Над контентом темы"
                 below_site_header: "Под заголовком сайта"
+            text_section:
+              locale_label: "Язык"
             header_new_members:
-              placeholder: "Добро пожаловать в %{site_name}, %{preferred_display_name}!"
+              placeholder: "Добро пожаловать в %{preferred_display_name}!"
             header_logged_in:
               label: "Заголовок для авторизованных пользователей"
               placeholder: "С возвращением, %{preferred_display_name}!"
@@ -8060,7 +8063,6 @@ ru:
           button: "Удалить все сообщения"
           progress:
             title: "Удаление сообщений"
-            description: "Удаление публикаций…"
           confirmation:
             title: "Удалить все сообщения от пользователя @%{username}"
             description: |

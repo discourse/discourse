@@ -38,7 +38,6 @@ html.composer-open:not(.has-full-page-chat) {
 }
 
 #reply-control {
-  border: 1px solid var(--content-border-color);
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -117,6 +116,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.open {
     --min-height: 255px;
+    border: 1px solid var(--content-border-color);
     box-sizing: border-box;
     height: var(--composer-height);
     min-height: var(--min-height);
@@ -129,6 +129,9 @@ html.composer-open:not(.has-full-page-chat) {
       transform: none;
       height: 100dvh;
       max-height: unset;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border: none;
     }
   }
 

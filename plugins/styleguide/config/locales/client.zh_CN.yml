@@ -85,6 +85,8 @@ zh_CN:
           title: "帖子列表"
           empty_example: "<PostList /> 空状态"
           populated_example: "<PostList /> 已填写状态"
+        post_oneboxes:
+          title: "帖子 Onebox"
         topic_map:
           title: "话题图"
         site_header:

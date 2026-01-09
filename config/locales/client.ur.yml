@@ -1359,6 +1359,9 @@ ur:
       new_private_message: "نیا پیغام"
       private_message: "پیغام"
       private_messages: "پیغامات"
+      upcoming_changes:
+        for_user:
+          enabled: "فعال؟"
       user_notifications:
         filters:
           filter_by: "فلٹر بذریعہ"
@@ -5396,6 +5399,10 @@ ur:
               options:
                 above_topic_content: "اوپر موضوع کا مواد"
                 below_site_header: "سائٹ ہیڈر کے نیچے"
+            text_section:
+              locale_label: "زبان"
+            header_new_members:
+              placeholder: "خوش آمدید، %{preferred_display_name}!"
             header_logged_in:
               placeholder: "دوبارہ خوش آمدید، %{preferred_display_name}!"
             header_anonymous:

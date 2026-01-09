@@ -40,6 +40,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
     "ORGANISMS" => [
       { href: "/organisms/post", title: "Post" },
       { href: "/organisms/post-list", title: "Post List" },
+      { href: "/organisms/post-oneboxes", title: "Post Oneboxes" },
       { href: "/organisms/topic-map", title: "Topic Map" },
       { href: "/organisms/topic-footer-buttons", title: "Topic Footer Buttons" },
       { href: "/organisms/topic-list", title: "Topic List" },

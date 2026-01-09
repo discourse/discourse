@@ -258,7 +258,7 @@ RSpec.describe "tasks/version_bump" do
         run "git", "reset", "--hard"
         run "git", "checkout", "version-bump/main"
         version_rb_content = File.read("lib/version.rb")
-        expect(version_rb_content).to include('STRING = "2026.01.0-latest"')
+        expect(version_rb_content).to include('STRING = "2026.1.0-latest"')
       end
     end
 
