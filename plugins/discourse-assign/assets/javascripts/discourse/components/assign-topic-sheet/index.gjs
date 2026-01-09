@@ -18,6 +18,7 @@ export default class AssignTopicSheet extends Component {
 
   @tracked sheetPresented = false;
   @tracked nestedSheetPresented = false;
+  @tracked assigneesListPresented = false;
 
   @tracked assignment = this.assignments[0];
 
@@ -285,7 +286,55 @@ export default class AssignTopicSheet extends Component {
                               @sheet={{nestedSheet}}
                               @form={{form}}
                               @data={{data}}
+                              @onShowAssigneesList={{fn
+                                (mut this.assigneesListPresented)
+                                true
+                              }}
                             />
+
+                            <DSheet.Root
+                              @presented={{this.assigneesListPresented}}
+                              @onPresentedChange={{fn
+                                (mut this.assigneesListPresented)
+                              }}
+                              @forComponent={{stack.stackId}}
+                              as |assigneesSheet|
+                            >
+                              <DSheet.Portal @sheet={{assigneesSheet}}>
+                                <DSheet.View
+                                  class="assign-sheet__view"
+                                  @sheet={{assigneesSheet}}
+                                  @tracks={{this.tracks}}
+                                  @inertOutside={{false}}
+                                >
+                                  <DSheet.Content
+                                    @sheet={{assigneesSheet}}
+                                    @stackingAnimation={{this.stackingAnimation}}
+                                    class="assign-sheet__content"
+                                  >
+                                    <div
+                                      class="assign-sheet__inner-content assign-sheet__inner-content--nested"
+                                    >
+                                      <DSheet.Header @sheet={{assigneesSheet}}>
+                                        <:left as |Button|>
+                                          <Button.Cancel />
+                                        </:left>
+                                        <:title>
+                                          Select Assignee
+                                        </:title>
+                                      </DSheet.Header>
+
+                                      <AssigneesList
+                                        @assignment={{this.assignment}}
+                                        @sheet={{assigneesSheet}}
+                                        @form={{form}}
+                                        @data={{data}}
+                                      />
+                                    </div>
+                                  </DSheet.Content>
+                                </DSheet.View>
+                              </DSheet.Portal>
+                            </DSheet.Root>
                           </div>
                         </DSheet.Content>
                       </DSheet.View>
