@@ -468,6 +468,7 @@ export default class Category extends RestModel {
   @tracked localizations = this.category_localizations;
   @tracked minimum_required_tags;
   @tracked styleType = this.style_type;
+  @tracked allowed_tags;
   @trackedArray available_groups;
   @trackedArray permissions;
   @trackedArray required_tag_groups;
@@ -783,7 +784,9 @@ export default class Category extends RestModel {
         all_topics_wiki: this.all_topics_wiki,
         allow_unlimited_owner_edits_on_first_post:
           this.allow_unlimited_owner_edits_on_first_post,
-        allowed_tags: this.allowed_tags,
+        allowed_tags: this.allowed_tags?.map((t) =>
+          typeof t === "object" ? t.name : t
+        ),
         allowed_tag_groups: this.allowed_tag_groups,
         allow_global_tags: this.allow_global_tags,
         required_tag_groups: this.required_tag_groups,

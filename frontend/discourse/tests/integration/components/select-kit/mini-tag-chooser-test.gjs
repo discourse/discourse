@@ -52,9 +52,9 @@ module(
         [...queryAll(".select-kit-row")].map((el) => el.textContent.trim()),
         ["monkey x1", "gazelle x2", "dog x3", "cat x4"]
       );
-      await this.subject.selectRowByValue("monkey");
+      await this.subject.selectRowByName("monkey");
 
-      assert.strictEqual(this.subject.header().value(), "foo,bar,monkey");
+      assert.strictEqual(this.subject.header().name(), "foo,bar,monkey");
     });
 
     test("max_tags_per_topic", async function (assert) {
@@ -72,7 +72,7 @@ module(
 
       await this.subject.expand();
       await this.subject.fillInFilter("baz");
-      await this.subject.selectRowByValue("monkey");
+      await this.subject.selectRowByName("monkey");
 
       assert.dom(".select-kit-error").hasText(
         i18n("select_kit.max_content_reached", {
@@ -133,7 +133,7 @@ module(
         })
       );
 
-      await this.subject.selectRowByValue("monkey");
+      await this.subject.selectRowByName("monkey");
 
       assert
         .dom("input[name=filter-input-search]")
@@ -212,9 +212,9 @@ module(
 
     test("displays tags and filter in header", async function (assert) {
       this.set("value", [
-        { id: "apple", name: "apple", slug: "apple" },
-        { id: "orange", name: "orange", slug: "orange" },
-        { id: "potato", name: "potato", slug: "potato" },
+        { id: 10, name: "apple", slug: "apple" },
+        { id: 11, name: "orange", slug: "orange" },
+        { id: 12, name: "potato", slug: "potato" },
       ]);
 
       await render(
@@ -226,7 +226,7 @@ module(
         </template>
       );
 
-      assert.strictEqual(this.subject.header().value(), "apple,orange,potato");
+      assert.strictEqual(this.subject.header().name(), "apple,orange,potato");
 
       assert.dom(".select-kit-header--filter").exists();
       assert.dom(".select-kit-header button[data-name='apple']").exists();
@@ -255,9 +255,9 @@ module(
 
     test("removing a tag does not display the dropdown", async function (assert) {
       this.set("value", [
-        { id: "apple", name: "apple", slug: "apple" },
-        { id: "orange", name: "orange", slug: "orange" },
-        { id: "potato", name: "potato", slug: "potato" },
+        { id: 10, name: "apple", slug: "apple" },
+        { id: 11, name: "orange", slug: "orange" },
+        { id: 12, name: "potato", slug: "potato" },
       ]);
 
       await render(
@@ -269,13 +269,13 @@ module(
         </template>
       );
 
-      assert.strictEqual(this.subject.header().value(), "apple,orange,potato");
+      assert.strictEqual(this.subject.header().name(), "apple,orange,potato");
 
       await click(".select-kit-header button[data-name='apple']");
 
       assert.dom(".select-kit-collection").doesNotExist();
       assert.dom(".select-kit-header button[data-name='apple']").doesNotExist();
-      assert.strictEqual(this.subject.header().value(), "orange,potato");
+      assert.strictEqual(this.subject.header().name(), "orange,potato");
 
       assert
         .dom(".select-kit-header .filter-input")

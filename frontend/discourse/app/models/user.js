@@ -567,7 +567,13 @@ export default class User extends RestModel.extend(Evented) {
       "watching_first_post_tags",
     ].forEach((prop) => {
       if (fields === undefined || fields.includes(prop)) {
-        data[prop] = this.get(prop) ? this.get(prop).join(",") : "";
+        const tags = this.get(prop);
+        if (tags) {
+          const names = tags.map((t) => (typeof t === "object" ? t.name : t));
+          data[prop] = names.join(",");
+        } else {
+          data[prop] = "";
+        }
       }
     });
 

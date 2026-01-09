@@ -344,9 +344,10 @@ class TopicTrackingState
           #{sql}
         )
         SELECT *, (
-          SELECT ARRAY_AGG(name) from topic_tags
-             JOIN tags on tags.id = topic_tags.tag_id
-             WHERE topic_id = tags_included_cte.topic_id
+          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id, 'name', tags.name, 'slug', tags.slug))
+          FROM topic_tags
+          JOIN tags ON tags.id = topic_tags.tag_id
+          WHERE topic_id = tags_included_cte.topic_id
           ) tags
         FROM tags_included_cte
       SQL

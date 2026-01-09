@@ -1157,8 +1157,10 @@ export default class Composer extends RestModel {
       let val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
         if (f === "tags" && Array.isArray(val)) {
-          // temporary, will be changed when backend accepts id
-          val = val.map((t) => (typeof t === "string" ? t : t.name));
+          // extract tag names from objects for backend compatibility
+          if (val.some((t) => typeof t === "object" && t !== null)) {
+            val = val.map((t) => (typeof t === "object" ? t.name : t));
+          }
         }
         set(dest, f, val);
       }
