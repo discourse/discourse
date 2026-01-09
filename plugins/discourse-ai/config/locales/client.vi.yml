@@ -127,6 +127,9 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
+      related_topics:
+        title: "Các chủ đề liên quan"
+        pill: "Liên quan"
       ai_helper:
         context_menu:
           cancel: "Hủy"
@@ -177,6 +180,13 @@ vi:
       summarization:
         chat:
           summarize: "Tóm tắt"
+        topic:
+          title: "Tóm tắt chủ đề"
+        topic_list_layout:
+          button:
+            compact: "Gọn gàng"
+            expanded: "Mở rộng"
+            expanded_description: "Với tóm tắt AI"
       discobot_discoveries:
         regular_results: "Các chủ đề"
         collapse: "Thu gọn"

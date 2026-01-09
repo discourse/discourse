@@ -16,7 +16,7 @@ vi:
       dates:
         yesterday: "Hôm qua"
       create: "Tạo"
-      cancel: "Huỷ"
+      cancel: "Hủy"
       channel_settings:
         edit: "Sửa"
         add: "Thêm"
@@ -32,14 +32,16 @@ vi:
         never: "Không bao giờ"
       header_indicator_preference:
         never: "Không bao giờ"
-      flag: "Gắn cờ"
+      flag: "Báo cáo"
       join: "Tham gia"
-      last_visit: "lần thăm cuối"
+      last_visit: "Lần truy cập cuối"
       mention_warning:
         groups:
           header:
             some: "Một số người dùng sẽ không được thông báo"
             all: "Sẽ không ai được thông báo"
+      no_direct_message_channels: "Bạn chưa nhắn riêng!"
+      no_public_channels: "Bạn chưa tham gia kênh nào!"
       reply: "Trả lời"
       edit: "Sửa"
       rebake_message: "Tạo lại HTML"
@@ -71,6 +73,7 @@ vi:
           settings: Cài đặt
         remove_member: "Xoá"
       new_message_modal:
+        title: Gửi tin nhắn
         no_items: "Không có mẫu nào"
         filter: "Lọc"
       direct_message_creator:
@@ -117,7 +120,7 @@ vi:
         url: "URL"
         username: "Tên tài khoản"
       selection:
-        cancel: "Huỷ"
+        cancel: "Hủy"
         copy: "Sao chép"
         new_topic:
           title: "Di chuyển tới Chủ đề mới"
@@ -152,7 +155,7 @@ vi:
           other: "+%{count}"
       draft_channel_screen:
         header: "Tin nhắn mới"
-        cancel: "Huỷ"
+        cancel: "Hủy"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
       chat_watched_thread_label:
@@ -163,3 +166,5 @@ vi:
           fields:
             message:
               label: Tin nhắn
+            sender:
+              label: Người gửi
