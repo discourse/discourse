@@ -100,12 +100,25 @@ class Admin::StaffActionLogsController < Admin::StaffController
   end
 
   def diff_tag_group(diff_fields, prev, cur)
-    %w[parent_tag_name one_per_topic permissions].each do |f|
+    %w[one_per_topic permissions].each do |f|
       diff_fields[f] = { prev: prev&.dig(f).to_s, cur: cur&.dig(f).to_s }
     end
-    diff_fields["tag_names"] = {
-      prev: prev&.dig("tag_names")&.join("\n"),
-      cur: cur&.dig("tag_names")&.join("\n"),
+    add_tag_diff(diff_fields, prev, cur, "tags", "tag_names")
+    add_tag_diff(diff_fields, prev, cur, "parent_tag", "parent_tag_name")
+  end
+
+  def add_tag_diff(diff_fields, prev, cur, new_key, old_key)
+    prev_key = prev&.key?(new_key) ? new_key : old_key
+    cur_key = cur&.key?(new_key) ? new_key : old_key
+    field_name = cur&.key?(new_key) || prev&.key?(new_key) ? new_key : old_key
+    diff_fields[field_name] = {
+      prev: extract_tag_names(prev&.dig(prev_key)),
+      cur: extract_tag_names(cur&.dig(cur_key)),
     }
+  end
+
+  def extract_tag_names(tags)
+    return nil if tags.blank?
+    tags.map { |t| t.is_a?(Hash) ? t["name"] : t }.join("\n")
   end
 end

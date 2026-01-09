@@ -212,6 +212,47 @@ RSpec.describe Admin::StaffActionLogsController do
         expect(parsed["side_by_side"]).to include("<del>#{tag1.name}</del>")
         expect(parsed["side_by_side"]).to include("<ins>#{tag3.name}</ins>")
       end
+
+      it "generates diffs for old tag_group format with tag_names" do
+        tag1 = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+        tag3 = Fabricate(:tag)
+
+        old_json = {
+          name: "old_group",
+          tag_names: [tag1.name, tag2.name],
+          parent_tag_name: [],
+          one_per_topic: false,
+          permissions: {
+            "0" => 1,
+          },
+        }.to_json
+
+        new_json = {
+          name: "new_group",
+          tag_names: [tag2.name, tag3.name],
+          parent_tag_name: [],
+          one_per_topic: false,
+          permissions: {
+            "0" => 1,
+          },
+        }.to_json
+
+        record =
+          StaffActionLogger.new(Discourse.system_user).log_tag_group_change(
+            "new_group",
+            old_json,
+            new_json,
+          )
+
+        get "/admin/logs/staff_action_logs/#{record.id}/diff.json"
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+        expect(parsed["side_by_side"]).to include("<h3>tag_names</h3>")
+        expect(parsed["side_by_side"]).to include("<del>#{tag1.name}</del>")
+        expect(parsed["side_by_side"]).to include("<ins>#{tag3.name}</ins>")
+      end
     end
 
     context "when logged in as an admin" do
