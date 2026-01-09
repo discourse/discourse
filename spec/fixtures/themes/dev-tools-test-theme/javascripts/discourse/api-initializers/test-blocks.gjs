@@ -1,10 +1,12 @@
 import { apiInitializer } from "discourse/lib/api";
+import BlockGroup from "discourse/blocks/block-group";
 import {
   CombinedAdminCategoryBlock,
   CombinedLoggedInTL1Block,
   ConditionalBlock,
   DebugArgsBlock,
   DebugConditionsBlock,
+  NestedGhostLeafBlock,
   OrAdminOrModeratorBlock,
   OrderFifthBlock,
   OrderFirstBlock,
@@ -51,7 +53,7 @@ export default apiInitializer((api) => {
     // Route condition blocks
     {
       block: RouteCategoryBlock,
-      conditions: [{ type: "route", urls: ["$CATEGORY_PAGES"] }],
+      conditions: [{ type: "route", pages: ["CATEGORY_PAGES"] }],
     },
     {
       block: RouteTopicBlock,
@@ -59,7 +61,7 @@ export default apiInitializer((api) => {
     },
     {
       block: RouteDiscoveryBlock,
-      conditions: [{ type: "route", urls: ["$DISCOVERY_PAGES"] }],
+      conditions: [{ type: "route", pages: ["DISCOVERY_PAGES"] }],
     },
 
     // Setting condition blocks
@@ -80,7 +82,7 @@ export default apiInitializer((api) => {
       block: CombinedAdminCategoryBlock,
       conditions: [
         { type: "user", admin: true },
-        { type: "route", urls: ["$CATEGORY_PAGES"] },
+        { type: "route", pages: ["CATEGORY_PAGES"] },
       ],
     },
 
@@ -121,6 +123,38 @@ export default apiInitializer((api) => {
       conditions: [
         { type: "user", admin: true },
         { type: "user", minTrustLevel: 2 },
+      ],
+    },
+
+    // Nested ghost blocks test - 4 levels deep with all children having failing conditions
+    // This tests that ghost blocks are shown for container blocks when all children are hidden
+    {
+      block: BlockGroup,
+      args: { name: "level-1" },
+      classNames: "deep-ghosts",
+      children: [
+        {
+          block: BlockGroup,
+          args: { name: "level-2" },
+          children: [
+            {
+              block: BlockGroup,
+              args: { name: "level-3" },
+              children: [
+                {
+                  block: BlockGroup,
+                  args: { name: "level-4" },
+                  children: [
+                    {
+                      block: NestedGhostLeafBlock,
+                      conditions: [{ type: "user", admin: true }],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
   ]);

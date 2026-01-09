@@ -35,6 +35,12 @@ module PageObjects
           page.has_css?(selector)
         end
 
+        def has_no_block_info?(block_name = nil)
+          selector =
+            block_name ? ".block-debug-info[data-block-name='#{block_name}']" : ".block-debug-info"
+          page.has_no_css?(selector)
+        end
+
         def hover_block_badge(block_name = nil)
           selector =
             block_name ? ".block-debug-info[data-block-name='#{block_name}']" : ".block-debug-info"
@@ -70,6 +76,18 @@ module PageObjects
               end
             )
           page.has_css?(selector)
+        end
+
+        def has_no_ghost_block?(block_name = nil)
+          selector =
+            (
+              if block_name
+                ".block-debug-ghost[data-block-name='#{block_name}']"
+              else
+                ".block-debug-ghost"
+              end
+            )
+          page.has_no_css?(selector)
         end
 
         def hover_ghost_badge(block_name = nil)

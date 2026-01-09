@@ -6,7 +6,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
  * Dev Tools Test Blocks (existing)
  */
 
-@block("dev-tools-test-block", {
+@block("theme:dev-tools-test:dev-tools-test-block", {
   args: { title: { type: "string" } },
 })
 export class TestBlock extends Component {
@@ -15,7 +15,7 @@ export class TestBlock extends Component {
   </template>
 }
 
-@block("dev-tools-conditional-block")
+@block("theme:dev-tools-test:dev-tools-conditional-block")
 export class ConditionalBlock extends Component {
   <template>
     <div class="dev-tools-conditional-block">Admin Only</div>
@@ -26,28 +26,28 @@ export class ConditionalBlock extends Component {
  * User Condition Test Blocks
  */
 
-@block("user-logged-in-block")
+@block("theme:dev-tools-test:user-logged-in-block")
 export class UserLoggedInBlock extends Component {
   <template>
     <div class="block-user-logged-in">Logged In User Content</div>
   </template>
 }
 
-@block("user-admin-block")
+@block("theme:dev-tools-test:user-admin-block")
 export class UserAdminBlock extends Component {
   <template>
     <div class="block-user-admin">Admin Only Content</div>
   </template>
 }
 
-@block("user-moderator-block")
+@block("theme:dev-tools-test:user-moderator-block")
 export class UserModeratorBlock extends Component {
   <template>
     <div class="block-user-moderator">Moderator Content</div>
   </template>
 }
 
-@block("user-trust-level-2-block")
+@block("theme:dev-tools-test:user-trust-level-2-block")
 export class UserTrustLevel2Block extends Component {
   <template>
     <div class="block-user-trust-level-2">Trust Level 2+ Content</div>
@@ -58,21 +58,21 @@ export class UserTrustLevel2Block extends Component {
  * Route Condition Test Blocks
  */
 
-@block("route-category-block")
+@block("theme:dev-tools-test:route-category-block")
 export class RouteCategoryBlock extends Component {
   <template>
     <div class="block-route-category">Category Page Content</div>
   </template>
 }
 
-@block("route-topic-block")
+@block("theme:dev-tools-test:route-topic-block")
 export class RouteTopicBlock extends Component {
   <template>
     <div class="block-route-topic">Topic Page Content</div>
   </template>
 }
 
-@block("route-discovery-block")
+@block("theme:dev-tools-test:route-discovery-block")
 export class RouteDiscoveryBlock extends Component {
   <template>
     <div class="block-route-discovery">Discovery Page Content</div>
@@ -83,7 +83,7 @@ export class RouteDiscoveryBlock extends Component {
  * Setting Condition Test Blocks
  */
 
-@block("setting-badges-enabled-block")
+@block("theme:dev-tools-test:setting-badges-enabled-block")
 export class SettingBadgesEnabledBlock extends Component {
   <template>
     <div class="block-setting-badges-enabled">Badges Enabled Content</div>
@@ -94,14 +94,14 @@ export class SettingBadgesEnabledBlock extends Component {
  * Combined Condition Test Blocks
  */
 
-@block("combined-logged-in-tl1-block")
+@block("theme:dev-tools-test:combined-logged-in-tl1-block")
 export class CombinedLoggedInTL1Block extends Component {
   <template>
     <div class="block-combined-logged-in-tl1">Logged In + TL1 Content</div>
   </template>
 }
 
-@block("combined-admin-category-block")
+@block("theme:dev-tools-test:combined-admin-category-block")
 export class CombinedAdminCategoryBlock extends Component {
   <template>
     <div class="block-combined-admin-category">Admin on Category Page</div>
@@ -112,7 +112,7 @@ export class CombinedAdminCategoryBlock extends Component {
  * OR Condition Test Block
  */
 
-@block("or-admin-or-moderator-block")
+@block("theme:dev-tools-test:or-admin-or-moderator-block")
 export class OrAdminOrModeratorBlock extends Component {
   <template>
     <div class="block-or-admin-or-moderator">Admin OR Moderator Content</div>
@@ -123,35 +123,35 @@ export class OrAdminOrModeratorBlock extends Component {
  * Block Ordering Test Blocks
  */
 
-@block("order-first-block")
+@block("theme:dev-tools-test:order-first-block")
 export class OrderFirstBlock extends Component {
   <template>
     <div class="block-order-first" data-order="1">First Block</div>
   </template>
 }
 
-@block("order-second-block")
+@block("theme:dev-tools-test:order-second-block")
 export class OrderSecondBlock extends Component {
   <template>
     <div class="block-order-second" data-order="2">Second Block</div>
   </template>
 }
 
-@block("order-third-block")
+@block("theme:dev-tools-test:order-third-block")
 export class OrderThirdBlock extends Component {
   <template>
     <div class="block-order-third" data-order="3">Third Block</div>
   </template>
 }
 
-@block("order-fourth-block")
+@block("theme:dev-tools-test:order-fourth-block")
 export class OrderFourthBlock extends Component {
   <template>
     <div class="block-order-fourth" data-order="4">Fourth Block</div>
   </template>
 }
 
-@block("order-fifth-block")
+@block("theme:dev-tools-test:order-fifth-block")
 export class OrderFifthBlock extends Component {
   <template>
     <div class="block-order-fifth" data-order="5">Fifth Block</div>
@@ -162,14 +162,14 @@ export class OrderFifthBlock extends Component {
  * Viewport Condition Test Blocks
  */
 
-@block("viewport-mobile-block")
+@block("theme:dev-tools-test:viewport-mobile-block")
 export class ViewportMobileBlock extends Component {
   <template>
     <div class="block-viewport-mobile">Mobile Only Content</div>
   </template>
 }
 
-@block("viewport-desktop-block")
+@block("theme:dev-tools-test:viewport-desktop-block")
 export class ViewportDesktopBlock extends Component {
   <template>
     <div class="block-viewport-desktop">Desktop Only Content</div>
@@ -180,7 +180,7 @@ export class ViewportDesktopBlock extends Component {
  * Debug Tools Test Blocks (enhanced)
  */
 
-@block("debug-args-block", {
+@block("theme:dev-tools-test:debug-args-block", {
   args: {
     title: { type: "string", required: true },
     count: { type: "number", default: 0 },
@@ -197,10 +197,21 @@ export class DebugArgsBlock extends Component {
   </template>
 }
 
-@block("debug-conditions-block")
+@block("theme:dev-tools-test:debug-conditions-block")
 export class DebugConditionsBlock extends Component {
   <template>
     <div class="block-debug-conditions">Admin + TL2 Content</div>
+  </template>
+}
+
+/*
+ * Nested Ghost Block Test - leaf block for deep nesting test
+ */
+
+@block("theme:dev-tools-test:nested-ghost-leaf-block")
+export class NestedGhostLeafBlock extends Component {
+  <template>
+    <div class="block-nested-ghost-leaf">Deeply Nested Content</div>
   </template>
 }
 
@@ -236,6 +247,7 @@ export default {
       api.registerBlock(ViewportDesktopBlock);
       api.registerBlock(DebugArgsBlock);
       api.registerBlock(DebugConditionsBlock);
+      api.registerBlock(NestedGhostLeafBlock);
     });
   },
 };

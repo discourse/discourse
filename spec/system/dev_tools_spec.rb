@@ -72,8 +72,8 @@ describe "Discourse dev tools", type: :system do
         toolbar.enable
         toolbar.toggle_block_visual_overlay
 
-        expect(block_debug).to have_block_info("dev-tools-test-block")
-        block_debug.hover_block_badge("dev-tools-test-block")
+        expect(block_debug).to have_block_info("theme:dev-tools-test:dev-tools-test-block")
+        block_debug.hover_block_badge("theme:dev-tools-test:dev-tools-test-block")
         expect(block_debug).to have_block_tooltip
         expect(block_debug).to have_block_title("dev-tools-test-block")
         expect(block_debug).to have_block_outlet("hero-blocks")
@@ -85,8 +85,8 @@ describe "Discourse dev tools", type: :system do
         toolbar.enable
         toolbar.toggle_block_visual_overlay
 
-        expect(block_debug).to have_ghost_block("dev-tools-conditional-block")
-        block_debug.hover_ghost_badge("dev-tools-conditional-block")
+        expect(block_debug).to have_ghost_block("theme:dev-tools-test:dev-tools-conditional-block")
+        block_debug.hover_ghost_badge("theme:dev-tools-test:dev-tools-conditional-block")
         expect(block_debug).to have_ghost_tooltip
         expect(block_debug).to have_conditions
       end
@@ -96,8 +96,8 @@ describe "Discourse dev tools", type: :system do
         toolbar.enable
         toolbar.toggle_block_visual_overlay
 
-        expect(block_debug).to have_block_info("debug-args-block")
-        block_debug.hover_block_badge("debug-args-block")
+        expect(block_debug).to have_block_info("theme:dev-tools-test:debug-args-block")
+        block_debug.hover_block_badge("theme:dev-tools-test:debug-args-block")
         expect(block_debug).to have_block_tooltip
         expect(block_debug).to have_block_arg(key: "title")
         expect(block_debug).to have_block_arg(key: "count")
@@ -109,10 +109,49 @@ describe "Discourse dev tools", type: :system do
         toolbar.enable
         toolbar.toggle_block_visual_overlay
 
-        expect(block_debug).to have_ghost_block("debug-conditions-block")
-        block_debug.hover_ghost_badge("debug-conditions-block")
+        expect(block_debug).to have_ghost_block("theme:dev-tools-test:debug-conditions-block")
+        block_debug.hover_ghost_badge("theme:dev-tools-test:debug-conditions-block")
         expect(block_debug).to have_ghost_tooltip
         expect(block_debug).to have_conditions
+      end
+
+      it "shows nested ghost blocks for groups with all children hidden (4 levels deep)" do
+        visit("/latest") # Anonymous user, all nested children fail admin condition
+        toolbar.enable
+        toolbar.toggle_block_visual_overlay
+
+        # The outermost group should appear as a ghost since all its children are hidden
+        expect(block_debug).to have_ghost_block("group")
+
+        # Verify all 4 levels of nested groups appear as ghosts
+        expect(page).to have_css(".block-debug-ghost[data-block-name='group']", minimum: 4)
+
+        # The leaf block should also appear as a ghost
+        expect(block_debug).to have_ghost_block("theme:dev-tools-test:nested-ghost-leaf-block")
+      end
+
+      it "reactively shows and hides overlays when toggling without page refresh" do
+        visit("/latest")
+        toolbar.enable
+
+        # Initially no overlays
+        expect(block_debug).to have_no_block_info
+        expect(block_debug).to have_no_ghost_block
+
+        # Enable visual overlay - should appear without page refresh
+        toolbar.toggle_block_visual_overlay
+        expect(block_debug).to have_block_info("theme:dev-tools-test:dev-tools-test-block")
+        expect(block_debug).to have_ghost_block("theme:dev-tools-test:dev-tools-conditional-block")
+
+        # Disable visual overlay - should disappear without page refresh
+        toolbar.toggle_block_visual_overlay
+        expect(block_debug).to have_no_block_info
+        expect(block_debug).to have_no_ghost_block
+
+        # Re-enable to confirm reactivity works both ways
+        toolbar.toggle_block_visual_overlay
+        expect(block_debug).to have_block_info("theme:dev-tools-test:dev-tools-test-block")
+        expect(block_debug).to have_ghost_block("theme:dev-tools-test:dev-tools-conditional-block")
       end
     end
   end

@@ -380,6 +380,10 @@
 }
 
 /* Block Debug Menu (dropdown button) */
+.fk-d-menu[data-identifier="block-debug-menu"] {
+  z-index: 1000001;
+}
+
 .block-debug-menu {
   display: flex;
   flex-direction: column;
