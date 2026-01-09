@@ -25,7 +25,7 @@ import { addGroupPostSmallActionCode } from "discourse/components/post/small-act
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
-} from "discourse/components/reviewable-item";
+} from "discourse/components/reviewable-refresh/item";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 import { addSearchSuggestion } from "discourse/components/search-menu/results/assistant";
 import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
