@@ -54,6 +54,7 @@ import {
   resolveBlockSync,
 } from "discourse/lib/blocks/registration";
 import { applyArgDefaults } from "discourse/lib/blocks/utils";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
@@ -942,9 +943,18 @@ export default class BlockOutlet extends Component {
         return result;
       })
       .catch((error) => {
-        // Log validation errors to console since TrackedAsyncData catches them
-        // eslint-disable-next-line no-console
-        console.error(error);
+        // In test environments, let the error propagate to fail the test
+        if (isTesting() || isRailsTesting()) {
+          throw error;
+        }
+
+        // Notify admins via the client error handler
+        document.dispatchEvent(
+          new CustomEvent("discourse-error", {
+            detail: { messageKey: "broken_block_alert", error },
+          })
+        );
+
         throw error;
       });
 
