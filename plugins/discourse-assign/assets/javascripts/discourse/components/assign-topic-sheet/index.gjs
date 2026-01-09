@@ -237,6 +237,8 @@ export default class AssignTopicSheet extends Component {
 
                   {{/if}} --}}
 
+                  {{log this assignments}}
+
                   <AssignmentsList
                     @assignments={{this.assignments}}
                     @topic={{@topic}}
