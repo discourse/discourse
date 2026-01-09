@@ -135,6 +135,11 @@ module PageObjects
         within_post(post) { has_no_css?(button_selector) }
       end
 
+      def has_disabled_post_action_button?(post, button)
+        button_selector = selector_for_post_action_button(button)
+        within_post(post) { has_css?("#{button_selector}[disabled]") }
+      end
+
       def has_who_liked_on_post?(post, count: nil)
         if count
           return(

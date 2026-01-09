@@ -15,6 +15,14 @@ RSpec.describe DiscourseReactions::ReactionManager do
   before { SiteSetting.discourse_reactions_reaction_for_like = "clap" }
 
   describe ".toggle!" do
+    context "when user is silenced" do
+      before { user.update!(silenced_till: 1.year.from_now) }
+
+      it "raises InvalidAccess when trying to toggle reaction" do
+        expect { reaction_manager("clap").toggle! }.to raise_error(Discourse::InvalidAccess)
+      end
+    end
+
     context "when switching to the default reaction" do
       fab!(:topic)
       fab!(:op_post) { Fabricate(:post, topic: topic) }

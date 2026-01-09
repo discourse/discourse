@@ -449,7 +449,7 @@ export default class Post extends RestModel {
       return true;
     }
 
-    return this.likeAction && (this.liked || this.canToggleLike);
+    return !!this.likeAction;
   }
 
   @cached
