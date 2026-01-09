@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import ColorInput from "discourse/admin/components/color-input";
 import ColorPicker from "discourse/components/color-picker";
 import EmojiPicker from "discourse/components/emoji-picker";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
@@ -542,9 +543,15 @@ export default class EditCategoryGeneral extends Component {
         >
           <cc.Conditions as |Condition|>
             {{#if this.parentIsRestricted}}
-              <Condition @name="public" @disabled={{true}}>
-                {{i18n this.publicVisibilityLabel}}
-              </Condition>
+              <DTooltip
+                @content={{i18n "category.subcategory_permissions_warning"}}
+              >
+                <:trigger>
+                  <Condition @name="public" @disabled={{true}}>
+                    {{i18n this.publicVisibilityLabel}}
+                  </Condition>
+                </:trigger>
+              </DTooltip>
             {{else}}
               <Condition @name="public">
                 {{i18n this.publicVisibilityLabel}}
@@ -557,7 +564,9 @@ export default class EditCategoryGeneral extends Component {
 
           <cc.Contents as |Content|>
             <Content @name="group_restricted">
-              <@form.Container @title="Who can see this category">
+              <@form.Container
+                @title={{i18n "category.visibility.who_can_see"}}
+              >
                 <GroupChooser
                   @content={{@category.site.groups}}
                   @value={{this.visibilityGroups}}
@@ -565,7 +574,9 @@ export default class EditCategoryGeneral extends Component {
                 />
               </@form.Container>
 
-              <@form.Container @title="Who can post in this category">
+              <@form.Container
+                @title={{i18n "category.visibility.who_can_post"}}
+              >
                 <GroupChooser
                   @content={{@category.site.groups}}
                   @value={{this.postingGroups}}
