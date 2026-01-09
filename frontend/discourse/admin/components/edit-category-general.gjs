@@ -21,7 +21,6 @@ export default class EditCategoryGeneral extends Component {
   @service siteSettings;
 
   @tracked categoryVisibilityState = null;
-  @tracked categoryPositionState = null;
   @tracked userModifiedPermissions = false;
 
   uncategorizedSiteSettingLink = getURL(
@@ -167,15 +166,6 @@ export default class EditCategoryGeneral extends Component {
     this.args.category.set("permissions", newPermissions);
   }
 
-  get categoryPosition() {
-    if (this.categoryPositionState) {
-      return this.categoryPositionState;
-    }
-    return this.args.transientData.parent_category_id
-      ? "within_existing"
-      : "top_level";
-  }
-
   get allowSubCategoriesAsParent() {
     // If max_category_nesting is 2, only top-level categories can be parents
     // If max_category_nesting is 3+, subcategories can also be parents
@@ -205,28 +195,6 @@ export default class EditCategoryGeneral extends Component {
   }
 
   @action
-  onConditionChange(name) {
-    this.categoryPositionState = name;
-    if (name === "top_level") {
-      this.args.category.set("parent_category_id", null);
-
-      if (!this.userModifiedPermissions) {
-        const site = this.args.category.site;
-        const everyoneGroup = site.groups.find(
-          (g) => g.id === AUTO_GROUPS.everyone.id
-        );
-        this.args.category.set("permissions", [
-          {
-            group_name: everyoneGroup?.name || "everyone",
-            group_id: AUTO_GROUPS.everyone.id,
-            permission_type: PermissionType.FULL,
-          },
-        ]);
-      }
-    }
-  }
-
-  @action
   onVisibilityChange(value) {
     this.categoryVisibilityState = value;
     this.userModifiedPermissions = true;
@@ -242,6 +210,19 @@ export default class EditCategoryGeneral extends Component {
     this.args.category.set("parent_category_id", parentCategoryId);
 
     if (!parentCategoryId) {
+      if (!this.userModifiedPermissions) {
+        const site = this.args.category.site;
+        const everyoneGroup = site.groups.find(
+          (g) => g.id === AUTO_GROUPS.everyone.id
+        );
+        this.args.category.set("permissions", [
+          {
+            group_name: everyoneGroup?.name || "everyone",
+            group_id: AUTO_GROUPS.everyone.id,
+            permission_type: PermissionType.FULL,
+          },
+        ]);
+      }
       return;
     }
 
@@ -530,49 +511,27 @@ export default class EditCategoryGeneral extends Component {
       </@form.Container>
 
       {{#unless @category.isUncategorizedCategory}}
-        <@form.Container @title={{i18n "category.position.title"}}>
-          <@form.ConditionalContent
-            @activeName={{this.categoryPosition}}
-            @onChange={{this.onConditionChange}}
-            as |cc|
-          >
-            <cc.Conditions as |Condition|>
-              <Condition @name="top_level">
-                {{i18n "category.position.top_level"}}
-              </Condition>
-              <Condition @name="within_existing">
-                {{i18n "category.position.within_existing"}}
-              </Condition>
-            </cc.Conditions>
-
-            <cc.Contents as |Content|>
-              <Content @name="within_existing">
-                <@form.Field
-                  @name="parent_category_id"
-                  @title={{i18n "category.parent_category_chooser"}}
-                  @showTitle={{false}}
-                  @format="large"
-                  class="parent-category"
-                  as |field|
-                >
-                  <field.Custom>
-                    <CategoryChooser
-                      @value={{@transientData.parent_category_id}}
-                      @onChange={{this.onParentCategoryChange}}
-                      @options={{hash
-                        allowSubCategories=this.allowSubCategoriesAsParent
-                        allowRestrictedCategories=true
-                        allowUncategorized=false
-                        excludeCategoryId=@category.id
-                        none="category.choose"
-                      }}
-                    />
-                  </field.Custom>
-                </@form.Field>
-              </Content>
-            </cc.Contents>
-          </@form.ConditionalContent>
-        </@form.Container>
+        <@form.Field
+          @name="parent_category_id"
+          @title={{i18n "category.subcategory_of"}}
+          @format="large"
+          as |field|
+        >
+          <field.Custom>
+            <CategoryChooser
+              @value={{@transientData.parent_category_id}}
+              @onChange={{this.onParentCategoryChange}}
+              @options={{hash
+                allowSubCategories=this.allowSubCategoriesAsParent
+                allowRestrictedCategories=true
+                allowUncategorized=false
+                excludeCategoryId=@category.id
+                none="category.none_subcategory_text"
+                clearable=true
+              }}
+            />
+          </field.Custom>
+        </@form.Field>
       {{/unless}}
 
       <@form.Container @title={{i18n "category.visibility.title"}}>

@@ -4612,11 +4612,8 @@ en:
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, enable the <a href='%{url}'>'fixed category positions'</a> setting."
       minimum_required_tags: "Minimum number of tags required in a topic:"
       default_slow_mode: 'Enable "Slow mode" for new topics in this category.'
-      position:
-        title: "Category level"
-        top_level: "Top-level"
-        within_existing: "Within another category"
-      parent_category_chooser: "Select parent category"
+      subcategory_of: "Subcategory of..."
+      none_subcategory_text: "None (top-level category)"
       visibility:
         title: "Access"
         public: "Public"

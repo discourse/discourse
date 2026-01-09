@@ -3,6 +3,11 @@
   flex-direction: column;
   gap: var(--space-3);
 
+  input[disabled] + span {
+    color: var(--primary-medium);
+    cursor: not-allowed;
+  }
+
   &-content {
     display: flex;
     flex-direction: column;
