@@ -25,6 +25,7 @@ en:
       status_change: "Changed assignment status for %{who} %{when}"
     discourse_assign:
       post_number: "Post#%{number}"
+      unassigned: "Unassigned"
       assign_to: Assign to...
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"

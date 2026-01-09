@@ -46,6 +46,16 @@
     @include ellipsis;
   }
 
+  &__unassigned {
+    font-size: var(--font-down-2);
+    color: var(--primary-low-mid);
+    font-style: italic;
+  }
+
+  &.--unassigned {
+    opacity: 0.7;
+  }
+
   &__note {
     margin-top: var(--space-2);
     padding: var(--space-2) var(--space-3);

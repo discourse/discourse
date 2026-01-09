@@ -1,9 +1,10 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import concatClass from "discourse/helpers/concat-class";
 import DButton from "discourse/components/d-button";
 import formatUsername from "discourse/helpers/format-username";
 import DiscourseURL from "discourse/lib/url";
-import { eq } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 function navigateToAssignment(topic, assignment) {
@@ -17,7 +18,16 @@ function navigateToAssignment(topic, assignment) {
 }
 
 const AssignmentCard = <template>
-  <div class="assignment-card">
+  <div
+    class={{concatClass
+      "assignment-card"
+      (if
+        (or @assignment.username @assignment.groupName)
+        ""
+        "--unassigned"
+      )
+    }}
+  >
     <div class="assignment-card__header">
       <button
         type="button"
@@ -32,6 +42,10 @@ const AssignmentCard = <template>
             </span>
           {{else if @assignment.groupName}}
             <span class="assignment-card__username">{{@assignment.groupName}}</span>
+          {{else}}
+            <span class="assignment-card__unassigned">
+              {{i18n "discourse_assign.unassigned"}}
+            </span>
           {{/if}}
         {{else}}
           <span class="assignment-card__title">
@@ -53,11 +67,13 @@ const AssignmentCard = <template>
           @icon="pencil"
           @action={{fn @onEditAssignment @assignment}}
         />
-        <DButton
-          class="btn-flat btn-small assignment-card__action-btn"
-          @icon="user-xmark"
-          @action={{fn @onRemoveAssignment @assignment}}
-        />
+        {{#if (or @assignment.username @assignment.groupName)}}
+          <DButton
+            class="btn-flat btn-small assignment-card__action-btn"
+            @icon="user-xmark"
+            @action={{fn @onRemoveAssignment @assignment}}
+          />
+        {{/if}}
       </div>
     </div>
 
