@@ -703,12 +703,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      const consoleStub = sinon.stub(console, "groupCollapsed");
-
+      let consoleCalled = false;
       debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => true);
-      // Set up the start group callback to call console.groupCollapsed
-      // This is what dev-tools does when loaded
-      debugHooks.setCallback(DEBUG_CALLBACK.START_GROUP, () => {});
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.START_GROUP,
+        () => (consoleCalled = true)
+      );
 
       withTestBlockRegistration(() => _registerBlock(LoggingTestBlock));
       renderBlocks(
@@ -726,9 +726,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
       );
 
-      assert.true(consoleStub.called, "console logging was enabled");
-      consoleStub.restore();
-      debugHooks.setCallback(DEBUG_CALLBACK.START_GROUP, null);
+      assert.true(consoleCalled, "console logging was enabled");
     });
 
     test("debugHooks.setCallback(BLOCK_LOGGING) disables logging when returns false", async function (assert) {
