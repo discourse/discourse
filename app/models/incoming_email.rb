@@ -31,7 +31,8 @@ class IncomingEmail < ActiveRecord::Base
   scope :without_raw, -> { select(self.column_names - ["raw"]) }
 
   def self.created_via_types
-    @types ||= Enum.new(unknown: 0, handle_mail: 1, pop3_poll: 2, imap: 3, group_smtp: 4)
+    @types ||=
+      Enum.new(unknown: 0, handle_mail: 1, pop3_poll: 2, _deprecated_imap: 3, group_smtp: 4)
   end
 
   def as_mail_message

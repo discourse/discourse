@@ -79,7 +79,6 @@ export default {
       has_messages: true,
       message_count: 2,
       default_notification_level: 2,
-      imap_mailboxes: ["All Mail", "Important"],
     },
     extras: {
       visible_group_names: ["support"],
