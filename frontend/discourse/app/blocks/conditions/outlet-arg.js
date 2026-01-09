@@ -1,6 +1,7 @@
+import { raiseBlockError } from "discourse/lib/blocks/error";
 import { getByPath } from "discourse/lib/blocks/path-resolver";
 import { matchValue } from "discourse/lib/blocks/value-matcher";
-import { BlockCondition, raiseBlockValidationError } from "./condition";
+import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
 /**
@@ -52,35 +53,37 @@ import { blockCondition } from "./decorator";
   validArgKeys: ["path", "value", "exists"],
 })
 export default class BlockOutletArgCondition extends BlockCondition {
-  validate(args) {
-    super.validate(args);
+  validate(args, path) {
+    super.validate(args, path);
 
-    const { path, value, exists } = args;
+    const { path: argPath, value, exists } = args;
 
-    if (!path) {
-      raiseBlockValidationError(
-        "BlockOutletArgCondition: `path` argument is required."
-      );
+    if (!argPath) {
+      raiseBlockError("BlockOutletArgCondition: `path` argument is required.", {
+        path: path ? `${path}.path` : undefined,
+      });
     }
 
-    if (typeof path !== "string") {
-      raiseBlockValidationError(
-        "BlockOutletArgCondition: `path` must be a string."
-      );
+    if (typeof argPath !== "string") {
+      raiseBlockError("BlockOutletArgCondition: `path` must be a string.", {
+        path: path ? `${path}.path` : undefined,
+      });
     }
 
     // Validate path format (alphanumeric, underscores, dots)
-    if (!/^[\w.]+$/.test(path)) {
-      raiseBlockValidationError(
-        `BlockOutletArgCondition: \`path\` "${path}" is invalid. ` +
-          `Use dot-notation with alphanumeric characters (e.g., "user.trust_level").`
+    if (!/^[\w.]+$/.test(argPath)) {
+      raiseBlockError(
+        `BlockOutletArgCondition: \`path\` "${argPath}" is invalid. ` +
+          `Use dot-notation with alphanumeric characters (e.g., "user.trust_level").`,
+        { path: path ? `${path}.path` : undefined }
       );
     }
 
     // Check for conflicting conditions
     if (value !== undefined && exists !== undefined) {
-      raiseBlockValidationError(
-        "BlockOutletArgCondition: Cannot use both `value` and `exists` together."
+      raiseBlockError(
+        "BlockOutletArgCondition: Cannot use both `value` and `exists` together.",
+        { path }
       );
     }
   }

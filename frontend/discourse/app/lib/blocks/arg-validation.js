@@ -1,7 +1,4 @@
-import {
-  BlockValidationError,
-  raiseBlockError,
-} from "discourse/lib/blocks/error";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -533,7 +530,7 @@ export function validateArrayItemType(
  *
  * @param {Object} config - The block configuration.
  * @param {Object} blockClass - The resolved block class (must be a class, not a string reference).
- * @throws {BlockValidationError} If args are invalid.
+ * @throws {BlockError} If args are invalid.
  */
 export function validateBlockArgs(config, blockClass) {
   const metadata = blockClass?.blockMetadata;
@@ -544,10 +541,10 @@ export function validateBlockArgs(config, blockClass) {
   // If args are provided but no schema exists, reject them
   if (hasProvidedArgs && !argsSchema) {
     const argNames = Object.keys(providedArgs).join(", ");
-    throw new BlockValidationError(
+    raiseBlockError(
       `args were provided (${argNames}) but this block does not declare an args schema. ` +
         `Add an args schema to the @block decorator or remove the args.`,
-      "args"
+      { path: "args" }
     );
   }
 
@@ -561,17 +558,16 @@ export function validateBlockArgs(config, blockClass) {
 
     // Check required args
     if (argDef.required && value === undefined) {
-      throw new BlockValidationError(
-        `missing required arg "${argName}".`,
-        `args.${argName}`
-      );
+      raiseBlockError(`missing required arg "${argName}".`, {
+        path: `args.${argName}`,
+      });
     }
 
     // Validate type if value is provided
     if (value !== undefined) {
       const typeError = validateArgValue(value, argDef, argName);
       if (typeError) {
-        throw new BlockValidationError(typeError, `args.${argName}`);
+        raiseBlockError(typeError, { path: `args.${argName}` });
       }
     }
   }
@@ -581,9 +577,9 @@ export function validateBlockArgs(config, blockClass) {
   for (const argName of Object.keys(providedArgs)) {
     if (!Object.hasOwn(argsSchema, argName)) {
       const suggestion = formatWithSuggestion(argName, declaredArgs);
-      throw new BlockValidationError(
+      raiseBlockError(
         `unknown arg ${suggestion}. Declared args are: ${declaredArgs.join(", ") || "none"}.`,
-        `args.${argName}`
+        { path: `args.${argName}` }
       );
     }
   }

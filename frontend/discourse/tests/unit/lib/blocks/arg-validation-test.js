@@ -12,7 +12,7 @@ import {
   validateConstraints,
   validateConstraintsSchema,
 } from "discourse/lib/blocks/constraint-validation";
-import { BlockValidationError } from "discourse/lib/blocks/error";
+import { BlockError } from "discourse/lib/blocks/error";
 
 module("Unit | Lib | blocks/arg-validation", function () {
   module("validateArgsSchema", function () {
@@ -1072,7 +1072,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
         validateBlockArgs({ args: {} }, RequiredArgsBlock);
         assert.true(false, "should have thrown");
       } catch (error) {
-        assert.true(error instanceof BlockValidationError);
+        assert.true(error instanceof BlockError);
         assert.true(error.message.includes('missing required arg "title"'));
         assert.strictEqual(error.path, "args.title");
       }
@@ -1090,7 +1090,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
         validateBlockArgs({ args: { count: "not-a-number" } }, TypedArgsBlock);
         assert.true(false, "should have thrown");
       } catch (error) {
-        assert.true(error instanceof BlockValidationError);
+        assert.true(error instanceof BlockError);
         assert.true(error.message.includes("must be a number"));
         assert.strictEqual(error.path, "args.count");
       }
@@ -1122,7 +1122,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
         validateBlockArgs({ args: { anything: "goes" } }, NoSchemaBlock);
         assert.true(false, "should have thrown");
       } catch (error) {
-        assert.true(error instanceof BlockValidationError);
+        assert.true(error instanceof BlockError);
         assert.true(error.message.includes("does not declare an args schema"));
         assert.strictEqual(error.path, "args");
       }
@@ -1154,7 +1154,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
         );
         assert.true(false, "should have thrown");
       } catch (error) {
-        assert.true(error instanceof BlockValidationError);
+        assert.true(error instanceof BlockError);
         assert.true(error.message.includes('unknown arg "unknownArg"'));
         assert.strictEqual(error.path, "args.unknownArg");
       }
@@ -1172,7 +1172,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
         validateBlockArgs({ args: { shoDescription: true } }, TypoArgsBlock);
         assert.true(false, "should have thrown");
       } catch (error) {
-        assert.true(error instanceof BlockValidationError);
+        assert.true(error instanceof BlockError);
         assert.true(error.message.includes("shoDescription"));
         assert.true(error.message.includes('did you mean "showDescription"'));
         assert.strictEqual(error.path, "args.shoDescription");

@@ -1,4 +1,4 @@
-import { BlockValidationError } from "discourse/lib/blocks/error";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -9,7 +9,7 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
  * @param {string} type - The condition type name.
  * @param {Object} args - The args provided to the condition.
  * @param {string} path - The path to this condition in the config tree.
- * @throws {BlockValidationError} If an unrecognized arg key is found.
+ * @throws {BlockError} If an unrecognized arg key is found.
  */
 export function validateConditionArgKeys(instance, type, args, path) {
   const validKeys = instance.constructor.validArgKeys;
@@ -23,10 +23,10 @@ export function validateConditionArgKeys(instance, type, args, path) {
   for (const key of Object.keys(args)) {
     if (!allValidKeys.includes(key)) {
       const suggestion = formatWithSuggestion(key, allValidKeys);
-      throw new BlockValidationError(
+      raiseBlockError(
         `Condition type "${type}": unknown arg ${suggestion}. ` +
           `Valid args: ${allValidKeys.join(", ")}`,
-        `${path}.${key}`
+        { path: `${path}.${key}` }
       );
     }
   }
@@ -36,14 +36,14 @@ export function validateConditionArgKeys(instance, type, args, path) {
  * Validates condition specs at block registration time.
  * Recursively validates nested conditions in `any` and `not` combinators.
  *
- * Throws BlockValidationError objects so callers can decide how to format
- * the final error with appropriate context. The error object includes a
- * `conditionPath` property indicating where in the config the error occurred.
+ * Throws BlockError objects with a `path` property indicating where in the
+ * config the error occurred. Callers can use this path to build full error
+ * context with the `// <-- error here` marker.
  *
  * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to validate.
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
  * @param {string} [path="conditions"] - The path to this condition in the config tree.
- * @throws {BlockValidationError} If validation fails.
+ * @throws {BlockError} If validation fails.
  */
 export function validateConditions(
   conditionSpec,
@@ -84,24 +84,23 @@ export function validateConditions(
  * @param {Object} conditionSpec - The condition spec containing "any".
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
  * @param {string} path - The path to this condition in the config tree.
- * @throws {BlockValidationError} If validation fails.
+ * @throws {BlockError} If validation fails.
  */
 function validateAnyCombinator(conditionSpec, conditionTypes, path) {
   // Validate no extra keys alongside "any"
   const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "any");
   if (extraKeys.length > 0) {
-    throw new BlockValidationError(
+    raiseBlockError(
       `"any" combinator has extra keys: ${extraKeys.join(", ")}. ` +
         `Only "any" is allowed.`,
-      path
+      { path }
     );
   }
 
   if (!Array.isArray(conditionSpec.any)) {
-    throw new BlockValidationError(
-      '"any" must be an array of conditions',
-      `${path}.any`
-    );
+    raiseBlockError('"any" must be an array of conditions', {
+      path: `${path}.any`,
+    });
   }
 
   for (let i = 0; i < conditionSpec.any.length; i++) {
@@ -119,16 +118,16 @@ function validateAnyCombinator(conditionSpec, conditionTypes, path) {
  * @param {Object} conditionSpec - The condition spec containing "not".
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
  * @param {string} path - The path to this condition in the config tree.
- * @throws {BlockValidationError} If validation fails.
+ * @throws {BlockError} If validation fails.
  */
 function validateNotCombinator(conditionSpec, conditionTypes, path) {
   // Validate no extra keys alongside "not"
   const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "not");
   if (extraKeys.length > 0) {
-    throw new BlockValidationError(
+    raiseBlockError(
       `"not" combinator has extra keys: ${extraKeys.join(", ")}. ` +
         `Only "not" is allowed.`,
-      path
+      { path }
     );
   }
 
@@ -136,10 +135,9 @@ function validateNotCombinator(conditionSpec, conditionTypes, path) {
     typeof conditionSpec.not !== "object" ||
     Array.isArray(conditionSpec.not)
   ) {
-    throw new BlockValidationError(
-      '"not" must be a single condition object',
-      `${path}.not`
-    );
+    raiseBlockError('"not" must be a single condition object', {
+      path: `${path}.not`,
+    });
   }
 
   validateConditions(conditionSpec.not, conditionTypes, `${path}.not`);
@@ -151,15 +149,15 @@ function validateNotCombinator(conditionSpec, conditionTypes, path) {
  * @param {Object} conditionSpec - The condition spec with a type property.
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
  * @param {string} path - The path to this condition in the config tree.
- * @throws {BlockValidationError} If validation fails.
+ * @throws {BlockError} If validation fails.
  */
 function validateSingleCondition(conditionSpec, conditionTypes, path) {
   const { type, ...args } = conditionSpec;
 
   if (!type) {
-    throw new BlockValidationError(
+    raiseBlockError(
       `Condition is missing "type" property: ${JSON.stringify(conditionSpec)}`,
-      path
+      { path }
     );
   }
 
@@ -168,9 +166,9 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
   if (!conditionInstance) {
     const availableTypes = [...conditionTypes.keys()];
     const suggestion = formatWithSuggestion(type, availableTypes);
-    throw new BlockValidationError(
+    raiseBlockError(
       `Unknown condition type: ${suggestion}. Available types: ${availableTypes.join(", ")}`,
-      `${path}.type`
+      { path: `${path}.type` }
     );
   }
 

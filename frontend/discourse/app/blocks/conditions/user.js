@@ -1,5 +1,6 @@
 import { service } from "@ember/service";
-import { BlockCondition, raiseBlockValidationError } from "./condition";
+import { raiseBlockError } from "discourse/lib/blocks/error";
+import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
 /**
@@ -70,8 +71,8 @@ import { blockCondition } from "./decorator";
 export default class BlockUserCondition extends BlockCondition {
   @service currentUser;
 
-  validate(args) {
-    super.validate(args);
+  validate(args, path) {
+    super.validate(args, path);
 
     const {
       loggedIn,
@@ -94,10 +95,11 @@ export default class BlockUserCondition extends BlockCondition {
         groups?.length;
 
       if (hasUserConditions) {
-        raiseBlockValidationError(
+        raiseBlockError(
           "BlockUserCondition: Cannot use `loggedIn: false` with user-specific conditions " +
             "(admin, moderator, staff, minTrustLevel, maxTrustLevel, groups). " +
-            "Anonymous users cannot have these properties."
+            "Anonymous users cannot have these properties.",
+          { path }
         );
       }
     }
@@ -109,8 +111,9 @@ export default class BlockUserCondition extends BlockCondition {
         minTrustLevel < 0 ||
         minTrustLevel > 4
       ) {
-        raiseBlockValidationError(
-          "BlockUserCondition: `minTrustLevel` must be a number between 0 and 4."
+        raiseBlockError(
+          "BlockUserCondition: `minTrustLevel` must be a number between 0 and 4.",
+          { path: path ? `${path}.minTrustLevel` : undefined }
         );
       }
     }
@@ -120,8 +123,9 @@ export default class BlockUserCondition extends BlockCondition {
         maxTrustLevel < 0 ||
         maxTrustLevel > 4
       ) {
-        raiseBlockValidationError(
-          "BlockUserCondition: `maxTrustLevel` must be a number between 0 and 4."
+        raiseBlockError(
+          "BlockUserCondition: `maxTrustLevel` must be a number between 0 and 4.",
+          { path: path ? `${path}.maxTrustLevel` : undefined }
         );
       }
     }
@@ -132,9 +136,10 @@ export default class BlockUserCondition extends BlockCondition {
       maxTrustLevel !== undefined &&
       minTrustLevel > maxTrustLevel
     ) {
-      raiseBlockValidationError(
+      raiseBlockError(
         `BlockUserCondition: \`minTrustLevel\` (${minTrustLevel}) cannot be greater than ` +
-          `\`maxTrustLevel\` (${maxTrustLevel}). No user can satisfy this condition.`
+          `\`maxTrustLevel\` (${maxTrustLevel}). No user can satisfy this condition.`,
+        { path }
       );
     }
   }

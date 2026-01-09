@@ -14,10 +14,7 @@ import {
   runCustomValidation,
   validateConstraints,
 } from "discourse/lib/blocks/constraint-validation";
-import {
-  BlockValidationError,
-  raiseBlockError,
-} from "discourse/lib/blocks/error";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 import { isBlockPermittedInOutlet } from "discourse/lib/blocks/outlet-matcher";
 import {
   OPTIONAL_MISSING,
@@ -34,8 +31,8 @@ import { applyArgDefaults } from "discourse/lib/blocks/utils";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
- * Wraps a validation function call with BlockValidationError handling.
- * Catches BlockValidationError and re-raises with full context via raiseBlockError.
+ * Wraps a validation function call with BlockError handling.
+ * Catches errors with a `path` property and re-raises with full context.
  *
  * @param {Function} validationFn - The validation function to call.
  * @param {string} errorPrefix - Prefix for the error message.
@@ -45,10 +42,11 @@ function wrapValidationError(validationFn, errorPrefix, context) {
   try {
     validationFn();
   } catch (error) {
-    if (error instanceof BlockValidationError) {
+    // Errors with path property need context enrichment
+    if (error.path) {
       raiseBlockError(`${errorPrefix}: ${error.message}`, {
         ...context,
-        errorPath: error.path,
+        errorPath: `${context.path}.${error.path}`,
       });
     }
     throw error;
@@ -207,18 +205,17 @@ function validateBlockConditions(
   try {
     blocksService.validate(config.conditions);
   } catch (error) {
-    // Build context for error message, including path if available
+    // Build context for error message
     const context = {
       outletName,
       blockName,
-      path,
       conditions: config.conditions,
       callSiteError,
     };
 
-    // If error has a path (from BlockValidationError), include it for precise location
-    if (error instanceof BlockValidationError) {
-      context.errorPath = error.path;
+    // If error has a path property, build the full errorPath
+    if (error.path) {
+      context.errorPath = `${path}.${error.path}`;
     }
 
     raiseBlockError(
@@ -377,7 +374,7 @@ const CONFIG_TYPE_RULES = {
  * system during preprocessing (e.g., `__visible`, `__failureReason`).
  *
  * @param {Object} config - The block configuration object.
- * @throws {BlockValidationError} If unknown keys are found.
+ * @throws {BlockError} If unknown keys are found.
  */
 export function validateConfigKeys(config) {
   const unknownKeys = Object.keys(config).filter(
@@ -392,10 +389,10 @@ export function validateConfigKeys(config) {
 
     const keyWord = unknownKeys.length > 1 ? "keys" : "key";
     // Use first unknown key for the error path
-    throw new BlockValidationError(
+    raiseBlockError(
       `Unknown config ${keyWord}: ${suggestions.join(", ")}. ` +
         `Valid keys are: ${VALID_CONFIG_KEYS.join(", ")}.`,
-      unknownKeys[0]
+      { path: unknownKeys[0] }
     );
   }
 }
@@ -405,16 +402,18 @@ export function validateConfigKeys(config) {
  * Iterates over CONFIG_TYPE_RULES to check each field's type.
  *
  * @param {Object} config - The block configuration object.
- * @throws {BlockValidationError} If any field has an invalid type.
+ * @throws {BlockError} If any field has an invalid type.
  */
 export function validateConfigTypes(config) {
   for (const [field, rule] of Object.entries(CONFIG_TYPE_RULES)) {
     const value = config[field];
     if (value != null && !rule.validate(value)) {
       const actualType = rule.actual?.(value) ?? typeof value;
-      throw new BlockValidationError(
+      raiseBlockError(
         `"${field}" must be ${rule.expected}, got ${actualType}.`,
-        field
+        {
+          path: field,
+        }
       );
     }
   }
@@ -516,7 +515,7 @@ export function isReservedArgName(argName) {
  * or prefixed with underscore).
  *
  * @param {Object} config - The block configuration
- * @throws {BlockValidationError} If reserved arg names are used
+ * @throws {BlockError} If reserved arg names are used
  */
 export function validateReservedArgs(config) {
   if (!config.args) {
@@ -526,10 +525,10 @@ export function validateReservedArgs(config) {
   const usedReservedArgs = Object.keys(config.args).filter(isReservedArgName);
 
   if (usedReservedArgs.length > 0) {
-    throw new BlockValidationError(
+    raiseBlockError(
       `Reserved arg names: ${usedReservedArgs.join(", ")}. ` +
         `Names starting with underscore are reserved for internal use.`,
-      `args.${usedReservedArgs[0]}`
+      { path: `args.${usedReservedArgs[0]}` }
     );
   }
 }

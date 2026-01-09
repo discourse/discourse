@@ -10,10 +10,7 @@
 
 // Public API for plugin developers
 export { block } from "discourse/components/block-outlet";
-export {
-  BlockCondition,
-  raiseBlockValidationError,
-} from "discourse/blocks/conditions";
+export { BlockCondition } from "discourse/blocks/conditions";
 
 // Core block components (auto-discovered by Blocks service via isBlock check)
 export { default as BlockGroup } from "discourse/blocks/block-group";

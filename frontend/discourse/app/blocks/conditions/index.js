@@ -1,5 +1,5 @@
-// BlockCondition class, error helper, and decorator
-export { BlockCondition, raiseBlockValidationError } from "./condition";
+// BlockCondition class and decorator
+export { BlockCondition } from "./condition";
 export { blockCondition } from "./decorator";
 
 // Built-in condition classes

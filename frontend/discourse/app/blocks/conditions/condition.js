@@ -1,7 +1,4 @@
-import {
-  BlockValidationError,
-  raiseBlockError,
-} from "discourse/lib/blocks/error";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 import { getByPath } from "discourse/lib/blocks/path-resolver";
 
 /**
@@ -38,7 +35,8 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  *
  * @example
  * ```javascript
- * import { BlockCondition, raiseBlockValidationError } from "discourse/blocks/conditions";
+ * import { raiseBlockError } from "discourse/lib/blocks/error";
+ * import { BlockCondition } from "discourse/blocks/conditions";
  *
  * export default class BlockMyCondition extends BlockCondition {
  *   static type = "my-condition";
@@ -46,9 +44,9 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  *
  *   @service myService;
  *
- *   validate(args) {
+ *   validate(args, path) {
  *     if (!args.requiredArg) {
- *       raiseBlockValidationError("requiredArg is required");
+ *       raiseBlockError("requiredArg is required", { path });
  *     }
  *   }
  *
@@ -136,33 +134,33 @@ export class BlockCondition {
 
     switch (sourceType) {
       case "none":
-        raiseBlockValidationError(
+        raiseBlockError(
           `${this.constructor.name}: \`source\` parameter is not supported for this condition type.`,
-          sourcePath
+          { path: sourcePath }
         );
         break;
 
       case "outletArgs":
         if (typeof source !== "string") {
-          raiseBlockValidationError(
+          raiseBlockError(
             `${this.constructor.name}: \`source\` must be a string in format "@outletArgs.propertyName".`,
-            sourcePath
+            { path: sourcePath }
           );
         }
         if (!OUTLET_ARGS_SOURCE_PATTERN.test(source)) {
-          raiseBlockValidationError(
+          raiseBlockError(
             `${this.constructor.name}: \`source\` must be in format "@outletArgs.propertyName", ` +
               `got "${source}".`,
-            sourcePath
+            { path: sourcePath }
           );
         }
         break;
 
       case "object":
         if (source !== null && typeof source !== "object") {
-          raiseBlockValidationError(
+          raiseBlockError(
             `${this.constructor.name}: \`source\` must be an object.`,
-            sourcePath
+            { path: sourcePath }
           );
         }
         break;
@@ -242,23 +240,4 @@ export class BlockCondition {
     }
     return undefined;
   }
-}
-
-/**
- * Raises a block validation error.
- *
- * When a `path` is provided, throws a `BlockValidationError` which gets caught
- * by the condition validation system and formatted with the error location marker.
- * Without a path, falls back to `raiseBlockError`.
- *
- * @param {string} message - The error message describing the validation failure.
- * @param {string} [path] - Optional path within the condition config (e.g., "params.categoryId").
- * @throws {BlockValidationError} When path is provided.
- * @throws {BlockError} When path is not provided.
- */
-export function raiseBlockValidationError(message, path) {
-  if (path) {
-    throw new BlockValidationError(message, path);
-  }
-  raiseBlockError(message);
 }

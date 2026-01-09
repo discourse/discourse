@@ -1,4 +1,3 @@
-import { DEBUG } from "@glimmer/env";
 import {
   formatConfigWithErrorPath,
   truncateForDisplay,
@@ -32,8 +31,8 @@ export function captureCallSite(callerFn) {
 /**
  * Formats the error context into a human-readable string for console output.
  *
- * When a `conditionPath` is provided, uses the path-aware formatter to show
- * the error location within the conditions config with a comment marker.
+ * When an `errorPath` is provided, uses the path-aware formatter to show
+ * the error location within the config with a comment marker.
  *
  * @param {Object} context - The error context.
  * @returns {string} Formatted context string, or empty string if no context.
@@ -45,12 +44,9 @@ function formatErrorContext(context) {
 
   const parts = [];
 
-  // If we have an errorPath, show the full location path
+  // Display the full error path location
   if (context.errorPath) {
-    const fullPath = context.path
-      ? `${context.path}.${context.errorPath}`
-      : context.errorPath;
-    parts.push(`Location: ${fullPath}`);
+    parts.push(`Location: ${context.errorPath}`);
   }
 
   // If we have conditions and an errorPath, use the path-aware formatter
@@ -124,45 +120,18 @@ export class BlockError extends Error {
    * @param {string} message - The error message.
    * @param {Object} [options] - Error options.
    * @param {Error} [options.cause] - The underlying cause of this error.
+   * @param {string} [options.path] - Path to the error within the config
+   *   (e.g., "conditions.any[0].type" or "args.showIcon").
    */
   constructor(message, options) {
     super(message, options);
     this.name = "BlockError";
+    this.path = options?.path;
   }
 }
 
 /**
- * Error thrown during block configuration validation.
- * Includes a path indicating where in the config the error occurred,
- * enabling precise error location display.
- *
- * Used for validation errors in conditions, args, and other nested config
- * structures where path tracking is valuable.
- *
- * @class BlockValidationError
- * @extends Error
- */
-export class BlockValidationError extends Error {
-  /**
-   * Creates a new BlockValidationError.
-   *
-   * @param {string} message - The error message describing the validation failure.
-   * @param {string} path - The path to the error within the config
-   *   (e.g., "conditions.any[0][0].querParams" or "args.showIcon").
-   */
-  constructor(message, path) {
-    super(message);
-    this.name = "BlockValidationError";
-    this.path = path;
-  }
-}
-
-/**
- * Raises an error in dev/test environments, surfaces to admins in production.
- *
- * In development/test environments, throws a BlockError to fail fast.
- * In production, dispatches a `discourse-error` event that surfaces the error
- * to admin users via a banner (handled by `ClientErrorHandlerService`).
+ * Raises a block error by throwing a `BlockError`.
  *
  * If context is provided, the error message will include the block
  * configuration for debugging.
@@ -176,15 +145,15 @@ export class BlockValidationError extends Error {
  * @param {Object} [context] - Optional error context for better error messages.
  * @param {string} [context.outletName] - The outlet name where the block is registered.
  * @param {string} [context.blockName] - The name of the block being validated.
- * @param {string} [context.path] - JSON-path style location in config (e.g., "blocks[3].children[0]").
+ * @param {string} [context.path] - Path within the config to the error (e.g., "params.categoryId").
+ *   Used by validation code to indicate where errors occurred. Combined with `errorPath` for display.
  * @param {Object} [context.config] - The full block config being validated.
  * @param {Object} [context.conditions] - The conditions config being validated.
- * @param {string} [context.errorPath] - Path within the config to the error (e.g., "conditions.any[0].type").
+ * @param {string} [context.errorPath] - Full path to the error for display (e.g., "blocks[2].conditions.params.categoryId").
  * @param {Error | null} [context.callSiteError] - Error object capturing where renderBlocks() was called.
- * @throws {BlockError} In DEBUG mode.
+ * @throws {BlockError} Always throws.
  */
 export function raiseBlockError(message, context = null) {
-  // Append context info to the message if available
   const contextInfo = formatErrorContext(context);
   const fullMessage = `[Blocks] ${message}${contextInfo}`;
 
@@ -197,21 +166,10 @@ export function raiseBlockError(message, context = null) {
     error = context.callSiteError;
     error.name = "BlockError";
     error.message = fullMessage;
+    error.path = context.path;
   } else {
-    error = new BlockError(fullMessage);
+    error = new BlockError(fullMessage, { path: context?.path });
   }
 
-  if (DEBUG) {
-    throw error;
-  } else {
-    // Surface to admins via error banner (only visible to admin users)
-    document.dispatchEvent(
-      new CustomEvent("discourse-error", {
-        detail: {
-          messageKey: "broken_block_alert",
-          error,
-        },
-      })
-    );
-  }
+  throw error;
 }

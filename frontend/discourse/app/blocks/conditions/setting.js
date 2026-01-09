@@ -1,5 +1,6 @@
 import { service } from "@ember/service";
-import { BlockCondition, raiseBlockValidationError } from "./condition";
+import { raiseBlockError } from "discourse/lib/blocks/error";
+import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
 /**
@@ -74,24 +75,25 @@ import { blockCondition } from "./decorator";
 export default class BlockSettingCondition extends BlockCondition {
   @service siteSettings;
 
-  validate(args) {
-    super.validate(args);
+  validate(args, path) {
+    super.validate(args, path);
 
     const { name, source, enabled, equals, includes, contains, containsAny } =
       args;
 
     if (!name) {
-      raiseBlockValidationError(
-        "BlockSettingCondition: `name` argument is required."
-      );
+      raiseBlockError("BlockSettingCondition: `name` argument is required.", {
+        path: path ? `${path}.name` : undefined,
+      });
     }
 
     // Skip site settings check if custom settings object is provided via source
     // (e.g., theme settings from "virtual:theme")
     if (!source && !(name in this.siteSettings)) {
-      raiseBlockValidationError(
+      raiseBlockError(
         `BlockSettingCondition: unknown site setting "${name}". ` +
-          `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`
+          `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`,
+        { path: path ? `${path}.name` : undefined }
       );
     }
 
@@ -105,9 +107,10 @@ export default class BlockSettingCondition extends BlockCondition {
     ].filter(Boolean).length;
 
     if (conditionCount > 1) {
-      raiseBlockValidationError(
+      raiseBlockError(
         "BlockSettingCondition: Cannot use multiple condition types together. " +
-          "Use only one of: `enabled`, `equals`, `includes`, `contains`, or `containsAny`."
+          "Use only one of: `enabled`, `equals`, `includes`, `contains`, or `containsAny`.",
+        { path }
       );
     }
   }
