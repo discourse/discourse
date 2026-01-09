@@ -9,6 +9,7 @@
 
     .sidebar-section-header-button {
       font-size: var(--font-down-1);
+      padding-inline: var(--space-1);
 
       > * {
         pointer-events: none;

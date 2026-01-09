@@ -96,8 +96,7 @@
 
     .sidebar-section-link-content-badge {
       @include ellipsis;
-      padding-left: 0.5em;
-      padding-right: 0;
+      padding-inline: var(--space-1);
       color: var(--d-sidebar-link-badge-color);
       font-size: var(--font-down-2);
       width: var(--font-down-1); // same width as icons in rows
@@ -260,6 +259,7 @@
       color: var(--d-sidebar-highlight-color);
       border: none;
       height: 100%;
+      padding-inline: var(--space-1);
 
       &:focus,
       .discourse-no-touch & {
