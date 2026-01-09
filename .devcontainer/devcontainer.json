@@ -1,6 +1,6 @@
 {
   "name": "Discourse",
-  "image": "docker.io/discourse/discourse_dev:20250930-0017",
+  "image": "docker.io/discourse/discourse_dev:20260109-0020",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/discourse,type=bind",
   "workspaceFolder": "/workspace/discourse",
   "postStartCommand": "./.devcontainer/scripts/start.rb",
