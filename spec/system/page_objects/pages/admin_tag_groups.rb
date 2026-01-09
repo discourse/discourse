@@ -3,23 +3,12 @@
 module PageObjects
   module Pages
     class AdminTagGroups < PageObjects::Pages::Base
-      def visit
-        page.visit("/tag_groups")
-        self
+      def tags_chooser
+        PageObjects::Components::SelectKit.new(".group-tags-list .tag-chooser")
       end
 
-      def visit_tag_group(tag_group)
-        page.visit("/tag_groups/#{tag_group.id}")
-        self
-      end
-
-      def click_new_tag_group
-        if has_css?(".tag-groups-sidebar .btn-default", wait: 0)
-          find(".tag-groups-sidebar .btn-default").click
-        else
-          find(".tag-group-content .btn-primary").click
-        end
-        self
+      def parent_tag_chooser
+        PageObjects::Components::SelectKit.new(".parent-tag-section .tag-chooser")
       end
 
       def has_tag_group_in_sidebar?(name)
@@ -45,17 +34,32 @@ module PageObjects
         )
       end
 
-      def fill_name(name)
-        find(".group-name input").fill_in(with: name)
+      def has_tag_in_group?(tag_name)
+        has_css?(".group-tags-list .tag-chooser", text: tag_name)
+      end
+
+      def visit
+        page.visit("/tag_groups")
         self
       end
 
-      def tags_chooser
-        PageObjects::Components::SelectKit.new(".group-tags-list .tag-chooser")
+      def visit_tag_group(tag_group)
+        page.visit("/tag_groups/#{tag_group.id}")
+        self
       end
 
-      def parent_tag_chooser
-        PageObjects::Components::SelectKit.new(".parent-tag-section .tag-chooser")
+      def click_new_tag_group
+        if has_css?(".tag-groups-sidebar .btn-default", wait: 0)
+          find(".tag-groups-sidebar .btn-default").click
+        else
+          find(".tag-group-content .btn-primary").click
+        end
+        self
+      end
+
+      def fill_name(name)
+        find(".group-name input").fill_in(with: name)
+        self
       end
 
       def select_public_permission
@@ -71,10 +75,6 @@ module PageObjects
       def save
         find(".tag-group-controls .btn-primary").click
         self
-      end
-
-      def has_tag_in_group?(tag_name)
-        has_css?(".group-tags-list .tag-chooser", text: tag_name)
       end
     end
   end
