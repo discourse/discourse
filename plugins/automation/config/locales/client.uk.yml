@@ -62,8 +62,6 @@ uk:
             label: Тіло
           delay:
             label: Затримка (хвилин)
-          prefers_encrypt:
-            label: Шифрує ПП, якщо можливо
         group:
           label: Група
         text:

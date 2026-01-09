@@ -8296,6 +8296,21 @@ cs:
         penalty_post_actions: "Co byste chtěli udělat s tímto přidruženým příspěvkem?"
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_delete_replies: "Smazat příspěvek + všechny odpovědi"
+        penalty_post_delete_all: "Smazat všechna témata uživatele + všechny odpovědi"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Tímto smažete
+          { TOPICS, plural,
+              one {# téma}
+              few {# témata}
+              many {# témat}
+            other {# témat}
+          } a
+          { REPLIES, plural,
+              one {# odpověď}
+              few {# odpovědi}
+              many {# odpovědí}
+            other {# odpovědí}
+          }. <b>Tuto akci nelze vrátit zpět!</b> Jste si jisti, že toto chcete provést?</span>
         penalty_post_edit: "Upravit příspěvek"
         penalty_post_none: "Nic nedělat"
         penalty_count: "Počet penalizací"
@@ -8394,6 +8409,11 @@ cs:
           button: "Smazat všechny příspěvky"
           progress:
             title: "Průběh mazání příspěvků"
+            description:
+              one: "Odstranění %{count} příspěvku od @%{username}..."
+              few: "Odstranění %{count} příspěvků od @%{username}..."
+              many: "Odstranění %{count} příspěvků od @%{username}..."
+              other: "Odstranění %{count} příspěvků od @%{username}..."
           confirmation:
             title: "Smazat všechny příspěvky od @%{username}"
             description: |
@@ -8405,6 +8425,7 @@ cs:
             text: "smazat příspěvky od @%{username}"
             delete: "Smazat příspěvky od @%{username}"
             cancel: "Zrušit"
+          all_enqueued: "Všechny příspěvky uživatele @%{username} byly zařazeny do fronty k odstranění."
         merge:
           button: "Sloučit"
           prompt:

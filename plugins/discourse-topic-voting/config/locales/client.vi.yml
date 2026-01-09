@@ -17,14 +17,16 @@ vi:
       allow_topic_voting: "Cho phép người dùng bình chọn chủ đề trong chuyên mục này"
       vote_title: "Bình chọn"
       vote_title_plural: "Bình chọn"
-      voted_title: "Đã bình ch"
+      voted_title: "Đã vốt"
       voting_closed_title: "Đã "
       voting_limit: "Giới h"
+      see_votes: "Bạn còn %{count}/%{max} lượt vốt"
       votes:
-        other: "%{count} phiếu bầu"
+        other: "%{count} vốt"
       anonymous_button:
         other: "Phiếu"
-      remove_vote: "Xoá Bình Chọn<br>"
+      remove_vote: "Bỏ vốt"
+      no_votes_title_self: "Bạn chưa bình chọn trong chủ đề nào"
     filters:
       votes:
         title: "Bình chọn"

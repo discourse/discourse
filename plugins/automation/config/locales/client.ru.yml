@@ -62,8 +62,6 @@ ru:
             label: Текст сообщения
           delay:
             label: Задержка (в минутах)
-          prefers_encrypt:
-            label: Шифрует ЛС, если это возможно
         group:
           label: Группа
         text:
