@@ -5,6 +5,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import BlockGroup from "discourse/blocks/block-group";
 import BlockOutlet, {
+  _getBlockConfigs,
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
@@ -1725,6 +1726,40 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert
         .dom(".undefined-conditions-content")
         .exists("block renders with undefined conditions");
+    });
+
+    test("validation errors cause test failures", async function (assert) {
+      @block("validation-error-block")
+      class ValidationErrorBlock extends Component {
+        <template>
+          <div class="validation-error-content">Content</div>
+        </template>
+      }
+
+      withTestBlockRegistration(() => _registerBlock(ValidationErrorBlock));
+
+      // The validation promise rejects when conditions are invalid.
+      // In tests, unhandled promise rejections cause test failures.
+      // We can access the validation promise via the internal blockConfigs.
+      renderBlocks(
+        "main-outlet-blocks",
+        [
+          {
+            block: ValidationErrorBlock,
+            conditions: { type: "outletArg" }, // missing required "path"
+          },
+        ],
+        getOwner(this)
+      );
+
+      // Access the validation promise to catch the expected error
+      const configData = _getBlockConfigs().get("main-outlet-blocks");
+
+      await assert.rejects(
+        configData.validatedConfig,
+        /`path` argument is required/,
+        "validation error thrown for missing required path argument"
+      );
     });
   });
 });

@@ -79,6 +79,21 @@ export function resetBlockConfigsForTesting() {
 }
 
 /**
+ * Returns the internal block configs map for testing.
+ * Allows tests to access validation promises to verify error handling.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ *
+ * @returns {Map<string, {validatedConfig: Promise}>} The block configs map.
+ */
+export function _getBlockConfigs() {
+  if (DEBUG) {
+    return blockConfigs;
+  }
+  return new Map();
+}
+
+/**
  * Valid config keys for the @block decorator options.
  * @constant {ReadonlyArray<string>}
  */
@@ -943,12 +958,19 @@ export default class BlockOutlet extends Component {
         return result;
       })
       .catch((error) => {
-        // In test environments, let the error propagate to fail the test
+        // Note on test failures:
+        // - Validation errors (from validateConfig): Already fail tests as
+        //   unhandled promise rejections before this handler runs.
+        // - Preprocessing errors (from .then block above): Need setTimeout to
+        //   escape TrackedAsyncData's error handling and surface as test failures.
         if (isTesting() || isRailsTesting()) {
-          throw error;
+          setTimeout(() => {
+            throw error;
+          }, 0);
         }
 
         // Notify admins via the client error handler
+        // This also logs the error in the console automatically
         document.dispatchEvent(
           new CustomEvent("discourse-error", {
             detail: { messageKey: "broken_block_alert", error },
