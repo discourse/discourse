@@ -79,11 +79,14 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       return condition.evaluate(args);
     };
 
-    // Helper to validate route condition
+    // Helper to validate route condition (throws if validation fails)
     this.validateCondition = (args) => {
       const condition = new BlockRouteCondition();
       setOwner(condition, testOwner);
-      return condition.validate(args);
+      const error = condition.validate(args);
+      if (error) {
+        throw new Error(error.message);
+      }
     };
   });
 

@@ -213,9 +213,12 @@ function validateBlockConditions(
       callSiteError,
     };
 
-    // If error has a path property, build the full errorPath
+    // If error has a path property, build the full errorPath and conditionsPath
+    // error.path is relative to conditions (e.g., "params.categoryId")
     if (error.path) {
-      context.errorPath = `${path}.${error.path}`;
+      context.errorPath = `${path}.conditions.${error.path}`;
+      // conditionsPath is relative to the conditions object (for formatter)
+      context.conditionsPath = error.path;
     }
 
     raiseBlockError(

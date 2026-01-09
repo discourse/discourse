@@ -1,4 +1,3 @@
-import { raiseBlockError } from "discourse/lib/blocks/error";
 import { getByPath } from "discourse/lib/blocks/path-resolver";
 import { matchValue } from "discourse/lib/blocks/value-matcher";
 import { BlockCondition } from "./condition";
@@ -53,39 +52,47 @@ import { blockCondition } from "./decorator";
   validArgKeys: ["path", "value", "exists"],
 })
 export default class BlockOutletArgCondition extends BlockCondition {
-  validate(args, path) {
-    super.validate(args, path);
+  validate(args) {
+    // Check base class validation (source parameter)
+    const baseError = super.validate(args);
+    if (baseError) {
+      return baseError;
+    }
 
     const { path: argPath, value, exists } = args;
 
     if (!argPath) {
-      raiseBlockError("BlockOutletArgCondition: `path` argument is required.", {
-        path: path ? `${path}.path` : undefined,
-      });
+      return {
+        message: "`path` argument is required.",
+        path: "path",
+      };
     }
 
     if (typeof argPath !== "string") {
-      raiseBlockError("BlockOutletArgCondition: `path` must be a string.", {
-        path: path ? `${path}.path` : undefined,
-      });
+      return {
+        message: "`path` must be a string.",
+        path: "path",
+      };
     }
 
     // Validate path format (alphanumeric, underscores, dots)
     if (!/^[\w.]+$/.test(argPath)) {
-      raiseBlockError(
-        `BlockOutletArgCondition: \`path\` "${argPath}" is invalid. ` +
+      return {
+        message:
+          `\`path\` "${argPath}" is invalid. ` +
           `Use dot-notation with alphanumeric characters (e.g., "user.trust_level").`,
-        { path: path ? `${path}.path` : undefined }
-      );
+        path: "path",
+      };
     }
 
     // Check for conflicting conditions
     if (value !== undefined && exists !== undefined) {
-      raiseBlockError(
-        "BlockOutletArgCondition: Cannot use both `value` and `exists` together.",
-        { path }
-      );
+      return {
+        message: "Cannot use both `value` and `exists` together.",
+      };
     }
+
+    return null;
   }
 
   evaluate(args, context) {

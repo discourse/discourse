@@ -1,5 +1,4 @@
 import { service } from "@ember/service";
-import { raiseBlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
@@ -74,25 +73,33 @@ export default class BlockViewportCondition extends BlockCondition {
    * @param {boolean} [args.touch] - Whether to check for touch capability.
    * @throws {BlockError} If validation fails.
    */
-  validate(args, path) {
+  validate(args) {
+    // Check base class validation (source parameter)
+    const baseError = super.validate(args);
+    if (baseError) {
+      return baseError;
+    }
+
     const { min, max } = args;
 
     if (min && !BREAKPOINTS.includes(min)) {
       const suggestion = formatWithSuggestion(min, BREAKPOINTS);
-      raiseBlockError(
-        `BlockViewportCondition: Invalid \`min\` breakpoint ${suggestion}. ` +
+      return {
+        message:
+          `Invalid \`min\` breakpoint ${suggestion}. ` +
           `Valid breakpoints are: ${BREAKPOINTS.join(", ")}.`,
-        { path: path ? `${path}.min` : undefined }
-      );
+        path: "min",
+      };
     }
 
     if (max && !BREAKPOINTS.includes(max)) {
       const suggestion = formatWithSuggestion(max, BREAKPOINTS);
-      raiseBlockError(
-        `BlockViewportCondition: Invalid \`max\` breakpoint ${suggestion}. ` +
+      return {
+        message:
+          `Invalid \`max\` breakpoint ${suggestion}. ` +
           `Valid breakpoints are: ${BREAKPOINTS.join(", ")}.`,
-        { path: path ? `${path}.max` : undefined }
-      );
+        path: "max",
+      };
     }
 
     if (min && max) {
@@ -100,13 +107,15 @@ export default class BlockViewportCondition extends BlockCondition {
       const maxIndex = BREAKPOINTS.indexOf(max);
 
       if (minIndex > maxIndex) {
-        raiseBlockError(
-          `BlockViewportCondition: \`min\` breakpoint "${min}" is larger than ` +
+        return {
+          message:
+            `\`min\` breakpoint "${min}" is larger than ` +
             `\`max\` breakpoint "${max}". No viewport can satisfy this condition.`,
-          { path }
-        );
+        };
       }
     }
+
+    return null;
   }
 
   evaluate(args) {

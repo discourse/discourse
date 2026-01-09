@@ -266,16 +266,16 @@ export default class Blocks extends Service {
    * Validates condition specs at block registration time.
    * Recursively validates nested conditions in `any` and `not` combinators.
    *
-   * Throws BlockValidationError objects so callers can decide how to format
+   * Throws BlockError objects so callers can decide how to format
    * the final error with appropriate context. The error object includes a
-   * `conditionPath` property indicating where in the config the error occurred.
+   * `path` property indicating where in the conditions the error occurred
+   * (relative to the conditions root, e.g., "params.categoryId").
    *
    * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to validate.
-   * @param {string} [path="conditions"] - The path to this condition in the config tree.
-   * @throws {BlockValidationError} If validation fails.
+   * @throws {BlockError} If validation fails.
    */
-  validate(conditionSpec, path = "conditions") {
-    validateConditions(conditionSpec, this.#conditionTypes, path);
+  validate(conditionSpec) {
+    validateConditions(conditionSpec, this.#conditionTypes);
   }
 
   /**

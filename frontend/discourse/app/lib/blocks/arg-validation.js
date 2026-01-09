@@ -1,4 +1,4 @@
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import { BlockError, raiseBlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -541,7 +541,7 @@ export function validateBlockArgs(config, blockClass) {
   // If args are provided but no schema exists, reject them
   if (hasProvidedArgs && !argsSchema) {
     const argNames = Object.keys(providedArgs).join(", ");
-    raiseBlockError(
+    throw new BlockError(
       `args were provided (${argNames}) but this block does not declare an args schema. ` +
         `Add an args schema to the @block decorator or remove the args.`,
       { path: "args" }
@@ -558,7 +558,7 @@ export function validateBlockArgs(config, blockClass) {
 
     // Check required args
     if (argDef.required && value === undefined) {
-      raiseBlockError(`missing required arg "${argName}".`, {
+      throw new BlockError(`missing required arg "${argName}".`, {
         path: `args.${argName}`,
       });
     }
@@ -567,7 +567,7 @@ export function validateBlockArgs(config, blockClass) {
     if (value !== undefined) {
       const typeError = validateArgValue(value, argDef, argName);
       if (typeError) {
-        raiseBlockError(typeError, { path: `args.${argName}` });
+        throw new BlockError(typeError, { path: `args.${argName}` });
       }
     }
   }
@@ -577,7 +577,7 @@ export function validateBlockArgs(config, blockClass) {
   for (const argName of Object.keys(providedArgs)) {
     if (!Object.hasOwn(argsSchema, argName)) {
       const suggestion = formatWithSuggestion(argName, declaredArgs);
-      raiseBlockError(
+      throw new BlockError(
         `unknown arg ${suggestion}. Declared args are: ${declaredArgs.join(", ") || "none"}.`,
         { path: `args.${argName}` }
       );

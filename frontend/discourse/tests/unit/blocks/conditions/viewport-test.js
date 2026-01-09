@@ -2,7 +2,6 @@ import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockViewportCondition from "discourse/blocks/conditions/viewport";
-import { BlockError } from "discourse/lib/blocks/error";
 
 module("Unit | Blocks | Condition | viewport", function (hooks) {
   setupTest(hooks);
@@ -10,41 +9,59 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
   hooks.beforeEach(function () {
     this.condition = new BlockViewportCondition();
     setOwner(this.condition, getOwner(this));
+
+    // Helper that throws if validation returns an error (for assert.throws tests)
+    this.validateOrThrow = (args) => {
+      const error = this.condition.validate(args);
+      if (error) {
+        throw new Error(error.message);
+      }
+    };
   });
 
   module("validate", function () {
     test("throws for invalid min breakpoint", function (assert) {
-      assert.throws(() => this.condition.validate({ min: "xxl" }), BlockError);
+      assert.throws(
+        () => this.validateOrThrow({ min: "xxl" }),
+        /Invalid.*breakpoint/
+      );
     });
 
     test("throws for invalid max breakpoint", function (assert) {
       assert.throws(
-        () => this.condition.validate({ max: "invalid" }),
-        BlockError
+        () => this.validateOrThrow({ max: "invalid" }),
+        /Invalid.*breakpoint/
       );
     });
 
     test("throws when min > max", function (assert) {
       assert.throws(
-        () => this.condition.validate({ min: "xl", max: "sm" }),
-        BlockError
+        () => this.validateOrThrow({ min: "xl", max: "sm" }),
+        /min.*breakpoint.*larger than.*max/
       );
     });
 
     test("passes valid breakpoint configurations", function (assert) {
-      this.condition.validate({ min: "sm" });
-      this.condition.validate({ max: "lg" });
-      this.condition.validate({ min: "md", max: "xl" });
-      this.condition.validate({ min: "2xl" });
-      this.condition.validate({ mobile: true });
-      this.condition.validate({ touch: true });
-      this.condition.validate({ mobile: false, touch: false });
-      assert.true(true, "all valid configurations passed");
+      assert.strictEqual(this.condition.validate({ min: "sm" }), null);
+      assert.strictEqual(this.condition.validate({ max: "lg" }), null);
+      assert.strictEqual(
+        this.condition.validate({ min: "md", max: "xl" }),
+        null
+      );
+      assert.strictEqual(this.condition.validate({ min: "2xl" }), null);
+      assert.strictEqual(this.condition.validate({ mobile: true }), null);
+      assert.strictEqual(this.condition.validate({ touch: true }), null);
+      assert.strictEqual(
+        this.condition.validate({ mobile: false, touch: false }),
+        null
+      );
     });
 
     test("passes when min equals max", function (assert) {
-      this.condition.validate({ min: "md", max: "md" });
-      assert.true(true, "min equals max is valid");
+      assert.strictEqual(
+        this.condition.validate({ min: "md", max: "md" }),
+        null
+      );
     });
   });
 

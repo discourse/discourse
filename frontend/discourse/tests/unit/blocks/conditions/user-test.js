@@ -2,7 +2,6 @@ import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockUserCondition from "discourse/blocks/conditions/user";
-import { BlockError } from "discourse/lib/blocks/error";
 
 module("Unit | Blocks | Condition | user", function (hooks) {
   setupTest(hooks);
@@ -10,125 +9,158 @@ module("Unit | Blocks | Condition | user", function (hooks) {
   hooks.beforeEach(function () {
     this.condition = new BlockUserCondition();
     setOwner(this.condition, getOwner(this));
+
+    // Helper that throws if validation returns an error (for assert.throws tests)
+    this.validateOrThrow = (args) => {
+      const error = this.condition.validate(args);
+      if (error) {
+        throw new Error(error.message);
+      }
+    };
   });
 
   module("validate", function () {
     test("throws when loggedIn: false combined with admin", function (assert) {
       assert.throws(
-        () => this.condition.validate({ loggedIn: false, admin: true }),
-        BlockError
+        () => this.validateOrThrow({ loggedIn: false, admin: true }),
+        /loggedIn: false/
       );
     });
 
     test("throws when loggedIn: false combined with moderator", function (assert) {
       assert.throws(
-        () => this.condition.validate({ loggedIn: false, moderator: true }),
-        BlockError
+        () => this.validateOrThrow({ loggedIn: false, moderator: true }),
+        /loggedIn: false/
       );
     });
 
     test("throws when loggedIn: false combined with staff", function (assert) {
       assert.throws(
-        () => this.condition.validate({ loggedIn: false, staff: true }),
-        BlockError
+        () => this.validateOrThrow({ loggedIn: false, staff: true }),
+        /loggedIn: false/
       );
     });
 
     test("throws when loggedIn: false combined with minTrustLevel", function (assert) {
       assert.throws(
-        () => this.condition.validate({ loggedIn: false, minTrustLevel: 2 }),
-        BlockError
+        () => this.validateOrThrow({ loggedIn: false, minTrustLevel: 2 }),
+        /loggedIn: false/
       );
     });
 
     test("throws when loggedIn: false combined with maxTrustLevel", function (assert) {
       assert.throws(
-        () => this.condition.validate({ loggedIn: false, maxTrustLevel: 2 }),
-        BlockError
+        () => this.validateOrThrow({ loggedIn: false, maxTrustLevel: 2 }),
+        /loggedIn: false/
       );
     });
 
     test("throws when loggedIn: false combined with groups", function (assert) {
       assert.throws(
-        () =>
-          this.condition.validate({ loggedIn: false, groups: ["some-group"] }),
-        BlockError
+        () => this.validateOrThrow({ loggedIn: false, groups: ["some-group"] }),
+        /loggedIn: false/
       );
     });
 
     test("throws when minTrustLevel > maxTrustLevel", function (assert) {
       assert.throws(
-        () => this.condition.validate({ minTrustLevel: 3, maxTrustLevel: 1 }),
-        BlockError
+        () => this.validateOrThrow({ minTrustLevel: 3, maxTrustLevel: 1 }),
+        /minTrustLevel.*cannot be greater than.*maxTrustLevel/
       );
     });
 
     test("throws when minTrustLevel is negative", function (assert) {
       assert.throws(
-        () => this.condition.validate({ minTrustLevel: -1 }),
+        () => this.validateOrThrow({ minTrustLevel: -1 }),
         /must be a number between 0 and 4/
       );
     });
 
     test("throws when maxTrustLevel is negative", function (assert) {
       assert.throws(
-        () => this.condition.validate({ maxTrustLevel: -1 }),
+        () => this.validateOrThrow({ maxTrustLevel: -1 }),
         /must be a number between 0 and 4/
       );
     });
 
     test("throws when minTrustLevel exceeds 4", function (assert) {
       assert.throws(
-        () => this.condition.validate({ minTrustLevel: 5 }),
+        () => this.validateOrThrow({ minTrustLevel: 5 }),
         /must be a number between 0 and 4/
       );
     });
 
     test("throws when maxTrustLevel exceeds 4", function (assert) {
       assert.throws(
-        () => this.condition.validate({ maxTrustLevel: 5 }),
+        () => this.validateOrThrow({ maxTrustLevel: 5 }),
         /must be a number between 0 and 4/
       );
     });
 
     test("throws when minTrustLevel is not a number", function (assert) {
       assert.throws(
-        () => this.condition.validate({ minTrustLevel: "2" }),
+        () => this.validateOrThrow({ minTrustLevel: "2" }),
         /must be a number between 0 and 4/
       );
     });
 
     test("throws when maxTrustLevel is not a number", function (assert) {
       assert.throws(
-        () => this.condition.validate({ maxTrustLevel: "3" }),
+        () => this.validateOrThrow({ maxTrustLevel: "3" }),
         /must be a number between 0 and 4/
       );
     });
 
     test("accepts boundary trust levels 0 and 4", function (assert) {
-      this.condition.validate({ minTrustLevel: 0 });
-      this.condition.validate({ maxTrustLevel: 4 });
-      this.condition.validate({ minTrustLevel: 0, maxTrustLevel: 4 });
-      assert.true(true);
+      assert.strictEqual(
+        this.condition.validate({ minTrustLevel: 0 }),
+        null,
+        "minTrustLevel: 0 is valid"
+      );
+      assert.strictEqual(
+        this.condition.validate({ maxTrustLevel: 4 }),
+        null,
+        "maxTrustLevel: 4 is valid"
+      );
+      assert.strictEqual(
+        this.condition.validate({ minTrustLevel: 0, maxTrustLevel: 4 }),
+        null,
+        "range 0-4 is valid"
+      );
     });
 
     test("passes valid configurations", function (assert) {
-      this.condition.validate({ loggedIn: true });
-      this.condition.validate({ loggedIn: false });
-      this.condition.validate({ admin: true });
-      this.condition.validate({ moderator: true });
-      this.condition.validate({ staff: true });
-      this.condition.validate({ minTrustLevel: 2 });
-      this.condition.validate({ maxTrustLevel: 3 });
-      this.condition.validate({ minTrustLevel: 1, maxTrustLevel: 3 });
-      this.condition.validate({ minTrustLevel: 2, maxTrustLevel: 2 });
-      this.condition.validate({ groups: ["test-group"] });
-      this.condition.validate({ loggedIn: true, admin: true });
-      this.condition.validate({
-        minTrustLevel: 2,
-        groups: ["beta"],
-        staff: true,
-      });
+      assert.strictEqual(this.condition.validate({ loggedIn: true }), null);
+      assert.strictEqual(this.condition.validate({ loggedIn: false }), null);
+      assert.strictEqual(this.condition.validate({ admin: true }), null);
+      assert.strictEqual(this.condition.validate({ moderator: true }), null);
+      assert.strictEqual(this.condition.validate({ staff: true }), null);
+      assert.strictEqual(this.condition.validate({ minTrustLevel: 2 }), null);
+      assert.strictEqual(this.condition.validate({ maxTrustLevel: 3 }), null);
+      assert.strictEqual(
+        this.condition.validate({ minTrustLevel: 1, maxTrustLevel: 3 }),
+        null
+      );
+      assert.strictEqual(
+        this.condition.validate({ minTrustLevel: 2, maxTrustLevel: 2 }),
+        null
+      );
+      assert.strictEqual(
+        this.condition.validate({ groups: ["test-group"] }),
+        null
+      );
+      assert.strictEqual(
+        this.condition.validate({ loggedIn: true, admin: true }),
+        null
+      );
+      assert.strictEqual(
+        this.condition.validate({
+          minTrustLevel: 2,
+          groups: ["beta"],
+          staff: true,
+        }),
+        null
+      );
       assert.true(true, "all valid configurations passed");
     });
   });
@@ -380,15 +412,16 @@ module("Unit | Blocks | Condition | user", function (hooks) {
     test("validate passes with valid source format", function (assert) {
       assert.strictEqual(
         this.condition.validate({ source: "@outletArgs.user" }),
-        undefined
+        null
       );
     });
 
-    test("validate throws with invalid source format", function (assert) {
-      assert.throws(
-        () => this.condition.validate({ source: "user" }),
-        BlockError,
-        "must be in format"
+    test("validate returns error with invalid source format", function (assert) {
+      const error = this.condition.validate({ source: "user" });
+      assert.notStrictEqual(error, null, "returns an error");
+      assert.true(
+        error.message.includes("must be in format"),
+        "error message mentions format"
       );
     });
 

@@ -2,7 +2,6 @@ import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockOutletArgCondition from "discourse/blocks/conditions/outlet-arg";
-import { BlockError } from "discourse/lib/blocks/error";
 
 module("Unit | Blocks | Condition | outletArg", function (hooks) {
   setupTest(hooks);
@@ -10,60 +9,63 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
   hooks.beforeEach(function () {
     this.condition = new BlockOutletArgCondition();
     setOwner(this.condition, getOwner(this));
+
+    // Helper that throws if validation returns an error (for assert.throws tests)
+    this.validateOrThrow = (args) => {
+      const error = this.condition.validate(args);
+      if (error) {
+        throw new Error(error.message);
+      }
+    };
   });
 
   module("validate", function () {
     test("throws when path is missing", function (assert) {
       assert.throws(
-        () => this.condition.validate({}),
-        BlockError,
-        "`path` argument is required"
+        () => this.validateOrThrow({}),
+        /`path` argument is required/
       );
     });
 
     test("throws when path is not a string", function (assert) {
       assert.throws(
-        () => this.condition.validate({ path: 123 }),
-        BlockError,
-        "`path` must be a string"
+        () => this.validateOrThrow({ path: 123 }),
+        /`path` must be a string/
       );
     });
 
     test("throws when path contains invalid characters", function (assert) {
       assert.throws(
-        () => this.condition.validate({ path: "user-name" }),
-        BlockError,
-        "invalid path format"
+        () => this.validateOrThrow({ path: "user-name" }),
+        /is invalid/
       );
     });
 
     test("throws when both value and exists are specified", function (assert) {
       assert.throws(
-        () =>
-          this.condition.validate({ path: "user", value: true, exists: true }),
-        BlockError,
-        "Cannot use both"
+        () => this.validateOrThrow({ path: "user", value: true, exists: true }),
+        /Cannot use both/
       );
     });
 
     test("accepts valid path with value", function (assert) {
       assert.strictEqual(
         this.condition.validate({ path: "user.admin", value: true }),
-        undefined
+        null
       );
     });
 
     test("accepts valid path with exists", function (assert) {
       assert.strictEqual(
         this.condition.validate({ path: "topic", exists: true }),
-        undefined
+        null
       );
     });
 
     test("accepts dot-notation paths", function (assert) {
       assert.strictEqual(
         this.condition.validate({ path: "user.trust_level", value: 2 }),
-        undefined
+        null
       );
     });
   });

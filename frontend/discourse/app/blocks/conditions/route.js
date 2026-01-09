@@ -1,5 +1,4 @@
 import { service } from "@ember/service";
-import { raiseBlockError } from "discourse/lib/blocks/error";
 import {
   getParamsForPageType,
   isValidPageType,
@@ -103,49 +102,53 @@ export default class BlockRouteCondition extends BlockCondition {
    * Validates the route condition arguments.
    *
    * @param {Object} args - The condition arguments.
-   * @param {string} [path] - The path to this condition in the config (for error messages).
-   * @throws {Error} If validation fails.
+   * @returns {{ message: string, path?: string } | null} Error info or null if valid.
    */
-  validate(args, path) {
+  validate(args) {
+    // Check base class validation (source parameter)
+    const baseError = super.validate(args);
+    if (baseError) {
+      return baseError;
+    }
+
     const { urls, pages, params, queryParams } = args;
 
     // Must provide either urls or pages
     if (!urls?.length && !pages?.length) {
-      raiseBlockError("BlockRouteCondition: Must provide `urls` or `pages`.", {
-        path,
-      });
+      return { message: "Must provide `urls` or `pages`." };
     }
 
     // Validate urls
     if (urls?.length) {
       if (!Array.isArray(urls)) {
-        raiseBlockError(
-          "BlockRouteCondition: `urls` must be an array of URL patterns.",
-          { path: path ? `${path}.urls` : undefined }
-        );
+        return {
+          message: "`urls` must be an array of URL patterns.",
+          path: "urls",
+        };
       }
 
       for (let i = 0; i < urls.length; i++) {
         const pattern = urls[i];
-        const urlPath = path ? `${path}.urls[${i}]` : undefined;
 
         // Check for old shortcut syntax
         if (typeof pattern === "string" && pattern.startsWith("$")) {
-          raiseBlockError(
-            `BlockRouteCondition: Shortcuts like '${pattern}' are not supported in \`urls\`.\n` +
+          return {
+            message:
+              `Shortcuts like '${pattern}' are not supported in \`urls\`.\n` +
               `Use the \`pages\` option instead:\n` +
               `  { type: "route", pages: ["${pattern.slice(1)}"] }`,
-            { path: urlPath }
-          );
+            path: `urls[${i}]`,
+          };
         }
 
         // Validate glob pattern syntax
         if (!isValidUrlPattern(pattern)) {
-          raiseBlockError(
-            `BlockRouteCondition: Invalid glob pattern "${pattern}". ` +
+          return {
+            message:
+              `Invalid glob pattern "${pattern}". ` +
               `Check for unbalanced brackets or braces.`,
-            { path: urlPath }
-          );
+            path: `urls[${i}]`,
+          };
         }
       }
     }
@@ -153,64 +156,62 @@ export default class BlockRouteCondition extends BlockCondition {
     // Validate pages
     if (pages?.length) {
       if (!Array.isArray(pages)) {
-        raiseBlockError(
-          `BlockRouteCondition: \`pages\` must be an array of page type strings.\n` +
+        return {
+          message:
+            `\`pages\` must be an array of page type strings.\n` +
             `Example: { pages: ["CATEGORY_PAGES", "TAG_PAGES"] }`,
-          { path: path ? `${path}.pages` : undefined }
-        );
+          path: "pages",
+        };
       }
 
       for (let i = 0; i < pages.length; i++) {
         const pageType = pages[i];
-        const pagePath = path ? `${path}.pages[${i}]` : undefined;
 
         if (typeof pageType !== "string") {
-          raiseBlockError(
-            `BlockRouteCondition: Each page type must be a string, got ${typeof pageType}.`,
-            { path: pagePath }
-          );
+          return {
+            message: `Each page type must be a string, got ${typeof pageType}.`,
+            path: `pages[${i}]`,
+          };
         }
 
         if (!isValidPageType(pageType)) {
           const suggestion = suggestPageType(pageType);
-          let errorMsg = `BlockRouteCondition: Unknown page type '${pageType}'.`;
+          let errorMsg = `Unknown page type '${pageType}'.`;
           if (suggestion) {
             errorMsg += `\nDid you mean '${suggestion}'?`;
           }
           errorMsg += `\nValid page types: ${VALID_PAGE_TYPES.join(", ")}`;
-          raiseBlockError(errorMsg, { path: pagePath });
+          return { message: errorMsg, path: `pages[${i}]` };
         }
       }
     }
 
     // Validate params
     if (params) {
-      const paramsPath = path ? `${path}.params` : undefined;
-
       // params requires pages
       if (!pages?.length) {
-        raiseBlockError(
-          `BlockRouteCondition: \`params\` requires \`pages\` to be specified.\n` +
+        return {
+          message:
+            `\`params\` requires \`pages\` to be specified.\n` +
             `Use \`pages\` to specify which page types to match, then \`params\` to filter by parameters.`,
-          { path: paramsPath }
-        );
+          path: "params",
+        };
       }
 
       // params cannot be used with urls
       if (urls?.length) {
-        raiseBlockError(
-          `BlockRouteCondition: \`params\` cannot be used with \`urls\`.\n` +
+        return {
+          message:
+            `\`params\` cannot be used with \`urls\`.\n` +
             `Use \`pages\` with typed parameters instead.`,
-          { path: paramsPath }
-        );
+          path: "params",
+        };
       }
 
       // Validate params against all listed page types
       const { valid, errors } = validateParamsAgainstPages(params, pages);
       if (!valid) {
-        raiseBlockError(`BlockRouteCondition: ${errors.join("\n")}`, {
-          path: paramsPath,
-        });
+        return { message: errors.join("\n"), path: "params" };
       }
 
       // Validate param types
@@ -228,9 +229,7 @@ export default class BlockRouteCondition extends BlockCondition {
             pageType
           );
           if (!typeValid) {
-            raiseBlockError(`BlockRouteCondition: ${error}`, {
-              path: path ? `${path}.params.${paramName}` : undefined,
-            });
+            return { message: error, path: `params.${paramName}` };
           }
         }
       }
@@ -238,12 +237,16 @@ export default class BlockRouteCondition extends BlockCondition {
 
     // Validate queryParams for operator typos (e.g., "an" vs "any")
     if (queryParams) {
+      let queryParamsError = null;
       validateParamSpec(queryParams, "queryParams", (msg) => {
-        raiseBlockError(`BlockRouteCondition: ${msg}`, {
-          path: path ? `${path}.queryParams` : undefined,
-        });
+        queryParamsError = { message: msg, path: "queryParams" };
       });
+      if (queryParamsError) {
+        return queryParamsError;
+      }
     }
+
+    return null;
   }
 
   /**

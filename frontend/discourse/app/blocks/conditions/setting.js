@@ -1,5 +1,4 @@
 import { service } from "@ember/service";
-import { raiseBlockError } from "discourse/lib/blocks/error";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
@@ -75,26 +74,39 @@ import { blockCondition } from "./decorator";
 export default class BlockSettingCondition extends BlockCondition {
   @service siteSettings;
 
-  validate(args, path) {
-    super.validate(args, path);
+  validate(args) {
+    // Check base class validation (source parameter)
+    const baseError = super.validate(args);
+    if (baseError) {
+      return baseError;
+    }
 
     const { name, source, enabled, equals, includes, contains, containsAny } =
       args;
 
     if (!name) {
-      raiseBlockError("BlockSettingCondition: `name` argument is required.", {
-        path: path ? `${path}.name` : undefined,
-      });
+      return {
+        message: "`name` argument is required.",
+        path: "name",
+      };
+    }
+
+    if (typeof name !== "string") {
+      return {
+        message: "`name` argument must be a string.",
+        path: "name",
+      };
     }
 
     // Skip site settings check if custom settings object is provided via source
     // (e.g., theme settings from "virtual:theme")
     if (!source && !(name in this.siteSettings)) {
-      raiseBlockError(
-        `BlockSettingCondition: unknown site setting "${name}". ` +
+      return {
+        message:
+          `Unknown site setting "${name}". ` +
           `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`,
-        { path: path ? `${path}.name` : undefined }
-      );
+        path: "name",
+      };
     }
 
     // Check for conflicting conditions
@@ -107,12 +119,14 @@ export default class BlockSettingCondition extends BlockCondition {
     ].filter(Boolean).length;
 
     if (conditionCount > 1) {
-      raiseBlockError(
-        "BlockSettingCondition: Cannot use multiple condition types together. " +
+      return {
+        message:
+          "Cannot use multiple condition types together. " +
           "Use only one of: `enabled`, `equals`, `includes`, `contains`, or `containsAny`.",
-        { path }
-      );
+      };
     }
+
+    return null;
   }
 
   evaluate(args, context) {

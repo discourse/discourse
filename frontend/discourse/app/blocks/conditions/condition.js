@@ -1,4 +1,3 @@
-import { raiseBlockError } from "discourse/lib/blocks/error";
 import { getByPath } from "discourse/lib/blocks/path-resolver";
 
 /**
@@ -35,7 +34,6 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  *
  * @example
  * ```javascript
- * import { raiseBlockError } from "discourse/lib/blocks/error";
  * import { BlockCondition } from "discourse/blocks/conditions";
  *
  * export default class BlockMyCondition extends BlockCondition {
@@ -44,10 +42,11 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  *
  *   @service myService;
  *
- *   validate(args, path) {
+ *   validate(args) {
  *     if (!args.requiredArg) {
- *       raiseBlockError("requiredArg is required", { path });
+ *       return { message: "requiredArg is required" };
  *     }
+ *     return null;  // No error
  *   }
  *
  *   evaluate(args, context) {
@@ -97,74 +96,69 @@ export class BlockCondition {
    * Override this method to check for required args, conflicting args,
    * or invalid values.
    *
-   * Note: Base class validation for `source` parameter is handled automatically
-   * via `validateSource()`. Subclasses should call `super.validate(args, path)` if
-   * they override this method.
+   * Returns error info if validation fails, or `null` if validation passes.
+   * Subclasses should call `super.validate(args)` first and return early if
+   * it returns an error.
    *
    * @param {Object} args - The condition arguments from the block config.
-   * @param {string} [path] - The path to this condition in the config (for error messages).
-   * @throws {BlockError} If validation fails.
+   * @returns {{ message: string, path?: string } | null} Error info or null if valid.
    */
-
-  validate(args, path) {
+  validate(args) {
     // Validate source parameter based on sourceType
-    this.validateSource(args, path);
+    return this.validateSource(args);
   }
 
   /**
    * Validates the `source` parameter based on the condition's `sourceType`.
    *
-   * - `sourceType: "none"`: Throws if `source` is provided
+   * - `sourceType: "none"`: Returns error if `source` is provided
    * - `sourceType: "outletArgs"`: Validates format is `@outletArgs.propertyPath`
    * - `sourceType: "object"`: Validates `source` is an object if provided
    *
    * @param {Object} args - The condition arguments from the block config.
-   * @param {string} [path] - The path to this condition in the config (for error messages).
-   * @throws {BlockError} If source validation fails.
+   * @returns {{ message: string, path?: string } | null} Error info or null if valid.
    */
-  validateSource(args, path) {
+  validateSource(args) {
     const { source } = args;
     const sourceType = this.constructor.sourceType;
 
     if (source === undefined) {
-      return; // source is always optional
+      return null; // source is always optional
     }
-
-    const sourcePath = path ? `${path}.source` : undefined;
 
     switch (sourceType) {
       case "none":
-        raiseBlockError(
-          `${this.constructor.name}: \`source\` parameter is not supported for this condition type.`,
-          { path: sourcePath }
-        );
-        break;
+        return {
+          message: `\`source\` parameter is not supported for this condition type.`,
+          path: "source",
+        };
 
       case "outletArgs":
         if (typeof source !== "string") {
-          raiseBlockError(
-            `${this.constructor.name}: \`source\` must be a string in format "@outletArgs.propertyName".`,
-            { path: sourcePath }
-          );
+          return {
+            message: `\`source\` must be a string in format "@outletArgs.propertyName".`,
+            path: "source",
+          };
         }
         if (!OUTLET_ARGS_SOURCE_PATTERN.test(source)) {
-          raiseBlockError(
-            `${this.constructor.name}: \`source\` must be in format "@outletArgs.propertyName", ` +
-              `got "${source}".`,
-            { path: sourcePath }
-          );
+          return {
+            message: `\`source\` must be in format "@outletArgs.propertyName", got "${source}".`,
+            path: "source",
+          };
         }
         break;
 
       case "object":
         if (source !== null && typeof source !== "object") {
-          raiseBlockError(
-            `${this.constructor.name}: \`source\` must be an object.`,
-            { path: sourcePath }
-          );
+          return {
+            message: `\`source\` must be an object.`,
+            path: "source",
+          };
         }
         break;
     }
+
+    return null;
   }
 
   /**

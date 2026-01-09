@@ -55,11 +55,14 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       return condition.evaluate(args);
     };
 
-    // Helper to validate setting condition
+    // Helper to validate setting condition (throws if validation fails)
     this.validateCondition = (args) => {
       const condition = new BlockSettingCondition();
       setOwner(condition, testOwner);
-      return condition.validate(args);
+      const error = condition.validate(args);
+      if (error) {
+        throw new Error(error.message);
+      }
     };
   });
 
@@ -407,7 +410,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     test("throws for unknown site setting", function (assert) {
       assert.throws(
         () => this.validateCondition({ name: "nonexistent_setting" }),
-        /unknown site setting/
+        /Unknown site setting/
       );
     });
 

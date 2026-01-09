@@ -3,6 +3,19 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { BlockCondition } from "discourse/blocks/conditions";
 
+/**
+ * Helper that throws if validation returns an error (for assert.throws tests).
+ *
+ * @param {BlockCondition} condition - The condition instance.
+ * @param {Object} args - The arguments to validate.
+ */
+function validateOrThrow(condition, args) {
+  const error = condition.validate(args);
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
 module("Unit | Blocks | Conditions | condition", function (hooks) {
   setupTest(hooks);
 
@@ -43,13 +56,13 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
       const outletArgs = new OutletArgsCondition();
       const objectSource = new ObjectCondition();
 
-      // None of these should throw when source is undefined
-      assert.strictEqual(noSource.validate({}), undefined);
-      assert.strictEqual(outletArgs.validate({}), undefined);
-      assert.strictEqual(objectSource.validate({}), undefined);
+      // None of these should return an error when source is undefined
+      assert.strictEqual(noSource.validate({}), null);
+      assert.strictEqual(outletArgs.validate({}), null);
+      assert.strictEqual(objectSource.validate({}), null);
     });
 
-    test("throws when source is provided for sourceType 'none'", function (assert) {
+    test("returns error when source is provided for sourceType 'none'", function (assert) {
       class NoSourceCondition extends BlockCondition {
         static type = "no-source-throw-test";
         static sourceType = "none";
@@ -62,7 +75,7 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
       const condition = new NoSourceCondition();
 
       assert.throws(
-        () => condition.validate({ source: "@outletArgs.foo" }),
+        () => validateOrThrow(condition, { source: "@outletArgs.foo" }),
         /source.*parameter is not supported/
       );
     });
@@ -79,38 +92,38 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
 
       const condition = new OutletArgsCondition();
 
-      // Valid formats should not throw
+      // Valid formats should return null
       assert.strictEqual(
         condition.validate({ source: "@outletArgs.foo" }),
-        undefined
+        null
       );
       assert.strictEqual(
         condition.validate({ source: "@outletArgs.nested.path" }),
-        undefined
+        null
       );
       assert.strictEqual(
         condition.validate({ source: "@outletArgs.deep.nested.value" }),
-        undefined
+        null
       );
 
-      // Invalid formats should throw
+      // Invalid formats should return errors
       assert.throws(
-        () => condition.validate({ source: "foo" }),
+        () => validateOrThrow(condition, { source: "foo" }),
         /must be in format "@outletArgs.propertyName"/
       );
 
       assert.throws(
-        () => condition.validate({ source: "outletArgs.foo" }),
+        () => validateOrThrow(condition, { source: "outletArgs.foo" }),
         /must be in format "@outletArgs.propertyName"/
       );
 
       assert.throws(
-        () => condition.validate({ source: "@outletArgs" }),
+        () => validateOrThrow(condition, { source: "@outletArgs" }),
         /must be in format "@outletArgs.propertyName"/
       );
 
       assert.throws(
-        () => condition.validate({ source: 123 }),
+        () => validateOrThrow(condition, { source: 123 }),
         /must be a string/
       );
     });
@@ -127,27 +140,27 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
 
       const condition = new ObjectCondition();
 
-      // Valid objects should not throw
+      // Valid objects should return null
       assert.strictEqual(
         condition.validate({ source: { key: "value" } }),
-        undefined
+        null
       );
-      assert.strictEqual(condition.validate({ source: {} }), undefined);
-      assert.strictEqual(condition.validate({ source: null }), undefined);
+      assert.strictEqual(condition.validate({ source: {} }), null);
+      assert.strictEqual(condition.validate({ source: null }), null);
 
-      // Invalid types should throw
+      // Invalid types should return errors
       assert.throws(
-        () => condition.validate({ source: "string" }),
+        () => validateOrThrow(condition, { source: "string" }),
         /must be an object/
       );
 
       assert.throws(
-        () => condition.validate({ source: 123 }),
+        () => validateOrThrow(condition, { source: 123 }),
         /must be an object/
       );
 
       assert.throws(
-        () => condition.validate({ source: true }),
+        () => validateOrThrow(condition, { source: true }),
         /must be an object/
       );
     });

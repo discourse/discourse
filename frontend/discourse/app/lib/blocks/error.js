@@ -49,13 +49,14 @@ function formatErrorContext(context) {
     parts.push(`Location: ${context.errorPath}`);
   }
 
-  // If we have conditions and an errorPath, use the path-aware formatter
-  if (context.conditions && context.errorPath) {
+  // If we have conditions and conditionsPath, use the path-aware formatter
+  // conditionsPath is relative to conditions object (e.g., "params.categoryId")
+  if (context.conditions && context.conditionsPath) {
     try {
       const conditionsStr = formatConfigWithErrorPath(
         context.conditions,
-        context.errorPath,
-        { prefix: "conditions", label: "conditions:" }
+        context.conditionsPath,
+        { label: "conditions:" }
       );
       parts.push(`\nContext:\n${conditionsStr}`);
     } catch {

@@ -1,4 +1,4 @@
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import { BlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -23,10 +23,10 @@ export function validateConditionArgKeys(instance, type, args, path) {
   for (const key of Object.keys(args)) {
     if (!allValidKeys.includes(key)) {
       const suggestion = formatWithSuggestion(key, allValidKeys);
-      raiseBlockError(
+      throw new BlockError(
         `Condition type "${type}": unknown arg ${suggestion}. ` +
           `Valid args: ${allValidKeys.join(", ")}`,
-        { path: `${path}.${key}` }
+        { path: path ? `${path}.${key}` : key }
       );
     }
   }
@@ -37,19 +37,16 @@ export function validateConditionArgKeys(instance, type, args, path) {
  * Recursively validates nested conditions in `any` and `not` combinators.
  *
  * Throws BlockError objects with a `path` property indicating where in the
- * config the error occurred. Callers can use this path to build full error
- * context with the `// <-- error here` marker.
+ * conditions the error occurred. Callers can use this path combined with
+ * their context path to build full error location.
  *
  * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to validate.
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {string} [path="conditions"] - The path to this condition in the config tree.
+ * @param {string} [path=""] - The path to this condition relative to conditions root
+ *   (e.g., "", "[0]", "any[1]", "params.categoryId").
  * @throws {BlockError} If validation fails.
  */
-export function validateConditions(
-  conditionSpec,
-  conditionTypes,
-  path = "conditions"
-) {
+export function validateConditions(conditionSpec, conditionTypes, path = "") {
   if (!conditionSpec) {
     return;
   }
@@ -90,7 +87,7 @@ function validateAnyCombinator(conditionSpec, conditionTypes, path) {
   // Validate no extra keys alongside "any"
   const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "any");
   if (extraKeys.length > 0) {
-    raiseBlockError(
+    throw new BlockError(
       `"any" combinator has extra keys: ${extraKeys.join(", ")}. ` +
         `Only "any" is allowed.`,
       { path }
@@ -98,7 +95,7 @@ function validateAnyCombinator(conditionSpec, conditionTypes, path) {
   }
 
   if (!Array.isArray(conditionSpec.any)) {
-    raiseBlockError('"any" must be an array of conditions', {
+    throw new BlockError('"any" must be an array of conditions', {
       path: `${path}.any`,
     });
   }
@@ -124,7 +121,7 @@ function validateNotCombinator(conditionSpec, conditionTypes, path) {
   // Validate no extra keys alongside "not"
   const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "not");
   if (extraKeys.length > 0) {
-    raiseBlockError(
+    throw new BlockError(
       `"not" combinator has extra keys: ${extraKeys.join(", ")}. ` +
         `Only "not" is allowed.`,
       { path }
@@ -135,7 +132,7 @@ function validateNotCombinator(conditionSpec, conditionTypes, path) {
     typeof conditionSpec.not !== "object" ||
     Array.isArray(conditionSpec.not)
   ) {
-    raiseBlockError('"not" must be a single condition object', {
+    throw new BlockError('"not" must be a single condition object', {
       path: `${path}.not`,
     });
   }
@@ -155,9 +152,9 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
   const { type, ...args } = conditionSpec;
 
   if (!type) {
-    raiseBlockError(
+    throw new BlockError(
       `Condition is missing "type" property: ${JSON.stringify(conditionSpec)}`,
-      { path }
+      { path: path || undefined }
     );
   }
 
@@ -166,15 +163,25 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
   if (!conditionInstance) {
     const availableTypes = [...conditionTypes.keys()];
     const suggestion = formatWithSuggestion(type, availableTypes);
-    raiseBlockError(
+    throw new BlockError(
       `Unknown condition type: ${suggestion}. Available types: ${availableTypes.join(", ")}`,
-      { path: `${path}.type` }
+      { path: path ? `${path}.type` : "type" }
     );
   }
 
   // Validate arg keys (catches typos like "querParams" instead of "queryParams")
   validateConditionArgKeys(conditionInstance, type, args, path);
 
-  // Run the condition's own validation, passing the path for error location markers
-  conditionInstance.validate(args, path);
+  // Run the condition's own validation - returns error info or null
+  const error = conditionInstance.validate(args);
+  if (error) {
+    // Build full path: combine condition path with error's relative path
+    let fullPath;
+    if (error.path) {
+      fullPath = path ? `${path}.${error.path}` : error.path;
+    } else {
+      fullPath = path || undefined;
+    }
+    throw new BlockError(error.message, { path: fullPath });
+  }
 }
