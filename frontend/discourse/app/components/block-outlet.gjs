@@ -33,12 +33,7 @@ import {
 } from "discourse/lib/blocks/block-processing";
 import { validateConfig } from "discourse/lib/blocks/config-validation";
 import { validateConstraintsSchema } from "discourse/lib/blocks/constraint-validation";
-import {
-  DEBUG_CALLBACK,
-  getDebugCallback,
-  isBlockLoggingEnabled,
-  isOutletBoundaryEnabled,
-} from "discourse/lib/blocks/debug-hooks";
+import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import { captureCallSite, raiseBlockError } from "discourse/lib/blocks/error";
 import {
   detectPatternConflicts,
@@ -424,6 +419,9 @@ export function block(name, options = {}) {
        */
       @cached
       get children() {
+        // set the tracking before any guard clause to ensure updating the options in the dev tools will track state
+        const showGhosts = debugHooks.isVisualOverlayEnabled;
+
         // Non-containers have no children
         if (!isContainer) {
           return;
@@ -442,7 +440,6 @@ export function block(name, options = {}) {
         }
 
         const owner = getOwner(this);
-        const showGhosts = !!getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
         const baseHierarchy = this.args._hierarchy;
         const outletArgs = this.args.outletArgs;
         // Logging already done during root preprocessing
@@ -626,7 +623,7 @@ function createChildBlock(blockConfig, owner, debugContext = {}) {
       );
 
   // Apply debug callback if present (for visual overlay)
-  const debugCallback = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
+  const debugCallback = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
   if (debugCallback) {
     const debugResult = debugCallback(
       {
@@ -854,8 +851,13 @@ export default class BlockOutlet extends Component {
    *
    * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>|undefined}
    */
-  @cached
+  // @cached
   get children() {
+    // we need to track the state outside the promise contexts to force the children to be rendered when
+    // the user enables the debugging
+    const showGhosts = debugHooks.isVisualOverlayEnabled;
+    const isLoggingEnabled = debugHooks.isBlockLoggingEnabled;
+
     if (!this.validatedConfig) {
       return;
     }
@@ -871,8 +873,6 @@ export default class BlockOutlet extends Component {
 
         const owner = getOwner(this);
         const blocksService = owner.lookup("service:blocks");
-        const isLoggingEnabled = isBlockLoggingEnabled();
-        const showGhosts = !!getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
         const outletArgs = this.outletArgsWithDeprecations;
         const baseHierarchy = this.#name;
 
@@ -949,6 +949,7 @@ export default class BlockOutlet extends Component {
               isLoggingEnabled,
               resolveBlockFn: resolveBlockSync,
             });
+
             if (ghostData) {
               result.push(ghostData);
             }
@@ -1013,13 +1014,17 @@ export default class BlockOutlet extends Component {
     const result = [];
 
     for (const config of configs) {
-      const resolvedBlock = resolveBlockSync(config.block);
+      // we need to work with a clone of the config to avoid mutating the children from the original in the registry
+      const configClone = { ...config };
+
+      // resolve block
+      const resolvedBlock = resolveBlockSync(configClone.block);
 
       // Skip unresolved blocks (optional missing or pending factory resolution)
       if (!resolvedBlock || isOptionalMissing(resolvedBlock)) {
         // Keep the config for ghost handling in the main loop
         if (showGhosts || isOptionalMissing(resolvedBlock)) {
-          result.push(config);
+          result.push(configClone);
         }
         continue;
       }
@@ -1029,31 +1034,31 @@ export default class BlockOutlet extends Component {
 
       // Evaluate this block's own conditions
       let conditionsPassed = true;
-      if (config.conditions) {
+      if (configClone.conditions) {
         if (isLoggingEnabled) {
-          getDebugCallback(DEBUG_CALLBACK.START_GROUP)?.(
+          debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(
             blockName,
             baseHierarchy
           );
         }
 
-        conditionsPassed = blocksService.evaluate(config.conditions, {
+        conditionsPassed = blocksService.evaluate(configClone.conditions, {
           debug: isLoggingEnabled,
           outletArgs,
         });
 
         if (isLoggingEnabled) {
-          getDebugCallback(DEBUG_CALLBACK.END_GROUP)?.(conditionsPassed);
+          debugHooks.getCallback(DEBUG_CALLBACK.END_GROUP)?.(conditionsPassed);
         }
       }
 
       // For containers: recursively process children first (bottom-up evaluation)
       // This determines which children are visible before we check if container has any
       let hasVisibleChildren = true; // Non-containers always "have" visible children
-      if (isChildContainer && config.children?.length) {
+      if (isChildContainer && configClone.children?.length) {
         // Recursively preprocess children - this computes their visibility
         const processedChildren = this.#preprocessConfigs(
-          config.children,
+          configClone.children,
           outletArgs,
           blocksService,
           showGhosts,
@@ -1061,25 +1066,20 @@ export default class BlockOutlet extends Component {
           `${baseHierarchy}/${blockName}`
         );
 
-        // Check if any child is visible
-        // In debug mode: check __visible property since all children are kept
-        // In prod mode: check if filtered result has any items
-        hasVisibleChildren = showGhosts
-          ? config.children.some((c) => c.__visible)
-          : processedChildren.length > 0;
+        hasVisibleChildren = processedChildren.some((child) => child.__visible);
 
-        // Update config's children with the processed (and possibly filtered) result
-        config.children = processedChildren;
+        // Update the cloned config's children with the processed (and possibly filtered) result
+        configClone.children = processedChildren;
       }
 
       // Final visibility: own conditions must pass AND (not container OR has visible children)
       // This implements the implicit "container must have visible children" condition
       const visible = conditionsPassed && hasVisibleChildren;
-      config.__visible = visible;
+      configClone.__visible = visible;
 
       // In debug mode, record why the block is hidden for the ghost tooltip
       if (showGhosts && !visible) {
-        config.__failureReason = !conditionsPassed
+        configClone.__failureReason = !conditionsPassed
           ? "condition-failed"
           : "no-visible-children";
       }
@@ -1087,7 +1087,7 @@ export default class BlockOutlet extends Component {
       // In production mode, filter out invisible blocks
       // In debug mode, keep all blocks for ghost rendering
       if (visible || showGhosts) {
-        result.push(config);
+        result.push(configClone);
       }
     }
 
@@ -1110,7 +1110,7 @@ export default class BlockOutlet extends Component {
    * @returns {boolean}
    */
   get showOutletBoundary() {
-    return isOutletBoundaryEnabled();
+    return debugHooks.isOutletBoundaryEnabled;
   }
 
   /**
@@ -1120,7 +1120,7 @@ export default class BlockOutlet extends Component {
    * @returns {typeof Component|null}
    */
   get OutletInfoComponent() {
-    return getDebugCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);
+    return debugHooks.getCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);
   }
 
   /**

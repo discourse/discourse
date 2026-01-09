@@ -1,7 +1,4 @@
-import {
-  DEBUG_CALLBACK,
-  getDebugCallback,
-} from "discourse/lib/blocks/debug-hooks";
+import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 
 /**
@@ -28,7 +25,7 @@ export function handleOptionalMissingBlock({
 }) {
   // Log if debug logging is enabled
   if (isLoggingEnabled) {
-    getDebugCallback(DEBUG_CALLBACK.OPTIONAL_MISSING_LOG)?.(
+    debugHooks.getCallback(DEBUG_CALLBACK.OPTIONAL_MISSING_LOG)?.(
       blockName,
       hierarchy
     );
@@ -36,7 +33,7 @@ export function handleOptionalMissingBlock({
 
   // Show ghost if visual overlay is enabled
   if (showGhosts) {
-    const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
+    const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
       {
         name: blockName,
         Component: null,
@@ -120,7 +117,9 @@ export function createGhostBlock({
     blockConfig.children?.length &&
     blockConfig.__failureReason === "no-visible-children"
   ) {
-    ghostChildren = getDebugCallback(DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR)?.(
+    ghostChildren = debugHooks.getCallback(
+      DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
+    )?.(
       blockConfig.children,
       owner,
       containerPath,
@@ -130,7 +129,7 @@ export function createGhostBlock({
     );
   }
 
-  const ghostData = getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
+  const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
     {
       name: blockName,
       Component: null,

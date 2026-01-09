@@ -1,8 +1,4 @@
-import {
-  DEBUG_CALLBACK,
-  getDebugCallback,
-  getLoggerInterface,
-} from "discourse/lib/blocks/debug-hooks";
+import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 
 /**
  * Evaluates condition specs at render time.
@@ -26,16 +22,16 @@ export function evaluateConditions(
 
   // Get logging callbacks (null if dev tools not loaded or logging disabled)
   const conditionLog = isLoggingEnabled
-    ? getDebugCallback(DEBUG_CALLBACK.CONDITION_LOG)
+    ? debugHooks.getCallback(DEBUG_CALLBACK.CONDITION_LOG)
     : null;
   const combinatorLog = isLoggingEnabled
-    ? getDebugCallback(DEBUG_CALLBACK.COMBINATOR_LOG)
+    ? debugHooks.getCallback(DEBUG_CALLBACK.COMBINATOR_LOG)
     : null;
   const conditionResultLog = isLoggingEnabled
-    ? getDebugCallback(DEBUG_CALLBACK.CONDITION_RESULT)
+    ? debugHooks.getCallback(DEBUG_CALLBACK.CONDITION_RESULT)
     : null;
   // Get logger interface for conditions (e.g., route condition needs to log params)
-  const logger = isLoggingEnabled ? getLoggerInterface() : null;
+  const logger = isLoggingEnabled ? debugHooks.loggerInterface : null;
 
   if (!conditionSpec) {
     return true;

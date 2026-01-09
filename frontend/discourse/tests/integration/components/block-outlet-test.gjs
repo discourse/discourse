@@ -9,10 +9,7 @@ import BlockOutlet, {
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
-import {
-  DEBUG_CALLBACK,
-  setDebugCallback,
-} from "discourse/lib/blocks/debug-hooks";
+import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,
   _registerBlockFactory,
@@ -24,10 +21,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.afterEach(function () {
-    setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
-    setDebugCallback(DEBUG_CALLBACK.BLOCK_LOGGING, null);
-    setDebugCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, null);
-    setDebugCallback(DEBUG_CALLBACK.START_GROUP, null);
+    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
+    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, null);
+    debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, null);
+    debugHooks.setCallback(DEBUG_CALLBACK.START_GROUP, null);
   });
 
   module("basic rendering", function () {
@@ -283,7 +280,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
   });
 
   module("debug callbacks", function () {
-    test("setDebugCallback(BLOCK_DEBUG) wraps rendered blocks", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_DEBUG) wraps rendered blocks", async function (assert) {
       @block("debug-wrap-block")
       class DebugWrapBlock extends Component {
         <template>
@@ -294,7 +291,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       let callbackCalled = false;
       let receivedBlockData = null;
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
         callbackCalled = true;
         receivedBlockData = blockData;
         return { Component: blockData.Component };
@@ -324,7 +321,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.dom(".debug-wrap-content").exists();
     });
 
-    test("setDebugCallback(BLOCK_DEBUG) shows ghost blocks when conditions fail", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_DEBUG) shows ghost blocks when conditions fail", async function (assert) {
       @block("ghost-test-block")
       class GhostTestBlock extends Component {
         <template>
@@ -334,7 +331,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       let ghostBlockReceived = false;
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
         if (!blockData.conditionsPassed) {
           ghostBlockReceived = true;
           return {
@@ -368,7 +365,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.dom(".ghost-indicator").exists("ghost indicator rendered");
     });
 
-    test("setDebugCallback(BLOCK_DEBUG) can be cleared by setting to null", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_DEBUG) can be cleared by setting to null", async function (assert) {
       @block("clear-callback-block")
       class ClearCallbackBlock extends Component {
         <template>
@@ -377,12 +374,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       let callCount = 0;
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, () => {
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, () => {
         callCount++;
         return null;
       });
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
 
       withTestBlockRegistration(() => _registerBlock(ClearCallbackBlock));
       renderBlocks(
@@ -397,7 +394,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.dom(".clear-content").exists("block still renders");
     });
 
-    test("setDebugCallback(BLOCK_DEBUG) receives correct hierarchy for direct children", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_DEBUG) receives correct hierarchy for direct children", async function (assert) {
       @block("direct-child-block")
       class DirectChildBlock extends Component {
         <template>
@@ -407,13 +404,16 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       const receivedContexts = [];
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
-        receivedContexts.push({
-          name: blockData.name,
-          outletName: context.outletName,
-        });
-        return { Component: blockData.Component };
-      });
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.BLOCK_DEBUG,
+        (blockData, context) => {
+          receivedContexts.push({
+            name: blockData.name,
+            outletName: context.outletName,
+          });
+          return { Component: blockData.Component };
+        }
+      );
 
       withTestBlockRegistration(() => _registerBlock(DirectChildBlock));
       renderBlocks(
@@ -439,7 +439,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
     });
 
-    test("setDebugCallback(BLOCK_DEBUG) receives correct hierarchy for children of container blocks", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_DEBUG) receives correct hierarchy for children of container blocks", async function (assert) {
       @block("nested-child-block")
       class NestedChildBlock extends Component {
         <template>
@@ -449,13 +449,16 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       const receivedContexts = [];
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
-        receivedContexts.push({
-          name: blockData.name,
-          outletName: context?.outletName,
-        });
-        return { Component: blockData.Component };
-      });
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.BLOCK_DEBUG,
+        (blockData, context) => {
+          receivedContexts.push({
+            name: blockData.name,
+            outletName: context?.outletName,
+          });
+          return { Component: blockData.Component };
+        }
+      );
 
       withTestBlockRegistration(() => _registerBlock(NestedChildBlock));
       renderBlocks(
@@ -490,7 +493,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
     });
 
-    test("setDebugCallback(BLOCK_DEBUG) receives correct hierarchy for deeply nested children", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_DEBUG) receives correct hierarchy for deeply nested children", async function (assert) {
       @block("deep-nested-block")
       class DeepNestedBlock extends Component {
         <template>
@@ -500,13 +503,16 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       const receivedContexts = [];
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
-        receivedContexts.push({
-          name: blockData.name,
-          outletName: context?.outletName,
-        });
-        return { Component: blockData.Component };
-      });
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.BLOCK_DEBUG,
+        (blockData, context) => {
+          receivedContexts.push({
+            name: blockData.name,
+            outletName: context?.outletName,
+          });
+          return { Component: blockData.Component };
+        }
+      );
 
       withTestBlockRegistration(() => _registerBlock(DeepNestedBlock));
       renderBlocks(
@@ -557,7 +563,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
     });
 
-    test("setDebugCallback(BLOCK_DEBUG) includes index for multiple containers at same level", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_DEBUG) includes index for multiple containers at same level", async function (assert) {
       @block("multi-container-child")
       class MultiContainerChild extends Component {
         <template>
@@ -567,13 +573,16 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       const receivedContexts = [];
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
-        receivedContexts.push({
-          name: blockData.name,
-          outletName: context?.outletName,
-        });
-        return { Component: blockData.Component };
-      });
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.BLOCK_DEBUG,
+        (blockData, context) => {
+          receivedContexts.push({
+            name: blockData.name,
+            outletName: context?.outletName,
+          });
+          return { Component: blockData.Component };
+        }
+      );
 
       withTestBlockRegistration(() => _registerBlock(MultiContainerChild));
       renderBlocks(
@@ -626,21 +635,24 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
-        // Wrap with a component that displays the hierarchy, simulating BlockInfo
-        const debugLocation = context?.outletName;
-        return {
-          Component: <template>
-            <div
-              class="debug-wrapper"
-              data-block-name={{blockData.name}}
-              data-debug-location={{debugLocation}}
-            >
-              <blockData.Component />
-            </div>
-          </template>,
-        };
-      });
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.BLOCK_DEBUG,
+        (blockData, context) => {
+          // Wrap with a component that displays the hierarchy, simulating BlockInfo
+          const debugLocation = context?.outletName;
+          return {
+            Component: <template>
+              <div
+                class="debug-wrapper"
+                data-block-name={{blockData.name}}
+                data-debug-location={{debugLocation}}
+              >
+                <blockData.Component />
+              </div>
+            </template>,
+          };
+        }
+      );
 
       withTestBlockRegistration(() => _registerBlock(HierarchyDisplayBlock));
       renderBlocks(
@@ -682,7 +694,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
   });
 
   module("logging callbacks", function () {
-    test("setDebugCallback(BLOCK_LOGGING) enables console logging when returns true", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_LOGGING) enables console logging when returns true", async function (assert) {
       @block("logging-test-block")
       class LoggingTestBlock extends Component {
         <template>
@@ -692,13 +704,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       const consoleStub = sinon.stub(console, "groupCollapsed");
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => true);
       // Set up the start group callback to call console.groupCollapsed
       // This is what dev-tools does when loaded
-      setDebugCallback(DEBUG_CALLBACK.START_GROUP, () => {
-        // eslint-disable-next-line no-console
-        console.groupCollapsed("[Blocks] test");
-      });
+      debugHooks.setCallback(DEBUG_CALLBACK.START_GROUP, () => {});
 
       withTestBlockRegistration(() => _registerBlock(LoggingTestBlock));
       renderBlocks(
@@ -718,10 +727,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert.true(consoleStub.called, "console logging was enabled");
       consoleStub.restore();
-      setDebugCallback(DEBUG_CALLBACK.START_GROUP, null);
+      debugHooks.setCallback(DEBUG_CALLBACK.START_GROUP, null);
     });
 
-    test("setDebugCallback(BLOCK_LOGGING) disables logging when returns false", async function (assert) {
+    test("debugHooks.setCallback(BLOCK_LOGGING) disables logging when returns false", async function (assert) {
       @block("no-logging-block")
       class NoLoggingBlock extends Component {
         <template>
@@ -731,7 +740,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       const consoleStub = sinon.stub(console, "groupCollapsed");
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => false);
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => false);
 
       withTestBlockRegistration(() => _registerBlock(NoLoggingBlock));
       renderBlocks(
@@ -753,7 +762,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
   });
 
   module("outlet boundary callbacks", function () {
-    test("setDebugCallback(OUTLET_BOUNDARY) shows boundary when returns true", async function (assert) {
+    test("debugHooks.setCallback(OUTLET_BOUNDARY) shows boundary when returns true", async function (assert) {
       @block("boundary-test-block")
       class BoundaryTestBlock extends Component {
         <template>
@@ -761,7 +770,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      setDebugCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => true);
 
       withTestBlockRegistration(() => _registerBlock(BoundaryTestBlock));
       renderBlocks(
@@ -779,7 +788,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.dom(".boundary-content").exists("content still renders");
     });
 
-    test("setDebugCallback(OUTLET_BOUNDARY) hides boundary when returns false", async function (assert) {
+    test("debugHooks.setCallback(OUTLET_BOUNDARY) hides boundary when returns false", async function (assert) {
       @block("no-boundary-block")
       class NoBoundaryBlock extends Component {
         <template>
@@ -787,7 +796,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      setDebugCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => false);
+      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => false);
 
       withTestBlockRegistration(() => _registerBlock(NoBoundaryBlock));
       renderBlocks(
@@ -804,7 +813,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.dom(".no-boundary-content").exists("content renders normally");
     });
 
-    test("setDebugCallback(OUTLET_BOUNDARY) can be cleared by setting to null", async function (assert) {
+    test("debugHooks.setCallback(OUTLET_BOUNDARY) can be cleared by setting to null", async function (assert) {
       @block("boundary-clear-block")
       class BoundaryClearBlock extends Component {
         <template>
@@ -812,8 +821,8 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      setDebugCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => true);
-      setDebugCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, null);
+      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, null);
 
       withTestBlockRegistration(() => _registerBlock(BoundaryClearBlock));
       renderBlocks(
@@ -1312,17 +1321,23 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       let ghostBlockData = null;
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
-        if (blockData.optionalMissing) {
-          ghostBlockData = { ...blockData, context };
-          return {
-            Component: <template>
-              <div class="ghost-block" data-name={{blockData.name}}>Ghost</div>
-            </template>,
-          };
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.BLOCK_DEBUG,
+        (blockData, context) => {
+          if (blockData.optionalMissing) {
+            ghostBlockData = { ...blockData, context };
+            return {
+              Component: <template>
+                <div
+                  class="ghost-block"
+                  data-name={{blockData.name}}
+                >Ghost</div>
+              </template>,
+            };
+          }
+          return { Component: blockData.Component };
         }
-        return { Component: blockData.Component };
-      });
+      );
 
       withTestBlockRegistration(() => _registerBlock(GhostTestBlock));
 
@@ -1589,10 +1604,13 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
     test("debug callback receives outletArgs in context", async function (assert) {
       let receivedContext = null;
 
-      setDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
-        receivedContext = context;
-        return { Component: blockData.Component };
-      });
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.BLOCK_DEBUG,
+        (blockData, context) => {
+          receivedContext = context;
+          return { Component: blockData.Component };
+        }
+      );
 
       @block("debug-outlet-args-block")
       class DebugOutletArgsBlock extends Component {
