@@ -16,10 +16,10 @@ module DiscourseAi
         def self.signature
           {
             name: name,
-            description: "Flags the current post for review when verdict is true.",
+            description: "Flags the current post for review when flag_post is true.",
             parameters: [
               {
-                name: "verdict",
+                name: "flag_post",
                 description: "Whether the post should be flagged",
                 type: "boolean",
                 required: true,
@@ -42,8 +42,8 @@ module DiscourseAi
           "flag_post"
         end
 
-        def verdict
-          !!parameters[:verdict]
+        def flag_post
+          !!parameters[:flag_post]
         end
 
         def reason
@@ -64,7 +64,7 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.flag_post.errors.invalid_flag_type"))
           end
 
-          if !verdict
+          if !flag_post
             return { status: "skipped", message: I18n.t("discourse_ai.ai_bot.flag_post.skipped") }
           end
 
@@ -132,7 +132,7 @@ module DiscourseAi
         end
 
         def description_args
-          { post_id: post&.id, verdict: verdict, flag_type: flag_type }
+          { post_id: post&.id, flag_post:, flag_type: }
         end
 
         private

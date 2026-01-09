@@ -102,7 +102,7 @@ describe DiscourseAi::Automation::LlmTriage do
       DiscourseAi::Completions::ToolCall.new(
         name: "flag_post",
         parameters: {
-          verdict: true,
+          flag_post: true,
           reason: "Looks unsafe",
         },
         id: "tool_call_1",

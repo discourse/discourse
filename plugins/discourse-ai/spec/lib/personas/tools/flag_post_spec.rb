@@ -24,10 +24,10 @@ RSpec.describe DiscourseAi::Personas::Tools::FlagPost do
 
   let(:context) { DiscourseAi::Personas::BotContext.new(post: post) }
 
-  it "flags the post when verdict is true" do
+  it "flags the post when flag_post is true" do
     result = nil
 
-    expect { result = tool(verdict: true, reason: "Clear spam").invoke }.to change {
+    expect { result = tool(flag_post: true, reason: "Clear spam").invoke }.to change {
       ReviewablePost.count
     }.by(1)
 
@@ -42,10 +42,10 @@ RSpec.describe DiscourseAi::Personas::Tools::FlagPost do
     expect(score.reason).to include("Clear spam")
   end
 
-  it "skips when verdict is false" do
+  it "skips when flag_post is false" do
     result = nil
 
-    expect { result = tool(verdict: false, reason: "Does not matter").invoke }.not_to change {
+    expect { result = tool(flag_post: false, reason: "Does not matter").invoke }.not_to change {
       ReviewablePost.count
     }
 
@@ -63,7 +63,7 @@ RSpec.describe DiscourseAi::Personas::Tools::FlagPost do
 
     result = nil
 
-    expect { result = tool(verdict: true, reason: "Duplicate flag").invoke }.not_to change {
+    expect { result = tool(flag_post: true, reason: "Duplicate flag").invoke }.not_to change {
       ReviewableScore.count
     }
 
@@ -71,7 +71,7 @@ RSpec.describe DiscourseAi::Personas::Tools::FlagPost do
   end
 
   it "returns an error when reason is blank" do
-    result = tool(verdict: true, reason: " ").invoke
+    result = tool(flag_post: true, reason: " ").invoke
 
     expect(result[:status]).to eq("error")
   end
@@ -79,7 +79,7 @@ RSpec.describe DiscourseAi::Personas::Tools::FlagPost do
   it "applies the configured flag_type option" do
     result =
       tool(
-        { verdict: true, reason: "Needs review" },
+        { flag_post: true, reason: "Needs review" },
         persona_options: {
           flag_type: "review_hide",
         },
