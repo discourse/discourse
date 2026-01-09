@@ -81,29 +81,71 @@ de:
         chat_usage:
           title: Chat-Aktivität
           total_messages: Nachrichten gesamt
+          avg_message_length: Ø Nachrichtenlänge
           messages: Nachrichten
           author: Du
           author_others: "%{username}"
           status_online: "● online"
+          reply_2: "cOo0oL :D"
+          message_5: "Deine Lieblingskanäle:"
+          message_5_others: "Die Lieblingskanäle:"
+          dancing_baby_alt: "Tanzendes Baby"
+        favorite_gifs:
+          title:
+            one: Dein Lieblings-GIF
+            other: Deine %{count} Lieblings-GIFs
+          title_others:
+            one: "Das Lieblings-GIF von %{username}"
+            other: "Die %{count} Lieblings-GIFs von %{username}"
+          total_usage:
+            one: '%{count} mal benutzt'
+            other: Insgesamt %{count} mal benutzt
         invites:
           title: Einladungen
+          total_invites: Anzahl der versendeten Einladungen
+          redeemed: Angenommene Einladungen
+          redemption_rate: Annahmequote
+          avg_trust_level: Ø Vertrauensstufe
+          invitee_impact: Auswirkungen deiner Einladungen
+          invitee_impact_others: Auswirkungen der Einladungen
           invitee_posts: Erstellte Beiträge
+          invitee_topics: Erstellte Themen
           invitee_likes: Abgegebene „Gefällt mir“
+          most_active_invitee: Aktivster Einladender
+          guest_book_title: Gästebuch
+          guest_book_subtitle: Deine Community Einladungen
+          guest_book_subtitle_others: "Community-Einladungen von %{username}"
           label_invitations_sent: "Einladungen gesendet:"
+          label_guests_joined: "Angenommene Einladungen:"
           label_acceptance_rate: "Annahmequote:"
+          section_contributions: Beiträge von Eingeladenen
           label_posts_written: "Verfasste Beiträge:"
           label_topics_started: "Erstellte Themen:"
           label_likes_given: "Abgegebene „Gefällt mir“"
+          section_most_active: Aktivster Gast
         new_user_interactions:
+          title: Betreuung neuer Benutzer
           subtitle:
             one: Du hast dieses Jahr einem neuen Benutzer geholfen
             other: Du hast dieses Jahr %{count} neuen Benutzern geholfen
           subtitle_others:
             one: "%{username} hat einem neuen Benutzer in diesem Jahr geholfen"
             other: "%{username} hat %{count} neuen Benutzern in diesem Jahr geholfen"
+          new_member:
+            one: "%{count} neuen Mitglied geholfen"
+            other: "%{count} neuen Mitgliedern geholfen"
+          total_interactions: Interaktionen insgesamt
+          unique_new_users: Einzigartige neue Benutzer
           likes_given: Abgegebene „Gefällt mir“
+          replies: Antworten auf Beiträge
           mentions: Erwähnungen
+          topics_with_new_users: Themen mit neuen Benutzern
+          contributions_helped: Deine Beiträge haben
+          contributions_helped_others: Die Beiträge haben
         time_of_day_activity:
+          title: Täglicher Aktivitätsrhythmus
+          play_button: Spiele deine Aktivität als Ton ab
+          play_button_others: Spielt die Aktivität als Ton ab
           stop_button: Audiowiedergabe stoppen
         writing_analysis:
           title: Textanalyse

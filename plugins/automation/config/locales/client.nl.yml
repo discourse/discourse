@@ -59,8 +59,6 @@ nl:
             label: Inhoud
           delay:
             label: Vertraging (minuten)
-          prefers_encrypt:
-            label: Versleutelt PB indien beschikbaar
         group:
           label: Groep
         text:

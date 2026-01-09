@@ -59,8 +59,6 @@ tr_TR:
             label: Gövde
           delay:
             label: Gecikme (dakika)
-          prefers_encrypt:
-            label: Mümkünse kişisel mesajı şifreler
         group:
           label: Grup
         text:
