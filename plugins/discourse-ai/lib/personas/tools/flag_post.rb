@@ -132,7 +132,7 @@ module DiscourseAi
         end
 
         def description_args
-          { post_id: post&.id, flag_post: flag_post, flag_type: flag_type }
+          { post_id: post&.id, flag_post:, flag_type: }
         end
 
         private
