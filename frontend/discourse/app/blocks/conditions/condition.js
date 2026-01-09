@@ -1,4 +1,7 @@
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import {
+  BlockValidationError,
+  raiseBlockError,
+} from "discourse/lib/blocks/error";
 import { getByPath } from "discourse/lib/blocks/path-resolver";
 
 /**
@@ -97,16 +100,17 @@ export class BlockCondition {
    * or invalid values.
    *
    * Note: Base class validation for `source` parameter is handled automatically
-   * via `validateSource()`. Subclasses should call `super.validate(args)` if
+   * via `validateSource()`. Subclasses should call `super.validate(args, path)` if
    * they override this method.
    *
    * @param {Object} args - The condition arguments from the block config.
+   * @param {string} [path] - The path to this condition in the config (for error messages).
    * @throws {BlockError} If validation fails.
    */
 
-  validate(args) {
+  validate(args, path) {
     // Validate source parameter based on sourceType
-    this.validateSource(args);
+    this.validateSource(args, path);
   }
 
   /**
@@ -117,9 +121,10 @@ export class BlockCondition {
    * - `sourceType: "object"`: Validates `source` is an object if provided
    *
    * @param {Object} args - The condition arguments from the block config.
+   * @param {string} [path] - The path to this condition in the config (for error messages).
    * @throws {BlockError} If source validation fails.
    */
-  validateSource(args) {
+  validateSource(args, path) {
     const { source } = args;
     const sourceType = this.constructor.sourceType;
 
@@ -127,31 +132,37 @@ export class BlockCondition {
       return; // source is always optional
     }
 
+    const sourcePath = path ? `${path}.source` : undefined;
+
     switch (sourceType) {
       case "none":
-        raiseBlockError(
-          `${this.constructor.name}: \`source\` parameter is not supported for this condition type.`
+        raiseBlockValidationError(
+          `${this.constructor.name}: \`source\` parameter is not supported for this condition type.`,
+          sourcePath
         );
         break;
 
       case "outletArgs":
         if (typeof source !== "string") {
-          raiseBlockError(
-            `${this.constructor.name}: \`source\` must be a string in format "@outletArgs.propertyName".`
+          raiseBlockValidationError(
+            `${this.constructor.name}: \`source\` must be a string in format "@outletArgs.propertyName".`,
+            sourcePath
           );
         }
         if (!OUTLET_ARGS_SOURCE_PATTERN.test(source)) {
-          raiseBlockError(
+          raiseBlockValidationError(
             `${this.constructor.name}: \`source\` must be in format "@outletArgs.propertyName", ` +
-              `got "${source}".`
+              `got "${source}".`,
+            sourcePath
           );
         }
         break;
 
       case "object":
         if (source !== null && typeof source !== "object") {
-          raiseBlockError(
-            `${this.constructor.name}: \`source\` must be an object.`
+          raiseBlockValidationError(
+            `${this.constructor.name}: \`source\` must be an object.`,
+            sourcePath
           );
         }
         break;
@@ -236,13 +247,18 @@ export class BlockCondition {
 /**
  * Raises a block validation error.
  *
- * In development/test environments, throws a `BlockError`.
- * In production, dispatches a `discourse-error` event that surfaces the error
- * to admin users via a banner (handled by `ClientErrorHandlerService`).
+ * When a `path` is provided, throws a `BlockValidationError` which gets caught
+ * by the condition validation system and formatted with the error location marker.
+ * Without a path, falls back to `raiseBlockError`.
  *
  * @param {string} message - The error message describing the validation failure.
- * @throws {BlockError} In development/test environments.
+ * @param {string} [path] - Optional path within the condition config (e.g., "params.categoryId").
+ * @throws {BlockValidationError} When path is provided.
+ * @throws {BlockError} When path is not provided.
  */
-export function raiseBlockValidationError(message) {
+export function raiseBlockValidationError(message, path) {
+  if (path) {
+    throw new BlockValidationError(message, path);
+  }
   raiseBlockError(message);
 }

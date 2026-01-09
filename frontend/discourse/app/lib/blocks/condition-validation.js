@@ -177,6 +177,6 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
   // Validate arg keys (catches typos like "querParams" instead of "queryParams")
   validateConditionArgKeys(conditionInstance, type, args, path);
 
-  // Run the condition's own validation
-  conditionInstance.validate(args);
+  // Run the condition's own validation, passing the path for error location markers
+  conditionInstance.validate(args, path);
 }
