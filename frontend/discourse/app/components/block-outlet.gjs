@@ -847,8 +847,8 @@ export default class BlockOutlet extends Component {
     /* Block configs are validated asynchronously. TrackedAsyncData lets us wait
        for validation to complete before rendering blocks, while also exposing
        any validation errors to the debug overlay. */
-    return new TrackedAsyncData(
-      this.validatedConfig.then((rawChildren) => {
+    const promiseWithLogging = this.validatedConfig
+      .then((rawChildren) => {
         if (!rawChildren.length) {
           return;
         }
@@ -941,7 +941,14 @@ export default class BlockOutlet extends Component {
 
         return result;
       })
-    );
+      .catch((error) => {
+        // Log validation errors to console since TrackedAsyncData catches them
+        // eslint-disable-next-line no-console
+        console.error(error);
+        throw error;
+      });
+
+    return new TrackedAsyncData(promiseWithLogging);
   }
 
   /**
