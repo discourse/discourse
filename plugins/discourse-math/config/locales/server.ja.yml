@@ -8,6 +8,3 @@ ja:
   site_settings:
     discourse_math_enabled: "Discourse Math プラグインを有効化する（$ と $$ ブロックに特別な処理を追加します）"
     discourse_math_provider: "デフォルトの数学レンダリングプロバイダー"
-    discourse_math_zoom_on_hover: "ホバー時に 200% ズーム（MathJax のみ）"
-    discourse_math_enable_accessibility: "アクセシビリティ機能を有効にする（MathJax のみ）"
-    discourse_math_enable_asciimath: "asciimath を有効にする（% 区切りの入力に特別な処理を追加します）（MathJax のみ）"

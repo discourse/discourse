@@ -59,8 +59,6 @@ it:
             label: Corpo
           delay:
             label: Ritardo (minuti)
-          prefers_encrypt:
-            label: Applica crittografia ai MP se disponibile
         group:
           label: Gruppo
         text:

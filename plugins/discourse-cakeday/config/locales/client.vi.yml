@@ -10,7 +10,7 @@ vi:
       date_of_birth:
         user_title: "Hôm nay là sinh nhật của bạn! "
         title: "Hôm nay là sinh nhật của tôi!"
-        label: "Ngày sinh nhật"
+        label: "Sinh nhật"
       anniversary:
         user_title: "Hôm nay là ngày kỷ niệm bạn gia nhập cộng đồng của chúng tôi!"
         title: "Hôm nay là ngày kỷ niệm tôi gia nhập cộng đồng này!"
@@ -24,3 +24,5 @@ vi:
       month:
         title: "Sinh nhật trong tháng của"
         empty: "Không có thành viên nào có sinh nhật tháng này."
+    anniversaries:
+      title: "Kỷ niệm"

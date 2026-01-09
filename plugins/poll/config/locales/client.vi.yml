@@ -12,7 +12,7 @@ vi:
       total_votes:
         other: "tổng số bình chọn"
       votes:
-        other: "%{count} phiếu bầu"
+        other: "%{count} vốt"
       average_rating: "Trung bình: <strong>%{average}</strong>."
       public:
         title: "Bình chọn <strong>công khai</strong>"
@@ -40,7 +40,7 @@ vi:
         age: "Đã đóng <strong>%{age}</strong>"
       breakdown:
         title: "Kết quả thăm dò ý kiến"
-        votes: "%{count} phiếu bầu"
+        votes: "%{count} vốt"
         percentage: "Phần trăm"
         count: "Đếm"
       ranked_choice:

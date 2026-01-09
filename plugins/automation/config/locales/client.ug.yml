@@ -59,8 +59,6 @@ ug:
             label: مەزمۇن
           delay:
             label: كېچىكىش (مىنۇت)
-          prefers_encrypt:
-            label: ئەگەر ئىشلەتكىلى بولسا شەخسىي ئۇچۇرنى شىفىرلايدۇ
         group:
           label: گۇرۇپپا
         text:

@@ -59,8 +59,6 @@ de:
             label: Hauptteil
           delay:
             label: Verzögerung (Minuten)
-          prefers_encrypt:
-            label: Verschlüsselt PN, falls verfügbar
         group:
           label: Gruppe
         text:

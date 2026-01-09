@@ -10,5 +10,6 @@ vi:
       name: Cảm Xúc Đầu Tiên
   reports:
     reactions:
+      title: "Cảm xúc"
       labels:
         day: "Ngày"

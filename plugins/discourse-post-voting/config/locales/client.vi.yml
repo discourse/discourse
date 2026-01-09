@@ -8,6 +8,9 @@ vi:
   js:
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
+    last_answer_lowercase: Trả lời cuối
+    answer_lowercase:
+      other: Trả lời
     post_voting:
       post:
         post_voting_comment:

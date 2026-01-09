@@ -59,8 +59,6 @@ fr:
             label: Corps
           delay:
             label: Délai (minutes)
-          prefers_encrypt:
-            label: Chiffrer le MP si disponible
         group:
           label: Groupe
         text:

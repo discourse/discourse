@@ -59,8 +59,6 @@ es:
             label: Cuerpo
           delay:
             label: Retardo (en minutos)
-          prefers_encrypt:
-            label: Cifra el MP cuando sea posible
         group:
           label: Grupo
         text:

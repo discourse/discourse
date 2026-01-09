@@ -2636,6 +2636,7 @@ pl_PL:
     content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i wpisów poprzez menu wpisów."
     enable_upcoming_changes: "Włącz nadchodzące zmiany"
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
+    floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     experimental_rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
@@ -3296,6 +3297,7 @@ pl_PL:
     contents_hidden: "Proszę przejść do wpisu, aby wyświetlić jego zawartość."
     post_hidden:
       title: "Ukryty wpis"
+      preview: "Wpis został ukryty z powodu flag zgłoszonych przez członków społeczności."
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
       text_body_template: |
         Witaj!
@@ -3357,6 +3359,7 @@ pl_PL:
         Moderatorzy %{site_name}
     post_hidden_again:
       title: "Post ukryty ponownie"
+      preview: "Wpis został ponownie ukryty przez członków społeczności."
       subject_template: "Wpis ukryty przez społeczność, powiadomiono personel"
       text_body_template: |
         Witaj!
@@ -3844,6 +3847,7 @@ pl_PL:
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Zbyt wiele spamowych flag."
+      preview: "Wpisy tymczasowo ukryte ze względu na flagi spamu."
       subject_template: "Nowe konto zawieszone"
       text_body_template: |
         Witaj!
@@ -3866,6 +3870,7 @@ pl_PL:
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Wyciszony przez personel"
+      preview: "Konto zostało tymczasowo zawieszone."
       subject_template: "Konto tymczasowo zawieszone"
       text_body_template: |
         Witaj!
@@ -4077,6 +4082,7 @@ pl_PL:
         %{respond_instructions}
     user_replied:
       title: "Użytkownik odpowiedział"
+      preview: "Ktoś odpowiedział na Twój wpis."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4099,6 +4105,7 @@ pl_PL:
         %{respond_instructions}
     user_quoted:
       title: "Użytkownik zacytował"
+      preview: "Ktoś zacytował Cię we wpisie."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4110,6 +4117,7 @@ pl_PL:
         %{respond_instructions}
     user_linked:
       title: "Użytkownik podał link"
+      preview: "Wpis powiązany z innym tematem."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4121,6 +4129,7 @@ pl_PL:
         %{respond_instructions}
     user_mentioned:
       title: "Użytkownik Wspomniany"
+      preview: "Ktoś wspomniał o Tobie we wpisie."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4176,6 +4185,7 @@ pl_PL:
         %{respond_instructions}
     user_posted:
       title: "Użytkownik Opublikował"
+      preview: "Ktoś odpowiedział na temat, który obserwujesz."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4209,6 +4219,7 @@ pl_PL:
         %{respond_instructions}
     user_posted_pm:
       title: "Użytkownik opublikował PW"
+      preview: "Ktoś wysłał Ci wiadomość prywatną."
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4303,6 +4314,7 @@ pl_PL:
       preheader: "Krótkie podsumowanie od %{since}"
     forgot_password:
       title: "Zapomniane hasło"
+      preview: "Zresetuj swoje hasło."
       subject_template: "[%{email_prefix}] Reset hasła"
       text_body_template: |
         Ktoś poprosił o zresetowanie Twojego hasła na [%{site_name}](%{base_url}).
@@ -4324,6 +4336,7 @@ pl_PL:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Ustaw hasło"
+      preview: "Ustaw hasło do konta."
       subject_template: "[%{email_prefix}] Ustaw hasło"
       text_body_template: |
         Ktoś poprosił o dodanie hasła do twojego konta [%{site_name}](%{base_url}). Możesz się zalogować przy pomocy konta w i innym serwisie (Google, Facebook, itd.) które zostało powiązane z twoim potwierdzonym adresem email.
@@ -4334,6 +4347,7 @@ pl_PL:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Logowanie administratora. "
+      preview: "Wymagane zalogowanie administratora."
       subject_template: "[%{email_prefix}] Login"
       text_body_template: |
         Ktoś poprosił o zalogowanie się na Twoje konto na [%{site_name}] (%{base_url}).
@@ -4344,6 +4358,7 @@ pl_PL:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Utworzono Konto"
+      preview: "Utworzono dla Ciebie nowe konto."
       subject_template: "[%{email_prefix}] Twoje Nowe Konto"
       text_body_template: |
         Utworzyliśmy Twoje konto na %{site_name}
@@ -4391,6 +4406,7 @@ pl_PL:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Powiadom Stary Email"
+      preview: "Zaktualizowano adres e-mail."
       subject_template: "[%{email_prefix}] Twój adres email został zmieniony"
       text_body_template: |
         To jest wiadomość automatyczna, aby cię poinformować, że twój adres email na stronie %{site_name}został zmieniony. Jeśli działania te zostały dokonane przez przypadek, proszę skontaktować się z administratorem strony.
@@ -4409,6 +4425,7 @@ pl_PL:
         %{new_email}
     signup_after_approval:
       title: "Zarejestruj się po zatwierdzeniu"
+      preview: "Nowe konto zostało zatwierdzone."
       subject_template: "Zostałeś/łaś zaakceptowany na forum %{site_name}!"
       text_body_template: |
         Witamy na %{site_name}!
@@ -4434,6 +4451,7 @@ pl_PL:
         %{reject_reason}
     signup:
       title: "Podpis"
+      preview: "Potwierdź swoje konto."
       subject_template: "[%{email_prefix}] Potwierdź swoje nowe konto"
       text_body_template: |
         Witaj na %{site_name}!
@@ -4454,6 +4472,7 @@ pl_PL:
         Jeśli powyższego łącza nie można kliknąć, spróbuj je skopiować i wkleić w pasku adresu swojej przeglądarki internetowej.
     suspicious_login:
       title: "Alert nowego logowania"
+      preview: "Zweryfikuj swoje urządzenie."
       subject_template: "[%{site_name}] Nowe logowanie z %{location}"
       text_body_template: |
         Witaj!

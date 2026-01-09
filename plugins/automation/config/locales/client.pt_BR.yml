@@ -59,8 +59,6 @@ pt_BR:
             label: Corpo
           delay:
             label: Atraso (minutos)
-          prefers_encrypt:
-            label: Criptografa PM, se disponível
         group:
           label: Grupo
         text:
