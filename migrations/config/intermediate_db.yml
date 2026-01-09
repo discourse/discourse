@@ -407,6 +407,7 @@ schema:
         - "group_tag_notification_defaults"
         - "groups_web_hooks"
         - "ignored_users"
+        - "imap_sync_logs"
         - "incoming_chat_webhooks"
         - "incoming_domains"
         - "incoming_emails"
