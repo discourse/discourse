@@ -5,8 +5,6 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class NotificationsController extends Controller {
-  subpageTitle = i18n("user.preferences_nav.notifications");
-
   likeNotificationFrequencies = [
     { name: i18n("user.like_notification_frequency.always"), value: 0 },
     {
@@ -16,6 +14,10 @@ export default class NotificationsController extends Controller {
     { name: i18n("user.like_notification_frequency.first_time"), value: 2 },
     { name: i18n("user.like_notification_frequency.never"), value: 3 },
   ];
+
+  get subpageTitle() {
+    return i18n("user.preferences_nav.notifications");
+  }
 
   get saveAttrNames() {
     return applyValueTransformer(

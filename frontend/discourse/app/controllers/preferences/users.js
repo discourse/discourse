@@ -15,7 +15,9 @@ export default class UsersController extends Controller {
   )
   allowPmUsersEnabled;
 
-  subpageTitle = i18n("user.preferences_nav.users");
+  get subpageTitle() {
+    return i18n("user.preferences_nav.users");
+  }
 
   get saveAttrNames() {
     return applyValueTransformer(

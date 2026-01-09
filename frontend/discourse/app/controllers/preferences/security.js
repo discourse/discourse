@@ -26,11 +26,14 @@ export default class SecurityController extends Controller {
   @setting("moderators_view_emails") canModeratorsViewEmails;
 
   passwordProgress = null;
-  subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;
 
   @gt("model.user_auth_tokens.length", DEFAULT_AUTH_TOKENS_COUNT)
   canShowAllAuthTokens;
+
+  get subpageTitle() {
+    return i18n("user.preferences_nav.security");
+  }
 
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {

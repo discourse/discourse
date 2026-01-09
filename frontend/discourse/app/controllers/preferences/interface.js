@@ -50,7 +50,10 @@ export default class InterfaceController extends Controller {
 
   @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
   @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
-  subpageTitle = i18n("user.preferences_nav.interface");
+
+  get subpageTitle() {
+    return i18n("user.preferences_nav.interface");
+  }
 
   @discourseComputed("makeThemeDefault")
   saveAttrNames(makeThemeDefault) {

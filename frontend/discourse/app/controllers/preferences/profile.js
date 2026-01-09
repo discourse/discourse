@@ -14,12 +14,14 @@ export default class ProfileController extends Controller {
   @service dialog;
   @service modal;
 
-  subpageTitle = i18n("user.preferences_nav.profile");
-
   @readOnly("model.can_change_bio") canChangeBio;
+
   @readOnly("model.can_change_location") canChangeLocation;
+
   @readOnly("model.can_change_website") canChangeWebsite;
+
   @readOnly("model.can_upload_profile_header") canUploadProfileHeader;
+
   @readOnly("model.can_upload_user_card_background")
   canUploadUserCardBackground;
 
@@ -27,6 +29,10 @@ export default class ProfileController extends Controller {
     { name: i18n("download_calendar.google"), value: "google" },
     { name: i18n("download_calendar.ics"), value: "ics" },
   ];
+
+  get subpageTitle() {
+    return i18n("user.preferences_nav.profile");
+  }
 
   get saveAttrNames() {
     return applyValueTransformer(
