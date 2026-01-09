@@ -111,13 +111,15 @@ RSpec.describe BadgeGranter do
   describe "preview" do
     it "can correctly preview" do
       Fabricate(:user, email: "sam@gmail.com")
-      result =
-        BadgeGranter.preview(
-          'select u.id user_id, null post_id, u.created_at granted_at from users u
-                                     join user_emails ue on ue.user_id = u.id AND ue.primary
-                                     where ue.email like \'%gmail.com\'',
-          explain: true,
-        )
+
+      sql = <<~SQL
+        SELECT u.id user_id, null post_id, u.created_at granted_at
+        FROM users u
+        JOIN user_emails ue ON ue.user_id = u.id AND ue.primary
+        WHERE ue.email like '%gmail.com'
+      SQL
+
+      result = BadgeGranter.preview(sql, explain: true)
 
       expect(result[:grant_count]).to eq(1)
       expect(result[:query_plan]).to be_present
@@ -186,7 +188,7 @@ RSpec.describe BadgeGranter do
       name_english = nice_topic.name
 
       user = Fabricate(:user, locale: "fr")
-      post = Fabricate(:post, like_count: 10, user: user)
+      post = Fabricate(:post, like_count: 10, user:)
 
       BadgeGranter.backfill(nice_topic)
 
@@ -207,7 +209,7 @@ RSpec.describe BadgeGranter do
       PostActionCreator.like(user, post)
 
       expect { BadgeGranter.backfill(Badge.find(Badge::FirstLike)) }.to_not change {
-        Notification.where(user_id: user.id).count
+        Notification.where(user:).count
       }
     end
 
@@ -222,7 +224,7 @@ RSpec.describe BadgeGranter do
 
         BadgeGranter.backfill(Badge.find(Badge::NiceShare))
 
-        expect(UserBadge.where(user_id: user.id, badge_id: Badge::NiceShare).count).to eq(1)
+        expect(UserBadge.where(user:, badge_id: Badge::NiceShare).count).to eq(1)
       end
 
       it "does not grant nice share badge when duplicates on IP address exists" do
@@ -238,7 +240,7 @@ RSpec.describe BadgeGranter do
 
         BadgeGranter.backfill(Badge.find(Badge::NiceShare))
 
-        expect(UserBadge.where(user_id: user.id, badge_id: Badge::NiceShare).count).to eq(0)
+        expect(UserBadge.where(user:, badge_id: Badge::NiceShare).count).to eq(0)
       end
 
       it "does not grant nice share badge when duplicates on current_user_id exists" do
@@ -254,12 +256,11 @@ RSpec.describe BadgeGranter do
 
         BadgeGranter.backfill(Badge.find(Badge::NiceShare))
 
-        expect(UserBadge.where(user_id: user.id, badge_id: Badge::NiceShare).count).to eq(0)
+        expect(UserBadge.where(user:, badge_id: Badge::NiceShare).count).to eq(0)
       end
 
       it "does not grant sharing badges to deleted users" do
-        incoming_links = Fabricate.times(25, :incoming_link, post: post, user: user)
-        user_id = user.id
+        Fabricate.times(25, :incoming_link, post:, user:)
         user.destroy!
 
         nice_share = Badge.find(Badge::NiceShare)
@@ -268,20 +269,20 @@ RSpec.describe BadgeGranter do
         BadgeGranter.backfill(nice_share)
         BadgeGranter.backfill(first_share)
 
-        expect(UserBadge.where(user_id: user_id).count).to eq(0)
+        expect(UserBadge.where(user:).count).to eq(0)
       end
     end
 
     it "auto revokes badges from users when badge is set to auto revoke and user no longer satisfy the badge's query" do
       user.update!(username: "cool_username")
 
-      badge_for_having_cool_username =
-        Fabricate(
-          :badge,
-          query:
-            "SELECT users.id user_id, CURRENT_TIMESTAMP granted_at FROM users WHERE users.username = 'cool_username'",
-          auto_revoke: true,
-        )
+      query = <<~SQL
+        SELECT users.id user_id, CURRENT_TIMESTAMP granted_at
+        FROM users
+        WHERE users.username = 'cool_username'
+      SQL
+
+      badge_for_having_cool_username = Fabricate(:badge, query:, auto_revoke: true)
 
       granted_user_ids = []
 
@@ -292,9 +293,7 @@ RSpec.describe BadgeGranter do
 
       expect(granted_user_ids).to eq([user.id])
 
-      expect(
-        UserBadge.exists?(user_id: user.id, badge_id: badge_for_having_cool_username.id),
-      ).to eq(true)
+      expect(UserBadge.exists?(user:, badge: badge_for_having_cool_username)).to eq(true)
 
       user.update!(username: "not_cool_username")
 
@@ -307,9 +306,66 @@ RSpec.describe BadgeGranter do
 
       expect(revoked_user_ids).to eq([user.id])
 
-      expect(
-        UserBadge.exists?(user_id: user.id, badge_id: badge_for_having_cool_username.id),
-      ).to eq(false)
+      expect(UserBadge.exists?(user:, badge: badge_for_having_cool_username)).to eq(false)
+    end
+
+    it "does not revoke manually granted badges even when user no longer satisfies the query" do
+      query = <<~SQL
+        SELECT users.id user_id, CURRENT_TIMESTAMP granted_at
+        FROM users
+        WHERE users.username = 'cool_username'
+      SQL
+
+      badge_for_having_cool_username = Fabricate(:badge, query:, auto_revoke: true)
+
+      BadgeGranter.grant(badge_for_having_cool_username, user, granted_by: Fabricate(:admin))
+
+      expect(UserBadge.exists?(user:, badge: badge_for_having_cool_username)).to eq(true)
+
+      revoked_user_ids = []
+
+      BadgeGranter.backfill(
+        badge_for_having_cool_username,
+        revoked_callback: ->(user_ids) { revoked_user_ids.concat(user_ids) },
+      )
+
+      expect(revoked_user_ids).to be_empty
+
+      expect(UserBadge.exists?(user:, badge: badge_for_having_cool_username)).to eq(true)
+    end
+
+    it "revokes only auto-granted badges when user has both auto and manual grants of a multiple_grant badge" do
+      user.update!(username: "cool_username")
+
+      query = <<~SQL
+        SELECT users.id user_id, CURRENT_TIMESTAMP granted_at
+        FROM users
+        WHERE users.username = 'cool_username'
+      SQL
+
+      multiple_grant_badge = Fabricate(:badge, multiple_grant: true, query:, auto_revoke: true)
+
+      BadgeGranter.backfill(multiple_grant_badge)
+
+      auto_granted =
+        UserBadge.find_by(
+          user:,
+          badge: multiple_grant_badge,
+          granted_by_id: Discourse::SYSTEM_USER_ID,
+        )
+      expect(auto_granted).to be_present
+
+      manually_granted_badge =
+        BadgeGranter.grant(multiple_grant_badge, user, granted_by: Fabricate(:admin))
+
+      expect(UserBadge.where(user:, badge: multiple_grant_badge).count).to eq(2)
+
+      user.update!(username: "not_cool_username")
+
+      BadgeGranter.backfill(multiple_grant_badge)
+
+      remaining_badges = UserBadge.where(user:, badge: multiple_grant_badge)
+      expect(remaining_badges).to contain_exactly(manually_granted_badge)
     end
   end
 
@@ -320,7 +376,7 @@ RSpec.describe BadgeGranter do
       user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
 
       expect(user_badge.granted_at).to eq_time(1.year.ago)
-      expect(Notification.where(user_id: user.id).count).to eq(0)
+      expect(Notification.where(user:).count).to eq(0)
     end
 
     it "handles deleted badge" do
@@ -343,9 +399,7 @@ RSpec.describe BadgeGranter do
       user.user_option.update!(skip_new_user_tips: true)
       badge = Fabricate(:badge, badge_grouping_id: BadgeGrouping::GettingStarted)
 
-      expect { BadgeGranter.grant(badge, user) }.to_not change {
-        Notification.where(user_id: user.id).count
-      }
+      expect { BadgeGranter.grant(badge, user) }.to_not change { Notification.where(user:).count }
     end
 
     it "notifies about the New User of the Month badge when user skipped new user tips" do
@@ -353,9 +407,7 @@ RSpec.describe BadgeGranter do
       user.user_option.update!(skip_new_user_tips: true)
       badge = Badge.find(Badge::NewUserOfTheMonth)
 
-      expect { BadgeGranter.grant(badge, user) }.to change {
-        Notification.where(user_id: user.id).count
-      }
+      expect { BadgeGranter.grant(badge, user) }.to change { Notification.where(user:).count }
     end
 
     it "grants multiple badges" do
@@ -364,23 +416,24 @@ RSpec.describe BadgeGranter do
       user_badge = BadgeGranter.grant(badge, user)
       expect(user_badge).to be_present
 
-      expect(UserBadge.where(user_id: user.id).count).to eq(2)
+      expect(UserBadge.where(user:).count).to eq(2)
     end
 
     it "updates is_favorite when granting multiple badges" do
       badge = Fabricate(:badge, multiple_grant: true)
-      user_badge =
-        UserBadge.create(
-          badge: badge,
-          user: user,
-          granted_by: Discourse.system_user,
-          granted_at: Time.now,
-          is_favorite: true,
-        )
-      user_badge2 = BadgeGranter.grant(badge, user)
 
-      expect(user_badge2).to be_present
-      expect(user_badge2.reload.is_favorite).to eq(true)
+      UserBadge.create(
+        badge:,
+        user:,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        is_favorite: true,
+      )
+
+      user_badge = BadgeGranter.grant(badge, user)
+
+      expect(user_badge).to be_present
+      expect(user_badge.reload.is_favorite).to eq(true)
     end
 
     it "sets granted_at" do
@@ -434,7 +487,7 @@ RSpec.describe BadgeGranter do
       expect(badge.reload.grant_count).to eq(1)
       StaffActionLogger.any_instance.expects(:log_badge_revoke).with(user_badge)
       BadgeGranter.revoke(user_badge, revoked_by: admin)
-      expect(UserBadge.find_by(user: user, badge: badge)).not_to be_present
+      expect(UserBadge.find_by(user:, badge:)).not_to be_present
       expect(badge.reload.grant_count).to eq(0)
       expect(
         user.notifications.where(notification_type: Notification.types[:granted_badge]),
@@ -467,7 +520,7 @@ RSpec.describe BadgeGranter do
             previous_value: user_badge.user.title,
           )
         BadgeGranter.revoke(user_badge, revoked_by: admin)
-        expect(UserBadge.find_by(user: user, badge: badge)).not_to be_present
+        expect(UserBadge.find_by(user:, badge:)).not_to be_present
         expect(badge.reload.grant_count).to eq(0)
         expect(
           user.notifications.where(notification_type: Notification.types[:granted_badge]),
@@ -484,7 +537,7 @@ RSpec.describe BadgeGranter do
       described_class.grant(badge, user)
       described_class.revoke_all(badge)
 
-      expect(UserBadge.exists?(badge: badge, user: user)).to eq(false)
+      expect(UserBadge.exists?(badge:, user:)).to eq(false)
     end
 
     it "removes titles" do
@@ -530,7 +583,7 @@ RSpec.describe BadgeGranter do
       user.save
 
       BadgeGranter.process_queue!
-      expect(UserBadge.where(user_id: user.id, badge_id: Badge::Autobiographer).count).to eq(1)
+      expect(UserBadge.where(user:, badge_id: Badge::Autobiographer).count).to eq(1)
     end
 
     it "grants read guidelines" do
@@ -538,7 +591,7 @@ RSpec.describe BadgeGranter do
       user.user_stat.save
 
       BadgeGranter.process_queue!
-      expect(UserBadge.where(user_id: user.id, badge_id: Badge::ReadGuidelines).count).to eq(1)
+      expect(UserBadge.where(user:, badge_id: Badge::ReadGuidelines).count).to eq(1)
     end
 
     it "grants first link" do
@@ -554,36 +607,34 @@ RSpec.describe BadgeGranter do
       post = create_post
       user = post.user
 
-      expect(UserBadge.where(user_id: user.id, badge_id: Badge::Editor).count).to eq(0)
+      expect(UserBadge.where(user:, badge_id: Badge::Editor).count).to eq(0)
 
       PostRevisor.new(post).revise!(user, raw: "This is my new test 1235 123")
       BadgeGranter.process_queue!
 
-      expect(UserBadge.where(user_id: user.id, badge_id: Badge::Editor).count).to eq(1)
+      expect(UserBadge.where(user:, badge_id: Badge::Editor).count).to eq(1)
     end
 
     it "grants and revokes trust level badges" do
       user.change_trust_level!(TrustLevel[4])
       BadgeGranter.process_queue!
-      expect(UserBadge.where(user_id: user.id, badge_id: Badge.trust_level_badge_ids).count).to eq(
-        4,
-      )
+      expect(UserBadge.where(user:, badge_id: Badge.trust_level_badge_ids).count).to eq(4)
 
       user.change_trust_level!(TrustLevel[1])
       BadgeGranter.backfill(Badge.find(1))
       BadgeGranter.backfill(Badge.find(2))
-      expect(UserBadge.where(user_id: user.id, badge_id: 1).first).not_to eq(nil)
-      expect(UserBadge.where(user_id: user.id, badge_id: 2).first).to eq(nil)
+      expect(UserBadge.where(user:, badge_id: 1).first).not_to eq(nil)
+      expect(UserBadge.where(user:, badge_id: 2).first).to eq(nil)
     end
 
     it "grants system like badges" do
-      post = create_post(user: user)
+      post = create_post(user:)
       # Welcome badge
       action = PostActionCreator.like(liker, post).post_action
       BadgeGranter.process_queue!
-      expect(UserBadge.find_by(user_id: user.id, badge_id: 5)).not_to eq(nil)
+      expect(UserBadge.find_by(user:, badge_id: 5)).not_to eq(nil)
 
-      post = create_post(topic: post.topic, user: user)
+      post = create_post(topic: post.topic, user:)
       action = PostActionCreator.like(liker, post).post_action
 
       # Nice post badge
@@ -592,30 +643,30 @@ RSpec.describe BadgeGranter do
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
 
-      expect(UserBadge.find_by(user_id: user.id, badge_id: Badge::NicePost)).not_to eq(nil)
-      expect(UserBadge.where(user_id: user.id, badge_id: Badge::NicePost).count).to eq(1)
+      expect(UserBadge.find_by(user:, badge_id: Badge::NicePost)).not_to eq(nil)
+      expect(UserBadge.where(user:, badge_id: Badge::NicePost).count).to eq(1)
 
       # Good post badge
       post.update like_count: 25
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
-      expect(UserBadge.find_by(user_id: user.id, badge_id: Badge::GoodPost)).not_to eq(nil)
+      expect(UserBadge.find_by(user:, badge_id: Badge::GoodPost)).not_to eq(nil)
 
       # Great post badge
       post.update like_count: 50
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
-      expect(UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost)).not_to eq(nil)
+      expect(UserBadge.find_by(user:, badge_id: Badge::GreatPost)).not_to eq(nil)
 
       # Revoke badges on unlike
       post.update like_count: 49
       BadgeGranter.backfill(Badge.find(Badge::GreatPost))
-      expect(UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost)).to eq(nil)
+      expect(UserBadge.find_by(user:, badge_id: Badge::GreatPost)).to eq(nil)
     end
 
     it "triggers the 'user_badge_granted' DiscourseEvent per badge when badges are backfilled" do
-      post = create_post(user: user)
-      action = PostActionCreator.like(liker, post).post_action
+      post = create_post(user:)
+      PostActionCreator.like(liker, post).post_action
 
       events = DiscourseEvent.track_events(:user_badge_granted) { BadgeGranter.process_queue! }
 
@@ -652,12 +703,12 @@ RSpec.describe BadgeGranter do
 
     it "grants the badge to the user as many times as the count argument" do
       BadgeGranter.mass_grant(badge, user, count: 10)
-      sequence = UserBadge.where(badge: badge, user: user).pluck(:seq).sort
-      expect(sequence).to eq((0...10).to_a)
+      sequence = UserBadge.where(badge:, user:).pluck(:seq).sort
+      expect(sequence).to eq [*0...10]
 
       BadgeGranter.mass_grant(badge, user, count: 10)
-      sequence = UserBadge.where(badge: badge, user: user).pluck(:seq).sort
-      expect(sequence).to eq((0...20).to_a)
+      sequence = UserBadge.where(badge:, user:).pluck(:seq).sort
+      expect(sequence).to eq [*0...20]
     end
   end
 
@@ -700,13 +751,13 @@ RSpec.describe BadgeGranter do
         expect(results[:matched_users_count]).to eq(2)
         expect(results[:unmatched_entries_count]).to eq(0)
 
-        sequence = UserBadge.where(user: user, badge: badge).pluck(:seq)
+        sequence = UserBadge.where(user:, badge:).pluck(:seq)
         expect(sequence).to contain_exactly(0)
         # no new badge/notification because user already had the badge
         # before enqueue_mass_grant_for_users was called
         expect(user.reload.notifications.size).to eq(0)
 
-        sequence = UserBadge.where(user: user_without_badge, badge: badge)
+        sequence = UserBadge.where(user: user_without_badge, badge:)
         expect(sequence.pluck(:seq)).to contain_exactly(0)
         notifications = user_without_badge.reload.notifications
         expect(notifications.size).to eq(1)
@@ -736,12 +787,12 @@ RSpec.describe BadgeGranter do
         expect(results[:matched_users_count]).to eq(2)
         expect(results[:unmatched_entries_count]).to eq(0)
 
-        sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
+        sequence = UserBadge.where(user: user_with_badge, badge:).pluck(:seq)
         expect(sequence.size).to eq(40 + 1)
-        expect(sequence.sort).to eq((0...(40 + 1)).to_a)
-        sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
+        expect(sequence.sort).to eq [*0...(40 + 1)]
+        sequence = UserBadge.where(user: user_without_badge, badge:).pluck(:seq)
         expect(sequence.size).to eq(40)
-        expect(sequence.sort).to eq((0...40).to_a)
+        expect(sequence.sort).to eq [*0...40]
 
         # each user gets 1 notification no matter how many times
         # they're repeated in the file.
