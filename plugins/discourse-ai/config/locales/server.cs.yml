@@ -55,12 +55,16 @@ cs:
       topic_not_found: "Souhrn není k dispozici, téma nebylo nalezeno!"
       summarizing: "Vytvářím souhrn tématu"
       tool_summary:
+        github_pull_request_diff: "GitHub pull request diff"
         search: "Vyhledávání"
         tags: "Seznam značek"
         time: "Čas"
         summarize: "Shrnout"
       tool_help:
+        github_pull_request_diff: "Načíst GitHub pull request diff"
         summary: "Shrnout téma"
+      tool_description:
+        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
     embeddings:
       configuration:
         invalid_config: "Vybrali jste neplatnou možnost."

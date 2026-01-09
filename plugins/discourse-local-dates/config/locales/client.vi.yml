@@ -31,6 +31,7 @@ vi:
           format_title: Định dạng ngày
           timezone: Múi giờ
           until: Cho đến khi...
+          current_timezone: "Múi giờ hiện tại:"
           recurring:
             every_day: "Mỗi ngày"
             every_week: "Mỗi tuần"
