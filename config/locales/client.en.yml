@@ -4998,6 +4998,7 @@ en:
         latest: "%{shortcut} Latest"
         new: "%{shortcut} New"
         unread: "%{shortcut} Unread"
+        unseen: "%{shortcut} Unseen"
         categories: "%{shortcut} Categories"
         top: "%{shortcut} Top"
         bookmarks: "%{shortcut} Bookmarks"
