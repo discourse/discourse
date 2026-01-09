@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .ProseMirror-container {
   margin: 0;
   overscroll-behavior: contain;
@@ -15,7 +17,7 @@
 
   > div:first-child,
   > details:first-child {
-    margin-top: 0.5rem;
+    margin-top: var(--space-4);
 
     // This is hacky, but helps having the leading gapcursor at the right position
     &.ProseMirror-gapcursor {
@@ -152,7 +154,13 @@
   }
 
   .html-block {
-    border: 1px dashed var(--primary-low-mid);
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
 
     &::after {
       position: absolute;
@@ -160,8 +168,104 @@
       top: 0;
       content: "HTML";
       font-size: var(--font-down-2-rem);
-      color: var(--primary-low-mid);
+      color: var(--primary-medium);
       z-index: 1;
+      background: var(--secondary-very-high);
+      padding: 0 var(--space-1);
+      border-bottom-left-radius: var(--d-border-radius);
+      border-top-right-radius: var(--d-border-radius);
+    }
+  }
+
+  .composer-image-grid {
+    position: relative;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-half) var(--space-2) 0 var(--space-2);
+    margin-block: var(--space-4);
+
+    &__remove-btn {
+      position: absolute;
+      bottom: var(--space-2);
+      right: var(--space-2);
+      color: var(--primary-medium);
+      padding: var(--space-1) var(--space-2);
+      background: var(--secondary);
+      border: 1px solid var(--primary-low);
+      font-size: var(--font-down-1-rem);
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+
+      @include viewport.until(sm) {
+        padding: var(--space-2) var(--space-4);
+      }
+
+      &:hover {
+        color: var(--primary);
+        background: var(--primary-low);
+      }
+    }
+
+    img:not(.ProseMirror-separator) {
+      @include viewport.until(md) {
+        width: 150px !important;
+        height: 150px !important;
+      }
+
+      @include viewport.from(md) {
+        width: 200px !important;
+        height: 200px !important;
+      }
+      object-fit: cover;
+    }
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
+  }
+
+  .composer-wrap-node {
+    position: relative;
+    white-space: normal;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding-inline: var(--space-2);
+    margin-block: var(--space-4);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
+
+    .d-wrap-indicator {
+      color: var(--primary-medium);
+      background-color: var(--secondary);
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary);
+      }
+
+      &.--inline {
+        font-size: var(--font-down-2);
+        padding: var(--space-half) 0;
+        margin-left: calc(-1 * var(--space-1));
+        margin-right: var(--space-2);
+        vertical-align: text-top;
+        display: inline-block;
+      }
+
+      &.--block {
+        position: absolute;
+        z-index: 1;
+        font-size: var(--font-down-1);
+        left: var(--space-2);
+        top: calc(-1 * var(--space-3) + 1px);
+        padding: 0 var(--space-1);
+      }
     }
   }
 
@@ -194,7 +298,6 @@
 .fk-d-menu[data-identifier="composer-image-alt-text"] {
   user-select: none;
   z-index: z("composer", "dropdown");
-  animation: fade-in ease 0.25s 1 forwards !important;
 
   .fk-d-menu__inner-content {
     overflow: visible;
@@ -375,7 +478,7 @@
 
 // stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: break-spaces;
 }
 
@@ -418,7 +521,8 @@ li.ProseMirror-selectednode::after {
   right: -2px;
   top: -2px;
   bottom: -2px;
-  border: 2px solid #8cf;
+  border: 2px solid var(--tertiary-high);
+  border-radius: var(--d-border-radius);
   pointer-events: none;
 }
 

@@ -62,6 +62,10 @@ module PageObjects
         find("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}").click
       end
 
+      def click_topic_title(topic)
+        find("#{topic_list_item_class(topic)} .raw-topic-link").click
+      end
+
       def visit_topic_with_title(title)
         find("#{TOPIC_LIST_BODY_SELECTOR} a", text: title).click
       end
@@ -84,6 +88,32 @@ module PageObjects
 
       def topic(topic)
         find(topic_list_item_class(topic))
+      end
+
+      def has_topic_tag?(topic, tag_name)
+        page.has_css?(
+          "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
+          text: tag_name,
+        )
+      end
+
+      def has_no_topic_tag?(topic, tag_name)
+        page.has_no_css?(
+          "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
+          text: tag_name,
+        )
+      end
+
+      def has_topic_tags?(topic, *tag_names)
+        tag_names.all? { |name| has_topic_tag?(topic, name) }
+      end
+
+      def has_no_topic_tags?(topic)
+        page.has_no_css?("#{topic_list_item_class(topic)} .discourse-tags .discourse-tag")
+      end
+
+      def click_topic_tag(topic, tag_name)
+        find("#{topic_list_item_class(topic)} .discourse-tags .discourse-tag", text: tag_name).click
       end
 
       def had_new_topics_alert?

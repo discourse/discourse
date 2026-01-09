@@ -23,11 +23,8 @@ Discourse is large with long history. Understand context before changes.
 - Use FormKit for forms: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439 (`app/assets/javascripts/discourse/app/form-kit`)
 
 ### JSDoc
-- Required for classes, methods, members (except `@service` members, constructors)
-- Multiline format only
-- Components: `@component` name, list params (`this.args` or `@paramname`)
-- Methods: no `@returns` for `@action`, use `@returns` for getters (not `@type`)
-- Members: specify `@type`
+- Do not add JSDoc to any new code you write.
+- If JSDoc already exists, ensure any changes you make keep it accurate and up to date.
 
 ## Testing
 - Do not write unnecessary comments in tests, every single assertion doesn't need a comment
@@ -43,31 +40,33 @@ Discourse is large with long history. Understand context before changes.
 - Don't assert immediate UI feedback after clicks (tests browser, not app logic)
 
 ### Commands
+
+#### Ruby RSpec tests
+
+To run all RSpec examples in file use `bin/rspec <path>`. Example:
+
 ```bash
-# Ruby tests
-bin/rspec [spec/path/file_spec.rb[:123]]
-LOAD_PLUGINS=1 bin/rspec  # Plugin tests
+bin/rspec spec/path/file_spec.rb
+```
 
-# JavaScript tests
-bin/rake qunit:test # RUN all non plugin tests
-LOAD_PLUGINS=1 TARGET=all FILTER='fill filter here' bin/rake qunit:test # RUN specific tests based on filter
+To run one or more RSpec examples or groups, append the line number to the path. `bin/rspec <path>:<line_number>`. Example:
 
-Exmaple filters JavaScript tests:
+```bash
+bin/rspec spec/path/file_spec.rb:123
+```
 
-  emoji-test.js
-    ...
-    acceptance("Emoji" ..
-      test("cooked correctly")
-    ...
-  Filter string is: "Acceptance: Emoji: cooked correctly"
+#### JavaScript Tests
 
-  user-test.js
-    ...
-    module("Unit | Model | user" ..
-      test("staff")
-    ...
-  Filter string is: "Unit | Model | user: staff"
+```bash
+# JavaScript tests - bin/qunit
+bin/qunit --help # detailed help
+bin/qunit path/to/test-file.js  # Run all tests in file
+bin/qunit path/to/tests/directory # Run all tests in directory
+```
 
+#### Linting
+
+```bash
 # Linting
 bin/lint path/to/file path/to/another/file
 bin/lint --fix path/to/file path/to/another/file
@@ -88,7 +87,7 @@ ALWAYS lint any changes you make
 
 ## Database & Performance
 - ActiveRecord: use `includes()`/`preload()` (N+1), `find_each()`/`in_batches()` (large sets), `update_all`/`delete_all` (bulk), `exists?` over `present?`
-- Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns
+- Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns, use `bin/rails generate migration` for new migrations
 - Queries: use `explain`, specify columns, strategic indexing, `counter_cache` for counts
 
 ## HTTP Response Codes

@@ -41,7 +41,6 @@ de:
       assigned_topic_to: "Thema zugeordnet zu <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} %{username} zugeordnet"
       assign_post_to_multiple: "#%{post_number} zu %{username}"
-      assigned_to_w_ellipsis: "Zugeordnet zu …"
       unassign:
         title: "Zuordnung aufheben"
         title_w_ellipsis: "Zuordnung aufheben …"

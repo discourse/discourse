@@ -21,10 +21,15 @@ module DiscourseAi
       def handle_interaction!
         last_update_sent_at = Time.now - 1
         reply = +""
+
+        context =
+          DiscourseAi::Personas::BotContext.new(
+            messages: [{ type: :user, content: @query }],
+            skip_show_thinking: true,
+          )
+
         full_reply =
-          @bot.reply(
-            { conversation_context: [{ type: :user, content: @query }], skip_tool_details: true },
-          ) do |partial, _something|
+          @bot.reply(context) do |partial, _something|
             reply << partial
             next if reply.blank?
 

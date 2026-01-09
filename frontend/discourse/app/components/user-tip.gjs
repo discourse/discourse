@@ -33,6 +33,10 @@ export default class UserTip extends Component {
         this.args.triggerSelector &&
         document.querySelector(this.args.triggerSelector);
 
+      const portalOutlet =
+        this.args.portalOutletSelector &&
+        document.querySelector(this.args.portalOutletSelector);
+
       let buttonText = i18n(this.args.buttonLabel || "user_tips.button");
       if (this.args.buttonIcon) {
         buttonText = `${iconHTML(this.args.buttonIcon)} ${buttonText}`;
@@ -44,6 +48,7 @@ export default class UserTip extends Component {
         closeOnScroll: false,
         closeOnClickOutside: true,
         placement: this.args.placement,
+        portalOutletElement: portalOutlet,
         component: UserTipContainer,
         data: {
           id: this.args.id,

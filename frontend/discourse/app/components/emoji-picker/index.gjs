@@ -28,7 +28,6 @@ export default class EmojiPicker extends Component {
   <template>
     <DMenu
       @triggerClass={{concatClass @btnClass}}
-      @contentClass="emoji-picker-content"
       @onRegisterApi={{this.onRegisterMenu}}
       @identifier="emoji-picker"
       @groupIdentifier="emoji-picker"
@@ -36,6 +35,7 @@ export default class EmojiPicker extends Component {
       @maxWidth={{405}}
       @onShow={{@onShow}}
       @onClose={{@onClose}}
+      @inline={{@inline}}
     >
       <:trigger>
         {{#if @emoji}}

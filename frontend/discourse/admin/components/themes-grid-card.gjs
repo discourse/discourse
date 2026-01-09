@@ -11,6 +11,7 @@ import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
 
@@ -175,17 +176,32 @@ export default class ThemeCard extends Component {
       data-theme-id={{@theme.id}}
     >
       <:content>
-
         <div class="theme-card__image-wrapper">
-          {{#if @theme.screenshot_url}}
+          {{#if @theme.screenshot_light_url}}
             <img
               class="theme-card__image"
-              src={{@theme.screenshot_url}}
-              alt={{@theme.name}}
+              src={{@theme.screenshot_light_url}}
+              alt={{i18n
+                "admin.customize.theme.light_mode"
+                themeName=@theme.name
+              }}
             />
-          {{else}}
-            <ThemesGridPlaceholder @theme={{@theme}} />
           {{/if}}
+          {{#if @theme.screenshot_dark_url}}
+            <img
+              class="theme-card__image"
+              src={{@theme.screenshot_dark_url}}
+              alt={{i18n
+                "admin.customize.theme.dark_mode"
+                themeName=@theme.name
+              }}
+            />
+          {{/if}}
+          {{#unless
+            (and @theme.screenshot_dark_url @theme.screenshot_light_url)
+          }}
+            <ThemesGridPlaceholder @theme={{@theme}} />
+          {{/unless}}
         </div>
         <div class="theme-card__content">
           <a class="theme-card__title" href={{this.editUrl}}>{{@theme.name}}</a>
@@ -307,7 +323,7 @@ export default class ThemeCard extends Component {
                         @label="admin.customize.delete"
                         @icon="trash-can"
                         @disabled={{this.destroyDisabled}}
-                        class="theme-card__button btn-danger btn-transparent delete"
+                        class="theme-card__button btn-transparent --danger delete"
                       />
                     </dropdown.item>
                   </DropdownMenu>

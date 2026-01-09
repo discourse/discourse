@@ -17,14 +17,34 @@ import { i18n } from "discourse-i18n";
 import Item from "./item";
 import TagDrop from "./tag-drop";
 
+const PREV_TEMPLATE_TAG_ID = "template-selected-tag";
+
 export default class DTemplatesFilterableList extends Component {
   @service siteSettings;
+  @service keyValueStore;
 
   @tracked loading = true;
   @tracked listFilter = "";
   @tracked replies = [];
   @tracked selectedTag = ALL_TAGS_ID;
   @tracked availableTags = [];
+
+  @computed("availableTags.[]", "selectedTag")
+  get selectedTagObject() {
+    if (!this.selectedTag || this.selectedTag === ALL_TAGS_ID) {
+      return null;
+    }
+
+    if (this.selectedTag === NO_TAG_ID) {
+      return { name: NO_TAG_ID };
+    }
+
+    return (
+      this.availableTags.find((tag) => tag.id === this.selectedTag) || {
+        name: this.selectedTag,
+      }
+    );
+  }
 
   @computed("replies", "selectedTag", "listFilter")
   get filteredReplies() {
@@ -55,9 +75,11 @@ export default class DTemplatesFilterableList extends Component {
           return template.tags.includes(this.selectedTag);
         })
         .sort((a, b) => {
-          /* Sort replies by relevance and title. */
+          /* Sort replies by relevance, usage, and title. */
           if (a.score !== b.score) {
             return a.score > b.score ? -1 : 1; /* descending */
+          } else if (a.usages !== b.usages) {
+            return a.usages > b.usages ? -1 : 1; /* descending */
           } else if (a.title !== b.title) {
             return a.title < b.title ? -1 : 1; /* ascending */
           }
@@ -88,6 +110,17 @@ export default class DTemplatesFilterableList extends Component {
             return availableTags;
           }, {})
         );
+
+        const prevSelectedTag = this.keyValueStore.get(PREV_TEMPLATE_TAG_ID);
+        if (
+          prevSelectedTag &&
+          (prevSelectedTag === NO_TAG_ID ||
+            this.availableTags.find((t) => t.id === prevSelectedTag))
+        ) {
+          this.selectedTag = prevSelectedTag;
+        } else {
+          this.keyValueStore.remove(PREV_TEMPLATE_TAG_ID);
+        }
       }
     } catch (e) {
       this.loading = false;
@@ -104,6 +137,11 @@ export default class DTemplatesFilterableList extends Component {
   @action
   changeSelectedTag(tagId) {
     this.selectedTag = tagId;
+    if (tagId === ALL_TAGS_ID) {
+      this.keyValueStore.remove(PREV_TEMPLATE_TAG_ID);
+      return;
+    }
+    this.keyValueStore.set({ key: PREV_TEMPLATE_TAG_ID, value: tagId });
   }
 
   @action
@@ -121,7 +159,7 @@ export default class DTemplatesFilterableList extends Component {
           {{#if this.siteSettings.tagging_enabled}}
             <TagDrop
               @availableTags={{this.availableTags}}
-              @tagId={{this.selectedTag}}
+              @tag={{this.selectedTagObject}}
               @onChangeSelectedTag={{this.changeSelectedTag}}
             />
           {{/if}}

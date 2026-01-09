@@ -11,12 +11,12 @@ vi:
     discourse_narrative_bot_ignored_usernames: "Những tên người dùng mà Bot tường thuật diễn văn nên bỏ qua"
   badges:
     certified:
-      name: Đã chứng nhận
+      name: Đạt Chuẩn
       description: "Đã hoàn thành hướng dẫn thành viên mới của chúng tôi"
       long_description: |
         Huy hiệu này được cấp khi hoàn thành thành công hướng dẫn tương tác cho thành viên mới. Bạn đã chủ động tìm hiểu các công cụ thảo luận cơ bản và giờ bạn đã được chứng nhận!
     licensed:
-      name: Đã cấp phép
+      name: Vượt Chuẩn
       description: "Đã hoàn thành hướng dẫn nâng cao cho thành viên mới của chúng tôi"
   discourse_narrative_bot:
     quote:
@@ -43,11 +43,11 @@ vi:
     new_user_narrative:
       hello:
         message: |-
-          Cảm ơn bạn đã tham gia %{title}, và chào mừng bạn!
+          Cảm ơn bạn đã tham gia %{title}, và chào mừng!
 
-          - Tôi chỉ là người máy, nhưng [nhân viên thân thiện của chúng tôi](%{base_uri}/about) cũng sẵn sàng trợ giúp nếu bạn cần tiếp cận một người.
+          - Tôi chỉ là người máy, nhưng [nhân viên thân thiện của chúng tôi](%{base_uri}/about) cũng sẵn sàng hỗ trợ nếu bạn cần người thật.
 
-          - Vì lý do an toàn, chúng tôi tạm thời giới hạn những gì người dùng mới có thể làm. Bạn sẽ đạt được [khả năng mới](https://blog.discourse.org/2018/06/undilities-discourse-trust-levels/) (là [badges](%{base_uri}/badges)) khi chúng tôi làm quen với bạn.
+          - Vì lý do an toàn, chúng tôi tạm thời giới hạn những gì thành viên mới có thể làm. Bạn sẽ đạt được [khả năng mới](https://blog.discourse.org/2018/06/undilities-discourse-trust-levels/) (và [những huy hiệu](%{base_uri}/badges)) trong quá trình làm quen.
 
           - Chúng tôi tin tưởng vào [hành vi cộng đồng văn minh](%{base_uri}/guidelines) mọi lúc.
       images:

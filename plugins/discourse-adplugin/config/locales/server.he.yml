@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 he:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: חשיפות פרסומות הבית של תוסף פרסומות
+      description: "דוח חשיפות של פרסומות הבית"
+    ad_plugin_ad_impressions:
+      title: חשיפות פרסומות של תוסף פרסומות
+      description: "דוח חשיפות של פרסומות"
+    ad_plugin_impressions_by_user:
+      title: חשיפות של תוסף מודעות לפי משתמש
+      description: "חשיפת פרסומת בקיבוץ לפי משתמשים"
+    ad_plugin_click_through_rate:
+      title: ביצועי המרת תוסף פרסומות
+      description: "דוח ביצועי פרסומת לפי פרסומת ומקום"
+    ad_plugin_click_through_rate_by_placement:
+      title: ביצועי תוסף פרסומות לפי מקום
+      description: "דוח ביצועי פרסומת לפי מקום"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: ביצועי תוסף פרסומות לפי סוג פרסומת
+      description: "דוח ביצועי פרסומת לפי סוג פרסומת"
+  errors:
+    already_clicked: "הלחיצה כבר תועדה"
   site_settings:
     discourse_adplugin_enabled: הפעל את התוספת של השיח.
     no_ads_for_personal_messages: "לא להציג פרסומות בעת צפייה בהודעות אישיות"

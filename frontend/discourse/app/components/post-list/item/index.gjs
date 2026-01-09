@@ -11,14 +11,12 @@ import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { bind } from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 import { or } from "discourse/truth-helpers";
 
 export default class PostListItem extends Component {
   @service site;
   @service currentUser;
-  @service appEvents;
 
   get moderatorActionClass() {
     return this.args.post.post_type === this.site.post_types.moderator_action
@@ -100,15 +98,6 @@ export default class PostListItem extends Component {
         shiftKey: event?.shiftKey || false,
       });
     }
-  }
-
-  @bind
-  decoratePostContent(element, helper) {
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
   }
 
   <template>
@@ -193,7 +182,6 @@ export default class PostListItem extends Component {
       >
         <DecoratedHtml
           @html={{htmlSafe (or @post.expandedExcerpt @post.excerpt)}}
-          @decorate={{this.decoratePostContent}}
           @className="cooked"
         />
       </div>

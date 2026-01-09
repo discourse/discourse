@@ -131,8 +131,8 @@
       grid-template-areas:
         "creator title title status"
         ". category activity activity";
-      grid-column-gap: 0.75rem;
-      grid-row-gap: 0.5rem;
+      column-gap: 0.75rem;
+      row-gap: 0.5rem;
       background: var(--d-content-background);
       box-shadow: 0 0 12px 1px var(--topic-card-shadow);
       text-overflow: ellipsis;

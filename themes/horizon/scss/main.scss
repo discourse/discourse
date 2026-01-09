@@ -22,10 +22,11 @@ body {
 
 #main-outlet-wrapper {
   gap: var(--main-grid-gap);
+  padding-right: var(--main-grid-gap);
 }
 
 body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
-  grid-column-gap: var(--main-grid-gap);
+  column-gap: var(--main-grid-gap);
   background-color: var(--background-color);
 }
 
@@ -44,8 +45,6 @@ body.has-full-page-chat:not(.has-sidebar-page) {
 }
 
 body.has-sidebar-page #main-outlet-wrapper {
-  grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr) 0;
-
   #main-outlet {
     max-width: unset;
   }

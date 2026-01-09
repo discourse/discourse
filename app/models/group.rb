@@ -8,10 +8,6 @@ class Group < ActiveRecord::Base
   MAX_EMAIL_DOMAIN_LENGTH = 253
   RESERVED_NAMES = %w[by-id]
 
-  # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  # TODO: Remove smtp_ssl when db/post_migrate/20240717053710_drop_groups_smtp_ssl has been promoted to pre-deploy
-  self.ignored_columns = %w[flair_url smtp_ssl]
-
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
@@ -558,35 +554,7 @@ class Group < ActiveRecord::Base
       group.update!(visibility_level: Group.visibility_levels[:logged_on_users])
     end
 
-    # Remove people from groups they don't belong in.
-    remove_subquery =
-      case name
-      when :admins
-        "SELECT id FROM users WHERE NOT admin OR staged"
-      when :moderators
-        "SELECT id FROM users WHERE NOT moderator OR staged"
-      when :staff
-        "SELECT id FROM users WHERE (NOT admin AND NOT moderator) OR staged"
-      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level < #{id - 10} OR staged"
-      end
-
-    removed_user_ids = DB.query_single <<-SQL
-      DELETE FROM group_users
-            USING (#{remove_subquery}) X
-            WHERE group_id = #{group.id}
-              AND user_id = X.id
-      RETURNING group_users.user_id
-    SQL
-
-    if removed_user_ids.present?
-      Jobs.enqueue(
-        :publish_group_membership_updates,
-        user_ids: removed_user_ids,
-        group_id: group.id,
-        type: AUTO_GROUPS_REMOVE,
-      )
-    end
+    remove_users_from_automatic_group(group:, name:)
 
     # Add people to groups
     insert_subquery =
@@ -668,6 +636,56 @@ class Group < ActiveRecord::Base
     SQL
   end
   private_class_method :reset_groups_user_count!
+
+  def self.remove_users_from_automatic_group(group:, name:)
+    remove_subquery =
+      case name
+      when :admins
+        "SELECT id FROM users WHERE NOT admin OR staged"
+      when :moderators
+        "SELECT id FROM users WHERE NOT moderator OR staged"
+      when :staff
+        "SELECT id FROM users WHERE (NOT admin AND NOT moderator) OR staged"
+      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "SELECT id FROM users WHERE trust_level < #{group.id - 10} OR staged"
+      end
+
+    removed_user_ids = DB.query_single(<<~SQL)
+        DELETE FROM group_users
+        USING (#{remove_subquery}) X
+        WHERE group_id = #{group.id}
+          AND user_id = X.id
+        RETURNING group_users.user_id
+      SQL
+
+    return if removed_user_ids.blank?
+
+    DB.exec(<<~SQL, group_id: group.id, user_ids: removed_user_ids)
+      UPDATE users
+      SET flair_group_id = NULL
+      WHERE id IN (:user_ids) AND flair_group_id = :group_id
+    SQL
+
+    DB.exec(<<~SQL, group_id: group.id, user_ids: removed_user_ids)
+      UPDATE users
+      SET primary_group_id = NULL
+      WHERE id IN (:user_ids) AND primary_group_id = :group_id
+    SQL
+
+    DB.exec(<<~SQL, user_ids: removed_user_ids, title: group.title) if group.title.present?
+        UPDATE users
+        SET title = NULL
+        WHERE id IN (:user_ids) AND title = :title
+      SQL
+
+    Jobs.enqueue(
+      :publish_group_membership_updates,
+      user_ids: removed_user_ids,
+      group_id: group.id,
+      type: AUTO_GROUPS_REMOVE,
+    )
+  end
+  private_class_method :remove_users_from_automatic_group
 
   def self.refresh_automatic_groups!(*args)
     args = AUTO_GROUPS.keys if args.empty?
@@ -812,38 +830,24 @@ class Group < ActiveRecord::Base
   PUBLISH_CATEGORIES_LIMIT = 10
 
   def add(user, notify: false, automatic: false)
-    return self if self.users.include?(user)
+    return false if user.nil?
+    return self if group_users.exists?(user_id: user.id)
 
     self.users.push(user)
-
-    if notify
-      Notification.create!(
-        notification_type: Notification.types[:membership_request_accepted],
-        user_id: user.id,
-        data: { group_id: id, group_name: name }.to_json,
-      )
-    end
-
-    if self.categories.count < PUBLISH_CATEGORIES_LIMIT
-      MessageBus.publish(
-        "/categories",
-        { categories: ActiveModel::ArraySerializer.new(self.categories).as_json },
-        user_ids: [user.id],
-      )
-    else
-      Discourse.request_refresh!(user_ids: [user.id])
-    end
-
+    send_membership_notification(user) if notify
+    publish_category_updates(user)
     trigger_user_added_event(user, automatic)
 
     self
   end
 
   def remove(user)
+    return false if user.nil?
     group_user = self.group_users.find_by(user: user)
     return false if group_user.blank?
 
     group_user.destroy
+    publish_category_updates(user)
     trigger_user_removed_event(user)
     enqueue_user_removed_from_group_webhook_events(group_user)
 
@@ -1280,6 +1284,34 @@ class Group < ActiveRecord::Base
   end
 
   private
+
+  def send_membership_notification(user)
+    Notification.create!(
+      notification_type: Notification.types[:membership_request_accepted],
+      user_id: user.id,
+      data: { group_id: id, group_name: name }.to_json,
+    )
+  end
+
+  def publish_category_updates(user)
+    if categories.count < PUBLISH_CATEGORIES_LIMIT
+      guardian = Guardian.new(user)
+      group_categories = categories.map { |c| Category.set_permission!(guardian, c) }
+      updated_categories = group_categories.select(&:permission)
+      removed_category_ids = group_categories.reject(&:permission).map(&:id)
+
+      MessageBus.publish(
+        "/categories",
+        {
+          categories: ActiveModel::ArraySerializer.new(updated_categories).as_json,
+          deleted_categories: removed_category_ids,
+        },
+        user_ids: [user.id],
+      )
+    else
+      Discourse.request_refresh!(user_ids: [user.id])
+    end
+  end
 
   def validate_grant_trust_level
     unless TrustLevel.valid?(self.grant_trust_level)

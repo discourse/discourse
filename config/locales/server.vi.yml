@@ -39,7 +39,7 @@ vi:
     <<: *datetime_formats
   title: "Discourse"
   topics: "Chủ đề"
-  posts: "bài viết"
+  posts: "tút"
   views: "lượt xem"
   loading: "Đang tải"
   powered_by_html: 'Được hỗ trợ bởi <a href="https://www.discourse.org">Discourse</a>, được xem tốt nhất khi bật JavaScript'
@@ -114,7 +114,7 @@ vi:
         silenced_user_error: "Xảy ra khi người gửi đã được tắt tiếng."
         bad_destination_address: "Xảy ra khi không có địa chỉ email nào trong trường To/Cc khớp với địa chỉ email đến đã được định cấu hình."
         strangers_not_allowed_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ không phải là thành viên."
-        insufficient_trust_level_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ chưa đủ cấp độ tin cậy."
+        insufficient_trust_level_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ chưa đủ độ tin cậy."
         reply_user_not_matching_error: "Xảy ra khi trả lời đến từ một địa chỉ email khác với thông báo được gửi đến."
         topic_not_found_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã bị xóa."
         topic_closed_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã được đóng lại."
@@ -170,7 +170,7 @@ vi:
       header:
         other: ! "%{count} lỗi đã ngăn cản không thể lưu %{model} này"
     embed:
-      load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
+      load_from_remote: "Đã xảy ra lỗi khi tải tút."
     site_settings:
       invalid_category_id: "Bạn đã chỉ định một danh mục không tồn tại"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
@@ -272,21 +272,21 @@ vi:
     new_topic: "Tạo chủ đề mới"
   no_mentions_allowed: "Xin lỗi, bạn không thể nhắc tới thành viên khác."
   too_many_mentions:
-    other: "Xin lỗi, bạn chỉ có thể nhắc tới %{count} thành viên trong một bài viết."
+    other: "Xin lỗi, bạn chỉ có thể nhắc tới %{count} thành viên trong một tút."
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
-    other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết."
+    other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một tút."
   no_embedded_media_allowed_group: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
-  no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào bài viết."
+  no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào tút."
   too_many_embedded_media:
     other: "Xin lỗi, người dùng mới chỉ có thể đưa %{count} mục phương tiện được nhúng vào một bài đăng."
-  no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong bài viết."
+  no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong tút."
   too_many_attachments:
-    other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một bài viết."
-  no_links_allowed: "Xin lỗi, thành viên mới chưa được chèn liên kết trong bài viết."
-  links_require_trust: "Xin lỗi, bạn không thể bao gồm các liên kết trong bài viết của mình."
+    other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một tút."
+  no_links_allowed: "Xin lỗi, thành viên mới chưa được chèn liên kết trong tút."
+  links_require_trust: "Xin lỗi, bạn không thể bao gồm các liên kết trong tút của mình."
   too_many_links:
-    other: "Xin lỗi, thành viên mới chỉ được chèn %{count} liên kết trong một bài viết."
+    other: "Xin lỗi, thành viên mới chỉ được chèn %{count} liên kết trong một tút."
   contains_blocked_word: "Xin lỗi, bạn không thể đăng từ '%{word}'; nó không được cho phép."
   contains_blocked_words: "Xin lỗi, bạn không thể đăng nó. Không được phép: %{words}."
   spamming_host: "Xin lỗi bạn không thể chèn liên kết tới trang đó."
@@ -295,7 +295,7 @@ vi:
   not_accepting_pms: "Xin lỗi, %{username} hiện không chấp nhận tin nhắn."
   max_pm_recipients: "Xin lỗi, bạn có thể gửi tin nhắn cho tối đa %{recipients_limit} người nhận."
   pm_reached_recipients_limit: "Xin lỗi, bạn không thể có nhiều hơn %{recipients_limit} người nhận trong một tin nhắn."
-  removed_direct_reply_full_quotes: "Đã tự động xóa trích dẫn của toàn bộ bài viết trước đó."
+  removed_direct_reply_full_quotes: "Đã tự động xóa trích dẫn của toàn bộ tút trước đó."
   watched_words_auto_tag: "Chủ đề được gắn thẻ tự động"
   create_pm_on_existing_topic: "Xin lỗi, bạn không thể tạo PM về một chủ đề hiện có."
   slow_mode_enabled: "Chủ đề này đang ở chế độ chậm."
@@ -310,7 +310,7 @@ vi:
   rss_posts_in_topic: "Nguồn cấp dữ liệu RSS của '%{topic}'"
   rss_topics_in_category: "Nguồn cấp dữ liệu RSS của các chủ đề trong chuyên mục '%{category}'"
   rss_num_posts:
-    other: "%{count} bài viết"
+    other: "%{count} tút"
   rss_num_participants:
     other: "%{count} người tham gia"
   read_full_topic: "Đọc toàn bộ chủ đề"
@@ -339,13 +339,13 @@ vi:
   excerpt_image: "hình ảnh"
   bookmarks:
     errors:
-      already_bookmarked_post: "Bạn không thể đánh dấu cùng một bài viết hai lần."
+      already_bookmarked_post: "Bạn không thể đánh dấu cùng một tút hai lần."
       already_bookmarked: "Bạn không thể đánh dấu cùng một %{type} hai lần."
       too_many: "Xin lỗi, bạn không thể thêm nhiều hơn %{limit} dấu trang, hãy truy cập <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> để xóa một số."
       cannot_set_past_reminder: "Bạn không thể đặt lời nhắc đánh dấu trong quá khứ."
       cannot_set_reminder_in_distant_future: "Bạn không thể đặt lời nhắc đánh dấu hơn 10 năm trong tương lai."
       time_must_be_provided: "Thời gian phải được cung cấp cho tất cả các lời nhắc"
-      for_topic_must_use_first_post: "Bạn chỉ có thể sử dụng bài viết đầu tiên để đánh dấu chủ đề."
+      for_topic_must_use_first_post: "Bạn chỉ có thể sử dụng tút đầu tiên để đánh dấu chủ đề."
       bookmarkable_id_type_required: "Tên và loại của bản ghi để đánh dấu là bắt buộc."
       invalid_bookmarkable: "Một %{type} không thể được đánh dấu."
     reminders:
@@ -361,7 +361,7 @@ vi:
       bulk_add:
         other: "%{count} người dùng đã được thêm vào nhóm."
     errors:
-      grant_trust_level_not_valid: "'%{trust_level}' không phải là mức tin cậy hợp lệ."
+      grant_trust_level_not_valid: "'%{trust_level}' không phải là độ tin cậy hợp lệ."
       can_not_modify_automatic: "Bạn không thể sửa một nhóm tự động"
       member_already_exist:
         other: "Những người dùng sau đã là thành viên của nhóm này: %{username}"
@@ -387,14 +387,14 @@ vi:
       trust_level_4: "trust_level_4"
   education:
     until_posts:
-      other: "%{count} bài đăng"
+      other: "%{count} tút"
   activerecord:
     attributes:
       category:
         name: "Tên chuyên mục"
       topic:
         title: "Tiêu đề"
-        category_id: "Danh mục"
+        category_id: "Chuyên mục"
       post:
         raw: "Thân"
       user_profile:
@@ -455,7 +455,7 @@ vi:
               invalid: "không phải là một màu không hợp lệ"
         post_reply:
           base:
-            different_topic: "Bài viết và bài trả lời phải thuộc cùng một chủ đề."
+            different_topic: "Tút và tút trả lời phải thuộc cùng một chủ đề."
         web_hook:
           attributes:
             payload_url:
@@ -503,9 +503,9 @@ vi:
       topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count} chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."
   trust_levels:
-    admin: "Quản trị"
+    admin: "Quản trị viên"
     staff: "Nhân viên"
-    change_failed_explanation: "Bạn đã cố gắng để giảm hạng %{user_name} xuống '%{new_trust_level}'. Tuy nhiên cấp độ tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở cấp độ '%{current_trust_level}' - nếu bạn muốn giảm hạng thành viên, trước tiên hãy khóa cấp độ tin cậy"
+    change_failed_explanation: "Bạn đã cố gắng để giáng chức %{user_name} xuống '%{new_trust_level}'. Tuy nhiên độ tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở độ '%{current_trust_level}' - nếu bạn muốn giáng chức thành viên, trước tiên hãy khóa độ tin cậy"
   post:
     image_placeholder:
       broken: "Hình ảnh này bị hỏng"
@@ -516,7 +516,7 @@ vi:
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
     by_type:
       first_day_replies_per_day: "Chúng tôi đánh giá cao sự nhiệt tình của bạn, hãy duy trì nó! Điều đó có nghĩa là, vì sự an toàn của cộng đồng của chúng tôi, bạn đã đạt đến số lượng câu trả lời tối đa mà người dùng mới có thể tạo vào ngày đầu tiên của họ. Vui lòng đợi %{time_left} và bạn sẽ có thể tạo thêm câu trả lời."
-      create_like: "Ồ! Bạn đã chia sẻ rất nhiều tình yêu thương! Bạn đã đạt đến số lượt thích tối đa trong khoảng thời gian 24 giờ, nhưng khi bạn đạt được mức độ tin cậy, bạn sẽ kiếm được nhiều lượt thích hàng ngày hơn. Bạn sẽ có thể thích lại các bài đăng sau %{time_left}."
+      create_like: "Ồ! Bạn đã chia sẻ rất nhiều yêu thương! Bạn đã đạt đến số lượt thích tối đa trong khoảng thời gian 24 giờ, nhưng khi bạn đạt được độ tin cậy, bạn sẽ được phép gửi nhiều lượt thích hàng ngày hơn. Bạn sẽ có thể thích lại các bài đăng sau %{time_left}."
       live_post_counts: "Bạn đang yêu cầu số lượng bài đăng trực tiếp quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
       unsubscribe_via_email: "Bạn đã đạt đến số lượng người hủy đăng ký tối đa qua email. Vui lòng đợi %{time_left} trước khi thử lại."
     hours:
@@ -578,6 +578,18 @@ vi:
     title: "Thiết lập lại mật khẩu"
     success: "Bạn đã thay đổi mật khẩu thành công và đã được đăng nhập."
     success_unapproved: "Bạn đã thay đổi mật khẩu thành công."
+  user_auth_tokens:
+    device:
+      android: "Thiết bị Android"
+      chromebook: "Hệ điều hành Chrome"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      linux: "Máy tính GNU/Linux"
+      mac: "Mac"
+      mobile: "Thiết bị di động"
+      windows: "Máy tính Windows"
+      unknown: "thiết bị không rõ"
   change_email:
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
@@ -602,7 +614,7 @@ vi:
     inappropriate:
       title: "Không thích hợp"
     illegal:
-      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
+      email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Gửi tin nhắn cho @%{username}."
@@ -612,16 +624,16 @@ vi:
       title: "Một thứ khác"
       description: "Bài viết này cần được Ban quản trị chú ý. Lý do chưa được liệt kê trong danh sách."
       short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
-      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
+      email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
     bookmark:
       title: "Đánh dấu chỉ mục"
-      description: "Đánh dấu chỉ mục bài viết này"
-      short_description: "Đánh dấu chỉ mục bài viết này"
+      description: "Lưu tút này"
+      short_description: "Lưu tút này"
     like:
       title: "Thích"
-      description: "Thích bài viết này"
-      short_description: "Thích bài viết này"
+      description: "Thích tút này"
+      short_description: "Thích tút này"
   email_settings:
     pop3_authentication_error: "Đã xảy ra sự cố với thông tin đăng nhập POP3 được cung cấp, hãy kiểm tra tên người dùng và mật khẩu rồi thử lại."
     imap_authentication_error: "Đã xảy ra sự cố với thông tin đăng nhập IMAP được cung cấp, hãy kiểm tra tên người dùng và mật khẩu rồi thử lại."
@@ -634,7 +646,7 @@ vi:
     spam:
       title: "Rác"
       description: "Chủ đề này mang bản chất quảng cáo, không có ích và không thích hợp với nơi này."
-      long_form: "đã đánh dấu bài này dạng bài viết rác"
+      long_form: "Đã báo cáo tút"
     inappropriate:
       title: "Không phù hợp"
       long_form: "đã đánh dấu bài này không phù hợp"
@@ -646,7 +658,7 @@ vi:
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
+      email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Bài viết này đã bị đánh dấu bởi cộng đồng và đang được ẩn tạm thời.</p>"
@@ -672,6 +684,7 @@ vi:
       every_month: "mỗi tháng"
       every_six_months: "mỗi sáu tháng"
   user_api_key:
+    deny: "Hủy"
     read: "đã đọc"
     otp_confirmation:
       confirm_title: Tiếp tục tới %{site_name}
@@ -694,7 +707,7 @@ vi:
         editor: Biên tập
         author: Tác giả
         edit_reason: Lý do
-      description: "Số bài viết mới chỉnh sửa."
+      description: "Số tút mới chỉnh sửa."
     user_flagging_ratio:
       title: "Tỷ lệ gắn cờ người dùng"
       labels:
@@ -709,7 +722,7 @@ vi:
         flag_count: Cờ đã được xem xét
         time_read: Thời gian đọc
         topic_count: Các chủ đề đã tạo
-        post_count: Các bài đăng đã tạo
+        post_count: Tút đã tạo
         pm_count: PMs đã tạo
         revision_count: Bản sửa đổi
       description: Danh sách hoạt động của người điều hành bao gồm các cờ được xem xét, thời gian đọc, chủ đề được tạo, bài đăng được tạo, tin nhắn cá nhân được tạo, và sửa đổi.
@@ -724,7 +737,7 @@ vi:
         flag: Loại
         assigned: Được chỉ định
         poster: Người gửi
-        flagger: Người gắn cờ
+        flagger: Người báo cáo
         time_to_resolution: Thời gian giải quyết
       description: "Danh sách các trạng thái của cờ bao gồm loại cờ, người đăng, người gắn cờ và thời gian giải quyết."
     visits:
@@ -738,7 +751,7 @@ vi:
       description: "Số thành viên thực hiện bài đăng đầu tiên của họ trong giai đoạn này."
     trust_level_growth:
       yaxis: "Ngày"
-      description: "Số lượng người dùng đã tăng Mức độ tin cậy của họ trong khoảng thời gian này."
+      description: "Số lượng người dùng đã tăng Độ tin cậy của họ trong khoảng thời gian này."
     consolidated_page_views:
       title_legacy: "Số lần xem trang tổng hợp"
       xaxis:
@@ -777,7 +790,7 @@ vi:
     posts:
       title: "Bài viết"
       xaxis: "Ngày"
-      yaxis: "Số lượng bài viết mới"
+      yaxis: "Số lượng tút mới"
     likes:
       title: "Lượt thích"
       xaxis: "Ngày"
@@ -791,12 +804,12 @@ vi:
       title: "Các đánh dấu"
       xaxis: "Ngày"
       yaxis: "Số đánh dấu mới"
-      description: "Số chủ đề và bài viết mới được đánh dấu."
+      description: "Số chủ đề và tút mới được đánh dấu."
     users_by_trust_level:
-      title: "Người dùng trên mỗi cấp độ tin cậy"
-      xaxis: "Bậc tin tưởng"
+      title: "Người dùng trên mỗi độ tin cậy"
+      xaxis: "Độ tin cậy"
       yaxis: "Số thành viên"
-      description: "Số lượng thành viên được nhóm theo mức độ tin cậy."
+      description: "Số lượng thành viên được nhóm theo độ tin cậy."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Người dùng mỗi loại"
@@ -988,9 +1001,9 @@ vi:
   site_settings:
     disabled: "khóa"
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
-    delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
+    delete_old_hidden_posts: "Tự động xóa bất kỳ tút ẩn hơn 30 ngày."
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
-    max_post_length: "Số kí tự tối đa trong bài đăng."
+    max_post_length: "Số kí tự tối đa trong tút."
     min_topic_views_for_delete_confirm: "Số lượt xem tối thiểu mà một chủ đề phải có để cửa sổ bật lên xác nhận xuất hiện khi chủ đề bị xóa"
     min_topic_title_length: "Số kí tự tối thiểu trong tiêu đề chủ đề."
     max_topic_title_length: "Số kí tự tối đa trong tiêu đề chủ đề."
@@ -1002,12 +1015,12 @@ vi:
     search_query_log_max_retention_days: "Khoảng thời gian tối đa để giữ các truy vấn tìm kiếm, tính bằng ngày."
     allow_uncategorized_topics: "Cho phép các chủ đề được tạo ra mà không gán chuyên mục. LƯU Ý: Nếu có bất kỳ chủ đề nào chưa gán chuyên mục, bạn phải phân loại chúng trước khi thay đổi."
     allow_duplicate_topic_titles: "Cho phép các chủ đề trùng tiêu đề."
-    unique_posts_mins: "Trong bao nhiêu phút người sử dụng có thể viết bài khác với nội dung giống nhau"
-    educate_until_posts: "Khi người dùng bắt đầu đăng (n) bài viết đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
+    unique_posts_mins: "Trong bao nhiêu phút người sử dụng có thể viết tút khác với nội dung giống nhau"
+    educate_until_posts: "Khi người dùng bắt đầu đăng (n) tút đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
-    editing_grace_period: "Trong khoảng (n) giây sau khi gửi bài, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử bài viết."
-    edit_history_visible_to_public: "Cho phép mọi người nhìn thấy phiên bản trước khi chỉnh sửa bài viết. Khi không cho phép, chỉ nhân viên có thể xem."
+    editing_grace_period: "Trong khoảng (n) giây sau khi gửi bài, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử tút."
+    edit_history_visible_to_public: "Cho phép mọi người nhìn thấy phiên bản trước khi chỉnh sửa tút. Khi không cho phép, chỉ nhân viên có thể xem."
     delete_removed_posts_after: "Bài viết đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
     notify_users_after_responses_deleted_on_flagged_post: "Khi một bài đăng bị gắn cờ và sau đó bị xóa, tất cả người dùng đã phản hồi bài đăng và đã xóa phản hồi của họ sẽ được thông báo."
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
@@ -1131,35 +1144,32 @@ vi:
     s3_cdn_url: "CDN URL được sử dụng cho tất cả các tài nguyên S3 (vd: https://cdn.somewhere.com). CHÚ Ý: sau khi thay đổi thiết lập này bạn phải tạo lại các bài viết cũ."
     avatar_sizes: "Danh sách những kích thước hình đại diện tự động khởi tạo."
     allow_all_attachments_for_group_messages: "Cho phép các email có đính kèm trong tin nhắn nhóm."
-    default_invitee_trust_level: "Bậc tin tưởng mặc định (0-4) cho thành viên được mời."
-    default_trust_level: "Cấp độ tin cậy mặc định (0-4) cho tất cả các thành viên mới. CHÚ Ý! Thay đổi thiết lập này sẽ đặt bạn vào nguy cơ spam cao."
-    tl1_requires_topics_entered: "Số chủ đề một thành viên mới phải truy cập trước khi được lên bậc tin tưởng 1"
-    tl1_requires_read_posts: "Số chủ đề một thành viên mới phải đọc trước khi được lên bậc tin tưởng 1"
-    tl1_requires_time_spent_mins: "Số phút một thành viên mới phải đọc trước khi được lên bậc tin tưởng 1"
-    tl2_requires_topics_entered: "Số chủ đề một thành viên mới phải truy cập trước khi được lên bậc tin tưởng 2"
-    tl2_requires_read_posts: "Số chủ đề một thành viên mới phải đọc trước khi được lên bậc tin tưởng 2"
-    tl2_requires_time_spent_mins: "Số phút một thành viên mới phải đọc trước khi được lên bậc tin tưởng 2"
-    tl2_requires_days_visited: "Số ngày một thành viên phải ghé thăm site trước khi được thăng lên bậc tin cậy cấp 2."
+    default_invitee_trust_level: "Độ tin cậy mặc định (0-4) cho thành viên được mời."
+    default_trust_level: "Độ tin cậy mặc định (0-4) cho tất cả các thành viên mới. CHÚ Ý! Thay đổi thiết lập này sẽ đặt bạn vào nguy cơ spam cao."
+    tl1_requires_topics_entered: "Số chủ đề một thành viên mới phải truy cập trước khi được lên độ tin cậy 1."
+    tl1_requires_read_posts: "Số chủ đề một thành viên mới phải đọc trước khi được lên độ tin cậy 1."
+    tl1_requires_time_spent_mins: "Số phút một thành viên mới phải đọc trước khi được lên độ tin cậy 1."
+    tl2_requires_topics_entered: "Số chủ đề một thành viên mới phải truy cập trước khi được lên độ tin cậy 2."
+    tl2_requires_read_posts: "Số chủ đề một thành viên mới phải đọc trước khi được lên độ tin cậy 2."
+    tl2_requires_time_spent_mins: "Số phút một thành viên mới phải đọc trước khi được lên độ tin cậy 2."
+    tl2_requires_days_visited: "Số ngày một thành viên phải ghé thăm site trước khi được thăng lên độ tin cậy 2."
     tl2_requires_likes_received: "Số like một thành viên phải nhận được trước khi được thăng lên bậc tin cậy cấp 2."
-    tl2_requires_likes_given: "Số like một thành viên phải thực hiện trước khi được thăng lên bậc tin cậy cấp 2."
-    tl2_requires_topic_reply_count: "Số chủ đề thành viên phải trả lời trước khi được thăng lên bậc tin cậy cấp 2."
-    tl3_time_period: "Độ tin cậy mức 3 yêu cầu khoảng thời gian (theo ngày)"
-    tl3_requires_days_visited: "Số ngày tối thiểu mà thành viên cần phải truy cập website trong (tl3) ngày để được thăng lên độ tin cậy mức 3. Đặt cao hơn khoảng thời gian tl3 để tắt thăng hạng cho tl3. (0 hoặc cao hơn)"
-    tl3_requires_topics_replied_to: "Số lượng chủ đề tối thiểu mà thành viên cần phải trả lời trong (tl3) ngày để được thăng lên độ tin cậy mức 3. (0 hoặc cao hơn)"
-    tl3_requires_topics_viewed: "Phần trăm số chủ đề được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy mức 3. (0 tới 100)"
-    tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy mức 3. (0 tới 100)"
+    tl2_requires_likes_given: "Số like một thành viên phải thực hiện trước khi được thăng lên độ tin cậy 2."
+    tl2_requires_topic_reply_count: "Số chủ đề thành viên phải trả lời trước khi được thăng lên độ tin cậy 2."
+    tl3_time_period: "Độ tin cậy 3 yêu cầu khoảng thời gian (theo ngày)"
+    tl3_requires_days_visited: "Số ngày tối thiểu mà thành viên cần phải truy cập website trong (tl3) ngày để được thăng lên độ tin cậy 3. Đặt cao hơn khoảng thời gian tl3 để tắt thăng hạng cho tl3. (0 hoặc cao hơn)"
+    tl3_requires_topics_replied_to: "Số lượng chủ đề tối thiểu mà thành viên cần phải trả lời trong (tl3) ngày để được thăng lên độ tin cậy 3. (0 hoặc cao hơn)"
+    tl3_requires_topics_viewed: "Phần trăm số chủ đề được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy 3. (0 tới 100)"
+    tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy 3. (0 tới 100)"
     tl3_requires_posts_read_cap: "Số lượng bài đăng được yêu cầu tối đa được đọc trong (khoảng thời gian tl3) ngày qua."
-    tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy cấp 3."
-    tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy cấp 3."
-    tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn X bài viết được đánh dấu bởi X thành viên khác trong (tl3) ngày để được thăng lên độ tin cậy mức 3, khi X là giá trị thiết lập. (0 hoặc cao hơn)"
-    tl3_promotion_min_duration: "Số ngày tối thiểu chương trình thăng hạng cấp 3 kéo dài trước khi thành viên có thể bị giáng cấp xuống độ tin cậy cấp 2."
-    tl3_requires_likes_given: "Số like tối thiểu phải thực hiện trong (tl3) ngày để được thăng lên độ tin cậy mức 3."
-    tl3_requires_likes_received: "Số like tối thiểu nhận được trong (tl3) ngày để được thăng lên độ tin cậy mức 3."
-    tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy cấp 3."
-    min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
-    min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
-    min_trust_to_allow_self_wiki: "Bậc tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
-    min_trust_to_send_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Mức độ tin cậy tối thiểu cần thiết để tạo tin nhắn cá nhân mới."
+    tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy 3."
+    tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy 3."
+    tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn X bài viết được đánh dấu bởi X thành viên khác trong (tl3) ngày để được thăng lên độ tin cậy 3, khi X là giá trị thiết lập. (0 hoặc cao hơn)"
+    tl3_promotion_min_duration: "Số ngày tối thiểu chương trình thăng hạng cấp 3 kéo dài trước khi thành viên có thể bị giáng cấp xuống độ tin cậy 2."
+    tl3_requires_likes_given: "Số like tối thiểu phải thực hiện trong (tl3) ngày để được thăng lên độ tin cậy 3."
+    tl3_requires_likes_received: "Số like tối thiểu nhận được trong (tl3) ngày để được thăng lên độ tin cậy 3."
+    tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy 3."
+    min_trust_to_send_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Độ tin cậy tối thiểu cần thiết để tạo tin nhắn cá nhân mới."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
     newuser_max_mentions_per_post: "Số tối đa thông báo @name mà thành viên mới có thể sử dụng trong bài viết."
@@ -1219,7 +1229,6 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
-    email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
     email_in_authserv_id: "Mã định danh của dịch vụ đang thực hiện kiểm tra xác thực đối với các email đến. Xem <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> để biết hướng dẫn về cách định cấu hình."
     enable_imap_idle: "Sử dụng cơ chế IMAP IDLE để chờ email mới."
     imap_polling_period_mins: "Khoảng thời gian tính bằng phút giữa việc kiểm tra tài khoản IMAP cho email."
@@ -1234,7 +1243,6 @@ vi:
     delete_all_posts_max: "Số lượng tối đa bài viết có thể được xóa cùng một lúc khi sử dụng nút Xóa Tất Cả Bài Viết. Nếu thành viên có nhiều hơn số lượng bài viết này, các bài viết có thể không bị xóa cùng một lúc và cũng không thể xóa được thành viên đó."
     delete_user_self_max_post_count: "Số lượng bài đăng tối đa mà người dùng có thể có trong khi cho phép xóa tài khoản tự phục vụ. Đặt thành -1 để tắt tính năng xóa tài khoản tự phục vụ."
     email_editable: "Cho phép thành viên thay đổi địa chỉ email sau khi đăng kí"
-    allow_uploaded_avatars: "Cho phép người dùng tải lên hình hồ sơ."
     default_avatars: "URL avatar mặc định được sử dụng cho các thành viên mới cho đến khi họ tự sửa đổi."
     automatically_download_gravatars: "Download Gravatar cho thành viên khi họ tạo tài khoản hoặc thay đổi email."
     digest_topics: "Số lượng tối đa các chủ đề phổ biến để hiển thị trong phần tóm tắt email."
@@ -1247,7 +1255,7 @@ vi:
     log_personal_messages_views: "Ghi nhật ký lượt xem tin nhắn cá nhân của Admin cho người dùng / nhóm khác."
     ignored_users_count_message_threshold: "Thông báo cho người kiểm duyệt nếu một người dùng cụ thể bị bỏ qua bởi nhiều người dùng khác này."
     ignored_users_message_gap_days: "Phải đợi bao lâu trước khi thông báo lại cho người kiểm duyệt về một người dùng đã bị nhiều người khác bỏ qua."
-    clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (mức độ tin cậy 0 không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
+    clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (độ tin cậy 0 không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     clean_up_unused_staged_users_after_days: "Số ngày trước khi người dùng theo giai đoạn không sử dụng (không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     allow_profile_backgrounds: "Cho phép người dùng tải lên ảnh nền"
     get_a_room_threshold: "Số lượng bài viết mà người dùng phải thực hiện với cùng một người trong cùng một chủ đề trước khi bị cảnh báo."
@@ -1271,9 +1279,8 @@ vi:
     notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
     auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
     auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
-    returning_user_notice_tl: "Cần có mức độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
+    returning_user_notice_tl: "Cần có độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
     returning_users_days: "Bao nhiêu ngày sẽ trôi qua trước khi người dùng được coi là trở lại."
-    review_media_unless_trust_level: "Nhân viên sẽ xem xét các bài đăng của người dùng có mức độ tin cậy thấp hơn nếu chúng chứa phương tiện được nhúng."
     enable_page_publishing: "Cho phép nhân viên xuất bản các chủ đề lên các URL mới với phong cách riêng của họ."
     skip_auto_delete_reply_likes: "Khi tự động xóa các trả lời cũ, bỏ qua việc xóa các bài đăng có số lượt thích này trở lên."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
@@ -1291,11 +1298,9 @@ vi:
     default_categories_muted: "Hiển thị danh sách chuyên mục đang im lặng theo mặc định."
     default_categories_normal: "Danh sách các danh mục không bị tắt tiếng theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
     allowed_user_api_auth_redirects: "URL được phép để chuyển hướng xác thực cho các khóa API của người dùng. Ký hiệu đại diện * có thể được sử dụng để khớp với bất kỳ phần nào của nó (ví dụ: www.example.com/*)."
-    shared_drafts_min_trust_level: "Cho phép người dùng xem và chỉnh sửa Thư nháp được chia sẻ."
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
-    short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
     dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
     dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."
@@ -1327,7 +1332,7 @@ vi:
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:
-      category: "Thư mục"
+      category: "Chuyên mục"
       topic: "Kết quả"
       user: "Thành viên"
     results_page: "Search results for '%{term}'"
@@ -1556,6 +1561,7 @@ vi:
       title: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
       subject_template: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
     welcome_user:
+      preview: "Chào mừng đến với %{site_name}!"
       subject_template: "Chào mừng đến với %{site_name}!"
       text_body_template: |
         Cảm ơn bạn đã tham gia %{site_name}, và chào mừng bạn!
@@ -1574,9 +1580,10 @@ vi:
 
         Với quyền lực lớn đi kèm với trách nhiệm lớn. Nếu bạn chưa quen với việc kiểm duyệt, vui lòng tham khảo [Hướng dẫn kiểm duyệt](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
+      preview: "Chào mừng đến với %{site_name}!"
       subject_template: "Chào mừng đến với %{site_name}!"
     tl2_promotion_message:
-      subject_template: "Chúc mừng bạn đã thăng cấp mức độ tin cậy!"
+      subject_template: "Chúc mừng bạn đã tăng độ tin cậy!"
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
     backup_failed:
@@ -1618,12 +1625,12 @@ vi:
       subject_template: "Xuất dữ liệu thất bại"
       text_body_template: "Rất tiếc, quá trình xuất dữ liệu của bạn không thành công. Vui lòng kiểm tra nhật ký hoặc [liên hệ với nhân viên](%{base_url}/about)."
     email_reject_insufficient_trust_level:
-      title: "Từ chối email không đủ mức độ tin cậy"
-      subject_template: "[%{email_prefix}] Vấn đề về email - Mức độ tin cậy không đủ"
+      title: "Từ chối email không đủ độ tin cậy"
+      subject_template: "[%{email_prefix}] Vấn đề về email - Độ tin cậy không đủ"
       text_body_template: |
         Rất tiếc, email của bạn gửi đến %{destination} (có tiêu đề %{former_title}) không hoạt động.
 
-        Tài khoản của bạn không có mức độ tin cậy cần thiết để đăng các chủ đề mới lên địa chỉ email này. Nếu bạn cho rằng đây là lỗi, hãy [liên hệ với nhân viên](%{base_url}/about).
+        Tài khoản của bạn không có độ tin cậy cần thiết để đăng các chủ đề mới lên địa chỉ email này. Nếu bạn cho rằng đây là lỗi, hãy [liên hệ với nhân viên](%{base_url}/about).
     email_reject_inactive_user:
       text_body_template: |2
 
@@ -1694,26 +1701,25 @@ vi:
 
         Bạn đã nhanh chóng trở thành một thành viên có giá trị trong cộng đồng của chúng tôi. Cảm ơn bạn đã tham gia và tiếp tục công việc tuyệt vời!
   unsubscribe_link: |
-    Để hủy đăng ký nhận những email này, hãy [click vào đây] (%{unsubscribe_url}).
+    Để hủy đăng ký nhận những email này, hãy [click vào đây](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
-    Để hủy đăng ký nhận những email này, hãy [click vào đây] (%{unsubscribe_url}).
+    Để hủy đăng ký nhận những email này, hãy [click vào đây](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
     Bạn đang nhận được tin nhắn này bởi vì bạn đã bật chế độ danh sách gửi thư.
 
     Để hủy đăng ký nhận các email này, [bấm vào đây] (%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Các trả lời trước"
     reached_limit:
       other: "Lưu ý: Chúng tôi gửi tối đa %{count} email hàng ngày. Kiểm tra trang web để xem những trang có thể bị giữ lại. PS cảm ơn!"
     in_reply_to: "Trong Trả Lời Tới"
-    reply_by_email: "[Truy cập Chủ đề] (%{base_url}%{url}) hoặc trả lời email này để phản hồi."
+    reply_by_email: "[Truy cập Chủ đề](%{base_url}%{url}) hoặc trả lời email này để phản hồi."
     reply_by_email_pm: "[Ghé thăm Tin nhắn] (%{base_url}%{url}) hoặc trả lời email này để trả lời %{participants}."
     only_reply_by_email: "Trả lời email này để phản hồi."
     only_reply_by_email_pm: "Trả lời email này để trả lời %{participants}."
-    visit_link_to_respond: "[Truy cập Chủ đề] (%{base_url}%{url}) để trả lời."
+    visit_link_to_respond: "[Truy cập Chủ đề](%{base_url}%{url}) để trả lời."
     visit_link_to_respond_pm: "[Truy cập Tin nhắn] (%{base_url}%{url}) để trả lời %{participants}."
     posted_by: "Đăng bởi %{{username} ngày %{post_date}"
     pm_participants: "Người tham gia: %{participants}"
@@ -1800,7 +1806,7 @@ vi:
       title: "Xác thực hai yếu tố bị vô hiệu hóa"
       subject_template: "[%{email_prefix}] Đã tắt Xác thực hai yếu tố"
     digest:
-      since_last_visit: "Kể từ lần thăm cuối cùng của bạn"
+      since_last_visit: "Kể từ lần truy cập cuối của bạn"
       new_topics: "Chủ đề mới"
       liked_received: "Likes Đã Nhận"
       new_users: "Thành viên mới"
@@ -1864,22 +1870,22 @@ vi:
   skipped_email_log:
     exceeded_emails_limit: "Vượt quá max_emails_per_day_per_user"
     user_email_no_user: "không tìm thấy người dùng với id %{user_id}"
-    user_email_post_not_found: "Không tìm thấy bài viết với id %{post_id}"
+    user_email_post_not_found: "Không tìm thấy tút với id %{post_id}"
     user_email_anonymous_user: "Người dùng là nặc danh"
     user_email_user_suspended_not_pm: "Tài khoản bị tạm khóa, không có tin nhắn"
     user_email_seen_recently: "Tài khoản đã xem gần đây"
     user_email_notification_already_read: "Thông báo email này đã được đọc"
     user_email_notification_topic_nil: "post.topic is nil"
-    user_email_post_deleted: "bài viết đã bị xóa bởi tác giả"
+    user_email_post_deleted: "tút đã bị xóa bởi tác giả"
     user_email_user_suspended: "người dùng đã bị tạm khóa"
-    user_email_already_read: "người dùng đã đọc bài viết này"
+    user_email_already_read: "người dùng đã đọc tút này"
     sender_message_blank: "tin nhắn rỗng"
     sender_message_to_blank: "message.to rỗng"
     sender_text_part_body_blank: "text_part.body rỗng"
     sender_body_blank: "nội dung rỗng"
-    sender_post_deleted: "bài đăng đã bị xóa"
+    sender_post_deleted: "tút đã bị xóa"
     sender_topic_deleted: "chủ đề đã bị xóa"
-    group_smtp_post_deleted: "bài đăng đã bị xóa"
+    group_smtp_post_deleted: "tút đã bị xóa"
     group_smtp_topic_deleted: "chủ đề đã bị xóa"
   color_schemes:
     base_theme_name: "Cơ bản"
@@ -1888,9 +1894,8 @@ vi:
     boolean_yes: "Đồng ý"
     boolean_no: "Không"
     rate_limit_error: "Bài viết chỉ được tải về một lần mỗi người, hãy thử lại vào ngày mai."
-  static_topic_first_reply: |2
-
-    Sửa bài viết đầu tiên trong chủ đề này để thay đổi nội dung của trang %{page_name}.
+  static_topic_first_reply: |
+    Sửa tút đầu tiên trong chủ đề này để thay đổi nội dung của trang %{page_name}.
   guidelines_topic:
     title: "FAQ/Hướng dẫn"
     guidelines_title: "Hướng dẫn"
@@ -1900,156 +1905,172 @@ vi:
     title: "Chính sách Riêng tư"
   badges:
     editor:
-      name: Biên tập
+      name: Chỉnh Sửa
       description: Sửa lần đầu
+    wiki_editor:
+      name: Biên Tập Viên Wiki
+      description: Lần chỉnh sửa wiki đầu tiên
     basic_user:
       name: Cơ bản
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> tất cả tính năng thiết yếu
     member:
       name: Thành viên
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">cấp</a> lời mời, nhắn tin nhóm, nhiều lượt thích hơn
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> lời mời, nhắn tin nhóm, nhiều lượt thích hơn
     regular:
       name: Thường xuyên
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> xếp lại danh mục, đổi tên, theo dõi các liên kết, wiki, nhiều lượt thích hơn
     leader:
-      name: Lãnh đạo
+      name: Thủ Lĩnh
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> chỉnh sửa toàn cầu, ghim, đóng, lưu trữ, tách và gộp, nhiều lượt thích hơn
     welcome:
-      name: Chào mừng
+      name: Chào Mừng
       description: Đã nhận 1 like
+      long_description: |
+        Huy hiệu này được trao khi bạn nhận được lượt thích bài đăng đầu tiên. Chúc mừng, bạn đã đăng tải nội dung mà các thành viên khác trong cộng đồng thấy thú vị, hay ho hoặc hữu ích!
     autobiographer:
-      name: Tự truyện
+      name: Viết Mô Tả
+      description: Đã điền <a href="%{base_uri}/my/preferences/profile">thông tin hồ sơ</a>
     anniversary:
-      name: Ngày kỷ niệm
+      name: Kỷ Niệm
       description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
     nice_post:
       name: Trả Lời Hay
-      description: Nhận được 10 like cho một trả lời
+      description: Đăng một trả lời nhận được 10 lượt thích
     good_post:
       name: Trả Lời Tốt
-      description: Nhận được 25 like cho một trả lời
+      description: Đăng một trả lời nhận được 25 lượt thích
     great_post:
       name: Trả Lời Tuyệt Vời
-      description: Nhận được 50 like cho một trả lời
+      description: Đăng một trả lời nhận được 50 lượt thích
     nice_topic:
       name: Chủ Đề Hay
-      description: Nhận được 10 like cho một chủ đề
+      description: Đăng một chủ đề nhận được 10 lượt thích
     good_topic:
       name: Chủ Đề Tốt
-      description: Nhận được 25 like cho một chủ đề
+      description: Đăng một chủ đề nhận được 25 lượt thích
     great_topic:
       name: Chủ Đề Tuyệt Vời
-      description: Nhận được 50 like cho một chủ đề
+      description: Đăng một chủ đề nhận được 50 lượt thích
     nice_share:
       name: Chia Sẻ Hay
-      description: Chia sẻ một bài viết có 25 lượt truy cập
-      long_description: |2
-
-        Huy hiệu này được cấp khi liên kết chia sẻ của bạn nhận được 25 lượt truy cập. Cám ơn bạn đã giúp lan tỏa các cuộc thảo luận của cộng đồng.
+      description: Chia sẻ một tút có 25 lượt truy cập
     good_share:
       name: Chia Sẻ Tốt
-      description: Chia sẻ một bài viết có 300 lượt truy cập
+      description: Chia sẻ một tút có 300 lượt truy cập
     great_share:
       name: Chia Sẻ Tuyệt Vời
-      description: Chia sẻ một bài viết có 1000 lượt truy cập
+      description: Chia sẻ một tút có 1000 lượt truy cập
     first_like:
-      name: Like Đầu Tiên
-      description: Đã like một bài viết
+      name: Lượt Thích Đầu Tiên
+      description: Đã thích một tút
       long_description: |2
 
         Huy hiệu này được cấp cho lần đầu tiên bạn like một bài đăng bằng sử dụng nút :heart:. Like bài viết là một cách tuyệt vời để cho các thành viên của cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ tình yêu!
     first_flag:
-      name: Gắn Cờ Đầu Tiên
-      description: Đã gắn cờ một bài viết
+      name: Báo Cáo Đầu Tiên
+      description: Đã báo cáo một tút
     promoter:
-      name: Người Khởi Xướng
+      name: Khởi Xướng
       description: Đã mời 1 người dùng
     campaigner:
-      name: Người Vận Động
+      name: Vận Động
       description: Đã mời 3 người dùng
     champion:
-      name: Quán Quân
+      name: Vô Địch
       description: Đã mời 5 thành viên
     first_share:
       name: Chia Sẻ Đầu Tiên
-      description: Chia sẻ 1 bài viết
+      description: Đã chia sẻ một tút
       long_description: |2
 
         Huy hiệu này được cấp cho lần đầu tiên bạn chia sẻ liên kết một bài trả lời hoặc một chủ đề bằng cách sử dụng nút chia sẻ. Chia sẻ liên kết là cách tuyệt vời để chia sẻ các cuộc thảo luận thú vị với phần còn lại của Thế Giới và giúp phát triển cộng đồng.
     first_link:
-      name: Liên Kết Đầu Tiên
+      name: Link Đầu Tiên
       description: Đã thêm 1 liên kết tới chủ đề khác
       long_description: |2
 
         Huy hiệu này được cáp cho lần đầu tiên bạn thêm một liên kết tới một chủ đề khác. Liên kết chủ đề giúp độc giả tìm thấy thú vị liên quan trong hội thoại, bằng cách hiển thị kết nối giữa các chủ đề theo cả hai hướng. Thoải mái liên kết!
     first_quote:
       name: Trích Dẫn Đầu Tiên
-      description: Trích dẫn một bài viết
+      description: Đã trích dẫn một tút
     read_guidelines:
-      name: Xem hướng dẫn
+      name: Đọc Hướng Dẫn
+      description: Đã đọc <a href="%{base_uri}/guidelines">quy định cộng đồng</a>
     reader:
-      name: Người xem
+      name: Độc Giả
       description: Đọc từng trả lời trong một chủ đề có hơn 100 trả lời
       long_description: |2
 
         Huy hiệu này được cấp cho lần đầu tiên bạn đọc một chủ đề dài với hơn 100 trả lời. Theo dõi sát sao một cuộc hội thoại giúp bạn hiểu được những quan điểm khác nhau, và giúp cho cuộc trò chuyện thú vị hơn. Bạn càng đọc, càng trò chuyện được tốt hơn. :slight_smile:
     popular_link:
-      name: Liên kết phổ biến
-      description: Đăng một liên kết ngoài được 50 click
+      name: Link Phổ Biến
+      description: Đăng một liên kết ngoài nhận được 50 lượt click
       long_description: |2
 
         Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 50 click. Cám ơn bạn đã đăng một liên kết hữu ích!
     hot_link:
-      name: Liên kết hấp dẫn
-      description: Đăng một liên kết ngoài được 300 click
+      name: Link Hot
+      description: Đăng một liên kết ngoài nhận được 300 lượt click
       long_description: |2
 
         Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 300 click. Cám ơn đã đăng một liên kết hấp dẫn giúp kéo cuộc trò chuyện về phía trước!
     famous_link:
-      name: Liên kết nổi tiếng
-      description: Đăng một liên kết ngoài được 1000 click
+      name: Link Nổi Tiếng
+      description: Đăng một liên kết ngoài nhận được 1000 lượt click
     appreciated:
-      name: Được đánh giá cao
-      description: Nhận được 1 like cho 20 bài viết
+      name: Cảm Kích
+      description: Đăng 20 tút nhận được 1 lượt thích
       long_description: |2
 
         Huy hiệu này được cấp khi bạn nhận được ít nhất 1 like cho 20 bài viết khác nhau. Cộng đồng thích thú với các đóng góp của bạn trong các cuộc đối thoại!
     respected:
-      name: Được tôn trọng
-      description: Nhận được 2 like cho 100 bài viết
+      name: Khả Mến
+      description: Đăng 100 tút nhận được 2 lượt thích
       long_description: |2
 
         Huy hiệu này được cấp khi bạn nhận được ít nhất 2 like cho 100 bài viết khác nhau. Cộng đồng đang hướng tới tôn trọng những đóng góp của bạn trong các cuộc đối thoại.
     admired:
-      name: Được ngưỡng mộ
-      description: Nhận được 5 like cho 300 bài viết
+      name: Ngưỡng Mộ
+      description: Đăng 300 tút nhận được 5 lượt thích
       long_description: |2
 
         Huy hiệu này được cấp khi bạn nhận được ít nhất 5 like cho 300 bài viết khác nhau. Tuyệt vời! Cộng đồng rất ngưỡng mộ các đóng góp thường xuyên có chất lượng cao của bạn trong các cuộc đối thoại.
     out_of_love:
-      name: Vì yêu thích
+      name: Yêu Hết Con Tim
     higher_love:
-      name: Thích nhiều hơn
+      name: Cao Thượng
     crazy_in_love:
-      name: Thích nhiệt tình
+      name: Thích Nhiệt Tình
     thank_you:
-      name: Cám ơn bạn
+      name: Cảm Ơn
       description: Nhận được 20 like và đã like 10 lần
       long_description: |
         Huy hiệu này được cấp khi bạn có 20 lượt thích bài đăng và đổi lại được 10 lượt thích trở lên. Khi ai đó thích bài đăng của bạn, bạn cũng tìm thấy thời gian để thích những gì người khác đang đăng.
     gives_back:
-      name: Tặng lại
+      name: Đóng Góp
       description: Nhận được 100 like và đã like 100 lần
     empathetic:
       name: Cảm thông
       description: Nhận được 500 like và đã like 1000 lần
     first_emoji:
-      name: Emoji đầu tiên
-      description: Sử dụng Emoji trong bài viết
+      name: Emoji Đầu Tiên
+      description: Sử dụng Emoji trong tút
     first_mention:
-      name: Đề cập đầu tiên
+      name: Lượt Nhắc Đầu Tiên
+    first_onebox:
+      name: Onebox Đầu Tiên
+    first_reply_by_email:
+      name: Trả Lời Đầu Tiên Qua Email
     new_user_of_the_month:
-      name: "Thành viên mới của tháng"
+      name: "Thành Viên Mới Của Tháng"
+    enthusiast:
+      name: Hăng Hái
     aficionado:
+      name: Đam Mê
       long_description: |
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
+    devotee:
+      name: Phụng Vụ
     badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
     email_input: "Email quản trị"
@@ -2066,12 +2087,11 @@ vi:
       title: "Gửi lại email kích hoạt"
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Bắt đầu"
         fields:
           default_locale:
             label: "Ngôn ngữ"
-      privacy:
-        fields:
           login_required:
             label: "Khả năng hiển thị"
             choices:
@@ -2079,21 +2099,12 @@ vi:
                 label: "Công khai"
               private:
                 label: "Riêng tư"
-      styling:
-        fields:
-          styling_preview:
-            label: "Xem trước"
-          homepage_style:
-            choices:
-              latest:
-                label: "Mới nhất"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     github:
       closed: "đã "
+      status_date:
+        approved: "đã duyệt"
+        closed: "đã "
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
@@ -2102,7 +2113,7 @@ vi:
       replied: '%{username} trả lời cho bạn trong "%{topic}" - %{site_title}'
       posted: '%{username} gửi bài trong "%{topic}" - %{site_title}'
       private_message: '%{username} đã gửi cho bạn một tin nhắn cá nhân trong "%{topic}" - %{site_title}'
-      linked: '%{username} liên quan đến bài viết của bạn từ "%{topic}" - %{site_title}'
+      linked: '%{username} liên kết đến tút của bạn từ "%{topic}" - %{site_title}'
       watching_first_post: '%{username} đã tạo một chủ đề mới "%{topic}" - %{site_title}'
       confirm_title: "Đã bật thông báo - %{site_title}"
       confirm_body: "Sự thành công! Thông báo đã được kích hoạt."
@@ -2125,7 +2136,7 @@ vi:
       high: "Cao"
     conflict: "Đã có xung đột cập nhật ngăn bạn làm điều đó."
     reasons:
-      post_count: "Một vài bài viết đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
+      post_count: "Một vài tút đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Người dùng mới nhập bài đăng đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
     actions:
       agree:
@@ -2150,11 +2161,11 @@ vi:
       approve:
         title: "Duyệt"
       approve_post:
-        title: "Phê duyệt bài đăng"
+        title: "Phê duyệt tút"
       approve_post_closed:
-        title: "Phê duyệt bài đăng"
+        title: "Phê duyệt tút"
       reject_post:
-        title: "Từ chối bài đăng"
+        title: "Từ chối tút"
       approve_user:
         title: "Phê duyệt người dùng"
       reject_user:
@@ -2167,11 +2178,11 @@ vi:
       reject:
         title: "Từ chối"
       reject_and_delete:
-        title: "Từ chối và xóa bài đăng"
+        title: "Từ chối và xóa tút"
       reject_and_keep_deleted:
-        title: "Giữ bài đăng bị xóa"
+        title: "Giữ tút bị xóa"
       approve_and_restore:
-        title: "Phê duyệt và khôi phục bài đăng"
+        title: "Phê duyệt và khôi phục tút"
       no_action_post:
         title: "Không có hành động"
       delete_post:

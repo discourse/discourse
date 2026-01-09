@@ -53,6 +53,7 @@ gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
 gem "discourse-emojis", require: "discourse_emojis"
+gem "discourse_math_bundle"
 
 gem "message_bus"
 

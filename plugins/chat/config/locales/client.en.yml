@@ -53,8 +53,12 @@ en:
       cancel: "Cancel"
       cancel_reply: "Cancel reply"
       chat_channels: "Channels"
+      starred: "Starred"
+      starred_channels: "Starred channels"
+      starred_channels_empty: "You haven't starred any channels yet. Star channels to see them here for quick access."
       browse_all_channels: "Browse all channels"
       see_in: "See in"
+      open_channel_menu: "Open channel menu"
       move_to_channel:
         title: "Move messages to channel"
         instructions:
@@ -69,6 +73,8 @@ en:
         title: "Channel settings"
         edit: "Edit"
         add: "Add"
+        star_channel: "Star channel"
+        unstar_channel: "Unstar channel"
         close_channel: "Close channel"
         open_channel: "Open channel"
         archive_channel: "Archive channel"
@@ -76,6 +82,8 @@ en:
         join_channel: "Join channel"
         leave_channel: "Leave channel"
         leave_groupchat_info: "By leaving this group chat, you will no longer have access to it and won’t receive notifications related to it. To rejoin, you will need to be re-invited by a member of the group chat."
+        notification_settings: "Notification settings"
+        notification_settings_context: "Notifications"
         join: "Join"
         leave: "Leave"
         save_label:
@@ -126,7 +134,7 @@ en:
       email_frequency:
         description: "We'll only email you if we haven't seen you in the last 15 minutes."
         never: "Never"
-        title: "Email Notifications"
+        title: "Email me when I am sent a chat direct message or group chat"
         when_away: "Only when away"
       header_indicator_preference:
         title: "Show activity indicator in header"
@@ -137,12 +145,11 @@ en:
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
       send_shortcut:
+        title: "Send shortcut"
         enter:
           label: "Send by Enter"
-          description: "New line by Shift + Enter"
         meta_enter:
           label: "Send by %{meta_key} + Enter"
-          description: "New line by Enter"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"
@@ -240,12 +247,12 @@ en:
       no_public_channels: "You have not joined any channels yet!"
       no_public_channels_cta: "Browse channels"
       kicked_from_channel: "You can no longer access this channel."
+      chat_notifications_title: "Chat notifications"
       only_chat_push_notifications:
         title: "Only send chat push notifications"
-        description: "Block all non-chat push notifications from being sent"
+      personalization_title: "Personalization"
       ignore_channel_wide_mention:
         title: "Ignore channel-wide mentions"
-        description: "Do not send notifications for channel-wide mentions (@here and @all)"
       show_thread_title_prompts:
         title: "Show thread title prompts"
         description: "Show prompts to set a title for new threads"
@@ -383,6 +390,8 @@ en:
         slug_description: A channel slug is used in the URL instead of the channel name
         name: Channel name
         slug: Channel slug (optional)
+        emoji: Channel emoji (optional)
+        reset_emoji: Reset emoji
 
       channel_edit_description_modal:
         title: Edit description
@@ -451,6 +460,9 @@ en:
         types:
           category: "Category"
           topic: "Topic"
+        emoji:
+          label: "Channel emoji (optional)"
+          reset: "Reset emoji"
 
       reviewable:
         type: "Chat message"
@@ -499,6 +511,7 @@ en:
         follow: "Join"
         followed: "Joined"
         mute: "Mute channel"
+        unmute: "Unmute channel"
         threading_enabled: "Enabled"
         threading_disabled: "Disabled"
         muted_on: "On"
@@ -525,6 +538,7 @@ en:
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       search:
+        short_title: Search
         title: Search chat
         aria_label: "Switch to chat search"
         no_results: "No results found"

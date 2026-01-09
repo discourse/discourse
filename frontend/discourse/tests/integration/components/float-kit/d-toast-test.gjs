@@ -4,12 +4,9 @@ import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DToast from "discourse/float-kit/components/d-toast";
 import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  disableRaiseOnDeprecation,
-  enableRaiseOnDeprecation,
-} from "discourse/tests/helpers/raise-on-deprecation";
 
 function createCustomToastInstance(owner, options, newClose) {
   class CustomToastInstance extends DToastInstance {
@@ -28,14 +25,6 @@ function createCustomToastInstance(owner, options, newClose) {
 
 module("Integration | Component | FloatKit | d-toast", function (hooks) {
   setupRenderingTest(hooks);
-
-  hooks.beforeEach(function () {
-    disableRaiseOnDeprecation();
-  });
-
-  hooks.afterEach(function () {
-    enableRaiseOnDeprecation();
-  });
 
   test("swipe up to close", async function (assert) {
     let closing = false;
@@ -71,7 +60,10 @@ module("Integration | Component | FloatKit | d-toast", function (hooks) {
       duration: 9999,
       data: { message: "test" },
     });
-    await render(<template><DToast @toast={{toast}} /></template>);
+    await withSilencedDeprecationsAsync(
+      "float-kit.d-toast.duration",
+      async () => await render(<template><DToast @toast={{toast}} /></template>)
+    );
 
     assert
       .dom(".fk-d-toast")

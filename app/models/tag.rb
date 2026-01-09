@@ -6,21 +6,20 @@ class Tag < ActiveRecord::Base
   include HasSanitizableFields
   include Localizable
 
-  self.ignored_columns = [
-    "topic_count", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  ]
-
   RESERVED_TAGS = [
     "none",
     "constructor", # prevents issues with javascript's constructor of objects
   ]
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :slug, uniqueness: { case_sensitive: false }, allow_blank: true
 
   validate :target_tag_validator,
            if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
   validates :description, length: { maximum: 1000 }
+
+  before_validation :ensure_slug
 
   scope :where_name,
         ->(name) do
@@ -181,7 +180,7 @@ class Tag < ActiveRecord::Base
     user_id = allowed_user.id
 
     DB.query_hash(<<~SQL).map!(&:symbolize_keys!)
-      SELECT tags.name as id, tags.name as text, COUNT(topics.id) AS count
+      SELECT tags.id as id, tags.name as name, COUNT(topics.id) AS count
         FROM tags
         JOIN topic_tags ON tags.id = topic_tags.tag_id
         JOIN topics ON topics.id = topic_tags.topic_id
@@ -197,7 +196,7 @@ class Tag < ActiveRecord::Base
             JOIN group_users gu ON gu.user_id = #{user_id.to_i}
                                AND gu.group_id = tg.group_id
        )
-       GROUP BY tags.name
+       GROUP BY tags.id, tags.name
        ORDER BY count DESC
        LIMIT #{limit.to_i}
     SQL
@@ -215,6 +214,10 @@ class Tag < ActiveRecord::Base
 
   def full_url
     "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
+  end
+
+  def slug_for_url
+    slug.presence || "#{id}-tag"
   end
 
   def index_search
@@ -265,6 +268,23 @@ class Tag < ActiveRecord::Base
 
   private
 
+  def ensure_slug
+    self.slug ||= ""
+    return if name.blank?
+
+    if self.slug.blank? || will_save_change_to_name?
+      self.slug = Slug.for(name, "")
+      self.slug = "" if self.slug.blank? || duplicate_slug?
+    end
+  end
+
+  def duplicate_slug?
+    return false if slug.blank?
+    scope = Tag.where("lower(slug) = ?", slug.downcase)
+    scope = scope.where.not(id: id) if id.present?
+    scope.exists?
+  end
+
   def sanitize_description
     self.description = sanitize_field(self.description) if description_changed?
   end
@@ -287,10 +307,12 @@ end
 #  target_tag_id      :integer
 #  description        :string(1000)
 #  public_topic_count :integer          default(0), not null
+#  slug               :string           default(""), not null
 #  staff_topic_count  :integer          default(0), not null
 #
 # Indexes
 #
 #  index_tags_on_lower_name  (lower((name)::text)) UNIQUE
 #  index_tags_on_name        (name) UNIQUE
+#  index_tags_on_slug        (slug) WHERE ((slug)::text <> ''::text)
 #

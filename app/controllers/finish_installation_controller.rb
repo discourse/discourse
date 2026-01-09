@@ -10,6 +10,9 @@ class FinishInstallationController < ApplicationController
   before_action :ensure_no_admins, except: %w[confirm_email resend_email]
 
   def index
+    @setting_up_discourse_id = ENV["DISCOURSE_SKIP_EMAIL_SETUP"] == "1"
+
+    setup_discourse_id if @setting_up_discourse_id
   end
 
   def register
@@ -49,6 +52,16 @@ class FinishInstallationController < ApplicationController
     send_signup_email if @user.present?
   end
 
+  def redirect_discourse_id
+    seed_admin_users
+
+    # Set a global notice in case the first admin login doesn't get completed
+    # This gets cleared when an admin successfully actives their account
+    SiteSetting.global_notice = I18n.t("finish_installation.discourse_id.global_notice")
+
+    redirect_to("#{Discourse.base_path}/auth/discourse_id?origin=#{wizard_path}")
+  end
+
   protected
 
   def send_signup_email
@@ -68,6 +81,49 @@ class FinishInstallationController < ApplicationController
       return []
     end
     GlobalSetting.developer_emails.split(",").map(&:strip)
+  end
+
+  def setup_discourse_id
+    begin
+      if find_allowed_emails.empty?
+        raise StandardError.new(I18n.t("finish_installation.discourse_id.no_allowed_emails"))
+      end
+      SiteSetting.enable_discourse_id = true
+      # Since we're setting up Discourse ID, disable local logins
+      SiteSetting.enable_local_logins = false
+      # Let ID set people's usernames
+      SiteSetting.auth_overrides_username = true
+      @discourse_id_enabled = true
+      @discourse_id_error = nil
+    rescue StandardError => e
+      @discourse_id_enabled = false
+      @discourse_id_error = e.message
+    end
+  end
+
+  def seed_admin_users
+    allowed_emails = find_allowed_emails
+    if allowed_emails.empty?
+      raise StandardError.new(I18n.t("finish_installation.discourse_id.no_allowed_emails"))
+    end
+
+    allowed_emails.each do |email|
+      next if User.find_by_email(email)
+
+      username = UserNameSuggester.suggest(email)
+
+      user =
+        User.new(
+          email: email,
+          username: username,
+          # no password needed, users will login via Discourse ID
+          active: false, # will be activated upon first login
+          admin: true,
+          trust_level: TrustLevel[4],
+        )
+      user.save!(validate: false)
+    end
+    Group.refresh_automatic_groups!(:staff, :admins)
   end
 
   def ensure_no_admins

@@ -439,7 +439,9 @@ export default class Group extends RestModel {
       data: { offset, filters },
     }).then((results) => {
       return EmberObject.create({
-        logs: results["logs"].map((log) => GroupHistory.create(log)),
+        logs: new TrackedArray(
+          results["logs"].map((log) => GroupHistory.create(log))
+        ),
         all_loaded: results["all_loaded"],
       });
     });

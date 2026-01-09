@@ -43,8 +43,6 @@ fa_IR:
           title: "پنل انتخاب تنظیمات"
         categories_list:
           title: "فهرست دسته‌بندی‌ها"
-        topic_link:
-          title: "پیوند موضوع"
         topic_list_item:
           title: "آیتم فهرست موضوع"
         topic_statuses:
@@ -53,8 +51,6 @@ fa_IR:
           title: "فهرست موضوعات"
         basic_topic_list:
           title: "فهرست موضوعات اصلی"
-        footer_message:
-          title: "پیام پاورقی"
         signup_cta:
           title: "فراخوانی اقدام به ثبت‌نام"
         topic_timer_info:

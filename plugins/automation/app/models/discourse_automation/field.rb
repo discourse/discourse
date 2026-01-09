@@ -222,9 +222,6 @@ module DiscourseAutomation
               "delay" => {
                 "type" => "integer",
               },
-              "prefers_encrypt" => {
-                "type" => "boolean",
-              },
             },
           },
         ],
@@ -238,6 +235,11 @@ module DiscourseAutomation
           "frequency" => {
             "type" => "string",
           },
+        },
+      },
+      "relative_time" => {
+        "value" => {
+          "type" => "integer",
         },
       },
     }

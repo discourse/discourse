@@ -3,6 +3,11 @@
 directory "plugins"
 
 desc "install all official plugins (use GIT_WRITE=1 to pull with write access)"
+
+task "plugin:list_official" do
+  Plugin::Metadata::OFFICIAL_PLUGINS.each { |name| STDOUT.puts name }
+end
+
 task "plugin:install_all_official" do
   skip = Set.new(%w[customer-flair poll])
 
@@ -191,6 +196,9 @@ def spec(plugin, files, parallel: false, argv: nil)
   params << "--seed #{ENV["RSPEC_SEED"]}" if Integer(ENV["RSPEC_SEED"], exception: false)
   params << argv if argv
 
+  # if plugin contains a comma, it's a list. we need to surround it with brackets
+  plugin = "{#{plugin}}" if plugin.include?(",")
+
   # reject system specs as they are slow and need dedicated setup
   if files.empty?
     files =
@@ -228,23 +236,9 @@ desc "run plugin qunit tests"
 task "plugin:qunit", :plugin do |t, args|
   args.with_defaults(plugin: "*")
 
-  rake = "#{Rails.root}/bin/rake"
-
-  cmd = "LOAD_PLUGINS=1 "
-
-  if args[:plugin] == "*"
-    plugin_names = Dir.glob("plugins/*/test/**/*-test.js").map { |file| file.split("/")[1] }.uniq
-    puts "Running qunit tests for all plugins: #{plugin_names.join(", ")}"
-    cmd += "PLUGIN_TARGETS='#{plugin_names.join(",")}' "
-  else
-    puts "Running qunit tests for #{args[:plugin]}"
-    cmd += "TARGET='#{args[:plugin]}' "
-  end
-
-  cmd += "#{rake} qunit:test"
-
-  system cmd
-  exit $?.exitstatus
+  target = args[:plugin]
+  target = "plugins" if target == "*"
+  exec Rails.root.join("bin/qunit").to_s, "--standalone", "--target", target
 end
 
 desc "run all migrations of a plugin"

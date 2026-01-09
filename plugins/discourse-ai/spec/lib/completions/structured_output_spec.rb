@@ -122,6 +122,29 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
 
       expect(structured_output.read_buffered_property(:message)).to eq("Hello!\n")
     end
+
+    context "when arrays contain objects" do
+      subject(:structured_output) do
+        described_class.new({ ratings: { type: "array", items: { type: "object" } } })
+      end
+
+      it "falls back to full parsing without raising" do
+        chunks = [
+          +"{\"ratings\":[{\"candidate\":\"alpha\",\"rating\":9",
+          +"},{\"candidate\":\"bravo\",\"rating\":6}]}",
+        ]
+
+        expect { structured_output << chunks[0] }.not_to raise_error
+        expect(structured_output.read_buffered_property(:ratings)).to eq(nil)
+
+        structured_output << chunks[1]
+        structured_output.finish
+
+        expect(structured_output.read_buffered_property(:ratings)).to eq(
+          [{ "candidate" => "alpha", "rating" => 9 }, { "candidate" => "bravo", "rating" => 6 }],
+        )
+      end
+    end
   end
 
   describe "dealing with non-JSON responses" do

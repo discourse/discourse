@@ -23,6 +23,7 @@ export const AUTO_DELETE_PREFERENCES = {
 };
 
 export const NO_REMINDER_ICON = "bookmark";
+export const NOT_BOOKMARKED = "far-bookmark";
 export const WITH_REMINDER_ICON = "discourse-bookmark-clock";
 
 export default class Bookmark extends RestModel {
@@ -96,12 +97,13 @@ export default class Bookmark extends RestModel {
     return this.pinned ? "unpin" : "pin";
   }
 
-  @discourseComputed("highest_post_number", "url")
-  lastPostUrl(highestPostNumber) {
-    return this.urlForPostNumber(highestPostNumber);
+  @discourseComputed("topic_id", "highest_post_number", "bookmarkable_url")
+  lastPostUrl(topic_id, highest_post_number, bookmarkable_url) {
+    return topic_id
+      ? this.urlForPostNumber(highest_post_number)
+      : bookmarkable_url;
   }
 
-  // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
     let url = getURL(`/t/${this.topic_id}`);
     if (postNumber > 0) {
@@ -110,14 +112,9 @@ export default class Bookmark extends RestModel {
     return url;
   }
 
-  // returns createdAt if there's no bumped date
   @discourseComputed("bumped_at", "createdAt")
   bumpedAt(bumped_at, createdAt) {
-    if (bumped_at) {
-      return new Date(bumped_at);
-    } else {
-      return createdAt;
-    }
+    return bumped_at ? new Date(bumped_at) : createdAt;
   }
 
   @discourseComputed("bumpedAt", "createdAt")

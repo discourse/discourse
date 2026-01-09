@@ -27,6 +27,16 @@ class Search
     %w[topic category user private_messages tags all_topics exclude_topics]
   end
 
+  # Patterns that indicate a valid search even without meeting minimum term length
+  # Includes shortcuts (l, r, t) and advanced filter syntax
+  VALID_SEARCH_SHORTCUT_PATTERN =
+    /\A[lrt]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
+
+  def self.valid_search_shortcut?(term)
+    return false if term.blank?
+    VALID_SEARCH_SHORTCUT_PATTERN.match?(term)
+  end
+
   def self.ts_config(locale = SiteSetting.default_locale)
     # if adding a text search configuration, you should check PG beforehand:
     # SELECT cfgname FROM pg_ts_config;
@@ -328,12 +338,12 @@ class Search
       @results.search_log_id = search_log_id unless status == :error
     end
 
-    unless @filters.present? || @opts[:search_for_id]
-      min_length = min_search_term_length
-      terms = (@term || "").split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject { |t| t.length < min_length }
+    is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
 
-      if terms.blank?
-        @term = ""
+    if !@opts[:search_for_id] && !is_topic_search
+      @term = filter_short_terms(@term)
+
+      if @term.blank? && @filters.blank? && @order.blank?
         @valid = false
         return
       end
@@ -471,6 +481,8 @@ class Search
   end
 
   advanced_filter(/\Ain:first|^f\z/i) { |posts| posts.where("posts.post_number = 1") }
+
+  advanced_filter(/\Ain:replies\z/i) { |posts| posts.where("posts.post_number > 1") }
 
   advanced_filter(/\Ain:pinned\z/i) { |posts| posts.where.not(topics: { pinned_at: nil }) }
 
@@ -842,13 +854,17 @@ class Search
     type_filter: "all_topics"
   )
     if @order == :latest
-      if aggregate_search
+      if @in_title
+        posts = posts.order("topics.bumped_at DESC")
+      elsif aggregate_search
         posts = posts.order("MAX(posts.created_at) DESC")
       else
         posts = posts.reorder("posts.created_at DESC")
       end
     elsif @order == :oldest
-      if aggregate_search
+      if @in_title
+        posts = posts.order("topics.bumped_at ASC")
+      elsif aggregate_search
         posts = posts.order("MAX(posts.created_at) ASC")
       else
         posts = posts.reorder("posts.created_at ASC")
@@ -984,6 +1000,9 @@ class Search
         elsif word =~ /\Ain:all\z/i
           @search_all_topics = true
           nil
+        elsif word =~ /\Ain:all-posts\z/i
+          @all_posts = true
+          nil
         elsif word =~ /\Ain:personal\z/i
           @search_pms = true
           nil
@@ -1095,13 +1114,16 @@ class Search
   def user_search
     return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
 
+    # Exlude B weight from search which is the weight `User#name` is indexed with in `SearchIndexer.update_users_index`
+    query = ts_query("simple", weight_filter: SiteSetting.enable_names ? nil : "AC")
+
     users =
       User
         .includes(:user_search_data)
         .references(:user_search_data)
         .where(active: true)
         .where(staged: false)
-        .where("user_search_data.search_data @@ #{ts_query("simple")}")
+        .where("user_search_data.search_data @@ #{query}")
         .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
         .order("last_posted_at DESC")
         .limit(limit)
@@ -1543,6 +1565,9 @@ class Search
         )
 
       posts.each { |post| @results.add(post) }
+    elsif @all_posts
+      posts = posts_scope(posts_eager_loads(posts_query(limit)))
+      posts.each { |post| @results.add(post) }
     else
       aggregate_search
     end
@@ -1611,6 +1636,19 @@ class Search
   def log_query?(readonly_mode)
     SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode &&
       @opts[:type_filter] != "exclude_topics"
+  end
+
+  def filter_short_terms(term_string)
+    return "" if term_string.blank?
+
+    min_length = min_search_term_length
+    # Split on spaces but respect quoted phrases
+    terms = term_string.split(/\s(?=(?:[^"]|"[^"]*")*$)/)
+
+    # Keep quoted phrases regardless of length, filter others by min_length
+    valid_terms = terms.select { |t| t.start_with?('"') || t.length >= min_length }
+
+    valid_terms.join(" ")
   end
 
   def min_search_term_length

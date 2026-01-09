@@ -94,7 +94,7 @@ RSpec.describe SeedData::Topics do
     end
 
     it "doesn't create a welcome topic when the 'General' category is missing" do
-      SiteSetting.general_category_id = nil
+      SiteSetting.general_category_id = ""
 
       create_topic("welcome_topic_id")
 
@@ -191,7 +191,7 @@ RSpec.describe SeedData::Topics do
 
     it "updates 'Welcome Topic' even when `general_category_id` doesn't exist" do
       create_topic("welcome_topic_id")
-      SiteSetting.general_category_id = nil
+      SiteSetting.general_category_id = ""
 
       post = Post.last
       post.revise(Discourse.system_user, raw: "New text of first post.")
@@ -251,7 +251,7 @@ RSpec.describe SeedData::Topics do
 
     it "returns 'Welcome Topic' even when `general_category_id` doesn't exist" do
       create_topic("welcome_topic_id")
-      SiteSetting.general_category_id = nil
+      SiteSetting.general_category_id = ""
 
       expected_options = [
         {

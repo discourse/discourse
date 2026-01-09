@@ -10,6 +10,7 @@ export default class ChatRoutesChannel extends Component {
   @service site;
   @service siteSettings;
   @service chat;
+  @service chatHistory;
 
   @tracked isFiltering = false;
 
@@ -20,9 +21,17 @@ export default class ChatRoutesChannel extends Component {
   }
 
   get getChannelsRoute() {
-    return this.args.channel.isDirectMessageChannel
-      ? "chat.direct-messages"
-      : "chat.channels";
+    if (this.chatHistory.previousRoute?.name === "chat.browse") {
+      return "chat.browse";
+    } else if (
+      this.chatHistory.previousRoute?.name === "chat.starred-channels"
+    ) {
+      return "chat.starred-channels";
+    } else if (this.args.channel.isDirectMessageChannel) {
+      return "chat.direct-messages";
+    } else {
+      return "chat.channels";
+    }
   }
 
   <template>

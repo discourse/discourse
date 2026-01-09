@@ -161,12 +161,7 @@ after_initialize do
 
   on(:unassign_topic) { |topic, unassigning_user| Assigner.new(topic, unassigning_user).unassign }
 
-  if respond_to?(:register_preloaded_category_custom_fields)
-    register_preloaded_category_custom_fields("enable_unassigned_filter")
-  else
-    # TODO: Drop the if-statement and this if-branch in Discourse v3.2
-    Site.preloaded_category_custom_fields << "enable_unassigned_filter"
-  end
+  register_preloaded_category_custom_fields("enable_unassigned_filter")
 
   BookmarkQuery.on_preload do |bookmarks, _bookmark_query|
     if SiteSetting.assign_enabled?
@@ -379,7 +374,7 @@ after_initialize do
   end
 
   add_to_class(:topic_query, :group_topics_assigned_results) do |group|
-    list = default_results(include_all_pms: true)
+    list = default_results(include_pms: true)
 
     assignee_condition = "(a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group')"
     if @options[:filter] != :direct

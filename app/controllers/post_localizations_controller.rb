@@ -4,12 +4,13 @@ class PostLocalizationsController < ApplicationController
   before_action :ensure_logged_in
 
   def show
-    guardian.ensure_can_localize_content!
+    post_id = params[:id] || params[:post_id]
+    raise ActionController::ParameterMissing.new(:id) if post_id.blank?
 
-    params.require(:post_id)
+    post = Post.find_by(id: post_id)
+    return render_json_error(I18n.t("not_found"), status: :not_found) if post.blank?
 
-    post = Post.find_by(id: params[:post_id])
-    return render json_error(I18n.t("not_found"), status: :not_found) if post.blank?
+    guardian.ensure_can_localize_post!(post)
 
     post_localizations = PostLocalization.where(post_id: post.id)
 
@@ -36,39 +37,32 @@ class PostLocalizationsController < ApplicationController
   end
 
   def create_or_update
-    guardian.ensure_can_localize_content!
+    post_id, locale, raw = params.require(%i[post_id locale raw])
 
-    params.require(%i[post_id locale raw])
+    post = Post.find_by(id: post_id)
+    raise Discourse::NotFound unless post
 
-    localization = PostLocalization.find_by(post_id: params[:post_id], locale: params[:locale])
+    guardian.ensure_can_localize_post!(post)
+
+    localization = PostLocalization.find_by(post_id: post.id, locale:)
     if localization
-      PostLocalizationUpdater.update(
-        post_id: params[:post_id],
-        locale: params[:locale],
-        raw: params[:raw],
-        user: current_user,
-      )
+      PostLocalizationUpdater.update(post:, locale:, raw:, user: current_user)
       render json: success_json, status: :ok
     else
-      PostLocalizationCreator.create(
-        post_id: params[:post_id],
-        locale: params[:locale],
-        raw: params[:raw],
-        user: current_user,
-      )
+      PostLocalizationCreator.create(post:, locale:, raw:, user: current_user)
       render json: success_json, status: :created
     end
   end
 
   def destroy
-    guardian.ensure_can_localize_content!
+    post_id, locale = params.require(%i[post_id locale])
 
-    params.require(%i[post_id locale])
-    PostLocalizationDestroyer.destroy(
-      post_id: params[:post_id],
-      locale: params[:locale],
-      acting_user: current_user,
-    )
+    post = Post.find_by(id: post_id)
+    raise Discourse::NotFound unless post
+
+    guardian.ensure_can_localize_post!(post)
+
+    PostLocalizationDestroyer.destroy(post:, locale:, acting_user: current_user)
     head :no_content
   end
 end

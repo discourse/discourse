@@ -293,7 +293,6 @@ sw:
         title: "Mpangilio"
       moderation_history: "Historia ya Usimamizi"
       topic: "Mada:"
-      filtered_user: "Mtumiaji"
       user:
         username: "Jina la mtumiaji"
         email: "Barua Pepe"
@@ -603,7 +602,6 @@ sw:
         week: "wiki"
         month: "mwezi"
     ip_lookup:
-      title: Utafutaji wa Anwani ya Mtandao
       hostname: Hostname
       location: Sehemu
       location_not_found: (haijulikani)
@@ -630,6 +628,9 @@ sw:
       new_private_message: "Ujumbe Mpya"
       private_message: "Ujumbe"
       private_messages: "Ujumbe"
+      upcoming_changes:
+        for_user:
+          enabled: "Imeruhusiwa?"
       user_notifications:
         filters:
           all: "Zote"
@@ -1293,6 +1294,8 @@ sw:
       upload_title: "Pakia"
       upload_description: "Ingiza maelezo kuhusu upakiaji hapa"
       list_item: "Listi kitu"
+      wrap_modal:
+        apply: "Tumia"
       help: "Msaada kwenye kuhariri MarkDown"
       modal_ok: "Sawa"
       cant_send_pm: "Samahani, hauwezi kutuma ujumbe kwenda kwa %{username}."
@@ -1320,6 +1323,7 @@ sw:
         shared_draft:
           label: "Mswadajaribio Gawiza"
       ignore: "Puuzia"
+      image: "picha"
     notifications:
       tooltip:
         regular:
@@ -1473,6 +1477,9 @@ sw:
         unlist_topics: "Ondoa Mada kwenye listi"
         relist_topics: "Orodhesha Upya Mada"
         delete: "Futa Mada"
+        delete_topics_count:
+          one: "Futa Mada"
+          other: "Futa Mada"
         dismiss: "Ondosha..."
         dismiss_read: "Ondosha zote ambazo hazijasomwa"
         dismiss_button: "Ondosha..."
@@ -1501,16 +1508,6 @@ sw:
         bookmarks: "Hauja alamisha mada yoyote."
         category: "Hakuna %{category} mada."
         top: "Hakuna mada za juu."
-      bottom:
-        latest: "Hakuna mada mpya zingine."
-        posted: "Hakuna mada mpya zilizochapishwa."
-        read: "Hakuna mada zingine zilizosomwa."
-        new: "Hakuna mada mpya zingine."
-        unread: "Hakuna mada zingine ambazo hazijasomwa."
-        category: "Hakuna %{category} mada zingine."
-        tag: "Hakuna %{tag} mada zingine."
-        top: "Hakuna mada za juu zingine."
-        bookmarks: "Hakuna mada zingine zilizoalamishwa."
     topic_bulk_actions:
       dismiss:
         name: "Ondosha..."
@@ -1927,17 +1924,10 @@ sw:
       tag_groups_placeholder: "(Sio muhimu) orodha ya vikundi vyenye lebo zilizoruhusiwa."
       required_tag_group:
         delete: "Futa"
-      delete: "Futa Kategoria"
-      create: "Kategoria Mpya"
       create_long: "Tengeneza kategoria mpya"
-      save: "Hifadhi Kategoria"
-      slug: "Neno la Kategoria "
       creation_error: Tatizo limetokea wakati wa kutengeneza kategoria.
       save_error: Hitilafu imetokea wakati wa kuhifadhi kategoria.
-      name: "Jina la Kategoria"
       description: "Maelezo"
-      logo: "Nembo ya Kategoria"
-      background_image: "Mandharinyuma ya Kategoria"
       background_color: "Rangi"
       color_validations:
         cant_be_empty: "haiwezi kuachwa wazi"
@@ -1951,9 +1941,7 @@ sw:
       color_placeholder: "Rangi yoyote ya mtandao"
       delete_confirm: "Una uhakika unataka kufuta kategoria hii?"
       delete_error: "Hitilafu imetokea wakati wa kuondoa kategoria."
-      list: "Orodhesha Kategoria"
       no_description: "Tafadhali, ongeza maelezo kuhusu kategoria hii."
-      change_in_category_topic: "Hariri Maelezo"
       already_used: "Rangi hii imetumika kwenye kategoria nyingine"
       security: "Ulinzi"
       permissions:
@@ -1966,15 +1954,10 @@ sw:
       email_in_allow_strangers: "Pokea barua pepe kutoka kwa watumiaji wasiojulikana ambao hawana akaunti"
       num_featured_topics: "Idadi ya mada zitakazo onyeshwa ndani ya ukurasa wa kategoria:"
       all_topics_wiki: "Hifadhi mada mpya kama chaguo msingi"
-      sort_order: "Orodha ya Maneno Imepangwa Kulingana Na:"
-      default_view: "Orodha ya Mada Chaguo Msingi:"
       allow_badges_label: "Ruhusu beji hizi zitolewe kwenye kategoria hii:"
-      edit_permissions: "Hariri Vibali"
       review_group_name: "jina la kikundi"
       this_year: "mwaka huu"
-      default_position: "Chaguo Msingi la Nafasi"
       minimum_required_tags: "Kiwango cha chini cha lebo zinazohitajika kwenye mada:"
-      parent: "Kategoria Miliki"
       notifications:
         watching:
           title: "Angalia"
@@ -1994,7 +1977,6 @@ sw:
       sort_options:
         default: "chaguo-msingi"
         likes: "Upendo"
-        op_likes: "Upendo wa Chapisho Asilia"
         views: "Imeonwa"
         posts: "Machapisho"
         activity: "Shughuli"
@@ -2135,8 +2117,6 @@ sw:
       top:
         title: "Juu"
         help: "mada zilizoongelewa sana ndani ya mwaka, mwezi, wiki au siku zilizopita"
-        all:
-          title: "Mda Wote"
         yearly:
           title: "Kila Mwaka"
         quarterly:
@@ -2147,12 +2127,12 @@ sw:
           title: "Kila wiki"
         daily:
           title: "Kila siku"
-        all_time: "Wakati wote"
         this_year: "Mwaka"
         this_quarter: "Robo"
         this_month: "Mwezi"
         this_week: "Wiki"
         today: "Leo"
+        custom: "Binafsi"
     permission_types:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
@@ -2252,6 +2232,7 @@ sw:
       sort_by_name: "jina"
       manage_groups: "Dhibiti makundi ya lebo"
       manage_groups_description: "Fasili makundi kwa ajili ya kurakibisha lebo"
+      bulk_create_button: "Tengeneza"
       filters:
         without_category: "mada %{filter}%{tag}"
         with_category: "mada%{filter} %{tag} za %{category}"
@@ -2273,10 +2254,7 @@ sw:
           title: "Imenyamazishwa"
           description: "Hautajulishwa kuhusu mada mpya zenye lebo hii, na hazitatokea kwenye sehemu ya taarifa ambazo hazijasomwa."
       groups:
-        title: "Vikundi vya Lebo"
-        new: "Kundi jipya"
         one_per_topic_label: "Weka kikomo cha lebo moja kwenye kila mada iliyo ndani ya kikundi hiki"
-        new_name: "Kikundi Kipya cha Lebo"
         name_placeholder: "Jina"
         save: "Hifadhi"
         delete: "Futa"
@@ -2424,6 +2402,8 @@ sw:
         name: "Jina"
         enabled: "Imeruhusiwa"
         preview: "Kihakiki"
+        enabled_for_options:
+          everyone: "Kila Mtu"
         impact_roles:
           admins: "Viongozi"
           moderators: "Wasimamizi"
@@ -2446,6 +2426,8 @@ sw:
           sub_pages:
             common_settings:
               title: "Mipangilio"
+        discourse_id:
+          learn_more: "Jifunze zaidi"
         logo:
           form:
             mobile: "Kifaa cha kiganjani"
@@ -2453,6 +2435,12 @@ sw:
         fonts:
           backfill_modal:
             modal_yes: "Ndio"
+        welcome_banner:
+          form:
+            location:
+              label: "Sehemu"
+            header_anonymous:
+              placeholder: "Karibu kwenye %{site_name}!"
         navigation:
           title: "Abiri"
         notifications:
@@ -3139,7 +3127,6 @@ sw:
           add: "Ongeza"
           success: "Mafanikio"
           exists: "Tayari ipo"
-          upload_successful: "Upakiaji Umemalizika. Maneno yameongezwa."
           html_label: "HTML"
         test:
           button_label: "Majaribio"
@@ -3478,6 +3465,9 @@ sw:
         no_user_badges: "%{name} hajapewa beji yoyote."
         no_badges: Hakuna beji za kutolewa.
         none_selected: "Chagua beji ya kuanzia"
+        sections:
+          query: Swali
+          settings: Mipangilio
         allow_title: Ruhusu beji iweze kutumika kama cheo
         multiple_grant: Inaweza kutolewa mara nyingi
         visibility_heading: Uonekanaji
@@ -3559,44 +3549,3 @@ sw:
         modal:
           categories: "Kategoria"
           topics: "Mada"
-  wizard_js:
-    wizard:
-      back: "Iliyopita"
-      next: "Ijayo"
-      step-text: "Hatua"
-      step: "%{current} chini ya %{total}"
-      upload_error: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
-      invites:
-        add_user: "ongeza"
-        none_added: "Haujakaribisha Msaidizi yoyote. Unauhakika ungependa kuendelea?"
-        roles:
-          admin: "Msimamizi"
-          moderator: "Msimamizi"
-          regular: "Mtumiaji wa Kawaida"
-      homepage_choices:
-        custom:
-          label: "Binafsi"
-        style_type:
-          categories: "kategoria"
-          topics: "mada"
-      top_menu_items:
-        new: "Mpya"
-        unread: "Haijasomwa"
-        top: "Juu"
-        latest: "Hivi Karibuni"
-        categories: "Kategoria"
-        read: "Soma"
-        bookmarks: "Mialamisho"
-      previews:
-        share_button: "Shirikisha"
-        reply_button: "Jibu"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "kategoria zote"
-        category_names:
-          site_feedback: "Majibu ya Mtandao"
-        table_headers:
-          topic: "Mada"
-          replies: "Majibu"
-          views: "Imeonwa"
-          activity: "Kitendo"

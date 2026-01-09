@@ -11,6 +11,7 @@ module DiscourseAi
 
           def all_dialects
             [
+              DiscourseAi::Completions::Dialects::OpenAiResponses,
               DiscourseAi::Completions::Dialects::ChatGpt,
               DiscourseAi::Completions::Dialects::Gemini,
               DiscourseAi::Completions::Dialects::Claude,
@@ -62,11 +63,11 @@ module DiscourseAi
 
         def self.no_more_tool_calls_text
           # note, Anthropic must never prefill with an ending whitespace
-          "I WILL NOT USE TOOLS IN THIS REPLY, user expressed they wanted to stop using tool calls.\nHere is the best, complete, answer I can come up with given the information I have."
+          "Tool budget EXHAUSTED for this response, no more tools will be called in this response.\nHere is the best, complete, answer I can come up with given the information I have to address the original user query."
         end
 
         def self.no_more_tool_calls_text_user
-          "DO NOT USE TOOLS IN YOUR REPLY. Return the best answer you can given the information I supplied you."
+          "IT IS CRITICAL you do not use any tools or function calls in your response. JUST REPLY with the best answer you can provide based on your existing knowledge."
         end
 
         def no_more_tool_calls_text
@@ -300,10 +301,13 @@ module DiscourseAi
 
         def to_encoded_content_array(
           content:,
-          image_encoder:,
+          upload_encoder:,
           text_encoder:,
           other_encoder: nil,
-          allow_vision:
+          allow_images:,
+          allow_documents: false,
+          allowed_attachment_types: nil,
+          upload_filter: nil
         )
           content = [content] if !content.is_a?(Array)
 
@@ -314,15 +318,29 @@ module DiscourseAi
             if c.is_a?(String)
               current_string << c
             elsif c.is_a?(Hash) && c.key?(:upload_id)
-              # this ensurse we skip uploads if vision is not supported
-              if allow_vision
-                if !current_string.empty?
-                  result << text_encoder.call(current_string)
-                  current_string = +""
-                end
-                encoded = prompt.encode_upload(c[:upload_id])
-                result << image_encoder.call(encoded) if encoded
+              next if !allow_images && !allow_documents
+
+              encoded =
+                prompt.encode_upload(
+                  c[:upload_id],
+                  allow_documents: allow_documents,
+                  allowed_attachment_types: allowed_attachment_types,
+                )
+              next if encoded.blank?
+
+              is_image = encoded[:kind] == :image
+              is_document = encoded[:kind] == :document
+
+              next if is_image && !allow_images
+              next if is_document && !allow_documents
+              next if upload_filter && !upload_filter.call(encoded)
+
+              if !current_string.empty?
+                result << text_encoder.call(current_string)
+                current_string = +""
               end
+
+              result << upload_encoder.call(encoded)
             elsif other_encoder
               encoded = other_encoder.call(c)
               result << encoded if encoded
@@ -331,6 +349,30 @@ module DiscourseAi
 
           result << text_encoder.call(current_string) if !current_string.empty?
           result
+        end
+
+        def attachment_type_for(encoded)
+          ext = File.extname(encoded[:filename].to_s).delete_prefix(".").downcase
+          mime = encoded[:mime_type].to_s
+
+          return "pdf" if ext == "pdf" || mime.include?("pdf")
+          return "docx" if ext == "docx"
+          return "doc" if ext == "doc"
+          return "txt" if ext == "txt" || mime.include?("text/plain")
+          return "rtf" if ext == "rtf"
+          return "html" if %w[html htm].include?(ext) || mime.include?("html")
+          return "markdown" if %w[md markdown].include?(ext) || mime.include?("markdown")
+
+          "file"
+        end
+
+        def document_allowed?(encoded)
+          return true if encoded[:kind] != :document
+
+          allowed_types = llm_model.allowed_attachment_types
+          return false if allowed_types.blank?
+
+          allowed_types.include?(attachment_type_for(encoded))
         end
       end
     end

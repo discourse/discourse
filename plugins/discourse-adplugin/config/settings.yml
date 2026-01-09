@@ -38,6 +38,9 @@ ad_plugin:
     client: false
     default: ""
     textarea: true
+  ad_plugin_enable_tracking:
+    client: true
+    default: false
 
 adsense_plugin:
   adsense_publisher_code:

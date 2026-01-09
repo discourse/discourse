@@ -45,6 +45,13 @@ after_initialize do
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
+  deprecate_setting(
+    "policy_restrict_to_staff_posts",
+    "create_policy_allowed_groups",
+    false,
+    "3.7.0",
+  )
+
   add_to_serializer(:user_option, :policy_email_frequency) { object.policy_email_frequency }
 
   register_email_unsubscriber("policy_email", EmailControllerHelper::PolicyEmailUnsubscriber)
@@ -54,7 +61,7 @@ after_initialize do
   on(:post_process_cooked) do |doc, post|
     has_group = false
 
-    if !SiteSetting.policy_restrict_to_staff_posts || post&.user&.staff?
+    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
       if policy = doc.search(".policy")&.first
         post_policy = post.post_policy || post.build_post_policy
 
@@ -154,6 +161,10 @@ after_initialize do
       post.save_custom_fields
       PostPolicy.where(post_id: post.id).destroy_all
     end
+  end
+
+  add_to_serializer(:current_user, :can_create_policy) do
+    object.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
   end
 
   add_report("unaccepted-policies") do |report|

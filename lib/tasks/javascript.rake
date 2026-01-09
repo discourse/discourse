@@ -77,6 +77,8 @@ task "javascript:update_constants" => :environment do
 
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};
 
+    export const GROUP_VISIBILITY_LEVELS = #{Group.visibility_levels.to_json};
+
     export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = #{Admin::GroupsController::MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP};
 
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
@@ -94,6 +96,8 @@ task "javascript:update_constants" => :environment do
     export const INVITE_DESCRIPTION_MAX_LENGTH = #{Invite::DESCRIPTION_MAX_LENGTH};
 
     export const USER_OPTION_COMPOSITION_MODES = #{UserOption.composition_mode_types.to_json};
+
+    export const UPCOMING_CHANGES_USER_ENABLED_REASONS = #{UpcomingChanges.user_enabled_reasons.to_json};
 
     export const INTERFACE_COLOR_MODES = {
       AUTO: #{UserOption::AUTO_MODE},

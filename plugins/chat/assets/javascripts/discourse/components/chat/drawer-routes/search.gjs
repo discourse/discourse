@@ -13,7 +13,6 @@ export default class ChatDrawerRoutesSearch extends Component {
   <template>
     <div class="c-drawer-routes --search">
       <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-        <navbar.BackButton />
         <navbar.Title @title={{i18n "chat.search.title"}} />
         <navbar.Actions as |action|>
           <action.ToggleDrawerButton />

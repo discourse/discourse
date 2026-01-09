@@ -368,7 +368,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
                     @label="discourse_post_event.close_event"
                     @action={{this.closeEvent}}
                     @disabled={{this.isSavingEvent}}
-                    class="btn-transparent btn-danger"
+                    class="btn-transparent --danger"
                   />
                 </dropdown.item>
               {{/unless}}

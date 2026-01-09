@@ -62,10 +62,11 @@
 
 .search-results {
   .fps-result {
-    padding: 0.5rem;
-
     .ai-result__icon {
       display: none;
+    }
+    &:not(.bulk-select-enabled) {
+      padding: 0.5rem;
     }
   }
 

@@ -118,4 +118,23 @@ describe "discourse_post_event_recurrence" do
       end
     end
   end
+
+  context "when the recurring event is closed" do
+    before { post_event_1.update!(recurrence: "every_week", closed: true) }
+
+    it "does not generate the next occurrence" do
+      initial_starts_at = post_event_1.starts_at
+      post_event_1.set_next_date
+
+      expect(post_event_1.starts_at).to eq_time(initial_starts_at)
+    end
+
+    it "does not schedule a topic bump" do
+      post_event_1.update!(reminders: "bumpTopic.10.minutes")
+
+      expect { post_event_1.set_topic_bump }.not_to change {
+        Jobs::DiscoursePostEventBumpTopic.jobs.size
+      }
+    end
+  end
 end

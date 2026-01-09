@@ -9,6 +9,10 @@ bg:
     overall_sentiment:
       yaxis: "Дата"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "По избор"
     ai_bot:
       tool_summary:
         search: "Търсене"

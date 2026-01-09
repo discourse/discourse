@@ -16,6 +16,8 @@ import PeriodChooserRow from "./period-chooser/period-chooser-row";
   customStyle: true,
   headerComponent: PeriodChooserHeader,
   headerAriaLabel: i18n("period_chooser.aria_label"),
+  startDate: "startDate",
+  endDate: "endDate",
 })
 export default class PeriodChooser extends DropdownSelectBoxComponent {
   @oneWay("site.periods") content;

@@ -11,6 +11,10 @@ ur:
     emotion_neutral:
       title: "\U0001F610 نیوٹرل"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "اپنی مرضی کا"
     spam_detection:
       bot_user_update_failed: "اسپام اسکیننگ بوٹ رکن کو اپ ڈیٹ کرنے میں ناکام"
     ai_bot:

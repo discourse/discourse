@@ -232,8 +232,10 @@ fi:
           name: "Vaihtokurssi"
         stock_quote:
           name: "Osakekurssi (AlphaVantage)"
-        image_generation:
-          name: "Flux-kuvageneraattori (Together.ai)"
+        image_generation_custom:
+          name: "Mukautettu"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Aloita tyhjästä..."
       name:
@@ -250,10 +252,6 @@ fi:
         explain: "Selitä"
         illustrate_post: "Havainnollista viestiä"
         replace_dates: "Älykkäät päivämäärät"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Kuvan tarjoaa Stable Diffusion XL"
-          dall_e_3: "Kuvan tarjoaa DALL-E 3"
       image_caption:
         attribution: "Tekoälyn laatima kuvateksti"
     share_ai:
@@ -278,7 +276,6 @@ fi:
     ai_bot:
       reply_error: "Näyttää siltä, että järjestelmässä tapahtui odottamaton ongelma, kun se yritti vastata.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
-      thinking: "Ajattelu käynnissä..."
       personas:
         default_llm_required: "Oletus-LLM-malli vaaditaan ennen chatin käyttöönottoa"
         cannot_delete_system_persona: "Järjestelmäpersoonia ei voi poistaa, poista se sen sijaan käytöstä"
@@ -346,7 +343,6 @@ fi:
           description: "Oletuspersoona, jota käytetään Apurin markdown-taulukkogeneraattoriominaisuuteen"
         post_illustrator:
           name: "Viestin havainnollistaja"
-          description: "Luo StableDiffusion-kehotteita Apurin viestien havainnollistamisominaisuudelle"
         proofreader:
           name: "Oikolukija"
           description: "Oletuspersoona, jota käytetään Apurin tekstin oikolukuominaisuuteen"
@@ -443,9 +439,9 @@ fi:
         github_search_files: "GitHub-hakutiedostot"
         github_search_code: "GitHub-koodihaku"
         github_file_content: "GitHub-tiedostosisältö"
-        github_pull_request_diff: "GitHub-vetopyyntöero"
         random_picker: "Satunnainen valitsin"
         categories: "Listaa alueet"
+        flag_post: "Liputa viesti"
         search: "Hae"
         tags: "Listaa tunnisteet"
         time: "Aika"
@@ -471,7 +467,6 @@ fi:
         github_search_code: "Etsi koodia GitHub-tietovarastosta"
         github_search_files: "Etsi tiedostoja GitHub-tietovarastosta"
         github_file_content: "Nouda tiedostojen sisältöä GitHub-tietovarastosta"
-        github_pull_request_diff: "Nouda GitHubin vetopyynnön ero"
         random_picker: "Valitse satunnainen luku tai satunnainen luettelon elementti"
         categories: "Listaa kaikki foorumin julkisesti näkyvät alueet"
         search: "Hae kaikista foorumin julkisista ketjuista"
@@ -497,7 +492,7 @@ fi:
         web_browser: "Luetaan: <a href='%{url}'>%{url}</a>"
         github_search_files: "Haettiin avainsanoilla \"%{keywords}\" tietovarastosta %{repo}/%{branch}"
         github_search_code: "Haettiin ehdolla \"%{query}\" tietovarastosta %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Noudettiin tiedostojen %{file_paths} sisältö tietovarastosta %{repo_name}@%{branch}"
         random_picker: "Valitaan vaihtoehdoista %{options}, valittu: %{result}"
         read: "Luetaan: <a href='%{url}'>%{title}</a>"
@@ -607,6 +602,3 @@ fi:
       custom_tool_exists:
         one: "Mukautettu työkalu nimeltä %{names} on jo olemassa."
         other: "Mukautetut työkalut nimillä %{names} on jo olemassa."
-  dashboard:
-    problem:
-      ai_llm_status: "LLM-mallissa %{model_name} on ongelmia. Tarkista <a href='%{url}'>-mallin määrityssivu</a>."

@@ -23,8 +23,8 @@ export default class UserPrivateMessagesTagsIndex extends DiscourseRoute {
     controller.setProperties({
       model,
       sortProperties: this.siteSettings.tags_sort_alphabetically
-        ? ["id"]
-        : ["count:desc", "id"],
+        ? ["name"]
+        : ["count:desc", "name"],
       tagsForUser: this.modelFor("user").get("username_lower"),
     });
 

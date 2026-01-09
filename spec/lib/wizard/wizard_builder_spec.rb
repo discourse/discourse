@@ -32,55 +32,37 @@ RSpec.describe Wizard::Builder do
     expect(wizard.steps).to be_blank
   end
 
-  describe "introduction" do
-    let(:introduction_step) { wizard.steps.find { |s| s.id == "introduction" } }
+  describe "setup step" do
+    let(:setup_step) { wizard.steps.find { |s| s.id == "setup" } }
 
     it "should not prefill default site setting values" do
-      fields = introduction_step.fields
+      fields = setup_step.fields
       title_field = fields.first
-      description_field = fields.second
 
       expect(title_field.id).to eq("title")
       expect(title_field.value).to eq("")
-      expect(description_field.id).to eq("site_description")
-      expect(description_field.value).to eq("")
     end
 
     it "should prefill overridden site setting values" do
       SiteSetting.title = "foobar"
-      SiteSetting.site_description = "lorem ipsum"
-      SiteSetting.contact_email = "foobar@example.com"
 
-      fields = introduction_step.fields
+      fields = setup_step.fields
       title_field = fields.first
-      description_field = fields.second
 
       expect(title_field.id).to eq("title")
       expect(title_field.value).to eq("foobar")
-      expect(description_field.id).to eq("site_description")
-      expect(description_field.value).to eq("lorem ipsum")
     end
-  end
 
-  describe "privacy step" do
-    let(:privacy_step) { wizard.steps.find { |s| s.id == "privacy" } }
-
-    it "should set the right default value for the fields" do
+    it "should set the right default value for privacy fields" do
       SiteSetting.login_required = true
       SiteSetting.invite_only = false
       SiteSetting.must_approve_users = true
-      SiteSetting.chat_enabled = true if defined?(::Chat)
-      SiteSetting.navigation_menu = NavigationMenuSiteSetting::SIDEBAR
 
-      fields = privacy_step.fields
-      login_required_field = fields.first
-      invite_only_field = fields.second
-      must_approve_users_field = fields.third
-      chat_enabled_field = fields.second_to_last if defined?(::Chat)
-      navigation_menu_field = fields.last
+      fields = setup_step.fields
+      login_required_field = fields[2]
+      invite_only_field = fields[3]
+      must_approve_users_field = fields[4]
 
-      count = defined?(::Chat) ? 4 : 3
-      expect(fields.length).to eq(count)
       expect(login_required_field.id).to eq("login_required")
       expect(login_required_field.value).to eq("private")
       expect(invite_only_field.id).to eq("invite_only")

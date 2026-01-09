@@ -19,6 +19,8 @@ register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
 
+register_asset "stylesheets/admin/ai-features-editor.scss"
+
 register_asset "stylesheets/modules/translation/common/admin-translations.scss"
 
 register_asset "stylesheets/modules/ai-helper/common/ai-helper.scss"
@@ -98,7 +100,7 @@ after_initialize do
     DiscourseAi::Discover::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
-  #register_problem_check ProblemCheck::AiLlmStatus
+  register_problem_check ProblemCheck::AiLlmStatus
   #register_problem_check ProblemCheck::AiCreditSoftLimit
   #register_problem_check ProblemCheck::AiCreditHardLimit
 

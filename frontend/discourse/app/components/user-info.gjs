@@ -9,6 +9,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserStatusMessage from "discourse/components/user-status-message";
 import avatar from "discourse/helpers/avatar";
+import concatClass from "discourse/helpers/concat-class";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
@@ -59,33 +60,43 @@ export default class UserInfo extends Component {
       </div>
     {{/if}}
     <div class="user-detail">
-      <div class="name-line">
-        {{#if this.includeLink}}
-          <a
-            href={{this.userPath}}
-            data-user-card={{@user.username}}
-            role="heading"
-          >
-            <span class={{if this.nameFirst "name" "username"}}>
-              {{if this.nameFirst @user.name (formatUsername @user.username)}}
-            </span>
-            <span class={{if this.nameFirst "username" "name"}}>
-              {{if this.nameFirst (formatUsername @user.username) @user.name}}
-            </span>
-          </a>
-        {{else}}
-          <span class={{if this.nameFirst "name" "username"}}>
-            {{if this.nameFirst @user.name (formatUsername @user.username)}}
+      <div
+        class={{concatClass
+          "name-line"
+          (if @showStatus "--show-status")
+          (if this.nameFirst "--name-first")
+        }}
+      >
+        <span class="username-wrapper">
+          {{#if this.includeLink}}
+            <a
+              href={{this.userPath}}
+              data-user-card={{@user.username}}
+              role={{if @headingLevel "heading"}}
+              aria-level={{@headingLevel}}
+            >
+              <span class="username">{{formatUsername @user.username}}</span>
+            </a>
+          {{else}}
+            <span class="username">{{formatUsername @user.username}}</span>
+          {{/if}}
+          {{#if (and @showStatus @user.status)}}
+            <UserStatusMessage
+              @status={{@user.status}}
+              @showDescription={{@showStatusDescription}}
+            />
+          {{/if}}
+        </span>
+        {{#if @user.name}}
+          <span class="name-wrapper">
+            {{#if this.includeLink}}
+              <a href={{this.userPath}} data-user-card={{@user.username}}>
+                <span class="name">{{@user.name}}</span>
+              </a>
+            {{else}}
+              <span class="name">{{@user.name}}</span>
+            {{/if}}
           </span>
-          <span class={{if this.nameFirst "username" "name"}}>
-            {{if this.nameFirst (formatUsername @user.username) @user.name}}
-          </span>
-        {{/if}}
-        {{#if (and @showStatus @user.status)}}
-          <UserStatusMessage
-            @status={{@user.status}}
-            @showDescription={{@showStatusDescription}}
-          />
         {{/if}}
         <PluginOutlet
           @name="after-user-name"

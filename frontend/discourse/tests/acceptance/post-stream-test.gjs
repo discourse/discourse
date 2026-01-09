@@ -7,7 +7,6 @@ acceptance("Post-Stream | @topicPageQueryParams reactivity", function (needs) {
   needs.user();
   needs.settings({
     enable_filtered_replies_view: true,
-    glimmer_post_stream_mode: "enabled",
   });
 
   needs.hooks.beforeEach(function () {

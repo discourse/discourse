@@ -63,7 +63,7 @@ export default class DFloatBody extends Component {
   }
 
   <template>
-    <DFloatPortal
+    {{~! strip whitespace ~}}<DFloatPortal
       @inline={{@inline}}
       @portalOutletElement={{@instance.portalOutletElement}}
     >
@@ -101,6 +101,6 @@ export default class DFloatBody extends Component {
           {{yield}}
         </div>
       </div>
-    </DFloatPortal>
+    </DFloatPortal>{{~! strip whitespace ~}}
   </template>
 }

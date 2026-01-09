@@ -12,6 +12,7 @@ describe "Upcoming Events", type: :system do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    SiteSetting.calendar_upcoming_events_default_view = "month"
     sign_in(admin)
   end
 
@@ -490,6 +491,18 @@ describe "Upcoming Events", type: :system do
             expect(upcoming_events).to have_event_height("This is a long workshop", 143)
           end
         end
+      end
+    end
+
+    describe "configurable view" do
+      before { SiteSetting.calendar_upcoming_events_default_view = "day" }
+
+      it "default view is controlled by calendar_upcoming_events_default_view setting",
+         time: Time.utc(2025, 9, 15) do
+        upcoming_events.visit
+
+        upcoming_events.expect_content("September 15, 2025")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/9/15")
       end
     end
 

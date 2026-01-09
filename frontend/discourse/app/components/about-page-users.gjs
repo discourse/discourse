@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import AboutPageUser from "discourse/components/about-page-user";
 import DButton from "discourse/components/d-button";
+import UserInfo from "discourse/components/user-info";
 import { i18n } from "discourse-i18n";
 
 export default class AboutPageUsers extends Component {
@@ -30,7 +30,7 @@ export default class AboutPageUsers extends Component {
   <template>
     <div class="about-page-users-list">
       {{#each this.users as |user|}}
-        <AboutPageUser @user={{user}} />
+        <UserInfo @user={{user}} />
       {{/each}}
     </div>
     {{#if this.showViewMoreButton}}

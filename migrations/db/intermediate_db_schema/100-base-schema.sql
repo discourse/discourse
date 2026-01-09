@@ -93,6 +93,13 @@ CREATE TABLE category_custom_fields
     PRIMARY KEY (category_id, name)
 );
 
+CREATE TABLE category_moderation_groups
+(
+    category_id NUMERIC,
+    group_id    NUMERIC,
+    PRIMARY KEY (category_id, group_id)
+);
+
 CREATE TABLE category_users
 (
     category_id        NUMERIC  NOT NULL,
@@ -196,6 +203,7 @@ CREATE TABLE tags
     original_id NUMERIC  NOT NULL PRIMARY KEY,
     created_at  DATETIME,
     description TEXT,
+    locale      TEXT,
     name        TEXT     NOT NULL
 );
 

@@ -51,8 +51,8 @@ export default class UppyComposerUpload {
   uploadPreProcessors;
   uploadHandlers;
 
-  /** @type {PlaceholderHandler} */
-  placeholderHandler;
+  /** @type {TextManipulation} */
+  textManipulation;
 
   #inProgressUploads = [];
   #bufferedUploadErrors = [];
@@ -329,7 +329,7 @@ export default class UppyComposerUpload {
           // The inProgressUploads is meant to be used to display these uploads
           // in a UI, and Ember will only update the array in the UI if pushObject
           // is used to notify it.
-          this.#inProgressUploads.pushObject(
+          this.#inProgressUploads.push(
             EmberObject.create({
               fileName: file.name,
               id: file.id,
@@ -339,7 +339,7 @@ export default class UppyComposerUpload {
           );
 
           if (!file.meta.skipPlaceholder) {
-            this.placeholderHandler.insert(file);
+            this.textManipulation.placeholder.insert(file);
           }
 
           this.appEvents.trigger(
@@ -351,9 +351,11 @@ export default class UppyComposerUpload {
         const MIN_IMAGES_TO_AUTO_GRID = 3;
         if (
           this.siteSettings.experimental_auto_grid_images &&
-          this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID
+          this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID &&
+          this.textManipulation
         ) {
-          this.#autoGridImages();
+          this.textManipulation.autoGridImages([...this.#consecutiveImages]);
+          this.#consecutiveImages.length = 0;
         }
       });
     });
@@ -382,7 +384,7 @@ export default class UppyComposerUpload {
             this.#removeInProgressUpload(file.id);
 
             if (!file.meta.skipPlaceholder) {
-              this.placeholderHandler.success(file, markdown);
+              this.textManipulation.placeholder.success(file, markdown);
             }
 
             this.appEvents.trigger(
@@ -409,7 +411,7 @@ export default class UppyComposerUpload {
     this.uppyWrapper.uppyInstance.on("cancel-all", () => {
       // Do the manual cancelling work only if the user clicked cancel
       if (this.#userCancelled) {
-        this.placeholderHandler.cancelAll();
+        this.textManipulation.placeholder.cancelAll();
         this.#userCancelled = false;
         this.#reset();
 
@@ -494,13 +496,13 @@ export default class UppyComposerUpload {
       });
 
     this.uppyWrapper.onPreProcessProgress((file) => {
-      this.placeholderHandler.progress(file);
+      this.textManipulation.placeholder.progress(file);
     });
 
     this.uppyWrapper.onPreProcessComplete(
       (file) => {
         run(() => {
-          this.placeholderHandler.progressComplete(file);
+          this.textManipulation.placeholder.progressComplete(file);
         });
       },
       () => {
@@ -543,7 +545,7 @@ export default class UppyComposerUpload {
   }
 
   #resetUpload(file) {
-    this.placeholderHandler.cancel(file);
+    this.textManipulation.placeholder.cancel(file);
   }
 
   @bind
@@ -630,94 +632,5 @@ export default class UppyComposerUpload {
       const regex = new RegExp(`\\.(${ext})$`, "i");
       return regex.test(fileName);
     });
-  }
-
-  #autoGridImages() {
-    const reply = this.composerModel.get("reply");
-    const imagesToWrapGrid = new Set(this.#consecutiveImages);
-
-    const uploadingText = i18n("uploading_filename", {
-      filename: "%placeholder%",
-    });
-    const uploadingTextMatch = uploadingText.match(
-      /^.*(?=: %placeholder%\s?…)/
-    );
-
-    if (!uploadingTextMatch || !uploadingTextMatch[0]) {
-      return;
-    }
-
-    const uploadingImagePattern = new RegExp(
-      "\\[" +
-        uploadingTextMatch[0].trim() +
-        "\\s?: ([^\\]]+?)\\.\\w+\\s?…\\]\\(\\)",
-      "g"
-    );
-
-    const matches = reply.match(uploadingImagePattern) || [];
-    const foundImages = [];
-
-    const existingGridPattern = /\[grid\]([\s\S]*?)\[\/grid\]/g;
-    const gridMatches = reply.match(existingGridPattern);
-
-    matches.forEach((imagePlaceholder) => {
-      imagePlaceholder = imagePlaceholder.trim();
-
-      const filenamePattern = new RegExp(
-        "\\[" +
-          uploadingTextMatch[0].trim() +
-          "\\s?: ([^\\]]+?)\\s?\\…\\]\\(\\)"
-      );
-
-      const filenameMatch = imagePlaceholder.match(filenamePattern);
-
-      if (filenameMatch && filenameMatch[1]) {
-        const filename = filenameMatch[1];
-
-        const isWithinGrid = gridMatches?.some((gridContent) =>
-          gridContent.includes(imagePlaceholder)
-        );
-
-        if (!isWithinGrid && imagesToWrapGrid.has(filename)) {
-          foundImages.push(imagePlaceholder);
-          imagesToWrapGrid.delete(filename);
-
-          // Check if we've found all the images
-          if (imagesToWrapGrid.size === 0) {
-            return;
-          }
-        }
-      }
-    });
-
-    // Check if all consecutive images have been found
-    if (foundImages.length === this.#consecutiveImages.length) {
-      const firstImageMarkdown = foundImages[0];
-      const lastImageMarkdown = foundImages[foundImages.length - 1];
-
-      const startIndex = reply.indexOf(firstImageMarkdown);
-      const endIndex =
-        reply.indexOf(lastImageMarkdown) + lastImageMarkdown.length;
-
-      if (startIndex !== -1 && endIndex !== -1) {
-        const textArea = this.#editorEl.querySelector(this.editorInputClass);
-        if (textArea) {
-          textArea.focus();
-          textArea.selectionStart = startIndex;
-          textArea.selectionEnd = endIndex;
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:apply-surround`,
-            "[grid]",
-            "[/grid]",
-            "grid_surround",
-            { useBlockMode: true }
-          );
-        }
-      }
-    }
-
-    // Clear found images for the next consecutive images:
-    this.#consecutiveImages.length = 0;
-    foundImages.length = 0;
   }
 }

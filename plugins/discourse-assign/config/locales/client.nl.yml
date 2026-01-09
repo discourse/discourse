@@ -41,7 +41,6 @@ nl:
       assigned_topic_to: "Topic toegewezen aan <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} toegewezen aan %{username}"
       assign_post_to_multiple: "#%{post_number} aan %{username}"
-      assigned_to_w_ellipsis: "Toegewezen aan..."
       unassign:
         title: "Toewijzing opheffen"
         title_w_ellipsis: "Toewijzing opheffen..."

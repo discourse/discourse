@@ -3,6 +3,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DModal from "discourse/components/d-modal";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { i18n } from "discourse-i18n";
@@ -39,11 +41,14 @@ export default class FullscreenCode extends Component {
       class="fullscreen-code-modal -max"
     >
       <:body>
-        <pre>
-          <code
-            class={{@model.codeClasses}}
-          >{{@model.code}}</code>
-        </pre>
+        <PluginOutlet
+          @name="fullscreen-codeblock-code"
+          @outletArgs={{lazyHash code=@model.code}}
+        >
+          <pre>
+            <code class={{@model.codeClasses}}>{{@model.code}}</code>
+          </pre>
+        </PluginOutlet>
       </:body>
     </DModal>
   </template>

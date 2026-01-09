@@ -7,6 +7,7 @@ import { and, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -19,6 +20,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
@@ -88,12 +90,14 @@ export default class TagInfo extends Component {
     }
     this.set("loading", true);
     return this.store
-      .find("tag-info", this.tag.id)
+      .find("tag-info", this.tag.name)
       .then((result) => {
         this.set("tagInfo", result);
         this.set(
           "tagInfo.synonyms",
-          result.synonyms.map((s) => this.store.createRecord("tag", s))
+          new TrackedArray(
+            result.synonyms.map((s) => this.store.createRecord("tag", s))
+          )
         );
       })
       .finally(() => this.set("loading", false))
@@ -109,7 +113,7 @@ export default class TagInfo extends Component {
     );
     this.setProperties({
       editing: true,
-      newTagName: this.tag.id,
+      newTagName: this.tag.name,
       newTagDescription: this.tagInfo.description,
     });
   }
@@ -117,10 +121,10 @@ export default class TagInfo extends Component {
   @action
   unlinkSynonym(tag, event) {
     event?.preventDefault();
-    ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.id}`, {
+    ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.name}`, {
       type: "DELETE",
     })
-      .then(() => this.tagInfo.synonyms.removeObject(tag))
+      .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
       .catch(popupAjaxError);
   }
 
@@ -135,7 +139,7 @@ export default class TagInfo extends Component {
       didConfirm: () => {
         return tag
           .destroyRecord()
-          .then(() => this.tagInfo.synonyms.removeObject(tag))
+          .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
           .catch(popupAjaxError);
       },
     });
@@ -153,18 +157,22 @@ export default class TagInfo extends Component {
 
   @action
   finishedEditing() {
-    const oldTagName = this.tag.id;
+    const oldTagName = this.tag.name;
     this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
     this.tag
-      .update({ id: this.newTagName, description: this.newTagDescription })
+      .update({
+        name: this.newTagName,
+        description: this.newTagDescription,
+      })
       .then((result) => {
         this.set("editing", false);
         this.tagInfo.set("description", this.newTagDescription);
-        if (
-          result.responseJson.tag &&
-          oldTagName !== result.responseJson.tag.id
-        ) {
-          this.router.transitionTo("tag.show", result.responseJson.tag.id);
+
+        if (result.responseJson.tag) {
+          const newTagName = result.responseJson.tag.name;
+          if (oldTagName !== newTagName) {
+            this.router.transitionTo("tag.show", newTagName);
+          }
         }
       })
       .catch(popupAjaxError);
@@ -331,7 +339,7 @@ export default class TagInfo extends Component {
             <div class="tag-list">
               {{#each this.tagInfo.synonyms as |tag|}}
                 <div class="tag-box">
-                  {{discourseTag tag.id pmOnly=tag.pmOnly tagName="div"}}
+                  {{discourseTag tag.name pmOnly=tag.pmOnly tagName="div"}}
                   {{#if this.editSynonymsMode}}
                     <a
                       href

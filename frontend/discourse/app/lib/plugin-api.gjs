@@ -1,5 +1,4 @@
 import $ from "jquery";
-import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -11,13 +10,17 @@ import {
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
+import {
+  NON_STREAM_HTML_DECORATOR,
+  registerHtmlDecorator,
+} from "discourse/components/decorated-html";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { STREAM_HTML_DECORATOR } from "discourse/components/post/cooked-html";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
@@ -56,10 +59,10 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
-import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
-import { isTesting } from "discourse/lib/environment";
+import { isDevelopment, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import { makeArray } from "discourse/lib/helpers";
@@ -67,14 +70,7 @@ import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
-import {
-  iconNode,
-  registerIconRenderer,
-  replaceIcon,
-} from "discourse/lib/icon-library";
-import KeyboardShortcuts, {
-  disableDefaultKeyboardShortcuts,
-} from "discourse/lib/keyboard-shortcuts";
+import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
@@ -105,7 +101,6 @@ import {
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { includeAttributes } from "discourse/lib/transform-post";
 import {
   _addTransformerName,
   _registerTransformer,
@@ -130,63 +125,9 @@ import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import { addPostClassesCallback } from "discourse/widgets/post";
-import { addDecorator } from "discourse/widgets/post-cooked";
-import {
-  addPostSmallActionClassesCallback,
-  addPostSmallActionIcon,
-} from "discourse/widgets/post-small-action";
-import {
-  addPostTransformCallback,
-  preventCloak,
-} from "discourse/widgets/post-stream";
-import { disableNameSuppression } from "discourse/widgets/poster-name";
-import {
-  changeSetting,
-  createWidget,
-  decorateWidget,
-  POST_STREAM_DEPRECATION_OPTIONS,
-  queryRegistry,
-  reopenWidget,
-  warnWidgetsDeprecation,
-} from "discourse/widgets/widget";
+import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
+import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-
-const DEPRECATED_POST_STREAM_CLASSES = ["component:scrolling-post-stream"];
-
-const DEPRECATED_POST_STREAM_WIDGETS = [
-  "actions-summary",
-  "avatar-flair",
-  "embedded-post",
-  "expand-hidden",
-  "expand-post-button",
-  "filter-jump-to-post",
-  "filter-show-all",
-  "post-article",
-  "post-article",
-  "post-avatar-user-info",
-  "post-avatar",
-  "post-body",
-  "post-contents",
-  "post-date",
-  "post-edits-indicator",
-  "post-email-indicator",
-  "post-gap",
-  "post-group-request",
-  "post-links",
-  "post-locked-indicator",
-  "post-meta-data",
-  "post-notice",
-  "post-placeholder",
-  "post-stream",
-  "post",
-  "poster-name",
-  "poster-name-title",
-  "posts-filtered-notice",
-  "reply-to-tab",
-  "select-post",
-  "topic-post-visited-line",
-];
 
 const blockedModifications = ["component:topic-list"];
 
@@ -243,7 +184,7 @@ function wrapWithErrorHandler(func, messageKey) {
 class _PluginApi {
   constructor(container) {
     this.container = container;
-    this.h = h;
+    this.h = warnWidgetsDecommissioned;
   }
 
   /**
@@ -547,16 +488,17 @@ class _PluginApi {
    *   },
    *
    *   // for the places in code that render virtual dom elements
-   *   node() {
-   *     return h("svg", {
-   *          attributes: { class: "fa d-icon d-icon-far-face-smile", "aria-hidden": true },
-   *          namespace: "http://www.w3.org/2000/svg"
-   *        },[
-   *          h("use", {
-   *          "href": attributeHook("http://www.w3.org/1999/xlink", `#far-face-smile`),
-   *          namespace: "http://www.w3.org/2000/svg"
-   *        })]
-   *     );
+   *   element() {
+   *     const svgElement = document.createElementNS(SVG_NAMESPACE, "svg");
+   *     svgElement.setAttribute("class", "fa d-icon d-icon-far-face-smile");
+   *     svgElement.setAttribute("aria-hidden", true);
+   *
+   *     const useElement = document.createElementNS(SVG_NAMESPACE, "use");
+   *     useElement.setAttribute("href", `#far-face-smile`);
+   *
+   *     svgElement.appendChild(useElement);
+   *
+   *     return svgElement;
    *   }
    * });
    **/
@@ -591,29 +533,59 @@ class _PluginApi {
   }
 
   /**
-   * Used for decorating the `cooked` content of a post after it is rendered
+   * Used for decorating the `cooked` content of a post after it is rendered.
    *
-   * `callback` will be called when it is time to decorate with an DOM node.
+   * @param {Function} callback - Function called to decorate a DOM node.
+   *                              For stream-only decorators, this callback can return
+   *                             a cleanup function that will be executed when decorated content is rerendered/removed.
+   *                             The callback receives two parameters:
    *
-   * Use `options.onlyStream` if you only want to decorate posts within a topic,
-   * and not in other places like the user stream.
+   *                             1. element: HTMLElement to be decorated
+   *                             2. decoratorHelper: Object containing helper methods for the decorator
    *
-   * For example, to add a yellow background to all posts you could do this:
+   * @param {Object} [opts] - Optional configuration object
+   * @param {boolean} [opts.onlyStream=false] - If true, only decorate posts within a post stream.
    *
-   * ```
+   * @example
+   * // Add a yellow background to the decorated element
    * api.decorateCookedElement(
-   *   elem => { elem.style.backgroundColor = 'yellow' }
+   *   elem => {
+   *     elem.style.backgroundColor = 'yellow';
+   *     // Optionally return a cleanup function
+   *     return () => elem.style.backgroundColor = '';
+   *   }
    * );
-   * ```
-   **/
+   *
+   * @example
+   * // Only decorate posts in the post-stream
+   * api.decorateCookedElement(
+   *   elem => { elem.classList.add('topic-post'); },
+   *   { onlyStream: true }
+   * );
+   *
+   * @example
+   * // Using the decorator helper
+   * api.decorateCookedElement(
+   *   (elem, helper) => {
+   *     const post = helper.model; // Get associated post model
+   *     if (post.firstPost) {
+   *       elem.classList.add('first-post');
+   *     }
+   *   }
+   * );
+   */
   decorateCookedElement(callback, opts) {
     opts = opts || {};
 
     callback = wrapWithErrorHandler(callback, "broken_decorator_alert");
 
-    addDecorator(callback);
+    registerHtmlDecorator(
+      callback,
+      opts.onlyStream ? STREAM_HTML_DECORATOR : NON_STREAM_HTML_DECORATOR
+    );
 
-    this.onAppEvent("decorate-post-cooked-element", callback);
+    // for backwards compatibility with plugins/themes decorating cooked elements
+    // using the app events
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
@@ -623,14 +595,18 @@ class _PluginApi {
    * See KeyboardShortcuts.addShortcut documentation.
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
-    KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+    this.container
+      .lookup("service:keyboard-shortcuts")
+      .addShortcut(shortcut, callback, opts);
   }
 
   /**
    * See KeyboardShortcuts.unbind documentation.
    **/
   removeKeyboardShortcut(shortcut, callback) {
-    KeyboardShortcuts.unbind({ [shortcut]: callback });
+    this.container
+      .lookup("service:keyboard-shortcuts")
+      .unbind({ [shortcut]: callback });
   }
 
   /**
@@ -702,133 +678,20 @@ class _PluginApi {
         return makeArray(value).concat(definitions).filter(Boolean);
       }
     );
-
-    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
-      const decoratorFor = (view) => (dec) => {
-        const currentView = this.container.lookup("service:site").mobileView
-          ? "mobile"
-          : "desktop";
-
-        if (view !== currentView) {
-          return;
-        }
-
-        const attrs = dec.attrs;
-        let results = cb(attrs.userCustomFields || {}, attrs);
-
-        if (results) {
-          if (!Array.isArray(results)) {
-            results = [results];
-          }
-
-          return results.map((result) => {
-            let iconBody;
-
-            if (result.icon) {
-              iconBody = iconNode(result.icon);
-            } else if (result.emoji) {
-              iconBody = result.emoji.split("|").map((name) => {
-                let widgetAttrs = { name };
-                if (result.emojiTitle) {
-                  widgetAttrs.title = true;
-                }
-                return dec.attach("emoji", widgetAttrs);
-              });
-            }
-
-            if (result.text) {
-              iconBody = [iconBody, result.text];
-            }
-
-            if (result.url) {
-              iconBody = dec.h(
-                "a",
-                { attributes: { href: result.url } },
-                iconBody
-              );
-            }
-
-            return dec.h(
-              "span.poster-icon",
-              {
-                className: result.className,
-                attributes: { title: result.title },
-              },
-              iconBody
-            );
-          });
-        }
-      };
-
-      decorateWidget(`poster-name:before`, decoratorFor("mobile"));
-      decorateWidget(`poster-name:after`, decoratorFor("desktop"));
-    });
   }
 
   /**
-   * The main interface for extending widgets with additional HTML.
-   *
-   * The `name` you pass it should be the name of the widget and a type
-   * for the decorator. All widgets support `before` and `after` types.
-   *
-   * Example:
-   *
-   * ```
-   * api.decorateWidget('post:after', () => {
-   *   return "I am displayed after every post!";
-   * });
-   * ```
-   *
-   * Your decorator will be called with an instance of a `DecoratorHelper`
-   * object, which provides methods you can use to build more interesting
-   * formatting.
-   *
-   * ```
-   * api.decorateWidget('post:after', helper => {
-   *   return helper.h('p.fancy', `I'm an HTML paragraph on post with id ${helper.attrs.id}`);
-   * });
-   *
-   * (View the source for `DecoratorHelper` for more helper methods you
-   * can use in your plugin decorators.)
-   *
-   **/
-  decorateWidget(name, fn) {
-    const widgetName = name.split(":")[0];
-    this.#deprecatedWidgetOverride(widgetName, "decorateWidget");
-
-    decorateWidget(name, fn);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  decorateWidget() {
+    warnWidgetsDecommissioned();
   }
 
   /**
-   * Adds a new action to a widget that already exists. You can use this to
-   * add additional functionality from your plugin.
-   *
-   * Example:
-   *
-   * ```
-   * api.attachWidgetAction('post', 'annoyMe', () => {
-   *  alert('ANNOYED!');
-   * });
-   * ```
-   **/
-  attachWidgetAction(widget, actionName, fn) {
-    const widgetClass =
-      queryRegistry(widget) ||
-      this.container.factoryFor(`widget:${widget}`)?.class;
-
-    if (!widgetClass) {
-      // eslint-disable-next-line no-console
-      console.error(
-        consolePrefix(),
-        `attachWidgetAction: Could not find widget ${widget} in registry`
-      );
-      return;
-    }
-
-    this.#deprecatedWidgetOverride(widget, "attachWidgetAction");
-
-    widgetClass.prototype[actionName] = fn;
+   * @deprecated the widget rendering system was decommissioned
+   */
+  attachWidgetAction() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -836,10 +699,6 @@ class _PluginApi {
    *
    * This function is now an alias to `api.addTrackedPostProperties`.
    * Use that function instead.
-   *
-   * Add more attributes to the Post's `attrs` object passed through to widgets.
-   * You'll need to do this if you've added attributes to the serializer for a
-   * Post and want to use them when you're rendering.
    *
    * Example:
    *
@@ -850,12 +709,12 @@ class _PluginApi {
    *
    **/
   includePostAttributes(...attributes) {
-    // TODO (glimmer-post-stream): we can keep this function as an alias to addTrackedPostProperties but it is useful to
-    //   deprecate it for now to get warnings for code that is incompatible with the Glimmer Post Stream because if an
-    //   extension is using it, then it is very likely that there is other code that is incompatible
     deprecated(
       "`api.includePostAttributes` has been deprecated. Use `api.addTrackedPostProperties` instead.",
-      POST_STREAM_DEPRECATION_OPTIONS
+      {
+        since: "v3.5.0.beta1-dev",
+        url: "https://meta.discourse.org/t/372063/1",
+      }
     );
 
     this.addTrackedPostProperties(...attributes);
@@ -866,17 +725,13 @@ class _PluginApi {
    *
    * This method is used to mark properties as tracked for post updates.
    *
-   * It will also add the properties to the list of Post's attributes passed to
-   * widgets.
-   *
-   * You'll need to do this if you've added properties to a Post and want to use
-   * them when you're rendering.
+   * You'll need to do this if you've added properties to a Post and need them to be
+   * automatically updated in the UI when there are changes in the model.
    *
    * @param {...string} names - The names of the properties to be tracked.
    */
   addTrackedPostProperties(...names) {
     names.forEach((name) => _addTrackedPostProperty(name));
-    includeAttributes(...names); // compatibility with widget's attributes
   }
 
   /**
@@ -1028,13 +883,10 @@ class _PluginApi {
   }
 
   /**
-   * A hook that is called when the post stream is removed from the DOM.
-   * This advanced hook should be used if you end up wiring up any
-   * events that need to be torn down when the user leaves the topic
-   * page.
-   **/
-  cleanupStream(fn) {
-    addWidgetCleanCallback("post-stream", fn);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  cleanupStream() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -1093,7 +945,6 @@ class _PluginApi {
    * This allows you to override core behavior
    **/
   disableNameSuppressionOnPosts() {
-    disableNameSuppression();
     this.registerValueTransformer(
       "post-meta-data-poster-name-suppress-similar-name",
       () => true
@@ -1135,17 +986,10 @@ class _PluginApi {
   }
 
   /**
-   * Changes a setting associated with a widget. For example, if
-   * you wanted small avatars in the post stream:
-   *
-   * ```javascript
-   * api.changeWidgetSetting('post-avatar', 'size', 'small');
-   * ```
-   *
-   **/
-  changeWidgetSetting(widgetName, settingName, newValue) {
-    this.#deprecatedWidgetOverride(widgetName, "changeWidgetSetting");
-    changeSetting(widgetName, settingName, newValue);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  changeWidgetSetting() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -1166,29 +1010,21 @@ class _PluginApi {
    * ```
    **/
   preventCloak(postId, prevent = true) {
-    // TODO (glimmer-post-stream) remove the call to the widget version of preventCloak below
-    preventCloak(postId); // widgets
-    preventCloaking(postId, prevent); // glimmer-post-stream
+    preventCloaking(postId, prevent);
   }
 
   /**
-   * Exposes the widget creating ability to plugins. Plugins can
-   * register their own widgets and attach them with decorators.
-   * See `createWidget` in `discourse/widgets/widget` for more info.
-   **/
-  createWidget(name, args) {
-    return createWidget(name, args);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  createWidget() {
+    warnWidgetsDecommissioned();
   }
 
   /**
-   * Exposes the widget update ability to plugins. Updates the widget
-   * registry for the given widget name to include the properties on args
-   * See `reopenWidget` in `discourse/widgets/widget` from more info.
-   **/
-
-  reopenWidget(name, args) {
-    this.#deprecatedWidgetOverride(name, "reopenWidget");
-    return reopenWidget(name, args);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  reopenWidget() {
+    warnWidgetsDecommissioned();
   }
 
   addFlagProperty() {
@@ -1199,21 +1035,8 @@ class _PluginApi {
   }
 
   /**
-   * Adds a panel to the header
-   *
-   * takes a widget name, a value to toggle on, and a function which returns the attrs for the widget
-   * Example:
-   * ```javascript
-   * api.addHeaderPanel('widget-name', 'widgetVisible', function(attrs, state) {
-   *   return { name: attrs.name, description: state.description };
-   * });
-   * ```
-   * 'toggle' is an attribute on the state of the header widget,
-   *
-   * 'transformAttrs' is a function which is passed the current attrs and state of the widget,
-   * and returns a hash of values to pass to attach
-   *
-   **/
+   * @deprecated Use `api.headerIcons` instead.
+   */
   addHeaderPanel() {
     // eslint-disable-next-line no-console
     console.error(
@@ -1414,9 +1237,6 @@ class _PluginApi {
       "post-small-action-icon",
       ({ value, context: { code } }) => (key === code ? icon : value)
     );
-
-    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    addPostSmallActionIcon(key, icon);
   }
 
   /**
@@ -1450,9 +1270,6 @@ class _PluginApi {
         ...makeArray(callback(post)),
       ]
     );
-
-    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    addPostSmallActionClassesCallback(callback);
   }
 
   /**
@@ -1520,9 +1337,6 @@ class _PluginApi {
         ...makeArray(callback(post)),
       ]
     );
-
-    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    addPostClassesCallback(callback);
   }
 
   /**
@@ -1565,26 +1379,10 @@ class _PluginApi {
   }
 
   /**
-   *
-   * Adds a callback to be executed on the "transformed" post that is passed to the post
-   * widget.
-   *
-   * This allows you to apply transformations on the actual post that is about to be rendered.
-   *
-   * Example:
-   *
-   * addPostTransformCallback((t)=>{
-   *  // post number 7 is overrated, don't show it ever
-   *  if (t.post_number === 7) { t.cooked = ""; }
-   * })
+   * @deprecated the widget rendering system was decommissioned
    */
-  addPostTransformCallback(callback) {
-    deprecated(
-      "`api.addPostTransformCallback` has been deprecated.",
-      POST_STREAM_DEPRECATION_OPTIONS
-    );
-
-    addPostTransformCallback(callback);
+  addPostTransformCallback() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -2180,15 +1978,8 @@ class _PluginApi {
   }
 
   /**
-   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
-   * in a theme or plugin via an initializer prior to calling this function.
-   *
-   * ```
-   * api.addToHeaderIcons(
-   *  createWidget("some-widget")
-   * ```
-   *
-   **/
+   * @deprecated Use `api.headerIcons` instead
+   */
   // eslint-disable-next-line no-unused-vars
   addToHeaderIcons(icon) {
     // eslint-disable-next-line no-console
@@ -2290,12 +2081,113 @@ class _PluginApi {
     addAdvancedSearchOptions(options);
   }
 
-  addSaveableUserField(fieldName) {
+  /**
+   * Registers a user field that can be saved via the user preferences API.
+   * User fields are admin-defined profile fields stored in the user_fields table.
+   *
+   * @param {string} fieldName - The name of the user field to save
+   * @param {Object} [options] - Optional configuration
+   * @param {string} [options.page] - The preferences page where this field should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Register a user field that will be saved on the emails preferences page
+   * api.addSaveableUserField("newsletter_subscribe", { page: "emails" });
+   */
+  addSaveableUserField(fieldName, options = {}) {
     addSaveableUserField(fieldName);
+
+    if (options.page) {
+      this.registerValueTransformer(
+        "preferences-save-attributes",
+        ({ value: attrs, context }) => {
+          if (context.page === options.page) {
+            attrs.push(fieldName);
+          }
+          return attrs;
+        }
+      );
+    }
   }
 
-  addSaveableUserOptionField(fieldName) {
+  /**
+   * Registers a user option that can be saved via the user preferences API.
+   * User options are preference settings stored in the user_options table.
+   *
+   * @param {string} fieldName - The name of the user option to save
+   * @param {Object} [options] - Optional configuration
+   * @param {string} [options.page] - The preferences page where this option should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Register a user option that will be saved on the emails preferences page
+   * api.addSaveableUserOption("chat_email_frequency", { page: "emails" });
+   *
+   * @example
+   * // Register a user option without specifying a page (for use with custom preference pages)
+   * api.addSaveableUserOption("my_custom_setting");
+   */
+  addSaveableUserOption(fieldName, options = {}) {
     addSaveableUserOptionField(fieldName);
+
+    if (options.page) {
+      this.registerValueTransformer(
+        "preferences-save-attributes",
+        ({ value: attrs, context }) => {
+          if (context.page === options.page) {
+            attrs.push(fieldName);
+          }
+          return attrs;
+        }
+      );
+    }
+  }
+
+  /**
+   * @deprecated Use `addSaveableUserOption` instead
+   */
+  addSaveableUserOptionField(fieldName, options = {}) {
+    this.addSaveableUserOption(fieldName, options);
+  }
+
+  /**
+   * Ensures custom_fields are saved on a specific preferences page.
+   * Custom fields are stored in the user_custom_fields table.
+   *
+   * Unlike `addSaveableUserOption` and `addSaveableUserField` which track
+   * individual field names, this method ensures the entire `custom_fields`
+   * object is included in the save payload. Multiple plugins can safely
+   * call this for the same page - `custom_fields` will only be added once.
+   *
+   * @param {string} page - The preferences page where custom_fields should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Ensure custom_fields are saved on the notifications preferences page
+   * api.addSaveableCustomFields("notifications");
+   */
+  addSaveableCustomFields(page) {
+    if (!page) {
+      const message =
+        "addSaveableCustomFields requires a `page` argument to specify which preferences page should save custom_fields";
+      if (isDevelopment() || isTesting()) {
+        throw new Error(message);
+      }
+      return;
+    }
+
+    this.registerValueTransformer(
+      "preferences-save-attributes",
+      ({ value: attrs, context }) => {
+        if (context.page === page && !attrs.includes("custom_fields")) {
+          attrs.push("custom_fields");
+        }
+        return attrs;
+      }
+    );
   }
 
   /**
@@ -2464,7 +2356,7 @@ class _PluginApi {
   }
 
   /**
-   * Add a function to be called when there is a keyDown even on the search-menu widget.
+   * Add a function to be called when there is a keyDown even on the search-menu.
    * This function runs before the default logic, and if one callback returns a falsey value
    * the logic chain will stop, to prevent the core behavior from occurring.
    *
@@ -2539,31 +2431,10 @@ class _PluginApi {
   }
 
   /**
-   * Calls a method on a mounted widget whenever an app event happens.
-   *
-   * For example, if you have a widget with a `key` of `cool-widget` that lives inside the
-   * `site-header` component, and you wanted it to respond to `thing:happened`, you could do this:
-   *
-   * ```
-   * api.dispatchWidgetAppEvent('site-header', 'cool-widget', 'thing:happened');
-   * ```
-   *
-   * In this case, the `cool-widget` must have a method called `thingHappened`. The event name
-   * is converted to camelCase and used as the method name for you.
+   * @deprecated the widget rendering system was decommissioned
    */
-  dispatchWidgetAppEvent(mountedComponent, widgetKey, appEvent) {
-    this.modifyClass(
-      `component:${mountedComponent}`,
-      {
-        pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
-
-        didInsertElement() {
-          this._super();
-          this.dispatch(appEvent, widgetKey);
-        },
-      },
-      { ignoreMissing: true }
-    );
+  dispatchWidgetAppEvent() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -3277,6 +3148,30 @@ class _PluginApi {
   }
 
   /**
+   * Sets the icon for a plugin in the admin sidebar.
+   *
+   * @param {string} pluginId - The plugin identifier (must match the plugin name)
+   * @param {string} icon - The icon name (FontAwesome icon without 'd-icon-' prefix)
+   *
+   * Example:
+   *
+   * ```javascript
+   * api.setAdminPluginIcon("discourse-calendar", "calendar-days");
+   * ```
+   */
+  setAdminPluginIcon(pluginId, icon) {
+    if (!pluginId) {
+      // eslint-disable-next-line no-console
+      console.warn(consolePrefix(), "A pluginId must be provided!");
+      return;
+    }
+
+    this.registerValueTransformer("admin-plugin-icon", ({ value, context }) => {
+      return context.pluginId === pluginId ? icon : value;
+    });
+  }
+
+  /**
    * Adds a custom site activity item in the new /about page. Requires using
    * the `register_stat` server-side API to serialize the needed data to the
    * frontend.
@@ -3419,39 +3314,17 @@ class _PluginApi {
     _addCategoryPropertyForSave(property);
   }
 
+  // eslint-disable-next-line no-unused-vars
   #deprecateModifyClass(className) {
-    if (DEPRECATED_POST_STREAM_CLASSES.includes(className)) {
-      deprecated(
-        `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
-        POST_STREAM_DEPRECATION_OPTIONS
-      );
-    }
-  }
-
-  #deprecatedWidgetOverride(widgetName, override) {
-    // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
-    // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
-    //   this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
+    // display notification messages for deprecated classes
+    // e.g:
+    //
+    // if (DEPRECATED_CLASSES.includes(className)) {
     //   deprecated(
-    //     `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-    //     {
-    //       since: "v3.3.0.beta1-dev",
-    //       id: "discourse.header-widget-overrides",
-    //       url: "https://meta.discourse.org/t/316549",
-    //     }
+    //     `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
+    //     DEPRECATION_OPTIONS
     //   );
     // }
-
-    if (DEPRECATED_POST_STREAM_WIDGETS.includes(widgetName)) {
-      deprecated(
-        `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
-        POST_STREAM_DEPRECATION_OPTIONS
-      );
-    } else {
-      warnWidgetsDeprecation(
-        `Using \`api.${override}\` is deprecated and will soon stop working. Affected widget: ${widgetName}.`
-      );
-    }
   }
 }
 

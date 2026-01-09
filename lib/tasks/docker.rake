@@ -157,6 +157,7 @@ task "docker:test" do
   begin
     @good = true
     @good &&= run_or_fail("pnpm install")
+    @good &&= run_or_fail("pnpm playwright-install")
 
     unless ENV["SKIP_LINT"]
       puts "Running linters/prettyfiers"
@@ -300,7 +301,7 @@ task "docker:test" do
 
       unless ENV["RUBY_ONLY"]
         unless ENV["SKIP_CORE"]
-          @good &&= run_or_fail("CI=1 QUNIT_PARALLEL=#{qunit_concurrency} bin/rake qunit:test")
+          @good &&= run_or_fail("CI=1 QUNIT_PARALLEL=#{qunit_concurrency} bin/qunit --standalone")
         end
 
         unless ENV["SKIP_PLUGINS"]

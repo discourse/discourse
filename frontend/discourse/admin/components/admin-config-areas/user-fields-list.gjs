@@ -28,7 +28,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
   moveUp(field) {
     const idx = this.sortedFields.indexOf(field);
     if (idx) {
-      const prev = this.sortedFields.objectAt(idx - 1);
+      const prev = this.sortedFields[idx - 1];
       const prevPos = prev.get("position");
 
       prev.update({ position: field.get("position") });
@@ -40,7 +40,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
   moveDown(field) {
     const idx = this.sortedFields.indexOf(field);
     if (idx > -1) {
-      const next = this.sortedFields.objectAt(idx + 1);
+      const next = this.sortedFields[idx + 1];
       const nextPos = next.get("position");
 
       next.update({ position: field.get("position") });

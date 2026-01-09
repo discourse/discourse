@@ -178,6 +178,7 @@ export default class UpcomingEventsCalendar extends Component {
         @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
         @rightHeaderToolbar={{this.rightHeaderToolbar}}
+        @refreshKey={{this.currentUser?.id}}
       />
     </div>
   </template>

@@ -12,6 +12,7 @@ class ReviewableSerializer < ApplicationSerializer
     :target_type,
     :target_id,
     :target_url,
+    :target_created_at,
     :topic_tags,
     :category_id,
     :created_at,
@@ -31,6 +32,7 @@ class ReviewableSerializer < ApplicationSerializer
   has_many :reviewable_scores, serializer: ReviewableScoreSerializer
   has_many :bundled_actions, serializer: ReviewableBundledActionSerializer
   has_many :reviewable_notes, serializer: ReviewableNoteSerializer
+  has_many :reviewable_histories, serializer: ReviewableHistorySerializer
   has_one :claimed_by, serializer: ReviewableClaimedTopicSerializer
 
   # Used to keep track of our payload attributes
@@ -111,6 +113,14 @@ class ReviewableSerializer < ApplicationSerializer
 
   def include_topic_tags?
     object.topic.present? && SiteSetting.tagging_enabled?
+  end
+
+  def target_created_at
+    object.target&.created_at
+  end
+
+  def include_target_created_at?
+    object.target_type == "Post"
   end
 
   def target_url

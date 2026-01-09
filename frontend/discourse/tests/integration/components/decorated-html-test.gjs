@@ -5,10 +5,12 @@ import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import curryComponent from "ember-curry-component";
 import { module, test } from "qunit";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DecoratedHtml, {
+  registerHtmlDecorator,
+} from "discourse/components/decorated-html";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
+import { WIDGET_DECOMMISSION_OPTIONS } from "discourse/widgets/widget";
 
 module("Integration | Component | <DecoratedHtml />", function (hooks) {
   setupRenderingTest(hooks);
@@ -92,7 +94,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     const decorateWithStringTarget = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
 
-      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
+      withSilencedDeprecations(WIDGET_DECOMMISSION_OPTIONS.id, () => {
         helper.renderGlimmer(
           "div",
           <template>
@@ -132,7 +134,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     const decorateWithHbsTemplate = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
 
-      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
+      withSilencedDeprecations(WIDGET_DECOMMISSION_OPTIONS.id, () => {
         helper.renderGlimmer(
           element,
           hbs("<div id='render-glimmer'>Hello from Glimmer Component</div>")
@@ -166,5 +168,51 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
       .doesNotExist(
         "Glimmer component is not rendered when a template is passed as the component"
       );
+  });
+
+  test("applies registered HTML decorators by default", async function (assert) {
+    let decoratorCalled = false;
+    registerHtmlDecorator((element) => {
+      decoratorCalled = true;
+      element.innerHTML += "<span id='auto-decorated'>Decorated</span>";
+    });
+
+    await render(
+      <template>
+        <DecoratedHtml @html={{htmlSafe "<div>Content</div>"}} />
+      </template>
+    );
+
+    assert.true(decoratorCalled, "registered decorator was called");
+    assert.dom("#auto-decorated").hasText("Decorated");
+  });
+
+  test("custom @decorate function replaces default decoration", async function (assert) {
+    let registeredDecoratorCalled = false;
+    registerHtmlDecorator(() => {
+      registeredDecoratorCalled = true;
+    });
+
+    let customDecoratorCalled = false;
+    const customDecorator = (element) => {
+      customDecoratorCalled = true;
+      element.innerHTML += "<span id='custom'>Custom</span>";
+    };
+
+    await render(
+      <template>
+        <DecoratedHtml
+          @html={{htmlSafe "<div>Content</div>"}}
+          @decorate={{customDecorator}}
+        />
+      </template>
+    );
+
+    assert.true(customDecoratorCalled, "custom decorator was called");
+    assert.false(
+      registeredDecoratorCalled,
+      "registered decorator was not called when custom decorator is provided"
+    );
+    assert.dom("#custom").hasText("Custom");
   });
 });

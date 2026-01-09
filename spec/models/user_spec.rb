@@ -1724,8 +1724,8 @@ RSpec.describe User do
       expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
     end
 
-    it "uses the system user avatar if the logo is nil" do
-      SiteSetting.logo_small = nil
+    it "uses the system user avatar if the logo is blank" do
+      SiteSetting.logo_small = ""
       system_user = Discourse.system_user
       expected = User.avatar_template(system_user.username, system_user.uploaded_avatar_id)
 
@@ -2134,7 +2134,7 @@ RSpec.describe User do
           status: Reviewable.statuses[:approved],
         )
 
-        expect(user.number_of_rejected_posts).to eq(0)
+        expect(user.number_of_rejected_posts.to_i).to eq(0)
       end
     end
 
@@ -2158,6 +2158,10 @@ RSpec.describe User do
           Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
         end
         expect(user.number_of_silencings).to eq(3)
+
+        # ignores other users' history
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user])
+        expect(user.reload.number_of_silencings).to eq(3)
       end
     end
   end
@@ -2356,6 +2360,7 @@ RSpec.describe User do
   describe ".clear_global_notice_if_needed" do
     fab!(:user)
     fab!(:admin)
+    let!(:inactive_user) { Fabricate(:user, active: false) }
 
     before do
       SiteSetting.has_login_hint = true
@@ -2374,10 +2379,17 @@ RSpec.describe User do
       expect(SiteSetting.global_notice).to eq("some notice")
     end
 
-    it "clears the notice when the admin is saved" do
+    it "clears the notice when an active admin is saved" do
       admin.save
       expect(SiteSetting.has_login_hint).to eq(false)
       expect(SiteSetting.global_notice).to eq("")
+    end
+
+    it "does not clear the notice when an inactive admin is saved" do
+      inactive_user.admin = true
+      inactive_user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
     end
   end
 
@@ -3772,6 +3784,170 @@ RSpec.describe User do
       SiteSetting.allow_user_locale = false
       user.update!(locale: "fr")
       expect(user.effective_locale).to eq(SiteSetting.default_locale)
+    end
+  end
+
+  describe ".upcoming_change_stats" do
+    fab!(:target_user, :user)
+    fab!(:guardian_user, :user)
+    fab!(:admin_user, :admin)
+    fab!(:group1) { Fabricate(:group, name: "test_group_1") }
+    fab!(:group2) { Fabricate(:group, name: "test_group_2") }
+    fab!(:hidden_group) do
+      Fabricate(:group, name: "hidden_group", visibility_level: Group.visibility_levels[:owners])
+    end
+
+    let(:guardian) { Guardian.new(guardian_user) }
+    let(:admin_guardian) { Guardian.new(admin_user) }
+
+    before do
+      SiteSetting.enable_upcoming_changes = true
+
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "feature,all_members",
+            status: :beta,
+            impact_type: "feature",
+            impact_role: "all_members",
+          },
+        },
+      )
+    end
+
+    context "when the change is enabled for all users" do
+      before { SiteSetting.enable_upload_debug_mode = true }
+
+      it "returns enabled as true and reason as enabled_for_everyone" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:enabled_for_everyone],
+        )
+        expect(change_stat[:specific_groups]).to eq([])
+      end
+    end
+
+    context "when the change is enabled for no users" do
+      before { SiteSetting.enable_upload_debug_mode = false }
+
+      it "returns enabled as false and reason as enabled_for_no_one" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:enabled]).to be(false)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:enabled_for_no_one],
+        )
+        expect(change_stat[:specific_groups]).to eq([])
+      end
+    end
+
+    context "when the change is enabled for specific groups" do
+      before do
+        SiteSetting.enable_upload_debug_mode = true
+        Fabricate(
+          :site_setting_group,
+          name: "enable_upload_debug_mode",
+          group_ids: "#{group1.id}|#{group2.id}",
+        )
+      end
+
+      context "when the target user belongs to one of those groups" do
+        before { group1.add(target_user) }
+
+        it "returns enabled as true and reason as in_specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+          expect(change_stat[:enabled]).to be(true)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to contain_exactly("test_group_1")
+        end
+      end
+
+      context "when the target user belongs to multiple groups" do
+        before do
+          group1.add(target_user)
+          group2.add(target_user)
+        end
+
+        it "returns enabled as true with all groups in specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+          expect(change_stat[:enabled]).to be(true)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to contain_exactly("test_group_1", "test_group_2")
+        end
+      end
+
+      context "when the target user does NOT belong to any of those groups" do
+        it "returns enabled as false and reason as not_in_specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+          expect(change_stat[:enabled]).to be(false)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:not_in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to eq([])
+        end
+      end
+    end
+
+    context "when guardian user visibility is restricted" do
+      before do
+        SiteSetting.enable_upload_debug_mode = true
+        group1.add(target_user)
+        hidden_group.add(target_user)
+        Fabricate(
+          :site_setting_group,
+          name: "enable_upload_debug_mode",
+          group_ids: "#{group1.id}|#{hidden_group.id}",
+        )
+      end
+
+      it "only shows groups the guardian user is allowed to see in specific_groups" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+        )
+        expect(change_stat[:specific_groups]).to contain_exactly("test_group_1")
+        expect(change_stat[:specific_groups]).not_to include("hidden_group")
+      end
+
+      it "shows all groups when guardian is admin" do
+        stats = target_user.upcoming_change_stats(admin_guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:specific_groups]).to contain_exactly("test_group_1", "hidden_group")
+      end
+    end
+
+    describe "metadata fields" do
+      before { SiteSetting.enable_upload_debug_mode = true }
+
+      it "includes correct name, humanized_name, and description" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:name]).to eq(:enable_upload_debug_mode)
+        expect(change_stat[:humanized_name]).to eq(
+          SiteSetting.humanized_name(:enable_upload_debug_mode),
+        )
+        expect(change_stat[:description]).to eq(SiteSetting.description(:enable_upload_debug_mode))
+      end
     end
   end
 end

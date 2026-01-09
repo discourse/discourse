@@ -1,4 +1,4 @@
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import icon from "discourse/helpers/d-icon";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -46,19 +46,19 @@ export default {
         "model:topic",
         (Superclass) =>
           class extends Superclass {
-            @tracked related_topics;
-            relatedTopicsCache = [];
+            @tracked _relatedTopicsRecords = null;
 
-            @cached
-            get relatedTopics() {
-              // Used to keep related topics when a user scrolls up from the
-              // bottom of the topic and then scrolls back down
-              if (this.related_topics) {
-                this.relatedTopicsCache = this.related_topics;
+            // Only updates if we have data - preserves cache when scrolling.
+            set related_topics(value) {
+              if (value?.length) {
+                this._relatedTopicsRecords = value.map((topic) =>
+                  this.store.createRecord("topic", topic)
+                );
               }
-              return this.relatedTopicsCache?.map((topic) =>
-                this.store.createRecord("topic", topic)
-              );
+            }
+
+            get relatedTopics() {
+              return this._relatedTopicsRecords;
             }
           }
       );
@@ -69,7 +69,10 @@ export default {
           class extends Superclass {
             _setSuggestedTopics(result) {
               super._setSuggestedTopics(...arguments);
-              this.topic.related_topics = result.related_topics;
+
+              if (result.related_topics) {
+                this.topic.related_topics = result.related_topics;
+              }
             }
           }
       );

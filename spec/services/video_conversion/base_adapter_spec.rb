@@ -37,9 +37,10 @@ RSpec.describe VideoConversion::BaseAdapter do
 
   describe "#handle_completion" do
     it "raises NotImplementedError" do
-      expect {
-        adapter.handle_completion("job-123", "/path/to/output.mp4", "new-sha1")
-      }.to raise_error(NotImplementedError, "#{described_class} must implement #handle_completion")
+      expect { adapter.handle_completion("job-123", "new-sha1") }.to raise_error(
+        NotImplementedError,
+        "#{described_class} must implement #handle_completion",
+      )
     end
   end
 

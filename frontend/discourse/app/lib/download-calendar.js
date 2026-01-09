@@ -2,12 +2,13 @@ import downloadCalendarModal from "discourse/components/modal/download-calendar"
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import User from "discourse/models/user";
+import { i18n } from "discourse-i18n";
 
 export function downloadCalendar(title, dates, options = {}) {
   const currentUser = User.current();
 
   const formattedDates = formatDates(dates);
-  title = title.trim();
+  title = (title || i18n("download_calendar.default_title")).trim();
 
   switch (currentUser?.user_option.default_calendar) {
     case "ics":
@@ -44,8 +45,9 @@ export function downloadGoogle(title, dates, options = {}) {
     link.searchParams.append("text", title);
     link.searchParams.append(
       "dates",
-      `${_formatDateForGoogleApi(date.startsAt)}/${_formatDateForGoogleApi(
-        date.endsAt
+      `${_formatDateForGoogleApi(date.startsAt, date.timezone)}/${_formatDateForGoogleApi(
+        date.endsAt,
+        date.timezone
       )}`
     );
 
@@ -242,8 +244,7 @@ function _displayModal(title, dates, options = {}) {
   });
 }
 
-function _formatDateForGoogleApi(date) {
-  return moment(date)
-    .toISOString()
-    .replace(/-|:|\.\d\d\d/g, "");
+function _formatDateForGoogleApi(date, timezone) {
+  const momentDate = timezone ? moment.tz(date, timezone) : moment(date);
+  return momentDate.utc().format("YYYYMMDD[T]HHmmss[Z]");
 }

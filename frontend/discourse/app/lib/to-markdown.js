@@ -1,3 +1,8 @@
+import {
+  buildImageMarkdown,
+  extensionFromUrl,
+} from "discourse/lib/markdown-image-builder";
+
 const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpFirst",
   "MsoListParagraphCxSpMiddle",
@@ -363,6 +368,14 @@ export class Tag {
 
           if (base62SHA1) {
             href = `upload://${base62SHA1}`;
+            const extension =
+              extensionFromUrl(img.attributes.src) ||
+              extensionFromUrl(attr.href) ||
+              extensionFromUrl(attr["data-download-href"]);
+
+            if (extension) {
+              href += `.${extension}`;
+            }
           }
 
           const width = img.attributes.width;
@@ -411,6 +424,13 @@ export class Tag {
         const base62SHA1 = attr["data-base62-sha1"];
         if (base62SHA1) {
           src = `upload://${base62SHA1}`;
+          const extension =
+            extensionFromUrl(attr.src || pAttr.src) ||
+            extensionFromUrl(attr["data-orig-src"]);
+
+          if (extension) {
+            src += `.${extension}`;
+          }
         }
 
         if (cssClass?.includes("emoji")) {
@@ -426,19 +446,20 @@ export class Tag {
             return "[image]";
           }
 
-          let alt = attr.alt || pAttr.alt || "";
+          const alt = attr.alt || pAttr.alt;
           const width = attr.width || pAttr.width;
           const height = attr.height || pAttr.height;
           const title = attr.title;
+          const escapeTablePipe = this.element.parentNames.includes("table");
 
-          if (width && height) {
-            const pipe = this.element.parentNames.includes("table")
-              ? "\\|"
-              : "|";
-            alt = `${alt}${pipe}${width}x${height}`;
-          }
-
-          return `![${alt}](${src}${title ? ` "${title}"` : ""})`;
+          return buildImageMarkdown({
+            src,
+            alt,
+            width,
+            height,
+            title,
+            escapeTablePipe,
+          });
         }
 
         return "";

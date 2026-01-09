@@ -9,6 +9,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -17,14 +18,16 @@ export default class DashboardProblems extends Component {
   async dismissProblem(problem) {
     try {
       await ajax(`/admin/admin_notices/${problem.id}`, { type: "DELETE" });
-      this.args.problems.removeObject(problem);
+      removeValueFromArray(this.args.problems, problem);
     } catch (error) {
       popupAjaxError(error);
     }
   }
 
   get problems() {
-    return this.args.problems.sort((a, b) => compare(a?.priority, b?.priority));
+    return this.args.problems.toSorted((a, b) =>
+      compare(a?.priority, b?.priority)
+    );
   }
 
   <template>

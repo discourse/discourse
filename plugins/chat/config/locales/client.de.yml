@@ -81,6 +81,7 @@ de:
         join_channel: "Kanal beitreten"
         leave_channel: "Kanal verlassen"
         leave_groupchat_info: "Wenn du den Gruppenchat verlässt, hast du keinen Zugriff mehr darauf und erhältst keine Benachrichtigungen mehr. Um wieder teilzunehmen, musst du von einem Mitglied des Gruppenchats erneut eingeladen werden."
+        notification_settings_context: "Benachrichtigungen"
         join: "Beitreten"
         leave: "Verlassen"
         save_label:
@@ -128,7 +129,6 @@ de:
       email_frequency:
         description: "Wir schicken dir nur dann eine E-Mail, wenn wir dich in den letzten 15 Minuten nicht gesehen haben."
         never: "Niemals"
-        title: "E-Mail-Benachrichtigungen"
         when_away: "Nur bei Abwesenheit"
       header_indicator_preference:
         title: "Aktivitätsindikator in der Kopfzeile anzeigen"
@@ -141,10 +141,8 @@ de:
       send_shortcut:
         enter:
           label: "Senden mit Enter"
-          description: "Neue Zeile mit Umschalt + Enter"
         meta_enter:
           label: "Senden mit %{meta_key} + Enter"
-          description: "Neue Zeile mit Enter"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"
@@ -239,12 +237,11 @@ de:
       no_public_channels: "Du bist noch keinem Kanal beigetreten!"
       no_public_channels_cta: "Kanäle durchsuchen"
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
+      chat_notifications_title: "Chat-Benachrichtigungen"
       only_chat_push_notifications:
         title: "Nur Chat-Push-Benachrichtigungen senden"
-        description: "Alle Nicht-Chat-Push-Benachrichtigungen blockieren und nicht senden"
       ignore_channel_wide_mention:
         title: "Kanalweite Erwähnungen ignorieren"
-        description: "Keine Benachrichtigungen für kanalweite Erwähnungen senden (@here und @all)"
       show_thread_title_prompts:
         title: "Eingabeaufforderungen für Thread-Titel anzeigen"
         description: "Eingabeaufforderungen zum Festlegen eines Titels für neue Threads anzeigen"
@@ -328,6 +325,7 @@ de:
         yesterday: Gestern
       search_view:
         filter_placeholder: Nachrichten durchsuchen
+        sr_instructions: "Drücke die Eingabetaste oder die Leertaste, um die Nachricht zu öffnen. Verwende Tab, um zwischen den Ergebnissen zu navigieren."
       members_view:
         filter_placeholder: Mitglieder finden
         add_member: Mitglied hinzufügen
@@ -500,6 +498,9 @@ de:
           confirm_export: "Dies exportiert alle Nachrichten aus allen Kanälen und schickt dir das Ergebnis in einer persönlichen Nachricht. Bist du sicher, dass du exportieren willst?"
           export_has_started: "Der Export hat begonnen. Du erhältst eine PN, wenn er abgeschlossen ist."
       search:
+        short_title: Suche
+        title: Chats durchsuchen
+        aria_label: "Zur Chatsuche wechseln"
         no_results: "Keine Ergebnisse gefunden"
         sort:
           relevance: "Relevanz"

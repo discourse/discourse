@@ -7,9 +7,11 @@
 zh_CN:
   admin_js:
     admin:
+      calendar: "日历与活动"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
+          discourse_calendar: "日历与活动"
   js:
     notifications:
       titles:
@@ -34,6 +36,7 @@ zh_CN:
         header_title: "假期"
         pick_region_description: "选择一个区域以查看该区域的假期。"
         disabled_holidays_description: "已禁用的假期将被排除在管理人员假期日历之外。"
+        header_description: "请选择一个地区以查看该地区的假期。被禁用的假期将从员工假期日历中排除。"
       date: "日期"
       add_to_calendar: "添加到 Google 日历"
       toggle_timezone_offset_title: "切换时区偏移"
@@ -42,6 +45,7 @@ zh_CN:
         title: "区域"
         none: "无"
         use_current_region: "使用当前区域"
+        select_region: "选择一个地区……"
         names:
           ae: "阿拉伯联合酋长国"
           ar: "阿根廷"
@@ -407,6 +411,7 @@ zh_CN:
         event:
           expired: "已过期"
           closed: "已关闭"
+          full: "已满"
           status:
             standalone:
               title: "独立"
@@ -464,6 +469,9 @@ zh_CN:
         minimal:
           label: "最低限度活动"
           checkbox_label: "隐藏“参加/不参加”按钮和受邀者状态"
+        max_attendees:
+          label: "最多参与者"
+          placeholder: "无限制"
         allow_chat:
           label: "聊天集成"
           checkbox_label: "创建和管理活动特定的聊天频道"

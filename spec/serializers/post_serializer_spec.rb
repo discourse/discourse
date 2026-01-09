@@ -424,11 +424,51 @@ RSpec.describe PostSerializer do
       before { post_action.created_at = 20.minutes.ago }
 
       it "disallows anonymous users from unliking posts" do
-        # There are no other post actions available to anonymous users so the action_summary will be an empty array
-        expect(serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }).to eq(
-          nil,
-        )
+        like_actions_summary =
+          serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+        expect(like_actions_summary[:acted]).to eq(true)
+        expect(like_actions_summary[:can_act]).to be_nil
       end
+    end
+  end
+
+  context "when user has liked a post but like count is 0 and undo window passed" do
+    fab!(:user)
+    fab!(:poster, :user)
+    fab!(:topic) { Fabricate(:topic, user: poster) }
+    fab!(:post) { Fabricate(:post, topic:, user: poster, like_count: 0) }
+    fab!(:like_action) do
+      Fabricate(
+        :post_action,
+        user:,
+        post:,
+        post_action_type_id: PostActionType.types[:like],
+        created_at: 1.day.ago,
+      )
+    end
+
+    before { SiteSetting.post_undo_action_window_mins = 10 }
+
+    let(:serializer) do
+      PostSerializer.new(
+        post,
+        scope: Guardian.new(user),
+        root: false,
+        post_actions: {
+          PostActionType.types[:like] => like_action,
+        },
+      )
+    end
+
+    it "includes the like action in actions_summary with acted flag" do
+      like_actions_summary =
+        serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+      expect(like_actions_summary).to be_present
+      expect(like_actions_summary[:acted]).to eq(true)
+      expect(like_actions_summary[:can_act]).to be_nil
+      expect(like_actions_summary[:can_undo]).to be_nil
     end
   end
 
@@ -834,5 +874,70 @@ RSpec.describe PostSerializer do
   def serialized_post_for_user(u)
     s = serialized_post(u)
     s.as_json
+  end
+
+  describe "#can_localize_post" do
+    fab!(:author, :user)
+    fab!(:author_post) { Fabricate(:post, user: author) }
+    fab!(:admin)
+    fab!(:group)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = group.id.to_s
+    end
+
+    it "is included when user can localize content" do
+      group.add(admin)
+      json = PostSerializer.new(author_post, scope: Guardian.new(admin), root: false).as_json
+      expect(json[:can_localize_post]).to eq(true)
+    end
+
+    it "is included when author localization is enabled and user is post author" do
+      SiteSetting.content_localization_allow_author_localization = true
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:can_localize_post]).to eq(true)
+
+      SiteSetting.content_localization_allow_author_localization = false
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:can_localize_post]).to eq(nil)
+    end
+
+    it "is not included when user cannot localize post" do
+      other_user = Fabricate(:user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(other_user), root: false).as_json
+      expect(json.key?(:can_localize_post)).to eq(false)
+    end
+  end
+
+  describe "post_localizations_count" do
+    fab!(:author, :user)
+    fab!(:author_post) { Fabricate(:post, user: author) }
+    fab!(:group)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = group.id.to_s
+      Fabricate(:post_localization, post: author_post, locale: "ja")
+    end
+
+    it "is included for users in allowed groups" do
+      user = Fabricate(:user)
+      group.add(user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(user), root: false).as_json
+      expect(json[:post_localizations_count]).to eq(1)
+    end
+
+    it "is included for post authors when author localization is enabled" do
+      SiteSetting.content_localization_allow_author_localization = true
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:post_localizations_count]).to eq(1)
+    end
+
+    it "is not included for users who cannot localize" do
+      other_user = Fabricate(:user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(other_user), root: false).as_json
+      expect(json.key?(:post_localizations_count)).to eq(false)
+    end
   end
 end

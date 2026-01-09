@@ -9,6 +9,7 @@ vi:
     gamification:
       you: "Bạn"
       leaderboard:
+        title: "Bảng xếp hạng"
         link_to_settings: "Cài đặt"
         refresh: "Làm mới"
         name: "Tên"

@@ -246,6 +246,7 @@ export default function () {
           });
           this.route("authenticators");
           this.route("discourseconnect");
+          this.route("discourse-id");
           // Lets plugins register routes via register_admin_config_login_route
           this.route("plugin-tab", {
             path: "/*wildcard",
@@ -369,6 +370,7 @@ export default function () {
         });
         this.route("logo");
         this.route("fonts");
+        this.route("adminWelcomeBanner", { path: "/welcome-banner" });
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });

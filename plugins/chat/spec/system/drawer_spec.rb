@@ -78,8 +78,8 @@ RSpec.describe "Drawer", type: :system do
       chat_page.open_from_header
 
       chat_drawer = page.find(".chat-drawer")
-      expect(get_style(chat_drawer, "width")).to eq("500px")
-      expect(get_style(chat_drawer, "height")).to eq("500px")
+      expect(chat_drawer).to have_computed_style(width: "500px")
+      expect(chat_drawer).to have_computed_style(height: "500px")
     end
 
     it "has a default size" do
@@ -88,8 +88,8 @@ RSpec.describe "Drawer", type: :system do
       chat_page.open_from_header
 
       chat_drawer = page.find(".chat-drawer")
-      expect(get_style(chat_drawer, "width")).to eq("400px")
-      expect(get_style(chat_drawer, "height")).to eq("530px")
+      expect(chat_drawer).to have_computed_style(width: "400px")
+      expect(chat_drawer).to have_computed_style(height: "530px")
     end
   end
 
@@ -261,7 +261,7 @@ RSpec.describe "Drawer", type: :system do
       chat_page.open_from_header
 
       expect(page).to have_css(".chat-drawer .c-footer")
-      expect(page).to have_css(".chat-drawer .c-footer__item", count: 2)
+      expect(page).to have_css(".chat-drawer .c-footer__item", count: 3)
     end
 
     it "hides footer nav when only channels are accessible" do

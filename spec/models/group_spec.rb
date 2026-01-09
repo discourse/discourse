@@ -358,6 +358,49 @@ RSpec.describe Group do
         expect(publish_event_job_args["group_id"]).to eq(tl0_users.id)
         expect(publish_event_job_args["type"]).to eq("add")
       end
+
+      it "clears flair_group_id when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        moderators.update!(flair_icon: "shield-halved")
+        user.update!(moderator: true, flair_group_id: moderators.id)
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(GroupUser.exists?(group: moderators, user: user)).to eq(true)
+        expect(user.reload.flair_group_id).to eq(moderators.id)
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(GroupUser.exists?(group: moderators, user: user)).to eq(false)
+        expect(user.reload.flair_group_id).to be_nil
+      end
+
+      it "clears primary_group_id when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        user.update!(moderator: true, primary_group_id: moderators.id)
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(user.reload.primary_group_id).to eq(moderators.id)
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(user.reload.primary_group_id).to be_nil
+      end
+
+      it "clears title when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        moderators.update!(title: "Moderator")
+        user.update!(moderator: true, title: "Moderator")
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(user.reload.title).to eq("Moderator")
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(user.reload.title).to be_nil
+      end
     end
 
     it "makes sure the everyone group is not visible except to staff" do
@@ -1063,6 +1106,49 @@ RSpec.describe Group do
         expect(payload["user_id"]).to eq(user.id)
       end
     end
+
+    context "when publishing updates" do
+      fab!(:category)
+
+      before { group.update!(public_exit: true) }
+
+      it "should publish category removal when category is read-restricted to the group" do
+        category.set_permissions(group => :full)
+        category.save!
+        group.update!(categories: [category])
+
+        message = MessageBus.track_publish("/categories") { group.remove(user) }.first
+
+        expect(message.data[:deleted_categories]).to eq([category.id])
+        expect(message.data[:categories]).to be_blank
+        expect(message.user_ids).to eq([user.id])
+      end
+
+      it "should publish updated category permissions when category is readable by everyone" do
+        category.set_permissions(:everyone => :readonly, group => :full)
+        category.save!
+        group.update!(categories: [category])
+
+        message = MessageBus.track_publish("/categories") { group.remove(user) }.first
+
+        expect(message.data[:categories].count).to eq(1)
+        expect(message.data[:categories].first[:id]).to eq(category.id)
+        expect(message.data[:deleted_categories]).to be_blank
+        expect(message.user_ids).to eq([user.id])
+      end
+
+      describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
+        it "should publish a message to refresh the user's client" do
+          group.categories += Fabricate.times(Group::PUBLISH_CATEGORIES_LIMIT + 1, :category)
+
+          message = MessageBus.track_publish { group.remove(user) }.first
+
+          expect(message.data).to eq("clobber")
+          expect(message.channel).to eq("/refresh_client")
+          expect(message.user_ids).to eq([user.id])
+        end
+      end
+    end
   end
 
   describe "#add" do
@@ -1133,7 +1219,7 @@ RSpec.describe Group do
 
       describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
         it "should publish a message to refresh the user's client" do
-          (Group::PUBLISH_CATEGORIES_LIMIT + 1).times { group.categories << Fabricate(:category) }
+          group.categories += Fabricate.times(Group::PUBLISH_CATEGORIES_LIMIT + 1, :category)
 
           message = MessageBus.track_publish { group.add(user) }.first
 

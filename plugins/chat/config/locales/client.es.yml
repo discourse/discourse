@@ -81,6 +81,7 @@ es:
         join_channel: "Unirse al canal"
         leave_channel: "Abandonar canal"
         leave_groupchat_info: "Al abandonar este chat de grupo, dejarás de tener acceso al mismo y no recibirás notificaciones relacionadas con él. Para volver a unirte, deberás ser invitado de nuevo por un miembro del chat de grupo."
+        notification_settings_context: "Notificaciones"
         join: "Unirse"
         leave: "Abandonar"
         save_label:
@@ -128,7 +129,6 @@ es:
       email_frequency:
         description: "Solo te enviaremos un correo electrónico si no te hemos visto en los últimos 15 minutos."
         never: "Nunca"
-        title: "Notificaciones por correo electrónico"
         when_away: "Solo cuando estés ausente"
       header_indicator_preference:
         title: "Mostrar indicador de actividad en el encabezado"
@@ -141,10 +141,8 @@ es:
       send_shortcut:
         enter:
           label: "Enviar mediante Intro"
-          description: "Nueva línea con Mayús + Intro"
         meta_enter:
           label: "Enviar por %{meta_key} + Intro"
-          description: "Nueva línea mediante Intro"
       enable: "Activar chat"
       flag: "Denunciar"
       emoji: "Insertar emoji"
@@ -239,12 +237,11 @@ es:
       no_public_channels: "¡No te has unido a ningún canal todavía!"
       no_public_channels_cta: "Examinar canales"
       kicked_from_channel: "Ya no puedes acceder a este canal."
+      chat_notifications_title: "Notificaciones de chat"
       only_chat_push_notifications:
         title: "Enviar solo notificaciones de chat"
-        description: "Bloquear el envío de todas las notificaciones que no sean de chat"
       ignore_channel_wide_mention:
         title: "Ignorar las menciones de todo el canal"
-        description: "No enviar notificaciones para las menciones de todo el canal (@here y @all)"
       show_thread_title_prompts:
         title: "Mostrar indicaciones para el título del hilo"
         description: "Mostrar indicaciones para establecer un título para los hilos nuevos"
@@ -500,6 +497,7 @@ es:
           confirm_export: "Esto exporta todos los mensajes de todos los canales y te envía el resultado en un mensaje personal. ¿Seguro que quieres exportar?"
           export_has_started: "La exportación ha comenzado. Recibirás un MP cuando esté lista."
       search:
+        short_title: Buscar
         no_results: "No se encontró ningún resultado"
         sort:
           relevance: "Relevancia"

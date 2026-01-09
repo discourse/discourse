@@ -1,5 +1,9 @@
 import Component from "@glimmer/component";
 import { Input } from "@ember/component";
+import {
+  addUniqueValueToArray,
+  removeValuesFromArray,
+} from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 
 export default class WebhookEventChooser extends Component {
@@ -28,9 +32,10 @@ export default class WebhookEventChooser extends Component {
     }
 
     if (value) {
-      eventTypes.addObject(this.args.type);
+      addUniqueValueToArray(eventTypes, this.args.type);
     } else {
-      eventTypes.removeObjects(
+      removeValuesFromArray(
+        eventTypes,
         eventTypes.filter((eventType) => eventType.name === this.args.type.name)
       );
     }

@@ -34,6 +34,10 @@ class Reviewable < ActiveRecord::Base
       def empty?
         @actions.empty?
       end
+
+      def bundle_id
+        id.split("-", 2).last
+      end
     end
 
     class Action < Item

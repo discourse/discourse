@@ -10,6 +10,7 @@ da:
       logs:
         staff_actions:
           actions:
+            update_automation: opdater automatisering
             delete_automation: slet automatisering
     discourse_automation:
       title: Automatisering
@@ -49,13 +50,17 @@ da:
             label: Brødtekst
           delay:
             label: Forsinkelse (minutter)
-          prefers_encrypt:
-            label: Krypterer PM hvis tilgængelig
         group:
           label: Gruppe
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Mærker
         user_badge_granted:
           fields:
             badge:
@@ -74,7 +79,7 @@ da:
             categories:
               label: Begrænset til kategorier
             tags:
-              label: Begrænset til mærker
+              label: Begrænset til tags
             stalled_after:
               label: Gået i stå efter
         recurring:
@@ -144,7 +149,7 @@ da:
             valid_trust_levels:
               label: Gyldige tillidsniveauer
             restricted_tags:
-              label: Mærker
+              label: Tags
             restricted_categories:
               label: Kategorier
             restricted_archetype:
@@ -204,7 +209,7 @@ da:
             restricted_category:
               label: Kategori
             restricted_tags:
-              label: Mærker
+              label: Tags
       scriptables:
         zapier_webhook:
           fields:
@@ -219,7 +224,7 @@ da:
         auto_tag_topic:
           fields:
             tags:
-              label: Mærker
+              label: Tags
         post:
           fields:
             topic:
@@ -229,7 +234,7 @@ da:
             category:
               label: Emne kategori
             tags:
-              label: Emne mærker
+              label: Emnetags
         group_category_notification_default:
           fields:
             group:
@@ -301,6 +306,8 @@ da:
             user:
               label: Bruger
               description: "Brugeren, der lukker emnet (standard: system)"
+        set_topic_timer:
+          title: Indstil timerfunktion for emne
       unnamed_automation: "Unavngiven automatisering"
       models:
         script:

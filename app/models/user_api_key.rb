@@ -2,7 +2,6 @@
 
 class UserApiKey < ActiveRecord::Base
   self.ignored_columns = [
-    "scopes", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
     "client_id", # TODO: Add post-migration to remove column after 3.4.0 stable release (not before early 2025)
     "application_name", # TODO: Add post-migration to remove column after 3.4.0 stable release (not before early 2025)
   ]

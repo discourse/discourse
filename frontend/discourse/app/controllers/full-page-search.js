@@ -7,10 +7,10 @@ import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
-import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import { setTransient } from "discourse/lib/page-tracker";
+import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import { scrollTop } from "discourse/lib/scroll-top";
 import {
   getSearchKey,
@@ -136,7 +136,7 @@ export default class FullPageSearchController extends Controller {
       });
     }
 
-    this.bulkSelectHelper = new BulkSelectHelper(this);
+    this.bulkSelectHelper = new PostBulkSelectHelper(this);
   }
 
   @discourseComputed("resultCount")
@@ -376,7 +376,12 @@ export default class FullPageSearchController extends Controller {
 
     this.set("invalidSearch", false);
     const searchTerm = this.searchTerm;
-    if (!isValidSearchTerm(searchTerm, this.siteSettings)) {
+    // A non-zero sortOrder means user selected an order filter, which is valid even without a search term
+    const hasValidSortOrder = this.sortOrder > 0;
+    if (
+      !hasValidSortOrder &&
+      !isValidSearchTerm(searchTerm, this.siteSettings)
+    ) {
       this.set("invalidSearch", true);
       return;
     }
@@ -386,7 +391,7 @@ export default class FullPageSearchController extends Controller {
     if (args.page === 1) {
       this.set("bulkSelectEnabled", false);
 
-      this.bulkSelectHelper.clear();
+      this.bulkSelectHelper.clearAll();
       this.set("searching", true);
       scrollTop();
     } else {
@@ -508,7 +513,7 @@ export default class FullPageSearchController extends Controller {
       page: 1,
       resultCount: null,
     });
-    this.bulkSelectHelper.clear();
+    this.bulkSelectHelper.clearAll();
   }
 
   @action
@@ -551,7 +556,7 @@ export default class FullPageSearchController extends Controller {
   selectAll() {
     addUniqueValuesToArray(
       this.bulkSelectHelper.selected,
-      this.searchResultPosts.map((item) => item.topic)
+      this.searchResultPosts.map((item) => item)
     );
 
     // Doing this the proper way is a HUGE pain,
@@ -568,7 +573,7 @@ export default class FullPageSearchController extends Controller {
 
   @action
   clearAll() {
-    this.bulkSelectHelper.selected = [];
+    this.bulkSelectHelper.clearAll();
 
     document
       .querySelectorAll(".fps-result input[type=checkbox]")
@@ -580,7 +585,7 @@ export default class FullPageSearchController extends Controller {
   @action
   toggleBulkSelect() {
     this.toggleProperty("bulkSelectEnabled");
-    this.bulkSelectHelper.selected = [];
+    this.bulkSelectHelper.clearAll();
   }
 
   @action

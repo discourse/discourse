@@ -1,3 +1,5 @@
+// @ts-check
+
 import {
   RARE_RE,
   replaceRareStr,
@@ -7,7 +9,7 @@ import {
 
 // TODO(renato): should respect `enable_markdown_typographer`
 
-/** @type {RichEditorExtension} */
+/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
   inputRules: [
     {

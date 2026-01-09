@@ -4,6 +4,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default class PostEventUpcomingEventsDefaultIndexRoute extends DiscourseRoute {
   @service router;
+  @service siteSettings;
 
   beforeModel() {
     const today = moment();
@@ -13,7 +14,7 @@ export default class PostEventUpcomingEventsDefaultIndexRoute extends DiscourseR
 
     this.router?.replaceWith?.(
       "discourse-post-event-upcoming-events.index",
-      "month",
+      this.siteSettings.calendar_upcoming_events_default_view,
       year,
       month,
       day

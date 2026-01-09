@@ -28,7 +28,7 @@ module DiscourseDataExplorer
 
       query_args = {}
       begin
-        query_args = query.cast_params req_params
+        query_args = query.cast_params(req_params, opts)
       rescue ValidationError => e
         return { error: e, duration_nanos: 0 }
       end
@@ -43,17 +43,18 @@ module DiscourseDataExplorer
           DB.exec "SET LOCAL statement_timeout = 10000"
 
           # SQL comments are for the benefits of the slow queries log
-          sql = <<-SQL
-  /*
-  * DiscourseDataExplorer Query
-  * Query: /admin/plugins/explorer/queries/#{query.id}
-  * Started by: #{opts[:current_user]}
-  */
-  WITH query AS (
-  #{query.sql}
-  ) SELECT * FROM query
-  LIMIT #{opts[:limit] || SiteSetting.data_explorer_query_result_limit}
-  SQL
+          started_by = opts[:current_user]&.username
+          sql = <<~SQL
+            /*
+            * DiscourseDataExplorer Query
+            * Query: /admin/plugins/explorer/queries/#{query.id}
+            #{"* Started by: #{started_by}" if started_by}
+            */
+            WITH query AS (
+            #{query.sql}
+            ) SELECT * FROM query
+            LIMIT #{opts[:limit] || SiteSetting.data_explorer_query_result_limit}
+          SQL
 
           time_start = Time.now
 

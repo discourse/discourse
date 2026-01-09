@@ -15,6 +15,7 @@ import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import DEditor from "discourse/components/d-editor";
 import DEditorPreview from "discourse/components/d-editor-preview";
+import { applyHtmlDecorators } from "discourse/components/decorated-html";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PickFilesButton from "discourse/components/pick-files-button";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
@@ -292,7 +293,7 @@ export default class ComposerEditor extends Component {
   @bind
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;
-    this.uppyComposerUpload.placeholderHandler = textManipulation.placeholder;
+    this.uppyComposerUpload.textManipulation = textManipulation;
 
     const input = this.element.querySelector(".d-editor-input");
 
@@ -609,11 +610,7 @@ export default class ComposerEditor extends Component {
   }
 
   _decorateCookedElement(preview, helper) {
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      preview,
-      helper
-    );
+    applyHtmlDecorators(preview, helper);
   }
 
   @debounce(DEBOUNCE_JIT_MS)
@@ -992,10 +989,8 @@ export default class ComposerEditor extends Component {
   }
 
   get showTranslationEditor() {
-    if (
-      !this.siteSettings.content_localization_enabled ||
-      !this.currentUser.can_localize_content
-    ) {
+    const post = this.get("composer.model.post");
+    if (!post?.can_localize_post) {
       return false;
     }
 
@@ -1037,6 +1032,13 @@ export default class ComposerEditor extends Component {
   )
   showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
     return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
+  }
+
+  @discourseComputed("composer.model")
+  forceEditorMode() {
+    return applyValueTransformer("composer-force-editor-mode", null, {
+      model: this.composer.model,
+    });
   }
 
   @action
@@ -1099,6 +1101,7 @@ export default class ComposerEditor extends Component {
         @validation={{this.validation}}
         @loading={{this.composer.loading}}
         @forcePreview={{this.forcePreview}}
+        @forceEditorMode={{this.forceEditorMode}}
         @showLink={{this.showLink}}
         @composerEvents={{true}}
         @onPopupMenuAction={{this.composer.onPopupMenuAction}}

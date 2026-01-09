@@ -11,16 +11,44 @@ da:
         solved:
           accepted_notification: "accepteret"
     solved:
+      title: "Løst"
       allow_accepted_answers: "Tillad ejer af emne og stab at markere svar som en løsning"
+      accepted_description: "Dette er den accepterede løsning på dette emne"
+      has_no_accepted_answer: "Dette emne har ingen løsning"
+      unaccept_answer: "Fjern markeringen, hvis dette svar ikke længere løser problemet"
       accepted_answer: "Løsning"
       solution: "Løsning"
+      solution_summary:
+        one: "løsning"
+        other: "løsninger"
+      accepted_answer_solver_info: "Løst af %{user} i %{post}"
       accepted_answer_post_number: "indlæg %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "alle"
+        solved: "løst"
+        unsolved: "uløst"
+      no_solved_topics_title: "Du har ikke løst nogen emner endnu"
+      no_solved_topics_title_others: "%{username} har endnu ikke løst nogen emner"
+      no_solved_topics_body: "Når du giver et nyttigt svar på et emne, kan dit svar blive udvalgt som løsningen af emneejeren eller personalet."
+      marked_solved_by: "Markeret som løst af %{user}"
+      no_answer:
+        title: Er dit spørgsmål blevet besvaret?
+        description: "Fremhæv svaret og hjælp andre ved at bruge løsningsknappen under det korrekte svar."
+      notification:
+        title: "dit indlæg blev markeret som løsning"
     topic_statuses:
       solved:
         help: "Dette svar har en løsning"
+    search:
+      advanced:
+        statuses:
+          solved: "er løst"
+          unsolved: "er uløst"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Løst begivenhed"
     discourse_automation:
       triggerables:
         first_accepted_solution:

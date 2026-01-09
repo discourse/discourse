@@ -49,7 +49,6 @@ nl:
     all_day_event_start_time: "Evenementen waarvoor geen begintijd is opgegeven, beginnen op deze tijd. De notatie is Hh:mm. Voor 6:00 uur voer je 06:00 in"
     all_day_event_end_time: "Evenementen waarvoor geen eindtijd is opgegeven, eindigen op deze tijd. De notatie is HH:mm. Voor 18:00 uur voer je 18:00 in"
     all_day_event_time_error: "Ongeldige tijd. Notatie moet HH:mm zijn (bijvoorbeeld 08:00)."
-    calendar_categories: "Geeft een kalender weer bovenaan een categorie. Verplichte instellingen zijn categoryId en postId, bijvoorbeeld: categoryId=6;postId=453\nAndere geldige instellingen: tzPicker, weekends en defaultView."
     calendar_categories_outlet: "Hiermee kun je veranderen welke outlet de categoriekalender moet weergeven."
     working_days: "Stel werkdagen in. Je kunt de beschikbaarheid van een groep weergeven met de 'timezones'-tag in een bericht, bijvoorbeeld: '[timezones group=admins][timezones]'"
     working_day_start_hour: "Begintijd van werkdag."

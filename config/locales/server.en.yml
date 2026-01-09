@@ -156,6 +156,9 @@ en:
         humanize_not_valid_string_value: "The property at JSON Pointer '%{property_json_pointer}' must be a string."
         not_valid_string_value: "must be a string"
 
+        humanize_not_valid_datetime_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid datetime."
+        not_valid_datetime_value: "must be a valid datetime"
+
         humanize_not_valid_integer_value: "The property at JSON Pointer '%{property_json_pointer}' must be an integer."
         not_valid_integer_value: "must be an integer"
 
@@ -870,6 +873,9 @@ en:
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       description_incomplete: "The category description post must have at least one paragraph."
+      description_too_long:
+        one: "Description is too long (maximum is %{count} character)."
+        other: "Description is too long (maximum is %{count} characters)."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
@@ -1233,11 +1239,14 @@ en:
       every_six_months: "every six months"
 
   user_api_key:
-    title: "Authorize application access"
+    title: 'Authorize "%{application_name}"'
     authorize: "Authorize"
+    deny: "Cancel"
     read: "read"
     read_write: "read/write"
-    description: '"%{application_name}" is requesting the following access to your account:'
+    logged_in_as: "Logged in as"
+    permissions_header: 'This will allow "%{application_name}" to:'
+    redirect_warning: "Authorizing will redirect you to"
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
@@ -2142,6 +2151,7 @@ en:
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
     video_conversion_service: "The video conversion service to use for processing uploaded videos."
     mediaconvert_role_arn: "AWS IAM role ARN for MediaConvert service. Required when using AWS MediaConvert for video conversion."
+    mediaconvert_output_subdirectory: "Subdirectory in S3 bucket where MediaConvert will temporarily write converted videos before they are moved to the final upload location."
 
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
@@ -2176,40 +2186,27 @@ en:
     tl3_requires_likes_given: "The minimum number of likes that must be given in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
-    tl4_delete_posts_and_topics: "Allow TL4 users to delete posts and topics created by other users. TL4 users will also be able to see deleted topics and posts."
     delete_all_posts_and_topics_allowed_groups: "Groups allowed to delete posts and topics created by other users. These groups will also be able to see deleted topics and posts."
     edit_all_topic_groups: "Allow users in this group to edit other users' topic titles, tags, and categories"
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
-    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     create_topic_allowed_groups: "Groups that are allowed to create new topics. Admins and moderators can always create topics."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
-    min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
     edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki. Admins and moderators can always edit posts marked as wiki."
 
-    min_trust_to_edit_post: "The minimum trust level required to edit posts."
     edit_post_allowed_groups: "Groups that are allowed to edit posts. Admins and moderators can always edit posts."
 
-    min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
     self_wiki_allowed_groups: "Allow users in these groups to make their own posts wiki. Admins and moderators can always make their own posts wiki."
 
     min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
-    min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
     send_email_messages_allowed_groups: "Groups that are allowed to send personal messages via email. Admins and moderators can always send personal messages via email."
-    min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     flag_post_allowed_groups: "Groups that are allowed to flag posts. Admins and moderators can always flag posts."
-    min_trust_to_post_links: "The minimum trust level required to include links in posts"
     post_links_allowed_groups: "Groups that are allowed to include links in posts. Admins and moderators are always allowed to post links."
-    min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post. Admins and moderators can always embed media items."
-    min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
     profile_background_allowed_groups: "Groups that are allowed to upload a profile background. Admins and moderators can always upload a profile background."
-    min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
     user_card_background_allowed_groups: "Groups that are allowed to upload a user card background. Admins and moderators can always upload a user card background."
-    min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
     invite_allowed_groups: "Groups that are allowed to invite users. Admins and moderators can always invite users."
-    min_trust_level_to_allow_ignore: "The minimum trust level required to ignore users"
     ignore_allowed_groups: "Groups that are allowed to ignore other users. Admins and moderators can always ignore other users."
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
@@ -2223,7 +2220,6 @@ en:
     enable_mentions: "Permits users to tag or reference each other in their posts using the '@' symbol."
     here_mention: "Name used for a @mention to allow privileged users to notify up to 'max_here_mentioned' people participating in the topic. Must not be an existing username."
     max_here_mentioned: "Maximum number of mentioned people by @here."
-    min_trust_level_for_here_mention: "The minimum trust level allowed to mention @here."
     here_mention_allowed_groups: "Groups that are allowed to mention @here. Admins and moderators can always mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
@@ -2305,6 +2301,7 @@ en:
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
+    moderator_guide_topic: "The topic that outlines how you moderate your community. Link will be visible on the review queue for moderators and admins."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
@@ -2313,7 +2310,7 @@ en:
     allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over 'flag post allowed groups'."
     email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
-    slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
+    slow_mode_prevents_editing: "Does 'Slow mode' prevent editing, after 'editing grace period'?"
 
     reply_by_email_enabled: "Activate the feature that permits users to respond to topics directly through email, instead of requiring them to log into the website. See <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>the guide on Meta</a> for more information."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -2377,7 +2374,6 @@ en:
     pop3_polling_delete_from_server: "Delete emails from server. NOTE: If you disable this you should manually clean your mail inbox"
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
-    email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_in_allowed_groups: "Groups that are allowed to post new topics via email. Admins and moderators can always post new topics via email."
 
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
@@ -2403,12 +2399,12 @@ en:
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
+    delete_all_posts_background_threshold: "The maximum number of posts that can be deleted at once with the Delete All Posts button before the deletion is processed in the background."
     delete_user_self_max_post_count: "The maximum number of posts a user can have while allowing self-service account deletion. Set to -1 to disable self-service account deletion."
     username_change_period: "The maximum number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "Location to redirect browser to after logout (eg: https://example.com/logout)"
 
-    allow_uploaded_avatars: "Allow users to upload custom profile pictures."
     uploaded_avatars_allowed_groups: "Specify groups allowed to upload custom profile pictures."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
@@ -2435,7 +2431,6 @@ en:
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_mode: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
     allow_likes_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. This setting requires the `allow anonymous mode` setting to be enabled."
-    anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting. This setting requires the `allow anonymous mode` setting to be enabled."
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting. This setting requires the `allow anonymous mode` setting to be enabled."
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
@@ -2567,9 +2562,7 @@ en:
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
-    approve_unless_trust_level: "Posts created by users below this trust level must be approved"
     approve_unless_allowed_groups: "Posts created by users not in these groups must be approved. Posts created by admins and moderators are always approved."
-    approve_new_topics_unless_trust_level: "New topics created by users below this trust level must be approved"
     approve_new_topics_unless_allowed_groups: "New topics created by users not in these groups must be approved. Topics created by admins and moderators are always approved."
     approve_unless_staged: "New topics and posts created by staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
@@ -2589,7 +2582,6 @@ en:
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
-    review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if they contain embedded media."
     skip_review_media_groups: "Users who are not in any of these groups will have their posts sent to staff for review if the post contains embedded media. Posts created by admins and moderators are always allowed."
     blur_tl0_flagged_posts_media: "Blur flagged posts images to hide potentially NSFW content."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
@@ -2654,9 +2646,6 @@ en:
     revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
 
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
-    min_trust_level_for_user_api_key: |
-      Trust level required for generation of user API keys.<br>
-      <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     user_api_key_allowed_groups: |
       Group membership required for generation of user API keys.<br>
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub.<br>
@@ -2667,7 +2656,6 @@ en:
     revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
-    min_trust_to_create_tag: "The minimum trust level required to create a tag."
     create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."
     edit_tags_allowed_groups: "Groups that are allowed to edit tags, tag descriptions, and tag synonyms."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
@@ -2680,7 +2668,6 @@ en:
     tags_listed_by_group: "List tags by tag group on the <a href='%{base_path}/tags' target='_blank'>Tags page</a>."
     tag_style: "Define the visual appearance of tag badges on the site. This setting allows you to customize how tags are visually represented across all areas of the site, enhancing layout consistency and user accessibility."
     pm_tags_allowed_for_groups: "Allow members of included groups to tag any personal message"
-    min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     tag_topic_allowed_groups: "Groups that are allowed to tag topics. Admins and moderators can always tag topics."
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
@@ -2694,7 +2681,6 @@ en:
     city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
-    shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
     shared_drafts_allowed_groups: "Allow users in these groups to see and edit Shared Drafts."
 
     push_notifications_prompt: "Show a user consent banner for push notifications. This setting triggers a prompt asking users for permission to send them push notifications. It only appears when push notifications are not already enabled, are supported by the user's device, and the user has either made a post or is using a Progressive Web App (PWA). The prompt will not be shown again if the user has already dismissed it or granted/denied permission."
@@ -2744,16 +2730,12 @@ en:
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready."
-    glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups."
-    deactivate_widgets_rendering: "Disable the legacy widgets rendering engine. This will disable all widgets that have not been updated to Glimmer components, it will also force the Glimmer Post Stream to be enabled unconditionally regardless of the value of the `glimmer_post_stream_mode` setting."
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     experimental_impersonation: "Impersonate a user without having to log out of your admin account."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
-    experimental_lightbox: "Use PhotoSwipe to lightbox larger images."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
@@ -2772,15 +2754,21 @@ en:
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
     content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
+    content_localization_use_default_locale_when_unsupported: "Serve localized content in the site's default locale to users whose preferred language is not listed in 'content localization supported locales'."
+    content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
     enable_upcoming_changes: "Enable upcoming changes"
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
+    floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
+    experimental_rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
+      invalid_datetime: "Invalid datetime format. Please ensure you've entered a valid date and time."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."
+      invalid_topic: "There's no topic with that ID."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
       invalid_integer_max: "Value cannot be higher than %{max}."
@@ -2837,7 +2825,7 @@ en:
         other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
-      discourse_id_credentials: "You must configure Discourse ID credentials ('discourse_id_client_id' and 'discourse_id_client_secret') before enabling this setting."
+      discourse_id_registration: "Failed to automatically register with Discourse ID. This could be due to network connectivity issues, firewall restrictions, or the Discourse ID service being unreachable. Please check server logs for more details or contact support."
       linkedin_oidc_credentials: "You must configure LinkedIn OIDC credentials ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
@@ -2848,6 +2836,7 @@ en:
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires the 'set locale from cookie' and 'allow user locale' site settings to be enabled, and 'content localization supported locales' to have at least one language."
       mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
+      mediaconvert_output_subdirectory_required: "MediaConvert output subdirectory is required."
       s3_credentials_required_for_video_conversion: "S3 credentials are required for video conversion. Please configure S3 access keys or enable IAM profile."
 
     keywords:
@@ -3379,11 +3368,13 @@ en:
     illegal: "Your post was flagged as  **illegal**: the community thinks it might be breaking the law."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
+    needs_approval: "Your post was flagged **for approval**: it has been automatically queued for review by a staff member to ensure it meets [our community guidelines](%{base_path}/guidelines)."
     responder:
       off_topic: "The post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
       inappropriate: "The post was flagged as **inappropriate**: the community feels it is offensive, abusive, to be hateful conduct or a violation of [our community guidelines](%{base_path}/guidelines)."
       spam: "The post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
       notify_moderators: "The post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
+      needs_approval: "The post was flagged **for approval**: it has been automatically queued for review by a staff member to ensure it meets [our community guidelines](%{base_path}/guidelines)."
 
   flags_dispositions:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
@@ -3408,6 +3399,7 @@ en:
 
     post_hidden:
       title: "Post Hidden"
+      preview: "Post hidden due to flags by community members."
       subject_template: "Post hidden by community flags"
       text_body_template: |
         Hello,
@@ -3472,6 +3464,7 @@ en:
 
     post_hidden_again:
       title: "Post Hidden again"
+      preview: "Post hidden again by community members."
       subject_template: "Post hidden by community flags, staff notified"
       text_body_template: |
         Hello,
@@ -3566,6 +3559,7 @@ en:
 
     welcome_user:
       title: "Welcome User"
+      preview: "Welcome to %{site_name}!"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome!
@@ -3595,6 +3589,7 @@ en:
         With great power comes great responsibility. If you’re new to moderating, please refer to the [Moderation Guide](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Welcome Invite"
+      preview: "Welcome to %{site_name}!"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
         Thanks for accepting your invitation to %{site_name} -- welcome!
@@ -4003,6 +3998,7 @@ en:
 
     too_many_spam_flags:
       title: "Too Many Spam Flags"
+      preview: "Posts temporarily hidden due to spam flags."
       subject_template: "New account on hold"
       text_body_template: |
         Hello,
@@ -4025,6 +4021,7 @@ en:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Silenced by Staff"
+      preview: "Account temporarily placed on hold."
       subject_template: "Account temporarily on hold"
       text_body_template: |
         Hello,
@@ -4074,6 +4071,7 @@ en:
 
     unsilenced:
       title: "Unsilenced"
+      preview: "Account no longer on hold."
       subject_template: "Account no longer on hold"
       text_body_template: |
         Hello,
@@ -4117,6 +4115,12 @@ en:
 
         Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/review?type=ReviewableQueuedPost).
 
+    user_posts_deleted:
+      title: "User Posts Deleted"
+      subject_template: "All of %{user}'s posts have been deleted"
+      text_body_template: |
+        %{deleted_posts_count} posts from @%{user} have been deleted by @%{staff_user}.
+
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
@@ -4130,8 +4134,6 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -4248,6 +4250,7 @@ en:
 
     user_replied:
       title: "User Replied"
+      preview: "Someone replied to your post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4272,6 +4275,7 @@ en:
 
     user_quoted:
       title: "User Quoted"
+      preview: "Someone quoted you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4284,6 +4288,7 @@ en:
 
     user_linked:
       title: "User Linked"
+      preview: "Post linked in another topic."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4296,6 +4301,7 @@ en:
 
     user_mentioned:
       title: "User Mentioned"
+      preview: "Someone mentioned you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4356,6 +4362,7 @@ en:
 
     user_posted:
       title: "User Posted"
+      preview: "Someone replied to a topic you are Watching."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4392,6 +4399,7 @@ en:
 
     user_posted_pm:
       title: "User Posted PM"
+      preview: "Someone sent you a PM."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4518,6 +4526,7 @@ en:
 
     forgot_password:
       title: "Forgot Password"
+      preview: "Reset your password."
       subject_template: "[%{email_prefix}] Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
@@ -4529,6 +4538,7 @@ en:
 
     email_login:
       title: "Log in via link"
+      preview: "Log in via link."
       subject_template: "[%{email_prefix}] Log in via link"
       text_body_template: |
         Here's your link to log in at [%{site_name}](%{base_url}).
@@ -4540,6 +4550,7 @@ en:
 
     set_password:
       title: "Set Password"
+      preview: "Set account password."
       subject_template: "[%{email_prefix}] Set Password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
@@ -4551,6 +4562,7 @@ en:
 
     admin_login:
       title: "Admin Login"
+      preview: "Admin login requested."
       subject_template: "[%{email_prefix}] Login"
       text_body_template: |
         Somebody asked to log in to your account on [%{site_name}](%{base_url}).
@@ -4562,6 +4574,7 @@ en:
 
     account_created:
       title: "Account Created"
+      preview: "New account created for you."
       subject_template: "[%{email_prefix}] Your New Account"
       text_body_template: |
         A new account was created for you at %{site_name}
@@ -4615,6 +4628,7 @@ en:
 
     notify_old_email:
       title: "Notify Old Email"
+      preview: "Email address updated."
       subject_template: "[%{email_prefix}] Your email address has been changed"
       text_body_template: |
         This is an automated message to let you know that your email address for
@@ -4639,6 +4653,7 @@ en:
 
     signup_after_approval:
       title: "Signup After Approval"
+      preview: "New account approved."
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
         Welcome to %{site_name}!
@@ -4666,6 +4681,7 @@ en:
 
     signup:
       title: "Signup"
+      preview: "Confirm your account."
       subject_template: "[%{email_prefix}] Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
@@ -4690,6 +4706,7 @@ en:
 
     suspicious_login:
       title: "New Login Alert"
+      preview: "Verify your device."
       subject_template: "[%{site_name}] New Login from %{location}"
       text_body_template: |
         Hello,
@@ -5291,17 +5308,17 @@ en:
       name: Nice Share
       description: Shared a post with 25 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 25 outside visitors. Thanks for spreading the word about our discussions, and this community.
+        This badge is granted for sharing a link that was clicked by 25 unique outside visitors. Thanks for spreading the word about our discussions, and this community.
     good_share:
       name: Good Share
       description: Shared a post with 300 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You’ve shown off a great discussion to a bunch of new people and helped this community grow.
+        This badge is granted for sharing a link that was clicked by 300 unique outside visitors. Good work! You’ve shown off a great discussion to a bunch of new people and helped this community grow.
     great_share:
       name: Great Share
       description: Shared a post with 1000 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You’ve promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
+        This badge is granted for sharing a link that was clicked by 1000 unique outside visitors. Wow! You’ve promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
     first_like:
       name: First Like
       description: Liked a post
@@ -5472,6 +5489,11 @@ en:
       one: "You must select at least %{count} tag."
       other: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    bulk_create:
+      invalid_params: "Invalid parameters. Please provide an array of tag names."
+      invalid_name: "Invalid tag name."
+      tag_too_long: "Tag is too long (max %{max} characters)."
+      too_many_tags: "Too many tags. You can create up to %{max} tags at once. For larger imports, use the CSV upload feature."
     forbidden:
       invalid:
         one: "The tag you selected cannot be used"
@@ -5499,6 +5521,9 @@ en:
 
   finish_installation:
     congratulations: "Congratulations, you installed Discourse!"
+    login_with_discourse_id: "Login with Discourse ID"
+    discourse_id_help: "Please log in with Discourse ID using the button below. <br/><br/>Make sure you use a Discourse ID account with a primary email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable."
+    discourse_id_error_help: "You have opted to skip setting up email for now. Unfortunately due to the error message above, the setup cannot continue. Please report this issue on <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Register"
       title: "Register Admin Account"
@@ -5510,6 +5535,10 @@ en:
     resend_email:
       title: "Resend Activation Email"
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
+    discourse_id:
+      help: "We are now setting up Discourse ID for you."
+      no_allowed_emails: "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup."
+      global_notice: "No admins have logged in yet. Please log in using a Discourse ID account with an email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable to complete the installation."
 
   safe_mode:
     title: "Enter safe mode"
@@ -5524,24 +5553,16 @@ en:
   wizard:
     title: "Discourse Setup"
     step:
-      introduction:
-        title: "About your site"
-        description: "These will be shown on your login and any public pages. You can always change them later."
+      setup:
+        title: "Getting started"
+        description: "Let's get your community set up with the basics. You can always change these later."
 
         fields:
           title:
             label: "Community name"
-            placeholder: "Jane’s Hangout"
-          site_description:
-            label: "Describe your community in a sentence"
-            placeholder: "A place for Jane and her friends to discuss cool stuff"
+            placeholder: "Jane's Hangout"
           default_locale:
             label: "Language"
-
-      privacy:
-        title: "Member access"
-
-        fields:
           login_required:
             label: "Visibility"
             description: "Is your community public or private?"
@@ -5565,89 +5586,6 @@ en:
                 label: "No, new members can join immediately"
               "yes":
                 label: "Yes, new members must be approved by moderators"
-          chat_enabled:
-            placeholder: "Enable chat"
-            extra_description: "Engage with your members in real time"
-
-      ready:
-        title: "Your site is ready!"
-        description: "That's it! You've done the basics to setup your community. Now you can jump in and have a look around, write a welcome topic, and send invites!<br><br>Have fun!"
-
-      styling:
-        title: "Look and feel"
-        fields:
-          color_scheme:
-            label: "Color palette"
-          body_font:
-            label: "Body font"
-          site_font:
-            label: "Font"
-          heading_font:
-            label: "Heading font"
-          styling_preview:
-            label: "Preview"
-          homepage_style:
-            label: "Homepage style"
-            choices:
-              latest:
-                label: "Latest"
-                description: "Displays the most recently active topics in all categories, helping members stay up-to-date with discussions they care about"
-              hot:
-                label: "Hot"
-                description: "Surfaces trending topics by blending recent and overall popularity, showcases what members are talking about in your community right now"
-              categories_and_latest_topics:
-                label: "Categories with latest topics"
-                description: "Combines the recently active topics across all categories with a list of categories, their description, and total topics"
-              categories_boxes:
-                label: "Category boxes"
-                description: "Displays the categories and their description in a grid, ideal for members to see an overview of the sub-communities of your site"
-
-      branding:
-        title: "Site logo"
-        fields:
-          logo:
-            label: "Primary logo"
-            description: "Recommended size: 600 x 200"
-          logo_small:
-            label: "Square logo"
-            description: "Recommended size: 512 x 512. Also used as the favicon and mobile home screen app icon."
-
-      corporate:
-        title: "Your organization"
-        description: "The following information will be used in your Terms of Service and About pages. Feel free to skip if no company exists."
-
-        fields:
-          company_name:
-            label: "Company name"
-            placeholder: "Acme Organization"
-          governing_law:
-            label: "Governing law"
-            placeholder: "California law"
-          contact_url:
-            label: "Web page"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "City for disputes"
-            placeholder: "San Francisco, California"
-          site_contact:
-            label: "Automated messages"
-            description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
-          contact_email:
-            label: "Point of contact"
-            placeholder: "example@user.com"
-            description: "Email address of key contact responsible for this site. Used for critical notifications, and listed on your <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent matters."
-
-      invites:
-        title: "Invite Staff"
-        description: "You’re almost done! Let’s invite some people to help <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to get your community started."
-        disabled: "Since local logins are disabled, it’s not possible to send invites to anyone. Please proceed to the next step."
-
-      finished:
-        title: "Your Discourse is Ready!"
-        description: |
-          <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
-          <p>It is easy to customize your Discourse even further using our powerful theming system. For examples, check out the <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">top themes and components</a> on <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
 
   search_logs:
     graph_title: "Search Count"
@@ -5672,6 +5610,21 @@ en:
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
       no_description: "Contribute to %{repo} development by creating an account on GitHub."
+      pr_title:
+        default: "Pull Request"
+        draft: "Draft Pull Request"
+        open: "Open Pull Request"
+        approved: "Approved Pull Request"
+        changes_requested: "Changes Requested"
+        merged: "Merged Pull Request"
+        closed: "Closed Pull Request"
+      status_date:
+        open: "opened"
+        draft: "drafted"
+        approved: "approved"
+        changes_requested: "changes requested"
+        merged: "merged"
+        closed: "closed"
 
   discourse_push_notifications:
     popup:
@@ -5691,6 +5644,8 @@ en:
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
     unknown: "unknown"
+    site_setting:
+      update_existing_users: "update existing users? %{value}"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
@@ -5716,13 +5671,13 @@ en:
     upcoming_changes:
       log_manually_toggled: "Manually toggled by user"
       log_promoted: >
-        This upcoming change was automatically enabled because it reached the '%{change_status}' status, which meets or exceeds the defined promotion status of '%{promotion_status_threshold}' on your site.
-
-        See the <a href="%{base_url}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
+        This upcoming change reached '%{change_status}' status, so it was automatically enabled on your site. See the <a href="%{base_path}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
+    post_deleted_by_author: "Post was deleted by the author"
+    post_restored_by_author: "Post was restored by the author"
     priorities:
       low: "Low"
       medium: "Medium"
@@ -5997,3 +5952,6 @@ en:
 
   discourse_id:
     already_registered: "This site is already registered with Discourse ID"
+    errors:
+      not_configured: "Discourse ID is not configured. Please enable Discourse ID first."
+      regenerate_failed: "Failed to regenerate credentials. Please try again later."

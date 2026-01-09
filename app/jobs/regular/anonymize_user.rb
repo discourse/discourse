@@ -45,6 +45,7 @@ module Jobs
       TopicViewItem.where(ip_where).update_all(ip_address: new_ip)
       UserHistory.where(ip_where("acting_user_id")).update_all(ip_address: new_ip)
       UserProfileView.where(ip_where).update_all(ip_address: new_ip)
+      UserIpAddressHistory.where(user_id: @user_id).delete_all
 
       # UserHistory for delete_user logs the user's IP. Note this is quite ugly but we don't
       # have a better way of querying on details right now.

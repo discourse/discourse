@@ -96,6 +96,7 @@ class PostSerializer < BasicPostSerializer
              :mentioned_users,
              :post_url,
              :post_localizations_count,
+             :can_localize_post,
              :locale,
              :is_localized,
              :language,
@@ -381,8 +382,8 @@ class PostSerializer < BasicPostSerializer
 
       summary.delete(:count) if summary[:count].to_i.zero?
 
-      # Only include it if the user can do it or it has a count
-      result << summary if summary[:can_act] || summary[:count]
+      # Only include it if the user can do it, it has a count, or the user has acted
+      result << summary if summary[:can_act] || summary[:count] || summary[:acted]
     end
 
     result
@@ -659,7 +660,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_post_localizations_count?
-    scope.can_localize_content?
+    SiteSetting.content_localization_enabled && scope.can_localize_post?(object)
+  end
+
+  def can_localize_post
+    true
+  end
+
+  def include_can_localize_post?
+    SiteSetting.content_localization_enabled && scope.can_localize_post?(object)
   end
 
   def raw

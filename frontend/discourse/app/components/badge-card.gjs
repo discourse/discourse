@@ -44,6 +44,21 @@ export default class BadgeCard extends Component {
     return ![1, 2, 3, 4].includes(badge.id);
   }
 
+  get ariaDescribedBy() {
+    const { badge } = this.args;
+    const ids = [`badge-summary-${badge.slug}`];
+
+    if (this.displayCount) {
+      ids.push(`badge-granted-${badge.slug}`);
+    }
+
+    if (badge.has_badge) {
+      ids.push(`badge-awarded-${badge.slug}`);
+    }
+
+    return ids.join(" ");
+  }
+
   <template>
     <div
       class="badge-card --badge-{{this.size}}"
@@ -69,7 +84,7 @@ export default class BadgeCard extends Component {
                 <a
                   href={{this.url}}
                   class="badge-link"
-                  aria-describedby="badge-summary-{{@badge.slug}} badge-granted-{{@badge.slug}} badge-awarded-{{@badge.slug}}"
+                  aria-describedby={{this.ariaDescribedBy}}
                 >
                   {{@badge.name}}
                 </a>

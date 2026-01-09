@@ -268,10 +268,8 @@ fi:
       view_more:
         one: "Näytä %{count} viesti lisää"
         other: "Näytä %{count} viestiä lisää"
-      your_chat_settings: "chat-sähköpostien tiheysasetus"
   unsubscribe:
     chat_summary:
-      select_title: "Aseta chat-yhteenvetosähköpostien tiheydeksi:"
       never: Ei koskaan
       when_away: Vain poissa ollessa
   category:

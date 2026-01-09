@@ -5,12 +5,12 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import isZoomed from "discourse/lib/zoom-check";
 
+const KEYBOARD_DETECT_THRESHOLD = 150;
+
 export default class DVirtualHeight extends Component {
   @service site;
   @service capabilities;
   @service appEvents;
-
-  MIN_THRESHOLD = 120;
 
   constructor() {
     super(...arguments);
@@ -83,7 +83,7 @@ export default class DVirtualHeight extends Component {
     let viewportWindowDiff =
       this.windowInnerHeight - window.visualViewport.height;
 
-    if (viewportWindowDiff > this.MIN_THRESHOLD) {
+    if (viewportWindowDiff > KEYBOARD_DETECT_THRESHOLD) {
       keyboardVisible = true;
     }
 

@@ -6,13 +6,34 @@ require_relative "../../evals/lib/eval"
 
 RSpec.describe DiscourseAi::Evals::Recorder do
   subject(:recorder) do
-    described_class.new(eval_case, logger, "/tmp/example.json", structured_logger, output: output)
+    described_class.new(
+      eval_case,
+      logger,
+      "/tmp/example.json",
+      structured_logger,
+      total_targets: 1,
+      persona_key: persona_key,
+      output: output,
+    )
   end
 
   let(:eval_case) do
     instance_double("DiscourseAi::Evals::Eval", id: "example-eval", to_json: { foo: "bar" })
   end
   let(:logger) { instance_double(Logger, info: nil, error: nil) }
+  let(:persona_key) { "default" }
+  let(:formatter) do
+    instance_double(
+      DiscourseAi::Evals::ConsoleFormatter,
+      announce_start: nil,
+      record_result: nil,
+      record_skip: nil,
+      pause_progress_line: nil,
+      record_comparison_judged: nil,
+      record_comparison_expected: nil,
+      finalize: nil,
+    )
+  end
   let(:structured_logger) do
     instance_double(
       DiscourseAi::Evals::StructuredLogger,
@@ -30,8 +51,9 @@ RSpec.describe DiscourseAi::Evals::Recorder do
   let(:output) { StringIO.new }
 
   before do
-    allow(recorder).to receive(:attach_thread_loggers) # rubocop:disable RSpec/SubjectStub
-    allow(recorder).to receive(:detach_thread_loggers) # rubocop:disable RSpec/SubjectStub
+    allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter)
+    allow_any_instance_of(described_class).to receive(:attach_thread_loggers)
+    allow_any_instance_of(described_class).to receive(:detach_thread_loggers)
   end
 
   describe "#running" do
@@ -39,12 +61,15 @@ RSpec.describe DiscourseAi::Evals::Recorder do
       recorder.running
 
       expect(structured_logger).to have_received(:start_root).with(
-        name: "Evaluating example-eval",
+        name: "Evaluating example-eval (persona: default)",
         args: {
           foo: "bar",
+          persona_key: "default",
         },
       )
-      expect(logger).to have_received(:info).with("Starting evaluation 'example-eval'")
+      expect(logger).to have_received(:info).with(
+        "Starting evaluation 'example-eval' (persona: default)",
+      )
     end
   end
 

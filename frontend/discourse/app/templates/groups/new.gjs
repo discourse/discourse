@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
+import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import GroupsFormInteractionFields from "discourse/components/groups-form-interaction-fields";
 import GroupsFormMembershipFields from "discourse/components/groups-form-membership-fields";
 import GroupsFormProfileFields from "discourse/components/groups-form-profile-fields";
@@ -53,6 +54,7 @@ export default <template>
       <GroupsFormMembershipFields @model={{@controller.model}} />
       <GroupsFormInteractionFields @model={{@controller.model}} />
 
+      <GroupFlairVisibilityWarning @model={{@controller.model}} />
       <div class="control-group buttons">
         <DButton
           @action={{@controller.save}}
