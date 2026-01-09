@@ -2,10 +2,19 @@
   height: 100%;
   min-height: 0;
   box-shadow: var(--shadow-dropdown);
-  overflow: hidden;
-  overflow: clip;
   border-radius: var(--d-border-radius-large);
   background-color: var(--secondary);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  > .form-kit {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
 
   &--nested {
     display: flex;
@@ -50,7 +59,7 @@
 
   &[data-d-sheet~="right"] {
     height: 100%;
-    width: min(80%, 280px);
+    width: min(80%, 375px);
     padding: var(--space-2);
     padding-inline: 0.5rem;
     padding-block: 0.5rem max(env(safe-area-inset-bottom, 0px), 0.5rem);

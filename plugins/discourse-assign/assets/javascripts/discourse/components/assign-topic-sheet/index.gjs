@@ -69,11 +69,8 @@ export default class AssignTopicSheet extends Component {
   }
 
   @action
-  async unassign() {
-    await this.taskActions.unassign(
-      this.assignment.targetId,
-      this.assignment.targetType
-    );
+  async unassign(assignment) {
+    await this.taskActions.unassign(assignment.targetId, assignment.targetType);
   }
 
   get stackingAnimation() {
@@ -215,20 +212,17 @@ export default class AssignTopicSheet extends Component {
                       <Button.Close />
                     </:left>
                     <:title>
-                      Assign
+                      Assignments
                     </:title>
-                    <:right as |Button|>
-                      <Button @action={{form.submit}}>Save</Button>
-                    </:right>
                   </DSheet.Header>
 
-                  <AssigneesList
+                  {{!-- <AssigneesList
                     @assignment={{this.assignment}}
                     @form={{form}}
                     @data={{data}}
-                  />
+                  /> --}}
 
-                  {{#if this.assignment}}
+                  {{!-- {{#if this.assignment}}
                     <AssignmentForm
                       @sheet={{sheet}}
                       @form={{form}}
@@ -240,11 +234,15 @@ export default class AssignTopicSheet extends Component {
                       @onSelectAssignee={{this.onSelectAssignee}}
                     />
                   {{else}}
-                    <AssignmentsList
-                      @assignments={{this.assignments}}
-                      @onSelectAssignment={{this.onSelectAssignment}}
-                    />
-                  {{/if}}
+
+                  {{/if}} --}}
+
+                  <AssignmentsList
+                    @assignments={{this.assignments}}
+                    @topic={{@topic}}
+                    @onEditAssignment={{this.onSelectAssignment}}
+                    @onRemoveAssignment={{this.unassign}}
+                  />
 
                   <DSheet.Root
                     @presented={{this.nestedSheetPresented}}
