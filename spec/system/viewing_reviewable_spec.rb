@@ -338,7 +338,11 @@ describe "Viewing reviewable item", type: :system do
         reviewable = ReviewableUser.find_by_target_id(user.id)
 
         refreshed_review_page.visit_reviewable(reviewable)
-        refreshed_review_page.select_bundled_action(reviewable, "user-approve_user")
+        refreshed_review_page.select_bundled_action(
+          reviewable,
+          "user-approve_user",
+          "user-approve_user",
+        )
 
         expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
         expect(refreshed_review_page).to have_approved_item_in_timeline(reviewable)
