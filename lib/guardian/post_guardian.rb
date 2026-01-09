@@ -352,7 +352,7 @@ module PostGuardian
     return false if !authenticated?
     return false if !can_see_post?(post)
 
-    is_staff? || is_my_own?(post)
+    is_staff? || is_my_own?(post) || is_category_group_moderator?(post.topic&.category)
   end
 
   def can_change_post_owner?

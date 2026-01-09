@@ -1785,7 +1785,7 @@ en:
     staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
     post_edit_time_limit: "A tl0 or tl1 author can edit their post for (n) minutes after posting. Set to 0 for forever."
     tl2_post_edit_time_limit: "A tl2+ author can edit their post for (n) minutes after posting. Set to 0 for forever."
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
+    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members and category group moderators (for posts in their moderated categories) can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     notify_users_after_responses_deleted_on_flagged_post: "When a post is flagged and then removed, all users that responded to the post and had their responses removed will be notified."
     max_image_width: "Maximum thumbnail width of images in a post. Images with a larger width will be resized and lightboxed."
