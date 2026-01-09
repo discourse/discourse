@@ -213,14 +213,14 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.true(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { id: 5 },
+          params: { categoryId: 5 },
         })
       );
 
       assert.false(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { id: 10 },
+          params: { categoryId: 10 },
         })
       );
     });
@@ -236,19 +236,19 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.true(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { slug: "general" },
+          params: { categorySlug: "general" },
         })
       );
 
       assert.false(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { slug: "support" },
+          params: { categorySlug: "support" },
         })
       );
     });
 
-    test("matches subcategory by parentId", function (assert) {
+    test("matches subcategory by parentCategoryId", function (assert) {
       this.mockDiscoveryState.category = {
         id: 10,
         slug: "javascript",
@@ -259,14 +259,14 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.true(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { parentId: 5 },
+          params: { parentCategoryId: 5 },
         })
       );
 
       assert.false(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { parentId: 99 },
+          params: { parentCategoryId: 99 },
         })
       );
     });
@@ -282,14 +282,14 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.true(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { id: 5, slug: "general" },
+          params: { categoryId: 5, categorySlug: "general" },
         })
       );
 
       assert.false(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { id: 5, slug: "other" },
+          params: { categoryId: 5, categorySlug: "other" },
         })
       );
     });
@@ -310,21 +310,45 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.false(this.evaluateCondition({ pages: ["TAG_PAGES"] }));
     });
 
-    test("matches specific tag by name", function (assert) {
+    test("matches specific tag by tagId", function (assert) {
       this.mockDiscoveryState.tag = { name: "javascript" };
       this.mockRouterState.currentURL = "/tag/javascript";
 
       assert.true(
         this.evaluateCondition({
           pages: ["TAG_PAGES"],
-          params: { name: "javascript" },
+          params: { tagId: "javascript" },
         })
       );
 
       assert.false(
         this.evaluateCondition({
           pages: ["TAG_PAGES"],
-          params: { name: "python" },
+          params: { tagId: "python" },
+        })
+      );
+    });
+
+    test("matches tag filtered by category", function (assert) {
+      this.mockDiscoveryState.tag = { name: "javascript" };
+      this.mockDiscoveryState.category = {
+        id: 5,
+        slug: "programming",
+        parent_category_id: null,
+      };
+      this.mockRouterState.currentURL = "/tags/c/programming/javascript";
+
+      assert.true(
+        this.evaluateCondition({
+          pages: ["TAG_PAGES"],
+          params: { tagId: "javascript", categoryId: 5 },
+        })
+      );
+
+      assert.false(
+        this.evaluateCondition({
+          pages: ["TAG_PAGES"],
+          params: { tagId: "javascript", categoryId: 10 },
         })
       );
     });
@@ -771,7 +795,7 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.true(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { id: 5 },
+          params: { categoryId: 5 },
           queryParams: { solved: "true" },
         })
       );
@@ -789,7 +813,7 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.false(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { id: 5 },
+          params: { categoryId: 5 },
           queryParams: { solved: "true" },
         })
       );
@@ -806,7 +830,7 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.false(
         this.evaluateCondition({
           pages: ["CATEGORY_PAGES"],
-          params: { id: 5 },
+          params: { categoryId: 5 },
         })
       );
     });
@@ -873,9 +897,9 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
         () =>
           this.validateCondition({
             pages: ["CATEGORY_PAGES"],
-            params: { id: "5" },
+            params: { categoryId: "5" },
           }),
-        /Parameter 'id' must be a number, got string '5'/
+        /Parameter 'categoryId' must be a number, got string '5'/
       );
     });
 
@@ -884,9 +908,9 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
         () =>
           this.validateCondition({
             pages: ["TAG_PAGES"],
-            params: { name: 123 },
+            params: { tagId: 123 },
           }),
-        /Parameter 'name' must be a string, got number '123'/
+        /Parameter 'tagId' must be a string, got number '123'/
       );
     });
 
@@ -894,10 +918,10 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.throws(
         () =>
           this.validateCondition({
-            pages: ["CATEGORY_PAGES", "DISCOVERY_PAGES"],
-            params: { id: 5 },
+            pages: ["TAG_PAGES", "DISCOVERY_PAGES"],
+            params: { tagId: "javascript" },
           }),
-        /Parameter 'id' is not valid for all listed page types/
+        /Parameter 'tagId' is not valid for all listed page types/
       );
     });
 
@@ -905,6 +929,14 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       this.validateCondition({
         pages: ["DISCOVERY_PAGES", "TOP_MENU"],
         params: { filter: "latest" },
+      });
+      assert.true(true);
+    });
+
+    test("accepts categoryId param valid for both CATEGORY_PAGES and TAG_PAGES", function (assert) {
+      this.validateCondition({
+        pages: ["CATEGORY_PAGES", "TAG_PAGES"],
+        params: { categoryId: 5 },
       });
       assert.true(true);
     });

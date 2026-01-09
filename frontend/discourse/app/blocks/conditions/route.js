@@ -333,9 +333,9 @@ export default class BlockRouteCondition extends BlockCondition {
           return null;
         }
         return {
-          id: category.id,
-          slug: category.slug,
-          parentId: category.parent_category_id,
+          categoryId: category.id,
+          categorySlug: category.slug,
+          parentCategoryId: category.parent_category_id,
         };
       }
 
@@ -344,7 +344,13 @@ export default class BlockRouteCondition extends BlockCondition {
         if (!tag) {
           return null;
         }
-        return { name: tag.name };
+        const category = this.discovery.category;
+        return {
+          tagId: tag.name,
+          categoryId: category?.id,
+          categorySlug: category?.slug,
+          parentCategoryId: category?.parent_category_id,
+        };
       }
 
       case "DISCOVERY_PAGES": {

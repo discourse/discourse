@@ -1356,8 +1356,8 @@ Uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
 
 | Page Type | Description | Parameters |
 |-----------|-------------|------------|
-| `CATEGORY_PAGES` | Category listing pages | `id` (number), `slug` (string), `parentId` (number) |
-| `TAG_PAGES` | Tag listing pages | `name` (string) |
+| `CATEGORY_PAGES` | Category listing pages | `categoryId` (number), `categorySlug` (string), `parentCategoryId` (number) |
+| `TAG_PAGES` | Tag listing pages | `tagId` (string), `categoryId` (number), `categorySlug` (string), `parentCategoryId` (number) |
 | `DISCOVERY_PAGES` | Discovery routes (latest, top, etc.) | `filter` (string) |
 | `HOMEPAGE` | Custom homepage only | (none) |
 | `TOP_MENU` | Top nav discovery routes | `filter` (string) |
@@ -1387,16 +1387,22 @@ The `params` option works only with `pages` (not `urls`) and validates parameter
 
 ```javascript
 // Match specific category by ID
-{ type: "route", pages: ["CATEGORY_PAGES"], params: { id: 5 } }
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { categoryId: 5 } }
 
 // Match category by slug
-{ type: "route", pages: ["CATEGORY_PAGES"], params: { slug: "general" } }
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "general" } }
 
-// Match subcategory by parent ID
-{ type: "route", pages: ["CATEGORY_PAGES"], params: { parentId: 5 } }
+// Match subcategory by parent category ID
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { parentCategoryId: 5 } }
 
 // Match discovery pages with specific filter
 { type: "route", pages: ["DISCOVERY_PAGES"], params: { filter: "latest" } }
+
+// Match specific tag
+{ type: "route", pages: ["TAG_PAGES"], params: { tagId: "javascript" } }
+
+// Match tag filtered by category
+{ type: "route", pages: ["TAG_PAGES"], params: { tagId: "javascript", categoryId: 5 } }
 
 // Match specific topic
 { type: "route", pages: ["TOPIC_PAGES"], params: { id: 123 } }
@@ -1412,6 +1418,9 @@ The `params` option works only with `pages` (not `urls`) and validates parameter
 { type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"] }
 
 // With params: params must be valid for ALL listed page types
+// This works because both CATEGORY_PAGES and TAG_PAGES support 'categoryId'
+{ type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"], params: { categoryId: 5 } }
+
 // This works because both DISCOVERY_PAGES and TOP_MENU support 'filter'
 { type: "route", pages: ["DISCOVERY_PAGES", "TOP_MENU"], params: { filter: "latest" } }
 ```

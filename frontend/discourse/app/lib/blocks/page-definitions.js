@@ -32,15 +32,15 @@ export const PAGE_DEFINITIONS = {
   CATEGORY_PAGES: {
     description: "Category listing pages",
     params: {
-      id: {
+      categoryId: {
         type: "number",
         description: "Category ID",
       },
-      slug: {
+      categorySlug: {
         type: "string",
         description: "Category slug (URL-safe name)",
       },
-      parentId: {
+      parentCategoryId: {
         type: "number",
         description: "Parent category ID (for subcategories)",
       },
@@ -54,9 +54,21 @@ export const PAGE_DEFINITIONS = {
   TAG_PAGES: {
     description: "Tag listing pages",
     params: {
-      name: {
+      tagId: {
         type: "string",
-        description: "Tag name",
+        description: "Tag name/ID",
+      },
+      categoryId: {
+        type: "number",
+        description: "Category ID (when tag is filtered by category)",
+      },
+      categorySlug: {
+        type: "string",
+        description: "Category slug (when tag is filtered by category)",
+      },
+      parentCategoryId: {
+        type: "number",
+        description: "Parent category ID (when tag is filtered by subcategory)",
       },
     },
   },
