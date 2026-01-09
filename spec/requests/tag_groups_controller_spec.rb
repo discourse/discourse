@@ -76,8 +76,8 @@ RSpec.describe TagGroupsController do
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
         expect(results).to contain_exactly(
-          { name: tag_group.name, tag_names: [tag.name] },
-          { name: tag_group2.name, tag_names: [tag.name] },
+          { name: tag_group.name, tags: [tag.name] },
+          { name: tag_group2.name, tags: [tag.name] },
         )
       end
 
@@ -105,7 +105,7 @@ RSpec.describe TagGroupsController do
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
         expect(results.first[:name]).to eq(tag_group.name)
-        expect(results.first[:tag_names]).to contain_exactly(tag.name)
+        expect(results.first[:tags]).to contain_exactly(tag.name)
       end
 
       it "returns an empty array if the tag group is private" do
@@ -173,7 +173,7 @@ RSpec.describe TagGroupsController do
            params: {
              tag_group: {
                name: "test_tag_group_log",
-               tag_names: [tag1.name, tag2.name],
+               tags: [tag1.name, tag2.name],
              },
            }
 
@@ -250,7 +250,7 @@ RSpec.describe TagGroupsController do
           params: {
             tag_group: {
               name: "test_tag_group_new_name",
-              tag_names: [tag2.name, tag3.name],
+              tags: [tag2.name, tag3.name],
             },
           }
 
