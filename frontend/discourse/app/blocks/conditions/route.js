@@ -1,22 +1,26 @@
 import { service } from "@ember/service";
 import {
-  isShortcut,
+  getParamsForPageType,
+  isValidPageType,
+  suggestPageType,
+  VALID_PAGE_TYPES,
+  validateParamsAgainstPages,
+  validateParamType,
+} from "discourse/lib/blocks/page-definitions";
+import {
   isValidUrlPattern,
-  looksLikeShortcutTypo,
   matchesAnyPattern,
   normalizePath,
-  VALID_SHORTCUTS,
 } from "discourse/lib/blocks/url-matcher";
 import {
   matchParams,
   validateParamSpec,
 } from "discourse/lib/blocks/value-matcher";
-import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import { BlockCondition, raiseBlockValidationError } from "./condition";
 import { blockCondition } from "./decorator";
 
 /**
- * A condition that evaluates based on the current URL path, semantic shortcuts,
+ * A condition that evaluates based on the current URL path, semantic page types,
  * route parameters, and query parameters.
  *
  * URL patterns use picomatch glob syntax:
@@ -26,13 +30,16 @@ import { blockCondition } from "./decorator";
  * - `[abc]` matches any character in the brackets
  * - `{a,b}` matches any of the comma-separated patterns
  *
- * Shortcuts (prefixed with `$`) match semantic page types without requiring
- * knowledge of URL structure:
- * - `$CATEGORY_PAGES` - any category page (when `discovery.category` is set)
- * - `$DISCOVERY_PAGES` - discovery routes (latest, top, etc.) excluding custom homepage
- * - `$HOMEPAGE` - custom homepage only
- * - `$TAG_PAGES` - any tag page (when `discovery.tag` is set)
- * - `$TOP_MENU` - discovery routes that appear in the top navigation menu
+ * Page types match semantic page contexts without requiring knowledge of URL structure:
+ * - `CATEGORY_PAGES` - any category page (when `discovery.category` is set)
+ * - `TAG_PAGES` - any tag page (when `discovery.tag` is set)
+ * - `DISCOVERY_PAGES` - discovery routes (latest, top, etc.) excluding custom homepage
+ * - `HOMEPAGE` - custom homepage only
+ * - `TOP_MENU` - discovery routes that appear in the top navigation menu
+ * - `TOPIC_PAGES` - individual topic pages
+ * - `USER_PAGES` - user profile pages
+ * - `ADMIN_PAGES` - admin section pages
+ * - `GROUP_PAGES` - group pages
  *
  * URL matching automatically handles Discourse subfolder installations by
  * normalizing URLs before matching. Theme authors don't need to know if
@@ -41,38 +48,38 @@ import { blockCondition } from "./decorator";
  * @class BlockRouteCondition
  * @extends BlockCondition
  *
- * @param {string[]} [urls] - URL patterns or shortcuts to match (passes if ANY match).
- * @param {string[]} [excludeUrls] - URL patterns or shortcuts to exclude (passes if NONE match).
- * @param {Object} [params] - Route parameters to match (from `router.currentRoute.params`).
- * @param {Object} [queryParams] - Query parameters to match (from `router.currentRoute.queryParams`).
+ * @param {string[]} [urls] - URL patterns to match (passes if ANY match).
+ * @param {string[]} [pages] - Page types to match (passes if ANY match).
+ * @param {Object} [params] - Page parameters to match (only valid with `pages`).
+ * @param {Object} [queryParams] - Query parameters to match.
  *
  * @example
- * // Match category pages using shortcut
- * { type: "route", urls: ["$CATEGORY_PAGES"] }
+ * // Match category pages using page type
+ * { type: "route", pages: ["CATEGORY_PAGES"] }
  *
  * @example
  * // Match category pages using URL pattern
  * { type: "route", urls: ["/c/**"] }
  *
  * @example
- * // Match multiple patterns (OR logic)
- * { type: "route", urls: ["$CATEGORY_PAGES", "/custom/**", "/tag/*"] }
+ * // Match multiple page types (OR logic)
+ * { type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"] }
  *
  * @example
- * // Match all except admin pages
- * { type: "route", excludeUrls: ["/admin/**"] }
+ * // Match specific category by ID
+ * { type: "route", pages: ["CATEGORY_PAGES"], params: { id: 5 } }
  *
  * @example
  * // Match with query params
  * { type: "route", urls: ["/latest"], queryParams: { filter: "solved" } }
  *
  * @example
- * // Match discovery pages with specific query params using OR logic
- * { type: "route", urls: ["$DISCOVERY_PAGES"], queryParams: { any: [{ filter: "solved" }, { filter: "open" }] } }
+ * // Exclude pages using NOT combinator
+ * { not: { type: "route", pages: ["ADMIN_PAGES"] } }
  */
 @blockCondition({
   type: "route",
-  validArgKeys: ["urls", "excludeUrls", "params", "queryParams"],
+  validArgKeys: ["urls", "pages", "params", "queryParams"],
 })
 export default class BlockRouteCondition extends BlockCondition {
   @service router;
@@ -98,57 +105,117 @@ export default class BlockRouteCondition extends BlockCondition {
    * @throws {Error} If validation fails.
    */
   validate(args) {
-    const { urls, excludeUrls } = args;
+    const { urls, pages, params, queryParams } = args;
 
-    if (!urls?.length && !excludeUrls?.length) {
+    // Must provide either urls or pages
+    if (!urls?.length && !pages?.length) {
       raiseBlockValidationError(
-        "BlockRouteCondition: Must provide `urls` or `excludeUrls`."
+        "BlockRouteCondition: Must provide `urls` or `pages`."
       );
     }
 
-    if (urls?.length && excludeUrls?.length) {
-      raiseBlockValidationError(
-        "BlockRouteCondition: Cannot use both `urls` and `excludeUrls`. Use one or the other."
-      );
-    }
+    // Validate urls
+    if (urls?.length) {
+      if (!Array.isArray(urls)) {
+        raiseBlockValidationError(
+          "BlockRouteCondition: `urls` must be an array of URL patterns."
+        );
+      }
 
-    // Validate all shortcuts are recognized and glob patterns are valid
-    const allPatterns = [...(urls || []), ...(excludeUrls || [])];
-    for (const pattern of allPatterns) {
-      if (isShortcut(pattern)) {
-        if (!VALID_SHORTCUTS.includes(pattern)) {
-          const suggestion = formatWithSuggestion(pattern, VALID_SHORTCUTS);
+      for (const pattern of urls) {
+        // Check for old shortcut syntax
+        if (typeof pattern === "string" && pattern.startsWith("$")) {
           raiseBlockValidationError(
-            `BlockRouteCondition: unknown shortcut ${suggestion}. ` +
-              `Valid shortcuts: ${VALID_SHORTCUTS.join(", ")}`
+            `BlockRouteCondition: Shortcuts like '${pattern}' are not supported in \`urls\`.\n` +
+              `Use the \`pages\` option instead:\n` +
+              `  { type: "route", pages: ["${pattern.slice(1)}"] }`
           );
         }
-      } else if (!isValidUrlPattern(pattern)) {
-        // Validate glob pattern syntax (non-shortcuts only)
-        raiseBlockValidationError(
-          `BlockRouteCondition: Invalid glob pattern "${pattern}". ` +
-            `Check for unbalanced brackets or braces.`
-        );
-      } else {
-        // Warn if URL pattern looks like a shortcut typo
-        const likelyShortcut = looksLikeShortcutTypo(pattern);
-        if (likelyShortcut) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[Blocks] BlockRouteCondition: URL pattern "${pattern}" looks like ` +
-              `it might be a shortcut typo. Did you mean "${likelyShortcut}"?`
+
+        // Validate glob pattern syntax
+        if (!isValidUrlPattern(pattern)) {
+          raiseBlockValidationError(
+            `BlockRouteCondition: Invalid glob pattern "${pattern}". ` +
+              `Check for unbalanced brackets or braces.`
           );
         }
       }
     }
 
-    // Validate params and queryParams for operator typos (e.g., "an" vs "any")
-    const { params, queryParams } = args;
-    if (params) {
-      validateParamSpec(params, "params", (msg) => {
-        raiseBlockValidationError(`BlockRouteCondition: ${msg}`);
-      });
+    // Validate pages
+    if (pages?.length) {
+      if (!Array.isArray(pages)) {
+        raiseBlockValidationError(
+          `BlockRouteCondition: \`pages\` must be an array of page type strings.\n` +
+            `Example: { pages: ["CATEGORY_PAGES", "TAG_PAGES"] }`
+        );
+      }
+
+      for (const pageType of pages) {
+        if (typeof pageType !== "string") {
+          raiseBlockValidationError(
+            `BlockRouteCondition: Each page type must be a string, got ${typeof pageType}.`
+          );
+        }
+
+        if (!isValidPageType(pageType)) {
+          const suggestion = suggestPageType(pageType);
+          let errorMsg = `BlockRouteCondition: Unknown page type '${pageType}'.`;
+          if (suggestion) {
+            errorMsg += `\nDid you mean '${suggestion}'?`;
+          }
+          errorMsg += `\nValid page types: ${VALID_PAGE_TYPES.join(", ")}`;
+          raiseBlockValidationError(errorMsg);
+        }
+      }
     }
+
+    // Validate params
+    if (params) {
+      // params requires pages
+      if (!pages?.length) {
+        raiseBlockValidationError(
+          `BlockRouteCondition: \`params\` requires \`pages\` to be specified.\n` +
+            `Use \`pages\` to specify which page types to match, then \`params\` to filter by parameters.`
+        );
+      }
+
+      // params cannot be used with urls
+      if (urls?.length) {
+        raiseBlockValidationError(
+          `BlockRouteCondition: \`params\` cannot be used with \`urls\`.\n` +
+            `Use \`pages\` with typed parameters instead.`
+        );
+      }
+
+      // Validate params against all listed page types
+      const { valid, errors } = validateParamsAgainstPages(params, pages);
+      if (!valid) {
+        raiseBlockValidationError(`BlockRouteCondition: ${errors.join("\n")}`);
+      }
+
+      // Validate param types
+      for (const [paramName, value] of Object.entries(params)) {
+        // Find a page type that has this param (we already validated it exists in all)
+        const pageType = pages.find((p) => {
+          const pageParams = getParamsForPageType(p);
+          return pageParams && paramName in pageParams;
+        });
+
+        if (pageType) {
+          const { valid: typeValid, error } = validateParamType(
+            paramName,
+            value,
+            pageType
+          );
+          if (!typeValid) {
+            raiseBlockValidationError(`BlockRouteCondition: ${error}`);
+          }
+        }
+      }
+    }
+
+    // Validate queryParams for operator typos (e.g., "an" vs "any")
     if (queryParams) {
       validateParamSpec(queryParams, "queryParams", (msg) => {
         raiseBlockValidationError(`BlockRouteCondition: ${msg}`);
@@ -160,9 +227,9 @@ export default class BlockRouteCondition extends BlockCondition {
    * Evaluates whether the current route matches the condition.
    *
    * Evaluation logic:
-   * - With `urls`: passes if ANY URL pattern OR shortcut matches
-   * - With `excludeUrls`: passes if NO URL pattern AND NO shortcut matches
-   * - With `params`: additionally requires all params to match
+   * - With `urls`: passes if ANY URL pattern matches
+   * - With `pages`: passes if ANY page type matches
+   * - With `params`: additionally requires all params to match (only with `pages`)
    * - With `queryParams`: additionally requires all query params to match
    *
    * @param {Object} args - The condition arguments.
@@ -170,7 +237,7 @@ export default class BlockRouteCondition extends BlockCondition {
    * @returns {boolean} True if the condition passes.
    */
   evaluate(args, context = {}) {
-    const { urls, excludeUrls, params, queryParams } = args;
+    const { urls, pages, params, queryParams } = args;
     const currentPath = this.currentPath;
 
     // Debug context for nested logging
@@ -179,62 +246,57 @@ export default class BlockRouteCondition extends BlockCondition {
     const childDepth = (context._depth ?? 0) + 1;
     const debugContext = { debug: isDebugging, _depth: childDepth, logger };
 
-    // Get actual params for debugging output
-    const actualParams = this.router.currentRoute?.params;
+    // Get actual query params for matching
     const actualQueryParams = this.router.currentRoute?.queryParams;
 
-    let routeMatched = true;
-
-    // Check excludeUrls (passes if NONE match)
-    if (excludeUrls?.length) {
-      const patternMatch = matchesAnyPattern(currentPath, excludeUrls);
-      const shortcutMatch = this.#matchesAnyShortcut(excludeUrls);
-
-      if (patternMatch || shortcutMatch) {
-        routeMatched = false;
-      }
-    }
+    let routeMatched = false;
+    let matchedPageType = null;
 
     // Check urls (passes if ANY match)
-    if (routeMatched && urls?.length) {
-      const patternMatch = matchesAnyPattern(currentPath, urls);
-      const shortcutMatch = this.#matchesAnyShortcut(urls);
-
-      if (!patternMatch && !shortcutMatch) {
-        routeMatched = false;
+    if (urls?.length) {
+      if (matchesAnyPattern(currentPath, urls)) {
+        routeMatched = true;
       }
     }
 
-    // Log URL state when debugging (only when params/queryParams present)
+    // Check pages (passes if ANY match)
+    if (pages?.length && !routeMatched) {
+      for (const pageType of pages) {
+        const pageContext = this.#getPageContext(pageType);
+        if (pageContext !== null) {
+          // Page type matches, now check params if provided
+          if (params) {
+            if (this.#matchPageParams(params, pageContext, debugContext)) {
+              routeMatched = true;
+              matchedPageType = pageType;
+              break;
+            }
+          } else {
+            routeMatched = true;
+            matchedPageType = pageType;
+            break;
+          }
+        }
+      }
+    }
+
+    // Log state when debugging
     if (isDebugging && (params || queryParams)) {
       logger?.logRouteState?.({
         currentPath,
         expectedUrls: urls,
-        excludeUrls,
-        actualParams,
+        pages,
+        params,
+        matchedPageType,
         actualQueryParams,
         depth: childDepth,
         result: routeMatched,
       });
     }
 
-    // Return early if URL/shortcut didn't match
+    // Return early if URL/page didn't match
     if (!routeMatched) {
       return false;
-    }
-
-    // Check params (uses shared matcher with AND/OR/NOT support)
-    if (params) {
-      if (
-        !matchParams({
-          actualParams,
-          expectedParams: params,
-          context: debugContext,
-          label: "params",
-        })
-      ) {
-        return false;
-      }
     }
 
     // Check query params (uses shared matcher with AND/OR/NOT support)
@@ -255,58 +317,126 @@ export default class BlockRouteCondition extends BlockCondition {
   }
 
   /**
-   * Checks if any shortcut in the patterns array matches the current route.
+   * Gets the current context values for a page type.
    *
-   * @param {string[]} patterns - Array of patterns (filters to shortcuts only).
-   * @returns {boolean} True if any shortcut matches.
+   * Returns an object with the current values for all parameters defined for
+   * this page type, or null if the page type doesn't match the current route.
+   *
+   * @param {string} pageType - The page type (e.g., "CATEGORY_PAGES").
+   * @returns {Object|null} The context object, or null if page type doesn't match.
    */
-  #matchesAnyShortcut(patterns) {
-    return patterns
-      .filter((p) => isShortcut(p))
-      .some((p) => this.#matchesShortcut(p));
+  #getPageContext(pageType) {
+    switch (pageType) {
+      case "CATEGORY_PAGES": {
+        const category = this.discovery.category;
+        if (!category) {
+          return null;
+        }
+        return {
+          id: category.id,
+          slug: category.slug,
+          parentId: category.parent_category_id,
+        };
+      }
+
+      case "TAG_PAGES": {
+        const tag = this.discovery.tag;
+        if (!tag) {
+          return null;
+        }
+        return { name: tag.name };
+      }
+
+      case "DISCOVERY_PAGES": {
+        if (!this.discovery.onDiscoveryRoute || this.discovery.custom) {
+          return null;
+        }
+        const filter = this.router.currentRouteName
+          ?.replace(/^discovery\./, "")
+          .split(".")[0];
+        return { filter };
+      }
+
+      case "HOMEPAGE":
+        return this.discovery.custom ? {} : null;
+
+      case "TOP_MENU": {
+        const { discovery } = this;
+        if (
+          !discovery.onDiscoveryRoute ||
+          discovery.category ||
+          discovery.tag ||
+          discovery.custom
+        ) {
+          return null;
+        }
+        const filter = this.router.currentRouteName
+          ?.replace(/^discovery\./, "")
+          .split(".")[0];
+        return { filter };
+      }
+
+      case "TOPIC_PAGES": {
+        if (!this.router.currentRouteName?.startsWith("topic.")) {
+          return null;
+        }
+        const routeParams = this.router.currentRoute?.params || {};
+        return {
+          id: routeParams.id ? parseInt(routeParams.id, 10) : undefined,
+          slug: routeParams.slug,
+        };
+      }
+
+      case "USER_PAGES": {
+        if (!this.router.currentRouteName?.startsWith("user.")) {
+          return null;
+        }
+        const routeParams = this.router.currentRoute?.params || {};
+        return { username: routeParams.username };
+      }
+
+      case "ADMIN_PAGES":
+        return this.router.currentRouteName?.startsWith("admin") ? {} : null;
+
+      case "GROUP_PAGES": {
+        if (!this.router.currentRouteName?.startsWith("group.")) {
+          return null;
+        }
+        const routeParams = this.router.currentRoute?.params || {};
+        return { name: routeParams.name };
+      }
+
+      default:
+        return null;
+    }
   }
 
   /**
-   * Evaluates a shortcut against the current discovery service state.
+   * Matches page parameters against the current context.
    *
-   * Shortcuts provide semantic route matching based on page context rather than
-   * URL patterns. This allows theme authors to target logical page types without
-   * knowing the internal URL structure.
-   *
-   * @param {string} shortcut - The shortcut pattern (e.g., "$CATEGORY_PAGES").
-   * @returns {boolean} True if the current route matches the shortcut's criteria.
+   * @param {Object} params - The expected params from the condition.
+   * @param {Object} pageContext - The actual context values from the current page.
+   * @param {Object} debugContext - Debug context for logging.
+   * @returns {boolean} True if all params match.
    */
-  #matchesShortcut(shortcut) {
-    switch (shortcut) {
-      case "$CATEGORY_PAGES":
-        // True when viewing any category page
-        return !!this.discovery.category;
+  #matchPageParams(params, pageContext, debugContext) {
+    for (const [paramName, expectedValue] of Object.entries(params)) {
+      const actualValue = pageContext[paramName];
 
-      case "$DISCOVERY_PAGES":
-        // True on discovery routes (latest, top, new, etc.) excluding custom homepage
-        return this.discovery.onDiscoveryRoute && !this.discovery.custom;
-
-      case "$HOMEPAGE":
-        // True only on the custom homepage route
-        return this.discovery.custom;
-
-      case "$TAG_PAGES":
-        // True when viewing any tag page
-        return !!this.discovery.tag;
-
-      case "$TOP_MENU":
-        // True on discovery routes that appear in the top navigation menu
-        // (excludes category pages, tag pages, and custom homepage)
-        return (
-          this.discovery.onDiscoveryRoute &&
-          !this.discovery.category &&
-          !this.discovery.tag &&
-          !this.discovery.custom
-        );
-
-      default:
-        // Unknown shortcuts never match (should be caught by validation)
+      // Simple equality check for now
+      // Could be extended to support arrays, NOT, etc. like matchParams
+      if (actualValue !== expectedValue) {
+        if (debugContext.debug) {
+          debugContext.logger?.logParamMismatch?.({
+            paramName,
+            expected: expectedValue,
+            actual: actualValue,
+            depth: debugContext._depth,
+          });
+        }
         return false;
+      }
     }
+    return true;
   }
 }

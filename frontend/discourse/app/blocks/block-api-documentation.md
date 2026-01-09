@@ -930,7 +930,7 @@ Conditions support three combinators for complex logic:
 conditions: [
   { type: "user", loggedIn: true },
   { type: "user", minTrustLevel: 2 },
-  { type: "route", urls: ["$DISCOVERY_PAGES"] }
+  { type: "route", pages: ["DISCOVERY_PAGES"] }
 ]
 // All three must pass
 ```
@@ -1199,12 +1199,12 @@ When enabled, every block render is logged with its condition tree:
 [Blocks] ✓ RENDERED hero-banner in homepage-blocks
   ├─ ✓ AND (2 conditions)
   │  ├─ ✓ user { loggedIn: true }
-  │  └─ ✓ route { urls: ["$DISCOVERY_PAGES"] }
+  │  └─ ✓ route { pages: ["DISCOVERY_PAGES"] }
 
 [Blocks] ✗ SKIPPED admin-banner in homepage-blocks
   ├─ ✗ AND (2 conditions)
   │  ├─ ✗ user { admin: true }
-  │  └─ ─ route { urls: ["$DISCOVERY_PAGES"] }  // not evaluated (short-circuit disabled in debug)
+  │  └─ ─ route { pages: ["DISCOVERY_PAGES"] }  // not evaluated (short-circuit disabled in debug)
 ```
 
 **What the icons mean:**
@@ -1237,7 +1237,7 @@ When enabled, each rendered block shows:
 > **Conditions** (passed)
 > - AND
 >   - user (loggedIn: true)
->   - route (urls: ["$DISCOVERY_PAGES"])
+>   - route (pages: ["DISCOVERY_PAGES"])
 >
 > **Arguments**
 > - title: "Welcome"
@@ -1293,7 +1293,7 @@ Tools are great, but knowing *when* to use *which* tool is the real skill. Here 
 
 4. For route conditions, check:
    - Is the current URL what you expect?
-   - Are shortcuts matching? (`$CATEGORY_PAGES` vs actual category page)
+   - Are page types matching? (`CATEGORY_PAGES` vs actual category page)
    - Are query params present?
 
 **"I'm not sure what's happening"**
@@ -1331,67 +1331,136 @@ We've mentioned conditions throughout this document. Now let's cover each one in
 
 #### Route Condition
 
-Evaluates based on the current URL path, semantic shortcuts, and parameters.
+Evaluates based on the current URL path, semantic page types, route parameters, and query parameters.
 
 ```javascript
-{ type: "route", urls: [...], excludeUrls: [...], params: {...}, queryParams: {...} }
+{ type: "route", urls: [...], pages: [...], params: {...}, queryParams: {...} }
 ```
 
 > **Why URLs instead of Ember route names?** Using internal route names like `discovery.latest` would make them part of the public API—any rename would break plugins and themes. URLs are already effectively public: changing them breaks bookmarks, external links, and SEO. By matching URLs, we avoid coupling blocks to Discourse's internal routing structure.
 
-**URL Patterns (picomatch glob syntax):**
+**Two approaches:** The route condition supports two complementary approaches:
+- **`urls`**: Match URL patterns using glob syntax
+- **`pages`**: Match semantic page types with typed parameters
+
+**URL Patterns (`urls` option):**
+
+Uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
 - `"/latest"` - Exact path match
 - `"/c/*"` - Single segment wildcard (`/c/foo` but not `/c/foo/bar`)
 - `"/c/**"` - Multi-segment wildcard (`/c/foo`, `/c/foo/bar`, `/c/foo/bar/baz`)
 - `"/t/*/**"` - Combined (`/t/123/slug`, `/t/123/slug/4`)
-- `"{/latest,/top}"` - Brace expansion (matches either)
+- `"/{latest,top}"` - Brace expansion (matches either)
 
-**Shortcuts (semantic page types):**
-- `$CATEGORY_PAGES` - Any category page
-- `$DISCOVERY_PAGES` - Discovery routes (latest, top, new) excluding custom homepage
-- `$HOMEPAGE` - Custom homepage only
-- `$TAG_PAGES` - Any tag page
-- `$TOP_MENU` - Discovery routes in top navigation
+**Semantic Page Types (`pages` option):**
 
-**URL vs Shortcut:**
+| Page Type | Description | Parameters |
+|-----------|-------------|------------|
+| `CATEGORY_PAGES` | Category listing pages | `id` (number), `slug` (string), `parentId` (number) |
+| `TAG_PAGES` | Tag listing pages | `name` (string) |
+| `DISCOVERY_PAGES` | Discovery routes (latest, top, etc.) | `filter` (string) |
+| `HOMEPAGE` | Custom homepage only | (none) |
+| `TOP_MENU` | Top nav discovery routes | `filter` (string) |
+| `TOPIC_PAGES` | Individual topic pages | `id` (number), `slug` (string) |
+| `USER_PAGES` | User profile pages | `username` (string) |
+| `ADMIN_PAGES` | Admin section pages | (none) |
+| `GROUP_PAGES` | Group pages | `name` (string) |
 
-Shortcuts are preferred when you want to match page types regardless of URL structure. URLs are preferred when you need specific path patterns.
+**URLs vs Pages:**
+
+Pages are preferred when you want to match page types regardless of URL structure. URLs are preferred when you need specific path patterns.
 
 ```javascript
-// Shortcut: matches category pages regardless of URL structure
-{ type: "route", urls: ["$CATEGORY_PAGES"] }
+// Page type: matches category pages regardless of URL structure
+{ type: "route", pages: ["CATEGORY_PAGES"] }
 
 // URL pattern: matches specific path structure
 { type: "route", urls: ["/c/**"] }
 
 // The URL pattern might miss category pages with custom routes
-// The shortcut checks the actual page context
+// The page type checks the actual page context
 ```
 
-**Parameters:**
-```javascript
-// Match specific route params
-{
-  type: "route",
-  urls: ["/t/**"],
-  params: { slug: "welcome" }
-}
+**Page Parameters (`params` option):**
 
-// Match query params
+The `params` option works only with `pages` (not `urls`) and validates parameters against the page type definitions:
+
+```javascript
+// Match specific category by ID
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { id: 5 } }
+
+// Match category by slug
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { slug: "general" } }
+
+// Match subcategory by parent ID
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { parentId: 5 } }
+
+// Match discovery pages with specific filter
+{ type: "route", pages: ["DISCOVERY_PAGES"], params: { filter: "latest" } }
+
+// Match specific topic
+{ type: "route", pages: ["TOPIC_PAGES"], params: { id: 123 } }
+
+// Match specific user profile
+{ type: "route", pages: ["USER_PAGES"], params: { username: "admin" } }
+```
+
+**Multiple Page Types (OR logic):**
+
+```javascript
+// Match category OR tag pages
+{ type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"] }
+
+// With params: params must be valid for ALL listed page types
+// This works because both DISCOVERY_PAGES and TOP_MENU support 'filter'
+{ type: "route", pages: ["DISCOVERY_PAGES", "TOP_MENU"], params: { filter: "latest" } }
+```
+
+**Query Parameters (`queryParams` option):**
+
+Works with both `urls` and `pages`:
+
+```javascript
+// Match query params with URL patterns
 {
   type: "route",
-  urls: ["$DISCOVERY_PAGES"],
+  urls: ["/latest"],
   queryParams: { filter: "solved" }
 }
 
-// OR logic for params
+// Match query params with page types
 {
   type: "route",
-  urls: ["$DISCOVERY_PAGES"],
+  pages: ["DISCOVERY_PAGES"],
+  queryParams: { filter: "solved" }
+}
+
+// OR logic for query params
+{
+  type: "route",
+  pages: ["DISCOVERY_PAGES"],
   queryParams: {
     any: [{ filter: "solved" }, { filter: "open" }]
   }
 }
+```
+
+**Excluding Pages:**
+
+Use the NOT combinator to exclude pages instead of a dedicated exclude option:
+
+```javascript
+// Show on all pages EXCEPT admin pages
+{ not: { type: "route", pages: ["ADMIN_PAGES"] } }
+
+// Show on all pages EXCEPT specific URLs
+{ not: { type: "route", urls: ["/admin/**", "/wizard/**"] } }
+
+// Show on discovery pages EXCEPT the homepage
+[
+  { type: "route", pages: ["DISCOVERY_PAGES"] },
+  { not: { type: "route", pages: ["HOMEPAGE"] } }
+]
 ```
 
 #### User Condition
@@ -1544,7 +1613,7 @@ Evaluates based on outlet arg values.
 ```javascript
 conditions: [
   { type: "user", loggedIn: true },
-  { type: "route", urls: ["$DISCOVERY_PAGES"] }
+  { type: "route", pages: ["DISCOVERY_PAGES"] }
 ]
 ```
 
@@ -1706,7 +1775,7 @@ export default apiInitializer((api) => {
         linkUrl: "/t/getting-started/1",
       },
       conditions: [
-        { type: "route", urls: ["$HOMEPAGE"] },
+        { type: "route", pages: ["HOMEPAGE"] },
         { not: { type: "user", admin: true } },
       ],
     },
@@ -2096,10 +2165,12 @@ api.registerBlockConditionType(ConditionClass)
 
 | Arg | Type | Description |
 |-----|------|-------------|
-| `urls` | `string[]` | URL patterns or shortcuts to match |
-| `excludeUrls` | `string[]` | URL patterns or shortcuts to exclude |
-| `params` | `object` | Route params to match |
-| `queryParams` | `object` | Query params to match |
+| `urls` | `string[]` | URL patterns to match (glob syntax) |
+| `pages` | `string[]` | Page types to match (e.g., `["CATEGORY_PAGES"]`) |
+| `params` | `object` | Page-specific params (only with `pages`) |
+| `queryParams` | `object` | Query params to match (works with both) |
+
+> :bulb: **Note:** Use `{ not: { type: "route", ... } }` to exclude URLs or page types.
 
 #### User Condition Args
 
@@ -2188,7 +2259,7 @@ api.registerBlockConditionType(ConditionClass)
    - Check console for type mismatch warnings
    - Ensure query params are compared as strings if that's their type
 
-2. **Shortcut not matching**
+2. **Page type not matching**
    - Verify you're on the expected page type
    - Check discovery service state (category, tag, custom)
 
