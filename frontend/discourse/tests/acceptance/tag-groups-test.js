@@ -12,8 +12,8 @@ acceptance("Tag Groups", function (needs) {
       tag_group: {
         id: 42,
         name: "test tag group",
-        tag_names: ["monkey"],
-        parent_tag_name: [],
+        tags: [{ id: 1, name: "monkey", slug: "monkey" }],
+        parent_tag: [],
         one_per_topic: false,
         permissions: { 0: 1 },
       },
