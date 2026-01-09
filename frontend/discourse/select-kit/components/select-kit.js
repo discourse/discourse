@@ -684,7 +684,7 @@ export default class SelectKit extends Component {
   }
 
   deselectByValue(value) {
-    if (!value) {
+    if (value === null || value === undefined) {
       return;
     }
 
@@ -895,7 +895,10 @@ export default class SelectKit extends Component {
 
   _deselectLast() {
     if (this.selectKit.hasSelection) {
-      this.deselectByValue(this.value[this.value.length - 1]);
+      const lastItem = this.value[this.value.length - 1];
+      // handle both raw values and objects with valueProperty
+      const value = this.getValue(lastItem) ?? lastItem;
+      this.deselectByValue(value);
     }
   }
 

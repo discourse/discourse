@@ -89,15 +89,15 @@ export default class MiniTagChooser extends MultiSelectComponent {
     let tags = this.tags;
     if (this.selectKit.options.hiddenValues) {
       tags = tags.filter((t) => {
-        const id = typeof t === "string" ? t : t.id;
+        const id = typeof t === "object" ? t.id : t;
         return !this.selectKit.options.hiddenValues.includes(id);
       });
     }
     return tags.map((t) => {
-      if (typeof t === "string") {
-        return this.defaultItem(t, t);
+      if (typeof t === "object" && t !== null) {
+        return this.defaultItem(t.id, t.name);
       }
-      return this.defaultItem(t.id, t.name);
+      return this.defaultItem(t, t);
     });
   }
 
@@ -106,12 +106,12 @@ export default class MiniTagChooser extends MultiSelectComponent {
     if (this.onChange) {
       this.onChange(items);
     } else {
-      this.set("value", value);
+      this.set("value", items);
     }
   }
 
   validateCreate(filter, content) {
-    const selectedTagNames = this.tags.map((t) =>
+    const selectedTagNames = (this.selectedContent || []).map((t) =>
       typeof t === "string" ? t : t.name
     );
 
@@ -145,7 +145,16 @@ export default class MiniTagChooser extends MultiSelectComponent {
     };
 
     if (this.value?.length) {
-      data.selected_tag_ids = this.value.slice(0, 100);
+      // extract IDs from objects, filter out non-numeric values (legacy tag names)
+      const ids = this.value
+        .map((v) => (typeof v === "object" ? v.id : v))
+        .filter(
+          (v) =>
+            typeof v === "number" || (typeof v === "string" && /^\d+$/.test(v))
+        );
+      if (ids.length) {
+        data.selected_tag_ids = ids.slice(0, 100);
+      }
     }
 
     if (!this.selectKit.options.everyTag) {

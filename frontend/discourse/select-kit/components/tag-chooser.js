@@ -73,7 +73,12 @@ export default class TagChooser extends MultiSelectComponent {
   @computed("tags.[]")
   get value() {
     return uniqueItemsFromArray(
-      makeArray(this.tags).map((t) => (typeof t === "string" ? t : t.id))
+      makeArray(this.tags).map((t) => {
+        if (typeof t === "string" || typeof t === "number") {
+          return t;
+        }
+        return t.id;
+      })
     );
   }
 
@@ -84,6 +89,10 @@ export default class TagChooser extends MultiSelectComponent {
         if (typeof t === "string") {
           return this.defaultItem(t, t);
         }
+        if (typeof t === "number") {
+          // numeric ID - use as both id and name until we can look up the actual name
+          return this.defaultItem(t, t);
+        }
         return this.defaultItem(t.id, t.name);
       })
     );
@@ -92,9 +101,9 @@ export default class TagChooser extends MultiSelectComponent {
   @action
   _onChange(value, items) {
     if (this.onChange) {
-      this.onChange(value, items);
+      this.onChange(items);
     } else {
-      this.set("tags", value);
+      this.set("tags", items);
     }
   }
 
@@ -178,8 +187,12 @@ export default class TagChooser extends MultiSelectComponent {
     });
 
     if (this.blockedTags) {
+      // extract names from blockedTags (may be strings or objects)
+      const blockedNames = this.blockedTags.map((t) =>
+        typeof t === "string" ? t : t.name
+      );
       results = results.filter((result) => {
-        return !this.blockedTags.includes(result.name);
+        return !blockedNames.includes(result.name);
       });
     }
 

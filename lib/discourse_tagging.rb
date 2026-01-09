@@ -247,6 +247,11 @@ module DiscourseTagging
     end
   end
 
+  def self.tag_topic_by_ids(topic, guardian, tag_ids, append: false)
+    tag_names = Tag.where(id: tag_ids).pluck(:name)
+    tag_topic_by_names(topic, guardian, tag_names, append: append)
+  end
+
   def self.validate_category_tags(guardian, model, category, tags = [])
     existing_tags = tags.present? ? Tag.where(name: tags) : []
     valid_tags = guardian.can_create_tag? ? tags : existing_tags

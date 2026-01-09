@@ -26,12 +26,12 @@ export default function selectKitPropUtils(target) {
     property,
     options = { definedOnly: true }
   ) {
-    if (!item) {
+    if (item === null || item === undefined) {
       return null;
     }
-    if (item && typeof property === "string") {
+    if (typeof property === "string") {
       const attempt = get(item, property);
-      if (attempt) {
+      if (attempt !== undefined) {
         return attempt;
       }
     }

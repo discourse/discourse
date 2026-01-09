@@ -959,16 +959,17 @@ export default class Topic extends RestModel {
   }
 
   updateTags(tags) {
-    if (!tags || tags.length === 0) {
-      tags = [""];
-    } else {
-      // SHOULD NOT normalize to tag names - tags may be objects {id, name} or strings
-      tags = tags.map((t) => (typeof t === "string" ? t : t.name));
+    // send tag_ids when values are objects
+    if (tags?.some((t) => typeof t === "object" && t !== null && t.id)) {
+      return ajax(`/t/${this.id}/tags`, {
+        type: "PUT",
+        data: { tag_ids: tags.map((t) => t.id) },
+      });
     }
 
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
-      data: { tags },
+      data: { tags: tags || [] },
     });
   }
 }

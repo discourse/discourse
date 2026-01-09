@@ -338,6 +338,14 @@ class TagsController < ::ApplicationController
   end
 
   def search
+    if params[:selected_tags].present?
+      Discourse.deprecate(
+        "selected_tags param is deprecated, use selected_tag_ids instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+    end
+
     filter_params = {
       for_input: params[:filterForInput],
       selected_tags: params[:selected_tags],

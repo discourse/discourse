@@ -232,7 +232,7 @@ RSpec.describe ListController do
 
           expect(body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(topic.id)
           expect(body["topic_list"]["topics"][0]["tags"]).to contain_exactly(
-            { "id" => tag.id, "name" => tag.name },
+            { "id" => tag.id, "name" => tag.name, "slug" => tag.slug },
           )
         end.count
 
@@ -253,10 +253,10 @@ RSpec.describe ListController do
           )
 
           expect(body["topic_list"]["topics"][0]["tags"]).to contain_exactly(
-            { "id" => tag2.id, "name" => tag2.name },
+            { "id" => tag2.id, "name" => tag2.name, "slug" => tag2.slug },
           )
           expect(body["topic_list"]["topics"][1]["tags"]).to contain_exactly(
-            { "id" => tag.id, "name" => tag.name },
+            { "id" => tag.id, "name" => tag.name, "slug" => tag.slug },
           )
         end.count
 

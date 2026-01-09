@@ -1680,6 +1680,32 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe "tag_topic_by_ids" do
+    fab!(:topic)
+    fab!(:tag1) { Fabricate(:tag, name: "tag1") }
+    fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+
+    it "tags a topic using tag IDs" do
+      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [tag1.id, tag2.id])
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+    end
+
+    it "returns false for non-existent IDs" do
+      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [-1])
+      expect(valid).to eq(true) # succeeds but with no tags
+      expect(topic.reload.tags).to be_empty
+    end
+
+    it "clears tags when given empty array" do
+      topic.tags = [tag1]
+      topic.save!
+      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [])
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to be_empty
+    end
+  end
+
   describe "#tags_for_saving" do
     it "returns empty array if input is nil" do
       expect(described_class.tags_for_saving(nil, guardian)).to eq([])
