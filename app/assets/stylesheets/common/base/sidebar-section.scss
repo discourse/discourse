@@ -1,6 +1,7 @@
 .sidebar-section-wrapper {
   .sidebar-section-header-wrapper {
     display: flex;
+    border-radius: var(--d-border-radius);
 
     &:focus-within {
       background: var(--d-sidebar-highlight-background);
@@ -8,7 +9,6 @@
 
     .sidebar-section-header-button {
       font-size: var(--font-down-1);
-      padding-right: 0;
 
       > * {
         pointer-events: none;
@@ -43,12 +43,7 @@
       }
 
       &:focus {
-        outline: none;
-        background: var(--d-sidebar-highlight-hover-background);
-
-        .d-icon {
-          color: var(--d-sidebar-highlight-hover-icon);
-        }
+        outline: 2px solid var(--tertiary);
       }
     }
   }
