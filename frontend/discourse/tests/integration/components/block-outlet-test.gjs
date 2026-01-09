@@ -21,6 +21,8 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.afterEach(function () {
+    setupOnerror();
+    debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, null);
     debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
     debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, null);
     debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, null);
@@ -274,8 +276,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         errorThrown?.message?.includes("cannot be used directly in templates"),
         "throws authorization error"
       );
-
-      setupOnerror();
     });
   });
 
@@ -331,6 +331,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       let ghostBlockReceived = false;
 
+      debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, () => true);
       debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
         if (!blockData.conditionsPassed) {
           ghostBlockReceived = true;
@@ -1321,6 +1322,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       let ghostBlockData = null;
 
+      debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, () => true);
       debugHooks.setCallback(
         DEBUG_CALLBACK.BLOCK_DEBUG,
         (blockData, context) => {
@@ -1682,8 +1684,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         errorCaught?.message?.includes("Block render error"),
         "error message is correct"
       );
-
-      setupOnerror();
     });
 
     test("block with invalid condition type shows warning in dev mode", async function (assert) {

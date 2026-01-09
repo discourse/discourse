@@ -766,6 +766,8 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
 
   // Store config with validation promise for potential future use
   blockConfigs.set(outletName, { validatedConfig });
+
+  return validatedConfig;
 }
 
 /**
