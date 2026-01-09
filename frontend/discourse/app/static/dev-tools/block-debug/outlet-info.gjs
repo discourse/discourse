@@ -13,11 +13,27 @@ import ArgsTable from "../shared/args-table";
  * @param {number} blockCount - Number of blocks registered.
  * @param {Object} [outletArgs] - Arguments passed to the outlet. May contain a non-enumerable
  *   `__deprecatedArgs__` property with the raw deprecated args for display in the debug tooltip.
+ * @param {Error} [error] - Validation error if config failed validation.
  */
 export default class OutletInfo extends Component {
   get blockLabel() {
     const count = this.args.blockCount;
     return count === 1 ? "1 block" : `${count} blocks`;
+  }
+
+  /**
+   * Cleans up the error message for display in the popup.
+   * Removes the "[Blocks]" prefix while preserving formatted structure.
+   *
+   * @returns {string} The cleaned error message.
+   */
+  get errorMessage() {
+    let message = this.args.error?.message ?? "Unknown validation error";
+
+    // Remove "[Blocks]" prefix that's added for console logging
+    message = message.replace(/^\[Blocks\]\s*/i, "");
+
+    return message.trim();
   }
 
   /**
@@ -45,18 +61,24 @@ export default class OutletInfo extends Component {
       @untriggers={{hash mobile=(array "click") desktop=(array "click")}}
     >
       <:trigger>
-        <span class="block-outlet-debug__badge">
+        <span class="block-outlet-debug__badge {{if @error '--error'}}">
           {{icon "cubes"}}
           {{@outletName}}
         </span>
       </:trigger>
       <:content>
         <div class="outlet-info__wrapper">
-          <div class="outlet-info__heading --block-outlet">
+          <div
+            class="outlet-info__heading
+              {{if @error '--error' '--block-outlet'}}"
+          >
             <span class="title">
               {{icon "cubes"}}
               {{@outletName}}
             </span>
+            {{#if @error}}
+              <span class="outlet-info__status">ERROR</span>
+            {{/if}}
             <a
               class="github-link"
               href="https://github.com/search?q=repo%3Adiscourse%2Fdiscourse%20BlockOutlet%20@name=%22{{@outletName}}%22&type=code"
@@ -66,7 +88,14 @@ export default class OutletInfo extends Component {
             >{{icon "fab-github"}}</a>
           </div>
           <div class="outlet-info__content">
-            {{#if @blockCount}}
+            {{#if @error}}
+              <div class="outlet-info__error">
+                <div class="outlet-info__section-title">Validation failed</div>
+                <pre
+                  class="outlet-info__error-message"
+                >{{this.errorMessage}}</pre>
+              </div>
+            {{else if @blockCount}}
               <div class="outlet-info__section">
                 <div class="outlet-info__section-title">Blocks Registered</div>
                 <div class="outlet-info__stat">

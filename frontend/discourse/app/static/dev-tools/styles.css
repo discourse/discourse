@@ -226,10 +226,29 @@
   padding: 2px;
   min-height: 20px;
   background: rgb(245 158 11 / var(--dev-tools-bg-opacity));
+
+  &.--validation-failed {
+    border: 1px dashed var(--dev-tools-ghost-color);
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
+      rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
+    );
+  }
 }
 
 .block-outlet-debug__badge {
   background: var(--dev-tools-block-outlet-color);
+
+  &.--error {
+    background: var(--dev-tools-ghost-color);
+
+    &:hover {
+      background: var(--dev-tools-ghost-hover-color);
+    }
+  }
 }
 
 /* Block Debug Tooltip */
@@ -429,6 +448,10 @@
   &.--block-outlet {
     color: var(--dev-tools-block-outlet-color);
   }
+
+  &.--error {
+    color: var(--dev-tools-ghost-color);
+  }
 }
 
 .outlet-info__content {
@@ -464,6 +487,37 @@
 .outlet-info__empty {
   font-style: italic;
   color: var(--primary-medium);
+}
+
+.outlet-info__status {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--dev-tools-ghost-color);
+  color: white;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.outlet-info__error {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+pre.outlet-info__error-message {
+  margin: 0;
+  padding: 8px;
+  background: none;
+  border: none;
+  font-size: 11px;
+  line-height: 1.4;
+  font-family: var(--dev-tools-mono-font);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 /* Shared Outlet Args Table */

@@ -20,6 +20,7 @@ import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { getOwner } from "@ember/owner";
+import { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -740,7 +741,7 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
   // - In prod: dispatches a 'block-error' event
   //
   // The promise is returned so tests can await and catch errors.
-  const validationPromise = validateConfig(
+  const validatedConfig = validateConfig(
     config,
     outletName,
     blocksService,
@@ -748,12 +749,10 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
     isContainerBlock,
     "blocks", // parentPath
     callSiteError // Error object for source-mapped call site
-  );
+  ).then(() => config);
 
   // Store config with validation promise for potential future use
-  blockConfigs.set(outletName, { children: config, validationPromise });
-
-  return validationPromise;
+  blockConfigs.set(outletName, { validatedConfig });
 }
 
 /**
@@ -820,6 +819,10 @@ export default class BlockOutlet extends Component {
     }
   }
 
+  get validatedConfig() {
+    return blockConfigs.get(this.#name)?.validatedConfig;
+  }
+
   /**
    * Processes block configurations and returns renderable components.
    *
@@ -837,93 +840,108 @@ export default class BlockOutlet extends Component {
    */
   @cached
   get children() {
-    const rawChildren = blockConfigs.get(this.#name)?.children ?? [];
-    if (!rawChildren.length) {
+    if (!this.validatedConfig) {
       return;
     }
 
-    const owner = getOwner(this);
-    const blocksService = owner.lookup("service:blocks");
-    const isLoggingEnabled = isBlockLoggingEnabled();
-    const showGhosts = !!getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
-    const outletArgs = this.outletArgsWithDeprecations;
-    const baseHierarchy = this.#name;
-
-    // Preprocess entire tree - this evaluates conditions and sets __visible on all configs
-    const processedConfigs = this.#preprocessConfigs(
-      rawChildren,
-      outletArgs,
-      blocksService,
-      showGhosts,
-      isLoggingEnabled,
-      baseHierarchy
-    );
-
-    // Create components from processed configs
-    const result = [];
-    const containerCounts = new Map();
-
-    for (const blockConfig of processedConfigs) {
-      const resolvedBlock = resolveBlockSync(blockConfig.block);
-
-      // Handle optional missing block (block ref ended with `?` but not registered)
-      if (isOptionalMissing(resolvedBlock)) {
-        const ghostData = handleOptionalMissingBlock({
-          blockName: resolvedBlock.name,
-          blockConfig,
-          hierarchy: baseHierarchy,
-          isLoggingEnabled,
-          showGhosts,
-        });
-        if (ghostData) {
-          result.push(ghostData);
+    /* Block configs are validated asynchronously. TrackedAsyncData lets us wait
+       for validation to complete before rendering blocks, while also exposing
+       any validation errors to the debug overlay. */
+    return new TrackedAsyncData(
+      this.validatedConfig.then((rawChildren) => {
+        if (!rawChildren.length) {
+          return;
         }
-        continue;
-      }
 
-      // If block couldn't be resolved (unresolved factory), skip it
-      if (!resolvedBlock) {
-        continue;
-      }
+        const owner = getOwner(this);
+        const blocksService = owner.lookup("service:blocks");
+        const isLoggingEnabled = isBlockLoggingEnabled();
+        const showGhosts = !!getDebugCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
+        const outletArgs = this.outletArgsWithDeprecations;
+        const baseHierarchy = this.#name;
 
-      const blockName = resolvedBlock.blockName || "unknown";
-      const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
-
-      // For containers, build their full path (used for their children's hierarchy)
-      const containerPath = isChildContainer
-        ? buildContainerPath(blockName, baseHierarchy, containerCounts)
-        : undefined;
-
-      // Check pre-computed visibility from preprocessing step
-      if (blockConfig.__visible) {
-        result.push(
-          createChildBlock({ ...blockConfig, block: resolvedBlock }, owner, {
-            displayHierarchy: baseHierarchy,
-            containerPath,
-            conditions: blockConfig.conditions,
-            outletArgs,
-          })
-        );
-      } else if (showGhosts) {
-        // Create ghost for invisible block
-        const ghostData = createGhostBlock({
-          blockName,
-          blockConfig,
-          hierarchy: baseHierarchy,
-          containerPath,
-          isContainer: isChildContainer,
-          owner,
+        // Preprocess entire tree - this evaluates conditions and sets __visible on all configs
+        const processedConfigs = this.#preprocessConfigs(
+          rawChildren,
           outletArgs,
+          blocksService,
+          showGhosts,
           isLoggingEnabled,
-          resolveBlockFn: resolveBlockSync,
-        });
-        if (ghostData) {
-          result.push(ghostData);
-        }
-      }
-    }
+          baseHierarchy
+        );
 
-    return result;
+        // Create components from processed configs
+        const result = [];
+        const containerCounts = new Map();
+
+        for (const blockConfig of processedConfigs) {
+          const resolvedBlock = resolveBlockSync(blockConfig.block);
+
+          // Handle optional missing block (block ref ended with `?` but not registered)
+          if (isOptionalMissing(resolvedBlock)) {
+            const ghostData = handleOptionalMissingBlock({
+              blockName: resolvedBlock.name,
+              blockConfig,
+              hierarchy: baseHierarchy,
+              isLoggingEnabled,
+              showGhosts,
+            });
+            if (ghostData) {
+              result.push(ghostData);
+            }
+            continue;
+          }
+
+          // If block couldn't be resolved (unresolved factory), skip it
+          if (!resolvedBlock) {
+            continue;
+          }
+
+          const blockName = resolvedBlock.blockName || "unknown";
+          const isChildContainer =
+            resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
+
+          // For containers, build their full path (used for their children's hierarchy)
+          const containerPath = isChildContainer
+            ? buildContainerPath(blockName, baseHierarchy, containerCounts)
+            : undefined;
+
+          // Check pre-computed visibility from preprocessing step
+          if (blockConfig.__visible) {
+            result.push(
+              createChildBlock(
+                { ...blockConfig, block: resolvedBlock },
+                owner,
+                {
+                  displayHierarchy: baseHierarchy,
+                  containerPath,
+                  conditions: blockConfig.conditions,
+                  outletArgs,
+                }
+              )
+            );
+          } else if (showGhosts) {
+            // Create ghost for invisible block
+            const ghostData = createGhostBlock({
+              blockName,
+              blockConfig,
+              hierarchy: baseHierarchy,
+              containerPath,
+              isContainer: isChildContainer,
+              owner,
+              outletArgs,
+              isLoggingEnabled,
+              resolveBlockFn: resolveBlockSync,
+            });
+            if (ghostData) {
+              result.push(ghostData);
+            }
+          }
+        }
+
+        return result;
+      })
+    );
   }
 
   /**
@@ -1073,7 +1091,23 @@ export default class BlockOutlet extends Component {
    * @returns {number}
    */
   get blockCount() {
-    return this.children?.length ?? 0;
+    if (!this.children?.isResolved) {
+      return 0;
+    }
+    return this.children.value?.length ?? 0;
+  }
+
+  /**
+   * Validation error if the block config failed validation.
+   * Only accessible when the validation promise has rejected.
+   *
+   * @returns {Error|null}
+   */
+  get validationError() {
+    if (!this.children?.isRejected) {
+      return null;
+    }
+    return this.children.error;
   }
 
   /**
@@ -1105,13 +1139,19 @@ export default class BlockOutlet extends Component {
     {{yield (hasConfig this.outletName) to="before"}}
 
     {{#if this.showOutletBoundary}}
-      <div class="block-outlet-debug">
+      <div
+        class={{concatClass
+          "block-outlet-debug"
+          (if this.children.isRejected "--validation-failed")
+        }}
+      >
         {{#if this.OutletInfoComponent}}
           <this.OutletInfoComponent
             @outletName={{this.outletName}}
             @hasBlocks={{this.blockCount}}
             @blockCount={{this.blockCount}}
             @outletArgs={{this.outletArgsWithDeprecations}}
+            @error={{this.validationError}}
           />
         {{else}}
           <span class="block-outlet-debug__badge">{{icon "cubes"}}
@@ -1119,33 +1159,37 @@ export default class BlockOutlet extends Component {
           </span>
         {{/if}}
         {{#if this.children}}
-          <div class={{this.outletName}}>
-            <div class="{{this.outletName}}__container">
-              <div class="{{this.outletName}}__layout">
-                {{#each this.children as |item|}}
-                  <item.Component
-                    @outletName={{this.outletName}}
-                    @outletArgs={{this.outletArgsWithDeprecations}}
-                  />
-                {{/each}}
+          {{#if this.children.isResolved}}
+            <div class={{this.outletName}}>
+              <div class="{{this.outletName}}__container">
+                <div class="{{this.outletName}}__layout">
+                  {{#each this.children.value as |item|}}
+                    <item.Component
+                      @outletName={{this.outletName}}
+                      @outletArgs={{this.outletArgsWithDeprecations}}
+                    />
+                  {{/each}}
+                </div>
               </div>
             </div>
-          </div>
+          {{/if}}
         {{/if}}
       </div>
     {{else if this.children}}
-      <div class={{this.outletName}}>
-        <div class="{{this.outletName}}__container">
-          <div class="{{this.outletName}}__layout">
-            {{#each this.children as |item|}}
-              <item.Component
-                @outletName={{this.outletName}}
-                @outletArgs={{this.outletArgsWithDeprecations}}
-              />
-            {{/each}}
+      {{#if this.children.isResolved}}
+        <div class={{this.outletName}}>
+          <div class="{{this.outletName}}__container">
+            <div class="{{this.outletName}}__layout">
+              {{#each this.children.value as |item|}}
+                <item.Component
+                  @outletName={{this.outletName}}
+                  @outletArgs={{this.outletArgsWithDeprecations}}
+                />
+              {{/each}}
+            </div>
           </div>
         </div>
-      </div>
+      {{/if}}
     {{/if}}
 
     {{! Yield to :after block with hasConfig boolean for conditional rendering }}
