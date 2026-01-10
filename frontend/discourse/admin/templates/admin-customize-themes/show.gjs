@@ -5,13 +5,21 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { slugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <div class="show-current-style admin-customize-themes-show">
+  <div
+    class={{concatClass
+      "show-current-style"
+      "admin-customize-themes-show"
+      (slugify @controller.model.name)
+    }}
+  >
     <div class="back-to-themes-and-components">
       <LinkTo
         @route={{if
