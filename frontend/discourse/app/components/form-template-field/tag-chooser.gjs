@@ -24,14 +24,20 @@ export default class TagChooserField extends Component {
     }));
   }
 
+  _tagName(tag) {
+    return typeof tag === "object" ? tag.name : tag;
+  }
+
   get filteredSelectedValues() {
     return this.tags.filter((tag) =>
-      this.formattedChoices.some((choice) => choice.name === tag)
+      this.formattedChoices.some((choice) => choice.name === this._tagName(tag))
     );
   }
 
   get selectedTags() {
-    return this.tags.filter((tag) => this.args.choices.includes(tag));
+    return this.tags.filter((tag) =>
+      this.args.choices.includes(this._tagName(tag))
+    );
   }
 
   @action
@@ -50,14 +56,17 @@ export default class TagChooserField extends Component {
         })
       );
 
-      const selectedTags = [
-        ...this.tags.filter((tag) => !this.selectedTags.includes(tag)),
+      const selectedTagNames = this.selectedTags.map((t) => this._tagName(t));
+      const filteredTags = [
+        ...this.tags.filter(
+          (tag) => !selectedTagNames.includes(this._tagName(tag))
+        ),
       ];
 
       // the next is needed because we already updated the tags in the same runloop
       // when the user selected a tag in the composer directly
       next(() => {
-        set(this.composer.model, "tags", selectedTags);
+        set(this.composer.model, "tags", filteredTags);
         this.args.onChange([]);
       });
     } else {
@@ -108,12 +117,15 @@ export default class TagChooserField extends Component {
     const selectedTags = selectedValues.filter((tag) =>
       validChoices.includes(tag)
     );
+    const selectedTagNames = this.selectedTags.map((t) => this._tagName(t));
 
     set(
       this.composer.model,
       "tags",
       uniqueItemsFromArray([
-        ...this.tags.filter((tag) => !this.selectedTags.includes(tag)),
+        ...this.tags.filter(
+          (tag) => !selectedTagNames.includes(this._tagName(tag))
+        ),
         ...selectedTags,
       ])
     );
@@ -122,7 +134,9 @@ export default class TagChooserField extends Component {
   @action
   isSelected(option) {
     option = option.toLowerCase().replace(/\s+/g, "-");
-    return this.filteredSelectedValues.includes(option);
+    return this.filteredSelectedValues.some(
+      (tag) => this._tagName(tag) === option
+    );
   }
 
   <template>
