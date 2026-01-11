@@ -457,16 +457,24 @@ class TagsController < ::ApplicationController
 
   def create_synonyms
     guardian.ensure_can_edit_tag!
-    value = DiscourseTagging.add_or_create_synonyms_by_name(@tag, params[:synonyms])
-    if value.is_a?(Array)
-      render json:
-               failed_json.merge(
-                 failed_tags:
-                   value.inject({}) do |h, t|
-                     h[t.name] = t.errors.full_messages.first
-                     h
-                   end,
-               )
+
+    # frontend uses form data
+    tags_param = params[:tags].try(:values) || params[:tags]
+    synonym_tag_ids = tags_param&.filter_map { |t| t[:id]&.to_i } || []
+    new_synonym_names = tags_param&.select { |t| t[:id].blank? }&.filter_map { |t| t[:name] } || []
+
+    if params[:synonyms].present? && tags_param.blank?
+      Discourse.deprecate(
+        "the synonyms param is deprecated, use tags array instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+      new_synonym_names = params[:synonyms]
+    end
+
+    value = DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:, new_synonym_names:)
+    if value.is_a?(Hash)
+      render json: failed_json.merge(failed_tags: value)
     else
       render json: success_json
     end

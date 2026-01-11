@@ -222,7 +222,11 @@ export default class TagInfo extends Component {
         return ajax(`/tag/${this.tagInfo.name}/synonyms`, {
           type: "POST",
           data: {
-            synonyms: this.newSynonyms,
+            tags: this.newSynonyms.map((t) =>
+              typeof t.id === "number"
+                ? { id: t.id, name: t.name }
+                : { name: t.name }
+            ),
           },
         })
           .then((response) => {
