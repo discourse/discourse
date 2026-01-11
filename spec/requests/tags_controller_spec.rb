@@ -1473,7 +1473,40 @@ RSpec.describe TagsController do
     context "when signed in as admin" do
       before { sign_in(admin) }
 
-      it "can make a tag a synonym of another tag" do
+      it "can make an existing tag a synonym using tags array with id" do
+        tag2 = Fabricate(:tag)
+        expect {
+          post "/tag/#{tag.name}/synonyms.json",
+               params: {
+                 tags: [{ id: tag2.id, name: tag2.name }],
+               }
+        }.to_not change { Tag.count }
+        expect(response.status).to eq(200)
+        expect(tag2.reload.target_tag).to eq(tag)
+      end
+
+      it "can create new tags using tags array without id" do
+        expect {
+          post "/tag/#{tag.name}/synonyms.json", params: { tags: [{ name: "new-synonym" }] }
+        }.to change { Tag.count }.by(1)
+        expect(response.status).to eq(200)
+        expect(Tag.find_by_name("new-synonym")&.target_tag).to eq(tag)
+      end
+
+      it "can use both existing and new tags together in tags array" do
+        tag2 = Fabricate(:tag)
+        expect {
+          post "/tag/#{tag.name}/synonyms.json",
+               params: {
+                 tags: [{ id: tag2.id, name: tag2.name }, { name: "new-synonym" }],
+               }
+        }.to change { Tag.count }.by(1)
+        expect(response.status).to eq(200)
+        expect(tag2.reload.target_tag).to eq(tag)
+        expect(Tag.find_by_name("new-synonym")&.target_tag).to eq(tag)
+      end
+
+      it "can make a tag a synonym of another tag (deprecated synonyms param)" do
         tag2 = Fabricate(:tag)
         expect {
           post "/tag/#{tag.name}/synonyms.json", params: { synonyms: [tag2.name] }
@@ -1482,7 +1515,7 @@ RSpec.describe TagsController do
         expect(tag2.reload.target_tag).to eq(tag)
       end
 
-      it "can create new tags at the same time" do
+      it "can create new tags at the same time (deprecated synonyms param)" do
         expect {
           post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym"] }
         }.to change { Tag.count }.by(1)
@@ -1493,7 +1526,7 @@ RSpec.describe TagsController do
       it "can return errors" do
         _tag2 = Fabricate(:tag, target_tag: tag)
         tag3 = Fabricate(:tag)
-        post "/tag/#{tag3.name}/synonyms.json", params: { synonyms: [tag.name] }
+        post "/tag/#{tag3.name}/synonyms.json", params: { tags: [{ id: tag.id, name: tag.name }] }
         expect(response.status).to eq(200)
         expect(response.parsed_body["failed"]).to be_present
         expect(response.parsed_body.dig("failed_tags", tag.name)).to be_present

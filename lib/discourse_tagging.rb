@@ -822,35 +822,96 @@ module DiscourseTagging
     end
   end
 
-  # Returns true if all were added successfully, or an Array of the
-  # tags that failed to be added, with errors on each Tag.
-  def self.add_or_create_synonyms_by_name(target_tag, synonym_names)
-    tag_names =
-      DiscourseTagging.tags_for_saving(synonym_names, Guardian.new(Discourse.system_user)) || []
-    tag_names -= [target_tag.name]
-    existing = Tag.where_name(tag_names).all
-    target_tag.synonyms << existing
-    (tag_names - target_tag.synonyms.map(&:name)).each do |name|
-      target_tag.synonyms << Tag.create(name: name)
-    end
-    successful = existing.select { |t| !t.errors.present? }
-    synonyms_ids = successful.map(&:id)
-    TopicTag.where(topic_id: target_tag.topics.with_deleted, tag_id: synonyms_ids).delete_all
-    TopicTag.joins(DB.sql_fragment(<<~SQL, synonyms_ids: synonyms_ids)).delete_all
-      INNER JOIN (
-        SELECT MIN(id) AS id, topic_id
-          FROM topic_tags
-          WHERE tag_id IN (:synonyms_ids)
-          GROUP BY topic_id
-      ) AS tt ON tt.id < topic_tags.id
-                  AND tt.topic_id = topic_tags.topic_id
-                  AND topic_tags.tag_id IN (:synonyms_ids)
+  # Add synonyms to a target tag.
+  #
+  # - ensures synonym tags do not already have synonyms,
+  # - adds the synonyms to tag groups, categories of the target tag
+  # - moves topic_tags of the synonym to the target tag
+  #
+  # @!attribute target_tag [Tag] the tag to which synonyms will be added
+  # @!attribute synonym_tag_ids [Array<Integer>] existing tag IDs to be added as synonyms
+  # @!attribute new_synonym_names [Array<String>] new tag names to be created as synonyms
+  # @return [true, Hash] true if all synonyms were added successfully or a hash of
+  #   failed synonym names with error messages
+  def self.add_or_create_synonyms(target_tag, synonym_tag_ids: [], new_synonym_names: [])
+    return true if synonym_tag_ids.blank? && new_synonym_names.blank?
+
+    # normalize inputs
+    synonym_tag_ids -= [target_tag.id]
+    cleaned_names =
+      (tags_for_saving(new_synonym_names, Guardian.new(Discourse.system_user)) || []) -
+        [target_tag.name]
+
+    # single query: find candidates + check if they have synonyms
+    candidates =
+      DB.query(
+        <<~SQL,
+      SELECT t.id, t.name,
+             EXISTS(SELECT 1 FROM tags s WHERE s.target_tag_id = t.id) AS has_synonyms
+      FROM tags t
+      WHERE (LOWER(t.name) IN (:names) OR t.id IN (:ids))
+        AND t.id != :target_id
     SQL
-    TopicTag.where(tag_id: synonyms_ids).update_all(tag_id: target_tag.id)
-    Scheduler::Defer.later "Update tag topic counts" do
-      Tag.ensure_consistency!
+        ids: synonym_tag_ids,
+        names: cleaned_names.map(&:downcase),
+        target_id: target_tag.id,
+      )
+
+    valid_ids = []
+    failed = {}
+    existing_names = Set.new
+
+    candidates.each do |c|
+      existing_names << c.name.downcase
+      if c.has_synonyms
+        failed[c.name] = I18n.t("tags.synonyms_exist")
+      else
+        valid_ids << c.id
+      end
     end
-    (existing - successful).presence || true
+    # set target_tag_id on existing tags
+    Tag.where(id: valid_ids).update_all(target_tag_id: target_tag.id)
+
+    # create new tags for names that don't exist
+    names_to_create = cleaned_names.reject { |n| existing_names.include?(n.downcase) }
+    if names_to_create.present?
+      now = Time.current
+      rows =
+        names_to_create.map do |n|
+          { name: n, target_tag_id: target_tag.id, created_at: now, updated_at: now }
+        end
+      valid_ids += Tag.insert_all(rows, returning: :id).pluck("id")
+    end
+
+    return failed.presence || true if valid_ids.blank?
+
+    # copy associations and consolidate topic_tags
+    DB.exec(<<~SQL, synonym_ids: valid_ids, target_id: target_tag.id)
+      INSERT INTO tag_group_memberships (tag_id, tag_group_id, created_at, updated_at)
+      SELECT s.id, tgm.tag_group_id, NOW(), NOW()
+      FROM unnest(ARRAY[:synonym_ids]::int[]) s(id)
+      JOIN tag_group_memberships tgm ON tgm.tag_id = :target_id
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO category_tags (tag_id, category_id, created_at, updated_at)
+      SELECT s.id, ct.category_id, NOW(), NOW()
+      FROM unnest(ARRAY[:synonym_ids]::int[]) s(id)
+      JOIN category_tags ct ON ct.tag_id = :target_id
+      ON CONFLICT DO NOTHING;
+
+      WITH keep AS (
+        SELECT MIN(id) AS id FROM topic_tags
+        WHERE tag_id IN (:synonym_ids)
+          AND topic_id NOT IN (SELECT topic_id FROM topic_tags WHERE tag_id = :target_id)
+        GROUP BY topic_id
+      )
+      DELETE FROM topic_tags WHERE tag_id IN (:synonym_ids) AND id NOT IN (SELECT id FROM keep);
+
+      UPDATE topic_tags SET tag_id = :target_id WHERE tag_id IN (:synonym_ids);
+    SQL
+
+    Scheduler::Defer.later("Update tag topic counts") { Tag.ensure_consistency! }
+    failed.presence || true
   end
 
   def self.muted_tags(user)
