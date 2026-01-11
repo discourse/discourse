@@ -1,0 +1,68 @@
+.filter-field {
+  position: relative;
+  padding: 0;
+  width: 100%;
+
+  &__icon,
+  &__case-sensitivity-btn,
+  &__clear-btn {
+    position: absolute;
+    align-items: center;
+    display: flex;
+    color: var(--primary-500);
+  }
+
+  &__icon {
+    top: 0;
+    bottom: 0;
+    left: var(--space-2);
+    font-size: var(--font-down-2);
+  }
+
+  &__case-sensitivity-btn {
+    top: var(--space-half);
+    bottom: var(--space-half);
+    right: var(--space-2);
+    font-size: var(--font-0);
+    padding: var(--space-half);
+    color: var(--primary-600);
+    border-radius: var(--d-border-radius);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--primary-800);
+    }
+
+    &.--active {
+      background: var(--primary-500);
+      color: var(--secondary);
+    }
+
+    &.--active:hover {
+      background: var(--primary-800);
+    }
+  }
+
+  &__clear-btn {
+    top: 0;
+    bottom: 0;
+    right: var(--space-6);
+    font-size: var(--font-down-2);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  &__input[type="text"] {
+    border: 1px solid var(--primary-200);
+    border-radius: var(--d-border-radius);
+    width: 100%;
+    font-size: var(--font-down-1);
+    background: var(--secondary);
+    margin: 0;
+    padding: var(--space-half) var(--space) var(--space-half) var(--space-6);
+  }
+}

@@ -1,0 +1,23 @@
+@use "lib/viewport";
+
+.copy-button {
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: var(--primary-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--d-border-radius);
+  transition: var(--transition);
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--tertiary);
+  }
+
+  .d-icon {
+    font-size: var(--font-down-2);
+  }
+}

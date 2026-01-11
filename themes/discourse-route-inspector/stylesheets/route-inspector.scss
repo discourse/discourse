@@ -1,0 +1,414 @@
+@use "lib/viewport";
+
+body {
+  --panel-width: clamp(300px, 28vw, 500px);
+  --panel-padding: 1rem;
+  --panel-padding-vertical: 0.75rem;
+  --panel-margin: 0.5rem;
+}
+
+.route-inspector {
+  --transition: all 250ms ease;
+  font-size: var(--font-down-1);
+  font-family: var(--font-family);
+  z-index: z("base");
+  overflow: hidden;
+  position: fixed;
+  top: calc(var(--header-offset) + 1px);
+  bottom: 0;
+  right: 0;
+  width: var(--panel-width);
+  border-radius: 0;
+  border-left: 1px solid var(--primary-400);
+  background: var(--secondary);
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+
+  &__layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &__section-controls {
+    container-type: inline-size;
+    container-name: section-controls;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    font-size: var(--font-down-1);
+    box-sizing: border-box;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--panel-padding);
+    white-space: nowrap;
+  }
+
+  
+  &__section-control {
+    padding: var(--space) var(--space-2);
+    color: var(--primary);
+    background: rgb(var(--primary-rgb), 0.03);
+
+
+
+    .d-icon {
+      margin-right: var(--space-half);
+    }
+
+    &:hover[disabled] {
+      background: var(--primary-100);
+      color: var(--primary-high);
+    }
+
+    &:hover:not([disabled]) {
+      background: var(--primary-200);
+      color: var(--tertiary);
+
+      .d-icon {
+        color: var(--tertiary);
+      }
+    }
+
+    
+    &.--customize {
+      margin-left: auto;
+
+      @container section-controls (max-width: 360px) {
+        .d-button-label {
+          display: none;
+        }
+      }
+    }
+
+    &.--expand-all,
+    &.--collapse-all {
+      @container section-controls (max-width: 300px) {
+        .d-button-label {
+          display: none;
+        }
+      }
+    }
+
+  }
+
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: var(--space-2) var(--panel-padding);
+  }
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space) var(--panel-padding);
+    padding-bottom: var(--space);
+
+    &-control {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      background: transparent;
+      border: none;
+    }
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-up-1);
+    font-weight: 400;
+    line-height: 1.1;
+    gap: var(--space-2);
+    color: var(--primary);
+
+    strong {
+      font-weight: 600;
+      line-height: 1;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__control {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: var(--d-border-radius);
+    transition: var(--transition);
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: var(--font-0);
+      margin: 0;
+    }
+
+    &:hover .d-icon,
+    &:focus .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--space-4);
+    margin-top: var(--space-2);
+    align-items: flex-start;
+    flex: 1;
+    min-height: 0;
+    padding-inline: 0;
+    overflow-y: hidden;
+  }
+
+  &__modules-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    box-sizing: border-box;
+    padding-bottom: var(--space-4);
+    border-top: 1px solid var(--primary-300);
+  }
+
+  &__section-content-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: var(--transition);
+    padding-bottom: var(--space-3);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  &__section-content {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &__module-section {
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition);
+    border-bottom: 1px solid var(--primary-300);
+
+    &.--long {
+      flex: 1 1 auto;
+      min-height: 10rem;
+      display: flex;
+      flex-direction: column;
+
+      .route-inspector__section-content {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .inspector-data-table-wrapper {
+        flex: 1;
+        min-height: 0;
+      }
+    }
+
+    &.--collapsed {
+      flex: 0 1 auto;
+      min-height: 38px;
+      justify-content: center;
+      padding: 0;
+
+      .route-inspector__section-content-wrapper {
+        grid-template-rows: 0fr;
+        padding: 0;
+      }
+
+      .route-inspector__table-header {
+        padding-bottom: var(--space-3);
+      }
+    }
+  }
+
+  &__table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--panel-padding-vertical) var(--panel-padding)
+      var(--panel-padding-vertical) var(--panel-padding);
+    cursor: pointer;
+    user-select: none;
+    transition: var(--transition);
+
+    &:hover {
+      background: var(--tertiary-200);
+    }
+  }
+
+  &__table-title-wrapper {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    gap: var(--space-2);
+    color: var(--primary-high);
+    font-size: var(--font-up-1);
+
+    .d-icon {
+      color: var(--primary-700);
+    }
+  }
+
+  &__table-title {
+    margin: 0;
+    font-weight: 500;
+    color: var(--primary);
+  }
+
+  &__table-toggle {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--primary-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .d-icon {
+      font-size: var(--font-0);
+    }
+  }
+
+  &__no-details {
+    font-style: italic;
+    color: var(--primary-medium);
+    padding: var(--space-2) var(--space-4);
+  }
+
+  &__section {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-inline: var(--space-4);
+    box-sizing: border-box;
+    flex: 0 0 auto;
+
+    &.--column {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &.--tabular {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25em;
+    }
+  }
+
+  &__flex-spacer {
+    flex: 100 1 0;
+    min-height: 0;
+  }
+
+  &__details-view {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__details-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+  }
+
+  &__back-btn {
+    background: transparent;
+    border: none;
+    padding: var(--space-half);
+    cursor: pointer;
+    color: var(--primary-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--d-border-radius);
+    transition: var(--transition);
+
+    &:hover {
+      background: var(--primary-low);
+      color: var(--primary);
+    }
+
+    .d-icon {
+      font-size: var(--font-0);
+    }
+  }
+
+  &__details-title {
+    margin: 0;
+    font-size: var(--font-0);
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  &__details-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+
+    .route-inspector__module-section {
+      border-top: none;
+      height: 100%;
+    }
+
+    .route-inspector__table-header {
+      display: none;
+    }
+  }
+}
+
+.route-inspector-toggle {
+  button.active {
+    background: var(--tertiary-low);
+    color: var(--tertiary);
+  }
+}
+
+body.route-inspector-panel #main-outlet-wrapper {
+  --total-main-outlet-width: calc(var(--d-sidebar-width) + var(--d-max-width));
+  --auto-margin-width: calc((100vw - var(--total-main-outlet-width)) / 2);
+  --panel-reserved-width: clamp(
+    0px,
+    calc(var(--panel-width) - var(--auto-margin-width)),
+    var(--panel-width)
+  );
+  grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr) var(
+      --panel-reserved-width
+    );
+}
+
+@include viewport.until(xl) {
+  body {
+    --panel-width: 300px;
+  }
+}
+
+@media (width <= 1400px) {
+  body.route-inspector-panel #main-outlet-wrapper {
+    --panel-reserved-width: var(--panel-width);
+    grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr) var(
+        --panel-reserved-width
+      );
+  }
+}

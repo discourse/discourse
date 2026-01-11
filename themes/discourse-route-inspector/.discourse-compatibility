@@ -1,0 +1,8 @@
+# Map Discourse core versions to a specific commit of this theme.
+# More info: https://meta.discourse.org/t/how-to-use-discourse-compatibility-files/260786
+#
+# Format:
+# < core-version: commit-hash of this theme
+#
+# Example:
+# < 3.2.0.beta2-dev: abcde12345

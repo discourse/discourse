@@ -1,0 +1,156 @@
+@use "lib/viewport";
+
+.inspector-value {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  position: relative;
+  min-height: 1.5em;
+
+  &__code {
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    background: transparent;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-width: 0;
+    transition: var(--transition);
+    padding: 0.1em;
+    border-radius: var(--d-border-radius);
+    flex: 1;
+
+    &.--drillable {
+      cursor: pointer;
+    }
+
+    &.--full-value {
+      display: block;
+      -webkit-line-clamp: unset;
+      -webkit-box-orient: unset;
+      word-break: break-word;
+      overflow: visible;
+    }
+  }
+
+  &__actions {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    opacity: 0;
+    transition: opacity var(--transition);
+    pointer-events: none;
+    padding-left: 1em;
+    padding-right: 0.25em;
+  }
+
+  &:hover &__actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &__action-btn {
+    background: transparent;
+    border: none;
+    padding: 0.25em;
+    cursor: pointer;
+    color: var(--primary-high);
+    display: flex;
+    align-items: center;
+    font-size: var(--font-down-1);
+    justify-content: center;
+    border-radius: var(--d-border-radius);
+    transition: var(--transition);
+    min-width: 1.5em;
+    height: 1.5em;
+
+    &:hover {
+      background: var(--tertiary-low);
+      color: var(--tertiary);
+      border-color: var(--tertiary);
+    }
+
+    .d-icon {
+      font-size: var(--font-0);
+      margin: 0;
+    }
+  }
+
+  .copy-button {
+    padding: 0.25em;
+    cursor: pointer;
+    color: var(--primary-high);
+    display: flex;
+    align-items: center;
+    font-size: var(--font-down-1);
+    justify-content: center;
+    border-radius: var(--d-border-radius);
+    transition: var(--transition);
+    background: var(--tertiary-low);
+    min-width: 1.5em;
+    height: 1.5em;
+    opacity: 1;
+    width: auto;
+
+    &:hover {
+      color: var(--tertiary);
+      border-color: var(--tertiary);
+    }
+
+    .d-icon {
+      font-size: var(--font-0);
+      margin: 0;
+    }
+  }
+
+  &.--type-string &__code {
+    color: light-dark(#0574c9, #6fb3e6);
+  }
+
+  &.--type-number &__code {
+    color: light-dark(#ad7900, #e0b35a);
+  }
+
+  &.--type-boolean-true &__code {
+    color: light-dark(#00a223, #a6fbbd);
+  }
+
+  &.--type-boolean-false &__code {
+    color: light-dark(#785569, #d3a3bf);
+  }
+
+  &.--type-null &__code {
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+
+  &.--empty &__code {
+    opacity: 0.5;
+  }
+
+  &.--type-object &__code {
+    color: light-dark(#3d10a7, #b39ddb);
+    font-style: italic;
+  }
+
+  &.--type-array &__code {
+    color: light-dark(#007575, #5fd1d1);
+    font-style: italic;
+  }
+
+  &.--type-function &__code {
+    color: light-dark(#924b28, #d2a48c);
+    font-style: italic;
+  }
+
+  &.--type-param &__code {
+    color: light-dark(#756f00, #d2a48c);
+    font-style: italic;
+  }
+}

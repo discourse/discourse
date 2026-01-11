@@ -1,0 +1,26 @@
+.current-route-module {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--d-border-radius);
+
+  &__value {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: var(--font-up-1);
+    gap: var(--space);
+    color: var(--tertiary-hover);
+    width: fit-content;
+    background: var(--tertiary-25);
+    padding: 0 var(--space) 0 var(--space-2);
+    border-radius: 99px;
+  }
+
+  .copy-button {
+    color: var(--primary-medium);
+
+    &:hover {
+      background: var(--primary-high);
+    }
+  }
+}

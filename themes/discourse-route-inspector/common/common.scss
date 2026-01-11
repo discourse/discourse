@@ -1,0 +1,12 @@
+@import "route-inspector";
+@import "inspector-data-table";
+@import "inspector-key";
+@import "filter-field";
+@import "inspector-value";
+@import "copy-button";
+@import "modules/route-tree";
+@import "modules/current-route";
+
+.filter-highlighted-text {
+  background: var(--highlight);
+}

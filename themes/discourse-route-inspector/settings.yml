@@ -1,0 +1,15 @@
+route_inspector_current_show_route:
+  default: true
+  type: bool
+
+route_inspector_show_route_tree:
+  default: true
+  type: bool
+
+route_inspector_show_route_data:
+  default: true
+  type: bool
+
+route_inspector_show_capabilities:
+  default: true
+  type: bool

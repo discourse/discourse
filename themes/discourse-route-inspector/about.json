@@ -1,0 +1,12 @@
+{
+  "name": "Route Inspector",
+  "component": true,
+  "authors": "Bryce Huhtala",
+  "theme_version": "1",
+  "minimum_discourse_version": null,
+  "maximum_discourse_version": null,
+  "modifiers": {},
+  "assets": {
+    "icons-sprite": "assets/icons-sprite.svg"
+  }
+}

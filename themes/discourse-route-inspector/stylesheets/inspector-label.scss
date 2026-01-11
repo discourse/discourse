@@ -1,0 +1,16 @@
+@use "lib/viewport";
+
+.inspector-label {
+  font-weight: 500;
+  font-size: var(--font-down-1);
+  color: var(--primary-600);
+  white-space: nowrap;
+
+  &.--large {
+    font-size: var(--font-0);
+  }
+
+  &.--freeform {
+    padding-left: var(--space);
+  }
+}

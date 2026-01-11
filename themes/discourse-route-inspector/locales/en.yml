@@ -1,0 +1,46 @@
+en:
+  theme_metadata:
+    description: "Displays detailed information about the current route for developers."
+  route_inspector:
+    aria_label: "Developer route information"
+    title: "Route Inspector"
+    filter_placeholder: "Filter"
+    undock: "Undock"
+    dock: "Dock to top"
+    expand_all: "Expand all"
+    collapse_all: "Collapse all"
+    customize: "Customize"
+    name_label: "name"
+    path_label: "Route path:"
+    details_title: "Details"
+    toggle_details: "Toggle details"
+    params_label: "Params"
+    query_label: "Query"
+    attributes_label: "Attributes"
+    model_label: "Model"
+    topic_list_label: "Topic List"
+    user_label: "User"
+    no_details: "No additional details."
+    switch_to_panel: "Switch to panel mode"
+    switch_to_header: "Switch to header mode"
+    device: "Device"
+    viewport: "Viewport"
+    toggle_button: "Toggle Route Inspector"
+    view_details: "View details"
+    copy_to_clipboard: "Copy to clipboard"    
+    content:
+      empty: "No data to display"
+      no_matches: "No entries match the filter"
+    route_tree:
+      title: "Route tree"
+      transition_to: "Go to"
+      requires_params: "Cannot transition: Requires params"
+      show_all: "Show all"
+    route_module:
+      title: "Current Route"
+    current_user_module:
+      title: "Current User"
+    table:
+      title: "table"
+      key: "Key"
+      value: "Value"
