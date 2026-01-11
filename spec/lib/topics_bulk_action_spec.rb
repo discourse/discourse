@@ -568,6 +568,19 @@ RSpec.describe TopicsBulkAction do
         end
       end
 
+      it "appends tags when passed as objects" do
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "append_tags",
+            tags: [{ "id" => tag3.id, "name" => tag3.name, "slug" => tag3.name }],
+          ).perform!
+
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name)
+      end
+
       it "keeps existing tags when appending empty array" do
         topic_ids =
           TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tags: []).perform!

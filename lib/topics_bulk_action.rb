@@ -242,7 +242,7 @@ class TopicsBulkAction
   end
 
   def change_tags
-    tags = @operation[:tags]
+    tags = extract_tag_names(@operation[:tags])
     tags = DiscourseTagging.tags_for_saving(tags, guardian) if tags.present?
 
     topics.each do |t|
@@ -258,7 +258,7 @@ class TopicsBulkAction
   end
 
   def append_tags
-    tags = @operation[:tags]
+    tags = extract_tag_names(@operation[:tags])
     tags = DiscourseTagging.tags_for_saving(tags, guardian) if tags.present?
 
     topics.each do |t|
@@ -276,6 +276,12 @@ class TopicsBulkAction
         @changed_ids << t.id
       end
     end
+  end
+
+  def extract_tag_names(tags)
+    return tags if tags.blank?
+    tags = tags.values if tags.is_a?(Hash)
+    tags.map { |t| t.is_a?(Hash) ? t["name"] : t }
   end
 
   def guardian
