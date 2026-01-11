@@ -1075,7 +1075,7 @@ class TopicsController < ApplicationController
           :message,
           :silent,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
-          tags: [],
+          tags: %i[id name slug],
         )
         .to_h
         .symbolize_keys
