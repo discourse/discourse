@@ -49,7 +49,7 @@ class Migration::SafeMigrate
   end
 
   module NiceErrors
-    def migrate
+    def migrate(*args, **kwargs)
       super
     rescue => e
       if e.cause.is_a?(Discourse::InvalidMigration)
