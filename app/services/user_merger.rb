@@ -537,7 +537,11 @@ class UserMerger
       email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid",
     )
 
-    UserDestroyer.new(Discourse.system_user).destroy(@source_user, quiet: true)
+    UserDestroyer.new(Discourse.system_user).destroy(
+      @source_user,
+      quiet: true,
+      prepare_for_destroy: true,
+    )
   end
 
   def log_merge
