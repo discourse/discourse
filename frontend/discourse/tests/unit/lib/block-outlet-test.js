@@ -76,6 +76,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         description: "",
         container: false,
         args: null,
+        childArgs: null,
         constraints: null,
         validate: null,
         allowedOutlets: null,
@@ -352,7 +353,9 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
     test("throws for container block without children", async function (assert) {
       await assert.rejects(
-        renderBlocks("hero-blocks", [{ block: BlockGroup }]),
+        renderBlocks("hero-blocks", [
+          { block: BlockGroup, args: { name: "test" } },
+        ]),
         /must have children/
       );
     });
@@ -474,6 +477,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
+            args: { name: "test" },
             children: [{ block: NestedChildBlock }, { block: NotABlock }],
           },
         ]),
@@ -526,6 +530,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       renderBlocks("main-outlet-blocks", [
         {
           block: BlockGroup,
+          args: { name: "test" },
           children: [{ block: ContainerChildBlock }],
         },
       ]);
@@ -567,7 +572,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       await assert.rejects(
         renderBlocks("hero-blocks", [{ block: RequiredArgBlock, args: {} }]),
-        /missing required arg "title"/
+        /missing required args\.title/
       );
     });
 

@@ -80,6 +80,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     renderBlocks("homepage-blocks", [
       {
         block: BlockGroup,
+        args: { name: "multi-children" },
         children: [
           { block: MultiChildA },
           { block: MultiChildB },
@@ -107,6 +108,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     renderBlocks("sidebar-blocks", [
       {
         block: BlockGroup,
+        args: { name: "args-children" },
         children: [
           { block: ArgsChild, args: { title: "First" } },
           { block: ArgsChild, args: { title: "Second" } },

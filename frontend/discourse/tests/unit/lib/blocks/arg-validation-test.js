@@ -1073,7 +1073,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
         assert.true(false, "should have thrown");
       } catch (error) {
         assert.true(error instanceof BlockError);
-        assert.true(error.message.includes('missing required arg "title"'));
+        assert.true(error.message.includes("missing required args.title"));
         assert.strictEqual(error.path, "args.title");
       }
     });
@@ -1155,7 +1155,7 @@ module("Unit | Lib | blocks/arg-validation", function () {
         assert.true(false, "should have thrown");
       } catch (error) {
         assert.true(error instanceof BlockError);
-        assert.true(error.message.includes('unknown arg "unknownArg"'));
+        assert.true(error.message.includes('unknown args "unknownArg"'));
         assert.strictEqual(error.path, "args.unknownArg");
       }
     });

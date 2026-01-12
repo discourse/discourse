@@ -38,8 +38,8 @@ module("Unit | Lib | blocks/config-validation", function () {
       assert.true(Object.isFrozen(VALID_CONFIG_KEYS));
     });
 
-    test("has exactly 5 keys", function (assert) {
-      assert.strictEqual(VALID_CONFIG_KEYS.length, 5);
+    test("has exactly 6 keys", function (assert) {
+      assert.strictEqual(VALID_CONFIG_KEYS.length, 6);
     });
   });
 
