@@ -65,10 +65,18 @@ function formatErrorContext(context) {
   } else if (context.config && context.errorPath) {
     // Block config with error path - use path-aware formatter
     try {
-      const configStr = formatConfigWithErrorPath(
-        context.config,
-        context.errorPath
-      );
+      // The errorPath is the full path from root (e.g., "blocks[4].children[2].args.nme")
+      // but config is just the individual block. Strip the base path prefix to get
+      // the relative path within the config (e.g., "args.nme").
+      let relativePath = context.errorPath;
+      if (context.path && context.errorPath.startsWith(context.path)) {
+        relativePath = context.errorPath.slice(context.path.length);
+        // Remove leading dot if present
+        if (relativePath.startsWith(".")) {
+          relativePath = relativePath.slice(1);
+        }
+      }
+      const configStr = formatConfigWithErrorPath(context.config, relativePath);
       parts.push(`\nContext:\n${configStr}`);
     } catch {
       parts.push("Context: [unable to format]");

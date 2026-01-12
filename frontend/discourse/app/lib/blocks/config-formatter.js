@@ -142,7 +142,14 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
 
     // Object
     const keys = Object.keys(obj);
-    if (keys.length === 0) {
+
+    // Check if we need to render a synthetic entry for a non-existent error key.
+    // This must be checked before the empty object early return.
+    const atErrorParent =
+      isOnErrorPath && currentPath.length === errorSegments.length - 1;
+    const errorKeyMissing = atErrorParent && !keys.includes(errorKey);
+
+    if (keys.length === 0 && !errorKeyMissing) {
       return "{}";
     }
 
@@ -177,6 +184,14 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
         shownEllipsis = true;
       }
     }
+
+    // Handle error pointing to a non-existent key (e.g., typo in arg name).
+    // If we're at the parent of the error and the error key doesn't exist,
+    // render a synthetic entry to show where the invalid key was referenced.
+    if (errorKeyMissing) {
+      lines.push(`${indent}  ${errorKey}: <invalid>, // <-- error here`);
+    }
+
     lines.push(`${indent}}`);
     return lines.join("\n");
   }
