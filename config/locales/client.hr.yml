@@ -1105,9 +1105,7 @@ hr:
           notification: Obavijest
         email:
           title: "Email"
-          status: "Sinkronizirano %{old_emails} / %{total_emails} e-mail poruka putem IMAP-a."
           enable_smtp: "Omogući SMTP"
-          enable_imap: "Omogući IMAP"
           test_settings: "Postavke testiranja"
           save_settings: "Spremi postavke"
           last_updated: "Posljednje ažuriranje:"
@@ -1116,14 +1114,7 @@ hr:
           smtp_settings_valid: "SMTP postavke važeće."
           smtp_title: "SMTP"
           smtp_instructions: "Kada omogućite SMTP za grupu, sve odlazne e-pošte poslane iz ulazne pošte grupe poslat će se putem SMTP postavki navedenih ovdje umjesto poslužitelja e-pošte konfiguriranog za druge e-mail poruke  koje šalje vaš forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Dodatne postavke"
-          imap_instructions: 'Kada omogućite IMAP za grupu, e-adrese se sinkroniziraju između pristigle pošte grupe i isporučenog IMAP poslužitelja i poštanskog sandučića. SMTP mora biti omogućen s važećim i provjerenim vjerodajnicama da bi se IMAP mogao omogućiti. Korisničko ime i lozinka e-mail adrese korišteni za SMTP koristit će se za IMAP. Za više informacija pogledajte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">najava značajke na Discourse Meta</a>.'
-          imap_alpha_warning: "Upozorenje: Ovo značajka je u alfa fazi. Službeno je podržan samo Gmail. Koristite na vlastiti rizik!"
-          imap_settings_valid: "IMAP postavke važeće."
-          smtp_disable_confirm: "Ako onemogućite SMTP, sve SMTP i IMAP postavke bit će resetirane i povezana funkcionalnost će biti onemogućena. Jeste li sigurni da želite nastaviti?"
-          imap_disable_confirm: "Ako onemogućite IMAP sve će IMAP postavke biti resetirane i povezane funkcije će biti onemogućene. Jeste li sigurni da želite nastaviti?"
-          imap_mailbox_not_selected: "Morate odabrati poštanski sandučić za ovu IMAP konfiguraciju jer se neće sinkronizirati nijedan poštanski sandučić!"
+          additional_settings: "Dodatne postavke"
           prefill:
             title: "Unaprijed ispunite postavke za:"
             gmail: "Gmail"
@@ -1137,9 +1128,6 @@ hr:
             smtp_server: "SMTP poslužitelj"
             smtp_port: "SMTP priključak"
             smtp_ssl_mode: "SSL način rada"
-            imap_server: "IMAP poslužitelj"
-            imap_port: "IMAP priključak"
-            imap_ssl: "Koristi SSL za IMAP"
             username: "Korisničko ime"
             password: "Zaporka"
           settings:
@@ -1148,10 +1136,6 @@ hr:
             allow_unknown_sender_topic_replies_hint: "Omogućuje nepoznatim pošiljateljima da odgovore na teme grupe. Ako to nije omogućeno, odgovori s e-adresa koje još nisu pozvane u temu stvorit će novu temu."
             from_alias: "Od Aliasa"
             from_alias_hint: "Alias koji se koristi kao adresa pošiljatelja pri slanju grupnih SMTP e-poruka. Imajte na umu da to možda ne podržavaju svi davatelji e-pošte, molimo pogledajte dokumentaciju svog e-mail pružatelja usluga."
-          mailboxes:
-            synchronized: "Sinkronizirani poštanski sandučić"
-            none_found: "Na ovom računu e-pošte nisu pronađeni poštanski sandučići."
-            disabled: "Onemogućeno"
         membership:
           title: Članstvo
           access: Pristup

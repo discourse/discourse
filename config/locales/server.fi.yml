@@ -1040,12 +1040,9 @@ fi:
     no_log_search_queries: "Haun kyselylokit eivät ole tällä hetkellä käytössä (ylläpitäjä voi ottaa ne käyttöön sivuston asetuksista)."
   email_settings:
     pop3_authentication_error: "Annetuissa POP3-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
-    imap_authentication_error: "Annetuissa IMAP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
-    imap_no_response_error: "Yhteydessä IMAP-palvelimeen tapahtui virhe. %{message}"
     smtp_authentication_error: "Annetuissa SMTP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen. %{message}"
     smtp_server_busy_error: "SMTP-palvelin on tällä hetkellä varattu, yritä myöhemmin uudelleen."
     smtp_unhandled_error: "Kommunikoinnissa SMTP-palvelimen kanssa tapahtui käsittelemätön virhe. %{message}"
-    imap_unhandled_error: "Kommunikoinnissa IMAP-palvelimen kanssa tapahtui käsittelemätön virhe. %{message}"
     connection_error: "Yhteyden muodostaminen palvelimeen ei onnistunut, tarkista palvelimen nimi ja portti ja yritä uudelleen."
     timeout_error: "Yhteys palvelimeen aikakatkaistiin, tarkista palvelimen nimi ja portti ja yritä uudelleen."
     unhandled_error: "Käsittelemätön virhe sähköpostiasetusten testauksessa. %{message}"
@@ -2150,14 +2147,7 @@ fi:
     email_in_allowed_groups: "Ryhmät, jotka voivat julkaista uusia ketjuja sähköpostitse. Ylläpitäjät ja valvojat voivat aina julkaista uusia ketjuja sähköpostitse."
     email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Valitsee tietyn sähköpostin ylätunnisteen, jota käytetään roskapostin tunnistamiseen. Tämä vaihtoehto voi olla X-Spam-Flag, X-Spam-Status tai X-SES-Spam-Verdict, ja sähköposti merkitään roskapostiksi ylätunnisteen arvon perusteella. Jos valittu asetus on esimerkiksi X-Spam-Flag, sähköposti, jonka ylätunnisteen arvo on KYLLÄ, luokitellaan roskapostiksi."
-    enable_imap: "Ota IMAP käyttöön ryhmäviestien synkronoimiseksi."
-    enable_imap_write: "Ota kaksisuuntainen IMAP-synkronointi käyttöön. Jos se on poistettu käytöstä, kaikki IMAP-tilien kirjoitustoiminnot poistetaan käytöstä."
-    enable_imap_idle: "Käytä IMAP IDLE -mekanismia uusien sähköpostien odottamiseen."
     enable_smtp: "Ota SMTP käyttöön ryhmäviestien ilmoitusten lähettämisessä."
-    imap_polling_period_mins: "Aika minuutteina sähköpostien tarkistusten välillä IMAP-tileiltä."
-    imap_polling_old_emails: "Päivitettävien vanhojen (käsiteltyjen) sähköpostien enimmäismäärä joka kerta, kun IMAP-laatikkoa pollataan (0 on kaikki)."
-    imap_polling_new_emails: "Päivitettävien uusien (käsittelemättömien) sähköpostien enimmäismäärä joka kerta, kun IMAP-laatikkoa pollataan."
-    imap_batch_import_email: "Tuontitilan käynnistävä vähimmäismäärä uusia sähköposteja (poistaa viestihälytykset käytöstä)."
     email_prefix: "Sähköpostin aiheessa käytettävä [tunniste]. Jos et aseta arvoa, oletusarvona käytetään 'otsikkoa'."
     email_site_title: "Sähköpostin lähettäjänä käytettävä nimi. Jos arvoa ei ole asetettu, oletuksena käytetään 'otsikkoa'. Jos 'otsikko' sisältää merkkejä, joita ei sallita sähköpostin lähettäjän nimessä, käytä tätä asetusta."
     find_related_post_with_key: "Käytä vain vastausavainta vastatun viestin löytämiseen. VAROITUS: tämän poistaminen käytöstä mahdollistaa sähköpostiosoitteeseen pohjautuvan toisena esiintymisen."
@@ -4828,6 +4818,8 @@ fi:
     deprecation_error_label: Aseta Javascriptin vanhentumiset aiheuttamaan virhe
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discoursen asennus"
     step:
@@ -4921,8 +4913,6 @@ fi:
     api_post_delete: "Poistettu APIn kautta"
     reminder_deleted: "Korvattu uudella muistutuksella"
     user_associated_posts_deleted: "Käyttäjä tuhottiin"
-    imap_email_deleted: "Sähköposti on poistettu IMAP-palvelimelta"
-    imap_email_marked_as_spam: "Sähköposti on siirretty roskapostiin IMAP-palvelimella"
     auto_deleted_hidden_posts: "Automaattisesti tuhotut piilotetut viestit"
     seed_data_topic_updated: "Seed-tiedon aihe päivitetty"
     seed_data_topic_deleted: "Seed-tiedon aihe poistettu"

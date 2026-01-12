@@ -817,9 +817,7 @@ nb_NO:
           notification: Varsling
         email:
           title: "E-post"
-          status: "Synkronisert %{old_emails} / %{total_emails} e-poster via IMAP."
           enable_smtp: "Aktiver SMTP"
-          enable_imap: "Aktiver IMAP"
           test_settings: "Test innstillinger"
           save_settings: "Lagre innstillinger"
           last_updated: "Sist oppdatert:"
@@ -828,14 +826,7 @@ nb_NO:
           smtp_settings_valid: "SMTP-innstillingene er gyldige."
           smtp_title: "SMTP"
           smtp_instructions: "Når du aktiverer SMTP for gruppen, alle e-poster som sendes fra gruppens innboks vil bli sendt via SMTP-innstillingene angitt her i stedet for e-posttjeneren som er konfigurert for andre e-poster som sendes av ditt forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Flere innstillinger"
-          imap_instructions: 'Når du aktiverer IMAP for gruppen, så synkroniseres e-post mellom gruppen innboksen og medfølgende IMAP-tjener og postboks. SMTP må være aktivert med gyldig og testet innloggingsinformasjon før IMAP kan aktiveres. Brukernavn og passord for SMTP vil bli brukt i IMAP. For mer informasjon, se <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funksjonsmelding på Discourse Meta</a>.'
-          imap_alpha_warning: "Advarsel: Dette er en alfa-scene-funksjon. Bare Gmail støttes offisielt. Bruk på egen risiko!"
-          imap_settings_valid: "IMAP-innstillinger er gyldige."
-          smtp_disable_confirm: "Hvis du deaktiverer SMTP, vil alle SMTP og IMAP-innstillinger bli tilbakestilt, og den tilknyttede funksjonaliteten vil bli deaktivert. Er du sikker på at du vil fortsette?"
-          imap_disable_confirm: "Hvis du deaktiverer IMAP vil alle IMAP-innstillinger bli tilbakestilt og den tilknyttede funksjonaliteten bli deaktivert. Er du sikker på at du vil fortsette?"
-          imap_mailbox_not_selected: "Du må velge en Mailbox for denne IMAP-konfigurasjonen, eller ingen e-postbokser vil bli synkronisert!"
+          additional_settings: "Flere innstillinger"
           prefill:
             title: "Forhåndsfyll med innstillinger for:"
             gmail: "Gmail"
@@ -850,9 +841,6 @@ nb_NO:
             smtp_server: "SMTP Server"
             smtp_port: "SMTP port"
             smtp_ssl_mode: "SSL-modus"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP port"
-            imap_ssl: "Bruk SSL for IMAP"
             username: "Brukernavn"
             password: "Passord"
           settings:
@@ -861,10 +849,6 @@ nb_NO:
             allow_unknown_sender_topic_replies_hint: "Tillater ukjente avsendere å svare på gruppetemaer. Hvis dette ikke er aktivert vil svar på e-postadresser som ikke allerede er invitert til emnet lage et nytt emne."
             from_alias: "Fra-alias"
             from_alias_hint: "Alias som skal brukes som fra-adresse når du sender SMTP-e-post til grupper. Merk at dette kanskje ikke støttes av alle e-postleverandører, se dokumentasjonen til e-postleverandøren din."
-          mailboxes:
-            synchronized: "Synkronisert postkasse"
-            none_found: "Ingen postkasser ble funnet i denne e-postkontoen."
-            disabled: "Deaktivert"
         membership:
           title: Medlemskap
           access: Tilgang

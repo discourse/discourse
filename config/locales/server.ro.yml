@@ -2231,6 +2231,8 @@ ro:
     deprecation_error_description: "Pentru a verifica compatibilitatea cu viitoarele actualizări Discourse, poți face ca deprecierile Javascript să ridice o eroare:"
     deprecation_error_label: Fă ca deprecierile Javascript să ridice o eroare
     enter: "Activează modul sigur"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Configurare Discourse"
     step:
@@ -2264,8 +2266,6 @@ ro:
     api_post_delete: "Șters prin API"
     reminder_deleted: "Înlocuit de un nou memento"
     user_associated_posts_deleted: "Utilizatorul a fost distrus"
-    imap_email_deleted: "Emailul a fost șters de pe serverul IMAP"
-    imap_email_marked_as_spam: "Emailul a fost mutat în spam pe serverul IMAP"
     auto_deleted_hidden_posts: "Postări ascunse distruse automat"
   reviewables:
     priorities:

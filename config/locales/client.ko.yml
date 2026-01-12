@@ -748,9 +748,7 @@ ko:
           notification: 알림
         email:
           title: "이메일"
-          status: "IMAP을 통해 %{old_emails} / %{total_emails} 동기화됨"
           enable_smtp: "SMTP 활성화"
-          enable_imap: "IMAP 활성화"
           test_settings: "테스트 설정"
           save_settings: "설정 저장"
           last_updated: "마지막 업데이트:"
@@ -759,14 +757,7 @@ ko:
           smtp_settings_valid: "SMTP 설정이 유효합니다."
           smtp_title: "SMTP"
           smtp_instructions: "그룹에 SMTP를 활성화하면 그룹의 받은 편지함에서 보낸 모든 아웃바운드 이메일이 포럼에서 보낸 다른 이메일에 대해 구성된 메일 서버 대신 여기에 지정된 SMTP 설정을 통해 전송됩니다."
-          imap_title: "IMAP"
-          imap_additional_settings: "추가 설정"
-          imap_instructions: '그룹에 IMAP을 활성화하면 그룹의 받은 편지함과 제공된 IMAP 서버 및 편지함 간에 이메일이 동기화됩니다. IMAP을 사용하려면 먼저 테스트를 마친 유효한 크리덴셜로 SMTP를 사용하도록 설정해야 합니다. SMTP에 사용되는 이메일 아이디와 비밀번호는 IMAP에서 사용됩니다. 자세한 내용은 <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta의 기능 안내</a>를 참조하세요.'
-          imap_alpha_warning: "경고: 이것은 알파 단계 기능입니다. Gmail만 공식적으로 지원됩니다. 위험을 감수할 수 있는지 신중히 생각 후 사용하세요."
-          imap_settings_valid: "IMAP 설정이 유효합니다."
-          smtp_disable_confirm: "SMTP를 비활성화하면 모든 SMTP 및 IMAP 설정이 리셋되고 관련 기능이 비활성화됩니다. 계속할까요?"
-          imap_disable_confirm: "IMAP을 비활성화하면 모든 IMAP 설정이 리셋되고 관련 기능이 비활성화됩니다. 계속할까요?"
-          imap_mailbox_not_selected: "이 IMAP 구성에 대해 메일함을 선택해야합니다. 그렇지 않으면 메일함이 동기화되지 않습니다!"
+          additional_settings: "추가 설정"
           prefill:
             title: "다음 설정으로 미리 채우기:"
           ssl_modes:
@@ -775,9 +766,6 @@ ko:
             title: "크리덴셜"
             smtp_server: "SMTP 서버"
             smtp_port: "SMTP 포트"
-            imap_server: "IMAP 서버"
-            imap_port: "IMAP 포트"
-            imap_ssl: "IMAP에 SSL 사용"
             username: "사용자명"
             password: "비밀번호"
           settings:
@@ -785,10 +773,6 @@ ko:
             allow_unknown_sender_topic_replies: "알 수 없는 발신자의 댓글을 허용합니다."
             allow_unknown_sender_topic_replies_hint: "알 수없는 발신자가 그룹 글에 댓글을 작성 할 수 있습니다. 이 기능이 활성화되지 않은 경우 글에 아직 초대되지 않은 이메일 주소에서 답장하면 새 글이 생성됩니다."
             from_alias: "보내는 사람 별칭"
-          mailboxes:
-            synchronized: "동기화된 메일함"
-            none_found: "이 이메일 계정에 메일함이 없습니다."
-            disabled: "비활성화됨"
         membership:
           title: 멤버십
           access: 액세스

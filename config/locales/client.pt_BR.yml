@@ -1028,9 +1028,7 @@ pt_BR:
           notification: Notificação
         email:
           title: "E-mail"
-          status: "Sincronizado(s) %{old_emails}/%{total_emails} e-mail(s) via IMAP."
           enable_smtp: "Ativar SMTP"
-          enable_imap: "Ativar IMAP"
           test_settings: "Configurações de teste"
           save_settings: "Salvar configurações"
           last_updated: "Última atualização:"
@@ -1039,14 +1037,7 @@ pt_BR:
           smtp_settings_valid: "Configurações de SMTP válidas."
           smtp_title: "SMTP"
           smtp_instructions: "Quando você ativa o SMTP para o grupo, todos os e-mails enviados da caixa de entrada do grupo serão enviados pelas configurações de SMTP especificadas aqui, em vez do servidor de e-mail configurado para outros e-mails enviados pelo seu fórum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Configurações adicionais"
-          imap_instructions: 'Quando você ativa o IMAP para o grupo, os e-mails são sincronizados entre a caixa de entrada do grupo, o servidor IMAP e a caixa de mensagens fornecidos. O SMTP deve ser ativado com as credenciais válidas e testadas antes que o IMAP possa ser ativado. O nome do(a) usuário(a) e a senha de e-mail usados para o SMTP serão aplicados ao IMAP. Para obter mais informações, consulte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anúncio de recursos no Discourse Meta</a>.'
-          imap_alpha_warning: "Aviso: este recurso está no estágio alfa. Apenas o Gmail é oficialmente compatível. Use por sua conta e risco!"
-          imap_settings_valid: "Configurações IMAP válidas."
-          smtp_disable_confirm: "Se você desativar o SMTP, todas as configurações de SMTP e IMAP serão redefinidas e os recursos correspondentes serão desativados. Tem certeza de que quer continuar?"
-          imap_disable_confirm: "Se você desativar o IMAP, todas as configurações de IMAP serão redefinidas e os recursos correspondentes serão desativados. Tem certeza de que quer continuar?"
-          imap_mailbox_not_selected: "Se você selecionar uma caixa de entrada para esta configuração IMAP ou nenhuma caixa postal será sincronizada!"
+          additional_settings: "Configurações adicionais"
           prefill:
             title: "Preencher com configurações para:"
             gmail: "Gmail"
@@ -1061,9 +1052,6 @@ pt_BR:
             smtp_server: "Servidor SMTP"
             smtp_port: "Porta SMTP"
             smtp_ssl_mode: "Modo SSL"
-            imap_server: "Servidor IMAP"
-            imap_port: "Porta IMAP"
-            imap_ssl: "Usar SSL para IMAP"
             username: "Nome do(a) usuário(a)"
             password: "Senha"
           settings:
@@ -1072,10 +1060,6 @@ pt_BR:
             allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos(as) respondam a tópicos de grupo. Se não estiver ativado, será criado um novo tópico para respostas de endereços de e-mail de usuários(as) não convidados para o tópico."
             from_alias: "De Alias"
             from_alias_hint: "Nome alternativo para ser utilizado como endereço de origem para enviar emails SMTP. Observe que isso pode não ser compatível com todos os provedores de email, consulte a documentação do seu provedor."
-          mailboxes:
-            synchronized: "Caixa de mensagens sincronizada"
-            none_found: "Nenhuma caixa de mensagens foi encontrada nesta conta de e-mail."
-            disabled: "Desativado(a)"
         membership:
           title: Associação
           access: Acesso

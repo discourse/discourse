@@ -451,8 +451,6 @@ sw:
             password: "Nywila"
           settings:
             title: "Mpangilio"
-          mailboxes:
-            disabled: "Imezuiwa"
         membership:
           title: Uanachama
           access: Ufikivu

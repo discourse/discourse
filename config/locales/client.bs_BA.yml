@@ -656,7 +656,6 @@ bs_BA:
           notification: Obavijest
         email:
           title: "Email"
-          status: "Sinkronizirano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           last_updated_by: "by"
           ssl_modes:
             none: "Ništa"
@@ -664,17 +663,10 @@ bs_BA:
             title: "Identifikacija"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Koristi SSL za IMAP"
             username: "Ime"
             password: "Lozinka"
           settings:
             title: "Postavke"
-          mailboxes:
-            synchronized: "Sinkronizirani poštanski sandučić"
-            none_found: "Na ovom računu e-pošte nisu pronađeni poštanski sandučići."
-            disabled: "Neomogućen"
         membership:
           title: Članstvo
           access: Pristup

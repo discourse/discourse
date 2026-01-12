@@ -790,9 +790,7 @@ sv:
           notification: Notifikation
         email:
           title: "E-post"
-          status: "Synkroniserat %{old_emails}/ %{total_emails} e-post genom IMAP."
           enable_smtp: "Aktivera SMTP"
-          enable_imap: "Aktivera IMAP"
           test_settings: "Testa inställningar"
           save_settings: "Spara inställningar"
           last_updated: "Senast uppdaterat:"
@@ -801,14 +799,7 @@ sv:
           smtp_settings_valid: "SMTP-inställningar är giltiga."
           smtp_title: "SMTP"
           smtp_instructions: "När du aktiverar SMTP för gruppen skickas alla utgående e-postmeddelanden från gruppens inkorg via de SMTP-inställningar som anges här istället för e-postservern som konfigurerats för andra e-postmeddelanden från ditt forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Ytterligare inställningar"
-          imap_instructions: 'När du aktiverar IMAP för gruppen synkroniseras e-post mellan gruppinkorgen och den medföljande IMAP-servern och brevlådan. SMTP måste aktiveras med giltiga och testade autentiseringsuppgifter innan IMAP kan aktiveras. Det användarnamn och lösenord som används för SMTP kommer att användas för IMAP. Mer information finns i <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funktionsmeddelande på Discourse Meta</a>.'
-          imap_alpha_warning: "Varning: Detta är en alfafunktion. Endast Gmail stöds officiellt. Använd på egen risk!"
-          imap_settings_valid: "IMAP-inställningar är giltiga."
-          smtp_disable_confirm: "Om du inaktiverar SMTP återställs alla SMTP- och IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
-          imap_disable_confirm: "Om du inaktiverar IMAP återställs alla IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
-          imap_mailbox_not_selected: "Du måste välja en brevlåda för den här IMAP-konfigurationen, annars synkroniseras inga brevlådor!"
+          additional_settings: "Ytterligare inställningar"
           prefill:
             title: "Förfyll med inställningar för:"
             gmail: "Gmail"
@@ -818,9 +809,6 @@ sv:
             title: "Kontouppgifter"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Använd SSL för IMAP"
             username: "Användarnamn"
             password: "Lösenord"
           settings:
@@ -829,10 +817,6 @@ sv:
             allow_unknown_sender_topic_replies_hint: "Tillåter okända avsändare att svara på gruppämnen. Om detta inte har aktiverats leder svar från e-postadresser som inte redan bjudits in till ämnet till att det skapas ett nytt ämne."
             from_alias: "Från alias"
             from_alias_hint: "Alias att använda som från adress när du skickar grupp SMTP e-post. Observera att detta kanske inte stöds av alla e-postleverantörer, vänligen konsultera dokumentationen från din e-postleverantör."
-          mailboxes:
-            synchronized: "Synkroniserad brevlåda"
-            none_found: "Inga brevlådor hittades för detta e-postkonto."
-            disabled: "Inaktiverad"
         membership:
           title: Medlemskap
           access: Tillgång
