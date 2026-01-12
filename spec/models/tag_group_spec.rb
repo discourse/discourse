@@ -139,7 +139,7 @@ RSpec.describe TagGroup do
     end
 
     it "accepts an array of names" do
-      expect(TagGroup.where_name(%w[my\ group other\ group])).to contain_exactly(
+      expect(TagGroup.where_name(["my group", "other group"])).to contain_exactly(
         tag_group1,
         tag_group2,
       )
