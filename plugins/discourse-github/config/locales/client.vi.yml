@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Discourse GitHub"
+  replace_github_link:
+    edit_reason: "Link Github đã được thay thế bằng một link cố định"

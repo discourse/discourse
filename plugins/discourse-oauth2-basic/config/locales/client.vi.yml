@@ -5,3 +5,11 @@
 # https://translate.discourse.org/
 
 vi:
+  js:
+    login:
+      oauth2_basic:
+        name: "OAuth 2"
+    admin:
+      site_settings:
+        categories:
+          discourse_oauth2_basic: "Đăng nhập OAuth2"

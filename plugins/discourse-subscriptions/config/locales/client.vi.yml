@@ -30,6 +30,7 @@ vi:
           cancel: hủy
       subscribe:
         countries:
+          TR: "Thổ Nhĩ Kỳ"
           VN: "Việt Nam"
       billing:
         email: Email

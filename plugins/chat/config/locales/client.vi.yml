@@ -11,6 +11,10 @@ vi:
         chat_separate_sidebar_mode:
           always: "Luôn luôn"
           never: "Không bao giờ"
+    about:
+      activities:
+        chat_messages:
+          other: "%{formatted_number} tin chat"
     chat:
       deleted_chat_username: đã bị xóa
       dates:
@@ -29,12 +33,14 @@ vi:
       muted: "im lặng"
       joined: "đã tham gia"
       email_frequency:
+        description: "Sẽ chỉ gửi email nếu bạn vắng mặt trong 15 phút."
         never: "Không bao giờ"
+        when_away: "Khi vắng mặt"
       header_indicator_preference:
         never: "Không bao giờ"
       flag: "Báo cáo"
       join: "Tham gia"
-      last_visit: "Lần truy cập cuối"
+      last_visit: "Lần ghé thăm cuối"
       mention_warning:
         groups:
           header:
@@ -168,3 +174,24 @@ vi:
               label: Tin nhắn
             sender:
               label: Người gửi
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chat"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Chuyển kênh"
+          switch__unread_channel_arrows: "%{shortcut} Chuyển kênh chưa đọc"
+          open_quick_channel_selector: "%{shortcut} Mở trình chọn kênh nhanh"
+          open_insert_link_modal: "%{shortcut} Chèn link (chỉ có trên trình soạn thảo)"
+          composer_bold: "%{shortcut} In đậm (chỉ có trên trình soạn thảo)"
+          composer_italic: "%{shortcut} In nghiêng (chỉ có trên trình soạn thảo)"
+          composer_code: "%{shortcut} Đoạn mã (chỉ có trên trình soạn thảo)"
+          drawer_open: "%{shortcut} Mở ngăn chat"
+          drawer_close: "%{shortcut} Đóng ngăn chat"
+          mark_all_channels_read: "%{shortcut} Đánh dấu tất cả các kênh đã đọc"
+    user_menu:
+      no_chat_notifications_body: >
+        Bảng điều khiển này hiện thông báo khi ai đó gửi tin nhắn trực tiếp cho bạn hoặc <b>nhắc đến</b> bạn trong cuộc trò chuyện. Thông báo cũng sẽ được gửi đến email của bạn khi bạn không đăng nhập trong một thời gian dài. <br><br> Nhấn vào tiêu đề ở đầu bất kỳ kênh trò chuyện nào để cấu hình các thông báo bạn nhận được trong kênh đó. Để biết thêm chi tiết, hãy xem <a href='%{preferencesUrl}'>thiết lập thông báo</a> của bạn.
+      tabs:
+        chat_notifications: "Thông báo chat"
+        chat_notifications_with_unread:
+          other: "Thông báo chat - %{count} chưa đọc"

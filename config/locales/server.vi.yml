@@ -283,13 +283,13 @@ vi:
   no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong tút."
   too_many_attachments:
     other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một tút."
-  no_links_allowed: "Xin lỗi, thành viên mới chưa được chèn liên kết trong tút."
+  no_links_allowed: "Rất tiếc, thành viên mới không được chèn link trong tút."
   links_require_trust: "Xin lỗi, bạn không thể bao gồm các liên kết trong tút của mình."
   too_many_links:
-    other: "Xin lỗi, thành viên mới chỉ được chèn %{count} liên kết trong một tút."
+    other: "Rất tiếc, thành viên mới chỉ được chèn %{count} link trong mỗi tút."
   contains_blocked_word: "Xin lỗi, bạn không thể đăng từ '%{word}'; nó không được cho phép."
   contains_blocked_words: "Xin lỗi, bạn không thể đăng nó. Không được phép: %{words}."
-  spamming_host: "Xin lỗi bạn không thể chèn liên kết tới trang đó."
+  spamming_host: "Bạn không thể chèn link tới trang đó."
   user_is_suspended: "Người dùng đang bị treo không được phép đăng bài."
   topic_not_found: "Có gì đó đã sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
   not_accepting_pms: "Xin lỗi, %{username} hiện không chấp nhận tin nhắn."
@@ -530,13 +530,13 @@ vi:
     distance_in_words:
       half_a_minute: "< 1 phút"
       less_than_x_seconds:
-        other: "< %{count} giây"
+        other: "< %{count}s"
       x_seconds:
-        other: "%{count} giây"
+        other: "%{count}s"
       less_than_x_minutes:
-        other: "< %{count} phút"
+        other: "< %{count}p"
       x_minutes:
-        other: "%{count} phút"
+        other: "%{count}p"
       about_x_hours:
         other: "%{count} giờ"
       x_days:
@@ -555,13 +555,13 @@ vi:
       half_a_minute: "ngay bây giờ"
       less_than_x_seconds: "ngay bây giờ"
       x_seconds:
-        other: "%{count} giây trước"
+        other: "%{count}s trước"
       less_than_x_minutes:
-        other: "ít hơn %{count} phút trước"
+        other: "ít hơn %{count}p trước"
       x_minutes:
-        other: "%{count} phút trước"
+        other: "%{count}p trước"
       about_x_hours:
-        other: "%{count} giờ trước"
+        other: "%{count}h trước"
       x_days:
         other: "%{count} ngày trước"
       about_x_months:
@@ -606,23 +606,29 @@ vi:
   post_action_types:
     off_topic:
       title: "Không-đúng-chủ-đề"
-      description: "Bài này không liên quan đến các cuộc thảo luận hiện nay theo quy định của các tiêu đề và bài đầu tiên, và có lẽ nó nên được di chuyển đến những nơi khác."
+      description: "Tút này không liên quan đến cuộc thảo luận hiện tại như đã được xác định trong tiêu đề và tút gốc, và có lẽ nên được chuyển sang nơi khác."
     spam:
       title: "Spam"
+      description: "Tút này là quảng cáo hoặc phá hoại. Nó không hữu ích hoặc không liên quan đến chủ đề hiện tại."
       email_title: '"%{title}" đã bị gắn cờ spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Không thích hợp"
+      description: 'Tút này chứa nội dung mà một người bình thường sẽ coi là xúc phạm, lăng mạ, có hành vi hận thù hoặc vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng</a>.'
     illegal:
+      title: "Bất hợp pháp"
+      description: "Tút này cần được BQT xem xét vì tôi cho rằng nó chứa nội dung bất hợp pháp."
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
     notify_user:
-      title: "Gửi tin nhắn cho @%{username}."
+      title: "Nhắn riêng cho @%{username}"
+      description: "Tôi muốn nói chuyện trực tiếp với người này về tút của họ."
+      short_description: "Tôi muốn nói chuyện trực tiếp với người này về tút của họ."
       email_title: 'Bài đăng của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Một thứ khác"
-      description: "Bài viết này cần được Ban quản trị chú ý. Lý do chưa được liệt kê trong danh sách."
+      description: "Tút này cần được BQT chú ý vì một lý do chưa được liệt kê trong danh sách."
       short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
@@ -658,6 +664,7 @@ vi:
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
       email_body: "%{link}\n\n%{message}"
     illegal:
+      title: "Bất hợp pháp"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -1366,31 +1373,31 @@ vi:
     autoclosed_message_max_posts:
       other: "Thư này đã tự động bị đóng sau khi đạt đến giới hạn tối đa là %{count} thư trả lời."
     autoclosed_topic_max_posts:
-      other: "Chủ đề này đã tự động bị đóng sau khi đạt đến giới hạn tối đa là %{count} câu trả lời."
+      other: "Chủ đề này đã tự động đóng sau khi đạt hạn mức tối đa là %{count} trả lời."
     autoclosed_enabled_days:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} ngày, sẽ không được gửi trả lời."
+      other: "Chủ đề này đã tự động đóng sau %{count} ngày. Bạn không thể trả lời."
     autoclosed_enabled_hours:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} giờ, sẽ không được gửi trả lời."
+      other: "Chủ đề này đã tự động đóng sau %{count} giờ. Bạn không thể trả lời."
     autoclosed_enabled_minutes:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} phút, sẽ không được gửi trả lời."
+      other: "Chủ đề này đã tự động đóng sau %{count} phút. Bạn không thể trả lời."
     autoclosed_enabled_lastpost_days:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} ngày sau lần trả lời cuối, sẽ không được gửi trả lời."
+      other: "Chủ đề này đã tự động đóng %{count} ngày sau lượt trả lời cuối. Bạn không thể trả lời."
     autoclosed_enabled_lastpost_hours:
-      other: "Chủ đề này đã được đóng tự động %{count} giờ sau phản hồi cuối cùng. Không còn cho phép phản hồi mới."
+      other: "Chủ đề này đã tự động đóng %{count} giờ sau lượt trả lời cuối. Bạn không thể trả lời."
     autoclosed_enabled_lastpost_minutes:
-      other: "Chủ đề này sẽ được tự động đóng sau %{count} phút sau lần trả lời cuối, sẽ không được gửi trả lời."
+      other: "Chủ đề này đã tự động đóng %{count} phút sau lượt trả lời cuối. Bạn không thể trả lời."
     autoclosed_disabled_days:
-      other: "Chủ đề này đã được tự động mở sau %{count} ngày."
+      other: "Chủ đề này đã tự động mở sau %{count} ngày."
     autoclosed_disabled_hours:
-      other: "Chủ đề này đã được tự động mở sau %{count} giờ."
+      other: "Chủ đề này đã tự động mở sau %{count} giờ."
     autoclosed_disabled_minutes:
-      other: "Chủ đề này đã được tự động mở sau %{count} phút."
+      other: "Chủ đề này đã tự động mở sau %{count} phút."
     autoclosed_disabled_lastpost_days:
-      other: "Chủ đề này đã được tự động mở %{count} ngày sau lần trả lời cuối cùng."
+      other: "Chủ đề này đã tự động mở %{count} ngày sau lượt trả lời cuối."
     autoclosed_disabled_lastpost_hours:
-      other: "Chủ đề này đã được tự động mở %{count} giờ sau lần trả lời cuối cùng."
+      other: "Chủ đề này đã tự động mở %{count} giờ sau lượt trả lời cuối."
     autoclosed_disabled_lastpost_minutes:
-      other: "Chủ đề này đã được tự động mở %{count} phút sau lần trả lời cuối cùng."
+      other: "Chủ đề này đã tự động mở %{count} phút sau lượt trả lời cuối."
     autoclosed_disabled: "Chủ đề này đã được mở. Bạn có thể bình luận"
     autoclosed_disabled_lastpost: "Chủ đề này đã được mở. Bạn có thể bình luận"
     auto_deleted_by_timer: "Tự động xóa theo bộ hẹn giờ."
@@ -1917,6 +1924,98 @@ vi:
   guidelines_topic:
     title: "FAQ/Hướng dẫn"
     guidelines_title: "Hướng dẫn"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Đây là một nơi văn minh cho thảo luận công khai](#civilized)
+
+      Xin hãy đối xử với diễn đàn thảo luận này với sự tôn trọng tương tự như khi bạn đến một công viên công cộng. Chúng tôi cũng là một tài nguyên cộng đồng chung &mdash; một nơi để chia sẻ kỹ năng, kiến thức và sở thích thông qua các cuộc trò chuyện liên tục.
+
+      Đây không phải là những quy tắc cứng nhắc. Chúng là hướng dẫn để hỗ trợ phán đoán của cộng đồng chúng ta và duy trì nơi này là một môi trường thân thiện, lịch sự cho thảo luận công khai văn minh.
+
+      <a name="improve"></a>
+
+      ## [Cải thiện cuộc thảo luận](#improve)
+
+      Giúp chúng tôi tạo ra một nơi tuyệt vời cho cuộc thảo luận bằng cách luôn đóng góp điều tích cực cho cuộc trò chuyện, dù nhỏ bé. Nếu bạn không chắc bài viết của mình có đóng góp gì cho cuộc trò chuyện, hãy suy nghĩ kỹ về điều bạn muốn nói và thử lại sau.
+
+      Một cách để cải thiện cuộc thảo luận là khám phá những cuộc thảo luận đang diễn ra. Hãy dành thời gian duyệt qua các chủ đề ở đây trước khi trả lời hoặc bắt đầu chủ đề của riêng bạn, và bạn sẽ có cơ hội gặp gỡ những người có cùng sở thích với bạn.
+
+      Các chủ đề được thảo luận ở đây quan trọng đối với chúng tôi, và chúng tôi muốn bạn hành động như thể chúng cũng quan trọng đối với bạn. Hãy tôn trọng các chủ đề và những người tham gia thảo luận, ngay cả khi bạn không đồng ý với một số ý kiến được đưa ra.
+
+      <a name="agreeable"></a>
+
+      ## [Hãy thân thiện, ngay cả khi bạn không đồng ý](#agreeable)
+
+      Bạn có thể muốn phản hồi bằng cách không đồng ý. Điều đó hoàn toàn được chấp nhận. Nhưng hãy nhớ rằng: _chỉ trích ý tưởng, không chỉ trích con người_. Vui lòng tránh:
+
+      * Gọi tên
+      * Tấn công cá nhân
+      * Phản hồi dựa trên giọng điệu của bài viết thay vì nội dung thực tế
+      * Phản đối một cách máy móc
+
+      Thay vào đó, hãy cung cấp những ý kiến sâu sắc giúp cải thiện cuộc trò chuyện.
+
+      <a name="participate"></a>
+
+      ## [Sự tham gia của bạn rất quan trọng](#participate)
+
+      Những cuộc trò chuyện chúng ta có ở đây sẽ định hình không khí cho mọi thành viên mới. Hãy giúp chúng tôi ảnh hưởng đến tương lai của cộng đồng này bằng cách tham gia vào các cuộc thảo luận làm cho diễn đàn này trở thành một nơi thú vị để tham gia &mdash; và tránh những cuộc thảo luận không mang lại giá trị.
+
+      Discourse cung cấp các công cụ giúp cộng đồng cùng nhau xác định những đóng góp tốt nhất (và tệ nhất): dấu trang, thích, báo cáo, trả lời, chỉnh sửa, theo dõi, tắt tiếng và nhiều hơn nữa. Sử dụng các công cụ này để cải thiện trải nghiệm của chính bạn và của mọi người khác.
+
+      Hãy để lại cộng đồng này tốt hơn khi chúng ta đến.
+
+      <a name="flag-problems"></a>
+
+      ## [Nếu bạn thấy vấn đề, hãy báo cáo](#flag-problems)
+
+      Các moderator có quyền hạn đặc biệt; họ chịu trách nhiệm về diễn đàn này. Nhưng bạn cũng vậy. Với sự giúp đỡ của bạn, các moderator có thể trở thành người điều phối cộng đồng, không chỉ là người dọn dẹp hay cảnh sát.
+
+      Khi bạn thấy hành vi xấu, đừng trả lời. Trả lời sẽ khuyến khích hành vi xấu bằng cách công nhận nó, tiêu tốn năng lượng của bạn và lãng phí thời gian của mọi người. _Chỉ cần báo cáo nó_. Nếu có đủ báo cáo, hành động sẽ được thực hiện, hoặc tự động hoặc do quản trị viên can thiệp.
+
+      Để duy trì cộng đồng của chúng ta, các quản trị viên có quyền xóa bất kỳ nội dung nào và tài khoản người dùng nào vì bất kỳ lý do nào vào bất kỳ thời điểm nào. Các quản trị viên không xem trước các bài đăng mới; các quản trị viên và nhà điều hành trang web không chịu trách nhiệm về bất kỳ nội dung nào được đăng bởi cộng đồng.
+
+      <a name="be-civil"></a>
+
+      ## [Luôn lịch sự](#be-civil)
+
+      Không có gì phá hoại một cuộc trò chuyện lành mạnh bằng sự thô lỗ:
+
+      * Hãy lịch sự. Đừng đăng bất kỳ nội dung nào mà một người bình thường có thể coi là xúc phạm, lăng mạ hoặc ngôn ngữ thù địch.
+      * Giữ cho nội dung sạch sẽ. Đừng đăng bất kỳ nội dung nào khiêu dâm hoặc có nội dung tình dục rõ ràng.
+      * Tôn trọng lẫn nhau. Đừng quấy rối hoặc làm phiền ai đó, giả mạo người khác hoặc tiết lộ thông tin cá nhân của họ.
+      * Tôn trọng diễn đàn của chúng ta. Không đăng spam hoặc phá hoại diễn đàn.
+
+      Đây không phải là những thuật ngữ cụ thể với định nghĩa chính xác &mdash; hãy tránh ngay cả vẻ ngoài của những điều này. Nếu bạn không chắc chắn, hãy tự hỏi mình sẽ cảm thấy thế nào nếu bài đăng của bạn được đăng trên trang chủ của một trang tin tức lớn.
+
+      Đây là một diễn đàn công khai, và các công cụ tìm kiếm lập chỉ mục các cuộc thảo luận này. Hãy giữ ngôn ngữ, liên kết và hình ảnh an toàn cho gia đình và bạn bè.
+
+      <a name="keep-tidy"></a>
+
+      ## [Giữ cho diễn đàn gọn gàng](#keep-tidy)
+
+      Hãy cố gắng đặt mọi thứ vào đúng vị trí, để chúng ta có thể dành nhiều thời gian hơn cho việc thảo luận và ít thời gian hơn cho việc dọn dẹp. Vì vậy:
+
+      * Đừng bắt đầu một chủ đề trong mục không phù hợp; vui lòng đọc định nghĩa của các mục.
+      * Đừng đăng cùng một nội dung trong nhiều chủ đề khác nhau.
+      * Đừng đăng các phản hồi không có nội dung.
+      * Đừng chuyển hướng chủ đề bằng cách thay đổi nó giữa chừng.
+      * Không ký tên vào bài viết của bạn &mdash; mỗi bài viết đều có thông tin hồ sơ của bạn được đính kèm.
+
+      Thay vì đăng “+1” hoặc “Đồng ý”, hãy sử dụng nút Thích. Thay vì đưa một chủ đề hiện có sang hướng hoàn toàn khác, hãy sử dụng Trả lời như một Chủ đề Liên kết.
+
+      <a name="stealing"></a>
+
+      ## [Chỉ đăng nội dung của riêng bạn](#stealing)
+
+      Bạn không được đăng bất kỳ nội dung kỹ thuật số nào thuộc sở hữu của người khác mà không có sự cho phép. Bạn không được đăng mô tả, liên kết hoặc phương pháp để đánh cắp tài sản trí tuệ của người khác (phần mềm, video, âm thanh, hình ảnh) hoặc vi phạm bất kỳ luật nào khác.
+
+      <a name="power"></a>
+
+      ## [Được vận hành bởi bạn](#power)
+
+      Trang web này được vận hành bởi đội ngũ điều hành thân thiện của bạn [đội ngũ điều hành thân thiện](%{base_path}/about) và *bạn*, cộng đồng. Nếu bạn có bất kỳ câu hỏi nào khác về cách thức hoạt động của trang web này, hãy mở một chủ đề mới tại %{feedback_category} và cùng thảo luận! Nếu có vấn đề cấp bách hoặc khẩn cấp không thể giải quyết qua chủ đề meta hoặc báo cáo, hãy [liên hệ với các moderator](%{base_path}/about).
   tos_topic:
     title: "Điều khoản Dịch vụ"
   privacy_topic:
@@ -1929,46 +2028,46 @@ vi:
       name: Biên Tập Viên Wiki
       description: Lần chỉnh sửa wiki đầu tiên
     basic_user:
-      name: Cơ bản
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> tất cả tính năng thiết yếu
+      name: Cơ Bản
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Được phép</a> dùng tất cả tính năng thiết yếu
     member:
-      name: Thành viên
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> lời mời, nhắn tin nhóm, nhiều lượt thích hơn
+      name: Nâng Cao
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Được phép</a> mời, nhắn tin nhóm, thích nhiều hơn
     regular:
-      name: Thường xuyên
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> xếp lại danh mục, đổi tên, theo dõi các liên kết, wiki, nhiều lượt thích hơn
+      name: Tích Cực
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Được phép</a> xếp lại danh mục, đổi tên, theo dõi các liên kết, wiki, thích nhiều hơn
     leader:
       name: Thủ Lĩnh
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Đã dùng</a> chỉnh sửa toàn cầu, ghim, đóng, lưu trữ, tách và gộp, nhiều lượt thích hơn
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Được phép</a> chỉnh sửa toàn cầu, ghim, đóng, lưu trữ, tách và gộp, thích nhiều hơn
     welcome:
       name: Chào Mừng
       description: Đã nhận 1 like
       long_description: |
         Huy hiệu này được trao khi bạn nhận được lượt thích bài đăng đầu tiên. Chúc mừng, bạn đã đăng tải nội dung mà các thành viên khác trong cộng đồng thấy thú vị, hay ho hoặc hữu ích!
     autobiographer:
-      name: Viết Mô Tả
+      name: Giới Thiệu
       description: Đã điền <a href="%{base_uri}/my/preferences/profile">thông tin hồ sơ</a>
     anniversary:
       name: Kỷ Niệm
       description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
     nice_post:
       name: Trả Lời Hay
-      description: Đăng một trả lời nhận được 10 lượt thích
+      description: Nhận được 10 lượt thích cho một trả lời
     good_post:
-      name: Trả Lời Tốt
-      description: Đăng một trả lời nhận được 25 lượt thích
+      name: Trả Lời Xịn
+      description: Nhận được 25 lượt thích cho một trả lời
     great_post:
-      name: Trả Lời Tuyệt Vời
-      description: Đăng một trả lời nhận được 50 lượt thích
+      name: Trả Lời Bá Đạo
+      description: Nhận được 50 lượt thích cho một trả lời
     nice_topic:
       name: Chủ Đề Hay
-      description: Đăng một chủ đề nhận được 10 lượt thích
+      description: Nhận được 10 lượt thích cho một chủ đề
     good_topic:
-      name: Chủ Đề Tốt
-      description: Đăng một chủ đề nhận được 25 lượt thích
+      name: Chủ Đề Xịn
+      description: Nhận được 25 lượt thích cho một chủ đề
     great_topic:
-      name: Chủ Đề Tuyệt Vời
-      description: Đăng một chủ đề nhận được 50 lượt thích
+      name: Chủ Đề Bá Đạo
+      description: Nhận được 50 lượt thích cho một chủ đề
     nice_share:
       name: Chia Sẻ Hay
       description: Chia sẻ một tút có 25 lượt truy cập
@@ -1982,14 +2081,13 @@ vi:
       name: Chia Sẻ Tuyệt Vời
       description: Chia sẻ một tút có 1000 lượt truy cập
     first_like:
-      name: Lượt Thích Đầu Tiên
+      name: Đã Thích
       description: Đã thích một tút
-      long_description: |2
-
-        Huy hiệu này được cấp cho lần đầu tiên bạn like một bài đăng bằng sử dụng nút :heart:. Like bài viết là một cách tuyệt vời để cho các thành viên của cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ tình yêu!
+      long_description: |
+        Huy hiệu này được trao cho lần đầu tiên bạn dùng nút :heart: để thích một tút. Thích tút là một cách tuyệt vời để cho các thành viên cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ tình yêu!
     first_flag:
-      name: Báo Cáo Đầu Tiên
-      description: Đã báo cáo một tút
+      name: Đã Báo Cáo
+      description: Lần đầu tiên báo cáo một tút
     promoter:
       name: Khởi Xướng
       description: Đã mời 1 người dùng
@@ -2000,44 +2098,43 @@ vi:
       name: Vô Địch
       description: Đã mời 5 thành viên
     first_share:
-      name: Chia Sẻ Đầu Tiên
-      description: Đã chia sẻ một tút
+      name: Đã Chia Sẻ
+      description: Lần đầu tiên chia sẻ một tút
       long_description: |2
 
         Huy hiệu này được cấp cho lần đầu tiên bạn chia sẻ liên kết một bài trả lời hoặc một chủ đề bằng cách sử dụng nút chia sẻ. Chia sẻ liên kết là cách tuyệt vời để chia sẻ các cuộc thảo luận thú vị với phần còn lại của Thế Giới và giúp phát triển cộng đồng.
     first_link:
-      name: Link Đầu Tiên
+      name: Đã Link
       description: Đã thêm 1 liên kết tới chủ đề khác
       long_description: |2
 
         Huy hiệu này được cáp cho lần đầu tiên bạn thêm một liên kết tới một chủ đề khác. Liên kết chủ đề giúp độc giả tìm thấy thú vị liên quan trong hội thoại, bằng cách hiển thị kết nối giữa các chủ đề theo cả hai hướng. Thoải mái liên kết!
     first_quote:
-      name: Trích Dẫn Đầu Tiên
-      description: Đã trích dẫn một tút
+      name: Đã Trích Dẫn
+      description: Lần đầu tiên trích dẫn một tút
     read_guidelines:
       name: Đọc Hướng Dẫn
       description: Đã đọc <a href="%{base_uri}/guidelines">quy định cộng đồng</a>
     reader:
       name: Độc Giả
       description: Đọc từng trả lời trong một chủ đề có hơn 100 trả lời
-      long_description: |2
-
-        Huy hiệu này được cấp cho lần đầu tiên bạn đọc một chủ đề dài với hơn 100 trả lời. Theo dõi sát sao một cuộc hội thoại giúp bạn hiểu được những quan điểm khác nhau, và giúp cho cuộc trò chuyện thú vị hơn. Bạn càng đọc, càng trò chuyện được tốt hơn. :slight_smile:
+      long_description: |
+        Huy hiệu này được trao cho lần đầu tiên bạn đọc một chủ đề dài với hơn 100 trả lời. Theo dõi sát sao một cuộc thảo luận giúp bạn hiểu được những quan điểm khác nhau, và giúp cho cuộc trò chuyện thú vị hơn. Bạn càng đọc, cuộc thảo luận càng tốt hơn. :slight_smile:
     popular_link:
-      name: Link Phổ Biến
-      description: Đăng một liên kết ngoài nhận được 50 lượt click
+      name: Link Hay
+      description: Nhận được 50 lượt click cho một link bên ngoài
       long_description: |2
 
         Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 50 click. Cám ơn bạn đã đăng một liên kết hữu ích!
     hot_link:
       name: Link Hot
-      description: Đăng một liên kết ngoài nhận được 300 lượt click
+      description: Nhận được 300 lượt click cho một link bên ngoài
       long_description: |2
 
         Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 300 click. Cám ơn đã đăng một liên kết hấp dẫn giúp kéo cuộc trò chuyện về phía trước!
     famous_link:
-      name: Link Nổi Tiếng
-      description: Đăng một liên kết ngoài nhận được 1000 lượt click
+      name: Link Bá Đạo
+      description: Nhận được 1000 lượt click cho một link bên ngoài
     appreciated:
       name: Cảm Kích
       description: Đăng 20 tút nhận được 1 lượt thích
@@ -2071,27 +2168,30 @@ vi:
       name: Đóng Góp
       description: Nhận được 100 like và đã like 100 lần
     empathetic:
-      name: Cảm thông
-      description: Nhận được 500 like và đã like 1000 lần
+      name: Đồng Cảm
+      description: Nhận được 500 lượt thích và đã thích 1000 lần
     first_emoji:
-      name: Emoji Đầu Tiên
-      description: Sử dụng Emoji trong tút
+      name: Đã Emoji
+      description: Lần đầu tiên sử dụng Emoji trong tút
     first_mention:
-      name: Lượt Nhắc Đầu Tiên
+      name: Đã Nhắc
     first_onebox:
-      name: Onebox Đầu Tiên
+      name: Đã Onebox
     first_reply_by_email:
-      name: Trả Lời Đầu Tiên Qua Email
+      name: Đã Trả Lời Qua Email
     new_user_of_the_month:
       name: "Thành Viên Mới Của Tháng"
     enthusiast:
-      name: Hăng Hái
+      name: Nhiệt Tình
+      description: Đã ghé thăm 10 ngày liên tiếp
     aficionado:
       name: Đam Mê
+      description: Đã ghé thăm 100 ngày liên tiếp
       long_description: |
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
     devotee:
       name: Phụng Vụ
+      description: Đã ghé thăm 365 ngày liên tiếp
     badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
     email_input: "Email quản trị"
@@ -2129,6 +2229,8 @@ vi:
             choices:
               latest:
                 label: "Mới nhất"
+              hot:
+                label: "Nổi bật"
       corporate:
         fields:
           contact_url:
