@@ -345,6 +345,7 @@ en:
       bulk_invite: "Bulk Invite"
       close_event: "Close event"
       open_event: "Open event"
+      destroy_event: "Destroy event"
       invitees_modal:
         title_invited: "Event Participation"
         title_participated: "List of users who participated"

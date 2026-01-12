@@ -202,7 +202,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
 
           const props = {
             raw: newRaw,
-            edit_reason: "Destroy event",
+            edit_reason: i18n("discourse_post_event.destroy_event"),
           };
 
           const cooked = await cook(newRaw);
