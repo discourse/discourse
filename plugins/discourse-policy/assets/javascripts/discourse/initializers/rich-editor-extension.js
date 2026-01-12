@@ -1,4 +1,5 @@
 import { camelize } from "@ember/string";
+import { camelCaseToDash } from "discourse/lib/case-converter";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 const POLICY_ATTRIBUTES = {
@@ -25,7 +26,6 @@ const extension = {
           tag: "div.policy",
           getAttrs: (dom) => {
             const attrs = {};
-            // Convert data-* attributes to camelCase node attributes
             Object.entries(dom.dataset).forEach(([key, value]) => {
               if (value && value.trim() !== "" && value !== '""') {
                 attrs[camelize(key)] = value;
@@ -38,10 +38,9 @@ const extension = {
       toDOM(node) {
         const attrs = { class: "policy" };
 
-        // Set data attributes, converting camelCase back to kebab-case and filtering out empty values
         Object.entries(node.attrs).forEach(([key, value]) => {
           if (value && value.trim() !== "" && value !== '""') {
-            const dataKey = key.replace(/([A-Z])/g, "-$1").toLowerCase();
+            const dataKey = camelCaseToDash(key);
             attrs[`data-${dataKey}`] = value;
           }
         });
@@ -56,10 +55,9 @@ const extension = {
       const dom = document.createElement("div");
       dom.classList.add("policy");
 
-      // Set data attributes
       Object.entries(node.attrs).forEach(([key, value]) => {
         if (value && value.trim() !== "" && value !== '""') {
-          const dataKey = key.replace(/([A-Z])/g, "-$1").toLowerCase();
+          const dataKey = camelCaseToDash(key);
           dom.setAttribute(`data-${dataKey}`, value);
         }
       });
@@ -83,9 +81,8 @@ const extension = {
             return false;
           }
 
-          // Update data attributes if they changed
           Object.entries(updatedNode.attrs).forEach(([key, value]) => {
-            const dataKey = key.replace(/([A-Z])/g, "-$1").toLowerCase();
+            const dataKey = camelCaseToDash(key);
             if (value && value.trim() !== "" && value !== '""') {
               dom.setAttribute(`data-${dataKey}`, value);
             } else {
@@ -133,8 +130,7 @@ const extension = {
 
       Object.entries(node.attrs).forEach(([key, value]) => {
         if (value && value.trim() !== "" && value !== '""') {
-          // Convert camelCase back to kebab-case for BBCode
-          const kebabKey = key.replace(/([A-Z])/g, "-$1").toLowerCase();
+          const kebabKey = camelCaseToDash(key);
           state.write(` ${kebabKey}="${value}"`);
         }
       });
