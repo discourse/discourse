@@ -2,6 +2,7 @@
 
 :root {
   --topic-card-shadow: rgb(var(--tertiary-rgb), 0.1);
+  --title-color--read: var(--primary);
 }
 
 $padding-pills-small: var(--space-half) var(--space-2);
@@ -22,7 +23,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
   padding: 0;
 
   &.closed {
-    opacity: 0.7;
+    opacity: 0.9;
   }
 
   &.bulk-selected {
@@ -185,8 +186,8 @@ $padding-pills-small: var(--space-half) var(--space-2);
     text-decoration: none;
     line-height: 1.3;
 
-    &:hover {
-      color: var(--tertiary);
+    a {
+      color: var(--primary);
     }
 
     .topic-status.--pinned,
@@ -283,7 +284,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
   &__category-tags {
     display: flex;
-    align-items: center;
     gap: var(--space-2);
     overflow: auto;
 
