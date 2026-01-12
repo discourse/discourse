@@ -29,7 +29,6 @@ module("Unit | Lib | blocks/config-validation", function () {
       assert.true(VALID_CONFIG_KEYS.includes("args"));
       assert.true(VALID_CONFIG_KEYS.includes("children"));
       assert.true(VALID_CONFIG_KEYS.includes("conditions"));
-      assert.true(VALID_CONFIG_KEYS.includes("name"));
       assert.true(VALID_CONFIG_KEYS.includes("classNames"));
     });
 
@@ -37,8 +36,8 @@ module("Unit | Lib | blocks/config-validation", function () {
       assert.true(Object.isFrozen(VALID_CONFIG_KEYS));
     });
 
-    test("has exactly 6 keys", function (assert) {
-      assert.strictEqual(VALID_CONFIG_KEYS.length, 6);
+    test("has exactly 5 keys", function (assert) {
+      assert.strictEqual(VALID_CONFIG_KEYS.length, 5);
     });
   });
 
@@ -49,7 +48,6 @@ module("Unit | Lib | blocks/config-validation", function () {
         args: { title: "Hello" },
         children: [],
         conditions: [{ type: "user" }],
-        name: "My Block",
         classNames: "custom-class",
       };
 
@@ -365,21 +363,6 @@ module("Unit | Lib | blocks/config-validation", function () {
             classNames: ["valid", 123, "also-valid"],
           }),
         /"classNames" must be a string or array of strings.*array with non-string items/
-      );
-    });
-
-    test("throws for name as number", function (assert) {
-      assert.throws(
-        () => validateConfigTypes({ block: "my-block", name: 123 }),
-        /"name" must be a string.*got number/
-      );
-    });
-
-    test("throws for name as object", function (assert) {
-      assert.throws(
-        () =>
-          validateConfigTypes({ block: "my-block", name: { label: "test" } }),
-        /"name" must be a string.*got object/
       );
     });
 

@@ -103,11 +103,10 @@ function validateContainerChildren(
   context
 ) {
   const hasChildren = config.children?.length > 0;
-  const displayName = config.name || blockName;
 
   if (hasChildren && !isContainer) {
     raiseBlockError(
-      `Block component ${displayName} in layout ${outletName} cannot have children`,
+      `Block component ${blockName} in layout ${outletName} cannot have children`,
       context
     );
     return false;
@@ -115,7 +114,7 @@ function validateContainerChildren(
 
   if (isContainer && !hasChildren) {
     raiseBlockError(
-      `Block component ${displayName} in layout ${outletName} must have children`,
+      `Block component ${blockName} in layout ${outletName} must have children`,
       context
     );
     return false;
@@ -321,10 +320,9 @@ export const RESERVED_ARG_NAMES = Object.freeze([
 export const VALID_CONFIG_KEYS = Object.freeze([
   "block", // Block class or name (required)
   "args", // Arguments to pass to the block
-  "children", // Nested block configurations
   "conditions", // Conditions for rendering
-  "name", // Display name for error messages
   "classNames", // CSS classes to add to wrapper
+  "children", // Nested block configurations
 ]);
 
 /**
@@ -355,11 +353,6 @@ const CONFIG_TYPE_RULES = {
     expected: "a string or array of strings",
     actual: (v) =>
       Array.isArray(v) ? "array with non-string items" : typeof v,
-  },
-  name: {
-    validate: (v) => typeof v === "string",
-    expected: "a string",
-    actual: (v) => typeof v,
   },
   conditions: {
     validate: (v) => typeof v === "object",
@@ -619,7 +612,6 @@ export async function validateConfig(
  *
  * @param {Object} config - The block configuration object.
  * @param {typeof import("@glimmer/component").default | string} config.block - Block class or name string.
- * @param {string} [config.name] - Display name for error messages.
  * @param {Object} [config.args] - Args to pass to the block.
  * @param {Array<Object>} [config.children] - Nested block configurations.
  * @param {Array<Object>|Object} [config.conditions] - Conditions for rendering.
@@ -714,7 +706,7 @@ export async function validateBlock(
   // Full validation with resolved class
   if (!isBlockFn(resolvedBlock)) {
     raiseBlockError(
-      `Block "${config.name || resolvedBlock?.blockName}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
+      `Block "${resolvedBlock?.blockName}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
       { outletName, path, config, callSiteError, rootConfig }
     );
     return;
