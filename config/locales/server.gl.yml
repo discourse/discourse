@@ -1566,14 +1566,7 @@ gl:
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se desactiva isto, deberá limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in_authserv_id: "O identificador do servizo que realiza revisións de autenticación no correo entrante. Revisa <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instrucións sobre como configurar isto."
-    enable_imap: "Activar IMAP para sincronizar mensaxes de grupo."
-    enable_imap_write: "Activar a sincronización IMAP bidireccional. Se está desactivada, todas as operacións de escritura das contas IMAP están desactivadas."
-    enable_imap_idle: "Utilice o mecanismo IMAP IDLE para agardar por novos correos electrónicos."
     enable_smtp: "Active SMTP para enviar notificacións de mensaxes de grupo."
-    imap_polling_period_mins: "Período en minutos entre revisións das contas IMAP para correos electrónicos."
-    imap_polling_old_emails: "Número máximo de correos electrónicos antigos (procesados) que se actualizarán cada vez que se recolla unha caixa de correo IMAP (0 para todos)."
-    imap_polling_new_emails: "Número máximo de correos electrónicos novos (sen procesar) que se actualizarán cada vez que se recolla unha caixa de correo IMAP."
-    imap_batch_import_email: "O número mínimo de correos electrónicos novos que disparan o modo de importación (desactiva as alertas de publicación)."
     email_prefix: "A [label] utilizada no asunto dos correos. Será «título» se non se define."
     email_site_title: "O título do sitio utilizado como remitente de correos electrónicos do sitio. Será o de «título» se non se estabelece. Se o seu «título» contén caracteres que non están permitidos nas cadeas do remitente de correo electrónico, utilice este axuste."
     find_related_post_with_key: "Utilice só a «clave de resposta» para atopar a publicación respondida. AVISO: desactivar isto permite a suplantación de identidade do usuario baseada no enderezo de correo electrónico."
@@ -3409,6 +3402,8 @@ gl:
     title: "Entrar en modo seguro"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
+  dev_mode:
+    enter: "Intro"
   wizard:
     title: "Configuración de Discourse"
     step:

@@ -965,12 +965,9 @@ ja:
     no_log_search_queries: "検索クエリログは現在無効になっています (管理者はサイト設定で有効にできます)。"
   email_settings:
     pop3_authentication_error: "指定された POP3 の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
-    imap_authentication_error: "指定された IMAP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
-    imap_no_response_error: "IMAP サーバーとの通信中にエラーが発生しました。%{message}"
     smtp_authentication_error: "指定された SMTP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。%{message}"
     smtp_server_busy_error: "SMTP サーバーは現在ビジー状態です。後でもう一度お試しください。"
     smtp_unhandled_error: "SMTP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
-    imap_unhandled_error: "IMAP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
     connection_error: "サーバーとの接続に問題が発生しました。サーバー名とポートを確認して、もう一度お試しください。"
     timeout_error: "サーバーへの接続がタイムアウトしました。サーバー名とポートを確認して、もう一度お試しください。"
     unhandled_error: "メールの設定をテスト中に未処理のエラーが発生しました。%{message}"
@@ -2074,14 +2071,7 @@ ja:
     email_in_allowed_groups: "メールで新規トピックを投稿できるグループ。管理者とモデレーターはいつでもメールで新規トピックを投稿できます。"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑投稿を識別するために使用するを特定のメールヘッダーを選択します。このオプションは X-Spam-Flag、X-Spam-Status、または X-SES-Spam-Verdict のいずれかで、このヘッダー値が YES に設定されたメールは迷惑投稿として分類されます。"
-    enable_imap: "グループメッセージを同期するために IMAP を有効にする。"
-    enable_imap_write: "双方向の IMAP 同期を有効にする。無効にすると、IMAP アカウントのすべての書き込み操作が無効になります。"
-    enable_imap_idle: "IMAP IDLE メカニズムを使用して新規メールを待機する。"
     enable_smtp: "グループメッセージの通知を送信するための SMTP を有効にする。"
-    imap_polling_period_mins: "IMAP アカウントでメールを確認する間隔 (分)。"
-    imap_polling_old_emails: "IMAP ボックスがポーリングされるたびに更新される古いメール (処理済み) の最大数 (すべての場合は 0)。"
-    imap_polling_new_emails: "IMAP ボックスがポーリングされるたびに更新される新しいメール (未処理) の最大数。"
-    imap_batch_import_email: "インポートモードをトリガーする新しいメールの最低数 (投稿アラートを無効にします)。"
     email_prefix: "メールの件名に使用される [label]。空白の場合、'title' がデフォルトで使用されます。"
     email_site_title: "サイトからのメールの送信者として使用されるサイトのタイトル。 空白の場合、'title' がデフォルトで使用されます。'title' にメールの送信者として使用できない文字列が含まれている場合、この設定を使用します。"
     find_related_post_with_key: "'reply key' のみを使って返信先の投稿を検索する。警告: これを無効にすると、メールアドレスに基づいてユーザー代理操作が可能になります。"
@@ -4791,6 +4781,8 @@ ja:
     deprecation_error_label: JavaScript の非推奨設定でエラーを発生させる
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse のセットアップ"
     step:
@@ -4882,8 +4874,6 @@ ja:
     api_post_delete: "API で削除されました"
     reminder_deleted: "新しいリマインダーに置き換えられました"
     user_associated_posts_deleted: "ユーザーは破棄されました"
-    imap_email_deleted: "メールは IMAP サーバー上で削除されました"
-    imap_email_marked_as_spam: "メールは IMAP サーバー上で迷惑メールに移動されました"
     auto_deleted_hidden_posts: "非表示の投稿は自動的に破棄されました"
     seed_data_topic_updated: "シードデータのトピックが更新されました"
     seed_data_topic_deleted: "シードデータのトピックが削除されました"

@@ -582,8 +582,6 @@ et:
             password: "Parool"
           settings:
             title: "Seaded"
-          mailboxes:
-            disabled: "Välja lülitatud"
         membership:
           title: Liikmesus
           access: Juurdepääs

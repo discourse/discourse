@@ -1006,6 +1006,8 @@ bs_BA:
       button: "Registriraj"
     resend_email:
       title: "Pošalji ponovo email aktivacije"
+  dev_mode:
+    enter: "Naprijed"
   wizard:
     step:
       setup:

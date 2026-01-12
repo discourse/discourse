@@ -1064,9 +1064,7 @@ el:
           self_lockout: "Πρόκειται να αλλάξετε την ορατότητα της ομάδας με τρόπο που θα αφαιρέσει τη δική σας πρόσβαση. Σίγουρα θέλετε να συνεχίσετε;"
         email:
           title: "Email"
-          status: "%{old_emails} / %{total_emails} συγχρονισμένα emails μέσω IMAP."
           enable_smtp: "Ενεργοποίηση SMTP"
-          enable_imap: "Ενεργοποίηση IMAP"
           test_settings: "Δοκιμή ρυθμίσεων"
           save_settings: "Αποθήκευση Ρυθμίσεων"
           last_updated: "Τελευταία ενημέρωση:"
@@ -1074,9 +1072,7 @@ el:
           settings_required: "Όλες οι ρυθμίσεις είναι υποχρεωτικές, συμπληρώστε όλα τα πεδία πριν από την επικύρωση."
           smtp_settings_valid: "Έγκυρες ρυθμίσεις SMTP."
           smtp_title: "SMTP"
-          imap_title: "IMAP"
-          imap_additional_settings: "Πρόσθετες ρυθμίσεις"
-          imap_settings_valid: "Έγκυρες ρυθμίσεις IMAP."
+          additional_settings: "Πρόσθετες ρυθμίσεις"
           prefill:
             title: "Προσυμπλήρωση με ρυθμίσεις για:"
             gmail: "Gmail"
@@ -1091,19 +1087,12 @@ el:
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
             smtp_ssl_mode: "Λειτουργία SSL"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Χρήση SSL για SMTP"
             username: "Όνομα Χρήστη"
             password: "Κωδικός Πρόσβασης"
           settings:
             title: "Ρυθμίσεις"
             allow_unknown_sender_topic_replies: "Να επιτρέπονται απαντήσεις σε θέματα από άγνωστους αποστολείς."
             allow_unknown_sender_topic_replies_hint: "Επιτρέπει σε άγνωστους αποστολείς να απαντούν σε θέματα ομάδας. Εάν αυτό δεν είναι ενεργοποιημένο, οι απαντήσεις από διευθύνσεις ηλεκτρονικού ταχυδρομείου που δεν έχουν ήδη προσκληθεί στο θέμα, θα δημιουργήσουν ένα νέο θέμα."
-          mailboxes:
-            synchronized: "Συγχρονισμένο γραμματοκιβώτιο"
-            none_found: "Δε βρέθηκαν γραμματοκιβώτια σε αυτόν τον λογαριασμό email."
-            disabled: "Απενεργοποιημένο"
         membership:
           title: Συνδρομή
           access: Πρόσβαση

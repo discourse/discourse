@@ -15,6 +15,7 @@ vi:
         user_title: "Hôm nay là ngày kỷ niệm bạn gia nhập cộng đồng của chúng tôi!"
         title: "Hôm nay là ngày kỷ niệm tôi gia nhập cộng đồng này!"
     cakeday:
+      title: Cakeday
       today: "Hôm nay"
       tomorrow: "Ngày mai"
       upcoming: "Sắp tới"
@@ -22,7 +23,26 @@ vi:
     birthdays:
       title: "Sinh nhật"
       month:
-        title: "Sinh nhật trong tháng của"
+        title: "Sinh nhật trong tháng"
         empty: "Không có thành viên nào có sinh nhật tháng này."
+      upcoming:
+        title: "Sinh nhật từ %{start_date} - %{end_date}"
+        empty: "Không thành viên nào có sinh nhật trong 7 ngày tới."
+      today:
+        title: "Sinh nhật %{date}"
+        empty: "Không thành viên nào có sinh nhật hôm nay."
+      tomorrow:
+        empty: "Không thành viên nào có sinh nhật trong ngày mai."
     anniversaries:
       title: "Kỷ niệm"
+      month:
+        title: "Các kỷ niệm trong tháng"
+        empty: "Không có người dùng nào kỷ niệm trong tháng này."
+      upcoming:
+        title: "Những kỷ niệm từ %{start_date} - %{end_date}"
+        empty: "Không có người dùng nào kỷ niệm trong 7 ngày tới."
+      today:
+        title: "Những kỷ niệm %{date}"
+        empty: "Không có người dùng nào kỷ niệm hôm nay."
+      tomorrow:
+        empty: "Không có người dùng nào kỷ niệm ngày mai."

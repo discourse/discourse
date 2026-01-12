@@ -9,5 +9,9 @@ vi:
     discourse_templates:
       title: "Templates"
   js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "Template (trong vùng văn bản)"
+        insert_template: "%{shortcut} Chèn template"
     templates:
       source: "Nguồn"

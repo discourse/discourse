@@ -1006,9 +1006,7 @@ zh_CN:
           self_lockout: "如果改变此群组的公开范围，您将丢失自己的访问权限，确定要继续吗？"
         email:
           title: "电子邮件"
-          status: "已通过 IMAP 同步了 %{old_emails}/%{total_emails} 封邮件。"
           enable_smtp: "启用 SMTP"
-          enable_imap: "启用 IMAP"
           test_settings: "测试设置"
           save_settings: "保存设置"
           last_updated: "最近更新："
@@ -1017,14 +1015,8 @@ zh_CN:
           smtp_settings_valid: "SMTP 设置有效。"
           smtp_title: "SMTP"
           smtp_instructions: "当您为群组启用 SMTP 时，从群组收件箱发送的所有出站电子邮件都将通过此处指定的 SMTP 设置，而不是为您的论坛发送的其他电子邮件配置的邮件服务器发送。"
-          imap_title: "IMAP"
-          imap_additional_settings: "附加设置"
-          imap_instructions: '当您为群组启用 IMAP 时，电子邮件将在群组收件箱和提供的 IMAP 服务器与邮箱之间同步。在启用 IMAP 之前，必须启用 SMTP 并验证和测试凭据。SMTP 使用的电子邮件用户名和密码将用于 IMAP。有关详情，请参阅 <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta 功能公告</a>。'
-          imap_alpha_warning: "警告：此功能仍处于 Alpha 版阶段。只官方支持 Gmail。风险自负！"
-          imap_settings_valid: "IMAP 设置有效。"
-          smtp_disable_confirm: "如果您禁用 SMTP，所有 SMTP 和 IMAP 设置都将被重置，关联功能将被禁用。确定要继续吗？"
-          imap_disable_confirm: "如果您禁用 IMAP，所有 IMAP 设置都将被重置，关联功能将被禁用。确定要继续吗？"
-          imap_mailbox_not_selected: "您必须为此 IMAP 配置选择一个邮箱，否则将不会同步任何邮箱！"
+          additional_settings: "附加设置"
+          smtp_disable_confirm: "如果禁用 SMTP，所有 SMTP 设置都将被重置，相关功能也将失效。您确定要继续吗？"
           prefill:
             title: "使用设置预填充："
             gmail: "Gmail"
@@ -1039,9 +1031,6 @@ zh_CN:
             smtp_server: "SMTP 服务器"
             smtp_port: "SMTP 端口"
             smtp_ssl_mode: "SSL 模式"
-            imap_server: "IMAP 服务器"
-            imap_port: "IMAP 端口"
-            imap_ssl: "为 IMAP 使用 SSL"
             username: "用户名"
             password: "密码"
           settings:
@@ -1050,10 +1039,6 @@ zh_CN:
             allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题。如果未启用此功能，且从未被邀请至该话题的电子邮件地址回复，将创建一个新话题。"
             from_alias: "发件人别名"
             from_alias_hint: "发送群组 SMTP 电子邮件时用作发件人地址的别名。请注意，并非所有邮件提供商都支持此功能，请查阅您的邮件提供商的文档。"
-          mailboxes:
-            synchronized: "已同步的邮箱"
-            none_found: "未在此电子邮件帐户中找到任何邮箱。"
-            disabled: "已禁用"
         membership:
           title: 成员资格
           access: 访问
@@ -4403,6 +4388,7 @@ zh_CN:
         latest: "%{shortcut} 最新"
         new: "%{shortcut} 新"
         unread: "%{shortcut} 未读"
+        unseen: "%{shortcut} 未读"
         categories: "%{shortcut} 类别"
         top: "%{shortcut} 排行榜"
         bookmarks: "%{shortcut} 书签"
