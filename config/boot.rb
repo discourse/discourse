@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Enable IRB console with autocompletion in debugger by default
+ENV["RUBY_DEBUG_IRB_CONSOLE"] ||= "true" if ENV["RAILS_ENV"] != "production"
+
 if ENV["DISCOURSE_DUMP_HEAP"] == "1"
   require "objspace"
   ObjectSpace.trace_object_allocations_start
