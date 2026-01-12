@@ -327,6 +327,95 @@ RSpec.describe SiteSetting do
         UploadReference.count
       }.by(-2)
     end
+
+    it "creates upload references for objects with upload URLs" do
+      objects_value =
+        JSON.generate(
+          [
+            { "name" => "object1", "upload_id" => upload.url },
+            { "name" => "object2", "upload_id" => upload2.url },
+          ],
+        )
+
+      expect {
+        provider.save(
+          "test_objects_with_uploads",
+          objects_value,
+          SiteSettings::TypeSupervisor.types[:objects],
+        )
+      }.to change { UploadReference.count }.by(2)
+
+      upload_references =
+        UploadReference.where(target: SiteSetting.find_by(name: "test_objects_with_uploads"))
+
+      expect(upload_references.pluck(:upload_id)).to contain_exactly(upload.id, upload2.id)
+    end
+
+    it "removes upload references when uploads are removed from objects" do
+      # First save with two uploads
+      objects_value =
+        JSON.generate(
+          [
+            { "name" => "object1", "upload_id" => upload.url },
+            { "name" => "object2", "upload_id" => upload2.url },
+          ],
+        )
+
+      provider.save(
+        "test_objects_with_uploads",
+        objects_value,
+        SiteSettings::TypeSupervisor.types[:objects],
+      )
+
+      setting = SiteSetting.find_by(name: "test_objects_with_uploads")
+      expect(UploadReference.where(target: setting).count).to eq(2)
+
+      # Now save with only one upload - should remove the other reference
+      objects_value_updated = JSON.generate([{ "name" => "object1", "upload_id" => upload.url }])
+
+      expect {
+        provider.save(
+          "test_objects_with_uploads",
+          objects_value_updated,
+          SiteSettings::TypeSupervisor.types[:objects],
+        )
+      }.to change { UploadReference.count }.by(-1)
+
+      expect(UploadReference.where(target: setting).pluck(:upload_id)).to contain_exactly(upload.id)
+    end
+
+    it "removes all upload references when all uploads are removed from objects" do
+      # First save with uploads
+      objects_value =
+        JSON.generate(
+          [
+            { "name" => "object1", "upload_id" => upload.url },
+            { "name" => "object2", "upload_id" => upload2.url },
+          ],
+        )
+
+      provider.save(
+        "test_objects_with_uploads",
+        objects_value,
+        SiteSettings::TypeSupervisor.types[:objects],
+      )
+
+      setting = SiteSetting.find_by(name: "test_objects_with_uploads")
+      expect(UploadReference.where(target: setting).count).to eq(2)
+
+      # Now save with no uploads - should remove all references
+      objects_value_empty = JSON.generate([{ "name" => "object1" }])
+
+      expect {
+        provider.save(
+          "test_objects_with_uploads",
+          objects_value_empty,
+          SiteSettings::TypeSupervisor.types[:objects],
+        )
+      }.to change { UploadReference.count }.by(-2)
+
+      expect(UploadReference.where(target: setting).count).to eq(0)
+    end
   end
 
   describe "Upload" do
