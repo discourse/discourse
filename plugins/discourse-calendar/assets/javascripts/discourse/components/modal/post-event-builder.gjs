@@ -291,7 +291,9 @@ export default class PostEventBuilder extends Component {
   async destroyPostEvent() {
     try {
       const confirmResult = await this.dialog.yesNoConfirm({
-        message: "Confirm delete",
+        message: i18n(
+          "discourse_post_event.builder_modal.delete_confirmation_message"
+        ),
       });
 
       if (confirmResult) {

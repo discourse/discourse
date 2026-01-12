@@ -214,7 +214,10 @@ export default class EventNodeView extends Component {
   }
 
   get eventNamePlaceholder() {
-    return this.composer?.get("model.title") || "Event";
+    return (
+      this.composer?.get("model.title") ||
+      i18n("discourse_post_event.composer.name_placeholder")
+    );
   }
 
   get hasLocation() {
