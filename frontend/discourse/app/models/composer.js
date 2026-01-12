@@ -1243,6 +1243,7 @@ export default class Composer extends RestModel {
 
       if (result.responseJson.action === "enqueued") {
         postStream?.undoPost(createdPost);
+        this.set("composeState", CLOSED);
         return result;
       }
 

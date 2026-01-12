@@ -286,6 +286,12 @@ acceptance(`Composer`, function (needs) {
 
     await click(".d-modal__footer button");
     assert.dom(".d-modal").doesNotExist("the modal can be dismissed");
+    assert
+      .dom("#reply-control")
+      .hasClass("closed", "composer is closed after enqueuing");
+    assert
+      .dom(".saving-text")
+      .doesNotExist("composer is not stuck in saving state");
   });
 
   test("Can display a message and route to a URL", async function (assert) {
@@ -562,6 +568,12 @@ acceptance(`Composer`, function (needs) {
     await click(".d-modal__footer button");
     assert.dom(".d-modal").doesNotExist("the modal can be dismissed");
     assert.dom(".pending-posts .reviewable-item").exists();
+    assert
+      .dom("#reply-control")
+      .hasClass("closed", "composer is closed after enqueuing");
+    assert
+      .dom(".saving-text")
+      .doesNotExist("composer is not stuck in saving state");
   });
 
   test("Edit the first post", async function (assert) {
