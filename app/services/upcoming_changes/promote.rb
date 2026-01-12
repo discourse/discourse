@@ -22,6 +22,7 @@ class UpcomingChanges::Promote
   policy :setting_not_already_enabled
   step :toggle_upcoming_change
   step :log_promotion
+  step :notify_admins
 
   private
 
@@ -69,8 +70,6 @@ class UpcomingChanges::Promote
     end
   end
 
-  # TODO (martin) Need to send notifications to admins here when
-  # the change is automatically enabled
   def log_promotion(params:, guardian:)
     context =
       I18n.t(
@@ -85,5 +84,18 @@ class UpcomingChanges::Promote
       true,
       { context: },
     )
+  end
+
+  def notify_admins(params:)
+    User
+      .human_users
+      .where(admin: true)
+      .each do |admin|
+        Notification.create!(
+          notification_type: Notification.types[:upcoming_change_automatically_promoted],
+          user_id: admin.id,
+          data: { upcoming_change_name: params.setting_name }.to_json,
+        )
+      end
   end
 end

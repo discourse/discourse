@@ -126,6 +126,20 @@ RSpec.describe UpcomingChanges::Promote do
           ),
         )
       end
+
+      it "notifies admins about the upcoming change" do
+        admin_2 = Fabricate(:admin)
+        expect { result }.to change {
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+            user_id: [admin.id, admin_2.id],
+          ).count
+        }.by(2)
+
+        expect(Notification.last.data).to eq(
+          { upcoming_change_name: :enable_upload_debug_mode }.to_json,
+        )
+      end
     end
   end
 end
