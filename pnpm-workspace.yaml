@@ -1,3 +1,4 @@
+strictPeerDependencies: true
 packages:
 - "frontend/custom-proxy"
 - "frontend/deprecation-silencer"
