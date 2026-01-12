@@ -14,6 +14,8 @@ class UpcomingChangeEvent < ActiveRecord::Base
          manual_opt_in: 3,
          manual_opt_out: 4,
          status_changed: 5,
+         admins_notified_available_change: 6,
+         admins_notified_automatic_promotion: 7,
        }
 
   scope :added_changes, -> { where(event_type: :added).order(created_at: :asc) }

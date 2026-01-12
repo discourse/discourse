@@ -77,7 +77,7 @@ class UpcomingChanges::AutoPromotionInitializer
             verbose_log(
               site,
               :error,
-              "Failed to promote '#{setting_name}', an unexpected error occurred.",
+              "Failed to promote '#{setting_name}', an unexpected error occurred. Error: #{error&.backtrace&.join("\n")}",
             )
           end
 

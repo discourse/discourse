@@ -68,6 +68,7 @@ class UpcomingChanges::Toggle
       UpcomingChangeEvent.create!(
         event_type: params.enabled ? :manual_opt_in : :manual_opt_out,
         upcoming_change_name: params.setting_name,
+        acting_user: guardian.user,
       )
     end
   end

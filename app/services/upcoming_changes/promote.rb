@@ -97,5 +97,11 @@ class UpcomingChanges::Promote
           data: { upcoming_change_name: params.setting_name }.to_json,
         )
       end
+
+    UpcomingChangeEvent.create!(
+      event_type: :admins_notified_automatic_promotion,
+      upcoming_changeg_name: params.setting_name,
+      acting_user: Discourse.system_user,
+    )
   end
 end
