@@ -6,7 +6,7 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
  * Starts with a letter, followed by letters, numbers, or underscores.
  * Note: Names starting with underscore are reserved for internal use.
  */
-const VALID_ARG_NAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+export const VALID_ARG_NAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
 
 /**
  * Valid arg types for block metadata schema.
@@ -38,6 +38,15 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "max",
   "integer",
   "enum",
+]);
+
+/**
+ * Valid properties for childArgs schema definitions.
+ * Includes all standard arg properties plus "unique" for sibling uniqueness validation.
+ */
+export const VALID_CHILD_ARG_SCHEMA_PROPERTIES = Object.freeze([
+  ...VALID_ARG_SCHEMA_PROPERTIES,
+  "unique",
 ]);
 
 /**
@@ -581,6 +590,177 @@ export function validateBlockArgs(config, blockClass) {
         `unknown arg ${suggestion}. Declared args are: ${declaredArgs.join(", ") || "none"}.`,
         { path: `args.${argName}` }
       );
+    }
+  }
+}
+
+/**
+ * Validates the childArgs schema definition passed to the @block decorator.
+ * Similar to validateArgsSchema but supports the additional "unique" property
+ * for enforcing uniqueness across sibling children.
+ *
+ * @param {Object} childArgsSchema - The childArgs schema object from decorator options.
+ * @param {string} blockName - Block name for error messages.
+ * @throws {Error} If schema is invalid.
+ */
+export function validateChildArgsSchema(childArgsSchema, blockName) {
+  if (!childArgsSchema || typeof childArgsSchema !== "object") {
+    return;
+  }
+
+  for (const [argName, argDef] of Object.entries(childArgsSchema)) {
+    // Validate arg name format
+    if (!VALID_ARG_NAME_PATTERN.test(argName)) {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg name "${argName}" is invalid. ` +
+          `Arg names must start with a letter and contain only letters, numbers, and underscores.`
+      );
+      continue;
+    }
+
+    if (!argDef || typeof argDef !== "object") {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" must be an object with a "type" property.`
+      );
+      continue;
+    }
+
+    // Check for unknown properties (including "unique" which is valid for childArgs)
+    const unknownProps = Object.keys(argDef).filter(
+      (prop) => !VALID_CHILD_ARG_SCHEMA_PROPERTIES.includes(prop)
+    );
+    if (unknownProps.length > 0) {
+      const suggestions = unknownProps.map((prop) =>
+        formatWithSuggestion(prop, VALID_CHILD_ARG_SCHEMA_PROPERTIES)
+      );
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has unknown properties: ${suggestions.join(", ")}. ` +
+          `Valid properties are: ${VALID_CHILD_ARG_SCHEMA_PROPERTIES.join(", ")}.`
+      );
+    }
+
+    // Validate "unique" is a boolean if provided
+    if (argDef.unique !== undefined && typeof argDef.unique !== "boolean") {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has invalid "unique" value. Must be a boolean.`
+      );
+    }
+
+    // Validate "unique" is only used with primitive types (not arrays)
+    if (argDef.unique === true && argDef.type === "array") {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has "unique: true" but type is "array". ` +
+          `Uniqueness validation is only supported for primitive types (string, number, boolean).`
+      );
+    }
+
+    // Type is required
+    if (!argDef.type) {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" is missing required "type" property.`
+      );
+      continue;
+    }
+
+    // Validate type
+    if (!VALID_ARG_TYPES.includes(argDef.type)) {
+      const suggestion = formatWithSuggestion(argDef.type, VALID_ARG_TYPES);
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has invalid type ${suggestion}. ` +
+          `Valid types are: ${VALID_ARG_TYPES.join(", ")}.`
+      );
+    }
+
+    // itemType is only valid for array type
+    if (argDef.itemType !== undefined && argDef.type !== "array") {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has "itemType" but type is "${argDef.type}". ` +
+          `"itemType" is only valid for array type.`
+      );
+    }
+
+    // Validate itemType for arrays
+    if (argDef.type === "array" && argDef.itemType !== undefined) {
+      if (!VALID_ITEM_TYPES.includes(argDef.itemType)) {
+        const suggestion = formatWithSuggestion(
+          argDef.itemType,
+          VALID_ITEM_TYPES
+        );
+        raiseBlockError(
+          `Block "${blockName}": childArgs arg "${argName}" has invalid itemType ${suggestion}. ` +
+            `Valid item types are: ${VALID_ITEM_TYPES.join(", ")}.`
+        );
+      }
+    }
+
+    // Validate schema properties using declarative rules
+    for (const prop of Object.keys(SCHEMA_PROPERTY_RULES)) {
+      validateSchemaProperty(prop, argDef, argName, blockName);
+    }
+
+    // Validate range pairs
+    validateRangePair(argDef, argName, blockName, "min", "max");
+    validateRangePair(argDef, argName, blockName, "minLength", "maxLength");
+
+    // enum is only valid for string or number type
+    if (
+      argDef.enum !== undefined &&
+      argDef.type !== "string" &&
+      argDef.type !== "number"
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has "enum" but type is "${argDef.type}". ` +
+          `"enum" is only valid for string or number type.`
+      );
+    }
+
+    // Validate enum is an array with at least one element
+    if (argDef.enum !== undefined) {
+      if (!Array.isArray(argDef.enum) || argDef.enum.length === 0) {
+        raiseBlockError(
+          `Block "${blockName}": childArgs arg "${argName}" has invalid "enum" value. Must be an array with at least one element.`
+        );
+      } else {
+        // Validate all enum values match the arg type
+        const expectedType = argDef.type === "string" ? "string" : "number";
+        for (const enumValue of argDef.enum) {
+          if (typeof enumValue !== expectedType) {
+            raiseBlockError(
+              `Block "${blockName}": childArgs arg "${argName}" enum contains invalid value "${enumValue}". All values must be ${expectedType}s.`
+            );
+          }
+        }
+      }
+    }
+
+    // Validate required is boolean
+    if (argDef.required !== undefined && typeof argDef.required !== "boolean") {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has invalid "required" value. Must be a boolean.`
+      );
+    }
+
+    // required + default is contradictory - default makes required meaningless
+    if (argDef.required === true && argDef.default !== undefined) {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has both "required: true" and "default". ` +
+          `These options are contradictory - an arg with a default value is never missing.`
+      );
+    }
+
+    // Validate default value matches type
+    if (argDef.default !== undefined) {
+      const defaultError = validateArgValue(
+        argDef.default,
+        argDef,
+        argName,
+        blockName
+      );
+      if (defaultError) {
+        raiseBlockError(
+          `Block "${blockName}": childArgs arg "${argName}" has invalid default value. ${defaultError}`
+        );
+      }
     }
   }
 }

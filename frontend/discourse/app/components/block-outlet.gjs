@@ -24,7 +24,10 @@ import { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { validateArgsSchema } from "discourse/lib/blocks/arg-validation";
+import {
+  validateArgsSchema,
+  validateChildArgsSchema,
+} from "discourse/lib/blocks/arg-validation";
 import {
   buildContainerPath,
   createGhostBlock,
@@ -96,6 +99,7 @@ const VALID_BLOCK_OPTIONS = Object.freeze([
   "container",
   "description",
   "args",
+  "childArgs",
   "constraints",
   "validate",
   "allowedOutlets",
@@ -253,6 +257,7 @@ export function block(name, options = {}) {
   const isContainer = options?.container ?? false;
   const description = options?.description ?? "";
   const argsSchema = options?.args ?? null;
+  const childArgsSchema = options?.childArgs ?? null;
   const constraints = options?.constraints ?? null;
   const validateFn = options?.validate ?? null;
   const allowedOutlets = options?.allowedOutlets ?? null;
@@ -276,6 +281,16 @@ export function block(name, options = {}) {
 
   // Validate arg schema structure and types
   validateArgsSchema(argsSchema, name);
+
+  // Validate childArgs is only allowed on container blocks
+  if (childArgsSchema && !isContainer) {
+    raiseBlockError(
+      `Block "${name}": "childArgs" is only valid for container blocks (container: true).`
+    );
+  }
+
+  // Validate childArgs schema structure and types (includes unique property)
+  validateChildArgsSchema(childArgsSchema, name);
 
   // Validate constraints schema (references to args, incompatible constraints, vacuous constraints)
   validateConstraintsSchema(constraints, argsSchema, name);
@@ -314,6 +329,7 @@ export function block(name, options = {}) {
     description,
     container: isContainer,
     args: argsSchema ? Object.freeze(argsSchema) : null,
+    childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
     constraints: constraints ? Object.freeze(constraints) : null,
     validate: validateFn,
     allowedOutlets: allowedOutlets ? Object.freeze([...allowedOutlets]) : null,
@@ -349,13 +365,14 @@ export function block(name, options = {}) {
 
       /**
        * Block metadata including description, container status, args schema,
-       * constraints, validate function, and outlet restrictions. Used for
-       * introspection, documentation, and runtime validation.
+       * childArgs schema, constraints, validate function, and outlet restrictions.
+       * Used for introspection, documentation, and runtime validation.
        *
        * @type {{
        *   description: string,
        *   container: boolean,
        *   args: Object|null,
+       *   childArgs: Object|null,
        *   constraints: Object|null,
        *   validate: Function|null,
        *   allowedOutlets: ReadonlyArray<string>|null,
