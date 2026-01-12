@@ -1,0 +1,14 @@
+<div class='container dev-mode'>
+  <h2><%= t 'dev_mode.title' %></h2>
+  <%= form_tag(dev_mode_enter_path) do %>
+    <p>
+      <label>
+        <%= check_box_tag 'enable_rack_mini_profiler', true, true %>
+        <%= t 'dev_mode.enable_rack_mini_profiler' %>
+      </label>
+    </p>
+    <p>
+      <%= submit_tag t('dev_mode.enter'), class: 'btn btn-primary' %>
+    </p>
+  <% end %>
+</div>

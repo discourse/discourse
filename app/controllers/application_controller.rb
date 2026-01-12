@@ -63,6 +63,8 @@ class ApplicationController < ActionController::Base
 
   HONEYPOT_KEY = "HONEYPOT_KEY"
   CHALLENGE_KEY = "CHALLENGE_KEY"
+  MINI_PROFILER_AUTH_COOKIE_EXPIRES_IN = 1.hour
+  MINI_PROFILER_CLASS = defined?(Rack::MiniProfiler) ? Rack::MiniProfiler : nil
 
   layout :set_layout
 
@@ -684,12 +686,25 @@ class ApplicationController < ActionController::Base
   end
 
   def mini_profiler_enabled?
-    defined?(Rack::MiniProfiler) && (guardian.is_developer? || Rails.env.development?)
+    return false unless MINI_PROFILER_CLASS
+    return true if Rails.env.development?
+    return true if guardian.is_developer?
+
+    if auth = cookies.encrypted[:_mp_auth]
+      user_id = auth[:user_id]
+      issued_at = auth[:issued_at]
+
+      if issued_at && issued_at > MINI_PROFILER_AUTH_COOKIE_EXPIRES_IN.ago.to_i
+        user = User.find_by(id: user_id)
+        return true if user && Guardian.new(user).is_developer?
+      end
+    end
+
+    false
   end
 
   def authorize_mini_profiler
-    return unless mini_profiler_enabled?
-    Rack::MiniProfiler.authorize_request
+    MINI_PROFILER_CLASS.authorize_request if mini_profiler_enabled?
   end
 
   def check_xhr
