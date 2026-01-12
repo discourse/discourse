@@ -1134,11 +1134,10 @@ de:
       every_month: "jeden Monat"
       every_six_months: "alle sechs Monate"
   user_api_key:
-    title: "Genehmige Zugriff für Anwendung"
     authorize: "Genehmigen"
+    deny: "Abbrechen"
     read: "Lesen"
     read_write: "Lesen/Schreiben"
-    description: '„%{application_name}“ fordert den folgenden Zugriff auf dein Konto:'
     instructions: 'Wir haben gerade einen neuen Benutzer-API-Schlüssel für dich generiert zur Verwendung mit „%{application_name}“, bitte füge den folgenden Schlüssel in deine Anwendung ein:'
     otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
     otp_confirmation:
@@ -3173,6 +3172,7 @@ de:
         Während du hier teilnimmst, lernen wir dich besser kennen, und vorübergehende Einschränkungen für neue Benutzer werden aufgehoben. Über die Zeit wirst du [Vertrauenstufen](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) erreichen, die besondere Fähigkeiten beinhalten, um uns dabei zu helfen, die Community gemeinsam zu verwalten.
     welcome_user:
       title: "Willkommen: Benutzer"
+      preview: "Willkommen bei %{site_name}!"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
         Danke, dass du %{site_name} beigetreten bist – herzlich willkommen!
@@ -3200,6 +3200,7 @@ de:
         Mit großer Kraft geht große Verantwortung einher. Wenn du mit dem Moderieren noch nicht vertraut bist, dann lies bitte den [Moderationsleitfaden](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Willkommen: Einladung"
+      preview: "Willkommen bei %{site_name}!"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
         Danke, dass du die Einladung zu %{site_name} angenommen hast -- willkommen!
@@ -3617,6 +3618,7 @@ de:
         Dies kann über die Website-Einstellungen `newuser_spam_host_threshold` und `allowed_spam_host_domains` geändert werden. Erwäge gegebenenfalls, %{domains} in die Positivliste aufzunehmen.
     unsilenced:
       title: "Stummschaltung aufgehoben"
+      preview: "Konto nicht mehr gesperrt."
       subject_template: "Konto nicht mehr gesperrt"
       text_body_template: |
         Hallo,
@@ -3665,8 +3667,6 @@ de:
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PN] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Vorherige Antworten"
     reached_limit:
@@ -4000,6 +4000,7 @@ de:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Anmeldung über Link"
+      preview: "Anmeldung über Link."
       subject_template: "[%{email_prefix}] Anmeldung über Link"
       text_body_template: |
         Hier ist dein Link, um dich bei [%{site_name}](%{base_url}) anzumelden.

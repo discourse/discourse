@@ -7,6 +7,10 @@
 nl:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privé"
+          public: "Openbaar"
       reports:
         reading_time:
           title: Leestijd
@@ -14,7 +18,8 @@ nl:
           title: Toewijzingen
         chat_usage:
           messages: berichten
-          you: Jij
+          author: Jij
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Uitnodigingen

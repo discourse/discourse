@@ -31,7 +31,7 @@ el:
         fields_section:
           title: Επιλογές σεναρίου
       destroy_automation:
-        confirm: "Είστε βέβαιοι ότι θέλετε να διαγράψετε το `%{name}`;"
+        confirm: "Σίγουρα θέλετε να διαγράψετε το `%{name}`;"
       fields:
         key_value:
           label_without_count: "Διαμόρφωση"
@@ -310,6 +310,8 @@ el:
             user:
               label: Χρήστης
               description: "Ο χρήστης που κλείνει το θέμα (προεπιλογή: σύστημα)"
+        set_topic_timer:
+          title: Ορισμός Χρονοδιακόπτη Θέματος
       unnamed_automation: "Ανώνυμος αυτοματισμός"
       models:
         trigger:

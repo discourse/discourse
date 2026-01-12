@@ -59,8 +59,6 @@ nl:
             label: Inhoud
           delay:
             label: Vertraging (minuten)
-          prefers_encrypt:
-            label: Versleutelt PB indien beschikbaar
         group:
           label: Groep
         text:
@@ -429,6 +427,8 @@ nl:
           fields:
             custom_field_name:
               label: "Naam aangepast gebruikersveld"
+        set_topic_timer:
+          title: Topictimer instellen
       unnamed_automation: "Naamloze automatisering"
       models:
         script:

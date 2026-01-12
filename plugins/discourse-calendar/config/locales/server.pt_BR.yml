@@ -49,7 +49,6 @@ pt_BR:
     all_day_event_start_time: "Os eventos que não têm uma hora de início especificada começarão neste momento. O formato é HH:mm. Para 6:00 da manhã, digite 06:00"
     all_day_event_end_time: "Os eventos que não têm uma hora de início especificada começarão neste momento. O formato é HH:mm. Para 6:00 da manhã, digite 18:00"
     all_day_event_time_error: "Hora inválida. O formato precisa ser HH:mm (ex: 08:00)."
-    calendar_categories: "Mostrar um calendário no topo de uma categoria. As configurações obrigatórias são categoryId e postId. eg: categoryId=6;postId=453\n Outras configurações válidas: tzPicker, fins de semana e defaultView."
     calendar_categories_outlet: "Permite mudar qual saída deve mostrar o calendário da categoria."
     working_days: "Dias úteis definidos. Você pode exibir a disponibilidade de um grupo utilizando a etiqueta \"timezones\" em uma postagem, por exemplo: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Hora de início das horas do dia útil."

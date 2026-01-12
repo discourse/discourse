@@ -21,6 +21,7 @@ te:
       channel_settings:
         edit: "సవరణ"
         add: "కలుపు"
+        notification_settings_context: "ప్రకటనలు"
         join: "చేరండి"
         leave: "వదిలేయండి"
       close: "మూసివేయి"
@@ -101,6 +102,7 @@ te:
         history_label: "చరిత్ర"
         members_label: "సభ్యులు"
       search:
+        short_title: వెతుకు
         sort:
           relevance: "ఔచిత్యం"
           latest: "తాజా"

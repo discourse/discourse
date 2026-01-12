@@ -1134,6 +1134,9 @@ sr:
       new_private_message: "Nova privatna poruka"
       private_message: "Privatna poruka"
       private_messages: "Poruke"
+      upcoming_changes:
+        for_user:
+          enabled: "Omgućeno"
       user_notifications:
         filters:
           all: "Sve"
@@ -1779,6 +1782,8 @@ sr:
       upload_title: "Učitaj"
       upload_description: "Ovde opišite stvar koju učitavate"
       list_item: "Predmet popisa"
+      wrap_modal:
+        apply: "Primeni"
       help: "Markdown pomoć pri izmenama"
       modal_ok: "U redu"
       yourself_confirm:
@@ -1892,16 +1897,6 @@ sr:
         bookmarks: "Nemate markiranih tema još."
         category: "Nema tema u %{category}."
         top: "Nema glavnih tema."
-      bottom:
-        latest: "Nema više najnovijih tema."
-        posted: "Nema više objavljenih tema."
-        read: "Nema više pročitanih tema."
-        new: "Nema više novih tema."
-        unread: "Nema više nepročitanih tema."
-        category: "Nema više %{category} tema."
-        tag: "Nema više %{tag} tema."
-        top: "Nema više glavnih tema."
-        bookmarks: "Nema više markiranih tema."
     topic_bulk_actions:
       dismiss:
         name: "Odbaci"
@@ -2382,6 +2377,7 @@ sr:
         this_month: "Mesec"
         this_week: "Nedelja"
         today: "Danas"
+        custom: "Posebna"
     permission_types:
       full: "Otvoriti / Odgovori / Pogledaj"
       create_post: "Odgovori / Pogledaj"
@@ -2459,6 +2455,7 @@ sr:
       sort_by_count: "broj"
       sort_by_name: "ime foruma"
       upload_instructions: "Jedan po liniji, opciono sa oznakom grupe u formatu 'tag_name, tag_group'."
+      bulk_create_button: "Kreiraj"
       filters:
         without_category: "%{filter} %{tag} teme"
       notifications:
@@ -3407,6 +3404,8 @@ sr:
         no_user_badges: "%{name} nije dodeljena ni jedna značka."
         no_badges: Nema znački koje bi mogle biti dodeljene.
         none_selected: "Odaberite značku da počnete"
+        sections:
+          settings: Podešavanje
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodeljena više puta
         listable: Prikaži značku na javnoj stranici sa značkama

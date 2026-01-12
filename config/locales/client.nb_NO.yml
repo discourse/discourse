@@ -1126,6 +1126,9 @@ nb_NO:
       new_private_message: "Ny melding"
       private_message: "Melding"
       private_messages: "Meldinger"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktivert?"
       user_notifications:
         filters:
           filter_by: "Filtrer etter"
@@ -1436,7 +1439,6 @@ nb_NO:
         tags: "Stikkord"
         interface: "Grensesnitt"
         apps: "Programmer"
-        navigation_menu: "Navigasjonsmeny"
       change_password:
         success: "(e-post sendt)"
         in_progress: "(sender e-post)"
@@ -2450,6 +2452,8 @@ nb_NO:
       upload_title: "Bilde"
       upload_description: "beskriv bildet her"
       list_item: "Listeelement"
+      wrap_modal:
+        apply: "Bruk"
       help: "Hjelp for redigering i Markdown"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
       modal_ok: "OK"
@@ -2902,19 +2906,6 @@ nb_NO:
         top: "Det finnes ingen populære emner."
         hot: "Det finnes ingen aktuelle temaer."
         filter: "Det finnes ingen emner."
-      bottom:
-        latest: "Det finnes ingen flere siste emner."
-        posted: "Det finnes ingen flere emner med innlegg."
-        read: "Det finnes ingen flere leste emner."
-        new: "Det finnes ingen flere nye emner."
-        unread: "Det finnes ingen flere uleste emner."
-        unseen: "Det finnes ikke flere usette emner."
-        category: "Det finnes ingen %{category}-emner igjen."
-        tag: "Det finnes ingen %{tag}-emner igjen."
-        top: "Det finnes ingen flere populære emner."
-        hot: "Det finnes ingen flere aktuelle emner."
-        bookmarks: "Det finnes ingen flere bokmerkede emner."
-        filter: "Det finnes ikke flere emner."
     topic_bulk_actions:
       dismiss:
         name: "Avslå"
@@ -3039,9 +3030,6 @@ nb_NO:
         }
       created_at: "Opprettet: %{date}"
       bumped_at: "Siste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Se alle kategorier</a> eller <a href='%{basePath}/latest'>se de nyeste emnene</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bla gjennom alle kategorier</a>, <a href='%{basePath}/latest'>se de nyeste emnene</a> eller se toppen:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Se alle stikkord</a> eller <a href='%{basePath}/latest'>se de nyeste emnene</a>."
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
       jump_reply: "Gå til innleggets opprinnelige plassering"
       jump_reply_aria: "Gå til @%{username}s innlegg på dets opprinnelige plassering"
@@ -3973,6 +3961,7 @@ nb_NO:
         this_month: "Den siste måneden"
         this_week: "Den siste uken"
         today: "I dag"
+        custom: "Egendefinert"
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
@@ -4142,6 +4131,7 @@ nb_NO:
       upload_description: "Last opp en csv-fil for å opprette flere stikkort på én gang"
       upload_instructions: "En per linje, eventuelt med en tagggruppe i formatet 'tag_name,tag_group'."
       upload_successful: "Stikkordene ble lastet opp"
+      bulk_create_button: "Opprett"
       delete_unused_confirmation:
         one: "%{count} taggen vil bli slettet: %{tags}"
         other: "%{count} merkene vil bli slettet: %{tags}"
@@ -5668,6 +5658,8 @@ nb_NO:
         no_user_badges: "%{name} er ikke blitt tildelt noen merker."
         no_badges: Det er ingen merker som kan bli tildelt.
         none_selected: "Velg et merke for å komme i gang"
+        sections:
+          settings: Innstillinger
         allow_title: Tillat merke å bli benyttet som en tittel
         multiple_grant: Kan bli tildelt flere ganger
         visibility_heading: Synlighet

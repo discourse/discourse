@@ -5,16 +5,76 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Перемотка Discourse"
   js:
     discourse_rewind:
+      placeholder: Перемотка Discourse
+      title: Rewind
+      viewing_other_user: "Вы просматриваете отчет <strong>%{username}'s</strong> Discourse Rewind."
+      cannot_view_rewind: >
+        Вы не можете просмотреть этот отчет Discourse Rewind. Возможно, владелец не опубликовал его публично?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Включите функцию Discourse Rewind. Это позволит отображать сводку событий за конец года в вашем профиле и на вашем аватаре."
+        share_publicly: "Поделитесь сводкой Discourse Rewind с другими участниками форума. Любой участник форума сможет просмотреть вашу сводку Discourse Rewind."
+        cannot_share_when_profile_hidden: "Чтобы поделиться доступом к Rewind, необходимо разрешить другим пользователям просматривать ваш общедоступный профиль."
+      profile_link: "Просмотрите свой %{rewindYear} Discourse Rewind"
+      share:
+        toggle_label:
+          private: "Закрытое сообщество"
+          public: "Публичное"
+        confirm: "Перед тем как делиться своими сообщениями в Rewind, обязательно проверьте их, так как они могут содержать данные из личных сообщений. Вы можете в любой момент снова сделать их приватными."
+        confirm_button:
+          enable: "Сделай публичным"
+          disable: "Сохранять приватность"
+        enabled_success: "Теперь вы можете поделиться своей загрузкой Rewind с другими участниками форума."
+        disabled_success: "Ваша функция «Перемотка» теперь приватна."
       reports:
+        activity_calendar:
+          title: Календарь активности
+          cell_title:
+            visited_no_posts: "Вы посетили и наблюдали за %{date}, но не оставили никаких сообщений."
+        top_words:
+          title: Использование слов
         reading_time:
           title: Время на прочтение
+          book_comparison: "Вы потратили <code>%{readingTime}</code> времени на чтение нашего сайта! Это время потребовалось бы, чтобы прочитать <i>%{bookTitle}</i>"
+        post_used_reactions:
+          title: Наиболее часто используемые реакции в темах
+          total_number: "Общее количество реакций: %{count}"
+        post_received_reactions:
+          title: Наиболее часто используемые реакции в темах
+        fbff:
+          title: Ваш FBFF (Лучший друг на форуме навсегда)
+        best_topics:
+          view_topic: Просмотреть тему
+        best_posts:
+          view_post: Посмотреть пост
+        ai_usage:
+          title: Использование ИИ
+          total_requests: Всего запросов
+          total_tokens: Всего токенов
+          success_rate: Процент успеха
+          favorite_features: Наиболее часто используемые функции
+          favorite_models: Наиболее часто используемые модели ИИ
+          wake_up: "Проснись, %{username}..."
+          system_title: "ОБНАРУЖЕНО ИСПОЛЬЗОВАНИЕ ИИ"
         assignments:
           title: Назначения
+          total_assigned: Назначен мне
+          completed: Задания выполнены
+          pending: Задания в процессе выполнения
+          assigned_by_user: Выданные задания
         chat_usage:
+          title: Активность в чате
+          total_messages: Всего сообщений
+          dm_messages: Сообщений DM
           messages: сообщений
-          you: Вы
+          author: Вы
+          author_others: "%{username}"
           status_online: "● онлайн"
         invites:
           title: Приглашения

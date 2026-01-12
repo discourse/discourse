@@ -7,12 +7,17 @@
 gl:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privada"
+          public: "Pública"
       reports:
         reading_time:
           title: Tempo de lectura
         chat_usage:
           messages: mensaxes
-          you: Vostede
+          author: Vostede
+          author_others: "%{username}"
         invites:
           title: Convites
           invitee_posts: Publicacións creadas

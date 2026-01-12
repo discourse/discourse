@@ -483,6 +483,33 @@ RSpec.configure do |config|
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
     config.before(:each, type: :system) do |example|
+      # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
+      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil?
+        example_file_path = example.metadata[:rerun_file_path]
+
+        if example_file_path
+          expanded_example_file_path = Pathname.new(example_file_path).expand_path
+          is_within_rails_root = expanded_example_file_path.to_s.start_with?(Rails.root.to_s)
+
+          if is_within_rails_root
+            extension_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
+            should_set_raise_on_deprecation =
+              if extension_match
+                type_dir, extension_name = extension_match.captures
+                extension_root = Rails.root.join(type_dir, extension_name)
+
+                # Preinstalled plugins/themes don't have a .git directory
+                !extension_root.join(".git").exist?
+              else
+                # Not a plugin or theme spec
+                true
+              end
+
+            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if should_set_raise_on_deprecation
+          end
+        end
+      end
+
       if example.metadata[:time]
         freeze_time(example.metadata[:time])
         page.driver.with_playwright_page do |pw_page|
@@ -787,7 +814,9 @@ RSpec.configure do |config|
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       playwright_cli_executable_path: "./node_modules/.bin/playwright",
       logger: Logger.new(IO::NULL),
-      timezoneId: example.metadata[:timezone],
+      # NOTE: timezoneId is NOT set here because the driver is cached and reused,
+      # so only the first test's timezone would be applied. Instead, we use CDP
+      # to override the timezone per-test in the before(:each) hook below.
       colorScheme: example.metadata[:color_scheme],
     }
 
@@ -853,6 +882,15 @@ RSpec.configure do |config|
 
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
+
+      # Apply timezone override via CDP if timezone metadata is present.
+      # We use CDP instead of the driver's timezoneId option because the driver
+      # instance is cached and reused between tests, so timezoneId only affects
+      # the first test. CDP override works at runtime for each test.
+      if (tz = example.metadata[:timezone])
+        cdp = pw_page.context.new_cdp_session(pw_page)
+        cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: tz })
+      end
     end
   end
 
@@ -959,13 +997,25 @@ RSpec.configure do |config|
       end
     end
 
+    deprecation_error =
+      $playwright_logger
+        &.logs
+        &.filter_map do |log|
+          if log[:level] == "trace"
+            error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
+            "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
+          end
+        end
+        &.first
+
+    expect(deprecation_error).to be_nil, deprecation_error
+
     $playwright_logger&.logs&.each do |log|
-      next if log[:level] != "WARNING"
-      deprecation_id = log[:message][/\[deprecation id: ([^\]]+)\]/, 1]
+      next if log[:level] != "count"
+      deprecation_id = log[:message][/^deprecation_id:(.+?):\s*\d+$/, 1]
       next if deprecation_id.nil?
 
-      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= {}
-      deprecations[deprecation_id] ||= 0
+      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= Hash.new(0)
       deprecations[deprecation_id] += 1
     end
 

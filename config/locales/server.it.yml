@@ -1134,11 +1134,10 @@ it:
       every_month: "ogni mese"
       every_six_months: "ogni sei mesi"
   user_api_key:
-    title: "Autorizza accesso dell'applicazione"
     authorize: "Autorizza"
+    deny: "Annulla"
     read: "lettura"
     read_write: "lettura/scrittura"
-    description: '"%{application_name}" richiede il seguente accesso al tuo account:'
     instructions: 'Abbiamo appena generato una nuova chiave API utente da usare con "%{application_name}", incolla la seguente chiave nella tua applicazione:'
     otp_description: 'Vuoi consentire a "%{application_name}" l''accesso al sito?'
     otp_confirmation:
@@ -3095,6 +3094,7 @@ it:
         Partecipando ti conosceremo meglio, e le limitazioni temporanee per i nuovi utenti saranno rimosse. Col tempo incrementerai il tuo [livello di attendibilità](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), sbloccando ulteriori funzionalità che ci aiuteranno a gestire insieme la comunità.
     welcome_user:
       title: "Benvenuto Utente"
+      preview: "Ti diamo il benvenuto su %{site_name}!"
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
         Grazie per esserti unito a %{site_name}, e benvenuto!
@@ -3119,6 +3119,7 @@ it:
         Da un grande potere derivano grandi responsabilità. Se non hai mai svolto attività di moderatore, puoi consultare la nostra [Guida per moderatori](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Invito di Benvenuto"
+      preview: "Ti diamo il benvenuto su %{site_name}!"
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
         Grazie per aver accettato l'invito a %{site_name} -- benvenuto!
@@ -3486,6 +3487,7 @@ it:
       text_body_template: "Questo è un messaggio automatico.\n\nIl nuovo utente [%{username}](%{user_url}) ha provato a creare numerosi messaggi contenenti link a %{domains}, ma quei messaggi sono stati bloccati per evitare fenomeni di spam. L'utente è ancora in grado di creare nuovi messaggi purché non contengano link a %{domains}. \n\nPer favore [controlla l'utente](%{user_url}). \n\nQuesto comportamento può essere modificato agendo sulle impostazioni del sito `newuser_spam_host_threshold` e `allowed_spam_host_domains`. Puoi anche aggiungere %{domains} alla lista dei consentiti se vuoi ammettere tali link.\n"
     unsilenced:
       title: "Non silenziato"
+      preview: "Account non più sospeso."
       subject_template: "Account non più sospeso"
       text_body_template: |
         Ciao,
@@ -3531,8 +3533,6 @@ it:
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   subject_re: "R:"
   subject_pm: "[MP]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     reached_limit:
@@ -3866,6 +3866,7 @@ it:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Accedi tramite collegamento"
+      preview: "Accedi tramite collegamento."
       subject_template: "[%{email_prefix}] Accedi tramite collegamento"
       text_body_template: "Ecco il collegamento per accedere a [%{site_name}](%{base_url}). \n\nSe non hai richiesto questo collegamento, puoi tranquillamente ignorare questa email. \n\nClicca sul seguente collegamento per accedere:\n %{base_url}/session/email-login/%{email_token}\n"
     set_password:

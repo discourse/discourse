@@ -44,7 +44,7 @@ hu:
         groups: "Csoportok:"
         no_persona: "Nincs beállítva"
         no_groups: "Egyik sem"
-        edit: "Szerkesztés"
+        edit: "Beállítások"
         expand_list:
           one: "(%{count} további)"
           other: "(%{count} további)"
@@ -54,6 +54,9 @@ hu:
           reset: "Alaphelyzetbe állítás"
         search:
           name: "Keresés"
+        embeddings:
+          setting_groups:
+            related_topics: "Kapcsolódó témák"
         spam:
           name: "Kéretlen tartalom"
       modals:

@@ -2838,39 +2838,6 @@ RSpec.describe GroupsController do
       end
     end
 
-    context "when validating imap" do
-      let(:protocol) { "imap" }
-      let(:username) { "test@gmail.com" }
-      let(:password) { "password" }
-      let(:domain) { nil }
-      let(:ssl) { true }
-      let(:ssl_mode) { nil }
-      let(:host) { "imap.somemailsite.com" }
-      let(:port) { 993 }
-
-      it "validates with the correct TLS settings" do
-        EmailSettingsValidator.expects(:validate_imap).with(has_entries(ssl: true))
-        post "/groups/#{group.id}/test_email_settings.json", params: params
-        expect(response.status).to eq(200)
-      end
-
-      context "when an error is raised" do
-        before do
-          EmailSettingsValidator.expects(:validate_imap).raises(
-            Net::IMAP::NoResponseError,
-            stub(data: stub(text: "Invalid credentials")),
-          )
-        end
-        it "uses the friendly error message functionality to return the message to the user" do
-          post "/groups/#{group.id}/test_email_settings.json", params: params
-          expect(response.status).to eq(422)
-          expect(response.parsed_body["errors"]).to include(
-            I18n.t("email_settings.imap_authentication_error"),
-          )
-        end
-      end
-    end
-
     describe "global param validation and rate limit" do
       let(:protocol) { "smtp" }
       let(:host) { "smtp.gmail.com" }
@@ -2885,9 +2852,7 @@ RSpec.describe GroupsController do
         it "raises an invalid params error" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
           expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"].first).to match(
-            /Valid protocols to test are smtp and imap/,
-          )
+          expect(response.parsed_body["errors"].first).to match(/Valid protocol to test is smtp/)
         end
       end
 

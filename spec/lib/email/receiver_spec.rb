@@ -404,8 +404,8 @@ RSpec.describe Email::Receiver do
     it "stores the created_via source against the incoming email" do
       process(:text_reply, source: :handle_mail)
       expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:handle_mail])
-      process(:text_and_html_reply, source: :imap)
-      expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:imap])
+      process(:text_and_html_reply, source: :pop3_poll)
+      expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:pop3_poll])
     end
 
     it "stores the message_id of the incoming email against the post as outbound_message_id" do

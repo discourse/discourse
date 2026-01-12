@@ -42,7 +42,7 @@ sv:
         groups: "Grupper:"
         no_persona: "Inte inställd"
         no_groups: "Ingen"
-        edit: "Redigera"
+        edit: "Inställningar"
         expand_list:
           one: "(ytterligare %{count})"
           other: "(ytterligare %{count})"

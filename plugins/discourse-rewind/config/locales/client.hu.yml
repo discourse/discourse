@@ -7,12 +7,17 @@
 hu:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privát"
+          public: "Nyilvános"
       reports:
         reading_time:
           title: Olvasási Idő
         chat_usage:
           messages: üzenetek
-          you: Ön
+          author: Ön
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Meghívók

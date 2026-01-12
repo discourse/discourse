@@ -156,6 +156,9 @@ en:
         humanize_not_valid_string_value: "The property at JSON Pointer '%{property_json_pointer}' must be a string."
         not_valid_string_value: "must be a string"
 
+        humanize_not_valid_datetime_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid datetime."
+        not_valid_datetime_value: "must be a valid datetime"
+
         humanize_not_valid_integer_value: "The property at JSON Pointer '%{property_json_pointer}' must be an integer."
         not_valid_integer_value: "must be an integer"
 
@@ -870,6 +873,9 @@ en:
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       description_incomplete: "The category description post must have at least one paragraph."
+      description_too_long:
+        one: "Description is too long (maximum is %{count} character)."
+        other: "Description is too long (maximum is %{count} characters)."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
@@ -1130,12 +1136,9 @@ en:
 
   email_settings:
     pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."
-    imap_authentication_error: "There was an issue with the IMAP credentials provided, check the username and password and try again."
-    imap_no_response_error: "An error occurred when communicating with the IMAP server. %{message}"
     smtp_authentication_error: "There was an issue with the SMTP credentials provided, check the username and password and try again. %{message}"
     smtp_server_busy_error: "The SMTP server is currently busy, try again later."
     smtp_unhandled_error: "There was an unhandled error when communicating with the SMTP server. %{message}"
-    imap_unhandled_error: "There was an unhandled error when communicating with the IMAP server. %{message}"
     connection_error: "There was an issue connecting with the server, check the server name and port and try again."
     timeout_error: "Connection to the server timed out, check the server name and port and try again."
     unhandled_error: "Unhandled error when testing email settings. %{message}"
@@ -1233,11 +1236,14 @@ en:
       every_six_months: "every six months"
 
   user_api_key:
-    title: "Authorize application access"
+    title: 'Authorize "%{application_name}"'
     authorize: "Authorize"
+    deny: "Cancel"
     read: "read"
     read_write: "read/write"
-    description: '"%{application_name}" is requesting the following access to your account:'
+    logged_in_as: "Logged in as"
+    permissions_header: 'This will allow "%{application_name}" to:'
+    redirect_warning: "Authorizing will redirect you to"
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
@@ -2370,15 +2376,7 @@ en:
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "Selects the specific email header to use for identifying spam. This option can be X-Spam-Flag, X-Spam-Status, or X-SES-Spam-Verdict, and the email is tagged as spam based on the header's value. For instance, if the chosen setting is X-Spam-Flag, an email with this header value set to YES would be classified as spam."
 
-    enable_imap: "Enable IMAP for synchronizing group messages."
-    enable_imap_write: "Enable two-way IMAP synchronization. If disabled, all write-operations on IMAP accounts are disabled."
-    enable_imap_idle: "Use IMAP IDLE mechanism to wait for new emails."
     enable_smtp: "Enable SMTP for sending notifications for group messages."
-
-    imap_polling_period_mins: "The period in minutes between checking the IMAP accounts for emails."
-    imap_polling_old_emails: "The maximum number of old emails (processed) to be updated every time an IMAP box is polled (0 for all)."
-    imap_polling_new_emails: "The maximum number of new emails (unprocessed) to be updated every time an IMAP box is polled ."
-    imap_batch_import_email: "The minimum number of new emails that trigger import mode (disables notifications for imported posts)."
 
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
@@ -2390,6 +2388,7 @@ en:
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
+    delete_all_posts_background_threshold: "The maximum number of posts that can be deleted at once with the Delete All Posts button before the deletion is processed in the background."
     delete_user_self_max_post_count: "The maximum number of posts a user can have while allowing self-service account deletion. Set to -1 to disable self-service account deletion."
     username_change_period: "The maximum number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
@@ -2748,9 +2747,12 @@ en:
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
     enable_upcoming_changes: "Enable upcoming changes"
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
+    floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
+    experimental_rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
+      invalid_datetime: "Invalid datetime format. Please ensure you've entered a valid date and time."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
@@ -3386,6 +3388,7 @@ en:
 
     post_hidden:
       title: "Post Hidden"
+      preview: "Post hidden due to flags by community members."
       subject_template: "Post hidden by community flags"
       text_body_template: |
         Hello,
@@ -3450,6 +3453,7 @@ en:
 
     post_hidden_again:
       title: "Post Hidden again"
+      preview: "Post hidden again by community members."
       subject_template: "Post hidden by community flags, staff notified"
       text_body_template: |
         Hello,
@@ -3544,6 +3548,7 @@ en:
 
     welcome_user:
       title: "Welcome User"
+      preview: "Welcome to %{site_name}!"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome!
@@ -3573,6 +3578,7 @@ en:
         With great power comes great responsibility. If you’re new to moderating, please refer to the [Moderation Guide](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Welcome Invite"
+      preview: "Welcome to %{site_name}!"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
         Thanks for accepting your invitation to %{site_name} -- welcome!
@@ -3981,6 +3987,7 @@ en:
 
     too_many_spam_flags:
       title: "Too Many Spam Flags"
+      preview: "Posts temporarily hidden due to spam flags."
       subject_template: "New account on hold"
       text_body_template: |
         Hello,
@@ -4003,6 +4010,7 @@ en:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Silenced by Staff"
+      preview: "Account temporarily placed on hold."
       subject_template: "Account temporarily on hold"
       text_body_template: |
         Hello,
@@ -4052,6 +4060,7 @@ en:
 
     unsilenced:
       title: "Unsilenced"
+      preview: "Account no longer on hold."
       subject_template: "Account no longer on hold"
       text_body_template: |
         Hello,
@@ -4095,6 +4104,12 @@ en:
 
         Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/review?type=ReviewableQueuedPost).
 
+    user_posts_deleted:
+      title: "User Posts Deleted"
+      subject_template: "All of %{user}'s posts have been deleted"
+      text_body_template: |
+        %{deleted_posts_count} posts from @%{user} have been deleted by @%{staff_user}.
+
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
@@ -4108,8 +4123,6 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -4226,6 +4239,7 @@ en:
 
     user_replied:
       title: "User Replied"
+      preview: "Someone replied to your post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4250,6 +4264,7 @@ en:
 
     user_quoted:
       title: "User Quoted"
+      preview: "Someone quoted you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4262,6 +4277,7 @@ en:
 
     user_linked:
       title: "User Linked"
+      preview: "Post linked in another topic."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4274,6 +4290,7 @@ en:
 
     user_mentioned:
       title: "User Mentioned"
+      preview: "Someone mentioned you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4334,6 +4351,7 @@ en:
 
     user_posted:
       title: "User Posted"
+      preview: "Someone replied to a topic you are Watching."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4370,6 +4388,7 @@ en:
 
     user_posted_pm:
       title: "User Posted PM"
+      preview: "Someone sent you a PM."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4496,6 +4515,7 @@ en:
 
     forgot_password:
       title: "Forgot Password"
+      preview: "Reset your password."
       subject_template: "[%{email_prefix}] Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
@@ -4507,6 +4527,7 @@ en:
 
     email_login:
       title: "Log in via link"
+      preview: "Log in via link."
       subject_template: "[%{email_prefix}] Log in via link"
       text_body_template: |
         Here's your link to log in at [%{site_name}](%{base_url}).
@@ -4518,6 +4539,7 @@ en:
 
     set_password:
       title: "Set Password"
+      preview: "Set account password."
       subject_template: "[%{email_prefix}] Set Password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
@@ -4529,6 +4551,7 @@ en:
 
     admin_login:
       title: "Admin Login"
+      preview: "Admin login requested."
       subject_template: "[%{email_prefix}] Login"
       text_body_template: |
         Somebody asked to log in to your account on [%{site_name}](%{base_url}).
@@ -4540,6 +4563,7 @@ en:
 
     account_created:
       title: "Account Created"
+      preview: "New account created for you."
       subject_template: "[%{email_prefix}] Your New Account"
       text_body_template: |
         A new account was created for you at %{site_name}
@@ -4593,6 +4617,7 @@ en:
 
     notify_old_email:
       title: "Notify Old Email"
+      preview: "Email address updated."
       subject_template: "[%{email_prefix}] Your email address has been changed"
       text_body_template: |
         This is an automated message to let you know that your email address for
@@ -4617,6 +4642,7 @@ en:
 
     signup_after_approval:
       title: "Signup After Approval"
+      preview: "New account approved."
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
         Welcome to %{site_name}!
@@ -4644,6 +4670,7 @@ en:
 
     signup:
       title: "Signup"
+      preview: "Confirm your account."
       subject_template: "[%{email_prefix}] Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
@@ -4668,6 +4695,7 @@ en:
 
     suspicious_login:
       title: "New Login Alert"
+      preview: "Verify your device."
       subject_template: "[%{site_name}] New Login from %{location}"
       text_body_template: |
         Hello,
@@ -5450,6 +5478,11 @@ en:
       one: "You must select at least %{count} tag."
       other: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    bulk_create:
+      invalid_params: "Invalid parameters. Please provide an array of tag names."
+      invalid_name: "Invalid tag name."
+      tag_too_long: "Tag is too long (max %{max} characters)."
+      too_many_tags: "Too many tags. You can create up to %{max} tags at once. For larger imports, use the CSV upload feature."
     forbidden:
       invalid:
         one: "The tag you selected cannot be used"
@@ -5477,6 +5510,9 @@ en:
 
   finish_installation:
     congratulations: "Congratulations, you installed Discourse!"
+    login_with_discourse_id: "Login with Discourse ID"
+    discourse_id_help: "Please log in with Discourse ID using the button below. <br/><br/>Make sure you use a Discourse ID account with a primary email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable."
+    discourse_id_error_help: "You have opted to skip setting up email for now. Unfortunately due to the error message above, the setup cannot continue. Please report this issue on <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Register"
       title: "Register Admin Account"
@@ -5488,6 +5524,10 @@ en:
     resend_email:
       title: "Resend Activation Email"
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
+    discourse_id:
+      help: "We are now setting up Discourse ID for you."
+      no_allowed_emails: "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup."
+      global_notice: "No admins have logged in yet. Please log in using a Discourse ID account with an email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable to complete the installation."
 
   safe_mode:
     title: "Enter safe mode"
@@ -5499,6 +5539,10 @@ en:
     deprecation_error_label: Make Javascript deprecations raise an error
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
+  dev_mode:
+    title: "Developer Mode"
+    enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
+    enter: "Enter"
   wizard:
     title: "Discourse Setup"
     step:
@@ -5612,8 +5656,6 @@ en:
     api_post_delete: "Deleted via API"
     reminder_deleted: "Replaced by new reminder"
     user_associated_posts_deleted: "User was destroyed"
-    imap_email_deleted: "Email has been deleted on the IMAP server"
-    imap_email_marked_as_spam: "Email has been moved to spam on the IMAP server"
     auto_deleted_hidden_posts: "Automatically destroyed hidden posts"
     seed_data_topic_updated: "Seed data topic updated"
     seed_data_topic_deleted: "Seed data topic deleted"

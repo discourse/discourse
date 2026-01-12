@@ -7,12 +7,17 @@
 ro:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Public"
       reports:
         reading_time:
           title: Durata citirii
         chat_usage:
           messages: mesaje
-          you: Tu
+          author: Tu
+          author_others: "%{username}"
           status_online: "● conectat"
         invites:
           title: Invitații

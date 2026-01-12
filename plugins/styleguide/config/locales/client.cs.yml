@@ -61,6 +61,8 @@ cs:
           title: "Složená navigace"
         categories_list:
           title: "Seznam kategorií"
+        topic_link:
+          title: "Odkaz na téma a stav"
         topic_list_item:
           title: "Položka seznamu témat"
         topic_statuses:
@@ -69,8 +71,6 @@ cs:
           title: "Seznam témat"
         basic_topic_list:
           title: "Seznam základních témat"
-        footer_message:
-          title: "Zpráva v zápatí"
         signup_cta:
           title: "CTA registrace"
         topic_timer_info:
@@ -85,6 +85,8 @@ cs:
           title: "Seznam příspěvků"
           empty_example: "<PostList /> prázdný stav"
           populated_example: "<PostList /> zaplněný stav"
+        post_oneboxes:
+          title: "Oneboxy příspěvků"
         topic_map:
           title: "Mapa tématu"
         site_header:

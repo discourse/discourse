@@ -757,8 +757,8 @@ da:
       short_description: "Bogmærk dette indlæg"
     like:
       title: "Like"
-      description: "Du 'Synes godt om' dette indlæg"
-      short_description: "Du 'synes godt om' dette indlæg"
+      description: "Synes godt om dette indlæg"
+      short_description: "Synes godt om dette indlæg"
   draft:
     sequence_conflict_error:
       title: "kladdefejl"
@@ -853,11 +853,10 @@ da:
       every_month: "hver måned"
       every_six_months: "hver sjette måned"
   user_api_key:
-    title: "Autoriser venligst at applikationen kan få adgang"
     authorize: "Autoriser"
+    deny: "Annuller"
     read: "læst"
     read_write: "læse/skrive"
-    description: '"%{application_name}" anmoder om følgende adgang til din konto:'
     instructions: 'Vi har netop genereret en ny bruger-API-nøgle, som du kan bruge med "%{application_name}", indsæt venligst følgende nøgle i din applikation:'
     otp_description: 'Vil du tillade at "%{application_name}" får adgang til dette websted?'
     otp_confirmation:
@@ -1212,7 +1211,7 @@ da:
     top_ignored_users:
       title: "Top Ignorerede / Tavse Brugere"
       labels:
-        ignored_user: Ignoreret Bruger
+        ignored_user: Ignoreret bruger
         mutes_count: Tavsheds tæller
       description: "Brugere, der er gjort tavse og/eller ignoreret af mange andre brugere."
     top_users_by_likes_received:
@@ -1943,6 +1942,7 @@ da:
         Gennemse vores [fællesskabs-retningslinjer](%{base_url}/guidelines) for detaljer.
     welcome_user:
       title: "Velkomst til bruger"
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
       text_body_template: |
         Tak for din tilmelding til %{site_name}, og velkommen!
@@ -1970,6 +1970,7 @@ da:
         Med stor magt kommer stort ansvar. Hvis du er ny til at moderere, henvises til [Moderationsvejledningen](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Velkomst til inviterede brugere"
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
       text_body_template: |
         Tak, fordi du accepterede din invitation til %{site_name} - velkommen!
@@ -2260,6 +2261,7 @@ da:
       title: "Spam-indlæg blokeret"
       subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"
     unsilenced:
+      preview: "Konto ikke længere sat på hold."
       subject_template: "Konto ikke længere sat på hold"
       text_body_template: |
         Hej,
@@ -2591,6 +2593,7 @@ da:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Log ind via link"
+      preview: "Log ind via link."
       subject_template: "[%{email_prefix}] Log ind via link"
       text_body_template: |
         Her er dit link til at logge ind på [%{site_name}](%{base_url}).

@@ -88,6 +88,8 @@ uk:
     ai_nsfw_flag_threshold_sexy: "Поріг для зображення, класифікованого як сексуальне, щоб вважатися NSFW."
     ai_nsfw_models: "Моделі для використання NSFW умов."
     ai_spam_detection_enabled: "Увімкнути модуль виявлення спаму зі штучним інтелектом"
+    ai_spam_detection_max_post_count: "Максимальна кількість публікацій, які може мати користувач, перш ніж його перестануть перевіряти на спам"
+    ai_spam_detection_max_trust_level: "Максимальний рівень довіри користувачів для сканування на спам"
     ai_openai_api_key: "Ключ API для OpenAI API. Використовується ТІЛЬКИ для створення та редагування зображень. Для GPT використовуйте вкладку конфігурації LLM."
     ai_openai_image_generation_url: "URL-адреса API генерації зображень OpenAI"
     ai_openai_image_edit_url: "URL-адреса для API редагування зображень OpenAI"
@@ -124,6 +126,7 @@ uk:
     ai_summary_gists_allowed_groups: "Групи, яким дозволено бачити суть у списку гарячих тем."
     ai_summary_backfill_maximum_topics_per_hour: "Кількість підсумків тем для заповнення на годину."
     ai_bot_enabled: "Увімкніть модуль AI Bot."
+    ai_bot_enabled_llms: "LLM доступні для вибору для бесід з AI-ботами"
     ai_bot_enable_chat_warning: "Відображати попередження, коли починається чат ПП. Можна змінити, відредагувавши рядок перекладу: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Коли GPT-бот отримає доступ до ПП, він відповідатиме членам цих груп."
     ai_bot_debugging_allowed_groups: "Дозвольте цим групам бачити кнопку налагодження в публікаціях, яка відображає необроблений запит і відповідь ШІ"
@@ -331,7 +334,7 @@ uk:
     ai_bot:
       reply_error: "Вибачте, схоже, наша система зіткнулася з несподіваною проблемою під час спроби відповісти.\n\n[details='Деталі помилки']\n%{details}\n[/details]"
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
-      thinking: "Думаю..."
+      thinking: "Мислення"
       personas:
         default_llm_required: "Перед увімкненням чату потрібно встановити модель LLM за замовчуванням"
         cannot_delete_system_persona: "Системні персони не можуть бути видалені, замість цього, будь ласка, вимкніть їх"
@@ -491,6 +494,10 @@ uk:
           base_query:
             name: "Базовий пошуковий запит"
             description: "Базовий запит для пошуку. Приклад: \"#urgent\" додасть \"#urgent\" до пошукового запиту і знайде лише теми з категорією або тегом \"терміново\"."
+        flag_post:
+          flag_type:
+            name: "Тип прапора"
+            description: "Контролює, чи буде повідомлення переглянуто, приховано, видалено або віднесено до спаму."
       tool_summary:
         read_artifact: "Читати артефакти"
         update_artifact: "Оновлення веб-артефакту"
@@ -499,9 +506,9 @@ uk:
         github_search_files: "Пошук файлів на GitHub"
         github_search_code: "Пошук коду на GitHub"
         github_file_content: "Вміст файлу GitHub"
-        github_pull_request_diff: "Порівняння змін GitHub pull request diff"
         random_picker: "Випадковий вибір"
         categories: "Список категорій"
+        flag_post: "Поскаржитися"
         search: "Пошук"
         tags: "Список тегів"
         time: "Час"
@@ -527,9 +534,9 @@ uk:
         github_search_code: "Пошук коду в репозиторії GitHub"
         github_search_files: "Пошук файлів у репозиторії GitHub"
         github_file_content: "Отримати вміст файлів з репозиторію GitHub"
-        github_pull_request_diff: "Отримати порівняння змін у запиті на GitHub"
         random_picker: "Виберіть випадкове число або випадковий елемент списку"
         categories: "Список усіх категорій для публічного перегляду на форумі"
+        flag_post: "Позначити поточну публікацію для перевірки персоналом"
         search: "Пошук у всіх публічних темах на форумі"
         tags: "Список всіх тегів на форумі"
         time: "Знайти час в різних часових поясах"
@@ -553,9 +560,10 @@ uk:
         web_browser: "Читання <a href='%{url}'>%{url}</a>"
         github_search_files: "Шукав «%{keywords}» в %{repo}/%{branch}"
         github_search_code: "Шукав '%{query}' у %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Отриманий вміст %{file_paths} з %{repo_name}@%{branch}"
         random_picker: "Вибір із %{options}, вибрано: %{result}"
+        flag_post: "Позначення допису %{post_id} (вердикт: %{verdict})"
         read: "Читання: <a href='%{url}'>%{title}</a>"
         time: "Час у %{timezone} %{time}"
         summarize: "Підсумок <a href='%{url}'>%{title}</a>"
@@ -609,6 +617,15 @@ uk:
         continue_conversation:
           title: "Розмова про відкриття: Пошук за запитом %{query}"
           raw: "У моєму пошуку %{query}ви показали мені таку інформацію:\n\n%{context}\n\nПродовжимо розмову."
+      flag_post:
+        errors:
+          no_context: "Контекст допису недоступний для позначення."
+          no_reason: "Для позначення публікації потрібна причина."
+          invalid_flag_type: "Невірний тип прапорця."
+        skipped: "Вердикт був помилковим, прапор не був створений."
+        already_flagged: "Допис вже позначений для перегляду."
+        flagged: "Публікацію позначено для перевірки."
+        reason: "Штучний інтелект позначив цю публікацію.\n\nПричина: %{reason}"
     summarization:
       configuration_hint:
         one: "Спочатку налаштуйте параметр `%{setting}`."

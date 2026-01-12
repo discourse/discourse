@@ -7,12 +7,17 @@
 ur:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "نجی"
+          public: "عوامی"
       reports:
         reading_time:
           title: پڑھنے کیلئے وقت
         chat_usage:
           messages: پیغامات
-          you: آپ
+          author: آپ
+          author_others: "%{username}"
           status_online: "● آن لائن"
         invites:
           title: دعوتیں

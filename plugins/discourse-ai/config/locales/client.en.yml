@@ -230,6 +230,7 @@ en:
         short_title: "Features"
         description: "These are the AI features available to visitors on your site. These can be configured to use specific personas and LLMs, and can be access controlled by groups."
         back: "Back"
+        settings_save_error: "Some settings could not be saved."
         disabled: "(disabled)"
         persona:
           one: "Persona:"
@@ -241,7 +242,7 @@ en:
         no_llm: "No LLM selected"
         no_persona: "Not set"
         no_groups: "None"
-        edit: "Edit"
+        edit: "Settings"
         expand_list:
           one: "(%{count} more)"
           other: "(%{count} more)"
@@ -250,6 +251,11 @@ en:
           bot: "Chatbot"
           name: "Bot"
           description: "A chat bot that can answer questions and assist users in personal messages, forum and in chat"
+          setting_groups:
+            settings: "Basic Settings"
+            access_control: "Access Control"
+            ui_settings: "UI Settings"
+            integrations: "Integrations"
         nav:
           configured: "Configured"
           unconfigured: "Unconfigured"
@@ -266,24 +272,42 @@ en:
           description: "Makes a summarization button available that allows visitors to summarize topics"
           topic_summaries: "Topic summaries"
           gists: "Topic list's short summaries"
+          setting_groups:
+            settings: "Basic Settings"
+            gists: "Gists"
+            backfill: "Backfill"
         search:
           name: "Search"
           description: "Enhances search experience by providing AI-generated answers to queries"
           discoveries: "Discoveries"
+          setting_groups:
+            settings: "Basic Settings"
         embeddings:
           name: "Embeddings"
           description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
           hyde: "HyDE"
+          setting_groups:
+            model_settings: "Model Settings"
+            related_topics: "Related Topics"
+            semantic_search: "Semantic Search"
         discord:
           name: "Discord integration"
           description: "Adds the ability to search Discord channels"
           search: "Discord search"
+          setting_groups:
+            settings: "Basic Settings"
+            discord_configuration: "Discord Configuration"
         inference:
           name: "Inferred concepts"
           description: "Classifies topics and posts into areas of interest / labels."
           generate_concepts: "Concepts inference"
           match_concepts: "Concepts matching"
           deduplicate_concepts: "Concepts deduplication"
+          setting_groups:
+            settings: "Basic Settings"
+            topic_criteria: "Topic Criteria"
+            post_criteria: "Post Criteria"
+            personas: "Personas"
 
         ai_helper:
           name: "Helper"
@@ -299,6 +323,11 @@ en:
           image_caption: "Caption images"
           translator: "Translator"
           post_illustrator: "Post illustrator"
+          setting_groups:
+            access_permissions: "Access & Permissions"
+            enabled_features: "Enabled Features"
+            automation: "Automation"
+            personas: "Personas"
 
         translation:
           name: "Translation"
@@ -312,6 +341,10 @@ en:
             one: "Scheduled translation for %{count} untranslated post."
             other: "Scheduled translation for %{count} untranslated posts."
           schedule_topic_error: "Failed to schedule translations. Please try again."
+          setting_groups:
+            settings: "Basic Settings"
+            personas: "Personas"
+            backfill_and_limits: "Backfill & Limits"
 
         spam:
           name: "Spam"
@@ -645,7 +678,6 @@ en:
         max_output_tokens: "Max output tokens"
         url: "URL of the service hosting the model"
         api_key: "API Key of the service hosting the model"
-        enabled_chat_bot: "Allow AI bot selector"
         vision_enabled: "Vision enabled"
         allowed_attachment_types: "Allowed attachments"
         attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, docx)"
@@ -750,7 +782,6 @@ en:
           name: "We include this in the API call to specify which model we'll use"
           vision_enabled: "If enabled, the AI will attempt to understand images. It depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI."
           allowed_attachment_types: "Choose which attachment types are forwarded to the model. Leave blank to disallow attachments. Images are controlled via vision."
-          enabled_chat_bot: "If enabled, users can select this model when creating PMs with the AI bot"
           cost_input: "The input cost per 1M tokens for this model"
           cost_cached_input: "The cached input cost per 1M tokens for this model (when reading from prompt cache)"
           cost_cache_write: "The cache write cost per 1M tokens for this model (when writing to prompt cache)"

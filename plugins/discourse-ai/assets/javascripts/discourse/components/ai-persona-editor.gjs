@@ -22,6 +22,7 @@ import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { gt, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiPersonaResponseFormatEditor from "../components/modal/ai-persona-response-format-editor";
+import { toPlainObject } from "../lib/utilities";
 import AiLlmSelector from "./ai-llm-selector";
 import AiPersonaCollapsableExample from "./ai-persona-example";
 import AiPersonaToolOptions from "./ai-persona-tool-options";
@@ -196,7 +197,10 @@ export default class PersonaEditor extends Component {
 
   @action
   updateUploads(form, newUploads) {
-    form.set("rag_uploads", newUploads);
+    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
+    // Convert to plain objects to ensure compatibility.
+    const plainUploads = toPlainObject(newUploads);
+    form.set("rag_uploads", plainUploads);
   }
 
   @action

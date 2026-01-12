@@ -419,8 +419,8 @@ module DiscourseTagging
   def self.filter_allowed_tags(guardian, opts = {})
     selected_tag_ids = opts[:selected_tags] ? Tag.where_name(opts[:selected_tags]).pluck(:id) : []
     category = opts[:category]
-    category_has_restricted_tags =
-      category ? (category.tags.count > 0 || category.tag_groups.count > 0) : false
+    category_has_tag_groups = category && category.tag_groups.count > 0
+    category_has_restricted_tags = category_has_tag_groups || (category && category.tags.count > 0)
 
     # If guardian is nil, it means the caller doesn't want tags to be filtered
     # based on guardian rules. Use the same rules as for staff users.
@@ -562,12 +562,21 @@ module DiscourseTagging
     end
 
     if builder_params[:selected_tag_ids] && (opts[:for_input] || opts[:for_topic])
-      one_tag_per_group_ids = DB.query(<<~SQL, builder_params[:selected_tag_ids]).map(&:id)
+      one_tag_per_group_sql = +<<~SQL
         SELECT DISTINCT(tg.id)
           FROM tag_groups tg
         INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id AND tgm.tag_id IN (?)
          WHERE tg.one_per_topic
       SQL
+
+      query_params = [builder_params[:selected_tag_ids]]
+
+      if category_has_tag_groups
+        one_tag_per_group_sql << "AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = ?)"
+        query_params << category.id
+      end
+
+      one_tag_per_group_ids = DB.query(one_tag_per_group_sql, *query_params).map(&:id)
 
       if one_tag_per_group_ids.present?
         builder.where(

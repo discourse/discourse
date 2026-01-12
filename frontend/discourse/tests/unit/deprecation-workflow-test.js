@@ -97,10 +97,20 @@ module("Unit | deprecation-workflow", function (hooks) {
         "throws if both log and silence are present"
       );
 
+      // both notify-admin and silence together throws
+      assert.throws(
+        () =>
+          new DiscourseDeprecationWorkflow([
+            { handler: ["notify-admin", "silence"], matchId: "four" },
+          ]),
+        /must not include both `notify-admin` and `silence`/,
+        "throws if both notify-admin and silence are present"
+      );
+
       // empty handler array is allowed (defaults to []), should still match for counting/silence checks
-      const wf2 = new DiscourseDeprecationWorkflow([{ matchId: "four" }]);
+      const wf2 = new DiscourseDeprecationWorkflow([{ matchId: "five" }]);
       assert.true(
-        wf2.shouldCount("four"),
+        wf2.shouldCount("five"),
         "empty handler is accepted and should count"
       );
     });
@@ -261,8 +271,8 @@ module("Unit | deprecation-workflow", function (hooks) {
       const wf = new DiscourseDeprecationWorkflow([
         { handler: "log", matchId: "a" },
         { handler: "silence", matchId: "b" },
-        { handler: "counter", matchId: "c" }, // no log -> false
-        { handler: ["silence", "counter"], matchId: "d" }, // still no log -> false
+        { handler: "count", matchId: "c" }, // no log -> false
+        { handler: ["silence", "count"], matchId: "d" }, // still no log -> false
       ]);
 
       assert.true(
@@ -271,40 +281,61 @@ module("Unit | deprecation-workflow", function (hooks) {
       );
       assert.true(wf.shouldLog("a"), "handler with log should log");
       assert.false(wf.shouldLog("b"), "silence handler should not log");
-      assert.false(wf.shouldLog("c"), "counter-only should not log");
-      assert.false(wf.shouldLog("d"), "silence+counter should not log");
+      assert.false(wf.shouldLog("c"), "count-only should not log");
+      assert.false(wf.shouldLog("d"), "silence+count should not log");
     });
 
     test("shouldSilence reflects presence of silence handler", function (assert) {
       const wf = new DiscourseDeprecationWorkflow([
         { handler: "silence", matchId: "s1" },
-        { handler: ["silence", "counter"], matchId: "s2" },
+        { handler: ["silence", "count"], matchId: "s2" },
         { handler: "log", matchId: "l" },
-        { handler: "counter", matchId: "c" },
+        { handler: "count", matchId: "c" },
       ]);
 
       assert.true(wf.shouldSilence("s1"), "silence -> true");
-      assert.true(wf.shouldSilence("s2"), "silence+counter -> true");
+      assert.true(wf.shouldSilence("s2"), "silence+count -> true");
       assert.false(wf.shouldSilence("l"), "log -> false");
-      assert.false(wf.shouldSilence("c"), "counter -> false");
+      assert.false(wf.shouldSilence("c"), "count -> false");
       assert.false(wf.shouldSilence("unhandled"), "unhandled -> false");
     });
 
-    test("shouldCount defaults to true and is true with counter even if silenced", function (assert) {
+    test("shouldCount defaults to true and is true with count even if silenced", function (assert) {
       const wf = new DiscourseDeprecationWorkflow([
         { handler: "silence", matchId: "s" },
-        { handler: "counter", matchId: "c" },
-        { handler: ["silence", "counter"], matchId: "sc" },
+        { handler: "count", matchId: "c" },
+        { handler: ["silence", "count"], matchId: "sc" },
         { handler: "log", matchId: "l" },
         { handler: [], matchId: "empty" },
       ]);
 
       assert.true(wf.shouldCount("unhandled"), "unhandled -> count");
       assert.false(wf.shouldCount("s"), "silence -> do not count");
-      assert.true(wf.shouldCount("c"), "counter -> count");
-      assert.true(wf.shouldCount("sc"), "silence+counter -> count");
+      assert.true(wf.shouldCount("c"), "count -> count");
+      assert.true(wf.shouldCount("sc"), "silence+count -> count");
       assert.true(wf.shouldCount("l"), "log only -> count");
       assert.true(wf.shouldCount("empty"), "empty handler -> count");
+    });
+
+    test("shouldCount respects dont-count handler", function (assert) {
+      const wf = new DiscourseDeprecationWorkflow([
+        { handler: "dont-count", matchId: "dc" },
+        { handler: ["log", "dont-count"], matchId: "ldc" },
+        { handler: ["count", "dont-count"], matchId: "cdc" },
+        { handler: "log", matchId: "l" },
+      ]);
+
+      assert.false(
+        wf.shouldCount("dc"),
+        "dont-count handler prevents counting"
+      );
+      assert.false(
+        wf.shouldCount("ldc"),
+        "dont-count with log still prevents counting"
+      );
+      assert.false(wf.shouldCount("cdc"), "dont-count overrides count handler");
+      assert.true(wf.shouldCount("l"), "log only should count");
+      assert.true(wf.shouldCount("unhandled"), "unhandled should count");
     });
 
     test("shouldThrow handles throw and includeUnsilenced", function (assert) {
@@ -348,23 +379,72 @@ module("Unit | deprecation-workflow", function (hooks) {
         "unhandled without includeUnsilenced -> false"
       );
     });
+
+    test("shouldThrow respects dont-throw handler", function (assert) {
+      const wf = new DiscourseDeprecationWorkflow([
+        { handler: "dont-throw", matchId: "dt" },
+        { handler: ["throw", "dont-throw"], matchId: "tdt" },
+        { handler: ["log", "dont-throw"], matchId: "ldt" },
+        { handler: "throw", matchId: "t" },
+      ]);
+
+      assert.false(
+        wf.shouldThrow("dt"),
+        "dont-throw handler prevents throwing"
+      );
+      assert.false(wf.shouldThrow("tdt"), "dont-throw overrides throw handler");
+      assert.false(
+        wf.shouldThrow("ldt"),
+        "dont-throw with log prevents throwing"
+      );
+      assert.true(wf.shouldThrow("t"), "throw handler should throw");
+
+      assert.false(
+        wf.shouldThrow("dt", true),
+        "dont-throw prevents throwing even with includeUnsilenced"
+      );
+      assert.false(
+        wf.shouldThrow("tdt", true),
+        "dont-throw overrides throw even with includeUnsilenced"
+      );
+      assert.false(
+        wf.shouldThrow("ldt", true),
+        "dont-throw with log prevents throwing even with includeUnsilenced"
+      );
+    });
+
+    test("shouldNotifyAdmin reflects presence of notify-admin handler", function (assert) {
+      const wf = new DiscourseDeprecationWorkflow([
+        { handler: "notify-admin", matchId: "na1" },
+        { handler: ["notify-admin", "count"], matchId: "na2" },
+        { handler: "log", matchId: "l" },
+        { handler: "silence", matchId: "s" },
+      ]);
+
+      assert.true(wf.shouldNotifyAdmin("na1"), "notify-admin handler -> true");
+      assert.true(wf.shouldNotifyAdmin("na2"), "notify-admin + count -> true");
+      assert.false(wf.shouldNotifyAdmin("l"), "log handler -> false");
+      assert.false(wf.shouldNotifyAdmin("s"), "silence handler -> false");
+      assert.false(wf.shouldNotifyAdmin("unhandled"), "unhandled -> false");
+    });
   });
 
   test("emberWorkflowList flattens handlers and filters to Ember CLI-compatible ones", function (assert) {
     const wf = new DiscourseDeprecationWorkflow([
-      { handler: ["silence", "counter"], matchId: "x" },
+      { handler: ["silence", "count"], matchId: "x" },
       { handler: ["log", "throw"], matchId: "y" },
+      { handler: ["silence", "dont-throw", "dont-count"], matchId: "z" },
     ]);
 
     const flattened = wf.emberWorkflowList
       .map((w) => `${w.matchId}:${w.handler}`)
       .sort();
 
-    // "counter" is not included in Ember CLI workflow output; others are
+    // "count", "dont-throw", "dont-count" are not included in Ember CLI workflow output; only Ember CLI handlers are
     assert.deepEqual(
       flattened,
-      ["x:silence", "y:log", "y:throw"].sort(),
-      "outputs one entry per allowed handler and excludes counter"
+      ["x:silence", "y:log", "y:throw", "z:silence"].sort(),
+      "outputs one entry per allowed handler and excludes count, dont-throw, and dont-count"
     );
   });
 });

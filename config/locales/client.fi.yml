@@ -158,7 +158,7 @@ fi:
       el:
         name: Kreikka
       en:
-        name: Englanti (Yhdysvallat)
+        name: Englanti
       en_GB:
         name: Englanti (Britannia)
       es:
@@ -1339,6 +1339,9 @@ fi:
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
+      upcoming_changes:
+        for_user:
+          enabled: "Otettu käyttöön?"
       user_notifications:
         filters:
           filter_by: "Suodata"
@@ -2799,6 +2802,8 @@ fi:
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Luettelokohde"
       toggle_direction: "Vaihda suuntaa"
+      wrap_modal:
+        apply: "Käytä"
       help: "Markdown-muokkausohje"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
       modal_ok: "OK"
@@ -3278,19 +3283,6 @@ fi:
           unread: "Mitään ei ole lukematta... vaikuttavaa!"
           new_new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
           new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
-      bottom:
-        latest: "Tuoreimpia ketjuja ei ole enempää."
-        posted: "Ketjuja, joihin olet kirjoittanut, ei ole enempää."
-        read: "Luettuja ketjuja ei ole enempää."
-        new: "Uusia ketjuja ei ole enempää."
-        unread: "Ketjuja ei ole enempää lukematta."
-        unseen: "Näkemättömiä ketjuja ei ole enempää."
-        category: "Alueen %{category} ketjuja ei ole enempää."
-        tag: "Tunnisteella %{tag} merkittyjä ketjuja ei ole enempää."
-        top: "Suosittuja ketjuja ei ole enempää."
-        hot: "Suosittuja ketjuja ei ole enempää."
-        bookmarks: "Kirjanmerkkeihin lisättyjä ketjuja ei ole enempää."
-        filter: "Ketjuja ei ole enempää."
     topic_bulk_actions:
       dismiss:
         name: "Selvä"
@@ -3418,9 +3410,6 @@ fi:
         other: "%{count} vastausta, siirry ensimmäiseen viestiin"
       created_at: "Luotu: %{date}"
       bumped_at: "Viimeisin: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a>, <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a> tai katso suosituimmat:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Selaa kaikkia tunnisteita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
       browse_latest_topics: "Selaa uusimpia ketjuja"
       suggest_create_topic: Valmiina <a href>aloittamaan uuden keskustelun?</a>
       jump_reply: "Siirry viestin alkuperäiseen sijaintiin"
@@ -4460,6 +4449,7 @@ fi:
         this_month: "Kuukausi"
         this_week: "Viikko"
         today: "Tänään"
+        custom: "Mukautettu"
     custom_homepage:
       admin_message: 'Yksi teemoistasi on ottanut käyttöön "custom_homepage"-muuntimen, mutta se ei tuota mitään [custom-homepage]-liittimessä. (Tämä viesti näytetään vain sivuston ylläpitäjille.)'
     browser_update: 'Valitettavasti <a href="https://discourse.org/about#browser">selaintasi ei tueta</a>. <a href="https://browsehappy.com">Vaihda tuettuun selaimeen</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
@@ -4693,6 +4683,7 @@ fi:
       upload_description: "Luo iso joukko tunnisteita kerralla lataamalla CSV-tiedosto"
       upload_instructions: "Yksi per rivi, valinnaisesti tunnisteryhmän kanssa muodossa \"tunnisteen_nimi,tunnisteen_ryhmä\"."
       upload_successful: "Tunnisteiden lataaminen onnistui"
+      bulk_create_button: "Luo"
       delete_unused_confirmation:
         one: "%{count} tunniste poistetaan: %{tags}"
         other: "%{count} tunnistetta poistetaan: %{tags}"
@@ -4843,7 +4834,6 @@ fi:
       tags_form_modal:
         title: "Muokkaa tunnisteiden navigointia"
         filter_placeholder: "Suodata tunnisteita"
-        no_tags: "Annettua termiä vastaavia tunnisteita ei ole."
         subtitle:
           text: "ja näytämme automaattisesti tämän sivuston suosituimmat tunnisteet"
       edit_navigation_modal_form:
@@ -5367,6 +5357,8 @@ fi:
               options:
                 above_topic_content: "Ketjun sisällön yläpuolella"
                 below_site_header: "Sivuston yläpalkin alapuolella"
+            text_section:
+              locale_label: "Kieli"
             header_logged_in:
               placeholder: "Tervetuloa takaisin, %{preferred_display_name}!"
             header_anonymous:
@@ -7431,7 +7423,6 @@ fi:
           button: "Poista kaikki viestit"
           progress:
             title: "Viestien poistamisen eteneminen"
-            description: "Poistetaan viestejä…"
           confirmation:
             title: "Poista kaikki käyttäjän @%{username} viestit"
             description: |
@@ -7750,16 +7741,12 @@ fi:
             prompt: "Tämän asetuksen muuttamisella voi olla merkittäviä tai tahattomia seurauksia sivustollesi. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, olen varma"
           min_password_length:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           min_admin_password_length:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin ylläpitäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           password_unique_charactes:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           block_common_passwords:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
       badges:
         status: Tila
@@ -7794,6 +7781,9 @@ fi:
         no_user_badges: "%{name} ei ole saanut yhtään kunniamerkkiä."
         no_badges: Myönnettäviä kunniamerkkejä ei ole.
         none_selected: "Aloita valitsemalla kunniamerkki"
+        sections:
+          query: Kysely
+          settings: Asetukset
         usage_heading: Käyttö
         allow_title: Salli kunniamerkin käyttäminen tittelinä
         multiple_grant: Voidaan myöntää useita kertoja

@@ -6,6 +6,10 @@
 
 pl_PL:
   js:
+    carousel:
+      go_to_slide: "Przejdź do slajdu %{index}"
+      previous: "Poprzedni slajd"
+      next: "Następny slajd"
     number:
       format:
         separator: ","
@@ -214,7 +218,7 @@ pl_PL:
       el:
         name: grecki
       en:
-        name: angielski (USA)
+        name: angielski
       en_GB:
         name: angielski (Wielka Brytania)
       es:
@@ -1220,6 +1224,7 @@ pl_PL:
           title: Interakcja
           posting: Wysyłanie
           notification: Powiadomienie
+          self_lockout: "Zamierzasz zmienić widoczność grupy w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
         email:
           title: "E-mail"
           status: "Zsynchronizowane %{old_emails} / %{total_emails} wiadomości e-mail za pośrednictwem IMAP."
@@ -1368,6 +1373,8 @@ pl_PL:
         make_owner_description: "Uczyń <b>%{username}</b> właścicielem tej grupy"
         remove_owner: "Usuń z funkcji właściciela"
         remove_owner_description: "Usuń <b>%{username}</b> z funkcji właściciela tej grupy"
+        remove_member_self_lockout: "Usunięcie się z tej grupy spowoduje cofnięcie dostępu do zarządzania nią. Czy na pewno chcesz kontynuować?"
+        remove_owner_self_lockout: "Usunięcie siebie jako właściciela spowoduje cofnięcie dostępu do zarządzania tą grupą. Czy na pewno chcesz kontynuować?"
         make_primary: "Ustaw jako podstawowe"
         make_primary_description: "Ustaw tę grupę jako podstawową dla <b>%{username}</b>"
         remove_primary: "Usuń jako podstawowy"
@@ -1560,7 +1567,16 @@ pl_PL:
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
       upcoming_changes:
-        title: "Nadchodząca zmiana włączona"
+        title: "Nadchodzące zmiany"
+        for_user:
+          upcoming_change: "Nadchodząca zmiana"
+          enabled: "Włączona?"
+          why: "Dlaczego?"
+        why_reasons:
+          not_in_specific_groups: "Użytkownik nie należy do konkretnych grup wymaganych do tej zmiany"
+          in_specific_groups: "Użytkownik należy do określonych grup wymaganych do tej zmiany"
+          enabled_for_everyone: "Ta zmiana jest dostępna dla wszystkich członków"
+          enabled_for_no_one: "Ta zmiana jest wyłączona dla wszystkich członków"
       user_notifications:
         filters:
           filter_by: "Filtruj według"
@@ -1916,7 +1932,8 @@ pl_PL:
         tags: "Tagi"
         interface: "Interfejs"
         apps: "Aplikacje"
-        navigation_menu: "Menu nawigacji"
+        navigation_menu: "Menu nawigacyjne"
+        upcoming_changes: "Nadchodzące zmiany"
       change_password:
         success: "(e-mail wysłany)"
         in_progress: "(e-mail wysyłany)"
@@ -3158,6 +3175,17 @@ pl_PL:
       ulist_title: "Lista wypunktowana"
       list_item: "Element listy"
       toggle_direction: "Przełącz kierunek"
+      apply_wrap_title: "Zastosuj zawijanie"
+      wrap_modal:
+        title: "Edytuj zawijanie"
+        name_label: "Zawiń nazwę"
+        attributes_label: "Atrybuty"
+        add_attribute: "Dodaj atrybut"
+        remove_attribute: "Usuń atrybut"
+        apply: "Zastosuj"
+        unwrap: "Rozwiń"
+        no_attributes: "Nie dodano jeszcze żadnych atrybutów."
+      wrap_text: "Zawijaj zawartość"
       help: "Pomoc formatowania Markdown"
       collapse: "Zminimalizuj panel kompozytora"
       open: "Otwórz panel kompozytora"
@@ -3229,6 +3257,10 @@ pl_PL:
         move_outside_grid: "Przenieś poza siatkę"
       image: "obraz"
       grid_label: "Będzie to wyświetlane jako siatka"
+      grid_mode_grid: "Siatka"
+      grid_mode_carousel: "Karuzela"
+      grid_mode_title: "Ustaw styl galerii obrazów na %{mode}"
+      remove_grid: "Usuń siatkę"
       image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
       toggle_image_grid: Przełącz siatkę obrazu
@@ -3486,6 +3518,7 @@ pl_PL:
           aria_label: Filtruj za pomocą tagów
         filters:
           label: Zwracaj tylko tematy/wpisy…
+          all: Dołącz wiadomości
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w
@@ -3717,7 +3750,7 @@ pl_PL:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
         new: "Nie masz nowych tematów."
-        read: "You haven't read any topics yet."
+        read: "Nie przeczytałeś jeszcze żadnego tematu."
         posted: "Jeszcze nie zamieściłeś/łaś wpisu w żadnym z tematów."
         latest: "Jesteś na biężąco!"
         bookmarks: "Nie posiadasz tematów dodanych do zakładek."
@@ -3730,19 +3763,6 @@ pl_PL:
           unread: "Nic nie zostało do przeczytania. Imponujące!"
           new_new: "Na razie nic nowego. Sprawdź wkrótce!"
           new: "Na razie nic nowego. Sprawdź wkrótce!"
-      bottom:
-        latest: "Nie ma więcej najnowszych tematów."
-        posted: "Nie ma więcej tematów w których pisałeś."
-        read: "Nie ma więcej przeczytanych tematów."
-        new: "Nie ma więcej nowych tematów."
-        unread: "Nie ma więcej nieprzeczytanych tematów."
-        unseen: "Nie ma już więcej niewidzianych tematów."
-        category: "Nie ma więcej tematów w kategorii %{category}."
-        tag: "Nie ma więcej tematów z %{tag}."
-        top: "Nie ma już więcej najlepszych tematów."
-        hot: "Nie ma już gorących tematów."
-        bookmarks: "Nie ma więcej zakładek."
-        filter: "Nie ma więcej tematów."
     topic_bulk_actions:
       dismiss:
         name: "Odrzuć"
@@ -3833,7 +3853,7 @@ pl_PL:
         few: "temat zawiera %{count} lajki"
         many: "temat zawiera %{count} lajków"
         other: "temat zawiera %{count} polubień"
-      back_to_list: "Wróć do Listy Tematów"
+      back_to_list: "Powrót do listy tematów"
       options: "Opcje tematu"
       show_links: "pokaż odnośniki z tego tematu"
       collapse_details: "zwiń szczegóły tematu"
@@ -3890,9 +3910,6 @@ pl_PL:
         other: "%{count} odpowiedzi, przejdź do pierwszego posta"
       created_at: "Utworzono: %{date}"
       bumped_at: "Ostatnie: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a> lub <a href='%{basePath}/latest'>przeglądaj najnowsze tematy</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Przeglądaj wszystkie tagi</a> lub <a href='%{basePath}/latest'>zobacz najnowsze tematy</a>."
       browse_latest_topics: "Przeglądaj najnowsze tematy"
       browse_new_replies: "Przeglądaj nowe odpowiedzi"
       browse_new_topics: "Przeglądaj nowe tematy"
@@ -3955,6 +3972,8 @@ pl_PL:
         title: "Automatycznie zamknij temat po ostatnim poście"
       auto_delete:
         title: "Automatycznie usuń temat"
+      auto_delete_after_last_post:
+        title: "Automatycznie usuń temat po ostatnim wpisie"
       auto_bump:
         title: "Automatycznie podbij temat"
       reminder:
@@ -3966,6 +3985,7 @@ pl_PL:
         auto_close: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
         auto_publish_to_category: "Wątek zostanie opublikowany w <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_after_last_post: "Ten watek zostanie automatycznie zamknięty po %{duration} od ostatniej odpowiedzi."
+        auto_delete_after_last_post: "Ten temat zostanie usunięty %{duration} po ostatniej odpowiedzi."
         auto_delete: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
         auto_bump: "Ten temat zostanie automatycznie podbity %{timeLeft}."
         auto_reminder: "Otrzymasz przypomnienie o tym temacie %{timeLeft}."
@@ -4272,9 +4292,10 @@ pl_PL:
       deleted_by_author_simple: "(temat usunięty przez autora)"
       localizations:
         title_edit_warning:
-          message: "To jest przetłumaczony wpis.<br><br>Czy chcesz edytować oryginalny wpis w języku %{language} czy edytować to konkretne tłumaczenie?"
-          action_original: "Edytuj oryginalny tytuł tematu"
+          message: "To jest przetłumaczony tytuł tematu.<br><br>Czy chcesz edytować <b>oryginalną</b> kategorię, tagi i tytuł w %{language} lub edytować to konkretne <b>tłumaczenie</b>?"
+          action_original: "Edytuj oryginał"
           action_translation: "Edytuj przetłumaczony tytuł tematu"
+        editing_translation: "Edycja tłumaczenia %{language}"
     post_list:
       title: "Aktualne wpisy"
       empty: "Brak wpisów"
@@ -4673,6 +4694,8 @@ pl_PL:
       slug_placeholder: "(opcjonalne) słowa-z-myślnikiem dla URLi"
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
+      errors:
+        self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"
@@ -5084,6 +5107,7 @@ pl_PL:
         this_month: "Miesiąc"
         this_week: "Tydzień"
         today: "Dzisiaj"
+        custom: "Niestandardowy"
     custom_homepage:
       admin_message: 'Jeden z Twoich motywów włączył modyfikator „custom_homepage”, ale nie wyświetla on niczego w łączniku [custom-homepage]. (Ta wiadomość jest wyświetlana tylko administratorom strony.)'
     browser_update: 'Niestety, <a href="https://discourse.org/about#browser">Twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby wyświetlać pełną zawartość, zalogować się i odpowiedzieć.'
@@ -5350,6 +5374,19 @@ pl_PL:
       upload_description: "Wczytaj plik .csv, by utworzyć wiele tagów naraz"
       upload_instructions: "Jeden na linię, opcjonalnie z grupą tagu, w formacie \"nazwa_tagu,grupa_tagu\"."
       upload_successful: "Tagi wgrane "
+      bulk_create_inline_placeholder: "Utwórz tagi (rozdzielone przecinkami)"
+      bulk_create_button: "Utwórz"
+      bulk_create_success:
+        one: "Utworzono %{count} tag:"
+        few: "Utworzono %{count} tagi:"
+        many: "Utworzono %{count} tagów:"
+        other: "Utworzono %{count} tagów:"
+      bulk_create_already_exist:
+        one: "%{count} tag już istnieje:"
+        few: "%{count} tagi już istnieją:"
+        many: "%{count} tagów już istnieje:"
+        other: "%{count} tagów  już istnieje:"
+      bulk_create_some_failed: "Nie udało się utworzyć niektórych tagów:"
       delete_unused_confirmation:
         one: "%{count} tag zostanie usunięty: %{tags}"
         few: "%{count} tagi zostaną usunięte: %{tags}"
@@ -5514,7 +5551,7 @@ pl_PL:
       tags_form_modal:
         title: "Edytuj nawigację tagów"
         filter_placeholder: "Filtruj tagi"
-        no_tags: "Brak tagów pasujących do podanego terminu."
+        no_tags: "Brak tagów pasujących do bieżących filtrów."
         subtitle:
           text: "a my automatycznie pokażemy najlepsze tagi tej witryny"
       edit_navigation_modal_form:
@@ -5867,6 +5904,8 @@ pl_PL:
       toggle_localized:
         translated: "Strona jest tłumaczona maszynowo. Kliknij, aby wyświetlić oryginał."
         not_translated: "Strona nie jest przetłumaczona. Kliknij, aby przetłumaczyć."
+    language_switcher:
+      title: "Zmień język witryny"
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
@@ -6139,15 +6178,18 @@ pl_PL:
                 below_site_header: "Poniżej nagłówka witryny"
             text_section:
               title: "Tekst do dostosowania"
-              variables: "Możesz używać tych zmiennych w swoim tekście: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Język"
             header_new_members:
               label: "Nagłówek dla nowych członków"
-              placeholder: "Witaj w %{site_name}, %{preferred_display_name}!"
+              description: "Dostępna zmienna: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Witaj, %{preferred_display_name}!"
             header_logged_in:
               label: "Nagłówek dla zalogowanych członków"
+              description: "Dostępna zmienna: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Witaj z powrotem, %{preferred_display_name}!"
             header_anonymous:
               label: "Nagłówek dla anonimowych gości"
+              description: "Dostępna zmienna: <code>&percnt;{site_name}</code>"
               placeholder: "Witaj na %{site_name}!"
             subheader_logged_in:
               label: "Podtytuł dla zalogowanych członków"
@@ -6704,6 +6746,7 @@ pl_PL:
               recover: Odzyskaj temat.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               status: "Zaktualizuj status tematu. Status: zamknięty, archiwalny, widoczny, przypięty. Włączone: prawda, fałsz. Określ identyfikator category_id tutaj i w żądaniu payload, aby zezwalać na zmiany statusu tylko w tematach z tej kategorii."
+              change_owner: Zmień właściciela wpisów tematu.
             posts:
               edit: Edytuj dowolny post lub konkretny.
               delete: Usuń wpis.
@@ -8230,6 +8273,21 @@ pl_PL:
         penalty_post_actions: "Co chcesz zrobić z powiązanym wpisem?"
         penalty_post_delete: "Usuń ten wpis"
         penalty_post_delete_replies: "Usuń wpis + wszelkie odpowiedzi"
+        penalty_post_delete_all: "Usuń wszystkie tematy użytkownika + wszystkie odpowiedzi"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>To usunie
+          { TOPICS, plural,
+              one {# temat}
+              few {# tematy}
+              many {# tematów}
+            other {# tematów}
+          } i
+          { REPLIES, plural,
+              one {# odpowiedź}
+              few {# odpowiedzi}
+              many {# odpowiedzi}
+            other {# odpowiedzi}
+          }. <b>Tego nie można cofnąć!</b> Czy na pewno chcesz to zrobić?</span>
         penalty_post_edit: "Edytuj wpis"
         penalty_post_none: "Nic nie rób"
         penalty_count: "Liczba Przewinień"
@@ -8287,6 +8345,11 @@ pl_PL:
         approve_bulk_success: "Sukces! Wszyscy wybrani użytkownicy zostali zatwierdzeni i powiadomieni."
         time_read: "Czas czytania"
         post_edits_count: "Edycje wpisu"
+        upcoming_changes:
+          title: "Nadchodzące zmiany użytkownika"
+          description: "Aby zmodyfikować grupy lub włączyć bądź wyłączyć nadchodzące zmiany, odwiedź stronę konfiguracji nadchodzących zmian <a href='%{basePath}/admin/config/upcoming-changes'></a>."
+          filter_placeholder: "Filtruj nadchodzące zmiany według nazwy lub opisu"
+          filter_no_results: "Nie znaleziono żadnych nadchodzących zmian"
         exports:
           title: Eksporty użytkownika
           download:
@@ -8313,7 +8376,11 @@ pl_PL:
           button: "Usuń wszystkie wpisy"
           progress:
             title: "Postęp usuwania postów"
-            description: "Usuwanie postów…"
+            description:
+              one: "Usuwanie %{count} wpisu autorstwa @%{username}..."
+              few: "Usuwanie %{count} wpisów autorstwa @%{username}..."
+              many: "Usuwanie %{count} wpisów autorstwa @%{username}..."
+              other: "Usuwanie %{count} wpisów autorstwa @%{username}..."
           confirmation:
             title: "Usuń wszystkie posty użytkownika @%{username}"
             description: |
@@ -8325,6 +8392,7 @@ pl_PL:
             text: "usuń posty użytkownika @%{username}"
             delete: "Usuń posty użytkownika @%{username}"
             cancel: "Anuluj"
+          all_enqueued: "Wszystkie wpisy użytkownika @%{username} zostały umieszczone w kolejce do usunięcia"
         merge:
           button: "Połącz"
           prompt:
@@ -8659,17 +8727,20 @@ pl_PL:
             prompt: "Zmiana tego ustawienia może mieć daleko idące lub niezamierzone konsekwencje dla Twojej witryny. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, jestem pewny/a"
           min_password_length:
-            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
+            prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Będzie to miało wpływ na wszystkich użytkowników, którzy od tej pory będą zmieniać swoje hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           min_admin_password_length:
-            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Od teraz będzie to dotyczyć wszystkich administratorów zmieniających hasła. Czy na pewno chcesz kontynuować?"
+            prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Od teraz będzie to dotyczyć wszystkich administratorów zmieniających hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           password_unique_charactes:
-            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
+            prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Będzie to miało wpływ na wszystkich użytkowników, którzy od tej pory będą zmieniać swoje hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           block_common_passwords:
-            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
+            prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Będzie to miało wpływ na wszystkich użytkowników, którzy od tej pory będą zmieniać swoje hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
+          clean_up_inactive_users_after_days:
+            prompt: "Ustawienie tej wartości na inną niż 0 spowoduje trwałe usunięcie użytkowników, którzy nie będą aktywni przez określoną liczbę dni. Czy na pewno chcesz kontynuować?"
+            confirm: "Tak, rozumiem, że nieaktywni użytkownicy zostaną trwale usunięci, chyba że ustawię tę wartość na 0"
         job_status:
           completed: "Aktualizacja ukończona"
           enqueued: "Aktualizacja w toku"
@@ -8706,6 +8777,10 @@ pl_PL:
         no_user_badges: "%{name} nie otrzymał żadnych odznak."
         no_badges: Nie ma odznak, które można by było przyznać.
         none_selected: "Wybierz odznakę, aby rozpocząć"
+        sections:
+          design: Projekt
+          query: Zapytanie
+          settings: Ustawienia
         usage_heading: Użycie
         allow_title: Pozwól wykorzystywać odznakę jako tytuł
         multiple_grant: Może być przyznana wielokrotnie

@@ -193,6 +193,7 @@ th:
       every_month: "ทุกเดือน"
       every_six_months: "ทุกหกเดือน"
   user_api_key:
+    deny: "ยกเลิก"
     read: "อ่าน"
     otp_confirmation:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
@@ -320,8 +321,10 @@ th:
     queued_by_staff:
       title: "โพสต์นี้ต้องได้รับการอนุมัติ"
     welcome_user:
+      preview: "ยินดีต้อนรับสู่ %{site_name}!"
       subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
     welcome_invite:
+      preview: "ยินดีต้อนรับสู่ %{site_name}!"
       subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
   subject_re: "ตอบ: "
   subject_pm: "[PM] "

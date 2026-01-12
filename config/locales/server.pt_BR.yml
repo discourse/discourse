@@ -1134,11 +1134,10 @@ pt_BR:
       every_month: "a cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
-    title: "Autorizar acesso ao aplicativo"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "ler"
     read_write: "ler/escrever"
-    description: '"%{application_name}" está pedindo o seguinte acesso à sua conta:'
     instructions: 'Acabamos de gerar uma nova chave de API de usuário(a) para você usar com "%{application_name}", cole a seguinte chave em seu aplicativo:'
     otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
     otp_confirmation:
@@ -3150,6 +3149,7 @@ pt_BR:
         Enquanto você participa, saberemos mais sobre você e as limitações temporárias de novo(a) usuário(a) serão suspensas. Ao longo do tempo, você ganhará [níveis de confiança](https://blog.discourse.org/20/20/entrevista-conhecimento-disco-trustes-levels/) que incluem capacidades especiais para nos ajudar a administrar a nossa comunidade.
     welcome_user:
       title: "Boas-vindas, usuário(a)"
+      preview: "Boas-vindas ao %{site_name}!"
       subject_template: "Boas-vindas ao %{site_name}!"
       text_body_template: |
         Obrigado por participar de %{site_name}, boas-vindas!
@@ -3177,6 +3177,7 @@ pt_BR:
         Grandes poderes trazem grandes responsabilidades. Se você estiver agindo como moderador pela primeira vez, consulte o [Guia de Moderação](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Convite de boas-vindas"
+      preview: "Boas-vindas ao %{site_name}!"
       subject_template: "Boas-vindas ao %{site_name}!"
       text_body_template: |
         Obrigado por aceitar o seu convite para %{site_name}, boas-vindas!
@@ -3594,6 +3595,7 @@ pt_BR:
         Isto pode ser modificado nas configurações do site "newuser_spam_host_threshold" e "white_listed_spam_host_domains". Considere adicionar %{domains} à lista de permissões caso precisem ser isentos.
     unsilenced:
       title: "Som ativado"
+      preview: "A conta não está mais em espera."
       subject_template: "A conta não está mais em espera"
       text_body_template: |
         Olá,
@@ -3642,8 +3644,6 @@ pt_BR:
     Para cancelar a inscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:
@@ -3977,6 +3977,7 @@ pt_BR:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Entrar com sua conta pelo link"
+      preview: "Entrar com sua conta pelo link."
       subject_template: "[%{email_prefix}] Entre com sua conta pelo link"
       text_body_template: |
         Aqui está o seu link para entrar em [%{site_name}](%{base_url}).

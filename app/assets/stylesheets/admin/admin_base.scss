@@ -1238,22 +1238,6 @@ a.inline-editable-field {
   cursor: pointer;
 }
 
-.desktop-view .emoji-value-list {
-  .value {
-    .shift-up-value-btn,
-    .shift-down-value-btn {
-      display: none;
-    }
-
-    &:hover {
-      .shift-up-value-btn,
-      .shift-down-value-btn {
-        display: block;
-      }
-    }
-  }
-}
-
 // Styles for subtabs in admin
 @import "admin/dashboard";
 @import "admin/sidebar";

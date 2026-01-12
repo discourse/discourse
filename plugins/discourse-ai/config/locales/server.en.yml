@@ -83,6 +83,8 @@ en:
     ai_nsfw_models: "Models to use for NSFW inference."
 
     ai_spam_detection_enabled: "Enable the AI spam detection module"
+    ai_spam_detection_max_post_count: "Maximum number of posts a user can have before they are no longer scanned for spam"
+    ai_spam_detection_max_trust_level: "Maximum trust level of users to scan for spam"
 
     ai_openai_api_key: "API key for OpenAI API. ONLY used for Image creation and edits. For GPT use the LLM config tab"
     ai_openai_image_generation_url: "URL for OpenAI image generation API"
@@ -124,6 +126,7 @@ en:
     ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour."
 
     ai_bot_enabled: "Enable the AI Bot module."
+    ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
     ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overriden by editing the translation string: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
@@ -341,7 +344,7 @@ en:
     ai_bot:
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
-      thinking: "Thinking..."
+      thinking: "Thinking"
       personas:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_persona: "System personas cannot be deleted, please disable it instead"
@@ -502,6 +505,10 @@ en:
           base_query:
             name: "Base Search Query"
             description: "Base query to use when searching. Example: '#urgent' will prepend '#urgent' to the search query and only include topics with the urgent category or tag."
+        flag_post:
+          flag_type:
+            name: "Flag Type"
+            description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
       tool_summary:
         read_artifact: "Read a web artifact"
         update_artifact: "Update a web artifact"
@@ -510,9 +517,10 @@ en:
         github_search_files: "GitHub search files"
         github_search_code: "GitHub code search"
         github_file_content: "GitHub file content"
-        github_pull_request_diff: "GitHub pull request diff"
+        github_diff: "GitHub diff"
         random_picker: "Random Picker"
         categories: "List categories"
+        flag_post: "Flag post"
         search: "Search"
         tags: "List tags"
         time: "Time"
@@ -538,9 +546,10 @@ en:
         github_search_code: "Search for code in a GitHub repository"
         github_search_files: "Search for files in a GitHub repository"
         github_file_content: "Retrieve content of files from a GitHub repository"
-        github_pull_request_diff: "Retrieve a GitHub pull request diff"
+        github_diff: "Retrieve a GitHub pull request or commit diff"
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
+        flag_post: "Flag the current post for staff review"
         search: "Search all public topics on the forum"
         tags: "List all tags on the forum"
         time: "Find time in various time zones"
@@ -564,9 +573,10 @@ en:
         web_browser: "Reading <a href='%{url}'>%{url}</a>"
         github_search_files: "Searched for '%{keywords}' in %{repo}/%{branch}"
         github_search_code: "Searched for '%{query}' in %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Retrieved content of %{file_paths} from %{repo_name}@%{branch}"
         random_picker: "Picking from %{options}, picked: %{result}"
+        flag_post: "Flagging post %{post_id} (flag_post: %{flag_post})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
         time: "Time in %{timezone} is %{time}"
         summarize: "Summarized <a href='%{url}'>%{title}</a>"
@@ -604,6 +614,16 @@ en:
         continue_conversation:
           title: "Discovery conversation: Search for %{query}"
           raw: "In my search for %{query}, you showed me the following information:\n\n%{context}\n\nLet's continue the conversation."
+
+      flag_post:
+        errors:
+          no_context: "No post context available for flagging."
+          no_reason: "A reason is required to flag a post."
+          invalid_flag_type: "Invalid flag type."
+        skipped: "Verdict was false; no flag was created."
+        already_flagged: "Post is already flagged for review."
+        flagged: "Post flagged for review."
+        reason: "AI bot flagged this post.\n\nReason: %{reason}"
 
     summarization:
       configuration_hint:
@@ -694,4 +714,3 @@ en:
       custom_tool_exists:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
-

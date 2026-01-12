@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -11,6 +11,7 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class AdminWelcomeBannerForm extends Component {
@@ -20,13 +21,20 @@ export default class AdminWelcomeBannerForm extends Component {
 
   @tracked formData = {};
   @tracked isLoading = true;
+  @tracked isLoadingLocale = false;
   @tracked allThemes = [];
+  @tracked locale;
   formApi;
   originalFormData = {};
 
   constructor() {
     super(...arguments);
+    this.locale = I18n.currentLocale();
     this.loadData();
+  }
+
+  get availableLocales() {
+    return this.siteSettings.available_locales;
   }
 
   @action
@@ -57,39 +65,12 @@ export default class AdminWelcomeBannerForm extends Component {
       welcomeBannerPageVisibility:
         this.siteSettings.welcome_banner_page_visibility,
       enabledThemes: [],
+      localeSelector: this.locale,
     };
 
     try {
-      const response = await ajax("/admin/customize/site_texts.json", {
-        data: {
-          q: "welcome_banner",
-          locale: I18n.currentLocale(),
-        },
-      });
-
-      const texts = response.site_texts;
-      texts.forEach((text) => {
-        switch (text.id) {
-          case "js.welcome_banner.header.new_members":
-            data.headerNewMembers = text.value;
-            break;
-          case "js.welcome_banner.header.logged_in_members":
-            data.headerLoggedInMembers = text.value;
-            break;
-          case "js.welcome_banner.header.anonymous_members":
-            data.headerAnonymousMembers = text.value;
-            break;
-          case "js.welcome_banner.subheader.logged_in_members":
-            data.subheaderLoggedInMembers = text.value;
-            break;
-          case "js.welcome_banner.subheader.anonymous_members":
-            data.subheaderAnonymousMembers = text.value;
-            break;
-          case "js.welcome_banner.search_placeholder":
-            data.searchPlaceholder = text.value;
-            break;
-        }
-      });
+      const textData = await this.fetchSiteTexts(this.locale);
+      Object.assign(data, textData);
     } catch (error) {
       popupAjaxError(error);
     }
@@ -135,6 +116,80 @@ export default class AdminWelcomeBannerForm extends Component {
     return this.allThemes.filter((theme) =>
       theme.name.toLowerCase().includes(filter.toLowerCase())
     );
+  }
+
+  async fetchSiteTexts(locale) {
+    const keys = [
+      "js.welcome_banner.header.new_members",
+      "js.welcome_banner.header.logged_in_members",
+      "js.welcome_banner.header.anonymous_members",
+      "js.welcome_banner.subheader.logged_in_members",
+      "js.welcome_banner.subheader.anonymous_members",
+      "js.welcome_banner.search_placeholder",
+    ];
+
+    const responses = await Promise.all(
+      keys.map((key) =>
+        ajax(`/admin/customize/site_texts/${key}.json`, {
+          data: { locale },
+        }).catch(() => ({ site_text: { id: key, value: "" } }))
+      )
+    );
+
+    const textData = {};
+    responses.forEach((response) => {
+      const text = response.site_text;
+      switch (text.id) {
+        case "js.welcome_banner.header.new_members":
+          textData.headerNewMembers = text.value;
+          break;
+        case "js.welcome_banner.header.logged_in_members":
+          textData.headerLoggedInMembers = text.value;
+          break;
+        case "js.welcome_banner.header.anonymous_members":
+          textData.headerAnonymousMembers = text.value;
+          break;
+        case "js.welcome_banner.subheader.logged_in_members":
+          textData.subheaderLoggedInMembers = text.value;
+          break;
+        case "js.welcome_banner.subheader.anonymous_members":
+          textData.subheaderAnonymousMembers = text.value;
+          break;
+        case "js.welcome_banner.search_placeholder":
+          textData.searchPlaceholder = text.value;
+          break;
+      }
+    });
+
+    return textData;
+  }
+
+  @action
+  async updateLocale(localeValue) {
+    this.isLoadingLocale = true;
+    this.locale = localeValue;
+
+    try {
+      const textData = await this.fetchSiteTexts(this.locale);
+
+      // don't reset entire form on language switch, just update relevant fields
+      if (this.formApi) {
+        Object.entries(textData).forEach(([key, value]) => {
+          this.formApi.set(key, value);
+        });
+        this.formApi.set("localeSelector", localeValue);
+      } else {
+        this.formData = {
+          ...this.formData,
+          ...textData,
+          localeSelector: localeValue,
+        };
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.isLoadingLocale = false;
+    }
   }
 
   @action
@@ -185,7 +240,7 @@ export default class AdminWelcomeBannerForm extends Component {
         });
       }
 
-      const locale = I18n.currentLocale();
+      const locale = this.locale;
       const siteTextUpdates = [
         {
           id: "js.welcome_banner.header.new_members",
@@ -277,7 +332,7 @@ export default class AdminWelcomeBannerForm extends Component {
       this.originalFormData = { ...data };
 
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("admin.config.welcome_banner.saved"),
         },
@@ -414,18 +469,41 @@ export default class AdminWelcomeBannerForm extends Component {
 
         <form.Section
           @title={{i18n "admin.config.welcome_banner.form.text_section.title"}}
-          @subtitle={{htmlSafe
-            (i18n "admin.config.welcome_banner.form.text_section.variables")
-          }}
         >
+          <form.Field
+            @name="localeSelector"
+            @title={{i18n
+              "admin.config.welcome_banner.form.text_section.locale_label"
+            }}
+            @format="large"
+            @validation="required"
+            as |field|
+          >
+            <field.Custom>
+              <ComboBox
+                @valueProperty="value"
+                @content={{this.availableLocales}}
+                @value={{this.locale}}
+                @onChange={{this.updateLocale}}
+                @options={{hash filterable=true}}
+                class="translation-selector"
+              />
+            </field.Custom>
+          </form.Field>
 
           <form.Field
             @name="headerNewMembers"
             @title={{i18n
               "admin.config.welcome_banner.form.header_new_members.label"
             }}
+            @description={{htmlSafe
+              (i18n
+                "admin.config.welcome_banner.form.header_new_members.description"
+              )
+            }}
             @format="large"
             @validation="required"
+            @disabled={{this.isLoadingLocale}}
             as |field|
           >
             <field.Input
@@ -442,8 +520,14 @@ export default class AdminWelcomeBannerForm extends Component {
             @title={{i18n
               "admin.config.welcome_banner.form.header_logged_in.label"
             }}
+            @description={{htmlSafe
+              (i18n
+                "admin.config.welcome_banner.form.header_logged_in.description"
+              )
+            }}
             @format="large"
             @validation="required"
+            @disabled={{this.isLoadingLocale}}
             as |field|
           >
             <field.Input
@@ -459,8 +543,14 @@ export default class AdminWelcomeBannerForm extends Component {
             @title={{i18n
               "admin.config.welcome_banner.form.header_anonymous.label"
             }}
+            @description={{htmlSafe
+              (i18n
+                "admin.config.welcome_banner.form.header_anonymous.description"
+              )
+            }}
             @format="large"
             @validation="required"
+            @disabled={{this.isLoadingLocale}}
             as |field|
           >
             <field.Input
@@ -480,6 +570,7 @@ export default class AdminWelcomeBannerForm extends Component {
               "admin.config.welcome_banner.form.subheader_logged_in.description"
             }}
             @format="large"
+            @disabled={{this.isLoadingLocale}}
             as |field|
           >
             <field.Textarea />
@@ -494,6 +585,7 @@ export default class AdminWelcomeBannerForm extends Component {
               "admin.config.welcome_banner.form.subheader_anonymous.description"
             }}
             @format="large"
+            @disabled={{this.isLoadingLocale}}
             as |field|
           >
             <field.Textarea />
@@ -509,6 +601,7 @@ export default class AdminWelcomeBannerForm extends Component {
             }}
             @format="large"
             @validation="required"
+            @disabled={{this.isLoadingLocale}}
             as |field|
           >
             <field.Input

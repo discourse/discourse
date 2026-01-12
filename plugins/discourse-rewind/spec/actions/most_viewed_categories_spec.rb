@@ -18,6 +18,8 @@ RSpec.describe DiscourseRewind::Action::MostViewedCategories do
   fab!(:topic_5) { Fabricate(:topic, category: category_4) }
   fab!(:topic_6) { Fabricate(:topic, category: category_5) }
 
+  before { SiteSetting.discourse_rewind_enabled = true }
+
   describe ".call" do
     it "returns top 4 most viewed categories ordered by view count" do
       # Category 1: 2 views
@@ -87,6 +89,24 @@ RSpec.describe DiscourseRewind::Action::MostViewedCategories do
 
       expect(result[:identifier]).to eq("most-viewed-categories")
       expect(result[:data]).to eq([])
+    end
+
+    describe "private categories" do
+      fab!(:group)
+
+      before do
+        group.add(user)
+        category_1.read_restricted = true
+        category_1.set_permissions(group.id => :full)
+        category_1.save!
+      end
+
+      it "does not return private categories even when the user has permission to see them" do
+        TopicViewItem.add(topic_1.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
+        TopicViewItem.add(topic_2.id, "127.0.0.2", user.id, Date.new(2021, 4, 20))
+        result = call_report
+        expect(result[:data]).to eq([])
+      end
     end
   end
 end

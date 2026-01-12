@@ -199,7 +199,7 @@ it:
         no_llm: "Nessun LLM selezionato"
         no_persona: "Non impostato"
         no_groups: "Nessuna"
-        edit: "Modifica"
+        edit: "Impostazioni"
         expand_list:
           one: "(%{count} altro)"
           other: "(altri %{count})"
@@ -230,6 +230,8 @@ it:
           name: "Integrazioni"
           description: "Sono alla base di funzionalità come Argomenti correlati e Ricerca IA generando rappresentazioni semantiche di un testo"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Argomenti correlati"
         discord:
           name: "Integrazione Discord"
           description: "Aggiunge l'opzione di cercare tra i canali di Discord"
@@ -240,6 +242,8 @@ it:
           generate_concepts: "Inferenza dei concetti"
           match_concepts: "Corrispondenza dei concetti"
           deduplicate_concepts: "Deduplicazione dei concetti"
+          setting_groups:
+            personas: "Personaggi"
         ai_helper:
           name: "Assistente"
           description: "Assiste gli utenti nelle interazioni con la community, come la creazione di argomenti, la scrittura di messaggi e la lettura di contenuti"
@@ -254,6 +258,9 @@ it:
           image_caption: "Didascalia immagini"
           translator: "Assistente traduzione"
           post_illustrator: "Assistente messaggi illustrati"
+          setting_groups:
+            automation: "Automazione"
+            personas: "Personaggi"
         translation:
           name: "Traduzione"
           description: "Traduce i contenuti nelle lingue supportate"
@@ -261,6 +268,8 @@ it:
           post_raw_translator: "Pubblica traduzione grezza"
           topic_title_translator: "Assistente traduzione titolo argomenti"
           short_text_translator: "Assistente traduzione testi brevi"
+          setting_groups:
+            personas: "Personaggi"
         spam:
           name: "Spam"
           description: "Identifica lo spam potenziale utilizzando l'LLM selezionato e lo segnala ai moderatori del sito affinché lo ispezionino nella coda di revisione"
@@ -539,7 +548,6 @@ it:
         max_output_tokens: "Massimo token di output"
         url: "URL del servizio che ospita il modello"
         api_key: "Chiave API del servizio che ospita il modello"
-        enabled_chat_bot: "Consenti selettore bot IA"
         vision_enabled: "Visione abilitata"
         ai_bot_user: "Utente bot IA"
         cost_input: "Costo di input"
@@ -622,7 +630,6 @@ it:
           display_name: "Il nome utilizzato per fare riferimento a questo modello nell'interfaccia del sito."
           name: "Lo includiamo nella chiamata API per specificare quale modello utilizzeremo"
           vision_enabled: "Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini. Dipende dal modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI."
-          enabled_chat_bot: "Se abilitato, gli utenti possono selezionare questo modello quando creano messaggi privati con il bot IA"
           cost_input: "Il costo di input di 1 milione di token per questo modello"
           cost_output: "Il costo di output di 1 milione di token per questo modello"
           cost_measure: "$/milione token"

@@ -43,7 +43,7 @@
 /**
  * @typedef InputRuleObject
  * @property {RegExp} match
- * @property {string | ((state: import('prosemirror-state').EditorState, match: RegExpMatchArray, start: number, end: number) => import('prosemirror-state').Transaction | null)} handler
+ * @property {((state: import('prosemirror-state').EditorState, match: RegExpMatchArray, start: number, end: number) => import('prosemirror-state').Transaction | null)} handler
  * @property {{ undoable?: boolean, inCode?: boolean | "only" }} [options]
  */
 
@@ -55,13 +55,42 @@
 
 /** @typedef {((params: InputRuleParams) => InputRuleObject) | InputRuleObject} RichInputRule */
 
+/**
+ * @typedef {(params: PluginParams, state: import('prosemirror-state').EditorState) => Record<string, unknown>} StateFunction
+ */
+
+/**
+ * @typedef {(params: PluginParams) => import('prosemirror-state').PluginSpec | import('prosemirror-state').PluginSpec} PluginsFunction
+ */
+
+/** @typedef {PluginsFunction | import('prosemirror-state').PluginSpec} PluginsProperty */
+
 // @ts-ignore we don't have type definitions for markdown-it
 /** @typedef {import("markdown-it").Token} MarkdownItToken */
 /** @typedef {(state: unknown, token: MarkdownItToken, tokenStream: MarkdownItToken[], index: number) => boolean | void} ParseFunction */
 /** @typedef {import("prosemirror-markdown").ParseSpec | ParseFunction} RichParseSpec */
 
 /**
- * @typedef {(state: import("prosemirror-markdown").MarkdownSerializerState, node: import("prosemirror-model").Node, parent: import("prosemirror-model").Node, index: number) => void} SerializeNodeFn
+ * NodeView constructor signature - can be a class or constructor function
+ * @typedef {new (node: import('prosemirror-model').Node, view: import('prosemirror-view').EditorView, getPos: (() => number) | boolean) => Object} NodeViewConstructor
+ */
+
+/**
+ * Extended MarkdownSerializerState with additional properties used by Discourse
+ * @typedef {Object} ExtendedMarkdownSerializerState
+ * @property {string} out - The output string being built
+ * @property {string} delim - Current delimiter for block formatting
+ * @property {boolean} [inTable] - Whether currently serializing inside a table (Discourse-specific)
+ * @property {(size?: number) => void} flushClose - Flush closed blocks with optional size
+ * @property {() => boolean} atBlank - Check if output is currently at a blank line
+ */
+
+/**
+ * @typedef {import("prosemirror-markdown").MarkdownSerializerState & ExtendedMarkdownSerializerState} DiscourseMarkdownSerializerState
+ */
+
+/**
+ * @typedef {(state: DiscourseMarkdownSerializerState, node: import("prosemirror-model").Node, parent: import("prosemirror-model").Node, index: number) => void} SerializeNodeFn
  */
 
 /** @typedef {Record<string, import('prosemirror-state').Command>} KeymapSpec */
@@ -79,23 +108,25 @@
  * @property {Record<string, import('prosemirror-model').MarkSpec>} [markSpec]
  *   Map containing Prosemirror mark spec definitions, each key being the mark name
  *   See https://prosemirror.net/docs/ref/#model.MarkSpec
- * @property {RichInputRule | Array<RichInputRule>} [inputRules]
+ * @property {InputRuleObject | InputRuleObject[] | ((params: PluginParams) => InputRuleObject | InputRuleObject[] | import('prosemirror-inputrules').InputRule | import('prosemirror-inputrules').InputRule[])} [inputRules]
  *   ProseMirror input rules. See https://prosemirror.net/docs/ref/#inputrules.InputRule
- *   can be a function returning an array or an array of input rules
- * @property {(params: PluginParams) => Record<string, SerializeNodeFn> | Record<string, SerializeNodeFn>} [serializeNode]
- *   Node serialization definition
- * @property {(params: PluginParams) => Record<string, MarkSerializerSpec> | Record<string, MarkSerializerSpec>} [serializeMark]
- *   Mark serialization definition
+ *   can be a single rule, array of rules, or function returning rule(s)
+ * @property {((params: PluginParams) => Record<string, SerializeNodeFn>) | Record<string, SerializeNodeFn>} [serializeNode]
+ *   Node serialization definition - can be a function returning an object with node serializers, or a direct object
+ * @property {((params: PluginParams) => Record<string, MarkSerializerSpec>) | Record<string, MarkSerializerSpec>} [serializeMark]
+ *   Mark serialization definition - can be a function returning an object with mark serializers, or a direct object
  * @property {Record<string, RichParseSpec>} [parse]
  *   Markdown-it token parse definition
- * @property {RichPlugin | Array<RichPlugin>} [plugins]
- *    ProseMirror plugins
- * @property {Record<string, import('prosemirror-view').NodeViewConstructor | { component: any, name?: string }>} [nodeViews]
- *    ProseMirror node views. Can be a NodeViewConstructor or an object with { component, name } for automatic Glimmer component wrapping
+ * @property {PluginsProperty} [plugins]
+ *    ProseMirror plugins - can be a function returning plugin spec or plugin spec object
+ * @property {Record<string, NodeViewConstructor | ((params: PluginParams) => NodeViewConstructor) | { component: any, name?: string }>} [nodeViews]
+ *   ProseMirror node views. Can be a NodeViewConstructor or an object with { component, name } for automatic Glimmer component wrapping
  * @property {RichKeymap} [keymap]
  *   Additional keymap definitions
  * @property {(params: PluginParams) => Record<string, import('prosemirror-state').Command>} [commands]
  *   Command definitions that will be available on view.state.commands
+ * @property {StateFunction} [state]
+ *   State function that computes editor state data
  */
 
 /** @type {RichEditorExtension[]} */

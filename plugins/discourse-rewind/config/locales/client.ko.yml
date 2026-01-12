@@ -7,12 +7,17 @@
 ko:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "비공개"
+          public: "공개"
       reports:
         reading_time:
           title: 읽은 시간
         chat_usage:
           messages: 메시지
-          you: 사용자님
+          author: 사용자님
+          author_others: "%{username}"
         invites:
           title: 초대
           invitee_posts: 글 수

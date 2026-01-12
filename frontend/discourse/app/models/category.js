@@ -24,7 +24,6 @@ import Site from "discourse/models/site";
 import Topic from "./topic";
 
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
-const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
 const pluginSaveProperties = new Set();
 
 let _uncategorized;
@@ -130,8 +129,6 @@ export default class Category extends RestModel {
     }
 
     if (typeof id === "string") {
-      // eslint-disable-next-line no-console
-      console.warn("Category.findById called with a string ID");
       id = parseInt(id, 10);
     }
 
@@ -415,21 +412,12 @@ export default class Category extends RestModel {
 
     const data = {
       term,
-      parent_category_id: opts.parentCategoryId,
-      limit: opts.limit,
       only: opts.only,
       except: opts.except,
       page: opts.page,
-      offset: opts.offset,
-      include_uncategorized: opts.includeUncategorized,
     };
 
-    const result = (CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[
-      JSON.stringify(data)
-    ] ||= await ajax("/categories/hierarchical_search", {
-      method: "GET",
-      data,
-    }));
+    const result = await ajax("/categories/hierarchical_search", { data });
 
     return result["categories"].map((category) =>
       Site.current().updateCategory(category)

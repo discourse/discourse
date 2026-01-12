@@ -6,6 +6,10 @@
 
 cs:
   js:
+    carousel:
+      go_to_slide: "Přejít na snímek č. %{index}"
+      previous: "Předchozí snímek"
+      next: "Další snímek"
     number:
       format:
         separator: "."
@@ -214,7 +218,7 @@ cs:
       el:
         name: Řečtina
       en:
-        name: Angličtina (USA)
+        name: Angličtina
       en_GB:
         name: Angličtina (Velká Británie)
       es:
@@ -1004,6 +1008,9 @@ cs:
         claimed_by: "Nárokováno uživatelem %{username} · %{relativeDate}"
         unclaimed_by: "Zrušil/a nárok %{username} · %{relativeDate}"
         reviewed: "Zkontrolováno"
+        approved_by: "Schválil/a %{username} · %{relativeDate}"
+        rejected_by: "Zamítl/a %{username} · %{relativeDate}"
+        ignored_by: "Ignoroval/a %{username} · %{relativeDate}"
         view_conversation: "zobrazit SZ"
         note_added: "Poznámka moderátora"
         note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
@@ -1221,6 +1228,7 @@ cs:
           title: Interakce
           posting: Přispívání
           notification: Upozornění
+          self_lockout: "Chystáte se změnit viditelnost skupiny způsobem, který vám odebere přístup. Opravdu chcete pokračovat?"
         email:
           title: "Email"
           status: "Synchronizováno %{old_emails} / %{total_emails} e-mailů přes IMAP."
@@ -1369,6 +1377,8 @@ cs:
         make_owner_description: "Udělat z <b>%{username}</b> vlastníka této skupiny"
         remove_owner: "Odstranit vlastníka"
         remove_owner_description: "Odstranit <b>%{username}</b> z role vlastníka této skupiny"
+        remove_member_self_lockout: "Odebráním se z této skupiny zrušíte svůj přístup k její správě. Opravdu chcete pokračovat?"
+        remove_owner_self_lockout: "Odebráním sebe jako vlastníka zrušíte svůj přístup ke správě této skupiny. Opravdu chcete pokračovat?"
         make_primary: "Nastavit jako primární"
         make_primary_description: "Nastavit jako primární skupinu pro <b>%{username}</b>"
         remove_primary: "Odebrat jako primární"
@@ -1561,7 +1571,16 @@ cs:
       private_message: "Zpráva"
       private_messages: "Zprávy"
       upcoming_changes:
-        title: "Nadcházející změna povolena"
+        title: "Nadcházející změny"
+        for_user:
+          upcoming_change: "Nadcházející změna"
+          enabled: "Zapnuto?"
+          why: "Proč?"
+        why_reasons:
+          not_in_specific_groups: "Uživatel není zahrnut v konkrétních skupinách požadovaných pro tuto změnu."
+          in_specific_groups: "Uživatel je zahrnut v konkrétních skupinách požadovaných pro tuto změnu."
+          enabled_for_everyone: "Tato změna je povolena pro všechny členy"
+          enabled_for_no_one: "Tato změna je zakázána pro všechny členy."
       user_notifications:
         filters:
           filter_by: "Filtrovat podle"
@@ -1914,7 +1933,8 @@ cs:
         tags: "Štítky"
         interface: "Vzhled"
         apps: "Aplikace"
-        navigation_menu: "Navigace"
+        navigation_menu: "Navigační nabídka"
+        upcoming_changes: "Nadcházející změny"
       change_password:
         success: "(email odeslán)"
         in_progress: "(odesílám)"
@@ -3166,6 +3186,17 @@ cs:
       ulist_title: "Seznam s odrážkami"
       list_item: "Položka seznamu"
       toggle_direction: "Přepnout směr"
+      apply_wrap_title: "Obalení bloku"
+      wrap_modal:
+        title: "Úprava obalení bloku"
+        name_label: "Název obalení"
+        attributes_label: "Atributy"
+        add_attribute: "Přidat atribut"
+        remove_attribute: "Odstranit atribut"
+        apply: "Použít"
+        unwrap: "Rozbalit"
+        no_attributes: "Zatím nebyly přidány žádné atributy."
+      wrap_text: "Obalit obsah"
       help: "Nápověda pro Markdown"
       collapse: "Minimalizovat panel editoru"
       open: "Otevřít panel editoru"
@@ -3237,6 +3268,10 @@ cs:
         move_outside_grid: "Přesunout mimo mřížku"
       image: "obrázek"
       grid_label: "Tyto obrázky se zobrazí v mřížce"
+      grid_mode_grid: "Mřížka"
+      grid_mode_carousel: "Karusel"
+      grid_mode_title: "Nastavit styl galerie obrázků na %{mode}"
+      remove_grid: "Odebrat mřížku"
       image_scale_button: "Změnit velikost obrázku na %{percent}%"
       delete_image_button: Odstranit obrázek
       toggle_image_grid: Přepnout mřížku obrázku
@@ -3494,6 +3529,7 @@ cs:
           aria_label: Filtrování pomocí štítků
         filters:
           label: Pouze v tématech/příspěvcích, které...
+          all: Zahrnout zprávy
           title: mají hledaný text pouze v názvu
           likes: se mi líbí
           posted: obsahují můj příspěvek
@@ -3738,19 +3774,6 @@ cs:
           unread: "Všechno přečteno... působivé!"
           new_new: "V tuto chvíli nic nového... vraťte se brzy!"
           new: "V tuto chvíli nic nového... vraťte se brzy!"
-      bottom:
-        latest: "Nejsou tu žádná další nejnovější témata."
-        posted: "Nejsou tu žádná další zaslaná témata k přečtení."
-        read: "Nejsou tu žádná další přečtená témata."
-        new: "Nejsou tu žádná další nová témata k přečtení."
-        unread: "Nejsou tu žádná další nepřečtená témata."
-        unseen: "Neexistují žádná další neshlédnutá témata."
-        category: "V kategorii %{category} nejsou žádná další témata."
-        tag: "V kategorii %{tag} nejsou žádná další témata."
-        top: "Nejsou tu žádná další populární témata."
-        hot: "Nejsou tu žádná další žhavá témata."
-        bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
-        filter: "Nejsou zde žádná další témata."
     topic_bulk_actions:
       dismiss:
         name: "Označit jako přečtené"
@@ -3898,9 +3921,6 @@ cs:
         other: "%{count} odpovědí, přejít na první příspěvek"
       created_at: "Vytvořeno: %{date}"
       bumped_at: "Poslední: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Projděte všechny kategorie</a> nebo <a href='%{basePath}/latest'>zobrazte nejnovější témata</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Projděte všechny kategorie</a>, <a href='%{basePath}/latest'>zobrazte nejnovější témata</a> nebo si prohlédněte nejlepší:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Projděte všechny štítky</a> nebo <a href='%{basePath}/latest'>zobrazte nejnovější témata</a>."
       browse_latest_topics: "Procházet nejnovější témata"
       browse_new_replies: "Procházet nové odpovědi"
       browse_new_topics: "Procházet nová témata"
@@ -3963,6 +3983,8 @@ cs:
         title: "Automaticky zavřít téma po posledním příspěvku"
       auto_delete:
         title: "Automaticky odstranit téma"
+      auto_delete_after_last_post:
+        title: "Automaticky odstranit téma po posledním příspěvku"
       auto_bump:
         title: "Automaticky pošťouchnout téma"
       reminder:
@@ -3974,6 +3996,7 @@ cs:
         auto_close: "Toto téma se automaticky zavře %{timeLeft}."
         auto_publish_to_category: "Toto téma bude zveřejněno v <a href=%{categoryUrl}>%{categoryName}</a>%{timeLeft}# ."
         auto_close_after_last_post: "Toto téma se zavře %{duration} po poslední odpovědi."
+        auto_delete_after_last_post: "Toto téma bude smazáno %{duration} po poslední odpovědi."
         auto_delete: "Toto téma bude automaticky smazáno %{timeLeft}."
         auto_bump: "Toto téma bude automaticky pošťouchnuto %{timeLeft}."
         auto_reminder: "Toto téma ti připomeneme %{timeLeft}."
@@ -4280,9 +4303,10 @@ cs:
       deleted_by_author_simple: "(téma smazáno autorem)"
       localizations:
         title_edit_warning:
-          message: "Tento název tématu je přeložený.<br><br>Chcete upravit původní název v jazyce %{language} nebo upravit tento konkrétní překlad?"
-          action_original: "Upravit původní název tématu"
+          message: "Toto je přeložený název tématu.<br><br>Chcete upravit <b>původní</b> kategorii, štítky a název v jazyce %{language}, nebo upravit tento konkrétní <b>překlad</b>?"
+          action_original: "Upravit originál"
           action_translation: "Upravit přeložený název tématu"
+        editing_translation: "Úprava překladu do %{language}"
     post_list:
       title: "Nejnovější příspěvky"
       empty: "Nejsou zde žádné příspěvky"
@@ -4681,6 +4705,8 @@ cs:
       slug_placeholder: "(Nepovinné) slova s pomlčkou pro URL"
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
+      errors:
+        self_lockout: "Chystáte se změnit oprávnění kategorie tak, že odeberete svůj vlastní přístup. Opravdu chcete pokračovat?"
       name: "Název kategorie"
       untitled: "Nepojmenovaná kategorie"
       description: "Popis"
@@ -5104,6 +5130,7 @@ cs:
         this_month: "Měsíc"
         this_week: "Týden"
         today: "Dnes"
+        custom: "Přizpůsobené"
     custom_homepage:
       admin_message: 'Jeden z vašich motivů má povolený modifikátor "custom_homepage", ale do konektoru [custom-homepage] nic neprodukuje. (Tato zpráva se zobrazuje pouze správcům webu.)'
     browser_update: 'Bohužel, <a href="https://discourse.org/about#browser">váš prohlížeč není podporován</a>. Pro zobrazení bohatého obsahu prosím <a href="https://browsehappy.com">přepněte na podporovaný prohlížeč</a>, přihlaste se a odpovězte.'
@@ -5299,6 +5326,7 @@ cs:
       add_to_calendar: "Přidat do kalendáře"
       google: "Kalendář Google"
       ics: "ICS"
+      default_title: "Naplánovaná událost"
     tagging:
       all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky"
@@ -5369,6 +5397,19 @@ cs:
       upload_description: "Nahrajte soubor csv a vytvořte štítky hromadně"
       upload_instructions: "Jeden na řádek, případně se skupinou štítků ve formátu 'název_štítku,skupina_štítků'."
       upload_successful: "Štítky byly úspěšně nahrány"
+      bulk_create_inline_placeholder: "Vytvořte štítky (oddělené čárkami)"
+      bulk_create_button: "Vytvořit"
+      bulk_create_success:
+        one: "Vytvořen %{count} štítek:"
+        few: "Vytvořeny %{count} štítky:"
+        many: "Vytvořeno %{count} štítků:"
+        other: "Vytvořeno %{count} štítků:"
+      bulk_create_already_exist:
+        one: "%{count} štítek již existuje:"
+        few: "%{count} štítky již existují:"
+        many: "%{count} štítků již existuje:"
+        other: "%{count} štítků již existuje:"
+      bulk_create_some_failed: "Některé štítky se nepodařilo vytvořit:"
       delete_unused_confirmation:
         one: "Bude vymazán %{count} štítek: %{tags}"
         few: "Budou vymazány %{count} štítky: %{tags}"
@@ -5533,7 +5574,7 @@ cs:
       tags_form_modal:
         title: "Úprava štítků v postranním panelu"
         filter_placeholder: "Filtrovat štítky"
-        no_tags: "Nebyly nalezeny žádné štítky odpovídající danému výrazu."
+        no_tags: "Aktuálním filtrům neodpovídají žádné štítky."
         subtitle:
           text: "a automaticky zobrazíme nejlepší štítky tohoto webu"
       edit_navigation_modal_form:
@@ -5886,6 +5927,8 @@ cs:
       toggle_localized:
         translated: "Stránka je strojově přeložena. Klepnutím zobrazíte originál."
         not_translated: "Stránka není přeložena. Kepnutím ji přeložíte."
+    language_switcher:
+      title: "Změna jazyka webu"
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
@@ -6030,7 +6073,15 @@ cs:
               title: "Discourse ID"
         discourse_id:
           title: "Discourse ID"
+          stats:
+            total_users: "Celkem uživatelů"
+            signups_30_days: "Registrace (30 dní)"
+            logins_30_days: "Přihlášení (30 dní)"
+          regenerate_credentials: "Obnovit přihlašovací údaje"
+          regenerate_confirm: "Jste si jisti, že chcete obnovit své pověření Discourse ID? Tím se vygeneruje nové client secret. Obnovení pověření není obvykle vyžadována, ale může být užitečná pro zvýšení bezpečnosti."
+          description: "Discourse ID je služba jednotného přihlášení, která umožňuje uživatelům přihlásit se k více webům Discourse pomocí jednoho účtu. Běžní poskytovatelé sociálních sítí pro přihlášení, jako jsou Google, Facebook, Apple a Github, jsou podporováni bez další konfigurace."
           learn_more: "Zjistit více"
+          regenerate_success: "Pověření bylo úspěšně obnoveno."
         logo:
           title: "Logo"
           header_description: "Nakonfigurujte loga a ikony používané na celém webu"
@@ -6150,15 +6201,18 @@ cs:
                 below_site_header: "Pod záhlavím webu"
             text_section:
               title: "Přizpůsobitelný text"
-              variables: "V textu můžete použít tyto proměnné: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Jazyk"
             header_new_members:
               label: "Záhlaví pro nové členy"
-              placeholder: "Vítejte na %{site_name}, %{preferred_display_name}!"
+              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Vítejte, %{preferred_display_name}!"
             header_logged_in:
               label: "Záhlaví pro přihlášené členy"
+              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte zpět, %{preferred_display_name}!"
             header_anonymous:
               label: "Záhlaví pro anonymní návštěvníky"
+              description: "Dostupná proměnná: <code>&percnt;{site_name}</code>"
               placeholder: "Vítejte v %{site_name}!"
             subheader_logged_in:
               label: "Podtitulek pro přihlášené členy"
@@ -6336,7 +6390,7 @@ cs:
           title: "Vzhled"
           header_description: "Přizpůsobte šablonu, ve které se vykreslují všechny e-maily ve formátu HTML, a upravte styl pomocí CSS"
         staff_action_logs:
-          title: "Protokoly a minitoring"
+          title: "Protokoly a monitoring"
           header_description: "Protokoly a monitoring vám umožňují monitorovat a spravovat vaši komunitu a zajistit, že zůstane bezpečná a respektující. Můžete zobrazit protokoly všech akcí provedených redaktory, protokoly vyhledávání a konfiguraci monitorování uživatelů"
           keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
           sub_pages:
@@ -6715,6 +6769,7 @@ cs:
               recover: Obnovit téma.
               read_lists: Čtěte seznamy témat, jako jsou nejlepší, nové, nejnovější atd. Podporována je také služba RSS.
               status: "Aktualizujte stav tématu. Stav: uzavřeno, archivováno, viditelné, připnuto. Povoleno: true, false. Zadejte category_id zde a v datové části požadavku, abyste povolili změny stavu pouze u témat v dané kategorii."
+              change_owner: Změna vlastnictví příspěvků v tématu.
             posts:
               edit: Upravte jakýkoli příspěvek nebo konkrétní příspěvek.
               delete: Odstranit příspěvek.
@@ -7351,6 +7406,8 @@ cs:
           create_name: "Název"
           save: "Uložit"
           long_title: "Změnit barvy, CSS a HTML obsahy na vaší stránce"
+          dark_mode: "Tmavý režim %{themeName}"
+          light_mode: "Světlý režim %{themeName}"
           edit: "Upravit"
           edit_confirm: "Toto je vzdálené téma, pokud upravíš CSS/HTML tvoje změny budou vymazány při dalším updatu motivu."
           update_confirm: "Tyto místní změny budou aktualizací vymazány. Opravdu chcete pokračovat?"
@@ -7472,7 +7529,7 @@ cs:
             error: "Tento motiv byl automaticky deaktivován, protože není kompatibilní s touto verzí Discourse."
             minimum: "Vyžaduje Discourse verze %{version} nebo vyšší."
             maximum: "Vyžaduje verzi Discourse %{version} nebo nižší."
-          update_to_latest: "Aktualizace na nejnovější verzi"
+          update_to_latest: "Aktualizovat na nejnovější verzi"
           check_for_updates: "Zkontrolovat aktualizace"
           updating: "Probíhá aktualizace…"
           update_success: "Aktualizace %{theme} dokončena"
@@ -7929,6 +7986,7 @@ cs:
             stop_impersonating: "zastavit impersonaci"
             upcoming_change_toggled: "nadcházející změna přepnuta"
             change_site_setting_groups: "změna skupin nastavení webu"
+            discourse_id_regenerate_credentials: "obnovit pověření Discourse ID"
         screened_emails:
           title: "Filtrované emaily"
           description: "Při registraci nového účtu budou konzultovány následujíci adresy. Při shodě bude registrace zablokována, nebo bude provedena jiná akce."
@@ -8238,6 +8296,21 @@ cs:
         penalty_post_actions: "Co byste chtěli udělat s tímto přidruženým příspěvkem?"
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_delete_replies: "Smazat příspěvek + všechny odpovědi"
+        penalty_post_delete_all: "Smazat všechna témata uživatele + všechny odpovědi"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Tímto smažete
+          { TOPICS, plural,
+              one {# téma}
+              few {# témata}
+              many {# témat}
+            other {# témat}
+          } a
+          { REPLIES, plural,
+              one {# odpověď}
+              few {# odpovědi}
+              many {# odpovědí}
+            other {# odpovědí}
+          }. <b>Tuto akci nelze vrátit zpět!</b> Jste si jisti, že toto chcete provést?</span>
         penalty_post_edit: "Upravit příspěvek"
         penalty_post_none: "Nic nedělat"
         penalty_count: "Počet penalizací"
@@ -8305,6 +8378,11 @@ cs:
         approve_bulk_success: "Povedlo se! Všichni uživatelé byli schváleni a byla jim rozeslána upozornění."
         time_read: "Čas čtení"
         post_edits_count: "Úpravy příspěvků"
+        upcoming_changes:
+          title: "Nadcházející změny uživatele"
+          description: "Chcete-li upravit skupiny nebo povolit či zakázat nadcházející změny, navštivte <a href='%{basePath}/admin/config/upcoming-changes'>stránku konfigurace nadcházejících změn</a>."
+          filter_placeholder: "Vyhledejte nadcházející změny podle názvu nebo popisu"
+          filter_no_results: "Nebyly nalezeny žádné nadcházející změny"
         exports:
           title: Export uživatelů
           download:
@@ -8331,7 +8409,11 @@ cs:
           button: "Smazat všechny příspěvky"
           progress:
             title: "Průběh mazání příspěvků"
-            description: "Mazání příspěvků…"
+            description:
+              one: "Odstranění %{count} příspěvku od @%{username}..."
+              few: "Odstranění %{count} příspěvků od @%{username}..."
+              many: "Odstranění %{count} příspěvků od @%{username}..."
+              other: "Odstranění %{count} příspěvků od @%{username}..."
           confirmation:
             title: "Smazat všechny příspěvky od @%{username}"
             description: |
@@ -8343,6 +8425,7 @@ cs:
             text: "smazat příspěvky od @%{username}"
             delete: "Smazat příspěvky od @%{username}"
             cancel: "Zrušit"
+          all_enqueued: "Všechny příspěvky uživatele @%{username} byly zařazeny do fronty k odstranění."
         merge:
           button: "Sloučit"
           prompt:
@@ -8677,17 +8760,20 @@ cs:
             prompt: "Změna tohoto nastavení může mít pro váš web dalekosáhlé nebo nezamýšlené důsledky. Opravdu chcete pokračovat?"
             confirm: "Ano, jsem si jistý/á"
           min_password_length:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           min_admin_password_length:
-            prompt: "Chystáte se změnit zásady pro hesla. To bude mít vliv na všechny administrátory, kteří si od nynějška změní svá hesla. Opravdu chcete pokračovat?"
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech správců, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           password_unique_charactes:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           block_common_passwords:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
+          clean_up_inactive_users_after_days:
+            prompt: "Nastavení této hodnoty na jinou hodnotu než 0 způsobí, že uživatelé, kteří již nejsou aktivní po tento počet dní, budou trvale odstraněni. Jste si jisti, že chcete pokračovat?"
+            confirm: "Ano, rozumím, že pokud tuto hodnotu nenastavím na 0, budou neaktivní uživatelé trvale smazáni."
         job_status:
           completed: "Aktualizace dokončena"
           enqueued: "Probíhá aktualizace"
@@ -8724,6 +8810,10 @@ cs:
         no_user_badges: "%{name} nezískal/a žádné oznaky."
         no_badges: Nejsou tu žádné odznaky, které by se daly udělit.
         none_selected: "Vyberte odznak, abyste mohli začít"
+        sections:
+          design: Vzhled
+          query: Dotaz
+          settings: Nastavení
         usage_heading: Použití
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát

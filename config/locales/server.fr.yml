@@ -1134,11 +1134,10 @@ fr:
       every_month: "tous les mois"
       every_six_months: "tous les six mois"
   user_api_key:
-    title: "Autoriser l'accès d'application"
     authorize: "Autoriser"
+    deny: "Annuler"
     read: "lecture"
     read_write: "lecture/écriture"
-    description: '« %{application_name} » demande l''accès suivant à votre compte :'
     instructions: 'Nous venons de générer une nouvelle clé d''API utilisateur à utiliser avec « %{application_name} ». Veuillez coller cette clé dans votre application :'
     otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
     otp_confirmation:
@@ -3169,6 +3168,7 @@ fr:
         À mesure que vous participerez ici, nous apprendrons à vous connaître et les limitations temporaires des nouveaux utilisateurs seront levées. Avec le temps, vous gagnerez [des niveaux de confiance](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) qui incluent des fonctionnalités spéciales pour nous aider à gérer notre communauté ensemble.
     welcome_user:
       title: "Bienvenue utilisateur"
+      preview: "Bienvenue sur %{site_name} !"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
         Merci d'avoir rejoint %{site_name}, nous vous souhaitons la bienvenue !
@@ -3196,6 +3196,7 @@ fr:
         Qui dit pouvoir, dit responsabilité. Si vous débutez dans le rôle de modérateur, nous vous invitons à consulter le [Guide de modération](https://meta.discourse.org/t/guide-des-moderateurs/89968).
     welcome_invite:
       title: "Bienvenue invité"
+      preview: "Bienvenue sur %{site_name} !"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
         Merci d'avoir accepté l'invitation sur %{site_name}. Nous vous souhaitons la bienvenue !
@@ -3606,6 +3607,7 @@ fr:
         Cette règle peut être modifiée avec les paramètres « newuser_spam_host_threshold » et « allowed_spam_host_domains ». Le paramètre « allowed_spam_host_domains » constitue une liste d'autorisations qui vous permettra d'exempter %{domains} de cette vérification.
     unsilenced:
       title: "Mise en sourdine annulée"
+      preview: "Compte débloqué."
       subject_template: "Compte débloqué"
       text_body_template: |
         Bonjour,
@@ -3654,8 +3656,6 @@ fr:
     Pour vous désabonner de ces e-mails, [cliquez ici](%{unsubscribe_url}).
   subject_re: "Re : "
   subject_pm: "[MP] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
@@ -3990,6 +3990,7 @@ fr:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Se connecter avec un lien"
+      preview: "Se connecter avec un lien."
       subject_template: "[%{email_prefix}] Se connecter avec un lien"
       text_body_template: |
         Voici votre lien pour vous connecter à [%{site_name}](%{base_url}).

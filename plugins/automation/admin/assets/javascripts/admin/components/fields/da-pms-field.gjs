@@ -19,10 +19,6 @@ export default class PmsField extends BaseField {
 
   noPmCreatedLabel = i18n("discourse_automation.fields.pms.no_pm_created");
 
-  prefersEncryptLabel = i18n(
-    "discourse_automation.fields.pms.prefers_encrypt.label"
-  );
-
   delayLabel = i18n("discourse_automation.fields.pms.delay.label");
 
   pmTitleLabel = i18n("discourse_automation.fields.pms.title.label");
@@ -104,21 +100,6 @@ export default class PmsField extends BaseField {
             </div>
           </div>
 
-          <div class="control-group">
-            <label class="control-label">
-              {{this.prefersEncryptLabel}}
-            </label>
-
-            <div class="controls">
-              <Input
-                @type="checkbox"
-                class="pm-prefers-encrypt"
-                @checked={{pm.prefers_encrypt}}
-                {{on "click" (fn this.prefersEncrypt pm)}}
-                disabled={{@field.isDisabled}}
-              />
-            </div>
-          </div>
           <section class="actions">
             <DButton
               @icon="trash-can"
@@ -173,14 +154,8 @@ export default class PmsField extends BaseField {
         title: "",
         raw: "",
         delay: 0,
-        prefers_encrypt: true,
       })
     );
-  }
-
-  @action
-  prefersEncrypt(pm, event) {
-    pm.prefers_encrypt = event.target.checked;
   }
 
   @action

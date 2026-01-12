@@ -921,11 +921,10 @@ ur:
       every_month: "ہر ماہ"
       every_six_months: "ہر چھ ماہ"
   user_api_key:
-    title: "ایپلیکیشن ایکسَیس کی اجازت دیں"
     authorize: "اجازت دیں"
+    deny: "منسوخ کریں"
     read: "رِیڈ"
     read_write: "رِیڈ/رائیٹ"
-    description: '"%{application_name}" آپ کے اکاؤنٹ سے مندرجہ ذیل رسائی کی درخواست کر رہا ہے:'
     instructions: '"%{application_name}" کے ساتھ استعمال کیلئے ہم نے آپ کیلئے ایک نئی صارف API کِی بنائی ہے، براہ مہربانی اپنی ایپلیکیشن میں مندرجہ ذیل کِی پیسٹ کریں:'
     otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
     otp_confirmation:
@@ -2341,6 +2340,7 @@ ur:
         جیسے جیسے کہ آپ یہاں شرکت کریں گے، ہم آپ کو جان پائیں گے، اور نئے صارف پر عارضی پابندیاں اٹھا دی جائیں گی۔ وقت کے ساتھ ساتھ آپ [ٹرسٹ لَیول](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) حاصل کر سکیں گے، جن میں اِس کمیونٹی کو مل کر مینیج کرنے کیلئے خصوصی صلاحیتیں شامل ہوں گی۔
     welcome_user:
       title: "خوش آمدید صارف"
+      preview: "%{site_name} پر خوش آمدید!"
       subject_template: "%{site_name} پر خوش آمدید!"
       text_body_template: |
         %{site_name} میں شمولیت اختیار کرنے کیلئے شکریہ، اور خوش آمدید!
@@ -2367,6 +2367,7 @@ ur:
         بڑی طاقت کے ساتھ بڑی ذمہ داری آتی ہے۔ اگر آپ نگرانی میں نئے ہیں، تو براہ کرم [نگرانی کی گائیڈ](https://meta.discourse.org/t/discourse-moderation-guide/63116) سے رجوع کریں۔
     welcome_invite:
       title: "خوش آمدید دعوت"
+      preview: "%{site_name} پر خوش آمدید!"
       subject_template: "%{site_name} پر خوش آمدید!"
       text_body_template: |
         %{site_name} کی دعوت قبول کرنے کا شکریہ -- خوش آمدید!
@@ -2701,6 +2702,7 @@ ur:
       subject_template: "بار بار لِنکس کی وجہ سے نئے صارف %{username} کی پوسٹس کو بلاک کردیا گیا"
     unsilenced:
       title: "خاموشی ختم"
+      preview: "اکاؤنٹ اَب ہولڈ پر نہیں ہے."
       subject_template: "اکاؤنٹ اَب ہولڈ پر نہیں ہے"
       text_body_template: |
         ہیلو،
@@ -2749,8 +2751,6 @@ ur:
     اِن ای میلز سے غیر سبسکرائب کرنے کیلئے، [یہاں کلِک کریں](%{unsubscribe_url})۔
   subject_re: "جواب: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} بذریعہ %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "پچھلے جوابات"
     reached_limit:
@@ -3022,6 +3022,7 @@ ur:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "بذریعہ لِنک لاگ اِن کریں"
+      preview: "بذریعہ لِنک لاگ اِن کریں."
       subject_template: "[%{email_prefix}] بذریعہ لِنک لاگ اِن کریں"
       text_body_template: |
         [%{site_name}](%{base_url}) پر لاگ اِن کرنے کیلئے آپ کا لِنک یہ ہے۔

@@ -57,7 +57,55 @@ RSpec.describe FinalDestination do
         ignore_redirects: %w[http://google.com youtube.com https://meta.discourse.org ://bing.com],
       )
 
-    expect(fd.ignored).to eq(%w[test.localhost google.com meta.discourse.org])
+    expect(fd.ignored).to eq(
+      [
+        { hostname: "test.localhost", path: "" },
+        { hostname: "google.com", path: "" },
+        { hostname: "meta.discourse.org", path: "" },
+      ],
+    )
+  end
+
+  it "does not ignore URLs on the same domain but outside subfolder path" do
+    set_subfolder "/forum"
+
+    fd =
+      FinalDestination.new(
+        "https://test.localhost/blog/article",
+        ignore_redirects: ["https://test.localhost/forum"],
+      )
+
+    expect(fd.ignored).to include({ hostname: "test.localhost", path: "/forum" })
+
+    fd_stub_request(:head, "https://test.localhost/blog/article").to_return(
+      status: 200,
+      headers: {
+        "Content-Type" => "text/html",
+      },
+    )
+
+    result = fd.resolve
+    expect(result.to_s).to eq("https://test.localhost/blog/article")
+    expect(fd.status).to eq(:resolved)
+  end
+
+  it "still performs SSRF checks for URLs on same domain but outside subfolder" do
+    set_subfolder "/forum"
+
+    FinalDestination::SSRFDetector
+      .stubs(:lookup_and_filter_ips)
+      .with("test.localhost")
+      .raises(FinalDestination::SSRFDetector::DisallowedIpError)
+
+    fd =
+      FinalDestination.new(
+        "https://test.localhost/blog/article",
+        ignore_redirects: ["https://test.localhost/forum"],
+      )
+
+    result = fd.resolve
+    expect(result).to be_nil
+    expect(fd.status).to eq(:invalid_address)
   end
 
   it "raises an error when URL is too long to encode" do

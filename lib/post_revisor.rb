@@ -287,8 +287,6 @@ class PostRevisor
     @silent = @opts[:silent] if @opts.has_key?(:silent)
     @topic_changes.silent = @silent
 
-    @post.incoming_email&.update(imap_sync: true) if @post.incoming_email&.imap_uid
-
     old_raw = @post.raw
 
     Post.transaction do
@@ -465,7 +463,10 @@ class PostRevisor
   def revise_and_create_new_version
     @version_changed = true
     @post.version += 1
-    @post.public_version += 1
+
+    @hidden_revision = only_hidden_tags_changed?
+    @post.public_version += 1 unless @hidden_revision
+
     @post.last_version_at = @revised_at
 
     revise
@@ -616,8 +617,8 @@ class PostRevisor
         user_id: @post.last_editor_id,
         post_id: @post.id,
         number: @post.version,
-        modifications: modifications,
-        hidden: only_hidden_tags_changed?,
+        modifications:,
+        hidden: @hidden_revision,
       )
   end
 
@@ -697,16 +698,19 @@ class PostRevisor
   end
 
   def only_hidden_tags_changed?
-    return false if (hidden_tag_names = DiscourseTagging.hidden_tag_names).blank?
+    return false if post_changed?
 
-    modifications = post_changes.merge(topic_diff)
-    if modifications.keys.size == 1 && (tags_diff = modifications["tags"]).present?
-      a, b = tags_diff[0] || [], tags_diff[1] || []
-      changed_tags = ((a + b) - (a & b)).map(&:presence).compact
-      return true if (changed_tags - hidden_tag_names).empty?
-    end
+    changed_topic_fields = PostRevisor.tracked_topic_fields.keys.select { |f| @fields.key?(f) }
+    return false if changed_topic_fields != [:tags]
 
-    false
+    hidden_tag_names = DiscourseTagging.hidden_tag_names
+    return false if hidden_tag_names.blank?
+
+    new_tags = @fields[:tags] || []
+    current_tags = @topic.tags.map(&:name)
+    added_or_removed = (new_tags - current_tags) | (current_tags - new_tags)
+
+    (added_or_removed - hidden_tag_names).empty?
   end
 
   def plugin_callbacks

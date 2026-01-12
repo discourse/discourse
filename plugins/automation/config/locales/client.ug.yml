@@ -59,8 +59,6 @@ ug:
             label: مەزمۇن
           delay:
             label: كېچىكىش (مىنۇت)
-          prefers_encrypt:
-            label: ئەگەر ئىشلەتكىلى بولسا شەخسىي ئۇچۇرنى شىفىرلايدۇ
         group:
           label: گۇرۇپپا
         text:
@@ -429,6 +427,8 @@ ug:
           fields:
             custom_field_name:
               label: "ئىشلەتكۈچى ئىختىيارى بۆلەك ئىسمى"
+        set_topic_timer:
+          title: تېما ۋاقىت خاتىرىلىگۈچ تەڭشىكى
       unnamed_automation: "ئاتسىز ئاپتوماتلاشتۇرۇش"
       models:
         script:

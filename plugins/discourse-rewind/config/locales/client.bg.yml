@@ -7,12 +7,17 @@
 bg:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Затворени"
+          public: "Публични"
       reports:
         reading_time:
           title: Време за четене
         chat_usage:
           messages: съобщения
-          you: Вие
+          author: Вие
+          author_others: "%{username}"
         invites:
           title: Покани
           invitee_posts: Създадени публикации

@@ -1134,11 +1134,11 @@ es:
       every_month: "cada mes"
       every_six_months: "cada seis meses"
   user_api_key:
-    title: "Autorizar acceso de aplicación"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "leer"
     read_write: "lectura/escritura"
-    description: '«%{application_name}» está solicitando el siguiente acceso a tu cuenta:'
+    logged_in_as: "Sesión iniciada como"
     instructions: 'Acabamos de generar una nueva clave API de usuario para que uses con «%{application_name}». Pega la siguiente clave en tu aplicación:'
     otp_description: '¿Te gustaría permitir a «%{application_name}» acceder a este sitio?'
     otp_confirmation:
@@ -1570,6 +1570,7 @@ es:
       labels:
         provider: Proveedor de inicio de sesión
         no_accounts: "No hay cuentas asociadas"
+        total_users: "Total de cuentas de usuario activas"
       description: "Muestra el número de cuentas asociadas agrupadas por proveedor de inicio de sesión. Solo se aplica cuando los métodos de inicio de sesión con red social están activados."
   dashboard:
     problem:
@@ -2573,6 +2574,7 @@ es:
       in_new: "Mostrar temas que son nuevos o tienen respuestas nuevas"
       in_new_replies: "Mostrar temas con respuestas nuevas"
       in_new_topics: "Mostrar temas nuevos"
+      in_unseen: "Mostrar temas que no has visto"
       order_activity: "Ordenar por actividad (más reciente primero)"
       order_activity_asc: "Ordenar por actividad (más antigua primero)"
       order_category: "Ordenar por nombre de categoría (Z-A)"
@@ -2593,6 +2595,7 @@ es:
       order_views_asc: "Ordenar por número de visualizaciones (de menor a mayor)"
       order_read: "Ordenar por fecha de última lectura (más reciente primero)"
       order_read_asc: "Ordenar por fecha de última lectura (más antigua primero)"
+      users: "Filtrar temas por participantes"
   discourse_connect:
     login_error: "Error al iniciar sesión"
     not_found: "No se ha podido encontrar tu cuenta. Contacta con la administración del sitio."
@@ -3159,6 +3162,7 @@ es:
         Conforme vayas participando, te iremos conociendo más y se irán levantando tus limitaciones temporales como usuario nuevo. Con el tiempo ganarás [niveles de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que incluyen capacidades especiales para ayudarnos a gestionar la comunidad juntos.
     welcome_user:
       title: "Bienvenida al usuario"
+      preview: "¡Te damos la bienvenida a %{site_name}!"
       subject_template: "¡Te damos la bienvenida a %{site_name}!"
       text_body_template: |
         ¡Gracias por unirte a %{site_name}! ¡Te damos la bienvenida!
@@ -3186,6 +3190,7 @@ es:
         Un gran poder conlleva una gran responsabilidad. Si no tienes experiencia moderando, consulta la [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Bienvenida al invitado"
+      preview: "¡Te damos la bienvenida a %{site_name}!"
       subject_template: "¡Te damos la bienvenida a %{site_name}!"
       text_body_template: |
         Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
@@ -3605,6 +3610,7 @@ es:
         Puedes cambiar este comportamiento a través de los ajustes «newuser_spam_host_threshold» y «allowed_spam_host_domains». Considera añadir %{domains} a la lista de dominios permitidos si deberían estar exentos.
     unsilenced:
       title: "Ha dejado de estar silenciado"
+      preview: "Cuenta reestablecida."
       subject_template: "Cuenta reestablecida"
       text_body_template: |
         Hola,
@@ -3653,8 +3659,6 @@ es:
     Para cancelar estos correos, [haz clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
-  email_from: "%{user_name} vía %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
@@ -3988,6 +3992,7 @@ es:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Iniciar sesión con un enlace"
+      preview: "Iniciar sesión con un enlace."
       subject_template: "[%{email_prefix}] Iniciar sesión con un enlace"
       text_body_template: |
         Aquí tienes tu enlace para iniciar sesión en [%{site_name}](%{base_url}).
@@ -4152,8 +4157,13 @@ es:
   page_not_found:
     page_title: "Página no encontrada"
     title: "¡Ups! Esa página no existe o es privada."
+    popular_topics: "Temas populares"
+    recent_topics: "Temas recientes"
     see_more: "Más"
+    search_title: "¿Y si pruebas a buscar?"
     search_button: "Buscar"
+    home: "Ir al inicio"
+    placeholder: "Buscar temas por título o palabras clave…"
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
@@ -4874,6 +4884,9 @@ es:
       one: "Debes seleccionar al menos %{count} etiqueta."
       other: "Debes seleccionar al menos %{count} etiquetas."
     upload_row_too_long: "El archivo CSV debe tener una etiqueta por línea. Opcionalmente, la etiqueta puede ir seguida de una coma, luego el nombre del grupo de etiquetas."
+    bulk_create:
+      invalid_name: "Nombre de etiqueta inválido."
+      tag_too_long: "Etiqueta demasiado larga (máximo %{max} caracteres)"
     forbidden:
       invalid:
         one: "La etiqueta que seleccionó no se puede usar"
@@ -4900,6 +4913,7 @@ es:
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
     congratulations: "¡Enhorabuena, has instalado Discourse!"
+    login_with_discourse_id: "Iniciar sesión con ID de Discourse"
     register:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"
@@ -4976,9 +4990,13 @@ es:
       review_by: "Revisado por"
       pr_summary: "%{commits} commits cambiaron %{changed_files} archivos con %{additions} adiciones y %{deletions} eliminaciones"
       no_description: "Contribuye al desarrollo de %{repo} creando una cuenta en GitHub."
+      pr_title:
+        closed: "Pull request cerrado"
       status_date:
         open: "abierto"
+        draft: "borrador"
         approved: "fecha de aprobación"
+        changes_requested: "cambios solicitados"
         closed: "cerrado"
   discourse_push_notifications:
     popup:
@@ -5019,9 +5037,13 @@ es:
     auto_deleted_hidden_posts: "Publicaciones ocultas destruidas automáticamente"
     seed_data_topic_updated: "Tema de datos de semillas actualizado"
     seed_data_topic_deleted: "Tema de datos de semillas eliminado"
+    upcoming_changes:
+      log_manually_toggled: "Cambiado manualmente por el usuario"
   reviewables:
     already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita denunciarse de nuevo."
     already_handled_and_user_not_exist: "Gracias, pero otra persona ya lo ha revisado, y ese usuario ha dejado de existir."
+    post_deleted_by_author: "La publicación fue eliminada por su autor/a"
+    post_restored_by_author: "La publicación fue restaurada por su autor/a"
     priorities:
       low: "Bajo"
       medium: "Medio"
@@ -5122,6 +5144,7 @@ es:
         title: "Descartar publicación"
         complete: "Publicación descartada."
       revise_and_reject_post:
+        title: "Solicitar revisión..."
         complete: "Publicación rechazada pendiente de revisión."
       ignore:
         title: "Ignorar"
@@ -5179,31 +5202,64 @@ es:
       approve_and_unhide:
         title: "Aprobar y dejar de ocultar publicación"
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
+      post_actions:
+        bundle_title: "¿Qué quieres hacer con la publicación?"
       no_action_post:
         title: "Ninguna acción"
+        description: "No hacer nada"
+        complete: "No se ha tomado ninguna medida al respecto"
       delete_post:
         title: "Eliminar publicación"
+        description: "Eliminar esta publicación"
         complete: "Publicación eliminada"
       hide_post:
         title: "Ocultar publicación"
+        description: "Ocultar esta publicación de la vista pública"
+        complete: "Publicación ocultada"
+      unhide_post:
+        title: "Dejar de ocultar la publicación"
+        description: "Volver a hacer público el contenido de la publicación"
+        complete: "Publicación desocultada"
       restore_post:
         title: "Restaurar publicación"
+        description: "Restaurar la publicación eliminada"
         complete: "Publicación restaurada"
+      edit_post:
+        title: "Editar publicación"
+        description: "Editar el contenido de esta publicación"
+        complete: "Publicación editada"
+      convert_to_pm:
+        title: "Convertir en mensaje personal"
+        description: "Convertir esta publicación en un mensaje personal"
+        complete: "Publicación convertida en mensaje personal"
+      user_actions:
+        bundle_title: "¿Qué quieres hacer con el usuario?"
       no_action_user:
         title: "Ninguna acción"
+        description: "No hacer nada con el usuario"
+        complete: "No se ha tomado ninguna medida contra el usuario"
       silence_user:
         title: "Silenciar al usuario"
+        description: "Evitar que el usuario siga publicando"
         complete: "Usuario silenciado"
+        reason: "Usuario silenciado a través de la cola de revisión"
       suspend_user:
         title: "Suspender al usuario"
+        description: "Suspender la cuenta del usuario"
         complete: "Usuario suspendido"
+        reason: "Usuario suspendido a través de la cola de revisión"
       delete_user:
         title: "Eliminar usuario"
+        description: "Eliminar este usuario del foro"
         complete: "Usuario eliminado"
         reason: "Eliminado a través de la cola de revisiones"
       delete_and_block_user:
+        title: "Eliminar y bloquear"
+        description: "Eliminar el usuario y bloquear su IP y correo electrónico"
         complete: "Usuario eliminado y bloqueado"
       delete_user_block:
+        title: "Eliminar y bloquear"
+        description: "Eliminar el usuario y bloquear su IP y correo electrónico"
         complete: "Usuario eliminado y bloqueado"
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"

@@ -75,6 +75,14 @@ export const AUTO_GROUPS = {
 
 export const GROUP_SMTP_SSL_MODES = { none: 0, ssl_tls: 1, starttls: 2 };
 
+export const GROUP_VISIBILITY_LEVELS = {
+  public: 0,
+  logged_on_users: 1,
+  members: 2,
+  staff: 3,
+  owners: 4,
+};
+
 export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10;
 
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;
@@ -106,6 +114,13 @@ export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];
 export const INVITE_DESCRIPTION_MAX_LENGTH = 100;
 
 export const USER_OPTION_COMPOSITION_MODES = { markdown: 0, rich: 1 };
+
+export const UPCOMING_CHANGES_USER_ENABLED_REASONS = {
+  enabled_for_everyone: "enabled_for_everyone",
+  enabled_for_no_one: "enabled_for_no_one",
+  in_specific_groups: "in_specific_groups",
+  not_in_specific_groups: "not_in_specific_groups",
+};
 
 export const INTERFACE_COLOR_MODES = {
   AUTO: 1,

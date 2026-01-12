@@ -71,8 +71,6 @@ uk:
           title: "Список тем"
         basic_topic_list:
           title: "Основний список тем"
-        footer_message:
-          title: "Повідомлення нижнього колонтитула"
         signup_cta:
           title: "Реєстрація CTA"
         topic_timer_info:
@@ -87,6 +85,8 @@ uk:
           title: "Список публікацій"
           empty_example: "<PostList /> порожній стан"
           populated_example: "<PostList /> заповнений стан"
+        post_oneboxes:
+          title: "Пошта OneBoxes"
         topic_map:
           title: "Карта теми"
         site_header:

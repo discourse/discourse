@@ -20,7 +20,7 @@ module("Integration | Component | rich-editor-extension", function (hooks) {
             .dom(".composer-event__date-display")
             .exists("Date should be displayed");
         },
-        `[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris"]\n[/event]\n`,
+        `[event start="2025-03-21 15:41" status=public timezone=Europe/Paris]\n[/event]\n`,
       ],
     ],
     "event with content around": [
@@ -37,7 +37,7 @@ module("Integration | Component | rich-editor-extension", function (hooks) {
             .dom(".composer-event__status")
             .hasText("Public", "Status should be displayed");
         },
-        `Hello world\n\n[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris"]\n[/event]\nGoodbye world`,
+        `Hello world\n\n[event start="2025-03-21 15:41" status=public timezone=Europe/Paris]\n[/event]\nGoodbye world`,
       ],
     ],
     "event with content inside": [
@@ -51,7 +51,7 @@ module("Integration | Component | rich-editor-extension", function (hooks) {
             .dom(".composer-event__status")
             .hasText("Public", "Status should be displayed");
         },
-        `[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris"]\ntest\n\n[/event]\n`,
+        `[event start="2025-03-21 15:41" status=public timezone=Europe/Paris]\ntest\n\n[/event]\n`,
       ],
     ],
   };

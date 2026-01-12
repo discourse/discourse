@@ -21,6 +21,7 @@ import {
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
+import ChatPaneState from "discourse/plugins/chat/discourse/lib/chat-pane-state";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
@@ -55,10 +56,19 @@ export default class ChatThread extends Component {
 
   @tracked atBottom = true;
   @tracked isScrolling = false;
-  @tracked needsArrow = false;
   @tracked uploadDropZone;
 
   scroller = null;
+
+  paneState = new ChatPaneState(getOwner(this), {
+    contextKey: this.pendingContextKey,
+    onUserPresent: this.debouncedUpdateLastReadMessage,
+  });
+
+  @action
+  registerScroller(element) {
+    this.scroller = element;
+  }
 
   @cached
   get messagesLoader() {
@@ -72,6 +82,10 @@ export default class ChatThread extends Component {
   get showChannelPreview() {
     const channel = this.args.thread.channel;
     return channel?.isCategoryChannel && !channel?.isFollowing;
+  }
+
+  get pendingContextKey() {
+    return this.args.thread?.id ? `thread:${this.args.thread.id}` : null;
   }
 
   @action
@@ -104,9 +118,10 @@ export default class ChatThread extends Component {
 
   @action
   teardown() {
+    this.paneState.teardown();
     this.subscriptionManager.teardown();
     cancel(this._debouncedFillPaneAttemptHandler);
-    cancel(this._debounceUpdateLastReadMessageHandler);
+    cancel(this._debouncedUpdateLastReadMessageHandler);
   }
 
   @action
@@ -117,13 +132,14 @@ export default class ChatThread extends Component {
       }
 
       DatesSeparatorsPositioner.apply(this.scroller);
-
-      this.needsArrow =
-        (this.messagesLoader.fetchedOnce &&
-          this.messagesLoader.canLoadMoreFuture) ||
-        (state.distanceToBottom.pixels > 250 && !state.atBottom);
+      this.paneState.updatePendingContentFromScrollState({
+        scroller: this.scroller,
+        fetchedOnce: this.messagesLoader.fetchedOnce,
+        canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+        state,
+      });
       this.isScrolling = true;
-      this.debounceUpdateLastReadMessage();
+      this.debouncedUpdateLastReadMessage();
 
       if (
         state.atTop ||
@@ -140,20 +156,25 @@ export default class ChatThread extends Component {
 
   @action
   onScrollEnd(state) {
-    this.needsArrow =
-      (this.messagesLoader.fetchedOnce &&
-        this.messagesLoader.canLoadMoreFuture) ||
-      (state.distanceToBottom.pixels > 250 && !state.atBottom);
     this.isScrolling = false;
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
+      this.paneState.clearPendingMessages();
       this.fetchMoreMessages({ direction: FUTURE });
+    } else {
+      this.paneState.updatePendingContentFromScrollState({
+        scroller: this.scroller,
+        fetchedOnce: this.messagesLoader.fetchedOnce,
+        canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+        state,
+      });
     }
   }
 
-  debounceUpdateLastReadMessage() {
-    this._debounceUpdateLastReadMessageHandler = discourseDebounce(
+  @bind
+  debouncedUpdateLastReadMessage() {
+    this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,
       this.updateLastReadMessage,
       READ_INTERVAL_MS
@@ -162,6 +183,10 @@ export default class ChatThread extends Component {
 
   @bind
   updateLastReadMessage() {
+    if (!this.paneState.userIsPresent) {
+      return;
+    }
+
     if (!this.args.thread?.currentUserMembership) {
       return;
     }
@@ -191,11 +216,6 @@ export default class ChatThread extends Component {
   }
 
   @action
-  registerScroller(element) {
-    this.scroller = element;
-  }
-
-  @action
   loadMessages() {
     this.fetchMessages();
     this.subscriptionManager = new ChatChannelThreadSubscriptionManager(
@@ -209,8 +229,14 @@ export default class ChatThread extends Component {
   didResizePane() {
     this._ignoreNextScroll = true;
     this.debounceFillPaneAttempt();
-    this.debounceUpdateLastReadMessage();
+    this.debouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
+
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
   }
 
   async fetchMessages(findArgs = {}) {
@@ -328,13 +354,12 @@ export default class ChatThread extends Component {
 
   @bind
   onNewMessage(message) {
-    if (!this.atBottom) {
-      this.needsArrow = true;
-      this.messagesLoader.canLoadMoreFuture = true;
-      return;
-    }
-
-    this.messagesManager.addMessages([message]);
+    this.paneState.handleIncomingMessage({
+      scroller: this.scroller,
+      shouldAutoScroll: this.paneState.userIsPresent && this.atBottom,
+      addMessage: () => this.messagesManager.addMessages([message]),
+      onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
+    });
   }
 
   @bind
@@ -499,6 +524,7 @@ export default class ChatThread extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
+    this.paneState.clearPendingMessages();
   }
 
   @action
@@ -570,7 +596,7 @@ export default class ChatThread extends Component {
 
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
-        @isVisible={{this.needsArrow}}
+        @isVisible={{this.paneState.hasPendingContentBelow}}
       />
 
       {{#if this.chatThreadPane.selectingMessages}}

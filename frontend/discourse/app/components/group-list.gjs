@@ -93,6 +93,10 @@ export default class GroupList extends Component {
               {{#each @groups.content as |group|}}
                 <GroupCard @group={{group}} />
               {{/each}}
+              <PluginOutlet
+                @name="groups-boxes-additional-cards"
+                @connectorTagName="div"
+              />
             </div>
           </div>
         </LoadMore>

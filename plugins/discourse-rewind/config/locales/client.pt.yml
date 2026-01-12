@@ -7,12 +7,17 @@
 pt:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privado"
+          public: "Público"
       reports:
         reading_time:
           title: Tempo de leitura
         chat_usage:
           messages: mensagens
-          you: Você
+          author: Você
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Convites

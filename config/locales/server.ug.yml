@@ -1132,11 +1132,10 @@ ug:
       every_month: "ھەر ئاي"
       every_six_months: "ھەر ئالتە ئاي"
   user_api_key:
-    title: "دەلىللەنگەن پىروگرامما زىيارىتى"
     authorize: "دەلىللە"
+    deny: "ۋاز كەچ"
     read: "ئوقۇ"
     read_write: "ئوقۇ/ياز"
-    description: '«%{application_name}» ھېساباتىڭىزغا تۆۋەندىكىدەك زىيارەتنى ئىلتىماس قىلدى:'
     instructions: 'بىز «%{application_name}» بىلەن ماسلاشتۇرۇپ ئىشلىتىش ئۈچۈن سىزگە يېڭى ئىشلەتكۈچى API شىفىرلىق ئاچقۇچى ھاسىللىدۇق، تۆۋەندىكى شىفىرلىق ئاچقۇچنى پىروگراممىڭىزغا كۆچۈرۈڭ:'
     otp_description: '«%{application_name}» نىڭ بۇ تور بېكەتنى زىيارەت قىلىشىغا يول قويامسىز؟'
     otp_confirmation:
@@ -3132,6 +3131,7 @@ ug:
         سىز بۇ جايغا قوشۇلغاندىن كېيىن، بىز سىزنى بىلىشكە باشلايمىز ھەمدە ۋاقىتلىق يېڭى ئىشلەتكۈچى چەكلىمىسى چىقىرىۋېتىلىدۇ. ۋاقىتنىڭ ئۆتۈشىگە ئەگىشىپ، سىز [ئىشەنچ دەرىجە] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) گە ئېرىشىسىز، ئۇنىڭدا بىزگە ياردەملىشىپ جامائىتىمىزنى باشقۇرىدىغان ئالاھىدە ئىمتىيازمۇ بار.
     welcome_user:
       title: "ئىشلەتكۈچى خۇش كەلدىڭىز"
+      preview: "%{site_name} غا خۇش كەلدىڭىز!"
       subject_template: "%{site_name} غا خۇش كەلدىڭىز!"
       text_body_template: |
         %{site_name} قوشۇلغىنىڭىزغا رەھمەت، خۇش كەلدىڭىز!
@@ -3159,6 +3159,7 @@ ug:
         ئىجازەتكە ئېرىشىش يۈكسەك مەسئۇلىيەتتىن دېرەك بېرىدۇ. ئەگەر رىياسەتچىلىك قىلىشقا يېڭى بولسىڭىز، [رىياسەتچى قوللانمىسى](https://meta.discourse.org/t/discourse-moderation-guide/63116)دىن پايدىلىنىڭ.
     welcome_invite:
       title: "خۇش كەلدىڭىز تەكلىپى"
+      preview: "%{site_name} غا خۇش كەلدىڭىز!"
       subject_template: "%{site_name} غا خۇش كەلدىڭىز!"
       text_body_template: |
         تەكلىپ بويىچە %{site_name} غا قوشۇلغانلىقىڭىزغا كۆپ رەھمەت - خۇش كەلدىڭىز!
@@ -3560,6 +3561,7 @@ ug:
         «newuser_spam_host_threshold» ۋە «allowed_spam_host_domains» تور بېكەت تەڭشىكى ئارقىلىق بۇنى ئۆزگەرتكىلى بولىدۇ. ئەگەر ئۇلار تەسىرگە ئۇچرىماسلىقى كېرەك بولسا يول قويۇش تىزىمى %{domains} غا قوشۇشنى ئويلىشىڭ.
     unsilenced:
       title: "ئۈنلۈك"
+      preview: "ھېسابات ئەمدى توختاپ قالمايدۇ."
       subject_template: "ھېسابات ئەمدى توختاپ قالمايدۇ"
       text_body_template: |
         سالام،
@@ -3608,8 +3610,6 @@ ug:
     بۇ ئېلخەت مۇشتەرىلىكىنى بىكار قىلماقچى بولسىڭىز، [بۇ جاينى چېكىڭ](%{unsubscribe_url}).
   subject_re: "جاۋاب: "
   subject_pm: "[شەخسىي ئۇچۇر] "
-  email_from: "%{user_name} %{site_name} ئارقىلىق"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "ئالدىنقى جاۋاب"
     reached_limit:
@@ -3943,6 +3943,7 @@ ug:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
+      preview: "ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ."
       subject_template: "[%{email_prefix}] ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
       text_body_template: |
         بۇ [%{site_name}](%{base_url}) دىكى تىزىمغا كىرىش ئۇلانمىسى.

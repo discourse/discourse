@@ -199,7 +199,7 @@ sk:
         no_llm: "Nie je vybraný žiadny LLM"
         no_persona: "Nie je nastavené"
         no_groups: "Žiadny"
-        edit: "Upraviť"
+        edit: "Nastavení"
         expand_list:
           one: "(%{count} ďalší)"
           few: "(%{count} ďalšie)"
@@ -241,6 +241,8 @@ sk:
           generate_concepts: "Inferencia konceptov"
           match_concepts: "Zhoda konceptov"
           deduplicate_concepts: "Deduplikácia konceptov"
+          setting_groups:
+            personas: "Personas"
         ai_helper:
           name: "Pomocník"
           description: "Pomáha používateľom pri interakcii s komunitou, ako je vytváranie tém, písanie príspevkov a čítanie obsahu"
@@ -255,6 +257,9 @@ sk:
           image_caption: "Obrázky s popismi"
           translator: "Prekladač"
           post_illustrator: "Ilustrátor príspevkov"
+          setting_groups:
+            automation: "Automatizácia"
+            personas: "Personas"
         translation:
           name: "Preklad"
           description: "Prekladá obsah do podporovaných jazykov"
@@ -262,6 +267,8 @@ sk:
           post_raw_translator: "Prekladač RAW"
           topic_title_translator: "Prekladač názvov tém"
           short_text_translator: "Prekladač krátkych textov"
+          setting_groups:
+            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifikuje potenciálny spam pomocou vybranej metódy LLM a označí ho moderátorom stránok na kontrolu v zozname kontrol."
@@ -546,7 +553,6 @@ sk:
         max_output_tokens: "Maximálny počet výstupných tokenov"
         url: "URL adresa služby, ktorá je hostiteľom modelu"
         api_key: "Kľúč API služby, ktorá je hostiteľom modelu"
-        enabled_chat_bot: "Povoľte AI bot selektor"
         vision_enabled: "Videnie povolené"
         ai_bot_user: "AI bot Používateľ"
         cost_input: "Vstupné náklady"
@@ -630,7 +636,6 @@ sk:
           display_name: "Názov, ktorý sa používa na odkazovanie na tento model v rozhraní vášho webu."
           name: "Tento údaj zahrnieme do volania API, aby sme určili, ktorý model použijeme"
           vision_enabled: "Ak je táto funkcia zapnutá, AI sa pokúsi porozumieť obrázkom. Závisí to od použitého modelu podporujúceho videnie. Podporované najnovšími modelmi od spoločností Anthropic, Google a OpenAI."
-          enabled_chat_bot: "Ak je táto možnosť povolená, používatelia môžu vybrať tento model pri vytváraní PM s botom AI"
           cost_input: "Vstupné náklady na 1 milión tokenov pre tento model"
           cost_output: "Výstupné náklady na 1 milión tokenov pre tento model"
           cost_measure: "Tokeny $/1 milión"

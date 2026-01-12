@@ -4,10 +4,16 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getAbsoluteURL } from "discourse/lib/get-url";
+import { clipboardCopy } from "discourse/lib/utilities";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import AiUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/ai-usage";
@@ -32,12 +38,25 @@ const BUFFER_SIZE = 3;
 const SCROLL_THRESHOLD = 0.7;
 
 export default class Rewind extends Component {
+  @service dialog;
+  @service currentUser;
+  @service toasts;
+
   @tracked rewind = [];
-  @tracked fullScreen = true;
+  @tracked fullScreen = this.currentUser !== null;
   @tracked loadingRewind = false;
   @tracked totalAvailable = 0;
   @tracked isLoadingMore = false;
+  @tracked cannotViewRewind = false;
   nextReportIndex = 0;
+
+  get canShare() {
+    return this.currentUser.id === this.args.user.id;
+  }
+
+  get isOwnRewind() {
+    return this.currentUser?.id === this.args.user.id;
+  }
 
   @action
   registerScrollWrapper(element) {
@@ -52,14 +71,23 @@ export default class Rewind extends Component {
 
   @action
   async loadRewind() {
+    let url = "/rewinds.json";
+    if (this.args.user.id !== this.currentUser.id) {
+      url += `?for_user_username=${this.args.user.username}`;
+    }
+
     try {
       this.loadingRewind = true;
-      const response = await ajax("/rewinds.json");
+      const response = await ajax(url);
       this.rewind = response.reports;
       this.totalAvailable = response.total_available;
       this.nextReportIndex = response.reports.length;
-    } catch (e) {
-      popupAjaxError(e);
+    } catch (err) {
+      if (err.jqXHR.status === 404 || err.jqXHR.status === 403) {
+        this.cannotViewRewind = true;
+      } else {
+        popupAjaxError(err);
+      }
     } finally {
       this.loadingRewind = false;
     }
@@ -107,8 +135,13 @@ export default class Rewind extends Component {
 
     try {
       while (this.nextReportIndex < targetIndex) {
+        let url = `/rewinds/${this.nextReportIndex}.json`;
+        if (this.args.user.id !== this.currentUser.id) {
+          url += `?for_user_username=${this.args.user.username}`;
+        }
+
         try {
-          const response = await ajax(`/rewinds/${this.nextReportIndex}.json`, {
+          const response = await ajax(url, {
             ignoreUnsent: false,
           });
           if (response.report) {
@@ -130,6 +163,73 @@ export default class Rewind extends Component {
   @action
   toggleFullScreen() {
     this.fullScreen = !this.fullScreen;
+  }
+
+  @action
+  async copyRewindLink() {
+    await clipboardCopy(
+      getAbsoluteURL(`/u/${this.args.user.username}/activity/rewind`)
+    );
+    this.toasts.success({
+      duration: "short",
+      data: {
+        message: i18n("post.controls.link_copied"),
+      },
+    });
+  }
+
+  @action
+  async toggleShareRewind() {
+    if (this.currentUser.user_option.discourse_rewind_share_publicly) {
+      try {
+        const response = await ajax("/rewinds/toggle-share", {
+          type: "PUT",
+        });
+
+        this.currentUser.set(
+          "user_option.discourse_rewind_share_publicly",
+          response.shared
+        );
+
+        this.toasts.success({
+          duration: "short",
+          data: {
+            message: i18n("discourse_rewind.share.disabled_success"),
+          },
+        });
+      } catch (err) {
+        popupAjaxError(err);
+        return;
+      }
+
+      return;
+    }
+
+    await this.dialog.confirm({
+      message: i18n("discourse_rewind.share.confirm"),
+      confirmButtonLabel: "discourse_rewind.share.confirm_button.enable",
+      cancelButtonLabel: "discourse_rewind.share.confirm_button.disable",
+      didConfirm: async () => {
+        try {
+          const response = await ajax("/rewinds/toggle-share", {
+            type: "PUT",
+          });
+          this.currentUser.set(
+            "user_option.discourse_rewind_share_publicly",
+            response.shared
+          );
+
+          this.toasts.success({
+            duration: "short",
+            data: {
+              message: i18n("discourse_rewind.share.enabled_success"),
+            },
+          });
+        } catch (err) {
+          popupAjaxError(err);
+        }
+      },
+    });
   }
 
   @action
@@ -214,16 +314,64 @@ export default class Rewind extends Component {
             </div>
           </div>
         {{else}}
-          <DButton
-            class="btn-default rewind__exit-fullscreen-btn --special-kbd"
-            @icon={{if this.fullScreen "discourse-compress" "discourse-expand"}}
-            @action={{this.toggleFullScreen}}
-          />
+          <div class="rewind__header-buttons">
+            {{#if this.canShare}}
+              <div class="rewind__share-toggle-wrapper">
+                {{i18n "discourse_rewind.share.toggle_label.private"}}
+
+                <DToggleSwitch
+                  @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
+                  class="rewind__share-toggle"
+                  {{on "click" this.toggleShareRewind}}
+                />
+                {{i18n "discourse_rewind.share.toggle_label.public"}}
+              </div>
+
+              {{#if
+                this.currentUser.user_option.discourse_rewind_share_publicly
+              }}
+                <DButton
+                  class="btn-default rewind__copy-link-btn --special-kbd"
+                  @title="composer.link_toolbar.copy"
+                  @icon="link"
+                  @action={{this.copyRewindLink}}
+                />
+              {{/if}}
+            {{/if}}
+            <DButton
+              class="btn-default rewind__exit-fullscreen-btn --special-kbd"
+              @icon={{if
+                this.fullScreen
+                "discourse-compress"
+                "discourse-expand"
+              }}
+              @action={{this.toggleFullScreen}}
+            />
+
+          </div>
+
           <div
             class="rewind__scroll-wrapper"
             {{didInsert this.registerScrollWrapper}}
             {{willDestroy this.cleanup}}
           >
+            {{#unless (eq this.currentUser.id @user.id)}}
+              <p class="rewind-other-user">{{htmlSafe
+                  (i18n
+                    "discourse_rewind.viewing_other_user"
+                    username=@user.username
+                  )
+                }}</p>
+            {{/unless}}
+
+            {{#if this.cannotViewRewind}}
+              <div class="rewind-error">
+                {{htmlSafe
+                  (i18n "discourse_rewind.cannot_view_rewind_gibberish")
+                }}
+                {{htmlSafe (i18n "discourse_rewind.cannot_view_rewind")}}
+              </div>
+            {{/if}}
 
             {{#each this.rewind as |report|}}
               {{#let
@@ -232,7 +380,11 @@ export default class Rewind extends Component {
               }}
                 {{#if ReportComponent}}
                   <div class={{concatClass "rewind-report" report.identifier}}>
-                    <ReportComponent @report={{report}} />
+                    <ReportComponent
+                      @report={{report}}
+                      @user={{@user}}
+                      @isOwnRewind={{this.isOwnRewind}}
+                    />
                   </div>
                 {{/if}}
               {{/let}}

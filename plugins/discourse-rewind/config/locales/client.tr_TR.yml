@@ -7,12 +7,17 @@
 tr_TR:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Özel"
+          public: "Genel"
       reports:
         reading_time:
           title: Okuma süresi
         chat_usage:
           messages: i̇letiler
-          you: Siz
+          author: Siz
+          author_others: "%{username}"
           status_online: "● çevrimiçi"
         invites:
           title: Davetler

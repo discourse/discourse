@@ -16,6 +16,17 @@ const detachedDocument = document.implementation.createHTMLDocument("detached");
 /** @type {Symbol} Default decorator type used when no specific type is provided */
 export const NON_STREAM_HTML_DECORATOR = Symbol("non-stream");
 
+/** Helper object for contexts without a post/model. Use with `applyHtmlDecorators`. */
+export const NULL_HELPER = Object.freeze({
+  getModel: () => null,
+  get model() {
+    return null;
+  },
+  get context() {
+    return null;
+  },
+});
+
 /** @type {Object.<Symbol|string, Function[]>} Storage for HTML decorators organized by type */
 let htmlDecorators = {};
 
@@ -57,24 +68,14 @@ export function registerHtmlDecorator(decorator, type) {
  * Applies registered HTML decorators to a DOM element and returns their cleanup functions.
  *
  * @param {HTMLElement} element - The DOM element to apply decorators to
- * @param {Object} options - Options object passed to each decorator function
+ * @param {Object} helper - Helper object passed to each decorator. Use NULL_HELPER for contexts without a model.
  * @param {Symbol|string} [type=NON_STREAM_HTML_DECORATOR] - The type of decorators to apply.
- *                                                       When not provided, defaults to NON_STREAM_HTML_DECORATOR (non-stream).
  * @returns {Function[]} Array of cleanup functions from decorators that returned them.
- *                      Each function, when called, will undo the decorator's effects.
- * @example
- * const cleanupFunctions = applyHtmlDecorators(
- *   document.querySelector('.content'),
- *   { highlight: true }
- * );
- *
- * // To clean up all decorations:
- * cleanupFunctions.forEach(cleanup => cleanup());
  */
-export function applyHtmlDecorators(element, options, type) {
+export function applyHtmlDecorators(element, helper, type) {
   return getHtmlDecoratorsForType(type)
     .map((decorator) => {
-      return decorator(element, options);
+      return decorator(element, helper);
     })
     .filter((fn) => typeof fn === "function");
 }
@@ -94,6 +95,20 @@ export function resetHtmlDecorators() {
 
 /**
  * Reactively renders cooked HTML with decorations applied.
+ *
+ * When no custom `@decorate` function is provided, registered HTML decorators
+ * (via `api.decorateCookedElement`) are automatically applied. This handles
+ * common cases like hashtag icons, mentions, and other cooked content decorations.
+ *
+ * @component DecoratedHtml
+ * @param {SafeString} html - The HTML content to render (must be wrapped with htmlSafe)
+ * @param {Function} [decorate] - Custom decorator function receiving (element, helper, decorateArgs).
+ *                                When provided, you're responsible for calling applyHtmlDecorators if needed.
+ * @param {Object} [decorateArgs] - Additional arguments passed to the decorate function
+ * @param {Object} [model] - Model object (e.g., post) passed to decorators via helper.model
+ * @param {Object} [context] - Context object passed to decorators via helper.context
+ * @param {string} [className] - CSS class name for the wrapper div
+ * @param {string} [id] - ID attribute for the wrapper div
  */
 export default class DecoratedHtml extends Component {
   renderGlimmerInfos = new TrackedArray();
@@ -110,12 +125,20 @@ export default class DecoratedHtml extends Component {
 
     const decorateFn = this.args.decorate;
 
-    // force parameters explicity declarated in `decorateArgs` to be tracked despite the
+    // force parameters explicitly declared in `decorateArgs` to be tracked despite the
     // use of `untrack` below
     decorateArgs && Object.values(decorateArgs);
 
     try {
-      untrack(() => decorateFn?.(cookedDiv, helper, decorateArgs));
+      untrack(() => {
+        if (decorateFn) {
+          // Custom decorator provided - it's responsible for calling applyHtmlDecorators if needed
+          decorateFn(cookedDiv, helper, decorateArgs);
+        } else {
+          // No custom decorator - automatically apply registered HTML decorators
+          applyHtmlDecorators(cookedDiv, helper);
+        }
+      });
     } catch (e) {
       if (isRailsTesting() || isTesting()) {
         throw e;
@@ -136,7 +159,7 @@ export default class DecoratedHtml extends Component {
   get elementToDecorate() {
     const cooked = this.args.html || htmlSafe("");
     if (!isHTMLSafe(cooked)) {
-      throw "@cooked must be an htmlSafe string";
+      throw "@html must be an htmlSafe string";
     }
     const cookedDiv = detachedDocument.createElement("div");
     cookedDiv.innerHTML = cooked.toString();

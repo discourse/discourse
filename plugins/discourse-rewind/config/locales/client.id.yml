@@ -7,12 +7,17 @@
 id:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Pribadi"
+          public: "Umum"
       reports:
         reading_time:
           title: Waktu bacaan
         chat_usage:
           messages: pesan
-          you: Anda
+          author: Anda
+          author_others: "%{username}"
         invites:
           title: Undangan
           invitee_likes: Likes Diberikan

@@ -7,12 +7,17 @@
 ca:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Públic"
       reports:
         reading_time:
           title: Temps de lectura.
         chat_usage:
           messages: missatges
-          you: Vós
+          author: Vós
+          author_others: "%{username}"
         invites:
           title: Invitacions
           invitee_posts: Publicacions creades

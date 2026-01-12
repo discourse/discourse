@@ -10,6 +10,7 @@ zh_CN:
       logs:
         staff_actions:
           actions:
+            create_automation: 创建自动化
             update_automation: 更新自动化
             delete_automation: 删除自动化
     discourse_automation:
@@ -58,8 +59,6 @@ zh_CN:
             label: 正文
           delay:
             label: 延迟（分钟）
-          prefers_encrypt:
-            label: 加密 PM（如果可用）
         group:
           label: 群组
         text:
@@ -438,6 +437,13 @@ zh_CN:
           fields:
             custom_field_name:
               label: "用户自定义字段名称"
+        set_topic_timer:
+          title: 设置话题计时器
+          fields:
+            type:
+              label: 计时器类型
+            duration:
+              label: 计时器持续时间
       unnamed_automation: "未命名的自动化"
       models:
         script:

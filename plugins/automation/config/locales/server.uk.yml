@@ -188,3 +188,6 @@ uk:
       random_assign:
         title: "Випадкове призначення"
         description: "Випадково призначати теми до групи"
+      set_topic_timer:
+        title: "Встановити таймер теми"
+        description: "Встановіть таймер теми з теми"

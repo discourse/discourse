@@ -6,7 +6,6 @@ export default class GroupManageEmail extends DiscourseRoute {
   @service router;
 
   beforeModel() {
-    // cannot configure IMAP without SMTP being enabled
     if (!this.siteSettings.enable_smtp) {
       return this.router.transitionTo("group.manage.profile");
     }

@@ -7,12 +7,17 @@
 zh_TW:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "私密"
+          public: "公開"
       reports:
         reading_time:
           title: 閱讀時間
         chat_usage:
           messages: 訊息
-          you: 你
+          author: 你
+          author_others: "%{username}"
           status_online: "● 線上"
         invites:
           title: 邀請

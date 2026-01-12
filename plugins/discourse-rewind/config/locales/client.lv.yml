@@ -7,10 +7,15 @@
 lv:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privāts"
+          public: "Publisks"
       reports:
         chat_usage:
           messages: ziņās
-          you: Tu
+          author: Tu
+          author_others: "%{username}"
         invites:
           title: Ielūgumi
           invitee_posts: Ieraksti

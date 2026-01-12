@@ -59,8 +59,6 @@ de:
             label: Hauptteil
           delay:
             label: Verzögerung (Minuten)
-          prefers_encrypt:
-            label: Verschlüsselt PN, falls verfügbar
         group:
           label: Gruppe
         text:
@@ -429,6 +427,8 @@ de:
           fields:
             custom_field_name:
               label: "Name des benutzerdefinierten Benutzerfelds"
+        set_topic_timer:
+          title: Themen-Timer einstellen
       unnamed_automation: "Automatisierung ohne Titel"
       models:
         script:

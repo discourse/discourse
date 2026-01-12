@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 const BotMessage = <template>
   <div class="chat-message__avatar">🤖</div>
@@ -25,7 +25,7 @@ const BotMessage = <template>
 const UserMessage = <template>
   <div class="chat-message__bubble">
     <div class="chat-message__author">
-      {{i18n "discourse_rewind.reports.chat_usage.you"}}
+      {{@authorText}}
     </div>
     {{#if @replyKey}}
       <div class="chat-message__text">
@@ -40,8 +40,6 @@ const UserMessage = <template>
 </template>;
 
 export default class ChatUsage extends Component {
-  @service currentUser;
-
   get favoriteChannels() {
     return this.args.report.data.favorite_channels ?? [];
   }
@@ -51,6 +49,67 @@ export default class ChatUsage extends Component {
       this.args.report.data.total_messages >= 20 &&
       this.args.report.data.unique_dm_channels >= 2 &&
       this.args.report.data.favorite_channels.length >= 1
+    );
+  }
+
+  get authorText() {
+    return i18nForOwner(
+      "discourse_rewind.reports.chat_usage.author",
+      this.args.isOwnRewind,
+      { username: this.args.user?.username }
+    );
+  }
+
+  get message1Text() {
+    return i18nForOwner(
+      "discourse_rewind.reports.chat_usage.message_1",
+      this.args.isOwnRewind,
+      {
+        count: this.args.report.data.total_messages,
+        username: this.args.user?.username,
+      }
+    );
+  }
+
+  get message2Text() {
+    return i18nForOwner(
+      "discourse_rewind.reports.chat_usage.message_2",
+      this.args.isOwnRewind,
+      {
+        dm_count: this.args.report.data.dm_message_count,
+        channel_count: this.args.report.data.unique_dm_channels,
+        username: this.args.user?.username,
+      }
+    );
+  }
+
+  get message3Text() {
+    return i18nForOwner(
+      "discourse_rewind.reports.chat_usage.message_3",
+      this.args.isOwnRewind,
+      {
+        count: this.args.report.data.total_reactions_received,
+        username: this.args.user?.username,
+      }
+    );
+  }
+
+  get message4Text() {
+    return i18nForOwner(
+      "discourse_rewind.reports.chat_usage.message_4",
+      this.args.isOwnRewind,
+      {
+        length: this.args.report.data.avg_message_length,
+        username: this.args.user?.username,
+      }
+    );
+  }
+
+  get message5Text() {
+    return i18nForOwner(
+      "discourse_rewind.reports.chat_usage.message_5",
+      this.args.isOwnRewind,
+      { username: this.args.user?.username }
     );
   }
 
@@ -73,67 +132,48 @@ export default class ChatUsage extends Component {
 
           <div class="chat-window__messages">
             <div class="chat-message --left">
-              <BotMessage
-                @message={{i18n
-                  "discourse_rewind.reports.chat_usage.message_1"
-                  count=(number @report.data.total_messages)
-                }}
-              />
+              <BotMessage @message={{htmlSafe this.message1Text}} />
             </div>
 
             <div class="chat-message --right">
-              <UserMessage @user={{this.currentUser}} @replyKey="reply_1" />
+              <UserMessage
+                @user={{@user}}
+                @replyKey="reply_1"
+                @authorText={{this.authorText}}
+              />
             </div>
 
             <div class="chat-message --left">
-              <BotMessage
-                @message={{htmlSafe
-                  (i18n
-                    "discourse_rewind.reports.chat_usage.message_2"
-                    dm_count=(number @report.data.dm_message_count)
-                    channel_count=(number @report.data.unique_dm_channels)
-                  )
-                }}
-              />
+              <BotMessage @message={{htmlSafe this.message2Text}} />
             </div>
 
             <div class="chat-message --right">
-              <UserMessage @user={{this.currentUser}} @replyKey="reply_2" />
+              <UserMessage
+                @user={{@user}}
+                @replyKey="reply_2"
+                @authorText={{this.authorText}}
+              />
             </div>
 
             <div class="chat-message --left">
-              <BotMessage
-                @message={{htmlSafe
-                  (i18n
-                    "discourse_rewind.reports.chat_usage.message_3"
-                    count=(number @report.data.total_reactions_received)
-                  )
-                }}
-              />
+              <BotMessage @message={{htmlSafe this.message3Text}} />
             </div>
 
             <div class="chat-message --right">
-              <UserMessage @user={{this.currentUser}} @replyKey="reply_3" />
+              <UserMessage
+                @user={{@user}}
+                @replyKey="reply_3"
+                @authorText={{this.authorText}}
+              />
             </div>
 
             <div class="chat-message --left">
-              <BotMessage
-                @message={{htmlSafe
-                  (i18n
-                    "discourse_rewind.reports.chat_usage.message_4"
-                    length=@report.data.avg_message_length
-                  )
-                }}
-              />
+              <BotMessage @message={{htmlSafe this.message4Text}} />
             </div>
 
             {{#if this.favoriteChannels.length}}
               <div class="chat-message --left">
-                <BotMessage
-                  @message={{i18n
-                    "discourse_rewind.reports.chat_usage.message_5"
-                  }}
-                >
+                <BotMessage @message={{this.message5Text}}>
                   <div class="chat-message__channels">
                     {{#each this.favoriteChannels as |channel|}}
                       <a
@@ -154,7 +194,7 @@ export default class ChatUsage extends Component {
             {{/if}}
 
             <div class="chat-message --right">
-              <UserMessage @user={{this.currentUser}}>
+              <UserMessage @user={{@user}} @authorText={{this.authorText}}>
                 <img
                   src={{getURL
                     "/plugins/discourse-rewind/images/dancing_baby.gif"

@@ -59,8 +59,6 @@ hu:
             label: Törzs
           delay:
             label: Késleltetés (perc)
-          prefers_encrypt:
-            label: PÜ titkosítása, ha elérhető
         group:
           label: Csoport
         text:
@@ -429,6 +427,8 @@ hu:
           fields:
             custom_field_name:
               label: "Felhasználó egyéni mezőneve"
+        set_topic_timer:
+          title: Téma időzítőjének beállítása
       unnamed_automation: "Névtelen automatizálás"
       models:
         script:

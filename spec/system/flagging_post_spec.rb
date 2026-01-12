@@ -10,6 +10,7 @@ describe "Flagging post", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
   let(:silence_user_modal) { PageObjects::Modals::PenalizeUser.new("silence") }
+  let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
 
   describe "Using Take Action" do
     before { sign_in(current_user) }
@@ -31,8 +32,7 @@ describe "Flagging post", type: :system do
 
       visit "/review/#{other_flag_reviewable.id}"
 
-      expect(page).to have_content(I18n.t("js.review.statuses.approved_flag.title"))
-      expect(page).to have_css(".reviewable-meta-data .status .approved")
+      expect(refreshed_review_page).to have_reviewable_with_approved_status(other_flag_reviewable)
     end
 
     it "can choose to immediately silence the user" do
@@ -56,8 +56,7 @@ describe "Flagging post", type: :system do
 
       visit "/review/#{Reviewable.sole.id}"
 
-      expect(page).to have_content(I18n.t("js.review.statuses.approved_flag.title"))
-      expect(page).to have_css(".reviewable-meta-data .status .approved")
+      expect(refreshed_review_page).to have_reviewable_with_approved_status(Reviewable.sole)
     end
   end
 

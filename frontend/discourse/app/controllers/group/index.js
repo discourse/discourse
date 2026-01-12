@@ -1,13 +1,19 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import { GROUP_VISIBILITY_LEVELS } from "discourse/lib/constants";
 import discourseComputed, { debounce } from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
+import { i18n } from "discourse-i18n";
 
 export default class GroupIndexController extends Controller {
+  @service currentUser;
+  @service dialog;
+
   @trackedArray bulkSelection = null;
 
   queryParams = ["order", "asc", "filter"];
@@ -178,8 +184,35 @@ export default class GroupIndexController extends Controller {
     }
   }
 
+  _wouldLoseAccessOnRemoval(user) {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    if (user.id !== this.currentUser.id) {
+      return false;
+    }
+
+    const group = this.model;
+
+    return (
+      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
+      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
+    );
+  }
+
   @action
-  removeMember(user) {
+  async removeMember(user) {
+    if (this._wouldLoseAccessOnRemoval(user)) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("groups.members.remove_member_self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     this.model.removeMember(user, this.memberParams);
   }
 
@@ -189,7 +222,17 @@ export default class GroupIndexController extends Controller {
   }
 
   @action
-  removeOwner(user) {
+  async removeOwner(user) {
+    if (this._wouldLoseAccessOnRemoval(user)) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("groups.members.remove_owner_self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     this.model.removeOwner(user);
   }
 

@@ -4,71 +4,86 @@ RSpec.describe "AI Usage Admin Page", type: :system do
   fab!(:admin)
   fab!(:llm_model)
 
+  let(:ai_usage_page) { PageObjects::Pages::AiUsage.new }
+
+  def create_usage(model, feature: "summarize", created_at: 1.day.ago)
+    AiApiRequestStat.create!(
+      provider_id: 1,
+      feature_name: feature,
+      language_model: model.name,
+      llm_id: model.id,
+      request_tokens: 100,
+      response_tokens: 50,
+      created_at:,
+    )
+  end
+
   before do
     enable_current_plugin
     sign_in(admin)
   end
 
-  context "when viewing usage data with total rows" do
+  context "when viewing usage data" do
     before do
-      AiApiRequestStat.create!(
-        provider_id: 1,
-        feature_name: "summarize",
-        language_model: llm_model.name,
-        llm_id: llm_model.id,
-        request_tokens: 100,
-        response_tokens: 50,
-        created_at: 1.day.ago,
-      )
-
-      AiApiRequestStat.create!(
-        provider_id: 1,
-        feature_name: "translate",
-        language_model: llm_model.name,
-        llm_id: llm_model.id,
-        request_tokens: 200,
-        response_tokens: 100,
-        created_at: 2.days.ago,
-      )
+      create_usage(llm_model, feature: "summarize")
+      create_usage(llm_model, feature: "translate", created_at: 2.days.ago)
     end
 
-    it "displays total rows in the features and models tables" do
-      visit "/admin/plugins/discourse-ai/ai-usage"
+    it "displays total rows in tables" do
+      ai_usage_page.visit
 
       expect(page).to have_css(".ai-usage__features-table .ai-usage__total-row")
       expect(page).to have_css(".ai-usage__models-table .ai-usage__total-row")
-
-      within ".ai-usage__features-table .ai-usage__total-row" do
-        expect(page).to have_content(I18n.t("js.discourse_ai.usage.total"))
-      end
     end
   end
 
-  context "when using custom date range functionality" do
-    it "allows selecting custom date range without JavaScript errors" do
-      visit "/admin/plugins/discourse-ai/ai-usage"
-      expect(page).to have_css(".ai-usage")
+  context "when filtering by model" do
+    fab!(:other_model) { Fabricate(:llm_model, display_name: "Other Model", name: "other-model") }
 
-      # Click custom date button to show date picker
-      find(".ai-usage__period-buttons .btn-default:last-child").click
-      expect(page).to have_css(".ai-usage__custom-date-pickers")
+    before do
+      create_usage(llm_model)
+      create_usage(other_model, feature: "translate")
+    end
 
-      # Set dates
-      date_inputs = all(".ai-usage__custom-date-pickers input[type='date']")
-      date_inputs[0].set("2025-07-01")
-      date_inputs[1].set("2025-07-31")
+    it "keeps all models in dropdown after selecting a filter" do
+      ai_usage_page.visit
 
-      # Verify dates are set correctly (preview functionality)
-      expect(date_inputs[0].value).to eq("2025-07-01")
-      expect(date_inputs[1].value).to eq("2025-07-31")
+      model_selector = ai_usage_page.model_selector
+      model_selector.expand
+      model_selector.select_row_by_name(llm_model.display_name)
 
-      # Click refresh - this used to cause visual glitches and date reversion
-      find(".ai-usage__custom-date-pickers .btn", text: I18n.t("js.refresh")).click
+      expect(model_selector).to have_selected_name(llm_model.display_name)
 
-      # Wait for any potential async operations
-      sleep(1)
+      model_selector.expand
+      expect(model_selector).to have_option_name(other_model.display_name)
+    end
+  end
 
-      expect(page).to have_css(".ai-usage__summary")
+  context "when changing time period" do
+    fab!(:recent_model) do
+      Fabricate(:llm_model, display_name: "Recent Model", name: "recent-model")
+    end
+    fab!(:old_model) { Fabricate(:llm_model, display_name: "Old Model", name: "old-model") }
+
+    before do
+      create_usage(recent_model, created_at: 6.hours.ago)
+      create_usage(old_model, feature: "translate", created_at: 5.days.ago)
+    end
+
+    it "updates model dropdown to reflect the selected period" do
+      ai_usage_page.visit
+
+      model_selector = ai_usage_page.model_selector
+      model_selector.expand
+      expect(model_selector).to have_option_name(recent_model.display_name)
+      expect(model_selector).to have_option_name(old_model.display_name)
+      model_selector.collapse
+
+      ai_usage_page.select_period(:day)
+
+      model_selector.expand
+      expect(model_selector).to have_option_name(recent_model.display_name)
+      expect(model_selector).to have_no_option_name(old_model.display_name)
     end
   end
 end

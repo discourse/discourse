@@ -1963,6 +1963,10 @@ class User < ActiveRecord::Base
     UpcomingChanges.enabled_for_user?(upcoming_change, self)
   end
 
+  def upcoming_change_stats(acting_guardian)
+    UpcomingChanges.stats_for_user(user: self, acting_guardian: acting_guardian)
+  end
+
   protected
 
   def badge_grant
@@ -1977,7 +1981,7 @@ class User < ActiveRecord::Base
   def clear_global_notice_if_needed
     return if id < 0
 
-    if admin && SiteSetting.has_login_hint
+    if admin && active && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""
     end

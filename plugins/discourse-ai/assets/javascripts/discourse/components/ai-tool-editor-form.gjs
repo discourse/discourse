@@ -9,6 +9,7 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { and, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { toPlainObject } from "../lib/utilities";
 import AiToolTestModal from "./modal/ai-tool-test-modal";
 import RagOptionsFk from "./rag-options-fk";
 import RagUploader from "./rag-uploader";
@@ -44,6 +45,12 @@ export default class AiToolEditorForm extends Component {
       }
     );
 
+    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
+    // Convert to plain objects to ensure compatibility.
+    const ragUploads = this.args.editingModel.rag_uploads || [];
+    const plainRagUploads =
+      ragUploads.length > 0 ? toPlainObject(ragUploads) : [];
+
     return {
       name: this.args.editingModel.name || "",
       tool_name: this.args.editingModel.tool_name || "",
@@ -51,7 +58,7 @@ export default class AiToolEditorForm extends Component {
       summary: this.args.editingModel.summary || "",
       parameters,
       script: this.args.editingModel.script || "",
-      rag_uploads: this.args.editingModel.rag_uploads || [],
+      rag_uploads: plainRagUploads,
     };
   }
 
@@ -71,7 +78,7 @@ export default class AiToolEditorForm extends Component {
     this.isSaving = true;
 
     // we injected a isEnum thing, we need to clean it up
-    const copiedData = JSON.parse(JSON.stringify(data));
+    const copiedData = toPlainObject(data);
     if (copiedData.parameters) {
       copiedData.parameters.forEach((parameter) => {
         if (!parameter.isEnum) {
@@ -121,7 +128,10 @@ export default class AiToolEditorForm extends Component {
 
   @action
   updateUploads(addItemToCollection, uploads) {
-    const uniqueUploads = uploads.filter(
+    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
+    // Convert to plain objects to ensure compatibility.
+    const plainUploads = toPlainObject(uploads);
+    const uniqueUploads = plainUploads.filter(
       (upload) => !this.uploadedFiles.some((file) => file.id === upload.id)
     );
     addItemToCollection("rag_uploads", uniqueUploads);
@@ -133,7 +143,11 @@ export default class AiToolEditorForm extends Component {
     this.uploadedFiles = this.uploadedFiles.filter(
       (file) => file.id !== upload.id
     );
-    form.set("rag_uploads", this.uploadedFiles);
+    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
+    // Convert to plain objects to ensure compatibility.
+    const plainUploads =
+      this.uploadedFiles.length > 0 ? toPlainObject(this.uploadedFiles) : [];
+    form.set("rag_uploads", plainUploads);
   }
 
   @action

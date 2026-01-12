@@ -882,6 +882,9 @@ lv:
       new_private_message: "Jauns ziņa"
       private_message: "Ziņa"
       private_messages: "Ziņas"
+      upcoming_changes:
+        for_user:
+          enabled: "Ieslēgts?"
       user_notifications:
         filters:
           filter_by: "Filtrēt pēc"
@@ -1715,6 +1718,8 @@ lv:
       upload_title: "Augšupielādēt"
       upload_description: "pievienojiet faila aprakstu"
       list_item: "Saraksta punkts"
+      wrap_modal:
+        apply: "Pielietot"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
@@ -1908,16 +1913,6 @@ lv:
         bookmarks: "Jūs vēl neesat pievienojuši grāmatzīmēm nevienu tēmu."
         category: "Sadaļā %{category} nav tēmu."
         top: "Nav svarīgu tēmu."
-      bottom:
-        latest: "Vairāk jaunāko tēmu nav. "
-        posted: "Vairāk publicēto tēmu nav. "
-        read: "Vairāk lasīto tēmu nav. "
-        new: "Vairāk jauno tēmu nav. "
-        unread: "Vairāk nelasīto tēmu nav. "
-        category: "Vairāk sadaļās %{category} tēmu nav. "
-        tag: "Vairāk sadaļās %{tag} tēmu nav. "
-        top: "Vairāk svarīgu tēmu nav. "
-        bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
     topic_bulk_actions:
       dismiss:
         name: "Nerādīt"
@@ -2694,6 +2689,7 @@ lv:
       sort_by_name: "vārda"
       manage_groups: "Pārvaldīt tagu grupas"
       manage_groups_description: "Izveidot grupas, lai organizētu tagus"
+      bulk_create_button: "Izveidot"
       filters:
         without_category: "%{filter} %{tag} tēmas"
         with_category: "%{filter} %{tag} tēmas sadaļā %{category}"
@@ -3834,6 +3830,8 @@ lv:
         no_user_badges: "%{name} nav piešķirts neviens žetons."
         no_badges: Nav žetonu, kas var tikt piešķirti.
         none_selected: "Izvēlieties žetonu, lai sāktu"
+        sections:
+          settings: Iestatījumi
         allow_title: Atļaut žetonam parādīties titulā
         multiple_grant: Var tikt piešķirts vairākas reizes
         listable: Rādīt žetonu publisko žeotnu lapā

@@ -21,6 +21,11 @@
 #                         is changed.
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# upcoming_change       - Additional metadata with the following options to show in the /admin/config/upcoming-changes page:
+#                          - status: experimental | alpha | beta | stable
+#                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
+#                          - learn_more_url: a url for more information
+#
 #
 #
 # type: email                 - Must be a valid email address.
@@ -568,6 +573,9 @@ basic:
     default: false
     hidden: true
     client: true
+  trigger_browser_pageview_events:
+    default: false
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
@@ -989,6 +997,11 @@ users:
     default: 15
     min: 1
     area: "users"
+  delete_all_posts_background_threshold:
+    client: true
+    default: 200
+    min: 1
+    area: "users"
   delete_user_self_max_post_count:
     default: 1
     min: -1
@@ -1095,6 +1108,7 @@ users:
     min: 0
     max: 36500
     area: "users"
+    requires_confirmation: "simple"
   clean_up_unused_staged_users_after_days:
     default: 365
     min: 0
@@ -1886,27 +1900,9 @@ email:
       - X-Spam-Status
       - X-SES-Spam-Verdict
     area: "email"
-  enable_imap:
-    default: false
-    client: true
-    hidden: true
-  enable_imap_write:
-    default: false
-    hidden: true
-  enable_imap_idle:
-    default: false
-    hidden: true
   enable_smtp:
     default: false
     client: true
-  imap_polling_period_mins:
-    default: 5
-  imap_polling_old_emails:
-    default: 1000
-  imap_polling_new_emails:
-    default: 250
-  imap_batch_import_email:
-    default: 100
   email_prefix:
     default: ""
     area: "email"
@@ -3105,6 +3101,10 @@ developer:
   viewport_based_mobile_mode:
     default: true
     client: true
+  site_setting_verbose_client_logging:
+    default: false
+    client: true
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -4146,6 +4146,9 @@ experimental:
     hidden: true
     client: true
     area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -4190,6 +4193,11 @@ experimental:
     type: group_list
     default: ""
     area: "experimental"
+    hidden: true
+  force_old_reviewable_ui:
+    client: true
+    default: false
+    hidden: true
   reviewable_old_moderator_actions:
     default: true
     hidden: true
@@ -4198,3 +4206,10 @@ experimental:
     default: false
     hidden: true
     client: true
+  floating_dismiss_topics_on_mobile:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"

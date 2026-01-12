@@ -150,6 +150,8 @@ pl_PL:
         invalid_type: "%{type} nie jest prawidłowym typem"
         humanize_not_valid_string_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być ciągiem znaków."
         not_valid_string_value: "musi być ciągiem znaków"
+        humanize_not_valid_datetime_value: "Właściwość wskaźnika JSON „%{property_json_pointer}” musi być prawidłową wartością daty i godziny."
+        not_valid_datetime_value: "musi być prawidłową datą i godziną"
         humanize_not_valid_integer_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być liczbą całkowitą."
         not_valid_integer_value: "musi być liczbą całkowitą"
         humanize_not_valid_float_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być typu float."
@@ -893,6 +895,11 @@ pl_PL:
       email_already_used_in_group: "'%{email}' jest już używany przez grupę '%{group_name}'."
       email_already_used_in_category: "'%{email}' jest już używany przez kategorię '%{category_name}'."
       description_incomplete: "Wpis opisujący kategorię musi mieć przynajmniej jeden paragraf."
+      description_too_long:
+        one: "Opis jest zbyt długi (maksymalnie %{count} znak)."
+        few: "Opis jest zbyt długi (maksymalnie %{count} znaki)."
+        many: "Opis jest zbyt długi (maksymalnie %{count} znaków)."
+        other: "Opis jest zbyt długi (maksymalnie %{count} znaków)."
       permission_conflict: "Grupa posiadająca dostęp do podkategorii musi mieć także dostęp do jej kategorii nadrzędnej. Grupy %{group_names} mają dostęp do jednej z podkategorii, ale nie do grupy nadrzędnej."
       disallowed_topic_tags: "Ten temat zawiera tagi %{tags}, które nie są dozwolone w tej kategorii"
       disallowed_tags_generic: "W tym temacie niedozwolone są tagi."
@@ -1285,11 +1292,14 @@ pl_PL:
       every_month: "każdego miesiąca"
       every_six_months: "co 6 miesięcy"
   user_api_key:
-    title: "Zezwolić na dostęp aplikacji"
+    title: 'Autoryzuj "%{application_name}"'
     authorize: "Autoryzuj"
+    deny: "Anuluj"
     read: "odczyt"
     read_write: "odzczyt/zapis"
-    description: '"%{application_name}" prosi o następujący dostęp do twojego konta:'
+    logged_in_as: "Zalogowano jako"
+    permissions_header: 'Pozwoli to "%{application_name}" na:'
+    redirect_warning: "Autoryzacja przekieruje Cię do"
     instructions: 'Wygenerowaliśmy nowy klucz API użytkownika do korzystania z "%{application_name}", skopiuj następujący klucz do swoje aplikacji:'
     otp_description: 'Czy zezwalasz "%{application_name}" na dostęp do tej strony?'
     otp_confirmation:
@@ -2344,6 +2354,7 @@ pl_PL:
     relative_date_duration: "Liczba dni od wysłania wpisu gdy wyświetlana jest data relatywna (7d) zamiast absolutnej (20 Lut)."
     delete_user_max_post_age: "Nie pozwalaj na usuwanie użytkowników których pierwszy wpis jest starszy niż (x) dni."
     delete_all_posts_max: "Maksymalna liczba wpisów jaka może zostać usunięta jednorazowo przyciskiem \"Usuń Wszystkie Wpisy\". Jeśli użytkownik ma więcej wpisów, ani one ani użytkownik nie mogą one być usunięte.1\n"
+    delete_all_posts_background_threshold: "Maksymalna liczba wpisów, które można usunąć jednocześnie za pomocą przycisku „Usuń wszystkie wpisy”, zanim usunięcie zostanie przetworzone w tle."
     delete_user_self_max_post_count: "Maksymalna liczba wpisów, jaką może posiadać użytkownik, umożliwiając usunięcie konta samoobsługowego. Ustaw na -1, aby wyłączyć usuwanie konta samoobsługowego."
     username_change_period: "Maksymalna liczba dni po rejestracji, w których konta mogą zmienić swoją nazwę użytkownika (0, aby uniemożliwić zmianę nazwy użytkownika)."
     email_editable: "Zezwól użytkownikom na zmianę adresu e-mail po rejestracji."
@@ -2625,8 +2636,11 @@ pl_PL:
     content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i wpisów poprzez menu wpisów."
     enable_upcoming_changes: "Włącz nadchodzące zmiany"
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
+    floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
+    experimental_rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
+      invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
       invalid_email: "Nieprawidłowy adres e-mail."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
       valid_username: "Istnieje użytkownik o tej nazwie."
@@ -3283,6 +3297,7 @@ pl_PL:
     contents_hidden: "Proszę przejść do wpisu, aby wyświetlić jego zawartość."
     post_hidden:
       title: "Ukryty wpis"
+      preview: "Wpis został ukryty z powodu flag zgłoszonych przez członków społeczności."
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
       text_body_template: |
         Witaj!
@@ -3344,6 +3359,7 @@ pl_PL:
         Moderatorzy %{site_name}
     post_hidden_again:
       title: "Post ukryty ponownie"
+      preview: "Wpis został ponownie ukryty przez członków społeczności."
       subject_template: "Wpis ukryty przez społeczność, powiadomiono personel"
       text_body_template: |
         Witaj!
@@ -3432,6 +3448,7 @@ pl_PL:
         Gdy będziesz uczestniczyć w dyskusji, poznamy Cię i tymczasowe ograniczenia dla nowych użytkowników zostaną zniesione. Z biegiem czasu zyskasz [poziomy zaufania](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), które obejmują specjalne umiejętności pomagające nam wspólnie zarządzać naszą społecznością.
     welcome_user:
       title: "Witaj Użytkowniku"
+      preview: "Witaj na %{site_name}!"
       subject_template: "Witaj na %{site_name}!"
       text_body_template: |
         Dziękujemy za rejestrację na %{site_name} i witamy!
@@ -3459,6 +3476,7 @@ pl_PL:
         Z wielką mocą wiąże się wielka odpowiedzialność. Jeśli nie masz doświadczenia w moderowaniu, zapoznaj się z [przewodnikiem moderacji](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Zaproszenie powitalne"
+      preview: "Witaj na %{site_name}!"
       subject_template: "Witaj na %{site_name}!"
       text_body_template: |
         Dziękujemy za przyjęcie zaproszenia do %{site_name} – witamy!
@@ -3829,6 +3847,7 @@ pl_PL:
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Zbyt wiele spamowych flag."
+      preview: "Wpisy tymczasowo ukryte ze względu na flagi spamu."
       subject_template: "Nowe konto zawieszone"
       text_body_template: |
         Witaj!
@@ -3851,6 +3870,7 @@ pl_PL:
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Wyciszony przez personel"
+      preview: "Konto zostało tymczasowo zawieszone."
       subject_template: "Konto tymczasowo zawieszone"
       text_body_template: |
         Witaj!
@@ -3897,6 +3917,7 @@ pl_PL:
         To może być modyfikowana poprzez zmodyfikowanie `newuser_spam_host_threshold` oraz `allowed_spam_host_domains` w ustawieniach serwisu. Rozważ dodanie %{domains} do dozwolonej listy, jeśli powinny być zwolnione z ręcznej weryfikacji.
     unsilenced:
       title: "Niewyciszony"
+      preview: "Konto odblokowane."
       subject_template: "Konto odblokowane"
       text_body_template: |
         Witaj!
@@ -3939,6 +3960,11 @@ pl_PL:
         Witaj!
 
         Wpisy od nowych użytkowników zostały przekazane do moderacji i obecnie czekają na przejrzenie. [Zatwierdź lub odrzuć je tutaj](%{base_url}/review?type=ReviewableQueuedPost).
+    user_posts_deleted:
+      title: "Usunięto wpisy użytkownika"
+      subject_template: "Wszystkie wpisy użytkownika %{user} zostały usunięte"
+      text_body_template: |
+        %{deleted_posts_count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}.
   unsubscribe_link: |
     Aby zrezygnować z otrzymywania tych e-maili, [kliknij tutaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -3949,8 +3975,6 @@ pl_PL:
     Aby zrezygnować z tych e-maili, [kliknij tutaj](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PW] "
-  email_from: "%{user_name} z %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Poprzednie odpowiedzi"
     reached_limit:
@@ -4058,6 +4082,7 @@ pl_PL:
         %{respond_instructions}
     user_replied:
       title: "Użytkownik odpowiedział"
+      preview: "Ktoś odpowiedział na Twój wpis."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4080,6 +4105,7 @@ pl_PL:
         %{respond_instructions}
     user_quoted:
       title: "Użytkownik zacytował"
+      preview: "Ktoś zacytował Cię we wpisie."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4091,6 +4117,7 @@ pl_PL:
         %{respond_instructions}
     user_linked:
       title: "Użytkownik podał link"
+      preview: "Wpis powiązany z innym tematem."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4102,6 +4129,7 @@ pl_PL:
         %{respond_instructions}
     user_mentioned:
       title: "Użytkownik Wspomniany"
+      preview: "Ktoś wspomniał o Tobie we wpisie."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4157,6 +4185,7 @@ pl_PL:
         %{respond_instructions}
     user_posted:
       title: "Użytkownik Opublikował"
+      preview: "Ktoś odpowiedział na temat, który obserwujesz."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4190,6 +4219,7 @@ pl_PL:
         %{respond_instructions}
     user_posted_pm:
       title: "Użytkownik opublikował PW"
+      preview: "Ktoś wysłał Ci wiadomość prywatną."
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4284,6 +4314,7 @@ pl_PL:
       preheader: "Krótkie podsumowanie od %{since}"
     forgot_password:
       title: "Zapomniane hasło"
+      preview: "Zresetuj swoje hasło."
       subject_template: "[%{email_prefix}] Reset hasła"
       text_body_template: |
         Ktoś poprosił o zresetowanie Twojego hasła na [%{site_name}](%{base_url}).
@@ -4294,6 +4325,7 @@ pl_PL:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Zaloguj za pomocą linku"
+      preview: "Zaloguj za pomocą linku."
       subject_template: "[%{email_prefix}] Zaloguj się przez link"
       text_body_template: |
         Oto Twój link do logowania się na [%{site_name}](%{base_url}).
@@ -4304,6 +4336,7 @@ pl_PL:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Ustaw hasło"
+      preview: "Ustaw hasło do konta."
       subject_template: "[%{email_prefix}] Ustaw hasło"
       text_body_template: |
         Ktoś poprosił o dodanie hasła do twojego konta [%{site_name}](%{base_url}). Możesz się zalogować przy pomocy konta w i innym serwisie (Google, Facebook, itd.) które zostało powiązane z twoim potwierdzonym adresem email.
@@ -4314,6 +4347,7 @@ pl_PL:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Logowanie administratora. "
+      preview: "Wymagane zalogowanie administratora."
       subject_template: "[%{email_prefix}] Login"
       text_body_template: |
         Ktoś poprosił o zalogowanie się na Twoje konto na [%{site_name}] (%{base_url}).
@@ -4324,6 +4358,7 @@ pl_PL:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Utworzono Konto"
+      preview: "Utworzono dla Ciebie nowe konto."
       subject_template: "[%{email_prefix}] Twoje Nowe Konto"
       text_body_template: |
         Utworzyliśmy Twoje konto na %{site_name}
@@ -4371,6 +4406,7 @@ pl_PL:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Powiadom Stary Email"
+      preview: "Zaktualizowano adres e-mail."
       subject_template: "[%{email_prefix}] Twój adres email został zmieniony"
       text_body_template: |
         To jest wiadomość automatyczna, aby cię poinformować, że twój adres email na stronie %{site_name}został zmieniony. Jeśli działania te zostały dokonane przez przypadek, proszę skontaktować się z administratorem strony.
@@ -4389,6 +4425,7 @@ pl_PL:
         %{new_email}
     signup_after_approval:
       title: "Zarejestruj się po zatwierdzeniu"
+      preview: "Nowe konto zostało zatwierdzone."
       subject_template: "Zostałeś/łaś zaakceptowany na forum %{site_name}!"
       text_body_template: |
         Witamy na %{site_name}!
@@ -4414,6 +4451,7 @@ pl_PL:
         %{reject_reason}
     signup:
       title: "Podpis"
+      preview: "Potwierdź swoje konto."
       subject_template: "[%{email_prefix}] Potwierdź swoje nowe konto"
       text_body_template: |
         Witaj na %{site_name}!
@@ -4434,6 +4472,7 @@ pl_PL:
         Jeśli powyższego łącza nie można kliknąć, spróbuj je skopiować i wkleić w pasku adresu swojej przeglądarki internetowej.
     suspicious_login:
       title: "Alert nowego logowania"
+      preview: "Zweryfikuj swoje urządzenie."
       subject_template: "[%{site_name}] Nowe logowanie z %{location}"
       text_body_template: |
         Witaj!
@@ -5199,6 +5238,11 @@ pl_PL:
       many: "Musisz wybrać co najmniej %{count} tagów."
       other: "Musisz wybrać co najmniej %{count} tagów."
     upload_row_too_long: "Plik CSV powinien zawierać jeden tag w każdym wierszu. Opcjonalnie po tagu można umieścić przecinek, a następnie nazwę grupy tagów."
+    bulk_create:
+      invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
+      invalid_name: "Nieprawidłowa nazwa tagu."
+      tag_too_long: "Tag jest za długi (maksymalnie %{max} znaków)."
+      too_many_tags: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{max} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
     forbidden:
       invalid:
         one: "Nie można użyć wybranego tagu"
@@ -5235,6 +5279,9 @@ pl_PL:
   rss_by_tag: "Tematy otagowane %{tag}"
   finish_installation:
     congratulations: "Gratulacje, zainstalowałeś/łaś Discourse!"
+    login_with_discourse_id: "Zaloguj się przez Discourse ID"
+    discourse_id_help: "Zaloguj się przy użyciu identyfikatora Discourse ID, korzystając z poniższego przycisku. <br/><br/>Upewnij się, że używasz konta Discourse ID z głównym adresem e-mail, który odpowiada zmiennej środowiskowej `DISCOURSE_DEVELOPER_EMAILS`."
+    discourse_id_error_help: "Zdecydowałeś się na razie pominąć konfigurację poczty e-mail. Niestety, z powodu powyższego komunikatu o błędzie, konfiguracja nie może być kontynuowana. Zgłoś ten problem na <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Zarejestruj"
       title: "Zarejestrowano konto administratora"
@@ -5246,6 +5293,10 @@ pl_PL:
     resend_email:
       title: "Ponowne przesyłanie emaila aktywacyjnego"
       message: "<p>Powtórnie przesłaliśmy e-maila aktywacyjnego do <b>%{email}</b>"
+    discourse_id:
+      help: "Konfigurujemy teraz Discourse ID."
+      no_allowed_emails: "Brak dozwolonych adresów e-mail skonfigurowanych w DISCOURSE_DEVELOPER_EMAILS. Nie można kontynuować konfiguracji witryny."
+      global_notice: "Żaden administrator jeszcze się nie zalogował. Zaloguj się, używając konta Discourse ID i adresu e-mail zgodnego ze zmienną środowiskową `DISCOURSE_DEVELOPER_EMAILS`, aby dokończyć instalację."
   safe_mode:
     title: "Wejście w tryb bezpieczny"
     description: "Tryb bezpieczny umożliwia testowanie witryny bez ładowania motywów i wtyczek po stronie klienta. Wtyczki po stronie serwera pozostają włączone."

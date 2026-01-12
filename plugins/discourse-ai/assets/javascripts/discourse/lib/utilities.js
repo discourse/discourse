@@ -1,6 +1,21 @@
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 
+/**
+ * Converts Immer proxy objects to plain JavaScript objects.
+ * FormKit uses Immer proxies which can cause issues when passed to certain handlers
+ * (like upload handlers). This function creates a deep clone without proxy wrappers.
+ *
+ * @param {any} obj - The object to convert (can be null/undefined)
+ * @returns {any} A plain JavaScript object without proxy wrappers
+ */
+export function toPlainObject(obj) {
+  if (!obj) {
+    return obj;
+  }
+  return JSON.parse(JSON.stringify(obj));
+}
+
 export function jsonToHtml(json) {
   if (json === null) {
     return "null";

@@ -59,8 +59,6 @@ fr:
             label: Corps
           delay:
             label: Délai (minutes)
-          prefers_encrypt:
-            label: Chiffrer le MP si disponible
         group:
           label: Groupe
         text:
@@ -429,6 +427,8 @@ fr:
           fields:
             custom_field_name:
               label: "Nom du champ personnalisé de l'utilisateur"
+        set_topic_timer:
+          title: Planifier une action
       unnamed_automation: "Automatisation sans nom"
       models:
         script:

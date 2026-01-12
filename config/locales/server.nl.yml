@@ -1134,11 +1134,10 @@ nl:
       every_month: "maandelijks"
       every_six_months: "elke zes maanden"
   user_api_key:
-    title: "Toegang tot toepassingen autoriseren"
     authorize: "Autoriseren"
+    deny: "Annuleren"
     read: "lezen"
     read_write: "lezen/schrijven"
-    description: '''%{application_name}'' vraagt de volgende toegang tot je account:'
     instructions: 'We hebben zojuist een nieuwe API-gebruikerssleutel voor je gegenereerd voor gebruik met ''%{application_name}''. Plak de volgende link in je toepassing:'
     otp_description: 'Wil je ''%{application_name}'' toegang tot deze website geven?'
     otp_confirmation:
@@ -3153,6 +3152,7 @@ nl:
         Terwijl je deelneemt hier, leren we je kennen en worden tijdelijke beperkingen voor nieuwe gebruikers opgeheven. Na verloop van tijd krijg je [vertrouwensniveaus](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) met speciale mogelijkheden om ons te helpen onze community samen te beheren.
     welcome_user:
       title: "Welkom gebruiker"
+      preview: "Welkom bij %{site_name}!"
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
         Fijn dat je lid bent geworden van %{site_name}, en welkom!
@@ -3180,6 +3180,7 @@ nl:
         Met macht komt verantwoordelijkheid. Als modereren nieuw is voor je, raadpleeg dan de [Moderatiegids](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Welkomstuitnodiging"
+      preview: "Welkom bij %{site_name}!"
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
         Bedankt voor het accepteren van de uitnodiging voor %{site_name} -- welkom!
@@ -3595,6 +3596,7 @@ nl:
         Dit kan worden gewijzigd via de website-instellingen `newuser_spam_host_threshold` en `allowed_spam_host_domains`. Overweeg %{domains} toe te voegen aan de toelatingslijst als deze moeten worden uitgezonderd.
     unsilenced:
       title: "Demping opgeheven"
+      preview: "Account niet meer geblokkeerd."
       subject_template: "Account niet meer geblokkeerd"
       text_body_template: |
         Hallo,
@@ -3643,8 +3645,6 @@ nl:
     [Klik hier](%{unsubscribe_url}) om je af te melden voor deze e-mails.
   subject_re: "Re:"
   subject_pm: "[PB]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Eerdere antwoorden"
     reached_limit:
@@ -3978,6 +3978,7 @@ nl:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Aanmelden via link"
+      preview: "Aanmelden via link."
       subject_template: "[%{email_prefix}] Aanmelden via link"
       text_body_template: |
         Dit is je link om je aan te melden bij [%{site_name}](%{base_url}).

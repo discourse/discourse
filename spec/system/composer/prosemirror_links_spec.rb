@@ -46,7 +46,7 @@ describe "Composer - ProseMirror - Links", type: :system do
     upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com?query=with space")
     upsert_hyperlink_modal.click_primary_button
     expect(rich).to have_css(
-      "a[href='https://updated-example.com?query=with%20space']",
+      "a[href='https://updated-example.com/?query=with%20space']",
       text: "Example",
     )
   end
@@ -155,10 +155,10 @@ describe "Composer - ProseMirror - Links", type: :system do
     open_composer
     composer.type_content("Text before [Example](https://example.com),")
     composer.send_keys(:left)
-    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+    wait_for { page.has_css?("[data-identifier='composer-link-toolbar']") }
     expect(page).to have_css("a.composer-link-toolbar__visit", text: "example.com")
     composer.send_keys(:right)
-    expect(page).to have_no_css("[data-identifier='composer-link-toolbar']")
+    wait_for { page.has_no_css?("[data-identifier='composer-link-toolbar']") }
   end
 
   it "preserves emojis when editing a link via toolbar" do

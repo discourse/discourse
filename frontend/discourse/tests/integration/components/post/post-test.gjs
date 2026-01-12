@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render, triggerEvent } from "@ember/test-helpers";
+import { click, render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
 import DMenus from "discourse/float-kit/components/d-menus";
@@ -337,6 +337,24 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     assert.dom(".read-state").exists();
+  });
+
+  test("language indicator appears after localization properties are updated", async function (assert) {
+    this.siteSettings.available_locales = [{ value: "ja", name: "Japanese" }];
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".post-language")
+      .doesNotExist("language indicator not shown initially");
+
+    this.post.is_localized = true;
+    this.post.language = "ja";
+    await settled();
+
+    assert
+      .dom(".post-language")
+      .exists("language indicator appears after update");
   });
 
   test("reply directly above (suppressed)", async function (assert) {

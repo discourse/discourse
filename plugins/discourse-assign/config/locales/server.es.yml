@@ -14,7 +14,7 @@ es:
     assign_self_regex: "Expresión regular que necesita pasar para asignar a sí mismo. Ejemplo «mi lista»"
     assign_other_regex: "Expresión regular que necesita pasar para asignar temas a otros a través de una mención. Ejemplo «tu lista»."
     unassign_on_group_archive: "Cuando un mensaje es archivado por un grupo, anula la asignación del mensaje (reasigna si se mueve nuevamente a la bandeja de entrada)"
-    unassign_on_close: "Cuando se cierra un tema, anular la asignación del tema"
+    unassign_on_close: "Desasignar automáticamente los temas cuando se cierren. NOTA: No se creará una publicación para avisar del cambio"
     reassign_on_open: "Cuando se abre un tema se reasignan los usuarios/grupos previamente asignados"
     invite_on_assign: "Cuando se asigna un mensaje personal a un usuario o grupo, invítale al MP si aún no es participante."
     assign_mailer: "Cuándo enviar notificaciones por correo electrónico de asignaciones."

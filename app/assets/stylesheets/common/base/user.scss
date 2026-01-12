@@ -771,6 +771,12 @@
     }
   }
 
+  #control-chat_quick_reactions_custom .form-kit__control-custom {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-2);
+  }
+
   .category-selector,
   .tag-chooser,
   textarea,
@@ -1017,6 +1023,11 @@
   .pref-second-factor {
     margin-top: 0.5em;
   }
+}
+
+.user-upcoming-changes-table {
+  margin-top: var(--space-4);
+  width: 100%;
 }
 
 .paginated-topics-list {

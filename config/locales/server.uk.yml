@@ -150,6 +150,8 @@ uk:
         invalid_type: "%{type} не є допустимим типом"
         humanize_not_valid_string_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути рядком."
         not_valid_string_value: "має бути рядком"
+        humanize_not_valid_datetime_value: "Властивість у вказівнику JSON '%{property_json_pointer}' має бути дійсною датою та часом."
+        not_valid_datetime_value: "має бути дійсна дата й час"
         humanize_not_valid_integer_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути цілим числом."
         not_valid_integer_value: "має бути цілим числом"
         humanize_not_valid_float_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути числом з плаваючою комою."
@@ -893,6 +895,11 @@ uk:
       email_already_used_in_group: "'%{email}' вже використовується групою '%{group_name}'."
       email_already_used_in_category: "'%{email}' вже використовується розділом '%{category_name}'."
       description_incomplete: "Опис розділу повинен мати принаймні один абзац."
+      description_too_long:
+        one: "Опис занадто довгий (максимум %{count} символ)."
+        few: "Опис занадто довгий (максимум %{count} символи)."
+        many: "Опис занадто довгий (максимум %{count} символів)."
+        other: "Опис занадто довгий (максимум %{count} символів)."
       permission_conflict: "Будь-яка група, якій дозволено доступ до підрозділу, також повинна мати доступ до батьківського розділу. Наступні групи мають доступ до одного з підрозділів, але не мають доступу до батьківського розділу: %{group_names}."
       disallowed_topic_tags: "У цій темі є теґи, не дозволені у цьому розділі: '%{tags}'"
       disallowed_tags_generic: "Ця тема має заборонені теґи."
@@ -1285,11 +1292,14 @@ uk:
       every_month: "щомісяця"
       every_six_months: "кожні півроку"
   user_api_key:
-    title: "Авторизувати доступ до програми"
+    title: 'Авторизувати "%{application_name}"'
     authorize: "Авторизувати"
+    deny: "Скасувати"
     read: "читання"
     read_write: "читання/запис"
-    description: '"%{application_name}" просить наступний доступ до вашого облікового запису:'
+    logged_in_as: "Увійшов як"
+    permissions_header: 'Це дозволить "%{application_name}" до:'
+    redirect_warning: "Авторизація перенаправить вас на"
     instructions: 'Ми щойно створили новий ключ API користувача для використання з «%{application_name}», додайте наступний ключ у свою програму:'
     otp_description: 'Чи бажаєте ви дозволити "%{application_name}" доступ до цього сайту?'
     otp_confirmation:
@@ -2625,8 +2635,10 @@ uk:
     content_localization_allow_author_localization: "Дозволити авторам оновлювати локалізації власних тем і публікацій через меню публікацій."
     enable_upcoming_changes: "Увімкнути майбутні зміни"
     fake_upcoming_change: "Це фальшива майбутня зміна для тестових цілей. Немає потреби перекладати цей рядок."
+    experimental_rename_faq_to_guidelines: "Ця зміна перейменовує сторінку поширених запитань на «Правила». Сторінка поширених запитань все ще буде доступна за адресою /faq. Налаштування «faq url» працює як і раніше."
     errors:
       invalid_css_color: "Недійсний колір. Введіть назву кольору або шістнадцяткове значення."
+      invalid_datetime: "Неправильний формат дати і часу. Будь ласка, переконайтеся, що ви ввели правильну дату та час."
       invalid_email: "Невірна адреса електронної пошти."
       invalid_username: "Немає користувача з таким псевдонімом."
       valid_username: "Існує користувач з таким ім'ям."
@@ -3417,6 +3429,7 @@ uk:
         Коли ви будете брати участь тут, ми познайомимося з вами, а тимчасові обмеження щодо нових користувачів буде знято. З часом ви отримаєте [рівень довіри](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), який додаватиме спеціальні можливості, які допоможуть нам спільно керувати спільнотою.
     welcome_user:
       title: "Ласкаво просимо,  користувач"
+      preview: "Ласкаво просимо до сайту %{site_name}!"
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
       text_body_template: "Дякуємо за приєднання до %{site_name} і ласкаво просимо!\n\n%{new_user_tips}\n\nМи завжди сподіваємось на [цивілізовану поведінку](%{base_url}/guidelines). \n\nПриємного перебування!\n"
     welcome_tl1_user:
@@ -3437,6 +3450,7 @@ uk:
         З великою владою приходить велика відповідальність. Якщо ви новачок, зверніться до [Посібника з модерування](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Ласкаво просимо"
+      preview: "Ласкаво просимо до сайту %{site_name}!"
       subject_template: "Ласкаво просимо до сайту %{site_name}!"
       text_body_template: "Дякуємо, що прийняли наше запрошення на %{site_name} -- ласкаво просимо! \n\n- Ми створили для вас цей новий акаунт **%{username}**. Змініть своє ім’я або пароль, відвідавши [your user profile][prefs].\n\n- Коли ви входите в систему, будь ласка **використовуйте ту саму адресу електронної пошти від свого початкового запрошення** -- інакше ми не зможемо сказати, що це ви! \n\n%{new_user_tips} Ми віримо в [civilized community behavior](%{base_url}/guidelines) у всі часи. \n\nНасолоджуйтеся своїм перебуванням! \n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
@@ -3857,6 +3871,7 @@ uk:
         Це можна змінити за допомогою параметрів сайту `newuser_spam_host_threshold` і `allowed_spam_host_domains`. Подумайте про додавання %{domains} до білого списку, якщо їх потрібно виключити.
     unsilenced:
       title: "Розблоковані"
+      preview: "Обліковий запис більше не призупинено."
       subject_template: "Обліковий запис більше не призупинено"
       text_body_template: |
         Привіт,
@@ -3907,8 +3922,6 @@ uk:
     Ви отримуєте це, тому що ви ввімкнули режим списку розсилки. Щоб скасувати підписку на ці електронні листи, [натисніть тут](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} на %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Попередні відповіді"
     reached_limit:
@@ -4239,6 +4252,7 @@ uk:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Увійдіть за посиланням"
+      preview: "Увійдіть за посиланням."
       subject_template: "[%{email_prefix}] Увійти за посиланням"
       text_body_template: |
         Ось ваше посилання для входу на [%{site_name}](%{base_url}).
@@ -5152,6 +5166,11 @@ uk:
       many: "Ви повинні вибрати принаймні %{count} теґів."
       other: "Ви повинні вибрати принаймні %{count} теґів."
     upload_row_too_long: "У файлі CSV має бути один теґ на рядок. За бажанням після теґу можна поставити кому, а потім додати назву групи теґів."
+    bulk_create:
+      invalid_params: "Недійсні параметри. Будь ласка, надайте масив назв тегів."
+      invalid_name: "Недійсна назва тегу."
+      tag_too_long: "Тег занадто довгий (максимум %{max} символів)."
+      too_many_tags: "Забагато тегів. Ви можете створити до %{max} тегів одночасно. Для більшого імпорту скористайтеся функцією завантаження CSV."
     forbidden:
       invalid:
         one: "Обраний вами теґ не можна використовувати"
@@ -5188,6 +5207,9 @@ uk:
   rss_by_tag: "Теми з теґом %{tag}"
   finish_installation:
     congratulations: "Вітаємо, ви встановили Discourse!"
+    login_with_discourse_id: "Увійти за допомогою Discourse ID"
+    discourse_id_help: "Будь ласка, увійдіть, використовуючи Discourse ID, натиснувши кнопку нижче. <br/><br/>Переконайтеся, що ви використовуєте обліковий запис Discourse ID з основною електронною адресою, яка відповідає змінній середовища `DISCOURSE_DEVELOPER_EMAILS`."
+    discourse_id_error_help: "Ви вирішили наразі пропустити налаштування електронної пошти. На жаль, через повідомлення про помилку вище, налаштування не може продовжитися. Будь ласка, повідомте про цю проблему на <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Зареєструватися"
       title: "Зареєструйте обліковий запис адміністратора"
@@ -5199,6 +5221,10 @@ uk:
     resend_email:
       title: "Надіслати ще раз листа для активації"
       message: "<p> Ми повторно надіслали електронний лист для активації на <b>%{email}</b>"
+    discourse_id:
+      help: "Зараз ми налаштовуємо для вас Discourse ID."
+      no_allowed_emails: "У DISCOURSE_DEVELOPER_EMAILS не налаштовано дозволені електронні адреси. Неможливо продовжити налаштування сайту."
+      global_notice: "Жоден адміністратор ще не ввійшов у систему. Будь ласка, увійдіть, використовуючи обліковий запис Discourse ID з електронною адресою, яка відповідає змінній середовища `DISCOURSE_DEVELOPER_EMAILS`, щоб завершити встановлення."
   safe_mode:
     title: "Увійти в безпечний режим"
     description: "Безпечний режим дозволяє протестувати свій сайт без завантаження тем або налаштувань плагінів на стороні клієнта. Налаштування плагінів на стороні сервера залишаються ввімкненими."
@@ -5276,7 +5302,9 @@ uk:
         closed: "Закритий запит на злиття"
       status_date:
         open: "відкрито"
+        draft: "чернетки"
         approved: "схвалено"
+        changes_requested: "запитувані зміни"
         merged: "об'єднано"
         closed: "закриті"
   discourse_push_notifications:
@@ -5599,6 +5627,9 @@ uk:
       invalid_tag_group: "має невірну групу тегів: %{tag_group_name}"
   discourse_id:
     already_registered: "Цей сайт вже зареєстровано з Discourse ID"
+    errors:
+      not_configured: "Discourse ID не встановлено. Спочатку увімкніть Discourse. ID."
+      regenerate_failed: "Не вдалося відновити облікові дані. Будь ласка, спробуйте пізніше."
   activemodel:
     errors:
       <<: *errors

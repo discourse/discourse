@@ -16,6 +16,7 @@ require_relative "lib/calendar_upcoming_events_default_view"
 
 enabled_site_setting :calendar_enabled
 
+register_svg_icon "calendar-days"
 register_asset "stylesheets/common/full-calendar-ext.scss"
 register_asset "stylesheets/common/discourse-calendar.scss"
 register_asset "stylesheets/common/discourse-calendar-holidays.scss"

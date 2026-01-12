@@ -199,7 +199,7 @@ pt_BR:
         no_llm: "Nenhum LLM selecionado"
         no_persona: "Não configurado"
         no_groups: "Nenhum"
-        edit: "Editar"
+        edit: "Definições"
         expand_list:
           one: "(mais %{count})"
           other: "(mais %{count})"
@@ -230,6 +230,8 @@ pt_BR:
           name: "Incorporações"
           description: "Alimenta recursos, como tópicos relacionados e pesquisa com IA, ao gerar representações semânticas do texto"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Tópicos relacionados"
         discord:
           name: "Integração com o Discourse"
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
@@ -240,6 +242,8 @@ pt_BR:
           generate_concepts: "Inferência de conceitos"
           match_concepts: "Correspondência de conceitos"
           deduplicate_concepts: "Deduplicação de conceitos"
+          setting_groups:
+            personas: "Personas"
         ai_helper:
           name: "Ajudante"
           description: "Auxilia os(as) usuários(as) na interação com a comunidade, em atividades tais como criação de tópicos, escrita de postagens e leitura de conteúdo"
@@ -254,6 +258,9 @@ pt_BR:
           image_caption: "Legendas em imagens"
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
+          setting_groups:
+            automation: "Automação"
+            personas: "Personas"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
@@ -261,6 +268,8 @@ pt_BR:
           post_raw_translator: "Tradutor sem processamento de postagens"
           topic_title_translator: "Tradutor de título de tópico"
           short_text_translator: "Tradutor de textos curtos"
+          setting_groups:
+            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifica possíveis spams usando o LLM selecionado e os sinaliza para inspeção pela moderação do site na fila de revisão"
@@ -539,7 +548,6 @@ pt_BR:
         max_output_tokens: "Máximo de tokens de saída"
         url: "URL do serviço da hospedagem do modelo"
         api_key: "Chave de API do serviço da hospedagem do modelo"
-        enabled_chat_bot: "Permitir seletor de bot de IA"
         vision_enabled: "Visão ativada"
         ai_bot_user: "Usuário(a) de bot de IA"
         cost_input: "Custo de entrada"
@@ -622,7 +630,6 @@ pt_BR:
           display_name: "O nome usado para referenciar este modelo na interface do seu site."
           name: "Incluímos na chamada da API para especificar qual modelo será usado"
           vision_enabled: "Ative para a IA tentar entender as imagens. Depende do modelo usado na visão compatível. É compatível com os modelos mais recentes do Anthropic, Google e OpenAI."
-          enabled_chat_bot: "Ative para os(as) usuários(as) poderem selecionar este modelo ao criar PM com bot de IA"
           cost_input: "O custo de entrada a cada 1 milhão de tokens para este modelo"
           cost_output: "O custo de saída a cada 1 milhão de tokens para este modelo"
           cost_measure: "$/1 milhão de tokens"

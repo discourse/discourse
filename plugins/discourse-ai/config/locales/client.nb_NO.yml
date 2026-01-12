@@ -40,7 +40,7 @@ nb_NO:
         groups: "Grupper:"
         no_persona: "Ikke angitt"
         no_groups: "Ingen"
-        edit: "Rediger"
+        edit: "Innstillinger"
         expand_list:
           one: "(%{count} mer)"
           other: "(%{count} mer)"

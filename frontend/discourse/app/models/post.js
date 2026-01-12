@@ -216,6 +216,9 @@ export default class Post extends RestModel {
   @trackedPostProperty yours;
   @trackedPostProperty user_custom_fields;
   @trackedPostProperty post_localizations;
+  @trackedPostProperty is_localized;
+  @trackedPostProperty language;
+  @trackedPostProperty localization_outdated;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;

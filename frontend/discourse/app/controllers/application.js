@@ -34,13 +34,12 @@ export default class ApplicationController extends Controller {
 
     const classes = [];
 
-    for (const [key, value] of Object.entries(
-      this.siteSettings.currentUserUpcomingChanges
-    )) {
-      if (value) {
+    Object.keys(this.siteSettings.currentUserUpcomingChanges).forEach((key) => {
+      if (this.siteSettings[key]) {
         classes.push(`uc-${dasherize(key)}`);
       }
-    }
+    });
+
     return classes.join(" ");
   }
 
@@ -60,7 +59,7 @@ export default class ApplicationController extends Controller {
 
   set showFooter(value) {
     deprecated(
-      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hide-application-footer}} helper to an Ember template.",
+      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hideApplicationFooter}} helper to an Ember template.",
       { id: "discourse.application-show-footer" }
     );
     this.footer.showFooter = value;

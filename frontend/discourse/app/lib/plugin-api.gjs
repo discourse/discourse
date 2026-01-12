@@ -25,7 +25,7 @@ import { addGroupPostSmallActionCode } from "discourse/components/post/small-act
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
-} from "discourse/components/reviewable-item";
+} from "discourse/components/reviewable-refresh/item";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 import { addSearchSuggestion } from "discourse/components/search-menu/results/assistant";
 import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
@@ -62,7 +62,7 @@ import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
-import { isTesting } from "discourse/lib/environment";
+import { isDevelopment, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import { makeArray } from "discourse/lib/helpers";
@@ -2081,12 +2081,113 @@ class _PluginApi {
     addAdvancedSearchOptions(options);
   }
 
-  addSaveableUserField(fieldName) {
+  /**
+   * Registers a user field that can be saved via the user preferences API.
+   * User fields are admin-defined profile fields stored in the user_fields table.
+   *
+   * @param {string} fieldName - The name of the user field to save
+   * @param {Object} [options] - Optional configuration
+   * @param {string} [options.page] - The preferences page where this field should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Register a user field that will be saved on the emails preferences page
+   * api.addSaveableUserField("newsletter_subscribe", { page: "emails" });
+   */
+  addSaveableUserField(fieldName, options = {}) {
     addSaveableUserField(fieldName);
+
+    if (options.page) {
+      this.registerValueTransformer(
+        "preferences-save-attributes",
+        ({ value: attrs, context }) => {
+          if (context.page === options.page) {
+            attrs.push(fieldName);
+          }
+          return attrs;
+        }
+      );
+    }
   }
 
-  addSaveableUserOptionField(fieldName) {
+  /**
+   * Registers a user option that can be saved via the user preferences API.
+   * User options are preference settings stored in the user_options table.
+   *
+   * @param {string} fieldName - The name of the user option to save
+   * @param {Object} [options] - Optional configuration
+   * @param {string} [options.page] - The preferences page where this option should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Register a user option that will be saved on the emails preferences page
+   * api.addSaveableUserOption("chat_email_frequency", { page: "emails" });
+   *
+   * @example
+   * // Register a user option without specifying a page (for use with custom preference pages)
+   * api.addSaveableUserOption("my_custom_setting");
+   */
+  addSaveableUserOption(fieldName, options = {}) {
     addSaveableUserOptionField(fieldName);
+
+    if (options.page) {
+      this.registerValueTransformer(
+        "preferences-save-attributes",
+        ({ value: attrs, context }) => {
+          if (context.page === options.page) {
+            attrs.push(fieldName);
+          }
+          return attrs;
+        }
+      );
+    }
+  }
+
+  /**
+   * @deprecated Use `addSaveableUserOption` instead
+   */
+  addSaveableUserOptionField(fieldName, options = {}) {
+    this.addSaveableUserOption(fieldName, options);
+  }
+
+  /**
+   * Ensures custom_fields are saved on a specific preferences page.
+   * Custom fields are stored in the user_custom_fields table.
+   *
+   * Unlike `addSaveableUserOption` and `addSaveableUserField` which track
+   * individual field names, this method ensures the entire `custom_fields`
+   * object is included in the save payload. Multiple plugins can safely
+   * call this for the same page - `custom_fields` will only be added once.
+   *
+   * @param {string} page - The preferences page where custom_fields should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Ensure custom_fields are saved on the notifications preferences page
+   * api.addSaveableCustomFields("notifications");
+   */
+  addSaveableCustomFields(page) {
+    if (!page) {
+      const message =
+        "addSaveableCustomFields requires a `page` argument to specify which preferences page should save custom_fields";
+      if (isDevelopment() || isTesting()) {
+        throw new Error(message);
+      }
+      return;
+    }
+
+    this.registerValueTransformer(
+      "preferences-save-attributes",
+      ({ value: attrs, context }) => {
+        if (context.page === page && !attrs.includes("custom_fields")) {
+          attrs.push("custom_fields");
+        }
+        return attrs;
+      }
+    );
   }
 
   /**
@@ -3044,6 +3145,30 @@ class _PluginApi {
     }
 
     registerAdminPluginConfigNav(pluginId, links);
+  }
+
+  /**
+   * Sets the icon for a plugin in the admin sidebar.
+   *
+   * @param {string} pluginId - The plugin identifier (must match the plugin name)
+   * @param {string} icon - The icon name (FontAwesome icon without 'd-icon-' prefix)
+   *
+   * Example:
+   *
+   * ```javascript
+   * api.setAdminPluginIcon("discourse-calendar", "calendar-days");
+   * ```
+   */
+  setAdminPluginIcon(pluginId, icon) {
+    if (!pluginId) {
+      // eslint-disable-next-line no-console
+      console.warn(consolePrefix(), "A pluginId must be provided!");
+      return;
+    }
+
+    this.registerValueTransformer("admin-plugin-icon", ({ value, context }) => {
+      return context.pluginId === pluginId ? icon : value;
+    });
   }
 
   /**

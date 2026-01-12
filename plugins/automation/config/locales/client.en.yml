@@ -54,8 +54,6 @@ en:
             label: Body
           delay:
             label: Delay (minutes)
-          prefers_encrypt:
-            label: Encrypts PM if available
         group:
           label: Group
         text:
@@ -434,6 +432,13 @@ en:
           fields:
             custom_field_name:
               label: "User Custom Field name"
+        set_topic_timer:
+          title: Set Topic Timer
+          fields:
+            type: 
+              label: Timer Type
+            duration:
+              label: Timer Duration
       unnamed_automation: "Unnamed automation"
 
       models:

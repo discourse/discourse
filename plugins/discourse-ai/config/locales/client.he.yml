@@ -243,7 +243,7 @@ he:
         no_llm: "לא נבחר מש״ג/LLM"
         no_persona: "לא מוגדר"
         no_groups: "ללא"
-        edit: "עריכה"
+        edit: "הגדרות"
         expand_list:
           one: "(עוד %{count})"
           two: "(עוד %{count})"
@@ -275,6 +275,9 @@ he:
         embeddings:
           name: "הטמעות"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "נושאים קשורים"
+            semantic_search: "חיפוש סמנטי"
         discord:
           name: "שילוב מול Discord"
           description: "הוספת היכולת לחפש בערוצי Discord"
@@ -284,6 +287,8 @@ he:
           generate_concepts: "הסקת תפיסות"
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
+          setting_groups:
+            personas: "דמויות"
         ai_helper:
           name: "מסייע"
           proofread: הגהת הטקסט
@@ -297,6 +302,8 @@ he:
           image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
+          setting_groups:
+            personas: "דמויות"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -304,6 +311,14 @@ he:
           post_raw_translator: "מתרגם פוסטים גולמי"
           topic_title_translator: "מתרגם כותרות נושאים"
           short_text_translator: "מתרגם טקסטים קצרים"
+          schedule_untranslated: "תזמון תרגומים"
+          schedule_topic_success:
+            one: "תזמון תרגום לפוסט שלא תורגם."
+            two: "תזמון תרגום של שני פוסטים לא מתורגמים."
+            many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
+            other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
+          setting_groups:
+            personas: "דמויות"
         spam:
           name: "ספאם"
           inspect_posts: "בדיקת פוסטים"
@@ -385,6 +400,7 @@ he:
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 או מזהה פוסט"
           result: "תוצאה"
           llm: "LLM"
+          scan_history: "היסטוריית סריקה"
           sent_message: "הודעה שנשלחה"
           system_prompt: "בקשת מערכת"
           scan_log: "יומן סריקה"
@@ -408,6 +424,7 @@ he:
         feature: "יכולת"
         usage_count: "כמות שימושים"
         model: "מודל"
+        credits_remaining: "קרדיטים שנותרו"
         models_breakdown: "שימוש לפי מודל"
         users_breakdown: "שימוש לפי משתמש"
         all_features: "כל היכולות"
@@ -611,7 +628,6 @@ he:
         max_output_tokens: "כמות אסימוני פלט מרבית"
         url: "כתובת השירות שמארח את המודל"
         api_key: "מפתח ה־API של השירות שמארח את המודל"
-        enabled_chat_bot: "לאפשר בורר בוטים של בינה מלאכותית"
         vision_enabled: "ראייה מופעלת"
         ai_bot_user: "משתמש בוט בינה מלאכותית"
         cost_input: "עלות קלט"
@@ -703,7 +719,6 @@ he:
           display_name: "השם משמש להתייחסות למודל הזה על פני כלל ממשק האתר שלך."
           name: "אנו מצרפים את זה לקריאת ה־API כדי לציין באיזה מודל להשתמש"
           vision_enabled: "אם האפשרות פעילה, הבינה מלאכותית תנסה להבין תמונות. כתלות בתמיכה של המודל בעיבוד תמונות. נתמך על ידי המודלים העדכניים ביותר מבית Anthropic,‏ Google ו־OpenAI."
-          enabled_chat_bot: "אם האפשרות פעילה, משתמשים יכולים לבחור את המודל הזה בעת יצירת הודעות פרטיות עם בוט הבינה המלאכותית"
           cost_input: "עלות הקלט לכל מיליון אסימונים למודל זה"
           cost_output: "עלות הפלט לכל מיליון אסימונים למודל זה"
           cost_measure: "$/מיליון אסימונים"
@@ -725,6 +740,7 @@ he:
           fake: "מותאם"
         provider_fields:
           access_key_id: "מזהה מפתח גישה ל־AWS Bedrock"
+          role_arn: "ARN של AWS Bedrock"
           region: "אזור של AWS Bedrock"
           organization: "מזהה ארגון OpenAI כרשות"
           disable_system_prompt: "השבתת הודעת מערכת בבקשות"

@@ -59,8 +59,6 @@ es:
             label: Cuerpo
           delay:
             label: Retardo (en minutos)
-          prefers_encrypt:
-            label: Cifra el MP cuando sea posible
         group:
           label: Grupo
         text:
@@ -429,6 +427,8 @@ es:
           fields:
             custom_field_name:
               label: "Nombre del campo personalizado del usuario"
+        set_topic_timer:
+          title: Establecer temporizador de tema
       unnamed_automation: "Automatización sin nombre"
       models:
         script:

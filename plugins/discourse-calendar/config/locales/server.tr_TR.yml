@@ -49,7 +49,6 @@ tr_TR:
     all_day_event_start_time: "Başlangıç zamanı belirtilmeyen etkinlikler bu saatte başlayacaktır. Biçim SS:dd'dir. Sabah 6 için 06.00 yazın"
     all_day_event_end_time: "Bitiş saati belirtilmeyen etkinlikler bu saatte sona erecektir. Biçim SS:dd'dir. Öğleden sonra 6 için 18.00 girin"
     all_day_event_time_error: "Geçersiz saat. Biçim SS:dd (ör: 08.00) olmalıdır."
-    calendar_categories: "Bir kategorinin en üstünde bir takvim görüntüleyin. Zorunlu ayarlar, CategoryId ve postId'dir. ör.: CategoryId=6;postId=453\n Diğer geçerli ayarlar: tzPicker, hafta sonları ve defaultView."
     calendar_categories_outlet: "Kategori takvimini hangi çıkışın göstereceğini değiştirmeye izin verir."
     working_days: "Çalışma günlerini ayarlayın. Bir gönderide \"saat dilimleri\" etiketini kullanarak bir grubun uygunluğunu görüntüleyebilirsiniz, ör.: \"[timezones group=admins][timezones]\""
     working_day_start_hour: "Çalışma günü saatlerinin başlama saati."

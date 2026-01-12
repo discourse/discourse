@@ -61,8 +61,6 @@ sk:
             label: Telo
           delay:
             label: Oneskorenie (minúty)
-          prefers_encrypt:
-            label: Šifruje PM, ak je k dispozícii
         group:
           label: Skupina
         text:
@@ -431,6 +429,8 @@ sk:
           fields:
             custom_field_name:
               label: "Názov vlastného poľa používateľa"
+        set_topic_timer:
+          title: Nastavenie časovača témy
       unnamed_automation: "Nemenovaná automatizácia"
       models:
         script:

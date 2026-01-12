@@ -59,8 +59,6 @@ pt_BR:
             label: Corpo
           delay:
             label: Atraso (minutos)
-          prefers_encrypt:
-            label: Criptografa PM, se disponível
         group:
           label: Grupo
         text:
@@ -429,6 +427,8 @@ pt_BR:
           fields:
             custom_field_name:
               label: "Nome do campo personalizado do(a) usuário(a)"
+        set_topic_timer:
+          title: Definir timer do tópico
       unnamed_automation: "Automação sem nome"
       models:
         script:

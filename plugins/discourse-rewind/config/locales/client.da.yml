@@ -7,12 +7,17 @@
 da:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Offentlig"
       reports:
         reading_time:
           title: Læsetid
         chat_usage:
           messages: beskeder
-          you: Dig
+          author: Dig
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Invitationer

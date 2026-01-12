@@ -1045,16 +1045,13 @@ class Topic < ActiveRecord::Base
       RETURNING highest_post_number
     SQL
 
-    highest_post_number = result.first.to_i
+    highest = result.first.to_i
 
-    # Update the forum topic user records
-    DB.exec(<<~SQL, highest: highest_post_number, topic_id: topic_id)
+    DB.exec(<<~SQL, highest:, topic_id:)
       UPDATE topic_users
-      SET last_read_post_number = CASE
-                                  WHEN last_read_post_number > :highest THEN :highest
-                                  ELSE last_read_post_number
-                                  END
-      WHERE topic_id = :topic_id
+         SET last_read_post_number = :highest
+       WHERE topic_id = :topic_id
+         AND last_read_post_number > :highest
     SQL
   end
 
@@ -2307,6 +2304,7 @@ end
 #  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
 #  index_topics_on_bannered_until          (bannered_until) WHERE (bannered_until IS NOT NULL)
 #  index_topics_on_bumped_at_public        (bumped_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
+#  index_topics_on_category_id             (category_id) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_external_id             (external_id) UNIQUE WHERE (external_id IS NOT NULL)
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)

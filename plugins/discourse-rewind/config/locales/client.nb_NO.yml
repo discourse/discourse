@@ -7,12 +7,17 @@
 nb_NO:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Offentlig"
       reports:
         reading_time:
           title: Lesetid
         chat_usage:
           messages: meldinger
-          you: Du
+          author: Du
+          author_others: "%{username}"
         invites:
           title: invitasjoner
           invitee_posts: Innlegg skrevet

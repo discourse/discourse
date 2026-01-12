@@ -45,8 +45,9 @@ export function downloadGoogle(title, dates, options = {}) {
     link.searchParams.append("text", title);
     link.searchParams.append(
       "dates",
-      `${_formatDateForGoogleApi(date.startsAt)}/${_formatDateForGoogleApi(
-        date.endsAt
+      `${_formatDateForGoogleApi(date.startsAt, date.timezone)}/${_formatDateForGoogleApi(
+        date.endsAt,
+        date.timezone
       )}`
     );
 
@@ -243,8 +244,7 @@ function _displayModal(title, dates, options = {}) {
   });
 }
 
-function _formatDateForGoogleApi(date) {
-  return moment(date)
-    .toISOString()
-    .replace(/-|:|\.\d\d\d/g, "");
+function _formatDateForGoogleApi(date, timezone) {
+  const momentDate = timezone ? moment.tz(date, timezone) : moment(date);
+  return momentDate.utc().format("YYYYMMDD[T]HHmmss[Z]");
 }

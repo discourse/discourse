@@ -7,12 +7,17 @@
 be:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Прыватная"
+          public: "Публічная"
       reports:
         reading_time:
           title: чытанне часу
         chat_usage:
           messages: паведамленні
-          you: Вы
+          author: Вы
+          author_others: "%{username}"
         invites:
           title: Запрашэнні
           invitee_posts: паведамленняў створаны

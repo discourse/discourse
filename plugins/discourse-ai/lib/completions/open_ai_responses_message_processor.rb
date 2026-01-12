@@ -149,12 +149,20 @@ module DiscourseAi::Completions
     end
 
     def build_tool_call_from_item(item)
-      id = item[:call_id]
+      call_id = item[:call_id]
+      item_id = item[:id]
       name = item[:name]
       arguments = item[:arguments] || ""
       params = arguments.empty? ? {} : JSON.parse(arguments, symbolize_names: true)
 
-      ToolCall.new(id: id, name: name, parameters: params)
+      ToolCall.new(
+        id: call_id,
+        name: name,
+        parameters: params,
+        provider_data: {
+          PROVIDER_KEY => { id: item_id, call_id: call_id }.compact,
+        },
+      )
     end
 
     def handle_tool_stream(event_type, json)
@@ -173,14 +181,19 @@ module DiscourseAi::Completions
     end
 
     def start_tool_stream(data)
-      # important note... streaming API has both id and call_id
-      # both seem to work as identifiers, api examples seem to favor call_id
-      # so I am using it here
-      id = data[:call_id]
+      call_id = data[:call_id]
+      item_id = data[:id]
       name = data[:name]
 
       @tool_arguments = +""
-      @tool = ToolCall.new(id: id, name: name)
+      @tool =
+        ToolCall.new(
+          id: call_id,
+          name: name,
+          provider_data: {
+            PROVIDER_KEY => { id: item_id, call_id: call_id }.compact,
+          },
+        )
       @streaming_parser = JsonStreamingTracker.new(self) if @partial_tool_calls
     end
 

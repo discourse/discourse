@@ -17,6 +17,8 @@ export default class PeriodChooserHeader extends DropdownSelectBoxHeaderComponen
         this.value
         showDateRange=true
         fullDay=this.selectKit.options.fullDay
+        startDate=this.selectKit.options.startDate
+        endDate=this.selectKit.options.endDate
       }}
     </h2>
 

@@ -44,7 +44,7 @@ cs:
         groups: "Skupiny:"
         no_persona: "Nenastaveno"
         no_groups: "Žádná"
-        edit: "Upravit"
+        edit: "Nastavení"
         expand_list:
           one: "(%{count} další)"
           few: "(%{count} další)"

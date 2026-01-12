@@ -1038,6 +1038,9 @@ bg:
       new_private_message: "Ново Съобщение"
       private_message: "Съобщение"
       private_messages: "Съобщения"
+      upcoming_changes:
+        for_user:
+          enabled: "Да е включен?"
       user_notifications:
         filters:
           filter_by: "Филтриране по"
@@ -1281,7 +1284,6 @@ bg:
         tags: "Етикети"
         interface: "Интерфейс"
         apps: "Апликации"
-        navigation_menu: "Меню за навигация"
       change_password:
         success: "(имейлът е изпратен)"
         in_progress: "(изпраща се имейл)"
@@ -2130,6 +2132,8 @@ bg:
       upload_title: "Качване"
       upload_description: "причина за качването"
       list_item: "Списък"
+      wrap_modal:
+        apply: "Приложи"
       help: "Помощ с Markdown"
       modal_ok: "Ок"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
@@ -2399,17 +2403,6 @@ bg:
         category: "Няма теми в категория %{category}."
         top: "Няма топ теми."
         filter: "Няма теми."
-      bottom:
-        latest: "Няма повече теми в Последни."
-        posted: "Няма повече публикувани теми."
-        read: "Няма повече прочетени теми."
-        new: "Няма повече нови теми."
-        unread: "Няма повече непрочетени теми."
-        category: "Няма повече теми в %{category}"
-        tag: "Няма повече теми в %{tag}"
-        top: "Няма повече топ теми."
-        bookmarks: "Няма теми в Отметки"
-        filter: "Няма повече теми."
     topic_bulk_actions:
       dismiss:
         name: "Отмени"
@@ -3169,6 +3162,7 @@ bg:
         this_month: "Месец"
         this_week: "Седмица"
         today: "Днес"
+        custom: "По избор"
     permission_types:
       full: "Създай / Отговори / Виж"
       create_post: "Отговари / Виж"
@@ -3266,6 +3260,7 @@ bg:
       sort_by_count: "брой"
       sort_by_name: "име"
       manage_groups_description: "Дефинирай групи за организране на етикетите"
+      bulk_create_button: "Създай"
       filters:
         without_category: "%{filter} %{tag} теми"
       notifications:
@@ -4426,6 +4421,8 @@ bg:
         no_user_badges: "%{name} няма присъдени значки."
         no_badges: Няма значки които биха могли да се присъдят.
         none_selected: "Изберете значка за да започнете."
+        sections:
+          settings: Настройки
         allow_title: Позволете значките да бъдат ползвани като титли.
         multiple_grant: Може да бъде присъдена няколко пъти
         visibility_heading: Видимост

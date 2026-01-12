@@ -7,12 +7,17 @@
 te:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "అంతరంగికం"
+          public: "బహిరంగం"
       reports:
         reading_time:
           title: చదివే సమయం
         chat_usage:
           messages: సందేశాలు
-          you: మీరు
+          author: మీరు
+          author_others: "%{username}"
         invites:
           title: ఆహ్వానాలు
           invitee_posts: పోస్ట్‌లు సృష్టించబడ్డాయి

@@ -197,10 +197,12 @@
       width: 100%;
     }
 
-    .fancy-title {
-      .d-icon-pencil {
-        font-size: var(--font-down-3);
-      }
+    .edit-topic__wrapper {
+      // managing whitespace to prevent the edit icon from wrapping to a new line
+      white-space: nowrap;
+      font-size: var(--font-down-3);
+      vertical-align: 0.125em;
+      margin-left: var(--space-1);
     }
 
     html.discourse-no-touch & {
@@ -270,6 +272,15 @@
     #edit-title {
       width: 100%;
       margin: 0;
+    }
+
+    .editing-localization-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      margin: var(--space-1);
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
     }
   }
 

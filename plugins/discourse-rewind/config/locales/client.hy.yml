@@ -7,12 +7,17 @@
 hy:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Մասնավոր"
+          public: "Հանրային"
       reports:
         reading_time:
           title: Կարդալու ժամանակը
         chat_usage:
           messages: հաղորդագրություն
-          you: Դուք
+          author: Դուք
+          author_others: "%{username}"
           status_online: "● օնլայն"
         invites:
           title: Հրավերներ

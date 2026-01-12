@@ -187,7 +187,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
 
       expected = <<~TXT.strip
-        <details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
+        <details class='ai-thinking'><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
 
         **searching for things**
         did stuff
@@ -774,8 +774,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       post.topic.custom_fields["ai_persona_id"] = persona.id.to_s
       post.topic.save_custom_fields
 
-      llm2 = Fabricate(:llm_model, enabled_chat_bot: true)
-
+      llm2 = Fabricate(:llm_model)
+      SiteSetting.ai_bot_enabled_llms = llm2.id.to_s
       llm2.toggle_companion_user
 
       DiscourseAi::Completions::Llm.with_prepared_responses(["Hi from bot two"], llm: llm2) do
@@ -1330,5 +1330,36 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(user_message[:content]).to include("This is additional context from the tool")
       expect(user_message[:content]).to include("Can you use the custom context tool?")
     end
+  end
+
+  it "does not raise 'can't modify frozen attributes' when retrying a reply with thinking" do
+    thinking_progress =
+      DiscourseAi::Completions::Thinking.new(message: "I should say hello", partial: true)
+    anthropic_info = { anthropic: { signature: "thinking-signature-123" } }
+    thinking =
+      DiscourseAi::Completions::Thinking.new(
+        message: "I should say hello",
+        partial: false,
+        provider_info: anthropic_info,
+      )
+
+    # 1. First reply that creates thinking context
+    first_responses = [[thinking_progress, thinking, "Hello Sam"]]
+
+    reply_post = nil
+    DiscourseAi::Completions::Llm.with_prepared_responses(first_responses) do
+      reply_post = playground.reply_to(third_post)
+    end
+
+    expect(PostCustomPrompt.exists?(post_id: reply_post.id)).to eq(true)
+
+    # 2. Retry the same reply (this is what triggers the bug)
+    second_responses = [[thinking_progress, thinking, "Hello again Sam"]]
+
+    expect {
+      DiscourseAi::Completions::Llm.with_prepared_responses(second_responses) do
+        playground.reply_to(third_post, existing_reply_post: reply_post)
+      end
+    }.not_to raise_error
   end
 end

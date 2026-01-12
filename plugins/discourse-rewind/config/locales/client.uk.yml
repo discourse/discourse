@@ -15,29 +15,110 @@ uk:
       placeholder: Перемотка
       title: Перемотай назад.
       loading: "Збирання сплайнів..."
+      viewing_other_user: "Ви переглядаєте <strong>%{username}</strong> звіт \"Перемотування дискурсу\"."
+      cannot_view_rewind_gibberish: >
+        [ДОСТУП ВІДМОВЛЕНО::ЗБІЙ ПІДПРОГРАМИ REWIND МЕЙНФРЕЙМУ]<br><br> Журнал аномалій завантаження...<br><br> &nbsp;&nbsp;>> недоповнення квантового буфера ⧛<br> &nbsp;&nbsp;>> міжвузловий дрейф парності (Δ=004.33)<br> &nbsp;&nbsp;>> фрагмент пакету ϟ зі зміщенням ∇47<br> &nbsp;&nbsp;>> Час очікування для відповідей на запити Flux Conduit<br><br>
+      cannot_view_rewind: >
+        Ви не можете переглянути цей звіт "Перемотування дискурсу". Можливо, власник не поділився ним публічно?<br><br> $> _<br><br>
       preferences:
-        disable_rewind: "Вимкнути перемотування дискусії. Це приховає звіт про діяльність за кінець року у вашому профілі та на вашому аватарі."
+        enable_rewind: "Увімкнути перемотування дискусії. Це відображає зведення активності за кінець року у вашому профілі та на вашому аватарі."
+        share_publicly: "Поділіться підсумковим звітом \"Перемотування дискурсу\" з іншими учасниками форуму. Будь-який учасник форуму зможе переглянути ваш звіт \"Перемотування дискурсу\"."
+        cannot_share_when_profile_hidden: "Щоб поділитися \"Перемотуванням дискурсу\", ви повинні дозволити іншим переглядати ваш публічний профіль."
       profile_link: "Перегляньте свій %{rewindYear} Перемотка дискурсу"
+      share:
+        toggle_label:
+          private: "Приватні"
+          public: "Публічні"
+        confirm: "Переконайтеся, що ви переглянули свій звіт \"Перемотування дискурсу\" перед тим, як ділитися ним, оскільки він може містити дані з особистих повідомлень. Ви можете зробити його знову приватним у будь-який час."
+        confirm_button:
+          enable: "Зробити публічним"
+          disable: "Зберегти особистим"
+        enabled_success: "Тепер перемотка доступна з іншими учасниками форуму."
+        disabled_success: "Ваше перемотування тепер приватне."
       reports:
         activity_calendar:
           title: Календар активностей
           cell_title:
             visited_no_posts: "Ви відвідували та стежили за %{date}, але не публікували жодних постів."
+            visited_no_posts_others: "%{username} відвідував та стежив %{date}, але не публікував жодних дописів."
             visited_with_posts:
               one: "Ви зробили %{count} публікацію на %{date}."
               few: "Ви зробили %{count} публікації на %{date}."
               many: "Ви зробили %{count} публікацій на %{date}."
               other: "Ви зробили %{count} публікацій на %{date}."
+            visited_with_posts_others:
+              one: "%{username} зробив %{count} публікацію на %{date}."
+              few: "%{username} зробив %{count} публікації на %{date}."
+              many: "%{username} зробив %{count} публікацій на %{date}."
+              other: "%{username} зробив %{count} публікацій на %{date}."
             no_activity: "Вас не було на %{date}."
+            no_activity_others: "%{username} не було на %{date}."
         top_words:
           title: Використання слів
         reading_time:
           title: Час читання
-          book_comparison: "Ви витратили <code>%{readingTitme}</code> на читання нашого сайту! Саме стільки часу знадобиться, щоб прочитати <i>%{bookTitle}</i>"
+          book_comparison: "Ви витратили <code>%{readingTime}</code> на читання нашого сайту! Саме стільки часу знадобиться, щоб прочитати <i>%{bookTitle}</i>"
+          book_comparison_others: "%{username} витратили <code>%{readingTime}</code> на читання нашого сайту! Саме стільки часу знадобилося б, щоб прочитати <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Найчастіше використовувані реакції в темах
           total_number: "Загальна кількість реакцій: %{count}"
+        post_received_reactions:
+          title: Найбільше отриманих реакцій у темах
+        fbff:
+          title: Ваш FBFF (перший форум найкращого друга)
+          title_others: "%{username} FBFF (Найкращий друг форуму назавжди)"
+        most_viewed_categories:
+          title:
+            one: Ваша найпопулярніша категорія
+            few: Ваші %{count} найпопулярніші категорії
+            many: Ваші %{count} найпопулярніших категорій
+            other: Ваші %{count} найпопулярніших категорій
+          title_others:
+            one: "Найпопулярніша категорія %{username}"
+            few: "Найпопулярніші %{count} категорії %{username}"
+            many: "Найпопулярніші %{count} категорій %{username}"
+            other: "Найпопулярніші %{count} категорій %{username}"
+        most_viewed_tags:
+          title:
+            one: Ваш найпопулярніший тег
+            few: Ваші %{count} найпопулярніші теги
+            many: Ваші %{count} найпопулярніших тегів
+            other: Ваші %{count} найпопулярніші теги
+          title_others:
+            one: "найпопулярніший тег %{username}"
+            few: "найпопулярніші %{count} теги %{username}"
+            many: "найпопулярніші %{count} тегів %{username}"
+            other: "найпопулярніші %{count} тегів %{username}"
+        best_topics:
+          view_topic: Переглянути тему
+          title:
+            one: Ваша найкраща тема
+            few: Ваші %{count} найкращі теми
+            many: Ваші %{count} найкращі теми
+            other: Ваші %{count} найкращі теми
+          title_others:
+            one: "Найкраща тема %{username}"
+            few: "Найкращі %{count} теми %{username}"
+            many: "Найкращі %{count} тем %{username}"
+            other: "Найкращі %{count} тем %{username}"
+        best_posts:
+          view_post: Переглянути публікацію
+          title:
+            one: Ваш найкращий допис
+            few: Ваші %{count} найкращі дописи
+            many: Ваші %{count} найкращих дописи
+            other: Ваші %{count} найкращі дописи
+          title_others:
+            one: "Найкращий допис %{username}"
+            few: "Найкращі %{count} дописи %{username}"
+            many: "Найкращі %{count} дописів %{username}"
+            other: "Найкращі %{count} дописів %{username}"
         ai_usage:
+          title: Використання ШІ
+          total_requests: Всього запитів
+          total_tokens: Всього токенів
+          success_rate: Коефіцієнт успіху
+          favorite_features: Найчастіше використовувані функції
           favorite_models: Найбільш використовувані моделі штучного інтелекту
           wake_up: "Прокинься, %{username}..."
           system_title: "ВИЯВЛЕНО ВИКОРИСТАННЯ ШІ"
@@ -46,6 +127,7 @@ uk:
         assignments:
           title: Призначення
           total_assigned: Призначено мені
+          total_assigned_others: Призначено їм
           completed: Призначення виконані
           pending: Завдання очікують на розгляд
           assigned_by_user: Вручено призначень
@@ -60,17 +142,23 @@ uk:
           favorite_channels: Улюблені канали
           messages: повідомлення
           bot_name: XxRewindBotxX
-          you: Ви
+          author: Ви
+          author_others: "%{username}"
           channel_title: "#chat-activity"
           status_online: "● онлайн"
           message_1: "Ви надіслали <strong>%{count}</strong> повідомлень цього року!"
+          message_1_others: "%{username} надіслано <strong>%{count}</strong> повідомлень цього року!"
           reply_1: "лол, круто B-)"
           message_2: "Ви мали <strong>%{dm_count}</strong> DM розмови з <strong>%{channel_count}</strong> різними людьми або групами"
+          message_2_others: "%{username} мав <strong>%{dm_count}</strong> чат з <strong>%{channel_count}</strong> різними людьми або групами"
           reply_2: "круто :D"
           message_3: "Людям сподобалися ваші повідомлення! Ви отримали <strong>%{count}</strong> реакцій ❤️"
+          message_3_others: "Людям сподобалися їхні повідомлення! Вони отримали <strong>%{count}</strong> реакції ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "Середня довжина вашого повідомлення становила <strong>%{length}</strong> символів"
+          message_4_others: "Середня довжина їхнього повідомлення становила <strong>%{length}</strong> символів"
           message_5: "Ваші улюблені канали:"
+          message_5_others: "Їхні улюблені канали:"
           dancing_baby_alt: "Танцююча дитина"
         favorite_gifs:
           title:
@@ -78,6 +166,11 @@ uk:
             few: Ваші %{count} улюблені GIF
             many: Ваші %{count} улюблені GIF
             other: Ваші %{count} улюблені GIF
+          title_others:
+            one: "Улюблений GIF від %{username}"
+            few: "Улюблені %{count} GIF від %{username}"
+            many: "Улюблені %{count} GIF від %{username}"
+            other: "Улюблені %{count} GIF від %{username}"
           total_usage:
             one: Використано %{count} раз
             few: Використано %{count} разів
@@ -90,12 +183,14 @@ uk:
           redemption_rate: Коефіцієнт прийняття
           avg_trust_level: Середній рівень довіри
           invitee_impact: Вплив ваших запрошених
+          invitee_impact_others: Вплив запрошених ними осіб
           invitee_posts: Дописів створено
           invitee_topics: Розпочаті теми
           invitee_likes: Вподобані
           most_active_invitee: Найактивніші запрошення
           guest_book_title: Гостьова книга
           guest_book_subtitle: Ваші запрошення до спільноти
+          guest_book_subtitle_others: "Запрошення до спільноти %{username}"
           label_invitations_sent: "Запрошення надіслані:"
           label_guests_joined: "Запрошення прийнято:"
           label_acceptance_rate: "Коефіцієнт прийняття:"
@@ -111,17 +206,66 @@ uk:
             few: Ви допомогли %{count} новим користувачам цього року
             many: Ви допомогли %{count} новим користувачам цього року
             other: Ви допомогли %{count} новим користувачам цього року
+          subtitle_others:
+            one: "%{username} допоміг %{count} новому користувачеві цього року"
+            few: "%{username} допоміг %{count} новим користувачам цього року"
+            many: "%{username} допоміг %{count} новим користувачам цього року"
+            other: "%{username} допоміг %{count} новим користувачам цього року"
           new_member:
             one: "%{count} новий учасник"
             few: "%{count} нові учасники"
             many: "%{count} нові учасники"
             other: "%{count} нові учасники"
+          total_interactions: Загальна кількість взаємодій
+          unique_new_users: Унікальні нові користувачі
           likes_given: Вподобані
+          replies: Відповіді на дописи
           mentions: Згадки
+          topics_with_new_users: Теми з новими користувачами
+          contributions_helped: ваші внески допомогли
+          contributions_helped_others: їхній внесок допоміг
+        time_of_day_activity:
+          title: Ритм щоденної активності
+          play_button: Відтворіть свою діяльність як звук
+          play_button_others: Відтворіть їхню діяльність як звук
+          stop_button: Зупинити відтворення аудіо
         writing_analysis:
+          title: Аналіз письма
+          menu_file: Файл
           menu_other: Інше
+          menu_additional: Додатково
+          menu_opening: ВІДКРИТТЯ
+          help_text: Натисніть F1 для отримання довідки
+          app_name: DiscoStar Professional
+          release_info: Реліз %{rewindYear} від CDCK
+          total_words: Всього слів
+          total_posts: Всього повідомлень
+          avg_post_length: Середня довжина повідомлення
+          readability_score_label: Оцінка читабельності
+          readability_level: Рівень читабельності
           readability_score:
+            over_80:
+              1: "Ернест Гемінґвей"
+              2: "Реймонд Карвер"
+              3: "Майкл Крайтон"
+              4: "Роальд Даль"
+            over_60:
+              1: "К.С. Льюїс"
+              2: "Стівен Кінг"
+              3: "Агата Крісті"
+              4: "Джордж Р.Р. Мартін"
+            over_40:
+              1: "Джордж Орвелл"
+              2: "Френсіс Скотт Фіцджеральд"
+              3: "Олдос Гакслі"
+              4: "Джоан Дідіон"
+            over_20:
+              1: "Кормак Маккарті"
+              2: "Вільям Фолкнер"
+              3: "Вірджіна Вульф"
+              4: "Габріель Гарсія Маркес"
             over_0:
+              1: "Джеймс Джойс"
               2: "Thomas Pynchon"
               3: "David Foster Wallace"
               4: "Федір Достоєвський"

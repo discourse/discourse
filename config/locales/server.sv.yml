@@ -964,11 +964,10 @@ sv:
       every_month: "varje månad"
       every_six_months: "varje halvår"
   user_api_key:
-    title: "Godkänn programåtkomst"
     authorize: "Godkänn"
+    deny: "Avbryt"
     read: "läs"
     read_write: "läs/skriv"
-    description: '"%{application_name}" begär följande tillträde till ditt konto.'
     instructions: 'Vi genererade precis en ny API-nyckel som du kan använda med "%{application_name}". Klistra in följande nyckel i din applikation:'
     otp_description: 'Vill du tillåta att "%{application_name}" får tillträde till din sida?'
     otp_confirmation:
@@ -2620,6 +2619,7 @@ sv:
         I takt med att du deltar här, lär vi känna dig, och därmed kommer tillfälliga begränsningar för nya medlemmar att tas bort. Med tiden når du [förtroendenivåer](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) som omfattar särskilda funktioner för att hantera vårt forum tillsammans.
     welcome_user:
       title: "Välkommen Användare!"
+      preview: "Välkommen till %{site_name}!"
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: |
         Tack för att du går med i %{site_name}, och välkommen!
@@ -2647,6 +2647,7 @@ sv:
         Med stor makt kommer stort ansvar. Om du är ny på det här att moderera, se [Moderationsguiden](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Välkomstinbjudan"
+      preview: "Välkommen till %{site_name}!"
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: "Tack för att du tackade ja till din inbjudan till %{site_name} -- välkommen!\n\nVi har skapat ett nytt konto **%{username}** till dig. Du kan byta namn eller lösenord genom att besöka [din användarprofil][prefs].\n\n- När du loggar in ber vi dig **använda samma e-postadress som i din ursprungliga inbjudan** — annars kan vi inte bekräfta att det är du! \n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
@@ -2966,6 +2967,7 @@ sv:
       text_body_template: "Det här är ett automatiskt meddelande. \n\nDen nya användaren [%{username}](%{user_url}) försökte skriva flera inlägg med länkar till %{domains}, men inläggen blockerades för att undvika skräppost. Användaren kan fortfarande skriva nya inlägg som inte länkar till %{domains}.\n\n[Granska användaren](%{user_url}).\n\nDu kan också modifiera webbplatsinställningarna `newuser_spam_host_threshold` och `white_listed_spam_host_domains`. Överväg att lägga till %{domains} på vitlistan om de ska undantas.\n"
     unsilenced:
       title: "Otystad"
+      preview: "Konto ej längre pausat."
       subject_template: "Konto ej längre pausat"
       text_body_template: "Hej!\n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt konto inte längre är pausat efter att personal har granskat ärendet. \n\nDu kan nu skriva inlägg och skapa nya ämnen igen. Tack för ditt tålamod.\n"
     pending_users_reminder:
@@ -3003,8 +3005,6 @@ sv:
   unsubscribe_mailing_list: "Du mottar de här e-postmeddelandena för att du har aktiverat utskicksläge för e-postlistor. \n\n[Klicka här](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.\n"
   subject_re: "Sv: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Föregående svar"
     reached_limit:
@@ -3281,6 +3281,7 @@ sv:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Logga in via länk"
+      preview: "Logga in via länk."
       subject_template: "[%{email_prefix}] Logga in via länk"
       text_body_template: "Här är din länk för att logga in hos [%{site_name}](%{base_url}). \n\nOm du inte begärde denna länk kan du utan vidare ignorera detta e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
     set_password:

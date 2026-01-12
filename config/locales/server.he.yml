@@ -887,6 +887,11 @@ he:
       email_already_used_in_group: "'%{email}' כבר בשימוש על ידי הקבוצה '%{group_name}'."
       email_already_used_in_category: "'%{email}' כבר בשימוש על ידי הקטגוריה '%{category_name}'."
       description_incomplete: "לתיאור קטגוריה זו צריכה להיות לפחות פסקה אחת."
+      description_too_long:
+        one: "התיאור ארוך מדי (תו לכל היותר)."
+        two: "התיאור ארוך מדי (שני תווים לכל היותר)."
+        many: "התיאור ארוך מדי (%{count} תווים לכל היותר)."
+        other: "התיאור ארוך מדי (%{count} תווים לכל היותר)."
       permission_conflict: "כל קבוצה שמורשית לגשת לתת־קטגוריה חייבת שתהיה לה גם גישה לקטגוריית ההורה. לקבוצות הבאות יש גישה לאחת מתת־הקטגוריות אך אין להן גישה לקטגוריית ההורה: %{group_names}."
       disallowed_topic_tags: "לנושא זה יש תגיות שאסור להשתמש בהן בקטגוריה הזו: ‚%{tags}’"
       disallowed_tags_generic: "לנושא זה יש תגיות אסורות."
@@ -1279,11 +1284,14 @@ he:
       every_month: "כל חודש"
       every_six_months: "כל שישה חודשים"
   user_api_key:
-    title: "אישור גישת יישומון"
+    title: 'אישור של „%{application_name}”'
     authorize: "אישור"
+    deny: "ביטול"
     read: "קריאה"
     read_write: "קריאה/כתיבה"
-    description: '„%{application_name}” מבקשת את הגישה הבאה לחשבון שלך:'
+    logged_in_as: "נכנסת בתור"
+    permissions_header: 'ההרשאה הזאת תאפשר ל־„%{application_name}” לבצע:'
+    redirect_warning: "האימות יפנה אותך אל"
     instructions: 'הרגע יצרנו מפתח משתמש API חדש עבורך לטובת שימוש עם „%{application_name}”, נא להדביק את המפתח הבא ליישום שלך:'
     otp_description: 'לאפשר ל־„%{application_name}” לגשת לאתר הזה?'
     otp_confirmation:
@@ -1408,6 +1416,8 @@ he:
       yaxis: "יום"
       description: "בקשות API למפתחות API רגילים ומפתחות API של משתמשים."
     consolidated_page_views_browser_detection:
+      title: "צפיות עמודים מאוחדות עם זיהוי דפדפן (מומלץ)"
+      title_legacy: "צפיות עמודים מאוחדות עם זיהוי דפדפן (מומלץ)"
       xaxis:
         page_view_anon_browser: "דפדפן אלמוני"
         page_view_logged_in_browser: "דפדפן עם כניסה למערכת"
@@ -1800,6 +1810,7 @@ he:
     allow_duplicate_topic_titles_category: "לאפשר נושאים עם כותרות זהות, כפולות אם הם לא באותה הקטגוריה. ההגדרה allow_duplicate_topic_titles (לאפשר כותרות נושאים כפולות) חייבת להיות מושבתת."
     unique_posts_mins: "כמה דקות לפני שמשתמש יכול לפרסם את אותו תוכן שוב"
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) הפוסטים הראשונים שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור הפוסטים."
+    title: "השם של האתר הזה. גלוי לכל המבקרים כולל האלמוניים. חשוב לשים לב ששינוי הכותרת הזאת עלול לשלוח בקשות למשתמשים ב־PWA (יישום דפדפני) שיבקשו מהם לעדכן או להסיר את היישום."
     site_description: "תיאור האתר הזה במשפט אחד. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     short_site_description: "תיאור קצר במספר מילים. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם יוצג ב־<a href='%{base_path}/about' target='_blank'>‎/about</a>. חשוף בפני משתמשים אלמוניים באתרים ציבוריים."
@@ -2459,6 +2470,7 @@ he:
     disable_watched_word_checking_in_user_fields: "השבתת בדיקת מילים במעקב בשדות המשתמשים"
     watched_words_regular_expressions: "מאפשר שימוש בביטויים רגולריים לסינון מילים. אם מופעלת, תכונה זו מקבצת מילים רגישות. לאחר מכן יאספו כל המילים שנבחרו לביטוי רגולרי יחיד, ומוסיף גבולות מילים עבור מילים נצפות רגילות. כתוצאה מכך, שיטת סינון זו מבוססת regex מוסיפה שכבה נוספת של שליטה על ניהול תוכן על ידי תמיכה בדפוסי מילים מתוחכמים יותר. ההגדרה גם מאפשרת להחליף בקלות את הטקסט המקורי בתחליף לבחירה."
     enable_fast_edit: "מוסיף כפתור לתפריט בחירת הפוסט כדי לערוך בחירה קטנה כחלק מהשורה."
+    old_post_notice_days: "מספר הימים שלאחריהם התראות הפרסום למשתמשים החדשים והחוזרים יוסתרו. התראת הפרסום הרשמית תמיד תישאר גלויה."
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
     returning_users_days: "כמה ימים אמורים לעבור לפני שמשתמש נחשב למשתמש חוזר."
@@ -2540,6 +2552,7 @@ he:
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
     create_post_for_category_and_tag_changes: "יצירת פוסט לחישה כשקטגוריה או תגיות משתנים, דורש הפעלת פוסטים של לחישה."
     automatically_clean_unused_tags: "למחוק אוטומטית תגיות שאין בהן שימוש באף נושא או הודעה פרטית על בסיס יומי."
+    default_watched_precedence_over_muted: "להודיע למשתמשים על נושאים בקטגוריות או תגיות שהם עוקבים אחריהם שגם שייכים לכאלה שהשתיקו"
     company_name: "שם החברה או הארגון שלך. בהעדר תוכן לא יסופקו תבניות תנאי שירות או הצהרת פרטיות."
     governing_law: "ציון תחום השיפוט שאחראי על ההיבטים המשפטיים של האתר, לרבות תנאי השירות ומדיניות הפרטיות. בדרך כלל מדובר במדינה או המחוז שבהם רשומה החברה שמפעילה את האתר או המקום העיקרי ממנו היא עושה עסקים."
     city_for_disputes: "ציון העיר שתשמש כתחום השיפוט ליישוב מחלוקות שקשורות בשימוש בפורום הזה. המידע הזה בדרך כלל מופיע במסמכים הרשמיים כגון תנאי השירות של הפורום."
@@ -2555,6 +2568,7 @@ he:
     sitemap_page_size: "מספר הכתובות שיתווספו בכל עמוד של מפת אתר. 50,000 לכל היותר"
     enable_user_status: "לאפשר למשתמשים להגדיר הודעת מצב מותאמת אישית (אמוג׳י + תיאור)."
     enable_user_tips: "לאפשר עצות למשתמשים חדשים שמתארים יכולות מפתח למשתמשים"
+    short_title: "הכותרת הקצרה תופיע במסך הבית של המשתמש, המשגר או במקומות אחרים שבהם המקום מוגבל. היא אמורה להיות מוגבלת ל־12 תווים. כדאי לשים לב ששינוי הכותרת הזאת עלול לשלוח בקשה למשתמשי ה־PWA (יישום דפדפני) שמבקש מהם לעדכן או להסיר את היישום."
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
     dashboard_general_tab_activity_metrics: "נא לבחור דיווחים שיופיעו בתור מדדי פעילות בלשונית הכללית."
@@ -3398,6 +3412,7 @@ he:
         השתתפותך כאן, מאפשרת לנו להכיר אותך, כך שמגבלות המשתמשים החדשים יוסרו. עם הזמן [דרגות האמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) בך תתקדמנה ותתווספנה לך יכולות כדי לסייע לנו לנהל את הקהילה שלנו ביחד.
     welcome_user:
       title: "ברוך בואך למשתמשים"
+      preview: "ברוכים הבאים ל %{site_name}!"
       subject_template: "ברוך בואך אל %{site_name}!"
       text_body_template: |
         תודה שהצטרפת אל %{site_name}, וברוך בואך!
@@ -3424,6 +3439,7 @@ he:
         כוח רב טומן בחובו אחריות רבה. אם תחום הפיקוח זר לך, ניתן לפנות אל [המדריך למפקחים](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "הזמנת קבלת פנים"
+      preview: "ברוכים הבאים ל %{site_name}!"
       subject_template: "ברוך בואך אל %{site_name}!"
       text_body_template: |
         תודה שאישרת את הזמנתך אל %{site_name} -- ברוך בואך!
@@ -3841,6 +3857,7 @@ he:
         ניתן לכוון זאת בהגדרות האתר `newuser_spam_host_threshold` (סף ספאם מארח למשתמש חדש) ו־`allowed_spam_host_domains` (שמות מתחם מורשים לספאם). מוטב להוסיף את %{domains} לרשימת ההיתר אם אין סיבה לחסום אותם.
     unsilenced:
       title: "השתקה בוטלה"
+      preview: "החשבון כבר לא מושהה."
       subject_template: "החשבון כבר לא מושהה"
       text_body_template: |
         שלום,
@@ -3893,8 +3910,6 @@ he:
     כדי לבטל את המינוי על ההודעות האלו, יש [ללחוץ כאן](%{unsubscribe_url}).
   subject_re: "תגובה: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} דרך %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "תגובות קודמות"
     reached_limit:
@@ -4219,6 +4234,7 @@ he:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "כניסה דרך קישור"
+      preview: "כניסה דרך קישור."
       subject_template: "[%{email_prefix}] כניסה דרך קישור"
       text_body_template: |
         להלן קישור הכניסה שלך אל [%{site_name}](%{base_url}).
@@ -5119,6 +5135,10 @@ he:
       many: "עליך לבחור לפחות %{count} תגיות."
       other: "עליך לבחור לפחות %{count} תגיות."
     upload_row_too_long: "בקובץ ה־CSV אמורה להופיע תגית אחת בכל שורה. מותר להוסיף פסיק לאחר תגית ואז את שם קבוצת התגיות."
+    bulk_create:
+      invalid_name: "שם התגית שגוי."
+      tag_too_long: "התגית ארוכה מדי (%{max} תווים לכל היותר)."
+      too_many_tags: "יותר מדי תגיות. אפשר ליצור עד %{max} תגיות בבת־אחת. לייבוא של כמות גדולה יותר, יש להשתמש ביכולת העלאת ה־CSV."
     forbidden:
       invalid:
         one: "לא ניתן להשתמש בתגית שבחרת"
@@ -5155,6 +5175,8 @@ he:
   rss_by_tag: "נושאים שמתויגים ב־%{tag}"
   finish_installation:
     congratulations: "ברכותינו, התקנת את Discourse!"
+    login_with_discourse_id: "כניסה עם Discourse ID"
+    discourse_id_help: "נא להיכנס עם Discourse ID בעזרת הכפתור שלהלן. <br/><br/>נא לוודא שהשתמשת בחשבון Discourse ID עם כתובת דוא״ל שתואמת למשתנה הסביבה `DISCOURSE_DEVELOPER_EMAILS`."
     register:
       button: "הרשמה"
       title: "הרשמת חשבון ניהול"
@@ -5166,6 +5188,10 @@ he:
     resend_email:
       title: "שליחת הודעת הפעלה בדוא״ל מחדש"
       message: "<p>הודעת ההפעלה נשלחה מחדש בדוא״ל אל <b>%{email}</b>"
+    discourse_id:
+      help: "אנחנו מגדירים כרגע Discourse ID עבורך."
+      no_allowed_emails: "כתובות דוא״ל לא מורשות מוגדרות תחת DISCOURSE_DEVELOPER_EMAILS. לא ניתן להמשיך עם הגדרת האתר."
+      global_notice: "אף מנהל לא נכנס עדיין. נא להיכנס דרך חשבון Discourse ID עם כתובת דוא״ל שתואמת את משתנה הסביבה `DISCOURSE_DEVELOPER_EMAILS` כדי להשלים את ההתקנה."
   safe_mode:
     title: "כנסו למצב בטוח"
     description: "„מצב בטוח” מאפשר לך לבחון את האתר מבלי להעלות ערכות נושא או תוספים בצד לקוח. תוספי צד שרת נשארים מופעלים."
@@ -5184,6 +5210,7 @@ he:
         fields:
           title:
             label: "שם הקהילה"
+            placeholder: "המקום של דגנית"
           default_locale:
             label: "שפה"
           login_required:

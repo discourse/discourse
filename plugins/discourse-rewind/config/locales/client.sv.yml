@@ -7,6 +7,10 @@
 sv:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Offentligt"
       reports:
         reading_time:
           title: Lästid
@@ -14,7 +18,8 @@ sv:
           title: Tilldelningar
         chat_usage:
           messages: meddelanden
-          you: Du
+          author: Du
+          author_others: "%{username}"
         invites:
           title: Inbjudningar
           invitee_posts: Inlägg skapade

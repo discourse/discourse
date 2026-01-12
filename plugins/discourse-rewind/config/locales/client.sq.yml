@@ -7,12 +7,17 @@
 sq:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Private"
+          public: "Publike"
       reports:
         reading_time:
           title: Koha e leximit
         chat_usage:
           messages: mesazhet
-          you: Ju
+          author: Ju
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Ftesat

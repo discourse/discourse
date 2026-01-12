@@ -626,6 +626,7 @@ te:
       every_six_months: "ప్రతి ఆరు నెలలకు"
   user_api_key:
     authorize: "అధికారం ఇవ్వండి"
+    deny: "రద్దుచేయండి"
     read: "చదివిన"
     read_write: "చదవండి/వ్రాయండి"
     otp_confirmation:
@@ -1840,6 +1841,7 @@ te:
         మీరు ఇక్కడ పాల్గొంటున్నప్పుడు, మేము మిమ్మల్ని తెలుసుకుంటాము మరియు తాత్కాలిక కొత్త సభ్యుడి పరిమితులు ఎత్తివేయబడతాయి. కాలక్రమేణా మీరు [విశ్వసనీయ స్థాయిలు](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)ని పొందుతారు, ఇందులో మా సంఘాన్ని కలిసి నిర్వహించడంలో మాకు సహాయపడే ప్రత్యేక సామర్థ్యాలు ఉంటాయి.
     welcome_user:
       title: "స్వాగతం సభ్యుడు"
+      preview: "%{site_name} కు సుస్వాగతం!"
       subject_template: "%{site_name} కు సుస్వాగతం!"
     welcome_tl1_user:
       title: "TL1 సభ్యుడుకు స్వాగతం"
@@ -1854,6 +1856,7 @@ te:
         గొప్ప శక్తితో గొప్ప బాధ్యత వస్తుంది. మీరు మోడరేట్ చేయడానికి కొత్తగా ఉంటే, దయచేసి [మోడరేషన్ గైడ్](https://meta.discourse.org/t/discourse-moderation-guide/63116) చూడండి.
     welcome_invite:
       title: "స్వాగతం ఆహ్వానం"
+      preview: "%{site_name} కు సుస్వాగతం!"
       subject_template: "%{site_name} కు సుస్వాగతం!"
     backup_succeeded:
       title: "బ్యాకప్ విజయవంతమైంది"
@@ -1936,8 +1939,6 @@ te:
       title: "వరుసలో ఉన్న పోస్ట్‌ల రిమైండర్"
   subject_re: "ప్ర: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} %{site_name} ద్వారా"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "గత జవాబులు"
     in_reply_to: "సమాధానముగా"

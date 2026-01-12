@@ -57,6 +57,7 @@ zh_TW:
         delete_channel: "刪除頻道"
         join_channel: "加入頻道"
         leave_channel: "離開頻道"
+        notification_settings_context: "通知"
         join: "加入"
         leave: "離開"
         save_label:
@@ -211,6 +212,7 @@ zh_TW:
           title: "匯出聊天訊息"
           create_export: "建立匯出"
       search:
+        short_title: 搜索
         sort:
           relevance: "最相關"
           latest: "最新版本"

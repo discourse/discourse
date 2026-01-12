@@ -72,7 +72,7 @@ fa_IR:
         groups: "گروه‌ها:"
         no_persona: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
-        edit: "ویرایش"
+        edit: "تنظیم"
         expand_list:
           one: "(%{count} مورد دیگر)"
           other: "(%{count} مورد دیگر)"
@@ -82,6 +82,9 @@ fa_IR:
           reset: "بازنشانی"
         search:
           name: "جستجو"
+        embeddings:
+          setting_groups:
+            related_topics: "موضوعات مرتبط"
         spam:
           name: "هرز‌نامه"
       modals:

@@ -225,6 +225,8 @@ ur:
               label: ٹاپک ID
             user:
               label: صارف
+        set_topic_timer:
+          title: ٹاپک ٹائمر مقرر کریں
       models:
         trigger:
           name:

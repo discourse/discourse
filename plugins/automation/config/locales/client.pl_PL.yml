@@ -62,8 +62,6 @@ pl_PL:
             label: Treść
           delay:
             label: Opóźnienie (minuty)
-          prefers_encrypt:
-            label: Szyfruje PW, jeśli jest to dostępne
         group:
           label: Grupa
         text:
@@ -442,6 +440,13 @@ pl_PL:
           fields:
             custom_field_name:
               label: "Nazwa niestandardowego pola użytkownika"
+        set_topic_timer:
+          title: Ustaw minutnik tematu
+          fields:
+            type:
+              label: Typ minutnika
+            duration:
+              label: Czas trwania minutnika
       unnamed_automation: "Automatyzacja bez nazwy"
       models:
         script:

@@ -7,12 +7,17 @@
 lt:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privatu"
+          public: "Vieša"
       reports:
         reading_time:
           title: Skaitymo laikas
         chat_usage:
           messages: žinutės
-          you: Jūs
+          author: Jūs
+          author_others: "%{username}"
         invites:
           title: Pakvietimai
           invitee_posts: Sukurta įrašų

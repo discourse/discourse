@@ -319,6 +319,7 @@ cs:
       greater_than: musí být větší než %{count}
       greater_than_or_equal_to: musí být větší nebo rovno %{count}
       has_already_been_used: "již byl použit"
+      in: musí být v %{count}
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
       is_invalid: "zdá se to být nejasné, je to kompletní věta?"
@@ -892,6 +893,11 @@ cs:
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
       description_incomplete: "Příspěvek s popisem kategorie musí obsahovat alespoň jeden odstavec."
+      description_too_long:
+        one: "Popis je příliš dlouhý (maximálně %{count} znak)."
+        few: "Popis je příliš dlouhý (maximálně %{count} znaky)."
+        many: "Popis je příliš dlouhý (maximálně %{count} znaků)."
+        other: "Popis je příliš dlouhý (maximálně %{count} znaků)."
       permission_conflict: "Každá skupina, která má přístup k podkategorii, musí mít také přístup k nadřazené kategorii. Následující skupiny mají přístup k jedné z podkategorií, ale nemají přístup k nadřazené kategorii: %{group_names}."
       disallowed_topic_tags: "Toto téma obsahuje štítky, které tato kategorie nepovoluje: '%{tags}'"
       disallowed_tags_generic: "Toto téma obsahuje nedovolené štítky."
@@ -1284,11 +1290,14 @@ cs:
       every_month: "každý měsíc"
       every_six_months: "každých šest měsíců"
   user_api_key:
-    title: "Autorizovat přístup k aplikaci"
+    title: 'Autorizovat „%{application_name}“'
     authorize: "Autorizovat"
+    deny: "Zrušit"
     read: "přečteno"
     read_write: "čtení/zápis"
-    description: '„%{application_name}" požaduje následující přístup k vašemu účtu:'
+    logged_in_as: "Přihlášen jako"
+    permissions_header: 'Toto povolí přístup „%{application_name}“:'
+    redirect_warning: "Ověření vás přesměruje na"
     instructions: 'Právě jsme pro vás vygenerovali nový uživatelský klíč API, který můžete použít s „%{application_name}“, do své aplikace vložte prosím následující klíč:'
     otp_description: 'Chcete povolit přístup k tomuto webu uživateli „%{application_name}“?'
     otp_confirmation:
@@ -1656,7 +1665,7 @@ cs:
       yaxis: "Počet událostí"
       description: "Počet spuštěných událostí webhooku nebo jejich průměrná doba trvání."
     suspicious_logins:
-      title: "Podezřelé přihlášení"
+      title: "Podezřelá přihlášení"
       labels:
         user: Uživatel
         client_ip: IP klienta
@@ -2250,6 +2259,7 @@ cs:
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
+    ignore_by_title: "Ignorovat příchozí e-maily na základě jejich názvu."
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
     delete_rejected_email_after_days: "Smazat odmítnuté e-maily starší než (n) dnů."
@@ -2997,6 +3007,7 @@ cs:
         Pokud budete aktivní, poznáme vás a dočasná nová uživatelská omezení budou zrušena. Postupem času získáte [úrovně důvěry](https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29) ([v originále zde](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)), které zahrnují speciální schopnosti, které nám pomohou společně spravovat naši komunitu.
     welcome_user:
       title: "Uvítání uživatele"
+      preview: "Vítejte v %{site_name}!"
       subject_template: "Vítejte v %{site_name}!"
       text_body_template: |
         Děkujeme, že jste se připojili na %{site_name} a vítáme vám na našem diskuzním fóru!
@@ -3024,6 +3035,7 @@ cs:
         S velkou mocí přichází velká odpovědnost. Pokud s moderováním začínáte, přečtěte si prosím [Průvodce moderováním](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Uvítací pozvánka"
+      preview: "Vítejte v %{site_name}!"
       subject_template: "Vítejte v %{site_name}!"
       text_body_template: |
         Děkujeme, že jste přijali pozvání do %{site_name} – vítejte!
@@ -3385,6 +3397,7 @@ cs:
         Toto lze upravit pomocí nastavení webu `newuser_spam_host_threshold` a `allowed_spam_host_domains`. Zvažte přidání %{domains} do seznamu povolených, pokud by měly být z kontroly vyňaty.
     unsilenced:
       title: "Zrušeno ztišení"
+      preview: "Účet již není pozastaven."
       subject_template: "Účet již není pozastaven"
       text_body_template: |
         Dobrý den,
@@ -3433,8 +3446,6 @@ cs:
     Chcete-li se odhlásit z těchto e-mailů, [klikněte zde](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[SZ] "
-  email_from: "%{user_name} přes %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     reached_limit:
@@ -3682,6 +3693,7 @@ cs:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Přihlášení pomocí odkazu"
+      preview: "Přihlášení pomocí odkazu."
       subject_template: "[%{email_prefix}] Přihlášení pomocí odkazu"
       text_body_template: |
         Zde je Váš odkaz pro přihlášení na [%{site_name}](%{base_url}).
@@ -4201,12 +4213,18 @@ cs:
     nice_share:
       name: Zdařilé sdílení
       description: Sdílení příspěvku s 25 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 25 unikátních externích návštěvníků. Děkujeme za šíření informací o našich diskusích a o této komunitě.
     good_share:
       name: Dobré sdílení
       description: Sdílení příspěvku s 300 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 300 unikátních externích návštěvníků. Dobrá práce! Ukázali jste skvělou diskusi spoustě nových lidí a pomohli jste této komunitě růst.
     great_share:
       name: Výborné sdílení
       description: Sdílení příspěvku s 1000 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 1000 unikátních externích návštěvníků. Wow! Propagovali jste zajímavou diskusi mezi obrovským množstvím nových čtenářů a pomohli jste nám tak výrazně rozšířit naši komunitu!
     first_like:
       name: První Líbí se
       description: Líbil se příspěvek

@@ -15,22 +15,22 @@ describe PostLocalizationDestroyer do
   end
 
   it "deletes the localization" do
-    expect {
-      described_class.destroy(post_id: post.id, locale: locale, acting_user: user)
-    }.to change { PostLocalization.count }.by(-1)
+    expect { described_class.destroy(post:, locale:, acting_user: user) }.to change {
+      PostLocalization.count
+    }.by(-1)
     expect { PostLocalization.find(localization.id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it "raises not found if the localization is missing" do
-    expect {
-      described_class.destroy(post_id: post.id, locale: "nope", acting_user: user)
-    }.to raise_error(Discourse::NotFound)
+    expect { described_class.destroy(post:, locale: "nope", acting_user: user) }.to raise_error(
+      Discourse::NotFound,
+    )
   end
 
   it "publishes MessageBus notification" do
     messages =
       MessageBus.track_publish("/topic/#{post.topic_id}") do
-        described_class.destroy(post_id: post.id, locale: locale, acting_user: user)
+        described_class.destroy(post:, locale:, acting_user: user)
       end
 
     expect(messages.length).to eq(1)
@@ -46,15 +46,15 @@ describe PostLocalizationDestroyer do
 
     before { SiteSetting.content_localization_allow_author_localization = true }
 
-    it "allows post author to create localization for their own post" do
-      localization = described_class.destroy(post_id: author_post.id, locale:, acting_user: author)
+    it "allows post author to destroy localization for their own post" do
+      localization = described_class.destroy(post: author_post, locale:, acting_user: author)
 
       expect(localization).to be_nil
     end
 
     it "raises permission error if user is not the post author" do
       expect {
-        described_class.destroy(post_id: other_post.id, locale:, acting_user: author)
+        described_class.destroy(post: other_post, locale:, acting_user: author)
       }.to raise_error(Discourse::InvalidAccess)
     end
   end

@@ -7,6 +7,10 @@
 fr:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privé"
+          public: "Public"
       reports:
         reading_time:
           title: Temps de lecture
@@ -14,7 +18,8 @@ fr:
           title: Affectations
         chat_usage:
           messages: messages directs
-          you: Vous
+          author: Vous
+          author_others: "%{username}"
           status_online: "● en ligne"
         invites:
           title: Invitations

@@ -7,12 +7,17 @@
 fa_IR:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "خصوصی"
+          public: "عمومی"
       reports:
         reading_time:
           title: زمان مطالعه
         chat_usage:
           messages: پیام‌ها
-          you: شما
+          author: شما
+          author_others: "%{username}"
           status_online: "● آنلاین"
         invites:
           title: دعوت‌ها

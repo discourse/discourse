@@ -7,12 +7,17 @@
 sw:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Binafsi"
+          public: "Umma"
       reports:
         reading_time:
           title: Mda wa kusoma
         chat_usage:
           messages: ujumbe
-          you: Wewe
+          author: Wewe
+          author_others: "%{username}"
         invites:
           title: Waliokaribishwa
           invitee_posts: Machapisho Yaliotengenezwa
