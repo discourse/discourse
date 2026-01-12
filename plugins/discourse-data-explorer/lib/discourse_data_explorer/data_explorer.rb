@@ -351,7 +351,6 @@ module DiscourseDataExplorer
         "groups.default_notification_level": GroupUser.notification_levels,
         "group_histories.action": GroupHistory.actions,
         "group_users.notification_level": GroupUser.notification_levels,
-        "imap_sync_logs.level": ImapSyncLog.levels,
         "invites.emailed_status": Invite.emailed_status_types,
         "notifications.notification_type": Notification.types,
         "polls.results": Poll.results,

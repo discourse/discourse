@@ -1359,83 +1359,6 @@ RSpec.describe Group do
     end
   end
 
-  describe "IMAP" do
-    let(:group) { Fabricate(:group) }
-    let(:mocked_imap_provider) do
-      MockedImapProvider.new(
-        group.imap_server,
-        port: group.imap_port,
-        ssl: group.imap_ssl,
-        username: group.email_username,
-        password: group.email_password,
-      )
-    end
-
-    def mock_imap
-      Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(mocked_imap_provider)
-    end
-
-    def configure_imap
-      group.update(
-        imap_server: "imap.gmail.com",
-        imap_port: 993,
-        imap_ssl: true,
-        imap_enabled: true,
-        email_username: "test@gmail.com",
-        email_password: "testPassword1!",
-      )
-    end
-
-    def enable_imap
-      SiteSetting.enable_imap = true
-      mocked_imap_provider.stubs(:connect!)
-      mocked_imap_provider.stubs(:list_mailboxes_with_attributes).returns(
-        [stub(attr: [], name: "Inbox")],
-      )
-      mocked_imap_provider.stubs(:list_mailboxes).returns(["Inbox"])
-      mocked_imap_provider.stubs(:disconnect!)
-    end
-
-    before { Discourse.redis.del("group_imap_mailboxes_#{group.id}") }
-
-    describe "#imap_mailboxes" do
-      it "returns an empty array if group imap is not configured" do
-        expect(group.imap_mailboxes).to eq([])
-      end
-
-      it "returns an empty array and does not contact IMAP server if group imap is configured but the setting is disabled" do
-        configure_imap
-        Imap::Providers::Detector.expects(:init_with_detected_provider).never
-        expect(group.imap_mailboxes).to eq([])
-      end
-
-      it "logs the imap error if one occurs" do
-        configure_imap
-        mock_imap
-        SiteSetting.enable_imap = true
-        mocked_imap_provider.stubs(:connect!).raises(Net::IMAP::NoResponseError)
-        group.imap_mailboxes
-        expect(group.reload.imap_last_error).not_to eq(nil)
-      end
-
-      it "returns a list of mailboxes from the IMAP provider" do
-        configure_imap
-        mock_imap
-        enable_imap
-        expect(group.imap_mailboxes).to eq(["Inbox"])
-      end
-
-      it "caches the login and mailbox fetch" do
-        configure_imap
-        mock_imap
-        enable_imap
-        group.imap_mailboxes
-        Imap::Providers::Detector.expects(:init_with_detected_provider).never
-        group.imap_mailboxes
-      end
-    end
-  end
-
   describe "Unicode usernames and group names" do
     before { SiteSetting.unicode_usernames = true }
 
@@ -1644,23 +1567,6 @@ RSpec.describe Group do
       expect(group.reload.smtp_updated_at).not_to eq_time(old_updated_at)
     end
 
-    it "enables imap and records the change" do
-      group.update(
-        imap_port: 587,
-        imap_ssl: true,
-        imap_server: "imap.gmail.com",
-        email_username: "test@gmail.com",
-        email_password: "password",
-      )
-
-      group.record_email_setting_changes!(user)
-      group.reload
-
-      expect(group.imap_enabled).to eq(true)
-      expect(group.imap_updated_at).not_to eq(nil)
-      expect(group.imap_updated_by).to eq(user)
-    end
-
     it "disables smtp and records the change" do
       group.update(
         smtp_port: 587,
@@ -1688,34 +1594,6 @@ RSpec.describe Group do
       expect(group.smtp_enabled).to eq(false)
       expect(group.smtp_updated_at).not_to eq(nil)
       expect(group.smtp_updated_by).to eq(user)
-    end
-
-    it "disables imap and records the change" do
-      group.update(
-        imap_port: 587,
-        imap_ssl: true,
-        imap_server: "imap.gmail.com",
-        email_username: "test@gmail.com",
-        email_password: "password",
-      )
-
-      group.record_email_setting_changes!(user)
-      group.reload
-
-      group.update(
-        imap_port: nil,
-        imap_ssl: false,
-        imap_server: nil,
-        email_username: nil,
-        email_password: nil,
-      )
-
-      group.record_email_setting_changes!(user)
-      group.reload
-
-      expect(group.imap_enabled).to eq(false)
-      expect(group.imap_updated_at).not_to eq(nil)
-      expect(group.imap_updated_by).to eq(user)
     end
   end
 

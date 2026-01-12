@@ -287,8 +287,6 @@ class PostRevisor
     @silent = @opts[:silent] if @opts.has_key?(:silent)
     @topic_changes.silent = @silent
 
-    @post.incoming_email&.update(imap_sync: true) if @post.incoming_email&.imap_uid
-
     old_raw = @post.raw
 
     Post.transaction do

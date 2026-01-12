@@ -107,7 +107,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_log.message_id).to eq("discourse/post/#{post.id}@test.localhost")
   end
 
-  it "creates an IncomingEmail record with the correct details to avoid double processing IMAP" do
+  it "creates an IncomingEmail record with the correct details" do
     job.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
@@ -217,28 +217,6 @@ RSpec.describe Jobs::GroupSmtpEmail do
       expect(email_log.cc_addresses).to eq("otherguy@test.com")
       expect(email_log.bcc_addresses).to eq("cormac@lit.com")
       expect(email_log.cc_user_ids).to match_array([staged1.id])
-    end
-  end
-
-  context "when the post in the argument is the OP" do
-    let(:post_id) { post.topic.posts.first.id }
-
-    context "when the group has imap enabled" do
-      before { group.update!(imap_enabled: true) }
-
-      it "aborts and does not send a group SMTP email; the OP is the one that sent the email in the first place" do
-        expect { job.execute(args) }.not_to(change { EmailLog.count })
-        expect(ActionMailer::Base.deliveries.count).to eq(0)
-      end
-    end
-
-    context "when the group does not have imap enabled" do
-      before { group.update!(imap_enabled: false) }
-
-      it "sends the email as expected" do
-        job.execute(args)
-        expect(ActionMailer::Base.deliveries.count).to eq(1)
-      end
     end
   end
 

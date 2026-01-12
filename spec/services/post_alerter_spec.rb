@@ -2457,13 +2457,9 @@ RSpec.describe PostAlerter do
         smtp_server: "smtp.gmail.com",
         smtp_port: 587,
         smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
-        imap_server: "imap.gmail.com",
-        imap_port: 993,
-        imap_ssl: true,
         email_username: "discourse@example.com",
         email_password: "password",
         smtp_enabled: true,
-        imap_enabled: true,
       )
     end
 

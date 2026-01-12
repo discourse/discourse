@@ -47,31 +47,6 @@ module Jobs
       bcc_addresses = User.not_staged.with_email(cc_addresses).pluck(:email)
       cc_addresses = cc_addresses - bcc_addresses
 
-      # There is a rare race condition causing the Imap::Sync class to create
-      # an incoming email and associated post/topic, which then kicks off
-      # the PostAlerter to notify others in the PM about a reply in the topic,
-      # but for the OP which is not necessary (because the person emailing the
-      # IMAP inbox already knows about the OP)
-      #
-      # Basically, we should never be sending this notification for the first
-      # post in a topic.
-      #
-      # If the group does not have IMAP enabled then this could be legitimate,
-      # for example in cases where we are creating a new topic to reply to another
-      # group PM and we need to send the participants the group OP email.
-      if post.is_first_post? && group.imap_enabled
-        ImapSyncLog.warn(
-          "Aborting SMTP email for post #{post.id} in topic #{post.topic_id} to #{email}, the post is the OP and should not send an email.",
-          group,
-        )
-        return
-      end
-
-      ImapSyncLog.debug(
-        "Sending SMTP email for post #{post.id} in topic #{post.topic_id} to #{email}.",
-        group,
-      )
-
       # The EmailLog record created by the sender will have the raw email
       # stored, the group smtp ID, and any cc addresses recorded for later
       # cross referencing.
@@ -101,10 +76,7 @@ module Jobs
         raise err # Re-raise the error so Sidekiq's retry mechanism kicks in.
       end
 
-      # Create an incoming email record to avoid importing again from IMAP
-      # server. While this may not be technically required if IMAP is not
-      # currently enabled for the group, it will help a lot with the initial
-      # sync if it is turned on at a later date.
+      # Create an incoming email record for tracking purposes.
       begin
         IncomingEmail.create!(
           user_id: post.user_id,

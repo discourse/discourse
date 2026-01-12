@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ##
-# If group SMTP or IMAP has been configured, we want to make sure the
+# If group SMTP has been configured, we want to make sure the
 # credentials are always valid otherwise emails will not be sending out
 # from group inboxes. This check is run as part of scheduled admin
 # problem checks, and if any credentials have issues they will show up on
@@ -9,9 +9,7 @@
 class ProblemCheck::GroupEmailCredentials < ProblemCheck
   self.priority = "high"
   self.perform_every = 30.minutes
-  self.targets = -> do
-    [*Group.with_smtp_configured.pluck(:name), *Group.with_imap_configured.pluck(:name)]
-  end
+  self.targets = -> { Group.with_smtp_configured.pluck(:name) }
 
   def call
     if group = Group.with_smtp_configured.find_by(name: target)
@@ -22,21 +20,6 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
           EmailSettingsValidator.validate_smtp(
             host: group.smtp_server,
             port: group.smtp_port,
-            username: group.email_username,
-            password: group.email_password,
-          )
-        end
-      )
-    end
-
-    if group = Group.with_imap_configured.find_by(name: target)
-      return no_problem if !SiteSetting.enable_imap
-
-      return(
-        try_validate(group) do
-          EmailSettingsValidator.validate_imap(
-            host: group.imap_server,
-            port: group.imap_port,
             username: group.email_username,
             password: group.email_password,
           )
