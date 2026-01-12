@@ -119,8 +119,8 @@
  *   Markdown-it token parse definition
  * @property {PluginsProperty} [plugins]
  *    ProseMirror plugins - can be a function returning plugin spec or plugin spec object
- * @property {Record<string, NodeViewConstructor | ((params: PluginParams) => NodeViewConstructor)>} [nodeViews]
- *    ProseMirror node views - can be direct NodeView constructors or functions that take params and return constructors
+ * @property {Record<string, NodeViewConstructor | ((params: PluginParams) => NodeViewConstructor) | { component: any, name?: string }>} [nodeViews]
+ *   ProseMirror node views. Can be a NodeViewConstructor or an object with { component, name } for automatic Glimmer component wrapping
  * @property {RichKeymap} [keymap]
  *   Additional keymap definitions
  * @property {(params: PluginParams) => Record<string, import('prosemirror-state').Command>} [commands]

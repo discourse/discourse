@@ -190,6 +190,48 @@ export default class DiscoursePostEventMoreMenu extends Component {
     this.modal.show(PostEventBuilder, {
       model: {
         event: this.args.event,
+        onDelete: async (event) => {
+          const post = await this.store.find("post", event.id);
+          const raw = post.raw;
+
+          const eventRegex = new RegExp(
+            `\\[event\\s(.*?)\\]\\n\\[\\/event\\]`,
+            "m"
+          );
+          const newRaw = raw.replace(eventRegex, "");
+
+          const props = {
+            raw: newRaw,
+            edit_reason: i18n("discourse_post_event.destroy_event"),
+          };
+
+          const cooked = await cook(newRaw);
+          props.cooked = cooked.string;
+
+          return await post.save(props);
+        },
+        onUpdate: async (startsAt, endsAt, event, siteSettings) => {
+          const post = await this.store.find("post", event.id);
+          const raw = post.raw;
+          const eventParams = buildParams(
+            startsAt,
+            endsAt,
+            event,
+            siteSettings
+          );
+          const newRaw = replaceRaw(eventParams, raw);
+          if (newRaw) {
+            const props = {
+              raw: newRaw,
+              edit_reason: i18n("discourse_post_event.edit_reason"),
+            };
+
+            const cooked = await cook(newRaw);
+            props.cooked = cooked.string;
+
+            return await post.save(props);
+          }
+        },
       },
     });
   }

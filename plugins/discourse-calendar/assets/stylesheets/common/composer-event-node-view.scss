@@ -1,0 +1,292 @@
+@use "lib/viewport";
+
+.composer-event-node {
+  display: flex;
+  padding: var(--space-3);
+  gap: var(--space-1);
+  background: var(--secondary);
+  flex-direction: column;
+  flex: 1 0 auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 3px var(--primary-100);
+  border: 1px solid var(--primary-300);
+  border-radius: var(--d-border-radius);
+  white-space: normal;
+
+  input,
+  textarea {
+    border: none;
+    margin-bottom: 0;
+    opacity: 0.8;
+
+    &::placeholder {
+      font-style: italic;
+      color: var(--primary-medium);
+    }
+
+    &:hover {
+      opacity: 1;
+      background: var(--primary-very-low);
+      cursor: pointer;
+    }
+
+    &:focus {
+      opacity: 1;
+      background: var(--primary-very-low);
+      cursor: text;
+      outline-color: var(--d-input-focused-color);
+
+      &::placeholder {
+        overflow: hidden;
+        opacity: 0;
+        height: 0;
+      }
+    }
+
+    @include viewport.until(sm) {
+      background: var(--primary-very-low);
+    }
+  }
+
+  input:not(:focus)::-webkit-outer-spin-button,
+  input:not(:focus)::-webkit-inner-spin-button {
+    appearance: none;
+  }
+
+  input:not(:focus)::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+
+  input[type="number"] {
+    appearance: textfield;
+
+    &:focus {
+      appearance: auto;
+    }
+  }
+
+  &.ProseMirror-selectednode {
+    border-color: var(--tertiary);
+    box-shadow: 0 0 0 1px var(--tertiary);
+  }
+
+  .composer-event__header {
+    column-gap: var(--space-4);
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: var(--space-2);
+
+    .composer-event__more-dropdown {
+      margin-left: auto;
+      align-self: flex-start;
+    }
+  }
+
+  .composer-event__date {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3em;
+    height: 3em;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    flex-direction: column;
+    align-self: flex-start;
+
+    .composer-event__month {
+      text-align: center;
+      color: red;
+      font-size: var(--font-down-2);
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .composer-event__day {
+      text-align: center;
+      font-size: var(--font-up-1);
+      font-weight: 400;
+    }
+  }
+
+  .composer-event__info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+
+    .composer-event__status {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      margin: 0;
+    }
+  }
+
+  .composer-event__dates,
+  .composer-event__location,
+  .composer-event__attendees {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3em 1fr;
+    column-gap: var(--space-2);
+    align-items: center;
+    min-height: 2em;
+
+    &:first-child {
+      border-top: 1px solid var(--primary-low);
+    }
+
+    > .d-icon {
+      color: var(--primary-high);
+      margin: 0 auto;
+      padding: 0;
+    }
+  }
+
+  .composer-event__description {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .composer-event__date-range {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-right: calc(-1 * var(--space-6));
+    gap: var(--space-half);
+
+    .composer-event__date-separator {
+      color: var(--primary-medium);
+    }
+  }
+}
+
+.composer-event__name-input {
+  border-radius: var(--d-border-radius);
+  margin-top: calc(-1 * var(--space-2));
+  margin-left: calc(-1 * var(--space-2));
+  margin-bottom: calc(-1 * var(--space-1));
+  font-size: var(--font-up-2) !important;
+  font-weight: 400;
+  color: var(--primary);
+  font-family: inherit;
+  padding: var(--space-2) !important;
+  cursor: text;
+  width: 100%;
+  resize: none;
+}
+
+.composer-event__date-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.composer-event__date-display {
+  position: absolute;
+  pointer-events: none;
+  width: 100%;
+  left: var(--space-3);
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  &.--empty {
+    font-style: italic;
+    color: var(--primary-low-mid);
+  }
+}
+
+.composer-event__date-input {
+  padding: var(--space-half) var(--space-1);
+  min-height: 2.25rem;
+  cursor: pointer;
+  color: transparent !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  width: 9rem;
+
+  &:focus {
+    @include viewport.from(sm) {
+      color: inherit !important;
+      width: auto;
+    }
+  }
+}
+
+@include viewport.from(sm) {
+  .composer-event__date-input:focus + .composer-event__date-display {
+    display: none;
+  }
+}
+
+.composer-event__location-input {
+  width: 100%;
+  cursor: text;
+}
+
+.composer-event__max-attendees-input {
+  width: 100%;
+  max-width: 13rem;
+  cursor: text;
+  color: transparent !important;
+
+  &:focus {
+    color: inherit !important;
+  }
+
+  &::placeholder {
+    color: var(--primary-medium);
+  }
+}
+
+.composer-event__max-attendees-input:focus
+  + .composer-event__max-attendees-display {
+  display: none;
+}
+
+.composer-event__max-attendees-display {
+  position: absolute;
+  pointer-events: none;
+  margin-left: var(--space-half);
+  left: 4em;
+}
+
+.composer-event__description-textarea {
+  border-radius: var(--d-border-radius);
+  padding: var(--space-2);
+  width: 100%;
+  cursor: text;
+  resize: none;
+}
+
+.composer-event__location-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.composer-event__location-external-link {
+  color: var(--primary-medium);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  border-radius: var(--d-border-radius);
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--tertiary);
+    background: var(--primary-very-low);
+  }
+
+  .d-icon {
+    font-size: var(--font-down-1);
+  }
+}
