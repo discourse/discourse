@@ -93,12 +93,22 @@ class SiteSetting < ActiveRecord::Base
         upload_ids = self.value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
-        upload_ids =
+        upload_values =
           SchemaSettingsObjectValidator.property_values_of_type(
             schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
             objects: JSON.parse(self.value),
             type: "upload",
           )
+
+        # Convert URLs to upload IDs (values can be either integer IDs or URL strings)
+        upload_ids =
+          upload_values.filter_map do |value|
+            if value.is_a?(Integer)
+              value
+            elsif value.is_a?(String) && value.present?
+              ::Upload.get_from_url(value)&.id
+            end
+          end
 
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
       end

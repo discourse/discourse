@@ -327,6 +327,29 @@ RSpec.describe SiteSetting do
         UploadReference.count
       }.by(-2)
     end
+
+    it "creates upload references for objects with upload URLs" do
+      objects_value =
+        JSON.generate(
+          [
+            { "name" => "object1", "upload_id" => upload.url },
+            { "name" => "object2", "upload_id" => upload2.url },
+          ],
+        )
+
+      expect {
+        provider.save(
+          "test_objects_with_uploads",
+          objects_value,
+          SiteSettings::TypeSupervisor.types[:objects],
+        )
+      }.to change { UploadReference.count }.by(2)
+
+      upload_references =
+        UploadReference.where(target: SiteSetting.find_by(name: "test_objects_with_uploads"))
+
+      expect(upload_references.pluck(:upload_id)).to contain_exactly(upload.id, upload2.id)
+    end
   end
 
   describe "Upload" do
