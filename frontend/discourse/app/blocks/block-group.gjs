@@ -16,7 +16,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
 @block("group", {
   container: true,
   args: {
-    name: { type: "string", pattern: VALID_BLOCK_NAME_PATTERN },
+    name: { type: "string", pattern: VALID_BLOCK_NAME_PATTERN, required: true },
   },
 })
 export default class GroupedBlocks extends Component {
