@@ -432,7 +432,13 @@ export function block(name, options = {}) {
        * getter which handles preprocessing. For nested containers, configs are
        * already pre-processed by the parent, so we just create components.
        *
-       * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>|undefined}
+       * Each child object contains:
+       * - `Component`: The curried block component ready to render
+       * - `containerArgs`: Values provided by the child config for the parent's
+       *   `childArgs` schema (e.g., `{ name: "settings" }` for a tabs container).
+       *   These are available to the parent but not passed to the child block itself.
+       *
+       * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>|undefined}
        */
       @cached
       get children() {
@@ -589,12 +595,17 @@ function buildBlockArgs(args, children, hierarchy, outletArgs, extra = {}) {
  * @param {string} [debugContext.containerPath] - Container's full path (for children's _hierarchy)
  * @param {Object} [debugContext.conditions] - The block's conditions
  * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
- * @returns {{Component: import("ember-curry-component").CurriedComponent}}
+ * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}}
+ *   An object containing the curried block component and any containerArgs
+ *   provided in the block config. The containerArgs are values required by
+ *   the parent container's childArgs schema, accessible to the parent but
+ *   not to the child block itself.
  */
 function createChildBlock(blockConfig, owner, debugContext = {}) {
   const {
     block: ComponentClass,
     args = {},
+    containerArgs,
     classNames,
     children: nestedChildren,
   } = blockConfig;
@@ -660,7 +671,7 @@ function createChildBlock(blockConfig, owner, debugContext = {}) {
     }
   }
 
-  return { Component: wrappedComponent };
+  return { Component: wrappedComponent, containerArgs };
 }
 
 /**
@@ -868,7 +879,12 @@ export default class BlockOutlet extends Component {
    * while nested containers use their own simplified logic since
    * their configs are already preprocessed by their parent.
    *
-   * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>|undefined}
+   * Each child object contains:
+   * - `Component`: The curried block component ready to render
+   * - `containerArgs`: Values provided by the child config for the parent's
+   *   `childArgs` schema (accessible to parent, not the child block itself)
+   *
+   * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>|undefined}
    */
   // @cached
   get children() {

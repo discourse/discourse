@@ -155,4 +155,83 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     assert.dom(".block__group-inner").exists();
     assert.dom(".nested-leaf").exists();
   });
+
+  test("containerArgs are accessible to parent container", async function (assert) {
+    // A tabs-like container that requires each child to provide a name via containerArgs.
+    // The parent can access containerArgs to render tab headers.
+    @block("tabs-container", {
+      container: true,
+      childArgs: {
+        tabName: { type: "string", required: true, unique: true },
+      },
+    })
+    class TabsContainer extends Component {
+      <template>
+        <div class="tabs-container">
+          <div class="tabs-header">
+            {{#each this.children as |child|}}
+              <button
+                class="tab-button"
+                data-tab={{child.containerArgs.tabName}}
+              >
+                {{child.containerArgs.tabName}}
+              </button>
+            {{/each}}
+          </div>
+          <div class="tabs-content">
+            {{#each this.children as |child|}}
+              <child.Component />
+            {{/each}}
+          </div>
+        </div>
+      </template>
+    }
+
+    @block("tab-content")
+    class TabContent extends Component {
+      <template>
+        <div class="tab-panel">Tab Panel Content</div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => {
+      _registerBlock(TabsContainer);
+      _registerBlock(TabContent);
+    });
+    renderBlocks("header-blocks", [
+      {
+        block: TabsContainer,
+        children: [
+          { block: TabContent, containerArgs: { tabName: "settings" } },
+          { block: TabContent, containerArgs: { tabName: "profile" } },
+          { block: TabContent, containerArgs: { tabName: "security" } },
+        ],
+      },
+    ]);
+
+    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+
+    // Verify tab headers are rendered from containerArgs
+    const tabButtons = document.querySelectorAll(".tab-button");
+    assert.strictEqual(tabButtons.length, 3, "three tab buttons rendered");
+    assert.strictEqual(
+      tabButtons[0].getAttribute("data-tab"),
+      "settings",
+      "first tab has correct name from containerArgs"
+    );
+    assert.strictEqual(
+      tabButtons[1].getAttribute("data-tab"),
+      "profile",
+      "second tab has correct name from containerArgs"
+    );
+    assert.strictEqual(
+      tabButtons[2].getAttribute("data-tab"),
+      "security",
+      "third tab has correct name from containerArgs"
+    );
+
+    // Verify tab content panels are rendered
+    const tabPanels = document.querySelectorAll(".tab-panel");
+    assert.strictEqual(tabPanels.length, 3, "three tab panels rendered");
+  });
 });
