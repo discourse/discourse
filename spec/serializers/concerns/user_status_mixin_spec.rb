@@ -38,8 +38,12 @@ RSpec.describe UserStatusMixin do
 
     it "respects guardian's can_see_user_status?" do
       user.update!(silenced_till: 1.year.from_now)
-      scope = Guardian.new(Fabricate(:user))
-      expect(serialize_status(scope:)).to be_nil
+
+      # own status is visible
+      expect(serialize_status).to be_present
+
+      # other user's status is not visible
+      expect(serialize_status(scope: Guardian.new(Fabricate(:user)))).to be_nil
     end
   end
 end

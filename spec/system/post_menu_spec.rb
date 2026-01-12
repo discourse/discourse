@@ -505,7 +505,7 @@ describe "Post menu", type: :system do
 
       topic_page.visit_topic(post.topic)
 
-      expect(topic_page).to have_disabled_post_action_button(post, :like)
+      expect(topic_page).to have_no_post_action_button(post, :like)
     end
   end
 
