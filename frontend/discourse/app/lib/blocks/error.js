@@ -1,5 +1,6 @@
 import {
   formatConfigWithErrorPath,
+  parseConditionPath,
   truncateForDisplay,
 } from "discourse/lib/blocks/config-formatter";
 
@@ -29,6 +30,68 @@ export function captureCallSite(callerFn) {
 }
 
 /**
+ * Builds a tree-style breadcrumb showing the path from root to error.
+ * Uses Unicode box-drawing characters for visual hierarchy.
+ *
+ * @param {Array|Object} rootConfig - The root configuration (usually an array of blocks).
+ * @param {string} errorPath - The path to the error (e.g., "[4].children[2].args.nme").
+ * @returns {string} Tree-style breadcrumb string.
+ *
+ * @example
+ * // Returns:
+ * // └─ [4] BlockGroup (name: "callouts")
+ * //    └─ children[2] BlockGroup
+ * //       └─ args.nme  ← error here
+ */
+function buildBreadcrumb(rootConfig, errorPath) {
+  const segments = parseConditionPath(errorPath);
+  const lines = [];
+  let current = rootConfig;
+  let indent = "";
+
+  for (let i = 0; i < segments.length; i++) {
+    const seg = segments[i];
+
+    if (typeof seg === "number" && Array.isArray(current)) {
+      // Array index - show block info
+      const block = current[seg];
+      const blockClass = block?.block;
+      const blockName = blockClass?.blockName || blockClass?.name || "Block";
+      const nameArg = block?.args?.name ? ` (name: "${block.args.name}")` : "";
+      lines.push(`${indent}└─ [${seg}] ${blockName}${nameArg}`);
+      current = block;
+      indent += "   ";
+    } else if (
+      typeof seg === "string" &&
+      current &&
+      typeof current === "object"
+    ) {
+      // Object key - check if this is a terminal segment or intermediate
+      const isLastSegment = i === segments.length - 1;
+      const nextSeg = segments[i + 1];
+      const value = current[seg];
+
+      if (seg === "children" && typeof nextSeg === "number") {
+        // "children" followed by index - continue traversal
+        current = value;
+      } else if (isLastSegment) {
+        // Final segment - this is the error location
+        lines.push(`${indent}└─ ${seg}  ← error here`);
+      } else if (seg === "args" || seg === "conditions") {
+        // Show remaining path as the error location
+        const remaining = segments.slice(i).join(".");
+        lines.push(`${indent}└─ ${remaining}  ← error here`);
+        break;
+      } else {
+        current = value;
+      }
+    }
+  }
+
+  return lines.join("\n");
+}
+
+/**
  * Formats the error context into a human-readable string for console output.
  *
  * When an `errorPath` is provided, uses the path-aware formatter to show
@@ -44,9 +107,23 @@ function formatErrorContext(context) {
 
   const parts = [];
 
-  // Display the full error path location
-  if (context.errorPath) {
-    parts.push(`Location: ${context.errorPath}`);
+  // Use errorPath if available, otherwise fall back to path
+  // Many validation calls use "path" for block location in the tree
+  const effectivePath = context.errorPath || context.path;
+
+  // Display the error path location - use tree-style breadcrumb when rootConfig is available
+  if (effectivePath) {
+    if (context.rootConfig) {
+      try {
+        const breadcrumb = buildBreadcrumb(context.rootConfig, effectivePath);
+        parts.push(`Location:\n${breadcrumb}`);
+      } catch {
+        // Fallback to plain path if breadcrumb fails
+        parts.push(`Location: ${effectivePath}`);
+      }
+    } else {
+      parts.push(`Location: ${effectivePath}`);
+    }
   }
 
   // If we have conditions and conditionsPath, use the path-aware formatter
@@ -62,16 +139,23 @@ function formatErrorContext(context) {
     } catch {
       parts.push("Context: [unable to format]");
     }
-  } else if (context.config && context.errorPath) {
-    // Block config with error path - use path-aware formatter
+  } else if (context.rootConfig && effectivePath) {
+    // Root config available - show full nesting path from root to error
     try {
-      // The errorPath is the full path from root (e.g., "blocks[4].children[2].args.nme")
-      // but config is just the individual block. Strip the base path prefix to get
-      // the relative path within the config (e.g., "args.nme").
-      let relativePath = context.errorPath;
-      if (context.path && context.errorPath.startsWith(context.path)) {
-        relativePath = context.errorPath.slice(context.path.length);
-        // Remove leading dot if present
+      const configStr = formatConfigWithErrorPath(
+        context.rootConfig,
+        effectivePath
+      );
+      parts.push(`\nContext:\n${configStr}`);
+    } catch {
+      parts.push("Context: [unable to format]");
+    }
+  } else if (context.config && effectivePath) {
+    // Fallback: individual block config - strip path prefix for relative path
+    try {
+      let relativePath = effectivePath;
+      if (context.path && effectivePath.startsWith(context.path)) {
+        relativePath = effectivePath.slice(context.path.length);
         if (relativePath.startsWith(".")) {
           relativePath = relativePath.slice(1);
         }

@@ -77,7 +77,40 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
   const errorKey = errorSegments[errorSegments.length - 1];
 
   /**
+   * Renders a truncated (shallow) representation of a value.
+   * Used for keys/items not on the error path to provide context without deep nesting.
+   *
+   * @param {*} obj - The value to render.
+   * @returns {string} Truncated string representation.
+   */
+  function renderTruncated(obj) {
+    if (obj === undefined) {
+      return "undefined";
+    }
+    if (obj === null) {
+      return "null";
+    }
+    // Handle functions/classes (including block components) before primitive check
+    if (typeof obj === "function") {
+      return `<${obj.blockName || obj.name || "Function"}>`;
+    }
+    if (typeof obj !== "object") {
+      return JSON.stringify(obj);
+    }
+    // Handle block component references on objects with blockName
+    if (obj.blockName) {
+      return `<${obj.blockName}>`;
+    }
+    if (Array.isArray(obj)) {
+      return obj.length === 0 ? "[]" : `[ ${obj.length} items ]`;
+    }
+    const keys = Object.keys(obj);
+    return keys.length === 0 ? "{}" : "{ ... }";
+  }
+
+  /**
    * Recursively renders the config object with highlighting.
+   * Shows all keys at each level, but truncates values not on the error path.
    *
    * @param {*} obj - The object to render.
    * @param {number} depth - Current indentation depth.
@@ -91,28 +124,31 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
     );
     const isPastErrorLocation = currentPath.length > errorSegments.length;
 
-    // Truncate values past the error location
+    // Values past the error location get truncated representation
     if (isPastErrorLocation) {
-      if (obj === null) {
-        return "null";
-      }
-      if (typeof obj !== "object") {
-        return JSON.stringify(obj);
-      }
-      return Array.isArray(obj) ? "[ ... ]" : "{ ... }";
+      return renderTruncated(obj);
+    }
+
+    if (obj === undefined) {
+      return "undefined";
     }
 
     if (obj === null) {
       return "null";
     }
 
+    // Handle functions/classes (including block components) before primitive check
+    if (typeof obj === "function") {
+      return `<${obj.blockName || obj.name || "Function"}>`;
+    }
+
     if (typeof obj !== "object") {
       return JSON.stringify(obj);
     }
 
-    // Handle block component references specially
-    if (obj.blockName || (typeof obj === "function" && obj.name)) {
-      return `<${obj.blockName || obj.name || "Component"}>`;
+    // Handle block component references on objects with blockName
+    if (obj.blockName) {
+      return `<${obj.blockName}>`;
     }
 
     if (Array.isArray(obj)) {
@@ -120,22 +156,46 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
         return "[]";
       }
 
-      const lines = ["["];
+      // Find which item (if any) is on the error path
+      let itemOnPathIndex = -1;
       for (let i = 0; i < obj.length; i++) {
         const itemPath = [...currentPath, i];
         const isItemOnPath = itemPath.every(
           (seg, j) => j >= errorSegments.length || seg === errorSegments[j]
         );
-
-        if (isItemOnPath || currentPath.length < errorSegments.length) {
-          const value = render(obj[i], depth + 1, itemPath);
-          const comma = i < obj.length - 1 ? "," : "";
-          lines.push(`${indent}  ${value}${comma}`);
-        } else if (i === 0) {
-          // Show ellipsis for items not on path
-          lines.push(`${indent}  ...`);
+        if (isItemOnPath) {
+          itemOnPathIndex = i;
+          break;
         }
       }
+
+      const lines = ["["];
+
+      // Show "..." for items before the one on path
+      if (itemOnPathIndex > 0) {
+        lines.push(`${indent}  ...`);
+      }
+
+      // Show the item on path (or all items if none is on path)
+      if (itemOnPathIndex >= 0) {
+        const itemPath = [...currentPath, itemOnPathIndex];
+        const value = render(obj[itemOnPathIndex], depth + 1, itemPath);
+        const comma = itemOnPathIndex < obj.length - 1 ? "," : "";
+        lines.push(`${indent}  ${value}${comma}`);
+
+        // Show "..." for items after the one on path
+        if (itemOnPathIndex < obj.length - 1) {
+          lines.push(`${indent}  ...`);
+        }
+      } else {
+        // No item on path - show all truncated
+        for (let i = 0; i < obj.length; i++) {
+          const value = renderTruncated(obj[i]);
+          const comma = i < obj.length - 1 ? "," : "";
+          lines.push(`${indent}  ${value}${comma}`);
+        }
+      }
+
       lines.push(`${indent}]`);
       return lines.join("\n");
     }
@@ -154,8 +214,8 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
     }
 
     const lines = ["{"];
-    let shownEllipsis = false;
 
+    // Render all keys to provide context, but truncate values not on the error path
     for (const key of keys) {
       const keyPath = [...currentPath, key];
       const isKeyOnPath = keyPath.every(
@@ -166,22 +226,21 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
         currentPath.length === errorSegments.length - 1 &&
         key === errorKey;
 
-      if (isKeyOnPath || isKeyTheError) {
-        const value = render(obj[key], depth + 1, keyPath);
-        const errorMarker = isKeyTheError ? " // <-- error here" : "";
+      // Use full rendering for keys on path, truncated for others
+      const value =
+        isKeyOnPath || isKeyTheError
+          ? render(obj[key], depth + 1, keyPath)
+          : renderTruncated(obj[key]);
+      const errorMarker = isKeyTheError ? " // <-- error here" : "";
 
-        // Handle multiline values - put error marker on the key line, not after the value
-        if (value.includes("\n")) {
-          const firstLine = value.split("\n")[0];
-          const restLines = value.split("\n").slice(1).join("\n");
-          lines.push(`${indent}  ${key}: ${firstLine}${errorMarker}`);
-          lines.push(`${restLines},`);
-        } else {
-          lines.push(`${indent}  ${key}: ${value},${errorMarker}`);
-        }
-      } else if (!shownEllipsis) {
-        lines.push(`${indent}  ...`);
-        shownEllipsis = true;
+      // Handle multiline values - put error marker on the key line, not after the value
+      if (value.includes("\n")) {
+        const firstLine = value.split("\n")[0];
+        const restLines = value.split("\n").slice(1).join("\n");
+        lines.push(`${indent}  ${key}: ${firstLine}${errorMarker}`);
+        lines.push(`${restLines},`);
+      } else {
+        lines.push(`${indent}  ${key}: ${value},${errorMarker}`);
       }
     }
 

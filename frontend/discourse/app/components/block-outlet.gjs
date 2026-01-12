@@ -760,7 +760,7 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
     blocksService,
     isBlock,
     isContainerBlock,
-    "blocks", // parentPath
+    "", // parentPath - empty so paths start with array index like [0]
     callSiteError // Error object for source-mapped call site
   ).then(() => config);
 

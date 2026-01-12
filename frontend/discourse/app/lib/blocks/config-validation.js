@@ -549,8 +549,9 @@ export function validateReservedArgs(config) {
  * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions.
  * @param {Function} isBlockFn - Function to check if component is a block.
  * @param {Function} isContainerBlockFn - Function to check if component is a container block.
- * @param {string} [parentPath="blocks"] - JSON-path style parent location for error context.
+ * @param {string} [parentPath=""] - JSON-path style parent location for error context.
  * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
+ * @param {Array<Object>} [rootConfig] - The root blocks array for error context display.
  * @returns {Promise<void>} Resolves when validation completes.
  * @throws {Error} If any block configuration is invalid.
  */
@@ -560,9 +561,13 @@ export async function validateConfig(
   blocksService,
   isBlockFn,
   isContainerBlockFn,
-  parentPath = "blocks",
-  callSiteError = null
+  parentPath = "",
+  callSiteError = null,
+  rootConfig = null
 ) {
+  // On first call, capture the root config for error display
+  const effectiveRootConfig = rootConfig ?? blocksConfig;
+
   // Use Promise.all for parallel validation (faster in dev when resolving factories)
   const validationPromises = blocksConfig.map(async (blockConfig, index) => {
     const currentPath = `${parentPath}[${index}]`;
@@ -575,7 +580,8 @@ export async function validateConfig(
       isBlockFn,
       isContainerBlockFn,
       currentPath,
-      callSiteError
+      callSiteError,
+      effectiveRootConfig
     );
 
     // Recursively validate nested children
@@ -587,7 +593,8 @@ export async function validateConfig(
         isBlockFn,
         isContainerBlockFn,
         `${currentPath}.children`,
-        callSiteError
+        callSiteError,
+        effectiveRootConfig
       );
     }
   });
@@ -622,6 +629,7 @@ export async function validateConfig(
  * @param {Function} isContainerBlockFn - Function to check if component is a container block.
  * @param {string} [path] - JSON-path style location in config (e.g., "blocks[3].children[0]").
  * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
+ * @param {Array<Object>} [rootConfig] - The root blocks array for error context display.
  * @returns {Promise<void>} Resolves when validation completes.
  * @throws {Error} If validation fails.
  */
@@ -632,7 +640,8 @@ export async function validateBlock(
   isBlockFn,
   isContainerBlockFn,
   path,
-  callSiteError = null
+  callSiteError = null,
+  rootConfig = null
 ) {
   if (!isValidOutlet(outletName)) {
     const allOutlets = getAllOutlets();
@@ -641,7 +650,7 @@ export async function validateBlock(
       `Unknown block outlet: ${suggestion}. ` +
         `Register custom outlets with api.registerBlockOutlet() in a pre-initializer. ` +
         `Available outlets: ${allOutlets.join(", ")}`,
-      { outletName, path, config, callSiteError }
+      { outletName, path, config, callSiteError, rootConfig }
     );
     return;
   }
@@ -653,13 +662,13 @@ export async function validateBlock(
       validateConfigTypes(config);
     },
     `Invalid block config at ${path} for outlet "${outletName}"`,
-    { outletName, path, config, callSiteError }
+    { outletName, path, config, callSiteError, rootConfig }
   );
 
   if (!config.block) {
     raiseBlockError(
       `Block config at ${path} for outlet "${outletName}" is missing required "block" property.`,
-      { outletName, path, config, callSiteError }
+      { outletName, path, config, callSiteError, rootConfig }
     );
     return;
   }
@@ -670,7 +679,7 @@ export async function validateBlock(
   const resolvedBlock = await resolveBlockForValidation(
     config.block,
     outletName,
-    { path, config, callSiteError }
+    { path, config, callSiteError, rootConfig }
   );
 
   // If resolution returned null (error was raised), exit early
@@ -706,7 +715,7 @@ export async function validateBlock(
   if (!isBlockFn(resolvedBlock)) {
     raiseBlockError(
       `Block "${config.name || resolvedBlock?.blockName}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
-      { outletName, path, config, callSiteError }
+      { outletName, path, config, callSiteError, rootConfig }
     );
     return;
   }
@@ -721,6 +730,7 @@ export async function validateBlock(
     path,
     config,
     callSiteError,
+    rootConfig,
   };
 
   // Validate outlet permission (allowedOutlets/deniedOutlets)
