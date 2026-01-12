@@ -1747,6 +1747,9 @@ Discourse::Application.routes.draw do
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
+    get "/dev-mode" => "dev_mode#index"
+    post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
+
     get "/theme-qunit" => "qunit#theme"
     get "/theme-tests", to: redirect("/theme-qunit")
 
