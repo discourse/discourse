@@ -345,6 +345,7 @@ en:
       bulk_invite: "Bulk Invite"
       close_event: "Close event"
       open_event: "Open event"
+      destroy_event: "Destroy event"
       invitees_modal:
         title_invited: "Event Participation"
         title_participated: "List of users who participated"
@@ -421,6 +422,12 @@ en:
             private:
               title: "Private"
               description: "A private event can only be joined by invited users."
+      composer:
+        end_date_placeholder: "Set end date"
+        location_placeholder: "Add location or URL"
+        max_attendees_placeholder: "Set max attendees"
+        description_placeholder: "Add event description"
+
       builder_modal:
         custom_fields:
           label: "Custom Fields"
