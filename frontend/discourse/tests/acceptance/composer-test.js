@@ -288,7 +288,7 @@ acceptance(`Composer`, function (needs) {
     assert.dom(".d-modal").doesNotExist("the modal can be dismissed");
     assert
       .dom("#reply-control")
-      .doesNotExist("composer is closed after enqueuing");
+      .hasClass("closed", "composer is closed after enqueuing");
     assert
       .dom(".saving-text")
       .doesNotExist("composer is not stuck in saving state");
@@ -570,7 +570,7 @@ acceptance(`Composer`, function (needs) {
     assert.dom(".pending-posts .reviewable-item").exists();
     assert
       .dom("#reply-control")
-      .doesNotExist("composer is closed after enqueuing");
+      .hasClass("closed", "composer is closed after enqueuing");
     assert
       .dom(".saving-text")
       .doesNotExist("composer is not stuck in saving state");
