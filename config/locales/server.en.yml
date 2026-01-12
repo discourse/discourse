@@ -5539,6 +5539,10 @@ en:
     deprecation_error_label: Make Javascript deprecations raise an error
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
+  dev_mode:
+    title: "Developer Mode"
+    enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
+    enter: "Enter"
   wizard:
     title: "Discourse Setup"
     step:
