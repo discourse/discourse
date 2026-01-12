@@ -14,7 +14,6 @@ import { categoryLinkHTML } from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
-import emoji from "discourse/helpers/emoji";
 import formatDate from "discourse/helpers/format-date";
 import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
@@ -279,7 +278,7 @@ export default class DetailedTopicCard extends Component {
               aria-label={{this.voteCountLabel}}
               title={{this.voteCountLabel}}
             >
-              {{emoji "ballot_box" skipTitle=true}}
+              {{icon "stamp" skipTitle=true}}
               <span class="hc-topic-card__votes-count">{{number
                   @topic.vote_count
                 }}</span>
@@ -292,7 +291,7 @@ export default class DetailedTopicCard extends Component {
               aria-label={{this.replyCountLabel}}
               title={{this.replyCountLabel}}
             >
-              {{emoji "speech_balloon" skipTitle=true}}
+              {{icon "reply" skipTitle=true}}
               <span class="hc-topic-card__count">{{number
                   @topic.posts_count
                 }}</span>
@@ -305,7 +304,7 @@ export default class DetailedTopicCard extends Component {
               aria-label={{this.likeCountLabel}}
               title={{this.likeCountLabel}}
             >
-              {{emoji "heart" skipTitle=true}}
+              {{icon "heart" skipTitle=true}}
               <span class="hc-topic-card__count">{{number
                   @topic.like_count
                 }}</span>
