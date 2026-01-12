@@ -126,7 +126,7 @@ export function replaceRaw(params, raw) {
   return false;
 }
 
-function camelCase(input) {
+export function camelCase(input) {
   return input
     .toLowerCase()
     .replace(/-/g, "_")

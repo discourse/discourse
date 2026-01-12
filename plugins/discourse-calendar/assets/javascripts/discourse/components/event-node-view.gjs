@@ -10,7 +10,10 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostEventBuilder from "discourse/plugins/discourse-calendar/discourse/components/modal/post-event-builder";
 import guessDateFormat from "discourse/plugins/discourse-calendar/discourse/lib/guess-best-date-format";
-import { buildParams } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
+import {
+  buildParams,
+  camelCase,
+} from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-event";
 
 export default class EventNodeView extends Component {
@@ -381,25 +384,13 @@ export default class EventNodeView extends Component {
 
     // Convert each custom field back from camelCase to original name
     allowedCustomFields.forEach((fieldName) => {
-      const camelCaseName = this.camelCase(fieldName);
+      const camelCaseName = camelCase(fieldName);
       if (typeof this.eventData[camelCaseName] !== "undefined") {
         customFields[fieldName] = this.eventData[camelCaseName];
       }
     });
 
     return customFields;
-  }
-
-  /**
-   * Converts string to camelCase (matches the logic in raw-event-helper.js)
-   * @param {string} input - The string to convert
-   * @returns {string} camelCase string
-   */
-  camelCase(input) {
-    return input
-      .toLowerCase()
-      .replace(/-/g, "_")
-      .replace(/_(.)/g, (match, group1) => group1.toUpperCase());
   }
 
   @action
