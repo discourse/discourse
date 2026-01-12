@@ -144,7 +144,7 @@ describe "Composer - ProseMirror - Event Editor", type: :system do
 
       composer.toggle_rich_editor
       markdown_content = find(".d-editor-input").value
-      expect(markdown_content).to include("maxAttendees=\"25\"")
+      expect(markdown_content).to include("maxAttendees=25")
     end
 
     it "allows editing event dates and persists to markdown" do
@@ -165,8 +165,8 @@ describe "Composer - ProseMirror - Event Editor", type: :system do
 
       composer.toggle_rich_editor
       markdown_content = find(".d-editor-input").value
-      expect(markdown_content).to include("2024-12-20T14:00:00.000Z")
-      expect(markdown_content).to include("2024-12-20T16:00:00.000Z")
+      expect(markdown_content).to include("2024-12-20 14:00")
+      expect(markdown_content).to include("2024-12-20 16:00")
     end
   end
 

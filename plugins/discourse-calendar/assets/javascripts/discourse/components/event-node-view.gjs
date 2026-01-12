@@ -323,20 +323,25 @@ export default class EventNodeView extends Component {
   @action
   updateEventStartDate(event) {
     const newDateTime = event.target.value;
+    const eventTz = this.eventData.timezone || "UTC";
     if (newDateTime) {
-      const dt = moment(newDateTime);
-      this.updateNodeAttribute("start", dt.toISOString());
+      const dt = moment.tz(newDateTime, eventTz);
+      this.updateNodeAttribute("start", dt.format("YYYY-MM-DD HH:mm"));
     } else {
-      this.updateNodeAttribute("start", new Date().toISOString());
+      this.updateNodeAttribute(
+        "start",
+        moment().tz(eventTz).format("YYYY-MM-DD HH:mm")
+      );
     }
   }
 
   @action
   updateEventEndDate(event) {
     const newDateTime = event.target.value;
+    const eventTz = this.eventData.timezone || "UTC";
     if (newDateTime) {
-      const dt = moment(newDateTime);
-      this.updateNodeAttribute("end", dt.toISOString());
+      const dt = moment.tz(newDateTime, eventTz);
+      this.updateNodeAttribute("end", dt.format("YYYY-MM-DD HH:mm"));
     } else {
       this.updateNodeAttribute("end", null);
     }
