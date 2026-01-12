@@ -38,7 +38,6 @@ describe "Composer - ProseMirror - Images", type: :system do
       open_composer
       image = Fabricate(:image_upload)
       composer.type_content("![alt text](#{image.url})")
-      find(".composer-image-node img").click
       expect(rich).to have_no_css(".composer-image-node img[width]")
       expect(rich).to have_no_css(".composer-image-node img[height]")
       find(".composer-image-toolbar__zoom-out").click
@@ -152,7 +151,6 @@ describe "Composer - ProseMirror - Images", type: :system do
       it "moves image outside grid" do
         open_composer
         composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
-        composer.image_grid.select_first_grid_image
         composer.image_grid.move_image_outside_grid
         expect(composer.image_grid).to have_grid_images(1)
         expect(composer.image_grid).to have_images(2) # One in grid, one standalone
@@ -191,6 +189,73 @@ describe "Composer - ProseMirror - Images", type: :system do
       attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
       expect(composer).to have_no_in_progress_uploads
       expect(composer.image_grid).to have_single_grid_with_images(5)
+    end
+  end
+
+  describe "image lightbox" do
+    let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
+
+    def click_selected_image_to_open_lightbox
+      page.execute_script(<<~JS)
+        document.querySelector('.composer-image-node img.ProseMirror-selectednode')?.click();
+      JS
+    end
+
+    it "opens lightbox with single image" do
+      open_composer
+      paste_and_click_image
+
+      click_selected_image_to_open_lightbox
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_no_counter
+      expect(lightbox).to have_no_next_button
+      expect(lightbox).to have_no_prev_button
+
+      lightbox.close_button.click
+      expect(lightbox).to be_hidden
+
+      expect(rich).to have_css(".composer-image-node img.ProseMirror-selectednode")
+      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+    end
+
+    it "opens lightbox with gallery when multiple images are present" do
+      open_composer
+      composer.type_content("![image1](upload://test1.png)\n\n![image2](upload://test2.png)")
+
+      first_image = rich.all(".composer-image-node img").first
+      first_image.click
+      expect(first_image[:class]).to include("ProseMirror-selectednode")
+
+      click_selected_image_to_open_lightbox
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_css(".pswp__counter", text: "1 / 2")
+      expect(lightbox).to have_next_button
+      expect(lightbox).to have_prev_button
+
+      lightbox.close_button.click
+      expect(lightbox).to be_hidden
+
+      expect(rich).to have_css(".composer-image-node img.ProseMirror-selectednode")
+      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+    end
+
+    it "navigates between images using prev/next buttons" do
+      open_composer
+      composer.type_content("![first](upload://test1.png)\n\n![second](upload://test2.png)")
+
+      rich.find(".composer-image-node img[alt='first']").click
+      click_selected_image_to_open_lightbox
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_caption_title("first")
+
+      lightbox.next_button.click
+      expect(lightbox).to have_caption_title("second")
+
+      lightbox.prev_button.click
+      expect(lightbox).to have_caption_title("first")
     end
   end
 end
