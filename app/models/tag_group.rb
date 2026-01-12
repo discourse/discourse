@@ -3,6 +3,7 @@
 class TagGroup < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
   validates :name, uniqueness: { case_sensitive: false }
+  validates :slug, uniqueness: { case_sensitive: false }, allow_blank: true
 
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
@@ -17,6 +18,7 @@ class TagGroup < ActiveRecord::Base
 
   belongs_to :parent_tag, class_name: "Tag"
 
+  before_validation :ensure_slug
   before_save :apply_permissions
   before_save :remove_parent_from_group
   before_create :init_permissions
@@ -47,9 +49,16 @@ class TagGroup < ActiveRecord::Base
     @permissions = TagGroup.resolve_permissions(permissions)
   end
 
-  # TODO: long term we can cache this if TONs of tag groups exist
   def self.find_id_by_slug(slug)
-    self.pluck(:id, :name).each { |id, name| return id if Slug.for(name) == slug }
+    return nil if slug.blank?
+
+    result = where("LOWER(slug) = ?", slug.downcase).pick(:id)
+    return result if result
+
+    if (match = slug.match(/\A(\d+)-tag-group\z/))
+      return match[1].to_i if exists?(id: match[1].to_i)
+    end
+
     nil
   end
 
@@ -88,6 +97,37 @@ class TagGroup < ActiveRecord::Base
       end
       @permissions = nil
     end
+  end
+
+  def ensure_slug
+    self.slug ||= ""
+    return if name.blank?
+
+    if slug.present?
+      self.slug = Slug.for(slug, "", method: :encoded)
+
+      if slug.blank?
+        errors.add(:slug, :invalid)
+      elsif SiteSetting.slug_generation_method == "ascii" && !CGI.unescape(slug).ascii_only?
+        errors.add(:slug, I18n.t("tag_group.errors.slug_contains_non_ascii_chars"))
+      elsif duplicate_slug?
+        errors.add(:slug, I18n.t("tag_group.errors.slug_already_in_use"))
+      end
+    else
+      self.slug = Slug.for(name, "")
+      self.slug = "" if duplicate_slug?
+    end
+  end
+
+  def duplicate_slug?
+    return false if slug.blank?
+    scope = TagGroup.where("LOWER(slug) = ?", slug.downcase)
+    scope = scope.where.not(id: id) if id.present?
+    scope.exists?
+  end
+
+  def slug_for_url
+    slug.presence || "#{id}-tag-group"
   end
 
   def remove_parent_from_group

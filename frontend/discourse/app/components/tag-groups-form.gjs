@@ -72,6 +72,7 @@ export default class TagGroupsForm extends Component {
   save() {
     const attrs = this.buffered.getProperties(
       "name",
+      "slug",
       "tag_names",
       "parent_tag_name",
       "one_per_topic",
@@ -120,6 +121,17 @@ export default class TagGroupsForm extends Component {
       <label>{{i18n "tagging.groups.name_placeholder"}}</label>
       <div>
         <TextField @value={{this.buffered.name}} /></div>
+    </section>
+
+    <section class="group-slug">
+      <label>{{i18n "tagging.groups.slug_label"}}</label>
+      <div>
+        <TextField
+          @value={{this.buffered.slug}}
+          @placeholderKey="tagging.groups.slug_placeholder"
+        />
+      </div>
+      <div class="description">{{i18n "tagging.groups.slug_description"}}</div>
     </section>
 
     <section class="group-tags-list">

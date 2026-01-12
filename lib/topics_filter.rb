@@ -851,8 +851,13 @@ class TopicsFilter
   end
 
   def filter_tag_groups(values:)
-    values.each do |key_prefix, tag_groups|
-      tag_group_ids = TagGroup.visible(@guardian).where(name: tag_groups).pluck(:id)
+    values.each do |key_prefix, tag_group|
+      downcased = tag_group.downcase
+      tag_group_ids =
+        TagGroup
+          .visible(@guardian)
+          .where("LOWER(slug) = ? OR LOWER(name) = ?", downcased, downcased)
+          .pluck(:id)
       exclude_clause = "NOT" if key_prefix == "-"
       filter =
         "tags.id #{exclude_clause} IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))"

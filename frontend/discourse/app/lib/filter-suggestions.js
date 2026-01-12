@@ -160,6 +160,8 @@ export default class FilterSuggestions {
         return suggester.getDateSuggestions();
       case "number":
         return suggester.getNumberSuggestions();
+      case "tag_group":
+        return await suggester.getTagGroupSuggestions();
       default:
         return [];
     }
@@ -383,6 +385,26 @@ class FilterTypeValueSuggester {
         name: this.buildSuggestionName(group.name),
         description: group.full_name || group.name,
         term: group.name,
+        isSuggestion: true,
+      }));
+
+      results = this.prepareDelimiterSuggestions(results);
+      return results;
+    } catch {
+      return [];
+    }
+  }
+
+  async getTagGroupSuggestions() {
+    try {
+      const response = await ajax("/tag_groups/filter/search.json", {
+        data: { q: this.searchTerm || "", limit: 10 },
+      });
+
+      let results = response.results.map((tagGroup) => ({
+        name: this.buildSuggestionName(tagGroup.slug || tagGroup.name),
+        description: tagGroup.name,
+        term: tagGroup.slug || tagGroup.name,
         isSuggestion: true,
       }));
 

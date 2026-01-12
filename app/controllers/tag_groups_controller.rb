@@ -86,10 +86,14 @@ class TagGroupsController < ApplicationController
   def search
     matches = TagGroup.includes(:tags).visible(guardian).all
 
-    matches = matches.where("lower(name) ILIKE ?", "%#{params[:q].strip}%") if params[:q].present?
+    if params[:q].present?
+      q = "%#{params[:q].strip}%"
+      matches = matches.where("LOWER(name) ILIKE ? OR LOWER(slug) ILIKE ?", q, q)
+    end
 
     if params[:names].present?
-      matches = matches.where("lower(NAME) in (?)", params[:names].map(&:downcase))
+      names = params[:names].map(&:downcase)
+      matches = matches.where("LOWER(name) IN (?) OR LOWER(slug) IN (?)", names, names)
     end
 
     matches =
@@ -102,7 +106,9 @@ class TagGroupsController < ApplicationController
 
     render json: {
              results:
-               matches.map { |x| { name: x.name, tag_names: x.tags.base_tags.pluck(:name).sort } },
+               matches.map do |x|
+                 { name: x.name, slug: x.slug, tag_names: x.tags.base_tags.pluck(:name).sort }
+               end,
            }
   end
 
@@ -117,7 +123,16 @@ class TagGroupsController < ApplicationController
     params.merge!(tag_group.permit!) if tag_group
 
     result =
-      params.permit(:id, :name, :one_per_topic, tag_names: [], parent_tag_name: [], permissions: {})
+      params.permit(
+        :id,
+        :name,
+        :slug,
+        :one_per_topic,
+        tag_names: [],
+        parent_tag_name: [],
+        permissions: {
+        },
+      )
 
     result[:tag_names] ||= []
     result[:parent_tag_name] ||= []

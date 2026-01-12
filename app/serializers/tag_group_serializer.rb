@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TagGroupSerializer < ApplicationSerializer
-  attributes :id, :name, :tag_names, :parent_tag_name, :one_per_topic, :permissions
+  attributes :id, :name, :slug, :tag_names, :parent_tag_name, :one_per_topic, :permissions
 
   def tag_names
     object.tags.base_tags.map(&:name).sort

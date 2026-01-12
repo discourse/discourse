@@ -890,6 +890,12 @@ en:
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
+
+  tag_group:
+    errors:
+      slug_already_in_use: "is already in use"
+      slug_contains_non_ascii_chars: "contains non-ASCII characters"
+
   trust_levels:
     admin: "Admin"
     staff: "Staff"
