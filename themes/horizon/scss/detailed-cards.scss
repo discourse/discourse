@@ -2,7 +2,8 @@
 
 :root {
   --topic-card-shadow: rgb(var(--tertiary-rgb), 0.1);
-  --title-color--read: var(--primary);
+  --title-color--read: var(--primary-medium);
+  --topic-title-font-weight--visited: 700;
 }
 
 $padding-pills-small: var(--space-half) var(--space-2);
@@ -146,7 +147,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
   &__category .badge-category__wrapper {
     padding: var(--space-half) var(--space-2) !important;
-    font-size: var(--font-0);
+    font-size: var(--font-down-1-rem);
   }
 
   &__status-tags {
@@ -188,6 +189,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
     a {
       color: var(--primary);
+      word-break: break-word;
     }
 
     .topic-status.--pinned,
@@ -199,6 +201,10 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   .topic-excerpt {
+    span {
+      word-break: break-word;
+    }
+
     .--high-context & {
       color: var(--primary-high);
       line-height: 1.25;
