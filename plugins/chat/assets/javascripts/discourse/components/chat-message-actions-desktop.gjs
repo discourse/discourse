@@ -52,7 +52,7 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   get shouldRenderFavoriteReactions() {
-    return this.size === FULL;
+    return this.size === FULL && this.message.channel?.isFollowing;
   }
 
   get messageContainer() {
