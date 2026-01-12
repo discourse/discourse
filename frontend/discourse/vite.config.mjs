@@ -77,11 +77,13 @@ export default defineConfig(({ mode, command }) => {
       maybeBabel({
         babelHelpers: "runtime",
         extensions,
+        parallel: 4,
+        skipPreflightCheck: true,
       }),
 
       // Discourse-specific
       // mkcert(),
-      visualizer({ emitFile: true }),
+      // visualizer({ emitFile: true }),
 
       {
         name: "resolve-external-locales",

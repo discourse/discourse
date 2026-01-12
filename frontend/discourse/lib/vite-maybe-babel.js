@@ -1,4 +1,5 @@
 import { babel } from "@rollup/plugin-babel";
+import { parse as oxcParse } from "oxc-parser";
 import { walk } from "zimmerframe";
 
 const babelRequiredImports = new Set([
@@ -17,60 +18,32 @@ const babelRequiredImports = new Set([
 ]);
 
 export default function maybeBabel(config) {
-  let totalFiles = 0;
-  let skippedFiles = 0;
-  let decoratorsWithNoImports = 0;
-
-  const original = babel(config);
-  return {
-    ...original,
-    async transform(code, id) {
-      // console.log(this.environment);
-      if (!config.extensions.some((ext) => id.endsWith(ext))) {
-        return null;
-      }
-
-      const estree = this.parse(code);
+  return babel({
+    ...config,
+    async filter(id, code) {
+      const estree = await oxcParse(id, code);
 
       let hasDecorators = false;
       let hasBabelRequiredImport = false;
 
       walk(
-        estree,
-        {},
+        estree.program,
+        /* state */ {},
         {
-          _(node, { state, next }) {
-            if (node.decorators?.length) {
-              hasDecorators = true;
-            } else {
-              next(state);
-            }
+          Decorator(_node, { stop }) {
+            hasDecorators = true;
+            stop();
           },
-          ImportDeclaration(node) {
+          ImportDeclaration(node, { stop }) {
             if (babelRequiredImports.has(node.source.value)) {
               hasBabelRequiredImport = true;
+              stop();
             }
           },
         }
       );
 
-      totalFiles += 1;
-
-      if (hasDecorators && !hasBabelRequiredImport) {
-        decoratorsWithNoImports += 1;
-      }
-
-      if (hasDecorators || hasBabelRequiredImport) {
-        return original.transform.call(this, code, id);
-      } else {
-        skippedFiles += 1;
-      }
+      return hasDecorators || hasBabelRequiredImport;
     },
-    buildEnd() {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[maybe-babel] Processed ${totalFiles - skippedFiles} of ${totalFiles} files. (${decoratorsWithNoImports} files had decorators but no required imports.)`
-      );
-    },
-  };
+  });
 }
