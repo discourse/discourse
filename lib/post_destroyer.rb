@@ -249,7 +249,11 @@ class PostDestroyer
             ignore(@post.reviewable_flag)
           end
         elsif reviewable = @post.reviewable_flag
-          @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
+          if @opts[:defer_flags]
+            ignore(reviewable)
+          else
+            agree(reviewable) unless reviewable.potentially_illegal?
+          end
         end
       end
     end
