@@ -102,7 +102,6 @@
     "@embroider/core": "^4.2.5",
     "@embroider/macros": "^1.18.0",
     "@embroider/router": "^3.0.4",
-    "@embroider/test-setup": "4.0.0",
     "@embroider/vite": "1.4.3",
     "@floating-ui/dom": "^1.7.4",
     "@glimmer/component": "^2.0.0",

@@ -78,7 +78,8 @@
         "lint-to-the-future-ember-template>ember-template-lint": "*",
         "ember-this-fallback>ember-source": "*",
         "ember-this-fallback>ember-cli-htmlbars": "*",
-        "@fullcalendar/moment-timezone>moment-timezone": "*"
+        "@fullcalendar/moment-timezone>moment-timezone": "*",
+        "@vitejs/plugin-basic-ssl>vite": ">8.0.0-beta.0"
       },
       "ignoreMissing": [
         "webpack"

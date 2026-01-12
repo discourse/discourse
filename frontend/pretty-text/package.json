@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "@ember/optional-features": "^2.3.0",
-    "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^2.0.0",
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
