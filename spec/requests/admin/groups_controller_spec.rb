@@ -26,6 +26,8 @@ RSpec.describe Admin::GroupsController do
       it "should work" do
         post "/admin/groups.json", params: group_params
 
+        #  response.parsed_body
+        # {"errors"=>["Mentionable level is not included in the list", "Messageable level is not included in the list"], "error_type"=>"record_invalid"}
         expect(response.status).to eq(200)
 
         group = Group.last

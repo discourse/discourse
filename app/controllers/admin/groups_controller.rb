@@ -7,31 +7,20 @@ class Admin::GroupsController < Admin::StaffController
   end
 
   def create
-    guardian.ensure_can_create_group!
+    resolved_group_params = group_params
+    resolved_group_params[:plugin_group_params] = resolved_group_params.slice(
+      *DiscoursePluginRegistry.group_params,
+    )
 
-    attributes = group_params.to_h.except(:owner_usernames, :usernames)
-    group = Group.new(attributes)
-
-    group.membership_request_template = nil unless group_params[:allow_membership_requests]
-
-    if group_params[:owner_usernames].present?
-      owner_ids = User.where(username: group_params[:owner_usernames].split(",")).pluck(:id)
-
-      owner_ids.each { |user_id| group.group_users.build(user_id: user_id, owner: true) }
-    end
-
-    if group_params[:usernames].present?
-      user_ids = User.where(username: group_params[:usernames].split(",")).pluck(:id)
-      user_ids -= owner_ids if owner_ids
-
-      user_ids.each { |user_id| group.group_users.build(user_id: user_id) }
-    end
-
-    if group.save
-      group.restore_user_count!
-      render_serialized(group, BasicGroupSerializer)
-    else
-      render_json_error group
+    Groups::Create.call(guardian: guardian, params: resolved_group_params) do
+      on_success { |group:| render_serialized(group, BasicGroupSerializer) }
+      on_failed_policy(:can_create_group) { |policy| raise Discourse::InvalidAccess }
+      on_failure do |result|
+        render(
+          json: failed_json.merge(errors: result.errors.full_messages),
+          status: :unprocessable_entity,
+        )
+      end
     end
   end
 
