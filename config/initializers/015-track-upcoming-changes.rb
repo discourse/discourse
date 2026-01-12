@@ -48,9 +48,9 @@ class UpcomingChanges::TrackingInitializer
         next
       end
 
+      current_upcoming_changes = SiteSetting.upcoming_change_site_settings
       removed_changes = []
       added_changes = []
-
       all_admins = User.human_users.where(admin: true)
 
       # Look at UpcomingChangeEvent to get all event_type: added (0) events
@@ -58,8 +58,9 @@ class UpcomingChanges::TrackingInitializer
       #       -> if so, create an event for the added changes
       #       -> send notifications to all site admins IF the event is the correct status (promotion_status - 1)
       previously_added_changes =
-        UpcomingChangeEvent.added_changes.pluck(:upcoming_change_name).map(&:to_sym)
-      (SiteSetting.upcoming_change_site_settings - previously_added_changes).each do |change_name|
+        UpcomingChangeEvent.added_changes.pluck(:upcoming_change_name).map(&:to_sym).uniq
+
+      (current_upcoming_changes - previously_added_changes).each do |change_name|
         added_changes << change_name
         UpcomingChangeEvent.create!(event_type: :added, upcoming_change_name: change_name)
         verbose_log(site, :info, "added upcoming change '#{change_name}'")
@@ -84,12 +85,12 @@ class UpcomingChanges::TrackingInitializer
         end
       end
 
-      # Lookup any event_type: added (events) and compare with removed (1) events and see if there are any
+      # Lookup any event_type: added (0) and compare with removed (1) events and see if there are any
       # added that are no longer in SiteSetting.upcoming_change_site_settings with no corresponding removed (1) event
       #   -> Create an event for the removed changes
-      current_upcoming_changes = SiteSetting.upcoming_change_site_settings
+
       previously_removed_changes =
-        UpcomingChangeEvent.removed_changes.pluck(:upcoming_change_name).map(&:to_sym)
+        UpcomingChangeEvent.removed_changes.pluck(:upcoming_change_name).map(&:to_sym).uniq
 
       previously_added_changes.each do |change_name|
         next if current_upcoming_changes.include?(change_name)
@@ -128,7 +129,11 @@ class UpcomingChanges::TrackingInitializer
           next
         end
 
+        # We only want to tell admins when a status changes for an exisiting UC,
+        # telling them just after one is added is redundant.
         next if added_changes.include?(change_name)
+
+        # Obviously, we don't want to tell admins about a status change for a removed UC.
         next if removed_changes.include?(change_name)
 
         previous_status =
@@ -139,19 +144,21 @@ class UpcomingChanges::TrackingInitializer
             "new_value"
           ]
 
-        UpcomingChangeEvent.create!(
-          event_type: :status_changed,
-          upcoming_change_name: change_name,
-          event_data: {
-            previous_value: previous_status,
-            new_value: UpcomingChanges.change_status(change_name),
-          }.to_json,
-        )
-        verbose_log(
-          site,
-          :info,
-          "status changed for upcoming change '#{change_name}' from #{previous_status} to #{UpcomingChanges.change_status(change_name)}",
-        )
+        if previous_status != UpcomingChanges.change_status(change_name)
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: change_name,
+            event_data: {
+              previous_value: previous_status,
+              new_value: UpcomingChanges.change_status(change_name),
+            }.to_json,
+          )
+          verbose_log(
+            site,
+            :info,
+            "status changed for upcoming change '#{change_name}' from #{previous_status} to #{UpcomingChanges.change_status(change_name)}",
+          )
+        end
       end
 
       # ---
