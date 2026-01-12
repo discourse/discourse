@@ -40,11 +40,13 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
-    const name = escapeExpression(params.tag_name);
+    const slug = params.tag_slug;
     const id = params.tag_id;
+    // use slug as initial name until API returns actual name
     const tag = this.store.createRecord("tag", {
       id,
-      name,
+      name: slug,
+      slug,
     });
 
     let additionalTags;
@@ -60,10 +62,11 @@ export default class TagShowRoute extends DiscourseRoute {
     const filterType = filterTypeForMode(this.navMode);
 
     let tagNotification;
-    if (tag && name !== NONE && this.currentUser && !additionalTags) {
+    if (tag && slug !== NONE && this.currentUser && !additionalTags) {
+      // encode as "slug/id" string so store treats it as single record lookup
       tagNotification = await this.store.find(
         "tagNotification",
-        name.toLowerCase()
+        `${slug}/${id}`
       );
     }
 
@@ -75,7 +78,7 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagName = name ? name.toLowerCase() : NONE;
+    const tagPath = `${slug}/${id}`;
     let filter;
 
     if (category) {
@@ -86,9 +89,9 @@ export default class TagShowRoute extends DiscourseRoute {
         filter += this.noSubcategories ? `/${NONE}` : `/${ALL}`;
       }
 
-      filter += `/${tagName}/l/${topicFilter}`;
+      filter += `/${tagPath}/l/${topicFilter}`;
     } else if (additionalTags) {
-      filter = `tags/intersection/${tagName}/${additionalTags.join("/")}`;
+      filter = `tags/intersection/${slug}/${additionalTags.join("/")}`;
 
       if (transition.to.queryParams["category"]) {
         filteredQueryParams["category"] = transition.to.queryParams["category"];
@@ -97,7 +100,7 @@ export default class TagShowRoute extends DiscourseRoute {
         );
       }
     } else {
-      filter = `tag/${tagName}/l/${topicFilter}`;
+      filter = `tag/${tagPath}/l/${topicFilter}`;
     }
 
     if (
@@ -110,7 +113,8 @@ export default class TagShowRoute extends DiscourseRoute {
       return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
-        tagName
+        slug,
+        id
       );
     }
 
@@ -125,10 +129,11 @@ export default class TagShowRoute extends DiscourseRoute {
     );
 
     if (list.topic_list.tags && list.topic_list.tags.length === 1) {
-      // Update name of tag (case might be different)
+      // update tag properties from API response
       tag.setProperties({
         id: list.topic_list.tags[0].id,
         name: list.topic_list.tags[0].name,
+        slug: list.topic_list.tags[0].slug,
         staff: list.topic_list.tags[0].staff,
       });
     }
