@@ -54,9 +54,9 @@
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^9"
+    "pnpm": "^10"
   },
-  "packageManager": "pnpm@9.15.5",
+  "packageManager": "pnpm@10.28.0",
   "pnpm": {
     "patchedDependencies": {
       "ember-this-fallback@0.4.0": "patches/ember-this-fallback@0.4.0.patch",
