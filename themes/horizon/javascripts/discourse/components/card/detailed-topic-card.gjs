@@ -78,7 +78,7 @@ export default class DetailedTopicCard extends Component {
 
   get replyCountLabel() {
     return i18n(themePrefix("reply_count"), {
-      count: this.args.topic.posts_count,
+      count: this.args.topic.replyCount,
     });
   }
 
@@ -219,20 +219,22 @@ export default class DetailedTopicCard extends Component {
         {{/if}}
       </div>
 
-      {{! ROW 3: Assigned + Tags }}
+      {{! ROW 3: Last Reply + Assigned }}
 
-      {{#if (or this.hasAssigned this.hasTags)}}
+      {{#if (or this.hasReplies this.hasAssigned)}}
         <div class="hc-topic-card__context">
-          <div class="hc-topic-card__last-reply">
-            {{avatar this.lastPoster.user imageSize="tiny"}}
-            <span
-              class="hc-topic-card__last-reply-name"
-            >{{this.lastPoster.username}}</span>
-            <span>{{i18n (themePrefix "replied")}}</span>
-            <span class="hc-topic-card__time">
-              {{formatDate @topic.bumpedAt leaveAgo="true"}}
-            </span>
-          </div>
+          {{#if this.hasReplies}}
+            <div class="hc-topic-card__last-reply">
+              {{avatar this.lastPoster.user imageSize="tiny"}}
+              <span
+                class="hc-topic-card__last-reply-name"
+              >{{this.lastPoster.username}}</span>
+              <span>{{i18n (themePrefix "replied")}}</span>
+              <span class="hc-topic-card__time">
+                {{formatDate @topic.bumpedAt leaveAgo="true"}}
+              </span>
+            </div>
+          {{/if}}
           {{#if this.hasAssigned}}
             {{#if this.assignedUser}}
               <div class="hc-topic-card__assigned">
@@ -293,7 +295,7 @@ export default class DetailedTopicCard extends Component {
             >
               {{icon "reply" skipTitle=true}}
               <span class="hc-topic-card__count">{{number
-                  @topic.posts_count
+                  @topic.replyCount
                 }}</span>
             </span>
           {{/if}}
