@@ -534,6 +534,48 @@ export function validateArrayItemType(
 }
 
 /**
+ * Validates provided arguments against a schema.
+ * This is the core validation logic used by both block args and container args validation.
+ *
+ * @param {Object} providedArgs - The arguments to validate.
+ * @param {Object} schema - The schema to validate against.
+ * @param {string} pathPrefix - Prefix for error paths (e.g., "args" or "containerArgs").
+ * @throws {BlockError} If validation fails.
+ */
+export function validateArgsAgainstSchema(providedArgs, schema, pathPrefix) {
+  for (const [argName, argDef] of Object.entries(schema)) {
+    const value = providedArgs[argName];
+
+    // Check required args
+    if (argDef.required && value === undefined) {
+      throw new BlockError(`missing required ${pathPrefix}.${argName}.`, {
+        path: `${pathPrefix}.${argName}`,
+      });
+    }
+
+    // Validate type if value is provided
+    if (value !== undefined) {
+      const typeError = validateArgValue(value, argDef, argName);
+      if (typeError) {
+        throw new BlockError(typeError, { path: `${pathPrefix}.${argName}` });
+      }
+    }
+  }
+
+  // Check for unknown args (args provided but not in schema)
+  const declaredArgs = Object.keys(schema);
+  for (const argName of Object.keys(providedArgs)) {
+    if (!Object.hasOwn(schema, argName)) {
+      const suggestion = formatWithSuggestion(argName, declaredArgs);
+      throw new BlockError(
+        `unknown ${pathPrefix} ${suggestion}. Declared args are: ${declaredArgs.join(", ") || "none"}.`,
+        { path: `${pathPrefix}.${argName}` }
+      );
+    }
+  }
+}
+
+/**
  * Validates block arguments against the block's metadata arg schema.
  * Checks for required args and validates types.
  *
@@ -562,36 +604,7 @@ export function validateBlockArgs(config, blockClass) {
     return;
   }
 
-  for (const [argName, argDef] of Object.entries(argsSchema)) {
-    const value = providedArgs[argName];
-
-    // Check required args
-    if (argDef.required && value === undefined) {
-      throw new BlockError(`missing required arg "${argName}".`, {
-        path: `args.${argName}`,
-      });
-    }
-
-    // Validate type if value is provided
-    if (value !== undefined) {
-      const typeError = validateArgValue(value, argDef, argName);
-      if (typeError) {
-        throw new BlockError(typeError, { path: `args.${argName}` });
-      }
-    }
-  }
-
-  // Check for unknown args (args provided but not in schema)
-  const declaredArgs = Object.keys(argsSchema);
-  for (const argName of Object.keys(providedArgs)) {
-    if (!Object.hasOwn(argsSchema, argName)) {
-      const suggestion = formatWithSuggestion(argName, declaredArgs);
-      throw new BlockError(
-        `unknown arg ${suggestion}. Declared args are: ${declaredArgs.join(", ") || "none"}.`,
-        { path: `args.${argName}` }
-      );
-    }
-  }
+  validateArgsAgainstSchema(providedArgs, argsSchema, "args");
 }
 
 /**

@@ -10,7 +10,7 @@
 
 import { DEBUG } from "@glimmer/env";
 import {
-  validateArgValue,
+  validateArgsAgainstSchema,
   validateBlockArgs,
 } from "discourse/lib/blocks/arg-validation";
 import {
@@ -184,6 +184,7 @@ function validateBlockConstraints(
 
 /**
  * Validates a child block's containerArgs against the parent container's childArgs schema.
+ * Reuses the shared validateArgsAgainstSchema function for core validation logic.
  *
  * @param {Object} childConfig - The child block configuration.
  * @param {Object} parentChildArgsSchema - The parent's childArgs schema.
@@ -198,27 +199,22 @@ function validateContainerArgs(
 ) {
   const providedArgs = childConfig.containerArgs || {};
 
-  for (const [argName, argDef] of Object.entries(parentChildArgsSchema)) {
-    const value = providedArgs[argName];
+  try {
+    validateArgsAgainstSchema(
+      providedArgs,
+      parentChildArgsSchema,
+      "containerArgs"
+    );
+  } catch (error) {
+    // Enhance error message with parent context
+    const enhancedMessage = error.path?.startsWith("containerArgs.")
+      ? `Child block at ${context.path} ${error.message} (required by parent "${parentName}").`
+      : `Child block at ${context.path}: ${error.message} (required by parent "${parentName}").`;
 
-    // Check required args
-    if (argDef.required && value === undefined) {
-      raiseBlockError(
-        `Child block at ${context.path} is missing required containerArgs.${argName} (required by parent "${parentName}").`,
-        { ...context, errorPath: `${context.path}.containerArgs.${argName}` }
-      );
-    }
-
-    // Validate type if value is provided
-    if (value !== undefined) {
-      const typeError = validateArgValue(value, argDef, argName);
-      if (typeError) {
-        raiseBlockError(
-          `Child block at ${context.path} containerArgs.${argName} (required by parent "${parentName}"): ${typeError}`,
-          { ...context, errorPath: `${context.path}.containerArgs.${argName}` }
-        );
-      }
-    }
+    raiseBlockError(enhancedMessage, {
+      ...context,
+      errorPath: error.path ? `${context.path}.${error.path}` : context.path,
+    });
   }
 }
 
