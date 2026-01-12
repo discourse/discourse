@@ -5,7 +5,14 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Chi tiết Discourse"
   js:
+    details:
+      title: Ẩn chi tiết
     composer:
       details_title: Tóm tắt
       details_text: "Văn bản này sẽ bị ẩn"

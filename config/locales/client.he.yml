@@ -6,6 +6,10 @@
 
 he:
   js:
+    carousel:
+      go_to_slide: "מעבר לשקופית %{index}"
+      previous: "השקופית הקודמת"
+      next: "השקופית הבאה"
     number:
       format:
         separator: "."
@@ -1220,9 +1224,7 @@ he:
           notification: התראה
         email:
           title: "כתובת דוא״ל"
-          status: "סונכרנו %{old_emails} / %{total_emails} הודעות דוא״ל דרך IMAP."
           enable_smtp: "הפעלת SMTP"
-          enable_imap: "הפעלת IMAP"
           test_settings: "בדיקת ההגדרות"
           save_settings: "שמירת ההגדרות"
           last_updated: "עדכון אחרון:"
@@ -1231,14 +1233,7 @@ he:
           smtp_settings_valid: "הגדרות ה־SMTP תקינות."
           smtp_title: "SMTP"
           smtp_instructions: "הפעלת SMTP לקבוצה תגרום לכך שכל הודעות הדוא״ל היוצאות נשלחות מהתיבה של הקבוצה יישלחו באמצעות הגדרות ה־SMTP שמוגדרות כאן במקום בשרת הדוא״ל שמוגדר להודעות דוא״ל אחרות שנשלחות על ידי הפורום שלך."
-          imap_title: "IMAP"
-          imap_additional_settings: "הגדרות נוספות"
-          imap_instructions: 'הפעלת IMAP לקבוצה תגרום לכך שההודעות תסונכרנה בין התיבה של הקבוצה ושרת ה־IMAP ותיבת הדואר שסופקו. יש להפעיל SMTP עם פרטי גישה תקפים ומאומתים לפני שניתן יהיה להפעיל IMAP. שם המשתמש והססמה של תיבת הדוא״ל שתשמש ל־SMTP ישמשו גם ל־IMAP. למידע נוסף ניתן <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">לקרוא את ההכרזה על התכונה בפורום Discourse Meta</a>.'
-          imap_alpha_warning: "אזהרה: יכולת זו היא בחיתולים. יש תמיכה רשמית רק ב־GMail. השימוש על אחריותך בלבד!"
-          imap_settings_valid: "הגדרות ה־IMAP תקינות."
-          smtp_disable_confirm: "השבתת ה־SMTP תוביל לאיפוס הגדרות ה־SMTP וה־IMAP והשבתת כל יכולותיהן. להמשיך?"
-          imap_disable_confirm: "השבתת ה־IMAP תוביל לאיפוס הגדרות ה־IMAP והשבתת כל יכולותיהן. להמשיך?"
-          imap_mailbox_not_selected: "עליך לבחור תיבת דואר עבור תצורת IMAP זו, אחרת לא יסונכרנו תיבות דואר כלל!"
+          additional_settings: "הגדרות נוספות"
           prefill:
             title: "מילוי הגדרות מראש עבור:"
             gmail: "Gmail"
@@ -1253,9 +1248,6 @@ he:
             smtp_server: "שרת SMTP"
             smtp_port: "פתחת SMTP"
             smtp_ssl_mode: "מצב SSL"
-            imap_server: "שרת IMAP"
-            imap_port: "פתחת IMAP"
-            imap_ssl: "להשתמש ב־SSL ל־IMAP"
             username: "שם משתמש"
             password: "סיסמה"
           settings:
@@ -1264,10 +1256,6 @@ he:
             allow_unknown_sender_topic_replies_hint: "מאפשר לשולחים בלתי־ידועים להגיב לנושאים קבוצתיים. אם האפשרות מבוטלת, תגובות מכתובות דוא״ל שטרם הוזמנו לנושא תיצורנה נושא חדש."
             from_alias: "כינוי מאת"
             from_alias_hint: "כינוי בו יש להשתמש בתור כתוב מאת בעת שליחת הודעות SMTP קבוצתיות בדוא״ל. נא לשים לב שאולי חלק מספקי הדוא״ל לא תומכים בזה, נא להיעזר בתיעוד של ספק הדוא״ל שלך."
-          mailboxes:
-            synchronized: "תיבת דוא״ל מסונכרנת"
-            none_found: "לא נמצאו תיבות דוא״ל בחשבון הדוא״ל הזה."
-            disabled: "מושבתת"
         membership:
           title: חברות
           access: גישה
@@ -1560,7 +1548,9 @@ he:
       upcoming_changes:
         title: "שינויים צפויים"
         for_user:
+          upcoming_change: "שינוי צפוי"
           enabled: "מאופשר?"
+          why: "למה?"
       user_notifications:
         filters:
           filter_by: "סינון לפי"
@@ -6140,12 +6130,15 @@ he:
               locale_label: "שפה"
             header_new_members:
               label: "כותרת עליונה לחברים חדשים"
+              description: "משתנה זמין: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "ברוך בואך, %{preferred_display_name}!"
             header_logged_in:
               label: "כותרת עליונה לחברים שנכנסו למערכת"
+              description: "משתנה זמין: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "ברוך שובך, %{preferred_display_name}!"
             header_anonymous:
               label: "כותרת עליונה למבקרים אלמוניים"
+              description: "משתנה זמין: <code>&percnt;{site_name}</code>"
               placeholder: "ברוכים הבאים ל %{site_name}!"
             subheader_logged_in:
               label: "תת־כותרת עליונה לחברים שנכנסו למערכת"

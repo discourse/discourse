@@ -58,8 +58,12 @@ de:
       cancel: "Abbrechen"
       cancel_reply: "Antwort verwerfen"
       chat_channels: "Kanäle"
+      starred: "Mit Sternchen"
+      starred_channels: "Kanäle mit Sternchen"
+      starred_channels_empty: "Du hast noch keine Kanäle mit einem Sternchen versehen. Markiere Kanäle mit einem Sternchen, um sie hier für schnellen Zugriff zu sehen."
       browse_all_channels: "Alle Kanäle durchsuchen"
       see_in: "Ansehen in"
+      open_channel_menu: "Kanalmenü öffnen"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
         instructions:
@@ -74,6 +78,8 @@ de:
         title: "Kanaleinstellungen"
         edit: "Bearbeiten"
         add: "Hinzufügen"
+        star_channel: "Kanal mit Sternchen markieren"
+        unstar_channel: "Sternchen von Kanal entfernen"
         close_channel: "Kanal schließen"
         open_channel: "Kanal öffnen"
         archive_channel: "Kanal archivieren"
@@ -81,6 +87,7 @@ de:
         join_channel: "Kanal beitreten"
         leave_channel: "Kanal verlassen"
         leave_groupchat_info: "Wenn du den Gruppenchat verlässt, hast du keinen Zugriff mehr darauf und erhältst keine Benachrichtigungen mehr. Um wieder teilzunehmen, musst du von einem Mitglied des Gruppenchats erneut eingeladen werden."
+        notification_settings: "Benachrichtigungseinstellungen"
         notification_settings_context: "Benachrichtigungen"
         join: "Beitreten"
         leave: "Verlassen"
@@ -129,6 +136,7 @@ de:
       email_frequency:
         description: "Wir schicken dir nur dann eine E-Mail, wenn wir dich in den letzten 15 Minuten nicht gesehen haben."
         never: "Niemals"
+        title: "Mich per E-Mail benachrichtigen, wenn ich eine Chat-Direktnachricht oder eine Nachricht in einem Gruppenchat erhalte"
         when_away: "Nur bei Abwesenheit"
       header_indicator_preference:
         title: "Aktivitätsindikator in der Kopfzeile anzeigen"
@@ -368,6 +376,7 @@ de:
         slug_description: In der URL wird anstelle des Kanalnamens ein Kanal-Kürzel verwendet
         name: Kanalname
         slug: Kanal-Kürzel (optional)
+        emoji: Kanal-Emoji (optional)
       channel_edit_description_modal:
         title: Beschreibung bearbeiten
         input_placeholder: Beschreibung hinzufügen
@@ -432,6 +441,8 @@ de:
         types:
           category: "Kategorie"
           topic: "Thema"
+        emoji:
+          label: "Kanal-Emoji (optional)"
       reviewable:
         type: "Chat-Nachricht"
         message_in_channel: "Kanal"

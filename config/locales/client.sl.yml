@@ -758,16 +758,12 @@ sl:
           notification: Obvestila
         email:
           title: "E-naslov"
-          status: "Sinhroniziranih %{old_emails} / %{total_emails} sporočil prek IMAP."
           enable_smtp: "Omogoči SMTP"
-          enable_imap: "Omogoči IMAP"
           test_settings: "Preveri nastavitve"
           save_settings: "Shrani nastavitve"
           last_updated: "Zadnjič posodobljeno:"
           smtp_settings_valid: "Nastavitve SMTP so veljavne."
           smtp_title: "SMTP"
-          imap_title: "IMAP"
-          imap_settings_valid: "Nastavitve IMAP so veljavne."
           prefill:
             gmail: "Gmail"
           ssl_modes:
@@ -776,18 +772,11 @@ sl:
             title: "Poverilnice"
             smtp_server: "Strežnik SMTP"
             smtp_port: "Vrata SMTP"
-            imap_server: "Strežnik IMAP"
-            imap_port: "Vrata IMAP"
-            imap_ssl: "Uporabi SSL za IMAP"
             username: "Uporabniško ime"
             password: "Geslo"
           settings:
             title: "Nastavitve"
             allow_unknown_sender_topic_replies: "Dovoli odgovore neznanih pošiljateljev."
-          mailboxes:
-            synchronized: "Sinhronizirani nabiralnik"
-            none_found: "V tem računu nismo našli poštnega nabiralnika."
-            disabled: "Onemogočeno"
         membership:
           title: Članstvo
           access: Dostopnost

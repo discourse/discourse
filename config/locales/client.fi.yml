@@ -1028,9 +1028,7 @@ fi:
           notification: Ilmoitus
         email:
           title: "Sähköposti"
-          status: "Synkronoitu %{old_emails}/%{total_emails} viestiä IMAP:n kautta."
           enable_smtp: "Ota SMTP käyttöön"
-          enable_imap: "Ota IMAP käyttöön"
           test_settings: "Testaa asetukset"
           save_settings: "Tallenna asetukset"
           last_updated: "Viimeksi päivitetty:"
@@ -1039,14 +1037,7 @@ fi:
           smtp_settings_valid: "SMTP-asetukset ovat kelvollisia."
           smtp_title: "SMTP"
           smtp_instructions: "Kun otat SMTP:n käyttöön ryhmälle, kaikki ryhmän postilaatikosta lähetetyt sähköpostit lähetetään tässä määritettyjen SMTP-asetusten kautta muille foorumisi lähettämille sähköposteille määritetyn postipalvelimen sijasta."
-          imap_title: "IMAP"
-          imap_additional_settings: "Lisäasetukset"
-          imap_instructions: 'Kun otat IMAPin käyttöön ryhmälle, sähköpostit synkronoidaan ryhmän postilaatikon ja annetun IMAP-palvelimen ja postilaatikon välillä. SMTP täytyy olla käytössä kelvollisilla ja testatuilla tunnistetiedoilla, ennen kuin IMAP voidaan ottaa käyttöön. SMTP:ssä käytettyä sähköpostiosoitetta ja salasanaa käytetään IMAPissa. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">ominaisuusilmoituksessa Discourse Metassa</a>.'
-          imap_alpha_warning: "Varoitus: Tämä on alfavaiheen ominaisuus. Vain Gmailia tuetaan virallisesti. Käytä omalla vastuullasi!"
-          imap_settings_valid: "IMAP-asetukset ovat kelvollisia."
-          smtp_disable_confirm: "Jos poistat SMTP:n käytöstä, kaikki SMTP- ja IMAP-asetukset nollataan, ja niihin liittyvät toiminnot poistetaan käytöstä. Oletko varma, että haluat jatkaa?"
-          imap_disable_confirm: "Jos poistat IMAPin käytöstä, kaikki IMAP-asetukset nollataan, ja niihin liittyvät toiminnot poistetaan käytöstä. Oletko varma, että haluat jatkaa?"
-          imap_mailbox_not_selected: "Sinun täytyy valita postilaatikko tälle IMAP-määritykselle, muuten postilaatikoita ei synkronoida!"
+          additional_settings: "Lisäasetukset"
           prefill:
             title: "Esitäyttö asetuksilla:"
             gmail: "Gmail"
@@ -1061,9 +1052,6 @@ fi:
             smtp_server: "SMTP-palvelin"
             smtp_port: "SMTP-portti"
             smtp_ssl_mode: "SSL-tila"
-            imap_server: "IMAP-palvelin"
-            imap_port: "IMAP-portti"
-            imap_ssl: "Käytä SSL-salausta IMAP:lle"
             username: "Käyttäjätunnus"
             password: "Salasana"
           settings:
@@ -1072,10 +1060,6 @@ fi:
             allow_unknown_sender_topic_replies_hint: "Salli tuntemattomien lähettäjien vastata ryhmän ketjuihin. Jos tämä ei ole käytössä, vastaukset sähköpostiosoitteista, joita ei ole kutsuttu ketjuun, luovat uuden ketjun."
             from_alias: "Lähettäjän alias"
             from_alias_hint: "Lähettäjän osoitteena käytettävä alias lähetettäessä ryhmä-SMTP-sähköposteja. Huomioithan, että kaikki sähköpostipalveluntarjoajat eivät välttämättä tue tätä; katso tiedot sähköpostipalveluntarjoajasi ohjeista."
-          mailboxes:
-            synchronized: "Synkronoitu postilaatikko"
-            none_found: "Tältä sähköpostitililtä ei löytynyt postilaatikoita."
-            disabled: "Pois käytöstä"
         membership:
           title: Jäsenyys
           access: Pääsy

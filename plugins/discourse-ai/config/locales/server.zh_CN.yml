@@ -526,6 +526,7 @@ zh_CN:
         github_file_content: "从 GitHub 仓库检索文件的内容"
         random_picker: "选择一个随机数或列表的随机元素"
         categories: "列出论坛上所有公开可见的类别"
+        flag_post: "举报当前帖子以供管理人员审核"
         search: "搜索论坛上的所有公开话题"
         tags: "列出论坛上的所有标签"
         time: "查找不同时区的时间"
@@ -552,6 +553,7 @@ zh_CN:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "已从 %{repo_name}@%{branch} 检索到 %{file_paths} 的内容"
         random_picker: "正在从 %{options} 中选择，已选：%{result}"
+        flag_post: "举报帖子 %{post_id} (flag_post: %{flag_post})"
         read: "正在阅读：<a href='%{url}'>%{title}</a>"
         time: "%{timezone} 的时间为 %{time}"
         summarize: "已总结 <a href='%{url}'>%{title}</a>"
@@ -581,6 +583,15 @@ zh_CN:
         continue_conversation:
           title: "发现对话：搜索 %{query}"
           raw: "在我搜索“%{query}”时，您向我展示了以下信息：\n\n%{context}\n\n让我们继续对话吧。"
+      flag_post:
+        errors:
+          no_context: "没有可用于举报的帖子上下文。"
+          no_reason: "举报帖子需要提供一个理由。"
+          invalid_flag_type: "举报类型无效。"
+        skipped: "裁定失败；未创建举报。"
+        already_flagged: "该帖子已被标记待审查。"
+        flagged: "帖子已标记待审查。"
+        reason: "AI机器人标记了此帖子。\n\n原因： %{reason}"
     summarization:
       configuration_hint:
         other: "首先配置这些设置：%{settings}"

@@ -5,16 +5,32 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_reactions: "Discourse Reactions"
   js:
     discourse_reactions:
       reactions_title: "Cảm xúc"
       state_panel:
         more_users: "và %{count} nữa..."
+      reaction:
+        forbidden: "Biểu cảm đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
+      picker:
+        react_with: "Bày tỏ cảm xúc: %{reaction}"
+        cant_remove_reaction: "Bạn không thể xóa biểu cảm của mình nữa"
+        remove_reaction: "Gỡ biểu cảm %{reaction} này"
       main_reaction:
-        add: "Thích bài viết này"
+        add: "Thích tút này"
+        remove: "Bỏ thích"
+        cant_remove: "Bạn không thể xóa lượt thích của mình nữa"
+        unauthenticated: "Vui lòng đăng ký hoặc đăng nhập để thích tút"
     notifications:
+      reaction_1_user_multiple_posts:
+        other: "đã biểu cảm %{count} tút của bạn"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         other: "%{username} và %{count} người khác"
       titles:
-        reaction: "phản ứng mới"
+        reaction: "biểu cảm mới"

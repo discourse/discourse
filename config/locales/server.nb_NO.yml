@@ -1280,6 +1280,8 @@ nb_NO:
       message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
   safe_mode:
     title: "Start sikkerhetsmodus"
+  dev_mode:
+    enter: "Angi"
   wizard:
     title: "Discourse-oppsett"
     step:

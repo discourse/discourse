@@ -5,3 +5,13 @@
 # https://translate.discourse.org/
 
 vi:
+  js:
+    discourse_hCaptcha:
+      missing_token: "Vui lòng hoàn thành thử thách hCaptcha."
+      placeholder: chỗ trống
+      contact_system_administrator: "Đã xảy ra sự cố với hCaptcha, nếu sự cố này vẫn tiếp diễn, vui lòng liên hệ với quản trị viên hệ thống."
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_hcaptcha: "Discourse hCaptcha"

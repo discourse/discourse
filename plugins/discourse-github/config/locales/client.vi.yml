@@ -11,4 +11,12 @@ vi:
         draft: "Bản nháp"
         open: "Mở"
         approved: "Đã phê duyệt"
+        merged: "Đã ghép"
         closed: "Đã "
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Discourse GitHub"
+  replace_github_link:
+    edit_reason: "Link Github đã được thay thế bằng một link cố định"

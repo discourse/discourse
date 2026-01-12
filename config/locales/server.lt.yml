@@ -736,7 +736,6 @@ lt:
     pm_body: "Tema, kurioje yra atsarginių juodraščių"
   email_settings:
     pop3_authentication_error: "Iškilo problema dėl pateiktų POP3 prisijungimo duomenų, patikrinkite naudotojo vardą ir slaptažodį ir bandykite dar kartą."
-    imap_no_response_error: "Ryšio su IMAP serveriu metu įvyko klaida. %{message}"
     smtp_server_busy_error: "SMTP serveris šiuo metu užimtas, bandykite dar kartą vėliau."
     smtp_unhandled_error: "Bendraujant su SMTP serveriu įvyko neapdorota klaida. %{message}"
     connection_error: "Prisijungiant prie serverio kilo problema, patikrinkite serverio pavadinimą ir prievadą ir bandykite dar kartą."
@@ -2509,6 +2508,8 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  dev_mode:
+    enter: "Įeiti"
   wizard:
     title: "Discourse sąranka"
     step:

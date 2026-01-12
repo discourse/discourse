@@ -27,6 +27,7 @@ vi:
       query_groups: "Nhóm"
       query_description: "Mô tả"
       query_user: "Tạo bởi"
+      column: "Cột %{number}"
       reset_params: "Cài lại"
       search_placeholder: "Tìm kiếm..."
     group:

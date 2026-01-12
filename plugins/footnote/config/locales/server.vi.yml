@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 vi:
+  site_settings:
+    enable_markdown_footnotes: Bật tính năng chú thích chân trang Markdown trên trang web này
+    display_footnotes_inline: Cho phép mở rộng chú thích ngay trong văn bản

@@ -37,10 +37,6 @@ en_GB:
           noun: "post"
     groups:
       manage:
-        email:
-          status: "Synchronised %{old_emails} / %{total_emails} emails via IMAP."
-          mailboxes:
-            synchronized: "Synchronised Mailbox"
         categories:
           title: Categories
       flair_bg_color: "Avatar Flair Background Colour"

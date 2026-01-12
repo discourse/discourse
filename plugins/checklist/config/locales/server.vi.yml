@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 vi:
+  site_settings:
+    checklist_enabled: "Kích hoạt plugin danh sách kiểm tra?"

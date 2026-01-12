@@ -1905,6 +1905,8 @@ sl:
     resend_email:
       title: "Ponovno pošlji aktivacijsko e-sporočilo"
       message: "<p>Ponovno smo poslali aktivacijsko e-sporočilo na<b>%{email}</b>"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Postavitev Discourse"
     step:

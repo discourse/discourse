@@ -565,7 +565,7 @@ pl_PL:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Pobrano zawartość %{file_paths} z %{repo_name}@%{branch}"
         random_picker: "Wybieranie z %{options}, wybrane: %{result}"
-        flag_post: "Oflagowano wpis %{post_id} (werdykt: %{verdict})"
+        flag_post: "Flagowanie wpisu %{post_id} (flag_post: %{flag_post})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
         time: "Czas w %{timezone} wynosi %{time}"
         summarize: "Podsumowano <a href='%{url}'>%{title}</a>"

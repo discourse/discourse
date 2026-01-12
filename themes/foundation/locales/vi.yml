@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 vi:
+  theme_metadata:
+    description: "Giao diện Discourse cổ điển, phù hợp để tùy chỉnh cho các nhu cầu cụ thể của cộng đồng bạn."

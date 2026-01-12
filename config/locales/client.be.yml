@@ -791,8 +791,6 @@ be:
             password: "Пароль"
           settings:
             title: "Налады"
-          mailboxes:
-            disabled: "Адключана"
         membership:
           access: Доступ
         categories:

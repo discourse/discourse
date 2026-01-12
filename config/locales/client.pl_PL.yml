@@ -1227,9 +1227,7 @@ pl_PL:
           self_lockout: "Zamierzasz zmienić widoczność grupy w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
         email:
           title: "E-mail"
-          status: "Zsynchronizowane %{old_emails} / %{total_emails} wiadomości e-mail za pośrednictwem IMAP."
           enable_smtp: "Włącz SMTP"
-          enable_imap: "Włącz IMAP"
           test_settings: "Testuj ustawienia"
           save_settings: "Zapisz ustawienia"
           last_updated: "Ostatnio zaktualizowane:"
@@ -1238,14 +1236,8 @@ pl_PL:
           smtp_settings_valid: "Ustawienia SMTP są poprawne."
           smtp_title: "SMTP"
           smtp_instructions: "Gdy włączysz SMTP dla grupy, wszystkie wychodzące wiadomości e-mail wysyłane ze skrzynki odbiorczej grupy będą wysyłane przy użyciu określonych tutaj ustawień SMTP zamiast serwera pocztowego skonfigurowanego dla innych wiadomości e-mail wysyłanych przez Twoje forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Dodatkowe ustawienia"
-          imap_instructions: 'Po włączeniu protokołu IMAP dla grupy wiadomości e-mail są synchronizowane między skrzynką odbiorczą grupy a dostarczonym serwerem IMAP i skrzynką pocztową. Protokół SMTP musi być włączony przy użyciu prawidłowych i przetestowanych poświadczeń, zanim będzie można włączyć protokół IMAP. Nazwa użytkownika poczty e-mail i hasło używane do SMTP będą używane do IMAP. Aby uzyskać więcej informacji, zobacz ogłoszenie o funkcji <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588"></a>.'
-          imap_alpha_warning: "Ostrzeżenie: To jest funkcja na etapie alfa. Tylko Gmail jest oficjalnie wspierany. Używaj na własne ryzyko!"
-          imap_settings_valid: "Ustawienia IMAP są prawidłowe."
-          smtp_disable_confirm: "Jeśli wyłączysz SMTP, wszystkie ustawienia SMTP i IMAP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Jesteś pewien, że chcesz kontynuować?"
-          imap_disable_confirm: "Jeśli wyłączysz IMAP, wszystkie ustawienia IMAP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Jesteś pewien, że chcesz kontynuować?"
-          imap_mailbox_not_selected: "Musisz wybrać skrzynkę pocztową dla tej konfiguracji IMAP, w przeciwnym razie żadna skrzynka pocztowa nie zostanie zsynchronizowana!"
+          additional_settings: "Dodatkowe ustawienia"
+          smtp_disable_confirm: "Jeśli wyłączysz SMTP, wszystkie ustawienia SMTP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Czy na pewno chcesz kontynuować?"
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
             gmail: "Gmail"
@@ -1260,9 +1252,6 @@ pl_PL:
             smtp_server: "Serwer SMTP"
             smtp_port: "Port SMTP"
             smtp_ssl_mode: "Tryb SSL"
-            imap_server: "Serwer IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Użyj SSL dla IMAP"
             username: "Nazwa użytkownika"
             password: "Hasło"
           settings:
@@ -1271,10 +1260,6 @@ pl_PL:
             allow_unknown_sender_topic_replies_hint: "Umożliwia nieznanym nadawcom odpowiadanie na tematy grupy. Jeśli ta opcja nie jest włączona, odpowiedzi z adresów e-mail, które nie zostały jeszcze zaproszone do tematu, utworzą nowy temat."
             from_alias: "Z aliasu"
             from_alias_hint: "Alias używany jako adres nadawcy podczas wysyłania grupowych wiadomości e-mail SMTP. Pamiętaj, że może to nie być obsługiwane przez wszystkich dostawców poczty, zapoznaj się z dokumentacją dostawcy poczty."
-          mailboxes:
-            synchronized: "Zsynchronizowana skrzynka pocztowa"
-            none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
-            disabled: "Wyłączone"
         membership:
           title: Członkostwo
           access: Dostęp
@@ -5148,6 +5133,7 @@ pl_PL:
         latest: "%{shortcut} Najnowsze"
         new: "%{shortcut} Nowe"
         unread: "%{shortcut} Nieprzeczytane"
+        unseen: "%{shortcut} Niewidziany"
         categories: "%{shortcut} Kategorie"
         top: "%{shortcut} Góra"
         bookmarks: "%{shortcut} Zakładki"

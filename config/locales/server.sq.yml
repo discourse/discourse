@@ -1375,6 +1375,8 @@ sq:
       title: "Konfirmoni emailin tuaj"
     resend_email:
       title: "Dërgo përsëri emailin e aktivizimit"
+  dev_mode:
+    enter: "Hyni"
   wizard:
     step:
       setup:

@@ -5,3 +5,18 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_openid_connect: "Discourse OpenID Connect"
+      config:
+        login:
+          sub_pages:
+            oidc: "OIDC"
+  js:
+    login:
+      oidc:
+        name: "Kết nối OpenID"
+        title: "với OpenID Connect"
+        message: "Đang xác thực bằng OpenID Connect"

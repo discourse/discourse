@@ -1198,12 +1198,9 @@ pl_PL:
     no_log_search_queries: "Dzienniki zapytań wyszukiwania są obecnie wyłączone (administrator może je włączyć w ustawieniach witryny)."
   email_settings:
     pop3_authentication_error: "Wystąpił problem z podanymi poświadczeniami POP3, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
-    imap_authentication_error: "Wystąpił problem z podanymi poświadczeniami IMAP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
-    imap_no_response_error: "Wystąpił błąd podczas komunikacji z serwerem IMAP. %{message}"
     smtp_authentication_error: "Wystąpił problem z podanymi poświadczeniami SMTP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie. %{message}"
     smtp_server_busy_error: "Serwer SMTP jest obecnie zajęty, spróbuj ponownie później."
     smtp_unhandled_error: "Wystąpił nieobsługiwany błąd podczas komunikacji z serwerem SMTP. %{message}"
-    imap_unhandled_error: "Podczas komunikacji z serwerem IMAP wystąpił nieobsługiwany błąd. %{message}"
     connection_error: "Wystąpił problem z połączeniem z serwerem, sprawdź nazwę i port serwera i spróbuj ponownie."
     timeout_error: "Przekroczono limit czasu połączenia z serwerem, sprawdź nazwę i port serwera i spróbuj ponownie."
     unhandled_error: "Nieobsługiwany błąd podczas testowania ustawień poczty e-mail. %{message}"
@@ -2339,14 +2336,7 @@ pl_PL:
     email_in_allowed_groups: "Grupy, które mogą publikować nowe tematy za pośrednictwem poczty e-mail. Administratorzy i moderatorzy zawsze mogą publikować nowe tematy za pośrednictwem poczty e-mail."
     email_in_authserv_id: "Identyfikator usługi sprawdzającej autentyczność przychodzących wiadomości e-mail. Instrukcje dotyczące konfigurowania znajdują się na <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> ."
     email_in_spam_header: "Wybiera konkretny nagłówek wiadomości e-mail, który będzie używany do identyfikowania spamu. Ta opcja może mieć wartość X-Spam-Flag, X-Spam-Status lub X-SES-Spam-Verdict, a wiadomość e-mail jest oznaczana jako spam na podstawie wartości nagłówka. Na przykład, jeśli wybrane ustawienie to X-Spam-Flag, wiadomość e-mail z wartością nagłówka ustawioną na TAK zostanie sklasyfikowana jako spam."
-    enable_imap: "Włącz protokół IMAP do synchronizowania wiadomości grupowych."
-    enable_imap_write: "Włącz dwukierunkową synchronizację IMAP. Jeśli opcja jest wyłączona, wszystkie operacje zapisu na kontach IMAP są wyłączone."
-    enable_imap_idle: "Użyj mechanizmu IMAP IDLE, aby czekać na nowe wiadomości e-mail."
     enable_smtp: "Włącz SMTP do wysyłania powiadomień o wiadomościach grupowych."
-    imap_polling_period_mins: "Okres w minutach między sprawdzaniem kont IMAP pod kątem wiadomości e-mail."
-    imap_polling_old_emails: "Maksymalna liczba starych e-maili (przetworzonych) do zaktualizowania za każdym razem, gdy jest odpytywana skrzynka IMAP (0 dla wszystkich)."
-    imap_polling_new_emails: "Maksymalna liczba nowych wiadomości e-mail (nieprzetworzonych) do zaktualizowania za każdym razem, gdy odpytywane jest skrzynka IMAP."
-    imap_batch_import_email: "Minimalna liczba nowych e-maili uruchamiających tryb importu (wyłącza alerty o postach)."
     email_prefix: "Etykieta używana w temacie emaili. Domyślnie będzie ustawiana jako \"tytuł\", w przypadku braku ustawienia."
     email_site_title: "Tytuł strony używany jako nadawca emaili ze strony. Domyślnie ustawiony jako \"tytuł\", w przypadku braku ustawienia. Jeśli twój \"tytuł\" zawiera znaki, które nie są dozwolone przez ciągi znaków nadawcy emaila, użyj tego ustawienia."
     find_related_post_with_key: "Używaj \"klucza odpowiedzi\" tylko po to, aby znaleźć wpis, na który odpowiadasz. Ostrzeżenie: Wyłączenie tej funkcji, pozwoli na personifikację użytkownika na podstawie adresu email."
@@ -5307,6 +5297,10 @@ pl_PL:
     deprecation_error_label: Spraw, aby przestarzały Javascript zgłaszał błąd
     enter: "Włącz Tryb Bezpieczny"
     must_select: "Musisz wybrać przynajmniej jedną opcję, by wejść do trybu bezpiecznego."
+  dev_mode:
+    title: "Tryb programisty"
+    enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
+    enter: "Wejdź"
   wizard:
     title: "Instalacja Discourse"
     step:
@@ -5419,8 +5413,6 @@ pl_PL:
     api_post_delete: "Usunięto przez API"
     reminder_deleted: "Zastąpiono nowym przypomnieniem"
     user_associated_posts_deleted: "Użytkownik został zniszczony"
-    imap_email_deleted: "Wiadomość e-mail została usunięta z serwera IMAP"
-    imap_email_marked_as_spam: "Wiadomość e-mail została przeniesiona do folderu spam na serwerze IMAP"
     auto_deleted_hidden_posts: "Automatycznie niszczone ukryte posty"
     seed_data_topic_updated: "Zaktualizowano temat danych seedów"
     seed_data_topic_deleted: "Usunięto temat danych seedów"

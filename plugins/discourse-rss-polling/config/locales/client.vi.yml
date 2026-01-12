@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discourse RSS Polling"
   js:
+    rss_polling:
+      title: RSS Polling
     admin:
       rss_polling:
+        feed: Cài đặt nguồn cấp dữ liệu
+        discourse: Cài đặt Discourse
         author: Tác giả
         feed_url: URL
         discourse_category: Chuyên mục
         discourse_tags: Thẻ
+        feed_category_filter: Bộ lọc theo chuyên mục
+        documentation: Tài liệu cấu hình RSS Polling
+        destroy_feed:
+          confirm: "Bạn có chắc chắn muốn xóa nguồn cấp này?"

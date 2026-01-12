@@ -452,6 +452,9 @@ de:
           base_query:
             name: "Basissuchanfrage"
             description: "Basisanfrage, die bei der Suche verwendet wird. Beispiel: Bei „#dringend“ wird der Suchanfrage „#dringend“ vorangestellt und es werden nur Themen mit der Kategorie oder dem Schlagwort „dringend“ angezeigt."
+        flag_post:
+          flag_type:
+            name: "Meldungs-Typ"
       tool_summary:
         read_artifact: "Ein Web-Artefakt lesen"
         update_artifact: "Aktualisieren eines Web-Artefakts"
