@@ -17,7 +17,7 @@
     "concurrently": "^9.2.1",
     "ember-template-lint": "7.9.3",
     "esbuild": "^0.25.11",
-    "eslint": "9.39.2",
+    "eslint": "9.39.1",
     "execa": "^9.6.0",
     "jsdoc": "^4.0.5",
     "lefthook": "^2.0.12",
@@ -57,9 +57,9 @@
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^9"
+    "pnpm": "^10"
   },
-  "packageManager": "pnpm@9.15.5",
+  "packageManager": "pnpm@10.28.0",
   "pnpm": {
     "patchedDependencies": {
       "ember-this-fallback@0.4.0": "patches/ember-this-fallback@0.4.0.patch",
@@ -76,7 +76,9 @@
         "lint-to-the-future-eslint>eslint": "*",
         "@mixer/parallel-prettier>prettier": "*",
         "lint-to-the-future-ember-template>ember-template-lint": "*",
-        "ember-this-fallback>ember-source": "*"
+        "ember-this-fallback>ember-source": "*",
+        "ember-this-fallback>ember-cli-htmlbars": "*",
+        "@fullcalendar/moment-timezone>moment-timezone": "*"
       },
       "ignoreMissing": [
         "webpack"

@@ -967,6 +967,7 @@ sl:
         S časom vas bomo bolje spoznali in bomo vaše začasne omejitve novega uporabnika odstranili. Čez čas boste lahko dosegli [nivo zaupanja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), ki vam bo omogočal več dejanj s katerimi skupaj upravljamo našo skupnost.
     welcome_user:
       title: "Dobrodošel uporabnik"
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
         Hvala za prijavo na %{site_name} in dobrodošli!
@@ -982,6 +983,7 @@ sl:
       text_body_template: "Pozdravljeni! \n\nVeseli nas, da pridno spremljate naš forum. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nVeseli smo, da ste med nami in zato bi radi izvedeli več o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [ustvarite novo temo](%{base_url}/categories).\n"
     welcome_invite:
       title: "Dobrodošel povabljeni"
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
         Hvala da ste sprejeli povabilo na %{site_name} -- dobrodošli!
@@ -1244,6 +1246,7 @@ sl:
       subject_template: "Prispevek novega uporabnika %{username} je blokiran zaradi ponovljenih povezav"
     unsilenced:
       title: "Od-utišan"
+      preview: "Uporabniški račun ni več na čakanju."
       subject_template: "Uporabniški račun ni več na čakanju"
       text_body_template: |
         Pozdravljeni,
@@ -1286,7 +1289,6 @@ sl:
     Za odjavo od takšnih e-sporočil [kliknite tukaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
     Za odjavo od takšnih e-sporočil [kliknite tukaj](%{unsubscribe_url}).
-  email_from: "%{user_name} preko %{site_name}"
   user_notifications:
     previous_discussion: "Prejšnji odgovori"
     reached_limit:
@@ -1534,6 +1536,7 @@ sl:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Prijava s povezavo"
+      preview: "Prijava s povezavo."
       subject_template: "[%{email_prefix}] Prijava s povezavo"
       text_body_template: |
         Tukaj je vaša povezava za prijavo na [%{site_name}](%{base_url}).
@@ -1902,6 +1905,8 @@ sl:
     resend_email:
       title: "Ponovno pošlji aktivacijsko e-sporočilo"
       message: "<p>Ponovno smo poslali aktivacijsko e-sporočilo na<b>%{email}</b>"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Postavitev Discourse"
     step:

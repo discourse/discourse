@@ -6,6 +6,10 @@
 
 uk:
   js:
+    carousel:
+      go_to_slide: "Перейти до слайда %{index}"
+      previous: "Попередній слайд"
+      next: "Наступний слайд"
     number:
       format:
         separator: "."
@@ -1227,9 +1231,7 @@ uk:
           self_lockout: "Ви збираєтеся змінити видимість групи таким чином, що ваш власний доступ буде скасовано. Ви впевнені, що хочете продовжити?"
         email:
           title: "Електронна пошта"
-          status: "Синхронізовано %{old_emails} / %{total_emails} листів через IMAP."
           enable_smtp: "Увімкнути SMTP"
-          enable_imap: "Увімкнути IMAP"
           test_settings: "Перевірити налаштування"
           save_settings: "Зберегти налаштування"
           last_updated: "Останнє оновлення:"
@@ -1238,14 +1240,7 @@ uk:
           smtp_settings_valid: "Настройки SMTP дійсні."
           smtp_title: "SMTP"
           smtp_instructions: "Коли ви ввімкнете SMTP для групи, всі вихідні повідомлення електронної пошти, надіслані з групи, буде надіслано через вказані тут параметри SMTP, замість стандартного поштового сервера, налаштованого для інших листів."
-          imap_title: "IMAP"
-          imap_additional_settings: "Додаткові налаштування"
-          imap_instructions: 'Коли ви ввімкнете IMAP для групи, електронні листи синхронізуються між вхідною текою групи та вказаним сервером IMAP і поштовою скринькою. Перш ніж увімкнути протокол IMAP, необхідно ввімкнути SMTP з дійсними та перевіреними обліковими даними. Ім’я користувача та пароль електронної пошти, які використовуються для SMTP, будуть використовуватися для IMAP. Для отримання додаткової інформації див. <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">анонс про функції на Discourse Meta</a>.'
-          imap_alpha_warning: "Попередження. Це функція на альфа-тестуванні. Офіційно підтримується лише Gmail. Використовуйте на свій страх і ризик!"
-          imap_settings_valid: "Налаштування IMAP правильні."
-          smtp_disable_confirm: "Якщо вимкнути SMTP, усі налаштування SMTP та IMAP будуть скинуті, а відповідна функціональність буде вимкнена. Ви впевнені, що хочете продовжити?"
-          imap_disable_confirm: "Якщо вимкнути IMAP, усі налаштування IMAP будуть скинуті, а відповідні функції будуть вимкнені. Ви впевнені, що хочете продовжити?"
-          imap_mailbox_not_selected: "Ви повинні вибрати поштову скриньку для цієї конфігурації IMAP, інакше жодна поштова скринька не буде синхронізована!"
+          additional_settings: "Додаткові налаштування"
           prefill:
             title: "Заповніть початкові налаштування для:"
             gmail: "Gmail"
@@ -1260,9 +1255,6 @@ uk:
             smtp_server: "SMTP-сервер"
             smtp_port: "Порт SMTP"
             smtp_ssl_mode: "Режим SSL"
-            imap_server: "Сервер IMAP"
-            imap_port: "Порт IMAP"
-            imap_ssl: "Використовувати SSL для IMAP"
             username: "Імʼя користувача"
             password: "Пароль"
           settings:
@@ -1271,10 +1263,6 @@ uk:
             allow_unknown_sender_topic_replies_hint: "Дозволяє невідомим відправникам відповідати в групові теми. Якщо цю функцію не увімкнено, то відповіді від електронних адрес, які не запрошені до теми, створюватимуть нову тему."
             from_alias: "Псевдо відправника"
             from_alias_hint: "Псевдонім для використання як адреси відправника під час надсилання групових листів SMTP. Зважте, що це може підтримуватися не всіма провайдерами електронної пошти. Зверніться до документації вашого провайдера пошти."
-          mailboxes:
-            synchronized: "Синхронізована поштова скринька"
-            none_found: "Не знайдено поштових скриньок в цьому обліковому записі."
-            disabled: "Відключено"
         membership:
           title: Членство
           access: Доступ
@@ -1567,7 +1555,16 @@ uk:
       private_message: "Повідомлення"
       private_messages: "Повідомлення"
       upcoming_changes:
-        title: "Майбутні зміни ввімкнено"
+        title: "Майбутні зміни"
+        for_user:
+          upcoming_change: "Майбутні зміни"
+          enabled: "Включено?"
+          why: "Чому?"
+        why_reasons:
+          not_in_specific_groups: "Користувач не належить до певних груп, необхідних для цієї зміни"
+          in_specific_groups: "Користувач належить до певних груп, необхідних для цієї зміни."
+          enabled_for_everyone: "Ця зміна доступна для всіх учасників"
+          enabled_for_no_one: "Ця зміна вимкнена для всіх учасників"
       user_notifications:
         filters:
           filter_by: "Фільтрувати за"
@@ -1924,7 +1921,8 @@ uk:
         tags: "Теґи"
         interface: "Інтерфейс"
         apps: "Застосунки"
-        navigation_menu: "Навігаційне меню"
+        navigation_menu: "Меню навігації"
+        upcoming_changes: "Майбутні зміни"
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
@@ -3248,6 +3246,10 @@ uk:
         move_outside_grid: "Переміщення за межі сітки"
       image: "зображення"
       grid_label: "Це відображатиметься у вигляді сітки"
+      grid_mode_grid: "Сітка"
+      grid_mode_carousel: "Карусель"
+      grid_mode_title: "Встановіть стиль галереї зображень на %{mode}"
+      remove_grid: "Видалити сітку"
       image_scale_button: "Масштабувати зображення до %{percent}%"
       delete_image_button: Видалити зображення
       toggle_image_grid: Перемкнути сітку зображень
@@ -6164,15 +6166,18 @@ uk:
                 below_site_header: "Нижче заголовка сайту"
             text_section:
               title: "Текст, який налаштовується"
-              variables: "Ви можете використовувати ці змінні у своєму тексті: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Мова"
             header_new_members:
               label: "Заголовок для нових учасників"
-              placeholder: "Ласкаво просимо на %{site_name}, %{preferred_display_name}!"
+              description: "Доступна змінна: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Ласкаво просимо, %{preferred_display_name}!"
             header_logged_in:
               label: "Заголовок для зареєстрованих учасників"
+              description: "Доступна змінна: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "З поверненням, %{preferred_display_name}!"
             header_anonymous:
               label: "Заголовок для анонімних відвідувачів"
+              description: "Доступна змінна: <code>&percnt;{site_name}</code>"
               placeholder: "Ласкаво просимо до сайту %{site_name}!"
             subheader_logged_in:
               label: "Підзаголовок для зареєстрованих учасників"
@@ -8313,6 +8318,11 @@ uk:
         approve_bulk_success: "Успіх! Всіх обраних користувачів було схвалено та сповіщено про це."
         time_read: "Час читання"
         post_edits_count: "Редагувати допис"
+        upcoming_changes:
+          title: "Майбутні зміни для користувачів"
+          description: "Щоб змінити групи або увімкнути чи вимкнути майбутні зміни, відвідайте <a href='%{basePath}/admin/config/upcoming-changes'>сторінку конфігурації майбутніх змін</a>."
+          filter_placeholder: "Фільтрувати майбутні зміни за назвою або описом"
+          filter_no_results: "Майбутніх змін не знайдено"
         exports:
           title: Експорт користувачів
           download:
@@ -8339,7 +8349,6 @@ uk:
           button: "Видалити всі дописи"
           progress:
             title: "Хід видалення дописів"
-            description: "Видалення дописів…"
           confirmation:
             title: "Видалити всі дописи від @%{username}"
             description: |

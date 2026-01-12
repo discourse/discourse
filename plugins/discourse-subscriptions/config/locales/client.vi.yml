@@ -28,6 +28,10 @@ vi:
             single: "Cập nhật"
           created_at: Tạo bởi
           cancel: hủy
+      subscribe:
+        countries:
+          TR: "Thổ Nhĩ Kỳ"
+          VN: "Việt Nam"
       billing:
         email: Email
       admin:

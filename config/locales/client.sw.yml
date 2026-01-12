@@ -451,8 +451,6 @@ sw:
             password: "Nywila"
           settings:
             title: "Mpangilio"
-          mailboxes:
-            disabled: "Imezuiwa"
         membership:
           title: Uanachama
           access: Ufikivu
@@ -628,6 +626,9 @@ sw:
       new_private_message: "Ujumbe Mpya"
       private_message: "Ujumbe"
       private_messages: "Ujumbe"
+      upcoming_changes:
+        for_user:
+          enabled: "Imeruhusiwa?"
       user_notifications:
         filters:
           all: "Zote"

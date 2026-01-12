@@ -910,9 +910,7 @@ zh_TW:
           notification: 通知
         email:
           title: "電子信箱"
-          status: "已透過 IMAP 同步了 %{old_emails}/%{total_emails} 封郵件。"
           enable_smtp: "啟用 SMTP"
-          enable_imap: "啟用 IMAP"
           test_settings: "測試設定"
           save_settings: "儲存設定"
           last_updated: "上次更新："
@@ -921,14 +919,7 @@ zh_TW:
           smtp_settings_valid: "SMTP 設定有效。"
           smtp_title: "SMTP"
           smtp_instructions: "當您為群組啟用 SMTP 時，從群組收件匣發送的所有外發電子郵件將透過此處指定的 SMTP 設定發送，而非透過為您的論壇配置的其他郵件伺服器發送。"
-          imap_title: "IMAP"
-          imap_additional_settings: "其他設定"
-          imap_instructions: '當您為群組啟用 IMAP 時，電子郵件將在群組收件匣與提供的 IMAP 伺服器之間同步。在啟用 IMAP 之前，必須先啟用 SMTP，並驗證與測試憑據。IMAP 將使用與 SMTP 相同的電子郵件帳號與密碼。詳情請參閱 <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta 功能公告</a>。'
-          imap_alpha_warning: "警告：此功能仍處於 Alpha 版階段。目前僅官方支援 Gmail，使用風險請自行承擔！"
-          imap_settings_valid: "IMAP 設定有效。"
-          smtp_disable_confirm: "如果您禁用 SMTP，所有 SMTP 和 IMAP 設定都將被重置，相關功能將被禁用。確定要繼續嗎？"
-          imap_disable_confirm: "如果您禁用 IMAP，所有 IMAP 設定都將被重置，相關功能將被禁用。確定要繼續嗎？"
-          imap_mailbox_not_selected: "您必須為此 IMAP 配置選擇一個郵箱，否則將不會同步任何郵箱！"
+          additional_settings: "其他設定"
           prefill:
             title: "使用設定預填充："
             gmail: "Gmail"
@@ -943,9 +934,6 @@ zh_TW:
             smtp_server: "SMTP 伺服器"
             smtp_port: "SMTP 通訊埠"
             smtp_ssl_mode: "SSL 模式"
-            imap_server: "IMAP 伺服器"
-            imap_port: "IMAP 連接埠"
-            imap_ssl: "在 IMAP 上使用 SSL"
             username: "使用者名稱"
             password: "密碼"
           settings:
@@ -954,10 +942,6 @@ zh_TW:
             allow_unknown_sender_topic_replies_hint: "允許未知的寄件者回覆群組主題。如果未啟用此功能，則來自尚未邀請到主題的電子郵件地址回覆，將建立一個新主題。"
             from_alias: "來自別名"
             from_alias_hint: "傳送群組 SMTP 電子郵件時，用作寄件者位址的別名。請注意，並非所有郵件供應商都支援此功能，請參閱郵件供應商的說明文件。"
-          mailboxes:
-            synchronized: "信箱已同步"
-            none_found: "未在此電子郵件帳戶中找到任何郵件信箱。"
-            disabled: "停用"
         membership:
           title: 會員身份
           access: 存取
@@ -1210,6 +1194,9 @@ zh_TW:
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
+      upcoming_changes:
+        for_user:
+          enabled: "啟用?"
       user_notifications:
         filters:
           filter_by: "篩選依據"
@@ -1507,7 +1494,6 @@ zh_TW:
         tags: "標籤"
         interface: "界面"
         apps: "應用"
-        navigation_menu: "導覽選單"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"
@@ -4789,6 +4775,8 @@ zh_TW:
           form:
             location:
               label: "位置"
+            text_section:
+              locale_label: "語言"
             header_logged_in:
               placeholder: "%{preferred_display_name} 歡迎回來！"
             header_anonymous:
@@ -6622,7 +6610,6 @@ zh_TW:
           button: "刪除所有貼文"
           progress:
             title: "刪除帖文的進度"
-            description: "刪除貼文中⋯"
           confirmation:
             title: "刪除 @%{username} 發布的所有帖文"
             description: |

@@ -9,6 +9,7 @@ class RenameDiscourseRewindDisabledToEnabled < ActiveRecord::Migration[7.2]
       SET discourse_rewind_enabled = NOT discourse_rewind_disabled
     SQL
 
+    change_column_null :user_options, :discourse_rewind_disabled, true
     change_column_default :user_options, :discourse_rewind_disabled, nil
 
     Migration::ColumnDropper.mark_readonly(:user_options, :discourse_rewind_disabled)
@@ -18,6 +19,7 @@ class RenameDiscourseRewindDisabledToEnabled < ActiveRecord::Migration[7.2]
     Migration::ColumnDropper.drop_readonly(:user_options, :discourse_rewind_disabled)
 
     change_column_default :user_options, :discourse_rewind_disabled, false
+    change_column_null :user_options, :discourse_rewind_disabled, false
 
     remove_column :user_options, :discourse_rewind_enabled
   end

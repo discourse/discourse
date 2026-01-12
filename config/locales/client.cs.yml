@@ -6,6 +6,10 @@
 
 cs:
   js:
+    carousel:
+      go_to_slide: "Přejít na snímek č. %{index}"
+      previous: "Předchozí snímek"
+      next: "Další snímek"
     number:
       format:
         separator: "."
@@ -1227,9 +1231,7 @@ cs:
           self_lockout: "Chystáte se změnit viditelnost skupiny způsobem, který vám odebere přístup. Opravdu chcete pokračovat?"
         email:
           title: "Email"
-          status: "Synchronizováno %{old_emails} / %{total_emails} e-mailů přes IMAP."
           enable_smtp: "Povolit SMTP"
-          enable_imap: "Povolit IMAP"
           test_settings: "Otestovat nastavení"
           save_settings: "Uložit nastavení"
           last_updated: "Poslední aktualizace:"
@@ -1238,14 +1240,7 @@ cs:
           smtp_settings_valid: "Nastavení SMTP je platné."
           smtp_title: "SMTP"
           smtp_instructions: "Pokud pro skupinu povolíte SMTP, budou všechny odchozí e-maily odeslané ze schránky skupiny odesílány prostřednictvím zde zadaných nastavení SMTP namísto poštovního serveru nakonfigurovaného pro ostatní e-maily odesílané fórem."
-          imap_title: "IMAP"
-          imap_additional_settings: "Další nastavení"
-          imap_instructions: 'Pokud pro skupinu povolíte IMAP, budou e-maily synchronizovány mezi doručenou poštou skupiny a poskytnutým serverem IMAP a poštovní schránkou. Před povolením protokolu IMAP musí být povolen protokol SMTP s platnými a otestovanými pověřeními. Uživatelské jméno a heslo e-mailu použité pro SMTP budou použity i pro IMAP. Další informace naleznete v oznámení o funkci <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">na webu Discourse Meta</a>.'
-          imap_alpha_warning: "Varování: Jedná se o funkci ve fázi alfa. Oficiálně je podporován pouze Gmail. Používání na vlastní nebezpečí!"
-          imap_settings_valid: "Nastavení IMAP je platné."
-          smtp_disable_confirm: "Pokud zakážete SMTP, budou resetována všechna nastavení SMTP a IMAP a související funkce budou zakázány. Jste si jistý, že chcete pokračovat?"
-          imap_disable_confirm: "Pokud deaktivujete IMAP, všechna nastavení IMAP budou resetována a související funkce budou deaktivovány. Jste si jistý, že chcete pokračovat?"
-          imap_mailbox_not_selected: "Pro tuto konfiguraci IMAP musíte vybrat poštovní schránku, jinak nebudou synchronizovány žádné poštovní schránky!"
+          additional_settings: "Další nastavení"
           prefill:
             title: "Předvyplnění s nastavením pro:"
             gmail: "Gmail"
@@ -1260,9 +1255,6 @@ cs:
             smtp_server: "SMTP server"
             smtp_port: "SMTP port"
             smtp_ssl_mode: "Režim SSL"
-            imap_server: "IMAP server"
-            imap_port: "IMAP port"
-            imap_ssl: "Použít SSL pro IMAP"
             username: "Uživatelské jméno"
             password: "Heslo"
           settings:
@@ -1271,10 +1263,6 @@ cs:
             allow_unknown_sender_topic_replies_hint: "Umožňuje neznámým odesílatelům odpovědět na skupinová témata. Pokud toto není povoleno, odpovědi z e-mailových adres, které ještě nebyly pozvány do tématu, vytvoří nové téma."
             from_alias: "Z aliasu"
             from_alias_hint: "Alias, který se použije jako adresa odesílatele při odesílání skupinových e-mailů přes SMTP. Upozorňujeme, že toto nemusí být podporováno všemi poskytovateli pošty. Podívejte se prosím do dokumentace poskytovatele pošty."
-          mailboxes:
-            synchronized: "Synchronizovaná schránka"
-            none_found: "Na tomto e-mailovém účtu nebyly nalezeny žádné schránky."
-            disabled: "Zakázáno"
         membership:
           title: Členství
           access: Přístup
@@ -1567,7 +1555,16 @@ cs:
       private_message: "Zpráva"
       private_messages: "Zprávy"
       upcoming_changes:
-        title: "Nadcházející změna povolena"
+        title: "Nadcházející změny"
+        for_user:
+          upcoming_change: "Nadcházející změna"
+          enabled: "Zapnuto?"
+          why: "Proč?"
+        why_reasons:
+          not_in_specific_groups: "Uživatel není zahrnut v konkrétních skupinách požadovaných pro tuto změnu."
+          in_specific_groups: "Uživatel je zahrnut v konkrétních skupinách požadovaných pro tuto změnu."
+          enabled_for_everyone: "Tato změna je povolena pro všechny členy"
+          enabled_for_no_one: "Tato změna je zakázána pro všechny členy."
       user_notifications:
         filters:
           filter_by: "Filtrovat podle"
@@ -1920,7 +1917,8 @@ cs:
         tags: "Štítky"
         interface: "Vzhled"
         apps: "Aplikace"
-        navigation_menu: "Navigace"
+        navigation_menu: "Navigační nabídka"
+        upcoming_changes: "Nadcházející změny"
       change_password:
         success: "(email odeslán)"
         in_progress: "(odesílám)"
@@ -3254,6 +3252,10 @@ cs:
         move_outside_grid: "Přesunout mimo mřížku"
       image: "obrázek"
       grid_label: "Tyto obrázky se zobrazí v mřížce"
+      grid_mode_grid: "Mřížka"
+      grid_mode_carousel: "Karusel"
+      grid_mode_title: "Nastavit styl galerie obrázků na %{mode}"
+      remove_grid: "Odebrat mřížku"
       image_scale_button: "Změnit velikost obrázku na %{percent}%"
       delete_image_button: Odstranit obrázek
       toggle_image_grid: Přepnout mřížku obrázku
@@ -3965,6 +3967,8 @@ cs:
         title: "Automaticky zavřít téma po posledním příspěvku"
       auto_delete:
         title: "Automaticky odstranit téma"
+      auto_delete_after_last_post:
+        title: "Automaticky odstranit téma po posledním příspěvku"
       auto_bump:
         title: "Automaticky pošťouchnout téma"
       reminder:
@@ -3976,6 +3980,7 @@ cs:
         auto_close: "Toto téma se automaticky zavře %{timeLeft}."
         auto_publish_to_category: "Toto téma bude zveřejněno v <a href=%{categoryUrl}>%{categoryName}</a>%{timeLeft}# ."
         auto_close_after_last_post: "Toto téma se zavře %{duration} po poslední odpovědi."
+        auto_delete_after_last_post: "Toto téma bude smazáno %{duration} po poslední odpovědi."
         auto_delete: "Toto téma bude automaticky smazáno %{timeLeft}."
         auto_bump: "Toto téma bude automaticky pošťouchnuto %{timeLeft}."
         auto_reminder: "Toto téma ti připomeneme %{timeLeft}."
@@ -6180,15 +6185,18 @@ cs:
                 below_site_header: "Pod záhlavím webu"
             text_section:
               title: "Přizpůsobitelný text"
-              variables: "V textu můžete použít tyto proměnné: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Jazyk"
             header_new_members:
               label: "Záhlaví pro nové členy"
-              placeholder: "Vítejte na %{site_name}, %{preferred_display_name}!"
+              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Vítejte, %{preferred_display_name}!"
             header_logged_in:
               label: "Záhlaví pro přihlášené členy"
+              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte zpět, %{preferred_display_name}!"
             header_anonymous:
               label: "Záhlaví pro anonymní návštěvníky"
+              description: "Dostupná proměnná: <code>&percnt;{site_name}</code>"
               placeholder: "Vítejte v %{site_name}!"
             subheader_logged_in:
               label: "Podtitulek pro přihlášené členy"
@@ -6366,7 +6374,7 @@ cs:
           title: "Vzhled"
           header_description: "Přizpůsobte šablonu, ve které se vykreslují všechny e-maily ve formátu HTML, a upravte styl pomocí CSS"
         staff_action_logs:
-          title: "Protokoly a minitoring"
+          title: "Protokoly a monitoring"
           header_description: "Protokoly a monitoring vám umožňují monitorovat a spravovat vaši komunitu a zajistit, že zůstane bezpečná a respektující. Můžete zobrazit protokoly všech akcí provedených redaktory, protokoly vyhledávání a konfiguraci monitorování uživatelů"
           keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
           sub_pages:
@@ -8272,6 +8280,21 @@ cs:
         penalty_post_actions: "Co byste chtěli udělat s tímto přidruženým příspěvkem?"
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_delete_replies: "Smazat příspěvek + všechny odpovědi"
+        penalty_post_delete_all: "Smazat všechna témata uživatele + všechny odpovědi"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Tímto smažete
+          { TOPICS, plural,
+              one {# téma}
+              few {# témata}
+              many {# témat}
+            other {# témat}
+          } a
+          { REPLIES, plural,
+              one {# odpověď}
+              few {# odpovědi}
+              many {# odpovědí}
+            other {# odpovědí}
+          }. <b>Tuto akci nelze vrátit zpět!</b> Jste si jisti, že toto chcete provést?</span>
         penalty_post_edit: "Upravit příspěvek"
         penalty_post_none: "Nic nedělat"
         penalty_count: "Počet penalizací"
@@ -8339,6 +8362,11 @@ cs:
         approve_bulk_success: "Povedlo se! Všichni uživatelé byli schváleni a byla jim rozeslána upozornění."
         time_read: "Čas čtení"
         post_edits_count: "Úpravy příspěvků"
+        upcoming_changes:
+          title: "Nadcházející změny uživatele"
+          description: "Chcete-li upravit skupiny nebo povolit či zakázat nadcházející změny, navštivte <a href='%{basePath}/admin/config/upcoming-changes'>stránku konfigurace nadcházejících změn</a>."
+          filter_placeholder: "Vyhledejte nadcházející změny podle názvu nebo popisu"
+          filter_no_results: "Nebyly nalezeny žádné nadcházející změny"
         exports:
           title: Export uživatelů
           download:
@@ -8365,7 +8393,11 @@ cs:
           button: "Smazat všechny příspěvky"
           progress:
             title: "Průběh mazání příspěvků"
-            description: "Mazání příspěvků…"
+            description:
+              one: "Odstranění %{count} příspěvku od @%{username}..."
+              few: "Odstranění %{count} příspěvků od @%{username}..."
+              many: "Odstranění %{count} příspěvků od @%{username}..."
+              other: "Odstranění %{count} příspěvků od @%{username}..."
           confirmation:
             title: "Smazat všechny příspěvky od @%{username}"
             description: |
@@ -8377,6 +8409,7 @@ cs:
             text: "smazat příspěvky od @%{username}"
             delete: "Smazat příspěvky od @%{username}"
             cancel: "Zrušit"
+          all_enqueued: "Všechny příspěvky uživatele @%{username} byly zařazeny do fronty k odstranění."
         merge:
           button: "Sloučit"
           prompt:
@@ -8711,13 +8744,20 @@ cs:
             prompt: "Změna tohoto nastavení může mít pro váš web dalekosáhlé nebo nezamýšlené důsledky. Opravdu chcete pokračovat?"
             confirm: "Ano, jsem si jistý/á"
           min_password_length:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           min_admin_password_length:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech správců, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           password_unique_charactes:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           block_common_passwords:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
+          clean_up_inactive_users_after_days:
+            prompt: "Nastavení této hodnoty na jinou hodnotu než 0 způsobí, že uživatelé, kteří již nejsou aktivní po tento počet dní, budou trvale odstraněni. Jste si jisti, že chcete pokračovat?"
+            confirm: "Ano, rozumím, že pokud tuto hodnotu nenastavím na 0, budou neaktivní uživatelé trvale smazáni."
         job_status:
           completed: "Aktualizace dokončena"
           enqueued: "Probíhá aktualizace"

@@ -582,8 +582,6 @@ et:
             password: "Parool"
           settings:
             title: "Seaded"
-          mailboxes:
-            disabled: "Välja lülitatud"
         membership:
           title: Liikmesus
           access: Juurdepääs
@@ -802,6 +800,9 @@ et:
       new_private_message: "Uus sõnum"
       private_message: "Sõnum"
       private_messages: "Sõnumid"
+      upcoming_changes:
+        for_user:
+          enabled: "Sisse lülitatud?"
       user_notifications:
         filters:
           all: "Kõik"

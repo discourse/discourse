@@ -43,7 +43,6 @@ sv:
     all_day_event_start_time: "Evenemang som inte har en angiven starttid börjar vid denna tidpunkt. Formatet är HH:mm. För kl. 06.00, ange 06:00"
     all_day_event_end_time: "Evenemang som inte har en angiven starttid börjar vid denna tidpunkt. Formatet är HH:mm. För kl. 18.00, ange 18:00"
     all_day_event_time_error: "Ogiltig tid. Formatet måste vara HH:mm (t.ex: 08:00)."
-    calendar_categories: "Visa en kalender högst upp i en kategori. Obligatoriska inställningar är categoryId och postId. t.ex.: categoryId=6; postId=453\n Andra giltiga inställningar: tzPicker, weekends och defaultView."
     calendar_categories_outlet: "Gör det möjligt att ändra vilken utgång som ska visa kategorins kalender."
     working_days: "Ange arbetsdagar. Du kan visa tillgängligheten för en grupp med hjälp av taggen `timezones` i ett inlägg, t.ex.: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Starttid för arbetsdagens timmar."

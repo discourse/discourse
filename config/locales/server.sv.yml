@@ -871,11 +871,8 @@ sv:
     no_log_search_queries: "Sökfrågeloggar är för närvarande inaktiverade (en administratör kan aktivera dem i webbplatsinställningarna)."
   email_settings:
     pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
-    imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
-    imap_no_response_error: "Det uppstod ett fel vid kommunikation med IMAP-servern. %{message}"
     smtp_server_busy_error: "SMTP-servern är för närvarande upptagen. Försök igen senare."
     smtp_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med SMTP-servern. %{message}"
-    imap_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med IMAP-servern. %{message}"
     connection_error: "Det uppstod ett problem vid anslutning till servern. Kontrollera serverns namn och port och försök igen."
     timeout_error: "Tidsgränsen för anslutning till servern uppnåddes. Kontrollera serverns namn och port och försök igen."
     unhandled_error: "Ohanterat fel vid testning av e-postinställningar. %{message}"
@@ -1847,14 +1844,7 @@ sv:
     log_mail_processing_failures: "Logga alla behandlingsfel för e-post till <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Tillåt användare att lägga upp nya ämnen via e-post. När du har aktiverat den här inställningen kan du konfigurera inkommande e-postadresser för grupper och kategorier."
     email_in_authserv_id: "Identifieraren för tjänsten som utför autentiseringskontroller av inkommande e-postmeddelanden. Se <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> för instruktioner om hur du konfigurerar detta."
-    enable_imap: "Aktivera IMAP för synkroniserade gruppmeddelanden."
-    enable_imap_write: "Aktivera två-stegs IMAP-synkronisering. Om avstängd kommer alla skriv-operationer för IMAP-konton inte att genomföras."
-    enable_imap_idle: "Använd IMAP IDLE-funktionen för att invänta ny e-post."
     enable_smtp: "Aktivera SMTP för att skicka aviseringar för gruppmeddelanden."
-    imap_polling_period_mins: "Tidsintervall i minuter mellan varje kontroll av IMAP-konton för e-post."
-    imap_polling_old_emails: "Maximalt antal äldre e-post (behandlad) som uppdateras varje gång IMAP-boxen anropas (0 för alla)."
-    imap_polling_new_emails: "Maximalt antal ny e-post (obehandlad) som uppdateras varje gång IMAP-boxen anropas."
-    imap_batch_import_email: "Lägsta antalet ny e-post som kommer att trigga importläge (stänger av inläggsvarningar)."
     email_prefix: "[label] används i ämnesraden för e-post. Om ej ifylld sätts standardrubriken 'title'."
     email_site_title: "Webbplatsens titel som används som avsändare för e-post från webbplatsen. Om ej ifylld sätts standardtiteln 'title'. Använd det alternativet om din titel innehåller tecken som inte tillåts i e-posts avsändarsträngar."
     find_related_post_with_key: "Använd bara 'svarsnyckeln' för att hitta svaret på inlägget. VARNING: om du inaktiverar detta tillåts användarimitationer baserat på e-postadress."
@@ -2619,6 +2609,7 @@ sv:
         I takt med att du deltar här, lär vi känna dig, och därmed kommer tillfälliga begränsningar för nya medlemmar att tas bort. Med tiden når du [förtroendenivåer](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) som omfattar särskilda funktioner för att hantera vårt forum tillsammans.
     welcome_user:
       title: "Välkommen Användare!"
+      preview: "Välkommen till %{site_name}!"
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: |
         Tack för att du går med i %{site_name}, och välkommen!
@@ -2646,6 +2637,7 @@ sv:
         Med stor makt kommer stort ansvar. Om du är ny på det här att moderera, se [Moderationsguiden](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Välkomstinbjudan"
+      preview: "Välkommen till %{site_name}!"
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: "Tack för att du tackade ja till din inbjudan till %{site_name} -- välkommen!\n\nVi har skapat ett nytt konto **%{username}** till dig. Du kan byta namn eller lösenord genom att besöka [din användarprofil][prefs].\n\n- När du loggar in ber vi dig **använda samma e-postadress som i din ursprungliga inbjudan** — annars kan vi inte bekräfta att det är du! \n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
@@ -2965,6 +2957,7 @@ sv:
       text_body_template: "Det här är ett automatiskt meddelande. \n\nDen nya användaren [%{username}](%{user_url}) försökte skriva flera inlägg med länkar till %{domains}, men inläggen blockerades för att undvika skräppost. Användaren kan fortfarande skriva nya inlägg som inte länkar till %{domains}.\n\n[Granska användaren](%{user_url}).\n\nDu kan också modifiera webbplatsinställningarna `newuser_spam_host_threshold` och `white_listed_spam_host_domains`. Överväg att lägga till %{domains} på vitlistan om de ska undantas.\n"
     unsilenced:
       title: "Otystad"
+      preview: "Konto ej längre pausat."
       subject_template: "Konto ej längre pausat"
       text_body_template: "Hej!\n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt konto inte längre är pausat efter att personal har granskat ärendet. \n\nDu kan nu skriva inlägg och skapa nya ämnen igen. Tack för ditt tålamod.\n"
     pending_users_reminder:
@@ -3002,8 +2995,6 @@ sv:
   unsubscribe_mailing_list: "Du mottar de här e-postmeddelandena för att du har aktiverat utskicksläge för e-postlistor. \n\n[Klicka här](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.\n"
   subject_re: "Sv: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Föregående svar"
     reached_limit:
@@ -3280,6 +3271,7 @@ sv:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Logga in via länk"
+      preview: "Logga in via länk."
       subject_template: "[%{email_prefix}] Logga in via länk"
       text_body_template: "Här är din länk för att logga in hos [%{site_name}](%{base_url}). \n\nOm du inte begärde denna länk kan du utan vidare ignorera detta e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
     set_password:
@@ -4071,6 +4063,8 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
+  dev_mode:
+    enter: "Retur"
   wizard:
     title: "Discourse-inställningar"
     step:

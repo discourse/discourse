@@ -714,9 +714,7 @@ ca:
           notification: Notificació
         email:
           title: "Correu electrònic"
-          status: "S'han sincronitzat %{old_emails} / %{total_emails} correus electrònics via IMAP."
           enable_smtp: "Activa SMTP"
-          enable_imap: "Activa IMAP"
           save_settings: "Desa la configuració"
           last_updated: "Darrera actualització:"
           last_updated_by: "per"
@@ -727,15 +725,10 @@ ca:
             title: "Credencials"
             smtp_server: "Servidor SMTP"
             smtp_port: "Port SMTP"
-            imap_server: "Servidor IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Utilitza SSL per a SMTP"
             username: "Nom d'usuari"
             password: "Contrasenya"
           settings:
             title: "Configuració"
-          mailboxes:
-            disabled: "Desactivat"
         membership:
           title: Membres
           access: Accés
@@ -933,6 +926,9 @@ ca:
       new_private_message: "Missatge nou"
       private_message: "Missatge"
       private_messages: "Missatges"
+      upcoming_changes:
+        for_user:
+          enabled: "Activat?"
       user_notifications:
         filters:
           all: "Tot"

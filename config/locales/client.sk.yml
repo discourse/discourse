@@ -1074,9 +1074,7 @@ sk:
           notification: Notifikácia
         email:
           title: "Email"
-          status: "Synchronizované %{old_emails} / %{total_emails} e-maily cez IMAP."
           enable_smtp: "Povoliť SMTP"
-          enable_imap: "Povoliť IMAP"
           test_settings: "Testovacie nastavenia"
           save_settings: "Uložiť nastavenia"
           last_updated: "Posledná aktualizácia:"
@@ -1085,14 +1083,7 @@ sk:
           smtp_settings_valid: "Platné nastavenia SMTP."
           smtp_title: "SMTP"
           smtp_instructions: "Keď pre skupinu povolíte SMTP, všetky odchádzajúce e-maily odoslané z doručenej pošty skupiny sa budú odosielať prostredníctvom nastavení SMTP, ktoré sú tu špecifikované, namiesto poštového servera nakonfigurovaného pre iné e-maily odosielané vaším fórom."
-          imap_title: "IMAP"
-          imap_additional_settings: "Ďalšie nastavenia"
-          imap_instructions: 'Keď povolíte IMAP pre skupinu, e-maily sa synchronizujú medzi doručenou poštou skupiny a poskytnutým serverom IMAP a poštovou schránkou. Pred povolením IMAP musí byť SMTP povolené s platnými a testovanými poverenciami. Používateľské meno e-mailu a heslo použité pre SMTP sa použijú pre IMAP. Ďalšie informácie nájdete v oznámení o funkcii <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">na Discourse Meta</a>.'
-          imap_alpha_warning: "Upozornenie: Toto je funkcia v štádiu alfa. Oficiálne je podporovaný iba Gmail. Použitie na vlastné riziko!"
-          imap_settings_valid: "Nastavenia IMAP sú platné."
-          smtp_disable_confirm: "Ak zakážete SMTP, všetky nastavenia SMTP a IMAP sa vynulujú a súvisiace funkcie budú deaktivované. Ste si istý, že chcete pokračovať?"
-          imap_disable_confirm: "Ak zakážete IMAP, všetky nastavenia IMAP sa vynulujú a súvisiace funkcie sa vypnú. Ste si istí, že chcete pokračovať?"
-          imap_mailbox_not_selected: "Pre túto konfiguráciu IMAP musíte vybrať poštovú schránku, inak sa nebudú synchronizovať žiadne poštové schránky!"
+          additional_settings: "Ďalšie nastavenia"
           prefill:
             title: "Predplňte nastavenia pre:"
             gmail: "Gmail"
@@ -1107,9 +1098,6 @@ sk:
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
             smtp_ssl_mode: "Režim SSL"
-            imap_server: "Server IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Pre IMAP použite SSL"
             username: "Používateľské meno"
             password: "Heslo"
           settings:
@@ -1118,10 +1106,6 @@ sk:
             allow_unknown_sender_topic_replies_hint: "Umožňuje neznámym odosielateľom odpovedať na skupinové témy. Ak to nie je povolené, odpovede z e-mailových adries, ktoré ešte neboli pozvané do témy, vytvoria novú tému."
             from_alias: "Od Alias"
             from_alias_hint: "Alias, ktorý sa má použiť ako adresa odosielateľa pri odosielaní skupinových e-mailov SMTP. Upozorňujeme, že to nemusia podporovať všetci poskytovatelia pošty, pozrite si dokumentáciu poskytovateľa pošty."
-          mailboxes:
-            synchronized: "Synchronizovaná poštová schránka"
-            none_found: "V tomto e-mailovom účte sa nenašli žiadne poštové schránky."
-            disabled: "Vypnuté"
         membership:
           title: Členstvo
           access: Prístup
@@ -1405,6 +1389,9 @@ sk:
       new_private_message: "Nová správa"
       private_message: "Správa"
       private_messages: "Správy"
+      upcoming_changes:
+        for_user:
+          enabled: "Povolené?"
       user_notifications:
         filters:
           filter_by: "Triediť podľa"
@@ -5762,6 +5749,8 @@ sk:
               options:
                 above_topic_content: "Obsah vyššie uvedenej témy"
                 below_site_header: "Pod hlavičkou stránky"
+            text_section:
+              locale_label: "Jazyk"
             header_logged_in:
               placeholder: "Vitaj späť, %{preferred_display_name}!"
             header_anonymous:
@@ -7868,7 +7857,6 @@ sk:
           button: "Zmazať všetky príspevky"
           progress:
             title: "Priebeh odstraňovania príspevkov"
-            description: "Odstránenie príspevkov…"
           confirmation:
             title: "Odstrániť všetky príspevky od @%{username}"
             description: |

@@ -1196,12 +1196,9 @@ cs:
     no_log_search_queries: "Záznamy o vyhledávacích dotazech jsou momentálně zakázány (správce je může povolit v nastavení webu)."
   email_settings:
     pop3_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji POP3, zkontrolujte uživatelské jméno a heslo a zkuste to znovu."
-    imap_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji IMAP. Zkontrolujte uživatelské jméno a heslo a zkuste to znovu."
-    imap_no_response_error: "Při komunikaci se serverem IMAP došlo k chybě. %{message}"
     smtp_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji SMTP. Zkontrolujte uživatelské jméno a heslo a zkuste to znovu. %{message}"
     smtp_server_busy_error: "SMTP server je momentálně zaneprázdněn, zkuste to znovu později."
     smtp_unhandled_error: "Při komunikaci se SMTP serverem došlo k neošetřené chybě. %{message}"
-    imap_unhandled_error: "Při komunikaci se serverem IMAP došlo k neošetřené chybě. %{message}"
     connection_error: "Došlo k problému s připojením k serveru, zkontrolujte název serveru a port a zkuste to znovu."
     timeout_error: "Časový limit připojení k serveru vypršel, zkontrolujte název serveru a port a zkuste to znovu."
     unhandled_error: "Při testování nastavení e-mailu nastala neošetřená chyba. %{message}"
@@ -3007,6 +3004,7 @@ cs:
         Pokud budete aktivní, poznáme vás a dočasná nová uživatelská omezení budou zrušena. Postupem času získáte [úrovně důvěry](https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29) ([v originále zde](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)), které zahrnují speciální schopnosti, které nám pomohou společně spravovat naši komunitu.
     welcome_user:
       title: "Uvítání uživatele"
+      preview: "Vítejte v %{site_name}!"
       subject_template: "Vítejte v %{site_name}!"
       text_body_template: |
         Děkujeme, že jste se připojili na %{site_name} a vítáme vám na našem diskuzním fóru!
@@ -3034,6 +3032,7 @@ cs:
         S velkou mocí přichází velká odpovědnost. Pokud s moderováním začínáte, přečtěte si prosím [Průvodce moderováním](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Uvítací pozvánka"
+      preview: "Vítejte v %{site_name}!"
       subject_template: "Vítejte v %{site_name}!"
       text_body_template: |
         Děkujeme, že jste přijali pozvání do %{site_name} – vítejte!
@@ -3395,6 +3394,7 @@ cs:
         Toto lze upravit pomocí nastavení webu `newuser_spam_host_threshold` a `allowed_spam_host_domains`. Zvažte přidání %{domains} do seznamu povolených, pokud by měly být z kontroly vyňaty.
     unsilenced:
       title: "Zrušeno ztišení"
+      preview: "Účet již není pozastaven."
       subject_template: "Účet již není pozastaven"
       text_body_template: |
         Dobrý den,
@@ -3443,8 +3443,6 @@ cs:
     Chcete-li se odhlásit z těchto e-mailů, [klikněte zde](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[SZ] "
-  email_from: "%{user_name} přes %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     reached_limit:
@@ -3692,6 +3690,7 @@ cs:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Přihlášení pomocí odkazu"
+      preview: "Přihlášení pomocí odkazu."
       subject_template: "[%{email_prefix}] Přihlášení pomocí odkazu"
       text_body_template: |
         Zde je Váš odkaz pro přihlášení na [%{site_name}](%{base_url}).
@@ -4448,6 +4447,8 @@ cs:
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
     enter: "Vstoupit do bezpečného režimu"
     must_select: "Chcete-li vstoupit do bezpečného režimu, musíte vybrat alespoň jednu možnost."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Nastavení Discourse"
     step:
@@ -4513,8 +4514,6 @@ cs:
     api_key:
       revoked: Zrušeno
     user_associated_posts_deleted: "Uživatel byl zcela odstraněn"
-    imap_email_deleted: "E-mail byl na serveru IMAP odstraněn"
-    imap_email_marked_as_spam: "E-mail byl na serveru IMAP přesunut do spamu."
     auto_deleted_hidden_posts: "Automaticky smazané skryté příspěvky"
   reviewables:
     already_handled: "Děkujeme, ale tento příspěvek jsme již zkontrolovali a rozhodli jsme se, že jej není třeba znovu nahlašovat."

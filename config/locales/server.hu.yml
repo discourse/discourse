@@ -1040,12 +1040,9 @@ hu:
     no_log_search_queries: "A keresési lekérdezések naplói jelenleg le vannak tiltva (az adminisztrátor engedélyezheti őket a webhely beállításaiban)."
   email_settings:
     pop3_authentication_error: "Probléma lépett fel a megadott POP3 hitelesítési adatokkal, ellenőrizze a felhasználónevet és a jelszót, majd próbálja újra."
-    imap_authentication_error: "Probléma lépett fel a megadott IMAP hitelesítési adatokkal, ellenőrizze a felhasználónevet és a jelszót, majd próbálja újra."
-    imap_no_response_error: "Hiba történt az IMAP-kiszolgálóval való kommunikáció során. %{message}"
     smtp_authentication_error: "Probléma lépett fel a megadott SMTP hitelesítési adatokkal, ellenőrizze a felhasználónevet és a jelszót, majd próbálja újra. %{message}"
     smtp_server_busy_error: "Az SMTP-szerver jelenleg foglalt, próbálkozzon újra később."
     smtp_unhandled_error: "Kezeletlen hiba történt az SMTP-szerverrel való kommunikáció során. %{message}"
-    imap_unhandled_error: "Kezeletlen hiba történt az IMAP-kiszolgálóval való kommunikáció során. %{message}"
     connection_error: "Hiba történt a szerverhez való kapcsolódás során, ellenőrizze a kiszolgáló nevét és portját, majd próbálja újra."
     timeout_error: "A kiszolgálóhoz való csatlakozás időtúllépése miatt ellenőrizze a kiszolgáló nevét és portját, majd próbálja újra."
     unhandled_error: "Kezeletlen hiba az e-mail beállítások tesztelésekor. %{message}"
@@ -2164,14 +2161,7 @@ hu:
     email_in_allowed_groups: "Csoportok, amelyek új témákat tehetnek közzé e-mailben. Az adminisztrátorok és a moderátorok bármikor közzétehetnek új témákat e-mailben."
     email_in_authserv_id: "A bejövő e-mailek hitelesítését végző szolgáltatás azonosítója. Ennek beállításaira vonatkozó utasításokat <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> oldalon találja."
     email_in_spam_header: "Kiválasztja a levélszemét azonosítására használt e-mail-fejlécet. Ez a lehetőség az X-Spam-Flag, az X-Spam-Status vagy az X-SES-Spam-Verdict lehet, és a fejléc értéke alapján lesz az e-mail levélszemétnek jelölve. Például, ha a kiválasztott beállítás az X-Spam-Flag, akkor egy YES fejlécértékű üzenet levélszemétként lesz osztályozva."
-    enable_imap: "Az IMAP engedélyezése a csoportos üzenetek szinkronizálásához."
-    enable_imap_write: "Kétirányú IMAP szinkronizálás engedélyezése. Ha le van tiltva, az IMAP-fiókokon minden írási művelet le van tiltva."
-    enable_imap_idle: "Használja az IMAP IDLE mechanizmust az új e-mailek megvárásához."
     enable_smtp: "Engedélyezze az SMTP-t a csoportos üzenetekhez tartozó értesítések küldéséhez."
-    imap_polling_period_mins: "Az IMAP-fiókok e-mailek ellenőrzése közötti időszak percekben."
-    imap_polling_old_emails: "A régi (feldolgozott) e-mailek maximális száma, amelyet minden alkalommal frissíteni kell, amikor egy IMAP-fiók lekérdezésre kerül (0 az összeshez)."
-    imap_polling_new_emails: "Az új (feldolgozatlan) e-mailek maximális száma, amely minden alkalommal frissül, amikor egy IMAP-fiók lekérdezésre kerül ."
-    imap_batch_import_email: "Az új e-mailek minimális száma, amely kiváltja az importálási módot (letiltja az importált bejegyzésekre vonatkozó értesítéseket)."
     email_prefix: "Az e-mailek tárgyában használt [címke]. Alapértelmezés szerint a „cím” lesz, ha nincs beállítva."
     email_site_title: "A webhelyről érkező e-mailek feladójaként használt webhely címe. Ha nincs beállítva, az alapértelmezett a „cím”. Ha a \"cím\" olyan karaktereket tartalmaz, amelyek nem engedélyezettek az e-mail küldő karakterláncaiban, használja ezt a beállítást."
     find_related_post_with_key: "Csak a \"válaszkulcs\" használatával találja meg a válaszolt hozzászólást. FIGYELMEZTETÉS: ennek kikapcsolása lehetővé teszi a felhasználó megszemélyesítését az e-mail cím alapján."
@@ -3192,6 +3182,7 @@ hu:
         Ahogy itt részt vesz, megismerjük Önt, és az ideiglenes új felhasználói korlátozások megszűnnek. Idővel [bizalmi szinteket] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) szerezhet, amelyek különleges képességeket tartalmaznak, amelyek segítenek nekünk közösen irányítani közösségünket.
     welcome_user:
       title: "Üdvözöljük felhasználó"
+      preview: "Üdvözöljük a(z) %{site_name} oldalon."
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
       text_body_template: |
         Köszönjük, hogy csatlakoztál a %{site_name}hoz, és üdvözlünk!
@@ -3219,6 +3210,7 @@ hu:
         A nagyobb hatalom nagyobb felelősséggel is jár. Ha még nem voltál soha moderátor, olvasd el a következő [moderációs útmutatót](https://meta.discourse.org/t/discourse-moderation-guide/63116), és bármikor, bármilyen kérdéssel keresd a tapasztaltabb moderátorokat bizalommal!
     welcome_invite:
       title: "Üdvözöljük Meghívó"
+      preview: "Üdvözöljük a(z) %{site_name} oldalon."
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
       text_body_template: |
         Köszönjük, hogy elfogadtad a %{site_name}ra szóló meghívót - üdvözlünk!
@@ -3570,6 +3562,7 @@ hu:
         Ez a beállítás módosítható az `newuser_spam_host_threshold` és az `allowed_spam_host_domains` beállításokon keresztül. Fontol meg %{domains}ek hozzáadását at az engedélylistához.
     unsilenced:
       title: "Némítás feloldva"
+      preview: "A fiók már nincs felfüggesztve."
       subject_template: "A fiók már nincs felfüggesztve"
       text_body_template: |
         Szia!
@@ -3618,8 +3611,6 @@ hu:
     Ha le szeretne iratkozni ezekről az e-mailekről, [kattintson ide] (%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PÜ]"
-  email_from: "%{user_name} a %{site_name} oldalon keresztül"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Régebbi válaszok"
     reached_limit:
@@ -3970,6 +3961,7 @@ hu:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Bejelentkezés a linken keresztül"
+      preview: "Bejelentkezés a linken keresztül."
       subject_template: "[%{email_prefix}] Bejelentkezés a linken keresztül"
       text_body_template: |
         Itt van a link a bejelentkezéshez a [%{site_name}](%{base_url}) címen.
@@ -4914,6 +4906,8 @@ hu:
     deprecation_error_label: Elavult Javascript hibaüzenetre késztetése
     enter: "Biztonságos módba lépés"
     must_select: "A biztonságos módba lépéshez választania kell legalább egy lehetőséget."
+  dev_mode:
+    enter: "Belépés"
   wizard:
     title: "Discourse telepítő"
     step:
@@ -5007,8 +5001,6 @@ hu:
     api_post_delete: "API-n keresztül törölve"
     reminder_deleted: "Új emlékeztetővel helyettesítve"
     user_associated_posts_deleted: "A felhasználó megsemmisült"
-    imap_email_deleted: "Az e-mail törölve lett az IMAP-kiszolgálóról."
-    imap_email_marked_as_spam: "Az e-mail átkerült a spam mappába az IMAP szerveren."
     auto_deleted_hidden_posts: "Automatikusan megsemmisített rejtett bejegyzések"
   reviewables:
     already_handled: "Köszönjük, de már átnéztük ezt a bejegyzést, és úgy döntöttünk, hogy nem kell újra megjelölni."

@@ -275,6 +275,9 @@ he:
         embeddings:
           name: "הטמעות"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "נושאים קשורים"
+            semantic_search: "חיפוש סמנטי"
         discord:
           name: "שילוב מול Discord"
           description: "הוספת היכולת לחפש בערוצי Discord"
@@ -284,6 +287,8 @@ he:
           generate_concepts: "הסקת תפיסות"
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
+          setting_groups:
+            personas: "דמויות"
         ai_helper:
           name: "מסייע"
           proofread: הגהת הטקסט
@@ -297,6 +302,8 @@ he:
           image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
+          setting_groups:
+            personas: "דמויות"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -310,6 +317,8 @@ he:
             two: "תזמון תרגום של שני פוסטים לא מתורגמים."
             many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
             other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
+          setting_groups:
+            personas: "דמויות"
         spam:
           name: "ספאם"
           inspect_posts: "בדיקת פוסטים"

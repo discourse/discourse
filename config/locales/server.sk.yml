@@ -1190,12 +1190,9 @@ sk:
     no_log_search_queries: "Protokoly vyhľadávacích dotazov sú momentálne zakázané (správca ich môže povoliť v nastaveniach lokality)."
   email_settings:
     pop3_authentication_error: "Vyskytol sa problém so zadanými povereniami POP3, skontrolujte používateľské meno a heslo a skúste to znova."
-    imap_authentication_error: "Vyskytol sa problém so zadanými povereniami IMAP, skontrolujte používateľské meno a heslo a skúste to znova."
-    imap_no_response_error: "Pri komunikácii so serverom IMAP došlo k chybe. %{message}"
     smtp_authentication_error: "Vyskytol sa problém so zadanými povereniami SMTP, skontrolujte používateľské meno a heslo a skúste to znova. %{message}"
     smtp_server_busy_error: "Server SMTP je momentálne zaneprázdnený, skúste to znova neskôr."
     smtp_unhandled_error: "Pri komunikácii so serverom SMTP sa vyskytla neošetrená chyba. %{message}"
-    imap_unhandled_error: "Pri komunikácii so serverom IMAP sa vyskytla neošetrená chyba. %{message}"
     connection_error: "Nastal problém s pripojením k serveru, skontrolujte názov a port servera a skúste to znova."
     timeout_error: "Časový limit pripojenia k serveru vypršal, skontrolujte názov servera a port a skúste to znova."
     unhandled_error: "Nevyriešená chyba pri testovaní nastavení e-mailu. %{message}"
@@ -2293,14 +2290,7 @@ sk:
     email_in_allowed_groups: "Skupiny, ktoré môžu zverejňovať nové témy prostredníctvom e-mailu. Správcovia a moderátori môžu vždy zverejňovať nové témy prostredníctvom e-mailu."
     email_in_authserv_id: "Identifikátor služby, ktorá vykonáva overovanie prichádzajúcich e-mailov. Pokyny na konfiguráciu <a href='https://meta.discourse.org/t/134358'>nájdete na adrese https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Výber konkrétnej hlavičky e-mailu, ktorá sa má použiť na identifikáciu spamu. Táto možnosť môže byť X-Spam-Flag, X-Spam-Status alebo X-SES-Spam-Verdict a e-mail sa označí ako spam na základe hodnoty hlavičky. Ak je napríklad zvolené nastavenie X-Spam-Flag, e-mail s hodnotou tejto hlavičky nastavenou na ÁNO bude klasifikovaný ako spam."
-    enable_imap: "Povolenie protokolu IMAP na synchronizáciu skupinových správ."
-    enable_imap_write: "Povolenie obojsmernej synchronizácie IMAP. Ak je vypnutá, všetky operácie zápisu na účty IMAP sú zakázané."
-    enable_imap_idle: "Na čakanie na nové e-maily použite mechanizmus IMAP IDLE."
     enable_smtp: "Povolenie protokolu SMTP na odosielanie oznámení pre skupinové správy."
-    imap_polling_period_mins: "Časový interval v minútach medzi kontrolou e-mailov na účtoch IMAP."
-    imap_polling_old_emails: "Maximálny počet starých e-mailov (spracovaných), ktoré sa majú aktualizovať pri každom dotazovaní schránky IMAP (0 pre všetky)."
-    imap_polling_new_emails: "Maximálny počet nových e-mailov (nespracovaných), ktoré sa majú aktualizovať pri každom dotazovaní schránky IMAP ."
-    imap_batch_import_email: "Minimálny počet nových e-mailov, ktoré spustia režim importu (vypne oznámenia pre importované príspevky)."
     email_prefix: "[Menovka], ktorá má byť použitá ako predmet emailov. Ak nie je nastavená bude nahradená 'nadpisom'."
     email_site_title: "Názov stránok, použitý ako odosieľateľ emailov zo stránok. Ak nie ne nastavený bude použitý 'nadpis'. Použite toto nastavenie, ak Váš nadpis obsahuje nepovolené znaky pre emailový reťazec odosieľateľ."
     find_related_post_with_key: "Používať iba 'kľúč odpovede' na nájdenie príspevku, na ktorý sa odpovedá. UPOZORNENIE: deaktivácia tohto nastavenia umožňuje vydávanie sa za používateľa na základe e-mailovej adresy."
@@ -3356,6 +3346,7 @@ sk:
         Ako sa budeš zapájať do komunity, budeme ťa lepšie spoznávať a dočasné obmedzenia pre nových používateľov budú zrušené. Postupne získaš [úrovne dôvery](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), ktoré zahŕňajú špeciálne schopnosti, ktoré nám pomôžu spravovať našu komunitu spoločne.
     welcome_user:
       title: "Vitajte používateľ"
+      preview: "Vitajte na %{site_name}!"
       subject_template: "Vitajte na %{site_name}!"
       text_body_template: |
         Ďakujeme, že si sa pridal k %{site_name}, vitaj!
@@ -3383,6 +3374,7 @@ sk:
         S veľkou mocou prichádza aj veľká zodpovednosť. Ak ste v moderovaní nováčikom, prečítajte si [Príručku moderovania](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Pozvánka na uvítanie"
+      preview: "Vitajte na %{site_name}!"
       subject_template: "Vitajte na %{site_name}!"
       text_body_template: |
         Ďakujeme, že si prijal pozvanie na %{site_name} -- vitaj!
@@ -3806,6 +3798,7 @@ sk:
         Toto môže byť upravené prostredníctvom nastavení stránky `newuser_spam_host_threshold` a `allowed_spam_host_domains`. Zváž pridanie %{domains} do zoznamu povolených domén, ak by mali byť vyňaté.
     unsilenced:
       title: "Neumlčaný"
+      preview: "Účet už nie je pozastavený."
       subject_template: "Účet už nie je pozastavený"
       text_body_template: |
         Ahoj,
@@ -3858,8 +3851,6 @@ sk:
     Ak chceš zrušiť odber týchto e-mailov, [klikni sem](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from: "%{user_name} cez %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Prechádzajúce odpovede"
     reached_limit:
@@ -4197,6 +4188,7 @@ sk:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Prihláste sa prostredníctvom odkazu"
+      preview: "Prihláste sa prostredníctvom odkazu."
       subject_template: "[%{email_prefix}] Prihláste sa prostredníctvom odkazu"
       text_body_template: |
         Tu je váš odkaz na prihlásenie na [%{site_name}](%{base_url}).
@@ -5149,6 +5141,8 @@ sk:
     deprecation_error_label: Zabezpečte, aby deprekácie Javascriptu vyvolali chybu
     enter: "Vstup do núdzového režimu"
     must_select: "Ak chcete vstúpiť do núdzového režimu, musíte vybrať aspoň jednu možnosť."
+  dev_mode:
+    enter: "Zadajte"
   wizard:
     title: "Nastavenie Discourse"
     step:
@@ -5246,8 +5240,6 @@ sk:
     api_post_delete: "Odstránené cez API"
     reminder_deleted: "Nahradené novou pripomienkou"
     user_associated_posts_deleted: "Používateľ bol zničený"
-    imap_email_deleted: "E-mail bol odstránený na serveri IMAP"
-    imap_email_marked_as_spam: "E-mail bol presunutý do spamu na serveri IMAP"
     auto_deleted_hidden_posts: "Automaticky odstránené skryté príspevky"
     seed_data_topic_updated: "Téma počiatočných údajov bola aktualizovaná"
     seed_data_topic_deleted: "Téma počiatočných údajov bola odstránená"

@@ -1040,9 +1040,7 @@ ro:
           notification: Notificare
         email:
           title: "Email"
-          status: "S-au sincronizat prin IMAP %{old_emails} e-mailuri din %{total_emails} în total."
           enable_smtp: "Activează SMTP"
-          enable_imap: "Activează IMAP"
           test_settings: "Testează setări"
           save_settings: "Salvează setări"
           last_updated: "Ultima actualizare:"
@@ -1051,14 +1049,7 @@ ro:
           smtp_settings_valid: "Setări SMTP valide."
           smtp_title: "SMTP"
           smtp_instructions: "Când activezi SMTP pentru grup, toate e-mailurile trimise din căsuța de intrare a grupului vor fi trimise prin intermediul setărilor SMTP specificate aici în locul serverului de mail configurat pentru alte e-mailuri trimise de forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Setări suplimentare"
-          imap_instructions: 'Când activezi IMAP pentru grup, e-mailurile sunt sincronizate între intrările grupului și serverul IMAP și cutia poștală furnizată. SMTP trebuie să fie activat cu date de conectare valide și testate înainte ca IMAP să poată fi activat. Numele de utilizator şi parola utilizate pentru SMTP vor fi folosite pentru IMAP. Pentru mai multe informații vezi <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anunțul despre caracteristici pe Discourse Meta</a>.'
-          imap_alpha_warning: "Atenție: Aceasta este o caracteristică pentru etapa alfa. Doar Gmail este acceptat oficial. Folosești pe propriul risc!"
-          imap_settings_valid: "Setări IMAP valide."
-          smtp_disable_confirm: "Dacă dezactivezi SMTP, toate setările SMTP și IMAP vor fi resetate și funcționalitatea asociată va fi dezactivată. Sigur vrei să continui?"
-          imap_disable_confirm: "Dacă dezactivezi IMAP, toate setările IMAP vor fi resetate și funcționalitatea asociată va fi dezactivată. Sigur vrei să continui?"
-          imap_mailbox_not_selected: "Trebuie să selectezi o cutie poștală pentru această configurație IMAP, altfel nicio cutie poștală nu va fi sincronizată!"
+          additional_settings: "Setări suplimentare"
           prefill:
             title: "Pre-completare cu setări pentru:"
           ssl_modes:
@@ -1067,9 +1058,6 @@ ro:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
-            imap_server: "Server IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Folosește SSL pentru IMAP"
             username: "Nume de utilizator"
             password: "Parolă"
           settings:
@@ -1077,10 +1065,6 @@ ro:
             allow_unknown_sender_topic_replies: "Permite răspunsuri la subiect cu expeditor necunoscut."
             allow_unknown_sender_topic_replies_hint: "Permite expeditorilor necunoscuți să răspundă la subiecte de grup. Dacă acest lucru nu este activat, răspunsurile de la adresele de e-mail care nu sunt deja invitate la subiect vor crea un subiect nou."
             from_alias: "De la alias"
-          mailboxes:
-            synchronized: "Cutie poștală sincronizată"
-            none_found: "Nu au fost găsite cutii poștale în acest cont de e-mail."
-            disabled: "Dezactivat"
         membership:
           title: Calitate de membru
           access: Acces
@@ -1301,7 +1285,8 @@ ro:
       private_message: "Mesaj"
       private_messages: "Mesaje"
       upcoming_changes:
-        title: "Modificare viitoare activată"
+        for_user:
+          enabled: "Activată?"
       user_notifications:
         filters:
           filter_by: "Filtrează după"
@@ -1520,6 +1505,7 @@ ro:
         tags: "Etichete"
         interface: "Interfață"
         apps: "Aplicații"
+        navigation_menu: "Meniu de navigare"
       change_password:
         success: "(e-mail trimis)"
         in_progress: "(se trimite e-mail)"
@@ -4025,6 +4011,8 @@ ro:
               options:
                 above_topic_content: "Deasupra conținutului subiectului"
                 below_site_header: "Sub antetul site-ului"
+            header_new_members:
+              placeholder: "Bine ai venit, %{preferred_display_name}!"
             header_logged_in:
               placeholder: "Bine ai revenit, %{preferred_display_name}!"
             header_anonymous:

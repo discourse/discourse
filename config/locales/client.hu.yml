@@ -1064,9 +1064,7 @@ hu:
           notification: Értesítés
         email:
           title: "E-mail-cím"
-          status: "%{total_emails} / %{old_emails} e-mail szinkronizálva IMAP-on keresztül."
           enable_smtp: "SMTP engedélyezése"
-          enable_imap: "IMAP engedélyezése"
           test_settings: "Tesztbeállítások"
           save_settings: "Beállítások mentése"
           last_updated: "Legutóbb frissítve:"
@@ -1075,14 +1073,7 @@ hu:
           smtp_settings_valid: "Az SMTP beállítások érvényesek."
           smtp_title: "SMTP"
           smtp_instructions: "Ha engedélyezi az SMTP-t a csoport számára, akkor csoport postaládájából küldött összes kimenő e-mail az itt megadott SMTP-beállításokkal lesz elküldve, a fórum által küldött, más e-mailekhez beállított levelezőkiszolgáló helyett."
-          imap_title: "IMAP"
-          imap_additional_settings: "További beállítások"
-          imap_instructions: 'Ha engedélyezi az IMAP-ot a csoport számára, akkor a levelek szinkronizálva lesznek a csoport postaládája és a megadott IMAP-kiszolgáló postaládája között. Az SMTP-t érvényes és kipróbált hitelesítő adatokkal kell engedélyezni, mielőtt az IMAP-ot engedélyezheti. Az SMTP-hez használt e-mail-fiók felhasználóneve és jelszava lesz használva az IMAP-hoz is. További információkért lásd a <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funkció bejelentését a Discourse Metán</a>.'
-          imap_alpha_warning: "Figyelmeztetés: ez egy alfa fázisú funkció. Hivatalosan csak a Gmail támogatott. Saját felelősségre használja."
-          imap_settings_valid: "Az IMAP beállítások érvényesek."
-          smtp_disable_confirm: "Ha letiltja az SMTP-t, akkor az összes SMTP- és IMAP-beállítás visszaáll, és a kapcsolódó funkciók le lesznek tiltva. Biztos, hogy folytatni akarja?"
-          imap_disable_confirm: "Ha letiltja az IMAP-ot, akkor az összes IMAP-beállítás alaphelyzetbe áll, és a kapcsolódó funkciók le lesznek tiltva. Biztos, hogy folytatja?"
-          imap_mailbox_not_selected: "Választani kell egy postaládát ehhez az IMAP-beállításhoz, különben egyetlen postafiók sem lesz szinkronizálva."
+          additional_settings: "További beállítások"
           prefill:
             title: "Beállítások előre kitöltése ehhez:"
             gmail: "Gmail"
@@ -1097,9 +1088,6 @@ hu:
             smtp_server: "SMTP-kiszolgáló"
             smtp_port: "SMTP-port"
             smtp_ssl_mode: "SSL mód"
-            imap_server: "IMAP-kiszolgáló"
-            imap_port: "IMAP-port"
-            imap_ssl: "SSL használata az IMAP-hoz"
             username: "Felhasználónév"
             password: "Jelszó"
           settings:
@@ -1108,10 +1096,6 @@ hu:
             allow_unknown_sender_topic_replies_hint: "Lehetővé teszi az ismeretlen feladók számára, hogy válaszoljanak a csoport témáira. Ha ez nincs engedélyezve, akkor az e-mail szálban még nem szereplő címekről érkező válaszok új témát hoznak létre."
             from_alias: "Álnévből"
             from_alias_hint: "A csoportos SMTP e-mailek küldésekor a „feladó” címként használandó álnév. Megjegyzés: ezt nem minden e-mail-szolgáltató támogatja, tekintse meg a szolgáltató dokumentációját."
-          mailboxes:
-            synchronized: "Szinkronizált postafiók"
-            none_found: "Ebben az e-mail fiókban nem találhatók postaládák."
-            disabled: "Kikapcsolt"
         membership:
           title: Tagság
           access: Hozzáférés
@@ -1380,7 +1364,8 @@ hu:
       private_message: "Üzenet"
       private_messages: "Üzenetek"
       upcoming_changes:
-        title: "Közelgő változás engedélyezve"
+        for_user:
+          enabled: "Engedélyezve?"
       user_notifications:
         filters:
           filter_by: "Szűrés:"
@@ -5506,10 +5491,10 @@ hu:
                 below_site_header: "A webhely fejléce alatt"
             text_section:
               title: "Testreszabható szöveg"
-              variables: "A következő változókat használhatod a szövegedben: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Nyelv"
             header_new_members:
               label: "Fejléc új tagoknak"
-              placeholder: "Üdvözöljük a %{site_name}, %{preferred_display_name}!"
+              placeholder: "Üdvözöljük, %{preferred_display_name}!"
             header_logged_in:
               label: "Fejléc bejelentkezett tagoknak"
               placeholder: "Üdv újra itt, %{preferred_display_name}!"
@@ -7617,7 +7602,6 @@ hu:
           button: "Összes bejegyzés törlése"
           progress:
             title: "A bejegyzések törlésének folyamata"
-            description: "Bejegyzések törlése…"
           confirmation:
             title: "@%{username} összes bejegyzésének törlése"
             description: |

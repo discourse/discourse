@@ -77,6 +77,7 @@ const DEFAULT_BINDINGS = {
   "g l": { path: "/latest", anonymous: true },
   "g n": { path: "/new" },
   "g u": { path: "/unread" },
+  "g y": { path: "/unseen" },
   "g c": { path: "/categories", anonymous: true },
   "g t": { path: "/top", anonymous: true },
   "g b": { path: "/my/activity/bookmarks" },

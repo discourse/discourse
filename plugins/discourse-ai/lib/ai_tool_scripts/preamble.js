@@ -55,11 +55,13 @@
  *      length (number): Maximum number of tokens.
  *    Returns: string (truncated text)
  *
- *    llm.generate(prompt): Generates text using the configured LLM associated with the tool runner.
+ *    llm.generate(prompt, options?): Generates text using the configured LLM associated with the tool runner.
  *    Parameters:
  *      prompt (string | Object): The prompt. Can be a simple string or an object
  *                                like { messages: [{ type: "system", content: "..." }, { type: "user", content: "..." }] }.
- *    Returns: string (generated text)
+ *      options (Object, optional):
+ *        json (boolean): If true, requests JSON output from the LLM and automatically parses it.
+ *    Returns: string | Object (generated text or parsed JSON)
  *
  * 3. index
  *    Searches attached RAG (Retrieval-Augmented Generation) documents linked to this tool.
@@ -110,6 +112,8 @@
  * 6. discourse
  *    Interacts with Discourse specific features. Access is generally performed as the SystemUser.
  *
+ *    discourse.baseUrl: The base URL of the Discourse site (e.g., "https://meta.discourse.org").
+ *
  *    discourse.search(params): Performs a Discourse search.
  *    Parameters:
  *      params (Object): Search parameters (e.g., { search_query: "keyword", with_private: true, max_results: 10 }).
@@ -147,6 +151,24 @@
  *                       `username` specifies the user who should appear as the sender. The user must exist.
  *                       The sending user must have permission to post in the channel.
  *    Returns: { success: boolean, message_id?: number, message?: string, created_at?: string } or { error: string }
+ *
+ *    discourse.setTags(topic_id, tags, options?): Sets tags for a topic.
+ *    Parameters:
+ *      topic_id (number): The ID of the topic.
+ *      tags (Array<string>): The list of tags to apply.
+ *      options (Object, optional):
+ *        append (boolean): If true, tags are added to existing ones.
+ *        username (string): The username of the user performing the action.
+ *    Returns: { success: boolean, tags: Array<string> }
+ *
+ *    discourse.editPost(post_id, raw, options?): Edits a post's content.
+ *    Parameters:
+ *      post_id (number): The ID of the post.
+ *      raw (string): The new raw Markdown content.
+ *      options (Object, optional):
+ *        edit_reason (string): Reason for the edit.
+ *        username (string): The username of the user performing the action.
+ *    Returns: { success: boolean, post_id: number }
  *
  * 7. context
  *    An object containing information about the environment where the tool is being run.

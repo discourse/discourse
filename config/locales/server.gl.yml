@@ -1566,14 +1566,7 @@ gl:
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se desactiva isto, deberá limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in_authserv_id: "O identificador do servizo que realiza revisións de autenticación no correo entrante. Revisa <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instrucións sobre como configurar isto."
-    enable_imap: "Activar IMAP para sincronizar mensaxes de grupo."
-    enable_imap_write: "Activar a sincronización IMAP bidireccional. Se está desactivada, todas as operacións de escritura das contas IMAP están desactivadas."
-    enable_imap_idle: "Utilice o mecanismo IMAP IDLE para agardar por novos correos electrónicos."
     enable_smtp: "Active SMTP para enviar notificacións de mensaxes de grupo."
-    imap_polling_period_mins: "Período en minutos entre revisións das contas IMAP para correos electrónicos."
-    imap_polling_old_emails: "Número máximo de correos electrónicos antigos (procesados) que se actualizarán cada vez que se recolla unha caixa de correo IMAP (0 para todos)."
-    imap_polling_new_emails: "Número máximo de correos electrónicos novos (sen procesar) que se actualizarán cada vez que se recolla unha caixa de correo IMAP."
-    imap_batch_import_email: "O número mínimo de correos electrónicos novos que disparan o modo de importación (desactiva as alertas de publicación)."
     email_prefix: "A [label] utilizada no asunto dos correos. Será «título» se non se define."
     email_site_title: "O título do sitio utilizado como remitente de correos electrónicos do sitio. Será o de «título» se non se estabelece. Se o seu «título» contén caracteres que non están permitidos nas cadeas do remitente de correo electrónico, utilice este axuste."
     find_related_post_with_key: "Utilice só a «clave de resposta» para atopar a publicación respondida. AVISO: desactivar isto permite a suplantación de identidade do usuario baseada no enderezo de correo electrónico."
@@ -2164,6 +2157,7 @@ gl:
         A medida que participe aquí, irémolo coñecendo e as limitacións temporais como novo usuario irán desaparecendo. Co tempo gañará [niveis de confianza] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclúen funcionalidades especiais para axudarnos a xestionar xuntos esta comunidade.
     welcome_user:
       title: "Benvida ao usuario"
+      preview: "Dámoslle a benvida a %{site_name}!"
       subject_template: "Dámoslle a benvida a %{site_name}!"
       text_body_template: |
         Grazas por se unir a %{site_name} e benvido/a!
@@ -2191,6 +2185,7 @@ gl:
         Canda o poder vén a responsabilidade. Se non ten experiencia moderando, visite a [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Convite de benvida"
+      preview: "Dámoslle a benvida a %{site_name}!"
       subject_template: "Dámoslle a benvida a %{site_name}!"
       text_body_template: |
         Grazas por aceptar a invitación a %{site_name} -- dámoslle a benvida!
@@ -2533,6 +2528,7 @@ gl:
         Isto pode modificarse nos axustes do sitio `newuser_spam_host_threshold` e `white_listed_spam_host_domains`. Considere a opción de engadir %{domains} á listaxe de permitidos se quere estabelecer unha excepción con eles.
     unsilenced:
       title: "Sen silenciar"
+      preview: "Conta restabelecida."
       subject_template: "Conta restabelecida"
       text_body_template: |
         Ola,
@@ -2581,7 +2577,6 @@ gl:
     Para se dar de baixa destes correos electrónicos, [prema aquí](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[MP] "
-  email_from: "%{user_name} vía %{site_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:
@@ -2882,6 +2877,7 @@ gl:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Iniciar sesión vía ligazón"
+      preview: "Iniciar sesión vía ligazón."
       subject_template: "[%{email_prefix}] Iniciar sesión vía ligazón"
       text_body_template: |
         Velaquí a súa ligazón para iniciar sesión en [%{site_name}](%{base_url}).
@@ -3406,6 +3402,8 @@ gl:
     title: "Entrar en modo seguro"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
+  dev_mode:
+    enter: "Intro"
   wizard:
     title: "Configuración de Discourse"
     step:

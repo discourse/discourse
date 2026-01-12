@@ -914,9 +914,7 @@ fa_IR:
           notification: آگاه‌سازی
         email:
           title: "ایمیل"
-          status: "ایمیل‌های %{old_emails} / %{total_emails} از طریق IMAP همگام‌سازی شده است."
           enable_smtp: "فعال کردن SMTP"
-          enable_imap: "فعال کردن IMAP"
           test_settings: "تنظیمات تست"
           save_settings: "ذخیره تنظیمات"
           last_updated: "آخرین به روز رسانی:"
@@ -925,14 +923,7 @@ fa_IR:
           smtp_settings_valid: "تنظیمات SMTP معتبر است."
           smtp_title: "SMTP"
           smtp_instructions: "وقتی SMTP را برای گروه فعال می‌کنید، همه ایمیل‌های ارسالی از صندوق ورودی گروه به‌جای سرور ایمیلی که برای سایر ایمیل‌های ارسال‌شده توسط انجمن شما پیکربندی شده است، از طریق تنظیمات SMTP که در اینجا مشخص شده‌اند ارسال می‌شوند."
-          imap_title: "IMAP"
-          imap_additional_settings: "تنظیمات اضافی"
-          imap_instructions: 'وقتی IMAP را برای گروه فعال می‌کنید، ایمیل‌ها بین صندوق ورودی گروه و سرور و صندوق پستی ارائه شده IMAP همگام‌سازی می‌شوند. SMTP باید قبل از فعال شدن IMAP با اعتبار معتبر و آزمایش شده فعال شود. نام کاربری و رمز عبور ایمیل مورد استفاده برای SMTP برای IMAP استفاده خواهد شد. برای کسب اطلاعات بیشتر به <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">اطلاعیه ویژگی در گفتمان متا</a>مراجعه کنید.'
-          imap_alpha_warning: "هشدار: این یک ویژگی آلفا مرحله است. فقط Gmail به طور رسمی پشتیبانی می‌شود. با مسئولیت خود استفاده کنید!"
-          imap_settings_valid: "تنظیمات IMAP معتبر است."
-          smtp_disable_confirm: "اگر SMTP را غیرفعال کنید، تمام تنظیمات SMTP و IMAP بازنشانی می‌شوند و عملکرد مربوط غیرفعال خواهد شد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
-          imap_disable_confirm: "اگر IMAP را غیرفعال کنید، تمام تنظیمات IMAP بازنشانی می‌شود و عملکرد مرتبط غیرفعال می‌شود. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
-          imap_mailbox_not_selected: "شما باید یک صندوق پستی برای این پیکربندی IMAP انتخاب کنید وگرنه هیچ صندوق پستی همگام‌سازی نخواهد شد!"
+          additional_settings: "تنظیمات اضافی"
           prefill:
             title: "از قبل پر کردن با تنظیمات برای:"
             gmail: "جی‌میل"
@@ -947,9 +938,6 @@ fa_IR:
             smtp_server: "سرور SMTP"
             smtp_port: "درگاه SMTP"
             smtp_ssl_mode: "حالت SSL"
-            imap_server: "سرور IMAP"
-            imap_port: "درگاه IMAP"
-            imap_ssl: "از SSL برای IMAP استفاده کنید"
             username: "نام‌کاربری"
             password: "رمزعبور"
           settings:
@@ -958,10 +946,6 @@ fa_IR:
             allow_unknown_sender_topic_replies_hint: "به فرستندگان ناشناس اجازه می‌دهد تا به موضوعات گروه پاسخ دهند. اگر این مورد فعال نباشد، پاسخ‌هایی از آدرس‌های ایمیلی که قبلاً به موضوع دعوت نشده‌اند، موضوع جدیدی ایجاد می‌کنند."
             from_alias: "از نام مستعار"
             from_alias_hint: "نام مستعار برای استفاده به عنوان آدرس در فیلد «از» هنگام ارسال ایمیل های گروهی SMTP. توجه داشته باشید که این ممکن است توسط همه ارائه دهندگان ایمیل پشتیبانی نشود، لطفاً به اسناد ارائه دهنده ایمیل خود رجوع کنید."
-          mailboxes:
-            synchronized: "صندوق پستی همگام شده"
-            none_found: "هیچ صندوق پستی در این حساب ایمیل یافت نشد."
-            disabled: "غیرفعال"
         membership:
           title: عضویت
           access: دسترسی
@@ -1224,6 +1208,9 @@ fa_IR:
       new_private_message: "پیام جدید"
       private_message: "پیام"
       private_messages: "پیام‌ها"
+      upcoming_changes:
+        for_user:
+          enabled: "فعال شده؟"
       user_notifications:
         filters:
           filter_by: "فیلتر توسط"
@@ -1537,7 +1524,6 @@ fa_IR:
         tags: "برچسب‌‌ها"
         interface: "رابط"
         apps: "برنامه‌ها"
-        navigation_menu: "منوی ناوبری"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
@@ -4929,6 +4915,8 @@ fa_IR:
           form:
             location:
               label: "موقعیت"
+            text_section:
+              locale_label: "زبان"
             header_logged_in:
               placeholder: "خوش آمدید، %{preferred_display_name}!"
             header_anonymous:
@@ -6720,7 +6708,6 @@ fa_IR:
           button: "پاک کردن همه‌ی نوشته‌ها"
           progress:
             title: "پیشرفت در حذف فرسته‌ها"
-            description: "در حال حذف فرسته‌ها…"
           confirmation:
             title: "حذف همه فرسته‌های @%{username}"
             text: "حذف فرسته‌های @%{username}"

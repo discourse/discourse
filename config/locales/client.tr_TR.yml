@@ -1028,9 +1028,7 @@ tr_TR:
           notification: Bildirim
         email:
           title: "E-posta"
-          status: "IMAP üzerinden senkronize edilmiş e-postalar %{old_emails} / %{total_emails}"
           enable_smtp: "SMTP'yi etkinleştir"
-          enable_imap: "IMAP'i etkinleştir"
           test_settings: "Test Ayarları"
           save_settings: "Ayarları kaydet"
           last_updated: "Son güncelleme:"
@@ -1039,14 +1037,7 @@ tr_TR:
           smtp_settings_valid: "SMTP ayarları geçerli."
           smtp_title: "SMTP"
           smtp_instructions: "Grup için SMTP'yi etkinleştirdiğinizde, grubun gelen kutusundan gönderilen tüm e-postalar, forumunuz tarafından gönderilen diğer e-postalar için yapılandırılmış posta sunucusu yerine burada belirtilen SMTP ayarları gözetilerek gönderilir."
-          imap_title: "IMAP"
-          imap_additional_settings: "Ek Ayarlar"
-          imap_instructions: 'Grup için IMAP''i etkinleştirdiğinizde, e-postalar gruba ait gelen kutusu, sağlanan IMAP sunucusu ve posta kutusu arasında senkronize edilir. IMAP''in etkinleştirilebilmesi için SMTP''nin geçerli ve test edilmiş giriş bilgileriyle etkinleştirilmesi gerekir. SMTP için kullanılan e-posta kullanıcı adı ve şifre IMAP için kullanılır. Daha fazla bilgi için <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta özellik duyurusuna</a> bakın.'
-          imap_alpha_warning: "Uyarı: Bu bir alfa aşaması özelliğidir. Resmi olarak yalnızca Gmail desteklenmektedir. Kendi sorumluluğunuzda kullanın!"
-          imap_settings_valid: "IMAP ayarları geçerli."
-          smtp_disable_confirm: "SMTP'yi devre dışı bırakırsanız tüm SMTP ve IMAP ayarları sıfırlanır ve ilgili işlevler devre dışı bırakılır. Devam etmek istediğinize emin misiniz?"
-          imap_disable_confirm: "IMAP'i devre dışı bırakırsanız tüm IMAP ayarları sıfırlanır ve ilgili işlevler devre dışı bırakılır. Devam etmek istediğinize emin misiniz?"
-          imap_mailbox_not_selected: "Bu IMAP yapılandırması için bir Posta Kutusu seçmelisiniz, yoksa hiçbir posta kutusu senkronize edilmez!"
+          additional_settings: "Ek Ayarlar"
           prefill:
             title: "Şu ayarlarla önceden doldurun:"
             gmail: "Gmail"
@@ -1061,9 +1052,6 @@ tr_TR:
             smtp_server: "SMTP Sunucusu"
             smtp_port: "SMTP Bağlantı Noktası"
             smtp_ssl_mode: "SSL Modu"
-            imap_server: "IMAP Sunucusu"
-            imap_port: "IMAP Bağlantı Noktası"
-            imap_ssl: "IMAP için SSL kullan"
             username: "Kullanıcı Adı"
             password: "Şifre"
           settings:
@@ -1072,10 +1060,6 @@ tr_TR:
             allow_unknown_sender_topic_replies_hint: "Bilinmeyen göndericilerin grup konularını yanıtlamalarına izin verir. Bu ayar etkinleştirilmezse konuya davet edilmemiş e-posta adreslerinden gelen yanıtlar yeni bir konu oluşturur."
             from_alias: "Takma Addan"
             from_alias_hint: "Grup SMTP e-postaları gönderirken gönderici adresi olarak kullanılacak takma ad. Bunun tüm posta sağlayıcıları tarafından desteklenmeyebileceğini unutmayın, lütfen posta sağlayıcınızın belgelerini inceleyin."
-          mailboxes:
-            synchronized: "Senkronize Posta Kutusu"
-            none_found: "Bu e-posta hesabında posta kutusu bulunamadı."
-            disabled: "Devre dışı"
         membership:
           title: Üyelik
           access: Erişim
@@ -1339,6 +1323,9 @@ tr_TR:
       new_private_message: "Yeni Mesaj"
       private_message: "Mesaj"
       private_messages: "Mesajlar"
+      upcoming_changes:
+        for_user:
+          enabled: "Etkin mi?"
       user_notifications:
         filters:
           filter_by: "Şuna göre filtrele"
@@ -1661,7 +1648,7 @@ tr_TR:
         tags: "Etiketler"
         interface: "Arayüz"
         apps: "Uygulamalar"
-        navigation_menu: "Navigasyon Menüsü"
+        navigation_menu: "Navigasyon menüsü"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"
@@ -5354,6 +5341,8 @@ tr_TR:
               options:
                 above_topic_content: "Yukarıdaki konu içeriği"
                 below_site_header: "Aşağıdaki site başlığı"
+            text_section:
+              locale_label: "Dil"
             header_logged_in:
               placeholder: "Tekrar hoş geldiniz %{preferred_display_name}!"
             header_anonymous:
@@ -7403,7 +7392,6 @@ tr_TR:
           button: "Tüm gönderileri sil"
           progress:
             title: "Gönderileri silme ilerleme durumu"
-            description: "Gönderiler siliniyor…"
           confirmation:
             title: "@%{username} tarafından gönderilen tüm gönderileri sil"
             description: |

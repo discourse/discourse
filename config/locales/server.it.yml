@@ -1040,12 +1040,9 @@ it:
     no_log_search_queries: "I log delle query di ricerca sono attualmente disabilitati (possono essere abilitati da un amministratore nelle impostazioni del sito)."
   email_settings:
     pop3_authentication_error: "Si è verificato un problema con le credenziali POP3 fornite. Controlla il nome utente e la password e riprova."
-    imap_authentication_error: "Si è verificato un problema con le credenziali IMAP fornite. Controlla il nome utente e la password e riprova."
-    imap_no_response_error: "Si è verificato un errore durante la comunicazione con il server IMAP. %{message}"
     smtp_authentication_error: "Si è verificato un problema con le credenziali SMTP fornite. Controlla nome utente e password, quindi riprova. %{message}"
     smtp_server_busy_error: "Il server SMTP è attualmente occupato. Riprova più tardi."
     smtp_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server SMTP. %{message}"
-    imap_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server IMAP. %{message}"
     connection_error: "Si è verificato un problema durante la connessione con il server. Controlla il nome e la porta del server e riprova."
     timeout_error: "Connessione al server scaduta. Controlla il nome e la porta del server e riprova."
     unhandled_error: "Errore non gestito durante il test delle impostazioni e-mail. %{message}"
@@ -2144,14 +2141,7 @@ it:
     email_in_allowed_groups: "Gruppi a cui è consentito pubblicare nuovi argomenti via email. Ad amministratori e moderatori è sempre consentito pubblicare nuovi argomenti via email."
     email_in_authserv_id: "L'identificatore del servizio che esegue i controlli di autenticazione sulle e-mail in arrivo. Consulta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> per istruzioni su come configurare questa opzione."
     email_in_spam_header: "Selezione l'intestazione di email da utilizzare per individuare lo spam. L'opzione può essere X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict. L'email verrà contrassegnata come spam in base al valore della sua intestazione. Per esempio, se l'impostazione selezionata è X-Spam-Flag, un'email con intestazione impostata sul valore YES verrà classificata come spam."
-    enable_imap: "Abilita IMAP per la sincronizzazione dei messaggi di gruppo."
-    enable_imap_write: "Abilita la sincronizzazione IMAP bidirezionale. Se l'opzione è disabilitata, tutte le operazioni di scrittura sugli account IMAP sono disabilitate."
-    enable_imap_idle: "Usa il meccanismo IMAP IDLE per attendere nuove email."
     enable_smtp: "Abilita SMTP per l'invio di notifiche per i messaggi di gruppo."
-    imap_polling_period_mins: "Intervallo in minuti per il controllo degli account IMAP tra un' e-mail e l'altra."
-    imap_polling_old_emails: "Il numero massimo di vecchie email (elaborate) da aggiornare ogni volta che viene interrogata una casella IMAP (0 indica tutte le e-mail)."
-    imap_polling_new_emails: "Il numero massimo di nuove e-mail (non elaborate) da aggiornare ogni volta che viene interrogata una casella IMAP."
-    imap_batch_import_email: "Il numero minimo di nuove e-mail che attivano la modalità di importazione (disabilita gli avvisi di messaggi importati)."
     email_prefix: "[Etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
     email_site_title: "Il titolo del sito utilizzato come mittente delle email dal sito. Impostazione di default a 'titolo' se non impostata. Se il tuo 'titolo' contiene caratteri non consentiti nelle stringhe del mittente email, utilizza questa impostazione."
     find_related_post_with_key: "Utilizza solo la 'reply key' per trovare il messaggio inviato. ATTENZIONE: la disattivazione di questa funzione consente di impersonare l'utente in base all'indirizzo email."
@@ -3094,6 +3084,7 @@ it:
         Partecipando ti conosceremo meglio, e le limitazioni temporanee per i nuovi utenti saranno rimosse. Col tempo incrementerai il tuo [livello di attendibilità](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), sbloccando ulteriori funzionalità che ci aiuteranno a gestire insieme la comunità.
     welcome_user:
       title: "Benvenuto Utente"
+      preview: "Ti diamo il benvenuto su %{site_name}!"
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
         Grazie per esserti unito a %{site_name}, e benvenuto!
@@ -3118,6 +3109,7 @@ it:
         Da un grande potere derivano grandi responsabilità. Se non hai mai svolto attività di moderatore, puoi consultare la nostra [Guida per moderatori](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Invito di Benvenuto"
+      preview: "Ti diamo il benvenuto su %{site_name}!"
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
         Grazie per aver accettato l'invito a %{site_name} -- benvenuto!
@@ -3485,6 +3477,7 @@ it:
       text_body_template: "Questo è un messaggio automatico.\n\nIl nuovo utente [%{username}](%{user_url}) ha provato a creare numerosi messaggi contenenti link a %{domains}, ma quei messaggi sono stati bloccati per evitare fenomeni di spam. L'utente è ancora in grado di creare nuovi messaggi purché non contengano link a %{domains}. \n\nPer favore [controlla l'utente](%{user_url}). \n\nQuesto comportamento può essere modificato agendo sulle impostazioni del sito `newuser_spam_host_threshold` e `allowed_spam_host_domains`. Puoi anche aggiungere %{domains} alla lista dei consentiti se vuoi ammettere tali link.\n"
     unsilenced:
       title: "Non silenziato"
+      preview: "Account non più sospeso."
       subject_template: "Account non più sospeso"
       text_body_template: |
         Ciao,
@@ -3530,8 +3523,6 @@ it:
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   subject_re: "R:"
   subject_pm: "[MP]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     reached_limit:
@@ -3865,6 +3856,7 @@ it:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Accedi tramite collegamento"
+      preview: "Accedi tramite collegamento."
       subject_template: "[%{email_prefix}] Accedi tramite collegamento"
       text_body_template: "Ecco il collegamento per accedere a [%{site_name}](%{base_url}). \n\nSe non hai richiesto questo collegamento, puoi tranquillamente ignorare questa email. \n\nClicca sul seguente collegamento per accedere:\n %{base_url}/session/email-login/%{email_token}\n"
     set_password:
@@ -4521,6 +4513,8 @@ it:
     deprecation_error_label: Fai in modo che le deprecazioni di Javascript generino un errore
     enter: "Avvia Modalità Sicura"
     must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
+  dev_mode:
+    enter: "Invio"
   wizard:
     title: "Configurazione Discourse"
     step:
@@ -4614,8 +4608,6 @@ it:
     api_post_delete: "Eliminato tramite API"
     reminder_deleted: "Sostituito da un nuovo promemoria"
     user_associated_posts_deleted: "L'utente è stato distrutto"
-    imap_email_deleted: "L'e-mail è stata eliminata sul server IMAP"
-    imap_email_marked_as_spam: "L'e-mail è stata spostata nello spam sul server IMAP"
     auto_deleted_hidden_posts: "Messaggi nascosti distrutti automaticamente"
     seed_data_topic_updated: "Dati seed dell'argomento aggiornati"
     seed_data_topic_deleted: "Dati seed dell'argomento eliminati"

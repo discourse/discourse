@@ -970,12 +970,9 @@ zh_CN:
     no_log_search_queries: "搜索查询日志当前已禁用（管理员可以在网站设置中启用它们）。"
   email_settings:
     pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码并重试。"
-    imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码并重试。"
-    imap_no_response_error: "与 IMAP 服务器通信时出错。%{message}"
     smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码，然后重试。%{message}"
     smtp_server_busy_error: "SMTP 服务器当前正忙，请稍后再试。"
     smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误。%{message}"
-    imap_unhandled_error: "与 IMAP 服务器通信时发生未处理错误。%{message}"
     connection_error: "与服务器连接时出现问题，请检查服务器名称和端口并重试。"
     timeout_error: "连接服务器时超时，请检查服务器名称和端口后并重试。"
     unhandled_error: "测试电子邮件设置时出现未处理的错误。%{message}"
@@ -2108,14 +2105,7 @@ zh_CN:
     email_in_allowed_groups: "能够通过电子邮件发布新话题的组。管理员和版主始终可以通过电子邮件发布新话题。"
     email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
     email_in_spam_header: "选择用于识别垃圾邮件的特定电子邮件头。此选项可以是 X-Spam-Flag、X-Spam-Status 或 X-SES-Spam-Verdict，电子邮件会根据头值被标记为垃圾邮件。例如，如果选择的设置是 X-Spam-Flag，则此头值设置为 YES 的电子邮件将被归类为垃圾邮件。"
-    enable_imap: "启用 IMAP 以同步群组消息。"
-    enable_imap_write: "启用双向 IMAP 同步。如果禁用，IMAP 帐户上的所有写入操作都将被禁用。"
-    enable_imap_idle: "使用 IMAP IDLE 机制等待新电子邮件。"
     enable_smtp: "启用 SMTP 以发送群组消息通知。"
-    imap_polling_period_mins: "检查 IMAP 帐户有无电子邮件的时间间隔（以分钟为单位）。"
-    imap_polling_old_emails: "每次轮询 IMAP 邮箱时要更新的旧电子邮件（已处理）的最大数量（设为 0 将更新全部）。"
-    imap_polling_new_emails: "每次轮询 IMAP 邮箱时要更新的新电子邮件（已处理）的最大数量。"
-    imap_batch_import_email: "触发导入模式的新电子邮件的最小数量（禁用导入帖子的通知）。"
     email_prefix: "电子邮件主题中使用的[标签]。如果不设置，将默认为 'title'。"
     email_site_title: "用作来自网站的电子邮件发件人的网站标头。如果不设置，则默认为 'title'。如果您的 'title' 包含电子邮件发件人字符串中不允许的字符，请使用此设置。"
     find_related_post_with_key: "仅使用“回复键”查找回复的帖子。警告：禁用此功能将允许基于电子邮件地址的用户模拟。"
@@ -2404,6 +2394,7 @@ zh_CN:
     content_localization_allow_author_localization: "允许作者通过帖子菜单更新自己主题和帖子的本地化内容。"
     enable_upcoming_changes: "启用即将到来的更改"
     fake_upcoming_change: "这是为测试目的即将进行的虚假更改。无需翻译此字符串。"
+    experimental_rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保您输入的日期和时间有效。"
@@ -3126,6 +3117,7 @@ zh_CN:
         当您在这里参与时，我们将了解您，并且临时的新用户限制将被取消。随着时间的推移，您将获得[信任级别](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)，其中包括帮助我们共同管理社区的特殊权限。
     welcome_user:
       title: "欢迎用户"
+      preview: "欢迎来到 %{site_name}！"
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
         感谢您加入%{site_name}，欢迎！
@@ -3153,6 +3145,7 @@ zh_CN:
         拥有权利的同时也需要承担重大责任。如果您不熟悉审核，请参阅[审核指南](https://meta.discourse.org/t/discourse-moderation-guide/63116)。
     welcome_invite:
       title: "欢迎邀请"
+      preview: "欢迎来到 %{site_name}！"
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
         感谢您接受邀请加入 %{site_name} - 欢迎！
@@ -3586,6 +3579,7 @@ zh_CN:
         可以通过 `newuser_spam_host_threshold` 和 `allowed_spam_host_domains` 网站设置对此进行修改。如果他们应该被豁免，请考虑将 %{domains} 添加到许可名单中。
     unsilenced:
       title: "已被取消禁言"
+      preview: "帐户不再处于暂停状态."
       subject_template: "帐户不再处于暂停状态"
       text_body_template: |
         您好，
@@ -3632,8 +3626,6 @@ zh_CN:
     要退订这些电子邮件，请[点击此处](%{unsubscribe_url})。
   subject_re: "回复："
   subject_pm: "[私信]"
-  email_from: "%{user_name} 通过 %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "以前的回复"
     reached_limit:
@@ -3971,6 +3963,7 @@ zh_CN:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "通过链接登录"
+      preview: "通过链接登录."
       subject_template: "[%{email_prefix}] 通过链接登录"
       text_body_template: |
         这是您用于登录 [%{site_name}](%{base_url}) 的链接
@@ -4924,6 +4917,10 @@ zh_CN:
     deprecation_error_label: 让 Javascript 弃用引发一个错误
     enter: "进入安全模式"
     must_select: "您必须至少选择一个选项才能进入安全模式。"
+  dev_mode:
+    title: "开发者模式"
+    enable_rack_mini_profiler: "启用 Rack Mini Profiler，使其在会话切换后保持 1 小时。"
+    enter: "Enter"
   wizard:
     title: "Discourse 设置"
     step:
@@ -5030,8 +5027,6 @@ zh_CN:
     api_post_delete: "通过 API 删除"
     reminder_deleted: "由新提醒替换"
     user_associated_posts_deleted: "用户已被删除"
-    imap_email_deleted: "电子邮件已在 IMAP 服务器上删除"
-    imap_email_marked_as_spam: "电子邮件已在 IMAP 服务器上移至垃圾邮件"
     auto_deleted_hidden_posts: "自动删除隐藏的帖子"
     seed_data_topic_updated: "种子数据话题已更新"
     seed_data_topic_deleted: "种子数据话题已删除"

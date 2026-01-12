@@ -1035,9 +1035,7 @@ fr:
           notification: Notification
         email:
           title: "E-mail"
-          status: "%{old_emails}/%{total_emails} e-mails synchronisés via IMAP."
           enable_smtp: "Activer le SMTP"
-          enable_imap: "Activer l'IMAP"
           test_settings: "Tester les paramètres"
           save_settings: "Enregistrer les paramètres"
           last_updated: "Dernière mise à jour :"
@@ -1046,14 +1044,7 @@ fr:
           smtp_settings_valid: "Paramètres SMTP valides."
           smtp_title: "SMTP"
           smtp_instructions: "Quand le SMTP est activé au niveau du groupe, tous les e-mails envoyés au nom de ce groupe seront expédiés en utilisant les paramètres SMTP indiqués ici plutôt qu'avec les paramètres SMTP globaux du site."
-          imap_title: "IMAP"
-          imap_additional_settings: "Paramètres additionnels"
-          imap_instructions: 'Quand l''IMAP est activé au niveau du groupe, les e-mails sont synchronisés entre la boîte de réception de ce groupe et la boîte de réception IMAP indiquée ici. Avant de pouvoir activer l''IMAP, le SMTP doit d''abord être activé, et des paramètres SMTP valides doivent être renseignés. L''identifiant et le mot de passe du serveur SMTP seront utilisés pour l''authentification auprès du serveur IMAP. Pour en savoir plus, consultez <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">l''annonce de cette fonctionnalité sur Discourse Meta</a> (en anglais).'
-          imap_alpha_warning: "Attention : cette fonctionnalité est en test alpha. Seul Gmail est pris en charge officiellement. Son utilisation se fait à vos risques et périls !"
-          imap_settings_valid: "Paramètres IMAP valides."
-          smtp_disable_confirm: "En désactivant le SMTP, tous les paramètres SMTP et IMAP seront réinitialisés et ces fonctionnalités seront désactivées. Souhaitez-vous continuer ?"
-          imap_disable_confirm: "En désactivant l'IMAP, tous les paramètres IMAP seront réinitialisés et cette fonctionnalité sera désactivée. Souhaitez-vous continuer ?"
-          imap_mailbox_not_selected: "Vous devez indiquer une boîte de réception dans ces paramètres IMAP, autrement aucune boîte de réception ne sera synchronisée !"
+          additional_settings: "Paramètres additionnels"
           prefill:
             title: "Renseigner les paramètres pour :"
             gmail: "Gmail"
@@ -1068,9 +1059,6 @@ fr:
             smtp_server: "Serveur SMTP"
             smtp_port: "Port SMTP"
             smtp_ssl_mode: "Mode SSL"
-            imap_server: "Serveur IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Utiliser SSL pour IMAP"
             username: "Nom d'utilisateur"
             password: "Mot de passe"
           settings:
@@ -1079,10 +1067,6 @@ fr:
             allow_unknown_sender_topic_replies_hint: "Permet aux expéditeurs inconnus de répondre aux sujets du groupe. Si cette option n'est pas activée, les réponses provenant d'adresses e-mail qui ne sont pas encore invitées dans le sujet créeront un nouveau sujet."
             from_alias: "Alias de l'expéditeur"
             from_alias_hint: "Alias à utiliser comme adresse d'expédition lors de l'envoi d'e-mails SMTP de groupe. Veuillez noter que cela peut ne pas être pris en charge par tous les prestataires de messagerie, nous vous invitons à consulter la documentation de votre prestataire."
-          mailboxes:
-            synchronized: "Boîte de réception à synchroniser"
-            none_found: "Aucune boîte de réception n'a été trouvée pour ce compte d'e-mail."
-            disabled: "Désactivée"
         membership:
           title: Adhésion
           access: Accès
@@ -1346,6 +1330,9 @@ fr:
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
+      upcoming_changes:
+        for_user:
+          enabled: "Activé ?"
       user_notifications:
         filters:
           filter_by: "Filtrer par"
@@ -5376,6 +5363,8 @@ fr:
               options:
                 above_topic_content: "Au-dessus du contenu du sujet"
                 below_site_header: "Sous l'en-tête du site"
+            text_section:
+              locale_label: "Langue "
             header_logged_in:
               placeholder: "Bienvenue, %{preferred_display_name} !"
             header_anonymous:
@@ -7425,7 +7414,6 @@ fr:
           button: "Supprimer tous les messages"
           progress:
             title: "Progression de la suppression des messages"
-            description: "Suppression des messages…"
           confirmation:
             title: "Supprimer tous les messages de @%{username}"
             description: |

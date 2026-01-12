@@ -954,9 +954,7 @@ ja:
           notification: 通知
         email:
           title: "メール"
-          status: "IMAP 経由で %{old_emails} / %{total_emails} のメールを同期しました。"
           enable_smtp: "SMTP を有効化"
-          enable_imap: "IMAP を有効化"
           test_settings: "設定をテスト"
           save_settings: "設定を保存"
           last_updated: "最終更新:"
@@ -965,14 +963,7 @@ ja:
           smtp_settings_valid: "SMTP 設定は有効です。"
           smtp_title: "SMTP"
           smtp_instructions: "このグループで SMTP を有効化すると、グループの受信トレイから送信されるすべての送信メールは、フォーラムが送信するほかのメール用に構成されているメールサーバーではなく、ここで指定される SMTP 設定を介して送信されます。"
-          imap_title: "IMAP"
-          imap_additional_settings: "追加設定"
-          imap_instructions: 'このグループで IMAP を有効化すると、グループの受信トレイと指定された IMAP サーバーとメールボックスの間でメールが同期されます。IMAP を有効にする前に、テスト済みの有効な資格情報で SMTP を有効にする必要があります。SMTP に使用されるメールのユーザー名とパスワードが IMAP にも使用されます。詳細は、「<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta の機能に関するお知らせ</a>」をご覧ください。'
-          imap_alpha_warning: "警告: これはアルファステージの機能です。Gmail のみが公式にサポートされています。自己責任でご利用ください！"
-          imap_settings_valid: "IMAP の設定は有効です。"
-          smtp_disable_confirm: "SMTP を無効にすると、すべての SMTP と IMAP の設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
-          imap_disable_confirm: "IMAP を無効にすると、すべての IMAP 設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
-          imap_mailbox_not_selected: "この IMAP 構成のメールボックスを選択する必要があります。選択しない場合、メールボックスは同期されません！"
+          additional_settings: "追加設定"
           prefill:
             title: "次の設定で事前入力:"
             gmail: "Gmail"
@@ -987,9 +978,6 @@ ja:
             smtp_server: "SMTP サーバー"
             smtp_port: "SMTP ポート"
             smtp_ssl_mode: "SSL モード"
-            imap_server: "IMAP サーバー"
-            imap_port: "IMAP ポート"
-            imap_ssl: "IMAP に SSL を使用する"
             username: "ユーザー名"
             password: "パスワード"
           settings:
@@ -998,10 +986,6 @@ ja:
             allow_unknown_sender_topic_replies_hint: "不明な送信者がグループトピックに返信できるようにします。これが有効になっていない場合、トピックに招待されていないメールアドレスからの返信があった場合は、新しいトピックを作成します。"
             from_alias: "送信元のエイリアス"
             from_alias_hint: "グループ SMTP メールを送信する際に送信元アドレスとして使用するエイリアス。すべてのメールプロバイダーでサポートされているわけではなことにご注意ください。メールプロバイダーのドキュメントを参照してください。"
-          mailboxes:
-            synchronized: "同期メールボックス"
-            none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
-            disabled: "無効"
         membership:
           title: メンバーシップ
           access: アクセス
@@ -1255,6 +1239,9 @@ ja:
       new_private_message: "新規メッセージ"
       private_message: "メッセージ"
       private_messages: "メッセージ"
+      upcoming_changes:
+        for_user:
+          enabled: "有効ですか？"
       user_notifications:
         filters:
           filter_by: "フィルタ基準:"
@@ -5088,6 +5075,8 @@ ja:
               options:
                 above_topic_content: "トピックコンテンツの上"
                 below_site_header: "サイトヘッダーの下"
+            text_section:
+              locale_label: "言語"
             header_logged_in:
               placeholder: "%{preferred_display_name}、おかえりなさい！"
             header_anonymous:
@@ -7122,7 +7111,6 @@ ja:
           button: "すべての投稿を削除する"
           progress:
             title: "投稿の削除状況"
-            description: "投稿を削除中…"
           confirmation:
             title: "@%{username} のすべての投稿を削除"
             description: |

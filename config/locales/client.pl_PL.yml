@@ -6,6 +6,10 @@
 
 pl_PL:
   js:
+    carousel:
+      go_to_slide: "Przejdź do slajdu %{index}"
+      previous: "Poprzedni slajd"
+      next: "Następny slajd"
     number:
       format:
         separator: ","
@@ -1223,9 +1227,7 @@ pl_PL:
           self_lockout: "Zamierzasz zmienić widoczność grupy w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
         email:
           title: "E-mail"
-          status: "Zsynchronizowane %{old_emails} / %{total_emails} wiadomości e-mail za pośrednictwem IMAP."
           enable_smtp: "Włącz SMTP"
-          enable_imap: "Włącz IMAP"
           test_settings: "Testuj ustawienia"
           save_settings: "Zapisz ustawienia"
           last_updated: "Ostatnio zaktualizowane:"
@@ -1234,14 +1236,8 @@ pl_PL:
           smtp_settings_valid: "Ustawienia SMTP są poprawne."
           smtp_title: "SMTP"
           smtp_instructions: "Gdy włączysz SMTP dla grupy, wszystkie wychodzące wiadomości e-mail wysyłane ze skrzynki odbiorczej grupy będą wysyłane przy użyciu określonych tutaj ustawień SMTP zamiast serwera pocztowego skonfigurowanego dla innych wiadomości e-mail wysyłanych przez Twoje forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Dodatkowe ustawienia"
-          imap_instructions: 'Po włączeniu protokołu IMAP dla grupy wiadomości e-mail są synchronizowane między skrzynką odbiorczą grupy a dostarczonym serwerem IMAP i skrzynką pocztową. Protokół SMTP musi być włączony przy użyciu prawidłowych i przetestowanych poświadczeń, zanim będzie można włączyć protokół IMAP. Nazwa użytkownika poczty e-mail i hasło używane do SMTP będą używane do IMAP. Aby uzyskać więcej informacji, zobacz ogłoszenie o funkcji <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588"></a>.'
-          imap_alpha_warning: "Ostrzeżenie: To jest funkcja na etapie alfa. Tylko Gmail jest oficjalnie wspierany. Używaj na własne ryzyko!"
-          imap_settings_valid: "Ustawienia IMAP są prawidłowe."
-          smtp_disable_confirm: "Jeśli wyłączysz SMTP, wszystkie ustawienia SMTP i IMAP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Jesteś pewien, że chcesz kontynuować?"
-          imap_disable_confirm: "Jeśli wyłączysz IMAP, wszystkie ustawienia IMAP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Jesteś pewien, że chcesz kontynuować?"
-          imap_mailbox_not_selected: "Musisz wybrać skrzynkę pocztową dla tej konfiguracji IMAP, w przeciwnym razie żadna skrzynka pocztowa nie zostanie zsynchronizowana!"
+          additional_settings: "Dodatkowe ustawienia"
+          smtp_disable_confirm: "Jeśli wyłączysz SMTP, wszystkie ustawienia SMTP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Czy na pewno chcesz kontynuować?"
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
             gmail: "Gmail"
@@ -1256,9 +1252,6 @@ pl_PL:
             smtp_server: "Serwer SMTP"
             smtp_port: "Port SMTP"
             smtp_ssl_mode: "Tryb SSL"
-            imap_server: "Serwer IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Użyj SSL dla IMAP"
             username: "Nazwa użytkownika"
             password: "Hasło"
           settings:
@@ -1267,10 +1260,6 @@ pl_PL:
             allow_unknown_sender_topic_replies_hint: "Umożliwia nieznanym nadawcom odpowiadanie na tematy grupy. Jeśli ta opcja nie jest włączona, odpowiedzi z adresów e-mail, które nie zostały jeszcze zaproszone do tematu, utworzą nowy temat."
             from_alias: "Z aliasu"
             from_alias_hint: "Alias używany jako adres nadawcy podczas wysyłania grupowych wiadomości e-mail SMTP. Pamiętaj, że może to nie być obsługiwane przez wszystkich dostawców poczty, zapoznaj się z dokumentacją dostawcy poczty."
-          mailboxes:
-            synchronized: "Zsynchronizowana skrzynka pocztowa"
-            none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
-            disabled: "Wyłączone"
         membership:
           title: Członkostwo
           access: Dostęp
@@ -1563,7 +1552,16 @@ pl_PL:
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
       upcoming_changes:
-        title: "Nadchodząca zmiana włączona"
+        title: "Nadchodzące zmiany"
+        for_user:
+          upcoming_change: "Nadchodząca zmiana"
+          enabled: "Włączona?"
+          why: "Dlaczego?"
+        why_reasons:
+          not_in_specific_groups: "Użytkownik nie należy do konkretnych grup wymaganych do tej zmiany"
+          in_specific_groups: "Użytkownik należy do określonych grup wymaganych do tej zmiany"
+          enabled_for_everyone: "Ta zmiana jest dostępna dla wszystkich członków"
+          enabled_for_no_one: "Ta zmiana jest wyłączona dla wszystkich członków"
       user_notifications:
         filters:
           filter_by: "Filtruj według"
@@ -1919,7 +1917,8 @@ pl_PL:
         tags: "Tagi"
         interface: "Interfejs"
         apps: "Aplikacje"
-        navigation_menu: "Menu nawigacji"
+        navigation_menu: "Menu nawigacyjne"
+        upcoming_changes: "Nadchodzące zmiany"
       change_password:
         success: "(e-mail wysłany)"
         in_progress: "(e-mail wysyłany)"
@@ -3243,6 +3242,10 @@ pl_PL:
         move_outside_grid: "Przenieś poza siatkę"
       image: "obraz"
       grid_label: "Będzie to wyświetlane jako siatka"
+      grid_mode_grid: "Siatka"
+      grid_mode_carousel: "Karuzela"
+      grid_mode_title: "Ustaw styl galerii obrazów na %{mode}"
+      remove_grid: "Usuń siatkę"
       image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
       toggle_image_grid: Przełącz siatkę obrazu
@@ -3732,7 +3735,7 @@ pl_PL:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
         new: "Nie masz nowych tematów."
-        read: "You haven't read any topics yet."
+        read: "Nie przeczytałeś jeszcze żadnego tematu."
         posted: "Jeszcze nie zamieściłeś/łaś wpisu w żadnym z tematów."
         latest: "Jesteś na biężąco!"
         bookmarks: "Nie posiadasz tematów dodanych do zakładek."
@@ -3835,7 +3838,7 @@ pl_PL:
         few: "temat zawiera %{count} lajki"
         many: "temat zawiera %{count} lajków"
         other: "temat zawiera %{count} polubień"
-      back_to_list: "Wróć do Listy Tematów"
+      back_to_list: "Powrót do listy tematów"
       options: "Opcje tematu"
       show_links: "pokaż odnośniki z tego tematu"
       collapse_details: "zwiń szczegóły tematu"
@@ -3954,6 +3957,8 @@ pl_PL:
         title: "Automatycznie zamknij temat po ostatnim poście"
       auto_delete:
         title: "Automatycznie usuń temat"
+      auto_delete_after_last_post:
+        title: "Automatycznie usuń temat po ostatnim wpisie"
       auto_bump:
         title: "Automatycznie podbij temat"
       reminder:
@@ -3965,6 +3970,7 @@ pl_PL:
         auto_close: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
         auto_publish_to_category: "Wątek zostanie opublikowany w <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_after_last_post: "Ten watek zostanie automatycznie zamknięty po %{duration} od ostatniej odpowiedzi."
+        auto_delete_after_last_post: "Ten temat zostanie usunięty %{duration} po ostatniej odpowiedzi."
         auto_delete: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
         auto_bump: "Ten temat zostanie automatycznie podbity %{timeLeft}."
         auto_reminder: "Otrzymasz przypomnienie o tym temacie %{timeLeft}."
@@ -5127,6 +5133,7 @@ pl_PL:
         latest: "%{shortcut} Najnowsze"
         new: "%{shortcut} Nowe"
         unread: "%{shortcut} Nieprzeczytane"
+        unseen: "%{shortcut} Niewidziany"
         categories: "%{shortcut} Kategorie"
         top: "%{shortcut} Góra"
         bookmarks: "%{shortcut} Zakładki"
@@ -6157,15 +6164,18 @@ pl_PL:
                 below_site_header: "Poniżej nagłówka witryny"
             text_section:
               title: "Tekst do dostosowania"
-              variables: "Możesz używać tych zmiennych w swoim tekście: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Język"
             header_new_members:
               label: "Nagłówek dla nowych członków"
-              placeholder: "Witaj w %{site_name}, %{preferred_display_name}!"
+              description: "Dostępna zmienna: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Witaj, %{preferred_display_name}!"
             header_logged_in:
               label: "Nagłówek dla zalogowanych członków"
+              description: "Dostępna zmienna: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Witaj z powrotem, %{preferred_display_name}!"
             header_anonymous:
               label: "Nagłówek dla anonimowych gości"
+              description: "Dostępna zmienna: <code>&percnt;{site_name}</code>"
               placeholder: "Witaj na %{site_name}!"
             subheader_logged_in:
               label: "Podtytuł dla zalogowanych członków"
@@ -8249,6 +8259,21 @@ pl_PL:
         penalty_post_actions: "Co chcesz zrobić z powiązanym wpisem?"
         penalty_post_delete: "Usuń ten wpis"
         penalty_post_delete_replies: "Usuń wpis + wszelkie odpowiedzi"
+        penalty_post_delete_all: "Usuń wszystkie tematy użytkownika + wszystkie odpowiedzi"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>To usunie
+          { TOPICS, plural,
+              one {# temat}
+              few {# tematy}
+              many {# tematów}
+            other {# tematów}
+          } i
+          { REPLIES, plural,
+              one {# odpowiedź}
+              few {# odpowiedzi}
+              many {# odpowiedzi}
+            other {# odpowiedzi}
+          }. <b>Tego nie można cofnąć!</b> Czy na pewno chcesz to zrobić?</span>
         penalty_post_edit: "Edytuj wpis"
         penalty_post_none: "Nic nie rób"
         penalty_count: "Liczba Przewinień"
@@ -8306,6 +8331,11 @@ pl_PL:
         approve_bulk_success: "Sukces! Wszyscy wybrani użytkownicy zostali zatwierdzeni i powiadomieni."
         time_read: "Czas czytania"
         post_edits_count: "Edycje wpisu"
+        upcoming_changes:
+          title: "Nadchodzące zmiany użytkownika"
+          description: "Aby zmodyfikować grupy lub włączyć bądź wyłączyć nadchodzące zmiany, odwiedź stronę konfiguracji nadchodzących zmian <a href='%{basePath}/admin/config/upcoming-changes'></a>."
+          filter_placeholder: "Filtruj nadchodzące zmiany według nazwy lub opisu"
+          filter_no_results: "Nie znaleziono żadnych nadchodzących zmian"
         exports:
           title: Eksporty użytkownika
           download:
@@ -8332,7 +8362,11 @@ pl_PL:
           button: "Usuń wszystkie wpisy"
           progress:
             title: "Postęp usuwania postów"
-            description: "Usuwanie postów…"
+            description:
+              one: "Usuwanie %{count} wpisu autorstwa @%{username}..."
+              few: "Usuwanie %{count} wpisów autorstwa @%{username}..."
+              many: "Usuwanie %{count} wpisów autorstwa @%{username}..."
+              other: "Usuwanie %{count} wpisów autorstwa @%{username}..."
           confirmation:
             title: "Usuń wszystkie posty użytkownika @%{username}"
             description: |
@@ -8344,6 +8378,7 @@ pl_PL:
             text: "usuń posty użytkownika @%{username}"
             delete: "Usuń posty użytkownika @%{username}"
             cancel: "Anuluj"
+          all_enqueued: "Wszystkie wpisy użytkownika @%{username} zostały umieszczone w kolejce do usunięcia"
         merge:
           button: "Połącz"
           prompt:

@@ -548,8 +548,6 @@ th:
             password: "รหัสผ่าน"
           settings:
             title: "การตั้งค่า"
-          mailboxes:
-            disabled: "ปิดใช้งานแล้ว"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -723,6 +721,9 @@ th:
       new_private_message: "สร้างข้อความส่วนตัวใหม่"
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
+      upcoming_changes:
+        for_user:
+          enabled: "เปิดใช้"
       user_notifications:
         filters:
           filter_by: "กรองโดย"

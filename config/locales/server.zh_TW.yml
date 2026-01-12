@@ -1747,6 +1747,7 @@ zh_TW:
         只要你參與，我們將更瞭解你，並且新使用者的臨時限制將被移除。隨着時間，你會提供[信任等級](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，這將提供一些特殊功能來幫助我們更好地管理社群。
     welcome_user:
       title: "歡迎使用者"
+      preview: "歡迎來到 %{site_name}！"
       subject_template: "歡迎來到 %{site_name}！"
       text_body_template: |
         感謝你加入%{site_name}，歡迎！
@@ -1765,6 +1766,7 @@ zh_TW:
         我們很高興你與我們一起共度時光，我們想知道更多關於你的事情。花一點時間來[填寫你的個人資料](%{base_url}/my/preferences/profile), 或著隨意 [發表一篇新的討論話題](%{base_url}/categories)，讓更多人看到吧！
     welcome_invite:
       title: "歡迎邀請"
+      preview: "歡迎來到 %{site_name}！"
       subject_template: "歡迎來到 %{site_name}！"
       text_body_template: |
         感謝你接受邀請加入 %{site_name} — 歡迎！
@@ -2042,6 +2044,7 @@ zh_TW:
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
     unsilenced:
       title: "解除禁言"
+      preview: "帳號已解除封鎖."
       subject_template: "帳號已解除封鎖"
       text_body_template: |
         你好，
@@ -2089,7 +2092,6 @@ zh_TW:
     要退訂這些郵件，[請點擊這裡](%{unsubscribe_url})。
   subject_re: "回覆："
   subject_pm: "[私訊]"
-  email_from: "%{user_name}透過%{site_name}"
   user_notifications:
     previous_discussion: "之前的回覆"
     reached_limit:
@@ -2335,6 +2337,7 @@ zh_TW:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "透過連結登入"
+      preview: "透過連結登入."
       subject_template: "[%{email_prefix}] 透過連結登入"
       text_body_template: |
         有人嘗試登入你在[%{site_name}](%{base_url})的帳號。
@@ -2764,6 +2767,8 @@ zh_TW:
     title: "進入安全模式"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse 安裝"
     step:

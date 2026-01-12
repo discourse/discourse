@@ -1048,9 +1048,7 @@ ur:
           notification: اطلاع
         email:
           title: "ای میل"
-          status: "IMAP کے ذریعے ای میلز کو ہم آہنگ کیا %{old_emails} / %{total_emails}"
           enable_smtp: "SMTP فعال کریں"
-          enable_imap: "IMAP فعال کریں"
           test_settings: "ترتیبات کو ٹیسٹ کریں"
           save_settings: "ترتیبات کو محفوظ کریں"
           last_updated: "آخری اپ ڈیٹ:"
@@ -1059,14 +1057,7 @@ ur:
           smtp_settings_valid: "SMTP ترتیبات درست ہیں۔"
           smtp_title: "SMTP"
           smtp_instructions: "جب آپ گروپ کے لیے SMTP کو فعال کرتے ہیں، تو گروپ کے ان باکس سے بھیجے گئے تمام آؤٹ باؤنڈ ای میلز آپ کے فورم کے ذریعے بھیجے گئے دیگر ای میلز کے لیے ترتیب کردہ میل سرور کے بجائے یہاں بیان کردہ SMTP سیٹنگز کے ذریعے بھیجے جائیں گے۔"
-          imap_title: "IMAP"
-          imap_additional_settings: "اضافی ترتیبات"
-          imap_instructions: 'جب آپ گروپ کے لیے IMAP کو فعال کرتے ہیں، تو ای میلز گروپ ان باکس اور فراہم کردہ IMAP سرور اور میل باکس کے درمیان مطابقت پذیر ہو جاتی ہیں۔ IMAP کو فعال کرنے سے پہلے SMTP کو درست اور جانچ شدہ اسناد کے ساتھ فعال کیا جانا چاہیے۔ SMTP کے لیے استعمال ہونے والا ای میل رکن نام اور پاس ورڈ IMAP کے لیے استعمال کیا جائے گا۔ مزید معلومات کے لیے ڈسکورس میٹا<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">فیچر کےاعلان پر دیکھیں </a>۔'
-          imap_alpha_warning: "انتباہ: یہ الفا اسٹیج کی خصوصیت ہے۔ صرف Gmail باضابطہ طور پر تعاون یافتہ ہے۔ اپنے خطرے پر استعمال کریں!"
-          imap_settings_valid: "SMTP ترتیبات درست ہیں۔"
-          smtp_disable_confirm: "اگر آپ SMTP کو غیر فعال کرتے ہیں، تو تمام SMTP اور IMAP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
-          imap_disable_confirm: "اگر آپ IMAP کو غیر فعال کرتے ہیں تو تمام IMAP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
-          imap_mailbox_not_selected: "آپ کو اس IMAP کنفیگریشن کے لیے ایک میل باکس کا انتخاب کرنا چاہیے ورنہ کوئی میل باکس مطابقت پذیر نہیں ہوگا!"
+          additional_settings: "اضافی ترتیبات"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
             gmail: "Gmail"
@@ -1081,9 +1072,6 @@ ur:
             smtp_server: "SMTP سرور"
             smtp_port: "SMTP پورٹ"
             smtp_ssl_mode: "SSL موڈ"
-            imap_server: "IMAP سرور"
-            imap_port: "IMAP پورٹ"
-            imap_ssl: "IMAP کے لیے SSL استعمال کریں"
             username: "اسمِ صارف"
             password: "پاسورڈ"
           settings:
@@ -1092,10 +1080,6 @@ ur:
             allow_unknown_sender_topic_replies_hint: "نامعلوم بھیجنے والوں کو گروپ کے موضوعات کا جواب دینے کی اجازت دیتا ہے۔ اگر یہ فعال نہیں ہے تو، ای میل پتوں کے جوابات جو پہلے ہی موضوع پر مدعو نہیں کیے گئے ہیں ایک نیا موضوع بنائیں گے۔"
             from_alias: "عرف سے"
             from_alias_hint: "گروپ SMTP ای میلز بھیجتے وقت فرم ایڈریس کے طور پر استعمال کرنے کے لیے عرف نوٹ کریں کہ یہ تمام میل فراہم کنندگان کے ذریعہ تعاون یافتہ نہیں ہوسکتا ہے، براہ کرم اپنے میل فراہم کنندہ کی دستاویزات سے مشورہ کریں۔"
-          mailboxes:
-            synchronized: "مطابقت پذیر میل باکس"
-            none_found: "اس ای میل اکاؤنٹ میں کوئی میل باکس نہیں ملا۔"
-            disabled: "غیر فعال"
         membership:
           title: رکنیت
           access: رسائی
@@ -1359,6 +1343,9 @@ ur:
       new_private_message: "نیا پیغام"
       private_message: "پیغام"
       private_messages: "پیغامات"
+      upcoming_changes:
+        for_user:
+          enabled: "فعال؟"
       user_notifications:
         filters:
           filter_by: "فلٹر بذریعہ"
@@ -5396,6 +5383,10 @@ ur:
               options:
                 above_topic_content: "اوپر موضوع کا مواد"
                 below_site_header: "سائٹ ہیڈر کے نیچے"
+            text_section:
+              locale_label: "زبان"
+            header_new_members:
+              placeholder: "خوش آمدید، %{preferred_display_name}!"
             header_logged_in:
               placeholder: "دوبارہ خوش آمدید، %{preferred_display_name}!"
             header_anonymous:

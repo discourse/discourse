@@ -829,8 +829,10 @@ bs_BA:
     queued_by_staff:
       title: "Post treba odobrenje"
     welcome_user:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošli na %{site_name}!"
     welcome_invite:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošli na %{site_name}!"
     tl2_promotion_message:
       subject_template: "Čestitamo na povišenju vašeg nivoa povjerenja!"
@@ -1004,6 +1006,8 @@ bs_BA:
       button: "Registriraj"
     resend_email:
       title: "Pošalji ponovo email aktivacije"
+  dev_mode:
+    enter: "Naprijed"
   wizard:
     step:
       setup:

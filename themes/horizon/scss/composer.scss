@@ -32,10 +32,6 @@
       padding: var(--space-4);
     }
 
-    &:has(.in-focus) .grippie {
-      background: var(--tertiary);
-    }
-
     .reply-area {
       padding-inline: 0;
     }
