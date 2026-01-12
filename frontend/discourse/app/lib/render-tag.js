@@ -29,6 +29,9 @@ export function defaultRenderTag(tag, params) {
         ? params.tagsForUser
         : User.current().username;
       path = `/u/${username}/messages/tags/${tagNameLower}`;
+    } else if (typeof tag === "object" && tag.id) {
+      const slugForUrl = tag.slug || `${tag.id}-tag`;
+      path = `/tag/${slugForUrl}/${tag.id}`;
     } else {
       path = `/tag/${tagNameLower}`;
     }

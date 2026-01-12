@@ -31,7 +31,7 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get models() {
-    return [this.tagName];
+    return [this.tag.slug, this.tag.id];
   }
 
   get route() {
