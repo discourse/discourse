@@ -1,4 +1,5 @@
 import { DEBUG } from "@glimmer/env";
+import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import {
   OPTIONAL_MISSING,
@@ -638,8 +639,46 @@ export function withTestBlockRegistration(callback) {
 }
 
 /**
+ * Stores the initial frozen state for condition registry to allow correct reset after tests.
+ * @type {boolean | null}
+ */
+let testConditionRegistryFrozenState = null;
+
+/**
+ * Temporarily unfreezes the condition type registry for testing purposes.
+ * Call this before registering condition types in tests.
+ * Only available in DEBUG mode.
+ *
+ * @param {Function} callback - Function to execute with unfrozen registry.
+ *
+ * @example
+ * ```javascript
+ * withTestConditionRegistration(() => {
+ *   _registerConditionType(MyTestCondition);
+ * });
+ * ```
+ */
+export function withTestConditionRegistration(callback) {
+  if (!DEBUG) {
+    return;
+  }
+
+  if (testConditionRegistryFrozenState === null) {
+    testConditionRegistryFrozenState = conditionTypeRegistryFrozen;
+  }
+
+  conditionTypeRegistryFrozen = false;
+  try {
+    callback();
+  } finally {
+    conditionTypeRegistryFrozen = testConditionRegistryFrozenState;
+  }
+}
+
+/**
  * Resets the block registry for testing purposes.
- * Clears all registered blocks and restores the original frozen state.
+ * Clears all registered blocks, outlets, and condition types.
+ * Restores the original frozen state.
  * Only available in DEBUG mode.
  */
 export function resetBlockRegistryForTesting() {
@@ -654,16 +693,19 @@ export function resetBlockRegistryForTesting() {
   sourceNamespaceMap.clear();
   testSourceIdentifier = undefined;
 
-  if (testRegistryFrozenState !== null) {
-    registryFrozen = testRegistryFrozenState;
-    testRegistryFrozenState = null;
-  } else {
-    registryFrozen = false;
-  }
+  // Always reset frozen state to false for testing.
+  // The saved test state is only for use during a single test, not between tests.
+  registryFrozen = false;
+  testRegistryFrozenState = null;
 
   // Reset outlet registry
   customOutletRegistry.clear();
   outletRegistryFrozen = false;
+
+  // Reset condition type registry
+  conditionTypeRegistry.clear();
+  conditionTypeRegistryFrozen = false;
+  testConditionRegistryFrozenState = null;
 }
 
 /**
@@ -776,4 +818,120 @@ export function isValidOutlet(name) {
  */
 export function getCustomOutlet(name) {
   return customOutletRegistry.get(name);
+}
+
+/*
+ * Condition Type Registration
+ */
+
+/**
+ * Registry of condition type classes registered by core, plugins, and themes.
+ * Maps condition type names to their class constructors.
+ *
+ * Unlike blocks which store component classes, conditions are stored as classes
+ * and instantiated by the Blocks service when first needed. This allows the
+ * service to set the owner for dependency injection.
+ *
+ * @type {Map<string, typeof import("discourse/blocks/conditions").BlockCondition>}
+ */
+const conditionTypeRegistry = new Map();
+
+/**
+ * Whether the condition type registry is frozen (no new registrations allowed).
+ * Frozen by the "freeze-block-registry" initializer during app boot.
+ */
+let conditionTypeRegistryFrozen = false;
+
+/**
+ * Registers a condition type class in the registry.
+ * Must be called before the registry is frozen by the "freeze-block-registry" initializer.
+ *
+ * The condition class must be decorated with `@blockCondition` and have:
+ * - `type` static property (set by the decorator)
+ * - `validArgKeys` static property (set by the decorator)
+ *
+ * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class to register.
+ *
+ * @example
+ * ```javascript
+ * import { withPluginApi } from "discourse/lib/plugin-api";
+ * import MyCondition from "../conditions/my-condition";
+ *
+ * export default {
+ *   initialize() {
+ *     withPluginApi("1.0", (api) => {
+ *       api.registerBlockConditionType(MyCondition);
+ *     });
+ *   },
+ * };
+ * ```
+ *
+ * @internal
+ */
+export function _registerConditionType(ConditionClass) {
+  if (conditionTypeRegistryFrozen) {
+    raiseBlockError(
+      `api.registerBlockConditionType() was called after the condition type registry was frozen. ` +
+        `Move your code to a pre-initializer that runs before "freeze-block-registry". ` +
+        `Condition: "${ConditionClass?.type || ConditionClass?.name}"`
+    );
+    return;
+  }
+
+  // Ensure the class was created by the @blockCondition decorator
+  if (!isDecoratedCondition(ConditionClass)) {
+    raiseBlockError(
+      `${ConditionClass.name} must use the @blockCondition decorator. ` +
+        `Manual inheritance from BlockCondition is not allowed.`
+    );
+    return;
+  }
+
+  const type = ConditionClass.type;
+
+  if (conditionTypeRegistry.has(type)) {
+    raiseBlockError(`Condition type "${type}" is already registered`);
+    return;
+  }
+
+  conditionTypeRegistry.set(type, ConditionClass);
+}
+
+/**
+ * Freezes the condition type registry, preventing further registrations.
+ * Called by the "freeze-block-registry" initializer during app boot.
+ *
+ * @internal
+ */
+export function _freezeConditionTypeRegistry() {
+  conditionTypeRegistryFrozen = true;
+}
+
+/**
+ * Returns whether the condition type registry is frozen.
+ *
+ * @returns {boolean}
+ */
+export function isConditionTypeRegistryFrozen() {
+  return conditionTypeRegistryFrozen;
+}
+
+/**
+ * Checks if a condition type is registered.
+ *
+ * @param {string} type - The condition type name.
+ * @returns {boolean}
+ */
+export function hasConditionType(type) {
+  return conditionTypeRegistry.has(type);
+}
+
+/**
+ * Returns the condition type registry Map.
+ * Used by the Blocks service to instantiate condition instances.
+ *
+ * @returns {Map<string, typeof import("discourse/blocks/conditions").BlockCondition>}
+ */
+export function getConditionTypeRegistry() {
+  return conditionTypeRegistry;
 }

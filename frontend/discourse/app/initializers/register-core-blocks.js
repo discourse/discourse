@@ -4,10 +4,11 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 /**
  * Registers core blocks from the registry.
  *
- * This pre-initializer runs before "freeze-block-registry" to ensure
- * core blocks are available before the registry is frozen.
+ * This initializer runs after "discourse-bootstrap" but before "freeze-block-registry"
+ * to ensure core blocks are available before the registry is frozen.
  */
 export default {
+  after: "discourse-bootstrap",
   before: "freeze-block-registry",
 
   initialize() {

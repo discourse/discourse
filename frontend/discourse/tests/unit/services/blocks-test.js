@@ -6,7 +6,9 @@ import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { block } from "discourse/components/block-outlet";
 import {
   _registerBlock,
+  _registerConditionType,
   withTestBlockRegistration,
+  withTestConditionRegistration,
 } from "discourse/lib/blocks/registration";
 
 module("Unit | Service | blocks", function (hooks) {
@@ -113,7 +115,7 @@ module("Unit | Service | blocks", function (hooks) {
     });
   });
 
-  module("registerConditionType", function () {
+  module("_registerConditionType", function () {
     test("registers a custom condition type", function (assert) {
       @blockCondition({
         type: "test-custom",
@@ -125,7 +127,9 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockTestCondition);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockTestCondition);
+      });
       assert.true(this.blocks.hasConditionType("test-custom"));
     });
 
@@ -139,7 +143,10 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       assert.throws(
-        () => this.blocks.registerConditionType(NotDecoratedCondition),
+        () =>
+          withTestConditionRegistration(() => {
+            _registerConditionType(NotDecoratedCondition);
+          }),
         /must use the @blockCondition decorator/
       );
     });
@@ -156,7 +163,10 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       assert.throws(
-        () => this.blocks.registerConditionType(BlockDuplicateCondition),
+        () =>
+          withTestConditionRegistration(() => {
+            _registerConditionType(BlockDuplicateCondition);
+          }),
         /already registered/
       );
     });
@@ -293,8 +303,10 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockAlwaysTrueCondition);
-      this.blocks.registerConditionType(BlockAlwaysFalseCondition);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockAlwaysTrueCondition);
+        _registerConditionType(BlockAlwaysFalseCondition);
+      });
 
       assert.true(
         this.blocks.evaluate([{ type: "always-true" }, { type: "always-true" }])
@@ -329,8 +341,10 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockAlwaysTrueCondition2);
-      this.blocks.registerConditionType(BlockAlwaysFalseCondition2);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockAlwaysTrueCondition2);
+        _registerConditionType(BlockAlwaysFalseCondition2);
+      });
 
       assert.true(
         this.blocks.evaluate({
@@ -366,8 +380,10 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockAlwaysTrueCondition3);
-      this.blocks.registerConditionType(BlockAlwaysFalseCondition3);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockAlwaysTrueCondition3);
+        _registerConditionType(BlockAlwaysFalseCondition3);
+      });
 
       assert.false(this.blocks.evaluate({ not: { type: "always-true-3" } }));
       assert.true(this.blocks.evaluate({ not: { type: "always-false-3" } }));
@@ -387,7 +403,9 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockArgCapturingCondition);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockArgCapturingCondition);
+      });
       this.blocks.evaluate({ type: "arg-capturing", foo: "bar", baz: 123 });
 
       assert.deepEqual(receivedArgs, { foo: "bar", baz: 123 });
@@ -422,8 +440,10 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockNestedTrue);
-      this.blocks.registerConditionType(BlockNestedFalse);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockNestedTrue);
+        _registerConditionType(BlockNestedFalse);
+      });
 
       // AND with OR inside: [{ any: [false, true] }] => true
       assert.true(
@@ -468,7 +488,9 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockContextCapturing);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockContextCapturing);
+      });
 
       const outletArgs = { topic: { id: 123 }, user: { admin: true } };
       this.blocks.evaluate({ type: "context-capturing" }, { outletArgs });
@@ -490,7 +512,9 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockNotOutletArgs);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockNotOutletArgs);
+      });
 
       const outletArgs = { topic: { closed: true } };
       this.blocks.evaluate(
@@ -521,7 +545,9 @@ module("Unit | Service | blocks", function (hooks) {
         }
       }
 
-      this.blocks.registerConditionType(BlockDeepOutletArgs);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockDeepOutletArgs);
+      });
 
       const outletArgs = { data: "test-value" };
 
@@ -570,7 +596,9 @@ module("Unit | Service | blocks", function (hooks) {
         }
       );
 
-      this.blocks.registerConditionType(BlockServiceInjectionCondition);
+      withTestConditionRegistration(() => {
+        _registerConditionType(BlockServiceInjectionCondition);
+      });
       this.blocks.evaluate({ type: "service-injection-test" });
 
       assert.true(!!injectedSiteSettings, "siteSettings was injected");

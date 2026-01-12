@@ -3,7 +3,7 @@ export { BlockCondition } from "./condition";
 export { blockCondition } from "./decorator";
 
 // Built-in condition classes
-// The BlockConditionEvaluator service discovers these via `import *` and inheritance check
+// Registered by the register-core-conditions pre-initializer
 export { default as BlockOutletArgCondition } from "./outlet-arg";
 export { default as BlockRouteCondition } from "./route";
 export { default as BlockUserCondition } from "./user";

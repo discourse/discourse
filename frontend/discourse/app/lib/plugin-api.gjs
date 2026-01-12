@@ -59,6 +59,7 @@ import { captureCallSite } from "discourse/lib/blocks/error";
 import {
   _registerBlock,
   _registerBlockFactory,
+  _registerConditionType,
   _registerOutlet,
 } from "discourse/lib/blocks/registration";
 import classPrepend, {
@@ -3509,9 +3510,7 @@ class _PluginApi {
    * ```
    */
   registerBlockConditionType(ConditionClass) {
-    this.container
-      .lookup("service:blocks")
-      .registerConditionType(ConditionClass);
+    _registerConditionType(ConditionClass);
   }
 
   // eslint-disable-next-line no-unused-vars

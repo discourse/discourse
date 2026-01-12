@@ -10,7 +10,9 @@ import BlockOutlet, {
 } from "discourse/components/block-outlet";
 import {
   _registerBlock,
+  _registerConditionType,
   withTestBlockRegistration,
+  withTestConditionRegistration,
 } from "discourse/lib/blocks/registration";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -38,14 +40,11 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
   hooks.beforeEach(function () {
     testOwner = getOwner(this);
 
-    const blocks = testOwner.lookup("service:blocks");
-
-    if (!blocks.hasConditionType("always-true")) {
-      blocks.registerConditionType(BlockAlwaysTrueCondition);
-    }
-    if (!blocks.hasConditionType("always-false")) {
-      blocks.registerConditionType(BlockAlwaysFalseCondition);
-    }
+    // Register test conditions for each test (registries are reset between tests)
+    withTestConditionRegistration(() => {
+      _registerConditionType(BlockAlwaysTrueCondition);
+      _registerConditionType(BlockAlwaysFalseCondition);
+    });
   });
 
   test("renders block when no conditions specified", async function (assert) {

@@ -1,12 +1,10 @@
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
-import * as conditions from "discourse/blocks/conditions";
-import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
 import { evaluateConditions } from "discourse/lib/blocks/condition-evaluator";
 import { validateConditions } from "discourse/lib/blocks/condition-validation";
-import { raiseBlockError } from "discourse/lib/blocks/error";
 import {
   blockRegistry,
+  getConditionTypeRegistry,
   isBlockFactory,
   resolveBlock,
 } from "discourse/lib/blocks/registration";
@@ -30,8 +28,8 @@ import {
  * Evaluates block render conditions at runtime:
  * - `evaluate(conditionSpec)` - Evaluate condition(s)
  * - `validate(conditionSpec)` - Validate condition(s) at registration time
- * - `registerConditionType(ConditionClass)` - Register custom condition types
  *
+ * Custom condition types are registered via `api.registerBlockConditionType()` in pre-initializers.
  * Built-in condition types are auto-discovered from `discourse/blocks/conditions`.
  *
  * Supports boolean combinators:
@@ -45,15 +43,19 @@ import {
 export default class Blocks extends Service {
   /**
    * Map of condition type names to their instances.
+   * Built lazily from the condition type registry when first accessed.
    *
    * @type {Map<string, import("discourse/blocks/conditions").BlockCondition>}
    */
-  #conditionTypes = new Map();
+  #conditionInstances = new Map();
 
-  constructor() {
-    super(...arguments);
-    this.#discoverBuiltInConditions();
-  }
+  /**
+   * Tracks which condition types have been instantiated.
+   * Used to detect new registrations and create instances for them.
+   *
+   * @type {number}
+   */
+  #lastKnownRegistrySize = 0;
 
   /*
    * Block Registry Methods
@@ -190,76 +192,44 @@ export default class Blocks extends Service {
    */
 
   /**
-   * Auto-discover and register built-in condition classes.
-   * Iterates over exports from the conditions module and registers
-   * any class that extends BlockCondition.
+   * Ensures all registered condition types have instances.
+   * Called lazily when conditions are needed, allowing condition types
+   * to be registered after the service is instantiated.
+   *
+   * This handles the case where:
+   * 1. Service is instantiated early (e.g., during plugin API usage)
+   * 2. Core conditions are registered later by the pre-initializer
+   * 3. Service needs to pick up the newly registered conditions
    */
-  #discoverBuiltInConditions() {
-    for (const exported of Object.values(conditions)) {
-      if (
-        typeof exported === "function" &&
-        exported.prototype instanceof conditions.BlockCondition &&
-        exported !== conditions.BlockCondition
-      ) {
-        this.#registerConditionType(exported);
+  #ensureConditionInstances() {
+    const registry = getConditionTypeRegistry();
+
+    // Only rebuild if registry has grown since last check
+    if (registry.size === this.#lastKnownRegistrySize) {
+      return;
+    }
+
+    // Create instances for any new condition types
+    for (const [type, ConditionClass] of registry) {
+      if (!this.#conditionInstances.has(type)) {
+        this.#createConditionInstance(type, ConditionClass);
       }
     }
+
+    this.#lastKnownRegistrySize = registry.size;
   }
 
   /**
-   * Internal registration method for condition types.
-   * Validates that the class was decorated with `@blockCondition` and creates
-   * an instance with owner set.
+   * Creates an instance of a condition class and stores it in the instances map.
+   * Sets the owner on the instance to enable service injection.
    *
-   * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass
+   * @param {string} type - The condition type name.
+   * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class.
    */
-  #registerConditionType(ConditionClass) {
-    // Ensure the class was created by the @blockCondition decorator
-    if (!isDecoratedCondition(ConditionClass)) {
-      raiseBlockError(
-        `${ConditionClass.name} must use the @blockCondition decorator. ` +
-          `Manual inheritance from BlockCondition is not allowed.`
-      );
-      return;
-    }
-
-    if (this.#conditionTypes.has(ConditionClass.type)) {
-      raiseBlockError(
-        `Condition type "${ConditionClass.type}" is already registered`
-      );
-      return;
-    }
-
+  #createConditionInstance(type, ConditionClass) {
     const instance = new ConditionClass();
     setOwner(instance, getOwner(this));
-    this.#conditionTypes.set(ConditionClass.type, instance);
-  }
-
-  /**
-   * Register a custom condition type.
-   * Used by plugins via `api.registerBlockConditionType()`.
-   *
-   * The condition class must be decorated with `@blockCondition` and extend
-   * `BlockCondition`.
-   *
-   * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass
-   *
-   * @example
-   * ```javascript
-   * import { blockCondition, BlockCondition } from "discourse/blocks/conditions";
-   *
-   * @blockCondition({
-   *   type: "my-condition",
-   *   validArgKeys: ["enabled"],
-   * })
-   * class BlockMyCondition extends BlockCondition {
-   *   evaluate(args) { return args.enabled ?? true; }
-   * }
-   * api.registerBlockConditionType(BlockMyCondition);
-   * ```
-   */
-  registerConditionType(ConditionClass) {
-    this.#registerConditionType(ConditionClass);
+    this.#conditionInstances.set(type, instance);
   }
 
   /**
@@ -275,7 +245,8 @@ export default class Blocks extends Service {
    * @throws {BlockError} If validation fails.
    */
   validate(conditionSpec) {
-    validateConditions(conditionSpec, this.#conditionTypes);
+    this.#ensureConditionInstances();
+    validateConditions(conditionSpec, this.#conditionInstances);
   }
 
   /**
@@ -290,7 +261,8 @@ export default class Blocks extends Service {
    * @returns {boolean} True if conditions pass, false otherwise.
    */
   evaluate(conditionSpec, context = {}) {
-    return evaluateConditions(conditionSpec, this.#conditionTypes, context);
+    this.#ensureConditionInstances();
+    return evaluateConditions(conditionSpec, this.#conditionInstances, context);
   }
 
   /**
@@ -300,7 +272,8 @@ export default class Blocks extends Service {
    * @returns {boolean}
    */
   hasConditionType(type) {
-    return this.#conditionTypes.has(type);
+    this.#ensureConditionInstances();
+    return this.#conditionInstances.has(type);
   }
 
   /**
@@ -310,6 +283,7 @@ export default class Blocks extends Service {
    * @returns {string[]}
    */
   getRegisteredConditionTypes() {
-    return [...this.#conditionTypes.keys()];
+    this.#ensureConditionInstances();
+    return [...this.#conditionInstances.keys()];
   }
 }

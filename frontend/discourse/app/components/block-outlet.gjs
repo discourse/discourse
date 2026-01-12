@@ -745,9 +745,6 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
     callSiteError = captureCallSite(renderBlocks);
   }
 
-  // Get blocks service for condition validation if owner is provided
-  const blocksService = owner?.lookup("service:blocks");
-
   // === Synchronous validation for outlet-level checks ===
   // These don't depend on block resolution and can fail fast.
 
@@ -763,8 +760,9 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
     raiseBlockError(`Unknown block outlet: ${outletName}`);
   }
 
-  // Verify registry is frozen before allowing renderBlocks().
-  // This ensures all blocks are registered before any layout configuration.
+  // Verify registries are frozen before allowing renderBlocks().
+  // This ensures all blocks and conditions are registered before any layout configuration.
+  // MUST happen before service lookup to avoid instantiating service with empty registries.
   if (!isBlockRegistryFrozen()) {
     raiseBlockError(
       `api.renderBlocks() was called before the block registry was frozen. ` +
@@ -772,6 +770,9 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
         `Outlet: "${outletName}"`
     );
   }
+
+  // Get blocks service for condition validation (safe now that registries are frozen)
+  const blocksService = owner?.lookup("service:blocks");
 
   // All block validation is async (handles both class refs and string refs).
   // In dev mode, this eagerly resolves all factories for early error detection.
