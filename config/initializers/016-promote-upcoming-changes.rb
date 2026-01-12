@@ -10,7 +10,7 @@ Rails.application.config.after_initialize { UpcomingChanges::AutoPromotionInitia
 
 class UpcomingChanges::AutoPromotionInitializer
   def self.log_prefix(site)
-    "[Upcoming changes promoter (#{site})]:"
+    "[Upcoming changes promoter (#{site})]: "
   end
 
   def self.verbose_log(site, level, message)
