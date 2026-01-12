@@ -294,8 +294,12 @@ body.wizard {
   }
 
   &__radio {
+    // these must be accessible in the DOM for accessibilty
+    // so we can't use visibility: hidden or display: none
     position: absolute;
-    visibility: hidden;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
   }
 
   &__radio-choices {
@@ -319,6 +323,13 @@ body.wizard {
         border-color: var(--tertiary-high);
         border-width: 2px;
         margin: 0;
+      }
+    }
+
+    &:focus-within {
+      .wizard-container__label {
+        outline: 2px solid var(--d-input-focused-color);
+        outline-offset: 2px;
       }
     }
 
