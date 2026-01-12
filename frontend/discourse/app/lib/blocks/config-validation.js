@@ -302,6 +302,8 @@ export async function resolveBlockForValidation(
  * user-provided args. Names starting with underscore are also reserved.
  */
 export const RESERVED_ARG_NAMES = Object.freeze([
+  "args",
+  "block",
   "classNames",
   "outletArgs",
   "outletName",
@@ -319,8 +321,8 @@ export const RESERVED_ARG_NAMES = Object.freeze([
  */
 export const VALID_CONFIG_KEYS = Object.freeze([
   "block", // Block class or name (required)
-  "args", // Arguments to pass to the block
   "conditions", // Conditions for rendering
+  "args", // Arguments to pass to the block
   "classNames", // CSS classes to add to wrapper
   "children", // Nested block configurations
 ]);

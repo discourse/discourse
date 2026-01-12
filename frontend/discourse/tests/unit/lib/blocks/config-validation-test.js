@@ -11,6 +11,8 @@ import {
 module("Unit | Lib | blocks/config-validation", function () {
   module("RESERVED_ARG_NAMES", function () {
     test("includes expected reserved names", function (assert) {
+      assert.true(RESERVED_ARG_NAMES.includes("args"));
+      assert.true(RESERVED_ARG_NAMES.includes("block"));
       assert.true(RESERVED_ARG_NAMES.includes("classNames"));
       assert.true(RESERVED_ARG_NAMES.includes("outletName"));
       assert.true(RESERVED_ARG_NAMES.includes("children"));
