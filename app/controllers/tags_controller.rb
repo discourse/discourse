@@ -151,8 +151,7 @@ class TagsController < ::ApplicationController
         end
 
       if @tag
-        # synonym redirect
-        if @tag.target_tag_id.present?
+        if @tag.target_tag_id.present? && @tag.target_tag_id != @tag.id
           return redirect_to_correct_tag(@tag.target_tag, filter: filter == :latest ? nil : filter)
         end
 
@@ -606,6 +605,7 @@ class TagsController < ::ApplicationController
           id: t.id,
           text: t.name,
           name: t.name,
+          slug: t.slug.presence || "#{t.id}-tag",
           description: t.description,
           count: topic_count,
           pm_only: topic_count == 0 && t.pm_topic_count > 0,
@@ -689,9 +689,17 @@ class TagsController < ::ApplicationController
 
   def url_method(opts = {})
     if opts[:category_slug_path_with_id]
-      "tag_category_#{action_name}_path"
+      if opts[:tag_id]
+        "tag_category_#{action_name}_path"
+      else
+        "tag_category_#{action_name}_by_name_path"
+      end
     else
-      "tag_#{action_name}_path"
+      if opts[:tag_id]
+        "tag_#{action_name}_path"
+      else
+        "tag_#{action_name}_by_name_path"
+      end
     end
   end
 
