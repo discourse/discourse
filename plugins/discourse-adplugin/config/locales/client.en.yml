@@ -39,6 +39,8 @@ en:
           show_to_anons: "Show to anonymous users"
           show_to_logged_in_users: "Show to logged in users"
           category_chooser_description: "Choose the categories where this ad should be displayed or leave empty to show the ad everywhere. The `no_ads_for_categories` site setting has priority over this setting."
+          category_chooser_description_with_routes: "Choose the categories where this ad should be displayed. Leave this and route selections empty to show the ad everywhere. The `no_ads_for_categories` site setting has priority over this setting."
+          route_chooser_description: "Choose the pages/routes where this ad should be displayed. Leave this and category selections empty to show the ad everywhere."
           group_chooser_description: "Choose the groups that can view this ad or leave empty to show the ad to all signed in users."
           preview: "Preview"
 

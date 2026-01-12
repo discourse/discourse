@@ -35,6 +35,7 @@ en:
     house_ads_after_nth_post: 'If "Between posts" house ads are defined, show an ad after every N posts, where N is this value.'
     house_ads_frequency: "If other ad networks are configured to show in an ad slot, how often should house ads be shown, as a percentage."
     ads_txt: "Contents of your ads.txt file. More details available at <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>this Google AdSense help page</a>."
+    ad_plugin_routes_enabled: "Enable route targeting for house ads"
 
     dfp_publisher_id: "Input your Google Ad Manager (formerly called DFP) network code, which is found in your network settings. NOTE: You will need to update the 'content security policy script src' setting. See <a href='https://meta.discourse.org/t/33734' target='_blank'>this topic</a> for the latest instructions."
     dfp_publisher_id_mobile: "(Optional) If you want to use a different Ad Manager publisher id for the mobile version of the site, enter it here. Leave blank to use dfp_publisher_id on mobile."

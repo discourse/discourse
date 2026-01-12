@@ -8,10 +8,19 @@ module AdPlugin
                :visible_to_logged_in_users,
                :visible_to_anons,
                :created_at,
-               :updated_at
+               :updated_at,
+               :routes
 
     has_many :groups, serializer: ::BasicGroupSerializer, embed: :objects
     has_many :categories, serializer: ::BasicCategorySerializer, embed: :objects
+
+    def routes
+      object.route_names
+    end
+
+    def include_routes?
+      SiteSetting.ad_plugin_routes_enabled
+    end
 
     def include_groups?
       @options[:include_groups]
