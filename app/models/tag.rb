@@ -135,6 +135,16 @@ class Tag < ActiveRecord::Base
     self.find_by("lower(name) = ?", name.downcase)
   end
 
+  def self.find_by_slug_or_id(slug_or_id, tag_id = nil)
+    if tag_id.present?
+      find_by(id: tag_id)
+    elsif slug_or_id =~ /\A\d+\z/
+      find_by(id: slug_or_id)
+    else
+      find_by_name(slug_or_id)
+    end
+  end
+
   def self.top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
     # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
     # than the limit. Frontend is responsible to enforce limit.
@@ -207,13 +217,13 @@ class Tag < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_path}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_path}/tag/#{slug_for_url}/#{id}"
   end
 
   alias_method :relative_url, :url
 
   def full_url
-    "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_url}/tag/#{slug_for_url}/#{id}"
   end
 
   def slug_for_url
