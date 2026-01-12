@@ -117,7 +117,8 @@ export default class ChatemojiReactions {
   get canInteractWithMessage() {
     return (
       !this.message?.deletedAt &&
-      this.message?.channel?.canModifyMessages(this.currentUser)
+      this.message?.channel?.canModifyMessages(this.currentUser) &&
+      this.message?.channel?.isFollowing
     );
   }
 
@@ -137,7 +138,9 @@ export default class ChatemojiReactions {
 
   get canReply() {
     return (
-      this.canInteractWithMessage && this.context !== MESSAGE_CONTEXT_THREAD
+      this.canInteractWithMessage &&
+      this.context !== MESSAGE_CONTEXT_THREAD &&
+      this.message?.channel?.isFollowing
     );
   }
 
