@@ -145,7 +145,7 @@ RSpec.describe TagGroup do
       )
     end
 
-    it "returns empty when no match found" do
+    it "returns an empty array when no match is found" do
       expect(TagGroup.where_name("nonexistent")).to be_empty
     end
   end
