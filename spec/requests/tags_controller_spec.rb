@@ -433,8 +433,8 @@ RSpec.describe TagsController do
     it "should handle synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
       get "/tag/#{synonym.name}/l/top.json?period=daily"
-      expect(response.status).to eq(302)
-      expect(response.redirect_url).to match(%r{/tag/#{tag.name}/l/top.json\?period=daily})
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to match(%r{/tag/test/#{tag.id}/l/top\.json\?period=daily})
     end
 
     it "is not creating infinite redirect loop when tag is a synonym of itself" do
@@ -452,7 +452,7 @@ RSpec.describe TagsController do
 
       sign_in(admin)
 
-      get "/tag/test"
+      get "/tag/test/#{tag.id}"
       expect(response.status).to eq(200)
     end
 
@@ -480,7 +480,7 @@ RSpec.describe TagsController do
 
     it "puts the tag description in the meta description" do
       described_tag = Fabricate(:tag, name: "test2", description: "This is a description")
-      get "/tag/#{described_tag.name}"
+      get "/tag/test2/#{described_tag.id}"
 
       expect(response.status).to eq(200)
 
@@ -490,7 +490,7 @@ RSpec.describe TagsController do
     end
 
     it "has a default description for tags without a description" do
-      get "/tag/test"
+      get "/tag/test/#{tag.id}"
 
       expect(response.status).to eq(200)
 
@@ -857,7 +857,7 @@ RSpec.describe TagsController do
       end
 
       it "can render a topic list from the latest endpoint" do
-        get "/tag/#{tag.name}/l/latest"
+        get "/tag/#{tag.name}/#{tag.id}/l/latest"
         expect(response.status).to eq(200)
         expect(response.body).to include("topic-list")
       end

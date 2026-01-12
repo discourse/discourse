@@ -464,7 +464,7 @@ module DiscourseTagging
       end
 
     sql << <<~SQL
-      SELECT #{distinct_clause} t.id, t.name, t.#{topic_count_column}, t.pm_topic_count, t.description,
+      SELECT #{distinct_clause} t.id, t.name, t.slug, t.#{topic_count_column}, t.pm_topic_count, t.description,
         tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
         tgr.one_per_topic as one_per_topic, t.target_tag_id
       FROM tags t
