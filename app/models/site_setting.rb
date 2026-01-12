@@ -110,7 +110,8 @@ class SiteSetting < ActiveRecord::Base
             end
           end
 
-        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
+        # Always call ensure_exist! to clean up old references when uploads are removed
+        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       end
     end
   end
