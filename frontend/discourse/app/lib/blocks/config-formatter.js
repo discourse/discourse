@@ -109,6 +109,37 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
   }
 
   /**
+   * Renders the remaining path segments for a missing key.
+   * Returns an array of lines to be joined.
+   *
+   * @param {Array<string|number>} segments - Remaining path segments.
+   * @param {number} depth - Current indentation depth.
+   * @returns {Array<string>} Array of formatted lines.
+   */
+  function renderMissingPath(segments, depth) {
+    const indent = "  ".repeat(depth);
+    const lines = [];
+
+    if (segments.length === 0) {
+      return lines;
+    }
+
+    const [seg, ...rest] = segments;
+
+    if (rest.length === 0) {
+      // Final segment - show as missing with error marker
+      lines.push(`${indent}  ${seg}: <missing>, // <-- error here`);
+    } else {
+      // Intermediate segment - open nested object
+      lines.push(`${indent}  ${seg}: { // <-- missing`);
+      lines.push(...renderMissingPath(rest, depth + 1));
+      lines.push(`${indent}  },`);
+    }
+
+    return lines;
+  }
+
+  /**
    * Recursively renders the config object with highlighting.
    * Shows all keys at each level, but truncates values not on the error path.
    *
@@ -203,13 +234,17 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
     // Object
     const keys = Object.keys(obj);
 
-    // Check if we need to render a synthetic entry for a non-existent error key.
-    // This must be checked before the empty object early return.
-    const atErrorParent =
-      isOnErrorPath && currentPath.length === errorSegments.length - 1;
-    const errorKeyMissing = atErrorParent && !keys.includes(errorKey);
+    // Check if we need to render a synthetic entry for a missing key on the error path.
+    // This handles both:
+    // 1. Final missing key (e.g., "nme" typo when "name" exists)
+    // 2. Intermediate missing key (e.g., "args" missing entirely when error is "args.name")
+    const nextErrorSegment = errorSegments[currentPath.length];
+    const needsSyntheticEntry =
+      isOnErrorPath &&
+      typeof nextErrorSegment === "string" &&
+      !keys.includes(nextErrorSegment);
 
-    if (keys.length === 0 && !errorKeyMissing) {
+    if (keys.length === 0 && !needsSyntheticEntry) {
       return "{}";
     }
 
@@ -244,11 +279,25 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
       }
     }
 
-    // Handle error pointing to a non-existent key (e.g., typo in arg name).
-    // If we're at the parent of the error and the error key doesn't exist,
-    // render a synthetic entry to show where the invalid key was referenced.
-    if (errorKeyMissing) {
-      lines.push(`${indent}  ${errorKey}: <invalid>, // <-- error here`);
+    // Handle missing keys on the error path - render synthetic entry showing the path
+    // This covers both intermediate missing keys (e.g., "args" when error is "args.name")
+    // and final missing keys (e.g., typo "nme" when "name" exists)
+    if (needsSyntheticEntry) {
+      const remainingPath = errorSegments.slice(currentPath.length);
+      const isAtFinalKey = remainingPath.length === 1;
+
+      if (isAtFinalKey) {
+        // Final key is missing - show as missing
+        lines.push(
+          `${indent}  ${nextErrorSegment}: <missing>, // <-- error here`
+        );
+      } else {
+        // Intermediate key is missing - show the path through it
+        // Put the missing comment on the opening brace line
+        lines.push(`${indent}  ${nextErrorSegment}: { // <-- missing`);
+        lines.push(...renderMissingPath(remainingPath.slice(1), depth + 1));
+        lines.push(`${indent}  },`);
+      }
     }
 
     lines.push(`${indent}}`);

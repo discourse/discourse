@@ -63,7 +63,7 @@ module("Unit | Blocks | config-formatter", function () {
       const result = formatConfigWithErrorPath(config, "args.nme");
 
       assert.true(
-        result.includes("nme: <invalid>, // <-- error here"),
+        result.includes("nme: <missing>, // <-- error here"),
         "should render synthetic entry for missing key 'nme'"
       );
       // Sibling keys are shown with their values (hybrid approach)
@@ -120,7 +120,7 @@ module("Unit | Blocks | config-formatter", function () {
       const result = formatConfigWithErrorPath(config, "blocks[0].args.nme");
 
       assert.true(
-        result.includes("nme: <invalid>, // <-- error here"),
+        result.includes("nme: <missing>, // <-- error here"),
         "should render synthetic entry at nested path"
       );
     });
@@ -134,8 +134,33 @@ module("Unit | Blocks | config-formatter", function () {
       const result = formatConfigWithErrorPath(config, "args.missingKey");
 
       assert.true(
-        result.includes("missingKey: <invalid>, // <-- error here"),
+        result.includes("missingKey: <missing>, // <-- error here"),
         "should render synthetic entry in empty object"
+      );
+    });
+
+    test("shows missing intermediate key when entire parent is absent", function (assert) {
+      // When "args" is completely missing and error is "args.name"
+      const config = {
+        block: "group",
+        children: [{ block: "child1" }, { block: "child2" }],
+      };
+
+      const result = formatConfigWithErrorPath(config, "args.name");
+
+      // Should show args as missing with nested path to the error
+      assert.true(result.includes("args:"), "should show missing 'args' key");
+      assert.true(
+        result.includes("// <-- missing"),
+        "should indicate 'args' is missing"
+      );
+      assert.true(
+        result.includes("name: <missing>"),
+        "should show nested missing 'name' key"
+      );
+      assert.true(
+        result.includes("// <-- error here"),
+        "should show error marker on final key"
       );
     });
 
@@ -147,12 +172,12 @@ module("Unit | Blocks | config-formatter", function () {
       };
 
       const result = formatConfigWithErrorPath(config, "args.name");
-      const invalidCount = (result.match(/<invalid>/g) || []).length;
+      const invalidCount = (result.match(/<missing>/g) || []).length;
 
       assert.strictEqual(
         invalidCount,
         0,
-        "should not add <invalid> when key exists"
+        "should not add <missing> when key exists"
       );
     });
 
