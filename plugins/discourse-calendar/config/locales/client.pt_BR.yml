@@ -418,7 +418,7 @@ pt_BR:
               title: "Independente"
               description: "Não é possível entrar em um evento independente."
             public:
-              title: "Público(a)"
+              title: "Público"
               description: "Qualquer pessoa pode participar de um evento público."
             private:
               title: "Privado(a)"

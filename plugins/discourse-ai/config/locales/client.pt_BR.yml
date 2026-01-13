@@ -277,6 +277,15 @@ pt_BR:
         card: "Cartão"
       translations:
         title: "Traduções"
+        description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
+        admin_actions:
+          disabled_state:
+            configure: "Configurar traduções"
+            empty_label: "As traduções automáticas estão desabilitadas, clique abaixo para configurar"
+        progress_chart:
+          title: "Progresso da tradução"
+          completed: "Completo"
+          remaining: "Restante"
       spam:
         short_title: "Spam"
         title: "Configurar tratamento de spam"
