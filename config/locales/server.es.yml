@@ -1040,12 +1040,9 @@ es:
     no_log_search_queries: "Los registros de consultas de búsqueda están actualmente desactivados (un administrador puede activarlos en los ajustes del sitio)."
   email_settings:
     pop3_authentication_error: "Ha habido un problema con las credenciales POP3 proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
-    imap_authentication_error: "Ha habido un problema con las credenciales IMAP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
-    imap_no_response_error: "Se ha producido un error al comunicarse con el servidor IMAP. %{message}"
     smtp_authentication_error: "Se ha producido un problema con las credenciales SMTP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo. %{message}"
     smtp_server_busy_error: "El servidor SMTP está ocupado actualmente, inténtalo de nuevo más tarde."
     smtp_unhandled_error: "Se ha producido un error no gestionado al comunicarse con el servidor SMTP. %{message}"
-    imap_unhandled_error: "Se ha producido un error no gestionado al comunicarse con el servidor IMAP. %{message}"
     connection_error: "Ha habido un problema de conexión con el servidor, comprueba el nombre del servidor y el puerto e inténtalo de nuevo."
     timeout_error: "La conexión con el servidor se ha interrumpido, comprueba el nombre y el puerto del servidor e inténtalo de nuevo."
     unhandled_error: "Error no controlado al probar la configuración del correo electrónico. %{message}"
@@ -2152,14 +2149,7 @@ es:
     email_in_allowed_groups: "Grupos que pueden enviar nuevos temas por correo electrónico. Los administradores y moderadores siempre pueden enviar nuevos temas por correo electrónico."
     email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Consulta: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
     email_in_spam_header: "Selecciona el encabezado de correo electrónico específico que se utilizará para identificar el correo no deseado. Esta opción puede ser X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict, y el correo electrónico se etiqueta como correo no deseado en función del valor del encabezado. Por ejemplo, si la opción elegida es X-Spam-Flag, un correo electrónico con este valor de encabezado establecido en SÍ se clasificaría como correo no deseado."
-    enable_imap: "Activar IMAP para sincronizar mensajes de grupo."
-    enable_imap_write: "Activar sincronización IMAP bidireccional. Si está desactivado, todas las operaciones de escritura en cuentas IMAP están desactivadas."
-    enable_imap_idle: "Usar el mecanismo IMAP IDLE para esperar nuevos correos electrónicos."
     enable_smtp: "Activar SMTP para enviar notificaciones de mensajes de grupo."
-    imap_polling_period_mins: "El período, en minutos, entre las comprobaciones de mensajes de correo electrónico en las cuentas IMAP."
-    imap_polling_old_emails: "El número máximo de correos electrónicos antiguos (procesados) que se actualizarán cada vez que se sondee una bandeja IMAP (0 para todos)."
-    imap_polling_new_emails: "El número máximo de correos electrónicos nuevos (sin procesar) que se actualizarán cada vez que se sondee una bandeja IMAP."
-    imap_batch_import_email: "El número mínimo de correos electrónicos nuevos que activan el modo de importación (desactiva las alertas de publicaciones)."
     email_prefix: "La [label] utilizada en el asunto de los correos electrónicos. Si no está configurado, será por defecto el 'título'."
     email_site_title: "El título del sitio utilizado como remitente de los correos electrónicos desde el sitio. Si no está configurado, será por defecto «título». Si tu «título» contiene caracteres que no están permitidos en las cadenas del remitente del correo electrónico, usa esta opción."
     find_related_post_with_key: "Solo usar la «clave de respuesta» para encontrar la publicación a la que se le respondió. ADVERTENCIA: desactivar esto permitirá al usuario hacerse pasar por otro basado en las direcciones de correo electrónico."
@@ -4935,6 +4925,8 @@ es:
     deprecation_error_label: Hacer que las depreciaciones de Javascript produzcan un error
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."
+  dev_mode:
+    enter: "Intro"
   wizard:
     title: "Instalación de Discourse"
     step:
@@ -5032,8 +5024,6 @@ es:
     api_post_delete: "Eliminado mediante API"
     reminder_deleted: "Reemplazado por un recordatorio nuevo"
     user_associated_posts_deleted: "El usuario ha sido destruido"
-    imap_email_deleted: "El correo electrónico se ha eliminado del servidor IMAP"
-    imap_email_marked_as_spam: "El correo electrónico se ha movido a la carpeta de correo no deseado del servidor IMAP"
     auto_deleted_hidden_posts: "Publicaciones ocultas destruidas automáticamente"
     seed_data_topic_updated: "Tema de datos de semillas actualizado"
     seed_data_topic_deleted: "Tema de datos de semillas eliminado"

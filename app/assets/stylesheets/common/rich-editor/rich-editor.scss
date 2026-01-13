@@ -421,6 +421,7 @@
 
     &.ProseMirror-selectednode {
       user-select: none;
+      cursor: zoom-in;
     }
   }
 }

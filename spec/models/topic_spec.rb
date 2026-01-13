@@ -3508,7 +3508,7 @@ RSpec.describe Topic do
     fab!(:group) do
       Fabricate(
         :group,
-        smtp_server: "imap.gmail.com",
+        smtp_server: "smtp.gmail.com",
         smtp_port: 587,
         email_username: "discourse@example.com",
         email_password: "discourse@example.com",

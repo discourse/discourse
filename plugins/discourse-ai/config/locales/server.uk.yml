@@ -563,7 +563,6 @@ uk:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Отриманий вміст %{file_paths} з %{repo_name}@%{branch}"
         random_picker: "Вибір із %{options}, вибрано: %{result}"
-        flag_post: "Позначення допису %{post_id} (вердикт: %{verdict})"
         read: "Читання: <a href='%{url}'>%{title}</a>"
         time: "Час у %{timezone} %{time}"
         summarize: "Підсумок <a href='%{url}'>%{title}</a>"

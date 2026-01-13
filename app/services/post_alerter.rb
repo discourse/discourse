@@ -817,9 +817,8 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    # To simplify things and to avoid IMAP double sync issues, and to cut down
-    # on emails sent via SMTP, any topic_allowed_users (except those who are
-    # not_allowed?) for a group that has SMTP enabled will have their notification
+    # To simplify things and to cut down on emails sent via SMTP, any topic_allowed_users
+    # (except those who are not_allowed?) for a group that has SMTP enabled will have their notification
     # email combined into one and sent via a single group SMTP email with CC addresses.
     emails_to_skip_send = email_using_group_smtp_if_configured(post)
 

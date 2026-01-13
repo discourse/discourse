@@ -1231,9 +1231,7 @@ cs:
           self_lockout: "Chystáte se změnit viditelnost skupiny způsobem, který vám odebere přístup. Opravdu chcete pokračovat?"
         email:
           title: "Email"
-          status: "Synchronizováno %{old_emails} / %{total_emails} e-mailů přes IMAP."
           enable_smtp: "Povolit SMTP"
-          enable_imap: "Povolit IMAP"
           test_settings: "Otestovat nastavení"
           save_settings: "Uložit nastavení"
           last_updated: "Poslední aktualizace:"
@@ -1242,14 +1240,7 @@ cs:
           smtp_settings_valid: "Nastavení SMTP je platné."
           smtp_title: "SMTP"
           smtp_instructions: "Pokud pro skupinu povolíte SMTP, budou všechny odchozí e-maily odeslané ze schránky skupiny odesílány prostřednictvím zde zadaných nastavení SMTP namísto poštovního serveru nakonfigurovaného pro ostatní e-maily odesílané fórem."
-          imap_title: "IMAP"
-          imap_additional_settings: "Další nastavení"
-          imap_instructions: 'Pokud pro skupinu povolíte IMAP, budou e-maily synchronizovány mezi doručenou poštou skupiny a poskytnutým serverem IMAP a poštovní schránkou. Před povolením protokolu IMAP musí být povolen protokol SMTP s platnými a otestovanými pověřeními. Uživatelské jméno a heslo e-mailu použité pro SMTP budou použity i pro IMAP. Další informace naleznete v oznámení o funkci <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">na webu Discourse Meta</a>.'
-          imap_alpha_warning: "Varování: Jedná se o funkci ve fázi alfa. Oficiálně je podporován pouze Gmail. Používání na vlastní nebezpečí!"
-          imap_settings_valid: "Nastavení IMAP je platné."
-          smtp_disable_confirm: "Pokud zakážete SMTP, budou resetována všechna nastavení SMTP a IMAP a související funkce budou zakázány. Jste si jistý, že chcete pokračovat?"
-          imap_disable_confirm: "Pokud deaktivujete IMAP, všechna nastavení IMAP budou resetována a související funkce budou deaktivovány. Jste si jistý, že chcete pokračovat?"
-          imap_mailbox_not_selected: "Pro tuto konfiguraci IMAP musíte vybrat poštovní schránku, jinak nebudou synchronizovány žádné poštovní schránky!"
+          additional_settings: "Další nastavení"
           prefill:
             title: "Předvyplnění s nastavením pro:"
             gmail: "Gmail"
@@ -1264,9 +1255,6 @@ cs:
             smtp_server: "SMTP server"
             smtp_port: "SMTP port"
             smtp_ssl_mode: "Režim SSL"
-            imap_server: "IMAP server"
-            imap_port: "IMAP port"
-            imap_ssl: "Použít SSL pro IMAP"
             username: "Uživatelské jméno"
             password: "Heslo"
           settings:
@@ -1275,10 +1263,6 @@ cs:
             allow_unknown_sender_topic_replies_hint: "Umožňuje neznámým odesílatelům odpovědět na skupinová témata. Pokud toto není povoleno, odpovědi z e-mailových adres, které ještě nebyly pozvány do tématu, vytvoří nové téma."
             from_alias: "Z aliasu"
             from_alias_hint: "Alias, který se použije jako adresa odesílatele při odesílání skupinových e-mailů přes SMTP. Upozorňujeme, že toto nemusí být podporováno všemi poskytovateli pošty. Podívejte se prosím do dokumentace poskytovatele pošty."
-          mailboxes:
-            synchronized: "Synchronizovaná schránka"
-            none_found: "Na tomto e-mailovém účtu nebyly nalezeny žádné schránky."
-            disabled: "Zakázáno"
         membership:
           title: Členství
           access: Přístup

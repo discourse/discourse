@@ -43,7 +43,7 @@ import { i18n } from "discourse-i18n";
 
 let _components = {};
 
-const pluginReviewableParams = {};
+export const pluginReviewableParams = {};
 const reviewableTypeLabels = {};
 
 // The mappings defined here are default core mappings, and cannot be overridden
@@ -51,7 +51,7 @@ const reviewableTypeLabels = {};
 const defaultActionModalClassMap = {
   revise_and_reject_post: ReviseAndRejectPostReviewable,
 };
-const actionModalClassMap = { ...defaultActionModalClassMap };
+export const actionModalClassMap = { ...defaultActionModalClassMap };
 
 export function addPluginReviewableParam(reviewableType, param) {
   pluginReviewableParams[reviewableType]

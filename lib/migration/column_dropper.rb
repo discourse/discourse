@@ -8,7 +8,8 @@ module Migration
       has_default = DB.query_single(<<~SQL, table_name: table_name, column_name: column_name).first
         SELECT column_default IS NOT NULL
         FROM information_schema.columns
-        WHERE table_name = :table_name
+        WHERE table_schema = 'public'
+        AND table_name = :table_name
         AND column_name = :column_name
       SQL
 

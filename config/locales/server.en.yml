@@ -1136,12 +1136,9 @@ en:
 
   email_settings:
     pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."
-    imap_authentication_error: "There was an issue with the IMAP credentials provided, check the username and password and try again."
-    imap_no_response_error: "An error occurred when communicating with the IMAP server. %{message}"
     smtp_authentication_error: "There was an issue with the SMTP credentials provided, check the username and password and try again. %{message}"
     smtp_server_busy_error: "The SMTP server is currently busy, try again later."
     smtp_unhandled_error: "There was an unhandled error when communicating with the SMTP server. %{message}"
-    imap_unhandled_error: "There was an unhandled error when communicating with the IMAP server. %{message}"
     connection_error: "There was an issue connecting with the server, check the server name and port and try again."
     timeout_error: "Connection to the server timed out, check the server name and port and try again."
     unhandled_error: "Unhandled error when testing email settings. %{message}"
@@ -2379,15 +2376,7 @@ en:
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "Selects the specific email header to use for identifying spam. This option can be X-Spam-Flag, X-Spam-Status, or X-SES-Spam-Verdict, and the email is tagged as spam based on the header's value. For instance, if the chosen setting is X-Spam-Flag, an email with this header value set to YES would be classified as spam."
 
-    enable_imap: "Enable IMAP for synchronizing group messages."
-    enable_imap_write: "Enable two-way IMAP synchronization. If disabled, all write-operations on IMAP accounts are disabled."
-    enable_imap_idle: "Use IMAP IDLE mechanism to wait for new emails."
     enable_smtp: "Enable SMTP for sending notifications for group messages."
-
-    imap_polling_period_mins: "The period in minutes between checking the IMAP accounts for emails."
-    imap_polling_old_emails: "The maximum number of old emails (processed) to be updated every time an IMAP box is polled (0 for all)."
-    imap_polling_new_emails: "The maximum number of new emails (unprocessed) to be updated every time an IMAP box is polled ."
-    imap_batch_import_email: "The minimum number of new emails that trigger import mode (disables notifications for imported posts)."
 
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
@@ -5550,6 +5539,10 @@ en:
     deprecation_error_label: Make Javascript deprecations raise an error
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
+  dev_mode:
+    title: "Developer Mode"
+    enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
+    enter: "Enter"
   wizard:
     title: "Discourse Setup"
     step:
@@ -5663,8 +5656,6 @@ en:
     api_post_delete: "Deleted via API"
     reminder_deleted: "Replaced by new reminder"
     user_associated_posts_deleted: "User was destroyed"
-    imap_email_deleted: "Email has been deleted on the IMAP server"
-    imap_email_marked_as_spam: "Email has been moved to spam on the IMAP server"
     auto_deleted_hidden_posts: "Automatically destroyed hidden posts"
     seed_data_topic_updated: "Seed data topic updated"
     seed_data_topic_deleted: "Seed data topic deleted"

@@ -142,7 +142,6 @@ class PostDestroyer
           @opts.slice(:context),
         )
       end
-      update_imap_sync(@post, false)
       if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
         Discourse.clear_urls!
       end
@@ -250,12 +249,15 @@ class PostDestroyer
             ignore(@post.reviewable_flag)
           end
         elsif reviewable = @post.reviewable_flag
-          @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
+          if @opts[:defer_flags]
+            ignore(reviewable)
+          else
+            agree(reviewable) unless reviewable.potentially_illegal?
+          end
         end
       end
     end
 
-    update_imap_sync(@post, true) if @post.topic&.deleted_at
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients!(permanent? ? :destroyed : :deleted) if @post.topic
     if @post.topic && @post.post_number == 1
@@ -506,13 +508,6 @@ class PostDestroyer
       # Update stats of all people who replied
       update_post_counts(:decrement)
     end
-  end
-
-  def update_imap_sync(post, sync)
-    return if !SiteSetting.enable_imap
-    incoming = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id)
-    return if !incoming || !incoming.imap_uid
-    incoming.update(imap_sync: sync)
   end
 
   def update_post_counts(operator)
