@@ -13,6 +13,7 @@ import ConditionsTree from "./conditions-tree";
  * @param {string} blockName - The name of the block
  * @param {string} debugLocation - The hierarchy path where the block is rendered
  * @param {Object} blockArgs - Arguments passed to the block
+ * @param {Object} [containerArgs] - Container arguments passed from parent container's childArgs
  * @param {Object} conditions - Conditions that were evaluated
  * @param {Object} [outletArgs] - Outlet arguments available to the block
  * @param {Component} WrappedComponent - The actual block component to render
@@ -41,6 +42,19 @@ export default class BlockInfo extends Component {
   }
 
   /**
+   * Checks whether this block has container args from a parent container.
+   * Used to conditionally render the container args section in the tooltip.
+   *
+   * @returns {boolean} True if the block has container args.
+   */
+  get hasContainerArgs() {
+    return (
+      this.args.containerArgs != null &&
+      Object.keys(this.args.containerArgs).length > 0
+    );
+  }
+
+  /**
    * Checks whether this block has outlet args available.
    * Used to conditionally render the outlet args section in the tooltip.
    *
@@ -60,7 +74,12 @@ export default class BlockInfo extends Component {
    * @returns {boolean} True if there is nothing to display in the tooltip.
    */
   get isEmpty() {
-    return !this.hasConditions && !this.hasArgs && !this.hasOutletArgs;
+    return (
+      !this.hasConditions &&
+      !this.hasArgs &&
+      !this.hasContainerArgs &&
+      !this.hasOutletArgs
+    );
   }
 
   <template>
@@ -103,6 +122,13 @@ export default class BlockInfo extends Component {
               <div class="block-debug-tooltip__section">
                 <div class="block-debug-tooltip__section-title">Arguments</div>
                 <ArgsTable @args={{@blockArgs}} />
+              </div>
+            {{/if}}
+
+            {{#if this.hasContainerArgs}}
+              <div class="block-debug-tooltip__section">
+                <div class="block-debug-tooltip__section-title">Container Args</div>
+                <ArgsTable @args={{@containerArgs}} />
               </div>
             {{/if}}
 

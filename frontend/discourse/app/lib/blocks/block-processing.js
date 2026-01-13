@@ -134,6 +134,7 @@ export function createGhostBlock({
       name: blockName,
       Component: null,
       args: blockConfig.args,
+      containerArgs: blockConfig.containerArgs,
       conditions: blockConfig.conditions,
       conditionsPassed: false,
       failureReason: blockConfig.__failureReason,

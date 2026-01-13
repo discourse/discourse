@@ -127,7 +127,10 @@ class BlockDebugLogger {
    * @param {string} options.currentPath - The current URL path (normalized).
    * @param {Array} [options.expectedUrls] - URL patterns to match (if using urls).
    * @param {Array} [options.excludeUrls] - URL patterns to exclude (if using excludeUrls).
-   * @param {Object} options.actualParams - Current route params.
+   * @param {Array} [options.pages] - Page types to match (e.g., ["CATEGORY_PAGES"]).
+   * @param {Object} [options.params] - Expected page params to match.
+   * @param {string} [options.matchedPageType] - The page type that matched (if pages used).
+   * @param {Object} [options.actualPageContext] - Actual page context values when checking params.
    * @param {Object} options.actualQueryParams - Current query params.
    * @param {number} options.depth - Nesting depth for indentation.
    * @param {boolean} options.result - Whether the URL matched (true) or not (false).
@@ -136,7 +139,10 @@ class BlockDebugLogger {
     currentPath,
     expectedUrls,
     excludeUrls,
-    actualParams,
+    pages,
+    params,
+    matchedPageType,
+    actualPageContext,
     actualQueryParams,
     depth,
     result,
@@ -149,7 +155,10 @@ class BlockDebugLogger {
       currentPath,
       expectedUrls,
       excludeUrls,
-      actualParams,
+      pages,
+      params,
+      matchedPageType,
+      actualPageContext,
       actualQueryParams,
       depth,
       result,
@@ -302,27 +311,61 @@ class BlockDebugLogger {
         currentPath,
         expectedUrls,
         excludeUrls: excludedUrls,
-        actualParams,
+        pages,
+        params,
+        matchedPageType,
+        actualPageContext,
         actualQueryParams,
         result: routeResult,
       } = log;
       const routeIcon = routeResult ? ICONS.passed : ICONS.failed;
       const routeStyle = routeResult ? STYLES.passed : STYLES.failed;
 
-      // Build configured value based on whether urls or excludeUrls was used
-      const configured = excludedUrls
-        ? { excludeUrls: excludedUrls }
-        : expectedUrls;
+      // Build configured value based on what options were used
+      const configured = {};
+      if (excludedUrls) {
+        configured.excludeUrls = excludedUrls;
+      } else if (expectedUrls) {
+        configured.urls = expectedUrls;
+      }
+      if (pages) {
+        configured.pages = pages;
+      }
+      if (params) {
+        configured.params = params;
+      }
 
       // eslint-disable-next-line no-console
       console.groupCollapsed(`%c${routeIcon}%c current URL`, routeStyle, "", {
         actual: currentPath,
         configured,
       });
-      if (actualParams && Object.keys(actualParams).length > 0) {
-        // eslint-disable-next-line no-console
-        console.log("params:", actualParams);
+
+      // Show page matching info when pages option is used
+      if (pages) {
+        if (matchedPageType) {
+          // eslint-disable-next-line no-console
+          console.log(
+            `%c${ICONS.passed}%c matched page type: ${matchedPageType}`,
+            STYLES.passed,
+            ""
+          );
+        } else {
+          // eslint-disable-next-line no-console
+          console.log(
+            `%c${ICONS.failed}%c no page type matched (not on any of: ${pages.join(", ")})`,
+            STYLES.failed,
+            ""
+          );
+        }
       }
+
+      // Show actual page context values when available (for debugging param mismatches)
+      if (actualPageContext) {
+        // eslint-disable-next-line no-console
+        console.log("actual page context:", actualPageContext);
+      }
+
       if (actualQueryParams && Object.keys(actualQueryParams).length > 0) {
         // eslint-disable-next-line no-console
         console.log("queryParams:", actualQueryParams);

@@ -658,6 +658,7 @@ function createChildBlock(blockConfig, owner, debugContext = {}) {
         name: ComponentClass.blockName,
         Component: wrappedComponent,
         args: argsWithDefaults,
+        containerArgs,
         conditions: debugContext.conditions,
         conditionsPassed: true,
       },

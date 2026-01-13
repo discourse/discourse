@@ -1,6 +1,7 @@
 import { array, hash } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
+import ArgsTable from "../shared/args-table";
 import ConditionsTree from "./conditions-tree";
 
 /**
@@ -35,6 +36,8 @@ function getHintMessage(optionalMissing, failureReason) {
  * @component GhostBlock
  * @param {string} blockName - The name of the hidden block.
  * @param {string} debugLocation - The hierarchy path where the block would render.
+ * @param {Object} [blockArgs] - Arguments that would have been passed to the block.
+ * @param {Object} [containerArgs] - Container arguments from parent container's childArgs.
  * @param {Object} [conditions] - Conditions that failed evaluation (not present for optional missing).
  * @param {boolean} [optionalMissing] - True if block is optional and not registered.
  * @param {string} [failureReason] - Why the block is hidden ("condition-failed" or "no-visible-children").
@@ -91,6 +94,20 @@ const GhostBlock = <template>
             </div>
           {{/if}}
 
+          {{#if (hasArgs @blockArgs)}}
+            <div class="block-debug-tooltip__section">
+              <div class="block-debug-tooltip__section-title">Arguments</div>
+              <ArgsTable @args={{@blockArgs}} />
+            </div>
+          {{/if}}
+
+          {{#if (hasArgs @containerArgs)}}
+            <div class="block-debug-tooltip__section">
+              <div class="block-debug-tooltip__section-title">Container Args</div>
+              <ArgsTable @args={{@containerArgs}} />
+            </div>
+          {{/if}}
+
           <div class="block-debug-tooltip__hint">
             {{getHintMessage @optionalMissing @failureReason}}
           </div>
@@ -117,6 +134,16 @@ const GhostBlock = <template>
  */
 function isNoVisibleChildren(failureReason) {
   return failureReason === "no-visible-children";
+}
+
+/**
+ * Helper to check if an args object has any entries.
+ *
+ * @param {Object} args - The arguments object to check.
+ * @returns {boolean} True if args is non-null and has at least one key.
+ */
+function hasArgs(args) {
+  return args != null && Object.keys(args).length > 0;
 }
 
 export default GhostBlock;

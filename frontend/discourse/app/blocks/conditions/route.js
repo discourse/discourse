@@ -277,6 +277,7 @@ export default class BlockRouteCondition extends BlockCondition {
 
     let routeMatched = false;
     let matchedPageType = null;
+    let actualPageContext = null;
 
     // Check urls (passes if ANY match)
     if (urls?.length) {
@@ -292,6 +293,10 @@ export default class BlockRouteCondition extends BlockCondition {
         if (pageContext !== null) {
           // Page type matches, now check params if provided
           if (params) {
+            // Track page context for debugging (shows what values were checked)
+            if (isDebugging) {
+              actualPageContext = { pageType, ...pageContext };
+            }
             if (this.#matchPageParams(params, pageContext, debugContext)) {
               routeMatched = true;
               matchedPageType = pageType;
@@ -314,6 +319,7 @@ export default class BlockRouteCondition extends BlockCondition {
         pages,
         params,
         matchedPageType,
+        actualPageContext,
         actualQueryParams,
         depth: childDepth,
         result: routeMatched,
