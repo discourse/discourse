@@ -37,6 +37,7 @@ zh_CN:
     house_ads_after_nth_post: '如果定义了“帖子之间”自家广告，则在每 N 条帖子后显示一个广告，其中 N 是此值。'
     house_ads_frequency: "如果将其他广告联盟配置为在广告位中展示，则应展示广告的频率（以百分比形式表示）。"
     ads_txt: "ads.txt 文件的内容。<a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>此 Google AdSense 帮助页面</a>介绍了更多详细信息。"
+    ad_plugin_routes_enabled: "启用针对站内广告的路由"
     dfp_publisher_id: "输入您的 Google Ad Manager（以前称为 DFP）网络代码，可以在您的网络设置中找到它。注意：您需要更新“内容安全策略脚本源”设置。有关最新说明，请参阅<a href='https://meta.discourse.org/t/33734' target='_blank'>此话题</a>。"
     dfp_publisher_id_mobile: "（可选）如果您想为移动版网站使用不同的 Ad Manager 发布商 ID，请在此处输入。留空将在移动版网站上使用 dfp_publisher_id。"
     dfp_through_trust_level: "按照信任级别向用户展示广告。信任级别高于此值的用户不会看到广告。"
