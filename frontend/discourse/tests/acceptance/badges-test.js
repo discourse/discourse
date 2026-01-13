@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -20,8 +20,10 @@ acceptance("Badges", function (needs) {
   });
 
   test("shows correct badge titles to choose from", async function (assert) {
-    const availableBadgeTitles = selectKit(".select-kit");
     await visit("/badges/50/custombadge");
+    await click(".badge-grant-info .btn-default");
+
+    const availableBadgeTitles = selectKit(".badge-set-title .select-kit");
     await availableBadgeTitles.expand();
 
     assert.strictEqual(
