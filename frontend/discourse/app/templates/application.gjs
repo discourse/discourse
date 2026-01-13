@@ -100,12 +100,7 @@ export default <template>
 
       <div id="main-outlet">
         <PluginOutlet @name="above-main-container" @connectorTagName="div" />
-        <BlockOutlet
-          @name="main-outlet-blocks"
-          @outletArgs={{lazyHash
-            currentPath=@controller.router._router.currentPath
-          }}
-        />
+        <BlockOutlet @name="main-outlet-blocks" />
 
         {{#if
           (eq
