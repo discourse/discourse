@@ -83,7 +83,15 @@ describe "bin/qunit" do
     expect(result.launched_unicorn).to eq(false)
 
     expect(result.args).to match(
-      ["pnpm", "ember", "exam", "--random", a_string_matching(/\A[a-zA-Z0-9]{8}\z/), "--path", "dist"],
+      [
+        "pnpm",
+        "ember",
+        "exam",
+        "--random",
+        a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
+        "--path",
+        "dist",
+      ],
     )
     expect(result.env).to match(
       "UNICORN_PORT" => a_truthy_value,
@@ -99,7 +107,15 @@ describe "bin/qunit" do
     expect(result.launched_unicorn).to eq(false)
 
     expect(result.args).to match(
-      ["pnpm", "ember", "exam", "--random", a_string_matching(/\A[a-zA-Z0-9]{8}\z/), "--path", "dist"],
+      [
+        "pnpm",
+        "ember",
+        "exam",
+        "--random",
+        a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
+        "--path",
+        "dist",
+      ],
     )
     expect(result.env).to match(
       "UNICORN_PORT" => a_truthy_value,
