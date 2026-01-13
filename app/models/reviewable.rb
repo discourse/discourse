@@ -802,6 +802,7 @@ class Reviewable < ActiveRecord::Base
     actions.add(:delete_user, bundle: bundle) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
+      a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
     end
 

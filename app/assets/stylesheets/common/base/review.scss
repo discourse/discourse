@@ -76,9 +76,17 @@
       background-color: var(--d-button-default-bg-color);
       color: var(--d-button-default-text-color);
 
+      .d-icon {
+        color: var(--d-button-default-icon-color);
+      }
+
       &:hover {
         background-color: var(--d-button-default-bg-color--hover);
         color: var(--d-button-default-text-color--hover);
+
+        .d-icon {
+          color: var(--d-button-default-icon-color--hover);
+        }
       }
     }
 

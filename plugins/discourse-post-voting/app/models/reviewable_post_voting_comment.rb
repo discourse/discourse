@@ -42,12 +42,10 @@ class ReviewablePostVotingComment < Reviewable
 
     if comment.deleted_at?
       build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree)
-      build_action(actions, :agree_and_keep_deleted, icon: "thumbs-up", bundle: agree)
-      build_action(actions, :disagree_and_restore, icon: "thumbs-down")
+      build_action(actions, :agree_and_keep_deleted, icon: "far-eye-slash", bundle: agree)
     else
-      build_action(actions, :agree_and_delete, icon: "far-eye-slash", bundle: agree)
-      build_action(actions, :agree_and_keep_comment, icon: "thumbs-up", bundle: agree)
-      build_action(actions, :disagree, icon: "thumbs-down")
+      build_action(actions, :agree_and_delete, icon: "trash-can", bundle: agree)
+      build_action(actions, :agree_and_keep_comment, icon: "far-eye", bundle: agree)
     end
 
     if guardian.can_suspend?(comment_creator)
@@ -67,12 +65,23 @@ class ReviewablePostVotingComment < Reviewable
       )
     end
 
-    ignore_bundle = actions.add_bundle("#{id}-ignore", label: "reviewables.actions.ignore.title")
+    disagree_bundle =
+      actions.add_bundle(
+        "#{id}-disagree",
+        icon: "far-eye",
+        label: "reviewables.actions.disagree_bundle.title",
+      )
 
-    build_action(actions, :ignore, icon: "up-right-from-square", bundle: ignore_bundle)
+    if comment.deleted_at?
+      build_action(actions, :disagree_and_restore, icon: "far-eye", bundle: disagree_bundle)
+    else
+      build_action(actions, :disagree, icon: "far-eye", bundle: disagree_bundle)
+    end
+
+    build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
 
     unless comment.deleted_at?
-      build_action(actions, :delete_and_agree, icon: "far-trash-can", bundle: ignore_bundle)
+      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
     end
   end
 

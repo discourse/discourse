@@ -37,6 +37,7 @@ import { showAlert } from "discourse/lib/post-action-feedback";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import { PENDING } from "discourse/models/reviewable";
 import Topic from "discourse/models/topic";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -157,7 +158,8 @@ export default class ReviewableItem extends Component {
     "claimOptional",
     "claimRequired",
     "reviewable.claimed_by",
-    "siteSettings.reviewable_old_moderator_actions"
+    "siteSettings.reviewable_old_moderator_actions",
+    "isAiReviewable"
   )
   displayContextQuestion(
     createdFromFlag,
@@ -165,14 +167,21 @@ export default class ReviewableItem extends Component {
     claimOptional,
     claimRequired,
     claimedBy,
-    oldModeratorActions
+    oldModeratorActions,
+    isAiReviewable
   ) {
     return (
-      oldModeratorActions &&
-      createdFromFlag &&
-      status === 0 &&
-      (claimOptional || (claimRequired && claimedBy !== null))
+      (oldModeratorActions &&
+        createdFromFlag &&
+        status === 0 &&
+        (claimOptional || (claimRequired && claimedBy !== null))) ||
+      isAiReviewable
     );
+  }
+
+  @discourseComputed("reviewable.type")
+  isAiReviewable(type) {
+    return type === "ReviewableAiChatMessage" || type === "ReviewableAiPost";
   }
 
   @discourseComputed(
@@ -832,8 +841,16 @@ export default class ReviewableItem extends Component {
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
                 <h3 class="review-item__aside-title">
-                  {{#if this.displayContextQuestion}}
-                    {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{#if this.editing}}
+                    {{i18n "review.editing_post"}}
+                  {{else if (eq this.reviewable.status PENDING)}}
+                    {{#if this.displayContextQuestion}}
+                      {{this.reviewable.flaggedReviewableContextQuestion}}
+                    {{else if this.reviewable.userReviewableContextQuestion}}
+                      {{this.reviewable.userReviewableContextQuestion}}
+                    {{else}}
+                      {{i18n "review.moderator_actions"}}
+                    {{/if}}
                   {{else}}
                     {{i18n "review.moderator_actions"}}
                   {{/if}}

@@ -24,9 +24,22 @@ class ReviewableAiPost < Reviewable
     end
 
     if post.hidden?
-      build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree)
+      build_action(actions, :agree_and_keep_hidden, icon: "far-eye-slash", bundle: agree)
     else
-      build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree)
+      build_action(actions, :agree_and_keep, icon: "far-eye", bundle: agree)
+    end
+
+    if guardian.can_delete_post_or_topic?(post)
+      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: agree)
+      if post.reply_count > 0
+        build_action(
+          actions,
+          :delete_and_agree_replies,
+          icon: "trash-can",
+          bundle: agree,
+          confirm: true,
+        )
+      end
     end
 
     if guardian.can_suspend?(target_created_by)
@@ -46,46 +59,37 @@ class ReviewableAiPost < Reviewable
       )
     end
 
+    delete_user_actions(actions, agree) if guardian.can_delete_user?(target_created_by)
+
     build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree) if post.user_deleted?
 
+    disagree_bundle =
+      actions.add_bundle(
+        "#{id}-disagree",
+        icon: "far-eye",
+        label: "reviewables.actions.disagree_bundle.title",
+      )
+
     if post.hidden?
-      build_action(actions, :disagree_and_restore, icon: "thumbs-down")
+      build_action(actions, :disagree_and_restore, icon: "far-eye", bundle: disagree_bundle)
     else
-      build_action(actions, :disagree, icon: "thumbs-down")
+      build_action(actions, :disagree, icon: "far-eye", bundle: disagree_bundle)
     end
 
+    build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
+
     if guardian.can_delete_post_or_topic?(post)
-      delete =
-        actions.add_bundle(
-          "#{id}-delete",
-          icon: "far-trash-can",
-          label: "reviewables.actions.delete.title",
-        )
-      build_action(actions, :delete_and_ignore, icon: "up-right-from-square", bundle: delete)
+      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: disagree_bundle)
       if post.reply_count > 0
         build_action(
           actions,
           :delete_and_ignore_replies,
-          icon: "up-right-from-square",
+          icon: "trash-can",
           confirm: true,
-          bundle: delete,
-        )
-      end
-      build_action(actions, :delete_and_agree, icon: "thumbs-up", bundle: delete)
-      if post.reply_count > 0
-        build_action(
-          actions,
-          :delete_and_agree_replies,
-          icon: "up-right-from-square",
-          bundle: delete,
-          confirm: true,
+          bundle: disagree_bundle,
         )
       end
     end
-
-    delete_user_actions(actions) if guardian.can_delete_user?(target_created_by)
-
-    build_action(actions, :ignore, icon: "up-right-from-square")
   end
 
   def perform_agree_and_hide(performed_by, args)

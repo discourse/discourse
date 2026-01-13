@@ -456,7 +456,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         actions = reviewable.actions_for(Guardian.new(admin))
         bundle_ids = actions.bundles.map(&:id)
 
-        expect(bundle_ids).to include("#{reviewable.id}-reject")
+        expect(bundle_ids).to include("#{reviewable.id}-reject-post")
         expect(bundle_ids).not_to include("#{reviewable.id}-post-actions")
         expect(bundle_ids).not_to include("#{reviewable.id}-user-actions")
       end
@@ -466,7 +466,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         action_ids = actions.to_a.map(&:id).map(&:to_s)
 
         expect(action_ids).to include("approve_post")
-        expect(action_ids).to include("discard_post")
+        expect(action_ids).to include("reject_post")
         expect(action_ids).to include("revise_and_reject_post")
         expect(action_ids).to include("delete_user")
         expect(action_ids).to include("delete_user_block")

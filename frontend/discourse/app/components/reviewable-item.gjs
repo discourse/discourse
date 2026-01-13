@@ -609,6 +609,10 @@ export default class ReviewableItem extends Component {
         <h3 class="reviewable-item__context-question">
           {{this.reviewable.flaggedReviewableContextQuestion}}
         </h3>
+      {{else if this.reviewable.userReviewableContextQuestion}}
+        <h3 class="reviewable-item__context-question">
+          {{this.reviewable.userReviewableContextQuestion}}
+        </h3>
       {{/if}}
 
       <div class="reviewable-actions">
