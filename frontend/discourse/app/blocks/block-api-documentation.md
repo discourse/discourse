@@ -23,6 +23,25 @@ The Block API is a structured alternative for UI extension points that need:
 
 The Block API is designed to handle the common cases—adding content to designated areas with conditional visibility, validation, and debugging tools. Plugin outlets remain available for complex scenarios requiring completely custom, bespoke components that don't fit the block model.
 
+### What Blocks Are For
+
+Blocks are designed for **structured layout areas**—regions where you want to compose multiple panels, cards, or content sections with validation, conditions, and theme control:
+
+- Homepage content grids
+- Sidebar panel areas
+- Dashboard panels
+- Category page customizations
+- Discovery page sections
+
+**Blocks are NOT intended for:**
+
+- Small UI additions (badges, icons, buttons)
+- Avatar modifications
+- Minor UI tweaks throughout the app
+- Places where the "composed layout" model doesn't fit
+
+For smaller customizations, plugin outlets remain the right choice. Blocks and plugin outlets are complementary—a page might use blocks for its main content layout while using plugin outlets for small additions elsewhere.
+
 ### Limitations
 
 Before diving in, understand what the Block API *doesn't* do:
@@ -58,6 +77,36 @@ This mental model helps explain the API's design decisions:
 - **Why must blocks be registered before `renderBlocks()`?** You need all your pieces in the bin before you start building.
 - **Why can't blocks render outside outlets?** LEGO pieces need baseplates—you can't attach them to thin air.
 - **Why are conditions evaluated at render time?** Building instructions are followed when you're actually assembling, not when the pieces were manufactured.
+
+### Beyond LEGO: The Publication Model
+
+The LEGO metaphor helps with structure but doesn't explain ownership, conditions, or coordination. For these, think of the Block API like a **publication system**:
+
+| Publication | Block API |
+|-------------|-----------|
+| Sections (Front Page, Features, Sidebar) | Outlets |
+| Content pieces (articles, ads, panels) | Blocks |
+| Content providers (wire services, columnists) | Plugins registering blocks |
+| In-house writers | Theme components registering blocks |
+| Editor-in-chief | Theme calling `renderBlocks()` |
+| Publishing rules ("subscribers only") | Conditions |
+| Content library | Block registry |
+
+**Why this model works:**
+
+**Editorial Control:** Just like a publication has one editor deciding layout, each outlet has a single owner (the theme) that composes the layout. Plugins submit content to the library, but the editor decides what gets published where.
+
+**Conditional Publishing:** "Only show this to logged-in users" is like "subscribers only." "Only on category pages" is like "only in the Sports section." Conditions are publishing rules.
+
+**Content Providers:** Plugins are like wire services (AP, Reuters)—they provide content but don't control placement. Theme components are like in-house writers—also providing content, but part of the publication's own team.
+
+**The Editor Composes:** The theme is the editor-in-chief. It looks at available content (registered blocks) and decides: "Put the analytics panel here, the tasks panel there, skip the gamification panel entirely." This is `renderBlocks()`.
+
+This model explains why:
+- Multiple plugins can provide blocks without conflict (content providers don't fight)
+- Only one caller can configure an outlet (one editor per section)
+- Conditions are declarative (publishing rules are set, not coded inline)
+- Blocks appear/disappear based on state (just like time-sensitive content)
 
 ### Complete Block Anatomy
 
@@ -588,6 +637,32 @@ Now that you understand the concepts and have seen a complete example, let's loo
 
 ## 2. Core Architecture
 
+### Blocks and Plugin Outlets
+
+Blocks and plugin outlets serve different purposes:
+
+| Aspect | Blocks | Plugin Outlets |
+|--------|--------|----------------|
+| **Intended for** | Structured layout areas (panel grids, panels) | Injections and small additions |
+| **Model** | Composed layout (theme orchestrates) | Content injection or wrapping |
+| **Conditions** | Declarative, validated at boot | Custom logic in your component |
+| **Dev tools** | Ghost blocks, condition logging, outlet boundaries, visual overlays | Outlet decorators, Ember inspector |
+| **Typical use** | Homepage sections, sidebars, dashboards | Badges, buttons, small UI tweaks |
+
+**They're complementary, not competing.** A category page might use:
+- Blocks for its main content area (grid of panels)
+- Plugin outlets for small additions (extra buttons, badges)
+
+**Use blocks when:**
+- You have a region that should display composed content (panels, cards, sections)
+- You want themes to control what appears and in what order
+- You need boot-time validation and condition debugging
+
+**Use plugin outlets when:**
+- You're making small additions to existing UI
+- You're wrapping or modifying existing content
+- The "composed layout" model doesn't fit your use case
+
 ### Using the Block API
 
 What you need to know to build with blocks.
@@ -753,6 +828,60 @@ api.renderBlocks("homepage-blocks", [
   { block: Sidebar, conditions: { type: "user", loggedIn: true } },
 ]);
 ```
+
+#### Plugins, Theme Components, and Themes
+
+The Block API separates **providing blocks** from **composing layouts**:
+
+**Plugins** register blocks:
+```javascript
+// plugins/discourse-analytics/pre-initializers/register-blocks.js
+api.registerBlock(StatsPanel);  // Adds to registry
+```
+
+**Theme components** can also register blocks:
+```javascript
+// themes/my-theme/theme-component/pre-initializers/register-blocks.js
+api.registerBlock(CustomPanel);  // Also adds to registry
+```
+
+**Themes** compose the layout:
+```javascript
+// themes/my-theme/api-initializers/configure-blocks.js
+api.renderBlocks("homepage-blocks", [
+  { block: "discourse-analytics:stats-panel?" },  // From plugin
+  { block: "theme:my-theme:custom-panel" },       // From theme component
+]);
+```
+
+This separation means:
+- Plugins provide functionality without controlling layout
+- Theme components extend the theme's own capabilities
+- The theme (editor) decides what appears where
+- Optional blocks (`?`) handle missing plugins gracefully
+
+**Can plugins or theme components call `renderBlocks()`?**
+
+Yes. When a plugin or theme component calls `renderBlocks()`, it **claims ownership** of that outlet. This works, but adds constraints to the Discourse instance:
+
+- No other extension can configure that outlet (they'll get an error)
+- The theme must be written knowing this constraint exists
+- You can't simply add a theme component that renders blocks to any arbitrary theme
+- All compatible extensions must be coordinated to prevent conflicts
+
+**When this makes sense:**
+
+- **Self-contained plugins** that own specific outlets no one else needs
+- **Heavily customized instances** where a plugin also manages the layout/theme
+- **Turnkey solutions** where the plugin provides a complete experience
+
+**When to avoid:**
+
+- Reusable theme components meant to work across different themes
+- Plugins that should compose nicely with other extensions
+- Outlets that multiple contributors might want to customize
+
+The recommended pattern for maximum flexibility is: **plugins and theme components register blocks; themes compose layouts.** But for controlled environments or self-contained solutions, having an extension own the layout is valid.
 
 #### Optional Blocks
 
@@ -1902,7 +2031,44 @@ You've seen the individual pieces. Time to watch them work together.
 
 ## 7. Practical Patterns
 
-Enough theory—let's build some blocks. These tutorials progress from simple to complex, showing how the concepts fit together in practice.
+Enough theory—let's build some blocks. This section covers common architectural patterns and tutorials that progress from simple to complex.
+
+### Common Patterns
+
+Different scenarios call for different approaches. Here are the common patterns:
+
+**Pattern A: Theme Composes Plugin Blocks (Recommended)**
+
+Plugins register blocks, theme arranges them:
+
+```
+plugins/analytics/     → api.registerBlock(StatsPanel)
+plugins/tasks/         → api.registerBlock(TaskList)
+themes/my-theme/       → api.renderBlocks("homepage-blocks", [
+                           { block: "analytics:stats-panel?" },
+                           { block: "tasks:task-list?" },
+                         ])
+```
+
+**Pattern B: Self-Contained Plugin**
+
+Plugin owns a specific outlet no one else needs:
+
+```
+plugins/my-plugin/     → api.registerBlock(MyPanel)
+                       → api.renderBlocks("my-plugin-outlet", [...])
+```
+
+Works when the outlet is truly plugin-specific.
+
+**Anti-Pattern: Competing for the Same Outlet**
+
+```
+plugins/plugin-a/      → api.renderBlocks("homepage-blocks", [...])  // Claims it
+plugins/plugin-b/      → api.renderBlocks("homepage-blocks", [...])  // ERROR!
+```
+
+If two plugins call `renderBlocks()` on the same outlet, the second fails. Solution: plugins register, themes compose.
 
 ### Tutorial 1: A Simple Promotional Banner
 
