@@ -1,4 +1,3 @@
-const { babelCompatSupport } = require("@embroider/compat/babel");
 const { buildMacros } = require("@embroider/macros/babel");
 
 const macros = buildMacros({
