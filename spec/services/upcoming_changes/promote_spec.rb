@@ -137,7 +137,10 @@ RSpec.describe UpcomingChanges::Promote do
         }.by(2)
 
         expect(Notification.last.data).to eq(
-          { upcoming_change_name: :enable_upload_debug_mode }.to_json,
+          {
+            upcoming_change_name: :enable_upload_debug_mode,
+            upcoming_change_humanized_name: "Enable upload debug mode",
+          }.to_json,
         )
       end
     end

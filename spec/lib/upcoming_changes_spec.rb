@@ -195,6 +195,58 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".previous_status_value" do
+    it "returns 0 for experimental (lowest status)" do
+      expect(described_class.previous_status_value(:experimental)).to eq(0)
+    end
+
+    it "returns 0 for alpha" do
+      expect(described_class.previous_status_value(:alpha)).to eq(0)
+    end
+
+    it "returns 100 for beta" do
+      expect(described_class.previous_status_value(:beta)).to eq(100)
+    end
+
+    it "returns 200 for stable" do
+      expect(described_class.previous_status_value(:stable)).to eq(200)
+    end
+
+    it "returns 300 for permanent" do
+      expect(described_class.previous_status_value(:permanent)).to eq(300)
+    end
+
+    it "accepts string status names" do
+      expect(described_class.previous_status_value("stable")).to eq(200)
+    end
+  end
+
+  describe ".previous_status" do
+    it "returns nil for experimental (lowest status)" do
+      expect(described_class.previous_status(:experimental)).to be_nil
+    end
+
+    it "returns :experimental for alpha" do
+      expect(described_class.previous_status(:alpha)).to eq(:experimental)
+    end
+
+    it "returns :alpha for beta" do
+      expect(described_class.previous_status(:beta)).to eq(:alpha)
+    end
+
+    it "returns :beta for stable" do
+      expect(described_class.previous_status(:stable)).to eq(:beta)
+    end
+
+    it "returns :stable for permanent" do
+      expect(described_class.previous_status(:permanent)).to eq(:stable)
+    end
+
+    it "accepts string status names" do
+      expect(described_class.previous_status("stable")).to eq(:beta)
+    end
+  end
+
   describe ".history_for" do
     fab!(:admin)
 
