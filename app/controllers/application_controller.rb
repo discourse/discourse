@@ -688,8 +688,8 @@ class ApplicationController < ActionController::Base
     return true if guardian.is_developer?
 
     if auth = cookies.encrypted[:_mp_auth]
-      user_id = auth[:user_id]
-      issued_at = auth[:issued_at]
+      user_id = auth["user_id"]
+      issued_at = auth["issued_at"]
 
       if issued_at && issued_at > MINI_PROFILER_AUTH_COOKIE_EXPIRES_IN.ago.to_i
         user = User.find_by(id: user_id)
