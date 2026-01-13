@@ -7,7 +7,7 @@ export default async function loadChartJS() {
 
 /**
  *
- * @returns {any}
+ * @returns {import("chart.js").Plugin}
  */
 export async function loadChartJSDatalabels() {
   return (await waitForPromise(import("chartjs-plugin-datalabels"))).default;
