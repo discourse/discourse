@@ -7,6 +7,7 @@ require "fileutils"
 require "socket"
 require "uri"
 require "net/http"
+require "securerandom"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
@@ -545,7 +546,7 @@ class QunitRunner
   end
 
   def resolved_seed
-    @resolved_seed ||= present_string(@seed) || Random.new.seed
+    @resolved_seed ||= present_string(@seed) || SecureRandom.alphanumeric(8)
   end
 
   def should_load_plugins?
