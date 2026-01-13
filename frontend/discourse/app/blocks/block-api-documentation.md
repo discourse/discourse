@@ -122,6 +122,12 @@ import { block } from "discourse/components/block-outlet";
 
   // (G) Outlet exclusions - where should this block never render?
   deniedOutlets: ["sidebar-*"],
+
+  // (H) Child args schema - metadata children must provide (container blocks only)
+  // childArgs: {
+  //   name: { type: "string", required: true, unique: true },
+  //   icon: { type: "string" },
+  // },
 })
 export default class HeroBanner extends Component {
   @service router;
@@ -335,6 +341,81 @@ deniedOutlets: ["sidebar-*"],
 Prevents the block from rendering in specific outlets. Same glob syntax as `allowedOutlets`.
 
 **Conflict detection:** If a pattern appears in both `allowedOutlets` and `deniedOutlets`, you get an error at decoration time (when the class is defined), not at runtime.
+
+#### (H) Child Args Schema
+
+```javascript
+childArgs: {
+  name: { type: "string", required: true, unique: true },
+  icon: { type: "string" },
+}
+```
+
+**Only for container blocks.** Defines metadata that child blocks must provide via `containerArgs` when configured as children of this container.
+
+**Why this exists?** Container blocks often need to know something about their children to render properly. A tabs container needs each tab to provide a unique name for routing. An accordion needs each panel to have a title. Rather than relying on convention, `childArgs` makes these requirements explicit and validated.
+
+**How it works:**
+
+1. **Container declares requirements** via `childArgs` in the `@block()` decorator:
+```javascript
+@block("my-plugin:tabs-container", {
+  container: true,
+  childArgs: {
+    name: { type: "string", required: true, unique: true },
+    icon: { type: "string" },
+  },
+})
+```
+
+2. **Children provide metadata** via `containerArgs` in the `renderBlocks()` config:
+```javascript
+api.renderBlocks("my-outlet", [
+  {
+    block: TabsContainer,
+    children: [
+      {
+        block: TabPanel,
+        args: { title: "Settings" },
+        containerArgs: { name: "settings", icon: "cog" }
+      },
+      {
+        block: TabPanel,
+        args: { title: "Profile" },
+        containerArgs: { name: "profile", icon: "user" }
+      },
+    ]
+  }
+])
+```
+
+3. **Container accesses metadata** via `this.children`:
+```javascript
+// In the container component - ALWAYS use key="key" for stable rendering
+{{#each this.children key="key" as |child|}}
+  <button data-tab={{child.containerArgs.name}}>
+    {{#if child.containerArgs.icon}}
+      {{icon child.containerArgs.icon}}
+    {{/if}}
+  </button>
+{{/each}}
+```
+
+> :exclamation: **Important:** Always use `key="key"` when iterating over `this.children`. Each child has a unique `key` property that ensures stable rendering during navigation and re-renders. Without it, Ember may reuse DOM elements incorrectly when children change.
+
+**The `unique` property:** Enforces uniqueness across sibling children. If two children have the same value for a `unique` arg, you get an error:
+
+```
+Duplicate value "settings" for containerArgs.name in children of "tabs-container".
+Found at children[0] and children[2].
+```
+
+> :exclamation: **Important:** `unique` is only valid for primitive types (`string`, `number`, `boolean`), not arrays.
+
+**Validation:**
+- If a container has `childArgs`, all children must provide `containerArgs` with the required fields
+- If a child provides `containerArgs` but the parent has no `childArgs` schema, you get an error
+- Schema validation (types, required fields, uniqueness) happens at boot time
 
 ### The Lifecycle: From Registration to Render
 
@@ -814,10 +895,10 @@ conditions: [{ type: "usr", admin: true }]  // typo: "usr"
 **Reserved Args Protection:**
 ```javascript
 // If you write:
-{ block: MyBlock, args: { children: [...], _internal: true } }
+{ block: MyBlock, args: { children: [...], args: {...}, block: "name", containerArgs: {...} } }
 
 // You get:
-// Error: Reserved arg names: children, _internal. Names starting with
+// Error: Reserved arg names: args, block, children, containerArgs. Names starting with
 // underscore are reserved for internal use.
 ```
 
@@ -874,14 +955,39 @@ import {
 
 **Debug hooks:**
 ```javascript
-import {
-  _setBlockDebugCallback,
-  _setBlockLoggingCallback,
-  // ... many more
-} from "discourse/lib/blocks/debug-hooks";
+import { debugHooks } from "discourse/lib/blocks/debug-hooks";
+
+// Reactive getters for checking debug state
+debugHooks.isBlockLoggingEnabled   // boolean
+debugHooks.isOutletBoundaryEnabled // boolean
+debugHooks.isVisualOverlayEnabled  // boolean
+debugHooks.loggerInterface         // logger object or null
+
+// Set/get callbacks by key
+debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)
+debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => true)
 ```
 
+The `debugHooks` singleton provides reactive getters that automatically track dependencies. This means UI components using these values will re-render when debug settings change.
+
+**Condition type registration (internal):**
+```javascript
+import {
+  _registerConditionType,
+  _freezeConditionTypeRegistry,
+  isConditionTypeRegistryFrozen,
+  hasConditionType,
+  getConditionTypeRegistry,
+} from "discourse/lib/blocks/registration";
+```
+
+> :exclamation: **Important:** Condition types must be registered before the `"freeze-block-registry"` initializer runs. Use `api.registerBlockConditionType()` in a pre-initializer for custom conditions.
+
 These are used by dev tools and test infrastructure. They're not part of the public API and may change without notice.
+
+**Performance: Leaf Block Caching**
+
+Leaf blocks (blocks without children) are cached to prevent unnecessary recreation during navigation. When a user navigates between pages, previously rendered leaf blocks are reused if their component class and args haven't changed. This optimization is transparent to developers—blocks behave the same, just render faster.
 
 ---
 
@@ -1027,9 +1133,11 @@ The Block API is designed to guide you toward the fix, not just tell you somethi
 // Error message:
 [Blocks] Invalid block config at blocks[0] for outlet "homepage-blocks":
 Unknown config key: "conditon" (did you mean "conditions"?).
-Valid keys are: block, args, children, conditions, name, classNames.
+Valid keys are: block, args, children, conditions, containerArgs, classNames.
 
-Location: blocks[0].conditon
+Location:
+└─ [0] MyBlock
+   └─ conditon  ← error here
 
 Context:
 {
@@ -1425,32 +1533,82 @@ The `params` option works only with `pages` (not `urls`) and validates parameter
 { type: "route", pages: ["DISCOVERY_PAGES", "TOP_MENU"], params: { filter: "latest" } }
 ```
 
-**Query Parameters (`queryParams` option):**
+**Params with `any` and `not` Operators:**
 
-Works with both `urls` and `pages`:
+The `params` object supports `any` (OR) and `not` (NOT) operators for complex matching:
 
 ```javascript
-// Match query params with URL patterns
+// Match if category ID is 1, 2, or 3 (OR logic)
+{
+  type: "route",
+  pages: ["CATEGORY_PAGES"],
+  params: { any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }] }
+}
+
+// Match if category ID is NOT 10 (negation)
+{
+  type: "route",
+  pages: ["CATEGORY_PAGES"],
+  params: { not: { categoryId: 10 } }
+}
+
+// Combined: Match if NOT in categories 1, 2, or 3
+{
+  type: "route",
+  pages: ["CATEGORY_PAGES"],
+  params: { not: { any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }] } }
+}
+
+// Nested: Match if category 1 OR NOT category 2
+{
+  type: "route",
+  pages: ["CATEGORY_PAGES"],
+  params: { any: [{ categoryId: 1 }, { not: { categoryId: 2 } }] }
+}
+```
+
+> :bulb: **Tip:** Use `any` in params when you want to match one of several specific values. Use `not` to exclude specific values while matching others.
+
+**Query Parameters (`queryParams` option):**
+
+Works with both `urls` and `pages`. Query params support the same `any` (OR) and `not` (NOT) operators as `params`:
+
+```javascript
+// Simple query param match
 {
   type: "route",
   urls: ["/latest"],
   queryParams: { filter: "solved" }
 }
 
-// Match query params with page types
+// Multiple query params (AND - all must match)
 {
   type: "route",
   pages: ["DISCOVERY_PAGES"],
-  queryParams: { filter: "solved" }
+  queryParams: { filter: "solved", order: "activity" }
 }
 
-// OR logic for query params
+// OR logic: match if filter is "solved" OR "open"
 {
   type: "route",
   pages: ["DISCOVERY_PAGES"],
   queryParams: {
     any: [{ filter: "solved" }, { filter: "open" }]
   }
+}
+
+// NOT logic: match if filter is NOT "closed"
+{
+  type: "route",
+  pages: ["DISCOVERY_PAGES"],
+  queryParams: { not: { filter: "closed" } }
+}
+
+// Combined: match if NOT (filter is "solved" OR "open")
+{
+  type: "route",
+  pages: ["DISCOVERY_PAGES"],
+  queryParams: { not: { any: [{ filter: "solved" }, { filter: "open" }] } }
 }
 ```
 
@@ -1669,7 +1827,7 @@ The built-in conditions cover most cases. But if you need something specific to 
 You can create custom condition types:
 
 ```javascript
-import { BlockCondition, raiseBlockValidationError } from "discourse/blocks/conditions";
+import { BlockCondition } from "discourse/blocks/conditions";
 import { blockCondition } from "discourse/blocks/conditions/decorator";
 import { service } from "@ember/service";
 
@@ -1680,14 +1838,24 @@ import { service } from "@ember/service";
 export default class FeatureFlagCondition extends BlockCondition {
   @service featureFlags;
 
+  /**
+   * Validates condition arguments. Returns an error object if invalid, null if valid.
+   *
+   * @param {Object} args - The condition arguments.
+   * @returns {{ message: string, path?: string } | null} Error info or null if valid.
+   */
   validate(args) {
-    super.validate(args);
+    // Always check base class validation first
+    const baseError = super.validate(args);
+    if (baseError) {
+      return baseError;
+    }
 
     if (!args.flag) {
-      raiseBlockValidationError(
-        "FeatureFlagCondition: `flag` argument is required."
-      );
+      return { message: "FeatureFlagCondition: `flag` argument is required.", path: "flag" };
     }
+
+    return null;  // Valid
   }
 
   evaluate(args) {
@@ -1696,11 +1864,31 @@ export default class FeatureFlagCondition extends BlockCondition {
     return enabled ? isEnabled : !isEnabled;
   }
 }
+```
 
-// Register in an initializer
-api.registerBlockConditionType(FeatureFlagCondition);
+**Registering custom conditions:**
 
-// Use in block configs
+Custom conditions must be registered before the registry freezes. Use `api.registerBlockConditionType()` in a pre-initializer:
+
+```javascript
+// plugins/my-plugin/assets/javascripts/discourse/pre-initializers/register-conditions.js
+import { withPluginApi } from "discourse/lib/plugin-api";
+import FeatureFlagCondition from "../blocks/conditions/feature-flag";
+
+export default {
+  initialize() {
+    withPluginApi((api) => {
+      api.registerBlockConditionType(FeatureFlagCondition);
+    });
+  },
+};
+```
+
+> :exclamation: **Important:** Registration must happen in a pre-initializer that runs before `"freeze-block-registry"`. If you register too late, you'll get an error: `api.registerBlockConditionType() was called after the condition type registry was frozen.`
+
+**Using the custom condition:**
+
+```javascript
 {
   block: MyBlock,
   conditions: [{ type: "feature-flag", flag: "new_feature", enabled: true }]
@@ -1798,95 +1986,145 @@ export default apiInitializer((api) => {
 - Content is configurable via args (message, link)
 - Dismissible by default
 
-That covered the basics. Now let's use outlet args to make blocks respond to their context.
+That covered the basics. Now let's use outlet args and route conditions to create context-aware layouts.
 
-### Tutorial 2: Context-Aware Topic Badges
+### Tutorial 2: Category-Specific Information Panels
 
-Let's build a badge system that shows different badges based on topic state. This example assumes a hypothetical `topic-header-blocks` outlet that provides `topic` in its outlet args.
+Let's build an information panel system that shows different content based on which category the user is browsing. This example assumes a hypothetical `category-sidebar-blocks` outlet that provides `category` in its outlet args and appears on category pages.
 
-**Step 1: Create reusable badge block**
+**Step 1: Create a reusable info panel block**
 
 ```javascript
-// plugins/my-plugin/assets/javascripts/discourse/blocks/topic-badge.gjs
+// themes/my-theme/javascripts/discourse/blocks/info-panel.gjs
 import Component from "@glimmer/component";
 import { block } from "discourse/components/block-outlet";
 import icon from "discourse/helpers/d-icon";
 
-@block("my-plugin:topic-badge", {
-  description: "A badge displayed on topics based on conditions",
+@block("theme:my-theme:info-panel", {
+  description: "An information panel with title, content, and optional icon",
   args: {
-    label: { type: "string", required: true },
+    title: { type: "string", required: true },
+    content: { type: "string", required: true },
     icon: { type: "string" },
-    variant: { type: "string", default: "default" },  // default, success, warning, danger
+    variant: { type: "string", default: "default", enum: ["default", "highlight", "warning"] },
   },
-  allowedOutlets: ["topic-*", "post-*"],
 })
-export default class TopicBadge extends Component {
+export default class InfoPanel extends Component {
   <template>
-    <span class="topic-badge topic-badge--{{@variant}}">
-      {{#if @icon}}
-        {{icon @icon}}
-      {{/if}}
-      <span class="topic-badge__label">{{@label}}</span>
-    </span>
+    <aside class="info-panel info-panel--{{@variant}}">
+      <header class="info-panel__header">
+        {{#if @icon}}
+          {{icon @icon}}
+        {{/if}}
+        <h3 class="info-panel__title">{{@title}}</h3>
+      </header>
+      <div class="info-panel__content">
+        {{@content}}
+      </div>
+    </aside>
   </template>
 }
 ```
 
-**Step 2: Configure multiple badge instances**
+**Step 2: Configure panels for different categories**
 
 ```javascript
-// plugins/my-plugin/assets/javascripts/discourse/api-initializers/topic-badges.js
+// themes/my-theme/javascripts/discourse/api-initializers/category-panels.js
 import { apiInitializer } from "discourse/lib/api";
-import TopicBadge from "../blocks/topic-badge";
+import InfoPanel from "../blocks/info-panel";
 
 export default apiInitializer((api) => {
-  api.renderBlocks("topic-header-blocks", [
-    // Closed topic badge
+  api.renderBlocks("category-sidebar-blocks", [
+    // Support category: show help resources
     {
-      block: TopicBadge,
-      args: { label: "Closed", icon: "lock", variant: "danger" },
+      block: InfoPanel,
+      args: {
+        title: "Need Help?",
+        content: "Check our FAQ or contact support for assistance.",
+        icon: "question-circle",
+        variant: "highlight",
+      },
       conditions: [
-        { type: "outletArg", path: "topic.closed", value: true },
+        { type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "support" } },
       ],
     },
 
-    // Pinned topic badge
+    // Announcements category: show posting guidelines
     {
-      block: TopicBadge,
-      args: { label: "Pinned", icon: "thumbtack", variant: "warning" },
+      block: InfoPanel,
+      args: {
+        title: "Posting Guidelines",
+        content: "Only staff can create announcements. Use clear, concise titles.",
+        icon: "bullhorn",
+        variant: "warning",
+      },
       conditions: [
-        { type: "outletArg", path: "topic.pinned", value: true },
-      ],
-    },
-
-    // Solved topic badge (for staff only)
-    {
-      block: TopicBadge,
-      args: { label: "Solved", icon: "check", variant: "success" },
-      conditions: [
-        { type: "outletArg", path: "topic.accepted_answer", exists: true },
+        { type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "announcements" } },
         { type: "user", staff: true },
       ],
     },
 
-    // High engagement badge
+    // Development categories: show API docs link
     {
-      block: TopicBadge,
-      args: { label: "Hot", icon: "fire", variant: "warning" },
+      block: InfoPanel,
+      args: {
+        title: "Developer Resources",
+        content: "Visit our API documentation for technical details.",
+        icon: "code",
+      },
       conditions: [
-        { type: "outletArg", path: "topic.like_count", value: { gte: 50 } },
+        {
+          type: "route",
+          pages: ["CATEGORY_PAGES"],
+          params: { any: [{ categorySlug: "dev" }, { categorySlug: "plugins" }, { categorySlug: "themes" }] },
+        },
+      ],
+    },
+
+    // All categories except meta: show community welcome
+    {
+      block: InfoPanel,
+      args: {
+        title: "Welcome!",
+        content: "Be respectful and help each other learn.",
+        icon: "heart",
+      },
+      conditions: [
+        { type: "route", pages: ["CATEGORY_PAGES"], params: { not: { categorySlug: "meta" } } },
+        { type: "user", loggedIn: false },
       ],
     },
   ]);
 });
 ```
 
+**Step 3: Access category data via outlet args**
+
+You can also use outlet args to access the current category directly:
+
+```javascript
+// Panel that shows category-specific rules from outlet args
+{
+  block: InfoPanel,
+  args: {
+    title: "Category Rules",
+    content: "Please read the pinned topics before posting.",
+    icon: "list-check",
+  },
+  conditions: [
+    // Show only if category has custom rules defined
+    { type: "outletArg", path: "category.custom_fields.has_rules", value: true },
+  ],
+}
+```
+
 **What we accomplished:**
-- Same block component, different configurations
-- Each badge has its own conditions
-- Conditions use outlet args to access topic data
-- Staff-only visibility for certain badges
+- Created a reusable panel component for larger UI layouts
+- Used route conditions with `params` to target specific categories
+- Combined `any` operator to match multiple categories with one condition
+- Used `not` operator to exclude specific categories
+- Mixed route conditions with user conditions (staff-only, logged-out)
+- Accessed category data via outlet args for dynamic content
 
 So far we've been working within a single theme or plugin. The real power of the Block API emerges when multiple plugins provide blocks and a theme composes them into a unified layout.
 
@@ -2107,6 +2345,7 @@ api.registerBlockConditionType(ConditionClass)
   container: boolean,           // Can contain child blocks
   description: string,          // Human-readable description
   args: { [key]: ArgSchema },   // Argument definitions
+  childArgs: { [key]: ChildArgSchema },  // Schema for child-provided metadata (container blocks only)
   constraints: ConstraintSpec,  // Cross-arg validation rules
   validate: (args) => string | string[] | undefined,  // Custom validation
   allowedOutlets: string[],     // Glob patterns for allowed outlets
@@ -2138,6 +2377,12 @@ api.registerBlockConditionType(ConditionClass)
   exactlyOne?: string[],   // Exactly one must be provided
   allOrNone?: string[],    // All or none must be provided
 }
+
+// ChildArgSchema (extends ArgSchema):
+{
+  // Same properties as ArgSchema, plus:
+  unique?: boolean,        // Enforce uniqueness across sibling children (primitives only)
+}
 ```
 
 #### Block Configuration
@@ -2145,10 +2390,11 @@ api.registerBlockConditionType(ConditionClass)
 ```javascript
 {
   block: BlockClass | "block-name" | "block-name?",  // Required
-  args?: { [key]: any },
+  args?: { [key]: any },           // Arguments passed to the block
   conditions?: ConditionSpec | ConditionSpec[],
   classNames?: string | string[],
-  children?: BlockConfig[],      // Only for container blocks
+  children?: BlockConfig[],        // Only for container blocks
+  containerArgs?: { [key]: any },  // Metadata provided to parent container
 }
 ```
 
@@ -2248,7 +2494,7 @@ api.registerBlockConditionType(ConditionClass)
 
 1. **"Unknown config key"**
    - Check for typos in config object
-   - Valid keys: block, args, conditions, classNames, children
+   - Valid keys: block, args, conditions, classNames, children, containerArgs
 
 2. **"Unknown condition type"**
    - Check condition type spelling
