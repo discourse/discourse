@@ -5,6 +5,7 @@ import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { findHelper } from "discourse/lib/helpers";
 import SuffixTrie from "discourse/lib/suffix-trie";
 import resolverShims from "./resolver-shims";
+import { defineModules } from "./app";
 
 let _options = {};
 let moduleSuffixTrie = null;
@@ -286,6 +287,10 @@ export function buildResolver(baseName) {
         this.findConnectorTemplate(parsedName) ||
         this.discourseTemplateModule("not_found")
       );
+    }
+
+    addModules(modules) {
+      defineModules(null, modules);
     }
 
     findLoadingTemplate(parsedName) {
