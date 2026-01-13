@@ -22,7 +22,7 @@ module UpcomingChanges
   end
 
   def self.previous_status(status)
-    self.statuses.keys.select { |key| self.statuses[key] < self.statuses[status.to_sym] }.max
+    self.statuses.keys.select { |key| self.statuses[key] < self.statuses[status.to_sym] }.last
   end
 
   def self.image_exists?(change_setting_name)

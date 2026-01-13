@@ -99,19 +99,19 @@ class UpcomingChanges::Track
   #     then don't send another notification
   #     -> If the change was not added, send a notification about the status change if  it's the correct
   #     status (promotion_status - 1) to indicate it's available to admins
-  def track_status_changes(added_changes:, removed_changes:)
+  def track_status_changes(added_changes:, removed_changes:, all_admins:)
     status_changes = UpcomingChangeEvent.status_changes.to_a
     context[:status_changes] = {}
 
     SiteSetting.upcoming_change_site_settings.each do |change_name|
-      if !status_changes.uniq { |status| status.upcoming_change_name }.include?(change_name)
+      if status_changes.none? { |event| event.upcoming_change_name == change_name.to_s }
         UpcomingChangeEvent.create!(
           event_type: :status_changed,
           upcoming_change_name: change_name,
           event_data: {
             previous_value: nil,
             new_value: UpcomingChanges.change_status(change_name),
-          }.to_json,
+          },
         )
 
         context[:status_changes][change_name] = {
@@ -131,18 +131,21 @@ class UpcomingChanges::Track
       next if removed_changes.include?(change_name)
 
       previous_status =
-        status_changes.select { |event| event.upcoming_change_name == change_name }.last.event_data[
+        status_changes
+          .select { |event| event.upcoming_change_name == change_name.to_s }
+          .last
+          .event_data[
           "new_value"
         ]
 
-      if previous_status != UpcomingChanges.change_status(change_name)
+      if previous_status&.to_sym != UpcomingChanges.change_status(change_name)
         UpcomingChangeEvent.create!(
           event_type: :status_changed,
           upcoming_change_name: change_name,
           event_data: {
             previous_value: previous_status,
             new_value: UpcomingChanges.change_status(change_name),
-          }.to_json,
+          },
         )
 
         context[:status_changes][change_name] = {
