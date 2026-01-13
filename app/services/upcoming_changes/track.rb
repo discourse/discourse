@@ -66,6 +66,8 @@ class UpcomingChanges::Track
           upcoming_change_name: change_name,
         )
 
+        StaffActionLogger.new(Discourse.system_user).log_upcoming_change_available(change_name)
+
         context[:notified_admins_for_added_changes] << change_name
       end
     end
@@ -176,6 +178,8 @@ class UpcomingChanges::Track
             event_type: :admins_notified_available_change,
             upcoming_change_name: change_name,
           )
+
+          StaffActionLogger.new(Discourse.system_user).log_upcoming_change_available(change_name)
 
           context[:notified_admins_for_added_changes] << change_name
         end

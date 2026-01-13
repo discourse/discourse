@@ -137,6 +137,15 @@ RSpec.describe UpcomingChanges::Track do
         it "includes the change in notified_admins_for_added_changes" do
           expect(result[:notified_admins_for_added_changes]).to include(:show_user_menu_avatars)
         end
+
+        it "creates a UserHistory entry for the upcoming change" do
+          expect { result }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_available],
+              subject: "show_user_menu_avatars",
+            ).count
+          }.by(1)
+        end
       end
 
       context "when the change status does not meet promotion_status - 1" do
@@ -174,6 +183,15 @@ RSpec.describe UpcomingChanges::Track do
           notified = result[:notified_admins_for_added_changes]
           expect(notified).not_to include(:enable_upload_debug_mode)
           expect(notified).not_to include(:show_user_menu_avatars)
+        end
+
+        it "does not create a UserHistory entry for the scoped changes" do
+          expect { result }.not_to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_available],
+              subject: %w[enable_upload_debug_mode show_user_menu_avatars],
+            ).count
+          }
         end
       end
 
@@ -472,6 +490,15 @@ RSpec.describe UpcomingChanges::Track do
           expect(result[:notified_admins_for_added_changes]).to include(:show_user_menu_avatars)
         end
 
+        it "creates a UserHistory entry for the upcoming change" do
+          expect { result }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_available],
+              subject: "show_user_menu_avatars",
+            ).count
+          }.by(1)
+        end
+
         context "when admins were already notified" do
           before do
             UpcomingChangeEvent.create!(
@@ -494,6 +521,15 @@ RSpec.describe UpcomingChanges::Track do
               scoped_events.where(
                 event_type: :admins_notified_available_change,
                 upcoming_change_name: :show_user_menu_avatars,
+              ).count
+            }
+          end
+
+          it "does not create another UserHistory entry" do
+            expect { result }.not_to change {
+              UserHistory.where(
+                action: UserHistory.actions[:upcoming_change_available],
+                subject: "show_user_menu_avatars",
               ).count
             }
           end

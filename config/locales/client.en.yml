@@ -7792,6 +7792,7 @@ en:
             change_theme_site_setting: "change theme site setting"
             stop_impersonating: "stop impersonating"
             upcoming_change_toggled: "upcoming change toggled"
+            upcoming_change_available: "upcoming change available"
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
         screened_emails:
