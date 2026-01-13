@@ -276,7 +276,6 @@ sk:
     ai_bot:
       reply_error: "Ospravedlňujeme sa, ale zdá sa, že náš systém narazil na neočakávaný problém pri pokuse o odpoveď.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Bez názvu AI bot PM]"
-      thinking: "Premýšľanie..."
       personas:
         default_llm_required: "Predvolený model LLM sa vyžaduje pred povolením funkcie Chat"
         cannot_delete_system_persona: "Systémové personas nie je možné odstrániť, radšej ich vypnite."
@@ -440,9 +439,9 @@ sk:
         github_search_files: "Vyhľadávanie súborov GitHub"
         github_search_code: "Vyhľadávanie kódu GitHub"
         github_file_content: "Obsah súboru GitHub"
-        github_pull_request_diff: "Rozdiel v žiadostiach o stiahnutie z GitHubu"
         random_picker: "Náhodný výber"
         categories: "Zoznam kategórií"
+        flag_post: "Príspevok s vlajkou"
         search: "Hľadať"
         tags: "Zoznam značiek"
         time: "Čas"
@@ -468,7 +467,6 @@ sk:
         github_search_code: "Vyhľadávanie kódu v úložisku GitHub"
         github_search_files: "Vyhľadávanie súborov v úložisku GitHub"
         github_file_content: "Získavanie obsahu súborov z úložiska GitHub"
-        github_pull_request_diff: "Získanie rozdielovej požiadavky na stiahnutie GitHub"
         random_picker: "Výber náhodného čísla alebo náhodného prvku zoznamu"
         categories: "Zoznam všetkých verejne viditeľných kategórií na fóre"
         search: "Vyhľadávanie vo všetkých verejných témach na fóre"
@@ -494,7 +492,7 @@ sk:
         web_browser: "Čítanie <a href='%{url}'>%{url}</a>"
         github_search_files: "Vyhľadávanie '%{keywords}' v %{repo}/%{branch}"
         github_search_code: "Hľadané výrazy „%{query}“ v %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Prevzatý obsah %{file_paths} z %{repo_name}@%{branch}"
         random_picker: "Výber z %{options}, vybrané: %{result}"
         read: "Čítanie: <a href='%{url}'>%{title}</a>"
@@ -627,6 +625,3 @@ sk:
         few: "Vlastné nástroje s názvom %{names} už existujú."
         many: "Vlastné nástroje s názvom %{names} už existujú."
         other: "Vlastné nástroje s názvom %{names} už existujú."
-  dashboard:
-    problem:
-      ai_llm_status: "Model LLM: %{model_name} má problémy. Skontrolujte konfiguračnú stránku modelu <a href='%{url}'></a>."

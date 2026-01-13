@@ -148,7 +148,7 @@ fa_IR:
       de:
         name: آلمانی
       en:
-        name: انگلیسی (لهجه آمریکایی)
+        name: انگلیسی
       en_GB:
         name: انگلیسی (بریتانیا)
       es:
@@ -914,9 +914,7 @@ fa_IR:
           notification: آگاه‌سازی
         email:
           title: "ایمیل"
-          status: "ایمیل‌های %{old_emails} / %{total_emails} از طریق IMAP همگام‌سازی شده است."
           enable_smtp: "فعال کردن SMTP"
-          enable_imap: "فعال کردن IMAP"
           test_settings: "تنظیمات تست"
           save_settings: "ذخیره تنظیمات"
           last_updated: "آخرین به روز رسانی:"
@@ -925,14 +923,7 @@ fa_IR:
           smtp_settings_valid: "تنظیمات SMTP معتبر است."
           smtp_title: "SMTP"
           smtp_instructions: "وقتی SMTP را برای گروه فعال می‌کنید، همه ایمیل‌های ارسالی از صندوق ورودی گروه به‌جای سرور ایمیلی که برای سایر ایمیل‌های ارسال‌شده توسط انجمن شما پیکربندی شده است، از طریق تنظیمات SMTP که در اینجا مشخص شده‌اند ارسال می‌شوند."
-          imap_title: "IMAP"
-          imap_additional_settings: "تنظیمات اضافی"
-          imap_instructions: 'وقتی IMAP را برای گروه فعال می‌کنید، ایمیل‌ها بین صندوق ورودی گروه و سرور و صندوق پستی ارائه شده IMAP همگام‌سازی می‌شوند. SMTP باید قبل از فعال شدن IMAP با اعتبار معتبر و آزمایش شده فعال شود. نام کاربری و رمز عبور ایمیل مورد استفاده برای SMTP برای IMAP استفاده خواهد شد. برای کسب اطلاعات بیشتر به <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">اطلاعیه ویژگی در گفتمان متا</a>مراجعه کنید.'
-          imap_alpha_warning: "هشدار: این یک ویژگی آلفا مرحله است. فقط Gmail به طور رسمی پشتیبانی می‌شود. با مسئولیت خود استفاده کنید!"
-          imap_settings_valid: "تنظیمات IMAP معتبر است."
-          smtp_disable_confirm: "اگر SMTP را غیرفعال کنید، تمام تنظیمات SMTP و IMAP بازنشانی می‌شوند و عملکرد مربوط غیرفعال خواهد شد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
-          imap_disable_confirm: "اگر IMAP را غیرفعال کنید، تمام تنظیمات IMAP بازنشانی می‌شود و عملکرد مرتبط غیرفعال می‌شود. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
-          imap_mailbox_not_selected: "شما باید یک صندوق پستی برای این پیکربندی IMAP انتخاب کنید وگرنه هیچ صندوق پستی همگام‌سازی نخواهد شد!"
+          additional_settings: "تنظیمات اضافی"
           prefill:
             title: "از قبل پر کردن با تنظیمات برای:"
             gmail: "جی‌میل"
@@ -947,9 +938,6 @@ fa_IR:
             smtp_server: "سرور SMTP"
             smtp_port: "درگاه SMTP"
             smtp_ssl_mode: "حالت SSL"
-            imap_server: "سرور IMAP"
-            imap_port: "درگاه IMAP"
-            imap_ssl: "از SSL برای IMAP استفاده کنید"
             username: "نام‌کاربری"
             password: "رمزعبور"
           settings:
@@ -958,10 +946,6 @@ fa_IR:
             allow_unknown_sender_topic_replies_hint: "به فرستندگان ناشناس اجازه می‌دهد تا به موضوعات گروه پاسخ دهند. اگر این مورد فعال نباشد، پاسخ‌هایی از آدرس‌های ایمیلی که قبلاً به موضوع دعوت نشده‌اند، موضوع جدیدی ایجاد می‌کنند."
             from_alias: "از نام مستعار"
             from_alias_hint: "نام مستعار برای استفاده به عنوان آدرس در فیلد «از» هنگام ارسال ایمیل های گروهی SMTP. توجه داشته باشید که این ممکن است توسط همه ارائه دهندگان ایمیل پشتیبانی نشود، لطفاً به اسناد ارائه دهنده ایمیل خود رجوع کنید."
-          mailboxes:
-            synchronized: "صندوق پستی همگام شده"
-            none_found: "هیچ صندوق پستی در این حساب ایمیل یافت نشد."
-            disabled: "غیرفعال"
         membership:
           title: عضویت
           access: دسترسی
@@ -1224,6 +1208,9 @@ fa_IR:
       new_private_message: "پیام جدید"
       private_message: "پیام"
       private_messages: "پیام‌ها"
+      upcoming_changes:
+        for_user:
+          enabled: "فعال شده؟"
       user_notifications:
         filters:
           filter_by: "فیلتر توسط"
@@ -1537,7 +1524,6 @@ fa_IR:
         tags: "برچسب‌‌ها"
         interface: "رابط"
         apps: "برنامه‌ها"
-        navigation_menu: "منوی ناوبری"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
@@ -2609,6 +2595,8 @@ fa_IR:
       upload_title: "بارگذاری"
       upload_description: "توضیح بارگذاری را در اینجا بنویسید"
       list_item: "فهرست موارد"
+      wrap_modal:
+        apply: "اعمال کردن"
       help: "راهنمای ویرایش با Markdown"
       exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
       modal_ok: "تایید"
@@ -2660,6 +2648,7 @@ fa_IR:
         title: "توضیحات تصویر را اضافه کنید"
       image_toolbar:
         alt_text: "توضیحات تصویر را اضافه کنید"
+      image: "تصویر"
       image_scale_button: "تغییر مقیاس تصویر به %{percent}%"
       delete_image_button: حذف تصویر
       toggle_image_grid: تغییر وضعیت شبکه تصویر
@@ -2989,6 +2978,9 @@ fa_IR:
         reset_bump_dates: "بازنشانی تاریخ بالا آوردن"
         defer: "علامت گذاری به عنوان خوانده نشده"
         delete: "حذف موضوعات"
+        delete_topics_count:
+          one: "پاک کردن موضوع"
+          other: "حذف موضوعات"
         dismiss: "پنهان کردن"
         dismiss_read: "پنهان کردن تمامی خوانده نشده ها"
         dismiss_read_with_selected:
@@ -3061,19 +3053,6 @@ fa_IR:
         top: "موضوع برتری وجود ندارد."
         hot: "هیچ موضوع داغی وجود ندارد."
         filter: "هنوز هیچ موضوعی وجود ندارد."
-      bottom:
-        latest: "موضوع تازه‌ی دیگری وجود ندارد."
-        posted: "هیچ موضوعات نوشته شده ای وجود ندارد"
-        read: "موضوع خوانده شده‌ی دیگری نیست."
-        new: "موضوع تازه‌ی دیگری وجود ندارد."
-        unread: "موضوع خوانده نشده‌ی دیگری وجود ندارد."
-        unseen: "دیگر هیچ موضوع دیده نشده‌ای وجود ندارد."
-        category: "هیچ موضوع دیگری در %{category} نیست."
-        tag: "هیچ موضوع دیگری در %{tag} نیست."
-        top: "موضوع برتر دیگری وجود ندارد"
-        hot: "دیگر هیچ موضوع داغی وجود ندارد."
-        bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
-        filter: "هیچ موضوع بیشتری وجود ندارد."
     topic_bulk_actions:
       dismiss:
         name: "رد کردن"
@@ -3198,9 +3177,6 @@ fa_IR:
         }
       created_at: "تاریخ ایجاد: %{date}"
       bumped_at: "جدیدترین: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>همه دسته‌ها</a> را مرور کنید یا <a href='%{basePath}/latest'> آخرین موضوعات</a> را مشاهده نمایید."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>همه دسته‌ها</a> را مرور کنید، <a href='%{basePath}/latest'>آخرین موضوعات</a> را مشاهده کنید؛ یا موضوعات برتر را ببینید:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>همه برچسب‌ها</a> را مرور کنید یا <a href='%{basePath}/latest'>آخرین موضوعات</a> را مشاهده نمایید."
       suggest_create_topic: برای <a href>شروع یک موضوع جدید آماده‌اید؟</a>
       jump_reply: "به مکان اصلی پست بروید"
       jump_reply_aria: "به پست کاربر: %{username}@ در مکان اصلی خود بروید"
@@ -4219,6 +4195,7 @@ fa_IR:
         this_month: "ماه"
         this_week: "هفته"
         today: "امروز"
+        custom: "سفارشی"
     custom_homepage:
       admin_message: 'یکی از پوسته‌های شما، اصلاح‌کننده «custom_homepage» را فعال کرده است؛ اما چیزی را در رابط [custom-homepage] خروجی نمی‌دهد. (این پیام فقط برای مدیران سایت نمایش داده می شود.)'
     permission_types:
@@ -4432,6 +4409,7 @@ fa_IR:
       upload_description: "برای ایجاد تگ ها به صورت دسته جمعی یک فایل csv آپلود کنید"
       upload_instructions: "یکی در هر خط، به صورت اختیاری با یک گروه برچسب؛ در قالب 'نام_تگ, گروه_تگ'."
       upload_successful: "تگ‌ها با موفقیت بارگذاری شد"
+      bulk_create_button: "ایجاد"
       delete_unused_confirmation:
         one: "%{count} برچسب حذف خواهد شد:%{tags}"
         other: "%{count} برچسب حذف خواهد شد: %{tags}"
@@ -4581,7 +4559,6 @@ fa_IR:
       tags_form_modal:
         title: "ویرایش ناوبری برچسب‌ها"
         filter_placeholder: "فیلتر کردن برچسب‌ها"
-        no_tags: "هیچ برچسبی مطابق با عبارت داده شده وجود ندارد."
         subtitle:
           text: "و ما به طور خودکار برچسب‌های برتر این سایت را نشان خواهیم داد"
       edit_navigation_modal_form:
@@ -4881,6 +4858,8 @@ fa_IR:
         enabled_for_options:
           everyone: "همه"
           staff: "فقط به تیم مدیریت"
+        statuses:
+          experimental: "آزمایشی"
         impact_roles:
           admins: "مدیران ارشد"
           moderators: "ناظران"
@@ -4890,6 +4869,7 @@ fa_IR:
           enabled: "فعال شده"
           disabled: "غیرفعال"
           impact_type_other: "دیگر"
+          status_experimental: "آزمایشی"
       config:
         about:
           title: "درباره سایت شما"
@@ -4920,6 +4900,8 @@ fa_IR:
           sub_pages:
             common_settings:
               title: "تنظیم"
+        discourse_id:
+          learn_more: "بیشتر بدانید"
         logo:
           form:
             logo:
@@ -4933,6 +4915,8 @@ fa_IR:
           form:
             location:
               label: "موقعیت"
+            text_section:
+              locale_label: "زبان"
             header_logged_in:
               placeholder: "خوش آمدید، %{preferred_display_name}!"
             header_anonymous:
@@ -6724,7 +6708,6 @@ fa_IR:
           button: "پاک کردن همه‌ی نوشته‌ها"
           progress:
             title: "پیشرفت در حذف فرسته‌ها"
-            description: "در حال حذف فرسته‌ها…"
           confirmation:
             title: "حذف همه فرسته‌های @%{username}"
             text: "حذف فرسته‌های @%{username}"
@@ -7001,16 +6984,12 @@ fa_IR:
             prompt: "تغییر این تنظیمات ممکن است عواقب گسترده یا ناخواسته ای برای سایت شما داشته باشد. آیا مطمئن هستید که می خواهید ادامه دهید؟"
             confirm: "بله، مطمئنم"
           min_password_length:
-            prompt: "شما در حال تغییر سیاست رمز عبور خود هستید. این تغییر از این پس بر تمام کاربرانی که رمز عبور خود را تغییر می‌دهند، اعمال خواهد شد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
             confirm: "بله، سیاست رمز عبور را به روز کنید"
           min_admin_password_length:
-            prompt: "شما در حال تغییر سیاست رمز عبور خود هستید. این تغییر از این پس بر تمام مدیرانی که رمز عبور خود را تغییر می‌دهند، اعمال خواهد شد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
             confirm: "بله، سیاست رمز عبور را به روز کنید"
           password_unique_charactes:
-            prompt: "شما در حال تغییر سیاست رمز عبور خود هستید. این تغییر از این پس بر تمام کاربرانی که رمز عبور خود را تغییر می‌دهند، اعمال خواهد شد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
             confirm: "بله، سیاست رمز عبور را به روز کنید"
           block_common_passwords:
-            prompt: "شما در حال تغییر سیاست رمز عبور خود هستید. این تغییر از این پس بر تمام کاربرانی که رمز عبور خود را تغییر می‌دهند، اعمال خواهد شد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
             confirm: "بله، سیاست رمز عبور را به روز کنید"
       badges:
         status: وضعیت
@@ -7045,6 +7024,8 @@ fa_IR:
         no_user_badges: "%{name} هیچ نشانی دریافت نکرده است."
         no_badges: نشانی برای اعطا کردن وجود ندارد.
         none_selected: "برای شروع یک نشان رو انتخاب کنید"
+        sections:
+          settings: تنظیم
         usage_heading: استفاده
         allow_title: اجازه‌ی استفاده نشان برای عنوان
         multiple_grant: نمی توان چندین بار اعطا کرد

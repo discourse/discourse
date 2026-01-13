@@ -155,7 +155,7 @@ da:
       el:
         name: Græsk
       en:
-        name: Engelsk (US)
+        name: Engelsk
       en_GB:
         name: Engelsk (UK)
       es:
@@ -790,7 +790,6 @@ da:
         claimed: "Påstået"
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
-        reviewed_by: "Gennemgået af %{username} · %{relativeDate}"
         note_added: "Moderator note"
       notes:
         add_note_button: "Tilføj note"
@@ -958,9 +957,7 @@ da:
           notification: Notifikation
         email:
           title: "Email"
-          status: "Synkroniserede %{old_emails} / %{total_emails} e-mails via IMAP."
           enable_smtp: "Aktivér SMTP"
-          enable_imap: "Aktivér IMAP"
           test_settings: "Test indstillinger"
           save_settings: "Gem indstillinger"
           last_updated: "Sidst opdateret:"
@@ -969,11 +966,7 @@ da:
           smtp_settings_valid: "SMTP-indstillinger er gyldige."
           smtp_title: "SMTP"
           smtp_instructions: "Når du aktiverer SMTP for gruppen, sendes alle udgående e-mails, der sendes fra gruppens indbakke, via de SMTP-indstillinger, der er angivet her, i stedet for den mailserver, der er konfigureret til andre e-mails, der sendes af dit forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Yderligere indstillinger"
-          imap_settings_valid: "IMAP-indstillinger er gyldige."
-          smtp_disable_confirm: "Hvis du deaktiverer SMTP, vil alle SMTP og IMAP indstillinger blive nulstillet, og den tilknyttede funktionalitet vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
-          imap_disable_confirm: "Hvis du deaktiverer IMAP, vil alle IMAP-indstillinger blive nulstillet, og den tilknyttede funktion vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
+          additional_settings: "Yderligere indstillinger"
           prefill:
             title: "Forudfyld med indstillinger for:"
             gmail: "Gmail"
@@ -988,19 +981,12 @@ da:
             smtp_server: "SMTP-server"
             smtp_port: "SMTP-port"
             smtp_ssl_mode: "SSL- Tilstand"
-            imap_server: "IMAP-server"
-            imap_port: "IMAP-port"
-            imap_ssl: "Brug SSL til IMAP"
             username: "Brugernavn"
             password: "Adgangskode"
           settings:
             title: "Indstillinger"
             allow_unknown_sender_topic_replies: "Tillad emnesvar fra ukendte afsendere"
             from_alias: "Fra Alias"
-          mailboxes:
-            synchronized: "Synkroniseret postkasse"
-            none_found: "Ingen postkasser blev fundet i denne e-mail-konto."
-            disabled: "Deaktiveret"
         membership:
           title: Medlemskab
           access: Adgang
@@ -1264,6 +1250,9 @@ da:
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktiveret?"
       user_notifications:
         filters:
           filter_by: "Filtrer efter"
@@ -1271,7 +1260,7 @@ da:
           read: "Læste"
           unread: "Ulæste"
           unseen: "Usete"
-        ignore_duration_title: "Ignorer Bruger"
+        ignore_duration_title: "Ignorer bruger"
         ignore_duration_username: "Brugernavn"
         ignore_duration_when: "Varighed:"
         ignore_duration_save: "Ignorér"
@@ -1492,7 +1481,6 @@ da:
         tags: "Tags"
         interface: "Grænseflade"
         apps: "Apps"
-        navigation_menu: "Navigationsmenu"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
@@ -2439,6 +2427,8 @@ da:
       ulist_title: "Punktopstilling"
       list_item: "Listepunkt"
       toggle_direction: "Skift retning"
+      wrap_modal:
+        apply: "Anvend"
       help: "Hjælp til Markdown-redigering"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
@@ -2487,6 +2477,7 @@ da:
         title: "Tilføj billedbeskrivelse"
       image_toolbar:
         alt_text: "Tilføj billedbeskrivelse"
+      image: "billede"
       image_scale_button: "Skaler billedet til %{percent}%"
       delete_image_button: Slet Billede
       link_toolbar:
@@ -2749,6 +2740,9 @@ da:
         reset_bump_dates: "Nulstil bump datoer"
         defer: "Markér som ulæst"
         delete: "Slet emner"
+        delete_topics_count:
+          one: "Slet emne"
+          other: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
         dismiss_button: "Afvis..."
@@ -2797,18 +2791,6 @@ da:
         category: "Der er ingen emner i kategorien %{category}."
         top: "Der er ingen top emner"
         filter: "Der er ingen emner."
-      bottom:
-        latest: "Der er ikke flere populære emner."
-        posted: "Der er ikke flere emner."
-        read: "Der er ikke flere læste emner."
-        new: "Der er ikke flere nye emner."
-        unread: "Der er ikke flere ulæste emner."
-        unseen: "Der er ikke flere usete emner."
-        category: "Der er ikke flere emner i kategorien %{category}."
-        tag: "Der er ikke flere %{tag} emner."
-        top: "Der er ikke flere top emner"
-        bookmarks: "Der er ikke flere bogmærkede emner."
-        filter: "Der er ikke flere emner."
     topic_bulk_actions:
       dismiss:
         name: "Ignorer Alle"
@@ -3787,6 +3769,7 @@ da:
         this_month: "Måned"
         this_week: "Uge"
         today: "I dag"
+        custom: "Tilpasset"
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -3992,6 +3975,7 @@ da:
       upload_description: "Overfør en csv-fil for at masseoprette tags"
       upload_instructions: "Én pr. linje, eventuelt med en mærkegruppe i formatet 'mærkenavn, mærkegruppe'"
       upload_successful: "Vellykket overførsel af tags"
+      bulk_create_button: "Opret"
       delete_unused_confirmation:
         one: "%{count}tag vil blive slettet: %{tags}"
         other: "%{count} tags bliver slettet: %{tags}"
@@ -4357,6 +4341,8 @@ da:
         enabled_for_options:
           everyone: "Alle"
           staff: "Kun personale"
+        statuses:
+          experimental: "Eksperimentel"
         impact_roles:
           admins: "Admins"
           moderators: "Moderatorer"
@@ -4366,6 +4352,7 @@ da:
           enabled: "Aktiveret"
           disabled: "Deaktiveret"
           impact_type_other: "Andre"
+          status_experimental: "Eksperimentel"
       config:
         about:
           title: "Om dit websted"
@@ -4388,6 +4375,11 @@ da:
           sub_pages:
             common_settings:
               title: "Indstillinger"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Lær mere"
         logo:
           title: "Logo"
           form:
@@ -4428,6 +4420,8 @@ da:
                 all_pages: "Alle sider"
             location:
               label: "Sted"
+            text_section:
+              locale_label: "Sprog"
             header_logged_in:
               placeholder: "Velkommen tilbage, %{preferred_display_name}!"
             header_anonymous:
@@ -5897,7 +5891,6 @@ da:
           button: "Slet alle indlæg"
           progress:
             title: "Fremskridt med sletning af indlæg"
-            description: "Sletter indlæg…"
           confirmation:
             title: "Slet alle indlæg af @%{username}"
             text: "slet indlæg af @%{username}"
@@ -6201,6 +6194,9 @@ da:
         no_user_badges: "%{name} er ikke blevet tildelt nogen emblemer."
         no_badges: Der er ikke nogen emblemer, der kan tildeles.
         none_selected: "Vælg et emblem for at komme igang"
+        sections:
+          query: Forespørgsel
+          settings: Indstillinger
         allow_title: Tillad at bruge dette emblem som titel
         multiple_grant: Kan tildeles flere gange
         visibility_heading: Synlighed

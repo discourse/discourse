@@ -129,6 +129,16 @@ RSpec.describe Chat::AddUsersToChannel do
         it "only notifies the newly added users" do
           expect(result.added_user_ids).to eq users.last(2).map(&:id)
         end
+
+        it "respects membership settings for existing users" do
+          membership = channel.user_chat_channel_memberships.find_by(user: users.first)
+          membership.update!(
+            muted: true,
+            notification_level: ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:mention],
+          )
+
+          expect { result }.not_to change { membership.reload.attributes }
+        end
       end
     end
 

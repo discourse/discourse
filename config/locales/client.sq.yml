@@ -138,6 +138,9 @@ sq:
       placeholder: data
       from_placeholder: "nga data"
       to_placeholder: "deri më"
+    languages:
+      en:
+        name: Anglisht
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "postimi #%{postNumber} nga @%{username}"
@@ -850,9 +853,7 @@ sq:
           notification: Njoftim
         email:
           title: "Email"
-          status: "Emailet e sinkronizuara %{old_emails} / %{total_emails} nëpërmjet IMAP."
           enable_smtp: "Aktivizoni SMTP"
-          enable_imap: "Aktivizoni IMAP"
           test_settings: "Cilësimet e Testimit"
           save_settings: "Ruani Cilësimet"
           last_updated: "Përditësimi i fundit:"
@@ -861,14 +862,7 @@ sq:
           smtp_settings_valid: "Cilësimet SMTP janë të vlefshme."
           smtp_title: "SMTP"
           smtp_instructions: "Kur aktivizoni SMTP për grupin, të gjitha emailet dalëse të dërguara nga kutia postare e grupit do të dërgohen përmes cilësimeve SMTP të specifikuara këtu në vend të serverit të postës të konfiguruar për emailet e tjera të dërguara nga forumi juaj."
-          imap_title: "IMAP"
-          imap_additional_settings: "Cilësimet Shtesë"
-          imap_instructions: 'Kur aktivizoni IMAP për grupin, emailet sinkronizohen ndërmjet kutisë hyrëse të grupit dhe serverit dhe kutisë postare të ofruar IMAP. SMTP duhet të aktivizohet me kredenciale të vlefshme dhe të testuara përpara se të aktivizohet IMAP. Emri i përdoruesit dhe fjalëkalimi i emailit të përdorur për SMTP do të përdoren për IMAP. Për më shumë informacion, shihni njoftimin e veçorive <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">në Discourse Meta</a>.'
-          imap_alpha_warning: "Paralajmërim: Ky është një veçori e fazës alfa. Vetëm Gmail mbështetet zyrtarisht. Përdoreni në rrezikun tuaj!"
-          imap_settings_valid: "Cilësimet IMAP janë të vlefshme."
-          smtp_disable_confirm: "Nëse çaktivizoni SMTP, të gjitha cilësimet SMTP dhe IMAP do të rivendosen dhe funksionaliteti përkatës do të çaktivizohet. Je tëi sigurt që dëshiron të vazhdoni?"
-          imap_disable_confirm: "Nëse çaktivizoni IMAP, të gjitha cilësimet IMAP do të rivendosen dhe funksionaliteti përkatës do të çaktivizohet. Jeni të sigurt që dëshironi të vazhdoni?"
-          imap_mailbox_not_selected: "Duhet të zgjidhni një kuti postare për këtë konfigurim IMAP ose asnjë kuti postare nuk do të sinkronizohet!"
+          additional_settings: "Cilësimet Shtesë"
           prefill:
             title: "Plotësoni paraprakisht me cilësimet për:"
             gmail: "Gmail"
@@ -883,9 +877,6 @@ sq:
             smtp_server: "Serveri SMTP"
             smtp_port: "Porta SMTP"
             smtp_ssl_mode: "Modaliteti SSL"
-            imap_server: "Serveri IMAP"
-            imap_port: "Porta IMAP"
-            imap_ssl: "Përdorni SSL për IMAP"
             username: "Emri i përdoruesit"
             password: "Fjalëkalimi"
           settings:
@@ -894,10 +885,6 @@ sq:
             allow_unknown_sender_topic_replies_hint: "Lejon dërguesit e panjohur të përgjigjen temave të grupit. Nëse kjo nuk është e aktivizuar, përgjigjet nga adresat e postës elektronike që nuk janë ftuar tashmë në temë do të krijojnë një temë të re."
             from_alias: "Nga Alias"
             from_alias_hint: "Alias për t'u përdorur si adresë nga kur dërgoni email SMTP në grup. Vini re se kjo mund të mos mbështetet nga të gjithë ofruesit e postës, ju lutemi konsultohuni me dokumentacionin e ofruesit tuaj të postës."
-          mailboxes:
-            synchronized: "Kuti postare e sinkronizuar"
-            none_found: "Nuk u gjet asnjë kuti postare në këtë llogari emaili."
-            disabled: "E çaktivizuar"
         membership:
           title: Anëtarësimi
           access: Lejimi
@@ -1160,6 +1147,9 @@ sq:
       new_private_message: "Mesazh i ri"
       private_message: "Mesazh"
       private_messages: "Mesazhet"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktivizuar?"
       user_notifications:
         filters:
           filter_by: "Filtro sipas"
@@ -1469,7 +1459,6 @@ sq:
         tags: "Etiketat"
         interface: "Ndërfaqja"
         apps: "Aplikimet"
-        navigation_menu: "Menuja e navigimit"
       change_password:
         success: "(emaili u dërgua)"
         in_progress: "(duke dërguar emailin)"
@@ -2525,6 +2514,8 @@ sq:
       upload_title: "Ngarko"
       upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
       list_item: "Element liste"
+      wrap_modal:
+        apply: "Apliko"
       help: "Ndihmë mbi Markdown"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
       modal_ok: "OK"
@@ -2574,6 +2565,7 @@ sq:
         title: "Shtoni përshkrimin e imazhit"
       image_toolbar:
         alt_text: "Shtoni përshkrimin e imazhit"
+      image: "imazh"
       image_scale_button: "Shkallezoni imazhin në %{percent}%"
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
@@ -2902,6 +2894,9 @@ sq:
         reset_bump_dates: "Rivendos datat e përplasjes"
         defer: "Shëno si të palexuar"
         delete: "Fshi temat"
+        delete_topics_count:
+          one: "Fshi temën"
+          other: "Fshi temat"
         dismiss: "Hiqe"
         dismiss_read: "Hiq të gjitha temat e palexuara"
         dismiss_read_with_selected:
@@ -2974,19 +2969,6 @@ sq:
         top: "Nuk ka tema popullore."
         hot: "Nuk ka tema të nxehta."
         filter: "Nuk ka tema."
-      bottom:
-        latest: "Nuk ka më tema të reja."
-        posted: "Nuk ka më tema të publikuara."
-        read: "Nuk ka më tema të lexuara."
-        new: "Nuk ka më tema të reja."
-        unread: "Nuk ka më tema të palexuara."
-        unseen: "Nuk ka më tema të palexuara."
-        category: "Nuk ka më tema nga %{category}."
-        tag: "Nuk ka më tema nga %{tag}."
-        top: "Nuk ka më tema popullore."
-        hot: "Nuk ka më tema popullore."
-        bookmarks: "Nuk ka më tema të preferuara."
-        filter: "Nuk ka më tema."
     topic_bulk_actions:
       dismiss:
         name: "Hiqe"
@@ -3078,9 +3060,6 @@ sq:
       participant_groups: "Grupet e pjesëmarrësve"
       created_at: "Krijuar: %{date}"
       bumped_at: "E fundit: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Shfletoni të gjitha kategoritë</a> ose <a href='%{basePath}/latest'>shikoni temat më të fundit</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Shfletoni të gjitha kategoritë</a>, <a href='%{basePath}/latest'>shikoni temat më të fundit</a> ose shihni krye:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Shfletoni të gjitha etiketat</a> ose <a href='%{basePath}/latest'>shikoni temat më të fundit</a>."
       suggest_create_topic: Gati për të filluar <a href>një bisedë të re?</a>
       jump_reply: "Shko në vendndodhjen origjinale të postimit"
       jump_reply_aria: "Shko te postimi i @%{username}në vendndodhjen e tij origjinale"
@@ -3718,6 +3697,7 @@ sq:
         this_month: "Këtë muaj"
         this_week: "Këtë javë"
         today: "Sot"
+        custom: "Grupet e krijuara"
     permission_types:
       full: "Krijo / Përgjigju / Shiko"
       create_post: "Përgjigju / Shiko"
@@ -3813,6 +3793,7 @@ sq:
       sort_by: "Rendit sipas:"
       sort_by_count: "numri"
       sort_by_name: "emër"
+      bulk_create_button: "Krijo"
       filters:
         without_category: "%{filter} %{tag} temat"
         with_category: "%{filter} %{tag} temat në %{category}"
@@ -3999,6 +3980,8 @@ sq:
           sub_pages:
             common_settings:
               title: "Rregullimet"
+        discourse_id:
+          learn_more: "Mësoni më shumë"
         logo:
           form:
             mobile: "Mobile"
@@ -4877,6 +4860,8 @@ sq:
         no_user_badges: "%{name} nuk ka marrë ende ndonjë stemë."
         no_badges: Nuk ka stema që mund të atribuohen.
         none_selected: "Si fillim zgjidhni një stemë"
+        sections:
+          settings: Rregullimet
         allow_title: Lejoni stemën të përdoret si titull
         multiple_grant: Mund të akordohet disa herë
         listable: Shfaqni stemën në faqen publike të stemave

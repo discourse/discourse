@@ -1,7 +1,9 @@
+// @ts-check
+
 /**
  * This extension is considered a "core" extension, it's autoloaded by ProsemirrorEditor
  *
- * @type {RichEditorExtension}
+ * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
  */
 const extension = {
   plugins({

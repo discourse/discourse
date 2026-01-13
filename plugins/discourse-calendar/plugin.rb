@@ -16,6 +16,7 @@ require_relative "lib/calendar_upcoming_events_default_view"
 
 enabled_site_setting :calendar_enabled
 
+register_svg_icon "calendar-days"
 register_asset "stylesheets/common/full-calendar-ext.scss"
 register_asset "stylesheets/common/discourse-calendar.scss"
 register_asset "stylesheets/common/discourse-calendar-holidays.scss"
@@ -23,6 +24,7 @@ register_asset "stylesheets/common/discourse-post-event.scss"
 register_asset "stylesheets/common/discourse-post-event-preview.scss"
 register_asset "stylesheets/common/post-event-builder.scss"
 register_asset "stylesheets/common/discourse-post-event-invitees.scss"
+register_asset "stylesheets/common/composer-event-node-view.scss"
 register_asset "stylesheets/common/discourse-post-event-core-ext.scss"
 register_asset "stylesheets/mobile/discourse-post-event-core-ext.scss", :mobile
 register_asset "stylesheets/common/discourse-post-event-bulk-invite-modal.scss"

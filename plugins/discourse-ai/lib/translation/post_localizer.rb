@@ -3,7 +3,7 @@
 module DiscourseAi
   module Translation
     class PostLocalizer
-      MAX_QUOTA_PER_DAY = 2
+      include LocalizableQuota
 
       def self.localize(post, target_locale = I18n.locale, llm_model: nil)
         if post.blank? || target_locale.blank? ||
@@ -21,52 +21,25 @@ module DiscourseAi
 
         localization.raw = translated_raw
         localization.cooked = post.post_analyzer.cook(translated_raw, post.cooking_options || {})
+        localization.post_version = post.version
+        localization.localizer_user_id = Discourse::SYSTEM_USER_ID
+        localization.save!
 
         cooked_processor = LocalizedCookedPostProcessor.new(localization, post, {})
         begin
           cooked_processor.post_process
-          localization.cooked = cooked_processor.html
+          localization.update!(cooked: cooked_processor.html)
         rescue => e
           # Log but don't fail translation if post-processing (oneboxes, images) fails
           Rails.logger.warn(
             "Post-processing failed for localization of post #{post.id} to #{target_locale}: #{e.class} - #{e.message}",
           )
-          # Keep the cooked content without post-processing
         end
-
-        localization.post_version = post.version
-        localization.localizer_user_id = Discourse.system_user.id
-        localization.save!
         localization
       end
 
-      def self.has_relocalize_quota?(post, locale, skip_incr: false)
-        return false if get_relocalize_quota(post, locale).to_i >= MAX_QUOTA_PER_DAY
-
-        incr_relocalize_quota(post, locale) unless skip_incr
-        true
-      end
-
-      private
-
-      def self.relocalize_key(post, locale)
-        "post_relocalized_#{post.id}_#{locale}"
-      end
-
-      def self.get_relocalize_quota(post, locale)
-        Discourse.redis.get(relocalize_key(post, locale)).to_i || 0
-      end
-
-      def self.incr_relocalize_quota(post, locale)
-        key = relocalize_key(post, locale)
-
-        if (count = get_relocalize_quota(post, locale)).zero?
-          Discourse.redis.set(key, 1, ex: 1.day.to_i)
-        else
-          ttl = Discourse.redis.ttl(key)
-          incr = count.to_i + 1
-          Discourse.redis.set(key, incr, ex: ttl)
-        end
+      def self.model_name
+        "post"
       end
     end
   end

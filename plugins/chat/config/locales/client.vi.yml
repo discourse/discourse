@@ -11,15 +11,20 @@ vi:
         chat_separate_sidebar_mode:
           always: "Luôn luôn"
           never: "Không bao giờ"
+    about:
+      activities:
+        chat_messages:
+          other: "%{formatted_number} tin chat"
     chat:
       deleted_chat_username: đã bị xóa
       dates:
         yesterday: "Hôm qua"
       create: "Tạo"
-      cancel: "Huỷ"
+      cancel: "Hủy"
       channel_settings:
         edit: "Sửa"
         add: "Thêm"
+        notification_settings_context: "Thông báo"
         join: "Tham gia"
         leave: "Rời nhóm"
       close: "Đóng"
@@ -29,22 +34,27 @@ vi:
       muted: "im lặng"
       joined: "đã tham gia"
       email_frequency:
+        description: "Sẽ chỉ gửi email nếu bạn vắng mặt trong 15 phút."
         never: "Không bao giờ"
+        title: "Email khi tôi nhận được tin nhắn trực tiếp hoặc nhóm chat."
+        when_away: "Khi vắng mặt"
       header_indicator_preference:
         never: "Không bao giờ"
-      flag: "Gắn cờ"
+      flag: "Báo cáo"
       join: "Tham gia"
-      last_visit: "lần thăm cuối"
+      last_visit: "Lần ghé thăm cuối"
       mention_warning:
         groups:
           header:
             some: "Một số người dùng sẽ không được thông báo"
             all: "Sẽ không ai được thông báo"
+      no_direct_message_channels: "Bạn chưa nhắn riêng!"
+      no_public_channels: "Bạn chưa tham gia kênh nào!"
       reply: "Trả lời"
       edit: "Sửa"
       rebake_message: "Tạo lại HTML"
-      bookmark_message: "Đánh dấu chỉ mục"
-      bookmark_message_edit: "Chỉnh sửa Dấu trang"
+      bookmark_message: "Đánh dấu"
+      bookmark_message_edit: "Chỉnh sửa đánh dấu"
       save: "Lưu lại"
       select: "Chọn"
       sounds:
@@ -69,11 +79,12 @@ vi:
       channel_info:
         back_to_channel: "Quay lại"
         tabs:
-          members: Các thành viên
+          members: Thành viên kênh
           settings: Cài đặt
           search: Tìm kiếm
         remove_member: "Xoá"
       new_message_modal:
+        title: Gửi tin nhắn
         no_items: "Không có mẫu nào"
         filter: "Lọc"
       direct_message_creator:
@@ -103,10 +114,12 @@ vi:
         unfollow: "Rời nhóm"
         admin_title: "Quản trị"
         settings_title: "Cài đặt"
-        category_label: "Danh mục"
+        category_label: "Chuyên mục"
         history_label: "Lịch sử"
         members_label: "Các thành viên"
       search:
+        short_title: Tìm kiếm
+        title: Tìm chat
         no_results: "Không tìm thấy kết quả"
         sort:
           relevance: "Độ phù hợp"
@@ -125,7 +138,7 @@ vi:
         url: "URL"
         username: "Tên tài khoản"
       selection:
-        cancel: "Huỷ"
+        cancel: "Hủy"
         copy: "Sao chép"
         new_topic:
           title: "Di chuyển tới Chủ đề mới"
@@ -160,7 +173,7 @@ vi:
           other: "+%{count}"
       draft_channel_screen:
         header: "Tin nhắn mới"
-        cancel: "Huỷ"
+        cancel: "Hủy"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
       chat_watched_thread_label:
@@ -171,3 +184,26 @@ vi:
           fields:
             message:
               label: Tin nhắn
+            sender:
+              label: Người gửi
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chat"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Chuyển kênh"
+          switch__unread_channel_arrows: "%{shortcut} Chuyển kênh chưa đọc"
+          open_quick_channel_selector: "%{shortcut} Mở trình chọn kênh nhanh"
+          open_insert_link_modal: "%{shortcut} Chèn link (chỉ có trên trình soạn thảo)"
+          composer_bold: "%{shortcut} In đậm (chỉ có trên trình soạn thảo)"
+          composer_italic: "%{shortcut} In nghiêng (chỉ có trên trình soạn thảo)"
+          composer_code: "%{shortcut} Đoạn mã (chỉ có trên trình soạn thảo)"
+          drawer_open: "%{shortcut} Mở ngăn chat"
+          drawer_close: "%{shortcut} Đóng ngăn chat"
+          mark_all_channels_read: "%{shortcut} Đánh dấu tất cả các kênh đã đọc"
+    user_menu:
+      no_chat_notifications_body: >
+        Bảng điều khiển này hiện thông báo khi ai đó gửi tin nhắn trực tiếp cho bạn hoặc <b>nhắc đến</b> bạn trong cuộc trò chuyện. Thông báo cũng sẽ được gửi đến email của bạn khi bạn không đăng nhập trong một thời gian dài. <br><br> Nhấn vào tiêu đề ở đầu bất kỳ kênh trò chuyện nào để cấu hình các thông báo bạn nhận được trong kênh đó. Để biết thêm chi tiết, hãy xem <a href='%{preferencesUrl}'>thiết lập thông báo</a> của bạn.
+      tabs:
+        chat_notifications: "Thông báo chat"
+        chat_notifications_with_unread:
+          other: "Thông báo chat - %{count} chưa đọc"

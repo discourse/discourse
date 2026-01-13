@@ -93,6 +93,7 @@ ar:
         join_channel: "الانضمام إلى القناة"
         leave_channel: "مغادرة القناة"
         leave_groupchat_info: "بمغادرة هذه الدردشة الجماعية، ستفقد الوصول إليها إلى الأبد ولن تتلقى أي إشعارات متعلقة بها. للانضمام مرة أخرى، ستحتاج إلى إعادة دعوتك من قِبل أحد أعضاء الدردشة الجماعية."
+        notification_settings_context: "الإشعارات"
         join: "الانضمام"
         leave: "مغادرة"
         save_label:
@@ -156,10 +157,8 @@ ar:
       send_shortcut:
         enter:
           label: "الإرسال بواسطة مفتاح Enter"
-          description: "سطر جديد بواسطة مفتاحَي Shift + Enter"
         meta_enter:
           label: "الإرسال بواسطة مفتاحَي %{meta_key} + Enter"
-          description: "سطر جديد بواسطة مفتاح Enter"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
@@ -272,10 +271,8 @@ ar:
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       only_chat_push_notifications:
         title: "إرسال الإشعارات الفورية للدردشة فقط"
-        description: "حظر إرسال جميع الإشعارات الفورية غير المتعلقة بالدردشة"
       ignore_channel_wide_mention:
         title: "تجاهل الإشارات على مستوى القناة"
-        description: "عدم إرسال الإشعارات للإشارات على مستوى القناة (@here و@all)"
       show_thread_title_prompts:
         title: "إظهار مطالبات عنوان سلسلة الدردشة"
         description: "إظهار مطالبات لتعيين عنوان للموضوعات الجديدة"
@@ -567,6 +564,7 @@ ar:
           confirm_export: "يؤدي هذا إلى تصدير جميع الرسائل من جميع القنوات وإرسال النتيجة إليك في رسالة شخصية. هل تريد بالتأكيد التصدير؟"
           export_has_started: "بدأ التصدير. ستتلقى رسالة خاصة عندما يصبح جاهزًا."
       search:
+        short_title: البحث
         no_results: "لم يتم العثور على نتائج"
         sort:
           relevance: "مدى الصلة بالموضوع"

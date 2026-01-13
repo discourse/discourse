@@ -285,7 +285,7 @@ export default class AdminBadgesShow extends Component {
           </form.Field>
         {{/if}}
 
-        <form.Section @title="Design">
+        <form.Section @title={{i18n "admin.badges.sections.design"}}>
           <form.Field
             @name="badge_type_id"
             @title={{i18n "admin.badges.badge_type"}}
@@ -400,7 +400,7 @@ export default class AdminBadgesShow extends Component {
         </form.Section>
 
         {{#if this.siteSettings.enable_badge_sql}}
-          <form.Section @title="Query">
+          <form.Section @title={{i18n "admin.badges.sections.query"}}>
             <form.Field
               @name="query"
               @title={{i18n "admin.badges.query"}}
@@ -468,7 +468,7 @@ export default class AdminBadgesShow extends Component {
           </form.Section>
         {{/if}}
 
-        <form.Section @title="Settings">
+        <form.Section @title={{i18n "admin.badges.sections.settings"}}>
           <form.Field
             @name="badge_grouping_id"
             @validation="required"

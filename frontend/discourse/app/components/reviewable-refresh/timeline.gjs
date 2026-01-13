@@ -5,9 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import DecoratedHtml, {
-  applyHtmlDecorators,
-} from "discourse/components/decorated-html";
+import DecoratedHtml from "discourse/components/decorated-html";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable-refresh/note-form";
@@ -17,7 +15,6 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -33,14 +30,6 @@ const HISTORY_UNCLAIMED_ID = 4;
  */
 export default class ReviewableTimeline extends Component {
   @service currentUser;
-  @service store;
-
-  /**
-   * The post being reviewed (if applicable)
-   *
-   * @type {Post}
-   */
-  @tracked reviewablePost;
 
   /**
    * Array of notes associated with the reviewable
@@ -53,13 +42,6 @@ export default class ReviewableTimeline extends Component {
     super(...arguments);
 
     this.reviewableNotes = this.args.reviewable.reviewable_notes || [];
-
-    // If we have a post_id but no post, we need to grab it from the store.
-    if (this.args.reviewable.post_id && !this.reviewablePost) {
-      this.store
-        .find("post", this.args.reviewable.post_id)
-        .then((post) => (this.reviewablePost = post));
-    }
   }
 
   /**
@@ -73,10 +55,10 @@ export default class ReviewableTimeline extends Component {
     const reviewedEvents = new Map(); // Track reviewed events to prevent duplicates
 
     // Add target post creation event (when the original post was created)
-    if (this.reviewablePost) {
+    if (this.args.reviewable.target_created_at) {
       events.push({
         type: "target_created",
-        date: this.reviewablePost.created_at,
+        date: this.args.reviewable.target_created_at,
         user: this.args.reviewable.target_created_by,
         icon: "pen-to-square",
         titleKey: "review.timeline.target_created_by",
@@ -131,15 +113,19 @@ export default class ReviewableTimeline extends Component {
           if (!reviewedEvents.has(reviewedKey)) {
             // Determine icon based on score status
             let reviewIcon;
+            let titleKey;
             switch (score.status) {
               case 1: // approved
                 reviewIcon = "check";
+                titleKey = "review.timeline.approved_by";
                 break;
               case 2: // rejected
-                reviewIcon = "times";
+                reviewIcon = "xmark";
+                titleKey = "review.timeline.rejected_by";
                 break;
               case 3: // ignored
                 reviewIcon = "far-eye-slash";
+                titleKey = "review.timeline.ignored_by";
                 break;
               default:
                 reviewIcon = "check"; // fallback
@@ -150,10 +136,7 @@ export default class ReviewableTimeline extends Component {
               date: score.reviewed_at,
               user: score.reviewed_by,
               icon: reviewIcon,
-              titleKey: "review.timeline.reviewed_by",
-              description: score.reason
-                ? htmlSafe(`<p>${score.reason}</p>`)
-                : undefined,
+              titleKey,
             };
 
             events.push(reviewedEvent);
@@ -241,11 +224,6 @@ export default class ReviewableTimeline extends Component {
     }
   }
 
-  @bind
-  decorate(element, helper) {
-    applyHtmlDecorators(element, helper);
-  }
-
   <template>
     <div class="reviewable-timeline">
 
@@ -285,7 +263,6 @@ export default class ReviewableTimeline extends Component {
                       <DecoratedHtml
                         @className="timeline-event__description"
                         @html={{event.description}}
-                        @decorate={{this.decorate}}
                       />
                     {{/if}}
                   </div>

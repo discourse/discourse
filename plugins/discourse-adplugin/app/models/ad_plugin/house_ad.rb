@@ -11,6 +11,11 @@ module AdPlugin
              foreign_key: "ad_plugin_house_ad_id",
              dependent: :destroy
 
+    has_many :routes,
+             class_name: "AdPlugin::HouseAdRoute",
+             foreign_key: "ad_plugin_house_ad_id",
+             dependent: :delete_all
+
     has_and_belongs_to_many :groups,
                             join_table: "ad_plugin_house_ads_groups",
                             foreign_key: "ad_plugin_house_ad_id",
@@ -59,6 +64,10 @@ module AdPlugin
           .distinct
 
       query.to_a
+    end
+
+    def route_names
+      routes.pluck(:route_name)
     end
 
     private

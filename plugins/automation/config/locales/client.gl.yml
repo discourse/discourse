@@ -27,6 +27,12 @@ gl:
         text:
           label: Texto
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorías
+            tags:
+              label: Etiquetas
         user_badge_granted:
           fields:
             badge:
@@ -132,6 +138,8 @@ gl:
               label: ID do tema
             user:
               label: Usuario
+        set_topic_timer:
+          title: Estabelecer temporizador do tema
       models:
         trigger:
           name:

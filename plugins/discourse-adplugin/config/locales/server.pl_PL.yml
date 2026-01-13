@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: Wyświetlenia wtyczki reklamowej reklam własnych
+      description: "Raport wyświetleń reklam własnych"
+    ad_plugin_ad_impressions:
+      title: Wyświetlenia wtyczki reklamowej
+      description: "Raport wyświetleń reklam"
+    ad_plugin_impressions_by_user:
+      title: Wyświetlenia wtyczki reklamowej według użytkownika
+      description: "Wyświetlenia reklam pogrupowane według użytkownika"
+    ad_plugin_click_through_rate:
+      title: Wydajność konwersji wtyczki reklamowej
+      description: "Raport skuteczności reklam według reklamy i miejsca docelowego"
+    ad_plugin_click_through_rate_by_placement:
+      title: Wydajność wtyczki reklamowej według umiejscowienia
+      description: "Raport skuteczności reklam według umiejscowienia"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: Wydajność wtyczki reklamowej według typu reklamy
+      description: "Raport skuteczności reklam według typu reklamy"
+  errors:
+    already_clicked: "Kliknięcie już zarejestrowane"
   site_settings:
     discourse_adplugin_enabled: Włącz wtyczkę discourse-adplugin.
     no_ads_for_personal_messages: "Nie pokazuj reklam podczas przeglądania prywatnych wiadomości"
@@ -16,6 +37,7 @@ pl_PL:
     house_ads_after_nth_post: 'Jeżeli wybrano wyświetlanie reklam pomiędzy wpisami, wyświetlaj je co N wpisów, gdzie N to ta liczba.'
     house_ads_frequency: "Jeśli reklamy innych sieci zostały skonfigurowane, by pokazywać się w slocie na reklamy, ta wartość pozwala na ustalenie – w procentach – jak często będą wyświetlane"
     ads_txt: "Zawartość pliku ads.txt. Więcej szczegółów znajdziesz na <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>tej stronie pomocy Google AdSense</a>."
+    ad_plugin_routes_enabled: "Włącz kierowanie trasą dla reklam własnych"
     dfp_publisher_id: "Wpisz kod sieci Menedżera reklam Google (wcześniej nazywany DFP), który znajduje się w ustawieniach sieci. UWAGA: Konieczne będzie zaktualizowanie ustawienia „skrypt bezpieczeństwa zasad src”. Zobacz <a href='https://meta.discourse.org/t/33734' target='_blank'>ten temat,</a> aby uzyskać najnowsze instrukcje."
     dfp_publisher_id_mobile: "(Opcjonalnie) jeśli chcesz użyć innego publisher id Ad Managera dla mobilnej wersji swojej strony, to umieść je tutaj. Pozostaw to pole puste, by użyć dfp_publisher_id na urządzeniach mobilnych."
     dfp_through_trust_level: "Pokaż reklamy swoim użytkownikom na podstawie poziomu zaufania. Użytkownicy z poziomem zaufania wyższym niż ta wartość, nie zobaczą reklam."

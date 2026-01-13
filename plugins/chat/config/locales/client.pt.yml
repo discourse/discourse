@@ -41,6 +41,7 @@ pt:
         delete_channel: "Apagar canal"
         join_channel: "Aderir ao canal"
         leave_channel: "Sair do canal"
+        notification_settings_context: "Notificações"
         join: "Entrar"
         leave: "Sair"
         save_label:
@@ -172,6 +173,7 @@ pt:
         history_label: "Histórico"
         members_label: "Membros"
       search:
+        short_title: Procurar
         no_results: "Não foi encontrado nenhum resultado"
         sort:
           relevance: "Relevância"

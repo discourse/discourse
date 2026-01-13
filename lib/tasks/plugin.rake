@@ -3,6 +3,11 @@
 directory "plugins"
 
 desc "install all official plugins (use GIT_WRITE=1 to pull with write access)"
+
+task "plugin:list_official" do
+  Plugin::Metadata::OFFICIAL_PLUGINS.each { |name| STDOUT.puts name }
+end
+
 task "plugin:install_all_official" do
   skip = Set.new(%w[customer-flair poll])
 
@@ -190,6 +195,9 @@ def spec(plugin, files, parallel: false, argv: nil)
   params << "--fail-fast" if ENV["RSPEC_FAILFAST"]
   params << "--seed #{ENV["RSPEC_SEED"]}" if Integer(ENV["RSPEC_SEED"], exception: false)
   params << argv if argv
+
+  # if plugin contains a comma, it's a list. we need to surround it with brackets
+  plugin = "{#{plugin}}" if plugin.include?(",")
 
   # reject system specs as they are slow and need dedicated setup
   if files.empty?

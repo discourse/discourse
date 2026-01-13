@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ca:
+  js:
+    github:
+      pr_status:
+        draft: "Esborrany"
+        open: "Obre"
+        approved: "Aprovat"
+        closed: "Tancat"

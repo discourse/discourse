@@ -1040,12 +1040,9 @@ fr:
     no_log_search_queries: "Les journaux des requêtes de recherche sont actuellement désactivés (un administrateur peut les activer dans les paramètres du site)."
   email_settings:
     pop3_authentication_error: "L'authentification auprès du serveur POP3 a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
-    imap_authentication_error: "L'authentification auprès du serveur IMAP a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
-    imap_no_response_error: "Une erreur est survenue lors de la communication avec le serveur IMAP. %{message}"
     smtp_authentication_error: "Un problème est survenu avec les informations d'identification SMTP fournies, vérifiez le nom d'utilisateur et le mot de passe, et réessayez. %{message}"
     smtp_server_busy_error: "Le serveur SMTP indique qu'il subit une trop forte charge. Patientez un moment avant de réessayer."
     smtp_unhandled_error: "Une erreur non prise en charge est survenue lors de la communication avec le serveur SMTP. %{message}"
-    imap_unhandled_error: "Une erreur non prise en charge est survenue lors de la communication avec le serveur IMAP. %{message}"
     connection_error: "Un problème de connexion au serveur s'est produit. Vérifiez le nom du serveur et le numéro de port avant de réessayer."
     timeout_error: "Le délai d'établissement de la connexion au serveur s'est écoulé. Vérifiez le nom du serveur et le numéro de port avant de réessayer."
     unhandled_error: "Une erreur non prise en charge est survenue lors du test des paramètres d'e-mail. %{message}"
@@ -1134,11 +1131,10 @@ fr:
       every_month: "tous les mois"
       every_six_months: "tous les six mois"
   user_api_key:
-    title: "Autoriser l'accès d'application"
     authorize: "Autoriser"
+    deny: "Annuler"
     read: "lecture"
     read_write: "lecture/écriture"
-    description: '« %{application_name} » demande l''accès suivant à votre compte :'
     instructions: 'Nous venons de générer une nouvelle clé d''API utilisateur à utiliser avec « %{application_name} ». Veuillez coller cette clé dans votre application :'
     otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
     otp_confirmation:
@@ -1997,35 +1993,22 @@ fr:
     tl3_requires_likes_given: "Le nombre minimal de « J'aime » à attribuer au cours des (tl3 time period) derniers jours pour être éligible au niveau de confiance 3."
     tl3_requires_likes_received: "Le nombre minimal de « J'aime » à recevoir au cours des (tl3 time period) derniers jours pour être éligible au niveau de confiance 3."
     tl3_links_no_follow: "Ne pas retirer rel=nofollow sur les liens des messages par les utilisateurs de niveau de confiance 3."
-    tl4_delete_posts_and_topics: "Autorisez les utilisateurs de TL4 à supprimer les messages et les sujets créés par d'autres utilisateurs. Les utilisateurs de TL4 pourront également voir les sujets et les messages supprimés."
     delete_all_posts_and_topics_allowed_groups: "Les groupes sont autorisés à supprimer les publications et les sujets créés par d'autres utilisateurs. Ces groupes pourront également voir les sujets et les publications supprimés."
     edit_all_topic_groups: "Autoriser les utilisateurs de ce groupe à modifier les titres, les étiquettes et les catégories des autres utilisateurs"
     edit_all_post_groups: "Autoriser les utilisateurs de ce groupe à modifier les messages des autres utilisateurs"
-    min_trust_to_create_topic: "Le niveau de confiance minimal pour créer un nouveau sujet."
     create_topic_allowed_groups: "Groupes autorisés à créer de nouveaux sujets. Les administrateurs et les modérateurs peuvent toujours créer des sujets."
     allow_flagging_staff: "Si cette option est activée, les utilisateurs peuvent signaler les messages des responsables."
-    min_trust_to_edit_wiki_post: "Le niveau de confiance minimal requis pour modifier les messages de type wiki."
     edit_wiki_post_allowed_groups: "Groupes autorisés à modifier les publications marquées comme wiki. Les administrateurs et les modérateurs peuvent toujours modifier les publications marquées comme wiki."
-    min_trust_to_edit_post: "Le niveau de confiance minimal requis pour modifier des messages."
     edit_post_allowed_groups: "Groupes autorisés à modifier des publications. Les administrateurs et les modérateurs peuvent toujours modifier les publications."
-    min_trust_to_allow_self_wiki: "Le niveau de confiance minimal requis pour transformer ses propres messages en type wiki."
     self_wiki_allowed_groups: "Autorisez les utilisateurs de ces groupes à créer leurs propres publications sur le wiki. Les administrateurs et les modérateurs peuvent toujours créer leurs propres publications sur le wiki."
     min_trust_to_send_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages directs ». Le niveau de confiance minimal requis pour créer de nouveaux messages directs."
-    min_trust_to_send_email_messages: "Le niveau de confiance minimal pour envoyer un message privé par e-mail."
     send_email_messages_allowed_groups: "Groupes autorisés à envoyer des messages privés par e-mail. Les administrateurs et les modérateurs peuvent toujours envoyer des messages privés par e-mail."
-    min_trust_to_flag_posts: "Le niveau de confiance minimal requis pour signaler des messages"
     flag_post_allowed_groups: "Groupes autorisés à signaler des publications. Les administrateurs et les modérateurs peuvent toujours signaler des publications."
-    min_trust_to_post_links: "Le niveau de confiance minimal requis pour inclure des liens dans les messages"
     post_links_allowed_groups: "Groupes autorisés à inclure des liens dans les publications. Les administrateurs et les modérateurs sont toujours autorisés à publier des liens."
-    min_trust_to_post_embedded_media: "Le niveau de confiance minimal requis pour intégrer des éléments multimédia dans un message"
     embedded_media_post_allowed_groups: "Les utilisateurs de ces groupes sont autorisés à intégrer des éléments multimédias dans les publications. Les administrateurs et les modérateurs peuvent toujours intégrer des éléments multimédias."
-    min_trust_level_to_allow_profile_background: "Le niveau de confiance minimal requis pour envoyer un arrière-plan de profil"
     profile_background_allowed_groups: "Groupes autorisés à téléverser un arrière-plan de profil. Les administrateurs et les modérateurs peuvent toujours téléverser un arrière-plan de profil."
-    min_trust_level_to_allow_user_card_background: "Le niveau de confiance minimal requis pour envoyer un arrière-plan de carte utilisateur"
     user_card_background_allowed_groups: "Groupes autorisés à téléverser l'arrière-plan d'une carte utilisateur. Les administrateurs et les modérateurs peuvent toujours téléverser l'arrière-plan d'une carte utilisateur."
-    min_trust_level_to_allow_invite: "Le niveau de confiance minimal requis pour inviter des utilisateurs"
     invite_allowed_groups: "Groupes autorisés à inviter des utilisateurs. Les administrateurs et les modérateurs peuvent toujours inviter des utilisateurs."
-    min_trust_level_to_allow_ignore: "Le niveau de confiance minimal requis pour ignorer les utilisateurs"
     ignore_allowed_groups: "Groupes autorisés à ignorer les autres utilisateurs. Les administrateurs et les modérateurs peuvent toujours ignorer les autres utilisateurs."
     allowed_link_domains: "Domaines vers lesquels les utilisateurs peuvent créer des liens, même s'ils n'ont pas le niveau de confiance suffisant pour publier des liens."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
@@ -2038,7 +2021,6 @@ fr:
     enable_mentions: "Permet aux utilisateurs de s'étiqueter ou de se référencer mutuellement dans leurs publications à l'aide du symbole « @ »."
     here_mention: "Nom d'une @mention permettant aux utilisateurs privilégiés d'envoyer une notification à chaque participant à un sujet, avec une limite de « max_here_mentioned » notifications envoyées. Doit être distinct de tout nom d'utilisateur existant."
     max_here_mentioned: "Nombre maximal de personnes recevant une notification lorsque la mention @here est utilisée."
-    min_trust_level_for_here_mention: "Niveau de confiance minimal requis pour utiliser la mention @here."
     here_mention_allowed_groups: "Groupes autorisés à mentionner @ici. Les administrateurs et les modérateurs peuvent toujours mentionner @ici."
     create_thumbnails: "Créer un aperçu et une visionneuse pour les images qui sont trop grandes pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des e-mails de notification, afin de laisser une chance aux utilisateurs de modifier ou de finaliser leurs messages."
@@ -2162,18 +2144,10 @@ fr:
     pop3_polling_delete_from_server: "Supprimer les e-mails du serveur. NOTE : si vous désactivez ceci vous devrez vider manuellement votre boîte de réception."
     log_mail_processing_failures: "Enregistrer tous les problèmes d'e-mail dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Autoriser les utilisateurs à publier de nouveaux sujets par e-mail. Après avoir activé ce paramètre, vous pourrez configurer les adresses e-mail entrantes pour les groupes et les catégories."
-    email_in_min_trust: "Le niveau de confiance minimal qu'un utilisateur doit avoir pour être autorisé à créer de nouveaux sujets par e-mail."
     email_in_allowed_groups: "Groupes autorisés à publier de nouveaux sujets par e-mail. Les administrateurs et les modérateurs peuvent toujours publier de nouveaux sujets par e-mail."
     email_in_authserv_id: "L'identifiant du service vérifiant l'authentification des e-mails entrants. Voir <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> pour obtenir plus d'informations."
     email_in_spam_header: "Sélectionne l'en-tête d'e-mail spécifique à utiliser pour identifier le courrier indésirable. Cette option peut être X-Spam-Flag, X-Spam-Status ou X-SES-Spam-Verdict, et l'e-mail est marqué comme spam en fonction de la valeur de l'en-tête. Par exemple, si le paramètre choisi est X-Spam-Flag, un e-mail dont la valeur d'en-tête est définie sur OUI sera classé comme courrier indésirable."
-    enable_imap: "Activer IMAP pour synchroniser les messages de groupes."
-    enable_imap_write: "Activer la synchronisation IMAP bidirectionnelle. Si elle est désactivée, toutes les opérations d'écriture sur les comptes IMAP sont désactivées."
-    enable_imap_idle: "Utiliser le mécanisme IMAP IDLE pour attendre de nouveaux e-mails."
     enable_smtp: "Activer SMTP pour l'envoi de notifications concernant les messages de groupe."
-    imap_polling_period_mins: "La durée en minutes entre chaque vérification des comptes IMAP pour les nouveaux e-mails."
-    imap_polling_old_emails: "Le nombre maximal d'anciens e-mails (traités) à mettre à jour chaque fois qu'une boîte IMAP est interrogée (0 pour tous)."
-    imap_polling_new_emails: "Le nombre maximal de nouveaux e-mails (non traités) à mettre à jour chaque fois qu'une boîte IMAP est interrogée."
-    imap_batch_import_email: "Le nombre minimal de nouveaux e-mails qui déclenchent le mode d'importation (désactive les alertes de messages)."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des e-mails. Par défaut il prend la valeur de « title »."
     email_site_title: "Le titre du site utilisé comme expéditeur pour les e-mails du site. Par défaut il prend la valeur de « title ». Si votre « title » utilise des caractères interdits dans les e-mails, utilisez ce paramètre."
     find_related_post_with_key: "N'utiliser que la « reply key » pour trouver le message auquel on a répondu. ATTENTION : la désactivation de cette option permet l'usurpation d'identité de l'utilisateur sur la base de l'adresse e-mail."
@@ -2185,7 +2159,6 @@ fr:
     username_change_period: "Le nombre de jours maximal après l'inscription pendant lesquels l'utilisateur peut encore modifier son nom d'utilisateur (0 pour empêcher la modification du nom d'utilisateur)."
     email_editable: "Autoriser les utilisateurs à modifier leur adresse e-mail après l'inscription."
     logout_redirect: "URL vers laquelle rediriger le navigateur après déconnexion (par exemple : https://example.com/logout)"
-    allow_uploaded_avatars: "Autoriser les utilisateurs à envoyer une photo de profil personnalisée."
     uploaded_avatars_allowed_groups: "Spécifiez les groupes autorisés à téléverser des photos de profil personnalisées."
     default_avatars: "Adresses URL des avatars qui seront utilisés par défaut pour les nouveaux utilisateurs jusqu'à ce qu'ils les modifient."
     automatically_download_gravatars: "Télécharger les Gravatars des utilisateurs lors de la création du compte ou lors de la modification de l'adresse e-mail."
@@ -2294,9 +2267,7 @@ fr:
     enable_inline_emoji_translation: "Active la traduction d'émojis en ligne (non précédés par un espace ou un signe de ponctuation)"
     emoji_deny_list: "Ces émojis ne seront pas disponibles dans les menus ou les shortcodes."
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
-    approve_unless_trust_level: "Les publications créées par des utilisateurs en dessous de ce niveau de confiance doivent être approuvées"
     approve_unless_allowed_groups: "Les publications créées par des utilisateurs ne faisant pas partie de ces groupes doivent être approuvées. Les publications créées par les administrateurs et les modérateurs sont toujours approuvées."
-    approve_new_topics_unless_trust_level: "Les nouveaux sujets créés par les utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
     approve_new_topics_unless_allowed_groups: "Les nouveaux sujets créés par des utilisateurs ne faisant pas partie de ces groupes doivent être approuvés. Les sujets créés par les administrateurs et les modérateurs sont toujours approuvés."
     approve_unless_staged: "Les nouveaux sujets et publications créés par les utilisateurs distants doivent être approuvés"
     notify_about_queued_posts_after: "Après tant d'heures écoulées, envoyer un e-mail à tous les modérateurs si des messages sont en attente d'examen. Désactiver l'envoi de ces e-mails en renseignant la valeur « 0 »."
@@ -2312,7 +2283,6 @@ fr:
     new_user_notice_tl: "Niveau de confiance minimal requis pour voir les nouveaux avis de publication d'utilisateur."
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs de retour."
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
-    review_media_unless_trust_level: "Les messages envoyés par les utilisateurs ayant un niveau de confiance inférieur à celui-ci et qui contiennent des médias intégrés devront être examinés par un responsable."
     skip_review_media_groups: "Les publications des utilisateurs qui ne font partie d'aucun de ces groupes seront envoyées au personnel pour examen si elles contiennent des éléments multimédias intégrés. Les publications créées par les administrateurs et les modérateurs sont toujours autorisées."
     blur_tl0_flagged_posts_media: "Flouter les images des messages signalés pour masquer du contenu potentiellement NSFW."
     enable_page_publishing: "Autoriser les responsables de publier des sujets vers de nouvelles URL utilisant leur propre style."
@@ -2364,9 +2334,6 @@ fr:
     revoke_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé d'API avant qu'elle soit automatiquement révoquée (0 pour jamais)"
     revoke_api_keys_maxlife_days: "Nombre de jours avant qu'une clé d'API soit automatiquement révoquée (0 pour jamais)"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
-    min_trust_level_for_user_api_key: |
-      Niveau de confiance requis pour la génération de clés d'API utilisateur.<br>
-      <b>AVERTISSEMENT</b> : la modification du niveau de confiance empêchera les utilisateurs dont le niveau de confiance est inférieur de se connecter via Discourse Hub
     user_api_key_allowed_groups: |
       L'appartenance à un groupe est requise pour la génération de clés d'API utilisateur.<br>
       <b>AVERTISSEMENT</b> : la modification du niveau de confiance empêchera les utilisateurs dont le niveau de confiance est inférieur de se connecter via Discourse Hub.<br>
@@ -2376,7 +2343,6 @@ fr:
     revoke_user_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé d'API utilisateur avant qu'elle soit automatiquement révoquée (0 pour jamais)"
     revoke_user_api_keys_maxlife_days: "Nombre de jours avant qu'une clé d'API utilisateur soit automatiquement révoquée (0 pour jamais)"
     tagging_enabled: "Activer les balises sur les sujets ? Consultez le <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>guide d'administration sur les étiquettes sur Meta</a> pour obtenir plus d'informations."
-    min_trust_to_create_tag: "Le niveau de confiance minimal requis pour créer une étiquette."
     create_tag_allowed_groups: "Groupes autorisés à créer des étiquettes. Les administrateurs et les modérateurs peuvent toujours créer des étiquettes."
     edit_tags_allowed_groups: "Groupes autorisés à modifier les étiquettes, les descriptions d'étiquettes et les synonymes d'étiquettes."
     max_tags_per_topic: "Le nombre maximal d'étiquettes pouvant être ajoutées à un sujet."
@@ -2389,7 +2355,6 @@ fr:
     tags_listed_by_group: "Lister les étiquettes par groupe d'étiquettes sur la <a href='%{base_path}/tags' target='_blank'>page Étiquettes</a>."
     tag_style: "Définissez l'apparence visuelle des badges d'étiquette sur le site. Ce paramètre vous permet de personnaliser la représentation visuelle des étiquettes dans toutes les zones du site, en améliorant ainsi la cohérence de la mise en page et l'accessibilité pour les utilisateurs."
     pm_tags_allowed_for_groups: "Autorisez les membres des groupes inclus à étiqueter n'importe quel message privé"
-    min_trust_level_to_tag_topics: "Niveau de confiance minimal requis pour étiqueter des sujets"
     tag_topic_allowed_groups: "Groupes autorisés à étiqueter des sujets. Les administrateurs et les modérateurs peuvent toujours étiqueter les sujets."
     suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
@@ -2400,7 +2365,6 @@ fr:
     governing_law: "Précisez la juridiction qui régit les aspects juridiques du site, y compris les Conditions d'utilisation et la Politique de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités."
     city_for_disputes: "Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum."
     shared_drafts_category: "Activez la fonction Brouillons partagés en désignant une catégorie pour les brouillons de sujet. Les sujets repris dans cette catégorie ne figureront pas dans les listes de sujets pour les responsables."
-    shared_drafts_min_trust_level: "Autoriser les utilisateurs à afficher et à modifier les brouillons partagés."
     shared_drafts_allowed_groups: "Autorisez les utilisateurs de ces groupes à voir et à modifier les brouillons partagés."
     push_notifications_prompt: "Affichez une bannière de consentement de l'utilisateur pour les notifications push. Ce paramètre déclenche une invite demandant aux utilisateurs l'autorisation de leur envoyer des notifications push. Elle apparaît uniquement lorsque les notifications push ne sont pas déjà activées, sont prises en charge par l'appareil de l'utilisateur et que celui-ci a publié un message ou utilise une Progressive Web App (PWA). L'invite ne sera pas affichée à nouveau si l'utilisateur l'a déjà rejetée ou si l'autorisation a déjà été accordée ou refusée."
     push_notifications_icon: "L'icône du badge qui apparaît dans les notifications. Une image monochrome de taille 96×96 et au format PNG avec transparence est recommandée."
@@ -3194,6 +3158,7 @@ fr:
         À mesure que vous participerez ici, nous apprendrons à vous connaître et les limitations temporaires des nouveaux utilisateurs seront levées. Avec le temps, vous gagnerez [des niveaux de confiance](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) qui incluent des fonctionnalités spéciales pour nous aider à gérer notre communauté ensemble.
     welcome_user:
       title: "Bienvenue utilisateur"
+      preview: "Bienvenue sur %{site_name} !"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
         Merci d'avoir rejoint %{site_name}, nous vous souhaitons la bienvenue !
@@ -3221,6 +3186,7 @@ fr:
         Qui dit pouvoir, dit responsabilité. Si vous débutez dans le rôle de modérateur, nous vous invitons à consulter le [Guide de modération](https://meta.discourse.org/t/guide-des-moderateurs/89968).
     welcome_invite:
       title: "Bienvenue invité"
+      preview: "Bienvenue sur %{site_name} !"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
         Merci d'avoir accepté l'invitation sur %{site_name}. Nous vous souhaitons la bienvenue !
@@ -3631,6 +3597,7 @@ fr:
         Cette règle peut être modifiée avec les paramètres « newuser_spam_host_threshold » et « allowed_spam_host_domains ». Le paramètre « allowed_spam_host_domains » constitue une liste d'autorisations qui vous permettra d'exempter %{domains} de cette vérification.
     unsilenced:
       title: "Mise en sourdine annulée"
+      preview: "Compte débloqué."
       subject_template: "Compte débloqué"
       text_body_template: |
         Bonjour,
@@ -3679,8 +3646,6 @@ fr:
     Pour vous désabonner de ces e-mails, [cliquez ici](%{unsubscribe_url}).
   subject_re: "Re : "
   subject_pm: "[MP] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
@@ -4015,6 +3980,7 @@ fr:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Se connecter avec un lien"
+      preview: "Se connecter avec un lien."
       subject_template: "[%{email_prefix}] Se connecter avec un lien"
       text_body_template: |
         Voici votre lien pour vous connecter à [%{site_name}](%{base_url}).
@@ -4956,6 +4922,8 @@ fr:
     deprecation_error_label: Faire en sorte que les dépréciations de Javascript génèrent une erreur
     enter: "Activer le mode sans échec"
     must_select: "Vous devez sélectionner au moins une option pour activer le mode sans échec."
+  dev_mode:
+    enter: "Entrée"
   wizard:
     title: "Configuration de Discourse"
     step:
@@ -5011,6 +4979,10 @@ fr:
       review_by: "Révision par"
       pr_summary: "%{commits} validations ont modifié %{changed_files} fichiers avec %{additions} ajouts et %{deletions} suppressions"
       no_description: "Contribuez au développement de %{repo} en créant un compte sur GitHub."
+      status_date:
+        open: "ouvert"
+        approved: "approuvé "
+        closed: "fermé"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vous a mentionné(e) dans « %{topic} » - %{site_title}'
@@ -5045,8 +5017,6 @@ fr:
     api_post_delete: "Supprimé via l'API"
     reminder_deleted: "Remplacé par un nouveau rappel"
     user_associated_posts_deleted: "L'utilisateur a été détruit"
-    imap_email_deleted: "L'e-mail a été supprimé sur le serveur IMAP"
-    imap_email_marked_as_spam: "L'e-mail a été déplacé vers le répertoire de courrier indésirable sur le serveur IMAP"
     auto_deleted_hidden_posts: "Publications cachées détruites automatiquement"
     seed_data_topic_updated: "Sujet de données d'amorçage mis à jour"
     seed_data_topic_deleted: "Sujet de données d'amorçage supprimé"

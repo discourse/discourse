@@ -60,6 +60,7 @@ ru:
       cancel: "Отмена"
       cancel_reply: "Отменить ответ"
       chat_channels: "Каналы"
+      starred: "Отмечено звездочкой"
       browse_all_channels: "Просмотреть все каналы"
       see_in: "Смотреть в:"
       move_to_channel:
@@ -87,6 +88,7 @@ ru:
         join_channel: "Подписаться на канал"
         leave_channel: "Покинуть канал"
         leave_groupchat_info: "Покинув этот групповой чат, вы потеряете к нему доступ и не будете получать связанные с ним уведомления. Чтобы снова присоединиться, вам потребуется повторное приглашение от участника группового чата."
+        notification_settings_context: "Уведомления"
         join: "Подписаться"
         leave: "Отписаться"
         save_label:
@@ -136,6 +138,7 @@ ru:
       email_frequency:
         description: "Мы отправим вам письмо только в том случае, если вы не были онлайн последние 15 минут."
         never: "Никогда"
+        title: "Сообщите мне по электронной почте, когда я получу личное сообщение в чате или групповом чате."
         when_away: "Если вы находитесь офлайн"
       header_indicator_preference:
         title: "Показать индикатор активности в заголовке"
@@ -148,10 +151,8 @@ ru:
       send_shortcut:
         enter:
           label: "Отправить с помощью Enter"
-          description: "Новая строка с помощью Shift + Enter"
         meta_enter:
           label: "Отправить с помощью %{meta_key} + Enter"
-          description: "Новая строка с помощью Enter"
       enable: "Включить чат"
       flag: "Пожаловаться"
       emoji: "Вставить эмодзи"
@@ -266,12 +267,11 @@ ru:
       no_public_channels: "Вы еще не присоединились ни к одному каналу!"
       no_public_channels_cta: "Просмотреть каналы"
       kicked_from_channel: "У вас больше нет доступа к этому каналу."
+      chat_notifications_title: "Уведомления чата"
       only_chat_push_notifications:
         title: "Отправлять только push-уведомления в чате"
-        description: "Запретить отправку всех push-уведомлений, не связанных с чатом."
       ignore_channel_wide_mention:
         title: "Игнорировать на канале массовые упоминания"
-        description: "Не отправлять массовые уведомления при использовании на канале переменных @here и @all."
       show_thread_title_prompts:
         title: "Показывать подсказки к заголовку цепочки сообщений"
         description: "Показывать подсказки при выборе заголовка для цепочки сообщений"
@@ -359,6 +359,9 @@ ru:
         yesterday: Вчера
       search_view:
         filter_placeholder: Искать в сообщениях
+        message_result_label: "Сообщение в чате от %{username}: %{preview} %{threadInfo}"
+        in_thread: "в ветке %{title}"
+        sr_instructions: "Нажмите Enter или Space, чтобы открыть сообщение. Используйте Tab для навигации между результатами."
       members_view:
         filter_placeholder: Найти участников
         add_member: Добавить участника
@@ -401,6 +404,8 @@ ru:
         slug_description: Слаг канала используется в URL-адресе вместо названия канала.
         name: Название канала
         slug: Слаг канала (необязательно)
+        emoji: Эмодзи канала (необязательно)
+        reset_emoji: Сбросить эмодзи
       channel_edit_description_modal:
         title: Изменить описание
         input_placeholder: Добавить описание
@@ -495,6 +500,9 @@ ru:
         types:
           category: "Категория"
           topic: "Тема"
+        emoji:
+          label: "Эмодзи канала (необязательно)"
+          reset: "Сбросить эмодзи"
       reviewable:
         type: "Сообщение чата"
         message_in_channel: "Канал"
@@ -565,6 +573,9 @@ ru:
           confirm_export: "Экспортируются все сообщения со всех каналов и отправляются вам в личном сообщении. Действительно экспортировать?"
           export_has_started: "Экспорт начался. Когда он завершится, вы получите личное сообщение."
       search:
+        short_title: Искать
+        title: Поиск чата
+        aria_label: "Перейти к поиску чата"
         no_results: "Ничего не найдено"
         sort:
           relevance: "По соответствию"

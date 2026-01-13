@@ -39,7 +39,7 @@ hy:
         disabled: "(անջատված)"
         groups: "Խմբեր:"
         no_groups: "Ոչ մի"
-        edit: "Խմբագրել"
+        edit: "Կարգավորումներ"
         expand_list:
           one: "(%{count} ավելի)"
           other: "(%{count} ավելի)"
@@ -78,6 +78,7 @@ hy:
         summary: "Ամփոփումը"
         username: "Օգտանուն"
         total_requests: "Ընդհանուր հարցումներ"
+        total: "Ամբողջ"
       ai_persona:
         back: "Ետ"
         name: "Անուն"

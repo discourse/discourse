@@ -216,6 +216,9 @@ export default class Post extends RestModel {
   @trackedPostProperty yours;
   @trackedPostProperty user_custom_fields;
   @trackedPostProperty post_localizations;
+  @trackedPostProperty is_localized;
+  @trackedPostProperty language;
+  @trackedPostProperty localization_outdated;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
@@ -559,6 +562,7 @@ export default class Post extends RestModel {
   setDeletedState(deletedBy) {
     let promise;
     this.set("oldCooked", this.cooked);
+    this.set("oldCanEdit", this.can_edit);
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
     if (deletedBy.staff || this.siteSettings.delete_removed_posts_after === 0) {
@@ -606,6 +610,7 @@ export default class Post extends RestModel {
         can_recover: false,
         can_delete: true,
         user_deleted: false,
+        can_edit: this.oldCanEdit ?? false,
       });
     }
   }

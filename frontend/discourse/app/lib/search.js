@@ -103,10 +103,12 @@ export function translateResults(results, opts) {
 
   results.tags = results.tags
     .map(function (tag) {
-      const tagName = escapeExpression(tag.name);
+      const id = tag.id;
+      const name = escapeExpression(tag.name);
       return EmberObject.create({
-        id: tagName,
-        url: getURL("/tag/" + tagName),
+        id,
+        name,
+        url: getURL("/tag/" + name),
       });
     })
     .filter((item) => item != null);
@@ -219,12 +221,24 @@ export function getSearchKey(args) {
   );
 }
 
+// Patterns that indicate a valid search even without a traditional search term
+const SEARCH_SYNTAX_PATTERNS =
+  /^(l|r|t)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
+
 export function isValidSearchTerm(searchTerm, siteSettings) {
-  if (searchTerm) {
-    return searchTerm.trim().length >= siteSettings.min_search_term_length;
-  } else {
+  if (!searchTerm) {
     return false;
   }
+
+  const trimmed = searchTerm.trim();
+
+  // If the search contains filter syntax, it's valid regardless of length
+  if (SEARCH_SYNTAX_PATTERNS.test(trimmed)) {
+    return true;
+  }
+
+  // Otherwise, apply minimum length requirement
+  return trimmed.length >= siteSettings.min_search_term_length;
 }
 
 export function applySearchAutocomplete(inputElement, siteSettings, owner) {

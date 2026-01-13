@@ -319,6 +319,7 @@ cs:
       greater_than: musí být větší než %{count}
       greater_than_or_equal_to: musí být větší nebo rovno %{count}
       has_already_been_used: "již byl použit"
+      in: musí být v %{count}
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
       is_invalid: "zdá se to být nejasné, je to kompletní věta?"
@@ -892,6 +893,11 @@ cs:
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
       description_incomplete: "Příspěvek s popisem kategorie musí obsahovat alespoň jeden odstavec."
+      description_too_long:
+        one: "Popis je příliš dlouhý (maximálně %{count} znak)."
+        few: "Popis je příliš dlouhý (maximálně %{count} znaky)."
+        many: "Popis je příliš dlouhý (maximálně %{count} znaků)."
+        other: "Popis je příliš dlouhý (maximálně %{count} znaků)."
       permission_conflict: "Každá skupina, která má přístup k podkategorii, musí mít také přístup k nadřazené kategorii. Následující skupiny mají přístup k jedné z podkategorií, ale nemají přístup k nadřazené kategorii: %{group_names}."
       disallowed_topic_tags: "Toto téma obsahuje štítky, které tato kategorie nepovoluje: '%{tags}'"
       disallowed_tags_generic: "Toto téma obsahuje nedovolené štítky."
@@ -1190,12 +1196,9 @@ cs:
     no_log_search_queries: "Záznamy o vyhledávacích dotazech jsou momentálně zakázány (správce je může povolit v nastavení webu)."
   email_settings:
     pop3_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji POP3, zkontrolujte uživatelské jméno a heslo a zkuste to znovu."
-    imap_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji IMAP. Zkontrolujte uživatelské jméno a heslo a zkuste to znovu."
-    imap_no_response_error: "Při komunikaci se serverem IMAP došlo k chybě. %{message}"
     smtp_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji SMTP. Zkontrolujte uživatelské jméno a heslo a zkuste to znovu. %{message}"
     smtp_server_busy_error: "SMTP server je momentálně zaneprázdněn, zkuste to znovu později."
     smtp_unhandled_error: "Při komunikaci se SMTP serverem došlo k neošetřené chybě. %{message}"
-    imap_unhandled_error: "Při komunikaci se serverem IMAP došlo k neošetřené chybě. %{message}"
     connection_error: "Došlo k problému s připojením k serveru, zkontrolujte název serveru a port a zkuste to znovu."
     timeout_error: "Časový limit připojení k serveru vypršel, zkontrolujte název serveru a port a zkuste to znovu."
     unhandled_error: "Při testování nastavení e-mailu nastala neošetřená chyba. %{message}"
@@ -1284,11 +1287,14 @@ cs:
       every_month: "každý měsíc"
       every_six_months: "každých šest měsíců"
   user_api_key:
-    title: "Autorizovat přístup k aplikaci"
+    title: 'Autorizovat „%{application_name}“'
     authorize: "Autorizovat"
+    deny: "Zrušit"
     read: "přečteno"
     read_write: "čtení/zápis"
-    description: '„%{application_name}" požaduje následující přístup k vašemu účtu:'
+    logged_in_as: "Přihlášen jako"
+    permissions_header: 'Toto povolí přístup „%{application_name}“:'
+    redirect_warning: "Ověření vás přesměruje na"
     instructions: 'Právě jsme pro vás vygenerovali nový uživatelský klíč API, který můžete použít s „%{application_name}“, do své aplikace vložte prosím následující klíč:'
     otp_description: 'Chcete povolit přístup k tomuto webu uživateli „%{application_name}“?'
     otp_confirmation:
@@ -1656,7 +1662,7 @@ cs:
       yaxis: "Počet událostí"
       description: "Počet spuštěných událostí webhooku nebo jejich průměrná doba trvání."
     suspicious_logins:
-      title: "Podezřelé přihlášení"
+      title: "Podezřelá přihlášení"
       labels:
         user: Uživatel
         client_ip: IP klienta
@@ -2160,35 +2166,22 @@ cs:
     tl3_requires_likes_given: "Minimální počet Líbí se, které je nutné udělit v posledních (období tl3) dnech, aby bylo možné povýšit na úroveň důvěry 3."
     tl3_requires_likes_received: "Minimální počet Líbí se, která je nutné získat za posledních (období tl3) dní, aby bylo možné povýšit na úroveň důvěry 3."
     tl3_links_no_follow: "Neodstraňovat rel=nofollow z odkazů zveřejněných uživateli s úrovní důvěry 3."
-    tl4_delete_posts_and_topics: "Povolit uživatelům úrovně důvěry 4 mazat příspěvky a témata vytvořená jinými uživateli. Uživatelé úrovně 4 budou také moci vidět smazaná témata a příspěvky."
     delete_all_posts_and_topics_allowed_groups: "Skupiny s povolením mazat příspěvky a témata vytvořená jinými uživateli. Tyto skupiny budou moci také vidět odstraněná témata a příspěvky."
     edit_all_topic_groups: "Povolit uživatelům v této skupině upravovat názvy témat, štítky a kategorie ostatních uživatelů"
     edit_all_post_groups: "Povolit uživatelům v této skupině upravovat příspěvky ostatních uživatelů"
-    min_trust_to_create_topic: "Minimální úroveň důvěry potřebná k vytvoření nového tématu."
     create_topic_allowed_groups: "Skupiny, které mohou vytvářet nová témata. Administrátoři a moderátoři mohou témata vytvářet vždy."
     allow_flagging_staff: "Pokud je povoleno, uživatelé mohou nahlašovat příspěvky členů redakce."
-    min_trust_to_edit_wiki_post: "Minimální úroveň důvěry požadovaná pro úpravu příspěvku označeného jako wiki."
     edit_wiki_post_allowed_groups: "Skupiny, které mohou upravovat příspěvky označené jako wiki. Administrátoři a moderátoři mohou příspěvky označené jako wiki upravovat vždy."
-    min_trust_to_edit_post: "Minimální úroveň důvěry požadovaná pro úpravu příspěvků."
     edit_post_allowed_groups: "Skupiny, které mohou upravovat příspěvky. Administrátoři a moderátoři mohou příspěvky upravovat vždy."
-    min_trust_to_allow_self_wiki: "Minimální úroveň důvěry uživatele požadovaná pro vytvoření vlastního wiki příspěvku."
     self_wiki_allowed_groups: "Povolit uživatelům v těchto skupinách vytvářet si vlastní wiki příspěvky. Administrátoři a moderátoři si mohou vytvořit vlastní wiki příspěvky kdykoli."
     min_trust_to_send_messages: "ZASTARALÉ, použijte místo toho nastavení 'personal message enabled groups'. Minimální úroveň důvěry požadovaná pro vytváření nových soukromých zpráv."
-    min_trust_to_send_email_messages: "Minimální úroveň důvěry požadovaná pro odesílání osobních zpráv e-mailem."
     send_email_messages_allowed_groups: "Skupiny, které mohou posílat soukromé zprávy e-mailem. Administrátoři a moderátoři mohou posílat soukromé zprávy e-mailem kdykoli."
-    min_trust_to_flag_posts: "Minimální úroveň důvěry požadovaná pro nahlašování příspěvků"
     flag_post_allowed_groups: "Skupiny, které mohou nahlašovat příspěvky. Administrátoři a moderátoři mohou příspěvky nahlašovat vždy."
-    min_trust_to_post_links: "Minimální úroveň důvěry požadovaná pro vkládání odkazů do příspěvků"
     post_links_allowed_groups: "Skupiny, které mohou vkládat odkazy do příspěvků. Administrátoři a moderátoři mohou odkazy zveřejňovat vždy."
-    min_trust_to_post_embedded_media: "Minimální úroveň důvěry požadovaná pro vkládání položek médií do příspěvku"
     embedded_media_post_allowed_groups: "Uživatelé v těchto skupinách mohou vkládat položky médií do příspěvku. Administrátoři a moderátoři mohou položky médií vkládat vždy."
-    min_trust_level_to_allow_profile_background: "Minimální úroveň důvěry požadovaná pro nahrání pozadí profilu"
     profile_background_allowed_groups: "Skupiny, které mohou nahrávat pozadí profilu. Administrátoři a moderátoři mohou pozadí profilu nahrát vždy."
-    min_trust_level_to_allow_user_card_background: "Minimální úroveň důvěry požadovaná pro nahrání pozadí uživatelské karty"
     user_card_background_allowed_groups: "Skupiny, které mohou nahrávat pozadí uživatelské karty. Administrátoři a moderátoři mohou pozadí uživatelské karty nahrát vždy."
-    min_trust_level_to_allow_invite: "Minimální úroveň důvěry požadovaná pro zvaní uživatelů"
     invite_allowed_groups: "Skupiny, které mohou zvát uživatele. Administrátoři a moderátoři mohou uživatele zvát vždy."
-    min_trust_level_to_allow_ignore: "Minimální úroveň důvěry požadovaná pro ignorování uživatelů"
     ignore_allowed_groups: "Skupiny, které mohou ignorovat ostatní uživatele. Administrátoři a moderátoři mohou ostatní uživatele ignorovat vždy."
     allowed_link_domains: "Domény, na které mohou uživatelé odkazovat, i když nemají odpovídající úroveň důvěry pro zveřejňování odkazů"
     newuser_max_links: "Kolik odkazů může nový uživatel přidat do příspěvku."
@@ -2201,7 +2194,6 @@ cs:
     enable_mentions: "Umožňuje uživatelům vzájemně se označovat nebo odkazovat ve svých příspěvcích pomocí symbolu '@'."
     here_mention: "Jméno použité pro @zmínku, které umožňuje privilegovaným uživatelům upozornit až maximálně 'max_here_mentioned' osob účastnících se tématu. Nesmí se jednat o existující uživatelské jméno."
     max_here_mentioned: "Maximální počet zmíněných osob pomocí @here."
-    min_trust_level_for_here_mention: "Minimální úroveň důvěry potřebná k možnosti zmínit @here."
     here_mention_allowed_groups: "Skupiny, které mohou zmínit @here. Administrátoři a moderátoři mohou @here zmínit vždy."
     create_thumbnails: "Vytvářet miniatury a obrázky v lightboxu, které jsou příliš velké na to, aby se vešly do příspěvku."
     email_time_window_mins: "Před odesláním jakýchkoli e-mailů s oznámením počkejte (n) minut, aby uživatelé měli možnost upravit a dokončit své příspěvky."
@@ -2264,6 +2256,7 @@ cs:
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
+    ignore_by_title: "Ignorovat příchozí e-maily na základě jejich názvu."
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
     delete_rejected_email_after_days: "Smazat odmítnuté e-maily starší než (n) dnů."
@@ -3011,6 +3004,7 @@ cs:
         Pokud budete aktivní, poznáme vás a dočasná nová uživatelská omezení budou zrušena. Postupem času získáte [úrovně důvěry](https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29) ([v originále zde](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)), které zahrnují speciální schopnosti, které nám pomohou společně spravovat naši komunitu.
     welcome_user:
       title: "Uvítání uživatele"
+      preview: "Vítejte v %{site_name}!"
       subject_template: "Vítejte v %{site_name}!"
       text_body_template: |
         Děkujeme, že jste se připojili na %{site_name} a vítáme vám na našem diskuzním fóru!
@@ -3038,6 +3032,7 @@ cs:
         S velkou mocí přichází velká odpovědnost. Pokud s moderováním začínáte, přečtěte si prosím [Průvodce moderováním](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Uvítací pozvánka"
+      preview: "Vítejte v %{site_name}!"
       subject_template: "Vítejte v %{site_name}!"
       text_body_template: |
         Děkujeme, že jste přijali pozvání do %{site_name} – vítejte!
@@ -3399,6 +3394,7 @@ cs:
         Toto lze upravit pomocí nastavení webu `newuser_spam_host_threshold` a `allowed_spam_host_domains`. Zvažte přidání %{domains} do seznamu povolených, pokud by měly být z kontroly vyňaty.
     unsilenced:
       title: "Zrušeno ztišení"
+      preview: "Účet již není pozastaven."
       subject_template: "Účet již není pozastaven"
       text_body_template: |
         Dobrý den,
@@ -3447,8 +3443,6 @@ cs:
     Chcete-li se odhlásit z těchto e-mailů, [klikněte zde](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[SZ] "
-  email_from: "%{user_name} přes %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     reached_limit:
@@ -3696,6 +3690,7 @@ cs:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Přihlášení pomocí odkazu"
+      preview: "Přihlášení pomocí odkazu."
       subject_template: "[%{email_prefix}] Přihlášení pomocí odkazu"
       text_body_template: |
         Zde je Váš odkaz pro přihlášení na [%{site_name}](%{base_url}).
@@ -4215,12 +4210,18 @@ cs:
     nice_share:
       name: Zdařilé sdílení
       description: Sdílení příspěvku s 25 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 25 unikátních externích návštěvníků. Děkujeme za šíření informací o našich diskusích a o této komunitě.
     good_share:
       name: Dobré sdílení
       description: Sdílení příspěvku s 300 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 300 unikátních externích návštěvníků. Dobrá práce! Ukázali jste skvělou diskusi spoustě nových lidí a pomohli jste této komunitě růst.
     great_share:
       name: Výborné sdílení
       description: Sdílení příspěvku s 1000 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 1000 unikátních externích návštěvníků. Wow! Propagovali jste zajímavou diskusi mezi obrovským množstvím nových čtenářů a pomohli jste nám tak výrazně rozšířit naši komunitu!
     first_like:
       name: První Líbí se
       description: Líbil se příspěvek
@@ -4446,6 +4447,8 @@ cs:
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
     enter: "Vstoupit do bezpečného režimu"
     must_select: "Chcete-li vstoupit do bezpečného režimu, musíte vybrat alespoň jednu možnost."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Nastavení Discourse"
     step:
@@ -4489,6 +4492,10 @@ cs:
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
       closed: "uzavřeno"
+      status_date:
+        approved: "schválen"
+        merged: "sloučeno"
+        closed: "zavřeno"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
@@ -4507,8 +4514,6 @@ cs:
     api_key:
       revoked: Zrušeno
     user_associated_posts_deleted: "Uživatel byl zcela odstraněn"
-    imap_email_deleted: "E-mail byl na serveru IMAP odstraněn"
-    imap_email_marked_as_spam: "E-mail byl na serveru IMAP přesunut do spamu."
     auto_deleted_hidden_posts: "Automaticky smazané skryté příspěvky"
   reviewables:
     already_handled: "Děkujeme, ale tento příspěvek jsme již zkontrolovali a rozhodli jsme se, že jej není třeba znovu nahlašovat."

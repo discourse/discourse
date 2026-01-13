@@ -158,7 +158,7 @@ it:
       el:
         name: Greco
       en:
-        name: Inglese (Stati Uniti)
+        name: Inglese
       en_GB:
         name: Inglese (Regno Unito)
       es:
@@ -844,7 +844,6 @@ it:
         claimed: "Rivendicato"
         claimed_by: "Rivendicato da %{username} · %{relativeDate}"
         reviewed: "Rivisto"
-        reviewed_by: "Rivisto da %{username} · %{relativeDate}"
         view_conversation: "visualizza PM"
         note_added: "Note del moderatore"
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
@@ -1029,9 +1028,7 @@ it:
           notification: Notifica
         email:
           title: "Email"
-          status: "Sincronizzate %{old_emails} / %{total_emails} email via IMAP."
           enable_smtp: "Abilita SMTP"
-          enable_imap: "Abilita IMAP"
           test_settings: "Prova le impostazioni"
           save_settings: "Salva Impostazioni"
           last_updated: "Ultimo aggiornamento:"
@@ -1040,14 +1037,7 @@ it:
           smtp_settings_valid: "Impostazioni SMTP valide."
           smtp_title: "SMTP"
           smtp_instructions: "Quando abiliti l'SMTP di gruppo, tutte le email in uscita dalla casella di posta del gruppo saranno inviate usando queste impostazioni SMTP, invece che tramite il server di posta configurato per le altre email inviate dal forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Altre impostazioni"
-          imap_instructions: 'Abilitando l''IMAP di gruppo, le e-mail vengono sincronizzate tra la casella di posta del gruppo e il server e la casella di posta IMAP forniti. Affinché l''IMAP possa essere abilitato, l''SMTP deve prima essere impostato con credenziali valide e verificate. Il nome utente e la password di posta elettronica utilizzati per SMTP saranno utilizzati anche per IMAP. Per ulteriori informazioni, consulta <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588"> l''annuncio della funzionalità su Discourse Meta</a>.'
-          imap_alpha_warning: "Attenzione: questa è una funzionalità in fase alfa. Solo Gmail è ufficialmente supportato. Gli utenti che la usano se ne assumono il rischio!"
-          imap_settings_valid: "Impostazioni IMAP valide."
-          smtp_disable_confirm: "Se disabiliti SMTP, tutte le impostazioni SMTP e IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
-          imap_disable_confirm: "Se disabiliti IMAP, tutte le impostazioni IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Continuare?"
-          imap_mailbox_not_selected: "Devi selezionare una casella di posta per questa configurazione IMAP, altrimenti non verrà sincronizzata nessuna casella di posta!"
+          additional_settings: "Altre impostazioni"
           prefill:
             title: "Precompila con impostazioni per:"
             gmail: "Gmail"
@@ -1062,9 +1052,6 @@ it:
             smtp_server: "Server SMTP"
             smtp_port: "Porta SMTP"
             smtp_ssl_mode: "Modalità SSL"
-            imap_server: "Server IMAP"
-            imap_port: "Porta IMAP"
-            imap_ssl: "Usa SSL per IMAP"
             username: "Nome utente"
             password: "Password"
           settings:
@@ -1073,10 +1060,6 @@ it:
             allow_unknown_sender_topic_replies_hint: "Consenti a mittenti sconosciuti di rispondere agli argomenti del gruppo. Se l'opzione è disabilitata, le risposte provenienti da indirizzi e-mail non invitati all'argomento causeranno la creazione di un nuovo argomento in cui saranno incluse."
             from_alias: "Da Alias"
             from_alias_hint: "Alias da usare come indirizzo di provenienza per l'invio di email SMTP di gruppo. Nota che questo potrebbe non essere supportato da tutti i provider di posta; consulta la documentazione del tuo provider di posta."
-          mailboxes:
-            synchronized: "Maibox sincronizzata"
-            none_found: "Nessuna mailbox trovata in questo account e-mail."
-            disabled: "Disabilitato"
         membership:
           title: Iscrizione
           access: Accesso
@@ -1340,6 +1323,9 @@ it:
       new_private_message: "Nuovo Messaggio"
       private_message: "Messaggio"
       private_messages: "Messaggi"
+      upcoming_changes:
+        for_user:
+          enabled: "Abilitato?"
       user_notifications:
         filters:
           filter_by: "Filtra per"
@@ -2797,6 +2783,8 @@ it:
       ulist_title: "Elenco puntato"
       list_item: "Elemento lista"
       toggle_direction: "Cambia direzione"
+      wrap_modal:
+        apply: "Applica"
       help: "Aiuto Inserimento Markdown"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       modal_ok: "OK"
@@ -2855,6 +2843,7 @@ it:
         zoom_out: "Riduci le dimensioni dell'immagine"
         zoom_in: "Aumenta le dimensioni dell'immagine"
         remove: "Rimuovi immagine"
+      image: "immagine"
       image_scale_button: "Ridimensiona l'immagine a %{percent}%"
       delete_image_button: Cancella immagine
       toggle_image_grid: Attiva/disattiva la griglia dell'immagine
@@ -3195,6 +3184,9 @@ it:
         reset_bump_dates: "Reimposta la date di riproposizione"
         defer: "Contrassegna come non letto"
         delete: "Elimina argomenti"
+        delete_topics_count:
+          one: "Cancella Argomento"
+          other: "Elimina argomenti"
         dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
         dismiss_read_with_selected:
@@ -3272,19 +3264,6 @@ it:
           unread: "Non è rimasto nulla da leggere... impressionante!"
           new_new: "Al momento non ci sono novità... torna presto a trovarci!"
           new: "Al momento non ci sono novità... torna presto a trovarci!"
-      bottom:
-        latest: "Non ci sono altri argomenti più recenti."
-        posted: "Non ci sono altri argomenti pubblicati."
-        read: "Non ci sono altri argomenti letti."
-        new: "Non ci sono altri argomenti nuovi."
-        unread: "Non ci sono altri argomenti non letti."
-        unseen: "Non ci sono altri argomenti non letti."
-        category: "Non ci sono altri argomenti nella categoria %{category}."
-        tag: "Non ci sono altri argomenti con l'etichetta %{tag}."
-        top: "Non ci sono altri argomenti popolari."
-        hot: "Non ci sono altri argomenti popolari."
-        bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
-        filter: "Non ci sono altri argomenti."
     topic_bulk_actions:
       dismiss:
         name: "Ignora"
@@ -3412,9 +3391,6 @@ it:
         other: "%{count} risposte, vai al primo messaggio"
       created_at: "Creazione: %{date}"
       bumped_at: "Più recente: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Sfoglia tutte le categorie</a> o <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Sfoglia tutte le categorie</a>, <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a> oppure guarda dall'inizio:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Sfoglia tutte le etichette</a> o <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a>."
       browse_latest_topics: "Sfoglia gli ultimi argomenti"
       suggest_create_topic: Pronto per <a href>iniziare una nuova conversazione?</a>
       jump_reply: "Passa alla posizione originale del messaggio"
@@ -4454,6 +4430,7 @@ it:
         this_month: "Mese"
         this_week: "Settimana"
         today: "Oggi"
+        custom: "Personalizzato"
     custom_homepage:
       admin_message: 'Uno dei tuoi argomenti ha abilitato il modificatore "custom_homepage", ma non invia alcun risultato al connettore [custom-homepage]. (Messaggio visibile solo agli amministratori del sito)'
     browser_update: 'Purtroppo, <a href="https://discourse.org/about#browser">il tuo browser non è supportato</a>. <a href="https://browsehappy.com">Passa a un browser supportato</a> per visualizzare contenuti avanzati, accedere e rispondere.'
@@ -4687,6 +4664,7 @@ it:
       upload_description: "Carica un file csv per creare numerose Etichette"
       upload_instructions: "Uno per riga, indicando opzionalmente un Gruppo di Etichette con il formato 'nome_etichetta,gruppo_etichetta'"
       upload_successful: "Etichette caricate con successo"
+      bulk_create_button: "Crea"
       delete_unused_confirmation:
         one: "%{count} etichetta sarà eliminata: %{tags}"
         other: "%{count} etichette saranno eliminate: %{tags}"
@@ -4837,7 +4815,6 @@ it:
       tags_form_modal:
         title: "Modifica la navigazione delle etichette"
         filter_placeholder: "Filtra etichette"
-        no_tags: "Non ci sono etichette corrispondenti al termine specificato."
         subtitle:
           text: "e mostreremo automaticamente le etichette principali di questo sito"
       edit_navigation_modal_form:
@@ -5208,6 +5185,8 @@ it:
         enabled_for_options:
           everyone: "Chiunque"
           staff: "Solo staff"
+        statuses:
+          experimental: "Sperimentale"
         impact_roles:
           admins: "Amministratori"
           moderators: "Moderatori"
@@ -5218,6 +5197,7 @@ it:
           disabled: "Disabilitati"
           impact_type_feature: "Funzionalità"
           impact_type_other: "Altri"
+          status_experimental: "Sperimentale"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -5254,6 +5234,11 @@ it:
           sub_pages:
             common_settings:
               title: "Impostazioni"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Scopri di più"
         logo:
           title: "Logo"
           header_description: "Configura i loghi e le icone utilizzati nel tuo sito"
@@ -5353,6 +5338,8 @@ it:
               options:
                 above_topic_content: "Sopra il contenuto dell'argomento"
                 below_site_header: "Sotto l'intestazione del sito"
+            text_section:
+              locale_label: "Lingua"
             header_logged_in:
               placeholder: "Rieccoti, %{preferred_display_name}!"
             header_anonymous:
@@ -7402,7 +7389,6 @@ it:
           button: "Cancella tutti i messaggi"
           progress:
             title: "Avanzamento dell'eliminazione dei messaggi"
-            description: "Eliminazione dei messaggi…"
           confirmation:
             title: "Elimina tutti i messaggi di @%{username}"
             description: |
@@ -7721,16 +7707,12 @@ it:
             prompt: "Modificare questa impostazione potrebbe risultare in conseguenze rilevanti o comunque indesiderate per il sito. Intendi procedere?"
             confirm: "Sì, procedi"
           min_password_length:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           min_admin_password_length:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà tutti gli amministratore che modificheranno la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           password_unique_charactes:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           block_common_passwords:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
       badges:
         status: Stato
@@ -7765,6 +7747,9 @@ it:
         no_user_badges: "%{name} non ha ricevuto alcun distintivo."
         no_badges: Non ci sono distintivi da assegnare.
         none_selected: "Seleziona un distintivo per iniziare"
+        sections:
+          query: Query
+          settings: Impostazioni
         usage_heading: Utilizzo
         allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnato più volte

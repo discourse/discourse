@@ -1,0 +1,242 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
+  js:
+    discourse_rewind:
+      placeholder: Discourse Rewind
+      title: Rewind
+      loading: "Reticulating splines..."
+      viewing_other_user: "You are viewing <strong>%{username}'s</strong> Discourse Rewind report."
+      cannot_view_rewind_gibberish: >
+        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br>
+
+        Bootstrapping anomaly log...<br><br>
+
+        &nbsp;&nbsp;>> quantum buffer underrun ⧛<br>
+        &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br>
+        &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br>
+        &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
+      cannot_view_rewind: >
+        You cannot view this Discourse Rewind report. Maybe the owner has not shared it publicly?<br><br>
+
+        $> _<br><br>
+      preferences:
+        enable_rewind: "Enable Discourse Rewind. This shows the year-end activity summary in your profile and on your avatar."
+        share_publicly: "Share Discourse Rewind summary with other forum members. Any forum member will be able to view your Discourse Rewind summary."
+        cannot_share_when_profile_hidden: "In order to share Rewind you must allow others to view your public profile."
+      profile_link: "View your %{rewindYear} Discourse Rewind"
+      share:
+        toggle_label:
+          private: "Private"
+          public: "Public"
+        confirm: "Be sure to review your Rewind before sharing, as it may include data from personal messages. You can make it private again at any time."
+        confirm_button:
+          enable: "Make public"
+          disable: "Keep private"
+        enabled_success: "Your Rewind is now sharable with other forum members."
+        disabled_success: "Your Rewind is now private."
+      reports:
+        activity_calendar:
+          title: Activity Calendar
+          cell_title:
+            visited_no_posts: "You visited and lurked on %{date}, but made no posts."
+            visited_no_posts_others: "%{username} visited and lurked on %{date}, but made no posts."
+            visited_with_posts:
+              one: "You made %{count} post on %{date}."
+              other: "You made %{count} posts on %{date}."
+            visited_with_posts_others:
+              one: "%{username} made %{count} post on %{date}."
+              other: "%{username} made %{count} posts on %{date}."
+            no_activity: "You weren't around on %{date}."
+            no_activity_others: "%{username} wasn't around on %{date}."
+        top_words:
+          title: Word Usage
+        reading_time:
+          title: Reading time
+          book_comparison: "You spent <code>%{readingTime}</code> reading on our site! That's the time it would take to read through <i>%{bookTitle}</i>"
+          book_comparison_others: "%{username} spent <code>%{readingTime}</code> reading on our site! That's the time it would take to read through <i>%{bookTitle}</i>"
+        post_used_reactions:
+          title: Most used reactions in topics
+          total_number: "Total number of reactions: %{count}"
+        post_received_reactions:
+          title: Most received reactions in topics
+        fbff:
+          title: Your FBFF (Forum Best Friend Forever)
+          title_others: "%{username}'s FBFF (Forum Best Friend Forever)"
+        most_viewed_categories:
+          title:
+            one: Your most viewed category
+            other: Your %{count} most viewed categories
+          title_others:
+            one: "%{username}'s most viewed category"
+            other: "%{username}'s %{count} most viewed categories"
+        most_viewed_tags:
+          title:
+            one: Your most viewed tag
+            other: Your %{count} most viewed tags
+          title_others:
+            one: "%{username}'s most viewed tag"
+            other: "%{username}'s %{count} most viewed tags"
+        best_topics:
+          view_topic: View topic
+          title:
+            one: Your best topic
+            other: Your %{count} best topics
+          title_others:
+            one: "%{username}'s best topic"
+            other: "%{username}'s %{count} best topics"
+        best_posts:
+          view_post: View post
+          title:
+            one: Your best post
+            other: Your %{count} best posts
+          title_others:
+            one: "%{username}'s best post"
+            other: "%{username}'s %{count} best posts"
+        ai_usage:
+          title: AI Usage
+          total_requests: Total Requests
+          total_tokens: Total Tokens
+          success_rate: Success Rate
+          favorite_features: Most Used Features
+          favorite_models: Most Used AI Models
+          wake_up: "Wake up, %{username}..."
+          system_title: "AI USAGE DETECTED"
+          section_features: "TOP FEATURES"
+          section_models: "TOP MODELS"
+        assignments:
+          title: Assignments
+          total_assigned: Assigned to me
+          total_assigned_others: Assigned to them
+          completed: Assignments completed
+          pending: Assignments pending
+          assigned_by_user: Assignments given
+          completion_rate: Completion rate
+        chat_usage:
+          title: Chat Activity
+          total_messages: Total Messages
+          dm_messages: DM Messages
+          unique_dm_channels: DM Conversations
+          reactions_received: Reactions Received
+          avg_message_length: Avg Message Length
+          favorite_channels: Favorite Channels
+          messages: messages
+          bot_name: XxRewindBotxX
+          author: You
+          author_others: "%{username}"
+          channel_title: "#chat-activity"
+          status_online: "● online"
+          message_1: "You sent <strong>%{count}</strong> messages this year!"
+          message_1_others: "%{username} sent <strong>%{count}</strong> messages this year!"
+          reply_1: "lol awesome B-)"
+          message_2: "You had <strong>%{dm_count}</strong> DM conversations with <strong>%{channel_count}</strong> different people or groups"
+          message_2_others: "%{username} had <strong>%{dm_count}</strong> DM conversations with <strong>%{channel_count}</strong> different people or groups"
+          reply_2: "cOo0oL :D"
+          message_3: "People loved your messages! You got <strong>%{count}</strong> reactions ❤️"
+          message_3_others: "People loved their messages! They got <strong>%{count}</strong> reactions ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Your average message length was <strong>%{length}</strong> characters"
+          message_4_others: "Their average message length was <strong>%{length}</strong> characters"
+          message_5: "Your favorite channels:"
+          message_5_others: "Their favorite channels:"
+          dancing_baby_alt: "Dancing baby"
+        favorite_gifs:
+          title:
+            one: Your favorite GIF
+            other: Your %{count} favorite GIFs
+          title_others:
+            one: "%{username}'s favorite GIF"
+            other: "%{username}'s %{count} favorite GIFs"
+          total_usage:
+            one: Used %{count} time
+            other: Used %{count} times total
+        invites:
+          title: Invites
+          total_invites: Total Invites Sent
+          redeemed: Accepted Invites
+          redemption_rate: Acceptance Rate
+          avg_trust_level: Avg Trust Level
+          invitee_impact: Impact of Your Invitees
+          invitee_impact_others: Impact of Their Invitees
+          invitee_posts: Posts Created
+          invitee_topics: Topics Started
+          invitee_likes: Likes Given
+          most_active_invitee: Most Active Invitee
+          guest_book_title: Guest Book
+          guest_book_subtitle: Your Community Invitations
+          guest_book_subtitle_others: "%{username}'s Community Invitations"
+          label_invitations_sent: "Invitations sent:"
+          label_guests_joined: "Invites accepted:"
+          label_acceptance_rate: "Acceptance rate:"
+          section_contributions: Invitee Contributions
+          label_posts_written: "Posts written:"
+          label_topics_started: "Topics started:"
+          label_likes_given: "Likes given:"
+          section_most_active: Most Active Guest
+        new_user_interactions:
+          title: Mentoring New Users
+          subtitle:
+            one: You helped %{count} new user this year
+            other: You helped %{count} new users this year
+          subtitle_others:
+            one: "%{username} helped %{count} new user this year"
+            other: "%{username} helped %{count} new users this year"
+          new_member:
+            one: "%{count} new member"
+            other: "%{count} new members"
+          total_interactions: Total Interactions
+          unique_new_users: Unique New Users
+          likes_given: Likes Given
+          replies: Replies to Posts
+          mentions: Mentions
+          topics_with_new_users: Topics with New Users
+          contributions_helped: your contributions helped
+          contributions_helped_others: their contributions helped
+        time_of_day_activity:
+          title: Daily Activity Rhythm
+          play_button: Play your activity as sound
+          play_button_others: Play their activity as sound
+          stop_button: Stop audio playback
+        writing_analysis:
+          title: Writing Analysis
+          menu_file: File
+          menu_other: Other
+          menu_additional: Additional
+          menu_opening: OPENING
+          help_text: Press F1 for help
+          app_name: DiscoStar Professional
+          release_info: Release %{rewindYear} from CDCK
+          total_words: Total Words
+          total_posts: Total Posts
+          avg_post_length: Avg Post Length
+          readability_score_label: Readability Score
+          readability_level: Readability Level
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C.S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R.R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virgina Woolf"
+              4: "Gabriel Garcia Marquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fyodor Dostoevsky"

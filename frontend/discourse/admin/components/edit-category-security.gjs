@@ -1,10 +1,12 @@
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { not } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import CategoryPermissionRow from "discourse/components/category-permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import PermissionType from "discourse/models/permission-type";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
@@ -12,12 +14,16 @@ import { i18n } from "discourse-i18n";
 export default class EditCategorySecurity extends buildCategoryPanel(
   "security"
 ) {
+  @service site;
+
   selectedGroup = null;
 
   @not("selectedGroup") noGroupSelected;
 
   get everyonePermission() {
-    return this.category.permissions.find((p) => p.group_name === "everyone");
+    return this.category.permissions.find(
+      (p) => p.group_id === AUTO_GROUPS.everyone.id
+    );
   }
 
   get everyoneGrantedFull() {
@@ -35,8 +41,10 @@ export default class EditCategorySecurity extends buildCategoryPanel(
 
   @action
   onSelectGroup(group_name) {
+    const group = this.site.groups.find((g) => g.name === group_name);
     this.category.addPermission({
       group_name,
+      group_id: group?.id,
       permission_type: this.minimumPermission,
     });
   }
@@ -44,7 +52,7 @@ export default class EditCategorySecurity extends buildCategoryPanel(
   @action
   onChangeEveryonePermission(everyonePermissionType) {
     this.category.permissions.forEach((permission, idx) => {
-      if (permission.group_name === "everyone") {
+      if (permission.group_id === AUTO_GROUPS.everyone.id) {
         return;
       }
 
@@ -84,6 +92,7 @@ export default class EditCategorySecurity extends buildCategoryPanel(
           </div>
           {{#each this.category.permissions as |p|}}
             <CategoryPermissionRow
+              @groupId={{p.group_id}}
               @groupName={{p.group_name}}
               @type={{p.permission_type}}
               @category={{this.category}}

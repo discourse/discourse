@@ -59,8 +59,6 @@ fr:
           title: "Navigation empilée"
         categories_list:
           title: "Liste des catégories"
-        topic_link:
-          title: "Lien vers le sujet"
         topic_list_item:
           title: "Élément de liste de sujets"
         topic_statuses:
@@ -69,8 +67,6 @@ fr:
           title: "Liste des sujets"
         basic_topic_list:
           title: "Liste des sujets de base"
-        footer_message:
-          title: "Message de pied de page"
         signup_cta:
           title: "CTA d'inscription"
         topic_timer_info:

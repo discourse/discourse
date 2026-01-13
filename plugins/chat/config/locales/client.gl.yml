@@ -20,6 +20,7 @@ gl:
       channel_settings:
         edit: "Editar"
         add: "Engadir"
+        notification_settings_context: "Notificacións"
         join: "Participar"
         leave: "Abandonar"
       close: "Pechar"
@@ -101,6 +102,7 @@ gl:
         history_label: "Historial"
         members_label: "Membros"
       search:
+        short_title: Buscar
         no_results: "Non se atoparon resultados"
         sort:
           relevance: "Relevancia"

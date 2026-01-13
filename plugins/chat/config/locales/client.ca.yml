@@ -20,6 +20,7 @@ ca:
       channel_settings:
         edit: "Edita"
         add: "Afegeix"
+        notification_settings_context: "Notificacions"
         join: "Registre"
         leave: "Abandona"
       close: "Tanca"
@@ -102,6 +103,7 @@ ca:
         history_label: "Historial"
         members_label: "Membres"
       search:
+        short_title: Cerca
         no_results: "No hi ha resultats"
         sort:
           relevance: "Importància"

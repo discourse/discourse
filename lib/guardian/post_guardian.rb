@@ -60,6 +60,9 @@ module PostGuardian
         # Silenced users can't flag
         return false if is_flag && @user.silenced?
 
+        # Silenced users can't like
+        return false if action_key == :like && @user.silenced?
+
         # Hidden posts can't be flagged
         return false if is_flag && post.hidden?
 

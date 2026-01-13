@@ -161,3 +161,5 @@ de:
       random_assign:
         title: "Zufällige Zuweisung"
         description: "Themen nach dem Zufallsprinzip einer Gruppe zuweisen"
+      set_topic_timer:
+        title: "Themen-Timer einstellen "

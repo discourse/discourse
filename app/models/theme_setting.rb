@@ -23,14 +23,25 @@ class ThemeSetting < ActiveRecord::Base
       UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
     elsif self.data_type == ThemeSetting.types[:objects] && saved_change_to_json_value? &&
           self.json_value.present?
-      upload_ids =
+      upload_values =
         SchemaSettingsObjectValidator.property_values_of_type(
           schema: theme.settings[self.name.to_sym].schema,
           objects: self.json_value,
           type: "upload",
         )
 
-      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
+      # Convert URLs to upload IDs (values can be either integer IDs or URL strings)
+      upload_ids =
+        upload_values.filter_map do |value|
+          if value.is_a?(Integer)
+            value
+          elsif value.is_a?(String) && value.present?
+            Upload.get_from_url(value)&.id
+          end
+        end
+
+      # Always call ensure_exist! to clean up old references when uploads are removed
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
 
     if theme.theme_modifier_set.refresh_theme_setting_modifiers(

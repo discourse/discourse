@@ -395,6 +395,13 @@ module ApplicationHelper
     end
   end
 
+  def discourse_track_view_session_tag
+    return if !SiteSetting.trigger_browser_pageview_events
+    <<~HTML.html_safe
+      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
+    HTML
+  end
+
   def gsub_emoji_to_unicode(str)
     Emoji.gsub_emoji_to_unicode(str)
   end
@@ -531,9 +538,17 @@ module ApplicationHelper
           template_path =~ Regexp.new("/connectors/(.*)/.*\.html\.erb$")
           outlet_name = Regexp.last_match(1)
           connectors[outlet_name] ||= []
-          connectors[outlet_name] << template_path.sub(plugins_prefix, "").delete_suffix(
-            ".html.erb",
-          )
+
+          connectors[outlet_name] << begin
+            ActionView::Template.new(
+              File.read(template_path),
+              "discourse_plugin_outlet__#{name}",
+              ActionView::Template.handler_for_extension("erb"),
+              locals: [],
+              format: :html,
+              virtual_path: template_path,
+            )
+          end
         end
     end
   private_constant :SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES
@@ -541,8 +556,6 @@ module ApplicationHelper
   def server_plugin_outlet(name, locals: {})
     return "" if !GlobalSetting.load_plugins?
     return "" if !SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES.key?(name)
-
-    lookup_context.append_view_paths(SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES)
 
     SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES[name]
       .map { |template| render template:, locals: }
@@ -850,8 +863,18 @@ module ApplicationHelper
       setup_data[:mb_last_file_change_id] = MessageBus.last_id("/file-change")
     end
 
-    if Rails.env.test? && ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-      setup_data[:capybara_playwright_debug_client_settled] = true
+    if Rails.env.test?
+      if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+        setup_data[:capybara_playwright_debug_client_settled] = true
+      end
+
+      # Allow controlling deprecation behavior in tests via environment variable
+      # Used to enforce or disable deprecation throwing for specific test runs
+      if ENV["EMBER_RAISE_ON_DEPRECATION"] == "1"
+        setup_data[:raise_on_deprecation] = true
+      elsif ENV["EMBER_RAISE_ON_DEPRECATION"] == "0"
+        setup_data[:raise_on_deprecation] = false
+      end
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

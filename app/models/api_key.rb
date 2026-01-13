@@ -10,12 +10,7 @@ class ApiKey < ActiveRecord::Base
 
   scope :active, -> { where("revoked_at IS NULL") }
   scope :revoked, -> { where.not(revoked_at: nil) }
-
-  scope :with_key,
-        ->(key) do
-          hashed = self.hash_key(key)
-          where(key_hash: hashed)
-        end
+  scope :with_key, ->(key) { where(key_hash: ApiKey.hash_key(key)) }
 
   validates :description, length: { maximum: 255 }
   validate :at_least_one_granular_scope

@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 ru:
+  js:
+    github:
+      pr_status:
+        draft: "Черновик"
+        open: "Открытые"
+        approved: "Одобренные"
+        closed: "Закрытое"
   admin_js:
     admin:
       site_settings:

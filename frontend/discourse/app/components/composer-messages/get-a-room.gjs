@@ -6,14 +6,17 @@ import DButton from "discourse/components/d-button";
 const GetARoomComposerMessage = <template>
   <ComposerTipCloseButton @action={{fn @closeMessage @message}} />
 
-  {{htmlSafe @message.body}}
+  <div class="composer-popup__content">
 
-  <DButton
-    @label="user.private_message"
-    @icon="envelope"
-    @action={{fn @switchPM @message}}
-    class="btn-primary"
-  />
+    {{htmlSafe @message.body}}
+
+    <DButton
+      @label="user.private_message"
+      @icon="envelope"
+      @action={{fn @switchPM @message}}
+      class="btn-primary"
+    />
+  </div>
 </template>;
 
 export default GetARoomComposerMessage;

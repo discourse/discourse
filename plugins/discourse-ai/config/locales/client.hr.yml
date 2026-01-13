@@ -42,7 +42,7 @@ hr:
         groups: "Grupe:"
         no_persona: "Nije postavljeno"
         no_groups: "Ništa"
-        edit: "Uredi"
+        edit: "Postavke"
         expand_list:
           one: "(%{count} još)"
           few: "(%{count} još)"
@@ -87,6 +87,7 @@ hr:
         summary: "Sažetak"
         username: "Korisničko ime"
         total_requests: "Ukupno zahtjeva"
+        total: "Ukupno"
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."

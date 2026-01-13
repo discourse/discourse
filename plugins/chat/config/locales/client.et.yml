@@ -38,6 +38,7 @@ et:
         close_channel: "Sulge kanal"
         open_channel: "Ava kanal"
         archive_channel: "Arhiveeri kanal"
+        notification_settings_context: "Teavitus"
         join: "Liitu"
         leave: "Lahku"
       close: "Sulge"
@@ -125,6 +126,7 @@ et:
       admin:
         title: "Vestlus"
       search:
+        short_title: Otsi
         no_results: "Ei leidnud midagi"
         sort:
           relevance: "Asjakohasus"

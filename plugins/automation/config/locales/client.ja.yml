@@ -10,6 +10,7 @@ ja:
       logs:
         staff_actions:
           actions:
+            update_automation: 自動化を更新
             delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化
@@ -57,13 +58,17 @@ ja:
             label: 本文
           delay:
             label: 遅延 (分)
-          prefers_encrypt:
-            label: 可能な場合は PM を暗号化する
         group:
           label: グループ
         text:
           label: テキスト
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: カテゴリ
+            tags:
+              label: タグ
         not_found: 自動化 `%{automation}` のトリガー `%{trigger}` が見つかりませんでした。関連するプラグインがインストールされていることを確認してください。
         user_badge_granted:
           fields:
@@ -421,6 +426,8 @@ ja:
           fields:
             custom_field_name:
               label: "ユーザーカスタムフィールド名"
+        set_topic_timer:
+          title: トピックタイマーを設定
       unnamed_automation: "無題の自動化"
       models:
         script:

@@ -57,6 +57,45 @@ describe "Solved", type: :system do
     expect(page.find(".post-list")).to have_content(solver_post.cooked)
   end
 
+  describe "solution excerpt formatting" do
+    it "preserves code blocks in the solution excerpt" do
+      raw = <<~RAW
+        Here's the solution:
+
+        ```ruby
+        def hello
+          puts "world"
+        end
+        ```
+
+        Hope this helps!
+      RAW
+      code_solution_post = Fabricate(:post, topic:, user: admin, raw:)
+      Fabricate(:solved_topic, topic:, answer_post: code_solution_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      within("#{ACCEPTED_ANSWER_QUOTE_SELECTOR} blockquote") do
+        expect(page).to have_css("pre code.lang-ruby")
+        expect(page).to have_content("def hello")
+        expect(page).to have_content('puts "world"')
+      end
+    end
+
+    it "preserves images in the solution excerpt" do
+      upload = Fabricate(:upload)
+      raw = "Check this image: ![test image](#{upload.short_url})"
+      image_solution_post = Fabricate(:post, topic:, user: admin, raw:)
+      Fabricate(:solved_topic, topic:, answer_post: image_solution_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      within("#{ACCEPTED_ANSWER_QUOTE_SELECTOR} blockquote") { expect(page).to have_css("img") }
+    end
+  end
+
   private
 
   def visit_solver_post

@@ -199,7 +199,7 @@ nl:
         no_llm: "Geen LLM geselecteerd"
         no_persona: "Niet ingesteld"
         no_groups: "Geen"
-        edit: "Bewerken"
+        edit: "Instellingen"
         expand_list:
           one: "(Nog %{count})"
           other: "(Nog %{count})"
@@ -230,6 +230,8 @@ nl:
           name: "Insluitingen"
           description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Gerelateerde topics"
         discord:
           name: "Discord-integratie"
           description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"
@@ -240,6 +242,8 @@ nl:
           generate_concepts: "Conceptenafleiding"
           match_concepts: "Conceptenmatching"
           deduplicate_concepts: "Conceptendeduplicatie"
+          setting_groups:
+            personas: "Persona's"
         ai_helper:
           name: "Helper"
           description: "Helpt gebruikers bij de interactie met de community, zoals het maken van topics, het schrijven van berichten en het lezen van content"
@@ -254,6 +258,9 @@ nl:
           image_caption: "Afbeeldingen bijschriften geven"
           translator: "Vertaler"
           post_illustrator: "Berichtillustrator"
+          setting_groups:
+            automation: "Automatisering"
+            personas: "Persona's"
         translation:
           name: "Vertaling"
           description: "Vertaalt content in ondersteunde talen"
@@ -261,6 +268,8 @@ nl:
           post_raw_translator: "Ruwe berichtvertaler"
           topic_title_translator: "Topictitelvertaler"
           short_text_translator: "Kortetekstvertaler"
+          setting_groups:
+            personas: "Persona's"
         spam:
           name: "Spam"
           description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
@@ -317,6 +326,8 @@ nl:
           post_url_label: "Bericht-URL of -ID"
           post_url_placeholder: "https://jouw-forum.com/t/topic/123/4 of bericht-ID"
           result: "Resultaat"
+          llm: "LLM"
+          system_prompt: "Systeemprompt"
           scan_log: "Scanlog"
           run: "Test uitvoeren"
           spam: "Spam"
@@ -353,6 +364,7 @@ nl:
         no_users: "Geen gebruikergebruiksgegevens gevonden"
         no_models: "Geen modelgebruiksgegevens gevonden"
         no_features: "Geen functiegebruiksgegevens gevonden"
+        total: "Totaal"
         subheader_description: "Tokens zijn de basiseenheden die LLM's gebruiken om tekst te begrijpen en te genereren. Gebruiksgegevens kunnen de kosten beïnvloeden"
         stat_tooltips:
           total_requests: "Alle verzoeken aan LLM's via Discourse"
@@ -536,7 +548,6 @@ nl:
         max_output_tokens: "Maximaal aantal uitvoertokens"
         url: "URL van de service die het model host"
         api_key: "API-sleutel van de service die het model host"
-        enabled_chat_bot: "AI-botkiezer toestaan"
         vision_enabled: "Zicht ingeschakeld"
         ai_bot_user: "AI-botgebruiker"
         cost_input: "Invoerkosten"
@@ -619,7 +630,6 @@ nl:
           display_name: "De naam die wordt gebruikt om naar dit model te verwijzen in de interface van je site."
           name: "We nemen dit op in de API-aanroep om aan te geven welk model we gebruiken"
           vision_enabled: "Indien ingeschakeld, zal de AI proberen afbeeldingen te begrijpen. Dit is afhankelijk van het gebruikte model ter ondersteuning van zicht. Ondersteund door de nieuwste modellen van Anthropic, Google en OpenAI."
-          enabled_chat_bot: "Indien ingeschakeld, kunnen gebruikers dit model selecteren bij het maken van PB's met de AI-bot."
           cost_input: "De invoerkosten per 1 miljoen tokens voor dit model"
           cost_output: "De uitvoerkosten per 1 miljoen tokens voor dit model"
           cost_measure: "$/miljoen tokens"
@@ -655,7 +665,6 @@ nl:
           reasoning_tokens: "Aantal tokens dat wordt gebruikt voor redeneren"
           disable_temperature: "Temperatuur uitschakelen (sommige denkmodellen ondersteunen geen temperatuur)"
           disable_top_p: "Top P uitschakelen (sommige denkmodellen ondersteunen geen top P)"
-          enable_responses_api: "Respons-API inschakelen (vereist voor bepaalde OpenAI-modellen)"
       related_topics:
         title: "Gerelateerde topics"
         pill: "Gerelateerd"
@@ -783,6 +792,7 @@ nl:
         llm: "Model"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"
+        try_again: "Opnieuw proberen"
         default_pm_prefix: "[Ongetitelde PB van AI-bot]"
         shortcut_title: "Start een PB met een AI-bot"
         shortcut_link: "AI-bot"

@@ -1040,12 +1040,9 @@ fi:
     no_log_search_queries: "Haun kyselylokit eivät ole tällä hetkellä käytössä (ylläpitäjä voi ottaa ne käyttöön sivuston asetuksista)."
   email_settings:
     pop3_authentication_error: "Annetuissa POP3-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
-    imap_authentication_error: "Annetuissa IMAP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
-    imap_no_response_error: "Yhteydessä IMAP-palvelimeen tapahtui virhe. %{message}"
     smtp_authentication_error: "Annetuissa SMTP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen. %{message}"
     smtp_server_busy_error: "SMTP-palvelin on tällä hetkellä varattu, yritä myöhemmin uudelleen."
     smtp_unhandled_error: "Kommunikoinnissa SMTP-palvelimen kanssa tapahtui käsittelemätön virhe. %{message}"
-    imap_unhandled_error: "Kommunikoinnissa IMAP-palvelimen kanssa tapahtui käsittelemätön virhe. %{message}"
     connection_error: "Yhteyden muodostaminen palvelimeen ei onnistunut, tarkista palvelimen nimi ja portti ja yritä uudelleen."
     timeout_error: "Yhteys palvelimeen aikakatkaistiin, tarkista palvelimen nimi ja portti ja yritä uudelleen."
     unhandled_error: "Käsittelemätön virhe sähköpostiasetusten testauksessa. %{message}"
@@ -1134,11 +1131,10 @@ fi:
       every_month: "kuukausittain"
       every_six_months: "kuuden kuukauden välein"
   user_api_key:
-    title: "Anna sovellukselle käyttöoikeus"
     authorize: "Anna käyttöoikeus"
+    deny: "Peruuta"
     read: "luku"
     read_write: "luku/kirjoitus"
-    description: '"%{application_name}" pyytää seuraavaa käyttöoikeutta tiliisi:'
     instructions: 'Loimme juuri uuden käyttäjä-API-avaimen, jota voit käyttää sovelluksessa "%{application_name}". Liitä tämä avainkoodi sovellukseesi:'
     otp_description: 'Haluatko sallia sovellukselle "%{application_name}" pääsyn sivustolle?'
     otp_confirmation:
@@ -1997,35 +1993,22 @@ fi:
     tl3_requires_likes_given: "Montako tykkäystä käyttäjän täytyy olla vähintään antanut viimeisten (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3."
     tl3_requires_likes_received: "Montako tykkäystä käyttäjän täytyy olla vähintään saanut viimeisten (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3."
     tl3_links_no_follow: "Älä poista rel=nofollow-määritettä linkeistä luottamustason 3 käyttäjiltä."
-    tl4_delete_posts_and_topics: "Salli LT4-käyttäjien poistaa muiden käyttäjien luomia viestejä ja ketjuja. LT4-käyttäjät voivat myös nähdä poistetut ketjut ja viestit."
     delete_all_posts_and_topics_allowed_groups: "Ryhmät, jotka saavat poistaa muiden käyttäjien luomia viestejä ja ketjuja. Nämä ryhmät voivat myös nähdä poistetut ketjut ja viestit."
     edit_all_topic_groups: "Salli ryhmän käyttäjien muokata muiden käyttäjien aiheotsikoita, tunnisteita ja kategorioita"
     edit_all_post_groups: "Salli tämän ryhmän käyttäjien muokata muiden käyttäjien julkaisuja"
-    min_trust_to_create_topic: "Ketjun aloittamiseen vaadittava luottamustaso."
     create_topic_allowed_groups: "Ryhmät, jotka voivat luoda uusia ketjuja. Ylläpitäjät ja valvojat voivat aina luoda ketjuja."
     allow_flagging_staff: "Jos käytössä, käyttäjät voivat merkitä henkilökunnan viestejä."
-    min_trust_to_edit_wiki_post: "Wiki-viestin muokkaamiseen vaadittava luottamustaso."
     edit_wiki_post_allowed_groups: "Ryhmät, jotka voivat muokata wikiksi merkittyjä viestejä. Ylläpitäjät ja valvojat voivat aina muokata wikiksi merkittyjä viestejä."
-    min_trust_to_edit_post: "Viestin muokkaamiseen vaadittava luottamustaso."
     edit_post_allowed_groups: "Ryhmät, jotka voivat muokata viestejä. Ylläpitäjät ja valvojat voivat aina muokata viestejä."
-    min_trust_to_allow_self_wiki: "Minimiluottamustaso, jolla käyttäjä voi tehdä omasta viestistään wiki-viestin."
     self_wiki_allowed_groups: "Salli näiden ryhmien käyttäjien luoda oma viestiwiki. Ylläpitäjät ja valvojat voivat aina luoda oman viestiwikin."
     min_trust_to_send_messages: "VANHENTUNUT, käytä tämän sijaan 'personal message enabled groups' -asetusta. Uusien henkilökohtaisten viestin luomiseen vaadittava vähimmäisluottamustaso."
-    min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää henkilökohtaisia viestejä sähköpostitse."
     send_email_messages_allowed_groups: "Ryhmät, jotka voivat lähettää henkilökohtaisia viestejä sähköpostitse. Ylläpitäjät ja valvojat voivat aina lähettää henkilökohtaisia viestejä sähköpostitse."
-    min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi merkitä viestejä"
     flag_post_allowed_groups: "Ryhmät, jotka voivat liputtaa viestejä. Ylläpitäjät ja valvojat voivat aina liputtaa viestejä."
-    min_trust_to_post_links: "Vähimmäisluottamustaso, jolla voi lisätä linkkejä viesteihin"
     post_links_allowed_groups: "Ryhmät, jotka voivat lisätä linkkejä viesteihin. Ylläpitäjät ja valvojat voivat aina lisätä linkkejä viesteihin."
-    min_trust_to_post_embedded_media: "Vähimmäisluottamustaso, jolla voi upottaa mediakohteita viesteihin"
     embedded_media_post_allowed_groups: "Näiden ryhmien käyttäjät voivat upottaa mediakohteita viestiin. Ylläpitäjät ja valvojat voivat aina upottaa mediakohteita."
-    min_trust_level_to_allow_profile_background: "Vähimmäisluottamustaso, jolla voi ladata profiilin taustakuvan"
     profile_background_allowed_groups: "Ryhmät, jotka voivat ladata profiilin taustan verkkoon. Ylläpitäjät ja valvojat voivat aina ladata profiilin taustan."
-    min_trust_level_to_allow_user_card_background: "Vähimmäisluottamustaso, jolla voi ladata käyttäjäkortin taustakuvan"
     user_card_background_allowed_groups: "Ryhmät, jotka voivat ladata käyttäjäkortin taustan verkkoon. Ylläpitäjät ja valvojat voivat aina ladata käyttäjäkortin taustan."
-    min_trust_level_to_allow_invite: "Vähimmäisluottamustaso, jolla voi kutsua käyttäjiä"
     invite_allowed_groups: "Ryhmät, jotka voivat kutsua käyttäjiä. Ylläpitäjät ja valvojat voivat aina kutsua käyttäjiä."
-    min_trust_level_to_allow_ignore: "Vähimmäisluottamustaso, jolla voi sivuuttaa käyttäjiä"
     ignore_allowed_groups: "Ryhmät, jotka voivat sivuuttaa muita käyttäjiä. Ylläpitäjät ja valvojat voivat aina sivuuttaa muita käyttäjiä."
     allowed_link_domains: "Verkkotunnukset, joihin käyttäjät voivat linkittää, vaikkei heillä olisikaan riittävää luottamustasoa lisätä linkkejä"
     newuser_max_links: "Kuinka monta linkkiä uusi käyttäjä voi lisätä viestiin."
@@ -2038,7 +2021,6 @@ fi:
     enable_mentions: "Sallii käyttäjien merkitä toisiaan tai viitata toisiinsa viesteissään @-symbolilla."
     here_mention: "@maininnassa käytettävä nimi, jolla oikeutetut käyttäjät voivat ilmoittaa enintään \"max_here_mentioned\"-asetuksen mukaiselle ketjuun osallistuvalle henkilömäärälle. Ei saa olla olemassa oleva käyttäjätunnus."
     max_here_mentioned: "Enimmäismäärä mainittuja henkilöitä @here-maininnalla."
-    min_trust_level_for_here_mention: "Vähimmäisluottamustaso, jolla tehdä @here-maininnan."
     here_mention_allowed_groups: "Ryhmät, jotka voivat käyttää @here-mainintaa. Ylläpitäjät ja valvojat voivat aina käyttää @here-mainintaa."
     create_thumbnails: "Luo esikatselu- ja lightbox-kuvia, jotka ovat liian suuria mahtuakseen viestiin."
     email_time_window_mins: "Odota (n) minuuttia ennen ilmoitussähköpostien lähettämistä, jotta käyttäjällä on aikaa muokata ja viimeistellä viestinsä."
@@ -2162,18 +2144,10 @@ fi:
     pop3_polling_delete_from_server: "Poista sähköpostit palvelimelta. HUOM: Jos poistat tämän käytöstä, sinun täytyy siivota saapuvien sähköpostien kansio manuaalisesti"
     log_mail_processing_failures: "Kirjaa kaikki sähköpostin käsittelyvirheet lokiin: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Salli käyttäjien julkaista uusia aiheita sähköpostitse. Kun asetustus on käytössä, voidaan ryhmille ja kategorioille määrittää vastaanottoon käytettävät sähköpostiosoitteet."
-    email_in_min_trust: "Vähimmäisluottamustaso, jonka käyttäjä tarvitsee uuden ketjun aloittamiseen sähköpostitse."
     email_in_allowed_groups: "Ryhmät, jotka voivat julkaista uusia ketjuja sähköpostitse. Ylläpitäjät ja valvojat voivat aina julkaista uusia ketjuja sähköpostitse."
     email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Valitsee tietyn sähköpostin ylätunnisteen, jota käytetään roskapostin tunnistamiseen. Tämä vaihtoehto voi olla X-Spam-Flag, X-Spam-Status tai X-SES-Spam-Verdict, ja sähköposti merkitään roskapostiksi ylätunnisteen arvon perusteella. Jos valittu asetus on esimerkiksi X-Spam-Flag, sähköposti, jonka ylätunnisteen arvo on KYLLÄ, luokitellaan roskapostiksi."
-    enable_imap: "Ota IMAP käyttöön ryhmäviestien synkronoimiseksi."
-    enable_imap_write: "Ota kaksisuuntainen IMAP-synkronointi käyttöön. Jos se on poistettu käytöstä, kaikki IMAP-tilien kirjoitustoiminnot poistetaan käytöstä."
-    enable_imap_idle: "Käytä IMAP IDLE -mekanismia uusien sähköpostien odottamiseen."
     enable_smtp: "Ota SMTP käyttöön ryhmäviestien ilmoitusten lähettämisessä."
-    imap_polling_period_mins: "Aika minuutteina sähköpostien tarkistusten välillä IMAP-tileiltä."
-    imap_polling_old_emails: "Päivitettävien vanhojen (käsiteltyjen) sähköpostien enimmäismäärä joka kerta, kun IMAP-laatikkoa pollataan (0 on kaikki)."
-    imap_polling_new_emails: "Päivitettävien uusien (käsittelemättömien) sähköpostien enimmäismäärä joka kerta, kun IMAP-laatikkoa pollataan."
-    imap_batch_import_email: "Tuontitilan käynnistävä vähimmäismäärä uusia sähköposteja (poistaa viestihälytykset käytöstä)."
     email_prefix: "Sähköpostin aiheessa käytettävä [tunniste]. Jos et aseta arvoa, oletusarvona käytetään 'otsikkoa'."
     email_site_title: "Sähköpostin lähettäjänä käytettävä nimi. Jos arvoa ei ole asetettu, oletuksena käytetään 'otsikkoa'. Jos 'otsikko' sisältää merkkejä, joita ei sallita sähköpostin lähettäjän nimessä, käytä tätä asetusta."
     find_related_post_with_key: "Käytä vain vastausavainta vastatun viestin löytämiseen. VAROITUS: tämän poistaminen käytöstä mahdollistaa sähköpostiosoitteeseen pohjautuvan toisena esiintymisen."
@@ -2185,7 +2159,6 @@ fi:
     username_change_period: "Kuinka monen päivän ajan käyttäjätunnuksen voi vaihtaa rekisteröitymisen jälkeen (0 estää käyttäjätunnuksen vaihtamisen)."
     email_editable: "Salli käyttäjien vaihtaa sähköpostiosoitteensa tilin luomisen jälkeen."
     logout_redirect: "Minne selain ohjataan uloskirjautumisen jälkeen (esim: https://esimerkki.fi/logout)"
-    allow_uploaded_avatars: "Salli käyttäjien ladata oma profiilikuva."
     uploaded_avatars_allowed_groups: "Määritä ryhmät, joilla on oikeus ladata verkkoon mukautettuja profiilikuvia."
     default_avatars: "URL-osoitteet avatareihin, joita käytetään oletuksena uusille käyttäjille, kunnes he vaihtavagt sen."
     automatically_download_gravatars: "Lataa käyttäjille Gravatarit automaattisesti tilin luonnin ja sähköpostin vaihdon yhteydessä."
@@ -2294,9 +2267,7 @@ fi:
     enable_inline_emoji_translation: "Ota käyttöön emojien kääntäminen merkkijonojen keskeltä (ei väliä tai välimerkkejä ennen emojia)"
     emoji_deny_list: "Nämä emojit eivät ole käytettävissä valikoista tai lyhytkoodeilla."
     approve_post_count: "Viestien lukumäärä, joka uusilta käyttäjiltä ja haastajilta täytyy hyväksyä"
-    approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien luomat viestit täytyy hyväksyä"
     approve_unless_allowed_groups: "Näihin ryhmiin kuulumattomien käyttäjien luomat viestit täytyy hyväksyä. Ylläpitäjien ja valvojien luomat viestit hyväksytään aina."
-    approve_new_topics_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien luomat uudet ketjut täytyy hyväksyä"
     approve_new_topics_unless_allowed_groups: "Näihin ryhmiin kuulumattomien käyttäjien luomat uudet ketjut täytyy hyväksyä. Ylläpitäjien ja valvojien luomat uudet ketjut hyväksytään aina."
     approve_unless_staged: "Esikäyttäjien luomat uudet ketjut ja viestit täytyy hyväksyä"
     notify_about_queued_posts_after: "Jos viestejä on ollut hyväksymättä näin monen tunnin ajan, lähetä ilmoitus valvojille. Poista ilmoitukset käytöstä asettamalla 0."
@@ -2312,7 +2283,6 @@ fi:
     new_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee uusiin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee palaaviin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_users_days: "Kuinka monen päivän kuluttua käyttäjä tulkitaan palaavaksi."
-    review_media_unless_trust_level: "Henkilökunta tarkistaa alhaisempien luottamustasojen käyttäjien viestit, jos ne sisältävät upotettua mediaa."
     skip_review_media_groups: "Näihin ryhmiin kuulumattomien käyttäjien viestit lähetetään henkilökunnalle käsiteltäväksi, jos viesti sisältää upotettua mediasisältöä. Ylläpitäjien ja valvojien luomat viestit ovat aina sallittuja."
     blur_tl0_flagged_posts_media: "Sumenna liputettujen viestien kuvat potentiaalisen NSFW-sisällön piilottamiseksi."
     enable_page_publishing: "Salli henkilökunnan jäsenten julkaista ketjuja uusiin URL-osoitteisiin omalla tyylillään."
@@ -2364,9 +2334,6 @@ fi:
     revoke_api_keys_unused_days: "Päivien määrä API-avaimen viimeisimmästä käytöstä ennen kuin se peruutetaan automaattisesti (0 on ei koskaan)"
     revoke_api_keys_maxlife_days: "Kuinka monen päivän kuluttua API-avain mitätöidään automaattisesti (0 on ei koskaan)"
     allow_user_api_key_scopes: "Luettelo käyttäjä-API-avaimiin liittyvistä oikeuksista"
-    min_trust_level_for_user_api_key: |
-      Käyttäjän API-avaimien luomiseen vaadittu luottamustaso.<br>
-      <b>VAROITUS:</b> Luottamustason muuttaminen estää matalamman luottamustason käyttäjiä kirjautumasta sisään Discourse Hubin kautta.
     user_api_key_allowed_groups: |
       Käyttäjän API-avaimien luomiseen vaadittu ryhmän jäsenyys.<br>
       <b>VAROITUS:</b> Luottamustason muuttaminen estää matalamman luottamustason käyttäjiä kirjautumasta sisään Discourse Hubin kautta.<br> Ylläpitäjät ja valvojat voivat aina luoda API-avaimia.
@@ -2375,7 +2342,6 @@ fi:
     revoke_user_api_keys_unused_days: "Päivien määrä käyttäjän API-avaimen viimeisimmästä käytöstä ennen kuin se peruutetaan automaattisesti (0 on ei koskaan)"
     revoke_user_api_keys_maxlife_days: "Kuinka monen päivän kuluttua käyttäjän API-avain mitätöidään automaattisesti (0 on ei koskaan)"
     tagging_enabled: "Otetaanko ketjujen tunnisteet käyttöön? Katso lisätietoja <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Metan oppaasta</a>."
-    min_trust_to_create_tag: "Vähimmäisluottamustaso, jolla voi luoda tunnisteita."
     create_tag_allowed_groups: "Ryhmät, jotka voivat luoda tunnisteita. Ylläpitäjät ja valvojat voivat aina luoda tunnisteita."
     edit_tags_allowed_groups: "Ryhmät, joilla on lupa muokata tunnisteita, tunnisteiden kuvauksia ja tunnisteiden synonyymejä."
     max_tags_per_topic: "Suurin tunnisteiden määrä, joka voi liittyä ketjuun."
@@ -2388,7 +2354,6 @@ fi:
     tags_listed_by_group: "Listaa tunnisteet tunnisteryhmittäin <a href='%{base_path}/tags' target='_blank'>Tunnisteet-sivulla</a>."
     tag_style: "Määritä tunnistemerkkien visuaalinen ulkoasu sivustolla. Tämän asetuksen avulla voit mukauttaa tunnisteiden visuaalista esittämistä sivuston kaikilla alueilla, mikä parantaa asettelun johdonmukaisuutta ja helppokäyttöisyyttä."
     pm_tags_allowed_for_groups: "Sallita sisältyvien ryhmien jäsenten merkitä tunnisteella mikä tahansa henkilökohtainen viesti"
-    min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
     tag_topic_allowed_groups: "Ryhmät, jotka voivat merkitä ketjuja tunnisteilla. Ylläpitäjät ja valvojat voivat aina merkitä ketjuja tunnisteilla."
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos ketjulla on vain vaimennettuja tunnisteita, älä näytä ketjua Tuoreimmat-ketjuluettelossa."
@@ -2399,7 +2364,6 @@ fi:
     governing_law: "Määritä lainkäyttöalue, joka sääntelee sivuston oikeudellisia aspekteja, kuten käyttöehtoja ja tietosuojaselostetta. Tämä on yleensä maa tai osavaltio, jossa sivustoa ylläpitävä yritys on rekisteröity tai jossa se harjoittaa liiketoimintaa."
     city_for_disputes: "Määritä kaupunki, jota käytetään lainkäyttöalueena tämän foorumin käyttöön liittyvien kiistojen ratkaisemiseen. Nämä tiedot sisältyvät yleensä oikeudellisiin asiakirjoihin, kuten foorumin käyttöehtoihin."
     shared_drafts_category: "Ota käyttöön jaetut luonnokset -toiminto määrittämällä alue, joka on ketjuluonnoksille varattu. Alueen ketjut eivät näy ketjuluetteloissa henkilökunnan jäsenille."
-    shared_drafts_min_trust_level: "Salli käyttäjien nähdä ja muokata jaettuja luonnoksia."
     shared_drafts_allowed_groups: "Salli näiden ryhmien käyttäjien nähdä ja muokata jaettuja luonnoksia."
     push_notifications_prompt: "Näytä käyttäjän suostumusbanneri push-ilmoituksia varten. Tämä asetus laukaisee kehotteen, joka pyytää käyttäjiltä lupaa lähettää heille push-ilmoituksia. Se näkyy vain, kun push-ilmoituksia ei ole otettu käyttöön, käyttäjän laite tukee niitä ja käyttäjä on joko kirjoittanut viestin tai käyttää progressiivista verkkosovellusta (PWA). Kehotetta ei näytetä uudelleen, jos käyttäjä on jo hylännyt sen tai myöntänyt tai evännyt luvan."
     push_notifications_icon: "Ilmoituskulmassa näkyvä kunniamerkkikuvake. Suosittelemme yksiväristä läpinäkyvää PNG:tä, jonka koko on 96×96."
@@ -3182,6 +3146,7 @@ fi:
         Sitä mukaa kun toimit täällä, opimme tuntemaan sinut, ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) ja saat valtuuksia, joiden avulla voit osallistua yhteisömme ylläpitoon.
     welcome_user:
       title: "Tervetuloa käyttäjä"
+      preview: "Tervetuloa sivustolle %{site_name}!"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
         Kiitos kun liityit sivustolle %{site_name}, ja tervetuloa!
@@ -3209,6 +3174,7 @@ fi:
         Suuri voima tuo mukanaan suuren vastuun. Jos valvonta on sinulle uutta, tutustu [valvontaoppaaseen](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Tervetuloa kutsuttu"
+      preview: "Tervetuloa sivustolle %{site_name}!"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
         Kiitos kun liityit sivustolle %{site_name}, ja tervetuloa!
@@ -3626,6 +3592,7 @@ fi:
         Tätä voi muuttaa sivustoasetuksilla "newuser_spam_host_threshold" ja "allowed_spam_host_domains". Harkitse kohteiden %{domains} lisäämistä sallittujen luetteloon, jos niiden ei pidä aiheuttaa toimenpiteitä.
     unsilenced:
       title: "Hiljennys kumottu"
+      preview: "Käyttäjätili ei ole enää pidossa."
       subject_template: "Käyttäjätili ei ole enää pidossa"
       text_body_template: |
         Hei,
@@ -3674,8 +3641,6 @@ fi:
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   subject_re: "VS:"
   subject_pm: "[YV]"
-  email_from: "%{user_name} sivustolta %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Edelliset vastaukset"
     reached_limit:
@@ -4009,6 +3974,7 @@ fi:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Kirjaudu linkin avulla"
+      preview: "Kirjaudu linkin avulla."
       subject_template: "%{email_prefix} Kirjautuminen linkin avulla"
       text_body_template: |
         Tässä linkki, jolla voit kirjautua sivustolle [%{site_name}](%{base_url}).
@@ -4852,6 +4818,8 @@ fi:
     deprecation_error_label: Aseta Javascriptin vanhentumiset aiheuttamaan virhe
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discoursen asennus"
     step:
@@ -4907,6 +4875,10 @@ fi:
       review_by: "Tarkistanut"
       pr_summary: "%{commits} solmua muutti %{changed_files} tiedostoa %{additions} lisäyksellä ja %{deletions} poistolla"
       no_description: "Auta tietovaraston %{repo} kehityksessä luomalla tili GitHubissa."
+      status_date:
+        open: "avattu"
+        approved: "hyväksytty"
+        closed: "suljettu"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
@@ -4941,8 +4913,6 @@ fi:
     api_post_delete: "Poistettu APIn kautta"
     reminder_deleted: "Korvattu uudella muistutuksella"
     user_associated_posts_deleted: "Käyttäjä tuhottiin"
-    imap_email_deleted: "Sähköposti on poistettu IMAP-palvelimelta"
-    imap_email_marked_as_spam: "Sähköposti on siirretty roskapostiin IMAP-palvelimella"
     auto_deleted_hidden_posts: "Automaattisesti tuhotut piilotetut viestit"
     seed_data_topic_updated: "Seed-tiedon aihe päivitetty"
     seed_data_topic_deleted: "Seed-tiedon aihe poistettu"

@@ -451,8 +451,6 @@ sw:
             password: "Nywila"
           settings:
             title: "Mpangilio"
-          mailboxes:
-            disabled: "Imezuiwa"
         membership:
           title: Uanachama
           access: Ufikivu
@@ -628,6 +626,9 @@ sw:
       new_private_message: "Ujumbe Mpya"
       private_message: "Ujumbe"
       private_messages: "Ujumbe"
+      upcoming_changes:
+        for_user:
+          enabled: "Imeruhusiwa?"
       user_notifications:
         filters:
           all: "Zote"
@@ -1291,6 +1292,8 @@ sw:
       upload_title: "Pakia"
       upload_description: "Ingiza maelezo kuhusu upakiaji hapa"
       list_item: "Listi kitu"
+      wrap_modal:
+        apply: "Tumia"
       help: "Msaada kwenye kuhariri MarkDown"
       modal_ok: "Sawa"
       cant_send_pm: "Samahani, hauwezi kutuma ujumbe kwenda kwa %{username}."
@@ -1318,6 +1321,7 @@ sw:
         shared_draft:
           label: "Mswadajaribio Gawiza"
       ignore: "Puuzia"
+      image: "picha"
     notifications:
       tooltip:
         regular:
@@ -1471,6 +1475,9 @@ sw:
         unlist_topics: "Ondoa Mada kwenye listi"
         relist_topics: "Orodhesha Upya Mada"
         delete: "Futa Mada"
+        delete_topics_count:
+          one: "Futa Mada"
+          other: "Futa Mada"
         dismiss: "Ondosha..."
         dismiss_read: "Ondosha zote ambazo hazijasomwa"
         dismiss_button: "Ondosha..."
@@ -1499,16 +1506,6 @@ sw:
         bookmarks: "Hauja alamisha mada yoyote."
         category: "Hakuna %{category} mada."
         top: "Hakuna mada za juu."
-      bottom:
-        latest: "Hakuna mada mpya zingine."
-        posted: "Hakuna mada mpya zilizochapishwa."
-        read: "Hakuna mada zingine zilizosomwa."
-        new: "Hakuna mada mpya zingine."
-        unread: "Hakuna mada zingine ambazo hazijasomwa."
-        category: "Hakuna %{category} mada zingine."
-        tag: "Hakuna %{tag} mada zingine."
-        top: "Hakuna mada za juu zingine."
-        bookmarks: "Hakuna mada zingine zilizoalamishwa."
     topic_bulk_actions:
       dismiss:
         name: "Ondosha..."
@@ -2133,6 +2130,7 @@ sw:
         this_month: "Mwezi"
         this_week: "Wiki"
         today: "Leo"
+        custom: "Binafsi"
     permission_types:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
@@ -2232,6 +2230,7 @@ sw:
       sort_by_name: "jina"
       manage_groups: "Dhibiti makundi ya lebo"
       manage_groups_description: "Fasili makundi kwa ajili ya kurakibisha lebo"
+      bulk_create_button: "Tengeneza"
       filters:
         without_category: "mada %{filter}%{tag}"
         with_category: "mada%{filter} %{tag} za %{category}"
@@ -2425,6 +2424,8 @@ sw:
           sub_pages:
             common_settings:
               title: "Mipangilio"
+        discourse_id:
+          learn_more: "Jifunze zaidi"
         logo:
           form:
             mobile: "Kifaa cha kiganjani"
@@ -3462,6 +3463,9 @@ sw:
         no_user_badges: "%{name} hajapewa beji yoyote."
         no_badges: Hakuna beji za kutolewa.
         none_selected: "Chagua beji ya kuanzia"
+        sections:
+          query: Swali
+          settings: Mipangilio
         allow_title: Ruhusu beji iweze kutumika kama cheo
         multiple_grant: Inaweza kutolewa mara nyingi
         visibility_heading: Uonekanaji

@@ -103,6 +103,7 @@ describe AdPlugin::HouseAdSetting do
           html: "<whatever-anon>",
           category_ids: [],
           id: a_kind_of(Integer),
+          routes: [],
         },
       )
       expect(anon_message.group_ids).to eq(nil)
@@ -113,6 +114,7 @@ describe AdPlugin::HouseAdSetting do
           html: "<whatever-logged-in>",
           category_ids: [],
           id: a_kind_of(Integer),
+          routes: [],
         },
       )
       expect(logged_in_message.group_ids).to eq([Group::AUTO_GROUPS[:trust_level_0]])

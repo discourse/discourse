@@ -111,10 +111,6 @@
   }
 }
 
-.mfp-preloader .spinner {
-  margin: auto;
-}
-
 .discourse-no-touch {
   a.lightbox {
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -139,14 +135,29 @@
     left: unset;
   }
 
+  .pswp .pswp__top-bar .pswp__button .pswp__icn {
+    right: 6px;
+    left: unset;
+  }
+
   .pswp__button--arrow--next {
     left: 0 !important;
     right: unset !important;
+
+    .pswp__icn {
+      right: unset;
+      left: 6px;
+    }
   }
 
   .pswp__button--arrow--prev {
     left: unset !important;
     right: 0 !important;
+
+    .pswp__icn {
+      left: unset;
+      right: 6px;
+    }
   }
 }
 
@@ -200,12 +211,12 @@
   opacity: 1;
 }
 
-.pswp .pswp__button {
+.pswp .pswp__top-bar .pswp__button {
   width: 45px;
-}
 
-.pswp .pswp__icn {
-  left: 6px;
+  .pswp__icn {
+    left: 6px;
+  }
 }
 
 .pswp__button--original-image svg,

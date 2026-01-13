@@ -11,7 +11,7 @@ export default apiInitializer((api) => {
     return;
   }
 
-  api.addSaveableUserOptionField("ai_search_discoveries");
+  api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
 
   const discobotDiscoveries = api.container.lookup(
     "service:discobot-discoveries"

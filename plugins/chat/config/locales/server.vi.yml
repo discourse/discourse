@@ -30,6 +30,9 @@ vi:
           other: "%{comma_separated_usernames} và %{count} khác"
     mention_warning:
       dismiss: "bỏ qua"
+    bookmarkable:
+      notification_title_channel: "tin nhắn trong %{channel_name}"
+      notification_title_direct_message: "tin nhắn với %{channel_name}"
     onebox:
       thread_title_connector: "trong"
   discourse_push_notifications:
@@ -48,3 +51,4 @@ vi:
   unsubscribe:
     chat_summary:
       never: Không bao giờ
+      when_away: Khi vắng mặt

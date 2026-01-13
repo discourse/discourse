@@ -40,7 +40,7 @@ bg:
         groups: "Групи:"
         no_persona: "Не е зададено"
         no_groups: "Без"
-        edit: "Редактирай"
+        edit: "Настройки"
         expand_list:
           one: "(още %{count})"
           other: "(още %{count})"
@@ -79,6 +79,7 @@ bg:
         summary: "Сумарно"
         username: "Потребителско име"
         total_requests: "Общо заявки"
+        total: "Общо"
         periods:
           last_day: "Последните 24 часа"
           custom: "Ръчно задаване..."

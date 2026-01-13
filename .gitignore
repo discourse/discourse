@@ -54,6 +54,8 @@
 !/plugins/discourse-graphviz
 !/plugins/discourse-rss-polling
 !/plugins/discourse-math
+/plugins/discourse-math/public/*/katex
+/plugins/discourse-math/public/*/mathjax
 !/plugins/discourse-chat-integration
 !/plugins/discourse-data-explorer
 !/plugins/discourse-post-voting
@@ -72,6 +74,7 @@
 !/plugins/discourse-templates
 !/plugins/discourse-ai
 !/plugins/discourse-cakeday
+!/plugins/discourse-rewind
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -89,6 +92,10 @@
 /.vscode/*
 !/.vscode/extensions.json
 !/.vscode/*.sample
+
+# Same for Zed config
+/.zed/*
+!/.zed/*.sample
 
 # Front-end
 dist

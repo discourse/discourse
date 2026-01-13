@@ -1,4 +1,3 @@
-import { DEBUG } from "@glimmer/env";
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
@@ -10,40 +9,7 @@ import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
-// Deprecations matching patterns on this list will trigger warnings for admins.
-// To avoid 'crying wolf', we should only add values here when we're sure they're
-// not being triggered by core or official themes/plugins.
-export const CRITICAL_DEPRECATIONS = [
-  "discourse.modal-controllers",
-  "discourse.bootbox",
-  "discourse.add-header-panel",
-  "discourse.header-widget-overrides",
-  "discourse.add-flag-property",
-  "discourse.breadcrumbs.childCategories",
-  "discourse.breadcrumbs.firstCategory",
-  "discourse.breadcrumbs.parentCategories",
-  "discourse.breadcrumbs.parentCategoriesSorted",
-  "discourse.breadcrumbs.parentCategory",
-  "discourse.breadcrumbs.secondCategory",
-  "discourse.qunit.acceptance-function",
-  "discourse.qunit.global-exists",
-  "discourse.post-stream.trigger-new-post",
-  "discourse.plugin-outlet-classic-args-clash",
-  "discourse.decorate-plugin-outlet",
-  "discourse.component-template-resolving",
-  "discourse.script-tag-hbs",
-  "discourse.script-tag-discourse-plugin",
-  "discourse.post-stream-widget-overrides",
-  "discourse.widgets-end-of-life",
-  "discourse.widgets-decommissioned",
-];
-
 const REPLACEMENT_URLS = {};
-
-if (DEBUG) {
-  // used in system specs
-  CRITICAL_DEPRECATIONS.push(/fake-deprecation.*/);
-}
 
 // Deprecation handling APIs don't have any way to unregister handlers, so we set up permanent
 // handlers and link them up to the application lifecycle using module-local state.
@@ -94,15 +60,7 @@ export default class DeprecationWarningHandler extends Service {
       return;
     }
 
-    if (
-      CRITICAL_DEPRECATIONS.some((pattern) => {
-        if (typeof pattern === "string") {
-          return pattern === opts.id;
-        } else {
-          return pattern.test(opts.id);
-        }
-      })
-    ) {
+    if (DeprecationWorkflow.shouldNotifyAdmin(opts.id)) {
       this.notifyAdmin(opts, source);
     }
   }

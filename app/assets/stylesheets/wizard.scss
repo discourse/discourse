@@ -294,8 +294,12 @@ body.wizard {
   }
 
   &__radio {
+    // these must be accessible in the DOM for accessibilty
+    // so we can't use visibility: hidden or display: none
     position: absolute;
-    visibility: hidden;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
   }
 
   &__radio-choices {
@@ -319,6 +323,13 @@ body.wizard {
         border-color: var(--tertiary-high);
         border-width: 2px;
         margin: 0;
+      }
+    }
+
+    &:focus-within {
+      .wizard-container__label {
+        outline: 2px solid var(--d-input-focused-color);
+        outline-offset: 2px;
       }
     }
 
@@ -379,10 +390,11 @@ body.wizard {
   }
 }
 
-// Register admin pages
+// New instance setup screens
 // /finish-installation and /finish-installation/register
 .wizard-container-contents.finish-installation {
   font-family: var(--font-family);
+  max-width: min(800px, 90vh);
 
   .wizard-container__combobox {
     background: var(--secondary);
@@ -435,5 +447,13 @@ body.wizard {
     &:disabled {
       background-color: var(--tertiary-low);
     }
+  }
+
+  .alert-error {
+    padding: 0.5em 2.5em 0.5em 1em;
+    background-color: var(--danger-low);
+    color: var(--primary);
+    position: relative;
+    margin-bottom: 1em;
   }
 }

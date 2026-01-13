@@ -11,7 +11,7 @@ describe "Admin upcoming changes", type: :system do
       {
         enable_upload_debug_mode: {
           impact: "other,developers",
-          status: :pre_alpha,
+          status: :experimental,
           impact_type: "other",
           impact_role: "developers",
         },
@@ -55,12 +55,7 @@ describe "Admin upcoming changes", type: :system do
 
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
-    expect(page).to have_content(
-      I18n.t(
-        "admin_js.admin.upcoming_changes.change_enabled_for_success",
-        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.everyone").downcase,
-      ),
-    )
+    expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
     expect(SiteSetting.enable_upload_debug_mode).to be_truthy
 
@@ -68,7 +63,7 @@ describe "Admin upcoming changes", type: :system do
     upcoming_changes_page.visit
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
-    expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.change_disabled"))
+    expect(upcoming_changes_page).to have_disabled_success_toast
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
 
     expect(SiteSetting.enable_upload_debug_mode).to be_falsey
@@ -79,12 +74,11 @@ describe "Admin upcoming changes", type: :system do
 
     # Add a group to test clearing behavior
     SiteSetting.enable_upload_debug_mode = true
-    SiteSettingGroup.create!(
+    Fabricate(
+      :site_setting_group,
       name: "enable_upload_debug_mode",
       group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
     )
-    SiteSetting.refresh_site_setting_group_ids!
-    SiteSetting.notify_changed!
 
     # Refresh after setting up the group
     upcoming_changes_page.visit
@@ -95,7 +89,7 @@ describe "Admin upcoming changes", type: :system do
 
     # Test 'no_one' option - should disable the change and clear groups
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
-    expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.change_disabled"))
+    expect(upcoming_changes_page).to have_disabled_success_toast
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
 
     upcoming_changes_page.visit
@@ -105,12 +99,7 @@ describe "Admin upcoming changes", type: :system do
 
     # Test 'everyone' option - should enable the change and clear groups
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
-    expect(page).to have_content(
-      I18n.t(
-        "admin_js.admin.upcoming_changes.change_enabled_for_success",
-        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.everyone").downcase,
-      ),
-    )
+    expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
 
     upcoming_changes_page.visit
@@ -119,12 +108,7 @@ describe "Admin upcoming changes", type: :system do
 
     # Test 'staff' option - should enable the change and set staff group
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("staff")
-    expect(page).to have_content(
-      I18n.t(
-        "admin_js.admin.upcoming_changes.change_enabled_for_success",
-        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.staff").downcase,
-      ),
-    )
+    expect(upcoming_changes_page).to have_enabled_for_success_toast("staff")
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
 
     upcoming_changes_page.visit
@@ -135,16 +119,12 @@ describe "Admin upcoming changes", type: :system do
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("groups")
     upcoming_changes_page.change_item(:enable_upload_debug_mode).add_group("trust_level_4")
     upcoming_changes_page.change_item(:enable_upload_debug_mode).save_groups
-    expect(page).to have_content(
-      I18n.t(
-        "admin_js.admin.upcoming_changes.change_enabled_for_success",
-        enabledFor:
-          I18n.t(
-            "admin_js.admin.upcoming_changes.enabled_for_options.specific_groups_with_group_names",
-            groupNames: "staff, trust_level_4",
-            count: 2,
-          ).downcase,
-      ),
+    expect(upcoming_changes_page).to have_enabled_for_success_toast(
+      "specific_groups_with_group_names",
+      translation_args: {
+        groupNames: "staff, trust_level_4",
+        count: 2,
+      },
     )
 
     upcoming_changes_page.visit

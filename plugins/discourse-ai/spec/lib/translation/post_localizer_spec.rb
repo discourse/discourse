@@ -163,6 +163,26 @@ describe DiscourseAi::Translation::PostLocalizer do
           expect(localization.persisted?).to eq(true)
         }.to change { PostLocalization.count }.by(1)
       end
+
+      describe "upload references" do
+        fab!(:upload)
+
+        it "creates upload references for images in translated content" do
+          post_with_image = Fabricate(:post, raw: "![image](#{upload.short_url})")
+          post_raw_translator_stub(
+            {
+              text: post_with_image.raw,
+              target_locale: "ja",
+              post: post_with_image,
+              translated: "![画像](#{upload.short_url})",
+            },
+          )
+
+          localization = described_class.localize(post_with_image, "ja")
+
+          expect(UploadReference.exists?(target: localization, upload: upload)).to eq(true)
+        end
+      end
     end
   end
 

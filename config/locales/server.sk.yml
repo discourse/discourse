@@ -1190,12 +1190,9 @@ sk:
     no_log_search_queries: "Protokoly vyhľadávacích dotazov sú momentálne zakázané (správca ich môže povoliť v nastaveniach lokality)."
   email_settings:
     pop3_authentication_error: "Vyskytol sa problém so zadanými povereniami POP3, skontrolujte používateľské meno a heslo a skúste to znova."
-    imap_authentication_error: "Vyskytol sa problém so zadanými povereniami IMAP, skontrolujte používateľské meno a heslo a skúste to znova."
-    imap_no_response_error: "Pri komunikácii so serverom IMAP došlo k chybe. %{message}"
     smtp_authentication_error: "Vyskytol sa problém so zadanými povereniami SMTP, skontrolujte používateľské meno a heslo a skúste to znova. %{message}"
     smtp_server_busy_error: "Server SMTP je momentálne zaneprázdnený, skúste to znova neskôr."
     smtp_unhandled_error: "Pri komunikácii so serverom SMTP sa vyskytla neošetrená chyba. %{message}"
-    imap_unhandled_error: "Pri komunikácii so serverom IMAP sa vyskytla neošetrená chyba. %{message}"
     connection_error: "Nastal problém s pripojením k serveru, skontrolujte názov a port servera a skúste to znova."
     timeout_error: "Časový limit pripojenia k serveru vypršal, skontrolujte názov servera a port a skúste to znova."
     unhandled_error: "Nevyriešená chyba pri testovaní nastavení e-mailu. %{message}"
@@ -1284,11 +1281,10 @@ sk:
       every_month: "každý mesiac"
       every_six_months: "každých šesť mesiacov"
   user_api_key:
-    title: "Autorizovať prístup aplikácie"
     authorize: "Autorizovať"
+    deny: "Zrušiť"
     read: "čítať"
     read_write: "čítať/zapisovať"
-    description: '"%{application_name}" žiada o nasledujúci prístup k vášmu účtu:'
     instructions: 'Práve sme pre vás vygenerovali nový kľúč API používateľa, ktorý môžete použiť s „%{application_name}“, vložte do svojej aplikácie nasledujúci kľúč:'
     otp_description: 'Chcete povoliť prístup na túto stránku "%{application_name}"?'
     otp_confirmation:
@@ -2140,35 +2136,22 @@ sk:
     tl3_requires_likes_given: "Minimálny počet lajkov, ktoré musia byť udelené za posledné (tl3 časové obdobie) dni, aby ste sa kvalifikovali na postup na úroveň dôvery 3."
     tl3_requires_likes_received: "Minimálny počet lajkov, ktoré musia byť prijaté v posledných (tl3 časových intervaloch) dňoch, aby ste sa kvalifikovali na postup na úroveň dôveryhodnosti 3."
     tl3_links_no_follow: "Neodstraňujte rel=nofollow z odkazov pridaných používateľmi so stupňom dôvery 3."
-    tl4_delete_posts_and_topics: "Povoliť používateľom TL4 odstraňovať príspevky a témy vytvorené inými používateľmi. Používatelia TL4 budú môcť vidieť aj odstránené témy a príspevky."
     delete_all_posts_and_topics_allowed_groups: "Skupiny môžu odstraňovať príspevky a témy vytvorené inými používateľmi. Tieto skupiny budú môcť vidieť aj odstránené témy a príspevky."
     edit_all_topic_groups: "Umožniť používateľom v tejto skupine upravovať názvy tém, značky a kategórie iných používateľov"
     edit_all_post_groups: "Povoliť používateľom v tejto skupine upravovať príspevky iných používateľov"
-    min_trust_to_create_topic: "MInimálna úroveň dôvery na vytvorenie novej témy."
     create_topic_allowed_groups: "Skupiny, ktoré môžu vytvárať nové témy. Správcovia a moderátori môžu vždy vytvárať témy."
     allow_flagging_staff: "Ak je táto možnosť povolená, používatelia môžu označovať príspevky z účtov členov personálu."
-    min_trust_to_edit_wiki_post: "MInimálna úroveň dôvery na úpravu wiki príspevku."
     edit_wiki_post_allowed_groups: "Skupiny, ktoré majú povolené upravovať príspevky označené ako wiki. Správcovia a moderátori môžu vždy upravovať príspevky označené ako wiki."
-    min_trust_to_edit_post: "Minimálna úroveň dôveryhodnosti potrebná na úpravu príspevkov."
     edit_post_allowed_groups: "Skupiny, ktoré majú povolené upravovať príspevky. Administrátori a moderátori môžu upravovať príspevky vždy."
-    min_trust_to_allow_self_wiki: "MInimálna úroveň dôvery k tomu aby mohol používateľ svoje témy meniť na wiki."
     self_wiki_allowed_groups: "Povoliť používateľom v týchto skupinách vytvárať vlastné príspevky na wiki. Správcovia a moderátori môžu vždy vytvárať svoje vlastné príspevky na wiki."
     min_trust_to_send_messages: "ODSTRÁNENÉ, namiesto toho použite nastavenie \"skupiny povolené pre osobné správy\". Minimálna úroveň dôveryhodnosti potrebná na vytvorenie nových osobných správ."
-    min_trust_to_send_email_messages: "Minimálna úroveň dôveryhodnosti potrebná na odosielanie osobných správ prostredníctvom e-mailu."
     send_email_messages_allowed_groups: "Skupiny, ktoré majú povolené posielať osobné správy prostredníctvom e-mailu. Správcovia a moderátori môžu vždy posielať osobné správy prostredníctvom e-mailu."
-    min_trust_to_flag_posts: "Minimálna úroveň dôveryhodnosti potrebná na označenie príspevkov"
     flag_post_allowed_groups: "Skupiny, ktoré môžu označovať príspevky. Správcovia a moderátori môžu príspevky označovať vždy."
-    min_trust_to_post_links: "Minimálna úroveň dôveryhodnosti potrebná na zahrnutie odkazov do príspevkov"
     post_links_allowed_groups: "Skupiny, ktoré majú povolené uvádzať odkazy v príspevkoch. Administrátori a moderátori majú vždy povolené uverejňovať odkazy."
-    min_trust_to_post_embedded_media: "Minimálna úroveň dôveryhodnosti potrebná na vloženie mediálnych položiek do príspevku"
     embedded_media_post_allowed_groups: "Používatelia v týchto skupinách môžu do príspevku vkladať mediálne položky. Administrátori a moderátori môžu mediálne položky vkladať vždy."
-    min_trust_level_to_allow_profile_background: "Minimálna úroveň dôveryhodnosti potrebná na nahratie pozadia profilu"
     profile_background_allowed_groups: "Skupiny, ktoré majú povolené nahrať pozadie profilu. Administrátori a moderátori môžu vždy nahrať pozadie profilu."
-    min_trust_level_to_allow_user_card_background: "Minimálna úroveň dôveryhodnosti potrebná na nahratie pozadia karty používateľa"
     user_card_background_allowed_groups: "Skupiny, ktoré môžu nahrať pozadie karty používateľa. Administrátori a moderátori môžu vždy nahrať pozadie karty používateľa."
-    min_trust_level_to_allow_invite: "Minimálna úroveň dôveryhodnosti potrebná na pozvanie používateľov"
     invite_allowed_groups: "Skupiny, ktoré môžu pozývať používateľov. Administrátori a moderátori môžu pozývať používateľov vždy."
-    min_trust_level_to_allow_ignore: "Minimálna úroveň dôveryhodnosti potrebná na ignorovanie používateľov"
     ignore_allowed_groups: "Skupiny, ktoré môžu ignorovať iných používateľov. Administrátori a moderátori môžu vždy ignorovať iných používateľov."
     allowed_link_domains: "Domény, na ktoré môžu používatelia odkazovať, aj keď nemajú príslušnú úroveň dôveryhodnosti na zverejňovanie odkazov"
     newuser_max_links: "Koľko odkazov môže nový používateľ pridať do príspevku."
@@ -2181,7 +2164,6 @@ sk:
     enable_mentions: "Umožňuje používateľom označovať sa navzájom alebo odkazovať na seba vo svojich príspevkoch pomocou symbolu \"@\"."
     here_mention: "Názov používaný pre @mention, ktorý umožňuje privilegovaným používateľom upozorniť až 'max_here_mentioned' ľudí zúčastnených na téme. Nesmie to byť existujúce používateľské meno."
     max_here_mentioned: "Maximálny počet uvedených osôb podľa @here."
-    min_trust_level_for_here_mention: "Minimálna úroveň dôveryhodnosti, ktorú je povolené uvádzať @here."
     here_mention_allowed_groups: "Skupiny, ktoré môžu uvádzať @here. Administrátori a moderátori môžu vždy uvádzať @here."
     create_thumbnails: "Vytvor náhľad a okraje pre obrázoky, ktoré sú príliš veľké aby sa zmestili do príspevku."
     email_time_window_mins: "Počkať (n) minút pred poslaním akýchkoľvek notifikačných emailov, aby mali používatelia čas úpraviť a dokončiť svoje príspevky."
@@ -2305,18 +2287,10 @@ sk:
     pop3_polling_delete_from_server: "Odstránenie e-mailov zo servera. POZNÁMKA: Ak túto funkciu zakážete, mali by ste si doručenú poštu vyčistiť ručne."
     log_mail_processing_failures: "Zaznamenávanie všetkých zlyhaní spracovania e-mailov do <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Povoliť používateľom uverejňovať nové témy prostredníctvom e-mailu. Po povolení tohto nastavenia budete môcť nakonfigurovať prichádzajúce e-mailové adresy pre skupiny a kategórie."
-    email_in_min_trust: "MInimálna úroveň dôveru použivateľa, ktorý môže posielať nové príspevky pomocou emailu."
     email_in_allowed_groups: "Skupiny, ktoré môžu zverejňovať nové témy prostredníctvom e-mailu. Správcovia a moderátori môžu vždy zverejňovať nové témy prostredníctvom e-mailu."
     email_in_authserv_id: "Identifikátor služby, ktorá vykonáva overovanie prichádzajúcich e-mailov. Pokyny na konfiguráciu <a href='https://meta.discourse.org/t/134358'>nájdete na adrese https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Výber konkrétnej hlavičky e-mailu, ktorá sa má použiť na identifikáciu spamu. Táto možnosť môže byť X-Spam-Flag, X-Spam-Status alebo X-SES-Spam-Verdict a e-mail sa označí ako spam na základe hodnoty hlavičky. Ak je napríklad zvolené nastavenie X-Spam-Flag, e-mail s hodnotou tejto hlavičky nastavenou na ÁNO bude klasifikovaný ako spam."
-    enable_imap: "Povolenie protokolu IMAP na synchronizáciu skupinových správ."
-    enable_imap_write: "Povolenie obojsmernej synchronizácie IMAP. Ak je vypnutá, všetky operácie zápisu na účty IMAP sú zakázané."
-    enable_imap_idle: "Na čakanie na nové e-maily použite mechanizmus IMAP IDLE."
     enable_smtp: "Povolenie protokolu SMTP na odosielanie oznámení pre skupinové správy."
-    imap_polling_period_mins: "Časový interval v minútach medzi kontrolou e-mailov na účtoch IMAP."
-    imap_polling_old_emails: "Maximálny počet starých e-mailov (spracovaných), ktoré sa majú aktualizovať pri každom dotazovaní schránky IMAP (0 pre všetky)."
-    imap_polling_new_emails: "Maximálny počet nových e-mailov (nespracovaných), ktoré sa majú aktualizovať pri každom dotazovaní schránky IMAP ."
-    imap_batch_import_email: "Minimálny počet nových e-mailov, ktoré spustia režim importu (vypne oznámenia pre importované príspevky)."
     email_prefix: "[Menovka], ktorá má byť použitá ako predmet emailov. Ak nie je nastavená bude nahradená 'nadpisom'."
     email_site_title: "Názov stránok, použitý ako odosieľateľ emailov zo stránok. Ak nie ne nastavený bude použitý 'nadpis'. Použite toto nastavenie, ak Váš nadpis obsahuje nepovolené znaky pre emailový reťazec odosieľateľ."
     find_related_post_with_key: "Používať iba 'kľúč odpovede' na nájdenie príspevku, na ktorý sa odpovedá. UPOZORNENIE: deaktivácia tohto nastavenia umožňuje vydávanie sa za používateľa na základe e-mailovej adresy."
@@ -2328,7 +2302,6 @@ sk:
     username_change_period: "Maximálny počet dní po registrácii, počas ktorých môžu účty zmeniť svoje používateľské meno (0 znamená, že zmena používateľského mena nie je povolená)."
     email_editable: "Povoliť užívateľom zmenu ich emailovej adresy po registrácii."
     logout_redirect: "Miesto, na ktoré sa má prehliadač presmerovať po odhlásení (napr.: https://example.com/logout)"
-    allow_uploaded_avatars: "Povoliť používateľom nahranie profilovej fotky."
     uploaded_avatars_allowed_groups: "Zadajte skupiny, ktoré môžu nahrávať vlastné profilové obrázky."
     default_avatars: "URL na avatara, ktorý bude štandardne použitý pre nových používateľov pokiaľ si ho nezmenia."
     automatically_download_gravatars: "Po vytvorení účtu alebo zmene heslo stiahnuť používateľov Gravatar."
@@ -2437,9 +2410,7 @@ sk:
     enable_inline_emoji_translation: "Umožňuje preklad pre riadkové emotikony (bez medzery alebo interpunkčných znamienok)"
     emoji_deny_list: "Tieto emotikony nebude možné používať v ponukách ani v skratkách."
     approve_post_count: "Počet príspevkov od nového alebo základného používateľa, ktoré musia byť schválené"
-    approve_unless_trust_level: "Príspevky vytvorené používateľmi pod touto úrovňou dôveryhodnosti musia byť schválené"
     approve_unless_allowed_groups: "Príspevky vytvorené používateľmi, ktorí nie sú v týchto skupinách, musia byť schválené. Príspevky vytvorené administrátormi a moderátormi sú vždy schválené."
-    approve_new_topics_unless_trust_level: "Nové témy vytvorené používateľmi pod touto úrovňou dôveryhodnosti musia byť schválené"
     approve_new_topics_unless_allowed_groups: "Nové témy vytvorené používateľmi, ktorí nie sú v týchto skupinách, musia byť schválené. Témy vytvorené administrátormi a moderátormi sú vždy schválené."
     approve_unless_staged: "Nové témy a príspevky vytvorené používateľmi v stave 'nezaktívnený' musia byť schválené"
     notify_about_queued_posts_after: "Ak existujú príspevky, ktoré čakajú na kontrolu viac ako toľko hodín, pošlite upozornenie všetkým moderátorom. Ak chcete tieto upozornenia vypnúť, nastavte na 0."
@@ -2455,7 +2426,6 @@ sk:
     new_user_notice_tl: "Minimálna úroveň dôveryhodnosti potrebná na zobrazenie oznámení o nových príspevkoch používateľov."
     returning_user_notice_tl: "Minimálna úroveň dôveryhodnosti potrebná na zobrazenie oznámení o odoslaní príspevku vracajúceho sa používateľa."
     returning_users_days: "Koľko dní by malo uplynúť, kým sa používateľ považuje za vracajúceho sa."
-    review_media_unless_trust_level: "Členovia personálu budú kontrolovať príspevky používateľov s nižšou úrovňou dôveryhodnosti, ak obsahujú vložené médiá."
     skip_review_media_groups: "Používateľom, ktorí nie sú v žiadnej z týchto skupín, budú ich príspevky zaslané členom personálu na preskúmanie, ak príspevok obsahuje vložené médiá. Príspevky vytvorené administrátormi a moderátormi sú vždy povolené."
     blur_tl0_flagged_posts_media: "Rozmazať obrázky označených príspevkov, aby sa skryl potenciálne obsah NSFW."
     enable_page_publishing: "Povoliť členom personálu zverejňovať témy na nové adresy URL s vlastným formátovaním."
@@ -2506,9 +2476,6 @@ sk:
     revoke_api_keys_unused_days: "Počet dní od posledného použitia kľúča API pred jeho automatickým zrušením (0 pre nikdy)"
     revoke_api_keys_maxlife_days: "Počet dní pred automatickým zrušením kľúča API (0 pre nikdy)"
     allow_user_api_key_scopes: "Zoznam rozsahov povolených pre kľúče API používateľa"
-    min_trust_level_for_user_api_key: |
-      Úroveň dôveryhodnosti požadovaná na generovanie kľúčov API používateľa.<br>
-      <b>VAROVANIE</b>: Zmena úrovne dôveryhodnosti zabráni používateľom s nižšou úrovňou dôveryhodnosti prihlásiť sa prostredníctvom Discourse Hub.
     user_api_key_allowed_groups: |
       Členstvo v skupine potrebné na generovanie kľúčov API používateľov.<br>
       <b>VAROVANIE</b>: Zmena úrovne dôveryhodnosti zabráni používateľom s nižšou úrovňou dôveryhodnosti prihlásiť sa prostredníctvom Discourse Hub.<br>
@@ -2518,7 +2485,6 @@ sk:
     revoke_user_api_keys_unused_days: "Počet dní od posledného použitia používateľského kľúča API pred jeho automatickým odvolaním (0 nikdy)"
     revoke_user_api_keys_maxlife_days: "Počet dní pred automatickým odvolaním používateľského kľúča API (0 nikdy)"
     tagging_enabled: "Chcete povoliť značky v témach? Ďalšie informácie nájdete v príručke správcu <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>pre značky na meta</a> ."
-    min_trust_to_create_tag: "Minimálny stupeň dôvery potrebný na vytvorenie štítku"
     create_tag_allowed_groups: "Skupiny, ktoré môžu vytvárať značky. Administrátori a moderátori môžu vytvárať značky vždy."
     max_tags_per_topic: "Maximálny počet značiek, ktoré možno použiť na tému."
     enable_max_tags_per_email_subject: "Pri generovaní predmetu e-mailu použite max_tags_per_email_subject"
@@ -2530,7 +2496,6 @@ sk:
     tags_listed_by_group: "Zoznam značiek podľa skupiny značiek na <a href='%{base_path}/tags' target='_blank'>stránke Značky</a>."
     tag_style: "Určuje vizuálny vzhľad odznakov štítkov na stránke. Toto nastavenie ti umožňuje prispôsobiť, ako sú štítky vizuálne reprezentované vo všetkých častiach stránky, čím sa zlepšuje konzistentnosť rozloženia a dostupnosť pre používateľov."
     pm_tags_allowed_for_groups: "Umožniť členom zahrnutých skupín označiť akúkoľvek osobnú správu"
-    min_trust_level_to_tag_topics: "Minimálny stupeň dôvery potrebný na štítkovanie tém"
     tag_topic_allowed_groups: "Skupiny, ktoré môžu označovať témy. Správcovia a moderátori môžu témy označovať vždy."
     suppress_overlapping_tags_in_list: "Ak sa značky zhodujú s presnými slovami v názvoch tém, značku nezobrazujte"
     remove_muted_tags_from_latest: "V zozname najnovších tém nezobrazujte témy označené iba tlmenými značkami."
@@ -2541,7 +2506,6 @@ sk:
     governing_law: "Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a zásad ochrany osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká."
     city_for_disputes: "Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra."
     shared_drafts_category: "Povoľte funkciu Zdieľané koncepty určením kategórie pre koncepty tém. Témy v tejto kategórii budú pre používateľov zo zoznamu tém odstránené."
-    shared_drafts_min_trust_level: "Umožniť používateľom vidieť a upravovať zdieľané návrhy."
     shared_drafts_allowed_groups: "Povoľte používateľom v týchto skupinách vidieť a upravovať zdieľané návrhy."
     push_notifications_prompt: "Zobrazenie bannera so súhlasom používateľa pre push oznámenia. Toto nastavenie spustí výzvu, ktorá požiada používateľov o povolenie posielať im push oznámenia. Zobrazí sa len vtedy, keď push oznámenia ešte nie sú povolené, zariadenie používateľa ich podporuje a používateľ buď odoslal príspevok, alebo používa progresívnu webovú aplikáciu (PWA). Výzva sa už nezobrazí, ak ju používateľ už zamietol alebo udelil/odmietol povolenie."
     push_notifications_icon: "Ikona odznaku, ktorá sa zobrazuje v rohu oznámenia. Odporúča sa jednofarebný PNG s priehľadnosťou 96 × 96."
@@ -3382,6 +3346,7 @@ sk:
         Ako sa budeš zapájať do komunity, budeme ťa lepšie spoznávať a dočasné obmedzenia pre nových používateľov budú zrušené. Postupne získaš [úrovne dôvery](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), ktoré zahŕňajú špeciálne schopnosti, ktoré nám pomôžu spravovať našu komunitu spoločne.
     welcome_user:
       title: "Vitajte používateľ"
+      preview: "Vitajte na %{site_name}!"
       subject_template: "Vitajte na %{site_name}!"
       text_body_template: |
         Ďakujeme, že si sa pridal k %{site_name}, vitaj!
@@ -3409,6 +3374,7 @@ sk:
         S veľkou mocou prichádza aj veľká zodpovednosť. Ak ste v moderovaní nováčikom, prečítajte si [Príručku moderovania](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Pozvánka na uvítanie"
+      preview: "Vitajte na %{site_name}!"
       subject_template: "Vitajte na %{site_name}!"
       text_body_template: |
         Ďakujeme, že si prijal pozvanie na %{site_name} -- vitaj!
@@ -3832,6 +3798,7 @@ sk:
         Toto môže byť upravené prostredníctvom nastavení stránky `newuser_spam_host_threshold` a `allowed_spam_host_domains`. Zváž pridanie %{domains} do zoznamu povolených domén, ak by mali byť vyňaté.
     unsilenced:
       title: "Neumlčaný"
+      preview: "Účet už nie je pozastavený."
       subject_template: "Účet už nie je pozastavený"
       text_body_template: |
         Ahoj,
@@ -3884,8 +3851,6 @@ sk:
     Ak chceš zrušiť odber týchto e-mailov, [klikni sem](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from: "%{user_name} cez %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Prechádzajúce odpovede"
     reached_limit:
@@ -4223,6 +4188,7 @@ sk:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Prihláste sa prostredníctvom odkazu"
+      preview: "Prihláste sa prostredníctvom odkazu."
       subject_template: "[%{email_prefix}] Prihláste sa prostredníctvom odkazu"
       text_body_template: |
         Tu je váš odkaz na prihlásenie na [%{site_name}](%{base_url}).
@@ -5175,6 +5141,8 @@ sk:
     deprecation_error_label: Zabezpečte, aby deprekácie Javascriptu vyvolali chybu
     enter: "Vstup do núdzového režimu"
     must_select: "Ak chcete vstúpiť do núdzového režimu, musíte vybrať aspoň jednu možnosť."
+  dev_mode:
+    enter: "Zadajte"
   wizard:
     title: "Nastavenie Discourse"
     step:
@@ -5230,6 +5198,10 @@ sk:
       review_by: "Recenzia od"
       pr_summary: "%{commits} revízie zmenili súbory %{changed_files} s pridaním %{additions} a odstránením %{deletions}"
       no_description: "Prispejte k vývoju %{repo} vytvorením účtu na GitHub."
+      status_date:
+        open: "otvorené"
+        approved: "schválený"
+        closed: "hlasovanie ukončené"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
@@ -5268,8 +5240,6 @@ sk:
     api_post_delete: "Odstránené cez API"
     reminder_deleted: "Nahradené novou pripomienkou"
     user_associated_posts_deleted: "Používateľ bol zničený"
-    imap_email_deleted: "E-mail bol odstránený na serveri IMAP"
-    imap_email_marked_as_spam: "E-mail bol presunutý do spamu na serveri IMAP"
     auto_deleted_hidden_posts: "Automaticky odstránené skryté príspevky"
     seed_data_topic_updated: "Téma počiatočných údajov bola aktualizovaná"
     seed_data_topic_deleted: "Téma počiatočných údajov bola odstránená"

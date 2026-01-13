@@ -10,6 +10,9 @@ he:
       llm_model:
         name: "מזהה מודל"
         max_prompt_tokens: "חלון הקשר"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "ל־%{model_name} נותרו רק %{percentage_remaining}% מהאסימונים. האסימונים יתאפסו ב־%{reset_date}. <a href='%{url}'>הצגת מודלים של בינה מלאכותית</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -269,8 +272,6 @@ he:
     ai_helper:
       errors:
         completion_request_failed: "משהו השתבש במהלך הניסיון לספק הצעות. נא לנסות שוב."
-        credit_limit_exceeded_user: "הגעת למגבלת אסימוני הבינה המלאכותית עבור התוכנית שלך. תגובות לא תהיינה זמינות עד שהמגבלה שלך תתאפס ב־%{reset_time}."
-        credit_limit_exceeded_bot: "תגובות בינה מלאכותית אינן זמינות כרגע עקב מגבלות אסימונים. נא לנסות שוב %{reset_time}."
         no_illustrator_persona: "לא מוגדר דמות איור לפוסטים. נא לבדוק את הגדרות האתר שלך."
         no_image_generation_tool: "לדמות איור הפוסטים חייב להיות מוצמד כלי יצירת תמונות. נא להגדיר כלי יצירת תמונות לדמות הזאת בלוח הניהול."
         no_image_generated: "יצירת תמונות נכשלה. נא לנסות שוב או לבדוק את הגדרות הכלי שלך."
@@ -309,7 +310,6 @@ he:
     ai_bot:
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
-      thinking: "בתהליך חשיבה…"
       personas:
         default_llm_required: "ברירת מחדל של מודל שפה הגדול נחוצה בטרם הפעלת הצ׳אט"
         cannot_delete_system_persona: "אי אפשר למחוק דמויות מערכת, נא להשבית אותן במקום"
@@ -476,9 +476,9 @@ he:
         github_search_files: "חיפוש קבצים ב־GitHub"
         github_search_code: "חיפוש קוד ב־GitHub"
         github_file_content: "תוכן קובץ ב־GitHub"
-        github_pull_request_diff: "הבדל בבקשת דחיפה ב־GitHub"
         random_picker: "בורר אקראי"
         categories: "הצגת קטגוריות"
+        flag_post: "סימון פוסט"
         search: "חיפוש"
         tags: "הצגת תגיות"
         time: "מועד"
@@ -504,7 +504,6 @@ he:
         github_search_code: "חיפוש אחר קוד במאגר GitHub"
         github_search_files: "חיפוש אחר קבצים במאגר GitHub"
         github_file_content: "משיכת תוכן של קבצים ממאגר ב־GitHub"
-        github_pull_request_diff: "משיכת הבדל לבקשת דחיפה ב־GitHub"
         random_picker: "נא לבחור מספר אקראי או רכיב אקראי מרשימה"
         categories: "הצגת כל הקטגוריות החשופות לציבור בפורום"
         search: "חיפוש בכל הנושאים הציבוריים בפורום"
@@ -530,7 +529,7 @@ he:
         web_browser: "קורא את <a href='%{url}'>%{url}</a>"
         github_search_files: "בוצע חיפוש אחר ‚%{keywords}’ בתוך %{repo}/%{branch}"
         github_search_code: "בוצע חיפוש אחר ‚%{query}’ בתוך %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "התקבל תוכן של %{file_paths} מתוך %{repo_name}@%{branch}"
         random_picker: "בחירה מתוך %{options}, נבחר: %{result}"
         read: "קריאה: <a href='%{url}'>%{title}</a>"
@@ -652,8 +651,6 @@ he:
       errors:
         disabled: "יכולת התרגום של הבינה המלאכותית אינה מוגדרת במלואה."
         all_posts_translated: "כל הפוסטים בנושא הזה כבר מתורגמים."
-    llm_credit_allocation:
-      limit_exceeded_admin: "ניצלת את כל אסימוני הבינה המלאכותית שלך. נא לנסות שוב בעוד %{reset_time}."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
       quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
@@ -672,7 +669,3 @@ he:
         two: "כבר קיימים כלים מותאמים בשמות %{names}."
         many: "כבר קיימים כלים מותאמים בשמות %{names}."
         other: "כבר קיימים כלים מותאמים בשמות %{names}."
-  dashboard:
-    problem:
-      ai_llm_status: "מודל השפה הגדול: %{model_name} נתקל בקשיים. נא לגשת ל<a href='%{url}'>עמוד ההגדרות של המודל</a>."
-      ai_credit_soft_limit: "ל־%{model_name} נותרו רק %{percentage_remaining}% מהאסימונים. האסימונים יתאפסו ב־%{reset_date}. <a href='%{url}'>הצגת מודלים של בינה מלאכותית</a>"

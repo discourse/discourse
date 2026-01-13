@@ -158,7 +158,7 @@ pt:
       el:
         name: Grego
       en:
-        name: Inglês (EUA)
+        name: Inglês
       en_GB:
         name: Inglês (Reino Unido)
       es:
@@ -862,7 +862,6 @@ pt:
         flagged: "Sinalizado"
         flagged_as_by: "Sinalizado como %{flagReason} por %{username} · %{relativeDate}"
         reviewed: "Revisto"
-        reviewed_by: "Revisto por %{username} · %{relativeDate}"
         view_conversation: "ver PM"
         note_added: "Nota do moderador"
         note_added_by: "Nota do moderador por %{username} · %{relativeDate}"
@@ -1044,9 +1043,7 @@ pt:
           notification: Notificação
         email:
           title: "E-mail"
-          status: "%{old_emails} / %{total_emails} e-mails sincronizados via IMAP."
           enable_smtp: "Ativar SMTP"
-          enable_imap: "Ativar IMAP"
           test_settings: "Testar Configurações"
           save_settings: "Guardar Configurações"
           last_updated: "Última atualização:"
@@ -1055,14 +1052,7 @@ pt:
           smtp_settings_valid: "Configurações SMTP válidas."
           smtp_title: "SMTP"
           smtp_instructions: "Quando ativar o SMTP para o grupo, todos os e-mails de saída enviados a partir da caixa de entrada do grupo serão enviados através das configurações de SMTP aqui especificadas ao invés do servidor de email configurado para outros e-mails enviados pelo seu fórum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Configurações Adicionais"
-          imap_instructions: 'Quando ativa o IMAP para o grupo, as mensagens são sincronizadas entre a caixa de entrada do grupo e o servidor e caixa de correio IMAP fornecidos. O SMTP tem de ser ativado com credenciais válidas e testadas antes do IMAP poder ser ativado. O nome de utilizador e a palavra-passe do e-mail utilizados para o SMTP serão utilizados no IMAP. Para obter mais informação, consulte a <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funcionalidade de anúncio no Discourse Meta</a>.'
-          imap_alpha_warning: "Aviso: esta é uma funcionalidade em fase alfa. Oficialmente só é suportado o Gmail. Utilzie por sua conta e risco!"
-          imap_settings_valid: "Configurações IMAP válidas."
-          smtp_disable_confirm: "Se desativar o SMTP, todas as configurações de SMTP e IMAP serão restauradas e a funcionalidade associada será desativada. Tem a certeza que deseja continuar?"
-          imap_disable_confirm: "Se desativar o IMAP, todas as configurações de IMAP serão restauradas e a funcionalidade associada será desativada. Tem a certeza que deseja continuar?"
-          imap_mailbox_not_selected: "Tem de selecionar uma caixa de correio para esta configuração IMAP ou nenhuma caixa de correio será sincronizada!"
+          additional_settings: "Configurações Adicionais"
           prefill:
             title: "Preencher com configurações para:"
             gmail: "Gmail"
@@ -1077,9 +1067,6 @@ pt:
             smtp_server: "Servidor SMTP"
             smtp_port: "Porta SMTP"
             smtp_ssl_mode: "Modo SSL"
-            imap_server: "Servidor IMAP"
-            imap_port: "Porta IMAP"
-            imap_ssl: "Utilizar SSL para IMAP"
             username: "Nome de utilizador"
             password: "Palavra-passe"
           settings:
@@ -1088,10 +1075,6 @@ pt:
             allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos respondam aos tópicos do grupo. Se não estiver ativado, as respostas de endereços de e-mail ainda não convidados para o tópico criarão um novo tópico."
             from_alias: "De Alias"
             from_alias_hint: "Alias para usar como endereço de origem ao enviar e-mails SMTP de grupo. Nota que isto pode não ser suportado por todos os fornecedores de e-mails, por isso consulta a documentação do seu fornecedor de correio."
-          mailboxes:
-            synchronized: "Caixa de Correio Sincronizada"
-            none_found: "Não foram encontradas caixas de correio nesta conta de e-mail."
-            disabled: "Desativado"
         membership:
           title: Filiação
           access: Acesso
@@ -1355,6 +1338,9 @@ pt:
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
+      upcoming_changes:
+        for_user:
+          enabled: "Ativado?"
       user_notifications:
         filters:
           filter_by: "Filtrar por"
@@ -1678,7 +1664,7 @@ pt:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicações"
-        navigation_menu: "Barra de Navegação"
+        navigation_menu: "Menu de Navegação"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -2805,6 +2791,8 @@ pt:
       ulist_title: "Lista de símbolos"
       list_item: "Item da Lista"
       toggle_direction: "Direção de alternar"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Ajuda de Edição Markdown"
       collapse: "Minimizar o painel de compositor"
       open: "Abrir o painel de compositor"
@@ -2865,6 +2853,7 @@ pt:
         zoom_out: "Diminuir tamanho da imagem"
         zoom_in: "Aumentar tamanho da imagem"
         remove: "Remover imagem"
+      image: "imagem"
       image_scale_button: "Escalar imagem para %{percent}%"
       delete_image_button: Excluir Imagem
       toggle_image_grid: Alternar grelha da imagem
@@ -3141,6 +3130,9 @@ pt:
         unlist_topics: "Remover Tópicos da Lista"
         relist_topics: "Voltar a Listar Tópicos"
         delete: "Eliminar Tópicos"
+        delete_topics_count:
+          one: "Eliminar Tópico"
+          other: "Eliminar Tópicos"
         dismiss: "Marcar Visto"
         dismiss_read: "Marcar todos os não lidos como vistos"
         dismiss_read_with_selected:
@@ -3193,16 +3185,6 @@ pt:
         bookmarks: "Ainda não marcou nenhum tópico."
         category: "Não há tópicos na categoria %{category}."
         top: "Não existem tópicos recentes."
-      bottom:
-        latest: "Não existem mais tópicos recentes."
-        posted: "Não existem mais tópicos publicados."
-        read: "Não existem mais tópicos lidos."
-        new: "Não existem mais tópicos novos."
-        unread: "Não existem mais tópicos não lidos."
-        category: "Não existem mais tópicos na categoria %{category}."
-        tag: "Não existem mais tópicos em %{tag}."
-        top: "Não existem mais tópicos recentes."
-        bookmarks: "Não há mais tópicos marcados."
     topic_bulk_actions:
       dismiss:
         name: "Marcar Visto"
@@ -3276,7 +3258,6 @@ pt:
       participant_groups: "Grupos participantes"
       created_at: "Criado: %{date}"
       bumped_at: "Mais recente: %{date}"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       jump_reply_button: "Ir para publicação"
       deleted: "Este tópico foi eliminado"
@@ -4154,6 +4135,7 @@ pt:
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
+        custom: "Personalizar"
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
@@ -4323,6 +4305,7 @@ pt:
       upload_description: "Faça upload de um arquivo csv para criar tags em massa"
       upload_instructions: "Um por linha, opcionalmente com um grupo de tags no formato 'tag_name,tag_group'."
       upload_successful: "Tags carregadas com sucesso"
+      bulk_create_button: "Criar"
       delete_unused_confirmation:
         one: "%{count} tag será excluída: %{tags}"
         other: "%{count} tags serão excluídas: %{tags}"
@@ -4550,6 +4533,8 @@ pt:
         enabled_for_options:
           everyone: "Todos"
           staff: "Apenas Pessoal"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -4560,6 +4545,7 @@ pt:
           disabled: "Desativado"
           impact_type_feature: "Funcionalidade"
           impact_type_other: "Outro"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Sobre o seu ''site''"
@@ -4585,6 +4571,11 @@ pt:
           sub_pages:
             common_settings:
               title: "Configurações"
+            discourse_id:
+              title: "Id. do Discourse"
+        discourse_id:
+          title: "Id. do Discourse"
+          learn_more: "Saiba mais"
         logo:
           title: "Logótipo"
           header_description: "Configure os logótipos e ícones utilizados no seu ''site''"
@@ -4623,6 +4614,8 @@ pt:
               options:
                 above_topic_content: "Por cima do conteúdo do tópico"
                 below_site_header: "Por debaixo do cabeçalho do site"
+            header_new_members:
+              placeholder: "Bem-vindo(a), %{preferred_display_name}!"
             header_logged_in:
               placeholder: "Seja bem-vindo, %{preferred_display_name}!"
             header_anonymous:
@@ -5874,6 +5867,8 @@ pt:
         no_user_badges: "%{name} não tem nenhum crachá."
         no_badges: Não existem crachás que possam ser atribuídos.
         none_selected: "Selecione um crachá para começar"
+        sections:
+          settings: Configurações
         allow_title: Permitir que o crachá seja usado como título
         multiple_grant: Pode ser concedido múltiplas vezes
         visibility_heading: Visibilidade

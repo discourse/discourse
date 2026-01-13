@@ -21,6 +21,11 @@
 #                         is changed.
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# upcoming_change       - Additional metadata with the following options to show in the /admin/config/upcoming-changes page:
+#                          - status: experimental | alpha | beta | stable
+#                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
+#                          - learn_more_url: a url for more information
+#
 #
 #
 # type: email                 - Must be a valid email address.
@@ -568,6 +573,9 @@ basic:
     default: false
     hidden: true
     client: true
+  trigger_browser_pageview_events:
+    default: false
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
@@ -577,11 +585,14 @@ basic:
     default: "stable"
     type: enum
     choices:
-      - pre_alpha
+      - experimental
       - alpha
       - beta
       - stable
       - never
+    hidden: true
+  upcoming_change_verbose_logging:
+    default: false
     hidden: true
 
 login:
@@ -669,6 +680,10 @@ login:
     default: ""
     textarea: true
     secret: true
+    area: "authenticators"
+  google_oauth2_hd_groups:
+    default: false
+    validator: GoogleOauth2HdGroupsValidator
     area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
@@ -982,6 +997,11 @@ users:
     default: 15
     min: 1
     area: "users"
+  delete_all_posts_background_threshold:
+    client: true
+    default: 200
+    min: 1
+    area: "users"
   delete_user_self_max_post_count:
     default: 1
     min: -1
@@ -1027,11 +1047,6 @@ users:
   allow_likes_in_anonymous_mode:
     default: false
     client: true
-  anonymous_posting_min_trust_level:
-    default: 1
-    enum: "TrustLevelSetting"
-    client: true
-    hidden: true
   anonymous_posting_allowed_groups:
     default: "1|2|11" # auto group admins, moderators and trust_level_1
     type: group_list
@@ -1093,6 +1108,7 @@ users:
     min: 0
     max: 36500
     area: "users"
+    requires_confirmation: "simple"
   clean_up_unused_staged_users_after_days:
     default: 365
     min: 0
@@ -1320,10 +1336,6 @@ posting:
     type: category
     default: ""
     area: "posts_and_topics"
-  shared_drafts_min_trust_level:
-    default: "staff"
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
   shared_drafts_allowed_groups:
     default: "1|2" # auto group admins and moderators
     type: group_list
@@ -1427,10 +1439,6 @@ posting:
   max_here_mentioned:
     default: 10
     area: "posts_and_topics"
-  min_trust_level_for_here_mention:
-    default: "2"
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
   here_mention_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1562,10 +1570,6 @@ posting:
   approve_post_count:
     default: 0
     area: "posts_and_topics"
-  approve_unless_trust_level:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   approve_unless_allowed_groups:
     default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1573,10 +1577,6 @@ posting:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  approve_new_topics_unless_trust_level:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   approve_new_topics_unless_allowed_groups:
     default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1671,10 +1671,6 @@ posting:
     default: 120
     max: 36500
     area: "posts_and_topics"
-  review_media_unless_trust_level:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   skip_review_media_groups:
     default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1885,10 +1881,6 @@ email:
     default: false
     client: true
     area: "email"
-  email_in_min_trust:
-    default: 2
-    enum: "TrustLevelSetting"
-    hidden: true
   email_in_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1908,27 +1900,9 @@ email:
       - X-Spam-Status
       - X-SES-Spam-Verdict
     area: "email"
-  enable_imap:
-    default: false
-    client: true
-    hidden: true
-  enable_imap_write:
-    default: false
-    hidden: true
-  enable_imap_idle:
-    default: false
-    hidden: true
   enable_smtp:
     default: false
     client: true
-  imap_polling_period_mins:
-    default: 5
-  imap_polling_old_emails:
-    default: 1000
-  imap_polling_new_emails:
-    default: 250
-  imap_batch_import_email:
-    default: 100
   email_prefix:
     default: ""
     area: "email"
@@ -2276,11 +2250,6 @@ files:
     client: true
     default: true
   automatically_download_gravatars: true
-  allow_uploaded_avatars:
-    client: true
-    default: "0"
-    enum: "TrustLevelAndStaffAndDisabledSetting"
-    hidden: true
   uploaded_avatars_allowed_groups:
     default: "10"
     type: group_list
@@ -2438,10 +2407,6 @@ trust:
     default: 1
     enum: "TrustLevelSetting"
     area: "trust_levels"
-  min_trust_to_create_topic:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   create_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2449,10 +2414,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_edit_wiki_post:
-    default: 1
-    enum: "TrustLevelSetting"
-    hidden: true
   edit_wiki_post_allowed_groups:
     default: "1|2|11" # auto group admins, moderators, trust_level_1
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2460,10 +2421,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_edit_post:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   edit_post_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2471,10 +2428,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_allow_self_wiki:
-    default: 3
-    enum: "TrustLevelSetting"
-    hidden: true
   self_wiki_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2482,10 +2435,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_send_email_messages:
-    default: "4"
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
   send_email_messages_allowed_groups:
     default: "1|2|14" # auto group admins, moderators, trust_level_4
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2493,10 +2442,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_flag_posts:
-    default: 1
-    enum: "TrustLevelSetting"
-    hidden: true
   flag_post_allowed_groups:
     default: "1|2|11" # auto group admins, moderators, trust_level_1
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2512,10 +2457,6 @@ trust:
     default: ""
     area: "flags"
     client: true
-  min_trust_to_post_links:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   post_links_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2523,10 +2464,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_post_embedded_media:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   embedded_media_post_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2534,11 +2471,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_allow_profile_background:
-    default: 0
-    client: true
-    enum: "TrustLevelSetting"
-    hidden: true
   profile_background_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2546,11 +2478,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_allow_user_card_background:
-    default: 0
-    client: true
-    enum: "TrustLevelSetting"
-    hidden: true
   user_card_background_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2558,10 +2485,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_allow_invite:
-    default: 2
-    enum: "TrustLevelSetting"
-    hidden: true
   invite_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2569,11 +2492,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_allow_ignore:
-    default: 2
-    enum: "TrustLevelSetting"
-    client: true
-    hidden: true
   ignore_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2665,11 +2583,6 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
-    area: "trust_levels"
-  tl4_delete_posts_and_topics:
-    default: false
-    client: true
-    hidden: true
     area: "trust_levels"
   delete_all_posts_and_topics_allowed_groups:
     default: "1|2" # auto group admins, moderators
@@ -3188,6 +3101,10 @@ developer:
   viewport_based_mobile_mode:
     default: true
     client: true
+  site_setting_verbose_client_logging:
+    default: false
+    client: true
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -4035,10 +3952,6 @@ user_api:
   push_api_secret_key:
     default: ""
     hidden: true
-  min_trust_level_for_user_api_key:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   user_api_key_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -4102,11 +4015,6 @@ tags:
     default: 20
     client: true
     area: "categories_and_tags"
-  min_trust_to_create_tag:
-    default: "3"
-    type: enum
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
   create_tag_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
     mandatory_values: "1|2" # auto group admins, moderators
@@ -4121,11 +4029,6 @@ tags:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_tag_topics:
-    default: "0"
-    enum: "TrustLevelAndStaffSetting"
-    client: true
-    hidden: true
   tag_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -4243,6 +4146,9 @@ experimental:
     hidden: true
     client: true
     area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -4260,10 +4166,6 @@ experimental:
     default: 15
     hidden: true
     area: "experimental"
-  experimental_lightbox:
-    client: true
-    default: true
-    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
@@ -4280,10 +4182,6 @@ experimental:
     client: true
     default: true
     area: "experimental"
-  google_oauth2_hd_groups:
-    default: false
-    validator: GoogleOauth2HdGroupsValidator
-    area: "experimental"
   lazy_load_categories_groups:
     default: ""
     type: group_list
@@ -4295,6 +4193,11 @@ experimental:
     type: group_list
     default: ""
     area: "experimental"
+    hidden: true
+  force_old_reviewable_ui:
+    client: true
+    default: false
+    hidden: true
   reviewable_old_moderator_actions:
     default: true
     hidden: true
@@ -4303,11 +4206,10 @@ experimental:
     default: false
     hidden: true
     client: true
-  fake_upcoming_change:
+  floating_dismiss_topics_on_mobile:
     default: false
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
-      impact: "other,all_members"
-      learn_more_url: "https://meta.discourse.org"
+      status: "experimental"
+      impact: "feature,all_members"

@@ -10,6 +10,15 @@ pl_PL:
       llm_model:
         name: "Identyfikator modelu"
         max_prompt_tokens: "Okno kontekstowe"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatniej godziny nie odpowiedział w %{failed_calls} na %{total_calls}."
+        few: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
+        many: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
+      ai_credit_soft_limit: "%{model_name} ma tylko %{percentage_remaining}% pozostałych kredytów. Kredyty zostaną zresetowane o %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
+      ai_credit_hard_limit: "Skończyły Ci się kredyty AI na %{model_name}. Funkcje AI będą niedostępne do %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -79,6 +88,8 @@ pl_PL:
     ai_nsfw_flag_threshold_sexy: "Próg uznania obrazu zaklasyfikowanego jako seksowny, aby został uznany za NSFW."
     ai_nsfw_models: "Modele używane do wnioskowania NSFW."
     ai_spam_detection_enabled: "Włącz moduł wykrywania spamu AI"
+    ai_spam_detection_max_post_count: "Maksymalna liczba wpisów, jakie może mieć użytkownik, zanim przestaną być skanowane pod kątem spamu"
+    ai_spam_detection_max_trust_level: "Maksymalny poziom zaufania użytkowników do skanowania w poszukiwaniu spamu"
     ai_openai_api_key: "Klucz API dla OpenAI API. Używany TYLKO do tworzenia i edycji obrazów. W przypadku GPT należy użyć zakładki konfiguracji LLM."
     ai_openai_image_generation_url: "Adres URL interfejsu API generowania obrazów OpenAI"
     ai_openai_image_edit_url: "Adres URL interfejsu API do edycji obrazów OpenAI"
@@ -115,6 +126,7 @@ pl_PL:
     ai_summary_gists_allowed_groups: "Grupy mogą przeglądać sedno dyskusji na liście gorących tematów."
     ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
     ai_bot_enabled: "Włącz moduł bota AI."
+    ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
     ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można je zastąpić, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Gdy bot GPT uzyska dostęp do PW, odpowie członkom tych grup."
     ai_bot_debugging_allowed_groups: "Zezwól tym grupom na wyświetlanie przycisku debugowania w postach, który wyświetla surowe żądanie i odpowiedź AI"
@@ -284,8 +296,6 @@ pl_PL:
     ai_helper:
       errors:
         completion_request_failed: "Coś poszło nie tak podczas próby przedstawienia sugestii. Spróbuj ponownie."
-        credit_limit_exceeded_user: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu %{reset_time}."
-        credit_limit_exceeded_bot: "Odpowiedzi AI są obecnie niedostępne z powodu limitów kredytów. Spróbuj ponownie %{reset_time}."
         no_illustrator_persona: "Osobowość ilustratora wpisów nie jest skonfigurowany. Sprawdź ustawienia witryny."
         no_image_generation_tool: "Osobowość ilustratora wpisów musi mieć dołączone narzędzie do generowania obrazów. Skonfiguruj narzędzie do generowania obrazów dla tej postaci w panelu administracyjnym."
         no_image_generated: "Nie udało się wygenerować obrazu. Spróbuj ponownie lub sprawdź konfigurację narzędzia."
@@ -324,7 +334,7 @@ pl_PL:
     ai_bot:
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
-      thinking: "Myślenie..."
+      thinking: "Myślenie"
       personas:
         default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
         cannot_delete_system_persona: "Person systemowych nie można usunąć, zamiast tego wyłącz je."
@@ -484,6 +494,10 @@ pl_PL:
           base_query:
             name: "Podstawowe zapytanie wyszukiwania"
             description: "Podstawowe zapytanie używane podczas wyszukiwania. Przykład: '#pilne' spowoduje dodanie '#pilne' do zapytania wyszukiwania i uwzględnienie tylko tematów z kategorią lub tagiem pilne."
+        flag_post:
+          flag_type:
+            name: "Typ flagi"
+            description: "Kontroluje, czy wpis jest sprawdzany, ukrywany, usuwany lub traktowany jako spam."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         update_artifact: "Zaktualizuj artefakt sieciowy"
@@ -492,9 +506,10 @@ pl_PL:
         github_search_files: "Pliki wyszukiwania GitHub"
         github_search_code: "Wyszukiwanie kodu GitHub"
         github_file_content: "Zawartość pliku GitHub"
-        github_pull_request_diff: "Różnica pull requestów GitHub"
+        github_diff: "Różnica GitHub"
         random_picker: "Losowy selektor"
         categories: "Wymień kategorie"
+        flag_post: "Oflaguj post"
         search: "Szukaj"
         tags: "Wymień tagi"
         time: "Czas"
@@ -520,9 +535,10 @@ pl_PL:
         github_search_code: "Wyszukaj kod w repozytorium GitHub"
         github_search_files: "Wyszukaj pliki w repozytorium GitHub"
         github_file_content: "Pobieranie zawartości plików z repozytorium GitHub"
-        github_pull_request_diff: "Pobierz różnicę w żądaniu ściągnięcia GitHub"
+        github_diff: "Pobierz pull request z GitHub lub zatwierdź różnicę"
         random_picker: "Wybierz losową liczbę lub losowy element listy"
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
+        flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
         search: "Przeszukaj wszystkie publiczne tematy na forum"
         tags: "Wymień wszystkie tagi na forum"
         time: "Znajdź czas w różnych strefach czasowych"
@@ -546,9 +562,10 @@ pl_PL:
         web_browser: "Czytanie <a href='%{url}'>%{url}</a>"
         github_search_files: "Wyszukano „%{keywords}” w %{repo}/%{branch}"
         github_search_code: "Wyszukano '%{query}' w %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Pobrano zawartość %{file_paths} z %{repo_name}@%{branch}"
         random_picker: "Wybieranie z %{options}, wybrane: %{result}"
+        flag_post: "Flagowanie wpisu %{post_id} (flag_post: %{flag_post})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
         time: "Czas w %{timezone} wynosi %{time}"
         summarize: "Podsumowano <a href='%{url}'>%{title}</a>"
@@ -602,6 +619,15 @@ pl_PL:
         continue_conversation:
           title: "Rozmowa odkrywcza: Wyszukaj %{query}"
           raw: "Podczas moich poszukiwań %{query} pokazałeś mi następujące informacje:\n\n%{context}\n\nKontynuujmy rozmowę."
+      flag_post:
+        errors:
+          no_context: "Brak kontekstu wpisu dostępnego do oflagowania."
+          no_reason: "Wymagany jest powód, aby oflagować wpis."
+          invalid_flag_type: "Nieprawidłowy typ flagi."
+        skipped: "Werdykt był fałszywy; flaga nie została utworzona."
+        already_flagged: "Wpis został już oflagowany do sprawdzenia."
+        flagged: "Wpis oflagowany do sprawdzenia."
+        reason: "Bot AI oflagował ten wpis.\n\nPowód: %{reason}"
     summarization:
       configuration_hint:
         one: "Najpierw skonfiguruj ustawienie `%{setting}`."
@@ -669,8 +695,8 @@ pl_PL:
         disabled: "Funkcja tłumaczenia AI nie jest w pełni skonfigurowana."
         all_posts_translated: "Wszystkie wpisy tego tematu są już przetłumaczone."
     llm_credit_allocation:
-      limit_exceeded_user: "Osiągnięto limit kredytu AI. Spróbuj ponownie za %{reset_time}. Aby uzyskać więcej informacji, skontaktuj się z administratorem witryny."
-      limit_exceeded_admin: "Osiągnięto limit kredytów AI. Spróbuj ponownie za %{reset_time}."
+      limit_exceeded_user: "Ta społeczność osiągnęła limit kredytów AI na dziś. Spróbuj ponownie po %{reset_time} lub skontaktuj się z administratorem witryny, aby uzyskać więcej informacji."
+      limit_exceeded_admin: "Osiągnięto limit kredytu AI. Spróbuj ponownie po %{reset_time}."
     errors:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
       quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"
@@ -689,8 +715,3 @@ pl_PL:
         few: "Niestandardowe narzędzia o nazwach %{names} już istnieją."
         many: "Niestandardowe narzędzia o nazwach %{names} już istnieją."
         other: "Niestandardowe narzędzia o nazwach %{names} już istnieją."
-  dashboard:
-    problem:
-      ai_llm_status: "Model LLM: %{model_name} napotyka problemy. Proszę sprawdzić stronę konfiguracji modelu <a href='%{url}'></a>."
-      ai_credit_soft_limit: "%{model_name} ma tylko %{percentage_remaining}% pozostałych kredytów. Kredyty zostaną zresetowane o %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
-      ai_credit_hard_limit: "Skończyły Ci się kredyty AI na %{model_name}. Funkcje AI będą niedostępne do %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"

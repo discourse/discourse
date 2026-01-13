@@ -27,6 +27,12 @@ hr:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorije
+            tags:
+              label: Oznake
         user_badge_granted:
           fields:
             badge:
@@ -129,6 +135,8 @@ hr:
               label: ID teme
             user:
               label: Korisnik
+        set_topic_timer:
+          title: Podesi tajmer teme
       models:
         trigger:
           name:

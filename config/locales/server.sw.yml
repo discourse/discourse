@@ -495,11 +495,10 @@ sw:
       daily: "kila siku"
       weekly: "kila wiki"
   user_api_key:
-    title: "Idhini ufikivu wa programu-tumizi"
     authorize: "Idhini"
+    deny: "Batili"
     read: "soma"
     read_write: "soma/andika"
-    description: '"%{application_name}" anaomba ufikivu ufuatao kwenye akaunti yako:'
     otp_confirmation:
       confirm_title: Endelea kwenye %{site_name}
     no_trust_level: "Samahani, hauna kiwango cha uaminifu kinachohitajika kufikia API ya mtumiaji"
@@ -843,13 +842,7 @@ sw:
     tl3_promotion_min_duration: "Siku ambazo lazima zipite kwa mtumiaji aliyepanda cheo kufika kiwango cha 3 cha uaminifu kabla hajarudishwa kwenye kiwango cha 2 cha uaminifu."
     tl3_requires_likes_given: "Kiwango cha chini cha upendo unaotakiwa kutolewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
     tl3_requires_likes_received: "Kiwango cha chini cha upendo unaotakiwa kupokelewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
-    min_trust_to_create_topic: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kutengeneza mada mpya."
     allow_flagging_staff: "Kama ikiruhusiwa, watumiaji wanaweza kuweka bendera kwenye machapisho kutoka kwenye akaunti za wasaidizi."
-    min_trust_to_edit_wiki_post: "Kiwango cha chini cha uaminifu kinachohitajika kuhariri machapisho ambayo ni wiki."
-    min_trust_to_edit_post: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuhariri machapisho."
-    min_trust_to_allow_self_wiki: "Kiwango cha chini cha uaminifu kinachohitajika na mtumiaji kuweza kufanya chapisho lake liwe wiki."
-    min_trust_to_flag_posts: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka bendera kwenye machapisho."
-    min_trust_to_post_links: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka viungo kwenye machapisho."
     newuser_max_links: "Viungo vingapi mtumiaji mpya anaweza kuongeza kwenye chapisho."
     newuser_max_attachments: "Viambatanisho vingapi mtumiaji mpya anaweza kuweka kwenye chapisho."
     newuser_max_mentions_per_post: "Namba ya taarifa za @jina mtumiaji mpya anaweza kutumia kwenye chapisho."
@@ -900,11 +893,9 @@ sw:
     default_categories_watching: "Orodha ya kategoria zinazoangaliwa kama chaguo-msingi."
     default_categories_tracking: "Orodha ya kategoria zinazofuatiliwa kama chaguo-msingi."
     default_categories_muted: "Orodha ya kategoria zinazonyamazishwa kama chaguo-msingi."
-    min_trust_to_create_tag: "kiwango cha chini cha uaminifu kinachohitajika kutengeneza lebo."
     max_tags_per_topic: "Kiwango cha juu cha lebo ambazo zinaweza kuwekwa kwenye mada."
     max_tag_length: "kiwango cha juu cha herufi zinazoweza kutumika kwenye lebo."
     max_tag_search_results: "Utafutaji wa lebo, utaonyesha kiwango hiki cha juu cha majibu."
-    min_trust_level_to_tag_topics: "Kiwango cha chini kabisa kinachohitajika kulebo mada"
     suppress_overlapping_tags_in_list: "Kama lebo zina maneno ambayo yapo kwenye vichwa vya mada, usionyeshe lebo"
     errors:
       invalid_email: "Barua pepe batili."
@@ -1125,6 +1116,7 @@ sw:
       title: "Chapisho Linahitaji Kibali"
     welcome_user:
       title: "Karibu Mtumiaji"
+      preview: "Karibu kwenye %{site_name}!"
       subject_template: "Karibu kwenye %{site_name}!"
       text_body_template: |
         Asante kwa jujiunga %{site_name}, na karibu!
@@ -1135,6 +1127,7 @@ sw:
         Karibu Sana!
     welcome_invite:
       title: "Muaiko wa Ukaribisho"
+      preview: "Karibu kwenye %{site_name}!"
       subject_template: "Karibu kwenye %{site_name}!"
       text_body_template: |
         Asante kwa kukubali mualiko kutoka kwa %{site_name} -- karibu!
@@ -1359,6 +1352,7 @@ sw:
       subject_template: "Machapisho ya mtumiaji mpya %{username} yamezuiliwa kwa sababu ya viungo vinavyojirudia"
     unsilenced:
       title: "Hajanyamazishwa Tena"
+      preview: "Akaunti haijasimamishwa tena."
       subject_template: "Akaunti haijasimamishwa tena"
       text_body_template: |
         Habari,
@@ -1624,6 +1618,7 @@ sw:
         %{base_url}/u/nywila-wekaupya/%{email_token}
     email_login:
       title: "Ingia kupitia kiungo"
+      preview: "Ingia kupitia kiungo."
       subject_template: "Ingia kupitia kiungo [%{email_prefix}] "
       text_body_template: |
         Hiki ni kiungo cha kuingia kwenye [%{site_name}](%{base_url}).
@@ -1962,6 +1957,9 @@ sw:
   onebox:
     github:
       closed: "imefungwa"
+      status_date:
+        approved: "wamekubaliwa"
+        closed: "imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'

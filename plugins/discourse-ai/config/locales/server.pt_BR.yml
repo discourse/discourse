@@ -276,7 +276,6 @@ pt_BR:
     ai_bot:
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
-      thinking: "Pensando..."
       personas:
         default_llm_required: "É preciso de um modelo de LLM padrão para ativar o bate-papo"
         cannot_delete_system_persona: "Personas de sistema não podem ser excluídas, desative"
@@ -440,9 +439,9 @@ pt_BR:
         github_search_files: "Arquivos de pesquisa do GitHub"
         github_search_code: "Pesquisa de código do GitHub"
         github_file_content: "Conteúdo de arquivo do GitHub"
-        github_pull_request_diff: "Diferença de solicitação pull do GitHub"
         random_picker: "Seletor aleatório"
         categories: "Listar categorias"
+        flag_post: "Sinalizar postagem"
         search: "Pesquisar"
         tags: "Listar etiquetas"
         time: "Hora"
@@ -468,7 +467,6 @@ pt_BR:
         github_search_code: "Procurar código no repositório do GitHub"
         github_search_files: "Procurar arquivos no repositório do GitHub"
         github_file_content: "Recuperar conteúdo de arquivos de um repositório do GitHub"
-        github_pull_request_diff: "Recuperar diferença de solicitação pull do GitHub"
         random_picker: "Escolha um número ou elemento aleatório de uma lista"
         categories: "Listar todas as categorias visíveis publicamente no fórum"
         search: "Pesquisar todos os tópicos públicos no fórum"
@@ -494,7 +492,7 @@ pt_BR:
         web_browser: "Lendo <a href='%{url}'>%{url}</a>"
         github_search_files: "Pesquisa por \"%{keywords}\" em %{repo}/%{branch}"
         github_search_code: "Pesquisa por \"%{query}\" em %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Conteúdo recuperado em %{file_paths} de %{repo_name}@%{branch}"
         random_picker: "Escolhendo %{options}, escolha: %{result}"
         read: "Lendo: <a href='%{url}'>%{title}</a>"
@@ -604,6 +602,3 @@ pt_BR:
       custom_tool_exists:
         one: "Já existe uma ferramenta personalizada chamada %{names}"
         other: "Já existem ferramentas personalizadas chamadas %{names}."
-  dashboard:
-    problem:
-      ai_llm_status: "O modelo de LLM %{model_name} está com problemas. Confira a <a href='%{url}'>página de configuração do modelo</a>."

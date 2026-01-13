@@ -15,9 +15,13 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
-html.ios-device.composer-open body,
-html.ios-device.has-full-page-chat body {
+html.ios-device.composer-open body {
   overflow: hidden;
+}
+
+html.ios-device.has-full-page-chat body {
+  position: fixed;
+  overflow: scroll;
 }
 
 .uppy-is-drag-over .chat-composer .drop-a-file {
@@ -270,6 +274,7 @@ html.has-full-page-chat {
         min-height: 0;
         max-width: 100vw;
         box-sizing: border-box;
+        container-type: inline-size;
       }
     }
   }
@@ -288,10 +293,6 @@ html.has-full-page-chat {
       // allows containers to shrink to fit
       min-height: 0;
     }
-  }
-
-  [data-popper-reference-hidden] {
-    visibility: hidden;
   }
 }
 

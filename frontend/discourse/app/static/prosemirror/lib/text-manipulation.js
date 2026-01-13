@@ -69,15 +69,20 @@ export default class ProsemirrorTextManipulation {
   }
 
   getSelected() {
-    const start = this.view.state.selection.from;
-    const end = this.view.state.selection.to;
-    const value = this.view.state.doc.textBetween(start, end, " ", " ");
+    const { state } = this.view;
+    const { from, to } = state.selection;
+    const value = this.convertToMarkdown(state.selection.content());
+
+    // Document-absolute pre/post to match textarea semantics
+    const pre = state.doc.textBetween(0, from, "\n", "\n");
+    const post = state.doc.textBetween(to, state.doc.content.size, "\n", "\n");
+
     return {
-      start,
-      end,
-      pre: "",
+      start: from,
+      end: to,
+      pre,
       value,
-      post: "",
+      post,
     };
   }
 

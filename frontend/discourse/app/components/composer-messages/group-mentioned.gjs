@@ -4,10 +4,12 @@ import ComposerTipCloseButton from "discourse/components/composer-tip-close-butt
 
 const GroupMentionedComposerMessage = <template>
   <ComposerTipCloseButton @action={{fn @closeMessage @message}} />
+  <div class="composer-popup__content">
 
-  <p>
-    {{htmlSafe @message.body}}
-  </p>
+    <p>
+      {{htmlSafe @message.body}}
+    </p>
+  </div>
 </template>;
 
 export default GroupMentionedComposerMessage;

@@ -158,7 +158,7 @@ ur:
       el:
         name: یونانی
       en:
-        name: انگریزی (امریکی)
+        name: انگریزی
       en_GB:
         name: انگریزی (برطانیہ)
       es:
@@ -864,7 +864,6 @@ ur:
         claimed: "دعویٰ کیا"
         claimed_by: "%{username} نے %{relativeDate}پر دعویٰ کیا"
         reviewed: "جائزہ لیا گیا"
-        reviewed_by: "%{username} نے%{relativeDate}پر جائزہ لیا"
         view_conversation: "ذاتی پیغام دیکھیں"
         note_added: "نگران کا نوٹ"
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
@@ -1049,9 +1048,7 @@ ur:
           notification: اطلاع
         email:
           title: "ای میل"
-          status: "IMAP کے ذریعے ای میلز کو ہم آہنگ کیا %{old_emails} / %{total_emails}"
           enable_smtp: "SMTP فعال کریں"
-          enable_imap: "IMAP فعال کریں"
           test_settings: "ترتیبات کو ٹیسٹ کریں"
           save_settings: "ترتیبات کو محفوظ کریں"
           last_updated: "آخری اپ ڈیٹ:"
@@ -1060,14 +1057,7 @@ ur:
           smtp_settings_valid: "SMTP ترتیبات درست ہیں۔"
           smtp_title: "SMTP"
           smtp_instructions: "جب آپ گروپ کے لیے SMTP کو فعال کرتے ہیں، تو گروپ کے ان باکس سے بھیجے گئے تمام آؤٹ باؤنڈ ای میلز آپ کے فورم کے ذریعے بھیجے گئے دیگر ای میلز کے لیے ترتیب کردہ میل سرور کے بجائے یہاں بیان کردہ SMTP سیٹنگز کے ذریعے بھیجے جائیں گے۔"
-          imap_title: "IMAP"
-          imap_additional_settings: "اضافی ترتیبات"
-          imap_instructions: 'جب آپ گروپ کے لیے IMAP کو فعال کرتے ہیں، تو ای میلز گروپ ان باکس اور فراہم کردہ IMAP سرور اور میل باکس کے درمیان مطابقت پذیر ہو جاتی ہیں۔ IMAP کو فعال کرنے سے پہلے SMTP کو درست اور جانچ شدہ اسناد کے ساتھ فعال کیا جانا چاہیے۔ SMTP کے لیے استعمال ہونے والا ای میل رکن نام اور پاس ورڈ IMAP کے لیے استعمال کیا جائے گا۔ مزید معلومات کے لیے ڈسکورس میٹا<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">فیچر کےاعلان پر دیکھیں </a>۔'
-          imap_alpha_warning: "انتباہ: یہ الفا اسٹیج کی خصوصیت ہے۔ صرف Gmail باضابطہ طور پر تعاون یافتہ ہے۔ اپنے خطرے پر استعمال کریں!"
-          imap_settings_valid: "SMTP ترتیبات درست ہیں۔"
-          smtp_disable_confirm: "اگر آپ SMTP کو غیر فعال کرتے ہیں، تو تمام SMTP اور IMAP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
-          imap_disable_confirm: "اگر آپ IMAP کو غیر فعال کرتے ہیں تو تمام IMAP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
-          imap_mailbox_not_selected: "آپ کو اس IMAP کنفیگریشن کے لیے ایک میل باکس کا انتخاب کرنا چاہیے ورنہ کوئی میل باکس مطابقت پذیر نہیں ہوگا!"
+          additional_settings: "اضافی ترتیبات"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
             gmail: "Gmail"
@@ -1082,9 +1072,6 @@ ur:
             smtp_server: "SMTP سرور"
             smtp_port: "SMTP پورٹ"
             smtp_ssl_mode: "SSL موڈ"
-            imap_server: "IMAP سرور"
-            imap_port: "IMAP پورٹ"
-            imap_ssl: "IMAP کے لیے SSL استعمال کریں"
             username: "اسمِ صارف"
             password: "پاسورڈ"
           settings:
@@ -1093,10 +1080,6 @@ ur:
             allow_unknown_sender_topic_replies_hint: "نامعلوم بھیجنے والوں کو گروپ کے موضوعات کا جواب دینے کی اجازت دیتا ہے۔ اگر یہ فعال نہیں ہے تو، ای میل پتوں کے جوابات جو پہلے ہی موضوع پر مدعو نہیں کیے گئے ہیں ایک نیا موضوع بنائیں گے۔"
             from_alias: "عرف سے"
             from_alias_hint: "گروپ SMTP ای میلز بھیجتے وقت فرم ایڈریس کے طور پر استعمال کرنے کے لیے عرف نوٹ کریں کہ یہ تمام میل فراہم کنندگان کے ذریعہ تعاون یافتہ نہیں ہوسکتا ہے، براہ کرم اپنے میل فراہم کنندہ کی دستاویزات سے مشورہ کریں۔"
-          mailboxes:
-            synchronized: "مطابقت پذیر میل باکس"
-            none_found: "اس ای میل اکاؤنٹ میں کوئی میل باکس نہیں ملا۔"
-            disabled: "غیر فعال"
         membership:
           title: رکنیت
           access: رسائی
@@ -1360,6 +1343,9 @@ ur:
       new_private_message: "نیا پیغام"
       private_message: "پیغام"
       private_messages: "پیغامات"
+      upcoming_changes:
+        for_user:
+          enabled: "فعال؟"
       user_notifications:
         filters:
           filter_by: "فلٹر بذریعہ"
@@ -2830,6 +2816,8 @@ ur:
       ulist_title: "گولیوں والی فہرست"
       list_item: "فہرست آئٹم"
       toggle_direction: "سمت ٹوگل کریں"
+      wrap_modal:
+        apply: "لاگو کریں"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"
@@ -2896,6 +2884,7 @@ ur:
         zoom_out: "تصویر کا سائز کم کریں"
         zoom_in: "تصویر کا سائز بڑھائیں"
         remove: "تصویر کو ہٹا دیں"
+      image: "تصویر"
       image_scale_button: "تصویر کو %{percent}% اسکیل کریں"
       delete_image_button: تصویر کو حذف کریں
       toggle_image_grid: تصویری گرڈ کو ٹوگل کریں
@@ -3237,6 +3226,9 @@ ur:
         reset_bump_dates: "ٹکرانے کی تاریخوں کی دوبارہ ترتیب"
         defer: "بغیر پڑھے نشان زد"
         delete: "موضوعات حذف کریں"
+        delete_topics_count:
+          one: "موضوع حذف کریں"
+          other: "موضوعات حذف کریں"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام بغیر پڑھے ہوئے بر خاست کریں"
         dismiss_read_with_selected:
@@ -3314,19 +3306,6 @@ ur:
           unread: "کچھ بھی بغیر پڑھا نہیں بچا... متاثر کن!"
           new_new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
           new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
-      bottom:
-        latest: "کوئی مزید تازہ ترین موضوع موجود نہیں۔"
-        posted: "کوئی مزید پوسٹ کیے گئے موضوعات موجود نہیں۔"
-        read: "کوئی مزید پڑھ لیے گئے موضوعات موجود نہیں۔"
-        new: "کوئی مزید نئے موضوعات موجود نہیں۔"
-        unread: "کوئی مزید بغیر پڑھے موضوعات موجود نہیں۔"
-        unseen: "مزید ان دیکھے موضوعات نہیں ہیں۔"
-        category: "مزید کوئی %{category} کے موضوعات موجود نہیں۔"
-        tag: "مزید کوئی %{tag} کے موضوعات موجود نہیں۔"
-        top: "مزید کوئی سرفہرست موضوعات موجود نہیں۔"
-        hot: "مزید گرما گرم موضوعات نہیں۔"
-        bookmarks: "مزید کوئی بک مارک کیے ہوئے موضوعات موجود نہیں۔"
-        filter: "مزید موضوعات نہیں۔"
     topic_bulk_actions:
       dismiss:
         name: "بر خاست کریں"
@@ -3454,9 +3433,6 @@ ur:
         other: "%{count} جوابات،، پہلے دھاگہ پر جائیں"
       created_at: "پر بنا: %{date}"
       bumped_at: "تازہ ترین: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>تمام زمروں کو براؤز کریں</a> یا <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a>۔"
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>تمام زمروں کو براؤز کریں</a>, <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a> یا اوپر دیکھیں:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>تمام ٹیگز براؤز کریں</a> یا <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a>۔"
       browse_latest_topics: "تازہ ترین موضوعات کو براؤز کریں"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       jump_reply: "دھاگہ کے اصل مقام پر جائیں"
@@ -4495,6 +4471,7 @@ ur:
         this_month: "ماہ"
         this_week: "ہفتہ"
         today: "آج"
+        custom: "اپنی مرضی کا"
     custom_homepage:
       admin_message: 'آپ کے تھیموں میں سے ایک نے "custom_homepage" ترمیم کرنے والے کو فعال کیا ہے لیکن یہ [custom-homepage] جوڈنے میں کچھ بھی آؤٹ پٹ نہیں کرتا ہے۔ (یہ پیغام صرف سائٹ کے منتظمین کو دکھایا گیا ہے۔)'
     browser_update: 'بدقسمتی سے، <a href="https://discourse.org/about#browser">آپ کا براؤزر غیر تعاون یافتہ ہے</a>۔ بھرپور مواد دیکھنے، لاگ ان کرنے اور جواب دینے کے لیے براہ کرم <a href="https://browsehappy.com">معاون براؤزر</a> پر سوئچ کریں۔'
@@ -4730,6 +4707,7 @@ ur:
       upload_description: "بَلک میں ٹیگز بنانے کیلئے ایک csv فائل اَپ لوڈ کریں"
       upload_instructions: "فی سطر ایک، اختیاری طور پر ایک ٹیگ گروپ کے ساتھ 'tag_name,tag_group' کے فارمیٹ میں۔"
       upload_successful: "ٹیگز کامیابی سے اپ لوڈ ہو گئے"
+      bulk_create_button: "بنائیں"
       delete_unused_confirmation:
         one: "%{count} ٹیگ کومٹادیا جائے گا: %{tags}"
         other: "%{count} ٹیگز کومٹادیا جائے گا: %{tags}"
@@ -4881,7 +4859,6 @@ ur:
       tags_form_modal:
         title: "دہجیوں کی نیویگیشن میں ترمیم کریں"
         filter_placeholder: "دہجیوں کو چھانیے"
-        no_tags: "دی گئی اصطلاح سے مماثل کوئی دہجی نہیں"
         subtitle:
           text: "اور ہم خود بخود اس سائٹ کے ٹاپ دہجیاں دکھائیں گے"
       edit_navigation_modal_form:
@@ -5254,6 +5231,8 @@ ur:
         enabled_for_options:
           everyone: "ہر کوئی"
           staff: "صرف سٹاف کیلئے"
+        statuses:
+          experimental: "تجرباتی"
         impact_roles:
           admins: "منتظمین"
           moderators: "نگران"
@@ -5263,6 +5242,7 @@ ur:
           enabled: "فعال شدہ"
           disabled: "غیر فعال"
           impact_type_other: "دیگر"
+          status_experimental: "تجرباتی"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -5299,6 +5279,11 @@ ur:
           sub_pages:
             common_settings:
               title: "سیٹِنگ"
+            discourse_id:
+              title: "ڈسکورس آئی ڈی"
+        discourse_id:
+          title: "ڈسکورس آئی ڈی"
+          learn_more: "مزید جانیں"
         logo:
           title: "لوگو"
           header_description: "اپنی پوری سائٹ میں استعمال ہونے والے لوگو اور شبیہیں ترتیب دیں"
@@ -5398,6 +5383,10 @@ ur:
               options:
                 above_topic_content: "اوپر موضوع کا مواد"
                 below_site_header: "سائٹ ہیڈر کے نیچے"
+            text_section:
+              locale_label: "زبان"
+            header_new_members:
+              placeholder: "خوش آمدید، %{preferred_display_name}!"
             header_logged_in:
               placeholder: "دوبارہ خوش آمدید، %{preferred_display_name}!"
             header_anonymous:
@@ -7403,15 +7392,6 @@ ur:
         file_types_list:
           add_image_types: "تصاویر"
           add_types_title: "ایکسٹینشنز کی اجازت دیں %{types}"
-        requires_confirmation_messages:
-          min_password_length:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          min_admin_password_length:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈز تبدیل کرنے والے تمام منتظمین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          password_unique_charactes:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          block_common_passwords:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
       badges:
         status: سٹیٹس
         title: تمغات
@@ -7443,6 +7423,9 @@ ur:
         no_user_badges: "%{name} کو کوئی تمغہ نہیں دیا گیا۔"
         no_badges: دیئے کے لیے کوئی تمغہ موجود نہیں۔
         none_selected: "شروع کرنے کے لئے ایک تمغہ منتخب کریں"
+        sections:
+          query: ڈیٹا کمانڈ
+          settings: سیٹِنگ
         allow_title: عنوان کے طور پر تمغوں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         visibility_heading: نموداری

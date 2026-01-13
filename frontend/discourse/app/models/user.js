@@ -19,6 +19,7 @@ import {
 } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import {
+  AUTO_GROUPS,
   INTERFACE_COLOR_MODES,
   USER_OPTION_COMPOSITION_MODES,
 } from "discourse/lib/constants";
@@ -777,7 +778,7 @@ export default class User extends RestModel.extend(Evented) {
     const groups = this.groups || [];
 
     return groups.filter((group) => {
-      return !group.automatic || group.name === "moderators";
+      return !group.automatic || group.name === AUTO_GROUPS.moderators.name;
     });
   }
 

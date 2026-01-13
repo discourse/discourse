@@ -39,7 +39,7 @@ th:
         disabled: "(ปิดใช้งานแล้ว)"
         groups: "กลุ่ม:"
         no_groups: "ไม่มี"
-        edit: "แก้ไข"
+        edit: "การตั้งค่า"
         expand_list:
           other: "(อีก %{count})"
         filters:
@@ -68,6 +68,7 @@ th:
       usage:
         summary: "สรุป"
         username: "ชื่อผู้ใช้"
+        total: "ทั้งหมด"
         periods:
           last_day: "24 ชั่วโมงที่ผ่านมา"
       ai_persona:

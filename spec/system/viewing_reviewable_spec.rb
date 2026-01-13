@@ -158,6 +158,57 @@ describe "Viewing reviewable item", type: :system do
         expect(page).to have_text("flagged@example.com")
       end
 
+      describe "Moderation history" do
+        fab!(:flagged_user) { reviewable_flagged_post.target_created_by }
+
+        it "displays the number of times the user has been silenced, suspended and number of rejected posts" do
+          UserHistory.create!(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: flagged_user.id,
+            acting_user_id: admin.id,
+          )
+          UserHistory.create!(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: flagged_user.id,
+            acting_user_id: admin.id,
+          )
+          UserHistory.create!(
+            action: UserHistory.actions[:suspend_user],
+            target_user_id: flagged_user.id,
+            acting_user_id: admin.id,
+          )
+          ReviewableQueuedPost.create!(
+            created_by: admin,
+            target_created_by: flagged_user,
+            status: Reviewable.statuses[:rejected],
+            payload: {
+              raw: "test post 1",
+            },
+          )
+          ReviewableQueuedPost.create!(
+            created_by: admin,
+            target_created_by: flagged_user,
+            status: Reviewable.statuses[:rejected],
+            payload: {
+              raw: "test post 2",
+            },
+          )
+
+          refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+          refreshed_review_page.click_insights_tab
+
+          expect(page).to have_text(
+            I18n.t("js.review.insights.moderation_history.silenced", count: 2),
+          )
+          expect(page).to have_text(
+            I18n.t("js.review.insights.moderation_history.suspended", count: 1),
+          )
+          expect(page).to have_text(
+            I18n.t("js.review.insights.moderation_history.rejected_posts", count: 2),
+          )
+        end
+      end
+
       describe "IP lookup" do
         fab!(:reviewable_flagged_post)
 
@@ -206,6 +257,32 @@ describe "Viewing reviewable item", type: :system do
 
           expect(refreshed_review_page).to have_ip_lookup_modal
           expect(refreshed_review_page).to have_account_in_modal(other_user.username)
+        end
+
+        context "when category moderator" do
+          fab!(:category)
+          fab!(:trust_level_1_user, :trust_level_1)
+          fab!(:category_moderation_group) do
+            Fabricate(
+              :category_moderation_group,
+              category: category,
+              group: trust_level_1_user.groups.last,
+            )
+          end
+
+          before do
+            SiteSetting.enable_category_group_moderation = true
+            reviewable_flagged_post.topic.change_category_to_id(category.id)
+            sign_in trust_level_1_user
+          end
+
+          it "does not show IP information" do
+            visit "/"
+            refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+            refreshed_review_page.click_insights_tab
+
+            expect(page).not_to have_text("The requested URL or resource could not be found.")
+          end
         end
       end
     end
@@ -280,15 +357,61 @@ describe "Viewing reviewable item", type: :system do
         refreshed_review_page.visit_reviewable(reviewable)
         refreshed_review_page.select_bundled_action(reviewable, "user-delete_user_block")
         expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+        expect(refreshed_review_page).to have_rejected_item_in_timeline(reviewable)
       end
 
       it "Allows to approve user" do
         reviewable = ReviewableUser.find_by_target_id(user.id)
 
         refreshed_review_page.visit_reviewable(reviewable)
-        refreshed_review_page.select_bundled_action(reviewable, "user-approve_user")
+        refreshed_review_page.select_bundled_action(
+          reviewable,
+          "user-approve_user",
+          "user-approve_user",
+        )
 
         expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
+        expect(refreshed_review_page).to have_approved_item_in_timeline(reviewable)
+      end
+
+      it "Allow to delete and scrub user when old moderator actions are enabled" do
+        SiteSetting.reviewable_old_moderator_actions = true
+
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+
+        refreshed_review_page.visit_reviewable(reviewable)
+
+        expect(page).to have_text(user.name)
+        expect(page).to have_link(user.username, href: "/admin/users/#{user.id}/#{user.username}")
+
+        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
+        rejection_reason_modal.fill_in_rejection_reason("Spamming the site")
+        rejection_reason_modal.delete_user
+
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+
+        expect(page).to have_text(user.name)
+
+        refreshed_review_page.click_scrub_user_button
+
+        scrubbing_reason = "a spammer who knows how to make GDPR requests"
+        scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
+        expect(scrub_user_modal.scrub_button).not_to be_disabled
+        scrub_user_modal.scrub_button.click
+
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_by(
+          reviewable,
+          admin.username,
+        )
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_reason(
+          reviewable,
+          scrubbing_reason,
+        )
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_at(
+          reviewable,
+          reviewable.payload["scrubbed_at"],
+        )
+        expect(page).not_to have_text(user.name)
       end
     end
   end
@@ -307,6 +430,7 @@ describe "Viewing reviewable item", type: :system do
 
       refreshed_review_page.visit_reviewable(reviewable_flagged_post)
       expect(refreshed_review_page).to have_history_items(count: 2)
+      expect(refreshed_review_page).to have_created_at_history_item
 
       refreshed_review_page.click_claim_reviewable
       page.refresh

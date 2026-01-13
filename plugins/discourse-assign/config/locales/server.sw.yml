@@ -12,7 +12,6 @@ sw:
     assigns_by_staff_mention: "Kama msaidizi akimtaja mfanyakazi mwenzake, mada inakabidhiwa"
     unassign_creates_tracking_post: "Mada zote ambazo hazijakabidhiwa kwa mtu, mabadiliko yake yanafuatiliwa."
     unassign_on_group_archive: "Kama ujumbe umefanywa kuwa nyaraka kwenye kikundi, ondoa ukabidhi wa ujumbe (kabidhi kama ukirudishwa kisanduku pokezi)"
-    unassign_on_close: "Mada haitakabidhiwa kwa mtu kama ikiwa imefungwa"
   discourse_assign:
     assigned_to: "%{username} amepewa mada"
     unassigned: "Hakuna mtu aliepewa hii mada"

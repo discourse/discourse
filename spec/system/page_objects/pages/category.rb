@@ -48,6 +48,11 @@ module PageObjects
         self
       end
 
+      def visit_tags(category)
+        page.visit("/c/#{category.slug}/edit/tags")
+        self
+      end
+
       def visit_images(category)
         page.visit("/c/#{category.slug}/edit/images")
         self

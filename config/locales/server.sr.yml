@@ -276,6 +276,7 @@ sr:
       every_month: "svaki mesec"
       every_six_months: "svakih šest meseci"
   user_api_key:
+    deny: "Odustani"
     read: "pročitano"
   reports:
     default:
@@ -401,7 +402,6 @@ sr:
     delete_user_max_post_age: "Ne dozvoli brisanje korisnika čije prve poruke su starije od (x) dana."
     delete_all_posts_max: "Maksimalan broj poruke koje mogu biti obrisane odjednom korišćenjem dugmeta Obriši sve poruke. Ako korisnik ima više poruka, poruke ne mogu biti obrisane odjednom i korisnik ne može biti obrisan."
     email_editable: "Dozvoli korisnicima da promene svoju email adresu nakon registracije"
-    allow_uploaded_avatars: "Dozvoli korisnicima da postave svoju sliku za profil"
     default_avatars: "URL avatara koji će biti korišćeni kao podrazumevani za nove korisnike dok ih ne promene. "
     digest_other_topics: "Maksimalan broj tema za prikazivanje u sekciji \"Novo u temama i kategorijama koje pratite\" rezimea email poruke."
     digest_min_excerpt_length: "Minimalna dužina isečka poruke u email rezimeu, u karakterima."
@@ -443,8 +443,10 @@ sr:
 
         Dok budete učestvovali ovde, mi ćemo vas upoznati, a privremena nova korisnička ograničenja će biti ukinuta. Vremenom ćete steći [nivoe poverenja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) koji uključuju posebne sposobnosti koje nam pomažu da zajedno upravljamo zajednicom.
     welcome_user:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošao na %{site_name}!"
     welcome_invite:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošao na %{site_name}!"
   user_notifications:
     user_posted_pm_staged:
@@ -529,6 +531,10 @@ sr:
             choices:
               private:
                 label: "Privatna"
+  onebox:
+    github:
+      status_date:
+        approved: "potvrđenji"
   staff_action_logs:
     unknown: "nepoznato"
   reviewables:

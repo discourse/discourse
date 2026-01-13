@@ -1,86 +1,69 @@
-import { bind } from "discourse/lib/decorators";
-import { iconHTML } from "discourse/lib/icon-library";
-import { i18n } from "discourse-i18n";
+import GridNodeView from "../components/grid-node-view";
+import GlimmerNodeView from "../lib/glimmer-node-view";
 
-class GridNodeView {
-  constructor(node, view, getPos) {
-    this.node = node;
-    this.view = view;
-    this.getPos = getPos;
+const createGridNodeView =
+  ({ getContext }) =>
+  (node, view, getPos) =>
+    new GlimmerNodeView({
+      node,
+      view,
+      getPos,
+      getContext,
+      component: GridNodeView,
+      name: "grid",
+      hasContent: true,
+    });
 
-    const div = document.createElement("div");
-    div.className = "composer-image-grid";
-
-    const title = document.createElement("div");
-    title.className = "composer-image-grid__title";
-    title.innerHTML = iconHTML("table-cells");
-    title.prepend(document.createTextNode(i18n("composer.grid_label")));
-
-    div.appendChild(title);
-
-    const contentDiv = document.createElement("div");
-    div.appendChild(contentDiv);
-
-    this.dom = div;
-    this.contentDOM = contentDiv;
-
-    this.svg = div.querySelector("svg");
-    this.svg.setAttribute("alt", i18n("composer.toggle_image_grid"));
-    this.svg.addEventListener("click", this.iconClickHandler);
-  }
-
-  @bind
-  iconClickHandler() {
-    const pos = this.getPos();
-    const currentNode = this.view.state.doc.nodeAt(pos);
-    const tr = this.view.state.tr;
-
-    tr.replaceWith(pos, pos + currentNode.nodeSize, currentNode.content);
-    this.view.dispatch(tr);
-  }
-
-  selectNode() {
-    this.dom.classList.add("ProseMirror-selectednode");
-  }
-
-  deselectNode() {
-    this.dom.classList.remove("ProseMirror-selectednode");
-  }
-
-  update(node) {
-    return node.type === this.node.type;
-  }
-
-  destroy() {
-    this.svg.removeEventListener("click", this.iconClickHandler);
-  }
-}
-
-/** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
     grid: {
       content: "block+",
       group: "block",
+      attrs: {
+        mode: { default: "grid" },
+      },
       createGapCursor: true,
       parseDOM: [
-        { tag: "div.d-image-grid" },
-        { tag: "div.composer-image-grid" },
+        {
+          tag: "div.d-image-grid",
+          getAttrs(dom) {
+            return {
+              mode: dom.getAttribute("data-mode") || "grid",
+            };
+          },
+        },
+        {
+          tag: "div.composer-image-grid",
+          getAttrs(dom) {
+            return {
+              mode: dom.getAttribute("data-mode") || "grid",
+            };
+          },
+        },
       ],
-      toDOM() {
-        return ["div", { class: "composer-image-grid" }, 0];
+      toDOM(node) {
+        return [
+          "div",
+          {
+            class: "composer-image-grid",
+            "data-mode": node.attrs.mode,
+          },
+          0,
+        ];
       },
     },
   },
 
   nodeViews: {
-    grid: GridNodeView,
+    grid: createGridNodeView,
   },
 
   parse: {
     bbcode_open(state, token) {
       if (token.attrGet("class") === "d-image-grid") {
-        state.openNode(state.schema.nodes.grid);
+        state.openNode(state.schema.nodes.grid, {
+          mode: token.attrGet("data-mode") || "grid",
+        });
         return true;
       }
     },
@@ -94,7 +77,11 @@ const extension = {
 
   serializeNode: {
     grid: (state, node) => {
-      state.write("\n[grid]\n\n");
+      let attrs = "";
+      if (node.attrs.mode && node.attrs.mode !== "grid") {
+        attrs += ` mode=${node.attrs.mode}`;
+      }
+      state.write(`\n[grid${attrs}]\n\n`);
       state.renderContent(node.content);
       state.write("\n[/grid]\n\n");
     },
@@ -111,7 +98,6 @@ const extension = {
   plugins({ pmState: { Plugin } }) {
     return new Plugin({
       appendTransaction(transactions, oldState, newState) {
-        // Only process if the document actually changed
         if (!transactions.some((tr) => tr.docChanged)) {
           return null;
         }
@@ -119,7 +105,6 @@ const extension = {
         const tr = newState.tr;
         let modified = false;
 
-        // Process grids from end to beginning to avoid position shifts
         const gridNodes = [];
         newState.doc.descendants((node, pos) => {
           if (node.type.name === "grid") {
@@ -128,7 +113,6 @@ const extension = {
         });
 
         gridNodes.reverse().forEach(({ node, pos }) => {
-          // If grid is completely empty, remove it
           if (node.childCount === 0) {
             tr.delete(pos, pos + node.nodeSize);
             modified = true;
@@ -136,12 +120,11 @@ const extension = {
           }
 
           const changes = [];
-          let currentPos = pos + 1; // Start inside the grid node
+          let currentPos = pos + 1;
 
           node.content.forEach((child) => {
             if (child.type.name === "paragraph") {
               if (child.content.size === 0) {
-                // Only remove empty paragraph if grid has other content
                 if (node.childCount > 1) {
                   changes.push({
                     type: "remove",
@@ -150,7 +133,6 @@ const extension = {
                   });
                 }
               } else {
-                // Split paragraphs with multiple images
                 const images = [];
                 child.content.forEach((grandchild) => {
                   if (grandchild.type.name === "image") {

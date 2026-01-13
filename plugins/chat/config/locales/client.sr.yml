@@ -23,6 +23,7 @@ sr:
       channel_settings:
         edit: "Izmeni"
         add: "Dodaj"
+        notification_settings_context: "Obaveštenja"
       close: "Zatvori"
       remove: "Ukloni"
       collapse: "Skupi okvir za chat"
@@ -89,6 +90,7 @@ sr:
         history_label: "Istorija"
         members_label: "Članovi"
       search:
+        short_title: Pretraži
         no_results: "Nema pronađenih rezultata"
         sort:
           relevance: "Relevantnost"

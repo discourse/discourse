@@ -47,6 +47,18 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(described_class.should_scan_post?(post)).to eq(false)
     end
 
+    it "respects custom max trust level setting" do
+      post.user.trust_level = TrustLevel[2]
+      expect(described_class.should_scan_post?(post)).to eq(false)
+
+      SiteSetting.ai_spam_detection_max_trust_level = 2
+      expect(described_class.should_scan_post?(post)).to eq(true)
+
+      SiteSetting.ai_spam_detection_max_trust_level = 3
+      post.user.trust_level = TrustLevel[3]
+      expect(described_class.should_scan_post?(post)).to eq(true)
+    end
+
     it "returns false for bots" do
       post.user.id = -100
       expect(described_class.should_scan_post?(post)).to eq(false)
@@ -73,6 +85,20 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(described_class.should_scan_post?(post)).to eq(false)
     end
 
+    it "respects custom max post count setting" do
+      3.times { Fabricate(:post, user: user) }
+      expect(described_class.should_scan_post?(post)).to eq(false)
+
+      SiteSetting.ai_spam_detection_max_post_count = 5
+      expect(described_class.should_scan_post?(post)).to eq(true)
+
+      Fabricate(:post, user: user)
+      expect(described_class.should_scan_post?(post)).to eq(true)
+
+      Fabricate(:post, user: user)
+      expect(described_class.should_scan_post?(post)).to eq(false)
+    end
+
     it "returns false for private messages" do
       pm_topic = Fabricate(:private_message_topic)
       pm_post = Fabricate(:post, topic: pm_topic, user: user)
@@ -93,9 +119,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
 
     it "scans when post should be scanned" do
       expect do
-        DiscourseAi::Completions::Llm.with_prepared_responses(["spam"]) do
-          described_class.perform_scan!(post)
-        end
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { described_class.perform_scan!(post) }
       end.to change { AiSpamLog.count }.by(1)
     end
   end
@@ -103,9 +129,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   describe ".perform_scan!" do
     it "creates spam log entry when scanning post" do
       expect do
-        DiscourseAi::Completions::Llm.with_prepared_responses(["spam"]) do
-          described_class.perform_scan!(post)
-        end
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { described_class.perform_scan!(post) }
       end.to change { AiSpamLog.count }.by(1)
     end
 
@@ -253,20 +279,20 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       prompts = nil
       result =
         DiscourseAi::Completions::Llm.with_prepared_responses(
-          [true, "the reason is just because"],
+          [{ spam: true, reason: "the reason is just because" }],
         ) do |_, _, _prompts|
           prompts = _prompts
           described_class.test_post(post, custom_instructions: "123")
         end
 
-      expect(prompts.length).to eq(2)
+      expect(prompts.length).to eq(1)
       expect(result[:is_spam]).to eq(true)
-      expect(result[:log]).to include("123")
-      expect(result[:log]).to include("just because")
+      expect(result[:system_prompt]).to include("123")
+      expect(result[:reason]).to eq("the reason is just because")
 
       result =
         DiscourseAi::Completions::Llm.with_prepared_responses(
-          [false, "the reason is just because"],
+          [{ spam: false, reason: "the reason is just because" }],
         ) do |_, _, _prompts|
           prompts = _prompts
           described_class.test_post(post, custom_instructions: "123")
@@ -289,7 +315,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       described_class.new_post(post)
 
       prompt = nil
-      DiscourseAi::Completions::Llm.with_prepared_responses([true]) do |_, _, _prompts|
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) do |_, _, _prompts|
         # force a rebake so we actually scan
         post.rebake!
         prompt = _prompts.first
@@ -341,7 +369,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
 
       described_class.new_post(post)
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([true]) do |_, _, _prompts|
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) do |_, _, _prompts|
         # force a rebake so we actually scan
         post.rebake!
       end
@@ -369,7 +399,7 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
 
     prompts = nil
     DiscourseAi::Completions::Llm.with_prepared_responses(
-      [true, "just because"],
+      [{ spam: true, reason: "just because" }],
     ) do |_, _, _prompts|
       prompts = _prompts
       described_class.test_post(post)

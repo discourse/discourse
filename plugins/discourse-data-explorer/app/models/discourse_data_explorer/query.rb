@@ -34,10 +34,10 @@ module DiscourseDataExplorer
       @params ||= Parameter.create_from_sql(sql)
     end
 
-    def cast_params(input_params)
+    def cast_params(input_params, opts = {})
       result = {}.with_indifferent_access
       self.params.each do |pobj|
-        result[pobj.identifier] = pobj.cast_to_ruby input_params[pobj.identifier]
+        result[pobj.identifier] = pobj.cast_to_ruby(input_params[pobj.identifier], opts)
       end
       result
     end

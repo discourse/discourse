@@ -1,6 +1,8 @@
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
-import CustomReaction from "../../models/discourse-reactions-custom-reaction";
+import CustomReaction, {
+  PAGE_SIZE,
+} from "../../models/discourse-reactions-custom-reaction";
 
 export default class UserNotificationsReactionsReceived extends DiscourseRoute {
   templateName = "user-activity.reactions";
@@ -27,7 +29,7 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    const loadedAll = model.length < 20;
+    const loadedAll = model.length < PAGE_SIZE;
 
     this.controllerFor("user-activity.reactions").setProperties({
       model,
@@ -37,7 +39,5 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
       actingUsername: controller.acting_username,
       includeLikes: controller.include_likes,
     });
-
-    this.controllerFor("application").set("showFooter", loadedAll);
   }
 }

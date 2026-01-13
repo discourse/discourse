@@ -1040,12 +1040,9 @@ de:
     no_log_search_queries: "Suchprotokollabfragen sind derzeit deaktiviert (ein Administrator kann sie in den Website-Einstellungen aktivieren)."
   email_settings:
     pop3_authentication_error: "Es gab ein Problem mit den bereitgestellten POP3-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
-    imap_authentication_error: "Es gab ein Problem mit den bereitgestellten IMAP-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
-    imap_no_response_error: "Bei der Kommunikation mit dem IMAP-Server ist ein Fehler aufgetreten. %{message}"
     smtp_authentication_error: "Es gab ein Problem mit den bereitgestellten SMTP-Anmeldedaten, überprüfe bitte den Benutzernamen sowie das Passwort und versuche es erneut. %{message}"
     smtp_server_busy_error: "Der SMTP-Server ist derzeit ausgelastet, versuche es später erneut."
     smtp_unhandled_error: "Es gab einen unbehandelten Fehler bei der Kommunikation mit dem SMTP-Server. %{message}"
-    imap_unhandled_error: "Es gab einen unbehandelten Fehler bei der Kommunikation mit dem IMAP-Server. %{message}"
     connection_error: "Es gab ein Problem beim Verbinden mit dem Server, überprüfe den Servernamen und den Port und versuche es erneut."
     timeout_error: "Zeitüberschreitung bei der Verbindung zum Server, überprüfe den Servernamen und den Port und versuche es erneut."
     unhandled_error: "Unbehandelter Fehler beim Testen der E-Mail-Einstellungen. %{message}"
@@ -1134,11 +1131,10 @@ de:
       every_month: "jeden Monat"
       every_six_months: "alle sechs Monate"
   user_api_key:
-    title: "Genehmige Zugriff für Anwendung"
     authorize: "Genehmigen"
+    deny: "Abbrechen"
     read: "Lesen"
     read_write: "Lesen/Schreiben"
-    description: '„%{application_name}“ fordert den folgenden Zugriff auf dein Konto:'
     instructions: 'Wir haben gerade einen neuen Benutzer-API-Schlüssel für dich generiert zur Verwendung mit „%{application_name}“, bitte füge den folgenden Schlüssel in deine Anwendung ein:'
     otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
     otp_confirmation:
@@ -1578,6 +1574,7 @@ de:
     problem:
       twitter_login: 'Die Anmeldung über Twitter scheint im Moment nicht zu funktionieren. Überprüfe die Anmeldedaten in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">den Website-Einstellungen</a>.'
       group_email_credentials: 'Es gab ein Problem mit den E-Mail-Anmeldedaten für die Gruppe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Bis dieses Problem behoben ist, werden keine E-Mails aus dem Posteingang der Gruppe versendet. %{error}'
+      upcoming_change_stable_opted_out: 'Deine Website hat die bevorstehende Änderung "%{upcoming_change}" deaktiviert. Diese Änderung hat jetzt den Status „dauerhaft“ erreicht und wird bald entfernt. Besuche <a href="%{base_path}/admin/config/upcoming-changes">die Seite mit den bevorstehenden Änderungen</a>, um mehr über diese Änderung zu erfahren.'
       rails_env: "Dein Server läuft im %{env}-Modus."
       host_names: "Deine config/database.yml-Datei verwendet den Standard-Hostnamen localhost. Trage hier den Hostnamen deiner Website ein."
       sidekiq: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
@@ -1869,6 +1866,7 @@ de:
     enable_local_logins_via_email: "Erlaube Benutzern, einen Ein-Klick-Anmelde-Link anzufordern, der ihnen per E-Mail zugeschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige einen Hinweis für wiederkehrende anonyme Benutzer an, der sie auffordert, sich für ein Konto zu registrieren."
+    enable_discourse_id: "Aktiviere die Authentifizierung über Discourse ID, einen Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook, Apple und GitHub werden ohne zusätzliche Konfiguration unterstützt. Weitere Informationen findest du unter <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
     enable_google_oauth2_logins: "Google-OAuth2-Authentifizierung aktivieren. Dies ist der momentan von Google unterstützte Authentifizierungs-Mechanismus. Benötigt Schlüssel und Geheimnis. Siehe <a href='https://meta.discourse.org/t/15858' target='_blank'>Google-Anmeldung für Discourse konfigurieren</a>."
     google_oauth2_client_id: "Die eindeutige Client-ID, die von deiner Google-Anwendung bereitgestellt und für den Authentifizierungsprozess verwendet wird."
     google_oauth2_client_secret: "Client-Geheimnis deiner Google-Anwendung."
@@ -2005,35 +2003,22 @@ de:
     tl3_requires_likes_given: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen vergeben werden muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_requires_likes_received: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen eingehen muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
-    tl4_delete_posts_and_topics: "TL4-Benutzern erlauben, Beiträge und Themen zu löschen, die von anderen Benutzern erstellt wurden. TL4-Benutzer können auch gelöschte Themen und Beiträge sehen."
     delete_all_posts_and_topics_allowed_groups: "Gruppen, die Beiträge und Themen löschen dürfen, die von anderen Benutzern erstellt wurden. Diese Gruppen können auch gelöschte Themen und Beiträge sehen."
     edit_all_topic_groups: "Benutzern in dieser Gruppe erlauben, die Thementitel, -schlagwörter und -kategorien anderer Benutzer zu bearbeiten"
     edit_all_post_groups: "Benutzern in dieser Gruppe erlauben, die Beiträge anderer Nutzer zu bearbeiten"
-    min_trust_to_create_topic: "Minimale Vertrauensstufe, um ein neues Thema zu erstellen."
     create_topic_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen zu erstellen. Administratoren und Moderatoren können immer Themen erstellen."
     allow_flagging_staff: "Wenn aktiviert, können Benutzer auch Beiträge von Team-Konten melden."
-    min_trust_to_edit_wiki_post: "Minimale Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
     edit_wiki_post_allowed_groups: "Gruppen, die als Wiki markierte Beiträge bearbeiten dürfen. Administratoren und Moderatoren können als Wiki markierte Beiträge immer bearbeiten."
-    min_trust_to_edit_post: "Minimale Vertrauensstufe, um Beiträge bearbeiten zu können."
     edit_post_allowed_groups: "Gruppen, die Beiträge bearbeiten dürfen. Administratoren und Moderatoren können Beiträge jederzeit bearbeiten."
-    min_trust_to_allow_self_wiki: "Minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki-Eintrag zu erstellen."
     self_wiki_allowed_groups: "Erlaube Benutzern in diesen Gruppen, ihre Beiträge als Wiki zu markieren. Administratoren und Moderatoren können ihre Beiträge immer als Wiki markieren."
     min_trust_to_send_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Die Mindestvertrauensstufe, die zum Erstellen neuer persönlicher Nachrichten erforderlich ist."
-    min_trust_to_send_email_messages: "Minimale Vertrauensstufe, um persönliche Nachrichten per E-Mail zu versenden."
     send_email_messages_allowed_groups: "Gruppen, denen es erlaubt ist, persönliche Nachrichten per E-Mail zu senden. Administratoren und Moderatoren können immer persönliche Nachrichten per E-Mail versenden."
-    min_trust_to_flag_posts: "Minimale Vertrauensstufe, um Beiträge melden zu können"
     flag_post_allowed_groups: "Gruppen, die Beiträge melden dürfen. Administratoren und Moderatoren können immer Beiträge melden."
-    min_trust_to_post_links: "Minimale Vertrauensstufe, um Links in Beiträge einzufügen"
     post_links_allowed_groups: "Gruppen, die Links in Beiträge einfügen dürfen. Administratoren und Moderatoren dürfen immer Links posten."
-    min_trust_to_post_embedded_media: "Minimale Vertrauensstufe, die zum Einbetten von Medienelementen in einen Beitrag erforderlich ist"
     embedded_media_post_allowed_groups: "Die Benutzer in diesen Gruppen dürfen Medienelemente in einen Beitrag einbetten. Administratoren und Moderatoren können immer Medienelemente einbetten."
-    min_trust_level_to_allow_profile_background: "Minimale Vertrauensstufe, die zum Hochladen eines Profilhintergrunds erforderlich ist"
     profile_background_allowed_groups: "Gruppen, die einen Profilhintergrund hochladen dürfen. Administratoren und Moderatoren können immer einen Profilhintergrund hochladen."
-    min_trust_level_to_allow_user_card_background: "Minimale Vertrauensstufe, die zum Hochladen eines Benutzerkartenhintergrunds erforderlich ist"
     user_card_background_allowed_groups: "Gruppen, die einen Benutzerkartenhintergrund hochladen dürfen. Administratoren und Moderatoren können immer einen Hintergrund für die Benutzerkarte hochladen."
-    min_trust_level_to_allow_invite: "Minimale Vertrauensstufe, die zum Einladen von Benutzern erforderlich ist"
     invite_allowed_groups: "Gruppen, die Benutzer einladen dürfen. Administratoren und Moderatoren können immer Benutzer einladen."
-    min_trust_level_to_allow_ignore: "Minimale Vertrauensstufe, um Benutzer ignorieren zu können"
     ignore_allowed_groups: "Gruppen, denen es erlaubt ist, andere Benutzer zu ignorieren. Administratoren und Moderatoren können andere Benutzer immer ignorieren."
     allowed_link_domains: "Domains, auf die Benutzer verlinken dürfen, auch wenn sie nicht die entsprechende Vertrauensstufe haben, um Links zu setzen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -2046,7 +2031,6 @@ de:
     enable_mentions: "Erlaubt es Benutzern, sich gegenseitig in ihren Beiträgen zu markieren oder zu referenzieren, indem sie das „@“-Symbol verwenden."
     here_mention: "Name, der für eine Erwähnung per @ verwendet wird, damit privilegierte Benutzer bis zu „max_here_mentioned“ Personen benachrichtigen können, die an dem Thema teilnehmen. Darf kein bestehender Benutzername sein."
     max_here_mentioned: "Maximale Anzahl der erwähnten Personen per @here."
-    min_trust_level_for_here_mention: "Die Mindestvertrauensstufe, die erforderlich ist, um @here zu erwähnen."
     here_mention_allowed_groups: "Gruppen, die @here erwähnen dürfen. Administratoren und Moderatoren können @here immer erwähnen."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor eine E-Mail-Benachrichtigung geschickt wird, um Benutzern Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
@@ -2170,18 +2154,10 @@ de:
     pop3_polling_delete_from_server: "E-Mails vom Server löschen. HINWEIS: Wenn du dies deaktivierst, solltest du deinen E-Mail-Posteingang manuell aufräumen"
     log_mail_processing_failures: "Protokolliere alle Fehler bei der E-Mail-Verarbeitung unter <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Benutzern erlauben, neue Themen per E-Mail zu posten. Nachdem du diese Einstellung aktiviert hast, kannst du eingehende E-Mail-Adressen für Gruppen und Kategorien konfigurieren."
-    email_in_min_trust: "Minimale Vertrauensstufe, um neue Themen per E-Mail erstellen zu können."
     email_in_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen per E-Mail zu posten. Administratoren und Moderatoren können immer neue Themen per E-Mail posten."
     email_in_authserv_id: "Die Kennung des Dienstes, der Authentifizierungsprüfungen für eingehende E-Mails durchführt. Siehe <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> für Hinweise zur Konfiguration."
     email_in_spam_header: "Wählt den spezifischen E-Mail-Header aus, der zur Identifizierung von Spam verwendet wird. Diese Option kann X-Spam-Flag, X-Spam-Status oder X-SES-Spam-Verdict sein und die E-Mail wird anhand des Werts des Headers als Spam gekennzeichnet. Wenn die gewählte Einstellung zum Beispiel X-Spam-Flag ist, wird eine E-Mail mit dem Header-Wert YES als Spam eingestuft."
-    enable_imap: "Aktiviere IMAP für die Synchronisation von Gruppen-Nachrichten."
-    enable_imap_write: "Bidirektionale IMAP-Synchronisation aktivieren. Wenn diese Option deaktiviert ist, sind alle Schreibvorgänge auf IMAP-Konten deaktiviert."
-    enable_imap_idle: "Verwende den IMAP-IDLE-Mechanismus, um auf neue E-Mails zu warten."
     enable_smtp: "Aktiviere SMTP für den Versand von Benachrichtigungen für Gruppen-Nachrichten."
-    imap_polling_period_mins: "Der Zeitraum in Minuten zwischen der Überprüfung der IMAP-Konten auf E-Mails."
-    imap_polling_old_emails: "Die maximale Anzahl alter E-Mails (verarbeitet), die jedes Mal aktualisiert werden sollen, wenn eine IMAP-Box abgefragt wird (0 für alle)."
-    imap_polling_new_emails: "Die maximale Anzahl neuer E-Mails (unverarbeitet), die jedes Mal aktualisiert werden sollen, wenn eine IMAP-Box abgefragt wird."
-    imap_batch_import_email: "Die Mindestanzahl neuer E-Mails, die den Importmodus auslösen (deaktiviert Beitragshinweise)."
     email_prefix: "Das [Präfix], das für den Betreff von E-Mails genutzt wird. Standardwert ist „title“, wenn nicht gesetzt."
     email_site_title: "Titel der Website, der als Absender beim Versand von E-Mails verwendet wird. Wenn nicht angegeben, wird „title“ verwendet. Nutze diese Einstellung, wenn „title“ spezielle Zeichen enthält, die im Absender-Feld einer E-Mail nicht verwendet werden dürfen."
     find_related_post_with_key: "Verwende nur den „Antwort-Schlüssel“, um den Beitrag zu finden, auf den geantwortet wurde. WARNUNG: Wenn dies deaktiviert wird, können Benutzer auf Grundlage der E-Mail-Adresse nachgeahmt werden."
@@ -2193,7 +2169,6 @@ de:
     username_change_period: "Die maximale Anzahl von Tagen nach der Registrierung, nach der Konten ihren Benutzernamen ändern können (0 verbietet die Änderung des Benutzernamen)."
     email_editable: "Erlaube Benutzern, ihre E-Mail-Adresse nach der Registrierung zu ändern."
     logout_redirect: "Adresse, auf die der Browser nach dem Abmelden weitergeleitet wird (z. B. https://example.com/logout)"
-    allow_uploaded_avatars: "Benutzer können eigene Profilbilder hochladen."
     uploaded_avatars_allowed_groups: "Lege fest, welche Gruppen eigene Profilbilder hochladen dürfen."
     default_avatars: "URLs zu Avataren, die standardmäßig für neue Benutzer verwendet werden, bis sie diese ändern."
     automatically_download_gravatars: "Gravatars für Benutzer bei Kontoerstellung oder E-Mail-Änderung herunterladen."
@@ -2218,6 +2193,7 @@ de:
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der persönlichen Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
     allow_anonymous_mode: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow anonymous likes`."
+    allow_likes_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website mit „Gefällt mir“ versehen. Für diese Einstellung muss die Einstellung `allow anonymous mode` aktiviert sein."
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     hide_new_user_profiles: "Verstecke Benutzerprofile der Vertrauensstufe 1 oder niedriger vor der Öffentlichkeit und bei Benutzern der Vertrauensstufe 1, bis sie zum ersten Mal posten. Diese Funktion ist auf Websites mit must_approve_users und invite_only bedingungslos deaktiviert."
@@ -2303,9 +2279,7 @@ de:
     enable_inline_emoji_translation: "Aktiviert die Übersetzung von Inline-Emojis (ohne ein Leerzeichen oder Satzzeichen davor)"
     emoji_deny_list: "Diese Emoji können nicht in Menüs oder Shortcodes verwendet werden."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzers oder Anwärters, die genehmigt werden müssen"
-    approve_unless_trust_level: "Beiträge, die von Benutzern unterhalb dieser Vertrauensstufe erstellt werden, müssen genehmigt werden"
     approve_unless_allowed_groups: "Beiträge, die von Benutzern erstellt werden, die nicht zu diesen Gruppen gehören, müssen genehmigt werden. Beiträge, die von Administratoren und Moderatoren erstellt werden, werden immer genehmigt."
-    approve_new_topics_unless_trust_level: "Neue Themen, die von Benutzern unterhalb dieser Vertrauensstufe erstellt werden, müssen genehmigt werden"
     approve_new_topics_unless_allowed_groups: "Neue Themen, die von Benutzern erstellt werden, die nicht zu diesen Gruppen gehören, müssen genehmigt werden. Themen, die von Administratoren und Moderatoren erstellt werden, werden immer genehmigt."
     approve_unless_staged: "Neue Themen und Beiträge, die von vorbereiteten Benutzern erstellt werden, müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
@@ -2321,7 +2295,6 @@ de:
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
-    review_media_unless_trust_level: "Das Team wird Beiträge von Benutzern mit niedrigeren Vertrauensstufen überprüfen, wenn sie eingebettete Medien enthalten."
     skip_review_media_groups: "Beiträge von Benutzern, die keiner dieser Gruppen angehören, werden zur Überprüfung an das Team weitergeleitet, wenn der Beitrag eingebettete Medien enthält. Beiträge, die von Administratoren und Moderatoren erstellt werden, sind immer erlaubt."
     blur_tl0_flagged_posts_media: "Bilder von gemeldeten Beiträgen mit Unschärfe versehen, um potenzielle NSFW-Inhalte auszublenden."
     enable_page_publishing: "Erlaube Team-Mitgliedern, Themen unter neuen URLs mit eigenem Styling zu veröffentlichen."
@@ -2373,9 +2346,6 @@ de:
     revoke_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
     revoke_api_keys_maxlife_days: "Anzahl der Tage, bevor ein API-Schlüssel automatisch widerrufen wird (0 für nie)"
     allow_user_api_key_scopes: "Liste erlaubter Bereiche für Benutzer-API-Schlüssel"
-    min_trust_level_for_user_api_key: |
-      Vertrauensstufe, die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>
-      <b>WARNUNG</b>: Die Änderung der Vertrauensstufe verhindert, dass sich Benutzer mit einer niedrigeren Vertrauensstufe über Discourse Hub anmelden können.
     user_api_key_allowed_groups: |
       Die Gruppenzugehörigkeit ist für die Generierung von Benutzer-API-Schlüsseln erforderlich.<br>
       <b>WARNUNG</b>: Wenn du die Vertrauensstufe änderst, können sich Benutzer mit einer niedrigeren Vertrauensstufe nicht mehr über Discourse Hub anmelden.<br>
@@ -2385,7 +2355,6 @@ de:
     revoke_user_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines Benutzer-API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
     revoke_user_api_keys_maxlife_days: "Anzahl der Tage, bevor ein Benutzer-API-Schlüssel automatisch widerrufen wird (0 für nie)"
     tagging_enabled: "Schlagwörter für Themen aktivieren? Weitere Informationen findest du in der <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Administrator-Anleitung zu Schlagwörtern auf Meta</a>."
-    min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     create_tag_allowed_groups: "Gruppen, die Schlagwörter erstellen dürfen. Administratoren und Moderatoren können immer Schlagwörter erstellen."
     edit_tags_allowed_groups: "Gruppen, die Schlagwörter, Schlagwort-Beschreibungen und -Synonyme bearbeiten dürfen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
@@ -2398,7 +2367,6 @@ de:
     tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwortgruppe an."
     tag_style: "Lege das visuelle Erscheinungsbild der Schlagwort-Abzeichen auf der Website fest. Mit dieser Einstellung kannst du die visuelle Darstellung der Schlagwörter in allen Bereichen der Website anpassen und so die Konsistenz des Layouts und die Barrierefreiheit für die Benutzer verbessern."
     pm_tags_allowed_for_groups: "Mitgliedern der einbezogenen Gruppen erlauben, jede persönliche Nachricht mit einem Schlagwort zu versehen"
-    min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     tag_topic_allowed_groups: "Gruppen, die Schlagwörter zu Themen hinzufügen dürfen. Administratoren und Moderatoren können immer Schlagwörter zu Themen hinzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Schlagwörtern versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
@@ -2409,7 +2377,6 @@ de:
     governing_law: "Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzerklärung. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Website betreibt, registriert ist oder Geschäfte tätigt."
     city_for_disputes: "Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten."
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Entwürfe“, indem du eine Kategorie für Themenentwürfe bestimmst. Themen in dieser Kategorie werden in den Themenlisten für Team-Mitglieder unterdrückt."
-    shared_drafts_min_trust_level: "Erlaube Benutzern, gemeinsame Entwürfe einzusehen und zu bearbeiten."
     shared_drafts_allowed_groups: "Erlaube Benutzern in diesen Gruppen, gemeinsame Entwürfe zu sehen und zu bearbeiten."
     push_notifications_prompt: "Zeige Benutzern ein Zustimmungsbanner für Push-Benachrichtigungen. Diese Einstellung löst eine Aufforderung aus, in der die Benutzer um Erlaubnis gebeten werden, ihnen Push-Benachrichtigungen senden zu dürfen. Das Banner wird nur angezeigt, wenn Push-Benachrichtigungen nicht bereits aktiviert sind, vom Gerät des Benutzers unterstützt werden und der Benutzer entweder einen Beitrag erstellt hat oder eine Progressive Web App (PWA) verwendet. Die Aufforderung wird nicht mehr angezeigt, wenn der Benutzer sie bereits abgelehnt oder die Erlaubnis erteilt/verweigert hat."
     push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein monochromatisches PNG mit Transparenz (96 × 96) wird empfohlen."
@@ -2468,12 +2435,16 @@ de:
     content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_allowed_groups: "Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_language_switcher: "Zeige einen Sprachumschalter in der Kopfzeile an, mit dem Besucher die Sprache der Discourse-Oberfläche und der von Benutzern erstellten Inhalten ändern können. Nutzt die Sprachen, die in ‚content localization supported locales‘ festgelegt wurden."
+    enable_upcoming_changes: "Aktiviere bevorstehende Änderungen"
+    fake_upcoming_change: "Dies ist keine echte bevorstehende Änderung. Sie dient zu Testzwecken und muss nicht übersetzt werden."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
+      invalid_datetime: "Ungültiges Datums-/Uhrzeitformat. Bitte stelle sicher, dass du ein gültiges Datum und eine gültige Uhrzeit eingegeben hast."
       invalid_email: "Ungültige E-Mail-Adresse."
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
       valid_username: "Es gibt einen Benutzer mit diesem Benutzernamen."
       invalid_group: "Es gibt keine Gruppe mit diesem Namen."
+      invalid_topic: "Es gibt kein Thema mit dieser ID."
       invalid_integer_min_max: "Der Wert muss zwischen %{min} und %{max} liegen."
       invalid_integer_min: "Der Wert muss %{min} oder größer sein."
       invalid_integer_max: "Der Wert kann nicht höher als %{max} sein."
@@ -3049,6 +3020,7 @@ de:
     contents_hidden: "Bitte besuche den Beitrag, um die Inhalte zu sehen."
     post_hidden:
       title: "Beitrag versteckt"
+      preview: "Beitrag aufgrund von Meldungen durch Community-Mitglieder ausgeblendet."
       subject_template: "Beitrag versteckt wegen Community-Meldungen"
       text_body_template: |
         Hallo,
@@ -3110,6 +3082,7 @@ de:
         Die Moderatoren von %{site_name}
     post_hidden_again:
       title: "Beitrag wieder ausgeblendet"
+      preview: "Beitrag von Community-Mitgliedern wieder ausgeblendet."
       subject_template: "Beitrag ausgeblendet wegen Community-Meldungen, Team wurde informiert"
       text_body_template: |
         Hallo,
@@ -3198,6 +3171,7 @@ de:
         Während du hier teilnimmst, lernen wir dich besser kennen, und vorübergehende Einschränkungen für neue Benutzer werden aufgehoben. Über die Zeit wirst du [Vertrauenstufen](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) erreichen, die besondere Fähigkeiten beinhalten, um uns dabei zu helfen, die Community gemeinsam zu verwalten.
     welcome_user:
       title: "Willkommen: Benutzer"
+      preview: "Willkommen bei %{site_name}!"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
         Danke, dass du %{site_name} beigetreten bist – herzlich willkommen!
@@ -3225,6 +3199,7 @@ de:
         Mit großer Kraft geht große Verantwortung einher. Wenn du mit dem Moderieren noch nicht vertraut bist, dann lies bitte den [Moderationsleitfaden](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Willkommen: Einladung"
+      preview: "Willkommen bei %{site_name}!"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
         Danke, dass du die Einladung zu %{site_name} angenommen hast -- willkommen!
@@ -3592,6 +3567,7 @@ de:
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Zu viele Spam-Meldungen"
+      preview: "Beiträge wurden aufgrund von Spam-Meldungen vorübergehend ausgeblendet."
       subject_template: "Neues Konto vorübergehend gesperrt"
       text_body_template: |
         Hallo,
@@ -3614,6 +3590,7 @@ de:
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Stummgeschaltet vom Team"
+      preview: "Konto vorübergehend gesperrt."
       subject_template: "Konto vorübergehend gesperrt"
       text_body_template: |
         Hallo,
@@ -3642,6 +3619,7 @@ de:
         Dies kann über die Website-Einstellungen `newuser_spam_host_threshold` und `allowed_spam_host_domains` geändert werden. Erwäge gegebenenfalls, %{domains} in die Positivliste aufzunehmen.
     unsilenced:
       title: "Stummschaltung aufgehoben"
+      preview: "Konto nicht mehr gesperrt."
       subject_template: "Konto nicht mehr gesperrt"
       text_body_template: |
         Hallo,
@@ -3680,6 +3658,8 @@ de:
         Hallo,
 
         Beiträge von neuen Benutzern wurden zur Moderation aufgehalten und warten derzeit auf Überprüfung. [Akzeptiere sie oder lehne sie hier ab](%{base_url}/review?type=ReviewableQueuedPost).
+    user_posts_deleted:
+      subject_template: "Alle Beiträge von %{user} wurden gelöscht"
   unsubscribe_link: |
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -3690,8 +3670,6 @@ de:
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PN] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Vorherige Antworten"
     reached_limit:
@@ -3795,6 +3773,7 @@ de:
         %{respond_instructions}
     user_replied:
       title: "Benutzer hat geantwortet"
+      preview: "Jemand hat auf deinen Beitrag geantwortet."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3817,6 +3796,7 @@ de:
         %{respond_instructions}
     user_quoted:
       title: "Benutzer wurde zitiert"
+      preview: "Jemand hat dich in einem Beitrag zitiert."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3828,6 +3808,7 @@ de:
         %{respond_instructions}
     user_linked:
       title: "Benutzer wurde verlinkt"
+      preview: "Beitrag in einem anderen Thema verlinkt."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3839,6 +3820,7 @@ de:
         %{respond_instructions}
     user_mentioned:
       title: "Benutzer wurde erwähnt"
+      preview: "Jemand hat dich in einem Beitrag erwähnt."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3894,6 +3876,7 @@ de:
         %{respond_instructions}
     user_posted:
       title: "Benutzer hat einen Beitrag geschrieben"
+      preview: "Jemand hat auf ein Thema geantwortet, das du beobachtest."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3927,6 +3910,7 @@ de:
         %{respond_instructions}
     user_posted_pm:
       title: "Benutzer hat persönliche Nachricht geschrieben"
+      preview: "Jemand hat dir eine PN geschickt."
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4015,6 +3999,7 @@ de:
       preheader: "Eine kurze Zusammenfassung seit %{since}"
     forgot_password:
       title: "Passwort vergessen"
+      preview: "Setze dein Passwort zurück."
       subject_template: "[%{email_prefix}] Passwort zurücksetzen"
       text_body_template: |
         Jemand hat angefordert, dein Passwort auf [%{site_name}](%{base_url}) zurückzusetzen.
@@ -4025,6 +4010,7 @@ de:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Anmeldung über Link"
+      preview: "Anmeldung über Link."
       subject_template: "[%{email_prefix}] Anmeldung über Link"
       text_body_template: |
         Hier ist dein Link, um dich bei [%{site_name}](%{base_url}) anzumelden.
@@ -4035,6 +4021,7 @@ de:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Passwort festlegen"
+      preview: "Passwort festlegen."
       subject_template: "[%{email_prefix}] Passwort festlegen"
       text_body_template: |
         Jemand hat angefordert, ein Passwort zu deinem Konto auf [%{site_name}](%{base_url}) hinzuzufügen. Alternativ kannst du dich mit jedem unterstützten Online-Service (Google, Facebook usw.) anmelden, der mit dieser validierten E-Mail-Adresse verknüpft ist.
@@ -4045,6 +4032,7 @@ de:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Administrator-Anmeldung"
+      preview: "Administrator-Anmeldung angefordert."
       subject_template: "[%{email_prefix}] Anmeldung"
       text_body_template: |
         Jemand hat versucht, sich bei deinem Konto auf [%{site_name}](%{base_url}) anzumelden.
@@ -4055,6 +4043,7 @@ de:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Konto erstellt"
+      preview: "Neues Konto für dich erstellt."
       subject_template: "[%{email_prefix}] Dein neues Konto"
       text_body_template: |
         Ein neues Konto wurde für dich bei %{site_name} erstellt
@@ -4099,6 +4088,7 @@ de:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
+      preview: "E-Mail Adresse aktualisiert."
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere einen Website-Administrator, wenn du von einem Fehler ausgehst.
@@ -4117,6 +4107,7 @@ de:
         %{new_email}
     signup_after_approval:
       title: "Registrierung: nach Genehmigung"
+      preview: "Neues Konto genehmigt."
       subject_template: "Dein Konto bei %{site_name} wurde genehmigt!"
       text_body_template: |
         Willkommen bei %{site_name}!
@@ -4142,6 +4133,7 @@ de:
         %{reject_reason}
     signup:
       title: "Registrierung"
+      preview: "Bestätige dein Konto."
       subject_template: "[%{email_prefix}] Bestätige dein neues Konto"
       text_body_template: |
         Willkommen bei %{site_name}!
@@ -4164,6 +4156,7 @@ de:
         Wenn der obige Link nicht anklickbar ist, versuche ihn zu kopieren und in die Adresszeile deines Webbrowsers einzufügen.
     suspicious_login:
       title: "Warnung über neue Anmeldung"
+      preview: "Verifiziere dein Gerät."
       subject_template: "[%{site_name}] Neue Anmeldung von %{location}"
       text_body_template: |
         Hallo,
@@ -4946,6 +4939,8 @@ de:
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
   finish_installation:
     congratulations: "Glückwunsch, du hast Discourse installiert!"
+    login_with_discourse_id: "Mit Discourse-ID anmelden"
+    discourse_id_error_help: "Du hast dich entschieden, die Einrichtung der E-Mail vorerst zu überspringen. Leider kann die Einrichtung aufgrund der obigen Fehlermeldung nicht fortgesetzt werden. Bitte melde dieses Problem auf <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Registrieren"
       title: "Administrator-Konto registrieren"
@@ -4967,6 +4962,8 @@ de:
     deprecation_error_label: Veraltete Javascript-Funktionen einen Fehler auslösen lassen
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse einrichten"
     step:
@@ -4975,6 +4972,7 @@ de:
         fields:
           title:
             label: "Name der Community"
+            placeholder: "Erikas Stammtisch"
           default_locale:
             label: "Sprache"
           login_required:
@@ -5022,6 +5020,12 @@ de:
       review_by: "Überprüfung durch"
       pr_summary: "%{commits} Commits haben %{changed_files} Dateien durch %{additions} Ergänzungen und %{deletions} Löschungen geändert"
       no_description: "Trage zur Entwicklung von %{repo} bei, indem du ein Konto bei GitHub erstellst."
+      pr_title:
+        default: "Pull Request"
+      status_date:
+        open: "offen"
+        approved: "genehmigt"
+        closed: "geschlossen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
@@ -5056,8 +5060,6 @@ de:
     api_post_delete: "Per API gelöscht"
     reminder_deleted: "Ersetzt durch neue Erinnerung"
     user_associated_posts_deleted: "Benutzer wurde zerstört"
-    imap_email_deleted: "E-Mail wurde auf dem IMAP-Server gelöscht"
-    imap_email_marked_as_spam: "E-Mail wurde auf dem IMAP-Server in den Spam-Ordner verschoben"
     auto_deleted_hidden_posts: "Versteckte Beiträge automatisch gelöscht"
     seed_data_topic_updated: "Systemvorlage für Thema aktualisiert"
     seed_data_topic_deleted: "Systemvorlage für Thema gelöscht"

@@ -64,6 +64,7 @@ class SiteSettings::TypeSupervisor
         objects: 28,
         locale_enum: 29,
         topic: 30,
+        datetime: 31,
       )
   end
 
@@ -170,7 +171,7 @@ class SiteSettings::TypeSupervisor
       nil
     when self.class.types[:enum]
       @defaults_provider[name].is_a?(Integer) ? value.to_i : value.to_s
-    when self.class.types[:string]
+    when self.class.types[:string], self.class.types[:datetime]
       value.to_s
     else
       return value if self.class.types[type]
@@ -191,7 +192,7 @@ class SiteSettings::TypeSupervisor
     list_type = get_list_type(name)
     result = { type: type.to_s }
 
-    if type == :enum || list_type == "locale"
+    if type == :enum || (type == :list && get_enum_class(name))
       if (klass = get_enum_class(name))
         result.merge!(valid_values: klass.values, translate_names: klass.translate_names?)
       else
@@ -240,7 +241,7 @@ class SiteSettings::TypeSupervisor
   end
 
   def validate_value(name, type, val)
-    if type == self.class.types[:enum] || get_list_type(name) == "locale"
+    if type == self.class.types[:enum] || (type == self.class.types[:list] && get_enum_class(name))
       if get_enum_class(name)
         unless get_enum_class(name).valid_value?(val)
           raise Discourse::InvalidParameters.new("Invalid value `#{val}` for `#{name}`")
@@ -355,6 +356,8 @@ class SiteSettings::TypeSupervisor
       HostListSettingValidator
     when self.class.types[:topic]
       TopicSettingValidator
+    when self.class.types[:datetime]
+      DatetimeSettingValidator
     else
       nil
     end

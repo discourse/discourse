@@ -1,5 +1,10 @@
 @use "lib/viewport";
 
+:root {
+  --poll-bar-color: var(--primary-medium);
+  --poll-bar-color--chosen: var(--tertiary);
+}
+
 div.poll-outer {
   div.poll {
     margin: 1em 0;
@@ -32,6 +37,8 @@ div.poll-outer {
         text-align: left;
         padding-left: 23px;
         text-indent: -23px;
+        width: 100%;
+        cursor: pointer;
       }
     }
 
@@ -404,16 +411,16 @@ div.poll-outer {
       }
 
       .bar-back {
-        background: var(--primary-low);
+        background: var(--poll-bar-background);
       }
 
       .bar {
         height: 0.75em;
-        background: var(--primary-medium);
+        background: var(--poll-bar-color);
       }
 
       .chosen .bar {
-        background: var(--tertiary);
+        background: var(--poll-bar-color--chosen);
       }
     }
 

@@ -21,9 +21,7 @@ describe "Admin Site Setting Locales", type: :system do
       settings_page.save_setting("default_locale")
 
       settings_page.type_in_search("default locale")
-      expect(settings_page.find_setting("default_locale")).to have_content(
-        "Inglés (EE. UU.) (English (US))",
-      )
+      expect(settings_page.find_setting("default_locale")).to have_content("Inglés (English)")
     end
   end
 
@@ -40,13 +38,13 @@ describe "Admin Site Setting Locales", type: :system do
       settings_page.select_list_values("content_localization_supported_locales", %w[en])
       settings_page.save_setting("content_localization_supported_locales")
       expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
-        "Japonés (日本語), Inglés (EE. UU.)",
+        "Japonés (日本語), Inglés",
       )
 
       # confirm persist on reload
       settings_page.visit("content_localization_supported_locales")
       expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
-        "Japonés (日本語), Inglés (EE. UU.)",
+        "Japonés (日本語), Inglés",
       )
     end
   end

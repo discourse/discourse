@@ -187,7 +187,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
 
       expected = <<~TXT.strip
-        <details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
+        <details class='ai-thinking'><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
 
         **searching for things**
         did stuff
@@ -448,6 +448,101 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         last_message = Chat::Message.where(chat_channel_id: channel.id).order("id desc").first
         expect(last_message.message).to eq("world")
       end
+
+      it "sends error message when credit limit is exceeded" do
+        # Create allocation to include in the exception
+        seeded_llm = Fabricate(:seeded_model)
+        allocation =
+          Fabricate(
+            :llm_credit_allocation,
+            llm_model: seeded_llm,
+            daily_credits: 1000,
+            daily_used: 1000,
+          )
+
+        # Add some chat history first (before stubbing to avoid side effects)
+        ChatSDK::Message.create(
+          channel_id: channel.id,
+          raw: "This is some background conversation",
+          guardian: guardian,
+        )
+
+        # Stub check_credits! to raise the exception (after background message is created)
+        exception =
+          LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+        allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+        ChatSDK::Message.create(
+          channel_id: channel.id,
+          raw: "Hello @#{persona.user.username}",
+          guardian: guardian,
+        )
+
+        last_message = Chat::Message.where(chat_channel_id: channel.id).order("id desc").first
+
+        # Error message has HTML links converted to markdown for chat
+        expected_message =
+          I18n.t(
+            "discourse_ai.llm_credit_allocation.limit_exceeded_user",
+            reset_time: allocation.relative_reset_time,
+          ).gsub(%r{<a\s+href=['"]([^'"]+)['"][^>]*>([^<]+)</a>}i, '[\2](\1)')
+        expect(last_message.message).to eq(expected_message)
+        expect(last_message.user_id).to eq(persona.user_id)
+      end
+
+      it "sends admin error message when credit limit is exceeded for admin users" do
+        # Stub external URL fetches that may be triggered by message processing
+        stub_request(:get, /meta\.discourse\.org/).to_return(
+          status: 200,
+          body: "",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+          },
+        )
+
+        # Create allocation to include in the exception
+        seeded_llm = Fabricate(:seeded_model)
+        allocation =
+          Fabricate(
+            :llm_credit_allocation,
+            llm_model: seeded_llm,
+            daily_credits: 1000,
+            daily_used: 1000,
+          )
+
+        admin_membership =
+          Fabricate(:user_chat_channel_membership, user: admin, chat_channel: channel)
+        admin_guardian = Guardian.new(admin)
+
+        # Add some chat history first (before stubbing to avoid side effects)
+        ChatSDK::Message.create(
+          channel_id: channel.id,
+          raw: "This is some background conversation",
+          guardian: admin_guardian,
+        )
+
+        # Stub check_credits! to raise the exception (after background message is created)
+        exception =
+          LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+        allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+        ChatSDK::Message.create(
+          channel_id: channel.id,
+          raw: "Hello @#{persona.user.username}",
+          guardian: admin_guardian,
+        )
+
+        last_message = Chat::Message.where(chat_channel_id: channel.id).order("id desc").first
+
+        # Error message has HTML links converted to markdown for chat
+        expected_message =
+          I18n.t(
+            "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
+            reset_time: allocation.relative_reset_time,
+          ).gsub(%r{<a\s+href=['"]([^'"]+)['"][^>]*>([^<]+)</a>}i, '[\2](\1)')
+        expect(last_message.message).to eq(expected_message)
+        expect(last_message.user_id).to eq(persona.user_id)
+      end
     end
 
     context "with chat dms" do
@@ -679,8 +774,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       post.topic.custom_fields["ai_persona_id"] = persona.id.to_s
       post.topic.save_custom_fields
 
-      llm2 = Fabricate(:llm_model, enabled_chat_bot: true)
-
+      llm2 = Fabricate(:llm_model)
+      SiteSetting.ai_bot_enabled_llms = llm2.id.to_s
       llm2.toggle_companion_user
 
       DiscourseAi::Completions::Llm.with_prepared_responses(["Hi from bot two"], llm: llm2) do
@@ -1056,6 +1151,64 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(custom_prompt.last.first).to eq(response2)
       expect(custom_prompt.last.last).to eq(bot_user.username)
     end
+
+    it "sends credit limit error message when credit limit is exceeded in PM" do
+      seeded_llm = Fabricate(:seeded_model)
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          llm_model: seeded_llm,
+          daily_credits: 1000,
+          daily_used: 1000,
+        )
+
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+      expect { playground.reply_to(third_post) }.not_to raise_error
+
+      last_post = pm.reload.posts.order(:post_number).last
+
+      expected_message =
+        I18n.t(
+          "discourse_ai.llm_credit_allocation.limit_exceeded_user",
+          reset_time: allocation.relative_reset_time,
+        )
+      expect(last_post.raw).to include(expected_message)
+      expect(last_post.user_id).to eq(bot_user.id)
+    end
+
+    it "sends admin credit limit error message when credit limit is exceeded for admin users" do
+      seeded_llm = Fabricate(:seeded_model)
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          llm_model: seeded_llm,
+          daily_credits: 1000,
+          daily_used: 1000,
+        )
+
+      # Add admin to existing PM
+      pm.topic_allowed_users.create!(user_id: admin.id)
+
+      admin_post =
+        Fabricate(:post, topic: pm, user: admin, post_number: 4, raw: "Hello bot from admin")
+
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+      expect { playground.reply_to(admin_post) }.not_to raise_error
+
+      last_post = pm.reload.posts.order(:post_number).last
+
+      expected_message =
+        I18n.t(
+          "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
+          reset_time: allocation.relative_reset_time,
+        )
+      expect(last_post.raw).to include(expected_message)
+      expect(last_post.user_id).to eq(bot_user.id)
+    end
   end
 
   describe "#canceling a completions" do
@@ -1177,5 +1330,36 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(user_message[:content]).to include("This is additional context from the tool")
       expect(user_message[:content]).to include("Can you use the custom context tool?")
     end
+  end
+
+  it "does not raise 'can't modify frozen attributes' when retrying a reply with thinking" do
+    thinking_progress =
+      DiscourseAi::Completions::Thinking.new(message: "I should say hello", partial: true)
+    anthropic_info = { anthropic: { signature: "thinking-signature-123" } }
+    thinking =
+      DiscourseAi::Completions::Thinking.new(
+        message: "I should say hello",
+        partial: false,
+        provider_info: anthropic_info,
+      )
+
+    # 1. First reply that creates thinking context
+    first_responses = [[thinking_progress, thinking, "Hello Sam"]]
+
+    reply_post = nil
+    DiscourseAi::Completions::Llm.with_prepared_responses(first_responses) do
+      reply_post = playground.reply_to(third_post)
+    end
+
+    expect(PostCustomPrompt.exists?(post_id: reply_post.id)).to eq(true)
+
+    # 2. Retry the same reply (this is what triggers the bug)
+    second_responses = [[thinking_progress, thinking, "Hello again Sam"]]
+
+    expect {
+      DiscourseAi::Completions::Llm.with_prepared_responses(second_responses) do
+        playground.reply_to(third_post, existing_reply_post: reply_post)
+      end
+    }.not_to raise_error
   end
 end

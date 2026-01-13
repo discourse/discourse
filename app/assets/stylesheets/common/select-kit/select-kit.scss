@@ -191,17 +191,11 @@
     display: none;
     background: var(--secondary);
     box-sizing: border-box;
+    width: max-content;
 
     .selected-content {
       max-height: 300px;
       overflow-y: auto;
-    }
-
-    &[data-popper-reference-hidden] {
-      html:not(.ios-device) & {
-        visibility: hidden;
-        pointer-events: none;
-      }
     }
   }
 
@@ -240,12 +234,9 @@
       background: var(--d-hover);
     }
 
-    &.is-selected {
-      background: var(--d-selected);
-    }
-
+    &.is-selected,
     &.is-selected.is-highlighted {
-      background: var(--d-hover);
+      background: var(--d-selected);
     }
 
     .discourse-tag,
@@ -269,6 +260,10 @@
 
     &:hover .select-kit-row.is-highlighted:hover {
       background: var(--d-hover);
+    }
+
+    &:hover .select-kit-row.is-selected.is-highlighted:hover {
+      background: var(--d-selected-hover);
     }
 
     .validation-message {

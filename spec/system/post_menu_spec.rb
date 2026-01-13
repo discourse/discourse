@@ -497,6 +497,16 @@ describe "Post menu", type: :system do
       topic_page.click_post_action_button(post, :like_count)
       expect(topic_page).to have_who_liked_on_post(post, count: 2)
     end
+
+    it "does not allow silenced users to like posts" do
+      user.update!(silenced_till: 1.year.from_now)
+
+      sign_in(user)
+
+      topic_page.visit_topic(post.topic)
+
+      expect(topic_page).to have_no_post_action_button(post, :like)
+    end
   end
 
   describe "read" do

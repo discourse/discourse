@@ -17,7 +17,7 @@ vi:
       no_providers: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
       channels_with_errors: "Một vài channels từ dịch vụ chat này đã thất bại trong lần gửi tin nhắn cuối cùng. Nhấn chuột vào biểu tượng lỗi để xem thêm."
       choose_group: "(chọn một nhóm)"
-      all_categories: "(tất cả danh mục)"
+      all_categories: "(tất cả chuyên mục)"
       all_tags: "(tất cả từ khoá)"
       delete_channel: "Xóa"
       edit_channel: "Sửa"
@@ -34,7 +34,7 @@ vi:
         watch: 'Tất cả bài viết và trả lời'
       rule_table:
         filter: "Lọc"
-        category: "Danh mục"
+        category: "Chuyên mục"
         tags: "Thẻ"
         edit_rule: "Sửa"
         delete_rule: "Xóa"
@@ -49,7 +49,7 @@ vi:
         cancel: Hủy
         type: Loại
         filter: Lọc
-        category: Danh mục
+        category: Chuyên mục
         group: Nhóm
         tags: Thẻ
       provider:

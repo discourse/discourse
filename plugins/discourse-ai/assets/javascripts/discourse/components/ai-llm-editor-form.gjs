@@ -17,6 +17,7 @@ import {
 } from "discourse/lib/array-tools";
 import { eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiLlmQuotaModal from "./modal/ai-llm-quota-modal";
 
@@ -62,6 +63,7 @@ export default class AiLlmEditorForm extends Component {
         cached_input_cost: modelInfo.cached_input_cost,
         vision_enabled: modelInfo.vision_enabled || false,
         cache_write_cost: modelInfo.cache_write_cost,
+        allowed_attachment_types: [],
       };
     }
 
@@ -76,7 +78,6 @@ export default class AiLlmEditorForm extends Component {
       display_name: model.display_name,
       name: model.name,
       provider: model.provider,
-      enabled_chat_bot: model.enabled_chat_bot,
       vision_enabled: model.vision_enabled,
       input_cost: model.input_cost,
       output_cost: model.output_cost,
@@ -87,6 +88,7 @@ export default class AiLlmEditorForm extends Component {
         model.provider_params
       ),
       llm_quotas: model.llm_quotas,
+      allowed_attachment_types: model.allowed_attachment_types || [],
     };
   }
 
@@ -492,13 +494,20 @@ export default class AiLlmEditorForm extends Component {
         </form.Field>
 
         <form.Field
-          @name="enabled_chat_bot"
-          @title={{i18n "discourse_ai.llms.enabled_chat_bot"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.enabled_chat_bot"}}
+          @name="allowed_attachment_types"
+          @title={{i18n "discourse_ai.llms.allowed_attachment_types"}}
+          @tooltip={{i18n "discourse_ai.llms.hints.allowed_attachment_types"}}
           @format="large"
           as |field|
         >
-          <field.Checkbox />
+          <field.Label />
+          <field.Custom>
+            <AiLlmAttachmentTypes
+              @value={{field.value}}
+              @onChange={{field.set}}
+            />
+          </field.Custom>
+          <field.Hint />
         </form.Field>
 
         {{#if @model.user}}

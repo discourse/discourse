@@ -462,8 +462,16 @@ class Reviewable < ActiveRecord::Base
           .includes(
             { created_by: :user_stat },
             :topic,
-            :target,
-            :target_created_by,
+            {
+              target: [
+                :user_stat,
+                :primary_email,
+                { topic: :category },
+                :user_histories,
+                :user_custom_fields,
+              ],
+            },
+            { target_created_by: [:user_custom_fields] },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
@@ -794,6 +802,7 @@ class Reviewable < ActiveRecord::Base
     actions.add(:delete_user, bundle: bundle) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
+      a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
     end
 
