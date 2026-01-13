@@ -311,7 +311,7 @@ export default class BlockRouteCondition extends BlockCondition {
       }
     }
 
-    // Log state when debugging
+    // Log URL/pages state when debugging (before queryParams matching so nesting is correct)
     if (isDebugging && (params || queryParams)) {
       logger?.logRouteState?.({
         currentPath,
@@ -328,26 +328,51 @@ export default class BlockRouteCondition extends BlockCondition {
       });
     }
 
-    // Return early if URL/page didn't match
-    if (!routeMatched) {
+    // Return early if URL/page didn't match (unless debugging, where we show queryParams)
+    if (!routeMatched && !isDebugging) {
       return false;
     }
 
     // Check query params (uses shared matcher with AND/OR/NOT support)
     if (queryParams) {
-      if (
-        !matchParams({
-          actualParams: actualQueryParams,
-          expectedParams: queryParams,
-          context: debugContext,
-          label: "queryParams",
-        })
-      ) {
+      // Log queryParams summary before matchParams (result updated after)
+      // Use an object as conditionSpec so we can update the result
+      const queryParamsSpec = isDebugging ? { _isQueryParams: true } : null;
+      if (isDebugging) {
+        logger?.logCondition?.({
+          type: "queryParams",
+          args: { actual: actualQueryParams, expected: queryParams },
+          result: null, // Will be updated after matchParams
+          depth: childDepth,
+          conditionSpec: queryParamsSpec,
+        });
+      }
+
+      // Pass deeper context so OR/AND/NOT logs nest under the queryParams summary
+      const queryParamsContext = {
+        ...debugContext,
+        _depth: childDepth + 1,
+      };
+
+      const queryParamsMatched = matchParams({
+        actualParams: actualQueryParams,
+        expectedParams: queryParams,
+        context: queryParamsContext,
+        label: "queryParams",
+      });
+
+      // Update the queryParams summary result
+      if (isDebugging) {
+        logger?.updateConditionResult?.(queryParamsSpec, queryParamsMatched);
+      }
+
+      // Both URL/page AND queryParams must match
+      if (!routeMatched || !queryParamsMatched) {
         return false;
       }
     }
 
-    return true;
+    return routeMatched;
   }
 
   /**

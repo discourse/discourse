@@ -120,8 +120,9 @@ class BlockDebugLogger {
   }
 
   /**
-   * Log current URL state for debugging route conditions with params/queryParams.
-   * Shows the actual values available for matching.
+   * Log current URL/page state for debugging route conditions.
+   * Shows URL/page matching status and a queryParams summary line. Detailed
+   * queryParams matching (OR/AND combinators) is logged separately by matchParams.
    *
    * @param {Object} options - Log options.
    * @param {string} options.currentPath - The current URL path (normalized).
@@ -132,10 +133,10 @@ class BlockDebugLogger {
    * @param {string} [options.matchedPageType] - The page type that matched (if pages used).
    * @param {string} [options.actualPageType] - The actual page type (when expected doesn't match).
    * @param {Object} [options.actualPageContext] - Actual page context values when checking params.
-   * @param {Object} [options.expectedQueryParams] - Expected query params to match.
-   * @param {Object} [options.actualQueryParams] - Current query params.
+   * @param {Object} [options.expectedQueryParams] - Expected query params (for summary display).
+   * @param {Object} [options.actualQueryParams] - Actual query params from the route.
    * @param {number} options.depth - Nesting depth for indentation.
-   * @param {boolean} options.result - Whether the URL matched (true) or not (false).
+   * @param {boolean} options.result - Whether the URL/page matched (true) or not (false).
    */
   logRouteState({
     currentPath,
@@ -321,14 +322,12 @@ class BlockDebugLogger {
         params,
         actualPageType,
         actualPageContext,
-        expectedQueryParams,
-        actualQueryParams,
         result: routeResult,
       } = log;
       const routeIcon = routeResult ? ICONS.passed : ICONS.failed;
       const routeStyle = routeResult ? STYLES.passed : STYLES.failed;
 
-      // When using pages option, show page type, params, and queryParams as siblings
+      // When using pages option, show page type and params as siblings
       if (pages) {
         // Page type matches if actualPageContext exists (regardless of params)
         const pageTypeMatched = actualPageContext !== null;
@@ -371,38 +370,19 @@ class BlockDebugLogger {
           });
         }
 
-        // Show queryParams only when expected queryParams were specified
-        if (expectedQueryParams) {
-          // eslint-disable-next-line no-console
-          console.log("queryParams:", {
-            actual: actualQueryParams,
-            expected: expectedQueryParams,
-          });
-        }
         return;
       }
 
       // For urls option, show URL matching info
-      const configured = excludedUrls
+      const expected = excludedUrls
         ? { excludeUrls: excludedUrls }
         : { urls: expectedUrls };
 
       // eslint-disable-next-line no-console
-      console.groupCollapsed(`%c${routeIcon}%c current URL`, routeStyle, "", {
+      console.log(`%c${routeIcon}%c current URL:`, routeStyle, "", {
         actual: currentPath,
-        configured,
+        expected,
       });
-
-      // Show queryParams only when expected queryParams were specified
-      if (expectedQueryParams) {
-        // eslint-disable-next-line no-console
-        console.log("queryParams:", {
-          actual: actualQueryParams,
-          expected: expectedQueryParams,
-        });
-      }
-      // eslint-disable-next-line no-console
-      console.groupEnd();
       return;
     }
 

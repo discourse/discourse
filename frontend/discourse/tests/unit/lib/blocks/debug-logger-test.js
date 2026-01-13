@@ -285,7 +285,6 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
         expectedUrls: ["/c/**"],
         excludeUrls: undefined,
         actualParams: { slug: "general" },
-        actualQueryParams: { preview_theme_id: "3" },
         depth: 2,
         result: true,
       });
@@ -347,29 +346,29 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       // 1. Main block group
       // 2. AND (depth 0) - has children at depth 1
       // 3. route (depth 1) - has children at depth 2
-      // 4. route-state (depth 2) - handles its own grouping internally
-      // 5. OR (depth 2) - has children at depth 3
+      // 4. OR (depth 2) - has children at depth 3
+      // Note: route-state now uses console.log instead of groupCollapsed
       assert.strictEqual(
         this.consoleStub.groupCollapsed.callCount,
-        5,
-        "five groups collapsed (main + AND + route + route-state + OR)"
+        4,
+        "four groups collapsed (main + AND + route + OR)"
       );
 
       // Expected groupEnd calls should match groupCollapsed
       assert.strictEqual(
         this.consoleStub.groupEnd.callCount,
-        5,
-        "five groups ended (main + AND + route + route-state + OR)"
+        4,
+        "four groups ended (main + AND + route + OR)"
       );
 
       // Expected console.log calls:
       // 1. setting (depth 1) - no children
       // 2. queryParams[0] param-group (single key, logs directly)
       // 3. queryParams[1] param-group (single key, logs directly)
-      // 4. route-state internal logs (params, queryParams)
+      // 4. route-state (current URL line)
       assert.true(
-        this.consoleStub.log.callCount >= 3,
-        "at least three log calls for leaf conditions"
+        this.consoleStub.log.callCount >= 4,
+        "at least four log calls for leaf conditions and route-state"
       );
     });
   });
@@ -400,17 +399,16 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
         expectedUrls: ["/latest"],
         excludeUrls: undefined,
         actualParams: {},
-        actualQueryParams: {},
+        _unusedQueryParams: {},
         depth: 1,
         result: true,
       });
       blockDebugLogger.endGroup(true);
 
-      // Find the route-state groupCollapsed call (second one after main block)
-      const routeStateCall = this.consoleStub.groupCollapsed
+      const routeStateCall = this.consoleStub.log
         .getCalls()
-        .find((call) => call.args[0]?.includes("current URL"));
-      assert.true(!!routeStateCall, "route-state groupCollapsed was called");
+        .find((call) => call.args[0]?.includes?.("current URL"));
+      assert.true(!!routeStateCall, "route-state log was called");
       assert.true(
         routeStateCall.args[0].includes("\u2713"),
         "displays checkmark for matching URL"
@@ -430,16 +428,16 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
         expectedUrls: ["/c/**"],
         excludeUrls: undefined,
         actualParams: {},
-        actualQueryParams: {},
+        _unusedQueryParams: {},
         depth: 1,
         result: false,
       });
       blockDebugLogger.endGroup(false);
 
-      const routeStateCall = this.consoleStub.groupCollapsed
+      const routeStateCall = this.consoleStub.log
         .getCalls()
-        .find((call) => call.args[0]?.includes("current URL"));
-      assert.true(!!routeStateCall, "route-state groupCollapsed was called");
+        .find((call) => call.args[0]?.includes?.("current URL"));
+      assert.true(!!routeStateCall, "route-state log was called");
       assert.true(
         routeStateCall.args[0].includes("\u2717"),
         "displays X for non-matching URL"
@@ -459,26 +457,26 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
         expectedUrls: ["/c/**"],
         excludeUrls: undefined,
         actualParams: {},
-        actualQueryParams: {},
+        _unusedQueryParams: {},
         depth: 1,
         result: false,
       });
       blockDebugLogger.endGroup(false);
 
-      const routeStateCall = this.consoleStub.groupCollapsed
+      const routeStateCall = this.consoleStub.log
         .getCalls()
-        .find((call) => call.args[0]?.includes("current URL"));
-      // The last argument should be an object with actual and configured
+        .find((call) => call.args[0]?.includes?.("current URL"));
+      // The last argument should be an object with actual and expected
       const dataArg = routeStateCall.args[routeStateCall.args.length - 1];
       assert.strictEqual(dataArg.actual, "/latest", "includes actual URL");
       assert.deepEqual(
-        dataArg.configured,
+        dataArg.expected,
         { urls: ["/c/**"] },
-        "includes configured URL patterns"
+        "includes expected URL patterns"
       );
     });
 
-    test("includes excludeUrls in configured when using exclusion", function (assert) {
+    test("includes excludeUrls in expected when using exclusion", function (assert) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
@@ -491,19 +489,19 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
         expectedUrls: undefined,
         excludeUrls: ["$HOMEPAGE"],
         actualParams: {},
-        actualQueryParams: {},
+        _unusedQueryParams: {},
         depth: 1,
         result: true,
       });
       blockDebugLogger.endGroup(true);
 
-      const routeStateCall = this.consoleStub.groupCollapsed
+      const routeStateCall = this.consoleStub.log
         .getCalls()
-        .find((call) => call.args[0]?.includes("current URL"));
+        .find((call) => call.args[0]?.includes?.("current URL"));
       const dataArg = routeStateCall.args[routeStateCall.args.length - 1];
       assert.strictEqual(dataArg.actual, "/latest", "includes actual URL");
       assert.deepEqual(
-        dataArg.configured,
+        dataArg.expected,
         { excludeUrls: ["$HOMEPAGE"] },
         "wraps excludeUrls in object for clarity"
       );
@@ -527,7 +525,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
           id: 123,
           slug: "my-topic",
         },
-        actualQueryParams: { page: "2" },
+        _unusedQueryParams: { page: "2" },
         depth: 1,
         result: true,
       });
@@ -566,47 +564,6 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       );
     });
 
-    test("logs queryParams only when expected queryParams are specified", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
-      blockDebugLogger.logCondition({
-        type: "route",
-        args: { pages: ["TOPIC_PAGES"], queryParams: { filter: "solved" } },
-        result: true,
-        depth: 0,
-      });
-      blockDebugLogger.logRouteState({
-        currentPath: "/t/my-topic/123",
-        pages: ["TOPIC_PAGES"],
-        actualPageContext: { pageType: "TOPIC_PAGES" },
-        expectedQueryParams: { filter: "solved" },
-        actualQueryParams: { filter: "solved", page: "2" },
-        depth: 1,
-        result: true,
-      });
-      blockDebugLogger.endGroup(true);
-
-      const logCalls = this.consoleStub.log.getCalls();
-      const queryParamsCall = logCalls.find((call) =>
-        call.args[0]?.includes?.("queryParams:")
-      );
-
-      assert.true(!!queryParamsCall, "queryParams was logged");
-
-      // Verify queryParams call includes both actual and expected
-      const queryParamsData =
-        queryParamsCall.args[queryParamsCall.args.length - 1];
-      assert.deepEqual(
-        queryParamsData.actual,
-        { filter: "solved", page: "2" },
-        "actual queryParams included"
-      );
-      assert.deepEqual(
-        queryParamsData.expected,
-        { filter: "solved" },
-        "expected queryParams included"
-      );
-    });
-
     test("shows page type matched even when params do not match", function (assert) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
@@ -625,7 +582,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
           categoryId: 4,
           categorySlug: "general",
         },
-        actualQueryParams: {},
+        _unusedQueryParams: {},
         depth: 1,
         result: false,
       });
@@ -682,7 +639,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
         matchedPageType: null,
         actualPageType: "TOPIC_PAGES",
         actualPageContext: null,
-        actualQueryParams: {},
+        _unusedQueryParams: {},
         depth: 1,
         result: false,
       });

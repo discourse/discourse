@@ -298,6 +298,8 @@ export function patchBlockRendering() {
       logCondition: (opts) => blockDebugLogger.logCondition(opts),
       updateCombinatorResult: (result, depth) =>
         blockDebugLogger.updateCombinatorResult(result, depth),
+      updateConditionResult: (conditionSpec, result) =>
+        blockDebugLogger.updateConditionResult(conditionSpec, result),
       logParamGroup: (opts) => blockDebugLogger.logParamGroup(opts),
       logRouteState: (opts) => blockDebugLogger.logRouteState(opts),
     };
