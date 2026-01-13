@@ -68,18 +68,27 @@ for (const packageName of packageNames) {
       recursive: true,
     });
 
-    const modulePath = [
-      packageName.replace(/@types\//, ""),
-      relativePath
-        .replace(exportedDtsPaths.get(relativePath), "")
-        .replace(/^\//, "")
-        .replace(/(index)?\.d\.ts$/, ""),
-    ]
-      .filter(Boolean)
-      .join("/");
+    let modulePath = relativePath;
+    const modulePrefix = exportedDtsPaths.get(relativePath);
 
-    if (!/^declare module ['"].+['"] {/.test(dts)) {
-      dts = `declare module '${modulePath}' {\n${dts}\n}`;
+    if (modulePrefix) {
+      if (modulePrefix.from && modulePath.startsWith(modulePrefix.from)) {
+        modulePath = modulePath.replace(modulePrefix.from, "");
+      }
+      if (modulePrefix.to) {
+        modulePath = `${modulePrefix.to}${modulePath}`;
+      }
+
+      modulePath = modulePath
+        .replace(/^\//, "")
+        .replace(/(index)?\.d\.ts$/, "");
+      modulePath = [packageName.replace(/@types\//, ""), modulePath]
+        .filter(Boolean)
+        .join("/");
+
+      if (!/^declare module ['"].+['"] {/.test(dts)) {
+        dts = `declare module '${modulePath}' {\n${dts}\n}`;
+      }
     }
 
     writeFileSync(`${targetPackagePath}/${relativePath}`, dts);

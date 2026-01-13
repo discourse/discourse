@@ -48,20 +48,24 @@ export default function processPackageJson(packageJson, packagePath) {
   }
 
   const expandedPaths = new Map();
+
   for (let path of paths) {
     path = path.replace(/^\.\/?/, "");
-    const modulePrefix = path.replace(/\/?\*$/, "");
+    const modulePrefix = path.replace(/\/?\*$/, "").replace(/\*.*$/, "");
 
     if (path.includes("*")) {
-      const entries = globSync(path.replace("*", "**/*.d.{ts,cts,mts}"), {
-        cwd: packagePath,
-      });
+      const entries = globSync(
+        path.replace("*", "**/*").replace(/\*$/, "*.d.ts"),
+        {
+          cwd: packagePath,
+        }
+      );
 
       for (const entry of entries) {
-        expandedPaths.set(entry, modulePrefix);
+        expandedPaths.set(entry, { from: modulePrefix });
       }
     } else if (existsSync(`${packagePath}/${path}`)) {
-      expandedPaths.set(path.replace(/^\.\//, ""), modulePrefix);
+      expandedPaths.set(path.replace(/^\.\//, ""), { from: modulePrefix });
     }
   }
 
