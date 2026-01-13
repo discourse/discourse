@@ -12,6 +12,7 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input";
+import { waitForPromise } from "@ember/test-waiters";
 
 const MIN_SCALE = 50;
 const MAX_SCALE = 100;
@@ -627,7 +628,9 @@ async function openLightbox(editorElement, currentImage) {
     };
   });
 
-  const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
+  const { default: PhotoSwipeLightbox } = await waitForPromise(
+    import("photoswipe/lightbox")
+  );
   const isTestEnv = isTesting() || isRailsTesting();
 
   const lightbox = new PhotoSwipeLightbox({
@@ -637,7 +640,7 @@ async function openLightbox(editorElement, currentImage) {
     zoomTitle: i18n("lightbox.zoom"),
     arrowPrevTitle: i18n("lightbox.previous"),
     arrowNextTitle: i18n("lightbox.next"),
-    pswpModule: () => import("photoswipe"),
+    pswpModule: () => waitForPromise(import("photoswipe")),
     tapAction: (pt, e) => {
       if (e.target.classList.contains("pswp__img")) {
         lightbox.pswp?.element?.classList.toggle("pswp--ui-visible");

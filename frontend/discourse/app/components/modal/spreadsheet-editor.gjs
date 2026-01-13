@@ -17,6 +17,7 @@ import {
   tokenRange,
 } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import { waitForPromise } from "@ember/test-waiters";
 
 export default class SpreadsheetEditor extends Component {
   @service dialog;
@@ -127,11 +128,13 @@ export default class SpreadsheetEditor extends Component {
   }
 
   async loadJspreadsheet() {
-    const [jspreadsheetModule] = await Promise.all([
-      import("jspreadsheet-ce"),
-      import("jspreadsheet-ce/dist/jspreadsheet.css"),
-      import("jsuites/dist/jsuites.css"),
-    ]);
+    const [jspreadsheetModule] = await waitForPromise(
+      Promise.all([
+        import("jspreadsheet-ce"),
+        import("jspreadsheet-ce/dist/jspreadsheet.css"),
+        import("jsuites/dist/jsuites.css"),
+      ])
+    );
 
     this.jspreadsheet = jspreadsheetModule.default;
     this.loading = false;
