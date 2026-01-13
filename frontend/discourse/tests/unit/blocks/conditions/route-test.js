@@ -836,6 +836,252 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
     });
   });
 
+  module("params with any/not operators", function () {
+    test("matches params with { any: [...] } OR logic", function (assert) {
+      this.mockDiscoveryState.category = {
+        id: 2,
+        slug: "announcements",
+        parent_category_id: null,
+      };
+      this.mockRouterState.currentURL = "/c/announcements/2";
+
+      // Should match because categoryId is 2 (one of the allowed values)
+      assert.true(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }],
+          },
+        })
+      );
+
+      // Should not match because categoryId is 2, not 10 or 20
+      assert.false(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            any: [{ categoryId: 10 }, { categoryId: 20 }],
+          },
+        })
+      );
+    });
+
+    test("matches params with { not: {...} } negation", function (assert) {
+      this.mockDiscoveryState.category = {
+        id: 5,
+        slug: "general",
+        parent_category_id: null,
+      };
+      this.mockRouterState.currentURL = "/c/general/5";
+
+      // Should match because categoryId is NOT 10
+      assert.true(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: { not: { categoryId: 10 } },
+        })
+      );
+
+      // Should not match because categoryId IS 5
+      assert.false(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: { not: { categoryId: 5 } },
+        })
+      );
+    });
+
+    test("matches nested { any: [{ not: {...} }] } combination", function (assert) {
+      this.mockDiscoveryState.category = {
+        id: 5,
+        slug: "general",
+        parent_category_id: null,
+      };
+      this.mockRouterState.currentURL = "/c/general/5";
+
+      // Match if categoryId is NOT 10 OR NOT 20 (always true since can't be both)
+      assert.true(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            any: [{ not: { categoryId: 10 } }, { not: { categoryId: 20 } }],
+          },
+        })
+      );
+
+      // Match if categoryId is NOT 5 OR categoryId is 5 (always true)
+      assert.true(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            any: [{ not: { categoryId: 5 } }, { categoryId: 5 }],
+          },
+        })
+      );
+    });
+
+    test("matches { not: { any: [...] } } - none of the values", function (assert) {
+      this.mockDiscoveryState.category = {
+        id: 99,
+        slug: "other",
+        parent_category_id: null,
+      };
+      this.mockRouterState.currentURL = "/c/other/99";
+
+      // Match if categoryId is NOT (1 OR 2 OR 3) - i.e., not any of them
+      assert.true(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            not: {
+              any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }],
+            },
+          },
+        })
+      );
+
+      // Change to category 2 - should NOT match
+      this.mockDiscoveryState.category = {
+        id: 2,
+        slug: "announcements",
+        parent_category_id: null,
+      };
+
+      assert.false(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            not: {
+              any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }],
+            },
+          },
+        })
+      );
+    });
+
+    test("matches any with multiple params per spec (AND within each)", function (assert) {
+      this.mockDiscoveryState.category = {
+        id: 5,
+        slug: "general",
+        parent_category_id: 1,
+      };
+      this.mockRouterState.currentURL = "/c/parent/general/5";
+
+      // Match if (categoryId=5 AND parentCategoryId=1) OR (categoryId=10)
+      assert.true(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            any: [{ categoryId: 5, parentCategoryId: 1 }, { categoryId: 10 }],
+          },
+        })
+      );
+
+      // Should NOT match - first spec has wrong parent, second has wrong id
+      assert.false(
+        this.evaluateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            any: [{ categoryId: 5, parentCategoryId: 99 }, { categoryId: 10 }],
+          },
+        })
+      );
+    });
+
+    test("validates params with any operator", function (assert) {
+      // Valid any usage
+      const noError = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        params: {
+          any: [{ categoryId: 1 }, { categoryId: 2 }],
+        },
+      });
+      assert.strictEqual(noError, null, "valid any params should not error");
+
+      // Invalid param name inside any
+      const invalidParam = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        params: {
+          any: [{ invalidParam: 1 }],
+        },
+      });
+      assert.true(
+        invalidParam?.message.includes("not valid"),
+        "invalid param inside any should error"
+      );
+    });
+
+    test("validates params with not operator", function (assert) {
+      // Valid not usage
+      const noError = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        params: { not: { categoryId: 5 } },
+      });
+      assert.strictEqual(noError, null, "valid not params should not error");
+
+      // Invalid param name inside not
+      const invalidParam = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        params: { not: { invalidParam: 1 } },
+      });
+      assert.true(
+        invalidParam?.message.includes("not valid"),
+        "invalid param inside not should error"
+      );
+    });
+
+    test("validates nested any/not operators", function (assert) {
+      // Valid nested any containing not
+      assert.strictEqual(
+        this.validateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            any: [{ not: { categoryId: 1 } }, { categoryId: 2 }],
+          },
+        }),
+        null,
+        "nested not inside any should be valid"
+      );
+
+      // Valid not containing any
+      assert.strictEqual(
+        this.validateCondition({
+          pages: ["CATEGORY_PAGES"],
+          params: {
+            not: {
+              any: [{ categoryId: 1 }, { categoryId: 2 }],
+            },
+          },
+        }),
+        null,
+        "any inside not should be valid"
+      );
+
+      // Invalid param deeply nested
+      const deepError = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        params: {
+          any: [{ not: { invalidParam: 1 } }],
+        },
+      });
+      assert.true(
+        deepError?.message.includes("not valid"),
+        "invalid param in deeply nested structure should error"
+      );
+    });
+
+    test("validates any must be an array", function (assert) {
+      const error = this.validateCondition({
+        pages: ["CATEGORY_PAGES"],
+        params: { any: { categoryId: 1 } },
+      });
+      assert.true(
+        error?.message.includes("must be an array"),
+        "any must be an array"
+      );
+    });
+  });
+
   module("validate", function () {
     test("returns error when neither urls nor pages provided", function (assert) {
       const error = this.validateCondition({});

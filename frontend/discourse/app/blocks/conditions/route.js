@@ -208,30 +208,10 @@ export default class BlockRouteCondition extends BlockCondition {
         };
       }
 
-      // Validate params against all listed page types
-      const { valid, errors } = validateParamsAgainstPages(params, pages);
-      if (!valid) {
-        return { message: errors.join("\n"), path: "params" };
-      }
-
-      // Validate param types
-      for (const [paramName, value] of Object.entries(params)) {
-        // Find a page type that has this param (we already validated it exists in all)
-        const pageType = pages.find((p) => {
-          const pageParams = getParamsForPageType(p);
-          return pageParams && paramName in pageParams;
-        });
-
-        if (pageType) {
-          const { valid: typeValid, error } = validateParamType(
-            paramName,
-            value,
-            pageType
-          );
-          if (!typeValid) {
-            return { message: error, path: `params.${paramName}` };
-          }
-        }
+      // Handle any/not operators in params
+      const paramsError = this.#validateParamsWithOperators(params, pages);
+      if (paramsError) {
+        return paramsError;
       }
     }
 
@@ -297,7 +277,8 @@ export default class BlockRouteCondition extends BlockCondition {
             if (isDebugging) {
               actualPageContext = { pageType, ...pageContext };
             }
-            if (this.#matchPageParams(params, pageContext, debugContext)) {
+            // Pass debug=false here - logging happens in dedicated block below
+            if (this.#matchPageParams(params, pageContext, { debug: false })) {
               routeMatched = true;
               matchedPageType = pageType;
               break;
@@ -311,21 +292,45 @@ export default class BlockRouteCondition extends BlockCondition {
       }
     }
 
-    // Log URL/pages state when debugging (before queryParams matching so nesting is correct)
+    // Log URL/pages state when debugging
     if (isDebugging && (params || queryParams)) {
       logger?.logRouteState?.({
         currentPath,
         expectedUrls: urls,
         pages,
-        params,
         matchedPageType,
         actualPageType: actualPageContext ? null : this.#getCurrentPageType(),
         actualPageContext,
-        expectedQueryParams: queryParams,
-        actualQueryParams,
         depth: childDepth,
         result: routeMatched,
       });
+    }
+
+    // Log params with nesting (like queryParams)
+    if (isDebugging && params && actualPageContext) {
+      // Log params summary before nested checks (result updated after)
+      const paramsSpec = { _isParams: true };
+      logger?.logCondition?.({
+        type: "params",
+        args: {
+          actual: this.#extractParamValues(params, actualPageContext),
+          expected: params,
+        },
+        result: null,
+        depth: childDepth,
+        conditionSpec: paramsSpec,
+      });
+
+      // Call #matchPageParams with debug=true to log nested OR/NOT/param checks
+      const paramsContext = { debug: true, _depth: childDepth + 1, logger };
+      const paramsMatched = this.#matchPageParams(
+        params,
+        actualPageContext,
+        paramsContext
+      );
+
+      // Update params summary result
+      logger?.updateConditionResult?.(paramsSpec, paramsMatched);
     }
 
     // Return early if URL/page didn't match (unless debugging, where we show queryParams)
@@ -492,31 +497,194 @@ export default class BlockRouteCondition extends BlockCondition {
   }
 
   /**
+   * Validates params with support for any/not operators.
+   *
+   * @param {Object} params - The params to validate.
+   * @param {Array<string>} pages - The page types to validate against.
+   * @param {string} [path="params"] - Path for error messages.
+   * @returns {{ message: string, path: string } | null} Error or null if valid.
+   */
+  #validateParamsWithOperators(params, pages, path = "params") {
+    // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
+    if (params.any !== undefined) {
+      if (!Array.isArray(params.any)) {
+        return {
+          message: `\`any\` in params must be an array of param objects.`,
+          path,
+        };
+      }
+      for (let i = 0; i < params.any.length; i++) {
+        const nestedError = this.#validateParamsWithOperators(
+          params.any[i],
+          pages,
+          `${path}.any[${i}]`
+        );
+        if (nestedError) {
+          return nestedError;
+        }
+      }
+      return null;
+    }
+
+    // Handle not operator: { not: { categoryId: 3 } }
+    if (params.not !== undefined) {
+      return this.#validateParamsWithOperators(
+        params.not,
+        pages,
+        `${path}.not`
+      );
+    }
+
+    // Simple params object - validate against page types
+    const { valid, errors } = validateParamsAgainstPages(params, pages);
+    if (!valid) {
+      return { message: errors.join("\n"), path };
+    }
+
+    // Validate param types
+    for (const [paramName, value] of Object.entries(params)) {
+      const pageType = pages.find((p) => {
+        const pageParams = getParamsForPageType(p);
+        return pageParams && paramName in pageParams;
+      });
+
+      if (pageType) {
+        const { valid: typeValid, error } = validateParamType(
+          paramName,
+          value,
+          pageType
+        );
+        if (!typeValid) {
+          return { message: error, path: `${path}.${paramName}` };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * Matches page parameters against the current context.
+   * Supports any/not operators for complex matching.
    *
    * @param {Object} params - The expected params from the condition.
    * @param {Object} pageContext - The actual context values from the current page.
    * @param {Object} debugContext - Debug context for logging.
-   * @returns {boolean} True if all params match.
+   * @returns {boolean} True if params match.
    */
   #matchPageParams(params, pageContext, debugContext) {
+    const isLoggingEnabled = debugContext.debug ?? false;
+    const depth = debugContext._depth ?? 0;
+    const logger = debugContext.logger;
+
+    // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
+    if (params.any !== undefined) {
+      const specs = params.any;
+
+      // Log combinator BEFORE children so it appears first in tree
+      if (isLoggingEnabled) {
+        logger?.logCondition?.({
+          type: "OR",
+          args: `${specs.length} params specs`,
+          result: null,
+          depth,
+          conditionSpec: params,
+        });
+      }
+
+      const results = specs.map((spec) =>
+        this.#matchPageParams(spec, pageContext, {
+          debug: isLoggingEnabled,
+          _depth: depth + 1,
+          logger,
+        })
+      );
+      const anyPassed = results.some(Boolean);
+
+      // Update combinator result after children evaluated
+      if (isLoggingEnabled) {
+        logger?.updateCombinatorResult?.(params, anyPassed);
+      }
+      return anyPassed;
+    }
+
+    // Handle not operator: { not: { categoryId: 3 } }
+    if (params.not !== undefined) {
+      // Log combinator BEFORE children so it appears first in tree
+      if (isLoggingEnabled) {
+        logger?.logCondition?.({
+          type: "NOT",
+          args: null,
+          result: null,
+          depth,
+          conditionSpec: params,
+        });
+      }
+
+      const innerResult = this.#matchPageParams(params.not, pageContext, {
+        debug: isLoggingEnabled,
+        _depth: depth + 1,
+        logger,
+      });
+      const result = !innerResult;
+
+      // Update combinator result after children evaluated
+      if (isLoggingEnabled) {
+        logger?.updateCombinatorResult?.(params, result);
+      }
+      return result;
+    }
+
+    // Simple params object - all must match
+    // Log individual param checks
+    const matches = [];
     for (const [paramName, expectedValue] of Object.entries(params)) {
       const actualValue = pageContext[paramName];
-
-      // Simple equality check for now
-      // Could be extended to support arrays, NOT, etc. like matchParams
-      if (actualValue !== expectedValue) {
-        if (debugContext.debug) {
-          debugContext.logger?.logParamMismatch?.({
-            paramName,
-            expected: expectedValue,
-            actual: actualValue,
-            depth: debugContext._depth,
-          });
-        }
-        return false;
-      }
+      const result = actualValue === expectedValue;
+      matches.push({
+        key: paramName,
+        expected: expectedValue,
+        actual: actualValue,
+        result,
+      });
     }
-    return true;
+
+    const allPassed = matches.every((m) => m.result);
+
+    // Log as a nested group with all param matches
+    if (isLoggingEnabled) {
+      logger?.logParamGroup?.({
+        label: "params",
+        matches,
+        result: allPassed,
+        depth,
+      });
+    }
+
+    return allPassed;
+  }
+
+  /**
+   * Extracts param values from page context for the specified params.
+   * Handles any/not operators by extracting from nested param objects.
+   *
+   * @param {Object} params - The expected params (keys to extract).
+   * @param {Object} pageContext - The page context containing actual values.
+   * @returns {Object} Object with only the requested param keys and their actual values.
+   */
+  #extractParamValues(params, pageContext) {
+    // Handle any/not operators - extract from first nested object for display
+    if (params.any !== undefined && params.any.length > 0) {
+      return this.#extractParamValues(params.any[0], pageContext);
+    }
+    if (params.not !== undefined) {
+      return this.#extractParamValues(params.not, pageContext);
+    }
+
+    const result = {};
+    for (const key of Object.keys(params)) {
+      result[key] = pageContext[key];
+    }
+    return result;
   }
 }

@@ -121,20 +121,17 @@ class BlockDebugLogger {
 
   /**
    * Log current URL/page state for debugging route conditions.
-   * Shows URL/page matching status and a queryParams summary line. Detailed
-   * queryParams matching (OR/AND combinators) is logged separately by matchParams.
+   * Shows URL/page matching status. Params and queryParams are logged separately
+   * with proper nesting via logCondition.
    *
    * @param {Object} options - Log options.
    * @param {string} options.currentPath - The current URL path (normalized).
    * @param {Array} [options.expectedUrls] - URL patterns to match (if using urls).
    * @param {Array} [options.excludeUrls] - URL patterns to exclude (if using excludeUrls).
    * @param {Array} [options.pages] - Page types to match (e.g., ["CATEGORY_PAGES"]).
-   * @param {Object} [options.params] - Expected page params to match.
    * @param {string} [options.matchedPageType] - The page type that matched (if pages used).
    * @param {string} [options.actualPageType] - The actual page type (when expected doesn't match).
-   * @param {Object} [options.actualPageContext] - Actual page context values when checking params.
-   * @param {Object} [options.expectedQueryParams] - Expected query params (for summary display).
-   * @param {Object} [options.actualQueryParams] - Actual query params from the route.
+   * @param {Object} [options.actualPageContext] - Actual page context (for determining page type match).
    * @param {number} options.depth - Nesting depth for indentation.
    * @param {boolean} options.result - Whether the URL/page matched (true) or not (false).
    */
@@ -143,12 +140,9 @@ class BlockDebugLogger {
     expectedUrls,
     excludeUrls,
     pages,
-    params,
     matchedPageType,
     actualPageType,
     actualPageContext,
-    expectedQueryParams,
-    actualQueryParams,
     depth,
     result,
   }) {
@@ -161,12 +155,9 @@ class BlockDebugLogger {
       expectedUrls,
       excludeUrls,
       pages,
-      params,
       matchedPageType,
       actualPageType,
       actualPageContext,
-      expectedQueryParams,
-      actualQueryParams,
       depth,
       result,
     });
@@ -311,7 +302,7 @@ class BlockDebugLogger {
   #logTreeNode(log, hasChildren = false) {
     const { type, args, result, resolvedValue } = log;
 
-    // Handle route state (shows current URL/page and params/queryParams values)
+    // Handle route state (shows current URL/page status)
     // Uses checkmark/X to show whether the route matched
     if (type === "route-state") {
       const {
@@ -319,7 +310,6 @@ class BlockDebugLogger {
         expectedUrls,
         excludeUrls: excludedUrls,
         pages,
-        params,
         actualPageType,
         actualPageContext,
         result: routeResult,
@@ -348,28 +338,7 @@ class BlockDebugLogger {
         // eslint-disable-next-line no-console
         console.log(`%c${pageIcon}%c ${pageStatus}`, pageStyle, "");
 
-        // Show params comparison when params were specified
-        if (params && actualPageContext) {
-          // Extract only the param values being checked from the full page context
-          const actualParams = {};
-          for (const key of Object.keys(params)) {
-            actualParams[key] = actualPageContext[key];
-          }
-
-          // Determine if params matched (all expected values equal actual values)
-          const paramsMatched = Object.entries(params).every(
-            ([key, expected]) => actualPageContext[key] === expected
-          );
-          const paramsIcon = paramsMatched ? ICONS.passed : ICONS.failed;
-          const paramsStyle = paramsMatched ? STYLES.passed : STYLES.failed;
-
-          // eslint-disable-next-line no-console
-          console.log(`%c${paramsIcon}%c params:`, paramsStyle, "", {
-            actual: actualParams,
-            expected: params,
-          });
-        }
-
+        // Note: params are logged separately with nesting (like queryParams)
         return;
       }
 

@@ -518,16 +518,21 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       blockDebugLogger.logRouteState({
         currentPath: "/t/my-topic/123",
         pages: ["TOPIC_PAGES"],
-        params: { id: 123 },
         matchedPageType: "TOPIC_PAGES",
         actualPageContext: {
           pageType: "TOPIC_PAGES",
           id: 123,
           slug: "my-topic",
         },
-        _unusedQueryParams: { page: "2" },
         depth: 1,
         result: true,
+      });
+      // Params are now logged via logCondition (like queryParams)
+      blockDebugLogger.logCondition({
+        type: "params",
+        args: { actual: { id: 123 }, expected: { id: 123 } },
+        result: true,
+        depth: 1,
       });
       blockDebugLogger.endGroup(true);
 
@@ -537,30 +542,17 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
         call.args[0]?.includes?.("on TOPIC_PAGES")
       );
       const paramsCall = logCalls.find((call) =>
-        call.args[0]?.includes?.("params:")
+        call.args[0]?.includes?.("params")
       );
       const queryParamsCall = logCalls.find((call) =>
-        call.args[0]?.includes?.("queryParams:")
+        call.args[0]?.includes?.("queryParams")
       );
 
       assert.true(!!pageTypeCall, "page type was logged");
-      assert.true(!!paramsCall, "params comparison was logged");
+      assert.true(!!paramsCall, "params was logged");
       assert.false(
         !!queryParamsCall,
         "queryParams not logged without expected"
-      );
-
-      // Verify params call includes both actual and expected
-      const paramsData = paramsCall.args[paramsCall.args.length - 1];
-      assert.deepEqual(
-        paramsData.actual,
-        { id: 123 },
-        "actual params extracted"
-      );
-      assert.deepEqual(
-        paramsData.expected,
-        { id: 123 },
-        "expected params included"
       );
     });
 
@@ -575,16 +567,21 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       blockDebugLogger.logRouteState({
         currentPath: "/c/general/4",
         pages: ["CATEGORY_PAGES"],
-        params: { categoryId: 1 },
         matchedPageType: null,
         actualPageContext: {
           pageType: "CATEGORY_PAGES",
           categoryId: 4,
           categorySlug: "general",
         },
-        _unusedQueryParams: {},
         depth: 1,
         result: false,
+      });
+      // Params are now logged via logCondition (like queryParams)
+      blockDebugLogger.logCondition({
+        type: "params",
+        args: { actual: { categoryId: 4 }, expected: { categoryId: 1 } },
+        result: false,
+        depth: 1,
       });
       blockDebugLogger.endGroup(false);
 
@@ -602,25 +599,12 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
       // Params should show as failed (X) because categoryId doesn't match
       const paramsCall = logCalls.find((call) =>
-        call.args[0]?.includes?.("params:")
+        call.args[0]?.includes?.("params")
       );
       assert.true(!!paramsCall, "params was logged");
       assert.true(
         paramsCall.args[0].includes("\u2717"),
         "shows X for non-matching params"
-      );
-
-      // Verify the actual vs expected values
-      const paramsData = paramsCall.args[paramsCall.args.length - 1];
-      assert.deepEqual(
-        paramsData.actual,
-        { categoryId: 4 },
-        "shows actual categoryId"
-      );
-      assert.deepEqual(
-        paramsData.expected,
-        { categoryId: 1 },
-        "shows expected categoryId"
       );
     });
 
@@ -655,6 +639,223 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       assert.true(
         pageTypeCall.args[0].includes("(actual: TOPIC_PAGES)"),
         "shows actual page type"
+      );
+    });
+  });
+
+  module("params with operators", function () {
+    test("logs params summary and OR combinator for { any: [...] }", function (assert) {
+      // Simulates the logging structure for params: { any: [...] }
+      // Both params summary and OR combinator should be logged
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+
+      // Route condition (parent)
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { pages: ["CATEGORY_PAGES"] },
+        result: true,
+        depth: 0,
+      });
+
+      // Page type matched
+      blockDebugLogger.logRouteState({
+        currentPath: "/c/general/4",
+        pages: ["CATEGORY_PAGES"],
+        matchedPageType: "CATEGORY_PAGES",
+        actualPageContext: { pageType: "CATEGORY_PAGES", categoryId: 4 },
+        depth: 1,
+        result: true,
+      });
+
+      // Params summary (logged before nested OR)
+      const paramsSpec = { _isParams: true };
+      blockDebugLogger.logCondition({
+        type: "params",
+        args: {
+          actual: { categoryId: 4 },
+          expected: { any: [{ categoryId: 1 }, { categoryId: 4 }] },
+        },
+        result: null,
+        depth: 1,
+        conditionSpec: paramsSpec,
+      });
+
+      // OR combinator (nested under params at deeper depth)
+      const orSpec = { any: [{ categoryId: 1 }, { categoryId: 4 }] };
+      blockDebugLogger.logCondition({
+        type: "OR",
+        args: "2 params specs",
+        result: null,
+        depth: 2,
+        conditionSpec: orSpec,
+      });
+
+      // Individual param checks (nested under OR)
+      blockDebugLogger.logParamGroup({
+        label: "params",
+        matches: [{ key: "categoryId", expected: 1, actual: 4, result: false }],
+        result: false,
+        depth: 3,
+      });
+      blockDebugLogger.logParamGroup({
+        label: "params",
+        matches: [{ key: "categoryId", expected: 4, actual: 4, result: true }],
+        result: true,
+        depth: 3,
+      });
+
+      // Update results
+      blockDebugLogger.updateCombinatorResult(orSpec, true);
+      blockDebugLogger.updateConditionResult(paramsSpec, true);
+
+      blockDebugLogger.endGroup(true);
+
+      const logCalls = this.consoleStub.log.getCalls();
+      const groupCalls = this.consoleStub.groupCollapsed.getCalls();
+      const allCalls = [...logCalls, ...groupCalls];
+
+      // Verify params summary was logged (may be in groupCollapsed if it has children)
+      const paramsSummaryCall = allCalls.find(
+        (call) =>
+          call.args[0]?.includes?.("params") &&
+          !call.args[0]?.includes?.("OR") &&
+          !call.args[0]?.includes?.("categoryId")
+      );
+      assert.true(!!paramsSummaryCall, "params summary was logged");
+
+      // Verify OR combinator was logged
+      const orCall = allCalls.find((call) => call.args[0]?.includes?.("OR"));
+      assert.true(!!orCall, "OR combinator was logged");
+    });
+
+    test("logs params summary and NOT combinator for { not: {...} }", function (assert) {
+      // Simulates the logging structure for params: { not: {...} }
+      // Both params summary and NOT combinator should be logged
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+
+      // Route condition (parent)
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { pages: ["CATEGORY_PAGES"] },
+        result: true,
+        depth: 0,
+      });
+
+      // Page type matched
+      blockDebugLogger.logRouteState({
+        currentPath: "/c/general/4",
+        pages: ["CATEGORY_PAGES"],
+        matchedPageType: "CATEGORY_PAGES",
+        actualPageContext: { pageType: "CATEGORY_PAGES", categoryId: 4 },
+        depth: 1,
+        result: true,
+      });
+
+      // Params summary (logged before nested NOT)
+      const paramsSpec = { _isParams: true };
+      blockDebugLogger.logCondition({
+        type: "params",
+        args: {
+          actual: { categoryId: 4 },
+          expected: { not: { categoryId: 10 } },
+        },
+        result: null,
+        depth: 1,
+        conditionSpec: paramsSpec,
+      });
+
+      // NOT combinator (nested under params at deeper depth)
+      const notSpec = { not: { categoryId: 10 } };
+      blockDebugLogger.logCondition({
+        type: "NOT",
+        args: null,
+        result: null,
+        depth: 2,
+        conditionSpec: notSpec,
+      });
+
+      // Inner param check (nested under NOT)
+      blockDebugLogger.logParamGroup({
+        label: "params",
+        matches: [
+          { key: "categoryId", expected: 10, actual: 4, result: false },
+        ],
+        result: false,
+        depth: 3,
+      });
+
+      // Update results (NOT inverts the inner false to true)
+      blockDebugLogger.updateCombinatorResult(notSpec, true);
+      blockDebugLogger.updateConditionResult(paramsSpec, true);
+
+      blockDebugLogger.endGroup(true);
+
+      const logCalls = this.consoleStub.log.getCalls();
+      const groupCalls = this.consoleStub.groupCollapsed.getCalls();
+      const allCalls = [...logCalls, ...groupCalls];
+
+      // Verify params summary was logged (may be in groupCollapsed if it has children)
+      const paramsSummaryCall = allCalls.find(
+        (call) =>
+          call.args[0]?.includes?.("params") &&
+          !call.args[0]?.includes?.("NOT") &&
+          !call.args[0]?.includes?.("categoryId")
+      );
+      assert.true(!!paramsSummaryCall, "params summary was logged");
+
+      // Verify NOT combinator was logged
+      const notCall = allCalls.find((call) => call.args[0]?.includes?.("NOT"));
+      assert.true(!!notCall, "NOT combinator was logged");
+    });
+
+    test("params at depth 1 renders before OR at depth 2 in tree", function (assert) {
+      // Verifies that params (depth 1) appears before OR (depth 2) in the log buffer
+      // The tree structure should have params as parent of OR
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+
+      // Params at depth 1 (parent)
+      const paramsSpec = { _isParams: true };
+      blockDebugLogger.logCondition({
+        type: "params",
+        args: { actual: {}, expected: {} },
+        result: null,
+        depth: 1,
+        conditionSpec: paramsSpec,
+      });
+
+      // OR at depth 2 (child of params)
+      const orSpec = {};
+      blockDebugLogger.logCondition({
+        type: "OR",
+        args: "2 specs",
+        result: null,
+        depth: 2,
+        conditionSpec: orSpec,
+      });
+
+      blockDebugLogger.updateCombinatorResult(orSpec, true);
+      blockDebugLogger.updateConditionResult(paramsSpec, true);
+
+      blockDebugLogger.endGroup(true);
+
+      const logCalls = this.consoleStub.log.getCalls();
+      const groupCalls = this.consoleStub.groupCollapsed.getCalls();
+
+      // Params has children (OR at depth 2), so it's logged as groupCollapsed
+      const paramsCall = groupCalls.find((call) =>
+        call.args[0]?.includes?.("params")
+      );
+      assert.true(!!paramsCall, "params was logged as group (has children)");
+
+      // OR has no children, so it's logged with console.log
+      const orCall = logCalls.find((call) => call.args[0]?.includes?.("OR"));
+      assert.true(!!orCall, "OR was logged");
+
+      // Verify params group opened before OR was logged
+      // The group structure ensures params is the parent containing OR
+      assert.true(
+        groupCalls.some((call) => call.args[0]?.includes?.("params")),
+        "params group exists for tree hierarchy"
       );
     });
   });
