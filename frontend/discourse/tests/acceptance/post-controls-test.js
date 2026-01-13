@@ -4,32 +4,17 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance(`Post controls`, function () {
-  test("accessibility of the likes list below the post", async function (assert) {
+  test("menu of like count is shown when clicking on like count", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert
-      .dom("#post_2 button.like-count")
-      .hasAria("pressed", "false", "show likes button isn't pressed");
+    assert.dom("#post_2 .button-count").exists("like count button exists");
 
-    await click("#post_2 button.like-count");
-    assert
-      .dom("#post_2 button.like-count")
-      .hasAria("pressed", "true", "show likes button is now pressed");
+    await click("#post_2 .button-count");
 
+    // Assert that the liked users list container appears
     assert
-      .dom("#post_2 .small-user-list.who-liked .small-user-list-content")
-      .hasAttribute("role", "list", "likes container has list role");
-
-    assert
-      .dom("#post_2 .small-user-list.who-liked a.trigger-user-card")
-      .exists("avatars are rendered");
-
-    assert
-      .dom("#post_2 .small-user-list.who-liked a.trigger-user-card")
-      .hasAria("hidden", "false", "avatars are not aria-hidden");
-    assert
-      .dom("#post_2 .small-user-list.who-liked a.trigger-user-card")
-      .hasAttribute("role", "listitem", "avatars have listitem role");
+      .dom(".liked-users-list__container")
+      .exists("liked users list container appears");
   });
 
   test("accessibility of the embedded replies below the post", async function (assert) {

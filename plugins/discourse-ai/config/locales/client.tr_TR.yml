@@ -199,7 +199,7 @@ tr_TR:
         no_llm: "LLM seçilmedi"
         no_persona: "Ayarlanmamış"
         no_groups: "Hiçbiri"
-        edit: "Düzenle"
+        edit: "Ayarlar"
         expand_list:
           one: "(%{count} tane Daha)"
           other: "(%{count} tane Daha)"
@@ -230,6 +230,8 @@ tr_TR:
           name: "Gömmeler"
           description: "Metnin anlamsal temsillerini oluşturarak İlgili Konular ve YZ Arama gibi özellikleri güçlendirir"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "İlgili Konular"
         discord:
           name: "Discord entegrasyonu"
           description: "Discord kanallarında arama yapma özelliğini ekler"
@@ -240,6 +242,8 @@ tr_TR:
           generate_concepts: "Kavram çıkarımı"
           match_concepts: "Kavram eşleştirme"
           deduplicate_concepts: "Kavram tekilleştirme"
+          setting_groups:
+            personas: "Kişilikler"
         ai_helper:
           name: "Yardımcı"
           description: "Kullanıcıların konu oluşturma, gönderi yazma ve içerik okuma gibi topluluk etkileşiminde bulunmasına yardımcı olur"
@@ -253,6 +257,10 @@ tr_TR:
           custom_prompt: "Özel istem"
           image_caption: "Görüntülere alt yazı ekle"
           translator: "Çevirmen"
+          post_illustrator: "Gönderi illüstratörü"
+          setting_groups:
+            automation: "Otomasyon"
+            personas: "Kişilikler"
         translation:
           name: "Çeviri"
           description: "İçeriği desteklenen dillere çevirir"
@@ -260,6 +268,8 @@ tr_TR:
           post_raw_translator: "Gönderi ham çevirmeni"
           topic_title_translator: "Konu başlığı çevirmeni"
           short_text_translator: "Kısa metin çevirmeni"
+          setting_groups:
+            personas: "Kişilikler"
         spam:
           name: "İstenmeyen içerik"
           description: "Seçili LLM'i kullanarak potansiyel istenmeyen içerikleri belirler ve inceleme kuyruğunda site moderatörlerinin incelemesi için işaretler"
@@ -316,6 +326,8 @@ tr_TR:
           post_url_label: "Gönderi URL'si veya kimliği"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 veya gönderi kimliği"
           result: "Sonuç"
+          llm: "LLM"
+          system_prompt: "Sistem İstemi"
           scan_log: "Tarama günlüğü"
           run: "Testi çalıştır"
           spam: "İstenmeyen içerik"
@@ -352,6 +364,7 @@ tr_TR:
         no_users: "Kullanıcı kullanım verisi bulunamadı"
         no_models: "Model kullanım verisi bulunamadı"
         no_features: "Özellik kullanım verisi bulunamadı"
+        total: "Toplam"
         subheader_description: "Token'lar, LLM'lerin metinleri anlamak ve üretmek için kullandıkları temel birimlerdir, kullanım verileri maliyetleri etkileyebilir"
         stat_tooltips:
           total_requests: "Discourse aracılığıyla LLM'lere gönderilen tüm talepler"
@@ -391,8 +404,6 @@ tr_TR:
           low: Düşük kalite - en ucuz (256x256)
           medium: Orta kalite (512x512)
           high: Yüksek kalite - en yavaş (1024x1024)
-        tool_details: Araç ayrıntılarını göster
-        tool_details_help: Son kullanıcılara dil modelinin hangi araçları tetiklediğine ilişkin ayrıntıları gösterir.
         mentionable: Bahsetmelere izin ver
         mentionable_help: Etkinleştirilirse izin verilen gruplardaki kullanıcılar gönderilerde bu kullanıcıdan bahsedebilir, YZ bu kişi olarak yanıt verir.
         user: Kullanıcı
@@ -537,7 +548,6 @@ tr_TR:
         max_output_tokens: "Maks. çıktı token'ları"
         url: "Modeli barındıran hizmetin URL'si"
         api_key: "Modeli barındıran hizmetin API Anahtarı"
-        enabled_chat_bot: "YZ bot seçicisine izin verin"
         vision_enabled: "Vizyon etkin"
         ai_bot_user: "YZ botu Kullanıcısı"
         cost_input: "Girdi maliyeti"
@@ -549,7 +559,6 @@ tr_TR:
         back: "Geri"
         confirm_delete: Bu modeli silmek istediğinizden emin misiniz?
         delete: Sil
-        seeded_warning: "Bu model sitenizde önceden yapılandırılmış ve düzenlenemez."
         quotas:
           title: "Kullanım kotaları"
           add_title: "Yeni kota oluşturun"
@@ -584,22 +593,18 @@ tr_TR:
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-1: "Antropic'in en akıllı modeli"
-          anthropic-claude-sonnet-4-0: "Hız ve maliyetin optimum dengesi"
-          anthropic-claude-3-7-sonnet-latest: "Hız ve maliyetin optimum dengesi (önceki nesil)"
-          anthropic-claude-3-5-haiku-latest: "Hızlı ve uygun maliyetli"
+          anthropic-claude-opus-4-5: "Antropic'in en akıllı modeli"
+          anthropic-claude-sonnet-4-5: "Hız ve maliyetin optimum dengesi"
+          anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
           google-gemini-2-5-pro: "Çok çeşitli görevleri yerine getirebilen büyük çok modlu model"
-          google-gemini-2-0-flash: "Çok modlu muhakeme ile hafif, hızlı ve uygun maliyetli (önceki nesil)"
           google-gemini-2-5-flash: "Çok modlu muhakeme ile hafif, hızlı ve uygun maliyetli"
-          google-gemini-2-0-flash-lite: "Maliyet açısından verimli ve düşük gecikmeli model"
-          open_ai-o4-mini: "Gelişmiş Uygun maliyetli muhakeme modeli"
           open_ai-gpt-5-mini: "Zekâ, hız ve maliyet arasında bir denge sağlar ve bu da onu birçok kullanım durumu için cazip bir model hâline getirir."
           open_ai-gpt-5-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Verimli hafif çok dilli model"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Güçlü çok amaçlı model"
           mistral-mistral-large-latest: "Mistral'in en güçlü modeli"
           mistral-pixtral-large-latest: "Mistral'in en güçlü görüş yeteneğine sahip modeli"
-          open_router-x-ai-grok-3-beta: "xAI'ın en son modeli"
+          open_router-x-ai-grok-4: "xAI'ın en son modeli"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek'in en son muhakeme modeli"
           open_router-meta-llama-3-3-70b-instruct: "Son derece yetenekli çok dilli model"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
@@ -625,9 +630,7 @@ tr_TR:
           display_name: "Sitenizin arayüzünde bu modele atıfta bulunmak için kullanılan ad."
           name: "Hangi modeli kullanacağımızı belirtmek için bunu API çağrısına dâhil ediyoruz"
           vision_enabled: "Etkinleştirilirse YZ görüntüleri anlamaya çalışır. Görmeyi destekleyen kullanılan modele bağlıdır. Anthropic, Google ve OpenAI'ın en son modelleri tarafından desteklenir."
-          enabled_chat_bot: "Etkinleştirilirse kullanıcılar YZ botu ile kişisel mesajlar oluştururken bu modeli seçebilir"
           cost_input: "Bu model için 1 milyon token başına girdi maliyeti"
-          cost_cached_input: "Bu model için 1 milyon token başına ön belleğe alınmış girdi maliyeti"
           cost_output: "Bu model için 1 milyon token başına çıktı maliyeti"
           cost_measure: "$/1 milyon token"
         providers:
@@ -662,7 +665,6 @@ tr_TR:
           reasoning_tokens: "Muhakeme için kullanılan token sayısı"
           disable_temperature: "Sıcaklığı devre dışı bırakın (bazı düşünme modelleri sıcaklığı desteklemez)"
           disable_top_p: "Üst P'yi devre dışı bırakın (bazı düşünme modelleri üst P'yi desteklemez)"
-          enable_responses_api: "Yanıt API'sini etkinleştirin (belirli OpenAI modellerinde gerekli)"
       related_topics:
         title: "İlgili konular"
         pill: "İlgili"
@@ -707,6 +709,7 @@ tr_TR:
           title: "Önerilen küçük resimler"
           select: "Seç"
           selected: "Seçili"
+          try_again: "Tekrar Dene"
         image_caption:
           button_label: "YZ ile alt yazı"
           generating: "Alt yazı oluşturuluyor..."
@@ -789,6 +792,7 @@ tr_TR:
         llm: "Model"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
+        try_again: "Tekrar deneyin"
         default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
         shortcut_title: "YZ botuyla kişisel mesaj başlatın"
         shortcut_link: "YZ botu"
@@ -900,7 +904,6 @@ tr_TR:
         loading_convo: "Konuşma yükleniyor"
         collapse: "Daralt"
         timed_out: "Discobot herhangi bir keşif bulamadı. Bir şeyler ters gitti."
-        user_setting: "Arama keşiflerini etkinleştirin"
         tooltip:
           header: "YZ destekli arama"
           content: "%{model} tarafından desteklenen doğal dil araması"

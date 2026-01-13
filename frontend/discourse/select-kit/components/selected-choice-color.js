@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { tagName } from "@ember-decorators/component";
 import { escapeExpression } from "discourse/lib/utilities";
-import SelectedChoiceComponent from "select-kit/components/selected-choice";
+import SelectedChoiceComponent from "discourse/select-kit/components/selected-choice";
 
 @tagName("")
 export default class SelectedChoiceColor extends SelectedChoiceComponent {

@@ -27,18 +27,17 @@ describe TopicQuery do
       Assigner.new(other_admin_pm, Discourse.system_user).assign(other_admin)
     end
 
-    it "includes PMs from all users" do
+    it "includes only PMs that users are participants in" do
       expect(TopicQuery.new(user).list_group_topics_assigned(group).topics).to contain_exactly(
         user_pm,
       )
       expect(TopicQuery.new(admin).list_group_topics_assigned(group).topics).to contain_exactly(
         user_pm,
         admin_pm,
-        other_admin_pm,
       )
       expect(
         TopicQuery.new(other_admin).list_group_topics_assigned(group).topics,
-      ).to contain_exactly(user_pm, admin_pm, other_admin_pm)
+      ).to contain_exactly(other_admin_pm)
     end
   end
 end

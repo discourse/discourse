@@ -20,9 +20,6 @@ sv:
       voted_title: "Röstade"
       voting_closed_title: "Stängd"
       voting_limit: "Begränsa"
-      votes_left_button_title:
-        one: "Du har %{count} röst kvar."
-        other: "Du har %{count} röster kvar."
       votes:
         one: "%{count} röst"
         other: "%{count} röster"

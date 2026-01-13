@@ -153,6 +153,19 @@ module("Unit | tracked-tools", function () {
       );
     });
 
+    test("accepts undefined as initial value", function (assert) {
+      class TestClass {
+        @trackedArray items;
+      }
+
+      const instance = new TestClass();
+      assert.strictEqual(
+        instance.items,
+        undefined,
+        "should allow undefined as initial value"
+      );
+    });
+
     test("handles setting regular arrays", function (assert) {
       class TestClass {
         @trackedArray items;
@@ -204,6 +217,21 @@ module("Unit | tracked-tools", function () {
       assert.strictEqual(instance.items, null, "should allow setting to null");
     });
 
+    test("allows setting to undefined", function (assert) {
+      class TestClass {
+        @trackedArray items = ["initial"];
+      }
+
+      const instance = new TestClass();
+      instance.items = undefined;
+
+      assert.strictEqual(
+        instance.items,
+        undefined,
+        "should allow setting to undefined"
+      );
+    });
+
     test("throws error for invalid values", function (assert) {
       class TestClass {
         @trackedArray items = [];
@@ -215,7 +243,7 @@ module("Unit | tracked-tools", function () {
         () => {
           instance.items = "not an array";
         },
-        /Expected an array or TrackedArray, got string/,
+        /Expected an array, TrackedArray, null, or undefined, got/,
         "should throw for strings"
       );
 
@@ -223,7 +251,7 @@ module("Unit | tracked-tools", function () {
         () => {
           instance.items = 42;
         },
-        /Expected an array or TrackedArray, got number/,
+        /Expected an array, TrackedArray, null, or undefined, got/,
         "should throw for numbers"
       );
 
@@ -231,16 +259,8 @@ module("Unit | tracked-tools", function () {
         () => {
           instance.items = {};
         },
-        /Expected an array or TrackedArray, got object/,
+        /Expected an array, TrackedArray, null, or undefined, got/,
         "should throw for plain objects"
-      );
-
-      assert.throws(
-        () => {
-          instance.items = undefined;
-        },
-        /Expected an array or TrackedArray, got undefined/,
-        "should throw for undefined"
       );
     });
 

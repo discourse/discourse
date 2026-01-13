@@ -219,6 +219,7 @@ cs:
         is_already_in_use: "se již používá"
     bookmarkable:
       notification_title_channel: "zpráva v %{channel_name}"
+      notification_title_direct_message: "konverzace s %{channel_name}"
     personal_chat: "soukromý chat"
     onebox:
       inline_to_message: "Zpráva #%{message_id} od %{username} – #%{chat_channel}"
@@ -318,10 +319,10 @@ cs:
         few: "Zobrazit %{count} další zprávy"
         many: "Zobrazit %{count} dalších zpráv"
         other: "Zobrazit %{count} dalších zpráv"
-      your_chat_settings: "nastavení četnosti e-mailů v chatu"
+      your_chat_settings: "předvolby e-mailu chatu"
   unsubscribe:
     chat_summary:
-      select_title: "Nastavit frekvenci e-mailů se souhrnem chatu na:"
+      select_title: "Nastavte souhrnné e-maily chatu na:"
       never: Nikdy
       when_away: Jen v nepřítomnosti
   category:

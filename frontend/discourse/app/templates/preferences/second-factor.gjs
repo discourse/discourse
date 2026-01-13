@@ -1,6 +1,5 @@
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { and } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -8,6 +7,7 @@ import SecurityKeyDropdown from "discourse/components/security-key-dropdown";
 import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdown";
 import TwoFactorBackupDropdown from "discourse/components/two-factor-backup-dropdown";
 import bodyClass from "discourse/helpers/body-class";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>

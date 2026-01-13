@@ -1,4 +1,4 @@
-import { and, eq, not } from "truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import Section from "./section";
 import SectionLink from "./section-link";
 
@@ -36,6 +36,7 @@ const SidebarApiSection = <template>
           @currentWhen={{link.currentWhen}}
           @href={{link.href}}
           @title={{link.title}}
+          @badgeText={{link.badgeText}}
           @contentCSSClass={{link.contentCSSClass}}
           @prefixColor={{link.prefixColor}}
           @prefixBadge={{link.prefixBadge}}
@@ -56,6 +57,8 @@ const SidebarApiSection = <template>
             link.contentComponent
             status=link.contentComponentArgs
           }}
+          @suffixComponent={{link.suffixComponent}}
+          @suffixArgs={{link.suffixArgs}}
           @scrollIntoView={{and
             @scrollActiveLinkIntoView
             (eq link.name @section.activeLink.name)

@@ -3,8 +3,8 @@ import GroupManageSaveButton from "discourse/components/group-manage-save-button
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
-import TagChooser from "select-kit/components/tag-chooser";
 
 export default <template>
   <form class="groups-form form-vertical groups-notifications-form">

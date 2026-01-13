@@ -4,8 +4,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
-import { or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ImageAltTextInput extends Component {

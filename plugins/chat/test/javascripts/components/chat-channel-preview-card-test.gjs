@@ -37,7 +37,7 @@ module(
         .hasText(this.channel.title, "shows the channel title");
 
       assert
-        .dom(".chat-channel-icon.--category-badge")
+        .dom(".chat-channel-icon.--icon")
         .exists("shows the category hashtag badge");
     });
 

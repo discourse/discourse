@@ -35,6 +35,18 @@ module DiscourseAi
         @http_requests_made = 0
       end
 
+      def system_guardian
+        @system_guardian ||= Guardian.new(Discourse.system_user)
+      end
+
+      def resolve_user(username)
+        if username.present?
+          User.find_by(username: username)
+        else
+          Discourse.system_user
+        end
+      end
+
       def mini_racer_context
         @mini_racer_context ||=
           begin
@@ -68,7 +80,17 @@ module DiscourseAi
 
         const llm = {
           truncate: _llm_truncate,
-          generate: function(prompt, options) { return _llm_generate(prompt, options); },
+          generate: function(prompt, options) {
+            const result = _llm_generate(prompt, options);
+            if (options && options.json) {
+              try {
+                return JSON.parse(result);
+              } catch (e) {
+                return result;
+              }
+            }
+            return result;
+          },
         };
 
         const index = {
@@ -89,6 +111,7 @@ module DiscourseAi
         };
 
         const discourse = {
+          baseUrl: #{Discourse.base_url.to_json},
           search: function(params) {
             return _discourse_search(params);
           },
@@ -149,6 +172,20 @@ module DiscourseAi
           },
           createPost: function(params) {
             const result = _discourse_create_post(params);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
+          setTags: function(topic_id, tags, options) {
+            const result = _discourse_set_tags(topic_id, tags, options);
+            if (result.error) {
+              return result;
+            }
+            return result;
+          },
+          editPost: function(post_id, raw, options) {
+            const result = _discourse_edit_post(post_id, raw, options);
             if (result.error) {
               throw new Error(result.error);
             }
@@ -289,6 +326,9 @@ module DiscourseAi
             in_attached_function do
               options ||= {}
               response_format = options["response_format"]
+
+              response_format = { "type" => "json_object" } if options["json"]
+
               if response_format && !response_format.is_a?(Hash)
                 raise Discourse::InvalidParameters.new("response_format must be a hash")
               end
@@ -396,14 +436,13 @@ module DiscourseAi
             in_attached_function do
               post = Post.find_by(id: post_id)
               return nil if post.nil?
-              guardian = Guardian.new(Discourse.system_user)
               obj =
                 recursive_as_json(
-                  PostSerializer.new(post, scope: guardian, root: false, add_raw: true),
+                  PostSerializer.new(post, scope: system_guardian, root: false, add_raw: true),
                 )
               topic_obj =
                 recursive_as_json(
-                  ListableTopicSerializer.new(post.topic, scope: guardian, root: false),
+                  ListableTopicSerializer.new(post.topic, scope: system_guardian, root: false),
                 )
               obj["topic"] = topic_obj
               obj
@@ -417,8 +456,13 @@ module DiscourseAi
             in_attached_function do
               topic = Topic.find_by(id: topic_id)
               return nil if topic.nil?
-              guardian = Guardian.new(Discourse.system_user)
-              recursive_as_json(ListableTopicSerializer.new(topic, scope: guardian, root: false))
+              data =
+                recursive_as_json(
+                  ListableTopicSerializer.new(topic, scope: system_guardian, root: false),
+                )
+              data["tags"] = topic.tags.pluck(:name)
+              data["first_post_id"] = topic.first_post&.id
+              data
             end
           end,
         )
@@ -438,8 +482,7 @@ module DiscourseAi
 
               return nil if user.nil?
 
-              guardian = Guardian.new(Discourse.system_user)
-              recursive_as_json(UserSerializer.new(user, scope: guardian, root: false))
+              recursive_as_json(UserSerializer.new(user, scope: system_guardian, root: false))
             end
           end,
         )
@@ -597,12 +640,7 @@ module DiscourseAi
               return { error: "Missing required parameter: title" } if title.blank?
               return { error: "Missing required parameter: raw" } if raw.blank?
 
-              user =
-                if username.present?
-                  User.find_by(username: username)
-                else
-                  Discourse.system_user
-                end
+              user = resolve_user(username)
               return { error: "User not found: #{username}" } if user.nil?
 
               category =
@@ -623,7 +661,7 @@ module DiscourseAi
                     category: category.id,
                     tags: tags,
                     skip_validations: true,
-                    guardian: Guardian.new(Discourse.system_user),
+                    guardian: system_guardian,
                   )
 
                 post = post_creator.create
@@ -661,12 +699,7 @@ module DiscourseAi
               return { error: "Missing required parameter: raw" } if raw.blank?
 
               # Find the user
-              user =
-                if username.present?
-                  User.find_by(username: username)
-                else
-                  Discourse.system_user
-                end
+              user = resolve_user(username)
               return { error: "User not found: #{username}" } if user.nil?
 
               # Verify topic exists
@@ -681,7 +714,7 @@ module DiscourseAi
                     topic_id: topic_id,
                     reply_to_post_number: reply_to_post_number,
                     skip_validations: true,
-                    guardian: Guardian.new(Discourse.system_user),
+                    guardian: system_guardian,
                   )
 
                 post = post_creator.create
@@ -807,6 +840,58 @@ module DiscourseAi
             end
           end,
         )
+
+        mini_racer_context.attach(
+          "_discourse_set_tags",
+          ->(topic_id, tags, options) do
+            in_attached_function do
+              topic = Topic.find_by(id: topic_id)
+              return { error: "Topic not found" } if topic.nil?
+
+              options ||= {}
+              append = !!options["append"]
+              username = options["username"]
+
+              user = resolve_user(username)
+              return { error: "User not found: #{username}" } if user.nil?
+
+              if DiscourseTagging.tag_topic_by_names(
+                   topic,
+                   Guardian.new(user),
+                   tags,
+                   append: append,
+                 )
+                { success: true, tags: topic.tags.pluck(:name) }
+              else
+                { error: "Failed to apply tags", details: topic.errors.full_messages }
+              end
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_edit_post",
+          ->(post_id, raw, options) do
+            in_attached_function do
+              post = Post.find_by(id: post_id)
+              return { error: "Post not found" } if post.nil?
+
+              options ||= {}
+              edit_reason = options["edit_reason"]
+              username = options["username"]
+
+              user = resolve_user(username)
+              return { error: "User not found: #{username}" } if user.nil?
+
+              revisor = PostRevisor.new(post)
+              if revisor.revise!(user, { raw: raw, edit_reason: edit_reason })
+                { success: true, post_id: post.id }
+              else
+                { error: post.errors.full_messages.join(", ") }
+              end
+            end
+          end,
+        )
       end
 
       def attach_upload(mini_racer_context)
@@ -884,9 +969,17 @@ module DiscourseAi
                       for_private_message: @context.private_message,
                     ).create_for(@bot_user.id)
 
-                  { id: upload.id, short_url: upload.short_url, url: upload.url }
+                  if upload&.persisted?
+                    { "id" => upload.id, "short_url" => upload.short_url, "url" => upload.url }
+                  else
+                    error_msg =
+                      upload&.errors&.full_messages&.join(", ") || "Upload creation failed"
+                    { "error" => error_msg }
+                  end
                 end
               end
+            rescue => e
+              { "error" => e.message }
             end
           end,
         )

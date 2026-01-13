@@ -1,10 +1,7 @@
 import { registerDestructor } from "@ember/destroyable";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
+import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { bind } from "discourse/lib/decorators";
 import SwipeEvents from "discourse/lib/swipe-events";
 /**
@@ -98,10 +95,10 @@ export default class SwipeModifier extends Modifier {
   @bind
   onDidStartSwipe(event) {
     if (this.lockBody) {
-      disableBodyScroll(this.element);
+      lock(this.element);
     }
 
-    this.onDidStartSwipeCallback?.(event.detail);
+    this.onDidStartSwipeCallback?.(event.detail, event);
   }
 
   /**
@@ -109,9 +106,9 @@ export default class SwipeModifier extends Modifier {
    * @param {Event} event - The swipe end event.
    */
   @bind
-  onDidEndSwipe() {
+  onDidEndSwipe(event) {
     if (this.lockBody) {
-      enableBodyScroll(this.element);
+      unlock(this.element);
     }
 
     this.onDidEndSwipeCallback?.(event.detail);
@@ -133,7 +130,7 @@ export default class SwipeModifier extends Modifier {
   @bind
   onDidCancelSwipe(event) {
     if (this.lockBody) {
-      enableBodyScroll(this.element);
+      unlock(this.element);
     }
 
     this.onDidCancelSwipeCallback?.(event.detail);
@@ -163,7 +160,7 @@ export default class SwipeModifier extends Modifier {
     this._swipeEvents.removeTouchListeners();
 
     if (this.lockBody) {
-      enableBodyScroll(this.element);
+      unlock(this.element);
     }
   }
 }

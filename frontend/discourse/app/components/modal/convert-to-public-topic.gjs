@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
 
 export default class ConvertToPublicTopic extends Component {
   @service appEvents;

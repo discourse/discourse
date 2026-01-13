@@ -158,7 +158,7 @@ it:
       el:
         name: Greco
       en:
-        name: Inglese (Stati Uniti)
+        name: Inglese
       en_GB:
         name: Inglese (Regno Unito)
       es:
@@ -291,7 +291,6 @@ it:
     software_update_prompt:
       message: "Abbiamo aggiornato il sito. <span>Aggiorna la pagina</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
-    bootstrap_mode: "Per iniziare"
     back_button: "Indietro"
     welcome_banner:
       header:
@@ -357,7 +356,7 @@ it:
     joined: "Iscritto"
     admin_title: "Amministrazione"
     show_more: "mostra altro"
-    show_help: "opzioni"
+    show_help: "Opzioni"
     links: "Collegamenti"
     links_lowercase:
       one: "collegamento"
@@ -697,7 +696,7 @@ it:
       title: "Revisiona"
       topic: "Argomento:"
       filtered_topic: "Hai filtrato il contenuto revisionabile in un singolo Argomento"
-      filtered_user: "Utente"
+      filtered_user: "Utente contrassegnato"
       filtered_reviewed_by: "Rivisto da"
       show_all_topics: "mostra tutti gli argomenti"
       deleted_post: "(messaggio eliminato)"
@@ -748,7 +747,7 @@ it:
       replies:
         one: "%{count} risposta"
         other: "%{count} risposte"
-      edit: "Modifica"
+      edit: "Modifica Messaggio"
       save: "Salva"
       cancel: "Annulla"
       new_topic: "L'approvazione di questo elemento creerà un nuovo Argomento"
@@ -770,7 +769,6 @@ it:
           created_at: "Creato il"
           created_at_asc: "Creato il (inverso)"
         priority:
-          title: "Priorità Minima"
           any: "(qualsiasi)"
           low: "Bassa"
           medium: "Media"
@@ -836,7 +834,6 @@ it:
           noun: "messaggio"
       flagged_as: "Contrassegnato come"
       user_label: "Utente"
-      assigned_to: "Assegnato a"
       moderator_actions: "Azioni del moderatore"
       timeline_and_notes: "Cronologia e note"
       timeline:
@@ -847,19 +844,17 @@ it:
         claimed: "Rivendicato"
         claimed_by: "Rivendicato da %{username} · %{relativeDate}"
         reviewed: "Rivisto"
-        reviewed_by: "Rivisto da %{username} · %{relativeDate}"
         view_conversation: "visualizza PM"
         note_added: "Note del moderatore"
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
         no_events: "Nessun evento nella cronologia da visualizzare"
       notes:
-        add_note_description: "Visibile solo ai moderatori. Utilizza queste note per aggiungere contesto o prendere decisioni sulla revisione."
         add_note_button: "Aggiungi note"
         placeholder: "Scrivi qui le tue note..."
         chars_remaining: "%{count} caratteri rimasti"
         delete_note: "Elimina questa nota"
         delete: "Elimina"
-      new_topic_label: "Nuovo argomento"
+      topic_label: "Argomento"
       queued_user: "Utente in coda"
       posted_in: "Pubblicato in"
       flagged_user: "Utente contrassegnato"
@@ -874,11 +869,7 @@ it:
         flagged_by_users:
           one: "Segnalato da %{count} utente unico"
           other: "Segnalato da %{count} utenti diversi"
-        similar_posts: "Messaggi simili passati"
-        flagged_in_timeframe: "%{count} segnalati in precedenza"
-        user_activity: "Attività dell'utente"
         activities:
-          new_account: "nuovo account"
           trust_level: "livello di attendibilità: %{trustLevelName}"
           posts:
             one: "%{count} messaggio"
@@ -886,7 +877,6 @@ it:
         solution_marked: "Soluzione contrassegnata"
         topic_has_solution: "Questo argomento ha una soluzione"
         visibility: "Visibilità"
-        topic_unlisted: "Questo argomento non è elencato. Accessibile solo tramite link diretto, non è pubblico."
       help:
         moderation_guide: "Guida alla moderazione di Discourse"
         flag_priorities: "Gestione della reputazione degli utenti e delle priorità delle segnalazioni"
@@ -1038,9 +1028,7 @@ it:
           notification: Notifica
         email:
           title: "Email"
-          status: "Sincronizzate %{old_emails} / %{total_emails} email via IMAP."
           enable_smtp: "Abilita SMTP"
-          enable_imap: "Abilita IMAP"
           test_settings: "Prova le impostazioni"
           save_settings: "Salva Impostazioni"
           last_updated: "Ultimo aggiornamento:"
@@ -1049,14 +1037,7 @@ it:
           smtp_settings_valid: "Impostazioni SMTP valide."
           smtp_title: "SMTP"
           smtp_instructions: "Quando abiliti l'SMTP di gruppo, tutte le email in uscita dalla casella di posta del gruppo saranno inviate usando queste impostazioni SMTP, invece che tramite il server di posta configurato per le altre email inviate dal forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Altre impostazioni"
-          imap_instructions: 'Abilitando l''IMAP di gruppo, le e-mail vengono sincronizzate tra la casella di posta del gruppo e il server e la casella di posta IMAP forniti. Affinché l''IMAP possa essere abilitato, l''SMTP deve prima essere impostato con credenziali valide e verificate. Il nome utente e la password di posta elettronica utilizzati per SMTP saranno utilizzati anche per IMAP. Per ulteriori informazioni, consulta <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588"> l''annuncio della funzionalità su Discourse Meta</a>.'
-          imap_alpha_warning: "Attenzione: questa è una funzionalità in fase alfa. Solo Gmail è ufficialmente supportato. Gli utenti che la usano se ne assumono il rischio!"
-          imap_settings_valid: "Impostazioni IMAP valide."
-          smtp_disable_confirm: "Se disabiliti SMTP, tutte le impostazioni SMTP e IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
-          imap_disable_confirm: "Se disabiliti IMAP, tutte le impostazioni IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Continuare?"
-          imap_mailbox_not_selected: "Devi selezionare una casella di posta per questa configurazione IMAP, altrimenti non verrà sincronizzata nessuna casella di posta!"
+          additional_settings: "Altre impostazioni"
           prefill:
             title: "Precompila con impostazioni per:"
             gmail: "Gmail"
@@ -1071,9 +1052,6 @@ it:
             smtp_server: "Server SMTP"
             smtp_port: "Porta SMTP"
             smtp_ssl_mode: "Modalità SSL"
-            imap_server: "Server IMAP"
-            imap_port: "Porta IMAP"
-            imap_ssl: "Usa SSL per IMAP"
             username: "Nome utente"
             password: "Password"
           settings:
@@ -1082,10 +1060,6 @@ it:
             allow_unknown_sender_topic_replies_hint: "Consenti a mittenti sconosciuti di rispondere agli argomenti del gruppo. Se l'opzione è disabilitata, le risposte provenienti da indirizzi e-mail non invitati all'argomento causeranno la creazione di un nuovo argomento in cui saranno incluse."
             from_alias: "Da Alias"
             from_alias_hint: "Alias da usare come indirizzo di provenienza per l'invio di email SMTP di gruppo. Nota che questo potrebbe non essere supportato da tutti i provider di posta; consulta la documentazione del tuo provider di posta."
-          mailboxes:
-            synchronized: "Maibox sincronizzata"
-            none_found: "Nessuna mailbox trovata in questo account e-mail."
-            disabled: "Disabilitato"
         membership:
           title: Iscrizione
           access: Accesso
@@ -1309,7 +1283,6 @@ it:
         one: "Categorie (%{count} altra)…"
         other: "Categorie (altre %{count})…"
     ip_lookup:
-      title: Ricerca Indirizzo IP
       hostname: Nome host
       location: Località
       location_not_found: (sconosciuto)
@@ -1350,6 +1323,9 @@ it:
       new_private_message: "Nuovo Messaggio"
       private_message: "Messaggio"
       private_messages: "Messaggi"
+      upcoming_changes:
+        for_user:
+          enabled: "Abilitato?"
       user_notifications:
         filters:
           filter_by: "Filtra per"
@@ -2696,7 +2672,6 @@ it:
         title: "Traduzione del messaggio"
         select: "Seleziona la traduzione"
         save: "Salva la traduzione"
-        original_content: "Contenuto del messaggio originale"
         translation: "Traduzione"
         placeholder: "Inserisci qui la traduzione del messaggio..."
       group_mentioned_limit:
@@ -2808,6 +2783,8 @@ it:
       ulist_title: "Elenco puntato"
       list_item: "Elemento lista"
       toggle_direction: "Cambia direzione"
+      wrap_modal:
+        apply: "Applica"
       help: "Aiuto Inserimento Markdown"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       modal_ok: "OK"
@@ -2856,7 +2833,6 @@ it:
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
         toggle_unlisted:
           label: Attiva/disattiva non in elenco
-          desc: Argomenti non in elenco accessibili ai membri solo tramite link diretto
       reload: "Ricarica"
       ignore: "Ignora"
       image_alt_text:
@@ -2867,6 +2843,7 @@ it:
         zoom_out: "Riduci le dimensioni dell'immagine"
         zoom_in: "Aumenta le dimensioni dell'immagine"
         remove: "Rimuovi immagine"
+      image: "immagine"
       image_scale_button: "Ridimensiona l'immagine a %{percent}%"
       delete_image_button: Cancella immagine
       toggle_image_grid: Attiva/disattiva la griglia dell'immagine
@@ -3207,6 +3184,9 @@ it:
         reset_bump_dates: "Reimposta la date di riproposizione"
         defer: "Contrassegna come non letto"
         delete: "Elimina argomenti"
+        delete_topics_count:
+          one: "Cancella Argomento"
+          other: "Elimina argomenti"
         dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
         dismiss_read_with_selected:
@@ -3265,7 +3245,6 @@ it:
         progress:
           one: "Avanzamento: <strong>%{count}</strong> argomento"
           other: "Avanzamento: <strong>%{count}</strong> argomenti"
-        silent: "Esegui questa azione in silenzio."
         performing: "Esecuzione di operazioni in blocco. Attendere…"
         completed: "Operazioni in blocco completate correttamente."
       none:
@@ -3285,19 +3264,6 @@ it:
           unread: "Non è rimasto nulla da leggere... impressionante!"
           new_new: "Al momento non ci sono novità... torna presto a trovarci!"
           new: "Al momento non ci sono novità... torna presto a trovarci!"
-      bottom:
-        latest: "Non ci sono altri argomenti più recenti."
-        posted: "Non ci sono altri argomenti pubblicati."
-        read: "Non ci sono altri argomenti letti."
-        new: "Non ci sono altri argomenti nuovi."
-        unread: "Non ci sono altri argomenti non letti."
-        unseen: "Non ci sono altri argomenti non letti."
-        category: "Non ci sono altri argomenti nella categoria %{category}."
-        tag: "Non ci sono altri argomenti con l'etichetta %{tag}."
-        top: "Non ci sono altri argomenti popolari."
-        hot: "Non ci sono altri argomenti popolari."
-        bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
-        filter: "Non ci sono altri argomenti."
     topic_bulk_actions:
       dismiss:
         name: "Ignora"
@@ -3425,9 +3391,6 @@ it:
         other: "%{count} risposte, vai al primo messaggio"
       created_at: "Creazione: %{date}"
       bumped_at: "Più recente: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Sfoglia tutte le categorie</a> o <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Sfoglia tutte le categorie</a>, <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a> oppure guarda dall'inizio:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Sfoglia tutte le etichette</a> o <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a>."
       browse_latest_topics: "Sfoglia gli ultimi argomenti"
       suggest_create_topic: Pronto per <a href>iniziare una nuova conversazione?</a>
       jump_reply: "Passa alla posizione originale del messaggio"
@@ -3435,7 +3398,6 @@ it:
       jump_reply_button: "Vai al messaggio"
       deleted: "L'argomento è stato eliminato"
       slow_mode_update:
-        title: "Modalità lenta"
         select: "Gli utenti possono pubblicare in questo argomento solo una volta ogni:"
         description: "Per promuovere discussioni ponderate in argomenti in rapida evoluzione o controversi, gli utenti devono attendere prima di pubblicare nuovamente in questo argomento."
         enable: "Attiva"
@@ -3870,7 +3832,6 @@ it:
         post_language_selector:
           none: "Nessuna"
         edit_warning:
-          message: "Questo è un messaggio tradotto.<br><br> Vuoi modificare il messaggio originale in %{language} o modificare questa traduzione specifica?"
           action_original: "Modifica il messaggio originale"
           action_translation: "Modifica questa traduzione"
       errors:
@@ -4103,24 +4064,14 @@ it:
         description: "Richiedi che i nuovi argomenti abbiano etichette dai seguenti gruppi:"
         delete: "Cancella"
         add: "Aggiungi il gruppo di etichette richiesto"
-        placeholder: "seleziona un gruppo di etichette…"
+        placeholder: "Seleziona un gruppo di etichette…"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
-      delete: "Elimina Categoria"
-      create: "Crea Categoria"
       create_long: "Crea una nuova categoria"
-      save: "Salva Categoria"
-      slug: "Abbreviazione della categoria"
       slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
-      name: "Nome Categoria"
-      untitled: "Categoria senza titolo"
       description: "Descrizione"
-      logo: "Immagine Categoria"
-      logo_dark: "Immagine del logo della categoria Modalità scura"
       logo_description: "Proporzioni consigliate 1:1 con dimensione minima di 200px. Se lasciato vuoto, non verrà mostrata alcuna immagine."
-      background_image: "Immagine di sfondo della categoria"
-      background_image_dark: "Immagine di sfondo della categoria per il tema scuro"
       style: "Stili"
       background_color: "Colore"
       foreground_color: "Colore del testo"
@@ -4140,9 +4091,9 @@ it:
       color_placeholder: "Qualsiasi colore web"
       delete_confirm: "Vuoi cancellare questa categoria?"
       delete_error: "Si è verificato un errore durante la cancellazione della categoria."
-      list: "Elenca Categorie"
+      list: "Elenca le categorie"
       no_description: "Aggiungi una descrizione alla categoria."
-      change_in_category_topic: "Modifica Descrizione"
+      change_in_category_topic: "Modifica descrizione"
       already_used: "Questo colore è già stato usato in un'altra categoria."
       security: "Sicurezza"
       security_add_group: "Aggiungi un gruppo"
@@ -4173,23 +4124,15 @@ it:
       all_topics_wiki: "Rendi i nuovi argomenti automaticamente delle wiki"
       allow_unlimited_owner_edits_on_first_post: "Consenti al proprietario modifiche illimitate sul primo messaggio"
       subcategory_list_style: "Stile Lista Sottocategorie:"
-      sort_order: "Lista Argomenti Ordinata Per:"
-      default_view: "Lista Argomenti Predefinita:"
-      default_top_period: "Periodo Predefinito Argomenti Popolari:"
-      default_list_filter: "Filtro predefinito della lista:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
-      edit_permissions: "Modifica Permessi"
       reviewable_by_group: "Oltre che dal personale, i contenuti di questa categoria possono essere revisionati anche da:"
       review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutte le nuove risposte"
       this_year: "quest'anno"
       position: "Posizione nella pagina delle Categorie:"
-      default_position: "Posizione predefinita"
       position_disabled: "Le categorie verranno visualizzate in ordine di attività. Per controllare l'ordine delle categorie negli elenchi, abilita l'impostazione <a href='%{url}'>'posizioni di categoria fisse'</a>."
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
-      default_slow_mode: 'Attiva la "modalità lenta" per i nuovi argomenti in questa categoria.'
-      parent: "Categoria Superiore"
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
       auto_bump_cooldown_days: "Numero minimo di giorni prima di affrontare nuovamente lo stesso argomento:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
@@ -4211,18 +4154,14 @@ it:
           title: "Silenziato"
           description: "Non riceverai notifiche circa i nuovi argomenti in questa categoria, inoltre essi non appariranno tra i \"Più recenti\"."
       search_priority:
-        label: "Priorità della ricerca"
         options:
           normal: "Normale"
           ignore: "Ignora"
-          very_low: "Molto Bassa"
           low: "Bassa"
           high: "Alta"
-          very_high: "Molto Alta"
       sort_options:
         default: "predefinito"
         likes: "Mi piace"
-        op_likes: "\"Mi Piace\" del Messaggio Originale"
         views: "Visualizzazioni"
         posts: "Messaggi"
         activity: "Attività"
@@ -4242,8 +4181,7 @@ it:
         appearance: "Aspetto"
         email: "Email"
       list_filters:
-        all: "tutti gli argomenti"
-        none: "nessuna sottocategoria"
+        all: "Tutti gli argomenti"
       colors_disabled: "Non puoi selezionare i colori perché lo stile della categoria è impostato su 'none'."
     anonymous_flagging:
       title: "Segnala contenuti illegali"
@@ -4475,7 +4413,7 @@ it:
         title: "Popolari"
         help: "gli argomenti più attivi nell'ultimo anno, mese, settimana o giorno"
         all:
-          title: "Tutti"
+          title: "Sempre"
         yearly:
           title: "Annuale"
         quarterly:
@@ -4486,12 +4424,13 @@ it:
           title: "Settimanale"
         daily:
           title: "Giornaliero"
-        all_time: "Tutti"
+        all_time: "Sempre"
         this_year: "Anno"
         this_quarter: "Trimestre"
         this_month: "Mese"
         this_week: "Settimana"
         today: "Oggi"
+        custom: "Personalizzato"
     custom_homepage:
       admin_message: 'Uno dei tuoi argomenti ha abilitato il modificatore "custom_homepage", ma non invia alcun risultato al connettore [custom-homepage]. (Messaggio visibile solo agli amministratori del sito)'
     browser_update: 'Purtroppo, <a href="https://discourse.org/about#browser">il tuo browser non è supportato</a>. <a href="https://browsehappy.com">Passa a un browser supportato</a> per visualizzare contenuti avanzati, accedere e rispondere.'
@@ -4545,7 +4484,6 @@ it:
         go_to_unread_post: "%{shortcut} Vai al primo messaggio non letto"
       application:
         title: "Applicazione"
-        create: "%{shortcut} Crea un nuovo argomento"
         notifications: "%{shortcut} Apri notifiche"
         hamburger_menu: "%{shortcut} Apri il menu di navigazione"
         user_profile_menu: "%{shortcut} Apri menu utente"
@@ -4726,6 +4664,7 @@ it:
       upload_description: "Carica un file csv per creare numerose Etichette"
       upload_instructions: "Uno per riga, indicando opzionalmente un Gruppo di Etichette con il formato 'nome_etichetta,gruppo_etichetta'"
       upload_successful: "Etichette caricate con successo"
+      bulk_create_button: "Crea"
       delete_unused_confirmation:
         one: "%{count} etichetta sarà eliminata: %{tags}"
         other: "%{count} etichette saranno eliminate: %{tags}"
@@ -4759,18 +4698,13 @@ it:
           description: "Non riceverai alcuna notifica per nuovi Argomenti con questa Etichetta, e non compariranno nella pagina dei messaggi non letti."
       groups:
         back_btn: "Torna a tutte le etichette"
-        title: "Gruppi Etichette"
         about_heading: "Seleziona un gruppo di etichette o creane uno nuovo"
         about_heading_empty: "Crea un nuovo gruppo di etichette per iniziare"
         about_description: "I gruppi di etichette permettono di gestire i permessi per più etichette in un unico posto."
-        new: "Nuovo Gruppo"
-        new_title: "Crea nuovo gruppo"
-        edit_title: "Modifica gruppo di etichette"
         tags_label: "Etichette in questo gruppo"
         parent_tag_label: "Etichetta padre"
         parent_tag_description: "Le etichette di questo gruppo possono essere usate solo se è presente l'etichetta padre."
         one_per_topic_label: "Limita ad una sola etichetta per argomento in questo gruppo"
-        new_name: "Nuovo Gruppo Etichette"
         name_placeholder: "Nome"
         save: "Salva"
         delete: "Elimina"
@@ -4881,7 +4815,6 @@ it:
       tags_form_modal:
         title: "Modifica la navigazione delle etichette"
         filter_placeholder: "Filtra etichette"
-        no_tags: "Non ci sono etichette corrispondenti al termine specificato."
         subtitle:
           text: "e mostreremo automaticamente le etichette principali di questo sito"
       edit_navigation_modal_form:
@@ -5249,6 +5182,11 @@ it:
         enabled: "Abilitato"
         select_groups: "Seleziona gruppi…"
         preview: "Anteprima"
+        enabled_for_options:
+          everyone: "Chiunque"
+          staff: "Solo staff"
+        statuses:
+          experimental: "Sperimentale"
         impact_roles:
           admins: "Amministratori"
           moderators: "Moderatori"
@@ -5259,6 +5197,7 @@ it:
           disabled: "Disabilitati"
           impact_type_feature: "Funzionalità"
           impact_type_other: "Altri"
+          status_experimental: "Sperimentale"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -5295,6 +5234,11 @@ it:
           sub_pages:
             common_settings:
               title: "Impostazioni"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Scopri di più"
         logo:
           title: "Logo"
           header_description: "Configura i loghi e le icone utilizzati nel tuo sito"
@@ -5381,6 +5325,25 @@ it:
               other: "Hai aggiornato la dimensione predefinita del testo. Vuoi applicare questa modifica a %{count} utenti esistenti?"
             modal_yes: "Sì"
             modal_no: "No, applica solo da adesso in avanti"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Colore del testo"
+            page_visibility:
+              options:
+                top_menu_pages: "Pagine del menu principale"
+                all_pages: "Tutte le pagine"
+            location:
+              label: "Località"
+              options:
+                above_topic_content: "Sopra il contenuto dell'argomento"
+                below_site_header: "Sotto l'intestazione del sito"
+            text_section:
+              locale_label: "Lingua"
+            header_logged_in:
+              placeholder: "Rieccoti, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Ti diamo il benvenuto su %{site_name}!"
         navigation:
           title: "Navigazione"
           header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
@@ -7138,7 +7101,6 @@ it:
           success: "Riuscito"
           exists: "Già esistente"
           upload: "Aggiungi dal file"
-          upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
           case_sensitivity_label: "distingue fra maiuscole e minuscole"
           case_sensitivity_description: "Solo parole con maiuscole e minuscole corrispondenti"
           html_label: "HTML"
@@ -7230,10 +7192,7 @@ it:
             second: "Opzione 2"
             third: "Opzione 3"
         edit_category:
-          toggle_freeform: "modello di modulo disabilitato"
-          toggle_form_template: "modello di modulo abilitato"
           select_template: "Seleziona i modelli di modulo"
-          select_template_help: "Aggiungi/modifica modelli di modulo"
         errors:
           multiple_tags_not_allowed: 'Non puoi selezionare altre etichette da "%{tag_name}". Per evitare problemi, usa il modello di modulo'
       impersonate:
@@ -7430,7 +7389,6 @@ it:
           button: "Cancella tutti i messaggi"
           progress:
             title: "Avanzamento dell'eliminazione dei messaggi"
-            description: "Eliminazione dei messaggi…"
           confirmation:
             title: "Elimina tutti i messaggi di @%{username}"
             description: |
@@ -7749,16 +7707,12 @@ it:
             prompt: "Modificare questa impostazione potrebbe risultare in conseguenze rilevanti o comunque indesiderate per il sito. Intendi procedere?"
             confirm: "Sì, procedi"
           min_password_length:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           min_admin_password_length:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà tutti gli amministratore che modificheranno la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           password_unique_charactes:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           block_common_passwords:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
       badges:
         status: Stato
@@ -7793,6 +7747,9 @@ it:
         no_user_badges: "%{name} non ha ricevuto alcun distintivo."
         no_badges: Non ci sono distintivi da assegnare.
         none_selected: "Seleziona un distintivo per iniziare"
+        sections:
+          query: Query
+          settings: Impostazioni
         usage_heading: Utilizzo
         allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnato più volte
@@ -7967,73 +7924,4 @@ it:
           replace: "Sostituisci"
   wizard_js:
     wizard:
-      jump_in: "Buttati!"
-      finish: "Esci dalla configurazione"
-      back: "Indietro"
-      next: "Avanti"
-      configure_more: "Configura altro…"
-      step-text: "Intervallo"
-      step: "%{current} di %{total}"
-      upload: "Carica file"
-      uploading: "Caricamento…"
-      upload_error: "Spiacenti, c'è stato un errore caricando il file. Per favore, prova di nuovo."
-      staff_count:
-        one: "La tua comunità ha %{count} membro dello staff (sei tu)."
-        other: "La tua comunità ha %{count} membri dello staff, te compreso."
-      invites:
-        add_user: "aggiungi"
-        none_added: "Non hai invitato nessuno a far parte dello staff. Vuoi proseguire lo stesso?"
-        roles:
-          admin: "Amministratore"
-          moderator: "Moderatore"
-          regular: "Utente Normale"
-      homepage_choices:
-        custom:
-          label: "Personalizzato"
-          description: "Visualizza una homepage focalizzata su %{type} con gli utenti che atterrano su %{landingPage}"
-        style_type:
-          categories: "categoria"
-          topics: "argomento"
-      top_menu_items:
-        new: "Nuovo"
-        unread: "Non letti"
-        top: "Popolari"
-        latest: "Più recenti"
-        hot: "Novità"
-        categories: "Categorie"
-        unseen: "Non visualizzati"
-        read: "Letti"
-        bookmarks: "Segnalibri"
-      previews:
-        topic_title: "Quali libri stai leggendo?"
-        share_button: "Condividi"
-        reply_button: "Rispondi"
-        topic_preview: "Anteprima argomento"
-        homepage_preview: "Anteprima della home page"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "tutte le categorie"
-        topic_titles:
-          what_books: "Quali libri stai leggendo?"
-          what_movies: "Quali film hai visto di recente?"
-          random_fact: "Un fatto a caso di oggi"
-          tv_show: "Consiglia una serie"
-          what_hobbies: "Quali sono i tuoi hobby?"
-          what_music: "Cosa stai ascoltando in questo momento?"
-          funniest_thing: "La cosa più divertente che hai visto oggi"
-          share_art: "Mostra la tua arte!"
-        topic_ops:
-          what_books: "A tutti noi piace leggere, usiamo questo argomento per\ncondividere le nostre letture attuali o recenti. A me piacciono i \nfantasy e ho riletto Il Signore degli Anelli per la centesima volta.\nE tu?\n"
-        category_descriptions:
-          icebreakers: "Impara a conoscere gli altri membri della tua community ponendo domande divertenti."
-          news: "Discuti le ultime notizie ed eventi."
-          site_feedback: "Condividi i tuoi pensieri sulla community e suggerisci miglioramenti."
-        category_names:
-          icebreakers: "Rompighiaccio"
-          news: "Notizie"
-          site_feedback: "Feedback sito"
-        table_headers:
-          topic: "Argomento"
-          replies: "Risposte"
-          views: "Visualizzazioni"
-          activity: "Attività"
+      jump_in: "Andiamo!"

@@ -4,8 +4,9 @@ module DiscourseAi
   module Completions
     module Endpoints
       class OpenAi < Base
-        def self.can_contact?(model_provider)
-          %w[open_ai azure groq].include?(model_provider)
+        def self.can_contact?(llm_model)
+          %w[open_ai azure groq].include?(llm_model.provider) &&
+            !llm_model.url.to_s.include?("/v1/responses")
         end
 
         def normalize_model_params(model_params)
@@ -49,7 +50,7 @@ module DiscourseAi
           cancel_manager: nil,
           &blk
         )
-          @disable_native_tools = dialect.disable_native_tools?
+          @native_tool_support = dialect.native_tool_support?
           super
         end
 
@@ -80,13 +81,7 @@ module DiscourseAi
         def prepare_payload(prompt, model_params, dialect)
           payload = default_options.merge(model_params).merge(messages: prompt)
 
-          if reasoning_effort
-            if responses_api?
-              payload.merge!({ reasoning: { effort: reasoning_effort } })
-            else
-              payload.merge!({ reasoning_effort: reasoning_effort })
-            end
-          end
+          payload.merge!({ reasoning_effort: reasoning_effort }) if reasoning_effort
 
           if @streaming_mode
             payload[:stream] = true
@@ -103,37 +98,18 @@ module DiscourseAi
                 if dialect.tool_choice == :none
                   payload[:tool_choice] = "none"
                 else
-                  if responses_api?
-                    payload[:tool_choice] = { type: "function", name: dialect.tool_choice }
-                  else
-                    payload[:tool_choice] = {
-                      type: "function",
-                      function: {
-                        name: dialect.tool_choice,
-                      },
-                    }
-                  end
+                  payload[:tool_choice] = {
+                    type: "function",
+                    function: {
+                      name: dialect.tool_choice,
+                    },
+                  }
                 end
               end
             end
           end
 
-          convert_payload_to_responses_api!(payload) if responses_api?
-
           payload
-        end
-
-        def responses_api?
-          return @responses_api if defined?(@responses_api)
-          @responses_api = llm_model.lookup_custom_param("enable_responses_api")
-        end
-
-        def convert_payload_to_responses_api!(payload)
-          payload[:input] = payload.delete(:messages)
-          completion_tokens = payload.delete(:max_completion_tokens) || payload.delete(:max_tokens)
-          payload[:max_output_tokens] = completion_tokens if completion_tokens
-          # not supported in responses api
-          payload.delete(:stream_options)
         end
 
         def prepare_request(payload)
@@ -154,7 +130,7 @@ module DiscourseAi
         def final_log_update(log)
           log.request_tokens = processor.prompt_tokens if processor.prompt_tokens
           log.response_tokens = processor.completion_tokens if processor.completion_tokens
-          log.cached_tokens = processor.cached_tokens if processor.cached_tokens
+          log.cache_read_tokens = processor.cache_read_tokens if processor.cache_read_tokens
         end
 
         def decode(response_raw)
@@ -180,18 +156,13 @@ module DiscourseAi
         end
 
         def xml_tools_enabled?
-          !!@disable_native_tools
+          !@native_tool_support
         end
 
         private
 
         def processor
-          @processor ||=
-            if responses_api?
-              OpenAiResponsesMessageProcessor.new(partial_tool_calls: partial_tool_calls)
-            else
-              OpenAiMessageProcessor.new(partial_tool_calls: partial_tool_calls)
-            end
+          @processor ||= OpenAiMessageProcessor.new(partial_tool_calls: partial_tool_calls)
         end
       end
     end

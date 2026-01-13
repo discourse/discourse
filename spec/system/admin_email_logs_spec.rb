@@ -72,6 +72,47 @@ RSpec.describe "Admin viewing email logs" do
         expect(row).to have_email_type(email_log.email_type)
       end
     end
+
+    context "when bounced email has bounce key" do
+      before { SiteSetting.reply_by_email_address = "replies+%{reply_key}@example.com" }
+
+      fab!(:bounced_email_log_with_key) do
+        Fabricate(:email_log, bounced: true, email_type: "signup", bounce_key: SecureRandom.uuid)
+      end
+
+      fab!(:incoming_email) do
+        bounce_key = bounced_email_log_with_key.bounce_key
+        bounce_address = "replies+verp-#{bounce_key}@example.com"
+        Fabricate(:incoming_email, to_addresses: bounce_address, error: "550 5.1.1 User unknown")
+      end
+
+      it "displays info button and opens modal with bounce details" do
+        admin_email_logs_page.visit_bounced
+
+        row = admin_email_logs_page.row_for(bounced_email_log_with_key)
+
+        expect(row).to have_info_button
+
+        details_modal = row.open_incoming_email
+
+        expect(details_modal).to be_open
+        expect(details_modal).to have_error_message(incoming_email.error)
+      end
+    end
+
+    context "when bounced email does not have bounce key" do
+      fab!(:bounced_email_log_without_key) do
+        Fabricate(:email_log, bounced: true, email_type: "signup", bounce_key: nil)
+      end
+
+      it "does not display info button" do
+        admin_email_logs_page.visit_bounced
+
+        row = admin_email_logs_page.row_for(bounced_email_log_without_key)
+
+        expect(row).to have_no_info_button
+      end
+    end
   end
 
   describe "when viewing skipped email logs" do

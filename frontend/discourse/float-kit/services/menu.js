@@ -3,7 +3,7 @@ import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import DMenuInstance from "float-kit/lib/d-menu-instance";
+import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 
 export default class Menu extends Service {
   registeredMenus = new TrackedSet();

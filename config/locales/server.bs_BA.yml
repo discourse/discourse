@@ -384,6 +384,7 @@ bs_BA:
       every_month: "svaki mjesec"
       every_six_months: "svakih šest mjeseci"
   user_api_key:
+    deny: "Odustani"
     read: "čitaj"
     otp_confirmation:
       confirm_title: Nastavi ka %{site_name}
@@ -695,8 +696,6 @@ bs_BA:
     tl3_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for trust level 3."
     tl3_promotion_min_duration: "The minimum number of days that a promotion to trust level 3 lasts before a user can be demoted back to trust level 2."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
-    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
-    min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
@@ -731,7 +730,6 @@ bs_BA:
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
-    email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
@@ -831,8 +829,10 @@ bs_BA:
     queued_by_staff:
       title: "Post treba odobrenje"
     welcome_user:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošli na %{site_name}!"
     welcome_invite:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošli na %{site_name}!"
     tl2_promotion_message:
       subject_template: "Čestitamo na povišenju vašeg nivoa povjerenja!"
@@ -1006,9 +1006,11 @@ bs_BA:
       button: "Registriraj"
     resend_email:
       title: "Pošalji ponovo email aktivacije"
+  dev_mode:
+    enter: "Naprijed"
   wizard:
     step:
-      privacy:
+      setup:
         fields:
           login_required:
             label: "Vidljivost"
@@ -1017,21 +1019,12 @@ bs_BA:
                 label: "Javno"
               private:
                 label: "Privatno"
-      styling:
-        fields:
-          styling_preview:
-            label: "Pregled"
-          homepage_style:
-            choices:
-              latest:
-                label: "Zadnje"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     github:
       closed: "zatvoreno"
+      status_date:
+        approved: "approved"
+        closed: "zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'

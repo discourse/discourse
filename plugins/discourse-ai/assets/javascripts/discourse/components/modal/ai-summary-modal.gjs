@@ -6,18 +6,18 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { not } from "truth-helpers";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import htmlClass from "discourse/helpers/html-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { shortDateNoYear } from "discourse/lib/formatter";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 import AiSummarySkeleton from "../../components/ai-summary-skeleton";
 import {
   isAiCreditLimitError,
@@ -135,12 +135,21 @@ export default class AiSummaryModal extends Component {
     this.loading = true;
     this.summarizedOn = null;
 
-    return ajax(url).then((data) => {
-      if (data?.ai_topic_summary?.summarized_text) {
-        data.done = true;
-        this._updateSummary(data);
-      }
-    });
+    return ajax(url)
+      .then((data) => {
+        if (data?.ai_topic_summary?.summarized_text) {
+          data.done = true;
+          this._updateSummary(data);
+        }
+      })
+      .catch((error) => {
+        this.loading = false;
+        if (isAiCreditLimitError(error)) {
+          popupAiCreditLimitError(error);
+        } else {
+          throw error;
+        }
+      });
   }
 
   @bind

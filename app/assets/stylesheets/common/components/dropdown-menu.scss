@@ -16,10 +16,20 @@
         :focus-visible {
           background: var(--danger-low);
         }
+        color: var(--danger);
 
         .d-icon {
           color: var(--danger);
         }
+      }
+    }
+
+    &.--selected .btn {
+      background: var(--d-selected);
+
+      &:hover,
+      :focus-visible {
+        background: var(--d-selected-hover);
       }
     }
   }

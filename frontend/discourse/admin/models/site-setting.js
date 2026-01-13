@@ -2,14 +2,14 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { alias } from "@ember/object/computed";
 import BufferedProxy from "ember-buffered-proxy/proxy";
-import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { bind } from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
 import {
   DEFAULT_USER_PREFERENCES,
   SITE_SETTING_REQUIRES_CONFIRMATION_TYPES,
-} from "admin/lib/constants";
-import SettingObjectHelper from "admin/lib/setting-object-helper";
+} from "discourse/admin/lib/constants";
+import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
 const AUTO_REFRESH_ON_SAVE = [
   "logo",
@@ -27,7 +27,7 @@ export default class SiteSetting extends EmberObject {
       if (!categories[s.category]) {
         categories[s.category] = [];
       }
-      categories[s.category].pushObject(SiteSetting.create(s));
+      categories[s.category].push(SiteSetting.create(s));
     });
     return Object.keys(categories).map(function (n) {
       return {

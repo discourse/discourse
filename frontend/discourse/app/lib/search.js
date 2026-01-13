@@ -1,6 +1,7 @@
 import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import HashtagAutocompleteResults from "discourse/components/hashtag-autocomplete-results";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import { ajax } from "discourse/lib/ajax";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
@@ -17,7 +18,6 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import categoryTagAutocomplete from "./autocomplete/category-tag";
 
 const translateResultsCallbacks = [];
 const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
@@ -103,10 +103,12 @@ export function translateResults(results, opts) {
 
   results.tags = results.tags
     .map(function (tag) {
-      const tagName = escapeExpression(tag.name);
+      const id = tag.id;
+      const name = escapeExpression(tag.name);
       return EmberObject.create({
-        id: tagName,
-        url: getURL("/tag/" + tagName),
+        id,
+        name,
+        url: getURL("/tag/" + name),
       });
     })
     .filter((item) => item != null);
@@ -219,12 +221,24 @@ export function getSearchKey(args) {
   );
 }
 
+// Patterns that indicate a valid search even without a traditional search term
+const SEARCH_SYNTAX_PATTERNS =
+  /^(l|r|t)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
+
 export function isValidSearchTerm(searchTerm, siteSettings) {
-  if (searchTerm) {
-    return searchTerm.trim().length >= siteSettings.min_search_term_length;
-  } else {
+  if (!searchTerm) {
     return false;
   }
+
+  const trimmed = searchTerm.trim();
+
+  // If the search contains filter syntax, it's valid regardless of length
+  if (SEARCH_SYNTAX_PATTERNS.test(trimmed)) {
+    return true;
+  }
+
+  // Otherwise, apply minimum length requirement
+  return trimmed.length >= siteSettings.min_search_term_length;
 }
 
 export function applySearchAutocomplete(inputElement, siteSettings, owner) {
@@ -234,8 +248,8 @@ export function applySearchAutocomplete(inputElement, siteSettings, owner) {
     inputElement,
     autocompleteHandler,
     {
-      template: categoryTagAutocomplete,
-      key: "#",
+      component: HashtagAutocompleteResults,
+      key: HashtagAutocompleteResults.TRIGGER_KEY,
       autoSelectFirstSuggestion: false,
       transformComplete: (obj) => obj.text,
       dataSource: (term) => searchCategoryTag(term, siteSettings),
@@ -274,10 +288,10 @@ export function updateRecentSearches(currentUser, term) {
   if (recentSearches.includes(term)) {
     recentSearches = recentSearches.filter((item) => item !== term);
   } else if (recentSearches.length === MAX_RECENT_SEARCHES) {
-    recentSearches.popObject();
+    recentSearches.pop();
   }
 
-  recentSearches.unshiftObject(term);
+  recentSearches.unshift(term);
   currentUser.set("recent_searches", recentSearches);
 }
 

@@ -268,10 +268,8 @@ tr_TR:
       view_more:
         one: "%{count} mesaj daha görüntüle"
         other: "%{count} mesaj daha görüntüle"
-      your_chat_settings: "sohbet e-postası sıklığı tercihi"
   unsubscribe:
     chat_summary:
-      select_title: "Özet sohbet e-posta sıklığını şu şekilde ayarla:"
       never: Asla
       when_away: Sadece uzaktayken
   category:

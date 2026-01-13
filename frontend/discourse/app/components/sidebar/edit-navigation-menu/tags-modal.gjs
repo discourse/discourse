@@ -6,12 +6,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import { gt, has, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { gt, has, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import EditNavigationMenuModal from "./modal";
 
@@ -35,25 +35,32 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
   }
 
   async #loadTags() {
-    this.tagsLoading = true;
-
-    const findArgs = {};
-
-    if (this.filter) {
-      findArgs.filter = this.filter;
-    }
-
-    if (this.onlySelected) {
-      findArgs.only_tags = [...this.selectedTags].join(",");
-    } else if (this.onlyUnselected) {
-      findArgs.exclude_tags = [...this.selectedTags].join(",");
-    }
-
     try {
-      const tags = await this.store.findAll("listTag", findArgs);
-      this.tags = tags;
-    } catch (error) {
-      popupAjaxError(error);
+      this.tagsLoading = true;
+
+      const findArgs = {};
+
+      if (this.filter) {
+        findArgs.filter = this.filter;
+      }
+
+      if (this.onlySelected) {
+        if (this.selectedTags.size === 0) {
+          this.tags = [];
+          return;
+        }
+
+        findArgs.only_tags = [...this.selectedTags].join(",");
+      } else if (this.onlyUnselected) {
+        findArgs.exclude_tags = [...this.selectedTags].join(",");
+      }
+
+      try {
+        const tags = await this.store.findAll("listTag", findArgs);
+        this.tags = tags;
+      } catch (error) {
+        popupAjaxError(error);
+      }
     } finally {
       this.tagsLoading = false;
       this.disableFiltering = false;

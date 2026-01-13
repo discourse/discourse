@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
 import discourseTag from "discourse/helpers/discourse-tag";
 import discourseComputed from "discourse/lib/decorators";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
 @classNames("tag-row")
 export default class TagRow extends SelectKitRowComponent {
@@ -13,13 +13,13 @@ export default class TagRow extends SelectKitRowComponent {
   <template>
     {{#if this.isTag}}
       {{discourseTag
-        this.rowValue
+        this.rowName
         noHref=true
         description=this.item.description
         count=this.item.count
       }}
     {{else}}
-      <span class="name">{{this.item.name}}</span>
+      <span class="name">{{this.rowName}}</span>
     {{/if}}
   </template>
 }

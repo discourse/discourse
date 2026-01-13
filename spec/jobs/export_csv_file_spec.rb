@@ -407,7 +407,6 @@ RSpec.describe Jobs::ExportCsvFile do
     )
 
     export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
-    puts export_user.pretty_inspect
 
     expect(export_user["custom field 1 (custom user field)"]).to eq("Answer custom 1")
     expect(export_user["custom field 2 (custom user field)"]).to eq("true")

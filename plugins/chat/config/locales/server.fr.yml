@@ -268,10 +268,8 @@ fr:
       view_more:
         one: "Voir %{count} message supplémentaire"
         other: "Voir %{count} messages supplémentaires"
-      your_chat_settings: "préférence de fréquence des e-mails de discussion"
   unsubscribe:
     chat_summary:
-      select_title: "Définissez la fréquence des e-mails de résumé de discussion sur :"
       never: Jamais
       when_away: Seulement en cas d'absence
   category:

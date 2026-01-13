@@ -1,5 +1,5 @@
-import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import { and, not } from "discourse/truth-helpers";
 
 const PostMetaDataSelectPost = <template>
   <div class="select-posts">

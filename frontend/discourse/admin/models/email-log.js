@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
+import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
-import AdminUser from "admin/models/admin-user";
 
 export default class EmailLog extends EmberObject {
   static create(attrs) {

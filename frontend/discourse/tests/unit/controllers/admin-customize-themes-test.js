@@ -1,6 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import Theme from "admin/models/theme";
+import Theme from "discourse/admin/models/theme";
 
 module("Unit | Controller | admin-customize-themes", function (hooks) {
   setupTest(hooks);

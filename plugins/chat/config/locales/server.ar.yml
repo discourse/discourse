@@ -348,10 +348,8 @@ ar:
         few: "عرض %{count} رسائل إضافية"
         many: "عرض %{count} رسائل إضافية"
         other: "عرض %{count} رسائل إضافية"
-      your_chat_settings: "تفضيل مدى تكرار رسائل البريد الإلكتروني للدردشة"
   unsubscribe:
     chat_summary:
-      select_title: "حدِّد مدى تكرار الرسائل الإلكترونية لملخص الدردشة:"
       never: أبدًا
       when_away: عندما أكون غائبًا فقط
   category:

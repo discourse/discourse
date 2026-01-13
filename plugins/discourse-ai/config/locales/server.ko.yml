@@ -11,6 +11,10 @@ ko:
     emotion_neutral:
       title: "\U0001F610 중립국"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "사용자 정의"
     ai_bot:
       tool_summary:
         search: "검색"

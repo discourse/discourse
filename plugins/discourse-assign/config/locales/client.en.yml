@@ -36,7 +36,6 @@ en:
       assign_post_to: "Assigned #%{post_number} to %{username}"
       # assign_post_to_multiple used in list form, example: "Assigned topic to username0, [#2 to username1], [#10 to username2]"
       assign_post_to_multiple: "#%{post_number} to %{username}"
-      assigned_to_w_ellipsis: "Assigned to..."
       unassign:
         title: "Unassign"
         title_w_ellipsis: "Unassign..."

@@ -13,6 +13,8 @@ export default class ShowController extends Controller {
 
   @tracked loadingMore = false;
   @tracked noMoreBadges = false;
+
+  @tracked userBadgesGrantCount;
   @trackedArray userBadges = null;
 
   queryParams = ["username"];
@@ -41,12 +43,11 @@ export default class ShowController extends Controller {
     }
   }
 
-  @discourseComputed("username", "model.grant_count", "userBadges.grant_count")
-  grantCount(username, modelCount, userCount) {
-    return username ? userCount : modelCount;
+  get grantCount() {
+    return this.username ? this.userBadgesGrantCount : this.model.grant_count;
   }
 
-  @discourseComputed("model.grant_count", "userBadges.grant_count")
+  @discourseComputed("model.grant_count", "userBadgesGrantCount")
   othersCount(modelCount, userCount) {
     return modelCount - userCount;
   }
@@ -56,12 +57,11 @@ export default class ShowController extends Controller {
     return this.siteSettings.enable_badges && hasTitleBadges && hasBadge;
   }
 
-  @discourseComputed("noMoreBadges", "grantCount", "userBadges.length")
-  canLoadMore(noMoreBadges, grantCount, userBadgeLength) {
-    if (noMoreBadges) {
+  get canLoadMore() {
+    if (this.noMoreBadges) {
       return false;
     }
-    return grantCount > (userBadgeLength || 0);
+    return this.grantCount > (this.userBadges?.length || 0);
   }
 
   @discourseComputed("user", "model.grant_count")

@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import MultiSelect from "select-kit/components/multi-select";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 
 const AiToolSelector = <template>
   <MultiSelect

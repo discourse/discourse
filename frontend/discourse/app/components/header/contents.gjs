@@ -1,11 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
 import HeaderSearch from "./header-search";
 import HomeLogo from "./home-logo";
@@ -14,8 +12,6 @@ import TopicInfo from "./topic/info";
 
 export default class Contents extends Component {
   @service site;
-  @service currentUser;
-  @service siteSettings;
   @service header;
   @service router;
   @service navigationMenu;
@@ -103,16 +99,6 @@ export default class Contents extends Component {
 
       {{#if @topicInfoVisible}}
         <TopicInfo @topicInfo={{@topicInfo}} />
-      {{else if
-        (and
-          this.siteSettings.bootstrap_mode_enabled
-          this.currentUser.staff
-          this.site.desktopView
-        )
-      }}
-        <div class="d-header-mode">
-          <BootstrapModeNotice />
-        </div>
       {{/if}}
 
       {{#if this.showHeaderSearch}}

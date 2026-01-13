@@ -3,12 +3,12 @@ import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   MAIN_COLLECTION,
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 import CreateColorRow from "./create-color-row";
 import SelectedChoice from "./selected-choice";
 import SelectedChoiceColor from "./selected-choice-color";

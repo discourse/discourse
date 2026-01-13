@@ -10,6 +10,7 @@ ar:
       logs:
         staff_actions:
           actions:
+            update_automation: تحديث الأتمتة
             delete_automation: حذف الأتمتة
     discourse_automation:
       title: الأتمتة
@@ -62,13 +63,17 @@ ar:
             label: النص الأساسي
           delay:
             label: التأخير (بالدقائق)
-          prefers_encrypt:
-            label: يشفِّر الرسائل الشخصية إذا كانت متاحة
         group:
           label: المجموعة
         text:
           label: النص
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: الفئات
+            tags:
+              label: الوسوم
         not_found: تعذَّر العثور على المشغِّل `%{trigger}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
         user_badge_granted:
           fields:
@@ -426,6 +431,8 @@ ar:
           fields:
             custom_field_name:
               label: "اسم الحقل المخصَّص للمستخدم"
+        set_topic_timer:
+          title: تعيين مؤقِّت للموضوع
       unnamed_automation: "أتمتة دون اسم"
       models:
         script:

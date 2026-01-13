@@ -1,6 +1,6 @@
 import icon from "discourse/helpers/d-icon";
+import ComboBoxSelectBoxHeaderComponent from "discourse/select-kit/components/combo-box/combo-box-header";
 import { i18n } from "discourse-i18n";
-import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class ChatChannelChooserHeader extends ComboBoxSelectBoxHeaderComponent {

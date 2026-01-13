@@ -30,6 +30,14 @@ describe DiscourseTopicVoting do
     expect(user0.reached_voting_limit?).to eq(true)
   end
 
+  it "doesn't allow users to vote if their trust level vote limit is 0" do
+    SiteSetting.topic_voting_tl1_vote_limit = 0
+    user0.update!(trust_level: 1)
+
+    expect(user0.vote_limit_0?).to eq(true)
+    expect(user0.reached_voting_limit?).to eq(true)
+  end
+
   context "with two topics" do
     let(:users) { [user0, user1, user2, user3, user4, user5] }
 

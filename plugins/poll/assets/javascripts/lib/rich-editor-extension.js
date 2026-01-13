@@ -1,3 +1,5 @@
+import { buildBBCodeAttrs } from "discourse/lib/text";
+
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -83,11 +85,8 @@ const extension = {
   },
   serializeNode: {
     poll(state, node) {
-      const attrs = Object.entries(node.attrs)
-        .map(([key, value]) => (value ? ` ${key}="${value}"` : ""))
-        .join("");
-
-      state.write(`[poll${attrs}]\n`);
+      const attrs = buildBBCodeAttrs(node.attrs);
+      state.write(`[poll${attrs ? ` ${attrs}` : ""}]\n`);
       state.renderContent(node);
       state.write("[/poll]\n\n");
     },

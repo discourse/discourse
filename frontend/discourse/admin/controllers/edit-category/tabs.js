@@ -5,8 +5,11 @@ import { and } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
+import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
@@ -24,16 +27,17 @@ const FIELD_LIST = [
 ];
 
 export default class EditCategoryTabsController extends Controller {
+  @service currentUser;
   @service dialog;
   @service site;
   @service router;
 
   @tracked breadcrumbCategories = this.site.get("categoriesList");
+  @trackedArray panels = [];
 
   selectedTab = "general";
   saving = false;
   deleting = false;
-  panels = [];
   showTooltip = false;
   createdCategory = false;
   expandedMenu = false;
@@ -109,38 +113,74 @@ export default class EditCategoryTabsController extends Controller {
     return !transition.targetName.startsWith("editCategory.tabs");
   }
 
+  _wouldLoseAccess(category = this.model) {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    const permissions = category.permissions;
+    if (!permissions?.length) {
+      return false;
+    }
+
+    const userGroupIds = new Set(this.currentUser.groups.map((g) => g.id));
+
+    return !permissions.some(
+      (p) =>
+        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
+    );
+  }
+
   @action
-  saveCategory(data) {
+  async saveCategory(data) {
     if (this.validators.some((validator) => validator())) {
       return;
     }
 
     this.model.setProperties(data);
+
+    const lostAccess = this._wouldLoseAccess();
+
+    if (lostAccess) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("category.errors.self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     this.set("saving", true);
 
-    this.model
-      .save()
-      .then((result) => {
-        if (!this.model.id) {
-          const updatedModel = this.site.updateCategory(result.category);
-          updatedModel.setupGroupsAndPermissions();
-          this.router.transitionTo(
-            "editCategory",
-            Category.slugFor(updatedModel)
-          );
-        }
-        // force a reload of the category list to track changes to style type
-        this.breadcrumbCategories = this.site.categoriesList.map((c) =>
-          c.id === this.model.id ? this.model : c
+    try {
+      const result = await this.model.save();
+      const updatedModel = this.site.updateCategory(result.category);
+      updatedModel.setupGroupsAndPermissions();
+
+      if (lostAccess) {
+        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
+
+      this.set("saving", false);
+
+      if (!this.model.id) {
+        this.router.transitionTo(
+          "editCategory",
+          Category.slugFor(updatedModel)
         );
-      })
-      .catch((error) => {
-        popupAjaxError(error);
-        this.model.set("parent_category_id", undefined);
-      })
-      .finally(() => {
-        this.set("saving", false);
-      });
+      }
+
+      // ensure breadcrumbs contain the updated category model
+      this.breadcrumbCategories = this.site.categoriesList.map((c) =>
+        c.id === this.model.id ? updatedModel : c
+      );
+    } catch (error) {
+      this.set("saving", false);
+      popupAjaxError(error);
+      this.model.set("parent_category_id", undefined);
+    }
   }
 
   @action

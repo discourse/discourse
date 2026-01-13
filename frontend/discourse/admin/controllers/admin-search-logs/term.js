@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
+import { DEFAULT_PERIOD } from "discourse/admin/controllers/admin-search-logs/index";
 import { i18n } from "discourse-i18n";
-import { DEFAULT_PERIOD } from "admin/controllers/admin-search-logs/index";
 
 export default class AdminSearchLogsTermController extends Controller {
   loading = false;

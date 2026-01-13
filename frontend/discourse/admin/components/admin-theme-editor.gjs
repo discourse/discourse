@@ -8,12 +8,12 @@ import { LinkTo } from "@ember/routing";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { gt, lte } from "truth-helpers";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
+import { gt, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const JS_DEFAULT_VALUE = `import { apiInitializer } from "discourse/lib/api";

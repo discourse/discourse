@@ -18,8 +18,8 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
+import ComposerActions from "discourse/select-kit/components/composer-actions";
 import { i18n } from "discourse-i18n";
-import ComposerActions from "select-kit/components/composer-actions";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
@@ -75,7 +75,6 @@ export default class ComposerActionTitle extends Component {
     if (
       this.currentUser &&
       this.siteSettings.content_localization_enabled &&
-      this.currentUser.can_localize_content &&
       allowedActions.includes(this.model.action)
     ) {
       return true;

@@ -538,6 +538,49 @@ RSpec.describe SearchController do
         )
       end
     end
+
+    describe "with content localization" do
+      fab!(:localized_post) do
+        post = Fabricate(:post, locale: "en", cooked: "<p>Original EN</p>")
+        Fabricate(:post_localization, post: post, locale: "ja", cooked: "<p>Translated JA</p>")
+        post
+      end
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "en"
+      end
+
+      context "when show_original cookie is not set" do
+        it "returns translated blurb in search results" do
+          with_search_indexer_enabled { SearchIndexer.index(localized_post.topic, force: true) }
+
+          get "/search.json", params: { q: localized_post.topic.title }
+
+          expect(response.status).to eq(200)
+          body = response.parsed_body
+          expect(body["posts"]).to be_present
+          cooked_or_blurb = body["posts"].first["blurb"] || body["posts"].first["cooked"]
+          expect(cooked_or_blurb).to include("Translated JA").or include("Original EN")
+        end
+      end
+
+      context "when show_original cookie is set" do
+        before { cookies[ContentLocalization::SHOW_ORIGINAL_COOKIE] = "true" }
+
+        it "returns original blurb in search results" do
+          with_search_indexer_enabled { SearchIndexer.index(localized_post.topic, force: true) }
+
+          get "/search.json", params: { q: localized_post.topic.title }
+
+          expect(response.status).to eq(200)
+          body = response.parsed_body
+          expect(body["posts"]).to be_present
+          cooked_or_blurb = body["posts"].first["blurb"] || body["posts"].first["cooked"]
+          expect(cooked_or_blurb).to include("Original EN")
+        end
+      end
+    end
   end
 
   context "with search priority" do

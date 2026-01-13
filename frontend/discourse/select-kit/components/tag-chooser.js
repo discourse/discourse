@@ -4,11 +4,11 @@ import { attributeBindings, classNames } from "@ember-decorators/component";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 import SelectKitRow from "./select-kit/select-kit-row";
 import TagChooserRow from "./tag-chooser-row";
 
@@ -20,10 +20,14 @@ import TagChooserRow from "./tag-chooser-row";
   limit: null,
   allowAny: "canCreateTag",
   maximum: "maximumTagCount",
+  valueProperty: "name",
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent {
   @service tagUtils;
+
+  valueProperty = "name";
+  nameProperty = "name";
 
   blockedTags = null;
   excludeSynonyms = false;
@@ -150,14 +154,14 @@ export default class TagChooser extends MultiSelectComponent {
 
     if (this.blockedTags) {
       results = results.filter((result) => {
-        return !this.blockedTags.includes(result.id);
+        return !this.blockedTags.includes(result.name);
       });
     }
 
     if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.id > b.id);
+      results = results.sort((a, b) => a.name > b.name);
     }
 
-    return uniqueItemsFromArray(results, "id");
+    return uniqueItemsFromArray(results, "name");
   }
 }

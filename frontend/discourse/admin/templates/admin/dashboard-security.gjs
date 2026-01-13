@@ -1,5 +1,5 @@
+import AdminReport from "discourse/admin/components/admin-report";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import AdminReport from "admin/components/admin-report";
 
 export default <template>
   <div class="sections">

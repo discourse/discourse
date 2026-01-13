@@ -1,17 +1,21 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import ImagesUploader from "discourse/admin/components/images-uploader";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
-import ImagesUploader from "admin/components/images-uploader";
 
 export default class UploadedImageList extends Component {
-  @tracked
+  @trackedArray
   images = this.args.model.value?.length
     ? this.args.model.value.split("|")
     : [];
@@ -19,12 +23,12 @@ export default class UploadedImageList extends Component {
   @action
   remove(url, event) {
     event.preventDefault();
-    this.images.removeObject(url);
+    removeValueFromArray(this.images, url);
   }
 
   @action
   uploadDone({ url }) {
-    this.images.addObject(url);
+    addUniqueValueToArray(this.images, url);
   }
 
   @action

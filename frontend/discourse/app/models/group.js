@@ -340,11 +340,6 @@ export default class Group extends RestModel {
       smtp_port: this.smtp_port,
       smtp_ssl_mode: this.smtp_ssl_mode,
       smtp_enabled: this.smtp_enabled,
-      imap_server: this.imap_server,
-      imap_port: this.imap_port,
-      imap_ssl: this.imap_ssl,
-      imap_mailbox_name: this.imap_mailbox_name,
-      imap_enabled: this.imap_enabled,
       email_username: this.email_username,
       email_from_alias: this.email_from_alias,
       email_password: this.email_password,
@@ -439,7 +434,9 @@ export default class Group extends RestModel {
       data: { offset, filters },
     }).then((results) => {
       return EmberObject.create({
-        logs: results["logs"].map((log) => GroupHistory.create(log)),
+        logs: new TrackedArray(
+          results["logs"].map((log) => GroupHistory.create(log))
+        ),
         all_loaded: results["all_loaded"],
       });
     });

@@ -152,3 +152,5 @@ hu:
       random_assign:
         title: "Véletlenszerű hozzárendelés"
         description: "Véletlenszerűen rendeljen témákat egy csoporthoz"
+      set_topic_timer:
+        title: "Téma időzítőjének beállítása"

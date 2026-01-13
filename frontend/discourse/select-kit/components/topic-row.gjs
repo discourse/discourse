@@ -2,7 +2,7 @@ import { classNames } from "@ember-decorators/component";
 import TopicStatus from "discourse/components/topic-status";
 import boundCategoryLink from "discourse/helpers/bound-category-link";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
 @classNames("topic-row")
 export default class TopicRow extends SelectKitRowComponent {

@@ -1,35 +1,28 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import { not, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import CountI18n from "discourse/components/count-i18n";
-import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import EmptyTopicFilter from "discourse/components/empty-topic-filter";
-import FooterMessage from "discourse/components/footer-message";
 import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TopPeriodButtons from "discourse/components/top-period-buttons";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import List from "discourse/components/topic-list/list";
-import basePath from "discourse/helpers/base-path";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
-import { i18n } from "discourse-i18n";
-import PeriodChooser from "select-kit/components/period-chooser";
+import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import { or } from "discourse/truth-helpers";
 
 export default class DiscoveryTopics extends Component {
-  @service composer;
   @service documentTitle;
   @service currentUser;
   @service topicTrackingState;
@@ -107,7 +100,7 @@ export default class DiscoveryTopics extends Component {
       return this.topicTrackingState.countUnread({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
-        tagId: this.args.tag?.id,
+        tagId: this.args.tag?.name,
       });
     } else {
       return 0;
@@ -121,7 +114,7 @@ export default class DiscoveryTopics extends Component {
       return this.topicTrackingState.countNew({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
-        tagId: this.args.tag?.id,
+        tagId: this.args.tag?.name,
       });
     } else {
       return 0;
@@ -130,53 +123,6 @@ export default class DiscoveryTopics extends Component {
 
   get showTopicPostBadges() {
     return !this.new || this.currentUser?.new_new_view_enabled;
-  }
-
-  get footerMessage() {
-    const topicsLength = this.args.model.get("topics.length");
-    if (!this.allLoaded) {
-      return;
-    }
-
-    const filterSegments = (this.args.model.get("filter") || "").split("/");
-    const lastFilterSegment = filterSegments.at(-1);
-    const newOrUnreadFilter =
-      lastFilterSegment === "new" || lastFilterSegment === "unread";
-    const { category, tag } = this.args;
-    if (category) {
-      // We have a different custom display for the empty new + unread filter education.
-      if (topicsLength === 0 && newOrUnreadFilter) {
-        return;
-      }
-
-      return i18n("topics.bottom.category", {
-        category: category.name,
-      });
-    } else if (tag) {
-      // We have a different custom display for the empty new + unread filter education.
-      if (topicsLength === 0 && newOrUnreadFilter) {
-        return;
-      }
-
-      return i18n("topics.bottom.tag", {
-        tag: tag.id,
-      });
-    } else {
-      if (topicsLength === 0) {
-        // We have a different custom display for the empty new + unread filter education.
-        if (newOrUnreadFilter) {
-          return;
-        }
-
-        return i18n(`topics.none.${lastFilterSegment}`, {
-          category: filterSegments[1],
-        });
-      } else {
-        return i18n(`topics.bottom.${lastFilterSegment}`, {
-          category: filterSegments[1],
-        });
-      }
-    }
   }
 
   get showEmptyFilterEducationInFooter() {
@@ -264,6 +210,14 @@ export default class DiscoveryTopics extends Component {
       @incomingCount={{this.topicTrackingState.incomingCount}}
       @bulkSelectHelper={{@bulkSelectHelper}}
     >
+      {{#if this.renderNewListHeaderControls}}
+        <NewListHeaderControlsWrapper
+          @current={{@model.params.subset}}
+          @newRepliesCount={{this.newRepliesCount}}
+          @newTopicsCount={{this.newTopicsCount}}
+          @changeNewListSubset={{@changeNewListSubset}}
+        />
+      {{/if}}
       {{#if this.top}}
         <div class="top-lists">
           <PeriodChooser
@@ -297,16 +251,6 @@ export default class DiscoveryTopics extends Component {
           </div>
         {{/if}}
       {{/if}}
-
-      {{#if this.renderNewListHeaderControls}}
-        <NewListHeaderControlsWrapper
-          @current={{@model.params.subset}}
-          @newRepliesCount={{this.newRepliesCount}}
-          @newTopicsCount={{this.newTopicsCount}}
-          @changeNewListSubset={{@changeNewListSubset}}
-        />
-      {{/if}}
-
       <span>
         <PluginOutlet
           @name="before-topic-list"
@@ -377,56 +321,18 @@ export default class DiscoveryTopics extends Component {
             @dismissRead={{@dismissRead}}
           />
 
-          <FooterMessage @message={{this.footerMessage}}>
-            <:messageDetails>
-              {{#if @tag}}
-                {{htmlSafe
-                  (i18n "topic.browse_all_tags_or_latest" basePath=(basePath))
-                }}
-              {{else if this.latest}}
-                {{#if @category.canCreateTopic}}
-                  <DiscourseLinkedText
-                    @action={{fn
-                      this.composer.openNewTopic
-                      (hash category=@category)
-                    }}
-                    @text="topic.suggest_create_topic"
-                  />
-                {{/if}}
-              {{else if this.top}}
-                {{htmlSafe
-                  (i18n
-                    "topic.browse_all_categories_latest_or_top"
-                    basePath=(basePath)
-                  )
-                }}
-                <TopPeriodButtons
-                  @period={{@period}}
-                  @action={{@changePeriod}}
-                />
-              {{else if (not (or this.new this.unread))}}
-                {{htmlSafe
-                  (i18n
-                    "topic.browse_all_categories_latest" basePath=(basePath)
-                  )
-                }}
-              {{/if}}
-            </:messageDetails>
-            <:afterMessage>
-              {{#if this.showEmptyFilterEducationInFooter}}
-                <EmptyTopicFilter
-                  @newFilter={{this.new}}
-                  @unreadFilter={{this.unread}}
-                  @trackingCounts={{hash
-                    newTopics=this.newTopicsCount
-                    newReplies=this.newRepliesCount
-                  }}
-                  @changeNewListSubset={{@changeNewListSubset}}
-                  @newListSubset={{@model.params.subset}}
-                />
-              {{/if}}
-            </:afterMessage>
-          </FooterMessage>
+          {{#if this.showEmptyFilterEducationInFooter}}
+            <EmptyTopicFilter
+              @newFilter={{this.new}}
+              @unreadFilter={{this.unread}}
+              @trackingCounts={{hash
+                newTopics=this.newTopicsCount
+                newReplies=this.newRepliesCount
+              }}
+              @changeNewListSubset={{@changeNewListSubset}}
+              @newListSubset={{@model.params.subset}}
+            />
+          {{/if}}
         </PluginOutlet>
       {{/if}}
     </footer>

@@ -3,7 +3,7 @@ import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
+import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 
 export default class Tooltip extends Service {
   registeredTooltips = new TrackedSet();

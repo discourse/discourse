@@ -65,6 +65,8 @@ module DiscoursePostEvent
     end
 
     def set_next_date
+      return if closed
+
       next_date_result = calculate_next_date
 
       return event_dates.update_all(finished_at: Time.current) if next_date_result.nil?
@@ -78,6 +80,8 @@ module DiscoursePostEvent
     end
 
     def set_topic_bump
+      return if closed
+
       date = nil
 
       return if reminders.blank? || starts_at.nil?
@@ -110,32 +114,21 @@ module DiscoursePostEvent
 
     def starts_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
-
-      date =
-        if association(:event_dates).loaded?
-          pending = event_dates.select { |d| d.finished_at.nil? }
-          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
-        else
-          event_dates.where(finished_at: nil).order(:starts_at).last ||
-            event_dates.order(:updated_at, :id).last
-        end
-
-      date&.starts_at || original_starts_at
+      current_event_date&.starts_at || original_starts_at
     end
 
     def ends_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+      current_event_date&.ends_at || original_ends_at
+    end
 
-      date =
-        if association(:event_dates).loaded?
-          pending = event_dates.select { |d| d.finished_at.nil? }
-          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
-        else
-          event_dates.where(finished_at: nil).order(:starts_at).last ||
-            event_dates.order(:updated_at, :id).last
-        end
-
-      date&.ends_at || original_ends_at
+    def current_event_date
+      if association(:event_dates).loaded?
+        pending = event_dates.select { |d| d.finished_at.nil? }
+        pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+      else
+        event_dates.current_first.first
+      end
     end
 
     def on_going_event_invitees

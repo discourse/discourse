@@ -4,8 +4,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import { eq } from "discourse/truth-helpers";
 
 export default class ChatUpload extends Component {
   @service siteSettings;
@@ -62,7 +62,8 @@ export default class ChatUpload extends Component {
   }
 
   get videoSourceUrl() {
-    const baseUrl = this.args.upload.url;
+    const baseUrl =
+      this.args.upload.optimized_video?.url ?? this.args.upload.url;
     return this.capabilities.isIOS || this.capabilities.isSafari
       ? `${baseUrl}#t=0.001`
       : baseUrl;

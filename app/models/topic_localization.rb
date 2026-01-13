@@ -10,6 +10,19 @@ class TopicLocalization < ActiveRecord::Base
   validates :fancy_title, presence: true
   validates :localizer_user_id, presence: true
   validates :locale, uniqueness: { scope: :topic_id }
+
+  def update_excerpt(cooked: nil)
+    return if cooked.blank?
+
+    excerpt =
+      Post.excerpt(
+        cooked,
+        SiteSetting.topic_excerpt_maxlength,
+        strip_links: true,
+        strip_images: true,
+      )
+    update_column(:excerpt, excerpt)
+  end
 end
 
 # == Schema Information

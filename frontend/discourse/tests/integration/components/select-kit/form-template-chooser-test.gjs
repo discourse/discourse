@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import FormTemplateChooser from "select-kit/components/form-template-chooser";
 
 module(
   "Integration | Component | select-kit/form-template-chooser",

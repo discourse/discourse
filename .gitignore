@@ -25,11 +25,6 @@
 /public/uploads
 /public/images/emoji
 
-# Ignore the default SQLite database and db dumps
-*.sql
-*.sql.gz
-!/spec/fixtures/**/*.sql
-/db/*.sqlite3
 /db/schema_cache.yml
 
 # Plugins except for the bundled ones
@@ -59,6 +54,8 @@
 !/plugins/discourse-graphviz
 !/plugins/discourse-rss-polling
 !/plugins/discourse-math
+/plugins/discourse-math/public/*/katex
+/plugins/discourse-math/public/*/mathjax
 !/plugins/discourse-chat-integration
 !/plugins/discourse-data-explorer
 !/plugins/discourse-post-voting
@@ -77,6 +74,7 @@
 !/plugins/discourse-templates
 !/plugins/discourse-ai
 !/plugins/discourse-cakeday
+!/plugins/discourse-rewind
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -94,6 +92,10 @@
 /.vscode/*
 !/.vscode/extensions.json
 !/.vscode/*.sample
+
+# Same for Zed config
+/.zed/*
+!/.zed/*.sample
 
 # Front-end
 dist
@@ -121,7 +123,15 @@ openapi/*
 # direnv.net
 .direnv
 
+# Types
+frontend/discourse-types/declarations
+*.tsbuildinfo
+
 # discourse-ai evals
 /plugins/discourse-ai/evals/cases
 /plugins/discourse-ai/evals/log
 /plugins/discourse-ai/config/eval-llms.local.yml
+
+# AI customization
+/.claude
+/.cursor

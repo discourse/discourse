@@ -1,4 +1,4 @@
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 
 const UserListInput = <template>
   <@field.Custom id={{@field.id}}>

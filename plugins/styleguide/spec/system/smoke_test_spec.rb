@@ -17,15 +17,13 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/atoms/otp", title: "OTP" },
       { href: "/atoms/date-time-inputs", title: "Date/Time inputs" },
       { href: "/atoms/dropdowns", title: "Dropdowns" },
-      { href: "/atoms/topic-link", title: "Topic Link" },
-      { href: "/atoms/topic-statuses", title: "Topic Statuses" },
+      { href: "/atoms/topic-link", title: "Topic Link and Status" },
     ],
     "MOLECULES" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
       { href: "/molecules/categories", title: "Categories" },
       { href: "/molecules/char-counter", title: "Character Counter" },
       { href: "/molecules/empty-state", title: "Empty State" },
-      { href: "/molecules/footer-message", title: "Footer Message" },
       { href: "/molecules/menus", title: "Menus" },
       { href: "/molecules/navigation-bar", title: "Navigation Bar" },
       { href: "/molecules/navigation-stacked", title: "Navigation Stacked" },
@@ -42,6 +40,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
     "ORGANISMS" => [
       { href: "/organisms/post", title: "Post" },
       { href: "/organisms/post-list", title: "Post List" },
+      { href: "/organisms/post-oneboxes", title: "Post Oneboxes" },
       { href: "/organisms/topic-map", title: "Topic Map" },
       { href: "/organisms/topic-footer-buttons", title: "Topic Footer Buttons" },
       { href: "/organisms/topic-list", title: "Topic List" },
@@ -52,7 +51,6 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },
       { href: "/organisms/more-topics", title: "More Topics" },
-      { href: "/organisms/user-about", title: "User About Box" },
     ],
   }
 
@@ -113,31 +111,34 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
 
     sections.each do |section, items|
       items.each do |item|
-        xit "renders the #{section}: #{item[:title]} page correctly" do
+        it "renders the #{section}: #{item[:title]} page correctly" do
+          # TODO: fix chat and more-topics pages
+          skip_pages = %w[/organisms/chat /organisms/more-topics]
+          skip "Skipping smoke test for #{item[:href]} page" if skip_pages.include?(item[:href])
+
           visit "/styleguide/#{item[:href]}"
-
-          errors =
-            page
-              .driver
-              .browser
-              .logs
-              .get(:browser)
-              .select { |log| log.level == "SEVERE" }
-              .reject do |error|
-                ["Failed to load resource", "Manifest", "PresenceChannelNotFound"].any? do |msg|
-                  error.message.include?(msg)
-                end
-              end
-
-          if errors.present?
-            errors.each do |error|
-              expect(error.message).to be_nil, "smoke test failed with error: #{error.message}"
-            end
-          end
 
           expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
         end
       end
+    end
+  end
+
+  context "when the styleguide is only enabled for staff" do
+    before { SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:staff] }
+
+    it "denies access to regular users" do
+      user = Fabricate(:user)
+      sign_in(user)
+      visit "/styleguide"
+      expect(page).to have_content("That page doesn’t exist or is private.")
+    end
+
+    it "allows access to staff users" do
+      moderator = Fabricate(:moderator)
+      sign_in(moderator)
+      visit "/styleguide"
+      expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
     end
   end
 end

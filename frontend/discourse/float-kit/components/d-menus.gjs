@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DHeadlessMenu from "float-kit/components/d-headless-menu";
+import DHeadlessMenu from "discourse/float-kit/components/d-headless-menu";
 
 export default class DMenus extends Component {
   @service menu;

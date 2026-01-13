@@ -1,8 +1,8 @@
+import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
+import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
-import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
 
 export default <template>
   <DPageHeader

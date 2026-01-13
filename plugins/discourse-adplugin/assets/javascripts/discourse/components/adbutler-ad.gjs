@@ -151,6 +151,16 @@ export default class AdbutlerAd extends AdComponent {
     return this.isNthPost(parseInt(this.siteSettings.adbutler_nth_post, 10));
   }
 
+  buildImpressionPayload() {
+    return {
+      ad_plugin_impression: {
+        ad_type: this.site.ad_types.adbutler,
+        ad_plugin_house_ad_id: null,
+        placement: this.placement,
+      },
+    };
+  }
+
   <template>
     {{#if this.showAd}}
       <div id={{this.divId}} class={{this.className}}></div>

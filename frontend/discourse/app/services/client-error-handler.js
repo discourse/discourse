@@ -1,10 +1,8 @@
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
-import $ from "jquery";
 import { getAndClearUnhandledThemeErrors } from "discourse/app";
 import { bind } from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
-import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import identifySource, {
   consolePrefix,
@@ -56,7 +54,6 @@ export default class ClientErrorHandlerService extends Service {
     };
 
     reportToConsole(error, source);
-    reportToLogster(source.name, error);
 
     const message = i18n("themes.broken_theme_alert");
     this.displayErrorNotice(message, source);
@@ -103,19 +100,6 @@ export default class ClientErrorHandlerService extends Service {
     alertDiv.innerHTML = html;
     this.rootElement.prepend(alertDiv);
   }
-}
-
-function reportToLogster(name, error) {
-  const data = {
-    message: `${name} theme/component is throwing errors:\n${error.name}: ${error.message}`,
-    stacktrace: error.stack,
-  };
-
-  // TODO: To be moved out into a logster-provided lib
-  $.ajax(getURL("/logs/report_js_error"), {
-    data,
-    type: "POST",
-  });
 }
 
 function reportToConsole(error, source) {

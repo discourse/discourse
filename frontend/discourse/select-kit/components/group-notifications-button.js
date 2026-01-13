@@ -1,9 +1,9 @@
 import { classNames } from "@ember-decorators/component";
-import NotificationOptionsComponent from "select-kit/components/notifications-button";
+import NotificationOptionsComponent from "discourse/select-kit/components/notifications-button";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 
 @classNames("group-notifications-button")
 @selectKitOptions({

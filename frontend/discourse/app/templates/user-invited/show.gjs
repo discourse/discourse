@@ -8,6 +8,7 @@ import EmptyState from "discourse/components/empty-state";
 import LoadMore from "discourse/components/load-more";
 import SvgEnvelopeZero from "discourse/components/svg/envelope-zero";
 import TextField from "discourse/components/text-field";
+import DMenu from "discourse/float-kit/components/d-menu";
 import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
@@ -17,7 +18,6 @@ import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 export default <template>
   {{bodyClass "user-invites-page"}}
@@ -310,7 +310,7 @@ export default <template>
                                       invite
                                     }}
                                     @icon="trash-can"
-                                    class="btn-transparent btn-danger"
+                                    class="btn-transparent --danger"
                                     @label={{if
                                       invite.destroyed
                                       "user.invited.removed"

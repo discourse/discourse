@@ -17,7 +17,7 @@ export { buildBBCodeAttrs } from "discourse/lib/text";
  *
  * @param {RegExp} regexp
  * @param {import("prosemirror-model").MarkType} markType
- * @param {Function} getAttrs
+ * @param {Function} [getAttrs]
  *
  * @returns {import("prosemirror-inputrules").InputRule}
  */

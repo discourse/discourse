@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ListSetting from "discourse/select-kit/components/list-setting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import ListSetting from "select-kit/components/list-setting";
 
 module("Integration | Component | select-kit/list-setting", function (hooks) {
   setupRenderingTest(hooks);

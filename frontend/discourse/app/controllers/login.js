@@ -179,6 +179,11 @@ export default class LoginPageController extends Controller {
   }
 
   @action
+  secondFactorTokenChanged(token) {
+    this.secondFactorToken = token;
+  }
+
+  @action
   showNotActivated(props) {
     this.modal.show(NotActivatedModal, { model: props });
   }
@@ -310,15 +315,9 @@ export default class LoginPageController extends Controller {
   createAccount() {
     // This makes the UX a little bit nicer by auto-filling the email/username when switching from /login to /signup
     if (this.loginName?.indexOf("@") > 0) {
-      this.send("showCreateAccount", {
-        accountEmail: this.loginName,
-        accountUsername: "",
-      });
+      this.send("showCreateAccount", { accountEmail: this.loginName });
     } else {
-      this.send("showCreateAccount", {
-        accountEmail: "",
-        accountUsername: this.loginName,
-      });
+      this.send("showCreateAccount", { accountUsername: this.loginName });
     }
   }
 }

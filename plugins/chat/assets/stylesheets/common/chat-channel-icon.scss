@@ -1,5 +1,40 @@
+@use "lib/viewport";
+
 .chat-channel-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-shrink: 0;
+  font-size: var(--font-up-1);
+  color: var(--primary-medium);
+  position: relative;
+
+  // separate otherwise it is used on the channel titles too
+  .direct-message-channels &,
+  .starred-channels & {
+    width: var(--channel-list-avatar-size);
+    height: var(--channel-list-avatar-size);
+
+    // emoji and icon styling on mobile = smaller + background circle for equalizing with avatars in mixed lists
+    &.--emoji,
+    &.--icon {
+      @include viewport.until(sm) {
+        background: var(--primary-low);
+        border-radius: 100%;
+
+        .emoji,
+        .d-icon:not(.chat-channel-icon__restricted-category-icon) {
+          width: calc(var(--channel-list-avatar-size) * 0.5);
+          height: calc(var(--channel-list-avatar-size) * 0.5);
+        }
+      }
+    }
+  }
+
+  .chat-message-creator & {
+    justify-content: center;
+    width: 24px;
+  }
 
   &.--users-count {
     display: flex;
@@ -29,24 +64,6 @@
     }
   }
 
-  &.--custom-icon img {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-  }
-
-  &.--category-badge {
-    color: var(--primary-medium);
-    display: flex;
-    font-size: var(--font-up-1);
-    position: relative;
-
-    .chat-message-creator & {
-      justify-content: center;
-      width: 24px;
-    }
-  }
-
   &__restricted-category-icon {
     background-color: var(--secondary);
     position: absolute;
@@ -56,6 +73,20 @@
     height: 0.5rem;
     width: 0.5rem;
     right: -0.5rem;
+
+    .direct-message-channels &,
+    .starred-channels & {
+      width: calc(var(--channel-list-avatar-size) * 0.35);
+      height: calc(var(--channel-list-avatar-size) * 0.35);
+      right: calc(var(--channel-list-avatar-size) * -0.15);
+    }
     top: -0.1rem;
+
+    .chat-channel-title & {
+      width: 40%;
+      height: 40%;
+      right: -30%;
+      top: -20%;
+    }
   }
 }

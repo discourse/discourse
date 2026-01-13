@@ -1,9 +1,9 @@
 import { classNames } from "@ember-decorators/component";
-import CategoryChooserComponent from "select-kit/components/category-chooser";
+import CategoryChooserComponent from "discourse/select-kit/components/category-chooser";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 
 @classNames("search-advanced-category-chooser")
 @selectKitOptions({

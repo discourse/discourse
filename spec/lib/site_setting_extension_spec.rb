@@ -558,6 +558,58 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "datetime setting" do
+    before do
+      settings.setting(:datetime_setting, "2024-01-01T00:00:00Z", type: "datetime")
+      settings.refresh!
+    end
+
+    after :each do
+      settings.remove_override!(:datetime_setting)
+    end
+
+    it "stores valid datetime values" do
+      settings.datetime_setting = "2024-12-29T15:30:00Z"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00Z")
+    end
+
+    it "stores valid datetime values with timezone offset" do
+      settings.datetime_setting = "2024-12-29T15:30:00+05:30"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00+05:30")
+    end
+
+    it "stores valid datetime values with milliseconds" do
+      settings.datetime_setting = "2024-12-29T15:30:00.123Z"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00.123Z")
+    end
+
+    it "rejects date-only strings" do
+      expect { settings.datetime_setting = "2024-12-29" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "rejects datetime without timezone" do
+      expect { settings.datetime_setting = "2024-12-29T15:30:00" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "rejects invalid datetime strings" do
+      expect { settings.datetime_setting = "not a datetime" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect { settings.datetime_setting = "2024-13-01T15:30:00Z" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "allows blank values" do
+      settings.datetime_setting = ""
+      expect(settings.datetime_setting).to eq("")
+    end
+  end
+
   describe "set for an invalid setting name" do
     it "raises an error" do
       settings.setting(:test_setting, 77)
@@ -879,6 +931,92 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
+    describe "objects settings with uploads" do
+      it "should hydrate upload IDs to URLs" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
+
+        schema = {
+          name: "section",
+          properties: {
+            title: {
+              type: "string",
+            },
+            image: {
+              type: "upload",
+            },
+            links: {
+              type: "objects",
+              schema: {
+                name: "link",
+                properties: {
+                  link_image: {
+                    type: "upload",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          {
+            "title" => "Section 1",
+            "image" => upload1.id,
+            "links" => [{ "link_image" => upload3.id }],
+          },
+          { "title" => "Section 2", "image" => upload2.id },
+        ].to_json
+        settings.refresh!
+
+        setting = settings.all_settings.last
+        value = JSON.parse(setting[:value])
+
+        expect(value[0]["image"]).to eq(upload1.url)
+        expect(value[1]["image"]).to eq(upload2.url)
+        expect(value[0]["title"]).to eq("Section 1")
+        expect(value[1]["title"]).to eq("Section 2")
+        expect(value[0]["links"][0]["link_image"]).to eq(upload3.url)
+      end
+
+      it "should batch uploads query" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
+
+        schema = {
+          name: "section",
+          properties: {
+            title: {
+              type: "string",
+            },
+            image: {
+              type: "upload",
+            },
+          },
+        }
+
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          { "title" => "Section 1", "image" => upload1.id },
+          { "title" => "Section 2", "image" => upload2.id },
+          { "title" => "Section 3", "image" => upload3.id },
+        ].to_json
+        settings.refresh!
+
+        queries =
+          track_sql_queries do
+            setting = settings.all_settings.last
+            JSON.parse(setting[:value])
+          end
+
+        upload_queries = queries.select { |q| q.include?("SELECT") && q.include?("uploads") }
+        expect(upload_queries.length).to eq(1)
+      end
+    end
+
     context "with the filter_allowed_hidden argument" do
       it "includes the specified hidden settings only if include_hidden is true" do
         result =
@@ -1109,7 +1247,7 @@ RSpec.describe SiteSettingExtension do
           {
             enable_upload_debug_mode: {
               impact: "other,developers",
-              status: :pre_alpha,
+              status: :experimental,
               impact_type: "other",
               impact_role: "developers",
             },
@@ -1306,6 +1444,11 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.personal_message_enabled_groups_map).to eq([1, 2])
     end
 
+    it "handles splitting category_list settings" do
+      SiteSetting.digest_suppress_categories = "3|4"
+      expect(SiteSetting.digest_suppress_categories_map).to eq([3, 4])
+    end
+
     it "handles splitting compact list settings" do
       SiteSetting.markdown_linkify_tlds = "com|net"
       expect(SiteSetting.markdown_linkify_tlds_map).to eq(%w[com net])
@@ -1336,10 +1479,10 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
     end
 
-    it "handles null values for settings" do
-      SiteSetting.ga_universal_auto_link_domains = nil
-      SiteSetting.pm_tags_allowed_for_groups = nil
-      SiteSetting.exclude_rel_nofollow_domains = nil
+    it "handles blank values for settings" do
+      SiteSetting.ga_universal_auto_link_domains = ""
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      SiteSetting.exclude_rel_nofollow_domains = ""
 
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])

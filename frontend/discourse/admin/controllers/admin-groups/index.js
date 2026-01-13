@@ -1,9 +1,12 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 
 export default class AdminGroupsIndexController extends Controller {
+  @service store;
+
   queryParams = ["order", "asc", "filter", "type"];
   order = null;
   asc = null;
@@ -21,7 +24,19 @@ export default class AdminGroupsIndexController extends Controller {
     discourseDebounce(this, this._debouncedFilter, filter, INPUT_DELAY);
   }
 
-  _debouncedFilter(filter) {
+  async _debouncedFilter(filter) {
     this.set("filter", filter);
+    await this._fetchGroups();
+  }
+
+  async _fetchGroups() {
+    const params = {
+      order: this.order,
+      asc: this.asc,
+      filter: this.filter,
+      type: this.type,
+    };
+    const groups = await this.store.findAll("group", params);
+    this.set("model.groups", groups);
   }
 }

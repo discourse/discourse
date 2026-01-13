@@ -1,11 +1,11 @@
 import { hash } from "@ember/helper";
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 
 module(
   "Integration | Component | select-kit/mini-tag-chooser",

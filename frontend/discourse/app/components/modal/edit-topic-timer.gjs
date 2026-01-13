@@ -8,14 +8,15 @@ import DModal from "discourse/components/d-modal";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
+import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import { i18n } from "discourse-i18n";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const CLOSE_AFTER_LAST_POST_STATUS_TYPE = "close_after_last_post";
 export const OPEN_STATUS_TYPE = "open";
 export const PUBLISH_TO_CATEGORY_STATUS_TYPE = "publish_to_category";
 export const DELETE_STATUS_TYPE = "delete";
+export const DELETE_AFTER_LAST_POST_STATUS_TYPE = "delete_after_last_post";
 export const BUMP_TYPE = "bump";
 export const DELETE_REPLIES_TYPE = "delete_replies";
 
@@ -68,6 +69,10 @@ export default class EditTopicTimer extends Component {
       types.push({
         id: DELETE_STATUS_TYPE,
         name: i18n("topic.auto_delete.title"),
+      });
+      types.push({
+        id: DELETE_AFTER_LAST_POST_STATUS_TYPE,
+        name: i18n("topic.auto_delete_after_last_post.title"),
       });
     }
 
@@ -160,7 +165,10 @@ export default class EditTopicTimer extends Component {
 
   @action
   onChangeStatusType(value) {
-    const basedOnLastPost = CLOSE_AFTER_LAST_POST_STATUS_TYPE === value;
+    const basedOnLastPost = [
+      CLOSE_AFTER_LAST_POST_STATUS_TYPE,
+      DELETE_AFTER_LAST_POST_STATUS_TYPE,
+    ].includes(value);
     this.topicTimer.based_on_last_post = basedOnLastPost;
     this.args.model.updateTopicTimerProperty(
       "based_on_last_post",
@@ -204,6 +212,9 @@ export default class EditTopicTimer extends Component {
     let statusType = this.topicTimer.status_type;
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
+    }
+    if (statusType === DELETE_AFTER_LAST_POST_STATUS_TYPE) {
+      statusType = DELETE_STATUS_TYPE;
     }
 
     await this._setTimer(

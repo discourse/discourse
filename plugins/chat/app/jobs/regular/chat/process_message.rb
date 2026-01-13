@@ -8,7 +8,10 @@ module Jobs
           "jobs_chat_process_message_#{args[:chat_message_id]}",
           validity: 10.minutes,
         ) do
-          chat_message = ::Chat::Message.find_by(id: args[:chat_message_id])
+          chat_message =
+            ::Chat::Message.includes(uploads: { optimized_videos: :optimized_upload }).find_by(
+              id: args[:chat_message_id],
+            )
           return if !chat_message
 
           processor =
@@ -28,11 +31,15 @@ module Jobs
           # we dont process mentions when creating/updating message so we always have to do it
           chat_message.upsert_mentions
 
-          # notifier should be idempotent and not re-notify
-          if args[:edit_timestamp]
-            ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit
-          else
-            ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
+          # extract external links for webhook-based rebaking
+          ::Chat::MessageLink.extract_from(chat_message)
+
+          unless args[:skip_notifications]
+            if args[:edit_timestamp]
+              ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit
+            else
+              ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
+            end
           end
 
           ::Chat::Publisher.publish_processed!(chat_message)

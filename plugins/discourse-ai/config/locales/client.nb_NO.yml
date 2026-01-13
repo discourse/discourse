@@ -40,7 +40,7 @@ nb_NO:
         groups: "Grupper:"
         no_persona: "Ikke angitt"
         no_groups: "Ingen"
-        edit: "Rediger"
+        edit: "Innstillinger"
         expand_list:
           one: "(%{count} mer)"
           other: "(%{count} mer)"
@@ -80,6 +80,7 @@ nb_NO:
         summary: "Sammendrag"
         username: "Brukernavn"
         total_requests: "Totalt forespørsler"
+        total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
       ai_persona:
@@ -152,6 +153,7 @@ nb_NO:
           cancel: "Avbryt"
         thumbnail_suggestions:
           select: "Velg"
+          try_again: "Prøv igjen"
         image_caption:
           save_caption: "Lagre"
       embeddings:

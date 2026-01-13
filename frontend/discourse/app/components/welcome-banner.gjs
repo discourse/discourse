@@ -8,6 +8,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
@@ -41,6 +42,10 @@ export default class WelcomeBanner extends Component {
     );
 
     observer.observe(element);
+
+    // Synchronously check if the element is in the viewport on initial setup
+    // to avoid a flash of the header search before the async IntersectionObserver callback fires
+    this.search.welcomeBannerSearchInViewport = isElementInViewport(element);
 
     return () => {
       observer.disconnect();

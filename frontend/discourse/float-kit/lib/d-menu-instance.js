@@ -3,8 +3,9 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { MENU } from "float-kit/lib/constants";
-import FloatKitInstance from "float-kit/lib/float-kit-instance";
+import { MENU } from "discourse/float-kit/lib/constants";
+import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
+import { animateClosing } from "discourse/lib/animation-utils";
 
 export default class DMenuInstance extends FloatKitInstance {
   @service menu;
@@ -67,6 +68,8 @@ export default class DMenuInstance extends FloatKitInstance {
     if (getOwner(this).isDestroying) {
       return;
     }
+
+    await animateClosing(this.content);
 
     await super.close(...arguments);
 

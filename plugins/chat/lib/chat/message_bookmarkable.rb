@@ -34,7 +34,7 @@ module Chat
     end
 
     def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
-      bookmarkable_search.call(bookmarks, "chat_messages.message ILIKE :q")
+      bookmarkable_search.call(bookmarks, "chat_messages.message ILIKE ?")
     end
 
     def self.validate_before_create(guardian, bookmarkable)

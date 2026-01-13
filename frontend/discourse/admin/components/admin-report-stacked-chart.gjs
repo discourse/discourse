@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import Report from "discourse/admin/models/report";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
-import Report from "admin/models/report";
 import Chart from "./chart";
 
 export default class AdminReportStackedChart extends Component {

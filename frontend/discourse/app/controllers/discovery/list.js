@@ -67,6 +67,14 @@ export default class DiscoveryListController extends Controller {
     }
   }
 
+  // NOTE: (martin) Please keep this in tact for now, will remove once we have
+  // some actual upcoming changes to use.
+  //
+  // TODO (martin) (upcoming-changes) Remove this once we have actual upcoming changes to use.
+  get showFakeUpcomingChange() {
+    return this.siteSettings.fake_upcoming_change;
+  }
+
   get canBulkSelect() {
     return (
       this.currentUser?.canManageTopic ||
@@ -172,7 +180,7 @@ export default class DiscoveryListController extends Controller {
   createTopic() {
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
-      tags: [this.model.tag?.id, ...(this.model.additionalTags ?? [])]
+      tags: [this.model.tag?.name, ...(this.model.additionalTags ?? [])]
         .filter(Boolean)
         .filter((t) => !["none", "all"].includes(t))
         .join(","),

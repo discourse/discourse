@@ -4,8 +4,8 @@ module DiscourseAi
   module Completions
     module Endpoints
       class OpenRouter < OpenAi
-        def self.can_contact?(model_provider)
-          %w[open_router].include?(model_provider)
+        def self.can_contact?(llm_model)
+          llm_model.provider == "open_router"
         end
 
         def normalize_model_params(model_params)

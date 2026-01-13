@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n, { i18n } from "discourse-i18n";
-import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 
 class TestClass {
   @tracked topic;

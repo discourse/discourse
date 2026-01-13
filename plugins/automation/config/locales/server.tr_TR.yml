@@ -158,3 +158,5 @@ tr_TR:
       random_assign:
         title: "Rastgele Ata"
         description: "Konuları rastgele bir gruba atayın"
+      set_topic_timer:
+        title: "Konu Zamanlayıcısını ayarla"

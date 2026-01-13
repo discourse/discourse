@@ -2,6 +2,7 @@ import ReviewableCreatedByName from "discourse/components/reviewable-created-by-
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 /**
  * Displays the creator information for a reviewable item.
@@ -22,7 +23,10 @@ import icon from "discourse/helpers/d-icon";
       <UserLink @user={{@user}}>{{avatar @user imageSize="small"}}</UserLink>
       <ReviewableCreatedByName @user={{@user}} />
     {{else}}
-      {{icon "trash-can" class="deleted-user-avatar"}}
+      <div class="deleted-user">
+        {{icon "trash-can" class="deleted-user-avatar"}}
+        <span class="deleted-user-name">{{i18n "review.deleted_user"}}</span>
+      </div>
     {{/if}}
   </div>
 </template>

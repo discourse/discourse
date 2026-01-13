@@ -101,19 +101,12 @@
     }
 
     .category-logo.aspect-image img {
+      --height: 40px;
       display: block;
-      width: auto;
-      height: 40px;
       margin: 0 auto 1em auto;
-    }
-
-    @supports (--custom: property) {
-      .category-logo.aspect-image img {
-        --height: 40px;
-        height: var(--height);
-        width: calc(var(--height) * var(--aspect-ratio));
-        max-width: 100%;
-      }
+      height: var(--height);
+      width: calc(var(--height) * var(--aspect-ratio));
+      max-width: 100%;
     }
   }
 
@@ -223,7 +216,7 @@
         line-height: var(--line-height-medium);
         overflow: hidden;
         margin-bottom: 0.25em;
-        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
 
       &::before {

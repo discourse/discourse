@@ -1,6 +1,6 @@
 import { tagName } from "@ember-decorators/component";
 import AvatarFlair from "discourse/components/avatar-flair";
-import SelectedNameComponent from "select-kit/components/selected-name";
+import SelectedNameComponent from "discourse/select-kit/components/selected-name";
 
 @tagName("")
 export default class SelectedFlair extends SelectedNameComponent {

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
+import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -36,7 +37,7 @@ function createBulkSelectHelper(testThis, opts = {}) {
 
   const bulkSelectHelper = new BulkSelectHelper(testThis);
   topics.forEach((t) => {
-    bulkSelectHelper.selected.addObject(t);
+    addUniqueValueToArray(bulkSelectHelper.selected, t);
   });
   return bulkSelectHelper;
 }
@@ -241,5 +242,69 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item .archive-topics")
       .doesNotExist();
+  });
+
+  test("supports excluding built-in buttons and handling custom actions", async function (assert) {
+    this.currentUser.admin = true;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+    this.extraButtons = [
+      {
+        id: "custom-action",
+        icon: "trash-can",
+        name: "Custom Action",
+        visible: () => true,
+      },
+    ];
+    this.excludedButtonIds = ["delete-topics"];
+    this.onAction = (actionId) => assert.step(actionId);
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown
+          @bulkSelectHelper={{this.bulkSelectHelper}}
+          @extraButtons={{this.extraButtons}}
+          @excludedButtonIds={{this.excludedButtonIds}}
+          @onAction={{this.onAction}}
+        />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
+      .doesNotExist();
+    await click(
+      ".fk-d-menu__inner-content .dropdown-menu__item .custom-action"
+    );
+    assert.verifySteps(["custom-action"]);
+  });
+
+  test("allows overriding built-in delete label with extra buttons", async function (assert) {
+    this.currentUser.admin = true;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+    this.extraButtons = [
+      {
+        id: "delete-topics",
+        icon: "trash-can",
+        name: "Delete Topics (override)",
+        visible: () => true,
+      },
+    ];
+    this.excludedButtonIds = ["delete-topics"];
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown
+          @bulkSelectHelper={{this.bulkSelectHelper}}
+          @extraButtons={{this.extraButtons}}
+          @excludedButtonIds={{this.excludedButtonIds}}
+        />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
+      .hasTextContaining("Delete Topics (override)");
   });
 });

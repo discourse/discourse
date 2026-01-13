@@ -1,5 +1,5 @@
 import { concat } from "@ember/helper";
-import AdminAreaSettings from "admin/components/admin-area-settings";
+import AdminAreaSettings from "discourse/admin/components/admin-area-settings";
 
 export default <template>
   <AdminAreaSettings

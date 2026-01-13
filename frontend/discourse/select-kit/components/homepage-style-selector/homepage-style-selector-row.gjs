@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
 @classNames("homepage-style-selector-row")
 export default class HomepageStyleSelectorRow extends SelectKitRowComponent {

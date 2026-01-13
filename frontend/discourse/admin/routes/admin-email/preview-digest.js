@@ -1,5 +1,5 @@
+import EmailPreview, { oneWeekAgo } from "discourse/admin/models/email-preview";
 import DiscourseRoute from "discourse/routes/discourse";
-import EmailPreview, { oneWeekAgo } from "admin/models/email-preview";
 
 export default class AdminEmailPreviewDigestRoute extends DiscourseRoute {
   model() {

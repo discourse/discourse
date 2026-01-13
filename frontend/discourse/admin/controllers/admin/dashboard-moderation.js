@@ -31,11 +31,6 @@ export default class AdminDashboardModerationController extends AdminDashboardTa
     };
   }
 
-  @computed("startDate", "endDate")
-  get filters() {
-    return { startDate: this.startDate, endDate: this.endDate };
-  }
-
   @discourseComputed("endDate")
   lastWeekFilters(endDate) {
     const lastWeek = moment()

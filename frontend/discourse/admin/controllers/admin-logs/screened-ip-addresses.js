@@ -1,31 +1,28 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
+import ScreenedIpAddress from "discourse/admin/models/screened-ip-address";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
-import ScreenedIpAddress from "admin/models/screened-ip-address";
 
 export default class AdminLogsScreenedIpAddressesController extends Controller {
   @service dialog;
 
-  loading = false;
-  filter = null;
-  savedIpAddress = null;
-
-  _debouncedShow() {
-    this.set("loading", true);
-    ScreenedIpAddress.findAll(this.filter).then((result) => {
-      this.setProperties({ model: result, loading: false });
-    });
-  }
+  @tracked filter = null;
+  @tracked loading = false;
+  @tracked savedIpAddress = null;
+  @trackedArray model;
 
   @observes("filter")
   show() {
-    discourseDebounce(this, this._debouncedShow, INPUT_DELAY);
+    discourseDebounce(this, this.#debouncedShow, INPUT_DELAY);
   }
 
   @action
@@ -82,39 +79,47 @@ export default class AdminLogsScreenedIpAddressesController extends Controller {
   }
 
   @action
-  destroyRecord(record) {
+  async destroyRecord(record) {
     return this.dialog.yesNoConfirm({
       message: i18n("admin.logs.screened_ips.delete_confirm", {
         ip_address: record.get("ip_address"),
       }),
-      didConfirm: () => {
-        return record
-          .destroy()
-          .then((deleted) => {
-            if (deleted) {
-              this.model.removeObject(record);
-            } else {
-              this.dialog.alert(i18n("generic_error"));
-            }
-          })
-          .catch((e) => {
-            this.dialog.alert(
-              i18n("generic_error_with_reason", {
-                error: `http: ${e.status} - ${e.body}`,
-              })
-            );
-          });
+      didConfirm: async () => {
+        try {
+          const deleted = await record.destroy();
+          if (deleted) {
+            removeValueFromArray(this.model, record);
+          } else {
+            this.dialog.alert(i18n("generic_error"));
+          }
+        } catch (e) {
+          this.dialog.alert(
+            i18n("generic_error_with_reason", {
+              error: `http: ${e.status} - ${e.body}`,
+            })
+          );
+        }
       },
     });
   }
 
   @action
   recordAdded(arg) {
-    this.model.unshiftObject(arg);
+    this.model.unshift(arg);
   }
 
   @action
   exportScreenedIpList() {
     exportEntity("screened_ip").then(outputExportResult);
+  }
+
+  async #debouncedShow() {
+    this.loading = true;
+
+    try {
+      this.model = await ScreenedIpAddress.findAll(this.filter);
+    } finally {
+      this.loading = false;
+    }
   }
 }

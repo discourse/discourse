@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
-import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
-import { resolveComponent } from "select-kit/components/select-kit";
+import ComboBoxSelectBoxHeaderComponent from "discourse/select-kit/components/combo-box/combo-box-header";
+import { resolveComponent } from "discourse/select-kit/components/select-kit";
 
 @classNames("tag-drop-header")
 export default class TagDropHeader extends ComboBoxSelectBoxHeaderComponent {

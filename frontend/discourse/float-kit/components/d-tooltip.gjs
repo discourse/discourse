@@ -3,12 +3,12 @@ import { concat } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { and } from "truth-helpers";
+import DFloatBody from "discourse/float-kit/components/d-float-body";
+import { TOOLTIP } from "discourse/float-kit/lib/constants";
+import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import DFloatBody from "float-kit/components/d-float-body";
-import { TOOLTIP } from "float-kit/lib/constants";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
+import { and } from "discourse/truth-helpers";
 
 export default class DTooltip extends Component {
   @service tooltip;
@@ -62,9 +62,9 @@ export default class DTooltip extends Component {
       ...attributes
     >
       <span class="fk-d-tooltip__trigger-container">
-        {{#if (has-block "trigger")}}
+        {{~#if (has-block "trigger")~}}
           {{yield this.componentArgs to="trigger"}}
-        {{else}}
+        {{~else~}}
           {{#if @icon}}
             <span class="fk-d-tooltip__icon">
               {{~icon @icon~}}
@@ -73,11 +73,9 @@ export default class DTooltip extends Component {
           {{#if @label}}
             <span class="fk-d-tooltip__label">{{@label}}</span>
           {{/if}}
-        {{/if}}
-      </span>
-    </span>
-
-    {{#if this.tooltipInstance.expanded}}
+        {{~/if~}}
+      </span></span>
+    {{~#if this.tooltipInstance.expanded~}}
       <DFloatBody
         @instance={{this.tooltipInstance}}
         @trapTab={{and this.options.interactive this.options.trapTab}}
@@ -102,6 +100,6 @@ export default class DTooltip extends Component {
           {{this.options.content}}
         {{/if}}
       </DFloatBody>
-    {{/if}}
+    {{~/if~}}
   </template>
 }

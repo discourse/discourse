@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
 import avatar from "discourse/helpers/avatar";
 import formatUsername from "discourse/helpers/format-username";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
 @classNames("user-row")
 export default class UserRow extends SelectKitRowComponent {

@@ -20,6 +20,7 @@ hy:
       channel_settings:
         edit: "Խմբագրել"
         add: "Ավելացնել"
+        notification_settings_context: "Ծանուցումներ"
         join: "Միանալ"
         leave: "Լքել"
       close: "Փակել"
@@ -105,6 +106,7 @@ hy:
         history_label: "Պատմություն"
         members_label: "Անդամներ"
       search:
+        short_title: Որոնում
         sort:
           relevance: "Համապատասխանության"
           latest: "Վերջինը"

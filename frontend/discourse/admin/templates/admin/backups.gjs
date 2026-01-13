@@ -1,9 +1,9 @@
+import AdminBackupsActions from "discourse/admin/components/admin-backups-actions";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
-import AdminBackupsActions from "admin/components/admin-backups-actions";
 
 export default <template>
   <div class="admin-backups admin-config-page">

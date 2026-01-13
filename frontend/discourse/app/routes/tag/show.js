@@ -40,35 +40,30 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
-    const tagIdFromParams = escapeExpression(params.tag_id);
+    const name = escapeExpression(params.tag_name);
+    const id = params.tag_id;
     const tag = this.store.createRecord("tag", {
-      id: tagIdFromParams,
+      id,
+      name,
     });
-
-    // Handles renaming a tag, since we refer to the tag.id instead
-    // of tag.name which is the actual identifier.
-    if (tag.id !== tagIdFromParams) {
-      tag.set("id", tagIdFromParams);
-    }
 
     let additionalTags;
 
     if (params.additional_tags) {
       additionalTags = params.additional_tags.split("/").map((t) => {
         return this.store.createRecord("tag", {
-          id: escapeExpression(t),
-        }).id;
+          name: escapeExpression(t),
+        }).name;
       });
     }
 
     const filterType = filterTypeForMode(this.navMode);
 
     let tagNotification;
-    if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
-      // If logged in, we should get the tag's user settings
+    if (tag && name !== NONE && this.currentUser && !additionalTags) {
       tagNotification = await this.store.find(
         "tagNotification",
-        tag.id.toLowerCase()
+        name.toLowerCase()
       );
     }
 
@@ -80,7 +75,7 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagId = tag ? tag.id.toLowerCase() : NONE;
+    const tagName = name ? name.toLowerCase() : NONE;
     let filter;
 
     if (category) {
@@ -91,9 +86,9 @@ export default class TagShowRoute extends DiscourseRoute {
         filter += this.noSubcategories ? `/${NONE}` : `/${ALL}`;
       }
 
-      filter += `/${tagId}/l/${topicFilter}`;
+      filter += `/${tagName}/l/${topicFilter}`;
     } else if (additionalTags) {
-      filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
+      filter = `tags/intersection/${tagName}/${additionalTags.join("/")}`;
 
       if (transition.to.queryParams["category"]) {
         filteredQueryParams["category"] = transition.to.queryParams["category"];
@@ -102,7 +97,7 @@ export default class TagShowRoute extends DiscourseRoute {
         );
       }
     } else {
-      filter = `tag/${tagId}/l/${topicFilter}`;
+      filter = `tag/${tagName}/l/${topicFilter}`;
     }
 
     if (
@@ -115,7 +110,7 @@ export default class TagShowRoute extends DiscourseRoute {
       return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
-        tagId
+        tagName
       );
     }
 
@@ -132,7 +127,8 @@ export default class TagShowRoute extends DiscourseRoute {
     if (list.topic_list.tags && list.topic_list.tags.length === 1) {
       // Update name of tag (case might be different)
       tag.setProperties({
-        id: list.topic_list.tags[0].name,
+        id: list.topic_list.tags[0].id,
+        name: list.topic_list.tags[0].name,
         staff: list.topic_list.tags[0].staff,
       });
     }
@@ -159,7 +155,7 @@ export default class TagShowRoute extends DiscourseRoute {
     if (model.category || model.additionalTags) {
       const tagIntersectionSearchContext = {
         type: "tagIntersection",
-        tagId: model.tag.id,
+        tagId: model.tag.name,
         tag: model.tag,
         additionalTags: model.additionalTags || null,
         categoryId: model.category?.id || null,
@@ -176,18 +172,18 @@ export default class TagShowRoute extends DiscourseRoute {
     const filterText = i18n(`filters.${this.navMode.replace("/", ".")}.title`);
     const model = this.currentModel;
 
-    const tag = model?.tag?.id;
+    const tag = model?.tag?.name;
     if (tag && tag !== NONE) {
       if (model.category) {
         return i18n("tagging.filters.with_category", {
           filter: filterText,
-          tag: model.tag.id,
+          tag: model.tag.name,
           category: model.category.displayName,
         });
       } else {
         return i18n("tagging.filters.without_category", {
           filter: filterText,
-          tag: model.tag.id,
+          tag: model.tag.name,
         });
       }
     } else {
@@ -215,6 +211,7 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 }
 
+/** @returns {any} */
 export function buildTagRoute(routeConfig = {}) {
   return class extends TagShowRoute {
     routeConfig = routeConfig;

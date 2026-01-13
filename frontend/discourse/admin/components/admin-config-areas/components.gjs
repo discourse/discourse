@@ -4,6 +4,10 @@ import { array, concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
+import InstallComponentModal from "discourse/admin/components/modal/install-theme";
+import { COMPONENTS } from "discourse/admin/models/theme";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -11,6 +15,7 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -20,11 +25,6 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import AdminFilterControls from "admin/components/admin-filter-controls";
-import InstallComponentModal from "admin/components/modal/install-theme";
-import { COMPONENTS } from "admin/models/theme";
-import DMenu from "float-kit/components/d-menu";
 
 const STATUS_FILTER_OPTIONS = [
   {
@@ -541,7 +541,7 @@ class ComponentRow extends Component {
       <td class="d-table__cell --controls">
         <div class="d-table__cell-actions">
           <DButton
-            class="admin-config-components__edit"
+            class="btn-default admin-config-components__edit"
             @label="admin.config_areas.themes_and_components.components.edit"
             @route="adminCustomizeThemes.show"
             @routeModels={{array "themes" @component.id}}

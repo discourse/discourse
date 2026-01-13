@@ -1,11 +1,11 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { topicLevels } from "discourse/lib/notification-levels";
-import NotificationsButtonComponent from "select-kit/components/notifications-button";
+import NotificationsButtonComponent from "discourse/select-kit/components/notifications-button";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 
 @classNames("topic-notifications-options")
 @selectKitOptions({

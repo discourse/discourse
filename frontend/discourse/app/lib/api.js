@@ -6,7 +6,7 @@ let _apiInitializerId = 0;
 /**
  * Define an initializer which will execute a callback with a PluginApi object.
  *
- * @param {(api: import("discourse/lib/plugin-api").PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
+ * @param {(api: import("./plugin-api.gjs").PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
  * @param {object} [opts] - Optional additional options to pass to the callback function.
  */
 export function apiInitializer(apiCodeCallback, opts) {

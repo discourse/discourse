@@ -10,6 +10,7 @@ fi:
       logs:
         staff_actions:
           actions:
+            update_automation: päivitä automaatio
             delete_automation: poista automaatio
     discourse_automation:
       title: Automaatio
@@ -58,13 +59,17 @@ fi:
             label: Leipäteksti
           delay:
             label: Viive (minuutteina)
-          prefers_encrypt:
-            label: Salaa yksityisviestin, jos käytettävissä
         group:
           label: Ryhmä
         text:
           label: Teksti
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategoriat
+            tags:
+              label: Tunnisteet
         not_found: Triggeriä %{trigger} automaatiolle %{automation} ei löytynyt. Varmista, että siihen liittyvä lisäosa on asennettuna.
         user_badge_granted:
           fields:
@@ -422,6 +427,8 @@ fi:
           fields:
             custom_field_name:
               label: "Käyttäjän mukautetun kentän nimi"
+        set_topic_timer:
+          title: Aseta ajastin ketjulle
       unnamed_automation: "Nimetön automaatio"
       models:
         script:

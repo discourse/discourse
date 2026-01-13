@@ -4,7 +4,13 @@ en:
       llm_model:
         name: "Model ID"
         max_prompt_tokens: "Context window"
-
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. In the past hour, it failed to respond %{failed_calls} out of %{total_calls} times."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
+      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -77,6 +83,8 @@ en:
     ai_nsfw_models: "Models to use for NSFW inference."
 
     ai_spam_detection_enabled: "Enable the AI spam detection module"
+    ai_spam_detection_max_post_count: "Maximum number of posts a user can have before they are no longer scanned for spam"
+    ai_spam_detection_max_trust_level: "Maximum trust level of users to scan for spam"
 
     ai_openai_api_key: "API key for OpenAI API. ONLY used for Image creation and edits. For GPT use the LLM config tab"
     ai_openai_image_generation_url: "URL for OpenAI image generation API"
@@ -92,6 +100,7 @@ en:
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
     ai_helper_image_caption_model: "Select the model to use for generating image captions"
+    ai_helper_post_illustrator_persona: "The persona to use for the AI helper's illustrate post feature. Note: you must also create an image generation tool (Admin > Plugins > Discourse AI > Tools) for this feature to work."
 
     ai_embeddings_selected_model: "Use the selected model for generating embeddings."
     ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."
@@ -117,6 +126,7 @@ en:
     ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour."
 
     ai_bot_enabled: "Enable the AI Bot module."
+    ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
     ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overriden by editing the translation string: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
@@ -149,6 +159,8 @@ en:
     ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
     ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
     ai_translation_max_tokens_multiplier: "Multiplier to determine the maximum number of tokens to use for translation. By default, we set the max tokens to approximately two to five times the number of characters in the post. This multiplier can be adjusted to allow for thinking or reasoning models which will use more tokens."
+    ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
+    ai_audit_logs_purge_after_days: "Delete AI API audit logs older than this many days. Defaults to about 6 months. Set to 0 to keep indefinitely."
 
   reviewables:
     reasons:
@@ -272,8 +284,18 @@ en:
           name: "Exchange rate"
         stock_quote:
           name: "Stock quote (AlphaVantage)"
-        image_generation:
-          name: "Flux image generator (Together.ai)"
+        image_generation_category:
+          name: "Image generation..."
+        image_generation_custom:
+          name: "Custom"
+        image_generation_openai:
+          name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Start from blank..."
       name:
@@ -282,8 +304,11 @@ en:
     ai_helper:
       errors:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
-        credit_limit_exceeded_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets %{reset_time}."
-        credit_limit_exceeded_bot: "AI responses are currently unavailable due to credit limits. Please try again %{reset_time}."
+        no_illustrator_persona: "Post Illustrator persona is not configured. Please check your site settings."
+        no_image_generation_tool: "Post Illustrator persona must have an image generation tool attached. Please configure an image generation tool for this persona in the admin panel."
+        no_image_generated: "Failed to generate image. Please try again or check your tool configuration."
+        llm_model_not_configured: "No language model is configured for image generation. Please configure a default language model in your site settings."
+        unknown_error: "An unexpected error occurred while generating thumbnails. Please try again."
       prompts:
         translate: Translate to %{language}
         generate_titles: Suggest topic titles
@@ -293,10 +318,6 @@ en:
         explain: "Explain"
         illustrate_post: "Illustrate Post"
         replace_dates: "Smart dates"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Image by Stable Diffusion XL"
-          dall_e_3: "Image by DALL-E 3"
       image_caption:
         attribution: "Captioned by AI"
 
@@ -323,7 +344,7 @@ en:
     ai_bot:
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
-      thinking: "Thinking..."
+      thinking: "Thinking"
       personas:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_persona: "System personas cannot be deleted, please disable it instead"
@@ -391,7 +412,7 @@ en:
           description: "Default persona powering the Helper's generate Markdown table feature"
         post_illustrator:
           name: "Post illustrator"
-          description: "Generates StableDiffusion prompts to power the Helper's illustrate post feature"
+          description: "Generates images to illustrate posts using available image generation tools"
         proofreader:
           name: "Proofreader"
           description: "Default persona powering the Helper's proofread text feature"
@@ -484,6 +505,10 @@ en:
           base_query:
             name: "Base Search Query"
             description: "Base query to use when searching. Example: '#urgent' will prepend '#urgent' to the search query and only include topics with the urgent category or tag."
+        flag_post:
+          flag_type:
+            name: "Flag Type"
+            description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
       tool_summary:
         read_artifact: "Read a web artifact"
         update_artifact: "Update a web artifact"
@@ -492,9 +517,10 @@ en:
         github_search_files: "GitHub search files"
         github_search_code: "GitHub code search"
         github_file_content: "GitHub file content"
-        github_pull_request_diff: "GitHub pull request diff"
+        github_diff: "GitHub diff"
         random_picker: "Random Picker"
         categories: "List categories"
+        flag_post: "Flag post"
         search: "Search"
         tags: "List tags"
         time: "Time"
@@ -520,9 +546,10 @@ en:
         github_search_code: "Search for code in a GitHub repository"
         github_search_files: "Search for files in a GitHub repository"
         github_file_content: "Retrieve content of files from a GitHub repository"
-        github_pull_request_diff: "Retrieve a GitHub pull request diff"
+        github_diff: "Retrieve a GitHub pull request or commit diff"
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
+        flag_post: "Flag the current post for staff review"
         search: "Search all public topics on the forum"
         tags: "List all tags on the forum"
         time: "Find time in various time zones"
@@ -546,9 +573,10 @@ en:
         web_browser: "Reading <a href='%{url}'>%{url}</a>"
         github_search_files: "Searched for '%{keywords}' in %{repo}/%{branch}"
         github_search_code: "Searched for '%{query}' in %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Retrieved content of %{file_paths} from %{repo_name}@%{branch}"
         random_picker: "Picking from %{options}, picked: %{result}"
+        flag_post: "Flagging post %{post_id} (flag_post: %{flag_post})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
         time: "Time in %{timezone} is %{time}"
         summarize: "Summarized <a href='%{url}'>%{title}</a>"
@@ -586,6 +614,16 @@ en:
         continue_conversation:
           title: "Discovery conversation: Search for %{query}"
           raw: "In my search for %{query}, you showed me the following information:\n\n%{context}\n\nLet's continue the conversation."
+
+      flag_post:
+        errors:
+          no_context: "No post context available for flagging."
+          no_reason: "A reason is required to flag a post."
+          invalid_flag_type: "Invalid flag type."
+        skipped: "Verdict was false; no flag was created."
+        already_flagged: "Post is already flagged for review."
+        flagged: "Post flagged for review."
+        reason: "AI bot flagged this post.\n\nReason: %{reason}"
 
     summarization:
       configuration_hint:
@@ -644,6 +682,7 @@ en:
     llm_models:
       missing_provider_param: "%{param} can't be blank"
       bedrock_invalid_url: "Please complete all the fields to use this model."
+      bedrock_missing_auth: "AWS Bedrock requires either Access Key ID or Role ARN to be configured"
 
     ai_staff_action_logger:
       updated: "updated"
@@ -653,9 +692,11 @@ en:
     translation:
       errors:
         disabled: "The AI translation feature is not fully configured."
+        all_posts_translated: "All posts in this topic are already translated."
 
     llm_credit_allocation:
-      limit_exceeded: "You have reached your AI credit limit. Please try again in %{reset_time}."
+      limit_exceeded_user: "This community has reached its AI credit limit for today. Please try again after %{reset_time} or contact your site administrator for more information."
+      limit_exceeded_admin: "You have reached your AI credit limit. Please try again after %{reset_time}."
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
@@ -673,8 +714,3 @@ en:
       custom_tool_exists:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
-  dashboard:
-    problem:
-      ai_llm_status: "The LLM model: %{model_name} is encountering issues. Please check the <a href='%{url}'>model's configuration page</a>."
-      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
-      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"

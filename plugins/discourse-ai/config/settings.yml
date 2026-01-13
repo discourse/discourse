@@ -34,31 +34,12 @@ discourse_ai:
     default: 60
     hidden: true
 
-  ai_openai_image_generation_url: "https://api.openai.com/v1/images/generations"
-  ai_openai_image_edit_url: "https://api.openai.com/v1/images/edits"
   ai_openai_embeddings_url:
     hidden: true
     default: "https://api.openai.com/v1/embeddings"
   ai_openai_organization:
     default: ""
     hidden: true
-  ai_openai_api_key:
-    default: ""
-    secret: true
-  ai_stability_api_key:
-    default: ""
-    secret: true
-  ai_stability_api_url:
-    default: "https://api.stability.ai"
-  ai_stability_engine:
-    default: "stable-diffusion-xl-1024-v1-0"
-    type: enum
-    choices:
-      - "sd3"
-      - "sd3-turbo"
-      - "stable-diffusion-xl-1024-v1-0"
-      - "stable-diffusion-768-v2-1"
-      - "stable-diffusion-v1-5"
   ai_hugging_face_tei_endpoint:
     hidden: true
     default: ""
@@ -96,6 +77,30 @@ discourse_ai:
     default: false
     hidden: true
 
+  # Deprecated image generation settings - TODO(keegan): Remove 2026-02-01
+  ai_openai_image_generation_url:
+    default: ""
+    hidden: true
+  ai_openai_image_edit_url:
+    default: ""
+    hidden: true
+  ai_stability_api_key:
+    default: ""
+    secret: true
+    hidden: true
+  ai_stability_api_url:
+    default: ""
+    hidden: true
+  ai_stability_engine:
+    default: ""
+    hidden: true
+  ai_helper_illustrate_post_model:
+    default: ""
+    type: enum
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    hidden: true
+
   ai_helper_enabled:
     default: false
     client: true
@@ -104,7 +109,7 @@ discourse_ai:
   composer_ai_helper_allowed_groups:
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
     area: "ai-features/ai_helper"
@@ -112,7 +117,7 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/ai_helper"
-  ai_helper_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_helper_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     allow_any: false
     type: enum
@@ -128,7 +133,7 @@ discourse_ai:
   post_ai_helper_allowed_groups:
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
     area: "ai-features/ai_helper"
@@ -137,14 +142,6 @@ discourse_ai:
     area: "ai-features/ai_helper"
   ai_helper_automatic_chat_thread_title_delay:
     default: 5
-    area: "ai-features/ai_helper"
-  ai_helper_illustrate_post_model:
-    default: disabled
-    type: enum
-    choices:
-      - stable_diffusion_xl
-      - dall_e_3
-      - disabled
     area: "ai-features/ai_helper"
   ai_helper_enabled_features:
     client: true
@@ -158,7 +155,7 @@ discourse_ai:
       - "context_menu"
       - "image_caption"
     area: "ai-features/ai_helper"
-  ai_helper_image_caption_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_helper_image_caption_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     type: enum
     enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
@@ -244,7 +241,7 @@ discourse_ai:
     default: true
     area: "ai-features/embeddings"
   ai_embeddings_semantic_related_age_penalty:
-    default: 0.3
+    default: 0.0
     type: float
     min: 0.0
     max: 2.0
@@ -266,7 +263,7 @@ discourse_ai:
     default: false
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/embeddings"
-  ai_embeddings_semantic_search_hyde_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_embeddings_semantic_search_hyde_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     hidden: true
     default: ""
     type: enum
@@ -368,6 +365,15 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  ai_bot_enabled_llms:
+    default: ""
+    client: true
+    type: list
+    list_type: compact
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    refresh: true
+    area: "ai-features/bot"
   ai_bot_enable_chat_warning:
     default: false
     client: true
@@ -458,6 +464,19 @@ discourse_ai:
   ai_spam_detection_user_id:
     default: ""
     hidden: true
+  ai_spam_detection_max_post_count:
+    default: 3
+    min: 1
+    max: 100
+  ai_spam_detection_max_trust_level:
+    default: 1
+    type: enum
+    choices:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
   ai_rag_images_enabled:
     default: false
     hidden: true
@@ -494,7 +513,7 @@ discourse_ai:
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/translation"
   ai_translation_backfill_hourly_rate:
-    default: 0
+    default: 50
     min: 0
     max: 100000
     client: false
@@ -582,3 +601,14 @@ discourse_ai:
   ai_artifact_max_keys_per_user_per_artifact:
     default: 100
     hidden: true
+
+  ai_usage_rollup_after_days:
+    default: 7
+    min: 0
+    client: false
+    hidden: true
+
+  ai_audit_logs_purge_after_days:
+    default: 180
+    min: 0
+    client: false

@@ -49,23 +49,16 @@ class ReviewableQueuedPost < Reviewable
     end
 
     if pending?
-      if guardian.can_delete_user?(target_created_by)
-        reject_bundle =
-          actions.add_bundle("#{id}-reject", label: "reviewables.actions.reject_post.title")
-
-        build_action(
-          actions,
-          :discard_post,
-          bundle: reject_bundle,
-          icon: "xmark",
-          button_class: "reject-post",
+      reject_bundle =
+        actions.add_bundle(
+          "#{id}-reject-post",
+          label: "reviewables.actions.reject_post_bundle.title",
         )
-        delete_user_actions(actions, reject_bundle)
-      else
-        build_action(actions, :reject_post, icon: "xmark")
-      end
 
-      build_action(actions, :revise_and_reject_post)
+      build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
+      build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+
+      delete_user_actions(actions, reject_bundle) if guardian.can_delete_user?(target_created_by)
     end
 
     build_action(actions, :delete) if guardian.can_delete?(self)
@@ -96,11 +89,12 @@ class ReviewableQueuedPost < Reviewable
     if pending?
       # We can edit category / title if it's a new topic
       if topic_id.blank?
+        fields.add("payload.title", :text)
+
         # Only staff can edit category for now, since in theory a category group reviewer could
         # post in a category they don't have access to.
         fields.add("category_id", :category) if guardian.is_staff?
 
-        fields.add("payload.title", :text)
         fields.add("payload.tags", :tags)
       end
 

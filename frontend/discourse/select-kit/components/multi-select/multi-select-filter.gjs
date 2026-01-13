@@ -5,7 +5,7 @@ import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
-import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";
+import SelectKitFilterComponent from "discourse/select-kit/components/select-kit/select-kit-filter";
 
 @classNames("multi-select-filter")
 export default class MultiSelectFilter extends SelectKitFilterComponent {

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import PeriodChooser from "select-kit/components/period-chooser";
+import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 export default class DashboardPeriodSelector extends Component {
@@ -28,6 +28,8 @@ export default class DashboardPeriodSelector extends Component {
         @action={{@setPeriod}}
         @content={{this.availablePeriods}}
         @fullDay={{false}}
+        @startDate={{@startDate}}
+        @endDate={{@endDate}}
       />
       <DButton
         @icon="gear"

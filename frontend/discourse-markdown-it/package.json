@@ -20,7 +20,7 @@
   "dependencies": {
     "@embroider/addon-shim": "^1.9.0",
     "discourse-i18n": "workspace:1.0.0",
-    "ember-auto-import": "^2.11.1",
+    "ember-auto-import": "^2.12.0",
     "markdown-it": "14.0.0",
     "pretty-text": "workspace:1.0.0",
     "xss": "^1.0.15"
@@ -35,7 +35,7 @@
     "node": ">= 18",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^9"
+    "pnpm": "^10"
   },
   "ember": {
     "edition": "octane"

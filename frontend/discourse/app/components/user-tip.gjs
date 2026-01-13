@@ -4,10 +4,10 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
+import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import helperFn from "discourse/helpers/helper-fn";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class UserTip extends Component {
   @service userTips;
@@ -33,6 +33,10 @@ export default class UserTip extends Component {
         this.args.triggerSelector &&
         document.querySelector(this.args.triggerSelector);
 
+      const portalOutlet =
+        this.args.portalOutletSelector &&
+        document.querySelector(this.args.portalOutletSelector);
+
       let buttonText = i18n(this.args.buttonLabel || "user_tips.button");
       if (this.args.buttonIcon) {
         buttonText = `${iconHTML(this.args.buttonIcon)} ${buttonText}`;
@@ -44,6 +48,7 @@ export default class UserTip extends Component {
         closeOnScroll: false,
         closeOnClickOutside: true,
         placement: this.args.placement,
+        portalOutletElement: portalOutlet,
         component: UserTipContainer,
         data: {
           id: this.args.id,

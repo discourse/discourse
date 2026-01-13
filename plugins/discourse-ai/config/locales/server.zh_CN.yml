@@ -10,12 +10,19 @@ zh_CN:
       llm_model:
         name: "模型 ID"
         max_prompt_tokens: "上下文窗口"
+  dashboard:
+    problem:
+      ai_llm_status:
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> 需要注意。在过去的 %{count} 小时里，它在 %{total_calls} 次中没有回复 %{failed_calls} 次。"
+      ai_credit_soft_limit: "%{model_name} 仅剩余 %{percentage_remaining}% 的积分。积分将在 %{reset_date}时重置。 <a href='%{url}'>查看 AI 模型</a>"
+      ai_credit_hard_limit: "您的 %{model_name}AI 积分已经用完了。AI 功能将在 %{reset_date}之前不可用。 <a href='%{url}'>查看 AI 模型</a>"
   discourse_automation:
     ai:
       flag_types:
         review: "将帖子添加到审核队列"
         review_hide: "将帖子添加到审核队列并隐藏帖子"
         review_delete: "将帖子添加到审核队列并删除帖子"
+        review_delete_silence: "将帖子加入审核队列、删除帖子并将用户设为静音。"
         spam: "标记为垃圾信息并隐藏帖子"
         spam_silence: "标记为垃圾信息，隐藏帖子并将用户禁言"
     scriptables:
@@ -28,6 +35,10 @@ zh_CN:
       llm_triage:
         title: 使用 AI 对帖子进行分类
         description: "使用大语言模型对帖子进行分类"
+        flagged_post: |
+          <div>模型的回答：</div>
+          <p>%{llm_response}</p>
+          <b>由 <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>规则触发。</b>
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |
@@ -39,6 +50,9 @@ zh_CN:
       llm_report:
         title: 使用 AI 的定期报告
         description: "基于大语言模型的定期报告"
+      llm_tagger:
+        title: 使用 AI 为话题添加标签
+        description: "使用 AI 自动为话题添加标签"
   site_settings:
     discourse_ai_enabled: "启用 Discourse AI 插件。"
     ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
@@ -71,6 +85,8 @@ zh_CN:
     ai_nsfw_flag_threshold_sexy: "分类为性感的图片被视为 NSFW 的阈值。"
     ai_nsfw_models: "用于 NSFW 推断的模型。"
     ai_spam_detection_enabled: "启用 AI 垃圾信息检测模块"
+    ai_spam_detection_max_post_count: "用户在不再被扫描为垃圾邮件之前可发表帖子的最大数量"
+    ai_spam_detection_max_trust_level: "用户扫描垃圾邮件的最大信任级别"
     ai_openai_api_key: "OpenAI API 的 API 密钥。仅用于图片创建和编辑。对于 GPT，请使用 LLM 配置标签页"
     ai_openai_image_generation_url: "OpenAI 图片生成 API 的 URL"
     ai_openai_image_edit_url: "OpenAI 图片编辑 API 的 URL"
@@ -84,6 +100,7 @@ zh_CN:
     ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。"
     post_ai_helper_allowed_groups: "能够在帖子中访问 AI 助手功能的用户群组"
     ai_helper_image_caption_model: "选择用于生成图片标题的模型"
+    ai_helper_post_illustrator_persona: "用于 AI 助手“帖子插图”功能的角色。注意：要使此功能生效，您还必须创建一个图像生成工具（Admin > Plugins > Discourse AI > Tools）。"
     ai_embeddings_selected_model: "使用所选模型生成嵌入向量。"
     ai_embeddings_generate_for_pms: "为个人消息生成嵌入向量。"
     ai_embeddings_semantic_related_topics_enabled: "将语义搜索用于相关话题。"
@@ -93,6 +110,8 @@ zh_CN:
     ai_embeddings_semantic_search_use_hyde: "使用 HyDE 进行语义全页搜索。使用 LLM 可以根据用户搜索词创建一个假设的帖子来帮助匹配。"
     ai_embeddings_semantic_quick_search_enabled: "在搜索菜单弹出窗口中启用语义搜索选项。"
     ai_embeddings_semantic_related_include_closed_topics: "在语义搜索结果中包含已关闭话题"
+    ai_embeddings_semantic_related_age_penalty: "对语义搜索结果中的话题适用指数式的年龄惩罚。0.0 = 无惩罚，0.3 = gentle 偏向于近期活跃的内容，1.0+ = 强烈的偏向近期内容。"
+    ai_embeddings_semantic_related_age_time_scale: "计算年龄惩罚的时间尺度，以天为单位。话题在此时间范围内未活跃，将受到约50%的惩罚，惩罚系数为1.0。使用365表示年度尺度，90表示季度尺度。"
     ai_embeddings_semantic_search_hyde_model: "用于在语义搜索中扩展关键字以获得更好结果的模型"
     ai_embeddings_per_post_enabled: 为每个帖子生成嵌入向量
     ai_summarization_enabled: "启用总结功能"
@@ -104,10 +123,13 @@ zh_CN:
     ai_summary_gists_allowed_groups: "能够查看热门话题列表中的要点的群组。"
     ai_summary_backfill_maximum_topics_per_hour: "每小时回填的话题摘要数。"
     ai_bot_enabled: "启用 AI 机器人模块。"
+    ai_bot_enabled_llms: "用于选择 AI bot 对话的 LLM"
     ai_bot_enable_chat_warning: "启动私信聊天时显示警告。可以通过编辑翻译字符串进行覆盖：discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "当 GPT 机器人可以访问私信时，它将回复这些群组的成员。"
     ai_bot_debugging_allowed_groups: "允许这些群组在帖子上看到显示原始 AI 请求和回答的调试按钮"
     ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的站点需要登录，分享时也需要登录。"
+    ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人启动 PM"
+    ai_bot_add_to_community_section: "在侧边栏社区版块显示一个链接，以开始使用 AI 机器人启动 PM。"
     ai_bot_github_access_token: "搭配使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
     ai_discover_enabled: "启用发现搜索功能"
     ai_discover_persona: "用于发现搜索功能的 Persona"
@@ -127,6 +149,10 @@ zh_CN:
     ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
     ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
+    ai_translation_backfill_hourly_rate: "每小时回填翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
+    ai_translation_max_tokens_multiplier: "倍数来决定用于翻译的最大令牌数量。 默认情况下，我们将最大令牌设置为帖子中字符数的大约2至5倍。 这个倍数可以调整，以考虑或推理模型使用更多的令牌。"
+    ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总为每日统计之前要保留的天数。设为 0 表示不进行汇总。"
+    ai_audit_logs_purge_after_days: "删除超过指定天数的 AI API 审计日志。默认值约为 6 个月。设置为 0 则无限期保留。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了标记。
@@ -245,8 +271,18 @@ zh_CN:
           name: "汇率"
         stock_quote:
           name: "股票报价 (AlphaVantage)"
-        image_generation:
-          name: "Flux 图片生成器 (Together.ai)"
+        image_generation_category:
+          name: "图像生成……"
+        image_generation_custom:
+          name: "自定义"
+        image_generation_openai:
+          name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "从空白开始…"
       name:
@@ -254,6 +290,11 @@ zh_CN:
     ai_helper:
       errors:
         completion_request_failed: "尝试提供建议时出错。请重试。"
+        no_illustrator_persona: "Post Illustrator 角色未配置。请检查您的网站设置。"
+        no_image_generation_tool: "Post Illustrator 角色必须附带图像生成工具。请在管理面板中为该角色配置图像生成工具。"
+        no_image_generated: "图像生成失败。请重试或检查您的工具配置。"
+        llm_model_not_configured: "图像生成未配置任何语言模型。请在您的网站设置中配置默认语言模型。"
+        unknown_error: "生成缩略图时出现意外错误。请重试。"
       prompts:
         translate: 翻译为%{language}
         generate_titles: 建议话题标题
@@ -263,10 +304,6 @@ zh_CN:
         explain: "解释"
         illustrate_post: "为帖子创建插图"
         replace_dates: "智能日期"
-      painter:
-        attribution:
-          stable_diffusion_xl: "图片由 Stable Diffusion XL 提供"
-          dall_e_3: "图片由 DALL-E 3 提供"
       image_caption:
         attribution: "由 AI 生成标题"
     share_ai:
@@ -291,7 +328,7 @@ zh_CN:
     ai_bot:
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
-      thinking: "正在思考…"
+      thinking: "正在思考"
       personas:
         default_llm_required: "启用聊天之前需要默认的 LLM 模型"
         cannot_delete_system_persona: "无法删除系统角色，请改为将其禁用"
@@ -359,7 +396,7 @@ zh_CN:
           description: "支持助手的生成 Markdown 表功能的默认角色"
         post_illustrator:
           name: "帖子插图创建器"
-          description: "生成 StableDiffusion 提示来支持助手的为帖子创建插图功能"
+          description: "使用现有的图像生成工具生成用于文章配图的图像"
         proofreader:
           name: "审校"
           description: "支持助手的审校文本功能的默认角色"
@@ -459,9 +496,9 @@ zh_CN:
         github_search_files: "GitHub 搜索文件"
         github_search_code: "GitHub 代码搜索"
         github_file_content: "GitHub 文件内容"
-        github_pull_request_diff: "GitHub 拉取请求差异"
         random_picker: "随机选择器"
         categories: "列出类别"
+        flag_post: "标记帖子"
         search: "搜索"
         tags: "列出标签"
         time: "时间"
@@ -487,9 +524,9 @@ zh_CN:
         github_search_code: "在 GitHub 仓库中搜索代码"
         github_search_files: "在 GitHub 仓库中搜索文件"
         github_file_content: "从 GitHub 仓库检索文件的内容"
-        github_pull_request_diff: "检索 GitHub 拉取请求差异"
         random_picker: "选择一个随机数或列表的随机元素"
         categories: "列出论坛上所有公开可见的类别"
+        flag_post: "举报当前帖子以供管理人员审核"
         search: "搜索论坛上的所有公开话题"
         tags: "列出论坛上的所有标签"
         time: "查找不同时区的时间"
@@ -513,9 +550,10 @@ zh_CN:
         web_browser: "正在阅读 <a href='%{url}'>%{url}</a>"
         github_search_files: "已在 %{repo}/%{branch} 中搜索 '%{keywords}'"
         github_search_code: "已在 %{repo} 中搜索 '%{query}'"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "已从 %{repo_name}@%{branch} 检索到 %{file_paths} 的内容"
         random_picker: "正在从 %{options} 中选择，已选：%{result}"
+        flag_post: "举报帖子 %{post_id} (flag_post: %{flag_post})"
         read: "正在阅读：<a href='%{url}'>%{title}</a>"
         time: "%{timezone} 的时间为 %{time}"
         summarize: "已总结 <a href='%{url}'>%{title}</a>"
@@ -545,6 +583,15 @@ zh_CN:
         continue_conversation:
           title: "发现对话：搜索 %{query}"
           raw: "在我搜索“%{query}”时，您向我展示了以下信息：\n\n%{context}\n\n让我们继续对话吧。"
+      flag_post:
+        errors:
+          no_context: "没有可用于举报的帖子上下文。"
+          no_reason: "举报帖子需要提供一个理由。"
+          invalid_flag_type: "举报类型无效。"
+        skipped: "裁定失败；未创建举报。"
+        already_flagged: "该帖子已被标记待审查。"
+        flagged: "帖子已标记待审查。"
+        reason: "AI机器人标记了此帖子。\n\n原因： %{reason}"
     summarization:
       configuration_hint:
         other: "首先配置这些设置：%{settings}"
@@ -589,9 +636,11 @@ zh_CN:
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
         choose_model: "首先设置 'ai embeddings selected model'。"
+        model_test_failed: "我们无法使用此模型生成测试嵌入向量。请检查设置是否正确。"
     llm_models:
       missing_provider_param: "%{param}不能为空"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
+      bedrock_missing_auth: "AWS Bedrock 需要配置访问密钥 ID 或角色 ARN。"
     ai_staff_action_logger:
       updated: "已更新"
       set: "已设置"
@@ -599,6 +648,10 @@ zh_CN:
     translation:
       errors:
         disabled: "人工智能翻译功能未完全配置。"
+        all_posts_translated: "此话题中的所有帖子均已翻译。"
+    llm_credit_allocation:
+      limit_exceeded_user: "该社区今天已达到其AI信用额度。请在 %{reset_time} 之后重试或联系您的站点管理员以获取更多信息。"
+      limit_exceeded_admin: "您的AI信用额度已达上限。请在 %{reset_time}后重试。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
       quota_required: "必须为此模型指定最大词元数或使用次数"
@@ -614,6 +667,3 @@ zh_CN:
       persona_already_exists: 名称为“%{name}”的角色已存在。
       custom_tool_exists:
         other: "名称为“%{names}”的自定义工具已存在。"
-  dashboard:
-    problem:
-      ai_llm_status: "LLM 模型：%{model_name} 遇到了问题。请检查<a href='%{url}'>模型的配置页面</a>。"

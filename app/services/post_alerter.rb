@@ -338,11 +338,14 @@ class PostAlerter
     users = users.where.not(id: notified.map(&:id)) if notified.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    received_notifications = []
     each_user_in_batches(users) do |user|
-      create_notification(user, Notification.types[:watching_first_post], post)
+      if create_notification(user, Notification.types[:watching_first_post], post).present?
+        received_notifications << user
+      end
     end
 
-    users
+    received_notifications
   end
 
   def sync_group_mentions(post, mentioned_groups)
@@ -798,9 +801,7 @@ class PostAlerter
     warn_if_not_sidekiq
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each { |u| create_notification(u, Notification.types[type], post, opts) }
-
-    users
+    users.select { |u| create_notification(u, Notification.types[type], post, opts).present? }
   end
 
   def pm_watching_users(post)
@@ -816,9 +817,8 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    # To simplify things and to avoid IMAP double sync issues, and to cut down
-    # on emails sent via SMTP, any topic_allowed_users (except those who are
-    # not_allowed?) for a group that has SMTP enabled will have their notification
+    # To simplify things and to cut down on emails sent via SMTP, any topic_allowed_users
+    # (except those who are not_allowed?) for a group that has SMTP enabled will have their notification
     # email combined into one and sent via a single group SMTP email with CC addresses.
     emails_to_skip_send = email_using_group_smtp_if_configured(post)
 
@@ -843,7 +843,7 @@ class PostAlerter
     # flow will not be sent via group SMTP if it is enabled.
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each do |user|
+    users.select do |user|
       case TopicUser.get(post.topic, user)&.notification_level
       when TopicUser.notification_levels[:watching]
         create_pm_notification(user, post, emails_to_skip_send)
@@ -1044,6 +1044,7 @@ class PostAlerter
           .pluck(:user_id),
       )
 
+    received_notifications = []
     each_user_in_batches(notify) do |user|
       calculated_type =
         if !new_record && already_seen_user_ids.include?(user.id)
@@ -1056,10 +1057,12 @@ class PostAlerter
       opts = {}
       opts[:display_username] = post.last_editor.username if calculated_type ==
         Notification.types[:edited]
-      create_notification(user, calculated_type, post, opts)
+      if create_notification(user, calculated_type, post, opts).present?
+        received_notifications << user
+      end
     end
 
-    notify
+    received_notifications
   end
 
   def warn_if_not_sidekiq

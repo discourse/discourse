@@ -2,10 +2,11 @@ import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
+import DeleteUserPostsProgressModal from "discourse/admin/components/modal/delete-user-posts-progress";
+import PenalizeUserModal from "discourse/admin/components/modal/penalize-user";
+import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import I18n, { i18n } from "discourse-i18n";
-import PenalizeUserModal from "admin/components/modal/penalize-user";
-import AdminUser from "admin/models/admin-user";
 
 // A service that can act as a bridge between the front end Discourse application
 // and the admin application. Use this if you need front end code to access admin
@@ -44,6 +45,7 @@ export default class AdminToolsService extends Service {
     const loadedUser = user.adminUserView
       ? user
       : await AdminUser.find(user.get("id"));
+    const originalSuccessCallback = opts.successCallback;
     return this.modal.show(PenalizeUserModal, {
       model: {
         penaltyType: type,
@@ -51,7 +53,15 @@ export default class AdminToolsService extends Service {
         postEdit: opts.postEdit,
         user: loadedUser,
         before: opts.before,
-        successCallback: opts.successCallback,
+        successCallback: async (result) => {
+          if (originalSuccessCallback) {
+            await originalSuccessCallback(result);
+          }
+
+          if (result?.shouldDeleteAllPosts) {
+            return this.deletePostsDecider(loadedUser);
+          }
+        },
       },
     });
   }
@@ -116,6 +126,34 @@ export default class AdminToolsService extends Service {
           },
         });
       });
+    });
+  }
+
+  async deletePostsDecider(user) {
+    const response = await ajax(
+      `/admin/users/${user.id}/delete_posts_decider`,
+      {
+        type: "POST",
+      }
+    );
+
+    if (response.job_enqueued) {
+      this.dialog.alert(
+        i18n("admin.user.delete_posts.all_enqueued", {
+          username: user.username,
+        })
+      );
+      this.modal.close();
+      return;
+    }
+
+    this.modal.show(DeleteUserPostsProgressModal, {
+      model: {
+        user,
+        updateUserPostCount(count) {
+          user.set("post_count", count);
+        },
+      },
     });
   }
 }

@@ -218,6 +218,7 @@ module("Unit | Utility | url", function (hooks) {
       "ftp://www.discourse.org"
     );
     assert.strictEqual(prefixProtocol("/my/preferences"), "/my/preferences");
+    assert.strictEqual(prefixProtocol("#anchor-fragment"), "#anchor-fragment");
   });
 
   test("getCategoryAndTagUrl", function (assert) {

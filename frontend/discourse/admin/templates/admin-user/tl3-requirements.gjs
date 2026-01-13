@@ -1,7 +1,7 @@
 import { LinkTo } from "@ember/routing";
+import checkIcon from "discourse/admin/helpers/check-icon";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import checkIcon from "admin/helpers/check-icon";
 
 export default <template>
   <div class="admin-controls">

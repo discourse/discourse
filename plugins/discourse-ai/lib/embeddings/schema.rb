@@ -232,18 +232,29 @@ module DiscourseAi
         builder.where("model_id = :vid AND strategy_id = :vsid")
 
         if use_age_penalty
-          builder.sql_literal(
-            extra_join: "INNER JOIN topics ON topics.id = #{table}.#{target_column}",
-            extra_columns: ", topics.bumped_at",
-            ordering: <<~SQL,
-              ORDER BY
-              (embeddings::halfvec(#{dimensions}) #{pg_function} (
+          distance_sql = <<~SQL
+            (
+              embeddings::halfvec(#{dimensions}) #{pg_function} (
                 SELECT
                   embeddings::halfvec(#{dimensions})
                 FROM
                   le_target
                 LIMIT 1
-              )) / POWER(EXTRACT(EPOCH FROM NOW() - bumped_at) / 86400 / :time_scale + 1, :age_penalty)
+              )
+            )
+          SQL
+
+          # Negative inner product (<#>) already returns inverted similarity, so we divide to move
+          # older topics closer to zero. Cosine (<=>) and other positive distance functions need to
+          # be multiplied so that larger values get deprioritized.
+          age_penalty_operator = vector_def.pg_function == "<#>" ? "/" : "*"
+
+          builder.sql_literal(
+            extra_join: "INNER JOIN topics ON topics.id = #{table}.#{target_column}",
+            extra_columns: ", topics.bumped_at",
+            ordering: <<~SQL,
+              ORDER BY
+              #{distance_sql.strip} #{age_penalty_operator} POWER(EXTRACT(EPOCH FROM NOW() - bumped_at) / 86400 / :time_scale + 1, :age_penalty)
             SQL
           )
         else

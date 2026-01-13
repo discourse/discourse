@@ -10,15 +10,15 @@ import DModal from "discourse/components/d-modal";
 import DTextarea from "discourse/components/d-textarea";
 import ReviewableQueuedPost from "discourse/components/reviewable-queued-post";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 const OTHER_REASON = "other_reason";
 
 export default class ReviseAndRejectPostReviewable extends Component {
   @service siteSettings;
 
-  @tracked reason;
+  @tracked reason = OTHER_REASON;
   @tracked customReason;
   @tracked feedback;
   @tracked submitting = false;

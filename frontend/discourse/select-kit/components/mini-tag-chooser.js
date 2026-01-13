@@ -9,12 +9,12 @@ import {
 import { setting } from "discourse/lib/computed";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
-import { i18n } from "discourse-i18n";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 import SelectKitRow from "./select-kit/select-kit-row";
 import TagRow from "./tag-row";
 
@@ -34,10 +34,15 @@ import TagRow from "./tag-row";
   maximum: "maxTagsPerTopic",
   autoInsertNoneItem: false,
   useHeaderFilter: false,
+  valueProperty: "name",
+  nameProperty: "name",
 })
 @pluginApiIdentifiers(["mini-tag-chooser"])
 export default class MiniTagChooser extends MultiSelectComponent {
   @service tagUtils;
+
+  valueProperty = "name";
+  nameProperty = "name";
 
   @empty("value") noTags;
   @or("allowCreate", "site.can_create_tag") allowAnyTag;
@@ -159,6 +164,6 @@ export default class MiniTagChooser extends MultiSelectComponent {
       this.set("selectKit.options.translatedFilterPlaceholder", null);
     }
 
-    return results.filter((r) => !makeArray(this.tags).includes(r.id));
+    return results.filter((r) => !makeArray(this.tags).includes(r.name));
   }
 }

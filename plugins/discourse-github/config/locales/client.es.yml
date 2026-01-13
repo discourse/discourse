@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 es:
+  js:
+    github:
+      pr_status:
+        draft: "Borrador"
+        open: "Abierto"
+        approved: "Aprobado"
+        closed: "Cerrado"
   admin_js:
     admin:
       site_settings:

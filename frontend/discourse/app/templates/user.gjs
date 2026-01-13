@@ -1,7 +1,6 @@
 import { array, concat, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import HtmlWithLinks from "discourse/components/html-with-links";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -14,8 +13,9 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import userStatus from "discourse/helpers/user-status";
+import UserNotificationsDropdown from "discourse/select-kit/components/user-notifications-dropdown";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import UserNotificationsDropdown from "select-kit/components/user-notifications-dropdown";
 import CollapsedInfo from "./user/collapsed-info";
 
 export default <template>

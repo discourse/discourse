@@ -9,7 +9,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
-import { eq } from "truth-helpers";
+import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import DButton from "discourse/components/d-button";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
@@ -26,6 +26,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import dasherizeHelper from "discourse/helpers/dasherize";
 import editableValue from "discourse/helpers/editable-value";
+import formatDate from "discourse/helpers/format-date";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -36,13 +37,14 @@ import { showAlert } from "discourse/lib/post-action-feedback";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import { PENDING } from "discourse/models/reviewable";
 import Topic from "discourse/models/topic";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 
 let _components = {};
 
-const pluginReviewableParams = {};
+export const pluginReviewableParams = {};
 const reviewableTypeLabels = {};
 
 // The mappings defined here are default core mappings, and cannot be overridden
@@ -50,7 +52,7 @@ const reviewableTypeLabels = {};
 const defaultActionModalClassMap = {
   revise_and_reject_post: ReviseAndRejectPostReviewable,
 };
-const actionModalClassMap = { ...defaultActionModalClassMap };
+export const actionModalClassMap = { ...defaultActionModalClassMap };
 
 export function addPluginReviewableParam(reviewableType, param) {
   pluginReviewableParams[reviewableType]
@@ -99,7 +101,7 @@ export default class ReviewableItem extends Component {
   @optionalService adminTools;
 
   @tracked disabled = false;
-  @tracked activeTab = "insights";
+  @tracked activeTab = "timeline";
 
   @alias("reviewable.claimed_by.automatic") autoClaimed;
 
@@ -156,7 +158,8 @@ export default class ReviewableItem extends Component {
     "claimOptional",
     "claimRequired",
     "reviewable.claimed_by",
-    "siteSettings.reviewable_old_moderator_actions"
+    "siteSettings.reviewable_old_moderator_actions",
+    "isAiReviewable"
   )
   displayContextQuestion(
     createdFromFlag,
@@ -164,14 +167,21 @@ export default class ReviewableItem extends Component {
     claimOptional,
     claimRequired,
     claimedBy,
-    oldModeratorActions
+    oldModeratorActions,
+    isAiReviewable
   ) {
     return (
-      oldModeratorActions &&
-      createdFromFlag &&
-      status === 0 &&
-      (claimOptional || (claimRequired && claimedBy !== null))
+      (oldModeratorActions &&
+        createdFromFlag &&
+        status === 0 &&
+        (claimOptional || (claimRequired && claimedBy !== null))) ||
+      isAiReviewable
     );
+  }
+
+  @discourseComputed("reviewable.type")
+  isAiReviewable(type) {
+    return type === "ReviewableAiChatMessage" || type === "ReviewableAiPost";
   }
 
   @discourseComputed(
@@ -186,10 +196,13 @@ export default class ReviewableItem extends Component {
   @discourseComputed(
     "siteSettings.reviewable_claiming",
     "topicId",
-    "reviewable.claimed_by.automatic"
+    "reviewable.claimed_by.automatic",
+    "reviewable.status"
   )
-  claimEnabled(claimMode, topicId, autoClaimed) {
-    return (claimMode !== "disabled" || autoClaimed) && !!topicId;
+  claimEnabled(claimMode, topicId, autoClaimed, status) {
+    return (
+      (claimMode !== "disabled" || autoClaimed) && !!topicId && status === 0
+    );
   }
 
   @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
@@ -280,15 +293,6 @@ export default class ReviewableItem extends Component {
     return updatedCategoryId || categoryId;
   }
 
-  @discourseComputed("reviewable.type", "reviewable.target_created_by")
-  showIpLookup(reviewableType) {
-    return (
-      reviewableType !== "ReviewableUser" &&
-      this.currentUser.staff &&
-      this.reviewable.target_created_by
-    );
-  }
-
   @discourseComputed("reviewable.reviewable_scores")
   scoreSummary(scores) {
     const scoreData = scores.reduce((acc, score) => {
@@ -307,8 +311,12 @@ export default class ReviewableItem extends Component {
     return Object.values(scoreData);
   }
 
-  @discourseComputed("reviewable.type", "reviewable.created_from_flag")
-  reviewableTypeLabel(type, createdFromFlag) {
+  @discourseComputed(
+    "reviewable.type",
+    "reviewable.created_from_flag",
+    "topicId"
+  )
+  reviewableTypeLabel(type, createdFromFlag, topicId) {
     // handle plugin types
     if (reviewableTypeLabels[type]) {
       return reviewableTypeLabels[type];
@@ -320,7 +328,8 @@ export default class ReviewableItem extends Component {
     }
 
     if (type === "ReviewableQueuedPost") {
-      return "review.queued_post_label";
+      // if topic_id is null it's a new topic
+      return topicId ? "review.queued_post_label" : "review.queued_topic_label";
     }
 
     if (type === "ReviewableChatMessage") {
@@ -337,14 +346,33 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateClaimedBy(data) {
-    const user = data.user ? this.store.createRecord("user", data.user) : null;
+    if (data.topic_id !== this.reviewable.topic.id) {
+      return;
+    }
 
-    if (data.topic_id === this.reviewable.topic.id) {
-      if (user) {
-        this.reviewable.set("claimed_by", { user, automatic: data.automatic });
-      } else {
-        this.reviewable.set("claimed_by", null);
-      }
+    const now = new Date().toISOString();
+
+    const user = this.store.createRecord("user", data.user);
+    if (data.claimed) {
+      this.reviewable.set("claimed_by", { user, automatic: data.automatic });
+      this.reviewable.set("reviewable_histories", [
+        ...this.reviewable.reviewable_histories,
+        {
+          reviewable_history_type: 3,
+          created_at: now,
+          created_by: user,
+        },
+      ]);
+    } else {
+      this.reviewable.set("claimed_by", null);
+      this.reviewable.set("reviewable_histories", [
+        ...this.reviewable.reviewable_histories,
+        {
+          reviewable_history_type: 4,
+          created_at: now,
+          created_by: user,
+        },
+      ]);
     }
   }
 
@@ -706,10 +734,6 @@ export default class ReviewableItem extends Component {
                   {{/each}}
                 </div>
               </div>
-              {{newReviewableStatus
-                this.reviewable.status
-                this.reviewable.type
-              }}
 
               <button
                 type="button"
@@ -719,6 +743,16 @@ export default class ReviewableItem extends Component {
               >
                 {{icon "d-post-share"}}
               </button>
+
+              {{newReviewableStatus
+                this.reviewable.status
+                this.reviewable.type
+              }}
+
+              <span class="reviewable-created-date">
+                {{formatDate this.reviewable.created_at format="tiny"}}
+              </span>
+
             </div>
             {{#if this.editing}}
               <div class="editable-fields">
@@ -761,20 +795,6 @@ export default class ReviewableItem extends Component {
               >
                 <li
                   class={{concatClass
-                    "insights"
-                    (if (eq this.activeTab "insights") "active")
-                  }}
-                >
-                  <a
-                    href="#"
-                    class={{if (eq this.activeTab "insights") "active"}}
-                    {{on "click" (fn this.switchTab "insights")}}
-                  >
-                    {{i18n "review.insights.title"}}
-                  </a>
-                </li>
-                <li
-                  class={{concatClass
                     "timeline"
                     (if (eq this.activeTab "timeline") "active")
                   }}
@@ -787,13 +807,30 @@ export default class ReviewableItem extends Component {
                     {{i18n "review.timeline_and_notes"}}
                   </a>
                 </li>
+                <li
+                  class={{concatClass
+                    "insights"
+                    (if (eq this.activeTab "insights") "active")
+                  }}
+                >
+                  <a
+                    href="#"
+                    class={{if (eq this.activeTab "insights") "active"}}
+                    {{on "click" (fn this.switchTab "insights")}}
+                  >
+                    {{i18n "review.insights.title"}}
+                  </a>
+                </li>
               </HorizontalOverflowNav>
             </div>
 
             {{#if (eq this.activeTab "insights")}}
               <ReviewableInsights @reviewable={{this.reviewable}} />
             {{else if (eq this.activeTab "timeline")}}
-              <ReviewableTimeline @reviewable={{this.reviewable}} />
+              <ReviewableTimeline
+                @reviewable={{this.reviewable}}
+                @historyEvents={{this.reviewable.reviewable_histories}}
+              />
             {{/if}}
           </div>
         </div>
@@ -804,8 +841,16 @@ export default class ReviewableItem extends Component {
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
                 <h3 class="review-item__aside-title">
-                  {{#if this.displayContextQuestion}}
-                    {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{#if this.editing}}
+                    {{i18n "review.editing_post"}}
+                  {{else if (eq this.reviewable.status PENDING)}}
+                    {{#if this.displayContextQuestion}}
+                      {{this.reviewable.flaggedReviewableContextQuestion}}
+                    {{else if this.reviewable.userReviewableContextQuestion}}
+                      {{this.reviewable.userReviewableContextQuestion}}
+                    {{else}}
+                      {{i18n "review.moderator_actions"}}
+                    {{/if}}
                   {{else}}
                     {{i18n "review.moderator_actions"}}
                   {{/if}}
@@ -837,7 +882,6 @@ export default class ReviewableItem extends Component {
                   {{#if this.reviewable.can_edit}}
                     <DButton
                       @disabled={{this.disabled}}
-                      @icon="pencil"
                       @action={{this.edit}}
                       @label="review.edit"
                       class="reviewable-action btn-default edit"

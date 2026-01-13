@@ -10,7 +10,6 @@ tr_TR:
       sort_options:
         votes: "Oylar"
     topic_voting:
-      title: "Konu Oylama"
       reached_limit: "Oy hakkınız kalmadı, mevcut bir oyunuzu kaldırın!"
       list_votes: "Oylarınızı listeleyin"
       votes_nav_help: "en çok oy alan konular"
@@ -21,12 +20,6 @@ tr_TR:
       voted_title: "Oylandı"
       voting_closed_title: "Kapalı"
       voting_limit: "Sınır"
-      votes_left:
-        one: "%{count} oyunuz kaldı, <a href='%{path}'>oylarınıza</a> bakın."
-        other: "%{count} oyunuz kaldı, <a href='%{path}'>oylarınıza</a> bakın."
-      votes_left_button_title:
-        one: "%{count} oyunuz kaldı."
-        other: "%{count} oyunuz kaldı."
       votes:
         one: "%{count} oy"
         other: "%{count} oy"

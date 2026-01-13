@@ -58,7 +58,7 @@ en:
         categories_list:
           title: "Categories List"
         topic_link:
-          title: "Topic Link"
+          title: "Topic Link and Status"
         topic_list_item:
           title: "Topic List Item"
         topic_statuses:
@@ -67,8 +67,6 @@ en:
           title: "Topic List"
         basic_topic_list:
           title: "Basic Topic List"
-        footer_message:
-          title: "Footer Message"
         signup_cta:
           title: "Signup CTA"
         topic_timer_info:
@@ -83,6 +81,8 @@ en:
           title: "Post List"
           empty_example: "<PostList /> empty state"
           populated_example: "<PostList /> populated state"
+        post_oneboxes:
+          title: "Post Oneboxes"
         topic_map:
           title: "Topic Map"
         site_header:

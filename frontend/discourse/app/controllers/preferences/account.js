@@ -5,11 +5,13 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import getURL from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
 import { i18n } from "discourse-i18n";
@@ -39,15 +41,15 @@ export default class AccountController extends Controller {
 
   init() {
     super.init(...arguments);
-
-    this.saveAttrNames = [
-      "name",
-      "title",
-      "primary_group_id",
-      "flair_group_id",
-      "status",
-    ];
     this.set("revoking", {});
+  }
+
+  get saveAttrNames() {
+    return applyValueTransformer(
+      "preferences-save-attributes",
+      ["name", "title", "primary_group_id", "flair_group_id", "status"],
+      { page: "account" }
+    );
   }
 
   reset() {
@@ -80,17 +82,17 @@ export default class AccountController extends Controller {
     );
   }
 
-  @discourseComputed("model.associated_accounts")
-  associatedAccountsLoaded(associatedAccounts) {
-    return typeof associatedAccounts !== "undefined";
+  get associatedAccountsLoaded() {
+    return typeof this.model.associated_accounts !== "undefined";
   }
 
-  @discourseComputed("model.associated_accounts.[]")
-  authProviders(accounts) {
+  get authProviders() {
     return findAll()
       .map((method) => ({
         method,
-        account: accounts.find(({ name }) => name === method.name),
+        account: this.model.associated_accounts.find(
+          ({ name }) => name === method.name
+        ),
       }))
       .filter((value) => value.account || value.method.can_connect);
   }
@@ -251,7 +253,7 @@ export default class AccountController extends Controller {
       .revokeAssociatedAccount(account.name)
       .then((result) => {
         if (result.success) {
-          this.model.associated_accounts.removeObject(account);
+          removeValueFromArray(this.model.associated_accounts, account);
         } else {
           this.dialog.alert(result.message);
         }

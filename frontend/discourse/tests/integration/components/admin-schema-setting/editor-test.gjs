@@ -1,6 +1,9 @@
 import { click, fillIn, render } from "@ember/test-helpers";
-import DialogHolder from "dialog-holder/components/dialog-holder";
 import { module, test } from "qunit";
+import AdminSchemaSettingEditor from "discourse/admin/components/schema-setting/editor";
+import SiteSetting from "discourse/admin/models/site-setting";
+import ThemeSettings from "discourse/admin/models/theme-settings";
+import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import schemaAndData, {
   SCHEMA_MODES,
 } from "discourse/tests/fixtures/theme-setting-schema-data";
@@ -8,9 +11,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import AdminSchemaSettingEditor from "admin/components/schema-setting/editor";
-import SiteSetting from "admin/models/site-setting";
-import ThemeSettings from "admin/models/theme-settings";
 
 class TreeFromDOM {
   constructor() {
@@ -2445,6 +2445,79 @@ module(
 
       assert.dom(MOVE_UP_BTN).isNotDisabled();
       assert.dom(MOVE_DOWN_BTN).isDisabled();
+    });
+
+    test("multiple upload fields have unique IDs", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            first_upload: {
+              type: "upload",
+            },
+            second_upload: {
+              type: "upload",
+            },
+          },
+        },
+        value: [{}],
+      });
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+
+      const inputFields = new InputFieldsFromDOM();
+
+      // Verify both upload fields exist
+      assert
+        .dom(inputFields.fields.first_upload.labelElement)
+        .hasText("first_upload");
+      assert
+        .dom(inputFields.fields.second_upload.labelElement)
+        .hasText("second_upload");
+
+      // The UppyImageUploader components should have unique IDs based on field names
+      const firstUploadId =
+        inputFields.fields.first_upload.inputElement.id ||
+        inputFields.fields.first_upload.inputElement.querySelector(
+          "[id^='schema-field-upload-']"
+        )?.id;
+      const secondUploadId =
+        inputFields.fields.second_upload.inputElement.id ||
+        inputFields.fields.second_upload.inputElement.querySelector(
+          "[id^='schema-field-upload-']"
+        )?.id;
+
+      assert.true(
+        !!firstUploadId,
+        "First upload field should have an ID attribute"
+      );
+      assert.true(
+        !!secondUploadId,
+        "Second upload field should have an ID attribute"
+      );
+      assert.notStrictEqual(
+        firstUploadId,
+        secondUploadId,
+        "Upload field IDs should be unique"
+      );
+      assert.true(
+        firstUploadId?.includes("first_upload"),
+        "First upload ID should include field name"
+      );
+      assert.true(
+        secondUploadId?.includes("second_upload"),
+        "Second upload ID should include field name"
+      );
     });
   }
 );

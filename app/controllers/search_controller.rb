@@ -20,7 +20,8 @@ class SearchController < ApplicationController
     # eg: ?q[foo]=bar
     raise Discourse::InvalidParameters.new(:q) if params[:q].present? && !@search_term.present?
 
-    if @search_term.present? && @search_term.length < SiteSetting.min_search_term_length
+    if @search_term.present? && @search_term.length < SiteSetting.min_search_term_length &&
+         !Search.valid_search_shortcut?(@search_term)
       raise Discourse::InvalidParameters.new(:q)
     end
 
@@ -75,7 +76,8 @@ class SearchController < ApplicationController
       result.find_user_data(guardian) if result
     end
 
-    serializer = serialize_data(result, GroupedSearchResultSerializer, result: result)
+    serializer =
+      serialize_data(result, GroupedSearchResultSerializer, result: result, scope: guardian)
 
     respond_to do |format|
       format.html { store_preloaded("search", MultiJson.dump(serializer)) }
@@ -163,7 +165,7 @@ class SearchController < ApplicationController
   protected
 
   def site_overloaded?
-    queue_time = request.env["REQUEST_QUEUE_SECONDS"]
+    queue_time = request.env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]
     if queue_time
       threshold = GlobalSetting.disable_search_queue_threshold.to_f
       threshold > 0 && queue_time > threshold

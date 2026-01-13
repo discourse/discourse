@@ -124,6 +124,24 @@ const extension = {
     return new Plugin({
       props: {
         transformPasted(slice, view) {
+          // Prevent quotes that start with a list from being unwrapped during paste.
+          // When a quote's first child is a list, Slice.maxOpen opens it too deeply
+          // (openStart: 4), causing ProseMirror to unwrap the quote during paste.
+          // We detect this case and limit the opening depth.
+          let wasFixed = false;
+          const firstChild = slice.content.firstChild;
+          if (
+            firstChild?.type.name === "quote" &&
+            slice.openStart > 2 &&
+            (firstChild.firstChild?.type.name === "bullet_list" ||
+              firstChild.firstChild?.type.name === "ordered_list")
+          ) {
+            // Limit opening to preserve quote structure while still allowing
+            // normal paste merging for quotes with mixed content
+            slice = new Slice(slice.content, 1, 1);
+            wasFixed = true;
+          }
+
           if (
             view.endOfTextblock("forward") &&
             slice.content.childCount === 1 &&
@@ -132,7 +150,16 @@ const extension = {
             const quote = slice.content.firstChild;
             const paragraph = view.state.schema.nodes.paragraph.create();
 
-            return Slice.maxOpen(Fragment.from([quote, paragraph]), false);
+            // If we fixed the slice above, preserve those open values.
+            // Otherwise use the original behavior (maxOpen with openIsolating=false)
+            const result = wasFixed
+              ? new Slice(
+                  Fragment.from([quote, paragraph]),
+                  slice.openStart,
+                  slice.openEnd
+                )
+              : Slice.maxOpen(Fragment.from([quote, paragraph]), false);
+            return result;
           }
 
           return slice;

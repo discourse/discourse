@@ -4,6 +4,8 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import ColorPaletteEditor from "discourse/admin/components/color-palette-editor";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import icon from "discourse/helpers/d-icon";
@@ -11,8 +13,6 @@ import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import ColorPaletteEditor from "admin/components/color-palette-editor";
 
 export default class AdminConfigAreasColorPalette extends Component {
   @service toasts;
@@ -314,7 +314,7 @@ export default class AdminConfigAreasColorPalette extends Component {
             {{/if}}
             <div class="admin-config-color-palettes__top-actions">
               <DButton
-                class="duplicate-palette"
+                class="btn-default duplicate-palette"
                 @label="admin.config_areas.color_palettes.duplicate"
                 @action={{this.duplicate}}
               />
@@ -430,7 +430,7 @@ export default class AdminConfigAreasColorPalette extends Component {
                   </span>
                 {{/if}}
                 <DButton
-                  class="copy-to-clipboard"
+                  class="btn-default copy-to-clipboard"
                   @label="admin.config_areas.color_palettes.copy_to_clipboard"
                   @action={{this.copyToClipboard}}
                 />

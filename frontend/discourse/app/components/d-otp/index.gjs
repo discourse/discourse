@@ -1,16 +1,35 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
+/** @type {import("./slot.gjs").default} */
 import Slot from "./slot";
 
 const DEFAULT_SLOTS = 6;
 
+/**
+ * @typedef DOTPSignature
+ *
+ * @property {object} Args
+ *
+ * @property {number} [Args.slots] - Number of OTP input slots to display (defaults to 6)
+ * @property {boolean} [Args.autoFocus] - Whether to autoFocus the input on mount (defaults to true)
+ * @property {function(string): void} [Args.onChange] - Callback invoked whenever the OTP value changes
+ * @property {function(string): void} [Args.onFill] - Callback invoked when all OTP slots are filled
+ *
+ */
+
+/** @extends {Component<DOTPSignature>} */
 export default class DOTP extends Component {
+  @service capabilities;
+
   @tracked isFocused = false;
   @tracked isAllSelected = false;
 
@@ -18,6 +37,10 @@ export default class DOTP extends Component {
 
   get slots() {
     return this.args.slots ?? DEFAULT_SLOTS;
+  }
+
+  get autoFocus() {
+    return (this.args.autoFocus ?? true) && !this.capabilities.isIOS;
   }
 
   get isFilled() {
@@ -90,7 +113,7 @@ export default class DOTP extends Component {
     const input = event.target;
     event.preventDefault(); // Prevent the call to input as we manually call it later
 
-    const clipboardData = event.clipboardData || window.clipboardData;
+    const { clipboardData } = event;
     if (!clipboardData) {
       return;
     }
@@ -143,6 +166,7 @@ export default class DOTP extends Component {
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
           aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
+          {{(if this.autoFocus (modifier autoFocus))}}
           ...attributes
         />
       </div>

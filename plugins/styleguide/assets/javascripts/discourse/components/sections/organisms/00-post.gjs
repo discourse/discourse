@@ -1,14 +1,22 @@
-import MountWidget from "discourse/components/mount-widget";
+import Component from "@glimmer/component";
+import Post from "discourse/components/post";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const Post = <template>
-  <StyleguideExample @title="post">
-    <MountWidget
-      @widget="post"
-      @model={{@dummy.postModel}}
-      @args={{@dummy.transformedPost}}
-    />
-  </StyleguideExample>
-</template>;
+export default class PostOrganism extends Component {
+  get postCode() {
+    return `import Post from "discourse/components/post";
 
-export default Post;
+<template>
+  <Post @post={{@dummy.postModel}} />
+</template>`;
+  }
+
+  <template>
+    <StyleguideExample @title="<Post>" @code={{this.postCode}}>
+      <Post
+        @post={{@dummy.postModel.transformedPost}}
+        @canCreatePost={{true}}
+      />
+    </StyleguideExample>
+  </template>
+}

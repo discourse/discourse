@@ -1,12 +1,13 @@
-import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
+// @ts-check
+
 import {
   getChangedRanges,
   markInputRule,
 } from "discourse/static/prosemirror/lib/plugin-utils";
 
-const REPLACE_STEPS = [ReplaceStep, ReplaceAroundStep];
+const REPLACE_STEPS = ["ReplaceStep", "ReplaceAroundStep"];
 
-/** @type {RichEditorExtension} */
+/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
   markSpec: {
     link: {
@@ -183,7 +184,7 @@ const extension = {
           .filter((tr) => tr.docChanged && tr.getMeta("addToHistory") !== false)
           .flatMap((tr) => tr.steps)
           .forEach((step) => {
-            if (REPLACE_STEPS.includes(step.constructor)) {
+            if (REPLACE_STEPS.includes(step.constructor.name)) {
               transaction.step(step);
             }
           });

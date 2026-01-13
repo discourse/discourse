@@ -108,7 +108,11 @@ ug:
       actions:
         no_action_message:
           title: "تەدبىر قوللانمىغان"
+        delete_message:
+          title: "ئۇچۇر ئۆچۈر"
+          description: "ئۇچۇرنى مەڭگۈلۈك ئۆچۈرىدۇ."
         restore_message:
+          title: "ئۇچۇرنى ئەسلىگە كەلتۈر"
           description: "ئۇچۇرنى ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
         agree:
           title: "قوشۇل…"
@@ -267,10 +271,8 @@ ug:
       view_more:
         one: "باشقا %{count} ئۇچۇرنى كۆرسەت"
         other: "باشقا %{count} ئۇچۇرنى كۆرسەت"
-      your_chat_settings: "سۆھبەت ئېلخەت چاستوتا مايىللىقى"
   unsubscribe:
     chat_summary:
-      select_title: "سۆھبەت خۇلاسە ئېلخەت چاستوتا تەڭشىكى:"
       never: ھەرگىز
       when_away: ئايرىلغاندىلا
   category:

@@ -1,10 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import AdminPluginConfigArea from "discourse/admin/components/admin-plugin-config-area";
+import AdminPlugin from "discourse/admin/models/admin-plugin";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AdminPluginConfigArea from "admin/components/admin-plugin-config-area";
-import AdminPlugin from "admin/models/admin-plugin";
 
 module("Integration | Component | admin-plugin-config-area", function (hooks) {
   setupRenderingTest(hooks);

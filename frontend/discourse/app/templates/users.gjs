@@ -13,9 +13,9 @@ import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import PeriodChooser from "select-kit/components/period-chooser";
 
 export default <template>
   {{#if @controller.model.canLoadMore}}

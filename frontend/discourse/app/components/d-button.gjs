@@ -5,10 +5,10 @@ import { empty, equal, notEmpty } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class DButton extends Component {
@@ -214,6 +214,12 @@ export default class DButton extends Component {
       {{~/if~}}
 
       {{yield}}
+
+      {{#if @suffixIcon}}
+        <span class="d-button__suffix-icon">
+          {{~icon @suffixIcon~}}
+        </span>
+      {{/if}}
     </this.wrapperElement>
   </template>
 }

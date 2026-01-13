@@ -10,6 +10,7 @@ el:
       logs:
         staff_actions:
           actions:
+            update_automation: ενημέρωση αυτοματισμού
             delete_automation: διαγραφή αυτοματισμού
     discourse_automation:
       title: Αυτοματισμός
@@ -30,7 +31,7 @@ el:
         fields_section:
           title: Επιλογές σεναρίου
       destroy_automation:
-        confirm: "Είστε βέβαιοι ότι θέλετε να διαγράψετε το `%{name}`;"
+        confirm: "Σίγουρα θέλετε να διαγράψετε το `%{name}`;"
       fields:
         key_value:
           label_without_count: "Διαμόρφωση"
@@ -56,6 +57,12 @@ el:
         text:
           label: Κείμενο
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Κατηγορίες
+            tags:
+              label: Ετικέτες
         user_badge_granted:
           fields:
             badge:
@@ -128,7 +135,12 @@ el:
               label: Ετικέτες
             restricted_categories:
               label: Κατηγορίες
+            restricted_archetype:
+              description: Προαιρετικά, να επιτρέπεται το έναυσμα μόνο σε θέματα ή προσωπικά μηνύματα
           created: Δημιουργήθηκε
+          topics: Όλα τα θέματα
+          personal_messages: Προσωπικά μηνύματα
+          public_topics: Δημόσια θέματα (εξαιρούνται όλες οι ασφαλείς κατηγορίες)
           with_images: Εικόνες
           with_links: Σύνδεσμοι
           with_code: Κωδικός
@@ -298,6 +310,8 @@ el:
             user:
               label: Χρήστης
               description: "Ο χρήστης που κλείνει το θέμα (προεπιλογή: σύστημα)"
+        set_topic_timer:
+          title: Ορισμός Χρονοδιακόπτη Θέματος
       unnamed_automation: "Ανώνυμος αυτοματισμός"
       models:
         trigger:
@@ -317,6 +331,8 @@ el:
             label: Έκδοση
           status:
             label: Κατάσταση
+          enabled:
+            label: "Ενεργοποίηση αυτοματισμού"
           disabled:
             label: Απενεργοποιημένο
           last_updated_at:

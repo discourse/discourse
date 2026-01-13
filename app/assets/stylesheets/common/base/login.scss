@@ -131,3 +131,10 @@ body.invite-page {
     }
   }
 }
+
+.totp-token {
+  flex-direction: column;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}

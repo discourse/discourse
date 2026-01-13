@@ -4,8 +4,9 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
+import ColorInput from "discourse/admin/components/color-input";
 import ColorPicker from "discourse/components/color-picker";
+import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -17,9 +18,9 @@ import {
 } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ColorInput from "admin/components/color-input";
-import CategoryChooser from "select-kit/components/category-chooser";
 
 export default class EditCategoryGeneral extends Component {
   @service site;
@@ -204,7 +205,7 @@ export default class EditCategoryGeneral extends Component {
       return htmlSafe(this.args.category.description);
     }
 
-    return i18n("category.no_description");
+    return htmlSafe(i18n("category.no_description"));
   }
 
   get canSelectParentCategory() {
@@ -298,7 +299,10 @@ export default class EditCategoryGeneral extends Component {
 
       {{#if this.showDescription}}
         <@form.Section @title={{i18n "category.description"}}>
-          <span class="readonly-field">{{this.categoryDescription}}</span>
+          <DecoratedHtml
+            @html={{this.categoryDescription}}
+            @className="readonly-field"
+          />
 
           {{#if @category.topic_url}}
             <@form.Container>

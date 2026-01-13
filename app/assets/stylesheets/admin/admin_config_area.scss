@@ -3,6 +3,7 @@
   border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius);
   background-color: var(--secondary);
+  min-width: 0;
 
   &__label-optional {
     color: var(--primary-medium);
@@ -82,7 +83,7 @@
 
   &__aside {
     /* use for help inset */
-    flex: 0 1 30%;
+    flex: 0 1 20%;
     padding: var(--space-2);
 
     @media (max-width: $mobile-breakpoint) {
@@ -275,6 +276,17 @@
             font-size: var(--base-font-size-largest);
           }
         }
+      }
+    }
+  }
+}
+
+.admin-welcome-banner-form {
+  #control-enabledThemes {
+    .form-kit__container-content.--large {
+      .d-multi-select-trigger__selection-label {
+        // show selection full names (overrides unnecessary truncation)
+        max-width: unset;
       }
     }
   }

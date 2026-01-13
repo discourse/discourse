@@ -1,27 +1,27 @@
 import EmberObject from "@ember/object";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 export default class WatchedWord extends EmberObject {
-  static findAll() {
-    return ajax("/admin/customize/watched_words.json").then((list) => {
-      const actions = {};
+  static async findAll() {
+    const list = await ajax("/admin/customize/watched_words.json");
+    const actions = {};
 
-      list.actions.forEach((action) => {
-        actions[action] = [];
-      });
+    list.actions.forEach((action) => {
+      actions[action] = [];
+    });
 
-      list.words.forEach((watchedWord) => {
-        actions[watchedWord.action].pushObject(WatchedWord.create(watchedWord));
-      });
+    list.words.forEach((watchedWord) => {
+      actions[watchedWord.action].push(WatchedWord.create(watchedWord));
+    });
 
-      return Object.keys(actions).map((nameKey) => {
-        return EmberObject.create({
-          nameKey,
-          name: i18n("admin.watched_words.actions." + nameKey),
-          words: actions[nameKey],
-          compiledRegularExpression: list.compiled_regular_expressions[nameKey],
-        });
+    return Object.keys(actions).map((nameKey) => {
+      return EmberObject.create({
+        nameKey,
+        name: i18n("admin.watched_words.actions." + nameKey),
+        words: new TrackedArray(actions[nameKey]),
+        compiledRegularExpression: list.compiled_regular_expressions[nameKey],
       });
     });
   }

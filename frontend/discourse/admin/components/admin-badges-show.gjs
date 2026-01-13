@@ -4,6 +4,8 @@ import { concat, fn, hash } from "@ember/helper";
 import { action, getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import AdminBadgesList from "discourse/admin/components/admin-badges-list";
+import BadgePreviewModal from "discourse/admin/components/modal/badge-preview";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
@@ -13,8 +15,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
-import AdminBadgesList from "admin/components/admin-badges-list";
-import BadgePreviewModal from "admin/components/modal/badge-preview";
 
 const FORM_FIELDS = [
   "allow_title",
@@ -285,7 +285,7 @@ export default class AdminBadgesShow extends Component {
           </form.Field>
         {{/if}}
 
-        <form.Section @title="Design">
+        <form.Section @title={{i18n "admin.badges.sections.design"}}>
           <form.Field
             @name="badge_type_id"
             @title={{i18n "admin.badges.badge_type"}}
@@ -400,7 +400,7 @@ export default class AdminBadgesShow extends Component {
         </form.Section>
 
         {{#if this.siteSettings.enable_badge_sql}}
-          <form.Section @title="Query">
+          <form.Section @title={{i18n "admin.badges.sections.query"}}>
             <form.Field
               @name="query"
               @title={{i18n "admin.badges.query"}}
@@ -468,7 +468,7 @@ export default class AdminBadgesShow extends Component {
           </form.Section>
         {{/if}}
 
-        <form.Section @title="Settings">
+        <form.Section @title={{i18n "admin.badges.sections.settings"}}>
           <form.Field
             @name="badge_grouping_id"
             @validation="required"

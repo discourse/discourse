@@ -14,8 +14,8 @@ import {
   REPLY,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
 // Component can get destroyed and lose state

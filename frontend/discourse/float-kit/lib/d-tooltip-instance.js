@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TOOLTIP } from "float-kit/lib/constants";
-import FloatKitInstance from "float-kit/lib/float-kit-instance";
+import { TOOLTIP } from "discourse/float-kit/lib/constants";
+import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 
 export default class DTooltipInstance extends FloatKitInstance {
   @service tooltip;
@@ -27,6 +27,7 @@ export default class DTooltipInstance extends FloatKitInstance {
    * @property {Object} options - Options object that configures the tooltip behavior and display.
    */
   @tracked options;
+  @tracked portalOutletOverrideElement;
 
   @tracked _trigger;
 
@@ -35,6 +36,7 @@ export default class DTooltipInstance extends FloatKitInstance {
 
     setOwner(this, owner);
     this.options = { ...TOOLTIP.options, ...options };
+    this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
   get trigger() {
@@ -48,7 +50,10 @@ export default class DTooltipInstance extends FloatKitInstance {
   }
 
   get portalOutletElement() {
-    return document.getElementById("d-tooltip-portals");
+    return (
+      this.portalOutletOverrideElement ||
+      document.getElementById("d-tooltip-portals")
+    );
   }
 
   @action

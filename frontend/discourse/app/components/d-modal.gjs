@@ -7,20 +7,18 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier as modifierFn } from "ember-modifier";
-import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
 import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import htmlClass from "discourse/helpers/html-class";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
+import { waitForAnimationEnd } from "discourse/lib/animation-utils";
+import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
+import { and, not, or } from "discourse/truth-helpers";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
@@ -31,7 +29,6 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
 export default class DModal extends Component {
-  @service capabilities;
   @service modal;
   @service site;
 
@@ -47,22 +44,10 @@ export default class DModal extends Component {
       return;
     }
 
-    let offset, interval;
-    if (this.capabilities.isIOS) {
-      offset = window.pageYOffset;
-      interval = setInterval(() => {
-        window.scrollTo(0, offset);
-      }, 50);
-    }
-
-    disableBodyScroll(el);
+    lock(el);
 
     return () => {
-      if (this.capabilities.isIOS) {
-        clearInterval(interval);
-      }
-
-      enableBodyScroll(el);
+      unlock(el);
     };
   });
 
@@ -70,14 +55,15 @@ export default class DModal extends Component {
   async setupModal(el) {
     document.documentElement.addEventListener(
       "keydown",
-      this.handleDocumentKeydown
+      this.handleDocumentKeydown,
+      { capture: true }
     );
 
     this.wrapperElement = el;
     this.animating = true;
 
     this.modalContainer.classList.add("is-entering");
-    await this.#waitForAnimationEnd(this.modalContainer);
+    await waitForAnimationEnd(this.modalContainer);
     this.modalContainer.classList.remove("is-entering");
 
     this.animating = false;
@@ -87,7 +73,8 @@ export default class DModal extends Component {
   cleanupModal() {
     document.documentElement.removeEventListener(
       "keydown",
-      this.handleDocumentKeydown
+      this.handleDocumentKeydown,
+      { capture: true }
     );
   }
 
@@ -114,10 +101,12 @@ export default class DModal extends Component {
       return false;
     }
 
-    // skip when in a form or a textarea element
+    // skip when in a form, textarea, or select-kit element
     if (
       event.target.closest("form") ||
-      document.activeElement?.nodeName === "TEXTAREA"
+      document.activeElement?.closest("form") ||
+      document.activeElement?.nodeName === "TEXTAREA" ||
+      document.activeElement?.closest(".select-kit")
     ) {
       return false;
     }
@@ -192,7 +181,7 @@ export default class DModal extends Component {
           backdrop.classList.add("is-exiting");
         }
 
-        await this.#waitForAnimationEnd(this.modalContainer);
+        await waitForAnimationEnd(this.modalContainer);
       }
     } finally {
       this.animating = false;
@@ -204,6 +193,12 @@ export default class DModal extends Component {
   handleDocumentKeydown(event) {
     if (this.args.hidden) {
       return;
+    }
+
+    // Prevent keyboard events from leaking to elements behind the modal
+    if (!this.wrapperElement.contains(document.activeElement)) {
+      event.stopPropagation();
+      event.preventDefault();
     }
 
     if (event.key === "Escape" && this.dismissable) {
@@ -266,31 +261,6 @@ export default class DModal extends Component {
     );
   }
 
-  #waitForAnimationEnd(el) {
-    return new Promise((resolve) => {
-      const style = window.getComputedStyle(el);
-      const duration = parseFloat(style.animationDuration) * 1000 || 0;
-      const delay = parseFloat(style.animationDelay) * 1000 || 0;
-      const totalTime = duration + delay;
-
-      const timeoutId = setTimeout(
-        () => {
-          el.removeEventListener("animationend", handleAnimationEnd);
-          resolve();
-        },
-        Math.max(totalTime + 50, 50)
-      );
-
-      const handleAnimationEnd = () => {
-        clearTimeout(timeoutId);
-        el.removeEventListener("animationend", handleAnimationEnd);
-        resolve();
-      };
-
-      el.addEventListener("animationend", handleAnimationEnd);
-    });
-  }
-
   async #animatePopOff() {
     const backdrop = this.wrapperElement.nextElementSibling;
 
@@ -303,8 +273,8 @@ export default class DModal extends Component {
 
     await waitForPromise(
       Promise.all([
-        this.#waitForAnimationEnd(this.modalContainer),
-        this.#waitForAnimationEnd(backdrop),
+        waitForAnimationEnd(this.modalContainer),
+        waitForAnimationEnd(backdrop),
       ])
     );
   }
@@ -424,8 +394,8 @@ export default class DModal extends Component {
 
           <div
             class={{concatClass "d-modal__body" @bodyClass}}
-            {{this.setupModalBody}}
             tabindex="-1"
+            {{this.setupModalBody}}
           >
             {{#if (has-block "body")}}
               {{yield to="body"}}

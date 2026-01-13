@@ -63,6 +63,8 @@ class ApplicationController < ActionController::Base
 
   HONEYPOT_KEY = "HONEYPOT_KEY"
   CHALLENGE_KEY = "CHALLENGE_KEY"
+  MINI_PROFILER_AUTH_COOKIE_EXPIRES_IN = 1.hour
+  MINI_PROFILER_CLASS = defined?(Rack::MiniProfiler) ? Rack::MiniProfiler : nil
 
   layout :set_layout
 
@@ -431,6 +433,7 @@ class ApplicationController < ActionController::Base
     else
       locale = Discourse.anonymous_locale(request)
       locale ||= SiteSetting.default_locale
+      persist_locale_param_to_cookie
     end
 
     locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE if !I18n.locale_available?(locale)
@@ -683,12 +686,25 @@ class ApplicationController < ActionController::Base
   end
 
   def mini_profiler_enabled?
-    defined?(Rack::MiniProfiler) && (guardian.is_developer? || Rails.env.development?)
+    return false unless MINI_PROFILER_CLASS
+    return true if Rails.env.development?
+    return true if guardian.is_developer?
+
+    if auth = cookies.encrypted[:_mp_auth]
+      user_id = auth[:user_id]
+      issued_at = auth[:issued_at]
+
+      if issued_at && issued_at > MINI_PROFILER_AUTH_COOKIE_EXPIRES_IN.ago.to_i
+        user = User.find_by(id: user_id)
+        return true if user && Guardian.new(user).is_developer?
+      end
+    end
+
+    false
   end
 
   def authorize_mini_profiler
-    return unless mini_profiler_enabled?
-    Rack::MiniProfiler.authorize_request
+    MINI_PROFILER_CLASS.authorize_request if mini_profiler_enabled?
   end
 
   def check_xhr
@@ -1072,5 +1088,16 @@ class ApplicationController < ActionController::Base
     yield
   ensure
     dont_cache_page
+  end
+
+  def persist_locale_param_to_cookie
+    if SiteSetting.set_locale_from_param && SiteSetting.set_locale_from_cookie &&
+         (locale_param = params[Discourse::LOCALE_PARAM]).present?
+      if I18n.locale_available?(locale_param)
+        cookie_args = { path: "/" }
+        cookie_args[:path] = Discourse.base_path if Discourse.base_path.present?
+        cookies[:locale] = cookie_args.merge(value: locale_param)
+      end
+    end
   end
 end

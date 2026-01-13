@@ -4,8 +4,8 @@ import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
-import DMenu from "float-kit/components/d-menu";
 
 const buttonOptionsMap = {
   exportResults: {

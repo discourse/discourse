@@ -46,7 +46,7 @@ module DiscoursePostEvent
             starts_at,
             finished_at
           FROM discourse_calendar_post_event_dates
-          ORDER BY event_id, finished_at DESC NULLS FIRST, starts_at DESC
+          ORDER BY event_id, #{DiscoursePostEvent::EventDate.current_ordering_sql}
         ) latest_event_dates ON latest_event_dates.event_id = discourse_post_event_events.id
       SQL
     end

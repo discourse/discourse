@@ -11,6 +11,10 @@ gl:
     emotion_neutral:
       title: "\U0001F610 Neutro"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Personalizado"
     ai_bot:
       tool_summary:
         search: "Buscar"

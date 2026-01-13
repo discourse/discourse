@@ -8,11 +8,6 @@ import DButton from "discourse/components/d-button";
 import htmlClass from "discourse/helpers/html-class";
 import getURL from "discourse/lib/get-url";
 
-// note the panel for artifact full screen can not be at position 0,0
-// otherwise this hack will not activate.
-// https://github.com/discourse/discourse/blob/b8325f2190a8c0a9022405c219faeac6f0f98ca5/app/assets/javascripts/discourse/app/components/scrolling-post-stream.js#L77-L77
-// this will cause post stream to navigate to a different post
-
 export default class AiArtifactComponent extends Component {
   @service siteSettings;
 

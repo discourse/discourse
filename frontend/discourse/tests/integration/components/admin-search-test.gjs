@@ -1,7 +1,7 @@
 import { fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
+import AdminSearch from "discourse/admin/components/admin-search";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AdminSearch from "admin/components/admin-search";
 
 module("Integration | Component | AdminSearch", function (hooks) {
   setupRenderingTest(hooks);

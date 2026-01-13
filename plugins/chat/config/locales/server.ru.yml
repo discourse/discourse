@@ -31,6 +31,7 @@ ru:
     chat_editing_grace_period_max_diff_high_trust: "Максимальное количество изменённых символов, допустимое в нерегистрируемый период редактирования чата. При превышении этого значения отображается тег («отредактировано») возле сообщения чата (уровень доверия 2 и выше)."
     chat_preferred_index: "Предпочитаемая вкладка при загрузке /chat."
     allow_chat_in_anonymous_mode: "Включите эту настройку, чтобы пользователи, просматривающие сайт в анонимном режиме, могли пользоваться чатом. Для работы требуется включить параметр`allow anonymous mode`."
+    chat_search_enabled: "Включите эту настройку, чтобы разрешить пользователям поиск сообщений в чате."
     errors:
       chat_default_channel: "Канал чата по умолчанию должен быть общедоступным."
       direct_message_enabled_groups_invalid: "Для этого параметра необходимо указать хотя бы одну группу. Если вы не хотите, чтобы кто-либо, кроме сотрудников, отправлял прямые сообщения, выберите группу сотрудников."
@@ -112,9 +113,16 @@ ru:
     reviewables:
       message_already_handled: "Спасибо, но мы уже рассмотрели жалобу на это сообщение, поэтому жаловаться на него снова нет необходимости."
       actions:
+        message_actions:
+          bundle_title: "Что вы хотите сделать с этим сообщением?"
         no_action_message:
           title: "Нет действий"
+          description: "Оставьте сообщение как есть."
+        delete_message:
+          title: "Удалить сообщение"
+          description: "Удалите сообщение навсегда."
         restore_message:
+          title: "Восстановить сообщение"
           description: "Восстановить сообщение, чтобы пользователи могли его видеть."
         agree:
           title: "Согласиться…"
@@ -211,6 +219,7 @@ ru:
         is_already_in_use: "уже используется"
     bookmarkable:
       notification_title_channel: "Сообщение в канале %{channel_name}"
+      notification_title_direct_message: "сообщение с %{channel_name}"
     personal_chat: "личный чат"
     onebox:
       inline_to_message: "Сообщение №%{message_id} от пользователя %{username} — №%{chat_channel}"
@@ -310,10 +319,9 @@ ru:
         few: "Посмотреть ещё %{count} сообщения"
         many: "Посмотреть ещё %{count} сообщений"
         other: "Посмотреть ещё %{count} сообщений"
-      your_chat_settings: "Настройка частоты рассылки дайджеста чата"
   unsubscribe:
     chat_summary:
-      select_title: "Частота писем со сводками чата:"
+      select_title: "Установить сводку писем в чате:"
       never: Никогда
       when_away: Если вы находитесь офлайн
   category:

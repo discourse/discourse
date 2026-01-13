@@ -1,7 +1,7 @@
 import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
+import NotificationOptionsComponent from "discourse/select-kit/components/notifications-button";
 import { i18n } from "discourse-i18n";
-import NotificationOptionsComponent from "select-kit/components/notifications-button";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
 @selectKitOptions({

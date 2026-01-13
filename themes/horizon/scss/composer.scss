@@ -17,10 +17,6 @@
   @include viewport.from(sm) {
     background: var(--d-content-background);
 
-    .grippie {
-      background: var(--tertiary-low);
-    }
-
     .user-selector,
     .title-and-category {
       padding: 0 var(--space-4);
@@ -34,10 +30,6 @@
 
     .d-editor-input {
       padding: var(--space-4);
-    }
-
-    &:has(.in-focus) .grippie {
-      background: var(--tertiary);
     }
 
     .reply-area {

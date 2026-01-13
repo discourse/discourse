@@ -1,10 +1,10 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import ComboBoxComponent from "select-kit/components/combo-box";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 import FlairRow from "./flair-row";
 import SelectedFlair from "./selected-flair";
 

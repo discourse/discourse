@@ -9,12 +9,106 @@ import {
   isRailsTesting,
   isTesting,
 } from "discourse/lib/environment";
-import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
+import { WIDGET_DECOMMISSION_OPTIONS } from "discourse/widgets/widget";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
+/** @type {Symbol} Default decorator type used when no specific type is provided */
+export const NON_STREAM_HTML_DECORATOR = Symbol("non-stream");
+
+/** Helper object for contexts without a post/model. Use with `applyHtmlDecorators`. */
+export const NULL_HELPER = Object.freeze({
+  getModel: () => null,
+  get model() {
+    return null;
+  },
+  get context() {
+    return null;
+  },
+});
+
+/** @type {Object.<Symbol|string, Function[]>} Storage for HTML decorators organized by type */
+let htmlDecorators = {};
+
+/**
+ * Gets or initializes an array of HTML decorators for a specific type
+ *
+ * @param {Symbol|string} [type] - The decorator type to get decorators for. If not provided,
+ *                                defaults to NON_STREAM_HTML_DECORATOR
+ * @returns {Function[]} An array of decorator functions for the specified type
+ * @example
+ * const decorators = getHtmlDecoratorsForType(myDecoratorType);
+ * // Returns existing decorators array or initializes a new one
+ */
+function getHtmlDecoratorsForType(type) {
+  return (htmlDecorators[type ?? NON_STREAM_HTML_DECORATOR] ||= []);
+}
+
+/**
+ * Registers a new HTML decorator function for a specific type of decoration.
+ *
+ * @param {Function} decorator - The decorator function to register. It receives two parameters:
+ *                              1. element: HTMLElement to be decorated
+ *                              2. options: Object containing decoration options
+ *                              The decorator can optionally return a cleanup function.
+ * @param {Symbol|string} [type=NON_STREAM_HTML_DECORATOR] - The type of decorator to register.
+ *                                                       When not provided, defaults to NON_STREAM_HTML_DECORATOR (non-stream).
+ * @returns {void}
+ * @example
+ * registerHtmlDecorator((element, options) => {
+ *   element.classList.add('decorated');
+ *   return () => element.classList.remove('decorated'); // Cleanup function
+ * });
+ */
+export function registerHtmlDecorator(decorator, type) {
+  getHtmlDecoratorsForType(type).push(decorator);
+}
+
+/**
+ * Applies registered HTML decorators to a DOM element and returns their cleanup functions.
+ *
+ * @param {HTMLElement} element - The DOM element to apply decorators to
+ * @param {Object} helper - Helper object passed to each decorator. Use NULL_HELPER for contexts without a model.
+ * @param {Symbol|string} [type=NON_STREAM_HTML_DECORATOR] - The type of decorators to apply.
+ * @returns {Function[]} Array of cleanup functions from decorators that returned them.
+ */
+export function applyHtmlDecorators(element, helper, type) {
+  return getHtmlDecoratorsForType(type)
+    .map((decorator) => {
+      return decorator(element, helper);
+    })
+    .filter((fn) => typeof fn === "function");
+}
+
+/**
+ * Clears all registered HTML decorators
+ *
+ * USE ONLY FOR TESTING PURPOSES
+ *
+ * @returns {void}
+ */
+export function resetHtmlDecorators() {
+  if (isTesting()) {
+    htmlDecorators = {};
+  }
+}
+
 /**
  * Reactively renders cooked HTML with decorations applied.
+ *
+ * When no custom `@decorate` function is provided, registered HTML decorators
+ * (via `api.decorateCookedElement`) are automatically applied. This handles
+ * common cases like hashtag icons, mentions, and other cooked content decorations.
+ *
+ * @component DecoratedHtml
+ * @param {SafeString} html - The HTML content to render (must be wrapped with htmlSafe)
+ * @param {Function} [decorate] - Custom decorator function receiving (element, helper, decorateArgs).
+ *                                When provided, you're responsible for calling applyHtmlDecorators if needed.
+ * @param {Object} [decorateArgs] - Additional arguments passed to the decorate function
+ * @param {Object} [model] - Model object (e.g., post) passed to decorators via helper.model
+ * @param {Object} [context] - Context object passed to decorators via helper.context
+ * @param {string} [className] - CSS class name for the wrapper div
+ * @param {string} [id] - ID attribute for the wrapper div
  */
 export default class DecoratedHtml extends Component {
   renderGlimmerInfos = new TrackedArray();
@@ -31,12 +125,20 @@ export default class DecoratedHtml extends Component {
 
     const decorateFn = this.args.decorate;
 
-    // force parameters explicity declarated in `decorateArgs` to be tracked despite the
+    // force parameters explicitly declared in `decorateArgs` to be tracked despite the
     // use of `untrack` below
     decorateArgs && Object.values(decorateArgs);
 
     try {
-      untrack(() => decorateFn?.(cookedDiv, helper, decorateArgs));
+      untrack(() => {
+        if (decorateFn) {
+          // Custom decorator provided - it's responsible for calling applyHtmlDecorators if needed
+          decorateFn(cookedDiv, helper, decorateArgs);
+        } else {
+          // No custom decorator - automatically apply registered HTML decorators
+          applyHtmlDecorators(cookedDiv, helper);
+        }
+      });
     } catch (e) {
       if (isRailsTesting() || isTesting()) {
         throw e;
@@ -57,7 +159,7 @@ export default class DecoratedHtml extends Component {
   get elementToDecorate() {
     const cooked = this.args.html || htmlSafe("");
     if (!isHTMLSafe(cooked)) {
-      throw "@cooked must be an htmlSafe string";
+      throw "@html must be an htmlSafe string";
     }
     const cookedDiv = detachedDocument.createElement("div");
     cookedDiv.innerHTML = cooked.toString();
@@ -128,11 +230,21 @@ class DecorateHtmlHelper {
     this.#context = context;
   }
 
+  /**
+   * Renders a Glimmer component into a specified target HTML element with provided data.
+   * Handles deprecation warnings if invalid parameters are passed.
+   *
+   * @param {Element} targetElement The HTML element where the Glimmer component should be rendered. Must be a valid DOM element.
+   * @param {Object} component The Glimmer component object to render. Should not have a name of "factory" to avoid deprecation warnings.
+   * @param {Object} data The data to be passed to the Glimmer component for rendering.
+   * @param {Object} [opts={}] Additional options for rendering. Supports an `append` boolean property that defaults to `true` to determine if the content should be appended to the target element.
+   * @return {void}
+   */
   renderGlimmer(targetElement, component, data, opts = {}) {
     if (!(targetElement instanceof Element)) {
       deprecated(
         "Invalid `targetElement` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `targetElement` must be a valid HTML element. This call has been ignored to prevent errors.",
-        POST_STREAM_DEPRECATION_OPTIONS
+        WIDGET_DECOMMISSION_OPTIONS
       );
 
       return;
@@ -141,7 +253,7 @@ class DecorateHtmlHelper {
     if (component.name === "factory") {
       deprecated(
         "Invalid `component` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `component` must be a valid Glimmer component. If using a template compiled via ember-cli-htmlbars, replace it with the `<template>...</template>` syntax. This call has been ignored to prevent errors.",
-        POST_STREAM_DEPRECATION_OPTIONS
+        WIDGET_DECOMMISSION_OPTIONS
       );
 
       return;
@@ -168,24 +280,11 @@ class DecorateHtmlHelper {
     return this.model;
   }
 
-  // TODO (glimmer-post-stream): remove this when we remove the legacy post stream code
   get widget() {
     deprecated(
-      "Accessing `helper.widget` is not supported when using `api.decorateCookedElement` with the Glimmer Post Stream and can yield unexpected results.",
-      POST_STREAM_DEPRECATION_OPTIONS
+      "Using `helper.widget` has been decommissioned. See https://meta.discourse.org/t/372063/1",
+      WIDGET_DECOMMISSION_OPTIONS
     );
-
-    const attrs = this.model;
-
-    return {
-      get attrs() {
-        return attrs;
-      },
-      scheduleRerender() {
-        // This is a no-op when using the new glimmer components.
-        // The component will rerender automatically when the model changes.
-      },
-    };
   }
 
   teardown() {

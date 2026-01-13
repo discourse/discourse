@@ -87,6 +87,7 @@ lt:
         join_channel: "Prisijungti prie kanalo"
         leave_channel: "Išeiti iš kanalo"
         leave_groupchat_info: "Išėję iš šio grupinio pokalbio, nebeturėsite jo prieigos ir negausite su juo susijusių pranešimų. Norėdami vėl prisijungti, turėsite gauti pakartotinį grupės pokalbio nario kvietimą."
+        notification_settings_context: "Pranešimai"
         join: "Prisijungti"
         leave: "Palikti"
         save_label:
@@ -126,8 +127,6 @@ lt:
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
       no_public_channels_cta: "Naršyti kanalus"
-      ignore_channel_wide_mention:
-        description: "Nesiųsti pranešimų apie paminėjimus visame kanale (@here ir @all)"
       show_thread_title_prompts:
         title: "Rodyti temos pavadinimo raginimus"
         description: "Rodyti raginimus nustatyti naujų gijų pavadinimą"
@@ -202,6 +201,7 @@ lt:
       admin:
         title: "Pokalbis"
       search:
+        short_title: Paieška
         no_results: "Nerasta jokių rezultatų"
         sort:
           relevance: "Tinkamumas"

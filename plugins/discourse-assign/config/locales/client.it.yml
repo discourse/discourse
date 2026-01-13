@@ -41,7 +41,6 @@ it:
       assigned_topic_to: "Argomento assegnato a <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} assegnato a %{username}"
       assign_post_to_multiple: "n°%{post_number} a %{username}"
-      assigned_to_w_ellipsis: "Assegnato a..."
       unassign:
         title: "Annulla assegnazione"
         title_w_ellipsis: "Annullamento assegnazione..."

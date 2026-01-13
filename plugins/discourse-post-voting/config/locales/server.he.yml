@@ -32,16 +32,16 @@ he:
     post_voting_enable_likes_on_answers: "הפעלת כפתור לייק על נושאים של הצבעה על פוסטים"
     post_voting_undo_vote_action_window: "מספר הדקות שמשתמשים רשאים לבטל הצבעות בנושאי הצבעות על פוסטים (0 להסרת ההגבלה)"
     post_voting_comment_limit_per_post: "מספר התגובות המותר על כל פוסט"
-    min_trust_to_flag_posts_voting_comments: "דרגת האמון המזערית לסימון הערת הצבעה על פוסט"
     flag_posts_voting_comments_allowed_groups: "קבוצות שמורשות לסמן הערת הצבעה לפוסט"
     post_voting_comment_enabled: "הפעלת הערות בפוסט בנושאים עם הצבעות על פוסטים"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments (דרגת אמון מזערית לסימון הערות הצבעה על פוסטים)"
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "מה לעשות עם ההערה?"
         no_action_comment:
           title: "אין פעולה"
+          description: "להשאיר את ההערה כפי שהיא."
         agree_and_keep_comment:
           title: "להשאיר את התגובה"
           description: "הבעת הסכמה עם הדגל והשארת התגובה ללא שינוי."

@@ -14,3 +14,13 @@ site_settings:
     upcoming_change:
       impact: "feature,admins"
       status: "alpha"
+  test_objects_with_uploads:
+    type: objects
+    default: "[]"
+    schema:
+      name: "test_object"
+      properties:
+        name:
+          type: string
+        upload_id:
+          type: upload

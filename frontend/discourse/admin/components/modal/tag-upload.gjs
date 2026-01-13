@@ -1,7 +1,7 @@
+import TagsUploader from "discourse/admin/components/tags-uploader";
 import DModal from "discourse/components/d-modal";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
-import TagsUploader from "admin/components/tags-uploader";
 
 const TagUpload = <template>
   <DModal @title={{i18n "tagging.upload"}} @closeModal={{@closeModal}}>

@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UserTip from "discourse/components/user-tip";
+import DTooltips from "discourse/float-kit/components/d-tooltips";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DTooltips from "float-kit/components/d-tooltips";
 
 module("Integration | Component | UserTip", function (hooks) {
   setupRenderingTest(hooks);

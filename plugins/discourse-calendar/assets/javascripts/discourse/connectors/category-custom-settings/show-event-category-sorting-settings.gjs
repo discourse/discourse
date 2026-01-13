@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import { or } from "truth-helpers";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

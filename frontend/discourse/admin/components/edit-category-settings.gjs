@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import TextField from "discourse/components/text-field";
@@ -15,10 +16,9 @@ import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import { buildCategoryPanel } from "admin/components/edit-category-panel";
-import ComboBox from "select-kit/components/combo-box";
-import GroupChooser from "select-kit/components/group-chooser";
 
 export default class EditCategorySettings extends buildCategoryPanel(
   "settings"

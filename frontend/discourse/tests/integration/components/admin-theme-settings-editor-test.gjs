@@ -1,7 +1,7 @@
 import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ThemeSettingsEditor from "admin/components/theme-settings-editor";
 
 module(
   "Integration | Component | admin-theme-settings-editor",

@@ -66,6 +66,21 @@ export default class BaseCustomSidebarSectionLink {
   get contentCSSClass() {}
 
   /**
+   * @returns {Component} Component to render inside the link text span (gets ellipsized with text)
+   */
+  get contentComponent() {}
+
+  /**
+   * @returns {string} Text for the badge within the link
+   */
+  get badgeText() {}
+
+  /**
+   * @returns {Object} Arguments to pass to the content component
+   */
+  get contentComponentArgs() {}
+
+  /**
    * @returns {string} Prefix type for the link. Accepted value: icon, image, text
    */
   get prefixType() {}
@@ -104,6 +119,16 @@ export default class BaseCustomSidebarSectionLink {
    * @returns {string} CSS class for suffix
    */
   get suffixCSSClass() {}
+
+  /**
+   * @returns {Component} Component to render as suffix (outside text span, not ellipsized)
+   */
+  get suffixComponent() {}
+
+  /**
+   * @returns {Object} Arguments to pass to the suffix component
+   */
+  get suffixArgs() {}
 
   /**
    * @returns {string} Type of the hover button. Accepted value: icon

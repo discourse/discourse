@@ -1,15 +1,15 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import TagUpload from "discourse/admin/components/modal/tag-upload";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n } from "discourse-i18n";
-import TagUpload from "admin/components/modal/tag-upload";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 
 @classNames("tags-admin-dropdown")
 @selectKitOptions({

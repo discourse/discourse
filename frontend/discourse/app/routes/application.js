@@ -1,7 +1,6 @@
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
@@ -199,11 +198,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showUploadSelector() {
     document.getElementById("file-uploader").click();
-  }
-
-  @action
-  showKeyboardShortcutsHelp() {
-    this.modal.show(KeyboardShortcutsHelp);
   }
 
   // Close the current modal, and destroy its state.

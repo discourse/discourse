@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import SiteSettingComponent from "discourse/admin/components/site-setting";
+import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
-import SiteSettingComponent from "admin/components/site-setting";
-import SiteSetting from "admin/models/site-setting";
 
 export default class AiDefaultLlmSelector extends Component {
   @tracked defaultLlmSetting = null;

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DiscourseAi::Completions::AnthropicMessageProcessor
+  PROVIDER_KEY = :anthropic
+
   class AnthropicToolCall
     attr_reader :name, :raw_json, :id
 
@@ -44,7 +46,12 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
     end
   end
 
-  attr_reader :tool_calls, :input_tokens, :output_tokens, :output_thinking
+  attr_reader :tool_calls,
+              :input_tokens,
+              :output_tokens,
+              :cache_creation_input_tokens,
+              :cache_read_input_tokens,
+              :output_thinking
 
   def initialize(streaming_mode:, partial_tool_calls: false, output_thinking: false)
     @streaming_mode = streaming_mode
@@ -73,11 +80,12 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
         ) if tool_name
     elsif parsed[:type] == "content_block_start" && parsed.dig(:content_block, :type) == "thinking"
       if @output_thinking
+        provider_info = { PROVIDER_KEY => { signature: +"", redacted: false } }
         @thinking =
           DiscourseAi::Completions::Thinking.new(
             message: +parsed.dig(:content_block, :thinking).to_s,
-            signature: +"",
             partial: true,
+            provider_info: provider_info,
           )
         result = @thinking.dup
       end
@@ -89,7 +97,11 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
       end
     elsif parsed[:type] == "content_block_delta" && parsed.dig(:delta, :type) == "signature_delta"
       if @output_thinking
-        @thinking.signature << parsed.dig(:delta, :signature) if @thinking
+        if @thinking
+          info = (@thinking.provider_info[PROVIDER_KEY] ||= { signature: +"", redacted: false })
+          info[:signature] ||= +""
+          info[:signature] << parsed.dig(:delta, :signature)
+        end
       end
     elsif parsed[:type] == "content_block_stop" && @thinking
       @thinking.partial = false
@@ -105,8 +117,13 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
           result =
             DiscourseAi::Completions::Thinking.new(
               message: nil,
-              signature: parsed.dig(:content_block, :data),
-              redacted: true,
+              partial: false,
+              provider_info: {
+                PROVIDER_KEY => {
+                  redacted_signature: parsed.dig(:content_block, :data),
+                  redacted: true,
+                },
+              },
             )
         end
       else
@@ -120,7 +137,10 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
         @current_tool_call = nil
       end
     elsif parsed[:type] == "message_start"
-      @input_tokens = parsed.dig(:message, :usage, :input_tokens)
+      usage = parsed.dig(:message, :usage)
+      @input_tokens = usage[:input_tokens]
+      @cache_creation_input_tokens = usage[:cache_creation_input_tokens]
+      @cache_read_input_tokens = usage[:cache_read_input_tokens]
     elsif parsed[:type] == "message_delta"
       @output_tokens =
         parsed.dig(:usage, :output_tokens) || parsed.dig(:delta, :usage, :output_tokens)
@@ -152,15 +172,24 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
               if @output_thinking
                 DiscourseAi::Completions::Thinking.new(
                   message: data[:thinking],
-                  signature: data[:signature],
+                  provider_info: {
+                    PROVIDER_KEY => {
+                      signature: data[:signature],
+                      redacted: false,
+                    },
+                  },
                 )
               end
             elsif data[:type] == "redacted_thinking"
               if @output_thinking
                 DiscourseAi::Completions::Thinking.new(
                   message: nil,
-                  signature: data[:data],
-                  redacted: true,
+                  provider_info: {
+                    PROVIDER_KEY => {
+                      redacted_signature: data[:data],
+                      redacted: true,
+                    },
+                  },
                 )
               end
             else
@@ -170,8 +199,11 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
           .compact
     end
 
-    @input_tokens = parsed.dig(:usage, :input_tokens)
-    @output_tokens = parsed.dig(:usage, :output_tokens)
+    usage = parsed.dig(:usage)
+    @input_tokens = usage[:input_tokens] if usage
+    @output_tokens = usage[:output_tokens] if usage
+    @cache_creation_input_tokens = usage[:cache_creation_input_tokens] if usage
+    @cache_read_input_tokens = usage[:cache_read_input_tokens] if usage
 
     result
   end

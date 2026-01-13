@@ -1,7 +1,7 @@
 import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
 @classNames("color-palettes-row")
 export default class ColorPalettesRow extends SelectKitRowComponent {

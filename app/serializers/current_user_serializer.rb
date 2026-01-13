@@ -77,13 +77,11 @@ class CurrentUserSerializer < BasicUserSerializer
              :login_method,
              :has_unseen_features,
              :can_see_emails,
-             :use_glimmer_post_stream_mode_auto_mode,
              :can_localize_content?,
              :effective_locale,
              :use_reviewable_ui_refresh,
              :can_see_ip,
-             :is_impersonating,
-             :upcoming_changes
+             :is_impersonating
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -332,14 +330,6 @@ class CurrentUserSerializer < BasicUserSerializer
     object.staff?
   end
 
-  def use_glimmer_post_stream_mode_auto_mode
-    true
-  end
-
-  def include_use_glimmer_post_stream_mode_auto_mode?
-    scope.user.in_any_groups?(SiteSetting.glimmer_post_stream_mode_auto_groups_map)
-  end
-
   def can_localize_content?
     scope.can_localize_content?
   end
@@ -370,16 +360,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_see_ip?
     object.admin? || (object.moderator? && SiteSetting.moderators_view_ips)
-  end
-
-  # TODO (martin) A page for members to see what upcoming changes
-  # they have enabled??
-  #
-  def upcoming_changes
-    SiteSetting
-      .upcoming_change_site_settings
-      .each_with_object({}) do |upcoming_change, hash|
-        hash[upcoming_change] = object.upcoming_change_enabled?(upcoming_change)
-      end
   end
 end

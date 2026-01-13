@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { A } from "@ember/array";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -15,6 +14,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
@@ -35,11 +35,13 @@ export default class SignupPageController extends Controller {
   @tracked isDeveloper = false;
   @tracked authOptions;
   @tracked skipConfirmation;
+  @tracked serverAccountEmail;
+  @tracked serverEmailValidation;
+  @trackedArray rejectedEmails = [];
 
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
-  rejectedEmails = A();
   prefilledUsername = null;
   maskPassword = true;
   emailValidationVisible = false;
@@ -217,41 +219,37 @@ export default class SignupPageController extends Controller {
   }
 
   // Check the email address
-  @discourseComputed(
-    "serverAccountEmail",
-    "serverEmailValidation",
-    "accountEmail",
-    "rejectedEmails.[]",
-    "forceValidationReason"
-  )
-  emailValidation(
-    serverAccountEmail,
-    serverEmailValidation,
-    email,
-    rejectedEmails,
-    forceValidationReason
-  ) {
+  @dependentKeyCompat
+  get emailValidation() {
     const failedAttrs = {
       failed: true,
       ok: false,
       element: document.querySelector("#new-account-email"),
     };
 
-    if (serverAccountEmail === email && serverEmailValidation) {
-      return serverEmailValidation;
+    if (
+      this.serverAccountEmail === this.accountEmail &&
+      this.serverEmailValidation
+    ) {
+      return this.serverEmailValidation;
     }
 
     // If blank, fail without a reason
-    if (isEmpty(email)) {
+    if (isEmpty(this.accountEmail)) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
           message: i18n("user.email.required"),
-          reason: forceValidationReason ? i18n("user.email.required") : null,
+          reason: this.forceValidationReason
+            ? i18n("user.email.required")
+            : null,
         })
       );
     }
 
-    if (rejectedEmails.includes(email) || !emailValid(email)) {
+    if (
+      this.rejectedEmails.includes(this.accountEmail) ||
+      !emailValid(this.accountEmail)
+    ) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
           reason: i18n("user.email.invalid"),
@@ -260,7 +258,7 @@ export default class SignupPageController extends Controller {
     }
 
     if (
-      this.authOptions?.email === email &&
+      this.authOptions?.email === this.accountEmail &&
       this.authOptions?.email_valid &&
       !isEmpty(this.authOptions?.auth_provider)
     ) {
@@ -539,6 +537,12 @@ export default class SignupPageController extends Controller {
   externalLogin(provider) {
     // we will automatically redirect to the external auth service
     this.login.externalLogin(provider, { signup: true });
+  }
+
+  @action
+  goToLogin() {
+    const loginName = this.accountEmail || this.accountUsername;
+    this.send("showLogin", { loginName });
   }
 
   @action

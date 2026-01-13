@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
 import DModal from "discourse/components/d-modal";
+import DFloatBody from "discourse/float-kit/components/d-float-body";
 import concatClass from "discourse/helpers/concat-class";
-import DFloatBody from "float-kit/components/d-float-body";
+import { and } from "discourse/truth-helpers";
 
 export default class DInlineFloat extends Component {
   @service site;

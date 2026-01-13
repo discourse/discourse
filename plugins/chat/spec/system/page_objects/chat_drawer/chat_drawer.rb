@@ -38,9 +38,23 @@ module PageObjects
         open_channel(channel)
       end
 
+      def visit_direct_messages
+        visit_index
+        click_direct_messages
+      end
+
+      def visit_user_threads
+        visit_index
+        click_user_threads
+      end
+
       def visit_browse
         visit_index
         open_browse
+      end
+
+      def open_chat_search
+        find("#c-footer-search").click
       end
 
       def open_channel(channel)
@@ -102,6 +116,10 @@ module PageObjects
         find("#c-footer-threads").click
       end
 
+      def click_starred_channels
+        find("#c-footer-starred").click
+      end
+
       def maximize
         mouseout
         find("#{VISIBLE_DRAWER} .c-navbar__full-page-button").click
@@ -137,9 +155,19 @@ module PageObjects
         has_css?("#{VISIBLE_DRAWER} .public-channels")
       end
 
+      def has_open_starred_channels?
+        has_css?("html.has-drawer-chat")
+        has_css?("#{VISIBLE_DRAWER} .starred-channels")
+      end
+
       def has_open_direct_messages?
         has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .direct-message-channels")
+      end
+
+      def has_open_chat_search?
+        has_css?("html.has-drawer-chat")
+        has_css?("#{VISIBLE_DRAWER} .c-search")
       end
 
       def has_open_user_threads?

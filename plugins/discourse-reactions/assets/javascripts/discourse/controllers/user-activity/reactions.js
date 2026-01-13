@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
@@ -7,7 +7,6 @@ import CustomReaction from "../../models/discourse-reactions-custom-reaction";
 
 export default class UserActivityReactions extends Controller {
   @service siteSettings;
-  @controller application;
 
   @tracked canLoadMore = true;
   @tracked loading = false;
@@ -15,7 +14,7 @@ export default class UserActivityReactions extends Controller {
   @tracked beforeReactionUserId = null;
 
   #getLastIdFrom(array) {
-    return array.length ? array[array.length - 1].get("id") : null;
+    return array.length ? array[array.length - 1].reaction_user_id : null;
   }
 
   #updateBeforeIds(reactionUsers) {
@@ -45,7 +44,7 @@ export default class UserActivityReactions extends Controller {
   @action
   async loadMore() {
     if (!this.canLoadMore || this.loading) {
-      return;
+      return [];
     }
 
     this.loading = true;
@@ -69,12 +68,18 @@ export default class UserActivityReactions extends Controller {
         opts
       );
 
-      addUniqueValuesToArray(reactionUsers, newReactionUsers);
-      this.#updateBeforeIds(newReactionUsers);
+      const flattened = newReactionUsers.map((r) =>
+        CustomReaction.flattenForPostList(r)
+      );
 
-      if (newReactionUsers.length === 0) {
+      addUniqueValuesToArray(reactionUsers, flattened);
+      this.#updateBeforeIds(flattened);
+
+      if (flattened.length === 0) {
         this.canLoadMore = false;
       }
+
+      return flattened;
     } finally {
       this.loading = false;
     }

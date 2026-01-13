@@ -110,26 +110,24 @@ export default class AboutPageExtraGroups extends Component {
 
   <template>
     <ConditionalLoadingSpinner @condition={{this.loading}}>
-      {{#if this.groups}}
-        {{#each this.groups as |group|}}
-          <section
-            class="about__{{group.name}}
-              --custom-group
-              {{if this.showGroupDescription '--has-description'}}"
-          >
-            <h3>
-              <a href="/g/{{group.name}}">{{this.groupName group}}</a>
-            </h3>
-            {{#if this.showGroupDescription}}
-              <p>{{htmlSafe group.bio_cooked}}</p>
-            {{/if}}
-            <AboutPageUsers
-              @users={{group.members}}
-              @truncateAt={{this.showInitialMembers}}
-            />
-          </section>
-        {{/each}}
-      {{/if}}
+      {{#each this.groups as |group|}}
+        <section
+          class="about__{{group.name}}
+            --custom-group
+            {{if this.showGroupDescription '--has-description'}}"
+        >
+          <h3>
+            <a href="/g/{{group.name}}">{{this.groupName group}}</a>
+          </h3>
+          {{#if this.showGroupDescription}}
+            <p>{{htmlSafe group.bio_cooked}}</p>
+          {{/if}}
+          <AboutPageUsers
+            @users={{group.members}}
+            @truncateAt={{this.showInitialMembers}}
+          />
+        </section>
+      {{/each}}
     </ConditionalLoadingSpinner>
   </template>
 }

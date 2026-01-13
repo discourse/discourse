@@ -54,6 +54,8 @@ const ARRAY_PROPERTIES = new Set(
 );
 
 /**
+ * @deprecated
+ *
  * LegacyArrayLikeObject is an EmberObject that proxies array-like behavior to a TrackedArray,
  * while exposing additional properties and methods. Access array methods via `.content`.
  *

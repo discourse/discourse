@@ -1,14 +1,18 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 
 export default class TrackSelected extends Component {
   @action
   onToggle(e) {
     if (e.target.checked) {
-      this.args.selectedList.addObject(this.args.selectedId);
+      addUniqueValueToArray(this.args.selectedList, this.args.selectedId);
     } else {
-      this.args.selectedList.removeObject(this.args.selectedId);
+      removeValueFromArray(this.args.selectedList, this.args.selectedId);
     }
   }
 

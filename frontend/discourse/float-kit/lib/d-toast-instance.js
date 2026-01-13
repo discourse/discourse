@@ -1,8 +1,8 @@
 import { action } from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { TOAST } from "discourse/float-kit/lib/constants";
 import uniqueId from "discourse/helpers/unique-id";
-import { TOAST } from "float-kit/lib/constants";
 
 export default class DToastInstance {
   @service site;

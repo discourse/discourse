@@ -2,11 +2,13 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -28,6 +30,16 @@ export default class ReviewableNoteForm extends Component {
   @action
   registerApi(api) {
     this.formApi = api;
+  }
+
+  @action
+  handleInput(setFn, event) {
+    setFn(event.target.value);
+  }
+
+  @bind
+  onDirtyCheck() {
+    return !isEmpty(this.formApi.get("content"));
   }
 
   /**
@@ -77,6 +89,7 @@ export default class ReviewableNoteForm extends Component {
         @data={{hash content=""}}
         @onSubmit={{this.onSubmit}}
         @onRegisterApi={{this.registerApi}}
+        @onDirtyCheck={{this.onDirtyCheck}}
         class="reviewable-note-form__form"
         as |form|
       >
@@ -89,23 +102,22 @@ export default class ReviewableNoteForm extends Component {
         >
           <div class="reviewable-note-form__textarea-wrapper">
             <field.Textarea
+              @height={{80}}
               placeholder={{i18n "review.notes.placeholder"}}
               class="reviewable-note-form__textarea"
-              rows="4"
+            />
+            <PluginOutlet
+              @name="reviewable-note-form-after-note"
+              @connectorTagName="div"
+              @outletArgs={{lazyHash form=form reviewable=@reviewable}}
             />
           </div>
         </form.Field>
 
-        <PluginOutlet
-          @name="reviewable-note-form-after-note"
-          @connectorTagName="div"
-          @outletArgs={{lazyHash form=form}}
-        />
-
         <form.Actions>
           <form.Submit
             @label="review.notes.add_note_button"
-            class="btn-primary"
+            class="btn-small btn-primary"
           />
         </form.Actions>
       </Form>

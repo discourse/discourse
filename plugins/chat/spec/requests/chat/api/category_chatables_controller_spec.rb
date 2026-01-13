@@ -79,6 +79,26 @@ describe Chat::Api::CategoryChatablesController do
       end
     end
 
+    context "when signed in as a moderator" do
+      fab!(:moderator)
+
+      before { sign_in(moderator) }
+
+      it "returns a 403 if they cannot see the category" do
+        get "/chat/api/category-chatables/#{private_category.id}/permissions"
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns a 200 if they can see the category" do
+        group.add(moderator)
+
+        get "/chat/api/category-chatables/#{private_category.id}/permissions"
+
+        expect(response.status).to eq(200)
+      end
+    end
+
     context "as anon" do
       it "returns a 404" do
         get "/chat/api/category-chatables/#{private_category.id}/permissions"

@@ -1,4 +1,4 @@
-import DInlineFloat from "float-kit/components/d-inline-float";
+import DInlineFloat from "discourse/float-kit/components/d-inline-float";
 
 const DHeadlessMenu = <template>
   <DInlineFloat

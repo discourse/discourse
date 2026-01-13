@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import UpcomingChangeItem from "admin/components/admin-config-areas/upcoming-change-item";
-import AdminFilterControls from "admin/components/admin-filter-controls";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
+      change.upcoming_change = new TrackedObject(change.upcoming_change);
       return new TrackedObject(change);
     });
   }
@@ -22,9 +23,10 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           filterFn: () => true,
         },
         {
-          label: i18n("admin.upcoming_changes.filter.status_pre_alpha"),
-          value: "pre_alpha",
-          filterFn: (change) => change.upcoming_change.status === "pre_alpha",
+          label: i18n("admin.upcoming_changes.filter.status_experimental"),
+          value: "experimental",
+          filterFn: (change) =>
+            change.upcoming_change.status === "experimental",
         },
         {
           label: i18n("admin.upcoming_changes.filter.status_alpha"),
@@ -109,11 +111,8 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                 class="d-table__header-cell upcoming-change__name-header"
               >{{i18n "admin.upcoming_changes.name"}}</th>
               <th
-                class="d-table__header-cell upcoming-change__groups-header"
-              >{{i18n "admin.upcoming_changes.opt_in_groups"}}</th>
-              <th
                 class="d-table__header-cell upcoming-change__enabled-header"
-              >{{i18n "admin.plugins.enabled"}}</th>
+              >{{i18n "admin.upcoming_changes.enabled_for"}}</th>
             </tr>
           </thead>
           <tbody class="d-table__body">

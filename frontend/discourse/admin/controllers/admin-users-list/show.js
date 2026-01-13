@@ -3,14 +3,14 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import BulkUserDeleteConfirmation from "discourse/admin/components/bulk-user-delete-confirmation";
+import AdminUser from "discourse/admin/models/admin-user";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { computedI18n, setting } from "discourse/lib/computed";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
-import BulkUserDeleteConfirmation from "admin/components/bulk-user-delete-confirmation";
-import AdminUser from "admin/models/admin-user";
 
 const MAX_BULK_SELECT_LIMIT = 100;
 

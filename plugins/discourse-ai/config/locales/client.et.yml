@@ -39,7 +39,7 @@ et:
         disabled: "(välja lülitatud)"
         groups: "Rühmad:"
         no_groups: "Pole"
-        edit: "Muuda"
+        edit: "Seaded"
         expand_list:
           one: "(veel %{count})"
           other: "(veel %{count})"
@@ -76,6 +76,7 @@ et:
         summary: "Kokkuvõte"
         username: "Kasutajanimi"
         total_requests: "Kokku päringuid"
+        total: "Kokku"
       ai_persona:
         back: "Tagasi"
         name: "Nimi"
@@ -139,6 +140,8 @@ et:
           copy: "Kopeeri"
           copied: "Kopeeritud!"
           cancel: "Loobu"
+        thumbnail_suggestions:
+          try_again: "Proovi uuesti"
         image_caption:
           save_caption: "Salvesta"
       embeddings:

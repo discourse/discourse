@@ -337,6 +337,35 @@ RSpec.describe DiscoursePoll::Poll do
         },
       )
     end
+
+    it "extracts poll when there are multiple quotes in the post" do
+      raw = <<~RAW
+      [quote="user1, post:1, topic:123"]
+      First quote content
+      [/quote]
+
+      [poll type=regular results=always]
+      * Option A
+      * Option B
+      [/poll]
+
+      [quote="user2, post:2, topic:123"]
+      Second quote content
+      [/quote]
+
+      Some text after.
+      RAW
+
+      polls = DiscoursePoll::Poll.extract(raw, 2)
+      expect(polls.size).to eq(1)
+      expect(polls.first["name"]).to eq("poll")
+      expect(polls.first["type"]).to eq("regular")
+      expect(polls.first["results"]).to eq("always")
+      expect(polls.first["options"].map { |o| o["html"] }).to contain_exactly(
+        "Option A",
+        "Option B",
+      )
+    end
   end
 
   describe ".serialized_voters" do

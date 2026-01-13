@@ -108,9 +108,15 @@ class PostTiming < ActiveRecord::Base
 
       Post.where(topic_id: topic_ids).update_all("reads = reads - 1")
 
-      date = Topic.listable_topics.where(id: topic_ids).minimum(:updated_at)
+      topics = Topic.where(id: topic_ids)
 
-      set_minimum_first_unread!(user_id: user_id, date: date) if date
+      if (date = topics.listable_topics.minimum(:updated_at))
+        set_minimum_first_unread!(user_id:, date:)
+      end
+
+      topics.private_messages.find_each do |topic|
+        set_minimum_first_unread_pm!(topic:, user_id:, date: topic.updated_at)
+      end
     end
   end
 

@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import NavItem from "discourse/components/nav-item";
 import ReviewIndexLegacy from "discourse/components/review-index-legacy";
 import ReviewIndexRefresh from "discourse/components/review-index-refresh";
 import icon from "discourse/helpers/d-icon";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewIndex extends Component {

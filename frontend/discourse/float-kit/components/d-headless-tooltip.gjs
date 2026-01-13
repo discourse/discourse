@@ -1,5 +1,5 @@
-import { and } from "truth-helpers";
-import DInlineFloat from "float-kit/components/d-inline-float";
+import DInlineFloat from "discourse/float-kit/components/d-inline-float";
+import { and } from "discourse/truth-helpers";
 
 const DHeadlessTooltip = <template>
   <DInlineFloat

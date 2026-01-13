@@ -31,12 +31,10 @@ module("Integration | Component | da-pms-field", function (hooks) {
     await fillIn(".pm-title", "title");
     await fillIn(".d-editor-input", "raw");
     await fillIn(".pm-delay", 6);
-    await click(".pm-prefers-encrypt", 6);
 
     assert.deepEqual(this.field.metadata.value, [
       {
         delay: "6",
-        prefers_encrypt: false,
         raw: "raw",
         title: "title",
       },

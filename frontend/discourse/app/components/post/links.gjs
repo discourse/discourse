@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const MAX_COLLAPSED_LINKS = 5;

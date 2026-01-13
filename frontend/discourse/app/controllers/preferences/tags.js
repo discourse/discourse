@@ -2,14 +2,21 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class TagsController extends Controller {
-  saveAttrNames = [
-    "muted_tags",
-    "tracked_tags",
-    "watched_tags",
-    "watching_first_post_tags",
-  ];
+  get saveAttrNames() {
+    return applyValueTransformer(
+      "preferences-save-attributes",
+      [
+        "muted_tags",
+        "tracked_tags",
+        "watched_tags",
+        "watching_first_post_tags",
+      ],
+      { page: "tags" }
+    );
+  }
 
   @discourseComputed(
     "model.watched_tags.[]",

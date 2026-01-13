@@ -90,7 +90,9 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: "MutedUser", dependent: :delete_all
   has_many :ignored_user_records, class_name: "IgnoredUser", dependent: :delete_all
   has_many :do_not_disturb_timings, dependent: :delete_all
+  has_many :reviewable_histories, foreign_key: :created_by_id, dependent: :delete_all
   has_many :sidebar_sections, dependent: :destroy
+  has_many :user_histories, foreign_key: :target_user_id
   has_one :user_status, dependent: :destroy
 
   # dependent deleting handled via before_destroy (special cases)
@@ -909,11 +911,21 @@ class User < ActiveRecord::Base
       payload = nil
     end
 
-    MessageBus.publish(
-      "/user-status",
-      { id => payload },
-      group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-    )
+    # When silenced, only the user themselves and staff should see the status
+    if silenced?
+      MessageBus.publish(
+        "/user-status",
+        { id => payload },
+        user_ids: [id],
+        group_ids: [Group::AUTO_GROUPS[:staff]],
+      )
+    else
+      MessageBus.publish(
+        "/user-status",
+        { id => payload },
+        group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
+    end
   end
 
   def password=(pw)
@@ -1328,7 +1340,7 @@ class User < ActiveRecord::Base
   end
 
   def silenced_record
-    UserHistory.for(self, :silence_user).order("id DESC").first
+    user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
   def silence_reason
@@ -1344,7 +1356,7 @@ class User < ActiveRecord::Base
   end
 
   def suspend_record
-    UserHistory.for(self, :suspend_user).order("id DESC").first
+    user_histories.where(action: UserHistory.actions[:suspend_user]).order("id DESC").first
   end
 
   def full_suspend_reason
@@ -1637,7 +1649,12 @@ class User < ActiveRecord::Base
   end
 
   def number_of_rejected_posts
-    ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
+    goldiload do |ids|
+      ReviewableQueuedPost
+        .where(status: "rejected", target_created_by_id: ids)
+        .group(:target_created_by_id)
+        .count
+    end
   end
 
   def number_of_flags_given
@@ -1649,11 +1666,21 @@ class User < ActiveRecord::Base
   end
 
   def number_of_silencings
-    UserHistory.for(self, :silence_user).count
+    goldiload do |ids|
+      UserHistory
+        .where(target_user_id: ids, action: UserHistory.actions[:silence_user])
+        .group(:target_user_id)
+        .count
+    end
   end
 
   def number_of_suspensions
-    UserHistory.for(self, :suspend_user).count
+    goldiload do |ids|
+      UserHistory
+        .where(target_user_id: ids, action: UserHistory.actions[:suspend_user])
+        .group(:target_user_id)
+        .count
+    end
   end
 
   def create_user_profile
@@ -1943,13 +1970,11 @@ class User < ActiveRecord::Base
   end
 
   def upcoming_change_enabled?(upcoming_change)
-    setting_enabled = SiteSetting.public_send(upcoming_change)
+    UpcomingChanges.enabled_for_user?(upcoming_change, self)
+  end
 
-    if UpcomingChanges.has_groups?(upcoming_change)
-      return setting_enabled && in_any_groups?(UpcomingChanges.group_ids_for(upcoming_change))
-    end
-
-    setting_enabled
+  def upcoming_change_stats(acting_guardian)
+    UpcomingChanges.stats_for_user(user: self, acting_guardian: acting_guardian)
   end
 
   protected
@@ -1966,7 +1991,7 @@ class User < ActiveRecord::Base
   def clear_global_notice_if_needed
     return if id < 0
 
-    if admin && SiteSetting.has_login_hint
+    if admin && active && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""
     end

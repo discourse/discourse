@@ -5,12 +5,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import FilterInput from "discourse/components/filter-input";
 import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
+import { and, not } from "discourse/truth-helpers";
 
 /**
  * admin filter controls component that support both client-side and server-side filtering

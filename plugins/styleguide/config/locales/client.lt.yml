@@ -39,16 +39,12 @@ lt:
           title: "Naršymo juosta"
         categories_list:
           title: "Kategorijų sąrašas"
-        topic_link:
-          title: "Temos Nuoroda"
         topic_statuses:
           title: "Temos būsenos"
         topic_list:
           title: "Temų sąrašas"
         basic_topic_list:
           title: "Pagrindinis temų sąrašas"
-        footer_message:
-          title: "Poraštės žinutė"
         signup_cta:
           title: "Registracijos CTA"
         topic_timer_info:

@@ -81,6 +81,7 @@ fa_IR:
         join_channel: "پیوستن به کانال"
         leave_channel: "ترک کانال"
         leave_groupchat_info: "با ترک این چت گروهی، دیگر به آن دسترسی نخواهید داشت و اعلان های مربوط به آن را دریافت نخواهید کرد. برای پیوستن مجدد، باید دوباره توسط یکی از اعضای چت گروهی دعوت شوید."
+        notification_settings_context: "اعلان‌ها"
         join: "عضو شدن"
         leave: "ترک کردن"
         save_label:
@@ -127,7 +128,6 @@ fa_IR:
       email_frequency:
         description: "فقط در صورتی که در ۱۵ دقیقه گذشته شما را ندیده باشیم به شما ایمیل ارسال می کنیم."
         never: "هرگز"
-        title: "آگاه‌سازی‌های ایمیل"
         when_away: "فقط وقتی نیستم"
       header_indicator_preference:
         title: "نمایش نشانگر فعالیت در سربرگ"
@@ -138,9 +138,6 @@ fa_IR:
       send_shortcut:
         enter:
           label: "ارسال با Enter"
-          description: "خط جدید با Shift + Enter"
-        meta_enter:
-          description: "خط جدید توسط Enter"
       enable: "فعال کردن گفتگو"
       flag: "پرچم"
       emoji: "درج ایموجی"
@@ -300,6 +297,7 @@ fa_IR:
       admin:
         title: "گفتگو"
       search:
+        short_title: جستجو
         no_results: "چیزی یافت نشد"
         sort:
           relevance: "ارتباطات"

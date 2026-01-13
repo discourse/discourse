@@ -2958,6 +2958,7 @@ RSpec.describe PostMover do
     end
 
     context "with freeze_original option" do
+      fab!(:admin)
       fab!(:original_topic, :topic)
       fab!(:destination_topic, :topic)
       fab!(:op) { Fabricate(:post, topic: original_topic, raw: "op of original topic") }
@@ -3208,6 +3209,22 @@ RSpec.describe PostMover do
 
         expect(original_topic.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
         expect(pm.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
+      end
+
+      it "adds the acting user to the new PM" do
+        moving_posts = [first_post, second_post]
+        pm =
+          PostMover.new(
+            original_topic,
+            admin,
+            moving_posts.map(&:id),
+            move_to_pm: true,
+            options: {
+              freeze_original: true,
+            },
+          ).to_new_topic("Hi I'm a new PM, with a copy of the old posts")
+
+        expect(pm.topic_allowed_users.pluck(:user_id)).to include(admin.id)
       end
 
       it "keep all posts when moving to an existing PM" do
