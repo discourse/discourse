@@ -79,14 +79,12 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
       });
     }
 
-    const mode = this.navigationMenu.isDesktopDropdownMode
-      ? "header_dropdown"
-      : "sidebar";
-
     actions.push({
       id: "edit-categories",
       action: () => this.modal.show(EditNavigationMenuCategoriesModal),
-      title: i18n(`sidebar.sections.categories.header_action_edit_${mode}`),
+      title: i18n(
+        `sidebar.sections.categories.header_action_edit_${this.navigationMenu.displayMode}`
+      ),
     });
 
     return actions;

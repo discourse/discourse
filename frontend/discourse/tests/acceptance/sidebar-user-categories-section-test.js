@@ -12,6 +12,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance(
@@ -637,7 +638,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       );
   });
 
-  test("category section link have the right title", async function (assert) {
+  test("category section link has the right title", async function (assert) {
     const categories = Site.current().categories;
 
     // Category with link HTML tag in description
@@ -977,7 +978,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       );
   });
 
-  test("clean up topic tracking state state changed callbacks when Sidebar is collapsed", async function (assert) {
+  test("cleans up topic tracking state changed callbacks when sidebar is collapsed", async function (assert) {
     setupUserSidebarCategories();
 
     await visit("/");
@@ -1022,27 +1023,28 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("admin categories section header shows dropdown with new and edit actions", async function (assert) {
+  test("categories section header shows dropdown with new and edit actions for admin user", async function (assert) {
     updateCurrentUser({ admin: true });
 
     await visit("/");
 
-    const dropdown =
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown";
+    const headerDropdown = selectKit(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+    );
 
-    assert.dom(dropdown).exists();
+    assert.true(headerDropdown.exists());
 
-    await click(`${dropdown} .select-kit-header`);
+    await headerDropdown.expand();
 
-    assert.dom(".select-kit-row[data-value='new-category']").exists();
-    assert.dom(".select-kit-row[data-value='edit-categories']").exists();
+    assert.true(headerDropdown.rowByValue("new-category").exists());
+    assert.true(headerDropdown.rowByValue("edit-categories").exists());
 
-    await click(".select-kit-row[data-value='new-category']");
+    await headerDropdown.selectRowByValue("new-category");
 
     assert.strictEqual(currentURL(), "/new-category");
   });
 
-  test("non-admin categories section header shows single edit button", async function (assert) {
+  test("categories section header shows single edit button for non-admin user", async function (assert) {
     await visit("/");
 
     const categoriesSection =
@@ -1371,14 +1373,18 @@ acceptance(
       await visit("/");
       await click("#toggle-hamburger-menu");
 
-      const dropdown =
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown";
+      const headerDropdown = selectKit(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+      );
 
-      await click(`${dropdown} .select-kit-header`);
+      await headerDropdown.expand();
 
-      assert
-        .dom(".select-kit-row[data-value='edit-categories']")
-        .hasText(/Edit nav categories/);
+      assert.true(
+        headerDropdown
+          .rowByValue("edit-categories")
+          .label()
+          .includes("Edit nav categories")
+      );
     });
   }
 );
