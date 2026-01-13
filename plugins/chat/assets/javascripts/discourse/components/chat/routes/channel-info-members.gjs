@@ -150,9 +150,8 @@ export default class ChatRouteChannelInfoMembers extends Component {
     }
 
     return (
-      this.currentUser?.staff ||
       this.args.channel.chatable.group ||
-      this.args.channel.messagesManager.messages.length === 0
+      !this.args.channel.lastMessage?.message
     );
   }
 

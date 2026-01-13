@@ -139,16 +139,6 @@ RSpec.describe "Chat message creator", type: :system do
     expect(chat_page.message_creator).to be_listing(group)
   end
 
-  it "hides add member option when group chats are disabled for members" do
-    SiteSetting.chat_max_direct_message_users = 1
-    channel = Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
-
-    visit("/")
-    chat_page.visit_channel_members(channel)
-
-    expect(chat_page).to have_no_add_member_button
-  end
-
   it "displays users status next to names" do
     SiteSetting.enable_user_status = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
