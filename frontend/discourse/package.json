@@ -43,6 +43,7 @@
     "@messageformat/runtime": "^3.0.2",
     "ace-builds": "^1.43.5",
     "chart.js": "4.5.1",
+    "chartjs-adapter-moment": "^1.0.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "decorator-transforms": "^2.3.0",
     "diff": "^8.0.2",

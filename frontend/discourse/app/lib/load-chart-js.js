@@ -1,4 +1,5 @@
 import { waitForPromise } from "@ember/test-waiters";
+import "chartjs-adapter-moment";
 
 export default async function loadChartJS() {
   return (await waitForPromise(import("chart.js/auto"))).default;
