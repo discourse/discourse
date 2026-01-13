@@ -7,6 +7,7 @@ require "fileutils"
 require "socket"
 require "uri"
 require "net/http"
+require "securerandom"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
@@ -260,6 +261,7 @@ class QunitRunner
       args += ["--filter", filter] if filter
       args += ["--file-path", file_path_filter] if file_path_filter
       args += ["--load-balance", "--parallel", parallel.to_s] if parallel
+      args += ["--random", resolved_seed]
       args += %w[--path dist] if reuse_build
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
@@ -496,7 +498,10 @@ class QunitRunner
 
   def build_query
     params = {}
-    params["seed"] = resolved_seed
+    if @qunit_path
+      # Only include seed manually if we're running without ember exam
+      params["seed"] = resolved_seed
+    end
     params["module"] = @module if @module
     params["theme_name"] = @theme_name if @theme_name
     params["theme_url"] = @theme_url if @theme_url
@@ -541,7 +546,7 @@ class QunitRunner
   end
 
   def resolved_seed
-    @resolved_seed ||= present_string(@seed) || Random.new.seed
+    @resolved_seed ||= present_string(@seed) || SecureRandom.alphanumeric(8)
   end
 
   def should_load_plugins?
