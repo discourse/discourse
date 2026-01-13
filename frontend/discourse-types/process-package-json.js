@@ -38,7 +38,7 @@ export default function processPackageJson(packageJson, packagePath) {
 
     for (const entry of Object.values(config)) {
       let path = entry[0];
-      if (!path.endsWith("/*") && !path.endsWith(".d.ts")) {
+      if (!path.endsWith("/*") && !/\.d\.[cm]?ts$/.test(path)) {
         path = `${path}/*`;
       }
 
@@ -49,6 +49,8 @@ export default function processPackageJson(packageJson, packagePath) {
   if (paths.size === 0) {
     // sometimes there is a index.d.ts and no package.json entries...
     paths.add("index.d.ts");
+    paths.add("index.d.cts");
+    paths.add("index.d.mts");
   }
 
   const expandedPaths = new Map();
@@ -59,7 +61,7 @@ export default function processPackageJson(packageJson, packagePath) {
 
     if (path.includes("*")) {
       const entries = globSync(
-        path.replace("*", "**/*").replace(/\*$/, "*.d.ts"),
+        path.replace("*", "**/*").replace(/\*$/, "*.d.{ts,mts,cts}"),
         {
           cwd: packagePath,
         }

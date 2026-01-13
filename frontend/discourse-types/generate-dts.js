@@ -81,7 +81,7 @@ for (const packageName of packageNames) {
 
       modulePath = modulePath
         .replace(/^\//, "")
-        .replace(/(index)?\.d\.ts$/, "");
+        .replace(/(index)?\.d\.[cm]?ts$/, "");
       modulePath = [packageName.replace(/@types\//, ""), modulePath]
         .filter(Boolean)
         .join("/");
