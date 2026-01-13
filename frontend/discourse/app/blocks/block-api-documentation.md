@@ -1379,95 +1379,9 @@ Result: Block renders (admin bypass)
 
 In debug mode, you'd see the full evaluation logged even though the `any` short-circuited in production.
 
-That handles basic conditions. But what if you need more complex logic?
+> :bulb: This example uses condition combinators (`any`, `not`, nested arrays) to build complex logic. See **Section 6: Conditions & Logic** for the complete syntax reference on combining conditions.
 
-### Condition Combinators: AND, OR, NOT
-
-Conditions support three combinators for complex logic:
-
-**AND (array of conditions):**
-```javascript
-conditions: [
-  { type: "user", loggedIn: true },
-  { type: "user", minTrustLevel: 2 },
-  { type: "route", pages: ["DISCOVERY_PAGES"] }
-]
-// All three must pass
-```
-
-**OR (`any` wrapper):**
-```javascript
-conditions: [
-  {
-    any: [
-      { type: "user", admin: true },
-      { type: "user", moderator: true }
-    ]
-  }
-]
-// At least one must pass
-```
-
-**NOT (`not` wrapper):**
-```javascript
-conditions: [
-  {
-    not: { type: "route", urls: ["/admin/**"] }
-  }
-]
-// Must NOT be on admin pages
-```
-
-**Nested combinators:**
-```javascript
-conditions: [
-  { type: "user", loggedIn: true },
-  {
-    any: [
-      { type: "user", admin: true },
-      {
-        not: { type: "route", urls: ["/admin/**"] }
-      }
-    ]
-  }
-]
-// Logged in AND (admin OR not on admin pages)
-```
-
-With combinators you can express almost any visibility rule. But where do conditions get their data?
-
-### Context Awareness: What Conditions Can Access
-
-Conditions receive a context object with access to:
-
-**Outlet Args:**
-```javascript
-// Passed from BlockOutlet
-<BlockOutlet @name="topic-blocks" @outletArgs={{hash topic=this.topic}} />
-
-// Accessible in conditions via source or outletArg condition
-{ type: "outletArg", path: "topic.closed", value: true }
-{ type: "user", source: "@outletArgs.topicAuthor", admin: true }
-```
-
-**Services (via injection):**
-```javascript
-// Inside a condition class
-@service router;
-@service currentUser;
-@service siteSettings;
-@service capabilities;
-```
-
-**Debug context:**
-```javascript
-// When debug logging is enabled
-context.debug = true;
-context._depth = 2;  // Nesting level for log indentation
-context.logger = { ... }; // Interface for structured logging
-```
-
-That covers how conditions work. But what happens when you make a mistake configuring them?
+That covers how the evaluation engine works. But what happens when you make a mistake configuring blocks?
 
 ---
 
@@ -1632,7 +1546,7 @@ The API balances simplicity for common cases with power for advanced use:
 }
 ```
 
-Start simple, add complexity only when you need it. You don't have to master conditions to render a block, and you don't have to master combinators to use a single condition.
+Start simple, add complexity only when you need it. You don't have to master conditions to render a block, and you don't have to master combinators to use a single condition. For complete condition syntax, see **Section 6: Conditions & Logic**.
 
 ### More Error Message Examples
 
@@ -2488,6 +2402,36 @@ Evaluates based on outlet arg values.
 
 // Check if topic property exists
 { type: "outletArg", path: "topic", exists: true }
+```
+
+### Context Awareness
+
+Conditions receive a context object with access to several data sources:
+
+**Outlet Args:**
+```javascript
+// Passed from BlockOutlet
+<BlockOutlet @name="topic-blocks" @outletArgs={{hash topic=this.topic}} />
+
+// Accessible in conditions via source or outletArg condition
+{ type: "outletArg", path: "topic.closed", value: true }
+{ type: "user", source: "@outletArgs.topicAuthor", admin: true }
+```
+
+**Services (via injection in custom conditions):**
+```javascript
+// Inside a custom condition class
+@service router;
+@service currentUser;
+@service siteSettings;
+@service capabilities;
+```
+
+**Debug context (when logging is enabled):**
+```javascript
+context.debug = true;
+context._depth = 2;  // Nesting level for log indentation
+context.logger = { ... }; // Interface for structured logging
 ```
 
 ### Combining Conditions
