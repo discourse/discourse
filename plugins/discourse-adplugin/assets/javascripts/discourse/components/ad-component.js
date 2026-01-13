@@ -32,6 +32,7 @@ export default class AdComponent extends Component {
     "router.currentRoute.parent.attributes.category.read_restricted"
   )
   isRestrictedCategory;
+  @alias("router.currentRoute.name") currentRouteName;
 
   _impressionId = null;
   _clickTracked = false;

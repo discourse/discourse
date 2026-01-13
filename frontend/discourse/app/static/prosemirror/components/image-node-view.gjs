@@ -8,7 +8,9 @@ import { htmlSafe } from "@ember/template";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input";
 
 const MIN_SCALE = 50;
@@ -570,6 +572,24 @@ export default class ImageNodeView extends Component {
     this.imageLoaded = true;
   }
 
+  @action
+  async handleImageClick(event) {
+    if (this.image.classList.contains("ProseMirror-selectednode")) {
+      event?.preventDefault();
+      event?.stopPropagation();
+
+      await openLightbox(this.args.view.dom, this.image);
+
+      const pos = this.args.getPos();
+      if (pos !== null && pos >= 0) {
+        const tr = this.args.view.state.tr.setSelection(
+          NodeSelection.create(this.args.view.state.doc, pos)
+        );
+        this.args.view.dispatch(tr);
+      }
+    }
+  }
+
   <template>
     <img
       src={{@node.attrs.src}}
@@ -581,8 +601,79 @@ export default class ImageNodeView extends Component {
       data-scale={{@node.attrs.scale}}
       data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
       style={{this.imageStyle}}
+      role="button"
       {{didInsert this.setupImage}}
       {{on "load" this.updateImageLoaded}}
+      {{on "click" this.handleImageClick}}
     />
   </template>
+}
+
+async function openLightbox(editorElement, currentImage) {
+  const allImages = [
+    ...editorElement.querySelectorAll(".composer-image-node img"),
+  ];
+  const currentIndex = allImages.indexOf(currentImage);
+
+  const dataSource = allImages.map((img) => {
+    return {
+      src: img.src,
+      msrc: img.currentSrc || img.src,
+      width: img.naturalWidth || 800,
+      height: img.naturalHeight || 600,
+      alt: img.alt || "",
+      element: img,
+      thumbCropped: true,
+    };
+  });
+
+  const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
+  const isTestEnv = isTesting() || isRailsTesting();
+
+  const lightbox = new PhotoSwipeLightbox({
+    dataSource,
+    showHideAnimationType: isTestEnv ? "none" : "zoom",
+    closeTitle: i18n("lightbox.close"),
+    zoomTitle: i18n("lightbox.zoom"),
+    arrowPrevTitle: i18n("lightbox.previous"),
+    arrowNextTitle: i18n("lightbox.next"),
+    pswpModule: () => import("photoswipe"),
+    tapAction: (pt, e) => {
+      if (e.target.classList.contains("pswp__img")) {
+        lightbox.pswp?.element?.classList.toggle("pswp--ui-visible");
+      } else {
+        lightbox.pswp?.close();
+      }
+    },
+  });
+
+  lightbox.on("uiRegister", function () {
+    lightbox.pswp.ui.registerElement({
+      name: "caption",
+      order: 11,
+      isButton: false,
+      appendTo: "root",
+      html: "",
+      onInit: (caption, pswp) => {
+        pswp.on("change", () => {
+          const slideData = pswp.getItemData(pswp.currIndex);
+          const alt = slideData?.alt;
+          if (alt) {
+            caption.innerHTML = `<div class='pswp__caption-title'>${alt}</div>`;
+          } else {
+            caption.innerHTML = "";
+          }
+        });
+      },
+    });
+  });
+
+  return new Promise((resolve) => {
+    lightbox.addFilter("thumbEl", (thumbEl, itemData) => itemData.element);
+    lightbox.on("close", resolve);
+    lightbox.on("closingAnimationEnd", () => lightbox.destroy());
+
+    lightbox.init();
+    lightbox.loadAndOpen(currentIndex);
+  });
 }

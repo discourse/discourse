@@ -655,7 +655,6 @@ gl:
           notification: Notificación
         email:
           title: "Correo electrónico"
-          status: "Sincronizados os correos %{old_emails} / %{total_emails} vía IMAP."
           last_updated_by: "por"
           ssl_modes:
             none: "Ningunha"
@@ -663,18 +662,11 @@ gl:
             title: "Acreditacións"
             smtp_server: "Servidor SMTP"
             smtp_port: "Porto SMTP"
-            imap_server: "Servidor SMTP"
-            imap_port: "Porto IMAP"
-            imap_ssl: "Use SSL para IMAP"
             username: "Nome do usuario"
             password: "Contrasinal"
           settings:
             title: "Configuración"
             allow_unknown_sender_topic_replies: "Permitir respostas ao tema de remitente descoñecido."
-          mailboxes:
-            synchronized: "Caixa de correo sincronizada"
-            none_found: "Non se atoparon caixas de correo nesta conta de correo electrónico."
-            disabled: "Desactivado"
         membership:
           title: Incorporación
           access: Acceso

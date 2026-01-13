@@ -1040,12 +1040,9 @@ nl:
     no_log_search_queries: "Zoekopdrachtenlogs zijn momenteel uitgeschakeld (een beheerder kan ze inschakelen in de website-instellingen)."
   email_settings:
     pop3_authentication_error: "Er was een probleem met de opgegeven POP3-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
-    imap_authentication_error: "Er was een probleem met de opgegeven IMAP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
-    imap_no_response_error: "Er is een fout opgetreden tijdens de communicatie met de IMAP-server. %{message}"
     smtp_authentication_error: "Er was een probleem met de opgegeven SMTP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw. %{message}"
     smtp_server_busy_error: "De SMTP-server is momenteel bezig, probeer het later opnieuw."
     smtp_unhandled_error: "Er is een onafgehandelde fout opgetreden tijdens de communicatie met de SMTP-server. %{message}"
-    imap_unhandled_error: "Er is een onafgehandelde fout opgetreden tijdens de communicatie met de IMAP-server. %{message}"
     connection_error: "Er was een probleem bij het verbinden met de server. Controleer de servernaam en -poort en probeer het opnieuw."
     timeout_error: "Er is een time-out opgetreden bij het verbinden met de server. Controleer de servernaam en -poort en probeer het opnieuw."
     unhandled_error: "Niet-afgehandelde fout bij het testen van e-mailinstellingen. %{message}"
@@ -2144,14 +2141,7 @@ nl:
     email_in_allowed_groups: "Groepen die nieuwe topics mogen plaatsen via e-mail. Beheerders en moderators kunnen altijd nieuwe topics plaatsen via e-mail."
     email_in_authserv_id: "De ID van de service die verificatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     email_in_spam_header: "Selecteert de specifieke e-mailheader die moet worden gebruikt voor het identificeren van spam. Deze optie kan X-Spam-Flag, X-Spam-Status of X-SES-Spam-Verdict zijn. De e-mail wordt als spam geclassificeerd op basis van de waarde van de header. Als de gekozen instelling bijvoorbeeld X-Spam-Flag is, wordt een e-mail waarvoor deze headerwaarde is ingesteld op JA als spam geclassificeerd."
-    enable_imap: "IMAP inschakelen voor het synchroniseren van groepsberichten."
-    enable_imap_write: "IMAP-synchronisatie in twee richtingen inschakelen. Wanneer uitgeschakeld, zijn alle schrijfbewerkingen op IMAP-accounts uitgeschakeld."
-    enable_imap_idle: "IMAP IDLE-mechanisme gebruiken voor het wachten op nieuwe e-mails."
     enable_smtp: "SMTP inschakelen voor het sturen van meldingen voor groepsberichten."
-    imap_polling_period_mins: "De periode in minuten tussen het controleren van de IMAP-accounts op e-mail."
-    imap_polling_old_emails: "Het maximale aantal oude e-mails (verwerkt) dat telkens bij het pollen van een IMAP-postvak moet worden bijgewerkt (0 voor alle)."
-    imap_polling_new_emails: "Het maximale aantal nieuwe e-mails (onverwerkt) dat telkens bij het pollen van een IMAP-postvak moet worden bijgewerkt."
-    imap_batch_import_email: "Het minimale aantal nieuwe e-mails dat de importmodus activeert (schakelt berichtmeldingen uit)."
     email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'titel' gebruikt."
     email_site_title: "De titel van de website die als de afzender van e-mails van de website wordt gebruikt. Standaard wordt 'titel' gebruikt als niets is ingesteld. Gebruik deze instelling als je 'titel' tekens bevat die niet in tekenreeksen van e-mailafzenders zijn toegestaan."
     find_related_post_with_key: "Alleen de 'reply key' gebruiken om het beantwoorde bericht te vinden. WAARSCHUWING: uitschakelen hiervan staat imitatie van gebruikers op basis van e-mailadres toe."
@@ -4919,6 +4909,8 @@ nl:
     deprecation_error_label: Laat Javascript-deprecaties een foutmelding geven
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse instellen"
     step:
@@ -5012,8 +5004,6 @@ nl:
     api_post_delete: "Verwijderd via API"
     reminder_deleted: "Vervangen door nieuwe herinnering"
     user_associated_posts_deleted: "Gebruiker is vernietigd"
-    imap_email_deleted: "E-mail is verwijderd op de IMAP-server"
-    imap_email_marked_as_spam: "E-mail is verplaatst naar spam op de IMAP-server"
     auto_deleted_hidden_posts: "Verborgen berichten automatisch vernietigd"
     seed_data_topic_updated: "Seeddatatopic bijgewerkt"
     seed_data_topic_deleted: "Seeddatatopic verwijderd"

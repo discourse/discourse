@@ -6,6 +6,7 @@ import TextField from "discourse/components/text-field";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
 import HouseAdsCategorySelector from "../../../components/house-ads-category-selector";
+import HouseAdsRouteSelector from "../../../components/house-ads-route-selector";
 
 export default <template>
   <section class="edit-house-ad content-body">
@@ -50,8 +51,24 @@ export default <template>
           class="house-ads-categories"
         />
         <div class="description">
-          {{i18n "admin.adplugin.house_ads.category_chooser_description"}}
+          {{#if @controller.routesEnabled}}
+            {{i18n
+              "admin.adplugin.house_ads.category_chooser_description_with_routes"
+            }}
+          {{else}}
+            {{i18n "admin.adplugin.house_ads.category_chooser_description"}}
+          {{/if}}
         </div>
+
+        {{#if @controller.routesEnabled}}
+          <HouseAdsRouteSelector
+            @value={{@controller.selectedRoutes}}
+            @onChange={{@controller.setRoutes}}
+          />
+          <div class="description">
+            {{i18n "admin.adplugin.house_ads.route_chooser_description"}}
+          </div>
+        {{/if}}
 
         <GroupChooser
           @content={{@controller.site.groups}}

@@ -871,11 +871,8 @@ sv:
     no_log_search_queries: "Sökfrågeloggar är för närvarande inaktiverade (en administratör kan aktivera dem i webbplatsinställningarna)."
   email_settings:
     pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
-    imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
-    imap_no_response_error: "Det uppstod ett fel vid kommunikation med IMAP-servern. %{message}"
     smtp_server_busy_error: "SMTP-servern är för närvarande upptagen. Försök igen senare."
     smtp_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med SMTP-servern. %{message}"
-    imap_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med IMAP-servern. %{message}"
     connection_error: "Det uppstod ett problem vid anslutning till servern. Kontrollera serverns namn och port och försök igen."
     timeout_error: "Tidsgränsen för anslutning till servern uppnåddes. Kontrollera serverns namn och port och försök igen."
     unhandled_error: "Ohanterat fel vid testning av e-postinställningar. %{message}"
@@ -1847,14 +1844,7 @@ sv:
     log_mail_processing_failures: "Logga alla behandlingsfel för e-post till <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Tillåt användare att lägga upp nya ämnen via e-post. När du har aktiverat den här inställningen kan du konfigurera inkommande e-postadresser för grupper och kategorier."
     email_in_authserv_id: "Identifieraren för tjänsten som utför autentiseringskontroller av inkommande e-postmeddelanden. Se <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> för instruktioner om hur du konfigurerar detta."
-    enable_imap: "Aktivera IMAP för synkroniserade gruppmeddelanden."
-    enable_imap_write: "Aktivera två-stegs IMAP-synkronisering. Om avstängd kommer alla skriv-operationer för IMAP-konton inte att genomföras."
-    enable_imap_idle: "Använd IMAP IDLE-funktionen för att invänta ny e-post."
     enable_smtp: "Aktivera SMTP för att skicka aviseringar för gruppmeddelanden."
-    imap_polling_period_mins: "Tidsintervall i minuter mellan varje kontroll av IMAP-konton för e-post."
-    imap_polling_old_emails: "Maximalt antal äldre e-post (behandlad) som uppdateras varje gång IMAP-boxen anropas (0 för alla)."
-    imap_polling_new_emails: "Maximalt antal ny e-post (obehandlad) som uppdateras varje gång IMAP-boxen anropas."
-    imap_batch_import_email: "Lägsta antalet ny e-post som kommer att trigga importläge (stänger av inläggsvarningar)."
     email_prefix: "[label] används i ämnesraden för e-post. Om ej ifylld sätts standardrubriken 'title'."
     email_site_title: "Webbplatsens titel som används som avsändare för e-post från webbplatsen. Om ej ifylld sätts standardtiteln 'title'. Använd det alternativet om din titel innehåller tecken som inte tillåts i e-posts avsändarsträngar."
     find_related_post_with_key: "Använd bara 'svarsnyckeln' för att hitta svaret på inlägget. VARNING: om du inaktiverar detta tillåts användarimitationer baserat på e-postadress."
@@ -4073,6 +4063,8 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
+  dev_mode:
+    enter: "Retur"
   wizard:
     title: "Discourse-inställningar"
     step:
