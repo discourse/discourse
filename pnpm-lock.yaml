@@ -38,10 +38,6 @@ patchedDependencies:
 importers:
 
   .:
-    dependencies:
-      '@rollup/plugin-babel':
-        specifier: link:../rollup-plugins/packages/babel
-        version: link:../rollup-plugins/packages/babel
     devDependencies:
       '@babel/plugin-proposal-decorators':
         specifier: ^7.28.0
@@ -483,8 +479,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@rollup/plugin-babel':
-        specifier: link:../rollup-plugins/packages/babel
-        version: link:../rollup-plugins/packages/babel
+        specifier: davidtaylorhq/rollup-plugins#babel-parallel-built&path:/packages/babel
+        version: https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/6b2a19ab3d3490c68677e0e9091cc57f7d1734d0#path:/packages/babel(@babel/core@7.28.5)(rollup@4.53.5)
       '@swc/core':
         specifier: ^1.15.7
         version: 1.15.7
@@ -2909,6 +2905,20 @@ packages:
       '@babel/core': ^7.0.0
       '@types/babel__core': ^7.1.9
       rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      '@types/babel__core':
+        optional: true
+      rollup:
+        optional: true
+
+  '@rollup/plugin-babel@https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/6b2a19ab3d3490c68677e0e9091cc57f7d1734d0#path:/packages/babel':
+    resolution: {path: /packages/babel, tarball: https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/6b2a19ab3d3490c68677e0e9091cc57f7d1734d0}
+    version: 6.1.0
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+      '@types/babel__core': ^7.1.9
+      rollup: ^2.0.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
       '@types/babel__core':
         optional: true
@@ -12014,6 +12024,16 @@ snapshots:
       '@types/estree': 1.0.8
 
   '@rollup/plugin-babel@6.1.0(@babel/core@7.28.5)(rollup@4.53.5)':
+    dependencies:
+      '@babel/core': 7.28.5
+      '@babel/helper-module-imports': 7.27.1
+      '@rollup/pluginutils': 5.3.0(rollup@4.53.5)
+    optionalDependencies:
+      rollup: 4.53.5
+    transitivePeerDependencies:
+      - supports-color
+
+  '@rollup/plugin-babel@https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/6b2a19ab3d3490c68677e0e9091cc57f7d1734d0#path:/packages/babel(@babel/core@7.28.5)(rollup@4.53.5)':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/helper-module-imports': 7.27.1

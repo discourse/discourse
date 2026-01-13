@@ -105,7 +105,7 @@
     "@embroider/vite": "1.4.3",
     "@floating-ui/dom": "^1.7.4",
     "@glimmer/component": "^2.0.0",
-    "@rollup/plugin-babel": "davidtaylorhq/rollup-plugins#babel-parallel&path:/packages/babel",
+    "@rollup/plugin-babel": "davidtaylorhq/rollup-plugins#babel-parallel-built&path:/packages/babel",
     "@swc/core": "^1.15.7",
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
