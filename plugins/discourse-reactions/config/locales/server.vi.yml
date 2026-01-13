@@ -17,8 +17,8 @@ vi:
       invalid_excluded_emoji: "Bạn không thể loại trừ các biểu tượng cảm xúc không nằm trong mục 'phản ứng được kích hoạt trong diễn đàn' và bạn cũng không thể loại trừ biểu tượng cảm xúc được sử dụng cho mục 'phản ứng thích trong diễn đàn'."
   badges:
     first_reaction:
-      name: Đã Biểu Cảm
-      description: Đã biểu cảm với tút
+      name: Lần Đầu Biểu Cảm
+      description: Lần đầu tiên biểu cảm với tút
       long_description: |
         Huy hiệu này được trao cho lần đầu tiên bạn biểu cảm với một tút. Biểu cảm với tút là một cách tuyệt vời để cho các thành viên cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ cảm xúc của bạn!
   reports:

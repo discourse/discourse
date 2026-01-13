@@ -1161,7 +1161,7 @@ pt_BR:
         automatic_groups: "Grupos automáticos"
         automatic: "Automático"
         closed: "Fechado"
-        public: "Público(a)"
+        public: "Público"
         private: "Privado(a)"
         public_groups: "Grupos públicos"
         my_groups: "Meus grupos"

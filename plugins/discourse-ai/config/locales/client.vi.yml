@@ -74,7 +74,7 @@ vi:
         export: "Xuất"
         import: "Nhập"
         description: "Mô tả"
-        user: Người dùng
+        user: Thành viên
         save: "Lưu lại"
         enabled: "Kích hoạt"
         delete: "Xóa"
@@ -160,6 +160,7 @@ vi:
         semantic_search_results:
           toggle: "Xem %{count} kết quả tìm thấy bằng AI"
           toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
+          none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
           new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
         semantic_search_tooltips:
           results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."

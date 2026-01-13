@@ -28,6 +28,8 @@ vi:
           other: "%{comma_separated_usernames} và %{count} khác"
     mention_warning:
       dismiss: "bỏ qua"
+    bookmarkable:
+      notification_title: "tin nhắn trong %{channel_name}"
     onebox:
       thread_title_connector: "trong"
   discourse_push_notifications:
