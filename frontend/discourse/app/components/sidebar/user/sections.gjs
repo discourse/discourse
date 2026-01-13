@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import BlockOutlet from "discourse/components/block-outlet";
+import BlockOutlet from "discourse/blocks/block-outlet";
 import ApiSections from "../api-sections";
 import CategoriesSection from "./categories-section";
 import CustomSections from "./custom-sections";

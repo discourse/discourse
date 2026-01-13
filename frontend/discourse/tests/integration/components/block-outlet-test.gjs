@@ -8,7 +8,7 @@ import BlockOutlet, {
   _getOutletLayouts,
   block,
   renderBlocks,
-} from "discourse/components/block-outlet";
+} from "discourse/blocks/block-outlet";
 import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,

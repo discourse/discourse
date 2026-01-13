@@ -1,4 +1,4 @@
-import BlockOutlet from "discourse/components/block-outlet";
+import BlockOutlet from "discourse/blocks/block-outlet";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
 

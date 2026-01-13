@@ -18,18 +18,17 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import dasherize from "discourse/helpers/dasherize";
 import {
   validateArgsSchema,
   validateChildArgsSchema,
 } from "discourse/lib/blocks/arg-validation";
+import { wrapBlockLayout } from "discourse/lib/blocks/block-layout-wrapper";
 import {
   buildContainerPath,
   createGhostBlock,
@@ -53,7 +52,7 @@ import {
   isBlockRegistryFrozen,
   resolveBlockSync,
 } from "discourse/lib/blocks/registration";
-import { applyArgDefaults } from "discourse/lib/blocks/utils";
+import { applyArgDefaults, shallowArgsEqual } from "discourse/lib/blocks/utils";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
@@ -68,6 +67,37 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
 const outletLayouts = new Map();
 
 /**
+ * Counter for generating stable entry keys.
+ * Incremented each time a block entry is registered via `renderBlocks()`.
+ *
+ * @type {number}
+ */
+let nextEntryKey = 0;
+
+/**
+ * Recursively assigns stable keys to all block entries in a layout.
+ *
+ * Each entry receives a `__stableKey` property that remains constant across
+ * renders. This is critical for Ember's `{{#each key=}}` to maintain DOM
+ * identity when blocks are hidden/shown by conditions.
+ *
+ * Keys are assigned at registration time (in `renderBlocks()`) rather than
+ * render time, ensuring they survive the shallow cloning in `#preprocessEntries`.
+ *
+ * @param {Array<Object>} entries - The block entries to process.
+ */
+function assignStableKeys(entries) {
+  for (const entry of entries) {
+    entry.__stableKey = nextEntryKey++;
+
+    // Recursively assign keys to children
+    if (entry.children?.length) {
+      assignStableKeys(entry.children);
+    }
+  }
+}
+
+/**
  * Clears all registered outlet layouts.
  *
  * USE ONLY FOR TESTING PURPOSES.
@@ -75,6 +105,7 @@ const outletLayouts = new Map();
 export function resetOutletLayoutsForTesting() {
   if (DEBUG) {
     outletLayouts.clear();
+    nextEntryKey = 0;
   }
 }
 
@@ -436,53 +467,6 @@ export function block(name, options = {}) {
       }
 
       /**
-       * Gets or creates a curried child component, using the cache when possible.
-       *
-       * Only caches leaf blocks (blocks without children). Container blocks are
-       * always recreated to ensure their children reflect current visibility.
-       *
-       * @param {Object} entry - The block entry.
-       * @param {typeof Component} resolvedBlock - The resolved block component class.
-       * @param {Object} debugContext - Debug context for the block.
-       * @param {import("@ember/owner").default} owner - The application owner.
-       * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
-       *   The cached or newly created component data.
-       */
-      #getOrCreateChildComponent(entry, resolvedBlock, debugContext, owner) {
-        const { key } = debugContext;
-        const cachedEntry = this.#childComponentCache.get(key);
-        const hasChildren = entry.children?.length > 0;
-
-        // Only cache leaf blocks (no children)
-        if (
-          !hasChildren &&
-          cachedEntry &&
-          cachedEntry.ComponentClass === resolvedBlock &&
-          shallowArgsEqual(cachedEntry.args, entry.args)
-        ) {
-          return cachedEntry.result;
-        }
-
-        // Create new curried component
-        const result = createChildBlock(
-          { ...entry, block: resolvedBlock },
-          owner,
-          debugContext
-        );
-
-        // Cache leaf blocks for future reuse
-        if (!hasChildren) {
-          this.#childComponentCache.set(key, {
-            ComponentClass: resolvedBlock,
-            args: entry.args,
-            result,
-          });
-        }
-
-        return result;
-      }
-
-      /**
        * Processes and returns child blocks as renderable components.
        * Only container blocks have children. The children are curried components
        * with all necessary args pre-bound.
@@ -521,96 +505,15 @@ export function block(name, options = {}) {
           return;
         }
 
-        const owner = getOwner(this);
-        const baseHierarchy = this.args._hierarchy;
-        const outletArgs = this.args.outletArgs;
-        // Logging already done during root preprocessing
-        const isLoggingEnabled = false;
-
-        // Entries already have __visible set by parent's preprocessing.
-        // Just create components from them.
-        const processedEntries = rawChildren;
-
-        const result = [];
-        // Track container counts for indexing (e.g., group[0], group[1])
-        const containerCounts = new Map();
-
-        for (let i = 0; i < processedEntries.length; i++) {
-          const entry = processedEntries[i];
-          // Resolve block reference (string name or class)
-          const resolvedBlock = resolveBlockSync(entry.block);
-
-          // Handle optional missing block (block ref ended with `?` but not registered)
-          if (isOptionalMissing(resolvedBlock)) {
-            const key = `optional-missing:${resolvedBlock.name}:${i}`;
-            const ghostData = handleOptionalMissingBlock({
-              blockName: resolvedBlock.name,
-              entry,
-              hierarchy: baseHierarchy,
-              isLoggingEnabled,
-              showGhosts,
-              key,
-            });
-            if (ghostData) {
-              result.push(ghostData);
-            }
-            continue;
-          }
-
-          // Skip unresolved blocks (pending factory resolution)
-          if (!resolvedBlock) {
-            continue;
-          }
-
-          const blockName = resolvedBlock.blockName || "unknown";
-          const isChildContainer =
-            resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
-
-          // Generate stable unique key based on block name and position
-          const key = `${blockName}:${i}`;
-
-          // For containers, build their full path for children's hierarchy
-          const containerPath = isChildContainer
-            ? buildContainerPath(blockName, baseHierarchy, containerCounts)
-            : undefined;
-
-          // Render visible blocks
-          if (entry.__visible) {
-            result.push(
-              this.#getOrCreateChildComponent(
-                entry,
-                resolvedBlock,
-                {
-                  displayHierarchy: baseHierarchy,
-                  containerPath,
-                  conditions: entry.conditions,
-                  outletArgs,
-                  key,
-                },
-                owner
-              )
-            );
-          } else if (showGhosts) {
-            // Show ghost for invisible blocks in debug mode
-            const ghostData = createGhostBlock({
-              blockName,
-              entry,
-              hierarchy: baseHierarchy,
-              containerPath,
-              isContainer: isChildContainer,
-              owner,
-              outletArgs,
-              isLoggingEnabled,
-              resolveBlockFn: resolveBlockSync,
-              key,
-            });
-            if (ghostData) {
-              result.push(ghostData);
-            }
-          }
-        }
-
-        return result;
+        return renderEntriesToComponents({
+          entries: rawChildren,
+          cache: this.#childComponentCache,
+          owner: getOwner(this),
+          baseHierarchy: this.args._hierarchy,
+          outletArgs: this.args.outletArgs,
+          showGhosts,
+          isLoggingEnabled: false,
+        });
       }
 
       /**
@@ -626,29 +529,175 @@ export function block(name, options = {}) {
 }
 
 /**
- * Performs a shallow comparison of two args objects.
+ * Gets or creates a curried block component, using the cache when possible.
  *
- * Compares top-level values using strict equality (===). Does not perform
- * deep comparison of nested objects. Used to determine if cached curried
- * components can be reused.
+ * This method checks if a cached component can be reused by comparing:
+ * 1. The component class (must be the same reference)
+ * 2. The args object (shallow comparison of top-level values)
  *
- * @param {Object|null|undefined} a - First args object.
- * @param {Object|null|undefined} b - Second args object.
- * @returns {boolean} True if the args are shallowly equal, false otherwise.
+ * If either has changed, a new curried component is created and cached.
+ *
+ * Container blocks with children are NOT cached because their children entries
+ * may change between renders (e.g., visibility changes). Caching them would
+ * result in stale children being displayed. Leaf blocks (no children) are
+ * safe to cache since they have no nested content that could become stale.
+ *
+ * @param {Map} cache - The component cache.
+ * @param {Object} entry - The block entry.
+ * @param {typeof Component} resolvedBlock - The resolved block component class.
+ * @param {Object} debugContext - Debug context for the block.
+ * @param {import("@ember/owner").default} owner - The application owner.
+ * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
+ *   The cached or newly created component data.
  */
-function shallowArgsEqual(a, b) {
-  if (a === b) {
-    return true;
+function getOrCreateCachedComponent(
+  cache,
+  entry,
+  resolvedBlock,
+  debugContext,
+  owner
+) {
+  const { key } = debugContext;
+  const cachedEntry = cache.get(key);
+  const hasChildren = entry.children?.length > 0;
+
+  // Only cache leaf blocks (no children). Container blocks are always recreated
+  // to ensure their children reflect current visibility state.
+  if (
+    !hasChildren &&
+    cachedEntry &&
+    cachedEntry.ComponentClass === resolvedBlock &&
+    shallowArgsEqual(cachedEntry.args, entry.args)
+  ) {
+    return cachedEntry.result;
   }
-  if (a == null || b == null) {
-    return false;
+
+  // Create new curried component
+  const result = createChildBlock(
+    { ...entry, block: resolvedBlock },
+    owner,
+    debugContext
+  );
+
+  // Cache leaf blocks for future reuse
+  if (!hasChildren) {
+    cache.set(key, {
+      ComponentClass: resolvedBlock,
+      args: entry.args,
+      result,
+    });
   }
-  const keysA = Object.keys(a);
-  const keysB = Object.keys(b);
-  if (keysA.length !== keysB.length) {
-    return false;
+
+  return result;
+}
+
+/**
+ * Processes block entries and creates renderable child components.
+ *
+ * This function iterates through a list of pre-processed block entries and
+ * transforms them into renderable components, handling ghost blocks for
+ * debug mode and optional missing blocks.
+ *
+ * @param {Object} options - Rendering options.
+ * @param {Array<Object>} options.entries - The pre-processed block entries.
+ * @param {Map} options.cache - Component cache for reuse.
+ * @param {import("@ember/owner").default} options.owner - The application owner.
+ * @param {string} options.baseHierarchy - Current hierarchy path.
+ * @param {Object} options.outletArgs - Arguments passed to the outlet.
+ * @param {boolean} options.showGhosts - Whether to render ghost blocks for invisible entries.
+ * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
+ * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>}
+ */
+function renderEntriesToComponents({
+  entries,
+  cache,
+  owner,
+  baseHierarchy,
+  outletArgs,
+  showGhosts,
+  isLoggingEnabled,
+}) {
+  const result = [];
+  const containerCounts = new Map();
+
+  for (const entry of entries) {
+    const resolvedBlock = resolveBlockSync(entry.block);
+
+    // Handle optional missing block (block ref ended with `?` but not registered)
+    if (isOptionalMissing(resolvedBlock)) {
+      const key = `optional-missing:${resolvedBlock.name}:${entry.__stableKey}`;
+      const ghostData = handleOptionalMissingBlock({
+        blockName: resolvedBlock.name,
+        entry,
+        hierarchy: baseHierarchy,
+        isLoggingEnabled,
+        showGhosts,
+        key,
+      });
+      if (ghostData) {
+        result.push(ghostData);
+      }
+      continue;
+    }
+
+    // Skip blocks that haven't resolved yet. This is intentional - block factories
+    // may be resolving asynchronously (e.g., lazy-loaded plugins). The block will
+    // render on the next pass once its factory resolves.
+    if (!resolvedBlock) {
+      continue;
+    }
+
+    const blockName = resolvedBlock.blockName || "unknown";
+    const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
+
+    // Use the stable key assigned at registration time. This key survives
+    // shallow cloning and ensures DOM identity is maintained when blocks
+    // are hidden/shown by conditions.
+    const key = `${blockName}:${entry.__stableKey}`;
+
+    // For containers, build their full path for children's hierarchy
+    const containerPath = isChildContainer
+      ? buildContainerPath(blockName, baseHierarchy, containerCounts)
+      : undefined;
+
+    // Render visible blocks
+    if (entry.__visible) {
+      result.push(
+        getOrCreateCachedComponent(
+          cache,
+          entry,
+          resolvedBlock,
+          {
+            displayHierarchy: baseHierarchy,
+            containerPath,
+            conditions: entry.conditions,
+            outletArgs,
+            key,
+          },
+          owner
+        )
+      );
+    } else if (showGhosts) {
+      // Show ghost for invisible blocks in debug mode
+      const ghostData = createGhostBlock({
+        blockName,
+        entry,
+        hierarchy: baseHierarchy,
+        containerPath,
+        isContainer: isChildContainer,
+        owner,
+        outletArgs,
+        isLoggingEnabled,
+        resolveBlockFn: resolveBlockSync,
+        key,
+      });
+      if (ghostData) {
+        result.push(ghostData);
+      }
+    }
   }
-  return keysA.every((key) => a[key] === b[key]);
+
+  return result;
 }
 
 /**
@@ -673,8 +722,9 @@ function buildBlockArgs(args, children, hierarchy, outletArgs, extra = {}) {
     ...extra,
   };
 
-  // Define reactive getters for system args. This allows curryComponent to
-  // maintain a stable component reference while these values can update.
+  // Define reactive getters for system args. Using getters instead of direct
+  // property assignment allows curryComponent to maintain a stable component
+  // reference while these values can update reactively when accessed.
   Object.defineProperties(blockArgs, {
     children: {
       get() {
@@ -826,19 +876,22 @@ export function isContainerBlock(component) {
  * attempting to register a second layout throws an error; in production,
  * it logs a warning.
  *
- * @param {string} outletName - The outlet identifier (must be in BLOCK_OUTLETS)
- * @param {Array<Object>} layout - Array of block entries
- * @param {typeof Component} layout[].block - The block component class (must use @block decorator)
- * @param {Object} [layout[].args] - Args to pass to the block component
- * @param {string} [layout[].classNames] - Additional CSS classes for the block wrapper
- * @param {Array<Object>} [layout[].children] - Nested block entries (only for container blocks)
- * @param {Array<Object>|Object} [layout[].conditions] - Conditions that must pass for block to render
- * @param {Object} [owner] - The application owner for service lookup (passed from plugin API)
- * @throws {Error} If validation fails or outlet already has a layout (in DEBUG mode)
+ * @param {string} outletName - The outlet identifier (must be in BLOCK_OUTLETS).
+ * @param {Array<Object>} layout - Array of block entries.
+ * @param {typeof Component} layout[].block - The block component class (must use @block decorator).
+ * @param {Object} [layout[].args] - Args to pass to the block component.
+ * @param {string} [layout[].classNames] - Additional CSS classes for the block wrapper.
+ * @param {Array<Object>} [layout[].children] - Nested block entries (only for container blocks).
+ * @param {Array<Object>|Object} [layout[].conditions] - Conditions that must pass for block to render.
+ * @param {Object} [owner] - The application owner for service lookup (passed from plugin API).
+ * @param {Error|null} [callSiteError] - Pre-captured error for source-mapped stack traces.
+ *   When called via api.renderBlocks(), this is captured there to exclude the PluginApi wrapper.
+ * @returns {Promise<Array<Object>>} Promise resolving to the validated layout array.
+ * @throws {Error} If validation fails or outlet already has a layout (in DEBUG mode).
  *
  * @example
  * ```js
- * import { renderBlocks } from "discourse/components/block-outlet";
+ * import { renderBlocks } from "discourse/blocks/block-outlet";
  *
  * renderBlocks("homepage-blocks", [
  *   { block: HeroBanner, args: { title: "Welcome" } },
@@ -896,6 +949,11 @@ export function renderBlocks(outletName, layout, owner, callSiteError = null) {
   // Get blocks service for condition validation (safe now that registries are frozen)
   const blocksService = owner?.lookup("service:blocks");
 
+  // Assign stable keys to all entries before validation. These keys survive
+  // shallow cloning in #preprocessEntries and ensure Ember maintains DOM
+  // identity when blocks are hidden/shown by conditions.
+  assignStableKeys(layout);
+
   // All block validation is async (handles both class refs and string refs).
   // In dev mode, this eagerly resolves all factories for early error detection.
   // In prod, it defers factory resolution to render time.
@@ -925,8 +983,8 @@ export function renderBlocks(outletName, layout, owner, callSiteError = null) {
  * Checks if a layout has been registered for a given outlet.
  * Used in templates to conditionally render content based on block presence.
  *
- * @param {string} outletName - The outlet identifier to check
- * @returns {boolean} True if a layout is registered for this outlet
+ * @param {string} outletName - The outlet identifier to check.
+ * @returns {boolean} True if a layout is registered for this outlet.
  */
 function hasLayout(outletName) {
   return outletLayouts.has(outletName);
@@ -938,10 +996,17 @@ function hasLayout(outletName) {
  * BlockOutlet serves as the entry point for the block rendering system. It:
  * - Looks up registered block configurations by outlet name
  * - Renders blocks in a consistent wrapper structure
- * - Provides named blocks (:before, :after) for conditional content
+ * - Provides named blocks (`:before`, `:after`) for conditional content
  *
- * @component BlockOutlet
- * @param {string} @name - The outlet identifier (must be registered in BLOCK_OUTLETS)
+ * Named blocks:
+ * - `:before` - Yields `hasLayout` boolean before block content.
+ * - `:after` - Yields `hasLayout` boolean after block content.
+ *
+ * @param {string} @name - The outlet identifier (must be registered in BLOCK_OUTLETS).
+ * @param {Object} [@outletArgs] - Values passed to blocks rendered in this outlet.
+ *   Blocks access these via `@outletArgs` in their templates.
+ * @param {Object} [@deprecatedArgs] - Deprecated args that trigger warnings when accessed.
+ *   Used for migrating consumers away from renamed outlet args.
  *
  * @example
  * ```hbs
@@ -1009,7 +1074,7 @@ export default class BlockOutlet extends Component {
    *
    * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>|undefined}
    */
-  // @cached
+  @cached
   get children() {
     // we need to track the state outside the promise contexts to force the children to be rendered when
     // the user enables the debugging
@@ -1198,17 +1263,18 @@ export default class BlockOutlet extends Component {
 }
 
 /**
- * Root container component that processes and renders block children.
+ * Internal container component that processes and renders block children.
  *
  * This component handles condition evaluation and component creation in a
- * tracked getter context. This is intentional - by evaluating conditions
- * synchronously in `processedChildren`, Ember's autotracking system can
- * establish dependencies on services like `router` and `discovery`. When
- * routes change, this getter re-runs and blocks are re-evaluated.
+ * tracked getter context. By evaluating conditions synchronously in
+ * `processedChildren`, Ember's autotracking establishes dependencies on
+ * services like `router` and `discovery`. Route changes trigger re-evaluation.
  *
  * If condition evaluation happened in the async promise chain (as it did
  * previously), service reads would not be tracked and route navigation
  * would not trigger re-evaluation.
+ *
+ * @private
  */
 class BlockOutletRootContainer extends Component {
   @service blocks;
@@ -1222,71 +1288,6 @@ class BlockOutletRootContainer extends Component {
    * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
    */
   #componentCache = new Map();
-
-  /**
-   * Cleans up the component cache when the container is destroyed.
-   */
-  willDestroy() {
-    super.willDestroy?.(...arguments);
-    this.#componentCache.clear();
-  }
-
-  /**
-   * Gets or creates a curried component, using the cache when possible.
-   *
-   * This method checks if a cached component can be reused by comparing:
-   * 1. The component class (must be the same reference)
-   * 2. The args object (shallow comparison of top-level values)
-   *
-   * If either has changed, a new curried component is created and cached.
-   *
-   * Container blocks with children are NOT cached because their children entries
-   * may change between renders (e.g., visibility changes). Caching them would
-   * result in stale children being displayed. Leaf blocks (no children) are
-   * safe to cache since they have no nested content that could become stale.
-   *
-   * @param {Object} entry - The block entry.
-   * @param {typeof Component} resolvedBlock - The resolved block component class.
-   * @param {Object} debugContext - Debug context for the block.
-   * @param {string} debugContext.key - Stable unique key for cache lookup.
-   * @param {import("@ember/owner").default} owner - The application owner.
-   * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
-   *   The cached or newly created component data.
-   */
-  #getOrCreateCurriedComponent(entry, resolvedBlock, debugContext, owner) {
-    const { key } = debugContext;
-    const cachedEntry = this.#componentCache.get(key);
-    const hasChildren = entry.children?.length > 0;
-
-    // Only cache leaf blocks (no children). Container blocks are always recreated
-    // to ensure their children reflect current visibility state.
-    if (
-      !hasChildren &&
-      cachedEntry &&
-      cachedEntry.ComponentClass === resolvedBlock &&
-      shallowArgsEqual(cachedEntry.args, entry.args)
-    ) {
-      return cachedEntry.result;
-    }
-
-    // Create new curried component
-    const result = createChildBlock(
-      { ...entry, block: resolvedBlock },
-      owner,
-      debugContext
-    );
-
-    // Cache leaf blocks for future reuse
-    if (!hasChildren) {
-      this.#componentCache.set(key, {
-        ComponentClass: resolvedBlock,
-        args: entry.args,
-        result,
-      });
-    }
-
-    return result;
-  }
 
   /**
    * Processes raw block entries and creates renderable child components.
@@ -1328,85 +1329,15 @@ class BlockOutletRootContainer extends Component {
     );
 
     // Step 2: Create components from processed entries
-    const result = [];
-    const containerCounts = new Map();
-
-    for (let i = 0; i < processedEntries.length; i++) {
-      const entry = processedEntries[i];
-      const resolvedBlock = resolveBlockSync(entry.block);
-
-      // Handle optional missing block (block ref ended with `?` but not registered)
-      if (isOptionalMissing(resolvedBlock)) {
-        // Generate key for optional missing blocks
-        const key = `optional-missing:${resolvedBlock.name}:${i}`;
-        const ghostData = handleOptionalMissingBlock({
-          blockName: resolvedBlock.name,
-          entry,
-          hierarchy: baseHierarchy,
-          isLoggingEnabled,
-          showGhosts,
-          key,
-        });
-        if (ghostData) {
-          result.push(ghostData);
-        }
-        continue;
-      }
-
-      // If block couldn't be resolved (unresolved factory), skip it
-      if (!resolvedBlock) {
-        continue;
-      }
-
-      const blockName = resolvedBlock.blockName || "unknown";
-      const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
-
-      // Generate stable unique key based on block name and position
-      const key = `${blockName}:${i}`;
-
-      // For containers, build their full path (used for their children's hierarchy)
-      const containerPath = isChildContainer
-        ? buildContainerPath(blockName, baseHierarchy, containerCounts)
-        : undefined;
-
-      // Check pre-computed visibility from preprocessing step
-      if (entry.__visible) {
-        result.push(
-          this.#getOrCreateCurriedComponent(
-            entry,
-            resolvedBlock,
-            {
-              displayHierarchy: baseHierarchy,
-              containerPath,
-              conditions: entry.conditions,
-              outletArgs,
-              key,
-            },
-            owner
-          )
-        );
-      } else if (showGhosts) {
-        // Create ghost for invisible block
-        const ghostData = createGhostBlock({
-          blockName,
-          entry,
-          hierarchy: baseHierarchy,
-          containerPath,
-          isContainer: isChildContainer,
-          owner,
-          outletArgs,
-          isLoggingEnabled,
-          resolveBlockFn: resolveBlockSync,
-          key,
-        });
-
-        if (ghostData) {
-          result.push(ghostData);
-        }
-      }
-    }
-
-    return result;
+    return renderEntriesToComponents({
+      entries: processedEntries,
+      cache: this.#componentCache,
+      owner,
+      baseHierarchy,
+      outletArgs,
+      showGhosts,
+      isLoggingEnabled,
+    });
   }
 
   /**
@@ -1439,7 +1370,9 @@ class BlockOutletRootContainer extends Component {
     const result = [];
 
     for (const entry of entries) {
-      // Clone entry to avoid mutating the original in the registry
+      // Shallow clone to add visibility metadata without mutating the original
+      // layout entry. The layout is immutable after registration, so we create
+      // a copy to attach __visible and __failureReason properties.
       const entryClone = { ...entry };
 
       // Resolve block reference
@@ -1536,37 +1469,3 @@ class BlockOutletRootContainer extends Component {
     </div>
   </template>
 }
-
-/**
- * Wraps a non-container block in a standard layout wrapper.
- * This provides consistent styling and class naming for all blocks.
- *
- * @param {Object} blockData - Block rendering data
- * @param {string} blockData.name - The block's registered name
- * @param {string} [blockData.classNames] - Additional CSS classes
- * @param {import("ember-curry-component").CurriedComponent} blockData.Component - The curried block component
- * @param {import("@ember/owner").default} owner - The application owner for currying
- * @returns {import("ember-curry-component").CurriedComponent} Wrapped component
- */
-function wrapBlockLayout(blockData, owner) {
-  return curryComponent(WrappedBlockLayout, blockData, owner);
-}
-
-/**
- * Template-only component that wraps non-container blocks.
- * Generates BEM-style class names:
- * - `{outletName}__block` - Identifies this as a block within the outlet
- * - `block-{name}` - Identifies the specific block type
- * - Custom classNames from configuration
- */
-const WrappedBlockLayout = <template>
-  <div
-    class={{concatClass
-      (concat (dasherize @outletName) "__block")
-      (concat "block-" (dasherize @name))
-      @classNames
-    }}
-  >
-    <@Component />
-  </div>
-</template>;

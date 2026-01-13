@@ -3,11 +3,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockGroup from "discourse/blocks/block-group";
-import {
-  block,
-  isBlock,
-  renderBlocks,
-} from "discourse/components/block-outlet";
+import { block, isBlock, renderBlocks } from "discourse/blocks/block-outlet";
 import {
   _registerBlock,
   blockRegistry,

@@ -3,11 +3,11 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockGroup from "discourse/blocks/block-group";
-import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import BlockOutlet, {
   block,
   renderBlocks,
-} from "discourse/components/block-outlet";
+} from "discourse/blocks/block-outlet";
+import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import {
   _registerBlock,
   _registerConditionType,

@@ -115,7 +115,7 @@ Here's a complete block registration that uses every available option. We'll wal
 ```javascript
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 
 @block("theme:my-theme:hero-banner", {
   // (A) Container mode - can this block contain child blocks?
@@ -527,7 +527,7 @@ Start with the absolute minimum—a block that just renders static content:
 ```javascript
 // themes/my-theme/javascripts/discourse/blocks/welcome-banner.gjs
 import Component from "@glimmer/component";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 
 @block("theme:my-theme:welcome-banner")
 export default class WelcomeBanner extends Component {
@@ -2609,7 +2609,7 @@ Let's build a banner that shows on the homepage for non-admin users.
 ```javascript
 // themes/my-theme/javascripts/discourse/blocks/promo-banner.gjs
 import Component from "@glimmer/component";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 
 @block("theme:my-theme:promo-banner", {
   description: "A promotional banner with customizable message and call-to-action",
@@ -2694,7 +2694,7 @@ Let's build an information panel system that shows different content based on wh
 ```javascript
 // themes/my-theme/javascripts/discourse/blocks/info-panel.gjs
 import Component from "@glimmer/component";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 import icon from "discourse/helpers/d-icon";
 
 @block("theme:my-theme:info-panel", {
@@ -2840,7 +2840,7 @@ First, the analytics plugin creates and registers a stats panel block:
 ```javascript
 // plugins/discourse-analytics/assets/javascripts/discourse/blocks/stats-panel.gjs
 import Component from "@glimmer/component";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 
 @block("discourse-analytics:stats-panel", {
   description: "Displays community statistics",
@@ -2886,7 +2886,7 @@ The tasks plugin provides a task list block:
 ```javascript
 // plugins/discourse-tasks/assets/javascripts/discourse/blocks/task-list.gjs
 import Component from "@glimmer/component";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 
 @block("discourse-tasks:task-list", {
   description: "Shows user's pending tasks",
@@ -2930,7 +2930,7 @@ The gamification plugin adds a leaderboard block:
 ```javascript
 // plugins/discourse-gamification/assets/javascripts/discourse/blocks/leaderboard.gjs
 import Component from "@glimmer/component";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 
 @block("discourse-gamification:leaderboard", {
   description: "Top contributors leaderboard",
@@ -3338,7 +3338,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import BlockOutlet, { block, renderBlocks } from "discourse/components/block-outlet";
+import BlockOutlet, { block, renderBlocks } from "discourse/blocks/block-outlet";
 import {
   _registerBlock,
   withTestBlockRegistration,
@@ -3417,7 +3417,7 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
-import BlockOutlet, { block, renderBlocks } from "discourse/components/block-outlet";
+import BlockOutlet, { block, renderBlocks } from "discourse/blocks/block-outlet";
 import {
   _registerBlock,
   _registerConditionType,
@@ -3587,7 +3587,7 @@ test("hides when outlet arg condition fails", async function (assert) {
 |---------|--------|-------|
 | Register block | `_registerBlock` from `discourse/lib/blocks/registration` | `withTestBlockRegistration(() => _registerBlock(MyBlock))` |
 | Register condition | `_registerConditionType` from `discourse/lib/blocks/registration` | `withTestConditionRegistration(() => _registerConditionType(MyCondition))` |
-| Configure layout | `renderBlocks` from `discourse/components/block-outlet` | `renderBlocks("outlet-name", [...], getOwner(this))` |
+| Configure layout | `renderBlocks` from `discourse/blocks/block-outlet` | `renderBlocks("outlet-name", [...], getOwner(this))` |
 | Test condition validate | Direct instantiation | `new MyCondition()` then `condition.validate(args)` |
 | Test condition evaluate | Direct instantiation with owner | `setOwner(condition, getOwner(this))` then `condition.evaluate(args, context)` |
 

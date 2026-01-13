@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import BlockOutlet from "discourse/components/block-outlet";
+import BlockOutlet from "discourse/blocks/block-outlet";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";

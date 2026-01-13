@@ -36,3 +36,29 @@ export function applyArgDefaults(ComponentClass, providedArgs) {
   }
   return result;
 }
+
+/**
+ * Performs a shallow comparison of two args objects.
+ *
+ * Compares top-level values using strict equality (===). Does not perform
+ * deep comparison of nested objects. Used to determine if cached curried
+ * components can be reused.
+ *
+ * @param {Object|null|undefined} a - First args object.
+ * @param {Object|null|undefined} b - Second args object.
+ * @returns {boolean} True if the args are shallowly equal, false otherwise.
+ */
+export function shallowArgsEqual(a, b) {
+  if (a === b) {
+    return true;
+  }
+  if (a == null || b == null) {
+    return false;
+  }
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+  return keysA.every((key) => a[key] === b[key]);
+}

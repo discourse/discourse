@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 /*

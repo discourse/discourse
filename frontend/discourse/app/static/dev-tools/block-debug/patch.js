@@ -1,5 +1,5 @@
 import curryComponent from "ember-curry-component";
-import { isContainerBlock } from "discourse/components/block-outlet";
+import { isContainerBlock } from "discourse/blocks/block-outlet";
 import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";

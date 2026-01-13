@@ -5,7 +5,7 @@ import BlockGroup from "discourse/blocks/block-group";
 import BlockOutlet, {
   block,
   renderBlocks,
-} from "discourse/components/block-outlet";
+} from "discourse/blocks/block-outlet";
 import {
   _registerBlock,
   withTestBlockRegistration,

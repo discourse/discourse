@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 import {
   _freezeBlockRegistry,

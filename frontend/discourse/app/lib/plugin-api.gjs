@@ -1,6 +1,6 @@
 import $ from "jquery";
+import { renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
-import { renderBlocks } from "discourse/components/block-outlet";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {

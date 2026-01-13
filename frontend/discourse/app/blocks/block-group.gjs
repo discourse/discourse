@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { block } from "discourse/components/block-outlet";
+import { block } from "discourse/blocks/block-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import dasherize from "discourse/helpers/dasherize";
 import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";

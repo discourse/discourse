@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { block } from "discourse/blocks/block-outlet";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
-import { block } from "discourse/components/block-outlet";
 import {
   _registerBlock,
   _registerConditionType,

@@ -11,7 +11,7 @@
  * 1. Create the block component in `app/blocks/` with the `@block` decorator:
  *    ```javascript
  *    import Component from "@glimmer/component";
- *    import { block } from "discourse/components/block-outlet";
+ *    import { block } from "discourse/blocks/block-outlet";
  *
  *    @block("my-block")
  *    export default class MyBlock extends Component {

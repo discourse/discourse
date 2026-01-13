@@ -13,8 +13,8 @@ import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
-import { resetOutletLayoutsForTesting } from "discourse/components/block-outlet";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
   cleanUpComposerUploadHandler,
