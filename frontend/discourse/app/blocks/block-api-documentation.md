@@ -211,7 +211,7 @@ The block name follows a strict namespacing convention:
 | Format | Source | Example |
 |--------|--------|---------|
 | `block-name` | Core Discourse | `group`, `block-outlet` |
-| `plugin:block-name` | Plugins | `chat:message-widget` |
+| `plugin:block-name` | Plugins | `chat:message-panel` |
 | `theme:namespace:block-name` | Themes | `theme:tactile:hero-banner` |
 
 **Why namespacing?** Prevents collisions. Two themes can both have a "banner" block without conflict because they're namespaced: `theme:tactile:banner` vs `theme:starter:banner`.
@@ -724,10 +724,10 @@ Both named blocks receive a boolean parameter indicating whether **any blocks ar
 
 ```handlebars
 {{! Add a header only when blocks exist }}
-<BlockOutlet @name="sidebar-widgets">
-  <:before as |hasWidgets|>
-    {{#if hasWidgets}}
-      <h3 class="sidebar-widgets__header">Widgets</h3>
+<BlockOutlet @name="sidebar-panels">
+  <:before as |hasPanels|>
+    {{#if hasPanels}}
+      <h3 class="sidebar-panels__header">Panels</h3>
     {{/if}}
   </:before>
 </BlockOutlet>
@@ -748,7 +748,7 @@ Both named blocks receive a boolean parameter indicating whether **any blocks ar
   <:after as |isConfigured|>
     {{#unless isConfigured}}
       <div class="empty-dashboard">
-        <p>Your dashboard is empty. Install plugins to add widgets.</p>
+        <p>Your dashboard is empty. Install plugins to add panels.</p>
       </div>
     {{/unless}}
   </:after>
@@ -889,9 +889,9 @@ When referencing blocks by string name, you can append `?` to make the block **o
 
 ```javascript
 api.renderBlocks("dashboard", [
-  { block: "analytics:stats-widget?" },  // Optional - won't error if missing
-  { block: "chat:recent-messages?" },    // Optional
-  { block: CoreBanner },                 // Required - will error if not registered
+  { block: "analytics:stats-panel?" },  // Optional - won't error if missing
+  { block: "chat:recent-messages?" },   // Optional
+  { block: CoreBanner },                // Required - will error if not registered
 ]);
 ```
 
@@ -1155,6 +1155,230 @@ for each entry in layout:
   5. If not visible, set __failureReason for debug display
 ```
 
+### The Resolution Phase
+
+Before conditions can be evaluated, block references must be resolved. The resolution phase handles three types of references:
+
+**String Name Resolution:**
+```javascript
+// String reference → registry lookup
+{ block: "discourse-analytics:stats-panel" }
+// System looks up "discourse-analytics:stats-panel" in blockRegistry Map
+// Returns the registered component class
+```
+
+**Factory Function Resolution:**
+
+Factory functions enable lazy loading for code splitting. They're declared during registration, then referenced by string name in layouts:
+
+```javascript
+// pre-initializers/register-blocks.js
+api.registerBlock("my-plugin:heavy-block", () => import("./blocks/heavy-block"));
+
+// api-initializers/configure-blocks.js
+api.renderBlocks("dashboard", [
+  { block: "my-plugin:heavy-block" },  // String reference, not the factory
+]);
+```
+
+When the block is needed, the system calls the factory, resolves the Promise, extracts the default export, and caches the result.
+
+> :warning: **Factory functions are evaluated only once.** The result is cached permanently for the session. Factories are for lazy loading, not conditional logic.
+
+**Incorrect usage** (dynamic result):
+```javascript
+// ✗ Bad: Tries to return different blocks based on condition
+// This will NOT work—the first result is cached forever
+api.registerBlock("my-plugin:dynamic", () => {
+  if (someCondition) {
+    return import("./block-a");
+  }
+  return import("./block-b");
+});
+```
+
+If you need conditional block selection, register both blocks and use conditions in the layout:
+```javascript
+// ✓ Good: Register both, use conditions to select
+api.registerBlock(BlockA);
+api.registerBlock(BlockB);
+
+api.renderBlocks("outlet", [
+  { block: BlockA, conditions: { type: "setting", name: "feature_a", enabled: true } },
+  { block: BlockB, conditions: { type: "setting", name: "feature_a", enabled: false } },
+]);
+```
+
+**Optional Block Handling:**
+```javascript
+// Optional marker (?) affects resolution behavior
+{ block: "some-plugin:optional-block?" }
+// If not found in registry:
+//   - Without ?: throw BlockError
+//   - With ?: return null, mark entry as __optional
+```
+
+The resolution cache (`factoryCache` Map) stores resolved classes to avoid repeated async loads. Once resolved, a factory never executes again—the cached class is returned directly.
+
+### Condition Evaluation Details
+
+After resolution, conditions are evaluated. The evaluation process has several important characteristics:
+
+**Short-Circuit Evaluation:**
+
+In production mode, AND conditions short-circuit—if any condition fails, remaining conditions aren't evaluated:
+
+```javascript
+conditions: [
+  { type: "user", admin: true },      // If false → skip rest
+  { type: "route", pages: ["ADMIN"] }, // Never evaluated if admin check failed
+  { type: "setting", name: "x" }       // Never evaluated
+]
+```
+
+In debug mode (when console logging is enabled), short-circuiting is disabled. All conditions are evaluated so the debug output shows the complete picture—you can see which conditions *would* have passed if earlier ones hadn't failed.
+
+**Visibility Flag Assignment:**
+
+Each entry receives two internal properties after evaluation:
+
+- `__visible` (`boolean`) - Whether the block should render
+- `__failureReason` (`string | null`) - Why it's hidden (for debug tools)
+
+Failure reasons include:
+- `"conditions_failed"` - Block's own conditions returned false
+- `"no_visible_children"` - Container has no visible children
+- `"not_registered"` - Optional block not found in registry
+
+**Container Visibility Logic:**
+
+Container blocks have an implicit condition: they only render if at least one child is visible. This prevents empty container wrappers from appearing in the DOM:
+
+```javascript
+// Container visibility calculation
+const ownConditionsPassed = evaluateConditions(entry.conditions);
+const hasVisibleChildren = entry.children?.some(c => c.__visible);
+entry.__visible = ownConditionsPassed && (isContainer ? hasVisibleChildren : true);
+```
+
+### Caching Behavior
+
+The Block API caches leaf blocks to optimize navigation performance.
+
+**What Gets Cached:**
+
+Leaf blocks (blocks without children) are cached based on:
+- Component class reference
+- Serialized args object
+
+When a user navigates between pages, if a leaf block's class and args match a cached entry, the cached component is reused instead of creating a new one.
+
+**What Doesn't Get Cached:**
+
+Container blocks are never cached because:
+- Their children may have different visibility on different pages
+- The children array is route-dependent
+- Re-evaluating children is necessary for correctness
+
+**Cache Invalidation:**
+
+The cache invalidates when:
+- Args change (even if component class is the same)
+- Component class changes
+- App is refreshed
+
+This caching is transparent—your block code doesn't need to account for it.
+
+### Reactive Re-evaluation Triggers
+
+Conditions can depend on reactive state. When that state changes, the block tree re-evaluates.
+
+**What Triggers Re-evaluation:**
+
+- **Route transitions** - Navigating to a new page triggers re-evaluation of route conditions
+- **User state changes** - Logging in/out, trust level changes, group membership changes
+- **Site settings changes** - If a setting used in a condition is modified (rare at runtime)
+- **Outlet args changes** - When parent component updates outlet args
+- **Viewport changes** - Resizing browser window (for viewport conditions)
+
+**How Re-evaluation Works:**
+
+1. Tracked property changes notify Ember's reactivity system
+2. BlockOutlet's `children` getter (which calls `#preprocessEntries`) re-runs
+3. All conditions re-evaluate with current state
+4. Components update based on new `__visible` flags
+
+**Minimizing Re-renders:**
+
+To keep re-evaluation efficient:
+- Avoid complex conditions when simple ones suffice
+- Use route conditions instead of outlet arg conditions when possible (routes change less frequently)
+- Keep container hierarchies shallow
+
+### Step-by-Step Evaluation Example
+
+Let's trace through a complex condition tree to understand the evaluation order:
+
+```javascript
+conditions: [
+  { type: "user", loggedIn: true },
+  {
+    any: [
+      { type: "user", admin: true },
+      [
+        { type: "user", minTrustLevel: 2 },
+        { not: { type: "route", pages: ["ADMIN_PAGES"] } }
+      ]
+    ]
+  }
+]
+```
+
+**Evaluation (user is logged in, trust level 3, not admin, on /latest):**
+
+```
+Step 1: Evaluate top-level AND (array)
+  ├─ Step 1a: { type: "user", loggedIn: true }
+  │  └─ currentUser exists? YES → ✓ PASS
+  │
+  └─ Step 1b: { any: [...] }
+     ├─ Step 1b-i: { type: "user", admin: true }
+     │  └─ currentUser.admin? NO → ✗ FAIL
+     │
+     └─ Step 1b-ii: [ (nested AND) ]
+        ├─ { type: "user", minTrustLevel: 2 }
+        │  └─ currentUser.trust_level >= 2? (3 >= 2) YES → ✓ PASS
+        │
+        └─ { not: { type: "route", pages: ["ADMIN_PAGES"] } }
+           └─ Is current page ADMIN_PAGES? /latest = NO
+              └─ NOT(false) = true → ✓ PASS
+        │
+        └─ Nested AND: PASS && PASS = ✓ PASS
+     │
+     └─ any: FAIL || PASS = ✓ PASS
+  │
+  └─ Top-level AND: PASS && PASS = ✓ PASS
+
+Result: Block renders
+```
+
+**Same evaluation, but user is admin on /admin page:**
+
+```
+Step 1: Evaluate top-level AND (array)
+  ├─ Step 1a: { type: "user", loggedIn: true } → ✓ PASS
+  │
+  └─ Step 1b: { any: [...] }
+     ├─ Step 1b-i: { type: "user", admin: true }
+     │  └─ currentUser.admin? YES → ✓ PASS
+     │
+     └─ (short-circuit: any already passed, skip remaining)
+
+Result: Block renders (admin bypass)
+```
+
+In debug mode, you'd see the full evaluation logged even though the `any` short-circuited in production.
+
 That handles basic conditions. But what if you need more complex logic?
 
 ### Condition Combinators: AND, OR, NOT
@@ -1410,6 +1634,124 @@ The API balances simplicity for common cases with power for advanced use:
 
 Start simple, add complexity only when you need it. You don't have to master conditions to render a block, and you don't have to master combinators to use a single condition.
 
+### More Error Message Examples
+
+Here are additional error messages you might encounter, organized by category:
+
+**Registration Errors:**
+
+```javascript
+// Duplicate block name
+[Blocks] Block "theme:my-theme:banner" is already registered.
+Each block name must be unique across all plugins and themes.
+Previously registered at: your-theme/pre-initializers/register.js:12
+
+// Missing namespace (plugin)
+[Blocks] Plugin blocks must use the "namespace:block-name" format.
+Got: "banner"
+Expected format: "your-plugin:banner"
+
+// Missing namespace (theme)
+[Blocks] Theme blocks must use the "theme:namespace:block-name" format.
+Got: "my-banner"
+Expected format: "theme:your-theme:my-banner"
+```
+
+**Args Validation Errors:**
+
+```javascript
+// Missing required arg
+[Blocks] Block "my-block" at blocks[0]:
+Required arg "title" was not provided.
+
+// Unknown arg (with suggestion)
+[Blocks] Block "my-block" at blocks[0]:
+Unknown arg "tite" (did you mean "title"?).
+Declared args: title, subtitle, variant
+
+// Type mismatch
+[Blocks] Block "my-block" at blocks[0]:
+Arg "count" expects type "number", got "string".
+Value: "5" (string)
+Hint: Remove quotes to pass a number: { count: 5 }
+
+// Array item type mismatch
+[Blocks] Block "my-block" at blocks[0]:
+Arg "tags" expects array of "string", but item at index 2 is "number".
+Value: ["a", "b", 123]
+```
+
+**Outlet Errors:**
+
+```javascript
+// Block denied in outlet
+[Blocks] Block "theme:my-theme:hero" cannot render in outlet "sidebar-blocks":
+Denied by deniedOutlets pattern "sidebar-*".
+
+// Second renderBlocks call
+[Blocks] Outlet "homepage-blocks" is already configured.
+First configured by: my-theme/api-initializers/layout.js:8
+Attempted again by: another-plugin/api-initializers/setup.js:15
+Only one caller can configure an outlet.
+```
+
+**Constraint Errors:**
+
+```javascript
+// atLeastOne violation
+[Blocks] Block "featured-list" at blocks[0]:
+At least one of "categoryId", "tagName" must be provided, but got none.
+
+// exactlyOne violation (both provided)
+[Blocks] Block "featured-list" at blocks[0]:
+Exactly one of "categoryId", "tagName" must be provided, but got both.
+
+// allOrNone violation
+[Blocks] Block "image-block" at blocks[0]:
+Args "width", "height" must be provided together or not at all.
+Got: width=100, height=undefined
+```
+
+**Container/Child Errors:**
+
+```javascript
+// Missing containerArgs
+[Blocks] Block "tab-panel" at blocks[0].children[1]:
+Parent container "tabs-container" requires containerArgs, but none provided.
+Required fields: name (string)
+
+// containerArgs without childArgs schema
+[Blocks] Block "simple-panel" at blocks[0].children[0]:
+containerArgs provided but parent "group" has no childArgs schema.
+Remove containerArgs or add childArgs schema to parent.
+
+// Duplicate unique value
+[Blocks] Duplicate value "settings" for containerArgs.name in children of "tabs-container".
+Found at children[0] and children[2].
+The "name" field is marked as unique and must have distinct values.
+```
+
+### Development vs Production Behavior
+
+The Block API behaves differently in development and production environments:
+
+| Aspect | Development | Production |
+|--------|-------------|------------|
+| Error messages | Verbose with suggestions | Minimal, logged to console |
+| Ghost blocks | Shown (if overlay enabled) | Hidden |
+| Condition logging | Available | Disabled |
+| Validation timing | Boot time + runtime | Boot time only |
+
+**Enabling Debug Mode:**
+
+Debug features are controlled via the dev tools toolbar. In production builds, the toolbar is hidden by default. To access debug tools in production:
+
+1. Open browser DevTools console
+2. Run: `Discourse.__container__.lookup("service:dev-tools-state").setProperty("enabled", true)`
+3. Refresh the page
+
+> :warning: Debug mode adds performance overhead. Use only for debugging, not routine production use.
+
 So far we've focused on what happens when things go wrong. But what about when things *seem* fine but aren't working as expected?
 
 ---
@@ -1556,6 +1898,250 @@ Debug tool settings are saved to sessionStorage:
 - Per-tab independent state
 
 This means you can enable debugging, navigate around, and the tools stay enabled.
+
+### Visual Reference
+
+The following sections describe what each debug tool looks like when enabled.
+
+#### The Dev Tools Toolbar
+
+The Block Debug button appears in the dev tools toolbar (left side of screen). Clicking it reveals a dropdown with three toggleable options:
+
+```
+┌─────────────────────────────────┐
+│ ☐ Console Logging              │
+│ ☐ Visual Overlay               │
+│ ☐ Outlet Boundaries            │
+└─────────────────────────────────┘
+```
+
+The button icon highlights when any option is enabled.
+
+> :bulb: **Screenshot opportunity:** The dev tools toolbar with Block Debug dropdown expanded showing the three checkbox options.
+
+#### Rendered Block Badges
+
+When Visual Overlay is enabled, rendered blocks display an orange badge in their top-left corner:
+
+```
+┌─────────────────────────────────────────┐
+│ 🧊 hero-banner                          │
+├─────────────────────────────────────────┤
+│                                         │
+│     [Block content appears here]        │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+The badge is styled with:
+- Orange background
+- Small cube icon
+- Block name in white text
+- Positioned in top-left corner with cut corner
+
+> :bulb: **Screenshot opportunity:** A rendered block with the orange badge visible in the top-left corner.
+
+#### Block Tooltips
+
+Clicking a badge opens an interactive tooltip with full block details:
+
+```
+┌─────────────────────────────────────────┐
+│ 🧊 hero-banner in homepage-blocks       │
+│ ─────────────────────────────────────── │
+│ Status: RENDERED ✓                      │
+│                                         │
+│ Conditions (passed):                    │
+│   ✓ AND                                 │
+│     ✓ user { loggedIn: true }           │
+│     ✓ route { pages: [...] }            │
+│                                         │
+│ Arguments:                              │
+│   @title: "Welcome"                     │
+│   @ctaText: "Get Started"               │
+│                                         │
+│ Outlet Args:                            │
+│   @outletArgs.topic: Topic {...}        │
+└─────────────────────────────────────────┘
+```
+
+The tooltip shows:
+- Block name and outlet location
+- Render status (RENDERED or HIDDEN)
+- Condition tree with pass/fail indicators
+- Args passed from configuration
+- Outlet args from template context
+
+> :bulb: **Screenshot opportunity:** An expanded block tooltip showing conditions, arguments, and outlet args.
+
+#### Ghost Block Placeholders
+
+Hidden blocks appear as ghost placeholders with a distinctive appearance:
+
+```
+┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+  🧊 admin-banner (hidden)
+│                                         │
+      ╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱
+│     ╱╱╱╱ (diagonal stripes) ╱╱╱╱       │
+      ╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱
+│                                         │
+└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+```
+
+Ghost styling includes:
+- Red dashed border
+- Red diagonal stripe pattern
+- Red badge with "(hidden)" suffix
+- Minimum height to ensure visibility
+
+> :bulb: **Screenshot opportunity:** A ghost block placeholder with red dashed border and diagonal stripes.
+
+#### Ghost Tooltip with Failure Reason
+
+Ghost block tooltips explain why the block is hidden:
+
+```
+┌─────────────────────────────────────────┐
+│ 🧊 admin-banner in homepage-blocks      │
+│ ─────────────────────────────────────── │
+│ Status: HIDDEN ✗                        │
+│                                         │
+│ Reason: Conditions failed               │
+│                                         │
+│ Conditions (failed):                    │
+│   ✗ AND                                 │
+│     ✗ user { admin: true }              │
+│     ─ route { ... } (not evaluated)     │
+│                                         │
+│ Hint: This block is not rendered        │
+│ because its conditions failed.          │
+└─────────────────────────────────────────┘
+```
+
+> :bulb: **Screenshot opportunity:** A ghost block tooltip explaining why the block is hidden with the failed condition highlighted.
+
+#### Outlet Boundaries
+
+When Outlet Boundaries is enabled, outlets show amber borders even when empty:
+
+```
+┌─────────────────────────────────────────┐
+│ 🧊🧊 homepage-blocks (3 blocks)         │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│                                         │
+│     [Rendered blocks appear here]       │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+Outlet boundary styling:
+- Amber dashed border
+- Amber badge with multiple-cubes icon
+- Shows block count
+- Minimum height even when empty
+
+> :bulb: **Screenshot opportunity:** An outlet with amber dashed boundary and badge showing "3 blocks".
+
+#### Console Logging Output
+
+The console output uses colors and collapsible groups:
+
+```
+▼ [Blocks] ✓ RENDERED hero-banner in homepage-blocks
+    ✓ AND (2 conditions)
+      ✓ user { loggedIn: true }
+      ✓ route { pages: ["DISCOVERY_PAGES"] }
+
+▼ [Blocks] ✗ SKIPPED admin-banner in homepage-blocks
+    ✗ AND (2 conditions)
+      ✗ user { admin: true }
+        actual: false, required: true
+      ─ route { ... } (not evaluated)
+```
+
+Console styling:
+- ✓ = green
+- ✗ = red
+- AND/OR/NOT = blue
+- Block names = bold white
+- Hints = yellow italic
+
+> :bulb: **Screenshot opportunity:** Browser console showing collapsible block evaluation logs with colored checkmarks and X marks.
+
+### Using Tools Together
+
+Each tool provides different information. Use them in combination for comprehensive debugging:
+
+| Tool | Best For | Complements |
+|------|----------|-------------|
+| Console Logging | Seeing *why* conditions pass/fail | Visual Overlay (to see *which* blocks) |
+| Visual Overlay | Finding blocks visually | Console Logging (to see condition details) |
+| Outlet Boundaries | Confirming outlets exist | Visual Overlay (to see what's inside) |
+| Ghost Blocks | Seeing hidden blocks | Console Logging (to see failure reasons) |
+
+**Recommended workflow:**
+
+1. **Start with Outlet Boundaries** - Confirm the outlet exists where you expect
+2. **Enable Visual Overlay** - See what's rendering (or what ghosts appear)
+3. **Enable Console Logging** - Understand the condition evaluation
+4. **Check tooltips** - Verify args and outlet args are correct
+
+### Tips for Effective Debugging
+
+**Identifying configuration vs condition issues:**
+
+- Block not in console at all → Registration or layout configuration issue
+- Block logged as SKIPPED → Condition issue (check which failed)
+- Block logged as RENDERED but not visible → CSS or DOM issue (not blocks)
+
+**Common debugging scenarios:**
+
+| Symptom | Check This |
+|---------|------------|
+| Block missing | Is outlet boundary visible? Is block in console logs? |
+| Ghost but expected visible | Expand console log, check which condition failed |
+| Visible but expected hidden | Check if all conditions are present in config |
+| Works locally, not in prod | Are debug tools enabled? Check production build |
+
+**Using the Args Table:**
+
+Clicking rows in the Arguments or Outlet Args tables saves values to global console variables:
+
+```javascript
+// After clicking @title row in tooltip:
+arg1 // → "Welcome"
+
+// After clicking @outletArgs.topic row:
+arg2 // → Topic { id: 123, title: "...", ... }
+
+// You can now inspect in console:
+arg2.category
+arg2.user.username
+```
+
+This is particularly useful for inspecting complex objects like topics, users, or categories that are passed through outlet args.
+
+### Integration with Browser DevTools
+
+The Block API debug tools complement browser DevTools:
+
+**Using with Elements panel:**
+1. Enable Visual Overlay
+2. Click a block badge
+3. Right-click tooltip → "Inspect Element"
+4. Now you're inspecting the block's DOM node
+
+**Using with Console panel:**
+1. Enable Console Logging
+2. Expand a block's log group
+3. Click object references to inspect full objects
+4. Use `copy()` to copy values to clipboard
+
+**Using with Network panel:**
+- Monitor lazy-loaded block imports
+- Check if factory functions trigger network requests
+- Verify block chunks load correctly
 
 You've got the tools to see what's happening. Now you need to know what all those condition types actually do.
 
@@ -2305,25 +2891,25 @@ This separation is intentional: plugins provide content, themes control presenta
 
 **Plugin A: Analytics Plugin**
 
-First, the analytics plugin creates and registers a stats widget block:
+First, the analytics plugin creates and registers a stats panel block:
 
 ```javascript
-// plugins/discourse-analytics/assets/javascripts/discourse/blocks/stats-widget.gjs
+// plugins/discourse-analytics/assets/javascripts/discourse/blocks/stats-panel.gjs
 import Component from "@glimmer/component";
 import { block } from "discourse/components/block-outlet";
 
-@block("discourse-analytics:stats-widget", {
+@block("discourse-analytics:stats-panel", {
   description: "Displays community statistics",
   args: {
     title: { type: "string", default: "Community Stats" },
     showGrowth: { type: "boolean", default: true },
   },
 })
-export default class StatsWidget extends Component {
+export default class StatsPanel extends Component {
   <template>
-    <div class="stats-widget">
-      <h3 class="stats-widget__title">{{@title}}</h3>
-      <ul class="stats-widget__list">
+    <div class="stats-panel">
+      <h3 class="stats-panel__title">{{@title}}</h3>
+      <ul class="stats-panel__list">
         <li>Total Users: {{@outletArgs.stats.totalUsers}}</li>
         <li>Posts Today: {{@outletArgs.stats.postsToday}}</li>
         {{#if @showGrowth}}
@@ -2338,12 +2924,12 @@ export default class StatsWidget extends Component {
 ```javascript
 // plugins/discourse-analytics/assets/javascripts/discourse/pre-initializers/register-blocks.js
 import { withPluginApi } from "discourse/lib/plugin-api";
-import StatsWidget from "../blocks/stats-widget";
+import StatsPanel from "../blocks/stats-panel";
 
 export default {
   initialize() {
     withPluginApi((api) => {
-      api.registerBlock(StatsWidget);
+      api.registerBlock(StatsPanel);
     });
   },
 };
@@ -2451,7 +3037,7 @@ export default apiInitializer((api) => {
   api.renderBlocks("community-dashboard", [
     // Stats for everyone (optional - plugin may not be installed)
     {
-      block: "discourse-analytics:stats-widget?",
+      block: "discourse-analytics:stats-panel?",
       args: { title: "Our Community", showGrowth: true },
     },
 
@@ -2466,13 +3052,13 @@ export default apiInitializer((api) => {
     {
       block: "discourse-gamification:leaderboard?",
       args: { count: 5, period: "month" },
-      conditions: { type: "viewport", minWidth: 768 },
+      conditions: { type: "viewport", min: "md" },
     },
   ]);
 });
 ```
 
-> :exclamation: Notice the `?` suffix on each block name (e.g., `"discourse-analytics:stats-widget?"`). This marks the block as **optional**. If the plugin isn't installed or is disabled, the block silently skips instead of throwing an error. This is essential when themes reference blocks from plugins that may or may not be present.
+> :exclamation: Notice the `?` suffix on each block name (e.g., `"discourse-analytics:stats-panel?"`). This marks the block as **optional**. If the plugin isn't installed or is disabled, the block silently skips instead of throwing an error. This is essential when themes reference blocks from plugins that may or may not be present.
 
 **What we accomplished:**
 - Three plugins each provide focused, reusable blocks
@@ -2564,6 +3150,8 @@ api.registerBlockConditionType(ConditionClass)
   containerArgs?: { [key]: any },  // Metadata provided to parent container
 }
 ```
+
+> :bulb: Use string references (`"plugin:block-name"`) for blocks registered with factory functions. Factory functions should be declared in `registerBlock()`, not in the layout.
 
 #### Condition Specification
 
@@ -2688,6 +3276,210 @@ api.registerBlockConditionType(ConditionClass)
 3. **Outlet args undefined**
    - Verify outlet passes args: `@outletArgs={{hash topic=this.topic}}`
    - Check path spelling in condition
+
+### FAQ: Advanced Troubleshooting
+
+**Q: My block renders in development but not in production. Why?**
+
+A: Check these common causes:
+1. **Bundle splitting** - Factory functions may fail if the import path is wrong in production builds. Verify the import path resolves correctly.
+2. **Debug-only code** - If your block relies on debug tools being enabled, it won't work in production.
+3. **Different site settings** - Production may have different settings that affect your conditions.
+4. **Asset pipeline** - Ensure your block files are included in the production build.
+
+**Q: Console shows my condition passed, but the block isn't visible. What's happening?**
+
+A: The block may be rendered but hidden by CSS. Check:
+1. Is the block inside a container that's hidden? (Container visibility depends on having visible children)
+2. Is there CSS that's hiding the block's DOM element?
+3. Is the block rendering empty content? (Check your template)
+
+Also check if a parent container's conditions are failing—child visibility doesn't help if the parent is hidden.
+
+**Q: Two plugins both want to render blocks in the same outlet. How do I resolve this?**
+
+A: Only one caller can configure an outlet with `renderBlocks()`. The solution is the intended pattern:
+1. Both plugins should `registerBlock()` only (in pre-initializers)
+2. The theme should call `renderBlocks()` to compose blocks from both plugins
+3. Use optional blocks (`?`) in case either plugin is disabled
+
+If you control both plugins, consider making the outlet name plugin-specific or coordinating who calls `renderBlocks()`.
+
+**Q: How do I pass data from my block back to the parent component?**
+
+A: Blocks are one-way data flow (parent → block). For communication back:
+1. **Services** - Use a shared service to communicate state
+2. **Actions** - Pass action closures through outlet args: `@outletArgs={{hash onSave=this.handleSave}}`
+3. **Events** - Use Ember's event system or custom events
+
+Avoid trying to modify outlet args directly—they're passed by value.
+
+**Q: Can I dynamically change which blocks render after boot?**
+
+A: No. Block layouts are configured at boot time and frozen. For dynamic visibility:
+1. **Use conditions** - Blocks can appear/disappear based on reactive state
+2. **Use outlet args** - Pass dynamic data that conditions can check
+3. **Use multiple outlets** - Different outlets for different contexts
+
+If you need truly dynamic layout changes, plugin outlets may be more appropriate.
+
+### Testing Strategies
+
+#### Unit Testing Custom Conditions
+
+Test custom conditions in isolation:
+
+```javascript
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import MyCustomCondition from "my-plugin/blocks/conditions/my-custom";
+
+module("Unit | Condition | my-custom", function (hooks) {
+  setupTest(hooks);
+
+  test("evaluate returns true when feature flag is enabled", function (assert) {
+    const condition = this.owner.lookup("service:blocks").instantiateCondition(MyCustomCondition);
+
+    // Mock the service the condition depends on
+    condition.featureFlags = { isEnabled: () => true };
+
+    const result = condition.evaluate({ flag: "my-feature", enabled: true });
+    assert.true(result);
+  });
+
+  test("validate returns error for missing flag", function (assert) {
+    const condition = new MyCustomCondition();
+    const error = condition.validate({});
+
+    assert.ok(error);
+    assert.ok(error.message.includes("flag"));
+  });
+});
+```
+
+#### Integration Testing Block Visibility
+
+Test block visibility with different conditions:
+
+```javascript
+import { module, test } from "qunit";
+import { setupRenderingTest } from "ember-qunit";
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { withTestBlockRegistration } from "discourse/lib/blocks/registration";
+
+module("Integration | Block | my-banner", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("renders when user is logged in", async function (assert) {
+    await withTestBlockRegistration(this, async () => {
+      // Register block
+      this.owner.lookup("service:blocks").registerBlock(MyBanner);
+
+      // Configure layout
+      this.owner.lookup("service:blocks").renderBlocks("test-outlet", [
+        {
+          block: MyBanner,
+          conditions: { type: "user", loggedIn: true },
+        },
+      ]);
+
+      // Mock logged-in user
+      this.owner.register("service:current-user", {
+        create: () => ({ id: 1, username: "test" }),
+      });
+
+      await render(hbs`<BlockOutlet @name="test-outlet" />`);
+
+      assert.dom(".my-banner").exists();
+    });
+  });
+
+  test("does not render when user is anonymous", async function (assert) {
+    await withTestBlockRegistration(this, async () => {
+      // ... similar setup but no current-user mock
+
+      await render(hbs`<BlockOutlet @name="test-outlet" />`);
+
+      assert.dom(".my-banner").doesNotExist();
+    });
+  });
+});
+```
+
+#### Testing with Mock Outlet Args
+
+```javascript
+test("uses topic data from outlet args", async function (assert) {
+  await withTestBlockRegistration(this, async () => {
+    // ... register and configure block
+
+    this.set("mockTopic", { id: 123, title: "Test Topic" });
+
+    await render(hbs`
+      <BlockOutlet
+        @name="test-outlet"
+        @outletArgs={{hash topic=this.mockTopic}}
+      />
+    `);
+
+    assert.dom(".topic-title").hasText("Test Topic");
+  });
+});
+```
+
+### Migration from Plugin Outlets
+
+If you're adding a `<BlockOutlet>` to replace or complement a plugin outlet, here's the process.
+
+#### Migration Checklist
+
+1. **Identify the outlet area**
+   - Is it a structured layout region?
+   - Will multiple blocks potentially render here?
+
+2. **Create a BlockOutlet**
+   ```handlebars
+   {{! Replace or add alongside existing plugin outlet }}
+   <BlockOutlet @name="my-outlet" @outletArgs={{hash topic=this.topic}} />
+   ```
+
+3. **Convert connectors to blocks**
+   ```javascript
+   // Before: Plugin outlet connector
+   // connectors/my-outlet/my-connector.js
+
+   // After: Block component
+   @block("my-plugin:my-block", { ... })
+   export default class MyBlock extends Component { ... }
+   ```
+
+4. **Register blocks in pre-initializers**
+   ```javascript
+   // pre-initializers/register-blocks.js
+   export default {
+     initialize() {
+       withPluginApi((api) => {
+         api.registerBlock(MyBlock);
+       });
+     },
+   };
+   ```
+
+5. **Configure layout in api-initializers**
+   ```javascript
+   // api-initializers/configure-blocks.js
+   export default apiInitializer((api) => {
+     api.renderBlocks("my-outlet", [
+       { block: MyBlock, conditions: [...] },
+     ]);
+   });
+   ```
+
+6. **Test thoroughly**
+   - Verify visibility in all scenarios
+   - Check debug tools show expected output
+   - Confirm no console errors
 
 ---
 
