@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { block } from "discourse/components/block-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import dasherize from "discourse/helpers/dasherize";
 import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
 
 /**
@@ -23,8 +24,8 @@ export default class GroupedBlocks extends Component {
   <template>
     <div
       class={{concatClass
-        (concat "block__group-" @name)
-        (concat @outletName "__group")
+        (concat "block__group-" (dasherize @name))
+        (concat (dasherize @outletName) "__group")
         @classNames
       }}
     >

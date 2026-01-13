@@ -20,10 +20,12 @@ import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { getOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import dasherize from "discourse/helpers/dasherize";
 import {
   validateArgsSchema,
   validateChildArgsSchema,
@@ -901,99 +903,22 @@ export default class BlockOutlet extends Component {
 
     /* Block configs are validated asynchronously. TrackedAsyncData lets us wait
        for validation to complete before rendering blocks, while also exposing
-       any validation errors to the debug overlay. */
+       any validation errors to the debug overlay.
+
+       Note: We intentionally do NOT evaluate conditions here. Condition evaluation
+       happens in BlockOutletRootContainer.processedChildren so that service reads
+       (router.currentURL, discovery.category, etc.) are tracked by Ember's
+       autotracking system. If we evaluated conditions inside this promise, route
+       changes would not trigger re-evaluation. */
     const promiseWithLogging = this.validatedConfig
       .then((rawChildren) => {
         if (!rawChildren.length) {
           return;
         }
 
-        const owner = getOwner(this);
-        const blocksService = owner.lookup("service:blocks");
-        const outletArgs = this.outletArgsWithDeprecations;
-        const baseHierarchy = this.#name;
-
-        // Preprocess entire tree - this evaluates conditions and sets __visible on all configs
-        const processedConfigs = this.#preprocessConfigs(
-          rawChildren,
-          outletArgs,
-          blocksService,
-          showGhosts,
-          isLoggingEnabled,
-          baseHierarchy
-        );
-
-        // Create components from processed configs
-        const result = [];
-        const containerCounts = new Map();
-
-        for (const blockConfig of processedConfigs) {
-          const resolvedBlock = resolveBlockSync(blockConfig.block);
-
-          // Handle optional missing block (block ref ended with `?` but not registered)
-          if (isOptionalMissing(resolvedBlock)) {
-            const ghostData = handleOptionalMissingBlock({
-              blockName: resolvedBlock.name,
-              blockConfig,
-              hierarchy: baseHierarchy,
-              isLoggingEnabled,
-              showGhosts,
-            });
-            if (ghostData) {
-              result.push(ghostData);
-            }
-            continue;
-          }
-
-          // If block couldn't be resolved (unresolved factory), skip it
-          if (!resolvedBlock) {
-            continue;
-          }
-
-          const blockName = resolvedBlock.blockName || "unknown";
-          const isChildContainer =
-            resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
-
-          // For containers, build their full path (used for their children's hierarchy)
-          const containerPath = isChildContainer
-            ? buildContainerPath(blockName, baseHierarchy, containerCounts)
-            : undefined;
-
-          // Check pre-computed visibility from preprocessing step
-          if (blockConfig.__visible) {
-            result.push(
-              createChildBlock(
-                { ...blockConfig, block: resolvedBlock },
-                owner,
-                {
-                  displayHierarchy: baseHierarchy,
-                  containerPath,
-                  conditions: blockConfig.conditions,
-                  outletArgs,
-                }
-              )
-            );
-          } else if (showGhosts) {
-            // Create ghost for invisible block
-            const ghostData = createGhostBlock({
-              blockName,
-              blockConfig,
-              hierarchy: baseHierarchy,
-              containerPath,
-              isContainer: isChildContainer,
-              owner,
-              outletArgs,
-              isLoggingEnabled,
-              resolveBlockFn: resolveBlockSync,
-            });
-
-            if (ghostData) {
-              result.push(ghostData);
-            }
-          }
-        }
-
-        return result;
+        // Return raw configs and metadata - BlockOutletRootContainer will handle
+        // condition evaluation and component creation in a tracked context
+        return { rawChildren, showGhosts, isLoggingEnabled };
       })
       .catch((error) => {
         // Note on test failures:
@@ -1019,116 +944,6 @@ export default class BlockOutlet extends Component {
       });
 
     return new TrackedAsyncData(promiseWithLogging);
-  }
-
-  /**
-   * Pre-processes block configurations to compute visibility for all blocks.
-   *
-   * This method evaluates conditions for all blocks in the tree and adds
-   * visibility metadata to each config:
-   * - `__visible`: Whether the block should be rendered
-   * - `__failureReason`: Why the block is hidden (debug mode only)
-   *
-   * Container blocks have an implicit condition: they must have at least
-   * one visible child. This is evaluated bottom-up (children first).
-   *
-   * @param {Array<Object>} configs - Array of block configurations to process
-   * @param {Object} outletArgs - Outlet arguments for condition evaluation
-   * @param {Object} blocksService - Blocks service for condition evaluation
-   * @param {boolean} showGhosts - If true, keep all blocks for ghost rendering; if false, filter invisible
-   * @param {boolean} isLoggingEnabled - If true, log condition evaluation
-   * @param {string} baseHierarchy - Base hierarchy path for logging
-   * @returns {Array<Object>} Processed configs with visibility metadata (filtered in non-debug mode)
-   */
-  #preprocessConfigs(
-    configs,
-    outletArgs,
-    blocksService,
-    showGhosts,
-    isLoggingEnabled,
-    baseHierarchy
-  ) {
-    const result = [];
-
-    for (const config of configs) {
-      // we need to work with a clone of the config to avoid mutating the children from the original in the registry
-      const configClone = { ...config };
-
-      // resolve block
-      const resolvedBlock = resolveBlockSync(configClone.block);
-
-      // Skip unresolved blocks (optional missing or pending factory resolution)
-      if (!resolvedBlock || isOptionalMissing(resolvedBlock)) {
-        // Keep the config for ghost handling in the main loop
-        if (showGhosts || isOptionalMissing(resolvedBlock)) {
-          result.push(configClone);
-        }
-        continue;
-      }
-
-      const blockName = resolvedBlock.blockName || "unknown";
-      const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
-
-      // Evaluate this block's own conditions
-      let conditionsPassed = true;
-      if (configClone.conditions) {
-        if (isLoggingEnabled) {
-          debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(
-            blockName,
-            baseHierarchy
-          );
-        }
-
-        conditionsPassed = blocksService.evaluate(configClone.conditions, {
-          debug: isLoggingEnabled,
-          outletArgs,
-        });
-
-        if (isLoggingEnabled) {
-          debugHooks.getCallback(DEBUG_CALLBACK.END_GROUP)?.(conditionsPassed);
-        }
-      }
-
-      // For containers: recursively process children first (bottom-up evaluation)
-      // This determines which children are visible before we check if container has any
-      let hasVisibleChildren = true; // Non-containers always "have" visible children
-      if (isChildContainer && configClone.children?.length) {
-        // Recursively preprocess children - this computes their visibility
-        const processedChildren = this.#preprocessConfigs(
-          configClone.children,
-          outletArgs,
-          blocksService,
-          showGhosts,
-          isLoggingEnabled,
-          `${baseHierarchy}/${blockName}`
-        );
-
-        hasVisibleChildren = processedChildren.some((child) => child.__visible);
-
-        // Update the cloned config's children with the processed (and possibly filtered) result
-        configClone.children = processedChildren;
-      }
-
-      // Final visibility: own conditions must pass AND (not container OR has visible children)
-      // This implements the implicit "container must have visible children" condition
-      const visible = conditionsPassed && hasVisibleChildren;
-      configClone.__visible = visible;
-
-      // In debug mode, record why the block is hidden for the ghost tooltip
-      if (showGhosts && !visible) {
-        configClone.__failureReason = !conditionsPassed
-          ? "condition-failed"
-          : "no-visible-children";
-      }
-
-      // In production mode, filter out invisible blocks
-      // In debug mode, keep all blocks for ghost rendering
-      if (visible || showGhosts) {
-        result.push(configClone);
-      }
-    }
-
-    return result;
   }
 
   /**
@@ -1236,40 +1051,280 @@ export default class BlockOutlet extends Component {
         {{/if}}
         {{#if this.children}}
           {{#if this.children.isResolved}}
-            <div class={{this.outletName}}>
-              <div class="{{this.outletName}}__container">
-                <div class="{{this.outletName}}__layout">
-                  {{#each this.children.value as |item|}}
-                    <item.Component
-                      @outletName={{this.outletName}}
-                      @outletArgs={{this.outletArgsWithDeprecations}}
-                    />
-                  {{/each}}
-                </div>
-              </div>
-            </div>
+            <BlockOutletRootContainer
+              @outletName={{this.outletName}}
+              @outletArgs={{this.outletArgsWithDeprecations}}
+              @rawChildren={{this.children.value.rawChildren}}
+              @showGhosts={{this.children.value.showGhosts}}
+              @isLoggingEnabled={{this.children.value.isLoggingEnabled}}
+            />
           {{/if}}
         {{/if}}
       </div>
     {{else if this.children}}
       {{#if this.children.isResolved}}
-        <div class={{this.outletName}}>
-          <div class="{{this.outletName}}__container">
-            <div class="{{this.outletName}}__layout">
-              {{#each this.children.value as |item|}}
-                <item.Component
-                  @outletName={{this.outletName}}
-                  @outletArgs={{this.outletArgsWithDeprecations}}
-                />
-              {{/each}}
-            </div>
-          </div>
-        </div>
+        <BlockOutletRootContainer
+          @outletName={{this.outletName}}
+          @outletArgs={{this.outletArgsWithDeprecations}}
+          @rawChildren={{this.children.value.rawChildren}}
+          @showGhosts={{this.children.value.showGhosts}}
+          @isLoggingEnabled={{this.children.value.isLoggingEnabled}}
+        />
       {{/if}}
     {{/if}}
 
     {{! Yield to :after block with hasConfig boolean for conditional rendering }}
     {{yield (hasConfig this.outletName) to="after"}}
+  </template>
+}
+
+/**
+ * Root container component that processes and renders block children.
+ *
+ * This component handles condition evaluation and component creation in a
+ * tracked getter context. This is intentional - by evaluating conditions
+ * synchronously in `processedChildren`, Ember's autotracking system can
+ * establish dependencies on services like `router` and `discovery`. When
+ * routes change, this getter re-runs and blocks are re-evaluated.
+ *
+ * If condition evaluation happened in the async promise chain (as it did
+ * previously), service reads would not be tracked and route navigation
+ * would not trigger re-evaluation.
+ */
+class BlockOutletRootContainer extends Component {
+  @service blocks;
+
+  /**
+   * Processes raw block configs and creates renderable child components.
+   *
+   * This getter is the key to reactive condition evaluation. By accessing
+   * services like `router` and `discovery` during condition evaluation here
+   * (synchronously in a tracked getter), Ember establishes tracking
+   * dependencies. Route changes trigger this getter to re-run.
+   *
+   * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>}
+   */
+  get processedChildren() {
+    const {
+      rawChildren,
+      showGhosts,
+      isLoggingEnabled,
+      outletName,
+      outletArgs,
+    } = this.args;
+
+    if (!rawChildren?.length) {
+      return [];
+    }
+
+    const owner = getOwner(this);
+    const baseHierarchy = outletName;
+
+    // Step 1: Evaluate conditions - THIS IS NOW TRACKED!
+    // When blocksService.evaluate() reads router.currentURL or discovery.category,
+    // Ember establishes a dependency. Route changes trigger re-evaluation.
+    const processedConfigs = this.#preprocessConfigs(
+      rawChildren,
+      outletArgs,
+      this.blocks,
+      showGhosts,
+      isLoggingEnabled,
+      baseHierarchy
+    );
+
+    // Step 2: Create components from processed configs
+    const result = [];
+    const containerCounts = new Map();
+
+    for (const blockConfig of processedConfigs) {
+      const resolvedBlock = resolveBlockSync(blockConfig.block);
+
+      // Handle optional missing block (block ref ended with `?` but not registered)
+      if (isOptionalMissing(resolvedBlock)) {
+        const ghostData = handleOptionalMissingBlock({
+          blockName: resolvedBlock.name,
+          blockConfig,
+          hierarchy: baseHierarchy,
+          isLoggingEnabled,
+          showGhosts,
+        });
+        if (ghostData) {
+          result.push(ghostData);
+        }
+        continue;
+      }
+
+      // If block couldn't be resolved (unresolved factory), skip it
+      if (!resolvedBlock) {
+        continue;
+      }
+
+      const blockName = resolvedBlock.blockName || "unknown";
+      const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
+
+      // For containers, build their full path (used for their children's hierarchy)
+      const containerPath = isChildContainer
+        ? buildContainerPath(blockName, baseHierarchy, containerCounts)
+        : undefined;
+
+      // Check pre-computed visibility from preprocessing step
+      if (blockConfig.__visible) {
+        result.push(
+          createChildBlock({ ...blockConfig, block: resolvedBlock }, owner, {
+            displayHierarchy: baseHierarchy,
+            containerPath,
+            conditions: blockConfig.conditions,
+            outletArgs,
+          })
+        );
+      } else if (showGhosts) {
+        // Create ghost for invisible block
+        const ghostData = createGhostBlock({
+          blockName,
+          blockConfig,
+          hierarchy: baseHierarchy,
+          containerPath,
+          isContainer: isChildContainer,
+          owner,
+          outletArgs,
+          isLoggingEnabled,
+          resolveBlockFn: resolveBlockSync,
+        });
+
+        if (ghostData) {
+          result.push(ghostData);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Pre-processes block configurations to compute visibility for all blocks.
+   *
+   * This method evaluates conditions for all blocks in the tree and adds
+   * visibility metadata to each config:
+   * - `__visible`: Whether the block should be rendered
+   * - `__failureReason`: Why the block is hidden (debug mode only)
+   *
+   * Container blocks have an implicit condition: they must have at least
+   * one visible child. This is evaluated bottom-up (children first).
+   *
+   * @param {Array<Object>} configs - Array of block configurations to process.
+   * @param {Object} outletArgs - Outlet arguments for condition evaluation.
+   * @param {Object} blocksService - Blocks service for condition evaluation.
+   * @param {boolean} showGhosts - If true, keep all blocks for ghost rendering.
+   * @param {boolean} isLoggingEnabled - If true, log condition evaluation.
+   * @param {string} baseHierarchy - Base hierarchy path for logging.
+   * @returns {Array<Object>} Processed configs with visibility metadata.
+   */
+  #preprocessConfigs(
+    configs,
+    outletArgs,
+    blocksService,
+    showGhosts,
+    isLoggingEnabled,
+    baseHierarchy
+  ) {
+    const result = [];
+
+    for (const config of configs) {
+      // Clone config to avoid mutating the original in the registry
+      const configClone = { ...config };
+
+      // Resolve block reference
+      const resolvedBlock = resolveBlockSync(configClone.block);
+
+      // Skip unresolved blocks (optional missing or pending factory resolution)
+      if (!resolvedBlock || isOptionalMissing(resolvedBlock)) {
+        // Keep the config for ghost handling in the main loop
+        if (showGhosts || isOptionalMissing(resolvedBlock)) {
+          result.push(configClone);
+        }
+        continue;
+      }
+
+      const blockName = resolvedBlock.blockName || "unknown";
+      const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
+
+      // Evaluate this block's own conditions
+      let conditionsPassed = true;
+      if (configClone.conditions) {
+        if (isLoggingEnabled) {
+          debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(
+            blockName,
+            baseHierarchy
+          );
+        }
+
+        // THIS IS THE KEY LINE - blocksService.evaluate() reads from router/discovery
+        // services, and since we're in a tracked getter, Ember tracks these reads!
+        conditionsPassed = blocksService.evaluate(configClone.conditions, {
+          debug: isLoggingEnabled,
+          outletArgs,
+        });
+
+        if (isLoggingEnabled) {
+          debugHooks.getCallback(DEBUG_CALLBACK.END_GROUP)?.(conditionsPassed);
+        }
+      }
+
+      // For containers: recursively process children first (bottom-up evaluation)
+      // This determines which children are visible before we check if container has any
+      let hasVisibleChildren = true; // Non-containers always "have" visible children
+      if (isChildContainer && configClone.children?.length) {
+        // Recursively preprocess children - this computes their visibility
+        const processedChildren = this.#preprocessConfigs(
+          configClone.children,
+          outletArgs,
+          blocksService,
+          showGhosts,
+          isLoggingEnabled,
+          `${baseHierarchy}/${blockName}`
+        );
+
+        hasVisibleChildren = processedChildren.some((child) => child.__visible);
+
+        // Update the cloned config's children with the processed result
+        configClone.children = processedChildren;
+      }
+
+      // Final visibility: own conditions must pass AND (not container OR has visible children)
+      // This implements the implicit "container must have visible children" condition
+      const visible = conditionsPassed && hasVisibleChildren;
+      configClone.__visible = visible;
+
+      // In debug mode, record why the block is hidden for the ghost tooltip
+      if (showGhosts && !visible) {
+        configClone.__failureReason = !conditionsPassed
+          ? "condition-failed"
+          : "no-visible-children";
+      }
+
+      // In production mode, filter out invisible blocks
+      // In debug mode, keep all blocks for ghost rendering
+      if (visible || showGhosts) {
+        result.push(configClone);
+      }
+    }
+
+    return result;
+  }
+
+  <template>
+    <div class={{@outletName}}>
+      <div class="{{@outletName}}__container">
+        <div class="{{@outletName}}__layout">
+          {{#each this.processedChildren as |child|}}
+            <child.Component
+              @outletName={{@outletName}}
+              @outletArgs={{@outletArgs}}
+            />
+          {{/each}}
+        </div>
+      </div>
+    </div>
   </template>
 }
 
@@ -1298,8 +1353,8 @@ function wrapBlockLayout(blockData, owner) {
 const WrappedBlockLayout = <template>
   <div
     class={{concatClass
-      (concat @outletName "__block")
-      (concat "block-" @name)
+      (concat (dasherize @outletName) "__block")
+      (concat "block-" (dasherize @name))
       @classNames
     }}
   >
