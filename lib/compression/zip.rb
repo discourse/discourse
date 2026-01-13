@@ -12,7 +12,7 @@ module Compression
       absolute_path = sanitize_path("#{path}/#{target_name}")
       zip_filename = "#{absolute_path}.zip"
 
-      ::Zip::File.open(zip_filename, ::Zip::File::CREATE) do |zipfile|
+      ::Zip::File.open(zip_filename, create: true) do |zipfile|
         if File.directory?(absolute_path)
           entries = Dir.entries(absolute_path) - %w[. ..]
           write_entries(entries, absolute_path, "", zipfile)
