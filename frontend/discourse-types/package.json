@@ -4,6 +4,14 @@
   "description": "Types only",
   "license": "GPL-2.0-only",
   "author": "Discourse",
+  "type": "module",
+  "files": [
+    "declarations",
+    "external-types",
+    "external-types.d.ts",
+    "package.json",
+    "tsconfig-plugin.json"
+  ],
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
     "./external-types": {
@@ -19,12 +27,9 @@
       "types": "./declarations/app/*.d.ts"
     }
   },
-  "dependencies": {
-    "ember-source": "~6.6.0",
-    "@types/glimmer__component": "npm:@glimmer/component@^2.0.0",
-    "@types/glint__ember-tsc": "npm:@glint/ember-tsc@^1.0.7",
-    "@types/glint__template": "npm:@glint/template@^1.7.2",
-    "@types/qunit": "^2.19.13"
+  "dependencies": {},
+  "devDependencies": {
+    "compare-versions": "^6.1.1"
   },
   "engines": {
     "node": ">= 18",
