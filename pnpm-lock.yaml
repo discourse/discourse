@@ -311,8 +311,8 @@ importers:
         specifier: 11.11.1
         version: 11.11.1
       immer:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^11.1.3
+        version: 11.1.3
       jspreadsheet-ce:
         specifier: ^4.15.0
         version: 4.15.0
@@ -5889,8 +5889,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immer@11.1.0:
-    resolution: {integrity: sha512-dlzb07f5LDY+tzs+iLCSXV2yuhaYfezqyZQc+n6baLECWkOMEWxkECAOnXL0ba7lsA25fM9b2jtzpu/uxo1a7g==}
+  immer@11.1.3:
+    resolution: {integrity: sha512-6jQTc5z0KJFtr1UgFpIL3N9XSC3saRaI9PwWtzM2pSqkNGtiNkYY2OSwkOGDK2XcTRcLb1pi/aNkKZz0nxVH4Q==}
 
   import-cwd@3.0.0:
     resolution: {integrity: sha512-4pnzH16plW+hgvRECbDWpQl3cqtvSofHWh44met7ESfZ8UZOWWddm8hEyDTqREJ9RbYHY8gi8DqmaelApoOGMg==}
@@ -15689,7 +15689,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@11.1.0: {}
+  immer@11.1.3: {}
 
   import-cwd@3.0.0:
     dependencies:
