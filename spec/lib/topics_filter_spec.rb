@@ -1561,6 +1561,88 @@ RSpec.describe TopicsFilter do
       end
     end
 
+    describe "when filtering by tag_groups with special characters" do
+      fab!(:tag) { Fabricate(:tag, name: "special-tag") }
+      fab!(:tag_group_with_spaces) do
+        Fabricate(:tag_group, name: "My Tag Group", tag_names: [tag.name])
+      end
+      fab!(:tag_group_with_ampersand) do
+        Fabricate(:tag_group, name: "News & Updates", tag_names: [tag.name])
+      end
+      fab!(:tag_group_with_parens) do
+        Fabricate(:tag_group, name: "Group (Test)", tag_names: [tag.name])
+      end
+      fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
+      fab!(:topic_without_tag, :topic)
+
+      it "should filter by tag group name with spaces using double quotes" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"My Tag Group"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with spaces using single quotes" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:'My Tag Group'")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with ampersand" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"News & Updates"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with parentheses" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"Group (Test)"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should perform case-insensitive tag group lookup" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"MY TAG GROUP"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should handle exclude prefix with quoted tag group names" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('-tag_group:"My Tag Group"')
+            .pluck(:id),
+        ).to contain_exactly(topic_without_tag.id)
+      end
+
+      it "should maintain backward compatibility with unquoted tag group names" do
+        simple_tag = Fabricate(:tag, name: "simple-tag")
+        _simple_group = Fabricate(:tag_group, name: "simple", tag_names: [simple_tag.name])
+        topic_simple = Fabricate(:topic, tags: [simple_tag])
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:simple")
+            .pluck(:id),
+        ).to contain_exactly(topic_simple.id)
+      end
+    end
+
     describe "when filtering by locale" do
       fab!(:en_topic) { Fabricate(:topic, locale: "en") }
       fab!(:ja_topic) { Fabricate(:topic, locale: "ja") }

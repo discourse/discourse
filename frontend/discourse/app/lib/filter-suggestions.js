@@ -150,6 +150,8 @@ export default class FilterSuggestions {
         return await suggester.getCategorySuggestions();
       case "tag":
         return await suggester.getTagSuggestions();
+      case "tag_group":
+        return await suggester.getTagGroupSuggestions();
       case "username":
         return await suggester.getUserSuggestions();
       case "group":
@@ -176,7 +178,9 @@ class FilterParser {
   }
 
   parse() {
-    const words = this.text.split(/\s+/).filter(Boolean);
+    // Split on whitespace, but preserve quoted strings
+    const quotedPattern = /"[^"]*"|'[^']*'|[^\s]+/g;
+    const words = (this.text.match(quotedPattern) || []).filter(Boolean);
     this.endsWithSpace = this.text.endsWith(" ");
     return words.map((word) => this.parseWord(word));
   }
@@ -338,6 +342,29 @@ class FilterTypeValueSuggester {
       }));
       results = this.prepareDelimiterSuggestions(results);
       return results;
+    } catch {
+      return [];
+    }
+  }
+
+  async getTagGroupSuggestions() {
+    try {
+      const response = await ajax("/tag_groups/filter/search.json", {
+        data: { q: this.searchTerm || "", limit: 10 },
+      });
+
+      return response.results.map((tagGroup) => {
+        // Quote the name if it contains special characters
+        const needsQuoting = /[\s&\-()']/.test(tagGroup.name);
+        const quotedName = needsQuoting ? `"${tagGroup.name}"` : tagGroup.name;
+
+        return {
+          name: this.buildSuggestionName(quotedName),
+          description: tagGroup.tag_names?.join(", ") || "",
+          term: quotedName,
+          isSuggestion: true,
+        };
+      });
     } catch {
       return [];
     }
