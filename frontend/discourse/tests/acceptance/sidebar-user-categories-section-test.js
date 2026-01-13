@@ -1021,6 +1021,38 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       "it links to the admin site settings page correctly"
     );
   });
+
+  test("admin categories section header shows dropdown with new and edit actions", async function (assert) {
+    updateCurrentUser({ admin: true });
+
+    await visit("/");
+
+    const dropdown =
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown";
+
+    assert.dom(dropdown).exists();
+
+    await click(`${dropdown} .select-kit-header`);
+
+    assert.dom(".select-kit-row[data-value='new-category']").exists();
+    assert.dom(".select-kit-row[data-value='edit-categories']").exists();
+
+    await click(".select-kit-row[data-value='new-category']");
+
+    assert.strictEqual(currentURL(), "/new-category");
+  });
+
+  test("non-admin categories section header shows single edit button", async function (assert) {
+    await visit("/");
+
+    const categoriesSection =
+      ".sidebar-section[data-section-name='categories']";
+
+    assert.dom(`${categoriesSection} .sidebar-section-header-button`).exists();
+    assert
+      .dom(`${categoriesSection} .sidebar-section-header-dropdown`)
+      .doesNotExist();
+  });
 });
 
 acceptance(
@@ -1325,6 +1357,28 @@ acceptance(
           "/c/feature/spec/26",
           "category3 links to the latest topics list for the category"
         );
+    });
+  }
+);
+
+acceptance(
+  "Sidebar - Admin - Categories Section - Header Dropdown Mode",
+  function (needs) {
+    needs.user({ admin: true });
+    needs.settings({ navigation_menu: "header dropdown" });
+
+    test("edit action shows 'Edit nav categories' text", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      const dropdown =
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown";
+
+      await click(`${dropdown} .select-kit-header`);
+
+      assert
+        .dom(".select-kit-row[data-value='edit-categories']")
+        .hasText(/Edit nav categories/);
     });
   }
 );
