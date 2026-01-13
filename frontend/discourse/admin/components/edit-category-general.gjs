@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import ColorInput from "discourse/admin/components/color-input";
 import ColorPicker from "discourse/components/color-picker";
+import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -204,7 +205,7 @@ export default class EditCategoryGeneral extends Component {
       return htmlSafe(this.args.category.description);
     }
 
-    return i18n("category.no_description");
+    return htmlSafe(i18n("category.no_description"));
   }
 
   get canSelectParentCategory() {
@@ -298,7 +299,10 @@ export default class EditCategoryGeneral extends Component {
 
       {{#if this.showDescription}}
         <@form.Section @title={{i18n "category.description"}}>
-          <span class="readonly-field">{{this.categoryDescription}}</span>
+          <DecoratedHtml
+            @html={{this.categoryDescription}}
+            @className="readonly-field"
+          />
 
           {{#if @category.topic_url}}
             <@form.Container>
