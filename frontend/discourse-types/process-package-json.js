@@ -11,7 +11,8 @@ export default function processPackageJson(packageJson, packagePath) {
         value.import?.types ||
         value.default?.development?.types ||
         value.default?.default?.types ||
-        value.require?.types;
+        value.require?.types ||
+        (typeof value === "string" && /\.d\.[cm]?ts$/.test(value) && value);
       if (types) {
         paths.add({ path: types, importPathPrefix: key });
       }
