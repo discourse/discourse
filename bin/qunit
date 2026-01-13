@@ -261,7 +261,7 @@ class QunitRunner
       args += ["--filter", filter] if filter
       args += ["--file-path", file_path_filter] if file_path_filter
       args += ["--load-balance", "--parallel", parallel.to_s] if parallel
-      args += ["--random", resolved_seed.to_s]
+      args += ["--random", resolved_seed]
       args += %w[--path dist] if reuse_build
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
