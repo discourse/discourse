@@ -4,6 +4,12 @@ class TagGroup < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
   validates :name, uniqueness: { case_sensitive: false }
 
+  scope :where_name,
+        ->(name) do
+          name = Array(name).map(&:downcase)
+          where("lower(tag_groups.name) IN (?)", name)
+        end
+
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
   has_many :none_synonym_tags,

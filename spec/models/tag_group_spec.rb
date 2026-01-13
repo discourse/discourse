@@ -127,6 +127,29 @@ RSpec.describe TagGroup do
       expect(TagGroup.find_by_name_insensitive("TeSt-TaG-GrOuP")).to eq(tag_group)
     end
   end
+
+  describe ".where_name" do
+    fab!(:tag_group1) { Fabricate(:tag_group, name: "My Group") }
+    fab!(:tag_group2) { Fabricate(:tag_group, name: "Other Group") }
+
+    it "finds tag groups case-insensitively" do
+      expect(TagGroup.where_name("my group")).to contain_exactly(tag_group1)
+      expect(TagGroup.where_name("MY GROUP")).to contain_exactly(tag_group1)
+      expect(TagGroup.where_name("My Group")).to contain_exactly(tag_group1)
+    end
+
+    it "accepts an array of names" do
+      expect(TagGroup.where_name(["my group", "other group"])).to contain_exactly(
+        tag_group1,
+        tag_group2,
+      )
+    end
+
+    it "returns an empty array when no match is found" do
+      expect(TagGroup.where_name("nonexistent")).to be_empty
+    end
+  end
+
   describe "tag_names=" do
     let(:tag_group) { Fabricate(:tag_group) }
     fab!(:tag)
