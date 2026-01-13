@@ -34,6 +34,9 @@ patchedDependencies:
   message-bus-client:
     hash: b9b55d2643b1af05bfbcab2388fe5b68f20ed4ef8bcea9647ab82405bccc20f9
     path: patches/message-bus-client.patch
+  pikaday:
+    hash: ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83
+    path: patches/pikaday.patch
 
 importers:
 
@@ -359,7 +362,7 @@ importers:
         version: 5.4.4
       pikaday:
         specifier: ^1.8.2
-        version: 1.8.2
+        version: 1.8.2(patch_hash=ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83)
       pretty-text:
         specifier: workspace:1.0.0
         version: link:../pretty-text
@@ -17980,7 +17983,7 @@ snapshots:
 
   picomatch@4.0.3: {}
 
-  pikaday@1.8.2: {}
+  pikaday@1.8.2(patch_hash=ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83): {}
 
   pkg-dir@4.2.0:
     dependencies:
