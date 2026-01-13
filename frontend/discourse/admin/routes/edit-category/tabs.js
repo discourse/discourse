@@ -15,5 +15,7 @@ export default class EditCategoryTabs extends DiscourseRoute {
       selectedTab: transition.to.params.tab,
       showTooltip: false,
     });
+
+    controller.resetPreview();
   }
 }

@@ -65,6 +65,12 @@ export default class NewCategory extends DiscourseRoute {
     });
   }
 
+  setupController(controller) {
+    super.setupController(...arguments);
+
+    controller.resetPreview();
+  }
+
   titleToken() {
     return i18n("category.create");
   }

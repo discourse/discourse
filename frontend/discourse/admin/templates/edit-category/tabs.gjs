@@ -48,7 +48,16 @@ export default <template>
             class="btn-transparent btn-back"
           />
         {{/if}}
-        <h2>{{@controller.title}}</h2>
+        <h2 class="edit-category-title-text">
+          <span
+            class="edit-category-static-title"
+          >{{@controller.baseTitle}}</span>
+          <span class="edit-category-preview-badge">
+            {{#if @controller.showPreviewBadge}}
+              {{@controller.previewBadge}}
+            {{/if}}
+          </span>
+        </h2>
         {{#if @controller.model.id}}
           <BreadCrumbs
             @categories={{@controller.breadcrumbCategories}}
@@ -146,6 +155,7 @@ export default <template>
             @registerValidator={{@controller.registerValidator}}
             @transientData={{transientData}}
             @form={{form}}
+            @updatePreview={{@controller.updatePreview}}
           />
         {{/let}}
       </form.Section>

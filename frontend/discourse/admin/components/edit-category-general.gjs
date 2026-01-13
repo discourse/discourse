@@ -8,7 +8,10 @@ import ColorInput from "discourse/admin/components/color-input";
 import ColorPicker from "discourse/components/color-picker";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import icon from "discourse/helpers/d-icon";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
@@ -17,7 +20,6 @@ import GroupChooser from "discourse/select-kit/components/group-chooser";
 import IconPicker from "discourse/select-kit/components/icon-picker";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import icon from "discourse/helpers/d-icon";
 
 export default class EditCategoryGeneral extends Component {
   @service siteSettings;
@@ -33,7 +35,6 @@ export default class EditCategoryGeneral extends Component {
   );
 
   get parentIsRestricted() {
-    // Check the parent category directly instead of caching
     const parentId = this.args.transientData.parent_category_id;
     if (!parentId) {
       return false;
@@ -44,7 +45,6 @@ export default class EditCategoryGeneral extends Component {
       return false;
     }
 
-    // A category is restricted if it's NOT the case that the only permission is "everyone"
     const onlyEveryone =
       parentCategory.permissions.length === 1 &&
       (parentCategory.permissions[0].group_id === AUTO_GROUPS.everyone.id ||
@@ -56,12 +56,10 @@ export default class EditCategoryGeneral extends Component {
   get isPrivateCategory() {
     const permissions = this.args.category.permissions;
 
-    // No permissions or empty = private (no groups selected yet)
     if (!permissions || permissions.length === 0) {
       return true;
     }
 
-    // Category is public only if the ONLY permission is "everyone"
     const onlyEveryone =
       permissions.length === 1 &&
       (permissions[0].group_id === AUTO_GROUPS.everyone.id ||
@@ -90,7 +88,6 @@ export default class EditCategoryGeneral extends Component {
   }
 
   get visibilityGroups() {
-    // FULL=1, CREATE_POST=2, READONLY=3 (lower number = higher permission)
     const permissions = this.args.category.permissions || [];
     return permissions
       .filter((p) => p.permission_type <= PermissionType.READONLY)
@@ -98,7 +95,6 @@ export default class EditCategoryGeneral extends Component {
   }
 
   get postingGroups() {
-    // FULL=1, CREATE_POST=2, READONLY=3 (lower number = higher permission)
     const permissions = this.args.category.permissions || [];
     return permissions
       .filter((p) => p.permission_type <= PermissionType.CREATE_POST)
@@ -107,7 +103,6 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   onChangeVisibilityGroups(groupIds) {
-    // If a group is removed from visibility, they lose all permissions (including posting)
     const site = this.args.category.site;
     const currentPermissions = this.args.category.permissions || [];
 
@@ -124,7 +119,6 @@ export default class EditCategoryGeneral extends Component {
       newPermissions.push({
         group_name: group?.name,
         group_id: groupId,
-        // Keep CREATE_POST permission if it's a posting group, otherwise READONLY
         permission_type: isPostingGroup
           ? PermissionType.CREATE_POST
           : PermissionType.READONLY,
@@ -133,6 +127,10 @@ export default class EditCategoryGeneral extends Component {
 
     this.userModifiedPermissions = true;
     this.args.category.set("permissions", newPermissions);
+
+    if (this.args.updatePreview) {
+      this.args.updatePreview({});
+    }
   }
 
   @action
@@ -152,7 +150,6 @@ export default class EditCategoryGeneral extends Component {
       });
     });
 
-    // Downgrade removed posting groups to READONLY instead of removing completely
     currentVisibilityGroupIds.forEach((groupId) => {
       if (!groupIds.includes(groupId)) {
         const group = site.groups.find((g) => g.id === groupId);
@@ -166,11 +163,15 @@ export default class EditCategoryGeneral extends Component {
 
     this.userModifiedPermissions = true;
     this.args.category.set("permissions", newPermissions);
+
+    if (this.args.updatePreview) {
+      this.args.updatePreview({});
+    }
   }
 
   get allowSubCategoriesAsParent() {
     // If max_category_nesting is 2, only top-level categories can be parents
-    // If max_category_nesting is 3+, subcategories can also be parents
+    // If max_category_nesting is 3, subcategories can also be parents
     return this.siteSettings.max_category_nesting > 2;
   }
 
@@ -205,12 +206,15 @@ export default class EditCategoryGeneral extends Component {
     } else if (value === "group_restricted") {
       this.isPrivateCategory = true;
     }
+
+    // Trigger preview update to show restricted status
+    if (this.args.updatePreview) {
+      this.args.updatePreview({});
+    }
   }
 
   @action
   async onParentCategoryChange(parentCategoryId) {
-    this.args.category.set("parent_category_id", parentCategoryId);
-
     if (!parentCategoryId) {
       if (!this.userModifiedPermissions) {
         const site = this.args.category.site;
@@ -264,6 +268,16 @@ export default class EditCategoryGeneral extends Component {
   }
 
   @action
+  async onParentCategorySet(value, { set, name, index }) {
+    await set(name, value, { index });
+    await this.onParentCategoryChange(value);
+
+    if (this.args.updatePreview) {
+      this.args.updatePreview({ parent_category_id: value });
+    }
+  }
+
+  @action
   togglePrivateCategory() {
     this.isPrivateCategory = !this.isPrivateCategory;
   }
@@ -312,8 +326,70 @@ export default class EditCategoryGeneral extends Component {
         color,
         text_color: CATEGORY_TEXT_COLORS[colorIndex],
       });
+
+      if (this.args.updatePreview) {
+        this.args.updatePreview({
+          color,
+          text_color: CATEGORY_TEXT_COLORS[colorIndex],
+        });
+      }
     } else {
       field.set(color);
+
+      if (this.args.updatePreview) {
+        this.args.updatePreview({ text_color: color });
+      }
+    }
+  }
+
+  @action
+  async onNameChange(value, { set, name, index }) {
+    await set(name, value, { index });
+    if (this.args.updatePreview) {
+      discourseDebounce(this, this._updateNamePreview, value, INPUT_DELAY);
+    }
+  }
+
+  _updateNamePreview(value) {
+    if (this.args.updatePreview) {
+      this.args.updatePreview({ name: value });
+    }
+  }
+
+  @action
+  async onIconSet(value, { set, name, index }) {
+    await set(name, value, { index });
+    if (this.args.updatePreview) {
+      this.args.updatePreview({ icon: value, style_type: "icon" });
+    }
+  }
+
+  @action
+  async onEmojiSet(value, { set, name, index }) {
+    await set(name, value, { index });
+    if (this.args.updatePreview) {
+      this.args.updatePreview({ emoji: value, style_type: "emoji" });
+    }
+  }
+
+  @action
+  onStyleTypeChange(value) {
+    if (this.args.updatePreview) {
+      const updateData = { style_type: value };
+
+      // Use transientData (current form values) if available, otherwise fall back to category model
+      const currentIcon =
+        this.args.transientData?.icon ?? this.args.category.icon ?? null;
+      const currentEmoji =
+        this.args.transientData?.emoji ?? this.args.category.emoji ?? null;
+
+      if (value === "icon" && currentIcon) {
+        updateData.icon = currentIcon;
+      } else if (value === "emoji" && currentEmoji) {
+        updateData.emoji = currentEmoji;
+      }
+
+      this.args.updatePreview(updateData);
     }
   }
 
@@ -406,6 +482,7 @@ export default class EditCategoryGeneral extends Component {
           @title={{i18n "category.name"}}
           @format="large"
           @validation="required"
+          @onSet={{this.onNameChange}}
           as |field|
         >
           <field.Input
@@ -445,6 +522,7 @@ export default class EditCategoryGeneral extends Component {
       <@form.Container @title={{i18n "category.style"}}>
         <@form.ConditionalContent
           @activeName={{or @category.styleType "square"}}
+          @onChange={{this.onStyleTypeChange}}
           as |cc|
         >
           <cc.Conditions as |Condition|>
@@ -466,6 +544,7 @@ export default class EditCategoryGeneral extends Component {
                 @title={{i18n "category.icon"}}
                 @showTitle={{false}}
                 @format="large"
+                @onSet={{this.onIconSet}}
                 as |field|
               >
                 <field.Custom>
@@ -495,6 +574,7 @@ export default class EditCategoryGeneral extends Component {
                 @title={{i18n "category.emoji"}}
                 @showTitle={{false}}
                 @format="large"
+                @onSet={{this.onEmojiSet}}
                 as |field|
               >
                 <field.Custom>
@@ -517,12 +597,13 @@ export default class EditCategoryGeneral extends Component {
           @name="parent_category_id"
           @title={{i18n "category.subcategory_of"}}
           @format="large"
+          @onSet={{this.onParentCategorySet}}
           as |field|
         >
           <field.Custom>
             <CategoryChooser
               @value={{@transientData.parent_category_id}}
-              @onChange={{this.onParentCategoryChange}}
+              @onChange={{field.set}}
               @options={{hash
                 allowSubCategories=this.allowSubCategoriesAsParent
                 allowRestrictedCategories=true

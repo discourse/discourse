@@ -4,6 +4,8 @@ import { action, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
@@ -62,6 +64,13 @@ export default class EditCategoryTabsController extends Controller {
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked selectedTab = "general";
+  @tracked previewName = "";
+  @tracked previewColor = "";
+  @tracked previewTextColor = "";
+  @tracked previewStyleType = "";
+  @tracked previewEmoji = "";
+  @tracked previewIcon = "";
+  @tracked previewParentCategoryId = null;
   @trackedArray panels = [];
   saving = false;
   deleting = false;
@@ -116,13 +125,99 @@ export default class EditCategoryTabsController extends Controller {
     return id ? "category.save" : "category.create";
   }
 
-  @discourseComputed("model.id", "model.name")
-  title(id, name) {
-    return id
-      ? i18n("category.edit_dialog_title", {
-          categoryName: name,
-        })
-      : i18n("category.create");
+  get baseTitle() {
+    if (this.model.id) {
+      return i18n("category.edit_dialog_title", {
+        categoryName: this.model.name,
+      });
+    }
+
+    return i18n("category.create");
+  }
+
+  get showPreviewBadge() {
+    if (this.model.id) {
+      return false;
+    }
+
+    const name = this.previewName || this.model.name || "";
+    return name.trim().length > 0;
+  }
+
+  get previewBadge() {
+    if (!this.showPreviewBadge) {
+      return null;
+    }
+
+    const permissions = this.model.permissions;
+    let isRestricted = false;
+
+    if (!permissions || permissions.length === 0) {
+      isRestricted = true;
+    } else {
+      const onlyEveryone =
+        permissions.length === 1 &&
+        (permissions[0].group_id === AUTO_GROUPS.everyone.id ||
+          permissions[0].group_name === "everyone");
+      isRestricted = !onlyEveryone;
+    }
+
+    const parentId =
+      this.previewParentCategoryId ?? this.model.parent_category_id;
+
+    const previewCategory = {
+      name: this.previewName || this.model.name,
+      color: this.previewColor || this.model.color,
+      text_color: this.previewTextColor || this.model.text_color,
+      style_type: this.previewStyleType || this.model.style_type || "icon",
+      emoji: this.previewEmoji || this.model.emoji,
+      icon: this.previewIcon || this.model.icon,
+      read_restricted: isRestricted,
+      parent_category_id: parentId,
+    };
+
+    const badge = categoryBadgeHTML(previewCategory, {
+      link: false,
+      previewColor: true,
+    });
+
+    return htmlSafe(badge);
+  }
+
+  @action
+  updatePreview(data) {
+    if (data.name !== undefined) {
+      this.previewName = data.name;
+    }
+    if (data.color !== undefined) {
+      this.previewColor = data.color;
+    }
+    if (data.text_color !== undefined) {
+      this.previewTextColor = data.text_color;
+    }
+    if (data.style_type !== undefined) {
+      this.previewStyleType = data.style_type;
+    }
+    if (data.emoji !== undefined) {
+      this.previewEmoji = data.emoji;
+    }
+    if (data.icon !== undefined) {
+      this.previewIcon = data.icon;
+    }
+    if (data.parent_category_id !== undefined) {
+      this.previewParentCategoryId = data.parent_category_id;
+    }
+  }
+
+  @action
+  resetPreview() {
+    this.previewName = "";
+    this.previewColor = "";
+    this.previewTextColor = "";
+    this.previewStyleType = "";
+    this.previewEmoji = "";
+    this.previewIcon = "";
+    this.previewParentCategoryId = null;
   }
 
   @action

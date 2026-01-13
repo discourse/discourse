@@ -11,6 +11,10 @@ $number-input-width: 75px;
     gap: 0.5em;
     font-weight: normal;
   }
+
+  @include viewport.until(sm) {
+    width: 100%;
+  }
 }
 
 .edit-category {
@@ -55,11 +59,13 @@ div.edit-category {
   overflow: hidden;
 
   .edit-category-title-bar {
+    min-height: 6.5rem; // avoid layout shift on category preview
     box-sizing: border-box;
     width: 100%;
     grid-area: header;
     grid-column: 1 / span 2;
     display: flex;
+    flex-wrap: wrap;
     gap: 1em;
     justify-content: space-between;
     align-self: start;
@@ -67,7 +73,6 @@ div.edit-category {
     padding: 20px;
 
     @include viewport.until(sm) {
-      justify-content: start;
       align-items: center;
       padding-bottom: 1em;
     }
@@ -89,6 +94,7 @@ div.edit-category {
   }
 
   .edit-category-title {
+    flex: 1 1 auto;
     min-width: 0;
 
     h2 {
@@ -328,6 +334,38 @@ div.edit-category {
     .select-category-template__info {
       margin-block: 0.25rem;
       font-size: var(--font-down-1);
+    }
+  }
+
+  .edit-category-title-text {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+
+    .edit-category-static-title {
+      transition: font-size 0.2s ease-in-out;
+    }
+
+    .edit-category-preview-badge {
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    &:has(.badge-category__wrapper) {
+      .edit-category-static-title {
+        position: absolute;
+        font-size: var(--font-down-3);
+      }
+
+      .edit-category-preview-badge {
+        opacity: 1;
+      }
+    }
+
+    .badge-category__wrapper {
+      font-weight: normal;
+      font-size: var(--font-up-2);
+      margin-top: var(--space-5);
     }
   }
 }
