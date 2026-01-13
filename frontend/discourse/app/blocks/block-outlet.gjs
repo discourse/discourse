@@ -139,6 +139,108 @@ const VALID_BLOCK_OPTIONS = Object.freeze([
   "deniedOutlets",
 ]);
 
+/**
+ * Validates the options object passed to the @block decorator.
+ * Checks for unknown keys and provides suggestions for typos.
+ *
+ * @param {string} name - The block name (for error messages).
+ * @param {Object} options - The options object to validate.
+ */
+function validateBlockOptions(name, options) {
+  if (options && typeof options === "object") {
+    const unknownKeys = Object.keys(options).filter(
+      (key) => !VALID_BLOCK_OPTIONS.includes(key)
+    );
+    if (unknownKeys.length > 0) {
+      const suggestions = unknownKeys
+        .map((key) => formatWithSuggestion(key, VALID_BLOCK_OPTIONS))
+        .join(", ");
+      raiseBlockError(
+        `@block("${name}"): unknown option(s): ${suggestions}. ` +
+          `Valid options are: ${VALID_BLOCK_OPTIONS.join(", ")}.`
+      );
+    }
+  }
+}
+
+/**
+ * Validates and parses the block name.
+ * Ensures the name follows the required format for core, plugin, or theme blocks.
+ *
+ * @param {string} name - The block name to validate.
+ * @returns {{type: string, namespace: string|null, name: string}} Parsed name components.
+ */
+function validateAndParseBlockName(name) {
+  if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {
+    raiseBlockError(
+      `Block name "${name}" is invalid. ` +
+        `Valid formats: "block-name" (core), "plugin:block-name" (plugin), ` +
+        `"theme:namespace:block-name" (theme).`
+    );
+  }
+
+  const parsed = parseBlockName(name);
+  if (!parsed) {
+    // This shouldn't happen if VALID_NAMESPACED_BLOCK_PATTERN passed, but be defensive
+    raiseBlockError(`Block name "${name}" could not be parsed.`);
+  }
+
+  return parsed;
+}
+
+/**
+ * Validates outlet restriction patterns (allowedOutlets and deniedOutlets).
+ * Checks for valid picomatch syntax and detects conflicts between patterns.
+ *
+ * @param {string} name - The block name (for error messages).
+ * @param {string[]|null} allowedOutlets - Allowed outlet patterns.
+ * @param {string[]|null} deniedOutlets - Denied outlet patterns.
+ */
+function validateOutletRestrictions(name, allowedOutlets, deniedOutlets) {
+  // Validate outlet patterns are valid picomatch syntax (arrays of strings)
+  validateOutletPatterns(allowedOutlets, name, "allowedOutlets");
+  validateOutletPatterns(deniedOutlets, name, "deniedOutlets");
+
+  // Detect conflicts between allowed and denied patterns.
+  // This prevents configurations where a block is both allowed AND denied
+  // in the same outlet, which would be confusing and likely a mistake.
+  const conflict = detectPatternConflicts(allowedOutlets, deniedOutlets);
+  if (conflict.conflict) {
+    raiseBlockError(
+      `Block "${name}": outlet "${conflict.details.outlet}" matches both ` +
+        `allowedOutlets pattern "${conflict.details.allowed}" and ` +
+        `deniedOutlets pattern "${conflict.details.denied}".`
+    );
+  }
+
+  // Warn if patterns don't match any known outlet (possible typos).
+  // Namespaced patterns (containing `:`) are skipped since they target
+  // plugin/theme-defined outlets not in the core registry.
+  warnUnknownOutletPatterns(allowedOutlets, name, "allowedOutlets");
+  warnUnknownOutletPatterns(deniedOutlets, name, "deniedOutlets");
+}
+
+/**
+ * Executes a function within a debug console group.
+ * Ensures START_GROUP and END_GROUP callbacks are always paired.
+ *
+ * @param {string} blockName - The block name for the group label.
+ * @param {string} hierarchy - The hierarchy path for context.
+ * @param {boolean} isLoggingEnabled - Whether debug logging is active.
+ * @param {() => boolean} fn - Function to execute that returns the condition result.
+ * @returns {boolean} The result of the function execution.
+ */
+function withDebugGroup(blockName, hierarchy, isLoggingEnabled, fn) {
+  if (!isLoggingEnabled) {
+    return fn();
+  }
+
+  debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(blockName, hierarchy);
+  const result = fn();
+  debugHooks.getCallback(DEBUG_CALLBACK.END_GROUP)?.(result);
+  return result;
+}
+
 /*
  * Security Symbols
  *
@@ -270,21 +372,8 @@ export function block(name, options = {}) {
   // === Decoration-time validation ===
   // All validation happens here (not at render time) for fail-fast behavior.
 
-  // Validate no unknown options keys (catches typos like "containers" or "allowedOutlet")
-  if (options && typeof options === "object") {
-    const unknownKeys = Object.keys(options).filter(
-      (key) => !VALID_BLOCK_OPTIONS.includes(key)
-    );
-    if (unknownKeys.length > 0) {
-      const suggestions = unknownKeys
-        .map((key) => formatWithSuggestion(key, VALID_BLOCK_OPTIONS))
-        .join(", ");
-      raiseBlockError(
-        `@block("${name}"): unknown option(s): ${suggestions}. ` +
-          `Valid options are: ${VALID_BLOCK_OPTIONS.join(", ")}.`
-      );
-    }
-  }
+  validateBlockOptions(name, options);
+  const parsed = validateAndParseBlockName(name);
 
   // Extract all options with defaults
   const isContainer = options?.container ?? false;
@@ -295,22 +384,6 @@ export function block(name, options = {}) {
   const validateFn = options?.validate ?? null;
   const allowedOutlets = options?.allowedOutlets ?? null;
   const deniedOutlets = options?.deniedOutlets ?? null;
-
-  // Validate block name format (supports namespaced names)
-  if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {
-    raiseBlockError(
-      `Block name "${name}" is invalid. ` +
-        `Valid formats: "block-name" (core), "plugin:block-name" (plugin), ` +
-        `"theme:namespace:block-name" (theme).`
-    );
-  }
-
-  // Parse name to extract components (type, namespace, shortName)
-  const parsed = parseBlockName(name);
-  if (!parsed) {
-    // This shouldn't happen if VALID_NAMESPACED_BLOCK_PATTERN passed, but be defensive
-    raiseBlockError(`Block name "${name}" could not be parsed.`);
-  }
 
   // Validate arg schema structure and types
   validateArgsSchema(argsSchema, name);
@@ -335,27 +408,8 @@ export function block(name, options = {}) {
     );
   }
 
-  // Validate outlet patterns are valid picomatch syntax (arrays of strings)
-  validateOutletPatterns(allowedOutlets, name, "allowedOutlets");
-  validateOutletPatterns(deniedOutlets, name, "deniedOutlets");
-
-  // Detect conflicts between allowed and denied patterns.
-  // This prevents configurations where a block is both allowed AND denied
-  // in the same outlet, which would be confusing and likely a mistake.
-  const conflict = detectPatternConflicts(allowedOutlets, deniedOutlets);
-  if (conflict.conflict) {
-    raiseBlockError(
-      `Block "${name}": outlet "${conflict.details.outlet}" matches both ` +
-        `allowedOutlets pattern "${conflict.details.allowed}" and ` +
-        `deniedOutlets pattern "${conflict.details.denied}".`
-    );
-  }
-
-  // Warn if patterns don't match any known outlet (possible typos).
-  // Namespaced patterns (containing `:`) are skipped since they target
-  // plugin/theme-defined outlets not in the core registry.
-  warnUnknownOutletPatterns(allowedOutlets, name, "allowedOutlets");
-  warnUnknownOutletPatterns(deniedOutlets, name, "deniedOutlets");
+  // Validate outlet restriction patterns
+  validateOutletRestrictions(name, allowedOutlets, deniedOutlets);
 
   // Create metadata object once (returned by getter)
   const metadata = Object.freeze({
@@ -505,7 +559,7 @@ export function block(name, options = {}) {
           return;
         }
 
-        return renderEntriesToComponents({
+        return processBlockEntries({
           entries: rawChildren,
           cache: this.#childComponentCache,
           owner: getOwner(this),
@@ -529,28 +583,25 @@ export function block(name, options = {}) {
 }
 
 /**
- * Gets or creates a curried block component, using the cache when possible.
+ * Gets or creates a curried component for a leaf block, using cache when possible.
  *
- * This method checks if a cached component can be reused by comparing:
- * 1. The component class (must be the same reference)
- * 2. The args object (shallow comparison of top-level values)
+ * Only leaf blocks (blocks without children) are cached. Container blocks are
+ * always recreated because their children's visibility may change between
+ * renders, and caching would result in stale children being displayed.
  *
- * If either has changed, a new curried component is created and cached.
+ * Cache hit conditions:
+ * 1. The component class must be the same reference
+ * 2. The args object must be shallowly equal
  *
- * Container blocks with children are NOT cached because their children entries
- * may change between renders (e.g., visibility changes). Caching them would
- * result in stale children being displayed. Leaf blocks (no children) are
- * safe to cache since they have no nested content that could become stale.
- *
- * @param {Map} cache - The component cache.
- * @param {Object} entry - The block entry.
+ * @param {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>} cache - The component cache keyed by stable block keys.
+ * @param {Object} entry - The block entry with __stableKey and optional children.
  * @param {typeof Component} resolvedBlock - The resolved block component class.
- * @param {Object} debugContext - Debug context for the block.
- * @param {import("@ember/owner").default} owner - The application owner.
+ * @param {Object} debugContext - Debug context containing key, hierarchy, conditions, and outletArgs.
+ * @param {import("@ember/owner").default} owner - The application owner for service lookup.
  * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
- *   The cached or newly created component data.
+ *   The cached or newly created component data with stable key for list rendering.
  */
-function getOrCreateCachedComponent(
+function getOrCreateLeafBlockComponent(
   cache,
   entry,
   resolvedBlock,
@@ -598,17 +649,33 @@ function getOrCreateCachedComponent(
  * transforms them into renderable components, handling ghost blocks for
  * debug mode and optional missing blocks.
  *
+ * @typedef {Object} BlockEntry
+ * @property {string|typeof Component} block - Block reference (string name or class).
+ * @property {Object} [args] - Arguments to pass to the block.
+ * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
+ * @property {Array<BlockEntry>} [children] - Nested block entries for containers.
+ * @property {Object|Array<Object>} [conditions] - Conditions that must pass for block to render.
+ * @property {string} [classNames] - Additional CSS classes for the block wrapper.
+ * @property {boolean} __visible - Whether the block passed condition evaluation.
+ * @property {number} __stableKey - Stable key assigned at registration time.
+ * @property {string} [__failureReason] - Why the block is hidden (debug mode only).
+ *
+ * @typedef {Object} ChildBlockResult
+ * @property {import("ember-curry-component").CurriedComponent} Component - Curried component ready to render.
+ * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
+ * @property {string} key - Stable unique key for list rendering.
+ *
  * @param {Object} options - Rendering options.
- * @param {Array<Object>} options.entries - The pre-processed block entries.
- * @param {Map} options.cache - Component cache for reuse.
- * @param {import("@ember/owner").default} options.owner - The application owner.
- * @param {string} options.baseHierarchy - Current hierarchy path.
- * @param {Object} options.outletArgs - Arguments passed to the outlet.
+ * @param {Array<BlockEntry>} options.entries - Pre-processed block entries with visibility metadata.
+ * @param {Map<string, {ComponentClass: typeof Component, args: Object, result: ChildBlockResult}>} options.cache - Component cache keyed by stable block keys.
+ * @param {import("@ember/owner").default} options.owner - Application owner for service lookup.
+ * @param {string} options.baseHierarchy - Current hierarchy path (e.g., "homepage-blocks/section-1").
+ * @param {Object} options.outletArgs - Arguments passed from the outlet to blocks.
  * @param {boolean} options.showGhosts - Whether to render ghost blocks for invisible entries.
- * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
- * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>}
+ * @param {boolean} options.isLoggingEnabled - Whether debug logging is active.
+ * @returns {Array<ChildBlockResult>} Array of renderable child objects with Component and containerArgs.
  */
-function renderEntriesToComponents({
+function processBlockEntries({
   entries,
   cache,
   owner,
@@ -663,7 +730,7 @@ function renderEntriesToComponents({
     // Render visible blocks
     if (entry.__visible) {
       result.push(
-        getOrCreateCachedComponent(
+        getOrCreateLeafBlockComponent(
           cache,
           entry,
           resolvedBlock,
@@ -701,21 +768,27 @@ function renderEntriesToComponents({
 }
 
 /**
- * Builds the args object to pass to a child block.
+ * Creates the args object for a child block with reactive getters.
  *
- * Uses getter-based properties for system args (`children`, `_hierarchy`,
- * `outletArgs`) to support per-argument reactivity with `curryComponent`.
- * This allows the curried component to remain stable while individual args
- * can update reactively.
+ * System args (`children`, `_hierarchy`, `outletArgs`) are defined as getters
+ * rather than direct properties. This enables `curryComponent` to maintain a
+ * stable component reference while these values can update reactively when
+ * accessed during rendering.
  *
  * @param {Object} args - User-provided args from block config.
  * @param {Array<Object>|undefined} children - Nested children configs.
  * @param {string} hierarchy - The hierarchy path for this child block.
  * @param {Object} outletArgs - Outlet args to pass through to the block.
  * @param {Object} [extra] - Additional properties to include (e.g., { classNames }).
- * @returns {Object} The complete args object for the child block.
+ * @returns {Object} The complete args object with reactive getters for system args.
  */
-function buildBlockArgs(args, children, hierarchy, outletArgs, extra = {}) {
+function createBlockArgsWithReactiveGetters(
+  args,
+  children,
+  hierarchy,
+  outletArgs,
+  extra = {}
+) {
   const blockArgs = {
     ...args,
     $block$: __BLOCK_CONTAINER_FLAG, // Pass the secret symbol to authorize child block instantiation
@@ -789,14 +862,14 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // Non-container blocks get classNames passed to wrapBlockLayout instead.
   // Pass containerPath so nested containers know their full path for debug logging.
   const blockArgs = isChildContainer
-    ? buildBlockArgs(
+    ? createBlockArgsWithReactiveGetters(
         argsWithDefaults,
         nestedChildren,
         debugContext.containerPath,
         debugContext.outletArgs,
         { classNames }
       )
-    : buildBlockArgs(
+    : createBlockArgsWithReactiveGetters(
         argsWithDefaults,
         nestedChildren,
         debugContext.displayHierarchy,
@@ -1329,7 +1402,7 @@ class BlockOutletRootContainer extends Component {
     );
 
     // Step 2: Create components from processed entries
-    return renderEntriesToComponents({
+    return processBlockEntries({
       entries: processedEntries,
       cache: this.#componentCache,
       owner,
@@ -1390,27 +1463,18 @@ class BlockOutletRootContainer extends Component {
       const blockName = resolvedBlock.blockName || "unknown";
       const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
 
-      // Evaluate this block's own conditions
-      let conditionsPassed = true;
-      if (entryClone.conditions) {
-        if (isLoggingEnabled) {
-          debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(
-            blockName,
-            baseHierarchy
-          );
-        }
-
-        // THIS IS THE KEY LINE - blocksService.evaluate() reads from router/discovery
-        // services, and since we're in a tracked getter, Ember tracks these reads!
-        conditionsPassed = blocksService.evaluate(entryClone.conditions, {
-          debug: isLoggingEnabled,
-          outletArgs,
-        });
-
-        if (isLoggingEnabled) {
-          debugHooks.getCallback(DEBUG_CALLBACK.END_GROUP)?.(conditionsPassed);
-        }
-      }
+      // Evaluate this block's own conditions.
+      // The withDebugGroup wrapper ensures START_GROUP/END_GROUP are always paired.
+      // This is the key reactive line - blocksService.evaluate() reads from router/discovery
+      // services, and since we're in a tracked getter, Ember tracks these reads.
+      const conditionsPassed = entryClone.conditions
+        ? withDebugGroup(blockName, baseHierarchy, isLoggingEnabled, () =>
+            blocksService.evaluate(entryClone.conditions, {
+              debug: isLoggingEnabled,
+              outletArgs,
+            })
+          )
+        : true;
 
       // For containers: recursively process children first (bottom-up evaluation)
       // This determines which children are visible before we check if container has any
