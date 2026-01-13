@@ -144,7 +144,7 @@
     "make-plural": "^7.4.0",
     "message-bus-client": "^4.4.1",
     "pretender": "^3.4.7",
-    "qunit": "^2.24.3",
+    "qunit": "^2.25.0",
     "qunit-dom": "^3.5.0",
     "sinon": "^21.0.1",
     "source-map": "^0.7.6",
