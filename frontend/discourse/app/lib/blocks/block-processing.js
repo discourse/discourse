@@ -13,8 +13,9 @@ import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
  * @param {string} options.hierarchy - The hierarchy path for logging.
  * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
  * @param {boolean} options.showGhosts - Whether to show ghost components.
- * @returns {{Component: import("ember-curry-component").CurriedComponent}|null}
- *   Ghost component data if showGhosts is true, null otherwise.
+ * @param {string} options.key - Stable unique key for this block.
+ * @returns {{Component: import("ember-curry-component").CurriedComponent, key: string}|null}
+ *   Ghost component data with key if showGhosts is true, null otherwise.
  */
 export function handleOptionalMissingBlock({
   blockName,
@@ -22,6 +23,7 @@ export function handleOptionalMissingBlock({
   hierarchy,
   isLoggingEnabled,
   showGhosts,
+  key,
 }) {
   // Log if debug logging is enabled
   if (isLoggingEnabled) {
@@ -44,7 +46,7 @@ export function handleOptionalMissingBlock({
       },
       { outletName: hierarchy }
     );
-    return ghostData?.Component ? ghostData : null;
+    return ghostData?.Component ? { ...ghostData, key } : null;
   }
 
   return null;
@@ -95,8 +97,9 @@ export function buildContainerPath(blockName, baseHierarchy, containerCounts) {
  * @param {Object} options.outletArgs - Outlet arguments.
  * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
  * @param {Function} options.resolveBlockFn - Function to resolve block references.
- * @returns {{Component: import("ember-curry-component").CurriedComponent}|null}
- *   Ghost component data if successful, null otherwise.
+ * @param {string} options.key - Stable unique key for this block.
+ * @returns {{Component: import("ember-curry-component").CurriedComponent, key: string}|null}
+ *   Ghost component data with key if successful, null otherwise.
  */
 export function createGhostBlock({
   blockName,
@@ -108,6 +111,7 @@ export function createGhostBlock({
   outletArgs,
   isLoggingEnabled,
   resolveBlockFn,
+  key,
 }) {
   // For container blocks with children that failed due to no visible children,
   // recursively create ghost children so they appear nested in the debug overlay.
@@ -143,5 +147,5 @@ export function createGhostBlock({
     { outletName: hierarchy }
   );
 
-  return ghostData?.Component ? ghostData : null;
+  return ghostData?.Component ? { ...ghostData, key } : null;
 }

@@ -385,6 +385,16 @@ export function block(name, options = {}) {
         return metadata;
       }
 
+      /**
+       * Cache for curried child components in nested containers.
+       *
+       * Similar to BlockOutletRootContainer's cache, this prevents
+       * unnecessary recreation of leaf block children during navigation.
+       *
+       * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
+       */
+      #childComponentCache = new Map();
+
       static [__BLOCK_FLAG] = true;
       static [__BLOCK_CONTAINER_FLAG] = isContainer;
 
@@ -423,6 +433,58 @@ export function block(name, options = {}) {
        */
       get config() {
         return this.isRoot ? super.config : [];
+      }
+
+      /**
+       * Gets or creates a curried child component, using the cache when possible.
+       *
+       * Only caches leaf blocks (blocks without children). Container blocks are
+       * always recreated to ensure their children reflect current visibility.
+       *
+       * @param {Object} blockConfig - The block configuration.
+       * @param {typeof Component} resolvedBlock - The resolved block component class.
+       * @param {Object} debugContext - Debug context for the block.
+       * @param {import("@ember/owner").default} owner - The application owner.
+       * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
+       *   The cached or newly created component data.
+       */
+      #getOrCreateChildComponent(
+        blockConfig,
+        resolvedBlock,
+        debugContext,
+        owner
+      ) {
+        const { key } = debugContext;
+        const cachedEntry = this.#childComponentCache.get(key);
+        const hasChildren = blockConfig.children?.length > 0;
+
+        // Only cache leaf blocks (no children)
+        if (
+          !hasChildren &&
+          cachedEntry &&
+          cachedEntry.ComponentClass === resolvedBlock &&
+          shallowArgsEqual(cachedEntry.args, blockConfig.args)
+        ) {
+          return cachedEntry.result;
+        }
+
+        // Create new curried component
+        const result = createChildBlock(
+          { ...blockConfig, block: resolvedBlock },
+          owner,
+          debugContext
+        );
+
+        // Cache leaf blocks for future reuse
+        if (!hasChildren) {
+          this.#childComponentCache.set(key, {
+            ComponentClass: resolvedBlock,
+            args: blockConfig.args,
+            result,
+          });
+        }
+
+        return result;
       }
 
       /**
@@ -478,18 +540,21 @@ export function block(name, options = {}) {
         // Track container counts for indexing (e.g., group[0], group[1])
         const containerCounts = new Map();
 
-        for (const blockConfig of processedConfigs) {
+        for (let i = 0; i < processedConfigs.length; i++) {
+          const blockConfig = processedConfigs[i];
           // Resolve block reference (string name or class)
           const resolvedBlock = resolveBlockSync(blockConfig.block);
 
           // Handle optional missing block (block ref ended with `?` but not registered)
           if (isOptionalMissing(resolvedBlock)) {
+            const key = `optional-missing:${resolvedBlock.name}:${i}`;
             const ghostData = handleOptionalMissingBlock({
               blockName: resolvedBlock.name,
               blockConfig,
               hierarchy: baseHierarchy,
               isLoggingEnabled,
               showGhosts,
+              key,
             });
             if (ghostData) {
               result.push(ghostData);
@@ -506,6 +571,9 @@ export function block(name, options = {}) {
           const isChildContainer =
             resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
 
+          // Generate stable unique key based on block name and position
+          const key = `${blockName}:${i}`;
+
           // For containers, build their full path for children's hierarchy
           const containerPath = isChildContainer
             ? buildContainerPath(blockName, baseHierarchy, containerCounts)
@@ -514,15 +582,17 @@ export function block(name, options = {}) {
           // Render visible blocks
           if (blockConfig.__visible) {
             result.push(
-              createChildBlock(
-                { ...blockConfig, block: resolvedBlock },
-                owner,
+              this.#getOrCreateChildComponent(
+                blockConfig,
+                resolvedBlock,
                 {
                   displayHierarchy: baseHierarchy,
                   containerPath,
                   conditions: blockConfig.conditions,
                   outletArgs,
-                }
+                  key,
+                },
+                owner
               )
             );
           } else if (showGhosts) {
@@ -537,6 +607,7 @@ export function block(name, options = {}) {
               outletArgs,
               isLoggingEnabled,
               resolveBlockFn: resolveBlockSync,
+              key,
             });
             if (ghostData) {
               result.push(ghostData);
@@ -560,25 +631,77 @@ export function block(name, options = {}) {
 }
 
 /**
- * Builds the args object to pass to a child block.
- * Merges user-provided args with internal system args and any extra properties.
+ * Performs a shallow comparison of two args objects.
  *
- * @param {Object} args - User-provided args from block config
- * @param {Array<Object>|undefined} children - Nested children configs
- * @param {string} hierarchy - The hierarchy path for this child block
- * @param {Object} outletArgs - Outlet args to pass through to the block
- * @param {Object} [extra] - Additional properties to include (e.g., { classNames })
- * @returns {Object} The complete args object for the child block
+ * Compares top-level values using strict equality (===). Does not perform
+ * deep comparison of nested objects. Used to determine if cached curried
+ * components can be reused.
+ *
+ * @param {Object|null|undefined} a - First args object.
+ * @param {Object|null|undefined} b - Second args object.
+ * @returns {boolean} True if the args are shallowly equal, false otherwise.
+ */
+function shallowArgsEqual(a, b) {
+  if (a === b) {
+    return true;
+  }
+  if (a == null || b == null) {
+    return false;
+  }
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+  return keysA.every((key) => a[key] === b[key]);
+}
+
+/**
+ * Builds the args object to pass to a child block.
+ *
+ * Uses getter-based properties for system args (`children`, `_hierarchy`,
+ * `outletArgs`) to support per-argument reactivity with `curryComponent`.
+ * This allows the curried component to remain stable while individual args
+ * can update reactively.
+ *
+ * @param {Object} args - User-provided args from block config.
+ * @param {Array<Object>|undefined} children - Nested children configs.
+ * @param {string} hierarchy - The hierarchy path for this child block.
+ * @param {Object} outletArgs - Outlet args to pass through to the block.
+ * @param {Object} [extra] - Additional properties to include (e.g., { classNames }).
+ * @returns {Object} The complete args object for the child block.
  */
 function buildBlockArgs(args, children, hierarchy, outletArgs, extra = {}) {
-  return {
+  const blockArgs = {
     ...args,
-    children,
-    _hierarchy: hierarchy, // Pass hierarchy to children for debug logging
-    outletArgs, // Pass outlet args so nested containers can access them
     $block$: __BLOCK_CONTAINER_FLAG, // Pass the secret symbol to authorize child block instantiation
     ...extra,
   };
+
+  // Define reactive getters for system args. This allows curryComponent to
+  // maintain a stable component reference while these values can update.
+  Object.defineProperties(blockArgs, {
+    children: {
+      get() {
+        return children;
+      },
+      enumerable: true,
+    },
+    _hierarchy: {
+      get() {
+        return hierarchy;
+      },
+      enumerable: true,
+    },
+    outletArgs: {
+      get() {
+        return outletArgs;
+      },
+      enumerable: true,
+    },
+  });
+
+  return blockArgs;
 }
 
 /**
@@ -597,11 +720,12 @@ function buildBlockArgs(args, children, hierarchy, outletArgs, extra = {}) {
  * @param {string} [debugContext.containerPath] - Container's full path (for children's _hierarchy)
  * @param {Object} [debugContext.conditions] - The block's conditions
  * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
- * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}}
- *   An object containing the curried block component and any containerArgs
- *   provided in the block config. The containerArgs are values required by
- *   the parent container's childArgs schema, accessible to the parent but
- *   not to the child block itself.
+ * @param {string} [debugContext.key] - Stable unique key for this block
+ * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
+ *   An object containing the curried block component, any containerArgs
+ *   provided in the block config, and a stable unique key for list rendering.
+ *   The containerArgs are values required by the parent container's childArgs
+ *   schema, accessible to the parent but not to the child block itself.
  */
 function createChildBlock(blockConfig, owner, debugContext = {}) {
   const {
@@ -674,7 +798,7 @@ function createChildBlock(blockConfig, owner, debugContext = {}) {
     }
   }
 
-  return { Component: wrappedComponent, containerArgs };
+  return { Component: wrappedComponent, containerArgs, key: debugContext.key };
 }
 
 /**
@@ -1095,6 +1219,86 @@ class BlockOutletRootContainer extends Component {
   @service blocks;
 
   /**
+   * Cache for curried components, keyed by their stable block key.
+   *
+   * This cache prevents unnecessary component recreation during navigation.
+   * Components are reused when their class and args haven't changed.
+   *
+   * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
+   */
+  #componentCache = new Map();
+
+  /**
+   * Cleans up the component cache when the container is destroyed.
+   */
+  willDestroy() {
+    super.willDestroy?.(...arguments);
+    this.#componentCache.clear();
+  }
+
+  /**
+   * Gets or creates a curried component, using the cache when possible.
+   *
+   * This method checks if a cached component can be reused by comparing:
+   * 1. The component class (must be the same reference)
+   * 2. The args object (shallow comparison of top-level values)
+   *
+   * If either has changed, a new curried component is created and cached.
+   *
+   * Container blocks with children are NOT cached because their children configs
+   * may change between renders (e.g., visibility changes). Caching them would
+   * result in stale children being displayed. Leaf blocks (no children) are
+   * safe to cache since they have no nested content that could become stale.
+   *
+   * @param {Object} blockConfig - The block configuration.
+   * @param {typeof Component} resolvedBlock - The resolved block component class.
+   * @param {Object} debugContext - Debug context for the block.
+   * @param {string} debugContext.key - Stable unique key for cache lookup.
+   * @param {import("@ember/owner").default} owner - The application owner.
+   * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
+   *   The cached or newly created component data.
+   */
+  #getOrCreateCurriedComponent(
+    blockConfig,
+    resolvedBlock,
+    debugContext,
+    owner
+  ) {
+    const { key } = debugContext;
+    const cachedEntry = this.#componentCache.get(key);
+    const hasChildren = blockConfig.children?.length > 0;
+
+    // Only cache leaf blocks (no children). Container blocks are always recreated
+    // to ensure their children reflect current visibility state.
+    if (
+      !hasChildren &&
+      cachedEntry &&
+      cachedEntry.ComponentClass === resolvedBlock &&
+      shallowArgsEqual(cachedEntry.args, blockConfig.args)
+    ) {
+      return cachedEntry.result;
+    }
+
+    // Create new curried component
+    const result = createChildBlock(
+      { ...blockConfig, block: resolvedBlock },
+      owner,
+      debugContext
+    );
+
+    // Cache leaf blocks for future reuse
+    if (!hasChildren) {
+      this.#componentCache.set(key, {
+        ComponentClass: resolvedBlock,
+        args: blockConfig.args,
+        result,
+      });
+    }
+
+    return result;
+  }
+
+  /**
    * Processes raw block configs and creates renderable child components.
    *
    * This getter is the key to reactive condition evaluation. By accessing
@@ -1104,6 +1308,7 @@ class BlockOutletRootContainer extends Component {
    *
    * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>}
    */
+  @cached
   get processedChildren() {
     const {
       rawChildren,
@@ -1136,17 +1341,21 @@ class BlockOutletRootContainer extends Component {
     const result = [];
     const containerCounts = new Map();
 
-    for (const blockConfig of processedConfigs) {
+    for (let i = 0; i < processedConfigs.length; i++) {
+      const blockConfig = processedConfigs[i];
       const resolvedBlock = resolveBlockSync(blockConfig.block);
 
       // Handle optional missing block (block ref ended with `?` but not registered)
       if (isOptionalMissing(resolvedBlock)) {
+        // Generate key for optional missing blocks
+        const key = `optional-missing:${resolvedBlock.name}:${i}`;
         const ghostData = handleOptionalMissingBlock({
           blockName: resolvedBlock.name,
           blockConfig,
           hierarchy: baseHierarchy,
           isLoggingEnabled,
           showGhosts,
+          key,
         });
         if (ghostData) {
           result.push(ghostData);
@@ -1162,6 +1371,9 @@ class BlockOutletRootContainer extends Component {
       const blockName = resolvedBlock.blockName || "unknown";
       const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
 
+      // Generate stable unique key based on block name and position
+      const key = `${blockName}:${i}`;
+
       // For containers, build their full path (used for their children's hierarchy)
       const containerPath = isChildContainer
         ? buildContainerPath(blockName, baseHierarchy, containerCounts)
@@ -1170,12 +1382,18 @@ class BlockOutletRootContainer extends Component {
       // Check pre-computed visibility from preprocessing step
       if (blockConfig.__visible) {
         result.push(
-          createChildBlock({ ...blockConfig, block: resolvedBlock }, owner, {
-            displayHierarchy: baseHierarchy,
-            containerPath,
-            conditions: blockConfig.conditions,
-            outletArgs,
-          })
+          this.#getOrCreateCurriedComponent(
+            blockConfig,
+            resolvedBlock,
+            {
+              displayHierarchy: baseHierarchy,
+              containerPath,
+              conditions: blockConfig.conditions,
+              outletArgs,
+              key,
+            },
+            owner
+          )
         );
       } else if (showGhosts) {
         // Create ghost for invisible block
@@ -1189,6 +1407,7 @@ class BlockOutletRootContainer extends Component {
           outletArgs,
           isLoggingEnabled,
           resolveBlockFn: resolveBlockSync,
+          key,
         });
 
         if (ghostData) {
@@ -1316,7 +1535,7 @@ class BlockOutletRootContainer extends Component {
     <div class={{@outletName}}>
       <div class="{{@outletName}}__container">
         <div class="{{@outletName}}__layout">
-          {{#each this.processedChildren as |child|}}
+          {{#each this.processedChildren key="key" as |child|}}
             <child.Component
               @outletName={{@outletName}}
               @outletArgs={{@outletArgs}}

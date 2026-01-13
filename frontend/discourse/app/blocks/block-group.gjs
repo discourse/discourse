@@ -29,7 +29,7 @@ export default class GroupedBlocks extends Component {
         @classNames
       }}
     >
-      {{#each this.children as |child|}}
+      {{#each this.children key="key" as |child|}}
         <child.Component
           @outletName={{@outletName}}
           @outletArgs={{@outletArgs}}
