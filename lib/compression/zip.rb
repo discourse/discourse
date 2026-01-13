@@ -27,7 +27,8 @@ module Compression
     private
 
     def extract_folder(entry, entry_path)
-      entry.extract(entry_path)
+      dest_dir = entry_path.delete_suffix(entry.name)
+      entry.extract(destination_directory: dest_dir)
     end
 
     def get_compressed_file_stream(compressed_file_path)
