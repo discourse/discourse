@@ -11,6 +11,7 @@ import AiSummaryModal from "../../components/modal/ai-summary-modal";
 
 export default class AiSummaryTrigger extends Component {
   @service aiCredits;
+  @service currentUser;
   @service modal;
   @service tooltip;
 
@@ -57,6 +58,11 @@ export default class AiSummaryTrigger extends Component {
   async checkCredits() {
     this.creditStatus = null;
     this.creditCheckComplete = false;
+
+    if (!this.currentUser) {
+      this.creditCheckComplete = true;
+      return;
+    }
 
     try {
       this.creditStatus =
