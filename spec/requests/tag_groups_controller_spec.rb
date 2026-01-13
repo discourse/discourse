@@ -232,19 +232,18 @@ RSpec.describe TagGroupsController do
       put "/tag_groups/#{tag_group.id}.json",
           params: {
             tag_group: {
-              tag_group: {
-                name: "test_tag_group_new_name",
-                tag_names: [tag2.name, tag3.name],
-              },
+              name: "test_tag_group_new_name",
+              tag_names: [tag2.name, tag3.name],
             },
           }
 
       expect(response.status).to eq(200)
+      expect(tag_group.tags.map(&:id)).to contain_exactly(tag2.id, tag3.id)
 
       expect(UserHistory.last).to have_attributes(
         acting_user_id: admin.id,
         action: UserHistory.actions[:tag_group_change],
-        subject: tag_group.name,
+        subject: "test_tag_group_new_name",
         previous_value:,
         new_value: response.parsed_body["tag_group"].to_json,
       )
