@@ -2987,6 +2987,32 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_see_user_status?" do
+    it "returns true for non-silenced users" do
+      expect(Guardian.new.can_see_user_status?(user)).to eq(true)
+    end
+
+    context "with a silenced user" do
+      before { user.update!(silenced_till: 1.year.from_now) }
+
+      it "returns false to anonymous users" do
+        expect(Guardian.new.can_see_user_status?(user)).to eq(false)
+      end
+
+      it "returns false to other users" do
+        expect(Guardian.new(another_user).can_see_user_status?(user)).to eq(false)
+      end
+
+      it "returns true to the silenced user themselves" do
+        expect(Guardian.new(user).can_see_user_status?(user)).to eq(true)
+      end
+
+      it "returns true to staff" do
+        expect(Guardian.new(moderator).can_see_user_status?(user)).to eq(true)
+      end
+    end
+  end
+
   describe "#can_remove_allowed_users?" do
     context "with staff users" do
       it "should be true" do

@@ -631,7 +631,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_user_status?
-    SiteSetting.enable_user_status && object.user&.has_status?
+    SiteSetting.enable_user_status && object.user&.has_status? &&
+      scope&.can_see_user_status?(object.user)
   end
 
   def user_status

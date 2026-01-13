@@ -120,6 +120,16 @@ module UserGuardian
     is_me?(user) || is_staff?
   end
 
+  def can_see_user_status?(user)
+    return false if user.blank?
+
+    if user.silenced?
+      is_me?(user) || is_staff?
+    else
+      true
+    end
+  end
+
   def can_disable_second_factor?(user)
     user && can_administer_user?(user)
   end

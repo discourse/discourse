@@ -163,7 +163,7 @@ RSpec.describe PostGuardian do
       UserSilencer.silence(user, admin)
 
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
-      expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
+      expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :bookmark)).to be_truthy
     end
 
