@@ -167,6 +167,11 @@ pt_BR:
             flag_post:
               label: "Sinalizar postagem"
               description: "Sinaliza a postagem (como spam ou para revisão)"
+            notify_author_pm:
+              label: "Notificar o autor via PM"
+              description: "Enviar uma mensagem pessoal ao autor da postagem quando os posts forem citados e deletados"
+            notify_author_pm_message:
+              label: "Conteúdo da mensagem pessoal"
             include_personal_messages:
               label: "Incluir mensagens pessoais"
               description: "Também verificar e fazer triagem de mensagens pessoais"
@@ -179,6 +184,10 @@ pt_BR:
             max_output_tokens:
               label: "Máximo de tokens de saída"
               description: "Quando especificado, define um limite superior para o número máximo de tokens que o modelo pode gerar. Respeita o limite máximo de tokens de saída do LLM"
+        llm_tagger:
+          fields:
+            available_tags:
+              label: "Tags disponíveis"
     discourse_ai:
       title: "IA"
       default_llm:
@@ -208,6 +217,10 @@ pt_BR:
           bot: "Chatbot"
           name: "Bot"
           description: "Um chatbot que responde a perguntas e auxilia os(as) usuários(as) em mensagens pessoais, fóruns e chat."
+          setting_groups:
+            settings: "Configurações Básicas"
+            access_control: "Controle de Acesso"
+            integrations: "Integrações"
         nav:
           configured: "Configurado"
           unconfigured: "Não configurado"
@@ -222,20 +235,28 @@ pt_BR:
           description: "Ativa o botão de criação de resumo para os visitantes resumirem os tópicos"
           topic_summaries: "Resumos de tópicos"
           gists: "Resumos breves da lista de tópicos"
+          setting_groups:
+            settings: "Configurações Básicas"
         search:
           name: "Pesquisar"
           description: "Melhore a experiência de pesquisa ao fornecer respostas geradas por IA para as consultas"
           discoveries: "Descobertas"
+          setting_groups:
+            settings: "Configurações Básicas"
         embeddings:
           name: "Incorporações"
           description: "Alimenta recursos, como tópicos relacionados e pesquisa com IA, ao gerar representações semânticas do texto"
           hyde: "HyDE"
           setting_groups:
+            model_settings: "Configurações de Modelo"
             related_topics: "Tópicos relacionados"
         discord:
           name: "Integração com o Discourse"
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
           search: "Pesquisa no Discord"
+          setting_groups:
+            settings: "Configurações Básicas"
+            discord_configuration: "Configurações do Discord"
         inference:
           name: "Conceitos inferidos"
           description: "Classifica os tópicos e postagens em áreas de interesse/rótulos."
@@ -243,6 +264,7 @@ pt_BR:
           match_concepts: "Correspondência de conceitos"
           deduplicate_concepts: "Deduplicação de conceitos"
           setting_groups:
+            settings: "Configurações Básicas"
             personas: "Personas"
         ai_helper:
           name: "Ajudante"
@@ -259,6 +281,8 @@ pt_BR:
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
           setting_groups:
+            access_permissions: "Acessos e Permissões"
+            enabled_features: "Recursos Habilitados"
             automation: "Automação"
             personas: "Personas"
         translation:
@@ -268,7 +292,13 @@ pt_BR:
           post_raw_translator: "Tradutor sem processamento de postagens"
           topic_title_translator: "Tradutor de título de tópico"
           short_text_translator: "Tradutor de textos curtos"
+          schedule_untranslated: "Agendar traduções"
+          schedule_topic_success:
+            one: "Tradução agendada para %{count} postagem não traduzida"
+            other: "Tradução agendada para %{count} postagens não traduzidas"
+          schedule_topic_error: "Erro ao agendar traduções. Por favor tente novamente."
           setting_groups:
+            settings: "Configurações Básicas"
             personas: "Personas"
         spam:
           name: "Spam"
@@ -287,6 +317,7 @@ pt_BR:
         card: "Cartão"
       translations:
         title: "Traduções"
+        description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
         stats:
           eta_minutes:
             one: "%{count} minuto"

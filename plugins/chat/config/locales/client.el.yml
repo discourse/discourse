@@ -214,6 +214,7 @@ el:
       settings:
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
+        unmute: "Άρση σίγασης καναλιού"
         threading_enabled: "Ενεργοποιημένα"
         threading_disabled: "Απενεργοποιημένο"
         notifications: "Ειδοποιήσεις"

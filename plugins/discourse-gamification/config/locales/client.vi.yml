@@ -17,7 +17,7 @@ vi:
       you: "Bạn"
       leaderboard:
         title: "Bảng xếp hạng"
-        info: "Cơ chế hoạt động như thế nào?"
+        info: "Cơ chế hoạt động?"
         link_to_settings: "Cài đặt"
         refresh: "Làm mới"
         modal:

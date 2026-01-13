@@ -53,8 +53,8 @@ vi:
       reply: "Trả lời"
       edit: "Sửa"
       rebake_message: "Tạo lại HTML"
-      bookmark_message: "Đánh dấu chỉ mục"
-      bookmark_message_edit: "Chỉnh sửa Dấu trang"
+      bookmark_message: "Đánh dấu"
+      bookmark_message_edit: "Chỉnh sửa đánh dấu"
       save: "Lưu lại"
       select: "Chọn"
       sounds:
@@ -79,7 +79,7 @@ vi:
       channel_info:
         back_to_channel: "Quay lại"
         tabs:
-          members: Các thành viên
+          members: Thành viên kênh
           settings: Cài đặt
           search: Tìm kiếm
         remove_member: "Xoá"

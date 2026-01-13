@@ -14,8 +14,10 @@ ko:
           composer:
             too_short:
               other: "최소 %{count}자 이상 입력하세요"
+          submit: "댓글 달기"
           edit: "편집"
           cancel: "취소"
+          add: "댓글 달기"
           user:
             deleted: "(사용자 삭제됨)"
           reviewables:

@@ -85,6 +85,7 @@ pt_BR:
           raw_invitees:
             only_group: "Um evento aceita apenas nomes de grupos."
           ends_at_before_starts_at: "Um evento não pode terminar antes de começar."
+          max_attendees_reached: "Este evento está lotado."
           start_must_be_present_and_a_valid_date: "Um evento requer uma data de início válida."
           end_must_be_a_valid_date: "A data final deve ser uma data válida."
           invalid_recurrence: "A recorrência deve ser: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

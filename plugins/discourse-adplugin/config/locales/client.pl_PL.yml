@@ -44,6 +44,8 @@ pl_PL:
           show_to_anons: "Pokaż anonimowym użytkownikom"
           show_to_logged_in_users: "Pokaż zalogowanym użytkownikom"
           category_chooser_description: "Wybierz kategorie, w których ta reklama ma być wyświetlana, lub pozostaw puste, aby wyświetlać ją wszędzie. Ustawienie witryny `no_ads_for_categories` ma pierwszeństwo przed tym ustawieniem."
+          category_chooser_description_with_routes: "Wybierz kategorie, w których ta reklama ma być wyświetlana. Pozostaw to pole i zaznaczenie trasy puste, aby reklama była wyświetlana wszędzie. Ustawienie witryny `no_ads_for_categories` ma pierwszeństwo przed tym ustawieniem."
+          route_chooser_description: "Wybierz strony/trasy, na których ta reklama ma być wyświetlana. Pozostaw to pole i wybór kategorii puste, aby reklama była wyświetlana wszędzie."
           group_chooser_description: "Wybierz grupy, które mogą oglądać to ogłoszenie lub pozostaw to pole puste, aby ogłoszenie było widoczne dla wszystkich zalogowanych użytkowników."
           preview: "Podgląd"
           topic_list_top:

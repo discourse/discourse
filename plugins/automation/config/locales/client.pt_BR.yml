@@ -10,6 +10,7 @@ pt_BR:
       logs:
         staff_actions:
           actions:
+            create_automation: criar automação
             update_automation: atualizar automação
             delete_automation: excluir automação
     discourse_automation:

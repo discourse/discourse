@@ -51,6 +51,8 @@ ko:
           reset: "리셋"
         search:
           name: "검색"
+          setting_groups:
+            settings: "기본 설정"
         spam:
           name: "스팸"
       modals:
@@ -135,6 +137,7 @@ ko:
           hours: "시간"
         usage:
           ai_summarization: "요약하기"
+          ai_embeddings_semantic_search: "AI 검색"
           ai_spam: "스팸"
         preconfigured:
           title_no_llms: "시작하려면 템플릿을 선택하세요."
