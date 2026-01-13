@@ -260,6 +260,7 @@ class QunitRunner
       args += ["--filter", filter] if filter
       args += ["--file-path", file_path_filter] if file_path_filter
       args += ["--load-balance", "--parallel", parallel.to_s] if parallel
+      args += ["--random", resolved_seed.to_s]
       args += %w[--path dist] if reuse_build
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
@@ -496,7 +497,10 @@ class QunitRunner
 
   def build_query
     params = {}
-    params["seed"] = resolved_seed
+    if @qunit_path
+      # Only include seed manually if we're running without ember exam
+      params["seed"] = resolved_seed
+    end
     params["module"] = @module if @module
     params["theme_name"] = @theme_name if @theme_name
     params["theme_url"] = @theme_url if @theme_url
