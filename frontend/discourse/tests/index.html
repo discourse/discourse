@@ -63,7 +63,7 @@
 
       import "discourse/loader";
       import "discourse/loader-shims";
-      import "discourse/discourse-common-loader-shims";
+
       import "discourse/lib/load-moment";
       import "discourse-i18n";
 
@@ -71,6 +71,8 @@
       import "/extra-locales/0000000000000000000000000000000000000000/en/mf.js";
       import "/extra-locales/0000000000000000000000000000000000000000/en/admin.js"
       import "/extra-locales/0000000000000000000000000000000000000000/en/wizard.js";
+
+      import "discourse/discourse-common-loader-shims";
 
       import "./set-test-env";
       import { startTests } from "./test-boot-ember-cli";
