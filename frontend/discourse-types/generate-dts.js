@@ -76,7 +76,7 @@ for (const packageName of packageNames) {
         modulePath = modulePath.replace(modulePrefix.from, "");
       }
       if (modulePrefix.to) {
-        modulePath = `${modulePrefix.to}${modulePath}`;
+        modulePath = `${modulePrefix.to}/${modulePath}`;
       }
 
       modulePath = modulePath
