@@ -36,7 +36,9 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        a_string_matching(/\Aseed=\d+&target=core\z/),
+        "target=core",
+        "--random",
+        a_string_matching(/\A\d+\z/),
         "--path",
         "dist",
       ],
@@ -59,9 +61,11 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        a_string_matching(/\Aseed=\d+&target=core\z/),
+        "target=core",
         "--file-path",
         core_test_file.sub("#{Rails.root}/frontend/discourse/", ""),
+        "--random",
+        a_string_matching(/\A\d+\z/),
         "--path",
         "dist",
       ],
@@ -79,7 +83,7 @@ describe "bin/qunit" do
     expect(result.launched_unicorn).to eq(false)
 
     expect(result.args).to match(
-      ["pnpm", "ember", "exam", "--query", a_string_matching(/\Aseed=\d+\z/), "--path", "dist"],
+      ["pnpm", "ember", "exam", "--random", a_string_matching(/\A\d+\z/), "--path", "dist"],
     )
     expect(result.env).to match(
       "UNICORN_PORT" => a_truthy_value,
@@ -95,7 +99,7 @@ describe "bin/qunit" do
     expect(result.launched_unicorn).to eq(false)
 
     expect(result.args).to match(
-      ["pnpm", "ember", "exam", "--query", a_string_matching(/\Aseed=\d+\z/), "--path", "dist"],
+      ["pnpm", "ember", "exam", "--random", a_string_matching(/\A\d+\z/), "--path", "dist"],
     )
     expect(result.env).to match(
       "UNICORN_PORT" => a_truthy_value,
@@ -116,12 +120,14 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        a_string_matching(/\Aseed=\d+&target=chat\z/),
+        "target=chat",
         "--file-path",
         chat_test_file.sub(
           "#{Rails.root}/plugins/chat/test/javascripts/",
           "discourse/plugins/chat/",
         ),
+        "--random",
+        a_string_matching(/\A\d+\z/),
         "--path",
         "dist",
       ],
