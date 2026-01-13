@@ -4641,7 +4641,7 @@ en:
         title: "Access"
         public: "Public"
         all_members: "All members"
-        group_restricted: "Group-restricted"
+        group_restricted: "Private"
         who_can_see: "Who can see this category"
         who_can_post: "Who can post in this category"
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"

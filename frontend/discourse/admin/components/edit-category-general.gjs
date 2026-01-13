@@ -17,6 +17,7 @@ import GroupChooser from "discourse/select-kit/components/group-chooser";
 import IconPicker from "discourse/select-kit/components/icon-picker";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import icon from "discourse/helpers/d-icon";
 
 export default class EditCategoryGeneral extends Component {
   @service siteSettings;
@@ -535,7 +536,10 @@ export default class EditCategoryGeneral extends Component {
         </@form.Field>
       {{/unless}}
 
-      <@form.Container @title={{i18n "category.visibility.title"}}>
+      <@form.Container
+        @title={{i18n "category.visibility.title"}}
+        class="--radio-cards"
+      >
         <@form.ConditionalContent
           @activeName={{this.categoryVisibility}}
           @onChange={{this.onVisibilityChange}}
@@ -548,16 +552,19 @@ export default class EditCategoryGeneral extends Component {
               >
                 <:trigger>
                   <Condition @name="public" @disabled={{true}}>
+                    {{icon "ban"}}
                     {{i18n this.publicVisibilityLabel}}
                   </Condition>
                 </:trigger>
               </DTooltip>
             {{else}}
               <Condition @name="public">
+                {{icon "check"}}
                 {{i18n this.publicVisibilityLabel}}
               </Condition>
             {{/if}}
             <Condition @name="group_restricted">
+              {{icon "check"}}
               {{i18n "category.visibility.group_restricted"}}
             </Condition>
           </cc.Conditions>
