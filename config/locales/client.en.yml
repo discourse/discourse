@@ -3277,6 +3277,13 @@ en:
       votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
+      upcoming_changes:
+        available:
+          title: "Upcoming changes"
+          description: "'%{changeName}' is available for preview"
+        automatically_promoted:
+          title: "Upcoming changes"
+          description: "'%{changeName}' has been automatically enabled"
       dismiss_confirmation:
         body:
           default:

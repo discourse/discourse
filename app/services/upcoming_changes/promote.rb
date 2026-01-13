@@ -94,13 +94,16 @@ class UpcomingChanges::Promote
         Notification.create!(
           notification_type: Notification.types[:upcoming_change_automatically_promoted],
           user_id: admin.id,
-          data: { upcoming_change_name: params.setting_name }.to_json,
+          data: {
+            upcoming_change_name: params.setting_name,
+            upcoming_change_humanized_name: SiteSetting.humanized_name(params.setting_name),
+          }.to_json,
         )
       end
 
     UpcomingChangeEvent.create!(
       event_type: :admins_notified_automatic_promotion,
-      upcoming_changeg_name: params.setting_name,
+      upcoming_change_name: params.setting_name,
       acting_user: Discourse.system_user,
     )
   end

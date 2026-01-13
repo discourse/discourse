@@ -38,14 +38,26 @@ class UpcomingChanges::Track
       #
       # Therefore, we may register the `added` event above in one deploy, then
       # send a notification to admins that the UC is available in a later deploy.
+      #
+      # In the case of experimental being the promotion status (very rare outside
+      # sandbox/debugging sites), there is no previous status, so we can notify
+      # straight away.
       notify_at_status =
-        UpcomingChanges.previous_status_value(SiteSetting.promote_upcoming_changes_on_status)
-      if UpcomingChange.meets_or_exceeds_status?(change_name, notify_at_status)
+        if SiteSetting.promote_upcoming_changes_on_status == "experimental"
+          :experimental
+        else
+          UpcomingChanges.previous_status(SiteSetting.promote_upcoming_changes_on_status)
+        end
+
+      if UpcomingChanges.meets_or_exceeds_status?(change_name, notify_at_status)
         all_admins.each do |admin|
           Notification.create!(
             notification_type: Notification.types[:upcoming_change_available],
             user_id: admin.id,
-            data: { upcoming_change_name: change_name }.to_json,
+            data: {
+              upcoming_change_name: change_name,
+              upcoming_change_humanized_name: SiteSetting.humanized_name(change_name),
+            }.to_json,
           )
         end
 
@@ -92,7 +104,7 @@ class UpcomingChanges::Track
     context[:status_changes] = {}
 
     SiteSetting.upcoming_change_site_settings.each do |change_name|
-      if !status_changes.uniq_by(&:upcoming_change_name).include?(change_name)
+      if !status_changes.uniq { |status| status.upcoming_change_name }.include?(change_name)
         UpcomingChangeEvent.create!(
           event_type: :status_changed,
           upcoming_change_name: change_name,
@@ -150,7 +162,10 @@ class UpcomingChanges::Track
             Notification.create!(
               notification_type: Notification.types[:upcoming_change_available],
               user_id: admin.id,
-              data: { upcoming_change_name: change_name }.to_json,
+              data: {
+                upcoming_change_name: change_name,
+                upcoming_change_humanized_name: SiteSetting.humanized_name(change_name),
+              }.to_json,
             )
           end
 

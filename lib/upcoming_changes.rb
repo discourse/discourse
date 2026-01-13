@@ -21,6 +21,10 @@ module UpcomingChanges
     self.statuses.values.select { |value| value < status_value }.max || 0
   end
 
+  def self.previous_status(status)
+    self.statuses.keys.select { |key| self.statuses[key] < self.statuses[status.to_sym] }.max
+  end
+
   def self.image_exists?(change_setting_name)
     File.exist?(File.join(Rails.public_path, self.image_path(change_setting_name)))
   end

@@ -47,7 +47,7 @@ class UpcomingChanges::TrackingInitializer
       end
 
       UpcomingChanges::Track.call(guardian: Guardian.new(Discourse.system_user)) do |result|
-        on_success do |added_changes:, removed_changes:, notified_admins_for_added_changes:|
+        on_success do |added_changes:, removed_changes:, notified_admins_for_added_changes:, status_changes:|
           added_changes.each do |change_name|
             verbose_log(site, :info, "added upcoming change '#{change_name}'")
           end
