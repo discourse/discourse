@@ -77,10 +77,9 @@ for (const packageName of packageNames) {
     ]
       .filter(Boolean)
       .join("/");
-    const moduleDefinition = `declare module '${modulePath}' {`;
 
-    if (!dts.includes(moduleDefinition)) {
-      dts = `${moduleDefinition}\n${dts}\n}`;
+    if (!/^declare module ['"].+['"] {/.test(dts)) {
+      dts = `declare module '${modulePath}' {\n${dts}\n}`;
     }
 
     writeFileSync(`${targetPackagePath}/${relativePath}`, dts);
