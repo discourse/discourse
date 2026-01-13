@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Flag message", type: :system do
+RSpec.describe "Chat message creator", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
   fab!(:current_user, :user)
@@ -27,6 +27,15 @@ RSpec.describe "Flag message", type: :system do
     visit("/")
     chat_page.open_new_message
     chat_page.message_creator.filter("x")
+
+    expect(chat_page).to have_no_css("#new-group-chat")
+  end
+
+  it "hides create group option when group chats are disabled for members" do
+    SiteSetting.chat_max_direct_message_users = 1
+
+    visit("/")
+    chat_page.open_new_message
 
     expect(chat_page).to have_no_css("#new-group-chat")
   end
@@ -128,6 +137,16 @@ RSpec.describe "Flag message", type: :system do
     expect(chat_page.message_creator).to be_listing(group)
     chat_page.message_creator.click_row(group)
     expect(chat_page.message_creator).to be_listing(group)
+  end
+
+  it "hides add member option when group chats are disabled for members" do
+    SiteSetting.chat_max_direct_message_users = 1
+    channel = Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
+
+    visit("/")
+    chat_page.visit_channel_members(channel)
+
+    expect(chat_page).to have_no_add_member_button
   end
 
   it "displays users status next to names" do

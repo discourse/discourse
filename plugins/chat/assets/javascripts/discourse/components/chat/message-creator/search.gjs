@@ -17,6 +17,7 @@ import SearchInput from "./search-input";
 
 export default class ChatMessageCreatorSearch extends Component {
   @service chat;
+  @service chatGuardian;
   @service router;
 
   @tracked chatables = [];
@@ -31,7 +32,7 @@ export default class ChatMessageCreatorSearch extends Component {
       return items;
     }
 
-    if (!this.term?.length) {
+    if (!this.term?.length && this.chatGuardian.canUseGroupChat()) {
       items.push({
         identifier: "new-group",
         type: "list-action",
