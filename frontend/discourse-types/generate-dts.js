@@ -77,7 +77,7 @@ for (const packageName of packageNames) {
     ]
       .filter(Boolean)
       .join("/");
-    const moduleDefinition = `declare module "${modulePath}" {`;
+    const moduleDefinition = `declare module '${modulePath}' {`;
 
     if (!dts.includes(moduleDefinition)) {
       dts = `${moduleDefinition}\n${dts}\n}`;
