@@ -9,7 +9,7 @@
  * When this marker is returned from resolution functions, it signals that the block
  * should be silently skipped rather than throwing an error.
  *
- * Used in both config-validation.js and block-outlet.gjs to identify optional
+ * Used in both layout-validation.js and block-outlet.gjs to identify optional
  * blocks that aren't registered and should be skipped during validation and rendering.
  *
  * @type {symbol}

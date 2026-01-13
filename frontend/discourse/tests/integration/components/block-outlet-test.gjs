@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import BlockGroup from "discourse/blocks/block-group";
 import BlockOutlet, {
-  _getBlockConfigs,
+  _getOutletLayouts,
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
@@ -1756,7 +1756,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       // The validation promise rejects when conditions are invalid.
       // In tests, unhandled promise rejections cause test failures.
-      // We can access the validation promise via the internal blockConfigs.
+      // We can access the validation promise via the internal outletLayouts.
       renderBlocks(
         "main-outlet-blocks",
         [
@@ -1769,10 +1769,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
 
       // Access the validation promise to catch the expected error
-      const configData = _getBlockConfigs().get("main-outlet-blocks");
+      const layoutData = _getOutletLayouts().get("main-outlet-blocks");
 
       await assert.rejects(
-        configData.validatedConfig,
+        layoutData.validatedLayout,
         /`path` argument is required/,
         "validation error thrown for missing required path argument"
       );

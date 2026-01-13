@@ -579,13 +579,13 @@ export function validateArgsAgainstSchema(providedArgs, schema, pathPrefix) {
  * Validates block arguments against the block's metadata arg schema.
  * Checks for required args and validates types.
  *
- * @param {Object} config - The block configuration.
+ * @param {Object} entry - The block entry.
  * @param {Object} blockClass - The resolved block class (must be a class, not a string reference).
  * @throws {BlockError} If args are invalid.
  */
-export function validateBlockArgs(config, blockClass) {
+export function validateBlockArgs(entry, blockClass) {
   const metadata = blockClass?.blockMetadata;
-  const providedArgs = config.args || {};
+  const providedArgs = entry.args || {};
   const hasProvidedArgs = Object.keys(providedArgs).length > 0;
   const argsSchema = metadata?.args;
 

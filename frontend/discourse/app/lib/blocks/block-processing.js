@@ -9,7 +9,7 @@ import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
  *
  * @param {Object} options - Options for handling the missing block.
  * @param {string} options.blockName - The name of the missing block.
- * @param {Object} options.blockConfig - The block configuration.
+ * @param {Object} options.entry - The block entry.
  * @param {string} options.hierarchy - The hierarchy path for logging.
  * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
  * @param {boolean} options.showGhosts - Whether to show ghost components.
@@ -19,7 +19,7 @@ import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
  */
 export function handleOptionalMissingBlock({
   blockName,
-  blockConfig,
+  entry,
   hierarchy,
   isLoggingEnabled,
   showGhosts,
@@ -39,8 +39,8 @@ export function handleOptionalMissingBlock({
       {
         name: blockName,
         Component: null,
-        args: blockConfig.args,
-        conditions: blockConfig.conditions,
+        args: entry.args,
+        conditions: entry.conditions,
         conditionsPassed: false,
         optionalMissing: true,
       },
@@ -89,7 +89,7 @@ export function buildContainerPath(blockName, baseHierarchy, containerCounts) {
  *
  * @param {Object} options - Options for creating the ghost.
  * @param {string} options.blockName - The block name.
- * @param {Object} options.blockConfig - The block configuration.
+ * @param {Object} options.entry - The block entry.
  * @param {string} options.hierarchy - The hierarchy path for display.
  * @param {string|undefined} options.containerPath - Container path for child hierarchies.
  * @param {boolean} options.isContainer - Whether this block is a container.
@@ -103,7 +103,7 @@ export function buildContainerPath(blockName, baseHierarchy, containerCounts) {
  */
 export function createGhostBlock({
   blockName,
-  blockConfig,
+  entry,
   hierarchy,
   containerPath,
   isContainer,
@@ -118,13 +118,13 @@ export function createGhostBlock({
   let ghostChildren = null;
   if (
     isContainer &&
-    blockConfig.children?.length &&
-    blockConfig.__failureReason === "no-visible-children"
+    entry.children?.length &&
+    entry.__failureReason === "no-visible-children"
   ) {
     ghostChildren = debugHooks.getCallback(
       DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
     )?.(
-      blockConfig.children,
+      entry.children,
       owner,
       containerPath,
       outletArgs,
@@ -137,11 +137,11 @@ export function createGhostBlock({
     {
       name: blockName,
       Component: null,
-      args: blockConfig.args,
-      containerArgs: blockConfig.containerArgs,
-      conditions: blockConfig.conditions,
+      args: entry.args,
+      containerArgs: entry.containerArgs,
+      conditions: entry.conditions,
       conditionsPassed: false,
-      failureReason: blockConfig.__failureReason,
+      failureReason: entry.__failureReason,
       children: ghostChildren,
     },
     { outletName: hierarchy }

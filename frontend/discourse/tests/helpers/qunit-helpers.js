@@ -14,7 +14,7 @@ import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { clearAboutPageActivities } from "discourse/components/about-page";
-import { resetBlockConfigsForTesting } from "discourse/components/block-outlet";
+import { resetOutletLayoutsForTesting } from "discourse/components/block-outlet";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
   cleanUpComposerUploadHandler,
@@ -269,7 +269,7 @@ export function testCleanup(container, app) {
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
   resetHtmlDecorators();
-  resetBlockConfigsForTesting();
+  resetOutletLayoutsForTesting();
   resetBlockRegistryForTesting();
 }
 

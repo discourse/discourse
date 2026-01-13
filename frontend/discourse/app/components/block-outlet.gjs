@@ -36,10 +36,10 @@ import {
   handleOptionalMissingBlock,
   isOptionalMissing,
 } from "discourse/lib/blocks/block-processing";
-import { validateConfig } from "discourse/lib/blocks/config-validation";
 import { validateConstraintsSchema } from "discourse/lib/blocks/constraint-validation";
 import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import { captureCallSite, raiseBlockError } from "discourse/lib/blocks/error";
+import { validateLayout } from "discourse/lib/blocks/layout-validation";
 import {
   detectPatternConflicts,
   validateOutletPatterns,
@@ -60,41 +60,41 @@ import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
- * Maps outlet names to their registered block configurations.
- * Each outlet can have exactly one configuration registered.
+ * Maps outlet names to their registered outlet layouts.
+ * Each outlet can have exactly one layout registered.
  *
- * @type {Map<string, {children: Array<Object>}>}
+ * @type {Map<string, {validatedLayout: Promise<Array<Object>>}>}
  */
-const blockConfigs = new Map();
+const outletLayouts = new Map();
 
 /**
- * Clears all registered block configurations.
+ * Clears all registered outlet layouts.
  *
  * USE ONLY FOR TESTING PURPOSES.
  */
-export function resetBlockConfigsForTesting() {
+export function resetOutletLayoutsForTesting() {
   if (DEBUG) {
-    blockConfigs.clear();
+    outletLayouts.clear();
   }
 }
 
 /**
- * Returns the internal block configs map for testing.
+ * Returns the internal outlet layouts map for testing.
  * Allows tests to access validation promises to verify error handling.
  *
  * USE ONLY FOR TESTING PURPOSES.
  *
- * @returns {Map<string, {validatedConfig: Promise}>} The block configs map.
+ * @returns {Map<string, {validatedLayout: Promise}>} The outlet layouts map.
  */
-export function _getBlockConfigs() {
+export function _getOutletLayouts() {
   if (DEBUG) {
-    return blockConfigs;
+    return outletLayouts;
   }
   return new Map();
 }
 
 /**
- * Valid config keys for the @block decorator options.
+ * Valid keys for the @block decorator options (block schema).
  * @constant {ReadonlyArray<string>}
  */
 const VALID_BLOCK_OPTIONS = Object.freeze([
@@ -425,14 +425,14 @@ export function block(name, options = {}) {
       }
 
       /**
-       * Returns the raw block configuration. Only meaningful for root blocks.
+       * Returns the raw outlet layout. Only meaningful for root blocks.
        * For child blocks (non-root), this returns an empty array because their
-       * configuration is managed by their parent block.
+       * layout is managed by their parent block.
        *
-       * @returns {Array<Object>} The block configurations, or an empty array for non-root blocks.
+       * @returns {Array<Object>} The block entries, or an empty array for non-root blocks.
        */
-      get config() {
-        return this.isRoot ? super.config : [];
+      get layout() {
+        return this.isRoot ? super.layout : [];
       }
 
       /**
@@ -441,36 +441,31 @@ export function block(name, options = {}) {
        * Only caches leaf blocks (blocks without children). Container blocks are
        * always recreated to ensure their children reflect current visibility.
        *
-       * @param {Object} blockConfig - The block configuration.
+       * @param {Object} entry - The block entry.
        * @param {typeof Component} resolvedBlock - The resolved block component class.
        * @param {Object} debugContext - Debug context for the block.
        * @param {import("@ember/owner").default} owner - The application owner.
        * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
        *   The cached or newly created component data.
        */
-      #getOrCreateChildComponent(
-        blockConfig,
-        resolvedBlock,
-        debugContext,
-        owner
-      ) {
+      #getOrCreateChildComponent(entry, resolvedBlock, debugContext, owner) {
         const { key } = debugContext;
         const cachedEntry = this.#childComponentCache.get(key);
-        const hasChildren = blockConfig.children?.length > 0;
+        const hasChildren = entry.children?.length > 0;
 
         // Only cache leaf blocks (no children)
         if (
           !hasChildren &&
           cachedEntry &&
           cachedEntry.ComponentClass === resolvedBlock &&
-          shallowArgsEqual(cachedEntry.args, blockConfig.args)
+          shallowArgsEqual(cachedEntry.args, entry.args)
         ) {
           return cachedEntry.result;
         }
 
         // Create new curried component
         const result = createChildBlock(
-          { ...blockConfig, block: resolvedBlock },
+          { ...entry, block: resolvedBlock },
           owner,
           debugContext
         );
@@ -479,7 +474,7 @@ export function block(name, options = {}) {
         if (!hasChildren) {
           this.#childComponentCache.set(key, {
             ComponentClass: resolvedBlock,
-            args: blockConfig.args,
+            args: entry.args,
             result,
           });
         }
@@ -493,12 +488,12 @@ export function block(name, options = {}) {
        * with all necessary args pre-bound.
        *
        * For root blocks (BlockOutlet), this defers to the component's own children
-       * getter which handles preprocessing. For nested containers, configs are
+       * getter which handles preprocessing. For nested containers, entries are
        * already pre-processed by the parent, so we just create components.
        *
        * Each child object contains:
        * - `Component`: The curried block component ready to render
-       * - `containerArgs`: Values provided by the child config for the parent's
+       * - `containerArgs`: Values provided by the child entry for the parent's
        *   `childArgs` schema (e.g., `{ name: "settings" }` for a tabs container).
        *   These are available to the parent but not passed to the child block itself.
        *
@@ -520,7 +515,7 @@ export function block(name, options = {}) {
           return super.children;
         }
 
-        // Nested containers: configs already pre-processed by parent
+        // Nested containers: entries already pre-processed by parent
         const rawChildren = this.args.children;
         if (!rawChildren?.length) {
           return;
@@ -532,25 +527,25 @@ export function block(name, options = {}) {
         // Logging already done during root preprocessing
         const isLoggingEnabled = false;
 
-        // Configs already have __visible set by parent's preprocessing.
+        // Entries already have __visible set by parent's preprocessing.
         // Just create components from them.
-        const processedConfigs = rawChildren;
+        const processedEntries = rawChildren;
 
         const result = [];
         // Track container counts for indexing (e.g., group[0], group[1])
         const containerCounts = new Map();
 
-        for (let i = 0; i < processedConfigs.length; i++) {
-          const blockConfig = processedConfigs[i];
+        for (let i = 0; i < processedEntries.length; i++) {
+          const entry = processedEntries[i];
           // Resolve block reference (string name or class)
-          const resolvedBlock = resolveBlockSync(blockConfig.block);
+          const resolvedBlock = resolveBlockSync(entry.block);
 
           // Handle optional missing block (block ref ended with `?` but not registered)
           if (isOptionalMissing(resolvedBlock)) {
             const key = `optional-missing:${resolvedBlock.name}:${i}`;
             const ghostData = handleOptionalMissingBlock({
               blockName: resolvedBlock.name,
-              blockConfig,
+              entry,
               hierarchy: baseHierarchy,
               isLoggingEnabled,
               showGhosts,
@@ -580,15 +575,15 @@ export function block(name, options = {}) {
             : undefined;
 
           // Render visible blocks
-          if (blockConfig.__visible) {
+          if (entry.__visible) {
             result.push(
               this.#getOrCreateChildComponent(
-                blockConfig,
+                entry,
                 resolvedBlock,
                 {
                   displayHierarchy: baseHierarchy,
                   containerPath,
-                  conditions: blockConfig.conditions,
+                  conditions: entry.conditions,
                   outletArgs,
                   key,
                 },
@@ -599,7 +594,7 @@ export function block(name, options = {}) {
             // Show ghost for invisible blocks in debug mode
             const ghostData = createGhostBlock({
               blockName,
-              blockConfig,
+              entry,
               hierarchy: baseHierarchy,
               containerPath,
               isContainer: isChildContainer,
@@ -705,15 +700,15 @@ function buildBlockArgs(args, children, hierarchy, outletArgs, extra = {}) {
 }
 
 /**
- * Creates a renderable child block from a block configuration.
+ * Creates a renderable child block from a block entry.
  * Curries the component with all necessary args and wraps non-container
  * blocks in a layout wrapper for consistent styling.
  *
- * @param {Object} blockConfig - The block configuration
- * @param {typeof Component} blockConfig.block - The block component class
- * @param {Object} [blockConfig.args] - Args to pass to the block
- * @param {string} [blockConfig.classNames] - Additional CSS classes
- * @param {Array<Object>} [blockConfig.children] - Nested block configs
+ * @param {Object} entry - The block entry
+ * @param {typeof Component} entry.block - The block component class
+ * @param {Object} [entry.args] - Args to pass to the block
+ * @param {string} [entry.classNames] - Additional CSS classes
+ * @param {Array<Object>} [entry.children] - Nested block entries
  * @param {import("@ember/owner").default} owner - The application owner
  * @param {Object} [debugContext] - Debug context for visual overlay
  * @param {string} [debugContext.displayHierarchy] - Where the block is rendered (for tooltip display)
@@ -723,18 +718,18 @@ function buildBlockArgs(args, children, hierarchy, outletArgs, extra = {}) {
  * @param {string} [debugContext.key] - Stable unique key for this block
  * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
  *   An object containing the curried block component, any containerArgs
- *   provided in the block config, and a stable unique key for list rendering.
+ *   provided in the block entry, and a stable unique key for list rendering.
  *   The containerArgs are values required by the parent container's childArgs
  *   schema, accessible to the parent but not to the child block itself.
  */
-function createChildBlock(blockConfig, owner, debugContext = {}) {
+function createChildBlock(entry, owner, debugContext = {}) {
   const {
     block: ComponentClass,
     args = {},
     containerArgs,
     classNames,
     children: nestedChildren,
-  } = blockConfig;
+  } = entry;
   const isChildContainer = ComponentClass[__BLOCK_CONTAINER_FLAG];
 
   // Apply default values from metadata before building args
@@ -824,22 +819,22 @@ export function isContainerBlock(component) {
 }
 
 /**
- * Registers block configurations for a named outlet.
+ * Registers an outlet layout (array of block entries) for a named outlet.
  *
  * This is the main entry point for plugins to render blocks in designated areas.
- * Each outlet can only have one configuration registered. In development mode,
- * attempting to register a second configuration throws an error; in production,
+ * Each outlet can only have one layout registered. In development mode,
+ * attempting to register a second layout throws an error; in production,
  * it logs a warning.
  *
  * @param {string} outletName - The outlet identifier (must be in BLOCK_OUTLETS)
- * @param {Array<Object>} config - Array of block configurations
- * @param {typeof Component} config[].block - The block component class (must use @block decorator)
- * @param {Object} [config[].args] - Args to pass to the block component
- * @param {string} [config[].classNames] - Additional CSS classes for the block wrapper
- * @param {Array<Object>} [config[].children] - Nested blocks (only for container blocks)
- * @param {Array<Object>|Object} [config[].conditions] - Conditions that must pass for block to render
+ * @param {Array<Object>} layout - Array of block entries
+ * @param {typeof Component} layout[].block - The block component class (must use @block decorator)
+ * @param {Object} [layout[].args] - Args to pass to the block component
+ * @param {string} [layout[].classNames] - Additional CSS classes for the block wrapper
+ * @param {Array<Object>} [layout[].children] - Nested block entries (only for container blocks)
+ * @param {Array<Object>|Object} [layout[].conditions] - Conditions that must pass for block to render
  * @param {Object} [owner] - The application owner for service lookup (passed from plugin API)
- * @throws {Error} If validation fails or outlet already has a config (in DEBUG mode)
+ * @throws {Error} If validation fails or outlet already has a layout (in DEBUG mode)
  *
  * @example
  * ```js
@@ -864,7 +859,7 @@ export function isContainerBlock(component) {
  * ]);
  * ```
  */
-export function renderBlocks(outletName, config, owner, callSiteError = null) {
+export function renderBlocks(outletName, layout, owner, callSiteError = null) {
   // Use provided call site error, or capture one here as fallback.
   // When called via api.renderBlocks(), the call site is captured there
   // to exclude the PluginApi wrapper from the stack trace.
@@ -876,9 +871,9 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
   // These don't depend on block resolution and can fail fast.
 
   // Check for duplicate registration before anything else
-  if (blockConfigs.has(outletName)) {
+  if (outletLayouts.has(outletName)) {
     raiseBlockError(
-      `Block outlet "${outletName}" already has a configuration registered.`
+      `Block outlet "${outletName}" already has a layout registered.`
     );
   }
 
@@ -910,31 +905,31 @@ export function renderBlocks(outletName, config, owner, callSiteError = null) {
   // - In prod: dispatches a 'block-error' event
   //
   // The promise is returned so tests can await and catch errors.
-  const validatedConfig = validateConfig(
-    config,
+  const validatedLayout = validateLayout(
+    layout,
     outletName,
     blocksService,
     isBlock,
     isContainerBlock,
     "", // parentPath - empty so paths start with array index like [0]
     callSiteError // Error object for source-mapped call site
-  ).then(() => config);
+  ).then(() => layout);
 
-  // Store config with validation promise for potential future use
-  blockConfigs.set(outletName, { validatedConfig });
+  // Store layout with validation promise for potential future use
+  outletLayouts.set(outletName, { validatedLayout });
 
-  return validatedConfig;
+  return validatedLayout;
 }
 
 /**
- * Checks if blocks have been registered for a given outlet.
+ * Checks if a layout has been registered for a given outlet.
  * Used in templates to conditionally render content based on block presence.
  *
  * @param {string} outletName - The outlet identifier to check
- * @returns {boolean} True if blocks are registered for this outlet
+ * @returns {boolean} True if a layout is registered for this outlet
  */
-function hasConfig(outletName) {
-  return blockConfigs.has(outletName);
+function hasLayout(outletName) {
+  return outletLayouts.has(outletName);
 }
 
 /**
@@ -990,26 +985,26 @@ export default class BlockOutlet extends Component {
     }
   }
 
-  get validatedConfig() {
-    return blockConfigs.get(this.#name)?.validatedConfig;
+  get validatedLayout() {
+    return outletLayouts.get(this.#name)?.validatedLayout;
   }
 
   /**
-   * Processes block configurations and returns renderable components.
+   * Processes block entries and returns renderable components.
    *
    * This is the root-level implementation that:
-   * 1. Gets raw configs from the block registry
+   * 1. Gets raw entries from the outlet layout registry
    * 2. Preprocesses them to evaluate conditions and compute visibility
    * 3. Creates renderable components from visible blocks
    * 4. Creates ghost components for invisible blocks (in debug mode)
    *
    * The decorator's `children` getter defers to this for root blocks,
    * while nested containers use their own simplified logic since
-   * their configs are already preprocessed by their parent.
+   * their entries are already preprocessed by their parent.
    *
    * Each child object contains:
    * - `Component`: The curried block component ready to render
-   * - `containerArgs`: Values provided by the child config for the parent's
+   * - `containerArgs`: Values provided by the child entry for the parent's
    *   `childArgs` schema (accessible to parent, not the child block itself)
    *
    * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>|undefined}
@@ -1021,11 +1016,11 @@ export default class BlockOutlet extends Component {
     const showGhosts = debugHooks.isVisualOverlayEnabled;
     const isLoggingEnabled = debugHooks.isBlockLoggingEnabled;
 
-    if (!this.validatedConfig) {
+    if (!this.validatedLayout) {
       return;
     }
 
-    /* Block configs are validated asynchronously. TrackedAsyncData lets us wait
+    /* Block entries are validated asynchronously. TrackedAsyncData lets us wait
        for validation to complete before rendering blocks, while also exposing
        any validation errors to the debug overlay.
 
@@ -1034,7 +1029,7 @@ export default class BlockOutlet extends Component {
        (router.currentURL, discovery.category, etc.) are tracked by Ember's
        autotracking system. If we evaluated conditions inside this promise, route
        changes would not trigger re-evaluation. */
-    const promiseWithLogging = this.validatedConfig
+    const promiseWithLogging = this.validatedLayout
       .then((rawChildren) => {
         if (!rawChildren.length) {
           return;
@@ -1046,7 +1041,7 @@ export default class BlockOutlet extends Component {
       })
       .catch((error) => {
         // Note on test failures:
-        // - Validation errors (from validateConfig): Already fail tests as
+        // - Validation errors (from validateLayout): Already fail tests as
         //   unhandled promise rejections before this handler runs.
         // - Preprocessing errors (from .then block above): Need setTimeout to
         //   escape TrackedAsyncData's error handling and surface as test failures.
@@ -1113,7 +1108,7 @@ export default class BlockOutlet extends Component {
   }
 
   /**
-   * Validation error if the block config failed validation.
+   * Validation error if the outlet layout failed validation.
    * Only accessible when the validation promise has rejected.
    *
    * @returns {Error|null}
@@ -1150,8 +1145,8 @@ export default class BlockOutlet extends Component {
   }
 
   <template>
-    {{! Yield to :before block with hasConfig boolean for conditional rendering }}
-    {{yield (hasConfig this.outletName) to="before"}}
+    {{! Yield to :before block with hasLayout boolean for conditional rendering }}
+    {{yield (hasLayout this.outletName) to="before"}}
 
     {{#if this.showOutletBoundary}}
       <div
@@ -1197,8 +1192,8 @@ export default class BlockOutlet extends Component {
       {{/if}}
     {{/if}}
 
-    {{! Yield to :after block with hasConfig boolean for conditional rendering }}
-    {{yield (hasConfig this.outletName) to="after"}}
+    {{! Yield to :after block with hasLayout boolean for conditional rendering }}
+    {{yield (hasLayout this.outletName) to="after"}}
   </template>
 }
 
@@ -1245,12 +1240,12 @@ class BlockOutletRootContainer extends Component {
    *
    * If either has changed, a new curried component is created and cached.
    *
-   * Container blocks with children are NOT cached because their children configs
+   * Container blocks with children are NOT cached because their children entries
    * may change between renders (e.g., visibility changes). Caching them would
    * result in stale children being displayed. Leaf blocks (no children) are
    * safe to cache since they have no nested content that could become stale.
    *
-   * @param {Object} blockConfig - The block configuration.
+   * @param {Object} entry - The block entry.
    * @param {typeof Component} resolvedBlock - The resolved block component class.
    * @param {Object} debugContext - Debug context for the block.
    * @param {string} debugContext.key - Stable unique key for cache lookup.
@@ -1258,15 +1253,10 @@ class BlockOutletRootContainer extends Component {
    * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
    *   The cached or newly created component data.
    */
-  #getOrCreateCurriedComponent(
-    blockConfig,
-    resolvedBlock,
-    debugContext,
-    owner
-  ) {
+  #getOrCreateCurriedComponent(entry, resolvedBlock, debugContext, owner) {
     const { key } = debugContext;
     const cachedEntry = this.#componentCache.get(key);
-    const hasChildren = blockConfig.children?.length > 0;
+    const hasChildren = entry.children?.length > 0;
 
     // Only cache leaf blocks (no children). Container blocks are always recreated
     // to ensure their children reflect current visibility state.
@@ -1274,14 +1264,14 @@ class BlockOutletRootContainer extends Component {
       !hasChildren &&
       cachedEntry &&
       cachedEntry.ComponentClass === resolvedBlock &&
-      shallowArgsEqual(cachedEntry.args, blockConfig.args)
+      shallowArgsEqual(cachedEntry.args, entry.args)
     ) {
       return cachedEntry.result;
     }
 
     // Create new curried component
     const result = createChildBlock(
-      { ...blockConfig, block: resolvedBlock },
+      { ...entry, block: resolvedBlock },
       owner,
       debugContext
     );
@@ -1290,7 +1280,7 @@ class BlockOutletRootContainer extends Component {
     if (!hasChildren) {
       this.#componentCache.set(key, {
         ComponentClass: resolvedBlock,
-        args: blockConfig.args,
+        args: entry.args,
         result,
       });
     }
@@ -1299,7 +1289,7 @@ class BlockOutletRootContainer extends Component {
   }
 
   /**
-   * Processes raw block configs and creates renderable child components.
+   * Processes raw block entries and creates renderable child components.
    *
    * This getter is the key to reactive condition evaluation. By accessing
    * services like `router` and `discovery` during condition evaluation here
@@ -1328,7 +1318,7 @@ class BlockOutletRootContainer extends Component {
     // Step 1: Evaluate conditions - THIS IS NOW TRACKED!
     // When blocksService.evaluate() reads router.currentURL or discovery.category,
     // Ember establishes a dependency. Route changes trigger re-evaluation.
-    const processedConfigs = this.#preprocessConfigs(
+    const processedEntries = this.#preprocessEntries(
       rawChildren,
       outletArgs,
       this.blocks,
@@ -1337,13 +1327,13 @@ class BlockOutletRootContainer extends Component {
       baseHierarchy
     );
 
-    // Step 2: Create components from processed configs
+    // Step 2: Create components from processed entries
     const result = [];
     const containerCounts = new Map();
 
-    for (let i = 0; i < processedConfigs.length; i++) {
-      const blockConfig = processedConfigs[i];
-      const resolvedBlock = resolveBlockSync(blockConfig.block);
+    for (let i = 0; i < processedEntries.length; i++) {
+      const entry = processedEntries[i];
+      const resolvedBlock = resolveBlockSync(entry.block);
 
       // Handle optional missing block (block ref ended with `?` but not registered)
       if (isOptionalMissing(resolvedBlock)) {
@@ -1351,7 +1341,7 @@ class BlockOutletRootContainer extends Component {
         const key = `optional-missing:${resolvedBlock.name}:${i}`;
         const ghostData = handleOptionalMissingBlock({
           blockName: resolvedBlock.name,
-          blockConfig,
+          entry,
           hierarchy: baseHierarchy,
           isLoggingEnabled,
           showGhosts,
@@ -1380,15 +1370,15 @@ class BlockOutletRootContainer extends Component {
         : undefined;
 
       // Check pre-computed visibility from preprocessing step
-      if (blockConfig.__visible) {
+      if (entry.__visible) {
         result.push(
           this.#getOrCreateCurriedComponent(
-            blockConfig,
+            entry,
             resolvedBlock,
             {
               displayHierarchy: baseHierarchy,
               containerPath,
-              conditions: blockConfig.conditions,
+              conditions: entry.conditions,
               outletArgs,
               key,
             },
@@ -1399,7 +1389,7 @@ class BlockOutletRootContainer extends Component {
         // Create ghost for invisible block
         const ghostData = createGhostBlock({
           blockName,
-          blockConfig,
+          entry,
           hierarchy: baseHierarchy,
           containerPath,
           isContainer: isChildContainer,
@@ -1420,26 +1410,26 @@ class BlockOutletRootContainer extends Component {
   }
 
   /**
-   * Pre-processes block configurations to compute visibility for all blocks.
+   * Pre-processes block entries to compute visibility for all blocks.
    *
    * This method evaluates conditions for all blocks in the tree and adds
-   * visibility metadata to each config:
+   * visibility metadata to each entry:
    * - `__visible`: Whether the block should be rendered
    * - `__failureReason`: Why the block is hidden (debug mode only)
    *
    * Container blocks have an implicit condition: they must have at least
    * one visible child. This is evaluated bottom-up (children first).
    *
-   * @param {Array<Object>} configs - Array of block configurations to process.
+   * @param {Array<Object>} entries - Array of block entries to process.
    * @param {Object} outletArgs - Outlet arguments for condition evaluation.
    * @param {Object} blocksService - Blocks service for condition evaluation.
    * @param {boolean} showGhosts - If true, keep all blocks for ghost rendering.
    * @param {boolean} isLoggingEnabled - If true, log condition evaluation.
    * @param {string} baseHierarchy - Base hierarchy path for logging.
-   * @returns {Array<Object>} Processed configs with visibility metadata.
+   * @returns {Array<Object>} Processed entries with visibility metadata.
    */
-  #preprocessConfigs(
-    configs,
+  #preprocessEntries(
+    entries,
     outletArgs,
     blocksService,
     showGhosts,
@@ -1448,18 +1438,18 @@ class BlockOutletRootContainer extends Component {
   ) {
     const result = [];
 
-    for (const config of configs) {
-      // Clone config to avoid mutating the original in the registry
-      const configClone = { ...config };
+    for (const entry of entries) {
+      // Clone entry to avoid mutating the original in the registry
+      const entryClone = { ...entry };
 
       // Resolve block reference
-      const resolvedBlock = resolveBlockSync(configClone.block);
+      const resolvedBlock = resolveBlockSync(entryClone.block);
 
       // Skip unresolved blocks (optional missing or pending factory resolution)
       if (!resolvedBlock || isOptionalMissing(resolvedBlock)) {
-        // Keep the config for ghost handling in the main loop
+        // Keep the entry for ghost handling in the main loop
         if (showGhosts || isOptionalMissing(resolvedBlock)) {
-          result.push(configClone);
+          result.push(entryClone);
         }
         continue;
       }
@@ -1469,7 +1459,7 @@ class BlockOutletRootContainer extends Component {
 
       // Evaluate this block's own conditions
       let conditionsPassed = true;
-      if (configClone.conditions) {
+      if (entryClone.conditions) {
         if (isLoggingEnabled) {
           debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(
             blockName,
@@ -1479,7 +1469,7 @@ class BlockOutletRootContainer extends Component {
 
         // THIS IS THE KEY LINE - blocksService.evaluate() reads from router/discovery
         // services, and since we're in a tracked getter, Ember tracks these reads!
-        conditionsPassed = blocksService.evaluate(configClone.conditions, {
+        conditionsPassed = blocksService.evaluate(entryClone.conditions, {
           debug: isLoggingEnabled,
           outletArgs,
         });
@@ -1492,10 +1482,10 @@ class BlockOutletRootContainer extends Component {
       // For containers: recursively process children first (bottom-up evaluation)
       // This determines which children are visible before we check if container has any
       let hasVisibleChildren = true; // Non-containers always "have" visible children
-      if (isChildContainer && configClone.children?.length) {
+      if (isChildContainer && entryClone.children?.length) {
         // Recursively preprocess children - this computes their visibility
-        const processedChildren = this.#preprocessConfigs(
-          configClone.children,
+        const processedChildren = this.#preprocessEntries(
+          entryClone.children,
           outletArgs,
           blocksService,
           showGhosts,
@@ -1505,18 +1495,18 @@ class BlockOutletRootContainer extends Component {
 
         hasVisibleChildren = processedChildren.some((child) => child.__visible);
 
-        // Update the cloned config's children with the processed result
-        configClone.children = processedChildren;
+        // Update the cloned entry's children with the processed result
+        entryClone.children = processedChildren;
       }
 
       // Final visibility: own conditions must pass AND (not container OR has visible children)
       // This implements the implicit "container must have visible children" condition
       const visible = conditionsPassed && hasVisibleChildren;
-      configClone.__visible = visible;
+      entryClone.__visible = visible;
 
       // In debug mode, record why the block is hidden for the ghost tooltip
       if (showGhosts && !visible) {
-        configClone.__failureReason = !conditionsPassed
+        entryClone.__failureReason = !conditionsPassed
           ? "condition-failed"
           : "no-visible-children";
       }
@@ -1524,7 +1514,7 @@ class BlockOutletRootContainer extends Component {
       // In production mode, filter out invisible blocks
       // In debug mode, keep all blocks for ghost rendering
       if (visible || showGhosts) {
-        result.push(configClone);
+        result.push(entryClone);
       }
     }
 

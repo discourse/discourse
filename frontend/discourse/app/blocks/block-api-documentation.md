@@ -29,7 +29,7 @@ Before diving in, understand what the Block API *doesn't* do:
 
 - **One layout per outlet.** If you call `renderBlocks("homepage-blocks", [...])` twice, the second call raises an error. There's no merging or appending—the first caller owns the outlet. This means two plugins targeting the same outlet will conflict, and the load order determines which one succeeds.
 
-- **No runtime reconfiguration.** Block configurations are set at boot time during initializers. You can't add or remove blocks after the application starts. Conditions handle dynamic visibility, but the set of *possible* blocks is fixed.
+- **No runtime reconfiguration.** Outlet layouts are set at boot time during initializers. You can't add or remove blocks after the application starts. Conditions handle dynamic visibility, but the set of *possible* blocks is fixed.
 
 - **All-or-nothing outlet ownership.** Unlike plugin outlets where multiple connectors coexist, a block outlet has a single owner that defines its entire layout. The intended pattern: plugins register blocks, themes call `renderBlocks()` to compose the layout. This separates content (plugins) from presentation (themes).
 
@@ -439,22 +439,22 @@ Understanding when things happen helps debug issues.
 - `api.renderBlocks("homepage-blocks", [...])`
   - Validates: outlet exists, blocks registered, schemas match
   - Validates: conditions syntax, arg names
-  - Stores config in `blockConfigs` Map
+  - Stores layout in `outletLayouts` Map
 
 ---
 
 #### :art: Render Time
 
 **4. BlockOutlet renders** (`<BlockOutlet @name="homepage-blocks" />`)
-- Retrieves config from `blockConfigs`
+- Retrieves layout from `outletLayouts`
 - Preprocesses: evaluates conditions, computes visibility
 
 **5. Condition evaluation** (bottom-up for containers)
-- For each block config:
+- For each block entry:
   - If has conditions → evaluate via Blocks service
   - If container → recurse to children first
   - Set `__visible` = conditions passed && has visible children
-- Result: each config now has `__visible` flag
+- Result: each entry now has `__visible` flag
 
 **6. Component creation**
 - Visible blocks → `curryComponent()` → wrapped with layout
@@ -571,7 +571,7 @@ conditions: [
 ]
 ```
 
-**Config options reference:**
+**Entry options reference:**
 
 | Property | Required | Default | Notes |
 |----------|----------|---------|-------|
@@ -580,6 +580,7 @@ conditions: [
 | `conditions` | No | — | If omitted, always renders |
 | `classNames` | No | — | Added to wrapper element |
 | `children` | No | — | Only for container blocks |
+| `containerArgs` | No | — | Metadata for parent container (when used as child) |
 
 Now that you understand the concepts and have seen a complete example, let's look at the building blocks in more detail.
 
@@ -859,13 +860,13 @@ That pipeline assumes everything is configured correctly. But what catches mista
 
 The Block API provides multiple layers of validation:
 
-**Config Key Validation:**
+**Entry Key Validation:**
 ```javascript
 // If you write:
 { block: MyBlock, conditon: [...] }  // typo: "conditon"
 
 // You get:
-// Error: Unknown config key: "conditon" (did you mean "conditions"?)
+// Error: Unknown entry key: "conditon" (did you mean "conditions"?)
 ```
 
 **Args Schema Validation:**
@@ -997,7 +998,7 @@ We've covered registration, configuration, and the internal machinery. Now let's
 
 ### How Decisions Are Made
 
-When a `<BlockOutlet>` renders, it needs to decide which blocks to show. This happens in the `#preprocessConfigs` method, which implements **bottom-up evaluation**.
+When a `<BlockOutlet>` renders, it needs to decide which blocks to show. This happens in the `#preprocessEntries` method, which implements **bottom-up evaluation**.
 
 **Why bottom-up?** Container blocks have an implicit condition: they only render if they have at least one visible child. We need to know child visibility before we can determine parent visibility.
 
@@ -1015,9 +1016,9 @@ Block Tree:                    Evaluation Order:
 The algorithm:
 
 ```javascript
-for each block in configs:
+for each entry in layout:
   1. Resolve block reference (string name → class)
-  2. Evaluate block's own conditions
+  2. Evaluate entry's own conditions
   3. If container with children:
      a. Recursively preprocess children (this computes their visibility)
      b. Check if any child is visible
@@ -1131,8 +1132,8 @@ The Block API is designed to guide you toward the fix, not just tell you somethi
 { block: MyBlock, conditon: [{ type: "user" }] }
 
 // Error message:
-[Blocks] Invalid block config at blocks[0] for outlet "homepage-blocks":
-Unknown config key: "conditon" (did you mean "conditions"?).
+[Blocks] Invalid block entry at blocks[0] for outlet "homepage-blocks":
+Unknown entry key: "conditon" (did you mean "conditions"?).
 Valid keys are: block, args, children, conditions, containerArgs, classNames.
 
 Location:
@@ -2330,7 +2331,7 @@ When you know what you're looking for, start here.
 ```javascript
 api.registerBlock(BlockClass)
 api.registerBlock("name", () => import("./block"))
-api.renderBlocks(outletName, blockConfigs)
+api.renderBlocks(outletName, layout)
 api.registerBlockOutlet(outletName, options)
 api.registerBlockConditionType(ConditionClass)
 ```
@@ -2385,7 +2386,7 @@ api.registerBlockConditionType(ConditionClass)
 }
 ```
 
-#### Block Configuration
+#### Block Entry
 
 ```javascript
 {
@@ -2393,7 +2394,7 @@ api.registerBlockConditionType(ConditionClass)
   args?: { [key]: any },           // Arguments passed to the block
   conditions?: ConditionSpec | ConditionSpec[],
   classNames?: string | string[],
-  children?: BlockConfig[],        // Only for container blocks
+  children?: BlockEntry[],         // Only for container blocks
   containerArgs?: { [key]: any },  // Metadata provided to parent container
 }
 ```
@@ -2477,7 +2478,7 @@ api.registerBlockConditionType(ConditionClass)
    - Check for errors in console during boot
    - Verify pre-initializer runs before `freeze-block-registry`
 
-2. **Is the outlet configured?**
+2. **Is a layout configured for the outlet?**
    - Check that `renderBlocks()` was called with correct outlet name
    - Enable outlet boundaries to see if outlet exists
 
@@ -2492,8 +2493,8 @@ api.registerBlockConditionType(ConditionClass)
 
 #### Validation errors
 
-1. **"Unknown config key"**
-   - Check for typos in config object
+1. **"Unknown entry key"**
+   - Check for typos in entry object
    - Valid keys: block, args, conditions, classNames, children, containerArgs
 
 2. **"Unknown condition type"**
@@ -2521,6 +2522,23 @@ api.registerBlockConditionType(ConditionClass)
 3. **Outlet args undefined**
    - Verify outlet passes args: `@outletArgs={{hash topic=this.topic}}`
    - Check path spelling in condition
+
+---
+
+## 9. Glossary
+
+Key terminology used throughout this documentation:
+
+| Term | Definition |
+|------|------------|
+| **Block Schema** | The options passed to the `@block()` decorator that define a block's interface: its name, args schema, childArgs, constraints, and outlet restrictions. |
+| **Block Entry** | An object in an outlet layout that specifies how to use a block: which block class, what args to pass, what conditions to evaluate, and any children. |
+| **Outlet Layout** | An array of block entries passed to `renderBlocks()` that defines which blocks appear in an outlet and how they're configured. |
+| **Container Block** | A block that can hold child blocks. Defined with `container: true` in the block schema. Responsible for rendering its children. |
+| **Condition** | A declarative rule that determines whether a block should be visible. Evaluated at render time. |
+| **Outlet** | A designated location in the UI where blocks can render. Defined by `<BlockOutlet @name="...">` in templates. |
+| **Outlet Args** | Data passed from the template context to blocks via `@outletArgs` on the BlockOutlet component. |
+| **Ghost Block** | A debug-mode placeholder that appears where a hidden block would render, showing why it's not visible. |
 
 ---
 

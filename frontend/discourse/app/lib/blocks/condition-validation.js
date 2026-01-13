@@ -8,7 +8,7 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
  * @param {import("discourse/blocks/conditions").BlockCondition} instance - The condition instance.
  * @param {string} type - The condition type name.
  * @param {Object} args - The args provided to the condition.
- * @param {string} path - The path to this condition in the config tree.
+ * @param {string} path - The path to this condition in the block tree.
  * @throws {BlockError} If an unrecognized arg key is found.
  */
 export function validateConditionArgKeys(instance, type, args, path) {
@@ -80,7 +80,7 @@ export function validateConditions(conditionSpec, conditionTypes, path = "") {
  *
  * @param {Object} conditionSpec - The condition spec containing "any".
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {string} path - The path to this condition in the config tree.
+ * @param {string} path - The path to this condition in the block tree.
  * @throws {BlockError} If validation fails.
  */
 function validateAnyCombinator(conditionSpec, conditionTypes, path) {
@@ -114,7 +114,7 @@ function validateAnyCombinator(conditionSpec, conditionTypes, path) {
  *
  * @param {Object} conditionSpec - The condition spec containing "not".
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {string} path - The path to this condition in the config tree.
+ * @param {string} path - The path to this condition in the block tree.
  * @throws {BlockError} If validation fails.
  */
 function validateNotCombinator(conditionSpec, conditionTypes, path) {
@@ -145,7 +145,7 @@ function validateNotCombinator(conditionSpec, conditionTypes, path) {
  *
  * @param {Object} conditionSpec - The condition spec with a type property.
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {string} path - The path to this condition in the config tree.
+ * @param {string} path - The path to this condition in the block tree.
  * @throws {BlockError} If validation fails.
  */
 function validateSingleCondition(conditionSpec, conditionTypes, path) {

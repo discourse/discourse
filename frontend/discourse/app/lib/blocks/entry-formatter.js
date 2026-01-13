@@ -1,10 +1,10 @@
 /**
- * Config formatting utilities for error display and debugging.
+ * Block entry formatting utilities for error display and debugging.
  *
- * These utilities help format block configurations for human-readable
+ * These utilities help format block entries for human-readable
  * display in error messages, console output, and debug tools.
  *
- * @module discourse/lib/blocks/config-formatter
+ * @module discourse/lib/blocks/entry-formatter
  */
 
 /**
@@ -56,18 +56,18 @@ export function parseConditionPath(path) {
 }
 
 /**
- * Renders a config object with the error path highlighted.
+ * Renders a block entry object with the error path highlighted.
  * Shows the structure with proper indentation and adds a comment marker
  * to indicate where the error occurred.
  *
- * @param {Object|Array} config - The config object to render.
+ * @param {Object|Array} entry - The block entry object to render.
  * @param {string} errorPath - The path to the error (e.g., "conditions.any[0][0].querParams").
  * @param {Object} [options] - Formatting options.
  * @param {string} [options.prefix] - Optional prefix to skip in the path (e.g., "conditions").
- * @param {string} [options.label] - Label to show before the config (e.g., "conditions:").
+ * @param {string} [options.label] - Label to show before the entry (e.g., "conditions:").
  * @returns {string} Formatted string with the error location highlighted.
  */
-export function formatConfigWithErrorPath(config, errorPath, options = {}) {
+export function formatEntryWithErrorPath(entry, errorPath, options = {}) {
   const { prefix, label } = options;
   const pathSegments = parseConditionPath(errorPath);
 
@@ -140,7 +140,7 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
   }
 
   /**
-   * Recursively renders the config object with highlighting.
+   * Recursively renders the entry object with highlighting.
    * Shows all keys at each level, but truncates values not on the error path.
    *
    * @param {*} obj - The object to render.
@@ -311,7 +311,7 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
     return lines.join("\n");
   }
 
-  const rendered = render(config, 0, []);
+  const rendered = render(entry, 0, []);
   return label ? `${label} ${rendered}` : rendered;
 }
 

@@ -1,9 +1,9 @@
 import { DEBUG } from "@glimmer/env";
 import {
-  formatConfigWithErrorPath,
+  formatEntryWithErrorPath,
   parseConditionPath,
   truncateForDisplay,
-} from "discourse/lib/blocks/config-formatter";
+} from "discourse/lib/blocks/entry-formatter";
 
 /**
  * Captures the current call site as an Error object, excluding internal frames.
@@ -34,7 +34,7 @@ export function captureCallSite(callerFn) {
  * Builds a tree-style breadcrumb showing the path from root to error.
  * Uses Unicode box-drawing characters for visual hierarchy.
  *
- * @param {Array|Object} rootConfig - The root configuration (usually an array of blocks).
+ * @param {Array|Object} rootLayout - The root layout (usually an array of block entries).
  * @param {string} errorPath - The path to the error (e.g., "[4].children[2].args.nme").
  * @returns {string} Tree-style breadcrumb string.
  *
@@ -44,10 +44,10 @@ export function captureCallSite(callerFn) {
  * //    └─ children[2] BlockGroup
  * //       └─ args.nme  ← error here
  */
-function buildBreadcrumb(rootConfig, errorPath) {
+function buildBreadcrumb(rootLayout, errorPath) {
   const segments = parseConditionPath(errorPath);
   const lines = [];
-  let current = rootConfig;
+  let current = rootLayout;
   let indent = "";
 
   for (let i = 0; i < segments.length; i++) {
@@ -96,7 +96,7 @@ function buildBreadcrumb(rootConfig, errorPath) {
  * Formats the error context into a human-readable string for console output.
  *
  * When an `errorPath` is provided, uses the path-aware formatter to show
- * the error location within the config with a comment marker.
+ * the error location within the entry with a comment marker.
  *
  * @param {Object} context - The error context.
  * @returns {string} Formatted context string, or empty string if no context.
@@ -112,11 +112,11 @@ function formatErrorContext(context) {
   // Many validation calls use "path" for block location in the tree
   const effectivePath = context.errorPath || context.path;
 
-  // Display the error path location - use tree-style breadcrumb when rootConfig is available
+  // Display the error path location - use tree-style breadcrumb when rootLayout is available
   if (effectivePath) {
-    if (context.rootConfig) {
+    if (context.rootLayout) {
       try {
-        const breadcrumb = buildBreadcrumb(context.rootConfig, effectivePath);
+        const breadcrumb = buildBreadcrumb(context.rootLayout, effectivePath);
         parts.push(`Location:\n${breadcrumb}`);
       } catch {
         // Fallback to plain path if breadcrumb fails
@@ -127,16 +127,16 @@ function formatErrorContext(context) {
     }
   }
 
-  // Priority: rootConfig tree > conditions > individual config
-  // Always prefer showing the full tree when rootConfig is available
-  if (context.rootConfig && effectivePath) {
-    // Root config available - show full nesting path from root to error
+  // Priority: rootLayout tree > conditions > individual entry
+  // Always prefer showing the full tree when rootLayout is available
+  if (context.rootLayout && effectivePath) {
+    // Root layout available - show full nesting path from root to error
     try {
-      const configStr = formatConfigWithErrorPath(
-        context.rootConfig,
+      const layoutStr = formatEntryWithErrorPath(
+        context.rootLayout,
         effectivePath
       );
-      parts.push(`\nContext:\n${configStr}`);
+      parts.push(`\nContext:\n${layoutStr}`);
     } catch {
       parts.push("Context: [unable to format]");
     }
@@ -144,7 +144,7 @@ function formatErrorContext(context) {
     // Fallback: conditions with path-aware formatter
     // conditionsPath is relative to conditions object (e.g., "params.categoryId")
     try {
-      const conditionsStr = formatConfigWithErrorPath(
+      const conditionsStr = formatEntryWithErrorPath(
         context.conditions,
         context.conditionsPath,
         { label: "conditions:" }
@@ -153,8 +153,8 @@ function formatErrorContext(context) {
     } catch {
       parts.push("Context: [unable to format]");
     }
-  } else if (context.config && effectivePath) {
-    // Fallback: individual block config - strip path prefix for relative path
+  } else if (context.entry && effectivePath) {
+    // Fallback: individual block entry - strip path prefix for relative path
     try {
       let relativePath = effectivePath;
       if (context.path && effectivePath.startsWith(context.path)) {
@@ -163,8 +163,8 @@ function formatErrorContext(context) {
           relativePath = relativePath.slice(1);
         }
       }
-      const configStr = formatConfigWithErrorPath(context.config, relativePath);
-      parts.push(`\nContext:\n${configStr}`);
+      const entryStr = formatEntryWithErrorPath(context.entry, relativePath);
+      parts.push(`\nContext:\n${entryStr}`);
     } catch {
       parts.push("Context: [unable to format]");
     }
@@ -176,20 +176,20 @@ function formatErrorContext(context) {
         null,
         2
       );
-      parts.push(`Conditions config:\n${conditionsStr}`);
+      parts.push(`Conditions:\n${conditionsStr}`);
     } catch {
-      parts.push("Conditions config: [unable to serialize]");
+      parts.push("Conditions: [unable to serialize]");
     }
-  } else if (context.config) {
+  } else if (context.entry) {
     try {
-      const configStr = JSON.stringify(
-        truncateForDisplay(context.config),
+      const entryStr = JSON.stringify(
+        truncateForDisplay(context.entry),
         null,
         2
       );
-      parts.push(`Block config:\n${configStr}`);
+      parts.push(`Block entry:\n${entryStr}`);
     } catch {
-      parts.push("Block config: [unable to serialize]");
+      parts.push("Block entry: [unable to serialize]");
     }
   }
 
@@ -198,7 +198,7 @@ function formatErrorContext(context) {
 
 /**
  * Error thrown when block validation fails.
- * Used by block configuration and condition validation to report
+ * Used by block entry and condition validation to report
  * errors at registration time.
  *
  * Supports the `cause` option to chain errors together. When a `cause` is
@@ -216,8 +216,8 @@ export class BlockError extends Error {
    * @param {string} message - The error message.
    * @param {Object} [options] - Error options.
    * @param {Error} [options.cause] - The underlying cause of this error.
-   * @param {string} [options.path] - Path to the error within the config
-   *   (e.g., "conditions.any[0].type" or "args.showIcon").
+   * @param {string} [options.path] - Path to the error within the layout
+   *   (e.g., "[0].conditions.any[0].type" or "[0].args.showIcon").
    */
   constructor(message, options) {
     super(message, options);
@@ -230,7 +230,7 @@ export class BlockError extends Error {
  * Raises a block error by throwing a `BlockError`.
  *
  * If context is provided, the error message will include the block
- * configuration for debugging.
+ * entry for debugging.
  *
  * If a `callSiteError` is present in the context, it is reused with the
  * new message. This preserves the original stack trace pointing to where
@@ -241,27 +241,28 @@ export class BlockError extends Error {
  * @param {Object} [context] - Optional error context for better error messages.
  * @param {string} [context.outletName] - The outlet name where the block is registered.
  * @param {string} [context.blockName] - The name of the block being validated.
- * @param {string} [context.path] - Path within the config to the error (e.g., "params.categoryId").
+ * @param {string} [context.path] - Path within the layout to the error (e.g., "[2].conditions.params.categoryId").
  *   Used by validation code to indicate where errors occurred. Combined with `errorPath` for display.
- * @param {Object} [context.config] - The full block config being validated.
- * @param {Object} [context.conditions] - The conditions config being validated.
- * @param {string} [context.errorPath] - Full path to the error for display (e.g., "blocks[2].conditions.params.categoryId").
+ * @param {Object} [context.entry] - The block entry being validated.
+ * @param {Object} [context.conditions] - The conditions being validated.
+ * @param {string} [context.errorPath] - Full path to the error for display (e.g., "[2].conditions.params.categoryId").
+ * @param {Array<Object>} [context.rootLayout] - The root outlet layout for tree display in errors.
  * @param {Error | null} [context.callSiteError] - Error object capturing where renderBlocks() was called.
  * @throws {BlockError} Always throws.
  */
 export function raiseBlockError(message, context = null) {
-  // Warn in DEBUG mode when config-related errors are missing rootConfig
-  // This helps catch future validation code that forgets to pass rootConfig
+  // Warn in DEBUG mode when entry-related errors are missing rootLayout
+  // This helps catch future validation code that forgets to pass rootLayout
   if (DEBUG) {
     const hasPath = context?.path || context?.errorPath;
-    const isConfigError =
-      context?.config || context?.conditions || context?.outletName;
+    const isEntryError =
+      context?.entry || context?.conditions || context?.outletName;
 
-    if (hasPath && isConfigError && !context?.rootConfig) {
+    if (hasPath && isEntryError && !context?.rootLayout) {
       // eslint-disable-next-line no-console
       console.warn(
-        `[Blocks] raiseBlockError called with path but no rootConfig. ` +
-          `Add rootConfig to context for better error display. ` +
+        `[Blocks] raiseBlockError called with path but no rootLayout. ` +
+          `Add rootLayout to context for better error display. ` +
           `Path: ${context?.path || context?.errorPath}`
       );
     }

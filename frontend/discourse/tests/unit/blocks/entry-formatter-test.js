@@ -1,10 +1,10 @@
 import { module, test } from "qunit";
 import {
-  formatConfigWithErrorPath,
+  formatEntryWithErrorPath,
   parseConditionPath,
-} from "discourse/lib/blocks/config-formatter";
+} from "discourse/lib/blocks/entry-formatter";
 
-module("Unit | Blocks | config-formatter", function () {
+module("Unit | Blocks | entry-formatter", function () {
   module("parseConditionPath", function () {
     test("parses simple dot notation", function (assert) {
       assert.deepEqual(parseConditionPath("args.name"), ["args", "name"]);
@@ -35,7 +35,7 @@ module("Unit | Blocks | config-formatter", function () {
     });
   });
 
-  module("formatConfigWithErrorPath", function () {
+  module("formatEntryWithErrorPath", function () {
     test("marks existing key with error comment", function (assert) {
       const config = {
         block: "test",
@@ -44,7 +44,7 @@ module("Unit | Blocks | config-formatter", function () {
         },
       };
 
-      const result = formatConfigWithErrorPath(config, "args.name");
+      const result = formatEntryWithErrorPath(config, "args.name");
 
       assert.true(
         result.includes('name: "value", // <-- error here'),
@@ -60,7 +60,7 @@ module("Unit | Blocks | config-formatter", function () {
         },
       };
 
-      const result = formatConfigWithErrorPath(config, "args.nme");
+      const result = formatEntryWithErrorPath(config, "args.nme");
 
       assert.true(
         result.includes("nme: <missing>, // <-- error here"),
@@ -83,7 +83,7 @@ module("Unit | Blocks | config-formatter", function () {
         children: [{ block: "child1" }, { block: "child2" }],
       };
 
-      const result = formatConfigWithErrorPath(config, "args.errorKey");
+      const result = formatEntryWithErrorPath(config, "args.errorKey");
 
       // Error key should have marker
       assert.true(
@@ -117,7 +117,7 @@ module("Unit | Blocks | config-formatter", function () {
         ],
       };
 
-      const result = formatConfigWithErrorPath(config, "blocks[0].args.nme");
+      const result = formatEntryWithErrorPath(config, "blocks[0].args.nme");
 
       assert.true(
         result.includes("nme: <missing>, // <-- error here"),
@@ -131,7 +131,7 @@ module("Unit | Blocks | config-formatter", function () {
         args: {},
       };
 
-      const result = formatConfigWithErrorPath(config, "args.missingKey");
+      const result = formatEntryWithErrorPath(config, "args.missingKey");
 
       assert.true(
         result.includes("missingKey: <missing>, // <-- error here"),
@@ -146,7 +146,7 @@ module("Unit | Blocks | config-formatter", function () {
         children: [{ block: "child1" }, { block: "child2" }],
       };
 
-      const result = formatConfigWithErrorPath(config, "args.name");
+      const result = formatEntryWithErrorPath(config, "args.name");
 
       // Should show args as missing with nested path to the error
       assert.true(result.includes("args:"), "should show missing 'args' key");
@@ -171,7 +171,7 @@ module("Unit | Blocks | config-formatter", function () {
         },
       };
 
-      const result = formatConfigWithErrorPath(config, "args.name");
+      const result = formatEntryWithErrorPath(config, "args.name");
       const invalidCount = (result.match(/<missing>/g) || []).length;
 
       assert.strictEqual(
@@ -187,7 +187,7 @@ module("Unit | Blocks | config-formatter", function () {
         urls: ["TAG_PAGES", "/other/**"],
       };
 
-      const result = formatConfigWithErrorPath(config, "urls[0]");
+      const result = formatEntryWithErrorPath(config, "urls[0]");
 
       assert.true(
         result.includes('"TAG_PAGES", // <-- error here'),
@@ -211,7 +211,7 @@ module("Unit | Blocks | config-formatter", function () {
       ];
 
       // Path starts with array index (no "blocks" prefix)
-      const result = formatConfigWithErrorPath(
+      const result = formatEntryWithErrorPath(
         config,
         "[2].children[1].args.nme"
       );

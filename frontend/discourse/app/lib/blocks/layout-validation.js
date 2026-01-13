@@ -1,11 +1,15 @@
 /**
- * Block configuration validation utilities.
+ * Outlet layout validation utilities.
  *
- * This module provides validation for block configurations passed to renderBlocks().
- * It validates block components, container/children relationships, reserved args,
+ * This module provides validation for outlet layouts passed to renderBlocks().
+ * It validates block entries, container/children relationships, reserved args,
  * and conditions.
  *
- * @module discourse/lib/blocks/config-validation
+ * Terminology:
+ * - **Block Entry**: An object in a layout that specifies how to use a block.
+ * - **Outlet Layout**: An array of block entries defining which blocks appear in an outlet.
+ *
+ * @module discourse/lib/blocks/layout-validation
  */
 
 import { DEBUG } from "@glimmer/env";
@@ -91,7 +95,7 @@ function validateOutletPermission(metadata, outletName, blockName, context) {
  * Validates container/children relationship.
  * Containers must have children, non-containers cannot have children.
  *
- * @param {Object} config - The block configuration.
+ * @param {Object} entry - The block entry.
  * @param {boolean} isContainer - Whether the block is a container.
  * @param {string} blockName - The block name for error messages.
  * @param {string} outletName - The outlet name for error messages.
@@ -99,13 +103,13 @@ function validateOutletPermission(metadata, outletName, blockName, context) {
  * @returns {boolean} True if validation passed, false if error was raised.
  */
 function validateContainerChildren(
-  config,
+  entry,
   isContainer,
   blockName,
   outletName,
   context
 ) {
-  const hasChildren = config.children?.length > 0;
+  const hasChildren = entry.children?.length > 0;
 
   if (hasChildren && !isContainer) {
     raiseBlockError(
@@ -131,14 +135,14 @@ function validateContainerChildren(
  *
  * @param {Object} metadata - Block metadata with constraints/validate.
  * @param {Object} resolvedBlock - The resolved block class.
- * @param {Object} config - The block configuration.
+ * @param {Object} entry - The block entry.
  * @param {string} blockName - The block name for error messages.
  * @param {Object} context - Error context for raiseBlockError.
  */
 function validateBlockConstraints(
   metadata,
   resolvedBlock,
-  config,
+  entry,
   blockName,
   context
 ) {
@@ -146,7 +150,7 @@ function validateBlockConstraints(
     return;
   }
 
-  const argsWithDefaults = applyArgDefaults(resolvedBlock, config.args || {});
+  const argsWithDefaults = applyArgDefaults(resolvedBlock, entry.args || {});
 
   // Validate declarative constraints
   if (metadata.constraints) {
@@ -186,18 +190,18 @@ function validateBlockConstraints(
  * Validates a child block's containerArgs against the parent container's childArgs schema.
  * Reuses the shared validateArgsAgainstSchema function for core validation logic.
  *
- * @param {Object} childConfig - The child block configuration.
+ * @param {Object} childEntry - The child block entry.
  * @param {Object} parentChildArgsSchema - The parent's childArgs schema.
  * @param {string} parentName - Parent block name for error messages.
  * @param {Object} context - Error context.
  */
 function validateContainerArgs(
-  childConfig,
+  childEntry,
   parentChildArgsSchema,
   parentName,
   context
 ) {
-  const providedArgs = childConfig.containerArgs || {};
+  const providedArgs = childEntry.containerArgs || {};
 
   try {
     validateArgsAgainstSchema(
@@ -221,14 +225,14 @@ function validateContainerArgs(
 /**
  * Validates uniqueness constraints for containerArgs across all sibling children.
  *
- * @param {Array<Object>} childrenConfigs - Array of child block configurations.
+ * @param {Array<Object>} childEntries - Array of child block entries.
  * @param {Object} childArgsSchema - The parent's childArgs schema.
  * @param {string} parentName - Parent block name for error messages.
  * @param {string} parentPath - Path to parent for error context.
  * @param {Object} context - Error context.
  */
 function validateContainerArgsUniqueness(
-  childrenConfigs,
+  childEntries,
   childArgsSchema,
   parentName,
   parentPath,
@@ -242,9 +246,9 @@ function validateContainerArgsUniqueness(
   for (const argName of uniqueArgs) {
     const seenValues = new Map(); // value -> index of first occurrence
 
-    for (let i = 0; i < childrenConfigs.length; i++) {
-      const childConfig = childrenConfigs[i];
-      const value = childConfig.containerArgs?.[argName];
+    for (let i = 0; i < childEntries.length; i++) {
+      const childEntry = childEntries[i];
+      const value = childEntry.containerArgs?.[argName];
 
       // Skip undefined values (uniqueness only applies to provided values)
       if (value === undefined) {
@@ -274,12 +278,12 @@ function validateContainerArgsUniqueness(
  * Validates that containerArgs is not provided when parent has no childArgs.
  * Follows the pattern: error in dev/test, warn in production.
  *
- * @param {Object} config - The block configuration.
+ * @param {Object} entry - The block entry.
  * @param {Object} parentChildArgsSchema - The parent's childArgs schema (null if none).
  * @param {Object} context - Error context.
  */
-function validateOrphanContainerArgs(config, parentChildArgsSchema, context) {
-  if (config.containerArgs && !parentChildArgsSchema) {
+function validateOrphanContainerArgs(entry, parentChildArgsSchema, context) {
+  if (entry.containerArgs && !parentChildArgsSchema) {
     const message =
       `Block at ${context.path} has "containerArgs" but parent container does not declare "childArgs". ` +
       `Remove the containerArgs or add a childArgs schema to the parent.`;
@@ -297,37 +301,37 @@ function validateOrphanContainerArgs(config, parentChildArgsSchema, context) {
  * Validates block conditions and raises errors with proper context.
  *
  * @param {Object} blocksService - The blocks service with validate method.
- * @param {Object} config - The block config containing conditions.
+ * @param {Object} entry - The block entry containing conditions.
  * @param {string} outletName - The outlet name for error messages.
  * @param {string} blockName - The block name for error messages.
- * @param {string} path - The path in the config tree for error messages.
+ * @param {string} path - The path in the layout tree for error messages.
  * @param {Error | null} [callSiteError] - Error object capturing where renderBlocks() was called.
- * @param {Array<Object>} [rootConfig] - The root blocks array for error context display.
+ * @param {Array<Object>} [rootLayout] - The root blocks array for error context display.
  */
 function validateBlockConditions(
   blocksService,
-  config,
+  entry,
   outletName,
   blockName,
   path,
   callSiteError = null,
-  rootConfig = null
+  rootLayout = null
 ) {
-  if (!config.conditions || !blocksService) {
+  if (!entry.conditions || !blocksService) {
     return;
   }
 
   try {
-    blocksService.validate(config.conditions);
+    blocksService.validate(entry.conditions);
   } catch (error) {
-    // Build context for error message - include rootConfig for tree display
+    // Build context for error message - include rootLayout for tree display
     const context = {
       outletName,
       blockName,
       path,
-      config,
-      rootConfig,
-      conditions: config.conditions,
+      entry,
+      rootLayout,
+      conditions: entry.conditions,
       callSiteError,
     };
 
@@ -367,8 +371,8 @@ function validateBlockConditions(
  * @param {string | Object} blockRef - Block name string (possibly with `?` suffix) or BlockClass.
  * @param {string} outletName - Outlet name for error messages.
  * @param {Object} [context] - Context for error messages.
- * @param {string} [context.path] - Path to this config in the block tree.
- * @param {Object} [context.config] - The block config object.
+ * @param {string} [context.path] - Path to this entry in the block tree.
+ * @param {Object} [context.entry] - The block entry object.
  * @param {Error} [context.callSiteError] - Error capturing call site location.
  * @returns {Promise<Object | string | { [OPTIONAL_MISSING]: true, name: string }>}
  *   Resolved BlockClass, string name if deferred, or optional missing marker object.
@@ -435,21 +439,21 @@ export const RESERVED_ARG_NAMES = Object.freeze([
 ]);
 
 /**
- * Valid top-level keys in block configuration objects.
+ * Valid top-level keys in block entry objects.
  * Any key not in this list will trigger a validation error, helping catch
  * common typos like `condition` instead of `conditions`.
  */
-export const VALID_CONFIG_KEYS = Object.freeze([
+export const VALID_ENTRY_KEYS = Object.freeze([
   "block", // Block class or name (required)
   "conditions", // Conditions for rendering
   "args", // Arguments to pass to the block
   "containerArgs", // Arguments required by parent container's childArgs schema
   "classNames", // CSS classes to add to wrapper
-  "children", // Nested block configurations
+  "children", // Nested block entries
 ]);
 
 /**
- * Declarative type validation rules for config fields.
+ * Declarative type validation rules for block entry fields.
  * Each rule specifies how to validate a field's type and generate error messages.
  *
  * @type {Object<string, {
@@ -458,7 +462,7 @@ export const VALID_CONFIG_KEYS = Object.freeze([
  *   actual?: (value: any) => string
  * }>}
  */
-const CONFIG_TYPE_RULES = {
+const ENTRY_TYPE_RULES = {
   args: {
     validate: (v) => typeof v === "object" && !Array.isArray(v),
     expected: "an object",
@@ -490,47 +494,47 @@ const CONFIG_TYPE_RULES = {
 };
 
 /**
- * Validates that a block config only uses known keys.
+ * Validates that a block entry only uses known keys.
  * Uses fuzzy matching to suggest corrections for typos like "condition",
  * "codition", or "conditons" instead of "conditions".
  *
  * Internal keys (starting with `__`) are skipped as they are added by the
  * system during preprocessing (e.g., `__visible`, `__failureReason`).
  *
- * @param {Object} config - The block configuration object.
+ * @param {Object} entry - The block entry object.
  * @throws {BlockError} If unknown keys are found.
  */
-export function validateConfigKeys(config) {
-  const unknownKeys = Object.keys(config).filter(
-    (key) => !key.startsWith("__") && !VALID_CONFIG_KEYS.includes(key)
+export function validateEntryKeys(entry) {
+  const unknownKeys = Object.keys(entry).filter(
+    (key) => !key.startsWith("__") && !VALID_ENTRY_KEYS.includes(key)
   );
 
   if (unknownKeys.length > 0) {
     // Build helpful suggestions using fuzzy matching from shared lib
     const suggestions = unknownKeys.map((key) =>
-      formatWithSuggestion(key, VALID_CONFIG_KEYS)
+      formatWithSuggestion(key, VALID_ENTRY_KEYS)
     );
 
     const keyWord = unknownKeys.length > 1 ? "keys" : "key";
     // Use first unknown key for the error path
     raiseBlockError(
-      `Unknown config ${keyWord}: ${suggestions.join(", ")}. ` +
-        `Valid keys are: ${VALID_CONFIG_KEYS.join(", ")}.`,
+      `Unknown entry ${keyWord}: ${suggestions.join(", ")}. ` +
+        `Valid keys are: ${VALID_ENTRY_KEYS.join(", ")}.`,
       { path: unknownKeys[0] }
     );
   }
 }
 
 /**
- * Validates the types of optional config fields.
- * Iterates over CONFIG_TYPE_RULES to check each field's type.
+ * Validates the types of optional entry fields.
+ * Iterates over ENTRY_TYPE_RULES to check each field's type.
  *
- * @param {Object} config - The block configuration object.
+ * @param {Object} entry - The block entry object.
  * @throws {BlockError} If any field has an invalid type.
  */
-export function validateConfigTypes(config) {
-  for (const [field, rule] of Object.entries(CONFIG_TYPE_RULES)) {
-    const value = config[field];
+export function validateEntryTypes(entry) {
+  for (const [field, rule] of Object.entries(ENTRY_TYPE_RULES)) {
+    const value = entry[field];
     if (value != null && !rule.validate(value)) {
       const actualType = rule.actual?.(value) ?? typeof value;
       raiseBlockError(
@@ -544,15 +548,15 @@ export function validateConfigTypes(config) {
 }
 
 /**
- * Safely stringifies a block config object for error messages.
+ * Safely stringifies a block entry object for error messages.
  * Handles circular references, limits depth, and truncates output.
  *
- * @param {Object} config - The config object to stringify.
+ * @param {Object} entry - The entry object to stringify.
  * @param {number} [maxDepth=2] - Maximum nesting depth to serialize.
  * @param {number} [maxLength=200] - Maximum output string length.
- * @returns {string} A safe string representation of the config.
+ * @returns {string} A safe string representation of the entry.
  */
-export function safeStringifyConfig(config, maxDepth = 2, maxLength = 200) {
+export function safeStringifyEntry(entry, maxDepth = 2, maxLength = 200) {
   const seen = new WeakSet();
 
   function serialize(value, depth) {
@@ -611,7 +615,7 @@ export function safeStringifyConfig(config, maxDepth = 2, maxLength = 200) {
   }
 
   try {
-    const result = serialize(config, 0);
+    const result = serialize(entry, 0);
     if (result.length > maxLength) {
       return result.slice(0, maxLength) + "...";
     }
@@ -634,19 +638,19 @@ export function isReservedArgName(argName) {
 }
 
 /**
- * Validates that block config args don't use reserved names.
+ * Validates that block entry args don't use reserved names.
  * Throws an error if any arg name is reserved (either explicitly listed
  * or prefixed with underscore).
  *
- * @param {Object} config - The block configuration
+ * @param {Object} entry - The block entry
  * @throws {BlockError} If reserved arg names are used
  */
-export function validateReservedArgs(config) {
-  if (!config.args) {
+export function validateReservedArgs(entry) {
+  if (!entry.args) {
     return;
   }
 
-  const usedReservedArgs = Object.keys(config.args).filter(isReservedArgName);
+  const usedReservedArgs = Object.keys(entry.args).filter(isReservedArgName);
 
   if (usedReservedArgs.length > 0) {
     raiseBlockError(
@@ -658,50 +662,50 @@ export function validateReservedArgs(config) {
 }
 
 /**
- * Recursively validates an array of block configurations.
- * Validates each block and traverses nested children configurations.
+ * Recursively validates an outlet layout (array of block entries).
+ * Validates each block entry and traverses nested children.
  *
  * This function is async to support lazy-loaded blocks:
  * - In dev/test: Eagerly resolves all factories for early error detection.
  * - In production: Defers factory resolution to render time.
  *
- * @param {Array<Object>} blocksConfig - Block configurations to validate.
+ * @param {Array<Object>} layout - The outlet layout (array of block entries) to validate.
  * @param {string} outletName - The outlet these blocks belong to.
  * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions.
  * @param {Function} isBlockFn - Function to check if component is a block.
  * @param {Function} isContainerBlockFn - Function to check if component is a container block.
  * @param {string} [parentPath=""] - JSON-path style parent location for error context.
  * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
- * @param {Array<Object>} [rootConfig] - The root blocks array for error context display.
+ * @param {Array<Object>} [rootLayout] - The root layout array for error context display.
  * @param {Object|null} [parentChildArgsSchema=null] - The parent container's childArgs schema, if any.
  * @param {string|null} [parentBlockName=null] - The parent container's block name for error messages.
  * @returns {Promise<void>} Resolves when validation completes.
- * @throws {Error} If any block configuration is invalid.
+ * @throws {Error} If any block entry is invalid.
  */
-export async function validateConfig(
-  blocksConfig,
+export async function validateLayout(
+  layout,
   outletName,
   blocksService,
   isBlockFn,
   isContainerBlockFn,
   parentPath = "",
   callSiteError = null,
-  rootConfig = null,
+  rootLayout = null,
   parentChildArgsSchema = null,
   parentBlockName = null
 ) {
-  // On first call, capture the root config for error display
-  const effectiveRootConfig = rootConfig ?? blocksConfig;
+  // On first call, capture the root layout for error display
+  const effectiveRootLayout = rootLayout ?? layout;
 
   // Validate containerArgs uniqueness across siblings if parent has childArgs with unique constraints
   if (parentChildArgsSchema) {
     const baseContext = {
       outletName,
       callSiteError,
-      rootConfig: effectiveRootConfig,
+      rootLayout: effectiveRootLayout,
     };
     validateContainerArgsUniqueness(
-      blocksConfig,
+      layout,
       parentChildArgsSchema,
       parentBlockName,
       parentPath.replace(/\.children$/, ""),
@@ -710,38 +714,38 @@ export async function validateConfig(
   }
 
   // Use Promise.all for parallel validation (faster in dev when resolving factories)
-  const validationPromises = blocksConfig.map(async (blockConfig, index) => {
+  const validationPromises = layout.map(async (entry, index) => {
     const currentPath = `${parentPath}[${index}]`;
 
-    // Validate the block itself (whether it has children or not)
+    // Validate the block entry itself (whether it has children or not)
     // Returns the block's childArgsSchema if it's a container with childArgs
-    const childArgsSchema = await validateBlock(
-      blockConfig,
+    const childArgsSchema = await validateEntry(
+      entry,
       outletName,
       blocksService,
       isBlockFn,
       isContainerBlockFn,
       currentPath,
       callSiteError,
-      effectiveRootConfig,
+      effectiveRootLayout,
       parentChildArgsSchema,
       parentBlockName
     );
 
     // Recursively validate nested children
-    if (blockConfig.children) {
+    if (entry.children) {
       // Get the block name for error messages when passing childArgs to children
       let blockName = null;
       if (childArgsSchema) {
         // We need the block name for error messages - resolve it
         const resolved = await resolveBlockForValidation(
-          blockConfig.block,
+          entry.block,
           outletName,
           {
             path: currentPath,
-            config: blockConfig,
+            entry,
             callSiteError,
-            rootConfig: effectiveRootConfig,
+            rootLayout: effectiveRootLayout,
           }
         );
         if (
@@ -753,15 +757,15 @@ export async function validateConfig(
         }
       }
 
-      await validateConfig(
-        blockConfig.children,
+      await validateLayout(
+        entry.children,
         outletName,
         blocksService,
         isBlockFn,
         isContainerBlockFn,
         `${currentPath}.children`,
         callSiteError,
-        effectiveRootConfig,
+        effectiveRootLayout,
         childArgsSchema,
         blockName
       );
@@ -772,7 +776,7 @@ export async function validateConfig(
 }
 
 /**
- * Validates a single block configuration object.
+ * Validates a single block entry object.
  *
  * Performs comprehensive validation including:
  * - Outlet name is a valid registered outlet (core or custom)
@@ -787,33 +791,33 @@ export async function validateConfig(
  * if a block reference is a string pointing to an unresolved factory, full
  * validation is deferred to render time.
  *
- * @param {Object} config - The block configuration object.
- * @param {typeof import("@glimmer/component").default | string} config.block - Block class or name string.
- * @param {Object} [config.args] - Args to pass to the block.
- * @param {Object} [config.containerArgs] - Args required by parent container's childArgs schema.
- * @param {Array<Object>} [config.children] - Nested block configurations.
- * @param {Array<Object>|Object} [config.conditions] - Conditions for rendering.
+ * @param {Object} entry - The block entry object.
+ * @param {typeof import("@glimmer/component").default | string} entry.block - Block class or name string.
+ * @param {Object} [entry.args] - Args to pass to the block.
+ * @param {Object} [entry.containerArgs] - Args required by parent container's childArgs schema.
+ * @param {Array<Object>} [entry.children] - Nested block entries.
+ * @param {Array<Object>|Object} [entry.conditions] - Conditions for rendering.
  * @param {string} outletName - The outlet this block belongs to.
  * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions.
  * @param {Function} isBlockFn - Function to check if component is a block.
  * @param {Function} isContainerBlockFn - Function to check if component is a container block.
- * @param {string} [path] - JSON-path style location in config (e.g., "blocks[3].children[0]").
+ * @param {string} [path] - JSON-path style location in layout (e.g., "[3].children[0]").
  * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
- * @param {Array<Object>} [rootConfig] - The root blocks array for error context display.
+ * @param {Array<Object>} [rootLayout] - The root layout array for error context display.
  * @param {Object|null} [parentChildArgsSchema=null] - The parent container's childArgs schema, if any.
  * @param {string|null} [parentBlockName=null] - The parent container's block name for error messages.
  * @returns {Promise<Object|null>} The block's childArgsSchema if it's a container with childArgs, otherwise null.
  * @throws {Error} If validation fails.
  */
-export async function validateBlock(
-  config,
+export async function validateEntry(
+  entry,
   outletName,
   blocksService,
   isBlockFn,
   isContainerBlockFn,
   path,
   callSiteError = null,
-  rootConfig = null,
+  rootLayout = null,
   parentChildArgsSchema = null,
   parentBlockName = null
 ) {
@@ -824,25 +828,25 @@ export async function validateBlock(
       `Unknown block outlet: ${suggestion}. ` +
         `Register custom outlets with api.registerBlockOutlet() in a pre-initializer. ` +
         `Available outlets: ${allOutlets.join(", ")}`,
-      { outletName, path, config, callSiteError, rootConfig }
+      { outletName, path, entry, callSiteError, rootLayout }
     );
     return null;
   }
 
-  // Validate config structure (keys and types) with error tracing
+  // Validate entry structure (keys and types) with error tracing
   wrapValidationError(
     () => {
-      validateConfigKeys(config);
-      validateConfigTypes(config);
+      validateEntryKeys(entry);
+      validateEntryTypes(entry);
     },
-    `Invalid block config at ${path} for outlet "${outletName}"`,
-    { outletName, path, config, callSiteError, rootConfig }
+    `Invalid block entry at ${path} for outlet "${outletName}"`,
+    { outletName, path, entry, callSiteError, rootLayout }
   );
 
-  if (!config.block) {
+  if (!entry.block) {
     raiseBlockError(
-      `Block config at ${path} for outlet "${outletName}" is missing required "block" property.`,
-      { outletName, path, config, callSiteError, rootConfig }
+      `Block entry at ${path} for outlet "${outletName}" is missing required "block" property.`,
+      { outletName, path, entry, callSiteError, rootLayout }
     );
     return null;
   }
@@ -851,9 +855,9 @@ export async function validateBlock(
   // In dev: eagerly resolves factories
   // In prod: returns string if factory is unresolved (defers to render time)
   const resolvedBlock = await resolveBlockForValidation(
-    config.block,
+    entry.block,
     outletName,
-    { path, config, callSiteError, rootConfig }
+    { path, entry, callSiteError, rootLayout }
   );
 
   // If resolution returned null (error was raised), exit early
@@ -874,12 +878,12 @@ export async function validateBlock(
     // Still validate conditions since they don't depend on the block class
     validateBlockConditions(
       blocksService,
-      config,
+      entry,
       outletName,
       blockName,
       path,
       callSiteError,
-      rootConfig
+      rootLayout
     );
 
     // Skip class-specific validation (will happen at render time)
@@ -890,7 +894,7 @@ export async function validateBlock(
   if (!isBlockFn(resolvedBlock)) {
     raiseBlockError(
       `Block "${resolvedBlock?.blockName}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
-      { outletName, path, config, callSiteError, rootConfig }
+      { outletName, path, entry, callSiteError, rootLayout }
     );
     return null;
   }
@@ -903,9 +907,9 @@ export async function validateBlock(
     outletName,
     blockName,
     path,
-    config,
+    entry,
     callSiteError,
-    rootConfig,
+    rootLayout,
   };
 
   // Validate outlet permission (allowedOutlets/deniedOutlets)
@@ -917,7 +921,7 @@ export async function validateBlock(
   const isContainer = isContainerBlockFn(resolvedBlock);
   if (
     !validateContainerChildren(
-      config,
+      entry,
       isContainer,
       blockName,
       outletName,
@@ -930,12 +934,12 @@ export async function validateBlock(
   // Validate reserved args and block args against schema
   const errorPrefix = `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`;
   wrapValidationError(
-    () => validateReservedArgs(config),
+    () => validateReservedArgs(entry),
     errorPrefix,
     baseContext
   );
   wrapValidationError(
-    () => validateBlockArgs(config, resolvedBlock),
+    () => validateBlockArgs(entry, resolvedBlock),
     errorPrefix,
     baseContext
   );
@@ -944,7 +948,7 @@ export async function validateBlock(
   validateBlockConstraints(
     metadata,
     resolvedBlock,
-    config,
+    entry,
     blockName,
     baseContext
   );
@@ -952,18 +956,18 @@ export async function validateBlock(
   // Validate conditions if service is available
   validateBlockConditions(
     blocksService,
-    config,
+    entry,
     outletName,
     blockName,
     path,
     callSiteError,
-    rootConfig
+    rootLayout
   );
 
   // Validate containerArgs against parent's childArgs schema
   if (parentChildArgsSchema) {
     validateContainerArgs(
-      config,
+      entry,
       parentChildArgsSchema,
       parentBlockName,
       baseContext
@@ -971,7 +975,7 @@ export async function validateBlock(
   }
 
   // Validate orphan containerArgs (containerArgs without parent's childArgs)
-  validateOrphanContainerArgs(config, parentChildArgsSchema, baseContext);
+  validateOrphanContainerArgs(entry, parentChildArgsSchema, baseContext);
 
   // Return the block's childArgsSchema for validating its children
   return isContainer ? metadata.childArgs : null;
