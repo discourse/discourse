@@ -212,7 +212,14 @@ export function formatConfigWithErrorPath(config, errorPath, options = {}) {
         const itemPath = [...currentPath, itemOnPathIndex];
         const value = render(obj[itemOnPathIndex], depth + 1, itemPath);
         const comma = itemOnPathIndex < obj.length - 1 ? "," : "";
-        lines.push(`${indent}  ${value}${comma}`);
+
+        // Check if this array item is the exact error location
+        const isItemTheError =
+          itemPath.length === errorSegments.length &&
+          itemPath.every((seg, j) => seg === errorSegments[j]);
+        const errorMarker = isItemTheError ? " // <-- error here" : "";
+
+        lines.push(`${indent}  ${value}${comma}${errorMarker}`);
 
         // Show "..." for items after the one on path
         if (itemOnPathIndex < obj.length - 1) {

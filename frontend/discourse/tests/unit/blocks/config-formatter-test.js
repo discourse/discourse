@@ -181,6 +181,20 @@ module("Unit | Blocks | config-formatter", function () {
       );
     });
 
+    test("marks array item with error comment when item itself is the error", function (assert) {
+      const config = {
+        type: "route",
+        urls: ["TAG_PAGES", "/other/**"],
+      };
+
+      const result = formatConfigWithErrorPath(config, "urls[0]");
+
+      assert.true(
+        result.includes('"TAG_PAGES", // <-- error here'),
+        "error marker should appear on array item when item itself is the error location"
+      );
+    });
+
     test("shows full nested path from root array to error", function (assert) {
       const config = [
         { block: "Block1", args: { name: "first" } },

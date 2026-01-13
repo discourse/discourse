@@ -1,3 +1,4 @@
+import { DEBUG } from "@glimmer/env";
 import {
   formatConfigWithErrorPath,
   parseConditionPath,
@@ -126,20 +127,9 @@ function formatErrorContext(context) {
     }
   }
 
-  // If we have conditions and conditionsPath, use the path-aware formatter
-  // conditionsPath is relative to conditions object (e.g., "params.categoryId")
-  if (context.conditions && context.conditionsPath) {
-    try {
-      const conditionsStr = formatConfigWithErrorPath(
-        context.conditions,
-        context.conditionsPath,
-        { label: "conditions:" }
-      );
-      parts.push(`\nContext:\n${conditionsStr}`);
-    } catch {
-      parts.push("Context: [unable to format]");
-    }
-  } else if (context.rootConfig && effectivePath) {
+  // Priority: rootConfig tree > conditions > individual config
+  // Always prefer showing the full tree when rootConfig is available
+  if (context.rootConfig && effectivePath) {
     // Root config available - show full nesting path from root to error
     try {
       const configStr = formatConfigWithErrorPath(
@@ -147,6 +137,19 @@ function formatErrorContext(context) {
         effectivePath
       );
       parts.push(`\nContext:\n${configStr}`);
+    } catch {
+      parts.push("Context: [unable to format]");
+    }
+  } else if (context.conditions && context.conditionsPath) {
+    // Fallback: conditions with path-aware formatter
+    // conditionsPath is relative to conditions object (e.g., "params.categoryId")
+    try {
+      const conditionsStr = formatConfigWithErrorPath(
+        context.conditions,
+        context.conditionsPath,
+        { label: "conditions:" }
+      );
+      parts.push(`\nContext:\n${conditionsStr}`);
     } catch {
       parts.push("Context: [unable to format]");
     }
@@ -247,6 +250,23 @@ export class BlockError extends Error {
  * @throws {BlockError} Always throws.
  */
 export function raiseBlockError(message, context = null) {
+  // Warn in DEBUG mode when config-related errors are missing rootConfig
+  // This helps catch future validation code that forgets to pass rootConfig
+  if (DEBUG) {
+    const hasPath = context?.path || context?.errorPath;
+    const isConfigError =
+      context?.config || context?.conditions || context?.outletName;
+
+    if (hasPath && isConfigError && !context?.rootConfig) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[Blocks] raiseBlockError called with path but no rootConfig. ` +
+          `Add rootConfig to context for better error display. ` +
+          `Path: ${context?.path || context?.errorPath}`
+      );
+    }
+  }
+
   const contextInfo = formatErrorContext(context);
   const fullMessage = `[Blocks] ${message}${contextInfo}`;
 

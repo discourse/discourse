@@ -947,11 +947,11 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       );
     });
 
-    test("returns error for old shortcut syntax in urls", function (assert) {
-      const error = this.validateCondition({ urls: ["$CATEGORY_PAGES"] });
+    test("returns error for page type names in urls", function (assert) {
+      const error = this.validateCondition({ urls: ["CATEGORY_PAGES"] });
       assert.true(
         error?.message.includes(
-          "Shortcuts like '$CATEGORY_PAGES' are not supported in `urls`"
+          "Page shortcuts like 'CATEGORY_PAGES' are not supported in `urls`"
         )
       );
       assert.strictEqual(error.path, "urls[0]");

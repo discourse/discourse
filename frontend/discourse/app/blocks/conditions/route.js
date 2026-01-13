@@ -130,13 +130,13 @@ export default class BlockRouteCondition extends BlockCondition {
       for (let i = 0; i < urls.length; i++) {
         const pattern = urls[i];
 
-        // Check for old shortcut syntax
-        if (typeof pattern === "string" && pattern.startsWith("$")) {
+        // Check for page type names mistakenly used in urls
+        if (typeof pattern === "string" && isValidPageType(pattern)) {
           return {
             message:
-              `Shortcuts like '${pattern}' are not supported in \`urls\`.\n` +
+              `Page shortcuts like '${pattern}' are not supported in \`urls\`.\n` +
               `Use the \`pages\` option instead:\n` +
-              `  { type: "route", pages: ["${pattern.slice(1)}"] }`,
+              `  { type: "route", pages: ["${pattern}"] }`,
             path: `urls[${i}]`,
           };
         }

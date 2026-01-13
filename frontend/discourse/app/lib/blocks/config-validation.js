@@ -302,6 +302,7 @@ function validateOrphanContainerArgs(config, parentChildArgsSchema, context) {
  * @param {string} blockName - The block name for error messages.
  * @param {string} path - The path in the config tree for error messages.
  * @param {Error | null} [callSiteError] - Error object capturing where renderBlocks() was called.
+ * @param {Array<Object>} [rootConfig] - The root blocks array for error context display.
  */
 function validateBlockConditions(
   blocksService,
@@ -309,7 +310,8 @@ function validateBlockConditions(
   outletName,
   blockName,
   path,
-  callSiteError = null
+  callSiteError = null,
+  rootConfig = null
 ) {
   if (!config.conditions || !blocksService) {
     return;
@@ -318,10 +320,13 @@ function validateBlockConditions(
   try {
     blocksService.validate(config.conditions);
   } catch (error) {
-    // Build context for error message
+    // Build context for error message - include rootConfig for tree display
     const context = {
       outletName,
       blockName,
+      path,
+      config,
+      rootConfig,
       conditions: config.conditions,
       callSiteError,
     };
@@ -873,7 +878,8 @@ export async function validateBlock(
       outletName,
       blockName,
       path,
-      callSiteError
+      callSiteError,
+      rootConfig
     );
 
     // Skip class-specific validation (will happen at render time)
@@ -950,7 +956,8 @@ export async function validateBlock(
     outletName,
     blockName,
     path,
-    callSiteError
+    callSiteError,
+    rootConfig
   );
 
   // Validate containerArgs against parent's childArgs schema
