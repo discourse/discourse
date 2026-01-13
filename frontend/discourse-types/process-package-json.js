@@ -4,11 +4,7 @@ import { existsSync, globSync } from "node:fs";
 export default function processPackageJson(packageJson, packagePath) {
   const paths = new Set();
 
-  if (packageJson["types"]) {
-    paths.add(packageJson["types"]);
-  } else if (packageJson["typings"]) {
-    paths.add(packageJson["typings"]);
-  } else if (packageJson["exports"]) {
+  if (packageJson["exports"]) {
     for (const entry of Object.values(packageJson["exports"])) {
       const types =
         entry.types ||
@@ -20,6 +16,14 @@ export default function processPackageJson(packageJson, packagePath) {
         paths.add(types);
       }
     }
+  }
+
+  if (paths.size === 0 && packageJson["types"]) {
+    paths.add(packageJson["types"]);
+  }
+
+  if (paths.size === 0 && packageJson["typings"]) {
+    paths.add(packageJson["typings"]);
   }
 
   if (paths.size === 0 && packageJson["typesVersions"]) {
