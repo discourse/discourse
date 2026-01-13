@@ -3271,82 +3271,235 @@ If you need truly dynamic layout changes, plugin outlets may be more appropriate
 
 #### Unit Testing Custom Conditions
 
-Test custom conditions in isolation:
+Test custom conditions by instantiating them directly and setting the owner for service injection:
 
 ```javascript
-import { module, test } from "qunit";
+import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
-import MyCustomCondition from "my-plugin/blocks/conditions/my-custom";
+import { module, test } from "qunit";
+import FeatureFlagCondition from "my-plugin/blocks/conditions/feature-flag";
 
-module("Unit | Condition | my-custom", function (hooks) {
+module("Unit | Condition | feature-flag", function (hooks) {
   setupTest(hooks);
 
-  test("evaluate returns true when feature flag is enabled", function (assert) {
-    const condition = this.owner.lookup("service:blocks").instantiateCondition(MyCustomCondition);
-
-    // Mock the service the condition depends on
-    condition.featureFlags = { isEnabled: () => true };
-
-    const result = condition.evaluate({ flag: "my-feature", enabled: true });
-    assert.true(result);
+  hooks.beforeEach(function () {
+    // Instantiate the condition directly
+    this.condition = new FeatureFlagCondition();
+    // Set the owner to enable service injection (@service decorators)
+    setOwner(this.condition, getOwner(this));
   });
 
-  test("validate returns error for missing flag", function (assert) {
-    const condition = new MyCustomCondition();
-    const error = condition.validate({});
+  module("validate", function () {
+    test("returns error for missing flag argument", function (assert) {
+      const error = this.condition.validate({});
 
-    assert.ok(error);
-    assert.ok(error.message.includes("flag"));
+      assert.notStrictEqual(error, null, "returns an error");
+      assert.true(error.message.includes("flag"), "error mentions flag");
+    });
+
+    test("passes valid configuration", function (assert) {
+      const error = this.condition.validate({ flag: "my-feature" });
+      assert.strictEqual(error, null);
+    });
+  });
+
+  module("evaluate", function () {
+    test("returns true when feature flag is enabled", function (assert) {
+      // Mock the service the condition depends on
+      this.condition.featureFlags = { isEnabled: () => true };
+
+      const result = this.condition.evaluate({ flag: "my-feature", enabled: true });
+      assert.true(result);
+    });
+
+    test("returns false when feature flag is disabled", function (assert) {
+      this.condition.featureFlags = { isEnabled: () => false };
+
+      const result = this.condition.evaluate({ flag: "my-feature", enabled: true });
+      assert.false(result);
+    });
+
+    test("returns true when checking for disabled flag that is disabled", function (assert) {
+      this.condition.featureFlags = { isEnabled: () => false };
+
+      const result = this.condition.evaluate({ flag: "my-feature", enabled: false });
+      assert.true(result);
+    });
   });
 });
 ```
 
 #### Integration Testing Block Visibility
 
-Test block visibility with different conditions:
+Test blocks with conditions using the test helpers from the registration module:
 
 ```javascript
-import { module, test } from "qunit";
-import { setupRenderingTest } from "ember-qunit";
+import Component from "@glimmer/component";
+import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import { withTestBlockRegistration } from "discourse/lib/blocks/registration";
+import { module, test } from "qunit";
+import BlockOutlet, { block, renderBlocks } from "discourse/components/block-outlet";
+import {
+  _registerBlock,
+  withTestBlockRegistration,
+} from "discourse/lib/blocks/registration";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Block | my-banner", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("renders when user is logged in", async function (assert) {
-    await withTestBlockRegistration(this, async () => {
-      // Register block
-      this.owner.lookup("service:blocks").registerBlock(MyBanner);
+  test("renders when conditions pass", async function (assert) {
+    @block("test-banner", {
+      args: { message: { type: "string" } },
+    })
+    class TestBanner extends Component {
+      <template>
+        <div class="test-banner">{{@message}}</div>
+      </template>
+    }
 
-      // Configure layout
-      this.owner.lookup("service:blocks").renderBlocks("test-outlet", [
+    // Register the block (synchronous, single callback parameter)
+    withTestBlockRegistration(() => _registerBlock(TestBanner));
+
+    // Configure the layout (top-level function, not a service method)
+    renderBlocks(
+      "test-outlet",
+      [
         {
-          block: MyBanner,
-          conditions: { type: "user", loggedIn: true },
+          block: TestBanner,
+          args: { message: "Hello World" },
         },
-      ]);
+      ],
+      getOwner(this)
+    );
 
-      // Mock logged-in user
-      this.owner.register("service:current-user", {
-        create: () => ({ id: 1, username: "test" }),
-      });
+    await render(<template><BlockOutlet @name="test-outlet" /></template>);
 
-      await render(hbs`<BlockOutlet @name="test-outlet" />`);
+    assert.dom(".test-banner").exists();
+    assert.dom(".test-banner").hasText("Hello World");
+  });
 
-      assert.dom(".my-banner").exists();
+  test("does not render when conditions fail", async function (assert) {
+    @block("conditional-banner")
+    class ConditionalBanner extends Component {
+      <template>
+        <div class="conditional-banner">Should not appear</div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => _registerBlock(ConditionalBanner));
+    renderBlocks(
+      "conditional-outlet",
+      [
+        {
+          block: ConditionalBanner,
+          // This condition will fail for anonymous users
+          conditions: { type: "user", admin: true },
+        },
+      ],
+      getOwner(this)
+    );
+
+    await render(<template><BlockOutlet @name="conditional-outlet" /></template>);
+
+    assert.dom(".conditional-banner").doesNotExist();
+  });
+});
+```
+
+#### Testing with Custom Test Conditions
+
+For complex condition testing, register custom test conditions:
+
+```javascript
+import Component from "@glimmer/component";
+import { getOwner } from "@ember/owner";
+import { render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
+import BlockOutlet, { block, renderBlocks } from "discourse/components/block-outlet";
+import {
+  _registerBlock,
+  _registerConditionType,
+  withTestBlockRegistration,
+  withTestConditionRegistration,
+} from "discourse/lib/blocks/registration";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+
+// Define test conditions at module scope (required for decorators)
+@blockCondition({ type: "always-true", validArgKeys: [] })
+class AlwaysTrueCondition extends BlockCondition {
+  evaluate() {
+    return true;
+  }
+}
+
+@blockCondition({ type: "always-false", validArgKeys: [] })
+class AlwaysFalseCondition extends BlockCondition {
+  evaluate() {
+    return false;
+  }
+}
+
+module("Integration | Block | conditional rendering", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    // Register test conditions before each test
+    withTestConditionRegistration(() => {
+      _registerConditionType(AlwaysTrueCondition);
+      _registerConditionType(AlwaysFalseCondition);
     });
   });
 
-  test("does not render when user is anonymous", async function (assert) {
-    await withTestBlockRegistration(this, async () => {
-      // ... similar setup but no current-user mock
+  test("renders when custom condition passes", async function (assert) {
+    @block("custom-condition-block")
+    class CustomConditionBlock extends Component {
+      <template>
+        <div class="custom-block">Rendered</div>
+      </template>
+    }
 
-      await render(hbs`<BlockOutlet @name="test-outlet" />`);
+    withTestBlockRegistration(() => _registerBlock(CustomConditionBlock));
+    renderBlocks(
+      "custom-outlet",
+      [
+        {
+          block: CustomConditionBlock,
+          conditions: { type: "always-true" },
+        },
+      ],
+      getOwner(this)
+    );
 
-      assert.dom(".my-banner").doesNotExist();
-    });
+    await render(<template><BlockOutlet @name="custom-outlet" /></template>);
+
+    assert.dom(".custom-block").exists();
+  });
+
+  test("hides when custom condition fails", async function (assert) {
+    @block("hidden-block")
+    class HiddenBlock extends Component {
+      <template>
+        <div class="hidden-block">Hidden</div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => _registerBlock(HiddenBlock));
+    renderBlocks(
+      "hidden-outlet",
+      [
+        {
+          block: HiddenBlock,
+          conditions: { type: "always-false" },
+        },
+      ],
+      getOwner(this)
+    );
+
+    await render(<template><BlockOutlet @name="hidden-outlet" /></template>);
+
+    assert.dom(".hidden-block").doesNotExist();
   });
 });
 ```
@@ -3354,23 +3507,91 @@ module("Integration | Block | my-banner", function (hooks) {
 #### Testing with Mock Outlet Args
 
 ```javascript
-test("uses topic data from outlet args", async function (assert) {
-  await withTestBlockRegistration(this, async () => {
-    // ... register and configure block
+test("uses outlet args in conditions", async function (assert) {
+  @block("outlet-args-block")
+  class OutletArgsBlock extends Component {
+    <template>
+      <div class="outlet-args-block">
+        Topic: {{@outletArgs.topic.title}}
+      </div>
+    </template>
+  }
 
-    this.set("mockTopic", { id: 123, title: "Test Topic" });
+  withTestBlockRegistration(() => _registerBlock(OutletArgsBlock));
+  renderBlocks(
+    "topic-outlet",
+    [
+      {
+        block: OutletArgsBlock,
+        conditions: { type: "outletArg", path: "topic.closed", value: false },
+      },
+    ],
+    getOwner(this)
+  );
 
-    await render(hbs`
+  // Mock outlet args with an open topic
+  this.set("mockTopic", { id: 123, title: "Test Topic", closed: false });
+
+  await render(
+    <template>
       <BlockOutlet
-        @name="test-outlet"
+        @name="topic-outlet"
         @outletArgs={{hash topic=this.mockTopic}}
       />
-    `);
+    </template>
+  );
 
-    assert.dom(".topic-title").hasText("Test Topic");
-  });
+  assert.dom(".outlet-args-block").exists();
+  assert.dom(".outlet-args-block").includesText("Test Topic");
+});
+
+test("hides when outlet arg condition fails", async function (assert) {
+  @block("closed-topic-block")
+  class ClosedTopicBlock extends Component {
+    <template>
+      <div class="closed-topic-block">Open topics only</div>
+    </template>
+  }
+
+  withTestBlockRegistration(() => _registerBlock(ClosedTopicBlock));
+  renderBlocks(
+    "closed-topic-outlet",
+    [
+      {
+        block: ClosedTopicBlock,
+        conditions: { type: "outletArg", path: "topic.closed", value: false },
+      },
+    ],
+    getOwner(this)
+  );
+
+  // Mock outlet args with a closed topic
+  this.set("closedTopic", { id: 456, title: "Closed Topic", closed: true });
+
+  await render(
+    <template>
+      <BlockOutlet
+        @name="closed-topic-outlet"
+        @outletArgs={{hash topic=this.closedTopic}}
+      />
+    </template>
+  );
+
+  assert.dom(".closed-topic-block").doesNotExist();
 });
 ```
+
+#### Key Testing Patterns
+
+| Pattern | Import | Usage |
+|---------|--------|-------|
+| Register block | `_registerBlock` from `discourse/lib/blocks/registration` | `withTestBlockRegistration(() => _registerBlock(MyBlock))` |
+| Register condition | `_registerConditionType` from `discourse/lib/blocks/registration` | `withTestConditionRegistration(() => _registerConditionType(MyCondition))` |
+| Configure layout | `renderBlocks` from `discourse/components/block-outlet` | `renderBlocks("outlet-name", [...], getOwner(this))` |
+| Test condition validate | Direct instantiation | `new MyCondition()` then `condition.validate(args)` |
+| Test condition evaluate | Direct instantiation with owner | `setOwner(condition, getOwner(this))` then `condition.evaluate(args, context)` |
+
+> :exclamation: **Important:** The test helpers `withTestBlockRegistration` and `withTestConditionRegistration` take a **single callback parameter** (synchronous). They temporarily unfreeze the registries to allow registration during tests.
 
 ### Migration from Plugin Outlets
 
