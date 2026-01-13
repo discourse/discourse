@@ -130,8 +130,10 @@ class BlockDebugLogger {
    * @param {Array} [options.pages] - Page types to match (e.g., ["CATEGORY_PAGES"]).
    * @param {Object} [options.params] - Expected page params to match.
    * @param {string} [options.matchedPageType] - The page type that matched (if pages used).
+   * @param {string} [options.actualPageType] - The actual page type (when expected doesn't match).
    * @param {Object} [options.actualPageContext] - Actual page context values when checking params.
-   * @param {Object} options.actualQueryParams - Current query params.
+   * @param {Object} [options.expectedQueryParams] - Expected query params to match.
+   * @param {Object} [options.actualQueryParams] - Current query params.
    * @param {number} options.depth - Nesting depth for indentation.
    * @param {boolean} options.result - Whether the URL matched (true) or not (false).
    */
@@ -142,7 +144,9 @@ class BlockDebugLogger {
     pages,
     params,
     matchedPageType,
+    actualPageType,
     actualPageContext,
+    expectedQueryParams,
     actualQueryParams,
     depth,
     result,
@@ -158,7 +162,9 @@ class BlockDebugLogger {
       pages,
       params,
       matchedPageType,
+      actualPageType,
       actualPageContext,
+      expectedQueryParams,
       actualQueryParams,
       depth,
       result,
@@ -304,8 +310,8 @@ class BlockDebugLogger {
   #logTreeNode(log, hasChildren = false) {
     const { type, args, result, resolvedValue } = log;
 
-    // Handle route state (shows current URL and params/queryParams values)
-    // Uses checkmark/X to show whether URL matched
+    // Handle route state (shows current URL/page and params/queryParams values)
+    // Uses checkmark/X to show whether the route matched
     if (type === "route-state") {
       const {
         currentPath,
@@ -313,27 +319,73 @@ class BlockDebugLogger {
         excludeUrls: excludedUrls,
         pages,
         params,
-        matchedPageType,
+        actualPageType,
         actualPageContext,
+        expectedQueryParams,
         actualQueryParams,
         result: routeResult,
       } = log;
       const routeIcon = routeResult ? ICONS.passed : ICONS.failed;
       const routeStyle = routeResult ? STYLES.passed : STYLES.failed;
 
-      // Build configured value based on what options were used
-      const configured = {};
-      if (excludedUrls) {
-        configured.excludeUrls = excludedUrls;
-      } else if (expectedUrls) {
-        configured.urls = expectedUrls;
-      }
+      // When using pages option, show page type, params, and queryParams as siblings
       if (pages) {
-        configured.pages = pages;
+        // Page type matches if actualPageContext exists (regardless of params)
+        const pageTypeMatched = actualPageContext !== null;
+        const pageIcon = pageTypeMatched ? ICONS.passed : ICONS.failed;
+        const pageStyle = pageTypeMatched ? STYLES.passed : STYLES.failed;
+
+        let pageStatus;
+        if (pageTypeMatched) {
+          pageStatus = `on ${actualPageContext?.pageType || pages[0]}`;
+        } else {
+          // Show what page type they're actually on (if any)
+          const actualInfo = actualPageType
+            ? ` (actual: ${actualPageType})`
+            : "";
+          pageStatus = `not on ${pages.join(", ")}${actualInfo}`;
+        }
+
+        // eslint-disable-next-line no-console
+        console.log(`%c${pageIcon}%c ${pageStatus}`, pageStyle, "");
+
+        // Show params comparison when params were specified
+        if (params && actualPageContext) {
+          // Extract only the param values being checked from the full page context
+          const actualParams = {};
+          for (const key of Object.keys(params)) {
+            actualParams[key] = actualPageContext[key];
+          }
+
+          // Determine if params matched (all expected values equal actual values)
+          const paramsMatched = Object.entries(params).every(
+            ([key, expected]) => actualPageContext[key] === expected
+          );
+          const paramsIcon = paramsMatched ? ICONS.passed : ICONS.failed;
+          const paramsStyle = paramsMatched ? STYLES.passed : STYLES.failed;
+
+          // eslint-disable-next-line no-console
+          console.log(`%c${paramsIcon}%c params:`, paramsStyle, "", {
+            actual: actualParams,
+            expected: params,
+          });
+        }
+
+        // Show queryParams only when expected queryParams were specified
+        if (expectedQueryParams) {
+          // eslint-disable-next-line no-console
+          console.log("queryParams:", {
+            actual: actualQueryParams,
+            expected: expectedQueryParams,
+          });
+        }
+        return;
       }
-      if (params) {
-        configured.params = params;
-      }
+
+      // For urls option, show URL matching info
+      const configured = excludedUrls
+        ? { excludeUrls: excludedUrls }
+        : { urls: expectedUrls };
 
       // eslint-disable-next-line no-console
       console.groupCollapsed(`%c${routeIcon}%c current URL`, routeStyle, "", {
@@ -341,34 +393,13 @@ class BlockDebugLogger {
         configured,
       });
 
-      // Show page matching info when pages option is used
-      if (pages) {
-        if (matchedPageType) {
-          // eslint-disable-next-line no-console
-          console.log(
-            `%c${ICONS.passed}%c matched page type: ${matchedPageType}`,
-            STYLES.passed,
-            ""
-          );
-        } else {
-          // eslint-disable-next-line no-console
-          console.log(
-            `%c${ICONS.failed}%c no page type matched (not on any of: ${pages.join(", ")})`,
-            STYLES.failed,
-            ""
-          );
-        }
-      }
-
-      // Show actual page context values when available (for debugging param mismatches)
-      if (actualPageContext) {
+      // Show queryParams only when expected queryParams were specified
+      if (expectedQueryParams) {
         // eslint-disable-next-line no-console
-        console.log("actual page context:", actualPageContext);
-      }
-
-      if (actualQueryParams && Object.keys(actualQueryParams).length > 0) {
-        // eslint-disable-next-line no-console
-        console.log("queryParams:", actualQueryParams);
+        console.log("queryParams:", {
+          actual: actualQueryParams,
+          expected: expectedQueryParams,
+        });
       }
       // eslint-disable-next-line no-console
       console.groupEnd();

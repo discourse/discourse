@@ -473,7 +473,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       assert.strictEqual(dataArg.actual, "/latest", "includes actual URL");
       assert.deepEqual(
         dataArg.configured,
-        ["/c/**"],
+        { urls: ["/c/**"] },
         "includes configured URL patterns"
       );
     });
@@ -509,27 +509,35 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       );
     });
 
-    test("logs params and queryParams inside group", function (assert) {
+    test("logs page type and params as siblings when using pages", function (assert) {
       blockDebugLogger.startGroup("test-block", "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
-        args: { urls: ["/t/**"], params: { id: 123 } },
+        args: { pages: ["TOPIC_PAGES"], params: { id: 123 } },
         result: true,
         depth: 0,
       });
       blockDebugLogger.logRouteState({
         currentPath: "/t/my-topic/123",
-        expectedUrls: ["/t/**"],
-        excludeUrls: undefined,
-        actualParams: { id: 123, slug: "my-topic" },
+        pages: ["TOPIC_PAGES"],
+        params: { id: 123 },
+        matchedPageType: "TOPIC_PAGES",
+        actualPageContext: {
+          pageType: "TOPIC_PAGES",
+          id: 123,
+          slug: "my-topic",
+        },
         actualQueryParams: { page: "2" },
         depth: 1,
         result: true,
       });
       blockDebugLogger.endGroup(true);
 
-      // Check that params and queryParams were logged
+      // Page type and params should be logged as siblings
       const logCalls = this.consoleStub.log.getCalls();
+      const pageTypeCall = logCalls.find((call) =>
+        call.args[0]?.includes?.("on TOPIC_PAGES")
+      );
       const paramsCall = logCalls.find((call) =>
         call.args[0]?.includes?.("params:")
       );
@@ -537,8 +545,160 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
         call.args[0]?.includes?.("queryParams:")
       );
 
-      assert.true(!!paramsCall, "params were logged");
-      assert.true(!!queryParamsCall, "queryParams were logged");
+      assert.true(!!pageTypeCall, "page type was logged");
+      assert.true(!!paramsCall, "params comparison was logged");
+      assert.false(
+        !!queryParamsCall,
+        "queryParams not logged without expected"
+      );
+
+      // Verify params call includes both actual and expected
+      const paramsData = paramsCall.args[paramsCall.args.length - 1];
+      assert.deepEqual(
+        paramsData.actual,
+        { id: 123 },
+        "actual params extracted"
+      );
+      assert.deepEqual(
+        paramsData.expected,
+        { id: 123 },
+        "expected params included"
+      );
+    });
+
+    test("logs queryParams only when expected queryParams are specified", function (assert) {
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { pages: ["TOPIC_PAGES"], queryParams: { filter: "solved" } },
+        result: true,
+        depth: 0,
+      });
+      blockDebugLogger.logRouteState({
+        currentPath: "/t/my-topic/123",
+        pages: ["TOPIC_PAGES"],
+        actualPageContext: { pageType: "TOPIC_PAGES" },
+        expectedQueryParams: { filter: "solved" },
+        actualQueryParams: { filter: "solved", page: "2" },
+        depth: 1,
+        result: true,
+      });
+      blockDebugLogger.endGroup(true);
+
+      const logCalls = this.consoleStub.log.getCalls();
+      const queryParamsCall = logCalls.find((call) =>
+        call.args[0]?.includes?.("queryParams:")
+      );
+
+      assert.true(!!queryParamsCall, "queryParams was logged");
+
+      // Verify queryParams call includes both actual and expected
+      const queryParamsData =
+        queryParamsCall.args[queryParamsCall.args.length - 1];
+      assert.deepEqual(
+        queryParamsData.actual,
+        { filter: "solved", page: "2" },
+        "actual queryParams included"
+      );
+      assert.deepEqual(
+        queryParamsData.expected,
+        { filter: "solved" },
+        "expected queryParams included"
+      );
+    });
+
+    test("shows page type matched even when params do not match", function (assert) {
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { pages: ["CATEGORY_PAGES"], params: { categoryId: 1 } },
+        result: false,
+        depth: 0,
+      });
+      blockDebugLogger.logRouteState({
+        currentPath: "/c/general/4",
+        pages: ["CATEGORY_PAGES"],
+        params: { categoryId: 1 },
+        matchedPageType: null,
+        actualPageContext: {
+          pageType: "CATEGORY_PAGES",
+          categoryId: 4,
+          categorySlug: "general",
+        },
+        actualQueryParams: {},
+        depth: 1,
+        result: false,
+      });
+      blockDebugLogger.endGroup(false);
+
+      const logCalls = this.consoleStub.log.getCalls();
+
+      // Page type should show as matched (checkmark) because we ARE on CATEGORY_PAGES
+      const pageTypeCall = logCalls.find((call) =>
+        call.args[0]?.includes?.("on CATEGORY_PAGES")
+      );
+      assert.true(!!pageTypeCall, "page type was logged");
+      assert.true(
+        pageTypeCall.args[0].includes("\u2713"),
+        "shows checkmark for matching page type"
+      );
+
+      // Params should show as failed (X) because categoryId doesn't match
+      const paramsCall = logCalls.find((call) =>
+        call.args[0]?.includes?.("params:")
+      );
+      assert.true(!!paramsCall, "params was logged");
+      assert.true(
+        paramsCall.args[0].includes("\u2717"),
+        "shows X for non-matching params"
+      );
+
+      // Verify the actual vs expected values
+      const paramsData = paramsCall.args[paramsCall.args.length - 1];
+      assert.deepEqual(
+        paramsData.actual,
+        { categoryId: 4 },
+        "shows actual categoryId"
+      );
+      assert.deepEqual(
+        paramsData.expected,
+        { categoryId: 1 },
+        "shows expected categoryId"
+      );
+    });
+
+    test("shows actual page type when expected page type does not match", function (assert) {
+      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.logCondition({
+        type: "route",
+        args: { pages: ["CATEGORY_PAGES"], params: { categoryId: 1 } },
+        result: false,
+        depth: 0,
+      });
+      blockDebugLogger.logRouteState({
+        currentPath: "/t/my-topic/123",
+        pages: ["CATEGORY_PAGES"],
+        params: { categoryId: 1 },
+        matchedPageType: null,
+        actualPageType: "TOPIC_PAGES",
+        actualPageContext: null,
+        actualQueryParams: {},
+        depth: 1,
+        result: false,
+      });
+      blockDebugLogger.endGroup(false);
+
+      const logCalls = this.consoleStub.log.getCalls();
+
+      // Should show "not on CATEGORY_PAGES (actual: TOPIC_PAGES)"
+      const pageTypeCall = logCalls.find((call) =>
+        call.args[0]?.includes?.("not on CATEGORY_PAGES")
+      );
+      assert.true(!!pageTypeCall, "page type mismatch was logged");
+      assert.true(
+        pageTypeCall.args[0].includes("(actual: TOPIC_PAGES)"),
+        "shows actual page type"
+      );
     });
   });
 });

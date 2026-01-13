@@ -319,7 +319,9 @@ export default class BlockRouteCondition extends BlockCondition {
         pages,
         params,
         matchedPageType,
+        actualPageType: actualPageContext ? null : this.#getCurrentPageType(),
         actualPageContext,
+        expectedQueryParams: queryParams,
         actualQueryParams,
         depth: childDepth,
         result: routeMatched,
@@ -447,6 +449,21 @@ export default class BlockRouteCondition extends BlockCondition {
       default:
         return null;
     }
+  }
+
+  /**
+   * Determines the current page type by checking all known page types.
+   * Used for debugging to show what page the user is actually on.
+   *
+   * @returns {string|null} The current page type, or null if no match.
+   */
+  #getCurrentPageType() {
+    for (const pageType of VALID_PAGE_TYPES) {
+      if (this.#getPageContext(pageType) !== null) {
+        return pageType;
+      }
+    }
+    return null;
   }
 
   /**
