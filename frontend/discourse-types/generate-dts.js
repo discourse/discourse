@@ -91,44 +91,6 @@ for (const packageName of packageNames) {
   }
 }
 
-// TODO: is this handled?
-
-// output += `
-// declare module "@glint/ember-tsc/-private/dsl" {
-//   export {
-//     resolve,
-//     resolveOrReturn,
-//     templateExpression,
-//     Globals,
-//     AnyFunction,
-//     AnyContext,
-//     AnyBlocks,
-//     InvokeDirect,
-//     DirectInvokable,
-//     Invoke,
-//     InvokableInstance,
-//     Invokable,
-//     Context,
-//     HasContext,
-//     ModifierReturn,
-//     ComponentReturn,
-//     TemplateContext,
-//     FlattenBlockParams,
-//     NamedArgs,
-//     NamedArgsMarker,
-//     NamedArgNames,
-//     UnwrapNamedArgs,
-//   } from "./external-types/glint__ember-tsc/types/-private/dsl";
-// }
-// `;
-// cpSync(
-//   "./node_modules/@types/glint__ember-tsc/types/-private/dsl",
-//   "./external-types/glint__ember-tsc/-private/dsl",
-//   {
-//     recursive: true,
-//   }
-// );
-
 writeFileSync(`./${fileName}`, output);
-
-// console.log(`Done, written to: ${fileName}`);
+// eslint-disable-next-line no-console
+console.log(`Done, written to: ${fileName}`);
