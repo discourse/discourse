@@ -3,8 +3,8 @@ import { raiseBlockError } from "discourse/lib/blocks/error";
 
 module("Unit | Blocks | error", function () {
   module("raiseBlockError", function () {
-    test("includes tree-style breadcrumb when rootConfig is provided", function (assert) {
-      const rootConfig = [
+    test("includes tree-style breadcrumb when rootLayout is provided", function (assert) {
+      const rootLayout = [
         { block: { blockName: "Block1" }, args: { name: "first" } },
         { block: { blockName: "Block2" }, args: { name: "second" } },
         {
@@ -20,7 +20,7 @@ module("Unit | Blocks | error", function () {
       try {
         raiseBlockError("Invalid arg name", {
           path: "[2].children[1].args.nme",
-          rootConfig,
+          rootLayout,
         });
         assert.true(false, "should have thrown");
       } catch (error) {
@@ -44,7 +44,7 @@ module("Unit | Blocks | error", function () {
     });
 
     test("shows nested config context from root to error", function (assert) {
-      const rootConfig = [
+      const rootLayout = [
         { block: { blockName: "Block1" }, args: { name: "first" } },
         {
           block: { blockName: "BlockGroup" },
@@ -56,7 +56,7 @@ module("Unit | Blocks | error", function () {
       try {
         raiseBlockError("Validation error", {
           path: "[1].children[0].args.bad",
-          rootConfig,
+          rootLayout,
         });
         assert.true(false, "should have thrown");
       } catch (error) {
@@ -72,14 +72,14 @@ module("Unit | Blocks | error", function () {
     });
 
     test("uses path when errorPath is not provided", function (assert) {
-      const rootConfig = [
+      const rootLayout = [
         { block: { blockName: "TestBlock" }, args: { name: "test" } },
       ];
 
       try {
         raiseBlockError("Block error", {
           path: "[0]",
-          rootConfig,
+          rootLayout,
         });
         assert.true(false, "should have thrown");
       } catch (error) {
@@ -111,7 +111,7 @@ module("Unit | Blocks | error", function () {
     test("paths without prefix correctly expand nested config", function (assert) {
       // Paths must start with array index (e.g., "[2]") not a string prefix
       // (e.g., "blocks[2]") for the formatter to match them to the config array
-      const rootConfig = [
+      const rootLayout = [
         { block: { blockName: "Block1" }, args: { name: "first" } },
         { block: { blockName: "Block2" }, args: { name: "second" } },
         {
@@ -125,7 +125,7 @@ module("Unit | Blocks | error", function () {
         raiseBlockError("Validation error", {
           // Path starts with array index, no "blocks" prefix
           path: "[2].children[0].args.bad",
-          rootConfig,
+          rootLayout,
         });
         assert.true(false, "should have thrown");
       } catch (error) {
@@ -151,7 +151,7 @@ module("Unit | Blocks | error", function () {
     test("expands nested config even with deeply nested error path", function (assert) {
       // This test mimics the CORRECT validation scenario where the path
       // starts with array index (no "blocks" prefix)
-      const rootConfig = [
+      const rootLayout = [
         { block: { blockName: "Block1" }, args: { name: "first" } },
         { block: { blockName: "Block2" }, args: { name: "second" } },
         { block: { blockName: "Block3" }, args: { name: "third" } },
@@ -170,7 +170,7 @@ module("Unit | Blocks | error", function () {
       try {
         raiseBlockError("Invalid arg", {
           path: "[4].children[2].args.nme",
-          rootConfig,
+          rootLayout,
         });
         assert.true(false, "should have thrown");
       } catch (error) {
