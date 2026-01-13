@@ -29,7 +29,11 @@ export default class CreateTopicButton extends Component {
       }
     );
 
-    return concatClass(this.btnTypeClass, ...additionalClasses);
+    return concatClass(
+      this.args.btnClass,
+      this.btnTypeClass,
+      ...additionalClasses
+    );
   }
 
   <template>
