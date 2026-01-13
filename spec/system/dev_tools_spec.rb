@@ -91,6 +91,27 @@ describe "Discourse dev tools", type: :system do
         expect(block_debug).to have_conditions
       end
 
+      it "shows conditions as failed with condition type" do
+        visit("/latest") # Anonymous user, admin condition fails
+        toolbar.enable
+        toolbar.toggle_block_visual_overlay
+
+        block_debug.hover_ghost_badge("theme:dev-tools-test:dev-tools-conditional-block")
+        expect(block_debug).to have_failed_conditions
+        expect(block_debug).to have_condition_type("user")
+      end
+
+      it "shows multiple condition types for combined conditions" do
+        visit("/latest") # Anonymous user, admin + TL2 condition fails
+        toolbar.enable
+        toolbar.toggle_block_visual_overlay
+
+        block_debug.hover_ghost_badge("theme:dev-tools-test:debug-conditions-block")
+        expect(block_debug).to have_failed_conditions
+        expect(block_debug).to have_condition_type("AND")
+        expect(block_debug).to have_condition_type("user")
+      end
+
       it "shows block args values in tooltip" do
         visit("/latest")
         toolbar.enable

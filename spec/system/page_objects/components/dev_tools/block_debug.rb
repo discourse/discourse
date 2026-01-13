@@ -113,6 +113,22 @@ module PageObjects
         def has_conditions?
           page.has_css?(".block-debug-conditions")
         end
+
+        def has_failed_conditions?
+          page.has_css?(".block-debug-conditions.--failed")
+        end
+
+        def has_passed_conditions?
+          page.has_css?(".block-debug-conditions.--passed")
+        end
+
+        def has_condition_type?(type)
+          page.has_css?(".block-debug-condition__type", text: type)
+        end
+
+        def condition_types
+          page.all(".block-debug-condition__type").map(&:text)
+        end
       end
     end
   end

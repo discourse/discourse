@@ -110,6 +110,45 @@ describe "Block conditions", type: :system do
     end
   end
 
+  describe "route navigation (SPA)" do
+    before { sign_in(trust_level_2_user) }
+
+    it "re-evaluates blocks when navigating from discovery to topic via click" do
+      visit("/latest")
+
+      expect(blocks).to have_block("route-discovery")
+      expect(blocks).to have_no_block("route-topic")
+
+      find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+
+      expect(blocks).to have_block("route-topic")
+      expect(blocks).to have_no_block("route-discovery")
+    end
+
+    it "re-evaluates blocks when navigating from topic back to discovery" do
+      visit("/t/#{topic.slug}/#{topic.id}")
+
+      expect(blocks).to have_block("route-topic")
+      expect(blocks).to have_no_block("route-discovery")
+
+      find("#site-logo").click
+
+      expect(blocks).to have_block("route-discovery")
+      expect(blocks).to have_no_block("route-topic")
+    end
+
+    it "re-evaluates combined conditions when navigating to category page" do
+      sign_in(admin)
+      visit("/latest")
+
+      expect(blocks).to have_no_block("combined-admin-category")
+
+      find(".sidebar-section-link", text: category.name).click
+
+      expect(blocks).to have_block("combined-admin-category")
+    end
+  end
+
   describe "setting conditions" do
     before { sign_in(trust_level_2_user) }
 
