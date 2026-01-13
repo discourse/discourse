@@ -71,7 +71,7 @@ for (const packageName of packageNames) {
     // console.log(relativePath);
 
     const modulePath = [
-      packageName,
+      packageName.replace(/@types\//, ""),
       relativePath
         .replace(exportedDtsPaths.get(relativePath), "")
         .replace(/^\//, "")
