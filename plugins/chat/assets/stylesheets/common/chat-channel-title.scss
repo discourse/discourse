@@ -12,10 +12,6 @@
     overflow: hidden;
   }
 
-  .user-status-message {
-    display: none; // we only show when in channels list
-  }
-
   &__user-status-message {
     flex-shrink: 3;
     overflow: hidden;
