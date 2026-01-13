@@ -7,6 +7,7 @@ class UpcomingChanges::List
   model :upcoming_changes, optional: true
   step :load_upcoming_change_groups
   step :sort_changes
+  step :update_last_visited
 
   private
 
@@ -75,5 +76,12 @@ class UpcomingChanges::List
 
   def sort_changes(upcoming_changes:)
     context[:upcoming_changes] = upcoming_changes.sort_by { |change| change[:setting] }
+  end
+
+  def update_last_visited(guardian:)
+    return if guardian.user.is_system_user?
+
+    guardian.user.custom_fields["last_visited_upcoming_changes_at"] = Time.current.iso8601
+    guardian.user.save_custom_fields
   end
 end

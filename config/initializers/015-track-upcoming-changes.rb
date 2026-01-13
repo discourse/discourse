@@ -81,16 +81,6 @@ class UpcomingChanges::TrackingInitializer
           )
         end
       end
-
-      # ---
-      #
-      # For "Upcoming changes *" in sidebar:
-      #   * Add `last_visited_upcoming_changes`  datetime in the user table
-      #   * Only serialize for admins and moderators
-      #   * If there is an added (0) event created > `last_visited_upcoming_changes` then  show the dot
-      #   * Update `last_visited_upcoming_changes` when  going to /admin/config/upcoming-changes
-      #   * (?) Maybe add a way to filter only "new" items on the upcoming change page? Or at least see
-      #   the log entries?
     end
   end
 end

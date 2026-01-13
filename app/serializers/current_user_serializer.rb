@@ -76,6 +76,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
+             :has_new_upcoming_changes,
              :can_see_emails,
              :can_localize_content?,
              :effective_locale,
@@ -148,6 +149,18 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_has_unseen_features?
     object.staff?
+  end
+
+  def has_new_upcoming_changes
+    last_visited = object.custom_fields["last_visited_upcoming_changes_at"]
+
+    scope = UpcomingChangeEvent.added
+    scope = scope.where("created_at > ?", Time.zone.parse(last_visited)) if last_visited.present?
+    scope.exists?
+  end
+
+  def include_has_new_upcoming_changes?
+    SiteSetting.enable_upcoming_changes && object.staff?
   end
 
   def can_post_anonymously
