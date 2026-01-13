@@ -57,7 +57,6 @@ for (const packageName of packageNames) {
   cpSync(`${packagePath}/package.json`, `${targetPackagePath}/package.json`);
 
   const exportedDtsPaths = processPackageJson(packageJson, packagePath);
-  // console.log(exportedDtsPaths);
 
   const dtsPaths = globSync(`${packagePath}/**/*.d.{ts,mts,cts}`);
   for (const path of dtsPaths) {
@@ -67,8 +66,6 @@ for (const packageName of packageNames) {
     mkdirSync(`${targetPackagePath}/${dirname(relativePath)}`, {
       recursive: true,
     });
-
-    // console.log(relativePath);
 
     const modulePath = [
       packageName.replace(/@types\//, ""),
@@ -80,10 +77,6 @@ for (const packageName of packageNames) {
       .filter(Boolean)
       .join("/");
     const moduleDefinition = `declare module "${modulePath}" {`;
-
-    // console.log(
-    //   `path: ${path}\nmap: ${exportedDtsPaths.get(relativePath)}\nmodulePath: ${modulePath}`
-    // );
 
     if (!dts.includes(moduleDefinition)) {
       dts = `${moduleDefinition}\n${dts}\n}`;

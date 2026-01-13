@@ -66,8 +66,4 @@ export default function processPackageJson(packageJson, packagePath) {
   }
 
   return expandedPaths;
-
-  // need to return the map and then use it in expand to get
-  // module paths
-  // return [...paths.values()];
 }
