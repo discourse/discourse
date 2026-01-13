@@ -37,8 +37,7 @@ class ReviewablePost < Reviewable
     super
   end
 
-  # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     if post.trashed? && guardian.can_recover_post?(post)
       build_action(actions, :approve_and_restore, icon: "check")
     elsif post.hidden?

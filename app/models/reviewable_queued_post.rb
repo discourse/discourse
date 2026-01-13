@@ -38,8 +38,7 @@ class ReviewableQueuedPost < Reviewable
     reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
-  # TODO (reviewable-refresh): Remove this method once new UI is fully deployed
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     unless approved?
       if topic&.closed?
         build_action(actions, :approve_post_closed, icon: "check", confirm: true)

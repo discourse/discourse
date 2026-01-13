@@ -317,10 +317,7 @@ describe "Reviewables", type: :system do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:reviewable, :reviewable_queued_post)
 
-    before do
-      SiteSetting.reviewable_old_moderator_actions = false
-      group.add(admin)
-    end
+    before { group.add(admin) }
 
     it "displays the custom guide topic link when configured" do
       SiteSetting.moderator_guide_topic = topic.id

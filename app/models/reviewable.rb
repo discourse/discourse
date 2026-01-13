@@ -34,7 +34,6 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
-  has_many :reviewable_action_logs, -> { order(created_at: :asc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -356,10 +355,6 @@ class Reviewable < ActiveRecord::Base
 
     validate_action!(guardian, action_id, perform_method, args)
 
-    # Bundle needs to be determined before the action is performed, as bundles
-    # are dynamic based on the state of the reviewable.
-    action_bundle_id = get_action_bundle_id(guardian, action_id, args)
-
     result = nil
     update_count = false
     Reviewable.transaction do
@@ -369,36 +364,10 @@ class Reviewable < ActiveRecord::Base
       raise ActiveRecord::Rollback unless result.success?
 
       if result.transition_to
-        reviewable_action_logs.create!(
-          action_key: action_id.to_s,
-          status: result.transition_to,
-          performed_by: performed_by,
-          bundle: action_bundle_id,
-        )
-      end
-
-      if SiteSetting.reviewable_old_moderator_actions
-        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+        update_count = transition_to(result.transition_to, performed_by)
         update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
         recalculate_score if result.recalculate_score
-      else
-        Review::CalculateFinalStatusFromLogs.call(
-          params: {
-            reviewable_id: id,
-            guardian: guardian,
-            args: args,
-          },
-        ) do
-          on_success do |status:|
-            unless status == :pending
-              update_count = transition_to(status, performed_by)
-              update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
-
-              recalculate_score if result.recalculate_score
-            end
-          end
-        end
       end
     end
 
@@ -891,25 +860,6 @@ class Reviewable < ActiveRecord::Base
     if action_aliases.none? { |a| actions.has?(a) } || !respond_to?(perform_method)
       raise InvalidAction.new(action_id, self.class)
     end
-  end
-
-  def get_action_bundle_id(guardian, action_id, args)
-    action_aliases = [
-      action_id,
-      aliases.to_a.select { |k, v| v == action_id }.map(&:first),
-    ].flatten.map(&:to_s)
-
-    actions = actions_for(guardian, args)
-    bundle_id = nil
-    actions.bundles.each do |bundle|
-      if bundle.actions.any? { |a| action_aliases.include?(a.server_action.to_s) }
-        bundle_id = bundle.bundle_id
-        break
-      end
-    end
-
-    # For old UI actions that aren't in the new separated bundles, use a default bundle
-    bundle_id ||= "legacy-actions"
   end
 
   def update_flag_stats(status:, user_ids:)

@@ -82,27 +82,32 @@ module ReviewableActionBuilder
     @guardian = guardian
     @action_args = args
 
-    if !SiteSetting.reviewable_old_moderator_actions
-      build_new_separated_actions
-    else
+    # For backward compatibility with plugins that override build_legacy_combined_actions
+    if method(:build_legacy_combined_actions).owner != ReviewableActionBuilder
       build_legacy_combined_actions(actions, guardian, args)
+    else
+      build_combined_actions(actions, guardian, args)
     end
   end
 
-  # Build legacy combined actions for the reviewable.
+  # Build combined actions for the reviewable.
   #
   # Classes that include this module should implement this method to define
-  # the legacy combined actions for their specific reviewable type.
-  #
-  # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
+  # the combined actions for their specific reviewable type.
   #
   # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
   # @param guardian [Guardian] Guardian instance to check permissions.
   # @param args [Hash] Additional arguments for building actions.
   #
   # @return [void]
+  def build_combined_actions(actions, guardian, args)
+    raise NotImplementedError, "Including class must implement #build_combined_actions"
+  end
+
+  # Deprecated: Use build_combined_actions instead.
+  # This method exists for backward compatibility with plugins.
   def build_legacy_combined_actions(actions, guardian, args)
-    raise NotImplementedError, "Including class must implement #build_legacy_combined_actions"
+    raise NotImplementedError, "Including class must implement #build_combined_actions"
   end
 
   # Build new separated actions for the reviewable.
