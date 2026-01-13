@@ -19,6 +19,7 @@ const packageNames = [
   "@glimmer/component",
   "@glimmer/syntax",
   // "@glimmer/tracking", ?
+  "@glint/ember-tsc",
   "@glint/template",
   "@types/qunit",
   "@types/rsvp",
