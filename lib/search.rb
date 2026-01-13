@@ -1242,13 +1242,12 @@ class Search
       if is_topic_search
         term_without_quote = @term
         term_without_quote = $1 if @term =~ /"(.+)"/
-
         term_without_quote = $1 if @term =~ /'(.+)'/
 
         posts = posts.joins("JOIN users u ON u.id = posts.user_id")
         posts =
           posts.where(
-            "posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?",
+            "posts.raw || ' ' || post_search_data.raw_data || ' ' || u.username || ' ' || COALESCE(u.name, '') ILIKE ?",
             "%#{term_without_quote}%",
           )
       else
@@ -1258,7 +1257,7 @@ class Search
 
         exact_terms.each do |exact|
           posts =
-            posts.where("posts.raw ilike :exact OR topics.title ilike :exact", exact: "%#{exact}%")
+            posts.where("posts.raw ILIKE :exact OR topics.title ILIKE :exact", exact: "%#{exact}%")
         end
       end
     end
@@ -1285,16 +1284,14 @@ class Search
               .pluck(:id)
               .push(@search_context.id)
 
-          posts.where("topics.category_id in (?)", category_ids)
+          posts.where("topics.category_id IN (?)", category_ids)
         elsif is_topic_search
           posts = posts.where("topics.id = ?", @search_context.id)
           posts = posts.order("posts.post_number ASC") unless @order
           posts
         elsif @search_context.is_a?(Tag)
-          posts =
-            posts.joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id").joins(
-              "LEFT JOIN tags ON tags.id = topic_tags.tag_id",
-            )
+          posts = posts.joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id")
+          posts = posts.joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
           posts.where("tags.id = ?", @search_context.id)
         end
       else
@@ -1316,14 +1313,8 @@ class Search
         end
     end
 
-    posts =
-      apply_order(
-        posts,
-        aggregate_search: aggregate_search,
-        allow_relevance_search: !is_topic_search,
-        type_filter: type_filter,
-      )
-
+    allow_relevance_search = !is_topic_search
+    posts = apply_order(posts, aggregate_search:, allow_relevance_search:, type_filter:)
     posts = posts.offset(offset)
     posts.limit(limit)
   end

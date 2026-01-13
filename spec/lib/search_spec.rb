@@ -1412,6 +1412,14 @@ RSpec.describe Search do
         results = Search.execute("discourse", search_context: topic)
         expect(results.posts.length).to eq(1)
       end
+
+      it "finds content only present in cooked HTML" do
+        post = new_post("check out this link")
+        post.post_search_data.update!(raw_data: "check out this link Example Site Title")
+
+        results = Search.execute("Example Site Title", search_context: post.topic)
+        expect(results.posts.map(&:id)).to eq([post.id])
+      end
     end
 
     context "when searching the OP" do
