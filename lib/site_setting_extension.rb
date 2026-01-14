@@ -242,7 +242,7 @@ module SiteSettingExtension
     ""
   end
 
-  def client_settings_json_uncached
+  def client_settings_json_uncached(return_defaults: false)
     uncached_json =
       @client_settings.filter_map do |name|
         # Themeable site settings require a theme ID, which we do not always
@@ -251,7 +251,9 @@ module SiteSettingExtension
         next if themeable[name]
 
         value =
-          if deprecated_settings.include?(name.to_s)
+          if return_defaults
+            SiteSetting.defaults[name]
+          elsif deprecated_settings.include?(name.to_s)
             public_send(name, warn: false)
           else
             public_send(name)
@@ -260,7 +262,7 @@ module SiteSettingExtension
         type = type_supervisor.get_type(name)
         if type == :upload
           value = value.to_s
-        elsif type == :uploaded_image_list
+        elsif type == :uploaded_image_list && value.present?
           value = value.map(&:to_s).join("|")
         end
 
