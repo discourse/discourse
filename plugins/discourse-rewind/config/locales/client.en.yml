@@ -110,7 +110,7 @@ en:
         assignments:
           title: Assignments
           total_assigned: Assigned to me
-          total_assigned_others: Assigned to them
+          total_assigned_others: "Assigned to %{username}"
           completed: Assignments completed
           pending: Assignments pending
           assigned_by_user: Assignments given
@@ -130,18 +130,13 @@ en:
           channel_title: "#chat-activity"
           status_online: "● online"
           message_1: "You sent <strong>%{count}</strong> messages this year!"
-          message_1_others: "%{username} sent <strong>%{count}</strong> messages this year!"
           reply_1: "lol awesome B-)"
           message_2: "You had <strong>%{dm_count}</strong> DM conversations with <strong>%{channel_count}</strong> different people or groups"
-          message_2_others: "%{username} had <strong>%{dm_count}</strong> DM conversations with <strong>%{channel_count}</strong> different people or groups"
           reply_2: "cOo0oL :D"
           message_3: "People loved your messages! You got <strong>%{count}</strong> reactions ❤️"
-          message_3_others: "People loved their messages! They got <strong>%{count}</strong> reactions ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "Your average message length was <strong>%{length}</strong> characters"
-          message_4_others: "Their average message length was <strong>%{length}</strong> characters"
           message_5: "Your favorite channels:"
-          message_5_others: "Their favorite channels:"
           dancing_baby_alt: "Dancing baby"
         favorite_gifs:
           title:
@@ -160,7 +155,7 @@ en:
           redemption_rate: Acceptance Rate
           avg_trust_level: Avg Trust Level
           invitee_impact: Impact of Your Invitees
-          invitee_impact_others: Impact of Their Invitees
+          invitee_impact_others: "Impact of %{username}'s Invitees"
           invitee_posts: Posts Created
           invitee_topics: Topics Started
           invitee_likes: Likes Given
@@ -194,11 +189,11 @@ en:
           mentions: Mentions
           topics_with_new_users: Topics with New Users
           contributions_helped: your contributions helped
-          contributions_helped_others: their contributions helped
+          contributions_helped_others: "%{username}'s contributions helped"
         time_of_day_activity:
           title: Daily Activity Rhythm
           play_button: Play your activity as sound
-          play_button_others: Play their activity as sound
+          play_button_others: "Play %{username}'s activity as sound"
           stop_button: Stop audio playback
         writing_analysis:
           title: Writing Analysis

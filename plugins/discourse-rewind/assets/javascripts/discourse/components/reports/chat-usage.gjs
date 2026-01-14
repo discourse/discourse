@@ -61,56 +61,32 @@ export default class ChatUsage extends Component {
   }
 
   get message1Text() {
-    return i18nForOwner(
-      "discourse_rewind.reports.chat_usage.message_1",
-      this.args.isOwnRewind,
-      {
-        count: this.args.report.data.total_messages,
-        username: this.args.user?.username,
-      }
-    );
+    return i18n("discourse_rewind.reports.chat_usage.message_1", {
+      count: this.args.report.data.total_messages,
+    });
   }
 
   get message2Text() {
-    return i18nForOwner(
-      "discourse_rewind.reports.chat_usage.message_2",
-      this.args.isOwnRewind,
-      {
-        dm_count: this.args.report.data.dm_message_count,
-        channel_count: this.args.report.data.unique_dm_channels,
-        username: this.args.user?.username,
-      }
-    );
+    return i18n("discourse_rewind.reports.chat_usage.message_2", {
+      dm_count: this.args.report.data.dm_message_count,
+      channel_count: this.args.report.data.unique_dm_channels,
+    });
   }
 
   get message3Text() {
-    return i18nForOwner(
-      "discourse_rewind.reports.chat_usage.message_3",
-      this.args.isOwnRewind,
-      {
-        count: this.args.report.data.total_reactions_received,
-        username: this.args.user?.username,
-      }
-    );
+    return i18n("discourse_rewind.reports.chat_usage.message_3", {
+      count: this.args.report.data.total_reactions_received,
+    });
   }
 
   get message4Text() {
-    return i18nForOwner(
-      "discourse_rewind.reports.chat_usage.message_4",
-      this.args.isOwnRewind,
-      {
-        length: this.args.report.data.avg_message_length,
-        username: this.args.user?.username,
-      }
-    );
+    return i18n("discourse_rewind.reports.chat_usage.message_4", {
+      length: this.args.report.data.avg_message_length,
+    });
   }
 
   get message5Text() {
-    return i18nForOwner(
-      "discourse_rewind.reports.chat_usage.message_5",
-      this.args.isOwnRewind,
-      { username: this.args.user?.username }
-    );
+    return i18n("discourse_rewind.reports.chat_usage.message_5");
   }
 
   <template>
