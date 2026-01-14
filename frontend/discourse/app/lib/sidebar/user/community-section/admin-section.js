@@ -15,11 +15,7 @@ export default class extends CommonCommunitySection {
 
   get moreSectionButtonText() {
     return i18n(
-      `sidebar.sections.community.edit_section.${
-        this.navigationMenu.isDesktopDropdownMode
-          ? "header_dropdown"
-          : "sidebar"
-      }`
+      `sidebar.sections.community.edit_section.${this.navigationMenu.displayMode}`
     );
   }
 
