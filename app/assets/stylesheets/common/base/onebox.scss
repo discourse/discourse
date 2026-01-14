@@ -604,11 +604,18 @@ pre.onebox code ol.lines li.selected {
     vertical-align: text-bottom;
   }
 
-  .labels span {
-    // !important required to override inline style attribute
-    background-color: var(--primary-medium) !important;
-    color: var(--secondary) !important;
-    padding: 2px 4px !important;
+  .labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em;
+
+    span {
+      // !important required to override inline style attribute
+      background-color: var(--primary-medium) !important;
+      color: var(--secondary) !important;
+      padding: 2px 4px !important;
+      white-space: nowrap;
+    }
   }
 
   .emoji {
