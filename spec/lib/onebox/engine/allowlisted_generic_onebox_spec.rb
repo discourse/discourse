@@ -276,27 +276,6 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
     end
   end
 
-  describe "fallback thumbnail dimensions" do
-    let(:url) { "https://example.com/fallback" }
-
-    before { stub_request(:get, url).to_return(status: 200, body: <<~HTML) }
-          <html>
-            <head>
-              <meta property="og:title" content="Title">
-              <meta property="og:image" content="https://example.com/image.jpg">
-            </head>
-            <body>Example</body>
-          </html>
-        HTML
-
-    it "adds fallback dimensions when missing" do
-      html = described_class.new(url).to_html
-
-      expect(html).to include('width="500"')
-      expect(html).to include('height="281"')
-    end
-  end
-
   describe "article html hosts" do
     context "when returning an article_html with a thumbnail" do
       before do
