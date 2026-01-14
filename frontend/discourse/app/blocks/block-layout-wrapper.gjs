@@ -8,18 +8,18 @@
  *
  * @module discourse/blocks/block-layout-wrapper
  */
-import { concat } from "@ember/helper";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import cssName from "discourse/helpers/css-name";
 
 /**
- * Wraps a non-container block in a standard layout wrapper.
- * This provides consistent styling and class naming for all blocks.
+ * Wraps a block in a standard layout wrapper with BEM-style classes.
  *
  * @param {Object} blockData - Block rendering data.
  * @param {string} blockData.name - The block's registered name.
- * @param {string} [blockData.classNames] - Additional CSS classes.
+ * @param {boolean} blockData.isContainer - Whether this is a container block.
+ * @param {string} [blockData.containerClassNames] - Extra CSS classes from decorator (container blocks only).
+ * @param {string} [blockData.classNames] - Additional CSS classes from layout entry.
  * @param {import("ember-curry-component").CurriedComponent} blockData.Component - The curried block component.
  * @param {import("@ember/owner").default} owner - The application owner for currying.
  * @returns {import("ember-curry-component").CurriedComponent} The wrapped component.
@@ -29,55 +29,44 @@ export function wrapBlockLayout(blockData, owner) {
 }
 
 /**
- * Template-only component that wraps non-container blocks.
+ * Generates the appropriate CSS class based on block type.
  *
- * Generates BEM-style class names:
+ * @param {string} outletName - The outlet name.
+ * @param {string} name - The block name.
+ * @param {boolean} isContainer - Whether this is a container block.
+ * @returns {string} The generated CSS class string.
+ */
+function blockClass(outletName, name, isContainer) {
+  const safeName = cssName(name);
+  const safeOutlet = cssName(outletName);
+
+  if (isContainer) {
+    return [`block__${safeName}`, `${safeOutlet}__${safeName}`];
+  }
+
+  return [`${safeOutlet}__block`, `block-${safeName}`];
+}
+
+/**
+ * Template-only component that wraps all blocks.
+ *
+ * Generates BEM-style class names based on block type:
+ *
+ * For non-container blocks:
  * - `{outletName}__block` - Identifies this as a block within the outlet
  * - `block-{name}` - Identifies the specific block type
- * - Custom classNames from configuration
+ *
+ * For container blocks:
+ * - `block__{name}` - Identifies the container block type
+ * - `{outletName}__{name}` - Identifies this as a container within the outlet
+ * - Custom containerClassNames from decorator
+ *
+ * Both types include custom classNames from layout entry configuration.
  */
 const WrappedBlockLayout = <template>
   <div
     class={{concatClass
-      (concat (cssName @outletName) "__block")
-      (concat "block-" (cssName @name))
-      @classNames
-    }}
-  >
-    <@Component />
-  </div>
-</template>;
-
-/**
- * Wraps a container block in a standard layout wrapper.
- * This provides consistent styling and class naming for container blocks.
- *
- * @param {Object} blockData - Block rendering data.
- * @param {string} blockData.name - The block's registered name.
- * @param {string} [blockData.containerClassNames] - Extra CSS classes from decorator (resolved).
- * @param {string} [blockData.classNames] - Additional CSS classes from layout entry.
- * @param {import("ember-curry-component").CurriedComponent} blockData.Component - The curried block component.
- * @param {import("@ember/owner").default} owner - The application owner for currying.
- * @returns {import("ember-curry-component").CurriedComponent} The wrapped component.
- */
-export function wrapContainerBlockLayout(blockData, owner) {
-  return curryComponent(WrappedContainerBlockLayout, blockData, owner);
-}
-
-/**
- * Template-only component that wraps container blocks.
- *
- * Generates BEM-style class names:
- * - `block__{name}` - Identifies the container block type
- * - `{outletName}__{name}` - Identifies this as a container within the outlet
- * - Custom containerClassNames from decorator
- * - Custom classNames from layout entry configuration
- */
-const WrappedContainerBlockLayout = <template>
-  <div
-    class={{concatClass
-      (concat "block__" (cssName @name))
-      (concat (cssName @outletName) "__" (cssName @name))
+      (blockClass @outletName @name @isContainer)
       @containerClassNames
       @classNames
     }}

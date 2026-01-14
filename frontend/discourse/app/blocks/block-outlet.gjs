@@ -56,10 +56,7 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
-import {
-  wrapBlockLayout,
-  wrapContainerBlockLayout,
-} from "./block-layout-wrapper";
+import { wrapBlockLayout } from "./block-layout-wrapper";
 
 /**
  * Maps outlet names to their registered outlet layouts.
@@ -743,7 +740,7 @@ function processBlockEntries({
     }
 
     const blockName = resolvedBlock.blockName || "unknown";
-    const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
+    const isContainer = isContainerBlock(resolvedBlock);
 
     // Use the stable key assigned at registration time. This key survives
     // shallow cloning and ensures DOM identity is maintained when blocks
@@ -751,7 +748,7 @@ function processBlockEntries({
     const key = `${blockName}:${entry.__stableKey}`;
 
     // For containers, build their full path for children's hierarchy
-    const containerPath = isChildContainer
+    const containerPath = isContainer
       ? buildContainerPath(blockName, baseHierarchy, containerCounts)
       : undefined;
 
@@ -779,7 +776,7 @@ function processBlockEntries({
         entry,
         hierarchy: baseHierarchy,
         containerPath,
-        isContainer: isChildContainer,
+        isContainer,
         owner,
         outletArgs,
         isLoggingEnabled,
@@ -903,7 +900,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
     classNames,
     children: nestedChildren,
   } = entry;
-  const isChildContainer = ComponentClass[__BLOCK_CONTAINER_FLAG];
+  const isContainer = isContainerBlock(ComponentClass);
 
   // Apply default values from metadata before building args
   const argsWithDefaults = applyArgDefaults(ComponentClass, args);
@@ -913,9 +910,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
   const blockArgs = createBlockArgsWithReactiveGetters(
     argsWithDefaults,
     nestedChildren,
-    isChildContainer
-      ? debugContext.containerPath
-      : debugContext.displayHierarchy,
+    isContainer ? debugContext.containerPath : debugContext.displayHierarchy,
     debugContext.outletArgs
   );
 
@@ -923,29 +918,22 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // without knowing its configuration details
   const curried = curryComponent(ComponentClass, blockArgs, owner);
 
-  // All blocks are wrapped for consistent styling.
-  // Container blocks use wrapContainerBlockLayout, non-containers use wrapBlockLayout.
-  let wrappedComponent = isChildContainer
-    ? wrapContainerBlockLayout(
-        {
-          name: ComponentClass.blockName,
-          containerClassNames: resolveContainerClassNames(
+  // All blocks are wrapped for consistent styling
+  let wrappedComponent = wrapBlockLayout(
+    {
+      name: ComponentClass.blockName,
+      isContainer,
+      containerClassNames: isContainer
+        ? resolveContainerClassNames(
             ComponentClass.blockMetadata,
             argsWithDefaults
-          ),
-          classNames,
-          Component: curried,
-        },
-        owner
-      )
-    : wrapBlockLayout(
-        {
-          classNames,
-          name: ComponentClass.blockName,
-          Component: curried,
-        },
-        owner
-      );
+          )
+        : null,
+      classNames,
+      Component: curried,
+    },
+    owner
+  );
 
   // Apply debug callback if present (for visual overlay)
   const debugCallback = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
@@ -1531,7 +1519,7 @@ class BlockOutletRootContainer extends Component {
       }
 
       const blockName = resolvedBlock.blockName || "unknown";
-      const isChildContainer = resolvedBlock[__BLOCK_CONTAINER_FLAG] ?? false;
+      const isContainer = isContainerBlock(resolvedBlock);
 
       // Evaluate this block's own conditions.
       // The withDebugGroup wrapper ensures START_GROUP/END_GROUP are always paired.
@@ -1549,7 +1537,7 @@ class BlockOutletRootContainer extends Component {
       // For containers: recursively process children first (bottom-up evaluation)
       // This determines which children are visible before we check if container has any
       let hasVisibleChildren = true; // Non-containers always "have" visible children
-      if (isChildContainer && entryClone.children?.length) {
+      if (isContainer && entryClone.children?.length) {
         // Recursively preprocess children - this computes their visibility
         const processedChildren = this.#preprocessEntries(
           entryClone.children,
