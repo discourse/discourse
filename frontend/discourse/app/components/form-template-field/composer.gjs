@@ -18,7 +18,7 @@ export default class FormTemplateFieldComposer extends Component {
   }
 
   <template>
-    <div class="control-group form-template-field" data-field-type="input">
+    <div class="control-group form-template-field" data-field-type="composer">
       {{#if @attributes.label}}
         <label class="form-template-field__label">
           {{@attributes.label}}
@@ -33,9 +33,7 @@ export default class FormTemplateFieldComposer extends Component {
           {{htmlSafe @attributes.description}}
         </span>
       {{/if}}
-
       <input type="hidden" name={{@id}} value={{this.composerValue}} />
-
       <DEditor
         class="form-template-field__composer"
         @value={{this.composerValue}}
