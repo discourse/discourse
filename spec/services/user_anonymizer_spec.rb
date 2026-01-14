@@ -358,6 +358,38 @@ RSpec.describe UserAnonymizer do
         expect { make_anonymous }.to change { user.custom_fields }
         expect(user.reload.custom_fields).to eq("some_field" => "123", "another_field" => "456")
       end
+
+      context "when log_anonymizer_details is disabled" do
+        before { SiteSetting.log_anonymizer_details = false }
+
+        it "anonymizes username in historical UserHistory records" do
+          StaffActionLogger.new(admin).log_check_email(
+            user,
+            context: "/admin/users/#{user.id}/#{user.username}",
+          )
+          StaffActionLogger.new(admin).log_username_change(user, user.username, "newname")
+
+          make_anonymous
+
+          reason = I18n.t("user.anonymized")
+          check_email =
+            UserHistory.find_by(action: UserHistory.actions[:check_email], target_user_id: user.id)
+          username_change =
+            UserHistory.find_by(
+              action: UserHistory.actions[:change_username],
+              target_user_id: user.id,
+            )
+
+          expect(check_email.context).to eq(reason)
+          expect(username_change.previous_value).to eq(reason)
+        end
+
+        it "does not affect records without the username" do
+          StaffActionLogger.new(admin).log_check_email(user, context: "/some/other/path")
+          make_anonymous
+          expect(UserHistory.find_by(target_user_id: user.id).context).to eq("/some/other/path")
+        end
+      end
     end
   end
 

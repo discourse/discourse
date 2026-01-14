@@ -3133,6 +3133,7 @@ en:
         updating_user_ids: "Updating user ids…"
         deleting_source_user: "Deleting source user…"
   user:
+    anonymized: "[removed due to user anonymization]"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
     deactivated_by_inactivity:
