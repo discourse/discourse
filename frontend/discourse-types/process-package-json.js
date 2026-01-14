@@ -3,6 +3,7 @@ import { existsSync, globSync } from "node:fs";
 
 export default function processPackageJson(packageJson, packagePath) {
   const paths = new Set();
+  const importPathPrefixes = new Map();
 
   if (packageJson["exports"]) {
     for (const [key, value] of Object.entries(packageJson["exports"])) {
@@ -14,17 +15,24 @@ export default function processPackageJson(packageJson, packagePath) {
         value.require?.types ||
         (typeof value === "string" && /\.d\.[cm]?ts$/.test(value) && value);
       if (types) {
-        paths.add({ path: types, importPathPrefix: key });
+        paths.add(types);
+
+        if (!importPathPrefixes.has(types)) {
+          importPathPrefixes.set(
+            types,
+            key.replace(/^\.\/?/, "").replace(/\/?\*$/, "")
+          );
+        }
       }
     }
   }
 
   if (paths.size === 0 && packageJson["types"]) {
-    paths.add({ path: packageJson["types"] });
+    paths.add(packageJson["types"]);
   }
 
   if (paths.size === 0 && packageJson["typings"]) {
-    paths.add({ path: packageJson["typings"] });
+    paths.add(packageJson["typings"]);
   }
 
   if (paths.size === 0 && packageJson["typesVersions"]) {
@@ -44,25 +52,21 @@ export default function processPackageJson(packageJson, packagePath) {
       }
 
       // TODO: add importPathPrefix here too?
-      paths.add({ path });
+      paths.add(path);
     }
   }
 
   if (paths.size === 0) {
     // sometimes there is a index.d.ts and no package.json entries...
-    paths.add({ types: "index.d.ts" });
-    paths.add({ types: "index.d.cts" });
-    paths.add({ types: "index.d.mts" });
+    paths.add("index.d.ts");
+    paths.add("index.d.cts");
+    paths.add("index.d.mts");
   }
 
   const expandedPaths = new Map();
 
-  for (let { path, importPathPrefix } of paths) {
-    if (importPathPrefix) {
-      importPathPrefix = importPathPrefix
-        .replace(/^\.\/?/, "")
-        .replace(/\/?\*$/, "");
-    }
+  for (let path of paths) {
+    let prefix = importPathPrefixes.get(path);
 
     path = path.replace(/^\.\/?/, "");
     const modulePrefix = path.replace(/\/?\*$/, "").replace(/\*.*$/, "");
@@ -76,13 +80,22 @@ export default function processPackageJson(packageJson, packagePath) {
       );
 
       for (const entry of entries) {
-        expandedPaths.set(entry, { from: modulePrefix, to: importPathPrefix });
+        if (!expandedPaths.has(entry)) {
+          expandedPaths.set(entry, {
+            from: modulePrefix,
+            to: importPathPrefixes.get(entry),
+          });
+        }
       }
     } else if (existsSync(`${packagePath}/${path}`)) {
-      expandedPaths.set(path.replace(/^\.\//, ""), {
-        from: modulePrefix,
-        to: importPathPrefix,
-      });
+      const entry = path.replace(/^\.\//, "");
+
+      if (!expandedPaths.has(entry)) {
+        expandedPaths.set(entry, {
+          from: modulePrefix,
+          to: prefix,
+        });
+      }
     }
   }
 
