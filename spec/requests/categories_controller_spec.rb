@@ -1278,6 +1278,7 @@ RSpec.describe CategoriesController do
 
     describe "Showing top topics from private categories" do
       it "returns the top topic from the private category when the user is a member" do
+        SiteSetting.categories_topics = 5
         restricted_group = Fabricate(:group)
         private_cat = Fabricate(:private_category, group: restricted_group)
         private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
@@ -1298,10 +1299,11 @@ RSpec.describe CategoriesController do
 
     describe "Showing hot topics from private categories" do
       it "returns the hot topic from the private category when the user is a member" do
+        SiteSetting.categories_topics = 5
         restricted_group = Fabricate(:group)
         private_cat = Fabricate(:private_category, group: restricted_group)
         private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
-        TopicHotScore.update_scores
+        TopicHotScore.create!(topic_id: private_topic.id, score: 1.0)
         restricted_group.add(user)
         sign_in(user)
 
