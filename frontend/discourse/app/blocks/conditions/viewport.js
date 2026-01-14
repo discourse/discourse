@@ -118,6 +118,12 @@ export default class BlockViewportCondition extends BlockCondition {
     return null;
   }
 
+  /**
+   * Evaluates whether the viewport condition passes.
+   *
+   * @param {Object} args - The condition arguments.
+   * @returns {boolean} True if the condition passes.
+   */
   evaluate(args) {
     const { min, max, mobile, touch } = args;
 

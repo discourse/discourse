@@ -149,6 +149,14 @@ export default class BlockUserCondition extends BlockCondition {
     return null;
   }
 
+  /**
+   * Evaluates whether the user condition passes.
+   *
+   * @param {Object} args - The condition arguments.
+   * @param {Object} [context] - Evaluation context.
+   * @param {Object} [context.outletArgs] - Outlet args for source resolution.
+   * @returns {boolean} True if the condition passes.
+   */
   evaluate(args, context) {
     const {
       loggedIn,

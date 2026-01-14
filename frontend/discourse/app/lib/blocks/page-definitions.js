@@ -306,3 +306,135 @@ export function validateParamType(paramName, value, pageType) {
 
   return { valid: true, error: null };
 }
+
+/**
+ * Gets the current context values for a page type.
+ *
+ * Returns an object with the current values for all parameters defined for
+ * this page type, or null if the page type doesn't match the current route.
+ *
+ * @param {string} pageType - The page type (e.g., "CATEGORY_PAGES").
+ * @param {Object} services - Injected services for context extraction.
+ * @param {Object} services.router - The Ember router service.
+ * @param {Object} services.discovery - The Discourse discovery service.
+ * @returns {Object|null} The context object with param values, or null if page type doesn't match.
+ *
+ * @example
+ * const context = getPageContext("CATEGORY_PAGES", { router, discovery });
+ * // Returns { categoryId: 5, categorySlug: "general", parentCategoryId: null }
+ * // or null if not on a category page
+ */
+export function getPageContext(pageType, { router, discovery }) {
+  switch (pageType) {
+    case "CATEGORY_PAGES": {
+      const category = discovery.category;
+      if (!category) {
+        return null;
+      }
+      return {
+        categoryId: category.id,
+        categorySlug: category.slug,
+        parentCategoryId: category.parent_category_id,
+      };
+    }
+
+    case "TAG_PAGES": {
+      const tag = discovery.tag;
+      if (!tag) {
+        return null;
+      }
+      const category = discovery.category;
+      return {
+        tagId: tag.name,
+        categoryId: category?.id,
+        categorySlug: category?.slug,
+        parentCategoryId: category?.parent_category_id,
+      };
+    }
+
+    case "DISCOVERY_PAGES": {
+      if (!discovery.onDiscoveryRoute || discovery.custom) {
+        return null;
+      }
+      const filter = router.currentRouteName
+        ?.replace(/^discovery\./, "")
+        .split(".")[0];
+      return { filter };
+    }
+
+    case "HOMEPAGE":
+      return discovery.custom ? {} : null;
+
+    case "TOP_MENU": {
+      if (
+        !discovery.onDiscoveryRoute ||
+        discovery.category ||
+        discovery.tag ||
+        discovery.custom
+      ) {
+        return null;
+      }
+      const filter = router.currentRouteName
+        ?.replace(/^discovery\./, "")
+        .split(".")[0];
+      return { filter };
+    }
+
+    case "TOPIC_PAGES": {
+      if (!router.currentRouteName?.startsWith("topic.")) {
+        return null;
+      }
+      const routeParams = router.currentRoute?.params || {};
+      return {
+        id: routeParams.id ? parseInt(routeParams.id, 10) : undefined,
+        slug: routeParams.slug,
+      };
+    }
+
+    case "USER_PAGES": {
+      if (!router.currentRouteName?.startsWith("user.")) {
+        return null;
+      }
+      const routeParams = router.currentRoute?.params || {};
+      return { username: routeParams.username };
+    }
+
+    case "ADMIN_PAGES":
+      return router.currentRouteName?.startsWith("admin") ? {} : null;
+
+    case "GROUP_PAGES": {
+      if (!router.currentRouteName?.startsWith("group.")) {
+        return null;
+      }
+      const routeParams = router.currentRoute?.params || {};
+      return { name: routeParams.name };
+    }
+
+    default:
+      return null;
+  }
+}
+
+/**
+ * Determines the current page type by checking all known page types.
+ *
+ * Iterates through all valid page types and returns the first one that matches
+ * the current route. Useful for debugging to show what page the user is on.
+ *
+ * @param {Object} services - Injected services for context extraction.
+ * @param {Object} services.router - The Ember router service.
+ * @param {Object} services.discovery - The Discourse discovery service.
+ * @returns {string|null} The current page type, or null if no match.
+ *
+ * @example
+ * const pageType = getCurrentPageType({ router, discovery });
+ * // Returns "CATEGORY_PAGES", "TOPIC_PAGES", etc., or null
+ */
+export function getCurrentPageType({ router, discovery }) {
+  for (const pageType of VALID_PAGE_TYPES) {
+    if (getPageContext(pageType, { router, discovery }) !== null) {
+      return pageType;
+    }
+  }
+  return null;
+}

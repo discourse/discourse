@@ -1,5 +1,7 @@
 import { service } from "@ember/service";
 import {
+  getCurrentPageType,
+  getPageContext,
   getParamsForPageType,
   isValidPageType,
   suggestPageType,
@@ -267,9 +269,10 @@ export default class BlockRouteCondition extends BlockCondition {
     }
 
     // Check pages (passes if ANY match)
+    const services = { router: this.router, discovery: this.discovery };
     if (pages?.length && !routeMatched) {
       for (const pageType of pages) {
-        const pageContext = this.#getPageContext(pageType);
+        const pageContext = getPageContext(pageType, services);
         if (pageContext !== null) {
           // Page type matches, now check params if provided
           if (params) {
@@ -292,14 +295,15 @@ export default class BlockRouteCondition extends BlockCondition {
       }
     }
 
-    // Log URL/pages state when debugging
+    // Log detailed route state only when params or queryParams are present.
+    // Simple URL-only or page-only conditions don't need verbose state logging.
     if (isDebugging && (params || queryParams)) {
       logger?.logRouteState?.({
         currentPath,
         expectedUrls: urls,
         pages,
         matchedPageType,
-        actualPageType: actualPageContext ? null : this.#getCurrentPageType(),
+        actualPageType: actualPageContext ? null : getCurrentPageType(services),
         actualPageContext,
         depth: childDepth,
         result: routeMatched,
@@ -381,122 +385,6 @@ export default class BlockRouteCondition extends BlockCondition {
   }
 
   /**
-   * Gets the current context values for a page type.
-   *
-   * Returns an object with the current values for all parameters defined for
-   * this page type, or null if the page type doesn't match the current route.
-   *
-   * @param {string} pageType - The page type (e.g., "CATEGORY_PAGES").
-   * @returns {Object|null} The context object, or null if page type doesn't match.
-   */
-  #getPageContext(pageType) {
-    switch (pageType) {
-      case "CATEGORY_PAGES": {
-        const category = this.discovery.category;
-        if (!category) {
-          return null;
-        }
-        return {
-          categoryId: category.id,
-          categorySlug: category.slug,
-          parentCategoryId: category.parent_category_id,
-        };
-      }
-
-      case "TAG_PAGES": {
-        const tag = this.discovery.tag;
-        if (!tag) {
-          return null;
-        }
-        const category = this.discovery.category;
-        return {
-          tagId: tag.name,
-          categoryId: category?.id,
-          categorySlug: category?.slug,
-          parentCategoryId: category?.parent_category_id,
-        };
-      }
-
-      case "DISCOVERY_PAGES": {
-        if (!this.discovery.onDiscoveryRoute || this.discovery.custom) {
-          return null;
-        }
-        const filter = this.router.currentRouteName
-          ?.replace(/^discovery\./, "")
-          .split(".")[0];
-        return { filter };
-      }
-
-      case "HOMEPAGE":
-        return this.discovery.custom ? {} : null;
-
-      case "TOP_MENU": {
-        const { discovery } = this;
-        if (
-          !discovery.onDiscoveryRoute ||
-          discovery.category ||
-          discovery.tag ||
-          discovery.custom
-        ) {
-          return null;
-        }
-        const filter = this.router.currentRouteName
-          ?.replace(/^discovery\./, "")
-          .split(".")[0];
-        return { filter };
-      }
-
-      case "TOPIC_PAGES": {
-        if (!this.router.currentRouteName?.startsWith("topic.")) {
-          return null;
-        }
-        const routeParams = this.router.currentRoute?.params || {};
-        return {
-          id: routeParams.id ? parseInt(routeParams.id, 10) : undefined,
-          slug: routeParams.slug,
-        };
-      }
-
-      case "USER_PAGES": {
-        if (!this.router.currentRouteName?.startsWith("user.")) {
-          return null;
-        }
-        const routeParams = this.router.currentRoute?.params || {};
-        return { username: routeParams.username };
-      }
-
-      case "ADMIN_PAGES":
-        return this.router.currentRouteName?.startsWith("admin") ? {} : null;
-
-      case "GROUP_PAGES": {
-        if (!this.router.currentRouteName?.startsWith("group.")) {
-          return null;
-        }
-        const routeParams = this.router.currentRoute?.params || {};
-        return { name: routeParams.name };
-      }
-
-      default:
-        return null;
-    }
-  }
-
-  /**
-   * Determines the current page type by checking all known page types.
-   * Used for debugging to show what page the user is actually on.
-   *
-   * @returns {string|null} The current page type, or null if no match.
-   */
-  #getCurrentPageType() {
-    for (const pageType of VALID_PAGE_TYPES) {
-      if (this.#getPageContext(pageType) !== null) {
-        return pageType;
-      }
-    }
-    return null;
-  }
-
-  /**
    * Validates params with support for any/not operators.
    *
    * @param {Object} params - The params to validate.
@@ -573,6 +461,10 @@ export default class BlockRouteCondition extends BlockCondition {
    * @returns {boolean} True if params match.
    */
   #matchPageParams(params, pageContext, debugContext) {
+    // Recursive matching with operators:
+    // - { any: [...] } - OR logic, passes if any spec matches
+    // - { not: {...} } - Negation, passes if inner spec does NOT match
+    // - { key: value } - Simple match, all keys must match (AND logic)
     const isLoggingEnabled = debugContext.debug ?? false;
     const depth = debugContext._depth ?? 0;
     const logger = debugContext.logger;
