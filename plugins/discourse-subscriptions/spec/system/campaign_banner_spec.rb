@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Campaign Banner", type: :system do
+RSpec.describe "Campaign Banner", type: :system, allow_network: true do
   fab!(:user)
   fab!(:contributor) { Fabricate(:user, username: "contributor1") }
 

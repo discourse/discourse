@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Subscription products", type: :system do
+describe "Subscription products", type: :system, allow_network: true do
   fab!(:admin)
   fab!(:product) { Fabricate(:product, external_id: "prod_OiK") }
   let(:dialog) { PageObjects::Components::Dialog.new }
