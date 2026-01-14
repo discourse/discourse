@@ -1,6 +1,6 @@
 import { settings } from "virtual:theme";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import DetailedTopicCard from "../components/card/detailed-topic-card";
+import HighContextTopicCard from "../components/card/high-context-topic-card";
 import TopicActivityColumn from "../components/card/topic-activity-column";
 import TopicCategoryColumn from "../components/card/topic-category-column";
 import TopicCreatorColumn from "../components/card/topic-creator-column";
@@ -37,12 +37,12 @@ const TopicCreator = <template>
   </td>
 </template>;
 
-function isDetailedCardsRoute(routeName) {
+function isHighContextRoute(routeName) {
   if (!routeName) {
     return false;
   }
 
-  // Only show detailed cards on public topic list routes
+  // Only show high context cards on public topic list routes
   // Discovery routes: /latest, /new, /unread, /top, /hot, /c/:category
   if (routeName.startsWith("discovery")) {
     return true;
@@ -56,8 +56,8 @@ function isDetailedCardsRoute(routeName) {
   return false;
 }
 
-const DetailedCard = <template>
-  <DetailedTopicCard
+const HighContextCard = <template>
+  <HighContextTopicCard
     @topic={{@topic}}
     @hideCategory={{@hideCategory}}
     @bulkSelectEnabled={{@bulkSelectEnabled}}
@@ -70,7 +70,7 @@ export default {
   name: "topic-list-customizations",
 
   initialize(container) {
-    const isDetailed = settings.topic_card_detail === "detailed";
+    const isHighContext = settings.topic_card_context === "high_context";
     const router = container.lookup("service:router");
 
     function applySimpleLayout(columns) {
@@ -104,15 +104,15 @@ export default {
       }
     }
 
-    function applyDetailedLayout(columns) {
+    function applyHighContextLayout(columns) {
       columns.delete("bulk-select");
       columns.delete("topic");
       columns.delete("posters");
       columns.delete("replies");
       columns.delete("views");
       columns.delete("activity");
-      columns.add("detailed-card", {
-        item: DetailedCard,
+      columns.add("high-context-card", {
+        item: HighContextCard,
       });
     }
 
@@ -120,8 +120,8 @@ export default {
       api.registerValueTransformer(
         "topic-list-columns",
         ({ value: columns }) => {
-          if (isDetailed && isDetailedCardsRoute(router.currentRouteName)) {
-            applyDetailedLayout(columns);
+          if (isHighContext && isHighContextRoute(router.currentRouteName)) {
+            applyHighContextLayout(columns);
           } else {
             applySimpleLayout(columns);
           }
@@ -138,11 +138,11 @@ export default {
           }
 
           // The rest only applies to public topic list routes
-          if (!isDetailedCardsRoute(router.currentRouteName)) {
+          if (!isHighContextRoute(router.currentRouteName)) {
             return classes;
           }
 
-          if (isDetailed) {
+          if (isHighContext) {
             classes.push("--high-context");
           }
 
@@ -161,7 +161,7 @@ export default {
       // Force desktop layout on public topic lists for Horizon card styling.
       // Return undefined on other routes to preserve default mobile/desktop behavior.
       api.registerValueTransformer("topic-list-item-mobile-layout", () => {
-        if (isDetailedCardsRoute(router.currentRouteName)) {
+        if (isHighContextRoute(router.currentRouteName)) {
           return false;
         }
       });
@@ -169,7 +169,7 @@ export default {
       api.registerBehaviorTransformer(
         "topic-list-item-click",
         ({ context: { event }, next }) => {
-          if (!isDetailedCardsRoute(router.currentRouteName)) {
+          if (!isHighContextRoute(router.currentRouteName)) {
             return next(); // Use default behavior on non-public routes
           }
 

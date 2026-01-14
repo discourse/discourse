@@ -21,7 +21,7 @@ import { shortDateNoYear } from "discourse/lib/formatter";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-export default class DetailedTopicCard extends Component {
+export default class HighContextTopicCard extends Component {
   @service capabilities;
 
   get hasSolved() {

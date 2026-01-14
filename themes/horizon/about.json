@@ -143,6 +143,6 @@
   "theme_site_settings": {
     "enable_welcome_banner": true,
     "search_experience": "search_field",
-    "topic_card_detail": "simple"
+    "topic_card_context": "simple"
   }
 }
