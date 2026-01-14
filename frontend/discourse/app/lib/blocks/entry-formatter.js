@@ -238,8 +238,8 @@ export function formatEntryWithErrorPath(entry, errorPath, options = {}) {
       return lines.join("\n");
     }
 
-    // Object
-    const keys = Object.keys(obj);
+    // Object - filter out private keys (starting with _)
+    const keys = Object.keys(obj).filter((k) => !k.startsWith("_"));
 
     // Check if we need to render a synthetic entry for a missing key on the error path.
     // This handles both:
@@ -360,7 +360,8 @@ export function truncateForDisplay(
     return obj.map((v) => truncateForDisplay(v, maxDepth - 1, maxKeys, seen));
   }
 
-  const keys = Object.keys(obj);
+  // Filter out private keys (starting with _)
+  const keys = Object.keys(obj).filter((k) => !k.startsWith("_"));
   const result = {};
   const displayKeys = keys.slice(0, maxKeys);
 
