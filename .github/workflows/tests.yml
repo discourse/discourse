@@ -291,6 +291,11 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
 
+      - name: Generate types
+        if: matrix.build_type == 'frontend'
+        working-directory: frontend/discourse-types
+        run: pnpm generate
+
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test

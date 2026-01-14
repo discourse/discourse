@@ -12,6 +12,9 @@
     "package.json",
     "tsconfig-plugin.json"
   ],
+  "scripts": {
+    "generate": "node generate-dts.js"
+  },
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
     "./external-types": {
