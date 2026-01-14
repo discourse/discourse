@@ -75,10 +75,7 @@ RSpec.describe TagGroupsController do
 
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
-        expect(results).to contain_exactly(
-          { name: tag_group.name, tags: [tag.name] },
-          { name: tag_group2.name, tags: [tag.name] },
-        )
+        expect(results).to contain_exactly({ name: tag_group.name }, { name: tag_group2.name })
       end
 
       it "returns an empty array if the tag group is private" do
@@ -96,7 +93,7 @@ RSpec.describe TagGroupsController do
     context "for regular users" do
       before { sign_in(user) }
 
-      it "returns the tag group with the associated tag names" do
+      it "returns the tag group" do
         tag_group = tag_group_with_permission(everyone, readonly)
 
         get "/tag_groups/filter/search.json"
@@ -105,7 +102,6 @@ RSpec.describe TagGroupsController do
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
         expect(results.first[:name]).to eq(tag_group.name)
-        expect(results.first[:tags]).to contain_exactly(tag.name)
       end
 
       it "returns an empty array if the tag group is private" do
@@ -173,7 +169,10 @@ RSpec.describe TagGroupsController do
            params: {
              tag_group: {
                name: "test_tag_group_log",
-               tags: [tag1.name, tag2.name],
+               tags: [
+                 { id: tag1.id, name: tag1.name, slug: tag1.slug },
+                 { id: tag2.id, name: tag2.name, slug: tag2.slug },
+               ],
              },
            }
 
@@ -200,7 +199,9 @@ RSpec.describe TagGroupsController do
            }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["tag_group"]["parent_tag_name"]).to eq([parent_tag.name])
+      expect(response.parsed_body["tag_group"]["parent_tag"]).to eq(
+        [{ "id" => parent_tag.id, "name" => parent_tag.name, "slug" => parent_tag.slug }],
+      )
       expect(TagGroup.last.parent_tag).to eq(parent_tag)
     end
   end
@@ -250,7 +251,10 @@ RSpec.describe TagGroupsController do
           params: {
             tag_group: {
               name: "test_tag_group_new_name",
-              tags: [tag2.name, tag3.name],
+              tags: [
+                { id: tag2.id, name: tag2.name, slug: tag2.slug },
+                { id: tag3.id, name: tag3.name, slug: tag3.slug },
+              ],
             },
           }
 
@@ -275,7 +279,9 @@ RSpec.describe TagGroupsController do
           }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["tag_group"]["parent_tag_name"]).to eq([parent_tag.name])
+      expect(response.parsed_body["tag_group"]["parent_tag"]).to eq(
+        [{ "id" => parent_tag.id, "name" => parent_tag.name, "slug" => parent_tag.slug }],
+      )
       expect(tag_group.reload.parent_tag).to eq(parent_tag)
     end
   end

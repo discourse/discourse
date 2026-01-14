@@ -1261,6 +1261,16 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag2.name)
         expect(response.parsed_body["required_tag_group"]).to eq(nil)
+
+        get "/tags/filter/search.json",
+            params: {
+              q: "",
+              categoryId: category.id,
+              filterForInput: true,
+              selected_tag_ids: [tag1.id],
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag2.name)
       end
     end
   end

@@ -159,7 +159,7 @@ class Tag < ActiveRecord::Base
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
        WHERE stats.category_id in (#{scope_category_ids.join(",")})
        #{filter_sql}
-      GROUP BY tags.id, tags.name, tags.slug
+      GROUP BY tags.id
       ORDER BY sum_topic_count DESC, tag_name ASC
       LIMIT #{limit}
     SQL

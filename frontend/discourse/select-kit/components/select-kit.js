@@ -684,7 +684,7 @@ export default class SelectKit extends Component {
   }
 
   deselectByValue(value) {
-    if (value === null || value === undefined) {
+    if (isNone(value)) {
       return;
     }
 

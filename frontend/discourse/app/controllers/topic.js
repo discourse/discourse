@@ -1912,8 +1912,6 @@ export default class TopicController extends Controller {
         if (data.refresh_stream) {
           this.send("postChangedRoute", currentPostNumber || 1);
           postStream.refresh({ nearPost: currentPostNumber });
-        } else if (data.type === "revised") {
-          postStream.triggerChangedPost(data.id, data.updated_at);
         }
       });
 

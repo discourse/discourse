@@ -475,19 +475,16 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
 
-    if params[:tags].present? && !params[:tag_ids].present?
-      Discourse.deprecate(
-        "the tags param is deprecated, use tag_ids instead",
-        since: "2026.01",
-        drop_from: "2026.07",
-      )
-    end
-
     tags =
       if params[:tag_ids].present?
         params[:tag_ids].map(&:to_i)
       else
         params.require(:tags)
+        Discourse.deprecate(
+          "the tags param is deprecated, use tag_ids instead",
+          since: "2026.01",
+          drop_from: "2026.07",
+        )
         params[:tags]
       end
 

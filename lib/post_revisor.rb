@@ -41,12 +41,13 @@ class PostRevisor
       @diff ||= {}
     end
 
-    def apply_tag_changes(tag_value, by_ids:)
+    def apply_tag_changes(tag_value)
       return unless guardian.can_tag_topics?
 
       prev_tags = topic.tags.map(&:name)
       return if tag_value.blank? && prev_tags.blank?
 
+      by_ids = tag_value.first.is_a?(Integer)
       success =
         if by_ids
           DiscourseTagging.tag_topic_by_ids(topic, guardian, tag_value)
@@ -155,11 +156,7 @@ class PostRevisor
     end
   end
 
-  track_topic_field(:tags) do |tc, tags|
-    # type-check: integers mean IDs, strings mean names
-    by_ids = tags.present? && tags.first.is_a?(Integer)
-    tc.apply_tag_changes(tags, by_ids: by_ids)
-  end
+  track_topic_field(:tags) { |tc, tags| tc.apply_tag_changes(tags) }
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
     if !SiteSetting.topic_featured_link_enabled ||
