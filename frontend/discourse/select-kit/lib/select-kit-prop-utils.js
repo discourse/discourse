@@ -1,4 +1,5 @@
 import { get } from "@ember/object";
+import { isNone } from "@ember/utils";
 
 export default function selectKitPropUtils(target) {
   target.prototype.defaultItem = function (value, name) {
@@ -26,7 +27,7 @@ export default function selectKitPropUtils(target) {
     property,
     options = { definedOnly: true }
   ) {
-    if (item === null || item === undefined) {
+    if (isNone(item)) {
       return null;
     }
     if (typeof property === "string") {

@@ -90,7 +90,10 @@ export default class MiniTagChooser extends MultiSelectComponent {
     if (this.selectKit.options.hiddenValues) {
       tags = tags.filter((t) => {
         const id = typeof t === "object" ? t.id : t;
-        return !this.selectKit.options.hiddenValues.includes(id);
+        return !this.selectKit.options.hiddenValues.some((h) => {
+          const hiddenId = typeof h === "object" ? h.id : h;
+          return hiddenId === id;
+        });
       });
     }
     return tags.map((t) => {
@@ -145,13 +148,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
     };
 
     if (this.value?.length) {
-      // extract IDs from objects, filter out non-numeric values (legacy tag names)
-      const ids = this.value
-        .map((v) => (typeof v === "object" ? v.id : v))
-        .filter(
-          (v) =>
-            typeof v === "number" || (typeof v === "string" && /^\d+$/.test(v))
-        );
+      const ids = this.value.map((v) => v.id);
       if (ids.length) {
         data.selected_tag_ids = ids.slice(0, 100);
       }

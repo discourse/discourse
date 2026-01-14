@@ -227,7 +227,7 @@ describe PostRevisor do
       expect { post_revisor.revise!(admin, tags: ["new-tag"]) }.not_to change { Post.count }
     end
 
-    it "accepts tags as integer IDs (type-checked)" do
+    it "accepts tags as integer IDs" do
       tag = Fabricate(:tag)
       post_revisor.revise!(admin, tags: [tag.id])
       expect(post.topic.reload.tags).to contain_exactly(tag)

@@ -2120,6 +2120,15 @@ RSpec.describe TopicsController do
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
           end
 
+          it "can update tags using tag_ids" do
+            expect do put "/t/#{topic.id}/tags.json", params: { tag_ids: [tag.id] } end.to change {
+              topic.reload.first_post.revisions.count
+            }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
           it "does not remove tag if no params is given" do
             topic.tags << tag
 

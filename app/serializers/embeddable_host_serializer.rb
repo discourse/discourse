@@ -12,6 +12,6 @@ class EmbeddableHostSerializer < ApplicationSerializer
   end
 
   def tags
-    object.tags.map { |tag| { id: tag.id, name: tag.name, slug: tag.slug } }
+    object.tags.map { |t| { id: t.id, name: t.name, slug: t.slug } }
   end
 end

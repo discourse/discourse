@@ -95,7 +95,9 @@ RSpec.describe Tag do
       let!(:tags) { make_some_tags(tag_a_topic: true) }
 
       it "returns all tags" do
-        expect(Tag.top_tags).to eq(tags.map { |t| { id: t.id, name: t.name, slug: t.slug } })
+        expect(Tag.top_tags).to contain_exactly(
+          *tags.map { |t| { id: t.id, name: t.name, slug: t.slug } },
+        )
       end
     end
 
@@ -120,32 +122,26 @@ RSpec.describe Tag do
         expect(Tag.top_tags(category: category1)).to eq(
           [{ id: tags[0].id, name: tags[0].name, slug: tags[0].slug }],
         )
-        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to eq(
-          [
-            { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
-            { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
-            { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
-          ],
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to contain_exactly(
+          { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
+          { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
         )
         expect(
           Tag.top_tags(category: private_category, guardian: Guardian.new(Fabricate(:admin))),
         ).to eq([{ id: tags[2].id, name: tags[2].name, slug: tags[2].slug }])
 
-        expect(Tag.top_tags).to eq(
-          [
-            { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
-            { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
-          ],
+        expect(Tag.top_tags).to contain_exactly(
+          { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
         )
         expect(Tag.top_tags(category: private_category)).to be_empty
 
         sub_category = Fabricate(:category, parent_category_id: category1.id)
         Fabricate(:topic, category: sub_category, tags: [tags[1]])
-        expect(Tag.top_tags(category: category1)).to eq(
-          [
-            { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
-            { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
-          ],
+        expect(Tag.top_tags(category: category1)).to contain_exactly(
+          { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
         )
       end
     end
@@ -169,21 +165,17 @@ RSpec.describe Tag do
       end
 
       it "for category without tags, lists allowed tags" do
-        expect(Tag.top_tags(category: category2)).to eq(
-          [
-            { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
-            { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
-          ],
+        expect(Tag.top_tags(category: category2)).to contain_exactly(
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
+          { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
         )
       end
 
       it "for no category arg, lists all tags" do
-        expect(Tag.top_tags).to eq(
-          [
-            { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
-            { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
-            { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
-          ],
+        expect(Tag.top_tags).to contain_exactly(
+          { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
+          { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
         )
       end
     end

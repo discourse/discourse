@@ -175,10 +175,10 @@ module(
 
     test("values in hiddenFromPreview will not display in preview", async function (assert) {
       this.set("value", [
-        { id: "foo", name: "foo", slug: "foo" },
-        { id: "bar", name: "bar", slug: "bar" },
+        { id: 1, name: "foo", slug: "foo" },
+        { id: 2, name: "bar", slug: "bar" },
       ]);
-      this.set("hiddenValues", ["foo"]);
+      this.set("hiddenValues", [{ id: 1, name: "foo", slug: "foo" }]);
 
       await render(
         <template>

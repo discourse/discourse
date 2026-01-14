@@ -114,19 +114,24 @@ export default class TagChooserField extends Component {
   handleInput(event) {
     const selectedValues = this.handleSelectedValues(event);
     const validChoices = this.formattedChoices.map((choice) => choice.name);
-    const selectedTags = selectedValues.filter((tag) =>
+    const selectedTagNames = selectedValues.filter((tag) =>
       validChoices.includes(tag)
     );
-    const selectedTagNames = this.selectedTags.map((t) => this._tagName(t));
+    const existingSelectedTagNames = this.selectedTags.map((t) =>
+      this._tagName(t)
+    );
+
+    // convert selected tag names to objects for consistency
+    const selectedTagObjects = selectedTagNames.map((name) => ({ name }));
 
     set(
       this.composer.model,
       "tags",
       uniqueItemsFromArray([
         ...this.tags.filter(
-          (tag) => !selectedTagNames.includes(this._tagName(tag))
+          (tag) => !existingSelectedTagNames.includes(this._tagName(tag))
         ),
-        ...selectedTags,
+        ...selectedTagObjects,
       ])
     );
   }
