@@ -1257,7 +1257,7 @@ export default class BlockOutlet extends Component {
     if (!this.children?.isResolved) {
       return 0;
     }
-    return this.children.value?.length ?? 0;
+    return this.children.value?.rawChildren?.length ?? 0;
   }
 
   /**
