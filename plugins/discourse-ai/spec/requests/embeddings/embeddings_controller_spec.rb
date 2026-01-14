@@ -217,6 +217,45 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
     end
   end
 
+  context "when embedding API fails" do
+    fab!(:vector_def, :open_ai_embedding_def)
+    fab!(:user)
+
+    before do
+      enable_current_plugin
+      SiteSetting.min_search_term_length = 3
+      SiteSetting.ai_embeddings_selected_model = vector_def.id
+      DiscourseAi::Embeddings::SemanticSearch.clear_cache_for("test")
+      sign_in(user)
+    end
+
+    it "returns empty results instead of 500 error for semantic search" do
+      stub_request(:post, "https://api.openai.com/v1/embeddings").to_return(
+        status: 429,
+        body: JSON.dump({ error: { message: "You exceeded your current quota" } }),
+      )
+
+      get "/discourse-ai/embeddings/semantic-search.json?q=test&hyde=false"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topics"]).to be_blank
+    end
+
+    it "returns empty results instead of 500 error for quick search" do
+      SiteSetting.ai_embeddings_semantic_quick_search_enabled = true
+
+      stub_request(:post, "https://api.openai.com/v1/embeddings").to_return(
+        status: 429,
+        body: JSON.dump({ error: { message: "You exceeded your current quota" } }),
+      )
+
+      get "/discourse-ai/embeddings/quick-search.json?q=test"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topics"]).to be_blank
+    end
+  end
+
   context "when performing a quick search" do
     fab!(:vector_def, :open_ai_embedding_def)
     fab!(:user)

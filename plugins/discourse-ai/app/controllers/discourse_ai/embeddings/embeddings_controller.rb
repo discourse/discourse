@@ -55,15 +55,13 @@ module DiscourseAi
             semantic_search
               .search_for_topics(query, _page = 1, hyde: use_hyde)
               .each { |topic_post| grouped_results.add(topic_post) }
-
-            render_serialized(
-              grouped_results,
-              GroupedSearchResultSerializer,
-              result: grouped_results,
-            )
           rescue Discourse::InvalidAccess
-            render_json_error(I18n.t("invalid_access"), status: 403)
+            return render_json_error(I18n.t("invalid_access"), status: 403)
+          rescue Net::HTTPBadResponse => e
+            Rails.logger.warn("Semantic search embedding generation failed: #{e.message}")
           end
+
+          render_serialized(grouped_results, GroupedSearchResultSerializer, result: grouped_results)
         end
       end
 
@@ -90,9 +88,13 @@ module DiscourseAi
         end
 
         hijack do
-          semantic_search
-            .search_for_topics(query, _page = 1, hyde: false)
-            .each { |topic_post| grouped_results.add(topic_post) }
+          begin
+            semantic_search
+              .search_for_topics(query, _page = 1, hyde: false)
+              .each { |topic_post| grouped_results.add(topic_post) }
+          rescue Net::HTTPBadResponse => e
+            Rails.logger.warn("Quick search embedding generation failed: #{e.message}")
+          end
 
           render_serialized(grouped_results, GroupedSearchResultSerializer, result: grouped_results)
         end
