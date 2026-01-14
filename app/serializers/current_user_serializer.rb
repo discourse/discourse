@@ -143,12 +143,16 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
+  def include_has_unseen_features?
+    object.staff?
+  end
+
   def has_unseen_features
     DiscourseUpdates.has_unseen_features?(object.id)
   end
 
-  def include_has_unseen_features?
-    object.staff?
+  def include_has_new_upcoming_changes?
+    SiteSetting.enable_upcoming_changes && object.staff?
   end
 
   def has_new_upcoming_changes
@@ -157,10 +161,6 @@ class CurrentUserSerializer < BasicUserSerializer
     scope = UpcomingChangeEvent.added
     scope = scope.where("created_at > ?", Time.zone.parse(last_visited)) if last_visited.present?
     scope.exists?
-  end
-
-  def include_has_new_upcoming_changes?
-    SiteSetting.enable_upcoming_changes && object.staff?
   end
 
   def can_post_anonymously

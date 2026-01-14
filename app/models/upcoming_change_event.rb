@@ -37,6 +37,7 @@ end
 #
 # Indexes
 #
+#  idx_upcoming_change_events_unique_once_off            (upcoming_change_name,event_type) UNIQUE WHERE (event_type = ANY (ARRAY[0, 1, 6, 7]))
 #  index_upcoming_change_events_on_event_type            (event_type)
 #  index_upcoming_change_events_on_upcoming_change_name  (upcoming_change_name)
 #
