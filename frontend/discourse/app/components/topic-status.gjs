@@ -58,7 +58,7 @@ export default class TopicStatus extends Component {
       {{~#if @topic.is_warning~}}
         <span
           title={{i18n "topic_statuses.warning.help"}}
-          class="topic-status --warning"
+          class="topic-status --warning topic-status-warning"
         >{{icon "envelope"}}</span>
       {{~else if (and @showPrivateMessageIcon @topic.isPrivateMessage)~}}
         <span
