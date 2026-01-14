@@ -126,7 +126,7 @@ function iconClasses(icon, params) {
       ? icon.replacementId
       : icon.id;
 
-  let classNames = `fa d-icon d-icon-${dClass} svg-icon`;
+  let classNames = `fa d-icon d-icon-${dClass} svg-icon fa-width-auto`;
 
   if (params && params["class"]) {
     classNames += " " + params["class"];
