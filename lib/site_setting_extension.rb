@@ -269,9 +269,9 @@ module SiteSettingExtension
         [name, value]
       end
     MultiJson.dump(Hash[uncached_json])
-    # rescue => err
-    #   # If something goes wrong here we really need to be aware of it in tests.
-    #   raise err if Rails.env.test?
+  rescue => err
+    # If something goes wrong here we really need to be aware of it in tests.
+    raise err if Rails.env.test?
 
     Rails.logger.error("Error while generating client_settings_json_uncached: #{err.message}")
     raise
