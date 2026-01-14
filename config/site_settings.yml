@@ -2333,9 +2333,9 @@ files:
     max: 1
   simultaneous_uploads:
     client: true
-    default: 5
+    default: 15
     min: 0
-    max: 20
+    max: 30
   decompressed_theme_max_file_size_mb:
     default: 1000
     hidden: true
