@@ -454,8 +454,8 @@ RSpec.describe TopicLink do
     end
 
     describe ".topic_map" do
-      fab!(:source_post) { Fabricate(:post) }
-      fab!(:target_topic) { Fabricate(:topic) }
+      fab!(:source_post, :post)
+      fab!(:target_topic, :topic)
       fab!(:topic_link) { Fabricate(:topic_link, post: source_post, link_topic: target_topic) }
       fab!(:topic_link_click) { Fabricate(:topic_link_click, topic_link: topic_link) }
 
@@ -483,8 +483,8 @@ RSpec.describe TopicLink do
     end
 
     describe ".counts_for" do
-      fab!(:source_post) { Fabricate(:post) }
-      fab!(:target_topic) { Fabricate(:topic) }
+      fab!(:source_post, :post)
+      fab!(:target_topic, :topic)
       fab!(:topic_link) { Fabricate(:topic_link, post: source_post, link_topic: target_topic) }
       fab!(:topic_link_click) { Fabricate(:topic_link_click, topic_link: topic_link) }
 
