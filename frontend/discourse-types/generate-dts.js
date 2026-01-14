@@ -98,7 +98,9 @@ for (const packageName of packageNames) {
   }
 
   for (const path of exportedDtsPaths.keys()) {
-    output += `/// <reference path="${targetPackagePath}/${path}" />\n`;
+    if (!path.includes("-private/")) {
+      output += `/// <reference path="${targetPackagePath}/${path}" />\n`;
+    }
   }
 }
 
