@@ -273,6 +273,7 @@ module Chat
           chat_channel_name: self.name,
           previous_value: status_previously_was,
           new_value: status,
+          category_id: category_channel? ? self.chatable_id : nil,
         },
       )
 
