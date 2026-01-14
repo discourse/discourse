@@ -6,7 +6,7 @@ import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import {
-  blockRegistry,
+  getBlockEntry,
   getConditionTypeRegistry,
   hasBlock,
   isValidOutlet,
@@ -261,10 +261,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
         });
 
         assert.true(hasBlock("api-direct-block"));
-        assert.strictEqual(
-          blockRegistry.get("api-direct-block"),
-          ApiDirectBlock
-        );
+        assert.strictEqual(getBlockEntry("api-direct-block"), ApiDirectBlock);
       });
 
       test("registers a block factory with string name", function (assert) {

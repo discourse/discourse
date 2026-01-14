@@ -10,8 +10,8 @@ import {
   _registerBlockFactory,
   _registerOutlet,
   _setTestSourceIdentifier,
-  blockRegistry,
   getAllOutlets,
+  getBlockEntry,
   getCustomOutlet,
   hasBlock,
   isBlockFactory,
@@ -43,8 +43,8 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       _registerBlock(TestBlock);
 
-      assert.true(blockRegistry.has("test-block"));
-      assert.strictEqual(blockRegistry.get("test-block"), TestBlock);
+      assert.true(hasBlock("test-block"));
+      assert.strictEqual(getBlockEntry("test-block"), TestBlock);
     });
 
     test("throws for class without @block decorator", function (assert) {
@@ -100,12 +100,12 @@ module("Unit | Lib | blocks/registration", function (hooks) {
       _registerBlock(ResetTestBlock);
       _freezeBlockRegistry();
 
-      assert.true(blockRegistry.has("reset-test-block"));
+      assert.true(hasBlock("reset-test-block"));
       assert.true(isBlockRegistryFrozen());
 
       resetBlockRegistryForTesting();
 
-      assert.false(blockRegistry.has("reset-test-block"));
+      assert.false(hasBlock("reset-test-block"));
       assert.false(isBlockRegistryFrozen());
     });
   });
@@ -120,8 +120,8 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       _registerBlockFactory("lazy-block", factory);
 
-      assert.true(blockRegistry.has("lazy-block"));
-      assert.true(isBlockFactory(blockRegistry.get("lazy-block")));
+      assert.true(hasBlock("lazy-block"));
+      assert.true(isBlockFactory(getBlockEntry("lazy-block")));
     });
 
     test("throws for invalid name format", function (assert) {
@@ -346,7 +346,7 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       _registerBlock(CoreBlock);
 
-      assert.true(blockRegistry.has("core-block"));
+      assert.true(hasBlock("core-block"));
       assert.strictEqual(CoreBlock.blockName, "core-block");
       assert.strictEqual(CoreBlock.blockShortName, "core-block");
       assert.strictEqual(CoreBlock.blockNamespace, null);
@@ -359,7 +359,7 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       _registerBlock(MessageWidget);
 
-      assert.true(blockRegistry.has("chat:message-widget"));
+      assert.true(hasBlock("chat:message-widget"));
       assert.strictEqual(MessageWidget.blockName, "chat:message-widget");
       assert.strictEqual(MessageWidget.blockShortName, "message-widget");
       assert.strictEqual(MessageWidget.blockNamespace, "chat");
@@ -372,7 +372,7 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       _registerBlock(HeroBanner);
 
-      assert.true(blockRegistry.has("theme:tactile:hero-banner"));
+      assert.true(hasBlock("theme:tactile:hero-banner"));
       assert.strictEqual(HeroBanner.blockName, "theme:tactile:hero-banner");
       assert.strictEqual(HeroBanner.blockShortName, "hero-banner");
       assert.strictEqual(HeroBanner.blockNamespace, "tactile");
@@ -386,7 +386,7 @@ module("Unit | Lib | blocks/registration", function (hooks) {
         return LazyWidget;
       });
 
-      assert.true(blockRegistry.has("chat:lazy-widget"));
+      assert.true(hasBlock("chat:lazy-widget"));
     });
 
     test("resolves factory with namespaced name", async function (assert) {
@@ -435,7 +435,7 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       _registerBlock(NamespacedBlock);
 
-      assert.true(blockRegistry.has("theme:mytheme:my-block"));
+      assert.true(hasBlock("theme:mytheme:my-block"));
     });
 
     test("plugin source must use namespace:name format", function (assert) {
@@ -458,7 +458,7 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       _registerBlock(ChatWidget);
 
-      assert.true(blockRegistry.has("chat:message-widget"));
+      assert.true(hasBlock("chat:message-widget"));
     });
 
     test("factory registration enforces theme namespace", function (assert) {
@@ -487,7 +487,7 @@ module("Unit | Lib | blocks/registration", function (hooks) {
 
       _registerBlock(CoreBlock);
 
-      assert.true(blockRegistry.has("core-block"));
+      assert.true(hasBlock("core-block"));
     });
   });
 

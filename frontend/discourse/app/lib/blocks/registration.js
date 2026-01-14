@@ -36,9 +36,12 @@ export { VALID_BLOCK_NAME_PATTERN };
  * Registry of block components registered via `@block` decorator and `api.registerBlock()`.
  * Maps block names to their component classes or factory functions.
  *
+ * NOT EXPORTED: External code must use accessor functions (hasBlock, getBlockEntry,
+ * getAllBlockEntries) to prevent bypassing the frozen registry check.
+ *
  * @type {Map<string, BlockRegistryEntry>}
  */
-export const blockRegistry = new Map();
+const blockRegistry = new Map();
 
 /**
  * Cache for resolved factory functions.
@@ -395,6 +398,26 @@ export function hasBlock(nameOrClass) {
     return blockRegistry.has(nameOrClass);
   }
   return nameOrClass?.blockName && blockRegistry.has(nameOrClass.blockName);
+}
+
+/**
+ * Returns the registry entry for a block (class or factory).
+ *
+ * @param {string} name - The block name.
+ * @returns {BlockRegistryEntry | undefined} The registry entry, or undefined if not found.
+ */
+export function getBlockEntry(name) {
+  return blockRegistry.get(name);
+}
+
+/**
+ * Returns all block entries with their names as [name, entry] pairs.
+ * Used by Blocks service for listing and introspection.
+ *
+ * @returns {Array<[string, BlockRegistryEntry]>} Array of [name, entry] pairs.
+ */
+export function getAllBlockEntries() {
+  return Array.from(blockRegistry.entries());
 }
 
 /**

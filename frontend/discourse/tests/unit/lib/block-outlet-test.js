@@ -6,7 +6,7 @@ import { block, isBlock, renderBlocks } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import {
   _registerBlock,
-  blockRegistry,
+  hasBlock,
   withTestBlockRegistration,
 } from "discourse/lib/blocks/registration";
 
@@ -802,7 +802,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(ValidBlock));
 
-      assert.true(blockRegistry.has("my-block-1"));
+      assert.true(hasBlock("my-block-1"));
     });
 
     test("unicode in block args works correctly", function (assert) {

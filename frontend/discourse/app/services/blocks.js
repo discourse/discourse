@@ -3,8 +3,10 @@ import Service from "@ember/service";
 import { evaluateConditions } from "discourse/lib/blocks/condition-evaluator";
 import { validateConditions } from "discourse/lib/blocks/condition-validation";
 import {
-  blockRegistry,
+  getAllBlockEntries,
+  getBlockEntry,
   getConditionTypeRegistry,
+  hasBlock,
   isBlockFactory,
   resolveBlock,
 } from "discourse/lib/blocks/registration";
@@ -80,7 +82,7 @@ export default class Blocks extends Service {
    * ```
    */
   getBlock(name) {
-    return blockRegistry.get(name);
+    return getBlockEntry(name);
   }
 
   /**
@@ -97,7 +99,7 @@ export default class Blocks extends Service {
    * ```
    */
   hasBlock(name) {
-    return blockRegistry.has(name);
+    return hasBlock(name);
   }
 
   /**
@@ -111,7 +113,7 @@ export default class Blocks extends Service {
    * ```
    */
   listBlocks() {
-    return Array.from(blockRegistry.values());
+    return getAllBlockEntries().map(([, entry]) => entry);
   }
 
   /**
@@ -129,7 +131,7 @@ export default class Blocks extends Service {
    * ```
    */
   listBlocksWithMetadata() {
-    return Array.from(blockRegistry.entries()).map(([name, component]) => ({
+    return getAllBlockEntries().map(([name, component]) => ({
       name,
       component,
       metadata: component.blockMetadata,
@@ -155,7 +157,7 @@ export default class Blocks extends Service {
    * ```
    */
   async getBlockAsync(name) {
-    if (!blockRegistry.has(name)) {
+    if (!hasBlock(name)) {
       return undefined;
     }
     try {
@@ -187,10 +189,10 @@ export default class Blocks extends Service {
    * ```
    */
   isBlockReady(name) {
-    if (!blockRegistry.has(name)) {
+    if (!hasBlock(name)) {
       return false;
     }
-    const entry = blockRegistry.get(name);
+    const entry = getBlockEntry(name);
     return !isBlockFactory(entry);
   }
 
