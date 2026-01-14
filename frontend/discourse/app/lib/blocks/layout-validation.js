@@ -590,7 +590,8 @@ export function validateReservedArgs(entry) {
   const usedReservedArgs = Object.keys(entry.args).filter(isReservedArgName);
 
   if (usedReservedArgs.length > 0) {
-    raiseBlockError(
+    // Throw BlockError directly - wrapValidationError will add context
+    throw new BlockError(
       `Reserved arg names: ${usedReservedArgs.join(", ")}. ` +
         `Names starting with underscore are reserved for internal use.`,
       { path: `args.${usedReservedArgs[0]}` }
