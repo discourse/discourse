@@ -1,4 +1,4 @@
-import { getByPath } from "discourse/lib/blocks/path-resolver";
+import { getByPath } from "discourse/lib/blocks/utils";
 
 /**
  * Regex for validating source path format: `@outletArgs.propertyName` or

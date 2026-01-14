@@ -1,4 +1,4 @@
-import { getByPath } from "discourse/lib/blocks/path-resolver";
+import { getByPath } from "discourse/lib/blocks/utils";
 import { matchValue } from "discourse/lib/blocks/value-matcher";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
