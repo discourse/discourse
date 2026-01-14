@@ -38,6 +38,10 @@ module PageObjects
         has_css?(".group-tags-list .tag-chooser", text: tag_name)
       end
 
+      def has_no_tag_in_group?(tag_name)
+        has_no_css?(".group-tags-list .tag-chooser", text: tag_name)
+      end
+
       def visit
         page.visit("/tag_groups")
         self
@@ -72,8 +76,22 @@ module PageObjects
         self
       end
 
+      def has_visible_permission_checked?
+        find("#visible-permission").checked?
+      end
+
       def save
         find(".tag-group-controls .btn-primary").click
+        self
+      end
+
+      def click_delete
+        find(".tag-group-controls .btn-danger").click
+        PageObjects::Components::Dialog.new
+      end
+
+      def click_tag_group(name)
+        find(".tag-groups-sidebar li", text: name).click
         self
       end
     end
