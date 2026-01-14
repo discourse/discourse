@@ -158,10 +158,10 @@ export default class ComposerEditor extends Component {
       placeholder = `composer.${key}`;
     }
 
-    return applyValueTransformer(
-      "composer-editor-reply-placeholder",
-      placeholder,
-      { model: this.composer }
+    return i18n(
+      applyValueTransformer("composer-editor-reply-placeholder", placeholder, {
+        model: this.composer,
+      })
     );
   }
 
