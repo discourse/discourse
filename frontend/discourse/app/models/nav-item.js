@@ -33,7 +33,9 @@ export default class NavItem extends EmberObject {
       return path;
     }
 
-    if (context.tagId && Site.currentProp("filters").includes(filterType)) {
+    // use tagName for URL building (tagId is numeric for filtering)
+    const tagName = context.tagName || context.tagId;
+    if (tagName && Site.currentProp("filters").includes(filterType)) {
       includesTagContext = true;
 
       if (context.category) {
@@ -53,7 +55,7 @@ export default class NavItem extends EmberObject {
     }
 
     if (includesTagContext) {
-      path += `/${context.tagId}`;
+      path += `/${tagName}`;
     }
 
     if (includesTagContext || includesCategoryContext) {
@@ -92,6 +94,9 @@ export default class NavItem extends EmberObject {
     let args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
       args.category = opts.category;
+    }
+    if (opts.tagName) {
+      args.tagName = opts.tagName;
     }
     if (opts.tagId) {
       args.tagId = opts.tagId;
@@ -221,6 +226,7 @@ export default class NavItem extends EmberObject {
   @service currentUser;
 
   @tracked name;
+  @tracked tagName;
   @reads("name") filterType;
 
   @tracked _title;
@@ -272,8 +278,8 @@ export default class NavItem extends EmberObject {
     this._displayName = value;
   }
 
-  @discourseComputed("filterType", "category", "noSubcategories", "tagId")
-  href(filterType, category, noSubcategories, tagId) {
+  @discourseComputed("filterType", "category", "noSubcategories", "tagName")
+  href(filterType, category, noSubcategories, tagName) {
     let customHref = null;
 
     NavItem.customNavItemHrefs.forEach(function (cb) {
@@ -287,7 +293,7 @@ export default class NavItem extends EmberObject {
       return getURL(customHref);
     }
 
-    const context = { category, noSubcategories, tagId };
+    const context = { category, noSubcategories, tagName };
     return NavItem.pathFor(filterType, context);
   }
 
