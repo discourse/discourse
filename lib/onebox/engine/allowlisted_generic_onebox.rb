@@ -300,6 +300,7 @@ module Onebox
         if iframe = fragment.at_css("iframe")
           iframe.remove_attribute("style")
           iframe["width"] = data[:width] || "100%"
+          iframe["height"] = data[:height] if data[:height].present?
           iframe["scrolling"] = "no"
           iframe["frameborder"] = "0"
         end
