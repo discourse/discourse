@@ -22,6 +22,9 @@ const decoratedConditions = new WeakSet();
  * Checks if a class was decorated with @blockCondition.
  * Used by the Blocks service to reject non-decorated classes.
  *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
+ *
  * @param {Function} ConditionClass - The class to check.
  * @returns {boolean} True if the class was decorated.
  */
@@ -34,6 +37,9 @@ export function isDecoratedCondition(ConditionClass) {
  *
  * The class must extend BlockCondition. The decorator adds static getters
  * for type, sourceType, and validArgKeys based on the provided config.
+ *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
  *
  * @param {Object} config - Condition configuration.
  * @param {string} config.type - Unique condition type identifier.

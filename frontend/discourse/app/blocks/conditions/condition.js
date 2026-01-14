@@ -30,6 +30,9 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  * When `sourceType` is `"outletArgs"`, use `resolveSource(args, context)` to get the
  * resolved value from outlet args.
  *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
+ *
  * @class BlockCondition
  *
  * @example

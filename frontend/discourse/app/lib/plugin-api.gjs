@@ -3334,6 +3334,9 @@ class _PluginApi {
    * Blocks can have conditions that determine when they render. Conditions support
    * AND logic (array), OR logic (`any`), and NOT logic (`not`).
    *
+   * @experimental This API is under active development and may change or be removed
+   * in future releases without prior notice. Use with caution in production environments.
+   *
    * @param {string} outletName - The block outlet identifier
    * @param {Array<Object>} blocks - Array of block configurations
    * @param {typeof Component} blocks[].block - Component class decorated with @block
@@ -3407,6 +3410,9 @@ class _PluginApi {
    *    loaded until actually needed. The resolved block's `blockName` must match
    *    the registered name.
    *
+   * @experimental This API is under active development and may change or be removed
+   * in future releases without prior notice. Use with caution in production environments.
+   *
    * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string for lazy loading.
    * @param {Function} [factory] - Factory function returning Promise<BlockClass> (required when first arg is name).
    *
@@ -3447,6 +3453,9 @@ class _PluginApi {
    *
    * **IMPORTANT:** Must be called in a pre-initializer before "freeze-block-registry".
    *
+   * @experimental This API is under active development and may change or be removed
+   * in future releases without prior notice. Use with caution in production environments.
+   *
    * @param {string} outletName - The outlet name (must follow naming conventions).
    * @param {Object} [options] - Outlet configuration options.
    * @param {string} [options.description] - Human-readable description of the outlet.
@@ -3475,6 +3484,9 @@ class _PluginApi {
    * **Note: The `evaluate()` method MUST be pure and idempotent.** It may be called
    * multiple times during a single render cycle, especially when debug logging
    * is enabled, and should not perform any side effects or state mutations.
+   *
+   * @experimental This API is under active development and may change or be removed
+   * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class decorated with `@blockCondition`.
    *

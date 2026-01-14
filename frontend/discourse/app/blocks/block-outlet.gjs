@@ -267,6 +267,9 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * - They cannot be used directly in templates
  * - They receive special args for authorization and hierarchy management
  *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
+ *
  * @param {string} name - Unique identifier for the block (e.g., "hero-banner", "sidebar-panel").
  *   Must match pattern: lowercase letters, numbers, hyphens.
  *
@@ -922,6 +925,9 @@ function createChildBlock(entry, owner, debugContext = {}) {
 /**
  * Checks if a component is registered as a block.
  *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
+ *
  * @param {Function} component - The component to check
  * @returns {boolean} True if the component is registered as a block, false otherwise
  */
@@ -933,6 +939,9 @@ export function isBlock(component) {
  * Checks if a component is registered as a container block.
  * Note: This function is exported for validation but should not be used
  * to bypass block security. It only returns a boolean, not the symbol itself.
+ *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
  *
  * @param {Function} component - The component to check
  * @returns {boolean} True if the component is registered as a container block, false otherwise
@@ -948,6 +957,9 @@ export function isContainerBlock(component) {
  * Each outlet can only have one layout registered. In development mode,
  * attempting to register a second layout throws an error; in production,
  * it logs a warning.
+ *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
  *
  * @param {string} outletName - The outlet identifier (must be in BLOCK_OUTLETS).
  * @param {Array<Object>} layout - Array of block entries.
@@ -1074,6 +1086,9 @@ function hasLayout(outletName) {
  * Named blocks:
  * - `:before` - Yields `hasLayout` boolean before block content.
  * - `:after` - Yields `hasLayout` boolean after block content.
+ *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
  *
  * @param {string} @name - The outlet identifier (must be registered in BLOCK_OUTLETS).
  * @param {Object} [@outletArgs] - Values passed to blocks rendered in this outlet.

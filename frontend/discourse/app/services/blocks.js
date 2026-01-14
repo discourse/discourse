@@ -39,6 +39,9 @@ import {
  * - `{ any: [...] }`: OR logic (at least one must pass)
  * - `{ not: {...} }`: NOT logic (must fail)
  *
+ * @experimental This API is under active development and may change or be removed
+ * in future releases without prior notice. Use with caution in production environments.
+ *
  * @class Blocks
  * @extends Service
  */
