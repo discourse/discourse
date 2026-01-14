@@ -80,6 +80,16 @@ describe "Discourse dev tools", type: :system do
         expect(block_debug).to have_block_arg(key: "title")
       end
 
+      it "shows correct block count in outlet boundary tooltip" do
+        visit("/latest")
+        toolbar.enable
+        toolbar.toggle_block_outlet_boundaries
+
+        block_debug.hover_outlet_badge("hero-blocks")
+        expect(block_debug).to have_outlet_tooltip
+        expect(block_debug).to have_outlet_block_count(23)
+      end
+
       it "shows ghost blocks for failed conditions" do
         visit("/latest") # Anonymous user, admin condition fails
         toolbar.enable

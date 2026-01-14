@@ -1307,6 +1307,7 @@ export default class BlockOutlet extends Component {
           "block-outlet-debug"
           (if this.children.isRejected "--validation-failed")
         }}
+        data-outlet-name={{this.outletName}}
       >
         {{#if this.OutletInfoComponent}}
           <this.OutletInfoComponent

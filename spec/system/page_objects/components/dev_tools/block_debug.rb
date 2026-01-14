@@ -31,6 +31,11 @@ module PageObjects
           page.has_css?(".outlet-info__heading .github-link")
         end
 
+        def has_outlet_block_count?(count)
+          text = count == 1 ? "1 block" : "#{count} blocks"
+          page.has_css?(".outlet-info__stat", text: text)
+        end
+
         # Block visual overlay methods
         def has_block_info?(block_name = nil)
           selector =
