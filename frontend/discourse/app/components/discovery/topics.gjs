@@ -132,13 +132,7 @@ export default class DiscoveryTopics extends Component {
       return false;
     }
 
-    const segments = (this.args.model.get("filter") || "").split("/");
-    const tab = segments.at(-1);
-    if (tab === "new" || tab === "unread") {
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
   get renderNewListHeaderControls() {
