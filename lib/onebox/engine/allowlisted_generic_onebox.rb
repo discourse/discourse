@@ -10,6 +10,9 @@ module Onebox
       include StandardEmbed
       include LayoutSupport
 
+      DEFAULT_THUMBNAIL_WIDTH = 500
+      DEFAULT_THUMBNAIL_RATIO = 9.0 / 16.0
+
       def self.priority
         200
       end
@@ -256,24 +259,18 @@ module Onebox
       end
 
       def article_html
-        if data[:image]
-          data[:thumbnail_width] ||= data[:image_width] || data[:width]
-          data[:thumbnail_height] ||= data[:image_height] || data[:height]
-        end
-
+        get_thumbnail_dimensions(data) if data[:image]
         layout.to_html
       end
 
       def image_html
         return if data[:image].blank?
+        get_thumbnail_dimensions(data)
 
         escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:image])
 
         alt = data[:description] || data[:title]
-        width = data[:image_width] || data[:thumbnail_width] || data[:width]
-        height = data[:image_height] || data[:thumbnail_height] || data[:height]
-
-        "<img src='#{escaped_src}' alt='#{alt}' width='#{width}' height='#{height}' class='onebox'>"
+        "<img src='#{escaped_src}' alt='#{alt}' width='#{data[:thumbnail_width]}' height='#{data[:thumbnail_height]}' class='onebox'>"
       end
 
       def video_html
@@ -305,6 +302,14 @@ module Onebox
           iframe["frameborder"] = "0"
         end
         fragment.to_html
+      end
+
+      private
+
+      def get_thumbnail_dimensions(data)
+        data[:thumbnail_width] = data[:image_width] || data[:width] || DEFAULT_THUMBNAIL_WIDTH
+        data[:thumbnail_height] = data[:image_height] || data[:height] ||
+          (data[:thumbnail_width] * DEFAULT_THUMBNAIL_RATIO).round
       end
     end
   end
