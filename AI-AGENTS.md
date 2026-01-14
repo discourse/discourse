@@ -55,6 +55,14 @@ To run one or more RSpec examples or groups, append the line number to the path.
 bin/rspec spec/path/file_spec.rb:123
 ```
 
+#### System Tests
+
+System tests require ember assets to be available. Either:
+- Run `bin/ember-cli` in a separate terminal (recommended for development)
+- Or build assets with `bin/ember-cli --build` before running tests
+
+Without this, system tests may fail with missing assets, leading to debugging loops.
+
 #### JavaScript Tests
 
 ```bash
