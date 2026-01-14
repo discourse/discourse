@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ::DiscourseLti::LtiAuthenticator < Auth::ManagedAuthenticator
+class DiscourseLti::LtiAuthenticator < Auth::ManagedAuthenticator
   def name
     "lti"
   end
@@ -24,7 +24,7 @@ class ::DiscourseLti::LtiAuthenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    omniauth.provider ::DiscourseLti::LtiOmniauthStrategy,
+    omniauth.provider DiscourseLti::LtiOmniauthStrategy,
                       name: :lti,
                       setup:
                         lambda { |env|

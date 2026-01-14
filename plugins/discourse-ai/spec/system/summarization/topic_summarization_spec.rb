@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Summarize a topic ", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:group)
   fab!(:topic)
   fab!(:post) do
@@ -25,7 +25,7 @@ RSpec.describe "Summarize a topic ", type: :system do
 
     group.add(current_user)
 
-    assign_fake_provider_to(:ai_summarization_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     assign_persona_to(:ai_summarization_persona, [group.id])
     SiteSetting.ai_summarization_enabled = true
 

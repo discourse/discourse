@@ -101,6 +101,8 @@ tr_TR:
               label: Sonuç yoksa kişisel mesaj göndermeyi atlayın
             attach_csv:
               label: CSV dosyasını kişisel mesaja ekleyin
+            users_from_group:
+              label: Her grup üyesine ayrı ayrı kişisel mesaj gönderin
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

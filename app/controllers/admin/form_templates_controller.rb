@@ -24,7 +24,8 @@ class Admin::FormTemplatesController < Admin::StaffController
 
     begin
       template.validate!
-      render json: success_json
+      template.process!(guardian)
+      render_serialized(template, FormTemplateSerializer, root: "form_template")
     rescue FormTemplate::NotAllowed => err
       render_json_error(err.message)
     end

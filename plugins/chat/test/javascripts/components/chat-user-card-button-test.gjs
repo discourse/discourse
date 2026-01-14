@@ -12,8 +12,6 @@ module(
     setupRenderingTest(hooks);
 
     test("when current user can send direct messages", async function (assert) {
-      const self = this;
-
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(true);
@@ -21,7 +19,7 @@ module(
 
       await render(
         <template>
-          <DirectMessageButton @user={{self.user}} @modal={{true}} />
+          <DirectMessageButton @user={{this.user}} @modal={{true}} />
         </template>
       );
 
@@ -29,8 +27,6 @@ module(
     });
 
     test("when current user can’t send direct messages", async function (assert) {
-      const self = this;
-
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(false);
@@ -38,7 +34,7 @@ module(
 
       await render(
         <template>
-          <DirectMessageButton @user={{self.user}} @modal={{true}} />
+          <DirectMessageButton @user={{this.user}} @modal={{true}} />
         </template>
       );
 
@@ -48,8 +44,6 @@ module(
     });
 
     test("when displayed user has disabled PMs / DMs", async function (assert) {
-      const self = this;
-
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(true);
@@ -60,7 +54,7 @@ module(
 
       await render(
         <template>
-          <DirectMessageButton @user={{self.user}} @modal={{true}} />
+          <DirectMessageButton @user={{this.user}} @modal={{true}} />
         </template>
       );
 

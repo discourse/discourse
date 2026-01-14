@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { bind } from "discourse/lib/decorators";
-import loadScript from "discourse/lib/load-script";
+import loadChartJS from "discourse/lib/load-chart-js";
 import themeColor from "../lib/themeColor";
 
 export default class DataExplorerBarChart extends Component {
@@ -45,44 +45,39 @@ export default class DataExplorerBarChart extends Component {
 
   get options() {
     return {
-      scales: {
+      plugins: {
         legend: {
           labels: {
-            fontColor: this.labelsColor,
+            color: this.labelsColor,
           },
         },
-        xAxes: [
-          {
-            gridLines: {
-              color: this.gridColor,
-              zeroLineColor: this.gridColor,
-            },
-            ticks: {
-              fontColor: this.labelsColor,
-            },
+      },
+      scales: {
+        x: {
+          grid: {
+            color: this.gridColor,
           },
-        ],
-        yAxes: [
-          {
-            gridLines: {
-              color: this.gridColor,
-              zeroLineColor: this.gridColor,
-            },
-            ticks: {
-              beginAtZero: true,
-              fontColor: this.labelsColor,
-            },
+          ticks: {
+            color: this.labelsColor,
           },
-        ],
+        },
+        y: {
+          grid: {
+            color: this.gridColor,
+          },
+          ticks: {
+            beginAtZero: true,
+            color: this.labelsColor,
+          },
+        },
       },
     };
   }
 
   @bind
   async initChart(canvas) {
-    await loadScript("/javascripts/Chart.min.js");
+    const Chart = await loadChartJS();
     const context = canvas.getContext("2d");
-    // eslint-disable-next-line
     this.chart = new Chart(context, this.config);
   }
 

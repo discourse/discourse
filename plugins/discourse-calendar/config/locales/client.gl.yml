@@ -23,6 +23,7 @@ gl:
         month: "Mes"
         week: "Semana"
         day: "Día"
+        year: "Ano"
     group_timezones:
       search: "Buscar..."
     discourse_post_event:

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 describe ReviewableAiPost do
-  fab!(:target) { Fabricate(:post) }
+  subject(:reviewable_ai_post) { described_class.new }
+
+  fab!(:target, :post)
 
   before { enable_current_plugin }
 
@@ -9,7 +11,7 @@ describe ReviewableAiPost do
     let(:guardian) { Guardian.new }
 
     let(:reviewable) do
-      subject.tap do |r|
+      reviewable_ai_post.tap do |r|
         r.target = target
         r.target_created_by = target.user
         r.created_by = Discourse.system_user
@@ -184,7 +186,7 @@ describe ReviewableAiPost do
           Fabricate(:user),
           raw: "this is the reply text",
           reply_to_post_number: post.post_number,
-          topic_id: post.topic,
+          topic_id: post.topic_id,
         )
       end
 

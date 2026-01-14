@@ -137,6 +137,31 @@ module DiscourseAutomation
       fields.map { |f| f[:component] }.uniq
     end
 
+    def missing_required_fields
+      if automation.blank?
+        raise RuntimeError.new("`missing_required_fields` cannot be called without `@automation`")
+      end
+
+      required = Set.new
+
+      fields.each do |field|
+        next if !field[:required]
+        required << field[:name].to_s
+      end
+
+      return [] if required.empty?
+
+      automation
+        .fields
+        .where(target: "script", name: required)
+        .pluck(:name, :metadata)
+        .each do |name, metadata|
+          required.delete(name) if metadata.present? && metadata["value"].present?
+        end
+
+      required.to_a
+    end
+
     def utils
       Utils
     end
@@ -225,21 +250,13 @@ module DiscourseAutomation
         "[quote=#{params.join(", ")}]\n#{post.raw.strip}\n[/quote]\n\n"
       end
 
-      def self.send_pm(
-        pm,
-        sender: Discourse.system_user.username,
-        delay: nil,
-        automation_id: nil,
-        prefers_encrypt: true
-      )
+      def self.send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil)
         pm = pm.symbolize_keys
-        prefers_encrypt = prefers_encrypt && !!defined?(EncryptedPostCreator)
 
         if delay && delay.to_i > 0 && automation_id
           pm[:execute_at] = delay.to_i.minutes.from_now
           pm[:sender] = sender
           pm[:automation_id] = automation_id
-          pm[:prefers_encrypt] = prefers_encrypt
           DiscourseAutomation::PendingPm.create!(pm)
         else
           sender = User.find_by(username: sender)
@@ -297,10 +314,8 @@ module DiscourseAutomation
             Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} to all users - some do not exist: `#{non_existing_targets.join(",")}`"
           end
 
-          post_created = EncryptedPostCreator.new(sender, pm).create if prefers_encrypt
-
           pm[:acting_user] = Discourse.system_user
-          PostCreator.new(sender, pm).create! if !post_created
+          PostCreator.new(sender, pm).create!
         end
       end
     end

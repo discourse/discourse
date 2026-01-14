@@ -6,7 +6,7 @@ class AuthProviderSerializer < ApplicationSerializer
              :custom_url,
              :frame_height,
              :frame_width,
-             :icon,
+             :icon_override,
              :name,
              :pretty_name_override,
              :provider_url,
@@ -23,5 +23,9 @@ class AuthProviderSerializer < ApplicationSerializer
 
   def title_override
     object.title_setting ? SiteSetting.get(object.title_setting) : object.title
+  end
+
+  def icon_override
+    object.icon_setting ? SiteSetting.get(object.icon_setting) : object.icon
   end
 end

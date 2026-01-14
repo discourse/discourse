@@ -41,7 +41,6 @@ cs:
       assigned_topic_to: "Téma přiděleno <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} přiděleno %{username}"
       assign_post_to_multiple: "#%{post_number} uživateli %{username}"
-      assigned_to_w_ellipsis: "Přiděleno..."
       unassign:
         title: "Odebrat přidělení"
         title_w_ellipsis: "Odebrat přidělení..."

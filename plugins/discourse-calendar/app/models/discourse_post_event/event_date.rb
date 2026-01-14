@@ -6,13 +6,19 @@ module DiscoursePostEvent
     belongs_to :event
 
     scope :pending,
-          -> do
-            where(finished_at: nil).joins(:event).where(
-              "discourse_post_event_events.deleted_at is NULL",
-            )
-          end
+          -> { where(finished_at: nil).joins(:event).merge(DiscoursePostEvent::Event.visible.open) }
     scope :expired, -> { where("ends_at IS NOT NULL AND ends_at < ?", Time.now) }
     scope :not_expired, -> { where("ends_at IS NULL OR ends_at > ?", Time.now) }
+
+    scope :current_first, -> { order(Arel.sql(current_ordering_sql)) }
+
+    def self.current_ordering_sql
+      <<~SQL.squish
+        finished_at IS NOT NULL,
+        CASE WHEN finished_at IS NULL THEN starts_at ELSE updated_at END DESC,
+        id DESC
+      SQL
+    end
 
     after_commit :upsert_topic_custom_field, on: %i[create]
     def upsert_topic_custom_field
@@ -56,18 +62,20 @@ end
 # Table name: discourse_calendar_post_event_dates
 #
 #  id                       :bigint           not null, primary key
-#  event_id                 :integer
-#  starts_at                :datetime
 #  ends_at                  :datetime
-#  reminder_counter         :integer          default(0)
-#  event_will_start_sent_at :datetime
 #  event_started_sent_at    :datetime
+#  event_will_start_sent_at :datetime
 #  finished_at              :datetime
+#  reminder_counter         :integer          default(0)
+#  starts_at                :datetime
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  event_id                 :integer
 #
 # Indexes
 #
-#  index_discourse_calendar_post_event_dates_on_event_id     (event_id)
-#  index_discourse_calendar_post_event_dates_on_finished_at  (finished_at)
+#  idx_discourse_calendar_post_event_dates_event_id_starts_at_uniq  (event_id,starts_at) UNIQUE
+#  index_discourse_calendar_post_event_dates_on_event_id_and_dates  (event_id,finished_at,starts_at DESC,updated_at DESC,id DESC)
+#  index_discourse_calendar_post_event_dates_on_event_id            (event_id)
+#  index_discourse_calendar_post_event_dates_on_finished_at         (finished_at)
 #

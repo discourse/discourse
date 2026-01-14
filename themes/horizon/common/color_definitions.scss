@@ -66,12 +66,6 @@ html {
     oklch(from #{$tertiary} calc(l * 1.5) calc(c * 0.25) h)
   ) !important;
 
-  // Topic Card Colors
-  --topic-card-shadow: light-dark(
-    oklch(from #{$tertiary} calc(l * 1.85) calc(c * 0.5) h),
-    oklch(from #{$tertiary} calc(l * 0.2) calc(c * 0.01) h / 0.25)
-  ) !important;
-
   // Button Colors
   --button-box-shadow: light-dark(
     oklch(from #{$tertiary} calc(l * 1.5) calc(c * 0.35) h),
@@ -102,4 +96,9 @@ html {
   --d-sidebar-section-link-icon-size: 1em !important;
   --d-hover: oklch(from var(--d-selected) l c h / 0.75) !important;
   --d-input-bg-color: var(--d-content-background) !important;
+  --discourse_id-text: var(--accent-text-color) !important;
+  --discourse_id-text-hover: var(--accent-text-color) !important;
+  --discourse_id-icon: var(--accent-text-color) !important;
+  --discourse_id-icon-hover: var(--accent-text-color) !important;
+  --discourse_id-border: var(--discourse_id-background) !important;
 }

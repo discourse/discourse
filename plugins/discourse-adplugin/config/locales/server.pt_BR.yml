@@ -15,6 +15,7 @@ pt_BR:
     house_ads_after_nth_topic: 'Se anúncios internos "Entre tópicos" forem definidos, mostrar um anúncio após cada N tópicos, em que N é este valor.'
     house_ads_after_nth_post: 'Se anúncios internos "Entre postagens" forem definidos, mostrar um anúncio após cada N postagens, em que N é este valor.'
     house_ads_frequency: "Se outras redes de anúncios estiverem configuradas para serem exibidas em um espaço de anúncio, com que frequência os anúncios internos serão exibidos, como uma porcentagem."
+    ads_txt: "O conteúdo do seu arquivo ads.txt. Saiba mais na <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>página de ajuda do AdSense do Google</a>."
     dfp_publisher_id: "Insira seu código de rede do Google Ad Manager (antes chamado de DFP), que se encontra nas configurações de rede. OBSERVAÇÃO: você precisará atualizar a configuração \"content security policy script src\". Consulte <a href='https://meta.discourse.org/t/33734' target='_blank'>este tópico</a> para obter as informações mais recentes."
     dfp_publisher_id_mobile: "(Opcional) Se você quiser usar uma ID de publicador(a) no Ad Manager diferente para a versão para dispositivo móvel do site, coloque aqui. Deixe em branco para usar dfp_publisher_id no dispositivo móvel."
     dfp_through_trust_level: "Mostre seus anúncios para usuários(as) baseado nos níveis de confiança. Usuários(as) com nível de confiança maior que este valor não verão anúncios."
@@ -44,6 +45,7 @@ pt_BR:
     dfp_mobile_post_bottom_ad_sizes: "Escolha o tamanho do seu anúncio para a unidade de anúncio exibida entre postagens em dispositivos móveis."
     dfp_target_post_bottom_key_code: "Insira chaves de segmentação personalizada - nível de inventário"
     dfp_target_post_bottom_value_code: "Insira valores de segmentação personalizada - nível de inventário"
+    adsense_publisher_code: "Sua ID de publicador(a). Insira apenas o número, não incluindo o \"pub-\". OBSERVAÇÃO: você precisará atualizar a configuração \"content security policy script src\". Consulte <a href='https://meta.discourse.org/t/33734' target='_blank'>este tópico</a> para obter as instruções mais recentes."
     adsense_through_trust_level: "Mostre seus anúncios para usuários(as) baseado nos níveis de confiança. Usuários(as) com nível de confiança maior que este valor não verão anúncios."
     adsense_exclude_groups: "Os anúncios não serão exibidos a membros destes grupos"
     adsense_topic_list_top_code: "Insira o código da unidade de anúncio para exibir no topo da lista de tópicos. Este é o número atribuído à unidade de anúncio, não o código JavaScript."
@@ -96,6 +98,7 @@ pt_BR:
     carbonads_exclude_groups: "Os anúncios não serão exibidos a membros destes grupos"
     carbonads_topic_list_top_enabled: "Mostrar um anúncio acima da lista de tópicos"
     carbonads_above_post_stream_enabled: "Mostrar um anúncio acima da stream de postagens"
+    adbutler_publisher_id: "AdButler Publisher ID. OBSERVAÇÃO: talvez seja necessário atualizar a configuração \"content security policy script src\". Consulte <a href='https://meta.discourse.org/t/33734' target='_blank'>este tópico</a> para obter as instruções mais recentes."
     adbutler_mobile_topic_list_top_zone_id: "ID da Zona para local no topo da lista de tópicos do dispositivo móvel"
     adbutler_mobile_topic_above_post_stream_zone_id: "ID da Zona para tópico de dispositivo móvel acima do local do fluxo de postagens"
     adbutler_mobile_post_bottom_zone_id: "ID da Zona para local na parte inferior da postagem em dispositivo móvel"

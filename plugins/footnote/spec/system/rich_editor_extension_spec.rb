@@ -69,4 +69,19 @@ describe "Composer - ProseMirror editor - Footnote extension", type: :system do
       expect(composer).to have_value("What is this? ^[multiple inline] ^[footnotes]")
     end
   end
+
+  describe "typing reference" do
+    it "creates an inline footnote from [^n] and focuses inside" do
+      open_composer_and_toggle_rich_editor
+      rich.click
+
+      rich.send_keys("[^1]Hello")
+
+      expect(rich).to have_css("div.footnote", count: 1)
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("^[Hello]")
+    end
+  end
 end

@@ -24,7 +24,7 @@ de:
     solved_add_schema_markup: "Füge QAPage-Schema-Mark-up zu HTML hinzu."
     enable_solved_tags: "Schlagwörter, die es Benutzern ermöglichen, Lösungen auszuwählen."
     prioritize_solved_topics_in_search: "Gelöste Themen in den Suchergebnissen priorisieren."
-    show_who_marked_solved: "Zeige, wer das Thema als gelöst markiert hat. Dies wird im ersten Beitrag des Themas und im Antwortbeitrag in einem Tooltip angezeigt."
+    show_who_marked_solved: "Zeige an, wer das Thema als gelöst markiert hat. Dies wird im ersten Beitrag des Themas und im Antwortbeitrag in einem Tooltipp angezeigt."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:

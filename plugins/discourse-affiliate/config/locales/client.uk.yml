@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_affiliate: "Партнерська програма"

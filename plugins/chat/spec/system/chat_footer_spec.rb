@@ -22,7 +22,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
       chat_page.open_from_header
 
       expect(page).to have_css(".c-footer")
-      expect(page).to have_css(".c-footer__item", count: 2)
+      expect(page).to have_css(".c-footer__item", count: 3)
       expect(page).to have_css("#c-footer-direct-messages")
       expect(page).to have_css("#c-footer-channels")
     end
@@ -121,7 +121,9 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
     end
 
     context "for direct messages" do
-      fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user]) }
+      fab!(:dm_channel) do
+        Fabricate(:direct_message_channel, users: [current_user], threading_enabled: true)
+      end
       fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel, user: current_user) }
 
       it "is urgent" do

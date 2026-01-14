@@ -1365,6 +1365,18 @@ RSpec.describe Post do
       post.rebake!
     end
 
+    it "does not publish to clients when invalidating oneboxes" do
+      post = create_post
+      post.expects(:publish_change_to_clients!).never
+      post.rebake!(invalidate_oneboxes: true)
+    end
+
+    it "does not publish to clients when skip_publish_rebaked_changes is true" do
+      post = create_post
+      post.expects(:publish_change_to_clients!).never
+      post.rebake!(skip_publish_rebaked_changes: true)
+    end
+
     it "uses inline onebox cache by default" do
       Jobs.run_immediately!
       stub_request(:get, "http://testonebox.com/vvf").to_return(status: 200, body: <<~HTML)
@@ -1559,6 +1571,42 @@ RSpec.describe Post do
       t.reload
       expect(t.visible).to eq(false)
     end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper])
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "does not reset the topic's bumped_at when hiding a whisper" do
+        whisper_post.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "resets the topic's bumped_at when hiding the last visible reply" do
+        last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+
+      it "does not reset the topic's bumped_at when hiding a reply that is not the last" do
+        second_last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+    end
   end
 
   describe "#unhide!" do
@@ -1618,6 +1666,88 @@ RSpec.describe Post do
       expect do post_2.unhide! end.to change { post_2.user.user_stat.reload.post_count }.from(0).to(
         1,
       )
+    end
+
+    it "allows staff to unhide posts containing media added by staff even if the author cannot embed" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
+
+      post =
+        create_post(
+          user: low_trust_user,
+          topic: Fabricate(:topic, user: low_trust_user),
+          raw: "original content",
+        )
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      post.revise(moderator, raw: "updated with media ![img](http://example.com/image.png)")
+
+      post.reload
+
+      post.acting_user = moderator
+      expect { post.unhide! }.not_to raise_error
+      expect(post.reload.hidden).to eq(false)
+    end
+
+    it "prevents unhiding posts with embedded media when author lacks permission" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
+
+      post =
+        create_post(
+          user: low_trust_user,
+          topic: Fabricate(:topic, user: low_trust_user),
+          raw: "original content",
+        )
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      post.revise(moderator, raw: "updated with media ![img](http://example.com/image.png)")
+
+      post = Post.find(post.id)
+
+      expect { post.unhide! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror, hidden: true)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:, hidden: true)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper], hidden: true)
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "does not reset the topic's bumped_at when unhiding a whisper" do
+        whisper_post.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "resets the topic's bumped_at when unhiding the last visible reply" do
+        last_reply.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      it "does not reset the topic's bumped_at when unhiding a reply that is not the last" do
+        second_last_reply.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
     end
   end
 

@@ -38,6 +38,8 @@ uk:
           title: "Шрифти"
         colors:
           title: "Кольори"
+        dialog:
+          title: "Діалог"
         icons:
           title: "Іконки"
           full_list: "Перегляньте повний список значків Font Awesome"
@@ -60,7 +62,7 @@ uk:
         categories_list:
           title: "Список категорій"
         topic_link:
-          title: "Посилання на тему"
+          title: "Посилання і статус теми"
         topic_list_item:
           title: "Тема у списку тем"
         topic_statuses:
@@ -69,8 +71,6 @@ uk:
           title: "Список тем"
         basic_topic_list:
           title: "Основний список тем"
-        footer_message:
-          title: "Повідомлення нижнього колонтитула"
         signup_cta:
           title: "Реєстрація CTA"
         topic_timer_info:
@@ -85,12 +85,14 @@ uk:
           title: "Список публікацій"
           empty_example: "<PostList /> порожній стан"
           populated_example: "<PostList /> заповнений стан"
+        post_oneboxes:
+          title: "Пошта OneBoxes"
         topic_map:
           title: "Карта теми"
         site_header:
           title: "Заголовок сайту"
-        suggested_topics:
-          title: "Схожі теми"
+        more_topics:
+          title: "Більше тем"
         post_menu:
           title: "Меню повідомлення"
         modal:
@@ -103,6 +105,8 @@ uk:
           title: "Значки заголовків"
         spinners:
           title: "Спінери"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Порожній стан"
         tooltips:

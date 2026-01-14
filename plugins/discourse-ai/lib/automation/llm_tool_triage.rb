@@ -5,7 +5,7 @@ module DiscourseAi
       def self.handle(post:, tool_id:, automation: nil)
         tool = AiTool.find_by(id: tool_id)
         return if !tool
-        return if !tool.parameters.blank?
+        return if tool.parameters.present?
 
         context = DiscourseAi::Personas::BotContext.new(post: post)
 

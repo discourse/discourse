@@ -39,7 +39,7 @@ th:
         disabled: "(ปิดใช้งานแล้ว)"
         groups: "กลุ่ม:"
         no_groups: "ไม่มี"
-        edit: "แก้ไข"
+        edit: "การตั้งค่า"
         expand_list:
           other: "(อีก %{count})"
         filters:
@@ -50,6 +50,15 @@ th:
           name: "ขยะ"
       modals:
         select_option: "เลือกตัวเลือก..."
+      translations:
+        stats:
+          eta_hours:
+            other: "%{count} ชั่วโมง"
+          eta_days:
+            other: "%{count} วัน"
+        progress_chart:
+          bar_done:
+            other: "%{count} โพส"
       spam:
         short_title: "ขยะ"
         last_seven_days: "7 วันที่ผ่านมา"
@@ -59,6 +68,7 @@ th:
       usage:
         summary: "สรุป"
         username: "ชื่อผู้ใช้"
+        total: "ทั้งหมด"
         periods:
           last_day: "24 ชั่วโมงที่ผ่านมา"
       ai_persona:
@@ -113,10 +123,10 @@ th:
           copy: "คัดลอก"
           copied: "คัดลอกแล้ว!"
           cancel: "ยกเลิก"
+        thumbnail_suggestions:
+          try_again: "ลองอีกครั้ง"
         image_caption:
           save_caption: "บันทึก"
-          automatic_caption_dialog:
-            confirm: "เปิดใช้งาน"
       embeddings:
         back: "กลับ"
         save: "บันทึก"

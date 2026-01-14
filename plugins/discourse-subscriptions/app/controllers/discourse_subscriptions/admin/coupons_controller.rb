@@ -6,7 +6,7 @@ module DiscourseSubscriptions
       include DiscourseSubscriptions::Stripe
       include DiscourseSubscriptions::Group
 
-      requires_plugin DiscourseSubscriptions::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       before_action :set_api_key
 

@@ -335,22 +335,8 @@
   }
 }
 
-.ai-category-suggester-content,
-.ai-tag-suggester-content,
-.ai-title-suggester-content {
-  z-index: z("composer", "dropdown");
-}
-
 .ai-suggestions-menu .btn {
   text-align: left;
-}
-
-.mobile-view {
-  .ai-category-suggester-content,
-  .ai-tag-suggester-content,
-  .ai-title-suggester-content {
-    z-index: z("modal", "dropdown");
-  }
 }
 
 .ai-category-suggester-content {
@@ -390,8 +376,6 @@
 #topic-title .edit-topic-title.showing-ai-suggestions {
   #edit-title {
     flex: 1 1 90%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
   }
 
   .suggest-titles-button {
@@ -559,6 +543,10 @@
       left: 0.5rem;
     }
   }
+
+  .regenerate {
+    margin-left: auto;
+  }
 }
 
 // AI Image Caption Feature:
@@ -672,14 +660,6 @@
   }
 }
 
-.auto-image-caption-loader {
-  margin-left: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--primary-high);
-}
-
 // AI Helper Options List
 .ai-helper-options {
   margin: 0;
@@ -728,16 +708,20 @@
   }
 }
 
-.fk-d-menu[data-identifier="ai-composer-helper-menu"],
-.fk-d-menu[data-identifier="ai-title-suggester"] {
-  z-index: z("modal", "dialog");
+.fk-d-menu {
+  &[data-identifier="ai-composer-helper-menu"],
+  &[data-identifier="ai-title-suggester"],
+  &[data-identifier="ai-category-suggester"],
+  &[data-identifier="ai-tag-suggester"] {
+    z-index: z("modal", "dialog");
 
-  .fullscreen-composer & {
-    z-index: z("header") + 1;
-  }
+    .fullscreen-composer & {
+      z-index: z("header") + 1;
+    }
 
-  .mobile-view & {
-    z-index: z("mobile-composer");
+    .mobile-view & {
+      z-index: z("mobile-composer");
+    }
   }
 }
 

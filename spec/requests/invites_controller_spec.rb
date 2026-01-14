@@ -47,15 +47,7 @@ RSpec.describe InvitesController do
     end
 
     context "when email data is present in authentication data" do
-      let(:store) { ActionDispatch::Session::CookieStore.new({}) }
-      let(:session_stub) do
-        ActionDispatch::Request::Session.create(store, ActionDispatch::TestRequest.create, {})
-      end
-
-      before do
-        session_stub[:authentication] = { email: invite.email }
-        ActionDispatch::Request.any_instance.stubs(:session).returns(session_stub)
-      end
+      before { server_session[:authentication] = { email: invite.email } }
 
       it "shows unobfuscated email" do
         get "/invites/#{invite.invite_key}"
@@ -288,11 +280,10 @@ RSpec.describe InvitesController do
       expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
     end
 
-    it "stores the invite key in the secure session if invite exists" do
+    it "stores the invite key in the server session if invite exists" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      invite_key = read_secure_session["invite-key"]
-      expect(invite_key).to eq(invite.invite_key)
+      expect(server_session["invite-key"]).to eq(invite.invite_key)
     end
 
     it "returns error if invite has already been redeemed" do
@@ -510,7 +501,7 @@ RSpec.describe InvitesController do
           expect(response).to have_http_status :unprocessable_entity
           expect(response.parsed_body["errors"]).to be_present
           error_message = response.parsed_body["errors"].first
-          expect(error_message).to eq("Email is too long (maximum is 500 characters)")
+          expect(error_message).to eq("#{email} isn't a valid email address.")
         end
       end
 
@@ -913,7 +904,22 @@ RSpec.describe InvitesController do
         another_invite = Fabricate(:invite, email: "test2@example.com")
 
         delete "/invites.json", params: { id: another_invite.id }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(403)
+        expect(invite.reload.trashed?).to be_falsey
+        expect(another_invite.reload.trashed?).to be_falsey
+      end
+
+      it "allows an admin to delete any invite" do
+        user.update!(admin: true)
+        another_invite = Fabricate(:invite, email: "test2@example.com")
+
+        delete "/invites.json", params: { id: another_invite.id }
+        expect(response.status).to eq(200)
+        expect(another_invite.reload.trashed?).to be_truthy
+
+        delete "/invites.json", params: { id: invite.id }
+        expect(response.status).to eq(200)
+        expect(invite.reload.trashed?).to be_truthy
       end
 
       it "destroys the invite" do

@@ -1,11 +1,11 @@
-import Component, { Input, Textarea } from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import EmberObject, { action } from "@ember/object";
-import { gt, or } from "@ember/object/computed";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { observes } from "@ember-decorators/object";
-import { and, not } from "truth-helpers";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -14,11 +14,17 @@ import InputTip from "discourse/components/input-tip";
 import RadioButton from "discourse/components/radio-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import discourseComputed from "discourse/lib/decorators";
+import withEventValue from "discourse/helpers/with-event-value";
+import { removeValueFromArray } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
+import { bind } from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
+import { optionalRequire } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import GroupChooser from "select-kit/components/group-chooser";
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
@@ -34,30 +40,46 @@ const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
 export default class PollUiBuilderModal extends Component {
+  @service currentUser;
+  @service site;
   @service siteSettings;
 
-  showAdvanced = false;
-  pollType = REGULAR_POLL_TYPE;
-  pollTitle;
-  pollOptions = [EmberObject.create({ value: "" })];
-  pollOptionsText = "";
-  pollMin = 1;
-  pollMax = 2;
-  pollStep = 1;
-  pollGroups;
-  pollAutoClose;
-  pollResult = ALWAYS_POLL_RESULT;
-  chartType = BAR_CHART_TYPE;
-  publicPoll = this.siteSettings.poll_default_public;
+  @tracked chartType = BAR_CHART_TYPE;
+  @tracked dynamic = false;
+  @tracked pollAutoClose;
+  @tracked pollGroups;
+  @tracked pollMax = 2;
+  @tracked pollMin = 1;
+  @tracked pollOptionsText = "";
+  @tracked pollResult = ALWAYS_POLL_RESULT;
+  @tracked pollStep = 1;
+  @tracked pollTitle;
+  @tracked pollType = REGULAR_POLL_TYPE;
+  @tracked publicPoll = this.siteSettings.poll_default_public;
+  @tracked showAdvanced = false;
+  @trackedArray pollOptions = [new TrackedObject({ value: "" })];
 
-  @or("showAdvanced", "isNumber") showNumber;
-  @or("showAdvanced", "isRankedChoice") showRankedChoice;
-  @gt("pollOptions.length", 1) canRemoveOption;
-  @or("isRankedChoice", "isRegular") rankedChoiceOrRegular;
-  @or("isRankedChoice", "isNumber") rankedChoiceOrNumber;
+  get showNumber() {
+    return this.showAdvanced || this.isNumber;
+  }
 
-  @discourseComputed("currentUser.staff")
-  pollResults(staff) {
+  get showRankedChoice() {
+    return this.showAdvanced || this.isRankedChoice;
+  }
+
+  get rankedChoiceOrRegular() {
+    return this.isRankedChoice || this.isRegular;
+  }
+
+  get rankedChoiceOrNumber() {
+    return this.isRankedChoice || this.isNumber;
+  }
+
+  get canRemoveOption() {
+    return this.pollOptions.length > 1;
+  }
+
+  get pollResults() {
     const options = [
       {
         name: i18n("poll.ui_builder.poll_result.always"),
@@ -73,7 +95,7 @@ export default class PollUiBuilderModal extends Component {
       },
     ];
 
-    if (staff) {
+    if (this.currentUser.staff) {
       options.push({
         name: i18n("poll.ui_builder.poll_result.staff"),
         value: STAFF_POLL_RESULT,
@@ -83,52 +105,47 @@ export default class PollUiBuilderModal extends Component {
     return options;
   }
 
-  @discourseComputed("pollType")
-  isRegular(pollType) {
-    return pollType === REGULAR_POLL_TYPE;
+  get isRegular() {
+    return this.pollType === REGULAR_POLL_TYPE;
   }
 
-  @discourseComputed("pollType")
-  isNumber(pollType) {
-    return pollType === NUMBER_POLL_TYPE;
+  get isNumber() {
+    return this.pollType === NUMBER_POLL_TYPE;
   }
 
-  @discourseComputed("pollType")
-  isMultiple(pollType) {
-    return pollType === MULTIPLE_POLL_TYPE;
+  get isMultiple() {
+    return this.pollType === MULTIPLE_POLL_TYPE;
   }
 
-  @discourseComputed("pollType")
-  isRankedChoice(pollType) {
-    return pollType === RANKED_CHOICE_POLL_TYPE;
+  get isRankedChoice() {
+    return this.pollType === RANKED_CHOICE_POLL_TYPE;
   }
 
-  @discourseComputed("pollOptions.@each.value")
-  pollOptionsCount(pollOptions) {
-    return (pollOptions || []).filter((option) => option.value.length > 0)
+  get pollOptionsCount() {
+    return (this.pollOptions || []).filter((option) => option.value.length > 0)
       .length;
   }
 
-  @discourseComputed("site.groups")
-  siteGroups(groups) {
+  get siteGroups() {
     // prevents group "everyone" to be listed
-    return groups.filter((g) => g.id !== 0);
+    return this.site.groups.filter((g) => g.id !== AUTO_GROUPS.everyone.id);
   }
 
-  @discourseComputed("chartType", "pollType")
-  isPie(chartType, pollType) {
-    return pollType !== NUMBER_POLL_TYPE && chartType === PIE_CHART_TYPE;
+  get isPie() {
+    return (
+      this.pollType !== NUMBER_POLL_TYPE && this.chartType === PIE_CHART_TYPE
+    );
   }
 
-  @observes("pollType", "pollOptionsCount")
-  _setPollMinMax() {
+  @bind
+  enforceMinMaxValues() {
     if (this.isMultiple) {
       if (
         this.pollMin <= 0 ||
         this.pollMin >= this.pollMax ||
         this.pollMin >= this.pollOptionsCount
       ) {
-        this.set("pollMin", this.pollOptionsCount > 0 ? 1 : 0);
+        this.pollMin = this.pollOptionsCount > 0 ? 1 : 0;
       }
 
       if (
@@ -136,43 +153,18 @@ export default class PollUiBuilderModal extends Component {
         this.pollMin >= this.pollMax ||
         this.pollMax > this.pollOptionsCount
       ) {
-        this.set("pollMax", this.pollOptionsCount);
+        this.pollMax = this.pollOptionsCount;
       }
     } else if (this.isNumber) {
-      this.set("pollMax", this.siteSettings.poll_maximum_options);
+      this.pollMax = this.siteSettings.poll_maximum_options;
     }
   }
 
-  @discourseComputed(
-    "pollType",
-    "pollResult",
-    "publicPoll",
-    "pollTitle",
-    "pollOptions.@each.value",
-    "pollMin",
-    "pollMax",
-    "pollStep",
-    "pollGroups",
-    "pollAutoClose",
-    "chartType"
-  )
-  pollOutput(
-    pollType,
-    pollResult,
-    publicPoll,
-    pollTitle,
-    pollOptions,
-    pollMin,
-    pollMax,
-    pollStep,
-    pollGroups,
-    pollAutoClose,
-    chartType
-  ) {
+  get pollOutput() {
     let pollHeader = "[poll";
     let output = "";
 
-    const match = this.model.toolbarEvent
+    const match = this.args.model.toolbarEvent
       .getText()
       .match(/\[poll(\s+name=[^\s\]]+)*.*\]/gim);
 
@@ -180,46 +172,49 @@ export default class PollUiBuilderModal extends Component {
       pollHeader += ` name=poll${match.length + 1}`;
     }
 
-    let step = pollStep;
+    let step = this.pollStep;
     if (step < 1) {
       step = 1;
     }
 
-    if (pollType) {
-      pollHeader += ` type=${pollType}`;
+    if (this.pollType) {
+      pollHeader += ` type=${this.pollType}`;
     }
-    if (pollResult) {
-      pollHeader += ` results=${pollResult}`;
+    if (this.pollResult) {
+      pollHeader += ` results=${this.pollResult}`;
     }
-    if (pollMin && pollType !== REGULAR_POLL_TYPE) {
-      pollHeader += ` min=${pollMin}`;
+    if (this.pollMin && this.pollType !== REGULAR_POLL_TYPE) {
+      pollHeader += ` min=${this.pollMin}`;
     }
-    if (pollMax && pollType !== REGULAR_POLL_TYPE) {
-      pollHeader += ` max=${pollMax}`;
+    if (this.pollMax && this.pollType !== REGULAR_POLL_TYPE) {
+      pollHeader += ` max=${this.pollMax}`;
     }
-    if (pollType === NUMBER_POLL_TYPE) {
+    if (this.pollType === NUMBER_POLL_TYPE) {
       pollHeader += ` step=${step}`;
     }
-    pollHeader += ` public=${publicPoll ? "true" : "false"}`;
-    if (chartType && pollType !== NUMBER_POLL_TYPE) {
-      pollHeader += ` chartType=${chartType}`;
+    pollHeader += ` public=${this.publicPoll ? "true" : "false"}`;
+    if (this.chartType && this.pollType !== NUMBER_POLL_TYPE) {
+      pollHeader += ` chartType=${this.chartType}`;
     }
-    if (pollGroups && pollGroups.length > 0) {
-      pollHeader += ` groups=${pollGroups}`;
+    if (this.dynamic) {
+      pollHeader += ` dynamic=true`;
     }
-    if (pollAutoClose) {
-      pollHeader += ` close=${pollAutoClose.toISOString()}`;
+    if (this.pollGroups?.length > 0) {
+      pollHeader += ` groups=${this.pollGroups}`;
+    }
+    if (this.pollAutoClose) {
+      pollHeader += ` close=${this.pollAutoClose.toISOString()}`;
     }
 
     pollHeader += "]";
     output += `${pollHeader}\n`;
 
-    if (pollTitle) {
-      output += `# ${pollTitle.trim()}\n`;
+    if (this.pollTitle) {
+      output += `# ${this.pollTitle.trim()}\n`;
     }
 
-    if (pollOptions.length > 0 && pollType !== NUMBER_POLL_TYPE) {
-      pollOptions.forEach((option) => {
+    if (this.pollOptions.length > 0 && this.pollType !== NUMBER_POLL_TYPE) {
+      this.pollOptions.forEach((option) => {
         if (option.value.length > 0) {
           output += `* ${option.value.trim()}\n`;
         }
@@ -230,110 +225,90 @@ export default class PollUiBuilderModal extends Component {
     return output;
   }
 
-  @discourseComputed("isNumber", "pollOptionsCount")
-  minNumOfOptionsValidation(isNumber, pollOptionsCount) {
-    let options = { ok: true };
-
-    if (!isNumber) {
-      if (pollOptionsCount < 1) {
-        return EmberObject.create({
+  get minNumOfOptionsValidation() {
+    if (!this.isNumber) {
+      if (this.pollOptionsCount < 1) {
+        return {
           failed: true,
           reason: i18n("poll.ui_builder.help.options_min_count"),
-        });
+        };
       }
 
-      if (pollOptionsCount > this.siteSettings.poll_maximum_options) {
-        return EmberObject.create({
+      if (this.pollOptionsCount > this.siteSettings.poll_maximum_options) {
+        return {
           failed: true,
           reason: i18n("poll.ui_builder.help.options_max_count", {
             count: this.siteSettings.poll_maximum_options,
           }),
-        });
+        };
       }
     }
 
-    return EmberObject.create(options);
+    return { ok: true };
   }
 
-  @discourseComputed("pollOptions.@each.value")
-  showMinNumOfOptionsValidation(pollOptions) {
-    return pollOptions.length !== 1 || pollOptions[0].value !== "";
+  get showMinNumOfOptionsValidation() {
+    return this.pollOptions.length !== 1 || this.pollOptions[0].value !== "";
   }
 
-  @discourseComputed(
-    "isMultiple",
-    "pollOptionsCount",
-    "isNumber",
-    "pollMin",
-    "pollMax",
-    "pollStep"
-  )
-  minMaxValueValidation(
-    isMultiple,
-    pollOptionsCount,
-    isNumber,
-    pollMin,
-    pollMax,
-    pollStep
-  ) {
-    pollMin = parseInt(pollMin, 10) || 0;
-    pollMax = parseInt(pollMax, 10) || 0;
-    pollStep = parseInt(pollStep, 10) || 0;
+  get minMaxValueValidation() {
+    const pollMin = parseInt(this.pollMin, 10) || 0;
+    const pollMax = parseInt(this.pollMax, 10) || 0;
+    const pollStep = parseInt(this.pollStep, 10) || 0;
 
     if (pollMin < 0) {
-      return EmberObject.create({
+      return {
         failed: true,
         reason: i18n("poll.ui_builder.help.invalid_min_value"),
-      });
+      };
     }
 
-    if (pollMax < 0 || (isMultiple && pollMax > pollOptionsCount)) {
-      return EmberObject.create({
+    if (pollMax < 0 || (this.isMultiple && pollMax > this.pollOptionsCount)) {
+      return {
         failed: true,
         reason: i18n("poll.ui_builder.help.invalid_max_value"),
-      });
+      };
     }
 
     if (pollMin > pollMax) {
-      return EmberObject.create({
+      return {
         failed: true,
         reason: i18n("poll.ui_builder.help.invalid_values"),
-      });
+      };
     }
 
-    if (isNumber) {
+    if (this.isNumber) {
       if (pollStep < 1) {
-        return EmberObject.create({
+        return {
           failed: true,
           reason: i18n("poll.ui_builder.help.min_step_value"),
-        });
+        };
       }
 
       const optionsCount = (pollMax - pollMin + 1) / pollStep;
 
       if (optionsCount < 1) {
-        return EmberObject.create({
+        return {
           failed: true,
           reason: i18n("poll.ui_builder.help.options_min_count"),
-        });
+        };
       }
 
       if (optionsCount > this.siteSettings.poll_maximum_options) {
-        return EmberObject.create({
+        return {
           failed: true,
           reason: i18n("poll.ui_builder.help.options_max_count", {
             count: this.siteSettings.poll_maximum_options,
           }),
-        });
+        };
       }
     }
 
-    return EmberObject.create({ ok: true });
+    return { ok: true };
   }
 
-  @discourseComputed("minMaxValueValidation", "minNumOfOptionsValidation")
-  disableInsert(minMaxValueValidation, minNumOfOptionsValidation) {
-    return !minMaxValueValidation.ok || !minNumOfOptionsValidation.ok;
+  get disableInsert() {
+    return !this.minMaxValueValidation.ok || !this.minNumOfOptionsValidation.ok;
   }
 
   _comboboxOptions(startIndex, endIndex) {
@@ -344,37 +319,47 @@ export default class PollUiBuilderModal extends Component {
   }
 
   @action
+  onChangePollMin(event) {
+    this.pollMin = event.target.value;
+    this.enforceMinMaxValues();
+  }
+
+  @action
+  onChangePollMax(event) {
+    this.pollMax = event.target.value;
+    this.enforceMinMaxValues();
+  }
+
+  @action
   onOptionsTextChange(e) {
-    this.set(
-      "pollOptions",
-      e.target.value.split("\n").map((value) => EmberObject.create({ value }))
-    );
+    this.pollOptions = e.target.value
+      .split("\n")
+      .map((value) => new TrackedObject({ value }));
+    this.enforceMinMaxValues();
   }
 
   @action
   insertPoll() {
-    this.model.toolbarEvent.addText(this.pollOutput);
-    this.closeModal();
+    this.args.model.toolbarEvent.addText(this.pollOutput);
+    this.args.closeModal();
   }
 
   @action
   toggleAdvanced() {
-    this.toggleProperty("showAdvanced");
+    this.showAdvanced = !this.showAdvanced;
     if (this.showAdvanced) {
-      this.set(
-        "pollOptionsText",
-        this.pollOptions.map((x) => x.value).join("\n")
-      );
+      this.pollOptionsText = this.pollOptions.map((x) => x.value).join("\n");
     }
   }
 
   @action
   updateValue(option, event) {
-    option.set("value", event.target.value);
+    option.value = event.target.value;
+    this.enforceMinMaxValues();
   }
 
   @action
-  onInputKeydown(index, event) {
+  onInputKeydown(option, index, event) {
     if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
@@ -382,6 +367,38 @@ export default class PollUiBuilderModal extends Component {
       if (event.target.value !== "") {
         this.addOption(index + 1);
       }
+      return;
+    }
+
+    if (
+      event.code === "Period" &&
+      event.shiftKey &&
+      (event.metaKey || event.ctrlKey) &&
+      this.siteSettings.discourse_local_dates_enabled
+    ) {
+      const generateCurrentDateMarkup = optionalRequire(
+        "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup"
+      );
+
+      if (!generateCurrentDateMarkup) {
+        return;
+      }
+
+      event.preventDefault();
+      const timezone = this.currentUser.user_option?.timezone;
+      const markup = generateCurrentDateMarkup(timezone);
+
+      const input = event.target;
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const value = option.value || "";
+
+      option.value = value.slice(0, start) + markup + value.slice(end);
+      this.enforceMinMaxValues();
+
+      requestAnimationFrame(() => {
+        input.setSelectionRange(start + markup.length, start + markup.length);
+      });
     }
   }
 
@@ -391,24 +408,27 @@ export default class PollUiBuilderModal extends Component {
       atIndex = this.pollOptions.length;
     }
 
-    const option = EmberObject.create({ value: "" });
-    this.pollOptions.insertAt(atIndex, option);
+    const option = new TrackedObject({ value: "" });
+    this.pollOptions.splice(atIndex, 0, option);
+    this.enforceMinMaxValues();
   }
 
   @action
   removeOption(option) {
-    this.pollOptions.removeObject(option);
+    removeValueFromArray(this.pollOptions, option);
+    this.enforceMinMaxValues();
   }
 
   @action
   updatePollType(pollType, event) {
     event?.preventDefault();
-    this.set("pollType", pollType);
+    this.pollType = pollType;
+    this.enforceMinMaxValues();
   }
 
   @action
   togglePublic() {
-    this.set("publicPoll", !this.publicPoll);
+    this.publicPoll = !this.publicPoll;
   }
 
   <template>
@@ -475,7 +495,11 @@ export default class PollUiBuilderModal extends Component {
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.poll_title.label"
               }}</label>
-            <Input @value={{this.pollTitle}} />
+            <input
+              {{on "input" (withEventValue (fn (mut this.pollTitle)))}}
+              type="text"
+              value={{this.pollTitle}}
+            />
           </div>
         {{/if}}
 
@@ -502,7 +526,7 @@ export default class PollUiBuilderModal extends Component {
                     value={{option.value}}
                     {{autoFocus}}
                     {{on "input" (fn this.updateValue option)}}
-                    {{on "keydown" (fn this.onInputKeydown index)}}
+                    {{on "keydown" (fn this.onInputKeydown option index)}}
                   />
                   {{#if this.canRemoveOption}}
                     <DButton
@@ -539,9 +563,10 @@ export default class PollUiBuilderModal extends Component {
               <label class="input-group-label">{{i18n
                   "poll.ui_builder.poll_config.min"
                 }}</label>
-              <Input
-                @type="number"
-                @value={{this.pollMin}}
+              <input
+                {{on "input" this.onChangePollMin}}
+                type="number"
+                value={{this.pollMin}}
                 class="poll-options-min"
                 min="1"
               />
@@ -551,9 +576,10 @@ export default class PollUiBuilderModal extends Component {
               <label class="input-group-label">{{i18n
                   "poll.ui_builder.poll_config.max"
                 }}</label>
-              <Input
-                @type="number"
-                @value={{this.pollMax}}
+              <input
+                {{on "input" this.onChangePollMax}}
+                type="number"
+                value={{this.pollMax}}
                 class="poll-options-max"
                 min="1"
               />
@@ -564,9 +590,10 @@ export default class PollUiBuilderModal extends Component {
                 <label class="input-group-label">{{i18n
                     "poll.ui_builder.poll_config.step"
                   }}</label>
-                <Input
-                  @type="number"
-                  @value={{this.pollStep}}
+                <input
+                  {{on "input" (withEventValue (fn (mut this.pollStep)))}}
+                  type="number"
+                  value={{this.pollStep}}
                   min="1"
                   class="poll-options-step"
                 />
@@ -589,6 +616,14 @@ export default class PollUiBuilderModal extends Component {
         </div>
 
         {{#if this.showAdvanced}}
+          <div class="input-group poll-dynamic">
+            <DToggleSwitch
+              @state={{this.dynamic}}
+              @label="poll.ui_builder.poll_dynamic.label"
+              class="poll-toggle-dynamic"
+              {{on "click" (fn (mut this.dynamic) (not this.dynamic))}}
+            />
+          </div>
           <div class="input-group poll-allowed-groups">
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.poll_groups.label"

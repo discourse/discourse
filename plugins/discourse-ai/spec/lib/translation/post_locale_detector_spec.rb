@@ -18,10 +18,24 @@ describe DiscourseAi::Translation::PostLocaleDetector do
       expect(described_class.detect_locale(nil)).to eq(nil)
     end
 
+    it "returns nil if language detector returns nil and does not update post" do
+      language_detector_stub({ text: post.cooked, locale: nil, post: })
+
+      expect(described_class.detect_locale(post)).to eq(nil)
+      expect { described_class.detect_locale(post) }.not_to change { post }
+    end
+
     it "updates the post locale with the detected locale" do
       language_detector_stub({ text: post.cooked, locale: "zh_CN", post: })
       expect { described_class.detect_locale(post) }.to change { post.reload.locale }.from(nil).to(
         "zh_CN",
+      )
+    end
+
+    it "returns site default locale if post is empty" do
+      post.update_column(:cooked, "")
+      expect { described_class.detect_locale(post) }.to change { post.reload.locale }.from(nil).to(
+        "en",
       )
     end
 

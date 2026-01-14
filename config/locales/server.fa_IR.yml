@@ -946,7 +946,6 @@ fa_IR:
   user_activity:
     no_log_search_queries: "لاگ درخواست‌های جستجو در حال حاضر غیرفعال است (مدیر می‌تواند آن را در تنظیمات سایت فعال کند)."
   email_settings:
-    imap_unhandled_error: "هنگام برقراری ارتباط با سرور IMAP یک خطای کنترل نشده وجود داشت. %{message}"
     connection_error: "مشکلی در اتصال با سرور وجود داشت. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
     timeout_error: "مدت زمان اتصال به سرور، بیش از حد طول کشید. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
     unhandled_error: "خطای کنترل نشده هنگام تست تنظیمات ایمیل. %{message}"
@@ -1032,11 +1031,10 @@ fa_IR:
       every_month: "هر ماه"
       every_six_months: "هر شش ماه"
   user_api_key:
-    title: "اجازه دسترسی به برنامه"
     authorize: "اجازه دادن"
+    deny: "لغو"
     read: "خواندن"
     read_write: "خواندن/نوشتن"
-    description: '"%{application_name}" درخواست دسترسی به حساب کاربری شما را دارد:'
     instructions: 'ما به تازگی یک کلید API کاربر جدید برای استفاده شما با "%{application_name}" ایجاد کردیم. لطفاً کلید زیر را در برنامه خود جایگذاری کنید:'
     otp_description: 'آیا می خواهید به "%{application_name}" اجازه دسترسی به این سایت را بدهید؟'
     otp_confirmation:
@@ -1488,12 +1486,10 @@ fa_IR:
     allow_duplicate_topic_titles: "به موضوعات اجازه داشتن عنوان مشابه، تکراری را بده."
     unique_posts_mins: "چند دقیقه‌ی بعد کاربر بتواند دوباره فرسته‌ای با محتویات یکسان بفرستد"
     educate_until_posts: "تا (n) فرسته‌ی اول کاربر، وقتی کاربر شروع به نوشتن می‌کند کادر پرشی آموزش کاربر جدید را نشان بده."
-    title: "نام این سایت. برای همه بازدیدکنندگان از جمله کاربران ناشناس قابل مشاهده است."
     site_description: "این سایت را در یک جمله توصیف کنید. برای همه بازدیدکنندگان از جمله کاربران ناشناس قابل مشاهده است."
     short_site_description: "توضیح کوتاه در چند کلمه. برای همه بازدیدکنندگان از جمله کاربران ناشناس قابل مشاهده است."
     crawl_images: "بازیابی تصاویر از URL‌های خارجی برای وارد کردن طول و عرض صحیح."
     download_remote_images_threshold: "حداقل فضای دیسک مورد نیاز برای دانلود عکس‌های خارجی به هاست (به درصد)"
-    disabled_image_download_domains: "عکس‌های خارجی هرگز از این دامنه‌ها دانلود نخواهند شد. لیست Pipe-delimited"
     editing_grace_period: "ویرایش کردن تا (n) ثانیه بعد از ارسال فرسته، نسخه جدیدی در تاریخچه ایجاد نمی‌کند."
     editing_grace_period_max_diff: "حداکثر تعداد تغییرات مجاز نویسه در دوره مهلت ویرایش. اگر تغییرات بیشتر از این مقدار باشد، یک نسخه جدید از پست ذخیره میشود. (سطح اعتماد ۰ و ۱)"
     editing_grace_period_max_diff_high_trust: "حداکثر تعداد تغییرات مجاز نویسه در دوره مهلت ویرایش. اگر تغییرات بیشتر از این مقدار باشد، یک نسخه جدید از پست ذخیره میشود. (سطح اعتماد ۲ به بالا)"
@@ -1518,7 +1514,6 @@ fa_IR:
     logo: "تصویر لوگو در سمت چپ بالای سایت شما. از یک تصویر مستطیلی عریض با ارتفاع ۱۲۰ و نسبت تصویر بیشتر از ۳:۱ استفاده کنید. اگر خالی بماند، متن عنوان سایت نشان داده می شود."
     logo_small: "تصویر لوگوی کوچک در سمت چپ بالای سایت شما که هنگام اسکرول کردن به پایین دیده می شود. از یک تصویر مربع ۱۲۰ × ۱۲۰ استفاده کنید. اگر خالی باقی بماند، علامت اصلی نشان داده خواهد شد."
     notification_email: "آدرس ایمیلی که در قسمت From: هنگام ارسال همه‌ی پیام‌های سیستمی استفاده می‌شود. دامنه مشخص شده در اینجا باید SPF, DKIM داشته باشد و رکورد PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
-    email_custom_headers: "یک لیست تفکیک شده از سرصفحه ایمیل‌های سفارشی"
     force_https: "اجبار به استفاده از HTTPS ، تا زمانی که HTTPS را کامل تنظیم نکرده‌اید این گزینه را فعال نکنید. آیا تمام CDN ها و شبکه‌های اجتماعی جهت ورود را بررسی کردید و تمام لوگو‌ها و وابستگی‌ها بدون مشکل با HTTPS کار می‌کنند؟"
     summary_score_threshold: "حداقل امتیاز برای یک نوشته که بتواند شامل «خلاصه کردن موضوع» شود"
     summary_percent_filter: "وقتی کاربر روی «خلاصه کردن موضوع» کلیک می‌کند، % بهترین نوشته‌ها را نشان بده"
@@ -1564,7 +1559,6 @@ fa_IR:
     allow_new_registrations: "اجازه ثبت نام کاربر جدید. برای جلوگیری از ایجاد حساب جدید، این تنظیم را غیر فعال کنید."
     enable_signup_cta: "نمایش اطلاعیه برای کاربران ناشناسی که سعی در ایجاد حساب کاربری دارند."
     google_oauth2_client_secret: "Client secret برنامه گوگل شما. "
-    automatic_backups_enabled: "فعالسازی پشتیبان‌گیری خودکار در بازه زمانی مشخص"
     s3_backup_bucket: "میزبان راه‌دور برای نگهداری از نسخه‌های پشتیبان. اخطار: مطمئن شوید که میزبان خصوصی است."
     backup_time_of_day: "زمان UTC روز برای رخ دادن نسخه پشتیبان."
     backup_with_uploads: "قراردادن فایل های بارگذاری شده در نسخه های پشتیبان. غیر فعال کردن این بخش باعث تهیه نسخه پشتیبان از دیتابیس می‌شود."
@@ -1627,10 +1621,6 @@ fa_IR:
     tl3_requires_likes_given: "حداقل تعداد پسندهایی که باید در آخرین (tl3 time period) روز داده شود تا واجد شرایط ارتقاء به سطح اعتماد ۳ شود."
     tl3_requires_likes_received: "حداقل تعداد پسند‌هایی که باید در آخرین (tl3 time period) روز دریافت شود تا صلاحیت ارتقا به سطح اعتماد ۳ مهیا شود."
     tl3_links_no_follow: "rel=nofollow را از لینک های ارسال شده توسط کاربران سطح اعتماد ۳ حذف نکنید."
-    min_trust_to_create_topic: "حداقل سطح اعتماد مورد نیاز برای ایجاد یک موضوع جدید."
-    min_trust_to_edit_wiki_post: "حداقل سطح اعتماد مورد نیاز برای ویرایش پست مشخص شده به عنوان ویکی."
-    min_trust_to_edit_post: "حداقل سطح اعتماد برای ویرایش نوشته مورد نیاز است."
-    min_trust_to_allow_self_wiki: "حداقل سطح اعتماد برای تبدیل نوشته‌ی خود به دانش‌نامه نیاز است."
     newuser_max_links: "کاربر جدید چند پیوند می تواند به یک پست اضافه کند؟"
     newuser_max_attachments: "کاربر جدید چند پیوست می تواند به یک پست اضافه کند؟"
     newuser_max_mentions_per_post: "حداکثر تعداد اعلان‌های @name که یک کاربر جدید می‌تواند در یک پست استفاده کند."
@@ -1700,7 +1690,6 @@ fa_IR:
     pop3_polling_openssl_verify: "تایید گواهینامه سرور TLS (پیش‌فرض: فعال)"
     pop3_polling_username: "نام کاربری برای حساب کاربری POP3 برای نظرسنجی در ایمیل."
     pop3_polling_password: "رمز عبور برای حساب کاربری POP3 برای نظرسنجی در ایمیل."
-    email_in_min_trust: "حداقل میزان سطح اعتماد برای کاربران تا بتوانند نوشته را از طریق ایمیل ارسال کنند."
     email_prefix: "[برچسب] مورد استفاده در موضوع ایمیل‌ها. اگر تنظیم نشود، به طور پیش‌فرض روی «عنوان» خواهد بود."
     email_site_title: "عنوان این سایت به فرستنده ایمیل‌ها در سایت استفاده شده. اگر مقداری عنوان شامل نویسه‌های غیر مجاز باشد، به 'عنوان' تبدیل خواهد شد."
     minimum_topics_similar: "چند موضوع باید قبل از وجود موضوعات مشابه، وجود داشته باشد، وقتی که موضوع جدید ایجاد می‌کنیم."
@@ -1708,7 +1697,6 @@ fa_IR:
     delete_user_max_post_age: "به کاربرانی که عمر نوشته‌شان بیشتر از (x) روز است اجازه پاک کردن نده."
     delete_all_posts_max: "حداکثر تعداد نوشته‌هایی که می‌تواند یکباره پاک شود با کلید همه نوشته ها را پاک کن. اگر کاربر بییشتر از این نوشته دارد، نوشته نمی تواند یکبار پاک شود و کاربر نمی تواند حذف شود."
     email_editable: "به کاربران اجازه بده بعد از ثبت نام ایمیل خود را عوض کنند."
-    allow_uploaded_avatars: "اجازه بارگذاری تصاویر سفارشی پروفایل به کاربران"
     default_avatars: "نشانی‌های اینترنتی به آواتارهایی که به‌طور پیش‌فرض برای کاربران جدید استفاده می‌شوند تا زمانی که آنها را تغییر دهند."
     automatically_download_gravatars: "Gravatar برای کاربران در زمان ایجاد حساب‌کاربری یا تغییر ایمیل، دانلود شود."
     digest_topics: "حداکثر تعداد موضوعات محبوب برای نمایش در ایمیل خلاصه"
@@ -1724,11 +1712,8 @@ fa_IR:
     enable_user_directory: "شاخه کاربری را برای مرور ارائه کن"
     enable_group_directory: "یک فهرست راهنما برای گروه‌ها فراهم کنید"
     allow_anonymous_mode: "گزینه‌ای را فعال کنید که به کاربران اجازه دهد برای ارسال نوشته‌ها به حالت ناشناس تغییر کنند. با فعال‌سازی، کاربران می‌توانند هویت خود را هنگام ایجاد نوشته‌ها یا موضوعات در وبگاه پنهان کنند. همچنین به اجازه پسندیده ناشناس مراجعه کنید."
-    allow_likes_in_anonymous_mode: "این تنظیمات را فعال کنید تا به کاربران اجازه دهید که در حالت ناشناس به نوشته‌ها واکنش پسندیدن دهند. با فعال‌سازی، کاربران می‌توانند هویت خود را هنگام واکنش پسندیدن دادن به نوشته‌ها یا موضوعات پنهان نگه دارند. همچنین به اجازه حالت ناشناس مراجعه کنید."
-    anonymous_posting_min_trust_level: "حداقل سطح اعتماد برای فعال‌سازی نوشته گذاشتن در حالت ناشناس"
     anonymous_account_duration_minutes: "برای محافظت از ناشناس ماندن، هر N دقیقه برای هر کاربر یک حساب‌کاربری ناشناس بساز. برای مثال: اگر به ۶۰۰ تنظیم شود، به محض اینکه ۶۰۰ دقیقه از آخرین فرسته گذشت و کاربر به حالت ناشناس تغییر کرد، حساب کاربری جدید ناشناس ساخته می شود."
     hide_user_profiles_from_public: "غیر‌فعال‌سازی کارت کاربری، پروفایل کاربر و فهرست راهنمای کاربر برای کاربران ناشناس."
-    allowed_user_website_domains: "سایت کاربر بر خلاف این دامنه‌ها تایید می‌شود. فهرست مرز‌های مشخص."
     allow_profile_backgrounds: "به کاربر اجازه بده تا پس‌زمینه نمایه خود را بارگذاری کند."
     get_a_room_threshold: "تعداد نوشته‌هایی که کاربر باید در یک موضوع ایجاد کند تا به او اخطار داده شود."
     enable_mobile_theme: "دستگاه های موبایلی که از قالب مناسب موبایل استفاده می کنند٬‌ با قابلیت جابجایی به حالت نمایش کامل. اگر از استایلی استفاده می‌کنید که کاملا واکنشگرا است این قسمت را غیر‌فعال کنید."
@@ -1769,13 +1754,11 @@ fa_IR:
     default_categories_watching_first_post: "لیست دسته‌بندی‌هایی که نوشته‌هایشان در هر موضوع به صورت پیشفرض تحت نظر هستند."
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
     allowed_user_api_push_urls: "لینک‌های مجاز برای سرور و ارسال به API کاربری"
-    min_trust_to_create_tag: "حداقل سطح اعتماد مورد نیاز برای ایجاد برچسب."
     max_tags_per_topic: "حداکثر برچسب‌هایی که می‌توانند در یک موضوع به کار برده شوند."
     max_tag_length: "حداکثر تعداد نویسه قابل استفاده در یک برچسب"
     max_tag_search_results: "وقتی برای برچسب جستجو می‌شود، حداکثر تعداد نتایج برای نمایش."
     max_tags_in_filter_list: "حداکثر تعداد برچسب‌ها برای نمایش در منو کشویی. بیشترین استفاده شده ها نمایش داده می‌شوند."
     tags_sort_alphabetically: "نمایش برچسب‌ها به ترتیب الفبا. پیشفرض نمایش به ترتیب محبوبیت است."
-    min_trust_level_to_tag_topics: "حداقل سطح اعتماد مورد نیاز برای برچسب زدن به موضوع"
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
     enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
     sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"
@@ -1814,6 +1797,11 @@ fa_IR:
       topic: "نتایج"
       user: "کاربران"
     results_page: "نتایج جستجو برای '%{term}'"
+  filter:
+    description:
+      in_new: "نمایش موضوعاتی که جدید هستند یا پاسخ جدید دارند"
+      in_new_replies: "نمایش موضوعات با پاسخ‌های جدید"
+      in_new_topics: "نمایش موضوعات جدید"
   discourse_connect:
     login_error: "خطا در ورود"
     not_found: "حساب کاربری پیدا نشد. لطفا با مدیریت سایت تماس بگیرید."
@@ -2020,6 +2008,7 @@ fa_IR:
       title: "نوشته نیاز به تایید دارد"
     welcome_user:
       title: "خوش‌آمد کاربر"
+      preview: "به %{site_name} خوش آمدید!"
       subject_template: "به %{site_name} خوش آمدید!"
       text_body_template: |
         سپاس که به %{site_name} پیوستید و خوش آمدید!
@@ -2031,6 +2020,7 @@ fa_IR:
         از بودن در انجمن لذت ببرید!
     welcome_invite:
       title: "دعوت خوش‌آمد"
+      preview: "به %{site_name} خوش آمدید!"
       subject_template: "به %{site_name} خوش آمدید!"
       text_body_template: |
         با تشکر از شما برای قبول دعوت به %{site_name} -- خوش آمدید!
@@ -2185,6 +2175,7 @@ fa_IR:
       title: "نوشته هرزنامه مسدود شد"
       subject_template: "کاربر جدید%{username} به‌دلیل پیوند‌های تکراری نوشته مسدود شده است"
     unsilenced:
+      preview: "حساب کاربری در انتظار نیست."
       subject_template: "حساب کاربری در انتظار نیست"
       text_body_template: |
         سلام،
@@ -2219,7 +2210,6 @@ fa_IR:
     برای لغو اشتراک از این ایمیل‌ها[کلیک کنید](%{unsubscribe_url}).
   subject_re: "پاسخ: "
   subject_pm: "[PM] "
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "پاسخ‌های قبلی"
     reached_limit:
@@ -2518,10 +2508,7 @@ fa_IR:
   page_not_found:
     page_title: "صفحه پیدا نشد"
     title: "اوه! صفحه وجود ندارد یا خصوصی‌ است."
-    popular_topics: "محبوب"
-    recent_topics: "اخیر"
     see_more: "بیشتر"
-    search_title: "جستجو در سایت"
     search_button: "جستجو"
   upload:
     edit_reason: "کپی عکس‌های محلی دانلود شد"
@@ -2629,8 +2616,6 @@ fa_IR:
     nice_share:
       name: اشتراک‌گذاری خوب
       description: یک نوشته با 25 بازدید‌کننده یکتا را به اشتراک گذاشته‌اید.
-      long_description: |
-        این نشان زمانی اعطا می‌شود که یک لینک را به اشتراک بگذارید و 25 کلیک دریافت کند. با تشکر از شما برای کمک به گسترش سخن درباره بحث‌های ما، و این انجمن.
     good_share:
       name: اشتراک‌گذاری بهتر
       description: یک نوشته با 300 بازدید یکتا را به اشتراک گذاشته
@@ -2775,22 +2760,18 @@ fa_IR:
     title: "ورود به حالت امن"
     no_themes: "غیرفعال کردن پوسته‌ها و اجزای پوسته"
     enter: "فعال‌سازی حالت امن"
+  dev_mode:
+    enter: "وارد شدن "
   wizard:
     title: "راه اندازی Discourse"
     step:
-      introduction:
-        title: "درباره سایت شما"
+      setup:
+        title: "شروع"
         fields:
           title:
             label: "نام انجمن"
-            placeholder: "انجمن آزموده"
-          site_description:
-            label: "انجمن خود را در یک جمله توصیف کنید"
-            placeholder: "محلی برای آموزش انواع زبان‌های برنامه نویسی"
           default_locale:
             label: "زبان"
-      privacy:
-        fields:
           login_required:
             label: "قابل مشاهده"
             choices:
@@ -2798,47 +2779,14 @@ fa_IR:
                 label: "عمومی"
               private:
                 label: "خصوصی"
-          chat_enabled:
-            placeholder: "فعال کردن گفتگو"
-      ready:
-        title: "سایت شما آماده است!"
-      styling:
-        fields:
-          styling_preview:
-            label: "پیش‌نمایش"
-          homepage_style:
-            choices:
-              latest:
-                label: "آخرین"
-              hot:
-                label: "داغ"
-      branding:
-        title: "لوگوی سایت"
-        fields:
-          logo:
-            label: "لوگوی اصلی"
-            description: "اندازه پیشنهادی: 600*200"
-          logo_small:
-            label: "لوگو مربع"
-      corporate:
-        title: "سازمان شما"
-        fields:
-          company_name:
-            label: "نام شرکت"
-          contact_url:
-            label: "صفحه وب"
-            placeholder: "https://www.example.com/contact-us"
-          contact_email:
-            placeholder: "example@user.com"
-      invites:
-        title: "دعوت همکاران"
-      finished:
-        title: "Discourse شما آماده‌ست!"
   onebox:
     discourse:
       user_joined_community: "در %{date} عضو شدن"
     github:
       closed: "بسته"
+      status_date:
+        approved: "تایید شده"
+        closed: "بسته شده"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'
@@ -2871,18 +2819,19 @@ fa_IR:
         title: "کاربر تعلیق شده"
       agree_and_restore:
         title: "بازیابی نوشته"
-      delete_single:
+      delete:
         title: "حذف"
         complete: "نوشته حذف شده."
-      delete:
-        title: "حذف…"
       delete_and_ignore:
         complete: "نوشته حذف شده."
       delete_and_agree:
         title: "حذف نوشته"
         complete: "نوشته حذف شده."
-      disagree:
+      disagree_and_restore:
+        title: "بازیابی نوشته"
+      disagree_bundle:
         title: "خیر"
+      disagree:
         complete: "پرچم نادیده گرفته شد."
       ignore:
         title: "چشم پوشی"
@@ -2890,24 +2839,51 @@ fa_IR:
       ignore_and_do_nothing:
         complete: "پرچم نادیده گرفته شد."
       approve:
-        title: "تایید"
+        title: "بله"
         complete: "نوشته تایید شده."
       approve_post:
+        title: "بله"
         complete: "نوشته تایید شده."
+      approve_post_closed:
+        title: "بله"
+        complete: "نوشته تایید شده."
+      reject_post_bundle:
+        title: "خیر"
       reject_post:
         complete: "نوشته رد شده."
       approve_user:
+        title: "بله"
         complete: "کاربر تایید شده."
       reject_user:
-        title: "حذف کاربر…"
+        title: "خیر"
         delete:
           title: "حذف کاربر"
           complete: "کاربر حذف شده."
+      confirm_spam:
+        title: "بله"
+      not_spam:
+        title: "خیر"
       reject:
         title: "رد کردن"
         bundle_title: "رد کردن…"
+      approve_and_restore:
+        title: "بله"
+      approve_and_unhide:
+        title: "بله"
+      no_action_post:
+        title: "هیچ اقدامی"
+      delete_post:
+        title: "حذف نوشته"
+        complete: "نوشته حذف شده"
+      restore_post:
+        title: "بازیابی نوشته"
+      no_action_user:
+        title: "هیچ اقدامی"
+      suspend_user:
+        title: "کاربر تعلیق شده"
       delete_user:
-        complete: "کاربر حذف شده."
+        title: "حذف کاربر"
+        complete: "کاربر حذف شده"
   fallback_username: "کاربران"
   user_status:
     errors:

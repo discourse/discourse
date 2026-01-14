@@ -4,7 +4,7 @@
 module GroupGuardian
   # Creating Method
   def can_create_group?
-    is_admin? || (SiteSetting.moderators_manage_categories_and_groups && is_moderator?)
+    is_admin? || (SiteSetting.moderators_manage_groups && is_moderator?)
   end
 
   # Edit authority for groups means membership changes only.
@@ -18,7 +18,7 @@ module GroupGuardian
   def can_admin_group?(group)
     is_admin? ||
       (
-        SiteSetting.moderators_manage_categories_and_groups && is_moderator? && can_see?(group) &&
+        SiteSetting.moderators_manage_groups && is_moderator? && can_see?(group) &&
           group.id != Group::AUTO_GROUPS[:admins]
       )
   end

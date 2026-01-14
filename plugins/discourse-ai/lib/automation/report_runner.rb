@@ -68,13 +68,8 @@ module DiscourseAi
           @receivers = []
         end
         @email_receivers = receivers&.filter { |r| r.include? "@" }
-        @title =
-          if title.present?
-            title
-          else
-            I18n.t("discourse_automation.scriptables.llm_report.title")
-          end
-        @model = LlmModel.find_by(id: model.split(":")&.last)
+        @title = title.presence || I18n.t("discourse_automation.scriptables.llm_report.title")
+        @model = LlmModel.find_by(id: model)
         @persona = AiPersona.find(persona_id).class_instance.new
         @category_ids = category_ids
         @tags = tags
@@ -144,7 +139,7 @@ module DiscourseAi
         report_ctx =
           DiscourseAi::Personas::BotContext.new(
             user: Discourse.system_user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             feature_name: "ai_report",
             messages: [{ type: :user, content: input }],
           )

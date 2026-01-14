@@ -20,7 +20,7 @@ export default class ChatStyleguideChatModalMoveMessageToChannel extends Compone
   channel = new ChatFabricators(getOwner(this)).channel();
   selectedMessageIds = [
     new ChatFabricators(getOwner(this)).message({ channel: this.channel }),
-  ].mapBy("id");
+  ].map((item) => item.id);
 
   @action
   openModal() {
@@ -31,7 +31,7 @@ export default class ChatStyleguideChatModalMoveMessageToChannel extends Compone
           new ChatFabricators(getOwner(this)).message({
             channel: this.channel,
           }),
-        ].mapBy("id"),
+        ].map((item) => item.id),
       },
     });
   }

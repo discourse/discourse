@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 RSpec.describe DiscourseAssign::AssignController do
@@ -10,8 +9,8 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   fab!(:staff_group) { Group.find_by(name: "staff") }
-  fab!(:non_allowed_group) { Fabricate(:group) }
-  fab!(:allowed_group) { Fabricate(:group) }
+  fab!(:non_allowed_group, :group)
+  fab!(:allowed_group, :group)
 
   fab!(:admin)
   fab!(:allowed_user) { Fabricate(:user, username: "mads", name: "Mads", groups: [allowed_group]) }
@@ -340,8 +339,8 @@ RSpec.describe DiscourseAssign::AssignController do
 
   describe "#assigned" do
     fab!(:topic1) { Fabricate(:topic, bumped_at: 1.hour.from_now) }
-    fab!(:topic2) { Fabricate(:topic, bumped_at: 2.hour.from_now) }
-    fab!(:topic3) { Fabricate(:topic, bumped_at: 3.hour.from_now) }
+    fab!(:topic2) { Fabricate(:topic, bumped_at: 2.hours.from_now) }
+    fab!(:topic3) { Fabricate(:topic, bumped_at: 3.hours.from_now) }
 
     fab!(:assignments) do
       Fabricate(

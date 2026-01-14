@@ -19,7 +19,7 @@ describe PostSerializer do
     end
 
     context "when the post has been destroyed" do
-      before { PostDestroyer.new(Discourse.system_user, post_1).destroy }
+      before { PostDestroyer.new(Discourse.system_user, post_1, context: "spec").destroy }
 
       it "doesn’t serialize the associated event" do
         json = PostSerializer.new(post_1, scope: Guardian.new).as_json

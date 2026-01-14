@@ -1,20 +1,8 @@
 # frozen_string_literal: true
 
-require "net/imap"
 require "net/smtp"
 require "net/pop"
 
-# Usage:
-#
-# begin
-#   EmailSettingsValidator.validate_imap(host: "imap.test.com", port: 999, username: "test@test.com", password: "password")
-#
-#   # or for specific host preset
-#   EmailSettingsValidator.validate_imap(**{ username: "test@gmail.com", password: "test" }.merge(Email.gmail_imap_settings))
-#
-# rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
-#   EmailSettingsExceptionHandler.friendly_exception_message(err, host)
-# end
 class EmailSettingsValidator
   def self.validate_as_user(user, protocol, **kwargs)
     DistributedMutex.synchronize("validate_#{protocol}_#{user.id}", validity: 10) do
@@ -51,7 +39,7 @@ class EmailSettingsValidator
         end
       end
 
-      # This disconnects itself, unlike SMTP and IMAP.
+      # This disconnects itself, unlike SMTP.
       pop3.auth_only(username, password)
     rescue => err
       log_and_raise(err, debug)
@@ -74,16 +62,12 @@ class EmailSettingsValidator
     password:,
     domain: nil,
     authentication: nil,
-    enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
+    enable_starttls_auto: !GlobalSetting.smtp_force_tls && GlobalSetting.smtp_enable_start_tls,
     enable_tls: GlobalSetting.smtp_force_tls,
     openssl_verify_mode: GlobalSetting.smtp_openssl_verify_mode,
     debug: Rails.env.development?
   )
     begin
-      if enable_tls && enable_starttls_auto
-        raise ArgumentError, "TLS and STARTTLS are mutually exclusive"
-      end
-
       if username || password
         authentication = SmtpProviderOverrides.authentication_override(host) if authentication.nil?
         authentication = authentication.to_sym
@@ -120,7 +104,12 @@ class EmailSettingsValidator
       ssl_context = Net::SMTP.default_ssl_context
       ssl_context.verify_mode = openssl_verify_mode if openssl_verify_mode
 
-      smtp.enable_starttls_auto(ssl_context) if enable_starttls_auto
+      if enable_starttls_auto
+        # starttls is automatic, but we might need to change the context
+        smtp.enable_starttls_auto(ssl_context)
+      else
+        smtp.disable_starttls
+      end
       smtp.enable_tls(ssl_context) if enable_tls
 
       smtp.open_timeout = 5
@@ -132,35 +121,6 @@ class EmailSettingsValidator
 
       smtp.start(domain, username, password, authentication)
       smtp.finish
-    rescue => err
-      log_and_raise(err, debug)
-    end
-  end
-
-  ##
-  # Attempts to login, logout, and disconnect an IMAP session and if that raises
-  # an error then it is assumed the credentials or some other settings are wrong.
-  #
-  # @param debug [Boolean] - When set to true, any errors will be logged at a warning
-  #                          level before being re-raised.
-  def self.validate_imap(
-    host:,
-    port:,
-    username:,
-    password:,
-    open_timeout: 5,
-    ssl: true,
-    debug: false
-  )
-    begin
-      imap = Net::IMAP.new(host, port: port, ssl: ssl, open_timeout: open_timeout)
-      imap.login(username, password)
-      begin
-        imap.logout
-      rescue StandardError
-        nil
-      end
-      imap.disconnect
     rescue => err
       log_and_raise(err, debug)
     end

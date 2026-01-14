@@ -54,19 +54,19 @@ ar:
       others_dirty: "يحتوي الاستعلام على تغييرات غير محفوظة سيتم فقدها إذا انتقلت بعيدًا."
       run_time: "اكتمل الاستعلام في %{value} مللي ثانية."
       result_count:
-        zero: "%{count} نتيجةً."
+        zero: "%{count} من النتائج."
         one: "نتيجة واحدة (%{count})."
-        two: "نتيجتان (%{count})"
+        two: "نتيجتان (%{count})."
         few: "%{count} نتائج."
         many: "%{count} نتيجةً."
-        other: "%{count} نتيجةً."
+        other: "%{count} نتيجة."
       max_result_count:
-        zero: "جارٍ عرض أبرز %{count} نتيجةً."
+        zero: "جارٍ عرض أبرز %{count} من النتائج."
         one: "جارٍ عرض أبرز نتيجة (%{count})."
         two: "جارٍ عرض أبرز نتيجتين (%{count})."
         few: "جارٍ عرض أبرز %{count} نتائج."
         many: "جارٍ عرض أبرز %{count} نتيجةً."
-        other: "جارٍ عرض أبرز %{count} نتيجةً."
+        other: "جارٍ عرض أبرز %{count} نتيجة."
       query_name: "استعلام"
       query_groups: "المجموعات"
       link: "رابط لـ"
@@ -109,6 +109,8 @@ ar:
               label: تخطي إرسال رسالة شخصية إذا لم تكن هناك نتائج
             attach_csv:
               label: إرفاق ملف CSV بالرسالة الشخصية
+            users_from_group:
+              label: إرسال رسالة خاصة فردية لكل عضو في المجموعة
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

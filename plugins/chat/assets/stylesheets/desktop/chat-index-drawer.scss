@@ -16,7 +16,7 @@
     margin: 0 0.5rem 0 0.5rem;
 
     &:not(:last-of-type) {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
     }
 
     .chat-channel-metadata {
@@ -48,6 +48,7 @@
 .chat-drawer-container .c-channel-settings,
 .chat-drawer-container .c-channel-info__nav,
 .chat-drawer-container .c-channel-members,
+.chat-drawer-container .c-search,
 .chat-drawer-container .chat-message-creator-container {
   padding: 1rem;
   width: auto;

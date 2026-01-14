@@ -38,6 +38,7 @@ pt_BR:
         reminder:
           label: Lembrete
           description: Frequência com que a notificação de lembrete para aceitar a política deve ser enviada
+          no_reminder: (Sem lembrete)
         accept:
           label: Aceitar
           description: Texto usado no botão de aceitar
@@ -50,6 +51,9 @@ pt_BR:
         send-email:
           label: Enviar e-mail?
           description: Notifique os usuários da nova política por e-mail
+        add-users-to-group:
+          label: Adicionar usuários(as) ao grupo
+          description: Adicione usuários(as) ao grupo a seguir depois que aceitarem esta política
       preferences:
         title: Políticas
         policy_emails:

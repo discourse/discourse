@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseTopicVoting do
   let!(:user0) { Fabricate(:user) }
   let!(:user1) { Fabricate(:user) }
@@ -29,6 +27,14 @@ describe DiscourseTopicVoting do
 
     DiscourseTopicVoting::Vote.create!(user: user0, topic: topic0)
 
+    expect(user0.reached_voting_limit?).to eq(true)
+  end
+
+  it "doesn't allow users to vote if their trust level vote limit is 0" do
+    SiteSetting.topic_voting_tl1_vote_limit = 0
+    user0.update!(trust_level: 1)
+
+    expect(user0.vote_limit_0?).to eq(true)
     expect(user0.reached_voting_limit?).to eq(true)
   end
 

@@ -79,12 +79,18 @@ class WordWatcher
               r = word_to_regexp(word, match_word: SiteSetting.watched_words_regular_expressions?)
               begin
                 r if Regexp.new(r)
-              rescue RegexpError
+              rescue RegexpError => e
                 raise if raise_errors
+                Rails.logger.warn(
+                  "Watched word '#{word}' has invalid regex '#{r}' for #{action}: #{e.message}",
+                )
+                nil
               end
             end
             .select { |r| r.present? }
             .join("|")
+
+        next if regexp.blank?
 
         # Add word boundaries to the regexp for regular watched words
         regexp =
@@ -94,8 +100,17 @@ class WordWatcher
           ) if !SiteSetting.watched_words_regular_expressions?
 
         # Add case insensitive flag if needed
-        Regexp.new(regexp, group_key == :case_sensitive ? nil : Regexp::IGNORECASE)
+        begin
+          Regexp.new(regexp, group_key == :case_sensitive ? nil : Regexp::IGNORECASE)
+        rescue RegexpError => e
+          raise if raise_errors
+          Rails.logger.warn(
+            "Watched word compilation failed for #{action} (#{group_key}): #{e.message}. Regexp: #{regexp}",
+          )
+          nil
+        end
       end
+      .compact
   end
 
   def self.serialized_regexps_for_action(action, engine: :ruby)

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ug:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Apple بىلەن تىزىمغا كىرىڭ"
+        sr_title: "Apple بىلەن تىزىمغا كىرىڭ"
+        message: "Apple سالاھىيەت دەلىللەيدۇ"

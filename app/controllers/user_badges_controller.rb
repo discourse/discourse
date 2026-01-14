@@ -81,7 +81,7 @@ class UserBadgesController < ApplicationController
     params.require(:username)
     user = fetch_user_from_params
 
-    return render json: failed_json, status: 403 unless can_assign_badge_to_user?(user)
+    return render json: failed_json, status: :forbidden unless can_assign_badge_to_user?(user)
 
     badge = fetch_badge_from_params
     post_id = nil
@@ -90,7 +90,7 @@ class UserBadgesController < ApplicationController
       unless is_badge_reason_valid? params[:reason]
         return(
           render json: failed_json.merge(message: I18n.t("invalid_grant_badge_reason_link")),
-                 status: 400
+                 status: :bad_request
         )
       end
 
@@ -120,7 +120,7 @@ class UserBadgesController < ApplicationController
     user_badge = UserBadge.find(params[:id])
 
     unless can_assign_badge_to_user?(user_badge.user)
-      render json: failed_json, status: 403
+      render json: failed_json, status: :forbidden
       return
     end
 
@@ -133,14 +133,14 @@ class UserBadgesController < ApplicationController
     user_badge = UserBadge.find(params[:user_badge_id])
     user_badges = user_badge.user.user_badges
 
-    return render json: failed_json, status: 403 unless can_favorite_badge?(user_badge)
+    return render json: failed_json, status: :forbidden unless can_favorite_badge?(user_badge)
 
     is_favorite = user_badges.where(badge: user_badge.badge, is_favorite: true).exists?
 
     if !is_favorite &&
          user_badges.select(:badge_id).distinct.where(is_favorite: true).count >=
            SiteSetting.max_favorite_badges
-      return render json: failed_json, status: 400
+      return render json: failed_json, status: :bad_request
     end
 
     UserBadge.where(user_id: user_badge.user_id, badge_id: user_badge.badge_id).update_all(

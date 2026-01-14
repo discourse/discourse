@@ -158,6 +158,25 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       chat_page.visit_channel_members(channel_1)
       expect(chat_page).to have_no_add_member_button
     end
+
+    it "hides add member option when group chats are disabled for members" do
+      SiteSetting.chat_max_direct_message_users = 1
+
+      visit("/")
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_no_add_member_button
+    end
+
+    it "shows add member option when group chats are disabled but user is staff" do
+      SiteSetting.chat_max_direct_message_users = 1
+      current_user.update!(admin: true)
+
+      visit("/")
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_add_member_button
+    end
   end
 
   describe "removing members" do

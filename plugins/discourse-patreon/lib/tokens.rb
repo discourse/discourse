@@ -2,7 +2,7 @@
 
 require "json"
 
-module ::Patreon
+module Patreon
   class Tokens
     def self.update!
       conn = Faraday.new(url: "https://api.patreon.com")

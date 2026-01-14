@@ -166,6 +166,21 @@ RSpec.describe PostActionCreator do
       expect(score.reviewed_at).to be_blank
     end
 
+    it "uses the system locale for the message when auto close" do
+      Topic.any_instance.stubs(:auto_close_threshold_reached?).returns(true)
+      I18n.with_locale(:fr) { PostActionCreator.create(user, post, :inappropriate) }
+
+      post.topic.reload
+
+      expect(post.topic.posts.last.raw).to eq(
+        I18n.t(
+          "temporarily_closed_due_to_flags",
+          count: SiteSetting.num_hours_to_close_topic,
+          locale: :en,
+        ),
+      )
+    end
+
     describe "Auto hide spam flagged posts" do
       before do
         user.trust_level = TrustLevel[3]

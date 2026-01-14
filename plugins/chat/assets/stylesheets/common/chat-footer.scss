@@ -1,7 +1,7 @@
 .c-footer {
   grid-area: footer;
   background: var(--secondary);
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -21,8 +21,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-basis: 33%;
-    flex-shrink: 0;
+    flex-basis: auto;
+    flex-shrink: 1;
     flex-grow: 1;
     padding-block: 0.75rem;
     height: 100%;
@@ -79,6 +79,27 @@
       &:not(.-urgent) {
         width: 11px;
         height: 11px;
+      }
+    }
+  }
+}
+
+@container (max-width: 450px) {
+  .c-footer {
+    &__item {
+      .d-button-label {
+        font-size: var(--font-down-2-rem);
+      }
+    }
+  }
+}
+
+// iphone se is 375
+@container (max-width: 374px) {
+  .c-footer {
+    &__item {
+      .d-button-label {
+        display: none;
       }
     }
   }

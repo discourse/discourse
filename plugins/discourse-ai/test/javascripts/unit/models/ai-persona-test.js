@@ -1,5 +1,3 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { module, test } from "qunit";
 import AiPersona from "discourse/plugins/discourse-ai/discourse/admin/models/ai-persona";
 
@@ -20,8 +18,8 @@ module("Discourse AI | Unit | Model | ai-persona", function () {
       "ToolName2",
       "ToolName3",
     ]);
-    assert.equal(aiPersonaPOJO.toolOptions["ToolName"].option1, "value1");
-    assert.equal(aiPersonaPOJO.toolOptions["ToolName"].option2, "value2");
+    assert.strictEqual(aiPersonaPOJO.toolOptions["ToolName"].option1, "value1");
+    assert.strictEqual(aiPersonaPOJO.toolOptions["ToolName"].option2, "value2");
   });
 
   test("fromPOJO", function (assert) {
@@ -51,7 +49,7 @@ module("Discourse AI | Unit | Model | ai-persona", function () {
       rag_llm_model_id: 1,
       question_consolidator_llm_id: 2,
       allow_chat: false,
-      tool_details: true,
+      show_thinking: true,
       forced_tool_count: -1,
       allow_personal_messages: true,
       allow_topic_mentions: true,

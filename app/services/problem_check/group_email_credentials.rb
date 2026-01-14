@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ##
-# If group SMTP or IMAP has been configured, we want to make sure the
+# If group SMTP has been configured, we want to make sure the
 # credentials are always valid otherwise emails will not be sending out
 # from group inboxes. This check is run as part of scheduled admin
 # problem checks, and if any credentials have issues they will show up on
@@ -9,55 +9,37 @@
 class ProblemCheck::GroupEmailCredentials < ProblemCheck
   self.priority = "high"
   self.perform_every = 30.minutes
+  self.targets = -> { Group.with_smtp_configured.pluck(:name) }
 
   def call
-    [*smtp_errors, *imap_errors]
+    if group = Group.with_smtp_configured.find_by(name: target)
+      return no_problem if !SiteSetting.enable_smtp
+
+      return(
+        try_validate(group) do
+          EmailSettingsValidator.validate_smtp(
+            host: group.smtp_server,
+            port: group.smtp_port,
+            username: group.email_username,
+            password: group.email_password,
+          )
+        end
+      )
+    end
+
+    no_problem
   end
 
   private
-
-  def targets
-    [*Group.with_smtp_configured.pluck(:name), *Group.with_imap_configured.pluck(:name)]
-  end
 
   def translation_data(group)
     { group_name: group.name, group_full_name: group.full_name }
   end
 
-  def smtp_errors
-    return [] if !SiteSetting.enable_smtp
-
-    Group.with_smtp_configured.find_each.filter_map do |group|
-      try_validate(group) do
-        EmailSettingsValidator.validate_smtp(
-          host: group.smtp_server,
-          port: group.smtp_port,
-          username: group.email_username,
-          password: group.email_password,
-        )
-      end
-    end
-  end
-
-  def imap_errors
-    return [] if !SiteSetting.enable_imap
-
-    Group.with_imap_configured.find_each.filter_map do |group|
-      try_validate(group) do
-        EmailSettingsValidator.validate_imap(
-          host: group.imap_server,
-          port: group.imap_port,
-          username: group.email_username,
-          password: group.email_password,
-        )
-      end
-    end
-  end
-
   def try_validate(group, &blk)
     begin
       blk.call
-      nil
+      no_problem
     rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
       error_message =
         EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server)
@@ -69,7 +51,7 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
         message:
           "Unexpected error when checking SMTP credentials for group #{group.id} (#{group.name}).",
       )
-      nil
+      no_problem
     end
   end
 end

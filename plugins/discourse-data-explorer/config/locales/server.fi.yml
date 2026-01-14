@@ -20,4 +20,26 @@ fi:
     report_generator:
       private_message:
         title: "Kyselyn %{query_name} ajoitettu raportti"
+        body: |
+          Hei %{recipient_name}, Dataselaimen raporttisi on valmis.
+
+          Kyselyn nimi:
+          %{query_name}
+
+          Tässä ovat tulokset:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Näytä kysely Dataselaimessa</a>
+
+          Raportti luotu %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Kyselyn %{query_name} ajoitettu raportti
+
+          Tässä ovat tulokset:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Näytä kysely Dataselaimessa</a>
+
+          Raportti luotu %{created_at} (%{timezone})
       upload_appendix: "Liite: [%{filename}|attachment](%{short_url})"

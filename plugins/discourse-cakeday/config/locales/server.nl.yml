@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    cakeday_enabled: "Toon taartdagemoji['s] naast de naam van de gebruiker op de datum waarop deze lid is geworden van Discourse."
+    cakeday_emoji: "De weergegeven emoji['s] naast de naam van de gebruiker op de datum dat deze lid is geworden van Discourse. Meerdere emoji's kunnen als volgt worden opgegeven: smile|cake|smile"
+    cakeday_birthday_enabled: "Toon verjaardagsemoji['s] naast de naam van de gebruiker op diens verjaardag."
+    cakeday_birthday_emoji: "De weergegeven emoji['s] naast de naam van de gebruiker op diens verjaardag. Meerdere emoji's kunnen als volgt worden opgegeven: smile|cake|smile"

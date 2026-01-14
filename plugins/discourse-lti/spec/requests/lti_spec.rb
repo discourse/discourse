@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "LTI Plugin" do
   let(:authorize_url) { "https://example.com/authorize" }
   let(:platform_private_key) { OpenSSL::PKey::RSA.generate 2048 }
@@ -190,6 +188,7 @@ describe "LTI Plugin" do
 
     context "with invite custom field" do
       let(:invite) { Invite.generate(Discourse.system_user) }
+
       before do
         token_data[DiscourseLti::CUSTOM_DATA_CLAIM] = {
           DiscourseLti::DISCOURSE_INVITE_KEYS.first => invite.link,

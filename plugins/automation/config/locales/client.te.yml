@@ -27,6 +27,12 @@ te:
         text:
           label: వచనం
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: వర్గాలు
+            tags:
+              label: ట్యాగులు
         user_badge_granted:
           fields:
             badge:
@@ -129,6 +135,8 @@ te:
               label: విషయపు ఐడీ
             user:
               label: సభ్యుడు
+        set_topic_timer:
+          title: టాపిక్ టైమర్ ని సెట్ చేయండి
       models:
         trigger:
           name:
@@ -142,7 +150,5 @@ te:
             label: సంస్కరణ
           status:
             label: స్థితి
-          enabled:
-            label: ప్రారంభించబడింది
           disabled:
             label: నిలిపివేయబడింది

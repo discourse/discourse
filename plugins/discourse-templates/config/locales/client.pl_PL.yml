@@ -18,7 +18,7 @@ pl_PL:
         title: "Szablony (w obszarze tekstowym)"
         insert_template: "%{shortcut} Wstaw szablon"
     templates:
-      filter_hint: "Filtruj według tytułu..."
+      filter_hint: "Filtruj według słowa kluczowego..."
       insert_template: "Wstaw szablon"
       close_templates: "Zamknij selektor szablonów"
       copy: "Kopiuj szablon"

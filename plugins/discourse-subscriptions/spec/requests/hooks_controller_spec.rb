@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseSubscriptions::HooksController do
   before do
     SiteSetting.discourse_subscriptions_webhook_secret = "zascharoo"

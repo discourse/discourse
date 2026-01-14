@@ -8,8 +8,5 @@ ja:
   js:
     user_notes:
       title: "ユーザーメモ"
-      attach: "ユーザーメモを追加"
-      remove: "ユーザーメモを削除"
-      show: "ユーザーメモ（%{count}）"
+      attach_note_description: "このユーザーに関するメモを追加します。このメモはスタッフのみに表示されます。"
       delete_confirm: "このユーザーメモを削除してもよろしいですか？"
-      show_post: "投稿を表示"

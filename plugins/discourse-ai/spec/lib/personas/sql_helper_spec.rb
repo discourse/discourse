@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Personas::SqlHelper do
-  let(:sql_helper) { subject }
+  subject(:sql_helper) { described_class.new }
 
   before { enable_current_plugin }
 

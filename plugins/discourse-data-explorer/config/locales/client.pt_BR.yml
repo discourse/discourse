@@ -101,6 +101,8 @@ pt_BR:
               label: Pular envio de PM se não houver resultados
             attach_csv:
               label: Anexe um arquivo CSV à MP
+            users_from_group:
+              label: Enviar PM individual para cada membro do grupo
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

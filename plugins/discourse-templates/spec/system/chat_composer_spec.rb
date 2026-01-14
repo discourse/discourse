@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe "Inserting templates in the chat composer", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
-  fab!(:templates_category) { Fabricate(:category) }
+  fab!(:current_user, :user)
+  fab!(:other_user, :user)
+  fab!(:templates_category, :category)
   fab!(:template_simple) { Fabricate(:template_item, category: templates_category) }
   fab!(:template_variables) do
     Fabricate(
@@ -13,7 +13,7 @@ RSpec.describe "Inserting templates in the chat composer", type: :system do
     )
   end
 
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) do
     Fabricate(:chat_message, user: current_user, chat_channel: channel_1, use_service: true)
   end

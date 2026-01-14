@@ -61,6 +61,9 @@ fr:
     chat_integration_webex_excerpt_length: "Longueur des extraits de messages Webex Teams"
     chat_integration_google_enabled: "Activer le fournisseur d'intégration de chat Google Chat"
     chat_integration_google_excerpt_length: "Longueur des extraits de messages Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "Certains canaux d'intégration de messagerie instantanée présentent des erreurs. Rendez-vous dans <a href='%{base_path}/admin/plugins/chat-integration'>la section d'intégration de messagerie instantanée</a> pour en savoir plus."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -82,9 +85,9 @@ fr:
         status:
           header: |
             *Règles pour ce canal*
-            (si plusieurs règles correspondent à un message, la première règle sera appliquée)
+            (si plusieurs règles correspondent à une publication, la première règle sera appliquée)
           no_rules: "Aucune règle n'est définie pour ce canal. Exécutez « /discourse help » pour obtenir des instructions."
-          rule_string: "*%{index})* *%{filter}* messages dans la catégorie *%{category}*"
+          rule_string: "*%{index})* *%{filter}* publications dans la catégorie *%{category}*"
           rule_string_tags_suffix: " avec les étiquettes : *%{tags}*"
         parse_error: "Désolé, je n'ai pas compris. Exécutez « /discourse help » pour obtenir des instructions."
         create:
@@ -98,22 +101,22 @@ fr:
           tag: "L'étiquette *%{name}* est introuvable."
           category: "La catégorie *%{name}* est introuvable. Catégories disponibles : *%{list}*"
         help: |
-          *Nouvelle règle :* « /discourse [thread|watch|follow|mute] [category] [tag:name] »
+          *Nouvelle règle :* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
           (vous devez spécifier un type de règle et au moins une catégorie ou étiquette)
           - *thread* : avertir ce canal en cas de nouveau sujet ou de nouvelle réponse au fil si possible
           - *watch* : avertir ce canal en cas de nouveau sujet ou de nouvelle réponse
           - *follow* : avertir ce canal en cas de nouveau sujet
           - *mute* : bloquer les notifications de ce canal
 
-          *Supprimer la règle :* « /discourse remove [rule number] »
-          (exécutez « /discourse status » pour trouver « [rule number] »)
+          *Supprimer la règle :* `/discourse remove [rule number]`
+          (exécutez `/discourse status` pour trouver `[rule number]`)
 
-          *Lister les règles :* « /discourse status »
+          *Lister les règles :* `/discourse status`
 
-          *[Experimental] Transcription de message :* « /discourse post [n] »
+          *[Experimental] Transcription de message :* `/discourse post [n]`
           Créer un brouillon de sujet sur Discourse contenant les « n » derniers messages de ce canal
 
-          *Aide :* « /discourse help »
+          *Aide :* `/discourse help`
         transcript:
           modal_title: "Créer une transcription"
           modal_description: "Tous les messages du fil seront rassemblés dans un seul message sur le forum. Vous aurez la possibilité de modifier la transcription avant de la publier."
@@ -147,7 +150,7 @@ fr:
         status:
           header: |
             <b>Règles pour ce canal</b>
-            (si plusieurs règles correspondent à un message, la première règle sera appliquée)
+            (si plusieurs règles correspondent à une publication, la première règle sera appliquée)
           no_rules: "Aucune règle n'est définie pour ce canal. Exécutez <code>/help</code> pour obtenir des instructions."
           rule_string: "<b>%{index})</b> <b>%{filter}</b> messages dans la catégorie <b>%{category}</b>"
           rule_string_tags_suffix: " avec les étiquettes : <b>%{tags}</b>"
@@ -181,7 +184,7 @@ fr:
         status:
           header: |
             *Règles pour ce canal*
-            (si plusieurs règles correspondent à un message, la première règle sera appliquée)
+            (si plusieurs règles correspondent à une publication, la première règle sera appliquée)
           no_rules: "Aucune règle n'est définie pour ce canal. Exécutez « /discourse help » pour obtenir des instructions."
           rule_string: "*%{index})* *%{filter}* messages dans la catégorie *%{category}*"
           rule_string_tags_suffix: " avec les étiquettes : *%{tags}*"
@@ -197,28 +200,28 @@ fr:
           tag: "L'étiquette *%{name}* est introuvable."
           category: "La catégorie *%{name}* est introuvable. Catégories disponibles : *%{list}*"
         help: |
-          *Nouvelle règle :* « /discourse [watch|follow|mute] [category] [tag:name] »
+          *Nouvelle règle :* `/discourse [watch|follow|mute] [category] [tag:name]`
           (vous devez spécifier un type de règle et au moins une catégorie ou étiquette)
           - *watch* : avertir ce canal en cas de nouveau sujet ou de nouvelle réponse
           - *follow* : avertir ce canal en cas de nouveau sujet
           - *mute* : bloquer les notifications adressées à ce canal
 
-          *Supprimer une règle :* « /discourse remove [rule number] »
-          (exécutez « /discourse status » pour trouver « [rule number] »)
+          *Supprimer une règle :* `/discourse remove [rule number]`
+          (exécutez `/discourse status` pour trouver `[rule number]`)
 
-          *Lister les règles :* « /discourse status »
+          *Lister les règles :* `/discourse status`
 
-          *Aide :* « /discourse help »
+          *Aide :* `/discourse help`
       matrix:
         text_message: "%{user} a publié un message dans %{title} - %{post_url}"
         formatted_message: |
-          <b>%{user}</b> a publié un message dans <b><a href='%{post_url}'>%{title}</a></b>
+          <b>%{user}</b> a effectué une publication dans <b><a href='%{post_url}'>%{title}</a></b>
           <blockquote>
           %{excerpt}
           </blockquote>
       zulip:
         message: |
-          **%{user}** a publié un message dans **[%{title}](%{post_url})**
+          **%{user}** a effectué une publication dans **[%{title}](%{post_url})**
           ~~~citation
           %{excerpt}
           ~~~

@@ -10,5 +10,14 @@ he:
     discourse_templates_categories: "קטגוריות מהן למשוך את התבניות"
     discourse_templates_enable_private_templates: "לאפשר שימוש בתבניות פרטיות"
     discourse_templates_groups_allowed_private_templates: "קבוצות מורשות להשתמש בתבניות פרטיות. לחברי הסגל תמיד מותר."
+    discourse_templates_private_templates_tags: "תגיות שמזהות הודעה אישית כתבנית פרטית"
   default_category_template:
     name: תבניות
+    description: |
+      קטגוריה זו משמשת לאחסון תבניות.
+
+      תבניות מאפשרות למשתמשים לאחסן תוכן לשימוש חוזר תדיר.
+
+      כל נושא בקטגוריה זו מייצג תבנית שונה. **הפוסט הראשון** של כל נושא משמש כדגם לתבנית.
+
+      יש לשים לב שלכל משתמש שיש גישה לקטגוריה זו יורשה להשתמש בתבניות שבשימוש.

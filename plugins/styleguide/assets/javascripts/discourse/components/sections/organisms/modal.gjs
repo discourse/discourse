@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input, Textarea } from "@ember/component";
+import { Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DModal from "discourse/components/d-modal";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import withEventValue from "discourse/helpers/with-event-value";
 import { getLoadedFaker } from "discourse/lib/load-faker";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
@@ -111,16 +112,28 @@ export default class extends Component {
           />
         </Row>
         <Row @name="@title">
-          <Input @value={{this.title}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.title)))}}
+            type="text"
+            value={{this.title}}
+          />
         </Row>
         <Row @name="@subtitle">
-          <Input @value={{this.subtitle}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.subtitle)))}}
+            type="text"
+            value={{this.subtitle}}
+          />
         </Row>
         <Row @name="<:body>">
           <Textarea @value={{this.body}} />
         </Row>
         <Row @name="@flash">
-          <Input @value={{this.flash}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.flash)))}}
+            type="text"
+            value={{this.flash}}
+          />
         </Row>
         <Row @name="@flashType">
           <ComboBox

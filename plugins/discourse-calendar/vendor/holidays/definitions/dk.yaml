@@ -37,6 +37,8 @@ months:
     regions: [dk]
     function: easter(year)
     function_modifier: 26
+    year_ranges:
+      until: 2024
   - name: Kristi Himmelfartsdag
     regions: [dk]
     function: easter(year)
@@ -110,6 +112,16 @@ months:
     mday: 26
 
 tests:
+  - given:
+      date: '2023-05-05'
+      regions: ["dk"]
+    expect:
+      name: "Store Bededag"
+  - given:
+      date: '2024-04-26'
+      regions: ["dk"]
+    expect:
+      holiday: false
   - given:
       date: '2007-01-01'
       regions: ["dk"]

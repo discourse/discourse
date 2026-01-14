@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Patreon::PatreonAdminController do
   describe "#list" do
     let(:group1) { Fabricate(:group) }

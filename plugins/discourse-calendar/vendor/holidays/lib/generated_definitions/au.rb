@@ -33,18 +33,22 @@ module Holidays
             {:wday => 1, :week => 1, :name => "May Day", :regions => [:au_nt]},
             {:function => "may_pub_hol_sa(year)", :function_arguments => [:year], :name => "May Public Holiday", :regions => [:au_sa]}],
       6 => [{:wday => 1, :week => 1, :name => "Western Australia Day", :regions => [:au_wa]},
-            {:wday => 1, :week => 2, :name => "Queen's Birthday", :regions => [:au_act, :au_nsw, :au_sa, :au_tas, :au_nt, :au_vic]},
-            {:function => "qld_queens_birthday_june(year)", :function_arguments => [:year], :name => "Queen's Birthday", :regions => [:au_qld]},
+            {:wday => 1, :week => 2, :year_ranges => { :until => 2022 },:name => "Queen's Birthday", :regions => [:au_act, :au_nsw, :au_sa, :au_tas, :au_nt, :au_vic]},
+            {:wday => 1, :week => 2, :year_ranges => { :from => 2023 },:name => "King's Birthday", :regions => [:au_act, :au_nsw, :au_sa, :au_tas, :au_nt, :au_vic]},
+            {:function => "qld_queens_birthday_june(year)", :function_arguments => [:year], :year_ranges => { :until => 2022 },:name => "Queen's Birthday", :regions => [:au_qld]},
+            {:function => "qld_queens_birthday_june(year)", :function_arguments => [:year], :year_ranges => { :from => 2023 },:name => "King's Birthday", :regions => [:au_qld]},
             {:mday => 6, :type => :informal, :name => "Queensland Day", :regions => [:au_qld]}],
       7 => [{:wday => 5, :week => 3, :name => "Cairns Show", :regions => [:au_qld_cairns]}],
       8 => [{:wday => 3, :week => -3, :name => "Ekka", :regions => [:au_qld_brisbane]}],
-      9 => [{:wday => 1, :week => -1, :name => "Queen's Birthday", :regions => [:au_wa]},
+      9 => [{:wday => 1, :week => -1, :year_ranges => { :until => 2022 },:name => "Queen's Birthday", :regions => [:au_wa]},
+            {:wday => 1, :week => -1, :year_ranges => { :from => 2023 },:name => "King's Birthday", :regions => [:au_wa]},
             {:wday => 1, :week => -1, :name => "Family & Community Day", :regions => [:au_act]},
             {:function => "national_day_of_mourning_2022(year)", :function_arguments => [:year], :name => "National Day of Mourning", :regions => [:au]}],
       10 => [{:function => "afl_grand_final(year)", :function_arguments => [:year], :name => "Friday before the AFL Grand Final", :regions => [:au_vic]},
             {:wday => 1, :week => 1, :name => "Labour Day", :regions => [:au_act, :au_nsw, :au_sa]},
             {:function => "qld_labour_day_october(year)", :function_arguments => [:year], :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Labour Day", :regions => [:au_qld]},
-            {:function => "qld_queens_bday_october(year)", :function_arguments => [:year], :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Queen's Birthday", :regions => [:au_qld]},
+            {:function => "qld_queens_bday_october(year)", :function_arguments => [:year], :year_ranges => { :until => 2022 },:name => "Queen's Birthday", :regions => [:au_qld]},
+            {:function => "qld_queens_bday_october(year)", :function_arguments => [:year], :year_ranges => { :from => 2023 },:observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "King's Birthday", :regions => [:au_qld]},
             {:function => "hobart_show_day(year)", :function_arguments => [:year], :name => "Royal Hobart Show", :regions => [:au_tas_south]}],
       11 => [{:function => "g20_day_2014_only(year)", :function_arguments => [:year], :name => "G20 Day", :regions => [:au_qld_brisbane]},
             {:wday => 1, :week => 1, :name => "Recreation Day", :regions => [:au_tas_north]},
@@ -61,18 +65,16 @@ module Holidays
       {
           "afl_grand_final(year)" => Proc.new { |year|
 case year
+when year < 2015
+  nil
 when 2015
   Date.civil(2015, 10, 2)
 when 2016
   Date.civil(2016, 9, 30)
-when 2017
-  Date.civil(2017, 9, 29)
-when 2018
-  Date.civil(2018, 9, 28)
-when 2019
-  Date.civil(2019,9, 27)
 when 2020
   Date.civil(2020, 10, 23)
+else
+  Date.civil(year, 9, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 9, :last, :saturday) - 1)
 end
 },
 

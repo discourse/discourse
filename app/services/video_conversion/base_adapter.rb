@@ -23,23 +23,54 @@ module VideoConversion
 
     # Handles the completion of a successful conversion
     # This is called by the job system when status is :complete
-    def handle_completion(job_id, output_path, new_sha1)
+    def handle_completion(job_id, new_sha1)
       raise NotImplementedError, "#{self.class} must implement #handle_completion"
     end
 
     protected
 
-    def create_optimized_video_record(output_path, new_sha1, filesize, url)
-      OptimizedVideo.create_for(
-        @upload,
-        @upload.original_filename.sub(/\.[^.]+$/, "_converted.mp4"),
-        @upload.user_id,
+    def create_optimized_video_record(output_path, new_sha1, filesize, url, etag: nil)
+      options = {
         filesize: filesize,
         sha1: new_sha1,
         url: url,
         extension: "mp4",
         adapter: adapter_name,
+      }
+      options[:etag] = etag if etag.present?
+
+      OptimizedVideo.create_for(
+        @upload,
+        @upload.original_filename.sub(/\.[^.]+$/, "_converted.mp4"),
+        @upload.user_id,
+        **options,
       )
+    end
+
+    def update_posts_with_optimized_video(optimized_video)
+      Post
+        .where(
+          id: UploadReference.where(upload_id: @upload.id, target_type: "Post").select(:target_id),
+        )
+        .find_each do |post|
+          Rails.logger.info("Rebaking post #{post.id} to use optimized video")
+          post.rebake!
+        end
+
+      chat_message_subquery =
+        UploadReference.where(upload_id: @upload.id, target_type: "ChatMessage").select(:target_id)
+
+      if chat_message_subquery.exists? && defined?(Chat::Message)
+        Chat::Message
+          .where(id: chat_message_subquery)
+          .includes(uploads: { optimized_videos: :optimized_upload })
+          .find_each do |chat_message|
+            Rails.logger.info(
+              "Rebaking chat message #{chat_message.id} to use optimized video (upload_id: #{@upload.id}, optimized_upload_id: #{optimized_video.optimized_upload.id})",
+            )
+            chat_message.rebake!
+          end
+      end
     end
 
     private

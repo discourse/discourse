@@ -7,11 +7,11 @@
 pt_BR:
   admin_js:
     admin:
-      calendar: "Calendário"
+      calendar: "Calendário e Eventos"
       site_settings:
         categories:
           discourse_post_event: "Evento do Discourse"
-          discourse_calendar: "Calendário do Discourse"
+          discourse_calendar: "Calendário e Eventos"
   js:
     notifications:
       titles:
@@ -36,13 +36,16 @@ pt_BR:
         header_title: "Feriados"
         pick_region_description: "Escolha uma região para ver os feriados dessa região."
         disabled_holidays_description: "Feriados desativados serão excluídos do calendário de férias da equipe."
+        header_description: "Selecione uma região para ver os feriados. Feriados desativados serão excluídos do calendário de feriados da equipe."
       date: "Data"
       add_to_calendar: "Adicionar ao Google Calendar"
       toggle_timezone_offset_title: "Alternar deslocamento de fuso horário"
+      local_time: "Hora local"
       region:
         title: "Região"
         none: "Nenhum"
         use_current_region: "Usar região atual"
+        select_region: "Selecione uma região"
         names:
           ae: "Emirados Árabes Unidos"
           ar: "Argentina"
@@ -137,6 +140,7 @@ pt_BR:
           dk: "Dinamarca"
           ee: "Estônia"
           el: "Grécia"
+          gr: "Grécia"
           es_an: "Espanha (es_an)"
           es_ar: "Espanha (es_ar)"
           es_ce: "Espanha (es_ce)"
@@ -313,7 +317,7 @@ pt_BR:
         month: "Mês"
         week: "Semana"
         day: "Dia"
-        list: "Lista"
+        year: "Ano"
     group_timezones:
       search: "Pesquisar..."
       group_availability: "disponibilidade de %{group}"
@@ -323,10 +327,8 @@ pt_BR:
         after_event_reminder: "Um evento foi encerrado"
         ongoing_event_reminder: "Um evento está em andamento"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} definiu automaticamente sua presença e convidou para %{description}"
-        before_event_reminder_html: "Um evento está prestes a começar %{description}"
-        after_event_reminder_html: "Um evento terminou %{description}"
-        ongoing_event_reminder_html: "Um evento está em andamento  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} definiu automaticamente sua presença e convidou para %{eventName}"
+        an_event: "um evento"
       edit_reason: "Evento atualizado"
       edit_reason_closed: "Evento fechado"
       edit_reason_opened: "Evento aberto"
@@ -349,6 +351,7 @@ pt_BR:
       bulk_invite: "Convite em massa"
       close_event: "Encerrar evento"
       open_event: "Evento aberto"
+      destroy_event: "Excluir evento"
       invitees_modal:
         title_invited: "Participação no evento"
         title_participated: "Lista de usuários(as) que participaram"
@@ -375,6 +378,8 @@ pt_BR:
         creator: "Criador(a)"
         status: "Status"
         starts_at: "Começa"
+        all_events: "Todos os eventos"
+        my_events: "Meus eventos"
       upcoming_events_list:
         title: "Próximos eventos"
         empty: "Nenhum evento próximo"
@@ -398,13 +403,13 @@ pt_BR:
             not_going: "Não vou"
             interested: "Interessado"
             going_count:
-              one: "%{count} vão"
+              one: "%{count} vai"
               other: "%{count} vão"
             not_going_count:
-              one: "%{count} não vão"
+              one: "%{count} não vai"
               other: "%{count} não vão"
             interested_count:
-              one: "%{count} têm interesse"
+              one: "%{count} tem interesse"
               other: "%{count} têm interesse"
             invited_count:
               one: "%{count} usuário(a) convidado(a)"
@@ -412,16 +417,23 @@ pt_BR:
         event:
           expired: "Expirou"
           closed: "Fechados"
+          full: "Lotado"
           status:
             standalone:
               title: "Independente"
               description: "Não é possível entrar em um evento independente."
             public:
-              title: "Público(a)"
+              title: "Público"
               description: "Qualquer pessoa pode participar de um evento público."
             private:
               title: "Privado(a)"
               description: "Um evento privado só pode ter a participação de usuários(as) convidados(as)."
+      composer:
+        name_placeholder: "Evento"
+        end_date_placeholder: "Definir data final"
+        location_placeholder: "Adicionar local ou URL"
+        max_attendees_placeholder: "Máx. de participantes"
+        description_placeholder: "Adicionar descrição do evento"
       builder_modal:
         custom_fields:
           label: "Campos personalizados"
@@ -436,6 +448,9 @@ pt_BR:
         update: "Salvar"
         attach: "Criar evento"
         add_reminder: "Adicionar lembrete"
+        show_local_time:
+          label: "Exibir hora local"
+          description: "As datas e os horários serão exibidas em %{timezone}. Use esta opção para eventos em um determinado local, de modo que o fuso horário seja o do local onde ocorrerá o evento."
         timezone:
           label: Fuso horário
           remove_timezone: Sem fuso horário (UTC)
@@ -452,6 +467,8 @@ pt_BR:
           periods:
             before: "antes"
             after: "depois"
+        recurrence_until:
+          label: "Até (inclusive)"
         recurrence:
           label: "Recorrência"
           none: "Sem recorrência"
@@ -464,13 +481,21 @@ pt_BR:
         minimal:
           label: "evento mínimo"
           checkbox_label: "Ocultar botões Vou/Não vou e status dos(as) convidados(as)"
+        max_attendees:
+          label: "Máximo de participantes"
+          placeholder: "Sem limite"
+        allow_chat:
+          label: "Integração com chat"
+          checkbox_label: "Criar e gerenciar canal de chat específico de evento"
         url:
           label: "URL"
           placeholder: "Opcional"
         location:
           label: "Localização"
+          placeholder: "Adicione um link, local ou qualquer outra coisa."
         description:
           label: "Descrição"
+          placeholder: "Fale um pouco sobre o seu evento. Linhas e links novos são compatíveis."
         name:
           label: "Nome do evento"
           placeholder: "Opcional, o padrão é o título do tópico"
@@ -478,6 +503,7 @@ pt_BR:
           label: "Grupos convidados"
         status:
           label: "Status"
+        delete_confirmation_message: "Excluir este evento?"
       invite_user_or_group:
         title: "Notificar usuário(s) ou grupo(s)"
         invite: "Enviar"

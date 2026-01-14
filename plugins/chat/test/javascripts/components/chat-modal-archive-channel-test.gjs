@@ -12,8 +12,6 @@ module(
     setupRenderingTest(hooks);
 
     test("channel title is escaped in instructions correctly", async function (assert) {
-      const self = this;
-
       this.channel = new ChatFabricators(getOwner(this)).channel({
         title: `<script>someeviltitle</script>`,
       });
@@ -22,7 +20,7 @@ module(
         <template>
           <ArchiveChannel
             @inline={{true}}
-            @model={{hash channel=self.channel}}
+            @model={{hash channel=this.channel}}
           />
         </template>
       );

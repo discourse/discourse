@@ -16,7 +16,7 @@ register_asset "stylesheets/common/layout.scss"
 register_asset "stylesheets/common/subscribe.scss"
 register_asset "stylesheets/common/campaign.scss"
 register_asset "stylesheets/mobile/main.scss"
-register_svg_icon "far-credit-card" if respond_to?(:register_svg_icon)
+register_svg_icon "far-credit-card"
 
 register_html_builder("server:before-head-close") do |controller|
   "<script src='https://js.stripe.com/v3/' nonce='#{controller.helpers.csp_nonce_placeholder}'></script>"
@@ -75,7 +75,7 @@ after_initialize do
     url: "https://github.com/discourse/discourse-subscriptions",
   )
 
-  Discourse::Application.routes.append { mount ::DiscourseSubscriptions::Engine, at: "s" }
+  Discourse::Application.routes.append { mount DiscourseSubscriptions::Engine, at: "s" }
 
   add_to_serializer(:site, :show_campaign_banner) do
     begin

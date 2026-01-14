@@ -7,5 +7,5 @@ Fabricator(:llm_quota_usage) do
   output_tokens_used { 0 }
   usages { 0 }
   started_at { Time.current }
-  reset_at { Time.current + 1.day }
+  reset_at { 1.day.from_now }
 end

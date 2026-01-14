@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Alerte spoiler Discourse"
   js:
     spoiler:
-      title: Flouter le texte
+      title: Flouter le spoiler
       label:
         show: "Afficher le contenu masqué"
     composer:

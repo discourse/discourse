@@ -21,6 +21,8 @@ class OptimizedVideo < ActiveRecord::Base
         extension: options[:extension] || "mp4",
         url: options[:url],
         etag: options[:etag],
+        skip_video_conversion: true,
+        secure: upload.secure?,
       )
 
     optimized_video =

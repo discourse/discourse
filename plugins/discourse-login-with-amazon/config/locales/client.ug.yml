@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ug:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Amazon بىلەن تىزىمغا كىرىڭ"

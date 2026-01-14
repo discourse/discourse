@@ -12,7 +12,7 @@ pl_PL:
           spoiler_alert: "Alert o spoilerach w Discourse"
   js:
     spoiler:
-      title: Spoiler rozmycia
+      title: Rozmycie spoilera
       label:
         show: "Pokaż ukrytą zawartość"
     composer:

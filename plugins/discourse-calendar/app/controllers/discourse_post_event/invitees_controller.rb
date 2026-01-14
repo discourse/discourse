@@ -52,8 +52,19 @@ module DiscoursePostEvent
     def update
       invitee = Invitee.find_by(id: params[:invitee_id], post_id: params[:event_id])
       guardian.ensure_can_act_on_invitee!(invitee)
-      invitee.update_attendance!(invitee_params[:status])
-      render json: InviteeSerializer.new(invitee)
+      begin
+        invitee.update_attendance!(invitee_params[:status])
+        render json: InviteeSerializer.new(invitee)
+      rescue Discourse::InvalidParameters => e
+        if e.message == "max_attendees"
+          render_json_error(
+            I18n.t("discourse_post_event.errors.models.event.max_attendees_reached"),
+            422,
+          )
+        else
+          raise
+        end
+      end
     end
 
     def create
@@ -73,8 +84,19 @@ module DiscoursePostEvent
         raise Discourse::InvalidAccess if !guardian.can_act_on_discourse_post_event?(event)
       end
 
-      invitee = Invitee.create_attendance!(user.id, params[:event_id], invitee_params[:status])
-      render json: InviteeSerializer.new(invitee)
+      begin
+        invitee = Invitee.create_attendance!(user.id, params[:event_id], invitee_params[:status])
+        render json: InviteeSerializer.new(invitee)
+      rescue Discourse::InvalidParameters => e
+        if e.message == "max_attendees"
+          render_json_error(
+            I18n.t("discourse_post_event.errors.models.event.max_attendees_reached"),
+            422,
+          )
+        else
+          raise
+        end
+      end
     end
 
     def destroy

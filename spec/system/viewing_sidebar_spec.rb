@@ -203,11 +203,6 @@ describe "Viewing sidebar", type: :system do
         end
         let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
 
-        before do
-          SiteSetting.experimental_sidebar_messages_count_enabled_groups =
-            Group::AUTO_GROUPS[:trust_level_0]
-        end
-
         it "should show new messages indicator" do
           sign_in(admin)
           visit("/")
@@ -226,15 +221,8 @@ describe "Viewing sidebar", type: :system do
           user_private_messages_page.visit(admin)
           user_private_messages_page.click_unseen_private_mesage(private_message.id)
           expect(sidebar).to have_my_messages_link_with_unread_icon
-          try_until_success { expect(sidebar).to have_my_messages_link_without_unread_icon }
-        end
 
-        context "when user does not belong to experimental_sidebar_messages_count_enabled_groups" do
-          before { SiteSetting.experimental_sidebar_messages_count_enabled_groups = "" }
-
-          it "does not show new messages indicator" do
-            sign_in(admin)
-            visit("/")
+          try_until_success(reason: "Liking relying on messagebus updates") do
             expect(sidebar).to have_my_messages_link_without_unread_icon
           end
         end

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-RSpec.describe ::Patreon::Api do
+RSpec.describe Patreon::Api do
   let(:url) do
     "https://api.patreon.com/oauth2/api/current_user/campaigns?include=rewards,creator,goals,pledges&page%5Bcount%5D=100"
   end

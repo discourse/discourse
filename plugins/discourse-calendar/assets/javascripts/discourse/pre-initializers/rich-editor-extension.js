@@ -1,11 +1,15 @@
 import { camelize } from "@ember/string";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { buildBBCodeAttrs } from "discourse/lib/text";
+import EventNodeView from "../components/event-node-view";
 import { buildEventPreview } from "../initializers/discourse-post-event-decorator";
 
-const EVENT_ATTRIBUTES = {
+export const EVENT_ATTRIBUTES = {
   name: { default: null },
   start: { default: null },
   end: { default: null },
+  location: { default: null },
+  maxAttendees: { default: null },
   reminders: { default: null },
   minimal: { default: null },
   closed: { default: null },
@@ -16,18 +20,24 @@ const EVENT_ATTRIBUTES = {
   recurrence: { default: null },
   recurrenceUntil: { default: null },
   chatEnabled: { default: null },
-  chatChannelId: { default: null },
 };
 
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeViews: {
+    event: {
+      component: EventNodeView,
+      name: "event",
+    },
+  },
+
   nodeSpec: {
     event: {
       attrs: EVENT_ATTRIBUTES,
       group: "block",
+      content: "block*",
       defining: true,
       isolating: true,
-      draggable: true,
       parseDOM: [
         {
           tag: "div.discourse-post-event",
@@ -81,24 +91,44 @@ const extension = {
 
   serializeNode: {
     event(state, node) {
-      let bbcode = "[event";
+      const attrs = buildBBCodeAttrs(node.attrs);
+      state.write(`[event${attrs ? ` ${attrs}` : ""}]\n`);
 
-      Object.entries(node.attrs).forEach(([key, value]) => {
-        if (value !== null) {
-          bbcode += ` ${key}="${value}"`;
-        }
-      });
+      if (node.content.size > 0) {
+        state.renderContent(node);
+      }
 
-      bbcode += "]\n[/event]\n";
-
-      state.write(bbcode);
+      state.write("[/event]\n");
     },
   },
+  inputRules: ({ utils: { convertFromMarkdown }, getContext }) => ({
+    match: /^\[event([^\]]*)]$/,
+    handler: (state, match, start, end) => {
+      const currentUser = getContext().currentUser;
+      const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
+
+      const userInput = match[1].trim();
+      let eventMarkdown;
+
+      if (userInput) {
+        eventMarkdown = `[event ${userInput}]\n[/event]`;
+      } else {
+        const now = moment.tz(moment(), timezone);
+        const defaults = `start="${now.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}"`;
+        eventMarkdown = `[event ${defaults}]\n[/event]`;
+      }
+
+      const doc = convertFromMarkdown(eventMarkdown);
+      return doc.content.firstChild
+        ? state.tr.replaceWith(start, end, doc.content.firstChild)
+        : null;
+    },
+  }),
 };
 
 export default {
   initialize() {
-    withPluginApi("2.1.1", (api) => {
+    withPluginApi((api) => {
       api.registerRichEditorExtension(extension);
     });
   },

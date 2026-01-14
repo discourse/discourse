@@ -9,35 +9,31 @@ module Jobs
     def execute(args)
       return if !DiscourseAi::Translation.backfill_enabled?
 
+      llm_model = find_llm_model
+      return if llm_model.blank?
+
+      unless LlmCreditAllocation.credits_available?(llm_model)
+        Rails.logger.info(
+          "Posts locale detection backfill skipped: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       limit = SiteSetting.ai_translation_backfill_hourly_rate / (60 / 5) # this job runs in 5-minute intervals
 
       posts =
-        Post
+        DiscourseAi::Translation::PostCandidates
+          .get()
           .where(locale: nil)
-          .where(deleted_at: nil)
-          .where("posts.user_id > 0")
-          .where("posts.created_at > ?", SiteSetting.ai_translation_backfill_max_age_days.days.ago)
-          .where.not(raw: [nil, ""])
+          .order(updated_at: :desc)
+          .limit(limit)
 
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
-        posts =
-          posts
-            .joins(:topic)
-            .where(topics: { category_id: Category.where(read_restricted: false).select(:id) })
-            .where("archetype != ?", Archetype.private_message)
-      else
-        posts =
-          posts.joins(:topic).where(
-            "topics.archetype != ? OR EXISTS (SELECT 1 FROM topic_allowed_groups WHERE topic_id = topics.id)",
-            Archetype.private_message,
-          )
-      end
-
-      posts = posts.order(updated_at: :desc).limit(limit)
       return if posts.empty?
 
       posts.each do |post|
         begin
+          next if !DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, "")
+
           DiscourseAi::Translation::PostLocaleDetector.detect_locale(post)
         rescue FinalDestination::SSRFDetector::LookupFailedError
           # do nothing, there are too many sporadic lookup failures
@@ -49,6 +45,16 @@ module Jobs
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{posts.size} post locales")
+    end
+
+    private
+
+    def find_llm_model
+      persona_klass =
+        AiPersona.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_persona)
+      return nil if persona_klass.blank?
+
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end
 end

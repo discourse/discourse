@@ -2,7 +2,7 @@
 
 require "mysql2"
 
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::Phorum < ImportScripts::Base
   PHORUM_DB = "piwik"

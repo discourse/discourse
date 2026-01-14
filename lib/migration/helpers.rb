@@ -17,7 +17,7 @@ module Migration
     end
 
     def self.new_site?
-      !old_site?
+      !existing_site?
     end
   end
 end

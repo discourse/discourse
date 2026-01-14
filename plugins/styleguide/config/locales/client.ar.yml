@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "دليل أنماط Discourse"
   js:
     styleguide:
       title: "دليل الأنماط"
@@ -25,6 +30,8 @@ ar:
           title: "حقول إدخال التاريخ/الوقت"
         menus:
           title: "القوائم"
+        multi_select:
+          title: "اختيار متعدد"
         toasts:
           title: "الرسائل المنبثقة"
         font_scale:
@@ -52,8 +59,6 @@ ar:
           title: "التنقّل الرأسي"
         categories_list:
           title: "قائمة الفئات"
-        topic_link:
-          title: "رابط الموضوع"
         topic_list_item:
           title: "العنصر في قائمة الموضوعات"
         topic_statuses:
@@ -62,8 +67,6 @@ ar:
           title: "قائمة الموضوعات"
         basic_topic_list:
           title: "قائمة الموضوعات الأساسية"
-        footer_message:
-          title: "رسالة التذييل"
         signup_cta:
           title: "عبارة الحث على الاشتراك"
         topic_timer_info:
@@ -82,8 +85,8 @@ ar:
           title: "خريطة الموضوع"
         site_header:
           title: "رأس الموقع"
-        suggested_topics:
-          title: "الموضوعات المقترحة"
+        more_topics:
+          title: "المزيد من الموضوعات"
         post_menu:
           title: "قائمة المشاركة"
         modal:

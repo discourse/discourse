@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 da:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Ingen handling"
+        ignore:
+          title: "Ignorer flag"
   post_action_types:
     vote:
       title: "Stemmeafgivelse"
@@ -15,11 +22,9 @@ da:
           agree_and_suspend:
             title: "Suspendér Bruger"
           agree_and_silence:
-            title: "Ignorer Bruger"
-          disagree:
-            title: "Uenig"
+            title: "Ignorer bruger"
           ignore:
-            title: "Gør ingenting"
+            title: "Ignorer flag"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

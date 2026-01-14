@@ -346,7 +346,7 @@ module HasCustomFields
   protected
 
   def refresh_custom_fields_from_db
-    target = HashWithIndifferentAccess.new
+    target = ActiveSupport::HashWithIndifferentAccess.new
     _custom_fields
       .order(:id)
       .pluck(:name, :value)

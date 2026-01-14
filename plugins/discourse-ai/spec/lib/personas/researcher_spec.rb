@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Personas::Researcher do
-  let(:researcher) { subject }
+  subject(:researcher) { described_class.new }
 
   before { enable_current_plugin }
 

@@ -6,23 +6,13 @@ module DiscourseSolved::TopicExtension
   prepended { has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy }
 
   def accepted_answer_post_info
-    return nil unless solved
+    return unless solved
+    return unless answer_post = solved.answer_post
 
-    answer_post = solved.answer_post
+    answer_post_user = answer_post.user || Discourse.system_user
+    accepter = solved.accepter || self.user || Discourse.system_user
 
-    answer_post_user = answer_post.user
-    accepter = solved.accepter
-
-    excerpt =
-      if SiteSetting.solved_quote_length > 0
-        PrettyText.excerpt(
-          answer_post.cooked,
-          SiteSetting.solved_quote_length,
-          keep_emoji_images: true,
-        )
-      else
-        nil
-      end
+    excerpt = SiteSetting.solved_quote_length > 0 ? answer_post.cooked : nil
 
     accepted_answer = {
       post_number: answer_post.post_number,

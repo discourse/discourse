@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscoursePolicy do
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user1, :user)
 
   before { enable_current_plugin }
 
@@ -64,7 +62,7 @@ describe DiscoursePolicy do
     end
 
     context "with add_users_to_group present" do
-      fab!(:group2) { Fabricate(:group) }
+      fab!(:group2, :group)
       fab!(:post) { Fabricate(:post, user: moderator) }
       fab!(:policy666) do
         policy = Fabricate(:post_policy, post: post, add_users_to_group: group2.id)
@@ -87,6 +85,40 @@ describe DiscoursePolicy do
 
         expect(group2.users).to contain_exactly
       end
+    end
+  end
+
+  describe "current user serializer extensions" do
+    let(:serializer) { CurrentUserSerializer.new(user1, scope: Guardian.new(user1)) }
+
+    fab!(:group)
+
+    before { SiteSetting.create_policy_allowed_groups = "1|2|#{group.id}" }
+
+    it "returns false when user is not in a policy creation group" do
+      expect(serializer.can_create_policy).to be_falsey
+    end
+
+    it "returns true when user is in a policy creation group" do
+      group.add(user1)
+
+      expect(serializer.can_create_policy).to be_truthy
+    end
+  end
+
+  describe "deprecated settings" do
+    let(:fake_logger) { FakeLogger.new }
+
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
+
+    it "logs deprecation warning" do
+      SiteSetting.policy_restrict_to_staff_posts
+
+      expect(fake_logger.warnings[0]).to include(
+        "DEPRECATION NOTICE: `SiteSetting.policy_restrict_to_staff_posts` has been deprecated. Please use `SiteSetting.create_policy_allowed_groups` instead. (removal in Discourse 3.7.0)",
+      )
     end
   end
 end

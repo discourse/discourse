@@ -8,7 +8,9 @@ ur:
   discourse_automation:
     triggerables:
       topic:
-        title: ٹاپک
+        title: موضوع
+      user_updated:
+        title: رکن اپ ڈیٹ کے بعد
     scriptables:
       pin_topic:
         title: ٹاپک پِن کریں
@@ -16,3 +18,5 @@ ur:
         title: ٹاپک بند کریں
       append_last_checked_by:
         button_text: مکمل
+      set_topic_timer:
+        title: "ٹاپک ٹائمر مقرر کریں"

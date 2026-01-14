@@ -1,7 +1,7 @@
 import { apiInitializer } from "discourse/lib/api";
 import ChatModalChannelSummary from "../components/modal/chat-modal-channel-summary";
 
-export default apiInitializer("1.34.0", (api) => {
+export default apiInitializer((api) => {
   const siteSettings = api.container.lookup("service:site-settings");
   const currentUser = api.getCurrentUser();
   const chatService = api.container.lookup("service:chat");

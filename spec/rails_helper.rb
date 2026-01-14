@@ -17,7 +17,6 @@ end
 require "rubygems"
 require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
-require "pry-byebug"
 require "pry-rails"
 require "pry-stack_explorer"
 require "fabrication"
@@ -120,7 +119,7 @@ Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
-require_relative "./helpers/redis_snapshot_helper"
+require_relative "helpers/redis_snapshot_helper"
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
 if ENV["LOAD_PLUGINS"] == "1"
@@ -131,12 +130,7 @@ if ENV["LOAD_PLUGINS"] == "1"
   Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
 end
 
-# let's not run seed_fu every test
-SeedFu.quiet = true if SeedFu.respond_to? :quiet
-
 SiteSetting.automatically_download_gravatars = false
-
-SeedFu.seed
 
 # we need this env var to ensure that we can impersonate in test
 # this enable integration_helpers sign_in helper
@@ -154,7 +148,22 @@ module TestSetup
     WordWatcher.disable_cache
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
+
+    # Set some standard overrides for tests. Some for performance, some to make the tests easier,
+    # and some because their default was changed, and we didn't want to refactor all the relevant specs.
+    {
+      s3_upload_bucket: "bucket",
+      min_post_length: 5,
+      min_first_post_length: 5,
+      min_personal_message_post_length: 10,
+      download_remote_images_to_local: false,
+      unique_posts_mins: 0,
+      max_consecutive_replies: 0,
+      allow_uncategorized_topics: true,
+    }.each { |k, v| SiteSetting.set(k, v) }
+
     SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
+    SiteSetting.refresh_site_setting_group_ids!
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
@@ -190,6 +199,7 @@ module TestSetup
     Middleware::AnonymousCache.disable_anon_cache
     BlockRequestsMiddleware.allow_requests!
     BlockRequestsMiddleware.current_example_location = nil
+    ApplicationSerializer.fragment_cache.clear
   end
 end
 
@@ -233,6 +243,9 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Default is :fork, but this causes problems if any miniracer context have started
+  config.bisect_runner = :shell
 
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
@@ -332,6 +345,7 @@ RSpec.configure do |config|
     Discourse.current_user_provider = TestCurrentUserProvider
     Discourse::Application.load_tasks
 
+    SystemThemesManager.clear_system_theme_user_history!
     ThemeField.delete_all
     JavascriptCache.delete_all
     ThemeSiteSetting.delete_all
@@ -379,6 +393,8 @@ RSpec.configure do |config|
       minio_runner_config.minio_port = 9_000 + 2 * test_i
       minio_runner_config.minio_console_port = 9_001 + 2 * test_i
     end
+
+    DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
 
     WebMock.disable_net_connect!(
       allow_localhost: true,
@@ -433,6 +449,7 @@ RSpec.configure do |config|
 
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
+
         begin
           super
         rescue StandardError => e
@@ -465,6 +482,132 @@ RSpec.configure do |config|
 
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
+    config.before(:each, type: :system) do |example|
+      # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
+      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil?
+        example_file_path = example.metadata[:rerun_file_path]
+
+        if example_file_path
+          expanded_example_file_path = Pathname.new(example_file_path).expand_path
+          is_within_rails_root = expanded_example_file_path.to_s.start_with?(Rails.root.to_s)
+
+          if is_within_rails_root
+            extension_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
+            should_set_raise_on_deprecation =
+              if extension_match
+                type_dir, extension_name = extension_match.captures
+                extension_root = Rails.root.join(type_dir, extension_name)
+
+                # Preinstalled plugins/themes don't have a .git directory
+                !extension_root.join(".git").exist?
+              else
+                # Not a plugin or theme spec
+                true
+              end
+
+            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if should_set_raise_on_deprecation
+          end
+        end
+      end
+
+      if example.metadata[:time]
+        freeze_time(example.metadata[:time])
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.clock.set_fixed_time(example.metadata[:time])
+        end
+      end
+    end
+
+    module CapybaraPlaywrightBasePatch
+      private
+
+      def execute_async_client_settled_script(session)
+        result = session.evaluate_async_script(<<~JS)
+            const done = arguments[0];
+
+            if (window.clientSettled) {
+              window.clientSettled(#{Capybara.default_max_wait_time * 1000})
+                .then(done)
+                .catch((error) => { done(error.message) });
+            } else {
+              done();
+            }
+          JS
+
+        raise result if result.is_a? String
+      end
+
+      def wait_for_client_settled(method_name)
+        session = @driver.send(:session)
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+          execute_async_client_settled_script(session)
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        else
+          execute_async_client_settled_script(session)
+        end
+      end
+    end
+
+    module CapybaraPlaywrightNodePatch
+      include CapybaraPlaywrightBasePatch
+
+      NODE_METHODS_TO_PATCH = %i[
+        click
+        right_click
+        double_click
+        send_keys
+        hover
+        drag_to
+        scroll_by
+        scroll_to
+        trigger
+        set
+        select_option
+        unselect_option
+      ]
+
+      NODE_METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_client_settled(method_name)
+          result
+        end
+      end
+    end
+
+    module CapybaraPlaywrightBrowserPatch
+      include CapybaraPlaywrightBasePatch
+
+      METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
+
+      METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_client_settled(method_name)
+          result
+        end
+      end
+    end
+
+    Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
+
+    module PlaywrightErrorPatch
+      def message
+        msg = super
+        if msg.include?("Please run the following command to download new browsers:")
+          replacement = "pnpm playwright-install"
+          msg.sub("playwright install".ljust(replacement.size), replacement)
+        else
+          msg
+        end
+      end
+    end
+    Playwright::Error.prepend(PlaywrightErrorPatch)
+
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&
@@ -473,27 +616,31 @@ RSpec.configure do |config|
       end
     end
 
-    [
-      [PostAction, :post_action_type_id],
-      [Reviewable, :target_id],
-      [ReviewableHistory, :reviewable_id],
-      [ReviewableScore, :reviewable_id],
-      [ReviewableScore, :reviewable_score_type],
-      [SidebarSectionLink, :linkable_id],
-      [SidebarSectionLink, :sidebar_section_id],
-      [User, :last_seen_reviewable_id],
-      [User, :required_fields_version],
-    ].each do |model, column|
-      DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
-      model.reset_column_information
-    end
+    if ENV["CI"].present?
+      [
+        [PostAction, :post_action_type_id],
+        [Reviewable, :target_id],
+        [ReviewableHistory, :reviewable_id],
+        [ReviewableScore, :reviewable_id],
+        [ReviewableScore, :reviewable_score_type],
+        [SidebarSectionLink, :linkable_id],
+        [SidebarSectionLink, :sidebar_section_id],
+        [User, :last_seen_reviewable_id],
+        [User, :required_fields_version],
+      ].each do |model, column|
+        DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
+        model.reset_column_information
+      end
 
-    # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
-    # type mistmatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
-    # instead of 2**31-1 so that the values are easier to read.
-    DB
-      .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
-      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', '10000000000')" }
+      # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
+      # type mismatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
+      # instead of 2**31-1 so that the values are easier to read.
+      DB
+        .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
+        .each do |row|
+          DB.exec "SELECT setval('#{row.sequence_name}', GREATEST((SELECT last_value FROM #{row.sequence_name}), 10000000000))"
+        end
+    end
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
@@ -667,7 +814,9 @@ RSpec.configure do |config|
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       playwright_cli_executable_path: "./node_modules/.bin/playwright",
       logger: Logger.new(IO::NULL),
-      timezoneId: example.metadata[:timezone],
+      # NOTE: timezoneId is NOT set here because the driver is cached and reused,
+      # so only the first test's timezone would be applied. Instead, we use CDP
+      # to override the timezone per-test in the before(:each) hook below.
       colorScheme: example.metadata[:color_scheme],
     }
 
@@ -733,6 +882,15 @@ RSpec.configure do |config|
 
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
+
+      # Apply timezone override via CDP if timezone metadata is present.
+      # We use CDP instead of the driver's timezoneId option because the driver
+      # instance is cached and reused between tests, so timezoneId only affects
+      # the first test. CDP override works at runtime for each test.
+      if (tz = example.metadata[:timezone])
+        cdp = pw_page.context.new_cdp_session(pw_page)
+        cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: tz })
+      end
     end
   end
 
@@ -777,6 +935,7 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.clear
     Discourse.redis.flushdb
     Scheduler::Defer.do_all_work
+    clear_mocked_upcoming_change_metadata
   end
 
   config.after(:each, type: :system) do |example|
@@ -838,13 +997,25 @@ RSpec.configure do |config|
       end
     end
 
-    $playwright_logger.logs.each do |log|
-      next if log[:level] != "WARNING"
-      deprecation_id = log[:message][/\[deprecation id: ([^\]]+)\]/, 1]
+    deprecation_error =
+      $playwright_logger
+        &.logs
+        &.filter_map do |log|
+          if log[:level] == "trace"
+            error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
+            "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
+          end
+        end
+        &.first
+
+    expect(deprecation_error).to be_nil, deprecation_error
+
+    $playwright_logger&.logs&.each do |log|
+      next if log[:level] != "count"
+      deprecation_id = log[:message][/^deprecation_id:(.+?):\s*\d+$/, 1]
       next if deprecation_id.nil?
 
-      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= {}
-      deprecations[deprecation_id] ||= 0
+      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= Hash.new(0)
       deprecations[deprecation_id] += 1
     end
 
@@ -874,12 +1045,14 @@ RSpec.configure do |config|
 
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
     def log_on_user(user, session, cookies, opts = {})
-      session[:current_user_id] = user.id
+      # Try using the main session as `session` sometimes is a server session
+      (cookies.try(:request).try(:session) || session)[:current_user_id] = user.id
       super
     end
 
     def log_off_user(session, cookies)
-      session[:current_user_id] = nil
+      # Try using the main session as `session` sometimes is a server session
+      (cookies.try(:request).try(:session) || session).delete(:current_user_id)
       super
     end
   end
@@ -909,11 +1082,17 @@ def before_next_spec(&callback)
 end
 
 def global_setting(name, value)
+  SiteSetting.hidden_settings_provider.remove_hidden(name)
+  SiteSetting.shadowed_settings.delete(name)
   GlobalSetting.reset_s3_cache!
 
   GlobalSetting.stubs(name).returns(value)
 
-  before_next_spec { GlobalSetting.reset_s3_cache! }
+  before_next_spec do
+    SiteSetting.hidden_settings_provider.remove_hidden(name)
+    SiteSetting.shadowed_settings.delete(name)
+    GlobalSetting.reset_s3_cache!
+  end
 end
 
 def set_cdn_url(cdn_url)
@@ -1094,7 +1273,7 @@ def swap_2_different_characters(str)
 end
 
 def create_request_env(path: nil)
-  env = Rails.application.env_config.dup
+  env = Rails.application.env_config.dup.merge("rack.session" => ActionController::TestSession.new)
   env.merge!(Rack::MockRequest.env_for(path)) if path
   env
 end

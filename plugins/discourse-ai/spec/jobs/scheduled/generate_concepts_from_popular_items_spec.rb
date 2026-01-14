@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::GenerateConceptsFromPopularItems do
+  subject(:job) { described_class.new }
+
   fab!(:topic) { Fabricate(:topic, posts_count: 6, views: 150, like_count: 12) }
   fab!(:post) { Fabricate(:post, like_count: 8, post_number: 2) }
 
@@ -29,7 +31,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
       )
       allow(Jobs).to receive(:enqueue)
 
-      subject.execute({})
+      job.execute({})
     end
 
     it "processes popular topics when enabled" do
@@ -57,7 +59,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
           :find_candidate_posts,
         ).and_return([])
 
-        subject.execute({})
+        job.execute({})
       end
     end
 
@@ -85,7 +87,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
           batch_size: 10,
         )
 
-        subject.execute({})
+        job.execute({})
       end
     end
 
@@ -136,7 +138,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
         match_only: true,
       )
 
-      subject.execute({})
+      job.execute({})
     end
 
     it "does not schedule jobs when no candidates found" do
@@ -150,7 +152,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
       allow(Jobs).to receive(:enqueue)
       allow(Jobs).to receive(:enqueue_in)
 
-      subject.execute({})
+      job.execute({})
     end
 
     it "uses site setting values for topic filtering" do
@@ -175,7 +177,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
           :find_candidate_posts,
         ).and_return([])
 
-        subject.execute({})
+        job.execute({})
       end
     end
 
@@ -198,7 +200,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
           created_after: 45.days.ago,
         ).and_return([])
 
-        subject.execute({})
+        job.execute({})
       end
     end
 
@@ -231,7 +233,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
           created_after: 30.days.ago, # default from before block
         ).and_return([])
 
-        subject.execute({})
+        job.execute({})
       end
     end
 
@@ -248,7 +250,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
 
       allow(Jobs).to receive(:enqueue).twice
 
-      subject.execute({})
+      job.execute({})
     end
   end
 

@@ -9,13 +9,16 @@ ro:
     admin:
       site_settings:
         categories:
-          chat_integration: "Integrări pentru Chat"
+          chat_integration: "Integrări pentru discuții"
   js:
     chat_integration:
-      menu_title: "Integrări pentru Chat"
+      menu_title: "Integrări pentru discuții"
       settings: "Setări"
-      no_providers: "Trebuie să activezi niște furnizori în setările pluginului"
-      channels_with_errors: "Unele canale pentru acest furnizor au eșuat când au fost trimise mesaje ultima dată. Apăsați pictograma(ele) de eroare pentru a afla mai mult."
+      no_providers: "Trebuie să activezi niște furnizori în setările modulului"
+      channels_with_errors: "Unele canale pentru acest furnizor au eșuat când au fost trimise mesaje ultima dată. Dă clic pe pictogramele de eroare pentru a afla mai multe."
+      channel_exception: "A apărut o eroare necunoscută atunci când un mesaj a fost trimis ultima dată pe acest canal."
+      group_mention_template: "Mențiuni despre: @%{name}"
+      group_message_template: "Mesaje către: @%{name}"
       choose_group: "(selectează un grup)"
       all_categories: "(toate categoriile)"
       all_tags: "(toate etichetele)"
@@ -24,11 +27,11 @@ ro:
       delete_channel: "Șterge"
       test_channel: "Test"
       edit_channel: "Editează"
-      channel_delete_confirm: "Ești sigur că vrei să ștergi acest canal? Toate regulile asociate vor fi șterse."
+      channel_delete_confirm: "Sigur vrei să ștergi acest canal? Toate regulile asociate vor fi șterse."
       test_modal:
-        title: "Trimiteți un mesaj de test"
+        title: "Trimite un mesaj de test"
         topic: "Subiect"
-        send: "Trimiteți un mesaj de test"
+        send: "Trimite un mesaj de test"
         close: "Închide"
         error: "O eroare necunoscută a apărut atunci când mesajul era în curs de trimitere. Verifică jurnalele site-ului pentru mai multe informații."
         success: "Mesajul a fost trimis cu succes"
@@ -40,6 +43,7 @@ ro:
         mute: 'Silențios'
         follow: 'Doar prima postare'
         watch: 'Toate postările și răspunsurile'
+        thread: 'Toate postările cu răspunsuri grupate în fire de discuție'
       rule_table:
         filter: "Filtru"
         category: "Categorie"
@@ -65,71 +69,170 @@ ro:
         category: Categorie
         group: Grup
         tags: Etichete
+        instructions:
+          type: "Schimbă tipul pentru a declanșa notificări pentru mesajele sau mențiunile de grup"
+          filter: "Nivel de notificare. Dezactivarea sunetului are prioritate față de alte reguli de potrivire"
+          category: "Această regulă se va aplica doar subiectelor din categoria specificată"
+          group: "Această regulă se va aplica postărilor care fac referire la acest grup"
+          tags: "Dacă este specificată, această regulă se va aplica doar subiectelor care au cel puțin una dintre aceste etichete"
       provider:
         slack:
+          title: "Slack"
           param:
             identifier:
               title: Canal
+              help: "de ex. #canal, @utilizator."
+          errors:
+            action_prohibited: "Botul nu are permisiunea de a posta pe canalul respectiv"
+            channel_not_found: "Canalul specificat nu există pe Slack"
         telegram:
+          title: "Telegram"
           param:
             name:
               title: "Nume"
+              help: "Un nume pentru a descrie canalul. Nu este folosit pentru conexiunea la Telegram."
+            chat_id:
+              title: ID discuție
+              help: Un număr dat de bot sau un identificator de canal de difuzare sub forma @numecanal
+          errors:
+            channel_not_found: "Canalul specificat nu există pe Telegram"
+            forbidden: "Botul nu are permisiunea de a posta pe canalul respectiv"
         discord:
           title: "Discord"
           param:
             name:
               title: "Nume"
+              help: "Un nume pentru a descrie canalul. Nu este folosit pentru conexiunea la Discord."
+            webhook_url:
+              title: URL cârlig web
+              help: URL-ul cârligului web creat în setările serverului Discord
         guilded:
+          title: "Guilded"
           param:
             name:
               title: "Nume"
+              help: "Un nume pentru a descrie canalul. Nu este folosit pentru conexiunea la Guilded"
+            webhook_url:
+              title: URL cârlig web
+              help: URL-ul cârligului web creat în setările serverului Guilded
         mattermost:
+          title: "Mattermost"
           param:
             identifier:
               title: Canal
+              help: "de ex. #canal, @utilizator."
+          errors:
+            channel_not_found: "Canalul specificat nu există pe Mattermost"
         matrix:
+          title: "Matrix"
           param:
             name:
               title: "Nume"
+              help: "Un nume pentru a descrie canalul. Nu este folosit pentru conexiunea la Matrix."
+            room_id:
+              title: "ID cameră"
+          errors:
+            unknown_token: "Jetonul de acces nu este valid"
+            unknown_room: "ID-ul camerei nu este valid"
         zulip:
+          title: "Zulip"
           param:
+            stream:
+              title: "Flux"
+              help: "Numele fluxului Zulip către care ar trebui trimis mesajul. De exemplu „general”"
             subject:
               title: "Subiect"
+          errors:
+            does_not_exist: "Acel flux nu există pe Zulip"
         rocketchat:
+          title: "Rocket.Chat"
           param:
             identifier:
               title: Canal
+              help: "de ex. #canal, @utilizator."
+          errors:
+            invalid_channel: "Acel canal nu există pe Rocket Chat"
         gitter:
+          title: "Gitter"
           param:
             name:
               title: "Nume"
+              help: "Numele unei camere Gitter, de ex. gitterHQ/servicii."
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi o nouă integrare într-o cameră Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Jeton Flow"
+              help: "Jetonul Flow furnizat după crearea unei surse pentru un flux în care vrei să trimiți mesaje."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "Nume instanță GroupMe"
+              help: "Numele instanței Groupme așa cum este listată în setările site-ului. Folosește „toate” pentru a trimite la toate instanțele."
+          errors:
+            not_found: "Calea pe care ai încercat să postezi mesajul tău nu a fost găsită. Verifică ID-ul botului în setările site-ului."
         teams:
+          title: "Microsoft Teams"
           param:
             name:
               title: "Nume"
+              help: "Un nume de canal Teams, de ex. discourse"
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi un nou cârlig web de intrare"
+          errors:
+            invalid_channel: "Acel canal nu există pe Microsoft Teams"
         powerautomate:
+          title: "Microsoft Power Automate"
           param:
             name:
               title: "Nume"
+              help: "Un nume pentru canal (afișat doar în interfața de administrare Discourse)"
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi un nou cârlig web de intrare"
+          errors:
+            invalid_webhook: "Acea adresă URL pentru cârligul web nu este validă."
         webex:
+          title: "Webex Teams"
           param:
             name:
               title: "Nume"
+              help: "Un nume de spațiu Webex, de ex. discourse"
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi un nou cârlig web de intrare"
+          errors:
+            invalid_channel: "Acel canal nu există pe Webex"
         google:
+          title: "Google Chat"
           param:
             name:
               title: "Nume"
+              help: "Un nume pentru canal (afișat doar în interfața de administrare Discourse)"
+            webhook_url:
+              title: "URL cârlig web"
+              help: "Adresa URL furnizată atunci când creezi un nou cârlig web"
     discourse_automation:
       scriptables:
         send_slack_message:
+          title: Trimite mesaj Slack
           fields:
             message:
               label: Mesaj
+              description: >-
+                Folosește ${TOPIC} pentru numele subiectului, ${URL} pentru URL-ul utilizat, ${REMOVED_TAGS} pentru etichetele eliminate, ${ADDED_TAGS} pentru etichetele adăugate, ${ADDED_AND_REMOVED} pentru textul implicit. Disponibil doar dacă declanșatorul este setat la Etichete subiect modificate.
             url:
               label: URL
             channel:
               label: Canal
         send_chat_integration_message:
           fields:
+            channel_name:
+              label: Nume canal
             provider:
               label: Furnizor

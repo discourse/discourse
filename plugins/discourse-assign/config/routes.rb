@@ -10,7 +10,7 @@ DiscourseAssign::Engine.routes.draw do
 end
 
 Discourse::Application.routes.draw do
-  mount ::DiscourseAssign::Engine, at: "/assign"
+  mount DiscourseAssign::Engine, at: "/assign"
 
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
       :as => "topics_private_messages_assigned",

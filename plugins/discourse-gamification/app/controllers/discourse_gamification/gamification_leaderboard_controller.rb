@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   class GamificationLeaderboardController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
@@ -34,7 +34,7 @@ module ::DiscourseGamification
                  .new(leaderboard)
                  .as_json
                  .merge({ users: [], reason: e.message }),
-             status: 202
+             status: :accepted
     end
   end
 end

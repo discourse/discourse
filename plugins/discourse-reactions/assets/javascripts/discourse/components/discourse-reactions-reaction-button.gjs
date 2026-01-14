@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/components/d-button";
 import { emojiUrlFor } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
@@ -19,7 +19,7 @@ export default class ReactionsReactionButton extends Component {
     this.args.cancelCollapse();
 
     const currentUserReaction = this.args.post.current_user_reaction;
-    if (!this.capabilities.touch || !this.site.mobileView) {
+    if (!this.capabilities.touch || this.site.desktopView) {
       this.args.toggleFromButton({
         reaction: currentUserReaction
           ? currentUserReaction.id
@@ -57,6 +57,25 @@ export default class ReactionsReactionButton extends Component {
 
     this.args.cancelExpand();
     this.args.scheduleCollapse("collapseReactionsPicker");
+  }
+
+  get likedIcon() {
+    const icon = this.siteSettings.discourse_reactions_like_icon;
+    // Map "heart" to the d-liked alias to follow core replacement pattern
+    if (icon === "heart") {
+      return "d-liked";
+    }
+    return icon;
+  }
+
+  get unlikedIcon() {
+    const icon = this.siteSettings.discourse_reactions_like_icon;
+    // Map "heart" to the d-unliked alias to follow core replacement pattern
+    if (icon === "heart") {
+      return "d-unliked";
+    }
+
+    return `far-${icon}`;
   }
 
   get title() {
@@ -115,35 +134,28 @@ export default class ReactionsReactionButton extends Component {
       title={{this.title}}
     >
       {{#if @post.current_user_used_main_reaction}}
-        <button
-          type="button"
-          class="btn-toggle-reaction-like btn-icon no-text reaction-button"
-          title={{this.title}}
-        >
-          {{icon this.siteSettings.discourse_reactions_like_icon}}
-        </button>
+        <DButton
+          class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
+          @translatedTitle={{this.title}}
+          @icon={{this.likedIcon}}
+        />
       {{else if @post.current_user_reaction}}
-        <button
-          type="button"
-          class="btn-icon no-text reaction-button"
-          title={{this.title}}
+        <DButton
+          class="btn-icon no-text btn-flat reaction-button"
+          @translatedTitle={{this.title}}
         >
           <img
             class="btn-toggle-reaction-emoji reaction-button"
             src={{emojiUrlFor @post.current_user_reaction.id}}
             alt={{concat ":" @post.current_user_reaction.id}}
           />
-        </button>
+        </DButton>
       {{else}}
-        <button
-          type="button"
-          class="btn-toggle-reaction-like btn-icon no-text reaction-button"
-          title={{this.title}}
-        >
-          {{icon
-            (concat "far-" this.siteSettings.discourse_reactions_like_icon)
-          }}
-        </button>
+        <DButton
+          class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
+          @translatedTitle={{this.title}}
+          @icon={{this.unlikedIcon}}
+        />
       {{/if}}
     </div>
   </template>

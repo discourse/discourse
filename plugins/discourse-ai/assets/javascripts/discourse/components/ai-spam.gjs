@@ -5,23 +5,22 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DStatTiles from "discourse/components/d-stat-tiles";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DTooltip from "discourse/components/d-tooltip";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import ComboBox from "select-kit/components/combo-box";
 import SpamTestModal from "./modal/spam-test-modal";
 
 export default class AiSpam extends Component {
-  @service siteSettings;
   @service toasts;
   @service modal;
 
@@ -90,7 +89,7 @@ export default class AiSpam extends Component {
     this.isEnabled = model.is_enabled;
 
     if (model.llm_id) {
-      this.selectedLLM = "custom:" + model.llm_id;
+      this.selectedLLM = model.llm_id;
     } else {
       if (this.availableLLMs.length) {
         this.selectedLLM = this.availableLLMs[0].id;
@@ -127,7 +126,7 @@ export default class AiSpam extends Component {
   }
 
   get llmId() {
-    return this.selectedLLM.toString().split(":")[1];
+    return this.selectedLLM;
   }
 
   @action

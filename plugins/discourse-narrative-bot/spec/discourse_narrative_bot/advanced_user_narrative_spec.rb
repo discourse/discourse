@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
-  fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  fab!(:narrative_bot) { DiscourseNarrativeBot::Base.new }
   fab!(:discobot_user) { narrative_bot.discobot_user }
   fab!(:discobot_username) { narrative_bot.discobot_username }
   fab!(:first_post) { Fabricate(:post, user: discobot_user) }

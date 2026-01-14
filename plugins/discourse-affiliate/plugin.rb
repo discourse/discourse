@@ -9,8 +9,10 @@
 
 enabled_site_setting :affiliate_enabled
 
+register_svg_icon "handshake"
+
 after_initialize do
-  require File.expand_path(File.dirname(__FILE__) + "/lib/affiliate_processor")
+  require_relative "lib/affiliate_processor"
 
   on(:post_process_cooked) do |doc, post|
     doc.css("a[href]").each { |a| a["href"] = AffiliateProcessor.apply(a["href"]) }

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-RSpec.describe ::Patreon::Patron do
+RSpec.describe Patreon::Patron do
   Fabricator(:patreon_user_info, class_name: :user_associated_account) do
     provider_name "patreon"
     user
@@ -19,13 +17,13 @@ RSpec.describe ::Patreon::Patron do
         amount_cents: "0",
       },
       "4589" => {
-        title: "Sponsers",
+        title: "Sponsors",
         amount_cents: "1000",
       },
     }
   end
   let(:reward_users) { { "0" => %w[111111 111112], "4589" => ["111112"] } }
-  let(:titles) { { "111111" => "All Patrons", "111112" => "All Patrons, Sponsers" } }
+  let(:titles) { { "111111" => "All Patrons", "111112" => "All Patrons, Sponsors" } }
 
   before do
     Patreon.set("users", patrons)
@@ -59,7 +57,7 @@ RSpec.describe ::Patreon::Patron do
   end
 
   describe "sync groups" do
-    let(:ouser) { Fabricate(:patreon_user_info, provider_uid: "111112") }
+    let(:patreon_user_info) { Fabricate(:patreon_user_info, provider_uid: "111112") }
     let(:group1) { Fabricate(:group) }
     let(:group2) { Fabricate(:group) }
 
@@ -71,14 +69,14 @@ RSpec.describe ::Patreon::Patron do
     it "should sync all Patreon users" do
       user = Fabricate(:user, email: "foo@bar.com")
       described_class.sync_groups
-      expect(group1.users.to_a - [ouser.user, user]).to eq([])
-      expect(group2.users.to_a - [ouser.user]).to eq([])
+      expect(group1.users.to_a - [patreon_user_info.user, user]).to eq([])
+      expect(group2.users.to_a - [patreon_user_info.user]).to eq([])
     end
 
     it "should sync by Patreon id" do
-      described_class.sync_groups_by(patreon_id: ouser.provider_uid)
-      expect(group1.users.to_a).to eq([ouser.user])
-      expect(group2.users.to_a).to eq([ouser.user])
+      described_class.sync_groups_by(patreon_id: patreon_user_info.provider_uid)
+      expect(group1.users.to_a).to eq([patreon_user_info.user])
+      expect(group2.users.to_a).to eq([patreon_user_info.user])
     end
   end
 end

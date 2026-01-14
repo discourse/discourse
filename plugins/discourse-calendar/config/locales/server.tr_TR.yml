@@ -33,7 +33,6 @@ tr_TR:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Takvimdeki etkinlik başına maksimum metin satırı."
     map_events_to_color: "Her etikete veya kategoriye bir renk atayın."
     map_events_title: "Her kategori için \"Yaklaşan Etkinlikler\" kenar çubuğu başlığındaki \"Etkinlikler\"in üzerine yazar."
     calendar_enabled: "discourse-calendar eklentisini etkinleştirin. Bu, bir konunun ilk gönderisine [calendar][/calendar] etiketi için destek ekleyecektir."
@@ -50,7 +49,6 @@ tr_TR:
     all_day_event_start_time: "Başlangıç zamanı belirtilmeyen etkinlikler bu saatte başlayacaktır. Biçim SS:dd'dir. Sabah 6 için 06.00 yazın"
     all_day_event_end_time: "Bitiş saati belirtilmeyen etkinlikler bu saatte sona erecektir. Biçim SS:dd'dir. Öğleden sonra 6 için 18.00 girin"
     all_day_event_time_error: "Geçersiz saat. Biçim SS:dd (ör: 08.00) olmalıdır."
-    calendar_categories: "Bir kategorinin en üstünde bir takvim görüntüleyin. Zorunlu ayarlar, CategoryId ve postId'dir. ör.: CategoryId=6;postId=453\n Diğer geçerli ayarlar: tzPicker, hafta sonları ve defaultView."
     calendar_categories_outlet: "Kategori takvimini hangi çıkışın göstereceğini değiştirmeye izin verir."
     working_days: "Çalışma günlerini ayarlayın. Bir gönderide \"saat dilimleri\" etiketini kullanarak bir grubun uygunluğunu görüntüleyebilirsiniz, ör.: \"[timezones group=admins][timezones]\""
     working_day_start_hour: "Çalışma günü saatlerinin başlama saati."
@@ -62,7 +60,6 @@ tr_TR:
     calendar_automatic_holidays_enabled: "Kullanıcı bölgesine göre tatil durumunu otomatik olarak ayarla (not: belirli otomatik tatilleri eklenti ayarlarından devre dışı bırakabilirsiniz)"
     event_participation_buttons: "Kullanıcıların kullanabileceği etkinlik katılım düğmelerinin listesi."
     sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
-    include_expired_events_on_calendar: "Kategori Takvimi ve Yaklaşan Etkinlikler görünümlerine geçmiş/süresi dolmuş etkinlikleri ekleyin."
   discourse_calendar:
     invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
     calendar_must_be_in_first_post: "Takvim etiketi, bir konunun yalnızca ilk gönderisinde kullanılabilir."

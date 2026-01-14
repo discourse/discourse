@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseZendeskPlugin::SyncController do
   describe "#webhook" do
     let!(:token) { "secret-token" }

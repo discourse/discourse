@@ -10,7 +10,7 @@ module Jobs
         Post
           .includes(:user, :topic)
           .where(id: args[:post_ids])
-          .where("user_id <> ?", args[:moved_by_id])
+          .where.not(user_id: args[:moved_by_id])
           .order(post_number: :asc)
       return if posts.blank?
 

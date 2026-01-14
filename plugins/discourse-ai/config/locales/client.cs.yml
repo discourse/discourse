@@ -44,7 +44,7 @@ cs:
         groups: "Skupiny:"
         no_persona: "Nenastaveno"
         no_groups: "Žádná"
-        edit: "Upravit"
+        edit: "Nastavení"
         expand_list:
           one: "(%{count} další)"
           few: "(%{count} další)"
@@ -66,6 +66,30 @@ cs:
           name: "Spam"
       modals:
         select_option: "Vyberte možnost..."
+      translations:
+        title: "Překlady"
+        stats:
+          eta_minutes:
+            one: "%{count} minutu"
+            few: "%{count} minuty"
+            many: "%{count} minut"
+            other: "%{count} minut"
+          eta_hours:
+            one: "%{count} hodinu"
+            few: "%{count} hodiny"
+            many: "%{count} hodin"
+            other: "%{count} hodin"
+          eta_days:
+            one: "%{count} den"
+            few: "%{count} dny"
+            many: "%{count} dní"
+            other: "%{count} dní"
+        progress_chart:
+          bar_done:
+            one: "%{count} příspěvek"
+            few: "%{count} příspěvků"
+            many: "%{count} příspěvky"
+            other: "%{count} příspěvky"
       spam:
         short_title: "Spam"
         last_seven_days: "Posledních 7 dní"
@@ -82,6 +106,7 @@ cs:
         total_requests: "Celkem požadavků"
         request_tokens: "Tokeny požadavku"
         response_tokens: "Tokeny odpovědi"
+        total: "Celkem"
         periods:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
@@ -208,17 +233,12 @@ cs:
           title: "Navrhované miniatury"
           select: "Vybrat"
           selected: "Zaškrtnuté"
+          try_again: "Zkusit znovu"
         image_caption:
           button_label: "Popisek pomocí AI"
           generating: "Generování popisku..."
           credits: "Popisek od AI"
           save_caption: "Uložit"
-          automatic_caption_setting: "Povolit automatické popisky"
-          automatic_caption_loading: "Popisuji obrázky..."
-          automatic_caption_dialog:
-            prompt: "Tento příspěvek obsahuje obrázky bez popisků. Chcete povolit automatické popisky při nahrávání obrázků? (To lze později změnit ve vašich nastaveních)"
-            confirm: "Zapnout"
-            cancel: "Již se neptat"
         no_content_error: "Nejprve přidejte obsah, abyste na něm mohli provádět akce AI"
       embeddings:
         back: "Zpět"
@@ -251,6 +271,7 @@ cs:
       ai_bot:
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."
         cancel_streaming: "Zastavit odpověď"
+        try_again: "Zkusit znovu"
         default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
         shortcut_title: "Začněte SZ s AI botem"
         share: "Kopírovat konverzaci s AI"
@@ -347,3 +368,5 @@ cs:
         tooltip:
           actions:
             disable: "Vypnout"
+      user_preferences:
+        empty: "Momentálně nejsou k dispozici žádná relevantní nastavení."

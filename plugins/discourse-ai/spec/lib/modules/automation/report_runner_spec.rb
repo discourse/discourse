@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 module DiscourseAi
   module Automation
     describe ReportRunner do
       fab!(:user)
-      fab!(:receiver) { Fabricate(:user) }
+      fab!(:receiver, :user)
       fab!(:post) { Fabricate(:post, user: user) }
       fab!(:group)
       fab!(:secure_category) { Fabricate(:private_category, group: group) }
@@ -45,9 +43,9 @@ module DiscourseAi
               sender_username: user.username,
               receivers: ["fake@discourse.com"],
               title: "test report %DATE%",
-              model: "custom:#{llm_model.id}",
               persona_id:
                 DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+              model: llm_model.id,
               category_ids: nil,
               tags: nil,
               allow_secure_categories: false,
@@ -84,9 +82,9 @@ module DiscourseAi
               sender_username: user.username,
               receivers: [receiver.username],
               title: "test report",
-              model: "custom:#{llm_model.id}",
               persona_id:
                 DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+              model: llm_model.id,
               category_ids: nil,
               tags: nil,
               allow_secure_categories: false,
@@ -131,9 +129,9 @@ module DiscourseAi
               sender_username: user.username,
               receivers: [receiver.username],
               title: "test report",
-              model: "custom:#{llm_model.id}",
               persona_id:
                 DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+              model: llm_model.id,
               category_ids: nil,
               tags: nil,
               allow_secure_categories: false,
@@ -176,9 +174,9 @@ module DiscourseAi
               sender_username: user.username,
               receivers: [receiver.username],
               title: "test report",
-              model: "custom:#{llm_model.id}",
               persona_id:
                 DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+              model: llm_model.id,
               category_ids: nil,
               tags: nil,
               allow_secure_categories: false,
@@ -210,9 +208,9 @@ module DiscourseAi
               sender_username: user.username,
               receivers: [group_for_reports.name],
               title: "group report",
-              model: "custom:#{llm_model.id}",
               persona_id:
                 DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+              model: llm_model.id,
               category_ids: nil,
               tags: nil,
               allow_secure_categories: false,
@@ -240,9 +238,9 @@ module DiscourseAi
               sender_username: user.username,
               receivers: [receiver.username],
               title: "test report",
-              model: "custom:#{llm_model.id}",
               persona_id:
                 DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+              model: llm_model.id,
               category_ids: nil,
               tags: nil,
               allow_secure_categories: false,

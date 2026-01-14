@@ -8,8 +8,8 @@
   {{/truncated?}}
 {{/gist_files}}
 
-<p>
-  {{#truncated_files?}}
+{{#truncated_files?}}
+  <p>
     {{i18n.more_than_three_files}} <a href="{{link}}" target="_blank" rel="noopener">{{i18n.show_original}}</a>
-  {{/truncated_files?}}
-</p>
+  </p>
+{{/truncated_files?}}

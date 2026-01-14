@@ -14,6 +14,12 @@ class GitUtils
     self.try_git('git describe --dirty --match "v[0-9]*" 2> /dev/null', "unknown")
   end
 
+  def self.has_commit?(hash)
+    return false if !hash.match?(/\A[a-f0-9]{40}\Z/)
+
+    self.try_git("git merge-base --is-ancestor #{hash} HEAD 2> /dev/null; echo $?", "1") == "0"
+  end
+
   def self.last_commit_date
     git_cmd = 'git log -1 --format="%ct"'
     seconds = self.try_git(git_cmd, nil)

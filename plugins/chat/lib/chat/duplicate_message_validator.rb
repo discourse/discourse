@@ -25,7 +25,7 @@ module Chat
       recent_identical_message_found =
         chat_channel
           .chat_messages
-          .includes(:uploads)
+          .includes(uploads: { optimized_videos: :optimized_upload })
           .where(created_at: 10.seconds.ago..)
           .where("LOWER(message) = ?", chat_message.message.strip.downcase)
           .where(user: chat_message.user)

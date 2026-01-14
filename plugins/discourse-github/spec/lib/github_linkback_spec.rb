@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe GithubLinkback do
   let(:github_commit_link) do
     "https://github.com/discourse/discourse/commit/76981605fa10975e2e7af457e2f6a31909e0c811"
@@ -109,6 +107,45 @@ describe GithubLinkback do
             raw: "this post http://github.com should not enqueue",
           )
         expect(GithubLinkback.new(unlisted_post).should_enqueue?).to eq(false)
+      end
+    end
+
+    describe "ignored categories" do
+      fab!(:category)
+      fab!(:post_in_category) do
+        topic = Fabricate(:topic, category:)
+        Fabricate(:post, topic:, raw: "https://github.com/discourse/discourse/commit/abc123")
+      end
+
+      before { SiteSetting.github_linkback_enabled = true }
+
+      it "doesn't enqueue posts in ignored categories" do
+        SiteSetting.github_linkback_ignored_categories = category.id.to_s
+        expect(GithubLinkback.new(post_in_category).should_enqueue?).to eq(false)
+      end
+
+      it "enqueues posts in non-ignored categories" do
+        other_category = Fabricate(:category)
+        SiteSetting.github_linkback_ignored_categories = other_category.id.to_s
+        expect(GithubLinkback.new(post_in_category).should_enqueue?).to eq(true)
+      end
+
+      it "handles multiple ignored categories" do
+        other_category = Fabricate(:category)
+        SiteSetting.github_linkback_ignored_categories = "#{category.id}|#{other_category.id}"
+        expect(GithubLinkback.new(post_in_category).should_enqueue?).to eq(false)
+      end
+
+      it "enqueues when ignored categories setting is empty" do
+        SiteSetting.github_linkback_ignored_categories = ""
+        expect(GithubLinkback.new(post_in_category).should_enqueue?).to eq(true)
+      end
+
+      it "enqueues posts without a category" do
+        SiteSetting.github_linkback_ignored_categories = category.id.to_s
+        uncategorized_post =
+          Fabricate(:post, raw: "https://github.com/discourse/discourse/commit/abc123")
+        expect(GithubLinkback.new(uncategorized_post).should_enqueue?).to eq(true)
       end
     end
   end

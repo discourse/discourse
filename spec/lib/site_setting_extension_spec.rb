@@ -41,7 +41,7 @@ RSpec.describe SiteSettingExtension do
     new_settings(provider_local)
   end
 
-  it "Does not leak state cause changes are not linked" do
+  it "does not leak state cause changes are not linked" do
     t1 =
       Thread.new do
         5.times do
@@ -66,7 +66,12 @@ RSpec.describe SiteSettingExtension do
     t2.join
   end
 
-  describe "refresh!" do
+  describe ".refresh!" do
+    it "ensures that the right MessageBus subscription has been set up" do
+      settings.expects(:ensure_listen_for_changes).once
+      settings.refresh!
+    end
+
     it "will reset to default if provider vanishes" do
       settings.setting(:hello, 1)
       settings.hello = 100
@@ -89,7 +94,7 @@ RSpec.describe SiteSettingExtension do
       expect(settings.hello).to eq(99)
     end
 
-    it "publishes changes cross sites" do
+    it "picks up changes from provider on refresh across processes" do
       settings.setting(:hello, 1)
       settings2.setting(:hello, 1)
 
@@ -553,6 +558,58 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "datetime setting" do
+    before do
+      settings.setting(:datetime_setting, "2024-01-01T00:00:00Z", type: "datetime")
+      settings.refresh!
+    end
+
+    after :each do
+      settings.remove_override!(:datetime_setting)
+    end
+
+    it "stores valid datetime values" do
+      settings.datetime_setting = "2024-12-29T15:30:00Z"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00Z")
+    end
+
+    it "stores valid datetime values with timezone offset" do
+      settings.datetime_setting = "2024-12-29T15:30:00+05:30"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00+05:30")
+    end
+
+    it "stores valid datetime values with milliseconds" do
+      settings.datetime_setting = "2024-12-29T15:30:00.123Z"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00.123Z")
+    end
+
+    it "rejects date-only strings" do
+      expect { settings.datetime_setting = "2024-12-29" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "rejects datetime without timezone" do
+      expect { settings.datetime_setting = "2024-12-29T15:30:00" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "rejects invalid datetime strings" do
+      expect { settings.datetime_setting = "not a datetime" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect { settings.datetime_setting = "2024-13-01T15:30:00Z" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "allows blank values" do
+      settings.datetime_setting = ""
+      expect(settings.datetime_setting).to eq("")
+    end
+  end
+
   describe "set for an invalid setting name" do
     it "raises an error" do
       settings.setting(:test_setting, 77)
@@ -635,6 +692,7 @@ RSpec.describe SiteSettingExtension do
 
   describe "hidden" do
     before do
+      settings.setting(:other_setting, "Blah")
       settings.setting(:superman_identity, "Clark Kent", hidden: true)
       settings.refresh!
     end
@@ -655,6 +713,17 @@ RSpec.describe SiteSettingExtension do
       expect(
         settings.all_settings(include_hidden: true).find { |s| s[:setting] == :superman_identity },
       ).to be_present
+    end
+
+    it "does not call the hidden_site_settings plugin modifier in a loop" do
+      called = 0
+      plugin = Plugin::Instance.new
+      plugin.register_modifier(:hidden_site_settings) do |defaults|
+        called += 1
+        defaults + [:other_setting]
+      end
+      settings.all_settings(include_hidden: true)
+      expect(called).to eq(1)
     end
   end
 
@@ -862,6 +931,92 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
+    describe "objects settings with uploads" do
+      it "should hydrate upload IDs to URLs" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
+
+        schema = {
+          name: "section",
+          properties: {
+            title: {
+              type: "string",
+            },
+            image: {
+              type: "upload",
+            },
+            links: {
+              type: "objects",
+              schema: {
+                name: "link",
+                properties: {
+                  link_image: {
+                    type: "upload",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          {
+            "title" => "Section 1",
+            "image" => upload1.id,
+            "links" => [{ "link_image" => upload3.id }],
+          },
+          { "title" => "Section 2", "image" => upload2.id },
+        ].to_json
+        settings.refresh!
+
+        setting = settings.all_settings.last
+        value = JSON.parse(setting[:value])
+
+        expect(value[0]["image"]).to eq(upload1.url)
+        expect(value[1]["image"]).to eq(upload2.url)
+        expect(value[0]["title"]).to eq("Section 1")
+        expect(value[1]["title"]).to eq("Section 2")
+        expect(value[0]["links"][0]["link_image"]).to eq(upload3.url)
+      end
+
+      it "should batch uploads query" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
+
+        schema = {
+          name: "section",
+          properties: {
+            title: {
+              type: "string",
+            },
+            image: {
+              type: "upload",
+            },
+          },
+        }
+
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          { "title" => "Section 1", "image" => upload1.id },
+          { "title" => "Section 2", "image" => upload2.id },
+          { "title" => "Section 3", "image" => upload3.id },
+        ].to_json
+        settings.refresh!
+
+        queries =
+          track_sql_queries do
+            setting = settings.all_settings.last
+            JSON.parse(setting[:value])
+          end
+
+        upload_queries = queries.select { |q| q.include?("SELECT") && q.include?("uploads") }
+        expect(upload_queries.length).to eq(1)
+      end
+    end
+
     context "with the filter_allowed_hidden argument" do
       it "includes the specified hidden settings only if include_hidden is true" do
         result =
@@ -927,6 +1082,87 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.client_settings_json_uncached).not_to include("enable_welcome_banner")
       expect(SiteSetting.client_settings_json_uncached).not_to include("search_experience")
     end
+
+    context "when error occurs" do
+      it "re-raises the exception instead of returning nil" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        allow(settings).to receive(:public_send).with(:default_locale).and_return(
+          SiteSetting.default_locale,
+        )
+        allow(settings).to receive(:public_send).with(:test_setting).and_raise(
+          PG::ConnectionBad,
+          "connection lost",
+        )
+
+        expect { settings.client_settings_json_uncached }.to raise_error(
+          PG::ConnectionBad,
+          /connection lost/,
+        )
+      end
+    end
+  end
+
+  describe ".client_settings_json" do
+    it "returns valid JSON when successful" do
+      settings.setting(:test_setting, "value", client: true)
+      settings.refresh!
+
+      result = settings.client_settings_json
+      expect { JSON.parse(result) }.not_to raise_error
+      parsed = JSON.parse(result)
+      expect(parsed["test_setting"]).to eq("value")
+    end
+
+    context "when error occurs" do
+      it "returns empty string without caching the error" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        allow(settings).to receive(:client_settings_json_uncached).and_raise(
+          PG::ConnectionBad,
+          "connection lost",
+        )
+
+        result = settings.client_settings_json
+        expect(result).to eq("")
+      end
+
+      it "does not cache the error and retries on next call" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        cache_key = SiteSettingExtension.client_settings_cache_key
+
+        call_count = 0
+        allow(settings).to receive(:client_settings_json_uncached) do
+          call_count += 1
+          if call_count == 1
+            raise PG::ConnectionBad, "connection lost"
+          else
+            '{"default_locale":"en","test_setting":"value"}'
+          end
+        end
+
+        # First call fails
+        result1 = settings.client_settings_json
+        expect(result1).to eq("")
+        # Verify error was NOT cached in Redis
+        expect(Discourse.cache.exist?(cache_key)).to be_falsey
+
+        # Second call should retry (not use cached error) and succeed
+        result2 = settings.client_settings_json
+        expect(result2).to eq('{"default_locale":"en","test_setting":"value"}')
+        expect(call_count).to eq(2) # Both calls executed, error was not cached
+
+        # Verify success was cached in Redis
+        expect(Discourse.cache.exist?(cache_key)).to be_truthy
+        expect(Discourse.cache.read(cache_key)).to eq(
+          '{"default_locale":"en","test_setting":"value"}',
+        )
+      end
+    end
   end
 
   describe ".setup_methods" do
@@ -990,9 +1226,121 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "site setting groups" do
+    before do
+      SiteSettingGroup.create!(
+        name: "enable_upload_debug_mode",
+        group_ids: "#{Group::AUTO_GROUPS[:trust_level_0]}|#{Group::AUTO_GROUPS[:trust_level_1]}",
+      )
+    end
+
+    it "returns the correct group for a setting" do
+      SiteSetting.refresh!
+      expect(SiteSetting.site_setting_group_ids[:enable_upload_debug_mode]).to eq([10, 11])
+    end
+  end
+
+  describe "#notify_clients!" do
+    context "when the site setting is an upcoming change" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :experimental,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+            some_other_upcoming_setting: {
+              impact: "feature,staff",
+              status: :alpha,
+              impact_type: "feature",
+              impact_role: "staff",
+            },
+          },
+        )
+        SiteSetting.send(:setup_methods, :enable_upload_debug_mode)
+        SiteSetting.refresh!
+      end
+
+      after { SiteSetting.refresh! }
+
+      context "with site setting groups assigned" do
+        before do
+          SiteSettingGroup.create!(
+            name: "enable_upload_debug_mode",
+            group_ids:
+              "#{Group::AUTO_GROUPS[:trust_level_0]}|#{Group::AUTO_GROUPS[:trust_level_1]}",
+          )
+          SiteSetting.refresh!
+        end
+
+        after { SiteSetting.refresh! }
+
+        it "does not publish to MessageBus for the client settings channel" do
+          messages =
+            MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+              SiteSetting.notify_clients!(:enable_upload_debug_mode)
+            end
+
+          expect(messages.length).to eq(0)
+        end
+      end
+
+      context "without site setting groups assigned" do
+        it "publishes to MessageBus with the setting name and value" do
+          messages =
+            MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+              SiteSetting.notify_clients!(:enable_upload_debug_mode)
+            end
+
+          expect(messages.length).to eq(1)
+          expect(messages.first.data[:name]).to eq(:enable_upload_debug_mode)
+          expect(messages.first.data[:value]).to eq(SiteSetting.enable_upload_debug_mode)
+        end
+      end
+    end
+
+    context "when the site setting is not an upcoming change" do
+      it "publishes to MessageBus with the setting name and value" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:title)
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:name]).to eq(:title)
+        expect(messages.first.data[:value]).to eq(SiteSetting.title)
+      end
+
+      it "includes scoped_to parameter when provided" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:title, { theme_id: 123 })
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:scoped_to]).to eq({ theme_id: 123 })
+      end
+    end
+
+    context "with default_locale setting" do
+      it "uses the custom getter for default_locale" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:default_locale)
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:name]).to eq(:default_locale)
+        expect(messages.first.data[:value]).to eq(SiteSetting.default_locale)
+      end
+    end
+  end
+
   describe "themeable settings" do
-    fab!(:theme_1) { Fabricate(:theme) }
-    fab!(:theme_2) { Fabricate(:theme) }
+    fab!(:theme_1, :theme)
+    fab!(:theme_2, :theme)
     fab!(:tss_1) do
       Fabricate(
         :theme_site_setting_with_service,
@@ -1048,6 +1396,31 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.search_experience(theme_id: theme_2.id)).to eq("search_field")
     end
 
+    it "publishes the right MessageBus message when a theme site setting is updated" do
+      settings_tss_instance_1 = new_settings(provider_local)
+      settings_tss_instance_1.load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+      settings_tss_instance_1.refresh!
+
+      expect(settings_tss_instance_1.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
+
+      tss_1.update!(value: true)
+
+      messages =
+        MessageBus.track_publish(described_class::SITE_SETTINGS_CHANNEL) do
+          settings_tss_instance_1.change_themeable_site_setting(
+            theme_1.id,
+            :enable_welcome_banner,
+            true,
+          )
+        end
+
+      expect(messages.length).to eq(1)
+
+      message = messages.first
+
+      expect(message.data[:process]).to eq(settings_tss_instance_1.process_id)
+    end
+
     describe ".theme_site_settings_json_uncached" do
       it "returns the correct JSON" do
         SiteSetting.refresh!
@@ -1069,6 +1442,11 @@ RSpec.describe SiteSettingExtension do
     it "handles splitting group_list settings" do
       SiteSetting.personal_message_enabled_groups = "1|2"
       expect(SiteSetting.personal_message_enabled_groups_map).to eq([1, 2])
+    end
+
+    it "handles splitting category_list settings" do
+      SiteSetting.digest_suppress_categories = "3|4"
+      expect(SiteSetting.digest_suppress_categories_map).to eq([3, 4])
     end
 
     it "handles splitting compact list settings" do
@@ -1101,10 +1479,10 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
     end
 
-    it "handles null values for settings" do
-      SiteSetting.ga_universal_auto_link_domains = nil
-      SiteSetting.pm_tags_allowed_for_groups = nil
-      SiteSetting.exclude_rel_nofollow_domains = nil
+    it "handles blank values for settings" do
+      SiteSetting.ga_universal_auto_link_domains = ""
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      SiteSetting.exclude_rel_nofollow_domains = ""
 
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])

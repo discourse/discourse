@@ -23,6 +23,7 @@ hy:
         month: "Ամիս"
         week: "Շաբաթ"
         day: "Օր"
+        year: "Տարի"
     group_timezones:
       search: "Որոնում..."
     discourse_post_event:

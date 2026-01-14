@@ -84,7 +84,6 @@ sk:
               help: "napr. #kanál, @používateľské_meno"
           errors:
             action_prohibited: "Bot nemá povolenie na odosielanie príspevkov do tohto kanála"
-            channel_not_found: "Zadaný kanál na Slacku neexistuje."
         telegram:
           title: "Telegram"
           param:
@@ -131,7 +130,6 @@ sk:
               help: "Názov, ktorý opisuje kanál. Nepoužíva sa pre pripojenie k Matrixu."
             room_id:
               title: "ID miestnosti"
-              help: "„Súkromný identifikátor“ miestnosti. Mal by vyzerať nejako takto !abcdefg:matrix.org"
           errors:
             unknown_token: "Prístupový token je neplatný"
             unknown_room: "ID miestnosti je neplatné"

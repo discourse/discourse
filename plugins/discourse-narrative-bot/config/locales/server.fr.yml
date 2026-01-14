@@ -169,8 +169,22 @@ fr:
 
           - Nous prônons [la civilité au sein de notre communauté](%{base_uri}/guidelines) en toutes circonstances.
       onebox:
+        instructions: |-
+          Ensuite, pouvez-vous partager l'un de ces liens avec moi ? Répondez avec un lien seul sur une ligne et il s'affichera automatiquement avec un résumé pratique.
+
+          Pour copier un lien, maintenez le doigt appuyé sur mobile, ou cliquez avec le bouton droit de la souris sur ordinateur.
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Super ! Ça fonctionne pour la plupart <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> des liens. N'oubliez pas, ils doivent être sur une ligne vide, sans rien devant ni derrière.
+        not_found: |-
+          Je regrette, mais je n'ai pas trouvé de lien dans votre réponse ! :cry:
+
+          Pouvez-vous essayer d'ajouter le lien suivant, sur sa propre ligne, dans votre prochaine réponse ?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair] (https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Voici une photo de licorne :
@@ -385,6 +399,19 @@ fr:
 
           Remarquez que quand vous répondez à un sujet ou lisez un sujet pendant plusieurs minutes, le niveau de notification est automatiquement configuré sur « Suivi ». Vous pouvez modifier cela dans [vos préférences utilisateur](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          Saviez-vous que vous pouvez ajouter un sondage à n'importe quelle publication ? Essayez d'utiliser l'icône <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> dans l'éditeur pour **créer un sondage**.
+        not_found: |-
+          Oups ! Il n'y a pas de sondage dans votre réponse.
+
+          Utilisez l'icône <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> dans l'éditeur ou copiez-collez ce sondage dans votre prochaine réponse :
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hé, bon sondage ! Comment s'est passée votre formation ?
 
@@ -393,6 +420,21 @@ fr:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Parfois, vous voudrez peut-être masquer certains détails dans vos réponses :
+
+          Lorsque vous évoquez des éléments clés de l'intrigue d'un film ou d'une série qui pourraient constituer un spoiler.
+
+          Lorsque votre publication contient beaucoup de détails facultatifs qui risqueraient de submerger le lecteur s'ils étaient affichés d'un seul coup.
+
+          [details=Sélectionnez ceci pour voir comment ça fonctionne !]
+
+          1. Cliquez sur l'icône <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> dans l'éditeur.
+          2. Choisissez « Masquer les détails ».
+          3. Modifiez le résumé de la section et ajoutez votre contenu.
+          [/details]
+
+          Pouvez-vous utiliser l'icône <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> dans l'éditeur pour insérer une section de détails dans votre prochaine réponse ?
         not_found: |-
           Des soucis pour créer le widget de détail ? Essayez d'inclure le texte suivant dans votre prochaine réponse :
 

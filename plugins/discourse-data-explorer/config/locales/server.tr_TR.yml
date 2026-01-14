@@ -20,4 +20,26 @@ tr_TR:
     report_generator:
       private_message:
         title: "%{query_name} için planlanmış rapor"
+        body: |
+          Merhaba %{recipient_name}, Veri Gezgini raporunuz hazır.
+
+          Sorgu adı:
+          %{query_name}
+
+          İşte sonuçlar:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Sorguyu Veri Gezgininde görüntüleyin</a>
+
+          Rapor oluşturulma zamanı: %{created_at} (%{timezone})
+      post:
+        body: |
+          ### %{query_name} için planlanan rapor
+
+          İşte sonuçlar:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Sorguyu Veri Gezgininde görüntüleyin</a>
+
+          Rapor oluşturulma zamanı: %{created_at} (%{timezone})
       upload_appendix: "Ek: [%{filename}|ek](%{short_url})"

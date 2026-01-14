@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse のネタバレ警告"
   js:
     spoiler:
       title: ネタバレをぼかす

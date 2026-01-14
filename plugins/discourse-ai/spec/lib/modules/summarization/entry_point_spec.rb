@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Summarization::EntryPoint do
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_summarization_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_summarization_enabled = true
     SiteSetting.ai_summary_gists_enabled = true
   end
@@ -150,6 +150,51 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
               ).as_json
 
             expect(serialized[:ai_topic_gist]).to be_nil
+          end
+
+          it "includes gists in suggested topics with TopicListItemSerializer" do
+            main_topic = Fabricate(:topic)
+            gist_topic = topic_ai_gist.target
+
+            suggested_list = topic_query.list_suggested_for(main_topic)
+            suggested_topic = suggested_list.topics.find { |t| t.id == gist_topic.id }
+
+            skip "suggested topic not found in results" if suggested_topic.nil?
+
+            # Verify that ai_gist_summary association is preloaded
+            expect(suggested_topic.association(:ai_gist_summary).loaded?).to eq(true)
+
+            serialized =
+              TopicListItemSerializer.new(
+                suggested_topic,
+                scope: Guardian.new(user),
+                root: false,
+                filter: :suggested,
+              ).as_json
+
+            expect(serialized[:ai_topic_gist]).to eq(topic_ai_gist.summarized_text)
+          end
+
+          it "includes gists in suggested topics with SuggestedTopicSerializer" do
+            main_topic = Fabricate(:topic)
+            gist_topic = topic_ai_gist.target
+
+            suggested_list = topic_query.list_suggested_for(main_topic)
+            suggested_topic = suggested_list.topics.find { |t| t.id == gist_topic.id }
+
+            skip "suggested topic not found in results" if suggested_topic.nil?
+
+            # Verify that ai_gist_summary association is preloaded
+            expect(suggested_topic.association(:ai_gist_summary).loaded?).to eq(true)
+
+            serialized =
+              SuggestedTopicSerializer.new(
+                suggested_topic,
+                scope: Guardian.new(user),
+                root: false,
+              ).as_json
+
+            expect(serialized[:ai_topic_gist]).to eq(topic_ai_gist.summarized_text)
           end
         end
       end

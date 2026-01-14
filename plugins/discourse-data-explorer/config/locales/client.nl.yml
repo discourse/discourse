@@ -101,6 +101,8 @@ nl:
               label: PB verzenden overslaan als er geen resultaten zijn
             attach_csv:
               label: Voeg het CSV-bestand bij de PB
+            users_from_group:
+              label: Individueel PB naar elk groepslid sturen
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

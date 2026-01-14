@@ -27,6 +27,12 @@ ca:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categories
+            tags:
+              label: Etiquetes
         user_badge_granted:
           fields:
             badge:
@@ -125,6 +131,8 @@ ca:
               label: ID de tema
             user:
               label: Usuari
+        set_topic_timer:
+          title: Estableix el temporitzador del tema
       models:
         trigger:
           name:
@@ -138,7 +146,5 @@ ca:
             label: Versió
           status:
             label: Estat
-          enabled:
-            label: Activat
           disabled:
             label: Desactivat

@@ -44,7 +44,7 @@ hu:
         groups: "Csoportok:"
         no_persona: "Nincs beállítva"
         no_groups: "Egyik sem"
-        edit: "Szerkesztés"
+        edit: "Beállítások"
         expand_list:
           one: "(%{count} további)"
           other: "(%{count} további)"
@@ -54,12 +54,31 @@ hu:
           reset: "Alaphelyzetbe állítás"
         search:
           name: "Keresés"
+        embeddings:
+          setting_groups:
+            related_topics: "Kapcsolódó témák"
         spam:
           name: "Kéretlen tartalom"
       modals:
         select_option: "Válasszon egy lehetőséget…"
       layout:
-        table: "Tábla"
+        table: "Táblázat"
+      translations:
+        title: "Fordítások"
+        stats:
+          eta_minutes:
+            one: "%{count} perc"
+            other: "%{count} perc"
+          eta_hours:
+            one: "%{count} óra"
+            other: "%{count} óra"
+          eta_days:
+            one: "%{count} nap"
+            other: "%{count} nap"
+        progress_chart:
+          bar_done:
+            one: "%{count} bejegyzés"
+            other: "%{count} bejegyzés"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"
@@ -74,6 +93,7 @@ hu:
         summary: "Összefoglaló"
         username: "Felhasználónév"
         total_requests: "Összes kérés"
+        total: "Összesen"
         periods:
           last_day: "Elmúlt 24 óra"
           custom: "Egyéni…"
@@ -136,7 +156,7 @@ hu:
           ai_summarization: "Összefoglalás"
           ai_spam: "Kéretlen tartalom"
         next:
-          title: "Tovább"
+          title: "Következő"
         tests:
           title: "Teszt futtatása"
           success: "Sikeres!"
@@ -156,12 +176,11 @@ hu:
           copied: "Másolva!"
           cancel: "Mégse"
         thumbnail_suggestions:
-          select: "Válasszon"
+          select: "Kiválasztás"
           selected: "Kiválasztott"
+          try_again: "Újrapróbálkozás"
         image_caption:
           save_caption: "Mentés"
-          automatic_caption_dialog:
-            confirm: "Engedélyezés"
       embeddings:
         back: "Vissza"
         save: "Mentés"
@@ -179,8 +198,8 @@ hu:
         debug_ai_modal:
           request: "Kérés"
           response: "Válasz"
-          next_log: "Tovább"
-          previous_log: "Vissza"
+          next_log: "Következő"
+          previous_log: "Előző"
         invite_ai_conversation:
           button: "Meghívás"
         share_modal:

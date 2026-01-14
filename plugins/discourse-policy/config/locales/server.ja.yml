@@ -15,6 +15,8 @@ ja:
       group_not_found: "ポリシーのグループが見つかりません"
       no_policy: "投稿にポリシーが存在しません"
       staff_only: "ポリシーはスタッフの投稿のみに適用される場合があります"
+    error:
+      no_permission: "許可されていません"
   reports:
     unaccepted-policies:
       title: 未承認のポリシー
@@ -32,6 +34,6 @@ ja:
   unsubscribe:
     policy_emails:
       select_title: "ポリシーアラートメールの頻度を次に設定する:"
-      never: 未使用
+      never: 送信しない
       when_away: 退席中の時のみ
       always: 常時

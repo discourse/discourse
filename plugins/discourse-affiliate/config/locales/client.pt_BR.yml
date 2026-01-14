@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_affiliate: "Afiliado(a) do Discourse"

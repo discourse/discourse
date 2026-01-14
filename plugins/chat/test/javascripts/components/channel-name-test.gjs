@@ -57,7 +57,9 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.dom(CHANNEL_NAME_LABEL).hasText(users.mapBy("username").join(", "));
+    assert
+      .dom(CHANNEL_NAME_LABEL)
+      .hasText(users.map((item) => item.username).join(", "));
   });
 
   test("dm channel - self", async function (assert) {
@@ -89,7 +91,9 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.dom(CHANNEL_NAME_LABEL).hasText(users.mapBy("name").join(", "));
+    assert
+      .dom(CHANNEL_NAME_LABEL)
+      .hasText(users.map((item) => item.name).join(", "));
   });
 
   test("unreadIndicator", async function (assert) {

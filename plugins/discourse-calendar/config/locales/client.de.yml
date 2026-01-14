@@ -7,11 +7,11 @@
 de:
   admin_js:
     admin:
-      calendar: "Kalender"
+      calendar: "Kalender & Ereignisse"
       site_settings:
         categories:
-          discourse_post_event: "Discourse-Ereignis"
-          discourse_calendar: "Discourse-Kalender"
+          discourse_post_event: "Discourse – Ereignis"
+          discourse_calendar: "Kalender und Ereignisse"
   js:
     notifications:
       titles:
@@ -36,14 +36,16 @@ de:
         header_title: "Feiertage"
         pick_region_description: "Wähle eine Region aus, um die Feiertage für diese Region zu sehen."
         disabled_holidays_description: "Deaktivierte Feiertage werden aus dem Team-Feiertagskalender ausgeschlossen."
+        header_description: "Wähle eine Region aus, um die Feiertage für diese zu sehen. Deaktivierte Feiertage werden aus dem Team-Feiertagskalender ausgeschlossen."
       date: "Datum"
       add_to_calendar: "Zu Google Kalender hinzufügen"
       toggle_timezone_offset_title: "Zeitzonenoffset umschalten"
       local_time: "Ortszeit"
       region:
         title: "Region"
-        none: "Keiner"
+        none: "Keine"
         use_current_region: "Aktuelle Region verwenden"
+        select_region: "Region auswählen ..."
         names:
           ae: "Vereinigte Arabische Emirate"
           ar: "Argentinien"
@@ -138,6 +140,7 @@ de:
           dk: "Dänemark"
           ee: "Estland"
           el: "Griechenland"
+          gr: "Griechenland"
           es_an: "Spanien (es_an)"
           es_ar: "Spanien (es_ar)"
           es_ce: "Spanien (es_ce)"
@@ -314,7 +317,7 @@ de:
         month: "Monat"
         week: "Woche"
         day: "Tag"
-        list: "Auflisten"
+        year: "Jahr"
     group_timezones:
       search: "Suche …"
       group_availability: "%{group} Verfügbarkeit"
@@ -324,10 +327,8 @@ de:
         after_event_reminder: "Ein Ereignis wurde beendet"
         ongoing_event_reminder: "Ein Ereignis läuft"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} hat automatisch deine Teilnahme festgelegt und dich zu %{description} eingeladen"
-        before_event_reminder_html: "Ein Ereignis beginnt in Kürze %{description}"
-        after_event_reminder_html: "Ein Ereignis wurde beendet %{description}"
-        ongoing_event_reminder_html: "Ein Ereignis läuft  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} hat automatisch deine Teilnahme festgelegt und dich zu %{eventName} eingeladen"
+        an_event: "einem Ereignis"
       edit_reason: "Ereignis aktualisiert"
       edit_reason_closed: "Ereignis geschlossen"
       edit_reason_opened: "Ereignis geöffnet"
@@ -401,10 +402,10 @@ de:
             not_going: "Nicht dabei"
             interested: "Interessiert"
             going_count:
-              one: "%{count} nehmen teil"
+              one: "%{count} nimmt teil"
               other: "%{count} nehmen teil"
             not_going_count:
-              one: "%{count} nehmen nicht teil"
+              one: "%{count} nimmt nicht teil"
               other: "%{count} nehmen nicht teil"
             interested_count:
               one: "%{count} interessiert"
@@ -415,6 +416,7 @@ de:
         event:
           expired: "Abgelaufen"
           closed: "Geschlossen"
+          full: "Voll"
           status:
             standalone:
               title: "Einzeln"
@@ -472,6 +474,9 @@ de:
         minimal:
           label: "Minimales Event"
           checkbox_label: "Schaltflächen „Dabei“/„Nicht dabei“ und Status der eingeladenen Personen ausblenden"
+        max_attendees:
+          label: "Maximale Teilnehmerzahl"
+          placeholder: "Keine Begrenzung"
         allow_chat:
           label: "Chat-Integration"
           checkbox_label: "Erstelle und verwalte ereignisspezifische Chat-Kanäle"
@@ -483,7 +488,7 @@ de:
           placeholder: "Füge einen Ort, einen Link oder etwas anderes hinzu."
         description:
           label: "Beschreibung"
-          placeholder: "Erzähle den Leuten ein bisschen mehr über deine Veranstaltung. Neue Zeilen und Links werden unterstützt."
+          placeholder: "Erzähle ein bisschen mehr über deine Veranstaltung. Neue Zeilen und Links werden unterstützt."
         name:
           label: "Name des Ereignisses"
           placeholder: "Optional, standardmäßig Titel des Themas"

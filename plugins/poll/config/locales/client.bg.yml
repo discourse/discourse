@@ -67,7 +67,6 @@ bg:
       error_while_fetching_voters: "Получи се грешка при показването на гласовете."
       error_while_exporting_results: "Съжаляваме, възникна грешка при експортирането на резултатите от анкетата."
       ui_builder:
-        title: Създаване на анкета
         insert: Вмъкване на анкета
         help:
           options_min_count: Въведете поне 1 опция.

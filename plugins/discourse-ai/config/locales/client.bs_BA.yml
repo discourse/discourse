@@ -39,7 +39,7 @@ bs_BA:
         disabled: "(neomogućen)"
         groups: "Grupa:"
         no_groups: "Ništa"
-        edit: "Izmijeni"
+        edit: "Postavke"
         expand_list:
           one: "(još %{count})"
           few: "(još %{count})"
@@ -53,6 +53,22 @@ bs_BA:
           name: "Spam"
       modals:
         select_option: "Odaberi opciju..."
+      translations:
+        title: "Prevodi"
+        stats:
+          eta_hours:
+            one: "%{count} sat"
+            few: "%{count} sata"
+            other: "%{count} sata"
+          eta_days:
+            one: "%{count} dan"
+            few: "Par dana"
+            other: "%{count} dana"
+        progress_chart:
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objave"
+            other: "%{count} objava"
       spam:
         short_title: "Spam"
         enable: "Omogući"
@@ -61,6 +77,7 @@ bs_BA:
       usage:
         summary: "Sažetak"
         username: "Nadimak"
+        total: "Suma"
       ai_persona:
         back: "Prethodno"
         name: "Ime"
@@ -120,10 +137,10 @@ bs_BA:
           copy: "Copy"
           copied: "Kopirano!"
           cancel: "Odustani"
+        thumbnail_suggestions:
+          try_again: "Pokušaj ponovo"
         image_caption:
           save_caption: "Sačuvaj"
-          automatic_caption_dialog:
-            confirm: "Omogući"
       embeddings:
         back: "Prethodno"
         save: "Sačuvaj"

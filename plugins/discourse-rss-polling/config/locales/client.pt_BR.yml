@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Sondagem de RSS do Discourse"
   js:
+    rss_polling:
+      title: Sondagem de RSS
     admin:
       rss_polling:
+        feed: Configurações do feed
+        discourse: Configurações do Discourse
         author: Autor(a)
         feed_url: URL
         discourse_category: Categoria
         discourse_tags: Etiquetas
+        feed_category_filter: Filtro de categoria
+        documentation: Documentação da configuração da sondagem de RSS
+        destroy_feed:
+          confirm: "Você tem certeza de que quer excluir este feed?"

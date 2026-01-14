@@ -10,8 +10,8 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
   end
 
   describe "GET #index" do
-    fab!(:llm_model) { Fabricate(:llm_model, enabled_chat_bot: true) }
-    fab!(:llm_model2) { Fabricate(:llm_model) }
+    fab!(:llm_model)
+    fab!(:llm_model2, :llm_model)
     fab!(:ai_persona) do
       Fabricate(
         :ai_persona,
@@ -50,20 +50,20 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
     it "lists enabled features on appropriate LLMs" do
       SiteSetting.ai_bot_enabled = true
+      SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
+      fake_model = assign_fake_provider_to(:ai_default_llm_model)
 
       # setting the setting calls the model
       DiscourseAi::Completions::Llm.with_prepared_responses(["OK"]) do
-        SiteSetting.ai_helper_model = "custom:#{llm_model.id}"
+        SiteSetting.ai_helper_proofreader_persona = ai_persona.id
         SiteSetting.ai_helper_enabled = true
       end
 
       DiscourseAi::Completions::Llm.with_prepared_responses(["OK"]) do
-        SiteSetting.ai_summarization_model = "custom:#{llm_model2.id}"
         SiteSetting.ai_summarization_enabled = true
       end
 
       DiscourseAi::Completions::Llm.with_prepared_responses(["OK"]) do
-        SiteSetting.ai_embeddings_semantic_search_hyde_model = "custom:#{llm_model2.id}"
         SiteSetting.ai_embeddings_semantic_search_enabled = true
       end
 
@@ -72,15 +72,18 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       llms = response.parsed_body["ai_llms"]
 
       model_json = llms.find { |m| m["id"] == llm_model.id }
-      expect(model_json["used_by"]).to contain_exactly(
-        { "type" => "ai_bot" },
-        { "type" => "ai_helper" },
-      )
+      expect(model_json["used_by"]).to contain_exactly({ "type" => "ai_bot" })
 
       model2_json = llms.find { |m| m["id"] == llm_model2.id }
 
       expect(model2_json["used_by"]).to contain_exactly(
         { "type" => "ai_persona", "name" => "Cool persona", "id" => ai_persona.id },
+        { "type" => "ai_helper", "name" => "Proofread text" },
+      )
+
+      model3_json = llms.find { |m| m["id"] == fake_model.id }
+
+      expect(model3_json["used_by"]).to contain_exactly(
         { "type" => "ai_summarization" },
         { "type" => "ai_embeddings_semantic_search" },
       )
@@ -138,6 +141,20 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(model.display_name).to eq(valid_attrs[:display_name])
       end
 
+      it "stores allowed_attachment_types" do
+        attrs = valid_attrs.merge(allowed_attachment_types: %w[pdf docx])
+
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: attrs }
+
+        expect(response.status).to eq(201)
+        model = LlmModel.last
+        expect(model.allowed_attachment_types).to contain_exactly("pdf", "docx")
+        expect(response.parsed_body["ai_llm"]["allowed_attachment_types"]).to contain_exactly(
+          "pdf",
+          "docx",
+        )
+      end
+
       it "logs staff action when creating an LLM model" do
         # Log the creation
         post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: valid_attrs }
@@ -153,15 +170,15 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(history.subject).to eq(valid_attrs[:display_name]) # Verify subject is set to display_name
       end
 
-      it "creates a companion user" do
-        post "/admin/plugins/discourse-ai/ai-llms.json",
-             params: {
-               ai_llm: valid_attrs.merge(enabled_chat_bot: true),
-             }
+      it "creates a companion user when LLM is in ai_bot_enabled_llms setting" do
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: valid_attrs }
 
         created_model = LlmModel.last
 
-        expect(created_model.user_id).to be_present
+        SiteSetting.ai_bot_enabled_llms = created_model.id.to_s
+        created_model.toggle_companion_user
+
+        expect(created_model.reload.user_id).to be_present
       end
 
       it "stores provider-specific config params" do
@@ -375,22 +392,27 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(response.status).to eq(404)
       end
 
-      it "creates a companion user" do
+      it "creates a companion user when LLM is added to ai_bot_enabled_llms setting" do
+        SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
+
         put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
             params: {
-              ai_llm: update_attrs.merge(enabled_chat_bot: true),
+              ai_llm: update_attrs,
             }
 
         expect(llm_model.reload.user_id).to be_present
       end
 
-      it "removes the companion user when desabling the chat bot option" do
-        llm_model.update!(enabled_chat_bot: true)
+      it "removes the companion user when LLM is removed from ai_bot_enabled_llms setting" do
+        SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
         llm_model.toggle_companion_user
+        expect(llm_model.reload.user_id).to be_present
+
+        SiteSetting.ai_bot_enabled_llms = ""
 
         put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
             params: {
-              ai_llm: update_attrs.merge(enabled_chat_bot: false),
+              ai_llm: update_attrs,
             }
 
         expect(llm_model.reload.user_id).to be_nil
@@ -472,16 +494,49 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           error_type: "validation",
         }
 
-        WebMock.stub_request(:post, test_attrs[:url]).to_return(
-          status: 422,
-          body: error_message.to_json,
-        )
+        error =
+          DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new(error_message.to_json)
 
-        get "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
+        DiscourseAi::Completions::Llm.with_prepared_responses([error]) do
+          get "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
+
+          expect(response).to be_successful
+          expect(response.parsed_body["success"]).to eq(false)
+          expect(response.parsed_body["error"]).to eq(error_message.to_json)
+        end
+      end
+    end
+
+    context "when config is invalid" do
+      it "returns a success false with the validation error" do
+        get "/admin/plugins/discourse-ai/ai-llms/test.json",
+            params: {
+              ai_llm: test_attrs.except(:max_prompt_tokens),
+            }
 
         expect(response).to be_successful
         expect(response.parsed_body["success"]).to eq(false)
-        expect(response.parsed_body["error"]).to eq(error_message.to_json)
+        expect(response.parsed_body["validation_errors"]).to contain_exactly(
+          "Context window is not a number",
+        )
+      end
+    end
+
+    context "when testing a seeded model" do
+      fab!(:seeded_llm) { Fabricate(:fake_model, id: -200) }
+
+      it "tests the existing model directly instead of using params" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+          get "/admin/plugins/discourse-ai/ai-llms/test.json",
+              params: {
+                ai_llm: {
+                  id: seeded_llm.id,
+                },
+              }
+
+          expect(response).to be_successful
+          expect(response.parsed_body["success"]).to eq(true)
+        end
       end
     end
   end
@@ -499,7 +554,6 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
     it "logs staff action when deleting an LLM model" do
       # Capture the model details before deletion for comparison
-      model_id = llm_model.id
       model_display_name = llm_model.display_name
 
       # Delete the model
@@ -516,17 +570,19 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       expect(history.subject).to eq(model_display_name) # Verify subject is set to display_name
     end
 
-    it "validates the model is not in use" do
-      fake_llm = assign_fake_provider_to(:ai_helper_model)
+    context "with llms configured" do
+      fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
 
-      delete "/admin/plugins/discourse-ai/ai-llms/#{fake_llm.id}.json"
-
-      expect(response.status).to eq(409)
-      expect(fake_llm.reload).to eq(fake_llm)
+      before { assign_fake_provider_to(:ai_helper_model) }
+      it "validates the model is not in use" do
+        delete "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json"
+        expect(response.status).to eq(409)
+        expect(llm_model.reload).to eq(llm_model)
+      end
     end
 
     it "cleans up companion users before deleting the model" do
-      llm_model.update!(enabled_chat_bot: true)
+      SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
       llm_model.toggle_companion_user
       companion_user = llm_model.user
 

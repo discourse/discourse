@@ -7,7 +7,7 @@
 fr:
   site_settings:
     discourse_adplugin_enabled: Activez le plugin discourse-adplugin.
-    no_ads_for_personal_messages: "Ne pas afficher les annonces lors de la visualisation des messages personnels"
+    no_ads_for_personal_messages: "Ne pas afficher les annonces lors de la visualisation des messages privés"
     no_ads_for_restricted_categories: "Ne pas afficher les annonces dans les catégories qui ne sont pas visibles pour tout le monde."
     no_ads_for_groups: "Ne pas afficher les annonces aux utilisateurs de ces groupes."
     no_ads_for_categories: "Ne pas afficher les annonces sur la liste des sujets et les pages des sujets appartenant à ces catégories."
@@ -15,6 +15,7 @@ fr:
     house_ads_after_nth_topic: 'Si des annonces maison « Entre les sujets » sont définies, afficher une annonce tous les N sujets, où N représente la valeur souhaitée.'
     house_ads_after_nth_post: 'Si des annonces maison « Entre les messages » sont définies, afficher une annonce tous les N messages, où N représente la valeur souhaitée.'
     house_ads_frequency: "Si d'autres réseaux publicitaires sont configurés pour afficher des annonces dans un emplacement publicitaire, à quelle fréquence les annonces doivent-elles être affichées, en pourcentage."
+    ads_txt: "Contenu de votre fichier ads.txt. Plus de détails sont disponibles via <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>cette page d'aide de Google AdSense</a>."
     dfp_publisher_id: "Saisissez votre code réseau Google Ad Manager (anciennement appelé DFP), qui se trouve dans vos paramètres réseaux. REMARQUE : vous devrez mettre à jour le paramètre « content security policy script src ». Consultez <a href='https://meta.discourse.org/t/33734' target='_blank'>ce sujet</a> pour obtenir les dernières instructions."
     dfp_publisher_id_mobile: "(Facultatif) Si vous souhaitez utiliser un identifiant Ad Manager différent pour la version mobile du site, saisissez-le ici. Laissez le champ vide pour utiliser dfp_publisher_id sur le mobile."
     dfp_through_trust_level: "Afficher vos annonces aux utilisateurs en fonction des niveaux de confiance. Les utilisateurs ayant un niveau de confiance supérieur à cette valeur ne verront pas les annonces."
@@ -44,6 +45,7 @@ fr:
     dfp_mobile_post_bottom_ad_sizes: "Choisissez la taille de votre annonce pour l'unité publicitaire affichée entre les messages sur la vue mobile."
     dfp_target_post_bottom_key_code: "Saisissez vos clés pour le ciblage personnalisé - niveau d'inventaire"
     dfp_target_post_bottom_value_code: "Saisissez vos valeurs pour le ciblage personnalisé - niveau d'inventaire"
+    adsense_publisher_code: "Votre identifiant d'éditeur. Saisissez seulement le numéro, en excluant « pub ». REMARQUE : vous devez mettre à jour le paramètre « content security policy script src ». Consultez <a href='https://meta.discourse.org/t/33734' target='_blank'>ce sujet</a> pour obtenir les dernières instructions."
     adsense_through_trust_level: "Afficher vos annonces aux utilisateurs en fonction des niveaux de confiance. Les utilisateurs ayant un niveau de confiance supérieur à cette valeur ne verront pas les annonces."
     adsense_exclude_groups: "Les annonces ne seront pas diffusées auprès des membres de ces groupes"
     adsense_topic_list_top_code: "Saisissez le code de l'unité publicitaire à afficher dans l'emplacement supérieur de la liste des sujets. Il s'agit du numéro attribué à l'unité publicitaire, pas du code JavaScript."
@@ -96,6 +98,7 @@ fr:
     carbonads_exclude_groups: "Les annonces ne seront pas diffusées auprès des membres de ces groupes"
     carbonads_topic_list_top_enabled: "Afficher une annonce au-dessus de la liste des sujets"
     carbonads_above_post_stream_enabled: "Afficher une annonce au-dessus du flux de messages"
+    adbutler_publisher_id: "ID d'éditeur AdButler. REMARQUE : vous devrez peut-être mettre à jour le paramètre « content security policy script src ». Consultez <a href='https://meta.discourse.org/t/33734' target='_blank'>ce sujet</a> pour obtenir les dernières instructions."
     adbutler_mobile_topic_list_top_zone_id: "ID de zone pour l'emplacement supérieur de la liste des sujets sur la vue mobile"
     adbutler_mobile_topic_above_post_stream_zone_id: "ID de zone pour l'emplacement du sujet au-dessus du flux de messages sur la vue mobile"
     adbutler_mobile_post_bottom_zone_id: "ID de zone pour l'emplacement inférieur du message sur la vue mobile"

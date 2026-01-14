@@ -6,6 +6,7 @@
 
 zh_CN:
   site_settings:
+    openid_connect_enabled: 启用 OpenID Connect 身份验证。在<a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>此处</a>自定义用户界面文本
     openid_connect_discovery_document: "OpenID Connect 发现文档 URL。通常位于 'https://your.domain/.well-known/openid-configuration' 下"
     openid_connect_client_id: "OpenID Connect 客户端 ID"
     openid_connect_client_secret: "OpenID Connect 客户端密钥"

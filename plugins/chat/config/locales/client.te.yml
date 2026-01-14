@@ -21,6 +21,7 @@ te:
       channel_settings:
         edit: "సవరణ"
         add: "కలుపు"
+        notification_settings_context: "ప్రకటనలు"
         join: "చేరండి"
         leave: "వదిలేయండి"
       close: "మూసివేయి"
@@ -46,7 +47,6 @@ te:
       select: "ఎంచుకోండి"
       sounds:
         none: "ఏదీ లేదు"
-      exit: "వెనుకకు"
       channel_status:
         closed: "మూసివేయబడినవి"
       browse:
@@ -56,6 +56,8 @@ te:
       chat_message_separator:
         today: ఈరోజు
         yesterday: నిన్న
+      search_view:
+        filter_placeholder: సందేశాలను శోధించండి
       about_view:
         title: శీర్షిక
         name: పేరు
@@ -65,6 +67,7 @@ te:
         tabs:
           members: సభ్యులు
           settings: అమరికలు
+          search: వెతుకు
         remove_member: "తొలగించు"
       new_message_modal:
         no_items: "అంశాలు లేవు"
@@ -98,6 +101,11 @@ te:
         category_label: "వర్గం"
         history_label: "చరిత్ర"
         members_label: "సభ్యులు"
+      search:
+        short_title: వెతుకు
+        sort:
+          relevance: "ఔచిత్యం"
+          latest: "తాజా"
       incoming_webhooks:
         back: "వెనుకకు"
         description: "వివరణ"

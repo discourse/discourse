@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -5,15 +6,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { classify } from "@ember/string";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
-import loadScript from "discourse/lib/load-script";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 import PollBreakdownChart from "discourse/plugins/poll/discourse/components/poll-breakdown-chart";
 import PollBreakdownOption from "discourse/plugins/poll/discourse/components/poll-breakdown-option";
 
@@ -29,11 +29,9 @@ export default class PollBreakdownModal extends Component {
 
   init() {
     this.set("groupedBy", this.groupableUserFields[0]?.id);
-    loadScript("/javascripts/Chart.min.js")
-      .then(() => loadScript("/javascripts/chartjs-plugin-datalabels.min.js"))
-      .then(() => {
-        this.fetchGroupedPollData();
-      });
+
+    this.fetchGroupedPollData();
+
     super.init(...arguments);
   }
 

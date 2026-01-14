@@ -17,6 +17,7 @@ uk:
       no_providers: "Потрібно включити деяких постачальників у налаштуваннях плагіна"
       channels_with_errors: "Деякі канали цього провайдера не вдавалися, коли останній раз надсилалися повідомлення. Клацніть піктограму помилок, щоб дізнатися більше."
       channel_exception: "Невідома помилка сталася під час останнього надсилання повідомлення на цей канал."
+      group_mention_template: "Згадки про: @%{name}"
       group_message_template: "Повідомлення до: @ %{name}"
       choose_group: "(виберіть групу)"
       all_categories: "(усі розділи)"
@@ -42,6 +43,7 @@ uk:
         mute: 'Приглушити'
         follow: 'Лише перший допис'
         watch: 'Усі повідомлення та відповіді'
+        thread: 'Усі публікації з ланцюжками відповідей'
       rule_table:
         filter: "Filter"
         category: "Розділ"
@@ -82,7 +84,7 @@ uk:
               help: "наприклад #channel, @username."
           errors:
             action_prohibited: "Бот не має дозволу на публікацію в цьому каналі"
-            channel_not_found: "Зазначений канал не існує у slack"
+            channel_not_found: "Зазначений канал не існує в Slack"
         telegram:
           title: "Telegram"
           param:
@@ -105,11 +107,14 @@ uk:
               title: URL-адреса веб-хука
               help: URL-адреса webhook, створена у налаштуваннях вашого сервера Discord
         guilded:
+          title: "Гільдійний"
           param:
             name:
               title: "Імʼя"
+              help: "Назва для опису каналу. Вона не використовується для підключення до Guilded."
             webhook_url:
               title: URL-адреса веб-хука
+              help: URL-адреса вебхука, створена в налаштуваннях вашого сервера Guilded
         mattermost:
           title: "Найважливіше"
           param:
@@ -126,7 +131,7 @@ uk:
               help: "Назва для опису каналу. Він не використовується для з’єднання з Matrix."
             room_id:
               title: "Room ID"
-              help: "'private identifier' для кімнати. Це має виглядати приблизно так !abcdefg:matrix.org"
+              help: "«Приватний ідентифікатор» кімнати. Він має виглядати приблизно так: !abcdefghijkl"
           errors:
             unknown_token: "Маркер доступу недійсний"
             unknown_room: "Room ID недійсний"
@@ -164,43 +169,74 @@ uk:
             flow_token:
               title: "Flow Token"
               help: "Token потоку надається після створення джерела для потоку, в який потрібно відправляти повідомлення."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "Назва екземпляра GroupMe"
+              help: "Назва екземпляра Groupme, як зазначено в налаштуваннях сайту. Використовуйте «всі», щоб надіслати всім екземплярам."
+          errors:
+            not_found: "Шлях, на який ви намагалися відправити повідомлення, не знайдено. Перевірте ідентифікатор бота в налаштуваннях сайту."
         teams:
+          title: "Microsoft Teams"
           param:
             name:
               title: "Імʼя"
+              help: "Назва каналу Teams, наприклад, discourse"
             webhook_url:
               title: "URL-адреса веб-хука"
+              help: "URL-адреса, що надається під час створення нового вхідного вебхука"
+          errors:
+            invalid_channel: "Цього каналу немає в Microsoft Teams"
         powerautomate:
+          title: "Microsoft Power Automate"
           param:
             name:
               title: "Імʼя"
+              help: "Назва каналу (відображається лише в інтерфейсі адміністратора Discourse)"
             webhook_url:
               title: "URL-адреса веб-хука"
+              help: "URL-адреса, що надається під час створення нового вхідного вебхука"
+          errors:
+            invalid_webhook: "Ця URL-адреса вебхука недійсна."
         webex:
+          title: "Команди Webex"
           param:
             name:
               title: "Імʼя"
+              help: "Ім'я простору Webex, наприклад, discourse"
             webhook_url:
               title: "URL-адреса веб-хука"
+              help: "URL-адреса, що надається під час створення нового вхідного вебхука"
+          errors:
+            invalid_channel: "Цього каналу не існує на Webex"
         google:
+          title: "Чат Google"
           param:
             name:
               title: "Імʼя"
+              help: "Назва каналу (відображається лише в інтерфейсі адміністратора Discourse)"
             webhook_url:
               title: "URL-адреса веб-хука"
+              help: "URL-адреса, що надається під час створення нового вебхука"
     discourse_automation:
       scriptables:
         send_slack_message:
+          title: Надіслати Slack повідомлення
           fields:
             message:
               label: Повідомлення
+              description: >-
+                Використовуйте ${TOPIC} для назви теми, ${URL} для використаної URL-адреси, ${REMOVED_TAGS} для видалених тегів, ${ADDED_TAGS} для доданих тегів, ${ADDED_AND_REMOVED} для тексту за замовчуванням. Доступно, лише якщо тригер встановлено на «Змінити теги теми».
             url:
               label: Посилання
             channel:
               label: Канал
         send_chat_integration_message:
+          title: Надіслати повідомлення про чат-інтеграцію
           fields:
             channel_name:
               label: Назва каналу
+              description: "Назву каналу ви можете знайти в налаштуваннях інтеграції чату"
             provider:
               label: Провайдер

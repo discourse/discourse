@@ -70,6 +70,6 @@ function initializeAiArtifacts(api) {
 export default {
   name: "ai-artifact",
   initialize() {
-    withPluginApi("0.8.7", initializeAiArtifacts);
+    withPluginApi(initializeAiArtifacts);
   },
 };

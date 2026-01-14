@@ -24,6 +24,13 @@ el:
   badges:
     solved_1:
       name: "Λύθηκε!"
+      description: "Έχει μια απάντηση σημασμένη ως Λύση"
+    solved_2:
+      description: "Έχει 10 απαντήσεις σημασμένες ως Λύσεις"
+    solved_3:
+      description: "Έχει 50 απαντήσεις σημασμένες ως Λύσεις"
+    solved_4:
+      description: "Έχει 150 απαντήσεις σημασμένες ως Λύσεις"
   discourse_automation:
     triggerables:
       first_accepted_solution:

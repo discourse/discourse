@@ -13,19 +13,19 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.status = event.status;
   }
 
-  if (event.name) {
+  if (event.name && event.name.trim()) {
     params.name = event.name;
   }
 
-  if (event.location) {
+  if (event.location && event.location.trim()) {
     params.location = event.location;
   }
 
-  if (event.description) {
+  if (event.description && event.description.trim()) {
     params.description = event.description;
   }
 
-  if (event.url) {
+  if (event.url && event.url.trim()) {
     params.url = event.url;
   }
 
@@ -55,16 +55,16 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.chatEnabled = "true";
   }
 
+  if (event.maxAttendees) {
+    params.maxAttendees = `${event.maxAttendees}`;
+  }
+
   if (endsAt) {
     params.end = moment(endsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
   }
 
   if (event.status === "private") {
     params.allowedGroups = (event.rawInvitees || []).join(",");
-  }
-
-  if (event.status === "public") {
-    params.allowedGroups = "trust_level_0";
   }
 
   if (event.reminders && event.reminders.length) {
@@ -112,7 +112,7 @@ export function replaceRaw(params, raw) {
 
     Object.keys(params).forEach((param) => {
       const value = params[param];
-      if (value && value.length) {
+      if (value != null && value !== "" && String(value).trim() !== "") {
         markdownParams.push(`${param}="${value.replace(/"/g, "")}"`);
       }
     });
@@ -126,7 +126,7 @@ export function replaceRaw(params, raw) {
   return false;
 }
 
-function camelCase(input) {
+export function camelCase(input) {
   return input
     .toLowerCase()
     .replace(/-/g, "_")

@@ -6,9 +6,7 @@ import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-c
 import ChatChannelArchive from "../models/chat-channel-archive";
 
 export default class ChatSubscriptionsManager extends Service {
-  @service store;
   @service chatChannelsManager;
-  @service chatTrackingStateManager;
   @service currentUser;
   @service appEvents;
   @service chat;

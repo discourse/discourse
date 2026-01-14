@@ -2,7 +2,7 @@
 
 RSpec.describe AiTool do
   fab!(:llm_model) { Fabricate(:llm_model, name: "claude-2") }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic, raw: "bananas are a tasty fruit") }
   fab!(:bot_user) { Discourse.system_user }
@@ -483,7 +483,7 @@ RSpec.describe AiTool do
       SiteSetting.chat_enabled = true
     end
 
-    fab!(:chat_user) { Fabricate(:user) }
+    fab!(:chat_user, :user)
     fab!(:chat_channel) do
       Fabricate(:chat_channel).tap do |channel|
         Fabricate(
@@ -948,7 +948,7 @@ RSpec.describe AiTool do
 
   context "when creating topics" do
     fab!(:category)
-    fab!(:user) { Fabricate(:admin) }
+    fab!(:user, :admin)
 
     it "can create a topic" do
       script = <<~JS
@@ -1176,6 +1176,91 @@ RSpec.describe AiTool do
       expect(topic.category_id).to eq(category.id)
 
       expect(topic.posts.count).to eq(2)
+    end
+  end
+
+  describe "#set_image_generation_tool_flag" do
+    it "sets flag to true when tool has all required characteristics" do
+      tool =
+        create_tool(parameters: [{ name: "prompt", type: "string", required: true }], script: <<~JS)
+            function invoke(params) {
+              const image = upload.create("test.png", "base64data");
+              chain.setCustomRaw(`![test](${image.short_url})`);
+              return { result: "success" };
+            }
+          JS
+
+      expect(tool.is_image_generation_tool).to eq(true)
+    end
+
+    it "sets flag to false when tool missing prompt parameter" do
+      tool =
+        create_tool(parameters: [{ name: "query", type: "string", required: true }], script: <<~JS)
+            function invoke(params) {
+              const image = upload.create("test.png", "base64data");
+              chain.setCustomRaw(`![test](${image.short_url})`);
+              return { result: "success" };
+            }
+          JS
+
+      expect(tool.is_image_generation_tool).to eq(false)
+    end
+
+    it "sets flag to false when tool missing upload.create" do
+      tool =
+        create_tool(parameters: [{ name: "prompt", type: "string", required: true }], script: <<~JS)
+            function invoke(params) {
+              chain.setCustomRaw(`![test](upload://test123)`);
+              return { result: "success" };
+            }
+          JS
+
+      expect(tool.is_image_generation_tool).to eq(false)
+    end
+
+    it "sets flag to false when tool missing chain.setCustomRaw" do
+      tool =
+        create_tool(parameters: [{ name: "prompt", type: "string", required: true }], script: <<~JS)
+            function invoke(params) {
+              const image = upload.create("test.png", "base64data");
+              return { result: "success", image: image };
+            }
+          JS
+
+      expect(tool.is_image_generation_tool).to eq(false)
+    end
+
+    it "updates flag when tool is updated" do
+      tool =
+        create_tool(
+          parameters: [{ name: "query", type: "string", required: true }],
+          script: "function invoke(params) { return params; }",
+        )
+
+      expect(tool.is_image_generation_tool).to eq(false)
+
+      tool.update!(parameters: [{ name: "prompt", type: "string", required: true }], script: <<~JS)
+          function invoke(params) {
+            const image = upload.create("test.png", "base64data");
+            chain.setCustomRaw(`![test](${image.short_url})`);
+            return { result: "success" };
+          }
+        JS
+
+      expect(tool.is_image_generation_tool).to eq(true)
+    end
+
+    it "handles edge case with spaces in method calls" do
+      tool =
+        create_tool(parameters: [{ name: "prompt", type: "string", required: true }], script: <<~JS)
+            function invoke(params) {
+              const image = upload . create("test.png", "base64data");
+              chain . setCustomRaw(`![test](${image.short_url})`);
+              return { result: "success" };
+            }
+          JS
+
+      expect(tool.is_image_generation_tool).to eq(false)
     end
   end
 end

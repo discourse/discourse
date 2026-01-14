@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { attributeBindings, classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";

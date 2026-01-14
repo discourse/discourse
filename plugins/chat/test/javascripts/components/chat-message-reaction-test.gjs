@@ -39,14 +39,12 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   });
 
   test("count of reactions", async function (assert) {
-    const self = this;
-
     this.set("count", 0);
 
     await render(
       <template>
         <ChatMessageReaction
-          @reaction={{hash emoji="heart" count=self.count}}
+          @reaction={{hash emoji="heart" count=this.count}}
         />
       </template>
     );
@@ -68,8 +66,6 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   });
 
   test("click action", async function (assert) {
-    const self = this;
-
     this.set("count", 0);
     this.set("react", () => {
       this.set("count", 1);
@@ -79,8 +75,8 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
       <template>
         <ChatMessageReaction
           class="show"
-          @reaction={{hash emoji="heart" count=self.count}}
-          @onReaction={{self.react}}
+          @reaction={{hash emoji="heart" count=this.count}}
+          @onReaction={{this.react}}
         />
       </template>
     );

@@ -7,19 +7,23 @@
 # We aren't manipulating the middleware stack directly because of
 # https://github.com/rails/rails/pull/27936
 
-require "middleware/processing_request"
-Rails.configuration.middleware.unshift(Middleware::ProcessingRequest)
 Rails.configuration.middleware.unshift(MessageBus::Rack::Middleware)
 
 # no reason to track this in development, that is 300+ redis calls saved per
 # page view (we serve all assets out of thin in development)
-if Rails.env != "development" || ENV["TRACK_REQUESTS"]
+if !Rails.env.development? || ENV["TRACK_REQUESTS"]
   require "middleware/request_tracker"
   Rails.configuration.middleware.unshift(Middleware::RequestTracker)
   Rails.configuration.middleware.move_before(Middleware::RequestTracker, ActionDispatch::RemoteIp)
 
   MethodProfiler.ensure_discourse_instrumentation! if GlobalSetting.enable_performance_http_headers
 end
+
+require "middleware/overload_protections"
+Rails.configuration.middleware.unshift(Middleware::OverloadProtections)
+
+require "middleware/processing_request"
+Rails.configuration.middleware.unshift(Middleware::ProcessingRequest)
 
 if Rails.env.test?
   # In test mode we can't insert/remove middlewares

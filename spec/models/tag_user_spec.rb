@@ -230,7 +230,7 @@ RSpec.describe TagUser do
       end
 
       it "sets notification level to the highest one if there are multiple tags" do
-        SiteSetting.watched_precedence_over_muted = true
+        user.user_option.update!(watched_precedence_over_muted: true)
 
         TagUser.create!(
           user: user,

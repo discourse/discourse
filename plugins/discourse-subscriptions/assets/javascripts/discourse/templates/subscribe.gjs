@@ -1,18 +1,18 @@
-import RouteTemplate from "ember-route-template";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
 
-export default RouteTemplate(
-  <template>
-    <div class="container">
-      <div class="title-wrapper">
-        <h1>
-          {{i18n "discourse_subscriptions.subscribe.title"}}
-        </h1>
-      </div>
+export default <template>
+  <div class="container">
+    <PluginOutlet @name="above-subscriptions-subscribe-title" />
 
-      <hr />
-
-      {{outlet}}
+    <div class="title-wrapper">
+      <h1>
+        {{i18n "discourse_subscriptions.subscribe.title"}}
+      </h1>
     </div>
-  </template>
-);
+
+    <hr />
+
+    {{outlet}}
+  </div>
+</template>

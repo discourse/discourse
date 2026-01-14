@@ -57,24 +57,11 @@ class SpamRule::AutoSilence
   end
 
   def silence_user
-    Post.transaction do
-      silencer =
-        UserSilencer.new(
-          @user,
-          Discourse.system_user,
-          message: :too_many_spam_flags,
-          post_id: @post&.id,
-        )
-
-      if silencer.silence && SiteSetting.notify_mods_when_user_silenced
-        @group_message =
-          GroupMessage.create(
-            Group[:moderators].name,
-            :user_automatically_silenced,
-            user: @user,
-            limit_once_per: false,
-          )
-      end
-    end
+    UserSilencer.auto_silence(
+      @user,
+      Discourse.system_user,
+      message: :too_many_spam_flags,
+      post_id: @post&.id,
+    )
   end
 end

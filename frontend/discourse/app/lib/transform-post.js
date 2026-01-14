@@ -1,0 +1,12 @@
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
+
+export {
+  warnWidgetsDecommissioned as includeAttributes,
+  warnWidgetsDecommissioned as transformBasicPost,
+  warnWidgetsDecommissioned as transformPost,
+} from "discourse/widgets/widget";

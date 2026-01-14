@@ -6,17 +6,23 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { gt, or } from "truth-helpers";
+import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { gt, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminUser from "admin/models/admin-user";
-import GroupChooser from "select-kit/components/group-chooser";
 import AiPersonaResponseFormatEditor from "../components/modal/ai-persona-response-format-editor";
+import { toPlainObject } from "../lib/utilities";
 import AiLlmSelector from "./ai-llm-selector";
 import AiPersonaCollapsableExample from "./ai-persona-example";
 import AiPersonaToolOptions from "./ai-persona-tool-options";
@@ -26,7 +32,6 @@ import RagUploader from "./rag-uploader";
 
 export default class PersonaEditor extends Component {
   @service router;
-  @service store;
   @service dialog;
   @service toasts;
   @service siteSettings;
@@ -98,10 +103,14 @@ export default class PersonaEditor extends Component {
     const groups = await Group.findAll({ include_everyone: true });
 
     // Backwards-compatibility code. TODO(roman): Remove 01-09-2025
-    const hasEveryoneGroup = groups.find((g) => g.id === 0);
+    const hasEveryoneGroup = groups.find(
+      (g) => g.id === AUTO_GROUPS.everyone.id
+    );
     if (!hasEveryoneGroup) {
-      const everyoneGroupName = "everyone";
-      groups.push({ id: 0, name: everyoneGroupName });
+      groups.push({
+        id: AUTO_GROUPS.everyone.id,
+        name: AUTO_GROUPS.everyone.name,
+      });
     }
 
     this.allGroups = groups;
@@ -122,7 +131,7 @@ export default class PersonaEditor extends Component {
       this.#sortPersonas();
 
       if (isNew && this.args.model.rag_uploads.length === 0) {
-        this.args.personas.addObject(personaToSave);
+        addUniqueValueToArray(this.args.personas.content, personaToSave);
         await this.router.replaceWith(
           "adminPlugins.show.discourse-ai-personas.edit",
           personaToSave
@@ -154,7 +163,7 @@ export default class PersonaEditor extends Component {
       message: i18n("discourse_ai.ai_persona.confirm_delete"),
       didConfirm: () => {
         return this.args.model.destroyRecord().then(() => {
-          this.args.personas.removeObject(this.args.model);
+          removeValueFromArray(this.args.personas.content, this.args.model);
           this.router.transitionTo(
             "adminPlugins.show.discourse-ai-personas.index"
           );
@@ -188,7 +197,10 @@ export default class PersonaEditor extends Component {
 
   @action
   updateUploads(form, newUploads) {
-    form.set("rag_uploads", newUploads);
+    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
+    // Convert to plain objects to ensure compatibility.
+    const plainUploads = toPlainObject(newUploads);
+    form.set("rag_uploads", plainUploads);
   }
 
   @action
@@ -241,7 +253,7 @@ export default class PersonaEditor extends Component {
     const updatedOptions = Object.assign({}, currentOptions);
 
     toolNames.forEach((toolId) => {
-      const tool = this.allTools.findBy("id", toolId);
+      const tool = this.allTools.find((item) => item.id === toolId);
       const toolOptions = tool?.options;
 
       if (!toolOptions || updatedOptions[toolId]) {
@@ -280,7 +292,8 @@ export default class PersonaEditor extends Component {
   }
 
   #sortPersonas() {
-    const sorted = this.args.personas.toArray().sort((a, b) => {
+    // .sort is done in place and personas.content is a tracked array.
+    this.args.personas.content.sort((a, b) => {
       if (a.priority && !b.priority) {
         return -1;
       } else if (!a.priority && b.priority) {
@@ -289,8 +302,6 @@ export default class PersonaEditor extends Component {
         return a.name.localeCompare(b.name);
       }
     });
-    this.args.personas.clear();
-    this.args.personas.setObjects(sorted);
   }
 
   @action
@@ -512,16 +523,6 @@ export default class PersonaEditor extends Component {
           {{/if}}
 
           {{#if (gt data.tools.length 0)}}
-            <form.Field
-              @name="tool_details"
-              @title={{i18n "discourse_ai.ai_persona.tool_details"}}
-              @tooltip={{i18n "discourse_ai.ai_persona.tool_details_help"}}
-              @format="large"
-              as |field|
-            >
-              <field.Checkbox />
-            </form.Field>
-
             <AiPersonaToolOptions
               @form={{form}}
               @data={{data}}
@@ -529,6 +530,16 @@ export default class PersonaEditor extends Component {
               @allTools={{@personas.resultSetMeta.tools}}
             />
           {{/if}}
+
+          <form.Field
+            @name="show_thinking"
+            @title={{i18n "discourse_ai.ai_persona.show_thinking"}}
+            @tooltip={{i18n "discourse_ai.ai_persona.show_thinking_help"}}
+            @format="large"
+            as |field|
+          >
+            <field.Checkbox />
+          </form.Field>
         </form.Section>
 
         {{#if this.siteSettings.ai_embeddings_enabled}}

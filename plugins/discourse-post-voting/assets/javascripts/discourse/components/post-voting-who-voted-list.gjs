@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action, get } from "@ember/object";
-import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import SmallUserList, {
   smallUserAttrs,
@@ -9,6 +8,7 @@ import SmallUserList, {
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { whoVoted } from "../lib/post-voting-utilities";
 

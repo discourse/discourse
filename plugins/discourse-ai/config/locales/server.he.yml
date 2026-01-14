@@ -5,27 +5,50 @@
 # https://translate.discourse.org/
 
 he:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "מזהה מודל"
+        max_prompt_tokens: "חלון הקשר"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "ל־%{model_name} נותרו רק %{percentage_remaining}% מהאסימונים. האסימונים יתאפסו ב־%{reset_date}. <a href='%{url}'>הצגת מודלים של בינה מלאכותית</a>"
   discourse_automation:
     ai:
       flag_types:
         review: "הוספת פוסט לתור הביקורת"
+        review_hide: "הוספת פוסט לתור הסקירה והסתרתו"
+        review_delete: "הוספת פוסט לתור הסקירה ומחיקתו"
+        review_delete_silence: "הוספת פוסט לתור סריקה, למחוק את הפוסט ולהשתיק את המשתמש/ת"
         spam: "סימון כזבל והסתרת הפוסט"
         spam_silence: "סימון כזבל, הסתרת הפוסט והשתקת המשתמש"
     scriptables:
       llm_tool_triage:
         title: מיון ראשוני של פוסטים באמצעות כלי בינה מלאכותית
+        description: "מיון פוסטים ראשוני באמצעות לוגיקה מותאמת בכלי בינה מלאכותית"
+      llm_persona_triage:
+        title: מיון ראשוני של פוסטים באמצעות דמות בינה מלאכותית
+        description: "תגובה לפוסטים באמצעות דמות בינה מלאכותית מסוימת"
       llm_triage:
         title: מיון ראשוני של פוסטים באמצעות בינה מלאכותית
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
-        flagged_post: |
-          <div>תגובה מהמודל:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>הוזנקה על ידי הכלל <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+        notify_author_pm:
+          subject: "הפוסט שלך הוסר זמנית לצורך בדיקה"
+          body: |
+            שלום ‎@%{username},
+
+            הפוסט שלך תחת „%{topic_title}” הוסר זמנית והועבר לתור הבדיקה שלנו כדי שההנהלה תוכל לעיין בו. אם יאושר, הוא ישוחזר אוטומטית.
+
+            הפניה: %{post_url}
       llm_report:
         title: דוח תקופתי בעזרת בינה מלאכותית
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
+      llm_tagger:
+        title: תיוג נושאים באמצעות בינה מלאכותית
+        description: "לתייג נושאים אוטומטית באמצעות בינה מלאכותית"
   site_settings:
     discourse_ai_enabled: "הפעלת תוסף הבינה המלאכותית של Discourse."
+    ai_default_llm_model: "מודל ה־LLM/מש״ג כברירת מחדל לשימוש ליכולות בינה מלאכותית"
     ai_artifact_security: "מערכת התוצרים של הבינה המלאכותית מייצרת חלוניות (IFRAME) עם קוד שניתן להריץ. מצב נוקשה מאלץ לחיצה נוספת כדי להריץ קוד. מצב Lax מריץ קוד ישירות. מצב משולב מאפשר למשתמש לספק data-ai-artifact-autorun שיופיע מיידית. מצב מושבת משבית את מערכת התוצרים."
     ai_toxicity_enabled: "הפעלת מודול הרעילות."
     ai_toxicity_inference_service_api_endpoint: "הכתובת בה נמצא ה־API הפעיל עבור מודול הרעילות"
@@ -54,6 +77,7 @@ he:
     ai_nsfw_flag_threshold_porn: "סף לתמונה שמוגדרת כארוטית כדי שתיחשב פוגענית."
     ai_nsfw_flag_threshold_sexy: "סף לתמונה שמוגדרת כמינית כדי שתיחשב פוגענית."
     ai_nsfw_models: "מודלים לשימוש להסקת פוגענות."
+    ai_spam_detection_enabled: "הפעלת מודול זיהוי זבל עם בינה מלאכותית"
     ai_openai_api_key: "מפתח API ל־API של OpenAI. משמש רק ליצירת ועריכת תמונות. בשביל GPT יש להשתמש בלשונית הגדרת ה־LLM."
     ai_openai_image_generation_url: "כתובת ל־API ליצירת תמונות מבית OpenAI"
     ai_openai_image_edit_url: "כתובת ל־API לעריכת תמונות מבית OpenAI"
@@ -61,14 +85,13 @@ he:
     composer_ai_helper_allowed_groups: "משתמשים בקבוצות אלו יראו כפתור מסייע בינה מלאכותית במחבר ההודעות."
     ai_helper_allowed_in_pm: "הפעלת מסייע הבינה המלאכותית בכותב ההודעות בהודעות הפרטיות."
     ai_helper_model: "דגם לשימוש למסייע הבינה המלאכותית."
-    ai_helper_custom_prompts_allowed_groups: "משתמשים בקבוצות אלה יראו את אפשרות הבקשה המותאמת אישית במסייע הבינה המלאכותית."
     ai_helper_automatic_chat_thread_title_delay: "השהייה בשניות לפני שמסייע הבינה המלאכותית מגדיר את כותרת שרשור הצ׳אט אוטומטית."
     ai_helper_automatic_chat_thread_title: "הגדרת כותרות שרשור הצ׳אט אוטומטית לפי תוכן השרשור."
     ai_helper_illustrate_post_model: "דגם לשימוש ליכולת הדמיית הפוסט של מסייע הבינה המלאכותית בכתיבה"
     ai_helper_enabled_features: "נא לבחור יכולות להפעלה במסייע הבינה המלאכותית."
     post_ai_helper_allowed_groups: "קבוצות משתמשים שמורשות לגשת ליכולות מסייע בינה מלאכותית בפוסטים"
     ai_helper_image_caption_model: "נא לבחור את הדגם שישמש ליצירת כותרות לתמונות"
-    ai_auto_image_caption_allowed_groups: "משתמשים בקבוצות האלה יכולים להפעיל או לכבות כותרות אוטומטיות לתמונות."
+    ai_embeddings_selected_model: "להשתמש במודל הנבחר ליצירת הטמעות."
     ai_embeddings_generate_for_pms: "יצירת הטמעות להודעות פרטיות."
     ai_embeddings_semantic_related_topics_enabled: "להשתמש בחיפוש סמנטי לנושאים קשורים."
     ai_embeddings_semantic_related_topics: "מספר הנושאים המרבי להצגה בסעיף הנושאים הקשורים."
@@ -92,7 +115,10 @@ he:
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
     ai_bot_public_sharing_allowed_groups: "לאפשר לקבוצות האלה לשתף הודעות אישיות של בינה למאכותית עם הציבור באמצעות קישור ייחודי גלוי לציבור. הערה: אם האתר שלך דורש כניסה, גם שיתופים ידרשו כניסה."
     ai_bot_add_to_header: "הצגת כפתור בכותרת כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
+    ai_bot_add_to_community_section: "הצגת קישור בסרגל הצד כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
     ai_bot_github_access_token: "אסימון גישה ל־GitHub לשימוש עם כלי הבינה המלאכותית של GitHub (נחוץ לתמיכה בחיפוש)"
+    ai_discover_enabled: "הפעלת יכולת חיפוש גילוי"
+    ai_discover_persona: "דמות לשימוש ליכולת חיפוש גילוי"
     ai_stability_api_key: "מפתח API ל־API של stability.ai"
     ai_stability_engine: "מנוע לחילול תמונות לשימוש עבור ה־API של stability.ai"
     ai_stability_api_url: "כתובת ל־API של stability.ai"
@@ -104,6 +130,14 @@ he:
     ai_discord_search_mode: "נא לבחור את מצב החיפוש לחיפוש ב־Discord"
     ai_discord_search_persona: "הדמות לשימוש בחיפוש Discord."
     ai_discord_allowed_guilds: "גילדות (שרתי) Discord בהן מותר לבוט לחפש"
+    ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
+    ai_translation_model: "המודל לשימוש לתרגום. המודל הזה חייב לתמוך בתרגום. הדמויות יכולות לדרוס את ההגדרה הזאת."
+    ai_translation_backfill_limit_to_public_content: "כשהאפשרות פעילה, רק תוכן בקטגוריות ציבוריות יתורגם. כשהאפשרות מושבתת, התוכן בהודעות קבוצתיות פרטיות וקטגוריות פרטיות יישלח גם הוא לתרגום."
+    ai_translation_max_post_length: "מספר התווים המרבי בפוסט לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
+    ai_translation_backfill_max_age_days: "הגיל המרבי של פוסט ונושא לתרגום. פוסטים ונושאים שהם ותיקים יותר ממשך הזמן הזה לא יתורגמו. 0 משבית מילוי לאחור אבל לא משבית תרגום של פוסטים חדשים."
+    ai_translation_backfill_hourly_rate: "מספר הפוסטים והנושאים לתרגום לשעה במהלך פעולות מילוי לאחור. יש להגדיר ל־0 כדי להשבית מילוי לאחור של תרגומים אוטומטית לתוכן קיים."
+    ai_usage_rollup_after_days: "מספר הימים לשמירת סטטיסטיקות שימוש בבינה מלאכותית לפי בקשה לפני גלגולן לצבירה יומית. הגדרה ל־0 תשבית איסופים."
+    ai_audit_logs_purge_after_days: "מחיקת יומני ביקורת של API של בינה מלאכותית שגילם עולה על מספר הימים הזה. ברירת המחדל היא כ־6 חודשים. הגדרה ל־0 תשמור ללא הגבלת זמן."
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -111,6 +145,7 @@ he:
   reports:
     sentiment_analysis:
       title: "ניתוח הבעות"
+      description: "הדוח מספק ניתוח רגשות לפוסטים, בקיבוץ לפי קטגוריות, עם דירוג חיובי, שלילי ופושר לכל אחד מהפוסטים והקטגוריות."
     overall_sentiment:
       title: "רגש כללי"
       description: 'התרשים משווה את מספר הפוסטים שמסווגים כחיוביים או שליליים. אלו מחושבים כאשר ניקוד חיובי או שלילי הוא גדול מסף הניקוד המוגדר. משמעות הדבר היא שפוסטים נייטרליים לא מופיעים. הודעות אישיות מוחרגות גם כן. מסווגות באמצעות „cardiffnlp/twitter-roberta-base-sentiment-latest”'
@@ -202,9 +237,12 @@ he:
       description: "פוסטים שסווגו עם הרגש הפתעה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
   discourse_ai:
     ai_artifact:
+      link: "הצגה בלשונית חדשה"
+      copy_embed: "העתקת הטמעה"
       view_source: "הצגת המקור"
       view_changes: "הצגת שינויים"
       change_description: "עריכת התיאור"
+      copied: "הועתקה ללוח הגזירים"
     unknown_model: "דגם בינה מלאכותית לא ידוע"
     tools:
       custom_name: "%{name} (מותאם אישית)"
@@ -215,8 +253,18 @@ he:
           name: "שער חליפין"
         stock_quote:
           name: "מחיר המניה (AlphaVantage)"
-        image_generation:
-          name: "מחולל תמונות Flux‏ (Together.ai)"
+        image_generation_category:
+          name: "יצירת תמונות…"
+        image_generation_custom:
+          name: "מותאם"
+        image_generation_openai:
+          name: "OpenAI"
+        image_generation_gemini:
+          name: "ננו בננה"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "התחלה מאפס…"
       name:
@@ -224,6 +272,11 @@ he:
     ai_helper:
       errors:
         completion_request_failed: "משהו השתבש במהלך הניסיון לספק הצעות. נא לנסות שוב."
+        no_illustrator_persona: "לא מוגדר דמות איור לפוסטים. נא לבדוק את הגדרות האתר שלך."
+        no_image_generation_tool: "לדמות איור הפוסטים חייב להיות מוצמד כלי יצירת תמונות. נא להגדיר כלי יצירת תמונות לדמות הזאת בלוח הניהול."
+        no_image_generated: "יצירת תמונות נכשלה. נא לנסות שוב או לבדוק את הגדרות הכלי שלך."
+        llm_model_not_configured: "לא מוגדר מודל שפה ליצירת תמונות. נא להגדיר מודל שפה כברירת מחדל בהגדרות האתר שלך."
+        unknown_error: "אירעה שגיאה מפתיעה בעת יצירת תמונות ממוזערות. נא לנסות שוב."
       prompts:
         translate: תרגום ל%{language}
         generate_titles: הצעת כותרות לנושא
@@ -233,10 +286,6 @@ he:
         explain: "הסבר"
         illustrate_post: "איור פוסט"
         replace_dates: "תאריכים חכמים"
-      painter:
-        attribution:
-          stable_diffusion_xl: "תמונה מאת Stable Diffusion XL"
-          dall_e_3: "תמונה מאת DALL-E 3"
       image_caption:
         attribution: "הכותרת נוספה ע״י בינה מלאכותית"
     share_ai:
@@ -255,11 +304,12 @@ he:
       silence_reason: "המשתמש הושתק אוטומטית על ידי <a href='%{url}'>בינה מלאכותית של Discourse</a>"
       invalid_error_type: "סוג השגיאה שסופק לא תקין"
       unexpected: "אירעה שגיאה בלתי צפויה"
+      bot_user_update_failed: "עדכון משתמש בוט סריקת הזבל נכשל"
+      configuration_missing: "הגדרות זיהוי ספאם עם בינה מלאכותית חסרות. יש להוסיף הגדרות דרך ‚ניהול > תוספים > בינה מלאכותית ב־Dicsourse > ספאם’ לפני הפעלת האפשרות הזאת."
       logging_subject: "זיהוי זבל"
     ai_bot:
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
-      thinking: "בתהליך חשיבה…"
       personas:
         default_llm_required: "ברירת מחדל של מודל שפה הגדול נחוצה בטרם הפעלת הצ׳אט"
         cannot_delete_system_persona: "אי אפשר למחוק דמויות מערכת, נא להשבית אותן במקום"
@@ -277,12 +327,18 @@ he:
         designer:
           name: מעצב
           description: "בוט בינה מלאכותית שמתמחה ביצירת ועריכת תמונות"
+        forum_researcher:
+          name: מחקר לפורום
+          description: "בוט בינה מלאכותית שמתמחה במחקר עמוק עבור הפורום"
         sql_helper:
           name: מסייע SQL
           description: "בוט בינה מלאכותית שמתמחה בסיוע בכתיבת שאילתות SQL במופע ה־Discourse הזה"
         settings_explorer:
           name: סייר הגדרות
           description: "בוט בינה מלאכותית שמתמחה בסיור בהגדרות אתר ה־Discourse"
+        researcher:
+          name: מחקר ברשת
+          description: "בוט בינה מלאכותית עם גישה לגוגל שיכולים לחפש ולקרוא אתרים באינטרנט"
         creative:
           name: יצירה
           description: "בוט בינה מלאכותית ללא שילובים חיצוניים שמתמחה ביצירת משימות יצירתיות"
@@ -297,21 +353,69 @@ he:
           description: "בוט בינה מלאכותית שמתמחה ביצירת תוצרים אינטרנטיים אינטראקטיביים"
         summarizer:
           name: "מסכם"
+          description: "דמות ברירת מחדל שעליה מופעלים תקצירי בינה מלאכותית"
         short_summarizer:
           name: "מסכם (מקוצר)"
+          description: "דמות ברירת מחדל שמסכמת עם פריטי רשימות נושאים עם בינה מלאכותית"
+        concept_finder:
+          name: "איתור מושגים"
+          description: "בוט בינה מלאכותית שמתמחה בזיהוי מושגים וערכות עיצוב בתוכן"
+        concept_matcher:
+          name: "תיאום מושגים"
+          description: "בוט בינה מלאכותית שמתמחה בהתאמת תוכן כנגן מושגים קיימים"
+        concept_deduplicator:
+          name: "הסרת כפילות מושגים"
+          description: "בוט בינה מלאכותית שמתמחה בהסרת מושגים כפולים"
         custom_prompt:
           name: "בקשה מותאמת אישית"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת הבקשה המותאמת של המסייע"
         smart_dates:
           name: "תאריכים חכמים"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת התאריכים החכמים של המסייע"
+        markdown_table_generator:
+          name: "יצירת טבלאות ב־Markdown"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת יצירת הטבלאות ב־Markdown של המסייע"
+        post_illustrator:
+          name: "איור פוסטים"
+          description: "יצירת תמונות לאיור פוסטים באמצעות כלי יצירת תמונות זמינים"
+        proofreader:
+          name: "הגהה"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת הגהת הטקסט של המסייע"
+        titles_generator:
+          name: "יצירת כותרות"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת הצעת כותרות הנושאים של המסייע"
+        tutor:
+          name: "הדרכה"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת ההסבר של המסייע"
+        translator:
+          name: "תרגום"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת התרגום של המסייע"
+        image_captioner:
+          name: "תיאור תמונות"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת תיאור התמונות של המסייע"
         locale_detector:
           name: "מזהה שפה ומקום"
+          description: "על גביו פועלת יכולת התרגום על ידי זיהוי השפה והניב של טקסט מסוים (פוסטים, כותרות וכו׳)"
+        post_raw_translator:
+          name: "תרגום פוסטים"
+          description: "על גביו פועלת יכולת התרגום על ידי תרגום פוסטים שמכילים Markdown של Discourse"
         topic_title_translator:
           name: "מתרגם כותרות נושאים"
+          description: "על גביו פועלת יכולת התרגום על ידי תרגום כותרות נושאים"
         short_text_translator:
           name: "מתרגם טקסטים קצרים"
+        spam_detector:
+          name: "זיהוי זבל"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת זיהוי הזבל שלנו"
+        content_creator:
+          name: "יצירת תוכן"
+          description: "דמות ברירת המחדל שעליה פועל חיפוש HyDE"
         report_runner:
           name: "אצן דוחות"
           description: "דמות ברירת המחדל שסקריפט אוטומציית הדוחות משתמש בה"
+        discover:
+          name: "גילוי"
+          description: "דמות ברירת מחדל לשימוש ביכולת הגילויים (חיפוש משלים)"
       topic_not_found: "תקציר לא זמין, לא נמצא נושא!"
       summarizing: "הנושא מסוכם"
       searching: "חיפוש אחר: ‚%{query}’"
@@ -319,8 +423,19 @@ he:
         researcher:
           researcher_llm:
             name: "LLM"
+            description: "מודל שפה לשימוש למחקר (ברירת המחדל היא ה־LLM של הדמות הנוכחית)"
+          max_tokens_per_batch:
+            name: "מספר אסימונים מרבי לאצווה"
+            description: "מספר האסימונים המרבי לשימוש לכל אצווה (ריכוז של פעולות) מחקר"
+          max_tokens_per_post:
+            name: "מספר אסימונים מרבי לפוסט"
+            description: "מספר האסימונים המרבי לשימוש לכל פוסט מחקר"
           max_results:
             name: "מספר תוצאות מרבי"
+            description: "מספר התוצאות המרבי לכלול במסנן"
+          include_private:
+            name: "לכלול פרטיים"
+            description: "לכלול נושאים פרטיים במסננים"
         create_artifact:
           creator_llm:
             name: "LLM"
@@ -333,6 +448,7 @@ he:
             name: "עדכון אלגוריתם"
             description: "לבקש מ־LLM להחליף לחלוטין או להשתמש ב־diff (הבדלים) כדי לעדכן"
           do_not_echo_artifact:
+            name: "לא להחזיר תוצרים"
             description: "יגביל את העלויות אבל יפגום ביעילות עדכוני התוצרים"
         google:
           base_query:
@@ -360,9 +476,9 @@ he:
         github_search_files: "חיפוש קבצים ב־GitHub"
         github_search_code: "חיפוש קוד ב־GitHub"
         github_file_content: "תוכן קובץ ב־GitHub"
-        github_pull_request_diff: "הבדל בבקשת דחיפה ב־GitHub"
         random_picker: "בורר אקראי"
         categories: "הצגת קטגוריות"
+        flag_post: "סימון פוסט"
         search: "חיפוש"
         tags: "הצגת תגיות"
         time: "מועד"
@@ -378,6 +494,7 @@ he:
         javascript_evaluator: "שערוך JavaScript"
         create_image: "יצירת תמונה"
         edit_image: "עריכת תמונה"
+        researcher: "מתבצע מחקר"
         researcher_dry_run: "המחקר בהכנה"
       tool_help:
         read_artifact: "לקרוא תוצר דפדפני באמצעות בוט הבינה המלאכותית"
@@ -387,7 +504,6 @@ he:
         github_search_code: "חיפוש אחר קוד במאגר GitHub"
         github_search_files: "חיפוש אחר קבצים במאגר GitHub"
         github_file_content: "משיכת תוכן של קבצים ממאגר ב־GitHub"
-        github_pull_request_diff: "משיכת הבדל לבקשת דחיפה ב־GitHub"
         random_picker: "נא לבחור מספר אקראי או רכיב אקראי מרשימה"
         categories: "הצגת כל הקטגוריות החשופות לציבור בפורום"
         search: "חיפוש בכל הנושאים הציבוריים בפורום"
@@ -405,6 +521,7 @@ he:
         dall_e: "יצירת תמונה באמצעות DALL-E 3"
         search_meta_discourse: "חיפוש ב־Meta Discrouse"
         javascript_evaluator: "שערוך JavaScript"
+        researcher: "לחקור את פרטי הפורום באמצעות בוט בינה מלאכותית"
       tool_description:
         read_artifact: "לקרוא תוצר דפדפני באמצעות בוט הבינה המלאכותית"
         update_artifact: "עודכן תוצר דפדפני באמצעות בוט הבינה המלאכותית"
@@ -412,7 +529,7 @@ he:
         web_browser: "קורא את <a href='%{url}'>%{url}</a>"
         github_search_files: "בוצע חיפוש אחר ‚%{keywords}’ בתוך %{repo}/%{branch}"
         github_search_code: "בוצע חיפוש אחר ‚%{query}’ בתוך %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "התקבל תוכן של %{file_paths} מתוך %{repo_name}@%{branch}"
         random_picker: "בחירה מתוך %{options}, נבחר: %{result}"
         read: "קריאה: <a href='%{url}'>%{title}</a>"
@@ -422,8 +539,52 @@ he:
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
         image: "%{prompt}"
+        categories:
+          one: "נמצאה קטגוריה"
+          two: "נמצאו שתי קטגוריות"
+          many: "נמצאו %{count} קטגוריות"
+          other: "נמצאו %{count} קטגוריות"
+        tags:
+          one: "נמצאה תגית"
+          two: "נמצאו שתי תגיות"
+          many: "נמצאו %{count} תגיות"
+          other: "נמצאו %{count} תגיות"
+        search:
+          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+        search_meta_discourse:
+          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+        google:
+          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         setting_context: "נקרא הקשר עבור: %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          one: "יעדים מוצעים: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
+          two: "יעדים מוצעים: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
+          many: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
+          other: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
+        researcher:
+          one: "במהלך מחקר: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
+          two: "במהלך מחקר: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
+          many: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
+          other: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
+        search_settings:
+          one: "נמצאה תוצאה לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי תוצאות לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
+      discoveries:
+        continue_conversation:
+          title: "שיחת גילוי: חיפוש אחר %{query}"
+          raw: "בחיפוש שלי אחר %{query}, הצגת לי את המידע הבא:\n\n%{context}\n\nאפשר להמשיך את השיחה."
     summarization:
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."
@@ -449,10 +610,12 @@ he:
           neutral: "נייטרלי"
     llm:
       configuration:
-        disable_module_first: "קודם צריך להשבית את %{setting}."
+        create_llm: "יש להפעיל LLM/מש״ג בטרם הפעלת היכולת הזאת"
+        disable_modules_first: "תחילה יש להשבית את המודולים הבאים: %{settings}"
         set_llm_first: "קודם יש להגדיר את %{setting}"
         model_unreachable: "לא הצלחנו לקבל תגובה מהמודל הזה. נא לוודא שההגדרות שלך נכונות קודם."
         invalid_seeded_model: "אי אפשר להשתמש במודל הזה עם היכולת הזאת"
+        invalid_persona_response_format: "לדמות הנבחרת חייבת להיות תבנית תגובה עם שדה בוליאני בשם „spam”"
         must_select_model: "קודם יש לבחור LLM"
       endpoints:
         not_configured: "%{display_name} (לא מוגדר)"
@@ -467,19 +630,27 @@ he:
         many: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
         other: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
+    personas:
+      malformed_examples: "הדוגמה הבאה היא בתבנית שגויה."
     embeddings:
       delete_failed: "זה המודל שנמצא בשימוש. יש לעדכן את `ai embeddings selected model`."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
       configuration:
         disable_embeddings: "יש להשבית קודם את ‚הטמעת בינה מלאכותית פעילה’."
-        invalid_config: "בחרת אפשרות שגויה."
         choose_model: "יש לעדכן את ‚ai embeddings selected model’."
+        model_test_failed: "כשלנו בייצור הטמעות בדיקה עם המודל הזה. נא לבדוק שהוא מוגדר כראוי."
     llm_models:
       missing_provider_param: "%{param} לא יכול להישאר ריק"
       bedrock_invalid_url: "נא למלא את כל השדות די להשתמש במודל הזה."
+      bedrock_missing_auth: "AWS Bedrock דורש שאו שמפתח הגישה (Access Key ID) או שכתובת התפקיד (Role ARN) יהיו מוגדרים"
     ai_staff_action_logger:
       updated: "עודכן"
+      set: "הגדרה"
       removed: "הוסרה"
+    translation:
+      errors:
+        disabled: "יכולת התרגום של הבינה המלאכותית אינה מוגדרת במלואה."
+        all_posts_translated: "כל הפוסטים בנושא הזה כבר מתורגמים."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
       quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
@@ -492,6 +663,9 @@ he:
       no_default_llm: לדמות חייב להיות מוגדר default_llm (מודל ברירת מחדל).
       user_not_allowed: המשתמש לא מורשה להשתתף בנושא.
       prompt_message_length: ההודעה %{idx} חורגת ממגבלת 1000 התווים.
-  dashboard:
-    problem:
-      ai_llm_status: "מודל השפה הגדול: %{model_name} נתקל בקשיים. נא לגשת ל<a href='%{url}'>עמוד ההגדרות של המודל</a>."
+      persona_already_exists: כבר קיימת דמות בשם %{name}.
+      custom_tool_exists:
+        one: "כבר קיים כלי מותאם בשם %{names}."
+        two: "כבר קיימים כלים מותאמים בשמות %{names}."
+        many: "כבר קיימים כלים מותאמים בשמות %{names}."
+        other: "כבר קיימים כלים מותאמים בשמות %{names}."

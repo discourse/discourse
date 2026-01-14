@@ -59,8 +59,6 @@ hu:
           title: "Halmozott navigáció"
         categories_list:
           title: "Kategóriák listája"
-        topic_link:
-          title: "Téma hivatkozás"
         topic_list_item:
           title: "Témalista elem"
         topic_statuses:
@@ -69,8 +67,6 @@ hu:
           title: "Témalista"
         basic_topic_list:
           title: "Alapvető témakörlista"
-        footer_message:
-          title: "Lábléc üzenet"
         signup_cta:
           title: "Regisztrációs felhívás"
         topic_timer_info:
@@ -89,8 +85,8 @@ hu:
           title: "Téma térkép"
         site_header:
           title: "Webhelyfejléc"
-        suggested_topics:
-          title: "Ajánlott témák"
+        more_topics:
+          title: "További témák"
         post_menu:
           title: "Bejegyzés menü"
         modal:

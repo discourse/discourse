@@ -7,11 +7,9 @@
 sk:
   admin_js:
     admin:
-      calendar: "Kalendár"
       site_settings:
         categories:
           discourse_post_event: "Discourse udalosť"
-          discourse_calendar: "Kalendár Discourse"
   js:
     notifications:
       titles:
@@ -138,6 +136,7 @@ sk:
           dk: "Dánsko"
           ee: "Estónsko"
           el: "Grécko"
+          gr: "Grécko"
           es_an: "Španielsko (es_an)"
           es_ar: "Španielsko (es_ar)"
           es_ce: "Španielsko (es_ce)"
@@ -314,7 +313,7 @@ sk:
         month: "Mesiac"
         week: "Týždeň"
         day: "Deň"
-        list: "Zoznam"
+        year: "Rok"
     group_timezones:
       search: "Hľadať"
       group_availability: "%{group} dostupnosť"
@@ -324,10 +323,7 @@ sk:
         after_event_reminder: "Udalosť sa skončila"
         ongoing_event_reminder: "Udalosť prebieha"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} automaticky nastavila vašu účasť a pozvala vás na stránku %{description}."
-        before_event_reminder_html: "Udalosť sa čoskoro začne %{description}"
-        after_event_reminder_html: "Udalosť sa skončila %{description}"
-        ongoing_event_reminder_html: "Prebieha udalosť  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} automaticky nastavila vašu účasť a pozvala vás na stránku %{eventName}."
       edit_reason: "Udalosť aktualizovaná"
       edit_reason_closed: "Udalosť je uzavretá"
       edit_reason_opened: "Udalosť otvorená"

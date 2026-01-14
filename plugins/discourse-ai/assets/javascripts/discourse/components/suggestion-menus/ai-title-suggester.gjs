@@ -5,10 +5,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
+import {
+  isAiCreditLimitError,
+  popupAiCreditLimitError,
+} from "../../lib/ai-errors";
 import {
   MIN_CHARACTER_COUNT,
   showSuggestionsError,
@@ -92,7 +96,11 @@ export default class AiTitleSuggester extends Component {
         return;
       }
     } catch (error) {
-      popupAjaxError(error);
+      if (isAiCreditLimitError(error)) {
+        popupAiCreditLimitError(error);
+      } else {
+        popupAjaxError(error);
+      }
     } finally {
       this.loading = false;
       this.triggerIcon = "rotate";

@@ -10,16 +10,25 @@ module DiscourseAi
         @current_key = nil
         @current_value = nil
         @tracking_array = false
+        @broken = false
         @parser = DiscourseAi::Completions::JsonStreamingParser.new
 
         @parser.key do |k|
+          next if @broken
+          if @tracking_array && @current_key.present?
+            mark_broken!
+            next
+          end
+
           @current_key = k
           @current_value = nil
         end
 
         @parser.value do |value|
+          next if @broken
           if @current_key
             if @tracking_array
+              @current_value ||= []
               @current_value << value
               stream_consumer.notify_progress(@current_key, @current_value)
             else
@@ -30,11 +39,15 @@ module DiscourseAi
         end
 
         @parser.start_array do
+          next if @broken
+          next if !@current_key
+
           @tracking_array = true
           @current_value = []
         end
 
         @parser.end_array do
+          next if @broken
           @tracking_array = false
           @current_key = nil
           @current_value = nil
@@ -52,13 +65,14 @@ module DiscourseAi
         return if @broken
 
         begin
+          pre_append_buffer = @parser.buf.dup
           @parser << raw_json
         rescue DiscourseAi::Completions::ParserError
           # Note: We're parsing JSON content that was itself embedded as a string inside another JSON object.
           # During the outer JSON.parse, any escaped control characters (like "\\n") are unescaped to real characters ("\n"),
           # which corrupts the inner JSON structure when passed to the parser here.
           # To handle this, we retry parsing with the string JSON-escaped again (`.dump[1..-2]`) if the first attempt fails.
-          try_escape_and_parse(raw_json)
+          try_escape_and_parse(raw_json, pre_append_buffer)
           return if @broken
         end
 
@@ -73,13 +87,27 @@ module DiscourseAi
 
       private
 
-      def try_escape_and_parse(raw_json)
+      def mark_broken!
+        @broken = true
+        @tracking_array = false
+        @current_key = nil
+        @current_value = nil
+      end
+
+      def try_escape_and_parse(raw_json, pre_append_buffer)
         if !raw_json.is_a?(String)
           @broken = true
           return
         end
         # Escape the string as JSON and remove surrounding quotes
         escaped_json = raw_json.dump[1..-2]
+
+        # Assume we could have already processed some of the chunk which was stored in the parser's buffer.
+        already_processed_chunk = @parser.buf
+        last_seen_char_idx = already_processed_chunk.length - pre_append_buffer.length
+
+        escaped_json = escaped_json[last_seen_char_idx..]
+
         @parser << escaped_json
       rescue DiscourseAi::Completions::ParserError
         @broken = true

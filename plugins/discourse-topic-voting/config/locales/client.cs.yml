@@ -21,11 +21,9 @@ cs:
       voted_title: "Hlasováno"
       voting_closed_title: "Zavřené"
       voting_limit: "limit"
-      votes_left_button_title:
-        one: "Zbývá vám %{count} hlas."
-        few: "Zbývají vám %{count} hlasy."
-        many: "Zbývá vám %{count} hlasů."
-        other: "Zbývá vám %{count} hlasů."
+      see_votes: "Zbývá vám %{count}/%{max} hlasů"
+      locked: "Uzamčeno"
+      locked_description: "Pro hlasování zvyšte svoji úroveň důvěry"
       votes:
         one: "%{count} hlas"
         few: "%{count} hlasy"

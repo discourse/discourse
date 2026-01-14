@@ -1,36 +1,46 @@
-<h1><%= t "user_api_key.title" %></h1>
 <div class='authorize-api-key'>
+  <h1><%= t("user_api_key.title", application_name: @application_name) %></h1>
 <% if @no_trust_level %>
-  <h3>
-  <%= t("user_api_key.no_trust_level") %>
-  </h3>
+  <p class="error-message"><%= t("user_api_key.no_trust_level") %></p>
 <% elsif @generic_error %>
-  <h3>
-  <%= t("user_api_key.generic_error") %>
-  </h3>
+  <p class="error-message"><%= t("user_api_key.generic_error") %></p>
 <% else %>
-<p>
-  <%= t("user_api_key.description", application_name: @application_name) %>
-</p>
-<p>
-  <ul class='scopes'>
-    <%- @localized_scopes.each do |scope| %>
-      <li><%= scope %></li>
-    <%- end %>
-  </ul>
-</p>
-<%= form_tag(user_api_key_path) do %>
-  <%= hidden_field_tag 'application_name', @application_name %>
-  <%= hidden_field_tag 'access', @access %>
-  <%= hidden_field_tag 'nonce', @nonce %>
-  <%= hidden_field_tag 'client_id', @client_id %>
-  <%= hidden_field_tag('auth_redirect', @auth_redirect) if @auth_redirect %>
-  <%= hidden_field_tag 'push_url', @push_url %>
-  <%= hidden_field_tag 'public_key', @public_key%>
-  <%= hidden_field_tag 'scopes', @scopes%>
-  <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-primary' %>
+
+  <div class="authorize-api-key__user">
+    <span class="authorize-api-key__user-label"><%= t("user_api_key.logged_in_as") %></span>
+    <img class="avatar" src="<%= current_user.avatar_template.gsub("{size}", "24") %>" width="24" height="24" alt="">
+    <span class="authorize-api-key__username"><%= current_user.username %></span>
+  </div>
+
+  <div class="authorize-api-key__permissions">
+    <p class="authorize-api-key__permissions-header"><%= t("user_api_key.permissions_header", application_name: @application_name) %></p>
+    <ul class='authorize-api-key__scopes'>
+      <%- @localized_scopes.each do |scope| %>
+        <li><%= scope %></li>
+      <%- end %>
+    </ul>
+  </div>
+
+  <% if @redirect_uri %>
+  <div class='authorize-api-key__redirect'>
+    <p class="authorize-api-key__redirect-url"><%= t("user_api_key.redirect_warning") %> <strong><%= @redirect_uri.host %><%= ":#{@redirect_uri.port}" if @redirect_uri.port && ![80, 443].include?(@redirect_uri.port) %></strong></p>
+  </div>
+  <% end %>
+
+  <%= form_tag(user_api_key_path) do %>
+    <%= hidden_field_tag 'application_name', @application_name %>
+    <%= hidden_field_tag 'access', @access %>
+    <%= hidden_field_tag 'nonce', @nonce %>
+    <%= hidden_field_tag 'client_id', @client_id %>
+    <%= hidden_field_tag('auth_redirect', @auth_redirect) if @auth_redirect %>
+    <%= hidden_field_tag 'push_url', @push_url %>
+    <%= hidden_field_tag 'public_key', @public_key %>
+    <%= hidden_field_tag 'scopes', @scopes %>
+    <%= hidden_field_tag('padding', @padding) if @padding %>
+    <div class='authorize-api-key__buttons'>
+      <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-primary' %>
+      <a href="/" class='btn btn-default'><%= t('user_api_key.deny') %></a>
+    </div>
+  <% end %>
 <% end %>
 </div>
-<% end %>
-
-

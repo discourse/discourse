@@ -13,6 +13,8 @@ zh_CN:
     reviewables:
       comment_already_handled: "谢谢，但我们已经审核这条评论，并确定不需要再次对其进行举报。"
   js:
+    discourse_post_voting:
+      title: "帖子投票"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -36,7 +38,7 @@ zh_CN:
     vote:
       already_voted: "您只能为每个问题投一次票。"
       user_over_limit: "您不能超过您的信任级别对应的投票数。"
-      one_vote_per_post: "您只能为每篇帖子投一次票。"
+      one_vote_per_post: "您只能为每个帖子投一次票。"
     last_answer_lowercase: 最后一个回答
     answer_lowercase:
       other: 回答
@@ -105,6 +107,8 @@ zh_CN:
         activity: "活动"
         answer_count:
           other: "%{count} 个回答"
+        voters_count_diff:
+          other: "其他 %{count} 个用户…"
     review:
       transcript:
         view: "查看以前的消息转录文本"

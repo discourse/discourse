@@ -4,6 +4,7 @@ describe Chat::Message do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
+  it { is_expected.to have_one(:message_search_data).dependent(:destroy) }
 
   it "supports custom fields" do
     message.custom_fields["test"] = "test"
@@ -263,12 +264,12 @@ describe Chat::Message do
         MD
 
         expect(cooked).to match_html <<~HTML
-        <h1><a name="h1-1" class="anchor" href="#h1-1"></a>h1</h1>
-        <h2><a name="h2-2" class="anchor" href="#h2-2"></a>h2</h2>
-        <h3><a name="h3-3" class="anchor" href="#h3-3"></a>h3</h3>
-        <h4><a name="h4-4" class="anchor" href="#h4-4"></a>h4</h4>
-        <h5><a name="h5-5" class="anchor" href="#h5-5"></a>h5</h5>
-        <h6><a name="h6-6" class="anchor" href="#h6-6"></a>h6</h6>
+        <h1><a name="h1-1" class="anchor" href="#h1-1" aria-label="Heading link"></a>h1</h1>
+        <h2><a name="h2-2" class="anchor" href="#h2-2" aria-label="Heading link"></a>h2</h2>
+        <h3><a name="h3-3" class="anchor" href="#h3-3" aria-label="Heading link"></a>h3</h3>
+        <h4><a name="h4-4" class="anchor" href="#h4-4" aria-label="Heading link"></a>h4</h4>
+        <h5><a name="h5-5" class="anchor" href="#h5-5" aria-label="Heading link"></a>h5</h5>
+        <h6><a name="h6-6" class="anchor" href="#h6-6" aria-label="Heading link"></a>h6</h6>
         HTML
       end
 
@@ -749,6 +750,20 @@ describe Chat::Message do
       message_1.destroy!
 
       expect { upload_reference_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "destroys message_search_data" do
+      message_1 = Fabricate(:chat_message)
+      search_data_1 =
+        Chat::MessageSearchData.create!(
+          chat_message_id: message_1.id,
+          search_data: "test search data",
+          raw_data: "test",
+        )
+
+      message_1.destroy!
+
+      expect { search_data_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     describe "bookmarks" do

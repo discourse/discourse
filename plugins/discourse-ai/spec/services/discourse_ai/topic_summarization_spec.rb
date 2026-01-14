@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::TopicSummarization do
-  fab!(:user) { Fabricate(:admin) }
+  fab!(:user, :admin)
   fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
   fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
   fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
 
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_summarization_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_summarization_enabled = true
   end
 

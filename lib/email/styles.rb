@@ -45,7 +45,7 @@ module Email
       css = EmailStyle.new.compiled_css
       @custom_styles = {}
 
-      if !css.blank?
+      if css.present?
         # there is a minor race condition here, CssParser could be
         # loaded by ::CssParser::Parser not loaded
         require "css_parser" unless defined?(::CssParser::Parser)
@@ -263,6 +263,7 @@ module Email
         "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%",
       )
 
+      style(".email-preview", "display: none;")
       style(".previous-discussion", "font-size: 17px; color: #444; margin-bottom:10px;")
       style(
         ".notification-date",
@@ -469,7 +470,6 @@ module Email
       style(".with-accent-colors, .digest-content-header", nil, dm: "body_primary")
       style(".digest-topic-body", nil, dm: "topic-body")
       style(".summary-footer", nil, dm: "text-color")
-      style("code, pre code, blockquote", nil, dm: "bg")
     end
 
     def replace_relative_urls

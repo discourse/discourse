@@ -10,6 +10,7 @@ fi:
     discourse_templates_categories: "Alueet, joista malleja haetaan"
     discourse_templates_enable_private_templates: "Mahdollistaa yksityisten mallien käytön"
     discourse_templates_groups_allowed_private_templates: "Ryhmät saavat käyttää yksityisiä malleja. Henkilökunnan jäsenet saavat aina käyttää niitä."
+    discourse_templates_private_templates_tags: "Tunnisteet, joista yksityisviestin tunnistaa yksityiseksi malliksi"
   default_category_template:
     name: Mallit
     description: |

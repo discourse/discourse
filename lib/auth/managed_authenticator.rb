@@ -96,22 +96,13 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     retrieve_profile(association.user, association.info)
 
     # Build the Auth::Result object
-    result = Auth::Result.new
     info = auth_token[:info]
+    result = Auth::Result.new
     result.email = info[:email]
-    result.name =
-      (
-        if (info[:first_name] && info[:last_name])
-          "#{info[:first_name]} #{info[:last_name]}"
-        else
-          info[:name]
-        end
-      )
-    if result.name.present? && result.name == result.email
-      # Some IDPs send the email address in the name parameter (e.g. Auth0 with default configuration)
-      # We add some generic protection here, so that users don't accidently make their email addresses public
-      result.name = nil
-    end
+    result.name = "#{info[:first_name]} #{info[:last_name]}".presence || info[:name]
+    # Some IDPs send the email address in the name parameter (e.g. Auth0 with default configuration)
+    # We add some generic protection here, so that users don't accidently make their email addresses public
+    result.name = nil if result.name.present? && result.name == result.email
     result.username = info[:nickname]
     result.email_valid = primary_email_verified?(auth_token) if result.email.present?
     result.overrides_email = always_update_user_email?
@@ -149,7 +140,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
   def retrieve_avatar(user, url)
     return unless user && url.present?
-    return if user.user_avatar.try(:custom_upload_id).present?
+    return if user.user_avatar.try(:custom_upload_id).present? && !SiteSetting.auth_overrides_avatar
     Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
   end
 

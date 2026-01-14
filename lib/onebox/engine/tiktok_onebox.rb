@@ -14,6 +14,10 @@ module Onebox
         path.match?(%r{^(/@.+/video/\d+|/v/\d+)(/\w+)?/?$})
       end
 
+      def self.embed_url(video_id)
+        "https://www.tiktok.com/embed/v2/#{video_id}"
+      end
+
       def placeholder_html
         <<-HTML
           <img
@@ -33,7 +37,7 @@ module Onebox
         <<-HTML
           <iframe
             class="tiktok-onebox"
-            src="https://www.tiktok.com/embed/v2/#{oembed_data.embed_product_id}"
+            src="#{self.class.embed_url(oembed_data.embed_product_id)}"
             sandbox="allow-popups allow-popups-to-escape-sandbox allow-scripts allow-top-navigation allow-same-origin"
             frameborder="0"
             seamless="seamless"

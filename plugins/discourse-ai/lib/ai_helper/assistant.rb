@@ -16,7 +16,7 @@ module DiscourseAi
       IMAGE_CAPTION = "image_caption"
 
       def self.prompt_cache
-        @prompt_cache ||= ::DiscourseAi::MultisiteHash.new("prompt_cache")
+        @prompt_cache ||= DiscourseAi::MultisiteHash.new("prompt_cache")
       end
 
       def self.clear_prompt_cache!
@@ -36,9 +36,9 @@ module DiscourseAi
           .map do |prompt|
             next if !user.in_any_groups?(prompt[:allowed_group_ids])
 
-            if prompt[:name] == ILLUSTRATE_POST &&
-                 SiteSetting.ai_helper_illustrate_post_model == "disabled"
-              next
+            if prompt[:name] == ILLUSTRATE_POST
+              persona = AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
+              next if persona.blank? || !persona_has_image_generation_tool?(persona)
             end
 
             # We cannot cache this. It depends on the user's effective_locale.
@@ -118,7 +118,7 @@ module DiscourseAi
         context =
           DiscourseAi::Personas::BotContext.new(
             user: user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             feature_name: "ai_helper",
             messages: [{ type: :user, content: user_input }],
             format_dates: helper_mode == REPLACE_DATES,
@@ -253,7 +253,7 @@ module DiscourseAi
         context =
           DiscourseAi::Personas::BotContext.new(
             user: user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             feature_name: IMAGE_CAPTION,
             messages: [
               {
@@ -289,6 +289,15 @@ module DiscourseAi
 
       private
 
+      def persona_has_image_generation_tool?(persona)
+        persona&.has_image_generation_tool?
+      rescue StandardError => e
+        Rails.logger.warn(
+          "Failed to check image generation tool for persona #{persona&.id}: #{e.message}",
+        )
+        false
+      end
+
       def build_bot(helper_mode, user)
         persona_id = personas_prompt_map(include_image_caption: true).invert[helper_mode]
         raise Discourse::InvalidParameters.new(:mode) if persona_id.blank?
@@ -312,18 +321,9 @@ module DiscourseAi
 
       # Priorities are:
       #   1. Persona's default LLM
-      #   2. Hidden `ai_helper_model` setting, or `ai_helper_image_caption_model` for image_caption.
-      #   3. Newest LLM config
+      #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
       def self.find_ai_helper_model(helper_mode, persona_klass)
-        model_id = persona_klass.default_llm_id
-
-        if !model_id
-          if helper_mode == IMAGE_CAPTION
-            model_id = SiteSetting.ai_helper_image_caption_model&.split(":")&.last
-          else
-            model_id = SiteSetting.ai_helper_model&.split(":")&.last
-          end
-        end
+        model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
         if model_id.present?
           LlmModel.find_by(id: model_id)

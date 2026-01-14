@@ -25,6 +25,41 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
         expect(vector.vector_from(text)).to eq(expected_embedding_1)
       end
+
+      it "passes asymmetric parameter to prepare_query_text correctly" do
+        text = "This is a piece of text"
+        vdef.update!(search_prompt: "Search: ")
+        prepared_text = vdef.prepare_query_text(text, asymmetric: true)
+        stub_vector_mapping(prepared_text, expected_embedding_1)
+
+        allow(vdef).to receive(:prepare_query_text).and_call_original
+
+        vector.vector_from(text, true)
+
+        expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: true)
+      end
+
+      it "defaults asymmetric parameter to false" do
+        text = "This is a piece of text"
+        stub_vector_mapping(text, expected_embedding_1)
+
+        allow(vdef).to receive(:prepare_query_text).and_call_original
+
+        vector.vector_from(text)
+
+        expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: false)
+      end
+
+      it "handles asymmetric parameter explicitly set to false" do
+        text = "This is a piece of text"
+        stub_vector_mapping(text, expected_embedding_1)
+
+        allow(vdef).to receive(:prepare_query_text).and_call_original
+
+        vector.vector_from(text, false)
+
+        expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: false)
+      end
     end
 
     describe "#generate_representation_from" do
@@ -48,7 +83,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
     end
 
     describe "#gen_bulk_reprensentations" do
-      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:topic_2, :topic)
       fab!(:post_2_1) { Fabricate(:post, post_number: 1, topic: topic_2) }
       fab!(:post_2_2) { Fabricate(:post, post_number: 2, topic: topic_2) }
 
@@ -105,7 +140,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   end
 
   context "with open_ai as the provider" do
-    fab!(:vdef) { Fabricate(:open_ai_embedding_def) }
+    fab!(:vdef, :open_ai_embedding_def)
 
     def stub_vector_mapping(text, expected_embedding, result_status: 200)
       EmbeddingsGenerationStubs.openai_service(
@@ -140,7 +175,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   end
 
   context "with hugging_face as the provider" do
-    fab!(:vdef) { Fabricate(:embedding_definition) }
+    fab!(:vdef, :embedding_definition)
 
     def stub_vector_mapping(text, expected_embedding, result_status: 200)
       EmbeddingsGenerationStubs.hugging_face_service(
@@ -154,7 +189,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   end
 
   context "with google as the provider" do
-    fab!(:vdef) { Fabricate(:gemini_embedding_def) }
+    fab!(:vdef, :gemini_embedding_def)
 
     def stub_vector_mapping(text, expected_embedding, result_status: 200)
       EmbeddingsGenerationStubs.gemini_service(
@@ -169,7 +204,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   end
 
   context "with cloudflare as the provider" do
-    fab!(:vdef) { Fabricate(:cloudflare_embedding_def) }
+    fab!(:vdef, :cloudflare_embedding_def)
 
     def stub_vector_mapping(text, expected_embedding, result_status: 200)
       EmbeddingsGenerationStubs.cloudflare_service(

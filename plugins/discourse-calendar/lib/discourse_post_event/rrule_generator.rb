@@ -8,15 +8,39 @@ class RRuleGenerator
     timezone: "UTC",
     max_years: nil,
     recurrence: "every_week",
-    recurrence_until: nil
+    recurrence_until: nil,
+    dtstart: nil
   )
     rrule = generate_hash(RRuleConfigurator.rule(recurrence_until:, recurrence:, starts_at:))
     rrule = set_mandatory_options(rrule, starts_at)
 
     ::RRule::Rule
       .new(stringify(rrule), dtstart: starts_at, tzid: timezone)
-      .between(Time.current, Time.current + 14.months)
+      .between(Time.current, 14.months.from_now)
       .first(RRuleConfigurator.how_many_recurring_events(recurrence:, max_years:))
+  end
+
+  def self.generate_string(
+    starts_at:,
+    recurrence: "every_week",
+    recurrence_until: nil,
+    dtstart: nil,
+    show_local_time: false
+  )
+    rrule = generate_hash(RRuleConfigurator.rule(recurrence_until:, recurrence:, starts_at:))
+    rrule = set_mandatory_options(rrule, starts_at)
+    rrule_line = "RRULE:#{stringify(rrule)}"
+
+    if dtstart
+      if show_local_time
+        dtstart_line = "DTSTART:#{dtstart.strftime("%Y%m%dT%H%M%S")}"
+      else
+        dtstart_line = "DTSTART:#{dtstart.utc.strftime("%Y%m%dT%H%M%SZ")}"
+      end
+      "#{dtstart_line}\n#{rrule_line}"
+    else
+      rrule_line
+    end
   end
 
   private
@@ -35,8 +59,6 @@ class RRuleGenerator
   end
 
   def self.set_mandatory_options(rrule, time)
-    rrule["BYHOUR"] = time.strftime("%H")
-    rrule["BYMINUTE"] = time.strftime("%M")
     rrule["INTERVAL"] ||= 1
     rrule["WKST"] = "MO" # considers Monday as the first day of the week
     rrule

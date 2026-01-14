@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Discord::Bot::Search do
   let(:interaction_body) do
     { data: { options: [{ value: "test query" }] }, token: "interaction_token" }.to_json.to_s

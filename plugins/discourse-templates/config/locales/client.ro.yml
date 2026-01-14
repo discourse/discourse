@@ -8,3 +8,9 @@ ro:
   admin_js:
     discourse_templates:
       title: "Șabloane"
+  js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "Șabloane (într-o zonă text)"
+    templates:
+      filter_hint: "Filtrare după cuvânt cheie..."

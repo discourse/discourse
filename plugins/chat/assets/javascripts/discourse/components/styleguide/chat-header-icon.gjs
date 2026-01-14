@@ -4,14 +4,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { optionalRequire } from "discourse/lib/utilities";
-import ComboBox from "select-kit/components/combo-box";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
 import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,
   HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
   HEADER_INDICATOR_PREFERENCE_NEVER,
   HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
-} from "discourse/plugins/chat/discourse/controllers/preferences-chat";
+} from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const StyleguideComponent = optionalRequire(
   "discourse/plugins/styleguide/discourse/components/styleguide/component"

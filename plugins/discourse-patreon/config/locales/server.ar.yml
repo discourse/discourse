@@ -23,6 +23,9 @@ ar:
     patreon_donation_prompt_campaign_url: "عنوان URL لحملة أوامر التبرع"
     errors:
       patreon_creator_username_not_set: "أنت بحاجة إلى ضبط إعداد اسم مستخدم Discourse لمنشئي المحتوى على Patreon قبل تفعيل تسجيل الدخول باستخدام Patreon."
+  dashboard:
+    problem:
+      access_token_invalid: "قيم رمز الوصول (Access Token) والتحديث (Refresh Token) الخاص بمنشئ Patreon غير صحيحة. يجب نسخ الرموز الجديدة من <a href='https://www.patreon.com/platform/documentation/clients'>موقع Patreon</a> ولصقها في <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>إعدادات الموقع</a>."
   patreon:
     error:
       invalid_response: "استجابة غير صالحة من Patreon API"

@@ -72,8 +72,27 @@ module PageObjects
         find(".form-template-field__#{type}", visible: :all).present?
       end
 
+      def has_input_field_with_name?(type, name)
+        if type == "tag-chooser"
+          # currently the tag chooser is rendered as a multi-select element
+          find(".form-template-field__multi-select[name=#{name}]", visible: :all).present?
+        elsif type == "upload"
+          find(".form-template-field__#{type}[id=#{name}-uploader]", visible: :all).present?
+        else
+          find(".form-template-field__#{type}[name=#{name}]", visible: :all).present?
+        end
+      end
+
+      def has_tag_chooser_tag?(tag)
+        find("option[value=#{tag.name} i]", visible: :all).present?
+      end
+
       def has_preview_modal?
         find(".form-template-form-preview-modal").present?
+      end
+
+      def has_no_preview_modal?
+        has_no_css?(".form-template-form-preview-modal")
       end
 
       def has_validations_modal?

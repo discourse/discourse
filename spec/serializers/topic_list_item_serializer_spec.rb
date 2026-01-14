@@ -206,6 +206,11 @@ RSpec.describe TopicListItemSerializer do
     ensure
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
     end
+
+    it "serializes op_like_count" do
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+      expect(json[:op_like_count]).to eq(first_post.like_count)
+    end
   end
 
   describe "#is_hot" do

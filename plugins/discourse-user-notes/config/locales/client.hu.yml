@@ -7,4 +7,6 @@
 hu:
   js:
     user_notes:
-      show_post: "Bejegyzés mutatása"
+      title: "Felhasználói megjegyzések"
+      attach_note_description: "Adjon hozzá egy megjegyzést erről a felhasználóról. Ez a megjegyzés csak a személyzet számára lesz látható."
+      delete_confirm: "Biztosan törölni szeretné ezt a felhasználói megjegyzést?"

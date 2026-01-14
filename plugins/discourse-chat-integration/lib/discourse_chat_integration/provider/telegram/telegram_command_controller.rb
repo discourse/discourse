@@ -2,7 +2,7 @@
 
 module DiscourseChatIntegration::Provider::TelegramProvider
   class TelegramCommandController < DiscourseChatIntegration::Provider::HookController
-    requires_provider ::DiscourseChatIntegration::Provider::TelegramProvider::PROVIDER_NAME
+    requires_provider DiscourseChatIntegration::Provider::TelegramProvider::PROVIDER_NAME
 
     before_action :telegram_token_valid?, only: :command
 
@@ -94,7 +94,7 @@ module DiscourseChatIntegration::Provider::TelegramProvider
       tokens[0][0] = "" # Remove the slash from the first token
       tokens[0] = tokens[0].split("@")[0] # Remove the bot name from the command (necessary for group chats)
 
-      ::DiscourseChatIntegration::Helper.process_command(channel, tokens)
+      DiscourseChatIntegration::Helper.process_command(channel, tokens)
     end
 
     def telegram_token_valid?

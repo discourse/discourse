@@ -23,13 +23,18 @@ module(
     Object.entries({
       "inline spoiler": [
         "Hey [spoiler]did you know the good guys die[/spoiler] in the end?",
-        '<p>Hey <span class="spoiled">did you know the good guys die</span> in the end?</p>',
+        '<p>Hey <span class="spoiled spoiler-blurred">did you know the good guys die</span> in the end?</p>',
         "Hey [spoiler]did you know the good guys die[/spoiler] in the end?",
       ],
       "block spoiler": [
         "hey\n\n[spoiler]\n> did you know the good guys die\n\n[/spoiler]\n\nin the end?",
-        '<p>hey</p><div class="spoiled"><blockquote><p>did you know the good guys die</p></blockquote></div><p>in the end?</p>',
+        '<p>hey</p><div class="spoiled spoiler-blurred"><blockquote><p>did you know the good guys die</p></blockquote></div><p>in the end?</p>',
         "hey\n\n[spoiler]\n> did you know the good guys die\n\n[/spoiler]\n\nin the end?",
+      ],
+      "inline spoiler with trailing space": [
+        "[spoiler]the answer is 42[/spoiler] ",
+        '<p><span class="spoiled spoiler-blurred">the answer is 42</span> </p>',
+        "[spoiler]the answer is 42[/spoiler] ",
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {

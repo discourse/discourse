@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::RefreshSubscriptionsCampaignData do
   before { SiteSetting.discourse_subscriptions_campaign_enabled = true }
 

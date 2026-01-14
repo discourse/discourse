@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseChatIntegration::Provider::SlackProvider::SlackMessageFormatter do
   describe ".format" do
     context "with links" do

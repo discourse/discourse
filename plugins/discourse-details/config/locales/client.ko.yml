@@ -6,8 +6,6 @@
 
 ko:
   js:
-    details:
-      title: 세부 정보 숨기기
     composer:
       details_title: 요약
       details_text: "이 텍스트는 숨겨집니다."

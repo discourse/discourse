@@ -643,6 +643,87 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
         expect(post.topic.reload.bumped_at).to eq_time(created_at)
       end
+
+      describe "bypass_bump parameter" do
+        fab!(:wiki_post) { Fabricate(:post, user:, wiki: true) }
+
+        before { wiki_post.topic.update!(bumped_at: 1.day.ago) }
+
+        it "prevents bumping when bypass_bump=true" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  bypass_bump: true,
+                  post: {
+                    raw: "updated content",
+                  },
+                }
+          }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "accepts bypass_bump nested under post param" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  post: {
+                    raw: "updated content",
+                    bypass_bump: true,
+                  },
+                }
+          }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "bumps the topic when bypass_bump is not provided" do
+          expect {
+            put "/posts/#{wiki_post.id}.json", params: { post: { raw: "updated content" } }
+          }.to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        context "as TL4 user" do
+          fab!(:tl4_user, :trust_level_4)
+          before { sign_in(tl4_user) }
+
+          it "prevents bumping when bypass_bump=true" do
+            expect {
+              put "/posts/#{wiki_post.id}.json",
+                  params: {
+                    bypass_bump: true,
+                    post: {
+                      raw: "updated content",
+                    },
+                  }
+            }.not_to change { wiki_post.topic.reload.bumped_at }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        context "as regular user" do
+          fab!(:old_wiki_post) do
+            Fabricate(:post, user:, wiki: true, last_version_at: 10.minutes.ago)
+          end
+
+          before do
+            sign_in(user)
+            old_wiki_post.topic.update!(bumped_at: 1.day.ago)
+          end
+
+          it "ignores bypass_bump (topic still bumps)" do
+            expect {
+              put "/posts/#{old_wiki_post.id}.json",
+                  params: {
+                    bypass_bump: true,
+                    post: {
+                      raw: "updated content",
+                    },
+                  }
+            }.to change { old_wiki_post.topic.reload.bumped_at }
+            expect(response.status).to eq(200)
+          end
+        end
+      end
     end
 
     describe "when logged in as group moderator" do
@@ -2411,6 +2492,33 @@ RSpec.describe PostsController do
         },
       )
     end
+    let(:tag_only_revision) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[tag1 tag2], %w[tag2 tag3]],
+        },
+      )
+    end
+    let(:text_number_tags) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[123 tag1 tag2], %w[456 tag3 tag4]],
+        },
+      )
+    end
+    let(:legacy_string_tag_revision) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => ["tag1, tag2", "tag2, tag3"],
+        },
+      )
+    end
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
@@ -2464,6 +2572,36 @@ RSpec.describe PostsController do
 
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
         expect(response.status).to eq(200)
+      end
+
+      it "supports reverting tag-only revisions" do
+        post.topic.tags = Tag.where(name: %w[tag2 tag3])
+
+        put "/posts/#{post_id}/revisions/#{tag_only_revision.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
+      end
+
+      it "supports reverting text and number tags" do
+        post.topic.tags = Tag.where(name: %w[456 tag3 tag4])
+
+        put "/posts/#{post_id}/revisions/#{text_number_tags.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[123 tag1 tag2])
+      end
+
+      it "supports reverting legacy string-format tags" do
+        post.topic.tags = Tag.where(name: ["tag2, tag3"])
+
+        put "/posts/#{post_id}/revisions/#{legacy_string_tag_revision.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
       end
     end
   end

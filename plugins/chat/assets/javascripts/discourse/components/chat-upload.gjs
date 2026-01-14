@@ -4,8 +4,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import { eq } from "discourse/truth-helpers";
 
 export default class ChatUpload extends Component {
   @service siteSettings;
@@ -42,7 +42,13 @@ export default class ChatUpload extends Component {
       this.siteSettings.max_image_width / width,
       this.siteSettings.max_image_height / height
     );
-    return { width: width * ratio, height: height * ratio };
+
+    return {
+      width,
+      thumb_width: width * ratio,
+      height,
+      thumb_height: height * ratio,
+    };
   }
 
   get imageUrl() {
@@ -56,7 +62,8 @@ export default class ChatUpload extends Component {
   }
 
   get videoSourceUrl() {
-    const baseUrl = this.args.upload.url;
+    const baseUrl =
+      this.args.upload.optimized_video?.url ?? this.args.upload.url;
     return this.capabilities.isIOS || this.capabilities.isSafari
       ? `${baseUrl}#t=0.001`
       : baseUrl;
@@ -70,15 +77,18 @@ export default class ChatUpload extends Component {
   <template>
     {{#if (eq this.type this.IMAGE_TYPE)}}
       <img
-        class="chat-img-upload"
+        class="chat-img-upload lightbox"
         data-orig-src={{@upload.short_url}}
         data-large-src={{@upload.url}}
-        height={{this.size.height}}
-        width={{this.size.width}}
+        data-download-href={{@upload.short_path}}
+        height={{this.size.thumb_height}}
+        width={{this.size.thumb_width}}
         src={{this.imageUrl}}
         style={{this.imageStyle}}
         loading="lazy"
         tabindex="0"
+        data-target-width={{this.size.width}}
+        data-target-height={{this.size.height}}
         data-dominant-color={{@upload.dominant_color}}
         {{on "load" this.imageLoaded}}
       />

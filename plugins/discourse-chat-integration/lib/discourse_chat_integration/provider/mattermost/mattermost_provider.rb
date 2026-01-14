@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module MattermostProvider
-      PROVIDER_NAME = "mattermost".freeze
+      PROVIDER_NAME = "mattermost"
       PROVIDER_ENABLED_SETTING = :chat_integration_mattermost_enabled
-      CHANNEL_IDENTIFIER_KEY = "identifier".freeze
+      CHANNEL_IDENTIFIER_KEY = "identifier"
       CHANNEL_PARAMETERS = [{ key: "identifier", regex: '^[@#]\S*$', unique: true }]
 
       def self.send_via_webhook(message)
@@ -23,17 +23,17 @@ module DiscourseChatIntegration
           else
             error_key = nil
           end
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                error_key: error_key,
-                                                                request: req.body,
-                                                                response_code: response.code,
-                                                                response_body: response.body,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key: error_key,
+                                                              request: req.body,
+                                                              response_code: response.code,
+                                                              response_body: response.body,
+                                                            }
         end
       end
 
       def self.mattermost_message(post, channel)
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         topic = post.topic
 
@@ -105,4 +105,4 @@ module DiscourseChatIntegration
   end
 end
 
-require_relative "mattermost_command_controller.rb"
+require_relative "mattermost_command_controller"

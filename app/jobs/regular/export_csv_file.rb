@@ -11,7 +11,7 @@ module Jobs
     attr_accessor :entity
 
     HEADER_ATTRS_FOR =
-      HashWithIndifferentAccess.new(
+      ActiveSupport::HashWithIndifferentAccess.new(
         user_list: %w[
           id
           name
@@ -60,7 +60,7 @@ module Jobs
 
     def execute(args)
       @entity = args[:entity]
-      @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
+      @extra = ActiveSupport::HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @current_user = User.find_by(id: args[:user_id])
 
       entity = { name: @entity }
@@ -148,16 +148,9 @@ module Jobs
     end
 
     def staff_action_export
-      staff_action_data =
-        if @current_user.admin?
-          UserHistory.only_staff_actions
-        else
-          UserHistory.where(admin_only: false).only_staff_actions
-        end
-
-      staff_action_data.find_each(order: :desc) do |staff_action|
-        yield get_staff_action_fields(staff_action)
-      end
+      UserHistory
+        .staff_action_records(@current_user, @extra)
+        .find_each { |staff_action| yield get_staff_action_fields(staff_action) }
     end
 
     def screened_email_export
@@ -338,7 +331,9 @@ module Jobs
 
     def add_custom_fields(user, user_info_array, user_field_ids)
       if user_field_ids.present?
-        user.user_fields.each { |custom_field| user_info_array << escape_comma(custom_field[1]) }
+        user.user_fields.each do |custom_field|
+          user_info_array << escape_comma(custom_field[1].to_s)
+        end
       end
       user_info_array
     end

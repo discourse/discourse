@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          styleguide: "Discourse Styleguide"
+          styleguide: "Discourse – Styleguide"
   js:
     styleguide:
       title: "Styleguide"
@@ -59,8 +59,6 @@ de:
           title: "Gestapelte Navigation"
         categories_list:
           title: "Kategorienliste"
-        topic_link:
-          title: "Link zu Thema"
         topic_list_item:
           title: "Element in Themenliste"
         topic_statuses:
@@ -69,8 +67,6 @@ de:
           title: "Themenliste"
         basic_topic_list:
           title: "Grundlegende Themenliste"
-        footer_message:
-          title: "Fußzeile"
         signup_cta:
           title: "Aufforderung zur Registrierung"
         topic_timer_info:
@@ -89,8 +85,8 @@ de:
           title: "Themenübersicht"
         site_header:
           title: "Seitenkopf"
-        suggested_topics:
-          title: "Vorgeschlagene Themen"
+        more_topics:
+          title: "Weitere Themen"
         post_menu:
           title: "Beitrag-Aktionen"
         modal:

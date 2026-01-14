@@ -4,10 +4,12 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
@@ -17,7 +19,11 @@ export default class AdminChatIncomingWebhooksList extends Component {
   @tracked loading = false;
 
   get sortedWebhooks() {
-    return this.args.webhooks?.sortBy("updated_at").reverse() || [];
+    return (
+      this.args.webhooks?.toSorted(
+        (a, b) => compare(b?.updated_at, a?.updated_at) // sort descending
+      ) || []
+    );
   }
 
   @action
@@ -31,7 +37,8 @@ export default class AdminChatIncomingWebhooksList extends Component {
           await ajax(`/admin/plugins/chat/hooks/${webhook.id}`, {
             type: "DELETE",
           });
-          this.args.webhooks.removeObject(webhook);
+
+          removeValueFromArray(this.args.webhooks, webhook);
         } catch (err) {
           popupAjaxError(err);
         } finally {

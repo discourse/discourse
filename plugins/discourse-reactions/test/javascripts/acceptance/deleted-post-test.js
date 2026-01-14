@@ -1,8 +1,7 @@
-/* eslint-disable qunit/no-loose-assertions */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import { default as ReactionsTopics } from "../fixtures/reactions-topic-fixtures";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
 acceptance("Discourse Reactions - Deleted post", function (needs) {
   needs.user();
@@ -19,12 +18,11 @@ acceptance("Discourse Reactions - Deleted post", function (needs) {
     server.get(topicPath, () => helper.response(ReactionsTopics[topicPath]));
   });
 
-  test("Reaction controls", async (assert) => {
+  test("Reaction controls", async function (assert) {
     await visit("/t/topic_with_reactions_and_likes/374");
 
-    assert.notOk(
-      exists("#post_4 .discourse-reactions-actions"),
-      "reaction controls are not shown"
-    );
+    assert
+      .dom("#post_4 .discourse-reactions-actions")
+      .doesNotExist("reaction controls are not shown");
   });
 });

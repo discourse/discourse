@@ -9,19 +9,19 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_rss_polling: "Discourse-RSS-Abfrage"
+          discourse_rss_polling: "Discourse – RSS-Abfrage"
   js:
     rss_polling:
       title: RSS-Abfrage
     admin:
       rss_polling:
         feed: Feed-Einstellungen
-        discourse: Discourse Einstellungen
-        author: Autor
+        discourse: Discourse-Einstellungen
+        author: Verfasser
         feed_url: URL
         discourse_category: Kategorie
         discourse_tags: Schlagwörter
         feed_category_filter: Kategoriefilter
-        documentation: Dokumentation zur Konfiguration von RSS-Abfrage
+        documentation: Dokumentation zur Konfiguration von RSS-Abfragen
         destroy_feed:
           confirm: "Bist du sicher, dass du diesen Feed löschen möchtest?"

@@ -3,8 +3,11 @@
 module PageObjects
   module Pages
     class AdminCustomizeThemes < PageObjects::Pages::AdminBase
-      def visit(id)
-        page.visit("/admin/customize/themes/#{id}")
+      def visit(theme_or_theme_id)
+        page.visit(
+          "/admin/customize/themes/#{theme_or_theme_id.is_a?(Theme) ? theme_or_theme_id.id : theme_or_theme_id}",
+        )
+        self
       end
 
       def has_colors_tab?
@@ -154,6 +157,11 @@ module PageObjects
         )
       end
 
+      def click_add_all_themes_button
+        find(".relative-theme-selector .setting-label .btn-link").click
+        find(".setting-controls .ok").click
+      end
+
       def has_no_page_header?
         has_no_css?(".d-page-header")
       end
@@ -188,13 +196,15 @@ module PageObjects
         find_button("Delete", disabled: true)
       end
 
-      def click_delete_themes_button
-        find(".btn-delete").click
+      def click_delete_button_and_confirm
+        find(".delete").click
+        PageObjects::Components::Dialog.new.click_danger
+        self
       end
 
-      def click_edit_objects_theme_setting_button(setting_name)
+      def click_edit_objects_setting_button(setting_name)
         find(".theme-setting[data-setting=\"#{setting_name}\"] .setting-value-edit-button").click
-        PageObjects::Pages::AdminObjectsThemeSettingEditor.new
+        PageObjects::Pages::AdminObjectsSettingEditor.new
       end
 
       def click_theme_settings_editor_button

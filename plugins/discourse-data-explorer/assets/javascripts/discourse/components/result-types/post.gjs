@@ -1,5 +1,5 @@
+import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
-import htmlSafe from "discourse/helpers/html-safe";
 
 const Post = <template>
   {{#if @ctx.post}}

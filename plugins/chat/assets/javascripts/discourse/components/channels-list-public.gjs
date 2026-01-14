@@ -4,23 +4,20 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
 import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatChannelRow from "./chat-channel-row";
 import ChatZero from "./svg/chat-zero";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;
-  @service chatStateManager;
   @service chatTrackingStateManager;
   @service site;
-  @service siteSettings;
-  @service currentUser;
   @service router;
 
   get inSidebar() {
@@ -36,7 +33,11 @@ export default class ChannelsListPublic extends Component {
   }
 
   get channelList() {
-    return this.chatChannelsManager.publicMessageChannelsByActivity;
+    if (this.inSidebar) {
+      return this.chatChannelsManager.unstarredPublicMessageChannelsByActivity;
+    }
+    // In mobile/drawer, show all channels including starred, sorted by activity
+    return this.chatChannelsManager.allPublicChannelsByActivity;
   }
 
   @action

@@ -1,14 +1,16 @@
 <%- if @popular_topics.present? %>
-### <%=t 'user_notifications.digest.popular_topics' %>
+  <%= digest_custom_text("above_popular_topics") %>
+  ### <%=t 'user_notifications.digest.popular_topics' %>
 
-<%- @popular_topics.each_with_index do |t,i| %>
-<%= raw(@markdown_linker.create(t.title, t.url)) %>
+  <%- @popular_topics.each_with_index do |t,i| %>
+    <%= raw(@markdown_linker.create(t.title, t.url)) %>
 
-<%- if t.best_post.present? %>
- <%= raw(t.best_post.excerpt(1000, strip_links: true, text_entities: true, markdown_images: true)) %>
+    <%- if t.best_post.present? %>
+      <%= raw(t.best_post.excerpt(1000, strip_links: true, text_entities: true, markdown_images: true)) %>
+    <%- end %>
 
+    <%= digest_custom_text("below_post_#{i+1}") %>
+  <%- end %>
+
+  <%= digest_custom_text("below_popular_topics") %>
 <%- end %>
-<%= digest_custom_text("below_post_#{i+1}") %>
-<%- end %>
-<%- end %>
-<%= digest_custom_text("above_popular_topics") %>

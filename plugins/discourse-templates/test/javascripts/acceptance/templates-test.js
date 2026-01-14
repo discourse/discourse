@@ -1,21 +1,16 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import {
   click,
   currentURL,
   fillIn,
+  focus,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
-import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { cloneJSON } from "discourse/lib/object";
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
+import topicFixtures from "discourse/tests/fixtures/topic";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import TemplatesFixtures from "../fixtures/templates-fixtures";
@@ -48,7 +43,7 @@ acceptance("discourse-templates", function (needs) {
 
   needs.pretender(templatesPretender);
 
-  test("Filtering by tags", async (assert) => {
+  test("Filtering by tags", async function (assert) {
     await visit("/");
 
     await click("#create-topic");
@@ -71,26 +66,25 @@ acceptance("discourse-templates", function (needs) {
           id: "cupcakes",
         },
       ],
-      "it should filter tags in the dropdown"
+      "filters tags in the dropdown"
     );
 
     await tagDropdown.selectRowByIndex(0);
-    assert.equal(
-      count(".templates-list .template-item"),
-      1,
-      "it should filter replies by tag"
-    );
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "filters replies by tag");
 
     await click("#template-item-1 .templates-apply");
 
-    assert.equal(
-      query(".d-editor-input").value.trim(),
-      "Cupcake ipsum dolor sit amet cotton candy cheesecake jelly. Candy canes sugar plum soufflé sweet roll jelly-o danish jelly muffin. I love jelly-o powder topping carrot cake toffee.",
-      "it should insert the template in the composer"
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue(
+        "Cupcake ipsum dolor sit amet cotton candy cheesecake jelly. Candy canes sugar plum soufflé sweet roll jelly-o danish jelly muffin. I love jelly-o powder topping carrot cake toffee.",
+        "inserts the template in the composer"
+      );
   });
 
-  test("Filtering by text", async (assert) => {
+  test("Filtering by text", async function (assert) {
     await visit("/");
 
     await click("#create-topic");
@@ -99,22 +93,21 @@ acceptance("discourse-templates", function (needs) {
     await click(`button[title="${i18n("templates.insert_template")}"]`);
 
     await fillIn(".templates-filter-bar input.templates-filter", "test");
-    assert.equal(
-      count(".templates-list .template-item"),
-      2,
-      "it should filter by text"
-    );
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 2 }, "filters by text");
 
     await click("#template-item-8 .templates-apply");
 
-    assert.equal(
-      query(".d-editor-input").value.trim(),
-      "Testing testin **123**",
-      "it should insert the template in the composer"
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue(
+        "Testing testin **123**",
+        "inserts the template in the composer"
+      );
   });
 
-  test("Replacing variables", async (assert) => {
+  test("Replacing variables", async function (assert) {
     await visit("/");
 
     await click("#create-topic");
@@ -124,14 +117,12 @@ acceptance("discourse-templates", function (needs) {
 
     await click("#template-item-9 .templates-apply");
 
-    assert.equal(
-      query(".d-editor-input").value.trim(),
-      "Hi there, regards eviltrout.",
-      "it should replace variables"
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue("Hi there, regards eviltrout.", "replaces variables");
   });
 
-  test("Navigate to source", async (assert) => {
+  test("Navigate to source", async function (assert) {
     await visit("/");
 
     await click("#create-topic");
@@ -154,24 +145,78 @@ acceptance("discourse-templates", function (needs) {
           id: "lorem",
         },
       ],
-      "it should filter tags in the dropdown"
+      "filters tags in the dropdown"
     );
 
     await tagDropdown.selectRowByIndex(0);
-    assert.equal(
-      count(".templates-list .template-item"),
-      1,
-      "it should filter replies by tag"
-    );
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "filters replies by tag");
 
     await click("#template-item-130 .template-item-title");
     await click("#template-item-130 .template-item-source-link");
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/t/lorem-ipsum-dolor-sit-amet/130",
-      "it should navigate to the source"
+      "navigates to the source"
     );
+  });
+
+  test("Has ordering by relevance, usage, and title", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
+
+    await fillIn(".templates-filter-bar input.templates-filter", "ipsum");
+    const templateItems = document.querySelectorAll(
+      ".templates-list .template-item-title-text"
+    );
+    const titles = Array.from(templateItems).map((el) => el.textContent.trim());
+
+    assert.deepEqual(
+      titles,
+      [
+        "Cupcake Ipsum excerpt",
+        "Hipster ipsum excerpt",
+        "Liquor ipsum excerpt",
+        "Mussum Ipsum excerpt",
+        "Lorem ipsum dolor sit amet",
+      ],
+      "orders templates by relevance, usage, and title"
+    );
+  });
+
+  test("Remembers selected tag between openings", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
+
+    const tagDropdown = selectKit(".templates-filter-bar .tag-drop");
+    await tagDropdown.expand();
+
+    await tagDropdown.fillInFilter(
+      "cupcake",
+      ".templates-filter-bar .tag-drop input"
+    );
+    await tagDropdown.selectRowByIndex(0);
+    assert.dom(".templates-list .template-item").exists({ count: 1 });
+
+    await click("#reply-control .toggle-save-and-close");
+
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "preserves selected tag across composer sessions");
   });
 });
 
@@ -188,7 +233,7 @@ acceptance(
 
     needs.pretender(templatesPretender);
 
-    test("Filtering by tags", async (assert) => {
+    test("Filtering by tags", async function (assert) {
       await visit("/");
 
       await click("#create-topic");
@@ -196,10 +241,9 @@ acceptance(
       await click(".toolbar-menu__options-trigger");
       await click(`button[title="${i18n("templates.insert_template")}"]`);
 
-      assert.notOk(
-        exists(".templates-filter-bar .tag-drop"),
-        "tag drop down is not displayed"
-      );
+      assert
+        .dom(".templates-filter-bar .tag-drop")
+        .doesNotExist("tag drop down is not displayed");
     });
   }
 );
@@ -224,7 +268,7 @@ acceptance("discourse-templates | keyboard shortcut", function (needs) {
     });
   };
 
-  const assertTemplateWasInserted = async (assert, textarea) => {
+  const assertTemplateWasInserted = async (assert, selector) => {
     const tagDropdown = selectKit(".templates-filter-bar .tag-drop");
     await tagDropdown.expand();
 
@@ -235,46 +279,45 @@ acceptance("discourse-templates | keyboard shortcut", function (needs) {
     await tagDropdown.selectRowByIndex(0);
     await click("#template-item-1 .templates-apply");
 
-    assert.equal(
-      textarea.value.trim(),
-      "Cupcake ipsum dolor sit amet cotton candy cheesecake jelly. Candy canes sugar plum soufflé sweet roll jelly-o danish jelly muffin. I love jelly-o powder topping carrot cake toffee.",
-      "it should insert the template in the textarea"
-    );
+    assert
+      .dom(selector)
+      .includesValue(
+        "Cupcake ipsum dolor sit amet cotton candy cheesecake jelly. Candy canes sugar plum soufflé sweet roll jelly-o danish jelly muffin. I love jelly-o powder topping carrot cake toffee.",
+        "inserts the template in the textarea"
+      );
   };
 
   test("Help | Added shortcut to help modal", async function (assert) {
     await visit("/");
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
 
-    assert.ok(exists(".shortcut-category-templates"));
-    assert.strictEqual(count(".shortcut-category-templates li"), 1);
+    assert.dom(".shortcut-category-templates").exists();
+    assert.dom(".shortcut-category-templates li").exists({ count: 1 });
   });
 
-  test("Composer | Title field focused | Template is inserted", async (assert) => {
-    await visit("/");
-
-    await click("#create-topic");
-    await selectCategory();
-    const textarea = query(".d-editor-input");
-
-    await triggerKeyboardShortcut();
-    await assertTemplateWasInserted(assert, textarea);
-  });
-
-  test("Composer | Textarea focused | Template is inserted", async (assert) => {
+  test("Composer | Title field focused | Template is inserted", async function (assert) {
     await visit("/");
 
     await click("#create-topic");
     await selectCategory();
 
-    const textarea = query(".d-editor-input");
-    await textarea.focus();
-
     await triggerKeyboardShortcut();
-    await assertTemplateWasInserted(assert, textarea);
+    await assertTemplateWasInserted(assert, ".d-editor-input");
   });
 
-  test("Modal | Templates modal | Show the modal if the preview is hidden", async (assert) => {
+  test("Composer | Textarea focused | Template is inserted", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategory();
+
+    await focus(".d-editor-input");
+
+    await triggerKeyboardShortcut();
+    await assertTemplateWasInserted(assert, ".d-editor-input");
+  });
+
+  test("Modal | Templates modal | Show the modal if the preview is hidden", async function (assert) {
     await visit("/");
 
     await click("#create-topic");
@@ -282,46 +325,40 @@ acceptance("discourse-templates | keyboard shortcut", function (needs) {
 
     await click(".toggle-preview");
 
-    const textarea = query(".d-editor-input");
-    await textarea.focus();
+    await focus(".d-editor-input");
 
     await triggerKeyboardShortcut();
-    assert.ok(
-      exists(".d-modal.d-templates"),
-      "It displayed the standard templates modal"
-    );
+    assert
+      .dom(".d-modal.d-templates")
+      .exists("displays the standard templates modal");
   });
 
-  test("Modal | Templates modal | Show the modal if a textarea is focused", async (assert) => {
+  test("Modal | Templates modal | Show the modal if a textarea is focused", async function (assert) {
     // if the text area is outside a modal then simply show the insert template modal
     // because there is no need to hijack
     await visit("/u/charlie/preferences/profile");
 
-    const textarea = query(".d-editor-input");
-    await textarea.focus();
+    await focus(".d-editor-input");
 
     await triggerKeyboardShortcut();
-    assert.ok(
-      exists(".d-modal.d-templates"),
-      "It displayed the standard templates modal"
-    );
+    assert
+      .dom(".d-modal.d-templates")
+      .exists("displays the standard templates modal");
   });
 
-  test("Modal | Templates modal | Template is inserted", async (assert) => {
+  test("Modal | Templates modal | Template is inserted", async function (assert) {
     await visit("/u/charlie/preferences/profile");
 
-    const textarea = query(".d-editor-input");
-    await textarea.focus();
+    await focus(".d-editor-input");
 
     await triggerKeyboardShortcut();
-    await assertTemplateWasInserted(assert, textarea);
+    await assertTemplateWasInserted(assert, ".d-editor-input");
   });
 
-  test("Modal | Templates modal | Template is inserted", async (assert) => {
+  test("Modal | Templates modal | Template is inserted", async function (assert) {
     await visit("/u/charlie/preferences/profile");
 
-    const textarea = query(".d-editor-input");
-    await textarea.focus();
+    await focus(".d-editor-input");
 
     await triggerKeyboardShortcut();
 
@@ -340,64 +377,57 @@ acceptance("discourse-templates | keyboard shortcut", function (needs) {
           id: "lorem",
         },
       ],
-      "it should filter tags in the dropdown"
+      "filters tags in the dropdown"
     );
 
     await tagDropdown.selectRowByIndex(0);
-    assert.equal(
-      count(".templates-list .template-item"),
-      1,
-      "it should filter replies by tag"
-    );
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "filters replies by tag");
 
     await click("#template-item-130 .template-item-title");
     await click("#template-item-130 .template-item-source-link");
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/t/lorem-ipsum-dolor-sit-amet/130",
-      "it should navigate to the source"
+      "navigates to the source"
     );
   });
 
-  test("Modal | Templates Modal | Stacked Modals | Template is inserted", async (assert) => {
+  test("Modal | Templates Modal | Stacked Modals | Template is inserted", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");
     await click(".show-more-actions");
     await click(".show-post-admin-menu");
     await click(".add-notice");
 
-    const textarea = query(".d-modal__body textarea");
-    await textarea.focus();
+    await focus(".d-modal__body textarea");
 
     await triggerKeyboardShortcut();
-    await assertTemplateWasInserted(assert, textarea);
+    await assertTemplateWasInserted(assert, ".d-modal__body textarea");
   });
 
-  test("Modal | Templates Modal | Stacked Modals | Closing the template modal returns the focus to the original modal textarea", async (assert) => {
+  test("Modal | Templates Modal | Stacked Modals | Closing the template modal returns the focus to the original modal textarea", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");
     await click(".show-more-actions");
     await click(".show-post-admin-menu");
     await click(".add-notice");
 
-    const textarea = query(".d-modal__body textarea");
-    await textarea.focus();
-    assert.notOk(
-      exists(".d-templates-modal"),
-      "the templates modal does not exist yet"
-    );
+    await focus(".d-modal__body textarea");
+    assert
+      .dom(".d-templates-modal")
+      .doesNotExist("the templates modal does not exist yet");
     await triggerKeyboardShortcut();
-    assert.ok(exists(".d-templates-modal"), "it displayed the templates modal");
+    assert.dom(".d-templates-modal").exists("displays the templates modal");
 
     await click(".d-templates-modal .btn.modal-close");
-    assert.strictEqual(
-      textarea,
-      document.activeElement,
-      "it focused the original textarea again after closing the templates modal"
-    );
+    assert
+      .dom(".d-modal__body textarea")
+      .isFocused(
+        "focuses the original textarea again after closing the templates modal"
+      );
   });
 });
-
-import topicFixtures from "discourse/tests/fixtures/topic";
 
 acceptance("discourse-templates - buttons on topics", function (needs) {
   needs.user();

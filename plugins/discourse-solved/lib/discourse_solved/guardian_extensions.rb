@@ -13,10 +13,10 @@ module DiscourseSolved
       end
 
       return false if category_id.blank?
-      if !::DiscourseSolved::AcceptedAnswerCache.allowed
-        ::DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+      if !DiscourseSolved::AcceptedAnswerCache.allowed
+        DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
       end
-      ::DiscourseSolved::AcceptedAnswerCache.allowed.include?(category_id)
+      DiscourseSolved::AcceptedAnswerCache.allowed.include?(category_id)
     end
 
     def can_accept_answer?(topic, post)

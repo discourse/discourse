@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 describe Jobs::LocalizePosts do
-  fab!(:post)
   subject(:job) { described_class.new }
+
+  fab!(:post)
 
   let(:locales) { %w[en ja de] }
 
   before do
+    assign_fake_provider_to(:ai_default_llm_model)
     enable_current_plugin
-    Fabricate(:fake_model).tap do |fake_llm|
-      SiteSetting.public_send("ai_translation_model=", "custom:#{fake_llm.id}")
-    end
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = locales.join("|")
     SiteSetting.ai_translation_backfill_hourly_rate = 100
@@ -45,6 +44,13 @@ describe Jobs::LocalizePosts do
     job.execute({ limit: 10 })
   end
 
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_post_localization?).returns(false)
+    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
   it "does nothing when there are no posts to translate" do
     Post.destroy_all
     DiscourseAi::Translation::PostLocalizer.expects(:localize).never
@@ -63,10 +69,16 @@ describe Jobs::LocalizePosts do
     post.update(locale: "es")
     DiscourseAi::Translation::PostLocalizer
       .expects(:localize)
-      .with(post, "en")
+      .with(post, "en", has_entries(llm_model: anything))
       .raises(StandardError.new("API error"))
-    DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "ja").once
-    DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "de").once
+    DiscourseAi::Translation::PostLocalizer
+      .expects(:localize)
+      .with(post, "ja", has_entries(llm_model: anything))
+      .once
+    DiscourseAi::Translation::PostLocalizer
+      .expects(:localize)
+      .with(post, "de", has_entries(llm_model: anything))
+      .once
 
     expect { job.execute({ limit: 10 }) }.not_to raise_error
   end
@@ -91,9 +103,18 @@ describe Jobs::LocalizePosts do
     it "scenario 2: localizes post with locale 'es' when localizations for en/ja/de do not exist" do
       post = Fabricate(:post, locale: "es")
 
-      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "en").once
-      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "ja").once
-      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "de").once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(post, "en", has_entries(llm_model: anything))
+        .once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(post, "ja", has_entries(llm_model: anything))
+        .once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(post, "de", has_entries(llm_model: anything))
+        .once
 
       job.execute({ limit: 10 })
     end
@@ -101,8 +122,14 @@ describe Jobs::LocalizePosts do
     it "scenario 3: localizes post with locale 'en' when ja/de localization do not exist" do
       post = Fabricate(:post, locale: "en")
 
-      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "ja").once
-      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "de").once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(post, "ja", has_entries(llm_model: anything))
+        .once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(post, "de", has_entries(llm_model: anything))
+        .once
       DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "en").never
 
       job.execute({ limit: 10 })
@@ -139,6 +166,28 @@ describe Jobs::LocalizePosts do
     end
   end
 
+  context "when relocalize quota is exhausted" do
+    before { post.update(locale: "es") }
+
+    it "skips localization for posts that have exceeded quota for a specific locale" do
+      DiscourseAi::Translation::PostLocalizer::MAX_QUOTA_PER_DAY.times do
+        DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, "en")
+      end
+
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "en").never
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(post, "ja", has_entries(llm_model: anything))
+        .once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(post, "de", has_entries(llm_model: anything))
+        .once
+
+      job.execute({ limit: 10 })
+    end
+  end
+
   describe "with public content limitation" do
     fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
     fab!(:private_topic) { Fabricate(:topic, category: private_category) }
@@ -146,7 +195,7 @@ describe Jobs::LocalizePosts do
 
     fab!(:public_post) { Fabricate(:post, locale: "es") }
 
-    fab!(:personal_pm_topic) { Fabricate(:private_message_topic) }
+    fab!(:personal_pm_topic, :private_message_topic)
     fab!(:personal_pm_post) { Fabricate(:post, topic: personal_pm_topic, locale: "es") }
 
     fab!(:group)
@@ -159,7 +208,10 @@ describe Jobs::LocalizePosts do
       before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
 
       it "only processes posts from public categories" do
-        DiscourseAi::Translation::PostLocalizer.expects(:localize).with(public_post, "ja").once
+        DiscourseAi::Translation::PostLocalizer
+          .expects(:localize)
+          .with(public_post, "ja", has_entries(llm_model: anything))
+          .once
 
         DiscourseAi::Translation::PostLocalizer
           .expects(:localize)
@@ -183,10 +235,19 @@ describe Jobs::LocalizePosts do
       before { SiteSetting.ai_translation_backfill_limit_to_public_content = false }
 
       it "processes public posts and group PMs but not personal PMs" do
-        DiscourseAi::Translation::PostLocalizer.expects(:localize).with(public_post, "ja").once
-        DiscourseAi::Translation::PostLocalizer.expects(:localize).with(private_post, "ja").once
+        DiscourseAi::Translation::PostLocalizer
+          .expects(:localize)
+          .with(public_post, "ja", has_entries(llm_model: anything))
+          .once
+        DiscourseAi::Translation::PostLocalizer
+          .expects(:localize)
+          .with(private_post, "ja", has_entries(llm_model: anything))
+          .once
 
-        DiscourseAi::Translation::PostLocalizer.expects(:localize).with(group_pm_post, "ja").once
+        DiscourseAi::Translation::PostLocalizer
+          .expects(:localize)
+          .with(group_pm_post, "ja", has_entries(llm_model: anything))
+          .once
 
         DiscourseAi::Translation::PostLocalizer
           .expects(:localize)
@@ -208,7 +269,10 @@ describe Jobs::LocalizePosts do
     end
 
     it "only processes posts within the age limit" do
-      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(new_post, "ja").once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(new_post, "ja", has_entries(llm_model: anything))
+        .once
 
       DiscourseAi::Translation::PostLocalizer
         .expects(:localize)
@@ -221,11 +285,46 @@ describe Jobs::LocalizePosts do
     it "processes all posts when setting is large" do
       SiteSetting.ai_translation_backfill_max_age_days = 1000
 
-      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(new_post, "ja").once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(new_post, "ja", has_entries(llm_model: anything))
+        .once
 
-      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(old_post, "ja").once
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(old_post, "ja", has_entries(llm_model: anything))
+        .once
 
       job.execute({ limit: 10 })
+    end
+  end
+
+  describe "LlmModel caching" do
+    it "caches the LlmModel and reuses it for all posts in a batch" do
+      post_1 = Fabricate(:post, locale: "es")
+      post_2 = Fabricate(:post, locale: "es")
+      SiteSetting.content_localization_supported_locales = "ja"
+
+      # Track how many times LlmModel.find_by is called
+      find_by_call_count = 0
+      LlmModel
+        .stubs(:find_by)
+        .with do
+          find_by_call_count += 1
+          true
+        end
+        .returns(LlmModel.last)
+
+      # Stub the actual localization to avoid real translation calls
+      DiscourseAi::Translation::PostLocalizer.stubs(:localize)
+
+      job.execute({ limit: 10 })
+
+      # Should call LlmModel.find_by only twice for the entire batch:
+      # 1. Once in credits_available_for_post_localization? check
+      # 2. Once in the job's find_llm_model_for_persona for caching
+      # Without caching, it would be called 2 + (number of posts) times
+      expect(find_by_call_count).to eq(2)
     end
   end
 end

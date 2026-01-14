@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class NotificationSerializer < ApplicationSerializer
+  include LocalizedFancyTopicTitleMixin
+
   attributes :id,
              :user_id,
              :external_id,
@@ -23,14 +25,6 @@ class NotificationSerializer < ApplicationSerializer
 
   def is_warning
     object.topic.present? && object.topic.subtype == TopicSubtype.moderator_warning
-  end
-
-  def include_fancy_title?
-    object.topic&.fancy_title
-  end
-
-  def fancy_title
-    object.topic.fancy_title
   end
 
   def include_is_warning?

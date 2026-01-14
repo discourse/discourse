@@ -7,6 +7,14 @@
 ug:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "سۈنئىي ئەقىلدە ئىزدەشكە يول قويىدۇ"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
       dashboard:
         reports:
           filters:
@@ -44,7 +52,7 @@ ug:
         groups: "گۇرۇپپا:"
         no_persona: "تەڭشەلمىدى"
         no_groups: "يوق"
-        edit: "تەھرىر"
+        edit: "تەڭشەك"
         expand_list:
           one: "(%{count} تېخىمۇ كۆپ)"
           other: "(%{count} تېخىمۇ كۆپ)"
@@ -54,16 +62,36 @@ ug:
           reset: "ئەسلىگە قايتۇر"
         search:
           name: "ئىزدە"
+        ai_helper:
+          setting_groups:
+            automation: "ئاپتوماتلاشتۇرۇش"
         spam:
           name: "ئەخلەت خەت"
       modals:
         select_option: "تاللانما تاللىنىدۇ..."
+      translations:
+        title: "تەرجىمە"
+        stats:
+          eta_minutes:
+            one: "%{count} مىنۇت"
+            other: "%{count} مىنۇت"
+          eta_hours:
+            one: "%{count} سائەت"
+            other: "%{count} سائەت"
+          eta_days:
+            one: "%{count} كۈن"
+            other: "%{count} كۈن"
+        progress_chart:
+          bar_done:
+            one: "%{count} يازما"
+            other: "%{count} يازما"
       spam:
         short_title: "ئەخلەت خەت"
         enable: "قوزغات"
         save_button: "ئۆزگەرتىشنى ساقلا"
         test_modal:
           result: "نەتىجە"
+          llm: "LLM"
           run: "سىناقنى ئىجرا قىل"
           spam: "ئەخلەت خەت"
       usage:
@@ -71,6 +99,7 @@ ug:
         summary: "خۇلاسە"
         username: "ئىشلەتكۈچى ئاتى"
         total_requests: "جەمئىي ئىلتىماس"
+        total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
       ai_persona:
@@ -149,10 +178,9 @@ ug:
         thumbnail_suggestions:
           select: "تاللا"
           selected: "تاللاندى"
+          try_again: "قايتا سىنا"
         image_caption:
           save_caption: "ساقلا"
-          automatic_caption_dialog:
-            confirm: "قوزغات"
       embeddings:
         back: "كەينى"
         save: "ساقلا"

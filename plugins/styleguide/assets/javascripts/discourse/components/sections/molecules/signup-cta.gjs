@@ -1,10 +1,13 @@
+import Component from "@glimmer/component";
 import SignupCta from "discourse/components/signup-cta";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const SignupCtaMolecule = <template>
-  <StyleguideExample @title="<SignupCta>">
-    <SignupCta />
-  </StyleguideExample>
-</template>;
+export default class SignupCtaMolecule extends Component {
+  signupCtaCode = `<SignupCta />`;
 
-export default SignupCtaMolecule;
+  <template>
+    <StyleguideExample @title="<SignupCta>" @code={{this.signupCtaCode}}>
+      <SignupCta />
+    </StyleguideExample>
+  </template>
+}

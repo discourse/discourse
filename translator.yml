@@ -80,9 +80,6 @@ files:
     destination_path: plugins/spoiler-alert/server.yml
     label: spoiler-alert
 
-  - source_path: plugins/checklist/config/locales/client.en.yml
-    destination_path: plugins/checklist/client.yml
-    label: checklist
   - source_path: plugins/checklist/config/locales/server.en.yml
     destination_path: plugins/checklist/server.yml
     label: checklist
@@ -180,6 +177,9 @@ files:
     destination_path: plugins/rss-polling/server.yml
     label: rss-polling
 
+  - source_path: plugins/discourse-math/config/locales/client.en.yml
+    destination_path: plugins/math/client.yml
+    label: math
   - source_path: plugins/discourse-math/config/locales/server.en.yml
     destination_path: plugins/math/server.yml
     label: math
@@ -302,3 +302,17 @@ files:
   - source_path: plugins/discourse-ai/config/locales/server.en.yml
     destination_path: plugins/ai/server.yml
     label: ai
+
+  - source_path: plugins/discourse-cakeday/config/locales/client.en.yml
+    destination_path: plugins/cakeday/client.yml
+    label: cakeday
+  - source_path: plugins/discourse-cakeday/config/locales/server.en.yml
+    destination_path: plugins/cakeday/server.yml
+    label: cakeday
+
+  - source_path: plugins/discourse-rewind/config/locales/client.en.yml
+    destination_path: plugins/rewind/client.yml
+    label: rewind
+  - source_path: plugins/discourse-rewind/config/locales/server.en.yml
+    destination_path: plugins/rewind/server.yml
+    label: rewind

@@ -13,17 +13,19 @@ if defined?(DiscourseAutomation)
     field :include_personal_messages, component: :boolean
 
     # Inputs
-    field :model,
+    field :triage_persona,
           component: :choices,
           required: true,
           extra: {
-            content: DiscourseAi::Automation.available_models,
+            content:
+              DiscourseAi::Automation.available_persona_choices(
+                require_user: false,
+                require_default_llm: true,
+              ),
           }
-    field :system_prompt, component: :message, required: false
     field :search_for_text, component: :text, required: true
     field :max_post_tokens, component: :text
     field :stop_sequences, component: :text_list, required: false
-    field :temperature, component: :text
     field :max_output_tokens, component: :text
 
     # Actions
@@ -50,6 +52,9 @@ if defined?(DiscourseAutomation)
               ),
           }
     field :whisper, component: :boolean
+    field :notify_author_pm, component: :boolean
+    field :notify_author_pm_user, component: :user
+    field :notify_author_pm_message, component: :message
 
     script do |context, fields|
       post = context["post"]
@@ -60,18 +65,21 @@ if defined?(DiscourseAutomation)
         next if !include_personal_messages
       end
 
+      triage_persona_id = fields.dig("triage_persona", "value")
+
       canned_reply = fields.dig("canned_reply", "value")
       canned_reply_user = fields.dig("canned_reply_user", "value")
       reply_persona_id = fields.dig("reply_persona", "value")
       whisper = fields.dig("whisper", "value")
+      notify_author_pm = fields.dig("notify_author_pm", "value")
+      notify_author_pm_user = fields.dig("notify_author_pm_user", "value")
+      notify_author_pm_message = fields.dig("notify_author_pm_message", "value")
 
       # nothing to do if we already replied
       next if post.user.username == canned_reply_user
       next if post.raw.strip == canned_reply.to_s.strip
 
-      system_prompt = fields.dig("system_prompt", "value")
       search_for_text = fields.dig("search_for_text", "value")
-      model = fields.dig("model", "value")
 
       category_id = fields.dig("category", "value")
       tags = fields.dig("tags", "value")
@@ -79,12 +87,6 @@ if defined?(DiscourseAutomation)
       flag_post = fields.dig("flag_post", "value")
       flag_type = fields.dig("flag_type", "value")
       max_post_tokens = fields.dig("max_post_tokens", "value").to_i
-      temperature = fields.dig("temperature", "value")
-      if temperature == "" || temperature.nil?
-        temperature = nil
-      else
-        temperature = temperature.to_f
-      end
 
       max_output_tokens = fields.dig("max_output_tokens", "value").to_i
       max_output_tokens = nil if max_output_tokens <= 0
@@ -93,16 +95,36 @@ if defined?(DiscourseAutomation)
 
       stop_sequences = fields.dig("stop_sequences", "value")
 
+      system_user = Discourse.system_user
+
+      if flag_post
+        flagged_as =
+          if DiscourseAi::Automation.spam_based_flag_types.include?(flag_type)
+            ReviewableScore.types[:spam]
+          else
+            ReviewableScore.types[:needs_approval]
+          end
+
+        if ReviewableScore
+             .pending
+             .where(user: system_user, reviewable_score_type: flagged_as)
+             .joins(:reviewable)
+             .where(reviewables: { target: post })
+             .exists?
+          next
+        end
+      end
+
       begin
         RateLimiter.new(
-          Discourse.system_user,
+          system_user,
           "llm_triage_#{post.id}",
           SiteSetting.ai_automation_max_triage_per_post_per_minute,
           1.minute,
         ).performed!
 
         RateLimiter.new(
-          Discourse.system_user,
+          system_user,
           "llm_triage",
           SiteSetting.ai_automation_max_triage_per_minute,
           1.minute,
@@ -110,9 +132,8 @@ if defined?(DiscourseAutomation)
 
         DiscourseAi::Automation::LlmTriage.handle(
           post: post,
-          model: model,
+          triage_persona_id: triage_persona_id,
           search_for_text: search_for_text,
-          system_prompt: system_prompt,
           category_id: category_id,
           tags: tags,
           canned_reply: canned_reply,
@@ -125,9 +146,11 @@ if defined?(DiscourseAutomation)
           max_post_tokens: max_post_tokens,
           stop_sequences: stop_sequences,
           automation: self.automation,
-          temperature: temperature,
           max_output_tokens: max_output_tokens,
           action: context["action"],
+          notify_author_pm: notify_author_pm,
+          notify_author_pm_user: notify_author_pm_user,
+          notify_author_pm_message: notify_author_pm_message,
         )
       rescue => e
         Discourse.warn_exception(

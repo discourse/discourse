@@ -10,7 +10,6 @@ hu:
       site_settings:
         categories:
           discourse_post_event: "Discourse esemény"
-          discourse_calendar: "Discourse naptár"
   js:
     notifications:
       titles:
@@ -127,6 +126,7 @@ hu:
           dk: "Dánia"
           ee: "Észtország"
           el: "Görögország"
+          gr: "Görögország"
           es_an: "Spanyolország (es_an)"
           es_ar: "Spanyolország (es_ar)"
           es_ce: "Spanyolország (es_ce)"
@@ -293,20 +293,18 @@ hu:
         month: "Utolsó 30 nap"
         week: "Utolsó 7 nap"
         day: "Nap"
+        year: "Elmúlt év"
     group_timezones:
       search: "Keresés…"
       group_availability: "%{group} elérhetősége"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} automatikusan beállította a részvételét, és meghívta erre: %{description}"
-        before_event_reminder_html: "Egy esemény hamarosan elkezdődik: %{description}"
-        after_event_reminder_html: "Egy esemény véget ért: %{description}"
-        ongoing_event_reminder_html: "Egy esemény folyamatban van: %{description}"
+        invite_user_predefined_attendance_notification: "%{username} automatikusan beállította a részvételét, és meghívta erre: %{eventName}"
       edit_reason: "Esemény frissítve"
       topic_title:
-        starts_at: "Az esemény kezdete: %{date}"
-        ended_at: "Az esemény véget ért: %{date}"
+        starts_at: "Esemény kezdete: %{date}"
+        ended_at: "Esemény véget ért: %{date}"
         ends_in_duration: "Véget ér: %{duration}"
       show_all: "Összes megjelenítése"
       participants:
@@ -321,7 +319,7 @@ hu:
       bulk_invite: "Csoportos meghívás"
       close_event: "Esemény lezárása"
       invitees_modal:
-        title_participated: "A részt vett felhasználók listája"
+        title_participated: "Részt vett felhasználók listája"
         filter_placeholder: "Felhasználók szűrése"
       bulk_invite_modal:
         confirm: "megerősítés"
@@ -340,9 +338,9 @@ hu:
         csv_title: "Csoportos meghívás CSV-ből"
       upcoming_events:
         title: "Közelgő események"
-        creator: "Szerző"
+        creator: "Létrehozó"
         status: "Állapot"
-        starts_at: "Kezdődik:"
+        starts_at: "Kezdet:"
       upcoming_events_list:
         title: "Közelgő események"
       preview:
@@ -366,7 +364,7 @@ hu:
               description: "Nyilvános eseményhez bárki csatlakozhat."
             private:
               title: "Privát"
-              description: "Privát eseményhez csak meghívott felhasználók csatlakozhatnak."
+              description: "Privát eseményhez csak a meghívott felhasználók csatlakozhatnak."
       builder_modal:
         custom_fields:
           label: "Egyéni mezők"

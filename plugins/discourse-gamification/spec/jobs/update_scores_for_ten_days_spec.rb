@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::UpdateScoresForTenDays do
   let(:user) { Fabricate(:user) }
   let(:user_2) { Fabricate(:user) }

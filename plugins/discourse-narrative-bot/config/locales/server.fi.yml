@@ -170,11 +170,11 @@ fi:
           Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:
         instructions: |-
-          Seuraavaksi voitko jakaa yhden näistä linkeistä minun kanssani? Vastaa **linkillä itse rivillä**, ja se laajenee automaattisesti sisältääksesi näppärän yhteenvedon.
+          Seuraavaksi voitko jakaa yhden näistä linkeistä minulle? Vastaa **linkillä omalla rivillä**, ja se laajenee automaattisesti sisältämään näppärän yhteenvedon.
 
-          Voit kopioida minkä tahansa linkin napauttamalla ja pitämällä mobiilia pohjassa tai napsauttamalla hiiren oikealla osoitinta:
+          Voit kopioida minkä tahansa linkin napauttamalla pitkään mobiililaitteella tai klikkaamalla hiiren kakkospainikkeella:
 
-          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en. ikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
           [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
           [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
@@ -399,6 +399,19 @@ fi:
 
           Huomioi, että kun vastaat ketjuun tai luet sitä kauemmin kuin muutaman minuutin ajan, se saa automaattisesti ilmoitustasokseen 'seurataan'. Tätä voi säätää [käyttäjäasetuksissa](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          Tiesitkö, että voit lisätä kyselyn mihin tahansa viestiin? Kokeile **laatia kysely** editorin kuvakkeella <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16">.
+        not_found: |-
+          Vastauksessasi ei ollut kyselyä.
+
+          Käytä editorin kuvaketta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> tai kopioi tämä kysely ja liitä se seuraavaan vastaukseesi:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hauska kysely! Miten onnistuin opetuksessa?
 
@@ -407,6 +420,20 @@ fi:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Joskus voit haluta **piilottaa tietoja** vastauksessasi:
+
+          – Kirjoitat elokuvasta tai TV-ohjelmasta jotakin, minkä voi kokea juonipaljastukseksi.
+
+          – Joudut sisällyttämään viestiisi suuria määriä yksityiskohtaista tietoa, joka voisi uuvuttaa lukijaa.
+
+          [details=Napauta niin näet kuinka se toimii!]
+          1. Valitse editorin kuvake <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16">.
+          2. Valitse "Piilota tiedot".
+          3. Muokkaa yhteenvetotekstiä ja lisää sisältö.
+          [/details]
+
+          Piilottaisitko tietoja editorin kuvakkeen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> avulla seuraavasta vastauksestasi?
         not_found: |-
           Onko sinulla ongelmia tietotoiminnon kanssa? Kokeilepa laittaa tämä seuraavaan vastaukseesi:
 

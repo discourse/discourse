@@ -53,6 +53,6 @@ export default {
   before: "inject-discourse-objects",
 
   initialize(container) {
-    withPluginApi("1.9.0", (api) => initializeHCaptcha(api, container));
+    withPluginApi((api) => initializeHCaptcha(api, container));
   },
 };

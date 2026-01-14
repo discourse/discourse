@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseSubscriptions::SubscribeController do
   let(:user) { Fabricate(:user) }
   let(:campaign_user) { Fabricate(:user) }
@@ -111,7 +109,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
       end
 
       it "is not subscribed" do
-        ::DiscourseSubscriptions::Customer.delete_all
+        DiscourseSubscriptions::Customer.delete_all
         ::Stripe::Product
           .expects(:list)
           .with({ ids: product_ids, active: true })

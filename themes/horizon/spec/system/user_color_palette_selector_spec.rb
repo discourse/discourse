@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./page_objects/components/user_color_palette_selector"
+require_relative "page_objects/components/user_color_palette_selector"
 
 describe "Horizon theme | User color palette selector", type: :system do
   let(:set_theme_as_default) { true }
@@ -19,7 +19,14 @@ describe "Horizon theme | User color palette selector", type: :system do
   let(:marigold_palette) { theme.color_schemes.find_by(name: "Marigold") }
   let(:marigold_palette_dark) { theme.color_schemes.find_by(name: "Marigold Dark") }
 
-  before { SiteSetting.interface_color_selector = "sidebar_footer" }
+  before do
+    SiteSetting.interface_color_selector = "sidebar_footer"
+    SiteSetting.default_theme_id = theme.id
+    theme.update!(
+      color_scheme_id: marigold_palette.id,
+      dark_color_scheme_id: marigold_palette_dark.id,
+    )
+  end
 
   it "does not show the sidebar button if there are no user-selectable color palettes" do
     ColorScheme.update_all(user_selectable: false)
@@ -30,7 +37,7 @@ describe "Horizon theme | User color palette selector", type: :system do
   describe "for logged in user" do
     before { sign_in(current_user) }
 
-    it "can open the user color palette menu and select a palette, which is preseved on reload" do
+    it "can open the user color palette menu and select a palette, which is preserved on reload" do
       visit "/"
       palette_selector.open_palette_menu
       palette_selector.click_palette_menu_item(marigold_palette.name)
@@ -67,7 +74,7 @@ describe "Horizon theme | User color palette selector", type: :system do
     context "when the theme is not default but is selected by a user" do
       let(:set_theme_as_default) { false }
 
-      it "can open the user color palette menu and select a palette, which is preseved on reload" do
+      it "can open the user color palette menu and select a palette, which is preserved on reload" do
         theme.update!(user_selectable: true)
         current_user.user_option.update!(theme_ids: [theme.id])
         visit "/"
@@ -83,7 +90,7 @@ describe "Horizon theme | User color palette selector", type: :system do
   end
 
   describe "for anon" do
-    it "can open the user color palette menu and select a palette, which is preseved on reload" do
+    it "can open the user color palette menu and select a palette, which is preserved on reload" do
       visit "/"
       palette_selector.open_palette_menu
       palette_selector.click_palette_menu_item(marigold_palette.name)

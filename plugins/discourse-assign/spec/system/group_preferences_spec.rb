@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Assign | Group Preferences", type: :system, js: true do
+RSpec.describe "Assign | Group Preferences", type: :system do
   fab!(:admin)
   fab!(:group)
 

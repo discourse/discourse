@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 ro:
+  site_settings:
+    discourse_math_enabled: "Activează modulul Discourse Math (va adăuga procesare specială la blocuri $ și $$)"
+    discourse_math_provider: "Furnizor de randare matematică implicit"

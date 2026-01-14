@@ -8,7 +8,7 @@ describe "Single thread in side panel", type: :system do
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap(current_user, [channel])
@@ -233,7 +233,7 @@ describe "Single thread in side panel", type: :system do
         sign_in(current_user)
         chat_page.visit_channel(channel)
         expect(page).not_to have_css(
-          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-content-badge.unread",
         )
       end
     end
@@ -264,6 +264,50 @@ describe "Single thread in side panel", type: :system do
         chat_page.visit_thread(thread)
 
         expect(page).to have_selector(".chat-thread .chat-message-separator__text", text: "Today")
+      end
+    end
+
+    context "when thread messages are sent with client timestamps" do
+      it "orders thread messages by client timestamp rather than server timestamp" do
+        first_message =
+          Chat::CreateMessage.call(
+            params: {
+              chat_channel_id: channel.id,
+              thread_id: thread.id,
+              message: "Thread message created first but should appear second",
+              client_created_at: 30.seconds.ago.iso8601,
+            },
+            guardian: current_user.guardian,
+          ).message_instance
+
+        second_message =
+          Chat::CreateMessage.call(
+            params: {
+              chat_channel_id: channel.id,
+              thread_id: thread.id,
+              message: "Thread message created second but should appear first",
+              client_created_at: 45.seconds.ago.iso8601,
+            },
+            guardian: current_user.guardian,
+          ).message_instance
+
+        chat_page.visit_thread(thread)
+
+        expect(page).to have_selector(
+          ".chat-thread .chat-message-container[data-id='#{first_message.id}'] .chat-message-text",
+          text: "Thread message created first but should appear second",
+        )
+        expect(page).to have_selector(
+          ".chat-thread .chat-message-container[data-id='#{second_message.id}'] .chat-message-text",
+          text: "Thread message created second but should appear first",
+        )
+
+        messages = page.all(".chat-thread .chat-message-container[data-id]")
+        message_ids = messages.map { |msg| msg["data-id"].to_i }
+        second_message_index = message_ids.index(second_message.id)
+        first_message_index = message_ids.index(first_message.id)
+
+        expect(second_message_index).to be < first_message_index
       end
     end
   end

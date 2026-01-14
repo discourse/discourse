@@ -43,8 +43,6 @@ en_GB:
           title: "Navigation Stacked"
         categories_list:
           title: "Categories List"
-        topic_link:
-          title: "Topic Link"
         topic_list_item:
           title: "Topic List Item"
         topic_statuses:
@@ -53,8 +51,6 @@ en_GB:
           title: "Topic List"
         basic_topic_list:
           title: "Basic Topic List"
-        footer_message:
-          title: "Footer Message"
         signup_cta:
           title: "Signup CTA"
         topic_timer_info:
@@ -69,8 +65,6 @@ en_GB:
           title: "Topic Map"
         site_header:
           title: "Site Header"
-        suggested_topics:
-          title: "Suggested Topics"
         post_menu:
           title: "Post Menu"
         modal:

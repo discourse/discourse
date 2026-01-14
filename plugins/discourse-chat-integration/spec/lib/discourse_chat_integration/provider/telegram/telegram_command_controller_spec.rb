@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "Telegram Command Controller", type: :request do
   let(:category) { Fabricate(:category) }
   let!(:chan1) do

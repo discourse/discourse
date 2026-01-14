@@ -18,6 +18,7 @@ et:
       solution_summary:
         one: "lahendus"
         other: "lahendused"
+      accepted_answer_post_number: "postitus %{post_number}"
       topic_status_filter:
         all: "kõik"
         solved: "lahendatud"

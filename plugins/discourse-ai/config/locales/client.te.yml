@@ -40,7 +40,7 @@ te:
         back: "వెనుకకు"
         no_persona: "సెట్ చేయబడలేదు"
         no_groups: "ఏదీ లేదు"
-        edit: "సవరించండి"
+        edit: "అమరికలు"
         expand_list:
           one: "(మరో %{count})"
           other: "(మరో %{count})"
@@ -51,6 +51,22 @@ te:
           name: "శోధించండి"
         spam:
           name: "స్పామ్"
+      translations:
+        title: "అనువాదాలు"
+        stats:
+          eta_minutes:
+            one: "ఒక నిమిషం"
+            other: "%{count} నిమిషాలు"
+          eta_hours:
+            one: "ఒక గంట"
+            other: "%{count} గంటలు"
+          eta_days:
+            one: "%{count} రోజు"
+            other: "%{count} రోజులు"
+        progress_chart:
+          bar_done:
+            one: "%{count} పోస్ట్"
+            other: "%{count} పోస్ట్‌లు"
       spam:
         short_title: "స్పామ్"
         enable: "ప్రారంభించండి"
@@ -60,6 +76,7 @@ te:
         summary: "సారాంశం"
         username: "సభ్యనామం"
         total_requests: "మొత్తం అభ్యర్థనలు"
+        total: "మొత్తం"
       ai_persona:
         back: "వెనుకకు"
         name: "పేరు"
@@ -127,10 +144,9 @@ te:
         thumbnail_suggestions:
           select: "ఎంచుకోండి"
           selected: "ఎంపిక చేయబడినవి"
+          try_again: "మళ్ళీ ప్రయత్నించండి"
         image_caption:
           save_caption: "సేవ్ చేయండి"
-          automatic_caption_dialog:
-            confirm: "ప్రారంభించండి"
       embeddings:
         back: "వెనుకకు"
         save: "సేవ్ చేయండి"

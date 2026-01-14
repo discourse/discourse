@@ -20,4 +20,26 @@ pt_BR:
     report_generator:
       private_message:
         title: "Relatório programado para %{query_name}"
+        body: |
+          Olá, %{recipient_name}, seu relatório do Data Explorer está pronto.
+
+          Nome da consulta:
+          %{query_name}
+
+          Aqui estão os resultados:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Ver consulta no Data Explorer</a>
+
+          Relatório criado à(s) %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Relatório programado para %{query_name}
+
+          Aqui estão os resultados
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Ver consulta no Data Explorer</a>
+
+          Relatório criado à(s) %{created_at} (%{timezone})
       upload_appendix: "Apêndice: [%{filename}|anexo](%{short_url})"

@@ -1,13 +1,7 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { tomorrow, twoDays } from "discourse/lib/time-utils";
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { tomorrow } from "discourse/lib/time-utils";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
   needs.site({
@@ -15,7 +9,7 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
       {
         id: 1,
         name: "Category 1",
-        slug: "caetgory-1",
+        slug: "category-1",
         color: "0f78be",
       },
       {
@@ -40,8 +34,6 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
         events: [
           {
             id: 67501,
-            starts_at: tomorrow().add(1, "hour"),
-            ends_at: null,
             timezone: "Asia/Calcutta",
             post: {
               id: 67501,
@@ -53,22 +45,21 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
               },
             },
             name: "Awesome Event",
-            upcoming_dates: [
+            category_id: 1,
+            rrule: `DTSTART:${tomorrow().add(1, "hour").format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${tomorrow().add(2, "days").format("YYYYMMDD")}`,
+            occurrences: [
               {
-                starts_at: tomorrow().format("YYYY-MM-DDT15:14:00.000Z"),
-                ends_at: tomorrow().format("YYYY-MM-DDT16:14:00.000Z"),
+                starts_at: tomorrow().add(1, "hour"),
+                ends_at: null,
               },
               {
-                starts_at: twoDays().format("YYYY-MM-DDT15:14:00.000Z"),
-                ends_at: twoDays().format("YYYY-MM-DDT16:14:00.000Z"),
+                starts_at: tomorrow().add(1, "day").add(1, "hour"),
+                ends_at: null,
               },
             ],
-            category_id: 1,
           },
           {
             id: 67502,
-            starts_at: tomorrow(),
-            ends_at: null,
             timezone: "Asia/Calcutta",
             post: {
               id: 67501,
@@ -81,53 +72,67 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
             },
             name: "Another Awesome Event",
             category_id: 2,
+            occurrences: [
+              {
+                starts_at: tomorrow(),
+                ends_at: null,
+              },
+            ],
           },
         ],
       });
     });
   });
 
-  test("shows upcoming events calendar", async (assert) => {
+  test("shows upcoming events calendar", async function (assert) {
     await visit("/upcoming-events");
 
-    assert.ok(
-      exists("#upcoming-events-calendar"),
-      "Upcoming Events calendar is shown."
-    );
+    assert
+      .dom("#upcoming-events-calendar")
+      .exists("Upcoming Events calendar is shown");
 
-    assert.ok(exists(".fc-view-container"), "FullCalendar is loaded.");
+    assert.dom(".fc").exists("FullCalendar is loaded");
   });
 
-  test("upcoming events category colors", async (assert) => {
+  test("upcoming events category colors", async function (assert) {
     await visit("/upcoming-events");
 
-    assert.strictEqual(
-      queryAll(".fc-event")[0].style.backgroundColor,
-      "rgb(190, 10, 10)",
-      "Event item uses the proper color from category 1"
-    );
+    const [first, second] = [
+      ...document.querySelectorAll(
+        ".fc-daygrid-event-harness .fc-daygrid-event-dot"
+      ),
+    ];
+    assert
+      .dom(first)
+      .hasStyle(
+        { borderColor: "rgb(190, 10, 10)" },
+        "Event item uses the proper color from category 1"
+      );
 
-    assert.strictEqual(
-      queryAll(".fc-event")[1].style.backgroundColor,
-      "rgb(15, 120, 190)",
-      "Event item uses the proper color from category 2"
-    );
+    assert
+      .dom(second)
+      .hasStyle(
+        { borderColor: "rgb(15, 120, 190)" },
+        "Event item uses the proper color from category 2"
+      );
   });
 
-  test("upcoming events calendar shows recurrent events", async (assert) => {
+  test("upcoming events calendar shows recurrent events", async function (assert) {
     await visit("/upcoming-events");
 
-    const [, first, second] = queryAll(".fc-event .fc-title");
-    assert.equal(first.textContent, "Awesome Event");
-    assert.equal(second.textContent, "Awesome Event");
+    const [, second, third] = [
+      ...document.querySelectorAll(".fc-daygrid-event-harness"),
+    ];
+    assert.dom(".fc-event-title", second).hasText("Awesome Event");
+    assert.dom(".fc-event-title", third).hasText("Awesome Event");
 
-    const firstCell = first.closest("td");
     const secondCell = second.closest("td");
+    const thirdCell = third.closest("td");
 
-    assert.notEqual(
-      firstCell,
+    assert.notStrictEqual(
       secondCell,
-      "events should be in different days"
+      thirdCell,
+      "events are in different days"
     );
   });
 });

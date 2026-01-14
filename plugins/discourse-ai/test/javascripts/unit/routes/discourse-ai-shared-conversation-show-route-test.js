@@ -1,5 +1,3 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -13,7 +11,7 @@ module(
       const transition = {
         intent: { url: "https://www.discourse.org" },
         abort() {
-          assert.ok(true, "transition.abort() was called");
+          assert.true(true, "transition.abort() was called");
         },
       };
 
@@ -32,12 +30,16 @@ module(
       });
 
       windowOpenStub.callsFake((url, target) => {
-        assert.equal(
+        assert.strictEqual(
           url,
           "https://www.discourse.org",
           "window.open was called with the correct URL"
         );
-        assert.equal(target, "_blank", 'window.open was called with "_blank"');
+        assert.strictEqual(
+          target,
+          "_blank",
+          'window.open was called with "_blank"'
+        );
       });
 
       route.beforeModel(transition);
@@ -50,7 +52,7 @@ module(
       });
 
       routeRedirectStub.callsFake((url) => {
-        assert.equal(
+        assert.strictEqual(
           url,
           "https://www.discourse.org",
           "redirect was called with the correct URL"

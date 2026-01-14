@@ -1,8 +1,17 @@
 import { tracked } from "@glimmer/tracking";
+import { computed, get } from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
 function initialize(api) {
+  Category.reopen({
+    enable_topic_voting: computed("custom_fields.enable_topic_voting", {
+      get() {
+        return get(this.custom_fields, "enable_topic_voting") === true;
+      },
+    }),
+  });
   api.addPostClassesCallback((post) => {
     if (post.post_number === 1 && post.can_vote) {
       return ["voting-post"];
@@ -61,7 +70,7 @@ export default {
   before: "inject-discourse-objects",
 
   initialize() {
-    withPluginApi("0.8.4", (api) => initialize(api));
-    withPluginApi("0.8.30", (api) => api.addCategorySortCriteria("votes"));
+    withPluginApi((api) => initialize(api));
+    withPluginApi((api) => api.addCategorySortCriteria("votes"));
   },
 };

@@ -9,7 +9,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
   def list_providers
     providers =
-      ::DiscourseChatIntegration::Provider.enabled_providers.map do |x|
+      DiscourseChatIntegration::Provider.enabled_providers.map do |x|
         {
           name: x::PROVIDER_NAME,
           id: x::PROVIDER_NAME,
@@ -26,8 +26,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       topic_id = params[:topic_id].to_i
 
       channel = DiscourseChatIntegration::Channel.find(channel_id)
-
-      provider = ::DiscourseChatIntegration::Provider.get_by_name(channel.provider)
+      provider = DiscourseChatIntegration::Provider.get_by_name(channel.provider)
 
       raise Discourse::NotFound if !DiscourseChatIntegration::Provider.is_enabled(provider)
 
@@ -37,19 +36,19 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
       render json: success_json
     rescue Discourse::InvalidParameters, ActiveRecord::RecordNotFound => e
-      render json: { errors: [e.message] }, status: 422
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     rescue DiscourseChatIntegration::ProviderError => e
       Rails.logger.error("Test provider failed #{e.info}")
       if e.info.key?(:error_key) && !e.info[:error_key].nil?
-        render json: { error_key: e.info[:error_key] }, status: 422
+        render json: { error_key: e.info[:error_key] }, status: :unprocessable_entity
       else
-        render json: { errors: [e.message] }, status: 422
+        render json: { errors: [e.message] }, status: :unprocessable_entity
       end
     end
   end
 
   def list_channels
-    providers = ::DiscourseChatIntegration::Provider.enabled_provider_names
+    providers = DiscourseChatIntegration::Provider.enabled_provider_names
     requested_provider = params[:provider]
 
     raise Discourse::InvalidParameters if !providers.include?(requested_provider)
@@ -60,8 +59,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
   def create_channel
     begin
-      providers =
-        ::DiscourseChatIntegration::Provider.enabled_providers.map { |x| x::PROVIDER_NAME }
+      providers = DiscourseChatIntegration::Provider.enabled_providers.map { |x| x::PROVIDER_NAME }
 
       if !defined?(params[:channel]) && defined?(params[:channel][:provider])
         raise Discourse::InvalidParameters, "Provider is not valid"
@@ -86,7 +84,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
       render_serialized channel, DiscourseChatIntegration::ChannelSerializer, root: "channel"
     rescue Discourse::InvalidParameters => e
-      render json: { errors: [e.message] }, status: 422
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 
@@ -106,7 +104,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
       render_serialized channel, DiscourseChatIntegration::ChannelSerializer, root: "channel"
     rescue Discourse::InvalidParameters => e
-      render json: { errors: [e.message] }, status: 422
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 
@@ -128,7 +126,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
       render_serialized rule, DiscourseChatIntegration::RuleSerializer, root: "rule"
     rescue Discourse::InvalidParameters => e
-      render json: { errors: [e.message] }, status: 422
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 
@@ -141,7 +139,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
       render_serialized rule, DiscourseChatIntegration::RuleSerializer, root: "rule"
     rescue Discourse::InvalidParameters => e
-      render json: { errors: [e.message] }, status: 422
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseAi
+module DiscourseAi
   module Inference
     class CloudflareWorkersAi
       def initialize(endpoint, api_token, referer = Discourse.base_url)

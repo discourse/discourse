@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 describe TopicsBulkAction do
   fab!(:post)
-  fab!(:post1) { Fabricate(:post) }
-  fab!(:post2) { Fabricate(:post) }
+  fab!(:post1, :post)
+  fab!(:post2, :post)
 
   before { SiteSetting.assign_enabled = true }
 

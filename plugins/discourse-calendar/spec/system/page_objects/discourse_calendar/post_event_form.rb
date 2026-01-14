@@ -16,6 +16,14 @@ module PageObjects
           self
         end
 
+        def fill_timezone(with)
+          filter =
+            PageObjects::Components::SelectKit.new(".post-event-builder-modal .timezone-input")
+          filter.search(with)
+          filter.select_row_by_value(with)
+          self
+        end
+
         def form
           modal.find("form")
         end

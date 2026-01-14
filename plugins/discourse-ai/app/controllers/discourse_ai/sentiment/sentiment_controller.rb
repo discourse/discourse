@@ -4,7 +4,7 @@ module DiscourseAi
   module Sentiment
     class SentimentController < ::Admin::StaffController
       include Constants
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       DEFAULT_POSTS_LIMIT = 50
       MAX_POSTS_LIMIT = 100
@@ -46,7 +46,7 @@ module DiscourseAi
             u.name,
             u.uploaded_avatar_id,
             c.id AS category_id,
-            (CASE 
+            (CASE
               WHEN (cr.classification::jsonb->'positive')::float > :threshold THEN 'positive'
               WHEN (cr.classification::jsonb->'negative')::float > :threshold THEN 'negative'
               ELSE 'neutral'

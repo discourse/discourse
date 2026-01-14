@@ -1,7 +1,7 @@
 export default {
-  resource: "admin.adminPlugins",
+  resource: "admin.adminPlugins.show",
   path: "/plugins",
   map() {
-    this.route("calendar");
+    this.route("discourse-calendar-holidays", { path: "holidays" });
   },
 };

@@ -444,9 +444,21 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  describe "message bus notifications" do
+  describe "#perform" do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
+
+    it "rolls back the transaction when the action fails" do
+      reviewable = Fabricate(:reviewable_queued_post)
+
+      reviewable.stubs(:perform_approve_post).returns(
+        Reviewable::PerformResult.new(reviewable, :failure),
+      )
+
+      expect { reviewable.perform(moderator, :approve_post) }.not_to change {
+        reviewable.reload.version
+      }
+    end
 
     it "triggers a notification on create" do
       reviewable = Fabricate(:reviewable_queued_post)
@@ -552,6 +564,83 @@ RSpec.describe Reviewable, type: :model do
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
       expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+    end
+
+    describe "action logging" do
+      fab!(:guardian) { Guardian.new(moderator) }
+      fab!(:reviewable, :reviewable_flagged_post)
+
+      context "with new UI enabled" do
+        before do
+          SiteSetting.reviewable_old_moderator_actions = false
+          allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(
+            true,
+          )
+        end
+
+        it "creates an action log" do
+          expect { reviewable.perform(moderator, :edit_post, guardian: guardian) }.to change {
+            reviewable.reviewable_action_logs.count
+          }.by(1)
+
+          log = reviewable.reviewable_action_logs.last
+          expect(log.action_key).to eq("edit_post")
+          expect(log.status).to eq("approved")
+          expect(log.bundle).to eq("post-actions")
+          expect(log.performed_by).to eq(moderator)
+        end
+
+        it "keeps reviewable pending when not all bundles are actioned" do
+          reviewable.perform(moderator, :edit_post, guardian: guardian)
+
+          reviewable.reload
+          expect(reviewable.status).to eq("pending")
+          expect(reviewable.reviewable_action_logs.count).to eq(1)
+        end
+
+        it "finalizes status when all bundles are actioned" do
+          reviewable.perform(moderator, :edit_post, guardian: guardian)
+          expect(reviewable.reload.status).to eq("pending")
+          reviewable.perform(moderator, :suspend_user, guardian: guardian)
+
+          reviewable.reload
+          expect(reviewable.status).to eq("approved")
+          expect(reviewable.reviewable_action_logs.count).to eq(2)
+        end
+
+        it "calculates correct final status for all ignored" do
+          reviewable.perform(moderator, :no_action_post, guardian: guardian)
+          reviewable.perform(moderator, :no_action_user, guardian: guardian)
+
+          reviewable.reload
+          expect(reviewable.status).to eq("ignored")
+        end
+
+        it "calculates correct final status for all rejected" do
+          reviewable.perform(moderator, :hide_post, guardian: guardian)
+          reviewable.perform(moderator, :silence_user, guardian: guardian)
+
+          reviewable.reload
+          expect(reviewable.status).to eq("rejected")
+        end
+      end
+
+      context "with old UI (backward compatibility)" do
+        before { SiteSetting.reviewable_old_moderator_actions = true }
+
+        it "creates an action log" do
+          expect { reviewable.perform(moderator, :agree_and_keep, guardian: guardian) }.to change {
+            reviewable.reviewable_action_logs.count
+          }.by(1)
+        end
+
+        it "transitions immediately (original behavior)" do
+          reviewable.perform(moderator, :agree_and_keep, guardian: guardian)
+
+          reviewable.reload
+          expect(reviewable.status).to eq("approved")
+        end
+      end
     end
   end
 
@@ -755,16 +844,13 @@ RSpec.describe Reviewable, type: :model do
 
     it "gets the bundles and actions for a reviewable" do
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.map(&:id)).to eq(%w[approve_post reject_post revise_and_reject_post])
+      expect(actions.bundles.map(&:id)).to eq(["approve_post", "#{reviewable.id}-reject-post"])
       expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
         ["approve_post"],
       )
-      expect(actions.bundles.find { |b| b.id == "reject_post" }.actions.map(&:id)).to eq(
-        ["reject_post"],
-      )
-      expect(actions.bundles.find { |b| b.id == "revise_and_reject_post" }.actions.map(&:id)).to eq(
-        ["revise_and_reject_post"],
-      )
+      expect(
+        actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }.actions.map(&:id),
+      ).to eq(%w[reject_post revise_and_reject_post])
     end
 
     describe "handling empty bundles" do

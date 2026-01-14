@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require Rails.root.join(
           "plugins/discourse-ai/db/migrate/20250127145305_clean_unused_embedding_search_indexes",
         )
 
 RSpec.describe CleanUnusedEmbeddingSearchIndexes do
+  subject(:migration) { described_class.new }
+
   let(:connection) { ActiveRecord::Base.connection }
 
   before { enable_current_plugin }
@@ -42,15 +43,15 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
 
     context "when there are no embedding definitions" do
       it "removes all indexes" do
-        subject.up
+        migration.up
 
-        remaininig_idxs =
+        remaining_idxs =
           DB.query_single(
             "SELECT indexname FROM pg_indexes WHERE indexname IN (:names)",
             names: all_idx_names,
           )
 
-        expect(remaininig_idxs).to be_empty
+        expect(remaining_idxs).to be_empty
       end
     end
 
@@ -63,21 +64,21 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
             memo << "ai_#{type}_embeddings_2_1_search_bit"
           end
 
-        subject.up
+        migration.up
 
-        remaininig_idxs =
+        remaining_idxs =
           DB.query_single(
             "SELECT indexname FROM pg_indexes WHERE indexname IN (:names)",
             names: all_idx_names,
           )
 
-        expect(remaininig_idxs).to contain_exactly(*expected_model_idxs)
+        expect(remaining_idxs).to contain_exactly(*expected_model_idxs)
         # This method checks dimensions are correct.
         expect(DiscourseAi::Embeddings::Schema.correctly_indexed?(embedding_def)).to eq(true)
       end
     end
 
-    context "when there is an embedding definition with different dimenstions" do
+    context "when there is an embedding definition with different dimensions" do
       fab!(:embedding_def) { Fabricate(:embedding_definition, id: 2, dimensions: 1536) }
       fab!(:embedding_def_2) { Fabricate(:embedding_definition, id: 3, dimensions: 768) }
 
@@ -88,15 +89,15 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
             memo << "ai_#{type}_embeddings_3_1_search_bit"
           end
 
-        subject.up
+        migration.up
 
-        remaininig_idxs =
+        remaining_idxs =
           DB.query_single(
             "SELECT indexname FROM pg_indexes WHERE indexname IN (:names)",
             names: all_idx_names,
           )
 
-        expect(remaininig_idxs).to contain_exactly(*expected_model_idxs)
+        expect(remaining_idxs).to contain_exactly(*expected_model_idxs)
         # This method checks dimensions are correct.
         expect(DiscourseAi::Embeddings::Schema.correctly_indexed?(embedding_def_2)).to eq(true)
       end
@@ -123,7 +124,7 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
             memo << "ai_#{type}_embeddings_9_1_search_bit"
           end
 
-        subject.up
+        migration.up
 
         other_idxs =
           DB.query_single(

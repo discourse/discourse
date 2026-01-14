@@ -3,6 +3,8 @@
 require_relative "../../support/sentiment_inference_stubs"
 
 RSpec.describe Jobs::SentimentBackfill do
+  subject(:job) { described_class.new }
+
   before { enable_current_plugin }
 
   describe "#execute" do
@@ -19,7 +21,7 @@ RSpec.describe Jobs::SentimentBackfill do
 
     it "backfills when settings are correct" do
       SentimentInferenceStubs.stub_classification(post)
-      subject.execute({})
+      job.execute({})
 
       expect(ClassificationResult.where(target: post).count).to eq(expected_analysis)
     end
@@ -27,7 +29,7 @@ RSpec.describe Jobs::SentimentBackfill do
     it "does nothing when batch size is zero" do
       SiteSetting.ai_sentiment_backfill_maximum_posts_per_hour = 0
 
-      subject.execute({})
+      job.execute({})
 
       expect(ClassificationResult.count).to be_zero
     end
@@ -35,7 +37,7 @@ RSpec.describe Jobs::SentimentBackfill do
     it "does nothing when sentiment is disabled" do
       SiteSetting.ai_sentiment_enabled = false
 
-      subject.execute({})
+      job.execute({})
 
       expect(ClassificationResult.count).to be_zero
     end
@@ -45,7 +47,7 @@ RSpec.describe Jobs::SentimentBackfill do
       SiteSetting.ai_sentiment_backfill_post_max_age_days = 80
       post_2 = Fabricate(:post, created_at: 81.days.ago)
 
-      subject.execute({})
+      job.execute({})
 
       expect(ClassificationResult.where(target: post).count).to eq(expected_analysis)
       expect(ClassificationResult.where(target: post_2).count).to be_zero

@@ -29,4 +29,12 @@ class Auth::LoginWithAmazonAuthenticator < ::Auth::ManagedAuthenticator
   def primary_email_verified?(auth)
     SiteSetting.login_with_amazon_email_verified
   end
+
+  def can_connect_existing_user?
+    SiteSetting.login_with_amazon_user_can_connect
+  end
+
+  def can_revoke?
+    SiteSetting.login_with_amazon_user_can_revoke
+  end
 end

@@ -1,11 +1,16 @@
 @use "lib/viewport";
 
+:root {
+  --onebox-shadow-color: var(--primary-100);
+  --onebox-border-color: var(--primary-300);
+}
+
 @mixin onebox-shadow($thickness) {
   border: 0;
   margin-inline: $thickness;
   box-shadow:
-    0 0 0 1px var(--primary-300),
-    0 0 0 $thickness var(--primary-100);
+    0 0 0 1px var(--onebox-border-color),
+    0 0 0 $thickness var(--onebox-shadow-color);
 
   // Makes the outer drop shadow radius equal to --d-border-radius
   border-radius: calc(var(--d-border-radius) - ($thickness / 2));
@@ -167,7 +172,7 @@ aside.onebox {
       color: var(--tertiary);
     }
 
-    img:not(.avatar, .onebox-avatar-inline) {
+    img:not(.avatar, .onebox-avatar-inline, .emoji) {
       max-height: 170px;
       max-width: 20%;
       height: auto;
@@ -186,6 +191,10 @@ aside.onebox {
 
     [style*="--aspect-ratio"] > :first-child {
       width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
     }
 
     [style*="--aspect-ratio"] > img {
@@ -194,58 +203,49 @@ aside.onebox {
 
     // this allows us to load all onebox images without jiggle
     // see: http://cssmojo.com/aspect-ratio-using-custom-properties-and-calc/
-    @supports (--custom: property) {
-      .aspect-image {
-        max-height: 170px;
+    .aspect-image {
+      max-height: 170px;
 
-        --magic-ratio: calc(var(--aspect-ratio) + 0.15);
-        width: calc(128px * var(--magic-ratio));
-        max-width: 20%;
-        float: left;
-        margin-right: 1em;
-        height: auto;
+      --magic-ratio: calc(var(--aspect-ratio) + 0.15);
+      width: calc(128px * var(--magic-ratio));
+      max-width: 20%;
+      float: left;
+      margin-right: 1em;
+      height: auto;
 
-        img {
-          width: 100%;
-          height: inherit;
-          max-width: initial;
-          max-height: initial;
-          float: none;
-        }
+      img {
+        width: 100%;
+        height: inherit;
+        max-width: initial;
+        max-height: initial;
+        float: none;
       }
+    }
 
-      // full size images for instagram, twitter, etc.
-      .aspect-image-full-size {
-        margin: 0.5em 0;
-        max-height: 100%;
-        width: calc(500px * var(--aspect-ratio));
-        max-width: 100%;
+    // full size images for instagram, twitter, etc.
+    .aspect-image-full-size {
+      margin: 0.5em 0;
+      max-height: 100%;
+      width: calc(500px * var(--aspect-ratio));
+      max-width: 100%;
 
-        img {
-          width: 100%;
-          height: inherit;
-          max-width: initial;
-          max-height: initial;
-          float: none;
-        }
+      img {
+        width: 100%;
+        height: inherit;
+        max-width: initial;
+        max-height: initial;
+        float: none;
       }
+    }
 
-      [style*="--aspect-ratio"] {
-        position: relative;
-      }
+    [style*="--aspect-ratio"] {
+      position: relative;
+    }
 
-      [style*="--aspect-ratio"]::before {
-        content: "";
-        display: block;
-        padding-bottom: calc(100% / (var(--aspect-ratio)));
-      }
-
-      [style*="--aspect-ratio"] > :first-child {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-      }
+    [style*="--aspect-ratio"]::before {
+      content: "";
+      display: block;
+      padding-bottom: calc(100% / (var(--aspect-ratio)));
     }
 
     p:last-child {
@@ -604,17 +604,30 @@ pre.onebox code ol.lines li.selected {
     vertical-align: text-bottom;
   }
 
-  .labels span {
-    // !important required to override inline style attribute
-    background-color: var(--primary-medium) !important;
-    color: var(--secondary) !important;
-    padding: 2px 4px !important;
+  .labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em;
+
+    span {
+      // !important required to override inline style attribute
+      background-color: var(--primary-medium) !important;
+      color: var(--secondary) !important;
+      padding: 2px 4px !important;
+      white-space: nowrap;
+    }
   }
 
   .emoji {
     max-height: 15px;
     margin: 0.2em;
     min-width: 15px;
+  }
+}
+
+.onebox.githubrepo {
+  .github-row {
+    display: contents;
   }
 }
 
@@ -726,7 +739,7 @@ aside.onebox.twitterstatus .onebox-body {
     padding: 1em 0;
 
     .quoted {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       padding: 0.5em 1em;
       margin-top: 1em;
       white-space: normal;
@@ -875,15 +888,22 @@ aside.onebox.xkcd .onebox-body img {
   }
 
   &.category-onebox {
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     padding-left: calc(1em - 5px);
     margin-left: 5px;
+
+    .subcategories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.625em;
+    }
   }
 
   .badge-category-bg {
     display: inline-block;
     width: 0.625rem;
     height: 0.625rem;
+    margin-right: 0.33em;
   }
 }
 
@@ -1018,14 +1038,10 @@ aside.onebox.mixcloud-preview {
   }
 }
 
-@supports (aspect-ratio: 1) {
-  // Not supported on iOS < 15. For those devices, we just
-  // use the fixed width/height attributes on the iframe
-  .youtube-onebox {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16/9;
-  }
+.youtube-onebox {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
 }
 
 // Force oneboxed videos to 16:9 aspect ratio
@@ -1092,14 +1108,6 @@ iframe.loom-onebox {
   width: 100%;
   height: auto;
   aspect-ratio: 16/9;
-}
-
-@supports not (aspect-ratio: auto) {
-  iframe.vimeo-onebox,
-  iframe.loom-onebox {
-    width: 690px;
-    height: 388px;
-  }
 }
 
 .video-container {
@@ -1221,7 +1229,7 @@ aside.onebox.preview-error .site-icon {
     padding: 1em 0;
 
     .quoted {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       padding: 0.5em 1em;
       margin-top: 1em;
       white-space: normal;

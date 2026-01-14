@@ -2,12 +2,24 @@
 
 module DiscourseAi
   module Automation
+    def self.spam_based_flag_types
+      %w[spam spam_silence]
+    end
+
     def self.flag_types
       [
         { id: "review", translated_name: I18n.t("discourse_automation.ai.flag_types.review") },
         {
           id: "review_hide",
           translated_name: I18n.t("discourse_automation.ai.flag_types.review_hide"),
+        },
+        {
+          id: "review_delete",
+          translated_name: I18n.t("discourse_automation.ai.flag_types.review_delete"),
+        },
+        {
+          id: "review_delete_silence",
+          translated_name: I18n.t("discourse_automation.ai.flag_types.review_delete_silence"),
         },
         { id: "spam", translated_name: I18n.t("discourse_automation.ai.flag_types.spam") },
         {
@@ -26,20 +38,10 @@ module DiscourseAi
     end
 
     def self.available_models
-      values = DB.query_hash(<<~SQL)
+      DB.query_hash(<<~SQL).each { |value_h| value_h["id"] = "#{value_h["id"]}" }
         SELECT display_name AS translated_name, id AS id
         FROM llm_models
       SQL
-
-      values =
-        values
-          .filter do |value_h|
-            value_h["id"] > 0 ||
-              SiteSetting.ai_automation_allowed_seeded_models_map.include?(value_h["id"].to_s)
-          end
-          .each { |value_h| value_h["id"] = "custom:#{value_h["id"]}" }
-
-      values
     end
 
     def self.available_persona_choices(require_user: true, require_default_llm: true)

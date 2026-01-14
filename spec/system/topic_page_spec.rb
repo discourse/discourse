@@ -6,7 +6,7 @@ describe "Topic page", type: :system do
 
   before { Fabricate(:post, topic: topic, cooked: <<~HTML) }
     <h2 dir="ltr" id="toc-h2-testing" data-d-toc="toc-h2-testing" class="d-toc-post-heading">
-      <a name="toc-h2-testing" class="anchor" href="#toc-h2-testing">x</a>
+      <a name="toc-h2-testing" class="anchor" href="#toc-h2-testing" aria-label="Heading link">x</a>
       Testing
     </h2>
     <p id="test-last-cooked-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor.</p>
@@ -17,9 +17,7 @@ describe "Topic page", type: :system do
 
     find("#toc-h2-testing .anchor", visible: :all).click
 
-    try_until_success do
-      expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
-    end
+    expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
   end
 
   context "with a subfolder setup" do
@@ -30,9 +28,7 @@ describe "Topic page", type: :system do
 
       find("#toc-h2-testing .anchor", visible: :all).click
 
-      try_until_success do
-        expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
-      end
+      expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
     end
   end
 

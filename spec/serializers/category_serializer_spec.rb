@@ -84,20 +84,33 @@ RSpec.describe CategorySerializer do
     end
 
     it "returns the right category group permissions for a user that can edit the category" do
-      SiteSetting.moderators_manage_categories_and_groups = true
+      SiteSetting.moderators_manage_categories = true
       user.update!(moderator: true)
 
       json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
 
       expect(json[:group_permissions]).to eq(
         [
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
+          {
+            permission_type: CategoryGroup.permission_types[:readonly],
+            group_name: group.name,
+            group_id: group.id,
+          },
           {
             permission_type: CategoryGroup.permission_types[:full],
             group_name: private_group.name,
+            group_id: private_group.id,
           },
-          { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: "everyone" },
+          {
+            permission_type: CategoryGroup.permission_types[:full],
+            group_name: user_group.name,
+            group_id: user_group.id,
+          },
+          {
+            permission_type: CategoryGroup.permission_types[:readonly],
+            group_name: "everyone",
+            group_id: Group::AUTO_GROUPS[:everyone],
+          },
         ],
       )
     end
@@ -112,6 +125,58 @@ RSpec.describe CategorySerializer do
     it "included for an admin" do
       json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
       expect(json[:available_groups]).to eq(Group.order(:name).pluck(:name) - ["everyone"])
+    end
+  end
+
+  describe "name and description" do
+    fab!(:category_with_localization) do
+      Fabricate(:category, name: "Original Name", description: "Original Description", locale: "en")
+    end
+
+    before do
+      CategoryLocalization.create!(
+        category: category_with_localization,
+        locale: "ja",
+        name: "日本語名",
+        description: "日本語の説明",
+      )
+    end
+
+    it "returns untranslated name and description for CategorySerializer" do
+      json =
+        described_class.new(
+          category_with_localization,
+          scope: Guardian.new(user),
+          root: false,
+        ).as_json
+      expect(json[:name]).to eq("Original Name")
+      expect(json[:description]).to eq("Original Description")
+    end
+
+    it "returns translated name and description for SiteCategorySerializer when enabled" do
+      SiteSetting.content_localization_enabled = true
+      user.update!(locale: "ja")
+      I18n.with_locale("ja") do
+        json =
+          SiteCategorySerializer.new(
+            category_with_localization,
+            scope: Guardian.new(user),
+            root: false,
+          ).as_json
+        expect(json[:name]).to eq("日本語名")
+        expect(json[:description]).to eq("日本語の説明")
+      end
+    end
+
+    it "returns untranslated name and description for BasicCategorySerializer" do
+      json =
+        BasicCategorySerializer.new(
+          category_with_localization,
+          scope: Guardian.new(user),
+          root: false,
+        ).as_json
+      expect(json[:name]).to eq("Original Name")
+      expect(json[:description]).to eq("Original Description")
     end
   end
 end

@@ -226,4 +226,30 @@ RSpec.describe PostTiming do
       )
     end
   end
+
+  describe ".destroy_for" do
+    it "updates first unread for a user correctly when topic is a pm" do
+      post = Fabricate(:private_message_post)
+      post.topic.update!(updated_at: 10.minutes.ago)
+      PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
+
+      PostTiming.destroy_for(post.user.id, [post.topic_id])
+
+      expect(post.user.user_stat.reload.first_unread_pm_at).to eq_time(post.topic.updated_at)
+    end
+
+    it "updates first unread for a user correctly when topic is a group pm" do
+      topic = Fabricate(:private_message_topic, updated_at: 10.minutes.ago)
+      post = Fabricate(:post, topic:)
+      user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      topic.allowed_groups << group
+      PostTiming.process_timings(user, topic.id, 1, [[post.post_number, 100]])
+
+      PostTiming.destroy_for(user.id, [topic.id])
+
+      expect(GroupUser.find_by(user:, group:).first_unread_pm_at).to eq_time(topic.updated_at)
+    end
+  end
 end

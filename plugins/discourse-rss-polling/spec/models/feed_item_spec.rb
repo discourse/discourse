@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "rss"
 
 RSpec.describe DiscourseRssPolling::FeedItem do

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 fi:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Kirjaudu Apple-tilillä"
+        sr_title: "Kirjaudu Apple-tilillä"
+        message: "Todennetaan Applella"

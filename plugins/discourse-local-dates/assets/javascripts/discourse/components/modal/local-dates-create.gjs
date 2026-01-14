@@ -1,25 +1,26 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 import { observes } from "@ember-decorators/object";
 import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import { propertyNotEqual } from "discourse/lib/computed";
 import computed, { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import MultiSelect from "discourse/select-kit/components/multi-select";
+import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import MultiSelect from "select-kit/components/multi-select";
-import TimezoneInput from "select-kit/components/timezone-input";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
 export default class LocalDatesCreate extends Component {
@@ -126,7 +127,7 @@ export default class LocalDatesCreate extends Component {
     }
 
     let format = options.format;
-    if (timeInferred && this.formats.includes(format)) {
+    if (timeInferred && (format === "LLL" || format === "LLLL")) {
       format = "LL";
     }
 
@@ -159,7 +160,7 @@ export default class LocalDatesCreate extends Component {
     }
 
     let format = options.format;
-    if (timeInferred && this.formats.includes(format)) {
+    if (timeInferred && (format === "LLL" || format === "LLLL")) {
       format = "LL";
     }
 

@@ -13,6 +13,8 @@ fi:
     reviewables:
       comment_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän kommentin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
   js:
+    discourse_post_voting:
+      title: "Viestiäänestys"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -28,10 +30,8 @@ fi:
         label: "Luo viestiäänestysketju"
       composer_actions:
         create_as_post_voting:
-          label: "Viestiäänestys käyttöön/pois käytöstä"
           desc: "Äänestettäviä viestejä sisältävä ketju luodaan"
         remove_as_post_voting:
-          label: "Poista viestiäänestys"
           desc: "Ketju luodaan tavallisessa muodossa"
     vote:
       already_voted: "Voit äänestää vain yhtä vastausta tähän kysymykseen."
@@ -111,6 +111,9 @@ fi:
         answer_count:
           one: "%{count} vastaus"
           other: "%{count} vastausta"
+        voters_count_diff:
+          one: "ja %{count} muu käyttäjä..."
+          other: "ja %{count} muuta käyttäjää..."
     review:
       transcript:
         view: "Näytä aiempien viestien transkriptio"

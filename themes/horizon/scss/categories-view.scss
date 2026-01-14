@@ -131,8 +131,8 @@
       grid-template-areas:
         "creator title title status"
         ". category activity activity";
-      grid-column-gap: 0.75rem;
-      grid-row-gap: 0.5rem;
+      column-gap: 0.75rem;
+      row-gap: 0.5rem;
       background: var(--d-content-background);
       box-shadow: 0 0 12px 1px var(--topic-card-shadow);
       text-overflow: ellipsis;
@@ -262,7 +262,8 @@
   }
 }
 
-.category-boxes.with-subcategories {
+.category-boxes,
+.category-boxes-with-topics {
   .category-logo {
     display: none;
   }
@@ -352,12 +353,19 @@
 
     .subcategories {
       margin-top: auto;
-      row-gap: 0.5em;
 
       .subcategory {
         margin-bottom: 0;
         font-size: var(--font-down-1);
       }
     }
+  }
+}
+
+// theme component: https://github.com/discourse/discourse-minimal-category-boxes
+.custom-category-boxes-container {
+  @include viewport.until(sm) {
+    padding-inline: var(--space-4);
+    box-sizing: border-box;
   }
 }

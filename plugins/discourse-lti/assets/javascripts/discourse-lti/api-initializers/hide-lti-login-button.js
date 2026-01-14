@@ -2,7 +2,7 @@ import { apiInitializer } from "discourse/lib/api";
 import discourseComputed from "discourse/lib/decorators";
 import { findAll } from "discourse/models/login-method";
 
-export default apiInitializer("0.8", (api) => {
+export default apiInitializer((api) => {
   // LTI login must be initiated by the IdP
   // Hide the LTI login button on the client side:
   api.modifyClass(

@@ -25,7 +25,7 @@ module DiscourseAi
       return false if !SiteSetting.ai_summarization_enabled
       return false if !SiteSetting.ai_summary_gists_enabled
 
-      if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summary_gists_persona)).blank?
+      if (ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summary_gists_persona)).blank?
         return false
       end
       persona_groups = ai_persona.allowed_group_ids.to_a
@@ -35,11 +35,19 @@ module DiscourseAi
       persona_groups.any? { |group_id| user.group_ids.include?(group_id) }
     end
 
+    def can_request_gists?
+      return false if !SiteSetting.ai_summarization_enabled
+      return false if !SiteSetting.ai_summary_gists_enabled
+      return false if !AiPersona.exists?(id: SiteSetting.ai_summary_gists_persona)
+
+      is_staff?
+    end
+
     def can_request_summary?
       return false if anonymous?
 
       user_group_ids = user.group_ids
-      if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)).blank?
+      if (ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)).blank?
         return false
       end
 

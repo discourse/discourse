@@ -14,10 +14,8 @@ describe "capabilities service", type: :system do
       expect(matches("lg")).to eq(true)
 
       resize_window(width: 700) do
-        try_until_success do
-          expect(matches("sm")).to eq(true)
-          expect(matches("lg")).to eq(false)
-        end
+        expect(matches("sm")).to eq(true)
+        expect(matches("lg")).to eq(false)
       end
     end
   end

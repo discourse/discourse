@@ -10,6 +10,8 @@ pl_PL:
       logs:
         staff_actions:
           actions:
+            create_automation: utwórz automatyzację
+            update_automation: aktualizuj automatyzację
             delete_automation: usuń automatyzację
     discourse_automation:
       title: Automatyzacja
@@ -60,13 +62,19 @@ pl_PL:
             label: Treść
           delay:
             label: Opóźnienie (minuty)
-          prefers_encrypt:
-            label: Szyfruje PW, jeśli jest to dostępne
         group:
           label: Grupa
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorie
+              description: Aktywuj tylko wtedy, gdy oflagowany temat znajduje się w tych kategoriach
+            tags:
+              label: Tagi
+              description: Aktywuj tylko wtedy, gdy oflagowany temat zawiera którykolwiek z tych tagów
         not_found: Nie można znaleźć wyzwalacza `%{trigger}` dla automatyzacji `%{automation}`, upewnij się, że powiązana wtyczka jest zainstalowana.
         user_badge_granted:
           fields:
@@ -277,6 +285,14 @@ pl_PL:
               label: Tagi
               description: Opcjonalne, uruchomi się tylko wtedy, gdy post ma którykolwiek z tych tagów
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Szablon wiadomości e-mail
+              description: Obsługuje symbole zastępcze automatyzacji
+            recipients:
+              label: Odbiorcy
+              description: Użytkownicy lub adresy e-mail, na które należy wysyłać powiadomienia
         not_found: Nie można znaleźć skryptu `%{script}` dla automatyzacji `%{automation}`, upewnij się, że powiązana wtyczka jest zainstalowana.
         zapier_webhook:
           fields:
@@ -408,7 +424,7 @@ pl_PL:
             sendable_pms:
               label: Prywatne wiadomości
             sender:
-              label: Nadawca wiadomości prywatnych
+              label: Nadawca prywatnych wiadomości
               description: "Upewnij się, że nadawca ma odpowiednie uprawnienia do wysyłania wiadomości prywatnych do odbiorcy."
         close_topic:
           fields:
@@ -424,6 +440,13 @@ pl_PL:
           fields:
             custom_field_name:
               label: "Nazwa niestandardowego pola użytkownika"
+        set_topic_timer:
+          title: Ustaw minutnik tematu
+          fields:
+            type:
+              label: Typ minutnika
+            duration:
+              label: Czas trwania minutnika
       unnamed_automation: "Automatyzacja bez nazwy"
       models:
         script:
@@ -449,7 +472,7 @@ pl_PL:
           status:
             label: Status
           enabled:
-            label: Włączona
+            label: "Włącz automatyzację"
           disabled:
             label: Wyłączone
           placeholders:
@@ -460,3 +483,4 @@ pl_PL:
             label: Ostatnie uruchomienie
           last_updated_by:
             label: Zaktualizowany przez
+          enable_toggle_disabled: "Możesz włączyć tę automatyzację po uzupełnieniu wszystkich wymaganych pól."

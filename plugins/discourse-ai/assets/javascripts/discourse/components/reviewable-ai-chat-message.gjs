@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { or } from "truth-helpers";
+import { htmlSafe } from "@ember/template";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
-import htmlSafe from "discourse/helpers/html-safe";
+import { or } from "discourse/truth-helpers";
 import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ModelAccuracies from "./model-accuracies";

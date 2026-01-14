@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "Mattermost Command Controller", type: :request do
   let(:category) { Fabricate(:category) }
   let(:tag) { Fabricate(:tag) }

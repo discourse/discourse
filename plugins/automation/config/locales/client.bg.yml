@@ -27,6 +27,12 @@ bg:
         text:
           label: Текст
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Категории
+            tags:
+              label: Етикети
         user_badge_granted:
           fields:
             badge:
@@ -136,7 +142,5 @@ bg:
             label: Версия
           status:
             label: Статус
-          enabled:
-            label: Да е включен
           disabled:
             label: Деактивирани

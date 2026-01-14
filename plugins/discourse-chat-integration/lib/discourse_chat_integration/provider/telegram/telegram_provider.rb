@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module TelegramProvider
-      PROVIDER_NAME = "telegram".freeze
+      PROVIDER_NAME = "telegram"
       PROVIDER_ENABLED_SETTING = :chat_integration_telegram_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+' },
         { key: "chat_id", regex: '^(-?[0-9]+|@\S+)$', unique: true },
@@ -51,7 +51,7 @@ module DiscourseChatIntegration
       end
 
       def self.message_text(post)
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         topic = post.topic
 
@@ -104,11 +104,11 @@ module DiscourseChatIntegration
           elsif response["description"].include? "Forbidden"
             error_key = "chat_integration.provider.telegram.errors.forbidden"
           end
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                error_key: error_key,
-                                                                message: message,
-                                                                response_body: response,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key: error_key,
+                                                              message: message,
+                                                              response_body: response,
+                                                            }
         end
       end
 
@@ -122,4 +122,4 @@ module DiscourseChatIntegration
   end
 end
 
-require_relative "telegram_command_controller.rb"
+require_relative "telegram_command_controller"

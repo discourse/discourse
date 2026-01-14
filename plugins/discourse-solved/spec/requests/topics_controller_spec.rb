@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe TopicsController do
   let(:p1) { Fabricate(:post, like_count: 1) }
   let(:topic) { p1.topic }

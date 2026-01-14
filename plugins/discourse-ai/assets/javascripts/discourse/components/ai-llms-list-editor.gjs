@@ -2,13 +2,16 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
+import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import icon from "discourse/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
-import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
-import DTooltip from "float-kit/components/d-tooltip";
+import AiCreditBar from "./ai-credit-bar";
+import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiLlmEditor from "./ai-llm-editor";
 
 function isPreseeded(llm) {
@@ -20,6 +23,18 @@ function isPreseeded(llm) {
 export default class AiLlmsListEditor extends Component {
   @service adminPluginNavManager;
   @service router;
+
+  formatResetDate(dateString) {
+    const resetDate = new Date(dateString);
+    const options = {
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone: "UTC",
+    };
+    return resetDate.toLocaleString(undefined, options);
+  }
 
   @action
   modelDescription(llm) {
@@ -56,7 +71,7 @@ export default class AiLlmsListEditor extends Component {
   }
 
   get hasLlmElements() {
-    return this.args.llms.length !== 0;
+    return this.args.llms.content.length !== 0;
   }
 
   get preconfiguredTitle() {
@@ -137,6 +152,9 @@ export default class AiLlmsListEditor extends Component {
           }}
           @learnMoreUrl="https://meta.discourse.org/t/discourse-ai-large-language-model-llm-settings-page/319903"
         />
+
+        <AiDefaultLlmSelector />
+
         {{#if this.hasLlmElements}}
           <section class="ai-llms-list-editor__configured">
             <DPageSubheader
@@ -151,7 +169,7 @@ export default class AiLlmsListEditor extends Component {
                 </tr>
               </thead>
               <tbody>
-                {{#each @llms as |llm|}}
+                {{#each @llms.content as |llm|}}
                   <tr
                     data-llm-id={{llm.name}}
                     class="ai-llm-list__row d-admin-row__content"
@@ -174,6 +192,38 @@ export default class AiLlmsListEditor extends Component {
                           {{/each}}
                         </ul>
                       {{/if}}
+                      {{#if llm.llm_credit_allocation}}
+                        <div class="ai-llm-list__credit-allocation">
+                          <AiCreditBar
+                            @allocation={{llm.llm_credit_allocation}}
+                          />
+                          {{#if llm.llm_credit_allocation.hard_limit_reached}}
+                            <div class="alert alert-danger ai-credit-warning">
+                              {{icon "circle-info"}}
+                              {{htmlSafe
+                                (i18n
+                                  "discourse_ai.llms.credit_allocation.hard_limit_warning"
+                                  reset_date=(this.formatResetDate
+                                    llm.llm_credit_allocation.next_reset_at
+                                  )
+                                )
+                              }}
+                            </div>
+                          {{else if
+                            llm.llm_credit_allocation.soft_limit_reached
+                          }}
+                            <div class="alert alert-warning ai-credit-warning">
+                              {{icon "circle-info"}}
+                              {{htmlSafe
+                                (i18n
+                                  "discourse_ai.llms.credit_allocation.soft_limit_warning"
+                                  percentage=llm.llm_credit_allocation.percentage_remaining
+                                )
+                              }}
+                            </div>
+                          {{/if}}
+                        </div>
+                      {{/if}}
                     </td>
                     <td class="d-admin-row__detail">
                       <div class="d-admin-row__mobile-label">
@@ -184,26 +234,12 @@ export default class AiLlmsListEditor extends Component {
                       }}
                     </td>
                     <td class="d-admin-row__controls">
-                      {{#if (isPreseeded llm)}}
-                        <DTooltip class="ai-llm-list__edit-disabled-tooltip">
-                          <:trigger>
-                            <DButton
-                              class="btn btn-default btn-small disabled"
-                              @label="discourse_ai.llms.edit"
-                            />
-                          </:trigger>
-                          <:content>
-                            {{i18n "discourse_ai.llms.seeded_warning"}}
-                          </:content>
-                        </DTooltip>
-                      {{else}}
-                        <DButton
-                          class="btn btn-default btn-small ai-llm-list__delete-button"
-                          @label="discourse_ai.llms.edit"
-                          @route="adminPlugins.show.discourse-ai-llms.edit"
-                          @routeModels={{llm.id}}
-                        />
-                      {{/if}}
+                      <DButton
+                        class="btn btn-default btn-small ai-llm-list__edit-button"
+                        @label="discourse_ai.llms.edit"
+                        @route="adminPlugins.show.discourse-ai-llms.edit"
+                        @routeModels={{llm.id}}
+                      />
                     </td>
                   </tr>
                 {{/each}}

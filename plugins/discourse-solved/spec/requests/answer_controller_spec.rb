@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseSolved::AnswerController do
   fab!(:user)
-  fab!(:staff_user) { Fabricate(:admin) }
+  fab!(:staff_user, :admin)
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:p) { Fabricate(:post, topic: topic) }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscourseAutomation::AdminAutomationsController do
-  fab!(:automation)
+  fab!(:automation) { Fabricate(:automation, enabled: true) }
 
   before do
     SiteSetting.discourse_automation_enabled = true
@@ -72,6 +72,17 @@ describe DiscourseAutomation::AdminAutomationsController do
              }
         expect(response.status).to eq(200)
       end
+
+      it "logs a staff action" do
+        expect {
+          post "/admin/plugins/automation/automations.json", params: { automation: { script: } }
+        }.to change { UserHistory.where(custom_type: "create_automation").count }.by(1)
+
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "create_automation",
+          details: a_string_including("script: #{script}"),
+        )
+      end
     end
 
     context "when logged in as a regular user" do
@@ -102,6 +113,81 @@ describe DiscourseAutomation::AdminAutomationsController do
               },
             }
         expect(response.status).to eq(200)
+      end
+
+      it "logs a staff action when changes are made" do
+        automation.update!(enabled: true)
+        original_name = automation.name
+
+        expect {
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  name: "new-name",
+                  enabled: false,
+                },
+              }
+        }.to change { UserHistory.where(custom_type: "update_automation").count }.by(1)
+
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "update_automation",
+          details:
+            a_string_including(
+              "id: #{automation.id}",
+              "name: #{original_name} → new-name",
+              "enabled: true → false",
+            ),
+        )
+      end
+
+      it "logs field changes" do
+        point_in_time_automation =
+          Fabricate(:automation, trigger: DiscourseAutomation::Triggers::POINT_IN_TIME)
+        original_time = 1.hour.from_now.iso8601
+        new_time = 2.hours.from_now.iso8601
+
+        point_in_time_automation.upsert_field!(
+          "execute_at",
+          "date_time",
+          { "value" => original_time },
+          target: "trigger",
+        )
+
+        expect {
+          put "/admin/plugins/automation/automations/#{point_in_time_automation.id}.json",
+              params: {
+                automation: {
+                  script: point_in_time_automation.script,
+                  trigger: point_in_time_automation.trigger,
+                  fields: [
+                    {
+                      name: "execute_at",
+                      component: "date_time",
+                      target: "trigger",
+                      metadata: {
+                        value: new_time,
+                      },
+                    },
+                  ],
+                },
+              }
+        }.to change { UserHistory.where(custom_type: "update_automation").count }.by(1)
+
+        expect(UserHistory.last).to have_attributes(
+          details: a_string_including("execute_at: #{original_time} → #{new_time}"),
+        )
+      end
+
+      it "does not log a staff action when no changes are made" do
+        expect {
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  name: automation.name,
+                  enabled: automation.enabled,
+                },
+              }
+        }.not_to change { UserHistory.where(custom_type: "update_automation").count }
       end
 
       describe "invalid field’s component" do
@@ -257,7 +343,7 @@ describe DiscourseAutomation::AdminAutomationsController do
         automation.upsert_field!(
           "execute_at",
           "date_time",
-          { value: 1.hours.from_now },
+          { value: 1.hour.from_now },
           target: "trigger",
         )
       end
@@ -265,7 +351,7 @@ describe DiscourseAutomation::AdminAutomationsController do
       it "updates the associated pending automation execute_at" do
         expect(automation.pending_automations.count).to eq(1)
         expect(automation.pending_automations.last.execute_at).to be_within_one_minute_of(
-          1.hours.from_now,
+          1.hour.from_now,
         )
 
         expect {

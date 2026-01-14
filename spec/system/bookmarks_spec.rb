@@ -2,9 +2,11 @@
 
 describe "Bookmarking posts and topics", type: :system do
   fab!(:topic)
+  fab!(:topic_2, :topic)
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is some post to bookmark") }
   fab!(:post_2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
+  fab!(:post_3) { Fabricate(:post, topic: topic_2, raw: "Check out this [topic](/t/#{topic.id})") }
 
   let(:timezone) { "Australia/Brisbane" }
   let(:cdp) { PageObjects::CDP.new }
@@ -33,9 +35,7 @@ describe "Bookmarking posts and topics", type: :system do
     expect(bookmark_menu).to be_open
     expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
     expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
-    try_until_success(frequency: 0.5) do
-      expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
-    end
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
   end
 
   it "updates the created bookmark with a selected reminder option from the bookmark menu" do
@@ -48,9 +48,7 @@ describe "Bookmarking posts and topics", type: :system do
 
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
     expect(page).to have_no_css(".bookmark-menu-content.-expanded")
-    try_until_success(frequency: 0.5) do
-      expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
-    end
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
   it "can set a reminder from the bookmark modal using the custom bookmark menu option" do
@@ -58,9 +56,7 @@ describe "Bookmarking posts and topics", type: :system do
     bookmark_menu.click_menu_option("custom")
     bookmark_modal.select_preset_reminder(:tomorrow)
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
-    try_until_success(frequency: 0.5) do
-      expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
-    end
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
   it "allows choosing a different auto_delete_preference to the user preference and remembers it when reopening the modal" do
@@ -107,9 +103,7 @@ describe "Bookmarking posts and topics", type: :system do
       bookmark_modal.fill_name("something important")
       bookmark_modal.click_primary_button
 
-      try_until_success(frequency: 0.5) do
-        expect(bookmark.reload.name).to eq("something important")
-      end
+      expect(bookmark.reload.name).to eq("something important")
     end
 
     it "allows to set a relative time" do
@@ -123,6 +117,16 @@ describe "Bookmarking posts and topics", type: :system do
       expect(bookmark_modal.custom_time_picker.value).to eq(
         bookmark.reminder_at_in_zone(timezone).strftime("%H:%M"),
       )
+    end
+
+    it "bookmark button is topic specific" do
+      topic_page.visit_topic(topic_2)
+      topic_page.click_topic_bookmark_button
+      expect(topic_page).to have_topic_bookmarked(topic_2)
+
+      # transition to another topic w/o refreshing the page
+      find("a[href='/t/#{topic.id}']").click
+      expect(topic_page).to have_no_bookmarks(topic)
     end
   end
 

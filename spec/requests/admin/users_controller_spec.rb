@@ -648,6 +648,23 @@ RSpec.describe Admin::UsersController do
           expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
         end
       end
+
+      it "can unsuspend a user who was granted moderation while suspended" do
+        user.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+        user.grant_moderation!
+
+        expect(user.reload).to be_suspended
+        expect(user).to be_moderator
+
+        put "/admin/users/#{user.id}/unsuspend.json"
+
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.suspended_till).to eq(nil)
+        expect(user.suspended_at).to eq(nil)
+        expect(user).not_to be_suspended
+        expect(user).to be_moderator
+      end
     end
   end
 
@@ -1038,7 +1055,17 @@ RSpec.describe Admin::UsersController do
 
       before { sign_in(admin) }
 
-      include_examples "trust level updates possible"
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        include_examples "trust level updates possible"
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        include_examples "trust level updates possible"
+      end
     end
 
     context "when logged in as a moderator" do
@@ -1046,7 +1073,23 @@ RSpec.describe Admin::UsersController do
 
       before { sign_in(moderator) }
 
-      include_examples "trust level updates possible"
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        include_examples "trust level updates possible"
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        it "prevents updates to trust level with a 422 response" do
+          another_user.update!(trust_level: TrustLevel[1])
+          put "/admin/users/#{another_user.id}/trust_level.json", params: { level: TrustLevel[0] }
+
+          expect(response.status).to eq(422)
+          expect(another_user.reload.trust_level).to eq(TrustLevel[1])
+        end
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -1247,14 +1290,14 @@ RSpec.describe Admin::UsersController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      context "when moderators_manage_categories_and_groups site setting is enabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = true }
+      context "when moderators_manage_groups site setting is enabled" do
+        before { SiteSetting.moderators_manage_groups = true }
 
         include_examples "primary group updates possible"
       end
 
-      context "when moderators_manage_categories_and_groups site setting is disabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = false }
+      context "when moderators_manage_groups site setting is disabled" do
+        before { SiteSetting.moderators_manage_groups = false }
 
         it "prevents setting primary group with a 403 response" do
           group.add(another_user)
@@ -1480,8 +1523,8 @@ RSpec.describe Admin::UsersController do
         expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
       end
 
-      it "responds with 404 when sending an empty user_ids list" do
-        delete "/admin/users/destroy-bulk.json", params: { user_ids: [] }
+      it "responds with 404 when sending non-existent user ids" do
+        delete "/admin/users/destroy-bulk.json", params: { user_ids: [0] }
 
         expect(response.status).to eq(404)
       end
@@ -2145,11 +2188,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2170,11 +2209,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        _user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        _user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2203,11 +2238,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2264,11 +2295,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2510,6 +2537,104 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#delete_posts_decider" do
+    shared_examples "delete_posts_decider accessible" do |acting_user_role|
+      let(:acting_user) { send(acting_user_role) }
+      context "when user exists" do
+        fab!(:target_user, :user)
+
+        context "when post count is below or equal to threshold" do
+          before { SiteSetting.delete_all_posts_background_threshold = 10 }
+
+          it "returns job_enqueued: false with correct post_count" do
+            post "/admin/users/#{target_user.id}/delete_posts_decider.json"
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["job_enqueued"]).to eq(false)
+            expect(response.parsed_body["post_count"]).to eq(0)
+          end
+        end
+
+        context "when post count exceeds threshold" do
+          before do
+            SiteSetting.delete_all_posts_background_threshold = 1
+            Fabricate.times(2, :post, user: target_user)
+            target_user.reload
+            target_user.user_stat.update!(post_count: 2)
+
+            allow(Jobs).to receive(:enqueue)
+          end
+
+          it "enqueues the delete_user_posts job and returns job_enqueued: true with correct post_count" do
+            post "/admin/users/#{target_user.id}/delete_posts_decider.json"
+
+            expect(Jobs).to have_received(:enqueue).with(
+              :delete_user_posts,
+              include(user_id: target_user.id, acting_user_id: acting_user.id),
+            )
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["job_enqueued"]).to eq(true)
+            expect(response.parsed_body["post_count"]).to eq(2)
+          end
+        end
+
+        context "when threshold is 0" do
+          it "does not allow threshold to be set to 0" do
+            expect { SiteSetting.delete_all_posts_background_threshold = 0 }.to raise_error(
+              Discourse::InvalidParameters,
+            )
+          end
+        end
+      end
+
+      context "when user does not exist" do
+        it "returns 404 not found" do
+          post "/admin/users/999999/delete_posts_decider.json"
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        end
+      end
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+      include_examples "delete_posts_decider accessible", :admin
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+      include_examples "delete_posts_decider accessible", :moderator
+
+      context "when user has too many posts to delete" do
+        fab!(:target_user) do
+          user = Fabricate(:user)
+          Fabricate.times(16, :post, user: user)
+          user.reload
+          user.user_stat.update!(post_count: 16)
+          user
+        end
+
+        it "denies access with a 403 response due to insufficient permissions" do
+          post "/admin/users/#{target_user.id}/delete_posts_decider.json"
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "denies access with a 404 response" do
+        post "/admin/users/#{user.id}/delete_posts_decider.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+  end
+
   describe "#merge" do
     fab!(:target_user, :user)
     fab!(:topic) { Fabricate(:topic, user: user) }
@@ -2616,7 +2741,7 @@ RSpec.describe Admin::UsersController do
         provider_name: "github",
         provider_uid: "123456789",
         user_id: user.id,
-        last_used: 1.seconds.ago,
+        last_used: 1.second.ago,
       )
     end
 
@@ -2633,7 +2758,10 @@ RSpec.describe Admin::UsersController do
           target_user_id: user.id,
           action: UserHistory.actions[:delete_associated_accounts],
         )
-        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"')
+        # first option is for ruby 3.3 and the other for 3.4
+        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"').or include(
+               'uid: "123456789"',
+             )
       end
     end
 

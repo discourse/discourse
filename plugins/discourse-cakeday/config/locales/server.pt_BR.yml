@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    cakeday_enabled: "Mostrar emoji(s) do dia de bolo ao lado do nome do(a) usuário(a) na data em que se registrou no Discourse."
+    cakeday_emoji: "O(s) emoji(s) que serão mostrados ao lado do nome do(a) usuário na data em que se registrou no Discourse. Vários emojis podem ser especificados por: smile|cake|smile"
+    cakeday_birthday_enabled: "Mostrar emoji(s) de aniversário ao lado do nome do(a) usuário(a) na sua data aniversário."
+    cakeday_birthday_emoji: "O(s) emoji(s) que serão mostrados ao lado do nome do(a) usuário(a) na sua data de aniversário. Vários emojis podem ser especificados por: smile|cake|smile"

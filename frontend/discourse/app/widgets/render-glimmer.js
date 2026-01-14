@@ -1,0 +1,51 @@
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
+
+import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
+
+/**
+ * This class is kept only for backward compatibility.
+ *
+ * @deprecated This class is part of the decommissioned widget system and should not be used anymore.
+ */
+export default class RenderGlimmer {
+  constructor() {
+    warnWidgetsDecommissioned();
+  }
+
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  init() {}
+
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  destroy() {}
+
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  update() {}
+
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  connectComponent() {}
+
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  updateElementAttrs() {}
+
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  get parentMountWidgetComponent() {}
+}
+
+export { createWidgetFrom as registerWidgetShim } from "discourse/widgets/widget";

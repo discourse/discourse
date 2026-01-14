@@ -69,43 +69,51 @@ module DiscourseAi
       # this new api tries to create symmetry between responses and prompts
       # this means anything we get back from the model via endpoint can be easily appended
       def push_model_response(response)
-        response = [response] if !response.is_a? Array
+        pending_thinking = nil
 
-        thinking, thinking_signature, redacted_thinking_signature = nil
+        thinking_attrs =
+          lambda do
+            return {} unless pending_thinking
 
-        response.each do |message|
-          if message.is_a?(Thinking)
-            # we can safely skip partials here
+            attrs = {
+              thinking: pending_thinking.message,
+              thinking_provider_info: pending_thinking.provider_info.presence,
+            }
+            pending_thinking = nil
+            attrs
+          end
+
+        Array(response).each do |message|
+          case message
+          when Thinking
             next if message.partial?
-            if message.redacted
-              redacted_thinking_signature = message.signature
-            else
-              thinking = message.message
-              thinking_signature = message.signature
-            end
-          elsif message.is_a?(ToolCall)
+            pending_thinking = message
+          when ToolCall
             next if message.partial?
-            # this is a bit surprising about the API
-            # needing to add arguments is not ideal
             push(
               type: :tool_call,
               content: { arguments: message.parameters }.to_json,
               id: message.id,
               name: message.name,
+              provider_data: message.provider_data,
+              **thinking_attrs.call,
             )
-          elsif message.is_a?(String)
-            push(type: :model, content: message)
+          when String
+            if messages.last&.dig(:type) == :model
+              messages.last[:content] = messages.last[:content] + message
+            else
+              push(type: :model, content: message, **thinking_attrs.call)
+            end
+          when ToolResult
+            push(
+              type: :tool,
+              content: message.content,
+              id: message.tool_call.id,
+              name: message.tool_call.name,
+            )
           else
-            raise ArgumentError, "response must be an array of strings, ToolCalls, or Thinkings"
+            raise ArgumentError, "unexpected message type: #{message.class}"
           end
-        end
-
-        # anthropic rules are that we attach thinking to last for the response
-        # it is odd, I wonder if long term we just keep thinking as a separate object
-        if thinking || redacted_thinking_signature
-          messages.last[:thinking] = thinking
-          messages.last[:thinking_signature] = thinking_signature
-          messages.last[:redacted_thinking_signature] = redacted_thinking_signature
         end
       end
 
@@ -115,18 +123,23 @@ module DiscourseAi
         id: nil,
         name: nil,
         thinking: nil,
-        thinking_signature: nil,
-        redacted_thinking_signature: nil
+        thinking_provider_info: nil,
+        provider_data: nil
       )
         return if type == :system
         new_message = { type: type, content: content }
         new_message[:name] = name.to_s if name
         new_message[:id] = id.to_s if id
         new_message[:thinking] = thinking if thinking
-        new_message[:thinking_signature] = thinking_signature if thinking_signature
-        new_message[
-          :redacted_thinking_signature
-        ] = redacted_thinking_signature if redacted_thinking_signature
+        if provider_data
+          raise ArgumentError, "provider_data must be a hash" unless provider_data.is_a?(Hash)
+          new_message[:provider_data] = provider_data.deep_symbolize_keys
+        end
+        if thinking_provider_info
+          new_message[:thinking_provider_info] = Thinking.normalize_provider_info(
+            thinking_provider_info,
+          )
+        end
 
         validate_message(new_message)
         validate_turn(messages.last, new_message)
@@ -138,7 +151,7 @@ module DiscourseAi
         tools.present?
       end
 
-      def encoded_uploads(message)
+      def encoded_uploads(message, allow_documents: false, allowed_attachment_types: nil)
         if message[:content].is_a?(Array)
           upload_ids =
             message[:content]
@@ -147,23 +160,45 @@ module DiscourseAi
               end
               .compact
           if !upload_ids.empty?
-            return UploadEncoder.encode(upload_ids: upload_ids, max_pixels: max_pixels)
+            allowed_kinds = allow_documents ? %i[image document] : %i[image]
+            return(
+              UploadEncoder.encode(
+                upload_ids: upload_ids,
+                max_pixels: max_pixels,
+                allowed_kinds: allowed_kinds,
+                allowed_attachment_types: allowed_attachment_types,
+              )
+            )
           end
         end
 
         []
       end
 
-      def encode_upload(upload_id)
-        UploadEncoder.encode(upload_ids: [upload_id], max_pixels: max_pixels).first
+      def encode_upload(upload_id, allow_documents: false, allowed_attachment_types: nil)
+        allowed_kinds = allow_documents ? %i[image document] : %i[image]
+        UploadEncoder.encode(
+          upload_ids: [upload_id],
+          max_pixels: max_pixels,
+          allowed_kinds: allowed_kinds,
+          allowed_attachment_types: allowed_attachment_types,
+        ).first
       end
 
-      def content_with_encoded_uploads(content)
+      def content_with_encoded_uploads(
+        content,
+        allow_documents: false,
+        allowed_attachment_types: nil
+      )
         return [content] unless content.is_a?(Array)
 
         content.map do |c|
           if c.is_a?(Hash) && c.key?(:upload_id)
-            encode_upload(c[:upload_id])
+            encode_upload(
+              c[:upload_id],
+              allow_documents: allow_documents,
+              allowed_attachment_types: allowed_attachment_types,
+            )
           else
             c
           end
@@ -199,8 +234,10 @@ module DiscourseAi
           id
           name
           thinking
+          thinking_provider_info
           thinking_signature
           redacted_thinking_signature
+          provider_data
         ]
         if (invalid_keys = message.keys - valid_keys).any?
           raise ArgumentError, "message contains invalid keys: #{invalid_keys}"

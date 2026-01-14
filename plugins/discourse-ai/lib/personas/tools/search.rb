@@ -6,8 +6,6 @@ module DiscourseAi
       class Search < Tool
         attr_reader :last_query
 
-        MIN_SEMANTIC_RESULTS = 5
-
         class << self
           def signature
             {
@@ -131,6 +129,7 @@ module DiscourseAi
               status: parameters[:status],
               max_results: max_results,
               current_user: options[:search_private] ? context.user : nil,
+              hyde: SiteSetting.ai_embeddings_semantic_search_use_hyde,
             )
 
           @last_num_results = results[:rows]&.length || 0

@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe User, type: :model do
   fab!(:user)
-  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
+  fab!(:leaderboard, :gamification_leaderboard)
 
   before do
     Fabricate(:gamification_score, user_id: user.id, score: 10, date: 8.days.ago)

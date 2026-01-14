@@ -12,7 +12,6 @@ sk:
           spoiler_alert: "Upozornenie na spoiler Discourse"
   js:
     spoiler:
-      title: Rozmazaný spojler
       label:
         show: "Zobraziť skrytý obsah"
     composer:

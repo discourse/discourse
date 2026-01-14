@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Patreon
+module Patreon
   class Seed
     def self.seed_content!
       flair =
@@ -43,7 +43,7 @@ module ::Patreon
       badge.save!
 
       basic_filter = { default_group.id.to_s => ["0"] }
-      ::Patreon.set("filters", basic_filter)
+      Patreon.set("filters", basic_filter)
     end
   end
 end

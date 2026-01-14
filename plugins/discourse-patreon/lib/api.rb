@@ -2,13 +2,13 @@
 
 require "json"
 
-module ::Patreon
+module Patreon
   class InvalidApiResponse < ::StandardError
   end
 
   class Api
-    ACCESS_TOKEN_INVALID = "dashboard.patreon.access_token_invalid".freeze
-    INVALID_RESPONSE = "patreon.error.invalid_response".freeze
+    ACCESS_TOKEN_INVALID = "dashboard.patreon.access_token_invalid"
+    INVALID_RESPONSE = "patreon.error.invalid_response"
 
     def self.campaign_data
       get(
@@ -43,7 +43,7 @@ module ::Patreon
       when 401
         ProblemCheckTracker[:access_token_invalid].problem!
       else
-        e = ::Patreon::InvalidApiResponse.new(response.body.presence || "")
+        e = Patreon::InvalidApiResponse.new(response.body.presence || "")
         e.set_backtrace(caller)
         Discourse.warn_exception(e, message: I18n.t(INVALID_RESPONSE), env: { api_uri: uri })
       end

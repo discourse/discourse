@@ -56,7 +56,7 @@ describe Chat::TranscriptService do
     message1 =
       Fabricate(
         :chat_message,
-        created_at: 10.minute.ago,
+        created_at: 10.minutes.ago,
         user: user1,
         chat_channel: channel,
         message: "an extremely insightful response :)",
@@ -72,7 +72,7 @@ describe Chat::TranscriptService do
     message3 =
       Fabricate(
         :chat_message,
-        created_at: 1.minutes.ago,
+        created_at: 1.minute.ago,
         user: user1,
         chat_channel: channel,
         message: "yay!",

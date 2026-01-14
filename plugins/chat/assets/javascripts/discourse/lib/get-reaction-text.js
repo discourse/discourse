@@ -6,7 +6,7 @@ function filterUsernames(users, currentUser) {
   return users
     .filter((user) => user.id !== currentUser?.id)
     .slice(0, MAX_DISPLAYED_USERNAMES)
-    .mapBy("username");
+    .map((item) => item.username);
 }
 
 function reactionIncludingCurrentUser(reaction, currentUser) {

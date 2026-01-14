@@ -12,4 +12,17 @@
       desaturate(lighten($tertiary, 40%), 20%),
       darken($tertiary, 10%)
     )};
+  --fc-border-color: var(--primary-low);
+  --fc-button-text-color: var(--d-button-default-text-color);
+  --fc-button-bg-color: var(--d-button-default-bg-color);
+  --fc-button-border-color: transparent;
+  --fc-button-hover-bg-color: var(--d-button-default-bg-color--hover);
+  --fc-button-hover-border-color: transparent;
+  --fc-button-active-bg-color: var(--tertiary);
+  --fc-button-active-border-color: transparent;
+  --fc-event-border-color: var(--primary-low);
+  --fc-today-bg-color: var(--highlight-medium);
+  --fc-page-bg-color: var(--secondary);
+  --fc-list-event-hover-bg-color: var(--secondary);
+  --fc-neutral-bg-color: var(--primary-low);
 }

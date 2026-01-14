@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
-  self.ignored_columns = [
-    :salt, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :password_hash, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :password_algorithm, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
-    :old_seen_notification_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
-  ]
-
   include Searchable
   include Roleable
   include HasCustomFields
@@ -97,7 +90,9 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: "MutedUser", dependent: :delete_all
   has_many :ignored_user_records, class_name: "IgnoredUser", dependent: :delete_all
   has_many :do_not_disturb_timings, dependent: :delete_all
+  has_many :reviewable_histories, foreign_key: :created_by_id, dependent: :delete_all
   has_many :sidebar_sections, dependent: :destroy
+  has_many :user_histories, foreign_key: :target_user_id
   has_one :user_status, dependent: :destroy
 
   # dependent deleting handled via before_destroy (special cases)
@@ -153,7 +148,7 @@ class User < ActiveRecord::Base
 
   delegate :last_sent_email_address, to: :email_logs
 
-  validates_presence_of :username
+  validates :username, presence: true
   validate :username_validator, if: :will_save_change_to_username?
   validate :password_validator
   validate :name_validator, if: :will_save_change_to_name?
@@ -173,6 +168,12 @@ class User < ActiveRecord::Base
 
   before_validation :set_skip_validate_email
 
+  before_save :update_usernames
+  before_save :match_primary_group_changes
+  before_save :check_if_title_is_badged_granted
+  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
+  before_save :check_qualification_for_users_directory,
+              if: Proc.new { SiteSetting.bootstrap_mode_enabled }
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_option
@@ -189,13 +190,6 @@ class User < ActiveRecord::Base
 
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
-
-  before_save :update_usernames
-  before_save :match_primary_group_changes
-  before_save :check_if_title_is_badged_granted
-  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
-  before_save :check_qualification_for_users_directory,
-              if: Proc.new { SiteSetting.bootstrap_mode_enabled }
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -263,6 +257,9 @@ class User < ActiveRecord::Base
 
   # Information if user was authenticated with OAuth
   attr_accessor :authenticated_with_oauth
+
+  # Flag used when admin is impersonating a user
+  attr_accessor :is_impersonating
 
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
@@ -489,7 +486,7 @@ class User < ActiveRecord::Base
   end
 
   def effective_locale
-    if SiteSetting.allow_user_locale && self.locale.present?
+    if SiteSetting.allow_user_locale && self.locale.present? && I18n.locale_available?(self.locale)
       self.locale
     else
       SiteSetting.default_locale
@@ -914,11 +911,21 @@ class User < ActiveRecord::Base
       payload = nil
     end
 
-    MessageBus.publish(
-      "/user-status",
-      { id => payload },
-      group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-    )
+    # When silenced, only the user themselves and staff should see the status
+    if silenced?
+      MessageBus.publish(
+        "/user-status",
+        { id => payload },
+        user_ids: [id],
+        group_ids: [Group::AUTO_GROUPS[:staff]],
+      )
+    else
+      MessageBus.publish(
+        "/user-status",
+        { id => payload },
+        group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
+    end
   end
 
   def password=(pw)
@@ -933,8 +940,12 @@ class User < ActiveRecord::Base
     @raw_password = pw # still required to maintain compatibility with usage of password-related User interface
   end
 
+  def can_remove_password?
+    associated_accounts.present? || passkey_credential_ids.present?
+  end
+
   def remove_password
-    raise Discourse::InvalidAccess if associated_accounts.blank? && passkey_credential_ids.blank?
+    raise Discourse::InvalidAccess if !can_remove_password?
 
     user_password.destroy if user_password
   end
@@ -1329,11 +1340,11 @@ class User < ActiveRecord::Base
   end
 
   def silenced_record
-    UserHistory.for(self, :silence_user).order("id DESC").first
+    user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
   def silence_reason
-    silenced_record.try(:details) if silenced?
+    PrettyText.cleanup(silenced_record.try(:details)) if silenced?
   end
 
   def silenced_at
@@ -1345,16 +1356,18 @@ class User < ActiveRecord::Base
   end
 
   def suspend_record
-    UserHistory.for(self, :suspend_user).order("id DESC").first
+    user_histories.where(action: UserHistory.actions[:suspend_user]).order("id DESC").first
   end
 
   def full_suspend_reason
-    suspend_record.try(:details) if suspended?
+    text = suspend_record.try(:details) if suspended?
+    return text if text.blank?
+    PrettyText.cleanup(text.gsub("\n", "<br>"))
   end
 
   def suspend_reason
     if details = full_suspend_reason
-      return details.split("\n")[0]
+      return details.split("<br>")[0]
     end
 
     nil
@@ -1583,9 +1596,25 @@ class User < ActiveRecord::Base
   USER_FIELD_PREFIX = "user_field_"
 
   def user_fields(field_ids = nil)
-    field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
+    fields =
+      if field_ids.nil?
+        @all_user_field_types ||= UserField.pluck(:id, :field_type)
+      else
+        UserField.where(id: field_ids).pluck(:id, :field_type)
+      end
 
-    field_ids.map { |fid| [fid.to_s, custom_fields["#{USER_FIELD_PREFIX}#{fid}"]] }.to_h
+    fields
+      .map do |fid, ftype|
+        value =
+          if ftype == "confirm"
+            !!Helpers::CUSTOM_FIELD_TRUE.include?(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
+          else
+            custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
+          end
+
+        [fid.to_s, value]
+      end
+      .to_h
   end
 
   def validatable_user_fields_values
@@ -1605,9 +1634,8 @@ class User < ActiveRecord::Base
   end
 
   def validatable_user_fields
-    # ignore multiselect fields since they are admin-set and thus not user generated content
-    @public_user_field_ids ||=
-      UserField.public_fields.where.not(field_type: "multiselect").pluck(:id)
+    # only validate fields that contain text content
+    @public_user_field_ids ||= UserField.public_fields.user_editable_text_fields.pluck(:id)
 
     user_fields(@public_user_field_ids)
   end
@@ -1621,7 +1649,12 @@ class User < ActiveRecord::Base
   end
 
   def number_of_rejected_posts
-    ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
+    goldiload do |ids|
+      ReviewableQueuedPost
+        .where(status: "rejected", target_created_by_id: ids)
+        .group(:target_created_by_id)
+        .count
+    end
   end
 
   def number_of_flags_given
@@ -1633,11 +1666,21 @@ class User < ActiveRecord::Base
   end
 
   def number_of_silencings
-    UserHistory.for(self, :silence_user).count
+    goldiload do |ids|
+      UserHistory
+        .where(target_user_id: ids, action: UserHistory.actions[:silence_user])
+        .group(:target_user_id)
+        .count
+    end
   end
 
   def number_of_suspensions
-    UserHistory.for(self, :suspend_user).count
+    goldiload do |ids|
+      UserHistory
+        .where(target_user_id: ids, action: UserHistory.actions[:suspend_user])
+        .group(:target_user_id)
+        .count
+    end
   end
 
   def create_user_profile
@@ -1902,14 +1945,6 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
-  def watched_precedence_over_muted
-    if user_option.watched_precedence_over_muted.nil?
-      SiteSetting.watched_precedence_over_muted
-    else
-      user_option.watched_precedence_over_muted
-    end
-  end
-
   def populated_required_custom_fields?
     UserField
       .for_all_users
@@ -1934,6 +1969,14 @@ class User < ActiveRecord::Base
       .where(ip_address: self.ip_address, admin: false, moderator: false)
   end
 
+  def upcoming_change_enabled?(upcoming_change)
+    UpcomingChanges.enabled_for_user?(upcoming_change, self)
+  end
+
+  def upcoming_change_stats(acting_guardian)
+    UpcomingChanges.stats_for_user(user: self, acting_guardian: acting_guardian)
+  end
+
   protected
 
   def badge_grant
@@ -1948,7 +1991,7 @@ class User < ActiveRecord::Base
   def clear_global_notice_if_needed
     return if id < 0
 
-    if admin && SiteSetting.has_login_hint
+    if admin && active && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""
     end

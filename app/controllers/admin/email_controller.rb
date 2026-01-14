@@ -17,7 +17,7 @@ class Admin::EmailController < Admin::AdminController
 
       render json: { sent_test_email_message: I18n.t("admin.email.sent_test") }
     rescue => e
-      render json: { errors: [e.message] }, status: 422
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 
@@ -55,31 +55,18 @@ class Admin::EmailController < Admin::AdminController
         Email::Sender.new(message, :digest).send
         render json: success_json
       rescue => e
-        render json: { errors: [e.message] }, status: 422
+        render json: { errors: [e.message] }, status: :unprocessable_entity
       end
     else
       render json: { errors: skip_reason }
     end
   end
 
+  # TODO (martin) Remove this in 3.7.0, this endpoint has been broken for years
+  # and was used only in the public mail-receiver's fast rejection code,
+  # which is removed in https://github.com/discourse/mail-receiver/pull/33
   def smtp_should_reject
-    params.require(:from)
-    params.require(:to)
-    # These strings aren't localized; they are sent to an anonymous SMTP user.
-    if !User.with_email(Email.downcase(params[:from])).exists? && !SiteSetting.enable_staged_users
-      render json: {
-               reject: true,
-               reason: "Mail from your address is not accepted. Do you have an account here?",
-             }
-    elsif Email::Receiver.check_address(Email.downcase(params[:to])).nil?
-      render json: {
-               reject: true,
-               reason:
-                 "Mail to this address is not accepted. Check the address and try to send again?",
-             }
-    else
-      render json: { reject: false }
-    end
+    render json: { reject: false }
   end
 
   def handle_mail

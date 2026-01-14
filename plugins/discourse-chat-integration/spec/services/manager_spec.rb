@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_dependency "post_creator"
 require_relative "../dummy_provider"
 
 RSpec.describe DiscourseChatIntegration::Manager do
-  let(:manager) { ::DiscourseChatIntegration::Manager }
+  subject(:manager) { described_class }
+
   let(:category) { Fabricate(:category) }
   let(:group) { Fabricate(:group) }
   let(:group2) { Fabricate(:group) }

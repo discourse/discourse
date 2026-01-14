@@ -6,7 +6,7 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
 
   fab!(:llm_model)
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
 
   fab!(:admin)
@@ -103,14 +103,46 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
       expect(results[:rows]).to eq([])
     end
 
+    it "uses /search URL for filter-only queries" do
+      Fabricate(:post, topic: topic_with_tags)
+
+      search = described_class.new({ order: "latest" }, bot_user: bot_user, llm: llm)
+      search.invoke(&progress_blk)
+
+      description_args = search.send(:description_args)
+      expect(description_args[:url]).to eq("/search?q=order%3Alatest")
+    end
+
+    it "uses /search URL for queries with search terms" do
+      post1 = Fabricate(:post, topic: topic_with_tags)
+
+      search =
+        described_class.new(
+          { search_query: post1.raw, order: "latest" },
+          bot_user: bot_user,
+          llm: llm,
+        )
+      search.invoke(&progress_blk)
+
+      description_args = search.send(:description_args)
+      expect(description_args[:url]).to eq("/search?q=Hello+world+order%3Alatest")
+    end
+
     describe "semantic search" do
       let(:query) { "this is an expanded search" }
-      after { DiscourseAi::Embeddings::SemanticSearch.clear_cache_for(query) }
+
+      after do
+        DiscourseAi::Embeddings::SemanticSearch.clear_cache_for(query)
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = false
+      end
 
       it "supports semantic search when enabled" do
-        assign_fake_provider_to(:ai_embeddings_semantic_search_hyde_model)
+        assign_fake_provider_to(:ai_default_llm_model)
+        SiteSetting.ai_embeddings_semantic_search_use_hyde = true
+
         vector_def = Fabricate(:embedding_definition)
         SiteSetting.ai_embeddings_selected_model = vector_def.id
+        SiteSetting.ai_embeddings_enabled = true
         SiteSetting.ai_embeddings_semantic_search_enabled = true
 
         hyde_embedding = [0.049382] * vector_def.dimensions
@@ -161,10 +193,14 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
       post1 = Fabricate(:post, topic: topic_with_tags)
 
       search =
-        described_class.new({ limit: 1, user: post1.user.username }, bot_user: bot_user, llm: llm)
+        described_class.new(
+          { search_query: post1.raw, limit: 1, user: post1.user.username },
+          bot_user: bot_user,
+          llm:,
+        )
 
       results = search.invoke(&progress_blk)
-      expect(results[:rows].to_s).to include("/subfolder" + post1.url)
+      expect(results[:rows].to_s).to include("/subfolder#{post1.url}")
     end
 
     it "passes on all search params" do
@@ -189,7 +225,12 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
 
     it "returns rich topic information" do
       post1 = Fabricate(:post, like_count: 1, topic: topic_with_tags)
-      search = described_class.new({ user: post1.user.username }, bot_user: bot_user, llm: llm)
+      search =
+        described_class.new(
+          { search_query: post1.raw, user: post1.user.username },
+          bot_user: bot_user,
+          llm: llm,
+        )
       post1.topic.update!(views: 100, posts_count: 2, like_count: 10)
 
       results = search.invoke(&progress_blk)

@@ -13,7 +13,7 @@ RSpec.describe "Navigation", type: :system do
   let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
@@ -38,10 +38,10 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
-  context "when clicking chat icon on mobile and is viewing channel" do
+  context "when clicking back button on mobile and is viewing channel" do
     it "navigates to channels tab", mobile: true do
       chat_page.visit_channel(category_channel_2)
-      chat_page.open_from_header
+      chat_page.back_to_channels_list
 
       expect(page).to have_current_path("/chat/channels")
     end

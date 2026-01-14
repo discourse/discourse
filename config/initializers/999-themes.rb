@@ -18,14 +18,16 @@ Rails.application.config.after_initialize do |config|
                    (theme_field = find_js_field(theme, filepath)) ||
                      (theme_field = find_scss_field(theme, filepath))
                  )
-              theme_field.update!(value: File.read(modified[0]))
-              theme.update_javascript_cache!
-              Stylesheet::Manager.clear_theme_cache!
-              Theme.expire_site_cache!
+              theme = theme_field.theme
+              theme.set_field(
+                target: theme_field.target_name,
+                name: theme_field.name,
+                value: File.read(modified[0]),
+              )
+              theme.save!
             else
               SystemThemesManager.sync_theme!(theme_name)
             end
-            MessageBus.publish "/file-change", ["development-mode-theme-changed"]
           end
         listener.start
       end

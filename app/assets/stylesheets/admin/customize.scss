@@ -144,6 +144,7 @@
   .show-current-style {
     display: inline-block;
     vertical-align: top;
+    max-width: var(--admin-content-max-width);
 
     .title {
       font-family: var(--heading-font-family);
@@ -327,7 +328,7 @@
     }
 
     .setting-label {
-      word-wrap: break-word;
+      overflow-wrap: break-word;
 
       @include viewport.from(md) {
         width: 25%;
@@ -543,7 +544,6 @@
     }
 
     .color-picker input {
-      width: 80px;
       margin-bottom: 0;
     }
 
@@ -689,7 +689,7 @@
 .admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 }
 
@@ -706,7 +706,7 @@
     }
 
     tr td {
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       max-width: 25vw;
       align-self: start;
     }
@@ -796,7 +796,7 @@
   .user-field {
     padding-block: 0.5em;
     margin-bottom: 1em;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .form-display {
       width: 25%;
@@ -843,6 +843,18 @@
 
   .d-editor {
     height: 50vh;
+  }
+
+  .back-to-email-templates {
+    margin-bottom: var(--space-2);
+  }
+
+  .email-templates-list {
+    &__row {
+      &.overridden {
+        border-left: 3px solid var(--highlight-medium);
+      }
+    }
   }
 }
 
@@ -933,7 +945,7 @@
 
     .btn {
       &:not(:last-of-type) {
-        border-right: 1px solid var(--primary-low);
+        border-right: 1px solid var(--content-border-color);
       }
     }
   }
@@ -960,12 +972,6 @@
 }
 
 .mobile-view .admin-customize {
-  .admin-container {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0;
-  }
-
   .color-scheme {
     h1,
     h1 input {

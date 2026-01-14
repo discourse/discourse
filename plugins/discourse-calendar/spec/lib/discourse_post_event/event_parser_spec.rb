@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 def build_post(user, raw)
   Post.new(user: user, raw: raw)
 end

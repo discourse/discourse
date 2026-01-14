@@ -1,0 +1,21 @@
+{
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer",
+            "description": "The ID of the post to perform the action on"
+        },
+        "post_action_type_id": {
+            "type": "integer",
+            "description": "The ID of the post action type (e.g., 2 for like)"
+        },
+        "flag_topic": {
+            "type": "boolean",
+            "description": "Whether to flag the entire topic"
+        }
+    },
+    "required": [
+        "id",
+        "post_action_type_id"
+    ]
+}

@@ -38,7 +38,7 @@ be:
         back: "Назад"
         disabled: "(адключана)"
         groups: "групы:"
-        edit: "Рэдагаваць"
+        edit: "Налады"
         filters:
           all: "усе"
           reset: "скінуць"
@@ -46,6 +46,29 @@ be:
           name: "Пошук"
         spam:
           name: "Спам"
+      translations:
+        stats:
+          eta_minutes:
+            one: "%{count} хвіліну"
+            few: "%{count}хвілін"
+            many: "%{count}хвіліны"
+            other: "%{count}хвілін"
+          eta_hours:
+            one: "%{count} гадзіна"
+            few: "%{count} гадзіны"
+            many: "%{count} гадзін"
+            other: "%{count} гадзін"
+          eta_days:
+            one: "%{count} дзень"
+            few: "%{count} дні"
+            many: "%{count} дзён"
+            other: "%{count} дзён"
+        progress_chart:
+          bar_done:
+            one: "%{count} запіс"
+            few: "%{count}запісаў"
+            many: "%{count}запісаў"
+            other: "%{count}запісаў"
       spam:
         short_title: "Спам"
         enable: "Уключыць"
@@ -55,6 +78,7 @@ be:
         summary: "вынік"
         username: "Імя карыстальніка"
         total_requests: "Усяго запытаў"
+        total: "Усяго"
       ai_persona:
         back: "Назад"
         name: "Імя"
@@ -106,10 +130,10 @@ be:
           close: "зачыніць"
           copy: "капіяваць"
           cancel: "Адмяніць"
+        thumbnail_suggestions:
+          try_again: "Паспрабаваць яшчэ раз"
         image_caption:
           save_caption: "Захаваць"
-          automatic_caption_dialog:
-            confirm: "Уключыць"
       embeddings:
         back: "Назад"
         save: "Захаваць"

@@ -15,6 +15,7 @@ tr_TR:
     house_ads_after_nth_topic: '"Konular arasında" şirket içi reklamları tanımlanmışsa her N konudan sonra bir reklam gösterin, burada N bu değerdir.'
     house_ads_after_nth_post: '"Gönderiler arasında" şirket içi reklamları tanımlanmışsa her N gönderiden sonra bir reklam göster; burada N bu değerdir.'
     house_ads_frequency: "Diğer reklam ağları bir reklam alanında gösterilecek şekilde yapılandırılmışsa şirket içi reklamlarının yüzde olarak ne sıklıkta gösterilmesi gerektiği."
+    ads_txt: "Ads.txt dosyanızın içeriği. Daha fazla ayrıntıya <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>bu Google AdSense yardım sayfasından</a> ulaşabilirsiniz."
     dfp_publisher_id: "Ağ ayarlarınızda bulunan Google Reklam Yöneticisi (eski adıyla DFP) ağ kodunuzu girin. NOT: \"İçerik güvenliği ilkesi komut dosyası src\" ayarını güncellemeniz gerekir. En yeni talimatlar için <a href='https://meta.discourse.org/t/33734' target='_blank'>bu konuya</a> bakın."
     dfp_publisher_id_mobile: "(Opsiyonel) Sitenin mobil sürümü için farklı bir Reklam Yöneticisi yayıncı kimliği kullanmak istiyorsanız onu buraya girin. Mobilde dfp_publisher_id kullanmak için boş bırakın."
     dfp_through_trust_level: "Reklamlarınızı kullanıcılara güven seviyelerine göre gösterin. Bu değerden yüksek güven seviyesine sahip kullanıcılar reklam görmez."
@@ -44,6 +45,7 @@ tr_TR:
     dfp_mobile_post_bottom_ad_sizes: "Mobil görünümdeki gönderiler arasında gösterilen reklam birimi için reklam boyutunuzu seçin."
     dfp_target_post_bottom_key_code: "Özel hedefleme anahtarlarını girin - envanter Seviyesi"
     dfp_target_post_bottom_value_code: "Özel hedefleme değerlerini girin - envanter Seviyesi"
+    adsense_publisher_code: "Yayıncı kimliğiniz. \"Pub-\" hariç yalnızca sayıyı girin. NOT: \"İçerik güvenliği ilkesi komut dosyası src\" ayarını güncellemeniz gerekir. En yeni talimatlar için <a href='https://meta.discourse.org/t/33734' target='_blank'>bu konuya</a> bakın."
     adsense_through_trust_level: "Reklamlarınızı kullanıcılara güven seviyelerine göre gösterin. Bu değerden yüksek güven seviyesine sahip kullanıcılar reklam görmez."
     adsense_exclude_groups: "Reklamlar bu grupların üyelerine gösterilmeyecek"
     adsense_topic_list_top_code: "Konu listesinin en üst konumunda gösterilecek reklam biriminin kodunu girin. Bu, JavaScript kodu değil, reklam birimine atanan numaradır."
@@ -96,6 +98,7 @@ tr_TR:
     carbonads_exclude_groups: "Reklamlar bu grupların üyelerine gösterilmeyecek"
     carbonads_topic_list_top_enabled: "Konu listesinin üstünde bir reklam göster"
     carbonads_above_post_stream_enabled: "Gönderi akışının üstünde bir reklam göster"
+    adbutler_publisher_id: "AdButler Yayıncı Kimliği. NOT: \"İçerik güvenliği ilkesi komut dosyası src\" ayarını güncellemeniz gerekebilir. En yeni talimatlar için <a href='https://meta.discourse.org/t/33734' target='_blank'>bu konuya</a> bakın."
     adbutler_mobile_topic_list_top_zone_id: "Mobil konu listesinin en üst konumu için bölge kimliği"
     adbutler_mobile_topic_above_post_stream_zone_id: "Gönderi akışı konumunun üstündeki mobil konu için bölge kimliği"
     adbutler_mobile_post_bottom_zone_id: "Mobil gönderi altı konumu için bölge kimliği"

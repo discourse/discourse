@@ -26,6 +26,7 @@ sl:
         two: "rešitev"
         few: "rešitev"
         other: "rešitev"
+      accepted_answer_post_number: "prispevek %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "vse"

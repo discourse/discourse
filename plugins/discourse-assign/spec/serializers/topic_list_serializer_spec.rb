@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 RSpec.describe TopicListSerializer do

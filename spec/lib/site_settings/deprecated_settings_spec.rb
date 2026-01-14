@@ -68,8 +68,6 @@ RSpec.describe SiteSettings::DeprecatedSettings do
           expect(SiteSetting.new_one?).to eq(false)
         end
       end
-
-      after { SiteSetting.remove_instance_variable(:@shadowed_settings) }
     end
 
     describe "when overriding deprecated settings" do
@@ -88,8 +86,12 @@ RSpec.describe SiteSettings::DeprecatedSettings do
           expect(SiteSetting.new_one?).to eq(true)
         end
       end
+    end
 
-      after { SiteSetting.remove_instance_variable(:@shadowed_settings) }
+    after do
+      global_setting(:old_one, false)
+      SiteSetting.refresh!
+      SiteSetting.remove_instance_variable(:@shadowed_settings)
     end
   end
 end

@@ -40,7 +40,7 @@ module Chat
         },
         style: {
           type: "string",
-          enum: %w[primary danger],
+          enum: %w[default primary danger],
         },
       },
       required: %w[schema_version type text],

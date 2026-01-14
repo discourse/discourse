@@ -3,6 +3,8 @@
 class AiPersona < ActiveRecord::Base
   # TODO remove this line 01-10-2025
   self.ignored_columns = %i[default_llm question_consolidator_llm]
+  # TODO remove tool_details from ignored_columns 01-02-2026
+  self.ignored_columns += %i[tool_details]
 
   # places a hard limit, so per site we cache a maximum of 500 classes
   MAX_PERSONAS_PER_SITE = 500
@@ -12,7 +14,6 @@ class AiPersona < ActiveRecord::Base
   validates :system_prompt, presence: true, length: { maximum: 10_000_000 }
   validate :system_persona_unchangeable, on: :update, if: :system
   validate :chat_preconditions
-  validate :allowed_seeded_model, if: :default_llm_id
   validate :well_formated_examples
   validates :max_context_posts, numericality: { greater_than: 0 }, allow_nil: true
   # leaves some room for growth but sets a maximum to avoid memory issues
@@ -38,11 +39,11 @@ class AiPersona < ActiveRecord::Base
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references
 
-  before_destroy :ensure_not_system
   before_update :regenerate_rag_fragments
+  before_destroy :ensure_not_system
 
   def self.persona_cache
-    @persona_cache ||= ::DiscourseAi::MultisiteHash.new("persona_cache")
+    @persona_cache ||= DiscourseAi::MultisiteHash.new("persona_cache")
   end
 
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }
@@ -59,6 +60,32 @@ class AiPersona < ActiveRecord::Base
     else
       persona_cache[:value]
     end
+  end
+
+  def self.all_persona_records(enabled_only: true)
+    persona_cache[:records] ||= AiPersona
+      .ordered
+      .includes(:user)
+      .all
+      .limit(MAX_PERSONAS_PER_SITE)
+      .to_a
+
+    if enabled_only
+      persona_cache[:records].select(&:enabled)
+    else
+      persona_cache[:records]
+    end
+  end
+
+  def self.find_by_id_from_cache(persona_id)
+    return nil if persona_id.nil?
+
+    # Try to find in record cache first
+    cached_persona = all_persona_records(enabled_only: false).find { |p| p.id == persona_id.to_i }
+    return cached_persona if cached_persona
+
+    # Fallback to database if not found in cache (e.g., in tests or if cache is stale)
+    find_by(id: persona_id.to_i)
   end
 
   def self.persona_users(user: nil)
@@ -181,7 +208,7 @@ class AiPersona < ActiveRecord::Base
       name
       description
       allowed_group_ids
-      tool_details
+      show_thinking
       enabled
     ]
 
@@ -316,6 +343,18 @@ class AiPersona < ActiveRecord::Base
     end
   end
 
+  def has_image_generation_tool?
+    persona_klass = class_instance.new
+    persona_klass.tools.any? do |tool_klass|
+      if tool_klass.respond_to?(:custom?) && tool_klass.custom?
+        ai_tool = AiTool.find_by(id: tool_klass.tool_id)
+        ai_tool&.image_generation_tool?
+      else
+        false
+      end
+    end
+  end
+
   def features
     DiscourseAi::Configuration::Feature.find_features_using(persona_id: id)
   end
@@ -365,17 +404,6 @@ class AiPersona < ActiveRecord::Base
     end
   end
 
-  def allowed_seeded_model
-    return if default_llm_id.blank?
-
-    return if default_llm.nil?
-    return if !default_llm.seeded?
-
-    return if SiteSetting.ai_bot_allowed_seeded_models_map.include?(default_llm.id.to_s)
-
-    errors.add(:default_llm, I18n.t("discourse_ai.llm.configuration.invalid_seeded_model"))
-  end
-
   def well_formated_examples
     return if examples.blank?
 
@@ -412,7 +440,7 @@ end
 #  rag_chunk_tokens             :integer          default(374), not null
 #  rag_chunk_overlap_tokens     :integer          default(10), not null
 #  rag_conversation_chunks      :integer          default(10), not null
-#  tool_details                 :boolean          default(TRUE), not null
+#  show_thinking                :boolean          default(TRUE), not null
 #  tools                        :json             not null
 #  forced_tool_count            :integer          default(-1), not null
 #  allow_chat_channel_mentions  :boolean          default(FALSE), not null

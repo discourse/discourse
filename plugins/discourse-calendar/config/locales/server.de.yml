@@ -33,7 +33,6 @@ de:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Maximale Textzeilen pro Ereignis im Kalender."
     map_events_to_color: "Weise jedem Schlagwort oder jeder Kategorie eine Farbe zu."
     map_events_title: "Überschreibt „Ereignisse“ im Titel der Seitenleiste „Anstehende Ereignisse“ pro Kategorie."
     calendar_enabled: "Aktiviere das discourse-calendar-Plug-in. Dadurch wird Unterstützung für einen [calendar][/calendar]-Tag im ersten Beitrag eines Themas hinzugefügt."
@@ -50,7 +49,6 @@ de:
     all_day_event_start_time: "Ereignisse, für die keine Startzeit angegeben ist, beginnen zu dieser Zeit. Das Format lautet HH:mm. Gib „06:00“ für 6 Uhr morgens ein"
     all_day_event_end_time: "Ereignisse, für die keine Endzeit angegeben ist, enden zu dieser Zeit. Das Format lautet HH:mm. Gib „18:00“ für 6 Uhr abends ein"
     all_day_event_time_error: "Ungültige Zeit. Format muss HH:mm sein (Beispiel: 08:00)."
-    calendar_categories: "Zeigt einen Kalender oben in einer Kategorie an. Erforderliche Einstellungen sind categoryId und postId. Zum Beispiel: categoryId=6;postId=453\n Andere gültige Einstellungen: tzPicker, weekends und defaultView."
     calendar_categories_outlet: "Hier kannst du einstellen, welches Outlet den Kategoriekalender anzeigen soll."
     working_days: "Lege Arbeitstage fest. Du kannst die Verfügbarkeit einer Gruppe mit dem `timezones`-Tag in einem Beitrag anzeigen, z. B.: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Startzeit des Arbeitstages."
@@ -62,7 +60,7 @@ de:
     calendar_automatic_holidays_enabled: "Feiertagsstatus automatisch basierend auf der Region eines Benutzers festlegen (Hinweis: Du kannst bestimmte automatische Feiertage in den Plug-in-Einstellungen deaktivieren)"
     event_participation_buttons: "Liste der Schaltflächen für die Teilnahme am Ereignis, die Benutzer verwenden können."
     sidebar_show_upcoming_events: "Zeige den Link für anstehende Ereignisse in der Seitenleiste unter „Mehr“."
-    include_expired_events_on_calendar: "Schließe vergangene/abgelaufene Ereignisse in die Ansichten „Kategoriekalender“ und „Anstehende Ereignisse“ ein."
+    calendar_first_day_of_week: "Lege den ersten Wochentag für die Kalenderanzeige fest. Zur Auswahl stehen Samstag, Sonntag oder Montag."
   discourse_calendar:
     invite_user_notification: "%{username} lädt dich ein zu: %{description}"
     calendar_must_be_in_first_post: "Kalender-Tag kann nur im ersten Beitrag eines Themas verwendet werden."
@@ -88,6 +86,7 @@ de:
           raw_invitees:
             only_group: "Ein Ereignis akzeptiert nur Gruppennamen."
           ends_at_before_starts_at: "Ein Ereignis kann nicht enden, bevor es beginnt."
+          max_attendees_reached: "Diese Veranstaltung ist ausgebucht."
           start_must_be_present_and_a_valid_date: "Ein Ereignis erfordert ein gültiges Startdatum."
           end_must_be_a_valid_date: "Das Enddatum muss ein gültiges Datum sein."
           invalid_recurrence: "Die Wiederholung muss einer der folgenden Werte sein: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

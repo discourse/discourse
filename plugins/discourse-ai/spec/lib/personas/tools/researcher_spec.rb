@@ -6,7 +6,7 @@ RSpec.describe DiscourseAi::Personas::Tools::Researcher do
 
   fab!(:llm_model)
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
 
   fab!(:admin)
@@ -17,7 +17,7 @@ RSpec.describe DiscourseAi::Personas::Tools::Researcher do
 
   fab!(:topic_with_tags) { Fabricate(:topic, category: category, tags: [tag_research, tag_data]) }
   fab!(:post) { Fabricate(:post, topic: topic_with_tags) }
-  fab!(:another_post) { Fabricate(:post) }
+  fab!(:another_post, :post)
 
   before do
     enable_current_plugin

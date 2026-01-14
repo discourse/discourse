@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
@@ -12,15 +12,12 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
-import SmoothStreamer from "../lib/smooth-streamer";
 import AiBlinkingAnimation from "./ai-blinking-animation";
 import AiIndicatorWave from "./ai-indicator-wave";
-
-const DISCOVERY_TIMEOUT_MS = 10000;
 
 export default class AiSearchDiscoveries extends Component {
   @service search;
@@ -32,16 +29,8 @@ export default class AiSearchDiscoveries extends Component {
   @service composer;
 
   @tracked loadingConversationTopic = false;
-  @tracked hideDiscoveries = false;
   @tracked fullDiscoveryToggled = false;
   @tracked discoveryPreviewLength = this.args.discoveryPreviewLength || 150;
-  @tracked
-  smoothStreamer = new SmoothStreamer(
-    () => this.discobotDiscoveries.discovery,
-    (newValue) => (this.discobotDiscoveries.discovery = newValue)
-  );
-
-  discoveryTimeout = null;
 
   constructor() {
     super(...arguments);
@@ -62,54 +51,16 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   @bind
-  detectSearch() {
-    if (
-      this.query?.length === 0 &&
-      this.discobotDiscoveries.discovery?.length > 0
-    ) {
-      this.discobotDiscoveries.resetDiscovery();
-      this.smoothStreamer.resetStreaming();
-    }
-
-    withPluginApi((api) => {
-      api.addSearchMenuOnKeyDownCallback((searchMenu, event) => {
-        if (!searchMenu) {
-          return;
-        }
-
-        if (this.discobotDiscoveries.lastQuery === this.query) {
-          return true;
-        }
-
-        if (event.key === "Enter" && this.query) {
-          this.triggerDiscovery();
-        }
-        return true;
-      });
-    });
-  }
-
-  @bind
   async _updateDiscovery(update) {
     if (this.query === update.query) {
-      if (this.discoveryTimeout) {
-        cancel(this.discoveryTimeout);
-      }
-
-      if (!this.discobotDiscoveries.discovery) {
-        this.discobotDiscoveries.discovery = "";
-      }
-
-      this.discobotDiscoveries.modelUsed = update.model_used;
-      this.discobotDiscoveries.loadingDiscoveries = false;
-      this.smoothStreamer.updateResult(update, "ai_discover_reply");
+      this.discobotDiscoveries.onDiscoveryUpdate(update);
     }
   }
 
   @bind
   unsubscribe() {
     this.messageBus.unsubscribe(
-      "/discourse-ai/ai-bot/discover",
+      "/discourse-ai/discoveries",
       this._updateDiscovery
     );
   }
@@ -117,7 +68,7 @@ export default class AiSearchDiscoveries extends Component {
   @bind
   subscribe() {
     this.messageBus.subscribe(
-      "/discourse-ai/ai-bot/discover",
+      "/discourse-ai/discoveries",
       this._updateDiscovery
     );
   }
@@ -145,7 +96,7 @@ export default class AiSearchDiscoveries extends Component {
   get canShowExpandtoggle() {
     return (
       !this.discobotDiscoveries.loadingDiscoveries &&
-      this.smoothStreamer.renderedText.length > this.discoveryPreviewLength
+      this.discobotDiscoveries.streamedText.length > this.discoveryPreviewLength
     );
   }
 
@@ -165,13 +116,13 @@ export default class AiSearchDiscoveries extends Component {
 
     const discoverPersona = personas.find(
       (persona) =>
-        persona.id === parseInt(this.siteSettings?.ai_bot_discover_persona, 10)
+        persona.id === parseInt(this.siteSettings?.ai_discover_persona, 10)
     );
     const discoverPersonaHasBot = discoverPersona?.username;
 
     return (
       this.discobotDiscoveries.discovery?.length > 0 &&
-      !this.smoothStreamer.isStreaming &&
+      !this.discobotDiscoveries.isStreaming &&
       discoverPersonaHasBot
     );
   }
@@ -186,43 +137,33 @@ export default class AiSearchDiscoveries extends Component {
 
   @action
   async triggerDiscovery() {
-    if (this.query?.length === 0) {
-      this.discobotDiscoveries.resetDiscovery();
-      this.smoothStreamer.resetStreaming();
-      return;
-    }
-
-    if (this.discobotDiscoveries.lastQuery === this.query) {
-      this.hideDiscoveries = false;
-      return;
-    } else {
-      this.smoothStreamer.resetStreaming();
-      this.discobotDiscoveries.resetDiscovery();
-    }
-
-    this.hideDiscoveries = false;
-    this.discobotDiscoveries.loadingDiscoveries = true;
-
-    this.discoveryTimeout = later(
-      this,
-      this.timeoutDiscovery,
-      DISCOVERY_TIMEOUT_MS
-    );
-
-    try {
-      this.discobotDiscoveries.lastQuery = this.query;
-
-      await ajax("/discourse-ai/ai-bot/discover", {
-        data: { query: this.query },
-      });
-    } catch {
-      this.hideDiscoveries = true;
-    }
+    this.discobotDiscoveries.triggerDiscovery(this.query);
   }
 
   @action
   toggleDiscovery() {
     this.fullDiscoveryToggled = !this.fullDiscoveryToggled;
+  }
+
+  @action
+  handleDiscoveryClick(event) {
+    const target = event.target;
+    const link = target.closest("a");
+
+    if (!link) {
+      return;
+    }
+
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    DiscourseURL.routeTo(link.href);
+
+    if (this.args.closeSearchMenu) {
+      this.args.closeSearchMenu();
+    }
   }
 
   @action
@@ -235,7 +176,7 @@ export default class AiSearchDiscoveries extends Component {
     try {
       this.loadingConversationTopic = true;
       const continueRequest = await ajax(
-        `/discourse-ai/ai-bot/discover/continue-convo`,
+        `/discourse-ai/discoveries/continue-convo`,
         {
           type: "POST",
           data,
@@ -262,22 +203,11 @@ export default class AiSearchDiscoveries extends Component {
     }
   }
 
-  timeoutDiscovery() {
-    if (this.discobotDiscoveries.discovery?.length > 0) {
-      return;
-    }
-
-    this.discobotDiscoveries.loadingDiscoveries = false;
-    this.discobotDiscoveries.discovery = "";
-    this.discobotDiscoveries.discoveryTimedOut = true;
-  }
-
   <template>
     <div
       class="ai-search-discoveries"
       {{didInsert this.subscribe this.query}}
       {{didUpdate this.subscribe this.query}}
-      {{didUpdate this.detectSearch this.query}}
       {{didInsert this.triggerDiscovery this.query}}
       {{willDestroy this.unsubscribe}}
     >
@@ -287,16 +217,18 @@ export default class AiSearchDiscoveries extends Component {
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
         {{else}}
+          {{! template-lint-disable no-invalid-interactive }}
           <article
             class={{concatClass
               "ai-search-discoveries__discovery"
               (if this.renderPreviewOnly "preview")
-              (if this.smoothStreamer.isStreaming "streaming")
+              (if this.discobotDiscoveries.isStreaming "streaming")
               "streamable-content"
             }}
+            {{on "click" this.handleDiscoveryClick}}
           >
             <CookText
-              @rawText={{this.smoothStreamer.renderedText}}
+              @rawText={{this.discobotDiscoveries.streamedText}}
               class="cooked"
             />
           </article>
@@ -317,7 +249,7 @@ export default class AiSearchDiscoveries extends Component {
           <DButton
             @action={{this.continueConversation}}
             @label={{this.continueConvoBtnLabel}}
-            class="btn-small"
+            class="btn-default btn-small"
           >
             <AiIndicatorWave @loading={{this.loadingConversationTopic}} />
           </DButton>

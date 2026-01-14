@@ -5,3 +5,11 @@
 # https://translate.discourse.org/
 
 ur:
+  js:
+    login:
+      oauth2_basic:
+        name: "اوآتھ 2"
+    admin:
+      site_settings:
+        categories:
+          discourse_oauth2_basic: "او آتھ2 لوگ ان"

@@ -48,7 +48,7 @@ class ApplicationRequest < ActiveRecord::Base
   end
 
   def self.stats
-    s = HashWithIndifferentAccess.new({})
+    s = ActiveSupport::HashWithIndifferentAccess.new({})
 
     self.req_types.each do |key, i|
       query = self.where(req_type: i)

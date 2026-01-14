@@ -2,7 +2,7 @@
 
 module DiscourseHcaptcha
   module CreateUsersControllerPatch
-    H_CAPTCHA_VERIFICATION_URL = "https://hcaptcha.com/siteverify".freeze
+    H_CAPTCHA_VERIFICATION_URL = "https://hcaptcha.com/siteverify"
 
     extend ActiveSupport::Concern
     included { before_action :check_h_captcha, only: [:create] }

@@ -11,9 +11,9 @@ class ForumsController < ActionController::Base
   def status
     if params[:cluster]
       if GlobalSetting.cluster_name.nil?
-        return render plain: "cluster name not configured", status: 500
+        return render plain: "cluster name not configured", status: :internal_server_error
       elsif GlobalSetting.cluster_name != params[:cluster]
-        return render plain: "cluster name does not match", status: 500
+        return render plain: "cluster name does not match", status: :internal_server_error
       end
     end
 

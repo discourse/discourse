@@ -58,7 +58,7 @@ fr:
         other: "%{count} résultats."
       max_result_count:
         one: "Affichage du premier (%{count}) résultat."
-        other: "Affichage du premier (%{count}) résultat."
+        other: "Affichage des %{count} premiers résultats."
       query_name: "Requête"
       query_groups: "Groupes"
       link: "Lien pour"
@@ -86,7 +86,7 @@ fr:
         scopes:
           descriptions:
             discourse_data_explorer:
-              run_queries: "Exécutez des requêtes de l'explorateur de données. Limitez la clé API à un ensemble de requêtes en spécifiant des ID de requêtes."
+              run_queries: "Exécutez des requêtes de l'explorateur de données. Limitez la clé d'API à un ensemble de requêtes en spécifiant des ID de requêtes."
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:
@@ -100,7 +100,9 @@ fr:
             skip_empty:
               label: Ignorer l'envoi d'un MP s'il n'y a aucun résultat
             attach_csv:
-              label: Joindre le fichier CSV au MD
+              label: Joindre le fichier CSV au MP
+            users_from_group:
+              label: Envoyer un PM individuel à chaque membre du groupe
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

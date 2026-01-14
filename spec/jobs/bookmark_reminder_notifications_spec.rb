@@ -4,7 +4,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   subject(:job) { described_class.new }
 
   fab!(:user)
-  let(:five_minutes_ago) { Time.zone.now - 5.minutes }
+  let(:five_minutes_ago) { 5.minutes.ago }
   let(:bookmark1) { Fabricate(:bookmark, user: user) }
   let(:bookmark2) { Fabricate(:bookmark, user: user) }
   let(:bookmark3) { Fabricate(:bookmark, user: user) }
@@ -30,7 +30,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
 
   it "will not send a reminder for a bookmark in the future" do
     freeze_time
-    bookmark4 = Fabricate(:bookmark, reminder_at: Time.zone.now + 1.day)
+    bookmark4 = Fabricate(:bookmark, reminder_at: 1.day.from_now)
     expect { job.execute }.to change { Notification.where(user: user).count }.by(3)
     expect(bookmark1.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
     expect(bookmark2.reload.reminder_last_sent_at).to eq_time(Time.zone.now)

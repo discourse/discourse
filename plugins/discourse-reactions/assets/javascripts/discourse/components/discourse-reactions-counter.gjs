@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { and } from "truth-helpers";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/components/d-button";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
+import { and } from "discourse/truth-helpers";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsList from "./discourse-reactions-list";
 import DiscourseReactionsStatePanel from "./discourse-reactions-state-panel";
@@ -26,34 +26,32 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   reactionsChanged(data) {
-    data.reactions.uniq().forEach((reaction) => {
+    uniqueItemsFromArray(data.reactions).forEach((reaction) => {
       this.getUsers(reaction);
     });
   }
 
   @bind
-  getUsers(reactionValue) {
-    return CustomReaction.findReactionUsers(this.args.post.id, {
+  async getUsers(reactionValue) {
+    const response = await CustomReaction.findReactionUsers(this.args.post.id, {
       reactionValue,
-    }).then((response) => {
-      response.reaction_users.forEach((reactionUser) => {
-        this.reactionsUsers[reactionUser.id] = reactionUser.users;
-      });
-
-      this.args.updatePopperPosition();
     });
+
+    response.reaction_users.forEach((reactionUser) => {
+      this.reactionsUsers[reactionUser.id] = reactionUser.users;
+    });
+
+    this.args.updatePopover();
   }
 
   @action
   mouseDown(event) {
     event.stopImmediatePropagation();
-    return false;
   }
 
   @action
   mouseUp(event) {
     event.stopImmediatePropagation();
-    return false;
   }
 
   @action
@@ -64,7 +62,7 @@ export default class DiscourseReactionsCounter extends Component {
 
     this.args.cancelCollapse();
 
-    if (!this.capabilities.touch || !this.site.mobileView) {
+    if (!this.capabilities.touch || this.site.desktopView) {
       event.stopPropagation();
       event.preventDefault();
 
@@ -173,7 +171,7 @@ export default class DiscourseReactionsCounter extends Component {
       class={{this.classes}}
       {{on "mousedown" this.mouseDown}}
       {{on "mouseup" this.mouseUp}}
-      {{closeOnClickOutside this.clickOutside (hash)}}
+      {{closeOnClickOutside this.clickOutside}}
       {{on "touchstart" this.touchStart}}
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}
@@ -203,12 +201,10 @@ export default class DiscourseReactionsCounter extends Component {
 
         {{#if (and @post.yours this.onlyOneMainReaction)}}
           <div class="discourse-reactions-reaction-button my-likes">
-            <button
-              type="button"
-              class="btn-toggle-reaction-like btn-icon no-text reaction-button"
-            >
-              {{icon this.siteSettings.discourse_reactions_like_icon}}
-            </button>
+            <DButton
+              class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
+              @icon={{this.siteSettings.discourse_reactions_like_icon}}
+            />
           </div>
         {{/if}}
       {{/if}}

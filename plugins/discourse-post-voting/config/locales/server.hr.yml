@@ -5,6 +5,17 @@
 # https://translate.discourse.org/
 
 hr:
+  topic:
+    post_voting:
+      answer_count:
+        one: "%{count} Odgovor"
+        few: "%{count} Odgovora"
+        other: "%{count} Odgovora"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Nema akcije"
   post_action_types:
     vote:
       title: "Glasaj"
@@ -16,8 +27,6 @@ hr:
             title: "Suspendiraj korisnika"
           agree_and_silence:
             title: "Ušuti korisnika"
-          disagree:
-            title: "Odbaci"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

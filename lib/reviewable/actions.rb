@@ -17,7 +17,7 @@ class Reviewable < ActiveRecord::Base
       {
         approve: Action.new(:approve, "thumbs-up", "reviewables.actions.approve.title"),
         reject: Action.new(:reject, "thumbs-down", "reviewables.actions.reject.title"),
-        delete: Action.new(:delete, "trash-can", "reviewables.actions.delete_single.title"),
+        delete: Action.new(:delete, "trash-can", "reviewables.actions.delete.title"),
       }
     end
 
@@ -33,6 +33,10 @@ class Reviewable < ActiveRecord::Base
 
       def empty?
         @actions.empty?
+      end
+
+      def bundle_id
+        id.split("-", 2).last
       end
     end
 

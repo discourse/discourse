@@ -1,0 +1,131 @@
+.--post-received-reactions {
+  margin-block: 1em;
+
+  .rewind-report-container {
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+
+    @media screen and (width <= 475px) {
+      gap: 0.125em;
+    }
+  }
+
+  .rewind-report-title {
+    border: none;
+    width: 100%;
+    text-align: center;
+    margin: 0 0 0 -1em;
+  }
+
+  .rewind-card {
+    flex-direction: row;
+    gap: 0.5em;
+    height: min-content;
+    perspective: 1000px;
+    will-change: transform;
+    transform-style: preserve-3d;
+    border-radius: var(--rewind-border-radius);
+    cursor: pointer;
+    animation-name: ambientMovement;
+    animation-duration: 4000ms;
+    animation-delay: calc(-4000ms * var(--rand));
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    z-index: 1;
+    color: var(--rewind-white);
+    border: none;
+
+    .emoji {
+      width: 30px;
+      height: 30px;
+      image-rendering: crisp-edges;
+      transform: scale(1);
+    }
+  }
+
+  .rewind-card__emoji {
+    font-size: 12px;
+  }
+
+  .scale:nth-child(1) {
+    padding: 0.25em;
+    transform: rotateZ(calc(var(--ambientAmount) * 12deg));
+
+    .emoji {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .scale:nth-child(2) {
+    padding: 0.35em;
+    transform: rotateZ(calc(var(--ambientAmount) * 11.2deg));
+
+    .emoji {
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  .scale:nth-child(3) {
+    transform: rotateZ(calc(var(--ambientAmount) * 10deg));
+    padding: 0.5em;
+
+    .emoji {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .scale:nth-child(4) {
+    transform: rotateZ(calc(var(--ambientAmount) * 8deg));
+    padding: 0.75em;
+
+    .emoji {
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  .scale:nth-child(5) {
+    transform: rotateZ(calc(var(--ambientAmount) * 13deg));
+  }
+
+  @media screen and (width <= 625px) {
+    .scale {
+      width: min-content;
+    }
+
+    .scale:nth-child(1) {
+      padding: 0.15em;
+    }
+
+    .scale:nth-child(2) {
+      padding: 0.25em;
+    }
+
+    .scale:nth-child(3) {
+      padding: 0.35em;
+    }
+
+    .scale:nth-child(4) {
+      padding: 0.45em;
+    }
+
+    .scale:nth-child(5) {
+      padding: 0.65em;
+    }
+  }
+
+  @media screen and (width <= 475px) {
+    .scale {
+      width: min-content;
+      padding: 0.2em;
+    }
+
+    .scale:nth-child(5) {
+      display: none;
+    }
+  }
+}

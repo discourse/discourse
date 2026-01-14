@@ -2,17 +2,14 @@
 
 module DiscourseAi::ChatBotHelper
   def toggle_enabled_bots(bots: [])
-    models = LlmModel.all
-    models = models.where("id not in (?)", bots.map(&:id)) if bots.present?
-    models.update_all(enabled_chat_bot: false)
-
-    bots.each { |b| b.update!(enabled_chat_bot: true) }
+    SiteSetting.ai_bot_enabled = true if bots.any?
+    SiteSetting.ai_bot_enabled_llms = bots.map(&:id).join("|")
     DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
   end
 
   def assign_fake_provider_to(setting_name)
     Fabricate(:fake_model).tap do |fake_llm|
-      SiteSetting.public_send("#{setting_name}=", "custom:#{fake_llm.id}")
+      SiteSetting.public_send("#{setting_name}=", "#{fake_llm.id}")
     end
   end
 

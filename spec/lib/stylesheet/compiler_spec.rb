@@ -244,8 +244,8 @@ RSpec.describe Stylesheet::Compiler do
         }
       SCSS
 
-      expect(css).to include("-webkit-min-device-pixel-ratio")
       expect(css).to include("csstools-light-dark-toggle")
+      expect(css).not_to include("& * {") # No native nesting
       expect(map.size).to be > 10
     end
 
@@ -258,7 +258,7 @@ RSpec.describe Stylesheet::Compiler do
       SCSS
 
       expect { Stylesheet::Compiler.compile(bad_css, "test.scss") }.to raise_error(
-        DiscourseJsProcessor::TranspileError,
+        AssetProcessor::TranspileError,
         /Missed semicolon/,
       )
     end

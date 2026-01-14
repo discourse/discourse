@@ -81,7 +81,6 @@ pt:
               help: "exemplo:. #channel, @username."
           errors:
             action_prohibited: "O robô não tem permissão para publicar para esse canal"
-            channel_not_found: "O canal especificado não existe no slack"
         telegram:
           title: "Telegram"
           param:

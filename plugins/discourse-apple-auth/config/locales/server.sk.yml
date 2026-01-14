@@ -7,7 +7,6 @@
 sk:
   site_settings:
     sign_in_with_apple_enabled: 'Povoliť prihlásenie cez Apple?'
-    apple_client_id: "(Prihlásiť sa pomocou Apple) „Identifikátor služby“ spoločnosti Apple z konzoly pre vývojárov. Zvyčajne ide o reťazec v štýle reverzného názvu domény (napr. com.example.auth) (Prihlásiť sa pomocou Apple)"
     apple_team_id: '(Prihláste sa pomocou Apple) Apple Team ID (10 znakov)'
     apple_key_id: '(Prihlásiť sa pomocou Apple) ID kľúča Apple (10 znakov)'
     apple_pem: '(Prihláste sa pomocou Apple) Obsah súboru Apple Pem. Zahrňte riadky BEGIN a END'

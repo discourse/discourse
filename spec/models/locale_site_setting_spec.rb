@@ -8,7 +8,7 @@ RSpec.describe LocaleSiteSetting do
 
   def native_locale_name(locale)
     value = LocaleSiteSetting.values.find { |v| v[:value] == locale }
-    value[:name]
+    value[:native_name]
   end
 
   describe ".valid_value?" do
@@ -56,7 +56,11 @@ RSpec.describe LocaleSiteSetting do
     end
 
     after do
-      DiscoursePluginRegistry.reset!
+      DiscoursePluginRegistry.unregister_locale("foo")
+      DiscoursePluginRegistry.unregister_locale("bar")
+      DiscoursePluginRegistry.unregister_locale("de")
+      DiscoursePluginRegistry.unregister_locale("de_AT")
+      DiscoursePluginRegistry.unregister_locale("tlh")
       LocaleSiteSetting.reset!
     end
 
@@ -64,6 +68,7 @@ RSpec.describe LocaleSiteSetting do
       it "returns true for locales from core" do
         expect(LocaleSiteSetting.valid_value?("en")).to eq(true)
         expect(LocaleSiteSetting.valid_value?("de")).to eq(true)
+        expect(LocaleSiteSetting.valid_value?("en|de")).to eq(true)
       end
 
       it "returns true for locales added by plugins" do
@@ -82,8 +87,8 @@ RSpec.describe LocaleSiteSetting do
         expect(native_locale_name("de")).to eq("Deutsch")
       end
 
-      it "returns the language code when no nativeName is set" do
-        expect(native_locale_name("tlh")).to eq("tlh")
+      it "returns nothing when no nativeName is set" do
+        expect(native_locale_name("tlh")).to eq(nil)
       end
     end
 
@@ -114,21 +119,6 @@ RSpec.describe LocaleSiteSetting do
       LocaleSiteSetting.supported_locales.each do |locale|
         expect(LocaleSiteSetting.language_names[locale]).to be_present
       end
-    end
-  end
-
-  describe ".get_language_name" do
-    it "returns the language name for a valid locale" do
-      expect(LocaleSiteSetting.get_language_name("en")).to eq("English (US)")
-      expect(LocaleSiteSetting.get_language_name("es")).to eq("Español")
-    end
-
-    it "returns nil for a locale that doesn't exist" do
-      expect(LocaleSiteSetting.get_language_name("xx")).to be_nil
-    end
-
-    it "handles symbol locales" do
-      expect(LocaleSiteSetting.get_language_name(:en_GB)).to eq("English (UK)")
     end
   end
 end

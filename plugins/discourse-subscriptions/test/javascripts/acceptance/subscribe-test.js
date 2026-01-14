@@ -1,9 +1,7 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import { stubStripe } from "discourse/plugins/discourse-subscriptions/helpers/stripe";
 
@@ -32,15 +30,11 @@ acceptance("Subscriptions", function (needs) {
     await visit("/s");
     await click(".product:first-child a");
 
-    assert.ok(
-      count(".discourse-subscriptions-section-columns") > 0,
-      "has the sections for billing"
-    );
+    assert
+      .dom(".discourse-subscriptions-section-columns")
+      .exists("has the sections for billing");
 
-    assert.ok(
-      count(".subscribe-buttons button") > 0,
-      "has buttons for subscribe"
-    );
+    assert.dom(".subscribe-buttons button").exists("has buttons for subscribe");
   });
 
   test("skips products list on sites with one product", async function (assert) {
@@ -55,12 +49,12 @@ acceptance("Subscriptions", function (needs) {
 
   // In YAML `NO:` is a boolean, so we need quotes around `"NO":`.
   test("Norway is translated correctly", async function (assert) {
-    assert.equal(
+    assert.strictEqual(
       i18n("discourse_subscriptions.subscribe.countries.NO"),
       "Norway"
     );
 
-    assert.equal(
+    assert.strictEqual(
       i18n("discourse_subscriptions.subscribe.countries.NG"),
       "Nigeria"
     );

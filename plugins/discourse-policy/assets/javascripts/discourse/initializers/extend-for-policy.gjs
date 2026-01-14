@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import PostPolicy from "../components/post-policy";
@@ -85,7 +86,25 @@ export default {
   name: "extend-for-policy",
 
   initialize() {
-    withPluginApi("0.8.7", function (api) {
+    withPluginApi(function (api) {
+      api.addTrackedPostProperties(
+        "policy_accepted",
+        "policy_accepted_by_count",
+        "policy_can_accept",
+        "policy_can_revoke",
+        "policy_not_accepted_by_count",
+        "policy_revoked"
+      );
+
+      api.modifyClass(
+        "model:post",
+        (Superclass) =>
+          class extends Superclass {
+            @trackedArray policy_accepted_by = [];
+            @trackedArray policy_not_accepted_by = [];
+          }
+      );
+
       api.decorateCookedElement(attachPolicy, {
         onlyStream: false,
         id: "discourse-policy",

@@ -4,11 +4,28 @@ import formatDate from "discourse/helpers/format-date";
 
 export default class TopicActivityColumn extends Component {
   get topicUser() {
+    const bumpedLastPostedDaysDiff = moment
+      .duration(
+        moment(this.args.topic.bumped_at).diff(
+          moment(this.args.topic.last_posted_at)
+        )
+      )
+      .asDays();
+
+    // If the bumped + last posted at are close together,
+    // then we assume someone is editing shortly after posting,
+    // in which case we should just show the last poster/first poster
+    // as normal.
+    //
+    // In other cases, it's likely an edit or a topic bump that happened
+    // a while after the last post, so we show no user.
     if (
-      moment(this.args.topic.bumped_at).isAfter(this.args.topic.last_posted_at)
+      moment(this.args.topic.bumped_at).isAfter(
+        this.args.topic.last_posted_at
+      ) &&
+      bumpedLastPostedDaysDiff > 1
     ) {
       return {
-        user: undefined,
         username: undefined,
         class: "--updated",
       };
@@ -16,13 +33,11 @@ export default class TopicActivityColumn extends Component {
 
     if (this.args.topic.posts_count > 1) {
       return {
-        user: this.args.topic.lastPosterUser,
         username: this.args.topic.last_poster_username,
         class: "--replied",
       };
     } else if (this.args.topic.posts_count === 1) {
       return {
-        user: this.args.topic.firstPosterUser,
         username: this.args.topic.last_poster_username,
         class: "--created",
       };

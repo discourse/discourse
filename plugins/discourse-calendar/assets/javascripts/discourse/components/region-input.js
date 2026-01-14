@@ -1,16 +1,17 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import { i18n } from "discourse-i18n";
-import ComboBoxComponent from "select-kit/components/combo-box";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 import { HOLIDAY_REGIONS } from "../lib/regions";
 
 @selectKitOptions({
   filterable: true,
   allowAny: false,
+  none: "discourse_calendar.region.select_region",
 })
 @pluginApiIdentifiers("timezone-input")
 @classNames("timezone-input", "region-input")
@@ -22,7 +23,7 @@ export default class RegionInput extends ComboBoxComponent {
     const localeNames = {};
     let regions = [];
 
-    JSON.parse(this.siteSettings.available_locales).forEach((locale) => {
+    this.siteSettings.available_locales.forEach((locale) => {
       localeNames[locale.value] = locale.name;
     });
 

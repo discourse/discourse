@@ -35,7 +35,7 @@
 
 .groups-boxes {
   display: grid;
-  grid-gap: 1em;
+  gap: 1em;
   grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
   margin: 1em 0;
   width: 100%;
@@ -44,7 +44,7 @@
     display: flex;
     box-sizing: border-box;
     cursor: pointer;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     color: var(--primary);
     border-radius: var(--d-border-radius);
 
@@ -109,7 +109,7 @@
 
       .group-description {
         color: var(--primary-high);
-        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
     }
 

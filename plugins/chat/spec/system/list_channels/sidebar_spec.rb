@@ -5,6 +5,8 @@ RSpec.describe "List channels | sidebar", type: :system do
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
+  let(:chat_sidebar) { PageObjects::Components::Chat::Sidebar.new }
+  let(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap
@@ -134,10 +136,23 @@ RSpec.describe "List channels | sidebar", type: :system do
   end
 
   context "when no direct message channels" do
-    before { visit("/") }
+    it "shows the start new dm button" do
+      visit("/")
+      chat_sidebar.click_start_new_dm
 
-    it "shows the section" do
-      expect(page).to have_css(".sidebar-section[data-section-name='chat-dms']")
+      expect(page).to have_selector(".chat-modal-new-message")
+    end
+
+    context "when user can't dm" do
+      fab!(:group)
+
+      before { SiteSetting.direct_message_enabled_groups = group.id }
+
+      it "doesn't show the section" do
+        visit("/")
+
+        expect(chat_sidebar).to have_no_dm_section
+      end
     end
   end
 
@@ -172,11 +187,8 @@ RSpec.describe "List channels | sidebar", type: :system do
 
       it "removes it from the sidebar" do
         visit("/")
-
-        find(".sidebar-row.channel-#{dm_channel_1.id}").hover
-        find(".sidebar-row.channel-#{dm_channel_1.id} .sidebar-section-hover-button").click
-
-        expect(page).to have_no_selector(".sidebar-row.channel-#{dm_channel_1.id}")
+        chat_sidebar_page.remove_channel(dm_channel_1)
+        expect(chat_sidebar_page).to have_no_channel(dm_channel_1)
       end
     end
   end

@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::RemoveOrphanedEmbeddings do
+  subject(:job) { described_class.new }
+
   before { enable_current_plugin }
 
   describe "#execute" do
     fab!(:embedding_definition)
-    fab!(:embedding_definition_2) { Fabricate(:embedding_definition) }
+    fab!(:embedding_definition_2, :embedding_definition)
     fab!(:topic)
     fab!(:post)
 
@@ -40,7 +42,7 @@ RSpec.describe Jobs::RemoveOrphanedEmbeddings do
         embedding_definition_2.id,
       )
 
-      subject.execute({})
+      job.execute({})
 
       expect(find_all_embeddings_of(topic, "ai_topics_embeddings", "topic_id")).to contain_exactly(
         embedding_definition_2.id,
@@ -54,7 +56,7 @@ RSpec.describe Jobs::RemoveOrphanedEmbeddings do
       expect(DiscourseAi::Embeddings::Schema.correctly_indexed?(embedding_definition)).to eq(true)
       expect(DiscourseAi::Embeddings::Schema.correctly_indexed?(embedding_definition_2)).to eq(true)
 
-      subject.execute({})
+      job.execute({})
 
       index_names =
         DiscourseAi::Embeddings::Schema::EMBEDDING_TARGETS.map do |t|

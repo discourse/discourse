@@ -25,6 +25,22 @@ RSpec.describe Admin::UserFieldsController do
         }.to change(UserField, :count).by(1)
       end
 
+      it "creates a user text field" do
+        expect {
+          post "/admin/config/user_fields.json",
+               params: {
+                 user_field: {
+                   name: "hello",
+                   description: "hello desc",
+                   field_type: "textarea",
+                   requirement: "on_signup",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+        }.to change(UserField, :count).by(1)
+      end
+
       it "creates a user field with options" do
         expect do
           post "/admin/config/user_fields.json",
@@ -165,6 +181,7 @@ RSpec.describe Admin::UserFieldsController do
                 field_type: "confirm",
                 description: "muppet",
                 requirement: "optional",
+                show_on_signup: false,
               },
             }
 
@@ -173,6 +190,7 @@ RSpec.describe Admin::UserFieldsController do
           name: "fraggle",
           field_type: "confirm",
           required?: false,
+          show_on_signup?: false,
         )
       end
 

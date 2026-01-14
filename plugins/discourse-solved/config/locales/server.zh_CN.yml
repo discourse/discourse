@@ -24,6 +24,7 @@ zh_CN:
     solved_add_schema_markup: "将 QAPage 架构标记添加到 HTML。"
     enable_solved_tags: "允许用户选择解决方案的标签。"
     prioritize_solved_topics_in_search: "在搜索结果中优先显示已解决的话题。"
+    show_who_marked_solved: "显示谁将该话题标记为已解决。它会在该话题的第一个帖子以及工具提示中的回答帖子中显示。"
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
@@ -35,6 +36,10 @@ zh_CN:
     no_solutions:
       self: "您还没有被接受的解决方案。"
       others: "没有被接受的解决方案。"
+    filter:
+      description:
+        solved: "筛选已解决的话题"
+        unsolved: "筛选未解决的话题"
   badges:
     solved_1:
       name: "已解决！"

@@ -4,7 +4,7 @@ RSpec.describe AiFeaturesPersonaSerializer do
   fab!(:admin)
   fab!(:ai_persona)
   fab!(:group)
-  fab!(:group_2) { Fabricate(:group) }
+  fab!(:group_2, :group)
 
   before { enable_current_plugin }
 

@@ -202,11 +202,11 @@ class WebhooksController < ActionController::Base
   private
 
   def signature_failure
-    render body: nil, status: 406
+    render body: nil, status: :not_acceptable
   end
 
   def success
-    render body: nil, status: 200
+    render body: nil, status: :ok
   end
 
   def valid_mailgun_signature?(token, timestamp, signature)

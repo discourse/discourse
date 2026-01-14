@@ -126,9 +126,8 @@ lt:
               label: "Persona"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Sistemos pranešimas"
-              description: "Pranešimas, kuris bus naudojamas nustatant, įsitikinkite, kad jis turi atsakyti vienu žodžiu, kurį galite naudoti veiksmui suaktyvinti"
+            triage_persona:
+              label: "Persona"
             search_for_text:
               label: "Ieškokite teksto"
             category:
@@ -144,11 +143,6 @@ lt:
               description: "Vartotojo vardas, norintis paskelbti paruoštą atsakymą"
             hide_topic:
               label: "Slėpti temą"
-            model:
-              label: "Modelis"
-            temperature:
-              label: "Temperatūra"
-              description: "Temperatūra, kurią naudosite LLM. Padidinkite, kad padidintumėte atsitiktinumą (palikite tuščią, kad naudotumėte numatytuosius modelio parametrus)."
     discourse_ai:
       title: "AI"
       features:
@@ -156,7 +150,7 @@ lt:
         disabled: "(uždrausta)"
         groups: "Grupės:"
         no_groups: "Nieko"
-        edit: "Redaguoti"
+        edit: "Nustatymai"
         expand_list:
           one: "(%{count} daugiau)"
           few: "(%{count}daugiau)"
@@ -199,6 +193,30 @@ lt:
       layout:
         table: "Lentelė"
         card: "Kortelė"
+      translations:
+        title: "Vertimai"
+        stats:
+          eta_minutes:
+            one: "%{count} minutė"
+            few: "%{count} minutės"
+            many: "%{count} minučių"
+            other: "%{count} minučių"
+          eta_hours:
+            one: "%{count} valanda"
+            few: "%{count} valandos"
+            many: "%{count} valandų"
+            other: "%{count} valandų"
+          eta_days:
+            one: "%{count} diena"
+            few: "%{count} dienos"
+            many: "%{count} dienų"
+            other: "%{count} dienų"
+        progress_chart:
+          bar_done:
+            one: "%{count} pranešimas"
+            few: "%{count} pranešimai"
+            many: "%{count} pranešimų"
+            other: "%{count} pranešimų"
       spam:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"
@@ -224,6 +242,7 @@ lt:
           post_url_label: "Įrašo URL arba ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 arba įrašo ID"
           result: "Rezultatas"
+          system_prompt: "Sistemos pranešimas"
           scan_log: "Nuskaitymo žurnalas"
           spam: "Šlamštas"
       usage:
@@ -231,6 +250,7 @@ lt:
         model: "Modelis"
         username: "Naudotojo vardas"
         total_requests: "Visos užklausos"
+        total: "Viso"
         periods:
           last_day: "Paskutinės 24 valandos"
           custom: "Pasirinktinis..."
@@ -287,7 +307,6 @@ lt:
             custom: "Pasirinktinis..."
           hours: "valandos"
         usage:
-          ai_helper: "Padėjėjas"
           ai_summarization: "Apibendrinti"
           ai_spam: "Šlamštas"
         next:
@@ -314,13 +333,12 @@ lt:
           cancel: "Atšaukti"
         thumbnail_suggestions:
           select: "Pasirinkite"
+          try_again: "Bandyti dar kartą"
         image_caption:
           button_label: "Antraštė su AI"
           generating: "Generuojama antraštė..."
           credits: "Antraštė teikiama AI"
           save_caption: "Saugoti"
-          automatic_caption_dialog:
-            confirm: "Įgalinti"
       embeddings:
         back: "Atgal"
         save: "Saugoti"

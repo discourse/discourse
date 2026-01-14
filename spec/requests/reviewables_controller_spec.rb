@@ -51,7 +51,7 @@ RSpec.describe ReviewablesController do
       end
 
       it "returns JSON with reviewable content" do
-        reviewable = Fabricate(:reviewable)
+        reviewable = Fabricate(:reviewable_flagged_post)
 
         get "/review.json"
         expect(response.code).to eq("200")
@@ -62,7 +62,7 @@ RSpec.describe ReviewablesController do
         expect(json_review["id"]).to eq(reviewable.id)
         expect(json_review["created_by_id"]).to eq(reviewable.created_by_id)
         expect(json_review["status"]).to eq(Reviewable.statuses[:pending])
-        expect(json_review["type"]).to eq("ReviewableUser")
+        expect(json_review["type"]).to eq("ReviewableFlaggedPost")
         expect(json_review["target_created_by_id"]).to eq(reviewable.target_created_by_id)
         expect(json_review["score"]).to eq(reviewable.score)
         expect(json_review["version"]).to eq(reviewable.version)
@@ -329,7 +329,7 @@ RSpec.describe ReviewablesController do
         end
 
         it "returns reviewable content that matches the date range" do
-          reviewable = Fabricate(:reviewable, created_at: 2.day.ago)
+          reviewable = Fabricate(:reviewable, created_at: 2.days.ago)
 
           get "/review.json?from_date=#{from}&to_date=#{to}"
 
@@ -352,7 +352,7 @@ RSpec.describe ReviewablesController do
           user.custom_fields["private_field"] = "private"
           user.save!
 
-          reviewable = Fabricate(:reviewable, target_created_by: user)
+          reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
 
           get "/review.json"
           json = response.parsed_body

@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ur:
+  discourse_subscriptions:
+    customer_not_found: گاہک نہیں ملا
+    card:
+      declined: کارڈ مسترد
+      invalid: کارڈ غلط

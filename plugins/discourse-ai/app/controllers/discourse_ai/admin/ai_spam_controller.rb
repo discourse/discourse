@@ -24,17 +24,6 @@ module DiscourseAi
         updated_params = {}
         if allowed_params.key?(:llm_model_id)
           llm_model_id = updated_params[:llm_model_id] = allowed_params[:llm_model_id]
-          if llm_model_id.to_i < 0 &&
-               !SiteSetting.ai_spam_detection_model_allowed_seeded_models_map.include?(
-                 llm_model_id.to_s,
-               )
-            return(
-              render_json_error(
-                I18n.t("discourse_ai.llm.configuration.invalid_seeded_model"),
-                status: 422,
-              )
-            )
-          end
         end
 
         if allowed_params.key?(:ai_persona_id)

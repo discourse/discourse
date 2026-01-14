@@ -40,7 +40,7 @@ nb_NO:
         groups: "Grupper:"
         no_persona: "Ikke angitt"
         no_groups: "Ingen"
-        edit: "Rediger"
+        edit: "Innstillinger"
         expand_list:
           one: "(%{count} mer)"
           other: "(%{count} mer)"
@@ -54,6 +54,22 @@ nb_NO:
           name: "Spam"
       modals:
         select_option: "Velg et alternativ..."
+      translations:
+        title: "Oversettelser"
+        stats:
+          eta_minutes:
+            one: "%{count} minutt"
+            other: "%{count} minutter"
+          eta_hours:
+            one: "%{count} time"
+            other: "%{count} timer"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dager"
+        progress_chart:
+          bar_done:
+            one: "%{count} innlegg"
+            other: "%{count} innlegg"
       spam:
         short_title: "Spam"
         last_seven_days: "Siste 7 dager"
@@ -64,6 +80,7 @@ nb_NO:
         summary: "Sammendrag"
         username: "Brukernavn"
         total_requests: "Totalt forespørsler"
+        total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
       ai_persona:
@@ -136,10 +153,9 @@ nb_NO:
           cancel: "Avbryt"
         thumbnail_suggestions:
           select: "Velg"
+          try_again: "Prøv igjen"
         image_caption:
           save_caption: "Lagre"
-          automatic_caption_dialog:
-            confirm: "Aktiver"
       embeddings:
         back: "Forrige"
         save: "Lagre"

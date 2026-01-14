@@ -37,8 +37,8 @@ export default class extends Component {
     ) {
       let recipients = this.composerModel.targetRecipients.split(",");
 
-      return this.currentUser.ai_enabled_chat_bots.any((bot) =>
-        recipients.any((username) => username === bot.username)
+      return this.currentUser.ai_enabled_chat_bots.some((bot) =>
+        recipients.some((username) => username === bot.username)
       );
     }
     return false;

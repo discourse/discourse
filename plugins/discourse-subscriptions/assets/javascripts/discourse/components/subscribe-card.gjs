@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 
 export default class SubscribeCard extends Component {
@@ -8,8 +9,7 @@ export default class SubscribeCard extends Component {
   }
 
   setCardElementStyles() {
-    const root = document.querySelector(":root");
-    const computedStyle = getComputedStyle(root);
+    const computedStyle = getComputedStyle(document.documentElement);
     const primaryColor = computedStyle.getPropertyValue("--primary");
     const placeholderColor =
       computedStyle.getPropertyValue("--secondary-medium");

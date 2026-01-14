@@ -14,7 +14,8 @@ RSpec.describe Jobs::StreamDiscoverReply do
     end
 
     before do
-      SiteSetting.ai_bot_discover_persona = ai_persona.id
+      SiteSetting.ai_discover_enabled = true
+      SiteSetting.ai_discover_persona = ai_persona.id
       group.add(user)
     end
 
@@ -25,7 +26,7 @@ RSpec.describe Jobs::StreamDiscoverReply do
     it "publishes updates with a partial summary" do
       with_responses(["dummy"]) do
         messages =
-          MessageBus.track_publish("/discourse-ai/ai-bot/discover") do
+          MessageBus.track_publish("/discourse-ai/discoveries") do
             job.execute(user_id: user.id, query: "Testing search")
           end
 
@@ -39,7 +40,7 @@ RSpec.describe Jobs::StreamDiscoverReply do
     it "publishes a final update to signal we're done" do
       with_responses(["dummy"]) do
         messages =
-          MessageBus.track_publish("/discourse-ai/ai-bot/discover") do
+          MessageBus.track_publish("/discourse-ai/discoveries") do
             job.execute(user_id: user.id, query: "Testing search")
           end
 
@@ -48,6 +49,25 @@ RSpec.describe Jobs::StreamDiscoverReply do
 
         expect(final_update[:model_used]).to eq(llm_model.display_name)
         expect(final_update[:ai_discover_reply]).to eq("dummy")
+      end
+    end
+
+    it "passes the user to BotContext for proper usage tracking and permissions" do
+      with_responses(["dummy"]) do
+        # Spy on BotContext creation to verify user is passed
+        context_spy = nil
+        allow(DiscourseAi::Personas::BotContext).to receive(
+          :new,
+        ).and_wrap_original do |method, **args|
+          context_spy = args
+          method.call(**args)
+        end
+
+        job.execute(user_id: user.id, query: "Testing search")
+
+        expect(context_spy).to be_present
+        expect(context_spy[:user]).to eq(user)
+        expect(context_spy[:feature_name]).to eq("discover")
       end
     end
   end

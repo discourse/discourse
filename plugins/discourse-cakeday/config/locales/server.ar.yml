@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    cakeday_enabled: "عرض رمز/رموز الكعكة التعبيرية بجانب اسم المستخدم في التاريخ الذي انضم فيه إلى Discourse."
+    cakeday_emoji: "سيتم عرض الرمز/الرموز التعبيرية بجانب اسم المستخدم في التاريخ الذي انضم فيه إلى Discourse. يمكن تخصيص عدة رموز تعبيرية عن طريق كتابة: smile|cake|smile"
+    cakeday_birthday_enabled: "عرض الرمز/الرموز التعبيرية لعيد الميلاد بجانب اسم المستخدم في عيد ميلاده"
+    cakeday_birthday_emoji: "سيتم عرض الرمز/الرموز التعبيرية بجانب اسم المستخدم في عيد ميلاده. يمكن تخصيص عدة رموز تعبيرية عن طريق كتابة: smile|cake|smile"

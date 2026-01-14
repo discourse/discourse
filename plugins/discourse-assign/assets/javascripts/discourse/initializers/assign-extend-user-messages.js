@@ -5,7 +5,7 @@ export default {
   name: "assign-extend-user-messages",
 
   initialize(container) {
-    withPluginApi("1.5.0", (api) => {
+    withPluginApi((api) => {
       const currentUser = container.lookup("service:current-user");
 
       if (currentUser?.can_assign && api.addUserMessagesNavigationDropdownRow) {

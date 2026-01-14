@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
+import { htmlSafe } from "@ember/template";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import categoryBadge from "discourse/helpers/category-badge";
-import htmlSafe from "discourse/helpers/html-safe";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewablePostVotingComment extends Component {

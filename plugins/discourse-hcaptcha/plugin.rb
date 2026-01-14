@@ -11,6 +11,8 @@
 
 enabled_site_setting :discourse_hcaptcha_enabled
 
+register_svg_icon "hand"
+
 extend_content_security_policy(script_src: %w[https://hcaptcha.com])
 
 module ::DiscourseHcaptcha
@@ -22,6 +24,6 @@ require_relative "lib/discourse_hcaptcha/engine"
 after_initialize do
   reloadable_patch { UsersController.include(DiscourseHcaptcha::CreateUsersControllerPatch) }
 
-  require_relative "app/services/problem_check/hcaptcha_configuration.rb"
+  require_relative "app/services/problem_check/hcaptcha_configuration"
   register_problem_check ProblemCheck::HcaptchaConfiguration
 end

@@ -21,6 +21,7 @@ hy:
       solution_summary:
         one: "լուծում"
         other: "լուծում"
+      accepted_answer_post_number: "գրառում %{post_number}"
       topic_status_filter:
         all: "բոլոր"
         solved: "լուծված"

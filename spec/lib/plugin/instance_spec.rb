@@ -151,6 +151,16 @@ TEXT
         plugin.git_repo.stubs(:latest_local_commit).returns(nil)
         expect(plugin.discourse_owned?).to eq(false)
       end
+
+      it "returns false if the commit_url has a nil path" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+        plugin.git_repo.stubs(:url).returns("invalid://url")
+        parsed_url = URI.parse("invalid://url")
+        parsed_url.stubs(:path).returns(nil)
+        UrlHelper.stubs(:relaxed_parse).returns(parsed_url)
+        expect(plugin.discourse_owned?).to eq(false)
+      end
     end
   end
 
@@ -340,7 +350,7 @@ TEXT
       plugin.send :register_assets!
 
       expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq(
-        "app/assets/javascripts/discourse/node_modules/moment/moment.js",
+        "frontend/discourse/node_modules/moment/moment.js",
       )
     end
   end
@@ -567,10 +577,7 @@ TEXT
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
       expect(locale[:moment_js]).to eq(
-        [
-          "pt-br",
-          "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale/pt-br.js",
-        ],
+        ["pt-br", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/pt-br.js"],
       )
       expect(locale[:moment_js_timezones]).to eq(
         [
@@ -591,7 +598,7 @@ TEXT
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale/tlh.js"],
+        ["tlh", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/tlh.js"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
@@ -853,23 +860,59 @@ TEXT
   describe "#register_site_categories_callback" do
     fab!(:category)
 
-    it "adds a callback to the Site#categories" do
-      instance = Plugin::Instance.new
+    let(:instance) { Plugin::Instance.new }
+    let(:site_guardian) { Guardian.new }
+    let(:site) { Site.new(site_guardian) }
 
-      site_guardian = Guardian.new
-
+    before do
+      allow(instance).to receive(:enabled?).and_call_original
       instance.register_site_categories_callback do |categories, guardian|
         categories.each { |category| category[:test_field] = "test" }
 
         expect(guardian).to eq(site_guardian)
       end
+    end
 
-      site = Site.new(site_guardian)
-
-      expect(site.categories.first[:test_field]).to eq("test")
-    ensure
+    after do
       Site.clear_cache
       Site.categories_callbacks.clear
+    end
+
+    it "adds a callback to the Site#categories" do
+      expect(site.categories.first[:test_field]).to eq("test")
+    end
+
+    context "when the plugin is disabled" do
+      before { allow(instance).to receive(:enabled?).and_return(false) }
+
+      it "does not run the callback" do
+        expect(site.categories.first[:test_field]).to be_blank
+      end
+    end
+  end
+
+  describe "#register_topic_list_preload_user_ids" do
+    subject(:preload_user_ids) { TopicList.preload_user_ids(stub, [], stub) }
+
+    let(:instance) { Plugin::Instance.new }
+
+    before do
+      allow(instance).to receive(:enabled?).and_call_original
+      instance.register_topic_list_preload_user_ids { |topics, user_ids, object| [1] }
+    end
+
+    after { TopicList.instance_variable_set(:@preload_user_ids, nil) }
+
+    it "adds a callback to TopicList.preload_user_ids" do
+      expect(preload_user_ids).to include(1)
+    end
+
+    context "when the plugin is disabled" do
+      before { allow(instance).to receive(:enabled?).and_return(false) }
+
+      it "does not run the callback" do
+        expect(preload_user_ids).to be_empty
+      end
     end
   end
 
@@ -1204,6 +1247,62 @@ TEXT
           )
         end
       end
+    end
+  end
+
+  describe "#register_admin_config_login_route" do
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "registers a new admin config login route" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_admin_config_login_route("plugin_route")
+
+      expect(DiscoursePluginRegistry.admin_config_login_routes).to include("plugin_route")
+    end
+  end
+
+  describe "#register_search_index" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:model_class) { User }
+    let(:search_data_class) { double }
+    let(:search_data) { ->(record, indexer_helper) { { a_weight: "test", d_weight: "content" } } }
+    let(:load_unindexed_record_ids) { -> { [1, 2, 3] } }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "registers a search handler with the correct parameters" do
+      plugin.register_search_index(
+        model_class: model_class,
+        search_data_class: search_data_class,
+        index_version: 1,
+        search_data: search_data,
+        load_unindexed_record_ids: load_unindexed_record_ids,
+      )
+
+      expect(DiscoursePluginRegistry.search_handlers.count).to eq(1)
+
+      handler = DiscoursePluginRegistry.search_handlers.first
+      expect(handler[:table_name]).to eq("user")
+      expect(handler[:model_class]).to eq(model_class)
+      expect(handler[:search_data_class]).to eq(search_data_class)
+      expect(handler[:index_version]).to eq(1)
+      expect(handler[:search_data]).to eq(search_data)
+      expect(handler[:load_unindexed_record_ids]).to eq(load_unindexed_record_ids)
+      expect(handler[:enabled].call).to eq(true)
+    end
+
+    it "allows custom enabled callback" do
+      plugin.register_search_index(
+        model_class: model_class,
+        search_data_class: search_data_class,
+        index_version: 1,
+        search_data: search_data,
+        load_unindexed_record_ids: load_unindexed_record_ids,
+        enabled: -> { false },
+      )
+
+      handler = DiscoursePluginRegistry.search_handlers.first
+      expect(handler[:enabled].call).to eq(false)
     end
   end
 end

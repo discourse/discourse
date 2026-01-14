@@ -4,16 +4,16 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import DMenu from "discourse/float-kit/components/d-menu";
 import categoryBadge from "discourse/helpers/category-badge";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import DMenu from "float-kit/components/d-menu";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import { eq } from "discourse/truth-helpers";
 
 export default class AiSplitTopicSuggester extends Component {
   @service site;
-  @service menu;
 
   @tracked suggestions = [];
   @tracked loading = false;
@@ -89,10 +89,10 @@ export default class AiSplitTopicSuggester extends Component {
       if (this.args.currentValue) {
         if (Array.isArray(this.args.currentValue)) {
           const updatedTags = [...this.args.currentValue, suggestion];
-          this.args.updateAction([...new Set(updatedTags)]);
+          this.args.updateAction(uniqueItemsFromArray(updatedTags));
         } else {
           const updatedTags = [this.args.currentValue, suggestion];
-          this.args.updateAction([...new Set(updatedTags)]);
+          this.args.updateAction(uniqueItemsFromArray(updatedTags));
         }
       } else {
         if (Array.isArray(suggestion)) {

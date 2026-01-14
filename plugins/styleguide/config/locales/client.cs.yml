@@ -33,11 +33,13 @@ cs:
         multi_select:
           title: "Vícenásobný výběr"
         toasts:
-          title: "Přípitky"
+          title: "Toasty"
         font_scale:
           title: "Systém písem"
         colors:
           title: "Barvy"
+        dialog:
+          title: "Dialog"
         icons:
           title: "Ikony"
           full_list: "Podívejte se na úplný seznam Font Awesome Icons"
@@ -50,7 +52,7 @@ cs:
         categories:
           title: "Kategorie"
         bread_crumbs:
-          title: "Strouhanka"
+          title: "Bread Crumbs"
         navigation:
           title: "Navigace"
         navigation_bar:
@@ -60,7 +62,7 @@ cs:
         categories_list:
           title: "Seznam kategorií"
         topic_link:
-          title: "Odkaz na téma"
+          title: "Odkaz na téma a stav"
         topic_list_item:
           title: "Položka seznamu témat"
         topic_statuses:
@@ -69,8 +71,6 @@ cs:
           title: "Seznam témat"
         basic_topic_list:
           title: "Seznam základních témat"
-        footer_message:
-          title: "Zpráva v zápatí"
         signup_cta:
           title: "CTA registrace"
         topic_timer_info:
@@ -85,24 +85,28 @@ cs:
           title: "Seznam příspěvků"
           empty_example: "<PostList /> prázdný stav"
           populated_example: "<PostList /> zaplněný stav"
+        post_oneboxes:
+          title: "Oneboxy příspěvků"
         topic_map:
           title: "Mapa tématu"
         site_header:
           title: "Záhlaví webu"
-        suggested_topics:
-          title: "Doporučená témata"
+        more_topics:
+          title: "Více témat"
         post_menu:
           title: "Nabídka příspěvku"
         modal:
           title: "Modální"
-          header: "Modální název"
-          footer: "Modální zápatí"
+          header: "Název dialogu"
+          footer: "Zápatí dialogu"
         user_about:
           title: "O uživateli"
         header_icons:
           title: "Ikony záhlaví"
         spinners:
           title: "Spinnery"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Prázdný stav"
         tooltips:

@@ -3,7 +3,9 @@
 module DiscourseAi
   module AiHelper
     class AssistantController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      include AiCreditLimitHandler
+
+      requires_plugin PLUGIN_NAME
       requires_login
       before_action :ensure_can_request_suggestions
       before_action :rate_limiter_performed!
@@ -44,7 +46,7 @@ module DiscourseAi
                      force_default_locale: force_default_locale,
                      custom_prompt: params[:custom_prompt],
                    ),
-                 status: 200
+                 status: :ok
         end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
         render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
@@ -54,6 +56,7 @@ module DiscourseAi
       def suggest_title
         if params[:topic_id]
           topic = Topic.find_by(id: params[:topic_id])
+          guardian.ensure_can_see!(topic)
           input = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic).targets_data
         else
           input = get_text_param!
@@ -66,42 +69,96 @@ module DiscourseAi
                      input,
                      current_user,
                    ),
-                 status: 200
+                 status: :ok
+        rescue LlmCreditAllocation::CreditLimitExceeded => e
+          render_credit_limit_error(e)
+        rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
+          render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
+                            status: 502
         end
-      rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
-        render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
-                          status: 502
       end
 
       def suggest_category
         if params[:topic_id]
-          opts = { topic_id: params[:topic_id] }
+          topic = Topic.find_by(id: params[:topic_id])
+          guardian.ensure_can_see!(topic)
+          opts = { topic_id: topic.id }
         else
           input = get_text_param!
           opts = { text: input }
         end
 
         render json: DiscourseAi::AiHelper::SemanticCategorizer.new(current_user, opts).categories,
-               status: 200
+               status: :ok
       end
 
       def suggest_tags
         if params[:topic_id]
-          opts = { topic_id: params[:topic_id] }
+          topic = Topic.find_by(id: params[:topic_id])
+          guardian.ensure_can_see!(topic)
+          opts = { topic_id: topic.id }
         else
           input = get_text_param!
           opts = { text: input }
         end
 
         render json: DiscourseAi::AiHelper::SemanticCategorizer.new(current_user, opts).tags,
-               status: 200
+               status: :ok
       end
 
       def suggest_thumbnails(input)
         hijack do
-          thumbnails = DiscourseAi::AiHelper::Painter.new.commission_thumbnails(input, current_user)
+          result =
+            DiscourseAi::AiHelper::GenerateThumbnails.call(
+              params: {
+                text: input,
+              },
+              guardian: guardian,
+            )
 
-          render json: { thumbnails: thumbnails }, status: 200
+          if result.failure?
+            failing_step = nil
+            failing_step = "contract.default" if result[:"result.contract.default"]&.failure?
+            failing_step = "model.persona" if result[:"result.model.persona"]&.failure?
+            failing_step = "policy.has_image_generation_tool" if result[
+              :"result.policy.has_image_generation_tool"
+            ]&.failure?
+            failing_step = "model.llm_model" if result[:"result.model.llm_model"]&.failure?
+
+            status =
+              case failing_step
+              when "contract.default"
+                422
+              when "model.persona"
+                404
+              when "policy.has_image_generation_tool"
+                422
+              when "model.llm_model"
+                500
+              else
+                500
+              end
+
+            translation_key =
+              case failing_step
+              when "contract.default"
+                "discourse_ai.ai_helper.errors.completion_request_failed"
+              when "model.persona"
+                "discourse_ai.ai_helper.errors.no_illustrator_persona"
+              when "policy.has_image_generation_tool"
+                "discourse_ai.ai_helper.errors.no_image_generation_tool"
+              when "model.llm_model"
+                "discourse_ai.ai_helper.errors.llm_model_not_configured"
+              else
+                "discourse_ai.ai_helper.errors.no_image_generated"
+              end
+
+            render_json_error(I18n.t(translation_key), status: status)
+          else
+            render json: { thumbnails: result[:thumbnails] }, status: :ok
+          end
+        rescue LlmCreditAllocation::CreditLimitExceeded => e
+          render_credit_limit_error(e)
         end
       end
 
@@ -156,7 +213,7 @@ module DiscourseAi
           )
         end
 
-        render json: { success: true, progress_channel: }, status: 200
+        render json: { success: true, progress_channel: }, status: :ok
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
         render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
                           status: 502
@@ -188,7 +245,7 @@ module DiscourseAi
                    caption:
                      "#{caption} (#{I18n.t("discourse_ai.ai_helper.image_caption.attribution")})",
                  },
-                 status: 200
+                 status: :ok
         end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed, Net::HTTPBadResponse
         render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),

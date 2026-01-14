@@ -4,10 +4,45 @@ require_relative "endpoint_compliance"
 RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   let(:url) { "https://api.anthropic.com/v1/messages" }
   fab!(:model) { Fabricate(:anthropic_model, name: "claude-3-opus", vision_enabled: true) }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(model) }
   let(:image100x100) { plugin_file_from_fixtures("100x100.jpg") }
   let(:upload100x100) do
     UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
+  end
+
+  def minimal_pdf_content
+    <<~PDF
+      %PDF-1.4
+      1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+      2 0 obj<< /Type /Pages /Count 1 /Kids [3 0 R] >>endobj
+      3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Contents 4 0 R >>endobj
+      4 0 obj<< /Length 44 >>stream
+      BT /F1 12 Tf 72 720 Td (Hello PDF) Tj ET
+      endstream
+      endobj
+      xref
+      0 5
+      0000000000 65535 f
+      0000000010 00000 n
+      0000000060 00000 n
+      0000000111 00000 n
+      0000000200 00000 n
+      trailer<< /Size 5 /Root 1 0 R >>
+      startxref
+      268
+      %%EOF
+    PDF
+  end
+
+  def build_pdf_upload
+    SiteSetting.authorized_extensions = "*"
+    file = Tempfile.new(%w[test-pdf .pdf])
+    file.binmode
+    file.write(minimal_pdf_content)
+    file.rewind
+    UploadCreator.new(file, "document.pdf").create_for(Discourse.system_user.id)
+  ensure
+    file.close! if file
   end
 
   let(:prompt) do
@@ -336,6 +371,76 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     expect(requested_body).to eq(request_body)
   end
 
+  it "can send pdf documents via a completion prompt" do
+    model.update!(allowed_attachment_types: %w[pdf])
+    pdf_upload = build_pdf_upload
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are pdf bot",
+        messages: [type: :user, id: "user1", content: ["hello", { upload_id: pdf_upload.id }]],
+      )
+
+    encoded = prompt.encoded_uploads(prompt.messages.last, allow_documents: true)
+
+    request_body = {
+      model: "claude-3-opus-20240229",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "user1: hello" },
+            {
+              type: "document",
+              source: {
+                type: "base64",
+                media_type: "application/pdf",
+                data: encoded[0][:base64],
+              },
+            },
+          ],
+        },
+      ],
+      system: "You are pdf bot",
+    }
+
+    response_body = <<~STRING
+      {
+        "content": [
+          {
+            "text": "What a cool pdf",
+            "type": "text"
+          }
+        ],
+        "id": "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+        "model": "claude-3-opus-20240229",
+        "role": "assistant",
+        "stop_reason": "end_turn",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "input_tokens": 10,
+          "output_tokens": 25
+        }
+      }
+    STRING
+
+    requested_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          requested_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: response_body)
+
+    result = llm.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("What a cool pdf")
+    expect(requested_body).to eq(request_body)
+  end
+
   it "can support reasoning" do
     body = <<~STRING
       {
@@ -376,7 +481,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     model.provider_params["reasoning_tokens"] = 10_000
     model.save!
 
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
     result = proxy.generate(prompt, user: Discourse.system_user)
     expect(result).to eq("Hello!")
 
@@ -434,7 +539,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       },
     ).to_return(status: 200, body: body)
 
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
     result = proxy.generate(prompt, user: Discourse.system_user)
     expect(result).to eq("Hello!")
 
@@ -450,6 +555,203 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     expect(log.provider_id).to eq(AiApiAuditLog::Provider::Anthropic)
     expect(log.request_tokens).to eq(10)
     expect(log.response_tokens).to eq(25)
+  end
+
+  it "handles prompt caching with always mode" do
+    body = {
+      id: "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+      type: "message",
+      role: "assistant",
+      content: [{ type: "text", text: "Using cached context!" }],
+      model: "claude-3-opus-20240229",
+      stop_reason: "end_turn",
+      usage: {
+        input_tokens: 6,
+        cache_creation_input_tokens: 2063,
+        cache_read_input_tokens: 5159,
+        output_tokens: 486,
+      },
+    }.to_json
+
+    model.update!(provider_params: { prompt_caching: "always" })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+        "Anthropic-Beta" => "prompt-caching-2024-07-31",
+      },
+    ).to_return(status: 200, body: body)
+
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+    result = proxy.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("Using cached context!")
+
+    expect(parsed_body[:messages].last[:content]).to eq(
+      [type: "text", text: "user1: hello", cache_control: { type: "ephemeral" }],
+    )
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.request_tokens).to eq(6)
+    expect(log.response_tokens).to eq(486)
+    expect(log.cache_write_tokens).to eq(2063)
+    expect(log.cache_read_tokens).to eq(5159)
+  end
+
+  it "does not include caching header when caching mode is never" do
+    body = {
+      id: "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+      type: "message",
+      role: "assistant",
+      content: [{ type: "text", text: "No caching!" }],
+      model: "claude-3-opus-20240229",
+      stop_reason: "end_turn",
+      usage: {
+        input_tokens: 10,
+        output_tokens: 25,
+      },
+    }.to_json
+
+    model.update!(provider_params: { prompt_caching: "never" })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+      },
+    ).to_return(status: 200, body: body)
+
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+    result = proxy.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("No caching!")
+
+    # Verify system prompt does not have cache_control
+    expect(parsed_body[:system]).to eq("You are hello bot")
+  end
+
+  it "handles streaming with cache tokens" do
+    body = (<<~STRING).strip
+      event: message_start
+      data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "cache_creation_input_tokens": 100, "cache_read_input_tokens": 500, "output_tokens": 1}}}
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index":0, "content_block": {"type": "text", "text": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Cached!"}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 0}
+
+      event: message_delta
+      data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null, "usage":{"output_tokens": 15}}}
+
+      event: message_stop
+      data: {"type": "message_stop"}
+    STRING
+
+    model.update!(provider_params: { prompt_caching: "always" })
+
+    stub_request(:post, url).to_return(status: 200, body: body)
+
+    result = +""
+    llm.generate(prompt, user: Discourse.system_user) { |partial| result << partial }
+
+    expect(result).to eq("Cached!")
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.request_tokens).to eq(25)
+    expect(log.response_tokens).to eq(15)
+    expect(log.cache_write_tokens).to eq(100)
+    expect(log.cache_read_tokens).to eq(500)
+  end
+
+  it "defaults to never mode and does not cache when mode is tool_results without tool results" do
+    body = {
+      id: "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+      type: "message",
+      role: "assistant",
+      content: [{ type: "text", text: "Hello!" }],
+      model: "claude-3-opus-20240229",
+      stop_reason: "end_turn",
+      usage: {
+        input_tokens: 10,
+        output_tokens: 5,
+      },
+    }.to_json
+
+    model.update!(provider_params: { prompt_caching: "tool_results" })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+        "Anthropic-Beta" => "prompt-caching-2024-07-31",
+      },
+    ).to_return(status: 200, body: body)
+
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+    result = proxy.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("Hello!")
+
+    # Verify system prompt does not have cache_control when no tool results
+    expect(parsed_body[:system]).to eq("You are hello bot")
+  end
+
+  it "detects tool results correctly in tool_results caching mode" do
+    model.update!(provider_params: { prompt_caching: "tool_results" })
+
+    test_endpoint = described_class.new(model)
+
+    # Create a mock prompt with tool results in messages (simulating what dialect produces)
+    mock_prompt = instance_double(DiscourseAi::Completions::Prompt)
+    allow(mock_prompt).to receive(:messages).and_return(
+      [
+        { role: "user", content: "use the echo tool" },
+        {
+          role: "assistant",
+          content: [{ type: "tool_use", id: "tool_1", name: "echo", input: { text: "hello" } }],
+        },
+        {
+          role: "user",
+          content: [{ type: "tool_result", tool_use_id: "tool_1", content: "hello" }],
+        },
+      ],
+    )
+
+    # Test that should_apply_prompt_caching? returns true when tool results are present
+    expect(test_endpoint.send(:should_apply_prompt_caching?, mock_prompt)).to be(true)
+
+    # Test that it returns false when no tool results
+    mock_prompt_no_tools = instance_double(DiscourseAi::Completions::Prompt)
+    allow(mock_prompt_no_tools).to receive(:messages).and_return(
+      [{ role: "user", content: "hello" }],
+    )
+    expect(test_endpoint.send(:should_apply_prompt_caching?, mock_prompt_no_tools)).to be(false)
   end
 
   it "can send through thinking tokens via a completion prompt" do
@@ -483,8 +785,12 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       id: "user1",
       content: "hello",
       thinking: "I am thinking",
-      thinking_signature: "signature",
-      redacted_thinking_signature: "redacted_signature",
+      thinking_provider_info: {
+        anthropic: {
+          signature: "signature",
+          redacted_signature: "redacted_signature",
+        },
+      },
     )
 
     result = llm.generate(prompt, user: Discourse.system_user)
@@ -555,11 +861,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     # First item should be a Thinking object
     expect(result[0]).to be_a(DiscourseAi::Completions::Thinking)
     expect(result[0].message).to eq("This is my thinking process about prime numbers...")
-    expect(result[0].signature).to eq("abc123signature")
+    expect(result[0].provider_info[:anthropic][:signature]).to eq("abc123signature")
 
     expect(result[1]).to be_a(DiscourseAi::Completions::Thinking)
-    expect(result[1].signature).to eq("abd456signature")
-    expect(result[1].redacted).to eq(true)
+    expect(result[1].provider_info[:anthropic][:redacted_signature]).to eq("abd456signature")
 
     # Second item should be the text response
     expect(result[2]).to eq("Yes, there are infinitely many prime numbers where n mod 4 = 3.")
@@ -643,7 +948,16 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     end
 
     expected_thinking = [
-      DiscourseAi::Completions::Thinking.new(message: "", signature: "", partial: true),
+      DiscourseAi::Completions::Thinking.new(
+        message: "",
+        partial: true,
+        provider_info: {
+          anthropic: {
+            signature: "",
+            redacted: false,
+          },
+        },
+      ),
       DiscourseAi::Completions::Thinking.new(
         message: "Let me solve this step by step:\n\n1. First break down 27 * 453",
         partial: true,
@@ -652,10 +966,24 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       DiscourseAi::Completions::Thinking.new(
         message:
           "Let me solve this step by step:\n\n1. First break down 27 * 453\n2. 453 = 400 + 50 + 3",
-        signature: "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds...",
         partial: false,
+        provider_info: {
+          anthropic: {
+            signature: "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds...",
+            redacted: false,
+          },
+        },
       ),
-      DiscourseAi::Completions::Thinking.new(message: nil, signature: "AAA==", redacted: true),
+      DiscourseAi::Completions::Thinking.new(
+        message: nil,
+        partial: false,
+        provider_info: {
+          anthropic: {
+            redacted_signature: "AAA==",
+            redacted: true,
+          },
+        },
+      ),
     ]
 
     expect(thinking_chunks).to eq(expected_thinking)
@@ -903,10 +1231,19 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\":\\""}}
 
       event: content_block_delta
-      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello!"}}
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello!\\n"}}
 
       event: content_block_delta
-      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\n there"}}
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " there\\nis a text"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " and\\n\\nmore text"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\n \\n and\\n\\n more much more"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " text"}}
 
       event: content_block_delta
       data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\"}"}}
@@ -944,7 +1281,9 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         response_format: schema,
       ) { |partial, cancel| structured_output = partial }
 
-      expect(structured_output.read_buffered_property(:key)).to eq("Hello!\n there")
+      expect(structured_output.read_buffered_property(:key)).to eq(
+        "Hello!\n there\nis a text and\n\nmore text\n \n and\n\n more much more text",
+      )
 
       expected_body = {
         model: "claude-3-opus-20240229",
@@ -954,6 +1293,144 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         stream: true,
       }
       expect(parsed_body).to eq(expected_body)
+    end
+  end
+
+  describe "effort parameter" do
+    it "includes effort in output_config and beta header when set to low, medium, or high" do
+      model.update!(provider_params: { effort: "high" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+          "Anthropic-Beta" => "effort-2025-11-24",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body.dig(:output_config, :effort)).to eq("high")
+    end
+
+    it "combines effort and caching beta headers when both are configured" do
+      model.update!(provider_params: { effort: "medium", prompt_caching: "always" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+          "Anthropic-Beta" => "prompt-caching-2024-07-31,effort-2025-11-24",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body.dig(:output_config, :effort)).to eq("medium")
+    end
+
+    it "omits effort and beta header when set to default" do
+      model.update!(provider_params: { effort: "default" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body).not_to have_key(:output_config)
+    end
+
+    it "omits effort and beta header when not configured" do
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body).not_to have_key(:output_config)
     end
   end
 end

@@ -11,10 +11,14 @@ hu:
     emotion_neutral:
       title: "\U0001F610 Semleges"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Egyéni"
     ai_bot:
       tool_summary:
         search: "Keresés"
-        tags: "Címkék listázása"
+        tags: "Címkék felsorolása"
         time: "Idő"
         summarize: "Összefoglalás"
     sentiment:

@@ -9,7 +9,7 @@ pt_BR:
     admin:
       site_settings:
         categories:
-          discourse_local_dates: "Datas locais Discourse"
+          discourse_local_dates: "Datas locais do Discourse"
   js:
     discourse_local_dates:
       relative_dates:

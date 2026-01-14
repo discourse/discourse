@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Configuration::Feature do
   fab!(:llm_model)
   fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+
+  before { assign_fake_provider_to(:ai_default_llm_model) }
 
   def allow_configuring_setting(&block)
     DiscourseAi::Completions::Llm.with_prepared_responses(["OK"]) { block.call }
@@ -40,7 +40,6 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
       it "returns the configured llm model" do
         SiteSetting.ai_summarization_persona = ai_persona.id
-        allow_configuring_setting { SiteSetting.ai_summarization_model = "custom:#{llm_model.id}" }
         expect(ai_feature.llm_models).to eq([llm_model])
       end
     end
@@ -57,14 +56,12 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
       it "returns the persona's default llm when no specific helper model is set" do
         SiteSetting.ai_helper_proofreader_persona = ai_persona.id
-        SiteSetting.ai_helper_model = ""
-
         expect(ai_feature.llm_models).to eq([llm_model])
       end
     end
 
     context "with translation module" do
-      fab!(:translation_model) { Fabricate(:llm_model) }
+      fab!(:translation_model, :llm_model)
 
       let(:ai_feature) do
         described_class.new(
@@ -77,11 +74,7 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
       it "uses translation model when configured" do
         SiteSetting.ai_translation_locale_detector_persona = ai_persona.id
-        ai_persona.update!(default_llm_id: nil)
-        allow_configuring_setting do
-          SiteSetting.ai_translation_model = "custom:#{translation_model.id}"
-        end
-
+        ai_persona.update!(default_llm_id: translation_model.id)
         expect(ai_feature.llm_models).to eq([translation_model])
       end
     end
@@ -119,8 +112,11 @@ RSpec.describe DiscourseAi::Configuration::Feature do
   end
 
   describe ".bot_features" do
-    fab!(:bot_llm) { Fabricate(:llm_model, enabled_chat_bot: true) }
-    fab!(:non_bot_llm) { Fabricate(:llm_model, enabled_chat_bot: false) }
+    fab!(:bot_llm, :llm_model)
+    fab!(:non_bot_llm, :llm_model)
+
+    before { SiteSetting.ai_bot_enabled_llms = bot_llm.id.to_s }
+
     fab!(:chat_persona) do
       Fabricate(
         :ai_persona,
@@ -168,14 +164,18 @@ RSpec.describe DiscourseAi::Configuration::Feature do
       expect(bot_feature.module_name).to eq(DiscourseAi::Configuration::Module::BOT)
     end
 
-    it "returns only LLMs with enabled_chat_bot" do
+    it "returns only LLMs enabled in ai_bot_enabled_llms setting" do
+      # Disable all other personas to ensure only test personas are active
+      expected_persona_ids = [chat_persona.id, dm_persona.id, topic_persona.id, pm_persona.id]
+      AiPersona.where.not(id: expected_persona_ids).update_all(enabled: false)
+
       expect(bot_feature.llm_models).to contain_exactly(bot_llm)
       expect(bot_feature.llm_models).not_to include(non_bot_llm)
     end
 
     it "returns only personas with at least one bot permission enabled" do
       expected_ids = [chat_persona.id, dm_persona.id, topic_persona.id, pm_persona.id]
-      AiPersona.where("id not in (:ids)", ids: expected_ids).update_all(enabled: false)
+      AiPersona.where.not(id: expected_ids).update_all(enabled: false)
       expect(bot_feature.persona_ids).to match_array(expected_ids)
       expect(bot_feature.persona_ids).not_to include(inactive_persona.id)
     end

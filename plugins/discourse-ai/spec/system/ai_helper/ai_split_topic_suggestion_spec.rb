@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "AI Post helper", type: :system do
-  fab!(:user) { Fabricate(:admin) }
-  fab!(:non_member_group) { Fabricate(:group) }
+  fab!(:user, :admin)
+  fab!(:non_member_group, :group)
   fab!(:topic)
   fab!(:category)
-  fab!(:category_2) { Fabricate(:category) }
+  fab!(:category_2, :category)
   fab!(:post) do
     Fabricate(
       :post,
@@ -30,17 +30,17 @@ RSpec.describe "AI Post helper", type: :system do
   end
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:suggestion_menu) { PageObjects::Components::AiSplitTopicSuggester.new }
-  fab!(:video) { Fabricate(:tag) }
-  fab!(:music) { Fabricate(:tag) }
-  fab!(:cloud) { Fabricate(:tag) }
-  fab!(:feedback) { Fabricate(:tag) }
-  fab!(:review) { Fabricate(:tag) }
+  fab!(:video, :tag)
+  fab!(:music, :tag)
+  fab!(:cloud, :tag)
+  fab!(:feedback, :tag)
+  fab!(:review, :tag)
   fab!(:embedding_definition)
 
   before do
     enable_current_plugin
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
-    assign_fake_provider_to(:ai_helper_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_helper_enabled = true
     sign_in(user)
   end
@@ -83,8 +83,8 @@ RSpec.describe "AI Post helper", type: :system do
           suggestion_menu.click_suggest_titles_button
           wait_for { suggestion_menu.has_dropdown? }
           suggestion_menu.select_suggestion_by_value(1)
-          expected_title = "Cake is the best!"
-          expect(find("#split-topic-name").value).to eq(expected_title)
+
+          expect(page).to have_field("split-topic-name", with: "Cake is the best!")
         end
       end
     end
@@ -133,11 +133,10 @@ RSpec.describe "AI Post helper", type: :system do
         open_move_topic_modal
         suggestion_menu.click_suggest_tags_button
         wait_for { suggestion_menu.has_dropdown? }
-
         suggestion = suggestion_menu.suggestion_name(0)
         suggestion_menu.select_suggestion_by_value(0)
-        tag_selector = page.find(".tag-chooser summary")
-        expect(tag_selector["data-name"]).to eq(suggestion)
+
+        expect(page).to have_css(".tag-chooser summary[data-name='#{suggestion}']")
       end
     end
   end

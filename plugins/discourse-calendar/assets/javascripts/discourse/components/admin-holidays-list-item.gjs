@@ -1,69 +1,69 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { classNameBindings, tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-@tagName("tr")
-@classNameBindings("isHolidayDisabled:disabled")
 export default class AdminHolidaysListItem extends Component {
-  loading = false;
-  isHolidayDisabled = false;
+  @tracked loading = false;
+  @tracked isHolidayDisabled = this.args.isHolidayDisabled || false;
 
   @action
-  disableHoliday(holiday, region_code) {
+  async toggleEnableHoliday() {
     if (this.loading) {
       return;
     }
 
-    this.set("loading", true);
+    let url, type;
 
-    return ajax({
-      url: `/admin/discourse-calendar/holidays/disable`,
-      type: "POST",
-      data: { disabled_holiday: { holiday_name: holiday.name, region_code } },
-    })
-      .then(() => this.set("isHolidayDisabled", true))
-      .catch(popupAjaxError)
-      .finally(() => this.set("loading", false));
-  }
-
-  @action
-  enableHoliday(holiday, region_code) {
-    if (this.loading) {
-      return;
+    if (this.isHolidayDisabled) {
+      url = `/admin/discourse-calendar/holidays/enable`;
+      type = "DELETE";
+    } else {
+      url = `/admin/discourse-calendar/holidays/disable`;
+      type = "POST";
     }
 
-    this.set("loading", true);
+    this.loading = true;
 
-    return ajax({
-      url: `/admin/discourse-calendar/holidays/enable`,
-      type: "DELETE",
-      data: { disabled_holiday: { holiday_name: holiday.name, region_code } },
-    })
-      .then(() => this.set("isHolidayDisabled", false))
-      .catch(popupAjaxError)
-      .finally(() => this.set("loading", false));
+    try {
+      await ajax({
+        url,
+        type,
+        data: {
+          disabled_holiday: {
+            holiday_name: this.args.holiday.name,
+            region_code: this.args.regionCode,
+          },
+        },
+      });
+      this.isHolidayDisabled = !this.isHolidayDisabled;
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   <template>
-    <td>{{this.holiday.date}}</td>
-    <td>{{this.holiday.name}}</td>
-    <td>
-      {{#if this.isHolidayDisabled}}
-        <DButton
-          {{! template-lint-disable no-action }}
-          @action={{action "enableHoliday" this.holiday this.region_code}}
-          @label="discourse_calendar.enable_holiday"
-        />
-      {{else}}
-        <DButton
-          {{! template-lint-disable no-action }}
-          @action={{action "disableHoliday" this.holiday this.region_code}}
-          @label="discourse_calendar.disable_holiday"
-        />
-      {{/if}}
-    </td>
+    <tr class="d-table__row {{if this.isHolidayDisabled '--disabled'}}">
+      <td class="d-table__cell --detail">{{@holiday.date}}</td>
+      <td class="d-table__cell --detail">{{@holiday.name}}</td>
+      <td class="d-table__cell --controls">
+        <div class="d-table__cell-actions">
+          <DButton
+            @action={{this.toggleEnableHoliday}}
+            @label={{if
+              this.isHolidayDisabled
+              "discourse_calendar.enable_holiday"
+              "discourse_calendar.disable_holiday"
+            }}
+            @isLoading={{this.loading}}
+            class="btn-default btn-small"
+          />
+        </div>
+      </td>
+    </tr>
   </template>
 }

@@ -191,17 +191,11 @@
     display: none;
     background: var(--secondary);
     box-sizing: border-box;
+    width: max-content;
 
     .selected-content {
       max-height: 300px;
       overflow-y: auto;
-    }
-
-    &[data-popper-reference-hidden] {
-      html:not(.ios-device) & {
-        visibility: hidden;
-        pointer-events: none;
-      }
     }
   }
 
@@ -214,6 +208,11 @@
     align-items: center;
     justify-content: flex-start;
     padding: 0.5em;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.4;
+    }
 
     > * {
       pointer-events: none;
@@ -235,12 +234,9 @@
       background: var(--d-hover);
     }
 
-    &.is-selected {
-      background: var(--d-selected);
-    }
-
+    &.is-selected,
     &.is-selected.is-highlighted {
-      background: var(--d-hover);
+      background: var(--d-selected);
     }
 
     .discourse-tag,
@@ -264,6 +260,10 @@
 
     &:hover .select-kit-row.is-highlighted:hover {
       background: var(--d-hover);
+    }
+
+    &:hover .select-kit-row.is-selected.is-highlighted:hover {
+      background: var(--d-selected-hover);
     }
 
     .validation-message {
@@ -353,7 +353,6 @@
     font-size: var(--font-down-1);
     color: var(--primary-med-or-secondary-med);
     position: absolute;
-    clip: rect(1px, 1px, 1px, 1px);
     clip-path: inset(50%);
     padding: 0;
     border: 0;

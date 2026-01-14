@@ -207,7 +207,7 @@ RSpec.describe CurrentUserSerializer do
     it "doesn't add expired user status" do
       SiteSetting.enable_user_status = true
 
-      user.user_status.ends_at = 1.minutes.ago
+      user.user_status.ends_at = 1.minute.ago
       serializer = described_class.new(user, scope: Guardian.new(user), root: false)
       json = serializer.as_json
 
@@ -328,6 +328,38 @@ RSpec.describe CurrentUserSerializer do
         end.count
 
       expect(initial_count).to eq(final_count)
+    end
+  end
+
+  describe "#can_see_ip" do
+    let(:payload) { serializer.as_json }
+
+    context "when user is an admin" do
+      let(:user) { Fabricate(:admin) }
+
+      it "includes can_see_ip as true" do
+        expect(payload[:can_see_ip]).to eq(true)
+      end
+    end
+
+    context "when user is a moderator and moderators_view_ips is enabled" do
+      let(:user) { Fabricate(:moderator) }
+
+      before { SiteSetting.moderators_view_ips = true }
+
+      it "includes can_see_ip as true" do
+        expect(payload[:can_see_ip]).to eq(true)
+      end
+    end
+
+    context "when user is a moderator and moderators_view_ips is disabled" do
+      let(:user) { Fabricate(:moderator) }
+
+      before { SiteSetting.moderators_view_ips = false }
+
+      it "does not include can_see_ip" do
+        expect(payload).not_to have_key(:can_see_ip)
+      end
     end
   end
 

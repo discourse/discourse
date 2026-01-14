@@ -39,8 +39,8 @@ sq:
           title: "Postim"
         topic_map:
           title: "Harta e temës"
-        suggested_topics:
-          title: "Temat e sugjeruara"
+        more_topics:
+          title: "Më shumë tema"
         modal:
           title: "Modalitet"
         user_about:

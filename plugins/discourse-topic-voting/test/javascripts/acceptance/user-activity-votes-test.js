@@ -1,8 +1,6 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance(
@@ -27,18 +25,18 @@ acceptance(
 
     test("When looking at the own activity page", async function (assert) {
       await visit(`/u/${currentUser}/activity/votes`);
-      assert.equal(
-        query(".empty-state .empty-state__title").innerText,
-        i18n("topic_voting.no_votes_title_self")
-      );
+      assert
+        .dom(".empty-state .empty-state__title")
+        .hasText(i18n("topic_voting.no_votes_title_self"));
     });
 
     test("When looking at another user's activity page", async function (assert) {
       await visit(`/u/${anotherUser}/activity/votes`);
-      assert.equal(
-        query(".empty-state .empty-state__title").innerText,
-        i18n("topic_voting.no_votes_title_others", { username: anotherUser })
-      );
+      assert
+        .dom(".empty-state .empty-state__title")
+        .hasText(
+          i18n("topic_voting.no_votes_title_others", { username: anotherUser })
+        );
     });
   }
 );

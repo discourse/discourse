@@ -96,4 +96,78 @@ RSpec.describe DiscourseAi::Summarization::Strategies::TopicSummary do
       end
     end
   end
+
+  describe "#as_llm_messages" do
+    let(:contents) do
+      [{ id: 1, poster: "user1", text: "First post content", last_version_at: Time.now }]
+    end
+
+    it "includes the topic title in the message" do
+      topic.title = "Test Topic Title"
+
+      messages = topic_summary.as_llm_messages(contents)
+      content = messages.first[:content]
+
+      expect(content).to include("The discussion title is: Test Topic Title")
+    end
+
+    context "when topic has a category" do
+      fab!(:category) { Fabricate(:category, name: "Test Category") }
+
+      it "includes the category name in the message" do
+        topic.category = category
+
+        messages = topic_summary.as_llm_messages(contents)
+        content = messages.first[:content]
+
+        expect(content).to include("Category: Test Category")
+      end
+    end
+
+    context "when topic has tags" do
+      fab!(:tag1) { Fabricate(:tag, name: "tag1") }
+      fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+
+      it "includes the tag names in the message" do
+        topic.tags = [tag1, tag2]
+
+        messages = topic_summary.as_llm_messages(contents)
+        content = messages.first[:content]
+
+        expect(content).to include("Tags: tag1, tag2")
+      end
+
+      context "with hidden tags" do
+        fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+
+        before do
+          Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+          topic.tags = [tag1, hidden_tag, tag2]
+        end
+
+        it "excludes hidden tags from summaries (summaries are cached and shared)" do
+          # Summaries are cached and shared across all users, so hidden tags should never appear
+          # regardless of who generates them
+          messages = topic_summary.as_llm_messages(contents)
+          content = messages.first[:content]
+
+          expect(content).to include("Tags: tag1, tag2")
+          expect(content).not_to include("hidden")
+        end
+      end
+    end
+
+    context "when topic has no category or tags" do
+      it "doesn't include category or tags in the message" do
+        topic.category = nil
+        topic.tags = []
+
+        messages = topic_summary.as_llm_messages(contents)
+        content = messages.first[:content]
+
+        expect(content).not_to include("Category:")
+        expect(content).not_to include("Tags:")
+      end
+    end
+  end
 end

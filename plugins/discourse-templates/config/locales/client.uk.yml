@@ -8,6 +8,19 @@ uk:
   admin_js:
     discourse_templates:
       title: "Шаблони"
+    admin:
+      site_settings:
+        categories:
+          discourse_templates: "Плагін Discourse «Шаблони»"
   js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "Шаблони (у текстовому полі)"
+        insert_template: "%{shortcut} Вставити шаблон"
     templates:
+      filter_hint: "Фільтр за ключовим словом..."
+      insert_template: "Вставити шаблон"
+      close_templates: "Закрити перемикач шаблонів"
+      copy: "Копіювати шаблон"
+      new_topic: "Нова тема з шаблону"
       source: "Джерело"

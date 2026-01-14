@@ -19,7 +19,6 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   has_one :smtp_updated_by, embed: :object, serializer: BasicUserSerializer
-  has_one :imap_updated_by, embed: :object, serializer: BasicUserSerializer
 
   admin_attributes :automatic_membership_email_domains,
                    :smtp_server,
@@ -28,20 +27,9 @@ class GroupShowSerializer < BasicGroupSerializer
                    :smtp_enabled,
                    :smtp_updated_at,
                    :smtp_updated_by,
-                   :imap_server,
-                   :imap_port,
-                   :imap_ssl,
-                   :imap_mailbox_name,
-                   :imap_mailboxes,
-                   :imap_enabled,
-                   :imap_updated_at,
-                   :imap_updated_by,
                    :email_username,
                    :email_password,
                    :email_from_alias,
-                   :imap_last_error,
-                   :imap_old_emails,
-                   :imap_new_emails,
                    :message_count,
                    :allow_unknown_sender_topic_replies,
                    :associated_group_ids

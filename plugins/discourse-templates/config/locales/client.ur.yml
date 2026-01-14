@@ -8,6 +8,18 @@ ur:
   admin_js:
     discourse_templates:
       title: "ٹَیمپلیٹ"
+    admin:
+      site_settings:
+        categories:
+          discourse_templates: "ڈسکورس سانچے"
   js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "سانچے (ایک متن علاقہ کے اندر)"
+        insert_template: "%{shortcut} سانچہ ڈالیں"
     templates:
+      insert_template: "سانچہ ڈالیں"
+      close_templates: "سانچے منتخب کرنے کو بند کریں۔"
+      copy: "سانچہ کاپی"
+      new_topic: "سانچہ سے نیا موضوع"
       source: "ذریعہ"

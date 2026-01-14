@@ -2,6 +2,8 @@
 
 module Migrations::Importer
   class DiscourseDB
+    QueryResult = Data.define(:rows, :column_count)
+
     COPY_BATCH_SIZE = 1_000
     SKIP_ROW_MARKER = :"$skip"
 
@@ -93,15 +95,31 @@ module Migrations::Importer
     end
 
     def query_array(sql, *params)
+      query_result(sql, *params).rows
+    end
+
+    def query_result(sql, *params)
       @connection.send_query_params(sql, params)
       @connection.set_single_row_mode
 
-      Enumerator.new do |y|
-        while (result = @connection.get_result)
-          result.stream_each_row { |row| y.yield(row) }
-          result.clear
+      first_result = @connection.get_result
+      return QueryResult.new(rows: Enumerator.new {}, column_count: 0) unless first_result
+
+      column_count = first_result.nfields
+      single_column = column_count == 1
+
+      rows_enumerator =
+        Enumerator.new do |y|
+          first_result.stream_each_row { |row| single_column ? y << row[0] : y << row }
+          first_result.clear
+
+          while (result = @connection.get_result)
+            result.stream_each_row { |row| single_column ? y << row[0] : y << row }
+            result.clear
+          end
         end
-      end
+
+      QueryResult.new(rows: rows_enumerator, column_count:)
     end
 
     def close
@@ -122,7 +140,7 @@ module Migrations::Importer
       {
         host: db_config[:host],
         port: db_config[:port],
-        username: db_config[:username] || username,
+        user: db_config[:username] || username,
         password: db_config[:password] || password,
         dbname: db_config[:database],
       }.compact

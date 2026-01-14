@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-RSpec.describe ::Patreon do
+RSpec.describe Patreon do
   let(:user1) { Fabricate(:user) }
   let(:user2) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }

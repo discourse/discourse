@@ -14,8 +14,6 @@ module("Integration | Component | da-categories-field", function (hooks) {
   });
 
   test("sets values", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "categories",
     });
@@ -23,8 +21,8 @@ module("Integration | Component | da-categories-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -37,8 +35,6 @@ module("Integration | Component | da-categories-field", function (hooks) {
   });
 
   test("empty", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "categories",
     });
@@ -46,8 +42,8 @@ module("Integration | Component | da-categories-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );

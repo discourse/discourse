@@ -4,8 +4,6 @@ module Chat
   class DirectMessageChannel < Channel
     alias_method :direct_message, :chatable
 
-    before_validation(on: :create) { self.threading_enabled = true }
-
     def direct_message_channel?
       true
     end
@@ -66,7 +64,7 @@ end
 #  messages_count              :integer          default(0), not null
 #  threading_enabled           :boolean          default(FALSE), not null
 #  last_message_id             :bigint
-#  icon_upload_id              :integer
+#  emoji                       :string
 #
 # Indexes
 #

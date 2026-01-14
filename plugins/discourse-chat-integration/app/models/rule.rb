@@ -61,7 +61,7 @@ class DiscourseChatIntegration::Rule < DiscourseChatIntegration::PluginModel
   validate :channel_valid?, :category_valid?, :group_valid?, :tags_valid?
 
   def self.key_prefix
-    "rule:".freeze
+    "rule:"
   end
 
   # We never want an empty array, set it to nil instead

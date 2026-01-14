@@ -27,6 +27,12 @@ pt:
         text:
           label: Texto
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorias
+            tags:
+              label: Etiquetas
         user_badge_granted:
           fields:
             badge:
@@ -64,6 +70,8 @@ pt:
               label: Etiquetas
             restricted_categories:
               label: Categorias
+            post_features:
+              label: Funcionalidades de publicação
           created: Criado
           with_images: Imagens
           with_links: Hiperligações
@@ -128,6 +136,8 @@ pt:
               label: ID do Tópico
             user:
               label: Utilizador
+        set_topic_timer:
+          title: Definir Temporizador de Tópico
       models:
         trigger:
           name:
@@ -141,7 +151,5 @@ pt:
             label: Versão
           status:
             label: Estado
-          enabled:
-            label: Ativado
           disabled:
             label: Desativado

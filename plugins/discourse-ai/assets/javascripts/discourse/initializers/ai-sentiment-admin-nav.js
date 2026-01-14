@@ -1,11 +1,11 @@
 import { apiInitializer } from "discourse/lib/api";
 
-export default apiInitializer("1.15.0", (api) => {
+export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
 
   if (
     !currentUser ||
-    !currentUser.admin ||
+    !currentUser.staff ||
     !currentUser.can_see_sentiment_reports
   ) {
     return;
@@ -16,6 +16,7 @@ export default apiInitializer("1.15.0", (api) => {
     route: "admin.dashboardSentiment",
     label: "discourse_ai.sentiments.sidebar.overview",
     icon: "chart-column",
+    moderator: true,
   });
   api.addAdminSidebarSectionLink("reports", {
     name: "sentiment_analysis",
@@ -23,5 +24,6 @@ export default apiInitializer("1.15.0", (api) => {
     routeModels: ["sentiment_analysis"],
     label: "discourse_ai.sentiments.sidebar.analysis",
     icon: "chart-pie",
+    moderator: true,
   });
 });

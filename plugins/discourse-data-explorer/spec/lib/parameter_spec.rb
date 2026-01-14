@@ -12,7 +12,7 @@ RSpec.describe DiscourseDataExplorer::Parameter do
 
     it "raises error for not-nullable blank string" do
       expect { param("param123", :string, nil, false).cast_to_ruby("") }.to raise_error(
-        ::DiscourseDataExplorer::ValidationError,
+        DiscourseDataExplorer::ValidationError,
       )
     end
 
@@ -21,7 +21,7 @@ RSpec.describe DiscourseDataExplorer::Parameter do
 
       it "raises an error if not a double" do
         expect { double_param.cast_to_ruby("abcd") }.to raise_error(
-          ::DiscourseDataExplorer::ValidationError,
+          DiscourseDataExplorer::ValidationError,
         )
       end
 
@@ -61,7 +61,7 @@ RSpec.describe DiscourseDataExplorer::Parameter do
         it "raises an error if no such post exists" do
           post.destroy
           expect { param("post_id", :post_id, nil, false).cast_to_ruby(post.url) }.to raise_error(
-            ::DiscourseDataExplorer::ValidationError,
+            DiscourseDataExplorer::ValidationError,
           )
         end
       end
@@ -69,7 +69,7 @@ RSpec.describe DiscourseDataExplorer::Parameter do
       context "when the value provided is an integer" do
         it "raises an error if no such post exists" do
           expect { param("post_id", :post_id, nil, false).cast_to_ruby("-999") }.to raise_error(
-            ::DiscourseDataExplorer::ValidationError,
+            DiscourseDataExplorer::ValidationError,
           )
         end
 
@@ -85,7 +85,7 @@ RSpec.describe DiscourseDataExplorer::Parameter do
       context "when the value provided is an integer" do
         it "raises an error if no such group exists" do
           expect { param("group_id", :group_id, nil, false).cast_to_ruby("-999") }.to raise_error(
-            ::DiscourseDataExplorer::ValidationError,
+            DiscourseDataExplorer::ValidationError,
           )
         end
 
@@ -102,15 +102,37 @@ RSpec.describe DiscourseDataExplorer::Parameter do
       it "raises an error if no such user exists" do
         expect {
           param("user_id", :user_id, nil, false).cast_to_ruby("user_not_exist")
-        }.to raise_error(::DiscourseDataExplorer::ValidationError)
+        }.to raise_error(DiscourseDataExplorer::ValidationError)
         expect {
           param("user_id", :user_id, nil, false).cast_to_ruby("user_not_exist@fake.email")
-        }.to raise_error(::DiscourseDataExplorer::ValidationError)
+        }.to raise_error(DiscourseDataExplorer::ValidationError)
       end
 
       it "returns the user id if the user exists" do
         expect(param("user_id", :user_id, nil, false).cast_to_ruby(user.username)).to eq(user.id)
         expect(param("user_id", :user_id, nil, false).cast_to_ruby(user.email)).to eq(user.id)
+      end
+    end
+
+    describe "current_user_id type" do
+      fab!(:user)
+      let(:current_user_param) { param("me", :current_user_id, nil, false) }
+
+      it "returns the current user's id, ignoring user-provided values" do
+        expect(current_user_param.cast_to_ruby(nil, current_user: user)).to eq(user.id)
+        expect(current_user_param.cast_to_ruby("999999", current_user: user)).to eq(user.id)
+      end
+
+      it "raises an error when not nullable and no current user" do
+        expect { current_user_param.cast_to_ruby(nil, {}) }.to raise_error(
+          DiscourseDataExplorer::ValidationError,
+          /requires a logged in user/,
+        )
+      end
+
+      it "returns nil when nullable and no current user" do
+        nullable_param = param("me", :current_user_id, nil, true)
+        expect(nullable_param.cast_to_ruby(nil, {})).to eq(nil)
       end
     end
   end

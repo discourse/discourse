@@ -21,6 +21,7 @@ module Holidays
             {:mday => 17, :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "St. Patrick's Day", :regions => [:gb_nir]}],
       5 => [{:wday => 1, :week => 1, :year_ranges => { :until => 2019 },:name => "May Day", :regions => [:gb]},
             {:mday => 8, :year_ranges => { :limited => [2020] },:name => "May Day", :regions => [:gb]},
+            {:mday => 8, :year_ranges => { :limited => [2023] },:name => "Bank Holiday for the Coronation of King Charles III", :regions => [:gb]},
             {:wday => 1, :week => 1, :year_ranges => { :from => 2021 },:name => "May Day", :regions => [:gb]},
             {:mday => 9, :name => "Liberation Day", :regions => [:je, :gb_jsy, :gg, :gb_gsy]},
             {:wday => 1, :week => -1, :year_ranges => { :until => 2021 },:name => "Bank Holiday", :regions => [:gb]},

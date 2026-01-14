@@ -10,6 +10,8 @@ he:
       logs:
         staff_actions:
           actions:
+            create_automation: יצירת אוטומציה
+            update_automation: עדכון אוטומציה
             delete_automation: מחיקת אוטומציה
     discourse_automation:
       title: אוטומציה
@@ -60,13 +62,17 @@ he:
             label: Body
           delay:
             label: השהיה (דקות)
-          prefers_encrypt:
-            label: מצפין הודעות פרטיות אם זמין
         group:
           label: קבוצה
         text:
           label: טקסט
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: קטגוריות
+            tags:
+              label: תגיות
         not_found: לא ניתן למצוא את גורם ההקפצה `%{trigger}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         user_badge_granted:
           fields:
@@ -277,6 +283,14 @@ he:
               label: תגיות
               description: הגדרת רשות, יוזנק רק אם לפוסט יש את אחת התגיות הבאות
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: תבנית דוא״ל
+              description: תומך בממלאי מקום לאוטומציה
+            recipients:
+              label: נמענים
+              description: משתמשים או כתובת דוא״ל לשליחת התראות
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:
           fields:
@@ -424,6 +438,13 @@ he:
           fields:
             custom_field_name:
               label: "שם שדה מותאם אישית של משתמש"
+        set_topic_timer:
+          title: הגדרת שעון עצר לנושא
+          fields:
+            type:
+              label: סוג מתזמן
+            duration:
+              label: משך מתזמן
       unnamed_automation: "אוטומציה ללא שם"
       models:
         script:
@@ -449,7 +470,7 @@ he:
           status:
             label: מצב
           enabled:
-            label: פעיל
+            label: "הפעלת אוטומציה"
           disabled:
             label: כבוי
           placeholders:
@@ -460,3 +481,4 @@ he:
             label: ריצה אחרונה
           last_updated_by:
             label: עודכן על ידי
+          enable_toggle_disabled: "אפשר להפעיל את האוטומציה הזאת לאחר שכל השדות הנחוצים מולאו."

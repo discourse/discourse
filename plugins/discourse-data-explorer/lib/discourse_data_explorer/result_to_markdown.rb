@@ -2,7 +2,7 @@
 
 include HasSanitizableFields
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class ResultToMarkdown
     def self.convert(pg_result, render_url_columns = false)
       relations, colrender = DataExplorer.add_extra_data(pg_result)

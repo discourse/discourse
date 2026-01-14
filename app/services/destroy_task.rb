@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-require "highline/import"
+require "highline"
+require "io/console"
 
 class DestroyTask
   def initialize(io = STDOUT)
     @io = io
+    @tty = IO.console
+    @hl = HighLine.new(@tty, @io)
   end
 
   def destroy_topics(category, parent_category = nil, delete_system_topics = false)
@@ -77,7 +80,7 @@ class DestroyTask
     end
 
     if require_confirmation
-      confirm_destroy = ask("Are you sure? (Y/n)")
+      confirm_destroy = @hl.ask("Are you sure? (Y/n)")
       exit 1 if confirm_destroy.downcase != "y"
     end
 

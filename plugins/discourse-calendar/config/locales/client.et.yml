@@ -23,6 +23,7 @@ et:
         month: "Kuu"
         week: "Nädal"
         day: "Päev"
+        year: "Aasta"
     group_timezones:
       search: "Otsi..."
     discourse_post_event:

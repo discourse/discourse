@@ -22,7 +22,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   attr_accessor :created_new
-  validates_presence_of :type, :status, :created_by_id
+  validates :type, :status, :created_by_id, presence: true
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: "User"
   belongs_to :target_created_by, class_name: "User"
@@ -34,6 +34,7 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
+  has_many :reviewable_action_logs, -> { order(created_at: :asc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -350,17 +351,14 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-    # Support this action or any aliases
-    aliases = self.class.action_aliases
-    valid = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
-
-    # Ensure the user has access to the action
-    guardian = args[:guardian] || Guardian.new(performed_by)
-    actions = actions_for(guardian, args)
-    raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
-
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
-    raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
+    guardian = args[:guardian] || Guardian.new(performed_by)
+
+    validate_action!(guardian, action_id, perform_method, args)
+
+    # Bundle needs to be determined before the action is performed, as bundles
+    # are dynamic based on the state of the reviewable.
+    action_bundle_id = get_action_bundle_id(guardian, action_id, args)
 
     result = nil
     update_count = false
@@ -370,23 +368,54 @@ class Reviewable < ActiveRecord::Base
 
       raise ActiveRecord::Rollback unless result.success?
 
-      update_count = transition_to(result.transition_to, performed_by) if result.transition_to
-      update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+      if result.transition_to
+        reviewable_action_logs.create!(
+          action_key: action_id.to_s,
+          status: result.transition_to,
+          performed_by: performed_by,
+          bundle: action_bundle_id,
+        )
+      end
 
-      recalculate_score if result.recalculate_score
+      if !guardian.can_see_reviewable_ui_refresh? || SiteSetting.reviewable_old_moderator_actions
+        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+        update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+
+        recalculate_score if result.recalculate_score
+      else
+        Review::CalculateFinalStatusFromLogs.call(
+          params: {
+            reviewable_id: id,
+            guardian: guardian,
+            args: args,
+          },
+        ) do
+          on_success do |status:|
+            unless status == :pending
+              update_count = transition_to(status, performed_by)
+              update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+
+              recalculate_score if result.recalculate_score
+            end
+          end
+        end
+      end
     end
+
     result.after_commit.call if result && result.after_commit
 
-    if update_count || result.remove_reviewable_ids.present?
-      Jobs.enqueue(
-        :notify_reviewable,
-        reviewable_id: self.id,
-        performing_username: performed_by.username,
-        updated_reviewable_ids: result.remove_reviewable_ids,
-      )
-    end
+    unless status == :pending
+      if update_count || result.remove_reviewable_ids.present?
+        Jobs.enqueue(
+          :notify_reviewable,
+          reviewable_id: self.id,
+          performing_username: performed_by.username,
+          updated_reviewable_ids: result.remove_reviewable_ids,
+        )
+      end
 
-    notify_users(result, guardian)
+      notify_users(result, guardian)
+    end
 
     result
   end
@@ -433,8 +462,16 @@ class Reviewable < ActiveRecord::Base
           .includes(
             { created_by: :user_stat },
             :topic,
-            :target,
-            :target_created_by,
+            {
+              target: [
+                :user_stat,
+                :primary_email,
+                { topic: :category },
+                :user_histories,
+                :user_custom_fields,
+              ],
+            },
+            { target_created_by: [:user_custom_fields] },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
@@ -478,6 +515,7 @@ class Reviewable < ActiveRecord::Base
     priority: nil,
     username: nil,
     reviewed_by: nil,
+    claimed_by: nil,
     sort_order: nil,
     from_date: nil,
     to_date: nil,
@@ -547,6 +585,17 @@ class Reviewable < ActiveRecord::Base
           status <> #{statuses[:pending]} AND created_by_id = #{reviewed_by_id}
         ) AS rh ON rh.reviewable_id = reviewables.id
       SQL
+    end
+
+    if claimed_by
+      claimed_by_id = User.find_by_username(claimed_by)&.id
+      return none if claimed_by_id.nil?
+
+      result = result.joins(<<~SQL)
+        INNER JOIN reviewable_claimed_topics rct_filter
+        ON rct_filter.topic_id = reviewables.topic_id
+      SQL
+      result = result.where("rct_filter.user_id = ?", claimed_by_id)
     end
 
     min_score = min_score_for_priority(priority)
@@ -631,6 +680,7 @@ class Reviewable < ActiveRecord::Base
     @@serializers[type] ||= lookup_serializer_for(type)
   end
 
+  # @TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated, it now lives in ReviewableActionBuilder.
   def create_result(status, transition_to = nil)
     result = PerformResult.new(self, status)
     result.transition_to = transition_to
@@ -740,6 +790,7 @@ class Reviewable < ActiveRecord::Base
     self.score
   end
 
+  # TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated.
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(
@@ -751,6 +802,7 @@ class Reviewable < ActiveRecord::Base
     actions.add(:delete_user, bundle: bundle) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
+      a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
     end
 
@@ -824,6 +876,41 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  def aliases
+    self.class.action_aliases
+  end
+
+  def validate_action!(guardian, action_id, perform_method, args)
+    # Support this action or any aliases
+    action_aliases = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
+
+    # Ensure the user has access to the action
+    actions = actions_for(guardian, args)
+
+    if action_aliases.none? { |a| actions.has?(a) } || !respond_to?(perform_method)
+      raise InvalidAction.new(action_id, self.class)
+    end
+  end
+
+  def get_action_bundle_id(guardian, action_id, args)
+    action_aliases = [
+      action_id,
+      aliases.to_a.select { |k, v| v == action_id }.map(&:first),
+    ].flatten.map(&:to_s)
+
+    actions = actions_for(guardian, args)
+    bundle_id = nil
+    actions.bundles.each do |bundle|
+      if bundle.actions.any? { |a| action_aliases.include?(a.server_action.to_s) }
+        bundle_id = bundle.bundle_id
+        break
+      end
+    end
+
+    # For old UI actions that aren't in the new separated bundles, use a default bundle
+    bundle_id ||= "legacy-actions"
+  end
 
   def update_flag_stats(status:, user_ids:)
     return if %i[agreed disagreed ignored].exclude?(status)

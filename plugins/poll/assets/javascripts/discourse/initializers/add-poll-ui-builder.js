@@ -30,6 +30,6 @@ export default {
   name: "add-poll-ui-builder",
 
   initialize() {
-    withPluginApi("1.14.0", initializePollUIBuilder);
+    withPluginApi(initializePollUIBuilder);
   },
 };

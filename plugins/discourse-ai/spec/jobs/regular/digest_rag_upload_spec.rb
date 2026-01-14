@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::DigestRagUpload do
-  fab!(:persona) { Fabricate(:ai_persona) }
+  subject(:job) { described_class.new }
+
+  fab!(:persona, :ai_persona)
   fab!(:upload) { Fabricate(:upload, extension: "txt") }
   fab!(:image_upload) { Fabricate(:upload, extension: "png") }
   let(:document_file) { StringIO.new("some text" * 200) }
@@ -80,11 +82,7 @@ RSpec.describe Jobs::DigestRagUpload do
       before { File.expects(:open).returns(document_file) }
 
       it "splits an upload into chunks" do
-        subject.execute(
-          upload_id: upload.id,
-          target_id: persona.id,
-          target_type: persona.class.to_s,
-        )
+        job.execute(upload_id: upload.id, target_id: persona.id, target_type: persona.class.to_s)
 
         created_fragment = RagDocumentFragment.last
 
@@ -95,11 +93,7 @@ RSpec.describe Jobs::DigestRagUpload do
 
       it "queue jobs to generate embeddings for each fragment" do
         expect {
-          subject.execute(
-            upload_id: upload.id,
-            target_id: persona.id,
-            target_type: persona.class.to_s,
-          )
+          job.execute(upload_id: upload.id, target_id: persona.id, target_type: persona.class.to_s)
         }.to change(Jobs::GenerateRagEmbeddings.jobs, :size).by(1)
       end
     end
@@ -109,7 +103,7 @@ RSpec.describe Jobs::DigestRagUpload do
 
       previous_count = RagDocumentFragment.where(upload: upload, target: persona).count
 
-      subject.execute(upload_id: upload.id, target_id: persona.id, target_type: persona.class.to_s)
+      job.execute(upload_id: upload.id, target_id: persona.id, target_type: persona.class.to_s)
       updated_count = RagDocumentFragment.where(upload: upload, target: persona).count
 
       expect(updated_count).to eq(previous_count)

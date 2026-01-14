@@ -22,8 +22,8 @@
 #   usernames to be created.
 
 require "csv"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-require File.expand_path(File.dirname(__FILE__) + "/base/csv_helper.rb")
+require_relative "base"
+require_relative "base/csv_helper"
 
 # Call it like this:
 #   bundle exec ruby script/import_scripts/zoho.rb <path-to-csv-files>

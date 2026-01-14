@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discourse RSS ポーリング"
   js:
+    rss_polling:
+      title: RSS ポーリング
     admin:
       rss_polling:
+        feed: フィードの設定
+        discourse: Discourse の設定
         author: 作成者
         feed_url: URL
         discourse_category: カテゴリ
         discourse_tags: タグ
+        feed_category_filter: カテゴリフィルタ
+        documentation: RSS ポーリングの構成ドキュメント
+        destroy_feed:
+          confirm: "このフィードを削除してもよろしいですか？"

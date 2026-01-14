@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 sk:
+  site_settings:
+    discourse_graphviz_enabled: "Povoliť doplnok Graphviz"
+    graphviz_default_svg: "Predvolené vykresľovanie SVG namiesto vykresľovania obrázkov, je možné prispôsobiť pre každý graf pomocou elementu `svg=true|false`."

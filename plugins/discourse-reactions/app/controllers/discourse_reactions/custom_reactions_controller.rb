@@ -2,6 +2,7 @@
 
 class DiscourseReactions::CustomReactionsController < ApplicationController
   MAX_USERS_COUNT = 26
+  PAGE_SIZE = 20
 
   requires_plugin DiscourseReactions::PLUGIN_NAME
 
@@ -9,10 +10,16 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   def toggle
     post = fetch_post_from_params
+    reaction = params[:reaction]
 
-    if DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
-      return render_json_error(post)
-    end
+    invalid_reaction =
+      if SiteSetting.discourse_reactions_allow_any_emoji
+        !Emoji.exists?(reaction)
+      else
+        DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
+      end
+
+    return render_json_error(post) if invalid_reaction
 
     begin
       manager =
@@ -61,7 +68,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         .joins("LEFT JOIN categories c ON c.id = t.category_id")
         .includes(:user, :post, :reaction)
         .where(user_id: user.id)
-        .where("discourse_reactions_reactions.reaction_users_count IS NOT NULL")
+        .where.not(discourse_reactions_reactions: { reaction_users_count: nil })
 
     reaction_users = secure_reaction_users!(reaction_users)
 
@@ -73,7 +80,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         )
     end
 
-    reaction_users = reaction_users.order(created_at: :desc).limit(20)
+    reaction_users = reaction_users.order(created_at: :desc).limit(PAGE_SIZE)
 
     render_serialized(reaction_users.to_a, UserReactionSerializer)
   end
@@ -95,7 +102,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       DiscourseReactions::ReactionUser
         .joins(:reaction)
         .where(post_id: post_ids)
-        .where("discourse_reactions_reactions.reaction_users_count IS NOT NULL")
+        .where.not(discourse_reactions_reactions: { reaction_users_count: nil })
 
     # Guarantee backwards compatibility if someone was calling this endpoint with the old param.
     # TODO(roman): Remove after the 2.9 release.
@@ -114,7 +121,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         reaction_users.joins(:user).where(users: { username: params[:acting_username] })
     end
 
-    reaction_users = reaction_users.order(created_at: :desc).limit(20).to_a
+    reaction_users = reaction_users.order(created_at: :desc).limit(PAGE_SIZE).to_a
 
     if params[:include_likes]
       # We do not want to include likes that also count as
@@ -134,7 +141,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           SQL
           .where("discourse_reactions_reaction_users.id IS NULL")
           .order(created_at: :desc)
-          .limit(20)
+          .limit(PAGE_SIZE)
 
       if params[:before_like_id]
         likes = likes.where("post_actions.id < ?", params[:before_like_id].to_i)
@@ -148,7 +155,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       reaction_users = reaction_users.sort { |a, b| b.created_at <=> a.created_at }
     end
 
-    render_serialized reaction_users.first(20), UserReactionSerializer
+    render_serialized reaction_users.first(PAGE_SIZE), UserReactionSerializer
   end
 
   def post_reactions_users
@@ -180,9 +187,10 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           .joins(
             "LEFT JOIN discourse_reactions_reactions ON discourse_reactions_reactions.id = discourse_reactions_reaction_users.reaction_id",
           )
-          .where(
-            "discourse_reactions_reactions.reaction_value NOT IN (:valid_reactions)",
-            valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
+          .where.not(
+            discourse_reactions_reactions: {
+              reaction_value: DiscourseReactions::Reaction.valid_reactions.to_a,
+            },
           )
 
       likes = likes.where.not(id: historical_reaction_likes.select(:id))

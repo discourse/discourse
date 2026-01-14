@@ -42,7 +42,7 @@ hr:
         groups: "Grupe:"
         no_persona: "Nije postavljeno"
         no_groups: "Ništa"
-        edit: "Uredi"
+        edit: "Postavke"
         expand_list:
           one: "(%{count} još)"
           few: "(%{count} još)"
@@ -56,7 +56,27 @@ hr:
         spam:
           name: "Nepoželjno"
       modals:
-        select_option: "Odaberi opciju..."
+        select_option: "Odaberite opciju..."
+      translations:
+        title: "Prijevodi"
+        stats:
+          eta_minutes:
+            one: "%{count} minuta"
+            few: "%{count} minuta"
+            other: "%{count} minuta"
+          eta_hours:
+            one: "%{count} sat"
+            few: "%{count} sata"
+            other: "%{count} sata"
+          eta_days:
+            one: "%{count} dan"
+            few: "%{count} dana"
+            other: "%{count} dana"
+        progress_chart:
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objava"
+            other: "%{count} objava"
       spam:
         short_title: "Nepoželjno"
         last_seven_days: "Zadnjih 7 dana"
@@ -67,6 +87,7 @@ hr:
         summary: "Sažetak"
         username: "Korisničko ime"
         total_requests: "Ukupno zahtjeva"
+        total: "Ukupno"
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."
@@ -143,10 +164,9 @@ hr:
         thumbnail_suggestions:
           select: "Odaberite"
           selected: "Odabrano"
+          try_again: "Pokušaj ponovno"
         image_caption:
           save_caption: "Spremi"
-          automatic_caption_dialog:
-            confirm: "Omogućiti"
       embeddings:
         back: "Natrag"
         save: "Spremi"
@@ -164,7 +184,7 @@ hr:
           request: "Zahtjev"
           response: "Odgovor"
           next_log: "Sljedeći"
-          previous_log: "Predhodno"
+          previous_log: "Prethodni"
         invite_ai_conversation:
           button: "Pozovite"
         share_modal:

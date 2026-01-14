@@ -87,7 +87,7 @@ RSpec.describe "Deleted message", type: :system do
       channel_page.messages.select(message_4)
       channel_page.messages.select(message_6)
       channel_page.selection_management.delete
-      click_button(I18n.t("js.delete"))
+      find(".d-modal__footer .btn-primary").click
 
       expect(channel_page.messages).to have_deleted_messages(message_2, message_4, message_6)
     end

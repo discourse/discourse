@@ -29,7 +29,20 @@ module Jobs
           post_number: 1,
         )
 
-      event_started = Time.now > event.starts_at
+      return if event.starts_at.nil?
+
+      # Convert both times to UTC for proper comparison
+      current_time = Time.current
+      event_start_time =
+        (
+          if event.starts_at.is_a?(ActiveSupport::TimeWithZone)
+            event.starts_at
+          else
+            event.starts_at.in_time_zone(event.timezone || "UTC")
+          end
+        )
+
+      event_started = current_time > event_start_time
 
       # we remove users who have been visiting the topic since event started
       if event_started
@@ -40,7 +53,7 @@ module Jobs
                 .where(
                   "topic_users.topic_id = ? AND topic_users.last_visited_at >= ? AND topic_users.last_read_post_number >= ?",
                   event.post.topic_id,
-                  event.starts_at,
+                  event_start_time,
                   1,
                 )
                 .pluck(:user_id)
@@ -50,7 +63,15 @@ module Jobs
         invitees = invitees.where.not(user_id: already_notified_users.pluck(:user_id))
       end
 
-      event_ended = event.ends_at && Time.now > event.ends_at
+      event_end_time =
+        (
+          if event.ends_at.is_a?(ActiveSupport::TimeWithZone)
+            event.ends_at
+          else
+            event.ends_at&.in_time_zone(event.timezone || "UTC")
+          end
+        )
+      event_ended = event_end_time && current_time > event_end_time
       prefix = "before"
       if event_ended
         prefix = "after"

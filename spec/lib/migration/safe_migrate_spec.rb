@@ -140,6 +140,16 @@ RSpec.describe Migration::SafeMigrate do
     expect(output).to include("change_column_null(:users, :username, true, nil)")
   end
 
+  it "allows dropping default" do
+    Migration::SafeMigrate.enable!
+
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/drop_default"
+
+    output = capture_stdout { migrate_up(path) }
+
+    expect(output).to include("change_column_default(:posts, :like_count, nil)")
+  end
+
   it "supports being disabled" do
     Migration::SafeMigrate.enable!
     Migration::SafeMigrate.disable!

@@ -6,11 +6,11 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import EmptyState from "discourse/components/empty-state";
 import FilterInput from "discourse/components/filter-input";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -45,7 +45,7 @@ export default class BrowseChannels extends Component {
     if (this.siteSettings.chat_allow_archiving_channels) {
       return TABS;
     } else {
-      return [...TABS].removeObject(ARCHIVED);
+      return TABS.filter((item) => item !== ARCHIVED);
     }
   }
 

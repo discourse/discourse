@@ -28,17 +28,27 @@ vi:
         quarterly: "Hàng quý"
     user:
       notification_level_when_assigned:
-        watch_topic: "Quan sát chủ đề"
-        track_topic: "Theo dõi chủ đề"
-        do_nothing: "Không làm gì cả"
+        label: "Khi được chỉ định"
+        watch_topic: "Giám sát chủ đề"
+        track_topic: "Quan tâm chủ đề"
+        do_nothing: "Không làm gì"
       messages:
         assigned: "Được chỉ định"
       assignment_description:
         topic: "%{topic_title}"
+    topics:
+      bulk:
+        unassign: "Hủy chỉ định chủ đề"
+        assign: "Chỉ định chủ đề"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Được chỉ định"
+    user_menu:
+      tabs:
+        assign_list: "Danh sách chỉ định"
+        assign_list_with_unread:
+          other: "Danh sách chỉ định - %{count} chưa đọc"
     edit_assignments_modal:
       topic: "Chủ đề"
       post: "Bài đăng"

@@ -7,6 +7,8 @@ module DiscourseAi
         attr_reader :partial_tool_calls, :output_thinking
 
         CompletionFailed = Class.new(StandardError)
+        FAIL_THRESHOLD = 5
+        FAIL_TTL = 1.hour
         # 6 minutes
         # Reasoning LLMs can take a very long time to respond, generally it will be under 5 minutes
         # The alternative is to have per LLM timeouts but that would make it extra confusing for people
@@ -14,10 +16,11 @@ module DiscourseAi
         TIMEOUT = 360
 
         class << self
-          def endpoint_for(provider_name)
+          def endpoint_for(llm_model)
             endpoints = [
               DiscourseAi::Completions::Endpoints::AwsBedrock,
               DiscourseAi::Completions::Endpoints::OpenAi,
+              DiscourseAi::Completions::Endpoints::OpenAiResponses,
               DiscourseAi::Completions::Endpoints::HuggingFace,
               DiscourseAi::Completions::Endpoints::Gemini,
               DiscourseAi::Completions::Endpoints::Vllm,
@@ -30,16 +33,14 @@ module DiscourseAi
 
             endpoints << DiscourseAi::Completions::Endpoints::Ollama if !Rails.env.production?
 
-            if Rails.env.test? || Rails.env.development?
-              endpoints << DiscourseAi::Completions::Endpoints::Fake
-            end
+            endpoints << DiscourseAi::Completions::Endpoints::Fake if Rails.env.local?
 
             endpoints.detect(-> { raise DiscourseAi::Completions::Llm::UNKNOWN_MODEL }) do |ek|
-              ek.can_contact?(provider_name)
+              ek.can_contact?(llm_model)
             end
           end
 
-          def can_contact?(_model_provider)
+          def can_contact?(_llm_model)
             raise NotImplementedError
           end
         end
@@ -80,6 +81,8 @@ module DiscourseAi
           &blk
         )
           LlmQuota.check_quotas!(@llm_model, user)
+          LlmCreditAllocation.check_credits!(@llm_model, feature_name)
+
           start_time = Time.now
 
           if cancel_manager && cancel_manager.cancelled?
@@ -113,7 +116,7 @@ module DiscourseAi
             wrapped = [result] if !result.is_a?(Array)
             wrapped.each do |partial|
               blk.call(partial)
-              break cancel_manager&.cancelled?
+              break if cancel_manager&.cancelled?
             end
             return result
           end
@@ -135,6 +138,7 @@ module DiscourseAi
 
           cancel_manager_callback = nil
           cancelled = false
+          call_status = :error
 
           FinalDestination::HTTP.start(
             model_uri.host,
@@ -148,6 +152,7 @@ module DiscourseAi
               cancel_manager_callback =
                 lambda do
                   cancelled = true
+                  call_status = :cancelled
                   http.finish
                 end
               cancel_manager.add_callback(cancel_manager_callback)
@@ -165,11 +170,36 @@ module DiscourseAi
             # of the JSON won't be included in the response. Supply it to keep JSON valid.
             structured_output << +"{" if structured_output && @forced_json_through_prefill
 
+            log = nil
+            start_logging =
+              lambda do
+                log =
+                  start_log(
+                    provider_id: provider_id,
+                    request_body: request_body,
+                    dialect: dialect,
+                    prompt: prompt,
+                    user: user,
+                    feature_name: feature_name,
+                    feature_context: feature_context,
+                  )
+              end
+
+            start_logging.call
+
+            if cancelled || cancel_manager&.cancelled?
+              call_status = :cancelled
+              break
+            end
+
             http.request(request) do |response|
+              log.response_status = response.code.to_i if log
+
               if response.code.to_i != 200
                 Rails.logger.error(
                   "#{self.class.name}: status: #{response.code.to_i} - body: #{response.body}",
                 )
+                response_raw << response.body.to_s
                 raise CompletionFailed, response.body
               end
 
@@ -198,17 +228,6 @@ module DiscourseAi
                   end
               end
 
-              log =
-                start_log(
-                  provider_id: provider_id,
-                  request_body: request_body,
-                  dialect: dialect,
-                  prompt: prompt,
-                  user: user,
-                  feature_name: feature_name,
-                  feature_context: feature_context,
-                )
-
               if !@streaming_mode
                 response_data =
                   non_streaming_response(
@@ -219,6 +238,7 @@ module DiscourseAi
                     response_raw: response_raw,
                     structured_output: structured_output,
                   )
+                call_status = :success
                 return response_data
               end
 
@@ -259,24 +279,52 @@ module DiscourseAi
                   # signal last partial output which will get parsed
                   # by best effort json parser
                   blk.call("")
+                else
+                  # got to signal the end of structured output
+                  blk.call(structured_output)
                 end
               end
+              call_status = :success
               return response_data
             ensure
-              if log
+              should_log = log && call_status != :cancelled
+
+              if should_log
                 log.raw_response_payload = response_raw
                 final_log_update(log)
                 log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
+                log.response_status ||= 200
                 log.created_at = start_time
                 log.updated_at = Time.now
                 log.duration_msecs = (Time.now - start_time) * 1000
                 log.save!
+                AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
                 LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
-                if Rails.env.development? && !ENV["DISCOURSE_AI_NO_DEBUG"]
+                LlmCreditAllocation.deduct_credits!(
+                  @llm_model,
+                  feature_name,
+                  log.request_tokens,
+                  log.response_tokens,
+                )
+
+                # Record Prometheus metrics
+                DiscourseAi::Completions::LlmMetric.record(
+                  llm_model: @llm_model,
+                  feature_name: feature_name,
+                  request_tokens: log.request_tokens || 0,
+                  response_tokens: log.response_tokens || 0,
+                  duration_ms: log.duration_msecs,
+                  status: call_status,
+                )
+
+                if Rails.env.development? && ENV["DISCOURSE_AI_DEBUG"]
                   puts "#{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}"
                 end
               end
-              if log && (logger = Thread.current[:llm_audit_log])
+
+              track_failures(call_status)
+
+              if should_log && (logger = Thread.current[:llm_audit_log])
                 call_data = <<~LOG
                   #{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}
                   request:
@@ -286,7 +334,7 @@ module DiscourseAi
                 LOG
                 logger.info(call_data)
               end
-              if log && (structured_logger = Thread.current[:llm_audit_structured_log])
+              if should_log && (structured_logger = Thread.current[:llm_audit_structured_log])
                 llm_request =
                   begin
                     JSON.parse(log.raw_request_payload)
@@ -296,8 +344,11 @@ module DiscourseAi
 
                 # gemini puts passwords in query params
                 # we don't want to log that
-                structured_logger.log(
-                  "llm_call",
+                llm_call_step = structured_logger.add_child_step(name: "Performing LLM call")
+
+                structured_logger.append_entry(
+                  step: llm_call_step,
+                  name: "llm_call",
                   args: {
                     class: self.class.name,
                     completion_url: request.uri.to_s.split("?")[0],
@@ -308,8 +359,8 @@ module DiscourseAi
                     duration: log.duration_msecs,
                     stream: @streaming_mode,
                   },
-                  start_time: start_time.utc,
-                  end_time: Time.now.utc,
+                  started_at: start_time.utc,
+                  ended_at: Time.now.utc,
                 )
               end
             end
@@ -397,6 +448,28 @@ module DiscourseAi
           end
         end
 
+        def track_failures(call_status)
+          return if call_status == :cancelled
+          return if llm_model.blank? || llm_model.seeded? || llm_model.new_record?
+          key = "ai_llm_status_fast_fail:#{llm_model.id}"
+
+          if call_status == :success
+            Discourse.redis.del(key)
+            return
+          end
+
+          failures_count = Discourse.redis.incr(key)
+          Discourse.redis.expire(key, FAIL_TTL.to_i)
+
+          return if failures_count < FAIL_THRESHOLD
+
+          ProblemCheck::AiLlmStatus.fast_track_problem!(
+            llm_model,
+            failures_count,
+            (FAIL_TTL / 1.hour),
+          )
+        end
+
         def start_log(
           provider_id:,
           request_body:,
@@ -414,8 +487,9 @@ module DiscourseAi
             topic_id: dialect.prompt.topic_id,
             post_id: dialect.prompt.post_id,
             feature_name: feature_name,
+            llm_id: llm_model&.id,
             language_model: llm_model.name,
-            feature_context: feature_context.present? ? feature_context.as_json : nil,
+            feature_context: feature_context.presence&.as_json,
           )
         end
 
@@ -444,11 +518,7 @@ module DiscourseAi
           if xml_stripper
             response_data.map! do |partial|
               stripped = (xml_stripper << partial) if partial.is_a?(String)
-              if stripped.present?
-                stripped
-              else
-                partial
-              end
+              stripped.presence || partial
             end
             response_data << xml_stripper.finish
           end
@@ -464,6 +534,7 @@ module DiscourseAi
 
           # this is to keep stuff backwards compatible
           response_data = response_data.first if response_data.length == 1
+          response_data = "" if response_data.nil?
 
           response_data
         end

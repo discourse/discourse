@@ -23,6 +23,7 @@ nb_NO:
         month: "Den siste måneden"
         week: "Den siste uken"
         day: "Dag"
+        year: "Det siste året"
     group_timezones:
       search: "Søk…"
     discourse_post_event:

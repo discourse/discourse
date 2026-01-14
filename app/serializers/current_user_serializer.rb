@@ -28,6 +28,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_delete_account,
              :can_post_anonymously,
              :can_ignore_users,
+             :can_edit_tags,
              :can_delete_all_posts_and_topics,
              :custom_fields,
              :muted_category_ids,
@@ -76,11 +77,11 @@ class CurrentUserSerializer < BasicUserSerializer
              :login_method,
              :has_unseen_features,
              :can_see_emails,
-             :use_glimmer_post_stream_mode_auto_mode,
              :can_localize_content?,
              :effective_locale,
              :use_reviewable_ui_refresh,
-             :use_experimental_sidebar_messages_count
+             :can_see_ip,
+             :is_impersonating
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -98,6 +99,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def login_method
     @options[:login_method]
+  end
+
+  def is_impersonating
+    !!object.is_impersonating
   end
 
   def groups
@@ -164,6 +169,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_edit
     true
+  end
+
+  def can_edit_tags
+    scope.can_edit_tag?
   end
 
   def can_invite_to_forum
@@ -321,14 +330,6 @@ class CurrentUserSerializer < BasicUserSerializer
     object.staff?
   end
 
-  def use_glimmer_post_stream_mode_auto_mode
-    true
-  end
-
-  def include_use_glimmer_post_stream_mode_auto_mode?
-    scope.user.in_any_groups?(SiteSetting.glimmer_post_stream_mode_auto_groups_map)
-  end
-
   def can_localize_content?
     scope.can_localize_content?
   end
@@ -349,11 +350,15 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_see_reviewable_ui_refresh?
   end
 
-  def use_experimental_sidebar_messages_count
-    scope.user.in_any_groups?(SiteSetting.experimental_sidebar_messages_count_enabled_groups_map)
-  end
-
   def include_use_reviewable_ui_refresh?
     scope.can_see_review_queue?
+  end
+
+  def can_see_ip
+    scope.can_see_ip?
+  end
+
+  def include_can_see_ip?
+    object.admin? || (object.moderator? && SiteSetting.moderators_view_ips)
   end
 end

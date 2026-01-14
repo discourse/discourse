@@ -39,8 +39,7 @@
     .excerpt {
       width: 100%;
       line-height: var(--line-height-large);
-      margin-top: 0.15em;
-      margin-bottom: 0.15em;
+      margin-bottom: var(--space-2);
       color: currentcolor;
 
       &__contents {
@@ -62,13 +61,22 @@
 
   .mobile-view & {
     .topic-list-item .excerpt {
-      margin-top: -0.25em;
-      margin-bottom: 0.25em;
+      display: block;
+      margin-top: 0.5em;
+      margin-bottom: 0;
+      font-size: var(--font-down-1);
     }
 
     .topic-item-stats .num.activity {
       align-self: end;
       margin-bottom: -0.15em; // vertical alignment
     }
+  }
+}
+
+.user-navigation-secondary {
+  .topic-list-layout-trigger {
+    // put PM toggle before new PM button
+    order: -1;
   }
 }

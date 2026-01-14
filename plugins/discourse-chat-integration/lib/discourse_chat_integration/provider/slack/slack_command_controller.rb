@@ -2,7 +2,7 @@
 
 module DiscourseChatIntegration::Provider::SlackProvider
   class SlackCommandController < DiscourseChatIntegration::Provider::HookController
-    requires_provider ::DiscourseChatIntegration::Provider::SlackProvider::PROVIDER_NAME
+    requires_provider DiscourseChatIntegration::Provider::SlackProvider::PROVIDER_NAME
 
     before_action :slack_token_valid?, only: :command
     before_action :slack_payload_token_valid?, only: :interactive
@@ -66,7 +66,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
           params[:response_url],
         )
       else
-        { text: ::DiscourseChatIntegration::Helper.process_command(channel, tokens) }
+        { text: DiscourseChatIntegration::Helper.process_command(channel, tokens) }
       end
     end
 

@@ -9,14 +9,12 @@ html.composer-open:not(.has-full-page-chat) {
 
 :root {
   --composer-max-width--hide-preview: 740px;
+  --composer-popup-background: var(--secondary);
 }
 
 .grippie {
   cursor: row-resize;
-  padding: 0.25em 0;
-  background: var(--tertiary);
-  border-top-left-radius: var(--d-border-radius-large);
-  border-top-right-radius: var(--d-border-radius-large);
+  padding: var(--space-2) 0 0;
 
   @media (pointer: coarse) {
     padding: 0.35em 0;
@@ -25,9 +23,17 @@ html.composer-open:not(.has-full-page-chat) {
   &::before {
     content: "";
     display: block;
-    width: 1.5em;
-    margin: auto;
-    border-top: 3px double var(--tertiary-medium);
+    height: var(--space-1);
+    width: 3em;
+    margin-inline: auto;
+    background-color: var(--primary-low-mid);
+    border-radius: 3px;
+    border: none;
+    transition: background-color 0.15s ease;
+  }
+
+  &:hover::before {
+    background-color: var(--primary-high);
   }
 }
 
@@ -110,6 +116,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.open {
     --min-height: 255px;
+    border: 1px solid var(--content-border-color);
     box-sizing: border-box;
     height: var(--composer-height);
     min-height: var(--min-height);
@@ -118,6 +125,13 @@ html.composer-open:not(.has-full-page-chat) {
 
     @include viewport.until(sm) {
       z-index: z("mobile-composer");
+      top: 0;
+      transform: none;
+      height: 100dvh;
+      max-height: unset;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border: none;
     }
   }
 
@@ -225,10 +239,6 @@ html.composer-open:not(.has-full-page-chat) {
         }
       }
 
-      .d-icon {
-        margin-right: 8px;
-      }
-
       img.avatar {
         margin-right: 3px;
       }
@@ -248,13 +258,18 @@ html.composer-open:not(.has-full-page-chat) {
         flex-wrap: wrap;
       }
 
-      .display-edit-reason {
-        margin-top: 0.5em;
+      .display-edit-reason.--active {
+        width: 100%;
+      }
+
+      #edit-reason {
+        width: 100%;
+        margin-left: 0;
+        margin-top: var(--space-2);
       }
 
       .composer-controls {
         align-self: flex-start;
-        gap: 6px;
       }
     }
   }
@@ -517,7 +532,7 @@ html.composer-open:not(.has-full-page-chat) {
     align-items: center;
     display: flex;
     flex: 0 1 auto;
-    margin-right: 1em;
+    gap: var(--space-2);
 
     @include viewport.until(sm) {
       margin-right: 0.5em;
@@ -533,7 +548,7 @@ html.composer-open:not(.has-full-page-chat) {
       display: flex;
       margin-left: 1em;
       line-height: normal;
-      color: var(--primary-high);
+      color: var(--accent-color);
       transition: color 250ms;
       padding: 0;
 
@@ -559,6 +574,18 @@ html.composer-open:not(.has-full-page-chat) {
 
     .preview-template {
       margin-left: 0.5rem;
+    }
+  }
+
+  .discard-button {
+    &:hover {
+      color: var(--danger);
+    }
+
+    @include viewport.until(sm) {
+      .d-icon {
+        color: var(--primary-medium);
+      }
     }
   }
 
@@ -744,8 +771,7 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       .submit-panel,
-      .composer-fields,
-      .d-editor-button-bar {
+      .composer-fields {
         // this prevents touch events (i.e. accidental scrolls) from bubbling up
         touch-action: none;
       }
@@ -773,10 +799,6 @@ html.composer-open:not(.has-full-page-chat) {
   #reply-control {
     .grippie {
       display: none;
-    }
-
-    &.open.show-preview {
-      height: 70vh;
     }
 
     &.show-preview {
@@ -821,15 +843,21 @@ html.composer-open:not(.has-full-page-chat) {
 // Safari in iOS/iPad does not handle well a bottom:0 fixed-positioned element,
 // especially while the software keyboard is visible, so we top-anchor it here
 // and shift it using transform
-.ios-device {
+.ipados-device {
   #reply-control {
     // the two properties below are equivalent to bottom: 0
     top: calc(var(--composer-vh, 1vh) * 100);
     transform: translateY(-100%);
     bottom: unset;
   }
+}
 
+.ios-device {
   &.footer-nav-visible {
+    #reply-control {
+      bottom: calc(var(--footer-nav-height, 0px) + env(safe-area-inset-bottom));
+    }
+
     #reply-control.draft,
     #reply-control.saving {
       margin-top: calc(
@@ -863,10 +891,15 @@ html.composer-open:not(.has-full-page-chat) {
   right: 1rem;
   overflow-y: auto;
   z-index: z("composer", "dropdown") + 1;
-  padding: 1.5em 1.5rem 0.75em 1.5rem;
   box-shadow: var(--shadow-dropdown);
   border-radius: var(--d-border-radius-large);
-  background: var(--secondary);
+  background: var(--composer-popup-background);
+  display: flex;
+  flex-direction: column;
+
+  &__content {
+    padding: 0 2rem 2rem;
+  }
 
   .show-preview & {
     right: 1.5rem;
@@ -878,26 +911,30 @@ html.composer-open:not(.has-full-page-chat) {
     display: none;
   }
 
-  > p,
+  p,
   h3 {
     &:first-of-type {
       margin-top: 0;
-      margin-right: 3em;
+      margin-right: 3rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 
   &.urgent {
-    background: var(--danger-low);
+    --composer-popup-background: var(--danger-low);
   }
 
   &.education-message {
-    background-color: var(--tertiary-low);
+    --composer-popup-background: var(--tertiary-low);
   }
 
   &.dominating-topic-message,
   &.get-a-room {
     bottom: unset;
-    padding: 2.25em 6em 2.5em 2.25em;
+    top: 4rem;
 
     p {
       font-size: var(--font-up-1);
@@ -915,11 +952,13 @@ html.composer-open:not(.has-full-page-chat) {
   .btn.close {
     flex-direction: row-reverse;
     align-items: center;
-    position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
+    position: sticky;
+    top: 0;
     color: var(--primary-medium);
     font-size: var(--font-0);
+    align-self: end;
+    background: var(--composer-popup-background);
+    border-radius: 0 0 0 var(--d-button-border-radius);
 
     .d-icon {
       color: currentcolor;
@@ -930,8 +969,6 @@ html.composer-open:not(.has-full-page-chat) {
     .discourse-no-touch & {
       &:active,
       &:focus {
-        background: transparent;
-
         .d-icon {
           color: var(--primary);
         }
@@ -955,10 +992,6 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
-  &:nth-of-type(2) {
-    width: calc(50% - 65px);
-  }
-
   .discourse-tags {
     font-size: var(--font-down-1);
   }
@@ -974,11 +1007,24 @@ html.composer-open:not(.has-full-page-chat) {
 
 .similar-topics {
   .similar-topic {
-    margin-bottom: 0.5em;
+    &:not(:last-child) {
+      margin-bottom: 0.5em;
+    }
   }
 
-  span.badge-wrapper {
-    margin-left: 0;
+  .topic {
+    display: flex;
+    flex-wrap: wrap;
+
+    .first-line {
+      width: 100%;
+    }
+
+    .second-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
   }
 
   .topic-title {
@@ -988,29 +1034,6 @@ html.composer-open:not(.has-full-page-chat) {
 
     .d-icon {
       color: var(--primary-high);
-    }
-
-    span.topic {
-      display: flex;
-      flex-direction: column;
-
-      .first-line {
-        flex: 1;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-
-      .second-line {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        gap: 0.5em;
-
-        .discourse-tags {
-          font-size: var(--font-down-1);
-        }
-      }
     }
   }
 }
@@ -1025,13 +1048,9 @@ html.composer-open:not(.has-full-page-chat) {
   #reply-control {
     &.fullscreen {
       // important needed because of inline styles when height is changed manually with grippie
-      height: 100vh !important;
+      height: calc(var(--composer-vh, 1vh) * 100) !important;
       max-height: 100%; // prevents devices from miscalculating using vh
       z-index: z("header") + 1;
-
-      @supports (--custom: property) {
-        height: calc(var(--composer-vh, 1vh) * 100) !important;
-      }
 
       .grippie {
         display: none;
@@ -1042,7 +1061,7 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       .reply-to {
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
         margin-bottom: 0;
         padding-bottom: 8px;
       }
@@ -1052,7 +1071,7 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       &.show-preview .d-editor-textarea-wrapper {
-        border-right: 1px solid var(--primary-low);
+        border-right: 1px solid var(--content-border-color);
       }
 
       #draft-status,

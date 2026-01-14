@@ -2,7 +2,7 @@
 
 module DiscourseUserNotes
   class UserNotesController < ::ApplicationController
-    requires_plugin DiscourseUserNotes::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
     before_action :ensure_logged_in
     before_action :ensure_staff
 
@@ -10,7 +10,7 @@ module DiscourseUserNotes
       user = User.where(id: params[:user_id]).first
       raise Discourse::NotFound if user.blank?
 
-      notes = ::DiscourseUserNotes.notes_for(params[:user_id])
+      notes = DiscourseUserNotes.notes_for(params[:user_id])
       render json: { extras: { username: user.username }, user_notes: create_json(notes.reverse) }
     end
 
@@ -21,9 +21,12 @@ module DiscourseUserNotes
       if post_id = params[:user_note][:post_id]
         extras[:post_id] = post_id
       end
+      if reviewable_id = params[:user_note][:reviewable_id]
+        extras[:reviewable_id] = reviewable_id
+      end
 
       user_note =
-        ::DiscourseUserNotes.add_note(user, params[:user_note][:raw], current_user.id, extras)
+        DiscourseUserNotes.add_note(user, params[:user_note][:raw], current_user.id, extras)
 
       render json: create_json(user_note)
     end
@@ -34,7 +37,7 @@ module DiscourseUserNotes
 
       raise Discourse::InvalidAccess.new unless guardian.can_delete_user_notes?
 
-      ::DiscourseUserNotes.remove_note(user, params[:id])
+      DiscourseUserNotes.remove_note(user, params[:id])
       render json: success_json
     end
 

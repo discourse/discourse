@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe ListController do
   fab!(:user)
   fab!(:topic)
@@ -27,8 +25,8 @@ describe ListController do
   end
 
   context "in a category" do
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
+    fab!(:category1, :category)
+    fab!(:category2, :category)
     fab!(:topic1) do
       Fabricate(:topic, category: category1, title: "Topic in votes-enabled category 1")
     end

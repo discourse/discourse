@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseAi
+module DiscourseAi
   module Database
     class Connection
       def self.db

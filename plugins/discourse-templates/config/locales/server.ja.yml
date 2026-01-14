@@ -10,6 +10,7 @@ ja:
     discourse_templates_categories: "テンプレートを取得するカテゴリ"
     discourse_templates_enable_private_templates: "プライベートテンプレートの使用を有効にします"
     discourse_templates_groups_allowed_private_templates: "プライベートテンプレートの使用が許可されたグループ。スタッフメンバーは常に許可されます。"
+    discourse_templates_private_templates_tags: "個人メッセージをプライベートテンプレートとして識別するタグ"
   default_category_template:
     name: テンプレート
     description: |

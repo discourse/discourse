@@ -28,6 +28,8 @@ module Chat
             edited
             thread
             blocks
+            channel
+            thread_title
           ]
       ),
     )
@@ -39,17 +41,15 @@ module Chat
     def mentioned_users
       object
         .user_mentions
-        .includes(user: :user_option)
-        .limit(SiteSetting.max_mentions_per_chat_message)
-        .map(&:user)
-        .compact
+        .first(SiteSetting.max_mentions_per_chat_message)
+        .filter_map(&:user)
         .sort_by(&:id)
         .map { |user| BasicUserSerializer.new(user, root: false, include_status: true) }
         .as_json
     end
 
-    def channel
-      @channel ||= @options.dig(:chat_channel) || object.chat_channel
+    def channel_object
+      @channel_object ||= @options.dig(:chat_channel) || object.chat_channel
     end
 
     def user
@@ -64,9 +64,8 @@ module Chat
     def reactions
       object
         .reactions
-        .includes(user: :user_option)
         .group_by(&:emoji)
-        .map do |emoji, reactions|
+        .filter_map do |emoji, reactions|
           next unless Emoji.exists?(emoji)
 
           users = reactions.take(5).map(&:user)
@@ -79,7 +78,6 @@ module Chat
             reacted: users_reactions.include?(emoji),
           }
         end
-        .compact
     end
 
     def include_reactions?
@@ -178,7 +176,9 @@ module Chat
       return [] if reviewable_id.present? && user_flag_status == ReviewableScore.statuses[:pending]
 
       PostActionType.flag_types.map do |sym, id|
-        next if channel.direct_message_channel? && %i[notify_moderators notify_user].include?(sym)
+        if channel_object.direct_message_channel? && %i[notify_moderators notify_user].include?(sym)
+          next
+        end
 
         if sym == :notify_user &&
              (
@@ -192,12 +192,28 @@ module Chat
       end
     end
 
+    def include_channel?
+      @options[:include_channel]
+    end
+
+    def channel
+      ::Chat::ChannelSerializer.new(channel_object, scope:, root: false)
+    end
+
     def include_thread_id?
-      channel.threading_enabled || object.thread&.force
+      channel_object.threading_enabled || object.thread&.force
     end
 
     def include_thread?
       include_thread_id? && object.thread_om? && object.thread.present?
+    end
+
+    def include_thread_title?
+      include_thread_id? && !object.thread_om? && object.thread.present?
+    end
+
+    def thread_title
+      object.thread&.title
     end
 
     def thread

@@ -47,7 +47,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     box-shadow: var(--shadow-composer);
     padding: 20px 0;
     z-index: z("fullscreen");
@@ -96,7 +96,7 @@
 
       .username {
         color: var(--primary-high-or-secondary-low);
-        word-wrap: break-word;
+        overflow-wrap: break-word;
         font-weight: bold;
       }
 
@@ -240,6 +240,7 @@
       margin-left: 0.5em;
       border-left: 1px solid var(--topic-timeline-border-color);
       position: relative;
+      max-width: 100%;
       transform: translateZ(0);
     }
 
@@ -265,9 +266,10 @@
     .timeline-handle {
       border-radius: 0.8em;
       width: 0.35em;
-      background-color: var(--topic-timeline-border-color);
+      background-color: var(--topic-timeline-handle-color);
       height: 100%;
       float: left;
+      flex-shrink: 0;
       z-index: z("base") + 1;
       outline: 1px solid transparent;
       margin-left: 0.5px;
@@ -284,7 +286,8 @@
 
     .timeline-ago {
       color: var(--primary-med-or-secondary-med);
-      max-width: 4.6em;
+      max-width: 100%;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }

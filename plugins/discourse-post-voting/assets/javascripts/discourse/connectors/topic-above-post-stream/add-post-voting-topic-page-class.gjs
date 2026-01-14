@@ -1,5 +1,5 @@
-import { eq } from "truth-helpers";
 import bodyClass from "discourse/helpers/body-class";
+import { eq } from "discourse/truth-helpers";
 import { ORDER_BY_ACTIVITY_FILTER } from "../../components/post-voting-answer-header";
 
 const AddPostVotingTopicPageClass = <template>

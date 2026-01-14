@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseGamification::LeaderboardCachedView do
   fab!(:admin)
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
   fab!(:moderator)
   fab!(:leaderboard) { Fabricate(:gamification_leaderboard, created_by_id: admin.id) }
   fab!(:gamification_score) { Fabricate(:gamification_score, user_id: user.id, date: 8.days.ago) }

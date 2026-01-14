@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 DiscourseAi::Engine.routes.draw do
+  scope path: "/credits", defaults: { format: :json } do
+    get "status" => "ai_credits#status"
+  end
+
   scope module: :ai_helper, path: "/ai-helper", defaults: { format: :json } do
     post "suggest" => "assistant#suggest"
     post "suggest_title" => "assistant#suggest_title"
@@ -24,9 +28,12 @@ DiscourseAi::Engine.routes.draw do
     get "post/:post_id/show-debug-info" => "bot#show_debug_info"
     get "show-debug-info/:id" => "bot#show_debug_info_by_id"
     post "post/:post_id/stop-streaming" => "bot#stop_streaming_response"
+    post "post/:post_id/retry" => "bot#retry_response"
+  end
 
-    get "discover" => "bot#discover"
-    post "discover/continue-convo" => "bot#discover_continue_convo"
+  scope module: :discover, path: "/discoveries", defaults: { format: :json } do
+    get "reply" => "discoveries#reply"
+    post "continue-convo" => "discoveries#continue_convo"
   end
 
   scope module: :ai_bot, path: "/ai-bot/shared-ai-conversations" do
@@ -55,21 +62,35 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :summarization, path: "/summarization", defaults: { format: :json } do
     get "/t/:topic_id" => "summary#show", :constraints => { topic_id: /\d+/ }
+    put "/regen_gist" => "summary#regen_gist"
     get "/channels/:channel_id" => "chat_summary#show"
   end
 
   scope module: :sentiment, path: "/sentiment", defaults: { format: :json } do
     get "/posts" => "sentiment#posts", :constraints => StaffConstraint.new
   end
+
+  scope module: :translation, path: "/translate", defaults: { format: :json } do
+    post "/posts/:post_id" => "translation#translate"
+    post "/topics/:topic_id" => "translation#schedule_topic"
+  end
 end
 
 Discourse::Application.routes.draw do
-  mount ::DiscourseAi::Engine, at: "discourse-ai"
+  mount DiscourseAi::Engine, at: "discourse-ai"
 
   get "admin/dashboard/sentiment" => "discourse_ai/admin/dashboard#sentiment",
       :constraints => StaffConstraint.new
 
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
+    resources :ai_artifacts,
+              only: %i[index show create update destroy],
+              path: "ai-artifacts",
+              controller: "discourse_ai/admin/ai_artifacts",
+              defaults: {
+                format: :json,
+              }
+
     resources :ai_personas,
               only: %i[index new create edit update destroy],
               path: "ai-personas",
@@ -107,6 +128,8 @@ Discourse::Application.routes.draw do
     post "/ai-spam/test", to: "discourse_ai/admin/ai_spam#test"
     post "/ai-spam/fix-errors", to: "discourse_ai/admin/ai_spam#fix_errors"
 
+    get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
+
     resources :ai_llms,
               only: %i[index new create edit update destroy],
               path: "ai-llms",
@@ -131,11 +154,4 @@ Discourse::Application.routes.draw do
               path: "ai-features",
               controller: "discourse_ai/admin/ai_features"
   end
-end
-
-Discourse::Application.routes.append do
-  get "u/:username/preferences/ai" => "users#preferences",
-      :constraints => {
-        username: RouteFormat.username,
-      }
 end

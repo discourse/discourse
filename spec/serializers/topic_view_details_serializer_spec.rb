@@ -52,4 +52,27 @@ RSpec.describe TopicViewDetailsSerializer do
       expect(serializer.as_json.dig(:topic_view_details, :can_permanently_delete)).to eq(nil)
     end
   end
+
+  describe "#can_delete" do
+    before { SiteSetting.enable_category_group_moderation = true }
+
+    it "is true for category moderators in their category" do
+      user = Fabricate(:user, trust_level: TrustLevel[4])
+      Group.user_trust_level_change!(user.id, user.trust_level)
+      category = Fabricate(:category)
+      topic = Fabricate(:topic, category:)
+      Fabricate(:category_moderation_group, category:, group: user.groups.first)
+
+      serializer = described_class.new(TopicView.new(topic, user), scope: Guardian.new(user))
+      expect(serializer.as_json.dig(:topic_view_details, :can_delete)).to eq(true)
+    end
+
+    it "is false for regular users" do
+      user = Fabricate(:user)
+      topic = Fabricate(:topic)
+
+      serializer = described_class.new(TopicView.new(topic, user), scope: Guardian.new(user))
+      expect(serializer.as_json.dig(:topic_view_details, :can_delete)).to eq(nil)
+    end
+  end
 end

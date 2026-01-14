@@ -7,12 +7,12 @@
 cs:
   site_settings:
     discourse_narrative_bot_enabled: "Povolit Discourse Narrative Bot (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "Zakázat uvítací příspěvek od Discourse Narrative Bot"
-    discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse Narrative Bot ignorovat"
-    discourse_narrative_bot_disable_public_replies: "Zakázat veřejné odpovědi od Discourse Narrative Bot"
-    discourse_narrative_bot_welcome_post_type: "Typ uvítacího příspěvku, který by měl Discourse Narrative Bot odesílat"
-    discourse_narrative_bot_welcome_post_delay: "Před odesláním uvítacího příspěvku Discourse Narrative Bot počkat (n) sekund."
-    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot kurzy k přeskočení"
+    disable_discourse_narrative_bot_welcome_post: "Zakázat uvítací příspěvek od Discourse vítacího bota"
+    discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse vítací bot ignorovat"
+    discourse_narrative_bot_disable_public_replies: "Zakázat veřejné odpovědi od Discourse vítacího bota"
+    discourse_narrative_bot_welcome_post_type: "Typ uvítacího příspěvku, který by měl Discourse vítací bot odesílat"
+    discourse_narrative_bot_welcome_post_delay: "Před odesláním uvítacího příspěvku Discourse vítací bot počkat (n) sekund."
+    discourse_narrative_bot_skip_tutorials: "Kurzy Discourse vítacího bota k přeskočení"
   badges:
     certified:
       name: Certifikován/a
@@ -401,6 +401,19 @@ cs:
 
           Všimni si, že když odpovídáš na téma nebo čteš téma déle než několik minut, je automaticky nastavena úroveň upozornění 'sledování'. Toto nastavení můžeš změnit ve [svých uživatelských nastaveních](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          Věděl/a jsi, že můžeš k jakémukoli příspěvku přidat anketu? Zkus k **vytvoření ankety** použít ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> v editoru.
+        not_found: |-
+          Jejda! Ve tvojí odpovědi nebyla žádná anketa.
+
+          Použij ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> v editoru nebo zkopíruj a vlož do další odpovědi tuto anketu:
+
+          ````text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hej, pěkná anketa! Jak jsem si vedl při výuce?
 
@@ -409,6 +422,20 @@ cs:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Někdy můžeš chtít v odpovědích **skrýt podrobnosti**:
+
+          - Pokud diskutuješ o dějových bodech filmu nebo seriálu, které by byly považovány za spoiler.
+
+          - Když je ve tvém příspěvku třeba spousta nepovinných detailů, které by mohly čtenáře zahltit.
+
+          [details=Klikni sem, abys viděl/a, jak to funguje!]
+          1. V editoru vyber ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16">.
+          2. Vyber možnost "Skrýt podrobnosti".
+          3. Uprav souhrn a přidej svůj obsah.
+          [/details]
+
+          Zkusíš použít ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> v editoru pro přidání sekce s detaily do další odpovědi?
         not_found: |-
           Máš potíže s vytvořením sekce s podrobnostmi? Zkus do příští odpovědi uvést následující text:
 

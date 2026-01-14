@@ -10,6 +10,7 @@ module Jobs
     def execute(args)
       @user_id = args[:user_id]
       @prev_email = args[:prev_email]
+      @prev_username = args[:prev_username]
       @anonymize_ip = args[:anonymize_ip]
 
       make_anonymous
@@ -17,6 +18,7 @@ module Jobs
 
     def make_anonymous
       anonymize_ips(@anonymize_ip) if @anonymize_ip
+      anonymize_username if @prev_username && !SiteSetting.log_anonymizer_details?
 
       Invite.where(email: @prev_email).destroy_all
       InvitedUser.where(user_id: @user_id).destroy_all
@@ -45,6 +47,7 @@ module Jobs
       TopicViewItem.where(ip_where).update_all(ip_address: new_ip)
       UserHistory.where(ip_where("acting_user_id")).update_all(ip_address: new_ip)
       UserProfileView.where(ip_where).update_all(ip_address: new_ip)
+      UserIpAddressHistory.where(user_id: @user_id).delete_all
 
       # UserHistory for delete_user logs the user's IP. Note this is quite ugly but we don't
       # have a better way of querying on details right now.
@@ -64,6 +67,17 @@ module Jobs
         user.custom_fields.delete("#{User::USER_FIELD_PREFIX}#{field_id}")
       end
       user.save!
+    end
+
+    def anonymize_username
+      reason = I18n.t("user.anonymized")
+      UserHistory
+        .where(target_user_id: @user_id)
+        .where(
+          "context LIKE :username OR details LIKE :username OR previous_value LIKE :username OR new_value LIKE :username",
+          username: "%#{@prev_username}%",
+        )
+        .update_all(context: reason, details: reason, previous_value: reason, new_value: reason)
     end
   end
 end

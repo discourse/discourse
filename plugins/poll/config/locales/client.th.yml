@@ -40,7 +40,6 @@ th:
       error_while_casting_votes: "ขออภัย มีข้อผิดพลาดในการโหวต"
       error_while_fetching_voters: "ขออภัย มีข้อผิดพลาดในการแสดงผู้โหวต"
       ui_builder:
-        title: สร้างโพล
         insert: แทรกโพล
         help:
           invalid_values: ค่าต่ำสุดต้องน้อยกว่าค่าสูงสุด

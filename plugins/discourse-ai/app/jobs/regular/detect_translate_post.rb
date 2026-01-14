@@ -9,13 +9,24 @@ module Jobs
       return if !DiscourseAi::Translation.enabled?
       return if args[:post_id].blank?
 
+      unless DiscourseAi::Translation.credits_available_for_post_detection?
+        Rails.logger.info(
+          "Translation skipped for post: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       post = Post.find_by(id: args[:post_id])
       return if post.blank? || post.raw.blank? || post.deleted_at.present? || post.user_id <= 0
 
       topic = post.topic
       return if topic.blank?
 
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
+      force = args[:force] || false
+
+      if force
+        # no restrictions
+      elsif SiteSetting.ai_translation_backfill_limit_to_public_content
         return if topic.category&.read_restricted? || topic.archetype == Archetype.private_message
       else
         if topic.archetype == Archetype.private_message &&
@@ -41,21 +52,29 @@ module Jobs
 
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        regionless_locale = locale.split("_").first
-        next if post.post_localizations.where("locale LIKE ?", "#{regionless_locale}%").exists?
+        exists = post.localizations.matching_locale(locale).exists?
 
-        begin
-          DiscourseAi::Translation::PostLocalizer.localize(post, locale)
-        rescue FinalDestination::SSRFDetector::LookupFailedError
-          # do nothing, there are too many sporadic lookup failures
-        rescue => e
-          DiscourseAi::Translation::VerboseLogger.log(
-            "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-          )
-        end
+        has_quota = DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
+        next if !force && exists && !has_quota
+
+        localize(post, locale)
       end
 
       MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
+    end
+
+    private
+
+    def localize(post, locale)
+      begin
+        DiscourseAi::Translation::PostLocalizer.localize(post, locale)
+      rescue FinalDestination::SSRFDetector::LookupFailedError
+        # do nothing, there are too many sporadic lookup failures
+      rescue => e
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+        )
+      end
     end
   end
 end

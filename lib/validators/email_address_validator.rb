@@ -7,7 +7,13 @@ class EmailAddressValidator
 
   class << self
     def valid_value?(email)
-      email.match?(email_regex) && !email.match?(encoded_word_regex) &&
+      # '@' splits the email in two parts local@domain
+      # local part must be <= 64 characters
+      # domain part must be <= 255 characters
+      at_index = email.to_s.index("@")
+
+      !!at_index && at_index <= 64 && (email.length - at_index - 1) <= 255 &&
+        email.match?(email_regex) && !email.match?(encoded_word_regex) &&
         decode(email)&.match?(email_regex)
     end
 

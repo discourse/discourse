@@ -1,7 +1,10 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { classNames, tagName } from "@ember-decorators/component";
+import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -23,8 +26,10 @@ export default class SolvedSettings extends Component {
         <div class="enable-accepted-answer">
           <label class="checkbox-label">
             <input
-              {{! template-lint-disable no-action }}
-              {{on "change" (action "onChangeSetting" value="target.checked")}}
+              {{on
+                "change"
+                (withEventValue this.onChangeSetting "target.checked")
+              }}
               checked={{this.category.enable_accepted_answers}}
               type="checkbox"
             />
@@ -39,12 +44,12 @@ export default class SolvedSettings extends Component {
         {{i18n "solved.solved_topics_auto_close_hours"}}
       </label>
       <input
-        {{! template-lint-disable no-action }}
         {{on
           "input"
-          (action
-            (mut this.category.custom_fields.solved_topics_auto_close_hours)
-            value="target.value"
+          (withEventValue
+            (fn
+              (mut this.category.custom_fields.solved_topics_auto_close_hours)
+            )
           )
         }}
         value={{this.category.custom_fields.solved_topics_auto_close_hours}}

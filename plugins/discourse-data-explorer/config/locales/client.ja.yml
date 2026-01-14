@@ -99,6 +99,8 @@ ja:
               label: 結果がない場合は PM の送信をスキップする
             attach_csv:
               label: CSV ファイルを PM に添付する
+            users_from_group:
+              label: 各グループメンバーに個別の PM を送信する
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

@@ -14,6 +14,7 @@ discourse_reactions:
     type: emoji_list
     default: "+1|laughing|open_mouth|clap|confetti_ball|hugs"
     client: true
+    area: "emojis"
   discourse_reactions_desaturated_reaction_panel:
     default: false
     client: true
@@ -21,5 +22,10 @@ discourse_reactions:
     type: emoji_list
     default: "-1"
     validator: "ReactionsExcludedFromLikeSiteSettingValidator"
+    area: "emojis"
   discourse_reactions_like_sync_enabled:
     default: true
+  discourse_reactions_allow_any_emoji:
+    default: false
+    client: true
+    area: "emojis"

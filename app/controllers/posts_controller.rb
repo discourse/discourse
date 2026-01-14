@@ -279,6 +279,14 @@ class PostsController < ApplicationController
       opts[:skip_validations] = true
     end
 
+    if params.key?(:bypass_bump) || params[:post]&.key?(:bypass_bump)
+      if guardian.can_update_bumped_at?
+        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(
+          params[:bypass_bump].presence || params.dig(:post, :bypass_bump),
+        )
+      end
+    end
+
     topic = post.topic
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 
@@ -572,7 +580,8 @@ class PostsController < ApplicationController
     guardian.ensure_can_see!(post_revision)
     guardian.ensure_can_edit!(post)
     if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? &&
-         post_revision.modifications["category_id"].blank?
+         post_revision.modifications["category_id"].blank? &&
+         post_revision.modifications["tags"].blank?
       return render_json_error(I18n.t("revert_version_same"))
     end
 
@@ -590,6 +599,13 @@ class PostsController < ApplicationController
         0
       ] if post_revision.modifications["category_id"].present? &&
         post_revision.modifications["category_id"][0] != topic.category.id
+      if post_revision.modifications["tags"].present?
+        revision_tags = post_revision.modifications["tags"][0]
+        revision_tags = revision_tags.is_a?(Array) ? revision_tags : revision_tags.split(",")
+        current_tags = topic.tags.pluck(:name)
+
+        changes[:tags] = revision_tags if revision_tags.sort != current_tags.sort
+      end
     end
     return render_json_error(I18n.t("revert_version_same")) if changes.length <= 0
     changes[:edit_reason] = I18n.with_locale(SiteSetting.default_locale) do
@@ -709,6 +725,7 @@ class PostsController < ApplicationController
 
     guardian.ensure_can_unhide!(post)
 
+    post.acting_user = current_user
     post.unhide!
 
     render body: nil

@@ -18,6 +18,13 @@ es:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "Tipo de anuncio"
+            user_type:
+              label: "Tipo de usuario"
       adplugin:
         house_ads:
           title: "Publicidad interna"

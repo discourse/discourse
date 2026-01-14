@@ -10,6 +10,10 @@ module PageObjects
       RICH_EDITOR = ".d-editor-input.ProseMirror"
       POST_LANGUAGE_SELECTOR = ".post-language-selector"
 
+      def initialize(composer_id = COMPOSER_ID)
+        @composer_id = composer_id
+      end
+
       def rich_editor
         find(RICH_EDITOR)
       end
@@ -23,15 +27,15 @@ module PageObjects
       end
 
       def opened?
-        page.has_css?("#{COMPOSER_ID}.open")
+        page.has_css?("#{@composer_id}.open")
       end
 
       def closed?
-        page.has_css?("#{COMPOSER_ID}.closed", visible: :all)
+        page.has_css?("#{@composer_id}.closed", visible: :all)
       end
 
       def minimized?
-        page.has_css?("#{COMPOSER_ID}.draft")
+        page.has_css?("#{@composer_id}.draft")
       end
 
       def open_composer_actions
@@ -49,22 +53,26 @@ module PageObjects
       end
 
       def focus
-        find(COMPOSER_INPUT_SELECTOR).click
+        find(composer_input_selector).click
         self
       end
 
       def fill_title(title)
-        find("#{COMPOSER_ID} #reply-title").fill_in(with: title)
+        find("#{@composer_id} #reply-title").fill_in(with: title)
         self
       end
 
+      def has_input_title?(value)
+        expect(find("#{@composer_id} input#reply-title").value).to eq(value)
+      end
+
       def fill_content(content)
-        find("#{COMPOSER_ID} .d-editor .d-editor-input").fill_in(with: content)
+        find("#{@composer_id} .d-editor .d-editor-input").fill_in(with: content)
         self
       end
 
       def minimize
-        find("#{COMPOSER_ID} .toggle-minimize").click
+        find("#{@composer_id} .toggle-minimize").click
         self
       end
 
@@ -100,25 +108,37 @@ module PageObjects
         composer_popup.has_content?(content)
       end
 
+      def has_no_action?(action)
+        !actions.include?(action)
+      end
+
       def select_action(action)
         find(action(action)).click
         self
       end
 
+      def reply_button_focused?
+        page.has_css?("#{@composer_id} .btn-primary:focus")
+      end
+
       def create
-        find("#{COMPOSER_ID} .btn-primary").click
+        find("#{@composer_id} .btn-primary").click
       end
 
       def action(action_title)
         ".composer-action-title .select-kit-collection li[title='#{action_title}']"
       end
 
+      def actions
+        all(".composer-action-title .select-kit-collection li").map { |el| el[:title] }
+      end
+
       def button_label
-        find("#{COMPOSER_ID} .btn-primary .d-button-label")
+        find("#{@composer_id} .btn-primary .d-button-label")
       end
 
       def emoji_picker
-        find("#{COMPOSER_ID} .emoji-picker")
+        find("#{@composer_id} .emoji-picker")
       end
 
       def emoji_autocomplete
@@ -130,7 +150,7 @@ module PageObjects
       end
 
       def locale
-        find("#{COMPOSER_ID} #{POST_LANGUAGE_SELECTOR}")
+        find("#{@composer_id} #{POST_LANGUAGE_SELECTOR}")
       end
 
       def set_locale(locale)
@@ -144,7 +164,7 @@ module PageObjects
       end
 
       def preview
-        find("#{COMPOSER_ID} .d-editor-preview-wrapper")
+        find("#{@composer_id} .d-editor-preview-wrapper")
       end
 
       def has_discard_draft_modal?
@@ -189,30 +209,32 @@ module PageObjects
         page.has_no_css?(emoji_preview_selector(emoji))
       end
 
-      COMPOSER_INPUT_SELECTOR = "#{COMPOSER_ID} .d-editor-input"
+      def composer_input_selector
+        "#{@composer_id} .d-editor-input"
+      end
 
       def has_no_composer_input?
-        page.has_no_css?(COMPOSER_INPUT_SELECTOR)
+        page.has_no_css?(composer_input_selector)
       end
 
       def has_composer_input?
-        page.has_css?(COMPOSER_INPUT_SELECTOR)
+        page.has_css?(composer_input_selector)
       end
 
       def has_composer_preview?
-        page.has_css?("#{COMPOSER_ID} .d-editor-preview-wrapper")
+        page.has_css?("#{@composer_id} .d-editor-preview-wrapper")
       end
 
       def has_no_composer_preview?
-        page.has_no_css?("#{COMPOSER_ID} .d-editor-preview-wrapper")
+        page.has_no_css?("#{@composer_id} .d-editor-preview-wrapper")
       end
 
       def has_composer_preview_toggle?
-        page.has_css?("#{COMPOSER_ID} .toggle-preview")
+        page.has_css?("#{@composer_id} .toggle-preview")
       end
 
       def has_no_composer_preview_toggle?
-        page.has_no_css?("#{COMPOSER_ID} .toggle-preview")
+        page.has_no_css?("#{@composer_id} .toggle-preview")
       end
 
       def has_form_template?
@@ -264,11 +286,11 @@ module PageObjects
       end
 
       def composer_input
-        find("#{COMPOSER_ID} .d-editor .d-editor-input")
+        find("#{@composer_id} .d-editor-input")
       end
 
       def composer_popup
-        find("#{COMPOSER_ID} .composer-popup")
+        find("#{@composer_id} .composer-popup")
       end
 
       def form_template_field(field)
@@ -278,7 +300,7 @@ module PageObjects
       def move_cursor_after(text)
         execute_script(<<~JS, text)
           const text = arguments[0];
-          const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
+          const composer = document.querySelector("#{@composer_id} .d-editor-input");
           const index = composer.value.indexOf(text);
           const position = index + text.length;
 
@@ -288,12 +310,12 @@ module PageObjects
       end
 
       def select_all
-        find(COMPOSER_INPUT_SELECTOR).send_keys([PLATFORM_KEY_MODIFIER, "a"])
+        find(composer_input_selector).send_keys([PLATFORM_KEY_MODIFIER, "a"])
       end
 
       def select_range(start_index, length)
         execute_script(<<~JS, text)
-          const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
+          const composer = document.querySelector("#{@composer_id} .d-editor-input");
           composer.focus();
           composer.setSelectionRange(#{start_index}, #{length});
         JS
@@ -305,19 +327,23 @@ module PageObjects
       end
 
       def submit
-        find("#{COMPOSER_ID} .save-or-cancel .create").click
+        find("#{@composer_id} .save-or-cancel .create").click
+      end
+
+      def discard
+        find("#{@composer_id} .discard-button").click
       end
 
       def close
-        find("#{COMPOSER_ID} .save-or-cancel .cancel").click
+        find("#{@composer_id} .toggle-save-and-close").click
       end
 
       def has_no_in_progress_uploads?
-        find("#{COMPOSER_ID}").has_no_css?("#file-uploading")
+        find("#{@composer_id}").has_no_css?("#file-uploading")
       end
 
       def has_in_progress_uploads?
-        find("#{COMPOSER_ID}").has_css?("#file-uploading")
+        find("#{@composer_id}").has_css?("#file-uploading")
       end
 
       def select_pm_user(username)
@@ -329,11 +355,15 @@ module PageObjects
       end
 
       def has_rich_editor_active?
-        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__right-icon.--active")
+        find("#{@composer_id}").has_css?(".d-editor-container.--rich-editor-enabled")
       end
 
       def has_no_rich_editor_active?
-        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__left-icon.--active")
+        find("#{@composer_id}").has_css?(".d-editor-container.--markdown-editor-enabled")
+      end
+
+      def has_markdown_editor_active?
+        has_no_rich_editor_active?
       end
 
       def toggle_rich_editor
@@ -350,8 +380,20 @@ module PageObjects
         self
       end
 
+      def has_toggle_switch?
+        page.has_css?("#{@composer_id} .composer-toggle-switch")
+      end
+
+      def has_no_toggle_switch?
+        page.has_no_css?("#{@composer_id} .composer-toggle-switch")
+      end
+
       def editor_toggle_switch
-        find("#{COMPOSER_ID} .composer-toggle-switch")
+        find("#{@composer_id} .composer-toggle-switch")
+      end
+
+      def image_grid
+        Components::ComposerImageGrid.new(rich_editor)
       end
 
       private

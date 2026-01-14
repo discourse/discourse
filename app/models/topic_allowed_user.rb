@@ -4,7 +4,7 @@ class TopicAllowedUser < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
 
-  validates_uniqueness_of :topic_id, scope: :user_id
+  validates :topic_id, uniqueness: { scope: :user_id }
 end
 
 # == Schema Information

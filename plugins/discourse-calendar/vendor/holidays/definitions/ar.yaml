@@ -1,11 +1,30 @@
 # Argentinian holiday definitions for the Ruby Holiday gem.
 #
-# Updated: 2016-02-26.
+# Updated: 2021-05-16.
 #
 # Sources:
 # - http://en.wikipedia.org/wiki/Public_holidays_in_Argentina
 # - http://servicios.lanacion.com.ar/feriados/2016
+# - https://www.argentina.gob.ar/interior/feriados-nacionales-2020
+# - https://www.argentina.gob.ar/interior/feriados-nacionales-2021
 ---
+methods:
+  to_nearest_monday:
+    arguments: date
+    ruby: |
+        case date.wday
+        when 5
+          date += 3
+        when 4
+          date += 4
+        when 3
+          date -= 2
+        when 2
+          date -= 1
+        end
+
+        date
+
 months:
   0:
   - name: Viernes Santo
@@ -39,14 +58,25 @@ months:
   - name: Día de la Revolución de Mayo
     regions: [ar]
     mday: 25
+  - name: Feriado con fines turísticos
+    regions: [ar]
+    mday: 24
+    year_ranges:
+      limited: [2021]
   6:
+  - name: Paso a la Inmortalidad del General Martín Miguel de Güemes
+    regions: [ar]
+    mday: 17
+    function: to_nearest_monday(date)
   - name: Día de la Bandera
     regions: [ar]
     mday: 20
   7:
-  - name: Feriado puente turístico
+  - name: Feriado con fines turísticos
     regions: [ar]
     mday: 8
+    year_ranges:
+      limited: [2016]
   - name: Día de la Independencia
     regions: [ar]
     mday: 9
@@ -54,21 +84,35 @@ months:
   - name: Paso a la Inmortalidad del General José de San Martín
     regions: [ar]
     mday: 17
+    function: to_nearest_monday(date)
   10:
   - name: Día del Respeto a la Diversidad Cultural
     regions: [ar]
     mday: 12
+    function: to_nearest_monday(date)
+  - name: Feriado con fines turísticos
+    regions: [ar]
+    mday: 8
+    year_ranges:
+      limited: [2021]
   11:
   - name: Día de la Soberanía Nacional
     regions: [ar]
     mday: 20
+  - name: Feriado con fines turísticos
+    regions: [ar]
+    mday: 22
+    year_ranges:
+      limited: [2021]
   12:
   - name: Inmaculada Concepción de María
     regions: [ar]
     mday: 8
-  - name: Feriado puente turístico
+  - name: Feriado con fines turísticos
     regions: [ar]
     mday: 9
+    year_ranges:
+      limited: [2016]
   - name: Navidad
     regions: [ar]
     mday: 25
@@ -147,17 +191,24 @@ tests:
     expect:
       name: 'Día de la Revolución de Mayo'
   - given:
+      date: ['2020-06-15', '2021-06-21']
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      name: 'Paso a la Inmortalidad del General Martín Miguel de Güemes'
+      holiday: true
+  - given:
+      date: ['2020-06-17', '2021-06-17']
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      holiday: false
+  - given:
       date: '2016-06-20'
       regions: ['ar']
       options: 'informal'
     expect:
-      name: 'Día de la Bandera'
-  - given:
-      date: '2016-07-08'
-      regions: ['ar']
-      options: 'informal'
-    expect:
-      name: 'Feriado puente turístico'
+      name: 'Paso a la Inmortalidad del General Martín Miguel de Güemes'
   - given:
       date: '2016-07-09'
       regions: ['ar']
@@ -165,17 +216,31 @@ tests:
     expect:
       name: 'Día de la Independencia'
   - given:
-      date: '2016-08-17'
+      date: ['2016-08-15', '2020-08-17', '2021-08-16']
       regions: ['ar']
       options: 'informal'
     expect:
       name: 'Paso a la Inmortalidad del General José de San Martín'
+      holiday: true
   - given:
-      date: '2016-10-12'
+      date: ['2016-08-17', '2021-08-17']
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      holiday: false
+  - given:
+      date: ['2016-10-10', '2021-10-11']
       regions: ['ar']
       options: 'informal'
     expect:
       name: 'Día del Respeto a la Diversidad Cultural'
+      holiday: true
+  - given:
+      date: '2021-10-12'
+      regions: ['ar']
+      options: 'informal'
+    expect:
+      holiday: false
   - given:
       date: '2016-11-20'
       regions: ['ar']
@@ -189,11 +254,12 @@ tests:
     expect:
       name: 'Inmaculada Concepción de María'
   - given:
-      date: '2016-12-09'
+      date: ['2016-07-08', '2016-12-09', '2021-05-24', '2021-10-8', '2021-11-22']
       regions: ['ar']
       options: 'informal'
     expect:
-      name: 'Feriado puente turístico'
+      name: 'Feriado con fines turísticos'
+      holyday: true
   - given:
       date: '2016-12-25'
       regions: ['ar']

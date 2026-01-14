@@ -3,7 +3,7 @@
 module DiscourseAi
   module AiBot
     class SharedAiConversationsController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
       requires_login only: %i[create update destroy]
       before_action :require_site_settings!
 

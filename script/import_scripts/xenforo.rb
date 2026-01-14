@@ -14,7 +14,7 @@ rescue LoadError
   exit
 end
 
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 AVATAR_DIR = "/path/to/avatars"
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/xenforo.rb

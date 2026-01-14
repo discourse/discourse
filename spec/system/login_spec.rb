@@ -154,6 +154,17 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".private_message")
     end
 
+    it "redirects to a route with a query parameters after login and keeps the query parameters" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+      category = Fabricate(:category)
+
+      visit "/new-topic?category_id=#{category.id}"
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+
+      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+    end
+
     it "does not leak topics" do
       visit "/"
 
@@ -206,6 +217,17 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".header-dropdown-toggle.current-user")
 
       expect(page).to have_css("#topic-title")
+    end
+
+    it "redirects to a route with a query parameters after login and keeps the query parameters" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+      category = Fabricate(:category)
+
+      visit "/new-topic?category_id=#{category.id}"
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+
+      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
     end
 
     context "with user api key and omniauth" do
@@ -266,7 +288,7 @@ shared_examples "login scenarios" do
         mock_google_auth
         visit("/user-api-key/new?#{args.to_query}")
 
-        expect(page).to have_css(".authorize-api-key .scopes")
+        expect(page).to have_css(".authorize-api-key__scopes")
       end
 
       it "redirects when navigating to login with redirect param" do
@@ -305,7 +327,6 @@ shared_examples "login scenarios" do
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       find("#login-second-factor").fill_in(with: totp)
-      login_form.click_login
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
@@ -320,7 +341,6 @@ shared_examples "login scenarios" do
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       find("#login-second-factor").fill_in(with: totp)
-      login_form.click_login
 
       expect(page).to have_current_path("/about")
     end

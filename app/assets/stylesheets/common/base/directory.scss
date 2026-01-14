@@ -1,8 +1,22 @@
 @use "lib/viewport";
 
-.directory-table-top-scroll {
-  width: 100%;
-  overflow-x: auto;
+.horizontal-scroll-sync {
+  &__container {
+    width: 100%;
+  }
+
+  &__top-scroll {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  &__fake-content {
+    pointer-events: auto;
+  }
+
+  &__content {
+    overflow-x: auto;
+  }
 }
 
 .directory {
@@ -140,7 +154,6 @@
   gap: 0;
   width: 100%;
   margin-top: var(--space-1);
-  overflow-x: auto;
 
   .me {
     .directory-table__cell {
@@ -154,13 +167,9 @@
   &__header,
   &__body,
   &__row {
-    display: contents;
-
-    @supports (grid-template-rows: subgrid) {
-      display: grid;
-      grid-column: 1 / -1;
-      grid-template-columns: subgrid;
-    }
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
   }
 
   &__column-header,

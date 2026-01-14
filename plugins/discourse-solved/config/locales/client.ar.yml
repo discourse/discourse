@@ -27,12 +27,13 @@ ar:
       accepted_answer: "الحل"
       solution: "الحل"
       solution_summary:
-        zero: "حلًا"
+        zero: "حلول"
         one: "حل واحد"
         two: "حلَّان"
         few: "حلول"
         many: "حلًا"
-        other: "حلًا"
+        other: "حل"
+      accepted_answer_post_number: "المنشور %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "الكل"

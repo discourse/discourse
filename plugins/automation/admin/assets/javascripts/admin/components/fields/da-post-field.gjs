@@ -1,4 +1,5 @@
 import DEditor from "discourse/components/d-editor";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
@@ -12,7 +13,11 @@ export default class PostField extends BaseField {
 
         <div class="controls">
           <div class="field-wrapper">
-            <DEditor @value={{@field.metadata.value}} />
+            <DEditor
+              @value={{@field.metadata.value}}
+              @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.rich}}
+              @processPreview={{false}}
+            />
 
             <DAFieldDescription @description={{@description}} />
 

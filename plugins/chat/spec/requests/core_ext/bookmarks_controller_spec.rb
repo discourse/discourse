@@ -21,7 +21,7 @@ RSpec.describe BookmarksController do
              params: {
                bookmarkable_id: bookmark_message.id,
                bookmarkable_type: "Chat::Message",
-               reminder_at: (Time.zone.now + 1.day).iso8601,
+               reminder_at: 1.day.from_now.iso8601,
              }
 
         expect(response.status).to eq(200)

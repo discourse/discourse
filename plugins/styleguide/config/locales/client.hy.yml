@@ -24,8 +24,8 @@ hy:
           title: "Թեմաների Ժամաչափիչներ"
         post:
           title: "Գրառում"
-        suggested_topics:
-          title: "Առաջարկվող Թեմաներ"
+        more_topics:
+          title: "Ավելի Շատ Թեմաներ"
         tooltips:
           description: "Նկարագրությունը"
           header: "Վերնամաս"

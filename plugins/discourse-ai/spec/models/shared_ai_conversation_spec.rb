@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe SharedAiConversation, type: :model do
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
 

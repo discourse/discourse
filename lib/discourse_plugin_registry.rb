@@ -60,8 +60,8 @@ class DiscoursePluginRegistry
   define_register :desktop_stylesheets, Hash
   define_register :color_definition_stylesheets, Hash
   define_register :serialized_current_user_fields, Set
-  define_register :seed_data, HashWithIndifferentAccess
-  define_register :locales, HashWithIndifferentAccess
+  define_register :seed_data, ActiveSupport::HashWithIndifferentAccess
+  define_register :locales, ActiveSupport::HashWithIndifferentAccess
   define_register :svg_icons, Set
   define_register :custom_html, Hash
   define_register :html_builders, Hash
@@ -73,7 +73,9 @@ class DiscoursePluginRegistry
   define_register :groups_callback_for_users_search_controller_action, Hash
   define_register :mail_pollers, Set
   define_register :site_setting_areas, Set
+  define_register :admin_config_login_routes, Set
   define_register :discourse_dev_populate_reviewable_types, Set
+  define_register :category_update_param_with_callback, Hash
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -114,6 +116,7 @@ class DiscoursePluginRegistry
   define_filtered_register :hashtag_autocomplete_contextual_type_priorities
 
   define_filtered_register :search_groups_set_query_callbacks
+  define_filtered_register :search_handlers
 
   define_filtered_register :stats
   define_filtered_register :bookmarkables
@@ -229,9 +232,9 @@ class DiscoursePluginRegistry
     html_builders[name] << block
   end
 
-  def self.build_html(name, ctx = nil)
+  def self.build_html(name, ctx = nil, **kwargs)
     builders = html_builders[name] || []
-    builders.map { |b| b.call(ctx) }.join("\n").html_safe
+    builders.map { |b| b.call(ctx, **kwargs) }.join("\n").html_safe
   end
 
   def self.seed_paths
@@ -247,9 +250,9 @@ class DiscoursePluginRegistry
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "app/assets/javascripts/discourse/node_modules/moment/moment.js",
+    "moment.js" => "frontend/discourse/node_modules/moment/moment.js",
     "moment-timezone.js" =>
-      "app/assets/javascripts/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
+      "frontend/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
   }
 
   def self.core_asset_for_name(name)

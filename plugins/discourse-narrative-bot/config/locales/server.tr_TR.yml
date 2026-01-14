@@ -169,8 +169,22 @@ tr_TR:
 
           - Her zaman [medeni topluluk davranışına](%{base_uri}/guidelines) inanıyoruz.
       onebox:
+        instructions: |-
+          Sonra bu bağlantılardan birini benimle paylaşabilir misiniz? **Tek başına bir satırdaki bağlantı** ile yanıt verdiğinizde otomatik olarak genişleyip şık bir özet eklenir.
+
+          Herhangi bir bağlantıyı kopyalamak için mobilde basılı tutun veya işaret cihazınıza sağ tıklayın:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Harika! Bu, çoğu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> bağlantısı için çalışacaktır. Unutmayın, önünde veya arkasında başka hiçbir şey olmadan _tek başına_ bir satırda olmalı.
+        not_found: |-
+          Üzgünüm, yanıtınızda bağlantıyı bulamadım! :cry:
+
+          Bir sonraki yanıtınızda aşağıdaki bağlantıyı kendi satırına eklemeyi deneyebilir misiniz?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           İşte bir tek boynuzlu at resmi:
@@ -385,6 +399,19 @@ tr_TR:
 
           Bir konuya yanıt verdiğinizde veya bir konuyu birkaç dakikadan fazla okuduğunuzda, konunun otomatik olarak "izleniyor" bildirim seviyesine ayarlandığını unutmayın. Bunu [kullanıcı tercihlerinizden](%{base_uri}/my/preferences) değiştirebilirsiniz.
       poll:
+        instructions: |-
+          Herhangi bir gönderiye anket ekleyebileceğinizi biliyor muydunuz? Editördeki <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> simgesini kullanarak **bir anket oluşturmayı** deneyin.
+        not_found: |-
+          Hay aksi! Yanıtınızda anket yoktu.
+
+          Editördeki <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> simgesini kullanın veya bu anketi kopyalayıp bir sonraki yanıtınıza yapıştırın:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hey, güzel anket! Size öğretme konusunda nasıldım?
 
@@ -393,6 +420,20 @@ tr_TR:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Bazen yanıtlarımızda **ayrıntıları gizlemek** isteyebilirsiniz:
+
+          - Bir filmin veya TV dizisinin spoiler olarak kabul edilebilecek olay örgüsü noktalarını tartışırken.
+
+          - Gönderinizde, hepsini bir kerede okuduğunuzda bunaltıcı olabilecek çok sayıda isteğe bağlı ayrıntıya ihtiyaç duyulduğunda.
+
+          [details=Nasıl çalıştığını görmek için bunu seçin!]
+          1. Düzenleyicide <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> simgesini seçin.
+          2. "Ayrıntıları Gizle" seçeneğini belirleyin.
+          3. Ayrıntı özetini düzenleyin ve içeriğinizi ekleyin.
+          [/details]
+
+          Bir sonraki cevabınıza ayrıntılar bölümü eklemek için düzenleyicideki <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> simgesini kullanabilir misiniz?
         not_found: |-
           Ayrıntılar widget'ı oluşturmakta sorun mu yaşıyorsunuz? Bir sonraki yanıtınıza aşağıdakileri eklemeyi deneyin:
 

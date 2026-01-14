@@ -60,7 +60,58 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
+    # Creates a new `categories` record in the IntermediateDB.
+    #
+    # @param original_id                                 [Integer, String]
+    # @param about_topic_title                           [String, nil]
+    # @param all_topics_wiki                             [Boolean, nil]
+    # @param allow_badges                                [Boolean, nil]
+    # @param allow_global_tags                           [Boolean, nil]
+    # @param allow_unlimited_owner_edits_on_first_post   [Boolean, nil]
+    # @param auto_close_based_on_last_post               [Boolean, nil]
+    # @param auto_close_hours                            [Float, nil]
+    # @param color                                       [String, nil]
+    # @param created_at                                  [Time, nil]
+    # @param default_list_filter                         [String, nil]
+    # @param default_slow_mode_seconds                   [Integer, nil]
+    # @param default_top_period                          [String, nil]
+    # @param default_view                                [String, nil]
+    # @param description                                 [String, nil]
+    # @param email_in                                    [String, nil]
+    # @param email_in_allow_strangers                    [Boolean, nil]
+    # @param emoji                                       [String, nil]
+    # @param existing_id                                 [Integer, String, nil]
+    # @param icon                                        [String, nil]
+    # @param locale                                      [String, nil]
+    # @param mailinglist_mirror                          [Boolean, nil]
+    # @param minimum_required_tags                       [Integer, nil]
+    # @param name                                        [String]
+    # @param navigate_to_first_post_after_read           [Boolean, nil]
+    # @param num_featured_topics                         [Integer, nil]
+    # @param parent_category_id                          [Integer, String, nil]
+    # @param position                                    [Integer, nil]
+    # @param read_only_banner                            [String, nil]
+    # @param read_restricted                             [Boolean, nil]
+    # @param search_priority                             [Integer, nil]
+    # @param show_subcategory_list                       [Boolean, nil]
+    # @param slug                                        [String]
+    # @param sort_ascending                              [Boolean, nil]
+    # @param sort_order                                  [String, nil]
+    # @param style_type                                  [Integer, nil]
+    # @param subcategory_list_style                      [String, nil]
+    # @param text_color                                  [String, nil]
+    # @param topic_featured_link_allowed                 [Boolean, nil]
+    # @param topic_id                                    [Integer, String, nil]
+    # @param topic_template                              [String, nil]
+    # @param uploaded_background_dark_id                 [String, nil]
+    # @param uploaded_background_id                      [String, nil]
+    # @param uploaded_logo_dark_id                       [String, nil]
+    # @param uploaded_logo_id                            [String, nil]
+    # @param user_id                                     [Integer, String]
+    #
+    # @return [void]
     def self.create(
       original_id:,
       about_topic_title: nil,

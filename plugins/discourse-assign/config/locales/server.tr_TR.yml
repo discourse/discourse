@@ -14,7 +14,6 @@ tr_TR:
     assign_self_regex: "Kendi kendine atama için geçmesi gereken regex. Örnek \"listem\""
     assign_other_regex: "Konuları bahsetme yoluyla başkalarına atamak için geçmesi gereken regex. Örnek \"listeniz\"."
     unassign_on_group_archive: "Bir mesaj bir grup tarafından arşivlendiğinde, mesajın atamasını kaldırın (gelen kutusuna geri taşınırsa yeniden atayın)"
-    unassign_on_close: "Bir konu kapatıldığında konu atamasını kaldırın"
     reassign_on_open: "Bir konu açıldığında önceden atanmış kullanıcıları/grupları yeniden atayın"
     invite_on_assign: "Bir kullanıcıya veya gruba kişisel bir mesaj atandığında, zaten katılımcı değillerse onları Kişisel Mesaja davet edin."
     assign_mailer: "Atamalar için bildirim e-postasının ne zaman gönderileceği"
@@ -33,6 +32,11 @@ tr_TR:
   discourse_assign:
     assigned_to: "@%{username} olarak atanan konu"
     unassigned: "Konu atanmadı"
+    filter:
+      description:
+        assigned: "Belirli bir kullanıcıya veya gruba atanan konuları filtreleyin"
+        nobody: "Kimseye atanmayan konuları filtreleyin"
+        anyone: "Herhangi birine atanan konuları filtreleyin"
     already_claimed: "Bu konu zaten alındı."
     already_assigned: "Konu zaten @%{username} adlı kullanıcıya atanmış"
     too_many_assigns: "@%{username} zaten maksimum atanmış konu sayısına ulaşmış (%{max})."
@@ -73,7 +77,7 @@ tr_TR:
       %{newest_assignments}
       %{oldest_assignments}
 
-      Birden fazla atanmış konunuz varsa bu hatırlatma %{frequency} adresine gönderilir.
+      Birden fazla atanmış konunuz varsa bu anımsatıcı %{frequency} gönderilir.
     newest: |
       ### En yeni
       %{topic_0}

@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscoursePolicy::PolicyController do
   fab!(:group)
   fab!(:moderator)
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
 
   before do
     enable_current_plugin
@@ -42,7 +40,7 @@ describe DiscoursePolicy::PolicyController do
   end
 
   context "when add_users_to_group is present" do
-    fab!(:group2) { Fabricate(:group) }
+    fab!(:group2, :group)
     fab!(:post) { Fabricate(:post, user: moderator) }
     fab!(:policy666) do
       policy = Fabricate(:post_policy, post: post, add_users_to_group: group2.id)
@@ -115,7 +113,7 @@ describe DiscoursePolicy::PolicyController do
   end
 
   describe "group member visibility restrictions" do
-    fab!(:owner) { Fabricate(:user) }
+    fab!(:owner, :user)
     let!(:post) do
       raw = <<~MD
         [policy group=#{group.name}]

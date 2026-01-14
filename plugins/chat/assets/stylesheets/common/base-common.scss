@@ -15,6 +15,15 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
+html.ios-device.composer-open body {
+  overflow: hidden;
+}
+
+html.ios-device.has-full-page-chat body {
+  position: fixed;
+  overflow: scroll;
+}
+
 .uppy-is-drag-over .chat-composer .drop-a-file {
   display: flex;
   position: absolute;
@@ -80,16 +89,15 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
     top: 0;
     right: 2px;
 
-    @include chat-unread-indicator;
+    @include chat-unread-indicator {
+      width: 14px;
+      height: 14px;
+    }
 
     &.-urgent {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: auto;
-      height: 1em;
-      min-width: 0.6em;
-      padding: 0.21em 0.42em;
       top: -1px;
       right: 0;
     }
@@ -122,7 +130,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 }
 
 .chat-messages-container {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: normal;
   position: relative;
 
@@ -178,7 +186,7 @@ body.has-full-page-chat {
   .alert-success,
   .alert-warning {
     margin: 0;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
   }
 }
 
@@ -189,7 +197,7 @@ body.has-full-page-chat {
 
   .c-navbar-container {
     position: sticky;
-    top: var(--main-outlet-offset);
+    top: 0;
     z-index: 1;
   }
 
@@ -238,7 +246,7 @@ body.has-full-page-chat {
 .chat-channel-status {
   background: var(--secondary);
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 }
 
 html.has-full-page-chat {
@@ -266,6 +274,7 @@ html.has-full-page-chat {
         min-height: 0;
         max-width: 100vw;
         box-sizing: border-box;
+        container-type: inline-size;
       }
     }
   }
@@ -285,8 +294,10 @@ html.has-full-page-chat {
       min-height: 0;
     }
   }
+}
 
-  [data-popper-reference-hidden] {
-    visibility: hidden;
+.sidebar-section-link-wrapper[data-list-item-name="new-chat-dm"] {
+  .prefix-icon {
+    color: var(--tertiary);
   }
 }

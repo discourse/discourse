@@ -4,13 +4,14 @@ return if !defined?(DiscourseAutomation)
 
 describe DiscourseAi::Automation::LlmTriage do
   fab!(:category)
-  fab!(:reply_user) { Fabricate(:user) }
-  fab!(:personal_message) { Fabricate(:private_message_topic) }
+  fab!(:reply_user, :user)
+  fab!(:personal_message, :private_message_topic)
   let(:canned_reply_text) { "Hello, this is a reply" }
 
   let(:automation) { Fabricate(:automation, script: "llm_triage", enabled: true) }
 
   fab!(:llm_model)
+  fab!(:ai_persona)
 
   def add_automation_field(name, value, type: "text")
     automation.fields.create!(
@@ -27,9 +28,11 @@ describe DiscourseAi::Automation::LlmTriage do
     enable_current_plugin
 
     SiteSetting.tagging_enabled = true
-    add_automation_field("system_prompt", "hello %%POST%%")
+
+    ai_persona.update!(default_llm: llm_model)
+
+    add_automation_field("triage_persona", ai_persona.id)
     add_automation_field("search_for_text", "bad")
-    add_automation_field("model", "custom:#{llm_model.id}")
     add_automation_field("category", category.id, type: "category")
     add_automation_field("tags", %w[aaa bbb], type: "tags")
     add_automation_field("hide_topic", true, type: "boolean")
@@ -42,21 +45,17 @@ describe DiscourseAi::Automation::LlmTriage do
   it "can trigger via automation" do
     post = Fabricate(:post, raw: "hello " * 5000)
 
-    body = {
-      model: "gpt-3.5-turbo-0301",
-      usage: {
-        prompt_tokens: 337,
-        completion_tokens: 162,
-        total_tokens: 499,
-      },
-      choices: [
-        { message: { role: "assistant", content: "bad" }, finish_reason: "stop", index: 0 },
-      ],
-    }.to_json
+    chunks = <<~RESPONSE
+    data: {"id":"chatcmpl-B2VwlY6KzSDtHvg8pN1VAfRhhLFgn","object":"chat.completion.chunk","created":1739939159,"model": "gpt-3.5-turbo-0301","service_tier":"default","system_fingerprint":"fp_ef58bd3122","choices":[{"index":0,"delta":{"role":"assistant","content":"","refusal":null},"finish_reason":null}],"usage":null}
+
+    data: {"id":"chatcmpl-B2VwlY6KzSDtHvg8pN1VAfRhhLFgn","object":"chat.completion.chunk","created":1739939159,"model": "gpt-3.5-turbo-0301","service_tier":"default","system_fingerprint":"fp_ef58bd3122","choices":[{"index":0,"delta":{"content":"bad"},"finish_reason":null}],"usage":null}
+
+    data: [DONE]
+    RESPONSE
 
     WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
       status: 200,
-      body: body,
+      body: chunks,
     )
 
     automation.running_in_background!
@@ -96,7 +95,7 @@ describe DiscourseAi::Automation::LlmTriage do
     # PM
     reply_user.update!(admin: true)
     add_automation_field("include_personal_messages", true, type: :boolean)
-    add_automation_field("temperature", "0.2")
+    ai_persona.update!(temperature: 0.2)
     add_automation_field("max_output_tokens", "700")
     post = Fabricate(:post, topic: personal_message)
 
@@ -206,5 +205,91 @@ describe DiscourseAi::Automation::LlmTriage do
     # Verify no replies were created
     last_post = topic.posts.order(:post_number).last
     expect(last_post.id).to eq(post.id)
+  end
+
+  context "with post images" do
+    fab!(:upload)
+    fab!(:post) { Fabricate(:post, raw: "Here is an image") }
+
+    before { post.uploads << upload }
+
+    def user_message_content(prompts)
+      prompts.first.messages.find { |m| m[:type] == :user }[:content]
+    end
+
+    it "excludes images when vision is disabled" do
+      ai_persona.update!(vision_enabled: false)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do |_, _, prompts|
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        expect(user_message_content(prompts)).to include(post.raw)
+      end
+    end
+
+    it "includes images when vision is enabled" do
+      ai_persona.update!(vision_enabled: true)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do |_, _, prompts|
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        expect(user_message_content(prompts)).to contain_exactly(
+          include(post.raw),
+          { upload_id: upload.id },
+        )
+      end
+    end
+  end
+
+  context "when the scripts gets triggered repeteadly due to edits" do
+    fab!(:post)
+
+    before { add_automation_field("canned_reply", nil, type: "message") }
+
+    it "flags the post once when using spam-based types" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+        add_automation_field("flag_type", "spam")
+
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        automation.trigger!({ "post" => post })
+      end
+
+      reviewable = ReviewableFlaggedPost.find_by(target: post)
+      scores = reviewable.reviewable_scores.select { |rs| rs.user == Discourse.system_user }
+
+      expect(scores.size).to eq(1)
+    end
+
+    it "flags the post once when not using spam-based types (review_* types)" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+        add_automation_field("flag_type", "review")
+
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        automation.trigger!({ "post" => post })
+      end
+
+      reviewable = ReviewablePost.find_by(target: post)
+      scores = reviewable.reviewable_scores.select { |rs| rs.user == Discourse.system_user }
+
+      expect(scores.size).to eq(1)
+    end
+
+    it "makes the reviewable visible to moderators when using review flag types" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+        add_automation_field("flag_type", "review")
+
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+      end
+
+      reviewable = ReviewablePost.find_by(target: post)
+      expect(reviewable.reviewable_by_moderator).to eq(true)
+
+      # Verify moderators can actually see it in their review list
+      moderator = Fabricate(:moderator)
+      expect(Reviewable.list_for(moderator)).to include(reviewable)
+    end
   end
 end

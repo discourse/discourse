@@ -132,9 +132,9 @@ en:
               description: "In silent mode persona will receive the content but will not post anything on the forum - useful when performing triage using tools"
         llm_triage:
           fields:
-            system_prompt:
-              label: "System Prompt"
-              description: "The prompt that will be used to triage, be sure for it to reply with a single word you can use to trigger the action"
+            triage_persona:
+              label: "Persona"
+              description: "Persona used to triage, be sure for it to reply with a single word you can use to trigger the action"
             max_post_tokens:
               label: "Max Post Tokens"
               description: "The maximum number of tokens to scan using LLM triage"
@@ -165,6 +165,15 @@ en:
             flag_post:
               label: "Flag post"
               description: "Flags post (either as spam or for review)"
+            notify_author_pm:
+              label: "Notify author via PM"
+              description: "Send a personal message to the post author when their post is queued and deleted"
+            notify_author_pm_user:
+              label: "PM sender"
+              description: "User who will send the PM (defaults to system)"
+            notify_author_pm_message:
+              label: "PM content"
+              description: "Optional custom message to send to the author"
             include_personal_messages:
               label: "Include personal messages"
               description: "Also scan and triage personal messages"
@@ -174,23 +183,54 @@ en:
             reply_persona:
               label: "Reply Persona"
               description: "AI Persona to use for replies (must have default LLM), will be prioritized over canned reply"
-            model:
-              label: "Model"
-              description: "Language model used for triage"
-            temperature:
-              label: "Temperature"
-              description: "Temperature to use for the LLM. Increase to increase randomness (leave empty to use model default)"
             max_output_tokens:
               label: "Max output tokens"
               description: "When specified, sets an upper bound to the maximum number of tokens the model can generate. Respects LLM's max output tokens limit"
+        llm_tagger:
+          tag_mode:
+            manual: "Use specific tag list (configured below)"
+            discover: "Let AI discover and use any site tags"
+          fields:
+            tagger_persona:
+              label: "AI Persona"
+              description: "The AI persona to use for analyzing and tagging topics"
+            tag_mode:
+              label: "Tag Selection Mode"
+              description: "Choose how the AI selects tags"
+            available_tags:
+              label: "Available Tags"
+              description: "Tags that the AI can choose from (only used in manual mode)"
+            confidence_threshold:
+              label: "Confidence Threshold"
+              description: "Minimum confidence percentage (0-100) required to apply suggested tags"
+            max_tags_per_post:
+              label: "Maximum Tags Per Post"
+              description: "Maximum number of tags that can be applied to a single post"
+            max_post_tokens:
+              label: "Maximum Post Tokens"
+              description: "Maximum number of tokens from the post content to analyze"
+            allow_restricted_tags:
+              label: "Allow Restricted Tags"
+              description: "Allow AI to suggest and apply tags with restricted permissions or visibility."
+            max_posts_for_context:
+              label: "Maximum Posts for Context"
+              description: "Maximum number of posts from the topic to include for analysis context (default: 5)"
+            allow_system_posts:
+              label: "Allow System Posts"
+              description: "Allow tagging of posts created by the system user."
 
     discourse_ai:
       title: "AI"
+
+      default_llm:
+        title: "Default LLM model"
+        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or persona. If no default LLM is specified, the last created LLM will be used."
 
       features:
         short_title: "Features"
         description: "These are the AI features available to visitors on your site. These can be configured to use specific personas and LLMs, and can be access controlled by groups."
         back: "Back"
+        settings_save_error: "Some settings could not be saved."
         disabled: "(disabled)"
         persona:
           one: "Persona:"
@@ -202,7 +242,7 @@ en:
         no_llm: "No LLM selected"
         no_persona: "Not set"
         no_groups: "None"
-        edit: "Edit"
+        edit: "Settings"
         expand_list:
           one: "(%{count} more)"
           other: "(%{count} more)"
@@ -211,6 +251,11 @@ en:
           bot: "Chatbot"
           name: "Bot"
           description: "A chat bot that can answer questions and assist users in personal messages, forum and in chat"
+          setting_groups:
+            settings: "Basic Settings"
+            access_control: "Access Control"
+            ui_settings: "UI Settings"
+            integrations: "Integrations"
         nav:
           configured: "Configured"
           unconfigured: "Unconfigured"
@@ -219,29 +264,50 @@ en:
           text: "Search features, personas, LLMs, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
+
+        no_automations: "There are no automations yet"
+
         summarization:
           name: "Summaries"
           description: "Makes a summarization button available that allows visitors to summarize topics"
           topic_summaries: "Topic summaries"
           gists: "Topic list's short summaries"
+          setting_groups:
+            settings: "Basic Settings"
+            gists: "Gists"
+            backfill: "Backfill"
         search:
           name: "Search"
           description: "Enhances search experience by providing AI-generated answers to queries"
           discoveries: "Discoveries"
+          setting_groups:
+            settings: "Basic Settings"
         embeddings:
           name: "Embeddings"
           description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
           hyde: "HyDE"
+          setting_groups:
+            model_settings: "Model Settings"
+            related_topics: "Related Topics"
+            semantic_search: "Semantic Search"
         discord:
           name: "Discord integration"
           description: "Adds the ability to search Discord channels"
           search: "Discord search"
+          setting_groups:
+            settings: "Basic Settings"
+            discord_configuration: "Discord Configuration"
         inference:
           name: "Inferred concepts"
           description: "Classifies topics and posts into areas of interest / labels."
           generate_concepts: "Concepts inference"
           match_concepts: "Concepts matching"
           deduplicate_concepts: "Concepts deduplication"
+          setting_groups:
+            settings: "Basic Settings"
+            topic_criteria: "Topic Criteria"
+            post_criteria: "Post Criteria"
+            personas: "Personas"
 
         ai_helper:
           name: "Helper"
@@ -256,6 +322,12 @@ en:
           custom_prompt: "Custom prompt"
           image_caption: "Caption images"
           translator: "Translator"
+          post_illustrator: "Post illustrator"
+          setting_groups:
+            access_permissions: "Access & Permissions"
+            enabled_features: "Enabled Features"
+            automation: "Automation"
+            personas: "Personas"
 
         translation:
           name: "Translation"
@@ -264,11 +336,28 @@ en:
           post_raw_translator: "Post raw translator"
           topic_title_translator: "Topic title translator"
           short_text_translator: "Short text translator"
+          schedule_untranslated: "Schedule translations"
+          schedule_topic_success:
+            one: "Scheduled translation for %{count} untranslated post."
+            other: "Scheduled translation for %{count} untranslated posts."
+          schedule_topic_error: "Failed to schedule translations. Please try again."
+          setting_groups:
+            settings: "Basic Settings"
+            personas: "Personas"
+            backfill_and_limits: "Backfill & Limits"
 
         spam:
           name: "Spam"
           description: "Identifies potential spam using the selected LLM and flags it for site moderators to inspect in the review queue"
           inspect_posts: "Inspect posts"
+
+        automation_reports:
+          name: "Automated reports"
+          description: "Automatically creates concise overviews of activity, highlighting trends, key topics, and engagement"
+
+        automation_triage:
+          name: "Posts triage"
+          description: "Automates moderation and management of posts by using configurable automation rules"
 
       modals:
         select_option: "Select an option..."
@@ -276,6 +365,46 @@ en:
       layout:
         table: "Table"
         card: "Card"
+
+      translations:
+        title: "Translations"
+        description: "Automatically translate all content on your forum to the user's preferred language"
+        supported_locales: "Supported languages"
+        supported_locales_description: "This site setting also allows visitors to contribute post translations."
+        admin_actions:
+          translation_settings: "Translation settings"
+          localization_settings: "Localization settings"
+          enable_translations: "Enable automatic translations"
+        stats:
+          title: "Translation statistics"
+          complete_language_detection_description: "All %{total} eligible posts have their language detected."
+          incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
+          backfill_disabled: "Backfilling is disabled, only new posts will be translated."
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          eta_minutes:
+            one: "%{count} minute"
+            other: "%{count} minutes"
+          eta_hours:
+            one: "%{count} hour"
+            other: "%{count} hours"
+          eta_days:
+            one: "%{count} day"
+            other: "%{count} days"
+        progress_chart:
+          title: "Translation Progress"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} out of %{total} non-%{language} posts translated"
+          bar_done:
+            one: "%{count} post"
+            other: "%{count} posts"
+        translations_menu:
+          translate:
+            label: "Translate post"
+            title: "Translates this post to all supported languages"
+            confirm: "This will update any existing translations on this post. Are you sure?"
+            success: "Post has been sent for translation"
+        credit_limit_warning: "Translations are paused due to credit limits. They will resume when credits reset at %{reset_time}."
+        credit_limit_warning_no_time: "Translations are paused due to credit limits. They will resume when credits reset."
 
       spam:
         short_title: "Spam"
@@ -302,6 +431,11 @@ en:
           post_url_label: "Post URL or ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 or post ID"
           result: "Result"
+          reason: "Reasoning"
+          llm: "LLM"
+          scan_history: "Scan History"
+          sent_message: "Sent Message"
+          system_prompt: "System Prompt"
           scan_log: "Scan log"
           run: "Run test"
           spam: "Spam"
@@ -324,6 +458,7 @@ en:
         feature: "Feature"
         usage_count: "Usage count"
         model: "Model"
+        credits_remaining: "Credits remaining"
         models_breakdown: "Usage per model"
         users_breakdown: "Usage per user"
         all_features: "All features"
@@ -333,18 +468,27 @@ en:
         request_tokens: "Request tokens"
         response_tokens: "Response tokens"
         net_request_tokens: "Net request tokens"
+        cache_read_tokens: "Cache read tokens"
+        cache_write_tokens: "Cache write tokens"
         cached_tokens: "Cached tokens"
         cached_request_tokens: "Cached request tokens"
         total_spending: "Estimated cost"
         no_users: "No user usage data found"
         no_models: "No model usage data found"
         no_features: "No feature usage data found"
+        total: "Total"
+        included_in_plan: "Included in plan"
+        included_models: "Included usage"
+        billed_models: "Billed usage"
+        cost: "Cost"
         subheader_description: "Tokens are the basic units that LLMs use to understand and generate text, usage data may affect costs"
         stat_tooltips:
           total_requests: "All requests made to LLMs through Discourse"
           total_tokens: "All the tokens used when prompting an LLM"
           request_tokens: "Tokens used when the LLM tries to understand what you are saying"
           response_tokens: "Tokens used when the LLM responds to your prompt"
+          cache_read_tokens: "Previously processed request tokens that the LLM reuses from cache to optimize performance and cost"
+          cache_write_tokens: "Request tokens that were written to cache for potential future reuse"
           cached_tokens: "Previously processed request tokens that the LLM reuses to optimize performance and cost"
           total_spending: "Cumulative cost of all tokens used by the LLMs based on specified cost metrics added to LLM configuration settings"
         periods:
@@ -352,6 +496,7 @@ en:
           last_week: "Last week"
           last_month: "Last month"
           custom: "Custom..."
+        credit_allocations: "Credit allocations"
 
       ai_persona:
         ai_tools: "Tools"
@@ -379,8 +524,8 @@ en:
           low: Low quality - cheapest (256x256)
           medium: Medium quality (512x512)
           high: High quality - slowest (1024x1024)
-        tool_details: Show tool details
-        tool_details_help: Will show end users details on which tools the language model has triggered.
+        show_thinking: Show thinking
+        show_thinking_help: Will show end users the internal thinking and tool calls of the language model.
         mentionable: Allow mentions
         mentionable_help: If enabled, users in allowed groups can mention this user in posts, the AI will respond as this persona.
         user: User
@@ -533,11 +678,13 @@ en:
         max_output_tokens: "Max output tokens"
         url: "URL of the service hosting the model"
         api_key: "API Key of the service hosting the model"
-        enabled_chat_bot: "Allow AI bot selector"
         vision_enabled: "Vision enabled"
+        allowed_attachment_types: "Allowed attachments"
+        attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, docx)"
         ai_bot_user: "AI bot User"
         cost_input: "Input cost"
         cost_cached_input: "Cached input cost"
+        cost_cache_write: "Cache write cost"
         cost_output: "Output cost"
 
         save: "Save"
@@ -546,7 +693,6 @@ en:
         back: "Back"
         confirm_delete: Are you sure you want to delete this model?
         delete: Delete
-        seeded_warning: "This model is pre-configured on your site and cannot be edited."
         quotas:
           title: "Usage quotas"
           add_title: "Create new quota"
@@ -567,9 +713,14 @@ en:
           max_tokens_required: "Must be set if max usages is not set"
           max_usages_help: "Maximum number of times each user in this group can use the AI model within the specified duration. This quota is tracked per individual user, not shared across the group."
           max_usages_required: "Must be set if max tokens is not set"
+        credit_allocation:
+          credits_remaining: "%{remaining} of %{total} credits remaining (%{percentage}%)"
+          soft_limit_warning: "This model has %{percentage}% of AI credits remaining today"
+          hard_limit_warning: "You have run out of AI credits for this model. AI features using this model will be unavailable until %{reset_date}"
+          next_reset: "Credits reset on %{time}"
         usage:
           ai_bot: "AI bot"
-          ai_helper: "Helper"
+          ai_helper: "Helper (%{persona})"
           ai_helper_image_caption: "Image caption"
           ai_persona: "Persona (%{persona})"
           ai_summarization: "Summarize"
@@ -582,26 +733,26 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-0: "Anthropic's most intelligent model"
-          anthropic-claude-sonnet-4-0: "Optimal balance of speed and cost"
-          anthropic-claude-3-7-sonnet-latest: "Optimal balance of speed and cost (previous generation)"
-          anthropic-claude-3-5-haiku-latest: "Fast and cost-effective"
+          anthropic-claude-opus-4-5: "Anthropic's most intelligent model"
+          anthropic-claude-sonnet-4-5: "Optimal balance of speed and cost"
+          anthropic-claude-haiku-4-5: "Fast and cost-effective"
+          google-gemini-3-pro: "Google's most intelligent model"
           google-gemini-2-5-pro: "Large multimodal model capable of a wide range of tasks"
-          google-gemini-2-0-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning (previous generation)"
           google-gemini-2-5-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning"
-          google-gemini-2-0-flash-lite: "Cost efficient and low latency model"
-          open_ai-o3: "Open AI's most capable reasoning model"
-          open_ai-o4-mini: "Advanced Cost-efficient reasoning model"
-          open_ai-gpt-4-1: "Open AI's flagship model. It is well suited for problem solving across domains"
-          open_ai-gpt-4-1-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
-          open_ai-gpt-4-1-nano: "Fastest, most cost-effective GPT-4.1 model."
+          google-gemini-2-5-flash-lite: "Google's smallest and most cost-effective model"
+          google-gemini-2-5-flash-image-preview: "Latest image generation model with vision capabilities"
+          open_ai-gpt-5-1: "OpenAI's flagship model. It is well suited for problem solving across domains"
+          open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
+          open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficient lightweight multilingual model"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Powerful multipurpose model"
           mistral-mistral-large-latest: "Mistral's most powerful model"
           mistral-pixtral-large-latest: "Mistral's most powerful vision capable model"
-          open_router-x-ai-grok-3-beta: "xAI's latest model"
+          open_router-x-ai-grok-4: "xAI's latest model"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek's latest reasoning model"
           open_router-meta-llama-3-3-70b-instruct: "Highly capable multilingual model"
+          groq-openai-gpt-oss-120b: "State of the art open-weight model by OpenAI"
+          groq-openai-gpt-oss-20b: "Lightweigh, fast, open-weight model by OpenAI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -621,6 +772,7 @@ en:
           title: "Run test"
           running: "Running test..."
           success: "Success!"
+          invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
 
         hints:
@@ -629,9 +781,10 @@ en:
           display_name: "The name used to reference this model across your site's interface."
           name: "We include this in the API call to specify which model we'll use"
           vision_enabled: "If enabled, the AI will attempt to understand images. It depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI."
-          enabled_chat_bot: "If enabled, users can select this model when creating PMs with the AI bot"
+          allowed_attachment_types: "Choose which attachment types are forwarded to the model. Leave blank to disallow attachments. Images are controlled via vision."
           cost_input: "The input cost per 1M tokens for this model"
-          cost_cached_input: "The cached input cost per 1M tokens for this model"
+          cost_cached_input: "The cached input cost per 1M tokens for this model (when reading from prompt cache)"
+          cost_cache_write: "The cache write cost per 1M tokens for this model (when writing to prompt cache)"
           cost_output: "The output cost per 1M tokens for this model"
           cost_measure: "$/1M tokens"
         providers:
@@ -648,10 +801,12 @@ en:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Custom"
 
         provider_fields:
           access_key_id: "AWS Bedrock access key ID"
+          role_arn: "AWS Bedrock Role ARN"
           region: "AWS Bedrock region"
           organization: "Optional OpenAI organization ID"
           disable_system_prompt: "Disable system message in prompts"
@@ -667,7 +822,11 @@ en:
           reasoning_tokens: "Number of tokens used for reasoning"
           disable_temperature: "Disable temperature (some thinking models don't support temperature)"
           disable_top_p: "Disable top P (some thinking models don't support top P)"
-          enable_responses_api: "Enable responses API (required on certain OpenAI models)"
+          prompt_caching: "Prompt caching mode"
+          prompt_caching_never: "Never - Do not use prompt caching"
+          prompt_caching_tool_results: "Tool Results - Cache when tool results are present (recommended)"
+          prompt_caching_always: "Always - Always use prompt caching"
+          effort: "Effort level (Claude Opus 4.5 only)"
 
       related_topics:
         title: "Related topics"
@@ -713,18 +872,21 @@ en:
           title: "Suggested thumbnails"
           select: "Select"
           selected: "Selected"
+          try_again: "Try Again"
         image_caption:
           button_label: "Caption with AI"
           generating: "Generating caption..."
           credits: "Captioned by AI"
           save_caption: "Save"
-          automatic_caption_setting: "Enable auto caption"
-          automatic_caption_loading: "Captioning images..."
-          automatic_caption_dialog:
-            prompt: "This post contains non-captioned images. Would you like to enable automatic captions on image uploads? (This can be changed in your preferences later)"
-            confirm: "Enable"
-            cancel: "Don't ask again"
         no_content_error: "Add content first to perform AI actions on it"
+
+      errors:
+        credit_limit_dialog:
+          title: "AI credit limit reached"
+          message_user: "This community has reached its AI credit limit for today. Please try again after %{reset_time} or contact your site administrator for more information."
+          message_without_time_user: "This community has reached its AI credit limit for today. Responses will be unavailable until your limit resets. Please contact your site administrator for more information."
+          message_admin: "You have reached the AI credit limit for your plan. Responses will be unavailable until your limit resets at %{reset_time}."
+          message_without_time_admin: "You have reached the AI credit limit for your plan. Responses will be unavailable until your limit resets."
 
       reviewables:
         model_used: "Model used:"
@@ -789,6 +951,7 @@ en:
           none: "Sorry, our AI search found no matching topics"
           new: "Press 'search' to begin looking for new results with AI"
           unavailable: "AI results unavailable"
+          zero_results_expanded: "Zero results found, showing %{count} AI results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
           invalid_sort: "Search results must be sorted by Relevance to display AI results"
@@ -807,8 +970,11 @@ en:
         llm: "Model"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
+        try_again: "Try again"
         default_pm_prefix: "[Untitled AI bot PM]"
         shortcut_title: "Start a PM with an AI bot"
+        shortcut_link: "AI bot"
+        exit: "exit AI bot"
         share: "Copy AI conversation"
         conversation_shared: "Conversation copied"
         embed_copied: "Embed copied to clipboard"
@@ -820,6 +986,8 @@ en:
           copy_response: "Copy response"
           request_tokens: "Request tokens:"
           response_tokens: "Response tokens:"
+          cache_read_tokens: "Cache read tokens:"
+          cache_write_tokens: "Cache write tokens:"
           request: "Request"
           response: "Response"
           next_log: "Next"
@@ -910,6 +1078,14 @@ en:
         topic:
           title: "Topic summary"
           close: "Close summary panel"
+          regenerate: "Regenerate short summary"
+          regenerate_bulk: "Regenerate short summaries"
+          regenerate_success:
+            one: "Short summary regenerated successfully"
+            other: "%{count} short summaries regenerated successfully"
+          regenerate_error:
+            one: "Failed to regenerate short summary"
+            other: "Failed to regenerate %{count} short summaries"
         topic_list_layout:
           button:
             compact: "Compact"
@@ -924,7 +1100,7 @@ en:
         loading_convo: "Loading conversation"
         collapse: "Collapse"
         timed_out: "Discobot couldn't find any discoveries. Something went wrong."
-        user_setting: "Enable search discoveries"
+        user_setting: "Enable AI search discoveries"
         tooltip:
           header: "AI powered search"
           content: "Natural language search powered by %{model}"

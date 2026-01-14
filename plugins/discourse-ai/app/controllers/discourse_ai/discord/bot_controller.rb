@@ -3,7 +3,7 @@
 module DiscourseAi
   module Discord
     class BotController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       skip_before_action :verify_authenticity_token
 

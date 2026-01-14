@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 ur:
+  site_settings:
+    spoiler_enabled: 'سپائلر پلگ ان کو فعال کریں۔ اگر آپ اسے تبدیل کرتے ہیں، تو آپ کو تمام پوسٹس کو اس کے ساتھ ری بیک کرنا ہوگا: "rake posts:rebake"۔'
+  spoiler_alert:
+    excerpt_spoiler: "بگاڑنے والا"

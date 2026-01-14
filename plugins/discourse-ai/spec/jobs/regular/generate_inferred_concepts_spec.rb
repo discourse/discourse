@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::GenerateInferredConcepts do
+  subject(:job) { described_class.new }
+
   fab!(:topic)
   fab!(:post)
   fab!(:concept) { Fabricate(:inferred_concept, name: "programming") }
@@ -16,8 +18,8 @@ RSpec.describe Jobs::GenerateInferredConcepts do
         :match_topic_to_concepts,
       )
 
-      subject.execute(item_type: "topics", item_ids: [])
-      subject.execute(item_type: "topics", item_ids: nil)
+      job.execute(item_type: "topics", item_ids: [])
+      job.execute(item_type: "topics", item_ids: nil)
     end
 
     it "does nothing with blank item_type" do
@@ -25,14 +27,14 @@ RSpec.describe Jobs::GenerateInferredConcepts do
         :match_topic_to_concepts,
       )
 
-      subject.execute(item_type: "", item_ids: [topic.id])
-      subject.execute(item_type: nil, item_ids: [topic.id])
+      job.execute(item_type: "", item_ids: [topic.id])
+      job.execute(item_type: nil, item_ids: [topic.id])
     end
 
     it "validates item_type to be topics or posts" do
       allow(Rails.logger).to receive(:error).with(/Invalid item_type/)
 
-      subject.execute(item_type: "invalid", item_ids: [1])
+      job.execute(item_type: "invalid", item_ids: [1])
     end
 
     context "with topics" do
@@ -41,7 +43,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
           :match_topic_to_concepts,
         ).with(topic)
 
-        subject.execute(item_type: "topics", item_ids: [topic.id], match_only: true)
+        job.execute(item_type: "topics", item_ids: [topic.id], match_only: true)
       end
 
       it "processes topics in generation mode" do
@@ -49,7 +51,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
           :generate_concepts_from_topic,
         ).with(topic)
 
-        subject.execute(item_type: "topics", item_ids: [topic.id], match_only: false)
+        job.execute(item_type: "topics", item_ids: [topic.id], match_only: false)
       end
 
       it "handles topics that don't exist" do
@@ -58,7 +60,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
           :match_topic_to_concepts,
         )
 
-        subject.execute(
+        job.execute(
           item_type: "topics",
           item_ids: [999_999], # non-existent ID
           match_only: true,
@@ -74,7 +76,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
         allow(manager_instance).to receive(:match_topic_to_concepts).with(topic)
         allow(manager_instance).to receive(:match_topic_to_concepts).with(topic2)
 
-        subject.execute(item_type: "topics", item_ids: [topic.id, topic2.id], match_only: true)
+        job.execute(item_type: "topics", item_ids: [topic.id, topic2.id], match_only: true)
       end
 
       it "processes topics in batches" do
@@ -85,7 +87,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
         allow(Topic).to receive(:where).with(id: topic_ids[0..2]).and_call_original
         allow(Topic).to receive(:where).with(id: topic_ids[3..4]).and_call_original
 
-        subject.execute(item_type: "topics", item_ids: topic_ids, batch_size: 3, match_only: true)
+        job.execute(item_type: "topics", item_ids: topic_ids, batch_size: 3, match_only: true)
       end
     end
 
@@ -95,7 +97,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
           :match_post_to_concepts,
         ).with(post)
 
-        subject.execute(item_type: "posts", item_ids: [post.id], match_only: true)
+        job.execute(item_type: "posts", item_ids: [post.id], match_only: true)
       end
 
       it "processes posts in generation mode" do
@@ -103,7 +105,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
           :generate_concepts_from_post,
         ).with(post)
 
-        subject.execute(item_type: "posts", item_ids: [post.id], match_only: false)
+        job.execute(item_type: "posts", item_ids: [post.id], match_only: false)
       end
 
       it "handles posts that don't exist" do
@@ -112,7 +114,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
           :match_post_to_concepts,
         )
 
-        subject.execute(
+        job.execute(
           item_type: "posts",
           item_ids: [999_999], # non-existent ID
           match_only: true,
@@ -128,7 +130,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
         allow(manager_instance).to receive(:match_post_to_concepts).with(post)
         allow(manager_instance).to receive(:match_post_to_concepts).with(post2)
 
-        subject.execute(item_type: "posts", item_ids: [post.id, post2.id], match_only: true)
+        job.execute(item_type: "posts", item_ids: [post.id, post2.id], match_only: true)
       end
     end
 
@@ -141,7 +143,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
         /Error generating concepts from topic #{topic.id}/,
       )
 
-      subject.execute(item_type: "topics", item_ids: [topic.id], match_only: true)
+      job.execute(item_type: "topics", item_ids: [topic.id], match_only: true)
     end
 
     it "uses default batch size of 100" do
@@ -152,7 +154,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
       allow(Topic).to receive(:where).with(id: topic_ids[0..99]).and_call_original
       allow(Topic).to receive(:where).with(id: topic_ids[100..149]).and_call_original
 
-      subject.execute(item_type: "topics", item_ids: topic_ids, match_only: true)
+      job.execute(item_type: "topics", item_ids: topic_ids, match_only: true)
     end
 
     it "respects custom batch size" do
@@ -164,7 +166,7 @@ RSpec.describe Jobs::GenerateInferredConcepts do
       allow(Topic).to receive(:where).with(id: topic_ids[2..3]).and_call_original
       allow(Topic).to receive(:where).with(id: topic_ids[4..4]).and_call_original
 
-      subject.execute(item_type: "topics", item_ids: topic_ids, batch_size: 2, match_only: true)
+      job.execute(item_type: "topics", item_ids: topic_ids, batch_size: 2, match_only: true)
     end
   end
 end

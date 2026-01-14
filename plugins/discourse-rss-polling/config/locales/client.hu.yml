@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discourse RSS"
   js:
+    rss_polling:
+      title: RSS Polling
     admin:
       rss_polling:
+        feed: Hírcsatorna-beállítások
+        discourse: Discourse beállítások
         author: Szerző
         feed_url: Webcím
         discourse_category: Kategória
         discourse_tags: Címkék
+        feed_category_filter: Kategóriaszűrő
+        documentation: RSS konfigurációs dokumentációja
+        destroy_feed:
+          confirm: "Biztosan törölni szeretné ezt a hírcsatornát?"

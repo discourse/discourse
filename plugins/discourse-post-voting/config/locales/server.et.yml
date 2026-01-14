@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 et:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Tegevust pole"
   post_action_types:
     vote:
       title: "Hinda"
@@ -16,8 +21,6 @@ et:
             title: "Peata kasutaja"
           agree_and_silence:
             title: "Vaigista kasutaja"
-          disagree:
-            title: "Ei nõustu"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

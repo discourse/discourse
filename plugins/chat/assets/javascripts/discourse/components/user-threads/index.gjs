@@ -13,7 +13,6 @@ import ThreadPreview from "discourse/plugins/chat/discourse/components/user-thre
 import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 
 export default class UserThreads extends Component {
-  @service chat;
   @service chatApi;
   @service chatChannelsManager;
   @service messageBus;

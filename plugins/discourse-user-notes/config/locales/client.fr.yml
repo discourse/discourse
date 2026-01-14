@@ -8,8 +8,5 @@ fr:
   js:
     user_notes:
       title: "Notes d'utilisateur"
-      attach: "Ajouter une note d'utilisateur"
-      remove: "Supprimer la note d'utilisateur"
-      show: "Notes d'utilisateur (%{count})"
+      attach_note_description: "Ajoutez une note concernant cet utilisateur. Cette note ne sera visible que par le personnel."
       delete_confirm: "Voulez-vous vraiment supprimer cette note d'utilisateur ?"
-      show_post: "Afficher le message"

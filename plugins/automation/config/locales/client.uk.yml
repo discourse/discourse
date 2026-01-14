@@ -10,6 +10,8 @@ uk:
       logs:
         staff_actions:
           actions:
+            create_automation: створити автоматизацію
+            update_automation: оновлення автоматизації
             delete_automation: видалити автоматизацію
     discourse_automation:
       title: Автоматизація
@@ -60,13 +62,19 @@ uk:
             label: Тіло
           delay:
             label: Затримка (хвилин)
-          prefers_encrypt:
-            label: Шифрує ПП, якщо можливо
         group:
           label: Група
         text:
           label: Текст
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Розділи
+              description: Активувати лише тоді, коли позначена тема належить до цих категорій
+            tags:
+              label: Теґи
+              description: Активувати лише тоді, коли позначена тема містить будь-який із цих тегів
         not_found: Не вдалося знайти тригер `%{trigger}` для автоматизації `%{automation}`, переконайтеся, що відповідний плагін встановлено
         user_badge_granted:
           fields:
@@ -277,6 +285,14 @@ uk:
               label: Теґи
               description: Необов'язково, буде спрацьовувати лише в тому випадку, якщо публікація містить будь-який з цих тегів
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Шаблон електронного листа
+              description: Підтримує заповнювачі автоматизації
+            recipients:
+              label: Одержувачі
+              description: Користувачі або адреси електронної пошти для сповіщення
         not_found: Не вдалося знайти скрипт `%{script}` для автоматизації `%{automation}`, переконайтеся, що відповідний плагін встановлено
         zapier_webhook:
           fields:
@@ -424,6 +440,13 @@ uk:
           fields:
             custom_field_name:
               label: "Назва користувальницького поля"
+        set_topic_timer:
+          title: Встановити таймер теми
+          fields:
+            type:
+              label: Тип таймера
+            duration:
+              label: Тривалість таймера
       unnamed_automation: "Неназвана автоматизація"
       models:
         script:
@@ -449,7 +472,7 @@ uk:
           status:
             label: Статус
           enabled:
-            label: Включено
+            label: "Увімкнути автоматизацію"
           disabled:
             label: Вимкнено
           placeholders:
@@ -460,3 +483,4 @@ uk:
             label: Останній запуск
           last_updated_by:
             label: Оновлено
+          enable_toggle_disabled: "Ви можете ввімкнути цю автоматизацію після заповнення всіх обов'язкових полів."

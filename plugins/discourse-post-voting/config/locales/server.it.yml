@@ -30,10 +30,40 @@ it:
     post_voting_enable_likes_on_answers: "Abilita il pulsante Mi piace nelle risposte agli argomenti con votazione dei messaggi"
     post_voting_undo_vote_action_window: "Numero di minuti consentiti agli utenti per annullare i voti negli argomenti con votazione dei messaggi (inserisci 0 per non definire alcun limite)"
     post_voting_comment_limit_per_post: "Numero di commenti consentiti su ogni messaggio"
-    min_trust_to_flag_posts_voting_comments: "Livello di attendibilità minimo per contrassegnare un commento di votazione dei messaggi"
     flag_posts_voting_comments_allowed_groups: "Gruppi autorizzati a contrassegnare un commento di votazione dei messaggi"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+    post_voting_comment_enabled: "Abilita i commenti nei messaggi negli argomenti con voto sui messaggi"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Nessuna azione"
+        agree_and_keep_comment:
+          title: "Mantieni il commento"
+          description: "Accetta la segnalazione e mantieni invariato il commento."
+        agree_and_keep_deleted:
+          title: "Mantieni il commento cancellato"
+          description: "Accetta segnalazione e conferma eliminazione del commento."
+        agree_and_restore:
+          title: "Ripristina il commento"
+          description: "Ripristina il commento in modo che gli utenti possano vederlo."
+        agree_and_delete:
+          title: "Elimina il commento"
+          description: "Elimina il commento in modo che gli utenti non possano vederlo."
+        agree_and_suspend:
+          title: "Sospendi utente"
+          description: "Accetta segnalazione e sospendi l'utente."
+        agree_and_silence:
+          title: "Silenzia utente"
+          description: "Accetta segnalazione e silenzia l'utente."
+        disagree_and_restore:
+          title: "Esprimi disaccordo e ripristina il commento"
+          description: "Ripristina il commento in modo che tutti gli utenti possano vederlo."
+        disagree:
+          title: "Mantieni il commento"
+        ignore:
+          title: "Ignore flag"
+        delete_and_agree:
+          description: "Ignora la segnalazione rimuovendola dalla coda ed eliminando il commento."
   post_action_types:
     vote:
       title: "Vota"
@@ -58,6 +88,7 @@ it:
         limit_exceeded: "È stato raggiunto il limite di %{limit} commenti per messaggio."
         perform: "Commento di votazione di messaggio contrassegnato con un punteggio sufficientemente alto per silenziare l'utente."
         auto_silence_from_flags: "Silenziato automaticamente a causa della segnalazione."
+        disabled: "Non è consentito commentare un messaggio."
       reviewables:
         comment_already_handled: "Grazie, ma abbiamo già esaminato questo commento e stabilito che non è necessario contrassegnarlo di nuovo."
         actions:
@@ -80,16 +111,14 @@ it:
             title: "Elimina il commento"
             description: "Elimina il commento in modo che gli utenti non possano vederlo."
           delete_and_agree:
-            title: "Ignora segnalazione ed elimina commento"
             description: "Ignora la segnalazione rimuovendola dalla coda ed eliminando il commento."
           disagree_and_restore:
             title: "Esprimi disaccordo e ripristina il commento"
             description: "Ripristina il commento in modo che tutti gli utenti possano vederlo."
           disagree:
-            title: "Rifiuta"
+            title: "Mantieni il commento"
           ignore:
-            title: "Non fare nulla"
-            description: "Ignora la segnalazione rimuovendola dalla coda senza intraprendere alcuna azione."
+            title: "Ignore flag"
         transcript:
           view: "Visualizza la trascrizione dei commenti precedenti"
       reviewable_score_types:

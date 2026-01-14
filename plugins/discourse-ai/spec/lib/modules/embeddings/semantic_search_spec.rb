@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
+  subject(:semantic_search) { described_class.new(Guardian.new(user)) }
+
   fab!(:post)
   fab!(:user)
+  fab!(:vector_def, :embedding_definition)
 
   let(:query) { "test_query" }
-  let(:subject) { described_class.new(Guardian.new(user)) }
-
-  fab!(:vector_def) { Fabricate(:embedding_definition) }
 
   before do
     enable_current_plugin
     SiteSetting.ai_embeddings_selected_model = vector_def.id
-    assign_fake_provider_to(:ai_embeddings_semantic_search_hyde_model)
+    assign_fake_provider_to(:ai_default_llm_model)
   end
 
   describe "#search_for_topics" do
@@ -29,7 +29,7 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
 
     def trigger_search(query)
       DiscourseAi::Completions::Llm.with_prepared_responses([hypothetical_post]) do
-        subject.search_for_topics(query)
+        semantic_search.search_for_topics(query)
       end
     end
 
@@ -39,6 +39,20 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
       posts = trigger_search(query)
 
       expect(posts).to contain_exactly(post)
+    end
+
+    context "with HYDE enabled" do
+      it "uses HYDE embeddings and not asymmetric ones" do
+        insert_candidate(post.topic)
+
+        vector = DiscourseAi::Embeddings::Vector.instance
+        allow(vector).to receive(:vector_from).and_call_original
+
+        posts = trigger_search(query)
+
+        expect(vector).not_to have_received(:vector_from).with(query, true)
+        expect(posts).to contain_exactly(post)
+      end
     end
 
     describe "applies different scopes to the candidates" do

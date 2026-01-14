@@ -48,6 +48,11 @@
       outline: 2px solid var(--tertiary);
       outline-offset: -2px;
     }
+
+    &.--bg-size-cover {
+      background-size: cover;
+      background-position: center;
+    }
   }
 
   .image-upload-controls {
@@ -140,4 +145,8 @@
 .hidden-upload-field {
   visibility: hidden;
   position: absolute;
+
+  .admin-backups-upload & {
+    width: 100%;
+  }
 }

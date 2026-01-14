@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../support/assign_allowed_group"
-require_relative "../fabricators/assign_hook_fabricator.rb"
+require_relative "../fabricators/assign_hook_fabricator"
 
 describe "integration tests" do
   before { SiteSetting.assign_enabled = true }
@@ -167,7 +166,7 @@ describe "integration tests" do
   end
 
   describe "move post" do
-    fab!(:old_topic) { Fabricate(:topic) }
+    fab!(:old_topic, :topic)
     fab!(:post) { Fabricate(:post, topic: old_topic) }
     fab!(:user)
     fab!(:assignment) do
@@ -190,7 +189,7 @@ describe "integration tests" do
       expect(assignment.target_id).to eq(new_topic.id)
     end
 
-    it "assigment is still post assignment when not first post" do
+    it "assignment is still post assignment when not first post" do
       post.update!(topic: new_topic, post_number: "3")
       DiscourseEvent.trigger(:post_moved, post, old_topic.id)
       assignment.reload

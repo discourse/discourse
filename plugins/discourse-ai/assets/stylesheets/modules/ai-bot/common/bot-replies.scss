@@ -1,25 +1,40 @@
+@use "lib/viewport";
+
 nav.post-controls .actions button.cancel-streaming {
   display: none;
 }
 
-.ai-bot-chat {
-  #reply-control {
-    .user-selector,
-    .title-and-category,
-    #private-message-users {
-      display: none;
-    }
+.ai-cancel-streaming-container {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.post-info.post-date {
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
+
+article.streaming {
+  .post-info.post-date {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
   }
 
-  .persona-llm-selector {
+  .ai-cancel-streaming-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    opacity: 1;
+  }
 
-    .select-kit.single-select.dropdown-select-box ul.select-kit-collection {
-      max-height: 200px;
+  nav.post-controls .actions button.ai-retry-streaming {
+    display: none;
+  }
+
+  @include viewport.until(sm) {
+    .persona-flair {
+      display: none;
     }
-    margin-bottom: 1em;
   }
 }
 
@@ -50,10 +65,6 @@ nav.post-controls .actions button.cancel-streaming {
   width: calc(100% - 20px);
 }
 
-article.streaming nav.post-controls .actions button.cancel-streaming {
-  display: inline-block;
-}
-
 .ai-bot-available-bot-options {
   padding: 0.5em;
 
@@ -78,6 +89,11 @@ article.streaming nav.post-controls .actions button.cancel-streaming {
 .topic-body .persona-flair {
   order: 2;
   font-size: var(--font-down-1);
+  transform: translateY(0.04em);
+
+  @include viewport.until(sm) {
+    transform: translateY(0.1em);
+  }
 }
 
 details.ai-quote {

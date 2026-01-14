@@ -1,10 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { render, triggerEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DTooltips from "discourse/float-kit/components/d-tooltips";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
-import DTooltips from "float-kit/components/d-tooltips";
 import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
@@ -69,10 +69,8 @@ module(
     });
 
     test("it shows status on mentions", async function (assert) {
-      const self = this;
-
       await render(
-        <template><ChatChannel @channel={{self.channel}} /></template>
+        <template><ChatChannel @channel={{this.channel}} /></template>
       );
 
       assertStatusIsRendered(
@@ -83,10 +81,8 @@ module(
     });
 
     test("it updates status on mentions", async function (assert) {
-      const self = this;
-
       await render(
-        <template><ChatChannel @channel={{self.channel}} /></template>
+        <template><ChatChannel @channel={{this.channel}} /></template>
       );
 
       const newStatus = {
@@ -109,10 +105,8 @@ module(
     });
 
     test("it deletes status on mentions", async function (assert) {
-      const self = this;
-
       await render(
-        <template><ChatChannel @channel={{self.channel}} /></template>
+        <template><ChatChannel @channel={{this.channel}} /></template>
       );
 
       this.appEvents.trigger("user-status:changed", {
@@ -125,10 +119,8 @@ module(
     });
 
     test("it shows status on mentions on messages that came from Message Bus", async function (assert) {
-      const self = this;
-
       await render(
-        <template><ChatChannel @channel={{self.channel}} /></template>
+        <template><ChatChannel @channel={{this.channel}} /></template>
       );
 
       await receiveChatMessageViaMessageBus();
@@ -141,10 +133,8 @@ module(
     });
 
     test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
-      const self = this;
-
       await render(
-        <template><ChatChannel @channel={{self.channel}} /></template>
+        <template><ChatChannel @channel={{this.channel}} /></template>
       );
       await receiveChatMessageViaMessageBus();
 
@@ -166,10 +156,8 @@ module(
     });
 
     test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {
-      const self = this;
-
       await render(
-        <template><ChatChannel @channel={{self.channel}} /></template>
+        <template><ChatChannel @channel={{this.channel}} /></template>
       );
       await receiveChatMessageViaMessageBus();
 
@@ -183,11 +171,9 @@ module(
     });
 
     test("it shows status tooltip", async function (assert) {
-      const self = this;
-
       await render(
         <template>
-          <ChatChannel @channel={{self.channel}} /><DTooltips />
+          <ChatChannel @channel={{this.channel}} /><DTooltips />
         </template>
       );
       await triggerEvent(statusSelector(mentionedUser.username), "pointermove");

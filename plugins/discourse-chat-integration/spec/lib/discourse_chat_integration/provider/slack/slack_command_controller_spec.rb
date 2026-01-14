@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "Slack Command Controller", type: :request do
   before { Discourse.cache.clear }
 

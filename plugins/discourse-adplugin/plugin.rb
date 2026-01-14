@@ -8,41 +8,53 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-adplugin
 
 register_asset "stylesheets/adplugin.scss"
+register_svg_icon "rectangle-ad"
 
 add_admin_route "admin.adplugin.house_ads.title", "houseAds"
 
 enabled_site_setting :discourse_adplugin_enabled
 
 module ::AdPlugin
-  def self.plugin_name
-    "discourse-adplugin".freeze
-  end
-
-  def self.pstore_get(key)
-    PluginStore.get(AdPlugin.plugin_name, key)
-  end
-
-  def self.pstore_set(key, value)
-    PluginStore.set(AdPlugin.plugin_name, key, value)
-  end
-
-  def self.pstore_delete(key)
-    PluginStore.remove(AdPlugin.plugin_name, key)
-  end
+  PLUGIN_NAME = "discourse-adplugin"
 end
 
+require_relative "lib/adplugin/engine"
+require_relative "lib/ad_plugin/ad_type"
+
 after_initialize do
-  require_relative "app/models/house_ad"
-  require_relative "app/models/house_ad_setting"
-  require_relative "app/controllers/house_ads_controller"
-  require_relative "app/controllers/house_ad_settings_controller"
+  require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
+  require_relative "app/controllers/ad_plugin/house_ads_controller"
   require_relative "app/controllers/adstxt_controller"
+  require_relative "app/controllers/ad_plugin/ad_impressions_controller"
+  require_relative "app/serializers/ad_plugin/house_ad_serializer"
+
+  require_relative "app/models/ad_plugin/house_ad_setting"
+  require_relative "app/models/ad_plugin/house_ad"
+  require_relative "app/models/ad_plugin/ad_impression"
+  require_relative "app/models/concerns/reports/ad_plugin"
   require_relative "lib/adplugin/guardian_extensions"
 
-  reloadable_patch { Guardian.prepend ::AdPlugin::GuardianExtensions }
+  reloadable_patch do
+    Guardian.prepend AdPlugin::GuardianExtensions
+    Report.include(Reports::AdPlugin)
+  end
+
+  Discourse::Application.routes.append do
+    get "/ads.txt" => "adstxt#index"
+
+    post "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
+    patch "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
+    post "/ad_plugin/ad_impressions" => "ad_plugin/ad_impressions#create"
+
+    mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
+  end
 
   add_to_serializer :site, :house_creatives do
     AdPlugin::HouseAdSetting.settings_and_ads(for_anons: scope.anonymous?, scope: scope)
+  end
+
+  add_to_serializer :site, :ad_types do
+    AdPlugin::AdType.types
   end
 
   add_to_serializer :topic_view, :tags_disable_ads do
@@ -73,21 +85,5 @@ after_initialize do
 
   add_to_serializer :current_user, :show_to_groups do
     scope.show_to_groups?
-  end
-
-  class AdPlugin::Engine < ::Rails::Engine
-    engine_name "adplugin"
-    isolate_namespace AdPlugin
-  end
-
-  AdPlugin::Engine.routes.draw do
-    root to: "house_ads#index"
-    resources :house_creatives, only: %i[index show create update destroy], controller: "house_ads"
-    resources :house_settings, only: [:update], controller: "house_ad_settings"
-  end
-
-  Discourse::Application.routes.append do
-    get "/ads.txt" => "adstxt#index"
-    mount ::AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
   end
 end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Report do
   fab!(:user_1, :user)
   fab!(:user_2, :user)
@@ -63,7 +61,7 @@ describe Report do
 
     expect(report.data).to contain_exactly(
       a_hash_including("cat_count" => 1, :day => 2.days.ago.to_date, :like_count => 0),
-      a_hash_including(day: 1.days.ago.to_date, like_count: 0),
+      a_hash_including(day: 1.day.ago.to_date, like_count: 0),
       a_hash_including("cat_count" => 1, :day => Time.current.to_date, :like_count => 0),
     )
   end

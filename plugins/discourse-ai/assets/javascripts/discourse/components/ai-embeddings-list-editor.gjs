@@ -1,19 +1,19 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import DTooltip from "float-kit/components/d-tooltip";
 import AiEmbeddingEditor from "./ai-embedding-editor";
 
 export default class AiEmbeddingsListEditor extends Component {
   @service adminPluginNavManager;
 
   get hasEmbeddingElements() {
-    return this.args.embeddings.length !== 0;
+    return this.args.embeddings.content.length !== 0;
   }
 
   <template>
@@ -53,7 +53,7 @@ export default class AiEmbeddingsListEditor extends Component {
               </tr>
             </thead>
             <tbody>
-              {{#each @embeddings as |embedding|}}
+              {{#each @embeddings.content as |embedding|}}
                 <tr class="ai-embeddings-list__row d-admin-row__content">
                   <td class="d-admin-row__overview">
                     <div class="ai-embeddings-list__name">

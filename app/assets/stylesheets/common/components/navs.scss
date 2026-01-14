@@ -40,6 +40,7 @@
       align-items: center;
       background-color: var(--d-nav-bg-color);
       transition: var(--d-button-transition);
+      white-space: nowrap;
 
       .d-icon {
         margin-right: 5px;
@@ -64,10 +65,9 @@
 .nav-stacked {
   @extend %nav;
   padding: 0;
-  background: var(--primary-low);
 
   li {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     &:last-of-type {
       border-bottom: 0;

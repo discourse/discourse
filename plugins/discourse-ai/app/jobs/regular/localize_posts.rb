@@ -11,50 +11,39 @@ module Jobs
 
       return if !DiscourseAi::Translation.backfill_enabled?
 
+      unless DiscourseAi::Translation.credits_available_for_post_localization?
+        Rails.logger.info(
+          "Translation skipped for posts: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
+      llm_model = find_llm_model_for_persona(SiteSetting.ai_translation_post_raw_translator_persona)
+      return if llm_model.blank?
+
       locales = SiteSetting.content_localization_supported_locales.split("|")
       locales.each do |locale|
         base_locale = locale.split("_").first
+
         posts =
-          Post
+          DiscourseAi::Translation::PostCandidates
+            .get
             .joins(
               "LEFT JOIN post_localizations pl ON pl.post_id = posts.id AND pl.locale LIKE '#{base_locale}%'",
             )
-            .where(
-              "posts.created_at > ?",
-              SiteSetting.ai_translation_backfill_max_age_days.days.ago,
-            )
-            .where(deleted_at: nil)
-            .where("posts.user_id > 0")
-            .where.not(raw: [nil, ""])
             .where.not(locale: nil)
             .where("posts.locale NOT LIKE '#{base_locale}%'")
             .where("pl.id IS NULL")
-
-        posts = posts.joins(:topic)
-
-        if SiteSetting.ai_translation_backfill_limit_to_public_content
-          # exclude all PMs
-          # and only include posts from public categories
-          posts =
-            posts
-              .where.not(topics: { archetype: Archetype.private_message })
-              .where(topics: { category_id: Category.where(read_restricted: false).select(:id) })
-        else
-          # all regular topics, and group PMs
-          posts =
-            posts.where(
-              "topics.archetype != ? OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
-              Archetype.private_message,
-            )
-        end
-
-        posts = posts.order(updated_at: :desc).limit(limit)
+            .order(updated_at: :desc)
+            .limit(limit)
 
         next if posts.empty?
 
         posts.each do |post|
+          next unless DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
+
           begin
-            DiscourseAi::Translation::PostLocalizer.localize(post, locale)
+            DiscourseAi::Translation::PostLocalizer.localize(post, locale, llm_model: llm_model)
           rescue FinalDestination::SSRFDetector::LookupFailedError
             # do nothing, there are too many sporadic lookup failures
           rescue => e
@@ -66,6 +55,17 @@ module Jobs
 
         DiscourseAi::Translation::VerboseLogger.log("Translated #{posts.size} posts to #{locale}")
       end
+    end
+
+    private
+
+    def find_llm_model_for_persona(persona_id)
+      return nil if persona_id.blank?
+
+      persona_klass = AiPersona.find_by_id_from_cache(persona_id)
+      return nil if persona_klass.blank?
+
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end
 end

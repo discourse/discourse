@@ -3,14 +3,16 @@
 module DiscourseAi
   module Summarization
     class << self
-      def topic_summary(topic)
+      def topic_summary(topic, llm_model: nil)
         return nil if !SiteSetting.ai_summarization_enabled
-        if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)).blank?
+        if (
+             ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
+           ).blank?
           return nil
         end
 
         persona_klass = ai_persona.class_instance
-        llm_model = find_summarization_model(persona_klass)
+        llm_model ||= find_summarization_model(persona_klass)
         return nil if llm_model.blank?
 
         DiscourseAi::Summarization::FoldContent.new(
@@ -19,14 +21,16 @@ module DiscourseAi
         )
       end
 
-      def topic_gist(topic)
+      def topic_gist(topic, llm_model: nil)
         return nil if !SiteSetting.ai_summarization_enabled
-        if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summary_gists_persona)).blank?
+        if (
+             ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summary_gists_persona)
+           ).blank?
           return nil
         end
 
         persona_klass = ai_persona.class_instance
-        llm_model = find_summarization_model(persona_klass)
+        llm_model ||= find_summarization_model(persona_klass)
         return nil if llm_model.blank?
 
         DiscourseAi::Summarization::FoldContent.new(
@@ -35,14 +39,16 @@ module DiscourseAi
         )
       end
 
-      def chat_channel_summary(channel, time_window_in_hours)
+      def chat_channel_summary(channel, time_window_in_hours, llm_model: nil)
         return nil if !SiteSetting.ai_summarization_enabled
-        if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)).blank?
+        if (
+             ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
+           ).blank?
           return nil
         end
 
         persona_klass = ai_persona.class_instance
-        llm_model = find_summarization_model(persona_klass)
+        llm_model ||= find_summarization_model(persona_klass)
         return nil if llm_model.blank?
 
         DiscourseAi::Summarization::FoldContent.new(
@@ -54,11 +60,9 @@ module DiscourseAi
 
       # Priorities are:
       #   1. Persona's default LLM
-      #   2. Hidden `ai_summarization_model` setting
-      #   3. Newest LLM config
+      #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
       def find_summarization_model(persona_klass)
-        model_id =
-          persona_klass.default_llm_id || SiteSetting.ai_summarization_model&.split(":")&.last # Remove legacy custom provider.
+        model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
         if model_id.present?
           LlmModel.find_by(id: model_id)
@@ -73,7 +77,7 @@ module DiscourseAi
         persona = persona_klass.new
         user = User.find_by(id: persona_klass.user_id) || Discourse.system_user
 
-        bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm_model)
+        DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm_model)
       end
     end
   end

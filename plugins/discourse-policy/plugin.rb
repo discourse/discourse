@@ -15,19 +15,14 @@ register_svg_icon "file-signature"
 
 enabled_site_setting :policy_enabled
 
+module ::DiscoursePolicy
+  PLUGIN_NAME = "discourse-policy"
+end
+
+require_relative "lib/discourse_policy/engine"
+
 after_initialize do
-  module ::DiscoursePolicy
-    PLUGIN_NAME = "discourse-policy"
-    HAS_POLICY = "HasPolicy"
-    POLICY_USER_DEFAULT_LIMIT = 25
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscoursePolicy
-    end
-  end
-
-  require_relative "app/controllers/policy_controller"
+  require_relative "app/controllers/discourse_policy/policy_controller"
   require_relative "app/models/policy_user"
   require_relative "app/models/post_policy_group"
   require_relative "app/models/post_policy"
@@ -39,14 +34,7 @@ after_initialize do
   require_relative "lib/extensions/user_option_extension"
   require_relative "lib/policy_mailer"
 
-  Discourse::Application.routes.append { mount ::DiscoursePolicy::Engine, at: "/policy" }
-
-  DiscoursePolicy::Engine.routes.draw do
-    put "/accept" => "policy#accept"
-    put "/unaccept" => "policy#unaccept"
-    get "/accepted" => "policy#accepted"
-    get "/not-accepted" => "policy#not_accepted"
-  end
+  Discourse::Application.routes.append { mount DiscoursePolicy::Engine, at: "/policy" }
 
   Post.prepend DiscoursePolicy::PostExtension
   PostSerializer.prepend DiscoursePolicy::PostSerializerExtension
@@ -57,6 +45,13 @@ after_initialize do
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
+  deprecate_setting(
+    "policy_restrict_to_staff_posts",
+    "create_policy_allowed_groups",
+    false,
+    "3.7.0",
+  )
+
   add_to_serializer(:user_option, :policy_email_frequency) { object.policy_email_frequency }
 
   register_email_unsubscriber("policy_email", EmailControllerHelper::PolicyEmailUnsubscriber)
@@ -66,7 +61,7 @@ after_initialize do
   on(:post_process_cooked) do |doc, post|
     has_group = false
 
-    if !SiteSetting.policy_restrict_to_staff_posts || post&.user&.staff?
+    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
       if policy = doc.search(".policy")&.first
         post_policy = post.post_policy || post.build_post_policy
 
@@ -166,6 +161,10 @@ after_initialize do
       post.save_custom_fields
       PostPolicy.where(post_id: post.id).destroy_all
     end
+  end
+
+  add_to_serializer(:current_user, :can_create_policy) do
+    object.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
   end
 
   add_report("unaccepted-policies") do |report|

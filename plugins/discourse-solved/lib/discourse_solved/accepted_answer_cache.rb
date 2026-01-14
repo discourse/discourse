@@ -8,7 +8,7 @@ module DiscourseSolved
       @@allowed_accepted_cache["allowed"] = begin
         Set.new(
           CategoryCustomField.where(
-            name: ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+            name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
             value: "true",
           ).pluck(:category_id),
         )

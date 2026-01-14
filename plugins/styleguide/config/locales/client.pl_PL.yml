@@ -38,6 +38,8 @@ pl_PL:
           title: "System czcionek"
         colors:
           title: "Kolory"
+        dialog:
+          title: "Okno dialogowe"
         icons:
           title: "Ikony"
           full_list: "Zobacz pełną listę niesamowitych ikon czcionek"
@@ -60,7 +62,7 @@ pl_PL:
         categories_list:
           title: "Lista Kategorii"
         topic_link:
-          title: "Łącze tematu"
+          title: "Link do tematu i status"
         topic_list_item:
           title: "Temat na liście tematów"
         topic_statuses:
@@ -69,8 +71,6 @@ pl_PL:
           title: "Lista tematów"
         basic_topic_list:
           title: "Podstawowa lista tematów"
-        footer_message:
-          title: "Wiadomość w stopce"
         signup_cta:
           title: "Zarejestruj CTA"
         topic_timer_info:
@@ -85,12 +85,14 @@ pl_PL:
           title: "Lista postów"
           empty_example: "<PostList /> pusty stan"
           populated_example: "<PostList /> stan wypełniony"
+        post_oneboxes:
+          title: "Opublikuj Oneboxy"
         topic_map:
           title: "Mapa tematu"
         site_header:
           title: "Nagłówek witryny"
-        suggested_topics:
-          title: "Sugerowane tematy"
+        more_topics:
+          title: "Więcej tematów"
         post_menu:
           title: "Menu postu"
         modal:
@@ -103,6 +105,8 @@ pl_PL:
           title: "Ikony nagłówka"
         spinners:
           title: "Ładowanie"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Pusty stan"
         tooltips:

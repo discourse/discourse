@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe PostVoting::VoteManager do
   fab!(:user)
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:user_3) { Fabricate(:user) }
+  fab!(:user_2, :user)
+  fab!(:user_3, :user)
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }
   fab!(:topic_post) { Fabricate(:post, topic: topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }

@@ -65,7 +65,7 @@
 .dialog-header {
   display: flex;
   padding: 10px 15px;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
   align-items: center;
 
   h3 {
@@ -89,7 +89,7 @@
   flex-wrap: wrap;
   align-items: center;
   padding: 14px 15px 10px;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
 
   --btn-bottom-margin: 0.3em;
 

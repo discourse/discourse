@@ -10,27 +10,23 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Message with edits", async function (assert) {
-    const self = this;
-
     this.message = new ChatFabricators(getOwner(this)).message({
       edited: true,
     });
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert.dom(".chat-message-edited").exists("has the correct css class");
   });
 
   test("Deleted message", async function (assert) {
-    const self = this;
-
     this.message = new ChatFabricators(getOwner(this)).message({
       user: this.currentUser,
       deleted_at: moment(),
     });
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert
@@ -39,13 +35,11 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   });
 
   test("Hidden message", async function (assert) {
-    const self = this;
-
     this.message = new ChatFabricators(getOwner(this)).message({
       hidden: true,
     });
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert
@@ -54,29 +48,25 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   });
 
   test("Message by a bot", async function (assert) {
-    const self = this;
-
     this.message = new ChatFabricators(getOwner(this)).message({
       message: "what <mark>test</mark>",
       user: new CoreFabricators(getOwner(this)).user({ id: -10 }),
     });
     await this.message.cook();
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert.dom(".chat-message-container.is-bot").exists("has the bot class");
   });
 
   test("Message with mark html tag", async function (assert) {
-    const self = this;
-
     this.message = new ChatFabricators(getOwner(this)).message({
       message: "what <mark>test</mark>",
     });
     await this.message.cook();
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert
@@ -85,13 +75,11 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   });
 
   test("Message with reply", async function (assert) {
-    const self = this;
-
     this.message = new ChatFabricators(getOwner(this)).message({
       inReplyTo: new ChatFabricators(getOwner(this)).message(),
     });
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert
@@ -100,8 +88,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   });
 
   test("Message with streaming", async function (assert) {
-    const self = this;
-
     // admin
     this.currentUser.admin = true;
 
@@ -111,7 +97,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     });
     await this.message.cook();
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert
@@ -129,7 +115,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     });
     await this.message.cook();
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert
@@ -149,7 +135,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     });
     await this.message.cook();
     await render(
-      <template><ChatMessage @message={{self.message}} /></template>
+      <template><ChatMessage @message={{this.message}} /></template>
     );
 
     assert

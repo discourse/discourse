@@ -2,7 +2,7 @@
 
 require "json"
 
-module ::Patreon
+module Patreon
   class Patron
     def self.update!
       return unless Patreon::Campaign.update!

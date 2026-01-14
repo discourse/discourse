@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import { i18n } from "discourse-i18n";
+import decorateCookedContent from "../modifiers/decorate-cooked-content";
+import decoratePollOption from "../modifiers/decorate-poll-option";
 
 export default class PollResultsRankedChoiceComponent extends Component {
   get rankedChoiceWinnerText() {
@@ -31,27 +33,25 @@ export default class PollResultsRankedChoiceComponent extends Component {
         </tr>
       </thead>
       <tbody>
-        {{#if @rankedChoiceOutcome}}
-          {{#each @rankedChoiceOutcome.round_activity as |round|}}
-            {{#if round.majority}}
-              <tr>
-                <td>{{round.round}}</td>
-                <td>{{htmlSafe round.majority.html}}</td>
-                <td>{{i18n "poll.ranked_choice.none"}}</td>
-              </tr>
-            {{else}}
-              <tr>
-                <td>{{round.round}}</td>
-                <td>{{i18n "poll.ranked_choice.none"}}</td>
-                <td>
-                  {{#each round.eliminated as |eliminated|}}
-                    {{htmlSafe eliminated.html}}
-                  {{/each}}
-                </td>
-              </tr>
-            {{/if}}
-          {{/each}}
-        {{/if}}
+        {{#each @rankedChoiceOutcome.round_activity as |round|}}
+          {{#if round.majority}}
+            <tr>
+              <td>{{round.round}}</td>
+              <td {{decoratePollOption round.majority.html}}></td>
+              <td>{{i18n "poll.ranked_choice.none"}}</td>
+            </tr>
+          {{else}}
+            <tr>
+              <td>{{round.round}}</td>
+              <td>{{i18n "poll.ranked_choice.none"}}</td>
+              <td>
+                {{#each round.eliminated as |eliminated|}}
+                  <span {{decoratePollOption eliminated.html}}></span>
+                {{/each}}
+              </td>
+            </tr>
+          {{/if}}
+        {{/each}}
       </tbody>
     </table>
     <h3 class="poll-results-ranked-choice-subtitle-outcome">
@@ -64,14 +64,16 @@ export default class PollResultsRankedChoiceComponent extends Component {
         >{{this.rankedChoiceTiedText}}</span>
         <ul class="poll-results-ranked-choice-tied-candidates">
           {{#each @rankedChoiceOutcome.tied_candidates as |tied_candidate|}}
-            <li class="poll-results-ranked-choice-tied-candidate">{{htmlSafe
-                tied_candidate.html
-              }}</li>
+            <li
+              class="poll-results-ranked-choice-tied-candidate"
+              {{decoratePollOption tied_candidate.html}}
+            ></li>
           {{/each}}
         </ul>
       {{else}}
         <span
           class="poll-results-ranked-choice-info"
+          {{decorateCookedContent}}
         >{{this.rankedChoiceWinnerText}}</span>
       {{/if}}
     {{/if}}

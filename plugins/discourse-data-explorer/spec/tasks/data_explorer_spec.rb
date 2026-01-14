@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "Data Explorer rake tasks" do
   before do
     Rake::Task.clear

@@ -23,6 +23,9 @@ fr:
     patreon_donation_prompt_campaign_url: "URL de la campagne d'incitation aux donations"
     errors:
       patreon_creator_username_not_set: "Vous devez définir le paramètre Patreon Creator Discourse Username avant d'activer la connexion Patreon."
+  dashboard:
+    problem:
+      access_token_invalid: "Les valeurs des jetons d'accès et d'actualisation de Patreon Creator sont incorrectes. Vous devez copier-coller les nouveaux jetons du site <a href='https://www.patreon.com/platform/documentation/clients'>Patreon</a> vers les paramètres du site <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'></a>."
   patreon:
     error:
       invalid_response: "Réponse invalide de l'API Patreon"

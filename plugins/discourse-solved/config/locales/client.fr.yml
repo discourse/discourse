@@ -29,6 +29,7 @@ fr:
       solution_summary:
         one: "solution"
         other: "solutions"
+      accepted_answer_post_number: "message %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tous"

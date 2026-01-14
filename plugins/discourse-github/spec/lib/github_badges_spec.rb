@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseGithubPlugin::GithubBadges do
   let(:bronze_user) { Fabricate(:user) }
   let(:bronze_user_repo_2) { Fabricate(:user) }
@@ -51,7 +49,7 @@ describe DiscourseGithubPlugin::GithubBadges do
       repo2.commits.create!(
         sha: "4",
         email: bronze_user_repo_2.email,
-        committed_at: 2.day.ago,
+        committed_at: 2.days.ago,
         role_id: roles[:committer],
       )
 

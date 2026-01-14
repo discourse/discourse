@@ -319,7 +319,7 @@ RSpec.describe SiteSettings::Validations do
         context "when the s3_upload_bucket is blank" do
           let(:error_message) { I18n.t("errors.site_settings.s3_upload_bucket_is_required") }
 
-          before { SiteSetting.s3_upload_bucket = nil }
+          before { SiteSetting.s3_upload_bucket = "" }
 
           it "is not ok" do
             expect { validations.validate_enable_s3_uploads("t") }.to raise_error(

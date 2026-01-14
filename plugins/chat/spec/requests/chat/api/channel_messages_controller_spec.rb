@@ -28,7 +28,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
     context "when params are invalid" do
       it "returns a 400" do
-        get "/chat/api/channels/#{channel.id}/messages?page_size=9999"
+        get "/chat/api/channels/#{channel.id}/messages?page_size=0"
 
         expect(response.status).to eq(400)
       end
@@ -70,6 +70,41 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         get "/chat/api/channels/#{channel.id}/messages"
 
         expect(response.status).to eq(403)
+      end
+    end
+
+    context "when page_size is above limit" do
+      fab!(:messages) { Fabricate.times(5, :chat_message, chat_channel: channel) }
+
+      it "clamps it to the max" do
+        stub_const(Chat::Api::ChannelMessagesController, "MAX_PAGE_SIZE", 1) do
+          get "/chat/api/channels/#{channel.id}/messages?page_size=9999"
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["messages"].size).to eq(1)
+        end
+      end
+    end
+
+    context "with user status enabled" do
+      before { SiteSetting.enable_user_status = true }
+
+      it "preloads user_options to avoid N+1 queries" do
+        3.times do
+          user = Fabricate(:user)
+          Fabricate(:user_status, user:)
+          msg = Fabricate(:chat_message, chat_channel: channel, user:)
+          mentioned = Fabricate(:user)
+          Fabricate(:user_status, user: mentioned)
+          Fabricate(:user_chat_mention, chat_message: msg, user: mentioned)
+        end
+
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        queries = track_sql_queries { get "/chat/api/channels/#{channel.id}/messages" }
+        user_option_queries = queries.select { |q| q.include?('"user_options"') }
+
+        expect(user_option_queries.size).to eq(2)
       end
     end
   end
@@ -114,7 +149,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           ]
         end
 
-        it "raises invalid acces" do
+        it "raises invalid access" do
           post "/chat/#{channel.id}.json", params: params
 
           expect(response.status).to eq(403)

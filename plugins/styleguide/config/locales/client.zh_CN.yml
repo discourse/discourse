@@ -38,6 +38,8 @@ zh_CN:
           title: "字体系统"
         colors:
           title: "颜色"
+        dialog:
+          title: "对话框"
         icons:
           title: "图标"
           full_list: "查看 Font Awesome 图标的完整列表"
@@ -60,7 +62,7 @@ zh_CN:
         categories_list:
           title: "类别列表"
         topic_link:
-          title: "话题链接"
+          title: "主题链接和状态"
         topic_list_item:
           title: "话题列表项"
         topic_statuses:
@@ -69,8 +71,6 @@ zh_CN:
           title: "话题列表"
         basic_topic_list:
           title: "基本话题列表"
-        footer_message:
-          title: "页脚消息"
         signup_cta:
           title: "注册号召性用语"
         topic_timer_info:
@@ -85,12 +85,14 @@ zh_CN:
           title: "帖子列表"
           empty_example: "<PostList /> 空状态"
           populated_example: "<PostList /> 已填写状态"
+        post_oneboxes:
+          title: "帖子 Onebox"
         topic_map:
           title: "话题图"
         site_header:
           title: "网站标头"
-        suggested_topics:
-          title: "建议的话题"
+        more_topics:
+          title: "更多话题"
         post_menu:
           title: "帖子菜单"
         modal:
@@ -103,6 +105,8 @@ zh_CN:
           title: "标头图标"
         spinners:
           title: "旋转的图标"
+        otp:
+          title: "OTP"
         empty_state:
           title: "空状态"
         tooltips:

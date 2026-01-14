@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    user:
+      date_of_birth:
+        user_title: "آج آپ کی سالگرہ ہے!"
+        title: "آج میری سالگرہ ہے!"
+        label: "تاریخِ پیدائش"
+      anniversary:
+        user_title: "آج آپ کا ہماری کمیونٹی میں شمولیت اختیار کرنے کی سالگرہ ہے!"
+        title: "آج میری اِس کمیونٹی میں شمولیت اختیار کرنے کی سالگرہ ہے!"
+    cakeday:
+      title: کَیک ڈے
+      today: "آج"
+      tomorrow: "کَل"
+      upcoming: "آنے والے"
+      all: "تمام"
+    birthdays:
+      title: "سالگرٰہیں"
+      month:
+        title: "کے مہینے کی سالگرٰہیں"
+        empty: "اِس مہینے کوئی صارف اپنی سالگرٰہ نہیں منارہے۔"
+      upcoming:
+        title: "%{start_date}- %{end_date} کی سالگرٰہیں"
+        empty: "اگلے 7 دنوں میں کوئی صارف اپنی سالگرٰہ نہیں منارہے۔"
+      today:
+        title: "%{date} کی سالگرہیں"
+        empty: "آج کوئی صارف اپنی سالگرٰہ نہیں منارہے۔"
+      tomorrow:
+        empty: "کل کوئی صارف اپنی سالگرٰہ نہیں منارہے۔"
+    anniversaries:
+      title: "سالگرٰہیں"
+      month:
+        title: "کے مہینے کی برسیاں"
+        empty: "اِس مہینے کوئی بھی صارف اپنی برسی نہیں منا رہا۔"
+      upcoming:
+        title: "%{start_date}- %{end_date} کی برسیاں"
+        empty: "اگلے 7 دنوں میں کوئی بھی صارف اپنی برسی نہیں منا رہا۔"
+      today:
+        title: "%{date} کی برسیاں"
+        empty: "آج کوئی بھی صارف اپنی برسی نہیں منا رہا۔"
+      tomorrow:
+        empty: "کل کوئی بھی صارف اپنی برسی نہیں منا رہا۔"

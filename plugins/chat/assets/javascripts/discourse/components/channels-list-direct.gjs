@@ -3,13 +3,13 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { and, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelRow from "./chat-channel-row";
@@ -18,10 +18,7 @@ import ChatZero from "./svg/chat-zero";
 export default class ChannelsListDirect extends Component {
   @service chat;
   @service chatChannelsManager;
-  @service chatStateManager;
-  @service currentUser;
   @service site;
-  @service siteSettings;
   @service modal;
 
   get inSidebar() {
@@ -48,6 +45,14 @@ export default class ChannelsListDirect extends Component {
 
   get directMessageChannelsEmpty() {
     return this.chatChannelsManager.directMessageChannels?.length === 0;
+  }
+
+  get channelList() {
+    if (this.inSidebar) {
+      return this.chatChannelsManager.truncatedUnstarredDirectMessageChannels;
+    }
+    // In mobile/drawer, show all channels including starred, sorted by activity
+    return this.chatChannelsManager.truncatedDirectMessageChannelsByActivity;
   }
 
   @action
@@ -121,10 +126,7 @@ export default class ChannelsListDirect extends Component {
           @ctaAction={{this.openNewMessageModal}}
         />
       {{else}}
-        {{#each
-          this.chatChannelsManager.truncatedDirectMessageChannels
-          as |channel|
-        }}
+        {{#each this.channelList as |channel|}}
           <ChatChannelRow
             @channel={{channel}}
             @options={{hash leaveButton=true}}

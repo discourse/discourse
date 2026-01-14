@@ -27,7 +27,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenRouter do
       body: { "choices" => [message: { role: "assistant", content: "world" }] }.to_json,
     )
 
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{open_router_model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(open_router_model)
     result = proxy.generate("hello", user: user)
 
     expect(result).to eq("world")
@@ -64,7 +64,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenRouter do
       body: { "choices" => [message: { role: "assistant", content: "test response" }] }.to_json,
     )
 
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{open_router_model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(open_router_model)
 
     # Request with parameters that should be ignored
     proxy.generate("test", user: user, top_p: 0.9, temperature: 0.8, max_tokens: 500)

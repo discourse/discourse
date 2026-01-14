@@ -30,9 +30,9 @@ class AiSpamSerializer < ApplicationSerializer
   end
 
   def available_llms
-    DiscourseAi::Configuration::LlmEnumerator
-      .values(allowed_seeded_llms: SiteSetting.ai_spam_detection_model_allowed_seeded_models_map)
-      .map { |hash| { id: hash[:value], name: hash[:name] } }
+    DiscourseAi::Configuration::LlmEnumerator.values.map do |hash|
+      { id: hash[:value], name: hash[:name] }
+    end
   end
 
   def available_personas

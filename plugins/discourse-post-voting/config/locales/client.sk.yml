@@ -5,9 +5,29 @@
 # https://translate.discourse.org/
 
 sk:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Hlasovanie o príspevkoch
+  post_voting:
+    reviewables:
+      comment_already_handled: "Ďakujeme, ale tento komentár sme už preskúmali a rozhodli sme, že ho netreba znova označiť."
   js:
+    discourse_post_voting:
+      title: "Hlasovanie o príspevkoch"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "nový komentár"
+      popup:
+        question_answer_user_commented: '%{username} komentoval(a) v časti „%{topic}“ – %{site_title}'
+    category:
+      post_voting_settings_heading: Hlasovanie o príspevkoch
+      create_as_post_voting_default: Nové témy sú predvolené ako témy pre hlasovanie v tejto kategórii.
+      only_post_voting_in_this_category: Nové témy v tejto kategórii môžu byť iba témami po hlasovaní.
+    composer:
+      create_post_voting:
+        label: "Vytvoriť tému hlasovania o príspevku"
     post_voting:
       post:
         post_voting_comment:

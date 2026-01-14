@@ -99,7 +99,11 @@ RSpec.describe Stylesheet::Importer do
     end
 
     it "should include WCAG overrides for WCAG based scheme" do
-      scheme = ColorScheme.create_from_base(name: "WCAG New", base_scheme_id: "WCAG Dark")
+      scheme =
+        ColorScheme.create_from_base(
+          name: "WCAG New",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG Dark"],
+        )
       expect(Stylesheet::Importer.new({ color_scheme_id: scheme.id }).import_wcag_overrides).to eq(
         "@import \"wcag\";",
       )

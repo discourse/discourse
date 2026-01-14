@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { classNames, tagName } from "@ember-decorators/component";
@@ -55,8 +56,7 @@ export default class ZendeskTopicActions extends Component {
         {{else}}
           <DButton
             class="btn-primary"
-            {{! template-lint-disable no-action }}
-            @action={{action "createZendeskIssue"}}
+            @action={{this.createZendeskIssue}}
             @label="topic.create_zendesk_issue"
             @disabled={{this.dirty}}
           />

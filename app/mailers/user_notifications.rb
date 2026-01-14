@@ -75,7 +75,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.suspicious_login",
       locale: user_locale(user),
       client_ip: opts[:client_ip],
-      location: location.present? ? location : I18n.t("staff_action_logs.unknown"),
+      location: (location.presence || I18n.t("staff_action_logs.unknown")),
       browser: I18n.t("user_auth_tokens.browser.#{browser}"),
       device: I18n.t("user_auth_tokens.device.#{device}"),
       os: I18n.t("user_auth_tokens.os.#{os}"),
@@ -179,14 +179,20 @@ class UserNotifications < ActionMailer::Base
   end
 
   def account_deleted(email, reviewable)
-    post_action_type_id =
-      reviewable.reviewable_scores.first&.reviewable_score_type ||
-        PostActionTypeView.new.types[:spam]
-    build_email(
-      email,
-      template: "user_notifications.account_deleted",
-      flag_reason: I18n.t("flag_reasons.#{PostActionTypeView.new.types[post_action_type_id]}"),
-    )
+    post_action_type_view = PostActionTypeView.new
+    post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
+
+    flag_reason =
+      if post_action_type_id
+        reason_key = post_action_type_view.flag_and_score_types[post_action_type_id]
+
+        reason = I18n.t("flag_reasons.#{reason_key}", default: nil).presence if reason_key
+        reason || post_action_type_view.descriptions[post_action_type_id].presence
+      end
+
+    flag_reason ||= I18n.t("flag_reasons.spam")
+
+    build_email(email, template: "user_notifications.account_deleted", flag_reason: flag_reason)
   end
 
   def account_suspended(user, opts = nil)
@@ -549,7 +555,7 @@ class UserNotifications < ActionMailer::Base
       title: topic_title,
       post: post,
       username: original_username,
-      from_alias: I18n.t("email_from", user_name: user_name, site_name: Email.site_title),
+      from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: opts[:use_site_subject],
       add_re_to_subject: opts[:add_re_to_subject],

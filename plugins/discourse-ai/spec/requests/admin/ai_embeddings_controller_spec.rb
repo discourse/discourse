@@ -94,7 +94,7 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
     end
 
     context "with invalid attrs" do
-      it "doesn't create a new embedding defitinion" do
+      it "doesn't create a new embedding definition" do
         post "/admin/plugins/discourse-ai/ai-embeddings.json",
              params: {
                ai_embedding: valid_attrs.except(:provider),
@@ -151,7 +151,7 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
         expect(response.status).to eq(404)
       end
 
-      it "doesn't allow dimenstions to be updated" do
+      it "doesn't allow dimensions to be updated" do
         new_dimensions = 200
 
         put "/admin/plugins/discourse-ai/ai-embeddings/#{embedding_definition.id}.json",
@@ -183,7 +183,7 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
   describe "DELETE #destroy" do
     fab!(:embedding_definition)
 
-    it "destroys the embedding defitinion" do
+    it "destroys the embedding definition" do
       expect {
         delete "/admin/plugins/discourse-ai/ai-embeddings/#{embedding_definition.id}.json"
 

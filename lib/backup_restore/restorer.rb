@@ -61,6 +61,7 @@ module BackupRestore
       @database_restorer.restore(db_dump_path, @interactive)
 
       reload_site_settings
+      run_seed_fu
 
       @system.disable_readonly_mode
 
@@ -132,6 +133,17 @@ module BackupRestore
         log "Disabling outgoing emails for non-staff users..."
         user = User.find_by_email(@user_info[:email]) || Discourse.system_user
         SiteSetting.set_and_log(:disable_emails, "non-staff", user)
+      end
+    end
+
+    def run_seed_fu
+      log "Running seed fu..."
+
+      begin
+        Discourse::Application.load_tasks
+        Rake::Task["db:seed"].invoke
+      rescue => ex
+        log "Failed to run seed fu", ex
       end
     end
 

@@ -6,18 +6,22 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state";
 
 export const AI_CONVERSATIONS_PANEL = "ai-conversations";
 const SCROLL_BUFFER = 100;
 const DEBOUNCE = 100;
+const TITLE_CHANNEL = `/discourse-ai/ai-bot/topic-titles`;
 
 export default class AiConversationsSidebarManager extends Service {
   @service appEvents;
   @service sidebarState;
   @service messageBus;
+  @service routeHistory;
+  @service router;
 
   @tracked topics = [];
   @tracked sections = new TrackedArray();
@@ -68,6 +72,8 @@ export default class AiConversationsSidebarManager extends Service {
       this,
       this._attachScrollListener
     );
+
+    this._watchForTitleUpdates();
   }
 
   willDestroy() {
@@ -82,6 +88,8 @@ export default class AiConversationsSidebarManager extends Service {
       this,
       this._attachScrollListener
     );
+
+    this.messageBus.unsubscribe(TITLE_CHANNEL);
   }
 
   addEmptyStateClass() {
@@ -151,14 +159,25 @@ export default class AiConversationsSidebarManager extends Service {
     document.body.classList.remove("has-ai-conversations-sidebar");
     document.body.classList.remove("has-empty-ai-conversations-sidebar");
 
-    const isAdmin = this.sidebarState.currentPanel?.key === ADMIN_PANEL;
-    if (this.sidebarState.isForcingSidebar && !isAdmin) {
+    // Only reset if no other route has claimed the sidebar in its activate() hook
+    const isStillAiPanel =
+      this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL;
+
+    if (this.sidebarState.isForcingSidebar && isStillAiPanel) {
       this.sidebarState.setPanel(MAIN_PANEL);
       this.sidebarState.isForcingSidebar = false;
       this.appEvents.trigger("discourse-ai:stop-forcing-conversations-sidebar");
     }
 
     this._removeScrollListener();
+  }
+
+  get lastKnownAppURL() {
+    const lastForumUrl = this.routeHistory.history.find((url) => {
+      return !url.startsWith("/discourse-ai");
+    });
+
+    return lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
   }
 
   async fetchMessages() {
@@ -196,22 +215,11 @@ export default class AiConversationsSidebarManager extends Service {
   _handleNewBotPM(topic) {
     this.topics = [topic, ...this.topics];
     this._rebuildSections();
-    this._watchForTitleUpdate(topic.id);
   }
 
-  _watchForTitleUpdate(topicId) {
-    if (this._subscribedTopicIds?.has(topicId)) {
-      return;
-    }
-
-    this._subscribedTopicIds = this._subscribedTopicIds || new Set();
-    this._subscribedTopicIds.add(topicId);
-
-    const channel = `/discourse-ai/ai-bot/topic/${topicId}`;
-
-    this.messageBus.subscribe(channel, (payload) => {
-      this._applyTitleUpdate(topicId, payload.title);
-      this.messageBus.unsubscribe(channel);
+  _watchForTitleUpdates() {
+    this.messageBus.subscribe(TITLE_CHANNEL, (payload) => {
+      this._applyTitleUpdate(payload.topic_id, payload.title);
     });
   }
 
@@ -233,6 +241,7 @@ export default class AiConversationsSidebarManager extends Service {
       title: i18n("discourse_ai.ai_bot.conversations.today"),
       links: new TrackedArray(),
     };
+
     fresh.push(todaySection);
 
     this.topics.forEach((t) => {

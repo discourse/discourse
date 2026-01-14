@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 describe Search do
-  fab!(:user) { Fabricate(:active_user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user, :active_user)
+  fab!(:user2, :user)
 
   before do
     SearchIndexer.enable

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "fix query ids rake task" do
   before do
     Rake::Task.clear

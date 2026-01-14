@@ -23,6 +23,7 @@ sw:
         month: "Mwezi"
         week: "Wiki"
         day: "Siku"
+        year: "Mwaka"
     group_timezones:
       search: "Tafuta"
     discourse_post_event:

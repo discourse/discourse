@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe PostPolicy do
   include ActiveSupport::Testing::TimeHelpers
 
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
   fab!(:inactive_user) { Fabricate(:user, active: false) }
   fab!(:suspended_user) { Fabricate(:user, suspended_till: 1.year.from_now) }
 

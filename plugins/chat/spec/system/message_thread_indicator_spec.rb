@@ -84,11 +84,7 @@ describe "Thread indicator for chat messages", type: :system do
 
       expect(channel_page).to have_thread_indicator(message_without_thread)
 
-      new_thread = nil
-      try_until_success(timeout: 5) do
-        new_thread = message_without_thread.reload.thread
-        expect(new_thread).to be_present
-      end
+      new_thread = message_without_thread.reload.thread
 
       expect(page).not_to have_css(channel_page.message_by_id_selector(new_thread.replies.first))
     end

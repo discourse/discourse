@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseCalendar::UsersOnHoliday do
   it "returns users on holiday" do
     event1 = Fabricate(:calendar_event, start_date: "2000-01-01")

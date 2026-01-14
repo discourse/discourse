@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require Rails.root.join(
           "plugins/discourse-ai/db/post_migrate/20241031041242_migrate_sentiment_classification_result_format",
         )

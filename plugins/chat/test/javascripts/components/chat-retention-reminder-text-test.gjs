@@ -12,14 +12,12 @@ module(
     setupRenderingTest(hooks);
 
     test("when setting is set on 0", async function (assert) {
-      const self = this;
-
       this.channel = new ChatFabricators(getOwner(this)).channel();
       this.siteSettings.chat_channel_retention_days = 0;
 
       await render(
         <template>
-          <ChatRetentionReminderText @channel={{self.channel}} />
+          <ChatRetentionReminderText @channel={{this.channel}} />
         </template>
       );
 
@@ -29,7 +27,7 @@ module(
 
       await render(
         <template>
-          <ChatRetentionReminderText @channel={{self.channel}} @type="short" />
+          <ChatRetentionReminderText @channel={{this.channel}} @type="short" />
         </template>
       );
 
@@ -39,14 +37,12 @@ module(
     });
 
     test("when channel is a public channel", async function (assert) {
-      const self = this;
-
       this.channel = new ChatFabricators(getOwner(this)).channel();
       this.siteSettings.chat_channel_retention_days = 10;
 
       await render(
         <template>
-          <ChatRetentionReminderText @channel={{self.channel}} />
+          <ChatRetentionReminderText @channel={{this.channel}} />
         </template>
       );
 
@@ -56,7 +52,7 @@ module(
 
       await render(
         <template>
-          <ChatRetentionReminderText @channel={{self.channel}} @type="short" />
+          <ChatRetentionReminderText @channel={{this.channel}} @type="short" />
         </template>
       );
 
@@ -66,14 +62,12 @@ module(
     });
 
     test("when channel is a DM channel", async function (assert) {
-      const self = this;
-
       this.channel = new ChatFabricators(getOwner(this)).directMessageChannel();
       this.siteSettings.chat_dm_retention_days = 10;
 
       await render(
         <template>
-          <ChatRetentionReminderText @channel={{self.channel}} />
+          <ChatRetentionReminderText @channel={{this.channel}} />
         </template>
       );
 
@@ -83,7 +77,7 @@ module(
 
       await render(
         <template>
-          <ChatRetentionReminderText @channel={{self.channel}} @type="short" />
+          <ChatRetentionReminderText @channel={{this.channel}} @type="short" />
         </template>
       );
 

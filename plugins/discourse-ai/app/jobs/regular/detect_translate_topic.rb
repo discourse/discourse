@@ -9,12 +9,23 @@ module Jobs
       return if !DiscourseAi::Translation.enabled?
       return if args[:topic_id].blank?
 
+      unless DiscourseAi::Translation.credits_available_for_topic_detection?
+        Rails.logger.info(
+          "Translation skipped for topic: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       topic = Topic.find_by(id: args[:topic_id])
       if topic.blank? || topic.title.blank? || topic.deleted_at.present? || topic.user_id <= 0
         return
       end
 
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
+      force = args[:force] || false
+
+      if force
+        # no restrictions
+      elsif SiteSetting.ai_translation_backfill_limit_to_public_content
         return if topic.category&.read_restricted? || topic.archetype == Archetype.private_message
       else
         if topic.archetype == Archetype.private_message &&
@@ -39,8 +50,10 @@ module Jobs
 
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        regionless_locale = locale.split("_").first
-        next if topic.topic_localizations.where("locale LIKE ?", "#{regionless_locale}%").exists?
+        exists = topic.localizations.matching_locale(locale).exists?
+
+        has_quota = DiscourseAi::Translation::TopicLocalizer.has_relocalize_quota?(topic, locale)
+        next if !force && exists && !has_quota
 
         begin
           DiscourseAi::Translation::TopicLocalizer.localize(topic, locale)
@@ -53,7 +66,7 @@ module Jobs
         end
       end
 
-      MessageBus.publish("/topic/#{topic.id}", type: :localized, id: 1)
+      MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
     end
   end
 end

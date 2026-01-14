@@ -101,6 +101,8 @@ it:
               label: Salta l'invio di MP se non ci sono risultati
             attach_csv:
               label: Allega il file CSV al MP
+            users_from_group:
+              label: Invia un messaggio privato individuale a ciascun membro del gruppo
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

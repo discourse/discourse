@@ -33,6 +33,10 @@ en:
     no_solutions:
       self: "You have no accepted solutions yet."
       others: "No accepted solutions."
+    filter:
+      description:
+        solved: "Filter topics that have been solved"
+        unsolved: "Filter topics that have not been solved"
 
   badges:
     solved_1:

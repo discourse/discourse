@@ -139,6 +139,41 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
   end
 
+  def minimal_pdf_content
+    <<~PDF
+      %PDF-1.4
+      1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+      2 0 obj<< /Type /Pages /Count 1 /Kids [3 0 R] >>endobj
+      3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Contents 4 0 R >>endobj
+      4 0 obj<< /Length 44 >>stream
+      BT /F1 12 Tf 72 720 Td (Hello PDF) Tj ET
+      endstream
+      endobj
+      xref
+      0 5
+      0000000000 65535 f
+      0000000010 00000 n
+      0000000060 00000 n
+      0000000111 00000 n
+      0000000200 00000 n
+      trailer<< /Size 5 /Root 1 0 R >>
+      startxref
+      268
+      %%EOF
+    PDF
+  end
+
+  def build_pdf_upload
+    SiteSetting.authorized_extensions = "*"
+    file = Tempfile.new(%w[test-pdf .pdf])
+    file.binmode
+    file.write(minimal_pdf_content)
+    file.rewind
+    UploadCreator.new(file, "document.pdf").create_for(Discourse.system_user.id)
+  ensure
+    file.close! if file
+  end
+
   let(:gemini_mock) { GeminiMock.new(endpoint) }
 
   let(:compliance) do
@@ -162,7 +197,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     req_body = nil
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     stub_request(:post, url).with(
@@ -188,7 +223,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     req_body = nil
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     stub_request(:post, url).with(
@@ -222,7 +257,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     req_body = nil
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     stub_request(:post, url).with(
@@ -248,7 +283,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     req_body = nil
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     stub_request(:post, url).with(
@@ -276,7 +311,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     req_body = nil
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     stub_request(:post, url).with(
@@ -299,7 +334,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
   it "properly encodes tool calls" do
     prompt = DiscourseAi::Completions::Prompt.new("Hello", tools: [echo_tool])
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     response_json = { "functionCall" => { name: "echo", args: { text: "<S>ydney" } } }
@@ -309,16 +344,79 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     response = llm.generate(prompt, user: user)
 
-    tool =
-      DiscourseAi::Completions::ToolCall.new(
-        id: "tool_0",
-        name: "echo",
-        parameters: {
-          text: "<S>ydney",
-        },
-      )
+    expect(response).to be_a(DiscourseAi::Completions::ToolCall)
+    expect(response.parameters[:text]).to eq("<S>ydney")
+    expect(response.provider_data[:batch_id]).to match(/\A[0-9a-f]{16}\z/)
+  end
 
-    expect(response).to eq(tool)
+  it "returns tool calls with thought signatures in provider data" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello", tools: [echo_tool])
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    response_json = {
+      "functionCall" => {
+        name: "echo",
+        args: {
+          text: "Sydney",
+        },
+      },
+      "thoughtSignature" => "abc123",
+    }
+    response = gemini_mock.response(response_json, tool_call: true).to_json
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate(prompt, user: user)
+
+    expect(result).to be_a(DiscourseAi::Completions::ToolCall)
+    expect(result.provider_data[:thought_signature]).to eq("abc123")
+  end
+
+  it "returns batch-aware tool calls when multiple are emitted in one message" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello", tools: [echo_tool])
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    batch_response = {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                functionCall: {
+                  name: "get_weather",
+                  args: {
+                    city: "Paris",
+                  },
+                },
+                thoughtSignature: "Signature_A",
+              },
+              { functionCall: { name: "get_weather", args: { city: "London" } } },
+            ],
+            role: "model",
+          },
+          finishReason: "STOP",
+          index: 0,
+        },
+      ],
+    }
+
+    stub_request(:post, url).to_return(status: 200, body: batch_response.to_json)
+
+    results = llm.generate(prompt, user: user)
+
+    expect(results).to be_an(Array)
+    expect(results.size).to eq(2)
+
+    batch_ids = results.map { |r| r.provider_data[:batch_id] }.uniq
+    expect(batch_ids.length).to eq(1)
+    expect(batch_ids.first).to match(/\A[0-9a-f]{16}\z/)
+
+    expect(results.first.provider_data[:thought_signature]).to eq("Signature_A")
+    expect(results.second.provider_data[:thought_signature]).to be_nil
   end
 
   it "Supports Vision API" do
@@ -334,7 +432,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     req_body = nil
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     stub_request(:post, url).with(
@@ -370,6 +468,64 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
       "systemInstruction" => {
         "role" => "system",
         "parts" => [{ "text" => "You are image bot" }],
+      },
+    }
+
+    expect(JSON.parse(req_body)).to eq(expected_prompt)
+  end
+
+  it "passes pdf documents using inlineData" do
+    model.update!(allowed_attachment_types: %w[pdf])
+    pdf_upload = build_pdf_upload
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are pdf bot",
+        messages: [type: :user, id: "user1", content: ["hello", { upload_id: pdf_upload.id }]],
+      )
+
+    encoded = prompt.encoded_uploads(prompt.messages.last, allow_documents: true)
+
+    response = gemini_mock.response("PDF processed").to_json
+
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate(prompt, user: user)
+
+    expect(response).to eq("PDF processed")
+
+    expected_prompt = {
+      "generationConfig" => {
+      },
+      "safetySettings" => [
+        { "category" => "HARM_CATEGORY_HARASSMENT", "threshold" => "BLOCK_NONE" },
+        { "category" => "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold" => "BLOCK_NONE" },
+        { "category" => "HARM_CATEGORY_HATE_SPEECH", "threshold" => "BLOCK_NONE" },
+        { "category" => "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold" => "BLOCK_NONE" },
+      ],
+      "contents" => [
+        {
+          "role" => "user",
+          "parts" => [
+            { "text" => "user1: hello" },
+            { "inlineData" => { "mimeType" => "application/pdf", "data" => encoded[0][:base64] } },
+          ],
+        },
+      ],
+      "systemInstruction" => {
+        "role" => "system",
+        "parts" => [{ "text" => "You are pdf bot" }],
       },
     }
 
@@ -412,7 +568,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     payload = rows.map { |r| "data: #{r.to_json}\n\n" }.join
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
 
     prompt = DiscourseAi::Completions::Prompt.new("Hello", tools: [echo_tool])
@@ -429,8 +585,12 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
         parameters: {
           text: "sam<>wh!s",
         },
+        provider_data: {
+          batch_id: output.first.provider_data[:batch_id],
+        },
       )
 
+    expect(output.first.provider_data[:batch_id]).to match(/\A[0-9a-f]{16}\z/)
     expect(output).to eq([tool_call])
 
     log = AiApiAuditLog.order(:id).last
@@ -452,7 +612,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     TEXT
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
 
     output = []
@@ -480,7 +640,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     split = data.split("|")
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
 
     output = []
@@ -499,7 +659,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     req_body = nil
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     stub_request(:post, url).with(
@@ -527,7 +687,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     req_body = nil
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:generateContent?key=123"
 
     stub_request(:post, url).with(
@@ -602,7 +762,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
       req_body = nil
 
-      llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+      llm = DiscourseAi::Completions::Llm.proxy(model)
       url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
 
       stub_request(:post, url).with(
@@ -659,7 +819,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
   TEXT
 
-    llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    llm = DiscourseAi::Completions::Llm.proxy(model)
     url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
 
     output = []
@@ -671,5 +831,74 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     llm.generate("Hello", user: user, temperature: 0.2) { |partial| output << partial }
 
     expect(output).to eq(["Hello", "! This is a simple response"])
+  end
+
+  it "handles inlineData in non-streaming response" do
+    base64_data =
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+    response = {
+      candidates: [
+        {
+          content: {
+            parts: [{ inlineData: { mimeType: "image/png", data: base64_data } }],
+            role: "model",
+          },
+          finishReason: "STOP",
+          index: 0,
+          safetyRatings: [
+            { category: "HARM_CATEGORY_HATE_SPEECH", probability: "NEGLIGIBLE" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", probability: "NEGLIGIBLE" },
+            { category: "HARM_CATEGORY_HARASSMENT", probability: "NEGLIGIBLE" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", probability: "NEGLIGIBLE" },
+          ],
+        },
+      ],
+    }.to_json
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate("Show image", user: user)
+    expect(result).to include("![image](")
+  end
+
+  it "handles inlineData in streaming response" do
+    base64_data =
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+    rows = [
+      {
+        candidates: [
+          {
+            content: {
+              parts: [{ inlineData: { mimeType: "image/png", data: base64_data } }],
+              role: "model",
+            },
+            safetyRatings: [
+              { category: "HARM_CATEGORY_HATE_SPEECH", probability: "NEGLIGIBLE" },
+              { category: "HARM_CATEGORY_DANGEROUS_CONTENT", probability: "NEGLIGIBLE" },
+              { category: "HARM_CATEGORY_HARASSMENT", probability: "NEGLIGIBLE" },
+              { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", probability: "NEGLIGIBLE" },
+            ],
+          },
+        ],
+      },
+      { candidates: [{ content: { parts: [{ text: "" }], role: "model" }, finishReason: "STOP" }] },
+    ]
+
+    payload = rows.map { |r| "data: #{r.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    llm.generate("Show image", user: user) { |partial| output << partial }
+
+    expect(output.length).to eq(1)
+    expect(output.first).to include("![image](")
   end
 end

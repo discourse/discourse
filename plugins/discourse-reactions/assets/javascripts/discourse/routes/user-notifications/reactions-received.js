@@ -1,0 +1,43 @@
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import DiscourseRoute from "discourse/routes/discourse";
+import CustomReaction, {
+  PAGE_SIZE,
+} from "../../models/discourse-reactions-custom-reaction";
+
+export default class UserNotificationsReactionsReceived extends DiscourseRoute {
+  templateName = "user-activity.reactions";
+  controllerName = "user-activity.reactions";
+
+  queryParams = {
+    acting_username: { refreshModel: true },
+    include_likes: { refreshModel: true },
+  };
+
+  async model(params) {
+    const list = await CustomReaction.findReactions(
+      "reactions-received",
+      this.modelFor("user").get("username"),
+      {
+        actingUsername: params.acting_username,
+        includeLikes: params.include_likes,
+      }
+    );
+
+    return new TrackedArray(
+      list.map((reaction) => CustomReaction.flattenForPostList(reaction))
+    );
+  }
+
+  setupController(controller, model) {
+    const loadedAll = model.length < PAGE_SIZE;
+
+    this.controllerFor("user-activity.reactions").setProperties({
+      model,
+      canLoadMore: !loadedAll,
+      reactionsUrl: "reactions-received",
+      username: this.modelFor("user").get("username"),
+      actingUsername: controller.acting_username,
+      includeLikes: controller.include_likes,
+    });
+  }
+}

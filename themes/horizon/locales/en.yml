@@ -1,3 +1,23 @@
 en:
+  solved: "Solved"
+  unsolved: "Unsolved"
+  posted: "posted"
+  by_username: "by @%{username}"
+  replied: "replied"
+  vote_count:
+    one: "%{count} vote"
+    other: "%{count} votes"
+  like_count:
+    one: "%{count} like"
+    other: "%{count} likes"
+  reply_count:
+    one: "%{count} reply"
+    other: "%{count} replies"
   theme_metadata:
     description: "A simple, beautiful theme that improves the out of the box experience for Discourse sites."
+    settings:
+      topic_card_context:
+        description: "Amount of information displayed on topic cards. 'Simple' shows minimal info. 'High Context' includes tags, solved status, assigned users, and vote counts."
+        choices:
+          simple: "Simple"
+          high_context: "High Context (experimental)"

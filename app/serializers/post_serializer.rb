@@ -95,8 +95,8 @@ class PostSerializer < BasicPostSerializer
              :user_status,
              :mentioned_users,
              :post_url,
-             :has_post_localizations,
              :post_localizations_count,
+             :can_localize_post,
              :locale,
              :is_localized,
              :language,
@@ -382,8 +382,8 @@ class PostSerializer < BasicPostSerializer
 
       summary.delete(:count) if summary[:count].to_i.zero?
 
-      # Only include it if the user can do it or it has a count
-      result << summary if summary[:can_act] || summary[:count]
+      # Only include it if the user can do it, it has a count, or the user has acted
+      result << summary if summary[:can_act] || summary[:count] || summary[:acted]
     end
 
     result
@@ -631,7 +631,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_user_status?
-    SiteSetting.enable_user_status && object.user&.has_status?
+    SiteSetting.enable_user_status && object.user&.has_status? &&
+      scope&.can_see_user_status?(object.user)
   end
 
   def user_status
@@ -655,20 +656,20 @@ class PostSerializer < BasicPostSerializer
     SiteSetting.enable_user_status
   end
 
-  def has_post_localizations
-    object.post_localizations.any?
-  end
-
   def post_localizations_count
-    object.post_localizations.size
-  end
-
-  def include_has_post_localizations?
-    object&.user&.guardian&.can_localize_content?
+    object.localizations.size
   end
 
   def include_post_localizations_count?
-    object&.user&.guardian&.can_localize_content?
+    SiteSetting.content_localization_enabled && scope.can_localize_post?(object)
+  end
+
+  def can_localize_post
+    true
+  end
+
+  def include_can_localize_post?
+    SiteSetting.content_localization_enabled && scope.can_localize_post?(object)
   end
 
   def raw
@@ -688,7 +689,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def language
-    LocaleSiteSetting.get_language_name(object.locale) || locale
+    locale
   end
 
   def include_language?

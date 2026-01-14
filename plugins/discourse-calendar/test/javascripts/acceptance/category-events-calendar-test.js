@@ -1,8 +1,6 @@
-/* eslint-disable qunit/no-loose-assertions */
-/* eslint-disable qunit/no-assert-equal */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
@@ -12,18 +10,6 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     discourse_post_event_enabled: true,
     events_calendar_categories: "1",
     calendar_categories: "",
-    map_events_to_color: JSON.stringify([
-      {
-        type: "tag",
-        color: "rgb(231, 76, 60)",
-        slug: "awesome-tag",
-      },
-      {
-        type: "category",
-        color: "rgb(140,24,193)",
-        slug: "awesome-category",
-      },
-    ]),
   });
 
   needs.pretender((server, helper) => {
@@ -48,11 +34,11 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               topic: {
                 id: 18449,
                 title: "This is an event",
-                tags: ["awesome-tag"],
               },
             },
             name: "Awesome Event",
-            upcoming_dates: [
+            rrule: `DTSTART:${moment().format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${moment().add(2, "days").format("YYYYMMDD")}`,
+            occurrences: [
               {
                 starts_at: moment()
                   .tz("Asia/Calcutta")
@@ -93,10 +79,21 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               topic: {
                 id: 18450,
                 title: "This is an event",
-                category_slug: "awesome-category",
               },
             },
             name: "Awesome Event 2",
+            occurrences: [
+              {
+                starts_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT15:14:00.000Z"),
+                ends_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT16:14:00.000Z"),
+              },
+            ],
           },
           {
             id: 67502,
@@ -116,81 +113,80 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               topic: {
                 id: 18451,
                 title: "This is an event",
-                category_slug: "awesome-category",
               },
             },
             name: "Awesome Event 3<script>alert('my awesome event');</script>",
+            occurrences: [
+              {
+                starts_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT15:14:00.000Z"),
+                ends_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT16:14:00.000Z"),
+              },
+            ],
           },
         ],
       });
     });
   });
 
-  test("event name is escaped correctly", async (assert) => {
+  test("event name is escaped correctly", async function (assert) {
     await visit("/c/bug/1");
 
     assert
-      .dom(".fc-event[href='/t/-/18451/1'] .fc-title")
+      .dom(".fc-daygrid-event-harness a[href='/t/-/18451/1'] .fc-event-title")
       .hasText(
         "Awesome Event 3<script>alert('my awesome event');</script>",
         "Elements should be escaped and appear as text rather than be the actual element."
       );
   });
 
-  test("events display the color configured in the map_events_to_color site setting", async (assert) => {
-    await visit("/c/bug/1");
-
-    assert
-      .dom(".fc-event")
-      .exists({ count: 4 }, "Events are displayed on the calendar");
-
-    assert.dom(".fc-event[href='/t/-/18449/1']").hasStyle({
-      "background-color": "rgb(231, 76, 60)",
-    });
-
-    assert.dom(".fc-event[href='/t/-/18450/1']").hasStyle({
-      "background-color": "rgb(140, 24, 193)",
-    });
-  });
-
-  test("shows event calendar on category page", async (assert) => {
+  test("shows event calendar on category page", async function (assert) {
     await visit("/c/bug/1?foobar=true");
 
     assert
       .dom("#category-events-calendar")
       .exists("Events calendar div exists.");
-    assert.dom(".fc-view-container").exists("FullCalendar is loaded.");
+    assert.dom(".fc").exists("FullCalendar is loaded.");
   });
 
-  test("uses current locale to display calendar weekday names", async (assert) => {
+  test("uses current locale to display calendar weekday names", async function (assert) {
     I18n.locale = "pt_BR";
 
     await visit("/c/bug/1");
 
     assert.deepEqual(
-      [...queryAll(".fc-day-header span")].map((el) => el.innerText),
-      ["seg.", "ter.", "qua.", "qui.", "sex.", "sáb.", "dom."],
+      [...document.querySelectorAll(".fc-col-header-cell-cushion")].map(
+        (el) => el.innerText
+      ),
+      ["SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB.", "DOM."],
       "Week days are translated in the calendar header"
     );
 
     I18n.locale = "en";
   });
 
-  test("event calendar shows recurrent events", async (assert) => {
+  test("event calendar shows recurrent events", async function (assert) {
     await visit("/c/bug/1");
 
-    const [first, second] = queryAll(".fc-event .fc-title");
+    const [first, second] = [
+      ...document.querySelectorAll(".fc-daygrid-event-harness"),
+    ];
 
-    assert.equal(first.textContent, "Awesome Event");
-    assert.equal(second.textContent, "Awesome Event");
+    assert.dom(".fc-event-title", first).hasText("Awesome Event");
+    assert.dom(".fc-event-title", second).hasText("Awesome Event");
 
     const firstCell = first.closest("td");
     const secondCell = second.closest("td");
 
-    assert.notEqual(
+    assert.notStrictEqual(
       firstCell,
       secondCell,
-      "events should be in different days"
+      "events are in different days"
     );
   });
 });

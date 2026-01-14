@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Chat
+module Chat
   HAS_CHAT_ENABLED = "has_chat_enabled"
   LAST_CHAT_CHANNEL_ID = "last_chat_channel_id"
 

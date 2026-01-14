@@ -13,6 +13,13 @@
     }
   }
 
+  .static-faq & {
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
   .mobile-view & {
     font-size: var(--font-0);
   }

@@ -16,7 +16,7 @@ module Chat
           membership: chat_channel.membership_for(current_user),
         )
       else
-        render body: nil, status: 404
+        render body: nil, status: :not_found
       end
     end
 

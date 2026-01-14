@@ -59,6 +59,8 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
   end
 
   it "toggles to desktop view after clicking on the toggle to desktop view button" do
+    SiteSetting.viewport_based_mobile_mode = false
+
     visit("/latest")
 
     expect(page).to have_css(".mobile-view")

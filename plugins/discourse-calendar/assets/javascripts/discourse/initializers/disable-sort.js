@@ -4,7 +4,7 @@ export default {
   name: "disable-sort",
 
   initialize(container) {
-    withPluginApi("0.8", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "topic-list-header-sortable-column",
         ({ value, context }) => {

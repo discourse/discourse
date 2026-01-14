@@ -3,7 +3,9 @@
 module DiscourseAi
   module AiBot
     class ConversationsController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      include AiCreditLimitHandler
+
+      requires_plugin PLUGIN_NAME
       requires_login
 
       def index

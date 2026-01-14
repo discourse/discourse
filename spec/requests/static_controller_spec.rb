@@ -70,7 +70,7 @@ RSpec.describe StaticController do
 
     it "can serve assets" do
       begin
-        assets_path = Rails.root.join("public/assets")
+        assets_path = Rails.public_path.join("assets")
 
         FileUtils.mkdir_p(assets_path)
 
@@ -272,9 +272,16 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/")
       end
 
-      it "sets the destination_url cookie when not logged in and path is /login with valid redirect param" do
-        get "/login", params: { redirect: "/foo" }
-        expect(response.cookies["destination_url"]).to eq("/foo")
+      context "when setting the destination_url cookie" do
+        it "respects the redirect parameter in the cookie" do
+          get "/login", params: { redirect: "/foo" }
+          expect(response.cookies["destination_url"]).to eq("/foo")
+        end
+
+        it "respects the redirect parameter including the query params" do
+          get "/login", params: { redirect: "/foo?filter=test" }
+          expect(response.cookies["destination_url"]).to eq("/foo?filter=test")
+        end
       end
     end
 
@@ -299,9 +306,16 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/sub_test/")
       end
 
-      it "sets the destination_url cookie when not logged in and path is /login with valid redirect param" do
-        get "/login", params: { redirect: "/foo" }
-        expect(response.cookies["destination_url"]).to eq("/sub_test/foo")
+      context "when sets the destination_url cookie" do
+        it "respects the redirect parameter in the cookie" do
+          get "/login", params: { redirect: "/foo" }
+          expect(response.cookies["destination_url"]).to eq("/sub_test/foo")
+        end
+
+        it "respects the redirect parameter including the query params" do
+          get "/login", params: { redirect: "/foo?filter=test" }
+          expect(response.cookies["destination_url"]).to eq("/sub_test/foo?filter=test")
+        end
       end
     end
   end
@@ -380,6 +394,31 @@ RSpec.describe StaticController do
       it "redirects to the root URL" do
         post "/login.json", params: { redirect: "test" }
         expect(response).to redirect_to("/")
+      end
+    end
+
+    context "with a subfolder" do
+      before { set_subfolder "/sub_test" }
+
+      context "without a redirect path" do
+        it "redirects to the subfolder root" do
+          post "/login.json"
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+
+      context "when the redirect path is the login page" do
+        it "redirects to the subfolder root" do
+          post "/login.json", params: { redirect: "#{Discourse.base_path}/login" }
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+
+      context "when the redirect path is invalid" do
+        it "redirects to the subfolder root" do
+          post "/login.json", params: { redirect: "test" }
+          expect(response).to redirect_to("/sub_test/")
+        end
       end
     end
   end

@@ -87,8 +87,8 @@ module DiscourseAi
         schema.store(target, embeddings, new_digest)
       end
 
-      def vector_from(text, asymetric: false)
-        prepared_text = vdef.prepare_query_text(text, asymetric: asymetric)
+      def vector_from(text, asymmetric = false)
+        prepared_text = vdef.prepare_query_text(text, asymmetric: asymmetric)
         return if prepared_text.blank?
 
         vdef.inference_client.perform!(prepared_text)

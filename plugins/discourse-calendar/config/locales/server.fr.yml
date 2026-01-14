@@ -33,7 +33,6 @@ fr:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Nombre maximal de lignes de texte par événement dans le calendrier."
     map_events_to_color: "Assigner une couleur à chaque étiquette ou catégorie."
     map_events_title: "Remplace « Événements » dans le titre de la barre latérale « Événements à venir » par catégorie."
     calendar_enabled: "Activer l'extension discourse-calendar. Ceci ajoutera la prise en charge de l'étiquette [calendar][/calendar] dans le premier message d'un sujet."
@@ -50,7 +49,6 @@ fr:
     all_day_event_start_time: "Les événements qui n'ont pas d'heure de début spécifiée commenceront à cette heure. Le format est HH:mm. Pour indiquer 6:00 heures, saisissez 06:00"
     all_day_event_end_time: "Les événements qui n'ont pas d'heure de fin spécifiée se termineront à cette heure. Le format est HH:mm. Pour indiquer 18:00 heures, saisissez 18:00"
     all_day_event_time_error: "Heure invalide. Le format doit être HH:mm (p. ex. : 08:00)."
-    calendar_categories: "Affiche un calendrier en haut d'une catégorie. Les paramètres obligatoires sont categoryId et postId. P. ex. : categoryId=6;postId=453\n Autres paramètres valides : tzPicker, weekends et defaultView."
     calendar_categories_outlet: "Permet de changer quelle sortie doit afficher le calendrier de la catégorie."
     working_days: "Définissez les jours ouvrés. Vous pouvez afficher la disponibilité d'un groupe en utilisant l'étiquette « timezones » dans un message. P. ex. : « [timezones group=admins][timezones] »"
     working_day_start_hour: "Heure de début des heures de travail."
@@ -62,7 +60,6 @@ fr:
     calendar_automatic_holidays_enabled: "Définir automatiquement le statut des vacances en fonction de la région de l'utilisateur (note : il est possible de désactiver des vacances automatiques spécifiques dans les paramètres de l'extension)"
     event_participation_buttons: "Liste des boutons de participation aux événements que les utilisateurs peuvent utiliser."
     sidebar_show_upcoming_events: "Afficher le lien des événements à venir dans la barre latérale sous « Plus »."
-    include_expired_events_on_calendar: "Inclure les événements passés ou expirés dans le calendrier des catégories et les vues des événements à venir."
   discourse_calendar:
     invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
     calendar_must_be_in_first_post: "L'étiquette du calendrier ne peut être utilisée que dans le premier message d'un sujet."

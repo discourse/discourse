@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 uk:
+  discourse_subscriptions:
+    customer_not_found: Клієнт не знайдений
+    card:
+      declined: Картку відхилено
+      invalid: Картка недійсна

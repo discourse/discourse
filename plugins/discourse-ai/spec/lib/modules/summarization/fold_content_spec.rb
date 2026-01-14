@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Summarization::FoldContent do
   subject(:summarizer) { DiscourseAi::Summarization.topic_summary(topic) }
 
-  let!(:llm_model) { assign_fake_provider_to(:ai_summarization_model) }
+  let!(:llm_model) { assign_fake_provider_to(:ai_default_llm_model) }
 
   fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
   fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1, raw: "This is a text") }
@@ -71,6 +71,28 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
           expect(summarizer.existing_summary.outdated).to eq(true)
         end
       end
+    end
+  end
+
+  describe "#truncate" do
+    it "preserves grapheme clusters for multi-codepoint emoji sequences" do
+      # Starts with scales emoji (⚖️ = U+2696 + U+FE0F) so we can catch any split between code points.
+      sample_text = "⚖️🧩"
+
+      item = summarizer.truncate({ text: sample_text.dup })
+
+      expect(item[:text]).to start_with("⚖️ ")
+      expect(item[:text]).to include("🧩")
+      expect(item[:text]).not_to start_with("⚖ ️")
+    end
+
+    it "keeps the second half of the text in the original order" do
+      sample_text = "abcdefgh"
+
+      item = summarizer.truncate({ text: sample_text.dup })
+
+      expect(item[:text]).to include("efgh")
+      expect(item[:text]).not_to include("hgfe")
     end
   end
 end

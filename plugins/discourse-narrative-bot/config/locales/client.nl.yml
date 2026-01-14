@@ -10,3 +10,8 @@ nl:
       welcome_post_type:
         new_user_track: "De handleiding voor nieuwe gebruikers starten voor alle nieuwe gebruikers"
         welcome_message: "Een welkomstbericht met een snelstartgids naar alle nieuwe gebruikers sturen"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

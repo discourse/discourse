@@ -1,9 +1,120 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAssign do
   before { SiteSetting.assign_enabled = true }
+
+  describe "discourse-assign topics_filter_options modifier" do
+    let(:user) { Fabricate(:user) }
+
+    before do
+      SiteSetting.assign_allowed_on_groups = Group::AUTO_GROUPS[:staff]
+      user.update!(admin: true)
+    end
+
+    it "adds assigned filter option for users who can assign" do
+      guardian = user.guardian
+      options = TopicsFilter.option_info(guardian)
+
+      assigned_option = options.find { |o| o[:name] == "assigned:" }
+      expect(assigned_option).to be_present
+      expect(assigned_option).to include(
+        name: "assigned:",
+        description: I18n.t("discourse_assign.filter.description.assigned"),
+        type: "username_group_list",
+        priority: 1,
+      )
+    end
+
+    it "does not add assigned filter option for users who cannot assign" do
+      regular_user = Fabricate(:user)
+      guardian = regular_user.guardian
+      options = TopicsFilter.option_info(guardian)
+
+      assigned_option = options.find { |o| o[:name] == "assigned:" }
+      expect(assigned_option).to be_nil
+    end
+
+    it "does not add assigned filter option for anonymous users" do
+      options = TopicsFilter.option_info(Guardian.new)
+
+      assigned_option = options.find { |o| o[:name] == "assigned:" }
+      expect(assigned_option).to be_nil
+    end
+  end
+
+  describe "discourse-assign TopicsFilter filtering" do
+    fab!(:group)
+    fab!(:user)
+
+    fab!(:post_assignment) { Fabricate(:post_assignment, assigned_to: user) }
+    fab!(:topic_assignment) { Fabricate(:topic_assignment, assigned_to: group) }
+
+    before do
+      SiteSetting.assign_allowed_on_groups = "#{group.id}"
+      group.add(user)
+    end
+
+    describe "with assigned:username" do
+      it "returns topics assigned to the specified user" do
+        filtered_topic_ids =
+          TopicsFilter
+            .new(guardian: Guardian.new(user))
+            .filter_from_query_string("assigned:#{user.username}")
+            .pluck(:id)
+        expect(filtered_topic_ids).to contain_exactly(post_assignment.topic.id)
+      end
+    end
+
+    describe "with assigned:group" do
+      it "returns topics assigned to the specified group" do
+        filtered_topic_ids =
+          TopicsFilter
+            .new(guardian: Guardian.new(user))
+            .filter_from_query_string("assigned:#{group.name}")
+            .pluck(:id)
+        expect(filtered_topic_ids).to contain_exactly(topic_assignment.topic.id)
+      end
+
+      describe "when querying private groups" do
+        fab!(:private_group) do
+          Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+        end
+
+        fab!(:private_topic_assignment) { Fabricate(:topic_assignment, assigned_to: private_group) }
+
+        it "does not return topics from private groups the user is not a member of" do
+          filtered_topic_ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("assigned:#{private_group.name}")
+              .pluck(:id)
+          expect(filtered_topic_ids).to be_empty
+        end
+
+        it "does not return topics from private groups the user is a member of but lacks access to" do
+          private_group.add(user)
+
+          filtered_topic_ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("assigned:#{private_group.name}")
+              .pluck(:id)
+          expect(filtered_topic_ids).to be_empty
+        end
+
+        it "returns topics from private groups the user has access to" do
+          private_group.add_owner(user)
+
+          filtered_topic_ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("assigned:#{private_group.name}")
+              .pluck(:id)
+          expect(filtered_topic_ids).to contain_exactly(private_topic_assignment.topic.id)
+        end
+      end
+    end
+  end
 
   describe "Events" do
     describe "on 'user_removed_from_group'" do
@@ -113,7 +224,7 @@ RSpec.describe DiscourseAssign do
       let!(:assignment) { Fabricate(:post_assignment) }
       let(:post) { assignment.target }
 
-      before { PostDestroyer.new(Discourse.system_user, post).destroy }
+      before { PostDestroyer.new(Discourse.system_user, post, context: "spec").destroy }
 
       it "deactivates the existing assignment" do
         assignment.reload
@@ -137,7 +248,7 @@ RSpec.describe DiscourseAssign do
       before do
         SiteSetting.reassign_on_open = true
         post.trash!
-        PostDestroyer.new(Discourse.system_user, post).recover
+        PostDestroyer.new(Discourse.system_user, post, context: "spec").recover
       end
 
       it "reactivates the existing assignment" do

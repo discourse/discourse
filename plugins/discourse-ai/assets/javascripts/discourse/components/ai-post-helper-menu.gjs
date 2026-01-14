@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { and, eq } from "truth-helpers";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import FastEdit from "discourse/components/fast-edit";
@@ -15,9 +14,14 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
 import { clipboardCopy } from "discourse/lib/utilities";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiHelperLoading from "../components/ai-helper-loading";
 import AiHelperOptionsList from "../components/ai-helper-options-list";
+import {
+  isAiCreditLimitError,
+  popupAiCreditLimitError,
+} from "../lib/ai-errors";
 import SmoothStreamer from "../lib/smooth-streamer";
 
 export default class AiPostHelperMenu extends Component {
@@ -168,6 +172,13 @@ export default class AiPostHelperMenu extends Component {
 
   @bind
   async _updateResult(result) {
+    if (isAiCreditLimitError(result)) {
+      this.loading = false;
+      this.menuState = this.MENU_STATES.triggers;
+      popupAiCreditLimitError(result);
+      return;
+    }
+
     this.streaming = !result.done;
     await this.smoothStreamer.updateResult(result, "result");
   }
@@ -212,7 +223,13 @@ export default class AiPostHelperMenu extends Component {
           this.menuState = this.MENU_STATES.result;
         });
     } catch (error) {
-      popupAjaxError(error);
+      if (isAiCreditLimitError(error)) {
+        popupAiCreditLimitError(error);
+      } else {
+        popupAjaxError(error);
+      }
+      this.loading = false;
+      this.menuState = this.MENU_STATES.triggers;
     }
 
     return this._activeAiRequest;
@@ -315,7 +332,11 @@ export default class AiPostHelperMenu extends Component {
 
         await this.args.data.post.save({ raw: newRaw });
       } catch (error) {
-        popupAjaxError(error);
+        if (isAiCreditLimitError(error)) {
+          popupAiCreditLimitError(error);
+        } else {
+          popupAjaxError(error);
+        }
       } finally {
         this.isSavingFootnote = false;
         await this.closeMenu();

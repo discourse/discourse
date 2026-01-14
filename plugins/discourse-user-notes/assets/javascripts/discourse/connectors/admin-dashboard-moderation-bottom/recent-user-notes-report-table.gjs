@@ -1,16 +1,17 @@
-import Component from "@ember/component";
-import { classNames, tagName } from "@ember-decorators/component";
-import AdminReport from "admin/components/admin-report";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
+import AdminReport from "discourse/admin/components/admin-report";
 
-@tagName("div")
-@classNames(
-  "admin-dashboard-moderation-bottom-outlet",
-  "recent-user-notes-report-table"
-)
 export default class RecentUserNotesReportTable extends Component {
+  @service siteSettings;
+
   <template>
-    {{#if this.siteSettings.user_notes_enabled}}
-      <AdminReport @dataSourceName="user_notes" @filters={{this.filters}} />
-    {{/if}}
+    <div
+      class="admin-dashboard-moderation-bottom-outlet recent-user-notes-report-table"
+    >
+      {{#if this.siteSettings.user_notes_enabled}}
+        <AdminReport @dataSourceName="user_notes" @filters={{@filters}} />
+      {{/if}}
+    </div>
   </template>
 }

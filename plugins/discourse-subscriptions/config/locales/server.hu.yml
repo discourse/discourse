@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 hu:
+  discourse_subscriptions:
+    customer_not_found: Az ügyfél nem található
+    card:
+      declined: Kártya elutasítva
+      invalid: Érvénytelen kártya

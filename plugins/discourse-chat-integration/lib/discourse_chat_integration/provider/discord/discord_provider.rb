@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module DiscordProvider
-      PROVIDER_NAME = "discord".freeze
+      PROVIDER_NAME = "discord"
       PROVIDER_ENABLED_SETTING = :chat_integration_discord_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+' },
         {
@@ -35,7 +35,7 @@ module DiscourseChatIntegration
       end
 
       def self.generate_discord_message(post)
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         topic = post.topic
 
@@ -99,7 +99,7 @@ module DiscourseChatIntegration
         end
 
         if !response.kind_of?(Net::HTTPSuccess)
-          raise ::DiscourseChatIntegration::ProviderError.new(
+          raise DiscourseChatIntegration::ProviderError.new(
                   info: {
                     error_key: nil,
                     message: message,

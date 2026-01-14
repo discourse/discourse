@@ -10,7 +10,7 @@ describe DiscourseAi::Utils::Research::Filter do
     end
 
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     fab!(:feature_tag) { Fabricate(:tag, name: "feature") }
     fab!(:bug_tag) { Fabricate(:tag, name: "bug") }
@@ -89,7 +89,7 @@ describe DiscourseAi::Utils::Research::Filter do
     end
 
     describe "security filtering" do
-      fab!(:secure_group) { Fabricate(:group) }
+      fab!(:secure_group, :group)
       fab!(:secure_category) { Fabricate(:category, name: "Secure") }
 
       fab!(:secure_topic) do

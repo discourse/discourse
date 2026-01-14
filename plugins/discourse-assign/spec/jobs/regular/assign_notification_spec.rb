@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::AssignNotification do
   describe "#execute" do
     subject(:execute_job) { described_class.new.execute(args) }

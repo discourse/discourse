@@ -7,6 +7,7 @@ RSpec.describe "AI personas", type: :system do
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
+    SiteSetting.ai_bot_add_to_header = true
     toggle_enabled_bots(bots: [gpt_4])
     sign_in(admin)
   end

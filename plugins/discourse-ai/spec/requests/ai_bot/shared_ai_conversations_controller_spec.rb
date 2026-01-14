@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
   before do
     enable_current_plugin
@@ -15,7 +13,7 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic)
-  fab!(:pm) { Fabricate(:private_message_topic) }
+  fab!(:pm, :private_message_topic)
   fab!(:user_pm) { Fabricate(:private_message_topic, recipient: user) }
 
   fab!(:bot_user) do
@@ -358,9 +356,9 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
     it "renders the shared conversation" do
       get "#{path}/#{shared_conversation.share_key}"
       expect(response).to have_http_status(:success)
-      expect(response.headers["Cache-Control"]).to eq("max-age=60, public")
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       expect(response.body).not_to include("Translation missing")
+      expect(response.headers["Cache-Control"]).to eq("max-age=60, public")
     end
 
     it "is also able to render in json format" do

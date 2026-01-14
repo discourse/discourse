@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseReactions::CustomReactionsController do
   fab!(:post_1, :post)
   fab!(:user_1, :user)
@@ -285,7 +283,7 @@ describe DiscourseReactions::CustomReactionsController do
         parsed = response.parsed_body
         expect(parsed.length).to eq(2)
 
-        PostDestroyer.new(Discourse.system_user, deleted_post).destroy
+        PostDestroyer.new(Discourse.system_user, deleted_post, context: "spec").destroy
 
         get "/discourse-reactions/posts/reactions.json", params: { username: user.username }
         parsed = response.parsed_body
@@ -307,7 +305,7 @@ describe DiscourseReactions::CustomReactionsController do
 
         expect(response.parsed_body.length).to eq(2)
 
-        PostDestroyer.new(Discourse.system_user, op).destroy
+        PostDestroyer.new(Discourse.system_user, op, context: "spec").destroy
         get "/discourse-reactions/posts/reactions.json", params: { username: user_1.username }
 
         parsed = response.parsed_body
@@ -585,7 +583,7 @@ describe DiscourseReactions::CustomReactionsController do
   end
 
   describe "reaction notifications" do
-    it "calls ReactinNotification service" do
+    it "calls ReactingNotification service" do
       sign_in(user_1)
       DiscourseReactions::ReactionNotification.any_instance.expects(:create).once
       DiscourseReactions::ReactionNotification.any_instance.expects(:delete).once
@@ -615,7 +613,7 @@ describe DiscourseReactions::CustomReactionsController do
             DiscourseReactions::ReactionUser.count
           }.by(1)
 
-    freeze_time(Time.zone.now + 11.minutes)
+    freeze_time(11.minutes.from_now)
     expect do
       put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/hugs/toggle.json"
     end.to not_change { DiscourseReactions::Reaction.count }.and not_change {

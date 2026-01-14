@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
@@ -9,7 +10,9 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 import RagUploadProgress from "./rag-upload-progress";
@@ -20,7 +23,7 @@ export default class RagUploader extends Component {
   @tracked term = null;
   @tracked filteredUploads = null;
   @tracked ragIndexingStatuses = null;
-  @tracked ragUploads = null;
+  @trackedArray ragUploads = null;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "discourse-ai-rag-uploader",
@@ -33,7 +36,7 @@ export default class RagUploader extends Component {
       const newUpload = uploadedFile.upload;
       newUpload.status = "uploaded";
       newUpload.statusText = i18n("discourse_ai.rag.uploads.uploaded");
-      this.ragUploads.pushObject(newUpload);
+      this.ragUploads.push(newUpload);
       this.debouncedSearch();
     },
   });
@@ -118,7 +121,7 @@ export default class RagUploader extends Component {
 
   @action
   removeUpload(upload) {
-    this.ragUploads.removeObject(upload);
+    removeValueFromArray(this.ragUploads, upload);
     this.onRemove(upload);
 
     this.debouncedSearch();

@@ -1295,12 +1295,12 @@ RSpec.describe GroupsController do
 
     context "when user is a site moderator" do
       before do
-        SiteSetting.moderators_manage_categories_and_groups = true
+        SiteSetting.moderators_manage_groups = true
         sign_in(moderator)
       end
 
       it "should not be able to update the group if the SiteSetting is false" do
-        SiteSetting.moderators_manage_categories_and_groups = false
+        SiteSetting.moderators_manage_groups = false
 
         put "/groups/#{group.id}.json", params: { group: { name: "testing" } }
 
@@ -1406,21 +1406,11 @@ RSpec.describe GroupsController do
 
   describe "#members" do
     let(:user1) do
-      Fabricate(
-        :user,
-        last_seen_at: Time.zone.now,
-        last_posted_at: Time.zone.now - 1.day,
-        email: "b@test.org",
-      )
+      Fabricate(:user, last_seen_at: Time.zone.now, last_posted_at: 1.day.ago, email: "b@test.org")
     end
 
     let(:user2) do
-      Fabricate(
-        :user,
-        last_seen_at: Time.zone.now - 1.day,
-        last_posted_at: Time.zone.now,
-        email: "a@test.org",
-      )
+      Fabricate(:user, last_seen_at: 1.day.ago, last_posted_at: Time.zone.now, email: "a@test.org")
     end
 
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
@@ -1960,8 +1950,8 @@ RSpec.describe GroupsController do
       context "when logged in as a moderator" do
         before { sign_in(moderator) }
 
-        context "with moderators_manage_categories_and_groups enabled" do
-          before { SiteSetting.moderators_manage_categories_and_groups = true }
+        context "with moderators_manage_groups enabled" do
+          before { SiteSetting.moderators_manage_groups = true }
 
           it "adds owners" do
             put "/groups/#{group.id}/owners.json",
@@ -1985,8 +1975,8 @@ RSpec.describe GroupsController do
           end
         end
 
-        context "with moderators_manage_categories_and_groups disabled" do
-          before { SiteSetting.moderators_manage_categories_and_groups = false }
+        context "with moderators_manage_groups disabled" do
+          before { SiteSetting.moderators_manage_groups = false }
 
           it "prevents adding of owners with a 403 response" do
             put "/groups/#{group.id}/owners.json",
@@ -2540,7 +2530,7 @@ RSpec.describe GroupsController do
 
     it "should create the right PM" do
       owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
-      owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1.day)
+      owner2 = Fabricate(:user, last_seen_at: 1.day.ago)
       [owner1, owner2].each { |owner| group.add_owner(owner) }
 
       sign_in(user)
@@ -2848,39 +2838,6 @@ RSpec.describe GroupsController do
       end
     end
 
-    context "when validating imap" do
-      let(:protocol) { "imap" }
-      let(:username) { "test@gmail.com" }
-      let(:password) { "password" }
-      let(:domain) { nil }
-      let(:ssl) { true }
-      let(:ssl_mode) { nil }
-      let(:host) { "imap.somemailsite.com" }
-      let(:port) { 993 }
-
-      it "validates with the correct TLS settings" do
-        EmailSettingsValidator.expects(:validate_imap).with(has_entries(ssl: true))
-        post "/groups/#{group.id}/test_email_settings.json", params: params
-        expect(response.status).to eq(200)
-      end
-
-      context "when an error is raised" do
-        before do
-          EmailSettingsValidator.expects(:validate_imap).raises(
-            Net::IMAP::NoResponseError,
-            stub(data: stub(text: "Invalid credentials")),
-          )
-        end
-        it "uses the friendly error message functionality to return the message to the user" do
-          post "/groups/#{group.id}/test_email_settings.json", params: params
-          expect(response.status).to eq(422)
-          expect(response.parsed_body["errors"]).to include(
-            I18n.t("email_settings.imap_authentication_error"),
-          )
-        end
-      end
-    end
-
     describe "global param validation and rate limit" do
       let(:protocol) { "smtp" }
       let(:host) { "smtp.gmail.com" }
@@ -2895,9 +2852,7 @@ RSpec.describe GroupsController do
         it "raises an invalid params error" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
           expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"].first).to match(
-            /Valid protocols to test are smtp and imap/,
-          )
+          expect(response.parsed_body["errors"].first).to match(/Valid protocol to test is smtp/)
         end
       end
 

@@ -21,7 +21,7 @@ describe DiscourseAi::Utils::DnsSrv do
       Discourse.cache.delete("dns_srv_lookup:#{domain}")
 
       (1..5).each do |i|
-        stub_request(:head, "https://service#{i}.example.com/").to_return(status: 200)
+        stub_request(:get, "https://service#{i}.example.com/health").to_return(status: 200)
       end
     end
 
@@ -44,10 +44,10 @@ describe DiscourseAi::Utils::DnsSrv do
 
       Discourse.cache.delete("dns_srv_lookup:#{domain}")
 
-      stub_request(:head, "https://service1.example.com/").to_raise(Faraday::SSLError)
+      stub_request(:get, "https://service1.example.com/health").to_raise(Faraday::SSLError)
 
       (2..5).each do |i|
-        stub_request(:head, "https://service#{i}.example.com/").to_return(status: 200)
+        stub_request(:get, "https://service#{i}.example.com/health").to_return(status: 200)
       end
     end
 
@@ -67,11 +67,11 @@ describe DiscourseAi::Utils::DnsSrv do
       Discourse.cache.delete("dns_srv_lookup:#{domain}")
 
       (1..3).each do |i|
-        stub_request(:head, "https://service#{i}.example.com/").to_raise(Faraday::SSLError)
+        stub_request(:get, "https://service#{i}.example.com/health").to_raise(Faraday::SSLError)
       end
 
       (4..5).each do |i|
-        stub_request(:head, "https://service#{i}.example.com/").to_return(status: 200)
+        stub_request(:get, "https://service#{i}.example.com/health").to_return(status: 200)
       end
     end
 

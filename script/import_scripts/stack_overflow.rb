@@ -2,7 +2,7 @@
 
 # cf. https://github.com/rails-sqlserver/tiny_tds#install
 require "tiny_tds"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::StackOverflow < ImportScripts::Base
   BATCH_SIZE = 1000

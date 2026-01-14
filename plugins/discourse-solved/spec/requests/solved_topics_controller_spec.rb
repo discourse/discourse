@@ -2,7 +2,7 @@
 
 describe DiscourseSolved::SolvedTopicsController do
   fab!(:user)
-  fab!(:another_user) { Fabricate(:user) }
+  fab!(:another_user, :user)
   fab!(:admin)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic:) }

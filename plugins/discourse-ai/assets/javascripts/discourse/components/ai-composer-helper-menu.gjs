@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import DToast from "discourse/float-kit/components/d-toast";
+import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 import { i18n } from "discourse-i18n";
-import DToast from "float-kit/components/d-toast";
-import DToastInstance from "float-kit/lib/d-toast-instance";
 import AiHelperOptionsList from "../components/ai-helper-options-list";
 import ModalDiffModal from "../components/modal/diff-modal";
 import ThumbnailSuggestion from "../components/modal/thumbnail-suggestions";
@@ -42,9 +42,7 @@ export default class AiComposerHelperMenu extends Component {
         // Since we want site default translations (and we are using: force_default_locale)
         // we need to replace the translated_name with the site default locale name
         const siteLocale = this.siteSettings.default_locale;
-        const availableLocales = JSON.parse(
-          this.siteSettings.available_locales
-        );
+        const availableLocales = this.siteSettings.available_locales;
         const locale = availableLocales.find((l) => l.value === siteLocale);
         const translatedName = i18n(
           "discourse_ai.ai_helper.context_menu.translate_prompt",

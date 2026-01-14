@@ -14,7 +14,6 @@ de:
     assign_self_regex: "Regulärer Ausdruck, der erfüllt sein muss, um sich einem Thema selbst zuzuordnen. Beispiel: „meine Liste“"
     assign_other_regex: "Regulärer Ausdruck, der erfüllt sein muss, um ein Thema jemand anderem per Erwähnung zuzuordnen. Beispiel: „deine Liste“"
     unassign_on_group_archive: "Zuordnung aufheben, wenn eine Nachricht von einer Gruppe archiviert wurde (neu zuordnen, wenn sie wieder in den Posteingang verschoben wird)"
-    unassign_on_close: "Zuordnung aufheben, wenn ein Thema geschlossen wird"
     reassign_on_open: "Wenn ein Thema eröffnet wird, ordne zuvor zugeordnete Benutzer/Gruppen neu zu"
     invite_on_assign: "Wenn eine persönliche Nachricht einem Benutzer oder einer Gruppe zugeordnet wird, lade ihn/sie zu der PN ein, wenn er/sie nicht bereits Teilnehmer ist."
     assign_mailer: "Wann für Zuordnungen Benachrichtigungs-E-Mails gesendet werden"
@@ -75,12 +74,12 @@ de:
 
       Diese Erinnerung wird %{frequency} zugesandt, wenn du mehr als ein zugeordnetes Thema hast.
     newest: |
-      ### Neuestes
+      ### Neueste
       %{topic_0}
       %{topic_1}
       %{topic_2}
     oldest: |
-      ### Ältestes
+      ### Älteste
       %{topic_0}
       %{topic_1}
       %{topic_2}

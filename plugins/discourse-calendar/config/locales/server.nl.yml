@@ -33,7 +33,6 @@ nl:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Maximaal aantal tekstrijen per evenement in de agenda."
     map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
     map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
     calendar_enabled: "Schakel de Discourse-Kalender-plug-in in. Dit voegt ondersteuning toe voor een [calendar][/calendar]-tag in het eerste bericht van een topic."
@@ -50,7 +49,6 @@ nl:
     all_day_event_start_time: "Evenementen waarvoor geen begintijd is opgegeven, beginnen op deze tijd. De notatie is Hh:mm. Voor 6:00 uur voer je 06:00 in"
     all_day_event_end_time: "Evenementen waarvoor geen eindtijd is opgegeven, eindigen op deze tijd. De notatie is HH:mm. Voor 18:00 uur voer je 18:00 in"
     all_day_event_time_error: "Ongeldige tijd. Notatie moet HH:mm zijn (bijvoorbeeld 08:00)."
-    calendar_categories: "Geeft een kalender weer bovenaan een categorie. Verplichte instellingen zijn categoryId en postId, bijvoorbeeld: categoryId=6;postId=453\nAndere geldige instellingen: tzPicker, weekends en defaultView."
     calendar_categories_outlet: "Hiermee kun je veranderen welke outlet de categoriekalender moet weergeven."
     working_days: "Stel werkdagen in. Je kunt de beschikbaarheid van een groep weergeven met de 'timezones'-tag in een bericht, bijvoorbeeld: '[timezones group=admins][timezones]'"
     working_day_start_hour: "Begintijd van werkdag."
@@ -62,7 +60,6 @@ nl:
     calendar_automatic_holidays_enabled: "Stel automatisch de feestdagstatus in op basis van een gebruikersregio (opmerking: je kunt specifieke automatische feestdagen uitschakelen in de plug-in-instellingen)"
     event_participation_buttons: "Lijst met knoppen voor evenementdeelname die gebruikers kunnen gebruiken."
     sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
-    include_expired_events_on_calendar: "Neem eerdere/afgelopen evenementen op in de weergaven Categoriekalender en Aankomende evenementen."
   discourse_calendar:
     invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
     calendar_must_be_in_first_post: "Calendar-tag kan alleen worden gebruikt in het eerste bericht van een topic."

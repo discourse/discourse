@@ -46,6 +46,32 @@ describe "Admin User Fields", type: :system do
     expect(form).to have_field(editable_label, checked: true, disabled: false)
   end
 
+  it "makes sure fields are available on signup when they have to" do
+    user_fields_page.visit
+    user_fields_page.click_add_field
+
+    expect(page_header).to be_hidden
+
+    form = page.find(".user-field")
+    show_on_signup_label = I18n.t("admin_js.admin.user_fields.show_on_signup.title")
+
+    user_fields_page.choose_requirement("for_all_users")
+
+    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true)
+
+    user_fields_page.choose_requirement("on_signup")
+
+    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true)
+
+    user_fields_page.choose_requirement("optional")
+
+    expect(form).to have_field(show_on_signup_label, checked: true, disabled: false)
+
+    user_fields_page.unselect_preference("editable")
+
+    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true)
+  end
+
   it "requires confirmation when applying required fields retroactively" do
     user_fields_page.visit
     user_fields_page.click_add_field

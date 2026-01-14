@@ -3,7 +3,7 @@
 module DiscourseAi
   module Embeddings
     class EmbeddingsController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       SEMANTIC_SEARCH_TYPE = "semantic_search"
 
@@ -12,7 +12,12 @@ module DiscourseAi
 
       def search
         query = params[:q].to_s
-        skip_hyde = params[:hyde].to_s.downcase == "false" || params[:hyde].to_s == "0"
+        use_hyde = SiteSetting.ai_embeddings_semantic_search_use_hyde
+
+        if params[:hyde].present? &&
+             (params[:hyde].to_s.downcase == "false" || params[:hyde].to_s == "0")
+          use_hyde = false
+        end
 
         if query.length < SiteSetting.min_search_term_length
           raise Discourse::InvalidParameters.new(:q)
@@ -29,43 +34,38 @@ module DiscourseAi
 
         semantic_search = DiscourseAi::Embeddings::SemanticSearch.new(guardian)
 
-        if !skip_hyde && !semantic_search.cached_query?(query)
+        if use_hyde && !semantic_search.cached_query?(query)
           RateLimiter.new(
             current_user,
             "semantic-search",
             MAX_HYDE_SEARCHES_PER_MINUTE,
-            1.minutes,
+            1.minute,
           ).performed!
         else
           RateLimiter.new(
             current_user,
             "semantic-search-non-hyde",
             MAX_SEARCHES_PER_MINUTE,
-            1.minutes,
+            1.minute,
           ).performed!
         end
 
         hijack do
           begin
             semantic_search
-              .search_for_topics(query, _page = 1, hyde: !skip_hyde)
+              .search_for_topics(query, _page = 1, hyde: use_hyde)
               .each { |topic_post| grouped_results.add(topic_post) }
-
-            render_serialized(
-              grouped_results,
-              GroupedSearchResultSerializer,
-              result: grouped_results,
-            )
           rescue Discourse::InvalidAccess
-            render_json_error(I18n.t("invalid_access"), status: 403)
+            return render_json_error(I18n.t("invalid_access"), status: 403)
+          rescue Net::HTTPBadResponse => e
+            Rails.logger.warn("Semantic search embedding generation failed: #{e.message}")
           end
+
+          render_serialized(grouped_results, GroupedSearchResultSerializer, result: grouped_results)
         end
       end
 
       def quick_search
-        # this search function searches posts (vs: topics)
-        # it requires post embeddings and a reranker
-        # it will not perform a hyde expantion
         query = params[:q].to_s
 
         if query.length < SiteSetting.min_search_term_length
@@ -78,16 +78,23 @@ module DiscourseAi
             term: query,
             search_context: guardian,
             use_pg_headlines_for_excerpt: false,
+            can_lazy_load_categories: guardian.can_lazy_load_categories?,
           )
 
         semantic_search = DiscourseAi::Embeddings::SemanticSearch.new(guardian)
 
         if !semantic_search.cached_query?(query)
-          RateLimiter.new(current_user, "semantic-search", 60, 1.minutes).performed!
+          RateLimiter.new(current_user, "semantic-search", 60, 1.minute).performed!
         end
 
         hijack do
-          semantic_search.quick_search(query).each { |topic_post| grouped_results.add(topic_post) }
+          begin
+            semantic_search
+              .search_for_topics(query, _page = 1, hyde: false)
+              .each { |topic_post| grouped_results.add(topic_post) }
+          rescue Net::HTTPBadResponse => e
+            Rails.logger.warn("Quick search embedding generation failed: #{e.message}")
+          end
 
           render_serialized(grouped_results, GroupedSearchResultSerializer, result: grouped_results)
         end

@@ -11,6 +11,10 @@ module PageObjects
         @sidebar ||= PageObjects::Components::Chat::Sidebar.new
       end
 
+      def footer
+        @footer ||= PageObjects::Components::Chat::Footer.new
+      end
+
       def prefers_full_page
         page.execute_script(
           "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
@@ -31,6 +35,11 @@ module PageObjects
       def close_from_header
         find(".chat-header-icon").click
         has_no_css?("html.has-chat")
+      end
+
+      def back_to_channels_list
+        find(".d-icon.d-icon-chevron-left").click
+        has_css?("html.has-chat")
       end
 
       def has_header_href?(href)

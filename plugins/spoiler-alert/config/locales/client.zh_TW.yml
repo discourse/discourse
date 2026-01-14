@@ -6,7 +6,5 @@
 
 zh_TW:
   js:
-    spoiler:
-      title: 模糊化劇透
     composer:
       spoiler_text: "這段文字會被模糊化"

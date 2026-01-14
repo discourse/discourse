@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseTopicVoting::VotesController do
   let(:user) { Fabricate(:user) }
   let(:category) { Fabricate(:category) }

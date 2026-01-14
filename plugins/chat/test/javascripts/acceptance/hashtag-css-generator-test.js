@@ -23,7 +23,10 @@ acceptance("Chat | Hashtag CSS Generator", function (needs) {
     name: "category3",
   };
 
-  needs.settings({ chat_enabled: true });
+  needs.settings({
+    chat_enabled: true,
+    enable_emoji: true,
+  });
   needs.user({
     has_chat_enabled: true,
   });

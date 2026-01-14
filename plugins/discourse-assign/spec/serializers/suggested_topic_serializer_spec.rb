@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe SuggestedTopicSerializer do
   fab!(:user)
   fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }
   fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
-  fab!(:topic2) { Fabricate(:topic) }
+  fab!(:topic2, :topic)
   fab!(:post2) { Fabricate(:post, topic: topic2) }
   fab!(:guardian) { Guardian.new(user) }
   fab!(:serializer) { described_class.new(topic, scope: guardian) }

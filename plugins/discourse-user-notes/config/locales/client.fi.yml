@@ -8,8 +8,5 @@ fi:
   js:
     user_notes:
       title: "Käyttäjähuomiot"
-      attach: "Lisää käyttäjähuomio"
-      remove: "Poista käyttäjähuomio"
-      show: "Käyttäjähuomiot (%{count})"
+      attach_note_description: "Lisää huomautus tästä käyttäjästä. Tämä huomautus näkyy vain henkilökunnalle."
       delete_confirm: "Oletko varma, että haluat poistaa kyseisen käyttäjähuomion?"
-      show_post: "Näytä viesti"

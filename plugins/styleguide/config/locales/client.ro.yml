@@ -53,16 +53,12 @@ ro:
           title: "Navigare suprapusă"
         categories_list:
           title: "Listă de categorii"
-        topic_link:
-          title: "Legătură spre subiect"
         topic_list_item:
           title: "Element din lista subiectelor"
         topic_statuses:
           title: "Statusuri pentru subiecte"
         topic_list:
           title: "Listă de subiecte"
-        footer_message:
-          title: "Mesaj subsol"
         signup_cta:
           title: "Îndemn la înregistrare"
         topic_timer_info:
@@ -75,8 +71,8 @@ ro:
           title: "Postare"
         topic_map:
           title: "Harta subiectului"
-        suggested_topics:
-          title: "Subiecte sugerate"
+        more_topics:
+          title: "Mai multe subiecte"
         post_menu:
           title: "Meniu postare"
         modal:
@@ -89,6 +85,8 @@ ro:
           title: "Pictograme Antet"
         spinners:
           title: "Indicatori încărcare"
+        otp:
+          title: "OTP"
         tooltips:
           description: "Descriere"
           header: "Antet"

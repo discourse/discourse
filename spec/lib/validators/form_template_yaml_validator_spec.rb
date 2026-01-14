@@ -186,4 +186,42 @@ RSpec.describe FormTemplateYamlValidator, type: :validator do
       end
     end
   end
+
+  describe "#check_tag_groups" do
+    fab!(:tag_group)
+
+    context "when tag group names are valid" do
+      let(:yaml_content) { <<~YAML }
+        - type: tag-chooser
+          id: name
+          tag_group: "#{tag_group.name}"
+        YAML
+
+      it "does not add an error" do
+        validator.validate(form_template)
+        expect(form_template.errors[:template]).to be_empty
+      end
+    end
+
+    context "when tag group names contains invalid name" do
+      let(:yaml_content) { <<~YAML }
+          - type: tag-chooser
+            id: name1
+            tag_group: "#{tag_group.name}"
+          - type: tag-chooser
+            id: name2
+            tag_group: "invalid tag group name"
+        YAML
+
+      it "adds an error for invalid tag groups" do
+        validator.validate(form_template)
+        expect(form_template.errors[:template]).to include(
+          I18n.t(
+            "form_templates.errors.invalid_tag_group",
+            tag_group_name: "invalid tag group name",
+          ),
+        )
+      end
+    end
+  end
 end

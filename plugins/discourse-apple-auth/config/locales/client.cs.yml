@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 cs:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Přihlásit se přes Apple"
+        sr_title: "Přihlásit se přes Apple"
+        message: "Ověřování pomocí Apple"

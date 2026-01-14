@@ -64,7 +64,7 @@ fi:
       link: "Linkki:"
       report_name: "Raportti"
       query_description: "Kuvaus"
-      query_time: "Viimeinen ajo"
+      query_time: "Viimeisin suoritus"
       query_user: "Luonut"
       column: "Sarake %{number}"
       explain_label: "Sisällytä kyselysuunnitelma?"
@@ -101,6 +101,8 @@ fi:
               label: Ohita yksityisviestin lähettäminen, jos tuloksia ei ole
             attach_csv:
               label: Liitä CSV-tiedosto yksityisviestiin
+            users_from_group:
+              label: Lähetä jokaiselle ryhmän jäsenelle yksittäinen yksityisviesti
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

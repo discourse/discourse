@@ -84,7 +84,6 @@ nl:
               help: "bijvoorbeeld #kanaal, @gebruikersnaam."
           errors:
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
-            channel_not_found: "Het opgegeven kanaal bestaat niet op Slack"
         telegram:
           title: "Telegram"
           param:
@@ -131,7 +130,6 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Matrix."
             room_id:
               title: "Ruimte-ID"
-              help: "De 'privé-ID' voor de ruimte. Deze dient eruit te zien als !abcdefg:matrix.org"
           errors:
             unknown_token: "Toegangstoken is ongeldig"
             unknown_room: "Ruimte-ID is ongeldig"

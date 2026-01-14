@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::DiscoursePostEventBumpTopic do
   let(:admin_1) { Fabricate(:user, admin: true) }
   let(:topic_1) { Fabricate(:topic, user: admin_1) }
@@ -24,6 +22,13 @@ describe Jobs::DiscoursePostEventBumpTopic do
         timer = TopicTimer.find_by(topic: topic_1)
         expect(timer.status_type).to eq(TopicTimer.types[:bump])
         expect(timer.execute_at).to eq_time(Time.zone.local(2019, 12, 10, 5, 0))
+      end
+
+      it "does not create a timer if the date is in the past" do
+        freeze_time
+        Jobs::DiscoursePostEventBumpTopic.new.execute(topic_id: topic_1.id, date: "2019-10-10 5:00")
+
+        expect(TopicTimer.find_by(topic: topic_1)).to be_nil
       end
     end
 

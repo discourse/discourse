@@ -27,10 +27,10 @@ en:
         label: "Create post voting topic"
       composer_actions:
         create_as_post_voting:
-          label: "Toggle Post Voting"
+          label: "Toggle post voting"
           desc: "Topic will be created with votable posts"
         remove_as_post_voting:
-          label: "Remove Post Voting"
+          label: "Remove post voting"
           desc: "Topic will be created in the regular format"
 
     vote:

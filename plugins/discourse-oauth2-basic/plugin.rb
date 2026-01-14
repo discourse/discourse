@@ -13,6 +13,9 @@ require_relative "lib/omniauth/strategies/oauth2_basic"
 require_relative "lib/oauth2_faraday_formatter"
 require_relative "lib/oauth2_basic_authenticator"
 
+register_site_setting_area("oauth2")
+register_admin_config_login_route("oauth2")
+
 # You should use this register if you want to add custom paths to traverse the user details JSON.
 # We'll store the value in the user associated account's extra attribute hash using the full path as the key.
 DiscoursePluginRegistry.define_filtered_register :oauth2_basic_additional_json_paths

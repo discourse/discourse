@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ja:
+  site_settings:
+    sign_in_with_apple_enabled: 'Apple でのサインインを有効にしますか？'
+    apple_team_id: '(Apple でサインイン) Apple チーム ID (10 文字)'
+    apple_key_id: '(Apple でサインイン) Apple キー ID (10 文字)'
+    apple_pem: '(Apple でサインイン) Apple Pem ファイルのコンテンツ。BEGIN 行と END 行を含めます'

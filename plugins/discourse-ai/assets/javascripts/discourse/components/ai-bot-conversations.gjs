@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
@@ -7,34 +8,42 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import $ from "jquery";
+import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import userAutocomplete from "discourse/lib/autocomplete/user";
-import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { clipboardHelpers } from "discourse/lib/utilities";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-persona-llm-selector";
 
 export default class AiBotConversations extends Component {
+  @service aiCredits;
   @service aiBotConversationsHiddenSubmit;
-  @service currentUser;
+  @service capabilities;
   @service mediaOptimizationWorker;
   @service site;
   @service siteSettings;
+  @service tooltip;
 
+  @tracked creditStatus = null;
+  @tracked selectedLlmId = null;
   @tracked uploads = new TrackedArray();
   // Don't track this directly - we'll get it from uppyUpload
 
@@ -42,7 +51,28 @@ export default class AiBotConversations extends Component {
   uppyUpload = null;
   fileInputEl = null;
 
-  _handlePaste = (event) => {
+  creditLimitTooltipModifier = modifier((element) => {
+    if (!this.isSubmitDisabled) {
+      return;
+    }
+
+    const instance = this.tooltip.register(element, {
+      identifier: "ai-credit-limit-tooltip",
+      content: htmlSafe(
+        this.aiCredits.getCreditLimitMessage(this.creditStatus)
+      ),
+      placement: "top",
+      triggers: "hover",
+      interactive: true,
+      trapTab: false,
+    });
+
+    return () => {
+      instance.destroy();
+    };
+  });
+
+  #handlePaste = (event) => {
     if (document.activeElement !== this.textarea) {
       return;
     }
@@ -76,7 +106,7 @@ export default class AiBotConversations extends Component {
           this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
             optimizeFn: (data, opts) =>
               this.mediaOptimizationWorker.optimizeImage(data, opts),
-            runParallel: !this.site.isMobileDevice,
+            runParallel: !this.capabilities.isMobileDevice,
           });
         }
 
@@ -98,7 +128,7 @@ export default class AiBotConversations extends Component {
           }
         });
 
-        this.textarea?.addEventListener("paste", this._handlePaste);
+        this.textarea?.addEventListener("paste", this.#handlePaste);
       },
 
       uploadDone: (upload) => {
@@ -115,7 +145,7 @@ export default class AiBotConversations extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.textarea?.removeEventListener("paste", this._handlePaste);
+    this.textarea?.removeEventListener("paste", this.#handlePaste);
     this.uppyUpload?.teardown();
     // needed for safety (textarea may not have a autocomplete)
     if (this.textarea.autocomplete) {
@@ -135,9 +165,43 @@ export default class AiBotConversations extends Component {
     return this.uploads?.length > 0 || this.inProgressUploads?.length > 0;
   }
 
+  get isSubmitDisabled() {
+    return this.creditStatus?.hard_limit_reached === true;
+  }
+
   @action
-  setPersonaId(id) {
+  async setPersonaId(id) {
     this.aiBotConversationsHiddenSubmit.personaId = id;
+    // Only check persona credits if no LLM is explicitly selected
+    // (e.g., when persona has force_default_llm)
+    if (!this.selectedLlmId) {
+      await this.#checkCreditStatus(id, "persona");
+    }
+  }
+
+  @action
+  async setLlmId(llmModelId) {
+    this.selectedLlmId = llmModelId;
+    await this.#checkCreditStatus(llmModelId, "llm");
+  }
+
+  async #checkCreditStatus(id, type) {
+    // Clear status immediately to prevent stale data
+    this.creditStatus = null;
+
+    if (!id) {
+      return;
+    }
+
+    try {
+      this.creditStatus =
+        type === "persona"
+          ? await this.aiCredits.getPersonaCreditStatus(id)
+          : await this.aiCredits.getLlmModelCreditStatus(id);
+    } catch {
+      // Fail open - allow usage if credit check fails
+      this.creditStatus = null;
+    }
   }
 
   @action
@@ -176,58 +240,73 @@ export default class AiBotConversations extends Component {
 
   @action
   setupAutocomplete(textarea) {
-    const $textarea = $(textarea);
-    this.applyUserAutocomplete($textarea);
-    this.applyHashtagAutocomplete($textarea);
+    this.applyUserAutocomplete(textarea);
+    this.applyHashtagAutocomplete(textarea);
   }
 
   @action
-  applyUserAutocomplete($textarea) {
+  applyUserAutocomplete(textarea) {
     if (!this.siteSettings.enable_mentions) {
       return;
     }
 
-    $textarea.autocomplete({
-      template: userAutocomplete,
-      dataSource: (term) => {
-        destroyUserStatuses();
-        return userSearch({
-          term,
-          includeGroups: true,
-        }).then((result) => {
-          initUserStatusHtml(getOwner(this), result.users);
-          return result;
-        });
-      },
-      onRender: (options) => renderUserStatusHtml(options),
-      key: "@",
-      width: "100%",
-      treatAsTextarea: true,
-      autoSelectFirstSuggestion: true,
-      transformComplete: (obj) => obj.username || obj.name,
-      afterComplete: (text) => {
-        this.textarea.value = text;
-        this.focusTextarea();
-        this.updateInputValue({ target: { value: text } });
-      },
-      onClose: destroyUserStatuses,
-    });
+    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+    DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      textarea,
+      autocompleteHandler,
+      {
+        component: UserAutocompleteResults,
+        key: UserAutocompleteResults.TRIGGER_KEY,
+        dataSource: (term) => {
+          destroyUserStatuses();
+          return userSearch({
+            term,
+            includeGroups: true,
+          }).then((result) => {
+            initUserStatusHtml(getOwner(this), result.users);
+            return result;
+          });
+        },
+        onRender: (options) => renderUserStatusHtml(options),
+        fixedTextareaPosition: true,
+        autoSelectFirstSuggestion: true,
+        offset: 2,
+        transformComplete: (obj) => {
+          validateSearchResult(obj);
+          return obj.username || obj.name;
+        },
+        afterComplete: (text) => {
+          this.textarea.value = text;
+          this.focusTextarea();
+          this.updateInputValue({ target: { value: text } });
+        },
+        onClose: destroyUserStatuses,
+      }
+    );
   }
 
   @action
-  applyHashtagAutocomplete($textarea) {
+  applyHashtagAutocomplete(textarea) {
     // Use the "topic-composer" configuration or create a specific one for AI bot
     // You can change this to "chat-composer" if that's more appropriate
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
-    setupHashtagAutocomplete(hashtagConfig, $textarea, this.siteSettings, {
-      treatAsTextarea: true,
-      afterComplete: (text) => {
-        this.textarea.value = text;
-        this.focusTextarea();
-        this.updateInputValue({ target: { value: text } });
-      },
-    });
+    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+    DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      textarea,
+      autocompleteHandler,
+      hashtagAutocompleteOptions(hashtagConfig, {
+        offset: 2,
+        fixedTextareaPosition: true,
+        afterComplete: (text) => {
+          this.textarea.value = text;
+          this.focusTextarea();
+          this.updateInputValue({ target: { value: text } });
+        },
+      })
+    );
   }
 
   @action
@@ -293,7 +372,10 @@ export default class AiBotConversations extends Component {
       <AiPersonaLlmSelector
         @showLabels={{true}}
         @setPersonaId={{this.setPersonaId}}
+        @setLlmId={{this.setLlmId}}
         @setTargetRecipient={{this.setTargetRecipient}}
+        @personaName={{@controller.persona}}
+        @llmName={{@controller.llm}}
       />
 
       <div class="ai-bot-conversations__content-wrapper">
@@ -308,10 +390,17 @@ export default class AiBotConversations extends Component {
           }}
         />
 
-        <div class="ai-bot-conversations__input-wrapper">
+        <div
+          {{this.creditLimitTooltipModifier}}
+          class={{concatClass
+            "ai-bot-conversations__input-wrapper"
+            (if this.isSubmitDisabled "--disabled")
+          }}
+        >
           <DButton
             @icon="upload"
-            @action={{this.openFileUpload}}
+            @action={{unless this.isSubmitDisabled this.openFileUpload}}
+            @disabled={{this.isSubmitDisabled}}
             @title="discourse_ai.ai_bot.conversations.upload_files"
             class="btn btn-transparent ai-bot-upload-btn"
           />
@@ -320,16 +409,17 @@ export default class AiBotConversations extends Component {
             {{on "input" this.updateInputValue}}
             {{on "keydown" this.handleKeyDown}}
             id="ai-bot-conversations-input"
-            autofocus="true"
+            autofocus={{unless this.isSubmitDisabled "true"}}
             placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
             minlength="10"
-            disabled={{this.loading}}
+            disabled={{if this.isSubmitDisabled true this.loading}}
             rows="1"
           />
           <DButton
-            @action={{this.prepareAndSubmitToBot}}
+            @action={{unless this.isSubmitDisabled this.prepareAndSubmitToBot}}
             @icon="paper-plane"
-            @isLoading={{this.loading}}
+            @disabled={{this.isSubmitDisabled}}
+            @isLoading={{unless this.isSubmitDisabled this.loading}}
             @title="discourse_ai.ai_bot.conversations.header"
             class="ai-bot-button btn-transparent ai-conversation-submit"
           />

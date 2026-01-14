@@ -7,11 +7,22 @@
 el:
   admin_js:
     admin:
-      calendar: "Ημερολόγιο"
+      calendar: "Ημερολόγιο και Εκδηλώσεις"
+      site_settings:
+        categories:
+          discourse_post_event: "Εκδήλωση Discourse"
+          discourse_calendar: "Ημερολόγιο και Εκδηλώσεις"
   js:
+    notifications:
+      titles:
+        event_reminder: "υπενθύμιση εκδήλωσης"
+        event_invitation: "πρόσκληση σε εκδήλωση"
+      popup:
+        event_reminder: Υπενθύμιση εκδήλωσης
     discourse_automation:
       triggerables:
         event_started:
+          title: Η εκδήλωση ξεκίνησε
           fields:
             topic_id:
               label: ID Θέματος
@@ -81,6 +92,7 @@ el:
           dk: "Δανία"
           ee: "Εσθονία"
           el: "Ελλάδα"
+          gr: "Ελλάδα"
           es_an: "Ισπανία (es_an)"
           es_ar: "Ισπανία (es_ar)"
           es_ce: "Ισπανία (es_ce)"
@@ -162,59 +174,173 @@ el:
         month: "Μήνας"
         week: "Εβδομάδα"
         day: "Ημέρα"
+        year: "Χρόνος"
     group_timezones:
       search: "Αναζήτηση..."
     discourse_post_event:
       notifications:
+        before_event_reminder: "Μια εκδήλωση πρόκειται να ξεκινήσει"
+        after_event_reminder: "Μια εκδήλωση έχει λήξει"
+        ongoing_event_reminder: "Μια εκδήλωση βρίσκεται σε εξέλιξη"
         invite_user_notification: "%{username} %{description}"
+        an_event: "μια εκδήλωση"
+      edit_reason: "Η εκδήλωση ενημερώθηκε"
+      edit_reason_closed: "Η εκδήλωση έκλεισε"
+      edit_reason_opened: "Η εκδήλωση άνοιξε"
+      topic_title:
+        starts_at: "Η εκδήλωση θα ξεκινήσει: %{date}"
+        ended_at: "Η εκδήλωση τελείωσε: %{date}"
+        ends_in_duration: "Τελειώνει %{duration}"
       show_all: "Εμφάνιση όλων"
+      show_participants: "Εμφάνιση συμμετεχόντων"
+      participants:
+        one: "%{count} χρήστης συμμετείχε."
+        other: "%{count} χρήστες συμμετείχαν."
+      invite: "Ειδοποίηση χρήστη"
       add_to_calendar: "Προσθήκη στο ημερολόγιο"
+      send_pm_to_creator: "Αποστολή ΠΜ στον/στην %{username}"
+      leave: "Αποχώρηση από την εκδήλωση"
+      edit_event: "Επεξεργασία εκδήλωσης"
+      export_event: "Εξαγωγή εκδήλωσης"
       created_by: "Δημιουργήθηκε από"
       bulk_invite: "Μαζική πρόσκληση"
+      close_event: "Κλείσιμο εκδήλωσης"
+      open_event: "Άνοιγμα εκδήλωσης"
+      invitees_modal:
+        title_invited: "Συμμετοχή σε Εκδήλωση"
+        title_participated: "Λίστα χρηστών που συμμετείχαν"
+        filter_placeholder: "Φιλτράρισμα χρηστών"
+        remove_invitee: "Αφαίρεση προσκεκλημένου από τη λίστα"
+        add_invitee: "Προσθήκη προσκεκλημένου στη λίστα"
       bulk_invite_modal:
         confirm: "επιβεβαίωση"
+        text: "Ανέβασμα αρχείου CSV"
         title: "Μαζική πρόσκληση"
         success: "Το αρχείο ανέβηκε. Θα ενημερωθείς με ένα μήνυμα όταν ολοκληρωθεί η διαδικασία."
         error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
+        confirmation_message: "Πρόκειται να ειδοποιήσετε όλους όσους βρίσκονται στο αρχείο που έχετε ανεβάσει."
+        description_public: "Οι δημόσιες εκδηλώσεις δέχονται μόνο ονόματα χρηστών για μαζικές προσκλήσεις."
+        description_private: "Οι ιδιωτικές εκδηλώσεις δέχονται μόνο ονόματα ομάδων για μαζικές προσκλήσεις."
+        download_sample_csv: "Λήψη δείγματος αρχείου CSV"
+        send_bulk_invites: "Αποστολή προσκλήσεων"
+        group_selector_placeholder: "Επιλέξτε μια ομάδα..."
+        user_selector_placeholder: "Επιλέξτε χρήστη..."
+        csv_title: "Μαζική πρόσκληση CSV"
       upcoming_events:
+        title: "Προσεχείς εκδηλώσεις"
         creator: "Δημιουργός"
         status: "Κατάσταση"
+        starts_at: "Ξεκινά στις"
+        all_events: "Όλες οι εκδηλώσεις"
+        my_events: "Οι εκδηλώσεις μου"
+      upcoming_events_list:
+        title: "Προσεχείς εκδηλώσεις"
+        empty: "Δεν υπάρχουν προσεχείς εκδηλώσεις"
+        all_day: "Όλη μέρα"
+        error: "Αποτυχία ανάκτησης εκδηλώσεων"
+        try_again: "Δοκιμάστε ξανά"
+        view_all: "Προβολή όλων"
+      category:
+        sort_topics_by_event_start_date: "Ταξινόμηση θεμάτων κατά ημερομηνία έναρξης εκδήλωσης."
+        disable_topic_resorting: "Απενεργοποίηση αναταξινόμησης θεμάτων."
+        settings_sections:
+          event_sorting: "Ταξινόμηση Εκδηλώσεων"
+      preview:
+        more_than_one_event: "Δεν μπορείτε να έχετε περισσότερες από μία εκδηλώσεις."
       models:
+        invitee:
+          no_users: "Δεν βρέθηκαν χρήστες"
+          status:
+            unknown: "Δεν ενδιαφέρεται"
+            going: "Θα παραστεί"
+            not_going: "Δεν θα παραστεί"
+            interested: "Ενδιαφέρεται"
+            going_count:
+              one: "%{count} θα παραστεί"
+              other: "%{count} θα παραστούν"
+            not_going_count:
+              one: "%{count} δεν θα παραστεί"
+              other: "%{count} δεν θα παραστούν"
+            interested_count:
+              one: "%{count} ενδιαφέρεται"
+              other: "%{count} ενδιαφέρονται"
+            invited_count:
+              one: "%{count} χρήστης προσκλήθηκε"
+              other: "%{count} χρήστες προσκλήθηκαν"
         event:
           expired: "Έληξε"
           closed: "Κλειστή"
+          full: "Πλήρης"
           status:
+            standalone:
+              title: "Αυτόνομη"
             public:
               title: "Δημόσια"
             private:
               title: "Ιδιωτική"
       builder_modal:
         custom_fields:
+          label: "Προσαρμοσμένα πεδία"
           placeholder: "Προαιρετικό"
+          description: "Τα επιτρεπόμενα προσαρμοσμένα πεδία ορίζονται στις ρυθμίσεις του ιστότοπου. Τα προσαρμοσμένα πεδία χρησιμοποιούνται για τη μετάδοση δεδομένων σε άλλα πρόσθετα."
+        create_event_title: "Δημιουργία Εκδήλωσης"
+        update_event_title: "Επεξεργασία Εκδήλωσης"
+        confirm_delete: "Σίγουρα θέλετε να διαγράψετε αυτήν την εκδήλωση;"
+        confirm_close: "Σίγουρα θέλετε να κλείσετε αυτήν την εκδήλωση;"
+        confirm_open: "Σίγουρα θέλετε να ανοίξετε αυτήν την εκδήλωση;"
         create: "Δημιουργία"
         update: "Αποθήκευση"
+        attach: "Δημιουργία εκδήλωσης"
+        add_reminder: "Προσθήκη υπενθύμισης"
+        show_local_time:
+          label: "Εμφάνιση τοπικής ώρας"
+          description: "Οι ημερομηνίες και οι ώρες θα εμφανίζονται χρησιμοποιώντας: %{timezone}. Χρησιμοποιήστε αυτήν την επιλογή για εκδηλώσεις σε μια τοποθεσία, ώστε οι ώρες να αντικατοπτρίζουν τη ζώνη ώρας όπου λαμβάνει χώρα η εκδήλωση."
         timezone:
           label: Ζώνη ώρας
+          remove_timezone: Χωρίς ζώνη ώρας (UTC)
         reminders:
+          label: "Υπενθυμίσεις"
+          types:
+            bump_topic: "αυτόματο bump θέματος"
+            notification: "ειδοποίηση συμμετεχόντων"
           units:
             minutes: "λεπτά"
             hours: "ώρες"
             days: "ημέρες"
+            weeks: "εβδομάδες"
           periods:
             before: "πριν"
             after: "μετά"
+        recurrence_until:
+          label: "Μέχρι (συμπεριλαμβάνεται)"
         recurrence:
           label: "Επανάληψη"
           none: "Χωρίς επανάληψη"
           every_day: "Κάθε μέρα"
+          every_month: "Κάθε μήνα αυτήν την εργάσιμη ημέρα"
+          every_weekday: "Κάθε εργάσιμη ημέρα"
+          every_week: "Κάθε εβδομάδα αυτήν την εργάσιμη ημέρα"
+          every_two_weeks: "Κάθε δύο εβδομάδες αυτήν την εργάσιμη ημέρα"
+          every_four_weeks: "Κάθε τέσσερις εβδομάδες αυτήν την εργάσιμη ημέρα"
+        max_attendees:
+          label: "Μέγιστος αριθμός συμμετεχόντων"
+          placeholder: "Χωρίς όριο"
+        allow_chat:
+          label: "Ενσωμάτωση συνομιλίας"
         url:
           label: "URL"
           placeholder: "Προαιρετικό"
         location:
           label: "Τοποθεσία"
+          placeholder: "Προσθέστε μια τοποθεσία, έναν σύνδεσμο ή κάτι άλλο."
         description:
           label: "Περιγραφή"
+        name:
+          label: "Όνομα εκδήλωσης"
+        invitees:
+          label: "Προσκεκλημένες ομάδες"
         status:
           label: "Κατάσταση"
       invite_user_or_group:
+        title: "Ειδοποίηση χρήστη/ών ή ομάδας/ών"
         invite: "Αποστολή"

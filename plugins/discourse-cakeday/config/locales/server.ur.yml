@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  site_settings:
+    cakeday_enabled: "جس تاریخ کو صارف نے ڈسکورس میں شمولیت اختیار کی، اُس دن ان کے نام کے ساتھ کیک ڈے ایموجی[ز] دکھائیں۔"
+    cakeday_emoji: "ایموجی[ز] جو صارف نام کے ساتھ دکھائے جائیں گے جس تاریخ کو انہوں نے ڈسکورس میں شمولیت اختیار کی۔ ایک سے زیادہ ایموجی اِس طرح متعینہ کیے جا سکتے ہیں: smile|cake|smile"
+    cakeday_birthday_enabled: "صارف کے نام کے ساتھ اُن کی سالگرہ پر سالگرہ ایموجی[ز] دکھائیں۔"
+    cakeday_birthday_emoji: "ایموجی[ز] جو صارف نام کے ساتھ اُن کی سالگرہ پر دکھائے جائیں گے۔ ایک سے زیادہ ایموجی اِس طرح متعینہ کیے جا سکتے ہیں: smile|cake|smile"

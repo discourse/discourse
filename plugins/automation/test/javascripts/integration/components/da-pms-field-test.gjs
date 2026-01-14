@@ -13,8 +13,6 @@ module("Integration | Component | da-pms-field", function (hooks) {
   });
 
   test("set value", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "pms",
     });
@@ -22,8 +20,8 @@ module("Integration | Component | da-pms-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -33,12 +31,10 @@ module("Integration | Component | da-pms-field", function (hooks) {
     await fillIn(".pm-title", "title");
     await fillIn(".d-editor-input", "raw");
     await fillIn(".pm-delay", 6);
-    await click(".pm-prefers-encrypt", 6);
 
     assert.deepEqual(this.field.metadata.value, [
       {
         delay: "6",
-        prefers_encrypt: false,
         raw: "raw",
         title: "title",
       },

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe TopicView do
   fab!(:user)
   fab!(:admin)
@@ -181,7 +179,7 @@ describe TopicView do
         TopicView.new(
           topic.id,
           user,
-          post_number: topic.posts.where("deleted_at IS NOT NULL").pick(:post_number),
+          post_number: topic.posts.where.not(deleted_at: nil).pick(:post_number),
         )
 
       expect(near_view.desired_post.id).to eq(post.id)

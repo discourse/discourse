@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 nl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse-stijlgids"
   js:
     styleguide:
       title: "Stijlgids"
@@ -25,6 +30,8 @@ nl:
           title: "Datum-/tijdinvoer"
         menus:
           title: "Menu's"
+        multi_select:
+          title: "Meervoudige selectie"
         toasts:
           title: "Toasts"
         font_scale:
@@ -52,8 +59,6 @@ nl:
           title: "Navigatie gestapeld"
         categories_list:
           title: "Categorieënlijst"
-        topic_link:
-          title: "Topiclink"
         topic_list_item:
           title: "Topiclijstitem"
         topic_statuses:
@@ -62,8 +67,6 @@ nl:
           title: "Topiclijst"
         basic_topic_list:
           title: "Basistopicslijst"
-        footer_message:
-          title: "Voettekstbericht"
         signup_cta:
           title: "Registratie-CTA"
         topic_timer_info:
@@ -82,8 +85,8 @@ nl:
           title: "Topickaart"
         site_header:
           title: "Header van de site"
-        suggested_topics:
-          title: "Voorgestelde topics"
+        more_topics:
+          title: "Meer topics"
         post_menu:
           title: "Berichtmenu"
         modal:

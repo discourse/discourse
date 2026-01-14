@@ -14,7 +14,6 @@ ko:
     assign_self_regex: "자체 할당을 위해 통과해야하는 정규식. &#39;내 목록&#39;예"
     assign_other_regex: "언급을 통해 다른 사람에게 주제를 할당하기 위해 전달해야하는 정규식. 예를 들어 &#39;내 목록&#39;입니다."
     unassign_on_group_archive: "메시지가 그룹에 의해 보관 된 경우 메시지를 할당 해제합니다 (받은 편지함으로 다시 이동하면 재 할당)"
-    unassign_on_close: "주제를 닫을 때 주제를 할당 해제"
     assign_mailer: "과제를 위해 알림 이메일을 보내는시기"
     remind_assigns: "보류중인 할당에 대해 사용자에게 알립니다."
     remind_assigns_frequency: "할당 된 주제에 대해 사용자에게 알리는 빈도입니다."

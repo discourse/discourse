@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../spec_helper"
 
 RSpec.describe Jobs::PatreonUpdateTokens do

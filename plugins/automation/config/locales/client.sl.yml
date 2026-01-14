@@ -23,6 +23,12 @@ sl:
         text:
           label: Besedilo
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorije
+            tags:
+              label: Oznake
         user_badge_granted:
           fields:
             badge:
@@ -124,6 +130,8 @@ sl:
               label: ID teme
             user:
               label: Uporabnik
+        set_topic_timer:
+          title: Nastavi opomnik teme
       models:
         trigger:
           name:
@@ -137,7 +145,5 @@ sl:
             label: Verzija
           status:
             label: Stanje
-          enabled:
-            label: Vključeno
           disabled:
             label: Onemogočeno

@@ -70,11 +70,9 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with an image", async function (assert) {
-    const self = this;
-
     this.set("upload", IMAGE_FIXTURE);
 
-    await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+    await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
     assert.dom("img.chat-img-upload").exists("displays as an image");
     assert
@@ -99,11 +97,9 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
   });
 
   test("with a video", async function (assert) {
-    const self = this;
-
     this.set("upload", VIDEO_FIXTURE);
 
-    await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+    await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
     assert.dom("video.chat-video-upload").exists("displays as an video");
     assert.dom("video.chat-video-upload").hasAttribute("controls");
@@ -117,11 +113,9 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
   });
 
   test("with a audio", async function (assert) {
-    const self = this;
-
     this.set("upload", AUDIO_FIXTURE);
 
-    await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+    await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
     assert.dom("audio.chat-audio-upload").exists("displays as an audio");
     assert.dom("audio.chat-audio-upload").hasAttribute("controls");
@@ -135,11 +129,9 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
   });
 
   test("non image upload", async function (assert) {
-    const self = this;
-
     this.set("upload", TXT_FIXTURE);
 
-    await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+    await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
     assert.dom("a.chat-other-upload").exists("displays as a link");
     assert
@@ -161,14 +153,13 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
     });
 
     test("adds timestamp parameter for Safari", async function (assert) {
-      const self = this;
       this.set("upload", {
         ...VIDEO_FIXTURE,
         url: "https://example.com/video.mp4",
       });
       mockCapabilities.isSafari = true;
 
-      await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+      await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
       assert
         .dom("video.chat-video-upload source")
@@ -180,14 +171,13 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
     });
 
     test("does not add timestamp parameter for other browsers", async function (assert) {
-      const self = this;
       this.set("upload", {
         ...VIDEO_FIXTURE,
         url: "https://example.com/video.mp4",
       });
       mockCapabilities.isSafari = false;
 
-      await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+      await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
       assert
         .dom("video.chat-video-upload source")

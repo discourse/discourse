@@ -14,7 +14,7 @@ class DiscourseChatIntegration::Channel < DiscourseChatIntegration::PluginModel
   validate :provider_valid?, :data_valid?
 
   def self.key_prefix
-    "channel:".freeze
+    "channel:"
   end
 
   def rules
@@ -39,9 +39,9 @@ class DiscourseChatIntegration::Channel < DiscourseChatIntegration::PluginModel
 
   def data_valid?
     # If provider is invalid, don't try and check data
-    return if ::DiscourseChatIntegration::Provider.provider_names.exclude? provider
+    return if DiscourseChatIntegration::Provider.provider_names.exclude? provider
 
-    params = ::DiscourseChatIntegration::Provider.get_by_name(provider)::CHANNEL_PARAMETERS
+    params = DiscourseChatIntegration::Provider.get_by_name(provider)::CHANNEL_PARAMETERS
 
     unless params.map { |p| p[:key] }.sort == data.keys.sort
       errors.add(:data, "data does not match the required structure for provider #{provider}")

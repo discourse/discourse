@@ -26,11 +26,9 @@ module(
     });
 
     test("channel title", async function (assert) {
-      const self = this;
-
       await render(
         <template>
-          <ChatChannelPreviewCard @channel={{self.channel}} />
+          <ChatChannelPreviewCard @channel={{this.channel}} />
         </template>
       );
 
@@ -39,16 +37,14 @@ module(
         .hasText(this.channel.title, "shows the channel title");
 
       assert
-        .dom(".chat-channel-icon.--category-badge")
+        .dom(".chat-channel-icon.--icon")
         .exists("shows the category hashtag badge");
     });
 
     test("channel description", async function (assert) {
-      const self = this;
-
       await render(
         <template>
-          <ChatChannelPreviewCard @channel={{self.channel}} />
+          <ChatChannelPreviewCard @channel={{this.channel}} />
         </template>
       );
 
@@ -58,13 +54,11 @@ module(
     });
 
     test("no channel description", async function (assert) {
-      const self = this;
-
       this.channel.description = null;
 
       await render(
         <template>
-          <ChatChannelPreviewCard @channel={{self.channel}} />
+          <ChatChannelPreviewCard @channel={{this.channel}} />
         </template>
       );
 
@@ -80,11 +74,9 @@ module(
     });
 
     test("join", async function (assert) {
-      const self = this;
-
       await render(
         <template>
-          <ChatChannelPreviewCard @channel={{self.channel}} />
+          <ChatChannelPreviewCard @channel={{this.channel}} />
         </template>
       );
 
@@ -94,11 +86,9 @@ module(
     });
 
     test("browse all", async function (assert) {
-      const self = this;
-
       await render(
         <template>
-          <ChatChannelPreviewCard @channel={{self.channel}} />
+          <ChatChannelPreviewCard @channel={{this.channel}} />
         </template>
       );
 
@@ -108,12 +98,10 @@ module(
     });
 
     test("closed channel", async function (assert) {
-      const self = this;
-
       this.channel.status = "closed";
       await render(
         <template>
-          <ChatChannelPreviewCard @channel={{self.channel}} />
+          <ChatChannelPreviewCard @channel={{this.channel}} />
         </template>
       );
 

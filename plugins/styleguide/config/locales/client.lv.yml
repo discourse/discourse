@@ -43,8 +43,6 @@ lv:
           title: "Navigācija sakrauta"
         categories_list:
           title: "Sadaļu saraksts"
-        topic_link:
-          title: "Tēmas saite"
         topic_list_item:
           title: "Tēmu saraksta vienums"
         topic_statuses:
@@ -53,8 +51,6 @@ lv:
           title: "Tēmu saraksts"
         basic_topic_list:
           title: "Pamata tēmu saraksts"
-        footer_message:
-          title: "Kājenes ziņojums"
         signup_cta:
           title: "Uzaicinājums reģistrēties"
         topic_timer_info:
@@ -69,8 +65,8 @@ lv:
           title: "Tēmas karte"
         site_header:
           title: "Vietnes galvene"
-        suggested_topics:
-          title: "Ieteiktās tēmas"
+        more_topics:
+          title: "Vairāk tēmu"
         post_menu:
           title: "Ziņas izvēlne"
         modal:

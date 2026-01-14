@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module GoogleProvider
-      PROVIDER_NAME = "google".freeze
+      PROVIDER_NAME = "google"
       PROVIDER_ENABLED_SETTING = :chat_integration_google_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+$', unique: true },
         {
@@ -28,11 +28,11 @@ module DiscourseChatIntegration
         response = http.request(req)
 
         unless response.kind_of? Net::HTTPSuccess
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                request: req.body,
-                                                                response_code: response.code,
-                                                                response_body: response.body,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              request: req.body,
+                                                              response_code: response.code,
+                                                              response_body: response.body,
+                                                            }
         end
       end
 

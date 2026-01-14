@@ -22,6 +22,7 @@ sq:
         month: "Këtë muaj"
         week: "Këtë javë"
         day: "Day"
+        year: "Këtë vit"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

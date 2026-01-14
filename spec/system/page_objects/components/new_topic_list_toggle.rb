@@ -13,6 +13,10 @@ module PageObjects
         has_no_css?(COMMON_SELECTOR)
       end
 
+      def rendered?
+        has_css?(COMMON_SELECTOR)
+      end
+
       def all_tab
         @all_tab ||= PageObjects::Components::NewTopicListToggleTab.new("all", ALL_SELECTOR)
       end

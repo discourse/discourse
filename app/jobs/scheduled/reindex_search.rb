@@ -13,6 +13,7 @@ module Jobs
       rebuild_topics
       rebuild_posts
       rebuild_users
+      rebuild_registered_search_handlers
 
       clean_topics
       clean_posts
@@ -70,6 +71,28 @@ module Jobs
       user_ids.each do |id|
         user = User.find_by(id: id)
         indexer.index(user, force: true) if user
+      end
+    end
+
+    def rebuild_registered_search_handlers(limit: 10_000, indexer: SearchIndexer)
+      DiscoursePluginRegistry.search_handlers.each do |handler|
+        next unless handler[:enabled]&.call
+
+        unindexed_record_ids =
+          handler[:load_unindexed_record_ids].call(limit:, index_version: handler[:index_version])
+
+        if @verbose
+          puts "rebuilding #{unindexed_record_ids.size} records for #{handler[:table_name]}"
+        end
+
+        unindexed_record_ids.each do |id|
+          record = handler[:model_class].find_by(id: id)
+          if record
+            indexer.index(record, force: true)
+          else
+            puts "↪ record #{id} not found" if @verbose
+          end
+        end
       end
     end
 

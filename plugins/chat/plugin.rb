@@ -25,6 +25,9 @@ register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
 register_svg_icon "circle-stop"
+register_svg_icon "filter"
+register_svg_icon "filter-circle-xmark"
+register_svg_icon "sort"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat", use_new_show_route: true
@@ -48,6 +51,33 @@ after_initialize do
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
   register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
+
+  register_search_index(
+    enabled: -> { SiteSetting.chat_search_enabled },
+    model_class: Chat::Message,
+    search_data_class: Chat::MessageSearchData,
+    index_version: 1,
+    search_data:
+      proc do |message, indexer_helper|
+        {
+          a_weight: message.message,
+          d_weight: indexer_helper.scrub_html(message.cooked)[0..600_000],
+        }
+      end,
+    load_unindexed_record_ids:
+      proc do |limit:, index_version:|
+        Chat::Message
+          .joins("LEFT JOIN chat_message_search_data ON chat_message_id = chat_messages.id")
+          .where(
+            "chat_message_search_data.locale IS NULL OR chat_message_search_data.locale != ? OR chat_message_search_data.version != ?",
+            SiteSetting.default_locale,
+            index_version,
+          )
+          .order("chat_messages.id ASC")
+          .limit(limit)
+          .pluck(:id)
+      end,
+  )
 
   register_user_custom_field_type(Chat::LAST_CHAT_CHANNEL_ID, :integer)
   DiscoursePluginRegistry.serialized_current_user_fields << Chat::LAST_CHAT_CHANNEL_ID
@@ -84,31 +114,25 @@ after_initialize do
     WebHook.prepend Chat::OutgoingWebHookExtension
   end
 
-  if Oneboxer.respond_to?(:register_local_handler)
-    Oneboxer.register_local_handler("chat/chat") do |url, route|
-      Chat::OneboxHandler.handle(url, route)
-    end
+  Oneboxer.register_local_handler("chat/chat") do |url, route|
+    Chat::OneboxHandler.handle(url, route)
   end
 
-  if InlineOneboxer.respond_to?(:register_local_handler)
-    InlineOneboxer.register_local_handler("chat/chat") do |url, route|
-      Chat::InlineOneboxHandler.handle(url, route)
-    end
+  InlineOneboxer.register_local_handler("chat/chat") do |url, route|
+    Chat::InlineOneboxHandler.handle(url, route)
   end
 
-  if respond_to?(:register_upload_in_use)
-    register_upload_in_use do |upload|
-      Chat::Message.where(
-        "message LIKE ? OR message LIKE ?",
+  register_upload_in_use do |upload|
+    Chat::Message.where(
+      "message LIKE ? OR message LIKE ?",
+      "%#{upload.sha1}%",
+      "%#{upload.base62_sha1}%",
+    ).exists? ||
+      Chat::Draft.where(
+        "data LIKE ? OR data LIKE ?",
         "%#{upload.sha1}%",
         "%#{upload.base62_sha1}%",
-      ).exists? ||
-        Chat::Draft.where(
-          "data LIKE ? OR data LIKE ?",
-          "%#{upload.sha1}%",
-          "%#{upload.base62_sha1}%",
-        ).exists?
-    end
+      ).exists?
   end
 
   add_to_serializer(:user_card, :can_chat_user) do
@@ -216,7 +240,7 @@ after_initialize do
   add_to_serializer(
     :user_option,
     :chat_sound,
-    include_condition: -> { !object.chat_sound.blank? },
+    include_condition: -> { object.chat_sound.present? },
   ) { object.chat_sound }
 
   add_to_serializer(:user_option, :only_chat_push_notifications) do
@@ -339,8 +363,14 @@ after_initialize do
     Chat::AutoJoinChannels.call(params: { user_id: user.id }) if user.active?
   end
 
-  on(:user_added_to_group) do |user, _group|
-    Chat::AutoJoinChannels.call(params: { user_id: user.id })
+  on(:user_added_to_group) do |user, group|
+    Chat::AutoJoinChannels.call(params: { user_id: user.id }) do |result|
+      on_exceptions do |exception|
+        Rails.logger.warn(
+          "[chat] Error auto-joining user #{user.id} to channels after being added to group #{group.id}: #{exception.message}\n\n#{result.inspect_steps}",
+        )
+      end
+    end
   end
 
   on(:user_removed_from_group) do |user, _group|
@@ -510,6 +540,4 @@ after_initialize do
   end
 end
 
-if Rails.env == "test"
-  Dir[Rails.root.join("plugins/chat/spec/support/**/*.rb")].each { |f| require f }
-end
+Dir[Rails.root.join("plugins/chat/spec/support/**/*.rb")].each { |f| require f } if Rails.env.test?

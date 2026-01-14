@@ -3,10 +3,11 @@
 .d-header {
   box-shadow: none;
   background: var(--background-color);
+}
 
-  @include viewport.from(xl) {
-    padding-bottom: var(--main-grid-gap);
-  }
+.search-menu .search-input,
+.search-menu-container .search-input {
+  border-color: var(--header_primary-low-mid);
 }
 
 .user-menu .quick-access-panel,
@@ -24,10 +25,6 @@
       }
     }
   }
-}
-
-.user-menu.revamped .tabs-list .btn.active {
-  background: var(--d-hover);
 }
 
 .discourse-no-touch .d-header-icons .icon:hover,

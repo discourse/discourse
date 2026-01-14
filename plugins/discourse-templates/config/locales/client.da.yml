@@ -14,7 +14,6 @@ da:
         title: "Skabeloner (inden for et tekstområde)"
         insert_template: "%{shortcut} Indsæt skabelon"
     templates:
-      filter_hint: "Filtrer efter titel..."
       insert_template: "Indsæt skabelon"
       close_templates: "Luk skabelonvælgeren"
       source: "Kilde"

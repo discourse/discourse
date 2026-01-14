@@ -7,11 +7,6 @@ export default {
 
   initialize() {
     withPluginApi((api) => {
-      const siteSettings = api.container.lookup("service:site-settings");
-      if (!siteSettings.ai_bot_enable_dedicated_ux) {
-        return;
-      }
-
       const currentUser = api.container.lookup("service:current-user");
       if (!currentUser) {
         return;

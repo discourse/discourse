@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe PostSerializer do
   let(:user) { Fabricate(:user) }
   let(:category) { Fabricate(:category) }

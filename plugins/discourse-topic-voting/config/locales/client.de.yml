@@ -10,7 +10,6 @@ de:
       sort_options:
         votes: "Stimmen"
     topic_voting:
-      title: "Themenabstimmung"
       reached_limit: "Du hast keine Stimmen mehr. Entferne eine bestehende Stimme!"
       list_votes: "Deine Stimmen auflisten"
       votes_nav_help: "Themen mit den meisten Stimmen"
@@ -21,14 +20,11 @@ de:
       voted_title: "Abgestimmt"
       voting_closed_title: "Geschlossen"
       voting_limit: "Limit"
-      votes_left_button_title:
-        one: "Du hast noch %{count} Stimme übrig."
-        other: "Du hast noch %{count} Stimmen übrig."
       votes:
         one: "%{count} Stimme"
         other: "%{count} Stimmen"
       anonymous_button:
-        one: "Abstimmen"
+        one: "Stimme"
         other: "Stimmen"
       remove_vote: "Stimme entfernen"
       no_votes_title_self: "Du hast noch für kein Thema gestimmt"

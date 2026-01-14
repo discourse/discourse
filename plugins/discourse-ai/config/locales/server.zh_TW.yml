@@ -11,6 +11,10 @@ zh_TW:
     emotion_neutral:
       title: "\U0001F610 中性"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "客製"
     ai_bot:
       tool_summary:
         search: "搜尋"

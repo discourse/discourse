@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  js:
+    user:
+      date_of_birth:
+        user_title: "היום הוא יום הולדתך!"
+        title: "היום הוא יום ההולדת שלי!"
+        label: "תאריך יום הולדת"
+      anniversary:
+        user_title: "היום הוא יום השנה להצטרפותך לקהילה שלנו!"
+        title: "היום הוא יום השנה להצטרפותי להקהילה הזאת!"
+    cakeday:
+      title: יום עוגה
+      today: "היום"
+      tomorrow: "מחר"
+      upcoming: "בקרוב"
+      all: "הכול"
+    birthdays:
+      title: "ימי הולדת"
+      month:
+        title: "ימי הולדת בחודש מתוך"
+        empty: "אין משתמשים שחוגגים את יום ההולדת שלהם החודש."
+      upcoming:
+        title: "ימי הולדת בטווח %{start_date} - %{end_date}"
+        empty: "אין משתמשים שחוגגים יום הולדת ב־7 הימים הקרובים."
+      today:
+        title: "ימי הולדת לתאריך %{date}"
+        empty: "אין משתמשים שחוגגים את יום ההולדת שלהם היום."
+      tomorrow:
+        empty: "אין משתמשים שחוגגים את יום ההולדת שלהם מחר."
+    anniversaries:
+      title: "ימי שנה"
+      month:
+        title: "ימי שנה החודש"
+        empty: "אין משתמשים שחוגגים יום שנה למשהו החודש."
+      upcoming:
+        title: "ימי שנה לטווח %{start_date} - %{end_date}"
+        empty: "אין משתמשים שחוגגים ימי שנה ב־7 הימים הבאים."
+      today:
+        title: "ימי שנה עבור %{date}"
+        empty: "אין משתמשים שחוגגים ימי שנה היום."
+      tomorrow:
+        empty: "אין משתמשים שחוגגים ימי שנה מחר."

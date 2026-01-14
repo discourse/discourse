@@ -1,6 +1,47 @@
 # frozen_string_literal: true
 
 RSpec.describe ApplicationController do
+  fab!(:user)
+
+  context "for cache control headers" do
+    it "sets the `no-cache, no-store` cache control response header when no error is raised" do
+      get "/latest"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+
+    it "sets the `no-cache, no-store` cache control response header when ActionController::RoutingError is raised" do
+      get "/invalid-urlllllllllll"
+
+      expect(response.status).to eq(404)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+
+    it "sets the `no-cache, no-store` cache control response header when Discourse::InvalidAccess is raised" do
+      get "/latest.json", headers: { HTTP_API_KEY: "invalid-api-key" }
+
+      expect(response.status).to eq(403)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+  end
+
+  context "when visiting an invalid URL" do
+    it "displays the not found page with the user's active theme" do
+      theme = Fabricate(:theme, user_selectable: true)
+      Fabricate(:theme_field, theme:, name: "header", value: "<a>html</a>")
+      user.user_option.update!(theme_ids: [theme.id])
+
+      sign_in(user)
+
+      get "/invalid-url"
+
+      expect(response.status).to eq(404)
+      expect(response.body).to include("<a>html</a>")
+      expect(response.body).to include(I18n.t("page_not_found.title"))
+    end
+  end
+
   describe "#redirect_to_login_if_required" do
     let(:admin) { Fabricate(:admin) }
 
@@ -424,6 +465,31 @@ RSpec.describe ApplicationController do
         expect(response.body).to_not include("google.com/search")
       end
 
+      it "should allow anchor tags in title" do
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "page_not_found.title",
+          'Visit <a href="/search">search</a> page',
+        )
+
+        get "/t/nope-nope/99999999"
+        expect(response.status).to eq(404)
+        expect(response.body).to include('<a href="/search">search</a>')
+      end
+
+      it "should sanitize unsafe HTML in title" do
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "page_not_found.title",
+          'Page <script>alert("xss")</script> not found',
+        )
+
+        get "/t/nope-nope/99999999"
+        expect(response.status).to eq(404)
+        expect(response.body).to_not include("<script>")
+        expect(response.body).to include("Page")
+      end
+
       describe "no logspam" do
         let(:fake_logger) { FakeLogger.new }
 
@@ -454,6 +520,28 @@ RSpec.describe ApplicationController do
           expect(fake_logger.fatals.length).to eq(0)
           expect(fake_logger.errors.length).to eq(0)
           expect(fake_logger.warnings.length).to eq(0)
+        end
+
+        it "should render category badges with correct style classes on 404 page" do
+          Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+
+          square_cat = Fabricate(:category, style_type: :square)
+          icon_cat = Fabricate(:category, style_type: :icon, icon: "user")
+          emoji_cat = Fabricate(:category, style_type: :emoji, emoji: "smile")
+
+          Fabricate(:topic, title: "Square Category Topic", category: square_cat)
+          Fabricate(:topic, title: "Icon Category Topic", category: icon_cat)
+          Fabricate(:topic, title: "Emoji Category Topic", category: emoji_cat)
+
+          get "/t/nope-nope/99999999"
+          expect(response.status).to eq(404)
+
+          expect(response.body).to include("badge-category --style-square")
+          expect(response.body).to include("badge-category --style-icon")
+          expect(response.body).to include("badge-category --style-emoji")
+
+          expect(response.body).to include('<svg id="user"')
+          expect(response.body).to include('class="emoji"')
         end
       end
 
@@ -664,13 +752,19 @@ RSpec.describe ApplicationController do
     end
 
     context "with color schemes" do
-      let!(:light_scheme) { ColorScheme.find_by(base_scheme_id: "Solarized Light") }
-      let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+      let!(:light_scheme) do
+        ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+      end
+      let!(:dark_scheme) do
+        ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
 
       before do
-        SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
         SiteSetting.interface_color_selector = "sidebar_footer"
-        Theme.find_by(id: SiteSetting.default_theme_id).update!(color_scheme_id: light_scheme.id)
+        Theme.find_default.update!(
+          color_scheme_id: light_scheme.id,
+          dark_color_scheme_id: dark_scheme.id,
+        )
       end
 
       context "when light mode is forced" do
@@ -1153,8 +1247,14 @@ RSpec.describe ApplicationController do
           it "serves a 404 page in the preferred locale" do
             get "/missingroute", headers: headers("fr")
             expect(response.status).to eq(404)
-            expected_title = I18n.t("page_not_found.title", locale: :fr)
-            expect(response.body).to include(CGI.escapeHTML(expected_title))
+            expect(response.body).to include(
+              # converts non-breaking space to &nbsp;
+              ActionController::Base.helpers.sanitize(
+                I18n.t("page_not_found.title", locale: :fr),
+                tags: %w[a],
+                attributes: %w[href class target rel],
+              ),
+            )
           end
 
           it "serves a RenderEmpty page in the preferred locale" do
@@ -1227,26 +1327,85 @@ RSpec.describe ApplicationController do
       end
     end
 
-    context "with set_locale_from_param enabled" do
+    context "with set_locale_from_param" do
       context "when param locale differs from default locale" do
         before do
           SiteSetting.allow_user_locale = true
-          SiteSetting.set_locale_from_param = true
           SiteSetting.default_locale = "en"
         end
 
         context "with an anonymous user" do
           it "uses the locale from the param" do
-            get "/latest?lang=es"
+            SiteSetting.set_locale_from_param = true
+
+            get "/latest?tl=es"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
+          end
+
+          it "sets a cookie with the locale from the param for persistence" do
+            SiteSetting.set_locale_from_param = false
+            SiteSetting.set_locale_from_cookie = false
+            get "/latest?tl=ja"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to eq(nil)
+
+            SiteSetting.set_locale_from_param = true
+            SiteSetting.set_locale_from_cookie = false
+            get "/latest?tl=ja"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to eq(nil)
+
+            SiteSetting.set_locale_from_param = true
+            SiteSetting.set_locale_from_cookie = true
+            get "/latest?tl=ja"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to eq("ja")
+          end
+
+          it "does not set a cookie for invalid locales" do
+            SiteSetting.set_locale_from_param = true
+            SiteSetting.set_locale_from_cookie = true
+
+            get "/latest?tl=invalid_locale"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to be_nil
+          end
+
+          it "persists locale across requests via cookie" do
+            SiteSetting.set_locale_from_param = true
+            SiteSetting.set_locale_from_cookie = true
+
+            get "/latest?tl=ja"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to eq("ja")
+            expect(main_locale_scripts(response.body)).to contain_exactly("ja")
+
+            # next request without tl parameter should use the cookie
+            get "/latest", headers: { Cookie: "locale=ja" }
+            expect(response.status).to eq(200)
+            expect(main_locale_scripts(response.body)).to contain_exactly("ja")
+          end
+        end
+
+        context "with a logged-in user" do
+          fab!(:user) { Fabricate(:user, locale: "de") }
+
+          it "ignores the tl parameter and uses user's preference" do
+            sign_in(user)
+            get "/latest?tl=es"
+            expect(response.status).to eq(200)
+            expect(main_locale_scripts(response.body)).to contain_exactly("de")
+            expect(response.cookies["locale"]).to be_nil
           end
         end
 
         context "when the preferred locale includes a region" do
           it "returns the locale and region separated by an underscore" do
-            get "/latest?lang=zh-CN"
+            SiteSetting.set_locale_from_param = true
+
+            get "/latest?tl=zh-CN"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
           end
@@ -1505,6 +1664,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "themeSiteSettingOverrides",
+            "upcomingChanges",
           ],
         )
       end
@@ -1533,6 +1693,7 @@ RSpec.describe ApplicationController do
             "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
+            "upcomingChanges",
           ],
         )
       end
@@ -1563,6 +1724,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStateMeta",
             "fontMap",
             "visiblePlugins",
+            "upcomingChanges",
           ],
         )
       end
@@ -1622,10 +1784,10 @@ RSpec.describe ApplicationController do
   end
 
   describe "color definition stylesheets" do
-    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
 
     before do
-      SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+      Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
       SiteSetting.interface_color_selector = "sidebar_footer"
     end
 
@@ -1635,7 +1797,7 @@ RSpec.describe ApplicationController do
       it "includes stylesheet links in the header" do
         get "/"
 
-        expect(response.headers["Link"]).to include("color_definitions_base")
+        expect(response.headers["Link"]).to include("color_definitions_light-default")
         expect(response.headers["Link"]).to include("color_definitions_dark")
       end
     end
@@ -1806,6 +1968,110 @@ RSpec.describe ApplicationController do
 
           expect(light_stylesheet[:media]).to eq("all")
         end
+      end
+    end
+  end
+
+  describe "google site verification" do
+    it "is omitted by default" do
+      get "/"
+      expect(response.body).not_to include("google-site-verification")
+    end
+
+    it "is included when the site setting is set" do
+      SiteSetting.google_site_verification_token = "verification_token"
+      get "/"
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
+
+      SiteSetting.login_required = true
+      get "/"
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
+
+      get "/", headers: { "User-Agent" => "Googlebot" }
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
+    end
+  end
+
+  describe "when authorizing mini_profiler" do
+    mini_profiler_stub = Class.new { def self.authorize_request = nil }
+
+    around do |example|
+      stub_const(ApplicationController, :MINI_PROFILER_CLASS, mini_profiler_stub) { example.run }
+    end
+
+    fab!(:developer) { Fabricate(:admin).tap { |u| Developer.create!(user_id: u.id) } }
+    fab!(:user)
+    fab!(:admin)
+
+    before { allow(mini_profiler_stub).to receive(:authorize_request) }
+    after { Developer.rebuild_cache }
+
+    it "authorizes mini_profiler for developer user" do
+      sign_in(developer)
+
+      get "/latest"
+
+      expect(mini_profiler_stub).to have_received(:authorize_request)
+    end
+
+    it "does not authorize mini_profiler for non-developer user" do
+      sign_in(admin)
+
+      get "/latest"
+
+      expect(mini_profiler_stub).not_to have_received(:authorize_request)
+    end
+
+    describe "using the mini_profiler auth cookie" do
+      def set_mini_profiler_auth_cookie(user, issued_at: Time.now.to_i)
+        data = { user_id: user.id, issued_at: issued_at }
+        jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        jar.encrypted[:_mp_auth] = { value: data }
+        cookies[:_mp_auth] = jar[:_mp_auth]
+      end
+
+      it "authorizes mini_profiler for anon user with valid cookie" do
+        set_mini_profiler_auth_cookie(developer)
+
+        get "/latest"
+
+        expect(mini_profiler_stub).to have_received(:authorize_request)
+      end
+
+      it "does not authorize with expired cookie" do
+        set_mini_profiler_auth_cookie(
+          developer,
+          issued_at:
+            (ApplicationController::MINI_PROFILER_AUTH_COOKIE_EXPIRES_IN + 1.hour).ago.to_i,
+        )
+
+        get "/latest"
+
+        expect(mini_profiler_stub).not_to have_received(:authorize_request)
+      end
+
+      it "does not authorize if user no longer exists" do
+        set_mini_profiler_auth_cookie(developer)
+        developer.destroy!
+
+        get "/latest"
+
+        expect(mini_profiler_stub).not_to have_received(:authorize_request)
+      end
+
+      it "does not authorize if user is no longer a developer" do
+        set_mini_profiler_auth_cookie(developer)
+        Developer.find_by(user_id: developer.id).destroy!
+
+        get "/latest"
+
+        expect(mini_profiler_stub).not_to have_received(:authorize_request)
       end
     end
   end

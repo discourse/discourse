@@ -9,29 +9,25 @@ module Jobs
     def execute(args)
       return if !DiscourseAi::Translation.backfill_enabled?
 
+      llm_model = find_llm_model
+      return if llm_model.blank?
+
+      unless LlmCreditAllocation.credits_available?(llm_model)
+        Rails.logger.info(
+          "Topics locale detection backfill skipped: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       limit = SiteSetting.ai_translation_backfill_hourly_rate / (60 / 5) # this job runs in 5-minute intervals
 
       topics =
-        Topic
-          .where(locale: nil, deleted_at: nil)
-          .where("topics.user_id > 0")
-          .where("topics.created_at > ?", SiteSetting.ai_translation_backfill_max_age_days.days.ago)
+        DiscourseAi::Translation::TopicCandidates
+          .get()
+          .where(locale: nil)
+          .order(updated_at: :desc)
+          .limit(limit)
 
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
-        topics =
-          topics.where(category_id: Category.where(read_restricted: false).select(:id)).where(
-            "archetype != ?",
-            Archetype.private_message,
-          )
-      else
-        topics =
-          topics.where(
-            "archetype != ? OR EXISTS (SELECT 1 FROM topic_allowed_groups WHERE topic_id = topics.id)",
-            Archetype.private_message,
-          )
-      end
-
-      topics = topics.order(updated_at: :desc).limit(limit)
       return if topics.empty?
 
       topics.each do |topic|
@@ -47,6 +43,16 @@ module Jobs
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{topics.size} topic locales")
+    end
+
+    private
+
+    def find_llm_model
+      persona_klass =
+        AiPersona.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_persona)
+      return nil if persona_klass.blank?
+
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end
 end

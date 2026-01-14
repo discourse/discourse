@@ -9,7 +9,7 @@ fi:
     admin:
       site_settings:
         categories:
-          discourse_local_dates: "Discourse paikalliset päivämäärät"
+          discourse_local_dates: "Discoursen paikalliset päivämäärät"
   js:
     discourse_local_dates:
       relative_dates:

@@ -17,9 +17,8 @@ end
 def setup_message_bus_env(env)
   return if env["__mb"]
 
-  ::Middleware::RequestTracker.populate_request_queue_seconds!(env)
-
-  if queue_time = env["REQUEST_QUEUE_SECONDS"]
+  if (queue_time = env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]) &&
+       Discourse.redis.get("docker_manager:upgrade:server_restarting").blank?
     if queue_time > (GlobalSetting.reject_message_bus_queue_seconds).to_f
       raise RateLimiter::LimitExceeded, 30 + (rand * 120).to_i
     end
@@ -89,7 +88,12 @@ end
 
 MessageBus.extra_response_headers_lookup do |env|
   setup_message_bus_env(env)
-  env["__mb"][:extra_headers]
+  headers = env["__mb"][:extra_headers]
+  if view_tracking_data = env["discourse.view_tracking_data"]
+    headers["X-Discourse-TrackView"] = "1" if view_tracking_data[:track_view]
+    headers["X-Discourse-BrowserPageView"] = "1" if view_tracking_data[:browser_page_view]
+  end
+  headers
 end
 
 MessageBus.user_id_lookup do |env|
@@ -123,7 +127,7 @@ MessageBus.on_disconnect do |site_id|
   ActiveRecord::Base.connection_handler.clear_active_connections!
 end
 
-if Rails.env == "test"
+if Rails.env.test?
   MessageBus.configure(backend: :memory)
 else
   MessageBus.redis_config = GlobalSetting.message_bus_redis_config
@@ -135,7 +139,7 @@ MessageBus.long_polling_enabled =
   GlobalSetting.enable_long_polling.nil? ? true : GlobalSetting.enable_long_polling
 MessageBus.long_polling_interval = GlobalSetting.long_polling_interval || 25_000
 
-if Rails.env == "test" || $0 =~ /rake$/
+if Rails.env.test? || $0 =~ /rake$/
   # disable keepalive in testing
   MessageBus.keepalive_interval = -1
 end

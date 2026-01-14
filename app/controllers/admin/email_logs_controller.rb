@@ -96,7 +96,7 @@ class Admin::EmailLogsController < Admin::AdminController
       serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
       render_json_dump(serializer)
     rescue => e
-      render json: { errors: [e.message] }, status: 404
+      render json: { errors: [e.message] }, status: :not_found
     end
   end
 

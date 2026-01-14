@@ -8,7 +8,7 @@ module Migrations::Converters::Discourse
       @source_db.count <<~SQL
         SELECT COUNT(*)
         FROM user_emails
-        WHERE user_id >= 0
+        WHERE user_id > 0
       SQL
     end
 
@@ -16,7 +16,7 @@ module Migrations::Converters::Discourse
       @source_db.query <<~SQL
         SELECT user_id, email, "primary", created_at
         FROM user_emails
-        WHERE user_id >= 0
+        WHERE user_id > 0
         ORDER BY user_id, email
       SQL
     end

@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 lt:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Jokių veiksmų"
+        agree_and_silence:
+          description: "Sutikti su pranešimu ir nutildyti narį."
   post_action_types:
     vote:
       title: "Balsuoti"
@@ -17,8 +24,6 @@ lt:
           agree_and_silence:
             title: "Nutildyti narį"
             description: "Sutikti su pranešimu ir nutildyti narį."
-          disagree:
-            title: "Nesutinka"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

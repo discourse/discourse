@@ -5,10 +5,19 @@
 # https://translate.discourse.org/
 
 pt:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Id. do Modelo"
+        max_prompt_tokens: "Janela de contexto"
   reports:
     overall_sentiment:
       yaxis: "Data"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Personalizar"
     ai_bot:
       tool_summary:
         search: "Pesquisar"

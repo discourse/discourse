@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiLlmsController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def index
         llms = LlmModel.all.includes(:llm_quotas).order(:display_name)
@@ -80,8 +80,14 @@ module DiscourseAi
           end
         end
 
+        handle_credit_allocation_update(llm_model)
+        handle_feature_credit_costs_update(llm_model)
+
         if llm_model.seeded?
-          return render_json_error(I18n.t("discourse_ai.llm.cannot_edit_builtin"), status: 403)
+          # For seeded models, only allow quota/credit updates (already handled above)
+          # Return success with updated model, don't allow other param changes
+          log_llm_model_update(llm_model, initial_attributes, initial_quotas)
+          return render json: LlmModelSerializer.new(llm_model)
         end
 
         if llm_model.update(ai_llm_params(updating: llm_model))
@@ -100,7 +106,7 @@ module DiscourseAi
           return render_json_error(I18n.t("discourse_ai.llm.cannot_delete_builtin"), status: 403)
         end
 
-        in_use_by = DiscourseAi::Configuration::LlmValidator.new.modules_using(llm_model)
+        in_use_by = DiscourseAi::Configuration::LlmValidator.new.is_using(llm_model)
 
         if !in_use_by.empty?
           return(
@@ -124,8 +130,7 @@ module DiscourseAi
         }
 
         # Clean up companion users
-        llm_model.enabled_chat_bot = false
-        llm_model.toggle_companion_user
+        llm_model.cleanup_companion_user
 
         if llm_model.destroy
           log_llm_model_deletion(model_details)
@@ -138,11 +143,24 @@ module DiscourseAi
       def test
         RateLimiter.new(current_user, "llm_test_#{current_user.id}", 3, 1.minute).performed!
 
-        llm_model = LlmModel.new(ai_llm_params)
+        # For seeded models, test the existing model directly since provider/url/api_key are hidden
+        if params.dig(:ai_llm, :id).present?
+          existing_model = LlmModel.find_by(id: params[:ai_llm][:id])
+          if existing_model&.seeded?
+            DiscourseAi::Configuration::LlmValidator.new.run_test(existing_model)
+            return render json: { success: true }
+          end
+        end
 
-        DiscourseAi::Configuration::LlmValidator.new.run_test(llm_model)
+        # We don't care about the display_name attr for testing.
+        llm_model = LlmModel.new(ai_llm_params.merge(display_name: "LLM test"))
 
-        render json: { success: true }
+        if llm_model.valid?
+          DiscourseAi::Configuration::LlmValidator.new.run_test(llm_model)
+          render json: { success: true }
+        else
+          render json: { success: false, validation_errors: llm_model.errors.full_messages }
+        end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed => e
         render json: { success: false, error: e.message }
       end
@@ -162,6 +180,24 @@ module DiscourseAi
         end
       end
 
+      def credit_allocation_params
+        return nil if params[:ai_llm][:llm_credit_allocation].blank?
+
+        allocation = params[:ai_llm][:llm_credit_allocation]
+        {
+          daily_credits: allocation[:daily_credits].to_i,
+          soft_limit_percentage: allocation[:soft_limit_percentage].to_i,
+        }
+      end
+
+      def feature_credit_cost_params
+        return nil if params[:ai_llm][:llm_feature_credit_costs].blank?
+
+        params[:ai_llm][:llm_feature_credit_costs].map do |cost|
+          { feature_name: cost[:feature_name], credits_per_token: cost[:credits_per_token].to_f }
+        end
+      end
+
       def ai_llm_params(updating: nil)
         return {} if params[:ai_llm].blank?
 
@@ -174,11 +210,11 @@ module DiscourseAi
             :max_prompt_tokens,
             :max_output_tokens,
             :api_key,
-            :enabled_chat_bot,
             :vision_enabled,
             :input_cost,
             :cached_input_cost,
             :output_cost,
+            allowed_attachment_types: [],
           )
 
         provider = updating ? updating.provider : permitted[:provider]
@@ -221,8 +257,6 @@ module DiscourseAi
           max_prompt_tokens: {
           },
           max_output_tokens: {
-          },
-          enabled_chat_bot: {
           },
           vision_enabled: {
           },
@@ -287,6 +321,40 @@ module DiscourseAi
         logger = DiscourseAi::Utils::AiStaffActionLogger.new(current_user)
         model_details[:subject] = model_details[:display_name]
         logger.log_deletion("llm_model", model_details)
+      end
+
+      def handle_credit_allocation_update(llm_model)
+        return unless llm_model.seeded? && params[:ai_llm].key?(:llm_credit_allocation)
+
+        if credit_allocation_params
+          allocation = llm_model.llm_credit_allocation || llm_model.build_llm_credit_allocation
+          allocation.update!(credit_allocation_params)
+        elsif llm_model.llm_credit_allocation
+          llm_model.llm_credit_allocation.destroy
+        end
+      end
+
+      def handle_feature_credit_costs_update(llm_model)
+        return unless llm_model.seeded? && params[:ai_llm].key?(:llm_feature_credit_costs)
+
+        if feature_credit_cost_params
+          existing_costs = llm_model.llm_feature_credit_costs.index_by(&:feature_name)
+          new_features = feature_credit_cost_params.map { |c| c[:feature_name] }
+
+          llm_model
+            .llm_feature_credit_costs
+            .where(feature_name: existing_costs.keys - new_features)
+            .destroy_all
+
+          feature_credit_cost_params.each do |cost_param|
+            cost =
+              existing_costs[cost_param[:feature_name]] ||
+                llm_model.llm_feature_credit_costs.build(feature_name: cost_param[:feature_name])
+            cost.update!(cost_param)
+          end
+        else
+          llm_model.llm_feature_credit_costs.destroy_all
+        end
       end
     end
   end

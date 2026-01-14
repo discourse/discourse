@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Patreon
+module Patreon
   class Pledge
     def self.create!(pledge_data)
       save!([pledge_data], true)
@@ -39,7 +39,7 @@ module ::Patreon
       pledges_data = []
 
       uris.each do |uri|
-        pledge_data = ::Patreon::Api.get(uri)
+        pledge_data = Patreon::Api.get(uri)
 
         # get next page if necessary and add to the current loop
         if pledge_data["links"] && pledge_data["links"]["next"]
@@ -135,7 +135,7 @@ module ::Patreon
     end
 
     class Decline
-      KEY = "pledge-declines".freeze
+      KEY = "pledge-declines"
 
       def self.all
         Patreon.get(KEY) || {}

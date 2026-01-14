@@ -8,7 +8,7 @@ module DiscourseAi
         # This general limit is mainly a security feature to avoid tools
         # forcing infinite downloads or causing memory exhaustion.
         # The limit is somewhat arbitrary and can be increased in future if needed.
-        MAX_RESPONSE_BODY_LENGTH = 30.megabyte
+        MAX_RESPONSE_BODY_LENGTH = 30.megabytes
 
         class << self
           def signature
@@ -45,10 +45,17 @@ module DiscourseAi
 
           def inject_prompt(prompt:, context:, persona:)
           end
+
+          def available_custom_image_tools
+            image_tool_ids = AiTool.where(enabled: true, is_image_generation_tool: true).pluck(:id)
+            image_tool_ids.map do |tool_id|
+              DiscourseAi::Personas::Tools::Custom.class_instance(tool_id)
+            end
+          end
         end
 
         # llm being public makes it a bit easier to test
-        attr_accessor :custom_raw, :parameters, :llm
+        attr_accessor :custom_raw, :parameters, :llm, :provider_data
         attr_reader :tool_call_id, :persona_options, :bot_user, :context
 
         def initialize(
@@ -57,14 +64,17 @@ module DiscourseAi
           persona_options: {},
           bot_user:,
           llm:,
-          context: nil
+          context: nil,
+          provider_data: {}
         )
           @parameters = parameters
           @tool_call_id = tool_call_id
-          @persona_options = persona_options
+          @persona_options =
+            persona_options.is_a?(Hash) ? persona_options.with_indifferent_access : persona_options
           @bot_user = bot_user
           @llm = llm
           @context = context.nil? ? DiscourseAi::Personas::BotContext.new(messages: []) : context
+          @provider_data = provider_data.is_a?(Hash) ? provider_data.deep_symbolize_keys : {}
           if !@context.is_a?(DiscourseAi::Personas::BotContext)
             raise ArgumentError, "context must be a DiscourseAi::Personas::Context"
           end
@@ -87,7 +97,7 @@ module DiscourseAi
         end
 
         def options
-          result = HashWithIndifferentAccess.new
+          result = ActiveSupport::HashWithIndifferentAccess.new
           self.class.accepted_options.each do |option|
             val = @persona_options[option.name]
             if val
@@ -219,7 +229,7 @@ module DiscourseAi
           end
 
           FinalDestination::HTTP.start(uri.hostname, uri.port, use_ssl: uri.port != 80) do |http|
-            http.request(request) { |response| yield response }
+            http.request(request) { |response| yield response, uri }
           end
         end
 

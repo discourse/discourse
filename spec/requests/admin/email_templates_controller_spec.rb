@@ -56,6 +56,26 @@ RSpec.describe Admin::EmailTemplatesController do
         template = templates.find { |t| t["id"] == "user_notifications.admin_login" }
         expect(template["can_revert"]).to eq(false)
       end
+
+      it "includes custom email template keys added via modifier" do
+        custom_keys = %w[custom.email_template_one custom.email_template_two]
+
+        # Register a modifier to add custom email template keys
+        block = Proc.new { |keys| keys + custom_keys }
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:email_template_keys, &block)
+
+        # Get the modified email keys
+        modified_keys = Admin::EmailTemplatesController.email_keys
+
+        # Verify custom keys are included
+        expect(modified_keys).to include(*custom_keys)
+
+        # Verify original keys are still present
+        expect(modified_keys).to include("user_notifications.admin_login")
+
+        DiscoursePluginRegistry.unregister_modifier(plugin_instance, :email_template_keys, &block)
+      end
     end
 
     shared_examples "email templates inaccessible" do
@@ -455,10 +475,12 @@ RSpec.describe Admin::EmailTemplatesController do
   end
 
   describe ".email_keys" do
-    it "returns a list that contains all the email templates in the server.en.yml file" do
-      expect(Admin::EmailTemplatesController.email_keys).to contain_exactly(
-        *EmailTemplatesFinder.list,
-      )
+    it "returns all email templates except security-restricted ones" do
+      expected_keys =
+        EmailTemplatesFinder.list.reject do |key|
+          Admin::EmailTemplatesController.restricted_key?(key)
+        end
+      expect(Admin::EmailTemplatesController.email_keys).to contain_exactly(*expected_keys)
     end
   end
 end

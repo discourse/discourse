@@ -5,7 +5,7 @@
 require "csv"
 require "mysql2"
 
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::Sfn < ImportScripts::Base
   BATCH_SIZE = 100_000

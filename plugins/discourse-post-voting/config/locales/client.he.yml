@@ -30,10 +30,8 @@ he:
         label: "יצירת נושא שו\"ת"
       composer_actions:
         create_as_post_voting:
-          label: "החלפת מצב שו\"ת"
           desc: "הנושא ייווצר בתבנית שו\"ת"
         remove_as_post_voting:
-          label: "הסרת שו\"ת"
           desc: "הנושא ייווצר בתבנית הרגילה"
     vote:
       already_voted: "אפשר להצביע רק פעם אחת לכל שאלה."
@@ -125,6 +123,11 @@ he:
           two: "%{count} תשובות"
           many: "%{count} תשובות"
           other: "%{count} תשובות"
+        voters_count_diff:
+          one: "ועוד משתמש/ת…"
+          two: "ועוד שני/שתי משתמשים/ות…"
+          many: "ועוד %{count} משתמשים/ות…"
+          other: "ועוד %{count} משתמשים/ות…"
     review:
       transcript:
         view: "הצגת תמליל ההודעות הקודמות"

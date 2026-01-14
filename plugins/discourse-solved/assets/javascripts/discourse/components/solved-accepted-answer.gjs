@@ -1,15 +1,21 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import PostQuotedContent from "discourse/components/post/quoted-content";
+import DButton from "discourse/components/d-button";
+import InterpolatedTranslation from "discourse/components/interpolated-translation";
+import PostCookedHtml from "discourse/components/post/cooked-html";
+import UserLink from "discourse/components/user-link";
 import concatClass from "discourse/helpers/concat-class";
-import { iconHTML } from "discourse/lib/icon-library";
-import { formatUsername } from "discourse/lib/utilities";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SolvedAcceptedAnswer extends Component {
   @service siteSettings;
-  @service store;
+
+  @tracked expanded = false;
 
   get topic() {
     return this.args.post.topic;
@@ -27,7 +33,7 @@ export default class SolvedAcceptedAnswer extends Component {
     return !!this.acceptedAnswer.excerpt;
   }
 
-  get collapsedContent() {
+  get content() {
     if (!this.hasExcerpt) {
       return "";
     }
@@ -35,82 +41,144 @@ export default class SolvedAcceptedAnswer extends Component {
     return htmlSafe(this.acceptedAnswer.excerpt);
   }
 
-  get htmlAccepter() {
-    if (!this.siteSettings.show_who_marked_solved) {
-      return;
-    }
-
-    const { accepter_username, accepter_name } = this.acceptedAnswer;
-    const displayName = this.#getDisplayName(accepter_username, accepter_name);
-
-    if (!displayName) {
-      return;
-    }
-
-    return htmlSafe(
-      i18n("solved.marked_solved_by", {
-        username: displayName,
-        username_lower: accepter_username.toLowerCase(),
-      })
-    );
+  get showMarkedBy() {
+    return this.siteSettings.show_who_marked_solved;
   }
 
-  get htmlSolvedBy() {
-    const { username, name, post_number: postNumber } = this.acceptedAnswer;
-    if (!username || !postNumber) {
-      return;
-    }
-
-    const displayedUser = this.#getDisplayName(username, name);
-    const data = {
-      icon: iconHTML("square-check", { class: "accepted" }),
-      username_lower: username.toLowerCase(),
-      username: displayedUser,
-      post_path: `${this.topic.url}/${postNumber}`,
-      post_number: postNumber,
-      user_path: this.store.createRecord("user", { username }).path,
-    };
-
-    return htmlSafe(i18n("solved.accepted_html", data));
+  get showSolvedBy() {
+    return !(!this.acceptedAnswer.username || !this.acceptedAnswer.post_number);
   }
 
-  #getDisplayName(username, name) {
-    if (!username) {
-      return null;
-    }
+  get postNumber() {
+    return i18n("solved.accepted_answer_post_number", {
+      post_number: this.acceptedAnswer.post_number,
+    });
+  }
 
-    return this.siteSettings.display_name_on_posts && name
-      ? name
-      : formatUsername(username);
+  get solverUsername() {
+    return this.acceptedAnswer.username;
+  }
+
+  get accepterUsername() {
+    return this.acceptedAnswer.accepter_username;
+  }
+
+  get solverDisplayName() {
+    const username = this.acceptedAnswer.username;
+    const name = this.acceptedAnswer.name;
+
+    return this.siteSettings.display_name_on_posts && name ? name : username;
+  }
+
+  get accepterDisplayName() {
+    const username = this.acceptedAnswer.accepter_username;
+    const name = this.acceptedAnswer.accepter_name;
+
+    return this.siteSettings.display_name_on_posts && name ? name : username;
+  }
+
+  get postPath() {
+    const postNumber = this.acceptedAnswer.post_number;
+    return `${this.topic.url}/${postNumber}`;
+  }
+
+  @action
+  toggleExpanded() {
+    this.expanded = !this.expanded;
+  }
+
+  @action
+  onClickTitle(event) {
+    if (event.target.closest("a") || event.target.closest(".quote-controls")) {
+      return;
+    }
+    this.toggleExpanded();
   }
 
   <template>
+    {{! template-lint-disable no-unnecessary-concat }}
     {{#if this.acceptedAnswer}}
-      <PostQuotedContent
+      <aside
         class={{concatClass
-          "accepted-answer"
+          "quote accepted-answer"
           (if this.hasExcerpt "accepted-answer--has-excerpt")
-          (unless this.collapsedContent "title-only")
+          (unless this.content "title-only")
         }}
-        @collapsedContent={{this.collapsedContent}}
-        @decoratorState={{@decoratorState}}
-        @id={{this.quoteId}}
-        @post={{@post}}
-        @quotedPostNumber={{this.acceptedAnswer.post_number}}
-        @quotedTopicId={{this.topic.id}}
-        @quotedUsername={{this.acceptedAnswer.username}}
+        data-expanded="{{this.expanded}}"
+        data-username={{this.acceptedAnswer.username}}
+        data-post={{this.acceptedAnswer.post_number}}
+        data-topic={{this.topic.id}}
       >
-        <:title>
+        <div
+          class="title"
+          data-has-quote-controls="true"
+          {{(if this.content (modifier on "click" this.onClickTitle))}}
+        >
           <div class="accepted-answer--solver-accepter">
             <div class="accepted-answer--solver">
-              {{this.htmlSolvedBy}}
+              {{#if this.showSolvedBy}}
+                {{icon "square-check" class="accepted"}}
+                <InterpolatedTranslation
+                  @key="solved.accepted_answer_solver_info"
+                  as |Placeholder|
+                >
+                  <Placeholder @name="user">
+                    <UserLink
+                      @username={{this.solverUsername}}
+                    >{{this.solverDisplayName}}</UserLink>
+                  </Placeholder>
+                  <Placeholder @name="post">
+                    <a href={{this.postPath}}>{{this.postNumber}}</a>
+                  </Placeholder>
+                </InterpolatedTranslation>
+              {{/if}}
             </div>
             <div class="accepted-answer--accepter">
-              {{this.htmlAccepter}}
+              {{#if this.showMarkedBy}}
+                <InterpolatedTranslation
+                  @key="solved.marked_solved_by"
+                  as |Placeholder|
+                >
+                  <Placeholder @name="user">
+                    <UserLink
+                      @username={{this.accepterUsername}}
+                    >{{this.accepterDisplayName}}</UserLink>
+                  </Placeholder>
+                </InterpolatedTranslation>
+              {{/if}}
             </div>
           </div>
-        </:title>
-      </PostQuotedContent>
+          <div class="quote-controls">
+            {{#if this.content}}
+              <DButton
+                class="btn-flat quote-toggle"
+                @action={{this.toggleExpanded}}
+                @ariaControls={{this.quoteId}}
+                @ariaExpanded={{this.expanded}}
+                @ariaLabel={{if this.expanded "post.collapse" "expand"}}
+                @title={{if this.expanded "post.collapse" "expand"}}
+                @icon={{if this.expanded "chevron-up" "chevron-down"}}
+              />
+            {{/if}}
+            <DButton
+              class="btn-flat back"
+              @href={{this.postPath}}
+              @title="post.follow_quote"
+              @ariaLabel="post.follow_quote"
+              @icon="arrow-down"
+            />
+          </div>
+        </div>
+        {{#if this.content}}
+          <blockquote id={{this.quoteId}}>
+            <PostCookedHtml
+              @post={{@post}}
+              @cooked={{this.content}}
+              @decoratorState={{@decoratorState}}
+            />
+          </blockquote>
+        {{/if}}
+      </aside>
     {{/if}}
   </template>
 }

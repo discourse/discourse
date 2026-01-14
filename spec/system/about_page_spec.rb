@@ -35,7 +35,7 @@ describe "About page", type: :system do
   end
 
   it "doesn't render banner image when it's not set" do
-    SiteSetting.about_banner_image = nil
+    SiteSetting.about_banner_image = ""
 
     about_page.visit
     expect(about_page).to have_no_banner_image
@@ -199,7 +199,7 @@ describe "About page", type: :system do
 
     it "displays only the 6 most recently seen admins when there are more than 6 admins" do
       admins[0].update!(last_seen_at: 4.minutes.ago)
-      admins[1].update!(last_seen_at: 1.minutes.ago)
+      admins[1].update!(last_seen_at: 1.minute.ago)
       admins[2].update!(last_seen_at: 10.minutes.ago)
 
       about_page.visit
@@ -385,7 +385,7 @@ describe "About page", type: :system do
     let(:order) { "alphabetically" }
 
     before do
-      SiteSetting.about_banner_image = nil
+      SiteSetting.about_banner_image = ""
       SiteSetting.about_page_extra_groups = extra_groups_setting
       SiteSetting.about_page_extra_groups_order = order
 
@@ -450,11 +450,12 @@ describe "About page", type: :system do
       sign_in(admin)
 
       about_page.visit
+
       expect(about_page).to have_edit_link
 
       about_page.edit_link.click
 
-      try_until_success { expect(current_url).to end_with("/admin/config/about") }
+      expect(current_url).to end_with("/admin/config/about")
     end
 
     it "doesn't appear for moderators" do

@@ -5,7 +5,7 @@ module DiscourseAi
     class Feature
       class << self
         def feature_cache
-          @feature_cache ||= ::DiscourseAi::MultisiteHash.new("feature_cache")
+          @feature_cache ||= DiscourseAi::MultisiteHash.new("feature_cache")
         end
 
         def summarization_features
@@ -30,7 +30,7 @@ module DiscourseAi
           feature_cache[:search] ||= [
             new(
               "discoveries",
-              "ai_bot_discover_persona",
+              "ai_discover_persona",
               DiscourseAi::Configuration::Module::SEARCH_ID,
               DiscourseAi::Configuration::Module::SEARCH,
             ),
@@ -121,6 +121,12 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
+            new(
+              "post_illustrator",
+              "ai_helper_post_illustrator_persona",
+              DiscourseAi::Configuration::Module::AI_HELPER_ID,
+              DiscourseAi::Configuration::Module::AI_HELPER,
+            ),
           ]
         end
 
@@ -171,7 +177,10 @@ module DiscourseAi
         end
 
         def lookup_bot_llms
-          LlmModel.where(enabled_chat_bot: true).to_a
+          persona_llms = AiPersona.where(id: lookup_bot_persona_ids).pluck(:default_llm_id)
+          enabled_chat_bot_llm_ids = LlmModel.enabled_chat_bot_ids
+
+          LlmModel.where(id: (persona_llms + enabled_chat_bot_llm_ids).uniq).to_a
         end
 
         def translation_features
@@ -203,6 +212,93 @@ module DiscourseAi
           ]
         end
 
+        def ai_automation_report_scripts
+          return [] if !SiteSetting.discourse_automation_enabled
+
+          feature_cache[:automation_reports] ||= begin
+            all_script_fields = DB.query(<<~SQL)
+              SELECT (fields.metadata->>'value') AS value, automations.name AS automation_name, fields.name AS name
+              FROM discourse_automation_fields fields
+              INNER JOIN discourse_automation_automations automations ON automations.id = fields.automation_id
+              WHERE fields.name IN ('model', 'persona_id')
+              AND automations.script = 'llm_report'
+              AND automations.enabled
+              LIMIT 20
+            SQL
+
+            all_script_fields =
+              all_script_fields
+                .take(10)
+                .reduce({}) do |memo, field|
+                  memo[field.automation_name] = {} if memo[field.automation_name].nil?
+
+                  memo[field.automation_name][field.name] = field.value
+
+                  memo
+                end
+
+            all_script_fields.map do |automation_name, fields|
+              new(
+                automation_name,
+                nil,
+                DiscourseAi::Configuration::Module::AUTOMATION_REPORTS_ID,
+                DiscourseAi::Configuration::Module::AUTOMATION_REPORTS,
+                persona_ids_lookup: -> { [fields.dig("persona_id")].compact.map(&:to_i) },
+                llm_models_lookup: -> { [LlmModel.find_by(id: fields["model"])].compact },
+              )
+            end
+          end
+        end
+
+        def ai_automation_triage_scripts
+          return [] if !SiteSetting.discourse_automation_enabled
+
+          feature_cache[:automation_triage] ||= begin
+            all_script_fields = DB.query(<<~SQL)
+            SELECT (fields.metadata->>'value') AS value, automations.name AS automation_name, fields.name AS name
+            FROM discourse_automation_fields fields
+            INNER JOIN discourse_automation_automations automations ON automations.id = fields.automation_id
+            WHERE fields.name IN ('model', 'triage_persona', 'persona')
+            AND automations.script IN ('llm_triage', 'llm_persona_triage')
+            AND automations.enabled
+            LIMIT 20
+          SQL
+
+            all_script_fields =
+              all_script_fields.reduce({}) do |memo, field|
+                memo[field.automation_name] = {} if memo[field.automation_name].nil?
+
+                if field.name == "model"
+                  memo[field.automation_name][field.name] = field.value
+                else
+                  memo[field.automation_name]["persona_id"] = field.value
+                end
+
+                memo
+              end
+
+            all_script_fields
+              .take(10)
+              .map do |automation_name, field|
+                llm_models_lookup =
+                  if field["model"].present?
+                    -> { [LlmModel.find_by(id: field["model"])].compact }
+                  else
+                    nil # llm_persona_triage uses the persona default_llm_id.
+                  end
+
+                new(
+                  automation_name,
+                  nil,
+                  DiscourseAi::Configuration::Module::AUTOMATION_TRIAGE_ID,
+                  DiscourseAi::Configuration::Module::AUTOMATION_TRIAGE,
+                  persona_ids_lookup: -> { [field.dig("persona_id")].compact.map(&:to_i) },
+                  llm_models_lookup: llm_models_lookup,
+                )
+              end
+          end
+        end
+
         def all
           [
             summarization_features,
@@ -214,6 +310,8 @@ module DiscourseAi
             bot_features,
             spam_features,
             embeddings_features,
+            ai_automation_report_scripts,
+            ai_automation_triage_scripts,
           ].flatten
         end
 
@@ -263,8 +361,9 @@ module DiscourseAi
               DiscourseAi::Embeddings::SemanticSearch.new(nil).find_ai_hyde_model(persona_klass)
             end
 
-          if llm_model.blank? && persona.default_llm_id
-            llm_model = LlmModel.find_by(id: persona.default_llm_id)
+          if llm_model.blank?
+            llm_model_id = persona.default_llm_id || SiteSetting.ai_default_llm_model
+            llm_model = LlmModel.find_by(id: llm_model_id)
           end
 
           llm_models << llm_model if llm_model

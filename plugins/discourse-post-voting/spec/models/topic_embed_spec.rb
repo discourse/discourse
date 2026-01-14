@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe TopicEmbed do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:title) { "How to turn a fish from good to evil in 30 seconds" }

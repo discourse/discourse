@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
@@ -5,13 +6,13 @@ import { equal } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
@@ -94,7 +95,7 @@ export default class CampaignBanner extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-    if (this.isSidebar && this.shouldShow && !this.site.mobileView) {
+    if (this.isSidebar && this.shouldShow && this.site.desktopView) {
       document.body.classList.add(SIDEBAR_BODY_CLASS);
     } else {
       document.body.classList.remove(SIDEBAR_BODY_CLASS);

@@ -6,7 +6,7 @@ en:
           spoiler_alert: "Discourse Spoiler Alert"
   js:
     spoiler:
-      title: Blur Spoiler
+      title: Blur spoiler
       label:
         show: "Show hidden content"
     composer:

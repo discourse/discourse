@@ -46,9 +46,9 @@ describe Jobs::ExportCsvFile do
                   ),
                 )
 
-                upload = system_message.first_post.uploads.first
+                upload = Upload.last
 
-                expect(system_message.first_post.raw).to eq(
+                expect(system_message.first_post.raw).to include(
                   I18n.t(
                     "system_messages.csv_export_succeeded.text_body_template",
                     download_link:

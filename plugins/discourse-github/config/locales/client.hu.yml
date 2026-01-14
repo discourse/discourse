@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 hu:
+  js:
+    github:
+      pr_status:
+        draft: "Vázlat"
+        open: "Nyitott"
+        approved: "Jóváhagyott"
+        closed: "Lezárva"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Discourse GitHub"
+  replace_github_link:
+    edit_reason: "A Github linket egy állandó linkre cserélték"

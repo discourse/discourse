@@ -15,11 +15,11 @@ module DiscourseAi
 
           Format your response as a JSON object with a single key named "output", which has the proofreaded version as the value.
           Your output should be in the following format:
-            <output>
-              {"output": "xx"}
-            </output>
+
+          {"output": "xx"}
 
           Where "xx" is replaced by the proofreaded version.
+          reply with valid JSON only
         PROMPT
       end
 

@@ -41,7 +41,6 @@ tr_TR:
       assigned_topic_to: "Konu <a href='%{path}'>%{username}</a> adlı kullanıcıya atandı"
       assign_post_to: "#%{post_number}, %{username} adlı kullanıcıya atandı"
       assign_post_to_multiple: "%{username} adlı kullanıcıya #%{post_number}"
-      assigned_to_w_ellipsis: "Şuraya atandı..."
       unassign:
         title: "Atamayı kaldır"
         title_w_ellipsis: "Atamayı kaldır..."
@@ -115,7 +114,7 @@ tr_TR:
         assigned: "Atandı"
       no_assignments_title: "Henüz atamanız yok"
       no_assignments_body: >
-        Atanan konularınız ve mesajlarınız burada listelenir. Ayrıca, atamalarınızla ilgili periyodik bir anımsatma bildirimi alırsınız; bunu <a href='%{preferencesUrl}'>kullanıcı tercihlerinizden</a> ayarlayabilirsiniz. <br><br>Kendinize veya bir başkasına bir konu veya mesaj atamak için alttaki %{icon} ata düğmesini kullanın.
+        Atanan konularınız ve mesajlarınız burada listelenir. Ayrıca atamalarınızla ilgili periyodik bir anımsatıcı bildirimi alırsınız ve bunu <a href='%{preferencesUrl}'>kullanıcı tercihlerinizden</a> ayarlayabilirsiniz. <br><br>Kendinize veya bir başkasına bir konu veya mesaj atamak için alttaki %{icon} ata düğmesini kullanın.
       dismiss_assigned_tooltip: "Okunmamış tüm atama bildirimlerini okundu olarak işaretle"
       assigned_to_group:
         post: "gönderi %{group_name} adlı gruba atandı"

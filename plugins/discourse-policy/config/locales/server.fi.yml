@@ -15,6 +15,8 @@ fi:
       group_not_found: "Ryhmää ei löydy käytännölle"
       no_policy: "Viestille ei ole käytäntöä"
       staff_only: "Käytännöt voivat koskea vain henkilökunnan viestejä"
+    error:
+      no_permission: "Ei valtuutta"
   reports:
     unaccepted-policies:
       title: Hyväksymättömät käytännöt

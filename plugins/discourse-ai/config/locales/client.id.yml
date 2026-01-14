@@ -77,9 +77,6 @@ id:
               label: "Model"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Perintah Sistem"
-              description: "Perintah yang akan digunakan untuk melakukan triase, pastikan untuk membalas dengan satu kata yang dapat Anda gunakan untuk memicu tindakan"
             search_for_text:
               label: "Cari teks"
             category:
@@ -89,10 +86,6 @@ id:
               label: "Label"
             canned_reply:
               label: "Balas"
-            model:
-              label: "Model"
-            temperature:
-              label: "Temperatur"
     discourse_ai:
       title: "AI"
       features:
@@ -100,7 +93,7 @@ id:
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
-        edit: "Ubah"
+        edit: "Pengaturan"
         expand_list:
           other: "(%{count} lainnya)"
         collapse_list: "(tampilkan lebih sedikit)"
@@ -113,16 +106,29 @@ id:
           name: "Spam"
       modals:
         select_option: "Memilih sebuah pilihan..."
+      translations:
+        stats:
+          eta_minutes:
+            other: "%{count} menit"
+          eta_hours:
+            other: "%{count} jam"
+          eta_days:
+            other: "%{count} hari"
+        progress_chart:
+          bar_done:
+            other: "%{count} post"
       spam:
         short_title: "Spam"
         last_seven_days: "7 hari terakhir"
         enable: "Aktifkan"
         test_modal:
+          system_prompt: "Perintah Sistem"
           spam: "Spam"
       usage:
         summary: "Ringkasan"
         model: "Model"
         username: "Nama Pengguna"
+        total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
       ai_persona:
@@ -203,13 +209,12 @@ id:
         thumbnail_suggestions:
           select: "Pilih"
           selected: "Dipilih"
+          try_again: "Coba Lagi"
         image_caption:
           button_label: "Keterangan dengan AI"
           generating: "Menghasilkan keterangan..."
           credits: "Keterangan oleh AI"
           save_caption: "Simpan"
-          automatic_caption_dialog:
-            confirm: "Aktifkan"
       reviewables:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"

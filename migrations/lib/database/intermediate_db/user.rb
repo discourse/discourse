@@ -41,7 +41,40 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
+    # Creates a new `users` record in the IntermediateDB.
+    #
+    # @param original_id                 [Integer, String]
+    # @param active                      [Boolean, nil]
+    # @param admin                       [Boolean, nil]
+    # @param approved                    [Boolean, nil]
+    # @param approved_at                 [Time, nil]
+    # @param approved_by_id              [Integer, String, nil]
+    # @param avatar_type                 [Integer, nil]
+    # @param created_at                  [Time]
+    # @param date_of_birth               [Time, nil]
+    # @param first_seen_at               [Time, nil]
+    # @param flair_group_id              [Integer, String, nil]
+    # @param group_locked_trust_level    [Integer, nil]
+    # @param ip_address                  [IPAddr, nil]
+    # @param last_seen_at                [Time, nil]
+    # @param locale                      [String, nil]
+    # @param manual_locked_trust_level   [Integer, nil]
+    # @param moderator                   [Boolean, nil]
+    # @param name                        [String, nil]
+    # @param original_username           [String, nil]
+    # @param primary_group_id            [Integer, String, nil]
+    # @param registration_ip_address     [IPAddr, nil]
+    # @param silenced_till               [Time, nil]
+    # @param staged                      [Boolean, nil]
+    # @param title                       [String, nil]
+    # @param trust_level                 [Integer]
+    # @param uploaded_avatar_id          [String, nil]
+    # @param username                    [String]
+    # @param views                       [Integer, nil]
+    #
+    # @return [void]
     def self.create(
       original_id:,
       active: nil,

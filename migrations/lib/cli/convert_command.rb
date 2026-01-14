@@ -14,7 +14,7 @@ module Migrations::CLI
       ::Migrations::Database.reset!(settings[:intermediate_db][:path]) if @options[:reset]
 
       converter = "migrations/converters/#{@converter_type}/converter".camelize.constantize
-      converter.new(settings).run
+      converter.new(settings).run(only_steps: @options[:only], skip_steps: @options[:skip])
     end
 
     private

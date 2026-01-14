@@ -22,9 +22,9 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_model_not_found(:threads) { render json: success_json.merge(threads: []) }
-      on_failure { render(json: failed_json, status: 422) }
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_failed_contract do |contract|
-        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
     end
   end
@@ -45,9 +45,9 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_model_not_found(:thread) { raise Discourse::NotFound }
-      on_failure { render(json: failed_json, status: 422) }
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_failed_contract do |contract|
-        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
     end
   end
@@ -59,12 +59,12 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       on_failed_policy(:can_edit_thread) { raise Discourse::InvalidAccess }
       on_model_not_found(:thread) { raise Discourse::NotFound }
       on_failed_step(:update) do |step|
-        render json: failed_json.merge(errors: [step.error]), status: 422
+        render json: failed_json.merge(errors: [step.error]), status: :unprocessable_entity
       end
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: 422) }
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_failed_contract do |contract|
-        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
     end
   end
@@ -80,15 +80,16 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
         )
       end
       on_failed_contract do |contract|
-        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_model_errors(:thread) do |model|
-        render json: failed_json.merge(errors: [model.errors.full_messages.join(", ")]), status: 422
+        render json: failed_json.merge(errors: [model.errors.full_messages.join(", ")]),
+               status: :unprocessable_entity
       end
-      on_failure { render(json: failed_json, status: 422) }
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
     end
   end
 end

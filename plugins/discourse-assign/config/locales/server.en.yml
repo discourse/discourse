@@ -8,7 +8,7 @@ en:
     assign_self_regex: "Regex that needs to pass for self assign. Example 'my list'"
     assign_other_regex: "Regex that needs to pass for assigning topics to others via mention. Example 'your list'."
     unassign_on_group_archive: "When a message is archived by a group, unassign message (reassign if moved back to inbox)"
-    unassign_on_close: "When a topic is closed unassign topic"
+    unassign_on_close: "Automatically unassign the topic when it is closed. NOTE: No tracking post will be created."
     reassign_on_open: "When a topic is opened reassign previously assigned users/groups"
     invite_on_assign: "When a personal message is assigned to a user or group, invite them to the PM if they are not already a participant."
     assign_mailer: "When to send notification email for assignments"
@@ -27,6 +27,11 @@ en:
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
+    filter:
+      description:
+        assigned: "Filter topics assigned to a specific user or group"
+        nobody: "Filter topics that are not assigned to anyone"
+        anyone: "Filter topics assigned to anyone"
     already_claimed: "That topic has already been claimed."
     already_assigned: "Topic is already assigned to @%{username}"
     too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."

@@ -4,8 +4,8 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Gemini < Base
-        def self.can_contact?(model_provider)
-          model_provider == "google"
+        def self.can_contact?(llm_model)
+          llm_model.provider == "google"
         end
 
         def default_options
@@ -60,6 +60,7 @@ module DiscourseAi
 
         def prepare_payload(prompt, model_params, dialect)
           @native_tool_support = dialect.native_tool_support?
+          @current_batch_token = nil
 
           tools = dialect.tools if @native_tool_support
 
@@ -126,7 +127,20 @@ module DiscourseAi
 
           if response_h
             @has_function_call ||= response_h.dig(:functionCall).present?
-            @has_function_call ? response_h.dig(:functionCall) : response_h.dig(:text)
+            if @has_function_call
+              function_call = response_h.dig(:functionCall)
+              provider_data = provider_data_from_part(response_h)
+              ToolCall.new(
+                id: "tool_0",
+                name: function_call[:name],
+                parameters: function_call[:args],
+                provider_data: provider_data,
+              )
+            elsif response_h[:text]
+              response_h.dig(:text)
+            elsif response_h[:inlineData]
+              inline_data_to_upload_markdown(response_h[:inlineData])
+            end
           end
         end
 
@@ -173,25 +187,32 @@ module DiscourseAi
           json = JSON.parse(chunk, symbolize_names: true)
 
           idx = -1
-          json
-            .dig(:candidates, 0, :content, :parts)
-            .map do |part|
-              if part[:functionCall]
-                idx += 1
-                ToolCall.new(
-                  id: "tool_#{idx}",
-                  name: part[:functionCall][:name],
-                  parameters: part[:functionCall][:args],
-                )
+          parts = json.dig(:candidates, 0, :content, :parts)
+          batch_token = current_batch_token_for(parts)
+
+          parts&.map do |part|
+            if part[:functionCall]
+              idx += 1
+              provider_data = provider_data_from_part(part, batch_token:)
+              ToolCall.new(
+                id: "tool_#{idx}",
+                name: part[:functionCall][:name],
+                parameters: part[:functionCall][:args],
+                provider_data: provider_data,
+              )
+            elsif part[:inlineData]
+              inline_data_to_upload_markdown(part[:inlineData])
+            else
+              part = part[:text]
+              if part != ""
+                part
               else
-                part = part[:text]
-                if part != ""
-                  part
-                else
-                  nil
-                end
+                nil
               end
             end
+            # we could get a nil here cause part can be nil
+            # interface expects an array
+          end || []
         end
 
         def decode_chunk(chunk)
@@ -201,6 +222,7 @@ module DiscourseAi
             .map do |parsed|
               update_usage(parsed)
               parts = parsed.dig(:candidates, 0, :content, :parts)
+              batch_token = current_batch_token_for(parts)
               parts&.map do |part|
                 if part[:text]
                   part = part[:text]
@@ -211,11 +233,15 @@ module DiscourseAi
                   end
                 elsif part[:functionCall]
                   @tool_index += 1
+                  provider_data = provider_data_from_part(part, batch_token:)
                   ToolCall.new(
                     id: "tool_#{@tool_index}",
                     name: part[:functionCall][:name],
                     parameters: part[:functionCall][:args],
+                    provider_data: provider_data,
                   )
+                elsif part[:inlineData]
+                  inline_data_to_upload_markdown(part[:inlineData])
                 end
               end
             end
@@ -244,12 +270,69 @@ module DiscourseAi
           @decoder ||= GeminiStreamingDecoder.new
         end
 
+        def provider_data_from_part(part, batch_token: nil)
+          thought_signature = part[:thoughtSignature] || part[:thought_signature]
+          provider_data = {}
+          provider_data[:thought_signature] = thought_signature if thought_signature
+          provider_data[:batch_id] = batch_token if batch_token
+          provider_data
+        end
+
+        def contains_function_call?(parts)
+          parts&.any? { |p| p[:functionCall].present? }
+        end
+
+        def current_batch_token_for(parts)
+          if contains_function_call?(parts)
+            @current_batch_token ||= SecureRandom.hex(8)
+          else
+            @current_batch_token = nil
+          end
+
+          @current_batch_token
+        end
+
         def extract_prompt_for_tokenizer(prompt)
           prompt.to_s
         end
 
         def xml_tools_enabled?
           !@native_tool_support
+        end
+
+        def inline_data_to_upload_markdown(inline_data)
+          mime = inline_data[:mimeType]
+          data_b64 = inline_data[:data]
+          return unless mime && data_b64
+
+          begin
+            raw = Base64.decode64(data_b64)
+            ext =
+              case mime
+              when "image/png"
+                "png"
+              when "image/jpeg", "image/jpg"
+                "jpg"
+              when "image/gif"
+                "gif"
+              when "image/webp"
+                "webp"
+              else
+                "bin"
+              end
+            filename = "gemini-#{SecureRandom.hex(8)}.#{ext}"
+            file = Tempfile.new(filename, binmode: true)
+            file.write(raw)
+            file.rewind
+            upload =
+              UploadCreator.new(file, filename, for_system_message: true).create_for(
+                Discourse.system_user.id,
+              )
+            return "\n![image](#{upload.short_url})\n" if upload&.persisted?
+          ensure
+            file&.close! if defined?(file)
+          end
+          nil
         end
       end
     end

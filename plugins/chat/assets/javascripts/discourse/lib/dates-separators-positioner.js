@@ -3,12 +3,20 @@ import { schedule } from "@ember/runloop";
 export default class DatesSeparatorsPositioner {
   static apply(list) {
     schedule("afterRender", () => {
+      if (!list) {
+        return;
+      }
+
       const dates = [
         ...list.querySelectorAll(".chat-message-separator-date"),
       ].reverse();
-      const height = list.querySelector(
-        ".chat-messages-container"
-      ).clientHeight;
+      const container = list.querySelector(".chat-messages-container");
+
+      if (!container) {
+        return;
+      }
+
+      const height = container.clientHeight;
 
       dates
         .map((date, index) => {

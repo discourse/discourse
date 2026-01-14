@@ -118,10 +118,10 @@
 
       @include viewport.until(sm) {
         grid-template-columns: repeat(2, 1fr);
-        grid-row-gap: 0.5em;
+        row-gap: 0.5em;
 
         &.scope-resource-name {
-          grid-row-gap: 0;
+          row-gap: 0;
         }
       }
     }

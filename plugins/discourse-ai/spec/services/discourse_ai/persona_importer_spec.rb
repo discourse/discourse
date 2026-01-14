@@ -68,7 +68,7 @@ RSpec.describe DiscourseAi::PersonaImporter do
           expect { importer.import! }.to raise_error(
             DiscourseAi::PersonaImporter::ImportError,
           ) do |error|
-            expect(error.conflicts).to eq(custom_tools: %w[browse_web calculator])
+            expect(error.conflicts[:custom_tools]).to contain_exactly("browse_web", "calculator")
           end
         end
       end
@@ -80,10 +80,8 @@ RSpec.describe DiscourseAi::PersonaImporter do
           expect { importer.import! }.to raise_error(
             DiscourseAi::PersonaImporter::ImportError,
           ) do |error|
-            expect(error.conflicts).to eq(
-              persona: "Test Persona",
-              custom_tools: %w[browse_web calculator],
-            )
+            expect(error.conflicts[:persona]).to eq("Test Persona")
+            expect(error.conflicts[:custom_tools]).to contain_exactly("browse_web", "calculator")
           end
         end
       end

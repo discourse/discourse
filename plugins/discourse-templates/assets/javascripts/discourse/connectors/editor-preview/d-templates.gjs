@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -15,7 +16,6 @@ export default class DTemplatesEditorPreview extends Component {
   }
 
   @service appEvents;
-  @service site;
 
   templatesVisible = false;
   onInsertTemplate;

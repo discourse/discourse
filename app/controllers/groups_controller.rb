@@ -162,7 +162,7 @@ class GroupsController < ApplicationController
         user_count = count_existing_users(group.group_users, notification_level, categories, tags)
         if user_count > 0
           return(
-            render status: 422,
+            render status: :unprocessable_entity,
                    json: {
                      user_count: user_count,
                      errors: [I18n.t("invalid_params", message: :update_existing_users)],
@@ -175,7 +175,6 @@ class GroupsController < ApplicationController
     if group.update(group_attributes)
       GroupActionLogger.new(current_user, group).log_change_group_settings
       group.record_email_setting_changes!(current_user)
-      group.expire_imap_mailbox_cache
       if params[:update_existing_users] == "true"
         update_existing_users(group.group_users, notification_level, categories, tags)
       end
@@ -355,12 +354,9 @@ class GroupsController < ApplicationController
     members = users.limit(limit).offset(offset)
     owners = users.where("group_users.owner")
 
-    group_members_serializer =
-      include_custom_fields ? GroupUserWithCustomFieldsSerializer : GroupUserSerializer
-
     render json: {
-             members: serialize_data(members, group_members_serializer),
-             owners: serialize_data(owners, GroupUserSerializer),
+             members: serialize_data(members, GroupUserWithCustomFieldsSerializer),
+             owners: serialize_data(owners, GroupUserWithCustomFieldsSerializer),
              meta: {
                total: total,
                limit: limit,
@@ -612,7 +608,7 @@ class GroupsController < ApplicationController
     rescue ActiveRecord::RecordNotUnique
       return(
         render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")),
-               status: 409
+               status: :conflict
       )
     end
 
@@ -728,51 +724,30 @@ class GroupsController < ApplicationController
     settings = params.except(:name, :protocol)
     email_host = params[:host]
 
-    if !%w[smtp imap].include?(params[:protocol])
-      raise Discourse::InvalidParameters.new("Valid protocols to test are smtp and imap")
+    if params[:protocol] != "smtp"
+      raise Discourse::InvalidParameters.new("Valid protocol to test is smtp")
     end
 
     hijack do
       begin
-        case params[:protocol]
-        when "smtp"
-          raise Discourse::InvalidParameters if params[:ssl_mode].blank?
+        raise Discourse::InvalidParameters if params[:ssl_mode].blank?
 
-          settings.delete(:ssl_mode)
+        settings.delete(:ssl_mode)
 
-          if params[:ssl_mode].blank? ||
-               !Group.smtp_ssl_modes.values.include?(params[:ssl_mode].to_i)
-            raise Discourse::InvalidParameters.new("SSL mode must be present and valid")
-          end
-
-          final_settings =
-            settings.merge(
-              enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
-              enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
-            ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
-          EmailSettingsValidator.validate_as_user(
-            current_user,
-            "smtp",
-            **final_settings.to_h.symbolize_keys,
-          )
-        when "imap"
-          raise Discourse::InvalidParameters if params[:ssl].blank?
-
-          final_settings =
-            settings.merge(ssl: settings[:ssl] == "true").permit(
-              :host,
-              :port,
-              :username,
-              :password,
-              :ssl,
-              :debug,
-            )
-          EmailSettingsValidator.validate_as_user(
-            current_user,
-            "imap",
-            **final_settings.to_h.symbolize_keys,
-          )
+        if params[:ssl_mode].blank? || !Group.smtp_ssl_modes.values.include?(params[:ssl_mode].to_i)
+          raise Discourse::InvalidParameters.new("SSL mode must be present and valid")
         end
+
+        final_settings =
+          settings.merge(
+            enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
+            enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
+          ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
+        EmailSettingsValidator.validate_as_user(
+          current_user,
+          "smtp",
+          **final_settings.to_h.symbolize_keys,
+        )
 
         render json: success_json
       rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
@@ -833,13 +808,6 @@ class GroupsController < ApplicationController
         :smtp_enabled,
         :smtp_updated_by,
         :smtp_updated_at,
-        :imap_server,
-        :imap_port,
-        :imap_ssl,
-        :imap_mailbox_name,
-        :imap_enabled,
-        :imap_updated_by,
-        :imap_updated_at,
         :email_username,
         :email_password,
         :email_from_alias,
@@ -909,15 +877,7 @@ class GroupsController < ApplicationController
   end
 
   def reset_group_email_settings_if_disabled!(group, attributes)
-    should_clear_imap = group.imap_enabled && attributes[:imap_enabled] == "false"
     should_clear_smtp = group.smtp_enabled && attributes[:smtp_enabled] == "false"
-
-    if should_clear_imap || should_clear_smtp
-      attributes[:imap_server] = nil
-      attributes[:imap_ssl] = false
-      attributes[:imap_port] = nil
-      attributes[:imap_mailbox_name] = ""
-    end
 
     if should_clear_smtp
       attributes[:smtp_server] = nil
@@ -1063,9 +1023,9 @@ class GroupsController < ApplicationController
             categories.each do |category_id, data|
               category_users = []
               existing_users =
-                CategoryUser.where(category_id: category_id, user_id: user_ids).where(
-                  "notification_level IS NOT NULL",
-                )
+                CategoryUser
+                  .where(category_id:, user_id: user_ids)
+                  .where.not(notification_level: nil)
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|
@@ -1089,9 +1049,7 @@ class GroupsController < ApplicationController
             tags.each do |tag_id, data|
               tag_users = []
               existing_users =
-                TagUser.where(tag_id: tag_id, user_id: user_ids).where(
-                  "notification_level IS NOT NULL",
-                )
+                TagUser.where(tag_id:, user_id: user_ids).where.not(notification_level: nil)
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|

@@ -104,19 +104,13 @@ module Chat
           .includes(chat_webhook_event: :incoming_chat_webhook)
           .includes(reactions: :user)
           .includes(:bookmarks)
-          .includes(:uploads)
+          .includes(uploads: { optimized_videos: :optimized_upload })
           .includes(chat_channel: :chatable)
           .includes(thread: %i[original_message last_message])
           .where(chat_channel_id: channel.id)
 
-      if SiteSetting.enable_user_status
-        query = query.includes(user: :user_status)
-        query = query.includes(user_mentions: { user: :user_status })
-      else
-        query = query.includes(user_mentions: :user)
-      end
-
-      query
+      user_includes = SiteSetting.enable_user_status ? %i[user_status user_option] : %i[user_option]
+      query.includes(user: user_includes, user_mentions: { user: user_includes })
     end
 
     def self.query_around_target(target_message_id, channel, messages)

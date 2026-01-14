@@ -10,7 +10,6 @@ it:
       sort_options:
         votes: "Voti"
     topic_voting:
-      title: "Votazione per argomenti"
       reached_limit: "Hai terminato i voti, rimuovi un voto esistente!"
       list_votes: "Elenca i tuoi voti"
       votes_nav_help: "argomenti con il maggior numero di voti"
@@ -21,14 +20,11 @@ it:
       voted_title: "Votato"
       voting_closed_title: "Chiuso"
       voting_limit: "Limite"
-      votes_left_button_title:
-        one: "Hai ancora %{count} voto."
-        other: "Hai ancora %{count} voti."
       votes:
         one: "%{count} voto"
         other: "%{count} voti"
       anonymous_button:
-        one: "Vota"
+        one: "Voto"
         other: "Voti"
       remove_vote: "Rimuovi voto"
       no_votes_title_self: "Non hai ancora votato per nessun argomento"

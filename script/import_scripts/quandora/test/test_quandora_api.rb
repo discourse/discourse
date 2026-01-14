@@ -2,8 +2,8 @@
 
 require "minitest/autorun"
 require "yaml"
-require_relative "../quandora_api.rb"
-require_relative "./test_data.rb"
+require_relative "../quandora_api"
+require_relative "test_data"
 
 class TestQuandoraApi < Minitest::Test
   DEBUG = false

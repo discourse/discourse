@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe TopicsController do
   fab!(:post)
 
@@ -21,6 +19,40 @@ describe TopicsController do
   end
 
   describe "#show" do
+    context "when user has reacted but like_count is 0 and undo window passed" do
+      fab!(:reaction) { Fabricate(:reaction, post:) }
+      fab!(:reaction_user) { Fabricate(:reaction_user, reaction:, user: user_1, post:) }
+      fab!(:like_action) do
+        Fabricate(
+          :post_action,
+          user: user_1,
+          post:,
+          post_action_type_id: PostActionType.types[:like],
+          created_at: 1.day.ago,
+        )
+      end
+
+      before do
+        SiteSetting.post_undo_action_window_mins = 10
+        post.update_column(:like_count, 0)
+      end
+
+      it "includes the like action in actions_summary with acted flag" do
+        sign_in(user_1)
+
+        get "/t/#{post.topic_id}.json"
+        expect(response.status).to eq(200)
+
+        post_json = response.parsed_body["post_stream"]["posts"].find { |p| p["id"] == post.id }
+        like_action_summary =
+          post_json["actions_summary"].find { |a| a["id"] == PostActionType.types[:like] }
+
+        expect(like_action_summary).to be_present
+        expect(like_action_summary["acted"]).to eq(true)
+        expect(like_action_summary["can_undo"]).to be_nil
+      end
+    end
+
     it "does not generate N+1 queries" do
       sign_in(user_1)
 

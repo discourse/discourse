@@ -7,7 +7,7 @@ RSpec.describe AiChatChannelSerializer do
 
   describe "#title" do
     context "when the channel is a DM" do
-      fab!(:dm_channel) { Fabricate(:direct_message_channel) }
+      fab!(:dm_channel, :direct_message_channel)
 
       it "display every participant" do
         serialized = described_class.new(dm_channel, scope: Guardian.new(admin), root: nil)
@@ -17,7 +17,7 @@ RSpec.describe AiChatChannelSerializer do
     end
 
     context "when the channel is a regular one" do
-      fab!(:channel) { Fabricate(:chat_channel) }
+      fab!(:channel, :chat_channel)
 
       it "displays the category title" do
         serialized = described_class.new(channel, scope: Guardian.new(admin), root: nil)

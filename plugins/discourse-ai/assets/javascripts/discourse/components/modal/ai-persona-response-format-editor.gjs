@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { gt } from "truth-helpers";
 import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
 import { prettyJSON } from "discourse/lib/formatter";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AiPersonaResponseFormatEditor extends Component {
@@ -81,8 +81,7 @@ export default class AiPersonaResponseFormatEditor extends Component {
       <div class="ai-persona-editor__response-format">
         {{#if (gt @data.response_format.length 0)}}
           <pre class="ai-persona-editor__response-format-pre">
-            <code
-            >{{this.displayJSON}}</code>
+            <code>{{this.displayJSON}}</code>
           </pre>
         {{else}}
           <div class="ai-persona-editor__response-format-none">

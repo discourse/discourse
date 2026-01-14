@@ -5,7 +5,7 @@ export default {
   before: "freeze-valid-transformers",
 
   initialize() {
-    withPluginApi("1.35.0", (api) => {
+    withPluginApi((api) => {
       api.addBehaviorTransformerName("topic-vote-button-click");
     });
   },

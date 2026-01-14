@@ -7,6 +7,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { and, eq, not } from "discourse/truth-helpers";
 
 export default class DiscoursePostEventStatus extends Component {
   @service appEvents;
@@ -81,6 +82,7 @@ export default class DiscoursePostEventStatus extends Component {
         postId: this.args.event.id,
       });
     } catch (e) {
+      // in case of 422 full, backend returns error string, let popup handle
       popupAjaxError(e);
     }
   }
@@ -132,8 +134,16 @@ export default class DiscoursePostEventStatus extends Component {
             >
               <DButton
                 class="going-button"
+                @disabled={{and
+                  @event.atCapacity
+                  (not (eq this.watchingInviteeStatus "going"))
+                }}
                 @icon="check"
-                @label="discourse_post_event.models.invitee.status.going"
+                @label={{if
+                  @event.atCapacity
+                  "discourse_post_event.models.event.full"
+                  "discourse_post_event.models.invitee.status.going"
+                }}
                 @action={{fn this.changeWatchingInviteeStatus "going"}}
               />
             </PluginOutlet>

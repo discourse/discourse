@@ -25,7 +25,6 @@ function attachPolls(elem, helper) {
 
     const quotedId = pollNode.closest(".expanded-quote")?.dataset.postId;
 
-    // TODO (glimmer-post-stream) the condition below is probably not needed after the widget are gone
     if (quotedId && post.quoted[quotedId]) {
       pollPost = EmberObject.create(post.quoted[quotedId]);
       poll = new TrackedObject(pollPost.polls.find((p) => p.name === pollName));
@@ -33,6 +32,7 @@ function attachPolls(elem, helper) {
 
     if (poll) {
       const titleHTML = pollNode.querySelector(".poll-title")?.outerHTML;
+      const isDynamic = pollNode.dataset.pollDynamic === "true";
 
       const newPollNode = document.createElement("div");
       Object.assign(newPollNode.dataset, {
@@ -48,7 +48,12 @@ function attachPolls(elem, helper) {
       helper.renderGlimmer(
         newPollNode,
         <template>
-          <Poll @poll={{poll}} @post={{post}} @titleHTML={{titleHTML}} />
+          <Poll
+            @poll={{poll}}
+            @post={{post}}
+            @titleHTML={{titleHTML}}
+            @isDynamic={{if isDynamic true poll.dynamic}}
+          />
         </template>
       );
     }
@@ -121,6 +126,6 @@ export default {
   name: "extend-for-poll",
 
   initialize() {
-    withPluginApi("0.8.7", initializePolls);
+    withPluginApi(initializePolls);
   },
 };

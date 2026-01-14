@@ -10,6 +10,10 @@
   }
 }
 
+.ai-discobot-discoveries {
+  padding: var(--search-result-element-padding);
+}
+
 .ai-search-discoveries {
   &__regular-results-title {
     margin-top: 0.5em;
@@ -114,14 +118,20 @@
   width: 1.15em;
 }
 
-.ai-discobot-discoveries {
-  padding-top: 0.5em;
-}
-
 @include viewport.from(lg) {
-  .search-menu .menu-panel:has(.ai-search-discoveries__discoveries-title) {
+  .welcome-banner .menu-panel:has(.ai-search-discoveries__discoveries-title) {
+    width: calc(90vw - var(--d-sidebar-width) - 1em);
+    max-width: 900px;
+    min-width: 100%;
+  }
+
+  .search-menu.glimmer-search-menu
+    .menu-panel:has(.ai-search-discoveries__discoveries-title) {
     width: 80vw;
     max-width: 900px;
+  }
+
+  .search-menu .menu-panel:has(.ai-search-discoveries__discoveries-title) {
     transition: width 0.5s;
 
     .results {
@@ -140,7 +150,6 @@
         grid-column-start: 2;
         grid-row: 1 / -1;
         box-sizing: border-box;
-        padding: 0 0.5em 0 2em;
         margin: 0.75em 0 0 0;
         border-left: 1px solid var(--primary-low);
 
@@ -153,6 +162,7 @@
     .ai-search-discoveries {
       font-size: var(--font-0);
       color: var(--primary-high);
+      padding-top: 0.5em;
       padding-right: 0.5em;
     }
 
@@ -215,8 +225,10 @@
     }
 
     .search-results .fps-result {
-      padding: 0;
       margin-bottom: 2.5em;
+      &:not(.bulk-select-enabled) {
+        padding: 0;
+      }
     }
 
     .search-advanced {

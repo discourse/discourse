@@ -105,6 +105,8 @@ ru:
               label: Пропустить отправку личного сообщения, если нет результатов
             attach_csv:
               label: Прикрепить CSV-файл к личному сообщению
+            users_from_group:
+              label: Отправлять отдельное ЛС каждому участнику группы
         recurring_data_explorer_result_topic:
           fields:
             topic_id:

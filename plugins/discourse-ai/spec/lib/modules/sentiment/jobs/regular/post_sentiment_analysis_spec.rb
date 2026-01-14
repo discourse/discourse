@@ -3,6 +3,8 @@
 require_relative "../../../../../support/sentiment_inference_stubs"
 
 describe Jobs::PostSentimentAnalysis do
+  subject(:job) { described_class.new }
+
   before { enable_current_plugin }
 
   describe "#execute" do
@@ -18,19 +20,19 @@ describe Jobs::PostSentimentAnalysis do
       it "does nothing when ai_sentiment_enabled is disabled" do
         SiteSetting.ai_sentiment_enabled = false
 
-        subject.execute({ post_id: post.id })
+        job.execute({ post_id: post.id })
 
         expect(ClassificationResult.where(target: post).count).to be_zero
       end
 
       it "does nothing if there's no arg called post_id" do
-        subject.execute({})
+        job.execute({})
 
         expect(ClassificationResult.where(target: post).count).to be_zero
       end
 
       it "does nothing if no post match the given id" do
-        subject.execute({ post_id: nil })
+        job.execute({ post_id: nil })
 
         expect(ClassificationResult.where(target: post).count).to be_zero
       end
@@ -38,7 +40,7 @@ describe Jobs::PostSentimentAnalysis do
       it "does nothing if the post content is blank" do
         post.update_columns(raw: "")
 
-        subject.execute({ post_id: post.id })
+        job.execute({ post_id: post.id })
 
         expect(ClassificationResult.where(target: post).count).to be_zero
       end
@@ -48,7 +50,7 @@ describe Jobs::PostSentimentAnalysis do
       expected_analysis = DiscourseAi::Sentiment::PostClassification.new.classifiers.length
       SentimentInferenceStubs.stub_classification(post)
 
-      subject.execute({ post_id: post.id })
+      job.execute({ post_id: post.id })
 
       expect(ClassificationResult.where(target: post).count).to eq(expected_analysis)
     end

@@ -29,7 +29,11 @@ RSpec.describe "Dismissing New", type: :system do
 
       topic_list_controls.dismiss_unread(untrack: true)
 
-      using_session(:tab_1) { expect(topic_view).to have_tracking_status("regular") }
+      using_session(:tab_1) do
+        try_until_success(reason: "relies on MessageBus updates") do
+          expect(topic_view).to have_tracking_status("regular")
+        end
+      end
     end
 
     context "when dismissing new on a category's topic list" do

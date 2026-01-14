@@ -25,9 +25,8 @@ export default class HouseAdsListSetting extends HouseAdsSetting {
     />
     <div class="setting-controls">
       {{#if this.changed}}
-        {{! template-lint-disable no-action }}
-        <DButton class="ok" @action={{action "save"}} @icon="check" />
-        <DButton class="cancel" @action={{action "cancel"}} @icon="xmark" />
+        <DButton class="ok" @action={{this.save}} @icon="check" />
+        <DButton class="cancel" @action={{this.cancel}} @icon="xmark" />
       {{/if}}
     </div>
     <p class="help">{{this.help}}</p>

@@ -129,7 +129,7 @@
       box-sizing: border-box;
 
       .chat-message-separator__line {
-        border-top: 1px solid var(--secondary-high);
+        border-top: 1px solid var(--content-border-color);
         margin: 0 0 -1px;
       }
     }

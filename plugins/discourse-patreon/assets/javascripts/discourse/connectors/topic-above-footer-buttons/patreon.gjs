@@ -1,10 +1,11 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
 import $ from "jquery";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import cookie from "discourse/lib/cookie";
 import { i18n } from "discourse-i18n";
 

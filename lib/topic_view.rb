@@ -76,8 +76,8 @@ class TopicView
     wpcf.flatten.uniq
   end
 
-  def self.add_custom_filter(key, &blk)
-    custom_filters[key] = blk
+  def self.add_custom_filter(key, enabled: -> { true }, &block)
+    custom_filters[key] = { block:, enabled: }
   end
 
   def self.custom_filters
@@ -485,7 +485,7 @@ class TopicView
   def has_deleted?
     @predelete_filtered_posts
       .with_deleted
-      .where("posts.deleted_at IS NOT NULL")
+      .where.not(deleted_at: nil)
       .where("posts.post_number > 1")
       .exists?
   end
@@ -714,6 +714,10 @@ class TopicView
       )
   end
 
+  def linkbacks_for(post)
+    link_counts[post.id]&.select { |l| l[:reflection] && l[:title].present? }
+  end
+
   def pm_params
     @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
   end
@@ -929,9 +933,8 @@ class TopicView
         :deleted_by,
         :incoming_email,
         :image_upload,
-        :post_localizations,
       )
-
+    @posts = @posts.includes(:localizations) if SiteSetting.content_localization_enabled
     @posts = @posts.includes({ user: :user_status }) if SiteSetting.enable_user_status
 
     @posts = apply_default_scope(@posts)
@@ -972,7 +975,7 @@ class TopicView
   def unfiltered_posts
     result = filter_post_types(@topic.posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
-    result = result.where("user_id IS NOT NULL") if @exclude_deleted_users
+    result = result.where.not(user_id: nil) if @exclude_deleted_users
     result = result.where(hidden: false) if @exclude_hidden
     result
   end
@@ -1017,7 +1020,11 @@ class TopicView
     end
 
     if @filter.present? && @filter.to_s != "summary" && TopicView.custom_filters[@filter].present?
-      @filtered_posts = TopicView.custom_filters[@filter].call(@filtered_posts, self)
+      @filtered_posts =
+        TopicView.custom_filters[@filter][:block].call(
+          @filtered_posts,
+          self,
+        ) if TopicView.custom_filters[@filter][:enabled].call
     end
 
     if @best.present?

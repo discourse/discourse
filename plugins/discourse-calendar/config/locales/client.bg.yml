@@ -23,6 +23,7 @@ bg:
         month: "Месец"
         week: "Седмица"
         day: "Ден"
+        year: "Година"
     group_timezones:
       search: "Търсене ... "
     discourse_post_event:

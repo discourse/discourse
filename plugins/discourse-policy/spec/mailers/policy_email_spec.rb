@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::UserEmail do
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user1, :user)
 
   fab!(:group1) do
     group = Fabricate(:group)

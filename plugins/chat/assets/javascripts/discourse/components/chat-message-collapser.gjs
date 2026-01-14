@@ -2,21 +2,21 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
-import { and } from "truth-helpers";
 import DecoratedHtml from "discourse/components/decorated-html";
 import domFromString from "discourse/lib/dom-from-string";
-import { escapeExpression } from "discourse/lib/utilities";
+import lightbox from "discourse/lib/lightbox";
+import { escapeExpression, optionalRequire } from "discourse/lib/utilities";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
-import lightbox from "../lib/lightbox";
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
 
   lightbox = modifier((element) => {
     if (this.args.uploads.length > 0) {
-      lightbox(element.querySelectorAll("img.chat-img-upload"));
+      lightbox(element);
     }
   });
 
@@ -27,7 +27,9 @@ export default class ChatMessageCollapser extends Component {
   get uploadsHeader() {
     let name = "";
     if (this.args.uploads.length === 1) {
-      name = this.args.uploads[0].original_filename;
+      const upload = this.args.uploads[0];
+      name =
+        upload.optimized_video?.original_filename || upload.original_filename;
     } else {
       name = i18n("chat.uploaded_files", { count: this.args.uploads.length });
     }
@@ -63,18 +65,18 @@ export default class ChatMessageCollapser extends Component {
   }
 
   get lazyVideoComponent() {
-    const path =
-      "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
-    return require.has(path) && require(path).default;
+    return optionalRequire(
+      "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video"
+    );
   }
 
   lazyVideoCooked(elements) {
+    const getVideoAttributes = optionalRequire(
+      "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
+    );
+
     return elements.reduce((acc, e) => {
       if (this.siteSettings.lazy_videos_enabled && lazyVideoPredicate(e)) {
-        const getVideoAttributes = requirejs(
-          "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
-        ).default;
-
         const videoAttributes = getVideoAttributes(e);
 
         if (this.siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {

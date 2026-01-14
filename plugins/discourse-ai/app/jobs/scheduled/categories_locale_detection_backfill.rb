@@ -9,6 +9,16 @@ module Jobs
     def execute(args)
       return if !DiscourseAi::Translation.backfill_enabled?
 
+      llm_model = find_llm_model
+      return if llm_model.blank?
+
+      unless LlmCreditAllocation.credits_available?(llm_model)
+        Rails.logger.info(
+          "Categories locale detection backfill skipped: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       categories = Category.where(locale: nil)
 
       if SiteSetting.ai_translation_backfill_limit_to_public_content
@@ -31,6 +41,16 @@ module Jobs
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{categories.size} category locales")
+    end
+
+    private
+
+    def find_llm_model
+      persona_klass =
+        AiPersona.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_persona)
+      return nil if persona_klass.blank?
+
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end
 end

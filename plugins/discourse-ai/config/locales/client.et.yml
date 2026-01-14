@@ -39,7 +39,7 @@ et:
         disabled: "(välja lülitatud)"
         groups: "Rühmad:"
         no_groups: "Pole"
-        edit: "Muuda"
+        edit: "Seaded"
         expand_list:
           one: "(veel %{count})"
           other: "(veel %{count})"
@@ -52,6 +52,21 @@ et:
           name: "Spämm"
       modals:
         select_option: "Vali võimalus..."
+      translations:
+        stats:
+          eta_minutes:
+            one: "%{count} minut"
+            other: "%{count} minutit"
+          eta_hours:
+            one: "%{count} tund"
+            other: "%{count} tundi"
+          eta_days:
+            one: "%{count} päev"
+            other: "%{count} päeva"
+        progress_chart:
+          bar_done:
+            one: "%{count} postitus"
+            other: "%{count} postitust"
       spam:
         short_title: "Spämm"
         enable: "Luba"
@@ -61,6 +76,7 @@ et:
         summary: "Kokkuvõte"
         username: "Kasutajanimi"
         total_requests: "Kokku päringuid"
+        total: "Kokku"
       ai_persona:
         back: "Tagasi"
         name: "Nimi"
@@ -124,10 +140,10 @@ et:
           copy: "Kopeeri"
           copied: "Kopeeritud!"
           cancel: "Loobu"
+        thumbnail_suggestions:
+          try_again: "Proovi uuesti"
         image_caption:
           save_caption: "Salvesta"
-          automatic_caption_dialog:
-            confirm: "Luba"
       embeddings:
         back: "Tagasi"
         save: "Salvesta"

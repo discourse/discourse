@@ -12,6 +12,7 @@ lt:
           accepted_notification: "patvirtinta"
     solved:
       title: "Išspresta"
+      accepted_answer_post_number: "įrašas %{post_number}"
       topic_status_filter:
         all: "visi"
         solved: "išspresta"

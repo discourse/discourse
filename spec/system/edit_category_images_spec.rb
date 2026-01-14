@@ -26,7 +26,7 @@ describe "Edit Category Images", type: :system do
         )
 
         expect(page).to have_content("uploaded successfully").or have_css(
-               ".uploaded-image-preview.input-xxlarge",
+               ".has-image .uploaded-image-preview.input-xxlarge",
              )
 
         upload = Upload.last

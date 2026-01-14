@@ -117,7 +117,7 @@ class AdminUserIndexQuery
   end
 
   def filter_exclude
-    @query.where("users.id != ?", params[:exclude]) if params[:exclude].present?
+    @query.where.not(id: params[:exclude]) if params[:exclude].present?
   end
 
   def append(active_relation)

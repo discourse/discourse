@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "openssl"
 require "json"
 require_relative "../spec_helper"
 
-RSpec.describe ::Patreon::PatreonWebhookController do
+RSpec.describe Patreon::PatreonWebhookController do
   before do
     SiteSetting.patreon_enabled = true
     SiteSetting.login_required = true

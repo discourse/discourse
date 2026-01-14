@@ -79,10 +79,10 @@ ja:
         select: サブスクリプションプランを選択する
         interval:
           adverb:
-            day: 日間
-            week: 週間
-            month: 月間
-            year: 年間
+            day: 毎日
+            week: 毎週
+            month: 毎月
+            year: 毎年
         payment_button: 購読
         success: ありがとうございました！サブスクリプションが作成されました。
         incomplete: お支払いは未完了です。あなたのサブスクリプションはお支払いが完了してから更新されます。

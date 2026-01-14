@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe TopicViewSerializer do
   let(:user) { Fabricate(:user) }
   let(:category) { Fabricate(:category) }

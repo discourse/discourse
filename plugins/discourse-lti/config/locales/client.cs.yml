@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 cs:
+  js:
+    login:
+      lti:
+        name: "Přihlásit se přes LTI"
+        title: "přes LTI"

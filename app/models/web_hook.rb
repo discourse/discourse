@@ -14,9 +14,9 @@ class WebHook < ActiveRecord::Base
 
   validates :payload_url, presence: true, format: URI.regexp(%w[http https])
   validates :secret, length: { minimum: 12 }, allow_blank: true
-  validates_presence_of :content_type
-  validates_presence_of :last_delivery_status
-  validates_presence_of :web_hook_event_types, unless: :wildcard_web_hook?
+  validates :content_type, presence: true
+  validates :last_delivery_status, presence: true
+  validates :web_hook_event_types, presence: { unless: :wildcard_web_hook? }
   validate :ensure_payload_url_allowed, if: :payload_url_changed?
 
   before_save :strip_url

@@ -17,6 +17,9 @@ chat:
     client: true
     default: false
     hidden: true
+  chat_search_enabled:
+    client: true
+    default: true
   needs_chat_seeded:
     default: true
     hidden: true
@@ -148,3 +151,5 @@ chat:
   allow_chat_in_anonymous_mode:
     default: false
     validator: "Chat::AllowChatInAnonymousModeValidator"
+    depends_on:
+      - "allow_anonymous_mode"

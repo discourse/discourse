@@ -14,7 +14,7 @@ ja:
     notifications:
       alt:
         solved:
-          accepted_notification: "承諾"
+          accepted_notification: "同意"
     solutions: "解決策"
     solved:
       title: "解決済み"
@@ -28,6 +28,7 @@ ja:
       solution: "解決策"
       solution_summary:
         other: "解決策"
+      accepted_answer_post_number: "投稿 %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "すべて"

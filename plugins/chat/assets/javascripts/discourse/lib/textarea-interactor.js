@@ -12,7 +12,6 @@ import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 export default class TextareaInteractor extends EmberObject {
   @service capabilities;
   @service site;
-  @service siteSettings;
 
   textManipulation;
 

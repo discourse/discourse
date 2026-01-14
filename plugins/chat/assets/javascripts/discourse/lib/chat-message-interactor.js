@@ -33,7 +33,6 @@ export function resetRemovedChatComposerSecondaryActions() {
 
 export default class ChatemojiReactions {
   @service appEvents;
-  @service dialog;
   @service chat;
   @service chatChannelComposer;
   @service chatThreadComposer;
@@ -42,7 +41,6 @@ export default class ChatemojiReactions {
   @service chatApi;
   @service currentUser;
   @service site;
-  @service router;
   @service modal;
   @service capabilities;
   @service siteSettings;
@@ -119,7 +117,8 @@ export default class ChatemojiReactions {
   get canInteractWithMessage() {
     return (
       !this.message?.deletedAt &&
-      this.message?.channel?.canModifyMessages(this.currentUser)
+      this.message?.channel?.canModifyMessages(this.currentUser) &&
+      this.message?.channel?.isFollowing
     );
   }
 
@@ -139,7 +138,9 @@ export default class ChatemojiReactions {
 
   get canReply() {
     return (
-      this.canInteractWithMessage && this.context !== MESSAGE_CONTEXT_THREAD
+      this.canInteractWithMessage &&
+      this.context !== MESSAGE_CONTEXT_THREAD &&
+      this.message?.channel?.isFollowing
     );
   }
 
@@ -249,7 +250,7 @@ export default class ChatemojiReactions {
       });
     }
 
-    return buttons.reject((button) => removedSecondaryActions.has(button.id));
+    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
   }
 
   select(checked = true) {
@@ -334,6 +335,9 @@ export default class ChatemojiReactions {
         emoji,
         reactAction
       )
+      .then(() => {
+        this.emojiStore.trackEmojiForContext(emoji, "chat");
+      })
       .catch((errResult) => {
         popupAjaxError(errResult);
         this.message.react(

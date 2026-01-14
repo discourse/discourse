@@ -18,14 +18,12 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("when user is not online", async function (assert) {
-    const self = this;
-
     this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = { presenceChannel: { users: [] } };
 
     await render(
       <template>
-        <ChatUserAvatar @chat={{self.chat}} @user={{self.user}} />
+        <ChatUserAvatar @chat={{this.chat}} @user={{this.user}} />
       </template>
     );
 
@@ -33,8 +31,6 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   });
 
   test("user is online", async function (assert) {
-    const self = this;
-
     this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = {
       presenceChannel: { users: [{ id: this.user.id }] },
@@ -42,7 +38,7 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
 
     await render(
       <template>
-        <ChatUserAvatar @chat={{self.chat}} @user={{self.user}} />
+        <ChatUserAvatar @chat={{this.chat}} @user={{this.user}} />
       </template>
     );
 
@@ -50,8 +46,6 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   });
 
   test("@showPresence=false", async function (assert) {
-    const self = this;
-
     this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = {
       presenceChannel: { users: [{ id: this.user.id }] },
@@ -61,8 +55,8 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
       <template>
         <ChatUserAvatar
           @showPresence={{false}}
-          @chat={{self.chat}}
-          @user={{self.user}}
+          @chat={{this.chat}}
+          @user={{this.user}}
         />
       </template>
     );
@@ -71,13 +65,11 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   });
 
   test("@interactive=true", async function (assert) {
-    const self = this;
-
     this.user = new CoreFabricators(getOwner(this)).user();
 
     await render(
       <template>
-        <ChatUserAvatar @interactive={{false}} @user={{self.user}} />
+        <ChatUserAvatar @interactive={{false}} @user={{this.user}} />
       </template>
     );
 

@@ -10,7 +10,7 @@
 
 .staff-actions {
   width: 100%;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   @media screen and (width >= 550px) and (width <= 767px) {
     table.staff-logs tr {
@@ -36,7 +36,7 @@
         display: flex;
 
         a {
-          word-wrap: break-word;
+          overflow-wrap: break-word;
           min-width: 25px;
         }
       }
@@ -132,21 +132,53 @@
   }
 
   td.context {
-    word-break: break-all;
+    max-width: 20vw;
   }
 }
 
 .staff-action-logs-controls {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.5em;
+  justify-content: space-between;
   margin: 0 0 1em 0;
 
-  .select-kit {
-    margin: 0 0.5em;
+  // for too small screen, we want it to also wrap
+  @media (width <= 400px) {
+    flex-wrap: wrap;
   }
 
-  button {
-    margin-left: auto;
+  .staff-action-logs-controls__left {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+
+    // we want to put it in one line
+    .date-filter-container .d-date-time-input-range {
+      display: flex;
+      gap: 0.5em;
+
+      .from {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  #staff-action-logs-action-filter {
+    // unset the global width of .admin-container .select-kit, so we can shrink it by flex
+    width: unset;
+    flex: 1 0 120px;
+    max-width: 400px;
+  }
+
+  .action-filter-container {
+    flex: 0 1 380px;
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
   }
 
   a.filter {
@@ -186,7 +218,7 @@
 table.screened-ip-addresses {
   td.ip_address {
     min-width: 150px;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     input {
       width: 80%;
@@ -240,7 +272,7 @@ table.screened-ip-addresses {
     td.domain {
       grid-column-start: 1;
       grid-column-end: 3;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
   }
 }
@@ -248,7 +280,7 @@ table.screened-ip-addresses {
 // Screened emails
 .screened-emails {
   td.ip_address {
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     @include viewport.from(md) {
       max-width: 20vw;
@@ -259,7 +291,7 @@ table.screened-ip-addresses {
     td.email {
       grid-column-start: 1;
       grid-column-end: 3;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     td.ip_address {
@@ -275,6 +307,13 @@ table.screened-ip-addresses {
 }
 
 // Watched words
+.watched-word-regex-errors {
+  max-height: 200px;
+  overflow-y: auto;
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
 .watched-word-box {
   display: inline-block;
   width: 250px;
@@ -387,7 +426,7 @@ table.screened-ip-addresses {
 table.search-logs-list {
   td.term {
     width: 60%;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     @media screen and (width <= 767px) {
       width: 100%;

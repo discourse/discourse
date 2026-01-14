@@ -9,7 +9,7 @@ zh_CN:
     admin:
       site_settings:
         categories:
-          discourse_details: "Discourse 细节"
+          discourse_details: "Discourse 详细信息"
   js:
     details:
       title: 隐藏详细信息

@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discourse RSS Anketi"
   js:
+    rss_polling:
+      title: RSS Anketi
     admin:
       rss_polling:
+        feed: Akış Ayarları
+        discourse: Discourse Ayarları
         author: Yazar
         feed_url: URL
         discourse_category: Kategori
         discourse_tags: Etiketler
+        feed_category_filter: Kategori Filtresi
+        documentation: RSS Anketi yapılandırma belgeleri
+        destroy_feed:
+          confirm: "Bu akışı silmek istediğinizden emin misiniz?"

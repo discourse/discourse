@@ -3,8 +3,8 @@
 describe Reviewable do
   fab!(:user)
   fab!(:admin)
-  fab!(:post1) { Fabricate(:post) }
-  fab!(:post2) { Fabricate(:post) }
+  fab!(:post1, :post)
+  fab!(:post2, :post)
   fab!(:reviewable1) { Fabricate(:reviewable_flagged_post, target: post1) }
   fab!(:reviewable2) { Fabricate(:reviewable_flagged_post, target: post2) }
 

@@ -7,8 +7,8 @@ class UserAction < ActiveRecord::Base
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
 
-  validates_presence_of :action_type
-  validates_presence_of :user_id
+  validates :action_type, presence: true
+  validates :user_id, presence: true
 
   LIKE = 1
   WAS_LIKED = 2

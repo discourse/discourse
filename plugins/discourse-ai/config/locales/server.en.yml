@@ -1,9 +1,23 @@
 en:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Model ID"
+        max_prompt_tokens: "Context window"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. In the past hour, it failed to respond %{failed_calls} out of %{total_calls} times."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
+      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
   discourse_automation:
     ai:
       flag_types:
         review: "Add post to review queue"
         review_hide: "Add post to review queue and hide post"
+        review_delete: "Add post to review queue and delete post"
+        review_delete_silence: "Add post to review queue, delete post and silence user"
         spam: "Flag as spam and hide post"
         spam_silence: "Flag as spam, hide post and silence user"
     scriptables:
@@ -18,13 +32,25 @@ en:
         description: "Triage posts using a large language model"
         flagged_post: |
           <div>Response from the model:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Triggered by the <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> rule.</b>
+          <p>%{llm_response}</p>
+          <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
+        notify_author_pm:
+          subject: "Your post was temporarily removed for review"
+          body: |
+            Hi @%{username},
+
+            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically.
+
+            Reference: %{post_url}
       llm_report:
         title: Periodic report using AI
         description: "Periodic report based on a large language model"
+      llm_tagger:
+        title: Tag topics using AI
+        description: "Automatically tag topics using AI"
   site_settings:
     discourse_ai_enabled: "Enable the discourse AI plugin."
+    ai_default_llm_model: "The default LLM model to use for all AI features"
     ai_artifact_security: "The AI artifact system generates IFRAMEs with runnable code. Strict mode forces an extra click to run code. Lax mode runs code immediately. Hybrid mode allows user to supply data-ai-artifact-autorun to show right away. Disabled mode disables the artifact system."
     ai_toxicity_enabled: "Enable the toxicity module."
     ai_toxicity_inference_service_api_endpoint: "URL where the API is running for the toxicity module"
@@ -57,6 +83,8 @@ en:
     ai_nsfw_models: "Models to use for NSFW inference."
 
     ai_spam_detection_enabled: "Enable the AI spam detection module"
+    ai_spam_detection_max_post_count: "Maximum number of posts a user can have before they are no longer scanned for spam"
+    ai_spam_detection_max_trust_level: "Maximum trust level of users to scan for spam"
 
     ai_openai_api_key: "API key for OpenAI API. ONLY used for Image creation and edits. For GPT use the LLM config tab"
     ai_openai_image_generation_url: "URL for OpenAI image generation API"
@@ -66,14 +94,13 @@ en:
     composer_ai_helper_allowed_groups: "Users on these groups will see the AI helper button in the composer."
     ai_helper_allowed_in_pm: "Enable the composer's AI helper in PMs."
     ai_helper_model: "Model to use for the AI helper."
-    ai_helper_custom_prompts_allowed_groups: "Users on these groups will see the custom prompt option in the AI helper."
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
     ai_helper_illustrate_post_model: "Model to use for the composer AI helper's illustrate post feature"
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
     ai_helper_image_caption_model: "Select the model to use for generating image captions"
-    ai_auto_image_caption_allowed_groups: "Users on these groups can toggle automatic image captioning."
+    ai_helper_post_illustrator_persona: "The persona to use for the AI helper's illustrate post feature. Note: you must also create an image generation tool (Admin > Plugins > Discourse AI > Tools) for this feature to work."
 
     ai_embeddings_selected_model: "Use the selected model for generating embeddings."
     ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."
@@ -81,8 +108,11 @@ en:
     ai_embeddings_semantic_related_topics: "Maximum number of topics to show in related topic section."
     ai_embeddings_backfill_batch_size: "Number of embeddings to backfill every 15 minutes."
     ai_embeddings_semantic_search_enabled: "Enable full-page semantic search."
+    ai_embeddings_semantic_search_use_hyde: "Use HyDE for semantic full page search. Uses an LLM to create an hypothetical post from the user search term to help with matches."
     ai_embeddings_semantic_quick_search_enabled: "Enable semantic search option in search menu popup."
     ai_embeddings_semantic_related_include_closed_topics: "Include closed topics in semantic search results"
+    ai_embeddings_semantic_related_age_penalty: "Apply exponential age penalty to topics in semantic search results. 0.0 = no penalty, 0.3 = gentle bias toward recently active content, 1.0+ = strong recency bias."
+    ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
     ai_embeddings_semantic_search_hyde_model: "Model used to expand keywords to get better results during a semantic search"
     ai_embeddings_per_post_enabled: Generate embeddings for each post
 
@@ -96,12 +126,17 @@ en:
     ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour."
 
     ai_bot_enabled: "Enable the AI Bot module."
+    ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
     ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overriden by editing the translation string: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
     ai_bot_public_sharing_allowed_groups: "Allow these groups to share AI personal messages with the public via a unique publicly available link. Note: if your site requires login, shares will also require login."
-    ai_bot_add_to_header: "Display a button in the header to start a PM with a AI Bot"
+    ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"
+    ai_bot_add_to_community_section: "Display a link in the sidebar community section to start a PM with an AI Bot"
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
+
+    ai_discover_enabled: "Enable the discovery search feature"
+    ai_discover_persona: "Persona to use for discovery search feature"
 
     ai_stability_api_key: "API key for the stability.ai API"
     ai_stability_engine: "Image generation engine to use for the stability.ai API"
@@ -116,13 +151,16 @@ en:
     ai_discord_search_mode: "Select the search mode to use for Discord search"
     ai_discord_search_persona: "The persona to use for Discord search."
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
-    ai_bot_enable_dedicated_ux: "Allow for full screen bot interface, instead of a PM"
 
-    ai_translation_enabled: "Enables the AI translation feature"
+    ai_translation_enabled: "Enable the AI translation feature"
     ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
     ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
-    ai_translation_max_post_length: "The maximum length of a post to be translated. Posts longer than this will not be translated."
+    ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
     ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
+    ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
+    ai_translation_max_tokens_multiplier: "Multiplier to determine the maximum number of tokens to use for translation. By default, we set the max tokens to approximately two to five times the number of characters in the post. This multiplier can be adjusted to allow for thinking or reasoning models which will use more tokens."
+    ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
+    ai_audit_logs_purge_after_days: "Delete AI API audit logs older than this many days. Defaults to about 6 months. Set to 0 to keep indefinitely."
 
   reviewables:
     reasons:
@@ -246,8 +284,18 @@ en:
           name: "Exchange rate"
         stock_quote:
           name: "Stock quote (AlphaVantage)"
-        image_generation:
-          name: "Flux image generator (Together.ai)"
+        image_generation_category:
+          name: "Image generation..."
+        image_generation_custom:
+          name: "Custom"
+        image_generation_openai:
+          name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Start from blank..."
       name:
@@ -256,6 +304,11 @@ en:
     ai_helper:
       errors:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
+        no_illustrator_persona: "Post Illustrator persona is not configured. Please check your site settings."
+        no_image_generation_tool: "Post Illustrator persona must have an image generation tool attached. Please configure an image generation tool for this persona in the admin panel."
+        no_image_generated: "Failed to generate image. Please try again or check your tool configuration."
+        llm_model_not_configured: "No language model is configured for image generation. Please configure a default language model in your site settings."
+        unknown_error: "An unexpected error occurred while generating thumbnails. Please try again."
       prompts:
         translate: Translate to %{language}
         generate_titles: Suggest topic titles
@@ -265,10 +318,6 @@ en:
         explain: "Explain"
         illustrate_post: "Illustrate Post"
         replace_dates: "Smart dates"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Image by Stable Diffusion XL"
-          dall_e_3: "Image by DALL-E 3"
       image_caption:
         attribution: "Captioned by AI"
 
@@ -295,7 +344,7 @@ en:
     ai_bot:
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
-      thinking: "Thinking..."
+      thinking: "Thinking"
       personas:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_persona: "System personas cannot be deleted, please disable it instead"
@@ -363,7 +412,7 @@ en:
           description: "Default persona powering the Helper's generate Markdown table feature"
         post_illustrator:
           name: "Post illustrator"
-          description: "Generates StableDiffusion prompts to power the Helper's illustrate post feature"
+          description: "Generates images to illustrate posts using available image generation tools"
         proofreader:
           name: "Proofreader"
           description: "Default persona powering the Helper's proofread text feature"
@@ -400,6 +449,9 @@ en:
         report_runner:
           name: "Report runner"
           description: "Default persona used in the report automation script"
+        discover:
+          name: "Discover"
+          description: "Default persona used in the discoveries feature (complimentary search)"
 
       topic_not_found: "Summary unavailable, topic not found!"
       summarizing: "Summarizing topic"
@@ -453,6 +505,10 @@ en:
           base_query:
             name: "Base Search Query"
             description: "Base query to use when searching. Example: '#urgent' will prepend '#urgent' to the search query and only include topics with the urgent category or tag."
+        flag_post:
+          flag_type:
+            name: "Flag Type"
+            description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
       tool_summary:
         read_artifact: "Read a web artifact"
         update_artifact: "Update a web artifact"
@@ -461,9 +517,10 @@ en:
         github_search_files: "GitHub search files"
         github_search_code: "GitHub code search"
         github_file_content: "GitHub file content"
-        github_pull_request_diff: "GitHub pull request diff"
+        github_diff: "GitHub diff"
         random_picker: "Random Picker"
         categories: "List categories"
+        flag_post: "Flag post"
         search: "Search"
         tags: "List tags"
         time: "Time"
@@ -489,9 +546,10 @@ en:
         github_search_code: "Search for code in a GitHub repository"
         github_search_files: "Search for files in a GitHub repository"
         github_file_content: "Retrieve content of files from a GitHub repository"
-        github_pull_request_diff: "Retrieve a GitHub pull request diff"
+        github_diff: "Retrieve a GitHub pull request or commit diff"
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
+        flag_post: "Flag the current post for staff review"
         search: "Search all public topics on the forum"
         tags: "List all tags on the forum"
         time: "Find time in various time zones"
@@ -515,9 +573,10 @@ en:
         web_browser: "Reading <a href='%{url}'>%{url}</a>"
         github_search_files: "Searched for '%{keywords}' in %{repo}/%{branch}"
         github_search_code: "Searched for '%{query}' in %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Retrieved content of %{file_paths} from %{repo_name}@%{branch}"
         random_picker: "Picking from %{options}, picked: %{result}"
+        flag_post: "Flagging post %{post_id} (flag_post: %{flag_post})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
         time: "Time in %{timezone} is %{time}"
         summarize: "Summarized <a href='%{url}'>%{title}</a>"
@@ -556,6 +615,16 @@ en:
           title: "Discovery conversation: Search for %{query}"
           raw: "In my search for %{query}, you showed me the following information:\n\n%{context}\n\nLet's continue the conversation."
 
+      flag_post:
+        errors:
+          no_context: "No post context available for flagging."
+          no_reason: "A reason is required to flag a post."
+          invalid_flag_type: "Invalid flag type."
+        skipped: "Verdict was false; no flag was created."
+        already_flagged: "Post is already flagged for review."
+        flagged: "Post flagged for review."
+        reason: "AI bot flagged this post.\n\nReason: %{reason}"
+
     summarization:
       configuration_hint:
         one: "Configure the `%{setting}` setting first."
@@ -582,7 +651,7 @@ en:
     llm:
       configuration:
         create_llm: "You need to setup an LLM before enabling this feature"
-        disable_module_first: "You have to disable %{setting} first."
+        disable_modules_first: "You must disable these modules first: %{settings}"
         set_llm_first: "Set %{setting} first"
         model_unreachable: "We couldn't get a response from this model. Check your settings first."
         invalid_seeded_model: "You can't use this model with this feature"
@@ -607,17 +676,27 @@ en:
       cannot_edit_builtin: "You can't edit a built-in model."
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
-        invalid_config: "You selected a invalid option."
         choose_model: "Set 'ai embeddings selected model' first."
+        model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"
       bedrock_invalid_url: "Please complete all the fields to use this model."
+      bedrock_missing_auth: "AWS Bedrock requires either Access Key ID or Role ARN to be configured"
 
     ai_staff_action_logger:
       updated: "updated"
       set: "set"
       removed: "removed"
+
+    translation:
+      errors:
+        disabled: "The AI translation feature is not fully configured."
+        all_posts_translated: "All posts in this topic are already translated."
+
+    llm_credit_allocation:
+      limit_exceeded_user: "This community has reached its AI credit limit for today. Please try again after %{reset_time} or contact your site administrator for more information."
+      limit_exceeded_admin: "You have reached your AI credit limit. Please try again after %{reset_time}."
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
@@ -635,6 +714,3 @@ en:
       custom_tool_exists:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
-  dashboard:
-    problem:
-      ai_llm_status: "The LLM model: %{model_name} is encountering issues. Please check the <a href='%{url}'>model's configuration page</a>."

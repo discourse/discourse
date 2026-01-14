@@ -30,7 +30,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   before { enable_current_plugin }
 
   it "should be able to make a simple request" do
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{nova_model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
 
     content = {
       "output" => {
@@ -92,7 +92,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
     stub_request(:post, stream_url).to_return(status: 200, body: messages.join)
 
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{nova_model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
     responses = []
     proxy.generate("Hello!", user: user) { |partial| responses << partial }
 
@@ -106,7 +106,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     #model.provider_params["disable_native_tools"] = true
     #model.save!
 
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{nova_model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
     prompt =
       DiscourseAi::Completions::Prompt.new(
         "You are a helpful assistant.",

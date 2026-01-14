@@ -18,11 +18,14 @@ vi:
       date: "Ngày"
       region:
         none: "Không có gì"
+        names:
+          ru: "Liên bang Nga"
       toolbar_button:
         today: "Hôm nay"
         month: "Tháng"
         week: "Tuần"
         day: "Ngày"
+        year: "Năm"
     group_timezones:
       search: "Tìm kiếm..."
     discourse_post_event:

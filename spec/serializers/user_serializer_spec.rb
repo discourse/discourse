@@ -438,7 +438,7 @@ RSpec.describe UserSerializer do
           revoked_at: Time.zone.now,
         )
       user_api_key_1 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 7.days.ago)
-      user_api_key_2 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 1.days.ago)
+      user_api_key_2 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 1.day.ago)
       user_api_key_3 =
         Fabricate(
           :readonly_user_api_key,

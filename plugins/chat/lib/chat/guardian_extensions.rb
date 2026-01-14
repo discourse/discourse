@@ -167,7 +167,12 @@ module Chat
           return true if is_admin?
           post_allowed_category_ids.include?(chatable.id)
         else
-          can_post_in_category?(chatable)
+          if is_anonymous?
+            SiteSetting.allow_chat_in_anonymous_mode &&
+              AnonymousShadowCreator.get_master(@user)&.guardian&.can_post_in_category?(chatable)
+          else
+            can_post_in_category?(chatable)
+          end
         end
       when Chat::DirectMessage
         true

@@ -11,6 +11,7 @@ module DiscourseAi
 
           def all_dialects
             [
+              DiscourseAi::Completions::Dialects::OpenAiResponses,
               DiscourseAi::Completions::Dialects::ChatGpt,
               DiscourseAi::Completions::Dialects::Gemini,
               DiscourseAi::Completions::Dialects::Claude,
@@ -25,9 +26,7 @@ module DiscourseAi
           def dialect_for(llm_model)
             dialects = []
 
-            if Rails.env.test? || Rails.env.development?
-              dialects = [DiscourseAi::Completions::Dialects::Fake]
-            end
+            dialects = [DiscourseAi::Completions::Dialects::Fake] if Rails.env.local?
 
             dialects = dialects.concat(all_dialects)
 
@@ -64,11 +63,11 @@ module DiscourseAi
 
         def self.no_more_tool_calls_text
           # note, Anthropic must never prefill with an ending whitespace
-          "I WILL NOT USE TOOLS IN THIS REPLY, user expressed they wanted to stop using tool calls.\nHere is the best, complete, answer I can come up with given the information I have."
+          "Tool budget EXHAUSTED for this response, no more tools will be called in this response.\nHere is the best, complete, answer I can come up with given the information I have to address the original user query."
         end
 
         def self.no_more_tool_calls_text_user
-          "DO NOT USE TOOLS IN YOUR REPLY. Return the best answer you can given the information I supplied you."
+          "IT IS CRITICAL you do not use any tools or function calls in your response. JUST REPLY with the best answer you can provide based on your existing knowledge."
         end
 
         def no_more_tool_calls_text
@@ -79,8 +78,66 @@ module DiscourseAi
           self.class.no_more_tool_calls_text_user
         end
 
+        # supported options are :none/:all/:model_only
+        def strip_upload_markdown_mode
+          :none
+        end
+
+        def strip_upload_markdown(messages, strip_mode: nil)
+          return messages if strip_mode == :none
+
+          eligible_types =
+            case strip_mode
+            when :all
+              %i[user model]
+            when :model_only
+              %i[model]
+            else
+              []
+            end
+
+          return messages if eligible_types.empty?
+
+          upload_ids =
+            messages
+              .flat_map do |m|
+                next [] if eligible_types.exclude?(m[:type].to_sym)
+                content = m[:content]
+                content = [content] unless content.is_a?(Array)
+                content.filter_map { |c| c.is_a?(Hash) && c[:upload_id] ? c[:upload_id] : nil }
+              end
+              .uniq
+
+          return messages if upload_ids.empty?
+
+          shas = Upload.where(id: upload_ids).pluck(:sha1).compact
+
+          messages.map do |m|
+            next m if eligible_types.exclude?(m[:type].to_sym)
+
+            content = m[:content]
+            content = [content] unless content.is_a?(Array)
+
+            new_content =
+              content.map do |c|
+                if c.is_a?(String)
+                  strip_upload_markers(c, shas)
+                else
+                  c
+                end
+              end
+
+            new_content = new_content[0] if new_content.length == 1
+            m.merge(content: new_content)
+          end
+        end
+
         def translate
-          messages = trim_messages(prompt.messages)
+          messages = prompt.messages
+          if strip_upload_markdown_mode != :none
+            messages = strip_upload_markdown(messages, strip_mode: strip_upload_markdown_mode)
+          end
+          messages = trim_messages(messages)
           last_message = messages.last
           inject_done_on_last_tool_call = false
 
@@ -129,6 +186,19 @@ module DiscourseAi
         private
 
         attr_reader :opts, :llm_model
+
+        def strip_upload_markers(markdown, upload_shas)
+          return markdown if markdown.blank? || upload_shas.blank?
+          base62_set = upload_shas.compact.map { |sha| Upload.base62_sha1(sha) }.to_set
+          markdown.gsub(%r{!\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([a-zA-Z0-9]+)[^)]+\)}) do
+            b62 = Regexp.last_match(2)
+            if base62_set.include?(b62)
+              ""
+            else
+              Regexp.last_match(0)
+            end
+          end
+        end
 
         def trim_messages(messages)
           prompt_limit = max_prompt_tokens
@@ -231,10 +301,13 @@ module DiscourseAi
 
         def to_encoded_content_array(
           content:,
-          image_encoder:,
+          upload_encoder:,
           text_encoder:,
           other_encoder: nil,
-          allow_vision:
+          allow_images:,
+          allow_documents: false,
+          allowed_attachment_types: nil,
+          upload_filter: nil
         )
           content = [content] if !content.is_a?(Array)
 
@@ -244,13 +317,30 @@ module DiscourseAi
           content.each do |c|
             if c.is_a?(String)
               current_string << c
-            elsif c.is_a?(Hash) && c.key?(:upload_id) && allow_vision
+            elsif c.is_a?(Hash) && c.key?(:upload_id)
+              next if !allow_images && !allow_documents
+
+              encoded =
+                prompt.encode_upload(
+                  c[:upload_id],
+                  allow_documents: allow_documents,
+                  allowed_attachment_types: allowed_attachment_types,
+                )
+              next if encoded.blank?
+
+              is_image = encoded[:kind] == :image
+              is_document = encoded[:kind] == :document
+
+              next if is_image && !allow_images
+              next if is_document && !allow_documents
+              next if upload_filter && !upload_filter.call(encoded)
+
               if !current_string.empty?
                 result << text_encoder.call(current_string)
                 current_string = +""
               end
-              encoded = prompt.encode_upload(c[:upload_id])
-              result << image_encoder.call(encoded) if encoded
+
+              result << upload_encoder.call(encoded)
             elsif other_encoder
               encoded = other_encoder.call(c)
               result << encoded if encoded
@@ -259,6 +349,30 @@ module DiscourseAi
 
           result << text_encoder.call(current_string) if !current_string.empty?
           result
+        end
+
+        def attachment_type_for(encoded)
+          ext = File.extname(encoded[:filename].to_s).delete_prefix(".").downcase
+          mime = encoded[:mime_type].to_s
+
+          return "pdf" if ext == "pdf" || mime.include?("pdf")
+          return "docx" if ext == "docx"
+          return "doc" if ext == "doc"
+          return "txt" if ext == "txt" || mime.include?("text/plain")
+          return "rtf" if ext == "rtf"
+          return "html" if %w[html htm].include?(ext) || mime.include?("html")
+          return "markdown" if %w[md markdown].include?(ext) || mime.include?("markdown")
+
+          "file"
+        end
+
+        def document_allowed?(encoded)
+          return true if encoded[:kind] != :document
+
+          allowed_types = llm_model.allowed_attachment_types
+          return false if allowed_types.blank?
+
+          allowed_types.include?(attachment_type_for(encoded))
         end
       end
     end

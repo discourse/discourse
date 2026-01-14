@@ -63,7 +63,6 @@ fa_IR:
       error_while_fetching_voters: "متاسفانه در نمایش رای دهندگان خطایی رخ داده است."
       error_while_exporting_results: "متأسفانه در پروسه اکسپورت خطایی رخ داده."
       ui_builder:
-        title: ساخت نظرسنجی
         insert: درج نظر سنجی
         help:
           options_min_count: حداقل 1 گزینه را وارد کنید.

@@ -16,8 +16,6 @@ module(
     });
 
     test("set value", async function (assert) {
-      const self = this;
-
       this.field = new AutomationFabricators(getOwner(this)).field({
         component: "category_notification_level",
       });
@@ -25,8 +23,8 @@ module(
       await render(
         <template>
           <AutomationField
-            @automation={{self.automation}}
-            @field={{self.field}}
+            @automation={{this.automation}}
+            @field={{this.field}}
           />
         </template>
       );

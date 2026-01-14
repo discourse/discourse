@@ -73,6 +73,7 @@ module Chat
             dependent: :destroy,
             class_name: "Chat::HereMention",
             foreign_key: :chat_message_id
+    has_one :message_search_data, dependent: :destroy, foreign_key: :chat_message_id
 
     scope :in_public_channel,
           -> do
@@ -197,9 +198,11 @@ module Chat
       invalidate_parsed_mentions
     end
 
-    def rebake!(invalidate_oneboxes: false, priority: nil)
+    def rebake!(invalidate_oneboxes: false, priority: nil, skip_notifications: false)
       ensure_last_editor_id
-      args = { chat_message_id: self.id, invalidate_oneboxes: invalidate_oneboxes }
+      args = { chat_message_id: self.id }
+      args[:invalidate_oneboxes] = true if invalidate_oneboxes
+      args[:skip_notifications] = true if skip_notifications
       args[:queue] = priority.to_s if priority && priority != :normal
       Jobs.enqueue(Jobs::Chat::ProcessMessage, args)
     end
@@ -245,6 +248,7 @@ module Chat
       emphasis
       replacements
       escape
+      entity
     ]
 
     def self.cook(message, opts = {})

@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    user:
+      date_of_birth:
+        user_title: "بۈگۈن تۇغۇلغان كۈنىڭىز!"
+        title: "بۈگۈن مېنىڭ تۇغۇلغان كۈنۈم!"
+        label: "تۇغۇلغان كۈنى"
+      anniversary:
+        user_title: "بۈگۈن سىزنىڭ جامائىتىمىزگە قوشۇلغانلىقىڭىزنىڭ يىللىق خاتىرە كۈنى!"
+        title: "بۈگۈن مېنىڭ بۇ جامائەتكە قوشۇلغانلىقىمنىڭ يىللىق خاتىرە كۈنى!"
+    cakeday:
+      today: "بۈگۈن"
+      tomorrow: "ئەتە"
+      upcoming: "كېلىۋاتقان"
+      all: "ھەممىسى"
+    birthdays:
+      title: "تۇغۇلغان كۈنى"
+      month:
+        title: "ئايدىكى تۇغۇلغان كۈن"
+      today:
+        title: "%{date} نىڭ تۇغۇلغان كۈنى"
+    anniversaries:
+      title: "يىل خاتىرىسى"
+      month:
+        title: "ئايدىكى يىل خاتىرە كۈنى"
+      today:
+        title: "%{date} نىڭ يىل خاتىرىسى"

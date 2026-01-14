@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseZendeskPlugin::Helper do
   subject(:dummy) { Class.new { extend DiscourseZendeskPlugin::Helper } }
 

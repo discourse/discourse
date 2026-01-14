@@ -22,7 +22,7 @@ RSpec.describe ColorScheme do
     href = manager.stylesheet_data(:desktop_theme)[0][:new_href]
     colors_href = manager.color_scheme_stylesheet_details(scheme.id, fallback_to_base: true)
 
-    ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "bbb" }])
+    ColorSchemeRevisor.revise(scheme, { colors: [{ name: "primary", hex: "bbb" }] })
 
     href2 = manager.stylesheet_data(:desktop_theme)[0][:new_href]
     colors_href2 = manager.color_scheme_stylesheet_details(scheme.id, fallback_to_base: true)
@@ -87,7 +87,7 @@ RSpec.describe ColorScheme do
         scheme = ColorScheme.create_from_base(name: "test scheme")
         ColorSchemeRevisor.revise(
           scheme,
-          colors: [{ name: "header_background", hex: "9dc927", default_hex: "949493" }],
+          { colors: [{ name: "header_background", hex: "9dc927", default_hex: "949493" }] },
         )
         scheme.reload
         expect(ColorScheme.hex_for_name("header_background", scheme.id)).to eq("9dc927")
@@ -104,13 +104,13 @@ RSpec.describe ColorScheme do
       scheme = ColorScheme.create_from_base(name: "Tester")
       ColorSchemeRevisor.revise(
         scheme,
-        colors: [{ name: "primary", hex: "333333" }, { name: "secondary", hex: "DDDDDD" }],
+        { colors: [{ name: "primary", hex: "333333" }, { name: "secondary", hex: "DDDDDD" }] },
       )
       expect(scheme.is_dark?).to eq(false)
 
       ColorSchemeRevisor.revise(
         scheme,
-        colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }],
+        { colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }] },
       )
       expect(scheme.is_dark?).to eq(true)
     end
@@ -123,15 +123,26 @@ RSpec.describe ColorScheme do
 
   describe "is_wcag?" do
     it "works as expected" do
-      expect(ColorScheme.create_from_base(name: "Nope").is_wcag?).to eq(nil)
-      expect(ColorScheme.create_from_base(name: "Nah", base_scheme_id: "Dark").is_wcag?).to eq(
-        false,
-      )
+      expect(ColorScheme.create_from_base(name: "Nope").is_wcag?).to eq(false)
+      expect(
+        ColorScheme.create_from_base(
+          name: "Nah",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+        ).is_wcag?,
+      ).to eq(false)
 
-      expect(ColorScheme.create_from_base(name: "Yup", base_scheme_id: "WCAG").is_wcag?).to eq(true)
-      expect(ColorScheme.create_from_base(name: "Yup", base_scheme_id: "WCAG Dark").is_wcag?).to eq(
-        true,
-      )
+      expect(
+        ColorScheme.create_from_base(
+          name: "Yup",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+        ).is_wcag?,
+      ).to eq(true)
+      expect(
+        ColorScheme.create_from_base(
+          name: "Yup",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG Dark"],
+        ).is_wcag?,
+      ).to eq(true)
     end
   end
 
@@ -145,18 +156,20 @@ RSpec.describe ColorScheme do
     end
 
     it "falls back to default scheme if base scheme does not have color" do
-      custom_scheme_id = "BaseSchemeWithNoHighlightColor"
-      ColorScheme::BUILT_IN_SCHEMES[custom_scheme_id.to_sym] = { "secondary" => "123123" }
-
-      color_scheme = ColorScheme.new(base_scheme_id: custom_scheme_id)
+      custom_color_scheme = Fabricate(:color_scheme)
+      Fabricate(
+        :color_scheme_color,
+        color_scheme: custom_color_scheme,
+        name: "secondary",
+        hex: "123123",
+      )
+      color_scheme = ColorScheme.new(base_scheme_id: custom_color_scheme.id)
       color_scheme.color_scheme_colors << ColorSchemeColor.new(name: "primary", hex: "121212")
 
       resolved = color_scheme.resolved_colors
       expect(resolved["primary"]).to eq("121212") # From db
       expect(resolved["secondary"]).to eq("123123") # From custom scheme
       expect(resolved["tertiary"]).to eq("08c") # From `foundation/colors.scss`
-    ensure
-      ColorScheme::BUILT_IN_SCHEMES.delete(custom_scheme_id.to_sym)
     end
 
     it "calculates 'hover' and 'selected' from existing db colors in dark mode" do
@@ -175,6 +188,108 @@ RSpec.describe ColorScheme do
       resolved = color_scheme.resolved_colors
       expect(resolved["hover"]).to eq("f2f2f2")
       expect(resolved["selected"]).to eq("e9e9e9")
+    end
+  end
+
+  describe "#diverge_from_remote" do
+    fab!(:theme)
+    fab!(:original_scheme) do
+      Fabricate(
+        :color_scheme,
+        name: "somescheme",
+        theme_id: theme.id,
+        user_selectable: true,
+        color_scheme_colors: [
+          Fabricate(:color_scheme_color, name: "primary", hex: "998877"),
+          Fabricate(:color_scheme_color, name: "secondary", hex: "553322"),
+        ],
+      )
+    end
+
+    it "creates a new scheme with the same colors and sets it as the base scheme" do
+      expect(original_scheme.base_scheme_id).to eq(nil)
+
+      original_scheme.diverge_from_remote
+
+      expect(original_scheme.base_scheme.colors.map { |c| [c.name, c.hex] }.sort_by(&:first)).to eq(
+        original_scheme.colors.map { |c| [c.name, c.hex] }.sort_by(&:first),
+      )
+      expect(original_scheme.base_scheme.theme_id).to eq(theme.id)
+      expect(original_scheme.base_scheme.user_selectable).to eq(false)
+      expect(original_scheme.base_scheme.remote_copy).to eq(true)
+      expect(original_scheme.base_scheme.via_wizard).to eq(false)
+    end
+
+    it "doesn't create multiple base schemes if called multiple times" do
+      expect do
+        original_scheme.diverge_from_remote
+        first_base_id = original_scheme.reload.base_scheme.id
+
+        original_scheme.diverge_from_remote
+        expect(original_scheme.reload.base_scheme.id).to eq(first_base_id)
+      end.to change { ColorScheme.unscoped.count }.by(1)
+    end
+  end
+
+  describe "#destroy_remote_original" do
+    fab!(:theme)
+
+    fab!(:original_scheme) { Fabricate(:color_scheme, name: "somescheme", theme_id: theme.id) }
+
+    fab!(:unrelated_scheme) do
+      Fabricate(:color_scheme, theme_id: theme.id, base_scheme_id: original_scheme.id)
+    end
+
+    before { original_scheme.diverge_from_remote }
+
+    it "deletes the base scheme that stores the original colors and is triggered on destroy" do
+      expect(ColorScheme.unscoped.exists?(id: original_scheme.base_scheme_id)).to eq(true)
+
+      expect do original_scheme.destroy! end.to change { ColorScheme.unscoped.count }.by(-2)
+
+      expect(ColorScheme.unscoped.exists?(id: original_scheme.base_scheme_id)).to eq(false)
+    end
+  end
+
+  describe "#no_edits_for_remote_copies" do
+    it "prevents editing remote copies of color schemes" do
+      remote_copy =
+        Fabricate(
+          :color_scheme,
+          remote_copy: true,
+          user_selectable: false,
+          theme_id: Fabricate(:theme).id,
+        )
+
+      remote_copy.user_selectable = true
+      expect(remote_copy.valid?).to eq(false)
+      expect(remote_copy.errors.full_messages).to include(
+        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
+      )
+
+      remote_copy.reload
+
+      remote_copy.base_scheme_id = 1
+      expect(remote_copy.valid?).to eq(false)
+      expect(remote_copy.errors.full_messages).to include(
+        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
+      )
+
+      remote_copy.reload
+
+      remote_copy.remote_copy = false
+      expect(remote_copy.valid?).to eq(false)
+      expect(remote_copy.errors.full_messages).to include(
+        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
+      )
+
+      remote_copy.reload
+
+      remote_copy.theme_id = 1
+      expect(remote_copy.valid?).to eq(false)
+      expect(remote_copy.errors.full_messages).to include(
+        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
+      )
     end
   end
 end

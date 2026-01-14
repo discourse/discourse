@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module ::DiscourseGamification
+module DiscourseGamification
   class LikeGiven < Scorable
     def self.score_multiplier
       SiteSetting.like_given_score_value

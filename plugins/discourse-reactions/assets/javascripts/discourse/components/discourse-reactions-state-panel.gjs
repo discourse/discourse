@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
-import { and, eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import { and, eq } from "discourse/truth-helpers";
 import DiscourseReactionsStatePanelReaction from "./discourse-reactions-state-panel-reaction";
 
 export default class DiscourseReactionsStatePanel extends Component {
@@ -14,7 +14,9 @@ export default class DiscourseReactionsStatePanel extends Component {
 
     const { post } = this.args;
     if (post?.reactions) {
-      const maxCount = Math.max(...post.reactions.mapBy("count"));
+      const maxCount = Math.max(
+        ...post.reactions.map((reaction) => reaction.count)
+      );
       const charsCount = maxCount.toString().length;
       classes.push(`max-length-${charsCount}`);
     }

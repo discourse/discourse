@@ -13,8 +13,6 @@ module(
     setupRenderingTest(hooks);
 
     test("onChange", async function (assert) {
-      const self = this;
-
       this.set("policy", new EmberObject());
       this.set("onChange", (key, value) => {
         query(".output").innerText = `${key}=${value}`;
@@ -24,8 +22,8 @@ module(
         <template>
           <span class="output"></span>
           <PolicyBuilderForm
-            @onChange={{self.onChange}}
-            @policy={{self.policy}}
+            @onChange={{this.onChange}}
+            @policy={{this.policy}}
           />
         </template>
       );

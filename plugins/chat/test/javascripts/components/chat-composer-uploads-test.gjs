@@ -42,14 +42,12 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   setupRenderingTest(hooks);
 
   test("loading uploads from an outside source (e.g. draft or editing message)", async function (assert) {
-    const self = this;
-
     this.existingUploads = [fakeUpload];
 
     await render(
       <template>
         <ChatComposerUploads
-          @existingUploads={{self.existingUploads}}
+          @existingUploads={{this.existingUploads}}
           @fileUploadElementId="chat-widget-uploader"
         />
       </template>
@@ -59,8 +57,6 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("upload starts and completes", async function (assert) {
-    const self = this;
-
     setupUploadPretender();
     this.set("onUploadChanged", () => {});
 
@@ -68,7 +64,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
       <template>
         <ChatComposerUploads
           @fileUploadElementId="chat-widget-uploader"
-          @onUploadChanged={{self.onUploadChanged}}
+          @onUploadChanged={{this.onUploadChanged}}
         />
       </template>
     );
@@ -94,8 +90,6 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("removing a completed upload", async function (assert) {
-    const self = this;
-
     this.set("changedUploads", null);
     this.set("onUploadChanged", () => {});
 
@@ -104,9 +98,9 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     await render(
       <template>
         <ChatComposerUploads
-          @existingUploads={{self.existingUploads}}
+          @existingUploads={{this.existingUploads}}
           @fileUploadElementId="chat-widget-uploader"
-          @onUploadChanged={{self.onUploadChanged}}
+          @onUploadChanged={{this.onUploadChanged}}
         />
       </template>
     );
@@ -119,8 +113,6 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("cancelling in progress upload", async function (assert) {
-    const self = this;
-
     setupUploadPretender();
 
     this.set("changedUploads", null);
@@ -132,7 +124,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
       <template>
         <ChatComposerUploads
           @fileUploadElementId="chat-widget-uploader"
-          @onUploadChanged={{self.onUploadChanged}}
+          @onUploadChanged={{this.onUploadChanged}}
         />
       </template>
     );

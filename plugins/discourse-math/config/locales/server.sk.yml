@@ -7,3 +7,4 @@
 sk:
   site_settings:
     discourse_math_enabled: "Povoliť matematický plugin Discourse (pridá špeciálne spracovanie $ a $$ blokov)"
+    discourse_math_provider: "Predvolený poskytovateľ matematického vykresľovania"

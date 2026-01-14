@@ -3,7 +3,9 @@
 describe "User preferences | Security", type: :system do
   fab!(:password) { "kungfukenny" }
   fab!(:email) { "email@user.com" }
+  fab!(:admin)
   fab!(:user) { Fabricate(:user, email: email, password: password) }
+  fab!(:staged_user) { Fabricate(:user, staged: true) }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
@@ -70,8 +72,6 @@ describe "User preferences | Security", type: :system do
         hasResidentKey: true,
         isUserVerified: true,
       ) do
-        add_cookie(name: "destination_url", value: "/new")
-
         user_preferences_security_page.visit(user)
 
         find(".pref-passkeys__add .btn").click
@@ -104,6 +104,12 @@ describe "User preferences | Security", type: :system do
 
         user_menu.sign_out
 
+        # ensures /hot isn't the homepage (otherwise the test below is pointless)
+        expect(SiteSetting.top_menu_items.first).not_to eq("hot")
+
+        # visit /hot to ensure we have a destination_url cookie set
+        visit("/hot")
+
         # login with the key we just created
         # this triggers the conditional UI for passkeys
         # which uses the virtual authenticator
@@ -112,7 +118,7 @@ describe "User preferences | Security", type: :system do
         expect(page).to have_css(".header-dropdown-toggle.current-user")
 
         # ensures that we are redirected to the destination_url cookie
-        expect(page.driver.current_url).to include("/new")
+        expect(page.driver.current_url).to include("/hot")
       end
     end
   end
@@ -144,11 +150,54 @@ describe "User preferences | Security", type: :system do
     include_examples "security keys"
     include_examples "passkeys"
     include_examples "enforced second factor"
+
+    it "shows backup codes button after adding first TOTP" do
+      user_preferences_security_page.visit(user).visit_second_factor(user, password)
+
+      expect(page).to have_text(I18n.t("js.user.second_factor_backup.enable_prerequisites"))
+      expect(page).to have_no_css(".new-second-factor-backup")
+
+      find(".totp .new-totp").click
+      find(".show-second-factor-key").click
+      totp = ROTP::TOTP.new(find(".second-factor-key").text.gsub(/\s+/, ""))
+      find("#second-factor-name").fill_in(with: "My Authenticator")
+      find("#second-factor-token").fill_in(with: totp.now)
+      find(".add-totp").click
+
+      expect(page).to have_css(".new-second-factor-backup")
+      expect(page).to have_no_text(I18n.t("js.user.second_factor_backup.enable_prerequisites"))
+    end
   end
 
   context "when mobile", mobile: true do
     include_examples "security keys"
     include_examples "passkeys"
     include_examples "enforced second factor"
+  end
+
+  context "when viewing a user's page as an admin" do
+    before { sign_in(admin) }
+
+    describe "password reset" do
+      it "disables the password reset button for staged users" do
+        visit("/u/#{staged_user.username}/preferences/security")
+
+        expect(page.find("#change-password-button")).to be_disabled
+        expect(page).to have_css(
+          ".instructions",
+          text: I18n.t("js.user.change_password.staged_user"),
+        )
+      end
+
+      it "does not disable password reset for non-staged users" do
+        visit("/u/#{user.username}/preferences/security")
+
+        expect(page.find("#change-password-button")).not_to be_disabled
+        expect(page).to have_no_css(
+          ".instructions",
+          text: I18n.t("js.user.change_password.staged_user"),
+        )
+      end
+    end
   end
 end

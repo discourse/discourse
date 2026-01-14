@@ -29,6 +29,12 @@ cs:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorie
+            tags:
+              label: Tagy
         user_badge_granted:
           fields:
             badge:
@@ -144,20 +150,20 @@ cs:
               label: ID tématu
             user:
               label: Uživatel
+        set_topic_timer:
+          title: Nastavení časovače tématu
       models:
         trigger:
           name:
             label: Spouštěč
         automation:
           name:
-            label: Jméno
+            label: Název
           trigger:
             label: Spouštěč
           version:
             label: Verze
           status:
             label: Stav
-          enabled:
-            label: Zapnuto
           disabled:
             label: Vypnuto

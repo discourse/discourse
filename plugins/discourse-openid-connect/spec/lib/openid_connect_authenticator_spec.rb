@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../../lib/omniauth_open_id_connect"
 
 describe OpenIDConnectAuthenticator do

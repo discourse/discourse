@@ -58,12 +58,12 @@ class EmbeddingDefinition < ActiveRecord::Base
             },
             {
               preset_id: "gemini-embedding-001",
-              display_name: "Gemini's embedding-001",
-              dimensions: 768,
+              display_name: "Gemini's gemini-embedding-001",
+              dimensions: 3072,
               max_sequence_length: 1536,
               pg_function: "<=>",
               url:
-                "https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent",
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent",
               tokenizer_class: "DiscourseAi::Tokenizer::GeminiTokenizer",
               provider: GOOGLE,
             },
@@ -127,7 +127,7 @@ class EmbeddingDefinition < ActiveRecord::Base
   validates :provider, presence: true, inclusion: provider_names
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer_class, presence: true, inclusion: tokenizer_names
-  validates_presence_of :url, :api_key, :dimensions, :max_sequence_length, :pg_function
+  validates :url, :api_key, :dimensions, :max_sequence_length, :pg_function, presence: true
 
   after_create :create_indexes
 
@@ -165,8 +165,8 @@ class EmbeddingDefinition < ActiveRecord::Base
     "https://#{service.target}:#{service.port}"
   end
 
-  def prepare_query_text(text, asymetric: false)
-    strategy.prepare_query_text(text, self, asymetric: asymetric)
+  def prepare_query_text(text, asymmetric: false)
+    strategy.prepare_query_text(text, self, asymmetric: asymmetric)
   end
 
   def prepare_target_text(target)
@@ -216,7 +216,9 @@ class EmbeddingDefinition < ActiveRecord::Base
   end
 
   def gemini_client
-    DiscourseAi::Inference::GeminiEmbeddings.new(endpoint_url, api_key)
+    client_dimensions = matryoshka_dimensions ? dimensions : nil
+
+    DiscourseAi::Inference::GeminiEmbeddings.new(endpoint_url, api_key, client_dimensions)
   end
 end
 

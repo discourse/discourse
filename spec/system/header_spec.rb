@@ -288,7 +288,9 @@ RSpec.describe "Glimmer Header", type: :system do
 
       current_user.publish_do_not_disturb(ends_at: 1.hour.from_now)
 
-      try_until_success { expect(page).to have_css(".d-header .do-not-disturb-background") }
+      try_until_success(reason: "Relies on messagebus updates") do
+        expect(page).to have_css(".d-header .do-not-disturb-background")
+      end
 
       current_user.publish_do_not_disturb(ends_at: 1.second.from_now)
 

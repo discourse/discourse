@@ -9,6 +9,25 @@ vi:
     accepted_solutions:
       xaxis: "Ngày"
       yaxis: "Tổng số"
+  solved:
+    filter:
+      description:
+        solved: "Lọc chủ đề đã được giải quyết"
+        unsolved: "Lọc chủ đề chưa được giải quyết"
   badges:
     solved_1:
-      name: "Đã xử lý!"
+      name: "Lần Đầu Giải Quyết"
+      description: "Có một câu trả lời được đánh dấu là Giải pháp"
+      long_description: "Huy hiệu này được trao khi câu trả lời của bạn được đánh dấu là Giải pháp cho một chủ đề. :white_check_mark: Làm tốt lắm. :+1:"
+    solved_2:
+      name: "Cố Vấn"
+      description: "Có 10 câu trả lời được đánh dấu là Giải pháp"
+      long_description: "Huy hiệu này được trao khi bạn có 10 câu trả lời được đánh dấu là Giải pháp cho các chủ đề. :white_check_mark: Bạn là một thành viên quý giá của cộng đồng."
+    solved_3:
+      name: "Biết Tuốt"
+      description: "Có 50 câu trả lời được đánh dấu là Giải pháp"
+      long_description: "Huy hiệu này được trao cho khi bạn có 50 câu trả lời được đánh dấu là Giải pháp cho các chủ đề. :white_check_mark: Bạn thực sự hiểu biết rất nhiều. :clap:"
+    solved_4:
+      name: "Quân Sư"
+      description: "Có 150 câu trả lời được đánh dấu là Giải pháp"
+      long_description: "Huy hiệu này được trao khi bạn có 150 câu trả lời được đánh dấu là Giải pháp cho các chủ đề. :white_check_mark: Tuyệt vời! :slightly_smiling_face: Bạn chính thức là một Nhà cung cấp Giải pháp. :brain:"

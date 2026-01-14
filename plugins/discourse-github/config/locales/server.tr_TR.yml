@@ -36,5 +36,28 @@ tr_TR:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "discourse-github eklentisi için eylem gerekli"
+      repository_identifier_invalid_pm: |
+        discourse-github eklentisinde belirtilen bir depo geçersiz:
+        %{repo_name}
+
+        `user/repo` olarak belirtilmeliler.
+
+        İsim
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a>
+        adresinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmez.
       repository_not_found_pm_title: "discourse-github eklentisi için eylem gerekli"
+      repository_not_found_pm: |
+        discourse-github eklentisinde belirtilen bir depo "Bulunamadı"
+        hatası döndürdü: %{repo_name}
+
+        İsim
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a>
+        içinde düzeltilene ve "github_badges_enabled" tekrar açılana kadar rozet verilmez.
       invalid_octokit_credentials_pm_title: "discourse-github eklentisi için eylem gerekli"
+      invalid_octokit_credentials_pm: |
+        discourse-github eklentisine eklenen GitHub giriş bilgileri geçersiz. "github rozetleri etkin\ site
+        ayarı devre dışı ve sorun çözülene kadar taahhütler doldurulmaz.
+
+        Belirtecin doğru olduğundan ve
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Ayarları</a> aracılığıyla tüm
+        depolara izne sahip olduğundan emin olmak için "github geri bağlantı erişim token'ı" site ayarınızı kontrol edin.

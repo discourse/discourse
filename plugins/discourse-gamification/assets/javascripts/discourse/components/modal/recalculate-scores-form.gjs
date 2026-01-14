@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DatePickerPast from "discourse/components/date-picker-past";
@@ -10,8 +10,9 @@ import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class RecalculateScoresForm extends Component {
   @service messageBus;
@@ -155,8 +156,7 @@ export default class RecalculateScoresForm extends Component {
                 @valueProperty="value"
                 @content={{this.updateRange}}
                 @value={{this.updateRangeValue}}
-                {{! template-lint-disable no-action }}
-                @onChange={{action (mut this.updateRangeValue)}}
+                @onChange={{fn (mut this.updateRangeValue)}}
               />
 
               {{#if (eq this.updateRangeValue 5)}}
@@ -166,8 +166,7 @@ export default class RecalculateScoresForm extends Component {
                     @id="custom-from-date"
                     @placeholder="yyyy-mm-dd"
                     @value={{this.recalculateFromDate}}
-                    {{! template-lint-disable no-action }}
-                    @onSelect={{action (mut this.recalculateFromDate)}}
+                    @onSelect={{fn (mut this.recalculateFromDate)}}
                     class="date-input"
                   />
                 </div>

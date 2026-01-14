@@ -17,11 +17,11 @@ class TopicLink < ActiveRecord::Base
   belongs_to :link_topic, class_name: "Topic"
   belongs_to :link_post, class_name: "Post"
 
-  validates_presence_of :url
+  validates :url, presence: true
 
-  validates_length_of :url, maximum: 500
+  validates :url, length: { maximum: 500 }
 
-  validates_uniqueness_of :url, scope: %i[topic_id post_id]
+  validates :url, uniqueness: { scope: %i[topic_id post_id] }
 
   has_many :topic_link_clicks, dependent: :destroy
 

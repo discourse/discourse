@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableFlaggedPost < Reviewable
+  include ReviewableActionBuilder
+
   scope :pending_and_default_visible, -> { pending.default_visible }
 
   # Penalties are handled by the modal after the action is performed
@@ -12,6 +14,7 @@ class ReviewableFlaggedPost < Reviewable
       agree_and_edit: :agree_and_keep,
       disagree_and_restore: :disagree,
       ignore_and_do_nothing: :ignore,
+      delete_user_block: :delete_and_block_user, # legacy name mapped to concern method
     }
   end
 
@@ -44,7 +47,12 @@ class ReviewableFlaggedPost < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
     return if post.blank?
+    super
+  end
 
+  # TODO (reviewable-refresh): Remove legacy method once new UI fully deployed
+  def build_legacy_combined_actions(actions, guardian, args)
+    # existing combined logic
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
@@ -53,9 +61,9 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     if post.hidden?
-      build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree_bundle)
+      build_action(actions, :agree_and_keep_hidden, icon: "far-eye-slash", bundle: agree_bundle)
     else
-      build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree_bundle)
+      build_action(actions, :agree_and_keep, icon: "far-eye", bundle: agree_bundle)
       build_action(
         actions,
         :agree_and_edit,
@@ -79,18 +87,7 @@ class ReviewableFlaggedPost < Reviewable
       end
     end
 
-    if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
-      delete_user_actions(actions, agree_bundle)
-    end
-
     if guardian.can_suspend?(target_created_by)
-      build_action(
-        actions,
-        :agree_and_suspend,
-        icon: "ban",
-        bundle: agree_bundle,
-        client_action: "suspend",
-      )
       build_action(
         actions,
         :agree_and_silence,
@@ -98,15 +95,21 @@ class ReviewableFlaggedPost < Reviewable
         bundle: agree_bundle,
         client_action: "silence",
       )
+      build_action(
+        actions,
+        :agree_and_suspend,
+        icon: "ban",
+        bundle: agree_bundle,
+        client_action: "suspend",
+      )
+    end
+
+    if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
+      delete_user_actions(actions, agree_bundle)
     end
 
     if post.user_deleted?
       build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree_bundle)
-    end
-    if post.hidden?
-      build_action(actions, :disagree_and_restore, icon: "thumbs-down")
-    else
-      build_action(actions, :disagree, icon: "thumbs-down")
     end
 
     post_visible_or_system_user = !post.hidden? || guardian.user.is_system_user?
@@ -114,30 +117,42 @@ class ReviewableFlaggedPost < Reviewable
 
     # We must return early in this case otherwise we can end up with a bundle
     # with no associated actions, which is not valid on the client.
-    return if !can_delete_post_or_topic && !post_visible_or_system_user
+    return if !can_delete_post_or_topic && !post_visible_or_system_user && post.hidden?
 
-    ignore =
+    disagree_bundle =
       actions.add_bundle(
-        "#{id}-ignore",
-        icon: "thumbs-up",
-        label: "reviewables.actions.ignore.title",
+        "#{id}-disagree",
+        icon: "far-eye",
+        label: "reviewables.actions.disagree_bundle.title",
       )
 
+    if post.hidden?
+      build_action(actions, :disagree_and_restore, icon: "far-eye", bundle: disagree_bundle)
+    else
+      build_action(actions, :disagree, icon: "far-eye", bundle: disagree_bundle)
+    end
+
     if post_visible_or_system_user
-      build_action(actions, :ignore_and_do_nothing, icon: "up-right-from-square", bundle: ignore)
+      build_action(actions, :ignore_and_do_nothing, icon: "xmark", bundle: disagree_bundle)
     end
     if can_delete_post_or_topic
-      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: ignore)
+      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: disagree_bundle)
       if post.reply_count > 0
         build_action(
           actions,
           :delete_and_ignore_replies,
           icon: "trash-can",
           confirm: true,
-          bundle: ignore,
+          bundle: disagree_bundle,
         )
       end
     end
+  end
+
+  # TODO (reviewable-refresh): Merge into build_actions post rollout.
+  def build_new_separated_actions
+    build_post_actions_bundle
+    build_user_actions_bundle
   end
 
   def perform_ignore(performed_by, args)
@@ -171,9 +186,7 @@ class ReviewableFlaggedPost < Reviewable
       DiscourseEvent.trigger(:flag_deferred, actions.first)
     end
 
-    create_result(:success, :ignored) do |result|
-      result.update_flag_stats = { status: :ignored, user_ids: actions.map(&:user_id) }
-    end
+    create_result(:success, :ignored, actions.map(&:user_id), false)
   end
 
   def perform_agree_and_keep(performed_by, args)
@@ -181,15 +194,12 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    delete_user(post.user, delete_opts, performed_by)
+    super
     agree(performed_by, args)
   end
 
-  def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts
-    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
-
-    delete_user(post.user, delete_options, performed_by)
+  def perform_delete_and_block_user(performed_by, args)
+    super
     agree(performed_by, args)
   end
 
@@ -243,9 +253,7 @@ class ReviewableFlaggedPost < Reviewable
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
 
-    create_result(:success, :rejected) do |result|
-      result.update_flag_stats = { status: :disagreed, user_ids: actions.map(&:user_id) }
-    end
+    create_result(:success, :rejected, actions.map(&:user_id), false)
   end
 
   def perform_delete_and_ignore(performed_by, args)
@@ -305,38 +313,16 @@ class ReviewableFlaggedPost < Reviewable
       yield(actions.first) if block_given?
     end
 
-    create_result(:success, :approved) do |result|
-      result.update_flag_stats = { status: :agreed, user_ids: actions.map(&:user_id) }
-      result.recalculate_score = true
-    end
-  end
-
-  def build_action(
-    actions,
-    id,
-    icon:,
-    button_class: nil,
-    bundle: nil,
-    client_action: nil,
-    confirm: false
-  )
-    actions.add(id, bundle: bundle) do |action|
-      prefix = "reviewables.actions.#{id}"
-      action.icon = icon
-      action.button_class = button_class
-      action.label = "#{prefix}.title"
-      action.description = "#{prefix}.description"
-      action.client_action = client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
-      action.completed_message = "#{prefix}.complete"
-    end
+    create_result(:success, :approved, actions.map(&:user_id), false)
   end
 
   def unassign_topic(performed_by, post)
     topic = post.topic
     return unless topic && performed_by && SiteSetting.reviewable_claiming != "disabled"
-    ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
-    topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
+    deleted_count = ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
+    if deleted_count > 0
+      topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
+    end
 
     user_ids = User.staff.pluck(:id)
 
@@ -359,25 +345,6 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   private
-
-  def delete_user(user, delete_options, performed_by)
-    email = user.email
-
-    UserDestroyer.new(performed_by).destroy(user, delete_options)
-
-    message = UserNotifications.account_deleted(email, self)
-    Email::Sender.new(message, :account_deleted).send
-  end
-
-  def delete_opts
-    {
-      delete_posts: true,
-      prepare_for_destroy: true,
-      block_urls: true,
-      delete_as_spammer: true,
-      context: "review",
-    }
-  end
 
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable: self)

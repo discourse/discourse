@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action, get } from "@ember/object";
-import { eq } from "truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiLlmSelector from "./ai-llm-selector";
 
@@ -10,8 +10,8 @@ export default class AiPersonaToolOptions extends Component {
     if (!allTools || !this.args.data.tools) {
       return false;
     }
-    return this.args.data?.tools.any(
-      (tool) => allTools.findBy("id", tool)?.options
+    return this.args.data?.tools.some(
+      (tool) => allTools.find((item) => item.id === tool)?.options
     );
   }
 
@@ -91,6 +91,8 @@ export default class AiPersonaToolOptions extends Component {
                           </field.Custom>
                         {{else if (eq optionMeta.type "boolean")}}
                           <field.Checkbox />
+                        {{else if (eq optionMeta.type "text")}}
+                          <field.Textarea />
                         {{else}}
                           <field.Input />
                         {{/if}}

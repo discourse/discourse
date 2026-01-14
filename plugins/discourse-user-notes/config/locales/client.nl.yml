@@ -8,8 +8,5 @@ nl:
   js:
     user_notes:
       title: "Gebruikersnotities"
-      attach: "Gebruikersnotitie toevoegen"
-      remove: "Gebruikersnotitie verwijderen"
-      show: "Gebruikersnotities (%{count})"
+      attach_note_description: "Voeg een opmerking toe over deze gebruiker. Deze opmerking is alleen zichtbaar voor medewerkers."
       delete_confirm: "Weet je zeker dat je die gebruikersnotitie wilt verwijderen?"
-      show_post: "Bericht weergeven"

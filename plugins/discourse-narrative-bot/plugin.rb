@@ -12,7 +12,7 @@ require_relative "lib/discourse_narrative_bot/welcome_post_type_site_setting"
 register_asset "stylesheets/discourse-narrative-bot.scss"
 
 module ::DiscourseNarrativeBot
-  PLUGIN_NAME = "discourse-narrative-bot".freeze
+  PLUGIN_NAME = "discourse-narrative-bot"
   BOT_USER_ID = -2
 end
 
@@ -87,10 +87,7 @@ after_initialize do
   self.add_to_class(:user, :enqueue_narrative_bot_job?) do
     SiteSetting.discourse_narrative_bot_enabled && self.human? && !self.anonymous? &&
       !self.staged &&
-      !SiteSetting
-        .discourse_narrative_bot_ignored_usernames
-        .split("|".freeze)
-        .include?(self.username)
+      !SiteSetting.discourse_narrative_bot_ignored_usernames.split("|").include?(self.username)
   end
 
   self.on(:post_created) do |post, options|
@@ -185,13 +182,13 @@ after_initialize do
       raw =
         I18n.t(
           "discourse_narrative_bot.tl2_promotion_message.text_body_template",
-          discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
+          discobot_username: DiscourseNarrativeBot::Base.new.discobot_username,
           reset_trigger:
-            "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}",
+            "#{DiscourseNarrativeBot::TrackSelector.reset_trigger} #{DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}",
         )
 
       PostCreator.create!(
-        ::DiscourseNarrativeBot::Base.new.discobot_user,
+        DiscourseNarrativeBot::Base.new.discobot_user,
         title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
         raw: raw,
         skip_validations: true,

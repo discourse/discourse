@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Özel"
+          public: "Genel"
+      reports:
+        reading_time:
+          title: Okuma süresi
+        chat_usage:
+          messages: i̇letiler
+          author: Siz
+          author_others: "%{username}"
+          status_online: "● çevrimiçi"
+        invites:
+          title: Davetler
+          invitee_posts: Oluşturulan Gönderiler
+          invitee_likes: Yapılan Beğenilenler
+          label_invitations_sent: "Davet gönderildi:"
+        new_user_interactions:
+          likes_given: Yapılan Beğenilenler
+          mentions: Bahsetmeler
+        writing_analysis:
+          menu_other: Diğer

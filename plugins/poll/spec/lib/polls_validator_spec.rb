@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::DiscoursePoll::PollsValidator do
+RSpec.describe DiscoursePoll::PollsValidator do
   subject(:validator) { described_class.new(post) }
 
   let(:post) { Fabricate(:post) }

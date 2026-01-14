@@ -178,21 +178,21 @@ class NewPostManager
 
     I18n.with_locale(SiteSetting.default_locale) do
       if is_fast_typer?(manager)
-        UserSilencer.silence(
+        UserSilencer.auto_silence(
           manager.user,
           Discourse.system_user,
           keep_posts: true,
           reason: I18n.t("user.new_user_typed_too_fast"),
         )
       elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
-        UserSilencer.silence(
+        UserSilencer.auto_silence(
           manager.user,
           Discourse.system_user,
           keep_posts: true,
           reason: I18n.t("user.content_matches_auto_silence_regex"),
         )
       elsif reason == :email_spam && is_first_post?(manager)
-        UserSilencer.silence(
+        UserSilencer.auto_silence(
           manager.user,
           Discourse.system_user,
           keep_posts: true,

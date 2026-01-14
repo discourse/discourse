@@ -13,7 +13,7 @@ RSpec.describe User::Silence do
     end
     it do
       is_expected.to validate_inclusion_of(:post_action).in_array(
-        %w[delete delete_replies edit],
+        %w[delete delete_replies edit none],
       ).allow_blank
     end
   end

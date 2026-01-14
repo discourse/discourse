@@ -15,16 +15,26 @@ class LlmModelSerializer < ApplicationSerializer
              :tokenizer,
              :api_key,
              :url,
-             :enabled_chat_bot,
              :provider_params,
              :vision_enabled,
              :input_cost,
              :output_cost,
              :cached_input_cost,
-             :used_by
+             :cache_write_cost,
+             :used_by,
+             :seeded,
+             :allowed_attachment_types
 
   has_one :user, serializer: BasicUserSerializer, embed: :object
   has_many :llm_quotas, serializer: LlmQuotaSerializer, embed: :objects
+  has_one :llm_credit_allocation,
+          serializer: LlmCreditAllocationSerializer,
+          embed: :object,
+          if: :include_credit_allocation?
+  has_many :llm_feature_credit_costs,
+           serializer: LlmFeatureCreditCostSerializer,
+           embed: :objects,
+           if: :include_credit_allocation?
 
   def used_by
     llm_usage =
@@ -49,5 +59,13 @@ class LlmModelSerializer < ApplicationSerializer
 
   def provider
     object.seeded? ? "CDCK" : object.provider
+  end
+
+  def include_credit_allocation?
+    object.credit_system_enabled?
+  end
+
+  def seeded
+    object.seeded?
   end
 end

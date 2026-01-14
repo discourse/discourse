@@ -6,6 +6,10 @@
 
 uk:
   js:
+    carousel:
+      go_to_slide: "Перейти до слайда %{index}"
+      previous: "Попередній слайд"
+      next: "Наступний слайд"
     number:
       format:
         separator: "."
@@ -194,6 +198,105 @@ uk:
       placeholder: дата
       from_placeholder: "з дати"
       to_placeholder: "дата"
+    languages:
+      ar:
+        name: Арабська
+      be:
+        name: Білоруська
+      bg:
+        name: Болгарська
+      bs_BA:
+        name: Боснійська
+      ca:
+        name: Каталонська
+      cs:
+        name: Чеська
+      da:
+        name: Данська
+      de:
+        name: Німецька
+      el:
+        name: Грецька
+      en:
+        name: Англійська
+      en_GB:
+        name: Англійська (Велика Британія)
+      es:
+        name: Іспанська
+      et:
+        name: Естонська
+      fa_IR:
+        name: Перська
+      fi:
+        name: Фінська
+      fr:
+        name: Французька
+      gl:
+        name: Галісійська
+      he:
+        name: Іврит
+      hr:
+        name: Хорватська
+      hu:
+        name: Угорська
+      hy:
+        name: Вірменська
+      id:
+        name: Індонезійська
+      it:
+        name: італійська
+      ja:
+        name: Японська
+      ko:
+        name: Корейська
+      lt:
+        name: Литовська
+      lv:
+        name: Латиська
+      nb_NO:
+        name: Норвезький букмол
+      nl:
+        name: Нідерландська
+      pl_PL:
+        name: Польська
+      pt:
+        name: Португальська
+      pt_BR:
+        name: Португальська
+      ro:
+        name: Румунська
+      ru:
+        name: Російська
+      sk:
+        name: Словацька
+      sl:
+        name: Словенська
+      sq:
+        name: Албанська
+      sr:
+        name: Сербська
+      sv:
+        name: Шведська
+      sw:
+        name: Суахілі.
+      te:
+        name: Телугу
+      th:
+        name: Тайська
+      tr_TR:
+        name: Турецька
+      ug:
+        name: Уйгурська
+      uk:
+        name: Українська
+      ur:
+        name: Урду
+      vi:
+        name: В'єтнамська
+      zh_TW:
+        name: Китайська
+      zh_CN:
+        name: Китайська спрощена
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "допис #%{postNumber} від @%{username}"
@@ -242,22 +345,31 @@ uk:
       forwarded: "Переслано вказаний вище електронний лист"
     topic_admin_menu: "дії теми"
     skip_to_main_content: "Перейти до основного вмісту"
+    skip_links_label: "Пропустити навігаційні посилання"
+    skip_to_post: "Перейти до повідомлення %{post_number}"
+    skip_to_where_you_left_off: "Перейти до місця, де ви зупинилися (пост %{post_number})"
+    skip_to_where_you_left_off_last: "Перейдіть до місця, на якому ви зупинилися (остання відповідь, пост %{post_number})"
+    skip_to_last_reply: "Перейти до останньої відповіді"
+    skip_to_top: "Перейти до початку"
     skip_user_nav: "Перейти до вмісту профілю"
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
     emails_are_disabled_non_staff: "Надсилання листів електронною поштою було вимкнено для користувачів, які не є членами команди обслуговування."
     software_update_prompt:
       message: "Ми оновили сайт, <span>, будь ласка, оновіть</span> , щоб все працювало безперебійно."
       dismiss: "Відхилити"
-    bootstrap_mode: "Початок роботи"
     back_button: "Назад"
     welcome_banner:
       header:
+        new_members: "Ласкаво просимо, %{preferred_display_name}!"
         logged_in_members: "З поверненням, %{preferred_display_name}!"
         anonymous_members: "Ласкаво просимо до сайту %{site_name}!"
-      search: "Пошук"
+      search_placeholder: "Пошук"
+    impersonation:
+      notice: "Ви видаєте себе за %{username}"
+      stop: "Припиніть видавати себе за іншу особу"
     themes:
       default_description: "Типово"
-      broken_theme_alert: "Ваш сайт не може працювати, оскільки тема / компонент має помилки."
+      broken_theme_alert: "Ваш сайт може не працювати через помилки в темі/компоненті. Перегляньте консоль браузера для отримання додаткової інформації."
       error_caused_by: "Викликано '%{name}'. <a target='blank' href='%{path}'>Натисніть тут</a>, щоб оновити, переналаштувати або вимкнути."
       only_admins: "(це повідомлення показується тільки адміністраторам сайту)"
     broken_decorator_alert: "Повідомлення можуть показуватись неправильно, оскільки один з декораторів вмісту дописів на вашому сайті викликав помилку."
@@ -314,7 +426,7 @@ uk:
     joined: "Приєднався(-лась)"
     admin_title: "Адміністратор"
     show_more: "показати більше"
-    show_help: "параметри"
+    show_help: "Параметри"
     links: "Посилання"
     links_lowercase:
       one: "посилання"
@@ -559,6 +671,13 @@ uk:
       resume: "Продовжити"
       remove: "Вилучити"
       remove_confirmation: "Ви справді хочете видалити цю чернетку?"
+      bulk_delete: "Видалити вибране"
+      bulk_delete_confirmation: "Видалити чернетки"
+      bulk_delete_message:
+        one: "Ви справді хочете видалити цю чернетку?"
+        few: "Ви справді хочете видалити ці %{count} чернетки?"
+        many: "Ви справді хочете видалити %{count} чернеток?"
+        other: "Ви справді хочете видалити %{count} чернеток?"
       new_topic: "Чернетка нової теми"
       new_private_message: "Чернетка нового приватного повідомлення"
       edit_topic: "Редагування чернетки теми"
@@ -603,6 +722,7 @@ uk:
       other: "Переглянути %{count} нових тем"
     preview: "попередній перегляд"
     cancel: "Скасувати"
+    done: "Виконано"
     deleting: "Видалення"
     save: "Зберегти зміни"
     saving: "Збереження"
@@ -640,6 +760,7 @@ uk:
     review:
       show_more: "Показати більше"
       show_less: "Показати менше"
+      back_to_queue: "Повернутися до черги"
       order_by: "Сортувати за"
       date_filter: "Опубліковано між"
       in_reply_to: "у відповідь на"
@@ -693,9 +814,9 @@ uk:
         claimed_by_other: "Цей елемент може розглядати лише <b>%{username}</b>."
         automatically_claimed_by: "Зараз цей елемент переглядає <b>%{username}</b>."
       claim:
-        title: "заявити права на цю тему"
+        title: "Заявити права на цю тему"
       unclaim:
-        help: "вилучити цю заявку"
+        help: "Вилучити цю заявку"
       awaiting_approval: "Очікує схвалення"
       delete: "Вилучити"
       settings:
@@ -717,8 +838,9 @@ uk:
       title: "Розглянути"
       topic: "Тема:"
       filtered_topic: "Ви відфільтрували контент до розгляду в одній темі."
-      filtered_user: "Користувач"
+      filtered_user: "Позначений користувач"
       filtered_reviewed_by: "Розглянуто"
+      filtered_claimed_by: "Прапор позначено"
       show_all_topics: "показати усі теми"
       deleted_post: "(допис вилучено)"
       deleted_user: "(користувача вилучено)"
@@ -780,7 +902,7 @@ uk:
         few: "%{count} відповіді"
         many: "%{count} відповідей"
         other: "%{count} відповідей"
-      edit: "Редагувати"
+      edit: "Редагувати допис"
       save: "Зберегти"
       cancel: "Скасувати"
       new_topic: "Схвалення цього елемента створить нову тему"
@@ -807,6 +929,8 @@ uk:
           low: "Низький"
           medium: "Середній"
           high: "Високий"
+        active_filters: "Активні фільтри:"
+        clear_filter: "Видалити %{filter}"
       conversation:
         view_full: "переглянути усю розмову"
       scores:
@@ -866,8 +990,17 @@ uk:
         reviewable_post:
           title: "Допис"
           noun: "допис"
+        reviewable_ai_chat_message:
+          noun: "повідомлення чату"
+        reviewable_ai_post:
+          noun: "допис"
       flagged_as: "Позначено як"
-      assigned_to: "Призначено для"
+      post_flagged_as: "Публікацію позначено як"
+      chat_flagged_as: "Чат позначено як"
+      queued_post_label: "Повідомлення в черзі"
+      queued_topic_label: "Тема в черзі"
+      user_label: "Користувач"
+      assigned_to: "Пост, призначений для"
       moderator_actions: "Дії модератора"
       timeline_and_notes: "Хронологія та нотатки"
       timeline:
@@ -877,26 +1010,31 @@ uk:
         flagged_as_by: "Позначено як %{flagReason} від %{username} · %{relativeDate}"
         claimed: "Заявлено претензію"
         claimed_by: "Подано претензію %{username} · %{relativeDate}"
+        unclaimed_by: "Не затребувано %{username} · %{relativeDate}"
         reviewed: "Розглянуто"
-        reviewed_by: "Переглянуто %{username} · %{relativeDate}"
+        approved_by: "Схвалено %{username} · %{relativeDate}"
+        rejected_by: "Відхилено %{username} - %{relativeDate}"
+        ignored_by: "Ігноровано %{username} · %{relativeDate}"
         view_conversation: "перегляд ПП"
         note_added: "Нотатка модератора"
         note_added_by: "Примітка модератора %{username} · %{relativeDate}"
         no_events: "Немає подій на шкалі часу для відображення"
       notes:
-        add_note_description: "Видно тільки модераторам. Використовуйте цю примітку, щоб додати контекст або рішення щодо розгляду."
+        add_note_description: "Додайте примітку, щоб надати контекст іншим модераторам."
         add_note_button: "Додати примітку"
         placeholder: "Напишіть свою нотатку тут..."
         chars_remaining: "Залишилося %{count} символів"
         delete_note: "Видалити цю примітку"
         delete: "Видалити"
-      new_topic_label: "Нова тема"
+      topic_label: "Тема"
       queued_user: "Користувач у черзі"
       posted_in: "Опубліковано в"
       flagged_user: "Позначений користувач"
       review_user: "Користувач"
       need_help: "Потрібна допомога?"
       copy_link: "Скопіювати посилання"
+      copy_permalink_title: "скопіювати посилання на цю рецензовану статтю в буфер обміну"
+      copy_link_feedback: "Посилання скопійовано"
       view_source: "Переглянути вихідний код"
       insights:
         title: "Статистика"
@@ -906,22 +1044,32 @@ uk:
           few: "Позначено %{count} унікальними користувачами"
           many: "Позначено %{count} унікальними користувачами"
           other: "Позначено %{count} унікальними користувачами"
-        similar_posts: "Схожі попередні публікації"
-        flagged_in_timeframe: "%{count} позначено раніше"
-        user_activity: "Активність користувача"
+        similar_posts: "Минулі порушення"
+        flagged_in_timeframe:
+          one: "%{count} підтверджений прапор"
+          few: "%{count} підтверджені прапори"
+          many: "%{count} підтверджених прапорів"
+          other: "%{count} підтверджених прапорів"
+        user_activity: "Інформація про користувача"
         activities:
-          new_account: "новий обліковий запис"
+          joined_on: "приєднався: %{joinDate}"
           trust_level: "рівень довіри: %{trustLevelName}"
           posts:
             one: "%{count} допис"
             few: "%{count} дописи"
             many: "%{count} дописів"
             other: "%{count} дописів"
+        moderation_history:
+          label: "Історія модерації"
+          silenced: "Заблоковано %{count}"
+          suspended: "Призупинено: %{count}"
+          rejected_posts: "Відхилені повідомлення: %{count}"
         solution_marked: "Рішення позначено"
         topic_has_solution: "Ця тема має рішення"
         visibility: "Видимість"
-        topic_unlisted: "Ця тема не входить до списку. Доступна лише за прямим посиланням — не публічна."
+        topic_unlisted: "Ця тема не входить до списку та доступна лише за прямим посиланням."
       help:
+        community_moderation_guide: "Посібник з модерації цієї спільноти"
         moderation_guide: "Посібник з модерації дискурсу"
         flag_priorities: "Керування репутацією користувачів та пріоритетами скарг"
         spam_detection: "Виявлення спаму"
@@ -1084,11 +1232,10 @@ uk:
           title: Взаємодія
           posting: Публікування
           notification: Сповіщення
+          self_lockout: "Ви збираєтеся змінити видимість групи таким чином, що ваш власний доступ буде скасовано. Ви впевнені, що хочете продовжити?"
         email:
           title: "Електронна пошта"
-          status: "Синхронізовано %{old_emails} / %{total_emails} листів через IMAP."
           enable_smtp: "Увімкнути SMTP"
-          enable_imap: "Увімкнути IMAP"
           test_settings: "Перевірити налаштування"
           save_settings: "Зберегти налаштування"
           last_updated: "Останнє оновлення:"
@@ -1097,14 +1244,8 @@ uk:
           smtp_settings_valid: "Настройки SMTP дійсні."
           smtp_title: "SMTP"
           smtp_instructions: "Коли ви ввімкнете SMTP для групи, всі вихідні повідомлення електронної пошти, надіслані з групи, буде надіслано через вказані тут параметри SMTP, замість стандартного поштового сервера, налаштованого для інших листів."
-          imap_title: "IMAP"
-          imap_additional_settings: "Додаткові налаштування"
-          imap_instructions: 'Коли ви ввімкнете IMAP для групи, електронні листи синхронізуються між вхідною текою групи та вказаним сервером IMAP і поштовою скринькою. Перш ніж увімкнути протокол IMAP, необхідно ввімкнути SMTP з дійсними та перевіреними обліковими даними. Ім’я користувача та пароль електронної пошти, які використовуються для SMTP, будуть використовуватися для IMAP. Для отримання додаткової інформації див. <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">анонс про функції на Discourse Meta</a>.'
-          imap_alpha_warning: "Попередження. Це функція на альфа-тестуванні. Офіційно підтримується лише Gmail. Використовуйте на свій страх і ризик!"
-          imap_settings_valid: "Налаштування IMAP правильні."
-          smtp_disable_confirm: "Якщо вимкнути SMTP, усі налаштування SMTP та IMAP будуть скинуті, а відповідна функціональність буде вимкнена. Ви впевнені, що хочете продовжити?"
-          imap_disable_confirm: "Якщо вимкнути IMAP, усі налаштування IMAP будуть скинуті, а відповідні функції будуть вимкнені. Ви впевнені, що хочете продовжити?"
-          imap_mailbox_not_selected: "Ви повинні вибрати поштову скриньку для цієї конфігурації IMAP, інакше жодна поштова скринька не буде синхронізована!"
+          additional_settings: "Додаткові налаштування"
+          smtp_disable_confirm: "Якщо вимкнути SMTP, усі налаштування SMTP будуть скинуті, а пов’язані з ними функції будуть вимкнені. Ви впевнені, що хочете продовжити?"
           prefill:
             title: "Заповніть початкові налаштування для:"
             gmail: "Gmail"
@@ -1119,9 +1260,6 @@ uk:
             smtp_server: "SMTP-сервер"
             smtp_port: "Порт SMTP"
             smtp_ssl_mode: "Режим SSL"
-            imap_server: "Сервер IMAP"
-            imap_port: "Порт IMAP"
-            imap_ssl: "Використовувати SSL для IMAP"
             username: "Імʼя користувача"
             password: "Пароль"
           settings:
@@ -1130,10 +1268,6 @@ uk:
             allow_unknown_sender_topic_replies_hint: "Дозволяє невідомим відправникам відповідати в групові теми. Якщо цю функцію не увімкнено, то відповіді від електронних адрес, які не запрошені до теми, створюватимуть нову тему."
             from_alias: "Псевдо відправника"
             from_alias_hint: "Псевдонім для використання як адреси відправника під час надсилання групових листів SMTP. Зважте, що це може підтримуватися не всіма провайдерами електронної пошти. Зверніться до документації вашого провайдера пошти."
-          mailboxes:
-            synchronized: "Синхронізована поштова скринька"
-            none_found: "Не знайдено поштових скриньок в цьому обліковому записі."
-            disabled: "Відключено"
         membership:
           title: Членство
           access: Доступ
@@ -1232,6 +1366,8 @@ uk:
         make_owner_description: "Зробити <b>%{username}</b> власником цієї групи"
         remove_owner: "Вилучити як власника"
         remove_owner_description: "Вилучити <b>%{username}</b> з власників цієї групи"
+        remove_member_self_lockout: "Видалення себе з цієї групи скасує ваш доступ до керування нею. Ви впевнені, що хочете продовжити?"
+        remove_owner_self_lockout: "Якщо ви видалите себе як власника, ви втратите доступ до керування цією групою. Ви впевнені, що хочете продовжити?"
         make_primary: "Зробити основною"
         make_primary_description: "Зробити основною групою для <b>%{username}</b>"
         remove_primary: "Видалити як основну"
@@ -1375,13 +1511,18 @@ uk:
         many: "Категорії (ще %{count} )…"
         other: "Категорії (ще %{count} )…"
     ip_lookup:
-      title: Пошук IP адреси
+      title: IP-адреса
       hostname: Імʼя хоста
       location: Місцезнаходження
       location_not_found: (невідомо)
       organisation: Організація
       phone: Телефон
       other_accounts: "Інші облікові записи з цією IP адресою"
+      other_accounts_with_ip:
+        one: "%{count} інший обліковий запис із цією IP-адресою"
+        few: "%{count} інші облікові записи із цією IP-адресою"
+        many: "%{count} інших облікових записів із цією IP-адресою"
+        other: "%{count} інших облікових записів із цією IP-адресою"
       delete_other_accounts:
         one: "Видалити %{count}"
         few: "Видалити %{count}"
@@ -1418,6 +1559,17 @@ uk:
       new_private_message: "Нове повідомлення"
       private_message: "Повідомлення"
       private_messages: "Повідомлення"
+      upcoming_changes:
+        title: "Майбутні зміни"
+        for_user:
+          upcoming_change: "Майбутні зміни"
+          enabled: "Включено?"
+          why: "Чому?"
+        why_reasons:
+          not_in_specific_groups: "Користувач не належить до певних груп, необхідних для цієї зміни"
+          in_specific_groups: "Користувач належить до певних груп, необхідних для цієї зміни."
+          enabled_for_everyone: "Ця зміна доступна для всіх учасників"
+          enabled_for_no_one: "Ця зміна вимкнена для всіх учасників"
       user_notifications:
         filters:
           filter_by: "Фільтрувати за"
@@ -1522,24 +1674,30 @@ uk:
         description: "Пропустити поради щодо створення користувача та значків"
       reset_seen_user_tips: "Знову показати поради користувача"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
-      color_scheme_default_on_all_devices: "Встановити палітру кольорів за замовчуванням на всіх моїх пристроях"
+      color_scheme_default_on_all_devices: "Встановити палітру кольорів і режим за замовчуванням на всіх моїх пристроях"
       color_scheme: "Колірна палітра"
       color_schemes:
         default_description: "Типова тема"
-        disable_dark_scheme: "Те саме, що і звичайне"
         dark_instructions: "Ви можете переглянути палітру кольорів темного режиму, увімкнувши темний режим вашого пристрою."
         undo: "Скинути"
-        regular: "Звичайний"
+        regular: "Світлий режим"
         dark: "Темний режим"
-        default_dark_scheme: "(типово для сайту)"
+        interface_mode: "Режим"
+        interface_mode_instructions: "«Авто» використовує налаштування вашої системи для світлого або темного режиму."
+        interface_modes:
+          auto: "Авто"
+          light: "Світла"
+          dark: "Темна"
+        picker:
+          active: "Активний"
       dark_mode: "Темний режим"
-      dark_mode_enable: "Увімкнути автоматичну палітру кольорів темного режиму"
       text_size_default_on_all_devices: "Зробити цей розмір тексту базовим для всіх моїх пристроїв"
       allow_private_messages: "Дозволити іншим користувачам надсилати мені особисті повідомлення"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       enable_smart_lists: "Увімкніть розумні списки під час запису в композитор"
       enable_defer: "Увімкнути позначення тем як непрочитані"
+      enable_markdown_monospace_font: "Використовувати моноширинний шрифт у режимі Markdown редактора тексту"
       experimental_sidebar:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
@@ -1768,18 +1926,21 @@ uk:
         tags: "Теґи"
         interface: "Інтерфейс"
         apps: "Застосунки"
-        navigation_menu: "Навігаційне меню"
+        navigation_menu: "Меню навігації"
+        upcoming_changes: "Майбутні зміни"
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
         error: "(помилка)"
         action: "Надіслати лист для відновлення пароля"
+        staged_user: "Поетапні користувачі не можуть отримувати електронні листи для скидання пароля."
         set_password: "Встановити пароль"
         choose_new: "Вибрати новий пароль"
         choose: "Вибрати пароль"
         verify_identity: "Щоб продовжити, підтвердьте свою особу."
         title: "Скидання пароля"
         remove: "Видалити пароль"
+        remove_disabled: "Перед видаленням пароля для облікового запису потрібен принаймні один інший метод входу (наприклад, ключ доступу або підключений зовнішній обліковий запис)."
         remove_detail: "Ваш обліковий запис більше не буде доступний за допомогою пароля, доки ви його не скинете."
       second_factor_backup:
         title: "Резервні коди двофакторної авторизації"
@@ -1886,7 +2047,7 @@ uk:
         invalid: "Таке імʼя користувача не підійде. Воно має містити лише цифри та літери"
       add_email:
         title: "Додати електронну пошту"
-        add: "додати"
+        add: "Додати"
       change_email:
         title: "Змінити адресу електронної пошти"
         taken: "Даруйте, ця адреса не доступна."
@@ -2052,6 +2213,7 @@ uk:
         first_time_and_daily: "Для першого вподобання, і далі не частіше разу на день"
         first_time: "Тільки для першого вподобання"
         never: "Ніколи"
+      notify_on_linked_posts: "Повідомляти, коли хтось поширює посилання на одну з моїх публікацій"
       email_previous_replies:
         title: "Додати попередні відповіді в кінець електронних листів"
         unless_emailed: "якщо не було надіслано раніше"
@@ -2399,6 +2561,12 @@ uk:
       no_results: "Немає результатів"
       search: "Пошук…"
       label: "Виберіть опції"
+    d_otp:
+      screen_reader:
+        one: Введіть %{count} число
+        few: Введіть %{count} числа
+        many: Введіть %{count} чисел
+        other: Введіть %{count} чисел
     form_kit:
       reset: Скинути
       optional: опціонально
@@ -2650,6 +2818,7 @@ uk:
       admin_not_allowed_from_ip_address: "З цієї IP адреси вхід адміністраторів заборонений."
       resend_activation_email: "Натисніть тут, щоб знову надіслати електронний лист для активації."
       omniauth_disallow_totp: "У вашому обліковому записі ввімкнено двофакторну автентифікацію. Будь ласка, увійдіть під своїм паролем."
+      works_with: "Працює з"
       activate_account: "Активувати обліковий запис"
       resend_title: "Повторно надіслати електронний лист для активації"
       change_email: "Змінити адресу електронної пошти"
@@ -2744,7 +2913,16 @@ uk:
     welcome_banner_location:
       above_topic_content: "Над вмістом теми"
       below_site_header: "Нижче заголовка сайту"
+    welcome_banner_page_visibility:
+      top_menu_pages: "Верхнє меню сторінок"
+      homepage: "Головна сторінка"
+      discovery: "Відкриття"
+      all_pages: "Усі сторінки"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Форматований текст"
     shortcut_modifier_key:
+      esc: "Esc"
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
@@ -2762,6 +2940,8 @@ uk:
         few: "в цьому розділі %{count} теми"
         many: "в цьому розділі %{count} тем"
         other: "в цьому розділі %{count} тем"
+      read_only: "тільки для читання"
+      read_only_description: "Ця категорія доступна лише для читання, тому ви не можете вибрати її для цієї теми"
     timezone_input:
       ambiguous_ist: "IST неоднозначний, будь ласка, виберіть певний часовий пояс (наприклад: Азія/Калькутта)"
     select_kit:
@@ -2830,13 +3010,16 @@ uk:
       confirm_publish: "Ви впевнені, що хочете опублікувати цю чернетку?"
       publishing: "Публікація теми"
     composer:
+      autocomplete:
+        username_missing: "У вибраному результаті автозаповнення відсутнє ім’я користувача."
+        name_missing: "Вибраний результат автозаповнення не має назви."
       emoji: "Емодзі :)"
       more_emoji: "ще"
       options: "Параметри"
       whisper: "шепотіння"
       unlist: "приховане зі стрічок"
       add_warning: "Це офіційне попередження."
-      toggle_whisper: "Шепіт"
+      toggle_whisper: "Увімкнути шепіт"
       insert_table: "Вставити таблицю"
       posting_not_on_topic: "На яку тему ви хочете відповісти?"
       saved_local_draft_tip: "збережено локально"
@@ -2850,8 +3033,13 @@ uk:
         title: "Переклад матеріалу"
         select: "Виберіть переклад"
         save: "Зберегти переклад"
-        original_content: "Оригінальний текст публікації"
+        original_content: "Оригінальна публікація"
+        translation_preview: "Попередній перегляд перекладу"
+        original: "Оригінал"
+        translation: "Переклад"
+        no_translation_yet: "Почніть вводити текст, щоб побачити попередній перегляд перекладу..."
         placeholder: "Введіть переклад для повідомлення тут..."
+        show_raw_markdown: "Показати необроблені дані"
       group_mentioned_limit:
         one: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
         few: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
@@ -2924,6 +3112,9 @@ uk:
       create_shared_draft: "Створити спільну чернетку"
       edit_shared_draft: "Редагувати спільну чернетку"
       title: "Або натисніть %{modifier}Enter"
+      save_and_close: "Зберегти та закрити"
+      discard: "Відкинути"
+      draft_saved: "Чернетку збережено!"
       users_placeholder: "Додайте користувачів або групи"
       title_placeholder: "Про що це обговорення, в одному короткому реченні?"
       title_or_link_placeholder: "Введіть назву, або вставте тут посилання"
@@ -2951,7 +3142,6 @@ uk:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "виділення тексту курсивом"
-      heading_label: "Н"
       heading_title: "Заголовки"
       heading_level_n: "Заголовок %{levelNumber}"
       heading_level_n_title: "Заголовок %{levelNumber}"
@@ -2978,16 +3168,28 @@ uk:
       olist_title: "Нумерований список"
       ulist_title: "Маркований список"
       list_item: "Елемент списку"
-      toggle_direction: "Змінити напрямок письма"
+      toggle_direction: "Змінити напрямок"
+      apply_wrap_title: "Застосувати загортання"
+      wrap_modal:
+        title: "Редагувати загортання"
+        name_label: "Назва обгортки"
+        attributes_label: "Атрибути"
+        add_attribute: "Додати атрибут"
+        remove_attribute: "Видалити атрибут"
+        apply: "Застосувати"
+        unwrap: "Розгорнути"
+        no_attributes: "Атрибути ще не додано."
+      wrap_text: "Обгортання вмісту"
       help: "Довідка з використання Markdown"
-      collapse: "згорнути панель редактора"
-      open: "відкрити панель редактора"
-      abandon: "закрити панель редактора та видалити чернетку"
-      enter_fullscreen: "панель редактора на весь екран"
-      exit_fullscreen: "вийти з повноекранного режиму редактора"
+      collapse: "Згорнути панель редактора"
+      open: "Відкрити панель редактора"
+      abandon: "Закрити панель редактора та видалити чернетку"
+      enter_fullscreen: "Панель редактора на весь екран"
+      exit_fullscreen: "Вийти з повноекранного режиму редактора"
       exit_fullscreen_prompt: "Натисніть <kbd>ESC</kbd>, щоб вийти з повноекранного режиму"
-      show_toolbar: "показати панель інструментів редактора"
-      hide_toolbar: "приховати панель інструментів редактора"
+      show_toolbar: "Показати панель інструментів редактора"
+      hide_toolbar: "Приховати панель інструментів редактора"
+      peek_mode_toggle: "Перемкнути режим попереднього перегляду"
       modal_ok: "Гаразд"
       cant_send_pm: "На жаль, ви не можете надсилати повідомлення користувачу %{username}."
       create_message_error: "На жаль, сталася помилка при створенні цього повідомлення. Будь ласка, спробуйте ще раз."
@@ -3023,6 +3225,9 @@ uk:
         create_topic:
           label: "Нова тема"
           desc: Створити нову тему
+        create_personal_message:
+          label: "Сворити нове"
+          desc: "Створити нове приватне повідомлення"
         shared_draft:
           label: "Спільна чернетка"
           desc: "Створіть тему, яку бачитимуть лише обрані користувачі"
@@ -3031,7 +3236,7 @@ uk:
           desc: "Відповісти без зміни дати останньої відповіді"
         toggle_unlisted:
           label: Перемикання між приватністю
-          desc: Непублічні теми доступні лише учасникам за прямим посиланням
+          desc: "Теми, які не вказані в списку, доступні лише за прямим посиланням"
       reload: "Перезавантажити"
       ignore: "Ігнорувати"
       image_alt_text:
@@ -3042,6 +3247,14 @@ uk:
         zoom_out: "Зменшити розмір зображення"
         zoom_in: "Збільшити розмір зображення"
         remove: "Видалити зображення"
+        add_to_grid: "Додати до сітки"
+        move_outside_grid: "Переміщення за межі сітки"
+      image: "зображення"
+      grid_label: "Це відображатиметься у вигляді сітки"
+      grid_mode_grid: "Сітка"
+      grid_mode_carousel: "Карусель"
+      grid_mode_title: "Встановіть стиль галереї зображень на %{mode}"
+      remove_grid: "Видалити сітку"
       image_scale_button: "Масштабувати зображення до %{percent}%"
       delete_image_button: Видалити зображення
       toggle_image_grid: Перемкнути сітку зображень
@@ -3051,6 +3264,7 @@ uk:
         remove: "Видалити посилання"
         visit: "Відкрити посилання у зовнішній вкладці"
         link_copied: "Посилання скопійовано!"
+      unsupported_token: "Редактор форматованого тексту не підтримує всі функції, що використовуються в цій публікації; ви перемикаєтесь на редактор Markdown."
     notifications:
       tooltip:
         regular:
@@ -3298,6 +3512,7 @@ uk:
           aria_label: Фільтруйте за теґами
         filters:
           label: Обмежити пошук по темам/повідомленням...
+          all: Включити повідомлення
           title: Збігам в заголовку
           likes: Мені сподобалося
           posted: В яких я писав
@@ -3420,6 +3635,7 @@ uk:
     topics:
       new_messages_marker: "останнє відвідування"
       bulk:
+        select: "Масовий вибір"
         confirm: "Підтвердити"
         select_all: "Обрати все"
         clear_all: "Очистити все"
@@ -3428,6 +3644,21 @@ uk:
         reset_bump_dates: "Скинути дату підняття"
         defer: "Позначити як непрочитане"
         delete: "Видалити теми"
+        delete_topics_count:
+          one: "Видалити тему"
+          few: "Видалити теми"
+          many: "Видалити теми"
+          other: "Видалити теми"
+        delete_posts_count:
+          one: "Видалити повідомлення"
+          few: "Видалити повідомлення"
+          many: "Видалити повідомлення"
+          other: "Видалити повідомлення"
+        delete_posts_confirmation:
+          one: "Ви дійсно хочете видалити %{count} допис?"
+          few: "Ви дійсно бажаєте видалити %{count} дописи?"
+          many: "Ви дійсно бажаєте видалити %{count} дописів?"
+          other: "Ви дійсно бажаєте видалити %{count} дописів?"
         dismiss: "Відхилити"
         dismiss_read: "Відхилити всі непрочитані"
         dismiss_read_with_selected:
@@ -3506,7 +3737,7 @@ uk:
           few: "Обробка: <strong>%{count}</strong> теми"
           many: "Обробка: <strong>%{count}</strong> тем"
           other: "Обробка: <strong>%{count}</strong> тем"
-        silent: "Виконати цю дію без звуку."
+        notify: "Повідомте користувачів про цю зміну."
         performing: "Виконання масових операцій, зачекайте…"
         completed: "Масові операції успішно завершено!"
       none:
@@ -3526,19 +3757,6 @@ uk:
           unread: "Не залишилося нічого непрочитаного... вражаюче!"
           new_new: "Наразі нічого нового... заходьте пізніше!"
           new: "Наразі нічого нового... заходьте пізніше!"
-      bottom:
-        latest: "Більше немає останніх тем."
-        posted: "Створених тем більше немає."
-        read: "Більше немає прочитаних тем."
-        new: "Більше немає нових тем."
-        unread: "Більше немає непрочитаних тем."
-        unseen: "Більше немає непрочитаних тем."
-        category: "Більше немає тем в розділі %{category}."
-        tag: "Немає більше %{tag} тем."
-        top: "Топових тем більше немає."
-        hot: "Гарячих тем більше немає."
-        bookmarks: "Більше немає обраних тем."
-        filter: "Більше немає тем."
     topic_bulk_actions:
       dismiss:
         name: "Відкласти"
@@ -3583,8 +3801,6 @@ uk:
         many: "%{count} дописів в темі"
         other: "%{count} дописів в темі"
       create: "Нова тема"
-      create_disabled_category: "Ви не можете створювати теми в цій категорії"
-      create_disabled_tag: "Ви не можете створювати теми з цим тегом"
       create_long: "Створити нову тему"
       open_draft: "Відкрити чернетку"
       private_message: "Нове приватне повідомлення"
@@ -3688,10 +3904,9 @@ uk:
         other: "%{count} відповідей, перейти до першого допису"
       created_at: "Створено: %{date}"
       bumped_at: "Останні:%{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Перегляньте всі категорії</a> або <a href='%{basePath}/latest'>перегляньте останні теми</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Перегляньте всі категорії</a>, <a href='%{basePath}/latest'>перегляньте останні теми</a> або перегляньте топ:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Переглянути всі теги</a> або <a href='%{basePath}/latest'>переглянути останні теми</a>."
       browse_latest_topics: "Переглянути найновіші теми"
+      browse_new_replies: "Переглянути нові відповіді"
+      browse_new_topics: "Переглянути нові теми"
       suggest_create_topic: Готові <a href>почати нову розмову?</a>
       jump_reply: "Перейти до початкового розташування публікації"
       jump_reply_aria: "Перейти до повідомлення @%{username} в його оригінальному розташуванні"
@@ -3751,6 +3966,8 @@ uk:
         title: "Автоматичне закриття теми після останнього дописа"
       auto_delete:
         title: "Автоматичне видалення теми"
+      auto_delete_after_last_post:
+        title: "Автоматичне видалення теми після останнього допису"
       auto_bump:
         title: "Само-підняття теми"
       reminder:
@@ -3762,17 +3979,13 @@ uk:
         auto_close: "Ця тема автоматично закриється %{timeLeft}."
         auto_publish_to_category: "Ця тема буде опублікована в розділі <a href=%{categoryUrl}>#%{categoryName}</a> через %{timeLeft}."
         auto_close_after_last_post: "Ця тема буде закрита через %{duration} після останньої відповіді."
+        auto_delete_after_last_post: "Цю тему буде видалено %{duration} після останньої відповіді."
         auto_delete: "Ця тема буде автоматично видалена через %{timeLeft}."
         auto_bump: "Ця тема буде автоматично піднята %{timeLeft}."
         auto_reminder: "Вам прийде нагадування про цю тему через %{timeLeft}."
         auto_delete_replies: "Відповіді на цю тему автоматично видаляються після %{duration}."
       auto_close_title: "Налаштування автоматичного закриття"
       auto_close_immediate:
-        one: "Останній допис в цій темі зроблений %{count} годину тому, а тому дана тема буде закрита негайно."
-        few: "Останній допис в цій темі зроблений %{count} години назад, а тому дана тема буде закрита негайно."
-        many: "Останній допис в цій темі зроблений %{count} годин тому, а тому дана тема буде закрита негайно."
-        other: "Останній допис в цій темі зроблений %{count} годин тому, а тому дана тема буде закрита негайно."
-      auto_close_momentarily:
         one: "Останній допис в цій темі зроблений %{count} годину тому, а тому дана тема буде закрита негайно."
         few: "Останній допис в цій темі зроблений %{count} години назад, а тому дана тема буде закрита негайно."
         many: "Останній допис в цій темі зроблений %{count} годин тому, а тому дана тема буде закрита негайно."
@@ -3866,6 +4079,8 @@ uk:
       reply:
         title: "Відповісти"
         help: "почати складати відповідь на цю тему"
+      footer_buttons:
+        region_label: "Дії з темою"
       share:
         title: "Поділитися темою"
         extended_title: "Поділитися посиланням"
@@ -4069,11 +4284,28 @@ uk:
           many: "Ви виділили <b>%{count}</b> дописів."
           other: "Ви виділили <b>%{count}</b> дописів."
       deleted_by_author_simple: "(тема, видалена автором)"
+      localizations:
+        title_edit_warning:
+          message: "Це перекладена назва теми.<br><br>Ви хочете редагувати <b>оригінальну</b> категорію, теги та назву в %{language} чи редагувати цей конкретний <b>переклад</b>?"
+          action_original: "Редагувати оригінал"
+          action_translation: "Редагувати перекладену назву теми"
+        editing_translation: "Редагування перекладу %{language}"
     post_list:
       title: "Останні дописи"
       empty: "Немає повідомлень"
       aria_post_number: "%{title} - допис #%{postNumber}"
+      bulk:
+        selected:
+          one: "Вибрано %{count} допис"
+          few: "Вибрано %{count} дописи"
+          many: "Вибрано %{count} дописів"
+          other: "Вибрано %{count} дописів"
+        select_all: "Вибрати все"
+        clear_all: "Очистити все"
+        actions: "Масові дії"
     post:
+      accessible_heading: "публікація від %{username} %{date}"
+      heading_anchor: "Посилання заголовка"
       confirm_delete: "Ви справді бажаєте вилучити цей допис?"
       quote_reply: "Цитата"
       quote_reply_shortcut: "Цитата (або натисніть q)"
@@ -4097,8 +4329,13 @@ uk:
       deleted_by_author_simple: "(допис вилучений автором)"
       collapse: "згорнути"
       load_more_replies: "завантажити більше відповідей"
+      load_more_posts_above: "Завантажте більше публікацій вище"
+      load_more_posts_below: "Завантажити більше публікацій нижче"
       sr_collapse_replies: "Згорнути відповіді на допис"
       sr_load_more_replies: "Завантажити більше вбудованих відповідей"
+      loading_more_posts_above: "Завантаження інших публікацій вище..."
+      loading_more_posts_below: "Завантаження інших публікацій нижче..."
+      loading_complete: "Завантаження завершено"
       sr_date: "Дата допису"
       sr_expand_replies:
         one: "Цей допис має %{count} відповідь"
@@ -4173,6 +4410,7 @@ uk:
           edit: "Редагувати"
           delete: "Видалити"
         add: "Додати новий переклад"
+        manage: "Керування перекладами (%{count} існуючих)"
         view:
           one: "Переглянути %{count} переклад"
           few: "Переглянути %{count} переклади"
@@ -4208,10 +4446,8 @@ uk:
         attachment_upload_not_allowed_for_new_user: "На жаль, нові користувачі не можуть завантажувати вкладені файли."
         attachment_download_requires_login: "Вибачте, вам потрібно увійти, щоб завантажити вкладення."
       cancel_composer:
-        confirm: "Що ви хотіли б зробити зі своїм дописом?"
+        confirm: "Ви хочете видалити свою публікацію?"
         discard: "Відкинути"
-        save_draft: "Зберегти чернетку на потім"
-        keep_editing: "Продовжити редагування"
       via_email: "цей допис надійшов електронною поштою"
       via_auto_generated_email: "цей допис прийшов з автоматично згенерованого e-mail"
       whisper: "це внутрішній допис, тобто його видно тільки модераторам"
@@ -4289,6 +4525,7 @@ uk:
         delete_post_notice: "Видалити офіційне повідомлення"
         remove_timer: "видалити таймер"
         edit_timer: "редагувати таймер"
+        remove_yourself_from_pm: "Ви впевнені, що хочете видалити себе з цього повідомлення? Ви більше не зможете побачити його або відповісти на нього."
       actions:
         people:
           like:
@@ -4428,8 +4665,10 @@ uk:
         add: "Додати нову мову"
         remove: "Вилучити"
         hint: "Наразі немає локалізацій для цієї категорії. Натисніть «Додати нову мову» нижче, щоб почати додавати локалізації."
-      tags_allowed_tags: "Обмежити ці теґи цим розділом:"
-      tags_allowed_tag_groups: "Обмежити ці групи теґів цим розділом:"
+      tags_allowed_tags: "Обмежте ці теги категорією '%{categoryName}':"
+      tags_allowed_tags_new_category: "Обмежити ці теґи цим розділом:"
+      tags_allowed_tag_groups: "Обмежити ці групи тегів категорією '%{categoryName}':"
+      tags_allowed_tag_groups_new_category: "Обмежити ці групи теґів цим розділом:"
       tags_placeholder: "(Необов'язково) список дозволених теґів"
       tags_tab_description: "Теґи та групи теґів, зазначені вище, будуть доступні лише в цьому розділі та інших розділах, які також їх визначають. Вони не будуть доступні для використання в інших розділах."
       tag_groups_placeholder: "(Необов'язково) список дозволених груп теґів"
@@ -4439,27 +4678,33 @@ uk:
         description: "Вимагати, щоб нові теми мали теґи з групи теґів:"
         delete: "Вилучити"
         add: "Додайте необхідну групу теґів"
-        placeholder: "вибрати групу тегів…"
+        placeholder: "Вибрати групу тегів…"
       topic_featured_link_allowed: "Дозволити популярні посилання в цьому розділі"
-      delete: "Видалити розділ"
-      create: "Новий розділ"
+      delete: "Видалити категорію"
+      create: "Нова категорія"
       create_long: "Створити розділ"
-      save: "Зберегти розділ"
+      save: "Зберегти категорію"
       slug: "Посилання на розділ"
       slug_placeholder: "(Опція) дефіси в url"
       creation_error: Під час створення розділу сталася помилка.
       save_error: Під час збереження розділу сталася помилка.
-      name: "Назва розділу"
+      errors:
+        self_lockout: "Ви збираєтеся змінити дозволи категорії таким чином, що позбавите себе доступу. Ви впевнені, що хочете продовжити?"
+      name: "Назва категорії"
       untitled: "Категорія без назви"
       description: "Опис"
-      logo: "Логотип розділу"
-      logo_dark: "Зображення логотипу темного режиму"
+      logo: "Зображення логотипу категорії"
+      logo_dark: "Зображення логотипу категорії темного режиму"
       logo_description: "Рекомендоване співвідношення сторін 1:1 з мінімальним розміром 200px. Якщо залишити поле порожнім, зображення не буде показано."
-      background_image: "Фонове зображення розділу"
-      background_image_dark: "Фонове зображення темної категорії"
+      background_image: "Фонове зображення категорії"
+      background_image_dark: "Темне фонове зображення категорії"
       style: "Стилі"
       background_color: "Колір"
       foreground_color: "Колір тексту"
+      color_validations:
+        cant_be_empty: "но може бути порожнім"
+        incorrect_length: "має відповідати формату #RRGGBB або #RGB"
+        non_hexdecimal: "має містити лише шістнадцяткові символи (0-9, A-F)"
       styles:
         type: "Стиль"
         icon: "Іконка"
@@ -4474,7 +4719,7 @@ uk:
       color_placeholder: "Будь-який веб-колір"
       delete_confirm: "Ви впевнені, що хочете видалити цей розділ?"
       delete_error: "Під час видалення розділу сталася помилка."
-      list: "List Categories"
+      list: "Список категорій"
       no_description: "Будь ласка, додайте опис для цього розділу."
       change_in_category_topic: "Редагувати опис"
       already_used: "Цей колір вже використовується іншим розділом"
@@ -4507,10 +4752,10 @@ uk:
       all_topics_wiki: "Створення нових тем Wikis за замовчуванням"
       allow_unlimited_owner_edits_on_first_post: "Дозволяти власнику першого допису необмежену можливість редагувань"
       subcategory_list_style: "Стиль списку підрозділів:"
-      sort_order: "Порядок сортування тем:"
-      default_view: "Вид списку тем за умовчанням:"
-      default_top_period: "Верхній період за замовчуванням:"
-      default_list_filter: "Стандартний фільтр списку:"
+      sort_order: "Список тем сортувати за:"
+      default_view: "Список тем за замовчуванням:"
+      default_top_period: "Типовий період топу:"
+      default_list_filter: "Фільтр списку за замовчуванням:"
       allow_badges_label: "Дозволити нагороди у цьому розділі"
       edit_permissions: "Редагувати дозволи"
       reviewable_by_group: "Крім команди обслуговування, зміст цього розділу також можуть переглядати:"
@@ -4519,11 +4764,11 @@ uk:
       require_reply_approval: "Вимагати схвалення модератором усіх нових відповідей"
       this_year: "цього року"
       position: "Позиція на сторінці розділів:"
-      default_position: "Default Position"
+      default_position: "Позиція за замовчуванням"
       position_disabled: "Розділи показуватимуться в порядку активності. Щоб керувати порядком розділів у списках, увімкніть параметр <a href='%{url}'>«фіксовані позиції розділів»</a>."
       minimum_required_tags: "Мінімальна кількість теґів, необхідних для теми:"
-      default_slow_mode: 'Увімкнути "Повільний режим" для нових тем в цьому розділі.'
-      parent: "Батьківський розділ"
+      default_slow_mode: 'Увімкнути «Повільний режим» для нових тем у цій категорії.'
+      parent: "Батьківська категорія"
       num_auto_bump_daily: "Кількість відкритих тем для автоматичного підняття щодня:"
       auto_bump_cooldown_days: "Мінімальна кількість днів до повторного підняття тієї самої теми:"
       navigate_to_first_post_after_read: "Перейдіть до першого допису після прочитання тем"
@@ -4545,7 +4790,7 @@ uk:
           title: "Ігноровані"
           description: "Не повідомляти про нові теми в цьому розділі та приховати їх з останніх."
       search_priority:
-        label: "Пріоритет Пошуку"
+        label: "Пріоритет пошуку"
         options:
           normal: "Нормальний"
           ignore: "Ігнорувати"
@@ -4556,7 +4801,7 @@ uk:
       sort_options:
         default: "типово"
         likes: "Вподобання"
-        op_likes: "Вподобання першого допису"
+        op_likes: "Вподобання оригінального допису"
         views: "Перегляди"
         posts: "Дописи"
         activity: "Активність"
@@ -4576,8 +4821,8 @@ uk:
         appearance: "Зовнішній вигляд"
         email: "Електронна пошта"
       list_filters:
-        all: "всі теми"
-        none: "немає підрозділів"
+        all: "Всі теми"
+        none: "Немає підкатегорій"
       colors_disabled: "Ви не можете вибрати кольори, оскільки у вас немає стилю розділу."
     anonymous_flagging:
       title: "Повідомити про незаконний вміст"
@@ -4841,7 +5086,7 @@ uk:
         title: "Топ"
         help: "Найактивніші теми за останній рік, місяць, квартал, тиждень або день"
         all:
-          title: "Весь час"
+          title: "За весь час"
         yearly:
           title: "Щорічно"
         quarterly:
@@ -4852,12 +5097,13 @@ uk:
           title: "Щотижня"
         daily:
           title: "Щодня"
-        all_time: "Весь час"
+        all_time: "За весь час"
         this_year: "Рік"
         this_quarter: "Квартал"
         this_month: "Місяць"
         this_week: "Тиждень"
         today: "Today"
+        custom: "Користувацька"
     custom_homepage:
       admin_message: 'В одній з ваших тем увімкнено модифікатор "custom_homepage", але він нічого не виводить у коннекторі [custom-homepage]. (Це повідомлення показується лише адміністраторам сайту).'
     browser_update: 'На жаль, <a href="https://discourse.org/about#browser">ваш браузер не підтримується</a>. Будь ласка, <a href="https://browsehappy.com">перейдіть на підтримуваний браузер</a> , щоб повноцінно переглянути вміст, увійти та відповісти.'
@@ -4867,17 +5113,22 @@ uk:
       readonly: "Бачити"
     preloader_text: "Завантаження"
     lightbox:
-      download: "завантажити"
-      open: "оригінальне зображення"
+      download: "Завантажити"
+      open: "Оригінальне зображення"
+      image_info: "Інформація про зображення"
+      quote: "Цитувати зображення"
       previous: "Попередній (клавіша зі стрілкою вліво)"
       next: "Наступний (клавіша зі стрілкою вправо)"
       counter: "%curr% з %total%"
       close: "Закрити (Esc)"
+      zoom: "Масштаб (клавіша Z)"
+      error: "Зображення не може бути завантажене"
       content_load_error: '<a href="%url%">Вміст</a> не вдалося завантажити.'
       image_load_error: '<a href="%url%">Зображення</a> не вдалося завантажити.'
     cannot_render_video: Це відео неможливо відтворити, оскільки ваш браузер не підтримує цей кодек.
     invalid_video_url: Це відео неможливо відтворити, оскільки URL-адреса недійсна або недоступна.
     keyboard_shortcuts_help:
+      search_placeholder: "Пошук ярлика за описом або комбінацією клавіш"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} або %{shortcut2}"
@@ -4893,6 +5144,7 @@ uk:
         latest: "%{shortcut} Останні"
         new: "%{shortcut} Нові"
         unread: "%{shortcut} Непрочитані"
+        unseen: "%{shortcut} Невидимий"
         categories: "%{shortcut} Розділи"
         top: "%{shortcut} Обговорювані"
         bookmarks: "%{shortcut} Закладки"
@@ -4911,7 +5163,7 @@ uk:
         go_to_unread_post: "%{shortcut} Перейти до першого непрочитаного допису"
       application:
         title: "Застосунок"
-        create: "%{shortcut} Створити нову тему"
+        create: "%{shortcut} Створити нову тему або особисте повідомлення"
         notifications: "%{shortcut} Відкрити сповіщення"
         hamburger_menu: "%{shortcut} Відкрити меню навігації"
         user_profile_menu: "%{shortcut} Відкрити меню профілю"
@@ -4926,6 +5178,8 @@ uk:
       composing:
         title: "Редагування"
         return: "%{shortcut} Повернутися в редактор"
+        minimize: "%{shortcut} Згорнути редактор тексту"
+        create_or_reply: "%{shortcut} Створити тему або відповісти"
         fullscreen: "%{shortcut} Повноекранний редактор"
         insert_current_time: "%{shortcut} Вставити поточний час"
         bold: "%{shortcut} Жирний"
@@ -5046,6 +5300,7 @@ uk:
       add_to_calendar: "Додати до календаря"
       google: "Календар Google"
       ics: "ICS"
+      default_title: "Запланована подія"
     tagging:
       all_tags: "Всі теґи"
       other_tags: "Інші теґи"
@@ -5064,7 +5319,7 @@ uk:
         few: "виберіть теги %{count} з '%{name}'…"
         many: "виберіть %{count} теґів з '%{name}'.…"
         other: "вибрати %{count} тегів з '%{name}'..."
-      info: "Інформація"
+      info: "Показати інформацію про тег"
       default_info: "Цей теґ не обмежений розділами та не має синонімів."
       staff_info: "Щоб додати обмеження, додайте цей теґ у <a href=%{basePath}/tag_groups>групу теґів</a>."
       category_restricted: "Цей теґ обмежено розділами, до яких ви не маєте доступу."
@@ -5105,6 +5360,7 @@ uk:
         many: "Синоніми %{count} також будуть видалені."
         other: "Синоніми %{count} також будуть видалені."
       edit_tag: "Редагувати назву та опис теґу"
+      edit: "Редагувати цей тег"
       description: "Опис (максимум 1000 символів)"
       sort_by: "Сортувати за:"
       sort_by_count: "Кількість"
@@ -5115,6 +5371,19 @@ uk:
       upload_description: "Завантажити csv-файл, щоб масово створити теґи"
       upload_instructions: "По одному у рядку, можна з групою теґів у форматі 'tag_name,tag_group'."
       upload_successful: "Теґи завантажено"
+      bulk_create_inline_placeholder: "Створення тегів (через кому)"
+      bulk_create_button: "Створити"
+      bulk_create_success:
+        one: "Створено %{count} місяць тому:"
+        few: "Створено %{count} місяці тому:"
+        many: "Створено %{count} місяців тому:"
+        other: "Створено %{count} місяців тому:"
+      bulk_create_already_exist:
+        one: "%{count} тег вже існує:"
+        few: "%{count} теги вже існують:"
+        many: "%{count} тегів вже існують:"
+        other: "%{count} тегів вже існують:"
+      bulk_create_some_failed: "Не вдалося створити деякі теги:"
       delete_unused_confirmation:
         one: "%{count} теґ буде вилучено: %{tags}"
         few: "%{count} теґи буде вилучено: %{tags}"
@@ -5152,18 +5421,18 @@ uk:
           description: "Ви не будете отримувати жодних сповіщень про нові теми з цим теґом, і вони не зʼявлятимуться у вкладці Непрочитані."
       groups:
         back_btn: "Повернутися до всіх тегів"
-        title: "Групи теґів"
+        title: "Групи тегів"
         about_heading: "Виберіть групу теґів або створіть нову"
         about_heading_empty: "Створіть нову групу теґів, щоб розпочати"
         about_description: "Групи теґів допомагають керувати дозволами для багатьох теґів в одному місці."
         new: "Нова група"
         new_title: "Створити нову групу"
-        edit_title: "Редагувати групу теґів"
+        edit_title: "Редагувати групу тегів"
         tags_label: "Теґи у цій групі"
         parent_tag_label: "Батьківський теґ"
         parent_tag_description: "Теґи з цієї групи можуть бути використані тільки якщо є батьківський теґ."
         one_per_topic_label: "Обмеження по одному теґу на тему з цієї групи"
-        new_name: "Нова група теґів"
+        new_name: "Нова група тегів"
         name_placeholder: "Назва"
         save: "Зберегти"
         delete: "Видалити"
@@ -5205,6 +5474,7 @@ uk:
     safe_mode:
       enabled: "Включено безпечний режим, щоб вийти з безпечного режиму, закрийте поточне вікно браузера"
     theme_preview_notice: "Зараз ви переглядаєте тему, закрийте цю вкладку або вікно браузера, щоб повернутися до звичайної конфігурації сайту."
+    theme_preview_failed: "Не вдалося переглянути тему, оскільки вона не існує або у вас немає дозволу на доступ до неї."
     image_removed: "(зображення видалено)"
     pause_notifications:
       title: "Призупинити сповіщення для"
@@ -5278,7 +5548,7 @@ uk:
       tags_form_modal:
         title: "Редагувати навігацію тегами"
         filter_placeholder: "Теги фільтрів"
-        no_tags: "Немає тегів, що відповідають заданому терміну."
+        no_tags: "Немає тегів, що відповідають поточним фільтрам."
         subtitle:
           text: "і ми автоматично покажемо найпопулярніші теги цього сайту"
       edit_navigation_modal_form:
@@ -5384,6 +5654,7 @@ uk:
               title: "Всі значки доступні для отримання"
             filter:
               content: "Filter"
+              title: "Фільтрувати теми за категорією, тегом або іншими критеріями"
             topics:
               content: "Теми"
               title: "Всі теми"
@@ -5441,6 +5712,8 @@ uk:
           light: "Світла"
           dark: "Темна"
           auto: "Авто"
+          title: "Колірна схема"
+          aria_label: "Колірна схема, наразі %{mode}"
     welcome_topic_banner:
       title: "Створіть тему привітання"
       description: "Ваша привітальна тема – це перше, що прочитають нові учасники. Думайте про це як про свою «початкову презентацію» або «програмну заяву». Повідомте всім, для кого ця спільнота, що вони можуть очікувати тут знайти та що ви хочете, щоб вони зробили в першу чергу."
@@ -5552,8 +5825,12 @@ uk:
     powered_by_discourse: "Працює на Discourse"
     safari_15_warning: "Ваш браузер незабаром буде несумісний з цією спільнотою. Щоб продовжити участь, будь ласка, оновіть свій браузер або <a href='%{url}'>дізнайтеся більше</a>."
     filter:
+      placeholder: "Фільтрувати теми за категорією, тегом або іншими критеріями"
       description:
         yesterday: "Вчора"
+        last_week: "Минулого тижня"
+        last_month: "Минулого місяця"
+        last_year: "Минулого року"
     discovery:
       headings:
         all:
@@ -5620,13 +5897,22 @@ uk:
             bookmarks: "Теми в %{category} без тегів, які ви додали до закладок"
             default: "%{filter} теми в %{category} без тегів"
         categories: "Всі розділи"
+    content_localization:
+      toggle_localized:
+        translated: "Сторінку перекладено машинним способом. Натисніть, щоб переглянути оригінал."
+        not_translated: "Сторінку не перекладено. Натисніть, щоб перекласти."
+    language_switcher:
+      title: "Змінити мову сайту"
   admin_js:
     type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
+    reset_filter: "Скинути"
+    toggle_filters: "Перемкнути випадаючі фільтри"
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
-      filter_reports: Фільтр звітів
+      filter_reports: "Фільтр звітів..."
+      filter_reports_no_results: "Немає звітів, що відповідають вашому фільтру"
       tags:
         remove_muted_tags_from_latest:
           always: "завжди"
@@ -5654,6 +5940,66 @@ uk:
           title: "Плагіни"
         advanced:
           title: "Розширений"
+      upcoming_changes:
+        name: "Імʼя"
+        plugin: "Плагін"
+        metadata: "Метадані"
+        enabled: "Включено"
+        enabled_for: "Увімкнено для..."
+        show_image: "Показати зображення"
+        edit_groups: "Редагувати групи підписки"
+        groups_updated: "Групи оновлено!"
+        save_groups: "Зберегти групи"
+        add_groups_to_enable: "Додайте групи, щоб увімкнути цю функцію"
+        no_changes_to_save: "Немає змін для збереження"
+        select_groups: "Виберіть групи…"
+        opt_in_groups: "Вибрані групи"
+        opt_in_groups_instructions: "Групи вибрані можна використовувати, щоб дозволити певній групі користувачів протестувати зміну, перш ніж вона буде опублікована для всіх. Зверніть увагу, що ці групи втратять актуальність, щойно зміна перейде до статусу «Стабільна»."
+        enabled_for_throttle: "Ви занадто швидко змінили, для кого ввімкнено цю зміну. Зачекайте кілька секунд, перш ніж повторити спробу."
+        change_enabled_for_success: "Ви ввімкнули цю зміну для %{enabledFor}"
+        change_disabled: "Ви відмовилися від цієї зміни"
+        permanent_notice: "Ця зміна зараз постійна і незабаром буде видалена. Ви більше не зможете її відмінити."
+        permanent_no_group_selection: "Н/Д, постійні зміни застосовуються до всіх груп."
+        no_changes: "Наразі жодних змін не планується."
+        preview: "Попередній перегляд"
+        enabled_for_options:
+          no_one: "Ніхто"
+          everyone: "Усі"
+          staff: "Для команди обслуговування"
+          specific_groups: "Конкретна(і) група(и)"
+          specific_groups_with_group_names:
+            one: "група %{groupNames}"
+            few: "групи %{groupNames}"
+            many: "групи %{groupNames}"
+            other: "групи %{groupNames}"
+        statuses:
+          experimental: "Експериментальний"
+          alpha: "Альфа"
+          beta: "Бета"
+          stable: "Стабільна"
+          permanent: "Постійна"
+        impact_roles:
+          admins: "Адміни"
+          moderators: "Модератори"
+          staff: "Команда обслуговування"
+          all_members: "Всі учасники"
+          developers: "Розробники"
+        filter:
+          search_placeholder: "Фільтрувати за назвою, описом або плагіном..."
+          no_results: "Немає майбутніх змін, що відповідають вашому фільтру"
+          all: "Всі"
+          enabled_all: "Увімкнено або вимкнено"
+          enabled: "Включено"
+          disabled: "Вимкнено"
+          impact_type_all: "Всі види впливу"
+          impact_type_feature: "Особливість"
+          impact_type_other: "Інше"
+          status_all: "Усі статуси"
+          status_experimental: "Експериментальний"
+          status_alpha: "Альфа"
+          status_beta: "Бета"
+          status_stable: "Стабільна"
+          status_permanent: "Постійна"
       config:
         about:
           title: "Про ваш сайт"
@@ -5684,9 +6030,32 @@ uk:
           title: "Локалізація"
           header_description: "Налаштуйте мову інтерфейсу вашої спільноти та інші параметри локалізації для ваших учасників"
           keywords: "locale|language|timezone|unicode|ltr"
-        login_and_authentication:
+        upcoming_changes:
+          title: "Майбутні зміни"
+          header_description: "Список майбутніх змін у Discourse, які можуть вплинути на ваш сайт, та експериментальні функції, до яких ви можете приєднатися. Ви можете фільтрувати за впливом, типом зміни та статусом.\n\nГрупи згоди можна використовувати, щоб дозволити певній групі користувачів протестувати зміну, перш ніж вона буде опублікована для всіх, хоча ці групи втратять актуальність, коли зміна перейде до статусу «Стабільний»."
+        login:
           title: "Вхід та автентифікація"
           header_description: "Налаштуйте спосіб входу та автентифікації користувачів, секрети та ключі, постачальники OAuth2 тощо"
+          sub_pages:
+            common_settings:
+              title: "Налаштування"
+            authenticators:
+              title: "Вхід через соціальні мережі"
+            discourseconnect:
+              title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          stats:
+            total_users: "Всього користувачів"
+            signups_30_days: "Реєстрації (30 днів)"
+            logins_30_days: "Вхід (30 днів)"
+          regenerate_credentials: "Відновити облікові дані"
+          regenerate_confirm: "Ви впевнені, що хочете повторно створити облікові дані Discourse ID? Це створить новий секретний ключ клієнта. Повторне створення облікових даних зазвичай не є обов'язковим, але може бути корисним для підвищення безпеки."
+          description: "Discourse ID - це сервіс єдиного входу, який дозволяє користувачам входити на кілька сайтів Discourse за допомогою одного облікового запису. Підтримуються поширені соціальні сервіси входу, такі як Google, Facebook, Apple та Github, без додаткового налаштування."
+          learn_more: "Дізнатися більше"
+          regenerate_success: "Облікові дані успішно відновлено."
         logo:
           title: "Логотип"
           header_description: "Налаштуйте логотипи та іконки, які використовуються на вашому сайті"
@@ -5775,6 +6144,62 @@ uk:
               other: "Ви оновили розмір тексту за замовчуванням. Бажаєте застосувати цю зміну до %{count} існуючих користувачів?"
             modal_yes: "Так"
             modal_no: "Ні, застосовувати лише надалі"
+        welcome_banner:
+          title: "Вітальний банер"
+          header_description: "Налаштуйте банер із рядком пошуку, який відображається відвідувачам вашого сайту."
+          saved: "Налаштування вітального банера успішно збережено."
+          form:
+            enabled_themes:
+              label: "Увімкнено для тем..."
+              description: "Виберіть, у яких темах має відображатися банер. Відображаються лише активні теми."
+              select_label: "Виберіть теми"
+            background_image:
+              label: "Фонове зображення"
+              description: "Це зображення буде відображатися за текстом банера."
+            text_color:
+              label: "Колір тексту"
+              description: "Коли завантажено «Фонове зображення» вище, скористайтеся цим налаштуванням, щоб змінити колір тексту банера, щоб забезпечити його читабельність. Якщо залишити поле порожнім або не завантажити фонове зображення, колір контролюватиметься активною темою."
+            page_visibility:
+              label: "Видимість сторінки"
+              description: "Виберіть, де має відображатися банер."
+              options:
+                top_menu_pages: "Верхнє меню сторінок"
+                homepage: "Тільки головна сторінка"
+                discovery: "Сторінки пошуку"
+                all_pages: "Усі сторінки"
+            location:
+              label: "Місцеположення"
+              description: "Виберіть, де на сторінці має з’являтися банер."
+              options:
+                above_topic_content: "Над вмістом теми"
+                below_site_header: "Нижче заголовка сайту"
+            text_section:
+              title: "Текст, який налаштовується"
+              locale_label: "Мова"
+            header_new_members:
+              label: "Заголовок для нових учасників"
+              description: "Доступна змінна: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Ласкаво просимо, %{preferred_display_name}!"
+            header_logged_in:
+              label: "Заголовок для зареєстрованих учасників"
+              description: "Доступна змінна: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "З поверненням, %{preferred_display_name}!"
+            header_anonymous:
+              label: "Заголовок для анонімних відвідувачів"
+              description: "Доступна змінна: <code>&percnt;{site_name}</code>"
+              placeholder: "Ласкаво просимо до сайту %{site_name}!"
+            subheader_logged_in:
+              label: "Підзаголовок для зареєстрованих учасників"
+              description: "Додатковий текст, показаний під заголовком для зареєстрованих користувачів."
+              placeholder: "Дізнайтеся, що нового в спільноті"
+            subheader_anonymous:
+              label: "Підзаголовок для анонімних відвідувачів"
+              description: "Додатковий текст, показаний під заголовком для анонімних відвідувачів."
+              placeholder: "Приєднуйтесь до нашої спільноти для участі в дискусіях"
+            search_placeholder:
+              label: "Заповнювач пошуку"
+              description: "Текст-заповнювач для поля пошуку у вітальному банері."
+              placeholder: "Пошук тем..."
         navigation:
           title: "Навігація"
           header_description: "Налаштуйте навігаційні посилання та пункти меню для свого сайту. Це включає розташування та поведінку основного навігаційного меню, швидких посилань у верхній частині домашньої сторінки, а також бічної панелі адміністратора"
@@ -5876,6 +6301,7 @@ uk:
           header_description: "Слова, що відстежуються, - це інструменти модерації, які можуть виконувати різні дії, зокрема блокувати, цензурувати, пов'язувати або позначати дописи, що містять певні слова."
         color_palettes:
           title: "Палітри кольорів"
+          header_description: "Ці палітри контролюють кольори, що використовуються у вашій спільноті. Коли ви робите палітру доступною для вибору користувачем, учасники можуть вибирати бажані кольори зі своїх уподобань."
         emoji:
           title: "Смайли"
           header_description: "Додайте нові смайли, які будуть доступні кожному. Виберіть кілька файлів, щоб створити емоджи, використовуючи їх назви файлів. Вибрана група буде використовуватися для всіх файлів, які додаються одночасно."
@@ -5956,7 +6382,7 @@ uk:
               header_description: "Перегляд журналу виконаних пошукових запитів"
         plugins:
           title: "Встановлені плагіни"
-          header_description: "Усі плагіни Discourse, які ви встановили, або плагіни, попередньо встановлені разом із хостингом Discourse, відображатимуться в цьому списку"
+          header_description: "Плагіни розширюють можливості вашої спільноти за допомогою додаткових функцій. Нижче перераховані як попередньо встановлені, так і користувацькі плагіни."
         api_keys:
           title: "Ключі API"
           header_description: "Ключі API дозволяють безпечно інтегрувати Discourse. із зовнішніми системами та автоматизувати дії. Адміністратори можуть створювати ключі за допомогою спеціальних областей для контролю доступу до ресурсів та конфіденційних даних. Межі обмежують функціональність, забезпечують підвищення безпеки."
@@ -5976,6 +6402,9 @@ uk:
         select_setting: "Виберіть налаштування сайту, щоб побачити поточні значення теми"
         add: "Перейдіть до налаштувань теми сайту"
         help: "Тема, яку ви зараз використовуєте, <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Перейдіть на сторінку налаштування теми <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'></a> , щоб змінити налаштування теми сайту, або натисніть на пов’язану тему в таблиці нижче, щоб редагувати її налаштування."
+        filter: "Фільтрувати налаштування сайту теми за назвою, описом або назвою теми..."
+        filter_no_results: "Немає налаштувань тем сайту, що відповідають вашому фільтру"
+        site_setting_warning: 'Цей параметр керується темою за замовчуванням для вашого сайту (%{defaultThemeName}). Ви можете змінити його на <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">сторінці редагування теми</a>.'
       search:
         modal_title: "Шукайте все в адмінці"
         title: "Пошук"
@@ -6041,11 +6470,18 @@ uk:
           only_experiments: "Показувати лише експериментальні функції"
           experiment_enabled: "Ви увімкнули експериментальну функцію."
           experiment_disabled: "Ви вимкнули експериментальну функцію."
-          experiment_toggled_too_fast: "Ви перемкнули експериментальну функцію занадто швидко. Зачекайте кілька секунд, перш ніж повторити спробу."
+          feature_enabled: "Ви увімкнули функцію."
+          feature_disabled: "Ви вимкнули цю функцію."
+          toggled_too_fast: "Ви переключили перемикач занадто швидко. Будь ласка, зачекайте кілька секунд, перш ніж спробувати знову."
           experiment_tooltip:
-            title_disabled: "Спробуйте нашу експериментальну функцію"
+            title_disabled: "Спробуйте цю експериментальну функцію"
             title_enabled: "Вимкнути експериментальну функцію"
-            content_disabled: "Спробуйте нашу найновішу функцію в розробці! Вона все ще знаходиться в якості експерименту, тому ми можемо вилучити її в будь-який момент. Ви можете відмовитися від неї, коли забажаєте."
+            content_disabled: "Спробуйте нашу найновішу функцію, яка знаходиться в розробці! Вона все ще перебуває на стадії експериментального тестування, тому ми можемо видалити її будь-коли. Ви можете відмовитися від її використання будь-коли.<br/><br/>Зміна цього налаштування ввімкне функцію для всіх користувачів."
+            content_enabled: "Зміна цього відключить функцію для всіх користувачів."
+          feature_tooltip:
+            title_disabled: "Спробувати цю функцію"
+            title_enabled: "Вимкнути функцію"
+            content_disabled: "Спробуйте цю нову функцію! Ви можете відмовитися від неї будь-коли.<br/><br/>Зміна цього параметра ввімкне функцію для всіх користувачів."
             content_enabled: "Зміна цього відключить функцію для всіх користувачів."
         last_checked: "Остання перевірка"
         refresh_problems: "Оновити"
@@ -6307,6 +6743,7 @@ uk:
               recover: Відновити тему.
               read_lists: Читайте списки тем, як топ, нові, останні тощо. RSS також підтримується.
               status: "Оновлення статусу теми. Статуси: закрита, архівна, видима, закріплена. Увімкнено: true, false. Укажіть category_id тут і в параметрах запиту, щоб дозволити зміну статусу лише для тем у цій категорії."
+              change_owner: Змінити власника публікацій у темі.
             posts:
               edit: Редагуйте будь-який допис або якийсь конкретний.
               delete: Видалити допис.
@@ -6339,6 +6776,7 @@ uk:
               suspend: Призупинити облікові записи користувачів.
               delete: Видалення облікових записів користувачів.
               list: Отримання списку користувачів.
+              create: Створити нового користувача.
             user_status:
               read: Читати статус користувача.
               update: Оновити статус користувача.
@@ -6442,6 +6880,7 @@ uk:
           user_destroyed: "Користувача видалено"
           user_suspended: "Користувача призупинено"
           user_unsuspended: "Користувача розблоковано"
+          user_anonymized: "Користувач анонімізований"
         reviewable_event:
           group_name: "Події, що підлягають перегляду"
           reviewable_created: "Елемент для перегляду готовий"
@@ -6678,9 +7117,12 @@ uk:
         themes_and_components:
           breadcrumb_title: "Customize"
           install: "Install"
+          theme_site_settings:
+            title: "Налаштування теми сайту"
+            description: "Налаштування, які дозволяють темам мати більший контроль над усіма функціями сайту, замінюючи невелику підмножину основних налаштувань сайту."
           themes:
             title: "Стилі"
-            description: 'Теми для всього сайту, які змінюють загальний вигляд вашого сайту для всіх користувачів. Хочете перевірити, які налаштування сайту замінюють ваші теми? <a href="%{themeSiteSettingsUrl}">Переглянути налаштування теми сайту</a>'
+            description: "Теми для всього сайту, які змінюють загальний вигляд вашого сайту для всіх користувачів."
             themes_intro: "Встановіть нову тему, щоб розпочати роботу, або створіть власну з нуля, використовуючи ці ресурси."
             new_theme: "Нова тема"
             back: "Назад до тем"
@@ -6718,7 +7160,7 @@ uk:
             filter_by_used: "Використано"
             filter_by_unused: "Невикористаний"
             filter_by_updates_available: "Доступні оновлення"
-            search_components: "Введіть назву компонента"
+            search_components: "Фільтрувати за назвою або описом компонента..."
             new_update_for_component: "Нове оновлення доступне для %{name}!"
             component_up_to_date: '"%{name}" оновлено.'
             updated_successfully: '"%{name}" успішно оновлено.'
@@ -6748,6 +7190,8 @@ uk:
             title: "Параметри кольору"
             toggle: "Вибір користувача"
             toggle_description: "Кольорова палітра може бути обрана користувачами"
+            toggle_default_light_on_theme: "Колірна палітра — це стандартна світла палітра для теми за замовчуванням (%{themeName})"
+            toggle_default_dark_on_theme: "Колірна палітра — це темна палітра за замовчуванням у темі за замовчуванням (%{themeName})"
           colors:
             title: "Кольори"
           save_changes: "Зберегти зміни"
@@ -6775,6 +7219,14 @@ uk:
         experimental_badge: "експериментальний"
         learn_more: "Дізнатися більше"
         preinstalled: "Попередньо встановлений"
+        filters:
+          all: "Всі"
+          enabled: "Включено"
+          disabled: "Вимкнено"
+          preinstalled: "Попередньо встановлений"
+          search_placeholder: "Пошук плагінів..."
+          reset: "Скинути"
+          no_results: "Не знайдено плагінів, що відповідають вашим фільтрам"
       navigation_menu:
         sidebar: "Бічна панель"
         header_dropdown: "Випадаючий заголовок"
@@ -6830,6 +7282,7 @@ uk:
             confirm: "Ви переконані, що хочете видалити резервну копію?"
           restore:
             is_disabled: "Відновлення наразі вимкнено. Щоб увімкнути його, відвідайте <a href='%{url}'>налаштування сайту</a>."
+            is_disabled_title: "Відновлення наразі вимкнено. Щоб увімкнути його, знайдіть «дозволити відновлення» в налаштуваннях сайту."
             label: "Відновити"
             title: "Відновити резервну копію"
             confirm: "Ви впевнені, що хочете відновити цей бекап?"
@@ -6880,14 +7333,19 @@ uk:
         copy_to_clipboard: "Скопіювати в буфер"
         copied_to_clipboard: "Скопійовано у буфер обміну"
         copy_to_clipboard_error: "Помилка під час копіювання даних у буфер обміну"
-        theme_owner: "Неможливо редагувати, власник: "
+        theme_owner: "Власник:"
         email_templates:
           title: "Електронна пошта"
           subject: "Тема"
           multiple_subjects: "Цей шаблон електронної пошти має безліч тем."
+          multiple_bodies: "Цей шаблон електронного листа має кілька тіл."
           body: "Тіло"
           revert: "Повернути зміни"
           revert_confirm: "Чи впевнені ви, що хочете повернути ваші зміни?"
+          search_templates: "Фільтр за назвою шаблону..."
+          no_templates_found: "Жоден шаблон не відповідає вашим фільтрам."
+          edit: "Редагувати"
+          back: "Назад до шаблонів"
         component:
           all_filter: "Все"
           used_filter: "Використано"
@@ -6900,7 +7358,10 @@ uk:
           theme: "Тема"
           component: "Компонент"
           components: "Компоненти"
-          search_placeholder: "введіть для пошуку…"
+          search_placeholder: "Фільтрувати за назвою або описом теми..."
+          filter_all: "Всі"
+          filter_user_selectable: "Вибір користувача"
+          no_themes_found: "Немає тем, що відповідають вашим фільтрам"
           theme_name: "Назва теми"
           component_name: "Назва компонента"
           themes_intro: "Виберіть існуючу тему, або встановіть нову, щоб почати роботу"
@@ -6919,6 +7380,8 @@ uk:
           create_name: "Ім'я"
           save: "Зберегти"
           long_title: "Стилізація сайту: кольори, CSS та HTML"
+          dark_mode: "%{themeName} темний режим"
+          light_mode: "%{themeName} світлий режим"
           edit: "Редагувати"
           edit_confirm: "Це імпортований стиль. Зміни CSS/HTML загубляться після чергового оновлення стилю."
           update_confirm: "Ці локальні зміни будуть видалені оновленням. Ви впевнені, що хочете продовжити?"
@@ -6930,21 +7393,23 @@ uk:
           extra_files_upload: "Експортувати тему для перегляду цих файлів."
           extra_files_remote: "Експортуйте тему або перевірте сховище git, щоб переглянути ці файли."
           preview: "Попередній перегляд"
-          default: "Активні"
+          default: "Стандартна тема"
           settings_editor: "Редактор налаштувань"
           show_advanced: "Показати розширені"
           is_default: "Активувати за замовчуванням"
           user_selectable: "Користувачі можуть вибирати стиль"
           user_selectable_badge_label: "Вибір користувача"
           user_selectable_button_label: "Дозволити користувачам вибирати"
-          user_selectable_unavailable_button_label: "Зробити недоступним для користувачів"
+          user_selectable_unavailable_button_label: "Не дозволяти користувачам вибирати"
           broken_badge_label: "Зламана тема"
           color_scheme_user_selectable: "Кольорова палітра може бути обрана користувачами"
           auto_update: "Автоматичне оновлення при оновленні Discourse"
           color_scheme: "Колірна палітра"
-          edit_color_scheme: "Редагувати палітру кольорів"
+          dark_color_scheme: "Темна кольорова палітра"
           default_light_scheme: "Світла (за замовчуванням)"
-          color_scheme_select: "Виберіть кольори для стилю"
+          color_scheme_select: "Виберіть кольори для стилю."
+          dark_color_scheme_select: "Виберіть кольори, які використовуватимуться темою в темному режимі."
+          edit_colors: "Редагувати кольори"
           custom_sections: "Налаштування секцій:"
           theme_components: "Компоненти стилю"
           add_all_themes: "Додати всі теми"
@@ -6956,11 +7421,12 @@ uk:
           convert_theme_alert_generic: "Ви впевнені, що хочете перетворити цю тему на компонент?"
           convert_theme_tooltip: "Перетворити цю тему в компонент"
           inactive_themes: "Неактивні теми:"
-          set_default_theme: "Встановити як активну"
-          default_theme: "Активна тема"
+          set_default_theme: "Встановити за замовчуванням"
+          default_theme: "Стандартна тема"
           set_default_success: "Тема за замовчуванням встановлена як %{theme}"
           setting_was_saved: "Налаштування теми збережено"
           install_success: "%{theme} успішно встановлено!"
+          delete_success: "%{theme} успішно видалено!"
           inactive_components: "Невикористані компоненти:"
           selected:
             one: "%{count} вибрано"
@@ -7048,7 +7514,7 @@ uk:
           theme_site_settings: "Налаштування, які тема може перевизначити"
           edit_objects_theme_setting: "Редактор налаштувань об'єктів"
           overriden_settings_explanation: "Зміни за замовчуванням позначені крапкою та підсвічуванням. Натисніть кнопку Скинути, щоб відновити значення за замовчуванням."
-          overriden_site_settings_explanation: "Налаштування сайту, які тема може змінювати. Натисніть Скинути, щоб відновити налаштування теми за замовчуванням. Якщо жодних налаштувань не встановлено, буде використано налаштування сайту за замовчуванням. Ви можете переглянути всі налаштування сайту, які замінюються темами, на <a href='%{themeSiteSettingsConfigUrl}'>сторінці конфігурації налаштувань теми сайту</a>."
+          overriden_site_settings_explanation: "Параметри сайту, які тема може налаштувати. Натисніть «Скинути», щоб відновити значення налаштувань сайту за замовчуванням. Ви можете побачити, як усі налаштування сайту перевизначаються темами, на <a href='%{themeSiteSettingsConfigUrl}'>сторінці конфігурації налаштувань теми сайту</a>."
           no_settings: "Ця тема не має налаштувань."
           theme_translations: "Переклади тем"
           empty: "Немає елементів"
@@ -7062,17 +7528,6 @@ uk:
           repo_unreachable: "Не вдалося зв’язатися з Git-репозиторієм цієї теми. Повідомлення про помилку:"
           built_in_description: "Ця тема попередньо встановлена і не може бути видалена або змінена"
           imported_from_archive: "Ця тема була імпортована з .zip файлу"
-          settings: "Налаштування"
-          colors: "Кольори"
-          unsaved_colors:
-            one: "У вас є %{count} незбережений колір"
-            few: "У вас є %{count} незбережені кольори"
-            many: "У вас є %{count} незбережених кольорів"
-            other: "У вас є %{count} незбережених кольорів"
-          unsaved_colors_leave_route_confirmation: "Ви ще не зберегли зміни палітри кольорів. Ви впевнені, що хочете піти?"
-          save_colors: "Зберегти кольори"
-          discard_colors: "Відкинути"
-          colors_title: "Кольори"
           scss:
             text: "CSS"
             title: "Користувальницькі правила CSS з підтримкою синтаксису SCSS"
@@ -7123,6 +7578,8 @@ uk:
         schema:
           title: "Редагувати налаштування %{name}"
           back_button: "Назад до %{name}"
+          move_up: "Посунути вгору"
+          move_down: "Посунути вниз"
           fields:
             required: "*обов'язкові"
             groups:
@@ -7156,13 +7613,33 @@ uk:
           select_base:
             title: "Виберіть базову колірну палітру"
             description: "Базова палітра:"
+          non_default_theme_warning: "Ваші <a href='%{link}'>особисті налаштування</a> для теми відрізняються від налаштувань за замовчуванням. Зміни, які ви тут внесете, можуть не застосовуватися до вас, але застосовуватимуться до всіх, хто використовує налаштування за замовчуванням (%{themeName})."
+          custom_schemes_warning: "Ваші особисті уподобання <a href='%{link}'></a> для %{colorModes} колірної палітри відрізняються від стандартної. Зміни в палітрі %{colorModes} можуть не застосовуватися до вас, але застосовуватимуться до всіх, хто використовує стандартну палітру."
+          light: "світла"
+          dark: "темна"
           title: "Кольори"
           edit: "Редагувати"
+          view: "Вигляд"
+          set_default_light: "Встановити як світлу палітру в темі за замовчуванням (%{theme})"
+          set_default_dark: "Встановити як темну палітру в темі за замовчуванням (%{theme})"
+          set_default_success: "%{schemeName} встановити як палітру за замовчуванням для %{themeName}"
+          saved_refreshing: "Збережено! Оновлення кольорів..."
+          from_theme: "З теми: %{name}"
           filters:
+            search_placeholder: "Фільтрувати за палітрою або назвою теми..."
             all: "Всі"
             user_selectable: "Вибір користувача"
-          active_badge:
-            text: "Активний"
+            from_theme: "З теми"
+            no_results: "Палітри кольорів не знайдено"
+          default_light_badge:
+            text: "Світлий за замовчуванням"
+            title: "Палітра світлих кольорів за замовчуванням"
+            reset: "Скинути фільтри"
+          default_dark_badge:
+            text: "Темний за замовчуванням"
+            title: "Темна кольорова палітра за замовчуванням"
+          system_palette: "Це вбудована палітра кольорів, її не можна редагувати або видаляти."
+          back_to_colors: "Повернутися до кольорових палітр"
           long_title: "Палітри кольорів"
           about: "Змініть кольору, використовувані в темах. Створіть нову колірну палітру для початку."
           new_name: "Нова палітра кольорів"
@@ -7362,6 +7839,7 @@ uk:
           modal_title: "Подробиці"
           no_previous: "Немає попереднього значення."
           deleted: "Немає нового значення. Запис видалено."
+          filter_date_time: "Фільтрувати дату та час"
           actions:
             permanently_delete_post_revisions: "назавжди видалити редакції публікації"
             delete_user: "видалення користувача"
@@ -7479,6 +7957,10 @@ uk:
             tag_group_change: "змінити групу тегів"
             delete_associated_accounts: "видалити пов’язані облікові записи"
             change_theme_site_setting: "змінити налаштування теми сайту"
+            stop_impersonating: "припиніть видавати себе за іншу особу"
+            upcoming_change_toggled: "майбутню зміну переключено"
+            change_site_setting_groups: "змінити групи налаштувань сайту"
+            discourse_id_regenerate_credentials: "відновити облікові дані Discourse ID"
         screened_emails:
           title: "Перевірені адреси електронної пошти"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."
@@ -7535,6 +8017,7 @@ uk:
         clear_all: Очистити все
         clear_all_confirm: "Ви впевнені, що хочете видалити всі контрольні слова на %{action}?"
         invalid_regex: 'Контрольоване слово "%{word}" є недійсним регулярним виразом.'
+        invalid_regex_multiple: "Неправильні регулярні вирази:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Контролюємі слова є регулярні вирази</a> і вони автоматично не включають межі слів. Якщо ви хочете, щоб регулярний вираз відповідав цілим словам, додайте <code>\b</code> на початку і в кінці вашого регулярного виразу.'
         actions:
           block: "Заблокувати"
@@ -7567,7 +8050,7 @@ uk:
           success: "Успіх"
           exists: "Вже існує"
           upload: "Додати з файлу"
-          upload_successful: "Завантаження пройшло успішно. Слова додані."
+          upload_successful: "Завантаження успішне. Слова будуть оброблені найближчим часом."
           case_sensitivity_label: "З урахуванням регістру"
           case_sensitivity_description: "Тільки слова з відповідним регістром"
           html_label: "HTML"
@@ -7659,10 +8142,10 @@ uk:
             second: "Варіант 2"
             third: "Варіант 3"
         edit_category:
-          toggle_freeform: "шаблон форми вимкнено"
-          toggle_form_template: "шаблон форми ввімкнено"
+          toggle_freeform: "Шаблон форми вимкнено"
+          toggle_form_template: "Шаблон форми ввімкнено"
           select_template: "Виберіть шаблони форм"
-          select_template_help: "Додати/редагувати шаблони форм"
+          select_template_help: "Додавання/редагування шаблонів форм"
         errors:
           multiple_tags_not_allowed: 'Ви не можете вибрати більше тегів з "%{tag_name}". Щоб уникнути проблем, використовуйте шаблон форми'
       impersonate:
@@ -7670,6 +8153,7 @@ uk:
         help: "Використовуйте цей інструмент, щоб увійти від імені користувача. Може бути корисно для налагодження. Після цього необхідно вийти та зайти під своїм обліковим записом знову."
         not_found: "Цього користувача не вдалося знайти."
         invalid: "Даруйте, Ви не можете втілитися в цього користувача."
+        error: "Ой. Сталася неочікувана помилка."
       users:
         title: "Користувачі"
         description: "Перегляд та керування користувачами."
@@ -7786,6 +8270,21 @@ uk:
         penalty_post_actions: "Що б ви хотіли зробити з повʼязаним дописом?"
         penalty_post_delete: "Видалити допис"
         penalty_post_delete_replies: "Видалити допис + будь-які відповіді"
+        penalty_post_delete_all: "Видалити всі теми користувачем + будь-які відповіді"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Це видалить
+          { TOPICS, plural,
+              one {# тема}
+              few {# теми}
+              many {# тем}
+            other {# теми}
+          } і
+          { REPLIES, plural,
+              one {# відповідь}
+              few {# відповіді}
+              many {# відповіді}
+            other {# відповіді}
+          }. <b>Це не можна скасувати!</b> Ви впевнені, що хочете це зробити?</span>
         penalty_post_edit: "Редагувати допис"
         penalty_post_none: "Нічого не робити"
         penalty_count: "Кількість порушень"
@@ -7843,6 +8342,11 @@ uk:
         approve_bulk_success: "Успіх! Всіх обраних користувачів було схвалено та сповіщено про це."
         time_read: "Час читання"
         post_edits_count: "Редагувати допис"
+        upcoming_changes:
+          title: "Майбутні зміни для користувачів"
+          description: "Щоб змінити групи або увімкнути чи вимкнути майбутні зміни, відвідайте <a href='%{basePath}/admin/config/upcoming-changes'>сторінку конфігурації майбутніх змін</a>."
+          filter_placeholder: "Фільтрувати майбутні зміни за назвою або описом"
+          filter_no_results: "Майбутніх змін не знайдено"
         exports:
           title: Експорт користувачів
           download:
@@ -7869,7 +8373,11 @@ uk:
           button: "Видалити всі дописи"
           progress:
             title: "Хід видалення дописів"
-            description: "Видалення дописів…"
+            description:
+              one: "Видалення %{count} публікацію від @%{username}..."
+              few: "Видалення %{count} публікації від @%{username}..."
+              many: "Видалення %{count} публікацій від @%{username}..."
+              other: "Видалення %{count} публікації від @%{username}..."
           confirmation:
             title: "Видалити всі дописи від @%{username}"
             description: |
@@ -7881,6 +8389,7 @@ uk:
             text: "видалити дописи від @%{username}"
             delete: "Видалити дописи від @%{username}"
             cancel: "Скасувати"
+          all_enqueued: "Усі публікації @%{username} поставлено в чергу на видалення"
         merge:
           button: "Об' єднати"
           prompt:
@@ -7907,8 +8416,8 @@ uk:
             cancel: "Скасувати"
         merging_user: "Приєднання користувача…"
         merge_failed: "Помилка під час об'єднання користувачів."
-        delete_forbidden_because_staff: "Адміністраторів та модераторів видалити не можливо."
-        delete_posts_forbidden_because_staff: "Не можна видалити всі повідомлення адміністраторів та модераторів."
+        delete_forbidden_because_admin: "Адміністратори не можуть бути видалені."
+        delete_posts_forbidden_because_admin: "Неможливо видалити всі повідомлення адміністраторів."
         delete_forbidden:
           one: "Користувачі не можуть бути видалені, якщо вони мають дописи. Видаліть усі дописи, перш ніж намагатися видалити користувача. (Дописи старші %{count} день не можна видалити.)"
           few: "Користувачі не можуть бути видалені, якщо вони мають дописи. Видаліть усі дописи, перш ніж намагатися видалити користувача. (Дописи старші %{count} дні не можна видалити.)"
@@ -8065,12 +8574,17 @@ uk:
           title: "Показувати в картці користувача"
           enabled: "Відображається на картці користувача"
           disabled: "Не відображається на картці користувача"
+        show_on_signup:
+          title: "Показувати у формі реєстрації"
+          enabled: "Відображається у формі реєстрації"
+          disabled: "Не відображається у формі реєстрації"
         searchable:
           title: "Включати при пошуку по сайту"
           enabled: "Включати при пошуку по сайту"
           disabled: "Не доступно для пошуку"
         field_types:
           text: "Текст"
+          textarea: "Текстове поле"
           confirm: "Підтвердження"
           dropdown: "Випадаючий список"
           multiselect: "Множинний вибір"
@@ -8183,6 +8697,7 @@ uk:
           experimental: "Експериментальний"
         secret_list:
           invalid_input: "поля введення не можуть бути порожніми, або містити символ вертикальної риски."
+          already_exists: "Запис для %{key} вже існує."
         default_categories:
           modal_description:
             one: "Ви хочете застосувати цю зміну історично? Це змінить налаштування для існуючого користувача %{count} ."
@@ -8209,17 +8724,23 @@ uk:
             prompt: "Зміна цього параметра може мати далекосяжні або непередбачувані наслідки для вашого сайту. Ви впевнені, що хочете продовжити?"
             confirm: "Так, я впевнений"
           min_password_length:
-            prompt: "Ви збираєтеся змінити свою політику паролів. Це вплине на всіх користувачів, які змінюватимуть свої паролі відтепер. Ви впевнені, що хочете продовжити?"
+            prompt: "Ви збираєтеся змінити свою політику паролів. Це вплине на всіх користувачів, які змінюють свої паролі відтепер. Ви впевнені, що хочете продовжити?"
             confirm: "Так, оновити політику паролів"
           min_admin_password_length:
-            prompt: "Ви збираєтеся змінити політику паролів. Відтепер це вплине на всіх адміністраторів, які змінюють свої паролі. Ви впевнені, що хочете продовжити?"
+            prompt: "Ви збираєтеся змінити свою політику паролів. Це вплине на всіх адміністраторів, які змінюватимуть свої паролі відтепер. Ви впевнені, що хочете продовжити?"
             confirm: "Так, оновити політику паролів"
           password_unique_charactes:
-            prompt: "Ви збираєтеся змінити політику паролів. Відтепер це вплине на всіх користувачів, які змінюють свої паролі. Ви впевнені, що хочете продовжити?"
+            prompt: "Ви збираєтеся змінити свою політику паролів. Це вплине на всіх користувачів, які змінюватимуть свої паролі відтепер. Ви впевнені, що хочете продовжити?"
             confirm: "Так, оновити політику паролів"
           block_common_passwords:
-            prompt: "Ви збираєтеся змінити політику паролів. Відтепер це вплине на всіх користувачів, які змінюють свої паролі. Ви впевнені, що хочете продовжити?"
+            prompt: "Ви збираєтеся змінити свою політику паролів. Це вплине на всіх користувачів, які змінюватимуть свої паролі відтепер. Ви впевнені, що хочете продовжити?"
             confirm: "Так, оновити політику паролів"
+          clean_up_inactive_users_after_days:
+            prompt: "Якщо ви встановите значення, відмінне від 0, користувачі, які не були активними протягом цієї кількості днів, будуть видалені назавжди. Ви впевнені, що хочете продовжити?"
+            confirm: "Так, я розумію, що неактивні користувачі будуть остаточно видалені, якщо я не встановлю це значення в 0"
+        job_status:
+          completed: "Оновлення завершено"
+          enqueued: "Оновлення в процесі"
       badges:
         status: Статус
         title: Нагороди
@@ -8253,6 +8774,10 @@ uk:
         no_user_badges: "%{name} не отримував жодного ."
         no_badges: Тут немає нагород, які можуть бути надані.
         none_selected: "Виберіть нагороди в списку ліворуч"
+        sections:
+          design: Дизайн
+          query: Запит
+          settings: Налаштування
         usage_heading: Використання
         allow_title: Дозволити використання значків як звань
         multiple_grant: Можуть бути надані декілька разів
@@ -8359,6 +8884,7 @@ uk:
         category: "Опублікувати в категорії"
         tags: "Теги теми"
         post_author: "Автор допису"
+        post_author_description: "Автор для всіх вбудованих тем з цього хоста, зміна тегів сторінок блогу. Залиште порожнім для читання автора з <meta name='discourse-username'> або <meta name='author'> тегів."
         post_author_with_default: "Автор допису (за замовчуванням %{author})"
         add_host: "Додати хост"
         posts_and_topics: "Конфігурація дописів і тем"
@@ -8433,75 +8959,4 @@ uk:
           replace: "Замінити"
   wizard_js:
     wizard:
-      jump_in: "Готово!"
-      finish: "Вийти з налаштування"
-      back: "Назад"
-      next: "Далі"
-      configure_more: "Більше налаштувань"
-      step-text: "Крок"
-      step: "%{current} з %{total}"
-      upload: "Завантажити файл"
-      uploading: "Завантаження…"
-      upload_error: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
-      staff_count:
-        one: "У вашій спільноті %{count} співробітник (це ви)."
-        few: "У вашій спільноті %{count} співробітника, включаючи вас."
-        many: "У вашій спільноті %{count} співробітників, включаючи вас."
-        other: "У вашій спільноті %{count} членів команди обслуговування, включаючи вас."
-      invites:
-        add_user: "додати"
-        none_added: "Ви не запросили жодного учасника до команди обслуговування. Ви впевнені, що хочете продовжити?"
-        roles:
-          admin: "Адмін"
-          moderator: "Модератор"
-          regular: "Звичайний користувач"
-      homepage_choices:
-        custom:
-          label: "Користувацька"
-          description: "Відображення домашньої сторінки, орієнтованої на %{type}, з користувачами, які потрапляють на %{landingPage}"
-        style_type:
-          categories: "категорія"
-          topics: "тема"
-      top_menu_items:
-        new: "Нові"
-        unread: "Непрочитані"
-        top: "Топ"
-        latest: "Остання"
-        hot: "Гаряче"
-        categories: "Розділи"
-        unseen: "Непереглянуті"
-        read: "Прочитані"
-        bookmarks: "Закладки"
-      previews:
-        topic_title: "Які книги ви читаєте?"
-        share_button: "Поширити"
-        reply_button: "Відповісти"
-        topic_preview: "Попередній перегляд теми"
-        homepage_preview: "Попередній перегляд головної сторінки"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "усі розділи"
-        topic_titles:
-          what_books: "Які книги ви читаєте?"
-          what_movies: "Які фільми ви дивилися останнім часом?"
-          random_fact: "Випадковий факт дня"
-          tv_show: "Порекомендуйте телешоу"
-          what_hobbies: "Чим ти захоплюєшся?"
-          what_music: "Що ти зараз слухаєш?"
-          funniest_thing: "Найсмішніше, що ви бачили сьогодні"
-          share_art: "Поділіться своїм мистецтвом!"
-        topic_ops:
-          what_books: "Ми всі любимо читати, давайте використаємо цю тему, \nщоб поділитися нашими поточними чи останніми читаннями. \nЯ фанат фентезі, і я в 100-й раз перечитав «Володаря кілець».\nА як щодо вас?\n"
-        category_descriptions:
-          icebreakers: "Познайомтеся з іншими членами спільноти за допомогою веселих запитань."
-          news: "Обговорити останні новини та події."
-          site_feedback: "Поділіться своїми думками про спільноту та запропонуйте покращення."
-        category_names:
-          icebreakers: "Криголам"
-          news: "Новини"
-          site_feedback: "Зворотній зв’язок"
-        table_headers:
-          topic: "Тема"
-          replies: "Відповіді"
-          views: "Перегляди"
-          activity: "Активність"
+      jump_in: "Поїхали!"

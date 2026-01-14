@@ -7,6 +7,10 @@
     margin-bottom: 10px;
   }
 
+  .warning {
+    color: var(--danger);
+  }
+
   label {
     display: inline-flex;
     padding-right: 5px;

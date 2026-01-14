@@ -14,7 +14,7 @@ module Migrations::Converters::Discourse
       @source_db.count <<~SQL
         SELECT COUNT(*)
         FROM users
-        WHERE id >= 0
+        WHERE id > 0
       SQL
     end
 

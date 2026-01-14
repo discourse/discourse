@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { reload } from "discourse/helpers/page-reloader";
@@ -13,7 +14,6 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import cookie from "discourse/lib/cookie";
-import DMenu from "float-kit/components/d-menu";
 import UserColorPaletteMenuItem from "./user-color-palette-menu-item";
 
 const HORIZON_PALETTES = [
@@ -27,10 +27,8 @@ const HORIZON_PALETTES = [
 
 export default class UserColorPaletteSelector extends Component {
   @service currentUser;
-  @service keyValueStore;
   @service site;
   @service session;
-  @service interfaceColor;
 
   @tracked anonColorPaletteId = this.#loadAnonColorPalette();
   @tracked userColorPaletteId = this.session.userColorSchemeId;
@@ -39,16 +37,20 @@ export default class UserColorPaletteSelector extends Component {
   get userColorPalettes() {
     const availablePalettes = listColorSchemes(this.site)
       ?.map((userPalette) => {
+        const hex = userPalette.colors.find(
+          (color) => color.name === "tertiary"
+        )?.hex;
         return {
           ...userPalette,
-          accent: `#${
-            userPalette.colors.find((color) => color.name === "tertiary").hex
-          }`,
+          accent: hex && `#${hex}`,
         };
       })
       .filter((userPalette) => {
         return HORIZON_PALETTES.some((palette) => {
-          return userPalette.name.toLowerCase().includes(palette.toLowerCase());
+          return (
+            userPalette.name.toLowerCase().includes(palette.toLowerCase()) &&
+            userPalette.accent
+          );
         });
       })
       .sort();

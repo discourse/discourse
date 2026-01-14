@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseAi
+module DiscourseAi
   module Inference
     class HuggingFaceTextEmbeddings
       def initialize(endpoint, key, referer = Discourse.base_url)

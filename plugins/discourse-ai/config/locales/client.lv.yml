@@ -39,7 +39,7 @@ lv:
         disabled: "(atslēgt)"
         groups: "Grupas:"
         no_groups: "Nav"
-        edit: "Labot"
+        edit: "Iestatījumi"
         expand_list:
           zero: "(vēl %{count})"
           one: "(vēl %{count})"
@@ -53,6 +53,21 @@ lv:
           name: "Spams"
       modals:
         select_option: "Izvēlieties opciju..."
+      translations:
+        stats:
+          eta_hours:
+            zero: "%{count} stundas"
+            one: "%{count} stunda"
+            other: "%{count} stundas"
+          eta_days:
+            zero: "%{count} dienas"
+            one: "%{count} diena"
+            other: "%{count} dienas"
+        progress_chart:
+          bar_done:
+            zero: "%{count} raksti"
+            one: "%{count} raksts"
+            other: "%{count} raksti"
       spam:
         short_title: "Spams"
         last_seven_days: "Pēdējās 7 dienas"
@@ -62,6 +77,7 @@ lv:
       usage:
         summary: "Kopsavilkums"
         username: "Lietotājvārds"
+        total: "Kopā"
         periods:
           last_day: "Pēdējās 24 stundas"
       ai_persona:
@@ -123,10 +139,10 @@ lv:
           copy: "Kopēt"
           copied: "Nokopēts!"
           cancel: "Atcelt"
+        thumbnail_suggestions:
+          try_again: "Mēģināt vēlreiz"
         image_caption:
           save_caption: "Saglabāt"
-          automatic_caption_dialog:
-            confirm: "Ieslēgt"
       embeddings:
         back: "Atpakaļ"
         save: "Saglabāt"

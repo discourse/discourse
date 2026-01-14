@@ -12,11 +12,10 @@
       <%= preload_script "test" %>
       <%= preload_script_url ExtraLocalesController.url("main") %>
       <%= preload_script_url ExtraLocalesController.url("mf") %>
-      <%= preload_script "admin" %>
       <%- Discourse.find_plugin_js_assets(include_disabled: true, include_admin_asset: true, only: @required_plugins).each do |file| %>
         <%= preload_script file %>
       <%- end %>
-      <%= preload_script "test-site-settings" %>
+      <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
       <%= theme_translations_lookup %>
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
@@ -27,7 +26,7 @@
       <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
 
       <style>
-        <%= File.read("#{Rails.root}/app/assets/javascripts/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
+        <%= File.read("#{Rails.root}/frontend/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
       </style>
 
       <%= discourse_stylesheet_link_tag(:common, theme_id: nil) %>

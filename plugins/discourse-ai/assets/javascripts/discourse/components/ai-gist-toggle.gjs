@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import bodyClass from "discourse/helpers/body-class";
+import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
+import { TABLE_AI_LAYOUT, TABLE_LAYOUT } from "../services/gists";
 
 export default class AiGistToggle extends Component {
   @service gists;
@@ -16,12 +16,12 @@ export default class AiGistToggle extends Component {
   get buttons() {
     return [
       {
-        id: "table",
+        id: TABLE_LAYOUT,
         label: "discourse_ai.summarization.topic_list_layout.button.compact",
         icon: "discourse-table",
       },
       {
-        id: "table-ai",
+        id: TABLE_AI_LAYOUT,
         label: "discourse_ai.summarization.topic_list_layout.button.expanded",
         icon: "discourse-table-sparkles",
         description:
@@ -31,7 +31,7 @@ export default class AiGistToggle extends Component {
   }
 
   get selectedOptionId() {
-    return this.gists.get("preference");
+    return this.gists.currentPreference;
   }
 
   get currentButton() {
@@ -53,8 +53,7 @@ export default class AiGistToggle extends Component {
   }
 
   <template>
-    {{#if this.gists.shouldShow}}
-      {{bodyClass (concat "topic-list-layout-" this.gists.preference)}}
+    {{#if this.gists.showToggle}}
       <DMenu
         @modalForMobile={{true}}
         @autofocus={{true}}
@@ -68,13 +67,14 @@ export default class AiGistToggle extends Component {
         <:content>
           <DropdownMenu as |dropdown|>
             {{#each this.buttons as |button|}}
-              <dropdown.item>
+              <dropdown.item
+                class={{if (eq this.currentButton.id button.id) "--selected"}}
+              >
                 <DButton
                   @label={{button.label}}
                   @icon={{button.icon}}
                   class="btn-transparent
-                    {{if button.description '--with-description'}}
-                    {{if (eq this.currentButton.id button.id) '--active'}}"
+                    {{if button.description '--with-description'}}"
                   @action={{fn this.onSelect button.id}}
                 >
                   {{#if button.description}}

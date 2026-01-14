@@ -122,4 +122,35 @@ describe ContentLocalization do
       end
     end
   end
+
+  describe ".show_translated_category?" do
+    fab!(:category)
+
+    it "returns false when setting is disabled" do
+      SiteSetting.content_localization_enabled = false
+      category.update!(locale: "ja")
+      I18n.locale = "de"
+      scope = create_scope
+
+      expect(ContentLocalization.show_translated_category?(category, scope)).to be false
+    end
+
+    it "returns true when category locale does not match user locale" do
+      SiteSetting.content_localization_enabled = true
+      category.update!(locale: "ja")
+      I18n.locale = "de"
+      scope = create_scope
+
+      expect(ContentLocalization.show_translated_category?(category, scope)).to be true
+    end
+
+    it "returns false when category locale does not match user locale but cookie set to show original" do
+      SiteSetting.content_localization_enabled = true
+      category.update!(locale: "ja")
+      I18n.locale = "de"
+      scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
+
+      expect(ContentLocalization.show_translated_category?(category, scope)).to be false
+    end
+  end
 end

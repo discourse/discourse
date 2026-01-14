@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   module UserExtension
     extend ActiveSupport::Concern
 
     prepended do
       has_many :gamification_scores,
-               class_name: "::DiscourseGamification::GamificationScore",
+               class_name: "DiscourseGamification::GamificationScore",
                dependent: :destroy
     end
 

@@ -13,6 +13,7 @@ register_asset "stylesheets/explorer.scss"
 
 register_svg_icon "caret-down"
 register_svg_icon "caret-right"
+register_svg_icon "chart-line"
 register_svg_icon "chevron-left"
 register_svg_icon "circle-exclamation"
 register_svg_icon "info"
@@ -68,7 +69,12 @@ after_initialize do
 
   add_api_key_scope(
     :discourse_data_explorer,
-    { run_queries: { actions: %w[discourse_data_explorer/query#run], params: %i[id] } },
+    {
+      run_queries: {
+        actions: %w[discourse_data_explorer/query#run discourse_data_explorer/query#public_run],
+        params: %i[id],
+      },
+    },
   )
 
   reloadable_patch do
@@ -126,7 +132,7 @@ after_initialize do
             )
             .each do |pm|
               begin
-                utils.send_pm(pm, automation_id: automation.id, prefers_encrypt: false)
+                utils.send_pm(pm, automation_id: automation.id)
               rescue ActiveRecord::RecordNotSaved => e
                 Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
               end

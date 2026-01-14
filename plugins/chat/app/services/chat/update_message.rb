@@ -60,6 +60,8 @@ module Chat
       step :publish
     end
 
+    step :index_message
+
     private
 
     def enforce_membership(guardian:, message:)
@@ -67,21 +69,23 @@ module Chat
     end
 
     def fetch_message(params:)
-      ::Chat::Message.includes(
-        :chat_mentions,
-        :bookmarks,
-        :chat_webhook_event,
-        :uploads,
-        :revisions,
-        reactions: [:user],
-        thread: [:channel, last_message: [:user]],
-        chat_channel: [
-          :last_message,
-          :chat_channel_archive,
-          chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
-        ],
-        user: :user_status,
-      ).find_by(id: params.message_id)
+      ::Chat::Message
+        .includes(
+          :chat_mentions,
+          :bookmarks,
+          :chat_webhook_event,
+          :revisions,
+          reactions: [:user],
+          thread: [:channel, last_message: [:user]],
+          chat_channel: [
+            :last_message,
+            :chat_channel_archive,
+            chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
+          ],
+          user: :user_status,
+        )
+        .includes(uploads: { optimized_videos: :optimized_upload })
+        .find_by(id: params.message_id)
     end
 
     def fetch_membership(guardian:, message:)
@@ -90,7 +94,10 @@ module Chat
 
     def fetch_uploads(params:, guardian:)
       return if !SiteSetting.chat_allow_uploads
-      guardian.user.uploads.where(id: params.upload_ids)
+      Upload
+        .where(id: params.upload_ids)
+        .joins(:user_uploads)
+        .where(user_uploads: { user: guardian.user })
     end
 
     def can_modify_channel_message(guardian:, message:)
@@ -179,6 +186,12 @@ module Chat
 
       if message.thread.present?
         ::Chat::Publisher.publish_thread_original_message_metadata!(message.thread)
+      end
+    end
+
+    def index_message(message:)
+      Scheduler::Defer.later "Index chat message for search" do
+        SearchIndexer.index(message)
       end
     end
   end

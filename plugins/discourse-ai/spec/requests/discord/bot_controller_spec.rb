@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "DiscourseAi::Discord::BotController", type: :request do
   let(:public_key) { "your_public_key_here" }
   let(:signature) { "valid_signature" }

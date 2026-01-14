@@ -1,6 +1,7 @@
 import loadMorphlex from "discourse/lib/load-morphlex";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { cook } from "discourse/lib/text";
-import { addProgressDot } from "../progress-handlers";
+import { addProgressDecoration } from "../progress-handlers";
 import StreamUpdater from "./stream-updater";
 
 export default class PostUpdater extends StreamUpdater {
@@ -52,24 +53,29 @@ export default class PostUpdater extends StreamUpdater {
     cookedElement.innerHTML = cooked;
 
     if (!done) {
-      addProgressDot(cookedElement);
+      addProgressDecoration(cookedElement);
     }
 
-    await this.setCooked(cookedElement.innerHTML);
+    await this.setCooked(cookedElement.innerHTML, done);
   }
 
-  async setCooked(value) {
+  async setCooked(value, done) {
     if (!this.postElement) {
       return;
     }
 
-    this.post.set("cooked", value);
+    withPluginApi((api) => api.preventCloak(this.postId));
 
     (await loadMorphlex()).morphInner(
       this.postElement.querySelector(".cooked"),
       `<div>${value}</div>`,
       this.morphingOptions
     );
+
+    if (done) {
+      this.post.set("cooked", value);
+      withPluginApi((api) => api.preventCloak(this.postId, false));
+    }
   }
 
   get raw() {

@@ -5,12 +5,14 @@ RSpec.describe "Middleware order" do
     [
       BlockRequestsMiddleware,
       TestMultisiteMiddleware,
+      Middleware::ProcessingRequest,
+      Middleware::OverloadProtections,
       ActionDispatch::RemoteIp,
       Middleware::RequestTracker,
       MessageBus::Rack::Middleware,
-      Middleware::ProcessingRequest,
       Rack::Sendfile,
       ActionDispatch::Static,
+      Propshaft::Server,
       ActionDispatch::Executor,
       Rack::MethodOverride,
       Middleware::EnforceHostname,
@@ -32,6 +34,7 @@ RSpec.describe "Middleware order" do
       Rack::Head,
       Rack::ConditionalGet,
       Rack::TempfileReaper,
+      Middleware::CrawlerHooks,
       Middleware::OmniauthBypassMiddleware,
     ]
   end

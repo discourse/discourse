@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-ai";
+
 export default {
   name: "discourse-ai-admin-plugin-configuration-nav",
 
@@ -9,8 +11,9 @@ export default {
       return;
     }
 
-    withPluginApi("1.1.0", (api) => {
-      api.addAdminPluginConfigurationNav("discourse-ai", [
+    withPluginApi((api) => {
+      api.setAdminPluginIcon(PLUGIN_ID, "discourse-sparkles");
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
         {
           label: "discourse_ai.features.short_title",
           route: "adminPlugins.show.discourse-ai-features",
@@ -45,6 +48,11 @@ export default {
           label: "discourse_ai.spam.short_title",
           route: "adminPlugins.show.discourse-ai-spam",
           description: "discourse_ai.spam.spam_description",
+        },
+        {
+          label: "discourse_ai.translations.title",
+          route: "adminPlugins.show.discourse-ai-translations",
+          description: "discourse_ai.translations.description",
         },
       ]);
     });

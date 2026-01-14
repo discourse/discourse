@@ -35,12 +35,10 @@ en_GB:
         reviewable_post:
           title: "Post"
           noun: "post"
+        reviewable_ai_post:
+          noun: "post"
     groups:
       manage:
-        email:
-          status: "Synchronised %{old_emails} / %{total_emails} emails via IMAP."
-          mailboxes:
-            synchronized: "Synchronised Mailbox"
         categories:
           title: Categories
       flair_bg_color: "Avatar Flair Background Colour"
@@ -74,7 +72,6 @@ en_GB:
       logout_disabled: "Logout is disabled whilst the site is in read only mode."
     composer:
       italic_text: "emphasised text"
-      collapse: "minimise the composer panel"
     search:
       categories: "Categories"
       type:
@@ -156,9 +153,7 @@ en_GB:
           customize_desc: "Customise:"
           long_title: "Amend colours, CSS and HTML contents of your site"
           color_scheme: "Colour Palette"
-          color_scheme_select: "Select colours to be used by theme"
-          colors: "Colours"
-          colors_title: "Colours"
+          color_scheme_select: "Select colours to be used by theme."
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"
@@ -208,7 +203,3 @@ en_GB:
       reseed:
         modal:
           categories: "Categories"
-  wizard_js:
-    wizard:
-      top_menu_items:
-        categories: "Categories"

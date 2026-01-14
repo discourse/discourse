@@ -15,10 +15,6 @@ module PageObjects
         context_component.find(SELECTOR)
       end
 
-      def context_component
-        page.find(@context)
-      end
-
       def post_id
         context_component["data-post-id"]
       end

@@ -1,10 +1,12 @@
-/* eslint-disable qunit/no-loose-assertions */
-/* eslint-disable qunit/no-assert-equal */
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import postFixtures from "discourse/tests/fixtures/post";
 import topicFixtures from "discourse/tests/fixtures/topic";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   updateCurrentUser,
@@ -38,7 +40,7 @@ acceptance("Discourse Policy - post", function (needs) {
   });
 
   test("insert a policy", async function (assert) {
-    updateCurrentUser({ admin: true });
+    updateCurrentUser({ can_create_policy: true });
     await visit("/t/-/130");
     await click(".actions .edit");
 
@@ -58,15 +60,33 @@ acceptance("Discourse Policy - post", function (needs) {
 
     let raw = document.querySelector("textarea.d-editor-input").value;
 
-    assert.equal(
+    assert.strictEqual(
       raw.trim(),
       '[policy reminder="daily" version="1" groups="staff"]\nI accept this policy\n[/policy]'
     );
   });
 
   test("edit email preferences", async function (assert) {
+    let savedData;
+    pretender.put("/u/eviltrout.json", (request) => {
+      savedData = parsePostData(request.requestBody);
+      return response({ user: {} });
+    });
+
     await visit(`/u/eviltrout/preferences/emails`);
     assert.dom("#user_policy_email_frequency").exists();
+
+    const dropdown = selectKit("#user_policy_email_frequency");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("never");
+
+    await click(".save-changes");
+
+    assert.strictEqual(
+      savedData.policy_email_frequency,
+      "never",
+      "policy_email_frequency is included in saved data"
+    );
   });
 
   test("edit policy - staff", async function (assert) {

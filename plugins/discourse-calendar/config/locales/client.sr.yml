@@ -21,6 +21,7 @@ sr:
         today: "Danas"
         month: "Mesec"
         week: "Nedelja"
+        year: "Godina"
     discourse_post_event:
       upcoming_events:
         status: "Status"

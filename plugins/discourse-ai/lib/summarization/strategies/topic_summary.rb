@@ -41,11 +41,17 @@ module DiscourseAi
         def as_llm_messages(contents)
           resource_path = "#{Discourse.base_path}/t/-/#{target.id}"
           content_title = target.title
+          category_name = target.category&.name
+          # Only include public tags in summaries since summaries are cached and shared across users
+          # Use anonymous guardian to get most restrictive tag visibility
+          tags = target.visible_tags(Guardian.new(nil)).map(&:name).sort
           input =
             contents.map { |item| "(#{item[:id]} #{item[:poster]} said: #{item[:text]} " }.join
 
           [{ type: :user, content: <<~TEXT.strip }]
             #{content_title.present? ? "The discussion title is: " + content_title + ".\n" : ""}
+            #{category_name.present? ? "Category: " + category_name + ".\n" : ""}
+            #{tags.present? ? "Tags: " + tags.join(", ") + ".\n" : ""}
             Here are the posts, inside <input></input> XML tags:
 
             <input>

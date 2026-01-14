@@ -6,11 +6,12 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 94
+  BASE_COMPILER_VERSION = 100
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
     color_scheme_id
+    dark_color_scheme_id
     default
     locale
     translations
@@ -36,6 +37,7 @@ class Theme < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :color_scheme
+  belongs_to :dark_color_scheme, class_name: "ColorScheme"
   alias_method :color_palette, :color_scheme
 
   has_many :theme_fields, dependent: :destroy, validate: false
@@ -64,13 +66,6 @@ class Theme < ActiveRecord::Base
           -> { where(target_id: Theme.targets[:settings], name: "yaml") },
           class_name: "ThemeField"
   has_one :javascript_cache, dependent: :destroy
-  has_one :theme_color_scheme, dependent: :destroy
-  has_one :owned_color_scheme,
-          class_name: "ColorScheme",
-          through: :theme_color_scheme,
-          source: :color_scheme
-  alias_method :owned_color_palette, :owned_color_scheme
-  alias_method :owned_color_palette=, :owned_color_scheme=
 
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
@@ -111,7 +106,11 @@ class Theme < ActiveRecord::Base
             :theme_site_settings,
             :settings_field,
             theme_fields: %i[upload theme_settings_migration],
-            child_themes: %i[color_scheme locale_fields theme_translation_overrides],
+            child_themes: [
+              { color_scheme: :base_scheme },
+              :locale_fields,
+              :theme_translation_overrides,
+            ],
           )
         end
 
@@ -122,8 +121,7 @@ class Theme < ActiveRecord::Base
             :user,
             :locale_fields,
             :theme_translation_overrides,
-            color_scheme: %i[theme color_scheme_colors],
-            owned_color_scheme: %i[theme color_scheme_colors],
+            color_scheme: %i[theme color_scheme_colors base_scheme],
             parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
@@ -161,7 +159,8 @@ class Theme < ActiveRecord::Base
 
     theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!) if saved_change_to_name?
 
-    if saved_change_to_color_scheme_id? || saved_change_to_user_selectable? || saved_change_to_name?
+    if saved_change_to_color_scheme_id? || saved_change_to_dark_color_scheme_id? ||
+         saved_change_to_user_selectable? || saved_change_to_name?
       Theme.expire_site_cache!
     end
     notify_with_scheme = saved_change_to_color_scheme_id?
@@ -245,7 +244,7 @@ class Theme < ActiveRecord::Base
     get_set_cache "compiler_version" do
       dependencies = [
         BASE_COMPILER_VERSION,
-        EmberCli.ember_version,
+        AssetProcessor.new.ember_version,
         GlobalSetting.cdn_url,
         GlobalSetting.s3_cdn_url,
         GlobalSetting.s3_endpoint,
@@ -363,8 +362,10 @@ class Theme < ActiveRecord::Base
     if component
       raise Discourse::InvalidParameters.new(I18n.t("themes.errors.component_no_default"))
     end
+
+    # NOTE: The cache is expired in the 014-track-setting-changes.rb
+    # initializer, so we don't need to do it here.
     SiteSetting.default_theme_id = id
-    Theme.expire_site_cache!
   end
 
   def default?
@@ -401,9 +402,21 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def screenshot_url
+  def screenshot_dark_url
     theme_fields
-      .find { |field| field.type_id == ThemeField.types[:theme_screenshot_upload_var] }
+      .find do |field|
+        field.type_id == ThemeField.types[:theme_screenshot_upload_var] &&
+          field.name == "screenshot_dark"
+      end
+      &.upload_url
+  end
+
+  def screenshot_light_url
+    theme_fields
+      .find do |field|
+        field.type_id == ThemeField.types[:theme_screenshot_upload_var] &&
+          field.name == "screenshot_light"
+      end
       &.upload_url
   end
 
@@ -492,7 +505,7 @@ class Theme < ActiveRecord::Base
     targets = %i[common_theme mobile_theme desktop_theme]
 
     if with_scheme
-      targets.prepend(:desktop, :mobile, :admin)
+      targets.prepend(:common, :desktop, :mobile, :admin)
       targets.append(*Discourse.find_plugin_css_assets(mobile_view: true, desktop_view: true))
       Stylesheet::Manager.cache.clear if clear_manager_cache
     end
@@ -534,10 +547,9 @@ class Theme < ActiveRecord::Base
     when :extra_js
       get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
         require_rebake =
-          ThemeField.where(theme_id: theme_ids, target_id: Theme.targets[:extra_js]).where(
-            "compiler_version <> ?",
-            Theme.compiler_version,
-          )
+          ThemeField
+            .where(theme_id: theme_ids, target_id: targets[:extra_js])
+            .where.not(compiler_version: compiler_version)
 
         ActiveRecord::Base.transaction do
           require_rebake.each { |tf| tf.ensure_baked! }
@@ -553,7 +565,7 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <script defer src="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
+          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}" />
         HTML
       end
     when :translations
@@ -1080,40 +1092,6 @@ class Theme < ActiveRecord::Base
     ThemeSiteSettingResolver.new(theme: self).resolved_theme_site_settings
   end
 
-  def find_or_create_owned_color_palette
-    Theme.transaction do
-      next self.owned_color_palette if self.owned_color_palette
-
-      palette = self.color_palette || ColorScheme.base
-
-      copy = palette.dup
-      copy.theme_id = self.id
-      copy.base_scheme_id = nil
-      copy.user_selectable = false
-      copy.via_wizard = false
-      copy.save!
-
-      result =
-        ThemeColorScheme.insert_all(
-          [{ theme_id: self.id, color_scheme_id: copy.id }],
-          unique_by: :index_theme_color_schemes_on_theme_id,
-        )
-
-      if result.rows.size == 0
-        # race condition, a palette has already been associated with this theme
-        copy.destroy!
-        self.reload.owned_color_palette
-      else
-        ColorSchemeColor.insert_all(
-          palette.colors.map do |color|
-            { color_scheme_id: copy.id, name: color.name, hex: color.hex, dark_hex: color.dark_hex }
-          end,
-        )
-        copy.reload
-      end
-    end
-  end
-
   private
 
   attr_accessor :theme_setting_requests_refresh
@@ -1154,19 +1132,20 @@ end
 #
 # Table name: themes
 #
-#  id               :integer          not null, primary key
-#  name             :string           not null
-#  user_id          :integer          not null
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  compiler_version :integer          default(0), not null
-#  user_selectable  :boolean          default(FALSE), not null
-#  hidden           :boolean          default(FALSE), not null
-#  color_scheme_id  :integer
-#  remote_theme_id  :integer
-#  component        :boolean          default(FALSE), not null
-#  enabled          :boolean          default(TRUE), not null
-#  auto_update      :boolean          default(TRUE), not null
+#  id                   :integer          not null, primary key
+#  auto_update          :boolean          default(TRUE), not null
+#  compiler_version     :integer          default(0), not null
+#  component            :boolean          default(FALSE), not null
+#  enabled              :boolean          default(TRUE), not null
+#  hidden               :boolean          default(FALSE), not null
+#  name                 :string           not null
+#  user_selectable      :boolean          default(FALSE), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  color_scheme_id      :integer
+#  dark_color_scheme_id :integer
+#  remote_theme_id      :integer
+#  user_id              :integer          not null
 #
 # Indexes
 #

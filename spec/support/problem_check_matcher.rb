@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec::Matchers.define :be_chill_about_it do
-  match { |service| expect(service.call).to be_empty }
+  match { |service| expect(service.call).to be_blank }
 end
 
 RSpec::Matchers.define :have_a_problem do
@@ -13,24 +13,29 @@ RSpec::Matchers.define :have_a_problem do
     @priority = priority
   end
 
+  chain :with_target do |target|
+    @target = target
+  end
+
   match do |service|
     @result = service.call
 
     aggregate_failures do
-      expect(@result).to include(be_a(ProblemCheck::Problem))
-      expect(@result.first.priority).to(eq(@priority.to_s)) if @priority.present?
-      expect(@result.first.message).to(eq(@message)) if @message.present?
+      expect(@result).to be_a(ProblemCheck::Problem)
+      expect(@result.priority).to(eq(@priority.to_s)) if @priority.present?
+      expect(@result.message).to(eq(@message)) if @message.present?
+      expect(@result.target).to(eq(@target)) if @target.present?
     end
   end
 
   failure_message do |service|
-    if @result.empty?
+    if @result.blank?
       "Expected check to have a problem, but it was chill about it."
-    elsif !@result.all?(ProblemCheck::Problem)
-      "Expected result to contain only instances of `Problem`."
-    elsif @priority.present? && @result.first.priority != @priority
-      "Expected problem to have priority `#{@priority}`, but got priority `#{@result.first.priority}`."
-    elsif @message.present? && @result.first.message != @message
+    elsif !@result.is_a?(ProblemCheck::Problem)
+      "Expected result to must be an instance of `Problem`."
+    elsif @priority.present? && @result.priority != @priority
+      "Expected problem to have priority `#{@priority}`, but got priority `#{@result.priority}`."
+    elsif @message.present? && @result.message != @message
       <<~MESSAGE
         Expected problem to have message:
 
@@ -38,8 +43,10 @@ RSpec::Matchers.define :have_a_problem do
 
         but got message:
 
-          > #{@result.first.message}
+          > #{@result.message}
       MESSAGE
+    elsif @target.present? && @result.target != @target
+      "Expected problem to have target `#{@target}`, but got target `#{@result.target}`."
     end
   end
 end

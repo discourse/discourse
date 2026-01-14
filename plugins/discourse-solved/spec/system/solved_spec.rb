@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 describe "Solved", type: :system do
   fab!(:admin)
-  fab!(:solver) { Fabricate(:user) }
-  fab!(:accepter) { Fabricate(:user) }
+  fab!(:solver, :user)
+  fab!(:accepter) { Fabricate(:user, name: "<b>DERP<b>") }
   fab!(:topic) { Fabricate(:post, user: admin).topic }
   fab!(:solver_post) { Fabricate(:post, topic:, user: solver, cooked: "The answer is 42") }
 
@@ -20,38 +21,33 @@ describe "Solved", type: :system do
     SiteSetting.allow_solved_on_all_topics = true
     SiteSetting.accept_all_solutions_allowed_groups = Group::AUTO_GROUPS[:everyone]
     SiteSetting.show_who_marked_solved = true
+    SiteSetting.display_name_on_posts = true
   end
 
-  %w[enabled disabled].each do |value|
-    context "when glimmer_post_stream_mode=#{value}" do
-      before { SiteSetting.glimmer_post_stream_mode = value }
+  it "accepts post as solution and shows in OP" do
+    sign_in(accepter)
+    visit_solver_post
 
-      it "accepts post as solution and shows in OP" do
-        sign_in(accepter)
-        visit_solver_post
+    verify_solution_unaccepted_state
+    accept_solution
+    verify_solution_accepted_state
+    verify_solution_quote_content
+    verify_solver_and_accepter_info
+    expand_solution_quote
+  end
 
-        verify_solution_unaccepted_state
-        accept_solution
-        verify_solution_accepted_state
-        verify_solution_quote_content
-        verify_solver_and_accepter_info
-        expand_solution_quote
-      end
+  it "accepts and unaccepts post as solution" do
+    sign_in(accepter)
+    visit_solver_post
 
-      it "accepts and unaccepts post as solution" do
-        sign_in(accepter)
-        visit_solver_post
+    verify_solution_unaccepted_state
+    accept_solution
+    verify_solution_accepted_state
+    verify_solution_info_present
 
-        verify_solution_unaccepted_state
-        accept_solution
-        verify_solution_accepted_state
-        verify_solution_info_present
-
-        unaccept_solution
-        verify_solution_unaccepted_state
-        verify_solution_info_absent
-      end
-    end
+    unaccept_solution
+    verify_solution_unaccepted_state
+    verify_solution_info_absent
   end
 
   it "shows the solved post in user activity at /my/activity/solved" do
@@ -59,6 +55,45 @@ describe "Solved", type: :system do
     sign_in(solver)
     visit "/my/activity/solved"
     expect(page.find(".post-list")).to have_content(solver_post.cooked)
+  end
+
+  describe "solution excerpt formatting" do
+    it "preserves code blocks in the solution excerpt" do
+      raw = <<~RAW
+        Here's the solution:
+
+        ```ruby
+        def hello
+          puts "world"
+        end
+        ```
+
+        Hope this helps!
+      RAW
+      code_solution_post = Fabricate(:post, topic:, user: admin, raw:)
+      Fabricate(:solved_topic, topic:, answer_post: code_solution_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      within("#{ACCEPTED_ANSWER_QUOTE_SELECTOR} blockquote") do
+        expect(page).to have_css("pre code.lang-ruby")
+        expect(page).to have_content("def hello")
+        expect(page).to have_content('puts "world"')
+      end
+    end
+
+    it "preserves images in the solution excerpt" do
+      upload = Fabricate(:upload)
+      raw = "Check this image: ![test image](#{upload.short_url})"
+      image_solution_post = Fabricate(:post, topic:, user: admin, raw:)
+      Fabricate(:solved_topic, topic:, answer_post: image_solution_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      within("#{ACCEPTED_ANSWER_QUOTE_SELECTOR} blockquote") { expect(page).to have_css("img") }
+    end
   end
 
   private
@@ -91,9 +126,9 @@ describe "Solved", type: :system do
   end
 
   def verify_solver_and_accepter_info
-    expect(topic_page.find(SOLVER_INFO_SELECTOR)).to have_content("Solved by #{solver.username}")
+    expect(topic_page.find(SOLVER_INFO_SELECTOR)).to have_content("Solved by #{solver.name}")
     expect(topic_page.find(ACCEPTER_INFO_SELECTOR)).to have_content(
-      "Marked as solved by #{accepter.username}",
+      "Marked as solved by #{accepter.name}",
     )
   end
 

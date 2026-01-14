@@ -2,9 +2,15 @@
 
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
-  --d-sidebar-row-horizontal-padding: 1rem;
+  --d-sidebar-row-horizontal-padding: var(--space-1);
+
+  @include viewport.until(sm) {
+    --d-sidebar-row-horizontal-padding: var(--space-1);
+  }
+
   --d-sidebar-vertical-gap: var(--space-half);
-  --sidebar-section-wrapper-padding: 1.5rem 1rem 1rem;
+  --sidebar-section-wrapper-padding: var(--space-6) var(--space-2)
+    var(--space-4);
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
@@ -32,7 +38,7 @@
   --d-sidebar-suffix-color: var(--tertiary-med-or-tertiary);
 
   // highlight applies to both hover and focus states
-  --d-sidebar-highlight-background: var(--primary-low);
+  --d-sidebar-highlight-background: var(--d-hover);
   --d-sidebar-highlight-color: var(--primary-high);
   --d-sidebar-highlight-prefix-background: var(--primary-300);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
@@ -50,6 +56,7 @@
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--primary-200);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
+  --d-sidebar-active-font-weight: bold; // example: active section link
 
   @include viewport.until(sm) {
     --d-sidebar-row-height: 2.4em;
@@ -65,6 +72,7 @@
   height: var(--d-sidebar-row-height);
   padding: 0 var(--d-sidebar-row-horizontal-padding);
   align-items: center;
+  gap: var(--d-sidebar-section-link-prefix-margin-right);
 }
 
 .sidebar-wrapper {
@@ -111,7 +119,7 @@
     // custom scrollbar styling
     --scrollbarBg: transparent;
     --scrollbarThumbBg: var(--primary-low);
-    --scrollbarWidth: 0.5em;
+    --scrollbarWidth: var(--space-2);
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
     transition-delay: 0.5s;
@@ -213,7 +221,7 @@
     margin-bottom: -2px;
 
     @include viewport.until(sm) {
-      grid-template-columns: 2em 4.5em repeat(2, 1fr);
+      grid-template-columns: 4em auto auto min-content;
     }
 
     &.header {
@@ -431,6 +439,7 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     border-radius: var(--d-input-border-radius);
+    overflow: hidden;
   }
 
   &__icon.btn.btn-transparent {
@@ -463,6 +472,7 @@
 
   &__shortcut-hint {
     background-color: rgb(var(--tertiary-rgb), 0.1);
+    min-width: 26px;
     padding: 0.25em 0.5em;
     margin-right: 0.5em;
     font-size: var(--font-down-3);

@@ -1,11 +1,6 @@
-enable_welcome_banner:
-  default: true
-  description: "Overrides the core `enable welcome banner` site setting"
-
-search_experience:
+topic_card_context:
   type: enum
-  default: search_field
+  default: simple
   choices:
-    - search_field
-    - search_icon
-  description: "Overrides the core `search experience` site setting"
+    - simple
+    - high_context

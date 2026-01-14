@@ -21,10 +21,9 @@ import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
 
 export default class ChatRouteChannelInfoMembers extends Component {
-  @service appEvents;
   @service chatApi;
+  @service chatGuardian;
   @service currentUser;
-  @service modal;
   @service loadingSlider;
   @service site;
 
@@ -143,13 +142,16 @@ export default class ChatRouteChannelInfoMembers extends Component {
   }
 
   get canAddMembers() {
-    if (!this.args.channel.isDirectMessageChannel) {
+    if (
+      !this.args.channel.isDirectMessageChannel ||
+      !this.chatGuardian.canUseGroupChat()
+    ) {
       return false;
     }
 
     return (
       this.args.channel.chatable.group ||
-      this.args.channel.messagesManager.messages.length === 0
+      !this.args.channel.lastMessage?.message
     );
   }
 

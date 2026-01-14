@@ -81,5 +81,7 @@ class DeDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Tag der Befreiung", (Holidays.on(Date.civil(2020, 5, 8), [:de_be])[0] || {})[:name]
 
+    assert_equal "Weltkindertag", (Holidays.on(Date.civil(2024, 9, 20), [:de_th])[0] || {})[:name]
+
   end
 end

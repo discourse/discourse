@@ -1,8 +1,6 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { module, test } from "qunit";
 import {
-  addProgressDot,
+  addProgressDecoration,
   applyProgress,
   MIN_LETTERS_PER_INTERVAL,
 } from "discourse/plugins/discourse-ai/discourse/lib/ai-streamer/progress-handlers";
@@ -56,10 +54,28 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
     const expectedElement = document.createElement("div");
     expectedElement.innerHTML = expected;
 
-    addProgressDot(element);
+    addProgressDecoration(element);
 
     assert.equal(element.innerHTML, expectedElement.innerHTML);
   }
+
+  test("it correctly decorates thinking blocks at end of stream", function (assert) {
+    const html =
+      "<details class='ai-thinking'><summary>Thinking ...</summary><p>test</p></details>";
+    const expected =
+      "<details class='ai-thinking in-progress'><summary>Thinking ...</summary><p>test<span class='progress-dot'></span></p></details>";
+
+    confirmPlaceholder(html, expected, assert);
+  });
+
+  test("it does not decorate thinking blocks at middle of stream", function (assert) {
+    const html =
+      "<details class='ai-thinking'><summary>Thinking ...</summary><p>test</p></details><p>more content</p>";
+    const expected =
+      "<details class='ai-thinking'><summary>Thinking ...</summary><p>test</p></details><p>more content<span class='progress-dot'></span></p>";
+
+    confirmPlaceholder(html, expected, assert);
+  });
 
   test("inserts progress span in correct location for simple div", function (assert) {
     const html = "<div>hello world<div>hello 2</div></div>";
@@ -128,9 +144,9 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
 
     let done = await applyProgress(status, streamUpdater);
 
-    assert.notOk(done, "The update should not be done.");
+    assert.false(done, "The update should not be done.");
 
-    assert.equal(
+    assert.strictEqual(
       streamUpdater.raw,
       status.raw.substring(0, MIN_LETTERS_PER_INTERVAL),
       "The raw content should delta update."
@@ -138,9 +154,9 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
 
     done = await applyProgress(status, streamUpdater);
 
-    assert.notOk(done, "The update should not be done.");
+    assert.false(done, "The update should not be done.");
 
-    assert.equal(
+    assert.strictEqual(
       streamUpdater.raw,
       status.raw.substring(0, MIN_LETTERS_PER_INTERVAL * 2),
       "The raw content should delta update."
@@ -150,7 +166,7 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
     await applyProgress(status, streamUpdater);
 
     const innerHtml = streamUpdater.element.innerHTML;
-    assert.equal(
+    assert.strictEqual(
       innerHtml,
       "<p>some raw content</p>",
       "The cooked content should be updated."
@@ -161,7 +177,7 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
 
     await applyProgress(status, streamUpdater);
 
-    assert.equal(
+    assert.strictEqual(
       streamUpdater.element.innerHTML,
       "<p>updated cooked</p>",
       "The cooked content should be updated."

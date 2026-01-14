@@ -10,7 +10,6 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import $ from "jquery";
 import {
   emojiSearch,
   isSkinTonableEmoji,
@@ -18,31 +17,37 @@ import {
 } from "pretty-text/emoji";
 import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
-import { not, or } from "truth-helpers";
 import DTextarea from "discourse/components/d-textarea";
+import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { SKIP } from "discourse/lib/autocomplete";
-import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
-import userAutocomplete from "discourse/lib/autocomplete/user";
-import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
 import { emojiUrlFor } from "discourse/lib/text";
-import userSearch from "discourse/lib/user-search";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import { optionalRequire } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
+import DAutocompleteModifier, {
+  SKIP,
+} from "discourse/modifiers/d-autocomplete";
+import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
+import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import { not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import Button from "discourse/plugins/chat/discourse/components/chat/composer/button";
+import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
 import ChatComposerMessageDetails from "discourse/plugins/chat/discourse/components/chat-composer-message-details";
 import ChatComposerUploads from "discourse/plugins/chat/discourse/components/chat-composer-uploads";
@@ -54,17 +59,15 @@ import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-in
 const CHAT_PRESENCE_KEEP_ALIVE = 5 * 1000; // 5 seconds
 
 export default class ChatComposer extends Component {
-  @service capabilities;
   @service site;
   @service siteSettings;
+  @service capabilities;
   @service store;
   @service chat;
   @service chatComposerWarningsTracker;
   @service appEvents;
   @service emojiStore;
   @service currentUser;
-  @service chatApi;
-  @service chatDraftsManager;
   @service modal;
   @service menu;
 
@@ -105,10 +108,9 @@ export default class ChatComposer extends Component {
 
   @action
   setupAutocomplete(textarea) {
-    const $textarea = $(textarea);
-    this.#applyUserAutocomplete($textarea);
-    this.#applyEmojiAutocomplete($textarea);
-    this.#applyCategoryHashtagAutocomplete($textarea);
+    this.#applyUserAutocomplete(textarea);
+    this.#applyEmojiAutocomplete(textarea);
+    this.#applyCategoryHashtagAutocomplete(textarea);
   }
 
   @action
@@ -118,6 +120,16 @@ export default class ChatComposer extends Component {
     if (this.site.desktopView && this.args.autofocus) {
       this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
     }
+  }
+
+  applyAutocomplete(textarea, options) {
+    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+    return DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      textarea,
+      autocompleteHandler,
+      options
+    );
   }
 
   @action
@@ -190,9 +202,9 @@ export default class ChatComposer extends Component {
 
   @action
   insertDiscourseLocalDate() {
-    // JIT import because local-dates isn't necessarily enabled
-    const LocalDatesCreateModal =
-      require("discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create").default;
+    const LocalDatesCreateModal = optionalRequire(
+      "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create"
+    );
 
     this.modal.show(LocalDatesCreateModal, {
       model: {
@@ -338,28 +350,29 @@ export default class ChatComposer extends Component {
     }
   }
 
+  forceScrollPosition() {
+    if (!this.capabilities.isIOS || this.capabilities.isIpadOS) {
+      return;
+    }
+
+    // attempts to reposition body
+    if (window.pageYOffset <= 100) {
+      // on iOS scrolling to 0 doesn’t work correctly
+      // scrolling to -1 is more consistent
+      window.scrollTo(0, -1);
+    }
+  }
+
   @action
   onTextareaFocusOut() {
+    this.forceScrollPosition();
     this.isFocused = false;
   }
 
   @action
-  onTextareaFocusIn(event) {
+  onTextareaFocusIn() {
+    this.forceScrollPosition();
     this.isFocused = true;
-
-    if (!this.capabilities.isIOS) {
-      return;
-    }
-
-    // hack to prevent the whole viewport to move on focus input
-    const textarea = event.target;
-    textarea.style.transform = "translateY(-99999px)";
-    textarea.focus();
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        textarea.style.transform = "";
-      });
-    });
   }
 
   @action
@@ -367,6 +380,7 @@ export default class ChatComposer extends Component {
     if (
       this.site.mobileView ||
       event.altKey ||
+      event.isComposing ||
       this.#isAutocompleteDisplayed()
     ) {
       return;
@@ -426,8 +440,21 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onSelectEmoji(emoji) {
-    this.composer.textarea.emojiSelected(emoji);
+  onSelectEmoji(emoji, context = {}) {
+    const textareaInteractor = this.composer.textarea;
+
+    if (context.emojiTermStart && context.emojiTermStart) {
+      const value = textareaInteractor.textarea.value;
+      const valueUpToCursor = `${value.substring(0, context.emojiTermStart)}:${emoji}: `;
+      const valueAfterCursor = value.substring(context.emojiTermEnd + 1);
+      textareaInteractor.value = `${valueUpToCursor}${valueAfterCursor}`;
+      textareaInteractor.textarea.setSelectionRange(
+        valueUpToCursor.length,
+        valueUpToCursor.length
+      );
+    } else {
+      textareaInteractor.emojiSelected(emoji);
+    }
 
     if (this.site.desktopView) {
       this.composer.focus();
@@ -451,30 +478,32 @@ export default class ChatComposer extends Component {
     this.draft.mentionedUsers.set(user.id, user);
   }
 
-  #applyUserAutocomplete($textarea) {
+  #applyUserAutocomplete(textarea) {
     if (!this.siteSettings.enable_mentions) {
       return;
     }
 
-    $textarea.autocomplete({
-      template: userAutocomplete,
-      key: "@",
+    this.applyAutocomplete(textarea, {
+      component: UserAutocompleteResults,
+      key: UserAutocompleteResults.TRIGGER_KEY,
       width: "100%",
       treatAsTextarea: true,
+      fixedTextareaPosition: true,
       autoSelectFirstSuggestion: true,
       transformComplete: (obj) => {
         if (obj.isUser) {
-          this.#addMentionedUser(obj);
+          this.#addMentionedUser(cloneJSON(obj));
         }
-
+        validateSearchResult(obj);
         return obj.username || obj.name;
       },
       dataSource: (term) => {
         destroyUserStatuses();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
-            const presentUserNames =
-              this.chat.presenceChannel.users?.mapBy("username");
+            const presentUserNames = this.chat.presenceChannel.users?.map(
+              (item) => item.username
+            );
             result.users.forEach((user) => {
               if (presentUserNames.includes(user.username)) {
                 user.cssClasses = "is-online";
@@ -498,39 +527,42 @@ export default class ChatComposer extends Component {
     });
   }
 
-  #applyCategoryHashtagAutocomplete($textarea) {
-    setupHashtagAutocomplete(
-      this.site.hashtag_configurations["chat-composer"],
-      $textarea,
-      this.siteSettings,
-      {
-        treatAsTextarea: true,
-        afterComplete: (text, event) => {
-          event.preventDefault();
-          this.composer.textarea.value = text;
-          this.composer.focus();
-        },
-      }
+  #applyCategoryHashtagAutocomplete(textarea) {
+    this.applyAutocomplete(
+      textarea,
+      hashtagAutocompleteOptions(
+        this.site.hashtag_configurations["chat-composer"],
+        {
+          fixedTextareaPosition: true,
+          treatAsTextarea: true,
+          afterComplete: (text, event) => {
+            event.preventDefault();
+            this.composer.textarea.value = text;
+            this.composer.focus();
+          },
+        }
+      )
     );
   }
 
-  #applyEmojiAutocomplete($textarea) {
+  #applyEmojiAutocomplete(textarea) {
     if (!this.siteSettings.enable_emoji) {
       return;
     }
 
-    $textarea.autocomplete({
-      template: renderEmojiAutocomplete,
-      key: ":",
+    this.applyAutocomplete(textarea, {
+      component: EmojiAutocompleteResults,
+      key: EmojiAutocompleteResults.TRIGGER_KEY,
       afterComplete: (text, event) => {
         event.preventDefault();
         this.composer.textarea.value = text;
         this.composer.focus();
       },
       treatAsTextarea: true,
+      fixedTextareaPosition: true,
       onKeyUp: (text, cp) => {
         const matches =
-          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?)$/gi.exec(
             text.substring(0, cp)
           );
 
@@ -542,7 +574,24 @@ export default class ChatComposer extends Component {
         if (v.code) {
           return `${v.code}:`;
         } else {
-          $textarea.autocomplete({ cancel: true });
+          // Capture emoji term positioning before opening the emoji picker which resets the textarea state
+          const textareaInteractor = this.composer.textarea;
+          const currentValue = textareaInteractor.textarea.value;
+          const currentCaretPos = textareaInteractor.textarea.selectionStart;
+
+          let emojiContext = null;
+
+          if (currentValue && currentCaretPos !== undefined) {
+            const textBeforeCursor = currentValue.substring(0, currentCaretPos);
+            const incompleteMatch = textBeforeCursor.match(/(:[\w-]+)$/);
+
+            if (incompleteMatch) {
+              emojiContext = {
+                emojiTermStart: currentCaretPos - incompleteMatch[1].length,
+                emojiTermEnd: currentCaretPos - 1,
+              };
+            }
+          }
 
           const menuOptions = {
             identifier: "emoji-picker",
@@ -552,7 +601,7 @@ export default class ChatComposer extends Component {
             modalForMobile: true,
             data: {
               didSelectEmoji: (emoji) => {
-                this.onSelectEmoji(emoji);
+                this.onSelectEmoji(emoji, emojiContext);
               },
               term: v.term,
               context: "chat",
@@ -561,7 +610,7 @@ export default class ChatComposer extends Component {
 
           // Close the keyboard before showing the emoji picker
           // it avoids a whole range of bugs on iOS
-          await waitForClosedKeyboard(this);
+          await waitForClosedKeyboard(this.site, this.capabilities);
 
           const virtualElement = virtualElementFromTextRange();
           this.menuInstance = await this.menu.show(virtualElement, menuOptions);
@@ -725,6 +774,8 @@ export default class ChatComposer extends Component {
               {{on "click" this.composer.focus}}
             >
               <DTextarea
+                {{preventScrollOnFocus}}
+                {{forceScrollingElementPosition}}
                 id={{this.composerId}}
                 value={{readonly this.draft.message}}
                 type="text"
@@ -744,23 +795,17 @@ export default class ChatComposer extends Component {
               />
             </div>
 
-            {{#if this.inlineButtons.length}}
-              {{#each this.inlineButtons as |button|}}
-                <Button
-                  @icon={{button.icon}}
-                  class="-{{button.id}}"
-                  disabled={{or this.disabled button.disabled}}
-                  tabindex={{if button.disabled -1 0}}
-                  {{on
-                    "click"
-                    (fn this.handleInlineButtonAction button.action)
-                  }}
-                  {{on "focus" (fn this.computeIsFocused true)}}
-                  {{on "blur" (fn this.computeIsFocused false)}}
-                />
-              {{/each}}
-
-            {{/if}}
+            {{#each this.inlineButtons as |button|}}
+              <DButton
+                @icon={{button.icon}}
+                class="-{{button.id}}"
+                disabled={{or this.disabled button.disabled}}
+                tabindex={{if button.disabled -1 0}}
+                {{on "click" (fn this.handleInlineButtonAction button.action)}}
+                {{on "focus" (fn this.computeIsFocused true)}}
+                {{on "blur" (fn this.computeIsFocused false)}}
+              />
+            {{/each}}
 
             <PluginOutlet
               @name="chat-composer-inline-buttons"
@@ -768,7 +813,7 @@ export default class ChatComposer extends Component {
             />
 
             {{#if this.site.desktopView}}
-              <Button
+              <DButton
                 @icon="paper-plane"
                 class="-send"
                 title={{i18n "chat.composer.send"}}
@@ -782,7 +827,7 @@ export default class ChatComposer extends Component {
             {{/if}}
           </div>
           {{#if this.site.mobileView}}
-            <Button
+            <DButton
               @icon="paper-plane"
               class="-send"
               title={{i18n "chat.composer.send"}}

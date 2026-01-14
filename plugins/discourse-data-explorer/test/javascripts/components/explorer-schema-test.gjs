@@ -40,8 +40,6 @@ module("Data Explorer Plugin | Component | explorer-schema", function (hooks) {
   setupRenderingTest(hooks);
 
   test("will automatically convert to lowercase", async function (assert) {
-    const self = this;
-
     this.setProperties({
       schema,
       hideSchema: false,
@@ -51,9 +49,9 @@ module("Data Explorer Plugin | Component | explorer-schema", function (hooks) {
     await render(
       <template>
         <ExplorerSchema
-          @schema={{self.schema}}
-          @hideSchema={{self.hideSchema}}
-          @updateHideSchema={{self.updateHideSchema}}
+          @schema={{this.schema}}
+          @hideSchema={{this.hideSchema}}
+          @updateHideSchema={{this.updateHideSchema}}
         />
       </template>
     );

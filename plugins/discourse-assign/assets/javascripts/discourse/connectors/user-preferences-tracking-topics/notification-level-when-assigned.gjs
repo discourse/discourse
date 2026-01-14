@@ -1,17 +1,11 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { service } from "@ember/service";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class NotificationLevelWhenAssigned extends Component {
   @service siteSettings;
-
-  constructor(owner, args) {
-    super(...arguments);
-    if (this.siteSettings.assign_enabled) {
-      args.outletArgs.customAttrNames.push("notification_level_when_assigned");
-    }
-  }
 
   get notificationLevelsWhenAssigned() {
     // The order matches the "notification level when replying" user preference
@@ -42,8 +36,7 @@ export default class NotificationLevelWhenAssigned extends Component {
           @content={{this.notificationLevelsWhenAssigned}}
           @value={{@outletArgs.model.user_option.notification_level_when_assigned}}
           @valueProperty="value"
-          {{! template-lint-disable no-action }}
-          @onChange={{action
+          @onChange={{fn
             (mut @outletArgs.model.user_option.notification_level_when_assigned)
           }}
         />

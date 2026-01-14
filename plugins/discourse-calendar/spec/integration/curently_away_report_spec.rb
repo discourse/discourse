@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe "currently_away report" do
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:group_1) { Fabricate(:group) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:group_1, :group)
 
   before { group_1.add(user_1) }
 

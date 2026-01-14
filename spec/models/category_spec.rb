@@ -38,6 +38,34 @@ RSpec.describe Category do
     expect(cats.errors[:name]).to be_present
   end
 
+  it "validates format of color" do
+    expect(Fabricate.build(:category, color: "fff", user:)).to be_valid
+    expect(Fabricate.build(:category, color: "1ac", user:)).to be_valid
+    expect(Fabricate.build(:category, color: "fffeee", user:)).to be_valid
+    expect(Fabricate.build(:category, color: "FF11CC", user:)).to be_valid
+    expect(Fabricate.build(:category, color: "ABC", user:)).to be_valid
+
+    expect(Fabricate.build(:category, color: "ffq1e1", user:)).to_not be_valid
+    expect(Fabricate.build(:category, color: "", user:)).to_not be_valid
+    expect(Fabricate.build(:category, color: "f", user:)).to_not be_valid
+    expect(Fabricate.build(:category, color: "21", user:)).to_not be_valid
+    expect(Fabricate.build(:category, color: "XCA", user:)).to_not be_valid
+  end
+
+  it "validates format of text_color" do
+    expect(Fabricate.build(:category, text_color: "fff", user:)).to be_valid
+    expect(Fabricate.build(:category, text_color: "1ac", user:)).to be_valid
+    expect(Fabricate.build(:category, text_color: "fffeee", user:)).to be_valid
+    expect(Fabricate.build(:category, text_color: "FF11CC", user:)).to be_valid
+    expect(Fabricate.build(:category, text_color: "ABC", user:)).to be_valid
+
+    expect(Fabricate.build(:category, text_color: "ffq1e1", user:)).to_not be_valid
+    expect(Fabricate.build(:category, text_color: "", user:)).to_not be_valid
+    expect(Fabricate.build(:category, text_color: "f", user:)).to_not be_valid
+    expect(Fabricate.build(:category, text_color: "21", user:)).to_not be_valid
+    expect(Fabricate.build(:category, text_color: "XCA", user:)).to_not be_valid
+  end
+
   describe "Associations" do
     it { is_expected.to have_one(:category_setting).dependent(:destroy) }
 
@@ -1508,18 +1536,66 @@ RSpec.describe Category do
     end
   end
 
-  describe ".limited_categories_matching" do
-    before_all { SiteSetting.max_category_nesting = 3 }
+  describe ".set_permission!" do
+    fab!(:category)
+    fab!(:group)
+    fab!(:user)
 
-    fab!(:foo) { Fabricate(:category, name: "foo") }
-    fab!(:bar) { Fabricate(:category, name: "bar", parent_category: foo) }
-    fab!(:baz) { Fabricate(:category, name: "baz", parent_category: bar) }
+    it "sets full permission for admin users" do
+      admin = Fabricate(:admin)
+      guardian = Guardian.new(admin)
 
-    it "produces results in depth-first pre-order" do
-      SiteSetting.max_category_nesting = 3
-      expect(Category.limited_categories_matching(nil, nil, nil, "baz").pluck(:name)).to eq(
-        %w[foo bar baz],
-      )
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to eq(CategoryGroup.permission_types[:full])
+    end
+
+    it "sets full permission for users who can create topics" do
+      category.set_permissions(group => :full)
+      category.save!
+      group.add(user)
+      guardian = Guardian.new(user)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to eq(CategoryGroup.permission_types[:full])
+    end
+
+    it "sets create_post permission for users who can post but not create topics" do
+      category.set_permissions(group => :create_post)
+      category.save!
+      group.add(user)
+      guardian = Guardian.new(user)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to eq(CategoryGroup.permission_types[:create_post])
+    end
+
+    it "sets readonly permission for users who can see but not post" do
+      category.set_permissions(group => :readonly)
+      category.save!
+      group.add(user)
+      guardian = Guardian.new(user)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to eq(CategoryGroup.permission_types[:readonly])
+    end
+
+    it "sets no permission for users who cannot see the category" do
+      category.set_permissions(group => :full)
+      category.save!
+      guardian = Guardian.new(user)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to be_nil
     end
   end
 end
