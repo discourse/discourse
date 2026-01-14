@@ -44,7 +44,8 @@
     "@types/rsvp": "^4.0.9",
     "ember-modifier": "^4.2.2",
     "ember-qunit": "^9.0.4",
-    "ember-source": "~6.6.0"
+    "ember-source": "~6.6.0",
+    "qunit": "^2.25.0"
   },
   "devDependencies": {
     "compare-versions": "^6.1.1"

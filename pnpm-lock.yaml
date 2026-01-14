@@ -723,6 +723,9 @@ importers:
       ember-source:
         specifier: ~6.6.0
         version: 6.6.0(patch_hash=fce06f88d4efb23d95b8bcd197505f279346ed295e4daea129961c9f263cdeed)(@glimmer/component@2.0.0)(rsvp@4.8.5)
+      qunit:
+        specifier: ^2.25.0
+        version: 2.25.0
     devDependencies:
       compare-versions:
         specifier: ^6.1.1
