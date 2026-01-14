@@ -10,6 +10,12 @@ id:
       actions:
         no_action_comment:
           title: "Tidak ada tindakan"
+        agree_and_suspend:
+          title: "Tangguhkan pengguna"
+          description: "Setuju dengan penanda dan menangguhkan pengguna."
+        agree_and_silence:
+          title: "Senyapkan pengguna"
+          description: "Setuju dengan penanda dan senyapkan pengguna."
   post_action_types:
     vote:
       title: "Pilih"
@@ -23,11 +29,6 @@ id:
           agree_and_silence:
             title: "Senyapkan Pengguna"
             description: "Setuju dengan penanda dan senyapkan pengguna."
-          disagree:
-            title: "Tidak setuju"
-          ignore:
-            title: "Tidak Melakukan Apapun"
-            description: "Abaikan penanda tersebut dengan menghapusnya dari antrean tanpa mengambil tindakan apa pun."
       reviewable_score_types:
         needs_review:
           title: "Perlu Reviu"

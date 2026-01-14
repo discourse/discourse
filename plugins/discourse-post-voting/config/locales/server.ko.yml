@@ -10,6 +10,10 @@ ko:
       actions:
         no_action_comment:
           title: "조치 없음"
+        agree_and_suspend:
+          description: "플래그에 동의하고 사용자를 일시 중지하십시오."
+        agree_and_silence:
+          description: "신고에 동의하고 사용자를 쓰기 금지로 설정합니다."
   post_action_types:
     vote:
       title: "투표"
@@ -23,8 +27,6 @@ ko:
           agree_and_silence:
             title: "글 작성 중지 사용자"
             description: "신고에 동의하고 사용자를 쓰기 금지로 설정합니다."
-          disagree:
-            title: "동의하지 않음"
       reviewable_score_types:
         needs_review:
           title: "검토 필요"

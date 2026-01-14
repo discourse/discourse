@@ -658,6 +658,8 @@ nb_NO:
         reviewable_post:
           title: "Innlegg"
           noun: "innlegg"
+        reviewable_ai_post:
+          noun: "innlegg"
       user_label: "Bruker"
       notes:
         delete: "Slett"

@@ -3661,38 +3661,46 @@ ur:
         complete: "پوسٹ مٹادی گئی."
       delete_and_agree_replies:
         confirm: "کیا آپ واقعی اِس پوسٹ پر جوابات بھی حذف کرنا چاہتے ہیں؟"
-      disagree_and_restore:
-        description: "پوسٹ کو بحال کریں تاکہ تمام صارفین اِسے دیکھ سکیں۔"
-      disagree:
-        title: "نہیں"
+      disagree_bundle:
+        title: "نہیں "
       ignore:
         title: "نظر انداز کریں"
       ignore_and_do_nothing:
         title: "کچھ نہ کریں"
       approve:
-        title: "منظور"
+        title: "جی ہاں"
       approve_post:
-        title: "پوسٹ منظور کریں"
+        title: "جی ہاں"
       approve_post_closed:
-        title: "پوسٹ منظور کریں"
+        title: "جی ہاں"
         confirm: "یہ ٹاپک بند ہے۔ کیا آپ پھر بھی پوسٹ بنانا چاہتے ہیں؟"
         complete: "پوسٹ منظور."
+      reject_post_bundle:
+        title: "نہیں "
       reject_post:
         title: "پوسٹ مسترد کریں"
       approve_user:
-        title: "صارف منظور کریں"
+        title: "جی ہاں"
       reject_user:
+        title: "نہیں "
         delete:
           title: "صارف حذف کریں"
-          description: "اِس صارف کو فورم سے حذف کردیا جائے گا۔"
           complete: "صارف مٹادیا گیا."
         block:
           title: "صارف کو حذف اور بلاک کریں"
           description: "اِس صارف کو حذف کر دیا جائے گا، اور ہم اِس کے IP اور ایمَیل ایڈریسوں کو بلاک کردیں گے۔"
+      confirm_spam:
+        title: "جی ہاں"
+      not_spam:
+        title: "نہیں "
       reject:
         title: "مسترد کریں"
       scrub:
         title: ریکارڈ صاف
+      approve_and_restore:
+        title: "جی ہاں"
+      approve_and_unhide:
+        title: "جی ہاں"
       no_action_post:
         title: "کوئی کارروائی نہیں"
       delete_post:

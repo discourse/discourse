@@ -36,7 +36,7 @@ vi:
       email_frequency:
         description: "Sẽ chỉ gửi email nếu bạn vắng mặt trong 15 phút."
         never: "Không bao giờ"
-        title: "Email khi tôi nhận được tin nhắn trực tiếp hoặc nhóm chat."
+        title: "Gửi email khi tôi nhận được tin nhắn trò chuyện trực tiếp hoặc nhóm"
         when_away: "Khi vắng mặt"
       header_indicator_preference:
         never: "Không bao giờ"
@@ -152,10 +152,18 @@ vi:
       flags:
         notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."
       emoji_picker:
+        favorites: "Được sử dụng gần đây"
+        smileys_&_emotion: "Mặt cười và cảm xúc"
         objects: "Vật thể"
+        people_&_body: "Con người và cơ thể"
+        travel_&_places: "Du lịch và địa điểm"
+        animals_&_nature: "Động vật và thiên nhiên"
+        food_&_drink: "Đồ ăn và thức uống"
         activities: "Hoạt động"
-        flags: "Dấu cờ - Flags"
+        flags: "Lá cờ"
         symbols: "Ký hiệu"
+        search_placeholder: "Tìm theo tên emoji và viết tắt..."
+        no_results: "Không có kết quả"
       thread:
         title: "Tiêu đề"
         replies:
@@ -169,6 +177,7 @@ vi:
             title: "Đang theo dõi"
           watching:
             title: "Theo dõi"
+            description: "Nhận thông báo về tất cả các phản hồi trong chủ đề này và xem số lượng phản hồi mới trong danh sách chủ đề."
         participants_other_count:
           other: "+%{count}"
       draft_channel_screen:

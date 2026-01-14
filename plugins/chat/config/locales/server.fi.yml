@@ -131,16 +131,12 @@ fi:
           title: "Poista viesti"
           description: "Poista viesti, jotta käyttäjät eivät näe sitä."
         delete_and_agree:
-          title: "Ohita liputus ja poista viesti"
           description: "Ohita lippu poistamalla se jonosta ja poista viesti."
         disagree_and_restore:
           title: "Hylkää ja palauta viesti"
           description: "Palauta viesti, jotta kaikki käyttäjät näkevät sen."
-        disagree:
-          title: "Hylkää"
         ignore:
-          title: "Älä tee mitään"
-          description: "Ohita lippu poistamalla se jonosta tekemättä toimia."
+          title: "Sivuuta lippu"
       direct_messages:
         transcript_title: "Kanavan %{channel_name} aiempien viestin transkriptio"
         transcript_body: "Antaaksemme sinulle enemmän kontekstia lisäsimme tämän keskustelun aiempien viestien transkription (enintään kymmenen):\n\n%{transcript}"

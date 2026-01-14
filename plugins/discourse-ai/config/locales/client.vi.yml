@@ -51,6 +51,9 @@ vi:
         embeddings:
           setting_groups:
             related_topics: "Các chủ đề liên quan"
+        ai_helper:
+          proofread: Hiệu chỉnh văn bản
+          markdown_tables: "Tạo bảng Markdown"
         spam:
           name: "Rác"
       modals:
@@ -103,7 +106,7 @@ vi:
       rag:
         uploads:
           title: "Tải lên"
-          uploading: "Đang đăng "
+          uploading: "Đang tải lên..."
       tools:
         back: "Quay lại"
         export: "Xuất"
@@ -151,6 +154,7 @@ vi:
           cancel: "Hủy"
           confirm: "Xác nhận"
           discard: "Hủy bỏ"
+          translate_prompt: "Dịch sang %{language}"
         post_options_menu:
           close: "Đóng lại"
           copy: "Sao chép"
@@ -161,6 +165,7 @@ vi:
           try_again: "Thử lại"
         image_caption:
           save_caption: "Lưu lại"
+        no_content_error: "Thêm nội dung trước để thực hiện các hành động AI trên đó"
       embeddings:
         back: "Quay lại"
         save: "Lưu lại"

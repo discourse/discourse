@@ -346,6 +346,8 @@ sw:
         reviewable_post:
           title: "Ujumbe"
           noun: "ujumbe"
+        reviewable_ai_post:
+          noun: "ujumbe"
       user_label: "Mtumiaji"
       notes:
         delete: "Futa"

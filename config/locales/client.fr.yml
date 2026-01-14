@@ -836,6 +836,10 @@ fr:
         reviewable_post:
           title: "Message"
           noun: "message"
+        reviewable_ai_chat_message:
+          noun: "message de discussion"
+        reviewable_ai_post:
+          noun: "publication"
       flagged_as: "Signalé comme"
       user_label: "Utilisateur"
       moderator_actions: "Actions du modérateur"
