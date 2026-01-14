@@ -5131,19 +5131,15 @@ de:
         description: "Der Meldung zustimmen, diesen Beitrag ausblenden und dem Benutzer automatisch eine Nachricht mit der Bitte schicken, ihn zu bearbeiten."
         complete: "Beitrag ausgeblendet, Benutzer wurde benachrichtigt."
       agree_and_edit:
-        title: "Zustimmen und Beitrag bearbeiten"
+        title: "Beitrag bearbeiten"
         description: "Stimme der Meldung zu und öffne ein Editorfenster, um den Beitrag zu bearbeiten."
         complete: "Meldung bestätigt, du kannst den Beitrag jetzt bearbeiten."
       delete:
         title: "Löschen"
         complete: "Beitrag gelöscht."
       delete_and_ignore:
-        title: "Meldung ignorieren und Beitrag löschen"
-        description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Beitrag löschst; wenn es der erste Beitrag ist, wird auch das Thema gelöscht. "
         complete: "Beitrag gelöscht."
       delete_and_ignore_replies:
-        title: "Meldung ignorieren, Beitrag und Antworten löschen"
-        description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Beitrag sowie alle seine Antworten löscht; wenn es der erste Beitrag ist, wird auch das Thema gelöscht"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
         complete: "Beitrag und Antworten gelöscht."
       delete_and_agree:
@@ -5156,11 +5152,12 @@ de:
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
         complete: "Beitrag und Antworten gelöscht."
       disagree_and_restore:
-        title: "Nein, Beitrag wiederherstellen"
-        description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
+        title: "Beitrag wiederherstellen"
         complete: "Beitrag wiederhergestellt."
-      disagree:
+      disagree_bundle:
         title: "Nein"
+      disagree:
+        title: "Beitrag behalten"
         complete: "Meldung ignoriert."
       discard_post:
         title: "Beitrag verwerfen"
@@ -5175,31 +5172,36 @@ de:
         description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen. Ausgeblendete Beiträge bleiben versteckt und werden von den Auto-Tools bearbeitet."
         complete: "Meldung ignoriert."
       approve:
-        title: "Genehmigen"
+        title: "Ja"
         complete: "Beitrag genehmigt."
       approve_post:
-        title: "Beitrag genehmigen"
+        title: "Ja"
         complete: "Beitrag genehmigt."
       approve_post_closed:
-        title: "Beitrag genehmigen"
+        title: "Ja"
         confirm: "Dieses Thema ist geschlossen. Willst du den Beitrag trotzdem erstellen?"
         complete: "Beitrag genehmigt."
+      reject_post_bundle:
+        title: "Nein"
       reject_post:
         title: "Beitrag ablehnen"
         complete: "Beitrag abgelehnt."
       approve_user:
-        title: "Benutzer genehmigen"
+        title: "Ja"
         complete: "Benutzer genehmigt."
       reject_user:
-        title: "Benutzer löschen …"
+        title: "Nein"
         delete:
           title: "Benutzer löschen"
-          description: "Der Benutzer wird aus dem Forum gelöscht."
           complete: "Benutzer gelöscht."
         block:
           title: "Benutzer löschen und blockieren"
           description: "Der Benutzer wird gelöscht und wir blockieren seine IP- und E-Mail-Adresse."
           complete: "Benutzer gelöscht und gesperrt."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nein"
       reject:
         title: "Ablehnen"
         bundle_title: "Ablehnen …"
@@ -5218,10 +5220,10 @@ de:
       scrub:
         title: Datensatz bereinigen
       approve_and_restore:
-        title: "Beitrag genehmigen und wiederherstellen"
+        title: "Ja"
         complete: "Beitrag genehmigt und wiederhergestellt."
       approve_and_unhide:
-        title: "Beitrag genehmigen und nicht länger verstecken"
+        title: "Ja"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
       post_actions:
         bundle_title: "Was willst du mit dem Beitrag machen?"

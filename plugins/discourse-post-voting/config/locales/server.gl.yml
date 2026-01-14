@@ -10,6 +10,12 @@ gl:
       actions:
         no_action_comment:
           title: "Sen acción"
+        agree_and_suspend:
+          description: "De acordo con esta denuncia e suspender o usuario."
+        agree_and_silence:
+          description: "De acordo con esta denuncia e silenciar o usuario."
+        ignore:
+          title: "Ignorar denuncia"
   post_action_types:
     vote:
       title: "Votar"
@@ -23,8 +29,8 @@ gl:
           agree_and_silence:
             title: "Silenciar o usuario"
             description: "De acordo con esta denuncia e silenciar o usuario."
-          disagree:
-            title: "Discrepar"
+          ignore:
+            title: "Ignorar denuncia"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

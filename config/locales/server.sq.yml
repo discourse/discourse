@@ -1414,30 +1414,45 @@ sq:
         complete: "Postimi u fshi."
       delete_and_agree:
         complete: "Postimi u fshi."
-      disagree:
+      disagree_bundle:
         title: "Jo"
+      disagree:
         complete: "Shënimi u injorua."
       ignore:
         complete: "Shënimi u injorua."
       ignore_and_do_nothing:
         complete: "Shënimi u injorua."
       approve:
-        title: "Aprovo"
+        title: "Po"
         complete: "Postimi u miratua."
       approve_post:
+        title: "Po"
         complete: "Postimi u miratua."
       approve_post_closed:
+        title: "Po"
         complete: "Postimi u miratua."
+      reject_post_bundle:
+        title: "Jo"
       reject_post:
         complete: "Postimi u refuzua."
       approve_user:
+        title: "Po"
         complete: "Përdoruesi u miratua."
       reject_user:
+        title: "Jo"
         delete:
           title: "Fshij Anëtarin"
           complete: "Përdoruesi u fshi."
+      confirm_spam:
+        title: "Po"
+      not_spam:
+        title: "Jo"
       reject:
         title: "Refuzo"
+      approve_and_restore:
+        title: "Po"
+      approve_and_unhide:
+        title: "Po"
       delete_post:
         complete: "Postimi u fshi"
       delete_user:

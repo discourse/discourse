@@ -3489,35 +3489,43 @@ gl:
         complete: "Publicación eliminada."
       delete_and_agree_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
-      disagree_and_restore:
-        description: "Restaurar a publicación para que todos os usuarios a poidan ver."
-      disagree:
+      disagree_bundle:
         title: "Non"
       ignore:
         title: "Ignorar"
       ignore_and_do_nothing:
         title: "Non facer nada"
       approve:
-        title: "Aprobar"
+        title: "Si"
       approve_post:
-        title: "Aprobar publicación"
+        title: "Si"
       approve_post_closed:
-        title: "Aprobar publicación"
+        title: "Si"
         confirm: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"
+      reject_post_bundle:
+        title: "Non"
       reject_post:
         title: "Rexeitar a publicación"
       approve_user:
-        title: "Aprobar usuario"
+        title: "Si"
       reject_user:
+        title: "Non"
         delete:
           title: "Eliminar usuario"
-          description: "O usuario será eliminado do foro."
           complete: "Usuario eliminado."
         block:
           title: "Eliminar e bloquear usuario"
           description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
+      confirm_spam:
+        title: "Si"
+      not_spam:
+        title: "Non"
       reject:
         title: "Rexeitar"
+      approve_and_restore:
+        title: "Si"
+      approve_and_unhide:
+        title: "Si"
       no_action_post:
         title: "Sen acción"
       delete_post:

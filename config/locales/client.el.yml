@@ -847,6 +847,10 @@ el:
         reviewable_post:
           title: "Ανάρτηση"
           noun: "ανάρτηση"
+        reviewable_ai_chat_message:
+          noun: "μήνυμα συνομιλίας"
+        reviewable_ai_post:
+          noun: "ανάρτηση"
       flagged_as: "Αναφορά ως"
       post_flagged_as: "Η ανάρτηση αναφέρθηκε ως"
       chat_flagged_as: "Η συνομιλία αναφέρθηκε ως"

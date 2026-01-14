@@ -852,6 +852,10 @@ ur:
         reviewable_post:
           title: "دھاگہ"
           noun: "پوسٹ"
+        reviewable_ai_chat_message:
+          noun: "گپ شپ کا پیغام"
+        reviewable_ai_post:
+          noun: "دھاگہ"
       flagged_as: "کے طور پرفلَیگ"
       user_label: "رکن"
       moderator_actions: "ناظم کی کاروائیاں"

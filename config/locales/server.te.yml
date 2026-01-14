@@ -2521,9 +2521,11 @@ te:
       delete_and_agree_replies:
         title: "పోస్ట్ మరియు ప్రత్యుత్తరాలను తొలగించండి"
       disagree_and_restore:
-        title: "లేదు, పోస్ట్‌ని పునరుద్ధరించండి"
-      disagree:
+        title: "పోస్ట్‌ని పునరుద్ధరించండి"
+      disagree_bundle:
         title: "లేదు"
+      disagree:
+        title: "పోస్ట్ ఉంచండి"
       discard_post:
         title: "పోస్ట్‌ని విస్మరించండి"
       ignore:
@@ -2531,19 +2533,25 @@ te:
       ignore_and_do_nothing:
         title: "ఏమీ చేయవద్దు"
       approve:
-        title: "అంగీకరించు"
+        title: "అవును"
       approve_post:
-        title: "పోస్ట్‌ని ఆమోదించండి"
+        title: "అవును"
       approve_post_closed:
-        title: "పోస్ట్‌ని ఆమోదించండి"
+        title: "అవును"
+      reject_post_bundle:
+        title: "లేదు"
       reject_post:
         title: "పోస్ట్‌ను తిరస్కరించండి"
       approve_user:
-        title: "సభ్యుని ఆమోదించండి"
+        title: "అవును"
       reject_user:
-        title: "సభ్యుని తొలగించండి"
+        title: "లేదు"
         delete:
           title: "సభ్యుడిని తొలగించు"
+      confirm_spam:
+        title: "అవును"
+      not_spam:
+        title: "లేదు"
       reject:
         title: "తిరస్కరించు"
         bundle_title: "తిరస్కరించండి…"
@@ -2552,7 +2560,9 @@ te:
       reject_and_keep_deleted:
         title: "పోస్ట్‌ను తొలగించి ఉంచండి"
       approve_and_restore:
-        title: "పోస్ట్‌ను ఆమోదించండి మరియు పునరుద్ధరించండి"
+        title: "అవును"
+      approve_and_unhide:
+        title: "అవును"
       no_action_post:
         title: "చర్య తీసుకోలేదు"
       delete_post:

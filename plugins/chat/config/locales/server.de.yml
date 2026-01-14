@@ -132,16 +132,12 @@ de:
           title: "Nachricht löschen"
           description: "Nachricht löschen, damit Benutzer sie nicht sehen können."
         delete_and_agree:
-          title: "Meldung ignorieren und Nachricht löschen"
           description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und die Nachricht löschst."
         disagree_and_restore:
           title: "Ablehnen und Nachricht wiederherstellen"
           description: "Nachricht wiederherstellen, damit alle Benutzer sie sehen können."
-        disagree:
-          title: "Ablehnen"
         ignore:
-          title: "Nichts tun"
-          description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen."
+          title: "Meldung ignorieren"
       direct_messages:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"

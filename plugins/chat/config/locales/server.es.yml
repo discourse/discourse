@@ -131,16 +131,12 @@ es:
           title: "Eliminar mensaje"
           description: "Elimina el mensaje para que los usuarios no puedan verlo."
         delete_and_agree:
-          title: "Ignorar denuncia y eliminar mensaje"
           description: "Ignorar la denuncia eliminándola de la cola y eliminar el mensaje."
         disagree_and_restore:
           title: "No aceptar y restaurar el mensaje"
           description: "Restaura el mensaje para que todos los usuarios puedan verlo."
-        disagree:
-          title: "No estoy de acuerdo"
         ignore:
-          title: "No hacer nada"
-          description: "Ignora la denuncia eliminándola de la cola sin realizar ninguna acción."
+          title: "Ignorar reporte"
       direct_messages:
         transcript_title: "Transcripción de los mensajes anteriores en %{channel_name}"
         transcript_body: "Para darte más contexto, incluimos una transcripción de los mensajes anteriores de esta conversación (hasta diez):\n\n%{transcript}"

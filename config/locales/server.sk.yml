@@ -5313,19 +5313,14 @@ sk:
         description: "Súhlasiť s označením a skryť tento príspevok + automaticky odoslať používateľovi správu, ktorá ho vyzve, aby ho upravil."
         complete: "Príspevok skrytý, používateľ bol upozornený."
       agree_and_edit:
-        title: "Súhlasím a upraviť príspevok"
         description: "Súhlasím s príznakom a otvorte okno kompozície na úpravu príspevku."
         complete: "Príznak bol potvrdený, teraz môžete príspevok upraviť."
       delete:
         title: "Odstrániť"
         complete: "Príspevok zmazaný."
       delete_and_ignore:
-        title: "Ignorovať príznak a vymazať príspevok"
-        description: "Ignorujte označenie odstránením z fronty a zmažte príspevok; ak je to prvý príspevok, zmažte aj tému. "
         complete: "Príspevok zmazaný."
       delete_and_ignore_replies:
-        title: "Ignorujte príznak, odstráňte príspevok a odpovede"
-        description: "Ignorovať príznak odstránením z frontu, vymazať príspevok a všetky jeho odpovede; ak ide o prvý príspevok, vymazať aj tému"
         confirm: "Ste si istí, že chcete vymazať aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       delete_and_agree:
@@ -5338,11 +5333,12 @@ sk:
         confirm: "Naozaj chcete odstrániť aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       disagree_and_restore:
-        title: "Nie, obnoviť príspevok"
-        description: "Obnovte príspevok tak, aby ho mohli vidieť všetci používatelia."
+        title: "Obnoviť príspevok"
         complete: "Príspevok bol obnovený."
-      disagree:
+      disagree_bundle:
         title: "Nie"
+      disagree:
+        title: "Ponechať príspevok"
         complete: "Vlajka ignorovaná."
       discard_post:
         title: "Zahodiť príspevok"
@@ -5357,31 +5353,36 @@ sk:
         description: "Ignorujte označenie odstránením z fronty bez prijatia akýchkoľvek opatrení. Skryté príspevky zostanú skryté a budú spracované automatickými nástrojmi."
         complete: "Vlajka ignorovaná."
       approve:
-        title: "Schváliť"
+        title: "Áno"
         complete: "Príspevok schválený."
       approve_post:
-        title: "Schváliť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený."
       approve_post_closed:
-        title: "Schváliť príspevok"
+        title: "Áno"
         confirm: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"
         complete: "Príspevok schválený."
+      reject_post_bundle:
+        title: "Nie"
       reject_post:
         title: "Odmietnuť príspevok"
         complete: "Príspevok zamietnutý."
       approve_user:
-        title: "Schváliť používateľa"
+        title: "Áno"
         complete: "Používateľ schválený."
       reject_user:
-        title: "Odstrániť používateľa…"
+        title: "Nie"
         delete:
           title: "Odstrániť používateľa"
-          description: "Používateľ bude z fóra vymazaný."
           complete: "Používateľ odstránený."
         block:
           title: "Odstránenie a blokovanie používateľa"
           description: "Používateľ bude vymazaný a my zablokujeme jeho IP a e-mailovú adresu."
           complete: "Používateľ vymazaný a zablokovaný."
+      confirm_spam:
+        title: "Áno"
+      not_spam:
+        title: "Nie"
       reject:
         title: "Zamietnuť"
         bundle_title: "Odmietnuť…"
@@ -5400,10 +5401,10 @@ sk:
       scrub:
         title: Záznam o čistení
       approve_and_restore:
-        title: "Schváliť a obnoviť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený a obnovený."
       approve_and_unhide:
-        title: "Schváliť a Odkryť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený a odkrytý"
       no_action_post:
         title: "Žiadna akcia"

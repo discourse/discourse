@@ -702,6 +702,8 @@ be:
         reviewable_post:
           title: "Паведамленне"
           noun: "пост"
+        reviewable_ai_post:
+          noun: "пост"
       user_label: "Карыстальнік"
       notes:
         delete: "выдаляць"

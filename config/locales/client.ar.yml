@@ -1097,6 +1097,10 @@ ar:
         reviewable_post:
           title: "المنشور"
           noun: "منشور"
+        reviewable_ai_chat_message:
+          noun: "رسالة الدردشة"
+        reviewable_ai_post:
+          noun: "منشور"
       flagged_as: "صفة الإبلاغ"
       post_flagged_as: "عُلّم على المنشور على أنه"
       chat_flagged_as: "عُلّم على الدردشة على أنها"

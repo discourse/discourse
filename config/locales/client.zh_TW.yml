@@ -759,6 +759,10 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+        reviewable_ai_chat_message:
+          noun: "聊天訊息"
+        reviewable_ai_post:
+          noun: "貼文"
       user_label: "使用者"
       notes:
         delete: "刪除"

@@ -778,6 +778,10 @@ da:
         reviewable_post:
           title: "Indlæg"
           noun: "indlæg"
+        reviewable_ai_chat_message:
+          noun: "chatbesked"
+        reviewable_ai_post:
+          noun: "indlæg"
       flagged_as: "Anmeldt som"
       user_label: "Bruger"
       moderator_actions: "Moderatorhandlinger"

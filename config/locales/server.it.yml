@@ -4679,19 +4679,14 @@ it:
         description: "Accetta la segnalazione, nascondi il messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
         complete: "Messaggio nascosto, l'utente è stato avvisato."
       agree_and_edit:
-        title: "Accetta e modifica messaggio"
         description: "Accetta segnalazione e apri la finestra di modifica per emendare il messaggio."
         complete: "Segnalazione riconosciuta, ora puoi modificare il messaggio."
       delete:
         title: "Elimina"
         complete: "Messaggio eliminato."
       delete_and_ignore:
-        title: "Ignora segnalazione ed elimina post"
-        description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio; se è li primo messaggio, elimina anche l'argomento. "
         complete: "Messaggio eliminato."
       delete_and_ignore_replies:
-        title: "Ignora segnalazione, elimina messaggio e risposte"
-        description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio e tutte le sue risposte; se è li primo messaggio, elimina anche l'argomento"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
         complete: "Messaggi e risposte eliminati."
       delete_and_agree:
@@ -4704,11 +4699,12 @@ it:
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
         complete: "Messaggi e risposte eliminati."
       disagree_and_restore:
-        title: "No, ripristina messaggio"
-        description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
+        title: "Ripristina messaggio"
         complete: "Messaggio ripristinato."
-      disagree:
+      disagree_bundle:
         title: "No"
+      disagree:
+        title: "Mantieni il messaggio"
         complete: "Segnalazione ignorata."
       discard_post:
         title: "Annulla messaggio"
@@ -4723,31 +4719,36 @@ it:
         description: "Ignora segnalazione rimuovendola dalla coda senza intraprendere alcuna azione. I messaggi nascosti rimarranno nascosti e saranno gestiti dagli strumenti automatici."
         complete: "Segnalazione ignorata."
       approve:
-        title: "Approva"
+        title: "Sì"
         complete: "Messaggio approvato."
       approve_post:
-        title: "Approva Messaggio"
+        title: "Sì"
         complete: "Messaggio approvato."
       approve_post_closed:
-        title: "Approva messaggio"
+        title: "Sì"
         confirm: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"
         complete: "Messaggio approvato."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Rifiuta Messaggio"
         complete: "Messaggio rifiutato."
       approve_user:
-        title: "Approva Utente"
+        title: "Sì"
         complete: "Utente approvato."
       reject_user:
-        title: "Elimina utente…"
+        title: "No"
         delete:
           title: "Cancella utente"
-          description: "L'utente sarà eliminato dal forum."
           complete: "Utente eliminato."
         block:
           title: "Elimina e blocca Utente"
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
           complete: "Utente eliminato e bloccato."
+      confirm_spam:
+        title: "Sì"
+      not_spam:
+        title: "No"
       reject:
         title: "Rifiuta"
         bundle_title: "Rifiuta…"
@@ -4766,10 +4767,10 @@ it:
       scrub:
         title: Cancella il record
       approve_and_restore:
-        title: "Approva e ripristina il messaggio"
+        title: "Sì"
         complete: "Messaggio approvato e ripristinato."
       approve_and_unhide:
-        title: "Approva e mostra il messaggio"
+        title: "Sì"
         complete: "Messaggio approvato e reso visibile"
       no_action_post:
         title: "Nessuna azione"

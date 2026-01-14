@@ -853,6 +853,10 @@ de:
         reviewable_post:
           title: "Beitrag"
           noun: "Beitrag"
+        reviewable_ai_chat_message:
+          noun: "Chat-Nachricht"
+        reviewable_ai_post:
+          noun: "Beitrag"
       flagged_as: "Gemeldet als"
       post_flagged_as: "Beitrag gemeldet als"
       chat_flagged_as: "Chat gemeldet als"

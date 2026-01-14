@@ -54,9 +54,21 @@ he:
         agree_and_delete:
           title: "מחיקת תגובה"
           description: "למחוק את התגובה כדי שמשתמשים לא יוכלו לראות אותה."
+        agree_and_suspend:
+          title: "השעיית משתמש"
+          description: "הבעת הסכמה עם הדגל והשעיית המשתמש."
+        agree_and_silence:
+          title: "השתקת משתמש"
+          description: "הבעת הסכמה עם הדגל והשתקת המשתמש."
         disagree_and_restore:
           title: "לסרב ולשחזר תגובה"
           description: "לשחזר את התגובה כדי שכל המשתמשים יוכלו לראות אותה."
+        disagree:
+          title: "להשאיר את התגובה"
+        ignore:
+          title: "התעלמות מדגל"
+        delete_and_agree:
+          description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת התגובה."
   post_action_types:
     vote:
       title: "הצבעה"
@@ -106,16 +118,14 @@ he:
             title: "מחיקת תגובה"
             description: "למחוק את התגובה כדי שמשתמשים לא יוכלו לראות אותה."
           delete_and_agree:
-            title: "התעלמות מהדגל ומחיקת התגובה"
             description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת התגובה."
           disagree_and_restore:
             title: "לסרב ולשחזר תגובה"
             description: "לשחזר את התגובה כדי שכל המשתמשים יוכלו לראות אותה."
           disagree:
-            title: "אי קבלה"
+            title: "להשאיר את התגובה"
           ignore:
-            title: "לא לעשות דבר"
-            description: "התעלמות מהדגל על ידי הסרתו מהתור מבלי לנקוט בשום פעולה."
+            title: "התעלמות מדגל"
         transcript:
           view: "הצגת תמליל התגובות הקודמות"
       reviewable_score_types:

@@ -793,6 +793,8 @@ lt:
         reviewable_post:
           title: "Įrašai"
           noun: "įrašai"
+        reviewable_ai_post:
+          noun: "įrašai"
       user_label: "Narys"
       notes:
         delete: "Pašalinti"

@@ -795,6 +795,10 @@ zh_CN:
         reviewable_post:
           title: "帖子"
           noun: "帖子"
+        reviewable_ai_chat_message:
+          noun: "聊天消息"
+        reviewable_ai_post:
+          noun: "帖子"
       flagged_as: "被标记为"
       post_flagged_as: "帖子被标记为"
       chat_flagged_as: "对话被标记为"

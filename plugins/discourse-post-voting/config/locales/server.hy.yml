@@ -10,6 +10,12 @@ hy:
       actions:
         no_action_comment:
           title: "Առանց գործողության"
+        agree_and_suspend:
+          description: "Ընդունել դրոշակավորումը և սառեցնել օգտատիրոջը:"
+        agree_and_silence:
+          description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
+        ignore:
+          title: "Անտեսել դրոշակը"
   post_action_types:
     vote:
       title: "Քվեարկել"
@@ -23,8 +29,8 @@ hy:
           agree_and_silence:
             title: "Լռեցնել Օգտատիրոջը"
             description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
-          disagree:
-            title: "Չընդունել"
+          ignore:
+            title: "Անտեսել դրոշակը"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

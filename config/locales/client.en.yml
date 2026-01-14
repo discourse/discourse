@@ -3640,6 +3640,7 @@ en:
           unread: "Nothing left unread... impressive!"
           new_new: "Nothing new at the moment... check back soon!"
           new: "Nothing new at the moment... check back soon!"
+          generic: "Nothing to see here...check back soon!"
 
     topic_bulk_actions:
       dismiss:
@@ -5467,6 +5468,9 @@ en:
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
           header_action_title: "Edit your sidebar categories"
+          header_action_new: "New category"
+          header_action_edit_sidebar: "Edit sidebar categories"
+          header_action_edit_header_dropdown: "Edit nav categories"
           configure_defaults: "Configure defaults"
         community:
           edit_section:
