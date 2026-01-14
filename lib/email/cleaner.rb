@@ -32,7 +32,12 @@ module Email
     private
 
     def truncate!
-      parts.each { |part| part.body = part.body.decoded.truncate(truncate_limit, omission: "") }
+      parts.each do |part|
+        part.body = part.body.decoded.truncate(truncate_limit, omission: "")
+        # let the serialiser re-encode it with an appropriate format - leaving
+        # the original one set tells Mail that the content is *already* encoded
+        part.content_transfer_encoding = nil
+      end
     end
 
     def parts
