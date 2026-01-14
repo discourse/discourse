@@ -1,11 +1,13 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   isTypeMismatch,
   matchParams,
   matchValue,
   validateParamSpec,
 } from "discourse/lib/blocks/value-matcher";
+import { blockDebugLogger } from "discourse/static/dev-tools/block-debug/debug-logger";
 
 module("Unit | Lib | Blocks | value-matcher", function (hooks) {
   setupTest(hooks);
@@ -430,156 +432,168 @@ module("Unit | Lib | Blocks | value-matcher", function (hooks) {
     });
   });
 
-  module("logger integration", function () {
-    /**
-     * Creates a test logger that mimics the real debug logger's behavior.
-     * Tracks pending logs by conditionSpec and updates results when
-     * updateCombinatorResult is called, just like the real logger does.
-     */
-    function createTestLogger() {
-      const logs = [];
-      const pendingLogs = new Map();
+  module("logger integration", function (loggerHooks) {
+    loggerHooks.beforeEach(function () {
+      this.logConditionSpy = sinon.spy(blockDebugLogger, "logCondition");
+      this.updateCombinatorResultSpy = sinon.spy(
+        blockDebugLogger,
+        "updateCombinatorResult"
+      );
+    });
 
-      return {
-        logs,
-        logCondition({ type, args, result, depth, conditionSpec }) {
-          const entry = { type, args, result, depth, conditionSpec };
-          logs.push(entry);
-          if (conditionSpec && result === null) {
-            pendingLogs.set(conditionSpec, entry);
-          }
-        },
-        updateCombinatorResult(conditionSpec, result) {
-          const entry = pendingLogs.get(conditionSpec);
-          if (entry) {
-            entry.result = result;
-            pendingLogs.delete(conditionSpec);
-          }
-        },
-        logParamGroup({ label, matches, result, depth }) {
-          logs.push({ type: "param-group", label, matches, result, depth });
-        },
-      };
-    }
+    loggerHooks.afterEach(function () {
+      this.logConditionSpy.restore();
+      this.updateCombinatorResultSpy.restore();
+    });
 
     module("combinator result is correctly updated", function () {
-      test("OR combinator shows passing result when one child matches", function (assert) {
+      test("OR combinator calls updateCombinatorResult with true when one child matches", function (assert) {
         const expectedParams = { any: [{ id: 123 }, { id: 456 }] };
         const actualParams = { id: 123 };
-        const logger = createTestLogger();
 
         const result = matchParams({
           actualParams,
           expectedParams,
-          context: { logger },
+          context: { logger: blockDebugLogger },
         });
 
         assert.true(result, "OR should pass when one child matches");
-
-        const orEntry = logger.logs.find((log) => log.type === "OR");
         assert.true(
-          orEntry.result,
-          "OR combinator log entry should have result=true"
+          this.updateCombinatorResultSpy.called,
+          "updateCombinatorResult should be called"
+        );
+
+        const orCall = this.updateCombinatorResultSpy
+          .getCalls()
+          .find((call) => call.args[1] === true);
+        assert.true(
+          Boolean(orCall),
+          "updateCombinatorResult should be called with true"
         );
       });
 
-      test("OR combinator shows failing result when no children match", function (assert) {
+      test("OR combinator calls updateCombinatorResult with false when no children match", function (assert) {
         const expectedParams = { any: [{ id: 456 }, { id: 789 }] };
         const actualParams = { id: 123 };
-        const logger = createTestLogger();
 
         const result = matchParams({
           actualParams,
           expectedParams,
-          context: { logger },
+          context: { logger: blockDebugLogger },
         });
 
         assert.false(result, "OR should fail when no children match");
+        assert.true(
+          this.updateCombinatorResultSpy.called,
+          "updateCombinatorResult should be called"
+        );
 
-        const orEntry = logger.logs.find((log) => log.type === "OR");
-        assert.false(
-          orEntry.result,
-          "OR combinator log entry should have result=false"
+        const orCall = this.updateCombinatorResultSpy
+          .getCalls()
+          .find((call) => call.args[1] === false);
+        assert.true(
+          Boolean(orCall),
+          "updateCombinatorResult should be called with false"
         );
       });
 
-      test("AND combinator shows passing result when all children match", function (assert) {
+      test("AND combinator calls updateCombinatorResult with true when all children match", function (assert) {
         const expectedParams = [{ id: 123 }, { slug: "test" }];
         const actualParams = { id: 123, slug: "test" };
-        const logger = createTestLogger();
 
         const result = matchParams({
           actualParams,
           expectedParams,
-          context: { logger },
+          context: { logger: blockDebugLogger },
         });
 
         assert.true(result, "AND should pass when all children match");
-
-        const andEntry = logger.logs.find((log) => log.type === "AND");
         assert.true(
-          andEntry.result,
-          "AND combinator log entry should have result=true"
+          this.updateCombinatorResultSpy.called,
+          "updateCombinatorResult should be called"
+        );
+
+        const andCall = this.updateCombinatorResultSpy
+          .getCalls()
+          .find((call) => call.args[1] === true);
+        assert.true(
+          Boolean(andCall),
+          "updateCombinatorResult should be called with true"
         );
       });
 
-      test("AND combinator shows failing result when one child fails", function (assert) {
+      test("AND combinator calls updateCombinatorResult with false when one child fails", function (assert) {
         const expectedParams = [{ id: 123 }, { slug: "wrong" }];
         const actualParams = { id: 123, slug: "test" };
-        const logger = createTestLogger();
 
         const result = matchParams({
           actualParams,
           expectedParams,
-          context: { logger },
+          context: { logger: blockDebugLogger },
         });
 
         assert.false(result, "AND should fail when one child fails");
+        assert.true(
+          this.updateCombinatorResultSpy.called,
+          "updateCombinatorResult should be called"
+        );
 
-        const andEntry = logger.logs.find((log) => log.type === "AND");
-        assert.false(
-          andEntry.result,
-          "AND combinator log entry should have result=false"
+        const andCall = this.updateCombinatorResultSpy
+          .getCalls()
+          .find((call) => call.args[1] === false);
+        assert.true(
+          Boolean(andCall),
+          "updateCombinatorResult should be called with false"
         );
       });
 
-      test("NOT combinator shows passing result when inner fails", function (assert) {
+      test("NOT combinator calls updateCombinatorResult with true when inner fails", function (assert) {
         const expectedParams = { not: { id: 456 } };
         const actualParams = { id: 123 };
-        const logger = createTestLogger();
 
         const result = matchParams({
           actualParams,
           expectedParams,
-          context: { logger },
+          context: { logger: blockDebugLogger },
         });
 
         assert.true(result, "NOT should pass when inner condition fails");
-
-        const notEntry = logger.logs.find((log) => log.type === "NOT");
         assert.true(
-          notEntry.result,
-          "NOT combinator log entry should have result=true"
+          this.updateCombinatorResultSpy.called,
+          "updateCombinatorResult should be called"
+        );
+
+        const notCall = this.updateCombinatorResultSpy
+          .getCalls()
+          .find((call) => call.args[1] === true);
+        assert.true(
+          Boolean(notCall),
+          "updateCombinatorResult should be called with true"
         );
       });
 
-      test("NOT combinator shows failing result when inner passes", function (assert) {
+      test("NOT combinator calls updateCombinatorResult with false when inner passes", function (assert) {
         const expectedParams = { not: { id: 123 } };
         const actualParams = { id: 123 };
-        const logger = createTestLogger();
 
         const result = matchParams({
           actualParams,
           expectedParams,
-          context: { logger },
+          context: { logger: blockDebugLogger },
         });
 
         assert.false(result, "NOT should fail when inner condition passes");
+        assert.true(
+          this.updateCombinatorResultSpy.called,
+          "updateCombinatorResult should be called"
+        );
 
-        const notEntry = logger.logs.find((log) => log.type === "NOT");
-        assert.false(
-          notEntry.result,
-          "NOT combinator log entry should have result=false"
+        const notCall = this.updateCombinatorResultSpy
+          .getCalls()
+          .find((call) => call.args[1] === false);
+        assert.true(
+          Boolean(notCall),
+          "updateCombinatorResult should be called with false"
         );
       });
     });
