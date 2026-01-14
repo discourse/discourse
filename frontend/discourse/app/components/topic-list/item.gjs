@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
@@ -323,15 +324,11 @@ export default class Item extends Component {
           >
             <div class="pull-left">
               {{#if @bulkSelectEnabled}}
-                <label for="bulk-select-{{@topic.id}}">
-                  <input
-                    {{on "click" this.onBulkSelectToggle}}
-                    checked={{this.isSelected}}
-                    type="checkbox"
-                    id="bulk-select-{{@topic.id}}"
-                    class="bulk-select"
-                  />
-                </label>
+                <BulkSelectCheckbox
+                  @topic={{@topic}}
+                  @isSelected={{this.isSelected}}
+                  @onToggle={{this.onBulkSelectToggle}}
+                />
               {{else}}
                 <PluginOutlet
                   @name="topic-list-item-mobile-avatar"

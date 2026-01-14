@@ -1,0 +1,6 @@
+topic_card_context:
+  type: enum
+  default: simple
+  choices:
+    - simple
+    - high_context

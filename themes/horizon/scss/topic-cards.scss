@@ -4,6 +4,7 @@
   --d-border-radius-small: calc(var(--d-border-radius) * 0.5);
   --topic-list-item-background-color: var(--d-content-background);
   --topic-list-item-background-color--visited: var(--d-content-background);
+  --topic-card-shadow: rgb(var(--tertiary-rgb), 0.1);
 }
 
 .topic-list .topic-list-item-separator {
@@ -144,15 +145,14 @@
 
   &:hover {
     .discourse-no-touch & {
-      border-color: var(--accent-color);
+      box-shadow: 1px 1px 12px 2px var(--topic-card-shadow);
       background: var(--d-content-background);
     }
   }
 
   &.selected {
-    box-shadow:
-      0 0 0 2px var(--accent-color),
-      0 0 12px 1px var(--topic-card-shadow);
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 0 12px 1px var(--topic-card-shadow);
 
     .user-messages-page & {
       box-shadow: inset 0 0 0 2px var(--accent-color);
@@ -244,7 +244,6 @@
 
     @include viewport.until(md) {
       padding: 0.25em 0.5rem;
-      font-size: var(--font-down-2);
     }
 
     .badge-category {

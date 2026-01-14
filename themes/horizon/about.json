@@ -4,7 +4,13 @@
   "theme_version": "1.0.0",
   "modifiers": {
     "svg_icons": [
-      "fire"
+      "fire",
+      "far-square-check",
+      "far-square",
+      "thumbtack",
+      "reply",
+      "heart",
+      "user-plus"
     ],
     "serialize_topic_is_hot": true
   },
@@ -136,6 +142,7 @@
   ],
   "theme_site_settings": {
     "enable_welcome_banner": true,
-    "search_experience": "search_field"
+    "search_experience": "search_field",
+    "topic_card_context": "simple"
   }
 }
