@@ -37,6 +37,7 @@ import { showAlert } from "discourse/lib/post-action-feedback";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import { PENDING } from "discourse/models/reviewable";
 import Topic from "discourse/models/topic";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -172,7 +173,7 @@ export default class ReviewableItem extends Component {
     return (
       (oldModeratorActions &&
         createdFromFlag &&
-        status === 0 &&
+        status === PENDING &&
         (claimOptional || (claimRequired && claimedBy !== null))) ||
       isAiReviewable
     );
