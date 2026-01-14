@@ -8,6 +8,7 @@ import {
   VALID_BLOCK_NAME_PATTERN,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/patterns";
+import { isTesting } from "discourse/lib/environment";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import identifySource from "discourse/lib/source-identifier";
 
@@ -94,13 +95,14 @@ let testSourceIdentifier;
 
 /**
  * Sets a test override for the source identifier.
- * Only available in DEBUG mode.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
  *
  * @param {string|null} sourceId - Source identifier to use, or null to clear.
  */
 export function _setTestSourceIdentifier(sourceId) {
-  if (!DEBUG) {
-    return;
+  if (!isTesting()) {
+    throw new Error("Use `_setTestSourceIdentifier` only in tests.");
   }
   testSourceIdentifier = sourceId;
 }
@@ -645,11 +647,14 @@ let outletRegistryFrozen = false;
 /**
  * Temporarily unfreezes the block registry for testing purposes.
  * Call this before registering blocks in tests.
- * Only available in DEBUG mode.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ *
+ * @param {Function} callback - Function to execute with unfrozen registry.
  */
 export function withTestBlockRegistration(callback) {
-  if (!DEBUG) {
-    return;
+  if (!isTesting()) {
+    throw new Error("Use `withTestBlockRegistration` only in tests.");
   }
 
   if (testRegistryFrozenState === null) {
@@ -673,7 +678,8 @@ let testConditionRegistryFrozenState = null;
 /**
  * Temporarily unfreezes the condition type registry for testing purposes.
  * Call this before registering condition types in tests.
- * Only available in DEBUG mode.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
  *
  * @param {Function} callback - Function to execute with unfrozen registry.
  *
@@ -685,8 +691,8 @@ let testConditionRegistryFrozenState = null;
  * ```
  */
 export function withTestConditionRegistration(callback) {
-  if (!DEBUG) {
-    return;
+  if (!isTesting()) {
+    throw new Error("Use `withTestConditionRegistration` only in tests.");
   }
 
   if (testConditionRegistryFrozenState === null) {
@@ -705,11 +711,12 @@ export function withTestConditionRegistration(callback) {
  * Resets the block registry for testing purposes.
  * Clears all registered blocks, outlets, and condition types.
  * Restores the original frozen state.
- * Only available in DEBUG mode.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
  */
 export function resetBlockRegistryForTesting() {
-  if (!DEBUG) {
-    return;
+  if (!isTesting()) {
+    throw new Error("Use `resetBlockRegistryForTesting` only in tests.");
   }
 
   blockRegistry.clear();
