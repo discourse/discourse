@@ -3640,6 +3640,7 @@ en:
           unread: "Nothing left unread... impressive!"
           new_new: "Nothing new at the moment... check back soon!"
           new: "Nothing new at the moment... check back soon!"
+          generic: "Nothing to see here...check back soon!"
 
     topic_bulk_actions:
       dismiss:
