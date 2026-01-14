@@ -149,6 +149,12 @@ module PageObjects
         find(".reviewable-claimed-topic .unclaim").click
       end
 
+      def has_context_question?(reviewable, text)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__aside-title", text: text)
+        end
+      end
+
       def has_created_at_history_item?
         expect(page).to have_css(".timeline-event__icon .d-icon-pen-to-square")
         expect(page).to have_text("Post created by")
