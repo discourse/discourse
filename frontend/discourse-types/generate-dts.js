@@ -86,7 +86,10 @@ for (const packageName of packageNames) {
         .filter(Boolean)
         .join("/");
 
-      if (!/^declare module ['"].+['"] {/.test(dts)) {
+      if (
+        !/^declare module ['"].+['"] {/.test(dts) &&
+        !dts.includes("/// <reference")
+      ) {
         dts = `declare module '${modulePath}' {\n${dts}\n}`;
       }
     }
