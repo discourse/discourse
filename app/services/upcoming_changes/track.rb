@@ -38,37 +38,11 @@ class UpcomingChanges::Track
       #
       # Therefore, we may register the `added` event above in one deploy, then
       # send a notification to admins that the UC is available in a later deploy.
-      #
-      # In the case of experimental being the promotion status (very rare outside
-      # sandbox/debugging sites), there is no previous status, so we can notify
-      # straight away.
       notify_at_status =
-        if SiteSetting.promote_upcoming_changes_on_status == "experimental"
-          :experimental
-        else
-          UpcomingChanges.previous_status(SiteSetting.promote_upcoming_changes_on_status)
-        end
+        UpcomingChanges.previous_status(SiteSetting.promote_upcoming_changes_on_status)
 
       if UpcomingChanges.meets_or_exceeds_status?(change_name, notify_at_status)
-        all_admins.each do |admin|
-          Notification.create!(
-            notification_type: Notification.types[:upcoming_change_available],
-            user_id: admin.id,
-            data: {
-              upcoming_change_name: change_name,
-              upcoming_change_humanized_name: SiteSetting.humanized_name(change_name),
-            }.to_json,
-          )
-        end
-
-        UpcomingChangeEvent.create!(
-          event_type: :admins_notified_available_change,
-          upcoming_change_name: change_name,
-        )
-
-        StaffActionLogger.new(Discourse.system_user).log_upcoming_change_available(change_name)
-
-        context[:notified_admins_for_added_changes] << change_name
+        notify_admins_of_available_change(change_name, all_admins:)
       end
     end
   end
@@ -163,27 +137,41 @@ class UpcomingChanges::Track
              upcoming_change_name: change_name,
              event_type: :admins_notified_available_change,
            )
-          all_admins.each do |admin|
-            Notification.create!(
-              notification_type: Notification.types[:upcoming_change_available],
-              user_id: admin.id,
-              data: {
-                upcoming_change_name: change_name,
-                upcoming_change_humanized_name: SiteSetting.humanized_name(change_name),
-              }.to_json,
-            )
-          end
-
-          UpcomingChangeEvent.create!(
-            event_type: :admins_notified_available_change,
-            upcoming_change_name: change_name,
-          )
-
-          StaffActionLogger.new(Discourse.system_user).log_upcoming_change_available(change_name)
-
-          context[:notified_admins_for_added_changes] << change_name
+          notify_admins_of_available_change(change_name, all_admins:)
         end
       end
     end
+  end
+
+  def notify_admins_of_available_change(change_name, all_admins:)
+    # Skip if change already meets promotion status - Promote service will handle it.
+    # We don't want to notify admins that a change is available then immediately tell
+    # them it's enabled.
+    if UpcomingChanges.meets_or_exceeds_status?(
+         change_name,
+         SiteSetting.promote_upcoming_changes_on_status.to_sym,
+       )
+      return
+    end
+
+    all_admins.each do |admin|
+      Notification.create!(
+        notification_type: Notification.types[:upcoming_change_available],
+        user_id: admin.id,
+        data: {
+          upcoming_change_name: change_name,
+          upcoming_change_humanized_name: SiteSetting.humanized_name(change_name),
+        }.to_json,
+      )
+    end
+
+    UpcomingChangeEvent.create!(
+      event_type: :admins_notified_available_change,
+      upcoming_change_name: change_name,
+    )
+
+    StaffActionLogger.new(Discourse.system_user).log_upcoming_change_available(change_name)
+
+    context[:notified_admins_for_added_changes] << change_name
   end
 end

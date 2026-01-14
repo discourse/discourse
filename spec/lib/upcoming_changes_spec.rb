@@ -222,8 +222,8 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".previous_status" do
-    it "returns nil for experimental (lowest status)" do
-      expect(described_class.previous_status(:experimental)).to be_nil
+    it "returns :experimental for experimental (lowest status)" do
+      expect(described_class.previous_status(:experimental)).to eq(:experimental)
     end
 
     it "returns :experimental for alpha" do
