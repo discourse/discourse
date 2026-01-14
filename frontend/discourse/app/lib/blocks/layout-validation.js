@@ -21,7 +21,7 @@ import {
   runCustomValidation,
   validateConstraints,
 } from "discourse/lib/blocks/constraint-validation";
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import { BlockError, raiseBlockError } from "discourse/lib/blocks/error";
 import { isBlockPermittedInOutlet } from "discourse/lib/blocks/outlet-matcher";
 import {
   OPTIONAL_MISSING,
@@ -532,8 +532,8 @@ export function validateEntryKeys(entry) {
     );
 
     const keyWord = unknownKeys.length > 1 ? "keys" : "key";
-    // Use first unknown key for the error path
-    raiseBlockError(
+    // Throw BlockError directly - wrapValidationError will add context
+    throw new BlockError(
       `Unknown entry ${keyWord}: ${suggestions.join(", ")}. ` +
         `Valid keys are: ${VALID_ENTRY_KEYS.join(", ")}.`,
       { path: unknownKeys[0] }
@@ -553,11 +553,10 @@ export function validateEntryTypes(entry) {
     const value = entry[field];
     if (value != null && !rule.validate(value)) {
       const actualType = rule.actual?.(value) ?? typeof value;
-      raiseBlockError(
+      // Throw BlockError directly - wrapValidationError will add context
+      throw new BlockError(
         `"${field}" must be ${rule.expected}, got ${actualType}.`,
-        {
-          path: field,
-        }
+        { path: field }
       );
     }
   }
