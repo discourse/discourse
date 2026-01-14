@@ -5,6 +5,12 @@ module Email
     def initialize(mail, remove_attachments: true, truncate: true, rejected: false)
       @mail = Mail.new(mail)
       @mail.charset = "UTF-8"
+      # The default sort order may incorrectly put postscripts to the message
+      # (e.g. such as those that might be appended by mailing lists as in
+      # https://meta.discourse.org/t/377793/21) ahead of "real content"
+      #
+      # default is: "text/plain", "text/enriched", "text/html", "multipart/alternative"
+      @mail.body.set_sort_order([])
       @remove_attachments = remove_attachments
       @truncate = truncate
       @rejected = rejected
