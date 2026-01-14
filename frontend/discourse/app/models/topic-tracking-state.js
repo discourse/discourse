@@ -671,59 +671,6 @@ export default class TopicTrackingState extends EmberObject {
     });
   }
 
-  /**
-   * Using the array of tags provided, tallies up all topics via forEachTracked
-   * that we are tracking, separated into new/unread/total.
-   *
-   * Total is only counted if opts.includeTotal is specified.
-   *
-   * Output (from input ["pending", "bug"]):
-   *
-   * {
-   *   pending: { unreadCount: 6, newCount: 1, totalCount: 10 },
-   *   bug: { unreadCount: 0, newCount: 4, totalCount: 20 }
-   * }
-   *
-   * @method countTags
-   * @param opts - Valid options:
-   *                 * includeTotal - When true, a totalCount is incremented for
-   *                                all topics matching a tag.
-   */
-  countTags(tags, opts = {}) {
-    let counts = {};
-
-    tags.forEach((tag) => {
-      counts[tag] = { unreadCount: 0, newCount: 0 };
-      if (opts.includeTotal) {
-        counts[tag].totalCount = 0;
-      }
-    });
-
-    this.forEachTracked(
-      (topic, newTopic, unreadTopic) => {
-        if (topic.tags && topic.tags.length > 0) {
-          tags.forEach((tag) => {
-            if (topic.tags.includes(tag)) {
-              if (unreadTopic) {
-                counts[tag].unreadCount++;
-              }
-              if (newTopic) {
-                counts[tag].newCount++;
-              }
-
-              if (opts.includeTotal) {
-                counts[tag].totalCount++;
-              }
-            }
-          });
-        }
-      },
-      { includeAll: opts.includeTotal }
-    );
-
-    return counts;
-  }
-
   countCategory(category_id, tagId) {
     let sum = 0;
     for (let topic of this.states.values()) {
