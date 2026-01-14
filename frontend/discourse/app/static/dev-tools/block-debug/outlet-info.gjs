@@ -57,7 +57,7 @@ export default class OutletInfo extends Component {
       @interactive={{true}}
       @placement="bottom-start"
       @maxWidth={{400}}
-      @triggers={{hash mobile=(array "click") desktop=(array "hover")}}
+      @triggers={{hash mobile=(array "click") desktop=(array "click" "hover")}}
       @untriggers={{hash mobile=(array "click") desktop=(array "click")}}
     >
       <:trigger>

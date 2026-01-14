@@ -16,7 +16,10 @@ module PageObjects
         def hover_outlet_badge(name = nil)
           selector =
             name ? ".block-outlet-debug[data-outlet-name='#{name}']" : ".block-outlet-debug"
-          first("#{selector} .block-outlet-debug__badge").hover
+          # Use JavaScript click to bypass any overlapping tooltip elements
+          page.execute_script(
+            "document.querySelector(\"#{selector} .block-outlet-debug__badge\").click()",
+          )
           self
         end
 
