@@ -197,6 +197,28 @@ describe "Reviewables", type: :system do
         expect(queued_post_reviewable.target_created_by).to be_nil
       end
 
+      it "removes all related reviewables from queue when deleting user with multiple queued posts" do
+        other_queued_post_reviewable =
+          Fabricate(
+            :reviewable_queued_post,
+            target_created_by: queued_post_reviewable.target_created_by,
+          )
+
+        refreshed_review_page.visit_review_index
+
+        expect(refreshed_review_page).to have_reviewable(queued_post_reviewable)
+        expect(refreshed_review_page).to have_reviewable(other_queued_post_reviewable)
+
+        refreshed_review_page.select_bundled_action(
+          queued_post_reviewable,
+          "delete_user",
+          "reject-post",
+        )
+
+        expect(refreshed_review_page).to have_no_reviewable(queued_post_reviewable)
+        expect(refreshed_review_page).to have_no_reviewable(other_queued_post_reviewable)
+      end
+
       it "allows revising and rejecting to send a PM to the user" do
         revise_modal = PageObjects::Modals::Base.new
 

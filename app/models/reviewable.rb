@@ -354,7 +354,7 @@ class Reviewable < ActiveRecord::Base
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
     guardian = args[:guardian] || Guardian.new(performed_by)
 
-    validate_action!(guardian, action_id, perform_method, args)
+    validate_action!(guardian, action_id, perform_method, args) unless args[:skip_validate_action]
 
     # Bundle needs to be determined before the action is performed, as bundles
     # are dynamic based on the state of the reviewable.
