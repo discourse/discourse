@@ -3,7 +3,7 @@
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
   def self.base_attrs
-    %i[topic_id post_id context subject ip_address previous_value new_value]
+    %i[topic_id post_id category_id context subject ip_address previous_value new_value]
   end
 
   def initialize(admin)
@@ -846,7 +846,12 @@ class StaffActionLogger
     ]
 
     UserHistory.create!(
-      params(opts).merge(action: UserHistory.actions[:post_rejected], details: details.join("\n")),
+      params(opts).merge(
+        action: UserHistory.actions[:post_rejected],
+        details: details.join("\n"),
+        topic_id: topic&.id,
+        category_id: reviewable.category_id,
+      ),
     )
   end
 
