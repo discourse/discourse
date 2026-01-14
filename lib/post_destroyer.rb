@@ -124,6 +124,9 @@ class PostDestroyer
     @topic.update_statistics
     Topic.publish_stats_to_clients!(@topic.id, :recovered)
 
+    @topic.reload
+    @topic.reset_bumped_at(@post) if @post.is_last_reply? && !@post.whisper?
+
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @topic.id) if @topic
@@ -139,7 +142,6 @@ class PostDestroyer
           @opts.slice(:context),
         )
       end
-      update_imap_sync(@post, false)
       if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
         Discourse.clear_urls!
       end
@@ -195,7 +197,6 @@ class PostDestroyer
         clear_user_posted_flag
       end
 
-      Topic.reset_highest(@post.topic_id)
       trash_public_post_actions
       trash_revisions
       trash_user_actions
@@ -236,6 +237,8 @@ class PostDestroyer
       end
 
       DB.after_commit do
+        Topic.reset_highest(@post.topic_id)
+
         if @opts[:reviewable]
           notify_deletion(
             @opts[:reviewable],
@@ -246,12 +249,15 @@ class PostDestroyer
             ignore(@post.reviewable_flag)
           end
         elsif reviewable = @post.reviewable_flag
-          @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
+          if @opts[:defer_flags]
+            ignore(reviewable)
+          else
+            agree(reviewable) unless reviewable.potentially_illegal?
+          end
         end
       end
     end
 
-    update_imap_sync(@post, true) if @post.topic&.deleted_at
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients!(permanent? ? :destroyed : :deleted) if @post.topic
     if @post.topic && @post.post_number == 1
@@ -288,6 +294,7 @@ class PostDestroyer
         @post.update_column(:user_deleted, true)
         @post.topic_links.each(&:destroy)
         @post.topic.update_column(:closed, true) if @post.is_first_post?
+        resolve_reviewables_for_author_deletion
       end
     end
   end
@@ -306,6 +313,8 @@ class PostDestroyer
     if last_revision.present? && last_revision.modifications["raw"].present?
       @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true)
     end
+
+    restore_reviewables_for_author_recovery if @user.id == @post.user_id
   end
 
   private
@@ -501,13 +510,6 @@ class PostDestroyer
     end
   end
 
-  def update_imap_sync(post, sync)
-    return if !SiteSetting.enable_imap
-    incoming = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id)
-    return if !incoming || !incoming.imap_uid
-    incoming.update(imap_sync: sync)
-  end
-
   def update_post_counts(operator)
     counts =
       Post
@@ -532,6 +534,39 @@ class PostDestroyer
           )
         end
       end
+    end
+  end
+
+  def resolve_reviewables_for_author_deletion
+    reviewables = Reviewable.where(target: @post, status: Reviewable.statuses[:pending])
+
+    reviewables.each do |reviewable|
+      reviewable.reviewable_notes.create!(
+        user: Discourse.system_user,
+        content: I18n.t("reviewables.post_deleted_by_author"),
+      )
+
+      reviewable.transition_to(:ignored, Discourse.system_user)
+    end
+  end
+
+  def restore_reviewables_for_author_recovery
+    # Only restore if it was reviewed by system user
+    reviewables =
+      Reviewable
+        .where(target: @post, status: Reviewable.statuses[:ignored])
+        .joins(
+          "LEFT JOIN reviewable_scores ON reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewed_by_id = #{Discourse::SYSTEM_USER_ID}",
+        )
+        .where("reviewable_scores.id IS NOT NULL")
+
+    reviewables.each do |reviewable|
+      reviewable.reviewable_notes.create!(
+        user: Discourse.system_user,
+        content: I18n.t("reviewables.post_restored_by_author"),
+      )
+
+      reviewable.transition_to(:pending, Discourse.system_user)
     end
   end
 end

@@ -1,5 +1,6 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -51,7 +52,7 @@ export default class UserActivityBookmarks extends DiscourseRoute {
         await Bookmark.applyTransformations(bookmarks);
         const loadMoreUrl = response.user_bookmark_list.more_bookmarks_url;
 
-        const model = { bookmarks, loadMoreUrl };
+        const model = { bookmarks: new TrackedArray(bookmarks), loadMoreUrl };
         this.session.set("bookmarksModel", model);
         return model;
       })

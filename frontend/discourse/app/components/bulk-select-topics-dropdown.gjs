@@ -9,10 +9,10 @@ import BulkTopicActions, {
 } from "discourse/components/modal/bulk-topic-actions";
 import DismissNew from "discourse/components/modal/dismiss-new";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 const _customButtons = [];
 const _customOnSelection = {};
@@ -148,7 +148,13 @@ export default class BulkSelectTopicsDropdown extends Component {
       },
     ];
 
-    return [...options, ..._customButtons].filter(({ visible }) => {
+    const excludedButtonIds = this.args.excludedButtonIds || [];
+    const baseOptions = [...options, ..._customButtons].filter(
+      (button) => !excludedButtonIds.includes(button.id)
+    );
+    const extraButtons = this.args.extraButtons || [];
+
+    return [...baseOptions, ...extraButtons].filter(({ visible }) => {
       if (visible) {
         return visible({
           topics: this.args.bulkSelectHelper.selected,
@@ -287,6 +293,11 @@ export default class BulkSelectTopicsDropdown extends Component {
               setComponent: _customOnSelection[actionId].setComponent,
             }
           );
+          return;
+        }
+
+        if (this.args.onAction) {
+          this.args.onAction(actionId);
         }
     }
   }

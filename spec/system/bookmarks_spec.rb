@@ -2,9 +2,11 @@
 
 describe "Bookmarking posts and topics", type: :system do
   fab!(:topic)
+  fab!(:topic_2, :topic)
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is some post to bookmark") }
   fab!(:post_2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
+  fab!(:post_3) { Fabricate(:post, topic: topic_2, raw: "Check out this [topic](/t/#{topic.id})") }
 
   let(:timezone) { "Australia/Brisbane" }
   let(:cdp) { PageObjects::CDP.new }
@@ -115,6 +117,16 @@ describe "Bookmarking posts and topics", type: :system do
       expect(bookmark_modal.custom_time_picker.value).to eq(
         bookmark.reminder_at_in_zone(timezone).strftime("%H:%M"),
       )
+    end
+
+    it "bookmark button is topic specific" do
+      topic_page.visit_topic(topic_2)
+      topic_page.click_topic_bookmark_button
+      expect(topic_page).to have_topic_bookmarked(topic_2)
+
+      # transition to another topic w/o refreshing the page
+      find("a[href='/t/#{topic.id}']").click
+      expect(topic_page).to have_no_bookmarks(topic)
     end
   end
 

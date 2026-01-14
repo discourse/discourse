@@ -24,7 +24,10 @@ import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
+import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
+import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
+import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
 import { buildCommands, buildCustomState } from "../core/commands";
 import { buildInputRules } from "../core/inputrules";
 import { buildKeymap } from "../core/keymap";
@@ -77,6 +80,7 @@ export default class ProsemirrorEditor extends Component {
   @service site;
   @service siteSettings;
   @service appEvents;
+  @service currentUser;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -173,7 +177,7 @@ export default class ProsemirrorEditor extends Component {
         )
       ),
       keymap(baseKeymap),
-      dropCursor({ color: "var(--primary)" }),
+      dropCursor({ color: "var(--tertiary-high)", width: 4 }),
       gapCursor(),
       history(),
       ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),
@@ -206,13 +210,40 @@ export default class ProsemirrorEditor extends Component {
         this.textManipulation.updateState();
       },
       handleDOMEvents: {
-        focus: () => {
+        focus: (view) => {
+          if (this.capabilities.isIOS) {
+            // prevents ios to attempt to scroll
+            focusOffScreen(view.dom);
+          }
+
           this.args.focusIn?.();
           return false;
         },
         blur: () => {
           next(() => this.args.focusOut?.());
           return false;
+        },
+        paste: (view, event) => {
+          // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
+          // which is originally responsible for preventDefault.
+          if (
+            event.clipboardData.files.length > 0 &&
+            !authorizesOneOrMoreExtensions(
+              this.currentUser.staff,
+              this.siteSettings
+            )
+          ) {
+            event.preventDefault();
+          }
+        },
+        drop: (view, event) => {
+          if (
+            [...event.dataTransfer.items].some((item) => item.kind === "file")
+          ) {
+            // Skip processing the drop event (e.g. Safari cross-window content drag),
+            // Uppy's DropTarget should handle that instead.
+            return true;
+          }
         },
       },
       handleKeyDown: (view, event) => {
@@ -242,7 +273,32 @@ export default class ProsemirrorEditor extends Component {
 
   @bind
   convertFromMarkdown(markdown) {
-    return this.parser.convert(this.schema, markdown);
+    try {
+      return this.parser.convert(this.schema, markdown);
+    } catch (e) {
+      if (e instanceof UnsupportedTokenError) {
+        this.dialog.alert({
+          message: i18n("composer.unsupported_token"),
+          didConfirm: this.args.toggleRichEditor,
+          didCancel: this.args.toggleRichEditor,
+        });
+
+        return this.schema.nodes.paragraph.create(
+          null,
+          markdown
+            // our html_block avoids double newlines
+            // because markdown-it closes the html block parsing at double newlines
+            .split("\n\n")
+            .filter(Boolean)
+            .map((line) =>
+              // this creates a dependency on having a html_block in the schema
+              this.schema.nodes.html_block.create(null, this.schema.text(line))
+            )
+        );
+      }
+
+      throw e;
+    }
   }
 
   @bind
@@ -255,7 +311,7 @@ export default class ProsemirrorEditor extends Component {
     }
 
     try {
-      const doc = this.convertFromMarkdown(value);
+      const doc = this.parser.convert(this.schema, value);
 
       const tr = this.view.state.tr;
       tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(
@@ -304,9 +360,10 @@ export default class ProsemirrorEditor extends Component {
       {{didUpdate this.convertFromValue @value}}
       {{didUpdate this.updateContext "placeholder" @placeholder}}
       {{willDestroy this.teardown}}
+      {{forceScrollingElementPosition}}
     ></div>
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
-      {{#in-element nodeView.dom insertBefore=null}}
+      {{~#in-element nodeView.dom insertBefore=null~}}
         <nodeView.component
           @node={{nodeView.node}}
           @view={{nodeView.view}}
@@ -314,7 +371,7 @@ export default class ProsemirrorEditor extends Component {
           @dom={{nodeView.dom}}
           @onSetup={{nodeView.setComponentInstance}}
         />
-      {{/in-element}}
+      {{~/in-element~}}
     {{/each}}
   </template>
 }

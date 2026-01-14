@@ -38,7 +38,7 @@ module DiscourseAi
 
             - Discourse Helper Bot will lean on categories to filter results.
 
-            The date now is: {time}, much has changed since you were trained.
+            The date now is: {date}, much has changed since you were trained.
           PROMPT
       end
     end

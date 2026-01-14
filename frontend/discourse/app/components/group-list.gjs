@@ -4,7 +4,6 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import GroupCard from "discourse/components/group-card";
@@ -13,8 +12,9 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import withEventValue from "discourse/helpers/with-event-value";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class GroupList extends Component {
   @service currentUser;
@@ -27,7 +27,7 @@ export default class GroupList extends Component {
 
   @action
   loadMore() {
-    this.args.groups && this.args.groups.loadMore();
+    this.args.groups?.loadMore();
   }
 
   get types() {
@@ -86,13 +86,17 @@ export default class GroupList extends Component {
         </div>
       </div>
 
-      {{#if @groups}}
+      {{#if @groups.content}}
         <LoadMore @action={{this.loadMore}}>
           <div class="container">
             <div class="groups-boxes">
-              {{#each @groups as |group|}}
+              {{#each @groups.content as |group|}}
                 <GroupCard @group={{group}} />
               {{/each}}
+              <PluginOutlet
+                @name="groups-boxes-additional-cards"
+                @connectorTagName="div"
+              />
             </div>
           </div>
         </LoadMore>

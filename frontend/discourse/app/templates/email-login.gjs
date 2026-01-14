@@ -1,11 +1,9 @@
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
-import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -47,10 +45,7 @@ export default <template>
                   @isLogin={{true}}
                 >
                   <SecondFactorInput
-                    {{on
-                      "input"
-                      (withEventValue (fn (mut @controller.secondFactorToken)))
-                    }}
+                    @onChange={{fn (mut @controller.secondFactorToken)}}
                     @secondFactorMethod={{@controller.secondFactorMethod}}
                     value={{@controller.secondFactorToken}}
                   />

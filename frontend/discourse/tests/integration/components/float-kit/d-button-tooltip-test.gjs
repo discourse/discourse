@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DButton from "discourse/components/d-button";
+import DButtonTooltip from "discourse/float-kit/components/d-button-tooltip";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DButtonTooltip from "float-kit/components/d-button-tooltip";
-import DTooltip from "float-kit/components/d-tooltip";
 
 module(
   "Integration | Component | FloatKit | d-button-tooltip",

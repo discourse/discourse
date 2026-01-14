@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
+import { eq } from "discourse/truth-helpers";
 import Dropdown from "./dropdown";
 import UserDropdown from "./user-dropdown";
 
@@ -18,7 +19,10 @@ function resetHeaderIcons() {
   headerIcons.add("search");
   headerIcons.add("hamburger", undefined, { after: "search" });
   headerIcons.add("user-menu", undefined, { after: "hamburger" });
-  headerIcons.add("interface-color-selector", undefined, { before: "search" });
+  headerIcons.add("interface-color-selector", undefined, {
+    before: "search",
+    after: "language-switcher",
+  });
   headerIcons.add("language-switcher", undefined, { before: "search" });
 }
 
@@ -77,6 +81,10 @@ export default class Icons extends Component {
   }
 
   get showLanguageSwitcher() {
+    if (!this.siteSettings.content_localization_enabled) {
+      return false;
+    }
+
     const has_locales =
       !!this.siteSettings.content_localization_supported_locales;
     switch (this.siteSettings.content_localization_language_switcher) {
@@ -110,10 +118,10 @@ export default class Icons extends Component {
               @icon="magnifying-glass"
               @iconId={{@searchButtonId}}
               @onClick={{@toggleSearchMenu}}
+              @onWillDestroy={{fn @toggleSearchMenu null false}}
               @active={{this.search.visible}}
               @href={{getURL "/search"}}
-              @className="search-dropdown"
-              @targetSelector=".search-menu-panel"
+              class="search-dropdown"
             />
           {{/if}}
         {{else if (eq entry.key "hamburger")}}
@@ -124,7 +132,7 @@ export default class Icons extends Component {
               @iconId="toggle-hamburger-menu"
               @active={{this.header.hamburgerVisible}}
               @onClick={{this.toggleHamburger}}
-              @className="hamburger-dropdown"
+              class="hamburger-dropdown"
             />
           {{/if}}
         {{else if (eq entry.key "user-menu")}}

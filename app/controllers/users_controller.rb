@@ -126,18 +126,14 @@ class UsersController < ApplicationController
     user_serializer = nil
     if !current_user&.staff? && !@user.active?
       user_serializer = InactiveUserSerializer.new(@user, scope: guardian, root: "user")
+      assign_topic_post_count(user_serializer) if for_card
     elsif !guardian.can_see_profile?(@user)
       user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
+      assign_topic_post_count(user_serializer) if for_card
     else
       serializer_class = for_card ? UserCardSerializer : UserSerializer
       user_serializer = serializer_class.new(@user, scope: guardian, root: "user")
-
-      topic_id = params[:include_post_count_for].to_i
-      if topic_id != 0 && guardian.can_see?(Topic.find_by_id(topic_id))
-        user_serializer.topic_post_count = {
-          topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count,
-        }
-      end
+      assign_topic_post_count(user_serializer)
     end
 
     track_visit_to_user_profile if !params[:skip_track_visit] && (@user != current_user)
@@ -1263,6 +1259,7 @@ class UsersController < ApplicationController
       params[:include_staged_users],
     )
     options[:last_seen_users] = !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
+    options[:can_review] = !!ActiveModel::Type::Boolean.new.cast(params[:can_review])
 
     if limit = fetch_limit_from_params(default: nil, max: SEARCH_USERS_LIMIT)
       options[:limit] = limit
@@ -2077,6 +2074,15 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def assign_topic_post_count(user_serializer)
+    topic_id = params[:include_post_count_for].to_i
+    if topic_id != 0 && guardian.can_see?(Topic.find_by_id(topic_id))
+      user_serializer.topic_post_count = {
+        topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count,
+      }
+    end
+  end
 
   def clean_custom_field_values(field)
     field_values = params[:user_fields][field.id.to_s]

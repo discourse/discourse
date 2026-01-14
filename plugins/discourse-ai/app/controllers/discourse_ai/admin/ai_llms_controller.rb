@@ -84,7 +84,10 @@ module DiscourseAi
         handle_feature_credit_costs_update(llm_model)
 
         if llm_model.seeded?
-          return render_json_error(I18n.t("discourse_ai.llm.cannot_edit_builtin"), status: 403)
+          # For seeded models, only allow quota/credit updates (already handled above)
+          # Return success with updated model, don't allow other param changes
+          log_llm_model_update(llm_model, initial_attributes, initial_quotas)
+          return render json: LlmModelSerializer.new(llm_model)
         end
 
         if llm_model.update(ai_llm_params(updating: llm_model))
@@ -127,8 +130,7 @@ module DiscourseAi
         }
 
         # Clean up companion users
-        llm_model.enabled_chat_bot = false
-        llm_model.toggle_companion_user
+        llm_model.cleanup_companion_user
 
         if llm_model.destroy
           log_llm_model_deletion(model_details)
@@ -140,6 +142,15 @@ module DiscourseAi
 
       def test
         RateLimiter.new(current_user, "llm_test_#{current_user.id}", 3, 1.minute).performed!
+
+        # For seeded models, test the existing model directly since provider/url/api_key are hidden
+        if params.dig(:ai_llm, :id).present?
+          existing_model = LlmModel.find_by(id: params[:ai_llm][:id])
+          if existing_model&.seeded?
+            DiscourseAi::Configuration::LlmValidator.new.run_test(existing_model)
+            return render json: { success: true }
+          end
+        end
 
         # We don't care about the display_name attr for testing.
         llm_model = LlmModel.new(ai_llm_params.merge(display_name: "LLM test"))
@@ -174,7 +185,7 @@ module DiscourseAi
 
         allocation = params[:ai_llm][:llm_credit_allocation]
         {
-          monthly_credits: allocation[:monthly_credits].to_i,
+          daily_credits: allocation[:daily_credits].to_i,
           soft_limit_percentage: allocation[:soft_limit_percentage].to_i,
         }
       end
@@ -199,11 +210,11 @@ module DiscourseAi
             :max_prompt_tokens,
             :max_output_tokens,
             :api_key,
-            :enabled_chat_bot,
             :vision_enabled,
             :input_cost,
             :cached_input_cost,
             :output_cost,
+            allowed_attachment_types: [],
           )
 
         provider = updating ? updating.provider : permitted[:provider]
@@ -246,8 +257,6 @@ module DiscourseAi
           max_prompt_tokens: {
           },
           max_output_tokens: {
-          },
-          enabled_chat_bot: {
           },
           vision_enabled: {
           },
@@ -318,9 +327,7 @@ module DiscourseAi
         return unless llm_model.seeded? && params[:ai_llm].key?(:llm_credit_allocation)
 
         if credit_allocation_params
-          allocation =
-            llm_model.llm_credit_allocation ||
-              llm_model.build_llm_credit_allocation(last_reset_at: Time.current)
+          allocation = llm_model.llm_credit_allocation || llm_model.build_llm_credit_allocation
           allocation.update!(credit_allocation_params)
         elsif llm_model.llm_credit_allocation
           llm_model.llm_credit_allocation.destroy

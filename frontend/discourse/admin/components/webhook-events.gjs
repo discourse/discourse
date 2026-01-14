@@ -8,7 +8,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { not } from "truth-helpers";
+import WebhookEvent from "discourse/admin/components/webhook-event";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import CountI18n from "discourse/components/count-i18n";
 import DButton from "discourse/components/d-button";
@@ -16,19 +16,20 @@ import LoadMore from "discourse/components/load-more";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import WebhookEvent from "admin/components/webhook-event";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class WebhookEvents extends Component {
   @service messageBus;
   @service store;
   @service dialog;
 
-  @tracked pingEnabled = true;
   @tracked events = [];
-  @tracked incomingEventIds = [];
+  @tracked pingEnabled = true;
   @tracked redeliverEnabled = true;
+  @trackedArray incomingEventIds = [];
 
   @readOnly("incomingEventIds.length") incomingCount;
   @gt("incomingCount", 0) hasIncoming;
@@ -104,7 +105,9 @@ export default class WebhookEvents extends Component {
     }
 
     if (data.type === "redelivered") {
-      const event = this.events.find((e) => e.id === data.web_hook_event.id);
+      const event = this.events.content.find(
+        (e) => e.id === data.web_hook_event.id
+      );
 
       event.setProperties({
         response_body: data.web_hook_event.response_body,
@@ -116,13 +119,15 @@ export default class WebhookEvents extends Component {
     }
 
     if (data.type === "redelivery_failed") {
-      const event = this.events.find((e) => e.id === data.web_hook_event_id);
+      const event = this.events.content.find(
+        (e) => e.id === data.web_hook_event_id
+      );
       event.set("redelivering", false);
       return;
     }
 
     if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
-      this.incomingEventIds.pushObject(data.web_hook_event_id);
+      this.incomingEventIds.push(data.web_hook_event_id);
     }
   }
 
@@ -138,7 +143,7 @@ export default class WebhookEvents extends Component {
     const objects = data.map((webhookEvent) =>
       this.store.createRecord("web-hook-event", webhookEvent)
     );
-    this.events.unshiftObjects(objects);
+    this.events.content.unshift(...objects);
     this.incomingEventIds = [];
   }
 
@@ -181,7 +186,7 @@ export default class WebhookEvents extends Component {
           );
           if (response.event_ids?.length) {
             response.event_ids.map((id) => {
-              const event = this.events.find((e) => e.id === id);
+              const event = this.events.content.find((e) => e.id === id);
               event.set("redelivering", true);
             });
           } else {
@@ -230,7 +235,7 @@ export default class WebhookEvents extends Component {
         />
       </div>
 
-      {{#if this.events}}
+      {{#if this.events.content}}
         <LoadMore @action={{this.loadMore}}>
           <div class="web-hook-events content-list">
             <div class="heading-container">
@@ -266,7 +271,7 @@ export default class WebhookEvents extends Component {
             {{/if}}
 
             <ul>
-              {{#each this.events as |event|}}
+              {{#each this.events.content as |event|}}
                 <WebhookEvent @event={{event}} />
               {{/each}}
             </ul>

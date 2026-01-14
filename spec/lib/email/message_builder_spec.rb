@@ -111,6 +111,10 @@ RSpec.describe Email::MessageBuilder do
     expect(header_args["X-Auto-Response-Suppress"]).to eq("All")
   end
 
+  it "disables Outlook's reaction via email feature" do
+    expect(header_args["x-ms-reactions"]).to eq("disallow")
+  end
+
   describe "include_respond_instructions" do
     context "when include_respond_instructions is false" do
       let(:private_reply) { false }
@@ -536,7 +540,15 @@ RSpec.describe Email::MessageBuilder do
     it "has the body rendered from a template" do
       I18n
         .expects(:t)
-        .with("mystery.text_body_template", templated_builder.template_args)
+        .with(
+          "mystery.text_body_template",
+          templated_builder.template_args.merge(
+            optional_re: "",
+            optional_pm: "",
+            optional_cat: "",
+            optional_tags: "",
+          ),
+        )
         .returns(rendered_template)
       expect(templated_builder.body).to eq(rendered_template)
     end

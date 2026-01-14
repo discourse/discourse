@@ -1,6 +1,6 @@
+import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import SiteSetting from "admin/models/site-setting";
 
 export default class ThemeSettings extends SiteSetting {
   async updateSetting(themeId, newValue) {

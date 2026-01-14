@@ -1,20 +1,22 @@
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import SecretValueList from "discourse/admin/components/secret-value-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import SecretValueList from "admin/components/secret-value-list";
 
 module("Integration | Component | secret-value-list", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {
     this.set("setValidationMessage", () => {});
+    this.set("changeValueCallback", (values) => this.set("values", values));
 
     await render(
       <template>
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
+          @changeValueCallback={{this.changeValueCallback}}
         />
       </template>
     );
@@ -62,12 +64,14 @@ module("Integration | Component | secret-value-list", function (hooks) {
       this.set("message", message);
     };
     this.set("setValidationMessage", setValidationMessage);
+    this.set("changeValueCallback", (values) => this.set("values", values));
 
     await render(
       <template>
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
+          @changeValueCallback={{this.changeValueCallback}}
         />
       </template>
     );
@@ -95,12 +99,14 @@ module("Integration | Component | secret-value-list", function (hooks) {
 
   test("changing a value", async function (assert) {
     this.set("setValidationMessage", () => {});
+    this.set("changeValueCallback", (values) => this.set("values", values));
 
     await render(
       <template>
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
+          @changeValueCallback={{this.changeValueCallback}}
         />
       </template>
     );
@@ -135,12 +141,14 @@ module("Integration | Component | secret-value-list", function (hooks) {
 
   test("removing a value", async function (assert) {
     this.set("setValidationMessage", () => {});
+    this.set("changeValueCallback", (values) => this.set("values", values));
 
     await render(
       <template>
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
+          @changeValueCallback={{this.changeValueCallback}}
         />
       </template>
     );

@@ -1,4 +1,5 @@
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
+import { getReviewBadgeText } from "discourse/lib/sidebar/helpers/review-badge-helper";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewSectionLink extends BaseSectionLink {
@@ -26,13 +27,7 @@ export default class ReviewSectionLink extends BaseSectionLink {
   }
 
   get badgeText() {
-    // force a tracker for reviewable_count by using .get to ensure badgeText
-    // rerenders when reviewable_count changes
-    if (this.currentUser?.get("reviewable_count") > 0) {
-      return i18n("sidebar.sections.community.links.review.pending_count", {
-        count: this.currentUser.reviewable_count,
-      });
-    }
+    return getReviewBadgeText(this.currentUser);
   }
 
   get defaultPrefixValue() {

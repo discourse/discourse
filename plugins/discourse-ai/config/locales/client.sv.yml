@@ -42,7 +42,7 @@ sv:
         groups: "Grupper:"
         no_persona: "Inte inställd"
         no_groups: "Ingen"
-        edit: "Redigera"
+        edit: "Inställningar"
         expand_list:
           one: "(ytterligare %{count})"
           other: "(ytterligare %{count})"
@@ -60,6 +60,16 @@ sv:
         table: "Tabell"
       translations:
         title: "Översättningar"
+        stats:
+          eta_minutes:
+            one: "%{count} minut"
+            other: "%{count} minuter"
+          eta_hours:
+            one: "%{count} timme"
+            other: "%{count} timmar"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dagar"
         progress_chart:
           bar_done:
             one: "%{count} inlägg"
@@ -75,6 +85,7 @@ sv:
         summary: "Sammanfattning"
         username: "Användarnamn"
         total_requests: "Totalt antal efterfrågningar"
+        total: "Totalt"
         periods:
           last_day: "Senaste 24 timmarna"
           custom: "Anpassad..."
@@ -153,6 +164,7 @@ sv:
         thumbnail_suggestions:
           select: "Välj"
           selected: "Markerat"
+          try_again: "Försök igen"
         image_caption:
           save_caption: "Spara"
       embeddings:

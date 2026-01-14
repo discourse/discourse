@@ -40,7 +40,7 @@ nb_NO:
         groups: "Grupper:"
         no_persona: "Ikke angitt"
         no_groups: "Ingen"
-        edit: "Rediger"
+        edit: "Innstillinger"
         expand_list:
           one: "(%{count} mer)"
           other: "(%{count} mer)"
@@ -56,6 +56,16 @@ nb_NO:
         select_option: "Velg et alternativ..."
       translations:
         title: "Oversettelser"
+        stats:
+          eta_minutes:
+            one: "%{count} minutt"
+            other: "%{count} minutter"
+          eta_hours:
+            one: "%{count} time"
+            other: "%{count} timer"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dager"
         progress_chart:
           bar_done:
             one: "%{count} innlegg"
@@ -70,6 +80,7 @@ nb_NO:
         summary: "Sammendrag"
         username: "Brukernavn"
         total_requests: "Totalt forespørsler"
+        total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
       ai_persona:
@@ -142,6 +153,7 @@ nb_NO:
           cancel: "Avbryt"
         thumbnail_suggestions:
           select: "Velg"
+          try_again: "Prøv igjen"
         image_caption:
           save_caption: "Lagre"
       embeddings:

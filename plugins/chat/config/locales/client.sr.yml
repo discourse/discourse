@@ -23,6 +23,7 @@ sr:
       channel_settings:
         edit: "Izmeni"
         add: "Dodaj"
+        notification_settings_context: "Obaveštenja"
       close: "Zatvori"
       remove: "Ukloni"
       collapse: "Skupi okvir za chat"
@@ -62,6 +63,7 @@ sr:
         tabs:
           members: Članovi
           settings: Podešavanja
+          search: Pretraži
         remove_member: "Ukloni"
       new_message_modal:
         filter: "Filter"
@@ -87,6 +89,12 @@ sr:
         category_label: "Kategorija"
         history_label: "Istorija"
         members_label: "Članovi"
+      search:
+        short_title: Pretraži
+        no_results: "Nema pronađenih rezultata"
+        sort:
+          relevance: "Relevantnost"
+          latest: "Poslednje"
       channel_list:
         title: "Kanali"
       incoming_webhooks:

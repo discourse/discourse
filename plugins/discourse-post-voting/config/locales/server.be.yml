@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 be:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Ніякіх дзеянняў"
+        agree_and_suspend:
+          description: "Пагадзіцеся са сцягамі і падвесіць карыстальнік."
+        agree_and_silence:
+          description: "Пагадзіцеся са сцягамі і маўчанне карыстальніка."
   post_action_types:
     vote:
       title: "Галасаваць"
@@ -18,8 +27,6 @@ be:
           agree_and_silence:
             title: "Silence Карыстальнік"
             description: "Пагадзіцеся са сцягамі і маўчанне карыстальніка."
-          disagree:
-            title: "не згаджацца"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

@@ -1,0 +1,30 @@
+{
+  "include": [
+    "./app/**/*",
+    "./tests/**/*",
+    "./admin/**/*",
+    "./select-kit/**/*",
+    "./float-kit/**/*",
+    "./truth-helpers/**/*",
+    "./dialog-holder/**/*",
+    "./config/environment.js"
+  ],
+  "exclude": ["./tests/unit/utils/decorators-test.js"],
+  "extends": "../../tsconfig-base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "./",
+    "outDir": "../discourse-types/declarations",
+    "types": ["ember-source/types"],
+    "paths": {
+      "discourse/tests/*": ["./tests/*"],
+      "discourse/admin/*": ["./admin/*"],
+      "discourse/select-kit/*": ["./select-kit/*"],
+      "discourse/float-kit/*": ["./float-kit/*"],
+      "discourse/truth-helpers/*": ["./truth-helpers/*"],
+      "discourse/truth-helpers": ["./truth-helpers/index.js"],
+      "discourse/dialog-holder/*": ["./dialog-holder/*"],
+      "discourse/*": ["./app/*"],
+    }
+  }
+}

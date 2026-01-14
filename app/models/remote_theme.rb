@@ -419,7 +419,12 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_theme_color_schemes(theme, schemes)
-    existing_schemes = ColorScheme.unscoped.where(theme_id: theme.id)
+    existing_schemes =
+      if theme.id
+        ColorScheme.unscoped.where(theme_id: theme.id)
+      else
+        []
+      end
 
     missing_scheme_names =
       existing_schemes.reduce({}) do |hash, cs|

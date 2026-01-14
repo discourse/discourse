@@ -81,6 +81,7 @@ nl:
         join_channel: "Deelnemen aan kanaal"
         leave_channel: "Kanaal verlaten"
         leave_groupchat_info: "Als je deze groepschat verlaat, heb je er geen toegang meer toe en ontvang je geen meldingen meer. Om weer deel te kunnen nemen, moet je opnieuw worden uitgenodigd door een lid van de groepschat."
+        notification_settings_context: "Meldingen"
         join: "Deelnemen"
         leave: "Verlaten"
         save_label:
@@ -128,7 +129,6 @@ nl:
       email_frequency:
         description: "We sturen alleen een e-mail als we je de afgelopen 15 minuten niet hebben gezien."
         never: "Nooit"
-        title: "E-mailmeldingen"
         when_away: "Alleen wanneer afwezig"
       header_indicator_preference:
         title: "Activiteitsindicator weergeven in kop"
@@ -141,10 +141,8 @@ nl:
       send_shortcut:
         enter:
           label: "Verzenden met Enter"
-          description: "Nieuwe regel met Shift + Enter"
         meta_enter:
           label: "Verzenden met %{meta_key} + Enter"
-          description: "Nieuwe regel met Enter"
       enable: "Chat inschakelen"
       flag: "Markeren"
       emoji: "Emoji invoegen"
@@ -239,12 +237,11 @@ nl:
       no_public_channels: "Je neemt nog niet deel aan kanalen!"
       no_public_channels_cta: "Kanalen bekijken"
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
+      chat_notifications_title: "Chatmeldingen"
       only_chat_push_notifications:
         title: "Alleen chatpushmeldingen sturen"
-        description: "Blokkeer de verzending van alle niet-chatpushmeldingen"
       ignore_channel_wide_mention:
         title: "Kanaalbrede vermeldingen negeren"
-        description: "Stuur geen meldingen voor kanaalbrede vermeldingen (@here en @all)"
       show_thread_title_prompts:
         title: "Threadtitelvragen weergeven"
         description: "Geef vragen weer om een titel in te stellen voor nieuwe threads"
@@ -326,6 +323,8 @@ nl:
       chat_message_separator:
         today: Vandaag
         yesterday: Gisteren
+      search_view:
+        filter_placeholder: Zoeken in berichten
       members_view:
         filter_placeholder: Leden zoeken
         add_member: Lid toevoegen
@@ -342,6 +341,7 @@ nl:
         tabs:
           members: Leden
           settings: Instellingen
+          search: Zoeken
         remove_member: "Verwijderen"
       new_message_modal:
         title: Bericht sturen
@@ -433,6 +433,7 @@ nl:
           topic: "Topic"
       reviewable:
         type: "Chatbericht"
+        message_in_channel: "Kanaal"
       reactions:
         only_you: "<span>Je hebt gereageerd met </span>:%{emoji}:"
         you_and_single_user: "<span>Jij en %{username} hebben gereageerd met </span>:%{emoji}:"
@@ -495,6 +496,12 @@ nl:
           create_export: "Export maken"
           confirm_export: "Hiermee worden alle berichten van alle kanalen geëxporteerd en wordt het resultaat naar jou gestuurd in een persoonlijk bericht. Weet je zeker dat je wilt exporteren?"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
+      search:
+        short_title: Zoeken
+        no_results: "Geen resultaten gevonden"
+        sort:
+          relevance: "Relevantie"
+          latest: "Recent"
       my_threads:
         title: Mijn threads
         aria_label: "Wisselen naar mijn threadslijst"

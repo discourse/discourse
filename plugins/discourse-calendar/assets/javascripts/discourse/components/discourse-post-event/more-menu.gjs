@@ -5,6 +5,7 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -12,7 +13,6 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { cook } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 import { buildParams, replaceRaw } from "../../lib/raw-event-helper";
 import PostEventBuilder from "../modal/post-event-builder";
 import PostEventBulkInvite from "../modal/post-event-bulk-invite";
@@ -80,10 +80,10 @@ export default class DiscoursePostEventMoreMenu extends Component {
         {
           startsAt: event.startsAt,
           endsAt: event.endsAt,
+          timezone: event.timezone,
         },
       ],
       {
-        rrule: event.rrule,
         location: event.location,
         details: event.description,
       }
@@ -190,6 +190,48 @@ export default class DiscoursePostEventMoreMenu extends Component {
     this.modal.show(PostEventBuilder, {
       model: {
         event: this.args.event,
+        onDelete: async (event) => {
+          const post = await this.store.find("post", event.id);
+          const raw = post.raw;
+
+          const eventRegex = new RegExp(
+            `\\[event\\s(.*?)\\]\\n\\[\\/event\\]`,
+            "m"
+          );
+          const newRaw = raw.replace(eventRegex, "");
+
+          const props = {
+            raw: newRaw,
+            edit_reason: i18n("discourse_post_event.destroy_event"),
+          };
+
+          const cooked = await cook(newRaw);
+          props.cooked = cooked.string;
+
+          return await post.save(props);
+        },
+        onUpdate: async (startsAt, endsAt, event, siteSettings) => {
+          const post = await this.store.find("post", event.id);
+          const raw = post.raw;
+          const eventParams = buildParams(
+            startsAt,
+            endsAt,
+            event,
+            siteSettings
+          );
+          const newRaw = replaceRaw(eventParams, raw);
+          if (newRaw) {
+            const props = {
+              raw: newRaw,
+              edit_reason: i18n("discourse_post_event.edit_reason"),
+            };
+
+            const cooked = await cook(newRaw);
+            props.cooked = cooked.string;
+
+            return await post.save(props);
+          }
+        },
       },
     });
   }
@@ -368,7 +410,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
                     @label="discourse_post_event.close_event"
                     @action={{this.closeEvent}}
                     @disabled={{this.isSavingEvent}}
-                    class="btn-transparent btn-danger"
+                    class="btn-transparent --danger"
                   />
                 </dropdown.item>
               {{/unless}}

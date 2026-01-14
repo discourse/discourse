@@ -3,7 +3,13 @@
 module DiscourseReactions::PostsReactionLoader
   def posts_with_reactions
     if SiteSetting.discourse_reactions_enabled
-      posts = object.posts.includes(:post_actions, reactions: { reaction_users: :user })
+      posts = object.posts
+
+      ActiveRecord::Associations::Preloader.new(
+        records: posts,
+        associations: [:post_actions, { reactions: { reaction_users: :user } }],
+      ).call
+
       post_ids = posts.map(&:id).uniq
       posts_reaction_users_count = TopicViewSerializer.posts_reaction_users_count(post_ids)
       post_actions_with_reaction_users =
@@ -14,8 +20,6 @@ module DiscourseReactions::PostsReactionLoader
         post.reaction_users_count = posts_reaction_users_count[post.id].to_i
         post.post_actions_with_reaction_users = post_actions_with_reaction_users[post.id] || {}
       end
-
-      object.instance_variable_set(:@posts, posts)
     end
   end
 end

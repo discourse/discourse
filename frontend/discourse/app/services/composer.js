@@ -48,6 +48,8 @@ import Composer, {
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
+import WrapAttributesModal from "discourse/static/prosemirror/components/wrap-attributes-modal";
+import { parseAttributesString } from "discourse/static/prosemirror/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -147,6 +149,9 @@ export default class ComposerService extends Service {
     this._showPreview = value;
   }
 
+  /**
+   * @returns {import("discourse/controllers/topic").default};
+   */
   get topicController() {
     return getOwner(this).lookup("controller:topic");
   }
@@ -465,6 +470,17 @@ export default class ComposerService extends Service {
         })
       );
 
+      options.push(
+        this._setupPopupMenuOption({
+          name: "toggle-wrap",
+          action: this.toggleWrap,
+          icon: "right-to-bracket",
+          label: "composer.apply_wrap_title",
+          showActiveIcon: true,
+          active: ({ state }) => state?.inWrap,
+        })
+      );
+
       return options.concat(
         customPopupMenuOptions
           .map((option) => this._setupPopupMenuOption({ ...option }))
@@ -554,20 +570,20 @@ export default class ComposerService extends Service {
     }
   }
 
-  // Use this to open the composer when you are not sure whether it is
-  // already open and whether it already has a draft being worked on. Supports
-  // options to append text once the composer is open if required.
-  //
-  // opts:
-  //
-  // - topic: if this is present, the composer will be opened with the reply
-  // action and the current topic key and draft sequence
-  // - fallbackToNewTopic: if true, and there is no draft and no topic,
-  // the composer will be opened with the create_topic action and a new
-  // topic draft key
-  // - insertText: the text to append to the composer once it is opened
-  // - openOpts: this object will be passed to this.open if fallbackToNewTopic is
-  // true or topic is provided
+  /**
+   * Opens the composer when uncertain if it's already open or has a draft.
+   * Supports appending text once the composer is open.
+   *
+   * @param {Object} opts - Configuration options
+   * @param {Object} [opts.topic] - If provided, opens composer with reply action,
+   *   using the current topic key and draft sequence
+   * @param {boolean} [opts.fallbackToNewTopic] - If true and no draft/topic exists,
+   *   opens composer with create_topic action and new topic draft key
+   * @param {string} [opts.insertText] - Text to append to the composer after opening
+   * @param {Object} [opts.openOpts] - Additional options passed to this.open when
+   *   fallbackToNewTopic is true or topic is provided
+   * @returns {Promise<void>}
+   */
   @action
   async focusComposer(opts = {}) {
     await this._openComposerForFocus(opts);
@@ -825,6 +841,40 @@ export default class ComposerService extends Service {
       model: {
         toolbarEvent: this.toolbarEvent,
         tableTokens: null,
+      },
+    });
+  }
+
+  @action
+  toggleWrap(toolbarEvent) {
+    const initialAttributes = toolbarEvent.state?.inWrap
+      ? toolbarEvent.state.wrapAttributes || ""
+      : "";
+
+    this.modal.show(WrapAttributesModal, {
+      model: {
+        initialAttributes,
+        onApply: (attributesString) => {
+          if (toolbarEvent.state?.inWrap) {
+            toolbarEvent.commands?.updateWrap(attributesString);
+          } else if (toolbarEvent.commands?.insertWrap) {
+            toolbarEvent.commands.insertWrap(
+              parseAttributesString(attributesString)
+            );
+          } else {
+            const wrapTag = attributesString.trim()
+              ? `[wrap ${attributesString}]`
+              : "[wrap]";
+            toolbarEvent.applySurround(
+              `${wrapTag}\n`,
+              "\n[/wrap]",
+              "wrap_text"
+            );
+          }
+        },
+        onRemove: toolbarEvent.state?.inWrap
+          ? () => toolbarEvent.commands?.removeWrap()
+          : undefined,
       },
     });
   }
@@ -1182,32 +1232,23 @@ export default class ComposerService extends Service {
         if (result.responseJson.action === "enqueued") {
           this.postWasEnqueued(result.responseJson);
           if (result.responseJson.pending_post) {
-            let pendingPosts = this.get("topicController.model.pending_posts");
+            let pendingPosts = this.topicController.model.pending_posts;
             if (pendingPosts) {
-              pendingPosts.pushObject(result.responseJson.pending_post);
+              pendingPosts.push(result.responseJson.pending_post);
             }
           }
 
           return this.destroyDraft().then(() => {
             this.close();
-            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-            this.appEvents.trigger("post-stream:refresh");
             return result;
           });
         }
 
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("composer:edited-post");
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", {
-            id: parseInt(result.responseJson.id, 10),
-          });
           if (result.responseJson.post.post_number === 1) {
             this.appEvents.trigger("header:update-topic", composer.topic);
           }
-        } else {
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh");
         }
 
         if (result.responseJson.action === "create_post") {
@@ -1275,9 +1316,6 @@ export default class ComposerService extends Service {
       staged = composer.get("stagedPost");
     }
 
-    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-    this.appEvents.trigger("post-stream:posted", staged);
-
     this.messageBus.pause();
     promise.finally(() => this.messageBus.resume());
 
@@ -1307,6 +1345,7 @@ export default class ComposerService extends Service {
         );
       }
 
+      this.set("model.loading", false);
       this.close();
       this.toasts.success({
         duration: "short",
@@ -1317,8 +1356,6 @@ export default class ComposerService extends Service {
       this.selectedTranslationLocale = null;
     } catch (e) {
       popupAjaxError(e);
-    } finally {
-      this.set("model.loading", false);
     }
   }
 
@@ -1419,6 +1456,14 @@ export default class ComposerService extends Service {
       opts.draftKey !== composerModel.draftKey &&
       composerModel.composeState === Composer.DRAFT
     ) {
+      // Check if content is dirty before auto-closing
+      if (composerModel.anyDirty) {
+        const retry = await this.cancelComposer(opts);
+        if (retry) {
+          await this.open(opts);
+        }
+        return;
+      }
       this.close();
       composerModel = null;
     }
@@ -1491,12 +1536,14 @@ export default class ComposerService extends Service {
   }
 
   @action
-  async openNewMessage({ title, body, recipients, hasGroups }) {
+  async openNewMessage({ title, body, recipients, hasGroups, tags }) {
+    tags = await this.filterTags(tags);
     return this.open({
       action: Composer.PRIVATE_MESSAGE,
       recipients,
       topicTitle: title,
       topicBody: body,
+      topicTags: tags,
       archetypeId: "private_message",
       draftKey: this.privateMessageDraftKey,
       hasGroups,
@@ -1514,7 +1561,7 @@ export default class ComposerService extends Service {
       });
     }
 
-    return tags
+    return tags.content
       .filter((t) => !t.staff)
       .map((t) => t.name)
       .join(",");
@@ -1567,7 +1614,11 @@ export default class ComposerService extends Service {
       this.model.set("title", opts.topicTitle);
     }
 
-    if (opts.topicTags && this.site.can_tag_topics) {
+    const isPrivateMessage = opts.action === Composer.PRIVATE_MESSAGE;
+    const canTag =
+      this.site.can_tag_topics && (!isPrivateMessage || this.site.can_tag_pms);
+
+    if (opts.topicTags && canTag) {
       let tags = escapeExpression(opts.topicTags)
         .split(",")
         .slice(0, this.siteSettings.max_tags_per_topic);

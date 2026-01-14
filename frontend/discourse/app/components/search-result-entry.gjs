@@ -70,7 +70,7 @@ export default class SearchResultEntry extends Component {
         {{#if this.bulkSelectEnabled}}
           <TrackSelected
             @selectedList={{this.selected}}
-            @selectedId={{this.post.topic}}
+            @selectedId={{this.post}}
             class="bulk-select"
           />
         {{/if}}
@@ -123,7 +123,11 @@ export default class SearchResultEntry extends Component {
 
       <PluginOutlet
         @name="search-result-entry-blurb-wrapper"
-        @outletArgs={{lazyHash post=this.post logClick=this.logClick}}
+        @outletArgs={{lazyHash
+          post=this.post
+          logClick=this.logClick
+          highlightQuery=this.highlightQuery
+        }}
       >
         <div class="blurb container">
           <span class="date">

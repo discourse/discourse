@@ -38,6 +38,8 @@ es:
           title: "Sistema de fuentes"
         colors:
           title: "Colores"
+        dialog:
+          title: "Diálogo"
         icons:
           title: "Iconos"
           full_list: "Ver la lista completa de iconos de Font Awesome"
@@ -60,7 +62,7 @@ es:
         categories_list:
           title: "Lista de categorías"
         topic_link:
-          title: "Enlace al tema"
+          title: "Enlace y estado de tema"
         topic_list_item:
           title: "Elemento de la lista de temas"
         topic_statuses:
@@ -69,8 +71,6 @@ es:
           title: "Lista de temas"
         basic_topic_list:
           title: "Lista básica de temas"
-        footer_message:
-          title: "Mensaje de pie de página"
         signup_cta:
           title: "Llamada a la acción para registrarse"
         topic_timer_info:
@@ -103,6 +103,8 @@ es:
           title: "Iconos de encabezado"
         spinners:
           title: "Indicadores de carga"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Estado vacío"
         tooltips:

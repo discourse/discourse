@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import FieldInputDescription from "admin/components/schema-setting/field-input-description";
+import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 
 export default class SchemaSettingTypeBoolean extends Component {
   @action

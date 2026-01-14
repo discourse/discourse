@@ -1,16 +1,26 @@
 # frozen_string_literal: true
 
-require "net/imap"
-
 class Group < ActiveRecord::Base
+  # NOTE (martin): Remove after 2026.02.0
+  # and drop columns.
+  self.ignored_columns += %w[
+    imap_server
+    imap_port
+    imap_ssl
+    imap_mailbox_name
+    imap_uid_validity
+    imap_last_uid
+    imap_last_error
+    imap_old_emails
+    imap_new_emails
+    imap_enabled
+    imap_updated_at
+    imap_updated_by_id
+  ]
   # Maximum 255 characters including terminator.
   # https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.4
   MAX_EMAIL_DOMAIN_LENGTH = 253
   RESERVED_NAMES = %w[by-id]
-
-  # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  # TODO: Remove smtp_ssl when db/post_migrate/20240717053710_drop_groups_smtp_ssl has been promoted to pre-deploy
-  self.ignored_columns = %w[flair_url smtp_ssl]
 
   include HasCustomFields
   include AnonCacheInvalidator
@@ -43,7 +53,6 @@ class Group < ActiveRecord::Base
   has_many :upload_references, as: :target, dependent: :destroy
 
   belongs_to :smtp_updated_by, class_name: "User"
-  belongs_to :imap_updated_by, class_name: "User"
 
   has_and_belongs_to_many :web_hooks
 
@@ -76,11 +85,6 @@ class Group < ActiveRecord::Base
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
-    expire_imap_mailbox_cache
-  end
-
-  def expire_imap_mailbox_cache
-    Discourse.cache.delete("group_imap_mailboxes_#{self.id}")
   end
 
   validate :name_format_validator
@@ -112,19 +116,10 @@ class Group < ActiveRecord::Base
   AUTO_GROUPS_ADD = "add"
   AUTO_GROUPS_REMOVE = "remove"
 
-  IMAP_SETTING_ATTRIBUTES = %w[
-    imap_server
-    imap_port
-    imap_ssl
-    imap_mailbox_name
-    email_username
-    email_password
-  ]
-
   SMTP_SETTING_ATTRIBUTES = %w[
-    imap_server
-    imap_port
-    imap_ssl
+    smtp_server
+    smtp_port
+    smtp_ssl_mode
     email_username
     email_password
     email_from_alias
@@ -161,7 +156,6 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :with_imap_configured, -> { where(imap_enabled: true).where.not(imap_mailbox_name: "") }
   scope :with_smtp_configured, -> { where(smtp_enabled: true) }
 
   scope :visible_groups,
@@ -364,11 +358,6 @@ class Group < ActiveRecord::Base
   end
 
   def record_email_setting_changes!(user)
-    if (self.previous_changes.keys & IMAP_SETTING_ATTRIBUTES).any?
-      self.imap_updated_at = Time.zone.now
-      self.imap_updated_by_id = user.id
-    end
-
     if (self.previous_changes.keys & SMTP_SETTING_ATTRIBUTES).any?
       self.smtp_updated_at = Time.zone.now
       self.smtp_updated_by_id = user.id
@@ -377,12 +366,6 @@ class Group < ActiveRecord::Base
     self.smtp_enabled = [
       self.smtp_port,
       self.smtp_server,
-      self.email_password,
-      self.email_username,
-    ].all?(&:present?)
-    self.imap_enabled = [
-      self.imap_port,
-      self.imap_server,
       self.email_password,
       self.email_username,
     ].all?(&:present?)
@@ -537,14 +520,11 @@ class Group < ActiveRecord::Base
     localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
     default_name = I18n.t("groups.default_names.#{name}")
 
-    group.name =
-      if can_use_name?(localized_name, group)
-        localized_name
-      elsif can_use_name?(default_name, group)
-        default_name
-      else
-        name.to_s
-      end
+    if can_use_name?(localized_name, group)
+      group.name = localized_name
+    elsif can_use_name?(default_name, group)
+      group.name = default_name
+    end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
@@ -561,35 +541,7 @@ class Group < ActiveRecord::Base
       group.update!(visibility_level: Group.visibility_levels[:logged_on_users])
     end
 
-    # Remove people from groups they don't belong in.
-    remove_subquery =
-      case name
-      when :admins
-        "SELECT id FROM users WHERE NOT admin OR staged"
-      when :moderators
-        "SELECT id FROM users WHERE NOT moderator OR staged"
-      when :staff
-        "SELECT id FROM users WHERE (NOT admin AND NOT moderator) OR staged"
-      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level < #{id - 10} OR staged"
-      end
-
-    removed_user_ids = DB.query_single <<-SQL
-      DELETE FROM group_users
-            USING (#{remove_subquery}) X
-            WHERE group_id = #{group.id}
-              AND user_id = X.id
-      RETURNING group_users.user_id
-    SQL
-
-    if removed_user_ids.present?
-      Jobs.enqueue(
-        :publish_group_membership_updates,
-        user_ids: removed_user_ids,
-        group_id: group.id,
-        type: AUTO_GROUPS_REMOVE,
-      )
-    end
+    remove_users_from_automatic_group(group:, name:)
 
     # Add people to groups
     insert_subquery =
@@ -671,6 +623,56 @@ class Group < ActiveRecord::Base
     SQL
   end
   private_class_method :reset_groups_user_count!
+
+  def self.remove_users_from_automatic_group(group:, name:)
+    remove_subquery =
+      case name
+      when :admins
+        "SELECT id FROM users WHERE NOT admin OR staged"
+      when :moderators
+        "SELECT id FROM users WHERE NOT moderator OR staged"
+      when :staff
+        "SELECT id FROM users WHERE (NOT admin AND NOT moderator) OR staged"
+      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "SELECT id FROM users WHERE trust_level < #{group.id - 10} OR staged"
+      end
+
+    removed_user_ids = DB.query_single(<<~SQL)
+        DELETE FROM group_users
+        USING (#{remove_subquery}) X
+        WHERE group_id = #{group.id}
+          AND user_id = X.id
+        RETURNING group_users.user_id
+      SQL
+
+    return if removed_user_ids.blank?
+
+    DB.exec(<<~SQL, group_id: group.id, user_ids: removed_user_ids)
+      UPDATE users
+      SET flair_group_id = NULL
+      WHERE id IN (:user_ids) AND flair_group_id = :group_id
+    SQL
+
+    DB.exec(<<~SQL, group_id: group.id, user_ids: removed_user_ids)
+      UPDATE users
+      SET primary_group_id = NULL
+      WHERE id IN (:user_ids) AND primary_group_id = :group_id
+    SQL
+
+    DB.exec(<<~SQL, user_ids: removed_user_ids, title: group.title) if group.title.present?
+        UPDATE users
+        SET title = NULL
+        WHERE id IN (:user_ids) AND title = :title
+      SQL
+
+    Jobs.enqueue(
+      :publish_group_membership_updates,
+      user_ids: removed_user_ids,
+      group_id: group.id,
+      type: AUTO_GROUPS_REMOVE,
+    )
+  end
+  private_class_method :remove_users_from_automatic_group
 
   def self.refresh_automatic_groups!(*args)
     args = AUTO_GROUPS.keys if args.empty?
@@ -815,38 +817,24 @@ class Group < ActiveRecord::Base
   PUBLISH_CATEGORIES_LIMIT = 10
 
   def add(user, notify: false, automatic: false)
-    return self if self.users.include?(user)
+    return false if user.nil?
+    return self if group_users.exists?(user_id: user.id)
 
     self.users.push(user)
-
-    if notify
-      Notification.create!(
-        notification_type: Notification.types[:membership_request_accepted],
-        user_id: user.id,
-        data: { group_id: id, group_name: name }.to_json,
-      )
-    end
-
-    if self.categories.count < PUBLISH_CATEGORIES_LIMIT
-      MessageBus.publish(
-        "/categories",
-        { categories: ActiveModel::ArraySerializer.new(self.categories).as_json },
-        user_ids: [user.id],
-      )
-    else
-      Discourse.request_refresh!(user_ids: [user.id])
-    end
-
+    send_membership_notification(user) if notify
+    publish_category_updates(user)
     trigger_user_added_event(user, automatic)
 
     self
   end
 
   def remove(user)
+    return false if user.nil?
     group_user = self.group_users.find_by(user: user)
     return false if group_user.blank?
 
     group_user.destroy
+    publish_category_updates(user)
     trigger_user_removed_event(user)
     enqueue_user_removed_from_group_webhook_events(group_user)
 
@@ -1045,43 +1033,6 @@ class Group < ActiveRecord::Base
         GroupTagNotificationDefault.batch_set(self, level, tag_names)
       end
     end
-  end
-
-  def imap_mailboxes
-    return [] if !self.imap_enabled || !SiteSetting.enable_imap
-
-    Discourse
-      .cache
-      .fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
-        Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
-        mailboxes = []
-
-        begin
-          imap_provider = Imap::Providers::Detector.init_with_detected_provider(self.imap_config)
-          imap_provider.connect!
-          mailboxes = imap_provider.filter_mailboxes(imap_provider.list_mailboxes_with_attributes)
-          imap_provider.disconnect!
-
-          update_columns(imap_last_error: nil)
-        rescue => ex
-          Rails.logger.warn(
-            "[IMAP] Mailbox refresh failed for group #{self.name} with error: #{ex}",
-          )
-          update_columns(imap_last_error: ex.message)
-        end
-
-        mailboxes
-      end
-  end
-
-  def imap_config
-    {
-      server: self.imap_server,
-      port: self.imap_port,
-      ssl: self.imap_ssl,
-      username: self.email_username,
-      password: self.email_password,
-    }
   end
 
   def email_username_domain
@@ -1284,6 +1235,34 @@ class Group < ActiveRecord::Base
 
   private
 
+  def send_membership_notification(user)
+    Notification.create!(
+      notification_type: Notification.types[:membership_request_accepted],
+      user_id: user.id,
+      data: { group_id: id, group_name: name }.to_json,
+    )
+  end
+
+  def publish_category_updates(user)
+    if categories.count < PUBLISH_CATEGORIES_LIMIT
+      guardian = Guardian.new(user)
+      group_categories = categories.map { |c| Category.set_permission!(guardian, c) }
+      updated_categories = group_categories.select(&:permission)
+      removed_category_ids = group_categories.reject(&:permission).map(&:id)
+
+      MessageBus.publish(
+        "/categories",
+        {
+          categories: ActiveModel::ArraySerializer.new(updated_categories).as_json,
+          deleted_categories: removed_category_ids,
+        },
+        user_ids: [user.id],
+      )
+    else
+      Discourse.request_refresh!(user_ids: [user.id])
+    end
+  end
+
   def validate_grant_trust_level
     unless TrustLevel.valid?(self.grant_trust_level)
       self.errors.add(
@@ -1320,56 +1299,44 @@ end
 # Table name: groups
 #
 #  id                                 :integer          not null, primary key
-#  name                               :string           not null
-#  created_at                         :datetime         not null
-#  updated_at                         :datetime         not null
+#  allow_membership_requests          :boolean          default(FALSE), not null
+#  allow_unknown_sender_topic_replies :boolean          default(FALSE), not null
 #  automatic                          :boolean          default(FALSE), not null
-#  user_count                         :integer          default(0), not null
 #  automatic_membership_email_domains :text
-#  primary_group                      :boolean          default(FALSE), not null
-#  title                              :string
-#  grant_trust_level                  :integer
-#  incoming_email                     :string
-#  has_messages                       :boolean          default(FALSE), not null
+#  bio_cooked                         :text
+#  bio_raw                            :text
+#  default_notification_level         :integer          default(3), not null
+#  email_from_alias                   :string
+#  email_password                     :string
+#  email_username                     :string
 #  flair_bg_color                     :string
 #  flair_color                        :string
-#  bio_raw                            :text
-#  bio_cooked                         :text
-#  allow_membership_requests          :boolean          default(FALSE), not null
-#  full_name                          :string
-#  default_notification_level         :integer          default(3), not null
-#  visibility_level                   :integer          default(0), not null
-#  public_exit                        :boolean          default(FALSE), not null
-#  public_admission                   :boolean          default(FALSE), not null
-#  membership_request_template        :text
-#  messageable_level                  :integer          default(0)
-#  mentionable_level                  :integer          default(0)
-#  smtp_server                        :string
-#  smtp_port                          :integer
-#  imap_server                        :string
-#  imap_port                          :integer
-#  imap_ssl                           :boolean
-#  imap_mailbox_name                  :string           default(""), not null
-#  imap_uid_validity                  :integer          default(0), not null
-#  imap_last_uid                      :integer          default(0), not null
-#  email_username                     :string
-#  email_password                     :string
-#  publish_read_state                 :boolean          default(FALSE), not null
-#  members_visibility_level           :integer          default(0), not null
-#  imap_last_error                    :text
-#  imap_old_emails                    :integer
-#  imap_new_emails                    :integer
 #  flair_icon                         :string
-#  flair_upload_id                    :integer
-#  allow_unknown_sender_topic_replies :boolean          default(FALSE), not null
+#  full_name                          :string
+#  grant_trust_level                  :integer
+#  has_messages                       :boolean          default(FALSE), not null
+#  incoming_email                     :string
+#  members_visibility_level           :integer          default(0), not null
+#  membership_request_template        :text
+#  mentionable_level                  :integer          default(0)
+#  messageable_level                  :integer          default(0)
+#  name                               :string           not null
+#  primary_group                      :boolean          default(FALSE), not null
+#  public_admission                   :boolean          default(FALSE), not null
+#  public_exit                        :boolean          default(FALSE), not null
+#  publish_read_state                 :boolean          default(FALSE), not null
 #  smtp_enabled                       :boolean          default(FALSE)
-#  smtp_updated_at                    :datetime
-#  smtp_updated_by_id                 :integer
-#  imap_enabled                       :boolean          default(FALSE)
-#  imap_updated_at                    :datetime
-#  imap_updated_by_id                 :integer
-#  email_from_alias                   :string
+#  smtp_port                          :integer
+#  smtp_server                        :string
 #  smtp_ssl_mode                      :integer          default(0), not null
+#  smtp_updated_at                    :datetime
+#  title                              :string
+#  user_count                         :integer          default(0), not null
+#  visibility_level                   :integer          default(0), not null
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  flair_upload_id                    :integer
+#  smtp_updated_by_id                 :integer
 #
 # Indexes
 #

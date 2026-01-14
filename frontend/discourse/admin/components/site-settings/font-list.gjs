@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import FontSelector from "select-kit/components/font-selector";
+import FontSelector from "discourse/select-kit/components/font-selector";
 
 export default class FontList extends Component {
   get choices() {

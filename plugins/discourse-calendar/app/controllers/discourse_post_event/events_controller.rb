@@ -13,9 +13,6 @@ module DiscoursePostEvent
           },
         )
 
-      # The detailed serializer is currently not used anywhere in the frontend, but available via API
-      serializer = params[:include_details] == "true" ? EventSerializer : BasicEventSerializer
-
       respond_to do |format|
         format.ics do
           filename = "events-#{Digest::SHA1.hexdigest(@events.map(&:id).sort.join("-"))}.ics"
@@ -23,12 +20,37 @@ module DiscoursePostEvent
         end
 
         format.json do
-          render json:
-                   ActiveModel::ArraySerializer.new(
-                     @events,
-                     each_serializer: serializer,
-                     scope: guardian,
-                   ).as_json
+          # The detailed serializer is currently not used anywhere in the frontend, but available via API
+          serializer = params[:include_details] == "true" ? EventSerializer : BasicEventSerializer
+
+          serialized_events =
+            @events.map do |event|
+              expanded =
+                DiscoursePostEvent::Action::ExpandOccurrences.call(
+                  event: event,
+                  after: filtered_events_params[:after]&.to_datetime || Time.current,
+                  before: filtered_events_params[:before]&.to_datetime,
+                  limit: filtered_events_params[:limit]&.to_i || 50,
+                )
+
+              formatted_occurrences =
+                expanded[:occurrences].map do |occurrence|
+                  {
+                    starts_at: format_time(event, occurrence[:starts_at]),
+                    ends_at: format_time(event, occurrence[:ends_at]),
+                  }
+                end
+
+              serializer.new(
+                event,
+                scope: guardian,
+                root: false,
+                occurrences: formatted_occurrences,
+                include_occurrences: true,
+              ).as_json
+            end
+
+          render json: { events: serialized_events }
         end
       end
     end
@@ -47,6 +69,7 @@ module DiscoursePostEvent
     def show
       event = Event.find(params[:id])
       guardian.ensure_can_see!(event.post)
+
       serializer = EventSerializer.new(event, scope: guardian)
       render_json_dump(serializer)
     end
@@ -144,6 +167,16 @@ module DiscoursePostEvent
         :after,
         :order,
       )
+    end
+
+    def format_time(event, time)
+      return nil unless time
+
+      if event.show_local_time
+        time.in_time_zone(event.timezone).strftime("%Y-%m-%dT%H:%M:%S")
+      else
+        time.in_time_zone(event.timezone).iso8601(3)
+      end
     end
   end
 end

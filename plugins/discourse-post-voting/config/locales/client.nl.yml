@@ -30,10 +30,8 @@ nl:
         label: "Topic met stemmen op berichten maken"
       composer_actions:
         create_as_post_voting:
-          label: "Stemmen op berichten schakelen"
           desc: "Topic wordt gemaakt met berichten waarop kan worden gestemd"
         remove_as_post_voting:
-          label: "Stemmen op berichten verwijderen"
           desc: "Topic wordt gemaakt in de normale vorm"
     vote:
       already_voted: "Je kunt maar één keer stemmen per vraag."

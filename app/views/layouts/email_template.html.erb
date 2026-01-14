@@ -2,7 +2,8 @@
   <%= yield %>
   <% if defined?(html_body) %><%= html_body %><% end %>
 <% else %>
-  <%= email_html_template do %>
+  <% preview = defined?(email_preview) ? email_preview : nil %>
+  <%= email_html_template(preview: preview) do %>
     <%= yield %>
     <% if defined?(html_body) %><%= html_body %><% end %>
   <% end %>

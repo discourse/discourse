@@ -1,11 +1,11 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import { i18n } from "discourse-i18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 
 @classNames("bulk-group-member-dropdown")
 @selectKitOptions({

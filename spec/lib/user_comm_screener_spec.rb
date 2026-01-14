@@ -275,6 +275,32 @@ RSpec.describe UserCommScreener do
       end
     end
 
+    describe "#actor_ignoring_or_muting_users" do
+      it "returns only the user_ids that the actor is ignoring or muting, excluding PM allowlist" do
+        acting_user.user_option.update!(enable_allowed_pm_users: true)
+        expect(screener.actor_ignoring_or_muting_users).to match_array(
+          [target_user1.id, target_user2.id],
+        )
+      end
+
+      it "does not include users filtered by PM allowlist" do
+        acting_user.user_option.update!(enable_allowed_pm_users: true)
+        expect(screener.actor_ignoring_or_muting_users).not_to include(target_user3.id)
+        expect(screener.actor_ignoring_or_muting_users).not_to include(target_user5.id)
+      end
+
+      describe "when the actor has no preferences" do
+        before do
+          muted_user.destroy
+          ignored_user.destroy
+        end
+
+        it "returns an empty array and does not error" do
+          expect(screener.actor_ignoring_or_muting_users).to match_array([])
+        end
+      end
+    end
+
     describe "#actor_ignoring?" do
       it "returns true for user ids that the actor is ignoring" do
         expect(screener.actor_ignoring?(target_user2.id)).to eq(true)

@@ -99,6 +99,6 @@ export function setup(helper) {
   ]);
 
   helper.registerPlugin((md) =>
-    md.core.ruler.push("checklist", processChecklist)
+    md.core.ruler.before("text_join", "checklist", processChecklist)
   );
 }

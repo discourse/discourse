@@ -2,6 +2,7 @@
 
 require "sidekiq/pausable"
 require "sidekiq/discourse_event"
+require "sidekiq/suppress_user_email_errors"
 require "sidekiq_logster_reporter"
 require "sidekiq_long_running_job_logger"
 require "mini_scheduler_long_running_job_logger"
@@ -15,6 +16,7 @@ Sidekiq.configure_server do |config|
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
     chain.add Sidekiq::DiscourseEvent
+    chain.add Sidekiq::SuppressUserEmailErrors
   end
 
   if stuck_sidekiq_job_minutes = GlobalSetting.sidekiq_report_long_running_jobs_minutes

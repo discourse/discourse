@@ -1,12 +1,12 @@
-import { tracked } from "@glimmer/tracking";
 import { sort } from "@ember/object/computed";
 import Service, { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { trackedArray } from "discourse/lib/tracked-tools";
 
 export default class AdminUserFields extends Service {
   @service store;
 
-  @tracked userFields = [];
+  @trackedArray userFields = [];
 
   @sort("userFields", "fieldSortOrder") sortedUserFields;
 
@@ -20,7 +20,8 @@ export default class AdminUserFields extends Service {
 
   async #fetchUserFields() {
     try {
-      this.userFields = await this.store.findAll("user-field");
+      const userFields = await this.store.findAll("user-field");
+      this.userFields = userFields.content;
     } catch (err) {
       popupAjaxError(err);
     }

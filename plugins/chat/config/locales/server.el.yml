@@ -8,20 +8,38 @@ el:
   site_settings:
     chat_enabled: "Ενεργοποίηση συνομιλίας."
     enable_public_channels: "Ενεργοποίηση δημόσιων καναλιών με βάση τις κατηγορίες."
+    max_mentions_per_chat_message: "Μέγιστος αριθμός @ονομαστικών ειδοποιήσεων που ένας χρήστης μπορεί να χρησιμοποιήσει σε ένα μήνυμα συνομιλίας."
   system_messages:
     private_channel_title: "Κανάλι %{id}"
   chat:
     deleted_chat_username: διεγράφη
     errors:
+      draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο."
       not_accepting_dms: "Λυπούμαστε, ο/η %{username} δεν δέχεται μηνύματα αυτή τη στιγμή."
     reviewables:
+      message_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το μήνυμα και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
       actions:
+        message_actions:
+          bundle_title: "Τι θέλετε να κάνετε με το μήνυμα;"
+        no_action_message:
+          title: "Καμία ενέργεια"
+          description: "Αφήστε το μήνυμα ως έχει."
+        delete_message:
+          title: "Διαγραφή μηνύματος"
+          description: "Μόνιμη διαγραφή του μηνύματος."
+        restore_message:
+          title: "Επαναφορά μηνύματος"
+          description: "Επαναφορά του μηνύματος ώστε οι χρήστες να μπορούν να το δουν."
+        agree:
+          title: "Συμφωνώ..."
+        agree_and_keep_message:
+          title: "Διατήρηση μηνύματος"
         agree_and_suspend:
           title: "Αποβολή Χρήστη"
         agree_and_silence:
           title: "Σίγαση Χρήστη"
-        disagree:
-          title: "Διαφωνώ"
+        ignore:
+          title: "Αγνόηση επισήμανσης"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -34,12 +52,17 @@ el:
         one: "Η πρόσκληση στάλθηκε"
         other: "Οι προσκλήσεις στάλθηκαν"
       invite: "Πρόσκληση στο κανάλι"
+      group_mentions_disabled: "%{first_identifier} δεν επιτρέπει επισημάνσεις."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} και %{count} άλλη ομάδα δεν επιτρέπουν τις επισημάνσεις."
+        other: "%{first_identifier} και %{count} άλλες ομάδες δεν επιτρέπουν τις επισημάνσεις."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "περιέχει χαρακτήρες που δεν είναι ascii"
         is_already_in_use: "είναι ήδη σε χρήση"
     bookmarkable:
-      notification_title: "μήνυμα στο %{channel_name}"
+      notification_title_channel: "μήνυμα στο %{channel_name}"
+      notification_title_direct_message: "μήνυμα με %{channel_name}"
     personal_chat: "προσωπική συνομιλία"
     onebox:
       inline_to_channel: "Συνομιλία #%{chat_channel}"
@@ -59,6 +82,10 @@ el:
     popup:
       chat_mention:
         direct: '%{username} σε ανέφερε στο "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} σας επισήμανε σε προσωπική συνομιλία"
+        other_type: "%{username} επισήμανε %{identifier} σε προσωπική συνομιλία"
+      new_direct_chat_message: "%{username} έστειλε ένα μήνυμα σε προσωπική συνομιλία"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

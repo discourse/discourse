@@ -106,6 +106,10 @@ nl:
     reviewables:
       message_already_handled: "Bedankt, maar we hebben dat bericht al beoordeeld en vastgesteld dat het niet opnieuw hoeft te worden gemarkeerd."
       actions:
+        no_action_message:
+          title: "Geen actie"
+        restore_message:
+          description: "Herstel het bericht zodat gebruikers het kunnen zien."
         agree:
           title: "Akkoord..."
         agree_and_keep_message:
@@ -127,16 +131,12 @@ nl:
           title: "Bericht verwijderen"
           description: "Verwijder het bericht zodat gebruikers het niet kunnen zien."
         delete_and_agree:
-          title: "Markering negeren en bericht verwijderen"
           description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht."
         disagree_and_restore:
           title: "Niet akkoord en bericht herstellen"
           description: "Herstel het bericht zodat alle gebruikers het kunnen zien."
-        disagree:
-          title: "Niet akkoord"
         ignore:
-          title: "Niets doen"
-          description: "Negeer de markering door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen."
+          title: "Markering negeren"
       direct_messages:
         transcript_title: "Transcript van eerdere berichten in %{channel_name}"
         transcript_body: "Om je meer context te geven, hebben we een transcript van de vorige berichten opgenomen in deze conversatie (maximaal tien):\n\n%{transcript}"
@@ -184,7 +184,7 @@ nl:
         slug_contains_non_ascii_chars: "bevat niet-ASCII-tekens"
         is_already_in_use: "is al in gebruik"
     bookmarkable:
-      notification_title: "bericht in %{channel_name}"
+      notification_title_channel: "bericht in %{channel_name}"
     personal_chat: "privéchat"
     onebox:
       inline_to_message: "Bericht %{message_id} van %{username} – #%{chat_channel}"
@@ -264,10 +264,8 @@ nl:
       view_more:
         one: "Nog %{count} bericht weergeven"
         other: "Nog %{count} berichten weergeven"
-      your_chat_settings: "voorkeur voor chat-e-mailfrequentie"
   unsubscribe:
     chat_summary:
-      select_title: "Stel de frequentie van e-mails met chatsamenvattingen in op:"
       never: Nooit
       when_away: Alleen wanneer afwezig
   category:

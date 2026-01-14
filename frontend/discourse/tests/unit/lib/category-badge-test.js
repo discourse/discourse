@@ -159,4 +159,29 @@ module("Unit | Utility | category-badge", function (hooks) {
     assert.true(badge.includes("d-icon-book"), "has parent with book icon");
     assert.true(badge.includes("d-icon-file"), "has child with file icon");
   });
+
+  test("ancestors", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    let badge;
+
+    const parent = store.createRecord("category", {
+      name: "parent",
+      id: 1,
+    });
+    const child = store.createRecord("category", {
+      name: "child",
+      id: 2,
+      parent_category_id: parent.id,
+    });
+
+    badge = categoryBadgeHTML(child);
+    assert.strictEqual((badge.match(/data-category-id/g) || []).length, 1);
+    assert.false(badge.includes('data-category-id="1"'), "excludes parent");
+    assert.true(badge.includes('data-category-id="2"'), "includes child");
+
+    badge = categoryBadgeHTML(child, { ancestors: [parent] });
+    assert.strictEqual((badge.match(/data-category-id/g) || []).length, 2);
+    assert.true(badge.includes('data-category-id="1"'), "includes parent");
+    assert.true(badge.includes('data-category-id="2"'), "includes child");
+  });
 });

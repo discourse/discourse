@@ -1,10 +1,15 @@
 import Component from "@glimmer/component";
+import { htmlSafe } from "@ember/template";
+import DecoratedHtml, {
+  applyHtmlDecorators,
+} from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewableCreatedBy from "discourse/components/reviewable-refresh/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable-refresh/topic-link";
 import lazyHash from "discourse/helpers/lazy-hash";
-import highlightWatchedWords from "discourse/lib/highlight-watched-words";
+import { bind } from "discourse/lib/decorators";
+import highlightHTML from "discourse/lib/highlight-html";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewablePost extends Component {
@@ -18,6 +23,29 @@ export default class ReviewablePost extends Component {
 
   get pluginOutletName() {
     return this.args.pluginOutletName || "after-reviewable-post-body";
+  }
+
+  @bind
+  decorate(element, helper) {
+    const reviewable = this.args.reviewable;
+    if (reviewable?.reviewable_scores) {
+      const words = reviewable.reviewable_scores
+        .map((rs) => {
+          return rs.reason_type === "watched_word" ? rs.reason_data : [];
+        })
+        .flat();
+
+      if (words.length > 0) {
+        words.forEach((word) => {
+          highlightHTML(element, word, {
+            nodeName: "mark",
+            className: "watched-word-highlight",
+          });
+        });
+      }
+    }
+
+    applyHtmlDecorators(element, helper);
   }
 
   <template>
@@ -38,23 +66,28 @@ export default class ReviewablePost extends Component {
 
     <div class="review-item__post">
       <div class="review-item__post-content-wrapper">
-        <div class="review-item__post-content">
-          {{#if @reviewable.blank_post}}
+        {{#if @reviewable.blank_post}}
+          <div class="review-item__post-content">
             <p>{{i18n "review.deleted_post"}}</p>
-          {{else}}
-            {{highlightWatchedWords @reviewable.cooked @reviewable}}
-          {{/if}}
+          </div>
+        {{else}}
+          <DecoratedHtml
+            @className="review-item__post-content"
+            @html={{htmlSafe @reviewable.cooked}}
+            @decorate={{this.decorate}}
+            @model={{@reviewable}}
+          />
+        {{/if}}
 
-          <span>
-            <PluginOutlet
-              @name={{this.pluginOutletName}}
-              @connectorTagName="div"
-              @outletArgs={{lazyHash model=@reviewable}}
-            />
-          </span>
+        <span>
+          <PluginOutlet
+            @name={{this.pluginOutletName}}
+            @connectorTagName="div"
+            @outletArgs={{lazyHash model=@reviewable}}
+          />
+        </span>
 
-          {{yield}}
-        </div>
+        {{yield}}
       </div>
     </div>
   </template>

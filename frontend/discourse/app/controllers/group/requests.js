@@ -61,9 +61,8 @@ export default class GroupRequestsController extends Controller {
     return { order, asc, filter };
   }
 
-  @discourseComputed("model.requesters.[]")
-  hasRequesters(requesters) {
-    return requesters && requesters.length > 0;
+  get hasRequesters() {
+    return this.model.requesters?.length > 0;
   }
 
   @discourseComputed

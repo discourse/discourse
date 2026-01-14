@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { not } from "truth-helpers";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
 import userStatus from "discourse/helpers/user-status";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";

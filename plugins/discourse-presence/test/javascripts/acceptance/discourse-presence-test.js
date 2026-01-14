@@ -248,4 +248,35 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     assert.dom(avatarSelector).doesNotExist("whisper avatar removed");
   });
+
+  test("Uses the translate channel for translating", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const avatarSelector = ".reply-to .presence-avatars .avatar";
+
+    await joinChannel("/discourse-presence/translate/398", {
+      id: 999,
+      avatar_template: "/images/avatar.png",
+      username: "translator",
+    });
+
+    await click(".topic-post[data-post-number='1'] button.show-more-actions");
+    await click(".topic-post[data-post-number='1'] button.edit");
+
+    assert.dom(avatarSelector).doesNotExist("editor does not see translator");
+
+    assert.deepEqual(
+      presentUserIds("/discourse-presence/translate/398"),
+      [999],
+      "translator is in translate channel"
+    );
+
+    assert.deepEqual(
+      presentUserIds("/discourse-presence/edit/398"),
+      [],
+      "no one in edit channel initially"
+    );
+
+    await leaveChannel("/discourse-presence/translate/398", { id: 999 });
+  });
 });

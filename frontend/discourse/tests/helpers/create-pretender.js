@@ -118,16 +118,16 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/tags", () => {
     return response({
       tags: [
-        { id: "eviltrout", count: 1 },
+        { id: 123, name: "eviltrout", text: "eviltrout", count: 1 },
         {
-          id: "planned",
+          id: 234,
           name: "planned",
           text: "planned",
           count: 7,
           pm_only: false,
         },
         {
-          id: "private",
+          id: 345,
           name: "private",
           text: "private",
           count: 0,

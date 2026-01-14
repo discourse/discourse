@@ -266,13 +266,7 @@ task "db:migrate" => %w[
 
     ActiveRecord::Tasks::DatabaseTasks.migrate
 
-    SeedFu.quiet = true
-
-    begin
-      SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
-    rescue => error
-      error.backtrace.each { |l| puts l }
-    end
+    Rake::Task["db:seed"].invoke if ENV["SKIP_SEED_FU"] != "1"
 
     Rake::Task["db:schema:cache:dump"].invoke if Rails.env.development? && !ENV["RAILS_DB"]
 
@@ -283,6 +277,16 @@ task "db:migrate" => %w[
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
     system("RAILS_DB=discourse_test_multisite rake db:migrate", exception: true)
+  end
+end
+
+task "db:seed" => "environment" do
+  SeedFu.quiet = true
+
+  begin
+    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+  rescue => error
+    error.backtrace.each { |l| puts l }
   end
 end
 

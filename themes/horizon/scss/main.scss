@@ -22,10 +22,11 @@ body {
 
 #main-outlet-wrapper {
   gap: var(--main-grid-gap);
+  padding-right: var(--main-grid-gap);
 }
 
 body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
-  grid-column-gap: var(--main-grid-gap);
+  column-gap: var(--main-grid-gap);
   background-color: var(--background-color);
 }
 
@@ -44,8 +45,6 @@ body.has-full-page-chat:not(.has-sidebar-page) {
 }
 
 body.has-sidebar-page #main-outlet-wrapper {
-  grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr) 0;
-
   #main-outlet {
     max-width: unset;
   }
@@ -105,20 +104,6 @@ body:not(.has-full-page-chat, .wizard) {
 }
 
 #list-area {
-  .show-more.has-topics {
-    @include viewport.from(lg) {
-      width: auto;
-      right: 50%;
-      transform: translateX(50%);
-
-      .alert {
-        padding: var(--space-2) var(--space-4);
-        border-radius: var(--d-border-radius-large);
-        font-size: var(--font-down-1-rem);
-      }
-    }
-  }
-
   .topic-list-body {
     padding-top: var(--space-4);
   }

@@ -4,6 +4,7 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import ReviewableField from "discourse/components/reviewable-field";
 import rawDate from "discourse/helpers/raw-date";
 import { ajax } from "discourse/lib/ajax";
@@ -12,7 +13,6 @@ import discourseComputed, { bind } from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { REJECTED } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
-import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 
 export default class ReviewableUser extends Component {
   @service currentUser;
@@ -26,7 +26,12 @@ export default class ReviewableUser extends Component {
 
   @discourseComputed("reviewable.status", "currentUser", "isScrubbed")
   canScrubRejectedUser(status, currentUser, isScrubbed) {
-    return status === REJECTED && currentUser.admin && !isScrubbed;
+    return (
+      status === REJECTED &&
+      currentUser.admin &&
+      !isScrubbed &&
+      !currentUser.use_reviewable_ui_refresh
+    );
   }
 
   @discourseComputed("reviewable.payload")
@@ -93,7 +98,7 @@ export default class ReviewableUser extends Component {
                   href={{getUrl
                     (concat
                       "/admin/users/"
-                      this.reviewable.user_id
+                      this.reviewable.user.id
                       "/"
                       this.reviewable.payload.username
                     )

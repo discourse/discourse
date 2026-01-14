@@ -18,14 +18,27 @@ class TopicsFilter
   }
   private_constant :FILTER_ALIASES
 
+  # Shared pattern for matching quoted values (single or double quotes)
+  QUOTED_VALUE_PATTERN = '"[^"]*"|\'[^\']*\''
+  private_constant :QUOTED_VALUE_PATTERN
+
+  # Pattern for extracting filter components: prefix, key, and value (supports quoted values)
+  FILTER_EXTRACTION_PATTERN =
+    /(?<key_prefix>(?:-|=|-=|=-))?(?<key>[\w-]+):(?<value>#{QUOTED_VALUE_PATTERN}|[^\s]+)/
+  private_constant :FILTER_EXTRACTION_PATTERN
+
+  # Pattern for tokenizing query string while preserving quoted values and filter:value pairs
+  # Note: wrap QUOTED_VALUE_PATTERN in non-capturing group to preserve alternation precedence
+  TOKENIZER_PATTERN =
+    /[\w-]+:(?:#{QUOTED_VALUE_PATTERN})|[\w-]+:[^\s]+|(?:#{QUOTED_VALUE_PATTERN})|[^\s]+/
+  private_constant :TOKENIZER_PATTERN
+
   def filter_from_query_string(query_string)
     return @scope if query_string.blank?
 
     filters = {}
 
-    query_string.scan(
-      /(?<key_prefix>(?:-|=|-=|=-))?(?<key>[\w-]+):(?<value>[^\s]+)/,
-    ) do |key_prefix, key, value|
+    query_string.scan(FILTER_EXTRACTION_PATTERN) do |key_prefix, key, value|
       key = FILTER_ALIASES[key] || key
 
       filters[key] ||= {}
@@ -52,7 +65,7 @@ class TopicsFilter
       when "created-before"
         filter_by_created(before: filter_values)
       when "created-by"
-        filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
+        filter_created_by(names: filter_values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: filter_values)
       when "latest-post-after"
@@ -100,8 +113,13 @@ class TopicsFilter
       end
     end
 
+    # Tokenize while preserving quoted values, then extract keywords (non-filter terms)
     keywords =
-      query_string.split(/\s+/).reject { |word| word.include?(":") }.map(&:strip).reject(&:empty?)
+      query_string
+        .scan(TOKENIZER_PATTERN)
+        .reject { |word| word.include?(":") }
+        .map(&:strip)
+        .reject(&:empty?)
 
     if keywords.present? && keywords.join(" ").length >= SiteSetting.min_search_term_length
       ts_query = Search.ts_query(term: keywords.join(" "))
@@ -110,7 +128,7 @@ class TopicsFilter
             SELECT topic_id
             FROM post_search_data
             JOIN posts ON posts.id = post_search_data.post_id
-            WHERE search_data @@ #{ts_query}
+            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")}
           )
         SQL
     end
@@ -118,8 +136,8 @@ class TopicsFilter
     @scope
   end
 
-  def self.add_filter_by_status(status, &blk)
-    custom_status_filters[status] = blk
+  def self.add_filter_by_status(status, enabled: -> { true }, &block)
+    custom_status_filters[status] = { block:, enabled: }
   end
 
   def self.custom_status_filters
@@ -148,7 +166,7 @@ class TopicsFilter
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
     else
       if custom_filter = TopicsFilter.custom_status_filters[status]
-        @scope = custom_filter.call(@scope)
+        @scope = custom_filter[:block].call(@scope) if custom_filter[:enabled].call
       end
     end
 
@@ -197,7 +215,7 @@ class TopicsFilter
       {
         name: "created-by:",
         description: I18n.t("filter.description.created_by"),
-        type: "username",
+        type: "username_group_list",
         delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
       },
       {
@@ -659,12 +677,35 @@ class TopicsFilter
       SQL
   end
 
-  def filter_created_by_user(usernames:)
-    @scope =
-      @scope.joins(:user).where(
-        "users.username_lower IN (:usernames)",
-        usernames: usernames.map(&:downcase),
-      )
+  def filter_created_by(names:)
+    if names.include?("me") && @guardian.authenticated?
+      names = names.map { |n| n == "me" ? @guardian.user.username_lower : n }
+    end
+
+    if (user_ids = User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)) &&
+         user_ids.any?
+      @scope = @scope.joins(:user).where(user_id: user_ids)
+      return
+    end
+
+    if (
+         group_ids =
+           Group
+             .visible_groups(@guardian.user)
+             .members_visible_groups(@guardian.user)
+             .where("lower(name) IN (?)", names.map(&:downcase))
+             .pluck(:id)
+       ) && group_ids.any?
+      @scope =
+        @scope
+          .joins(:user)
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", group_ids)
+          .distinct(:id)
+      return
+    end
+
+    @scope = @scope.none
   end
 
   def apply_custom_filter!(scope:, filter_name:, values:)
@@ -828,8 +869,9 @@ class TopicsFilter
   end
 
   def filter_tag_groups(values:)
-    values.each do |key_prefix, tag_groups|
-      tag_group_ids = TagGroup.visible(@guardian).where(name: tag_groups).pluck(:id)
+    values.each do |key_prefix, tag_groups_value|
+      tag_group_name = strip_quotes(tag_groups_value)
+      tag_group_ids = TagGroup.visible(@guardian).where_name(tag_group_name).pluck(:id)
       exclude_clause = "NOT" if key_prefix == "-"
       filter =
         "tags.id #{exclude_clause} IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))"
@@ -846,6 +888,10 @@ class TopicsFilter
 
       @scope = query.distinct(:id)
     end
+  end
+
+  def strip_quotes(value)
+    value.gsub(/\A["']|["']\z/, "")
   end
 
   def filter_tags(values:)

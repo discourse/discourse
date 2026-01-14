@@ -10,6 +10,7 @@ ur:
       logs:
         staff_actions:
           actions:
+            update_automation: آٹومیشن کو اپ ڈیٹ کریں۔
             delete_automation: آٹومیشن کو حذف کریں
     discourse_automation:
       title: آٹومیشن
@@ -37,6 +38,12 @@ ur:
         text:
           label: ٹیکسٹ
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: زمرہ جات
+            tags:
+              label: ٹیگز
         not_found: ٹرگر `%{trigger}` آٹومیشن `%{automation}` کے لیے نہیں ملا، براہ کرم یقین دہانی کریں کہ متعلقہ پلگ اِن انسٹال ہے۔
         user_badge_granted:
           fields:
@@ -218,6 +225,8 @@ ur:
               label: ٹاپک ID
             user:
               label: صارف
+        set_topic_timer:
+          title: ٹاپک ٹائمر مقرر کریں
       models:
         trigger:
           name:

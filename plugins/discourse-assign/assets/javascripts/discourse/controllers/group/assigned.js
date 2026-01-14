@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -5,15 +6,17 @@ import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { trackedArray } from "discourse/lib/tracked-tools";
 
 export default class GroupAssigned extends Controller {
   @service router;
   @controller application;
 
-  loading = false;
-  offset = 0;
-  filterName = "";
-  filter = "";
+  @tracked filter = "";
+  @tracked filterName = "";
+  @tracked loading = false;
+  @tracked offset = 0;
+  @trackedArray members = [];
 
   @discourseComputed("router.currentRoute.queryParams.order")
   order(order) {
@@ -60,9 +63,9 @@ export default class GroupAssigned extends Controller {
       });
   }
 
-  findMembers(refresh) {
+  async findMembers(refresh) {
     if (refresh) {
-      this.set("members", this.model.members);
+      this.members = this.model.members;
       return;
     }
 
@@ -71,16 +74,19 @@ export default class GroupAssigned extends Controller {
     }
 
     if (this.model.members.length >= this.offset + 50) {
-      this.set("loading", true);
-      this.set("offset", this.offset + 50);
-      ajax(`/assign/members/${this.group.name}`, {
-        type: "GET",
-        data: { filter: this.filter, offset: this.offset },
-      })
-        .then((result) => {
-          this.members.pushObjects(result.members);
-        })
-        .finally(() => this.set("loading", false));
+      try {
+        this.loading = true;
+        this.offset = this.offset + 50;
+
+        const result = await ajax(`/assign/members/${this.group.name}`, {
+          type: "GET",
+          data: { filter: this.filter, offset: this.offset },
+        });
+
+        this.members.push(...result.members);
+      } finally {
+        this.loading = false;
+      }
     }
   }
 

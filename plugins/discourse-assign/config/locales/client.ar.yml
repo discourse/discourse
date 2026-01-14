@@ -41,7 +41,6 @@ ar:
       assigned_topic_to: "تم تعيين الموضوع إلى المستخدم <a href='%{path}'>%{username}</a>"
       assign_post_to: "تم تعيين المنشور #%{post_number} إلى المستخدم %{username}"
       assign_post_to_multiple: "#%{post_number} إلى %{username}"
-      assigned_to_w_ellipsis: "معيَّنة إلى..."
       unassign:
         title: "إلغاء التعيين"
         title_w_ellipsis: "إلغاء التعيين..."

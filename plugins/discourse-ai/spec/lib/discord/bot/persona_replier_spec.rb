@@ -23,5 +23,14 @@ RSpec.describe DiscourseAi::Discord::Bot::PersonaReplier do
       persona_replier.handle_interaction!
       expect(persona_replier).to have_received(:create_reply).at_least(:once)
     end
+
+    it "uses a BotContext to generate the reply" do
+      expect_any_instance_of(DiscourseAi::Personas::Bot).to receive(:reply) do |bot, context|
+        expect(context).to be_a(DiscourseAi::Personas::BotContext)
+        [["This is a reply from bot!"]]
+      end
+
+      persona_replier.handle_interaction!
+    end
   end
 end

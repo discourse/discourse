@@ -126,7 +126,8 @@ class GlobalSetting
     hostnames
   end
 
-  def self.database_config
+  def self.database_config(variables_overrides: {})
+    variables_overrides = variables_overrides.with_indifferent_access
     hash = { "adapter" => "postgresql" }
 
     %w[
@@ -166,6 +167,11 @@ class GlobalSetting
       db_variables.each do |k|
         hash["variables"][k.slice(("db_variables_".length)..)] = self.public_send(k)
       end
+    end
+
+    variables_overrides.each do |key, value|
+      hash["variables"] ||= {}
+      hash["variables"][key.to_s] = value
     end
 
     { "production" => hash }
@@ -266,9 +272,9 @@ class GlobalSetting
         domain: GlobalSetting.smtp_domain,
         user_name: GlobalSetting.smtp_user_name,
         password: GlobalSetting.smtp_password,
-        enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
-        open_timeout: GlobalSetting.smtp_open_timeout,
-        read_timeout: GlobalSetting.smtp_read_timeout,
+        enable_starttls_auto: !GlobalSetting.smtp_force_tls && GlobalSetting.smtp_enable_start_tls,
+        open_timeout: GlobalSetting.smtp_open_timeout.to_f,
+        read_timeout: GlobalSetting.smtp_read_timeout.to_f,
       }
 
       if settings[:password] || settings[:user_name]
@@ -288,7 +294,7 @@ class GlobalSetting
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"
-      return $1.to_i if setting.to_s.strip =~ /\A([0-9]+)\z/
+      return $1.to_i if setting.to_s.strip =~ /\A(-?[0-9]+)\z/
       setting
     end
 
@@ -366,13 +372,14 @@ class GlobalSetting
     attr_accessor :provider
   end
 
-  def self.configure!
-    if Rails.env.test?
+  def self.configure!(
+    path: File.expand_path("../../../config/discourse.conf", __FILE__),
+    use_blank_provider: Rails.env.test?
+  )
+    if use_blank_provider
       @provider = BlankProvider.new
     else
-      @provider =
-        FileProvider.from(File.expand_path("../../../config/discourse.conf", __FILE__)) ||
-          EnvProvider.new
+      @provider = FileProvider.from(path) || EnvProvider.new
     end
   end
 

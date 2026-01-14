@@ -11,6 +11,8 @@ gl:
       not_accepting_dms: "Sentímolo, %{username} non acepta mensaxes neste momento."
     reviewables:
       actions:
+        no_action_message:
+          title: "Sen acción"
         agree:
           title: "De acordo..."
         agree_and_suspend:
@@ -19,8 +21,8 @@ gl:
         agree_and_silence:
           title: "Silenciar o usuario"
           description: "De acordo con esta denuncia e silenciar o usuario."
-        disagree:
-          title: "Discrepar"
+        ignore:
+          title: "Ignorar denuncia"
     channel:
       dm_title:
         single_user: "%{username}"

@@ -358,6 +358,49 @@ RSpec.describe Group do
         expect(publish_event_job_args["group_id"]).to eq(tl0_users.id)
         expect(publish_event_job_args["type"]).to eq("add")
       end
+
+      it "clears flair_group_id when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        moderators.update!(flair_icon: "shield-halved")
+        user.update!(moderator: true, flair_group_id: moderators.id)
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(GroupUser.exists?(group: moderators, user: user)).to eq(true)
+        expect(user.reload.flair_group_id).to eq(moderators.id)
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(GroupUser.exists?(group: moderators, user: user)).to eq(false)
+        expect(user.reload.flair_group_id).to be_nil
+      end
+
+      it "clears primary_group_id when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        user.update!(moderator: true, primary_group_id: moderators.id)
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(user.reload.primary_group_id).to eq(moderators.id)
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(user.reload.primary_group_id).to be_nil
+      end
+
+      it "clears title when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        moderators.update!(title: "Moderator")
+        user.update!(moderator: true, title: "Moderator")
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(user.reload.title).to eq("Moderator")
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(user.reload.title).to be_nil
+      end
     end
 
     it "makes sure the everyone group is not visible except to staff" do
@@ -411,18 +454,49 @@ RSpec.describe Group do
       end
     end
 
-    it "does not use the localized name if name has already been taken" do
-      begin
-        I18n.locale = SiteSetting.default_locale = "de"
+    it "does not use the localized name if name has already been taken when switching to a the english locale" do
+      I18n.locale = SiteSetting.default_locale = "de"
 
-        Fabricate(:group, name: I18n.t("groups.default_names.staff").upcase)
-        group = Group.refresh_automatic_group!(:staff)
-        expect(group.name).to eq("staff")
+      Group.refresh_automatic_group!(:staff)
+      Group.refresh_automatic_group!(:moderators)
 
-        Fabricate(:user, username: I18n.t("groups.default_names.moderators").upcase)
-        group = Group.refresh_automatic_group!(:moderators)
-        expect(group.name).to eq("moderators")
-      end
+      moderator_group = Group.find(Group::AUTO_GROUPS[:moderators])
+      staff_group = Group.find(Group::AUTO_GROUPS[:staff])
+
+      expect(moderator_group.name).to eq("Moderatoren")
+      expect(staff_group.name).to eq("Team")
+
+      I18n.locale = SiteSetting.default_locale = "en"
+
+      Fabricate(:group, name: I18n.t("groups.default_names.staff").upcase)
+      Group.refresh_automatic_group!(:staff)
+
+      expect(staff_group.reload.name).to eq("Team")
+
+      Fabricate(:user, username: I18n.t("groups.default_names.moderators").upcase)
+      Group.refresh_automatic_group!(:moderators)
+
+      expect(moderator_group.reload.name).to eq("Moderatoren")
+    end
+
+    it "does not use the localized name if name has already been taken when switching to a non-english locale" do
+      moderator_group = Group.find(Group::AUTO_GROUPS[:moderators])
+      staff_group = Group.find(Group::AUTO_GROUPS[:staff])
+
+      expect(moderator_group.name).to eq("moderators")
+      expect(staff_group.name).to eq("staff")
+
+      I18n.locale = SiteSetting.default_locale = "de"
+
+      Fabricate(:group, name: I18n.t("groups.default_names.staff").upcase)
+      Group.refresh_automatic_group!(:staff)
+
+      expect(staff_group.reload.name).to eq(staff_group.name)
+
+      Fabricate(:user, username: I18n.t("groups.default_names.moderators").upcase)
+      Group.refresh_automatic_group!(:moderators)
+
+      expect(moderator_group.reload.name).to eq(moderator_group.name)
     end
 
     it "always uses the default locale" do
@@ -1032,6 +1106,49 @@ RSpec.describe Group do
         expect(payload["user_id"]).to eq(user.id)
       end
     end
+
+    context "when publishing updates" do
+      fab!(:category)
+
+      before { group.update!(public_exit: true) }
+
+      it "should publish category removal when category is read-restricted to the group" do
+        category.set_permissions(group => :full)
+        category.save!
+        group.update!(categories: [category])
+
+        message = MessageBus.track_publish("/categories") { group.remove(user) }.first
+
+        expect(message.data[:deleted_categories]).to eq([category.id])
+        expect(message.data[:categories]).to be_blank
+        expect(message.user_ids).to eq([user.id])
+      end
+
+      it "should publish updated category permissions when category is readable by everyone" do
+        category.set_permissions(:everyone => :readonly, group => :full)
+        category.save!
+        group.update!(categories: [category])
+
+        message = MessageBus.track_publish("/categories") { group.remove(user) }.first
+
+        expect(message.data[:categories].count).to eq(1)
+        expect(message.data[:categories].first[:id]).to eq(category.id)
+        expect(message.data[:deleted_categories]).to be_blank
+        expect(message.user_ids).to eq([user.id])
+      end
+
+      describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
+        it "should publish a message to refresh the user's client" do
+          group.categories += Fabricate.times(Group::PUBLISH_CATEGORIES_LIMIT + 1, :category)
+
+          message = MessageBus.track_publish { group.remove(user) }.first
+
+          expect(message.data).to eq("clobber")
+          expect(message.channel).to eq("/refresh_client")
+          expect(message.user_ids).to eq([user.id])
+        end
+      end
+    end
   end
 
   describe "#add" do
@@ -1102,7 +1219,7 @@ RSpec.describe Group do
 
       describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
         it "should publish a message to refresh the user's client" do
-          (Group::PUBLISH_CATEGORIES_LIMIT + 1).times { group.categories << Fabricate(:category) }
+          group.categories += Fabricate.times(Group::PUBLISH_CATEGORIES_LIMIT + 1, :category)
 
           message = MessageBus.track_publish { group.add(user) }.first
 
@@ -1239,83 +1356,6 @@ RSpec.describe Group do
       job = Jobs::AutomaticGroupMembership.jobs.last
 
       expect(job["args"].first["group_id"]).to eq(group.id)
-    end
-  end
-
-  describe "IMAP" do
-    let(:group) { Fabricate(:group) }
-    let(:mocked_imap_provider) do
-      MockedImapProvider.new(
-        group.imap_server,
-        port: group.imap_port,
-        ssl: group.imap_ssl,
-        username: group.email_username,
-        password: group.email_password,
-      )
-    end
-
-    def mock_imap
-      Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(mocked_imap_provider)
-    end
-
-    def configure_imap
-      group.update(
-        imap_server: "imap.gmail.com",
-        imap_port: 993,
-        imap_ssl: true,
-        imap_enabled: true,
-        email_username: "test@gmail.com",
-        email_password: "testPassword1!",
-      )
-    end
-
-    def enable_imap
-      SiteSetting.enable_imap = true
-      mocked_imap_provider.stubs(:connect!)
-      mocked_imap_provider.stubs(:list_mailboxes_with_attributes).returns(
-        [stub(attr: [], name: "Inbox")],
-      )
-      mocked_imap_provider.stubs(:list_mailboxes).returns(["Inbox"])
-      mocked_imap_provider.stubs(:disconnect!)
-    end
-
-    before { Discourse.redis.del("group_imap_mailboxes_#{group.id}") }
-
-    describe "#imap_mailboxes" do
-      it "returns an empty array if group imap is not configured" do
-        expect(group.imap_mailboxes).to eq([])
-      end
-
-      it "returns an empty array and does not contact IMAP server if group imap is configured but the setting is disabled" do
-        configure_imap
-        Imap::Providers::Detector.expects(:init_with_detected_provider).never
-        expect(group.imap_mailboxes).to eq([])
-      end
-
-      it "logs the imap error if one occurs" do
-        configure_imap
-        mock_imap
-        SiteSetting.enable_imap = true
-        mocked_imap_provider.stubs(:connect!).raises(Net::IMAP::NoResponseError)
-        group.imap_mailboxes
-        expect(group.reload.imap_last_error).not_to eq(nil)
-      end
-
-      it "returns a list of mailboxes from the IMAP provider" do
-        configure_imap
-        mock_imap
-        enable_imap
-        expect(group.imap_mailboxes).to eq(["Inbox"])
-      end
-
-      it "caches the login and mailbox fetch" do
-        configure_imap
-        mock_imap
-        enable_imap
-        group.imap_mailboxes
-        Imap::Providers::Detector.expects(:init_with_detected_provider).never
-        group.imap_mailboxes
-      end
     end
   end
 
@@ -1527,23 +1567,6 @@ RSpec.describe Group do
       expect(group.reload.smtp_updated_at).not_to eq_time(old_updated_at)
     end
 
-    it "enables imap and records the change" do
-      group.update(
-        imap_port: 587,
-        imap_ssl: true,
-        imap_server: "imap.gmail.com",
-        email_username: "test@gmail.com",
-        email_password: "password",
-      )
-
-      group.record_email_setting_changes!(user)
-      group.reload
-
-      expect(group.imap_enabled).to eq(true)
-      expect(group.imap_updated_at).not_to eq(nil)
-      expect(group.imap_updated_by).to eq(user)
-    end
-
     it "disables smtp and records the change" do
       group.update(
         smtp_port: 587,
@@ -1571,34 +1594,6 @@ RSpec.describe Group do
       expect(group.smtp_enabled).to eq(false)
       expect(group.smtp_updated_at).not_to eq(nil)
       expect(group.smtp_updated_by).to eq(user)
-    end
-
-    it "disables imap and records the change" do
-      group.update(
-        imap_port: 587,
-        imap_ssl: true,
-        imap_server: "imap.gmail.com",
-        email_username: "test@gmail.com",
-        email_password: "password",
-      )
-
-      group.record_email_setting_changes!(user)
-      group.reload
-
-      group.update(
-        imap_port: nil,
-        imap_ssl: false,
-        imap_server: nil,
-        email_username: nil,
-        email_password: nil,
-      )
-
-      group.record_email_setting_changes!(user)
-      group.reload
-
-      expect(group.imap_enabled).to eq(false)
-      expect(group.imap_updated_at).not_to eq(nil)
-      expect(group.imap_updated_by).to eq(user)
     end
   end
 

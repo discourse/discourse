@@ -1,6 +1,6 @@
+import Themes from "discourse/admin/components/admin-config-areas/themes";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { i18n } from "discourse-i18n";
-import Themes from "admin/components/admin-config-areas/themes";
 
 export default <template>
   <DBreadcrumbsItem

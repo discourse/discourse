@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import DMenu from "float-kit/components/d-menu";
+import { eq } from "discourse/truth-helpers";
 
 export const FITZPATRICK_MODIFIERS = [
   { scale: null, modifier: "" },

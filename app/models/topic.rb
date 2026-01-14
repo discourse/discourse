@@ -16,11 +16,6 @@ class Topic < ActiveRecord::Base
 
   EXTERNAL_ID_MAX_LENGTH = 50
 
-  self.ignored_columns = [
-    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  ]
-
   def_delegator :featured_users, :user_ids, :featured_user_ids
   def_delegator :featured_users, :choose, :feature_topic_users
 
@@ -366,7 +361,7 @@ class Topic < ActiveRecord::Base
   scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
 
   scope :secured,
-        lambda { |guardian = nil|
+        lambda { |guardian = nil, include_uncategorized: true|
           ids = guardian.secure_category_ids if guardian
 
           # Query conditions
@@ -377,8 +372,10 @@ class Topic < ActiveRecord::Base
               ["NOT read_restricted"]
             end
 
+          uncategorized_condition = "topics.category_id IS NULL OR" if include_uncategorized
+
           where(
-            "topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
+            "#{uncategorized_condition} topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
             condition[1],
           )
         }
@@ -1048,16 +1045,13 @@ class Topic < ActiveRecord::Base
       RETURNING highest_post_number
     SQL
 
-    highest_post_number = result.first.to_i
+    highest = result.first.to_i
 
-    # Update the forum topic user records
-    DB.exec(<<~SQL, highest: highest_post_number, topic_id: topic_id)
+    DB.exec(<<~SQL, highest:, topic_id:)
       UPDATE topic_users
-      SET last_read_post_number = CASE
-                                  WHEN last_read_post_number > :highest THEN :highest
-                                  ELSE last_read_post_number
-                                  END
-      WHERE topic_id = :topic_id
+         SET last_read_post_number = :highest
+       WHERE topic_id = :topic_id
+         AND last_read_post_number > :highest
     SQL
   end
 
@@ -1154,6 +1148,7 @@ class Topic < ActiveRecord::Base
         topic_id: self.id,
         silent: opts[:silent],
         skip_validations: true,
+        skip_guardian: opts[:skip_guardian],
         custom_fields: opts[:custom_fields],
         import_mode: opts[:import_mode],
       )
@@ -1212,13 +1207,14 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
 
       if topic_user
+        topic_user.destroy
+
         if user.id == removed_by&.id
-          add_small_action(removed_by, "user_left", user.username)
+          add_small_action(removed_by, "user_left", user.username, skip_guardian: true)
         else
-          add_small_action(removed_by, "removed_user", user.username)
+          add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
         end
 
-        topic_user.destroy
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
         return true
       end
@@ -2196,6 +2192,14 @@ class Topic < ActiveRecord::Base
         topic_allowed_users.create!(user_id: target_user.id)
       end
 
+      # Set the invited user to watch the PM so they receive notifications for new messages
+      # even if they haven’t opened the PM yet.
+      TopicUser.change(
+        target_user,
+        self,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
       user_in_allowed_group = (user.group_ids & topic_allowed_groups.map(&:group_id)).present?
       add_small_action(invited_by, "invited_user", target_user.username) if !user_in_allowed_group
 
@@ -2300,6 +2304,7 @@ end
 #  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
 #  index_topics_on_bannered_until          (bannered_until) WHERE (bannered_until IS NOT NULL)
 #  index_topics_on_bumped_at_public        (bumped_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
+#  index_topics_on_category_id             (category_id) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_external_id             (external_id) UNIQUE WHERE (external_id IS NOT NULL)
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)

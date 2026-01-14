@@ -20,6 +20,7 @@ lv:
       channel_settings:
         edit: "Rediģēt"
         add: "Pievienot"
+        notification_settings_context: "Paziņojumi"
         join: "Pievienojieties"
         leave: "Iziet"
       close: "Aizvērt"
@@ -54,6 +55,8 @@ lv:
       chat_message_separator:
         today: Šodien
         yesterday: Vakar
+      search_view:
+        filter_placeholder: Meklēt ziņās
       about_view:
         title: Virsraksts
         name: Vārds
@@ -63,6 +66,7 @@ lv:
         tabs:
           members: Dalībnieki
           settings: Iestatījumi
+          search: Meklēt
         remove_member: "Atcelt"
       new_message_modal:
         filter: "Filtrs"
@@ -95,6 +99,12 @@ lv:
         category_label: "Sadaļa"
         history_label: "Vēsture"
         members_label: "Dalībnieki"
+      search:
+        short_title: Meklēt
+        no_results: "Nekas nav atrasts"
+        sort:
+          relevance: "Nozīmīgums"
+          latest: "Pēdējais"
       incoming_webhooks:
         back: "Atpakaļ"
         description: "Apraksts"

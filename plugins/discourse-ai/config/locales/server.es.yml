@@ -26,10 +26,6 @@ es:
       llm_triage:
         title: Triaje de publicaciones mediante IA
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
-        flagged_post: |
-          <div>Respuesta del modelo:</div>
-          <p>%{llm_response}</p>
-          <b>Activada por la regla<a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a></b>
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"
@@ -102,7 +98,6 @@ es:
     ai_bot_allowed_groups: "Cuando el Bot GPT tenga acceso al MP, responderá a los miembros de estos grupos."
     ai_bot_debugging_allowed_groups: "Permitir que estos grupos vean un botón de depuración en las publicaciones que muestre la solicitud y la respuesta sin procesar de la IA."
     ai_bot_public_sharing_allowed_groups: "Permitir que estos grupos compartan mensajes personales de IA con el público a través de un enlace único disponible públicamente. Nota: Si tu sitio requiere inicio de sesión, los mensajes compartidos también requerirán inicio de sesión."
-    ai_bot_add_to_header: "Mostrar un botón en el encabezado para iniciar un MP con un bot de IA"
     ai_bot_github_access_token: "Token de acceso a GitHub para utilizarlo con las herramientas de IA de GitHub (necesario para la compatibilidad con búsquedas)"
     ai_stability_api_key: "Clave API para la API de stability.ai"
     ai_stability_engine: "Motor de generación de imágenes que se utilizará para la API stability.ai"
@@ -237,8 +232,10 @@ es:
           name: "Tipo de cambio"
         stock_quote:
           name: "Cotización de acciones (AlphaVantage)"
-        image_generation:
-          name: "Generador de imágenes de flujo (Together.ai)"
+        image_generation_custom:
+          name: "Personalizado"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Empieza desde cero..."
       name:
@@ -255,10 +252,6 @@ es:
         explain: "Explicar"
         illustrate_post: "Ilustrar publicación"
         replace_dates: "Fechas inteligentes"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Imagen de Stable Diffusion XL"
-          dall_e_3: "Imagen de DALL-E 3"
       image_caption:
         attribution: "Subtitulado por IA"
     share_ai:
@@ -283,7 +276,6 @@ es:
     ai_bot:
       reply_error: "Lo sentimos, parece que nuestro sistema ha encontrado un problema inesperado al intentar responder.\n\n[details='Detalles del error']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA sin título]"
-      thinking: "Pensando..."
       personas:
         default_llm_required: "Se requiere el modelo LLM predeterminado antes de activar el Chat"
         cannot_delete_system_persona: "Las personas del sistema no se pueden eliminar, desactívalas en su lugar"
@@ -351,7 +343,6 @@ es:
           description: "Persona por defecto que impulsa la característica de generar tabla markdown del Ayudante"
         post_illustrator:
           name: "Ilustrador de publicaciones"
-          description: "Genera instrucciones de StableDiffusion para impulsar la característica de ilustrar publicación del Ayudante"
         proofreader:
           name: "Corrector"
           description: "Persona por defecto que impulsa la característica de corregir texto del Ayudante"
@@ -448,9 +439,9 @@ es:
         github_search_files: "Archivos de búsqueda de GitHub"
         github_search_code: "Búsqueda de código en GitHub"
         github_file_content: "Contenido del archivo de GitHub"
-        github_pull_request_diff: "Diferencia de solicitud de extracción de GitHub"
         random_picker: "Selector aleatorio"
         categories: "Lista de categorías"
+        flag_post: "Denunciar publicación"
         search: "Buscar"
         tags: "Listar etiquetas"
         time: "Hora"
@@ -476,7 +467,6 @@ es:
         github_search_code: "Buscar código en un repositorio de GitHub"
         github_search_files: "Buscar archivos en un repositorio de GitHub"
         github_file_content: "Recuperar el contenido de los archivos de un repositorio de GitHub"
-        github_pull_request_diff: "Recuperar una diferencia de solicitud de extracción de GitHub"
         random_picker: "Elige un número aleatorio o un elemento aleatorio de una lista"
         categories: "Listar todas las categorías visibles públicamente en el foro"
         search: "Buscar todos los temas públicos en el foro."
@@ -502,7 +492,7 @@ es:
         web_browser: "Leyendo <a href='%{url}'>%{url}</a>"
         github_search_files: "Se buscó «%{keywords}» en %{repo}/%{branch}"
         github_search_code: "Se buscó «%{query}» en %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Contenido recuperado de %{file_paths} de %{repo_name}@%{branch}"
         random_picker: "Escogiendo entre %{options}, escogido: %{result}"
         read: "Leyendo: <a href='%{url}'>%{title}</a>"
@@ -612,6 +602,3 @@ es:
       custom_tool_exists:
         one: "Ya existe una herramienta personalizada con el nombre %{names}."
         other: "Ya existen herramientas personalizadas con los nombres %{names}."
-  dashboard:
-    problem:
-      ai_llm_status: "El modelo LLM: %{model_name} está teniendo problemas. Comprueba la <a href='%{url}'>página de configuración del modelo</a>."

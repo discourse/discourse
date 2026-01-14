@@ -10,6 +10,32 @@ el:
       answer_count:
         one: "%{count} Απάντηση"
         other: "%{count} Απαντήσεις"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Καμία ενέργεια"
+        agree_and_keep_comment:
+          title: "Διατήρηση σχολίου"
+        agree_and_keep_deleted:
+          title: "Διατήρηση σχολίου ως Διαγραμμένο"
+        agree_and_restore:
+          title: "Επαναφορά σχολίου"
+          description: "Επαναφορά του σχολίου ώστε οι χρήστες να μπορούν να το δουν."
+        agree_and_delete:
+          title: "Διαγραφή σχολίου"
+          description: "Διαγράψτε το σχόλιο ώστε οι χρήστες να μην μπορούν να το δουν."
+        agree_and_suspend:
+          title: "Αναστολή χρήστη"
+        agree_and_silence:
+          title: "Σίγαση χρήστη"
+          description: "Συμφωνία με την αναφορά και σίγηση του χρήστη."
+        disagree_and_restore:
+          title: "Διαφωνώ και Επαναφορά σχολίου"
+        disagree:
+          title: "Διατήρηση σχολίου"
+        ignore:
+          title: "Αγνόηση επισήμανσης"
   post_action_types:
     vote:
       title: "Ψήφισε"
@@ -34,9 +60,9 @@ el:
           disagree_and_restore:
             title: "Διαφωνώ και Επαναφορά σχολίου"
           disagree:
-            title: "Διαφωνώ"
+            title: "Διατήρηση σχολίου"
           ignore:
-            title: "Μην κάνετε τίποτα"
+            title: "Αγνόηση επισήμανσης"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

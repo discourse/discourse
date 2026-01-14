@@ -9,6 +9,10 @@ sw:
     overall_sentiment:
       yaxis: "Tarehe"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Binafsi"
     ai_bot:
       tool_summary:
         search: "Tafuta"

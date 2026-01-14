@@ -1931,6 +1931,26 @@ RSpec.describe PostAlerter do
         ).and not_add_notification(staged_non_member, :watching_category_or_tag)
       end
 
+      it "notifies even if the user has disabled link notifications" do
+        linked_post = Fabricate(:post, user: user)
+        topic = Fabricate(:topic, category: category)
+
+        CategoryUser.set_notification_level_for_category(
+          user,
+          CategoryUser.notification_levels[:watching],
+          category.id,
+        )
+        user.user_option.update!(notify_on_linked_posts: false)
+
+        post = create_post(topic:, raw: "Check this out: #{linked_post.full_url}")
+
+        expect(post.topic_links.first.link_post_id).to eq(linked_post.id)
+        expect { PostAlerter.post_created(post) }.to add_notification(
+          user,
+          :watching_category_or_tag,
+        ).and not_add_notification(user, :linked)
+      end
+
       it "does not update existing unread notification" do
         CategoryUser.set_notification_level_for_category(
           user,
@@ -2034,6 +2054,23 @@ RSpec.describe PostAlerter do
 
         expect { PostAlerter.post_created(post) }.to change { Notification.count }.by(1)
       end
+
+      it "notifies even if the user has disabled link notifications" do
+        linked_post = Fabricate(:post, user: user)
+        tag = Fabricate(:tag)
+        topic = Fabricate(:topic, tags: [tag])
+
+        TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+        user.user_option.update!(notify_on_linked_posts: false)
+
+        post = create_post(topic:, raw: "Check this out: #{linked_post.full_url}")
+
+        expect(post.topic_links.first.link_post_id).to eq(linked_post.id)
+        expect { PostAlerter.post_created(post) }.to add_notification(
+          user,
+          :watching_category_or_tag,
+        ).and not_add_notification(user, :linked)
+      end
     end
 
     context "with category and tags" do
@@ -2095,51 +2132,7 @@ RSpec.describe PostAlerter do
         )
       end
 
-      it "adds notification when watched_precedence_over_muted setting is true" do
-        SiteSetting.watched_precedence_over_muted = true
-        expect {
-          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
-        }.to change { Notification.count }.by(1)
-        expect {
-          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
-        }.to change { Notification.count }.by(1)
-        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
-          Notification.count
-        }.by(1)
-      end
-
-      it "respects user option even if watched_precedence_over_muted site setting is true" do
-        SiteSetting.watched_precedence_over_muted = true
-        user.user_option.update!(watched_precedence_over_muted: false)
-        expect {
-          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
-        }.not_to change { Notification.count }
-        expect {
-          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
-        }.not_to change { Notification.count }
-        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
-          Notification.count
-        }.by(1)
-      end
-
-      it "does not add notification when watched_precedence_over_muted setting is false" do
-        SiteSetting.watched_precedence_over_muted = false
-        expect {
-          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
-        }.not_to change { Notification.count }
-        expect {
-          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
-        }.not_to change { Notification.count }
-        expect { PostAlerter.post_created(topic_with_watched_category.posts.first) }.to change {
-          Notification.count
-        }.by(1)
-        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
-          Notification.count
-        }.by(1)
-      end
-
-      it "respects user option even if watched_precedence_over_muted site setting is false" do
-        SiteSetting.watched_precedence_over_muted = false
+      it "adds notification when watched_precedence_over_muted preference is true" do
         user.user_option.update!(watched_precedence_over_muted: true)
         expect {
           PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
@@ -2147,6 +2140,19 @@ RSpec.describe PostAlerter do
         expect {
           PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
         }.to change { Notification.count }.by(1)
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
+      end
+
+      it "does not add notifcation when watched_precedence_over_muted preference is false" do
+        user.user_option.update!(watched_precedence_over_muted: false)
+        expect {
+          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
+        }.not_to change { Notification.count }
+        expect {
+          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
+        }.not_to change { Notification.count }
         expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
           Notification.count
         }.by(1)
@@ -2451,13 +2457,9 @@ RSpec.describe PostAlerter do
         smtp_server: "smtp.gmail.com",
         smtp_port: 587,
         smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
-        imap_server: "imap.gmail.com",
-        imap_port: 993,
-        imap_ssl: true,
         email_username: "discourse@example.com",
         email_password: "password",
         smtp_enabled: true,
-        imap_enabled: true,
       )
     end
 

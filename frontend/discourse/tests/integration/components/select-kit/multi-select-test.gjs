@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import MultiSelect from "select-kit/components/multi-select";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },

@@ -149,4 +149,16 @@ RSpec.describe "Remote theme update" do
     expect(ColorScheme.unscoped.exists?(id: scheme1.id)).to eq(true)
     expect(ColorScheme.unscoped.exists?(id: scheme2.id)).to eq(false)
   end
+
+  it "does not delete custom color schemes when installing a new theme" do
+    custom_scheme = ColorScheme.create!(name: "My Custom Palette")
+    custom_scheme.color_scheme_colors.create!(name: "primary", hex: "ff0000")
+
+    expect(custom_scheme.theme_id).to be_nil
+    expect(ColorScheme.find_by(name: "My Custom Palette")).to be_present
+
+    new_theme = RemoteTheme.import_theme(initial_repo_url)
+
+    expect(ColorScheme.find_by(name: "My Custom Palette")).to be_present
+  end
 end

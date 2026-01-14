@@ -16,9 +16,9 @@ import { topicLevels } from "discourse/lib/notification-levels";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import autoFocus from "discourse/modifiers/auto-focus";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import TagChooser from "select-kit/components/tag-chooser";
 
 const _customActions = {};
 
@@ -34,7 +34,7 @@ export default class BulkTopicActions extends Component {
   @tracked categoryId;
   @tracked loading;
   @tracked errors;
-  @tracked isSilent = false;
+  @tracked notifyUsers = false;
   @tracked closeNote = null;
 
   @tracked notificationLevelId = null;
@@ -86,7 +86,7 @@ export default class BulkTopicActions extends Component {
     const topicIds = [];
     const options = {};
 
-    if (this.isSilent) {
+    if (this.model.allowSilent && !this.notifyUsers) {
       operation.silent = true;
     }
 
@@ -437,14 +437,14 @@ export default class BulkTopicActions extends Component {
         {{#if @model.allowSilent}}
           <div class="topic-bulk-actions-options">
             <label
-              for="topic-bulk-action-options__silent"
+              for="topic-bulk-action-options__notify"
               class="checkbox-label"
             >
               <Input
-                id="topic-bulk-action-options__silent"
+                id="topic-bulk-action-options__notify"
                 @type="checkbox"
-                @checked={{this.isSilent}}
-              />{{i18n "topics.bulk.silent"}}</label>
+                @checked={{this.notifyUsers}}
+              />{{i18n "topics.bulk.notify"}}</label>
           </div>
         {{/if}}
 

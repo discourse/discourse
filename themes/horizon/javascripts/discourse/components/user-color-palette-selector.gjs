@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { reload } from "discourse/helpers/page-reloader";
@@ -13,7 +14,6 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import cookie from "discourse/lib/cookie";
-import DMenu from "float-kit/components/d-menu";
 import UserColorPaletteMenuItem from "./user-color-palette-menu-item";
 
 const HORIZON_PALETTES = [

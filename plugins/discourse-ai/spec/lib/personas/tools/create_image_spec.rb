@@ -4,12 +4,40 @@ RSpec.describe DiscourseAi::Personas::Tools::CreateImage do
   let(:prompts) { ["a watercolor painting", "an abstract design"] }
 
   fab!(:gpt_35_turbo) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
+  fab!(:admin)
+
+  fab!(:test_upload) do
+    Fabricate(
+      :upload,
+      sha1: Upload.sha1_from_short_url("upload://test123"),
+      original_filename: "test_image.png",
+    )
+  end
+
+  fab!(:image_tool) do
+    AiTool.create!(
+      name: "test_image_generator",
+      tool_name: "test_image_generator",
+      description: "Test image generation tool",
+      summary: "Generates test images",
+      parameters: [{ name: "prompt", type: "string", required: true }],
+      script: <<~JS,
+        function invoke(params) {
+          upload.create("test_image.png", "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==");
+          chain.setCustomRaw(`![${params.prompt}](upload://test123)`);
+          return { result: "success" };
+        }
+      JS
+      created_by_id: admin.id,
+      enabled: true,
+      is_image_generation_tool: true,
+    )
+  end
 
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
     toggle_enabled_bots(bots: [gpt_35_turbo])
-    SiteSetting.ai_openai_api_key = "abc"
   end
 
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_35_turbo.name) }
@@ -18,122 +46,63 @@ RSpec.describe DiscourseAi::Personas::Tools::CreateImage do
 
   let(:create_image) { described_class.new({ prompts: prompts }, llm: llm, bot_user: bot_user) }
 
-  let(:base64_image) do
-    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-  end
+  describe "#invoke" do
+    it "returns error when no image generation tools are configured" do
+      image_tool.update!(enabled: false)
 
-  describe "#process" do
-    it "can reject generation of images and return a proper error to llm" do
-      error_message = {
-        error: {
-          message:
-            "Your request was rejected as a result of our safety system. Your request may contain content that is not allowed by our safety system.",
-          type: "user_error",
-          param: nil,
-          code: "moderation_blocked",
-        },
-      }
+      result = create_image.invoke(&progress_blk)
 
-      WebMock.stub_request(:post, "https://api.openai.com/v1/images/generations").to_return(
-        status: 400,
-        body: error_message.to_json,
-      )
-
-      info = create_image.invoke(&progress_blk).to_json
-      expect(info).to include("Your request was rejected as a result of our safety system.")
+      expect(result[:error]).to include("No image generation tools configured")
       expect(create_image.chain_next_response?).to eq(true)
     end
-    it "can generate images with gpt-image-1 model" do
-      data = [{ b64_json: base64_image, revised_prompt: "a watercolor painting of flowers" }]
 
-      WebMock
-        .stub_request(:post, "https://api.openai.com/v1/images/generations")
-        .with do |request|
-          json = JSON.parse(request.body, symbolize_names: true)
+    it "delegates to available custom image generation tool" do
+      result = create_image.invoke(&progress_blk)
 
-          expect(prompts).to include(json[:prompt])
-          expect(json[:model]).to eq("gpt-image-1")
-          expect(json[:size]).to eq("auto")
-          true
-        end
-        .to_return(status: 200, body: { data: data }.to_json)
-
-      info = create_image.invoke(&progress_blk).to_json
-
-      expect(JSON.parse(info)).to eq(
-        {
-          "prompts" => [
-            {
-              "prompt" => "a watercolor painting of flowers",
-              "url" => "upload://pv9zsrM93Jz3U8xELTJCPYU2DD0.png",
-            },
-            {
-              "prompt" => "a watercolor painting of flowers",
-              "url" => "upload://pv9zsrM93Jz3U8xELTJCPYU2DD0.png",
-            },
-          ],
-        },
-      )
-      expect(create_image.custom_raw).to include("upload://")
+      expect(result[:prompts]).to be_an(Array)
+      expect(result[:prompts].length).to eq(2)
+      expect(result[:prompts].first[:prompt]).to eq("a watercolor painting")
+      expect(result[:prompts].first[:url]).to include("upload://")
       expect(create_image.custom_raw).to include("[grid]")
-      expect(create_image.custom_raw).to include("a watercolor painting of flowers")
+      expect(create_image.custom_raw).to include("upload://")
     end
 
-    it "can defaults to auto size" do
-      create_image_with_size =
-        described_class.new({ prompts: ["a landscape"] }, llm: llm, bot_user: bot_user)
+    it "limits to 4 prompts maximum" do
+      many_prompts = ["prompt 1", "prompt 2", "prompt 3", "prompt 4", "prompt 5", "prompt 6"]
+      create_image_many =
+        described_class.new({ prompts: many_prompts }, llm: llm, bot_user: bot_user)
 
-      data = [{ b64_json: base64_image, revised_prompt: "a detailed landscape" }]
+      result = create_image_many.invoke(&progress_blk)
 
-      WebMock
-        .stub_request(:post, "https://api.openai.com/v1/images/generations")
-        .with do |request|
-          json = JSON.parse(request.body, symbolize_names: true)
-
-          expect(json[:prompt]).to eq("a landscape")
-          expect(json[:size]).to eq("auto")
-          true
-        end
-        .to_return(status: 200, body: { data: data }.to_json)
-
-      info = create_image_with_size.invoke(&progress_blk).to_json
-      expect(JSON.parse(info)).to eq(
-        "prompts" => [
-          {
-            "prompt" => "a detailed landscape",
-            "url" => "upload://pv9zsrM93Jz3U8xELTJCPYU2DD0.png",
-          },
-        ],
-      )
+      expect(result[:prompts].length).to eq(4)
     end
 
-    it "handles custom API endpoint" do
-      SiteSetting.ai_openai_image_generation_url = "https://custom-api.example.com/images/generate"
+    it "handles errors from custom tools gracefully" do
+      # Create a tool that raises an error
+      failing_tool =
+        AiTool.create!(
+          name: "failing_tool",
+          tool_name: "failing_tool",
+          description: "A tool that fails",
+          summary: "Fails",
+          parameters: [{ name: "prompt", type: "string", required: true }],
+          script: <<~JS,
+            function invoke(params) {
+              throw new Error("Tool error");
+            }
+          JS
+          created_by_id: admin.id,
+          enabled: true,
+          is_image_generation_tool: true,
+        )
 
-      data = [{ b64_json: base64_image, revised_prompt: "a watercolor painting" }]
+      # Disable the working tool so the failing one is used
+      image_tool.update!(enabled: false)
 
-      WebMock
-        .stub_request(:post, SiteSetting.ai_openai_image_generation_url)
-        .with do |request|
-          json = JSON.parse(request.body, symbolize_names: true)
-          expect(prompts).to include(json[:prompt])
-          true
-        end
-        .to_return(status: 200, body: { data: data }.to_json)
+      result = create_image.invoke(&progress_blk)
 
-      info = create_image.invoke(&progress_blk).to_json
-      expect(JSON.parse(info)).to eq(
-        "prompts" => [
-          {
-            "prompt" => "a watercolor painting",
-            "url" => "upload://pv9zsrM93Jz3U8xELTJCPYU2DD0.png",
-          },
-          {
-            "prompt" => "a watercolor painting",
-            "url" => "upload://pv9zsrM93Jz3U8xELTJCPYU2DD0.png",
-          },
-        ],
-      )
+      expect(result[:error]).to be_present
+      expect(create_image.chain_next_response?).to eq(true)
     end
   end
 end

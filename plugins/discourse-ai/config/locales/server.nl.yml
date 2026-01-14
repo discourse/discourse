@@ -26,10 +26,6 @@ nl:
       llm_triage:
         title: Berichten triageren met AI
         description: "Triageer berichten met behulp van een groot taalmodel"
-        flagged_post: |
-          <div>Reactie van het model:</div>
-          <p>%{llm_response}</p>
-          <b>Getriggerd door de regel <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"
@@ -102,7 +98,6 @@ nl:
     ai_bot_allowed_groups: "Wanneer de GPT-bot toegang heeft tot het privébericht, zal deze reageren op leden van deze groepen."
     ai_bot_debugging_allowed_groups: "Geef deze groepen een debugknop bij berichten die het ruwe AI-verzoek en -antwoord weergeeft"
     ai_bot_public_sharing_allowed_groups: "Sta deze groepen toe persoonlijke AI-berichten met het publiek delen via een unieke, openbaar beschikbare link. Let op: als aanmelden vereist is op je site, is dat ook vereist voor delen."
-    ai_bot_add_to_header: "Geef een knop weer in de kop om een privéchat te starten met een AI-bot"
     ai_bot_github_access_token: "GitHub-toegangstoken voor gebruik met GitHub AI-tools (vereist voor zoekondersteuning)"
     ai_stability_api_key: "API-sleutel voor de stability.ai-API"
     ai_stability_engine: "Te gebruiken engine voor het genereren van afbeeldingen voor de stability.ai-API"
@@ -237,8 +232,10 @@ nl:
           name: "Wisselkoers"
         stock_quote:
           name: "Aandelenkoers (AlphaVantage)"
-        image_generation:
-          name: "Flux-afbeeldingsgenerator (Together.ai)"
+        image_generation_custom:
+          name: "Aangepast"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Vanaf blanco beginnen..."
       name:
@@ -255,10 +252,6 @@ nl:
         explain: "Uitleggen"
         illustrate_post: "Bericht illustreren"
         replace_dates: "Slimme datums"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Afbeelding door Stable Diffusion XL"
-          dall_e_3: "Afbeelding door DALL-E 3"
       image_caption:
         attribution: "Bijschrift door AI"
     share_ai:
@@ -283,7 +276,6 @@ nl:
     ai_bot:
       reply_error: "Het lijkt erop dat ons systeem een onverwacht probleem heeft ondervonden terwijl het probeerde te antwoorden.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
-      thinking: "Denken..."
       personas:
         default_llm_required: "Standaard LLM-model is vereist voordat Chat wordt ingeschakeld"
         cannot_delete_system_persona: "Systeempersona's kunnen niet worden verwijderd. Schakel deze in plaats daarvan uit"
@@ -351,7 +343,6 @@ nl:
           description: "Standaardpersona die de Markdown-tabelfunctie van de Helper ondersteunt"
         post_illustrator:
           name: "Berichtillustrator"
-          description: "Genereert StableDiffusion-prompts om de berichtillustratiefunctie van de Helper te activeren"
         proofreader:
           name: "Proeflezer"
           description: "Standaardpersona die de proefleesfunctie van de Helper ondersteunt"
@@ -448,9 +439,9 @@ nl:
         github_search_files: "GitHub-zoekbestanden"
         github_search_code: "GitHub-code zoeken"
         github_file_content: "GitHub-bestandsinhoud"
-        github_pull_request_diff: "GitHub pullverzoek-diff"
         random_picker: "Willekeurige kiezer"
         categories: "Categorieën weergeven"
+        flag_post: "Bericht markeren"
         search: "Zoeken"
         tags: "Tags weergeven"
         time: "Tijd"
@@ -476,7 +467,6 @@ nl:
         github_search_code: "Zoek code in een GitHub-repository"
         github_search_files: "Zoek bestanden in een GitHub-repository"
         github_file_content: "Haal de inhoud van bestanden op uit een GitHub-repository"
-        github_pull_request_diff: "Haal een GitHub pullverzoek-diff op"
         random_picker: "Kies een willekeurig getal of een willekeurig element uit een lijst"
         categories: "Geef een lijst weer van alle openbaar zichtbare categorieën op het forum"
         search: "Doorzoek alle openbare topics op het forum"
@@ -502,7 +492,7 @@ nl:
         web_browser: "Lezen: <a href='%{url}'>%{url}</a>"
         github_search_files: "Gezocht naar '%{keywords}' in %{repo}/%{branch}"
         github_search_code: "Gezocht naar '%{query}' in %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Inhoud van %{file_paths} opgehaald uit %{repo_name}@%{branch}"
         random_picker: "Kiezen uit %{options}, gekozen: %{result}"
         read: "Lezen: <a href='%{url}'>%{title}</a>"
@@ -612,6 +602,3 @@ nl:
       custom_tool_exists:
         one: "Aangepaste tool met de naam %{names} bestaat al."
         other: "Aangepaste tools met de namen %{names} bestaan al."
-  dashboard:
-    problem:
-      ai_llm_status: "Het LLM-model %{model_name} ondervindt problemen. Controleer de <a href='%{url}'>configuratiepagina van het model</a>."

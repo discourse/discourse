@@ -1,5 +1,4 @@
 import { on } from "@ember/modifier";
-import { and } from "truth-helpers";
 import CountI18n from "discourse/components/count-i18n";
 import CategoriesDisplay from "discourse/components/discovery/categories-display";
 import Layout from "discourse/components/discovery/layout";
@@ -8,6 +7,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { and } from "discourse/truth-helpers";
 
 export default <template>
   <Layout @model={{@controller.model}} @listClass="--categories">

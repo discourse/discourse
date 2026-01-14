@@ -43,8 +43,6 @@ pt:
           title: "Navegação Empilhada"
         categories_list:
           title: "Lista de Categorias"
-        topic_link:
-          title: "Link de Tópico"
         topic_list_item:
           title: "Item da Lista de Tópicos"
         topic_statuses:
@@ -53,8 +51,6 @@ pt:
           title: "Lista de Tópicos"
         basic_topic_list:
           title: "Lista Básica de Tópicos"
-        footer_message:
-          title: "Mensagem do Rodapé"
         signup_cta:
           title: "Inscrição de Chamada à Ação."
         topic_timer_info:

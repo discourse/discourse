@@ -603,11 +603,10 @@ nb_NO:
       every_month: "hver måned"
       every_six_months: "hver sjette måned"
   user_api_key:
-    title: "Autoriser tilgang fra applikasjon"
     authorize: "Autoriser"
+    deny: "Avbryt"
     read: "les"
     read_write: "les/skriv"
-    description: '"%{application_name}" ber om følgende tilgang til kontoen din:'
     otp_confirmation:
       confirm_title: Fortsett til %{site_name}
       logging_in_as: Logger inn som %{username}
@@ -1000,7 +999,6 @@ nb_NO:
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
     default_categories_muted: "Liste med kategorier som er dempet som forvalg"
     default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hvert nye emne følges."
-    watched_precedence_over_muted: "Varsle meg om emner i kategorier eller tagger jeg ser på, som også tilhører en jeg har dempet"
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
@@ -1086,8 +1084,10 @@ nb_NO:
     queued_by_staff:
       title: "Innlegg trenger godkjenning"
     welcome_user:
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
     backup_failed:
       subject_template: "Sikkerhetskopiering mislyktes"
@@ -1098,6 +1098,7 @@ nb_NO:
     too_many_tl3_flags:
       subject_template: "Ny konto på vent"
     unsilenced:
+      preview: "Kontoen er ikke lenger på vent."
       subject_template: "Kontoen er ikke lenger på vent"
   unsubscribe_mailing_list: |
     Du mottar dette fordi du har slått på e-postlistemodus.
@@ -1279,10 +1280,13 @@ nb_NO:
       message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
   safe_mode:
     title: "Start sikkerhetsmodus"
+  dev_mode:
+    enter: "Angi"
   wizard:
     title: "Discourse-oppsett"
     step:
-      privacy:
+      setup:
+        title: "Kom godt i gang"
         fields:
           login_required:
             label: "Synlighet"
@@ -1291,17 +1295,12 @@ nb_NO:
                 label: "Offentlig"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Forhåndsvis"
-          homepage_style:
-            choices:
-              latest:
-                label: "Siste"
   onebox:
     github:
       closed: "lukket"
+      status_date:
+        approved: "godkjent"
+        closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
@@ -1343,24 +1342,38 @@ nb_NO:
         complete: "Post slettet."
       delete_and_agree:
         complete: "Post slettet."
-      disagree_and_restore:
-        description: "Gjenopprett innlegget slik at alle brukere kan se det."
-      disagree:
+      disagree_bundle:
         title: "Nei"
       ignore:
         title: "Ignorer"
       ignore_and_do_nothing:
         title: "ikke gjør noe"
       approve:
-        title: "Godkjenn"
+        title: "Ja"
+      approve_post:
+        title: "Ja"
+      approve_post_closed:
+        title: "Ja"
+      reject_post_bundle:
+        title: "Nei"
       approve_user:
+        title: "Ja"
         complete: "Brukar godkjent."
       reject_user:
+        title: "Nei"
         delete:
           title: "Slett bruker"
           complete: "Bruker slettet."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nei"
       reject:
         title: "Avvis"
+      approve_and_restore:
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       no_action_post:
         title: "Ingen handling"
       delete_post:

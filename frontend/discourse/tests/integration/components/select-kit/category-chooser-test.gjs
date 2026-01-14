@@ -2,10 +2,10 @@ import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
 
 module(
   "Integration | Component | select-kit/category-chooser",

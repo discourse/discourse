@@ -73,6 +73,13 @@ describe Migrations::SetStore::ThreeKeySet do
       expect(set.include?("key4", "key5", "key6", 2)).to be true
     end
 
+    it "handles nil keys correctly" do
+      set.bulk_add([[nil, "key2", "key3", 1], ["key1", nil, "key3", 2], ["key1", "key2", nil, 3]])
+      expect(set.include?(nil, "key2", "key3", 1)).to be true
+      expect(set.include?("key1", nil, "key3", 2)).to be true
+      expect(set.include?("key1", "key2", nil, 3)).to be true
+    end
+
     it "returns nil" do
       expect(set.bulk_add([["key1", "key2", "key3", 1]])).to be_nil
     end

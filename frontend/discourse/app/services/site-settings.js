@@ -5,7 +5,9 @@ import i18n from "discourse-i18n";
 
 export function createSiteSettingsFromPreloaded(
   siteSettings,
-  themeSiteSettingOverrides
+  themeSiteSettingOverrides,
+  currentUser,
+  upcomingChanges
 ) {
   const settings = new TrackedObject(siteSettings);
 
@@ -13,10 +15,38 @@ export function createSiteSettingsFromPreloaded(
     for (const [key, value] of Object.entries(themeSiteSettingOverrides)) {
       settings[key] = value;
     }
+
+    if (siteSettings.site_setting_verbose_client_logging) {
+      // eslint-disable-next-line no-console
+      console.debug(
+        "[SiteSettings] Overriding site settings with theme overrides:",
+        themeSiteSettingOverrides
+      );
+    }
+
     settings.themeSiteSettingOverrides = themeSiteSettingOverrides;
   }
 
-  // localize locale names here as they are not localized in the backend
+  if (upcomingChanges) {
+    for (const [key, value] of Object.entries(upcomingChanges)) {
+      settings[key] = value;
+    }
+
+    if (siteSettings.site_setting_verbose_client_logging) {
+      // eslint-disable-next-line no-console
+      console.debug(
+        "[SiteSettings] Overriding site settings with upcoming changes based on user group permissions:",
+        upcomingChanges
+      );
+    }
+
+    // Includes upcoming changes which apply to the anon user (Everyone changes)
+    settings.currentUserUpcomingChanges = upcomingChanges;
+  } else {
+    settings.currentUserUpcomingChanges = {};
+  }
+
+  // Localize locale names here as they are not localized in the backend
   // due to initialization order and caching
   if (settings.available_locales) {
     const locales = JSON.parse(settings.available_locales);
@@ -55,7 +85,9 @@ export default class SiteSettingsService {
   static create() {
     return createSiteSettingsFromPreloaded(
       PreloadStore.get("siteSettings"),
-      PreloadStore.get("themeSiteSettingOverrides")
+      PreloadStore.get("themeSiteSettingOverrides"),
+      PreloadStore.get("currentUser"),
+      PreloadStore.get("upcomingChanges")
     );
   }
 }

@@ -52,7 +52,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     server.get("/tag/important/notifications", () => {
       return helper.response({
-        tag_notification: { id: "important", notification_level: 2 },
+        tag_notification: { id: 1, name: "important", notification_level: 2 },
       });
     });
   });
@@ -470,7 +470,7 @@ acceptance("Search - Authenticated", function (needs) {
   });
 
   test("full page search - the right filters are shown", async function (assert) {
-    const inSelector = selectKit(".select-kit#in");
+    const inSelector = selectKit("#search-in-options");
     await visit("/search?expanded=true");
     await inSelector.expand();
 
@@ -485,9 +485,12 @@ acceptance("Search - Authenticated", function (needs) {
     assert.true(inSelector.rowByValue("tracking").exists());
     assert.true(inSelector.rowByValue("bookmarks").exists());
 
-    assert.dom(".search-advanced-options .in-likes").exists();
-    assert.dom(".search-advanced-options .in-private").exists();
-    assert.dom(".search-advanced-options .in-seen").exists();
+    assert.true(inSelector.rowByValue("likes").exists());
+    assert.true(inSelector.rowByValue("messages").exists());
+    assert.true(inSelector.rowByValue("seen").exists());
+    assert.true(inSelector.rowByValue("title").exists());
+    assert.true(inSelector.rowByValue("created").exists());
+    assert.true(inSelector.rowByValue("all").exists());
   });
 
   test("topic results - topic search scope - works with empty result sets", async function (assert) {
@@ -806,7 +809,7 @@ acceptance("Search - with tagging enabled", function (needs) {
 
     server.get("/tag/dev/notifications", () => {
       return helper.response({
-        tag_notification: { id: "dev", notification_level: 2 },
+        tag_notification: { id: 1, name: "dev", notification_level: 2 },
       });
     });
 

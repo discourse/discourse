@@ -29,5 +29,9 @@ module DiscourseTopicVoting
     def vote_limit
       SiteSetting.public_send("topic_voting_tl#{self.trust_level}_vote_limit")
     end
+
+    def vote_limit_0?
+      vote_limit == 0
+    end
   end
 end

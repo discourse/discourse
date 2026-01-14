@@ -7,11 +7,12 @@
 pl_PL:
   js:
     user_notes:
-      title: "Dodaj uwagę o użytkowniku"
+      title: "Uwagi o użytkowniku"
       attach: "Dodaj uwagę o użytkowniku"
       attach_note_description: "Dodaj uwagę o tym użytkowniku. Ta uwaga będzie widoczna tylko dla personelu."
       remove: "Usuń uwagę o użytkowniku"
       show: "Uwagi o użytkowniku (%{count})"
       delete_confirm: "Czy na pewno chcesz usunąć tę uwagę o użytkowniku?"
-      show_post: "Pokaż post"
-      copy_reviewable_note: "Skopiować uwagę do profilu użytkownika?"
+      show_post: "Pokaż wpis"
+      show_flag: "Pokaż flagę"
+      copy_reviewable_note: "Skopiować uwagę do profilu %{username}?"

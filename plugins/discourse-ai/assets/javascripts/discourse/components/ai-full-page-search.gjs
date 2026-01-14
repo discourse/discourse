@@ -6,13 +6,13 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isValidSearchTerm, translateResults } from "discourse/lib/search";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 import AiIndicatorWave from "./ai-indicator-wave";
 
 const AI_RESULTS_TOGGLED = "full-page-search:ai-results-toggled";

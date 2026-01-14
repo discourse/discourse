@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { ajax } from "discourse/lib/ajax";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 

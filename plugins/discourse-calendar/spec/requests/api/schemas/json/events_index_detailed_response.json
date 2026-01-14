@@ -12,24 +12,42 @@
             "type": "integer"
           },
           "category_id": {
-            "type": ["integer", "null"]
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "name": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "recurrence": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "recurrence_until": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "starts_at": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "ends_at": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "rrule": {
@@ -39,17 +57,26 @@
             "type": "boolean"
           },
           "timezone": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "duration": {
             "type": "string",
             "pattern": "^\\d{2}:\\d{2}:\\d{2}$"
           },
           "can_act_on_discourse_post_event": {
-            "type": ["boolean", "null"]
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "can_update_attendance": {
-            "type": ["boolean", "null"]
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "creator": {
             "type": "object",
@@ -62,16 +89,26 @@
                 "type": "string"
               },
               "name": {
-                "type": ["string", "null"]
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "avatar_template": {
                 "type": "string"
               }
             },
-            "required": ["id", "username", "avatar_template"]
+            "required": [
+              "id",
+              "username",
+              "avatar_template"
+            ]
           },
           "custom_fields": {
-            "type": ["object", "null"]
+            "type": [
+              "object",
+              "null"
+            ]
           },
           "is_closed": {
             "type": "boolean"
@@ -92,10 +129,16 @@
             "type": "boolean"
           },
           "minimal": {
-            "type": ["boolean", "null"]
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "raw_invitees": {
-            "type": ["array", "null"],
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "string"
             }
@@ -113,13 +156,21 @@
                 },
                 "period": {
                   "type": "string",
-                  "enum": ["before", "after"]
+                  "enum": [
+                    "before",
+                    "after"
+                  ]
                 },
                 "type": {
                   "type": "string"
                 }
               },
-              "required": ["value", "unit", "period", "type"]
+              "required": [
+                "value",
+                "unit",
+                "period",
+                "type"
+              ]
             }
           },
           "sample_invitees": {
@@ -136,28 +187,47 @@
           },
           "status": {
             "type": "string",
-            "enum": ["public", "private", "standalone"]
+            "enum": [
+              "public",
+              "private",
+              "standalone"
+            ]
           },
           "url": {
             "type": "string"
           },
           "description": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "location": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "watching_invitee": {
-            "type": ["object", "null"]
+            "type": [
+              "object",
+              "null"
+            ]
           },
           "chat_enabled": {
-            "type": ["boolean", "null"]
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "channel": {
             "type": "object"
           },
           "max_attendees": {
-            "type": ["integer", "null"]
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "at_capacity": {
             "type": "boolean"
@@ -198,10 +268,46 @@
                     "type": "object"
                   }
                 },
-                "required": ["id", "title", "tags", "tags_descriptions"]
+                "required": [
+                  "id",
+                  "title",
+                  "tags",
+                  "tags_descriptions"
+                ]
               }
             },
-            "required": ["id", "post_number", "url", "category_slug", "topic"]
+            "required": [
+              "id",
+              "post_number",
+              "url",
+              "category_slug",
+              "topic"
+            ]
+          },
+          "occurrences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "starts_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "ends_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "starts_at",
+                "ends_at"
+              ]
+            }
           }
         },
         "required": [
@@ -222,10 +328,13 @@
           "should_display_invitees",
           "status",
           "at_capacity",
-          "post"
+          "post",
+          "occurrences"
         ]
       }
     }
   },
-  "required": ["events"]
+  "required": [
+    "events"
+  ]
 }

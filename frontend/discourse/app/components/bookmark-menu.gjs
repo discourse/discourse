@@ -2,19 +2,23 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import BookmarkModal from "discourse/components/modal/bookmark";
+import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
+import {
+  NO_REMINDER_ICON,
+  NOT_BOOKMARKED,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 export default class BookmarkMenu extends Component {
   @service modal;
@@ -22,8 +26,8 @@ export default class BookmarkMenu extends Component {
   @service toasts;
 
   @tracked quicksaved = false;
+  @tracked reminderAtOptions = [];
 
-  bookmarkManager = this.args.bookmarkManager;
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
   bookmarkCreatePromise = null;
@@ -39,6 +43,10 @@ export default class BookmarkMenu extends Component {
     const custom = this.timeShortcuts.custom();
     custom.label = "time_shortcut.more_options";
     this.reminderAtOptions.push(custom);
+  }
+
+  get bookmarkManager() {
+    return this.args.bookmarkManager;
   }
 
   get existingBookmark() {
@@ -93,9 +101,11 @@ export default class BookmarkMenu extends Component {
 
   get buttonIcon() {
     if (this.existingBookmark?.reminderAt) {
-      return "discourse-bookmark-clock";
+      return WITH_REMINDER_ICON;
+    } else if (this.existingBookmark) {
+      return NO_REMINDER_ICON;
     } else {
-      return "bookmark";
+      return NOT_BOOKMARKED;
     }
   }
 
@@ -143,6 +153,7 @@ export default class BookmarkMenu extends Component {
 
   @action
   onShowMenu() {
+    this.setReminderShortcuts();
     if (!this.existingBookmark) {
       this.onBookmark();
     }
@@ -253,7 +264,6 @@ export default class BookmarkMenu extends Component {
 
   <template>
     <DMenu
-      {{didInsert this.setReminderShortcuts}}
       ...attributes
       @identifier="bookmark-menu"
       class={{this.buttonClasses}}

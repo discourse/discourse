@@ -81,7 +81,7 @@
   grid-template-areas:
     "creator title title title status"
     ". category activity activity .";
-  grid-gap: var(--space-3);
+  gap: var(--space-3);
   border-radius: var(--d-border-radius);
   cursor: pointer;
 
@@ -117,7 +117,7 @@
   }
 
   .bulk-select-enabled & {
-    grid-template-columns: min-content min-content min-content auto min-content min-content;
+    grid-template-columns: min-content min-content min-content min-content auto min-content;
     grid-template-areas:
       "bulk-select creator title title title status"
       "bulk-select category category activity activity .";
@@ -125,7 +125,7 @@
     &.has-replies {
       grid-template-areas:
         "bulk-select creator title title title status"
-        "bulk-select category category activity likes-replies likes-replies";
+        "bulk-select category category activity likes-replies .";
 
       @include viewport.until(sm) {
         grid-template-areas:
@@ -354,7 +354,6 @@
     border-radius: var(--d-border-radius);
     border: 1px solid var(--status-color);
     color: var(--status-color);
-    width: min-content;
 
     @include viewport.until(sm) {
       border-radius: var(--d-border-radius-small);
@@ -466,6 +465,10 @@
 
     svg {
       color: var(--primary-600);
+    }
+
+    .number {
+      white-space: nowrap;
     }
   }
 

@@ -1,13 +1,16 @@
 import EmberObject from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 import PostPolicy from "discourse/plugins/discourse-policy/discourse/components/post-policy";
 
 function fabricatePost(options = {}) {
-  return EmberObject.create({ id: 1, ...options });
+  const store = getOwnerWithFallback(this).lookup("service:store");
+  const topic = store.createRecord("topic", { id: 123 });
+  return store.createRecord("post", { id: 1, topic, ...options });
 }
 
 function fabricatePolicy(options = {}) {
@@ -191,7 +194,7 @@ module(
       );
 
       pretender.put("/policy/accept", () => {
-        this.post.set("policy_accepted_by", this.currentUser);
+        this.post.set("policy_accepted_by", [this.currentUser]);
         this.post.set("policy_accepted_by_count", 1);
         return response({});
       });
@@ -225,7 +228,7 @@ module(
       );
 
       pretender.put("/policy/unaccept", () => {
-        this.post.set("policy_not_accepted_by", this.currentUser);
+        this.post.set("policy_not_accepted_by", [this.currentUser]);
         this.post.set("policy_not_accepted_by_count", 1);
         return response({});
       });
@@ -234,6 +237,90 @@ module(
 
       assert.dom(".btn-accept-policy").exists();
       assert.dom(".user-lists .toggle-not-accepted .user-count").hasText("1");
+    });
+
+    test("load remaining accepted users", async function (assert) {
+      const acceptedByUsers = [
+        { id: 1, username: "alice", avatar_template: "/images/avatar.png" },
+        { id: 2, username: "bob", avatar_template: "/images/avatar.png" },
+      ];
+
+      const additionalUsers = [
+        { id: 3, username: "charlie", avatar_template: "/images/avatar.png" },
+        { id: 4, username: "dana", avatar_template: "/images/avatar.png" },
+      ];
+
+      this.set(
+        "post",
+        fabricatePost({
+          policy_accepted_by: acceptedByUsers,
+          policy_accepted_by_count: 4,
+        })
+      );
+      this.set("policy", fabricatePolicy());
+
+      await render(
+        <template>
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+        </template>
+      );
+
+      pretender.get("/policy/accepted", (request) => {
+        assert.strictEqual(request.queryParams.post_id, "1");
+        assert.strictEqual(request.queryParams.offset, "2");
+        return response({ users: additionalUsers });
+      });
+
+      assert.dom(".users.accepted .avatar").exists({ count: 2 });
+      assert.dom(".load-more-users").hasText("+ 2");
+
+      await click(".users.accepted .load-more-users");
+
+      assert.dom(".users.accepted .avatar").exists({ count: 4 });
+      assert.dom(".load-more-users").doesNotExist();
+    });
+
+    test("load remaining not accepted users", async function (assert) {
+      const notAcceptedByUsers = [
+        { id: 1, username: "alice", avatar_template: "/images/avatar.png" },
+        { id: 2, username: "bob", avatar_template: "/images/avatar.png" },
+      ];
+
+      const additionalUsers = [
+        { id: 3, username: "charlie", avatar_template: "/images/avatar.png" },
+        { id: 4, username: "dana", avatar_template: "/images/avatar.png" },
+      ];
+
+      this.set(
+        "post",
+        fabricatePost({
+          policy_not_accepted_by: notAcceptedByUsers,
+          policy_not_accepted_by_count: 4,
+        })
+      );
+      this.set("policy", fabricatePolicy());
+
+      await render(
+        <template>
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+        </template>
+      );
+
+      pretender.get("/policy/not-accepted", (request) => {
+        assert.strictEqual(request.queryParams.post_id, "1");
+        assert.strictEqual(request.queryParams.offset, "2");
+        return response({ users: additionalUsers });
+      });
+
+      await click(".toggle-not-accepted");
+
+      assert.dom(".users.not-accepted .avatar").exists({ count: 2 });
+      assert.dom(".load-more-users").hasText("+ 2");
+
+      await click(".users.not-accepted .load-more-users");
+
+      assert.dom(".users.not-accepted .avatar").exists({ count: 4 });
+      assert.dom(".load-more-users").doesNotExist();
     });
   }
 );

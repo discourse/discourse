@@ -103,6 +103,10 @@ ja:
     reviewables:
       message_already_handled: "ありがとうございます。ただ、このメッセージはすでにレビュー済みで、通報の必要がないと判断されています。"
       actions:
+        no_action_message:
+          title: "未対応"
+        restore_message:
+          description: "ユーザーが閲覧できるようにメッセージを復元します。"
         agree:
           title: "同意…"
         agree_and_keep_message:
@@ -124,16 +128,10 @@ ja:
           title: "メッセージを削除"
           description: "ユーザーが閲覧できないようにメッセージを削除します。"
         delete_and_agree:
-          title: "通報を無視してメッセージを削除"
           description: "キューから削除して通報を無視し、そのメッセージを削除します。"
         disagree_and_restore:
           title: "同意せずにメッセージを復元"
           description: "すべてのユーザーが閲覧できるようにメッセージを復元します。"
-        disagree:
-          title: "同意しない"
-        ignore:
-          title: "何もしない"
-          description: "何もアクションを起こさずに、キューから削除して通報を無視します。"
       direct_messages:
         transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
         transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
@@ -173,7 +171,7 @@ ja:
         slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"
         is_already_in_use: "はすでに使用されています"
     bookmarkable:
-      notification_title: "%{channel_name} のメッセージ"
+      notification_title_channel: "%{channel_name} のメッセージ"
     personal_chat: "パーソナルチャット"
     onebox:
       inline_to_message: "%{username} によるメッセージ #%{message_id} - #%{chat_channel}"
@@ -243,10 +241,8 @@ ja:
         other: "%{count} 件のメッセージを表示"
       view_more:
         other: "さらに %{count} 件のメッセージを表示"
-      your_chat_settings: "チャットのメール送信頻度設定"
   unsubscribe:
     chat_summary:
-      select_title: "チャット要約メールの頻度を設定:"
       never: なし
       when_away: 退席中の時のみ
   category:

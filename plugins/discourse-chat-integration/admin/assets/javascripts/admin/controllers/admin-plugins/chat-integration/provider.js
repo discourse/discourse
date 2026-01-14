@@ -13,7 +13,7 @@ export default class AdminPluginsChatIntegrationProvider extends Controller {
   get anyErrors() {
     let anyErrors = false;
 
-    this.model.channels.forEach((channel) => {
+    this.model.channels.content.forEach((channel) => {
       if (channel.error_key) {
         anyErrors = true;
       }

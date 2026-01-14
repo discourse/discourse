@@ -1,7 +1,7 @@
 @mixin chat-unread-indicator {
   @include unselectable;
-  width: 14px;
-  height: 14px;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 1em;
   box-sizing: content-box;
   -webkit-touch-callout: none;
@@ -16,6 +16,10 @@
   &.-urgent {
     background: var(--success);
     color: var(--secondary);
+    height: 1em;
+    width: min-content;
+    min-width: 0.6em;
+    padding: 0.21em 0.42em;
   }
 
   &__number {
@@ -24,6 +28,7 @@
   }
 }
 
-.c-unread-indicator {
+.c-unread-indicator,
+.chat-channel-unread-indicator {
   @include chat-unread-indicator;
 }

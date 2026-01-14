@@ -30,10 +30,8 @@ fi:
         label: "Luo viestiäänestysketju"
       composer_actions:
         create_as_post_voting:
-          label: "Viestiäänestys käyttöön/pois käytöstä"
           desc: "Äänestettäviä viestejä sisältävä ketju luodaan"
         remove_as_post_voting:
-          label: "Poista viestiäänestys"
           desc: "Ketju luodaan tavallisessa muodossa"
     vote:
       already_voted: "Voit äänestää vain yhtä vastausta tähän kysymykseen."

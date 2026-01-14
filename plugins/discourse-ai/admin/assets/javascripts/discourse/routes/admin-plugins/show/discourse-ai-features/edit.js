@@ -1,7 +1,7 @@
-import { action } from "@ember/object";
+import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import SiteSetting from "admin/models/site-setting";
+import { getSettingGroupsForFeature } from "discourse/plugins/discourse-ai/discourse/lib/ai-feature-setting-groups";
 
 export default class AdminPluginsShowDiscourseAiFeaturesEdit extends DiscourseRoute {
   async model(params) {
@@ -23,13 +23,34 @@ export default class AdminPluginsShowDiscourseAiFeaturesEdit extends DiscourseRo
       SiteSetting.create(setting)
     );
 
+    currentFeature.settingGroups = getSettingGroupsForFeature(
+      currentFeature.module_name
+    );
+
+    currentFeature.formData = {};
+    currentFeature.feature_settings.forEach((setting) => {
+      let value = setting.value;
+
+      if (setting.type === "bool") {
+        value = value === "true" || value === true;
+      }
+
+      if (setting.type === "enum" && typeof value === "string") {
+        const numValue = parseInt(value, 10);
+        if (!isNaN(numValue) && numValue.toString() === value) {
+          value = numValue;
+        }
+      }
+
+      currentFeature.formData[setting.setting] = value;
+    });
+
     return currentFeature;
   }
 
-  @action
-  willTransition() {
-    // site settings may amend if a feature is enabled or disabled, so refresh the model
-    // even on back button
-    this.router.refresh("adminPlugins.show.discourse-ai-features");
+  setupController(controller, model) {
+    super.setupController(controller, model);
+
+    controller.set("settings", model.feature_settings);
   }
 }

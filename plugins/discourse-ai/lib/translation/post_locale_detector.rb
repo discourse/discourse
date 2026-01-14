@@ -12,6 +12,8 @@ module DiscourseAi
           locale = SiteSetting.default_locale
         else
           detected_locale = LanguageDetector.new(text, post:).detect
+          return if detected_locale.blank?
+
           locale = LocaleNormalizer.normalize_to_i18n(detected_locale)
         end
 

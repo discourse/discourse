@@ -19,6 +19,8 @@ ro:
       add_to_calendar: "Adaugă în Google Calendar"
       region:
         none: "Nimic"
+        names:
+          gr: "Grecia"
       toolbar_button:
         today: "Astăzi"
         month: "Lună"

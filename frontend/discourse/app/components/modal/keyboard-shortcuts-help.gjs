@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DModal from "discourse/components/d-modal";
 import FilterInput from "discourse/components/filter-input";
-import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
+import { extraKeyboardShortcutsHelp } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";
@@ -430,6 +430,7 @@ export default class KeyboardShortcutsHelp extends Component {
       latest: buildShortcut("jump_to.latest", { keys1: ["g", "l"] }),
       new: buildShortcut("jump_to.new", { keys1: ["g", "n"] }),
       unread: buildShortcut("jump_to.unread", { keys1: ["g", "u"] }),
+      unseen: buildShortcut("jump_to.unseen", { keys1: ["g", "y"] }),
       categories: buildShortcut("jump_to.categories", { keys1: ["g", "c"] }),
       top: buildShortcut("jump_to.top", { keys1: ["g", "t"] }),
       bookmarks: buildShortcut("jump_to.bookmarks", { keys1: ["g", "b"] }),

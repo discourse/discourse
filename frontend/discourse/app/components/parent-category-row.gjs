@@ -1,10 +1,10 @@
 import { array, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { gt } from "truth-helpers";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import CategoryUnread from "discourse/components/category-unread";
+import DecoratedHtml from "discourse/components/decorated-html";
 import MobileCategoryTopic from "discourse/components/mobile-category-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubCategoryItem from "discourse/components/sub-category-item";
@@ -14,6 +14,7 @@ import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ParentCategoryRow extends CategoryListItem {
@@ -53,7 +54,12 @@ export default class ParentCategoryRow extends CategoryListItem {
               {{#if this.category.description_excerpt}}
                 <tr class="category-description">
                   <td colspan="3">
-                    {{htmlSafe this.category.description_excerpt}}
+                    <DecoratedHtml
+                      @html={{dirSpan
+                        this.category.description_excerpt
+                        htmlSafe="true"
+                      }}
+                    />
                   </td>
                 </tr>
               {{/if}}
@@ -141,7 +147,12 @@ export default class ParentCategoryRow extends CategoryListItem {
 
             {{#if this.category.description_excerpt}}
               <div class="category-description">
-                {{dirSpan this.category.description_excerpt htmlSafe="true"}}
+                <DecoratedHtml
+                  @html={{dirSpan
+                    this.category.description_excerpt
+                    htmlSafe="true"
+                  }}
+                />
               </div>
             {{/if}}
 

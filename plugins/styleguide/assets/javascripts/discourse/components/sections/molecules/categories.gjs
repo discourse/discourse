@@ -1,30 +1,17 @@
+import Component from "@glimmer/component";
 import categoryBadge from "discourse/helpers/category-badge";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const Categories = <template>
-  <StyleguideExample @title="category-badge - bullet">
-    {{#each @dummy.categories as |c|}}
-      {{categoryBadge c categoryStyle="bullet"}}
-    {{/each}}
-  </StyleguideExample>
+export default class Categories extends Component {
+  categoryBadgeCode = `{{#each @dummy.categories as |c|}}
+  {{categoryBadge c categoryStyle="bullet"}}
+{{/each}}`;
 
-  <StyleguideExample @title="category-badge - bar">
-    {{#each @dummy.categories as |c|}}
-      {{categoryBadge c categoryStyle="bar"}}
-    {{/each}}
-  </StyleguideExample>
-
-  <StyleguideExample @title="category-badge - box">
-    {{#each @dummy.categories as |c|}}
-      {{categoryBadge c categoryStyle="box"}}
-    {{/each}}
-  </StyleguideExample>
-
-  <StyleguideExample @title="category-badge - none">
-    {{#each @dummy.categories as |c|}}
-      {{categoryBadge c categoryStyle="none"}}
-    {{/each}}
-  </StyleguideExample>
-</template>;
-
-export default Categories;
+  <template>
+    <StyleguideExample @title="categoryBadge" @code={{this.categoryBadgeCode}}>
+      {{#each @dummy.categories as |c|}}
+        {{categoryBadge c categoryStyle="bullet"}}
+      {{/each}}
+    </StyleguideExample>
+  </template>
+}

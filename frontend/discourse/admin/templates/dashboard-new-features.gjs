@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
+import DashboardNewFeatures from "discourse/admin/components/dashboard-new-features";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
-import DashboardNewFeatures from "admin/components/dashboard-new-features";
 
 export default <template>
   <ConditionalLoadingSpinner @condition={{@controller.isLoading}}>

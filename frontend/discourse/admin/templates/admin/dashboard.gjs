@@ -1,10 +1,10 @@
 import { LinkTo } from "@ember/routing";
+import DashboardProblems from "discourse/admin/components/dashboard-problems";
+import VersionChecks from "discourse/admin/components/version-checks";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
-import DashboardProblems from "admin/components/dashboard-problems";
-import VersionChecks from "admin/components/version-checks";
 
 export default <template>
   <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />

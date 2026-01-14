@@ -22,8 +22,6 @@ class RRuleGenerator
 
   def self.generate_string(
     starts_at:,
-    timezone: "UTC",
-    max_years: nil,
     recurrence: "every_week",
     recurrence_until: nil,
     dtstart: nil,

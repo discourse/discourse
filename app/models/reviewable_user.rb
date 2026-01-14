@@ -11,19 +11,67 @@ class ReviewableUser < Reviewable
     { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
   end
 
+  def build_legacy_combined_actions(actions, guardian, args)
+    if status == "rejected" && !payload["scrubbed_by"]
+      build_action(actions, :scrub, client_action: "scrub")
+    end
+    if status == "pending"
+      if is_a_suspect_user?
+        confirm_spam_bundle =
+          actions.add_bundle(
+            "#{id}-confirm-spam",
+            icon: "user-xmark",
+            label: "reviewables.actions.confirm_spam.title",
+          )
+        delete_user_actions(actions, confirm_spam_bundle, require_reject_reason: false)
+
+        if guardian.can_approve?(target)
+          actions.add(:approve_user, bundle: nil) do |a|
+            a.icon = "user-plus"
+            a.label = "reviewables.actions.not_spam.title"
+            a.description = "reviewables.actions.not_spam.description"
+            a.completed_message = "reviewables.actions.approve_user.complete"
+          end
+        end
+      else
+        if guardian.can_approve?(target)
+          actions.add(:approve_user, bundle: nil) do |a|
+            a.icon = "user-plus"
+            a.label = "reviewables.actions.approve_user.title"
+          end
+        end
+        delete_user_actions(actions, require_reject_reason: true)
+      end
+    end
+  end
+
   def build_actions(actions, guardian, args)
-    return unless pending?
+    return if approved?
     super
   end
 
-  def build_legacy_combined_actions(actions, guardian, args)
-    build_action(actions, :approve_user, icon: "user-plus") if guardian.can_approve?(target)
-
-    delete_user_actions(actions, require_reject_reason: !is_a_suspect_user?)
-  end
-
+  # TODO (reviewable-refresh): Move to build_actions when fully migrated to new UI
   def build_new_separated_actions
-    build_legacy_combined_actions(@actions, @guardian, @action_args)
+    bundle_actions = {}
+    if status == "pending"
+      bundle_actions[:approve_user] = {} if target_user && !target_user.approved? &&
+        guardian.can_approve?(target_user)
+
+      if @guardian.can_delete_user?(target_user)
+        bundle_actions[:delete_user] = {}
+        bundle_actions[:delete_user_block] = {}
+      end
+    end
+    if status == "rejected" && !payload["scrubbed_by"]
+      bundle_actions[:scrub] = { client_action: "scrub" }
+    end
+
+    build_bundle(
+      "#{id}-user-actions",
+      "reviewables.actions.user_actions.bundle_title",
+      bundle_actions,
+      source: "core",
+    )
   end
 
   def perform_approve_user(performed_by, args)
@@ -102,6 +150,7 @@ class ReviewableUser < Reviewable
         else
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
+        delete_args[:from_reviewable] = true
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess

@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { gt } from "truth-helpers";
+import ChildTree from "discourse/admin/components/schema-setting/editor/child-tree";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import ChildTree from "admin/components/schema-setting/editor/child-tree";
+import { gt } from "discourse/truth-helpers";
 
 export default class SchemaSettingNewEditorTreeNode extends Component {
   @tracked text;

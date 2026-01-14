@@ -69,6 +69,7 @@ RSpec.describe ReviewablePost do
       let(:admin_guardian) { Guardian.new(admin) }
 
       before do
+        SiteSetting.reviewable_old_moderator_actions = false
         allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
       end
 
@@ -238,6 +239,7 @@ RSpec.describe ReviewablePost do
 
     context "with new separated actions" do
       before do
+        SiteSetting.reviewable_old_moderator_actions = false
         allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
       end
 

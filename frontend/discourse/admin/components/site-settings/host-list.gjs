@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import ListSetting from "select-kit/components/list-setting";
+import ListSetting from "discourse/select-kit/components/list-setting";
 
 export default class HostList extends Component {
   tokenSeparator = "|";

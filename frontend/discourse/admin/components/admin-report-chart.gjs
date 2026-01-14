@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import Report from "discourse/admin/models/report";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
-import Report from "admin/models/report";
 import Chart from "./chart";
 
 export default class AdminReportChart extends Component {
@@ -52,7 +52,7 @@ export default class AdminReportChart extends Component {
           tooltip: {
             callbacks: {
               title: (tooltipItem) =>
-                moment(tooltipItem[0].label, "YYYY-MM-DD").format("LL"),
+                moment(tooltipItem[0].parsed.x).format("LL"),
             },
           },
           legend: {
@@ -74,32 +74,28 @@ export default class AdminReportChart extends Component {
           },
         },
         scales: {
-          y: [
-            {
-              display: true,
-              ticks: {
-                callback: (label) => number(label),
-                sampleSize: 5,
-                maxRotation: 25,
-                minRotation: 25,
-              },
+          y: {
+            display: true,
+            ticks: {
+              callback: (label) => number(label),
+              sampleSize: 5,
+              maxRotation: 25,
+              minRotation: 25,
             },
-          ],
-          x: [
-            {
-              display: true,
-              gridLines: { display: false },
-              type: "time",
-              time: {
-                unit: Report.unitForGrouping(options.chartGrouping),
-              },
-              ticks: {
-                sampleSize: 5,
-                maxRotation: 50,
-                minRotation: 50,
-              },
+          },
+          x: {
+            display: true,
+            grid: { display: false },
+            type: "time",
+            time: {
+              unit: Report.unitForGrouping(options.chartGrouping),
             },
-          ],
+            ticks: {
+              sampleSize: 5,
+              maxRotation: 50,
+              minRotation: 50,
+            },
+          },
         },
       },
     };

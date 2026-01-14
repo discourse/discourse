@@ -1,7 +1,6 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
@@ -994,6 +993,12 @@ describe Topic do
           expect { topic.invite(user, user1.username) }.to change { Notification.count }.by(
             1,
           ).and not_change { Post.where(post_type: Post.types[:small_action]).count }
+        end
+
+        it "sets invited user to watch the PM" do
+          expect { topic.invite(user, user1.username) }.to change {
+            TopicUser.get(topic, user1).try(:notification_level)
+          }.to TopicUser.notification_levels[:watching]
         end
 
         context "when from a muted user" do
@@ -2601,6 +2606,19 @@ describe Topic do
         topic,
       )
     end
+
+    it "excludes uncategorized topics when `include_uncategorized` kwarg is false" do
+      uncategorized_topic =
+        Fabricate(:topic, category_id: nil, archetype: Archetype.private_message)
+
+      categorized_topic = Fabricate(:topic, category: Fabricate(:category))
+
+      expect(uncategorized_topic.reload.category_id).to eq(nil)
+
+      result = Topic.secured(Guardian.new(user), include_uncategorized: false)
+
+      expect(result.pluck(:id)).to contain_exactly(categorized_topic.id)
+    end
   end
 
   describe "all_allowed_users" do
@@ -3490,7 +3508,7 @@ describe Topic do
     fab!(:group) do
       Fabricate(
         :group,
-        smtp_server: "imap.gmail.com",
+        smtp_server: "smtp.gmail.com",
         smtp_port: 587,
         email_username: "discourse@example.com",
         email_password: "discourse@example.com",

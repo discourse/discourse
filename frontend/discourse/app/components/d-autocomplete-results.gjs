@@ -18,6 +18,7 @@ const SELECTED_CLASS = "selected";
  * @param {number} data.selectedIndex - Currently selected index
  * @param {Function} data.onSelect - Callback for item selection
  * @param {Function} data.template - Template function for rendering
+ * @param {Component} data.component - Component for rendering results (takes precedence over template if provided)
  */
 export default class DAutocompleteResults extends Component {
   isInitialRender = true;
@@ -75,7 +76,7 @@ export default class DAutocompleteResults extends Component {
 
   @action
   handleClick(event) {
-    if (!this.args.data.template) {
+    if (!this.args.data.template || this.hasComponent) {
       return;
     }
 
@@ -138,6 +139,10 @@ export default class DAutocompleteResults extends Component {
     return htmlSafe(tempDiv.innerHTML);
   }
 
+  get hasComponent() {
+    return !!this.args.data.component;
+  }
+
   <template>
     <div
       {{didInsert this.handleInitialRender}}
@@ -145,7 +150,18 @@ export default class DAutocompleteResults extends Component {
       {{on "click" this.handleClick}}
       tabindex="-1"
     >
-      {{this.templateHTML}}
+      {{#if this.hasComponent}}
+        {{#let @data.component as |AutocompleteComponent|}}
+          <AutocompleteComponent
+            @results={{this.results}}
+            @selectedIndex={{this.selectedIndex}}
+            @onSelect={{@data.onSelect}}
+            @onRender={{@data.onRender}}
+          />
+        {{/let}}
+      {{else}}
+        {{this.templateHTML}}
+      {{/if}}
     </div>
   </template>
 }

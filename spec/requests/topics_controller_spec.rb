@@ -37,6 +37,41 @@ RSpec.describe TopicsController do
 
   before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
+  describe "topic_header plugin outlet" do
+    fab!(:another_topic) { Fabricate(:topic, title: "Another topic by me") }
+
+    before { global_setting(:load_plugins?, true) }
+
+    it "renders the connector templates from multiple plugins" do
+      get "/t/#{topic.slug}/#{topic.id}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Fixture from my_plugin template 1: #{topic.title}")
+      expect(response.body).to include("Fixture from my_plugin template 2: #{topic.title}")
+      expect(response.body).to include("Fixture from my_plugin_2 template 1: #{topic.title}")
+      expect(response.body).to include("Fixture from my_plugin_2 template 2: #{topic.title}")
+      expect(response.body).not_to include("Fixture from my_plugin_3 template 1: #{topic.title}")
+
+      get "/t/#{another_topic.slug}/#{another_topic.id}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Fixture from my_plugin template 1: #{another_topic.title}")
+      expect(response.body).to include("Fixture from my_plugin template 2: #{another_topic.title}")
+
+      expect(response.body).to include(
+        "Fixture from my_plugin_2 template 1: #{another_topic.title}",
+      )
+
+      expect(response.body).to include(
+        "Fixture from my_plugin_2 template 2: #{another_topic.title}",
+      )
+
+      expect(response.body).not_to include(
+        "Fixture from my_plugin_3 template 1: #{another_topic.title}",
+      )
+    end
+  end
+
   describe "#wordpress" do
     before { sign_in(moderator) }
 
@@ -1057,6 +1092,43 @@ RSpec.describe TopicsController do
           expect(p1.like_count).to eq(0)
         end
       end
+
+      context "with API key" do
+        let(:api_key) { Fabricate(:api_key, user: admin, created_by: admin) }
+
+        it "allows changing ownership with change_owner scope" do
+          ApiKeyScope.create!(resource: "topics", action: "change_owner", api_key_id: api_key.id)
+
+          post "/t/#{topic.id}/change-owner.json",
+               params: {
+                 username: user_a.username_lower,
+                 post_ids: [p1.id],
+               },
+               headers: {
+                 "HTTP_API_KEY" => api_key.key,
+                 "HTTP_API_USERNAME" => api_key.user.username,
+               }
+
+          expect(response.status).to eq(200)
+          expect(p1.reload.user).to eq(user_a)
+        end
+
+        it "denies access without change_owner scope" do
+          ApiKeyScope.create!(resource: "topics", action: "read", api_key_id: api_key.id)
+
+          post "/t/#{topic.id}/change-owner.json",
+               params: {
+                 username: user_a.username_lower,
+                 post_ids: [p1.id],
+               },
+               headers: {
+                 "HTTP_API_KEY" => api_key.key,
+                 "HTTP_API_USERNAME" => api_key.user.username,
+               }
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
   end
 
@@ -1487,6 +1559,34 @@ RSpec.describe TopicsController do
         expect do delete "/t/#{user_topic.id}/timings.json" end.to change {
           topic_user_post_timings_count(user, user_topic)
         }.from([1, 1]).to([0, 0])
+      end
+    end
+
+    context "for private messages" do
+      fab!(:pm_post, :private_message_post)
+      fab!(:pm_topic) { pm_post.topic }
+      fab!(:pm_user) { pm_topic.user }
+
+      before do
+        sign_in(pm_user)
+        TopicUser.create!(
+          topic: pm_topic,
+          user: pm_user,
+          last_read_post_number: 1,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+        PostTiming.create!(topic: pm_topic, user: pm_user, post_number: 1, msecs: 1000)
+      end
+
+      it "publishes a message to update the client-side tracking state" do
+        messages =
+          MessageBus.track_publish(PrivateMessageTopicTrackingState.user_channel(pm_user.id)) do
+            delete "/t/#{pm_topic.id}/timings.json"
+          end
+
+        expect(messages.size).to eq(1)
+        expect(messages.first.data["message_type"]).to eq("read")
+        expect(messages.first.data["topic_id"]).to eq(pm_topic.id)
       end
     end
   end
@@ -3637,6 +3737,84 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    describe "#posts with content localization" do
+      fab!(:localized_post) do
+        post = Fabricate(:post, user:, locale: "en", cooked: "<p>Original EN</p>")
+        Fabricate(:post_localization, post:, locale: "ja", cooked: "<p>Translated JA</p>")
+        post
+      end
+      fab!(:localized_topic) { localized_post.topic }
+      fab!(:localized_post2) do
+        post =
+          Fabricate(
+            :post,
+            user:,
+            topic: localized_topic,
+            locale: "ja",
+            cooked: "<p>Original 2 JA</p>",
+          )
+        Fabricate(:post_localization, post:, locale: "en", cooked: "<p>Translated 2 EN</p>")
+        post
+      end
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "en"
+      end
+
+      context "when show_original cookie is not set" do
+        it "returns translated posts" do
+          get "/t/#{localized_topic.id}/posts.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          posts = body["post_stream"]["posts"]
+
+          expect(posts.first["cooked"]).to eq("<p>Original EN</p>")
+          expect(posts.second["cooked"]).to eq("<p>Translated 2 EN</p>")
+        end
+
+        it "returns translated posts when loading specific post_ids" do
+          get "/t/#{localized_topic.id}/posts.json", params: { post_ids: [localized_post2.id] }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          posts = body["post_stream"]["posts"]
+
+          expect(posts.first["cooked"]).to eq("<p>Translated 2 EN</p>")
+        end
+      end
+
+      context "when show_original cookie is set" do
+        before { cookies[ContentLocalization::SHOW_ORIGINAL_COOKIE] = "true" }
+
+        it "returns original posts" do
+          get "/t/#{localized_topic.id}/posts.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          posts = body["post_stream"]["posts"]
+
+          expect(posts.first["cooked"]).to eq("<p>Original EN</p>")
+          expect(posts.second["cooked"]).to eq("<p>Original 2 JA</p>")
+        end
+
+        it "returns original posts when loading specific post_ids" do
+          get "/t/#{localized_topic.id}/posts.json", params: { post_ids: [localized_post2.id] }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          posts = body["post_stream"]["posts"]
+
+          expect(posts.first["cooked"]).to eq("<p>Original 2 JA</p>")
+        end
+      end
+    end
   end
 
   describe "#feed" do
@@ -4383,7 +4561,7 @@ RSpec.describe TopicsController do
 
         it "dismisses topics for tag" do
           TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_topic.id])
-          put "/topics/reset-new.json?tag_id=#{tag.name}"
+          put "/topics/reset-new.json?tag_name=#{tag.name}"
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
         end
 
@@ -4405,7 +4583,7 @@ RSpec.describe TopicsController do
             group.add(user)
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { tag_id: restricted_tag.name }
+                put "/topics/reset-new.json", params: { tag_name: restricted_tag.name }
               end
             expect(messages.size).to eq(1)
             expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
@@ -4419,7 +4597,7 @@ RSpec.describe TopicsController do
           it "ignores the tag param and dismisses all topics if the user can't see the tag" do
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { tag_id: restricted_tag.name }
+                put "/topics/reset-new.json", params: { tag_name: restricted_tag.name }
               end
             expect(messages.size).to eq(1)
             expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
@@ -4447,7 +4625,7 @@ RSpec.describe TopicsController do
             user.id,
             topic_ids: [tag_and_category_topic.id],
           )
-          put "/topics/reset-new.json?tag_id=#{tag.name}&category_id=#{category.id}"
+          put "/topics/reset-new.json?tag_name=#{tag.name}&category_id=#{category.id}"
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq(
             [tag_and_category_topic.id],
           )
@@ -4678,7 +4856,7 @@ RSpec.describe TopicsController do
                 dismiss_topics: true,
                 dismiss_posts: true,
                 untrack: true,
-                tag_id: tag.name,
+                tag_name: tag.name,
               }
 
           expect(response.status).to eq(200)
@@ -5699,6 +5877,8 @@ RSpec.describe TopicsController do
 
         before do
           SiteSetting.content_localization_enabled = true
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_param = true
 
           topic.update!(category: subcategory, tags: [tag], locale: "en")
           topic.first_post.update(locale: "en")

@@ -40,7 +40,7 @@ bg:
         groups: "Групи:"
         no_persona: "Не е зададено"
         no_groups: "Без"
-        edit: "Редактирай"
+        edit: "Настройки"
         expand_list:
           one: "(още %{count})"
           other: "(още %{count})"
@@ -55,6 +55,16 @@ bg:
       modals:
         select_option: "Изберете опция..."
       translations:
+        stats:
+          eta_minutes:
+            one: "%{count} минута"
+            other: "%{count} минути "
+          eta_hours:
+            one: "%{count} час"
+            other: "%{count} часове "
+          eta_days:
+            one: "%{count} ден"
+            other: "%{count} дни"
         progress_chart:
           bar_done:
             one: "%{count} публикация"
@@ -69,6 +79,7 @@ bg:
         summary: "Сумарно"
         username: "Потребителско име"
         total_requests: "Общо заявки"
+        total: "Общо"
         periods:
           last_day: "Последните 24 часа"
           custom: "Ръчно задаване..."
@@ -137,6 +148,8 @@ bg:
           copy: "Копирай"
           copied: "Копирано!"
           cancel: "Отмени"
+        thumbnail_suggestions:
+          try_again: "Опитайте отново"
         image_caption:
           save_caption: "Запази"
       embeddings:

@@ -53,6 +53,7 @@ da:
         archive_channel: "Arkivér kanal"
         delete_channel: "Slet kanal"
         leave_channel: "Forlad kanal"
+        notification_settings_context: "Notifikationer"
         join: "Tilslut"
         leave: "Forlad"
       channel_archive:
@@ -145,6 +146,8 @@ da:
       chat_message_separator:
         today: I dag
         yesterday: I går
+      search_view:
+        filter_placeholder: Søg i meddelelser
       members_view:
         add_member: Tilføj Medlem
         back_to_settings: "Tilbage til indstillinger"
@@ -157,6 +160,7 @@ da:
         tabs:
           members: Brugere
           settings: Indstillinger
+          search: Søg
         remove_member: "Fjern"
       new_message_modal:
         no_items: "Ingen punkter"
@@ -183,6 +187,7 @@ da:
           topic: "Emne"
       reviewable:
         type: "Chatbesked"
+        message_in_channel: "Kanal"
       composer:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"
@@ -212,6 +217,12 @@ da:
         title: "Chat"
         export_messages:
           description: "Dette eksporterer alle beskeder fra alle kanaler."
+      search:
+        short_title: Søg
+        no_results: "Ingen resultater fundet"
+        sort:
+          relevance: "Relevans"
+          latest: "Seneste"
       incoming_webhooks:
         back: "Tilbage"
         description: "Beskrivelse"

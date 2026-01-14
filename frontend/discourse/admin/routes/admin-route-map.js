@@ -1,5 +1,5 @@
 export default function () {
-  this.route("admin", { resetNamespace: true }, function () {
+  this.route("admin", function () {
     this.route("dashboard", { path: "/" }, function () {
       this.route("general", { path: "/" });
       this.route("admin.dashboardModeration", {
@@ -238,12 +238,15 @@ export default function () {
         });
 
         this.route("about");
+        this.route("upcomingChanges", { path: "/upcoming-changes" });
+
         this.route("login", { path: "/login-and-authentication" }, function () {
           this.route("settings", {
             path: "/",
           });
           this.route("authenticators");
           this.route("discourseconnect");
+          this.route("discourse-id");
           // Lets plugins register routes via register_admin_config_login_route
           this.route("plugin-tab", {
             path: "/*wildcard",
@@ -367,6 +370,7 @@ export default function () {
         });
         this.route("logo");
         this.route("fonts");
+        this.route("adminWelcomeBanner", { path: "/welcome-banner" });
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });

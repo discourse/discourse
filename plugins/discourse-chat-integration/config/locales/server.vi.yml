@@ -8,4 +8,4 @@ vi:
   site_settings:
     chat_integration_mattermost_webhook_url: 'URL cho Mattermost webhook'
   chat_integration:
-    all_categories: "(tất cả danh mục)"
+    all_categories: "(tất cả chuyên mục)"

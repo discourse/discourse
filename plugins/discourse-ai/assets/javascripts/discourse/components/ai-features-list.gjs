@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import { and, eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiFeatureCard from "./ai-feature-card";
 
@@ -51,24 +51,26 @@ export default class AiFeaturesList extends Component {
         <div class="ai-module" data-module-name={{module.module_name}}>
           <div class="ai-module__header">
             <div class="ai-module__module-title">
-              <h3>{{i18n
+              <h3>
+                {{i18n
                   (concat "discourse_ai.features." module.module_name ".name")
-                }}</h3>
+                }}
+              </h3>
               {{#if (this.isSpamModule module)}}
                 <DButton
-                  class="edit"
+                  class="btn-default edit"
                   @label="discourse_ai.features.edit"
                   @route="adminPlugins.show.discourse-ai-spam"
                 />
               {{else if (this.isAutomationModule module)}}
                 <DButton
-                  class="edit"
+                  class="btn-default edit"
                   @label="discourse_ai.features.edit"
                   @action={{this.transitionToAutomations}}
                 />
               {{else}}
                 <DButton
-                  class="edit"
+                  class="btn-default edit"
                   @label="discourse_ai.features.edit"
                   @route="adminPlugins.show.discourse-ai-features.edit"
                   @routeModels={{module.id}}

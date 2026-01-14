@@ -49,7 +49,6 @@ fi:
     all_day_event_start_time: "Tapahtumat, joille ei ole määritetty alkamisaikaa, alkavat tähän aikaan. Muoto on tt:mm. Esim. kirjoita klo 6.00 muodossa 06:00."
     all_day_event_end_time: "Tapahtumat, joille ei ole määritetty loppumisaikaa, päättyvät tähän aikaan. Muoto on tt:mm. Esim. kirjoita klo 18.00 muodossa 18:00."
     all_day_event_time_error: "Virheellinen aika. Muodon täytyy olla tt:mm (esim. 08:00)."
-    calendar_categories: "Näytä kalenteri alueen yläosassa. Pakolliset asetukset ovat categoryId ja postId. esim.: categoryId=6;postId=453\n Muut kelvolliset asetukset: tzPicker, weekends ja defaultView."
     calendar_categories_outlet: "Mahdollistaa sen muuttamisen, missä julkaisukohdassa alueen kalenteri näytetään."
     working_days: "Aseta työpäivät. Voit näyttää ryhmän saatavuuden käyttämällä viestissä `timezones`-tunnistetta, esim.: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Työajan alkamisaika."

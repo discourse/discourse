@@ -1,12 +1,12 @@
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import CustomReaction from "../../models/discourse-reactions-custom-reaction";
 
 export default class UserActivityReactions extends Controller {
   @service siteSettings;
-  @controller application;
 
   @tracked canLoadMore = true;
   @tracked loading = false;
@@ -14,7 +14,7 @@ export default class UserActivityReactions extends Controller {
   @tracked beforeReactionUserId = null;
 
   #getLastIdFrom(array) {
-    return array.length ? array[array.length - 1].get("id") : null;
+    return array.length ? array[array.length - 1].reaction_user_id : null;
   }
 
   #updateBeforeIds(reactionUsers) {
@@ -42,35 +42,46 @@ export default class UserActivityReactions extends Controller {
   }
 
   @action
-  loadMore() {
+  async loadMore() {
     if (!this.canLoadMore || this.loading) {
-      return;
+      return [];
     }
 
     this.loading = true;
     const reactionUsers = this.model;
 
-    if (!this.beforeReactionUserId) {
-      this.#updateBeforeIds(reactionUsers);
+    try {
+      if (!this.beforeReactionUserId) {
+        this.#updateBeforeIds(reactionUsers);
+      }
+
+      const opts = {
+        actingUsername: this.actingUsername,
+        includeLikes: this.includeLikes,
+        beforeLikeId: this.beforeLikeId,
+        beforeReactionUserId: this.beforeReactionUserId,
+      };
+
+      const newReactionUsers = await CustomReaction.findReactions(
+        this.reactionsUrl,
+        this.username,
+        opts
+      );
+
+      const flattened = newReactionUsers.map((r) =>
+        CustomReaction.flattenForPostList(r)
+      );
+
+      addUniqueValuesToArray(reactionUsers, flattened);
+      this.#updateBeforeIds(flattened);
+
+      if (flattened.length === 0) {
+        this.canLoadMore = false;
+      }
+
+      return flattened;
+    } finally {
+      this.loading = false;
     }
-
-    const opts = {
-      actingUsername: this.actingUsername,
-      includeLikes: this.includeLikes,
-      beforeLikeId: this.beforeLikeId,
-      beforeReactionUserId: this.beforeReactionUserId,
-    };
-
-    CustomReaction.findReactions(this.reactionsUrl, this.username, opts)
-      .then((newReactionUsers) => {
-        reactionUsers.addObjects(newReactionUsers);
-        this.#updateBeforeIds(newReactionUsers);
-        if (newReactionUsers.length === 0) {
-          this.canLoadMore = false;
-        }
-      })
-      .finally(() => {
-        this.loading = false;
-      });
   }
 }

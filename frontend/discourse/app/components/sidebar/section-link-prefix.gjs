@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import { isHex } from "discourse/components/sidebar/section-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { eq } from "discourse/truth-helpers";
 
 export default class SidebarSectionLinkPrefix extends Component {
   get prefixValue() {

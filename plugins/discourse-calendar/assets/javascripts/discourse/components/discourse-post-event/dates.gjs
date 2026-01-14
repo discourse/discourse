@@ -6,8 +6,9 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import { bbcodeAttributeEncode } from "discourse/lib/bbcode-attributes";
+import { generateIcsData } from "discourse/lib/download-calendar";
 import discourseLater from "discourse/lib/later";
-import loadRRule from "discourse/lib/load-rrule";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
 
@@ -21,21 +22,17 @@ export default class DiscoursePostEventDates extends Component {
     return this.args.event.timezone || "UTC";
   }
 
+  get showLocalTime() {
+    return this.args.event.showLocalTime ?? true;
+  }
+
   get startsAt() {
-    return (
-      this.args.currentEventStart ??
-      moment(this.args.event.startsAt).tz(this.timezone)
-    );
+    return moment.tz(this.args.event.startsAt, this.timezone);
   }
 
   get endsAt() {
-    const currentEventEnd = this.args.currentEventEnd;
     const eventEndsAt = this.args.event.endsAt;
-
-    return (
-      currentEventEnd ??
-      (eventEndsAt ? moment(eventEndsAt).tz(this.timezone) : null)
-    );
+    return eventEndsAt ? moment.tz(eventEndsAt, this.timezone) : null;
   }
 
   get startsAtFormat() {
@@ -104,6 +101,36 @@ export default class DiscoursePostEventDates extends Component {
     return date.hour() || date.minute();
   }
 
+  generateIcsForEvent() {
+    const event = this.args.event;
+    if (!event || !this.startsAt) {
+      return null;
+    }
+
+    const title = event.name || event.post?.topic?.title || "Event";
+    const startsAt = this.startsAt.toISOString();
+    const endsAt = this.endsAt
+      ? this.endsAt.toISOString()
+      : moment(this.startsAt).add(1, "hours").toISOString();
+
+    const dates = [{ startsAt, endsAt, timezone: this.timezone }];
+    const options = {};
+
+    if (event.rrule) {
+      options.rrule = event.rrule;
+    }
+
+    if (event.location) {
+      options.location = event.location;
+    }
+
+    if (event.description) {
+      options.details = event.description;
+    }
+
+    return generateIcsData(title, dates, options);
+  }
+
   buildDateBBCode({ date, format, range }) {
     const bbcode = {
       date: date.format("YYYY-MM-DD"),
@@ -111,6 +138,7 @@ export default class DiscoursePostEventDates extends Component {
       format,
       timezone: date.tz(),
       postId: this.args.event.id,
+      calendar: "on",
     };
 
     if (this.args.event.showLocalTime) {
@@ -119,6 +147,11 @@ export default class DiscoursePostEventDates extends Component {
 
     if (range) {
       bbcode.range = range;
+    }
+
+    const icsData = this.generateIcsForEvent();
+    if (icsData) {
+      bbcode.ics = bbcodeAttributeEncode(icsData);
     }
 
     const content = Object.entries(bbcode)
@@ -133,8 +166,6 @@ export default class DiscoursePostEventDates extends Component {
     if (this.args.expiredAndRecurring) {
       return;
     }
-
-    this.rrule = await loadRRule();
 
     if (this.siteSettings.discourse_local_dates_enabled) {
       const bbcode = this.datesBBCode.join("<span> → </span>");

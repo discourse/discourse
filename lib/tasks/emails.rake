@@ -59,22 +59,50 @@ desc "Check if SMTP connection is successful and send test message"
 task "emails:test", [:email] => [:environment] do |_, args|
   email = args[:email]
   message = "OK"
+
+  def textwidth
+    @textwidth ||=
+      begin
+        IO.console.winsize[1]
+      rescue StandardError
+        80
+      end
+  end
+
+  def make_warning_message(warning)
+    <<~EOT
+      #{" WARNING ".center(textwidth, "=")}
+      #{warning}\
+      #{"=" * textwidth}
+    EOT
+  end
+
+  def make_error_message(error, solution)
+    <<~EOT
+      #{" ERROR ".center(textwidth, "=")}
+      #{error}\
+      #{" SOLUTION ".center(textwidth, "=")}
+      #{solution}\
+      #{"=" * textwidth}
+    EOT
+  end
+
   begin
     smtp = Discourse::Application.config.action_mailer.smtp_settings
 
-    puts <<~TEXT if smtp[:address].match(/smtp\.gmail\.com/)
-        #{smtp}
-        ============================== WARNING ==============================
+    puts make_warning_message(<<~WARN) + "\n" if smtp[:address].match(/smtp\.gmail\.com/)
+          Sending mail with Gmail is a violation of their terms of service.
 
-        Sending mail with Gmail is a violation of their terms of service.
+          Sending with G Suite might work, but it is not recommended.
+          For further information see: https://meta.discourse.org/t/62931
 
-        Sending with G Suite might work, but it is not recommended. For information see:
-        https://meta.discourse.org/t/discourse-aws-ec2-g-suite-troubleshooting/62931?u=pfaffman
+          Current settings:
+          #{smtp.compact}
 
-        ========================= CONTINUING TEST ============================
-      TEXT
+          Continuing…
+        WARN
 
-    puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}, username:#{smtp[:user_name]} with #{smtp[:authentication]} auth."
+    puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}, username:#{smtp[:user_name] || "(none)"} with #{smtp[:authentication] || "no"} auth."
 
     # We are not formatting the messages using EmailSettingsExceptionHandler here
     # because we are doing custom messages in the rake task with more details.
@@ -87,88 +115,127 @@ task "emails:test", [:email] => [:environment] do |_, args|
       authentication: smtp[:authentication],
     )
   rescue Exception => e
-    if e.to_s.match(/execution expired/)
-      message = <<~TEXT
-        ======================================== ERROR ========================================
-        Connection to port #{smtp[:port]} failed.
-        ====================================== SOLUTION =======================================
-        The most likely problem is that your server has outgoing SMTP traffic blocked.
-        If you are using a service like Mailgun or Sendgrid, try using port 2525.
-        =======================================================================================
-      TEXT
-    elsif e.to_s.match(/530.*STARTTLS/)
-      # We can't run a preliminary test with STARTTLS, we'll just try sending the test email.
-      message = "OK"
-    elsif e.to_s.match(/535/)
-      message = <<~TEXT
-        ======================================== ERROR ========================================
-                                          AUTHENTICATION FAILED
+    message =
+      case e
+      when ArgumentError
+        make_error_message(<<~ERR, <<~SOL)
+        #{e.class}: #{e.message.strip}
+        ERR
+        The combination of SMTP parameters is invalid - see the above error message for the reason.
 
-        #{e}
+        If you need assistance, please report the relevant SMTP environment variables
+        and the exact error message above to https://meta.discourse.org/
+        SOL
+      when Net::SMTPAuthenticationError
+        case e.message
+        when /530.*STARTTLS/
+          make_error_message(<<~ERR, <<~SOL)
+          Your mail server has refused to accept credentials over an unencrypted connection.
+          #{e.class}: #{e.message.strip}
+          ERR
+          If you have disabled STARTTLS (DISCOURSE_SMTP_ENABLE_START_TLS=false), remove it.
+          SOL
+        else
+          make_error_message(<<~ERR, <<~SOL)
+          Your mail server has refused your credentials as invalid:
+          #{e.class}: #{e.message.strip}
+          ERR
+          Check your credentials for the mail server to verify they are correct:
+          Username: #{smtp[:user_name]}
+          Password: #{smtp[:password][..3]}… (truncated to four characters)
+          SOL
+        end
+      when Errno::ECONNREFUSED
+        make_error_message(<<~ERR, <<~SOL)
+        Connection to port #{smtp[:port]} failed:
+        #{e.class}: #{e.message.strip}
+        ERR
+        Your server has outgoing SMTP traffic blocked, or your connection attempt is explicitly blocked by your network.
 
-        ====================================== SOLUTION =======================================
-        The most likely problem is that your SMTP username and/or Password is incorrect.
-        Check them and try again.
-        =======================================================================================
-      TEXT
-    elsif e.to_s.match(/Connection refused/)
-      message = <<~TEXT
-        ======================================== ERROR ========================================
-                                          CONNECTION REFUSED
+        If you are using a external SMTP service (such as Mailgun or Sendgrid),
+        review their service documentation to find an alternative port such as 2525.
+        SOL
+      when Errno::ENETUNREACH
+        make_error_message(<<~ERR, <<~SOL)
+        Connection to port #{smtp[:port]} failed:
+        #{e.class}: #{e.message.strip}
+        ERR
+        Check your server connectivity. The server may actually be unreachable, or you may have chosen the
+        wrong port, or a network problem is preventing access from the Docker container.
+        SOL
+      when Net::OpenTimeout
+        make_error_message(<<~ERR, <<~SOL)
+        Connection timeout while making the initial connection
+        #{e.class}: #{e.message.strip}
+        ERR
+        The server may not actually be reachable, or your traffic may be silently dropped.
 
-        #{e}
-
-        ====================================== SOLUTION =======================================
-        The most likely problem is that you have chosen the wrong port or a network problem is
-        blocking access from the Docker container.
-
-        Check the port and your networking configuration.
-        =======================================================================================
-      TEXT
-    elsif e.to_s.match(/service not known/)
-      message = <<~TEXT
-        ======================================== ERROR ========================================
-                                          SMTP SERVER NOT FOUND
-
-        #{e}
-
-        ====================================== SOLUTION =======================================
+        If you are using a external SMTP service (such as Mailgun or Sendgrid),
+        review their service documentation to find an alternative port such as 2525.
+        SOL
+      when Socket::ResolutionError
+        make_error_message(<<~ERR, <<~SOL)
+        SMTP server not found!
+        #{e.class}: #{e.message.strip}
+        ERR
         The most likely problem is that the host name of your SMTP server is incorrect.
         Check it and try again.
-        =======================================================================================
-      TEXT
-    else
-      message = <<~TEXT
-        ======================================== ERROR ========================================
-                                            UNEXPECTED ERROR
+        SOL
+      when OpenSSL::SSL::SSLError
+        case e.message
+        when /certificate verify failed/
+          make_error_message(<<~ERR, <<~SOL)
+          Encountered a certificate verification error while connecting to the mail server.
+          #{e.class}: #{e.message.strip}
+          ERR
+          Check the SMTP server certificate. If the certificate is self-signed or from a private authority,
+          consider setting DISCOURSE_SMTP_OPENSSL_VERIFY_MODE=none to disable verification.
 
-        #{e}
+          If you need assistance, please report the relevant SMTP environment variables
+          and the exact error message above to https://meta.discourse.org/
+          SOL
+        else
+          make_error_message(<<~ERR, <<~SOL)
+          OpenSSL error encountered:
+          #{e.class}: #{e.message.strip}
+          ERR
+          An unexpected error from openssl was encountered. Review the above output for clues.
 
-        ====================================== SOLUTION =======================================
+          If you need assistance, please report the relevant SMTP environment variables
+          and the exact error message above to https://meta.discourse.org/
+          SOL
+        end
+      else
+        make_error_message(<<~ERR, <<~SOL)
+        UNKNOWN ERROR!
+        #{e.class}: #{e.message.strip}
+        ERR
         This is not a common error. No recommended solution exists!
 
         Please report the exact error message above to https://meta.discourse.org/
         (And a solution, if you find one!)
-        =======================================================================================
-      TEXT
-    end
+        SOL
+      end
   end
+
   if message == "OK"
     puts "SMTP server connection successful."
   else
     puts message
-    exit
+    exit 1
   end
+
   begin
-    puts "Sending to #{email}. . . "
+    puts "Sending to #{email}…"
     email_log = Email::Sender.new(TestMailer.send_test(email), :test_message).send
     case email_log
     when SkippedEmailLog
-      puts <<~TEXT
+      puts make_error_message(<<~ERR, <<~SOL)
         Mail was not sent.
-
-        Reason: #{email_log.reason}
-      TEXT
+        Reason: #{email_log.reason.strip}
+        ERR
+        Review the reason for the failure and address it with the server owner.
+        SOL
     when EmailLog
       puts <<~TEXT
         Mail accepted by SMTP server.
@@ -182,30 +249,33 @@ task "emails:test", [:email] => [:environment] do |_, args|
         failed to deliver the message.
       TEXT
     when nil
-      puts <<~TEXT
+      puts make_error_message(<<~ERR, <<~SOL)
         Mail was not sent.
-
+        ERR
         Verify the status of the `disable_emails` site setting.
-      TEXT
+        SOL
     else
-      puts <<~TEXT
+      puts make_error_message(<<~ERR, <<~SOL)
         SCRIPT BUG: Got back a #{email_log.class}
         #{email_log.inspect}
-
+        ERR
         Mail may or may not have been sent. Check the destination mailbox.
-      TEXT
+        Post this output to https://meta.discourse.org/ for assistance.
+        SOL
     end
-  rescue => error
-    puts "Sending mail failed."
-    puts error.message
+  rescue => e
+    puts make_error_message(<<~ERR, <<~SOL)
+      Sending mail failed:
+      #{e.class}: #{e.message.strip}
+      ERR
+      Post this output to https://meta.discourse.org/ for assistance.
+      SOL
   end
 
-  puts <<~TEXT if SiteSetting.disable_emails != "no"
-
-      ### WARNING
+  puts make_warning_message(<<~WARN) if SiteSetting.disable_emails != "no"
       The `disable_emails` site setting is currently set to #{SiteSetting.disable_emails}.
       Consider changing it to 'no' before performing any further troubleshooting.
-    TEXT
+    WARN
 end
 
 desc "run this to fix users associated to emails mirrored from a mailman mailing list"

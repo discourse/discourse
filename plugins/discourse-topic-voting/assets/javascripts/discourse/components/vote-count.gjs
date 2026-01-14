@@ -4,7 +4,6 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import SmallUserList from "discourse/components/small-user-list";
 import concatClass from "discourse/helpers/concat-class";
@@ -12,6 +11,7 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
+import { eq } from "discourse/truth-helpers";
 
 export default class VoteBox extends Component {
   @service siteSettings;

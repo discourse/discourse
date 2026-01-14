@@ -53,6 +53,7 @@ after_initialize do
   register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
 
   register_search_index(
+    enabled: -> { SiteSetting.chat_search_enabled },
     model_class: Chat::Message,
     search_data_class: Chat::MessageSearchData,
     index_version: 1,
@@ -113,31 +114,25 @@ after_initialize do
     WebHook.prepend Chat::OutgoingWebHookExtension
   end
 
-  if Oneboxer.respond_to?(:register_local_handler)
-    Oneboxer.register_local_handler("chat/chat") do |url, route|
-      Chat::OneboxHandler.handle(url, route)
-    end
+  Oneboxer.register_local_handler("chat/chat") do |url, route|
+    Chat::OneboxHandler.handle(url, route)
   end
 
-  if InlineOneboxer.respond_to?(:register_local_handler)
-    InlineOneboxer.register_local_handler("chat/chat") do |url, route|
-      Chat::InlineOneboxHandler.handle(url, route)
-    end
+  InlineOneboxer.register_local_handler("chat/chat") do |url, route|
+    Chat::InlineOneboxHandler.handle(url, route)
   end
 
-  if respond_to?(:register_upload_in_use)
-    register_upload_in_use do |upload|
-      Chat::Message.where(
-        "message LIKE ? OR message LIKE ?",
+  register_upload_in_use do |upload|
+    Chat::Message.where(
+      "message LIKE ? OR message LIKE ?",
+      "%#{upload.sha1}%",
+      "%#{upload.base62_sha1}%",
+    ).exists? ||
+      Chat::Draft.where(
+        "data LIKE ? OR data LIKE ?",
         "%#{upload.sha1}%",
         "%#{upload.base62_sha1}%",
-      ).exists? ||
-        Chat::Draft.where(
-          "data LIKE ? OR data LIKE ?",
-          "%#{upload.sha1}%",
-          "%#{upload.base62_sha1}%",
-        ).exists?
-    end
+      ).exists?
   end
 
   add_to_serializer(:user_card, :can_chat_user) do

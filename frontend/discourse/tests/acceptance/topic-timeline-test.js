@@ -356,12 +356,10 @@ acceptance("Glimmer Topic Timeline", function (needs) {
 
   test("selecting now-date navigates you to the last post", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
+
     await click(".timeline-date-wrapper .now-date");
-    assert.strictEqual(
-      currentURL(),
-      "/t/internationalization-localization/280/11",
-      "navigates to the latest post"
-    );
+
+    assert.dom("[data-post-number='11']").exists();
   });
 
   test("clicking the timeline padding updates the position", async function (assert) {

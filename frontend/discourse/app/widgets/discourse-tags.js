@@ -1,10 +1,8 @@
-import renderTags from "discourse/lib/render-tags";
-import RawHtml from "discourse/widgets/raw-html";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
 
-// Right now it's RawHTML. Eventually it should emit nodes
-export default class DiscourseTags extends RawHtml {
-  constructor(attrs) {
-    attrs.html = renderTags(attrs.topic, attrs);
-    super(attrs);
-  }
-}
+export { DummyWidget as default } from "discourse/widgets/widget";

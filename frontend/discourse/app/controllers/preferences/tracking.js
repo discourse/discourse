@@ -4,6 +4,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class extends Controller {
@@ -119,10 +120,6 @@ export default class extends Controller {
       (this.model.watched_tags?.length > 0 &&
         this.model.mutedCategories?.length > 0);
 
-    if (show && this.model.user_option.watched_precedence_over_muted === null) {
-      this.model.user_option.watched_precedence_over_muted =
-        this.siteSettings.watched_precedence_over_muted;
-    }
     return show;
   }
 
@@ -189,7 +186,9 @@ export default class extends Controller {
       attrs.push(...this.customAttrNames);
     }
 
-    return attrs;
+    return applyValueTransformer("preferences-save-attributes", attrs, {
+      page: "tracking",
+    });
   }
 
   @action

@@ -6,6 +6,7 @@ module Migrations::Importer
       @intermediate_db = ::Migrations::Database.connect(config[:intermediate_db])
       @discourse_db = DiscourseDB.new
       @shared_data = SharedData.new(@discourse_db)
+      @config = config[:config]
       @options = options
 
       attach_mappings_db(config[:mappings_db], options[:reset])
@@ -64,7 +65,7 @@ module Migrations::Importer
         .each
         .with_index(1) do |step_class, index|
           puts "#{step_class.title} [#{index}/#{max}]"
-          step = step_class.new(@intermediate_db, @discourse_db, @shared_data)
+          step = step_class.new(@intermediate_db, @discourse_db, @shared_data, @config)
           step.execute
           puts ""
         end

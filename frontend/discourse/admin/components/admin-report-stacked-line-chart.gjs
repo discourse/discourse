@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import hexToRGBA from "discourse/admin/lib/hex-to-rgba";
+import Report from "discourse/admin/models/report";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
-import hexToRGBA from "admin/lib/hex-to-rgba";
-import Report from "admin/models/report";
 import Chart from "./chart";
 
 export default class AdminReportStackedLineChart extends Component {
@@ -55,7 +55,7 @@ export default class AdminReportStackedLineChart extends Component {
                 return `= ${total}`;
               },
               title: (tooltipItem) =>
-                moment(tooltipItem[0].label, "YYYY-MM-DD").format("LL"),
+                moment(tooltipItem[0].parsed.x).format("LL"),
             },
           },
         },
@@ -69,33 +69,30 @@ export default class AdminReportStackedLineChart extends Component {
           },
         },
         scales: {
-          y: [
-            {
-              stacked: true,
-              display: true,
-              ticks: {
-                callback: (label) => number(label),
-                sampleSize: 5,
-                maxRotation: 25,
-                minRotation: 25,
-              },
+          y: {
+            stacked: true,
+            display: true,
+            ticks: {
+              callback: (label) => number(label),
+              sampleSize: 5,
+              maxRotation: 25,
+              minRotation: 25,
             },
-          ],
-          x: [
-            {
-              display: true,
-              gridLines: { display: false },
-              type: "time",
-              time: {
-                unit: Report.unitForDatapoints(chartData[0].data.length),
-              },
-              ticks: {
-                sampleSize: 5,
-                maxRotation: 50,
-                minRotation: 50,
-              },
+          },
+          x: {
+            stacked: true,
+            display: true,
+            grid: { display: false },
+            type: "time",
+            time: {
+              unit: Report.unitForDatapoints(chartData[0].data.length),
             },
-          ],
+            ticks: {
+              sampleSize: 5,
+              maxRotation: 50,
+              minRotation: 50,
+            },
+          },
         },
       },
     };

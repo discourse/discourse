@@ -1,23 +1,28 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import { number } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 
 /**
  * Component to display credit allocation remaining as a horizontal progress bar
  *
  * @component AiCreditBar
- * @param {Object} allocation - LlmCreditAllocation object with monthly_credits, credits_remaining, percentage_remaining, soft_limit_reached, hard_limit_reached, next_reset_at
+ * @param {Object} allocation - LlmCreditAllocation object with daily_credits, credits_remaining, percentage_remaining, soft_limit_reached, hard_limit_reached, next_reset_at
  * @param {Boolean} showTooltip - Whether to show tooltip on hover (default: true)
+ * @param {Boolean} compact - Whether to show compact format (just percentage) for use in tables (default: false)
  */
 export default class AiCreditBar extends Component {
   get barClass() {
+    const classes = [];
     if (this.args.allocation.soft_limit_reached) {
-      return "ai-credit-bar--warning";
+      classes.push("ai-credit-bar--warning");
     }
-    return "";
+    if (this.args.compact) {
+      classes.push("ai-credit-bar--compact");
+    }
+    return classes.join(" ");
   }
 
   get fillStyle() {
@@ -25,20 +30,31 @@ export default class AiCreditBar extends Component {
   }
 
   get barText() {
+    if (this.args.compact) {
+      return `${this.args.allocation.percentage_remaining}%`;
+    }
     return i18n("discourse_ai.llms.credit_allocation.credits_remaining", {
       remaining: number(this.args.allocation.credits_remaining),
-      total: number(this.args.allocation.monthly_credits),
+      total: number(this.args.allocation.daily_credits),
       percentage: this.args.allocation.percentage_remaining,
     });
   }
 
   get tooltipText() {
+    if (this.args.compact) {
+      return i18n("discourse_ai.llms.credit_allocation.credits_remaining", {
+        remaining: number(this.args.allocation.credits_remaining),
+        total: number(this.args.allocation.daily_credits),
+        percentage: this.args.allocation.percentage_remaining,
+      });
+    }
     const resetDate = new Date(this.args.allocation.next_reset_at);
     const options = {
       month: "long",
       day: "numeric",
       hour: "numeric",
       minute: "2-digit",
+      timeZone: "UTC",
     };
     const formattedDate = resetDate.toLocaleString(undefined, options);
 

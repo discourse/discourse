@@ -24,6 +24,16 @@ describe DiscourseAi::Translation::PostCandidates do
       expect(DiscourseAi::Translation::PostCandidates.get).not_to include(post)
     end
 
+    it "does not return posts longer than ai_translation_max_post_length" do
+      SiteSetting.ai_translation_max_post_length = 100
+      short_post = Fabricate(:post, raw: "This is a short post that fits within the limit.")
+      long_post = Fabricate(:post, raw: "a" * 50 + " This is a long post. " + "b" * 50)
+
+      posts = DiscourseAi::Translation::PostCandidates.get
+      expect(posts).to include(short_post)
+      expect(posts).not_to include(long_post)
+    end
+
     describe "SiteSetting.ai_translation_backfill_limit_to_public_content" do
       fab!(:pm_post) { Fabricate(:post, topic: Fabricate(:private_message_topic)) }
       fab!(:group_pm_post) do
@@ -120,6 +130,17 @@ describe DiscourseAi::Translation::PostCandidates do
       expect(es_entry[:total]).to eq(2)
       fr_entry = progress.find { |r| r[:locale] == "fr" }
       expect(fr_entry).to be_nil
+    end
+
+    it "excludes posts longer than ai_translation_max_post_length from totals" do
+      SiteSetting.ai_translation_max_post_length = 100
+      short_post = Fabricate(:post, locale: "en_GB", raw: "This is a short post that fits.")
+      long_post =
+        Fabricate(:post, locale: "fr", raw: "a" * 50 + " This is a long post. " + "b" * 50)
+
+      result = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
+      expect(result[:total]).to eq(1)
+      expect(result[:posts_with_detected_locale]).to eq(1)
     end
   end
 end

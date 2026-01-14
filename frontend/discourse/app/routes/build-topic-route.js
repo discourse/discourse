@@ -148,6 +148,7 @@ class AbstractTopicRoute extends DiscourseRoute {
   }
 }
 
+/** @returns {any} */
 export default function buildTopicRoute(filter) {
   return class extends AbstractTopicRoute {
     routeConfig = { filter };

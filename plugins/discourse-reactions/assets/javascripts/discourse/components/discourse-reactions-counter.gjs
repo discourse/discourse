@@ -3,11 +3,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
+import { and } from "discourse/truth-helpers";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsList from "./discourse-reactions-list";
 import DiscourseReactionsStatePanel from "./discourse-reactions-state-panel";
@@ -32,28 +32,26 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   @bind
-  getUsers(reactionValue) {
-    return CustomReaction.findReactionUsers(this.args.post.id, {
+  async getUsers(reactionValue) {
+    const response = await CustomReaction.findReactionUsers(this.args.post.id, {
       reactionValue,
-    }).then((response) => {
-      response.reaction_users.forEach((reactionUser) => {
-        this.reactionsUsers[reactionUser.id] = reactionUser.users;
-      });
-
-      this.args.updatePopperPosition();
     });
+
+    response.reaction_users.forEach((reactionUser) => {
+      this.reactionsUsers[reactionUser.id] = reactionUser.users;
+    });
+
+    this.args.updatePopover();
   }
 
   @action
   mouseDown(event) {
     event.stopImmediatePropagation();
-    return false;
   }
 
   @action
   mouseUp(event) {
     event.stopImmediatePropagation();
-    return false;
   }
 
   @action

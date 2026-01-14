@@ -1040,12 +1040,9 @@ hu:
     no_log_search_queries: "A keresési lekérdezések naplói jelenleg le vannak tiltva (az adminisztrátor engedélyezheti őket a webhely beállításaiban)."
   email_settings:
     pop3_authentication_error: "Probléma lépett fel a megadott POP3 hitelesítési adatokkal, ellenőrizze a felhasználónevet és a jelszót, majd próbálja újra."
-    imap_authentication_error: "Probléma lépett fel a megadott IMAP hitelesítési adatokkal, ellenőrizze a felhasználónevet és a jelszót, majd próbálja újra."
-    imap_no_response_error: "Hiba történt az IMAP-kiszolgálóval való kommunikáció során. %{message}"
     smtp_authentication_error: "Probléma lépett fel a megadott SMTP hitelesítési adatokkal, ellenőrizze a felhasználónevet és a jelszót, majd próbálja újra. %{message}"
     smtp_server_busy_error: "Az SMTP-szerver jelenleg foglalt, próbálkozzon újra később."
     smtp_unhandled_error: "Kezeletlen hiba történt az SMTP-szerverrel való kommunikáció során. %{message}"
-    imap_unhandled_error: "Kezeletlen hiba történt az IMAP-kiszolgálóval való kommunikáció során. %{message}"
     connection_error: "Hiba történt a szerverhez való kapcsolódás során, ellenőrizze a kiszolgáló nevét és portját, majd próbálja újra."
     timeout_error: "A kiszolgálóhoz való csatlakozás időtúllépése miatt ellenőrizze a kiszolgáló nevét és portját, majd próbálja újra."
     unhandled_error: "Kezeletlen hiba az e-mail beállítások tesztelésekor. %{message}"
@@ -1134,11 +1131,10 @@ hu:
       every_month: "minden hónapban"
       every_six_months: "minden hat hónapban"
   user_api_key:
-    title: "Engedélyezze az alkalmazás hozzáférését"
     authorize: "Engedélyezés"
+    deny: "Mégse"
     read: "olvasható"
     read_write: "olvasható/írható"
-    description: '"%{application_name}" a következő hozzáférést kéri az Ön fiókjához:'
     instructions: 'Létrehoztunk egy új felhasználói API-kulcsot, amelyet a "%{application_name} applikációhoz használhat, kérjük, illessze be a következő kulcsot az alkalmazásába:'
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
@@ -1263,8 +1259,6 @@ hu:
       yaxis: "Nap"
       description: "API-kérelmek a normál API-kulcsokhoz és a felhasználói API-kulcsokhoz."
     consolidated_page_views_browser_detection:
-      title: "Összevont oldalmegtekintések böngészőészleléssel (kísérleti)"
-      title_legacy: "Összevont oldalmegtekintések böngészőészleléssel (kísérleti)"
       xaxis:
         page_view_anon_browser: "Névtelen böngésző"
         page_view_logged_in_browser: "Bejelentkezve a böngészőben"
@@ -1655,7 +1649,6 @@ hu:
     allow_duplicate_topic_titles_category: "Engedélyezi az azonos, duplikált címekkel rendelkező témákat, ha a kategória eltérő. allow_duplicate_topic_titles letiltva kell lennie."
     unique_posts_mins: "Hány percnek kell eltelnie, mielőtt egy felhasználó újra ugyanazzal a tartalommal tehet közzé bejegyzést"
     educate_until_posts: "Amikor a felhasználó elkezdi gépelni az első (n) új bejegyzését, mutassa meg az új felhasználói oktatópanel felugró ablakot a szerkesztőben."
-    title: "Az oldal neve. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     site_description: "Jellemezze az oldalt egy mondatban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     short_site_description: "Rövid leírás néhány szóban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     contact_email: "Az oldalért felelős fő kapcsolattartó e-mail címe. Kritikus értesítésekhez használatos, és a <a href='%{base_path}/about' target='_blank'>/about</a> oldalon is megjelenik. Névtelen felhasználók számára látható a nyilvános webhelyeken."
@@ -2014,35 +2007,22 @@ hu:
     tl3_requires_likes_given: "Az utolsó (3-as bizalmi szint időtartama) napban adott kedvelések minimális száma, ami szükséges a 3-as megbízhatósági szintre való előléptetéshez."
     tl3_requires_likes_received: "Az utolsó (3-as bizalmi szint időtartama) napban kapott kedvelések minimális száma, ami szükséges a 3-as megbízhatósági szintre való előléptetéshez."
     tl3_links_no_follow: "Ne távolítsa el a rel=nofollow attribútumot a 3. bizalmi szintű felhasználók által közzétett linkekről."
-    tl4_delete_posts_and_topics: "4-es bizalmi szintű felhasználók számára engedélyezi más felhasználók által létrehozott bejegyzések és témák törlését. A 4-es bizalmi szintű felhasználók a törölt témákat és bejegyzéseket is láthatják."
     delete_all_posts_and_topics_allowed_groups: "A csoportok törölhetik a más felhasználók által létrehozott bejegyzéseket és témákat. Ezek a csoportok a törölt témákat és bejegyzéseket is láthatják."
     edit_all_topic_groups: "A csoport felhasználói szerkeszthetik más felhasználók témacímeit, címkéit és kategóriáit"
     edit_all_post_groups: "A csoport felhasználói szerkeszthetik más felhasználók bejegyzéseit"
-    min_trust_to_create_topic: "Az új téma létrehozásához szükséges minimális bizalmi szint."
     create_topic_allowed_groups: "Csoportok, amelyek új témákat hozhatnak létre. Az adminisztrátorok és moderátorok mindig létrehozhatnak témákat."
     allow_flagging_staff: "Ha engedélyezve van, a felhasználók megjelölhetik a stábtagok bejegyzéseit."
-    min_trust_to_edit_wiki_post: "A wikinek jelölt hozzászólás szerkesztéséhez szükséges minimális bizalmi szint."
     edit_wiki_post_allowed_groups: "Csoportok, amelyek szerkeszthetik a wikiként megjelölt bejegyzéseket. Az adminisztrátorok és moderátorok mindig szerkeszthetik a wikiként megjelölt bejegyzéseket."
-    min_trust_to_edit_post: "A hozzászólások szerkesztéséhez szükséges minimális bizalmi szint."
     edit_post_allowed_groups: "A hozzászólások szerkesztésére jogosult csoportok. Az adminisztrátorok és a moderátorok mindig szerkeszthetik a hozzászólásokat."
-    min_trust_to_allow_self_wiki: "A minimális bizalmi szint, amely szükséges ahhoz, hogy a felhasználó saját hozzászólása wikivé váljon."
     self_wiki_allowed_groups: "Engedélyezze a csoportok felhasználóinak, hogy létrehozzák saját wiki bejegyzéseiket. Az adminisztrátorok és moderátorok mindig létrehozhatják saját bejegyzéseiket."
     min_trust_to_send_messages: "MEGSZŰNT, használja inkább a „személyes üzenetet engedélyező csoportok” beállítást. Az új személyes üzenetek létrehozásához szükséges minimális megbízhatósági szint."
-    min_trust_to_send_email_messages: "A személyes üzenetek e-mailben történő küldéséhez szükséges minimális megbízhatósági szint."
     send_email_messages_allowed_groups: "Csoportok, amelyek jogosultak személyes üzeneteket küldeni e-mailben. Az adminisztrátorok és moderátorok mindig küldhetnek személyes üzeneteket e-mailben."
-    min_trust_to_flag_posts: "A megjelölések szerkesztéséhez szükséges minimális bizalmi szint"
     flag_post_allowed_groups: "A megjelölések szerkesztésére jogosult csoportok. Az adminisztrátorok és a moderátorok mindig szerkeszthetik a megjelöléseket."
-    min_trust_to_post_links: "Linkek bejegyzésbe való illesztéséhez szükséges minimális bizalmi szint."
     post_links_allowed_groups: "Csoportok, amelyek linkeket helyezhetnek el a bejegyzésekben. Az adminisztrátorok és a moderátorok mindig közzétehetnek linkeket."
-    min_trust_to_post_embedded_media: "A médiaelemek bejegyzésbe való beágyazásához szükséges minimális megbízhatósági szint"
     embedded_media_post_allowed_groups: "Az ezekben a csoportokban lévő felhasználók médiaelemeket ágyazhatnak be egy bejegyzésbe. Az adminisztrátorok és moderátorok mindig beágyazhatnak médiaelemeket."
-    min_trust_level_to_allow_profile_background: "A profil borítókép feltöltéséhez szükséges minimális bizalmi szint"
     profile_background_allowed_groups: "Csoportok, amelyek jogosultak profil borítókép feltöltésére. Az adminisztrátorok és moderátorok mindig feltölthetnek profil hátteret."
-    min_trust_level_to_allow_user_card_background: "A felhasználói kártya háttérkép feltöltéséhez szükséges minimális bizalmi szint"
     user_card_background_allowed_groups: "Csoportok, amelyek jogosultak felhasználói kártya háttérkép feltöltésére. Az adminisztrátorok és moderátorok mindig feltölthetnek felhasználói kártya hátteret."
-    min_trust_level_to_allow_invite: "A felhasználók meghívásához szükséges minimális bizalmi szint"
     invite_allowed_groups: "Csoportok, amelyek meghívhatnak felhasználókat. Az adminisztrátorok és moderátorok bármikor meghívhatnak felhasználókat."
-    min_trust_level_to_allow_ignore: "A felhasználók figyelmen kívül hagyásához szükséges minimális bizalmi szint"
     ignore_allowed_groups: "Csoportok, amelyek figyelmen kívül hagyhatják a többi felhasználót. Az adminisztrátorok és moderátorok mindig figyelmen kívül hagyhatják a többi felhasználót."
     allowed_link_domains: "Domainek, amelyekre a felhasználók akkor is hivatkozhatnak, ha nem rendelkeznek a megfelelő megbízhatósági szinttel a linkek közzétételéhez"
     newuser_max_links: "Hány linket adhat hozzá egy új felhasználó egy bejegyzéshez."
@@ -2055,7 +2035,6 @@ hu:
     enable_mentions: "Lehetővé teszi a felhasználók számára, hogy a hozzászólásaikban a \"@\" szimbólummal megjelöljék vagy hivatkozzanak egymásra."
     here_mention: "Az @említéshez használt név, amely lehetővé teszi a kiváltságos felhasználók számára, hogy értesítsenek legfeljebb 'max_here_mentioned' számú, a témában résztvevő személyt. Nem lehet már létező felhasználónév."
     max_here_mentioned: "Az @itt által megemlített személyek maximális száma."
-    min_trust_level_for_here_mention: "Az @itt megemlítés használatához szükséges minimális bizalmi szint."
     here_mention_allowed_groups: "Csoportok, amelyek megemlíthetik @itt. Az adminisztrátorok és a moderátorok mindig megemlíthetik @itt."
     create_thumbnails: "Nagy méretű, bejegyzésbe nem illeszkedő képekből miniatűrök és lightbox képek készítése."
     email_time_window_mins: "Várjon (n) percet bármilyen értesítő e-mail küldése előtt, hogy a felhasználóknak lehetőségük legyen szerkeszteni és véglegesíteni bejegyzéseiket."
@@ -2125,7 +2104,6 @@ hu:
     allow_all_users_to_flag_illegal_content: "A névtelen felhasználók látni fogják az illegális tartalom adminisztrátorok felé való jelzéséhez szükséges információkat. Ez a beállítás elsőbbséget élvez az „bejegyzéseket megjelölhető csoportokkal” szemben."
     email_address_to_report_illegal_content: "Ha üresen hagyja, az alapértelmezett webhelyadminisztrátori e-mail-cím kerül felhasználásra."
     cooldown_hours_until_reflag: "Mennyi időt kell várniuk a felhasználóknak, amíg újra megjelölhetnek egy bejegyzést."
-    slow_mode_prevents_editing: "A „Lassú mód” megakadályozza a szerkesztést az editing_grace_period után?"
     reply_by_email_enabled: "Aktiválja azt a funkciót, amely lehetővé teszi a felhasználók számára, hogy közvetlenül e-mailben válaszoljanak a témákra, ahelyett, hogy be kellene jelentkezniük a webhelyre. További információért lásd <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>a Meta</a> útmutatóját."
     reply_by_email_address: "Válaszsablon e-mail bejövő e-mail címre, például: %%{reply_key}@reply.example.com vagy válaszok+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Alternatív sablonok listája a bejövő e-mail-címekre történő válaszadáshoz. Példa: %%{reply_key}@reply.example.com|válaszok+%%{reply_key}@example.com"
@@ -2180,18 +2158,10 @@ hu:
     pop3_polling_delete_from_server: "E-mailek törlése a szerverről. MEGJEGYZÉS: Ha letiltja ezt, manuálisan kell tisztítania a postafiókját"
     log_mail_processing_failures: "Minden e-mail-feldolgozási hiba naplózása ide: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Felhasználók számára új témák létrehozásának engedélyezése e-mailen keresztül. Ennek a beállításnak az engedélyezése után konfigurálhatja a beérkező e-mail címeket a csoportokhoz és kategóriákhoz."
-    email_in_min_trust: "A minimális bizalmi szint, amivel a felhasználónak rendelkeznie kell, hogy új témákat tegyen közzé e-mailben."
     email_in_allowed_groups: "Csoportok, amelyek új témákat tehetnek közzé e-mailben. Az adminisztrátorok és a moderátorok bármikor közzétehetnek új témákat e-mailben."
     email_in_authserv_id: "A bejövő e-mailek hitelesítését végző szolgáltatás azonosítója. Ennek beállításaira vonatkozó utasításokat <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> oldalon találja."
     email_in_spam_header: "Kiválasztja a levélszemét azonosítására használt e-mail-fejlécet. Ez a lehetőség az X-Spam-Flag, az X-Spam-Status vagy az X-SES-Spam-Verdict lehet, és a fejléc értéke alapján lesz az e-mail levélszemétnek jelölve. Például, ha a kiválasztott beállítás az X-Spam-Flag, akkor egy YES fejlécértékű üzenet levélszemétként lesz osztályozva."
-    enable_imap: "Az IMAP engedélyezése a csoportos üzenetek szinkronizálásához."
-    enable_imap_write: "Kétirányú IMAP szinkronizálás engedélyezése. Ha le van tiltva, az IMAP-fiókokon minden írási művelet le van tiltva."
-    enable_imap_idle: "Használja az IMAP IDLE mechanizmust az új e-mailek megvárásához."
     enable_smtp: "Engedélyezze az SMTP-t a csoportos üzenetekhez tartozó értesítések küldéséhez."
-    imap_polling_period_mins: "Az IMAP-fiókok e-mailek ellenőrzése közötti időszak percekben."
-    imap_polling_old_emails: "A régi (feldolgozott) e-mailek maximális száma, amelyet minden alkalommal frissíteni kell, amikor egy IMAP-fiók lekérdezésre kerül (0 az összeshez)."
-    imap_polling_new_emails: "Az új (feldolgozatlan) e-mailek maximális száma, amely minden alkalommal frissül, amikor egy IMAP-fiók lekérdezésre kerül ."
-    imap_batch_import_email: "Az új e-mailek minimális száma, amely kiváltja az importálási módot (letiltja az importált bejegyzésekre vonatkozó értesítéseket)."
     email_prefix: "Az e-mailek tárgyában használt [címke]. Alapértelmezés szerint a „cím” lesz, ha nincs beállítva."
     email_site_title: "A webhelyről érkező e-mailek feladójaként használt webhely címe. Ha nincs beállítva, az alapértelmezett a „cím”. Ha a \"cím\" olyan karaktereket tartalmaz, amelyek nem engedélyezettek az e-mail küldő karakterláncaiban, használja ezt a beállítást."
     find_related_post_with_key: "Csak a \"válaszkulcs\" használatával találja meg a válaszolt hozzászólást. FIGYELMEZTETÉS: ennek kikapcsolása lehetővé teszi a felhasználó megszemélyesítését az e-mail cím alapján."
@@ -2203,7 +2173,6 @@ hu:
     username_change_period: "A regisztráció utáni napok maximális száma, ameddig a fiókok módosíthatják a felhasználónevüket (0 a felhasználónév módosításának tiltása)."
     email_editable: "Engedélyezi a felhasználóknak, hogy a regisztráció után megváltoztassák az e-mail címüket."
     logout_redirect: "A böngésző átirányításának helye kijelentkezés után (pl.: https://example.com/logout)"
-    allow_uploaded_avatars: "Lehetővé teszi a felhasználók számára, hogy egyéni profilképeket töltsenek fel."
     uploaded_avatars_allowed_groups: "Adja meg az egyéni profilképek feltöltésére jogosult csoportokat."
     default_avatars: "URL-ek az avatarokhoz, amelyek alapértelmezés szerint az új felhasználóknál használatosak, amíg meg nem változtatják őket."
     automatically_download_gravatars: "Gravatarok letöltése a felhasználók számára fiók létrehozásakor vagy e-mail váltáskor."
@@ -2229,7 +2198,6 @@ hu:
     group_in_subject: "Állítsa be az e-mail tárgyában a %%{optional_pm} értéket a privát üzenetben szereplő első csoport nevére, lásd: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standard e-mailek tárgyformátumának testreszabása</a>"
     allow_anonymous_mode: "Engedélyezze a felhasználók számára, hogy névtelen módra váltsanak a közzétételhez. Ha aktiválva van, a felhasználók eldönthetik, hogy személyazonosságukat elrejtse, amikor bejegyzéseket vagy témákat hoznak létre a webhelyen. Lásd még: \"névtelen kedvelések engedélyezése\"."
     allow_likes_in_anonymous_mode: "Engedélyezze ezt a beállítást, hogy a webhelyet névtelenül böngésző felhasználók lájkolhassák a bejegyzéseket. Aktiválás esetén a felhasználók választhatják, hogy identitásuk rejtve maradjon, amikor bejegyzéseket vagy témákat lájkolnak a webhelyen. Ehhez a beállításhoz engedélyezni kell az „névtelen mód engedélyezése” beállítást."
-    anonymous_posting_min_trust_level: "A névtelen posztolás engedélyezéséhez szükséges minimális megbízhatósági szint. Ehhez a beállításhoz engedélyezni kell a „névtelen mód engedélyezése” beállítást."
     anonymous_posting_allowed_groups: "Azok a csoportok, amelyek engedélyezik a névtelen hozzászólás lehetőségét. Ehhez a beállításhoz engedélyezni kell a `engedélyezzük a névtelen módot` beállítást."
     anonymous_account_duration_minutes: "Az anonimitás védelme érdekében N percenként új névtelen fiókot hoz létre minden felhasználó számára. Példa: ha 600-ra van állítva, amint 600 perc eltelik az utolsó bejegyzés óta ÉS a felhasználó névtelen módra vált, egy új névtelen fiók jön létre."
     hide_user_profiles_from_public: "Felhasználói kártyák, felhasználói profilok és felhasználói címtár letiltása névtelen felhasználók számára."
@@ -2316,9 +2284,7 @@ hu:
     enable_inline_emoji_translation: "Az egymás után következő (előttük szóköz vagy írásjel nélküli) emojik fordításának engedélyezése"
     emoji_deny_list: "Ezek a hangulatjelek nem használhatók menükben vagy rövid kódokban."
     approve_post_count: "Új vagy alapfelhasználótól származó bejegyzések száma, amelyeket jóvá kell hagyni"
-    approve_unless_trust_level: "Ezen bizalmi szint alatti felhasználók által létrehozott bejegyzéseket jóvá kell hagyni"
     approve_unless_allowed_groups: "Az ezekben a csoportokban nem szereplő felhasználók által létrehozott bejegyzéseket jóvá kell hagyni. Az adminok és moderátorok által létrehozott bejegyzések mindig jóváhagyásra kerülnek."
-    approve_new_topics_unless_trust_level: "Ezen bizalmi szint alatti felhasználók által létrehozott új témákat jóvá kell hagyni"
     approve_new_topics_unless_allowed_groups: "Az ezekben a csoportokban nem szereplő felhasználók által létrehozott új témákat jóvá kell hagyni. Az adminok és moderátorok által létrehozott témák mindig jóváhagyásra kerülnek."
     approve_unless_staged: "Az átmeneti felhasználók által létrehozott új témákat és bejegyzéseket jóvá kell hagyni"
     notify_about_queued_posts_after: "Ha vannak olyan bejegyzések, amelyek több mint ennyi órán át várnak felülvizsgálatra, küldjön értesítést az összes moderátornak. Állítsa be 0 értékre az értesítések letiltásához."
@@ -2335,7 +2301,6 @@ hu:
     new_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy az új felhasználók bejegyzés értesítéseit lássa."
     returning_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy a visszatérő felhasználók bejegyzés értesítéseit lássa."
     returning_users_days: "Hány napnak kell eltelnie, mielőtt egy felhasználó visszatérőnek tekinthető."
-    review_media_unless_trust_level: "A stábtagok ellenőrzik az alacsonyabb megbízhatósági szinttel rendelkező felhasználók bejegyzéseit, ha azok beágyazott médiát tartalmaznak."
     skip_review_media_groups: "Azok a felhasználók, akik nem tartoznak e csoportok egyikébe sem, a bejegyzéseiket elküldik a stábtagoknak ellenőrzésre, ha a bejegyzés beágyazott médiát tartalmaz. Az adminisztrátorok és moderátorok által létrehozott bejegyzések mindig engedélyezettek."
     blur_tl0_flagged_posts_media: "Homályosítsa el a megjelölt bejegyzések képeit az esetleges NSFW-tartalom elrejtéséhez."
     enable_page_publishing: "Lehetővé teszi a stábtagok számára, hogy témákat tegyenek közzé új URL-eken, saját stílusukkal."
@@ -2387,8 +2352,6 @@ hu:
     revoke_api_keys_unused_days: "Az API kulcs utolsó használata óta eltelt napok száma, mielőtt automatikusan visszavonásra kerül (0 esetén soha)"
     revoke_api_keys_maxlife_days: "Az API kulcs automatikus visszavonása előtti napok száma (0 esetén soha)"
     allow_user_api_key_scopes: "A felhasználói API kulcsok számára engedélyezett hatáskörök listája"
-    min_trust_level_for_user_api_key: |
-      A felhasználói API kulcsok generálásához szükséges bizalmi szint.<br> <b>FIGYELMEZTETÉS</b>: A bizalmi szint megváltoztatása megakadályozza az alacsonyabb bizalmi szintű felhasználókat abban, hogy bejelentkezzenek a Discourse Hub-on keresztül
     user_api_key_allowed_groups: |
       Csoporttagság szükséges a felhasználói API kulcsok generálásához.<br> <b>FIGYELMEZTETÉS</b>: A bizalmi szint megváltoztatása megakadályozza az alacsonyabb bizalmi szintű felhasználókat abban, hogy bejelentkezzenek a Discourse Hub-on keresztül.<br> Az adminisztrátorok és moderátorok mindig létrehozhatnak felhasználói API kulcsokat.
     allowed_user_api_auth_redirects: "Engedélyezett URL az átirányításos hitelesítéshez a felhasználói API kulcsok esetében. A * helyettesítő karakter használható bármely részének egyeztetésére (pl. www.example.com/*)."
@@ -2396,7 +2359,6 @@ hu:
     revoke_user_api_keys_unused_days: "A felhasználói API kulcs utolsó használata óta eltelt napok száma, mielőtt automatikusan visszavonásra kerül (0 esetén soha)"
     revoke_user_api_keys_maxlife_days: "A felhasználói API kulcs automatikus visszavonása előtti napok száma (0 esetén soha)"
     tagging_enabled: "Engedélyezi a címkéket a témákhoz? További információért tekintse meg az <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Adminisztrátori útmutató a címkékhez</a> című cikket a Meta oldalon."
-    min_trust_to_create_tag: "Címke létrehozásához szükséges minimális bizalmi szint."
     create_tag_allowed_groups: "Címkék létrehozására jogosult csoportok. Az adminisztrátorok és a moderátorok mindig létrehozhatnak címkéket."
     edit_tags_allowed_groups: "Csoportok, amelyek jogosultak címkék, címkeleírások és címkeszinonimák szerkesztésére."
     max_tags_per_topic: "A témához maximálisan hozzárendelhető címkék száma."
@@ -2409,19 +2371,16 @@ hu:
     tags_listed_by_group: "Címkék csoportonkénti listázása a <a href='%{base_path}/tags' target='_blank'>Címkék oldalon</a>."
     tag_style: "Határozza meg a címkejelvények vizuális megjelenését a webhelyen. Ez a beállítás lehetővé teszi a címkék vizuális megjelenítésének testreszabását a webhely minden területén, javítva az elrendezés konzisztenciáját és a felhasználói hozzáférést."
     pm_tags_allowed_for_groups: "A kiválasztott csoportok tagjainak engedélyezése, hogy bármely személyes üzenetet címkézhessenek"
-    min_trust_level_to_tag_topics: "A témák megjelöléséhez szükséges minimális bizalmi szint"
     tag_topic_allowed_groups: "Csoportok, amelyek jogosultak témák címkézésére. Az adminisztrátorok és moderátorok mindig megcímkézhetnek témákat."
     suppress_overlapping_tags_in_list: "Ha a címkék pontosan egyeznek a téma címében szereplő szavakkal, ne jelenítse meg a címkét"
     remove_muted_tags_from_latest: "Ne jelenjenek meg a csak némított címkékkel ellátott témák a legújabb témák listájában."
     force_lowercase_tags: "Az összes új címke kisbetűsre kényszerítése."
     create_post_for_category_and_tag_changes: "Suttogó hozzászólás létrehozása, amikor egy téma kategóriája vagy címkéi megváltoznak, a suttogó hozzászólások engedélyezése szükséges."
     automatically_clean_unused_tags: "Naponta automatikusan törölje azokat a címkéket, amelyeket nem használ semmilyen témában vagy személyes üzenetben."
-    watched_precedence_over_muted: "Értesítést kérek az általam némított kategóriákba vagy címkékbe tartozó témákról, amelyek szintén egy olyanhoz tartoznak, amelyet elnémítottam"
     company_name: "Cége vagy szervezete neve. Ha üresen hagyja, akkor a szolgáltatási feltételek vagy az adatvédelmi nyilatkozat nem jelenik meg."
     governing_law: "Adja meg azt a joghatóságot, amely szabályozza a webhely jogi vonatkozásait, beleértve a Szolgáltatási feltételeket és az Adatvédelmi irányelveket. Ez általában az az ország vagy állam, ahol a webhelyet üzemeltető vállalat be van jegyezve vagy üzleti tevékenységet folytat."
     city_for_disputes: "Adja meg azt a várost, amely a fórum használatával kapcsolatos viták rendezésének joghatósága alá tartozik. Ezt az információt általában jogi dokumentumok tartalmazzák, például a fórum használati feltételei."
     shared_drafts_category: "A Megosztott vázlatok funkció engedélyezése egy kategória kijelölésével a téma vázlatok számára. Az ebben a kategóriában lévő témák el lesznek rejtve a személyzeti felhasználók téma listáiból."
-    shared_drafts_min_trust_level: "Engedélyezze a felhasználóknak a megosztott piszkozatok megtekintését és szerkesztését."
     shared_drafts_allowed_groups: "Engedélyezze, hogy az e csoportokhoz tartozó felhasználók láthassák és szerkeszthessék a megosztott piszkozatokat."
     push_notifications_prompt: "Felhasználói hozzájárulási sáv megjelenítése a push értesítésekhez. Ez a beállítás egy felkérést jelenít meg, amely engedélyt kér a felhasználóktól push értesítések küldésére. Ez csak akkor jelenik meg, ha a push értesítések még nincsenek engedélyezve, a felhasználó eszköze támogatja azokat, és a felhasználó vagy már írt bejegyzést, vagy Progresszív Web Alkalmazást (PWA) használ. A felkérés nem jelenik meg újra, ha a felhasználó már elutasította, vagy megadta/megtagadta az engedélyt."
     push_notifications_icon: "Az értesítési sarokban megjelenő jelvény ikon. 96×96-os, átlátszó monokróm PNG használata javasolt."
@@ -2433,7 +2392,6 @@ hu:
     sitemap_page_size: "Az egyes oldaltérkép oldalakba belefoglalandó URL-ek száma. Maximum 50.000"
     enable_user_status: "A felhasználók egyéni állapotüzenetet állíthatnak be (emoji + leírás)."
     enable_user_tips: "Új felhasználói tippek engedélyezése, amelyek ismertetik a legfontosabb funkciókat a felhasználók számára."
-    short_title: "A rövid cím a felhasználó kezdőképernyőjén, az indítóképernyőn vagy más olyan helyeken kerül felhasználásra, ahol a hely korlátozott lehet. 12 karakterre kell korlátozni."
     dashboard_hidden_reports: "Engedélyezze a megadott jelentések elrejtését a vezérlőpulton."
     dashboard_visible_tabs: "Válassza ki, hogy a vezérlőpult mely lapjai legyenek láthatóak."
     dashboard_general_tab_activity_metrics: "Válassza ki azokat a jelentéseket, amelyek aktivitási mutatóként jelenjenek meg az általános fülön."
@@ -2454,18 +2412,11 @@ hu:
     welcome_banner_image: "Állítson be egy képet, amely az üdvözlő banner hátterében jelenik meg."
     welcome_banner_location: "Meghatározza, hogy az oldalon hol jelenjen meg az üdvözlő banner."
     welcome_banner_page_visibility: "Meghatározza, hogy mely oldalakon jelenjen meg az üdvözlő banner."
-    welcome_banner_text_color: "Ha a „Üdvözlő bannerkép” beállítás konfigurálva van, ezzel a beállítással módosíthatja a banner szövegének színét, hogy az olvasható maradjon. Ha üresen hagyja, vagy ha nincs feltöltve kép, a színpaletta „elsődleges” színe lesz használatban."
     splash_screen: "Ideiglenes betöltési képernyőt jelenít meg, amíg az oldal eszközei betöltődnek."
     navigation_menu: "Adja meg, hogy az oldalsáv vagy a fejléc legördülő menüje legyen az oldal fő navigációs menüje. Az oldalsáv ajánlott."
     default_navigation_menu_categories: "A kiválasztott kategóriák alapértelmezetten megjelennek a Navigációs Menü Kategóriák szekciójában."
     default_navigation_menu_tags: "A kiválasztott címkék alapértelmezetten megjelennek a Navigációs Menü Címkék szekciójában."
     experimental_new_new_view_groups: 'Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és új témákat, és az oldalsávon lévő "Minden" hivatkozást jelölje be.'
-    glimmer_post_stream_mode: "Szabályozhatja, hogy a rendszer használja-e az új „csillogó” post-stream megvalósítást. Az „auto” automatikusan bekapcsol, amint minden témája és bővítménye készen áll. Ez a megvalósítás aktív fejlesztés alatt áll, és nem termelési használatra készült. Ne dolgozzon ellene témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
-    glimmer_post_stream_mode_auto_groups: "Az új 'glimmer' post stream implementáció engedélyezése 'auto' módban a megadott felhasználói csoportok számára. Ez az implementáció aktív fejlesztés alatt áll, és nem szánták gyártás közbeni használatra. Ne fejlesszen témákat/pluginokat ellene, amíg az implementáció véglegesítésre és bejelentésre nem kerül."
-    deactivate_widgets_rendering: "Tiltsd le a régi widgetek renderelő motorját. Ez letiltja az összes olyan widgetet, amely nem lett frissítve a Glimmer komponensekre, és a Glimmer Post Stream feltétel nélküli engedélyezését is kényszeríti, függetlenül a `glimmer_post_stream_mode` beállítás értékétől. Ez a beállítás nem ajánlott éles webhelyek számára, mivel a meglévő témák és bővítmények működését tönkreteheti."
-    floatkit_autocomplete_composer: "Engedélyezze a Floatkit-alapú automatikus kiegészítés menüt a szerkesztőben. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi JQuery-alapú automatikus kiegészítés menüt."
-    floatkit_autocomplete_input_fields: "Engedélyezze a Floatkit-alapú automatikus kiegészítés menüt a teljes oldalas keresés és a csoportválasztó mezők beviteli mezőihez. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi jQuery-alapú automatikus kiegészítés menüt."
-    floatkit_autocomplete_chat_composer: "Engedélyezd a Floatkit-alapú automatikus kiegészítés menüt a chat szerkesztőben. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi jQuery-alapú automatikus kiegészítés menüt."
     experimental_form_templates: "Engedélyezze az űrlapsablonok funkciót. A sablonokat a következő helyen kezelheti: <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a>."
     show_preview_for_form_templates: "Az űrlapsablonok előnézetének engedélyezése"
     lazy_load_categories_groups: "Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."
@@ -2483,8 +2434,8 @@ hu:
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
     rich_editor: "Engedélyezze a gazdag szerkesztőt a szerző számára, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új gazdag szövegszerkesztő között az intuitívabb és felhasználóbarátabb komponálás érdekében."
     default_composition_mode: "Állítsd be a közösséged szövegszerkesztőjének alapértelmezett módját. A Rich Text mód modernebb, ismerősebb írási élményt nyújt a legtöbb felhasználó számára, míg a Markdown mód a technikaibb közönség számára lehet alkalmasabb. A tagok a szövegszerkesztő eszköztárán található kapcsolóval válthatnak a módok között."
-    viewport_based_mobile_mode: "A mobil/asztali mód meghatározásához használd a nézetablak szélességét. Ez a beállítás hamarosan eltávolításra kerül. Ha ki szeretnéd kapcsolni, kérjük, jelezd nekünk <a href='https://meta.discourse.org/t/384280'>a Meta</a>oldalon."
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
+    viewport_based_mobile_mode: "A mobil/asztali mód meghatározásához használd a nézetablak szélességét. Ez a beállítás hamarosan eltávolításra kerül. Ha ki szeretnéd kapcsolni, kérjük, jelezd nekünk <a href='https://meta.discourse.org/t/384280'>a Meta</a>oldalon."
     content_localization_enabled: "Lokalizált tartalmakat jelenít meg a felhasználók számára a böngésző vagy a felhasználói nyelvi beállítások alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. A támogatott helyi nyelvek a 'tartalom lokalizációja támogatott helyi nyelvek' menüpontban vannak beállítva."
     content_localization_supported_locales: "A támogatott helyi nyelvek listája, amelyekre a felhasználói tartalom lefordítható. Feltételezi, hogy a 'tartalom lokalizáció engedélyezve'."
     content_localization_allowed_groups: "Lokalizált tartalom frissítésére jogosult csoportok. Feltételezi a 'tartalom lokalizáció engedélyezve' opciót."
@@ -2551,7 +2502,6 @@ hu:
         other: "A listának pontosan %{count} értéket kell tartalmaznia."
       markdown_linkify_tlds: "Nem adhat meg „*” értéket."
       google_oauth2_hd_groups: "A beállítás engedélyezése előtt konfigurálnia kell a „google oauth2 hd” összes beállítását."
-      discourse_id_credentials: "A beállítás engedélyezése előtt konfigurálnia kell a Discourse ID hitelesítő adatait („discourse_id_client_id” és „discourse_id_client_secret”)."
       linkedin_oidc_credentials: "A beállítás engedélyezése előtt konfigurálnia kell a LinkedIn OIDC hitelesítő adatait (\"linkedin_oidc_client_id\" és \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
@@ -2605,9 +2555,6 @@ hu:
       activity_after: "Mutassa a témákat, amelyek utolsó aktivitása egy adott dátum (ÉÉÉÉ-HH-NN vagy napokkal ezelőtt) után történt"
       created_before: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) előtt létrehozott témák megjelenítése"
       created_after: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) után létrehozott témák megjelenítése"
-      created_by: "Egy adott felhasználó által létrehozott témák megjelenítése"
-      created_by_user: "A felhasználónév által létrehozott témák megjelenítése (@ nélkül)"
-      created_by_multiple: "A megadott felhasználók által létrehozott témák megjelenítése (vesszővel elválasztva)"
       latest_post_before: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum előtt történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
       latest_post_after: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum után történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
       likes_min: "Legalább ennyi kedveléssel rendelkező témák megjelenítése"
@@ -3235,6 +3182,7 @@ hu:
         Ahogy itt részt vesz, megismerjük Önt, és az ideiglenes új felhasználói korlátozások megszűnnek. Idővel [bizalmi szinteket] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) szerezhet, amelyek különleges képességeket tartalmaznak, amelyek segítenek nekünk közösen irányítani közösségünket.
     welcome_user:
       title: "Üdvözöljük felhasználó"
+      preview: "Üdvözöljük a(z) %{site_name} oldalon."
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
       text_body_template: |
         Köszönjük, hogy csatlakoztál a %{site_name}hoz, és üdvözlünk!
@@ -3262,6 +3210,7 @@ hu:
         A nagyobb hatalom nagyobb felelősséggel is jár. Ha még nem voltál soha moderátor, olvasd el a következő [moderációs útmutatót](https://meta.discourse.org/t/discourse-moderation-guide/63116), és bármikor, bármilyen kérdéssel keresd a tapasztaltabb moderátorokat bizalommal!
     welcome_invite:
       title: "Üdvözöljük Meghívó"
+      preview: "Üdvözöljük a(z) %{site_name} oldalon."
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
       text_body_template: |
         Köszönjük, hogy elfogadtad a %{site_name}ra szóló meghívót - üdvözlünk!
@@ -3597,14 +3546,9 @@ hu:
     user_automatically_silenced:
       title: "A felhasználó automatikusan elnémítva"
       subject_template: "Az új felhasználó %{username} közösségi megjelölések által elnémítva"
-      text_body_template: |
-        Ez egy automatikus üzenet.
-
-        Az új felhasználó [%{username}](%{user_url}) automatikusan elnémult, mert több felhasználó megjelölte a %{username} bejegyzését(bejegyzéseit).
-
-        Kérjük, [tekintse át a jelöléseket](%{base_url}/review). Ha a %{username} tévesen lett elhallgattatva a bejegyzésektől, kattintson az elhallgatás megszüntetése gombra [a felhasználó adminisztrációs oldalán](%{user_url}).
-
-        Ez a küszöbérték a `silence_new_user` oldal beállításain keresztül módosítható.
+    user_automatically_silenced_with_reason:
+      title: "A felhasználó automatikusan elnémítva"
+      subject_template: "Az új felhasználó %{username} közösségi megjelölések által elnémítva"
     spam_post_blocked:
       title: "Spam bejegyzés blokkolva"
       subject_template: "Új felhasználó %{username} bejegyzései blokkolva az ismétlődő linkek miatt"
@@ -3618,6 +3562,7 @@ hu:
         Ez a beállítás módosítható az `newuser_spam_host_threshold` és az `allowed_spam_host_domains` beállításokon keresztül. Fontol meg %{domains}ek hozzáadását at az engedélylistához.
     unsilenced:
       title: "Némítás feloldva"
+      preview: "A fiók már nincs felfüggesztve."
       subject_template: "A fiók már nincs felfüggesztve"
       text_body_template: |
         Szia!
@@ -3666,8 +3611,6 @@ hu:
     Ha le szeretne iratkozni ezekről az e-mailekről, [kattintson ide] (%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PÜ]"
-  email_from: "%{user_name} a %{site_name} oldalon keresztül"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Régebbi válaszok"
     reached_limit:
@@ -4018,6 +3961,7 @@ hu:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Bejelentkezés a linken keresztül"
+      preview: "Bejelentkezés a linken keresztül."
       subject_template: "[%{email_prefix}] Bejelentkezés a linken keresztül"
       text_body_template: |
         Itt van a link a bejelentkezéshez a [%{site_name}](%{base_url}) címen.
@@ -4742,18 +4686,12 @@ hu:
     nice_share:
       name: Szép megosztás
       description: A megosztásod 25 felhasználót ért el.
-      long_description: |
-        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 25 külső látogató kattintott. Köszönjük, hogy terjesztetted a hírt beszélgetéseinkről és erről a közösségről.
     good_share:
       name: Jó megosztás
       description: A megosztásod 300 felhasználót ért el.
-      long_description: |
-        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 300 külső látogató kattintott. Szép munka! Remek beszélgetést mutattál meg egy csomó új embernek, és segítetted a közösség növekedését.
     great_share:
       name: Nagyszerű megosztás
       description: A megosztásod 1000 felhasználót ért el.
-      long_description: |
-        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 1000 külső látogató kattintott. Azta! Érdekes beszélgetést hirdettél egy hatalmas új közönség számára, és nagyban hozzájárultál a közösségünk növekedéséhez!
     first_like:
       name: Első kedvelés
       description: Tetszett egy bejegyzés
@@ -4968,24 +4906,18 @@ hu:
     deprecation_error_label: Elavult Javascript hibaüzenetre késztetése
     enter: "Biztonságos módba lépés"
     must_select: "A biztonságos módba lépéshez választania kell legalább egy lehetőséget."
+  dev_mode:
+    enter: "Belépés"
   wizard:
     title: "Discourse telepítő"
     step:
-      introduction:
-        title: "Az Ön webhelyéről"
-        description: "A következők jelennek meg a bejelentkezési és egyéb nyilvános oldalakon. Később bármikor megváltoztathatja őket."
+      setup:
+        title: "Első lépések"
         fields:
           title:
             label: "Közösség neve"
-            placeholder: "Jane társalgója"
-          site_description:
-            label: "Jellemezze a közösségét egy mondatban!"
-            placeholder: "Egy hely, ahol Jane és barátai megbeszélhetik a klassz dolgokat"
           default_locale:
             label: "Nyelv"
-      privacy:
-        title: "Tagok hozzáférése"
-        fields:
           login_required:
             label: "Láthatóság"
             description: "A közösség nyitott vagy privát?"
@@ -5009,82 +4941,6 @@ hu:
                 label: "Nem, az új tagok azonnal csatlakozhatnak"
               "yes":
                 label: "Igen, az új tagokat a moderátoroknak jóvá kell hagyniuk."
-          chat_enabled:
-            placeholder: "Csevegés engedélyezése"
-            extra_description: "Lépjen kapcsolatba tagjaival valós időben"
-      ready:
-        title: "Az oldala készen áll!"
-        description: "Ennyi az egész! Elvégezte a közössége beállításához szükséges alapvető lépéseket. Most már belevethetni magát, körülnézhet, írhat egy üdvözlő témát, és küldhet meghívókat!<br><br>Jó szórakozást!"
-      styling:
-        title: "Megjelenés és élmény"
-        fields:
-          color_scheme:
-            label: "Színpaletta"
-          body_font:
-            label: "Törzs betűtípus"
-          site_font:
-            label: "Betűtípus"
-          heading_font:
-            label: "Fejléc betűtípus"
-          styling_preview:
-            label: "Előnézet"
-          homepage_style:
-            label: "Kezdőlap stílusa"
-            choices:
-              latest:
-                label: "Legutóbbi"
-                description: "Megjeleníti a legfrissebb aktív témákat minden kategóriában, így a tagok naprakészek maradhatnak a számukra fontos vitákban"
-              hot:
-                label: "Felkapott"
-                description: "Felkapja a felkapott témákat a közelmúlt és az általános népszerűség ötvözésével, bemutatja, hogy a tagok miről beszélnek most a közösségedben"
-              categories_and_latest_topics:
-                label: "Kategóriák legújabb témákkal"
-                description: "Összevonja az összes kategóriában nemrégiben aktív témákat a kategóriák listájával, azok leírásával és az összes témák számával."
-              categories_boxes:
-                label: "Kategória dobozok"
-                description: "Megjeleníti a kategóriákat és azok leírását egy rácsban, ideális a tagok számára, hogy áttekintést kapjanak a webhely alközösségeiről."
-      branding:
-        title: "Webhely logó"
-        fields:
-          logo:
-            label: "Elsődleges logó"
-            description: "Ajánlott méret: 600 x 200"
-          logo_small:
-            label: "Négyzet alakú logó"
-            description: "Ajánlott méret: 512 x 512. A favicon és a mobil kezdőképernyő alkalmazás ikonjaként is használható."
-      corporate:
-        title: "Az Ön szervezete"
-        description: "Az alábbi információkat a Felhasználási feltételek és a Rólunk oldalakon használjuk fel. Nyugodtan kihagyhatja, ha nem létezik cég."
-        fields:
-          company_name:
-            label: "Cégnév"
-            placeholder: "Példa szervezet"
-          governing_law:
-            label: "Irányadó jog"
-            placeholder: "Kaliforniai törvény"
-          contact_url:
-            label: "Weboldal"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Város a vitákért"
-            placeholder: "San Francisco, Kalifornia"
-          site_contact:
-            label: "Automatikus üzenetek"
-            description: "Minden automatikus Discourse személyes üzenet ettől a felhasználótól kerül elküldésre, például a megjelölési figyelmeztetések és a biztonsági mentés befejezéséről szóló értesítések."
-          contact_email:
-            label: "Kapcsolattartó"
-            placeholder: "example@user.com"
-            description: "Az oldalért felelős fő kapcsolattartó e-mail címe. Kritikus értesítésekhez használják, és sürgős ügyek esetén <a href='%{base_path}/about' target='_blank'>az Önről szóló oldalon</a> szerepel."
-      invites:
-        title: "Stáb meghívása"
-        description: "Már majdnem kész! Hívjunk meg néhány embert, hogy segítsenek <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>elindítani a beszélgetéseket</a> érdekes témákkal és válaszokkal, hogy beindíthassák a közösséget."
-        disabled: "Mivel a helyi bejelentkezés le van tiltva, senkinek nem lehet meghívót küldeni. Kérjük, folytassa a következő lépéssel."
-      finished:
-        title: "A Discourse készen áll!"
-        description: |
-          <p>Ha bármikor úgy érzi, hogy szeretné megváltoztatni ezeket a beállításokat, <b>bármikor újra futtathatja ezt a varázslót</b>, vagy látogasson el az <a href='%{base_path}/admin' target='_blank'>adminisztrációs részbe</a>; ezt a csavarkulcs ikon mellett találja a webhely menüjében.</p>
-          <p>Könnyedén tovább testreszabhatja a Discourse-t a hatékony témarendszerünk segítségével. Példákért nézze meg a <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">legnépszerűbb témákat és komponenseket</a> a <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> oldalon.</p>
-          <p>Jó szórakozást és sok sikert kívánunk az <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>új közössége építéséhez!</a></p>
   search_logs:
     graph_title: "Keresés száma"
   onebox:
@@ -5107,6 +4963,10 @@ hu:
       review_by: "Jóváhagyta:"
       pr_summary: "%{commits} véglegesíti a megváltozott %{changed_files} fájlokat %{additions} kiegészítéssel és %{deletions} törléssel"
       no_description: "Hozzájáruljon a %{repo} fejlesztéséhez a GitHubon való fiók létrehozásával."
+      status_date:
+        open: "nyitott"
+        approved: "jóváhagyott"
+        closed: "lezárva"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
@@ -5141,8 +5001,6 @@ hu:
     api_post_delete: "API-n keresztül törölve"
     reminder_deleted: "Új emlékeztetővel helyettesítve"
     user_associated_posts_deleted: "A felhasználó megsemmisült"
-    imap_email_deleted: "Az e-mail törölve lett az IMAP-kiszolgálóról."
-    imap_email_marked_as_spam: "Az e-mail átkerült a spam mappába az IMAP szerveren."
     auto_deleted_hidden_posts: "Automatikusan megsemmisített rejtett bejegyzések"
   reviewables:
     already_handled: "Köszönjük, de már átnéztük ezt a bejegyzést, és úgy döntöttünk, hogy nem kell újra megjelölni."
@@ -5212,19 +5070,15 @@ hu:
         description: "Egyetértek a jelöléssel, és elrejtem ezt a bejegyzést + automatikusan üzenetet küldök a felhasználónak, hogy szerkessze azt."
         complete: "A bejegyzés elrejtve, a felhasználó értesítést kapott."
       agree_and_edit:
-        title: "Elfogadás és bejegyzés szerkesztése"
+        title: "Bejegyzés szerkesztése"
         description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
         complete: "Megjelölés tudomásul véve, most már szerkesztheti a bejegyzést."
       delete:
         title: "Törlés"
         complete: "Bejegyzés törölve."
       delete_and_ignore:
-        title: "Megjelölés figyelmen kívül hagyása, és a bejegyzés törlése"
-        description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és a bejegyzés törlésével; ha ez az első hozzászólás, akkor a témát is törli. "
         complete: "Bejegyzés törölve."
       delete_and_ignore_replies:
-        title: "Megjelölés figyelmen kívül hagyása, a bejegyzés és a válaszok törlése"
-        description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, a bejegyzés és az összes válasz törlésével; ha ez az első hozzászólás, akkor a témát is törli"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       delete_and_agree:
@@ -5237,17 +5091,17 @@ hu:
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       disagree_and_restore:
-        title: "Nem, bejegyzés visszaállítása"
-        description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
+        title: "Bejegyzés visszaállítása"
         complete: "A bejegyzés visszaállítva."
-      disagree:
+      disagree_bundle:
         title: "Nem"
+      disagree:
+        title: "Bejegyzés megtartása"
         complete: "Megjelölés figyelmen kívül hagyva."
       discard_post:
         title: "Bejegyzés elvetése"
         complete: "Bejegyzés elvetve."
       revise_and_reject_post:
-        title: "Bejegyzés felülvizsgálata..."
         complete: "A bejegyzés elutasítva, felülvizsgálatra vár."
       ignore:
         title: "Letiltás"
@@ -5257,31 +5111,36 @@ hu:
         description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne. A rejtett bejegyzések rejtve maradnak, és az automatikus eszközök kezelik őket."
         complete: "Megjelölés figyelmen kívül hagyva."
       approve:
-        title: "Jóváhagyás"
+        title: "Igen"
         complete: "Bejegyzés jóváhagyva."
       approve_post:
-        title: "Bejegyzés jóváhagyása"
+        title: "Igen"
         complete: "Bejegyzés jóváhagyva."
       approve_post_closed:
-        title: "Bejegyzés jóváhagyása"
+        title: "Igen"
         confirm: "Ez a téma lezárva. Ennek ellenére szeretné létrehozni a bejegyzést?"
         complete: "Bejegyzés jóváhagyva."
+      reject_post_bundle:
+        title: "Nem"
       reject_post:
         title: "Bejegyzés elutasítása"
         complete: "Bejegyzés elutasítva."
       approve_user:
-        title: "Felhasználó jóváhagyása"
+        title: "Igen"
         complete: "Felhasználó jóváhagyva."
       reject_user:
-        title: "Felhasználó törlése"
+        title: "Nem"
         delete:
           title: "Felhasználó törlése"
-          description: "A felhasználó törlésre kerül a fórumról."
           complete: "Felhasználó törölve."
         block:
           title: "Felhasználó törlése és blokkolása"
           description: "A felhasználót töröljük, IP-címét és e-mail címét pedig blokkoljuk."
           complete: "Felhasználó törölve és letiltva."
+      confirm_spam:
+        title: "Igen"
+      not_spam:
+        title: "Nem"
       reject:
         title: "Elutasítás"
         bundle_title: "Elutasítás..."
@@ -5298,10 +5157,10 @@ hu:
         title: "A bejegyzés maradjon törölve"
         complete: "A bejegyzést elutasították és törölték."
       approve_and_restore:
-        title: "Bejegyzés jóváhagyása és visszaállítása"
+        title: "Igen"
         complete: "A bejegyzés jóváhagyva és visszaállítva."
       approve_and_unhide:
-        title: "Bejegyzés jóváhagyása és felfedése"
+        title: "Igen"
         complete: "Bejegyzés jóváhagyva és felfedve"
       post_actions:
         bundle_title: "Mit akarsz csinálni a bejegyzéssel?"
@@ -5354,6 +5213,10 @@ hu:
         complete: "Felhasználó törölve"
         reason: "Törölve az ellenőrzési soron keresztül"
       delete_and_block_user:
+        title: "Törlés és blokkolás"
+        description: "Törölje a felhasználót és blokkolja az IP/email címét."
+        complete: "Felhasználó törölve és letiltva"
+      delete_user_block:
         title: "Törlés és blokkolás"
         description: "Törölje a felhasználót és blokkolja az IP/email címét."
         complete: "Felhasználó törölve és letiltva"

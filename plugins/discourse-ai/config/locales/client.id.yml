@@ -93,7 +93,7 @@ id:
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
-        edit: "Ubah"
+        edit: "Pengaturan"
         expand_list:
           other: "(%{count} lainnya)"
         collapse_list: "(tampilkan lebih sedikit)"
@@ -107,6 +107,13 @@ id:
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
+        stats:
+          eta_minutes:
+            other: "%{count} menit"
+          eta_hours:
+            other: "%{count} jam"
+          eta_days:
+            other: "%{count} hari"
         progress_chart:
           bar_done:
             other: "%{count} post"
@@ -115,11 +122,13 @@ id:
         last_seven_days: "7 hari terakhir"
         enable: "Aktifkan"
         test_modal:
+          system_prompt: "Perintah Sistem"
           spam: "Spam"
       usage:
         summary: "Ringkasan"
         model: "Model"
         username: "Nama Pengguna"
+        total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
       ai_persona:
@@ -200,6 +209,7 @@ id:
         thumbnail_suggestions:
           select: "Pilih"
           selected: "Dipilih"
+          try_again: "Coba Lagi"
         image_caption:
           button_label: "Keterangan dengan AI"
           generating: "Menghasilkan keterangan..."

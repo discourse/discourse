@@ -39,7 +39,7 @@ hy:
         disabled: "(անջատված)"
         groups: "Խմբեր:"
         no_groups: "Ոչ մի"
-        edit: "Խմբագրել"
+        edit: "Կարգավորումներ"
         expand_list:
           one: "(%{count} ավելի)"
           other: "(%{count} ավելի)"
@@ -55,6 +55,16 @@ hy:
         select_option: "Ընտրել..."
       translations:
         title: "Թարգմանություններ"
+        stats:
+          eta_minutes:
+            one: "%{count} րոպե"
+            other: "%{count} րոպե"
+          eta_hours:
+            one: "%{count} ժամ"
+            other: "%{count} ժամ"
+          eta_days:
+            one: "%{count} օր"
+            other: "%{count} օր"
         progress_chart:
           bar_done:
             one: "%{count} գրառում"
@@ -68,6 +78,7 @@ hy:
         summary: "Ամփոփումը"
         username: "Օգտանուն"
         total_requests: "Ընդհանուր հարցումներ"
+        total: "Ամբողջ"
       ai_persona:
         back: "Ետ"
         name: "Անուն"
@@ -136,6 +147,8 @@ hy:
           copy: "Կրկնօրինակել"
           copied: "Պատճենված է!"
           cancel: "Չեղարկել"
+        thumbnail_suggestions:
+          try_again: "Կրկին Փորձել"
         image_caption:
           save_caption: "Պահպանել"
       embeddings:

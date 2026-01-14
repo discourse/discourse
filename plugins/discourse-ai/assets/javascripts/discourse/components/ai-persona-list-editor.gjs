@@ -4,20 +4,21 @@ import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { gt } from "truth-helpers";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import AdminFilterControls from "admin/components/admin-filter-controls";
-import DMenu from "float-kit/components/d-menu";
 import AiPersona from "../admin/models/ai-persona";
 import AiPersonaEditor from "./ai-persona-editor";
 
@@ -163,13 +164,13 @@ export default class AiPersonaListEditor extends Component {
     })
       .then((result) => {
         let persona = AiPersona.create(result);
-        let existingPersona = this.args.personas.find(
+        let existingPersona = this.args.personas.content.find(
           (item) => item.id === persona.id
         );
         if (existingPersona) {
-          this.args.personas.removeObject(existingPersona);
+          removeValueFromArray(this.args.personas.content, existingPersona);
         }
-        this.args.personas.insertAt(0, persona);
+        this.args.personas.content.unshift(persona);
       })
       .catch((error) => {
         if (error.jqXHR?.status === 422) {
@@ -220,7 +221,7 @@ export default class AiPersonaListEditor extends Component {
             />
           </:actions>
         </DPageSubheader>
-        {{#if @personas}}
+        {{#if @personas.content}}
           <AdminFilterControls
             @array={{@personas.content}}
             @searchableProps={{this.searchableProps}}
@@ -340,7 +341,7 @@ export default class AiPersonaListEditor extends Component {
                         <LinkTo
                           @route="adminPlugins.show.discourse-ai-personas.edit"
                           @model={{persona}}
-                          class="btn btn-text btn-small"
+                          class="btn btn-default btn-text btn-small"
                         >{{i18n "discourse_ai.ai_persona.edit"}} </LinkTo>
                       </td>
                     </tr>

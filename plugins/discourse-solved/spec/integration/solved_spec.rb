@@ -357,6 +357,29 @@ RSpec.describe "Managing Posts solved status" do
       expect(topic.solved).to be(nil)
     end
 
+    it "does not remove the solution when an unrelated post is deleted" do
+      reply1 = Fabricate(:post, post_number: 2, topic: topic)
+      reply2 = Fabricate(:post, post_number: 3, topic: topic)
+      reply3 = Fabricate(:post, post_number: 4, topic: topic)
+
+      post "/solution/accept.json", params: { id: reply2.id }
+      expect(response.status).to eq(200)
+
+      expect(topic.solved.answer_post_id).to eq(reply2.id)
+
+      PostDestroyer.new(Discourse.system_user, reply1, context: "spec").destroy
+      topic.reload
+
+      expect(topic.solved).to be_present
+      expect(topic.solved.answer_post_id).to eq(reply2.id)
+
+      PostDestroyer.new(Discourse.system_user, reply3, context: "spec").destroy
+      topic.reload
+
+      expect(topic.solved).to be_present
+      expect(topic.solved.answer_post_id).to eq(reply2.id)
+    end
+
     it "does not allow you to accept a whisper" do
       whisper = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
       sign_in(Fabricate(:admin))
@@ -649,7 +672,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(accepted_message.data[:accepted_answer][:post_number]).to eq(2)
       expect(accepted_message.data[:accepted_answer][:username]).to eq(user.username)
       expect(accepted_message.data[:accepted_answer][:name]).to eq(user.name)
-      expect(accepted_message.data[:accepted_answer][:excerpt]).to eq(reply.excerpt)
+      expect(accepted_message.data[:accepted_answer][:excerpt]).to eq(reply.cooked)
       expect(accepted_message.data[:accepted_answer][:accepter_name]).to eq(admin.name)
       expect(accepted_message.data[:accepted_answer][:accepter_username]).to eq(admin.username)
 

@@ -197,7 +197,7 @@ ja:
         no_llm: "LLM が選択されていません"
         no_persona: "未設定"
         no_groups: "なし"
-        edit: "編集"
+        edit: "設定"
         expand_list:
           other: "(他 %{count})"
         collapse_list: "(表示を減らす)"
@@ -227,6 +227,8 @@ ja:
           name: "埋め込み"
           description: "テキストのセマンティック表現を生成することで、関連トピックや AI 検索などの機能を強化します"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "関連トピック"
         discord:
           name: "Discord 統合"
           description: "Discord チャンネルを検索する機能を追加します"
@@ -237,6 +239,8 @@ ja:
           generate_concepts: "概念の推論"
           match_concepts: "概念の照合"
           deduplicate_concepts: "概念の重複排除"
+          setting_groups:
+            personas: "ペルソナ"
         ai_helper:
           name: "ヘルパー"
           description: "トピックの作成、投稿の作成、コンテンツの閲覧など、ユーザーのコミュニティー操作を支援します"
@@ -250,6 +254,10 @@ ja:
           custom_prompt: "カスタムプロンプト"
           image_caption: "画像のキャプション設定"
           translator: "翻訳ツール"
+          post_illustrator: "イラスト投稿ツール"
+          setting_groups:
+            automation: "自動化"
+            personas: "ペルソナ"
         translation:
           name: "翻訳"
           description: "コンテンツをサポートされている言語で翻訳します"
@@ -257,6 +265,8 @@ ja:
           post_raw_translator: "投稿の生の翻訳ツール"
           topic_title_translator: "トピックタイトルの翻訳ツール"
           short_text_translator: "短いテキストの翻訳ツール"
+          setting_groups:
+            personas: "ペルソナ"
         spam:
           name: "迷惑"
           description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで調査できるように通報します"
@@ -278,6 +288,13 @@ ja:
         admin_actions:
           translation_settings: "翻訳の設定"
           localization_settings: "ローカリゼーションの設定"
+        stats:
+          eta_minutes:
+            other: "%{count} 分"
+          eta_hours:
+            other: "%{count} 時間"
+          eta_days:
+            other: "%{count} 日"
         progress_chart:
           bar_done:
             other: "投稿 %{count} 件"
@@ -306,6 +323,8 @@ ja:
           post_url_label: "投稿の URL または ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 または投稿 ID"
           result: "結果"
+          llm: "LLM"
+          system_prompt: "システムプロンプト"
           scan_log: "スキャンログ"
           run: "テストを実行"
           spam: "迷惑"
@@ -342,6 +361,7 @@ ja:
         no_users: "ユーザー使用状況データが見つかりません"
         no_models: "モデル使用状況データが見つかりません"
         no_features: "機能使用状況データが見つかりません"
+        total: "総合"
         subheader_description: "トークンは、LLM がテキストを理解して生成するために使用する基本単位であり、使用状況データがコストに影響する可能性があります"
         stat_tooltips:
           total_requests: "Discourse を通じて LLM に行われたすべてのリクエスト"
@@ -380,8 +400,6 @@ ja:
           low: 低品質 - 最も安い (256x256)
           medium: 中品質 (512x512)
           high: 高品質 - 最も遅い (1024x1024)
-        tool_details: ツールの詳細を表示
-        tool_details_help: 言語モデルがトリガーしたツールの詳細をエンドユーザーに表示します。
         mentionable: メンションを許可
         mentionable_help: 有効にすると、許可されているグループのユーザーは投稿内でこのユーザーをメンションでき、AI はこのペルソナとして返答します。
         user: ユーザー
@@ -525,7 +543,6 @@ ja:
         max_output_tokens: "最大出力トークン"
         url: "モデルをホストするサービスの URL"
         api_key: "モデルをホストするサービスの API キー"
-        enabled_chat_bot: "AI ボットのセレクターを許可"
         vision_enabled: "ビジョン対応"
         ai_bot_user: "AI ボットユーザー"
         cost_input: "入力コスト"
@@ -537,7 +554,6 @@ ja:
         back: "戻る"
         confirm_delete: このモデルを削除してもよろしいですか？
         delete: 削除
-        seeded_warning: "このモデルはサイト上で事前設定されているため、編集できません。"
         quotas:
           title: "使用量制限"
           add_title: "新しい制限の作成"
@@ -571,22 +587,18 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-1: "Anthropic の最もインテリジェントなモデル"
-          anthropic-claude-sonnet-4-0: "速度とコストの最適なバランス"
-          anthropic-claude-3-7-sonnet-latest: "速度とコストの最適なバランス (前世代)"
-          anthropic-claude-3-5-haiku-latest: "高速でコスト効率に優れています"
+          anthropic-claude-opus-4-5: "Anthropic の最もインテリジェントなモデル"
+          anthropic-claude-sonnet-4-5: "速度とコストの最適なバランス"
+          anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
           google-gemini-2-5-pro: "広範なタスクに対応できる大規模マルチモーダルモデル"
-          google-gemini-2-0-flash: "マルチモーダル推論による軽量・高速で、コスト効率に優れています (前世代)"
           google-gemini-2-5-flash: "マルチモーダル推論による軽量・高速で、コスト効率に優れています"
-          google-gemini-2-0-flash-lite: "コスト効率の良い低レイテンシーモデル"
-          open_ai-o4-mini: "コスト効率の良い高度な推論モデル"
           open_ai-gpt-5-mini: "インテリジェンス、速度、コストのバランスが取れており、多くのユースケースに魅力的なモデル。"
           open_ai-gpt-5-nano: "最速かつ最もコスト効率の良い GPT-5 モデル。"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "効率的な軽量多言語モデル"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "強力な多目的モデル"
           mistral-mistral-large-latest: "Mistral の最も強力なモデル"
           mistral-pixtral-large-latest: "Mistral の最も強力なビジョン対応モデル"
-          open_router-x-ai-grok-3-beta: "xAI の最新モデル"
+          open_router-x-ai-grok-4: "xAI の最新モデル"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek の最新の推論モデル"
           open_router-meta-llama-3-3-70b-instruct: "高機能多言語モデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
@@ -612,9 +624,7 @@ ja:
           display_name: "サイトのインターフェース全体でこのモデルを参照するために使用される名前。"
           name: "これを API 呼び出しに含めて、使用するモデルを指定します"
           vision_enabled: "有効にすると、AI は画像を理解しようとします。ビジョンのサポートに使用されているモデルに応じます。Anthropic、Google、および OpenAI の最新モデルでサポートされています。"
-          enabled_chat_bot: "有効にすると、ユーザーは AI ボットを使って PM を作成するときに、このモデルを選択できます"
           cost_input: "このモデルの 100 万トークン当たりの入力コスト"
-          cost_cached_input: "このモデルの 100 万トークン当たりのキャッシュ入力コスト"
           cost_output: "このモデルの 100 万トークン当たりの出力コスト"
           cost_measure: "$/100 万トークン"
         providers:
@@ -649,7 +659,6 @@ ja:
           reasoning_tokens: "推論に使用されるトークンの数"
           disable_temperature: "Temperature を無効にする (一部の試行モデルは Temperature をサポートしていません)"
           disable_top_p: "Top P を無効にする (一部の試行モデルは Top P をサポートしていません)"
-          enable_responses_api: "レスポンス API を有効にする (特定の OpenAI モデルで必要です)"
       related_topics:
         title: "関連トピック"
         pill: "関連"
@@ -693,6 +702,7 @@ ja:
           title: "提案されたサムネイル"
           select: "選択"
           selected: "選択済み"
+          try_again: "やり直す"
         image_caption:
           button_label: "AI によるキャプション"
           generating: "キャプションを生成中..."
@@ -775,8 +785,10 @@ ja:
         llm: "モデル"
         pm_warning: "AI チャットボットのメッセージは、モデレーターによって定期的に監視されます。"
         cancel_streaming: "返信を停止する"
+        try_again: "やり直す"
         default_pm_prefix: "[無題の AI ボット PM]"
         shortcut_title: "AI ボットと PM を開始する"
+        shortcut_link: "AI ボット"
         exit: "AI ボットを終了"
         share: "AI の会話のコピー"
         conversation_shared: "会話をコピーしました"
@@ -883,7 +895,6 @@ ja:
         loading_convo: "会話を読み込み中"
         collapse: "折りたたむ"
         timed_out: "Discobot は発見を見つけられませんでした。問題が発生しました。"
-        user_setting: "発見の検索を有効にする"
         tooltip:
           header: "AI 搭載の検索"
           content: "%{model} による自然言語検索"

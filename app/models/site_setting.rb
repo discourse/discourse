@@ -74,6 +74,7 @@ class SiteSetting < ActiveRecord::Base
     default_sidebar_link_to_filtered_list
     default_sidebar_show_count_of_new_items
     default_composition_mode
+    default_watched_precedence_over_muted
   ]
 
   extend GlobalPath
@@ -90,6 +91,26 @@ class SiteSetting < ActiveRecord::Base
         UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
       elsif self.data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
         upload_ids = self.value.split("|").compact.uniq
+        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
+        upload_values =
+          SchemaSettingsObjectValidator.property_values_of_type(
+            schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
+            objects: JSON.parse(self.value),
+            type: "upload",
+          )
+
+        # Convert URLs to upload IDs (values can be either integer IDs or URL strings)
+        upload_ids =
+          upload_values.filter_map do |value|
+            if value.is_a?(Integer)
+              value
+            elsif value.is_a?(String) && value.present?
+              ::Upload.get_from_url(value)&.id
+            end
+          end
+
+        # Always call ensure_exist! to clean up old references when uploads are removed
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       end
     end
@@ -227,6 +248,31 @@ class SiteSetting < ActiveRecord::Base
         Regexp.new(SiteSetting.allowed_unicode_username_characters)
       end
     end
+  end
+
+  def self.history_for(setting_name)
+    UserHistory.where(
+      action: UserHistory.actions[:change_site_setting],
+      subject: setting_name,
+    ).order(created_at: :desc)
+  end
+
+  class ImageQuality
+    def self.png_to_jpg_quality
+      SiteSetting.png_to_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+
+    def self.recompress_original_jpg_quality
+      SiteSetting.recompress_original_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+
+    def self.image_preview_jpg_quality
+      SiteSetting.image_preview_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+  end
+
+  def self.ImageQuality
+    SiteSetting::ImageQuality
   end
 
   # helpers for getting s3 settings that fallback to global

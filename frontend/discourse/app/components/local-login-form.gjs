@@ -16,7 +16,6 @@ import SecurityKeyForm from "discourse/components/security-key-form";
 import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import icon from "discourse/helpers/d-icon";
 import valueEntered from "discourse/helpers/value-entered";
-import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -127,6 +126,12 @@ export default class LocalLoginForm extends Component {
   }
 
   @action
+  filledSecondFactorToken(otp) {
+    this.args.secondFactorTokenChanged(otp);
+    this.args.login();
+  }
+
+  @action
   handleForgotPassword(event) {
     event?.preventDefault();
 
@@ -170,7 +175,7 @@ export default class LocalLoginForm extends Component {
         <div class="input-group" {{didInsert this.passkeyConditionalLogin}}>
           <Input
             {{on "focusin" this.scrollInputIntoView}}
-            value={{@loginName}}
+            @value={{@loginName}}
             @type="email"
             id="login-account-name"
             class={{valueEntered @loginName}}
@@ -259,8 +264,9 @@ export default class LocalLoginForm extends Component {
           {{else}}
             <SecondFactorInput
               {{on "keydown" this.loginOnEnter}}
-              {{on "input" (withEventValue (fn (mut @secondFactorToken)))}}
               {{on "focusin" this.scrollInputIntoView}}
+              @onChange={{fn (mut @secondFactorToken)}}
+              @onFill={{this.filledSecondFactorToken}}
               @secondFactorMethod={{@secondFactorMethod}}
               value={{@secondFactorToken}}
               id="login-second-factor"

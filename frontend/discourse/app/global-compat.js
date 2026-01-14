@@ -1,9 +1,6 @@
 import "discourse/lib/load-moment";
 import jQuery from "jquery";
-import virtualDom from "virtual-dom";
-import widgetHelpers from "discourse-widget-hbs/helpers";
-
-window.__widget_helpers = widgetHelpers;
+import * as virtualDom from "discourse/widgets/virtual-dom";
 
 // TODO: Eliminate this global
 window.virtualDom = virtualDom;

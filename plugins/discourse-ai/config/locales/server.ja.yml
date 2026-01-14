@@ -26,10 +26,6 @@ ja:
       llm_triage:
         title: AI を使った投稿のトリアージ
         description: "大規模言語モデルを使って投稿に優先順位を付けます"
-        flagged_post: |
-          <div>モデルからの応答:</div>
-          <p>%{llm_response}</p>
-          <b><a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> ルールによってトリガーされました。</b>
       llm_report:
         title: AI を使った定期レポート
         description: "大規模言語モデルに基づく定期レポート"
@@ -102,7 +98,6 @@ ja:
     ai_bot_allowed_groups: "GPT ボットが PM にアクセスできる場合、これらのグループのメンバーに返信します。"
     ai_bot_debugging_allowed_groups: "これらのグループが生の AI リクエストと応答を表示するデバッグボタンを投稿に表示することを許可する"
     ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可する。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
-    ai_bot_add_to_header: "AI ボットとの PM を開始するためのボタンをヘッダーに表示する"
     ai_bot_github_access_token: "GitHub AI ツールで使用する GitHub アクセストークン (検索サポートに必要)"
     ai_stability_api_key: "stability.ai API の API キー"
     ai_stability_engine: "stability.ai API に使用する画像生成エンジン"
@@ -236,8 +231,10 @@ ja:
           name: "為替レート"
         stock_quote:
           name: "株価 (AlphaVantage)"
-        image_generation:
-          name: "Flux 画像ジェネレーター (Together.ai)"
+        image_generation_custom:
+          name: "カスタム"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "空白から始める..."
       name:
@@ -254,10 +251,6 @@ ja:
         explain: "説明"
         illustrate_post: "イラスト投稿"
         replace_dates: "スマート日付"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Stable Diffusion XL による画像"
-          dall_e_3: "DALL-E 3 による画像"
       image_caption:
         attribution: "AI によるキャプション"
     share_ai:
@@ -282,7 +275,6 @@ ja:
     ai_bot:
       reply_error: "返信中に予期しない問題が発生したようです。\n\n\n[details='エラーの詳細']\n%{details}\n[/details]"
       default_pm_prefix: "[無題の AI ボット PM]"
-      thinking: "考えています..."
       personas:
         default_llm_required: "チャットを有効にする前に、デフォルトの LLM モデルが必要です"
         cannot_delete_system_persona: "システムペルソナは削除できません。代わりに無効にしてください"
@@ -350,7 +342,6 @@ ja:
           description: "ヘルパーの Markdown テーブルの生成機能を強化するデフォルトのペルソナ"
         post_illustrator:
           name: "イラスト投稿ツール"
-          description: "ヘルパーのイラスト投稿機能を強化する StableDiffusion プロンプトを生成しあｍす"
         proofreader:
           name: "校正ツール"
           description: "ヘルパーのテキストの校正機能を強化するデフォルトのペルソナ"
@@ -447,9 +438,9 @@ ja:
         github_search_files: "GitHub 検索ファイル"
         github_search_code: "GitHub コード検索"
         github_file_content: "GitHub ファイルコンテンツ"
-        github_pull_request_diff: "GitHub プルリクエストの差分"
         random_picker: "ランダムピッカー"
         categories: "カテゴリをリスト表示"
+        flag_post: "投稿を通報"
         search: "検索"
         tags: "タグをリスト"
         time: "時刻"
@@ -475,7 +466,6 @@ ja:
         github_search_code: "GitHub リポジトリでコードを検索する"
         github_search_files: "GitHub リポジトリでファイルを検索する"
         github_file_content: "GitHub リポジトリからファイルのコンテンツを取得する"
-        github_pull_request_diff: "GitHub プルリクエストの差分を取得する"
         random_picker: "ランダムな数字またはリストのランダムな要素を選択する"
         categories: "フォーラムのすべての公開カテゴリをリストする"
         search: "フォーラムのすべての公開トピックを検索する"
@@ -501,7 +491,7 @@ ja:
         web_browser: "読み取り中: <a href='%{url}'>%{url}</a>"
         github_search_files: "%{repo}/%{branch} で「%{keywords}」を検索しました"
         github_search_code: "%{repo} で「%{query}」を検索しました"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "%{repo_name}@%{branch} から %{file_paths} のコンテンツを取得しました"
         random_picker: "%{options} から選択中。選択: %{result}"
         read: "読み取り中: <a href='%{url}'>%{title}</a>"
@@ -599,6 +589,3 @@ ja:
       persona_already_exists: '%{name} という名前のペルソナはすでに存在します。'
       custom_tool_exists:
         other: "%{names} という名前のカスタムツールはすでに存在します。"
-  dashboard:
-    problem:
-      ai_llm_status: "LLM モデル: %{model_name} に問題が発生しています。<a href='%{url}'>モデルの構成ページ</a>を確認してください。"

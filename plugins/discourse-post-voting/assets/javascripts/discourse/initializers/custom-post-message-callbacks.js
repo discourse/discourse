@@ -29,11 +29,7 @@ export default {
                 raw: message.comment_raw,
                 cooked: message.comment_cooked,
               };
-              post.comments.replace(indexToUpdate, 1, [updatedComment]);
-
-              topicController.appEvents.trigger("post-stream:refresh", {
-                id: post.id,
-              });
+              post.comments.splice(indexToUpdate, 1, updatedComment);
             }
           }
         }
@@ -55,14 +51,10 @@ export default {
                 ...post.comments[indexToDelete],
                 deleted: true,
               };
-              post.comments.replace(indexToDelete, 1, [comment]);
+              post.comments.splice(indexToDelete, 1, comment);
             }
 
             post.set("comments_count", message.comments_count);
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );
@@ -85,12 +77,8 @@ export default {
               post.comments_count - post.comments.length <= 1 &&
               topicController.currentUser.id !== message.comment.user_id
             ) {
-              post.comments.pushObject(message.comment);
+              post.comments.push(message.comment);
             }
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );
@@ -116,10 +104,6 @@ export default {
             }
 
             post.setProperties(props);
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );

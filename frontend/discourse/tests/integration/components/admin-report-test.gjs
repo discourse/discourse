@@ -1,8 +1,8 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import AdminReport from "discourse/admin/components/admin-report";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import AdminReport from "admin/components/admin-report";
 
 module("Integration | Component | admin-report", function (hooks) {
   setupRenderingTest(hooks);

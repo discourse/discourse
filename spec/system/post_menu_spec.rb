@@ -487,21 +487,25 @@ describe "Post menu", type: :system do
       expect(topic_page).to have_no_post_action_button(post2, :like_count)
     end
 
-    it "toggles the users who liked when clicking on the like count" do
+    it "shows the users who liked when clicking on the like count" do
       PostActionCreator.like(user, post)
       PostActionCreator.like(admin, post)
 
       topic_page.visit_topic(post.topic)
 
-      expect(topic_page).to have_no_who_liked_on_post(post)
-
-      # toggle users who liked on
+      # show users who liked on
       topic_page.click_post_action_button(post, :like_count)
       expect(topic_page).to have_who_liked_on_post(post, count: 2)
+    end
 
-      # toggle users who liked off
-      topic_page.click_post_action_button(post, :like_count)
-      expect(topic_page).to have_no_who_liked_on_post(post)
+    it "does not allow silenced users to like posts" do
+      user.update!(silenced_till: 1.year.from_now)
+
+      sign_in(user)
+
+      topic_page.visit_topic(post.topic)
+
+      expect(topic_page).to have_no_post_action_button(post, :like)
     end
   end
 

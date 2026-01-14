@@ -9,22 +9,27 @@ import { classNameBindings } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
 import ShareTopic from "discourse/components/modal/share-topic";
 import { ajax } from "discourse/lib/ajax";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
 import { i18n } from "discourse-i18n";
+import { trackedArray } from "../lib/tracked-tools";
 
 let _messagesCache = {};
 
 @classNameBindings(":composer-popup-container", "hidden")
 export default class ComposerMessages extends Component {
   @tracked showShareModal;
+  @trackedArray similarTopics = null;
+  @trackedArray messages = null;
 
   checkedMessages = false;
-  messages = null;
   messagesByTemplate = null;
   queuedForTyping = null;
-  similarTopics = null;
   usersNotSeen = null;
   recipientNames = [];
 
@@ -59,12 +64,12 @@ export default class ComposerMessages extends Component {
       return;
     }
 
-    this.messages.popObject();
+    this.messages.pop();
     this.set("messageCount", this.messages.length);
   }
 
   _removeMessage(message) {
-    this.messages.removeObject(message);
+    removeValueFromArray(this.messages, message);
     this.set("messageCount", this.messages.length);
   }
 
@@ -233,8 +238,7 @@ export default class ComposerMessages extends Component {
       return;
     }
 
-    this.similarTopics.clear();
-    this.similarTopics.pushObjects(topics.content);
+    this.similarTopics.splice(0, Infinity, ...topics.content);
 
     if (this.similarTopics.length > 0) {
       this._similarTopicsMessage.set("similarTopics", this.similarTopics);
@@ -288,9 +292,9 @@ export default class ComposerMessages extends Component {
 
     this.set("checkedMessages", true);
 
-    messages.forEach((msg) => {
+    messages.content.forEach((msg) => {
       if (msg.wait_for_typing) {
-        this.queuedForTyping.addObject(msg);
+        addUniqueValueToArray(this.queuedForTyping, msg);
       } else {
         this.popup(msg);
       }
@@ -318,7 +322,7 @@ export default class ComposerMessages extends Component {
     }
 
     if (!this.messagesByTemplate[message.templateName]) {
-      this.messages.pushObject(message);
+      this.messages.push(message);
       this.set("messageCount", this.messages.length);
       this.messagesByTemplate[message.templateName] = message;
     }

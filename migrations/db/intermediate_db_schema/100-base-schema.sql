@@ -93,6 +93,13 @@ CREATE TABLE category_custom_fields
     PRIMARY KEY (category_id, name)
 );
 
+CREATE TABLE category_moderation_groups
+(
+    category_id NUMERIC,
+    group_id    NUMERIC,
+    PRIMARY KEY (category_id, group_id)
+);
+
 CREATE TABLE category_users
 (
     category_id        NUMERIC  NOT NULL,
@@ -148,6 +155,14 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE site_settings
+(
+    name            TEXT         NOT NULL PRIMARY KEY,
+    import_mode     ENUM_INTEGER NOT NULL,
+    last_changed_at DATETIME,
+    value           TEXT
+);
+
 CREATE TABLE tag_group_memberships
 (
     tag_group_id NUMERIC  NOT NULL,
@@ -188,6 +203,7 @@ CREATE TABLE tags
     original_id NUMERIC  NOT NULL PRIMARY KEY,
     created_at  DATETIME,
     description TEXT,
+    locale      TEXT,
     name        TEXT     NOT NULL
 );
 
@@ -374,6 +390,7 @@ CREATE TABLE user_options
     new_topic_duration_minutes           INTEGER,
     notification_level_when_assigned     INTEGER,
     notification_level_when_replying     INTEGER,
+    notify_on_linked_posts               BOOLEAN,
     oldest_search_log_date               DATETIME,
     only_chat_push_notifications         BOOLEAN,
     policy_email_frequency               INTEGER,

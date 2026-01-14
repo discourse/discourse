@@ -7,7 +7,7 @@ export default class AdminEmailTemplatesIndexController extends Controller {
   @tracked showOverridenOnly = false;
 
   titleSorting = ["title"];
-  @sort("emailTemplates", "titleSorting") sortedTemplates;
+  @sort("emailTemplates.content", "titleSorting") sortedTemplates;
 
   get shownTemplates() {
     if (this.showOverridenOnly) {

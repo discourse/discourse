@@ -1,13 +1,13 @@
 import { array, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { gt } from "truth-helpers";
+import EmailLogsList from "discourse/admin/components/email-logs-list";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import slice from "discourse/helpers/slice";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import EmailLogsList from "admin/components/email-logs-list";
-import DTooltip from "float-kit/components/d-tooltip";
 
 const CC_ADDRESS_DISPLAY_THRESHOLD = 2;
 

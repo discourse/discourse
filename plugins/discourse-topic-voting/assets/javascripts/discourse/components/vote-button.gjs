@@ -1,101 +1,190 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
+import icon from "discourse/helpers/d-icon";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
+import { and, eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class VoteBox extends Component {
-  @service siteSettings;
   @service currentUser;
 
-  get wrapperClasses() {
-    const classes = [];
-    const { topic } = this.args;
-    if (topic.closed) {
-      classes.push("voting-closed");
-    } else {
-      if (!topic.user_voted) {
-        classes.push("nonvote");
-      } else {
-        if (this.currentUser && this.currentUser.votes_exceeded) {
-          classes.push("vote-limited nonvote");
-        } else {
-          classes.push("vote");
-        }
-      }
-    }
-    if (this.siteSettings.topic_voting_show_who_voted) {
-      classes.push("show-pointer");
-    }
-    return classes.join(" ");
-  }
+  @tracked hasVoted = false;
+  @tracked hasSeenSuccessMenu = false;
+  topic = this.args.topic;
+
+  alreadyVoted = this.topic.user_voted;
 
   get buttonContent() {
-    const { topic } = this.args;
+    const content = {};
     if (this.currentUser) {
-      if (topic.closed) {
-        return i18n("topic_voting.voting_closed_title");
+      if (this.topic.closed) {
+        content.label = i18n("topic_voting.voting_closed_title");
+        content.title = i18n("topic_voting.voting_closed_title");
+      } else if (this.topic.user_voted) {
+        content.label = i18n("topic_voting.voted_title");
+        content.title = i18n("topic_voting.voted_title");
+      } else if (this.currentUser.vote_limit === 0) {
+        content.label = i18n("topic_voting.locked");
+        content.title = i18n("topic_voting.locked_description");
+      } else if (this.currentUser.votes_exceeded) {
+        content.label = i18n("topic_voting.voting_limit");
+        content.title = i18n("topic_voting.reached_limit");
+      } else {
+        content.label = i18n("topic_voting.vote_title");
+        content.title = i18n("topic_voting.vote_title");
       }
-
-      if (topic.user_voted) {
-        return i18n("topic_voting.voted_title");
-      }
-
-      if (this.currentUser.votes_exceeded) {
-        return i18n("topic_voting.voting_limit");
-      }
-
-      return i18n("topic_voting.vote_title");
+    } else {
+      content.label = i18n("topic_voting.anonymous_button", { count: 1 });
+      content.title = i18n("topic_voting.anonymous_button", { count: 1 });
     }
 
-    if (topic.vote_count) {
-      return i18n("topic_voting.anonymous_button", {
-        count: topic.vote_count,
-      });
-    }
+    return content;
+  }
 
-    return i18n("topic_voting.anonymous_button", { count: 1 });
+  get showVotedMenu() {
+    return this.hasVoted && !this.hasSeenSuccessMenu;
+  }
+
+  get buttonClasses() {
+    return this.currentUser?.vote_limit === 0
+      ? "btn-default vote-button"
+      : "btn-primary vote-button";
   }
 
   @action
-  click() {
+  onShowMenu() {
     applyBehaviorTransformer("topic-vote-button-click", () => {
       if (!this.currentUser) {
         return this.args.showLogin();
       }
 
-      const { topic } = this.args;
+      if (this.currentUser.vote_limit === 0) {
+        return;
+      }
 
+      // If user has already voted and seen the success menu, don't do anything
+      // The menu will show with the "remove vote" option
+      if (this.topic.user_voted && this.hasSeenSuccessMenu) {
+        return;
+      }
+
+      // If user hasn't voted yet, add vote and show success menu
       if (
-        !topic.closed &&
-        !topic.user_voted &&
+        !this.topic.closed &&
+        !this.topic.user_voted &&
         !this.currentUser.votes_exceeded
       ) {
         this.args.addVote();
-      }
-
-      if (topic.user_voted || this.currentUser.votes_exceeded) {
-        this.args.showVoteOptions();
+        this.hasVoted = true;
+        // Don't set hasSeenSuccessMenu yet - it will be set when menu closes
       }
     });
   }
 
+  @action
+  addVote() {
+    this.args.addVote();
+    this.hasVoted = true;
+  }
+
+  @action
+  removeVote() {
+    this.args.removeVote();
+    this.hasVoted = false;
+    this.hasSeenSuccessMenu = false;
+    this.dMenu.close();
+  }
+
+  @action
+  onRegisterApi(api) {
+    this.dMenu = api;
+  }
+
+  @action
+  onCloseMenu() {
+    if (this.hasVoted && !this.hasSeenSuccessMenu) {
+      this.hasSeenSuccessMenu = true;
+    }
+  }
+
   <template>
-    <div class={{this.wrapperClasses}}>
-      <DButton
-        @translatedTitle={{if
-          this.currentUser
-          (i18n
-            "topic_voting.votes_left_button_title"
-            count=this.currentUser.votes_left
-          )
-          ""
-        }}
-        @translatedLabel={{this.buttonContent}}
-        class="btn-primary vote-button"
-        @action={{this.click}}
-      />
-    </div>
+    <DMenu
+      @identifier="topic-voting-menu"
+      @title={{this.buttonContent.title}}
+      @label={{this.buttonContent.label}}
+      @onShow={{this.onShowMenu}}
+      @onClose={{this.onCloseMenu}}
+      class={{this.buttonClasses}}
+      @onRegisterApi={{this.onRegisterApi}}
+    >
+      <:content>
+        <DropdownMenu as |dropdown|>
+          {{#if this.showVotedMenu}}
+            <dropdown.item class="topic-voting-menu__title">
+              {{icon "circle-check"}}
+              <span>{{i18n "topic_voting.voted_title"}}</span>
+            </dropdown.item>
+            <dropdown.item class="topic-voting-menu__votes-left">
+              <DButton
+                @translatedLabel={{i18n
+                  "topic_voting.see_votes"
+                  count=this.currentUser.votes_left
+                  max=this.currentUser.vote_limit
+                }}
+                @href="/my/activity/votes"
+                @icon="check-to-slot"
+                class="btn-transparent see-votes topic-voting-menu__row-btn"
+              />
+            </dropdown.item>
+          {{else if (eq this.currentUser.vote_limit 0)}}
+            <dropdown.item class="topic-voting-menu__title --locked">
+              {{icon "lock"}}
+              <span>{{i18n "topic_voting.locked_description"}}</span>
+            </dropdown.item>
+          {{else if
+            (and this.currentUser.votes_exceeded (not this.topic.user_voted))
+          }}
+            <dropdown.item class="topic-voting-menu__row">
+              <DButton
+                @translatedLabel={{i18n
+                  "topic_voting.see_votes"
+                  count=this.currentUser.votes_left
+                  max=this.currentUser.vote_limit
+                }}
+                @href="/my/activity/votes"
+                @icon="check-to-slot"
+                class="btn-transparent see-votes topic-voting-menu__row-btn"
+              />
+            </dropdown.item>
+          {{else}}
+            <dropdown.item class="topic-voting-menu__row">
+              <DButton
+                @translatedLabel={{i18n
+                  "topic_voting.see_votes"
+                  count=this.currentUser.votes_left
+                  max=this.currentUser.vote_limit
+                }}
+                @href="/my/activity/votes"
+                @icon="check-to-slot"
+                class="btn-transparent see-votes topic-voting-menu__row-btn"
+              />
+            </dropdown.item>
+            <dropdown.item class="topic-voting-menu__row">
+              <DButton
+                @translatedLabel={{i18n "topic_voting.remove_vote"}}
+                @action={{this.removeVote}}
+                @icon="arrow-rotate-left"
+                class="btn-transparent remove-vote topic-voting-menu__row-btn --danger"
+              />
+            </dropdown.item>
+          {{/if}}
+        </DropdownMenu>
+      </:content>
+    </DMenu>
   </template>
 }

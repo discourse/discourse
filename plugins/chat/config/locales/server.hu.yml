@@ -106,6 +106,10 @@ hu:
     reviewables:
       message_already_handled: "Köszönjük, de már megvizsgáltuk ezt az üzenetet, és megállapítottuk, hogy nem kell újra megjelölni."
       actions:
+        no_action_message:
+          title: "Nincs művelet"
+        restore_message:
+          description: "Üzenet helyreállítása, hogy láthassák a felhasználók."
         agree:
           title: "Egyetértek…"
         agree_and_keep_message:
@@ -127,16 +131,10 @@ hu:
           title: "Üzenet törlése"
           description: "Üzenet törlése, hogy a felhasználók ne láthassák."
         delete_and_agree:
-          title: "Megjelölés figyelmen kívül hagyása, és az üzenet törlése"
           description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és az üzenet törlésével."
         disagree_and_restore:
           title: "Nem ért egyet, és az üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
-        disagree:
-          title: "Elutasítás"
-        ignore:
-          title: "Ne csináljon semmit"
-          description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
       direct_messages:
         transcript_title: "A korábbi üzenetek leirata a(z) %{channel_name} csatornában"
         transcript_body: "A pontosabb kontextus érdekében hozzáadtuk a beszélgetés korábbi üzeneteinek leiratát (legfeljebb tíz):\n\n%{transcript}"
@@ -184,7 +182,7 @@ hu:
         slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
         is_already_in_use: "már használatban van"
     bookmarkable:
-      notification_title: "Üzenet a(z) %{channel_name} csatornában."
+      notification_title_channel: "Üzenet a(z) %{channel_name} csatornában."
     personal_chat: "személyes csevegés"
     onebox:
       inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"
@@ -264,10 +262,8 @@ hu:
       view_more:
         one: "%{count} további üzenet megtekintése"
         other: "%{count} további üzenet megtekintése"
-      your_chat_settings: "csevegési e-mail gyakoriságának beállítása"
   unsubscribe:
     chat_summary:
-      select_title: "A csevegési összefoglaló e-mailek gyakoriságának beállítása:"
       never: Soha
       when_away: Csak ha távol van
   category:

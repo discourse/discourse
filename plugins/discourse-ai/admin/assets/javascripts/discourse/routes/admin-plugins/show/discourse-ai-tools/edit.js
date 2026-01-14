@@ -5,7 +5,7 @@ export default class DiscourseAiToolsEditRoute extends DiscourseRoute {
     const allTools = this.modelFor("adminPlugins.show.discourse-ai-tools");
     const id = parseInt(params.id, 10);
 
-    return allTools.find((tool) => tool.id === id);
+    return allTools.content.find((tool) => tool.id === id);
   }
 
   setupController(controller) {

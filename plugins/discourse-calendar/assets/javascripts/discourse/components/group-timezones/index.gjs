@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
-import { eq } from "truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import roundTime from "../../lib/round-time";
 import NewDay from "./new-day";

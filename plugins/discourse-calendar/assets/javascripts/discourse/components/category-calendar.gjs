@@ -21,7 +21,6 @@ export default class CategoryCalendar extends Component {
       const params = {
         after: info.startStr,
         before: info.endStr,
-        post_id: this.categorySetting?.postId,
         category_id: this.category.id,
         include_subcategories: true,
       };
@@ -136,9 +135,7 @@ export default class CategoryCalendar extends Component {
       return {
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
         start: startsAt,
-        rrule: event.rrule,
         end: endsAt || startsAt,
-        duration: event.duration,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,
@@ -151,8 +148,9 @@ export default class CategoryCalendar extends Component {
       <FullCalendar
         @onLoadEvents={{this.loadEvents}}
         @height="650px"
-        @initialView={{this.categorySetting?.defaultView}}
+        @initialView={{this.categorySetting.defaultView}}
         @weekends={{this.renderWeekends}}
+        @refreshKey={{this.category.id}}
       />
     {{/if}}
   </template>

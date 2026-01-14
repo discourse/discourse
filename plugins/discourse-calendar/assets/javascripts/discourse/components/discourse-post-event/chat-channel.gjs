@@ -1,6 +1,6 @@
 import { LinkTo } from "@ember/routing";
-import { and } from "truth-helpers";
 import { optionalRequire } from "discourse/lib/utilities";
+import { and } from "discourse/truth-helpers";
 
 const ChannelTitle = optionalRequire(
   "discourse/plugins/chat/discourse/components/channel-title"

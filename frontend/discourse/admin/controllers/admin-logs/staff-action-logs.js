@@ -177,6 +177,15 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   }
 
   @action
+  showHtmlSafeContext(model) {
+    if (model.action_name === "upcoming_change_toggled") {
+      return true;
+    }
+
+    return false;
+  }
+
+  @action
   showCustomDetailsModal(model, event) {
     event?.preventDefault();
     this.modal.show(AdminStaffActionLogComponent, {

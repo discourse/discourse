@@ -12,6 +12,7 @@ describe "Upcoming Events", type: :system do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    SiteSetting.calendar_upcoming_events_default_view = "month"
     sign_in(admin)
   end
 
@@ -64,14 +65,14 @@ describe "Upcoming Events", type: :system do
         end
       end
 
-      describe "without local time (UTC events)" do
+      describe "without local time" do
         it "displays event time converted to user timezone",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
           create_post(
             user: admin,
             category: Fabricate(:category),
-            title: "Event with UTC time",
+            title: "Event with CET time",
             raw:
               "[event timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 21:00\"]\n[/event]",
           )
@@ -79,9 +80,9 @@ describe "Upcoming Events", type: :system do
           upcoming_events.visit
           upcoming_events.open_year_view
 
-          expect(upcoming_events).to have_event_with_time("Event with UTC time", "1:00pm - 3:00pm")
+          expect(upcoming_events).to have_event_with_time("Event with CET time", "1:00pm - 3:00pm")
 
-          find("a", text: "Event with UTC time").click
+          find("a", text: "Event with CET time").click
 
           expect(page).to have_css(
             ".event__section.event-dates",
@@ -159,14 +160,14 @@ describe "Upcoming Events", type: :system do
         end
       end
 
-      describe "without local time (UTC events)" do
+      describe "without local time" do
         it "displays multiple occurrences converted to user timezone",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
           create_post(
             user: admin,
             category: Fabricate(:category),
-            title: "Recurring UTC event",
+            title: "Recurring CET event",
             raw:
               "[event recurrence=every_week timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 20:00\"]\n[/event]",
           )
@@ -184,7 +185,7 @@ describe "Upcoming Events", type: :system do
 
           find(
             "tr.fc-list-event:nth-child(2) .fc-list-event-title a",
-            text: "Recurring UTC event",
+            text: "Recurring CET event",
           ).click
 
           expect(page).to have_css(
@@ -196,7 +197,7 @@ describe "Upcoming Events", type: :system do
 
           find(
             "tr.fc-list-event:nth-child(4) .fc-list-event-title a",
-            text: "Recurring UTC event",
+            text: "Recurring CET event",
           ).click
 
           expect(page).to have_css(
@@ -264,10 +265,10 @@ describe "Upcoming Events", type: :system do
         upcoming_events.visit
 
         upcoming_events.expect_event_count(4)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 3, col: 3)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 4, col: 3)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 5, col: 3)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 6, col: 3)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 3, col: 2)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 4, col: 2)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 5, col: 2)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 6, col: 2)
       end
     end
   end
@@ -490,6 +491,18 @@ describe "Upcoming Events", type: :system do
             expect(upcoming_events).to have_event_height("This is a long workshop", 143)
           end
         end
+      end
+    end
+
+    describe "configurable view" do
+      before { SiteSetting.calendar_upcoming_events_default_view = "day" }
+
+      it "default view is controlled by calendar_upcoming_events_default_view setting",
+         time: Time.utc(2025, 9, 15) do
+        upcoming_events.visit
+
+        upcoming_events.expect_content("September 15, 2025")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/9/15")
       end
     end
 

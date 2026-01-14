@@ -39,7 +39,7 @@ sw:
         disabled: "(imezuiwa)"
         groups: "Makundi:"
         no_groups: "Hakuna"
-        edit: "Hariri"
+        edit: "Mipangilio"
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"
@@ -50,6 +50,13 @@ sw:
       modals:
         select_option: "Chagua chaguo moja..."
       translations:
+        stats:
+          eta_hours:
+            one: "saa %{count}"
+            other: "masaa %{count}"
+          eta_days:
+            one: "siku %{count}"
+            other: "siku %{count}"
         progress_chart:
           bar_done:
             one: "%{count} chapisho"
@@ -63,6 +70,7 @@ sw:
         summary: "Muhtasari"
         username: "Jina la mtumiaji"
         total_requests: "Jumla ya Maombi"
+        total: "Jumla"
       ai_persona:
         back: "Iliyopita"
         name: "Jina"
@@ -119,6 +127,8 @@ sw:
           close: "Funga"
           copy: "Nakili"
           cancel: "Batili"
+        thumbnail_suggestions:
+          try_again: "Jaribu Tena"
         image_caption:
           save_caption: "Hifadhi"
       embeddings:

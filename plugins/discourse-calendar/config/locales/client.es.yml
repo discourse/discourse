@@ -7,9 +7,11 @@
 es:
   admin_js:
     admin:
+      calendar: "Calendario y eventos"
       site_settings:
         categories:
           discourse_post_event: "Evento de Discourse"
+          discourse_calendar: "Calendario y eventos"
   js:
     notifications:
       titles:
@@ -42,6 +44,7 @@ es:
         title: "Región"
         none: "Ninguna"
         use_current_region: "Usar región actual"
+        select_region: "Seleccionar una región..."
         names:
           ae: "Emiratos Árabes Unidos"
           ar: "Argentina"
@@ -136,6 +139,7 @@ es:
           dk: "Dinamarca"
           ee: "Estonia"
           el: "Grecia"
+          gr: "Grecia"
           es_an: "España (es_an)"
           es_ar: "España (es_ar)"
           es_ce: "España (es_ce)"
@@ -411,6 +415,7 @@ es:
         event:
           expired: "Caducado"
           closed: "Cerrado"
+          full: "Completo"
           status:
             standalone:
               title: "Independiente"
@@ -468,6 +473,9 @@ es:
         minimal:
           label: "Evento mínimo"
           checkbox_label: "Ocultar los botones Asistiré/No asistiré y el estado de los invitados"
+        max_attendees:
+          label: "Aforo máximo"
+          placeholder: "Sin límite"
         allow_chat:
           label: "Integración de chat"
           checkbox_label: "Crea y gestiona un canal de chat específico para cada evento"

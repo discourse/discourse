@@ -965,20 +965,20 @@ module Discourse
   end
 
   def self.after_unicorn_worker_fork
-    unicorn_worker_db_variables_prefix = "DISCOURSE_UNICORN_WORKER_DB_VARIABLES_"
-    db_variables_overrides = {}
+    variables_overrides = {}
+    unicorn_worker_db_variables_prefix = "unicorn_worker_db_variables_"
 
-    ENV.filter do |key, value|
+    GlobalSetting.provider.keys.each do |key|
       if key.start_with?(unicorn_worker_db_variables_prefix)
-        db_variables_overrides[
-          "DISCOURSE_DB_VARIABLES_#{key.sub(unicorn_worker_db_variables_prefix, "")}"
-        ] = value
+        variables_overrides[
+          key.to_s.sub(unicorn_worker_db_variables_prefix, "").downcase.to_sym
+        ] = GlobalSetting.public_send(key)
       end
     end
 
-    if db_variables_overrides.any?
-      db_variables_overrides.each { |key, value| ENV[key] = value }
-      ActiveRecord::Base.configurations = Rails.application.config.database_configuration
+    if variables_overrides.any?
+      ActiveRecord::Base.configurations =
+        Rails.application.config.database_configuration(variables_overrides:)
       ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
       ActiveRecord::Base.establish_connection
     end
@@ -1080,7 +1080,7 @@ module Discourse
 
   def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
     location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
-    warning = ["Deprecation notice:", warning]
+    warning = ["DEPRECATION NOTICE:", warning]
     warning << "(deprecated since Discourse #{since})" if since
     warning << "(removal in Discourse #{drop_from})" if drop_from
     warning << "\nAt #{location}"

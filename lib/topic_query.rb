@@ -1012,7 +1012,7 @@ class TopicQuery
 
     if user
       watched_tag_ids =
-        if user.watched_precedence_over_muted
+        if user.user_option.watched_precedence_over_muted
           TagUser
             .where(user: user)
             .where("notification_level >= ?", TopicUser.notification_levels[:watching])
@@ -1100,8 +1100,7 @@ class TopicQuery
     if user && !opts[:skip_categories]
       query_params[:regular] = CategoryUser.notification_levels[:regular]
 
-      query_params[:watching_or_infinite] = if user.watched_precedence_over_muted ||
-           SiteSetting.watched_precedence_over_muted
+      query_params[:watching_or_infinite] = if user.user_option.watched_precedence_over_muted
         CategoryUser.notification_levels[:watching]
       else
         99
@@ -1341,14 +1340,23 @@ class TopicQuery
       if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
         # ALL of the given tags:
         if tags_arg.length == tags.length
-          tags.each_with_index do |tag, index|
-            sql_alias = ["t", index].join
+          tag_subqueries = tags.map { |tag| TopicTag.select(:topic_id).where(tag_id: tag).to_sql }
 
-            result =
-              result.joins(
-                "INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}",
-              )
+          joined_subqueries = nil
+
+          tag_subqueries.each_with_index do |sql, index|
+            alias_name = "t#{index}"
+            subquery_with_alias = "(#{sql}) #{alias_name}"
+
+            if joined_subqueries
+              joined_subqueries =
+                "#{joined_subqueries} INNER JOIN #{subquery_with_alias} ON #{alias_name}.topic_id = t0.topic_id"
+            else
+              joined_subqueries = subquery_with_alias
+            end
           end
+
+          result = result.where("topics.id IN (SELECT t0.topic_id FROM #{joined_subqueries})")
         else
           result = result.none # don't return any results unless all tags exist in the database
         end

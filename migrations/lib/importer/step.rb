@@ -2,6 +2,9 @@
 
 module Migrations::Importer
   class Step
+    MappingType = ::Migrations::Importer::MappingType
+    Enums = ::Migrations::Database::IntermediateDB::Enums
+
     class << self
       # stree-ignore
       def title(value = (getter = true; nil))
@@ -49,6 +52,15 @@ module Migrations::Importer
         end
       end
 
+      def requires_shared_data(*names)
+        @required_shared_data ||= []
+        @required_shared_data += names
+      end
+
+      def required_shared_data
+        @required_shared_data || []
+      end
+
       def requires_mapping(name, sql)
         @required_mappings ||= {}
         @required_mappings[name] = sql
@@ -68,12 +80,15 @@ module Migrations::Importer
       end
     end
 
-    def initialize(intermediate_db, discourse_db, shared_data)
+    def initialize(intermediate_db, discourse_db, shared_data, config)
       @intermediate_db = intermediate_db
       @discourse_db = discourse_db
       @shared_data = shared_data
+      @config = config
 
       @stats = StepStats.new(skip_count: 0, warning_count: 0, error_count: 0)
+
+      setup
     end
 
     def execute
@@ -82,15 +97,22 @@ module Migrations::Importer
 
     private
 
+    # Override in subclasses if necessary
+    def setup
+    end
+
     def load_required_data
+      required_shared_data = self.class.required_shared_data
       required_mappings = self.class.required_mappings
       required_sets = self.class.required_sets
-      return if required_mappings.blank? && required_sets.blank?
+      return if required_shared_data.empty? && required_mappings.blank? && required_sets.blank?
 
       print "    #{I18n.t("importer.loading_required_data")} "
 
       runtime =
         ::Migrations::DateHelper.track_time do
+          required_shared_data.each { |name| instance_variable_set("@#{name}", @shared_data[name]) }
+
           required_mappings.each do |name, sql|
             instance_variable_set("@#{name}", @shared_data.load_mapping(sql))
           end

@@ -56,7 +56,7 @@ describe Jobs::ProcessLocalizedCooked do
     }
   end
 
-  it "publishes MessageBus notification when cooked changes" do
+  it "publishes MessageBus notification" do
     processed_html = "<p>これはテスト投稿です。</p><div class='onebox'>Processed</div>"
     LocalizedCookedPostProcessor.any_instance.expects(:html).returns(processed_html)
 
@@ -68,17 +68,6 @@ describe Jobs::ProcessLocalizedCooked do
     expect(messages.length).to eq(1)
     expect(messages.first.data[:type]).to eq(:localized)
     expect(messages.first.data[:id]).to eq(post.id)
-  end
-
-  it "does not publish MessageBus notification when cooked unchanged" do
-    LocalizedCookedPostProcessor.any_instance.expects(:html).returns(post_localization.cooked)
-
-    messages =
-      MessageBus.track_publish("/topic/#{post.topic_id}") do
-        job.execute(post_localization_id: post_localization.id)
-      end
-
-    expect(messages.length).to eq(0)
   end
 
   it "processes oneboxes and images" do
@@ -101,5 +90,52 @@ describe Jobs::ProcessLocalizedCooked do
 
     post_localization.reload
     expect(post_localization.cooked).to include("onebox")
+  end
+
+  describe "topic localization excerpt" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:first_post_localization) do
+      Fabricate(
+        :post_localization,
+        post: first_post,
+        locale: "ja",
+        raw: "これは最初の投稿です。",
+        cooked: "<p>これは最初の投稿です。</p>",
+      )
+    end
+    fab!(:topic_localization) do
+      Fabricate(:topic_localization, topic: topic, locale: "ja", title: "日本語タイトル")
+    end
+
+    it "updates topic localization excerpt when processing first post" do
+      job.execute(post_localization_id: first_post_localization.id)
+
+      topic_localization.reload
+      expect(topic_localization.excerpt).to eq("これは最初の投稿です。")
+    end
+
+    it "does not update excerpt when processing non-first post" do
+      second_post = Fabricate(:post, topic: topic, post_number: 2)
+      second_post_localization =
+        Fabricate(
+          :post_localization,
+          post: second_post,
+          locale: "ja",
+          raw: "これは2番目の投稿です。",
+          cooked: "<p>これは2番目の投稿です。</p>",
+        )
+
+      job.execute(post_localization_id: second_post_localization.id)
+
+      topic_localization.reload
+      expect(topic_localization.excerpt).to be_nil
+    end
+
+    it "does not error when topic localization does not exist" do
+      topic_localization.destroy!
+
+      expect { job.execute(post_localization_id: first_post_localization.id) }.not_to raise_error
+    end
   end
 end

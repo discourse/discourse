@@ -214,7 +214,7 @@ be:
       el:
         name: Грэчаская
       en:
-        name: Англійская (ЗША)
+        name: Англійская
       en_GB:
         name: Англійская (Вялікабрытанія)
       es:
@@ -313,13 +313,12 @@ be:
     software_update_prompt:
       message: "Мы абнавілі гэты сайт, <span>абнавіце старонку</span> , каб усё працавала без праблем."
       dismiss: "Адхіліць"
-    bootstrap_mode: "Пачатак працы"
     back_button: "Назад"
     welcome_banner:
       header:
         logged_in_members: "З вяртаннем, %{preferred_display_name}!"
         anonymous_members: "Вітаем у %{site_name}!"
-      search: "Пошук"
+      search_placeholder: "Пошук"
     impersonation:
       notice: "Вы выдаеце сябе за %{username}"
       stop: "Перастаньце выдаваць сябе за іншую асобу"
@@ -370,7 +369,7 @@ be:
     joined: "Далучыўся(-лася)"
     admin_title: "Адміністратар"
     show_more: "паказаць больш"
-    show_help: "параметры"
+    show_help: "Налады"
     links: "Спасылкі"
     links_lowercase:
       one: "спасылка"
@@ -586,6 +585,7 @@ be:
       other: "Паглядзець %{count} новых тэм"
     preview: "Перадпрагляд"
     cancel: "Скасаваць"
+    done: "Выканана"
     deleting: "Выдаленне…"
     save: "Захаваць змены"
     saving: "Захаванне…"
@@ -643,7 +643,6 @@ be:
       moderation_history: "Гісторыя мадэрацыі"
       title: "Разгляд"
       topic: "Тэма:"
-      filtered_user: "Карыстальнік"
       show_all_topics: "паказаць усе тэмы"
       user:
         username: "Імя карыстальніка"
@@ -658,7 +657,6 @@ be:
         reviewable_count: "Колькасць"
         deleted: "[Тэма выдалена]"
         details: "падрабязнасці"
-      edit: "Рэдагаваць"
       save: "Захаваць"
       cancel: "Скасаваць"
       filters:
@@ -704,8 +702,12 @@ be:
         reviewable_post:
           title: "Паведамленне"
           noun: "пост"
+        reviewable_ai_post:
+          noun: "пост"
+      user_label: "Карыстальнік"
       notes:
         delete: "выдаляць"
+      topic_label: "Тэма"
       review_user: "карыстальнік"
       insights:
         activities:
@@ -791,8 +793,6 @@ be:
             password: "Пароль"
           settings:
             title: "Налады"
-          mailboxes:
-            disabled: "Адключана"
         membership:
           access: Доступ
         categories:
@@ -886,7 +886,6 @@ be:
         week: "тыдзень"
         month: "месяц"
     ip_lookup:
-      title: Пошук IP-адраса
       hostname: Імя хоста
       location: Месцазнаходжанне
       location_not_found: (невядома)
@@ -1030,59 +1029,59 @@ be:
         confirm_success: "Ваш адрас электроннай пошты быў абноўлены."
       change_avatar:
         letter_based: "Аватар профілю, прызначаны сістэмай"
-        uploaded_avatar: "Іншая выява"
-        uploaded_avatar_empty: "Дадаць малюнак"
-        upload_title: "Загрузіць свой малюнак"
+        uploaded_avatar: "Уласны відарыс"
+        uploaded_avatar_empty: "Дадаць відарыс"
+        upload_title: "Запампаваць свой відарыс"
       change_card_background:
-        title: "Фон вашай візітоўкі"
+        title: "Фон карткі карыстальніка"
       email:
         title: "Электронная пошта"
-        primary_label: "асноўнай"
+        primary_label: "асноўны"
         resent_label: "Ліст адпраўлены"
-        update_email: "Змяненне адрасы электроннай пошты"
-        invalid: "Калі ласка, увядзіце верны email"
+        update_email: "Змяніць email"
+        invalid: "Увядзіце правільны адрас электроннай пошты"
       associated_accounts:
-        title: "Асацыяваныя аккаўнты"
-        revoke: "ануляваць"
-        cancel: "адмяніць"
+        title: "Звязаныя ўліковыя запісы"
+        revoke: "Адклікаць"
+        cancel: "Скасаваць"
       activate_account:
-        action: "Націсніце тут, каб актываваць свой рахунак"
-        already_done: "ня На жаль, гэтая спасылка для пацверджання акаўнта больш не дзейнічае. Магчыма, ваш уліковы запіс ўжо актываваная?"
+        action: "Націсніце тут, каб актываваць уліковы запіс"
+        already_done: "Гэта спасылка для пацвярджэння ўліковага запісу больш не дзейнічае. Магчыма, ваш уліковы запіс ўжо актыўны?"
         please_continue: "Ваш новы рахунак пацвярджаецца; Вы будзеце перанакіраваны на галоўную старонку."
-        welcome_to: "Сардэчна запрашаем да сайта %{site_name}!"
-        approval_required: "Мадэратар павінен ўручную зацвердзіць новы ўліковы запіс, перш чым гэты форум. Вы атрымаеце па электроннай пошце, калі ваш рахунак будзе ўхвалены!"
+        welcome_to: "Вітае на %{site_name}!"
+        approval_required: "Мадэратар павінен уручную зацвердзіць ваш новы ўліковы запіс, перш чым вы зможаце атрымаць доступ да гэтага форуму. Вы атрымаеце ліст, калі ваш уліковы запіс будзе зацверджаны!"
       name:
         title: "Імя"
-        instructions_required: "Ваша поўнае імя"
-        too_short: "Ваша імя занадта кароткае"
-        ok: "Ваша імя выглядае добра"
+        instructions_required: "Поўнае імя"
+        too_short: "Імя занадта кароткае"
+        ok: "Імя выглядае добра"
       username:
         title: "Імя карыстальніка"
         available: "Ваша імя даступна"
-        not_available: "Не даступна. Паспрабуеце %{suggestion}?"
-        too_short: "Ваша імя кароткі"
-        too_long: "Ваша імя доўгае"
+        not_available: "Недаступна. Паспрабуеце %{suggestion}?"
+        too_short: "Імя карыстальніка занадта кароткае"
+        too_long: "Імя карыстальніка занадта доўгае"
       locale:
         title: "Мова інтэрфейсу"
-        default: "(Default)"
-        any: "любой"
+        default: "(Прадвызначаная)"
+        any: "любая"
       homepage:
-        default: "(Default)"
+        default: "(Прадвызначаная)"
       password_confirmation:
         title: "Пароль яшчэ раз"
       auth_tokens:
-        details: "дэталі"
-        log_out_all: "Выйсці паўсюль"
-      last_posted: "Апошняе паведамленне"
-      last_seen: "заўважаны апошні раз"
-      created: "Далучыўся (лася)"
+        details: "Падрабязнасці"
+        log_out_all: "Выйсці адусюль"
+      last_posted: "Апошні допіс"
+      last_seen: "Быў(-ла)"
+      created: "Далучыўся(-лася)"
       log_out: "Выйсці"
-      location: "месцазнаходжанне"
-      website: "вэбсайт"
+      location: "Месцазнаходжанне"
+      website: "Вэб-сайт"
       email_settings: "Электронная пошта"
       like_notification_frequency:
-        always: "заўсёды"
-        never: "ніколі"
+        always: "Заўсёды"
+        never: "Ніколі"
       email_previous_replies:
         always: "заўсёды"
         never: "ніколі"
@@ -1107,121 +1106,121 @@ be:
         after_2_days: "створаны за апошнія 2 дні"
         after_1_week: "створаны за апошні тыдзень"
         after_2_weeks: "створаны за апошнія 2 тыдні"
-      auto_track_topics: "Аўтаматычна сачыць за тэмамі, я наведаў"
+      auto_track_topics: "Аўтаматычна сачыць за тэмамі, што я наведаў"
       auto_track_options:
         never: "ніколі"
         immediately: "неадкладна"
-        after_30_seconds: "пасля 30 секунд"
-        after_1_minute: "пасля 1 хвіліны"
-        after_2_minutes: "пасля 2 хвілін"
-        after_3_minutes: "пасля 3 хвілін"
-        after_4_minutes: "пасля 4 хвілін"
-        after_5_minutes: "пасля 5 хвілін"
-        after_10_minutes: "пасля 10 хвілін"
+        after_30_seconds: "праз 30 секунд"
+        after_1_minute: "праз 1 хвіліну"
+        after_2_minutes: "праз 2 хвіліны"
+        after_3_minutes: "праз 3 хвіліны"
+        after_4_minutes: "праз 4 хвіліны"
+        after_5_minutes: "праз 5 хвілін"
+        after_10_minutes: "праз 10 хвілін"
       invited:
         title: "Запрашэнні"
-        pending_tab: "прынята......"
-        redeemed_tab: "прынята"
+        pending_tab: "У чаканні"
+        redeemed_tab: "Прынятыя"
         groups: "Групы"
         topic: "Тэма"
         edit: "Рэдагаваць"
-        remove: "выдаліць"
-        user: "запрошаны карыстальнік"
-        redeemed: "Адазваныя запрашэнні"
-        redeemed_at: "прынята"
-        pending: "Няпрынятые запрашэнні"
-        topics_entered: "Тэмаў прагледжана"
-        posts_read_count: "прачытана паведамленняў"
-        expired: "Тэрмін дзеяння гэтага запрашэння мінуў."
-        time_read: "час чытання"
-        days_visited: "дзён наведанае"
-        account_age_days: "Ўзрост акаўнта ў днях"
+        remove: "Выдаліць"
+        user: "Запрошаны карыстальнік"
+        redeemed: "Прынятыя запрашэнні"
+        redeemed_at: "Прынята"
+        pending: "Запрашэнні ў чаканні"
+        topics_entered: "Тэм прагледжана"
+        posts_read_count: "Допісаў прачытана"
+        expired: "Тэрмін дзеяння гэтага запрашэння скончыўся."
+        time_read: "Час чытання"
+        days_visited: "Дзён наведвання"
+        account_age_days: "Узрост уліковага запісу ў днях"
         invite:
           description: "Апісанне"
-          cancel: "адмяніць"
+          cancel: "Скасаваць"
       password:
         title: "Пароль"
-        common: "Гэты пароль занадта просты."
-        same_as_username: "Гэты пароль занадта просты...."
-        same_as_email: "Пароль ідэнтычны Вашаму email"
-        ok: "Пароль добры."
+        common: "Гэты пароль занадта папулярны."
+        same_as_username: "Пароль супадае з імем карыстальніка."
+        same_as_email: "Пароль супадае з электроннай поштай."
+        ok: "Пароль выглядае добра."
       summary:
-        title: "Рэзюмэ"
-        stats: "статыстыка"
-        time_read: "пры чытанні"
+        title: "Зводка"
+        stats: "Статыстыка"
+        time_read: "час чытання"
         topic_count:
           one: "тэма створана"
-          few: "тэмаў створана"
-          many: "тэмаў створана"
-          other: "тэмаў створана"
+          few: "тэмы створаны"
+          many: "тэм створана"
+          other: "тэм створана"
         likes_received:
           one: "атрымана"
           few: "атрымана"
           many: "атрымана"
           other: "атрымана"
         bookmark_count:
-          one: "абранае"
+          one: "закладка"
           few: "закладкі"
-          many: "закладкі"
-          other: "закладкі"
-        more_topics: "Больш тэмаў"
-        top_categories: "ТОП катэгорый"
+          many: "закладак"
+          other: "закладак"
+        more_topics: "Больш тэм"
+        top_categories: "Топ катэгорый"
         topics: "Тэмы"
         replies: "Адказы"
       ip_address:
-        title: "Апошні IP адрас"
+        title: "Апошні IP-адрас"
       registration_ip_address:
-        title: "IP Адрас Рэгістрацыі"
+        title: "IP-адрас рэгістрацыі"
       avatar:
-        title: "Выява профілю"
+        title: "Аватар профілю"
       title:
-        title: "Назва"
+        title: "Загаловак"
       filters:
-        all: "усе"
+        all: "Усе"
       stream:
-        posted_by: "апублікавана"
-        sent_by: "адпраўлена"
+        posted_by: "Апублікавана"
+        sent_by: "Адпраўлена"
         private_message: "паведамленне"
         the_topic: "тэма"
     user_status:
       save: "Захаваць"
     errors:
       reasons:
-        network: "памылка Сеткі"
-        server: "серверная памылка"
-        forbidden: "няма доступу"
-        unknown: "памылка"
+        network: "Памылка сеткі"
+        server: "Памылка сервера"
+        forbidden: "Доступ забаронены"
+        unknown: "Памылка"
       desc:
-        network: "Калі ласка, праверце злучэння."
+        network: "Праверце злучэнне."
         server: "Код памылкі: %{status}"
-        forbidden: "Выбачайце, але гэта пераглядаць."
+        forbidden: "У вас няма дазволу на прагляд."
         unknown: "Нешта пайшло не так."
       buttons:
-        back: "вярнуцца"
+        back: "Вярнуцца"
         again: "Паспрабаваць яшчэ раз"
-        fixed: "загрузка Старонкі"
+        fixed: "Загрузіць старонку"
     modal:
-      close: "схаваць"
+      close: "закрыць"
     form_kit:
-      reset: скінуць
+      reset: Скінуць
       errors:
-        required: "абавязковыя"
-    close: "зачыніць"
-    refresh: "абнавіць"
-    home: "дома"
+        required: "Абавязковае"
+    close: "Закрыць"
+    refresh: "Абнавіць"
+    home: "Галоўная старонка"
     read_only_mode:
-      login_disabled: "Login is disabled while the site is in read only mode."
-    mute: Mute
-    unmute: Unmute
-    time_read: прачытаныя
+      login_disabled: "Уваход забаронены, пакуль сайт знаходзіцца ў рэжыме толькі для чытання."
+    mute: Адключыць гук
+    unmute: Уключыць гук
+    time_read: Прачытана
     last_reply_lowercase: апошні адказ
     replies_lowercase:
-      one: адказаць
+      one: адказ
       few: адказы
-      many: адказы
-      other: адказы
+      many: адказаў
+      other: адказаў
     signup_cta:
-      sign_up: "рэгістрацыя"
+      sign_up: "Зарэгістравацца"
       hide_forever: "няма дзякуй"
     summary:
       buttons:
@@ -1344,15 +1343,19 @@ be:
       upload_title: "спампаваць"
       upload_description: "увядзіце апісанне загрузкі"
       list_item: "элемент спісу"
+      wrap_modal:
+        apply: "Ужыць"
       help: "Markdown Editing Help"
       modal_ok: "Добра"
       admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
-        create_topic:
-          label: "Стварыць новую тэму"
+        create_personal_message:
+          label: "Новае паведамленне"
+          desc: "Напісаць новае асабістае паведамленне"
       ignore: "ігнараваць"
+      image: "малюнак"
     notifications:
       watching_first_post_label: "Стварыць новую тэму"
       admin_problems: "Новыя рэкамендацыі на вашым сайце прыборнай панэлі"
@@ -1424,6 +1427,11 @@ be:
       bulk:
         select_all: "выбраць усе"
         delete: "Выдаліць тэмы"
+        delete_topics_count:
+          one: "Выдаліць тэму"
+          few: "Выдаліць тэмы"
+          many: "Выдаліць тэмы"
+          other: "Выдаліць тэмы"
         dismiss_read: "Пазначыць усе як прачытаныя"
         dismiss_new: "Dismiss New"
         toggle: "перамыкач масавай дзеянні над тэмамі"
@@ -1439,16 +1447,6 @@ be:
         bookmarks: "У вас пакуль няма тэмаў у закладках."
         category: "У катэгорыі %{category} няма тэм."
         top: "There are no top topics."
-      bottom:
-        latest: "Усе апошнія тэмы адлюстраваныя."
-        posted: "There are no more posted topics."
-        read: "Больш няма прачытаных тэм."
-        new: "Больш няма новых тэм."
-        unread: "Больш няма непрачытаных тэм."
-        category: "Больш няма тым у катэгорыі %{category}."
-        tag: "Больш няма тым у катэгорыі %{tag}."
-        top: "There are no more top topics."
-        bookmarks: "Тэмы ў закладках адсутнічаюць."
     topic_bulk_actions:
       close_topics:
         name: "зачыніць"
@@ -1460,7 +1458,6 @@ be:
         name: "выдаляць"
     topic:
       create: "пачаць новую тэму"
-      create_long: "Стварыць новую тэму"
       archive_message:
         title: "архіў"
       move_to_inbox:
@@ -1636,13 +1633,9 @@ be:
         remove: "выдаліць"
       required_tag_group:
         delete: "Выдаліць"
-      delete: "выдаліць катэгорыю"
-      create: "Новая катэгорыя"
       create_long: "стварыць катэгорыю"
-      save: "захаваць катэгорыю"
       creation_error: Пры стварэнні катэгорыі адбылася памылка.
       save_error: У выпадку захавання катэгорыі адбылася памылка.
-      name: "Назва катэгорыі"
       description: "апісанне"
       background_color: "колер"
       color_validations:
@@ -1657,8 +1650,6 @@ be:
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
-      list: "Спіс катэгорыяў"
-      change_in_category_topic: "рэдагаваць апісанне"
       already_used: "Гэты колер ўжо выкарыстоўваецца іншы катэгорыяй"
       security: "Бяспека"
       permissions:
@@ -1669,11 +1660,8 @@ be:
       images: "Выява"
       email_in: "Custom incoming email address:"
       allow_badges_label: "Дазволіць ўзнагароджваць значкамі ў гэтай катэгорыі"
-      edit_permissions: "рэдагаваць дазволу"
       review_group_name: "назва групы"
       this_year: "гэтага года"
-      default_position: "Default Position"
-      parent: "бацькоўская катэгорыя"
       notifications:
         watching:
           title: "сачыць"
@@ -1771,7 +1759,7 @@ be:
       top:
         title: "Топ тэмаў"
         all:
-          title: "Top..."
+          title: "За ўвесь час"
         yearly:
           title: "штогод"
         quarterly:
@@ -1782,7 +1770,7 @@ be:
           title: "штотыдзень"
         daily:
           title: "штодня"
-        all_time: "ўвесь час"
+        all_time: "За ўвесь час"
         this_year: "год"
         this_quarter: "квартал"
         this_month: "месяц"
@@ -1794,7 +1782,7 @@ be:
       readonly: "бачыць"
     preloader_text: "загрузка"
     lightbox:
-      download: "загрузіць"
+      download: "спампаваць"
     keyboard_shortcuts_help:
       title: "Спалучэнні клавіш"
       jump_to:
@@ -1805,7 +1793,6 @@ be:
         open: "<B> o <"
       application:
         title: "дадатак"
-        create: "<B> c <"
         notifications: "%{shortcut}Адкрытыя абвесткі "
         log_out: "%{shortcut}Выйсці"
       actions:
@@ -1845,6 +1832,7 @@ be:
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
+      bulk_create_button: "стварыць"
       notifications:
         watching:
           title: "Сачыць"
@@ -1853,7 +1841,6 @@ be:
         muted:
           title: "ігнараваць"
       groups:
-        new: "Новая група"
         name_placeholder: "Імя"
         save: "Захаваць"
         delete: "выдаліць"
@@ -1968,6 +1955,7 @@ be:
         categories: "Усе катэгорыі"
   admin_js:
     settings: "Налады"
+    reset_filter: "Скінуць"
     admin:
       moderator: "Мадэратар"
       tags:
@@ -1989,6 +1977,19 @@ be:
           title: "Бяспека"
         plugins:
           title: "Плагіны"
+      upcoming_changes:
+        name: "Імя"
+        preview: "Папярэдні прагляд"
+        enabled_for_options:
+          everyone: "усе"
+        impact_roles:
+          admins: "адміністратары"
+          moderators: "Мадэратары"
+          staff: "персанал"
+        filter:
+          all: "Усе"
+          disabled: "Адключана"
+          impact_type_other: "Іншае"
       config:
         developer:
           title: "для распрацоўшчыкаў"
@@ -2013,6 +2014,14 @@ be:
         fonts:
           backfill_modal:
             modal_yes: "ды"
+        welcome_banner:
+          form:
+            location:
+              label: "Месцазнаходжанне"
+            header_logged_in:
+              placeholder: "З вяртаннем, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Вітае на %{site_name}!"
         navigation:
           title: "рух"
         notifications:
@@ -2777,6 +2786,8 @@ be:
         grant: Выдаць
         no_user_badges: " %{Name} не атрымліваў ні аднаго."
         no_badges: Тут няма значкоў, якія могуць быць прадастаўлены.
+        sections:
+          settings: Налады
         allow_title: Дазволіць выкарыстанне значкоў як званняў
         disabled: адключана
         icon: Абразка
@@ -2837,39 +2848,3 @@ be:
         modal:
           categories: "Катэгорыі"
           topics: "тэмы"
-  wizard_js:
-    wizard:
-      back: "Назад"
-      next: "Далей"
-      upload_error: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
-      invites:
-        add_user: "дадаць"
-        roles:
-          admin: "Адміністратар"
-          moderator: "Мадэратар"
-          regular: "звычайны карыстальнік"
-      homepage_choices:
-        style_type:
-          categories: "катэгорыя"
-          topics: "тэма"
-      top_menu_items:
-        new: "Новыя"
-        unread: "Непрачытаныя"
-        top: "Топ тэмаў"
-        latest: "апошняя"
-        categories: "катэгорыі"
-        read: "прачытаныя"
-        bookmarks: "закладкі"
-      previews:
-        share_button: "Падзяліцца"
-        reply_button: "Адказаць"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "усе катэгорыі"
-        category_names:
-          site_feedback: "зваротная сувязь"
-        table_headers:
-          topic: "тэма"
-          replies: "Адказы"
-          views: "прагляды"
-          activity: "актыўнасць"

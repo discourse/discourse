@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import AdminFilterControls from "admin/components/admin-filter-controls";
 import ThemesGridCard from "./themes-grid-card";
 
 const FILTER_MINIMUM = 8;
@@ -12,7 +12,7 @@ const FILTER_MINIMUM = 8;
 export default class ThemesGrid extends Component {
   @cached
   get sortedThemes() {
-    return this.args.themes.sort((a, b) => {
+    return this.args.themes.toSorted((a, b) => {
       if (a.get("default")) {
         return -1;
       } else if (b.get("default")) {

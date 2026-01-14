@@ -6,9 +6,9 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import DMenus from "float-kit/components/d-menus";
 
 module(
   "Integration | Component | discovery | FilterNavigationMenu",

@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 uk:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: Покази власних оголошень Adplugin
+      description: "Звіт про покази власних оголошень"
+    ad_plugin_ad_impressions:
+      title: Покази реклами Adplagin
+      description: "Звіт про покази оголошень"
+    ad_plugin_impressions_by_user:
+      title: Покази реклами по користувачам
+      description: "Покази оголошень згруповані за користувачами"
+    ad_plugin_click_through_rate:
+      title: Ефективність конверсії плагінів реклами
+      description: "Звіт про ефективність реклами за оголошенням та місцем розташування"
+    ad_plugin_click_through_rate_by_placement:
+      title: Продуктивність плагінів реклами за місцем розташування
+      description: "Звіт про ефективність оголошень за місцями розташування"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: Ефективність плагінів реклами за типом реклами
+      description: "Звіт про ефективність реклами за типом реклами"
+  errors:
+    already_clicked: "Клік вже записано"
   site_settings:
     discourse_adplugin_enabled: Увімкнути Discourse Adplugin
     no_ads_for_personal_messages: "Не показуйте оголошення під час перегляду особистих повідомлень"
@@ -16,6 +37,7 @@ uk:
     house_ads_after_nth_post: 'Якщо визначено власні оголошення ''Між дописами'', показуйте оголошення після кожного N допису, де N - це значення.'
     house_ads_frequency: "Якщо в інших рекламних мережах налаштовано показ рекламного місця, як часто слід розміщувати рекламу у відсотках."
     ads_txt: "Вміст вашого файлу ads.txt. Більше деталей доступно на <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>цій сторінці довідки Google AdSense</a>."
+    ad_plugin_routes_enabled: "Увімкнути таргетинг маршруту для власних оголошень"
     dfp_publisher_id: "Введіть мережевий код Google Ad Manager (раніше відомий як DFP), який можна знайти в налаштуваннях мережі. ЗАУВАЖТЕ: Вам доведеться оновити налаштування 'content security policy script src'. Див. <a href='https://meta.discourse.org/t/33734' target='_blank'>це обговорення</a> для подальших інструкцій."
     dfp_publisher_id_mobile: "(Необов’язково) Якщо ви хочете використовувати інший ідентифікатор видавця Ad Manager для мобільної версії сайту, введіть його тут. Залиште порожнім, щоб використовувати dfp_publisher_id на мобільному пристрої."
     dfp_through_trust_level: "Показуйте свої оголошення користувачам на основі рівня довіри. Користувачі із рівнем довіри, що перевищує цю величину, не побачать рекламу."

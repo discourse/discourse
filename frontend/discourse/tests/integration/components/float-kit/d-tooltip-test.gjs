@@ -1,5 +1,6 @@
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
   click,
   render,
@@ -7,11 +8,11 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DDefaultToast from "discourse/float-kit/components/d-default-toast";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
+import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DDefaultToast from "float-kit/components/d-default-toast";
-import DTooltip from "float-kit/components/d-tooltip";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   setupRenderingTest(hooks);
@@ -352,5 +353,35 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await leave();
 
     assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("@portalOutletElement", async function (assert) {
+    this.set("portalOutletElement", null);
+    this.setPortalOutletElement = (element) => {
+      this.set("portalOutletElement", element);
+    };
+
+    await render(
+      <template>
+        <div
+          id="custom-tooltip-portal"
+          {{didInsert this.setPortalOutletElement}}
+        ></div>
+        {{#if this.portalOutletElement}}
+          <DTooltip
+            @inline={{false}}
+            @label="label"
+            @content="content"
+            @portalOutletElement={{this.portalOutletElement}}
+          />
+        {{/if}}
+      </template>
+    );
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom("#custom-tooltip-portal .fk-d-tooltip__content")
+      .exists("tooltip renders in custom portal outlet");
   });
 });

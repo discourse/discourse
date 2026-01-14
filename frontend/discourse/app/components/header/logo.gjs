@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { and, eq, notEq } from "truth-helpers";
 import getURL from "discourse/lib/get-url";
+import { and, eq, notEq } from "discourse/truth-helpers";
 
 export default class Logo extends Component {
   @service interfaceColor;

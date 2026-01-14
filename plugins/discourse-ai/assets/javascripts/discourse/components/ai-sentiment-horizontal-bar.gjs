@@ -1,8 +1,8 @@
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
-import { gt } from "truth-helpers";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 
 const AiSentimentHorizontalBar = <template>
   {{#if (gt @score 0)}}

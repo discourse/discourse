@@ -7,7 +7,7 @@ export default class AdminPluginsChatIntegrationProvider extends DiscourseRoute 
   async model(params) {
     const [channels, provider, groups] = await Promise.all([
       this.store.findAll("channel", { provider: params.provider }),
-      this.modelFor("admin-plugins.chat-integration").find(
+      this.modelFor("admin-plugins.chat-integration").content.find(
         (item) => item.id === params.provider
       ),
       Group.findAll(),
@@ -15,7 +15,8 @@ export default class AdminPluginsChatIntegrationProvider extends DiscourseRoute 
 
     const enabledFilters =
       getOwner(this).lookup("model:rule").possible_filters_id;
-    channels.forEach((channel) => {
+
+    channels.content.forEach((channel) => {
       channel.set(
         "rules",
         channel.rules

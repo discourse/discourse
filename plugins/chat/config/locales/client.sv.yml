@@ -73,6 +73,7 @@ sv:
         join_channel: "Gå med i kanal"
         leave_channel: "Lämna kanal"
         leave_groupchat_info: "Genom att lämna den här gruppchatten har du inte längre tillgång till den och kommer inte att få aviseringar relaterade till den. För att gå med igen måste du bjudas in igen av en medlem av gruppchatten."
+        notification_settings_context: "Aviseringar"
         join: "Gå med"
         leave: "Lämna"
         save_label:
@@ -120,7 +121,6 @@ sv:
       email_frequency:
         description: "Vi skickar bara e-post till dig om vi inte har sett dig under de senaste 15 minuterna."
         never: "Aldrig"
-        title: "E-postaviseringar"
         when_away: "Endast när du är borta"
       header_indicator_preference:
         title: "Visa aktivitetsindikator i sidhuvudet"
@@ -219,12 +219,11 @@ sv:
         composer: "Chattkompositör"
         channels_list: "Lista över chattkanaler"
       kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
+      chat_notifications_title: "Chattaviseringar"
       only_chat_push_notifications:
         title: "Skicka bara push-meddelanden för chatt"
-        description: "Blockera alla push-meddelanden som inte är chattmeddelanden från att skickas"
       ignore_channel_wide_mention:
         title: "Ignorera omnämnanden i hela kanalen"
-        description: "Skicka inte meddelanden för kanalövergripande omnämnanden (@here och @all)."
       open: "Öppna chatt"
       open_full_page: "Öppna chatt i helskärmsläge"
       close_full_page: "Stäng helskärmschatt"
@@ -301,6 +300,8 @@ sv:
       chat_message_separator:
         today: Idag
         yesterday: Igår
+      search_view:
+        filter_placeholder: Sök meddelanden
       members_view:
         filter_placeholder: Hitta medlemmar
         add_member: Lägg till medlem
@@ -317,6 +318,7 @@ sv:
         tabs:
           members: Medlemmar
           settings: Inställningar
+          search: Sök
         remove_member: "Ta bort"
       new_message_modal:
         title: Skicka meddelande
@@ -408,6 +410,7 @@ sv:
           topic: "Ämne"
       reviewable:
         type: "Chatt meddelande"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Du reagerade med </span>:%{emoji}:"
         you_and_single_user: "<span>Du och %{username} reagerade med </span>:%{emoji}:"
@@ -468,6 +471,12 @@ sv:
           description: "Detta exporterar alla meddelanden från alla kanaler."
           create_export: "Skapa export"
           export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
+      search:
+        short_title: Sök
+        no_results: "Inga resultat hittades"
+        sort:
+          relevance: "Relevans"
+          latest: "Senaste"
       my_threads:
         title: Mina trådar
         aria_label: "Byt till min trådlista"

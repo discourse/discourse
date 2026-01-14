@@ -191,7 +191,7 @@ acceptance("Theme", function (needs) {
   test("can continue installation", async function (assert) {
     await visit("/admin/config/customize/themes");
 
-    await click(".theme-card .btn-secondary");
+    await click(".theme-card .btn-default");
     assert
       .dom(".control-unit .status-message")
       .includesText(

@@ -7,6 +7,7 @@ Fabricator(:user, class_name: :user) do
   transient trust_level: nil
   transient search_index: false
   transient composition_mode: UserOption.composition_mode_types[:markdown]
+  transient seen_before: false
 
   name "Bruce Wayne"
   username { sequence(:username) { |i| "bruce#{i}" } }
@@ -28,6 +29,10 @@ Fabricator(:user, class_name: :user) do
     # of specs failing when setting SiteSetting.rich_editor default to true and SiteSetting.default_composition_mode
     # default to rich
     user.user_option.update!(composition_mode: transients[:composition_mode])
+
+    if transients[:seen_before]
+      user.update!(last_seen_at: 2.days.ago, previous_visit_at: 2.days.ago)
+    end
   end
 
   before_create { |user, transients| SearchIndexer.enable if transients[:search_index] }

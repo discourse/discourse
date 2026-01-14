@@ -1,5 +1,3 @@
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class UserDeletedPosts extends DiscourseRoute {
@@ -18,11 +16,5 @@ export default class UserDeletedPosts extends DiscourseRoute {
     super.setupController(...arguments);
 
     model.set("canLoadMore", model.itemsLoaded === 60);
-
-    model.content.forEach((item) => {
-      if (item.title) {
-        item.set("titleHtml", emojiUnescape(escapeExpression(item.title)));
-      }
-    });
   }
 }

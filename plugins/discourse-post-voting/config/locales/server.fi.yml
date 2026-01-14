@@ -30,11 +30,40 @@ fi:
     post_voting_enable_likes_on_answers: "Ota käyttöön tykkäyspainike viestiäänestysketjujen vastauksissa"
     post_voting_undo_vote_action_window: "Minuuttien määrä, joiden aikana käyttäjät voivat perua ääniä viestiäänestysketjuissa (poista raja käytöstä syöttämällä 0)"
     post_voting_comment_limit_per_post: "Kussakin viestissä sallittavien kommenttien määrä"
-    min_trust_to_flag_posts_voting_comments: "Vähimmäisluottamustaso viestin äänestyskommentin liputtamiseen"
     flag_posts_voting_comments_allowed_groups: "Ryhmät, jotka voivat liputtaa viestin äänestyskommentin"
     post_voting_comment_enabled: "Ota viestin kommentit käyttöön viestiäänestysketjuissa"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Ei toimintaa"
+        agree_and_keep_comment:
+          title: "Pidä kommentti"
+          description: "Hyväksy liputus ja pidä kommentti ennallaan."
+        agree_and_keep_deleted:
+          title: "Pidä kommentti poistettuna"
+          description: "Hyväksy liputus ja pidä kommentti poistettuna."
+        agree_and_restore:
+          title: "Palauta kommentti"
+          description: "Palauta kommentti, jotta käyttäjät näkevät sen."
+        agree_and_delete:
+          title: "Poista kommentti"
+          description: "Poista kommentti, jotta käyttäjät eivät näe sitä."
+        agree_and_suspend:
+          title: "Jäädytä käyttäjä"
+          description: "Hyväksy liputus ja aseta käyttäjä käyttökieltoon."
+        agree_and_silence:
+          title: "Hiljennä käyttäjä"
+          description: "Hyväksy liputus ja hiljennä käyttäjä."
+        disagree_and_restore:
+          title: "Hylkää ja palauta kommentti"
+          description: "Palauta kommentti, jotta kaikki käyttäjät näkevät sen."
+        disagree:
+          title: "Pidä kommentti"
+        ignore:
+          title: "Sivuuta lippu"
+        delete_and_agree:
+          description: "Ohita lippu poistamalla se jonosta ja poista kommentti."
   post_action_types:
     vote:
       title: "Äänestä"
@@ -82,16 +111,14 @@ fi:
             title: "Poista kommentti"
             description: "Poista kommentti, jotta käyttäjät eivät näe sitä."
           delete_and_agree:
-            title: "Ohita liputus ja poista kommentti"
             description: "Ohita lippu poistamalla se jonosta ja poista kommentti."
           disagree_and_restore:
             title: "Hylkää ja palauta kommentti"
             description: "Palauta kommentti, jotta kaikki käyttäjät näkevät sen."
           disagree:
-            title: "Hylkää"
+            title: "Pidä kommentti"
           ignore:
-            title: "Älä tee mitään"
-            description: "Ohita lippu poistamalla se jonosta tekemättä toimia."
+            title: "Sivuuta lippu"
         transcript:
           view: "Näytä aiempien kommenttien transkriptio"
       reviewable_score_types:

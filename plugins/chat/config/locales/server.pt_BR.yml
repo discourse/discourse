@@ -106,6 +106,10 @@ pt_BR:
     reviewables:
       message_already_handled: "Obrigado, mas já analisamos esta mensagem e determinamos que ela não precisa ser sinalizada novamente."
       actions:
+        no_action_message:
+          title: "Sem ação"
+        restore_message:
+          description: "Restaure a mensagem para que os(as) usuários(as) possam vê-las."
         agree:
           title: "Concordo..."
         agree_and_keep_message:
@@ -127,16 +131,12 @@ pt_BR:
           title: "Excluir mensagem"
           description: "Exclua a mensagem para que os(as) usuários(as) não possam vê-las."
         delete_and_agree:
-          title: "Ignorar sinalizador e excluir mensagem"
           description: "Ignore o sinalizador ao removê-lo da fila e exclua a mensagem."
         disagree_and_restore:
           title: "Não concordar e restaurar mensagem"
           description: "Restaure a mensagem para que todos(as) os(as) usuários(as) possam vê-las."
-        disagree:
-          title: "Discordar"
         ignore:
-          title: "Não fazer nada"
-          description: "Ignore o sinalizador ao removê-lo da fila sem realizar nenhuma ação."
+          title: "Ignorar sinalizações"
       direct_messages:
         transcript_title: "Transcrição de mensagens anteriores em %{channel_name}"
         transcript_body: "Para fornecer mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"
@@ -184,7 +184,7 @@ pt_BR:
         slug_contains_non_ascii_chars: "contém caracteres não ascii"
         is_already_in_use: "já está em uso"
     bookmarkable:
-      notification_title: "mensagem em %{channel_name}"
+      notification_title_channel: "mensagem em %{channel_name}"
     personal_chat: "chat pessoal"
     onebox:
       inline_to_message: "Mensagem #%{message_id} por %{username} – #%{chat_channel}"
@@ -264,10 +264,8 @@ pt_BR:
       view_more:
         one: "Ver mais %{count} mensagem"
         other: "Ver mais %{count} mensagens"
-      your_chat_settings: "preferência de frequência de e-mail do chat"
   unsubscribe:
     chat_summary:
-      select_title: "Defina a frequência de e-mails de resumo do chat para:"
       never: Nunca
       when_away: Só quando estiver ausente
   category:

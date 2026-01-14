@@ -1,9 +1,9 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import uniqueId from "discourse/helpers/unique-id";
 import withEventValue from "discourse/helpers/with-event-value";
+import { eq } from "discourse/truth-helpers";
 
 const radioTitle = <template>
   <span class="form-kit__control-radio-title">{{yield}}</span>

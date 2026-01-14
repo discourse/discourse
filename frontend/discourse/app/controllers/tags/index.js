@@ -1,10 +1,24 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, notEmpty } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import autosize from "autosize";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { optionalRequire } from "discourse/lib/utilities";
 
 export default class TagsIndexController extends Controller {
+  @service router;
+
+  @tracked bulkTagInput = "";
+  @tracked isCreatingTags = false;
+  @tracked bulkCreateResults = null;
+
+  bulkTagTextarea = null;
+
   sortedByCount = true;
   sortedByName = false;
 
@@ -27,6 +41,17 @@ export default class TagsIndexController extends Controller {
 
   get TagsAdminDropdownComponent() {
     return optionalRequire("discourse/admin/components/tags-admin-dropdown");
+  }
+
+  get canCreateTags() {
+    return this.bulkTagInput && this.bulkTagInput.trim().length > 0;
+  }
+
+  get hasFailedTags() {
+    return (
+      this.bulkCreateResults?.failed &&
+      Object.keys(this.bulkCreateResults.failed).length > 0
+    );
   }
 
   @discourseComputed("groupedByCategory", "groupedByTagGroup")
@@ -56,5 +81,56 @@ export default class TagsIndexController extends Controller {
       sortedByCount: false,
       sortedByName: true,
     });
+  }
+
+  @action
+  registerTextarea(element) {
+    this.bulkTagTextarea = element;
+  }
+
+  @action
+  async bulkCreateTags(event) {
+    event?.preventDefault();
+
+    if (!this.bulkTagInput || this.bulkTagInput.trim().length === 0) {
+      return;
+    }
+
+    const tagNames = this.bulkTagInput
+      .split(/[,\n\r]+/)
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+
+    if (tagNames.length === 0) {
+      return;
+    }
+
+    this.isCreatingTags = true;
+
+    try {
+      const response = await ajax("/tags/bulk_create.json", {
+        type: "POST",
+        data: { tag_names: tagNames },
+      });
+
+      this.bulkTagInput = "";
+      this.bulkCreateResults = response;
+
+      schedule("afterRender", () => {
+        if (this.bulkTagTextarea) {
+          autosize.update(this.bulkTagTextarea);
+        }
+      });
+      this.router.refresh();
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.isCreatingTags = false;
+    }
+  }
+
+  @action
+  dismissResults() {
+    this.bulkCreateResults = null;
   }
 }

@@ -12,11 +12,14 @@ module PageObjects
       PREV_BTN = ".pswp__button--arrow--prev"
       DOWNLOAD_BTN = ".pswp__button--download-image"
       ORIGINAL_IMAGE_BTN = ".pswp__button--original-image"
-      COUNTER = ".pswp__counter"
+      IMAGE_INFO_BTN = ".pswp__button--image-info"
+      QUOTE_BTN = ".pswp__button--quote-image"
+      COUNTER = ".pswp__custom-counter"
       CAPTION = ".pswp__caption"
       CAPTION_TITLE = ".pswp__caption-title"
       CAPTION_DETAILS = ".pswp__caption-details"
       UI_VISIBLE = ".pswp--ui-visible"
+      ACTIVE_IMG = ".pswp__item[aria-hidden='false'] .pswp__img"
 
       def initialize
         @component = find(SELECTOR)
@@ -38,8 +41,20 @@ module PageObjects
         component.find(PREV_BTN)
       end
 
+      def image_info_button
+        component.find(IMAGE_INFO_BTN)
+      end
+
+      def quote_button
+        component.find(QUOTE_BTN)
+      end
+
       def close_button
         component.find(CLOSE_BTN)
+      end
+
+      def counter
+        component.find(COUNTER)
       end
 
       def has_counter?(text)
@@ -60,6 +75,10 @@ module PageObjects
 
       def has_no_caption?
         component.has_no_css?(CAPTION)
+      end
+
+      def has_no_caption_details?
+        component.has_no_css?(CAPTION_DETAILS)
       end
 
       def has_next_button?
@@ -94,12 +113,32 @@ module PageObjects
         component.has_no_css?(ORIGINAL_IMAGE_BTN)
       end
 
+      def has_image_info_button?
+        component.has_css?(IMAGE_INFO_BTN)
+      end
+
+      def has_no_image_info_button?
+        component.has_no_css?(IMAGE_INFO_BTN)
+      end
+
+      def has_quote_button?
+        component.has_css?(QUOTE_BTN)
+      end
+
+      def has_no_quote_button?
+        component.has_no_css?(QUOTE_BTN)
+      end
+
       def has_ui_visible?
         page.has_css?(UI_VISIBLE)
       end
 
       def has_no_ui_visible?
         page.has_no_css?(UI_VISIBLE)
+      end
+
+      def has_image_source?(upload)
+        component.has_css?(ACTIVE_IMG + "[src$='#{upload.url}']")
       end
     end
   end

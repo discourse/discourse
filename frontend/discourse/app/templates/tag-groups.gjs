@@ -14,10 +14,10 @@ export default <template>
     <h2>{{i18n "tagging.groups.title"}}</h2>
 
     {{#if @controller.siteSettings.tagging_enabled}}
-      {{#if @controller.model}}
+      {{#if @controller.model.content}}
         <div class="tag-groups-sidebar content-list">
           <ul>
-            {{#each @controller.model as |tagGroup|}}
+            {{#each @controller.model.content as |tagGroup|}}
               <li>
                 <LinkTo @route="tagGroups.edit" @model={{tagGroup}}>
                   {{tagGroup.name}}

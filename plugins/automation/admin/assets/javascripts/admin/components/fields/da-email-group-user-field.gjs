@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";
@@ -44,20 +44,16 @@ export default class EmailGroupUserField extends BaseField {
   }
 
   _updateGroups(selected, newGroups) {
-    const groups = [];
+    const groups = new Set();
 
     this.groups.forEach((existing) => {
       if (selected.includes(existing)) {
-        groups.addObject(existing);
+        groups.add(existing);
       }
     });
 
-    newGroups.forEach((newGroup) => {
-      if (!groups.includes(newGroup)) {
-        groups.addObject(newGroup);
-      }
-    });
+    newGroups.forEach((newGroup) => groups.add(newGroup));
 
-    this.groups = groups;
+    this.groups = Array.from(groups);
   }
 }

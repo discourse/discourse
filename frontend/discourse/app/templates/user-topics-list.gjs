@@ -1,5 +1,4 @@
 import { on } from "@ember/modifier";
-import { or } from "truth-helpers";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import CountI18n from "discourse/components/count-i18n";
@@ -9,6 +8,7 @@ import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
+import { or } from "discourse/truth-helpers";
 
 export default <template>
   {{#if @controller.model.canLoadMore}}

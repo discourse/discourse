@@ -47,6 +47,7 @@ RSpec.describe ReviewableClaimedTopicsController do
 
         expect(message.data[:topic_id]).to eq(topic.id)
         expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.data[:claimed]).to be true
         expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
       end
 
@@ -170,7 +171,8 @@ RSpec.describe ReviewableClaimedTopicsController do
       message = messages[0]
 
       expect(message.data[:topic_id]).to eq(topic.id)
-      expect(message.data[:user]).to eq(nil)
+      expect(message.data[:user][:id]).to eq(moderator.id)
+      expect(message.data[:claimed]).to be false
       expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
     end
 
@@ -231,6 +233,22 @@ RSpec.describe ReviewableClaimedTopicsController do
         delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
         expect(response.status).to eq(200)
       end
+    end
+
+    it "does not log unclaimed history when topic was not claimed" do
+      SiteSetting.reviewable_claiming = "optional"
+      claimed.destroy!
+
+      delete "/reviewable_claimed_topics/#{topic.id}.json"
+      expect(response.status).to eq(200)
+      expect(
+        topic
+          .reviewables
+          .first
+          .history
+          .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
+          .size,
+      ).to eq(0)
     end
   end
 end

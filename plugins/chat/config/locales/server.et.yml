@@ -12,12 +12,12 @@ et:
       not_accepting_dms: "Kahjuks ei aktsepteeri %{username} hetkel sõnumeid."
     reviewables:
       actions:
+        no_action_message:
+          title: "Tegevust pole"
         agree_and_suspend:
           title: "Peata kasutaja"
         agree_and_silence:
           title: "Vaigista kasutaja"
-        disagree:
-          title: "Ei nõustu"
     channel:
       dm_title:
         single_user: "%{username}"

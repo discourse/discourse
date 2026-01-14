@@ -10,16 +10,25 @@ module DiscourseAi
         @current_key = nil
         @current_value = nil
         @tracking_array = false
+        @broken = false
         @parser = DiscourseAi::Completions::JsonStreamingParser.new
 
         @parser.key do |k|
+          next if @broken
+          if @tracking_array && @current_key.present?
+            mark_broken!
+            next
+          end
+
           @current_key = k
           @current_value = nil
         end
 
         @parser.value do |value|
+          next if @broken
           if @current_key
             if @tracking_array
+              @current_value ||= []
               @current_value << value
               stream_consumer.notify_progress(@current_key, @current_value)
             else
@@ -30,11 +39,15 @@ module DiscourseAi
         end
 
         @parser.start_array do
+          next if @broken
+          next if !@current_key
+
           @tracking_array = true
           @current_value = []
         end
 
         @parser.end_array do
+          next if @broken
           @tracking_array = false
           @current_key = nil
           @current_value = nil
@@ -73,6 +86,13 @@ module DiscourseAi
       end
 
       private
+
+      def mark_broken!
+        @broken = true
+        @tracking_array = false
+        @current_key = nil
+        @current_value = nil
+      end
 
       def try_escape_and_parse(raw_json, pre_append_buffer)
         if !raw_json.is_a?(String)

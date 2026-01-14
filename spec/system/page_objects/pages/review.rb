@@ -154,14 +154,6 @@ module PageObjects
         PageObjects::Components::Review::TopicLink.new
       end
 
-      def click_timeline_tab
-        find(".action-list li.timeline").click
-      end
-
-      def click_insights_tab
-        find(".action-list li.insights").click
-      end
-
       private
 
       def reviewable_action_dropdown

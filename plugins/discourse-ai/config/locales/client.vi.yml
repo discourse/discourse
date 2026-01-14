@@ -22,13 +22,13 @@ vi:
             title:
               label: "Tiêu đề"
             categories:
-              label: "Danh mục"
+              label: "Chuyên mục"
             tags:
               label: "Thẻ"
         llm_triage:
           fields:
             category:
-              label: "Danh mục"
+              label: "Chuyên mục"
             tags:
               label: "Thẻ"
             canned_reply:
@@ -39,7 +39,7 @@ vi:
         disabled: "(vô hiệu hóa)"
         groups: "Nhóm:"
         no_groups: "Không có gì"
-        edit: "Sửa"
+        edit: "Cài đặt"
         expand_list:
           other: "(%{count} khác)"
         collapse_list: "(thu gọn)"
@@ -48,12 +48,25 @@ vi:
           reset: "Cài lại"
         search:
           name: "Tìm kiếm"
+        embeddings:
+          setting_groups:
+            related_topics: "Các chủ đề liên quan"
+        ai_helper:
+          proofread: Hiệu chỉnh văn bản
+          markdown_tables: "Tạo bảng Markdown"
         spam:
           name: "Rác"
       modals:
         select_option: "Chọn một tùy Chọn..."
       translations:
         title: "Bản dịch"
+        stats:
+          eta_minutes:
+            other: "%{count} phút"
+          eta_hours:
+            other: "%{count} giờ"
+          eta_days:
+            other: "%{count} ngày"
         progress_chart:
           bar_done:
             other: "%{count} bài đăng"
@@ -67,6 +80,7 @@ vi:
         summary: "Tóm tắt"
         username: "Tên tài khoản"
         total_requests: "Tổng số yêu cầu"
+        total: "Tổng số"
         periods:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."
@@ -77,7 +91,7 @@ vi:
         export: "Xuất"
         import: "Nhập"
         description: "Mô tả"
-        user: Người dùng
+        user: Thành viên
         save: "Lưu lại"
         enabled: "Kích hoạt"
         delete: "Xóa"
@@ -85,12 +99,14 @@ vi:
           open_modal: "Sửa"
           modal:
             key_title: "Phím"
+        examples:
+          collapsable_title: "Ví dụ #%{number}"
         filters:
           reset: "Cài lại"
       rag:
         uploads:
           title: "Tải lên"
-          uploading: "Đang đăng "
+          uploading: "Đang tải lên..."
       tools:
         back: "Quay lại"
         export: "Xuất"
@@ -130,11 +146,15 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
+      related_topics:
+        title: "Các chủ đề liên quan"
+        pill: "Liên quan"
       ai_helper:
         context_menu:
           cancel: "Hủy"
           confirm: "Xác nhận"
           discard: "Hủy bỏ"
+          translate_prompt: "Dịch sang %{language}"
         post_options_menu:
           close: "Đóng lại"
           copy: "Sao chép"
@@ -142,8 +162,10 @@ vi:
           cancel: "Hủy"
         thumbnail_suggestions:
           select: "Chọn"
+          try_again: "Thử lại"
         image_caption:
           save_caption: "Lưu lại"
+        no_content_error: "Thêm nội dung trước để thực hiện các hành động AI trên đó"
       embeddings:
         back: "Quay lại"
         save: "Lưu lại"
@@ -155,6 +177,13 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
+        semantic_search_results:
+          toggle: "Xem %{count} kết quả tìm thấy bằng AI"
+          toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
+          none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
+          new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
+        semantic_search_tooltips:
+          results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
       ai_bot:
         debug_ai_modal:
           request: "Yêu cầu"
@@ -174,15 +203,23 @@ vi:
           filter_types:
             all: "Tất cả"
           group_types:
-            category: "Danh mục"
+            category: "Chuyên mục"
           table:
             total_count: "Tổng số"
       summarization:
         chat:
           summarize: "Tóm tắt"
+        topic:
+          title: "Tóm tắt chủ đề"
+        topic_list_layout:
+          button:
+            compact: "Gọn gàng"
+            expanded: "Mở rộng"
+            expanded_description: "Với tóm tắt AI"
       discobot_discoveries:
         regular_results: "Các chủ đề"
         collapse: "Thu gọn"
+        user_setting: "Bật tính năng tìm kiếm bằng AI"
         tooltip:
           actions:
             disable: "Tắt"

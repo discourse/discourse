@@ -1,54 +1,53 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { or as computedOr } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { GROUP_VISIBILITY_LEVELS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class GroupManageSaveButton extends Component {
+  @service currentUser;
+  @service dialog;
   @service modal;
+  @service router;
   @service groupAutomaticMembersDialog;
 
   saving = null;
   disabled = false;
   updateExistingUsers = null;
 
-  @computedOr("model.flair_icon", "model.flair_url") hasFlair;
-
   @discourseComputed("saving")
   savingText(saving) {
     return saving ? i18n("saving") : i18n("save");
   }
 
-  @discourseComputed(
-    "model.visibility_level",
-    "model.primary_group",
-    "hasFlair"
-  )
-  privateGroupNameNotice(visibilityLevel, isPrimaryGroup, hasFlair) {
-    if (visibilityLevel === 0) {
-      return;
-    }
-
-    if (isPrimaryGroup) {
-      return i18n("admin.groups.manage.alert.primary_group", {
-        group_name: this.model.name,
-      });
-    } else if (hasFlair) {
-      return i18n("admin.groups.manage.alert.flair_group", {
-        group_name: this.model.name,
-      });
-    }
-  }
-
   @action
   setUpdateExistingUsers(value) {
     this.updateExistingUsers = value;
+  }
+
+  _wouldLoseAccess() {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    const group = this.model;
+
+    if (
+      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
+      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
+    ) {
+      return !group.is_group_owner_display;
+    }
+
+    return false;
   }
 
   @action
@@ -57,7 +56,18 @@ export default class GroupManageSaveButton extends Component {
       this.beforeSave();
     }
 
-    this.set("saving", true);
+    const lostAccess = this._wouldLoseAccess();
+
+    if (lostAccess) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("groups.manage.interaction.self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     const group = this.model;
 
     const accepted = await this.groupAutomaticMembersDialog.showConfirm(
@@ -66,36 +76,42 @@ export default class GroupManageSaveButton extends Component {
     );
 
     if (!accepted) {
-      this.set("saving", false);
       return;
     }
+
+    this.set("saving", true);
 
     const opts = {};
     if (this.updateExistingUsers !== null) {
       opts.update_existing_users = this.updateExistingUsers;
     }
 
-    return group
-      .save(opts)
-      .then(() => {
-        this.setProperties({
-          saved: true,
-          updateExistingUsers: null,
-        });
+    try {
+      await group.save(opts);
 
-        if (this.afterSave) {
-          this.afterSave();
-        }
-      })
-      .catch((error) => {
-        const json = error.jqXHR.responseJSON;
-        if (error.jqXHR.status === 422 && json.user_count) {
-          this.editGroupNotifications(json);
-        } else {
-          popupAjaxError(error);
-        }
-      })
-      .finally(() => this.set("saving", false));
+      if (lostAccess) {
+        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
+
+      this.setProperties({
+        saved: true,
+        updateExistingUsers: null,
+      });
+
+      if (this.afterSave) {
+        this.afterSave();
+      }
+    } catch (error) {
+      const json = error.jqXHR?.responseJSON;
+      if (error.jqXHR?.status === 422 && json?.user_count) {
+        this.editGroupNotifications(json);
+      } else {
+        popupAjaxError(error);
+      }
+    } finally {
+      this.set("saving", false);
+    }
   }
 
   @action
@@ -110,13 +126,8 @@ export default class GroupManageSaveButton extends Component {
   }
 
   <template>
-    {{#if this.privateGroupNameNotice}}
-      <div class="row">
-        <div class="alert alert-warning alert-private-group-name">
-          {{this.privateGroupNameNotice}}
-        </div>
-      </div>
-    {{/if}}
+    <GroupFlairVisibilityWarning @model={{this.model}} />
+
     <div class="control-group buttons group-manage-save-button">
       <DButton
         @action={{this.save}}

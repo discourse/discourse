@@ -137,6 +137,14 @@ module.exports = {
           fs.existsSync(path.resolve(root, dirent.name, "plugin.rb"))
       );
 
+    // Load official plugins list
+    const officialPluginsPath = path.resolve(
+      "../../config/official_plugins.json"
+    );
+    const officialPlugins = JSON.parse(
+      fs.readFileSync(officialPluginsPath, "utf8")
+    );
+
     return pluginDirectories.map((directory) => {
       const directoryName = directory.name;
       const pluginName = parsePluginName(
@@ -165,6 +173,15 @@ module.exports = {
       const testRequiredPlugins = getTestRequiredPlugins(
         path.resolve(root, directoryName, "about.json")
       );
+
+      // Check if plugin is official
+      const isOfficial = officialPlugins.includes(pluginName);
+
+      // Check if plugin is preinstalled (bundled in discourse git repo)
+      const isPreinstalled = !fs.existsSync(
+        path.resolve(root, directoryName, ".git")
+      );
+
       return {
         pluginName,
         directoryName,
@@ -177,6 +194,8 @@ module.exports = {
         hasTests,
         hasConfig,
         testRequiredPlugins,
+        isOfficial,
+        isPreinstalled,
       };
     });
   },
@@ -300,33 +319,35 @@ module.exports = {
       directoryName,
       hasJs,
       hasAdminJs,
+      isPreinstalled,
+      isOfficial,
     } of pluginInfos) {
-      if (hasJs) {
+      const pushScript = (suffix) => {
         scripts.push({
-          src: `plugins/${directoryName}.js`,
+          src: `plugins/${directoryName}${suffix}.js`,
           name: pluginName,
+          isPreinstalled,
+          isOfficial,
         });
+      };
+
+      if (hasJs) {
+        pushScript("");
       }
 
       if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
-        scripts.push({
-          src: `plugins/${directoryName}_extras.js`,
-          name: pluginName,
-        });
+        pushScript("_extras");
       }
 
       if (hasAdminJs) {
-        scripts.push({
-          src: `plugins/${directoryName}_admin.js`,
-          name: pluginName,
-        });
+        pushScript("_admin");
       }
     }
 
     const scriptTags = scripts
       .map(
-        ({ src, name }) =>
-          `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
+        ({ src, name, isPreinstalled, isOfficial }) =>
+          `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}" data-preinstalled="${isPreinstalled}" data-official="${isOfficial}"></script>`
       )
       .join("\n");
 
@@ -344,8 +365,8 @@ module.exports = {
     return this.pluginInfos()
       .filter(({ hasTests }) => hasTests)
       .map(
-        ({ directoryName, pluginName }) =>
-          `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
+        ({ directoryName, pluginName, isPreinstalled, isOfficial }) =>
+          `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}" data-preinstalled="${isPreinstalled}" data-official="${isOfficial}"></script>`
       )
       .join("\n");
   },

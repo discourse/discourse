@@ -3,8 +3,9 @@
 module PageObjects
   module Components
     class AdminFilterControls < PageObjects::Components::Base
-      def initialize(component_selector)
+      def initialize(component_selector, has_multiple_dropdowns: false)
         @component_selector = component_selector
+        @has_multiple_dropdowns = has_multiple_dropdowns
       end
 
       def component
@@ -19,8 +20,20 @@ module PageObjects
         component.find(".admin-filter-controls__input").set("")
       end
 
-      def select_dropdown_option(text)
-        component.find(".admin-filter-controls__dropdown").select(text)
+      def select_dropdown_option(text, dropdown_id: nil)
+        selector = ".admin-filter-controls__dropdown"
+        selector += "#{selector}--#{dropdown_id}" if dropdown_id
+        component.find(selector).select(text)
+      end
+
+      def select_all_dropdown_option(dropdown_id: nil)
+        selector = ".admin-filter-controls__dropdown"
+        selector += "#{selector}--#{dropdown_id}" if dropdown_id
+        find(selector).find("option[value='all']").select_option
+      end
+
+      def toggle_dropdown_filters
+        component.find(".admin-filter-controls__toggle-filters").click
       end
 
       def has_reset_button?

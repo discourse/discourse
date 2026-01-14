@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { equal, reads } from "@ember/object/computed";
@@ -6,6 +7,7 @@ import { observes } from "@ember-decorators/object";
 import CreateInvite from "discourse/components/modal/create-invite";
 import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed, { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import Invite from "discourse/models/invite";
@@ -16,13 +18,15 @@ export default class UserInvitedShowController extends Controller {
   @service modal;
   @service toasts;
 
+  @tracked canLoadMore = true;
+  @tracked hasLoadedInitialInvites = false;
+  @tracked invitesLoading = false;
+
   user = null;
   model = null;
   filter = null;
   invitesCount = null;
-  canLoadMore = true;
-  invitesLoading = false;
-  hasLoadedInitialInvites = false;
+
   reinvitedAll = false;
   searchTerm = "";
 
@@ -80,7 +84,7 @@ export default class UserInvitedShowController extends Controller {
   async destroyInvite(invite) {
     try {
       await invite.destroy();
-      this.model.invites.removeObject(invite);
+      removeValueFromArray(this.model.invites, invite);
     } catch (error) {
       popupAjaxError(error);
     }
@@ -122,30 +126,32 @@ export default class UserInvitedShowController extends Controller {
   }
 
   @action
-  loadMore() {
+  async loadMore() {
     const model = this.model;
 
     if (this.canLoadMore && !this.invitesLoading) {
-      this.set("invitesLoading", true);
-      Invite.findInvitedBy(
-        this.user,
-        this.filter,
-        this.searchTerm,
-        model.invites.length
-      )
-        .then((invite_model) => {
-          this.set("invitesLoading", false);
-          model.invites.pushObjects(invite_model.invites);
-          if (
-            invite_model.invites.length === 0 ||
-            invite_model.invites.length < this.siteSettings.invites_per_page
-          ) {
-            this.set("canLoadMore", false);
-          }
-        })
-        .finally(() => {
-          this.set("hasLoadedInitialInvites", true);
-        });
+      this.invitesLoading = true;
+
+      try {
+        const inviteList = await Invite.findInvitedBy(
+          this.user,
+          this.filter,
+          this.searchTerm,
+          model.invites.length
+        ).invites;
+
+        this.invitesLoading = false;
+        model.invites.push(...inviteList);
+
+        if (
+          inviteList.length === 0 ||
+          inviteList.length < this.siteSettings.invites_per_page
+        ) {
+          this.canLoadMore = false;
+        }
+      } finally {
+        this.hasLoadedInitialInvites = true;
+      }
     }
   }
 }

@@ -45,7 +45,6 @@ ro:
               label: "Expeditor PM"
               description: "Utilizatorul care va trimite PM (implicit la sistem)"
             notify_author_pm_message:
-              label: "Mesaj PM"
               description: "Mesaj personalizat opțional pentru a trimite autorului"
         llm_tagger:
           fields:
@@ -63,7 +62,7 @@ ro:
         disabled: "(dezactivat)"
         groups: "Grupuri:"
         no_groups: "Nimic"
-        edit: "Editează"
+        edit: "Setări"
         expand_list:
           one: "(încă %{count})"
           few: "(încă %{count})"
@@ -74,6 +73,13 @@ ro:
           reset: "Resetare"
         search:
           name: "Caută"
+        translation:
+          schedule_untranslated: "Programează traduceri"
+          schedule_topic_success:
+            one: "Traducere programată pentru o postare netradusă."
+            few: "Traduceri programate pentru %{count} postări netraduse."
+            other: "Traduceri programate pentru %{count} de postări netraduse."
+          schedule_topic_error: "Programarea traducerilor a eșuat. Te rog să încerci din nou."
         spam:
           name: "Spam"
       modals:
@@ -92,14 +98,21 @@ ro:
           complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
           incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
           backfill_disabled: "Completarea este dezactivată, doar postările noi vor fi traduse."
-          description_tooltip:
-            one: 'Există o postare eligibilă pentru traducere.'
-            few: 'Există %{count} postări eligibile pentru traducere.'
-            other: 'Există %{count} de postări eligibile pentru traducere.'
+          eta_minutes:
+            one: "un minut"
+            few: "%{count} minute"
+            other: "%{count} de minute"
+          eta_hours:
+            one: "o oră"
+            few: "%{count} ore"
+            other: "%{count} de ore"
+          eta_days:
+            one: "%{count} zi"
+            few: "%{count} zile"
+            other: "%{count} de zile"
         progress_chart:
           title: "Progresul traducerii"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} din %{total} postări traduse"
           bar_done:
             one: "o postare"
             few: "%{count} postări"
@@ -116,6 +129,7 @@ ro:
         summary: "Rezumat"
         username: "Nume utilizator"
         total_requests: "Total cereri"
+        total: "Total"
         periods:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
@@ -170,17 +184,17 @@ ro:
             week: "7 zile"
             custom: "Personalizat..."
           hours: "de ore"
+        credit_allocation:
+          soft_limit_warning: "Acest model are %{percentage}% din creditele IA rămase astăzi"
         usage:
           ai_helper: "Ajutor (%{persona})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-1: "Cel mai inteligent model de la Anthropic"
-          google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
+          anthropic-claude-opus-4-5: "Cel mai inteligent model de la Anthropic"
           google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
           google-gemini-2-5-flash-image-preview: "Cel mai recent model de generare a imaginilor cu capacități vizuale"
-          open_ai-o3: "Cel mai capabil model de raționament al OpenAI"
-          open_ai-gpt-5: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
+          open_ai-gpt-5-1: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
           open_ai-gpt-5-mini: "Asigură un echilibru între inteligență, viteză și costuri care îl transformă într-un model atractiv pentru multe cazuri de utilizare."
           open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Model multilingv ușor și eficient"
@@ -195,6 +209,9 @@ ro:
         providers:
           google: "Google"
           fake: "Personalizat"
+        provider_fields:
+          role_arn: "Rol ARN AWS Bedrock"
+          effort: "Nivel de efort (doar Claude Opus 4.5)"
       ai_helper:
         context_menu:
           cancel: "Anulează"
@@ -205,6 +222,8 @@ ro:
           copy: "Copiază"
           copied: "Copiat!"
           cancel: "Anulează"
+        thumbnail_suggestions:
+          try_again: "Încearcă din nou"
         image_caption:
           save_caption: "Salvează"
       embeddings:
@@ -221,6 +240,7 @@ ro:
           google: "Google"
           fake: "Personalizat"
       ai_bot:
+        try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
         debug_ai_modal:
           request: "Cere"
@@ -252,6 +272,7 @@ ro:
       discobot_discoveries:
         regular_results: "Discuții"
         collapse: "Colaps"
+        user_setting: "Activează descoperirile de căutare IA"
         tooltip:
           actions:
             disable: "Dezactivează"

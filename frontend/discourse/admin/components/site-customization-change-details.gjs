@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import SiteCustomizationChangeField from "discourse/admin/components/site-customization-change-field";
 import { i18n } from "discourse-i18n";
-import SiteCustomizationChangeField from "admin/components/site-customization-change-field";
 
 export default class SiteCustomizationChangeDetails extends Component {
   <template>

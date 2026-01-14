@@ -81,6 +81,7 @@ it:
         join_channel: "Partecipa al canale"
         leave_channel: "Lascia il canale"
         leave_groupchat_info: "Uscendo da questa chat di gruppo, non avrai più accesso a essa e non riceverai notifiche a essa relative. Per partecipare nuovamente, dovrai ricevere nuovamente un invito da un membro della chat di gruppo."
+        notification_settings_context: "Notifiche"
         join: "Partecipa"
         leave: "Esci"
         save_label:
@@ -128,7 +129,6 @@ it:
       email_frequency:
         description: "Ti invieremo un'e-mail solo se non ti sei fatto vedere negli ultimi 15 minuti."
         never: "Mai"
-        title: "Notifiche via e-mail"
         when_away: "Solo quando non sono collegato"
       header_indicator_preference:
         title: "Mostra l'indicatore di attività nell'intestazione"
@@ -141,10 +141,8 @@ it:
       send_shortcut:
         enter:
           label: "Invia tramite Invio"
-          description: "Nuova riga con Maiusc + Invio"
         meta_enter:
           label: "Invia tramite %{meta_key} + Invio"
-          description: "Nuova riga con Invio"
       enable: "Abilita chat"
       flag: "Segnala"
       emoji: "Inserisci emoji"
@@ -239,12 +237,11 @@ it:
       no_public_channels: "Non hai ancora aderito a nessun canale!"
       no_public_channels_cta: "Sfoglia i canali"
       kicked_from_channel: "Non puoi più accedere a questo canale."
+      chat_notifications_title: "Notifiche chat"
       only_chat_push_notifications:
         title: "Invia solo le notifiche push della chat"
-        description: "Blocca l'invio di tutte le notifiche push non relative alla chat"
       ignore_channel_wide_mention:
         title: "Ignora le menzioni a livello di canale"
-        description: "Non inviare notifiche per menzioni a livello di canale (@here e @all)"
       show_thread_title_prompts:
         title: "Mostra suggerimenti per i titoli di thread"
         description: "Mostra suggerimenti per scegliere il titolo dei nuovi thread"
@@ -326,6 +323,8 @@ it:
       chat_message_separator:
         today: Oggi
         yesterday: Ieri
+      search_view:
+        filter_placeholder: Cerca messaggi
       members_view:
         filter_placeholder: Trova membri
         add_member: Aggiungi membro
@@ -342,6 +341,7 @@ it:
         tabs:
           members: Membri
           settings: Impostazioni
+          search: Cerca
         remove_member: "Rimuovi"
       new_message_modal:
         title: Invia messaggio
@@ -433,6 +433,7 @@ it:
           topic: "Argomento"
       reviewable:
         type: "Messaggio di chat"
+        message_in_channel: "Canale"
       reactions:
         only_you: "<span>Hai reagito con </span>:%{emoji}:"
         you_and_single_user: "<span>Tu e %{username} avete reagito con </span>:%{emoji}:"
@@ -495,6 +496,12 @@ it:
           create_export: "Crea esportazione"
           confirm_export: "Questa operazione esporta tutti i messaggi da tutti i canali e ti invia il risultato in un messaggio personale. Vuoi esportare?"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
+      search:
+        short_title: Cerca
+        no_results: "Nessun risultato trovato"
+        sort:
+          relevance: "Rilevanza"
+          latest: "Più recenti"
       my_threads:
         title: I miei thread
         aria_label: "Passa all'elenco dei miei thread"

@@ -52,8 +52,6 @@ pt:
           title: "Utilizador Suspenso"
         agree_and_silence:
           title: "Silenciar Usuário"
-        disagree:
-          title: "Discordar"
     channel:
       dm_title:
         single_user: "%{username}"

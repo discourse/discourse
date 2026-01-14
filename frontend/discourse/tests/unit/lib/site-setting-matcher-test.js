@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import SiteSettingMatcher from "admin/lib/site-setting-matcher";
-import SiteSetting from "admin/models/site-setting";
+import SiteSettingMatcher from "discourse/admin/lib/site-setting-matcher";
+import SiteSetting from "discourse/admin/models/site-setting";
 
 module("Unit | Lib | SiteSettingMatcher", function (hooks) {
   setupTest(hooks);

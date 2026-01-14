@@ -6,6 +6,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import InstallThemeItem from "discourse/admin/components/install-theme-item";
+import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import CopyButton from "discourse/components/copy-button";
 import DButton from "discourse/components/d-button";
@@ -16,10 +18,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
 import { POPULAR_THEMES } from "discourse/lib/popular-themes";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import InstallThemeItem from "admin/components/install-theme-item";
-import { COMPONENTS, THEMES } from "admin/models/theme";
-import ComboBox from "select-kit/components/combo-box";
 
 const MIN_NAME_LENGTH = 4;
 const CREATE_TYPES = [

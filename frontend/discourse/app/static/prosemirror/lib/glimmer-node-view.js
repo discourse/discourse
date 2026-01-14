@@ -19,7 +19,15 @@ export default class GlimmerNodeView {
   /**
    * @param {GlimmerNodeViewArgs} args
    */
-  constructor({ node, view, getPos, getContext, component, name }) {
+  constructor({
+    node,
+    view,
+    getPos,
+    getContext,
+    component,
+    name,
+    hasContent = false,
+  }) {
     this.node = node;
     this.view = view;
     this.getPos = getPos;
@@ -28,13 +36,25 @@ export default class GlimmerNodeView {
 
     getContext().addGlimmerNodeView(this);
 
-    this.dom = document.createElement("div");
+    this.dom = document.createElement(node.isInline ? "span" : "div");
     this.dom.classList.add(`composer-${name}-node`);
+    if (hasContent) {
+      this.contentDOM = document.createElement(node.isInline ? "span" : "div");
+      this.dom.appendChild(this.contentDOM);
+    }
   }
 
   @action
   setComponentInstance(instance) {
     this.#componentInstance = instance;
+
+    if (this.#componentInstance?.setSelection) {
+      this.setSelection = this.#componentInstance.setSelection.bind(
+        this.#componentInstance
+      );
+    } else {
+      this.setSelection = undefined;
+    }
   }
 
   update(node) {
@@ -51,16 +71,12 @@ export default class GlimmerNodeView {
     next(() => this.#componentInstance?.deselectNode?.());
   }
 
-  setSelection() {
-    this.#componentInstance?.setSelection?.(...arguments);
-  }
-
   stopEvent(event) {
     return this.#componentInstance?.stopEvent?.(event) ?? false;
   }
 
-  ignoreMutation() {
-    return this.#componentInstance?.ignoreMutation?.() ?? true;
+  ignoreMutation(mutation) {
+    return this.#componentInstance?.ignoreMutation?.(mutation) ?? true;
   }
 
   destroy() {

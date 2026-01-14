@@ -23,7 +23,7 @@ module Migrations::SetStore
     end
 
     def bulk_add(records)
-      current_key = nil
+      current_key = :__uninitialized__
       current_set = nil
 
       records.each do |record|

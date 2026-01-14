@@ -1,6 +1,6 @@
-import { not } from "truth-helpers";
 import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import { not } from "discourse/truth-helpers";
 import ChatIncomingWebhookEditForm from "discourse/plugins/chat/admin/components/chat-incoming-webhook-edit-form";
 
 export default <template>

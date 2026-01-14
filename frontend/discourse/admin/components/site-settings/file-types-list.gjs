@@ -7,8 +7,8 @@ import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
+import ListSetting from "discourse/select-kit/components/list-setting";
 import { i18n } from "discourse-i18n";
-import ListSetting from "select-kit/components/list-setting";
 
 const IMAGE_TYPES = [
   "gif",

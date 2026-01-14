@@ -80,16 +80,21 @@ RSpec.describe InviteMailer do
         fab!(:invite)
         let(:plugin) { Plugin::Instance.new }
         let(:custom_template) { "plugin_custom_invite_template" }
-        I18n.backend.store_translations(
-          :en,
-          {
-            plugin_custom_invite_template: {
-              subject_template: "[%{site_name}] Custom Invite from %{inviter_name}",
-              text_body_template:
-                "Custom invite body: %{invite_link}\n\nFrom: %{inviter_name}\nSite: %{site_domain_name}",
+        before do
+          I18n.backend.store_translations(
+            :en,
+            {
+              plugin_custom_invite_template: {
+                subject_template: "[%{site_name}] Custom Invite from %{inviter_name}",
+                text_body_template:
+                  "Custom invite body: %{invite_link}\n\nFrom: %{inviter_name}\nSite: %{site_domain_name}",
+              },
             },
-          },
-        )
+          )
+        end
+
+        after { I18n.backend.reload! }
+
         it "allows plugins to customize the invite template" do
           plugin_instance = Plugin::Instance.new
           @modifier_block = Proc.new { |template, passed_invite| custom_template }
@@ -101,8 +106,13 @@ RSpec.describe InviteMailer do
           )
 
           mail = InviteMailer.send_invite(invite)
-          expect(mail.subject).to eq("[Discourse] Custom Invite from Bruce Wayne (bruce0)")
-
+          expect(mail.subject).to eq(
+            I18n.t(
+              "#{custom_template}.subject_template",
+              site_name: "Discourse",
+              inviter_name: "#{invite.invited_by.name} (#{invite.invited_by.username})",
+            ),
+          )
           DiscoursePluginRegistry.unregister_modifier(
             plugin_instance,
             :invite_forum_mailer_template,

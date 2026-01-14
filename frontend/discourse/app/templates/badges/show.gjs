@@ -28,7 +28,7 @@ export default <template>
       <BadgeCard
         @badge={{@controller.model}}
         @size="large"
-        @count={{@controller.userBadges.grant_count}}
+        @count={{@controller.userBadgesGrantCount}}
       />
       <div
         class="badge-grant-info {{if @controller.hiddenSetTitle '' 'hidden'}}"

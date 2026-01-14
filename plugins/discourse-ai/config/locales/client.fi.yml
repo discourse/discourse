@@ -199,7 +199,7 @@ fi:
         no_llm: "LLM:ää ei ole valittu"
         no_persona: "Ei asetettu"
         no_groups: "Ei valittu"
-        edit: "Muokkaa"
+        edit: "Asetukset"
         expand_list:
           one: "(%{count} muuta)"
           other: "(%{count} muuta)"
@@ -230,6 +230,8 @@ fi:
           name: "Upotukset"
           description: "Tarjoaa ominaisuuksia, kuten aiheeseen liittyvät ketjut ja tekoälyhaun, luomalla semanttisia kuvauksia tekstistä"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Liittyvät ketjut"
         discord:
           name: "Discord-integraatio"
           description: "Lisää mahdollisuuden hakea Discord-kanavia"
@@ -240,6 +242,8 @@ fi:
           generate_concepts: "Käsitteiden päättely"
           match_concepts: "Käsitteiden sovittaminen"
           deduplicate_concepts: "Käsitteiden deduplikaatio"
+          setting_groups:
+            personas: "Persoonat"
         ai_helper:
           name: "Apuri"
           description: "Auttaa käyttäjiä vuorovaikutuksessa yhteisön kanssa, kuten ketjujen luomisessa, viestien kirjoittamisessa ja sisällön lukemisessa"
@@ -253,6 +257,10 @@ fi:
           custom_prompt: "Mukautettu kehote"
           image_caption: "Lisää kuvateksti"
           translator: "Kääntäjä"
+          post_illustrator: "Viestin havainnollistaja"
+          setting_groups:
+            automation: "Automaatio"
+            personas: "Persoonat"
         translation:
           name: "Käännös"
           description: "Kääntää sisällön tuetuille kielille"
@@ -260,6 +268,8 @@ fi:
           post_raw_translator: "Viestin raakakääntäjä"
           topic_title_translator: "Ketjun otsikon kääntäjä"
           short_text_translator: "Lyhyen tekstin kääntäjä"
+          setting_groups:
+            personas: "Persoonat"
         spam:
           name: "Roskaposti"
           description: "Tunnistaa mahdollisen roskapostin valitun suuren kielimallin avulla ja liputtaa sen sivuston valvojien tarkastettavaksi tarkastusjonoon"
@@ -277,6 +287,16 @@ fi:
         card: "Kortti"
       translations:
         title: "Käännökset"
+        stats:
+          eta_minutes:
+            one: "%{count} minuutti"
+            other: "%{count} minuuttia"
+          eta_hours:
+            one: "%{count} tunti"
+            other: "%{count} tuntia"
+          eta_days:
+            one: "%{count} päivä"
+            other: "%{count} päivää"
         progress_chart:
           bar_done:
             one: "ensimmäisen %{count} viestin"
@@ -306,6 +326,8 @@ fi:
           post_url_label: "Vistin URL tai tunnus"
           post_url_placeholder: "https://foorumisi.com/t/topic/123/4 tai viestin tunnus"
           result: "Tulos"
+          llm: "LLM"
+          system_prompt: "Järjestelmäkehote"
           scan_log: "Skannausloki"
           run: "Suorita testi"
           spam: "Roskaposti"
@@ -342,6 +364,7 @@ fi:
         no_users: "Käyttäjien käyttötietoja ei löytynyt"
         no_models: "Mallin käyttötietoja ei löytynyt"
         no_features: "Ominaisuuden käyttötietoja ei löytynyt"
+        total: "Yhteensä"
         subheader_description: "Saneet ovat perusyksiköitä, joita suuret kielimallit käyttävät tekstin ymmärtämiseen ja luomiseen. Käyttötiedot voivat vaikuttaa kustannuksiin"
         stat_tooltips:
           total_requests: "Kaikki suurille kielimalleille Discoursen kautta tehdyt pyynnöt"
@@ -381,8 +404,6 @@ fi:
           low: Heikko laatu – halvin (256x256)
           medium: Keskilaatuinen (512x512)
           high: Korkea laatu – hitain (1024x1024)
-        tool_details: Näytä työkalun tiedot
-        tool_details_help: Näyttää loppukäyttäjille tiedot siitä, mitkä työkalut kielimalli on laukaissut.
         mentionable: Salli maininnat
         mentionable_help: Jos tämä on käytössä, sallittujen ryhmien käyttäjät voivat mainita tämän käyttäjän viesteissä, tekoäly vastaa tänä persoonana.
         user: Käyttäjä
@@ -527,7 +548,6 @@ fi:
         max_output_tokens: "Tuotossaneiden enimmäismäärä"
         url: "Mallia isännöivän palvelun URL-osoite"
         api_key: "Mallia isännöivän palvelun API-avain"
-        enabled_chat_bot: "Salli tekoälybotin valitsin"
         vision_enabled: "Näkö käytössä"
         ai_bot_user: "Tekoälybottikäyttäjä"
         cost_input: "Syötekustannukset"
@@ -539,7 +559,6 @@ fi:
         back: "Takaisin"
         confirm_delete: Oletko varma, että haluat poistaa tämän mallin?
         delete: Poista
-        seeded_warning: "Tämä malli on valmiiksi määritetty sivustollesi, eikä sitä voi muokata."
         quotas:
           title: "Käyttökiintiöt"
           add_title: "Luo uusi kiintiö"
@@ -574,22 +593,18 @@ fi:
           other: "Tätä mallia käyttää tällä hetkellä seuraavat: %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla. "
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
-          anthropic-claude-opus-4-1: "Anthropicin älykkäin malli"
-          anthropic-claude-sonnet-4-0: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
-          anthropic-claude-3-7-sonnet-latest: "Optimaalinen tasapaino nopeuden ja kustannusten välillä (edellinen sukupolvi)"
-          anthropic-claude-3-5-haiku-latest: "Nopea ja kustannustehokas"
+          anthropic-claude-opus-4-5: "Anthropicin älykkäin malli"
+          anthropic-claude-sonnet-4-5: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
+          anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
           google-gemini-2-5-pro: "Suuri multimodaalinen malli, joka pystyy suorittamaan monenlaisia tehtäviä"
-          google-gemini-2-0-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä (edellinen sukupolvi)"
           google-gemini-2-5-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä"
-          google-gemini-2-0-flash-lite: "Kustannustehokas ja matalan latenssin malli"
-          open_ai-o4-mini: "Kehittynyt kustannustehokas päättelymalli"
           open_ai-gpt-5-mini: "Tarjoaa tasapainon älykkyyden, nopeuden ja kustannusten välillä, mikä tekee siitä houkuttelevan mallin moniin käyttötarkoituksiin."
           open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Tehokas kevyt monikielinen malli"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Tehokas monikäyttöinen malli"
           mistral-mistral-large-latest: "Mistralin tehokkain malli"
           mistral-pixtral-large-latest: "Mistralin tehokkain näkökykyinen malli"
-          open_router-x-ai-grok-3-beta: "xAI:n uusin malli"
+          open_router-x-ai-grok-4: "xAI:n uusin malli"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeekin uusin päättelymalli"
           open_router-meta-llama-3-3-70b-instruct: "Erittäin kyvykäs monikielinen malli"
         preseeded_model_description: "Ennalta määritetty avoimen lähdekoodin malli, joka käyttää mallia %{model}"
@@ -615,9 +630,7 @@ fi:
           display_name: "Nimi, jota käytetään viittaamaan tähän malliin sivustosi käyttöliittymässä."
           name: "Sisällytämme tämän API-kutsuun määrittääksemme, mitä mallia käytämme"
           vision_enabled: "Jos tämä on käytössä, tekoäly yrittää ymmärtää kuvia. Tämä riippuu siitä, tukeeko käytettävä malli näköä. Anthropicin, Googlen ja OpenAI:n uusimmat mallit tukevat näköä."
-          enabled_chat_bot: "Jos tämä on käytössä, käyttäjät voivat valita tämän mallin luodessaan yksityisviestejä tekoälybotin kanssa"
           cost_input: "Tämän mallin syöttökustannukset miljoonaa sanetta kohden"
-          cost_cached_input: "Tämän mallin välimuistisyöttökustannukset miljoonaa sanetta kohden"
           cost_output: "Tämän mallin tuotoskustannukset miljoonaa sanetta kohden"
           cost_measure: "$/1 milj. sanetta"
         providers:
@@ -652,7 +665,6 @@ fi:
           reasoning_tokens: "Päättelyyn käytettyjen saneiden määrä"
           disable_temperature: "Poista lämpötila käytöstä (jotkin ajattelumallit eivät tue lämpötilaa)"
           disable_top_p: "Poista top-p käytöstä (jotkin ajattelumallit eivät tue top-p:tä)"
-          enable_responses_api: "Ota vastaus-API käyttöön (vaaditaan tietyissä OpenAI:n malleissa)"
       related_topics:
         title: "Liittyvät ketjut"
         pill: "Liittyy aiheeseen"
@@ -697,6 +709,7 @@ fi:
           title: "Ehdotetut pikkukuvat"
           select: "Valitse"
           selected: "Valittu"
+          try_again: "Yritä uudelleen"
         image_caption:
           button_label: "Kuvateksti tekoälyllä"
           generating: "Luodaan kuvatekstiä..."
@@ -779,8 +792,10 @@ fi:
         llm: "Malli"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"
+        try_again: "Yritä uudelleen"
         default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
         shortcut_title: "Aloita yksityiskeskustelu tekoälybotin kanssa"
+        shortcut_link: "Tekoälybotti"
         exit: "poistu tekoälybotista"
         share: "Kopioi tekoälykeskustelu"
         conversation_shared: "Keskustelu kopioitu"
@@ -889,7 +904,6 @@ fi:
         loading_convo: "Ladataan keskustelua"
         collapse: "Supista"
         timed_out: "Discobot ei löytänyt löytöjä. Jokin meni vikaan."
-        user_setting: "Ota hakulöydöt käyttöön"
         tooltip:
           header: "Tekoälyhaku"
           content: "Luonnollisen kielen haun tarjoaa %{model}"

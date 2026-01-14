@@ -3,10 +3,11 @@
 RSpec.describe SvgSprite do
   fab!(:theme)
 
-  before do
+  before { allow(Rails.env).to receive(:test?).and_return(false) }
+
+  after do
     SvgSprite.clear_plugin_svg_sprite_cache!
     SvgSprite.expire_cache
-    allow(Rails.env).to receive(:test?).and_return(false)
   end
 
   it "can generate a bundle" do
@@ -209,7 +210,7 @@ RSpec.describe SvgSprite do
     expect(all_icons).to include("compass-drafting")
     expect(all_icons).to include("fab-bandcamp")
 
-    SiteSetting.svg_icon_subset = nil
+    SiteSetting.svg_icon_subset = ""
     SvgSprite.expire_cache
     expect(SvgSprite.all_icons).not_to include("compass-drafting")
 

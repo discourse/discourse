@@ -14,7 +14,6 @@ tr_TR:
     assign_self_regex: "Kendi kendine atama için geçmesi gereken regex. Örnek \"listem\""
     assign_other_regex: "Konuları bahsetme yoluyla başkalarına atamak için geçmesi gereken regex. Örnek \"listeniz\"."
     unassign_on_group_archive: "Bir mesaj bir grup tarafından arşivlendiğinde, mesajın atamasını kaldırın (gelen kutusuna geri taşınırsa yeniden atayın)"
-    unassign_on_close: "Bir konu kapatıldığında konu atamasını kaldırın"
     reassign_on_open: "Bir konu açıldığında önceden atanmış kullanıcıları/grupları yeniden atayın"
     invite_on_assign: "Bir kullanıcıya veya gruba kişisel bir mesaj atandığında, zaten katılımcı değillerse onları Kişisel Mesaja davet edin."
     assign_mailer: "Atamalar için bildirim e-postasının ne zaman gönderileceği"

@@ -3,14 +3,16 @@
 module DiscourseAi
   module Translation
     class BaseTranslator
-      def initialize(text:, target_locale:, topic: nil, post: nil)
+      def initialize(text:, target_locale:, topic: nil, post: nil, llm_model: nil)
         @text = text
         @target_locale = target_locale
         @topic = topic
         @post = post
+        @llm_model = llm_model
       end
 
       def translate
+        return nil if @text.blank?
         return nil if !SiteSetting.ai_translation_enabled
         if (ai_persona = AiPersona.find_by_id_from_cache(persona_setting)).blank?
           return nil
@@ -19,7 +21,7 @@ module DiscourseAi
         persona_klass = ai_persona.class_instance
         persona = persona_klass.new
 
-        model = self.class.preferred_llm_model(persona_klass)
+        model = @llm_model || self.class.preferred_llm_model(persona_klass)
         return nil if model.blank?
 
         bot = DiscourseAi::Personas::Bot.as(translation_user, persona:, model:)
@@ -40,7 +42,7 @@ module DiscourseAi
         context =
           DiscourseAi::Personas::BotContext.new(
             user: translation_user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             feature_name: "translation",
             messages: [{ type: :user, content: formatted_content(text) }],
             topic: @topic,
@@ -55,13 +57,21 @@ module DiscourseAi
       end
 
       def get_max_tokens(text)
-        if text.length < 100
-          500
-        elsif text.length < 500
-          1000
-        else
-          text.length * 2
-        end
+        base_tokens =
+          if text.length < 100
+            500
+          elsif text.length < 500
+            1000
+          else
+            text.length * 2
+          end
+
+        (base_tokens * max_token_multiplier).to_i
+      end
+
+      def max_token_multiplier
+        multiplier = SiteSetting.ai_translation_max_tokens_multiplier
+        multiplier > 0 ? multiplier : 1.0
       end
 
       def persona_setting

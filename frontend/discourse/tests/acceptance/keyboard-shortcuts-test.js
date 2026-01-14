@@ -1,5 +1,5 @@
 import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
@@ -63,7 +63,7 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
       .exists("pressing k moves selection to previous post");
   });
 
-  // FIXME: For reasons unknown this test if flaky on firefox
+  // FIXME: For reasons unknown this test is flaky on firefox
   chromeTest("j/k navigation skips hidden elements", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
@@ -123,6 +123,9 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       return helper.response(topicList);
     });
     server.get("/new.json", () => {
+      return helper.response(topicList);
+    });
+    server.get("/unseen.json", () => {
       return helper.response(topicList);
     });
     server.put("/topics/reset-new", () => {
@@ -269,5 +272,50 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     assert.dom("#discourse-modal-title").hasText(i18n("topic.share.title"));
 
     await click(".modal-close");
+  });
+
+  test("g y navigates to /unseen", async function (assert) {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "G");
+    await triggerKeyEvent(document, "keypress", "Y");
+    assert.strictEqual(currentURL(), "/unseen");
+  });
+
+  module("context aware create new shortcuts", function () {
+    test("C key opens composer in new topic mode from topics list", async function (assert) {
+      await visit("/");
+      await triggerKeyEvent(document, "keypress", "C");
+
+      assert
+        .dom(".composer-action-create-topic .composer-action-title")
+        .includesText(
+          i18n("composer.composer_actions.create_topic.desc"),
+          "composer shows create topic title"
+        );
+    });
+
+    test("C key opens composer in new PM mode from messages list", async function (assert) {
+      await visit("/my/messages");
+      await triggerKeyEvent(document, "keypress", "C");
+
+      assert
+        .dom(".composer-action-private-message .composer-action-title")
+        .includesText(
+          i18n("topic.private_message"),
+          "composer shows create message title"
+        );
+    });
+
+    test("C key opens composer in new PM mode from PM topic", async function (assert) {
+      await visit("/t/pm-for-testing/12");
+      await triggerKeyEvent(document, "keypress", "C");
+
+      assert
+        .dom(".composer-action-private-message .composer-action-title")
+        .includesText(
+          i18n("topic.private_message"),
+          "composer shows create message title"
+        );
+    });
   });
 });

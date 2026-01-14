@@ -52,6 +52,7 @@ export default class SearchMenu extends Component {
   @tracked menuPanelOpen = false;
 
   searchInputId = this.args.searchInputId ?? "search-term";
+  searchInputPlaceholder = this.args.searchInputPlaceholder || "search.title";
 
   _debouncer = null;
   _activeSearch = null;
@@ -333,13 +334,6 @@ export default class SearchMenu extends Component {
           // we ensure the current search term is the one used
           // when starting the query
           if (results) {
-            if (this.searchContext) {
-              // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-              this.appEvents.trigger("post-stream:refresh", {
-                force: true,
-              });
-            }
-
             this.search.noResults = results.resultTypes.length === 0;
             this.search.results = results;
           }
@@ -454,7 +448,7 @@ export default class SearchMenu extends Component {
             @openSearchMenu={{this.open}}
             @autofocus={{@autofocusInput}}
             @inputId={{this.searchInputId}}
-            @placeholder={{@placeholder}}
+            @inputPlaceholder={{this.searchInputPlaceholder}}
           />
 
           {{#if this.loading}}
@@ -490,7 +484,7 @@ export default class SearchMenu extends Component {
           @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
-        <MenuPanel @panelClass="search-menu-panel">
+        <MenuPanel class="search-menu-panel">
           <Results
             @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}

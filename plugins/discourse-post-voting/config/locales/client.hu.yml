@@ -30,10 +30,8 @@ hu:
         label: "Szavazás bejegyzés létrehozása"
       composer_actions:
         create_as_post_voting:
-          label: "Szavazás kapcsoló"
           desc: "A téma szavazható bejegyzésekkel lesz létrehozva."
         remove_as_post_voting:
-          label: "Szavazás eltávolítás"
           desc: "A téma a szokásos formátumban lesz létrehozva."
     vote:
       already_voted: "Kérdésenként csak egyszer lehet szavazni."

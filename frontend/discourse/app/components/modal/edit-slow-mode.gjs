@@ -11,8 +11,8 @@ import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
 import { extractError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import Topic from "discourse/models/topic";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 const SLOW_MODE_OPTIONS = [
   {

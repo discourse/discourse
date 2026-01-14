@@ -1,6 +1,6 @@
-import { and } from "truth-helpers";
 import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import TopicPostBadges from "discourse/components/topic-post-badges";
+import { and } from "discourse/truth-helpers";
 
 const PostCountOrBadges = <template>
   {{#if (and @postBadgesEnabled @topic.unread_posts)}}

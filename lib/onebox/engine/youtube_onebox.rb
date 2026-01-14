@@ -22,11 +22,30 @@ module Onebox
       end
 
       def parse_embed_response
-        return unless video_id
         return @parse_embed_response if defined?(@parse_embed_response)
 
-        embed_url = self.class.embed_url(video_id)
-        @embed_doc ||= Onebox::Helpers.fetch_html_doc(embed_url)
+        # Only try oEmbed for video URLs (not channels, playlists, etc.)
+        # This is a fast check before making the HTTP request
+        if video_id
+          # Try oEmbed first (most reliable)
+          begin
+            oembed = get_oembed
+            if oembed.data[:thumbnail_url] && oembed.data[:title]
+              @parse_embed_response = {
+                image: oembed.data[:thumbnail_url],
+                title: oembed.data[:title],
+              }
+              return @parse_embed_response
+            end
+          rescue StandardError
+            # Fall through to other methods
+          end
+
+          # Try parsing embed page JSON (legacy, can be broken
+          # or missing in some cases)
+          embed_url = self.class.embed_url(video_id)
+          @embed_doc ||= Onebox::Helpers.fetch_html_doc(embed_url)
+        end
 
         begin
           script_tag =
@@ -42,11 +61,10 @@ module Onebox
           title = renderer["title"]["runs"].first["text"]
 
           image = "https://img.youtube.com/vi/#{video_id}/hqdefault.jpg"
-        rescue StandardError
-          return
-        end
 
-        @parse_embed_response = { image: image, title: title }
+          @parse_embed_response = { image:, title: }
+        rescue StandardError
+        end
       end
 
       def placeholder_html
@@ -63,6 +81,7 @@ module Onebox
       def to_html
         if video_id
           <<-HTML
+            <img class="youtube-thumbnail onebox" style="display: none;" src="#{video_thumbnail_url}">
             <iframe
               src="#{self.class.embed_url(video_id)}?#{embed_params}"
               width="#{WIDTH}"
@@ -191,6 +210,10 @@ module Onebox
           end
       rescue StandardError
         {}
+      end
+
+      def video_thumbnail_url
+        "https://img.youtube.com/vi/#{video_id}/maxresdefault.jpg"
       end
     end
   end

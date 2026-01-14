@@ -29,5 +29,9 @@ module Migrations::SetStore
     def empty?
       @store.empty?
     end
+
+    def each
+      @store.each
+    end
   end
 end

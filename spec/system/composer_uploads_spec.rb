@@ -150,6 +150,31 @@ describe "Uploading files in the composer", type: :system do
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container", count: 2)
     end
+
+    it "handles thumbnail upload errors gracefully without blocking video upload" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+      topic.fill_in_composer_title("Thumbnail Error Test")
+
+      # Mock canvas.toBlob to fail, simulating a thumbnail generation error
+      page.execute_script <<-JS
+        HTMLCanvasElement.prototype.toBlob = function(callback, type, quality) {
+          // Simulate a failure in blob creation
+          setTimeout(() => callback(null), 0);
+        };
+      JS
+
+      file_path_1 = file_from_fixtures("small.webm", "media").path
+      attach_file("file-uploader", file_path_1, make_visible: true)
+
+      # Video upload should complete successfully even if thumbnail generation fails
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".onebox-placeholder-container")
+
+      # Video should still be uploadable/submittable
+      composer.submit
+      expect(find("#topic-title")).to have_content("Thumbnail Error Test")
+    end
   end
 
   context "when multiple images are uploaded" do

@@ -56,6 +56,7 @@ module Migrations::Database::IntermediateDB
         new_topic_duration_minutes,
         notification_level_when_assigned,
         notification_level_when_replying,
+        notify_on_linked_posts,
         oldest_search_log_date,
         only_chat_push_notifications,
         policy_email_frequency,
@@ -76,7 +77,7 @@ module Migrations::Database::IntermediateDB
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?
+        ?, ?, ?, ?, ?
       )
     SQL
     private_constant :SQL
@@ -131,6 +132,7 @@ module Migrations::Database::IntermediateDB
     # @param new_topic_duration_minutes             [Integer, nil]
     # @param notification_level_when_assigned       [Integer, nil]
     # @param notification_level_when_replying       [Integer, nil]
+    # @param notify_on_linked_posts                 [Boolean, nil]
     # @param oldest_search_log_date                 [Time, nil]
     # @param only_chat_push_notifications           [Boolean, nil]
     # @param policy_email_frequency                 [Integer, nil]
@@ -198,6 +200,7 @@ module Migrations::Database::IntermediateDB
       new_topic_duration_minutes: nil,
       notification_level_when_assigned: nil,
       notification_level_when_replying: nil,
+      notify_on_linked_posts: nil,
       oldest_search_log_date: nil,
       only_chat_push_notifications: nil,
       policy_email_frequency: nil,
@@ -265,6 +268,7 @@ module Migrations::Database::IntermediateDB
         new_topic_duration_minutes,
         notification_level_when_assigned,
         notification_level_when_replying,
+        ::Migrations::Database.format_boolean(notify_on_linked_posts),
         ::Migrations::Database.format_datetime(oldest_search_log_date),
         ::Migrations::Database.format_boolean(only_chat_push_notifications),
         policy_email_frequency,

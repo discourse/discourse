@@ -5,17 +5,19 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import Chart from "discourse/admin/components/chart";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import Chart from "admin/components/chart";
-import MultiSelect from "select-kit/components/multi-select";
 
 export default class AiTranslations extends Component {
+  @service aiCredits;
   @service router;
   @service languageNameLookup;
   @service site;
@@ -40,6 +42,46 @@ export default class AiTranslations extends Component {
   @tracked isSavingLocales = false;
   @tracked isTogglingTranslation = false;
   @tracked hourlyRate = this.args.model?.hourly_rate || 0;
+  @tracked creditStatus = null;
+  @tracked creditCheckComplete = false;
+
+  constructor() {
+    super(...arguments);
+    this._checkCredits();
+  }
+
+  async _checkCredits() {
+    try {
+      this.creditStatus =
+        await this.aiCredits.getFeatureCreditStatus("locale_detector");
+    } catch {
+      this.creditStatus = null;
+    }
+    this.creditCheckComplete = true;
+  }
+
+  get creditLimitReached() {
+    return this.creditStatus?.hard_limit_reached === true;
+  }
+
+  get creditLimitWarningMessage() {
+    if (!this.creditLimitReached) {
+      return null;
+    }
+    const resetTime =
+      this.creditStatus?.reset_time_formatted ||
+      this.creditStatus?.reset_time_absolute;
+    if (resetTime) {
+      return htmlSafe(
+        i18n("discourse_ai.translations.credit_limit_warning", {
+          reset_time: resetTime,
+        })
+      );
+    }
+    return htmlSafe(
+      i18n("discourse_ai.translations.credit_limit_warning_no_time")
+    );
+  }
 
   get localesChanged() {
     const current = [...this.selectedLocales].sort().join("|");
@@ -292,11 +334,7 @@ export default class AiTranslations extends Component {
     const colors = this.chartColors;
     const processedData = this.data.map(({ locale, total, done }) => {
       const rawPercentage = total > 0 ? (done / total) * 100 : 0;
-      // Show one decimal place when between 99.0 and 99.9 to avoid showing 100% when not complete
-      const donePercentage =
-        rawPercentage >= 99 && rawPercentage < 100 && rawPercentage % 1 !== 0
-          ? rawPercentage.toFixed(1)
-          : rawPercentage.toFixed(0);
+      const donePercentage = Math.trunc(rawPercentage).toString();
       const localeName = this.languageNameLookup.getLanguageName(locale);
       const languageNameForTooltip = localeName.split(" (")[0];
 
@@ -430,6 +468,13 @@ export default class AiTranslations extends Component {
           {{/if}}
         </:actions>
       </DPageSubheader>
+
+      {{#if this.creditLimitReached}}
+        <div class="alert alert-warning ai-translations__credit-warning">
+          {{icon "triangle-exclamation"}}
+          <span>{{this.creditLimitWarningMessage}}</span>
+        </div>
+      {{/if}}
 
       {{#if this.showLocaleSelector}}
         <div class="alert alert-info">

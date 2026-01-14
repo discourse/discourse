@@ -85,6 +85,22 @@
               }
             },
             "required": ["id", "post_number", "url", "category_slug", "topic"]
+          },
+          "occurrences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "starts_at": {
+                  "type": ["string", "null"]
+                },
+                "ends_at": {
+                  "type": ["string", "null"]
+                }
+              },
+              "required": ["starts_at", "ends_at"]
+            }
           }
         },
         "required": [
@@ -94,7 +110,8 @@
           "ends_at",
           "show_local_time",
           "timezone",
-          "post"
+          "post",
+          "occurrences"
         ]
       }
     }

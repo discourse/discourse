@@ -35,13 +35,11 @@ describe RRuleGenerator do
 
   describe "show_local_time" do
     it "generates floating time RRule without timezone when show_local_time is enabled" do
-      timezone = "Europe/Prague"
       time = Time.utc(2020, 1, 25, 15, 36)
 
       rrule_string =
         RRuleGenerator.generate_string(
           starts_at: time,
-          timezone: timezone,
           recurrence: "every_week",
           dtstart: time,
           show_local_time: true,
@@ -53,13 +51,11 @@ describe RRuleGenerator do
     end
 
     it "generates timezone-specific RRule when show_local_time is disabled" do
-      timezone = "Europe/Prague"
       time = Time.utc(2020, 1, 25, 15, 36)
 
       rrule_string =
         RRuleGenerator.generate_string(
           starts_at: time,
-          timezone: timezone,
           recurrence: "every_week",
           dtstart: time,
           show_local_time: false,

@@ -5,15 +5,15 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { eq } from "truth-helpers";
+import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-post-action";
+import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
+import AdminPenaltySimilarUsers from "discourse/admin/components/admin-penalty-similar-users";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
+import { eq } from "discourse/truth-helpers";
 import I18n, { i18n } from "discourse-i18n";
-import AdminPenaltyPostAction from "admin/components/admin-penalty-post-action";
-import AdminPenaltyReason from "admin/components/admin-penalty-reason";
-import AdminPenaltySimilarUsers from "admin/components/admin-penalty-similar-users";
 
 export default class PenalizeUser extends Component {
   @service dialog;
@@ -27,6 +27,7 @@ export default class PenalizeUser extends Component {
   @tracked flash;
   @tracked reason;
   @tracked message;
+  @tracked readyToDeleteAll = false;
 
   constructor() {
     super(...arguments);
@@ -72,7 +73,8 @@ export default class PenalizeUser extends Component {
       this.penalizing ||
       isEmpty(this.penalizeUntil) ||
       !this.reason ||
-      this.reason.length < 1
+      this.reason.length < 1 ||
+      (this.postAction === "delete_all" && !this.readyToDeleteAll)
     );
   }
 
@@ -110,8 +112,12 @@ export default class PenalizeUser extends Component {
         console.error("Unknown penalty type:", this.args.model.penaltyType);
       }
       this.args.closeModal({ success: true });
-      if (this.successCallback) {
-        await this.successCallback(result);
+      if (this.args.model.successCallback) {
+        await this.args.model.successCallback({
+          ...result,
+          shouldDeleteAllPosts:
+            this.postAction === "delete_all" && this.readyToDeleteAll,
+        });
       }
     } catch (error) {
       this.flash = result ? extractError(result) : extractError(error);
@@ -136,6 +142,11 @@ export default class PenalizeUser extends Component {
   @action
   similarUsersChanged(userIds) {
     this.otherUserIds = userIds;
+  }
+
+  @action
+  updateReadyToDeleteAll(flag) {
+    this.readyToDeleteAll = flag;
   }
 
   <template>
@@ -185,6 +196,8 @@ export default class PenalizeUser extends Component {
               @postId={{@model.postId}}
               @postAction={{this.postAction}}
               @postEdit={{this.postEdit}}
+              @user={{@model.user}}
+              @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
             />
           {{/if}}
           {{#if @model.user.similar_users_count}}

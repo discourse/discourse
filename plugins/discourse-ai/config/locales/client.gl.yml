@@ -41,7 +41,7 @@ gl:
         disabled: "(desactivado)"
         groups: "Grupos:"
         no_groups: "Ningunha"
-        edit: "Editar"
+        edit: "Configuración"
         expand_list:
           one: "(%{count} máis)"
           other: "(%{count} máis)"
@@ -56,6 +56,16 @@ gl:
         select_option: "Seleccione unha opción..."
       translations:
         title: "Traducións"
+        stats:
+          eta_minutes:
+            one: "%{count} minuto"
+            other: "%{count} minutos"
+          eta_hours:
+            one: "%{count} hora"
+            other: "%{count} horas"
+          eta_days:
+            one: "%{count} día"
+            other: "%{count} días"
         progress_chart:
           bar_done:
             one: "%{count} publicación"
@@ -69,6 +79,7 @@ gl:
         summary: "Resumo"
         username: "Nome de usuario"
         total_requests: "Solicitudes totais"
+        total: "Total"
         periods:
           custom: "Personalizar..."
       ai_persona:
@@ -140,6 +151,8 @@ gl:
           copy: "Copiar"
           copied: "Copiado!"
           cancel: "Cancelar"
+        thumbnail_suggestions:
+          try_again: "Tentar de novo"
         image_caption:
           save_caption: "Gardar"
       embeddings:

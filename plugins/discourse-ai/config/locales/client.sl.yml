@@ -40,7 +40,7 @@ sl:
         groups: "Skupine:"
         no_persona: "Ni nastavljeno"
         no_groups: "Brez"
-        edit: "Uredi"
+        edit: "Nastavitve"
         expand_list:
           one: "(%{count} več)"
           two: "(%{count} več)"
@@ -59,6 +59,22 @@ sl:
       layout:
         table: "Tabela"
       translations:
+        stats:
+          eta_minutes:
+            one: "%{count} minuta"
+            two: "%{count} minuti"
+            few: "%{count} minute"
+            other: "%{count} minut"
+          eta_hours:
+            one: "%{count} ura"
+            two: "%{count} uri"
+            few: "%{count} ure"
+            other: "%{count} ur"
+          eta_days:
+            one: "%{count} dan"
+            two: "%{count} dneva"
+            few: "%{count} dnevi"
+            other: "%{count} dni"
         progress_chart:
           bar_done:
             one: "%{count} prispevek"
@@ -74,6 +90,7 @@ sl:
       usage:
         summary: "Povzetek"
         username: "Uporabniško ime"
+        total: "Skupaj"
         periods:
           last_day: "Zadnjih 24 ur"
           custom: "Po meri..."
@@ -144,6 +161,8 @@ sl:
           copy: "Kopiraj"
           copied: "Kopirano!"
           cancel: "Prekliči"
+        thumbnail_suggestions:
+          try_again: "Poskusi ponovno"
         image_caption:
           save_caption: "Shrani"
       embeddings:

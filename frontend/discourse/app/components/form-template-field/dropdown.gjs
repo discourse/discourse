@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
+import { eq } from "discourse/truth-helpers";
 
 const Dropdown = <template>
   <div class="control-group form-template-field" data-field-type="dropdown">

@@ -20,6 +20,7 @@ register_asset "stylesheets/common/gamification-score.scss"
 
 register_svg_icon "crown"
 register_svg_icon "award"
+register_svg_icon "trophy"
 
 module ::DiscourseGamification
   PLUGIN_NAME = "discourse-gamification"
@@ -70,12 +71,10 @@ after_initialize do
     Guardian.include(DiscourseGamification::GuardianExtension)
   end
 
-  if respond_to?(:add_directory_column)
-    add_directory_column(
-      "gamification_score",
-      query: DiscourseGamification::DirectoryIntegration.query,
-    )
-  end
+  add_directory_column(
+    "gamification_score",
+    query: DiscourseGamification::DirectoryIntegration.query,
+  )
 
   add_to_serializer(
     :admin_plugin,

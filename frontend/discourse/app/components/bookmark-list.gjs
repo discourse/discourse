@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
-import { and } from "truth-helpers";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -26,13 +25,18 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
+import BulkSelectBookmarksDropdown from "discourse/select-kit/components/bulk-select-bookmarks-dropdown";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import BulkSelectBookmarksDropdown from "select-kit/components/bulk-select-bookmarks-dropdown";
 
 @classNames("bookmark-list-wrapper")
 export default class BookmarkList extends Component {
@@ -153,14 +157,14 @@ export default class BookmarkList extends Component {
   }
 
   _removeBookmarkFromList(bookmark) {
-    this.content.removeObject(bookmark);
+    removeValueFromArray(this.content, bookmark);
   }
 
   _toggleSelection(target, bookmark, isSelectingRange) {
     const selected = this.selected;
 
     if (target.checked) {
-      selected.addObject(bookmark);
+      addUniqueValueToArray(selected, bookmark);
 
       if (isSelectingRange) {
         const bulkSelects = Array.from(
@@ -180,7 +184,7 @@ export default class BookmarkList extends Component {
       }
       this.set("lastChecked", target);
     } else {
-      selected.removeObject(bookmark);
+      removeValueFromArray(selected, bookmark);
       this.set("lastChecked", null);
     }
   }

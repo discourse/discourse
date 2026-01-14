@@ -1,9 +1,22 @@
 import { fn } from "@ember/helper";
 import DButton from "discourse/components/d-button";
+import NavItem from "discourse/components/nav-item";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default <template>
+  <ul class="nav nav-pills reviewable-title">
+    <NavItem @route="review.index" @label="review.view_all" />
+    <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+    {{#if @controller.currentUser.admin}}
+      <NavItem
+        @route="review.settings"
+        @label="review.settings.title"
+        @icon="wrench"
+      />
+    {{/if}}
+  </ul>
+
   <div class="reviewable-settings">
     <h4>{{i18n "review.settings.priorities.title"}}</h4>
 

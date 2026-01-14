@@ -63,7 +63,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
     assert.dom(".post-list-item__details .post-member-info").doesNotExist();
   });
 
-  test("@titlePath", async function (assert) {
+  test("@titlePath with plain text title", async function (assert) {
     const posts = cloneJSON(postModel).map((post) => {
       post.topic_html_title = `Fancy title`;
       return post;
@@ -74,6 +74,23 @@ module("Integration | Component | PostList | Index", function (hooks) {
       </template>
     );
     assert.dom(".post-list-item__details .title a").hasText("Fancy title");
+  });
+
+  test("@titlePath with emoji title", async function (assert) {
+    const posts = cloneJSON(postModel).map((post) => {
+      post.titleHtml = `<img width="20" height="20" src="/images/emoji/twitter/smiley.png?v=15" title="smiley" alt="smiley" class="emoji"> Zion Event Post`;
+      return post;
+    });
+    await render(
+      <template><PostList @posts={{posts}} @titlePath="titleHtml" /></template>
+    );
+    assert
+      .dom(".post-list-item__details .title a")
+      .includesText("Zion Event Post");
+    assert.dom(".post-list-item__details .title a img.emoji").exists();
+    assert
+      .dom(".post-list-item__details .title a img.emoji")
+      .hasAttribute("alt", "smiley");
   });
 
   test("@idPath", async function (assert) {

@@ -1,7 +1,6 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
-import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FullnameInput from "discourse/components/fullname-input";
 import InputTip from "discourse/components/input-tip";
@@ -20,6 +19,7 @@ import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>

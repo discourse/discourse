@@ -32,11 +32,46 @@ pl_PL:
     post_voting_enable_likes_on_answers: "Włącz przycisk polubień na odpowiedziach na temat głosowania na posty"
     post_voting_undo_vote_action_window: "Liczba minut, przez które użytkownicy mogą cofnąć głosy oddane w tematach głosowania na posty (wprowadź 0, aby nie było limitu)"
     post_voting_comment_limit_per_post: "Liczba komentarzy dozwolonych pod każdym postem"
-    min_trust_to_flag_posts_voting_comments: "Minimalny poziom zaufania wymagany do oznaczenia postu i głosowania nad komentarzem"
     flag_posts_voting_comments_allowed_groups: "Grupy, które mogą oznaczać posty głosowaniem na komentarz"
     post_voting_comment_enabled: "Włącz komentarze do postów w tematach głosowania na posty"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_zaufanie_do_głosowania_w_komentarzach_w_postach"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        comment_actions:
+          bundle_title: "Co chcesz zrobić z tym komentarzem?"
+        no_action_comment:
+          title: "Brak akcji"
+          description: "Pozostaw komentarz bez zmian."
+        agree_and_keep_comment:
+          title: "Zachowaj komentarz"
+          description: "Zgadzam się z flagą i pozostawię komentarz bez zmian."
+        agree_and_keep_deleted:
+          title: "Zachowaj komentarz usunięty"
+          description: "Zgadzam się z flagą i pozostawię komentarz usunięty."
+        agree_and_restore:
+          title: "Przywróć komentarz"
+          description: "Przywróć komentarz, aby użytkownicy mogli go zobaczyć."
+        agree_and_delete:
+          title: "Usuń komentarz"
+          description: "Usuń komentarz, aby użytkownicy nie mogli go zobaczyć."
+        agree_and_suspend:
+          title: "Zawieś użytkownika"
+          description: "Zgódź się z flagą i zawieś konto użytkownika."
+        agree_and_silence:
+          title: "Wycisz użytkownika"
+          description: "Zgódź się z flagą i wycisz użytkownika."
+        disagree_and_restore:
+          title: "Nie zgadzam się i przywróć komentarz"
+          description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
+        disagree:
+          title: "Zachowaj komentarz"
+          description: "Nie zgódź się z flagą i pozostaw komentarz bez zmian."
+        ignore:
+          title: "Ignoruj flagę"
+          description: "Usuń z kolejki bez podejmowania żadnych działań."
+        delete_and_agree:
+          title: "Zignoruj flagę i usuń komentarz"
+          description: "Zignoruj flagę, usuwając ją z kolejki i usuń komentarz."
   post_action_types:
     vote:
       title: "Głosuj"
@@ -92,10 +127,11 @@ pl_PL:
             title: "Nie zgadzam się i przywróć komentarz"
             description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
           disagree:
-            title: "Wycofaj"
+            title: "Zachowaj komentarz"
+            description: "Nie zgódź się z flagą i pozostaw komentarz bez zmian."
           ignore:
-            title: "Nic nie rób"
-            description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+            title: "Ignoruj flagę"
+            description: "Usuń z kolejki bez podejmowania żadnych działań."
         transcript:
           view: "Zobacz transkrypt poprzednich komentarzy"
       reviewable_score_types:

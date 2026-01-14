@@ -8,7 +8,9 @@
 }
 
 @include viewport.from(md) {
-  .list-controls #create-topic {
-    display: none;
+  .horizon-new-topic-button-enabled {
+    .list-controls #create-topic {
+      display: none;
+    }
   }
 }

@@ -1,23 +1,25 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { and, gt, not } from "truth-helpers";
+import AdminEditableField from "discourse/admin/components/admin-editable-field";
+import AdminUserExportsTable from "discourse/admin/components/admin-user-exports-table";
+import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
+import IpLookup from "discourse/admin/components/ip-lookup";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import avatar from "discourse/helpers/avatar";
+import basePath from "discourse/helpers/base-path";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { and, gt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminEditableField from "admin/components/admin-editable-field";
-import AdminUserExportsTable from "admin/components/admin-user-exports-table";
-import IpLookup from "admin/components/ip-lookup";
-import ComboBox from "select-kit/components/combo-box";
-import GroupChooser from "select-kit/components/group-chooser";
 
 export default <template>
   <section class="details {{unless @controller.model.active 'not-activated'}}">
@@ -772,7 +774,11 @@ export default <template>
             />
           {{/if}}
         {{else}}
-          {{@controller.deleteAllPostsExplanation}}
+          {{#if @controller.deleteAllPostsExplanation}}
+            <span class="delete-all-posts-explanation">
+              {{@controller.deleteAllPostsExplanation}}
+            </span>
+          {{/if}}
         {{/if}}
       </div>
     </div>
@@ -927,6 +933,22 @@ export default <template>
     </section>
   {{/if}}
 
+  {{#if
+    (and
+      @controller.currentUser.staff
+      @controller.model.upcoming_changes_stats
+      @controller.siteSettings.enable_upcoming_changes
+    )
+  }}
+    <section class="details">
+      <h1>{{i18n "admin.user.upcoming_changes.title"}}</h1>
+      <p>{{htmlSafe
+          (i18n "admin.user.upcoming_changes.description" basePath=basePath)
+        }}</p>
+      <AdminUserUpcomingChanges @user={{@controller.model}} />
+    </section>
+  {{/if}}
+
   {{#if @controller.currentUser.admin}}
     <AdminUserExportsTable @model={{@controller.model}} />
   {{/if}}
@@ -988,7 +1010,9 @@ export default <template>
       <br />
       <div class="pull-right">
         {{icon "triangle-exclamation"}}
-        {{@controller.deleteExplanation}}
+        <span class="delete-explanation">
+          {{@controller.deleteExplanation}}
+        </span>
       </div>
     {{/if}}
   </section>

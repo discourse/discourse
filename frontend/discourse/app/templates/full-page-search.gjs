@@ -2,16 +2,15 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
-import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import GoogleSearch from "discourse/components/google-search";
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import SearchBulkSelectDropdown from "discourse/components/search-bulk-select-dropdown";
 import SearchResultEntries from "discourse/components/search-result-entries";
 import SearchTextField from "discourse/components/search-text-field";
-import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
@@ -19,8 +18,9 @@ import categoryLink from "discourse/helpers/category-link";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default <template>
   {{#if @controller.loading}}
@@ -155,7 +155,7 @@ export default <template>
                 class="btn-default bulk-select"
               />
               {{#if @controller.bulkSelectHelper.selected}}
-                <TopicBulkSelectDropdown
+                <SearchBulkSelectDropdown
                   @bulkSelectHelper={{@controller.bulkSelectHelper}}
                   @afterBulkActionComplete={{@controller.afterBulkActionComplete}}
                 />
@@ -310,7 +310,7 @@ export default <template>
                       {{#each @controller.model.tags as |tag|}}
                         <div class="fps-tag-item">
                           <a href={{tag.url}}>
-                            {{tag.id}}
+                            {{tag.name}}
                           </a>
                         </div>
                       {{/each}}

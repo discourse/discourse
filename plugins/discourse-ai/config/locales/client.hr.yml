@@ -42,7 +42,7 @@ hr:
         groups: "Grupe:"
         no_persona: "Nije postavljeno"
         no_groups: "Ništa"
-        edit: "Uredi"
+        edit: "Postavke"
         expand_list:
           one: "(%{count} još)"
           few: "(%{count} još)"
@@ -59,6 +59,19 @@ hr:
         select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
+        stats:
+          eta_minutes:
+            one: "%{count} minuta"
+            few: "%{count} minuta"
+            other: "%{count} minuta"
+          eta_hours:
+            one: "%{count} sat"
+            few: "%{count} sata"
+            other: "%{count} sata"
+          eta_days:
+            one: "%{count} dan"
+            few: "%{count} dana"
+            other: "%{count} dana"
         progress_chart:
           bar_done:
             one: "%{count} objava"
@@ -74,6 +87,7 @@ hr:
         summary: "Sažetak"
         username: "Korisničko ime"
         total_requests: "Ukupno zahtjeva"
+        total: "Ukupno"
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."
@@ -150,6 +164,7 @@ hr:
         thumbnail_suggestions:
           select: "Odaberite"
           selected: "Odabrano"
+          try_again: "Pokušaj ponovno"
         image_caption:
           save_caption: "Spremi"
       embeddings:

@@ -11,6 +11,8 @@ ca:
       not_accepting_dms: "De moment %{username} no accepta missatges."
     reviewables:
       actions:
+        no_action_message:
+          title: "Cap acció"
         agree:
           title: "D'acord..."
         agree_and_suspend:
@@ -19,8 +21,8 @@ ca:
         agree_and_silence:
           title: "Silencia l'usuari"
           description: "D'acord amb la bandera i silencia l'usuari. "
-        disagree:
-          title: "En desacord"
+        ignore:
+          title: "Ignora la bandera"
     channel:
       dm_title:
         single_user: "%{username}"

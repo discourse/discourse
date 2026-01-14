@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 const EMAIL_LEVELS = {
@@ -19,18 +20,6 @@ export default class EmailsController extends Controller {
 
   @equal("model.user_option.email_level", EMAIL_LEVELS.ONLY_WHEN_AWAY)
   emailLevelAway;
-
-  saveAttrNames = [
-    "email_level",
-    "email_messages_level",
-    "mailing_list_mode",
-    "mailing_list_mode_frequency",
-    "email_digests",
-    "email_in_reply_to",
-    "email_previous_replies",
-    "digest_after_minutes",
-    "include_tl0_in_digests",
-  ];
 
   previousRepliesOptions = [
     { name: i18n("user.email_previous_replies.always"), value: 0 },
@@ -55,6 +44,24 @@ export default class EmailsController extends Controller {
     { name: i18n("user.email_digests.every_month"), value: 43200 },
     { name: i18n("user.email_digests.every_six_months"), value: 259200 },
   ];
+
+  get saveAttrNames() {
+    return applyValueTransformer(
+      "preferences-save-attributes",
+      [
+        "email_level",
+        "email_messages_level",
+        "mailing_list_mode",
+        "mailing_list_mode_frequency",
+        "email_digests",
+        "email_in_reply_to",
+        "email_previous_replies",
+        "digest_after_minutes",
+        "include_tl0_in_digests",
+      ],
+      { page: "emails" }
+    );
+  }
 
   @discourseComputed()
   frequencyEstimate() {

@@ -1,15 +1,16 @@
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
+import StartBackupModal from "discourse/admin/components/modal/start-backup";
+import Backup from "discourse/admin/models/backup";
+import BackupStatus from "discourse/admin/models/backup-status";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
-import StartBackupModal from "admin/components/modal/start-backup";
-import Backup from "admin/models/backup";
-import BackupStatus from "admin/models/backup-status";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
@@ -73,7 +74,7 @@ export default class AdminBackupsRoute extends DiscourseRoute {
     } else {
       this.controllerFor("admin.backups.logs")
         .get("logs")
-        .pushObject(EmberObject.create(log));
+        .push(EmberObject.create(log));
     }
   }
 
@@ -95,17 +96,13 @@ export default class AdminBackupsRoute extends DiscourseRoute {
   }
 
   @action
-  destroyBackup(backup) {
+  async destroyBackup(backup) {
     return this.dialog.yesNoConfirm({
       message: i18n("admin.backups.operations.destroy.confirm"),
-      didConfirm: () => {
-        backup
-          .destroy()
-          .then(() =>
-            this.controllerFor("admin.backups.index")
-              .get("model")
-              .removeObject(backup)
-          );
+      didConfirm: async () => {
+        await backup.destroy();
+        const list = this.controllerFor("admin.backups.index").get("model");
+        removeValueFromArray(list, backup);
       },
     });
   }

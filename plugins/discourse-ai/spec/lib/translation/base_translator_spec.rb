@@ -52,7 +52,7 @@ describe DiscourseAi::Translation::BaseTranslator do
 
       expect(DiscourseAi::Personas::BotContext).to have_received(:new).with(
         user: an_instance_of(User),
-        skip_tool_details: true,
+        skip_show_thinking: true,
         feature_name: "translation",
         messages: [{ type: :user, content: expected_content }],
         topic: topic,
@@ -63,11 +63,13 @@ describe DiscourseAi::Translation::BaseTranslator do
       expect(mock_bot).to have_received(:reply).with(bot_context, llm_args: { max_tokens: 500 })
     end
 
-    it "sets max_tokens correctly based on text length" do
+    it "sets max_tokens correctly based on text length and ai_translation_max_tokens_multiplier setting" do
+      multiplier = 1.5
+      SiteSetting.ai_translation_max_tokens_multiplier = multiplier
       test_cases = [
-        ["Short text", 500], # Short text (< 100 chars)
-        ["a" * 200, 1000], # Medium text (100-500 chars)
-        ["a" * 600, 1200], # Long text (> 500 chars, 600*2=1200)
+        ["Short text", 500 * multiplier], # Short text (< 100 chars)
+        ["a" * 200, 1000 * multiplier], # Medium text (100-500 chars)
+        ["a" * 600, 1200 * multiplier], # Long text (> 500 chars, 600*2=1200)
       ]
 
       test_cases.each do |text, expected_max_tokens|

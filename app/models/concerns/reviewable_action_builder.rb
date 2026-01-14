@@ -82,7 +82,7 @@ module ReviewableActionBuilder
     @guardian = guardian
     @action_args = args
 
-    if guardian.can_see_reviewable_ui_refresh?
+    if guardian.can_see_reviewable_ui_refresh? && !SiteSetting.reviewable_old_moderator_actions
       build_new_separated_actions
     else
       build_legacy_combined_actions(actions, guardian, args)
@@ -222,6 +222,7 @@ module ReviewableActionBuilder
   end
 
   def perform_unhide_post(performed_by, _args)
+    target_post.acting_user = performed_by
     target_post.unhide!
     create_result(:success, :approved, [created_by_id], false)
   end
@@ -244,12 +245,15 @@ module ReviewableActionBuilder
   private
 
   # Returns the user associated with the reviewable, if applicable.
-  # For most reviewables, this will be the user who created the reviewable, though some
-  # reviewables may need to implement this method differently (for example, ReviewableUser).
+  # For most reviewables, this will be the user who created the reviewable target.
   #
   # @return [User] The user associated with the reviewable.
   def target_user
-    try(:target_created_by)
+    if target_type == "User"
+      try(:target)
+    else
+      try(:target_created_by)
+    end
   end
 
   # Returns the post associated with the reviewable, if applicable.

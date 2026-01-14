@@ -26,3 +26,9 @@ cs:
       few: "%{count} hlasy nelze přesunout, protože uživatel již ve druhém tématu hlasoval."
       many: "%{count} hlasů nelze přesunout, protože uživatel již ve druhém tématu hlasoval."
       other: "%{count} hlasů nelze přesunout, protože uživatel již ve druhém tématu hlasoval."
+    filter:
+      description:
+        topic_votes_min: "Minimální počet hlasů pro dané téma"
+        topic_votes_max: "Maximální počet hlasů pro dané téma"
+        order_topic_votes: "Seřadit témata podle nejvyššího počtu hlasů"
+        order_topic_votes_asc: "Seřadit témata podle nejnižšího počtu hlasů"

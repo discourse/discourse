@@ -1,17 +1,20 @@
-import { A } from "@ember/array";
-import { Promise } from "rsvp";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import UserAction from "discourse/models/user-action";
 
 export default class UserStream extends RestModel {
-  loaded = false;
-  itemsLoaded = 0;
-  content = [];
+  @tracked actingUsername;
+  @tracked lastLoadedUrl;
+  @tracked loaded = false;
+  @tracked loading = false;
+  @tracked itemsLoaded = 0;
+  @trackedArray content = [];
 
   @url(
     "itemsLoaded",
@@ -33,17 +36,13 @@ export default class UserStream extends RestModel {
     return filter;
   }
 
-  filterBy(opts) {
-    this.setProperties(
-      Object.assign(
-        {
-          itemsLoaded: 0,
-          content: [],
-          lastLoadedUrl: null,
-        },
-        opts
-      )
-    );
+  async filterBy(opts) {
+    this.setProperties({
+      itemsLoaded: 0,
+      content: [],
+      lastLoadedUrl: null,
+      ...opts,
+    });
 
     return this.findItems();
   }
@@ -78,7 +77,7 @@ export default class UserStream extends RestModel {
       ["likes", "stars", "edits", "bookmarks"].forEach((group) => {
         const items = ua.get(`childGroups.${group}.items`);
         if (items) {
-          items.removeObject(userAction);
+          removeValueFromArray(items, userAction);
         }
       });
     });
@@ -93,45 +92,39 @@ export default class UserStream extends RestModel {
     this.setProperties({ content, itemsLoaded: content.length });
   }
 
-  findItems() {
-    if (!this.canLoadMore) {
+  async findItems() {
+    if (this.loading || !this.canLoadMore) {
       // Don't load the same stream twice. We're probably at the end.
-      return Promise.resolve();
+      return;
     }
 
     const findUrl = this.nextFindUrl;
 
-    if (this.loading) {
-      return Promise.resolve();
-    }
+    this.loading = true;
+    try {
+      const result = await ajax(findUrl);
+      if (result && result.user_actions) {
+        const copy = [];
 
-    this.set("loading", true);
-    return ajax(findUrl)
-      .then((result) => {
-        if (result && result.user_actions) {
-          const copy = A();
+        result.categories?.forEach((category) => {
+          Site.current().updateCategory(category);
+        });
 
-          result.categories?.forEach((category) => {
-            Site.current().updateCategory(category);
-          });
+        result.user_actions?.forEach((action) => {
+          copy.push(UserAction.create(action));
+        });
 
-          result.user_actions?.forEach((action) => {
-            action.titleHtml = replaceEmoji(action.title);
-            copy.pushObject(UserAction.create(action));
-          });
-
-          this.content.pushObjects(UserAction.collapseStream(copy));
-          this.setProperties({
-            itemsLoaded: this.itemsLoaded + result.user_actions.length,
-          });
-        }
-      })
-      .finally(() =>
+        this.content.push(...UserAction.collapseStream(copy));
         this.setProperties({
-          loaded: true,
-          loading: false,
-          lastLoadedUrl: findUrl,
-        })
-      );
+          itemsLoaded: this.itemsLoaded + result.user_actions.length,
+        });
+      }
+    } finally {
+      this.setProperties({
+        loaded: true,
+        loading: false,
+        lastLoadedUrl: findUrl,
+      });
+    }
   }
 }
