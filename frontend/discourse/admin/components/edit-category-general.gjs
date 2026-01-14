@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import DecoratedHtml from "discourse/components/decorated-html";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
@@ -450,7 +451,7 @@ export default class EditCategoryGeneral extends Component {
       return htmlSafe(this.args.category.description);
     }
 
-    return i18n("category.no_description");
+    return htmlSafe(i18n("category.no_description"));
   }
 
   get canSelectParentCategory() {

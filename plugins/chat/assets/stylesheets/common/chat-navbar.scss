@@ -60,6 +60,16 @@
   height: var(--chat-header-offset);
   display: flex;
   align-items: center;
+
+  .chat-channel-title.is-dm .user-status-message {
+    display: inline-flex;
+  }
+
+  .chat-channel-title.is-dm .chat-channel-name__label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 }
 
 .c-navbar__star-channel-button {

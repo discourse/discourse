@@ -134,16 +134,17 @@ en:
           title: "Delete Message"
           description: "Delete the message so that users cannot see it."
         delete_and_agree:
-          title: "Ignore Flag and Delete Message"
+          title: "Ignore flag and delete message"
           description: "Ignore the flag by removing it from the queue and delete the message."
         disagree_and_restore:
           title: "Disagree and Restore Message"
           description: "Restore the message so that all users can see it."
         disagree:
-          title: "Disagree"
+          title: "Keep message"
+          description: "Disagree with flag and leave message unchanged."
         ignore:
-          title: "Do Nothing"
-          description: "Ignore the flag by removing it from the queue without taking any action."
+          title: "Ignore flag"
+          description: "Remove it from the queue without taking action."
       direct_messages:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"

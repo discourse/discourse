@@ -61,9 +61,9 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     if post.hidden?
-      build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree_bundle)
+      build_action(actions, :agree_and_keep_hidden, icon: "far-eye-slash", bundle: agree_bundle)
     else
-      build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree_bundle)
+      build_action(actions, :agree_and_keep, icon: "far-eye", bundle: agree_bundle)
       build_action(
         actions,
         :agree_and_edit,
@@ -87,18 +87,7 @@ class ReviewableFlaggedPost < Reviewable
       end
     end
 
-    if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
-      delete_user_actions(actions, agree_bundle)
-    end
-
     if guardian.can_suspend?(target_created_by)
-      build_action(
-        actions,
-        :agree_and_suspend,
-        icon: "ban",
-        bundle: agree_bundle,
-        client_action: "suspend",
-      )
       build_action(
         actions,
         :agree_and_silence,
@@ -106,15 +95,21 @@ class ReviewableFlaggedPost < Reviewable
         bundle: agree_bundle,
         client_action: "silence",
       )
+      build_action(
+        actions,
+        :agree_and_suspend,
+        icon: "ban",
+        bundle: agree_bundle,
+        client_action: "suspend",
+      )
+    end
+
+    if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
+      delete_user_actions(actions, agree_bundle)
     end
 
     if post.user_deleted?
       build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree_bundle)
-    end
-    if post.hidden?
-      build_action(actions, :disagree_and_restore, icon: "thumbs-down")
-    else
-      build_action(actions, :disagree, icon: "thumbs-down")
     end
 
     post_visible_or_system_user = !post.hidden? || guardian.user.is_system_user?
@@ -122,27 +117,33 @@ class ReviewableFlaggedPost < Reviewable
 
     # We must return early in this case otherwise we can end up with a bundle
     # with no associated actions, which is not valid on the client.
-    return if !can_delete_post_or_topic && !post_visible_or_system_user
+    return if !can_delete_post_or_topic && !post_visible_or_system_user && post.hidden?
 
-    ignore =
+    disagree_bundle =
       actions.add_bundle(
-        "#{id}-ignore",
-        icon: "thumbs-up",
-        label: "reviewables.actions.ignore.title",
+        "#{id}-disagree",
+        icon: "far-eye",
+        label: "reviewables.actions.disagree_bundle.title",
       )
 
+    if post.hidden?
+      build_action(actions, :disagree_and_restore, icon: "far-eye", bundle: disagree_bundle)
+    else
+      build_action(actions, :disagree, icon: "far-eye", bundle: disagree_bundle)
+    end
+
     if post_visible_or_system_user
-      build_action(actions, :ignore_and_do_nothing, icon: "up-right-from-square", bundle: ignore)
+      build_action(actions, :ignore_and_do_nothing, icon: "xmark", bundle: disagree_bundle)
     end
     if can_delete_post_or_topic
-      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: ignore)
+      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: disagree_bundle)
       if post.reply_count > 0
         build_action(
           actions,
           :delete_and_ignore_replies,
           icon: "trash-can",
           confirm: true,
-          bundle: ignore,
+          bundle: disagree_bundle,
         )
       end
     end
