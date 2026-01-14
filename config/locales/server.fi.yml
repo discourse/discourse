@@ -4984,19 +4984,14 @@ fi:
         description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
         complete: "Viesti piilotettu, käyttäjälle on ilmoitettu."
       agree_and_edit:
-        title: "Hyväksy ja muokkaa viestiä"
         description: "Hyväksy lipulla ja avaa kirjoitusikkuna viestin muokkaamiseksi."
         complete: "Lippu vahvistettu, voit nyt muokata viestiä."
       delete:
         title: "Poista"
         complete: "Viesti poistettu."
       delete_and_ignore:
-        title: "Ohita liputus ja poista viesti"
-        description: "Ohita liputus poistamalla se jonosta ja poista viesti; jos viesti on ensimmäinen viesti, poista myös ketju. "
         complete: "Viesti poistettu."
       delete_and_ignore_replies:
-        title: "Ohita liputus, poista viesti ja vastaukset"
-        description: "Ohita liputus poistamalla se jonosta, poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
         complete: "Viesti ja vastaukset poistettu."
       delete_and_agree:
@@ -5009,11 +5004,12 @@ fi:
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
         complete: "Viesti ja vastaukset poistettu."
       disagree_and_restore:
-        title: "Ei, palauta viesti"
-        description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
+        title: "Palauta viesti"
         complete: "Viesti palautettu."
-      disagree:
+      disagree_bundle:
         title: "Ei"
+      disagree:
+        title: "Säilytä viesti"
         complete: "Liputus ohitettu."
       discard_post:
         title: "Hylkää viesti"
@@ -5028,31 +5024,36 @@ fi:
         description: "Ohita liputus poistamalla se jonosta tekemättä mitään. Piilotetut viestit pysyvät piilossa ja automaattiset työkalut käsittelevät ne."
         complete: "Liputus ohitettu."
       approve:
-        title: "Hyväksy"
+        title: "Kyllä"
         complete: "Viesti hyväksytty."
       approve_post:
-        title: "Hyväksy viesti"
+        title: "Kyllä"
         complete: "Viesti hyväksytty."
       approve_post_closed:
-        title: "Hyväksy viesti"
+        title: "Kyllä"
         confirm: "Tämä ketju on suljettu. Haluatko silti luoda viestin?"
         complete: "Viesti hyväksytty."
+      reject_post_bundle:
+        title: "Ei"
       reject_post:
         title: "Hylkää viesti"
         complete: "Viesti hylätty."
       approve_user:
-        title: "Hyväksy käyttäjä"
+        title: "Kyllä"
         complete: "Käyttäjä hyväksytty."
       reject_user:
-        title: "Poista käyttäjä…"
+        title: "Ei"
         delete:
           title: "Poista käyttäjä"
-          description: "Käyttäjä poistetaan foorumista."
           complete: "Käyttäjä poistettu."
         block:
           title: "Poista ja estä käyttäjä"
           description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
           complete: "Käyttäjä poistettu ja estetty."
+      confirm_spam:
+        title: "Kyllä"
+      not_spam:
+        title: "Ei"
       reject:
         title: "Hylkää"
         bundle_title: "Hylkää…"
@@ -5071,10 +5072,10 @@ fi:
       scrub:
         title: Puhdistusrekisteri
       approve_and_restore:
-        title: "Hyväksy ja palauta viesti"
+        title: "Kyllä"
         complete: "Viesti hyväksytty ja palautettu."
       approve_and_unhide:
-        title: "Hyväksy ja näytä viesti"
+        title: "Kyllä"
         complete: "Viesti hyväksytty ja näkyvissä"
       no_action_post:
         title: "Ei toimintaa"

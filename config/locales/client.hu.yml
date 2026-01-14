@@ -849,6 +849,10 @@ hu:
         reviewable_post:
           title: "Bejegyzés"
           noun: "bejegyzéssel"
+        reviewable_ai_chat_message:
+          noun: "csevegőüzenet"
+        reviewable_ai_post:
+          noun: "bejegyzéssel"
       flagged_as: "Megjelölt"
       post_flagged_as: "Bejegyzés megjelölve mint"
       chat_flagged_as: "Csevegés megjelölve mint"

@@ -597,6 +597,8 @@ bg:
         reviewable_post:
           title: "Публикация"
           noun: "публикация"
+        reviewable_ai_post:
+          noun: "публикация"
       user_label: "Потребител"
       notes:
         delete: "Изтрий"

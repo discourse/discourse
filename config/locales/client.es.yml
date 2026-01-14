@@ -846,6 +846,10 @@ es:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+        reviewable_ai_chat_message:
+          noun: "mensaje de chat"
+        reviewable_ai_post:
+          noun: "publicación"
       flagged_as: "Marcado como"
       post_flagged_as: "Publicación denunciada: "
       chat_flagged_as: "Mensaje de chat denunciado: "

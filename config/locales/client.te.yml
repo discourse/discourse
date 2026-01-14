@@ -624,6 +624,8 @@ te:
         reviewable_post:
           title: "పోస్ట్"
           noun: "పోస్ట్"
+        reviewable_ai_post:
+          noun: "పోస్ట్"
       user_label: "సభ్యుడు"
       notes:
         delete: "తొలగించు"

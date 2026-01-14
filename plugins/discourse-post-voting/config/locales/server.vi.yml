@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 vi:
+  post:
+    post_voting:
+      errors:
+        voting_not_permitted: "Bạn không được phép bình chọn tút này."
+        comment_cannot_be_downvoted: "Bạn chỉ có thể up bình chọn các bình luận."
+        self_voting_not_permitted: "Bạn không được phép bình chọn cho tút hoặc bình luận của chính mình."
+        vote_archived_topic: "Bạn không thể bình chọn cho các chủ đề đã được lưu trữ."
+        vote_closed_topic: "Bạn không thể bỏ phiếu cho các chủ đề đã đóng."
+  site_settings:
+    post_voting_undo_vote_action_window: "Số phút tối đa người dùng được phép hủy bỏ bình chọn trong các chủ đề Bỏ phiếu sau bài đăng (nhập 0 để không giới hạn)."
   discourse_post_voting:
     reviewables:
       actions:
@@ -13,6 +23,18 @@ vi:
   post_action_types:
     vote:
       title: "Bình chọn"
+      description: "Bình chọn cho tút này"
+      short_description: "Bình chọn cho tút này"
+      long_form: "đã bình chọn cho tút này"
+  vote:
+    error:
+      user_has_not_voted: "Người dùng chưa bình chọn."
+      user_over_limit: "Bạn không thể vượt quá số bình chọn tương ứng với độ tin cậy của mình."
+      already_voted: "Bạn chỉ được phép bình chọn một lần cho mỗi câu hỏi."
+      undo_vote_action_window:
+        other: "Bạn không thể hủy bỏ phiếu bầu %{count} phút sau khi đã bỏ phiếu."
+      one_vote_per_post: "Bạn chỉ có thể bình chọn một lần cho mỗi tút."
+      one_vote_per_comment: "Bạn chỉ có thể bình chọn một lần cho mỗi bình luận."
   post_voting:
     comment:
       reviewables:
@@ -21,8 +43,6 @@ vi:
             title: "Tạm ngưng người dùng"
           agree_and_silence:
             title: "Người dùng im lặng"
-          disagree:
-            title: "Không đồng ý"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

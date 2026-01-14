@@ -21,8 +21,6 @@ vi:
           title: "Tạm ngưng người dùng"
         agree_and_silence:
           title: "Người dùng im lặng"
-        disagree:
-          title: "Không đồng ý"
     channel:
       dm_title:
         single_user: "%{username}"

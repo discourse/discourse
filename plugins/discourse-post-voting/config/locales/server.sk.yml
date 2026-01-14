@@ -10,6 +10,12 @@ sk:
       actions:
         no_action_comment:
           title: "Žiadna akcia"
+        agree_and_suspend:
+          title: "Pozastavenie používateľa"
+          description: "Súhlas s príznakom a pozastavenie používateľa."
+        agree_and_silence:
+          title: "Umlčať používateľa"
+          description: "Súhlas s príznakom a umlčte používateľa."
   post_action_types:
     vote:
       title: "Hlasovať"
@@ -23,11 +29,6 @@ sk:
           agree_and_silence:
             title: "Tichý užívateľ"
             description: "Súhlas s príznakom a umlčte používateľa."
-          disagree:
-            title: "Nesúhlasiť"
-          ignore:
-            title: "Nerobte nič"
-            description: "Ignorujte príznak jeho odstránením z frontu bez vykonania akejkoľvek akcie."
       reviewable_score_types:
         needs_review:
           title: "Potreba preskúmať"

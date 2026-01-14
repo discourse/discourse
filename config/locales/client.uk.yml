@@ -990,6 +990,10 @@ uk:
         reviewable_post:
           title: "Допис"
           noun: "допис"
+        reviewable_ai_chat_message:
+          noun: "повідомлення чату"
+        reviewable_ai_post:
+          noun: "допис"
       flagged_as: "Позначено як"
       post_flagged_as: "Публікацію позначено як"
       chat_flagged_as: "Чат позначено як"

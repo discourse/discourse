@@ -5075,19 +5075,14 @@ nl:
         description: "Ga akkoord met de markering en verberg dit bericht, stuur de gebruiker automatisch een bericht waarin deze wordt aangespoord het gemarkeerde bericht te bewerken."
         complete: "Bericht verborgen, gebruiker is geïnformeerd."
       agree_and_edit:
-        title: "Akkoord en bericht bewerken"
         description: "Ga akkoord met de markering en open een editorvenster om het bericht te bewerken."
         complete: "Markering bevestigd, je kunt het bericht nu bewerken."
       delete:
         title: "Verwijderen"
         complete: "Bericht verwijderd."
       delete_and_ignore:
-        title: "Markering negeren en bericht verwijderen"
-        description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht. Als dit het eerste bericht is, wordt het topic ook verwijderd. "
         complete: "Bericht verwijderd."
       delete_and_ignore_replies:
-        title: "Markering negeren, bericht en antwoorden verwijderen"
-        description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht en alle antwoorden. Als dit het eerste bericht is, wordt het topic ook verwijderd"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       delete_and_agree:
@@ -5100,11 +5095,12 @@ nl:
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       disagree_and_restore:
-        title: "Nee, bericht herstellen"
-        description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
+        title: "Bericht herstellen"
         complete: "Bericht hersteld."
-      disagree:
+      disagree_bundle:
         title: "Nee"
+      disagree:
+        title: "Bericht behouden"
         complete: "Markering genegeerd."
       discard_post:
         title: "Bericht weggooien"
@@ -5119,31 +5115,36 @@ nl:
         description: "Negeer de vlag door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen. Verborgen berichten blijven verborgen en worden afgehandeld door de automatische tools."
         complete: "Markering genegeerd."
       approve:
-        title: "Goedkeuren"
+        title: "Ja"
         complete: "Bericht goedgekeurd."
       approve_post:
-        title: "Bericht goedkeuren"
+        title: "Ja"
         complete: "Bericht goedgekeurd."
       approve_post_closed:
-        title: "Bericht goedkeuren"
+        title: "Ja"
         confirm: "Dit topic is gesloten. Wil je het bericht toch maken?"
         complete: "Bericht goedgekeurd."
+      reject_post_bundle:
+        title: "Nee"
       reject_post:
         title: "Bericht weigeren"
         complete: "Bericht afgekeurd."
       approve_user:
-        title: "Gebruiker goedkeuren"
+        title: "Ja"
         complete: "Gebruiker goedgekeurd."
       reject_user:
-        title: "Gebruiker verwijderen…"
+        title: "Nee"
         delete:
           title: "Gebruiker verwijderen"
-          description: "De gebruiker wordt van het forum verwijderd."
           complete: "Gebruiker verwijderd."
         block:
           title: "Gebruiker verwijderen en blokkeren"
           description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
           complete: "Gebruiker verwijderd en geblokkeerd."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nee"
       reject:
         title: "Weigeren"
         bundle_title: "Weigeren…"
@@ -5162,10 +5163,10 @@ nl:
       scrub:
         title: Record scrubben
       approve_and_restore:
-        title: "Bericht goedkeuren en herstellen"
+        title: "Ja"
         complete: "Bericht goedgekeurd en hersteld."
       approve_and_unhide:
-        title: "Bericht goedkeuren en zichtbaar maken"
+        title: "Ja"
         complete: "Bericht goedgekeurd en zichtbaar gemaakt"
       no_action_post:
         title: "Geen actie"

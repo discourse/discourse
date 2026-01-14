@@ -5492,19 +5492,19 @@ pl_PL:
         description: "Zgódź się z flagą i ukryj ten post + automatycznie wyślij użytkownikowi wiadomość z prośbą o jego edycję."
         complete: "Post ukryty, użytkownik został powiadomiony."
       agree_and_edit:
-        title: "Zgadzam się i edytuj post"
+        title: "Edytuj wpis"
         description: "Zgódź się z flagą i otwórz okno kompozytora, aby edytować post."
         complete: "Flaga potwierdzona, możesz teraz edytować post."
       delete:
         title: "Usuń"
         complete: "Wpis usunięty."
       delete_and_ignore:
-        title: "Zignoruj flagę i usuń post"
-        description: "Zignoruj flagę, usuwając ją z kolejki i usuń post; jeśli jest to pierwszy post, usuń również temat. "
+        title: "Usuń wpis i zignoruj flagę"
+        description: "Usuń wpis i zignoruj flagę, usuwając ją z kolejki; jeśli to pierwszy wpis, usuń także temat. "
         complete: "Wpis usunięty."
       delete_and_ignore_replies:
-        title: "Zignoruj flagę, usuń post i odpowiedzi"
-        description: "Zignoruj flagę, usuwając ją z kolejki, usuń post i wszystkie jego odpowiedzi; jeśli jest to pierwszy post, usuń także temat."
+        title: "Usuń wpis i odpowiedzi, zignoruj flagę"
+        description: "Usuń wpis i wszystkie odpowiedzi, a następnie zignoruj flagę, usuwając ją z kolejki; jeśli to pierwszy wpis, usuń również temat"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
         complete: "Post i odpowiedzi usunięte."
       delete_and_agree:
@@ -5517,11 +5517,14 @@ pl_PL:
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
         complete: "Post i odpowiedzi usunięte."
       disagree_and_restore:
-        title: "Nie, przywróć post"
-        description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
+        title: "Przywróć wpis"
+        description: "Nie zgódź się z flagą i przywróć wpis"
         complete: "Post przywrócony."
-      disagree:
+      disagree_bundle:
         title: "Nie"
+      disagree:
+        title: "Zachowaj wpis"
+        description: "Nie zgódź się z flagą"
         complete: "Flaga zignorowana."
       discard_post:
         title: "Odrzuć post"
@@ -5531,37 +5534,45 @@ pl_PL:
         complete: "Post odrzucony w oczekiwaniu na zmianę."
       ignore:
         title: "Ignoruj"
+        description: "Usuń z kolejki bez podejmowania żadnych działań."
         complete: "Flaga zignorowana."
       ignore_and_do_nothing:
         title: "Nic nie rób"
         description: "Zignoruj flagę, usuwając ją z kolejki bez podejmowania żadnych działań. Ukryte posty pozostaną ukryte i będą obsługiwane przez automatyczne narzędzia."
         complete: "Flaga zignorowana."
       approve:
-        title: "Zatwierdź"
+        title: "Tak"
         complete: "Post zatwierdzony."
       approve_post:
-        title: "Zatwierdź post"
+        title: "Tak"
         complete: "Post zatwierdzony."
       approve_post_closed:
-        title: "Zatwierdź post"
+        title: "Tak"
         confirm: "Ten temat jest zamknięty. Czy mimo to chcesz utworzyć wpis?"
         complete: "Post zatwierdzony."
+      reject_post_bundle:
+        title: "Nie"
       reject_post:
         title: "Odrzuć post"
         complete: "Post odrzucony."
       approve_user:
-        title: "Zatwierdź użytkownika"
+        title: "Tak"
         complete: "Użytkownik zatwierdzony."
       reject_user:
-        title: "Usuń użytkownika…"
+        title: "Nie"
         delete:
           title: "Usuń użytkownika"
-          description: "Użytkownik zostanie usunięty z forum."
+          description: "Usuń użytkownika bez blokowania"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
           description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
           complete: "Użytkownik usunięty i zablokowany."
+      confirm_spam:
+        title: "Tak"
+      not_spam:
+        title: "Nie"
+        description: "Nie jest to spam, zatwierdź użytkownika"
       reject:
         title: "Odrzuć"
         bundle_title: "Odrzuć…"
@@ -5574,16 +5585,20 @@ pl_PL:
       reject_and_delete:
         title: "Odrzuć i usuń post"
         complete: "Post odrzucony i usunięty."
+      reject_and_delete_standalone:
+        title: "Nie, usuń wpis"
       reject_and_keep_deleted:
         title: "Zachowaj usunięcie postu"
         complete: "Post odrzucony i usunięcie zachowane w mocy."
+      reject_and_keep_deleted_standalone:
+        title: "Nie, zachowaj usunięty wpis"
       scrub:
         title: Wyczyść rekord
       approve_and_restore:
-        title: "Zatwierdź i przywróć post"
+        title: "Tak"
         complete: "Post zatwierdzony i przywrócony."
       approve_and_unhide:
-        title: "Zatwierdź i pokaż post"
+        title: "Tak"
         complete: "Post zatwierdzony i nieukryty"
       post_actions:
         bundle_title: "Co chcesz zrobić z tym wpisem?"
