@@ -82,6 +82,32 @@ RSpec.describe TopicTrackingState do
   describe ".publish_new" do
     include_examples("publishes message to right groups and users", "/new", :publish_new)
     include_examples("does not publish message for private topics", :publish_new)
+
+    it "includes tags as objects with id when tagging is enabled" do
+      SiteSetting.tagging_enabled = true
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      topic.tags = [tag1, tag2]
+      topic.save!
+
+      message = MessageBus.track_publish("/new") { described_class.publish_new(topic) }.first
+
+      expect(message.data["payload"]["tags"]).to contain_exactly(
+        { "id" => tag1.id },
+        { "id" => tag2.id },
+      )
+    end
+
+    it "does not include tags when tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+      tag = Fabricate(:tag)
+      topic.tags = [tag]
+      topic.save!
+
+      message = MessageBus.track_publish("/new") { described_class.publish_new(topic) }.first
+
+      expect(message.data["payload"]["tags"]).to be_nil
+    end
   end
 
   describe ".publish_latest" do
@@ -98,6 +124,21 @@ RSpec.describe TopicTrackingState do
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
       expect(message.group_ids).to eq(nil)
       expect(message.user_ids).to eq(nil)
+    end
+
+    it "includes tags as objects with id when tagging is enabled" do
+      SiteSetting.tagging_enabled = true
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      topic.tags = [tag1, tag2]
+      topic.save!
+
+      message = MessageBus.track_publish("/latest") { described_class.publish_latest(topic) }.first
+
+      expect(message.data["payload"]["tags"]).to contain_exactly(
+        { "id" => tag1.id },
+        { "id" => tag2.id },
+      )
     end
 
     it "publishes whisper post to staff users and members of whisperers group" do
@@ -176,6 +217,22 @@ RSpec.describe TopicTrackingState do
       expect(data["topic_id"]).to eq(topic.id)
       expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    it "includes tags as objects with id when tagging is enabled" do
+      SiteSetting.tagging_enabled = true
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      topic.tags = [tag1, tag2]
+      topic.save!
+
+      message =
+        MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread(post) }.first
+
+      expect(message.data["payload"]["tags"]).to contain_exactly(
+        { "id" => tag1.id },
+        { "id" => tag2.id },
+      )
     end
 
     it "does not publish unread to the user who created the post" do

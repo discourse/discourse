@@ -25,10 +25,10 @@ module("Unit | Model | nav-item", function (hooks) {
 
     href("latest", {}, "/latest", "latest");
     href("categories", {}, "/categories", "categories");
-    href("latest", { tagId: "bar" }, "/tag/bar/l/latest", "latest with tag");
+    href("latest", { tagName: "bar" }, "/tag/bar/l/latest", "latest with tag");
     href(
       "latest",
-      { tagId: "bar", category: Category.findBySlugPath(["foo"]) },
+      { tagName: "bar", category: Category.findBySlugPath(["foo"]) },
       "/tags/c/foo/123/bar/l/latest",
       "latest with tag and category"
     );

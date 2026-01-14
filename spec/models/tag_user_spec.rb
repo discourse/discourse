@@ -366,10 +366,10 @@ RSpec.describe TagUser do
       end
       it "every tag from the default_tags_* site settings get overridden to watching_first_post, except for muted" do
         levels = TagUser.notification_levels_for(user)
-        expect(levels[tag1.name]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag2.name]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag3.name]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag4.name]).to eq(TagUser.notification_levels[:muted])
+        expect(levels[tag1.id]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag2.id]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag3.id]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag4.id]).to eq(TagUser.notification_levels[:muted])
       end
     end
 
@@ -402,11 +402,11 @@ RSpec.describe TagUser do
       include tags the user is not tracking at all" do
         tag5 = Fabricate(:tag)
         levels = TagUser.notification_levels_for(user)
-        expect(levels[tag1.name]).to eq(TagUser.notification_levels[:watching])
-        expect(levels[tag2.name]).to eq(TagUser.notification_levels[:tracking])
-        expect(levels[tag3.name]).to eq(TagUser.notification_levels[:watching_first_post])
-        expect(levels[tag4.name]).to eq(TagUser.notification_levels[:muted])
-        expect(levels.key?(tag5.name)).to eq(false)
+        expect(levels[tag1.id]).to eq(TagUser.notification_levels[:watching])
+        expect(levels[tag2.id]).to eq(TagUser.notification_levels[:tracking])
+        expect(levels[tag3.id]).to eq(TagUser.notification_levels[:watching_first_post])
+        expect(levels[tag4.id]).to eq(TagUser.notification_levels[:muted])
+        expect(levels.key?(tag5.id)).to eq(false)
       end
 
       it "does not show a tag is tracked if the user does not belong to the tag group with permissions" do
@@ -414,7 +414,7 @@ RSpec.describe TagUser do
         tag_group = Fabricate(:tag_group, tags: [tag2], permissions: { group.name => 1 })
 
         expect(TagUser.notification_levels_for(user).keys).to match_array(
-          [tag1.name, tag3.name, tag4.name],
+          [tag1.id, tag3.id, tag4.id],
         )
       end
     end
