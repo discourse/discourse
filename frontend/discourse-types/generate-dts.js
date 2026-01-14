@@ -106,7 +106,15 @@ for (const packageName of packageNames) {
 
   // Add <reference /> entries to external-types.d.ts
   for (const path of exportedDtsPaths.keys()) {
-    if (!path.includes("-private/")) {
+    if (
+      // Don't reference private types...
+      !/(^|\/)-private/.test(path) ||
+      // ...except those:
+      (packageName === "@glint/template" &&
+        path === "-private/integration.d.ts") ||
+      (packageName === "@glint/ember-tsc" &&
+        path === "types/-private/dsl/index.d.ts")
+    ) {
       output += `/// <reference path="${targetPackagePath}/${path}" />\n`;
     }
   }
