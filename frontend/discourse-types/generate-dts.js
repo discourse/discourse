@@ -18,7 +18,6 @@ const packageNames = [
   "@floating-ui/dom",
   "@glimmer/component",
   "@glimmer/syntax",
-  // "@glimmer/tracking", ?
   "@glint/ember-tsc",
   "@glint/template",
   "@types/qunit",
