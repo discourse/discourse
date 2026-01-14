@@ -1,8 +1,6 @@
 @use "lib/viewport";
 
 .semantic-search__container {
-  margin: 1rem 0 0 0;
-
   .has-sidebar-page & {
     @include viewport.until(lg) {
       border-top: 1px solid var(--primary-low);
@@ -65,6 +63,7 @@
     .ai-result__icon {
       display: none;
     }
+
     &:not(.bulk-select-enabled) {
       padding: 0.5rem;
     }
