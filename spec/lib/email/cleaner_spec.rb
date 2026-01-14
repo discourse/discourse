@@ -29,6 +29,15 @@ RSpec.describe Email::Cleaner do
     expect(described_class.new(email, rejected: true).execute).to eq(expected_message)
   end
 
+  it "does not mangle encoded text bodies" do
+    raw = email(:base64_encoded_body)
+    email = Mail.new(raw)
+    cleaned_email = Mail.new(described_class.new(raw).execute)
+
+    expect(email.parts[0].body.decoded).to eq(cleaned_email.parts[0].body.decoded)
+    expect(email.parts[1].body.decoded).to eq(cleaned_email.parts[1].body.decoded)
+  end
+
   it "does not sort message parts" do
     raw = email(:unsorted_parts)
     email = Mail.new(raw)
