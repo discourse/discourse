@@ -4,8 +4,8 @@ import { evaluateConditions } from "discourse/lib/blocks/condition-evaluator";
 import { validateConditions } from "discourse/lib/blocks/condition-validation";
 import {
   getAllBlockEntries,
+  getAllConditionTypeEntries,
   getBlockEntry,
-  getConditionTypeRegistry,
   hasBlock,
   isBlockFactory,
   resolveBlock,
@@ -211,21 +211,21 @@ export default class Blocks extends Service {
    * Called at the start of validate(), evaluate(), and other condition methods.
    */
   #lazilyInitializeConditionInstances() {
-    const registry = getConditionTypeRegistry();
+    const entries = getAllConditionTypeEntries();
 
     // Only rebuild if registry has grown since last check
-    if (registry.size === this.#lastKnownRegistrySize) {
+    if (entries.length === this.#lastKnownRegistrySize) {
       return;
     }
 
     // Create instances for any new condition types
-    for (const [type, ConditionClass] of registry) {
+    for (const [type, ConditionClass] of entries) {
       if (!this.#conditionInstances.has(type)) {
         this.#createConditionInstance(type, ConditionClass);
       }
     }
 
-    this.#lastKnownRegistrySize = registry.size;
+    this.#lastKnownRegistrySize = entries.length;
   }
 
   /**

@@ -7,8 +7,8 @@ import { block } from "discourse/blocks/block-outlet";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import {
   getBlockEntry,
-  getConditionTypeRegistry,
   hasBlock,
+  hasConditionType,
   isValidOutlet,
   resetBlockRegistryForTesting,
 } from "discourse/lib/blocks/registration";
@@ -338,8 +338,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
           api.registerBlockConditionType(ApiTestCondition);
         });
 
-        const registry = getConditionTypeRegistry();
-        assert.true(registry.has("api-test-condition"));
+        assert.true(hasConditionType("api-test-condition"));
       });
     });
 

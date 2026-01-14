@@ -950,11 +950,11 @@ export function hasConditionType(type) {
 }
 
 /**
- * Returns the condition type registry Map.
- * Used by the Blocks service to instantiate condition instances.
+ * Returns all condition type entries as [type, ConditionClass] pairs.
+ * Used by Blocks service for lazy initialization.
  *
- * @returns {Map<string, typeof import("discourse/blocks/conditions").BlockCondition>}
+ * @returns {Array<[string, typeof import("discourse/blocks/conditions").BlockCondition]>}
  */
-export function getConditionTypeRegistry() {
-  return conditionTypeRegistry;
+export function getAllConditionTypeEntries() {
+  return Array.from(conditionTypeRegistry.entries());
 }
