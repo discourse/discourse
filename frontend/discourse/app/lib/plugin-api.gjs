@@ -3462,29 +3462,31 @@ class _PluginApi {
    * api.renderBlocks("chat:message-actions", [...]);
    * ```
    */
-  registerBlockOutlet(outletName, options = {}) {
+  registerBlockOutlet(outletName, options) {
     _registerOutlet(outletName, options);
   }
 
   /**
    * Registers a custom block condition type.
    *
-   * Custom conditions must extend `BlockCondition` from "discourse/blocks/conditions"
-   * and implement the `evaluate(args)` method.
+   * Custom conditions must use the `@blockCondition` decorator from "discourse/blocks/conditions"
+   * and extend `BlockCondition`. The class must implement the `evaluate(args)` method.
    *
    * **Note: The `evaluate()` method MUST be pure and idempotent.** It may be called
    * multiple times during a single render cycle, especially when debug logging
    * is enabled, and should not perform any side effects or state mutations.
    *
-   * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class
+   * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class decorated with `@blockCondition`.
    *
    * @example
    * ```javascript
-   * import { BlockCondition } from "discourse/blocks/conditions";
+   * import { blockCondition, BlockCondition } from "discourse/blocks/conditions";
    *
+   * @blockCondition({
+   *   type: "feature-flag",
+   *   validArgKeys: ["flag"],
+   * })
    * class BlockFeatureFlagCondition extends BlockCondition {
-   *   static type = "feature-flag";
-   *
    *   @service currentUser;
    *
    *   validate(args) {
