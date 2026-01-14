@@ -4,7 +4,7 @@ import { dasherize } from "@ember/string";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import ReviewFilters from "discourse/components/review-filters";
-import ReviewableItemRefresh from "discourse/components/reviewable-refresh/item";
+import ReviewableItem from "discourse/components/reviewable/item";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -12,9 +12,17 @@ export default class ReviewIndexRefresh extends Component {
   @bind
   refreshedReviewableComponentExists(reviewable) {
     const owner = getOwner(this);
-    const dasherized = dasherize(reviewable.type).replace(
+    let dasherized = dasherize(reviewable.type).replace(
       "reviewable-",
       "reviewable-refresh/"
+    );
+    if (owner.hasRegistration(`component:${dasherized}`)) {
+      return true;
+    }
+
+    dasherized = dasherize(reviewable.type).replace(
+      "reviewable-",
+      "reviewable/"
     );
     return owner.hasRegistration(`component:${dasherized}`);
   }
@@ -28,10 +36,7 @@ export default class ReviewIndexRefresh extends Component {
             <div class="reviewables">
               {{#each @controller.reviewables.content as |r|}}
                 {{#if (this.refreshedReviewableComponentExists r)}}
-                  <ReviewableItemRefresh
-                    @reviewable={{r}}
-                    @showHelp={{false}}
-                  />
+                  <ReviewableItem @reviewable={{r}} @showHelp={{false}} />
                 {{/if}}
               {{/each}}
             </div>

@@ -2,7 +2,7 @@ import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import NavItem from "discourse/components/nav-item";
-import ReviewIndexRefresh from "discourse/components/review-index-refresh";
+import ReviewIndex from "discourse/components/review-index";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -63,5 +63,5 @@ import { i18n } from "discourse-i18n";
     </div>
   {{/if}}
 
-  <ReviewIndexRefresh @controller={{@controller}} />
+  <ReviewIndex @controller={{@controller}} />
 </template>

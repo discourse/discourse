@@ -17,10 +17,8 @@ describe "Viewing reviewable item", type: :system do
   let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
   let(:review_note_form) { PageObjects::Components::ReviewNoteForm.new }
 
-  describe "when user is part of the groups list of the `reviewable_ui_refresh` site setting" do
+  describe "refreshed reviewable UI" do
     before do
-      SiteSetting.reviewable_ui_refresh = group.name
-      SiteSetting.reviewable_old_moderator_actions = false
       group.add(admin)
       sign_in(admin)
     end
@@ -291,7 +289,6 @@ describe "Viewing reviewable item", type: :system do
       fab!(:reviewable_queued_post)
 
       it "allows to edit post when old moderator actions are enabled" do
-        SiteSetting.reviewable_old_moderator_actions = true
         refreshed_review_page.visit_reviewable(reviewable_queued_post)
 
         expect(page).to have_text("hello world post contents.")
@@ -301,20 +298,6 @@ describe "Viewing reviewable item", type: :system do
 
         expect(page).to have_text("Hello world from system spec!")
         expect(page).not_to have_text("hello world post contents.")
-      end
-
-      it "shows context question for rejected queued post" do
-        reviewable_queued_post.update!(status: Reviewable.statuses[:rejected])
-
-        refreshed_review_page.visit_reviewable(reviewable_queued_post)
-
-        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
-          reviewable_queued_post,
-        )
-        expect(refreshed_review_page).to have_context_question(
-          reviewable_queued_post,
-          I18n.t("js.review.context_question.approve_post"),
-        )
       end
     end
 
@@ -331,64 +314,6 @@ describe "Viewing reviewable item", type: :system do
       end
 
       it "Allow to delete and scrub user" do
-        reviewable = ReviewableUser.find_by_target_id(user.id)
-
-        refreshed_review_page.visit_reviewable(reviewable)
-
-        expect(page).to have_text(user.name)
-        expect(page).to have_link(user.username, href: "/admin/users/#{user.id}/#{user.username}")
-
-        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
-        expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
-
-        expect(page).to have_text(user.name)
-
-        refreshed_review_page.select_bundled_action(reviewable, "user-scrub")
-
-        scrubbing_reason = "a spammer who knows how to make GDPR requests"
-        scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
-        expect(scrub_user_modal.scrub_button).not_to be_disabled
-        scrub_user_modal.scrub_button.click
-
-        expect(refreshed_review_page).to have_reviewable_with_scrubbed_by(
-          reviewable,
-          admin.username,
-        )
-        expect(refreshed_review_page).to have_reviewable_with_scrubbed_reason(
-          reviewable,
-          scrubbing_reason,
-        )
-        expect(refreshed_review_page).to have_reviewable_with_scrubbed_at(
-          reviewable,
-          reviewable.payload["scrubbed_at"],
-        )
-        expect(page).not_to have_text(user.name)
-      end
-
-      it "Allows to delete and block user" do
-        reviewable = ReviewableUser.find_by_target_id(user.id)
-
-        refreshed_review_page.visit_reviewable(reviewable)
-        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user_block")
-        expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
-        expect(refreshed_review_page).to have_rejected_item_in_timeline(reviewable)
-      end
-
-      it "Allows to approve user" do
-        reviewable = ReviewableUser.find_by_target_id(user.id)
-
-        refreshed_review_page.visit_reviewable(reviewable)
-        refreshed_review_page.select_bundled_action(
-          reviewable,
-          "user-approve_user",
-          "user-approve_user",
-        )
-
-        expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
-        expect(refreshed_review_page).to have_approved_item_in_timeline(reviewable)
-      end
-
-      it "Allow to delete and scrub user when old moderator actions are enabled" do
         SiteSetting.reviewable_old_moderator_actions = true
 
         reviewable = ReviewableUser.find_by_target_id(user.id)
@@ -427,13 +352,32 @@ describe "Viewing reviewable item", type: :system do
         )
         expect(page).not_to have_text(user.name)
       end
+
+      it "Allows to delete and block user" do
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+
+        refreshed_review_page.visit_reviewable(reviewable)
+        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user_block")
+        rejection_reason_modal.fill_in_rejection_reason("Spamming the site")
+        rejection_reason_modal.delete_user
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+        expect(refreshed_review_page).to have_rejected_item_in_timeline(reviewable)
+      end
+
+      it "Allows to approve user" do
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+
+        refreshed_review_page.visit_reviewable(reviewable)
+        refreshed_review_page.click_approve_user_button
+
+        expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
+        expect(refreshed_review_page).to have_approved_item_in_timeline(reviewable)
+      end
     end
   end
 
   describe "moderator" do
     before do
-      SiteSetting.reviewable_ui_refresh = group.name
-      SiteSetting.reviewable_old_moderator_actions = false
       group.add(admin)
       group.add(moderator)
       sign_in(moderator)

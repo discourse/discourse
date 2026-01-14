@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -79,7 +78,3 @@ export default class ReviewableQueuedPost extends Component {
     </div>
   </template>
 }
-=======
-export default QueuedPost;
-import QueuedPost from "discourse/components/reviewable/queued-post";
->>>>>>> 31082242588 (FIX: prepare to remove review-refresh directory)

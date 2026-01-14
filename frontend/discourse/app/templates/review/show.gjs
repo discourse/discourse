@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
-import ReviewableItemRefresh from "discourse/components/reviewable-refresh/item";
+import ReviewableItem from "discourse/components/reviewable/item";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -14,11 +14,18 @@ export default class extends Component {
    */
   get refreshedReviewableComponentExists() {
     const owner = getOwner(this);
-    const dasherized = dasherize(this.args.controller.reviewable.type).replace(
+    let dasherized = dasherize(this.args.controller.reviewable.type).replace(
       "reviewable-",
       "reviewable-refresh/"
     );
+    if (owner.hasRegistration(`component:${dasherized}`)) {
+      return true;
+    }
 
+    dasherized = dasherize(this.args.controller.reviewable.type).replace(
+      "reviewable-",
+      "reviewable/"
+    );
     return owner.hasRegistration(`component:${dasherized}`);
   }
 
@@ -30,7 +37,7 @@ export default class extends Component {
           {{i18n "review.back_to_queue"}}
         </LinkTo>
       </div>
-      <ReviewableItemRefresh
+      <ReviewableItem
         @reviewable={{@controller.reviewable}}
         @showHelp={{true}}
       />

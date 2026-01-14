@@ -1,6 +1,17 @@
-import Post from "discourse/components/reviewable/post";
+import Component from "@glimmer/component";
+import { htmlSafe } from "@ember/template";
+import DecoratedHtml, {
+  applyHtmlDecorators,
+} from "discourse/components/decorated-html";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
+import ReviewableCreatedBy from "discourse/components/reviewable-refresh/created-by";
+import ReviewableTopicLink from "discourse/components/reviewable-refresh/topic-link";
+import lazyHash from "discourse/helpers/lazy-hash";
+import { bind } from "discourse/lib/decorators";
+import highlightHTML from "discourse/lib/highlight-html";
+import { i18n } from "discourse-i18n";
 
-<<<<<<< HEAD
 export default class ReviewablePost extends Component {
   get metaLabel() {
     return this.args.metaLabel || i18n("review.posted_in");
@@ -81,6 +92,3 @@ export default class ReviewablePost extends Component {
     </div>
   </template>
 }
-=======
-export default Post;
->>>>>>> 31082242588 (FIX: prepare to remove review-refresh directory)
