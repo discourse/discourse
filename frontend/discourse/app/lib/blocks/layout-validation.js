@@ -34,7 +34,11 @@ import {
   isValidOutlet,
   resolveBlock,
 } from "discourse/lib/blocks/registration";
-import { applyArgDefaults } from "discourse/lib/blocks/utils";
+import {
+  applyArgDefaults,
+  buildErrorPath,
+  createValidationContext,
+} from "discourse/lib/blocks/utils";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -53,7 +57,7 @@ function wrapValidationError(validationFn, errorPrefix, context) {
     if (error.path) {
       raiseBlockError(`${errorPrefix}: ${error.message}`, {
         ...context,
-        errorPath: `${context.path}.${error.path}`,
+        errorPath: buildErrorPath(context.path, error.path),
       });
     }
     throw error;
@@ -326,19 +330,24 @@ function validateBlockConditions(
   } catch (error) {
     // Build context for error message - include rootLayout for tree display
     const context = {
-      outletName,
-      blockName,
-      path,
-      entry,
-      rootLayout,
+      ...createValidationContext({
+        outletName,
+        blockName,
+        path,
+        entry,
+        callSiteError,
+        rootLayout,
+      }),
       conditions: entry.conditions,
-      callSiteError,
     };
 
     // If error has a path property, build the full errorPath and conditionsPath
     // error.path is relative to conditions (e.g., "params.categoryId")
     if (error.path) {
-      context.errorPath = `${path}.conditions.${error.path}`;
+      context.errorPath = buildErrorPath(
+        path,
+        buildErrorPath("conditions", error.path)
+      );
       // conditionsPath is relative to the conditions object (for formatter)
       context.conditionsPath = error.path;
     }
@@ -400,7 +409,14 @@ export async function resolveBlockForValidation(
     raiseBlockError(
       `Block "${name}" at ${context.path || "unknown"} for outlet "${outletName}" is not registered. ` +
         `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`,
-      { outletName, blockName: name, ...context }
+      createValidationContext({
+        outletName,
+        blockName: name,
+        path: context.path,
+        entry: context.entry,
+        callSiteError: context.callSiteError,
+        rootLayout: context.rootLayout,
+      })
     );
     return null;
   }
@@ -548,84 +564,6 @@ export function validateEntryTypes(entry) {
 }
 
 /**
- * Safely stringifies a block entry object for error messages.
- * Handles circular references, limits depth, and truncates output.
- *
- * @param {Object} entry - The entry object to stringify.
- * @param {number} [maxDepth=2] - Maximum nesting depth to serialize.
- * @param {number} [maxLength=200] - Maximum output string length.
- * @returns {string} A safe string representation of the entry.
- */
-export function safeStringifyEntry(entry, maxDepth = 2, maxLength = 200) {
-  const seen = new WeakSet();
-
-  function serialize(value, depth) {
-    if (depth > maxDepth) {
-      return "[...]";
-    }
-
-    if (value === null) {
-      return "null";
-    }
-    if (value === undefined) {
-      return "undefined";
-    }
-    if (typeof value === "string") {
-      return `"${value.length > 30 ? value.slice(0, 30) + "..." : value}"`;
-    }
-    if (typeof value === "number" || typeof value === "boolean") {
-      return String(value);
-    }
-    if (typeof value === "function") {
-      return `[Function: ${value.name || "anonymous"}]`;
-    }
-    if (typeof value === "symbol") {
-      return `[Symbol: ${value.description || ""}]`;
-    }
-
-    if (typeof value === "object") {
-      if (seen.has(value)) {
-        return "[Circular]";
-      }
-      seen.add(value);
-
-      if (Array.isArray(value)) {
-        if (value.length === 0) {
-          return "[]";
-        }
-        const items = value.slice(0, 3).map((v) => serialize(v, depth + 1));
-        if (value.length > 3) {
-          items.push(`... ${value.length - 3} more`);
-        }
-        return `[${items.join(", ")}]`;
-      }
-
-      const keys = Object.keys(value).slice(0, 5);
-      if (keys.length === 0) {
-        return "{}";
-      }
-      const pairs = keys.map((k) => `${k}: ${serialize(value[k], depth + 1)}`);
-      if (Object.keys(value).length > 5) {
-        pairs.push("...");
-      }
-      return `{${pairs.join(", ")}}`;
-    }
-
-    return String(value);
-  }
-
-  try {
-    const result = serialize(entry, 0);
-    if (result.length > maxLength) {
-      return result.slice(0, maxLength) + "...";
-    }
-    return result;
-  } catch {
-    return "[Object]";
-  }
-}
-
-/**
  * Checks if an argument name is reserved for internal use.
  * Reserved names include explicit names in RESERVED_ARG_NAMES and
  * any name starting with underscore (private by convention).
@@ -699,17 +637,17 @@ export async function validateLayout(
 
   // Validate containerArgs uniqueness across siblings if parent has childArgs with unique constraints
   if (parentChildArgsSchema) {
-    const baseContext = {
-      outletName,
-      callSiteError,
-      rootLayout: effectiveRootLayout,
-    };
     validateContainerArgsUniqueness(
       layout,
       parentChildArgsSchema,
       parentBlockName,
       parentPath.replace(/\.children$/, ""),
-      baseContext
+      createValidationContext({
+        outletName,
+        path: parentPath,
+        callSiteError,
+        rootLayout: effectiveRootLayout,
+      })
     );
   }
 
@@ -741,12 +679,13 @@ export async function validateLayout(
         const resolved = await resolveBlockForValidation(
           entry.block,
           outletName,
-          {
+          createValidationContext({
+            outletName,
             path: currentPath,
             entry,
             callSiteError,
             rootLayout: effectiveRootLayout,
-          }
+          })
         );
         if (
           resolved &&
@@ -821,6 +760,15 @@ export async function validateEntry(
   parentChildArgsSchema = null,
   parentBlockName = null
 ) {
+  // Create context without blockName for early validation errors
+  const earlyContext = createValidationContext({
+    outletName,
+    path,
+    entry,
+    callSiteError,
+    rootLayout,
+  });
+
   if (!isValidOutlet(outletName)) {
     const allOutlets = getAllOutlets();
     const suggestion = formatWithSuggestion(outletName, allOutlets);
@@ -828,7 +776,7 @@ export async function validateEntry(
       `Unknown block outlet: ${suggestion}. ` +
         `Register custom outlets with api.registerBlockOutlet() in a pre-initializer. ` +
         `Available outlets: ${allOutlets.join(", ")}`,
-      { outletName, path, entry, callSiteError, rootLayout }
+      earlyContext
     );
     return null;
   }
@@ -840,13 +788,13 @@ export async function validateEntry(
       validateEntryTypes(entry);
     },
     `Invalid block entry at ${path} for outlet "${outletName}"`,
-    { outletName, path, entry, callSiteError, rootLayout }
+    earlyContext
   );
 
   if (!entry.block) {
     raiseBlockError(
       `Block entry at ${path} for outlet "${outletName}" is missing required "block" property.`,
-      { outletName, path, entry, callSiteError, rootLayout }
+      earlyContext
     );
     return null;
   }
@@ -857,7 +805,7 @@ export async function validateEntry(
   const resolvedBlock = await resolveBlockForValidation(
     entry.block,
     outletName,
-    { path, entry, callSiteError, rootLayout }
+    earlyContext
   );
 
   // If resolution returned null (error was raised), exit early
@@ -894,7 +842,7 @@ export async function validateEntry(
   if (!isBlockFn(resolvedBlock)) {
     raiseBlockError(
       `Block "${resolvedBlock?.blockName}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
-      { outletName, path, entry, callSiteError, rootLayout }
+      earlyContext
     );
     return null;
   }
@@ -903,14 +851,14 @@ export async function validateEntry(
   const metadata = resolvedBlock.blockMetadata;
 
   // Build base context for all validation errors in this block
-  const baseContext = {
+  const baseContext = createValidationContext({
     outletName,
     blockName,
     path,
     entry,
     callSiteError,
     rootLayout,
-  };
+  });
 
   // Validate outlet permission (allowedOutlets/deniedOutlets)
   if (!validateOutletPermission(metadata, outletName, blockName, baseContext)) {

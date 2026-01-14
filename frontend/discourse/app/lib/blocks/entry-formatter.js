@@ -8,6 +8,84 @@
  */
 
 /**
+ * Safely stringifies a block entry object for error messages.
+ * Handles circular references, limits depth, and truncates output.
+ *
+ * @param {Object} entry - The entry object to stringify.
+ * @param {number} [maxDepth=2] - Maximum nesting depth to serialize.
+ * @param {number} [maxLength=200] - Maximum output string length.
+ * @returns {string} A safe string representation of the entry.
+ */
+export function safeStringifyEntry(entry, maxDepth = 2, maxLength = 200) {
+  const seen = new WeakSet();
+
+  function serialize(value, depth) {
+    if (depth > maxDepth) {
+      return "[...]";
+    }
+
+    if (value === null) {
+      return "null";
+    }
+    if (value === undefined) {
+      return "undefined";
+    }
+    if (typeof value === "string") {
+      return `"${value.length > 30 ? value.slice(0, 30) + "..." : value}"`;
+    }
+    if (typeof value === "number" || typeof value === "boolean") {
+      return String(value);
+    }
+    if (typeof value === "function") {
+      return `[Function: ${value.name || "anonymous"}]`;
+    }
+    if (typeof value === "symbol") {
+      return `[Symbol: ${value.description || ""}]`;
+    }
+
+    if (typeof value === "object") {
+      if (seen.has(value)) {
+        return "[Circular]";
+      }
+      seen.add(value);
+
+      if (Array.isArray(value)) {
+        if (value.length === 0) {
+          return "[]";
+        }
+        const items = value.slice(0, 3).map((v) => serialize(v, depth + 1));
+        if (value.length > 3) {
+          items.push(`... ${value.length - 3} more`);
+        }
+        return `[${items.join(", ")}]`;
+      }
+
+      const keys = Object.keys(value).slice(0, 5);
+      if (keys.length === 0) {
+        return "{}";
+      }
+      const pairs = keys.map((k) => `${k}: ${serialize(value[k], depth + 1)}`);
+      if (Object.keys(value).length > 5) {
+        pairs.push("...");
+      }
+      return `{${pairs.join(", ")}}`;
+    }
+
+    return String(value);
+  }
+
+  try {
+    const result = serialize(entry, 0);
+    if (result.length > maxLength) {
+      return result.slice(0, maxLength) + "...";
+    }
+    return result;
+  } catch {
+    return "[Object]";
+  }
+}
+
+/**
  * Parses a condition path string into path segments.
  * Handles both dot notation (`.key`) and bracket notation (`[0]`).
  *
