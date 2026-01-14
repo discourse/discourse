@@ -1,5 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
-import BlockGroup from "discourse/blocks/block-group";
+import BlockGroup from "discourse/blocks/builtin/block-group";
 import {
   CombinedAdminCategoryBlock,
   CombinedLoggedInTL1Block,

@@ -24,6 +24,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
  * 3. Freeze block, outlet, and condition type registries
  */
 export default {
+  name: "freeze-block-registry",
   after: "discourse-bootstrap",
   before: "inject-discourse-objects",
 
