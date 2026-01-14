@@ -35,6 +35,7 @@ mkdirSync("./external-types");
 let output = "";
 
 for (const packageName of packageNames) {
+  // Read package.json
   const packagePath = `../discourse/node_modules/${packageName}`;
   let packageJson;
   try {
@@ -49,6 +50,7 @@ for (const packageName of packageNames) {
 
   mkdirSync(targetPackagePath);
 
+  // Copy the license and package.json
   const licenses = globSync(`${packagePath}/LICENSE*`);
   if (licenses.length > 0) {
     cpSync(licenses[0], `${targetPackagePath}/${basename(licenses[0])}`);
@@ -56,8 +58,11 @@ for (const packageName of packageNames) {
 
   cpSync(`${packagePath}/package.json`, `${targetPackagePath}/package.json`);
 
+  // Get all the exported .d.ts paths
   const exportedDtsPaths = processPackageJson(packageJson, packagePath);
 
+  // Copy **all** .d.ts files, and wrap those present in `exportedDtsPaths`
+  // in a `declare module ...` block
   const dtsPaths = globSync(`${packagePath}/**/*.d.{ts,mts,cts}`);
   for (const path of dtsPaths) {
     let dts = readFileSync(path, "utf-8");
@@ -67,13 +72,15 @@ for (const packageName of packageNames) {
       recursive: true,
     });
 
-    let modulePath = relativePath;
     const modulePrefix = exportedDtsPaths.get(relativePath);
 
     if (modulePrefix) {
+      let modulePath = relativePath;
+
       if (modulePrefix.remove && modulePath.startsWith(modulePrefix.remove)) {
         modulePath = modulePath.replace(modulePrefix.remove, "");
       }
+
       if (modulePrefix.add) {
         modulePath = [modulePrefix.add, modulePath].filter(Boolean).join("/");
       }
@@ -81,6 +88,7 @@ for (const packageName of packageNames) {
       modulePath = modulePath
         .replace(/^\//, "")
         .replace(/(index)?\.d\.[cm]?ts$/, "");
+
       modulePath = [packageName.replace(/@types\//, ""), modulePath]
         .filter(Boolean)
         .join("/");
@@ -96,6 +104,7 @@ for (const packageName of packageNames) {
     writeFileSync(`${targetPackagePath}/${relativePath}`, dts);
   }
 
+  // Add <reference /> entries to external-types.d.ts
   for (const path of exportedDtsPaths.keys()) {
     if (!path.includes("-private/")) {
       output += `/// <reference path="${targetPackagePath}/${path}" />\n`;
