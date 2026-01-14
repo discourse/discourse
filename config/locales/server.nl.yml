@@ -4996,6 +4996,8 @@ nl:
     deprecation_error_label: Laat Javascript-deprecaties een foutmelding geven
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse instellen"
     step:

@@ -3442,6 +3442,8 @@ gl:
     title: "Entrar en modo seguro"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
+  dev_mode:
+    enter: "Intro"
   wizard:
     title: "Configuración de Discourse"
     step:

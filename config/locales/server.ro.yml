@@ -2204,6 +2204,8 @@ ro:
     deprecation_error_description: "Pentru a verifica compatibilitatea cu viitoarele actualizări Discourse, poți face ca deprecierile Javascript să ridice o eroare:"
     deprecation_error_label: Fă ca deprecierile Javascript să ridice o eroare
     enter: "Activează modul sigur"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Configurare Discourse"
     step:
@@ -2337,6 +2339,7 @@ ro:
         title: "Aprobare"
         complete: "Postarea a fost aprobată."
       approve_post:
+        title: "Aprobă postarea"
         complete: "Postarea a fost aprobată."
       approve_post_closed:
         title: "Aprobă postarea"

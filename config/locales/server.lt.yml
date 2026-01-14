@@ -2531,6 +2531,8 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  dev_mode:
+    enter: "Įeiti"
   wizard:
     title: "Discourse sąranka"
     step:

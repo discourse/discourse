@@ -5190,6 +5190,10 @@ uk:
     deprecation_error_label: Зробити так, щоб застарілі версії Javascript викликали помилку
     enter: "Увійти в безпечний режим"
     must_select: "Ви повинні вибрати принаймні одну опцію для входу в безпечний режим."
+  dev_mode:
+    title: "Режим розробника"
+    enable_rack_mini_profiler: "Дозволити Rack Mini Profiler зберігати зміни сеансу протягом 1 години"
+    enter: "Enter"
   wizard:
     title: "Налаштування Discourse"
     step:

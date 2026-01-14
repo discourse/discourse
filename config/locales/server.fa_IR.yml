@@ -2780,6 +2780,8 @@ fa_IR:
     title: "ورود به حالت امن"
     no_themes: "غیرفعال کردن پوسته‌ها و اجزای پوسته"
     enter: "فعال‌سازی حالت امن"
+  dev_mode:
+    enter: "وارد شدن "
   wizard:
     title: "راه اندازی Discourse"
     step:

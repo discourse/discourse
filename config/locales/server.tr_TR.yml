@@ -4962,6 +4962,8 @@ tr_TR:
     deprecation_error_label: Javascript kullanımdan kaldırmaları hata oluştursun
     enter: "Güvenli Moda Gir"
     must_select: "Güvenli moda girmek için en az bir seçenek belirlemelisiniz."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse Kurulumu"
     step:

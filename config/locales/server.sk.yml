@@ -5225,6 +5225,8 @@ sk:
     deprecation_error_label: Zabezpečte, aby deprekácie Javascriptu vyvolali chybu
     enter: "Vstup do núdzového režimu"
     must_select: "Ak chcete vstúpiť do núdzového režimu, musíte vybrať aspoň jednu možnosť."
+  dev_mode:
+    enter: "Zadajte"
   wizard:
     title: "Nastavenie Discourse"
     step:

@@ -4744,6 +4744,8 @@ ug:
     deprecation_error_label: Javascript ئىشلەتمەسلىك خاتالىقى كەلتۈرۈپ چىقىرىدۇ
     enter: "بىخەتەر ھالەتكە كىرىدۇ"
     must_select: "بىخەتەر ھالەتكە كىرىشتە كەم دېگەندە تاللاشتىن بىرى تاللىنىدۇ."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse تەڭشەك"
     step:

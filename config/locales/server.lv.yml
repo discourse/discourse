@@ -492,6 +492,8 @@ lv:
       button: "Reģistrēties"
     resend_email:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
+  dev_mode:
+    enter: "Ievadīt"
   wizard:
     step:
       privacy:

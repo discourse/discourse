@@ -4595,6 +4595,8 @@ it:
     deprecation_error_label: Fai in modo che le deprecazioni di Javascript generino un errore
     enter: "Avvia Modalità Sicura"
     must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
+  dev_mode:
+    enter: "Invio"
   wizard:
     title: "Configurazione Discourse"
     step:

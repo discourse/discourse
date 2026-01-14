@@ -13,17 +13,17 @@ vi:
   js:
     poll:
       voters:
-        other: "người vốt"
+        other: "người bình chọn"
       total_votes:
-        other: "tổng lượt vốt"
+        other: "tổng bình chọn"
       votes:
-        other: "%{count} vốt"
+        other: "%{count} lượt bình chọn"
       average_rating: "Trung bình: <strong>%{average}</strong>."
       public:
-        title: "Lượt vốt là <strong>công khai</strong>"
+        title: "Lượt bình chọn là <strong>công khai</strong>"
       results:
         groups:
-          title: "Bạn cần phải là thành viên của %{groups} để vốt."
+          title: "Bạn cần phải là thành viên của %{groups} để bình chọn."
         vote:
           title: "Kết quả sẽ được hiển thị trên <strong>bình chọn</strong>."
         closed:
@@ -31,7 +31,7 @@ vi:
         staff:
           title: "Kết quả chỉ được hiển thị cho <strong>BQT</strong>."
         tabs:
-          votes: "Lượt vốt"
+          votes: "Lượt bình chọn"
           outcome: "Kết quả"
       multiple:
         help:
@@ -43,25 +43,25 @@ vi:
             other: "Chọn <strong>%{count} lựa chọn</strong>."
           between_min_and_max_options: "Chọn giữa các lựa chọn <strong>%{min} và %{max}</strong>."
       cast-votes:
-        title: "Vốt theo ý bạn"
-        label: "Vốt ngay!"
+        title: "Bình chọn theo ý bạn"
+        label: "Bình chọn ngay!"
       show-results:
         title: "Hiển thị kết quả bình chọn"
         label: "Kết quả"
       show-tally:
-        title: "Hiển thị kết quả vốt theo số lượng vốt"
+        title: "Hiển thị kết quả bình chọn theo số lượng bình chọn"
         label: "Hiển thị số liệu"
       show-percentage:
-        title: "Hiển thị kết quả vốt dưới dạng phần trăm"
+        title: "Hiển thị kết quả bình chọn dưới dạng phần trăm"
         label: "Hiển thị dưới dạng phần trăm"
       remove-vote:
-        title: "Bỏ vốt của bạn"
-        label: "Thu hồi vốt"
+        title: "Xóa bình chọn của bạn"
+        label: "Thu hồi bình chọn"
       hide-results:
-        title: "Trở lại lượt vốt của bạn"
-        label: "Vốt"
+        title: "Trở lại bình chọn của bạn"
+        label: "Bình chọn"
       group-results:
-        title: "Nhóm lượt vốt theo trường người dùng"
+        title: "Nhóm lượt bình chọn theo trường người dùng"
         label: "Hiển thị phân tích"
       export-results:
         title: "Xuất kết quả bình chọn"
@@ -79,7 +79,7 @@ vi:
         age: "Đã đóng <strong>%{age}</strong>"
       breakdown:
         title: "Kết quả thăm dò ý kiến"
-        votes: "%{count} vốt"
+        votes: "%{count} lượt bình chọn"
         breakdown: "Phân tích chi tiết"
         percentage: "Phần trăm"
         count: "Đếm"
@@ -101,10 +101,10 @@ vi:
           abstain: "Không tham gia"
           highest_priority: "(Ưu tiên cao nhất)"
           lowest_priority: "(Ưu tiên thấp nhất)"
-          login: "Đăng nhập để vốt!"
+          login: "Đăng nhập để bình chọn!"
       error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái bình chọn."
-      error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến lượt vốt của bạn."
-      error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia vốt."
+      error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến lượt bình chọn của bạn."
+      error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia bình chọn."
       error_while_exporting_results: "Đã có lỗi xảy ra khi xuất kết quả bình chọn."
       ui_builder:
         title: Tạo bình chọn
@@ -125,7 +125,7 @@ vi:
         poll_result:
           label: Hiển thị kết quả...
           always: Luôn hiển thị
-          vote: Chỉ sau khi vốt
+          vote: Chỉ sau khi bình chọn
           closed: Khi cuộc bình chọn kết thúc
           staff: Chỉ BQT
         poll_groups:
@@ -139,7 +139,7 @@ vi:
           min: Lựa chọn tối thiểu
           step: Bước
         poll_public:
-          label: Hiển thị người đã vốt
+          label: Hiển thị người đã bình chọn
         poll_title:
           label: Tiêu đề (tùy chọn)
         poll_options:

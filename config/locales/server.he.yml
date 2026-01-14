@@ -5199,6 +5199,8 @@ he:
     deprecation_error_label: לגרום להשבתות נקודתיות של JavaScript לעורר שגיאה
     enter: "כנסו למצב בטוח"
     must_select: "עליך לבחור באפשרות אחת לפחות כדי להיכנס למצב בטוח."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "הקמת Discourse"
     step:

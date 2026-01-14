@@ -5234,6 +5234,8 @@ ru:
     deprecation_error_label: Сделать так, чтобы прекращение поддержки Javascript вызывало ошибку
     enter: "Войти в безопасный режим"
     must_select: "Для перехода в безопасный режим необходимо выбрать хотя бы один параметр."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Настройка Discourse"
     step:

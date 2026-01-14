@@ -2753,6 +2753,8 @@ ca:
     title: "Entra en mode segur"
     enter: "Entra en mode segur"
     must_select: "Cal seleccionar almenys una opció per a entrar en mode segur."
+  dev_mode:
+    enter: "Retorn"
   wizard:
     title: "Instal·lació de Discourse"
     step:

@@ -3131,6 +3131,8 @@ da:
     title: "Gå ind i fejlsikret tilstand"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse Opsætning"
     step:

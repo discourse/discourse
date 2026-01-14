@@ -490,6 +490,8 @@ th:
       button: "ลงทะเบียน"
     resend_email:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
+  dev_mode:
+    enter: "เอ็นเทอร์"
   wizard:
     step:
       privacy:

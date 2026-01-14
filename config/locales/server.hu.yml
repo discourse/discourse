@@ -4951,6 +4951,8 @@ hu:
     deprecation_error_label: Elavult Javascript hibaüzenetre késztetése
     enter: "Biztonságos módba lépés"
     must_select: "A biztonságos módba lépéshez választania kell legalább egy lehetőséget."
+  dev_mode:
+    enter: "Belépés"
   wizard:
     title: "Discourse telepítő"
     step:

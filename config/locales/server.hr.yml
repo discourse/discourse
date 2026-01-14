@@ -2778,6 +2778,8 @@ hr:
       help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
+  dev_mode:
+    enter: "Unesi"
   wizard:
     step:
       introduction:

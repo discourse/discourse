@@ -5003,6 +5003,8 @@ de:
     deprecation_error_label: Veraltete Javascript-Funktionen einen Fehler auslösen lassen
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse einrichten"
     step:

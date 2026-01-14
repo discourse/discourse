@@ -2041,6 +2041,8 @@ pt:
   safe_mode:
     title: "Entrar em modo de segurança"
     enter: "Entrar em Modo de Segurança"
+  dev_mode:
+    enter: "Entrar"
   wizard:
     title: "Configuração do Discourse"
     step:
