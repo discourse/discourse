@@ -87,6 +87,21 @@ module SystemHelpers
     retry
   end
 
+  def wait_for_message_bus_started(timeout: Capybara.default_max_wait_time)
+    page.evaluate_async_script(<<~JS, timeout * 1000)
+      const [timeout, callback] = [arguments[0], arguments[1]];
+      const check = () => {
+        if (typeof MessageBus !== 'undefined' && MessageBus.status() === 'started') {
+          callback(true);
+        } else {
+          setTimeout(check, 50);
+        }
+      };
+      setTimeout(() => callback(false), timeout);
+      check();
+    JS
+  end
+
   def wait_for_attribute(
     element,
     attribute,

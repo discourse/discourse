@@ -7,7 +7,7 @@ class Reviewable < ActiveRecord::Base
     attr_reader :reviewable, :status, :created_post, :created_post_topic
     attr_accessor(
       :transition_to,
-      :remove_reviewable_ids,
+      :update_reviewable_statuses,
       :errors,
       :recalculate_score,
       :update_flag_stats,
@@ -17,7 +17,7 @@ class Reviewable < ActiveRecord::Base
     def initialize(reviewable, status)
       @status = status
       @reviewable = reviewable
-      @remove_reviewable_ids = success? ? [reviewable.id] : []
+      @update_reviewable_statuses = {}
     end
 
     def created_post=(created_post)

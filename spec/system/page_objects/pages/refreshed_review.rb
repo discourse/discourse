@@ -10,6 +10,19 @@ module PageObjects
         self
       end
 
+      def visit_review_index
+        page.visit("/review")
+        self
+      end
+
+      def has_reviewable?(reviewable)
+        page.has_css?(".review-item[data-reviewable-id=\"#{reviewable.id}\"]")
+      end
+
+      def has_no_reviewable?(reviewable)
+        page.has_no_css?(".review-item[data-reviewable-id=\"#{reviewable.id}\"]")
+      end
+
       def click_timeline_tab
         find(".action-list li.timeline").click
       end

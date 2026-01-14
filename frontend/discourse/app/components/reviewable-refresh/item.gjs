@@ -378,9 +378,11 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (data.remove_reviewable_ids?.includes(this.reviewable.id)) {
-      delete data.remove_reviewable_ids;
-      this._performResult(data, {}, this.reviewable);
+    const id = this.reviewable.id;
+
+    if (id in (data.update_reviewable_statuses ?? {})) {
+      this.reviewable.set("status", data.update_reviewable_statuses[id]);
+      this.reviewable.set("bundled_actions", []);
     }
   }
 
@@ -467,11 +469,7 @@ export default class ReviewableItem extends Component {
       });
     }
 
-    if (this.remove && result.remove_reviewable_ids?.length > 0) {
-      this.remove(result.remove_reviewable_ids);
-    } else {
-      return this.store.find("reviewable", reviewable.id);
-    }
+    return this.store.find("reviewable", reviewable.id);
   }
 
   @action

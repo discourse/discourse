@@ -7,7 +7,7 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :transition_to_id,
     :created_post_id,
     :created_post_topic_id,
-    :remove_reviewable_ids,
+    :update_reviewable_statuses,
     :version,
     :reviewable_count,
     :unseen_reviewable_count,
@@ -39,6 +39,10 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
 
   def include_created_post_topic_id?
     object.created_post_topic.present?
+  end
+
+  def include_update_reviewable_statuses?
+    object.update_reviewable_statuses.present?
   end
 
   def reviewable_count

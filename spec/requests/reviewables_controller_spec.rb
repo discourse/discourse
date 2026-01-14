@@ -635,7 +635,7 @@ RSpec.describe ReviewablesController do
         expect(json["reviewable_perform_result"]["transition_to_id"]).to eq(
           Reviewable.statuses[:approved],
         )
-        expect(json["reviewable_perform_result"]["remove_reviewable_ids"]).to eq([reviewable.id])
+        expect(json["reviewable_perform_result"]["update_reviewable_statuses"]).to be_nil
         expect(json["reviewable_perform_result"]["reviewable_count"]).to eq(1)
 
         expect(reviewable.reload.version).to eq(1)
@@ -728,7 +728,6 @@ RSpec.describe ReviewablesController do
             success: true,
             transition_to: :approved,
             transition_to_id: 1,
-            remove_reviewable_ids: [reviewable_phony.id],
             version: 1,
             reviewable_count: 0,
             unseen_reviewable_count: 0,

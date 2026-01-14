@@ -354,14 +354,13 @@ class Reviewable < ActiveRecord::Base
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
     guardian = args[:guardian] || Guardian.new(performed_by)
 
-    validate_action!(guardian, action_id, perform_method, args)
+    validate_action!(guardian, action_id, perform_method, args) unless args[:skip_validate_action]
 
     # Bundle needs to be determined before the action is performed, as bundles
     # are dynamic based on the state of the reviewable.
     action_bundle_id = get_action_bundle_id(guardian, action_id, args)
 
     result = nil
-    update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
       result = public_send(perform_method, performed_by, args)
@@ -378,7 +377,7 @@ class Reviewable < ActiveRecord::Base
       end
 
       if !guardian.can_see_reviewable_ui_refresh? || SiteSetting.reviewable_old_moderator_actions
-        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+        transition_to(result.transition_to, performed_by) if result.transition_to
         update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
         recalculate_score if result.recalculate_score
@@ -392,7 +391,7 @@ class Reviewable < ActiveRecord::Base
         ) do
           on_success do |status:|
             unless status == :pending
-              update_count = transition_to(status, performed_by)
+              transition_to(status, performed_by)
               update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
               recalculate_score if result.recalculate_score
@@ -405,16 +404,21 @@ class Reviewable < ActiveRecord::Base
     result.after_commit.call if result && result.after_commit
 
     unless status == :pending
-      if update_count || result.remove_reviewable_ids.present?
-        Jobs.enqueue(
-          :notify_reviewable,
-          reviewable_id: self.id,
-          performing_username: performed_by.username,
-          updated_reviewable_ids: result.remove_reviewable_ids,
-        )
-      end
+      updated_ids =
+        if result.update_reviewable_statuses.present?
+          result.update_reviewable_statuses.keys
+        else
+          [self.id]
+        end
 
-      notify_users(result, guardian)
+      Jobs.enqueue(
+        :notify_reviewable,
+        reviewable_id: self.id,
+        performing_username: performed_by.username,
+        updated_reviewable_ids: updated_ids,
+      )
+
+      notify_users(result, guardian) if !args[:skip_notify_users]
     end
 
     result

@@ -197,6 +197,36 @@ describe "Reviewables", type: :system do
         expect(queued_post_reviewable.target_created_by).to be_nil
       end
 
+      it "updates status of all related reviewables when deleting user with multiple queued posts" do
+        other_queued_post_reviewable =
+          Fabricate(
+            :reviewable_queued_post,
+            target_created_by: queued_post_reviewable.target_created_by,
+          )
+
+        refreshed_review_page.visit_review_index
+        wait_for_message_bus_started
+
+        expect(refreshed_review_page).to have_reviewable(queued_post_reviewable)
+        expect(refreshed_review_page).to have_reviewable(other_queued_post_reviewable)
+
+        refreshed_review_page.select_bundled_action(
+          queued_post_reviewable,
+          "delete_user",
+          "reject-post",
+        )
+
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
+          queued_post_reviewable,
+        )
+
+        try_until_success(timeout: 10, reason: "Relies on MessageBus updates") do
+          expect(refreshed_review_page).to have_reviewable_with_rejected_status(
+            other_queued_post_reviewable,
+          )
+        end
+      end
+
       it "allows revising and rejecting to send a PM to the user" do
         revise_modal = PageObjects::Modals::Base.new
 

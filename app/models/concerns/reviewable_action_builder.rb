@@ -196,17 +196,13 @@ module ReviewableActionBuilder
     create_result(:success, :rejected)
   end
 
-  def perform_delete_user(performed_by, args, &)
-    delete_user(target_user, delete_opts, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+  def perform_delete_user(performed_by, args)
+    reject_all_related_reviewables(performed_by:)
   end
 
-  def perform_delete_and_block_user(performed_by, args, &)
-    delete_options = delete_opts
-    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
-
-    delete_user(target_user, delete_options, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+  def perform_delete_and_block_user(performed_by, args)
+    extra_options = Rails.env.production? ? { block_email: true, block_ip: true } : {}
+    reject_all_related_reviewables(performed_by:, extra_delete_options: extra_options)
   end
 
   def perform_delete_post(performed_by, _args)
@@ -240,6 +236,10 @@ module ReviewableActionBuilder
   def perform_convert_to_pm(performed_by, _args)
     # TODO (reviewable-refresh): Implement convert to PM logic
     create_result(:success, :rejected, [created_by_id], false)
+  end
+
+  def perform_reject_due_to_user_deletion(performed_by, args)
+    create_result(:success, :rejected)
   end
 
   private
@@ -288,6 +288,34 @@ module ReviewableActionBuilder
 
     message = UserNotifications.account_deleted(email, self)
     Email::Sender.new(message, :account_deleted).send
+  end
+
+  def reject_all_related_reviewables(performed_by:, extra_delete_options: {})
+    user = target_user
+    return create_result(:success, :rejected) if user.blank?
+
+    delete_user(user, delete_opts.merge(extra_delete_options), performed_by)
+    update!(target_created_by_id: nil)
+
+    rejected_status = Reviewable.statuses[:rejected]
+    statuses = { id => rejected_status }
+
+    Reviewable
+      .where(target_created_by_id: user.id)
+      .where.not(id: id)
+      .find_each do |reviewable|
+        statuses[reviewable.id] = rejected_status
+        reviewable.update!(target_created_by_id: nil)
+
+        reviewable.perform(
+          performed_by,
+          :reject_due_to_user_deletion,
+          skip_validate_action: true,
+          skip_notify_users: true,
+        )
+      end
+
+    create_result(:success, :rejected) { |result| result.update_reviewable_statuses = statuses }
   end
 
   def map_reviewable_status_to_flag_status(status)

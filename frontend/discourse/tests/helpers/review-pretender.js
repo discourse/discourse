@@ -230,7 +230,7 @@ export default function (helpers) {
     return response(200, {
       reviewable_perform_result: {
         success: true,
-        remove_reviewable_ids: [parseInt(request.params.id, 10)],
+        update_reviewable_statuses: { [request.params.id]: 2 },
       },
     });
   });

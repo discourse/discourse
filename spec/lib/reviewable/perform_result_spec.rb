@@ -4,16 +4,10 @@ RSpec.describe Reviewable::PerformResult do
   fab!(:reviewable, :reviewable_queued_post)
 
   describe "#initialize" do
-    it "sets remove_reviewable_ids to array with reviewable id on success" do
+    it "sets update_reviewable_statuses to empty hash" do
       result = described_class.new(reviewable, :success)
 
-      expect(result.remove_reviewable_ids).to eq([reviewable.id])
-    end
-
-    it "sets remove_reviewable_ids to empty array on failure" do
-      result = described_class.new(reviewable, :failure)
-
-      expect(result.remove_reviewable_ids).to eq([])
+      expect(result.update_reviewable_statuses).to eq({})
     end
   end
 end
