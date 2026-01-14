@@ -56,7 +56,12 @@ class TopicLink < ActiveRecord::Base
     SQL
 
     builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
-    apply_link_visibility_filters(builder, link: "ftl", target_topic: "ft", target_posts: "target_posts")
+    apply_link_visibility_filters(
+      builder,
+      link: "ftl",
+      target_topic: "ft",
+      target_posts: "target_posts",
+    )
     builder.where("ftl.extension IS NULL OR ftl.extension NOT IN ('png','jpg','gif')")
     builder.where(
       "COALESCE(ft.archetype, 'regular') <> :archetype",
@@ -93,7 +98,12 @@ class TopicLink < ActiveRecord::Base
               ORDER BY reflection ASC, clicks DESC",
       )
 
-    apply_link_visibility_filters(builder, link: "l", target_topic: "t", target_posts: "target_posts")
+    apply_link_visibility_filters(
+      builder,
+      link: "l",
+      target_topic: "t",
+      target_posts: "target_posts",
+    )
     builder.where(
       "COALESCE(t.archetype, 'regular') <> :archetype",
       archetype: Archetype.private_message,

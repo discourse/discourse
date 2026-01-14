@@ -489,7 +489,8 @@ RSpec.describe TopicLink do
       fab!(:topic_link_click) { Fabricate(:topic_link_click, topic_link: topic_link) }
 
       it "returns topic link data for posts" do
-        result = TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id].first
+        result =
+          TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id].first
         expect(result[:url]).to eq(topic_link.url)
         expect(result[:title]).to eq(target_topic.title)
         expect(result[:internal]).to eq(true)
@@ -499,14 +500,18 @@ RSpec.describe TopicLink do
 
       it "excludes deleted target topics" do
         target_topic.trash!
-        expect(TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id]).to be_blank
+        expect(
+          TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id],
+        ).to be_blank
       end
 
       it "excludes deleted target posts" do
         target_post = Fabricate(:post)
         topic_link.update!(link_post: target_post)
         target_post.trash!
-        expect(TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id]).to be_blank
+        expect(
+          TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id],
+        ).to be_blank
       end
     end
 
