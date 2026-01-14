@@ -70,7 +70,7 @@ export default {
   name: "topic-list-customizations",
 
   initialize(container) {
-    const isDetailed = settings.topic_card_detail.startsWith("detailed");
+    const isDetailed = settings.topic_card_detail === "detailed";
     const router = container.lookup("service:router");
 
     function applySimpleLayout(columns) {
