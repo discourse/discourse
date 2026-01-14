@@ -28,7 +28,6 @@ import {
   validateArgsSchema,
   validateChildArgsSchema,
 } from "discourse/lib/blocks/arg-validation";
-import { wrapBlockLayout } from "discourse/lib/blocks/block-layout-wrapper";
 import {
   buildContainerPath,
   createGhostBlock,
@@ -57,6 +56,10 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
+import {
+  wrapBlockLayout,
+  wrapContainerBlockLayout,
+} from "./block-layout-wrapper";
 
 /**
  * Maps outlet names to their registered outlet layouts.
@@ -130,6 +133,7 @@ export function _getOutletLayouts() {
  */
 const VALID_BLOCK_OPTIONS = Object.freeze([
   "container",
+  "containerClassNames",
   "description",
   "args",
   "childArgs",
@@ -380,6 +384,7 @@ export function block(name, options = {}) {
 
   // Extract all options with defaults
   const isContainer = options?.container ?? false;
+  const containerClassNames = options?.containerClassNames ?? null;
   const description = options?.description ?? "";
   const argsSchema = options?.args ?? null;
   const childArgsSchema = options?.childArgs ?? null;
@@ -395,6 +400,25 @@ export function block(name, options = {}) {
   if (childArgsSchema && !isContainer) {
     raiseBlockError(
       `Block "${name}": "childArgs" is only valid for container blocks (container: true).`
+    );
+  }
+
+  // Validate containerClassNames is only allowed on container blocks
+  if (containerClassNames != null && !isContainer) {
+    raiseBlockError(
+      `Block "${name}": "containerClassNames" is only valid for container blocks (container: true).`
+    );
+  }
+
+  // Validate containerClassNames type (string, array, or function)
+  if (
+    containerClassNames != null &&
+    typeof containerClassNames !== "string" &&
+    typeof containerClassNames !== "function" &&
+    !Array.isArray(containerClassNames)
+  ) {
+    raiseBlockError(
+      `Block "${name}": "containerClassNames" must be a string, array, or function.`
     );
   }
 
@@ -418,6 +442,7 @@ export function block(name, options = {}) {
   const metadata = Object.freeze({
     description,
     container: isContainer,
+    containerClassNames,
     args: argsSchema ? Object.freeze(argsSchema) : null,
     childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
     constraints: constraints ? Object.freeze(constraints) : null,
@@ -826,9 +851,31 @@ function createBlockArgsWithReactiveGetters(
 }
 
 /**
+ * Resolves the containerClassNames value from block metadata.
+ * Handles string, array, and function forms.
+ *
+ * @param {Object} metadata - The block metadata object.
+ * @param {Object} args - The block's args (passed to function form).
+ * @returns {string|null} The resolved class names string, or null if none.
+ */
+function resolveContainerClassNames(metadata, args) {
+  const value = metadata.containerClassNames;
+  if (value == null) {
+    return null;
+  }
+  if (typeof value === "function") {
+    return value(args);
+  }
+  if (Array.isArray(value)) {
+    return value.join(" ");
+  }
+  return value;
+}
+
+/**
  * Creates a renderable child block from a block entry.
- * Curries the component with all necessary args and wraps non-container
- * blocks in a layout wrapper for consistent styling.
+ * Curries the component with all necessary args and wraps all blocks
+ * in a layout wrapper for consistent styling.
  *
  * @param {Object} entry - The block entry
  * @param {typeof Component} entry.block - The block component class
@@ -861,33 +908,36 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // Apply default values from metadata before building args
   const argsWithDefaults = applyArgDefaults(ComponentClass, args);
 
-  // Container blocks receive classNames directly (they handle their own wrapper).
-  // Non-container blocks get classNames passed to wrapBlockLayout instead.
+  // All blocks use the same arg structure - classNames are handled by wrappers.
   // Pass containerPath so nested containers know their full path for debug logging.
-  const blockArgs = isChildContainer
-    ? createBlockArgsWithReactiveGetters(
-        argsWithDefaults,
-        nestedChildren,
-        debugContext.containerPath,
-        debugContext.outletArgs,
-        { classNames }
-      )
-    : createBlockArgsWithReactiveGetters(
-        argsWithDefaults,
-        nestedChildren,
-        debugContext.displayHierarchy,
-        debugContext.outletArgs
-      );
+  const blockArgs = createBlockArgsWithReactiveGetters(
+    argsWithDefaults,
+    nestedChildren,
+    isChildContainer
+      ? debugContext.containerPath
+      : debugContext.displayHierarchy,
+    debugContext.outletArgs
+  );
 
   // Curry the component with pre-bound args so it can be rendered
   // without knowing its configuration details
   const curried = curryComponent(ComponentClass, blockArgs, owner);
 
-  // Container blocks handle their own layout wrapper (they need access
-  // to classNames for their container element). Non-container blocks
-  // get wrapped in WrappedBlockLayout for consistent block styling.
+  // All blocks are wrapped for consistent styling.
+  // Container blocks use wrapContainerBlockLayout, non-containers use wrapBlockLayout.
   let wrappedComponent = isChildContainer
-    ? curried
+    ? wrapContainerBlockLayout(
+        {
+          name: ComponentClass.blockName,
+          containerClassNames: resolveContainerClassNames(
+            ComponentClass.blockMetadata,
+            argsWithDefaults
+          ),
+          classNames,
+          Component: curried,
+        },
+        owner
+      )
     : wrapBlockLayout(
         {
           classNames,
@@ -1298,7 +1348,9 @@ export default class BlockOutlet extends Component {
   }
 
   <template>
-    {{! Yield to :before block with hasLayout boolean for conditional rendering }}
+    {{! yield to :before block with hasLayout boolean for conditional rendering
+        This allows block outlets to wrap other elements and conditionally render them based on
+        the presence of a registered layout if necessary }}
     {{yield (hasLayout this.outletName) to="before"}}
 
     {{#if this.showOutletBoundary}}
@@ -1346,7 +1398,9 @@ export default class BlockOutlet extends Component {
       {{/if}}
     {{/if}}
 
-    {{! Yield to :after block with hasLayout boolean for conditional rendering }}
+    {{! yield to :after block with hasLayout boolean for conditional rendering
+        This allows block outlets to wrap other elements and conditionally render them based on
+        the presence of a registered layout if necessary }}
     {{yield (hasLayout this.outletName) to="after"}}
   </template>
 }

@@ -71,6 +71,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.deepEqual(MetadataDefaultBlock.blockMetadata, {
         description: "",
         container: false,
+        containerClassNames: null,
         args: null,
         childArgs: null,
         constraints: null,
@@ -291,6 +292,70 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
         return UnknownPropBlock;
       }, /unknown properties/);
+    });
+
+    test("throws for containerClassNames on non-container block", function (assert) {
+      assert.throws(() => {
+        @block("non-container-with-classes", {
+          containerClassNames: "extra-class",
+        })
+        class NonContainerWithClasses extends Component {}
+
+        return NonContainerWithClasses;
+      }, /containerClassNames.*only valid for container blocks/);
+    });
+
+    test("throws for containerClassNames with invalid type", function (assert) {
+      assert.throws(() => {
+        @block("container-invalid-classnames", {
+          container: true,
+          containerClassNames: { foo: "bar" },
+        })
+        class ContainerInvalidClassNames extends Component {}
+
+        return ContainerInvalidClassNames;
+      }, /containerClassNames.*must be a string, array, or function/);
+    });
+
+    test("accepts containerClassNames as string for container", function (assert) {
+      @block("container-string-classes", {
+        container: true,
+        containerClassNames: "extra-class",
+      })
+      class ContainerStringClasses extends Component {}
+
+      assert.strictEqual(
+        ContainerStringClasses.blockMetadata.containerClassNames,
+        "extra-class"
+      );
+    });
+
+    test("accepts containerClassNames as array for container", function (assert) {
+      @block("container-array-classes", {
+        container: true,
+        containerClassNames: ["class-a", "class-b"],
+      })
+      class ContainerArrayClasses extends Component {}
+
+      assert.deepEqual(
+        ContainerArrayClasses.blockMetadata.containerClassNames,
+        ["class-a", "class-b"]
+      );
+    });
+
+    test("accepts containerClassNames as function for container", function (assert) {
+      const classNamesFn = (args) => `dynamic-${args.name}`;
+
+      @block("container-fn-classes", {
+        container: true,
+        containerClassNames: classNamesFn,
+      })
+      class ContainerFnClasses extends Component {}
+
+      assert.strictEqual(
+        ContainerFnClasses.blockMetadata.containerClassNames,
+        classNamesFn
+      );
     });
   });
 

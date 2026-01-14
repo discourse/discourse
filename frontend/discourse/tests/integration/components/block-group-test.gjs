@@ -164,25 +164,21 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       childArgs: {
         tabName: { type: "string", required: true, unique: true },
       },
+      containerClassNames: "tabs-container",
     })
     class TabsContainer extends Component {
       <template>
-        <div class="tabs-container">
-          <div class="tabs-header">
-            {{#each this.children as |child|}}
-              <button
-                class="tab-button"
-                data-tab={{child.containerArgs.tabName}}
-              >
-                {{child.containerArgs.tabName}}
-              </button>
-            {{/each}}
-          </div>
-          <div class="tabs-content">
-            {{#each this.children as |child|}}
-              <child.Component />
-            {{/each}}
-          </div>
+        <div class="tabs-header">
+          {{#each this.children as |child|}}
+            <button class="tab-button" data-tab={{child.containerArgs.tabName}}>
+              {{child.containerArgs.tabName}}
+            </button>
+          {{/each}}
+        </div>
+        <div class="tabs-content">
+          {{#each this.children as |child|}}
+            <child.Component />
+          {{/each}}
         </div>
       </template>
     }
