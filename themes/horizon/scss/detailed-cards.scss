@@ -178,9 +178,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   &__title {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
     font-weight: 700;
     font-size: var(--font-up-1);
     color: var(--primary);
