@@ -802,12 +802,12 @@ Pass data from the parent template to blocks via `@outletArgs`. Given a BlockOut
 />
 ```
 
-> **Important difference from plugin outlets:** In blocks, outlet args are accessed via `@outletArgs`, not `@args`. The `@args` namespace is reserved for the block's configured args (from `renderBlocks()`). This separation is intentional—it clearly distinguishes "data from the template context" (`@outletArgs`) from "data from the block configuration" (`@args`).
+> **Important difference from plugin outlets:** In blocks, outlet args are accessed via `@outletArgs`, not `@args`. The `@args` namespace is reserved for the block's layout entry args (from `renderBlocks()`). This separation is intentional—it clearly distinguishes "data from the template context" (`@outletArgs`) from "data from the layout entry" (`@args`).
 
 ```javascript
 // In your block component:
 <template>
-  {{! Config args - from renderBlocks() config }}
+  {{! Layout entry args - from renderBlocks() layout }}
   <h2>{{@title}}</h2>
 
   {{! Outlet args - from BlockOutlet's @outletArgs }}
@@ -977,7 +977,7 @@ So we have blocks in a registry, protected by symbols. What happens when it's ti
 #### The Preprocessing Pipeline
 
 When `<BlockOutlet>` renders:
-1. Retrieves config from `blockConfigs` Map
+1. Retrieves layout from the registry
 2. Resolves block references (string names → classes, factories → resolved classes)
 3. Evaluates conditions bottom-up (children before parents for container visibility)
 4. Creates curried components for visible blocks

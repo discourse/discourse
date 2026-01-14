@@ -72,7 +72,7 @@ export function buildErrorPath(basePath, segment) {
  * are only applied when the arg is undefined in the provided args.
  *
  * @param {typeof import("@glimmer/component").default} ComponentClass - The block component class.
- * @param {Object} providedArgs - The args provided in the block configuration.
+ * @param {Object} providedArgs - The args provided in the layout entry.
  * @returns {Object} A new object with defaults applied for missing args.
  *
  * @example

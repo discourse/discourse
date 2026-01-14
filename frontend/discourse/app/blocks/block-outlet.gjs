@@ -778,7 +778,7 @@ function processBlockEntries({
  * stable component reference while these values can update reactively when
  * accessed during rendering.
  *
- * @param {Object} args - User-provided args from block config.
+ * @param {Object} args - User-provided args from the layout entry.
  * @param {Array<Object>|undefined} children - Nested children configs.
  * @param {string} hierarchy - The hierarchy path for this child block.
  * @param {Object} outletArgs - Outlet args to pass through to the block.
@@ -1079,7 +1079,7 @@ function hasLayout(outletName) {
  * Root component for rendering registered blocks in a designated outlet.
  *
  * BlockOutlet serves as the entry point for the block rendering system. It:
- * - Looks up registered block configurations by outlet name
+ * - Looks up registered layouts by outlet name
  * - Renders blocks in a consistent wrapper structure
  * - Provides named blocks (`:before`, `:after`) for conditional content
  *
@@ -1277,7 +1277,7 @@ export default class BlockOutlet extends Component {
    * Combines `@outletArgs` with `@deprecatedArgs` for lazy evaluation.
    *
    * Outlet args are values passed from the parent template to blocks rendered
-   * in this outlet. They are separate from block config args and accessed via
+   * in this outlet. They are separate from layout entry args and accessed via
    * `@outletArgs` in block components.
    *
    * Deprecated args trigger a deprecation warning when accessed, helping

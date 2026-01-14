@@ -24,7 +24,7 @@ module("Unit | Lib | blocks/error", function (hooks) {
     });
 
     test("preserves original message in error", function (assert) {
-      const originalMessage = "Something went wrong with block configuration";
+      const originalMessage = "Something went wrong with block registration";
 
       try {
         raiseBlockError(originalMessage);

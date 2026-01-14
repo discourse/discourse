@@ -3338,7 +3338,7 @@ class _PluginApi {
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
-   * @param {Array<Object>} blocks - Array of block configurations
+   * @param {Array<Object>} blocks - Array of layout entries
    * @param {typeof Component} blocks[].block - Component class decorated with @block
    * @param {Object} [blocks[].args] - Arguments to pass to the block component
    * @param {string} [blocks[].classNames] - Additional CSS classes for the block wrapper

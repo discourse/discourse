@@ -103,7 +103,7 @@ export class BlockCondition {
    * Subclasses should call `super.validate(args)` first and return early if
    * it returns an error.
    *
-   * @param {Object} args - The condition arguments from the block config.
+   * @param {Object} args - The condition arguments from the layout entry.
    * @returns {{ message: string, path?: string } | null} Error info or null if valid.
    */
   validate(args) {
@@ -118,7 +118,7 @@ export class BlockCondition {
    * - `sourceType: "outletArgs"`: Validates format is `@outletArgs.propertyPath`
    * - `sourceType: "object"`: Validates `source` is an object if provided
    *
-   * @param {Object} args - The condition arguments from the block config.
+   * @param {Object} args - The condition arguments from the layout entry.
    * @returns {{ message: string, path?: string } | null} Error info or null if valid.
    */
   validateSource(args) {
@@ -205,7 +205,7 @@ export class BlockCondition {
    * multiple times during a single render cycle (e.g., when debug logging
    * is enabled), and should not have side effects.
    *
-   * @param {Object} args - The condition arguments from the block config.
+   * @param {Object} args - The condition arguments from the layout entry.
    * @param {Object} [context] - Evaluation context from the blocks service.
    * @param {boolean} [context.debug] - Whether debug logging is enabled.
    * @param {Object} [context.outletArgs] - Outlet args for source resolution.
@@ -225,7 +225,7 @@ export class BlockCondition {
    * For example, the `outletArg` condition uses a `path` parameter
    * to resolve values from outlet args.
    *
-   * @param {Object} args - The condition arguments from the block config.
+   * @param {Object} args - The condition arguments from the layout entry.
    * @param {Object} [context] - Evaluation context containing outletArgs.
    * @returns {{ value: *, hasValue: true }|undefined} Object with resolved value,
    *   or undefined if this condition doesn't resolve values.

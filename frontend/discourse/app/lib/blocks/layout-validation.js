@@ -436,7 +436,7 @@ export async function resolveBlockForValidation(
 }
 
 /**
- * Reserved argument names that cannot be used in block configurations.
+ * Reserved argument names that cannot be used in layout entries.
  * These are used internally by the block system and would conflict with
  * user-provided args. Names starting with underscore are also reserved.
  */

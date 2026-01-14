@@ -504,7 +504,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       );
     });
 
-    test("accepts valid block configuration", function (assert) {
+    test("accepts valid layout entry", function (assert) {
       @block("valid-config", { args: { title: { type: "string" } } })
       class ValidConfigBlock extends Component {}
 

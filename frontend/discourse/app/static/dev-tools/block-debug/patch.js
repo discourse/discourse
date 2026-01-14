@@ -33,7 +33,7 @@ function makeDebugCallback(fn) {
  * this function recursively processes its children to create ghost components
  * so they appear nested inside the container ghost in the debug overlay.
  *
- * @param {Array<Object>} childConfigs - Child block configurations (already preprocessed with __visible)
+ * @param {Array<Object>} childEntries - Child layout entries (already preprocessed with __visible)
  * @param {import("@ember/owner").default} owner - The application owner
  * @param {string} containerPath - The container's hierarchy path (e.g., "outlet/group[0]")
  * @param {Object} outletArgs - Outlet arguments for context
@@ -42,7 +42,7 @@ function makeDebugCallback(fn) {
  * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>} Array of ghost components
  */
 function createGhostChildren(
-  childConfigs,
+  childEntries,
   owner,
   containerPath,
   outletArgs,
@@ -52,8 +52,8 @@ function createGhostChildren(
   const result = [];
   const containerCounts = new Map();
 
-  for (const childConfig of childConfigs) {
-    const resolvedBlock = resolveBlockFn(childConfig.block);
+  for (const childEntry of childEntries) {
+    const resolvedBlock = resolveBlockFn(childEntry.block);
 
     // Handle optional missing block
     if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
@@ -61,9 +61,9 @@ function createGhostChildren(
         {
           name: resolvedBlock.name,
           Component: null,
-          args: childConfig.args,
-          containerArgs: childConfig.containerArgs,
-          conditions: childConfig.conditions,
+          args: childEntry.args,
+          containerArgs: childEntry.containerArgs,
+          conditions: childEntry.conditions,
           conditionsPassed: false,
           optionalMissing: true,
         },
@@ -95,11 +95,11 @@ function createGhostChildren(
     let nestedGhostChildren = null;
     if (
       isChildContainer &&
-      childConfig.children?.length &&
-      childConfig.__failureReason === "no-visible-children"
+      childEntry.children?.length &&
+      childEntry.__failureReason === "no-visible-children"
     ) {
       nestedGhostChildren = createGhostChildren(
-        childConfig.children,
+        childEntry.children,
         owner,
         nestedContainerPath,
         outletArgs,
@@ -112,11 +112,11 @@ function createGhostChildren(
       {
         name: blockName,
         Component: null,
-        args: childConfig.args,
-        containerArgs: childConfig.containerArgs,
-        conditions: childConfig.conditions,
+        args: childEntry.args,
+        containerArgs: childEntry.containerArgs,
+        conditions: childEntry.conditions,
         conditionsPassed: false,
-        failureReason: childConfig.__failureReason,
+        failureReason: childEntry.__failureReason,
         children: nestedGhostChildren,
       },
       { outletName: containerPath }
