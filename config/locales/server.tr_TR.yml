@@ -5040,19 +5040,14 @@ tr_TR:
         description: "Bayrağı kabul edin ve bu gönderiyi gizleyin + otomatik olarak kullanıcıya bu gönderiyi düzenlemesini isteyen bir mesaj gönderin"
         complete: "Gönderi gizlendi, kullanıcı bilgilendirildi."
       agree_and_edit:
-        title: "Kabul Et ve Gönderiyi Düzenle"
         description: "Bayrağı kabul edin ve gönderiyi düzenlemek için bir besteci penceresi açın."
         complete: "Bayrak onaylandı, artık gönderiyi düzenleyebilirsiniz."
       delete:
         title: "Sil"
         complete: "Gönderi silindi."
       delete_and_ignore:
-        title: "Bayrağı yok say ve gönderiyi sil"
-        description: "Kuyruktan kaldırarak bayrağı yok sayın ve gönderiyi silin; ilk gönderiyse konuyu da silin. "
         complete: "Gönderi silindi."
       delete_and_ignore_replies:
-        title: "Bayrağı yok say, gönderiyi ve yanıtları sil"
-        description: "Kuyruktan kaldırarak bayrağı yok sayın, gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
         complete: "Gönderi ve yanıtlar silindi."
       delete_and_agree:
@@ -5065,11 +5060,12 @@ tr_TR:
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
         complete: "Gönderi ve yanıtlar silindi."
       disagree_and_restore:
-        title: "Hayır, gönderiyi geri yükle"
-        description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
+        title: "Gönderiyi geri yükle"
         complete: "Gönderi geri yüklendi."
-      disagree:
+      disagree_bundle:
         title: "Hayır"
+      disagree:
+        title: "Gönderiyi tut"
         complete: "Bayrak yok sayıldı."
       discard_post:
         title: "Gönderiyi sil"
@@ -5084,31 +5080,36 @@ tr_TR:
         description: "Herhangi bir işlem yapmadan kuyruktan kaldırarak bayrağı yok sayın. Gizli gönderiler gizli kalır ve otomatik araçlar tarafından işlenir."
         complete: "Bayrak yok sayıldı."
       approve:
-        title: "Onayla"
+        title: "Evet"
         complete: "Gönderi onaylandı."
       approve_post:
-        title: "Gönderiyi Onayla"
+        title: "Evet"
         complete: "Gönderi onaylandı."
       approve_post_closed:
-        title: "Gönderiyi Onayla"
+        title: "Evet"
         confirm: "Bu konu kapalı. Yine de gönderiyi oluşturmak istiyor musunuz?"
         complete: "Gönderi onaylandı."
+      reject_post_bundle:
+        title: "Hayır"
       reject_post:
         title: "Gönderiyi Reddet"
         complete: "Gönderi reddedildi."
       approve_user:
-        title: "Kullanıcıyı Onayla"
+        title: "Evet"
         complete: "Kullanıcı onaylandı."
       reject_user:
-        title: "Kullanıcıyı sil…"
+        title: "Hayır"
         delete:
           title: "Kullanıcıyı Sil"
-          description: "Kullanıcı forumdan silinecek."
           complete: "Kullanıcı silindi."
         block:
           title: "Kullanıcıyı Sil ve Engelle"
           description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
           complete: "Kullanıcı silindi ve engellendi."
+      confirm_spam:
+        title: "Evet"
+      not_spam:
+        title: "Hayır"
       reject:
         title: "Reddet"
         bundle_title: "Reddet…"
@@ -5127,10 +5128,10 @@ tr_TR:
       scrub:
         title: Temizleme kaydı
       approve_and_restore:
-        title: "Onayla ve Gönderiyi Geri Yükle"
+        title: "Evet"
         complete: "Gönderi onaylandı ve geri yüklendi."
       approve_and_unhide:
-        title: "Gönderiyi onayla ve Gizlemesini kaldır"
+        title: "Evet"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
       no_action_post:
         title: "Eylem yok"

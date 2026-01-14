@@ -990,6 +990,10 @@ cs:
         reviewable_post:
           title: "Příspěvek"
           noun: "příspěvek"
+        reviewable_ai_chat_message:
+          noun: "zpráva chatu"
+        reviewable_ai_post:
+          noun: "příspěvek"
       flagged_as: "Nahlášeno jako"
       post_flagged_as: "Příspěvek nahlášen jako"
       chat_flagged_as: "Chat nahlášen jako"

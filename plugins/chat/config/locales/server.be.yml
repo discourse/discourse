@@ -21,8 +21,6 @@ be:
         agree_and_silence:
           title: "Silence Карыстальнік"
           description: "Пагадзіцеся са сцягамі і маўчанне карыстальніка."
-        disagree:
-          title: "не згаджацца"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

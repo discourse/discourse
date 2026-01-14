@@ -137,16 +137,10 @@ sk:
           title: "Odstrániť správu"
           description: "Odstráňte správu, aby ju používatelia nemohli vidieť."
         delete_and_agree:
-          title: "Ignorovať nahlásenie a odstrániť správu"
           description: "Ignorovať príznak odstránením z frontu a vymazaním správy."
         disagree_and_restore:
           title: "Nesúhlasiť a obnoviť správu"
           description: "Obnovte správu, aby ju mohli vidieť všetci používatelia."
-        disagree:
-          title: "Nesúhlasiť"
-        ignore:
-          title: "Nerobte nič"
-          description: "Ignorujte príznak jeho odstránením z frontu bez vykonania akejkoľvek akcie."
       direct_messages:
         transcript_title: "Prepis predchádzajúcich správ v %{channel_name}"
         transcript_body: "Aby sme vám poskytli viac kontextu, vložili sme do tejto konverzácie prepis predchádzajúcich správ (až desať):\n\n%{transcript}"

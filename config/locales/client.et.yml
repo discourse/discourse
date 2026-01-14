@@ -455,6 +455,8 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+        reviewable_ai_post:
+          noun: "postitus"
       user_label: "Kasutaja"
       notes:
         delete: "Kustuta"

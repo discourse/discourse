@@ -827,6 +827,8 @@ ro:
         reviewable_post:
           title: "Articol"
           noun: "postare"
+        reviewable_ai_post:
+          noun: "articol"
       flagged_as: "Semnalat ca"
       post_flagged_as: "Postare semnalată ca"
       chat_flagged_as: "Discuție semnalată ca"

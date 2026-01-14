@@ -131,16 +131,12 @@ fr:
           title: "Supprimer le message"
           description: "Supprimer le message pour que les utilisateurs ne puissent pas le voir."
         delete_and_agree:
-          title: "Ignorer le signalement et supprimer le message"
           description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le message."
         disagree_and_restore:
           title: "Refuser et restaurer le message"
           description: "Restaurer le message pour que tous les utilisateurs puissent le voir."
-        disagree:
-          title: "Refuser"
         ignore:
-          title: "Ne rien faire"
-          description: "Ignorez le signalement en le supprimant de la file d'attente sans prendre aucune mesure."
+          title: "Ignorer le signalement"
       direct_messages:
         transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
         transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"

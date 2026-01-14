@@ -122,16 +122,10 @@ sq:
           title: "Fshi Mesazhin"
           description: "Fshi mesazhin në mënyrë që përdoruesit të mos e shohin atë."
         delete_and_agree:
-          title: "Injoro shënimin dhe Fshi Mesazhin"
           description: "Injoro shënimin duke e hequr atë nga radha dhe fshi mesazhin."
         disagree_and_restore:
           title: "Ndrysho dhe rikthe mesazhin"
           description: "Rikthe mesazhin që të shfaqet për përdoruesit."
-        disagree:
-          title: "Jo dakord"
-        ignore:
-          title: "Mos bëni asnjë veprim"
-          description: "Injoro shënimin duke e hequr atë nga radha pa ndërmarrë asnjë veprim."
       direct_messages:
         transcript_title: "Kopja e mesazheve të mëparshme në %{channel_name}"
         transcript_body: "Për t'ju dhënë më shumë informacion, kemi përfshirë një kopje të mesazheve të mëparshme në këtë bisedë (deri në dhjetë):\n\n%{transcript}"

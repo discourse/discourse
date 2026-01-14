@@ -537,6 +537,8 @@ bs_BA:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+        reviewable_ai_post:
+          noun: "objava"
       user_label: "User"
       notes:
         delete: "Delete"

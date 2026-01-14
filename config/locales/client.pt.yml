@@ -847,6 +847,8 @@ pt:
         reviewable_post:
           title: "Mensagem"
           noun: "publicação"
+        reviewable_ai_post:
+          noun: "publicação"
       flagged_as: "Sinalizado como"
       post_flagged_as: "Artigo sinalizado como"
       chat_flagged_as: "Conversação sinalizada como"

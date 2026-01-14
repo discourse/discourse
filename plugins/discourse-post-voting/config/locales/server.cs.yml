@@ -10,6 +10,14 @@ cs:
       actions:
         no_action_comment:
           title: "Bez akce"
+        agree_and_suspend:
+          title: "Pozastavit uživatele"
+          description: "Schválit nahlášení a pozastavit uživatele."
+        agree_and_silence:
+          title: "Ztišit uživatele"
+          description: "Schválit nahlášení a ztišit uživatele."
+        ignore:
+          title: "Ignorovat nahlášení"
   post_action_types:
     vote:
       title: "Hlasovat"
@@ -23,11 +31,8 @@ cs:
           agree_and_silence:
             title: "Ztišení uživatele"
             description: "Schválit nahlášení a ztišit uživatele."
-          disagree:
-            title: "Neschvaluji"
           ignore:
-            title: "Nedělat nic"
-            description: "Ignorovat nahlášení odstraněním z fronty bez jakékoli akce."
+            title: "Ignorovat nahlášení"
       reviewable_score_types:
         needs_review:
           title: "Potřebuje revizi"

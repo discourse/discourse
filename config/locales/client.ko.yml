@@ -601,6 +601,10 @@ ko:
         reviewable_post:
           title: "게시물"
           noun: "글"
+        reviewable_ai_chat_message:
+          noun: "채팅 메시지"
+        reviewable_ai_post:
+          noun: "글"
       user_label: "사용자"
       notes:
         delete: "삭제하기"

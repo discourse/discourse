@@ -25,8 +25,17 @@ el:
         agree_and_delete:
           title: "Διαγραφή σχολίου"
           description: "Διαγράψτε το σχόλιο ώστε οι χρήστες να μην μπορούν να το δουν."
+        agree_and_suspend:
+          title: "Αναστολή χρήστη"
+        agree_and_silence:
+          title: "Σίγαση χρήστη"
+          description: "Συμφωνία με την αναφορά και σίγηση του χρήστη."
         disagree_and_restore:
           title: "Διαφωνώ και Επαναφορά σχολίου"
+        disagree:
+          title: "Διατήρηση σχολίου"
+        ignore:
+          title: "Αγνόηση επισήμανσης"
   post_action_types:
     vote:
       title: "Ψήφισε"
@@ -51,9 +60,9 @@ el:
           disagree_and_restore:
             title: "Διαφωνώ και Επαναφορά σχολίου"
           disagree:
-            title: "Διαφωνώ"
+            title: "Διατήρηση σχολίου"
           ignore:
-            title: "Μην κάνετε τίποτα"
+            title: "Αγνόηση επισήμανσης"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

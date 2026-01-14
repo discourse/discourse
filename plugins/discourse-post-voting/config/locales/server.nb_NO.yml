@@ -10,6 +10,12 @@ nb_NO:
       actions:
         no_action_comment:
           title: "Ingen handling"
+        agree_and_suspend:
+          description: "Si deg enig med rapportering og steng ute bruker. "
+        agree_and_silence:
+          description: "Si deg enig med rapportering og demp bruker. "
+        ignore:
+          title: "Ignorer flagg"
   post_action_types:
     vote:
       title: "Stemme"
@@ -23,8 +29,8 @@ nb_NO:
           agree_and_silence:
             title: "Demp bruker"
             description: "Si deg enig med rapportering og demp bruker. "
-          disagree:
-            title: "Si deg uenig"
+          ignore:
+            title: "Ignorer flagg"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

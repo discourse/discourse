@@ -136,16 +136,10 @@ zh_CN:
           title: "删除消息"
           description: "删除消息，使用户看不到。"
         delete_and_agree:
-          title: "忽略举报并删除消息"
           description: "将举报从队列中移除并删除消息以忽略该举报。"
         disagree_and_restore:
           title: "不同意并恢复消息"
           description: "恢复消息，以便所有用户都可以看到。"
-        disagree:
-          title: "不同意"
-        ignore:
-          title: "不进行操作"
-          description: "不采取任何措施，将举报从队列中移除以忽略该举报。"
       direct_messages:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"

@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 th:
-  post_voting:
-    comment:
-      reviewables:
-        actions:
-          disagree:
-            title: "ไม่เห็นด้วย"

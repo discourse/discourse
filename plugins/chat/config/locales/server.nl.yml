@@ -131,16 +131,12 @@ nl:
           title: "Bericht verwijderen"
           description: "Verwijder het bericht zodat gebruikers het niet kunnen zien."
         delete_and_agree:
-          title: "Markering negeren en bericht verwijderen"
           description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht."
         disagree_and_restore:
           title: "Niet akkoord en bericht herstellen"
           description: "Herstel het bericht zodat alle gebruikers het kunnen zien."
-        disagree:
-          title: "Niet akkoord"
         ignore:
-          title: "Niets doen"
-          description: "Negeer de markering door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen."
+          title: "Markering negeren"
       direct_messages:
         transcript_title: "Transcript van eerdere berichten in %{channel_name}"
         transcript_body: "Om je meer context te geven, hebben we een transcript van de vorige berichten opgenomen in deze conversatie (maximaal tien):\n\n%{transcript}"

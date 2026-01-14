@@ -2803,10 +2803,9 @@ hy:
         complete: "Գրառումը ջնջված է."
       delete_and_agree:
         complete: "Գրառումը ջնջված է."
-      disagree_and_restore:
-        description: "Վերականգնել գրառումը, որպեսզի բոլոր օգտատերերը կարողանան տեսնել այն:"
-      disagree:
+      disagree_bundle:
         title: "Ոչ"
+      disagree:
         complete: "Բողոքը անտեսվել է."
       ignore:
         title: "Անտեսել"
@@ -2815,22 +2814,36 @@ hy:
         title: "Ոչինչ չանել"
         complete: "Բողոքը անտեսվել է."
       approve:
-        title: "Հաստատել"
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
       approve_post:
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
       approve_post_closed:
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
+      reject_post_bundle:
+        title: "Ոչ"
       reject_post:
         complete: "Գրառումը մերժվել է."
       approve_user:
+        title: "Այո"
         complete: "Օգտատերը հաստատվել է."
       reject_user:
+        title: "Ոչ"
         delete:
           title: "Ջնջել Օգտատիրոջը"
           complete: "Օգտատերը ջնջված է."
+      confirm_spam:
+        title: "Այո"
+      not_spam:
+        title: "Ոչ"
       reject:
         title: "Մերժել"
+      approve_and_restore:
+        title: "Այո"
+      approve_and_unhide:
+        title: "Այո"
       no_action_post:
         title: "Առանց գործողության"
       delete_post:

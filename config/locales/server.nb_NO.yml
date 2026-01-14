@@ -1342,24 +1342,38 @@ nb_NO:
         complete: "Post slettet."
       delete_and_agree:
         complete: "Post slettet."
-      disagree_and_restore:
-        description: "Gjenopprett innlegget slik at alle brukere kan se det."
-      disagree:
+      disagree_bundle:
         title: "Nei"
       ignore:
         title: "Ignorer"
       ignore_and_do_nothing:
         title: "ikke gjør noe"
       approve:
-        title: "Godkjenn"
+        title: "Ja"
+      approve_post:
+        title: "Ja"
+      approve_post_closed:
+        title: "Ja"
+      reject_post_bundle:
+        title: "Nei"
       approve_user:
+        title: "Ja"
         complete: "Brukar godkjent."
       reject_user:
+        title: "Nei"
         delete:
           title: "Slett bruker"
           complete: "Bruker slettet."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nei"
       reject:
         title: "Avvis"
+      approve_and_restore:
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       no_action_post:
         title: "Ingen handling"
       delete_post:

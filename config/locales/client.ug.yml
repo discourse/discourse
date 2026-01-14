@@ -860,6 +860,10 @@ ug:
         reviewable_post:
           title: "يازما"
           noun: "يازما"
+        reviewable_ai_chat_message:
+          noun: "سۆھبەت ئۇچۇرى"
+        reviewable_ai_post:
+          noun: "يازما"
       flagged_as: "پاش قىلىنغان"
       post_flagged_as: "يازمىغا سېلىنغان بەلگە"
       chat_flagged_as: "سۆھبەتكە سېلىنغان بەلگە"

@@ -17,22 +17,24 @@ vi:
       allow_topic_voting: "Cho phép người dùng bình chọn chủ đề trong chuyên mục này"
       vote_title: "Bình chọn"
       vote_title_plural: "Bình chọn"
-      voted_title: "Đã vốt"
+      voted_title: "Đã bình chọn"
       voting_closed_title: "Đã "
       voting_limit: "Giới h"
-      see_votes: "Bạn còn %{count}/%{max} lượt vốt"
+      see_votes: "Bạn còn %{count}/%{max} lượt bình chọn"
+      locked_description: "Tăng độ tin cậy của bạn để bình chọn"
       votes:
-        other: "%{count} vốt"
+        other: "%{count} lượt bình chọn"
       anonymous_button:
-        other: "Phiếu"
-      remove_vote: "Bỏ vốt"
+        other: "Bình chọn"
+      remove_vote: "Xóa bình chọn"
       no_votes_title_self: "Bạn chưa bình chọn trong chủ đề nào"
+      no_votes_title_others: "%{username} chưa bình chọn bất kỳ chủ đề nào"
     filters:
       votes:
         title: "Bình chọn"
         help: "chủ đề có nhiều bình chọn nhất"
       my_votes:
-        title: "Phiếu của tôi"
+        title: "Bình chọn của tôi"
         help: "Những chủ đề bạn đã bình chọn"
     search:
       most_votes: "Bình chọn nhiều nhất"
@@ -40,3 +42,8 @@ vi:
         vote:
           count:
             label: "Điểm bình chọn ít nhất"
+    admin:
+      web_hooks:
+        voting_event:
+          topic_upvote: "Khi người dùng bình chọn cho một chủ đề"
+          topic_unvote: "Khi người dùng hủy bình chọn cho một chủ đề"

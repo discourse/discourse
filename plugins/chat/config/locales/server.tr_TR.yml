@@ -131,16 +131,12 @@ tr_TR:
           title: "Mesajı sil"
           description: "Kullanıcıların görememesi için mesajı silin."
         delete_and_agree:
-          title: "Bayrağı Yok Say ve Mesajı Sil"
           description: "Kuyruktan kaldırarak bayrağı yok sayın ve mesajı sil."
         disagree_and_restore:
           title: "Katılma ve Mesajı Geri Yükle"
           description: "Tüm kullanıcıların görebilmesi için mesajı geri yükle."
-        disagree:
-          title: "Katılma"
         ignore:
-          title: "Hiçbir şey yapma"
-          description: "Herhangi bir işlem yapmadan bayrağı kuyruktan kaldırarak yok say."
+          title: "Bildirimi yoksay"
       direct_messages:
         transcript_title: "%{channel_name} adlı kanaldaki önceki mesajların dökümü"
         transcript_body: "Size daha fazla bağlam sağlamak için bu konuşmadaki önceki mesajların bir dökümünü ekledik (en fazla on):\n\n%{transcript}"

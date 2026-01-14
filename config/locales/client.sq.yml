@@ -694,6 +694,8 @@ sq:
         reviewable_post:
           title: "Postim"
           noun: "postim"
+        reviewable_ai_post:
+          noun: "postim"
       user_label: "User"
       notes:
         delete: "Fshij"

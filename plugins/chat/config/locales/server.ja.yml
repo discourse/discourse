@@ -128,16 +128,10 @@ ja:
           title: "メッセージを削除"
           description: "ユーザーが閲覧できないようにメッセージを削除します。"
         delete_and_agree:
-          title: "通報を無視してメッセージを削除"
           description: "キューから削除して通報を無視し、そのメッセージを削除します。"
         disagree_and_restore:
           title: "同意せずにメッセージを復元"
           description: "すべてのユーザーが閲覧できるようにメッセージを復元します。"
-        disagree:
-          title: "同意しない"
-        ignore:
-          title: "何もしない"
-          description: "何もアクションを起こさずに、キューから削除して通報を無視します。"
       direct_messages:
         transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
         transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"

@@ -27,8 +27,6 @@ hr:
             title: "Suspendiraj korisnika"
           agree_and_silence:
             title: "Ušuti korisnika"
-          disagree:
-            title: "Odbaci"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

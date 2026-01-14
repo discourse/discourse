@@ -4585,19 +4585,15 @@ cs:
         description: "Souhlasit s nahlášením a skrytím tohoto příspěvku + automaticky odeslat uživateli zprávu s výzvou k jeho úpravě."
         complete: "Příspěvek byl skryt a uživatel byl upozorněn."
       agree_and_edit:
-        title: "Souhlasit a upravit příspěvek"
+        title: "Upravit příspěvek"
         description: "Souhlasit s nahlášením a otevřít okno editoru pro úpravu příspěvku."
         complete: "Nahlášení potvrzeno, nyní můžete příspěvek upravit."
       delete:
         title: "Smazat"
         complete: "Příspěvek smazán."
       delete_and_ignore:
-        title: "Ignorovat nahlášení a smazat příspěvek"
-        description: "Ignorovat nahlášení tím, že jej odstraněníte z fronty a smažete příspěvek; pokud jde o první příspěvek, smaže i téma. "
         complete: "Příspěvek smazán."
       delete_and_ignore_replies:
-        title: "Ignorovat nahlášení, smazat příspěvek a odpovědi"
-        description: "Ignorovat nahlášení odstraněním z fronty, smazáním příspěvku a všech jeho odpovědí; pokud jde o první příspěvek, smaže i téma"
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
         complete: "Příspěvek a odpovědi byly odstraněny."
       delete_and_agree:
@@ -4610,11 +4606,12 @@ cs:
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
         complete: "Příspěvek a odpovědi byly odstraněny."
       disagree_and_restore:
-        title: "Ne, obnovit příspěvek"
-        description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
+        title: "Obnovit příspěvek"
         complete: "Příspěvek obnoven."
-      disagree:
+      disagree_bundle:
         title: "Ne"
+      disagree:
+        title: "Ponechat příspěvek"
         complete: "Nahlášení ignorováno."
       discard_post:
         title: "Zahodit příspěvek"
@@ -4630,31 +4627,36 @@ cs:
         description: "Ignorovat nahlášením odstraněním z fronty bez jakékoli akce. Skryté příspěvky zůstanou skryté a budou řešeny pomocí automatických nástrojů."
         complete: "Nahlášení ignorováno."
       approve:
-        title: "Schválit"
+        title: "Ano"
         complete: "Příspěvek schválen."
       approve_post:
-        title: "Schválit příspěvek"
+        title: "Ano"
         complete: "Příspěvek schválen."
       approve_post_closed:
-        title: "Schválit příspěvek"
+        title: "Ano"
         confirm: "Toto téma je uzavřeno. Chcete příspěvek přesto vytvořit?"
         complete: "Příspěvek schválen."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         title: "Odmítnout příspěvek"
         complete: "Příspěvek zamítnut."
       approve_user:
-        title: "Schválit uživatele"
+        title: "Ano"
         complete: "Uživatel schválen."
       reject_user:
-        title: "Odstranit uživatele..."
+        title: "Ne"
         delete:
           title: "Smazat uživatele"
-          description: "Uživatel bude odstraněn z fóra."
           complete: "Uživatel smazán."
         block:
           title: "Odstranit a blokovat uživatele"
           description: "Uživatel bude smazán a zablokujeme jeho IP a e-mailovou adresu."
           complete: "Uživatel smazán a zablokován."
+      confirm_spam:
+        title: "Ano"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Odmítnout"
         bundle_title: "Odmítnout…"
@@ -4673,10 +4675,10 @@ cs:
       scrub:
         title: Očistit záznam
       approve_and_restore:
-        title: "Schválit a obnovit příspěvek"
+        title: "Ano"
         complete: "Příspěvek schválen a obnoven."
       approve_and_unhide:
-        title: "Schválit a zviditelnit příspěvek"
+        title: "Ano"
         complete: "Příspěvek schválen a zviditelněn"
       post_actions:
         bundle_title: "Co chcete s příspěvkem udělat?"

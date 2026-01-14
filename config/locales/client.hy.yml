@@ -689,6 +689,8 @@ hy:
         reviewable_post:
           title: "Գրառում"
           noun: "գրառում"
+        reviewable_ai_post:
+          noun: "գրառում"
       user_label: "Օգտատեր"
       notes:
         delete: "Ջնջել"

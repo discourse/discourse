@@ -984,6 +984,10 @@ he:
         reviewable_post:
           title: "פוסט"
           noun: "פוסט"
+        reviewable_ai_chat_message:
+          noun: "הודעת הצ׳אט"
+        reviewable_ai_post:
+          noun: "פרסום"
       flagged_as: "מסומן בתור"
       post_flagged_as: "הפוסט סומן בתור"
       chat_flagged_as: "השיחה סומנה בתור"

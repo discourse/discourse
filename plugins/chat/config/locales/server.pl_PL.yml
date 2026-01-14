@@ -151,10 +151,11 @@ pl_PL:
           title: "Nie zgadzam się i przywracam wiadomość"
           description: "Przywróć wiadomość, aby wszyscy użytkownicy mogli ją zobaczyć."
         disagree:
-          title: "Wycofaj"
+          title: "Zachowaj wiadomość"
+          description: "Nie zgódź się z flagą i pozostaw wiadomość bez zmian."
         ignore:
-          title: "Nic nie rób"
-          description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+          title: "Ignoruj flagę"
+          description: "Usuń z kolejki bez podejmowania żadnych działań."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"

@@ -636,6 +636,10 @@ sv:
         reviewable_post:
           title: "Inlägg"
           noun: "inlägg"
+        reviewable_ai_chat_message:
+          noun: "chattmeddelande"
+        reviewable_ai_post:
+          noun: "inlägg"
       user_label: "Användare"
       notes:
         delete: "Radera"

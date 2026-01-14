@@ -9,6 +9,11 @@ vi:
     accepted_solutions:
       xaxis: "Ngày"
       yaxis: "Tổng số"
+  solved:
+    filter:
+      description:
+        solved: "Lọc chủ đề đã được giải quyết"
+        unsolved: "Lọc chủ đề chưa được giải quyết"
   badges:
     solved_1:
       name: "Lần Đầu Giải Quyết"

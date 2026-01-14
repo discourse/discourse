@@ -2592,32 +2592,36 @@ lt:
         complete: "Įrašas ištrintas."
       delete_and_agree_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
-      disagree_and_restore:
-        description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
-      disagree:
+      disagree_bundle:
         title: "Ne"
       ignore:
         title: "Ignoruoti"
       ignore_and_do_nothing:
         title: "Nieko nedaryti"
       approve:
-        title: "Patvirtinti"
+        title: "Taip"
       approve_post:
-        title: "Patvirtinti įrašą"
+        title: "Taip"
       approve_post_closed:
-        title: "Patvirtinti įrašą"
+        title: "Taip"
         complete: "Įrašas patvirtintas."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         title: "Atmesti įrašą"
       approve_user:
-        title: "Patvirtinti vartotoją"
+        title: "Taip"
       reject_user:
+        title: "Ne"
         delete:
           title: "Ištrinti vartotoją"
-          description: "Vartotojas bus pašalintas iš forumo."
           complete: "Naudotojas ištrintas."
         block:
           title: "Ištrinti ir blokuoti vartotoją"
+      confirm_spam:
+        title: "Taip"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Atmesti"
       reject_and_suspend:
@@ -2630,6 +2634,10 @@ lt:
         title: "Palikti įrašą ištrintą"
       scrub:
         title: Šveitimo įrašas
+      approve_and_restore:
+        title: "Taip"
+      approve_and_unhide:
+        title: "Taip"
       no_action_post:
         title: "Jokių veiksmų"
       delete_post:

@@ -2095,8 +2095,9 @@ pt:
         complete: "Publicação eliminada."
       delete_and_agree:
         complete: "Publicação eliminada."
-      disagree:
+      disagree_bundle:
         title: "Não"
+      disagree:
         complete: "Sinalização ignorada."
       ignore:
         title: "Ignorar"
@@ -2104,17 +2105,33 @@ pt:
       ignore_and_do_nothing:
         complete: "Sinalização ignorada."
       approve:
-        title: "Aprovar"
+        title: "Sim"
+      approve_post:
+        title: "Sim"
       approve_post_closed:
+        title: "Sim"
         complete: "Mensagem aprovada."
+      reject_post_bundle:
+        title: "Não"
       reject_post:
         complete: "Publicação rejeitada."
+      approve_user:
+        title: "Sim"
       reject_user:
+        title: "Não"
         delete:
           title: "Eliminar Utilizador"
           complete: "Usuário eliminado."
+      confirm_spam:
+        title: "Sim"
+      not_spam:
+        title: "Não"
       reject:
         title: "Rejeitar"
+      approve_and_restore:
+        title: "Sim"
+      approve_and_unhide:
+        title: "Sim"
       delete_post:
         complete: "Publicação eliminada"
       silence_user:

@@ -8,6 +8,10 @@ vi:
   js:
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
+    vote:
+      already_voted: "Bạn chỉ được phép bình chọn một lần cho mỗi câu hỏi."
+      user_over_limit: "Bạn không thể vượt quá số bình chọn tương ứng với độ tin cậy của mình."
+      one_vote_per_post: "Bạn chỉ có thể bình chọn một lần cho mỗi tút."
     last_answer_lowercase: Trả lời cuối
     answer_lowercase:
       other: Trả lời
@@ -31,5 +35,7 @@ vi:
                 title: "Không đồng ý"
       topic:
         sort_by: "Sắp xếp theo"
-        votes: "Bình chọn"
+        votes: "Lượt bình chọn"
         activity: "Hoạt động"
+        voters_count_diff:
+          other: "và %{count} người khác..."

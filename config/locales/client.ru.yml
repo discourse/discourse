@@ -970,6 +970,10 @@ ru:
         reviewable_post:
           title: "Сообщение"
           noun: "публикация"
+        reviewable_ai_chat_message:
+          noun: "сообщение чата"
+        reviewable_ai_post:
+          noun: "публикация"
       flagged_as: "Помечено как"
       user_label: "Пользователь"
       moderator_actions: "Действия модератора"

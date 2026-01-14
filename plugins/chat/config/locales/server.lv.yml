@@ -11,8 +11,6 @@ lv:
       actions:
         agree_and_suspend:
           title: "Apturētie lietotāji"
-        disagree:
-          title: "Nepiekrist"
     channel:
       dm_title:
         single_user: "%{username}"

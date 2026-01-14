@@ -832,6 +832,10 @@ it:
         reviewable_post:
           title: "Messaggio"
           noun: "messaggio"
+        reviewable_ai_chat_message:
+          noun: "messaggio di chat"
+        reviewable_ai_post:
+          noun: "messaggio"
       flagged_as: "Contrassegnato come"
       user_label: "Utente"
       moderator_actions: "Azioni del moderatore"

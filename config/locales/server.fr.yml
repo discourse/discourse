@@ -5088,19 +5088,14 @@ fr:
         description: "Acceptez ce signalement, masquez le message et envoyez automatiquement un message à l'utilisateur pour l'inciter à le modifier"
         complete: "Publication masquée. L'utilisateur a été averti."
       agree_and_edit:
-        title: "Accepter et modifier la publication"
         description: "Acceptez le signalement et ouvrez une fenêtre de composition pour modifier le message."
         complete: "Signalement confirmé, vous pouvez maintenant modifier la publication."
       delete:
         title: "Supprimer"
         complete: "Publication supprimée."
       delete_and_ignore:
-        title: "Ignorer le signalement et supprimer le message"
-        description: "Ignorez le signalement en le retirant de la file d'attente et supprimez le message. S'il s'agit du premier message, vous supprimerez également le sujet. "
         complete: "Publication supprimée."
       delete_and_ignore_replies:
-        title: "Ignorer le signalement, supprimer le message et les réponses"
-        description: "Ignorez le signalement en le supprimant de la file d'attente, et supprimez le message et toutes ses réponses. S'il s'agit du premier message, vous supprimerez également le sujet"
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
         complete: "Publication et réponses supprimées."
       delete_and_agree:
@@ -5113,11 +5108,12 @@ fr:
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
         complete: "Publication et réponses supprimées."
       disagree_and_restore:
-        title: "Non, restaurer le message"
-        description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
+        title: "Rétablir le message"
         complete: "Publication restaurée."
-      disagree:
+      disagree_bundle:
         title: "Non"
+      disagree:
+        title: "Conserver le message"
         complete: "Signalement ignoré."
       discard_post:
         title: "Supprimer le message"
@@ -5132,31 +5128,36 @@ fr:
         description: "Ignorez le signalement en le retirant de la file d'attente sans effectuer aucune action. Les messages masqués resteront masqués et seront gérés par les outils automatiques."
         complete: "Signalement ignoré."
       approve:
-        title: "Approuver"
+        title: "Oui"
         complete: "Publication approuvée."
       approve_post:
-        title: "Approuver le message"
+        title: "Oui"
         complete: "Publication approuvée."
       approve_post_closed:
-        title: "Approuver la publication"
+        title: "Oui"
         confirm: "Ce sujet est fermé. Voulez-vous quand même créer la publication ?"
         complete: "Publication approuvée."
+      reject_post_bundle:
+        title: "Non"
       reject_post:
         title: "Rejeter le message"
         complete: "Publication rejetée."
       approve_user:
-        title: "Approuver l'utilisateur"
+        title: "Oui"
         complete: "Utilisateur approuvé."
       reject_user:
-        title: "Supprimer l'utilisateur…"
+        title: "Non"
         delete:
           title: "Supprimer l'utilisateur"
-          description: "L'utilisateur sera supprimé du forum."
           complete: "Utilisateur supprimé."
         block:
           title: "Supprimer et bloquer l'utilisateur"
           description: "L'utilisateur sera supprimé et nous bloquerons ses adresses e-mail et IP."
           complete: "Utilisateur supprimé et bloqué."
+      confirm_spam:
+        title: "Oui"
+      not_spam:
+        title: "Non"
       reject:
         title: "Rejeter"
         bundle_title: "Rejeter…"
@@ -5175,10 +5176,10 @@ fr:
       scrub:
         title: Effacer l'enregistrement
       approve_and_restore:
-        title: "Autoriser et restaurer ce message"
+        title: "Oui"
         complete: "Publication approuvée et restaurée."
       approve_and_unhide:
-        title: "Approuver et afficher la publication"
+        title: "Oui"
         complete: "Publication approuvée et visible"
       no_action_post:
         title: "Aucune action"

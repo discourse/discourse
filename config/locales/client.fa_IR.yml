@@ -754,6 +754,8 @@ fa_IR:
         reviewable_post:
           title: "نوشته"
           noun: "نوشته"
+        reviewable_ai_post:
+          noun: "نوشته"
       user_label: "کاربر"
       notes:
         delete: "حذف"

@@ -768,6 +768,10 @@ ja:
         reviewable_post:
           title: "投稿"
           noun: "投稿"
+        reviewable_ai_chat_message:
+          noun: "チャットメッセージ"
+        reviewable_ai_post:
+          noun: "投稿"
       flagged_as: "通報:"
       user_label: "ユーザー"
       moderator_actions: "モデレーターのアクション"

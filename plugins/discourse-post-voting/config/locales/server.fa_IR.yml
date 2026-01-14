@@ -15,6 +15,10 @@ fa_IR:
       actions:
         no_action_comment:
           title: "هیچ اقدامی"
+        agree_and_suspend:
+          title: "کاربر تعلیق شده"
+        ignore:
+          title: "چشم‌پوشی از پرچم"
   post_action_types:
     vote:
       title: "رای"
@@ -26,8 +30,8 @@ fa_IR:
             title: "کاربر تعلیق شده"
           agree_and_silence:
             title: "سکوت کاربر"
-          disagree:
-            title: "مخالف"
+          ignore:
+            title: "چشم‌پوشی از پرچم"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

@@ -2812,8 +2812,9 @@ hr:
         complete: "Post izbrisan."
       delete_and_agree:
         complete: "Post izbrisan."
-      disagree:
+      disagree_bundle:
         title: "Ne"
+      disagree:
         complete: "Zastava zanemarena."
       ignore:
         title: "Zanemari"
@@ -2822,25 +2823,38 @@ hr:
         title: "Ne radi ništa"
         complete: "Zastava zanemarena."
       approve:
-        title: "Odobri"
+        title: "Da"
         complete: "Objava odobrena."
       approve_post:
+        title: "Da"
         complete: "Objava odobrena."
       approve_post_closed:
+        title: "Da"
         complete: "Objava odobrena."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         complete: "Objava je odbijena."
       approve_user:
-        title: "Odobri korisnika"
+        title: "Da"
         complete: "Korisnik odobren."
       reject_user:
+        title: "Ne"
         delete:
           title: "Obriši korisnika"
           complete: "Korisnik izbrisan."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Odbij"
       scrub:
         title: Obriši zapis
+      approve_and_restore:
+        title: "Da"
+      approve_and_unhide:
+        title: "Da"
       no_action_post:
         title: "Nema akcije"
       delete_post:

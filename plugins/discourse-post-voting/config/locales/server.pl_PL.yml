@@ -54,9 +54,24 @@ pl_PL:
         agree_and_delete:
           title: "Usuń komentarz"
           description: "Usuń komentarz, aby użytkownicy nie mogli go zobaczyć."
+        agree_and_suspend:
+          title: "Zawieś użytkownika"
+          description: "Zgódź się z flagą i zawieś konto użytkownika."
+        agree_and_silence:
+          title: "Wycisz użytkownika"
+          description: "Zgódź się z flagą i wycisz użytkownika."
         disagree_and_restore:
           title: "Nie zgadzam się i przywróć komentarz"
           description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
+        disagree:
+          title: "Zachowaj komentarz"
+          description: "Nie zgódź się z flagą i pozostaw komentarz bez zmian."
+        ignore:
+          title: "Ignoruj flagę"
+          description: "Usuń z kolejki bez podejmowania żadnych działań."
+        delete_and_agree:
+          title: "Zignoruj flagę i usuń komentarz"
+          description: "Zignoruj flagę, usuwając ją z kolejki i usuń komentarz."
   post_action_types:
     vote:
       title: "Głosuj"
@@ -112,10 +127,11 @@ pl_PL:
             title: "Nie zgadzam się i przywróć komentarz"
             description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
           disagree:
-            title: "Wycofaj"
+            title: "Zachowaj komentarz"
+            description: "Nie zgódź się z flagą i pozostaw komentarz bez zmian."
           ignore:
-            title: "Nic nie rób"
-            description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+            title: "Ignoruj flagę"
+            description: "Usuń z kolejki bez podejmowania żadnych działań."
         transcript:
           view: "Zobacz transkrypt poprzednich komentarzy"
       reviewable_score_types:

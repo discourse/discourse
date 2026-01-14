@@ -28,8 +28,6 @@ ro:
           title: "Suspendă utilizator"
         agree_and_silence:
           title: "Suspendă utilizatorul"
-        disagree:
-          title: "Nu sunt de acord"
     channel:
       users_invited_to_channel:
         one: "%{invited_users} a fost invitat de %{inviting_user}."

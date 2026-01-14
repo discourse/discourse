@@ -119,16 +119,12 @@ sv:
           title: "Radera meddelande"
           description: "Ta bort meddelandet så att användarna inte kan se det."
         delete_and_agree:
-          title: "Ignorera flagga och radera meddelande"
           description: "Ignorera flaggan genom att ta bort den från kön och radera meddelandet."
         disagree_and_restore:
           title: "Håll inte med och återställ meddelande"
           description: "Återställ meddelandet så att alla användare kan se det."
-        disagree:
-          title: "Håll inte med"
         ignore:
-          title: "Gör ingenting"
-          description: "Ignorera flaggan genom att ta bort den från kön utan att vidta någon åtgärd."
+          title: "Ignorera flagga"
       direct_messages:
         transcript_title: "Avskrift av tidigare meddelanden i %{channel_name}"
         transcript_body: "För att ge dig mer sammanhang inkluderade vi en avskrift av de tidigare meddelandena i det här samtalet (upp till tio):\n\n%{transcript}"

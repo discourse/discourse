@@ -35,6 +35,8 @@ en_GB:
         reviewable_post:
           title: "Post"
           noun: "post"
+        reviewable_ai_post:
+          noun: "post"
     groups:
       manage:
         categories:

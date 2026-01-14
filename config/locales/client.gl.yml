@@ -513,6 +513,8 @@ gl:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+        reviewable_ai_post:
+          noun: "publicación"
       user_label: "Usuario"
       notes:
         delete: "Eliminar"

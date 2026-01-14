@@ -145,16 +145,12 @@ cs:
           title: "Smazat zprávu"
           description: "Odstranit zprávu, aby ji uživatelé nemohli vidět."
         delete_and_agree:
-          title: "Ignorovat nahlášení a smazat zprávu"
           description: "Ignorovat nahlášení odstraněním z fronty a smazáním zprávy."
         disagree_and_restore:
           title: "Nesouhlasit a obnovit zprávu"
           description: "Obnovit zprávu, aby ji mohli vidět všichni uživatelé."
-        disagree:
-          title: "Neschvaluji"
         ignore:
-          title: "Nedělat nic"
-          description: "Ignorovat nahlášení odstraněním z fronty bez jakékoli akce."
+          title: "Ignorovat nahlášení"
       direct_messages:
         transcript_title: "Přepis předchozích zpráv v %{channel_name}"
         transcript_body: "Abychom vám poskytli více souvislostí, zahrnuli jsme do této konverzace přepis předchozích zpráv (až 10):\n\n%{transcript}"

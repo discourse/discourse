@@ -860,6 +860,10 @@ sk:
         reviewable_post:
           title: "Príspevok"
           noun: "príspevok"
+        reviewable_ai_chat_message:
+          noun: "správa v chate"
+        reviewable_ai_post:
+          noun: "príspevok"
       flagged_as: "Označené ako"
       user_label: "Používateľ"
       moderator_actions: "Akcie moderátora"

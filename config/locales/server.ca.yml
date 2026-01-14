@@ -2816,35 +2816,43 @@ ca:
         complete: "Publicació suprimida."
       delete_and_agree_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
-      disagree_and_restore:
-        description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
-      disagree:
+      disagree_bundle:
         title: "No"
       ignore:
         title: "Ignora"
       ignore_and_do_nothing:
         title: "No facis res"
       approve:
-        title: "Aprova"
+        title: "Sí"
       approve_post:
-        title: "Aprova la publicació"
+        title: "Sí"
       approve_post_closed:
-        title: "Aprova la publicació"
+        title: "Sí"
         confirm: "Aquest tema és tancat. Voleu crear la publicació de totes maneres?"
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Rebutja la publicació"
       approve_user:
-        title: "Aprova l'usuari"
+        title: "Sí"
       reject_user:
+        title: "No"
         delete:
           title: "Suprimeix l'usuari"
-          description: "L'usuari serà suprimit del fòrum."
           complete: "Usuari suprimit."
         block:
           title: "Suprimeix i bloca l'usuari"
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
+      confirm_spam:
+        title: "Sí"
+      not_spam:
+        title: "No"
       reject:
         title: "Rebutja"
+      approve_and_restore:
+        title: "Sí"
+      approve_and_unhide:
+        title: "Sí"
       no_action_post:
         title: "Cap acció"
       delete_post:

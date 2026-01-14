@@ -488,6 +488,8 @@ lv:
         reviewable_post:
           title: "Ieraksts"
           noun: "ieraksts"
+        reviewable_ai_post:
+          noun: "ieraksts"
       user_label: "Lietotājs"
       notes:
         delete: "Dzēst"

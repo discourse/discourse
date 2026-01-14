@@ -30,8 +30,8 @@ ur:
         agree_and_silence:
           title: "صارف خاموش کریں"
           description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
-        disagree:
-          title: "اختلاف کریں"
+        ignore:
+          title: "فلَیگ نظر انداز کریں"
     channel:
       dm_title:
         single_user: "%{username}"

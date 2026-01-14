@@ -2827,8 +2827,11 @@ fa_IR:
       delete_and_agree:
         title: "حذف نوشته"
         complete: "نوشته حذف شده."
-      disagree:
+      disagree_and_restore:
+        title: "بازیابی نوشته"
+      disagree_bundle:
         title: "خیر"
+      disagree:
         complete: "پرچم نادیده گرفته شد."
       ignore:
         title: "چشم پوشی"
@@ -2836,24 +2839,37 @@ fa_IR:
       ignore_and_do_nothing:
         complete: "پرچم نادیده گرفته شد."
       approve:
-        title: "تایید"
+        title: "بله"
         complete: "نوشته تایید شده."
       approve_post:
+        title: "بله"
         complete: "نوشته تایید شده."
       approve_post_closed:
+        title: "بله"
         complete: "نوشته تایید شده."
+      reject_post_bundle:
+        title: "خیر"
       reject_post:
         complete: "نوشته رد شده."
       approve_user:
+        title: "بله"
         complete: "کاربر تایید شده."
       reject_user:
-        title: "حذف کاربر…"
+        title: "خیر"
         delete:
           title: "حذف کاربر"
           complete: "کاربر حذف شده."
+      confirm_spam:
+        title: "بله"
+      not_spam:
+        title: "خیر"
       reject:
         title: "رد کردن"
         bundle_title: "رد کردن…"
+      approve_and_restore:
+        title: "بله"
+      approve_and_unhide:
+        title: "بله"
       no_action_post:
         title: "هیچ اقدامی"
       delete_post:
