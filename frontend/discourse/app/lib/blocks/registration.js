@@ -629,6 +629,9 @@ let testRegistryFrozenState = null;
  * Registry of custom block outlets registered by plugins and themes.
  * Maps outlet names to their metadata.
  *
+ * NOT EXPORTED: External code must use accessor functions (getAllOutlets,
+ * isValidOutlet, getCustomOutlet) to prevent bypassing the frozen registry check.
+ *
  * @type {Map<string, { name: string, description?: string }>}
  */
 const customOutletRegistry = new Map();
@@ -854,6 +857,9 @@ export function getCustomOutlet(name) {
  * Unlike blocks which store component classes, conditions are stored as classes
  * and instantiated by the Blocks service when first needed. This allows the
  * service to set the owner for dependency injection.
+ *
+ * NOT EXPORTED: External code must use accessor functions (hasConditionType,
+ * getAllConditionTypeEntries) to prevent bypassing the frozen registry check.
  *
  * @type {Map<string, typeof import("discourse/blocks/conditions").BlockCondition>}
  */
