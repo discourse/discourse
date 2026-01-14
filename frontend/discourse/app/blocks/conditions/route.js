@@ -274,12 +274,13 @@ export default class BlockRouteCondition extends BlockCondition {
       for (const pageType of pages) {
         const pageContext = getPageContext(pageType, services);
         if (pageContext !== null) {
+          // Track page context for debugging (shows what values were checked)
+          if (isDebugging) {
+            actualPageContext = { pageType, ...pageContext };
+          }
+
           // Page type matches, now check params if provided
           if (params) {
-            // Track page context for debugging (shows what values were checked)
-            if (isDebugging) {
-              actualPageContext = { pageType, ...pageContext };
-            }
             // Pass debug=false here - logging happens in dedicated block below
             if (this.#matchPageParams(params, pageContext, { debug: false })) {
               routeMatched = true;
@@ -295,9 +296,8 @@ export default class BlockRouteCondition extends BlockCondition {
       }
     }
 
-    // Log detailed route state only when params or queryParams are present.
-    // Simple URL-only or page-only conditions don't need verbose state logging.
-    if (isDebugging && (params || queryParams)) {
+    // Log route state for conditions using pages or queryParams with urls
+    if (isDebugging && (pages?.length || (urls?.length && queryParams))) {
       logger?.logRouteState?.({
         currentPath,
         expectedUrls: urls,
