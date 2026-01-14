@@ -1,5 +1,9 @@
 en:
   js:
+    carousel:
+      go_to_slide: "Go to slide %{index}"
+      previous: "Previous slide"
+      next: "Next slide"
     number:
       format:
         # symbol used to separate the integer part from the fractional part of a number
@@ -718,6 +722,7 @@ en:
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"
+      editing_post: "Editing post…"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
@@ -922,6 +927,10 @@ en:
         is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
         something_else_wrong: "Is there something wrong with this %{reviewable_type}?"
+        approve_user: "Approve this user?"
+        suspect_user: "Is this user spam?"
+        approve_post: "Approve this post?"
+        approve_topic: "Approve this topic?"
 
       types:
         reviewable_flagged_post:
@@ -940,6 +949,15 @@ en:
         reviewable_post:
           title: "Post"
           noun: "post"
+        reviewable_ai_chat_message:
+          title: "AI-Flagged Chat Message"
+          noun: "chat message"
+        reviewable_ai_post:
+          title: "AI-Flagged Post"
+          noun: "post"
+        reviewable_post_voting_comment:
+          title: "Flagged Comment"
+          noun: "comment"
       flagged_as: "Flagged as"
       post_flagged_as: "Post flagged as"
       chat_flagged_as: "Chat flagged as"
@@ -1166,11 +1184,10 @@ en:
           title: Interaction
           posting: Posting
           notification: Notification
+          self_lockout: "You are about to change group visibility in a way that will remove your own access. Are you sure you want to proceed?"
         email:
           title: "Email"
-          status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
           enable_smtp: "Enable SMTP"
-          enable_imap: "Enable IMAP"
           test_settings: "Test Settings"
           save_settings: "Save Settings"
           last_updated: "Last updated:"
@@ -1179,14 +1196,8 @@ en:
           smtp_settings_valid: "SMTP settings valid."
           smtp_title: "SMTP"
           smtp_instructions: "When you enable SMTP for the group, all outbound emails sent from the group's inbox will be sent via the SMTP settings specified here instead of the mail server configured for other emails sent by your forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Additional Settings"
-          imap_instructions: 'When you enable IMAP for the group, emails are synced between the group inbox and the provided IMAP server and mailbox. SMTP must be enabled with valid and tested credentials before IMAP can be enabled. The email username and password used for SMTP will be used for IMAP. For more information see <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">feature announcement on Discourse Meta</a>.'
-          imap_alpha_warning: "Warning: This is an alpha-stage feature. Only Gmail is officially supported. Use at your own risk!"
-          imap_settings_valid: "IMAP settings valid."
-          smtp_disable_confirm: "If you disable SMTP, all SMTP and IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
-          imap_disable_confirm: "If you disable IMAP, all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
-          imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
+          additional_settings: "Additional Settings"
+          smtp_disable_confirm: "If you disable SMTP, all SMTP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
           prefill:
             title: "Prefill with settings for:"
             gmail: "Gmail"
@@ -1201,9 +1212,6 @@ en:
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
             smtp_ssl_mode: "SSL Mode"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Use SSL for IMAP"
             username: "Username"
             password: "Password"
           settings:
@@ -1212,10 +1220,6 @@ en:
             allow_unknown_sender_topic_replies_hint: "Allows unknown senders to reply to group topics. If this is not enabled, replies from email addresses not already invited to the topic will create a new topic."
             from_alias: "From Alias"
             from_alias_hint: "Alias to use as the from address when sending group SMTP emails. Note this may not be supported by all mail providers, please consult your mail provider's documentation."
-          mailboxes:
-            synchronized: "Synchronized Mailbox"
-            none_found: "No mailboxes were found in this email account."
-            disabled: "Disabled"
         membership:
           title: Membership
           access: Access
@@ -1312,6 +1316,8 @@ en:
         make_owner_description: "Make <b>%{username}</b> an owner of this group"
         remove_owner: "Remove as Owner"
         remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
+        remove_member_self_lockout: "Removing yourself from this group will revoke your access to manage it. Are you sure you want to proceed?"
+        remove_owner_self_lockout: "Removing yourself as owner will revoke your access to manage this group. Are you sure you want to proceed?"
         make_primary: "Make Primary"
         make_primary_description: "Make this the primary group for <b>%{username}</b>"
         remove_primary: "Remove as Primary"
@@ -1489,7 +1495,17 @@ en:
       private_message: "Message"
       private_messages: "Messages"
       upcoming_changes:
-        title: "Upcoming change enabled"
+        title: "Upcoming changes"
+        for_user:
+          upcoming_change: "Upcoming change"
+          enabled: "Enabled?"
+          why: "Why?"
+        why_reasons:
+          not_in_specific_groups: "The user is not in the specific groups required for this change"
+          in_specific_groups: "The user is in the specific groups required for this change"
+          enabled_for_everyone: "This change is enabled for all members"
+          enabled_for_no_one: "This change is disabled for all members"
+
       user_notifications:
         filters:
           filter_by: "Filter By"
@@ -1833,7 +1849,8 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        navigation_menu: "Navigation Menu"
+        navigation_menu: "Navigation menu"
+        upcoming_changes: "Upcoming changes"
 
       change_password:
         success: "(email sent)"
@@ -3186,6 +3203,10 @@ en:
       image: "image"
 
       grid_label: "This will be displayed as a grid"
+      grid_mode_grid: "Grid"
+      grid_mode_carousel: "Carousel"
+      grid_mode_title: "Set image gallery style to %{mode}"
+      remove_grid: "Remove grid"
 
       image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image
@@ -3634,20 +3655,6 @@ en:
           new_new: "Nothing new at the moment... check back soon!"
           new: "Nothing new at the moment... check back soon!"
 
-      bottom:
-        latest: "There are no more latest topics."
-        posted: "There are no more posted topics."
-        read: "There are no more read topics."
-        new: "There are no more new topics."
-        unread: "There are no more unread topics."
-        unseen: "There are no more unseen topics."
-        category: "There are no more %{category} topics."
-        tag: "There are no more %{tag} topics."
-        top: "There are no more top topics."
-        hot: "There are no more hot topics."
-        bookmarks: "There are no more bookmarked topics."
-        filter: "There are no more topics."
-
     topic_bulk_actions:
       dismiss:
         name: "Dismiss"
@@ -3784,9 +3791,6 @@ en:
       created_at: "Created: %{date}"
       bumped_at: "Latest: %{date}"
 
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Browse all categories</a> or <a href='%{basePath}/latest'>view latest topics</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
       browse_latest_topics: "Browse latest topics"
       browse_new_replies: "Browse new replies"
       browse_new_topics: "Browse new topics"
@@ -3851,6 +3855,8 @@ en:
         title: "Auto-Close Topic After Last Post"
       auto_delete:
         title: "Auto-Delete Topic"
+      auto_delete_after_last_post:
+        title: "Auto-Delete Topic After Last Post"
       auto_bump:
         title: "Auto-Bump Topic"
       reminder:
@@ -3863,6 +3869,7 @@ en:
         auto_close: "This topic will automatically close %{timeLeft}."
         auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_after_last_post: "This topic will close %{duration} after the last reply."
+        auto_delete_after_last_post: "This topic will be deleted %{duration} after the last reply."
         auto_delete: "This topic will be automatically deleted %{timeLeft}."
         auto_bump: "This topic will be automatically bumped %{timeLeft}."
         auto_reminder: "You will be reminded about this topic %{timeLeft}."
@@ -4956,6 +4963,7 @@ en:
         this_month: "Month"
         this_week: "Week"
         today: "Today"
+        custom: "Custom"
 
     custom_homepage:
       admin_message: 'One of your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'
@@ -5003,6 +5011,7 @@ en:
         latest: "%{shortcut} Latest"
         new: "%{shortcut} New"
         unread: "%{shortcut} Unread"
+        unseen: "%{shortcut} Unseen"
         categories: "%{shortcut} Categories"
         top: "%{shortcut} Top"
         bookmarks: "%{shortcut} Bookmarks"
@@ -6017,15 +6026,18 @@ en:
                 below_site_header: "Below site header"
             text_section:
               title: "Customizable text"
-              variables: "You can use these variables in your text: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+              locale_label: "Language"
             header_new_members:
               label: "Header for new members"
-              placeholder: "Welcome to %{site_name}, %{preferred_display_name}!"
+              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Welcome, %{preferred_display_name}!"
             header_logged_in:
               label: "Header for logged-in members"
+              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome back, %{preferred_display_name}!"
             header_anonymous:
               label: "Header for anonymous visitors"
+              description: "Available variable: <code>&percnt;{site_name}</code>"
               placeholder: "Welcome to %{site_name}!"
             subheader_logged_in:
               label: "Subheader for logged-in members"
@@ -8083,6 +8095,17 @@ en:
         penalty_post_actions: "What would you like to do with the associated post?"
         penalty_post_delete: "Delete the post"
         penalty_post_delete_replies: "Delete the post + any replies"
+        penalty_post_delete_all: "Delete all topics by user + any replies"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>This will delete
+          { TOPICS, plural,
+              one {# topic}
+            other {# topics}
+          } and
+          { REPLIES, plural,
+              one {# reply}
+            other {# replies}
+          }. <b>This cannot be undone!</b> Are you sure you would like to do this?</span>
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
@@ -8160,6 +8183,11 @@ en:
         approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
         post_edits_count: "Post Edits"
+        upcoming_changes:
+          title: "User upcoming changes"
+          description: "To modify groups or to enable or disable upcoming changes, please visit the <a href='%{basePath}/admin/config/upcoming-changes'>upcoming changes config page</a>."
+          filter_placeholder: "Filter upcoming changes by name or description"
+          filter_no_results: "No upcoming changes found"
         exports:
           title: User exports
           download:
@@ -8184,7 +8212,9 @@ en:
           button: "Delete all posts"
           progress:
             title: "Progress of deleting posts"
-            description: "Deleting posts…"
+            description:
+              one: "Deleting %{count} post by @%{username}..."
+              other: "Deleting %{count} posts by @%{username}..."
           confirmation:
             title: "Delete all posts by @%{username}"
             description: |
@@ -8197,6 +8227,7 @@ en:
             text: "delete posts by @%{username}"
             delete: "Delete posts by @%{username}"
             cancel: "Cancel"
+          all_enqueued: "All of @%{username}'s posts have been queued for deletion"
         merge:
           button: "Merge"
           prompt:
@@ -8519,17 +8550,20 @@ en:
             prompt: "Changing this setting may have far-reaching or unintended consequences for your site. Are you sure you want to proceed?"
             confirm: "Yes, I'm sure"
           min_password_length:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           min_admin_password_length:
-            prompt: "You’re about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           password_unique_charactes:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           block_common_passwords:
-            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
+          clean_up_inactive_users_after_days:
+            prompt: "Setting this value to anything other than 0 will cause users who are no longer active for that many days to be permanently deleted. Are you sure you want to proceed?"
+            confirm: "Yes, I understand that inactive users will be permanently deleted unless I set this value to 0"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

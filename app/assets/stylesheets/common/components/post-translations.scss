@@ -4,7 +4,7 @@
   }
 }
 
-.post-language-selector-content {
+.fk-d-menu.post-language-selector-content {
   z-index: z("composer", "dropdown");
 
   // eventho mobile composer shouldnt be used in conjuction with fk-d-menu (floating version), on tablets the possibility unfortunately exists

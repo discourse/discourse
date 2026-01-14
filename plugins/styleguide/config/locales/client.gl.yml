@@ -51,8 +51,6 @@ gl:
           title: "Listaxe de temas"
         basic_topic_list:
           title: "Listaxe de temas básicos"
-        footer_message:
-          title: "Mensaxe rodapé"
         signup_cta:
           title: "Subscrición CTA"
         topic_timer_info:

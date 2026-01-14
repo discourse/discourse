@@ -62,6 +62,7 @@ zh_CN:
       starred_channels_empty: "您未收藏任何频道，收藏一些频道，以便在此快速访问它们。"
       browse_all_channels: "浏览所有频道"
       see_in: "参见"
+      open_channel_menu: "打开频道菜单"
       move_to_channel:
         title: "将消息移至频道"
         instructions:
@@ -83,6 +84,8 @@ zh_CN:
         join_channel: "加入频道"
         leave_channel: "离开频道"
         leave_groupchat_info: "离开此群组聊天后，您将无法再访问它，也不会收到与之相关的通知。要重新加入，需要群组聊天成员再次向您发送邀请。"
+        notification_settings: "通知设置"
+        notification_settings_context: "通知"
         join: "加入"
         leave: "离开"
         save_label:
@@ -129,6 +132,7 @@ zh_CN:
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"
+        title: "向我发送聊天直通消息或群聊时向我发送电子邮件"
         when_away: "仅在离开时"
       header_indicator_preference:
         title: "在标题中显示活动指示器"
@@ -139,6 +143,7 @@ zh_CN:
       separate_sidebar_mode:
         title: "为论坛和聊天显示单独的边栏模式"
       send_shortcut:
+        title: "发送快捷方式"
         enter:
           label: "按 Enter 发送"
         meta_enter:
@@ -230,6 +235,7 @@ zh_CN:
       chat_notifications_title: "聊天通知"
       only_chat_push_notifications:
         title: "只发送聊天推送通知"
+      personalization_title: "个性化"
       ignore_channel_wide_mention:
         title: "忽略频道范围内的提及"
       show_thread_title_prompts:
@@ -313,6 +319,9 @@ zh_CN:
         yesterday: 昨天
       search_view:
         filter_placeholder: 搜索消息
+        message_result_label: "来自 %{username}的聊天消息： %{preview} %{threadInfo}"
+        in_thread: "在线程 %{title}"
+        sr_instructions: "按 Enter 或空格键打开消息。使用 Tab 在结果之间导航。"
         results_list_label: "聊天消息搜索结果"
       members_view:
         filter_placeholder: 查找成员
@@ -453,6 +462,7 @@ zh_CN:
         follow: "加入"
         followed: "已加入"
         mute: "将频道设为免打扰"
+        unmute: "取消频道静音"
         threading_enabled: "已启用"
         threading_disabled: "已禁用"
         muted_on: "开"

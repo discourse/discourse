@@ -81,6 +81,7 @@ es:
         join_channel: "Unirse al canal"
         leave_channel: "Abandonar canal"
         leave_groupchat_info: "Al abandonar este chat de grupo, dejarás de tener acceso al mismo y no recibirás notificaciones relacionadas con él. Para volver a unirte, deberás ser invitado de nuevo por un miembro del chat de grupo."
+        notification_settings_context: "Notificaciones"
         join: "Unirse"
         leave: "Abandonar"
         save_label:

@@ -4,6 +4,7 @@ import avatar from "discourse/helpers/bound-avatar-template";
 import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class Invites extends Component {
   get mostActiveInvitee() {
@@ -18,6 +19,14 @@ export default class Invites extends Component {
     );
   }
 
+  get subtitleText() {
+    return i18nForOwner(
+      "discourse_rewind.reports.invites.guest_book_subtitle",
+      this.args.isOwnRewind,
+      { username: this.args.user?.username }
+    );
+  }
+
   <template>
     {{#if this.minimumDataThresholdMet}}
       <div class="rewind-report-page --invites">
@@ -27,7 +36,7 @@ export default class Invites extends Component {
               {{i18n "discourse_rewind.reports.invites.guest_book_title"}}
             </div>
             <div class="guest-book__subtitle">
-              {{i18n "discourse_rewind.reports.invites.guest_book_subtitle"}}
+              {{this.subtitleText}}
             </div>
           </div>
 

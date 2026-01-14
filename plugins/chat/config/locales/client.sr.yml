@@ -23,6 +23,7 @@ sr:
       channel_settings:
         edit: "Izmeni"
         add: "Dodaj"
+        notification_settings_context: "Obaveštenja"
       close: "Zatvori"
       remove: "Ukloni"
       collapse: "Skupi okvir za chat"

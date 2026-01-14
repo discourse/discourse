@@ -817,9 +817,7 @@ nb_NO:
           notification: Varsling
         email:
           title: "E-post"
-          status: "Synkronisert %{old_emails} / %{total_emails} e-poster via IMAP."
           enable_smtp: "Aktiver SMTP"
-          enable_imap: "Aktiver IMAP"
           test_settings: "Test innstillinger"
           save_settings: "Lagre innstillinger"
           last_updated: "Sist oppdatert:"
@@ -828,14 +826,7 @@ nb_NO:
           smtp_settings_valid: "SMTP-innstillingene er gyldige."
           smtp_title: "SMTP"
           smtp_instructions: "Når du aktiverer SMTP for gruppen, alle e-poster som sendes fra gruppens innboks vil bli sendt via SMTP-innstillingene angitt her i stedet for e-posttjeneren som er konfigurert for andre e-poster som sendes av ditt forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Flere innstillinger"
-          imap_instructions: 'Når du aktiverer IMAP for gruppen, så synkroniseres e-post mellom gruppen innboksen og medfølgende IMAP-tjener og postboks. SMTP må være aktivert med gyldig og testet innloggingsinformasjon før IMAP kan aktiveres. Brukernavn og passord for SMTP vil bli brukt i IMAP. For mer informasjon, se <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funksjonsmelding på Discourse Meta</a>.'
-          imap_alpha_warning: "Advarsel: Dette er en alfa-scene-funksjon. Bare Gmail støttes offisielt. Bruk på egen risiko!"
-          imap_settings_valid: "IMAP-innstillinger er gyldige."
-          smtp_disable_confirm: "Hvis du deaktiverer SMTP, vil alle SMTP og IMAP-innstillinger bli tilbakestilt, og den tilknyttede funksjonaliteten vil bli deaktivert. Er du sikker på at du vil fortsette?"
-          imap_disable_confirm: "Hvis du deaktiverer IMAP vil alle IMAP-innstillinger bli tilbakestilt og den tilknyttede funksjonaliteten bli deaktivert. Er du sikker på at du vil fortsette?"
-          imap_mailbox_not_selected: "Du må velge en Mailbox for denne IMAP-konfigurasjonen, eller ingen e-postbokser vil bli synkronisert!"
+          additional_settings: "Flere innstillinger"
           prefill:
             title: "Forhåndsfyll med innstillinger for:"
             gmail: "Gmail"
@@ -850,9 +841,6 @@ nb_NO:
             smtp_server: "SMTP Server"
             smtp_port: "SMTP port"
             smtp_ssl_mode: "SSL-modus"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP port"
-            imap_ssl: "Bruk SSL for IMAP"
             username: "Brukernavn"
             password: "Passord"
           settings:
@@ -861,10 +849,6 @@ nb_NO:
             allow_unknown_sender_topic_replies_hint: "Tillater ukjente avsendere å svare på gruppetemaer. Hvis dette ikke er aktivert vil svar på e-postadresser som ikke allerede er invitert til emnet lage et nytt emne."
             from_alias: "Fra-alias"
             from_alias_hint: "Alias som skal brukes som fra-adresse når du sender SMTP-e-post til grupper. Merk at dette kanskje ikke støttes av alle e-postleverandører, se dokumentasjonen til e-postleverandøren din."
-          mailboxes:
-            synchronized: "Synkronisert postkasse"
-            none_found: "Ingen postkasser ble funnet i denne e-postkontoen."
-            disabled: "Deaktivert"
         membership:
           title: Medlemskap
           access: Tilgang
@@ -1126,6 +1110,9 @@ nb_NO:
       new_private_message: "Ny melding"
       private_message: "Melding"
       private_messages: "Meldinger"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktivert?"
       user_notifications:
         filters:
           filter_by: "Filtrer etter"
@@ -1436,7 +1423,6 @@ nb_NO:
         tags: "Stikkord"
         interface: "Grensesnitt"
         apps: "Programmer"
-        navigation_menu: "Navigasjonsmeny"
       change_password:
         success: "(e-post sendt)"
         in_progress: "(sender e-post)"
@@ -2904,19 +2890,6 @@ nb_NO:
         top: "Det finnes ingen populære emner."
         hot: "Det finnes ingen aktuelle temaer."
         filter: "Det finnes ingen emner."
-      bottom:
-        latest: "Det finnes ingen flere siste emner."
-        posted: "Det finnes ingen flere emner med innlegg."
-        read: "Det finnes ingen flere leste emner."
-        new: "Det finnes ingen flere nye emner."
-        unread: "Det finnes ingen flere uleste emner."
-        unseen: "Det finnes ikke flere usette emner."
-        category: "Det finnes ingen %{category}-emner igjen."
-        tag: "Det finnes ingen %{tag}-emner igjen."
-        top: "Det finnes ingen flere populære emner."
-        hot: "Det finnes ingen flere aktuelle emner."
-        bookmarks: "Det finnes ingen flere bokmerkede emner."
-        filter: "Det finnes ikke flere emner."
     topic_bulk_actions:
       dismiss:
         name: "Avslå"
@@ -3041,9 +3014,6 @@ nb_NO:
         }
       created_at: "Opprettet: %{date}"
       bumped_at: "Siste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Se alle kategorier</a> eller <a href='%{basePath}/latest'>se de nyeste emnene</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bla gjennom alle kategorier</a>, <a href='%{basePath}/latest'>se de nyeste emnene</a> eller se toppen:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Se alle stikkord</a> eller <a href='%{basePath}/latest'>se de nyeste emnene</a>."
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
       jump_reply: "Gå til innleggets opprinnelige plassering"
       jump_reply_aria: "Gå til @%{username}s innlegg på dets opprinnelige plassering"
@@ -3975,6 +3945,7 @@ nb_NO:
         this_month: "Den siste måneden"
         this_week: "Den siste uken"
         today: "I dag"
+        custom: "Egendefinert"
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"

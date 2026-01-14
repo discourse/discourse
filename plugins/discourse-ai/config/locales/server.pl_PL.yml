@@ -494,6 +494,10 @@ pl_PL:
           base_query:
             name: "Podstawowe zapytanie wyszukiwania"
             description: "Podstawowe zapytanie używane podczas wyszukiwania. Przykład: '#pilne' spowoduje dodanie '#pilne' do zapytania wyszukiwania i uwzględnienie tylko tematów z kategorią lub tagiem pilne."
+        flag_post:
+          flag_type:
+            name: "Typ flagi"
+            description: "Kontroluje, czy wpis jest sprawdzany, ukrywany, usuwany lub traktowany jako spam."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         update_artifact: "Zaktualizuj artefakt sieciowy"
@@ -502,9 +506,10 @@ pl_PL:
         github_search_files: "Pliki wyszukiwania GitHub"
         github_search_code: "Wyszukiwanie kodu GitHub"
         github_file_content: "Zawartość pliku GitHub"
-        github_pull_request_diff: "Różnica pull requestów GitHub"
+        github_diff: "Różnica GitHub"
         random_picker: "Losowy selektor"
         categories: "Wymień kategorie"
+        flag_post: "Oflaguj post"
         search: "Szukaj"
         tags: "Wymień tagi"
         time: "Czas"
@@ -530,9 +535,10 @@ pl_PL:
         github_search_code: "Wyszukaj kod w repozytorium GitHub"
         github_search_files: "Wyszukaj pliki w repozytorium GitHub"
         github_file_content: "Pobieranie zawartości plików z repozytorium GitHub"
-        github_pull_request_diff: "Pobierz różnicę w żądaniu ściągnięcia GitHub"
+        github_diff: "Pobierz pull request z GitHub lub zatwierdź różnicę"
         random_picker: "Wybierz losową liczbę lub losowy element listy"
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
+        flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
         search: "Przeszukaj wszystkie publiczne tematy na forum"
         tags: "Wymień wszystkie tagi na forum"
         time: "Znajdź czas w różnych strefach czasowych"
@@ -556,9 +562,10 @@ pl_PL:
         web_browser: "Czytanie <a href='%{url}'>%{url}</a>"
         github_search_files: "Wyszukano „%{keywords}” w %{repo}/%{branch}"
         github_search_code: "Wyszukano '%{query}' w %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Pobrano zawartość %{file_paths} z %{repo_name}@%{branch}"
         random_picker: "Wybieranie z %{options}, wybrane: %{result}"
+        flag_post: "Flagowanie wpisu %{post_id} (flag_post: %{flag_post})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
         time: "Czas w %{timezone} wynosi %{time}"
         summarize: "Podsumowano <a href='%{url}'>%{title}</a>"
@@ -612,6 +619,15 @@ pl_PL:
         continue_conversation:
           title: "Rozmowa odkrywcza: Wyszukaj %{query}"
           raw: "Podczas moich poszukiwań %{query} pokazałeś mi następujące informacje:\n\n%{context}\n\nKontynuujmy rozmowę."
+      flag_post:
+        errors:
+          no_context: "Brak kontekstu wpisu dostępnego do oflagowania."
+          no_reason: "Wymagany jest powód, aby oflagować wpis."
+          invalid_flag_type: "Nieprawidłowy typ flagi."
+        skipped: "Werdykt był fałszywy; flaga nie została utworzona."
+        already_flagged: "Wpis został już oflagowany do sprawdzenia."
+        flagged: "Wpis oflagowany do sprawdzenia."
+        reason: "Bot AI oflagował ten wpis.\n\nPowód: %{reason}"
     summarization:
       configuration_hint:
         one: "Najpierw skonfiguruj ustawienie `%{setting}`."

@@ -1040,12 +1040,9 @@ pt_BR:
     no_log_search_queries: "Os registros de consultas de pesquisa foram desativados (um(a) administrador(a) pode ativá-las nas configurações do site)."
   email_settings:
     pop3_authentication_error: "Ocorreu um problema com as credenciais POP3 informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
-    imap_authentication_error: "Ocorreu um problema com as credenciais IMAP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
-    imap_no_response_error: "Ocorreu um erro ao se comunicar com o servidor IMAP. %{message}"
     smtp_authentication_error: "Ocorreu um problema com as credenciais SMTP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente. %{message}"
     smtp_server_busy_error: "O servidor SMTP está ocupado neste momento, tente novamente mais tarde."
     smtp_unhandled_error: "Ocorreu um erro sem tratamento ao se comunicar com o servidor SMTP. %{message}"
-    imap_unhandled_error: "Ocorreu um erro sem tratamento ao se comunicar com o servidor IMAP. %{message}"
     connection_error: "Ocorreu um problema ao se conectar com o servidor, verifique o nome e a porta do servidor e tente novamente."
     timeout_error: "O tempo de conexão com o servidor se esgotou, verifique a porta e o nome do servidor e tente novamente."
     unhandled_error: "Erro sem tratamento ao testar as configurações do e-mail. %{message}"
@@ -1134,11 +1131,10 @@ pt_BR:
       every_month: "a cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
-    title: "Autorizar acesso ao aplicativo"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "ler"
     read_write: "ler/escrever"
-    description: '"%{application_name}" está pedindo o seguinte acesso à sua conta:'
     instructions: 'Acabamos de gerar uma nova chave de API de usuário(a) para você usar com "%{application_name}", cole a seguinte chave em seu aplicativo:'
     otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
     otp_confirmation:
@@ -2145,14 +2141,7 @@ pt_BR:
     email_in_allowed_groups: "Grupos com permissão para postar tópicos novos via e-mail. Administradores(as) e moderadores(as) sempre podem postar tópicos novos por e-mail."
     email_in_authserv_id: "O identificador do serviço realizando verificações de autenticação em e-mails recebidos. Confira <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instruções de como configurar isso."
     email_in_spam_header: "Seleciona o cabeçalho de um e-mail específico e o usa para identificar spam. Esta opção pode ser X-Spam-Flag, X-Spam-Status, ou X-SES-Spam-Verdict, e o e-mail recebe a etiqueta de spam de acordo com o valor do cabeçalho. Por exemplo, se a configuraçao escolhida for X-Spam-Flag, um e-mail com esse valor de cabeçalho definido como \"YES\" seria classificado como spam."
-    enable_imap: "Ative IMAP para sincronizar mensagens de grupo."
-    enable_imap_write: "Ative sincronização de dois fatores IMAP. Se desativado, desativa todas as operações de escrita para contas IMAP."
-    enable_imap_idle: "Use o mecanismo IMAP IDLE para aguardar novos e-mails."
     enable_smtp: "Ative SMTP para enviar notificações de mensagens de grupo."
-    imap_polling_period_mins: "O período em minutos entre a conferência de contas IMAP para e-mails."
-    imap_polling_old_emails: "A quantidade máxima de e-mails antigos (processados) a serem enviados sempre que uma caixa IMAP for sondada (0 para todos)."
-    imap_polling_new_emails: "A quantidade máxima de e-mails novos (não processados) a serem enviados sempre que uma caixa IMAP for sondada."
-    imap_batch_import_email: "A quantidade mínima de novos e-mails que acionam o modo de importação (desativa alertas de postagem)."
     email_prefix: "A [label] usada no assunto dos e-mails. Por padrão, será \"título\" se não for configurada."
     email_site_title: "O título do site usado como o remetente dos e-mails do site. Por padrão, será \"título' se não for configurado. Caso seu \"título\" contenha caracteres não permitidos em linhas do remetente de e-mails, utilize esta configuração."
     find_related_post_with_key: "Use somente a \"chave de resposta\" para encontrar a postagem respondida. AVISO: desativar isso permite a representação do usuário(a) com base no endereço de e-mail."
@@ -3150,6 +3139,7 @@ pt_BR:
         Enquanto você participa, saberemos mais sobre você e as limitações temporárias de novo(a) usuário(a) serão suspensas. Ao longo do tempo, você ganhará [níveis de confiança](https://blog.discourse.org/20/20/entrevista-conhecimento-disco-trustes-levels/) que incluem capacidades especiais para nos ajudar a administrar a nossa comunidade.
     welcome_user:
       title: "Boas-vindas, usuário(a)"
+      preview: "Boas-vindas ao %{site_name}!"
       subject_template: "Boas-vindas ao %{site_name}!"
       text_body_template: |
         Obrigado por participar de %{site_name}, boas-vindas!
@@ -3177,6 +3167,7 @@ pt_BR:
         Grandes poderes trazem grandes responsabilidades. Se você estiver agindo como moderador pela primeira vez, consulte o [Guia de Moderação](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Convite de boas-vindas"
+      preview: "Boas-vindas ao %{site_name}!"
       subject_template: "Boas-vindas ao %{site_name}!"
       text_body_template: |
         Obrigado por aceitar o seu convite para %{site_name}, boas-vindas!
@@ -3594,6 +3585,7 @@ pt_BR:
         Isto pode ser modificado nas configurações do site "newuser_spam_host_threshold" e "white_listed_spam_host_domains". Considere adicionar %{domains} à lista de permissões caso precisem ser isentos.
     unsilenced:
       title: "Som ativado"
+      preview: "A conta não está mais em espera."
       subject_template: "A conta não está mais em espera"
       text_body_template: |
         Olá,
@@ -3642,8 +3634,6 @@ pt_BR:
     Para cancelar a inscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:
@@ -3977,6 +3967,7 @@ pt_BR:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Entrar com sua conta pelo link"
+      preview: "Entrar com sua conta pelo link."
       subject_template: "[%{email_prefix}] Entre com sua conta pelo link"
       text_body_template: |
         Aqui está o seu link para entrar em [%{site_name}](%{base_url}).
@@ -4686,12 +4677,18 @@ pt_BR:
     nice_share:
       name: Compartilhamento interessante
       description: Compartilhou uma postagem com 25 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 25 cliques. Obrigado por divulgar nossas discussões e esta comunidade.
     good_share:
       name: Compartilhamento bom
       description: Compartilhou uma postagem com 300 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 300 cliques. Bom trabalho! Você apresentou uma ótima discussão e ajudou esta comunidade a crescer.
     great_share:
       name: Compartilhamento excelente
       description: Compartilhou uma postagem com 1.000 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 1000 cliques. Uau! Você promoveu uma discussão interessante para um grande público e ajudou a expandir significativamente a nossa comunidade.
     first_like:
       name: Primeira curtida
       description: Curtiu uma postagem
@@ -4906,6 +4903,8 @@ pt_BR:
     deprecation_error_label: Faça com que conteúdos obsoletos de Javascript causem um erro
     enter: "Entrar no modo de segurança"
     must_select: "Você deve selecionar pelo menos uma opção para entrar no modo de segurança."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Configuração do Discourse"
     step:
@@ -4999,8 +4998,6 @@ pt_BR:
     api_post_delete: "Exclusão via API"
     reminder_deleted: "Substituído por um novo lembrete"
     user_associated_posts_deleted: "O(a) usuário(a) foi destruído(a)"
-    imap_email_deleted: "O e-mail foi excluído do servidor IMAP"
-    imap_email_marked_as_spam: "O e-mail foi movido para a pasta de spam no servidor IMAP"
     auto_deleted_hidden_posts: "Postagens ocultas destruídas automaticamente"
     seed_data_topic_updated: "Tópico de dados de semente atualizado"
     seed_data_topic_deleted: "Tópico de dados de semente excluído"

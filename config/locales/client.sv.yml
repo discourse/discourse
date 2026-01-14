@@ -137,6 +137,11 @@ sv:
       placeholder: datum
       from_placeholder: "från-datum"
       to_placeholder: "till-datum"
+    languages:
+      ur:
+        name: Urdu
+      vi:
+        name: Vietnamesiska
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber} av %{username}"
@@ -315,6 +320,9 @@ sv:
         posts:
           one: "%{formatted_number} inlägg"
           other: "%{formatted_number} inlägg"
+        sign_ups:
+          one: "%{formatted_number} registrering"
+          other: "%{formatted_number} registreringar"
         likes:
           one: "%{formatted_number} gillning"
           other: "%{formatted_number} gillningar"
@@ -334,6 +342,7 @@ sv:
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne"
     bookmarks:
       bookmarked_success: "Bokmärkt!"
+      deleted_bookmark_success: "Bokmärke borttaget!"
       created: "Du har bokmärkt detta inlägg. %{name}"
       created_generic: "Du har bokmärkt detta. %{name}"
       create: "Skapa bokmärke"
@@ -781,9 +790,7 @@ sv:
           notification: Notifikation
         email:
           title: "E-post"
-          status: "Synkroniserat %{old_emails}/ %{total_emails} e-post genom IMAP."
           enable_smtp: "Aktivera SMTP"
-          enable_imap: "Aktivera IMAP"
           test_settings: "Testa inställningar"
           save_settings: "Spara inställningar"
           last_updated: "Senast uppdaterat:"
@@ -792,14 +799,7 @@ sv:
           smtp_settings_valid: "SMTP-inställningar är giltiga."
           smtp_title: "SMTP"
           smtp_instructions: "När du aktiverar SMTP för gruppen skickas alla utgående e-postmeddelanden från gruppens inkorg via de SMTP-inställningar som anges här istället för e-postservern som konfigurerats för andra e-postmeddelanden från ditt forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Ytterligare inställningar"
-          imap_instructions: 'När du aktiverar IMAP för gruppen synkroniseras e-post mellan gruppinkorgen och den medföljande IMAP-servern och brevlådan. SMTP måste aktiveras med giltiga och testade autentiseringsuppgifter innan IMAP kan aktiveras. Det användarnamn och lösenord som används för SMTP kommer att användas för IMAP. Mer information finns i <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funktionsmeddelande på Discourse Meta</a>.'
-          imap_alpha_warning: "Varning: Detta är en alfafunktion. Endast Gmail stöds officiellt. Använd på egen risk!"
-          imap_settings_valid: "IMAP-inställningar är giltiga."
-          smtp_disable_confirm: "Om du inaktiverar SMTP återställs alla SMTP- och IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
-          imap_disable_confirm: "Om du inaktiverar IMAP återställs alla IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
-          imap_mailbox_not_selected: "Du måste välja en brevlåda för den här IMAP-konfigurationen, annars synkroniseras inga brevlådor!"
+          additional_settings: "Ytterligare inställningar"
           prefill:
             title: "Förfyll med inställningar för:"
             gmail: "Gmail"
@@ -809,9 +809,6 @@ sv:
             title: "Kontouppgifter"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Använd SSL för IMAP"
             username: "Användarnamn"
             password: "Lösenord"
           settings:
@@ -820,10 +817,6 @@ sv:
             allow_unknown_sender_topic_replies_hint: "Tillåter okända avsändare att svara på gruppämnen. Om detta inte har aktiverats leder svar från e-postadresser som inte redan bjudits in till ämnet till att det skapas ett nytt ämne."
             from_alias: "Från alias"
             from_alias_hint: "Alias att använda som från adress när du skickar grupp SMTP e-post. Observera att detta kanske inte stöds av alla e-postleverantörer, vänligen konsultera dokumentationen från din e-postleverantör."
-          mailboxes:
-            synchronized: "Synkroniserad brevlåda"
-            none_found: "Inga brevlådor hittades för detta e-postkonto."
-            disabled: "Inaktiverad"
         membership:
           title: Medlemskap
           access: Tillgång
@@ -1077,6 +1070,9 @@ sv:
       new_private_message: "Nytt meddelande"
       private_message: "Meddelande"
       private_messages: "Meddelanden"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktiverad?"
       user_notifications:
         filters:
           filter_by: "Filtrera efter"
@@ -1323,7 +1319,6 @@ sv:
         tags: "Taggar"
         interface: "Gränssnitt"
         apps: "Appar"
-        navigation_menu: "Navigeringsmeny"
       change_password:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"
@@ -2714,19 +2709,6 @@ sv:
         top: "Det finns inga toppämnen."
         hot: "Det finns inga heta ämnen."
         filter: "Det finns inga ämnen."
-      bottom:
-        latest: "Det finns inga fler senaste ämnen."
-        posted: "Det finns inga fler postade ämnen."
-        read: "Det finns inga fler lästa ämnen."
-        new: "Det finns inga fler nya ämnen."
-        unread: "Det finns inga fler olästa ämnen."
-        unseen: "Det finns inga fler osedda ämnen."
-        category: "Det finns inga fler ämnen i %{category}."
-        tag: "Det finns inga fler %{tag}-ämnen."
-        top: "Det finns inga fler toppämnen."
-        hot: "Det finns inte fler heta ämnen."
-        bookmarks: "Inga fler bokmärkta ämnen hittades."
-        filter: "Det finns inga fler ämnen."
     topic_bulk_actions:
       dismiss:
         name: "Avfärda"
@@ -2832,9 +2814,6 @@ sv:
         }
       created_at: "Skapad: %{date}"
       bumped_at: "Senaste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
       jump_reply: "Hoppa till inläggets ursprungliga plats"
       jump_reply_aria: "Hoppa till @%{username}s inlägg på dess ursprungliga plats"
@@ -3776,6 +3755,7 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
+        custom: "Anpassad"
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -4440,6 +4420,8 @@ sv:
           form:
             location:
               label: "Plats"
+            text_section:
+              locale_label: "Språk"
             header_anonymous:
               placeholder: "Välkommen till %{site_name}!"
         navigation:
@@ -5899,7 +5881,6 @@ sv:
           button: "Radera alla inlägg"
           progress:
             title: "Förlopp för radering av inlägg"
-            description: "Raderar inlägg…"
           confirmation:
             title: "Radera alla inlägg av @%{username}"
             description: |

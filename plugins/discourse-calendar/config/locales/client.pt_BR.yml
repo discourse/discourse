@@ -7,9 +7,11 @@
 pt_BR:
   admin_js:
     admin:
+      calendar: "Calendário e Eventos"
       site_settings:
         categories:
           discourse_post_event: "Evento do Discourse"
+          discourse_calendar: "Calendário e Eventos"
   js:
     notifications:
       titles:
@@ -34,6 +36,7 @@ pt_BR:
         header_title: "Feriados"
         pick_region_description: "Escolha uma região para ver os feriados dessa região."
         disabled_holidays_description: "Feriados desativados serão excluídos do calendário de férias da equipe."
+        header_description: "Selecione uma região para ver os feriados. Feriados desativados serão excluídos do calendário de feriados da equipe."
       date: "Data"
       add_to_calendar: "Adicionar ao Google Calendar"
       toggle_timezone_offset_title: "Alternar deslocamento de fuso horário"
@@ -42,6 +45,7 @@ pt_BR:
         title: "Região"
         none: "Nenhum"
         use_current_region: "Usar região atual"
+        select_region: "Selecione uma região"
         names:
           ae: "Emirados Árabes Unidos"
           ar: "Argentina"
@@ -347,6 +351,7 @@ pt_BR:
       bulk_invite: "Convite em massa"
       close_event: "Encerrar evento"
       open_event: "Evento aberto"
+      destroy_event: "Excluir evento"
       invitees_modal:
         title_invited: "Participação no evento"
         title_participated: "Lista de usuários(as) que participaram"
@@ -412,16 +417,23 @@ pt_BR:
         event:
           expired: "Expirou"
           closed: "Fechados"
+          full: "Lotado"
           status:
             standalone:
               title: "Independente"
               description: "Não é possível entrar em um evento independente."
             public:
-              title: "Público(a)"
+              title: "Público"
               description: "Qualquer pessoa pode participar de um evento público."
             private:
               title: "Privado(a)"
               description: "Um evento privado só pode ter a participação de usuários(as) convidados(as)."
+      composer:
+        name_placeholder: "Evento"
+        end_date_placeholder: "Definir data final"
+        location_placeholder: "Adicionar local ou URL"
+        max_attendees_placeholder: "Máx. de participantes"
+        description_placeholder: "Adicionar descrição do evento"
       builder_modal:
         custom_fields:
           label: "Campos personalizados"
@@ -469,6 +481,9 @@ pt_BR:
         minimal:
           label: "evento mínimo"
           checkbox_label: "Ocultar botões Vou/Não vou e status dos(as) convidados(as)"
+        max_attendees:
+          label: "Máximo de participantes"
+          placeholder: "Sem limite"
         allow_chat:
           label: "Integração com chat"
           checkbox_label: "Criar e gerenciar canal de chat específico de evento"
@@ -488,6 +503,7 @@ pt_BR:
           label: "Grupos convidados"
         status:
           label: "Status"
+        delete_confirmation_message: "Excluir este evento?"
       invite_user_or_group:
         title: "Notificar usuário(s) ou grupo(s)"
         invite: "Enviar"

@@ -911,11 +911,21 @@ class User < ActiveRecord::Base
       payload = nil
     end
 
-    MessageBus.publish(
-      "/user-status",
-      { id => payload },
-      group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-    )
+    # When silenced, only the user themselves and staff should see the status
+    if silenced?
+      MessageBus.publish(
+        "/user-status",
+        { id => payload },
+        user_ids: [id],
+        group_ids: [Group::AUTO_GROUPS[:staff]],
+      )
+    else
+      MessageBus.publish(
+        "/user-status",
+        { id => payload },
+        group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
+    end
   end
 
   def password=(pw)
@@ -1961,6 +1971,10 @@ class User < ActiveRecord::Base
 
   def upcoming_change_enabled?(upcoming_change)
     UpcomingChanges.enabled_for_user?(upcoming_change, self)
+  end
+
+  def upcoming_change_stats(acting_guardian)
+    UpcomingChanges.stats_for_user(user: self, acting_guardian: acting_guardian)
   end
 
   protected

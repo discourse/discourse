@@ -1028,9 +1028,7 @@ nl:
           notification: Melding
         email:
           title: "E-mailadres"
-          status: "%{old_emails} / %{total_emails} e-mails gesynchroniseerd via IMAP."
           enable_smtp: "SMTP inschakelen"
-          enable_imap: "IMAP inschakelen"
           test_settings: "Instellingen testen"
           save_settings: "Instellingen opslaan"
           last_updated: "Laatst bijgewerkt:"
@@ -1039,14 +1037,7 @@ nl:
           smtp_settings_valid: "SMTP-instellingen geldig."
           smtp_title: "SMTP"
           smtp_instructions: "Als je SMTP inschakelt voor de groep, worden alle uitgaande e-mails die worden verzonden vanuit de groepsinbox verzonden via de SMTP-instellingen die hier zijn opgegeven, in plaats van de e-mailserver die is geconfigureerd voor andere e-mails die door je forum worden verzonden."
-          imap_title: "IMAP"
-          imap_additional_settings: "Aanvullende instellingen"
-          imap_instructions: 'Wanneer je IMAP inschakelt voor de groep, worden e-mails gesynchroniseerd tussen de groepsinbox en de opgegeven IMAP-server en -mailbox. SMTP moet zijn ingeschakeld met geldige en geteste inloggegevens voordat IMAP kan worden ingeschakeld. De gebruikersnaam en het wachtwoord voor e-mail die worden gebruikt voor SMTP, worden gebruikt voor IMAP. Zie voor meer informatie de <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">functieaankondiging op Discourse Meta</a>.'
-          imap_alpha_warning: "Waarschuwing: dit is een functie in alfafase. Alleen Gmail wordt officieel ondersteund. Gebruik op eigen risico!"
-          imap_settings_valid: "IMAP-instellingen geldig."
-          smtp_disable_confirm: "Als je SMTP uitschakelt, worden alle SMTP- en IMAP-instellingen gereset en wordt de bijbehorende functionaliteit uitgeschakeld. Weet je zeker dat je door wilt gaan?"
-          imap_disable_confirm: "Als je IMAP uitschakelt, worden alle IMAP-instellingen gereset en wordt de bijbehorende functionaliteit uitgeschakeld. Weet je zeker dat je door wilt gaan?"
-          imap_mailbox_not_selected: "Je moet een mailbox selecteren voor deze IMAP-configuratie, anders worden er geen mailboxen gesynchroniseerd!"
+          additional_settings: "Aanvullende instellingen"
           prefill:
             title: "Vooraf invullen met instellingen voor:"
             gmail: "Gmail"
@@ -1061,9 +1052,6 @@ nl:
             smtp_server: "SMTP-server"
             smtp_port: "SMTP-poort"
             smtp_ssl_mode: "SSL-modus"
-            imap_server: "IMAP-server"
-            imap_port: "IMAP-poort"
-            imap_ssl: "SSL gebruiken voor IMAP"
             username: "Gebruikersnaam"
             password: "Wachtwoord"
           settings:
@@ -1072,10 +1060,6 @@ nl:
             allow_unknown_sender_topic_replies_hint: "Staat onbekende afzenders toe om te antwoorden op groepstopics. Als dit niet is ingeschakeld leiden antwoorden van e-mailadressen die niet voor het topic zijn uitgenodigd tot een nieuw topic."
             from_alias: "Van-alias"
             from_alias_hint: "Alias om te gebruiken als het van-adres bij het verzenden van groeps-SMTP-e-mails. Let op: dit wordt mogelijk niet door alle e-mailproviders ondersteund, raadpleeg de documentatie van je e-mailprovider."
-          mailboxes:
-            synchronized: "Gesynchroniseerde mailbox"
-            none_found: "Geen mailboxen gevonden op dit e-mailaccount."
-            disabled: "Uitgeschakeld"
         membership:
           title: Lidmaatschap
           access: Toegang
@@ -1339,6 +1323,9 @@ nl:
       new_private_message: "Nieuw bericht"
       private_message: "Bericht"
       private_messages: "Berichten"
+      upcoming_changes:
+        for_user:
+          enabled: "Ingeschakeld?"
       user_notifications:
         filters:
           filter_by: "Filteren op"
@@ -3280,19 +3267,6 @@ nl:
           unread: "Niets ongelezen gelaten... indrukwekkend!"
           new_new: "Momenteel niets nieuws. Kom snel terug!"
           new: "Momenteel niets nieuws. Kom snel terug!"
-      bottom:
-        latest: "Er zijn verder geen nieuwste topics."
-        posted: "Er zijn verder geen geplaatste topics."
-        read: "Er zijn verder geen gelezen topics."
-        new: "Er zijn verder geen nieuwe topics."
-        unread: "Er zijn verder geen ongelezen topics."
-        unseen: "Er zijn verder geen ongeziene topics."
-        category: "Er zijn verder geen topics in %{category}."
-        tag: "Er zijn verder geen topics over %{tag}."
-        top: "Er zijn verder geen toptopics."
-        hot: "Er zijn geen populaire topics meer."
-        bookmarks: "Er zijn verder geen topics met bladwijzers."
-        filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
       dismiss:
         name: "Sluiten"
@@ -3420,9 +3394,6 @@ nl:
         other: "%{count} antwoorden, ga naar eerste bericht"
       created_at: "Gemaakt: %{date}"
       bumped_at: "Nieuwste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Blader door alle categorieën</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Blader door alle categorieën</a>, <a href='%{basePath}/latest'>bekijk de nieuwste topics</a> of zie de top:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Blader door alle tags</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
       browse_latest_topics: "Nieuwste topics bekijken"
       suggest_create_topic: Klaar om <a href>een nieuw gesprek te beginnen?</a>
       jump_reply: "Naar oorspronkelijke locatie van bericht"
@@ -4462,6 +4433,7 @@ nl:
         this_month: "Maand"
         this_week: "Week"
         today: "Vandaag"
+        custom: "Aangepast"
     custom_homepage:
       admin_message: 'Een van je thema''s heeft de modificator "custom_homepage" ingeschakeld, maar voert niets uit naar de connector [custom-homepage]. (Deze melding wordt alleen weergegeven voor sitebeheerders.)'
     browser_update: '<a href="https://discourse.org/about#browser">Je browser wordt helaas niet ondersteund</a>. <a href="https://browsehappy.com">Schakel over naar een ondersteunde browser</a> om rijke inhoud te bekijken, je aan te melden en te antwoorden.'
@@ -5369,6 +5341,8 @@ nl:
               options:
                 above_topic_content: "Boven topiccontent"
                 below_site_header: "Onder sitekop"
+            text_section:
+              locale_label: "Taal"
             header_logged_in:
               placeholder: "Welkom terug, %{preferred_display_name}!"
             header_anonymous:
@@ -7418,7 +7392,6 @@ nl:
           button: "Alle berichten verwijderen"
           progress:
             title: "Voortgang van berichten verwijderen"
-            description: "Berichten verwijderen…"
           confirmation:
             title: "Alle berichten van @%{username} verwijderen"
             description: |
@@ -7737,16 +7710,12 @@ nl:
             prompt: "Het wijzigen van deze instelling kan verstrekkende of onbedoelde gevolgen hebben voor je site. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, ik weet het zeker"
           min_password_length:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           min_admin_password_length:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle beheerders die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           password_unique_charactes:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
           block_common_passwords:
-            prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
       badges:
         status: Status

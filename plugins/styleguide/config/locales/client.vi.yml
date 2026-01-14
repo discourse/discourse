@@ -37,7 +37,7 @@ vi:
         navigation_stacked:
           title: "Điều hướng ngăn xếp"
         categories_list:
-          title: "Danh sách Danh mục"
+          title: "Danh sách Chuyên mục"
         topic_list_item:
           title: "Mục danh sách chủ đề"
         topic_statuses:
@@ -46,8 +46,6 @@ vi:
           title: "Danh sách chủ đề"
         basic_topic_list:
           title: "Danh sách chủ đề cơ bản"
-        footer_message:
-          title: "Tin nhắn chân trang"
         signup_cta:
           title: "Đăng ký CTA"
         topic_timer_info:

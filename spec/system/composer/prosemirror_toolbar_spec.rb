@@ -205,14 +205,18 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
       heading_menu.collapse
 
       composer.select_range_rich_editor(0, 0)
-      heading_menu.expand
-      expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
+      try_until_success(reason: "Toolbar state updates asynchronously after selection change") do
+        heading_menu.expand
+        expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
+      end
       heading_menu.collapse
 
       composer.select_all
-      heading_menu.expand
-      expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
-      expect(heading_menu.option("[data-name='heading-4']")).to have_no_css(".d-icon-check")
+      try_until_success(reason: "Toolbar state updates asynchronously after selection change") do
+        heading_menu.expand
+        expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
+        expect(heading_menu.option("[data-name='heading-4']")).to have_no_css(".d-icon-check")
+      end
     end
 
     it "can change heading level or reset to paragraph" do

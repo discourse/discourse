@@ -291,6 +291,64 @@ RSpec.describe Search do
         expect(result.users).to contain_exactly(suspended_user)
       end
     end
+
+    context "when SiteSetting.enable_names is disabled" do
+      fab!(:evil_trout) { Fabricate(:user, username: "evil_trout", name: "John Doe") }
+
+      before do
+        SiteSetting.enable_names = false
+        SearchIndexer.index(evil_trout, force: true)
+      end
+
+      it "finds users by their usernames only" do
+        result = Search.execute("evil", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("trout", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("evil_trout", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("john", guardian: Guardian.new(user2))
+        expect(result.users).to be_empty
+
+        result = Search.execute("doe", guardian: Guardian.new(user2))
+        expect(result.users).to be_empty
+
+        result = Search.execute("john doe", guardian: Guardian.new(user2))
+        expect(result.users).to be_empty
+      end
+    end
+
+    context "when SiteSetting.enable_names is enabled" do
+      fab!(:evil_trout) { Fabricate(:user, username: "evil_trout", name: "John Doe") }
+
+      before do
+        SiteSetting.enable_names = true
+        SearchIndexer.index(evil_trout, force: true)
+      end
+
+      it "finds users by their usernames and names" do
+        result = Search.execute("evil", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("trout", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("evil_trout", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("john", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("doe", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("john doe", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+      end
+    end
   end
 
   describe "categories" do
@@ -459,11 +517,43 @@ RSpec.describe Search do
     expect(search.term).to eq('"a b c d"')
   end
 
-  it "searches for short terms if one hits the length" do
+  it "strips short terms but keeps valid ones" do
     search = Search.new("a b c okaylength", min_search_term_length: 5)
     search.execute
     expect(search.valid?).to eq(true)
-    expect(search.term).to eq("a b c okaylength")
+    expect(search.term).to eq("okaylength")
+  end
+
+  describe "min_search_term_length with filters" do
+    it "strips short terms even when filters are present" do
+      search = Search.new("status:open ab", min_search_term_length: 3)
+      search.execute
+      expect(search.valid?).to eq(true)
+      expect(search.term).to eq("")
+    end
+
+    it "keeps valid terms when filters are present" do
+      search = Search.new("status:open valid", min_search_term_length: 3)
+      search.execute
+      expect(search.valid?).to eq(true)
+      expect(search.term).to eq("valid")
+    end
+
+    it "strips short terms with order present" do
+      search = Search.new("order:latest ab", min_search_term_length: 3)
+      search.execute
+      expect(search.valid?).to eq(true)
+      expect(search.term).to eq("")
+    end
+
+    it "allows short terms for in-topic search" do
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic, raw: "hello world")
+      search = Search.new("a", min_search_term_length: 3, search_context: topic)
+      search.execute
+      expect(search.valid?).to eq(true)
+      expect(search.term).to eq("a")
+    end
   end
 
   describe "query sanitization" do
@@ -1322,6 +1412,14 @@ RSpec.describe Search do
         results = Search.execute("discourse", search_context: topic)
         expect(results.posts.length).to eq(1)
       end
+
+      it "finds content only present in cooked HTML" do
+        post = new_post("check out this link")
+        post.post_search_data.update!(raw_data: "check out this link Example Site Title")
+
+        results = Search.execute("Example Site Title", search_context: post.topic)
+        expect(results.posts.map(&:id)).to eq([post.id])
+      end
     end
 
     context "when searching the OP" do
@@ -1411,6 +1509,39 @@ RSpec.describe Search do
             )
           expect(result.posts.length).to eq(1)
         end
+      end
+    end
+
+    context "with order-only searches" do
+      it "returns results when searching with order and category filters" do
+        result =
+          Search.execute("order:latest category:#{topic.category.slug}", type_filter: "topic")
+
+        expect(result.posts).to be_present
+        expect(result.posts.map(&:topic_id)).to include(topic.id)
+      end
+
+      it "returns results when searching with only order filter" do
+        post # ensure post is created
+
+        result = Search.execute("order:latest", type_filter: "topic")
+
+        expect(result.posts).to be_present
+      end
+
+      it "returns results when using 'l' shortcut for order:latest" do
+        post # ensure post is created
+
+        result = Search.execute("l", type_filter: "topic")
+
+        expect(result.posts).to be_present
+      end
+
+      it "marks search as invalid when no term, filters, or order provided" do
+        search = Search.new("", type_filter: "topic")
+        search.execute
+
+        expect(search.valid?).to eq(false)
       end
     end
 

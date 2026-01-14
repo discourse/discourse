@@ -963,9 +963,7 @@ lt:
           notification: Perspėjimai
         email:
           title: "Epaštas"
-          status: "Sinchronizuoti %{old_emails} / %{total_emails} laiškus per IMAP."
           enable_smtp: "Įjungti SMTP"
-          enable_imap: "Įjungti IMAP"
           test_settings: "Bandymo nustatymai"
           save_settings: "Išsaugoti nustatymus"
           last_updated: "Paskutinį kartą atnaujinta:"
@@ -974,14 +972,7 @@ lt:
           smtp_settings_valid: "Galioja SMTP nustatymai."
           smtp_title: "SMTP"
           smtp_instructions: "Įjungus SMTP grupei, visi iš grupės gautųjų laiškų dėžutės siunčiami el. laiškai bus siunčiami per čia nurodytus SMTP nustatymus, o ne per pašto serverį, sukonfigūruotą kitiems jūsų forumo siunčiamiems el. laiškams."
-          imap_title: "IMAP"
-          imap_additional_settings: "Papildomi nustatymai"
-          imap_instructions: 'Kai grupei įjungiate IMAP, el. laiškai sinchronizuojami tarp grupės gautųjų aplanko ir nurodyto IMAP serverio bei pašto dėžutės. Prieš įjungiant IMAP, turi būti įjungtas SMTP su galiojančiais ir patikrintais prisijungimo duomenimis. SMTP naudojamas el. pašto vartotojo vardas ir slaptažodis bus naudojami ir IMAP. Daugiau informacijos žr. <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funkcijų pranešimas „Discourse Meta“</a>.'
-          imap_alpha_warning: "Įspėjimas: Tai alfa stadijos funkcija. Oficialiai palaikoma tik \"Gmail\". Naudokite savo rizika!"
-          imap_settings_valid: "IMAP nustatymai galioja."
-          smtp_disable_confirm: "Jei išjungsite SMTP, visi SMTP ir IMAP nustatymai bus iš naujo nustatyti, o susijusios funkcijos bus išjungtos. Ar tikrai norite tęsti?"
-          imap_disable_confirm: "Jei išjungsite IMAP, visi IMAP parametrai bus iš naujo nustatyti ir susijusios funkcijos bus išjungtos. Ar tikrai norite tęsti?"
-          imap_mailbox_not_selected: "Šiai IMAP konfigūracijai turite pasirinkti pašto dėžutę arba pašto dėžutės nebus sinchronizuojamos!"
+          additional_settings: "Papildomi nustatymai"
           prefill:
             title: "Užpildykite nustatymus:"
             gmail: "„Gmail“"
@@ -996,9 +987,6 @@ lt:
             smtp_server: "SMTP serveris"
             smtp_port: "SMTP prievadas"
             smtp_ssl_mode: "SSL režimas"
-            imap_server: "IMAP serveris"
-            imap_port: "IMAP prievadas"
-            imap_ssl: "SSL naudojimas IMAP"
             username: "Slapyvardis"
             password: "Slaptažodis"
           settings:
@@ -1007,10 +995,6 @@ lt:
             allow_unknown_sender_topic_replies_hint: "Leidžia nežinomiems siuntėjams atsakyti į grupės temas. Jei tai neįgalinta, atsakymai iš el. pašto adresų, kurie dar nėra pakviesti į temą, sukurs naują temą."
             from_alias: "Iš slapyvardžio"
             from_alias_hint: "Slapyvardis, naudojamas kaip siuntėjo adresas siunčiant grupinius SMTP el. laiškus. Atminkite, kad tai gali palaikyti ne visi pašto paslaugų teikėjai, todėl žr. savo pašto paslaugų teikėjo dokumentaciją."
-          mailboxes:
-            synchronized: "Sinchronizuota pašto dėžutė"
-            none_found: "Šioje el. pašto paskyroje pašto dėžučių nerasta."
-            disabled: "Uždrausta"
         membership:
           title: Narystė
           access: Prieiga
@@ -1263,6 +1247,9 @@ lt:
       new_private_message: "Nauja žinutė"
       private_message: "Žinutės"
       private_messages: "Žinutės"
+      upcoming_changes:
+        for_user:
+          enabled: "Galimas?"
       user_notifications:
         filters:
           filter_by: "Filtruoti pagal"
@@ -2766,17 +2753,6 @@ lt:
         bookmarks: "Jūs dar neturite pažymėtų temų."
         category: "Nėra jokių temų kategorijoje %{category}."
         top: "Nėra jokių TOP temų."
-      bottom:
-        latest: "Daugiau nėra jokių naujausių temų."
-        posted: "Daugiau nėra jokių paskelbtų temų."
-        read: "Daugiau nėra jokių perskaitytų temų."
-        new: "Daugiau nėra jokių naujų temų."
-        unread: "Daugiau nėra jokių neperskaitytų temų."
-        unseen: "Nebėra nematytų temų."
-        category: "Daugiau nėra jokių temų kategorijoje %{category}."
-        tag: "Daugiau nėra jokių temų kategorijoje %{tag}."
-        top: "Daugiau nėra jokių populiarių temų."
-        bookmarks: "Daugiau pažymėtų temų nėra"
     topic_bulk_actions:
       dismiss:
         name: "Praleisti"
@@ -3700,6 +3676,7 @@ lt:
         this_month: "Per mėnesį"
         this_week: "Per savaitę"
         today: "Šandien"
+        custom: "Išskirtinės"
     permission_types:
       full: "Kurti / Atsakyti / Peržiūrėti"
       create_post: "Atsakyti / Peržiūrėti"
@@ -4152,6 +4129,8 @@ lt:
           form:
             location:
               label: "Vieta"
+            text_section:
+              locale_label: "Kalba"
             header_logged_in:
               placeholder: "Sveikas sugrįžęs, %{preferred_display_name}!"
             header_anonymous:

@@ -814,7 +814,9 @@ RSpec.configure do |config|
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       playwright_cli_executable_path: "./node_modules/.bin/playwright",
       logger: Logger.new(IO::NULL),
-      timezoneId: example.metadata[:timezone],
+      # NOTE: timezoneId is NOT set here because the driver is cached and reused,
+      # so only the first test's timezone would be applied. Instead, we use CDP
+      # to override the timezone per-test in the before(:each) hook below.
       colorScheme: example.metadata[:color_scheme],
     }
 
@@ -880,6 +882,15 @@ RSpec.configure do |config|
 
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
+
+      # Apply timezone override via CDP if timezone metadata is present.
+      # We use CDP instead of the driver's timezoneId option because the driver
+      # instance is cached and reused between tests, so timezoneId only affects
+      # the first test. CDP override works at runtime for each test.
+      if (tz = example.metadata[:timezone])
+        cdp = pw_page.context.new_cdp_session(pw_page)
+        cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: tz })
+      end
     end
   end
 

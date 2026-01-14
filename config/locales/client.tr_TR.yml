@@ -1028,9 +1028,7 @@ tr_TR:
           notification: Bildirim
         email:
           title: "E-posta"
-          status: "IMAP üzerinden senkronize edilmiş e-postalar %{old_emails} / %{total_emails}"
           enable_smtp: "SMTP'yi etkinleştir"
-          enable_imap: "IMAP'i etkinleştir"
           test_settings: "Test Ayarları"
           save_settings: "Ayarları kaydet"
           last_updated: "Son güncelleme:"
@@ -1039,14 +1037,7 @@ tr_TR:
           smtp_settings_valid: "SMTP ayarları geçerli."
           smtp_title: "SMTP"
           smtp_instructions: "Grup için SMTP'yi etkinleştirdiğinizde, grubun gelen kutusundan gönderilen tüm e-postalar, forumunuz tarafından gönderilen diğer e-postalar için yapılandırılmış posta sunucusu yerine burada belirtilen SMTP ayarları gözetilerek gönderilir."
-          imap_title: "IMAP"
-          imap_additional_settings: "Ek Ayarlar"
-          imap_instructions: 'Grup için IMAP''i etkinleştirdiğinizde, e-postalar gruba ait gelen kutusu, sağlanan IMAP sunucusu ve posta kutusu arasında senkronize edilir. IMAP''in etkinleştirilebilmesi için SMTP''nin geçerli ve test edilmiş giriş bilgileriyle etkinleştirilmesi gerekir. SMTP için kullanılan e-posta kullanıcı adı ve şifre IMAP için kullanılır. Daha fazla bilgi için <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta özellik duyurusuna</a> bakın.'
-          imap_alpha_warning: "Uyarı: Bu bir alfa aşaması özelliğidir. Resmi olarak yalnızca Gmail desteklenmektedir. Kendi sorumluluğunuzda kullanın!"
-          imap_settings_valid: "IMAP ayarları geçerli."
-          smtp_disable_confirm: "SMTP'yi devre dışı bırakırsanız tüm SMTP ve IMAP ayarları sıfırlanır ve ilgili işlevler devre dışı bırakılır. Devam etmek istediğinize emin misiniz?"
-          imap_disable_confirm: "IMAP'i devre dışı bırakırsanız tüm IMAP ayarları sıfırlanır ve ilgili işlevler devre dışı bırakılır. Devam etmek istediğinize emin misiniz?"
-          imap_mailbox_not_selected: "Bu IMAP yapılandırması için bir Posta Kutusu seçmelisiniz, yoksa hiçbir posta kutusu senkronize edilmez!"
+          additional_settings: "Ek Ayarlar"
           prefill:
             title: "Şu ayarlarla önceden doldurun:"
             gmail: "Gmail"
@@ -1061,9 +1052,6 @@ tr_TR:
             smtp_server: "SMTP Sunucusu"
             smtp_port: "SMTP Bağlantı Noktası"
             smtp_ssl_mode: "SSL Modu"
-            imap_server: "IMAP Sunucusu"
-            imap_port: "IMAP Bağlantı Noktası"
-            imap_ssl: "IMAP için SSL kullan"
             username: "Kullanıcı Adı"
             password: "Şifre"
           settings:
@@ -1072,10 +1060,6 @@ tr_TR:
             allow_unknown_sender_topic_replies_hint: "Bilinmeyen göndericilerin grup konularını yanıtlamalarına izin verir. Bu ayar etkinleştirilmezse konuya davet edilmemiş e-posta adreslerinden gelen yanıtlar yeni bir konu oluşturur."
             from_alias: "Takma Addan"
             from_alias_hint: "Grup SMTP e-postaları gönderirken gönderici adresi olarak kullanılacak takma ad. Bunun tüm posta sağlayıcıları tarafından desteklenmeyebileceğini unutmayın, lütfen posta sağlayıcınızın belgelerini inceleyin."
-          mailboxes:
-            synchronized: "Senkronize Posta Kutusu"
-            none_found: "Bu e-posta hesabında posta kutusu bulunamadı."
-            disabled: "Devre dışı"
         membership:
           title: Üyelik
           access: Erişim
@@ -1339,6 +1323,9 @@ tr_TR:
       new_private_message: "Yeni Mesaj"
       private_message: "Mesaj"
       private_messages: "Mesajlar"
+      upcoming_changes:
+        for_user:
+          enabled: "Etkin mi?"
       user_notifications:
         filters:
           filter_by: "Şuna göre filtrele"
@@ -1661,7 +1648,7 @@ tr_TR:
         tags: "Etiketler"
         interface: "Arayüz"
         apps: "Uygulamalar"
-        navigation_menu: "Navigasyon Menüsü"
+        navigation_menu: "Navigasyon menüsü"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"
@@ -3280,19 +3267,6 @@ tr_TR:
           unread: "Okunmamış bir şey kalmadı... Etkileyici!"
           new_new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
           new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
-      bottom:
-        latest: "Başka en son konu yok."
-        posted: "Başka gönderi yapılan konu yok."
-        read: "Başka okunmuş konu yok."
-        new: "Başka yeni konu yok."
-        unread: "Başka okunmamış konu yok."
-        unseen: "Başka görülmemiş konu yok."
-        category: "Başka %{category} konusu yok."
-        tag: "Başka %{tag} konusu yok."
-        top: "Başka popüler konu yok."
-        hot: "Başka popüler konu yok."
-        bookmarks: "Başka yer imli konu yok."
-        filter: "Başka konu kalmadı."
     topic_bulk_actions:
       dismiss:
         name: "Kapat"
@@ -3420,9 +3394,6 @@ tr_TR:
         other: "%{count} yanıt, ilk gönderiye atla"
       created_at: "Oluşturulma: %{date}"
       bumped_at: "En Son: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a>, <a href='%{basePath}/latest'>en son konuları görüntüleyin</a> veya en üste bakın:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Tüm etiketlere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
       browse_latest_topics: "En son konulara göz atın"
       suggest_create_topic: <a href>Yeni bir konuşma başlatmaya</a> hazır mısınız?
       jump_reply: "Gönderinin orijinal konumuna atla"
@@ -4462,6 +4433,7 @@ tr_TR:
         this_month: "Ay"
         this_week: "Hafta"
         today: "Bugün"
+        custom: "Özel"
     custom_homepage:
       admin_message: 'Temalarınızdan biri "custom_homepage" değiştiricisini etkinleştirdi ancak [custom-homepage] bağlayıcısında hiçbir çıktı vermiyor. (Bu mesaj yalnızca site yöneticilerine gösterilir.)'
     browser_update: 'Ne yazık ki <a href="https://discourse.org/about#browser">tarayıcınız desteklenmiyor</a>. Lütfen zengin içeriği görüntülemek, giriş yapmak ve yanıtlamak için <a href="https://browsehappy.com">desteklenen bir tarayıcıya geçin.</a>'
@@ -5369,6 +5341,8 @@ tr_TR:
               options:
                 above_topic_content: "Yukarıdaki konu içeriği"
                 below_site_header: "Aşağıdaki site başlığı"
+            text_section:
+              locale_label: "Dil"
             header_logged_in:
               placeholder: "Tekrar hoş geldiniz %{preferred_display_name}!"
             header_anonymous:
@@ -7418,7 +7392,6 @@ tr_TR:
           button: "Tüm gönderileri sil"
           progress:
             title: "Gönderileri silme ilerleme durumu"
-            description: "Gönderiler siliniyor…"
           confirmation:
             title: "@%{username} tarafından gönderilen tüm gönderileri sil"
             description: |
@@ -7737,16 +7710,12 @@ tr_TR:
             prompt: "Bu ayarı değiştirmenin siteniz için geniş kapsamlı veya istenmeyen sonuçları olabilir. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, eminim"
           min_password_length:
-            prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm kullanıcıları etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
           min_admin_password_length:
-            prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm yöneticileri etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
           password_unique_charactes:
-            prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm kullanıcıları etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
           block_common_passwords:
-            prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm kullanıcıları etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
       badges:
         status: Durum

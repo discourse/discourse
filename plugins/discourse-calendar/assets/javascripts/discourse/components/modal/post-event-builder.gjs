@@ -14,19 +14,17 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import RadioButton from "discourse/components/radio-button";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
-import { cook } from "discourse/lib/text";
 import Group from "discourse/models/group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import { buildParams, replaceRaw } from "../../lib/raw-event-helper";
+import { buildParams } from "../../lib/raw-event-helper";
 import EventField from "../event-field";
 
 export default class PostEventBuilder extends Component {
   @service dialog;
   @service siteSettings;
-  @service store;
   @service currentUser;
 
   @tracked flash = null;
@@ -41,6 +39,10 @@ export default class PostEventBuilder extends Component {
   endsAt =
     this.event.endsAt &&
     moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+
+  get isEditing() {
+    return this.args.model.event.id || this.args.model.onUpdate;
+  }
 
   get recurrenceUntil() {
     return (
@@ -289,22 +291,13 @@ export default class PostEventBuilder extends Component {
   async destroyPostEvent() {
     try {
       const confirmResult = await this.dialog.yesNoConfirm({
-        message: "Confirm delete",
+        message: i18n(
+          "discourse_post_event.builder_modal.delete_confirmation_message"
+        ),
       });
 
       if (confirmResult) {
-        const post = await this.store.find("post", this.event.id);
-        const raw = post.raw;
-        const newRaw = this._removeRawEvent(raw);
-        const props = {
-          raw: newRaw,
-          edit_reason: "Destroy event",
-        };
-
-        const cooked = await cook(newRaw);
-        props.cooked = cooked.string;
-
-        const result = await post.save(props);
+        const result = await this.args.model.onDelete();
         if (result) {
           this.args.closeModal();
         }
@@ -350,29 +343,14 @@ export default class PostEventBuilder extends Component {
     try {
       this.isSaving = true;
 
-      const post = await this.store.find("post", this.event.id);
-      const raw = post.raw;
-      const eventParams = buildParams(
+      await this.args.model.onUpdate(
         this.startsAt,
         this.endsAt,
         this.event,
         this.siteSettings
       );
-      const newRaw = replaceRaw(eventParams, raw);
-      if (newRaw) {
-        const props = {
-          raw: newRaw,
-          edit_reason: i18n("discourse_post_event.edit_reason"),
-        };
 
-        const cooked = await cook(newRaw);
-        props.cooked = cooked.string;
-
-        const result = await post.save(props);
-        if (result) {
-          this.args.closeModal();
-        }
-      }
+      this.args.closeModal();
     } catch (e) {
       this.flash = extractError(e);
     } finally {
@@ -380,17 +358,12 @@ export default class PostEventBuilder extends Component {
     }
   }
 
-  _removeRawEvent(raw) {
-    const eventRegex = new RegExp(`\\[event\\s(.*?)\\]\\n\\[\\/event\\]`, "m");
-    return raw.replace(eventRegex, "");
-  }
-
   <template>
     <DModal
       @title={{i18n
         (concat
           "discourse_post_event.builder_modal."
-          (if @model.event.id "update_event_title" "create_event_title")
+          (if this.isEditing "update_event_title" "create_event_title")
         )
       }}
       @closeModal={{@closeModal}}
@@ -751,7 +724,7 @@ export default class PostEventBuilder extends Component {
         </ConditionalLoadingSection>
       </:body>
       <:footer>
-        {{#if @model.event.id}}
+        {{#if @model.onUpdate}}
           <DButton
             class="btn-primary"
             @label="discourse_post_event.builder_modal.update"

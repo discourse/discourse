@@ -482,6 +482,7 @@ bg:
       every_month: "всеки месец"
       every_six_months: "на всеки шест месеца"
   user_api_key:
+    deny: "Отмени"
     read: "четене"
     otp_confirmation:
       confirm_title: Продължете към %{site_name}
@@ -1077,8 +1078,10 @@ bg:
     queued_by_staff:
       title: "Публикацията изисква одобрение"
     welcome_user:
+      preview: "Добре дошли в %{site_name}!"
       subject_template: "Добре дошли в %{site_name}!"
     welcome_invite:
+      preview: "Добре дошли в %{site_name}!"
       subject_template: "Добре дошли в %{site_name}!"
     backup_succeeded:
       subject_template: "Бекъпа завърши успещно."
@@ -1570,6 +1573,8 @@ bg:
     description: "Безопасният режим ви позволява да тествате сайта си, без да зареждате теми или персонализации на плъгини от страна на клиента. Персонализирането на плъгини от страна на сървъра остава активирано."
     no_unofficial_plugins: "Деактивирайте неофициалните персонализации на приставки от страна на клиента"
     no_plugins: "Деактивирайте всички персонализации на приставки от страна на клиента"
+  dev_mode:
+    enter: "Въведете"
   wizard:
     step:
       setup:

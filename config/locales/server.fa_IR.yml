@@ -946,7 +946,6 @@ fa_IR:
   user_activity:
     no_log_search_queries: "لاگ درخواست‌های جستجو در حال حاضر غیرفعال است (مدیر می‌تواند آن را در تنظیمات سایت فعال کند)."
   email_settings:
-    imap_unhandled_error: "هنگام برقراری ارتباط با سرور IMAP یک خطای کنترل نشده وجود داشت. %{message}"
     connection_error: "مشکلی در اتصال با سرور وجود داشت. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
     timeout_error: "مدت زمان اتصال به سرور، بیش از حد طول کشید. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
     unhandled_error: "خطای کنترل نشده هنگام تست تنظیمات ایمیل. %{message}"
@@ -1032,11 +1031,10 @@ fa_IR:
       every_month: "هر ماه"
       every_six_months: "هر شش ماه"
   user_api_key:
-    title: "اجازه دسترسی به برنامه"
     authorize: "اجازه دادن"
+    deny: "لغو"
     read: "خواندن"
     read_write: "خواندن/نوشتن"
-    description: '"%{application_name}" درخواست دسترسی به حساب کاربری شما را دارد:'
     instructions: 'ما به تازگی یک کلید API کاربر جدید برای استفاده شما با "%{application_name}" ایجاد کردیم. لطفاً کلید زیر را در برنامه خود جایگذاری کنید:'
     otp_description: 'آیا می خواهید به "%{application_name}" اجازه دسترسی به این سایت را بدهید؟'
     otp_confirmation:
@@ -2010,6 +2008,7 @@ fa_IR:
       title: "نوشته نیاز به تایید دارد"
     welcome_user:
       title: "خوش‌آمد کاربر"
+      preview: "به %{site_name} خوش آمدید!"
       subject_template: "به %{site_name} خوش آمدید!"
       text_body_template: |
         سپاس که به %{site_name} پیوستید و خوش آمدید!
@@ -2021,6 +2020,7 @@ fa_IR:
         از بودن در انجمن لذت ببرید!
     welcome_invite:
       title: "دعوت خوش‌آمد"
+      preview: "به %{site_name} خوش آمدید!"
       subject_template: "به %{site_name} خوش آمدید!"
       text_body_template: |
         با تشکر از شما برای قبول دعوت به %{site_name} -- خوش آمدید!
@@ -2175,6 +2175,7 @@ fa_IR:
       title: "نوشته هرزنامه مسدود شد"
       subject_template: "کاربر جدید%{username} به‌دلیل پیوند‌های تکراری نوشته مسدود شده است"
     unsilenced:
+      preview: "حساب کاربری در انتظار نیست."
       subject_template: "حساب کاربری در انتظار نیست"
       text_body_template: |
         سلام،
@@ -2209,7 +2210,6 @@ fa_IR:
     برای لغو اشتراک از این ایمیل‌ها[کلیک کنید](%{unsubscribe_url}).
   subject_re: "پاسخ: "
   subject_pm: "[PM] "
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "پاسخ‌های قبلی"
     reached_limit:
@@ -2760,6 +2760,8 @@ fa_IR:
     title: "ورود به حالت امن"
     no_themes: "غیرفعال کردن پوسته‌ها و اجزای پوسته"
     enter: "فعال‌سازی حالت امن"
+  dev_mode:
+    enter: "وارد شدن "
   wizard:
     title: "راه اندازی Discourse"
     step:

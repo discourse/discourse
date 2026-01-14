@@ -46,7 +46,7 @@ es:
           title: Uso de palabras
         reading_time:
           title: Tiempo de lectura
-          book_comparison: "¡Pasaste <code>%{readingTitme}</code> leyendo nuestra comunidad! Ese es el tiempo que te llevaría leer <i>%{bookTitle}</i>"
+          book_comparison: "¡Pasaste <code>%{readingTime}</code> leyendo nuestra comunidad! Ese es el tiempo que te llevaría leer <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Reacciones más utilizadas en los temas
           total_number: "Número total de reacciones: %{count}"
@@ -99,7 +99,8 @@ es:
           avg_message_length: Longitud media de los mensajes
           favorite_channels: Canales favoritos
           messages: mensajes
-          you: Tú
+          author: Tú
+          author_others: "%{username}"
           channel_title: "#actividad-en-el-chat"
           status_online: "● en línea"
           message_1: "¡Enviaste <strong>%{count}</strong> mensajes este año!"
@@ -151,7 +152,7 @@ es:
           replies: Respuestas a las publicaciones
           mentions: Menciones
           topics_with_new_users: Temas con nuevos usuarios
-          your_contributions_helped: tus contribuciones ayudaron a
+          contributions_helped: tus contribuciones ayudaron a
         time_of_day_activity:
           title: Ritmo de actividad diaria
           play_button: Reproduce tu actividad como sonido

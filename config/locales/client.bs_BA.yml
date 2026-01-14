@@ -656,7 +656,6 @@ bs_BA:
           notification: Obavijest
         email:
           title: "Email"
-          status: "Sinkronizirano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           last_updated_by: "by"
           ssl_modes:
             none: "Ništa"
@@ -664,17 +663,10 @@ bs_BA:
             title: "Identifikacija"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Koristi SSL za IMAP"
             username: "Ime"
             password: "Lozinka"
           settings:
             title: "Postavke"
-          mailboxes:
-            synchronized: "Sinkronizirani poštanski sandučić"
-            none_found: "Na ovom računu e-pošte nisu pronađeni poštanski sandučići."
-            disabled: "Neomogućen"
         membership:
           title: Članstvo
           access: Pristup
@@ -899,6 +891,9 @@ bs_BA:
       new_private_message: "Nova poruka"
       private_message: "Poruka"
       private_messages: "Poruke"
+      upcoming_changes:
+        for_user:
+          enabled: "Omogućen?"
       user_notifications:
         filters:
           filter_by: "Filtriraj po"
@@ -1982,16 +1977,6 @@ bs_BA:
         bookmarks: "Još nemate zabilježenih tema."
         category: "Nema tema u %{category}."
         top: "Nema top tema."
-      bottom:
-        latest: "Nema više aktuelnih tema."
-        posted: "There are no more posted topics."
-        read: "Nema više pročitanih tema."
-        new: "Nema više novih tema."
-        unread: "Nema više nepročitanih tema."
-        category: "Nema više %{category} tema."
-        tag: "Nema više %{tag} tema."
-        top: "Nema više top tema."
-        bookmarks: "U zabilješkama više nema spremljenih tema."
     topic_bulk_actions:
       dismiss:
         name: "Odbaci"
@@ -2790,6 +2775,7 @@ bs_BA:
         this_month: "Mjesec"
         this_week: "Sedmica"
         today: "Danas"
+        custom: "Custom"
     permission_types:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"

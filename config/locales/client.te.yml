@@ -777,9 +777,7 @@ te:
           notification: నోటిఫికేషన్
         email:
           title: "ఈమెయిల్"
-          status: "IMAP ద్వారా %{old_emails} / %{total_emails} ఇమెయిల్‌లు సమకాలీకరించబడ్డాయి."
           enable_smtp: "SMTPని ప్రారంభించండి"
-          enable_imap: "IMAPని ప్రారంభించండి"
           test_settings: "అమరికలను పరీక్షించండి"
           save_settings: "అమరికలను సేవ్ చేయండి"
           last_updated: "చివరిగా నవీకరించబడింది:"
@@ -788,14 +786,7 @@ te:
           smtp_settings_valid: "SMTP అమరికలు చెల్లుబాటు అయ్యేవి."
           smtp_title: "SMTP"
           smtp_instructions: "మీరు సమూహం కోసం SMTPని ప్రారంభించినప్పుడు, సమూహం యొక్క ఇన్‌బాక్స్ నుండి పంపబడిన అన్ని అవుట్‌బౌండ్ ఇమెయిల్‌లు మీ ఫోరమ్ ద్వారా పంపబడిన ఇతర ఇమెయిల్‌ల కోసం కాన్ఫిగర్ చేయబడిన మెయిల్ సర్వర్‌కు బదులుగా ఇక్కడ పేర్కొన్న SMTP సెట్టింగ్‌ల ద్వారా పంపబడతాయి."
-          imap_title: "IMAP"
-          imap_additional_settings: "అదనపు అమరికలు"
-          imap_instructions: 'మీరు సమూహం కోసం IMAPని ప్రారంభించినప్పుడు, ఇమెయిల్‌లు సమూహం ఇన్‌బాక్స్, అందించిన IMAP సర్వర్ మరియు మెయిల్‌బాక్స్ మధ్య సమకాలీకరించబడతాయి. IMAPని ప్రారంభించే ముందు SMTP తప్పనిసరిగా చెల్లుబాటు అయ్యే మరియు పరీక్షించబడిన ఆధారాలతో ప్రారంభించబడాలి. SMTP కోసం ఉపయోగించే ఇమెయిల్ వినియోగదారు పేరు మరియు పాస్‌వర్డ్ IMAP కోసం ఉపయోగించబడుతుంది. మరింత సమాచారం కోసం <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">డిస్కోర్స్ మెటా పై ఫీచర్ ప్రకటన చూడండి</a>.'
-          imap_alpha_warning: "హెచ్చరిక: ఇది పరీక్షించబడని ఫీచర్. అధికారికంగా Gmail మాత్రమే ఖచ్చితంగా పని చేస్తోంది. మీ స్వంత పూచీతో ఉపయోగించండి!"
-          imap_settings_valid: "IMAP సెట్టింగ్‌లు చెల్లుబాటు అయ్యేవి."
-          smtp_disable_confirm: "మీరు SMTPని నిలిపివేస్తే, అన్ని SMTP మరియు IMAP సెట్టింగ్‌లు రీసెట్ చేయబడతాయి మరియు అనుబంధిత కార్యాచరణ నిలిపివేయబడుతుంది. మీరు ఖచ్చితంగా కొనసాగించాలనుకుంటున్నారా?"
-          imap_disable_confirm: "మీరు IMAPని నిలిపివేస్తే, అన్ని IMAP సెట్టింగ్‌లు రీసెట్ చేయబడతాయి మరియు అనుబంధిత కార్యాచరణ నిలిపివేయబడుతుంది. మీరు ఖచ్చితంగా కొనసాగించాలనుకుంటున్నారా?"
-          imap_mailbox_not_selected: "మీరు ఈ IMAP కాన్ఫిగరేషన్ కోసం తప్పనిసరిగా మెయిల్‌బాక్స్‌ని ఎంచుకోవాలి లేదా మెయిల్‌బాక్స్‌లు ఏవీ సమకాలీకరించబడవు!"
+          additional_settings: "అదనపు అమరికలు"
           prefill:
             title: "సెట్టింగ్‌లతో ముందుగా పూరించండి:"
             gmail: "జి మెయిల్"
@@ -805,9 +796,6 @@ te:
             title: "ఆధారాలు"
             smtp_server: "SMTP సర్వర్"
             smtp_port: "SMTP పోర్ట్"
-            imap_server: "IMAP సర్వర్"
-            imap_port: "IMAP పోర్ట్"
-            imap_ssl: "IMAP కోసం SSLని ఉపయోగించండి"
             username: "సభ్యనామం"
             password: "సంకేతపదం"
           settings:
@@ -816,10 +804,6 @@ te:
             allow_unknown_sender_topic_replies_hint: "సమూహ విషయాలకు ప్రత్యుత్తరం ఇవ్వడానికి తెలియని పంపినవారిని అనుమతించండి. ఇది ప్రారంభించబడకపోతే, విషయానికి ఇప్పటికే ఆహ్వానించబడని ఇమెయిల్ చిరునామాల నుండి ప్రత్యుత్తరాలు కొత్త విషయాన్ని సృష్టిస్తాయి."
             from_alias: "అలియాస్ నుండి"
             from_alias_hint: "సమూహ SMTP ఇమెయిల్‌లను పంపేటప్పుడు చిరునామా నుండి ఉపయోగించే మారుపేరు. మెయిల్ ప్రొవైడర్లందరూ దీనికి మద్దతు ఇవ్వకపోవచ్చని గమనించండి. దయచేసి మీ మెయిల్ ప్రొవైడర్ డాక్యుమెంటేషన్‌ను సంప్రదించండి."
-          mailboxes:
-            synchronized: "సమకాలీకరించబడిన మెయిల్‌బాక్స్"
-            none_found: "ఈ ఇమెయిల్ ఖాతాలో మెయిల్‌బాక్స్‌లు ఏవీ కనుగొనబడలేదు."
-            disabled: "నిలిపివేయబడింది"
         membership:
           title: సభ్యత్వం
           access: యాక్సెస్
@@ -1069,6 +1053,9 @@ te:
       new_private_message: "కొత్త సందేశం"
       private_message: "సందేశం"
       private_messages: "సందేశాలు"
+      upcoming_changes:
+        for_user:
+          enabled: "ప్రారంభించబడిందా?"
       user_notifications:
         filters:
           filter_by: "ద్వారా ఫిల్టర్"
@@ -1315,7 +1302,6 @@ te:
         tags: "ట్యాగులు"
         interface: "ప్రదర్శన"
         apps: "యాప్‌లు"
-        navigation_menu: "నావిగేషన్ మెను"
       change_password:
         success: "(ఈమెయిల్ పంపిన)"
         in_progress: "(ఈమెయిల్ పంపుతోన్నాం)"
@@ -2700,19 +2686,6 @@ te:
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
         hot: "ఏవి అగ్ర విషయాలూ లేవు."
         filter: "విషయాలూ లేవు."
-      bottom:
-        latest: "ఇంకా కొత్త విషయాలు లేవు."
-        posted: "ఇంకా రాసిన విషయాలు లేవు."
-        read: "ఇంకా చదవని విషయాలు లేవు."
-        new: "కొత్త విషయాలు లేవు."
-        unread: "ఇంకా చదవని విషయాలు లేవు."
-        unseen: "ఇంక చదవని విషయాలు లేవు."
-        category: "ఇంకా %{category} విషయాలు లేవు."
-        tag: "ఇంకా %{tag} విషయాలు లేవు."
-        top: "ఇంకా అగ్ర విషయాలు లేవు."
-        hot: "ఇంక అగ్ర విషయాలు లేవు."
-        bookmarks: "బుక్‌మార్క్ చేయబడిన విషయాలు ఏవీ లేవు."
-        filter: "ఇక విషయాలు లేవు."
     topic_bulk_actions:
       dismiss:
         name: "రద్దుచేయండి"
@@ -2826,9 +2799,6 @@ te:
         }
       created_at: "సృష్టించబడింది: %{date}"
       bumped_at: "తాజాది: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a> లేదా <a href='%{basePath}/latest'>తాజా విషయాలను వీక్షించండి</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a>, <a href='%{basePath}/latest'>తాజా అంశాలను వీక్షించండి</a> లేదా అగ్ర విషయాలను చూడండి:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>అన్ని ట్యాగ్‌లను బ్రౌజ్ చేయండి</a> లేదా <a href='%{basePath}/latest'>తాజా విషయాలను వీక్షించండి</a>."
       suggest_create_topic: <a href>కొత్త సంభాషణను ప్రారంభించడానికి</a> సిద్ధంగా ఉన్నారా?
       jump_reply: "పోస్ట్ యొక్క అసలు స్థానానికి వెళ్లండి"
       jump_reply_aria: "@%{username}యొక్క పోస్ట్‌ అసలు స్థానం కి వెళ్లండి"
@@ -3772,6 +3742,7 @@ te:
         this_month: "ఈ నెల"
         this_week: "వారం"
         today: "ఈ రోజు"
+        custom: "అనురూప"
     permission_types:
       full: "సృష్టించడం / ప్రత్యుత్తరం ఇవ్వడం / చూడడం"
       create_post: "ప్రత్యుత్తరం ఇవ్వండి / చూడండి"
@@ -4433,6 +4404,8 @@ te:
           form:
             location:
               label: "ప్రాంతం"
+            text_section:
+              locale_label: "భాష"
             header_anonymous:
               placeholder: "%{site_name} కు సుస్వాగతం!"
         navigation:
@@ -5886,7 +5859,6 @@ te:
           button: "అన్ని పోస్ట్‌లను తొలగించండి"
           progress:
             title: "పోస్ట్‌లను తొలగించడంలో పురోగతి"
-            description: "పోస్ట్‌లను తొలగిస్తోంది…"
           confirmation:
             title: "@%{username} ద్వారా అన్ని పోస్ట్‌లను తొలగించండి"
             description: |

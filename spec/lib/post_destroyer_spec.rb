@@ -374,15 +374,6 @@ RSpec.describe PostDestroyer do
       expect(post.like_count).to eq(2)
       expect(post.custom_fields["deleted_public_actions"]).to be_nil
     end
-
-    it "unmarks the matching incoming email for imap sync" do
-      SiteSetting.enable_imap = true
-      incoming =
-        Fabricate(:incoming_email, imap_sync: true, post: post, topic: post.topic, imap_uid: 99)
-      PostDestroyer.new(moderator, post).recover
-      incoming.reload
-      expect(incoming.imap_sync).to eq(false)
-    end
   end
 
   describe "basic destroying" do
@@ -881,28 +872,6 @@ RSpec.describe PostDestroyer do
       end
     end
 
-    describe "incoming email and imap sync" do
-      fab!(:incoming) { Fabricate(:incoming_email, post: post, topic: post.topic) }
-
-      it "does nothing if imap not enabled" do
-        IncomingEmail.expects(:find_by).never
-        PostDestroyer.new(moderator, post).destroy
-      end
-
-      it "does nothing if the incoming email has no imap_uid" do
-        SiteSetting.enable_imap = true
-        PostDestroyer.new(moderator, post).destroy
-        expect(incoming.reload.imap_sync).to eq(false)
-      end
-
-      it "sets imap_sync to true for the matching incoming" do
-        SiteSetting.enable_imap = true
-        incoming.update(imap_uid: 999)
-        PostDestroyer.new(moderator, post).destroy
-        expect(incoming.reload.imap_sync).to eq(true)
-      end
-    end
-
     context "with a reply" do
       fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
       let!(:post_reply) { PostReply.create(post_id: post.id, reply_post_id: reply.id) }
@@ -1012,6 +981,17 @@ RSpec.describe PostDestroyer do
       PostDestroyer.new(moderator, second_post, defer_flags: true).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
+    end
+
+    context "when the flagged post is potentially illegal" do
+      before { ReviewableFlaggedPost.pending.update_all(potentially_illegal: true) }
+
+      it "does not automatically mark it as ignored or approved" do
+        expect { PostDestroyer.new(moderator, second_post).destroy }.not_to change {
+          ReviewableFlaggedPost.pending.count
+        }
+        expect(Jobs::SendSystemMessage.jobs).to be_empty
+      end
     end
 
     context "when custom flags" do
@@ -1376,6 +1356,39 @@ RSpec.describe PostDestroyer do
         topic.reload
 
         expect(topic.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+    end
+
+    context "when recovering a deleted reply" do
+      it "restores bumped_at when the last reply is recovered" do
+        PostDestroyer.new(moderator, last_reply).destroy
+        PostDestroyer.new(moderator, last_reply.reload).recover
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      it "restores bumped_at when a user-deleted reply is recovered" do
+        PostDestroyer.new(user, last_reply).destroy
+        PostDestroyer.new(user, last_reply.reload).recover
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      context "when the recovered post is not the last reply" do
+        let!(:newer_reply) do
+          freeze_time 3.days.from_now
+          create_post(topic:, user: coding_horror)
+        end
+
+        it "does not change bumped_at" do
+          PostDestroyer.new(moderator, second_last_reply).destroy
+          PostDestroyer.new(moderator, second_last_reply.reload).recover
+          topic.reload
+
+          expect(topic.bumped_at).to eq_time(newer_reply.created_at)
+        end
       end
     end
   end

@@ -5,9 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import DecoratedHtml, {
-  applyHtmlDecorators,
-} from "discourse/components/decorated-html";
+import DecoratedHtml from "discourse/components/decorated-html";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable-refresh/note-form";
@@ -17,7 +15,6 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -227,11 +224,6 @@ export default class ReviewableTimeline extends Component {
     }
   }
 
-  @bind
-  decorate(element, helper) {
-    applyHtmlDecorators(element, helper);
-  }
-
   <template>
     <div class="reviewable-timeline">
 
@@ -271,7 +263,6 @@ export default class ReviewableTimeline extends Component {
                       <DecoratedHtml
                         @className="timeline-event__description"
                         @html={{event.description}}
-                        @decorate={{this.decorate}}
                       />
                     {{/if}}
                   </div>

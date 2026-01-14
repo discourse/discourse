@@ -1028,9 +1028,7 @@ fi:
           notification: Ilmoitus
         email:
           title: "Sähköposti"
-          status: "Synkronoitu %{old_emails}/%{total_emails} viestiä IMAP:n kautta."
           enable_smtp: "Ota SMTP käyttöön"
-          enable_imap: "Ota IMAP käyttöön"
           test_settings: "Testaa asetukset"
           save_settings: "Tallenna asetukset"
           last_updated: "Viimeksi päivitetty:"
@@ -1039,14 +1037,7 @@ fi:
           smtp_settings_valid: "SMTP-asetukset ovat kelvollisia."
           smtp_title: "SMTP"
           smtp_instructions: "Kun otat SMTP:n käyttöön ryhmälle, kaikki ryhmän postilaatikosta lähetetyt sähköpostit lähetetään tässä määritettyjen SMTP-asetusten kautta muille foorumisi lähettämille sähköposteille määritetyn postipalvelimen sijasta."
-          imap_title: "IMAP"
-          imap_additional_settings: "Lisäasetukset"
-          imap_instructions: 'Kun otat IMAPin käyttöön ryhmälle, sähköpostit synkronoidaan ryhmän postilaatikon ja annetun IMAP-palvelimen ja postilaatikon välillä. SMTP täytyy olla käytössä kelvollisilla ja testatuilla tunnistetiedoilla, ennen kuin IMAP voidaan ottaa käyttöön. SMTP:ssä käytettyä sähköpostiosoitetta ja salasanaa käytetään IMAPissa. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">ominaisuusilmoituksessa Discourse Metassa</a>.'
-          imap_alpha_warning: "Varoitus: Tämä on alfavaiheen ominaisuus. Vain Gmailia tuetaan virallisesti. Käytä omalla vastuullasi!"
-          imap_settings_valid: "IMAP-asetukset ovat kelvollisia."
-          smtp_disable_confirm: "Jos poistat SMTP:n käytöstä, kaikki SMTP- ja IMAP-asetukset nollataan, ja niihin liittyvät toiminnot poistetaan käytöstä. Oletko varma, että haluat jatkaa?"
-          imap_disable_confirm: "Jos poistat IMAPin käytöstä, kaikki IMAP-asetukset nollataan, ja niihin liittyvät toiminnot poistetaan käytöstä. Oletko varma, että haluat jatkaa?"
-          imap_mailbox_not_selected: "Sinun täytyy valita postilaatikko tälle IMAP-määritykselle, muuten postilaatikoita ei synkronoida!"
+          additional_settings: "Lisäasetukset"
           prefill:
             title: "Esitäyttö asetuksilla:"
             gmail: "Gmail"
@@ -1061,9 +1052,6 @@ fi:
             smtp_server: "SMTP-palvelin"
             smtp_port: "SMTP-portti"
             smtp_ssl_mode: "SSL-tila"
-            imap_server: "IMAP-palvelin"
-            imap_port: "IMAP-portti"
-            imap_ssl: "Käytä SSL-salausta IMAP:lle"
             username: "Käyttäjätunnus"
             password: "Salasana"
           settings:
@@ -1072,10 +1060,6 @@ fi:
             allow_unknown_sender_topic_replies_hint: "Salli tuntemattomien lähettäjien vastata ryhmän ketjuihin. Jos tämä ei ole käytössä, vastaukset sähköpostiosoitteista, joita ei ole kutsuttu ketjuun, luovat uuden ketjun."
             from_alias: "Lähettäjän alias"
             from_alias_hint: "Lähettäjän osoitteena käytettävä alias lähetettäessä ryhmä-SMTP-sähköposteja. Huomioithan, että kaikki sähköpostipalveluntarjoajat eivät välttämättä tue tätä; katso tiedot sähköpostipalveluntarjoajasi ohjeista."
-          mailboxes:
-            synchronized: "Synkronoitu postilaatikko"
-            none_found: "Tältä sähköpostitililtä ei löytynyt postilaatikoita."
-            disabled: "Pois käytöstä"
         membership:
           title: Jäsenyys
           access: Pääsy
@@ -1339,6 +1323,9 @@ fi:
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
+      upcoming_changes:
+        for_user:
+          enabled: "Otettu käyttöön?"
       user_notifications:
         filters:
           filter_by: "Suodata"
@@ -3280,19 +3267,6 @@ fi:
           unread: "Mitään ei ole lukematta... vaikuttavaa!"
           new_new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
           new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
-      bottom:
-        latest: "Tuoreimpia ketjuja ei ole enempää."
-        posted: "Ketjuja, joihin olet kirjoittanut, ei ole enempää."
-        read: "Luettuja ketjuja ei ole enempää."
-        new: "Uusia ketjuja ei ole enempää."
-        unread: "Ketjuja ei ole enempää lukematta."
-        unseen: "Näkemättömiä ketjuja ei ole enempää."
-        category: "Alueen %{category} ketjuja ei ole enempää."
-        tag: "Tunnisteella %{tag} merkittyjä ketjuja ei ole enempää."
-        top: "Suosittuja ketjuja ei ole enempää."
-        hot: "Suosittuja ketjuja ei ole enempää."
-        bookmarks: "Kirjanmerkkeihin lisättyjä ketjuja ei ole enempää."
-        filter: "Ketjuja ei ole enempää."
     topic_bulk_actions:
       dismiss:
         name: "Selvä"
@@ -3420,9 +3394,6 @@ fi:
         other: "%{count} vastausta, siirry ensimmäiseen viestiin"
       created_at: "Luotu: %{date}"
       bumped_at: "Viimeisin: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a>, <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a> tai katso suosituimmat:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Selaa kaikkia tunnisteita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
       browse_latest_topics: "Selaa uusimpia ketjuja"
       suggest_create_topic: Valmiina <a href>aloittamaan uuden keskustelun?</a>
       jump_reply: "Siirry viestin alkuperäiseen sijaintiin"
@@ -4462,6 +4433,7 @@ fi:
         this_month: "Kuukausi"
         this_week: "Viikko"
         today: "Tänään"
+        custom: "Mukautettu"
     custom_homepage:
       admin_message: 'Yksi teemoistasi on ottanut käyttöön "custom_homepage"-muuntimen, mutta se ei tuota mitään [custom-homepage]-liittimessä. (Tämä viesti näytetään vain sivuston ylläpitäjille.)'
     browser_update: 'Valitettavasti <a href="https://discourse.org/about#browser">selaintasi ei tueta</a>. <a href="https://browsehappy.com">Vaihda tuettuun selaimeen</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
@@ -5369,6 +5341,8 @@ fi:
               options:
                 above_topic_content: "Ketjun sisällön yläpuolella"
                 below_site_header: "Sivuston yläpalkin alapuolella"
+            text_section:
+              locale_label: "Kieli"
             header_logged_in:
               placeholder: "Tervetuloa takaisin, %{preferred_display_name}!"
             header_anonymous:
@@ -7433,7 +7407,6 @@ fi:
           button: "Poista kaikki viestit"
           progress:
             title: "Viestien poistamisen eteneminen"
-            description: "Poistetaan viestejä…"
           confirmation:
             title: "Poista kaikki käyttäjän @%{username} viestit"
             description: |
@@ -7752,16 +7725,12 @@ fi:
             prompt: "Tämän asetuksen muuttamisella voi olla merkittäviä tai tahattomia seurauksia sivustollesi. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, olen varma"
           min_password_length:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           min_admin_password_length:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin ylläpitäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           password_unique_charactes:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
           block_common_passwords:
-            prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
       badges:
         status: Tila

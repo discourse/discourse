@@ -768,7 +768,6 @@ id:
   email_settings:
     smtp_server_busy_error: "Server SMTP sedang sibuk, coba lagi nanti."
     smtp_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server SMTP. %{message}"
-    imap_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server IMAP. %{message}"
     connection_error: "Terjadi masalah saat menghubungkan dengan server, periksa nama dan port server, lalu coba lagi."
     timeout_error: "Waktu koneksi ke server habis, periksa nama server dan port, lalu coba lagi."
     unhandled_error: "Kesalahan tidak tertangani saat menguji setelan email. %{message}"
@@ -848,11 +847,10 @@ id:
       every_month: "setiap bulan"
       every_six_months: "setiap enam bulan"
   user_api_key:
-    title: "Izinkan akses aplikasi"
     authorize: "Izinkan"
+    deny: "Batal"
     read: "baca"
     read_write: "baca/tulis"
-    description: '"%{application_name}" meminta akses berikut ke akun Anda:'
     instructions: 'Kami baru saja membuat kunci API pengguna baru untuk Anda gunakan dengan "%{application_name}", harap tempelkan kunci berikut ke dalam aplikasi Anda:'
     otp_description: 'Apakah Anda ingin mengizinkan "%{application_name}" untuk mengakses situs ini?'
     otp_confirmation:
@@ -1328,8 +1326,10 @@ id:
     queued_by_staff:
       title: "Pesan Membutuhkan Persetujuan"
     welcome_user:
+      preview: "Selamat datang ke %{site_name}!"
       subject_template: "Selamat datang ke %{site_name}!"
     welcome_invite:
+      preview: "Selamat datang ke %{site_name}!"
       subject_template: "Selamat datang ke %{site_name}!"
     tl2_promotion_message:
       subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
@@ -1759,6 +1759,8 @@ id:
     description: "Mode aman memungkinkan Anda menguji situs Anda tanpa memuat tema atau penyesuaian plugin client-side. Penyesuaian plugin server-side tetap diaktifkan."
     no_unofficial_plugins: "Nonaktifkan penyesuaian plugin client-side tidak resmi"
     no_plugins: "Nonaktifkan semua penyesuaian plugin client-side"
+  dev_mode:
+    enter: "Enter"
   wizard:
     step:
       setup:

@@ -954,9 +954,7 @@ ja:
           notification: 通知
         email:
           title: "メール"
-          status: "IMAP 経由で %{old_emails} / %{total_emails} のメールを同期しました。"
           enable_smtp: "SMTP を有効化"
-          enable_imap: "IMAP を有効化"
           test_settings: "設定をテスト"
           save_settings: "設定を保存"
           last_updated: "最終更新:"
@@ -965,14 +963,7 @@ ja:
           smtp_settings_valid: "SMTP 設定は有効です。"
           smtp_title: "SMTP"
           smtp_instructions: "このグループで SMTP を有効化すると、グループの受信トレイから送信されるすべての送信メールは、フォーラムが送信するほかのメール用に構成されているメールサーバーではなく、ここで指定される SMTP 設定を介して送信されます。"
-          imap_title: "IMAP"
-          imap_additional_settings: "追加設定"
-          imap_instructions: 'このグループで IMAP を有効化すると、グループの受信トレイと指定された IMAP サーバーとメールボックスの間でメールが同期されます。IMAP を有効にする前に、テスト済みの有効な資格情報で SMTP を有効にする必要があります。SMTP に使用されるメールのユーザー名とパスワードが IMAP にも使用されます。詳細は、「<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta の機能に関するお知らせ</a>」をご覧ください。'
-          imap_alpha_warning: "警告: これはアルファステージの機能です。Gmail のみが公式にサポートされています。自己責任でご利用ください！"
-          imap_settings_valid: "IMAP の設定は有効です。"
-          smtp_disable_confirm: "SMTP を無効にすると、すべての SMTP と IMAP の設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
-          imap_disable_confirm: "IMAP を無効にすると、すべての IMAP 設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
-          imap_mailbox_not_selected: "この IMAP 構成のメールボックスを選択する必要があります。選択しない場合、メールボックスは同期されません！"
+          additional_settings: "追加設定"
           prefill:
             title: "次の設定で事前入力:"
             gmail: "Gmail"
@@ -987,9 +978,6 @@ ja:
             smtp_server: "SMTP サーバー"
             smtp_port: "SMTP ポート"
             smtp_ssl_mode: "SSL モード"
-            imap_server: "IMAP サーバー"
-            imap_port: "IMAP ポート"
-            imap_ssl: "IMAP に SSL を使用する"
             username: "ユーザー名"
             password: "パスワード"
           settings:
@@ -998,10 +986,6 @@ ja:
             allow_unknown_sender_topic_replies_hint: "不明な送信者がグループトピックに返信できるようにします。これが有効になっていない場合、トピックに招待されていないメールアドレスからの返信があった場合は、新しいトピックを作成します。"
             from_alias: "送信元のエイリアス"
             from_alias_hint: "グループ SMTP メールを送信する際に送信元アドレスとして使用するエイリアス。すべてのメールプロバイダーでサポートされているわけではなことにご注意ください。メールプロバイダーのドキュメントを参照してください。"
-          mailboxes:
-            synchronized: "同期メールボックス"
-            none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
-            disabled: "無効"
         membership:
           title: メンバーシップ
           access: アクセス
@@ -1255,6 +1239,9 @@ ja:
       new_private_message: "新規メッセージ"
       private_message: "メッセージ"
       private_messages: "メッセージ"
+      upcoming_changes:
+        for_user:
+          enabled: "有効ですか？"
       user_notifications:
         filters:
           filter_by: "フィルタ基準:"
@@ -3102,19 +3089,6 @@ ja:
           unread: "未読はありません... お見事！"
           new_new: "今のところ新着はありません... また後で確認してください！"
           new: "今のところ新着はありません... また後で確認してください！"
-      bottom:
-        latest: "最新のトピックは以上です。"
-        posted: "投稿のあるトピックは以上です。"
-        read: "既読のトピックは以上です。"
-        new: "新規トピックは以上です。"
-        unread: "未読のトピックは以上です。"
-        unseen: "その他の未読のトピックはありません。"
-        category: "%{category} のトピックは以上です。"
-        tag: "%{tag} のトピックは以上です。"
-        top: "人気のトピックは以上です。"
-        hot: "ホットなトピックは以上です。"
-        bookmarks: "ブックマーク済みのトピックは以上です。"
-        filter: "トピックは以上です。"
     topic_bulk_actions:
       dismiss:
         name: "閉じる"
@@ -3232,9 +3206,6 @@ ja:
         other: "%{count} 件の返信、最初の投稿にジャンプ"
       created_at: "作成日: %{date}"
       bumped_at: "最新: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか、<a href='%{basePath}/latest'>最新のトピックを表示</a>するか、トップを見ます。"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>すべてのタグを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
       browse_latest_topics: "最新のトピックを閲覧する"
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
       jump_reply: "投稿の下の場所にジャンプする"
@@ -4223,6 +4194,7 @@ ja:
         this_month: "今月"
         this_week: "今週"
         today: "今日"
+        custom: "カスタム"
     custom_homepage:
       admin_message: 'テーマの 1 つで "custom_homepage" 修飾子が有効になっていますが、[custom-homepage] コネクタには何も出力されません。(このメッセージはサイト管理者にのみ表示されます。)'
     browser_update: '残念ながら、<a href="https://discourse.org/about#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
@@ -5103,6 +5075,8 @@ ja:
               options:
                 above_topic_content: "トピックコンテンツの上"
                 below_site_header: "サイトヘッダーの下"
+            text_section:
+              locale_label: "言語"
             header_logged_in:
               placeholder: "%{preferred_display_name}、おかえりなさい！"
             header_anonymous:
@@ -7137,7 +7111,6 @@ ja:
           button: "すべての投稿を削除する"
           progress:
             title: "投稿の削除状況"
-            description: "投稿を削除中…"
           confirmation:
             title: "@%{username} のすべての投稿を削除"
             description: |
@@ -7446,16 +7419,12 @@ ja:
             prompt: "この設定を変更すると、サイトに広範に適用されるか意図しない結果が生じる可能性があります。続行してもよろしいですか？"
             confirm: "はい"
           min_password_length:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           min_admin_password_length:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべての管理者のパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           password_unique_charactes:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           block_common_passwords:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
       badges:
         status: ステータス

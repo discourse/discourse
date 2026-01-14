@@ -714,9 +714,7 @@ ca:
           notification: Notificació
         email:
           title: "Correu electrònic"
-          status: "S'han sincronitzat %{old_emails} / %{total_emails} correus electrònics via IMAP."
           enable_smtp: "Activa SMTP"
-          enable_imap: "Activa IMAP"
           save_settings: "Desa la configuració"
           last_updated: "Darrera actualització:"
           last_updated_by: "per"
@@ -727,15 +725,10 @@ ca:
             title: "Credencials"
             smtp_server: "Servidor SMTP"
             smtp_port: "Port SMTP"
-            imap_server: "Servidor IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Utilitza SSL per a SMTP"
             username: "Nom d'usuari"
             password: "Contrasenya"
           settings:
             title: "Configuració"
-          mailboxes:
-            disabled: "Desactivat"
         membership:
           title: Membres
           access: Accés
@@ -933,6 +926,9 @@ ca:
       new_private_message: "Missatge nou"
       private_message: "Missatge"
       private_messages: "Missatges"
+      upcoming_changes:
+        for_user:
+          enabled: "Activat?"
       user_notifications:
         filters:
           all: "Tot"
@@ -1976,16 +1972,6 @@ ca:
         bookmarks: "Encara no heu marcat temes com a preferits."
         category: "No hi ha temes de %{category}."
         top: "No hi ha temes principals."
-      bottom:
-        latest: "No hi ha més temes recents."
-        posted: "No hi ha més temes publicats."
-        read: "No hi ha més temes llegits."
-        new: "No hi ha més temes nous."
-        unread: "No hi ha més temes no llegits. "
-        category: "No hi ha més temes de %{category}."
-        tag: "No hi ha més temes de %{tag}."
-        top: "No hi ha més temes destacats."
-        bookmarks: "No hi ha més temes marcats com a preferits."
     topic_bulk_actions:
       dismiss:
         name: "Descarta-ho"
@@ -2750,6 +2736,7 @@ ca:
         this_month: "Mes"
         this_week: "Setmana"
         today: "Avui"
+        custom: "Personalitzat"
     permission_types:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"

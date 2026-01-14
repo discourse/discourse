@@ -99,3 +99,157 @@
     }
   }
 }
+
+.d-image-carousel {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+
+  &__track {
+    display: flex;
+    width: 100%;
+    height: 400px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__slide {
+    .d-image-carousel--carousel & {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: contain !important;
+        border-radius: var(--d-border-radius);
+      }
+    }
+
+    .lightbox-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      max-height: 100%;
+      height: 100%;
+
+      // Ensure the lightbox link itself doesn't force a crop
+      .lightbox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding-block: var(--space-2);
+  }
+
+  &__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    padding: 0;
+    background: none;
+    color: var(--primary-medium);
+    cursor: pointer;
+    font-size: var(--font-down-1);
+    touch-action: manipulation;
+
+    &:hover {
+      background: none;
+      color: var(--primary);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.6;
+    }
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--primary-very-low);
+    border-radius: 1rem;
+  }
+
+  &__dot {
+    height: 0.6rem;
+    width: 0.6rem;
+    padding: 0;
+    background: var(--primary-low-mid);
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition:
+      width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.15s ease-out;
+    touch-action: manipulation;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+
+    &.active {
+      background: var(--primary-medium);
+      width: 1.4rem;
+    }
+  }
+
+  &__counter {
+    padding: 0.5rem 0.75rem;
+    background: var(--primary-very-low);
+    border-radius: 1rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  &--single {
+    .d-image-carousel__controls {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .d-image-carousel__track {
+      scroll-behavior: auto;
+    }
+  }
+}

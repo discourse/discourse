@@ -62,8 +62,6 @@ uk:
             label: Тіло
           delay:
             label: Затримка (хвилин)
-          prefers_encrypt:
-            label: Шифрує ПП, якщо можливо
         group:
           label: Група
         text:
@@ -444,6 +442,11 @@ uk:
               label: "Назва користувальницького поля"
         set_topic_timer:
           title: Встановити таймер теми
+          fields:
+            type:
+              label: Тип таймера
+            duration:
+              label: Тривалість таймера
       unnamed_automation: "Неназвана автоматизація"
       models:
         script:

@@ -48,9 +48,24 @@ en:
         agree_and_delete:
           title: "Delete comment"
           description: "Delete the comment so that users cannot see it."
+        agree_and_suspend:
+          title: "Suspend user"
+          description: "Agree with flag and suspend the user."
+        agree_and_silence:
+          title: "Silence user"
+          description: "Agree with flag and silence the user."
         disagree_and_restore:
           title: "Disagree and Restore comment"
           description: "Restore the comment so that all users can see it."
+        disagree:
+          title: "Keep comment"
+          description: "Disagree with flag and leave comment unchanged."
+        ignore:
+          title: "Ignore flag"
+          description: "Remove it from the queue without taking action."
+        delete_and_agree:
+          title: "Ignore flag and delete comment"
+          description: "Ignore the flag by removing it from the queue and delete the comment."
 
   post_action_types:
     vote:
@@ -102,16 +117,17 @@ en:
             title: "Delete comment"
             description: "Delete the comment so that users cannot see it."
           delete_and_agree:
-            title: "Ignore Flag and Delete comment"
+            title: "Ignore flag and delete comment"
             description: "Ignore the flag by removing it from the queue and delete the comment."
           disagree_and_restore:
             title: "Disagree and Restore comment"
             description: "Restore the comment so that all users can see it."
           disagree:
-            title: "Disagree"
+            title: "Keep comment"
+            description: "Disagree with flag and leave comment unchanged."
           ignore:
-            title: "Do Nothing"
-            description: "Ignore the flag by removing it from the queue without taking any action."
+            title: "Ignore flag"
+            description: "Remove it from the queue without taking action."
         transcript:
           view: "View previous comments transcript"
       reviewable_score_types:

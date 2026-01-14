@@ -1040,12 +1040,9 @@ fr:
     no_log_search_queries: "Les journaux des requêtes de recherche sont actuellement désactivés (un administrateur peut les activer dans les paramètres du site)."
   email_settings:
     pop3_authentication_error: "L'authentification auprès du serveur POP3 a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
-    imap_authentication_error: "L'authentification auprès du serveur IMAP a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
-    imap_no_response_error: "Une erreur est survenue lors de la communication avec le serveur IMAP. %{message}"
     smtp_authentication_error: "Un problème est survenu avec les informations d'identification SMTP fournies, vérifiez le nom d'utilisateur et le mot de passe, et réessayez. %{message}"
     smtp_server_busy_error: "Le serveur SMTP indique qu'il subit une trop forte charge. Patientez un moment avant de réessayer."
     smtp_unhandled_error: "Une erreur non prise en charge est survenue lors de la communication avec le serveur SMTP. %{message}"
-    imap_unhandled_error: "Une erreur non prise en charge est survenue lors de la communication avec le serveur IMAP. %{message}"
     connection_error: "Un problème de connexion au serveur s'est produit. Vérifiez le nom du serveur et le numéro de port avant de réessayer."
     timeout_error: "Le délai d'établissement de la connexion au serveur s'est écoulé. Vérifiez le nom du serveur et le numéro de port avant de réessayer."
     unhandled_error: "Une erreur non prise en charge est survenue lors du test des paramètres d'e-mail. %{message}"
@@ -1134,11 +1131,10 @@ fr:
       every_month: "tous les mois"
       every_six_months: "tous les six mois"
   user_api_key:
-    title: "Autoriser l'accès d'application"
     authorize: "Autoriser"
+    deny: "Annuler"
     read: "lecture"
     read_write: "lecture/écriture"
-    description: '« %{application_name} » demande l''accès suivant à votre compte :'
     instructions: 'Nous venons de générer une nouvelle clé d''API utilisateur à utiliser avec « %{application_name} ». Veuillez coller cette clé dans votre application :'
     otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
     otp_confirmation:
@@ -2151,14 +2147,7 @@ fr:
     email_in_allowed_groups: "Groupes autorisés à publier de nouveaux sujets par e-mail. Les administrateurs et les modérateurs peuvent toujours publier de nouveaux sujets par e-mail."
     email_in_authserv_id: "L'identifiant du service vérifiant l'authentification des e-mails entrants. Voir <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> pour obtenir plus d'informations."
     email_in_spam_header: "Sélectionne l'en-tête d'e-mail spécifique à utiliser pour identifier le courrier indésirable. Cette option peut être X-Spam-Flag, X-Spam-Status ou X-SES-Spam-Verdict, et l'e-mail est marqué comme spam en fonction de la valeur de l'en-tête. Par exemple, si le paramètre choisi est X-Spam-Flag, un e-mail dont la valeur d'en-tête est définie sur OUI sera classé comme courrier indésirable."
-    enable_imap: "Activer IMAP pour synchroniser les messages de groupes."
-    enable_imap_write: "Activer la synchronisation IMAP bidirectionnelle. Si elle est désactivée, toutes les opérations d'écriture sur les comptes IMAP sont désactivées."
-    enable_imap_idle: "Utiliser le mécanisme IMAP IDLE pour attendre de nouveaux e-mails."
     enable_smtp: "Activer SMTP pour l'envoi de notifications concernant les messages de groupe."
-    imap_polling_period_mins: "La durée en minutes entre chaque vérification des comptes IMAP pour les nouveaux e-mails."
-    imap_polling_old_emails: "Le nombre maximal d'anciens e-mails (traités) à mettre à jour chaque fois qu'une boîte IMAP est interrogée (0 pour tous)."
-    imap_polling_new_emails: "Le nombre maximal de nouveaux e-mails (non traités) à mettre à jour chaque fois qu'une boîte IMAP est interrogée."
-    imap_batch_import_email: "Le nombre minimal de nouveaux e-mails qui déclenchent le mode d'importation (désactive les alertes de messages)."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des e-mails. Par défaut il prend la valeur de « title »."
     email_site_title: "Le titre du site utilisé comme expéditeur pour les e-mails du site. Par défaut il prend la valeur de « title ». Si votre « title » utilise des caractères interdits dans les e-mails, utilisez ce paramètre."
     find_related_post_with_key: "N'utiliser que la « reply key » pour trouver le message auquel on a répondu. ATTENTION : la désactivation de cette option permet l'usurpation d'identité de l'utilisateur sur la base de l'adresse e-mail."
@@ -3169,6 +3158,7 @@ fr:
         À mesure que vous participerez ici, nous apprendrons à vous connaître et les limitations temporaires des nouveaux utilisateurs seront levées. Avec le temps, vous gagnerez [des niveaux de confiance](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) qui incluent des fonctionnalités spéciales pour nous aider à gérer notre communauté ensemble.
     welcome_user:
       title: "Bienvenue utilisateur"
+      preview: "Bienvenue sur %{site_name} !"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
         Merci d'avoir rejoint %{site_name}, nous vous souhaitons la bienvenue !
@@ -3196,6 +3186,7 @@ fr:
         Qui dit pouvoir, dit responsabilité. Si vous débutez dans le rôle de modérateur, nous vous invitons à consulter le [Guide de modération](https://meta.discourse.org/t/guide-des-moderateurs/89968).
     welcome_invite:
       title: "Bienvenue invité"
+      preview: "Bienvenue sur %{site_name} !"
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
         Merci d'avoir accepté l'invitation sur %{site_name}. Nous vous souhaitons la bienvenue !
@@ -3606,6 +3597,7 @@ fr:
         Cette règle peut être modifiée avec les paramètres « newuser_spam_host_threshold » et « allowed_spam_host_domains ». Le paramètre « allowed_spam_host_domains » constitue une liste d'autorisations qui vous permettra d'exempter %{domains} de cette vérification.
     unsilenced:
       title: "Mise en sourdine annulée"
+      preview: "Compte débloqué."
       subject_template: "Compte débloqué"
       text_body_template: |
         Bonjour,
@@ -3654,8 +3646,6 @@ fr:
     Pour vous désabonner de ces e-mails, [cliquez ici](%{unsubscribe_url}).
   subject_re: "Re : "
   subject_pm: "[MP] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
@@ -3990,6 +3980,7 @@ fr:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Se connecter avec un lien"
+      preview: "Se connecter avec un lien."
       subject_template: "[%{email_prefix}] Se connecter avec un lien"
       text_body_template: |
         Voici votre lien pour vous connecter à [%{site_name}](%{base_url}).
@@ -4931,6 +4922,8 @@ fr:
     deprecation_error_label: Faire en sorte que les dépréciations de Javascript génèrent une erreur
     enter: "Activer le mode sans échec"
     must_select: "Vous devez sélectionner au moins une option pour activer le mode sans échec."
+  dev_mode:
+    enter: "Entrée"
   wizard:
     title: "Configuration de Discourse"
     step:
@@ -5024,8 +5017,6 @@ fr:
     api_post_delete: "Supprimé via l'API"
     reminder_deleted: "Remplacé par un nouveau rappel"
     user_associated_posts_deleted: "L'utilisateur a été détruit"
-    imap_email_deleted: "L'e-mail a été supprimé sur le serveur IMAP"
-    imap_email_marked_as_spam: "L'e-mail a été déplacé vers le répertoire de courrier indésirable sur le serveur IMAP"
     auto_deleted_hidden_posts: "Publications cachées détruites automatiquement"
     seed_data_topic_updated: "Sujet de données d'amorçage mis à jour"
     seed_data_topic_deleted: "Sujet de données d'amorçage supprimé"

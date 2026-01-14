@@ -181,24 +181,29 @@
     position: relative;
     border: 2px dashed var(--primary-low-mid);
     border-radius: var(--d-border-radius);
-    padding: var(--space-half) var(--space-2) var(--space-2) var(--space-2);
+    padding: var(--space-half) var(--space-2) 0 var(--space-2);
     margin-block: var(--space-4);
 
-    &__title {
+    &__remove-btn {
+      position: absolute;
+      bottom: var(--space-2);
+      right: var(--space-2);
+      color: var(--primary-medium);
+      padding: var(--space-1) var(--space-2);
+      background: var(--secondary);
+      border: 1px solid var(--primary-low);
+      font-size: var(--font-down-1-rem);
       display: flex;
       align-items: center;
-      justify-content: end;
-      font-size: var(--font-down-1-rem);
-      color: var(--primary-medium);
+      gap: var(--space-1);
 
-      svg {
-        font-size: var(--font-up-1-rem);
-        padding-inline: var(--space-2);
+      @include viewport.until(sm) {
+        padding: var(--space-2) var(--space-4);
+      }
 
-        &:hover {
-          color: var(--primary);
-          cursor: pointer;
-        }
+      &:hover {
+        color: var(--primary);
+        background: var(--primary-low);
       }
     }
 
@@ -416,6 +421,7 @@
 
     &.ProseMirror-selectednode {
       user-select: none;
+      cursor: zoom-in;
     }
   }
 }

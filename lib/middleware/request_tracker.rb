@@ -19,6 +19,11 @@ class Middleware::RequestTracker
   STATIC_IP_SKIPPER =
     ENV["DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS"]&.split&.map { |ip| IPAddr.new(ip) }
 
+  MAX_URL_LENGTH = 2000
+  MAX_SESSION_ID_LENGTH = 32
+  MAX_USER_AGENT_LENGTH = 1000
+  MAX_IP_ADDRESS_LENGTH = 45
+
   # register callbacks for detailed request loggers called on every request
   # example:
   #
@@ -94,42 +99,18 @@ class Middleware::RequestTracker
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
-
-        if data[:explicit_track_view]
-          # Must be a browser if it had this header from our ajax implementation
-          ApplicationRequest.increment!(:page_view_logged_in_browser)
-          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
-
-          if data[:topic_id].present? && data[:current_user_id].present?
-            TopicsController.defer_topic_view(
-              data[:topic_id],
-              data[:request_remote_ip],
-              data[:current_user_id],
-            )
-          end
-        end
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon)
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
-
-        if data[:explicit_track_view]
-          # Must be a browser if it had this header from our ajax implementation
-          ApplicationRequest.increment!(:page_view_anon_browser)
-          ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
-
-          if data[:topic_id].present?
-            TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
-          end
-        end
       end
     end
 
-    # Message-bus requests may include this 'deferred track' header which we use to detect
-    # 'real browser' views.
-    if data[:deferred_track_view] && !data[:is_crawler]
+    if data[:browser_page_view] && !data[:is_crawler]
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+
+        trigger_browser_pageview_event(data)
 
         if data[:topic_id].present? && data[:current_user_id].present?
           TopicsController.defer_topic_view(
@@ -141,6 +122,8 @@ class Middleware::RequestTracker
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+
+        trigger_browser_pageview_event(data)
 
         if data[:topic_id].present?
           TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
@@ -180,22 +163,9 @@ class Middleware::RequestTracker
     # NOTE: Locally with MessageBus requests, the remote IP ends up as ::1 because
     # of the X-Forwarded-For header set...somewhere, whereas all other requests
     # end up as 127.0.0.1.
-    request_remote_ip = env["action_dispatch.remote_ip"].to_s
+    request_remote_ip = env["action_dispatch.remote_ip"].to_s.slice(0, MAX_IP_ADDRESS_LENGTH)
 
     view_tracking_data = extract_view_tracking_data(env, status, headers)
-
-    # Discourse-Deferred-Track-View-Topic-ID is set in the same place as
-    # Discourse-Deferred-Track-View, piggybacked on MessageBus on initial
-    # page load.
-    #
-    # Discourse-Track-View-Topic-ID is set when navigating to a topic on
-    # Ember route change in ajax.js
-    topic_id =
-      if view_tracking_data[:deferred_track_view]
-        env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_TOPIC_ID"]
-      elsif view_tracking_data[:explicit_track_view] || view_tracking_data[:implicit_track_view]
-        env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
-      end
 
     auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request)
     auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
@@ -207,13 +177,8 @@ class Middleware::RequestTracker
     is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
-    # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
-    # current user based on env variables.
-    #
-    # We only care about this for topic views, other pageviews it's enough to know if the user is
-    # logged in or not, and we have separate pageview tracking for API views.
     current_user_id =
-      if topic_id.present?
+      if view_tracking_data[:deferred_track_view] || view_tracking_data[:explicit_track_view]
         begin
           (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
         rescue Discourse::InvalidAccess => err
@@ -231,7 +196,6 @@ class Middleware::RequestTracker
       is_crawler: helper.is_crawler?,
       has_auth_cookie: has_auth_cookie,
       current_user_id: current_user_id,
-      topic_id: topic_id,
       is_api: is_api,
       is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
@@ -575,7 +539,7 @@ class Middleware::RequestTracker
     # versions of a page.
     #
     # See `scripts/pageview.js` and `instance-initializers/page-tracking.js`
-    env_deferred_track_view = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"]
+    env_deferred_track_view = env["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"]
     deferred_track_view = %w[1 true].include?(env_deferred_track_view)
 
     # This only indicates that we are tracking a page view of some kind, not
@@ -593,12 +557,44 @@ class Middleware::RequestTracker
     track_view = !!(explicit_track_view || implicit_track_view)
     browser_page_view = !!(explicit_track_view || deferred_track_view)
 
+    topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]&.to_i
+    tracking_url = env["HTTP_DISCOURSE_TRACK_VIEW_URL"]&.slice(0, MAX_URL_LENGTH)
+    tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]&.slice(0, MAX_URL_LENGTH)
+    tracking_session_id =
+      env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]&.slice(0, MAX_SESSION_ID_LENGTH)
+    user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
+
     {
       track_view: track_view,
       explicit_track_view: explicit_track_view,
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
+      topic_id: topic_id,
+      tracking_url: tracking_url,
+      tracking_referrer: tracking_referrer,
+      tracking_session_id: tracking_session_id,
+      user_agent: user_agent,
     }
   end
+
+  def self.trigger_browser_pageview_event(data)
+    if SiteSetting.trigger_browser_pageview_events
+      DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
+    end
+  end
+  private_class_method :trigger_browser_pageview_event
+
+  def self.build_browser_pageview_event_payload(data)
+    {
+      user_id: data[:current_user_id],
+      url: data[:tracking_url],
+      ip_address: data[:request_remote_ip],
+      user_agent: data[:user_agent],
+      referrer: data[:tracking_referrer],
+      session_id: data[:tracking_session_id],
+      topic_id: data[:topic_id],
+    }
+  end
+  private_class_method :build_browser_pageview_event_payload
 end

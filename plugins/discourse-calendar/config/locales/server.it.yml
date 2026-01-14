@@ -42,7 +42,6 @@ it:
     all_day_event_start_time: "Gli eventi che non hanno un orario iniziale indicato inizieranno in questo orario. Il formato è HH:mm. Per le 6:00, inserire 06:00"
     all_day_event_end_time: "Gli eventi che non hanno un orario finale indicato termineranno a questo orario. Il formato è HH:mm. Per le 18:00, inserire 18:00"
     all_day_event_time_error: "Orario non valido. Il formato deve essere HH:mm (Ad es.: 08:00)."
-    calendar_categories: "Visualizza un calendario all'inizio di una categoria. Le impostazioni obbligatorie sono categoryId e postId. Ad es.: categoryId=6;postId=453\n Altre impostazioni valide: tzPicker, weekends e defaultView."
     calendar_categories_outlet: "Consente di modificare la posizione (outlet) in cui il calendario della categoria.deve essere visualizzato."
     working_days: "Imposta giorni lavorativi. Puoi visualizzare la disponibilità di un gruppo utilizzando il tag `timezones` in un messaggio, ad esempio: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Orario iniziale della giornata lavorativa."

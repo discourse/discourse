@@ -915,9 +915,7 @@ sr:
           notification: Obaveštenje
         email:
           title: "E-mail"
-          status: "Sinhronizovano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           enable_smtp: "Omogući SMTP"
-          enable_imap: "Omogući IMAP"
           test_settings: "Postavke testiranja"
           save_settings: "Sačuvaj podešavanja"
           last_updated: "Posljednje ažuriranje:"
@@ -926,14 +924,7 @@ sr:
           smtp_settings_valid: "SMTP podešavanja su ispravna."
           smtp_title: "SMTP"
           smtp_instructions: "Kada omogućite SMTP za grupu, sve odlazne e-pošte poslate iz ulazne pošte grupe poslat će se putem SMTP parametara navedenih ovde umesto servera e-pošte konfigurisanog za druge poruke e-pošte koje šalje vaš forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Dodatna Podešavanja"
-          imap_instructions: 'Kada uključite IMAP za grupu, emailovi su sync-ovani između grupinog prijemnog foldera i podešenog IMAP servera odlaznog foldera. SMTP mora biti uključen sa validnim i testiranim kredencijalima pre nego što se IMAP može uključiti. Email korisničko ime i šifra koji se koriste za SMTP će se koristiti i za IMAP. Za više informacija pogledajte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">objavu na Discourse Meta</a>.'
-          imap_alpha_warning: "Upozorenje: Ovo je alfa funkcionalnost. Samo Gmail je oficijalno podržan. Koristite na svoju odgovornost!"
-          imap_settings_valid: "IMAP podešavanja su validna."
-          smtp_disable_confirm: "Ukoliko isključite SMTP, sva SMTP i IMAP podešavanja će biti resetovana i povezana funkcionalnost će biti ugašena. Želite li da nastavite?"
-          imap_disable_confirm: "Ukoliko ugasite IMAP, sva IMAP podešavanja će biti resetovana i povezana funkcionalnost će biti ugašena. Želite li da nastavite?"
-          imap_mailbox_not_selected: "Morate odabrati Mailbox za ovu IMAP konfiguraciju inače ni jedna odlazna pošta se neće sinhronizovati."
+          additional_settings: "Dodatna Podešavanja"
           prefill:
             title: "Popunite sa podešavanjima za:"
             gmail: "Gmail"
@@ -948,9 +939,6 @@ sr:
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
             smtp_ssl_mode: "SSL Mod"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Koristi SSL za IMAP"
             username: "Korisničko ime"
             password: "Šifra"
           settings:
@@ -959,10 +947,6 @@ sr:
             allow_unknown_sender_topic_replies_hint: "Omogući nepoznatim pošiljaocima odgovore na teme u grupi. Ukoliko ovo nije uključeno, odgovori sa email adresa koje nisu već pozvane u temu, napraviće novu temu."
             from_alias: "From Alias"
             from_alias_hint: "Alias koji da se koristi za from adresu kada se šalju grupni SMTP emailovi. Ovo može bit nepodržano od svih email provajdera, molimo konsultujte dokumentaciju vašeg email provajder."
-          mailboxes:
-            synchronized: "Sinhronizovani Mailbox"
-            none_found: "Ni jedan mailbox nije pronađen u ovom email nalogu."
-            disabled: "Isključeno"
         membership:
           title: Članstvo
         categories:
@@ -1134,6 +1118,9 @@ sr:
       new_private_message: "Nova privatna poruka"
       private_message: "Privatna poruka"
       private_messages: "Poruke"
+      upcoming_changes:
+        for_user:
+          enabled: "Omgućeno"
       user_notifications:
         filters:
           all: "Sve"
@@ -1894,16 +1881,6 @@ sr:
         bookmarks: "Nemate markiranih tema još."
         category: "Nema tema u %{category}."
         top: "Nema glavnih tema."
-      bottom:
-        latest: "Nema više najnovijih tema."
-        posted: "Nema više objavljenih tema."
-        read: "Nema više pročitanih tema."
-        new: "Nema više novih tema."
-        unread: "Nema više nepročitanih tema."
-        category: "Nema više %{category} tema."
-        tag: "Nema više %{tag} tema."
-        top: "Nema više glavnih tema."
-        bookmarks: "Nema više markiranih tema."
     topic_bulk_actions:
       dismiss:
         name: "Odbaci"
@@ -2384,6 +2361,7 @@ sr:
         this_month: "Mesec"
         this_week: "Nedelja"
         today: "Danas"
+        custom: "Posebna"
     permission_types:
       full: "Otvoriti / Odgovori / Pogledaj"
       create_post: "Odgovori / Pogledaj"

@@ -692,11 +692,10 @@ pt:
       every_month: "cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
-    title: "Autorizar o acesso da aplicação"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "ler"
     read_write: "ler/escrever"
-    description: '"%{application_name}" está a requerer o seguinte acesso à sua conta:'
     otp_confirmation:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Fazendo login como %{username}
@@ -1431,6 +1430,7 @@ pt:
         Para orientações adicionais, por favor consulte as nossas [regras da comunidade](%{base_url}/guidelines).
     welcome_user:
       title: "Bem-vindo Utilizador"
+      preview: "Bem-vindo a %{site_name}!"
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |
         Obrigado por se juntar a %{site_name}, e bem-vindo!
@@ -1442,6 +1442,7 @@ pt:
         Desfrute da sua estadia!
     welcome_invite:
       title: "Boas-vindas de Convite"
+      preview: "Bem-vindo a %{site_name}!"
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |2
 
@@ -1555,6 +1556,7 @@ pt:
     spam_post_blocked:
       subject_template: "Novas mensagens do novo utilizador %{username} foram bloqueadas devido a hiperligações repetidas"
     unsilenced:
+      preview: "Conta deixou de estar suspensa."
       subject_template: "Conta deixou de estar suspensa"
       text_body_template: |
         Olá,
@@ -2031,6 +2033,8 @@ pt:
   safe_mode:
     title: "Entrar em modo de segurança"
     enter: "Entrar em Modo de Segurança"
+  dev_mode:
+    enter: "Entrar"
   wizard:
     title: "Configuração do Discourse"
     step:

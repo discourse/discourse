@@ -81,6 +81,7 @@ tr_TR:
         join_channel: "Kanala katıl"
         leave_channel: "Kanaldan ayrıl"
         leave_groupchat_info: "Bu grup sohbetinden ayrıldığınızda, artık bu sohbete erişiminiz olmayacak ve bununla ilgili bildirimler almayacaksınız. Yeniden katılmak için grup sohbetinin bir üyesi tarafından yeniden davet edilmeniz gerekecek."
+        notification_settings_context: "Bildirimler"
         join: "Katıl"
         leave: "Ayrıl"
         save_label:

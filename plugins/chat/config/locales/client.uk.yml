@@ -65,6 +65,7 @@ uk:
       starred_channels_empty: "Ви ще не позначили жодного каналу зірочкою. Позначте канали зірочкою, щоб побачити їх тут для швидкого доступу."
       browse_all_channels: "Переглянути всі канали"
       see_in: "Дивіться в"
+      open_channel_menu: "Відкрити меню каналу"
       move_to_channel:
         title: "Перенести повідомлення в канал"
         instructions:
@@ -92,6 +93,8 @@ uk:
         join_channel: "Приєднатися до каналу"
         leave_channel: "Вийти з каналу"
         leave_groupchat_info: "Залишивши цей груповий чат, ви більше не матимете доступу до нього та не отримуватимете сповіщень, пов'язаних з ним. Щоб знову приєднатися, вас потрібно буде повторно запросити учасником групового чату."
+        notification_settings: "Налаштування сповіщень"
+        notification_settings_context: "Сповіщення"
         join: "Приєднатися"
         leave: "Покинути"
         save_label:
@@ -152,6 +155,7 @@ uk:
       separate_sidebar_mode:
         title: "Показувати окремі режими бічної панелі для форуму і чату"
       send_shortcut:
+        title: "Надіслати ярлик"
         enter:
           label: "Надіслати за допомогою Enter"
         meta_enter:
@@ -273,6 +277,7 @@ uk:
       chat_notifications_title: "Сповіщення чату"
       only_chat_push_notifications:
         title: "Надсилати лише push-сповіщення в чаті"
+      personalization_title: "Персоналізація"
       ignore_channel_wide_mention:
         title: "Ігнорувати на каналі масові згадки"
       show_thread_title_prompts:
@@ -553,6 +558,7 @@ uk:
         follow: "Приєднатися"
         followed: "Приєднався(лась)"
         mute: "Вимкнути канал"
+        unmute: "Увімкнути канал"
         threading_enabled: "Включено"
         threading_disabled: "Вимкнено"
         muted_on: "Увімк"

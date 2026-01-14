@@ -36,6 +36,11 @@
   .form-kit__container-description {
     margin: 0;
     font-size: var(--font-down-1-rem);
+
+    pre,
+    code {
+      font-size: var(--font-down-2-rem);
+    }
   }
 
   .form-kit__container-help-text {

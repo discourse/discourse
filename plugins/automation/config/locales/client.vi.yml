@@ -11,7 +11,7 @@ vi:
       edit: Sửa
       fields:
         user:
-          label: Người dùng
+          label: Thành viên
         pm:
           title:
             label: Tiêu đề
@@ -30,7 +30,7 @@ vi:
         post_flag_created:
           fields:
             categories:
-              label: Danh mục
+              label: Chuyên mục
             tags:
               label: Thẻ
         user_badge_granted:
@@ -67,7 +67,7 @@ vi:
             restricted_tags:
               label: Thẻ
             restricted_categories:
-              label: Danh mục
+              label: Chuyên mục
           created: Tạo bởi
           with_images: Hình ảnh
           with_links: Liên kết
@@ -86,7 +86,7 @@ vi:
         after_post_cook:
           fields:
             restricted_category:
-              label: Danh mục
+              label: Chuyên mục
             restricted_tags:
               label: Thẻ
       scriptables:
@@ -116,7 +116,7 @@ vi:
         suspend_user_by_email:
           fields:
             actor:
-              label: Người dùng
+              label: Thành viên
         pin_topic:
           fields:
             pinnable_topic:
@@ -126,13 +126,13 @@ vi:
             topic_id:
               label: ID Chủ đề
             user:
-              label: Người dùng
+              label: Thành viên
         close_topic:
           fields:
             topic:
               label: ID Chủ đề
             user:
-              label: Người dùng
+              label: Thành viên
       models:
         trigger:
           name:

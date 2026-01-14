@@ -150,6 +150,8 @@ uk:
         invalid_type: "%{type} не є допустимим типом"
         humanize_not_valid_string_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути рядком."
         not_valid_string_value: "має бути рядком"
+        humanize_not_valid_datetime_value: "Властивість у вказівнику JSON '%{property_json_pointer}' має бути дійсною датою та часом."
+        not_valid_datetime_value: "має бути дійсна дата й час"
         humanize_not_valid_integer_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути цілим числом."
         not_valid_integer_value: "має бути цілим числом"
         humanize_not_valid_float_value: "Властивість покажчика JSON '%{property_json_pointer}' має бути числом з плаваючою комою."
@@ -893,6 +895,11 @@ uk:
       email_already_used_in_group: "'%{email}' вже використовується групою '%{group_name}'."
       email_already_used_in_category: "'%{email}' вже використовується розділом '%{category_name}'."
       description_incomplete: "Опис розділу повинен мати принаймні один абзац."
+      description_too_long:
+        one: "Опис занадто довгий (максимум %{count} символ)."
+        few: "Опис занадто довгий (максимум %{count} символи)."
+        many: "Опис занадто довгий (максимум %{count} символів)."
+        other: "Опис занадто довгий (максимум %{count} символів)."
       permission_conflict: "Будь-яка група, якій дозволено доступ до підрозділу, також повинна мати доступ до батьківського розділу. Наступні групи мають доступ до одного з підрозділів, але не мають доступу до батьківського розділу: %{group_names}."
       disallowed_topic_tags: "У цій темі є теґи, не дозволені у цьому розділі: '%{tags}'"
       disallowed_tags_generic: "Ця тема має заборонені теґи."
@@ -1191,12 +1198,9 @@ uk:
     no_log_search_queries: "Журнали пошукових запитів наразі вимкнено (адміністратор може ввімкнути їх у налаштуваннях сайту)."
   email_settings:
     pop3_authentication_error: "Виникла проблема з обліковими даними POP3, перевірте імʼя користувача та пароль і повторіть спробу."
-    imap_authentication_error: "Виникла проблема з обліковими даними IMAP, перевірте імʼя користувача та пароль і повторіть спробу."
-    imap_no_response_error: "Сталася помилка під час з’єднання з сервером IMAP. %{message}"
     smtp_authentication_error: "Виникла проблема з наданими обліковими даними SMTP, перевірте ім'я користувача та пароль та повторіть спробу. %{message}"
     smtp_server_busy_error: "Сервер SMTP зараз зайнятий, повторіть спробу пізніше."
     smtp_unhandled_error: "Під час зв’язку із сервером SMTP сталася невідома помилка. %{message}"
-    imap_unhandled_error: "Під час з’єднання з сервером IMAP сталася невідома помилка. %{message}"
     connection_error: "Виникла проблема зʼєднання з сервером, перевірте імʼя сервера і порт та спробуйте знову."
     timeout_error: "Час очікування зʼєднання з сервером вичерпано, перевірте імʼя сервера і порт та спробуйте знов."
     unhandled_error: "Невідома помилка під час перевірки параметрів електронної пошти. %{message}"
@@ -1285,11 +1289,14 @@ uk:
       every_month: "щомісяця"
       every_six_months: "кожні півроку"
   user_api_key:
-    title: "Авторизувати доступ до програми"
+    title: 'Авторизувати "%{application_name}"'
     authorize: "Авторизувати"
+    deny: "Скасувати"
     read: "читання"
     read_write: "читання/запис"
-    description: '"%{application_name}" просить наступний доступ до вашого облікового запису:'
+    logged_in_as: "Увійшов як"
+    permissions_header: 'Це дозволить "%{application_name}" до:'
+    redirect_warning: "Авторизація перенаправить вас на"
     instructions: 'Ми щойно створили новий ключ API користувача для використання з «%{application_name}», додайте наступний ключ у свою програму:'
     otp_description: 'Чи бажаєте ви дозволити "%{application_name}" доступ до цього сайту?'
     otp_confirmation:
@@ -2329,14 +2336,7 @@ uk:
     email_in_allowed_groups: "Групи, яким дозволено публікувати нові теми електронною поштою. Адміністратори та модератори завжди можуть публікувати нові теми електронною поштою."
     email_in_authserv_id: "Ідентифікатор служби, яка перевіряє автентифікацію вхідних електронних листів. Див. <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>, щоб дізнатися, як налаштувати."
     email_in_spam_header: "Вибирає конкретний заголовок електронної пошти для визначення спаму. Цей параметр може бути X-Spam-Flag, X-Spam-Status або X-SES-Spam-Verdict, і електронний лист позначається як спам на основі значення заголовка. Наприклад, якщо вибрано значення X-Spam-Flag, електронний лист зі значенням заголовка, встановленим на ТАК, буде класифіковано як спам."
-    enable_imap: "Увімкнути IMAP для синхронізації групових повідомлень."
-    enable_imap_write: "Увімкнути двосторонню синхронізацію IMAP. Якщо вимкнено, усі операції запису в облікових записах IMAP буде вимкнено."
-    enable_imap_idle: "Використовувати механізм IMAP IDLE для очікування нових листів."
     enable_smtp: "Увімкнути SMTP для надсилання групових сповіщень."
-    imap_polling_period_mins: "Період у хвилинах між перевіркою записів IMAP на наявність електронних листів."
-    imap_polling_old_emails: "Максимальна кількість старих електронних листів (оброблених), які оновлюються щоразу, коли опитується скринька IMAP (0 для всіх)."
-    imap_polling_new_emails: "Максимальна кількість нових електронних листів (необроблених), які оновлюються щоразу, коли опитується скринька IMAP."
-    imap_batch_import_email: "Мінімальна кількість нових електронних листів, які запускають режим імпорту (вимкнення сповіщень для імпортованих дописів)."
     email_prefix: "[label], який використовується в темі електронних листів. Стандартно встановлено значення 'title', якщо воно явно не встановлено."
     email_site_title: "Назва сайту використовується як відправник електронних листів з сайту. Типове значення «title», якщо не встановлено. Якщо заголовок містить символи, які заборонено в рядках відправника електронної пошти, то буде використано цей параметр."
     find_related_post_with_key: "Використовувати лише «ключ відповіді», щоб знайти відповідь на допис. УВАГА: відключення цього параметра дозволяє видавати себе за іншого користувача на основі адреси електронної пошти."
@@ -2344,6 +2344,7 @@ uk:
     relative_date_duration: "Кількість днів після публікації, коли дати дописів будуть показані як відносні (7 днів), а не абсолютні (20 лютого)."
     delete_user_max_post_age: "Не дозволяти видаляти користувачів, чий перший допис старший (x) днів."
     delete_all_posts_max: "Максимальна кількість дописів, які можна видалити одночасно за допомогою кнопки «Видалити всі дописи». Якщо користувач має більше ніж зазначену кількість дописів, усі дописи не можна видалити одночасно, також не можна видалити користувача."
+    delete_all_posts_background_threshold: "Максимальна кількість публікацій, яку можна видалити одночасно за допомогою кнопки «Видалити всі публікації», перш ніж видалення буде оброблено у фоновому режимі."
     delete_user_self_max_post_count: "Максимальна кількість дописів, які може мати користувач, дозволяючи самостійне видалення облікового запису. Установіть значення -1, щоб вимкнути самостійне видалення облікового запису."
     username_change_period: "Максимальна кількість днів після реєстрації, протягом яких облікові записи можуть змінювати ім’я користувача (0, щоб заборонити зміну імені користувача)."
     email_editable: "Дозволити користувачам змінювати адресу електронної пошти після реєстрації."
@@ -2625,8 +2626,11 @@ uk:
     content_localization_allow_author_localization: "Дозволити авторам оновлювати локалізації власних тем і публікацій через меню публікацій."
     enable_upcoming_changes: "Увімкнути майбутні зміни"
     fake_upcoming_change: "Це фальшива майбутня зміна для тестових цілей. Немає потреби перекладати цей рядок."
+    floating_dismiss_topics_on_mobile: "Відображає плаваючу кнопку «Закрити...» на мобільному пристрої для списку тем для легшого доступу та звільнення місця у верхній частині списку тем."
+    experimental_rename_faq_to_guidelines: "Ця зміна перейменовує сторінку поширених запитань на «Правила». Сторінка поширених запитань все ще буде доступна за адресою /faq. Налаштування «faq url» працює як і раніше."
     errors:
       invalid_css_color: "Недійсний колір. Введіть назву кольору або шістнадцяткове значення."
+      invalid_datetime: "Неправильний формат дати і часу. Будь ласка, переконайтеся, що ви ввели правильну дату та час."
       invalid_email: "Невірна адреса електронної пошти."
       invalid_username: "Немає користувача з таким псевдонімом."
       valid_username: "Існує користувач з таким ім'ям."
@@ -3269,6 +3273,7 @@ uk:
     contents_hidden: "Будь ласка, відвідайте допис, щоб побачити його зміст."
     post_hidden:
       title: "Допис приховано"
+      preview: "Публікацію приховано через скарги учасників спільноти."
       subject_template: "Допис приховано через скарги спільноти"
       text_body_template: |
         Привіт,
@@ -3330,6 +3335,7 @@ uk:
         %{site_name} Модератори
     post_hidden_again:
       title: "Допис знову приховано"
+      preview: "Публікацію знову приховано учасниками спільноти."
       subject_template: "Допис приховано через скарги спільноти, також сповіщено команду обслуговування"
       text_body_template: |
         Привіт,
@@ -3417,6 +3423,7 @@ uk:
         Коли ви будете брати участь тут, ми познайомимося з вами, а тимчасові обмеження щодо нових користувачів буде знято. З часом ви отримаєте [рівень довіри](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), який додаватиме спеціальні можливості, які допоможуть нам спільно керувати спільнотою.
     welcome_user:
       title: "Ласкаво просимо,  користувач"
+      preview: "Ласкаво просимо до сайту %{site_name}!"
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
       text_body_template: "Дякуємо за приєднання до %{site_name} і ласкаво просимо!\n\n%{new_user_tips}\n\nМи завжди сподіваємось на [цивілізовану поведінку](%{base_url}/guidelines). \n\nПриємного перебування!\n"
     welcome_tl1_user:
@@ -3437,6 +3444,7 @@ uk:
         З великою владою приходить велика відповідальність. Якщо ви новачок, зверніться до [Посібника з модерування](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Ласкаво просимо"
+      preview: "Ласкаво просимо до сайту %{site_name}!"
       subject_template: "Ласкаво просимо до сайту %{site_name}!"
       text_body_template: "Дякуємо, що прийняли наше запрошення на %{site_name} -- ласкаво просимо! \n\n- Ми створили для вас цей новий акаунт **%{username}**. Змініть своє ім’я або пароль, відвідавши [your user profile][prefs].\n\n- Коли ви входите в систему, будь ласка **використовуйте ту саму адресу електронної пошти від свого початкового запрошення** -- інакше ми не зможемо сказати, що це ви! \n\n%{new_user_tips} Ми віримо в [civilized community behavior](%{base_url}/guidelines) у всі часи. \n\nНасолоджуйтеся своїм перебуванням! \n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
@@ -3791,6 +3799,7 @@ uk:
         Щоб отримати додаткові вказівки, зверніться до наших [настанов спільноті](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Забагато позначок спаму"
+      preview: "Дописи тимчасово приховані через прапори спаму."
       subject_template: "Новий обліковий запис призупинено"
       text_body_template: |
         Привіт,
@@ -3813,6 +3822,7 @@ uk:
         Щоб отримати додаткові вказівки, зверніться до наших [настанов спільноті](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Заблоковано командою обслуговування"
+      preview: "Обліковий запис тимчасово заблоковано."
       subject_template: "Обліковий запис тимчасово призупинено"
       text_body_template: |
         Привіт,
@@ -3857,6 +3867,7 @@ uk:
         Це можна змінити за допомогою параметрів сайту `newuser_spam_host_threshold` і `allowed_spam_host_domains`. Подумайте про додавання %{domains} до білого списку, якщо їх потрібно виключити.
     unsilenced:
       title: "Розблоковані"
+      preview: "Обліковий запис більше не призупинено."
       subject_template: "Обліковий запис більше не призупинено"
       text_body_template: |
         Привіт,
@@ -3899,6 +3910,11 @@ uk:
         Привіт!
 
         дописи від нових користувачів пройшли модерацію та наразі очікують на розгляд. [Схвалити або відхилити їх тут](%{base_url}/review?type=ReviewableQueuedPost).
+    user_posts_deleted:
+      title: "Видалено повідомлення користувача"
+      subject_template: "Всі дописи %{user} були видалені"
+      text_body_template: |
+        %{deleted_posts_count} дописи з @%{user} були видалені @%{staff_user}.
   unsubscribe_link: |
     Щоб скасувати підписку на ці електронні листи, [натисніть тут](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -3907,8 +3923,6 @@ uk:
     Ви отримуєте це, тому що ви ввімкнули режим списку розсилки. Щоб скасувати підписку на ці електронні листи, [натисніть тут](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} на %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Попередні відповіді"
     reached_limit:
@@ -4003,6 +4017,7 @@ uk:
         %{respond_instructions}
     user_replied:
       title: "Користувач відповів"
+      preview: "Хтось відповів на ваш пост."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4025,6 +4040,7 @@ uk:
         %{respond_instructions}
     user_quoted:
       title: "Користувач цитує"
+      preview: "Хтось процитував вас у дописі."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4036,6 +4052,7 @@ uk:
         %{respond_instructions}
     user_linked:
       title: "Користувач пов’язаний"
+      preview: "Посилання на публікацію в іншій темі."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4047,6 +4064,7 @@ uk:
         %{respond_instructions}
     user_mentioned:
       title: "Згаданий користувач"
+      preview: "Хтось згадував про вас у дописі."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4102,6 +4120,7 @@ uk:
         %{respond_instructions}
     user_posted:
       title: "Користувач створив допис"
+      preview: "Хтось відповів на тему, яку ви переглядаєте."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4135,6 +4154,7 @@ uk:
         %{respond_instructions}
     user_posted_pm:
       title: " Користувач написав PM"
+      preview: "Хтось надіслав вам приватне повідомлення."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4229,6 +4249,7 @@ uk:
       preheader: "Короткий підсумок з %{since}"
     forgot_password:
       title: "Забув(ла) пароль"
+      preview: "Скинути пароль."
       subject_template: "[%{email_prefix}] Зміна пароля"
       text_body_template: |
         Хтось попросив змінити ваш пароль на [%{site_name}](%{base_url}).
@@ -4239,6 +4260,7 @@ uk:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Увійдіть за посиланням"
+      preview: "Увійдіть за посиланням."
       subject_template: "[%{email_prefix}] Увійти за посиланням"
       text_body_template: |
         Ось ваше посилання для входу на [%{site_name}](%{base_url}).
@@ -4249,6 +4271,7 @@ uk:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Встановити пароль"
+      preview: "Встановити пароль облікового запису."
       subject_template: "[%{email_prefix}] Встановити пароль"
       text_body_template: |
         Хтось попросив додати пароль до вашого облікового запису на [%{site_name}](%{base_url}). Крім того, ви можете увійти за допомогою будь-якої підтримуваної онлайн-служби (Google, Facebook тощо), пов’язаної з цією підтвердженою електронною адресою.
@@ -4259,6 +4282,7 @@ uk:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Логін Адміністратора"
+      preview: "Запитується вхід адміністратора."
       subject_template: "[%{email_prefix}] Вхід"
       text_body_template: |
         Хтось попросив увійти у ваш обліковий запис на [%{site_name}](%{base_url}).
@@ -4269,6 +4293,7 @@ uk:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Обліковий запис створено"
+      preview: "Для вас створено новий обліковий запис."
       subject_template: "[%{email_prefix}] Ваш новий обліковий запис"
       text_body_template: |
         Для вас було створено новий обліковий запис %{site_name}
@@ -4317,6 +4342,7 @@ uk:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Повідомити стару електронну пошту"
+      preview: "Адресу електронної пошти оновлено."
       subject_template: "[%{email_prefix}] Вашу адресу електронної пошти було змінено"
       text_body_template: |
         Це автоматичне повідомлення, щоб повідомити вам, що ваша адреса електронної пошти для
@@ -4339,6 +4365,7 @@ uk:
         %{new_email}
     signup_after_approval:
       title: "Реєстрація після затвердження"
+      preview: "Новий обліковий запис схвалено."
       subject_template: "Ваш запит було схвалено на сайті %{site_name}!"
       text_body_template: |
         Ласкаво просимо до %{site_name}!
@@ -4364,6 +4391,7 @@ uk:
         %{reject_reason}
     signup:
       title: "Реєстрація"
+      preview: "Підтвердіть свій обліковий запис."
       subject_template: "[%{email_prefix}] Підтвердьте свій новий обліковий запис"
       text_body_template: |
         Ласкаво просимо до %{site_name}!
@@ -4386,6 +4414,7 @@ uk:
         Якщо наведене вище посилання не можна натиснути, спробуйте скопіювати та вставити його в адресний рядок вебоглядача.
     suspicious_login:
       title: "Сповіщення про новий логін"
+      preview: "Перевірте свій пристрій."
       subject_template: "[%{site_name}] Новий Логін від %{location}"
       text_body_template: |
         Привіт,
@@ -5193,6 +5222,9 @@ uk:
   rss_by_tag: "Теми з теґом %{tag}"
   finish_installation:
     congratulations: "Вітаємо, ви встановили Discourse!"
+    login_with_discourse_id: "Увійти за допомогою Discourse ID"
+    discourse_id_help: "Будь ласка, увійдіть, використовуючи Discourse ID, натиснувши кнопку нижче. <br/><br/>Переконайтеся, що ви використовуєте обліковий запис Discourse ID з основною електронною адресою, яка відповідає змінній середовища `DISCOURSE_DEVELOPER_EMAILS`."
+    discourse_id_error_help: "Ви вирішили наразі пропустити налаштування електронної пошти. На жаль, через повідомлення про помилку вище, налаштування не може продовжитися. Будь ласка, повідомте про цю проблему на <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Зареєструватися"
       title: "Зареєструйте обліковий запис адміністратора"
@@ -5204,6 +5236,10 @@ uk:
     resend_email:
       title: "Надіслати ще раз листа для активації"
       message: "<p> Ми повторно надіслали електронний лист для активації на <b>%{email}</b>"
+    discourse_id:
+      help: "Зараз ми налаштовуємо для вас Discourse ID."
+      no_allowed_emails: "У DISCOURSE_DEVELOPER_EMAILS не налаштовано дозволені електронні адреси. Неможливо продовжити налаштування сайту."
+      global_notice: "Жоден адміністратор ще не ввійшов у систему. Будь ласка, увійдіть, використовуючи обліковий запис Discourse ID з електронною адресою, яка відповідає змінній середовища `DISCOURSE_DEVELOPER_EMAILS`, щоб завершити встановлення."
   safe_mode:
     title: "Увійти в безпечний режим"
     description: "Безпечний режим дозволяє протестувати свій сайт без завантаження тем або налаштувань плагінів на стороні клієнта. Налаштування плагінів на стороні сервера залишаються ввімкненими."
@@ -5214,6 +5250,10 @@ uk:
     deprecation_error_label: Зробити так, щоб застарілі версії Javascript викликали помилку
     enter: "Увійти в безпечний режим"
     must_select: "Ви повинні вибрати принаймні одну опцію для входу в безпечний режим."
+  dev_mode:
+    title: "Режим розробника"
+    enable_rack_mini_profiler: "Дозволити Rack Mini Profiler зберігати зміни сеансу протягом 1 години"
+    enter: "Enter"
   wizard:
     title: "Налаштування Discourse"
     step:
@@ -5326,8 +5366,6 @@ uk:
     api_post_delete: "Видалено через API"
     reminder_deleted: "Замінено новим нагадуванням"
     user_associated_posts_deleted: "Користувача було видалено"
-    imap_email_deleted: "Email був видалений на сервері IMAP"
-    imap_email_marked_as_spam: "Електронний лист переміщено до папки «Спам» на сервері IMAP"
     auto_deleted_hidden_posts: "Автоматично знищені приховані повідомлення"
     seed_data_topic_updated: "Тему початкових даних оновлено"
     seed_data_topic_deleted: "Тему початкових даних видалено"

@@ -736,7 +736,6 @@ lt:
     pm_body: "Tema, kurioje yra atsarginių juodraščių"
   email_settings:
     pop3_authentication_error: "Iškilo problema dėl pateiktų POP3 prisijungimo duomenų, patikrinkite naudotojo vardą ir slaptažodį ir bandykite dar kartą."
-    imap_no_response_error: "Ryšio su IMAP serveriu metu įvyko klaida. %{message}"
     smtp_server_busy_error: "SMTP serveris šiuo metu užimtas, bandykite dar kartą vėliau."
     smtp_unhandled_error: "Bendraujant su SMTP serveriu įvyko neapdorota klaida. %{message}"
     connection_error: "Prisijungiant prie serverio kilo problema, patikrinkite serverio pavadinimą ir prievadą ir bandykite dar kartą."
@@ -808,11 +807,10 @@ lt:
       every_month: "kiekvieną mėnesį"
       every_six_months: "kas šešis mėnesius"
   user_api_key:
-    title: "Suteikite prieigą prie programos"
     authorize: "Leisti"
+    deny: "Atšaukti"
     read: "skaityti"
     read_write: "skaityti/rašyti"
-    description: '„%{application_name}“ prašo šios prieigos prie jūsų paskyros:'
     instructions: 'Ką tik sukūrėme naują vartotojo API raktą, kurį galėsite naudoti su „%{application_name}“, įklijuokite šį raktą į savo programą:'
     otp_description: 'Ar norite leisti „%{application_name}“ pasiekti šią svetainę?'
     otp_confirmation:
@@ -1614,6 +1612,7 @@ lt:
         Kai dalyvausite čia, mes su jumis susipažinsime ir bus panaikinti laikini naujų naudotojų apribojimai. Laikui bėgant įgysite [patikimumo lygius](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), kurie apima specialius gebėjimus, padėsiančius mums kartu valdyti bendruomenę.
     welcome_user:
       title: "Sveikas narį"
+      preview: "Sveiki atvykę į %{site_name}!"
       subject_template: "Sveiki atvykę į %{site_name}!"
       text_body_template: |
         Ačiū, kad prisijungėte prie %{site_name}ir sveiki atvykę!
@@ -1627,6 +1626,7 @@ lt:
       title: "Sveikas TL1 Narį"
       subject_template: "Dėkojeme jog praleidžiate laika su mumis"
     welcome_invite:
+      preview: "Sveiki atvykę į %{site_name}!"
       subject_template: "Sveiki atvykę į %{site_name}!"
       text_body_template: |
         Dėkojame, kad priėmėte kvietimą į %{site_name} – sveiki!
@@ -1765,6 +1765,7 @@ lt:
       subject_template: "Naujas naudotojo %{username} įrašas užblokuotas dėl pakartotinių nuorodų"
     unsilenced:
       title: "Nebenutildytas"
+      preview: "Paskyra nebesulaikyta."
       subject_template: "Paskyra nebesulaikyta"
       text_body_template: |
         Sveiki,
@@ -1787,7 +1788,6 @@ lt:
     Norėdami atsisakyti šių el. laiškų prenumeratos, [spustelėkite čia](%{unsubscribe_url}).
   subject_re: "Dar kartą:"
   subject_pm: "[AŽ]"
-  email_from: "%{user_name} per %{site_name}"
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"
@@ -2015,6 +2015,7 @@ lt:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Prisijungti per nuorodą"
+      preview: "Prisijungti per nuorodą."
       subject_template: "[%{email_prefix}] Prisijunk per nuorodą"
       text_body_template: |
         Čia yra jūsų nuoroda prisijungti adresu [%{site_name}] (%{base_url}).
@@ -2507,6 +2508,8 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  dev_mode:
+    enter: "Įeiti"
   wizard:
     title: "Discourse sąranka"
     step:

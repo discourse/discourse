@@ -1,8 +1,8 @@
 @use "lib/viewport";
 
 :root {
-  --d-sidebar-section-link-prefix-margin-right: 0.75em;
-  --d-sidebar-section-link-prefix-width: 1.75rem;
+  --d-sidebar-section-link-prefix-margin-right: var(--space-2);
+  --d-sidebar-section-link-prefix-width: var(--space-6);
   --d-sidebar-section-link-icon-size: 1em;
   --d-sidebar-section-link-emoji-size: 1em;
 }
@@ -18,13 +18,26 @@
     font-size: var(--font-down-1-rem);
   }
 
+  &.--hovering .sidebar-section-link {
+    background: var(--d-sidebar-highlight-background);
+    color: var(--d-sidebar-highlight-color);
+
+    .prefix-text {
+      background: var(--d-sidebar-highlight-prefix-background);
+    }
+
+    .sidebar-section-link-suffix.icon.unread svg {
+      color: var(--d-sidebar-highlight-suffix-color);
+    }
+  }
+
   .sidebar-section-link {
     display: inline-flex;
     width: 100%;
     align-items: center;
     color: var(--d-sidebar-link-color);
-    transition: background-color 0.25s;
     border-radius: var(--d-border-radius);
+    gap: var(--d-sidebar-section-link-prefix-margin-right);
 
     &:focus-visible,
     &:hover {
@@ -65,10 +78,6 @@
       .sidebar-section-link-suffix.icon.unread svg {
         color: var(--d-sidebar-active-suffix-color);
       }
-
-      .sidebar-section-link-hover:hover .sidebar-section-hover-button {
-        background-color: var(--d-sidebar-active-background);
-      }
     }
 
     &--muted {
@@ -86,11 +95,10 @@
     }
 
     .sidebar-section-link-content-badge {
-      @include ellipsis;
-      padding-left: 0.5em;
-      padding-right: 0.1em; // avoids some overflow cropping
+      padding-inline: var(--space-1);
       color: var(--d-sidebar-link-badge-color);
       font-size: var(--font-down-2);
+      width: auto;
       font-weight: normal;
       flex-shrink: 0;
 
@@ -153,21 +161,6 @@
     background: inherit;
   }
 
-  .sidebar-section-link[data-link-name="personal-messages-sent"],
-  .sidebar-section-link[data-link-name="personal-messages-new"],
-  .sidebar-section-link[data-link-name="personal-messages-archive"],
-  .sidebar-section-link[data-link-name="personal-messages-unread"],
-  .sidebar-section-link[data-link-name="group-messages-new"],
-  .sidebar-section-link[data-link-name="group-messages-unread"],
-  .sidebar-section-link[data-link-name="group-messages-archive"] {
-    .sidebar-section-link-content-text {
-      margin-left: calc(
-        var(--d-sidebar-section-link-prefix-margin-right) +
-          var(--d-sidebar-section-link-prefix-width)
-      );
-    }
-  }
-
   .sidebar-section-link-review {
     .sidebar-section-link-content-badge {
       color: var(--danger);
@@ -180,8 +173,6 @@
     justify-content: center;
     flex-shrink: 0;
     width: var(--d-sidebar-section-link-prefix-width);
-    height: var(--d-sidebar-section-link-prefix-width);
-    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
 
     #sidebar-section-content-chat-dms & {
       @include viewport.from(sm) {
@@ -263,13 +254,11 @@
     margin-left: auto;
 
     .sidebar-section-hover-button {
-      display: none;
+      opacity: 0;
       color: var(--d-sidebar-highlight-color);
       border: none;
-      background: transparent;
-      padding: 0 0 0 0.5em;
       height: 100%;
-      transition: background-color 0.25s;
+      padding-inline: var(--space-1);
 
       &:focus,
       .discourse-no-touch & {
@@ -280,19 +269,12 @@
 
       svg {
         font-size: var(--font-down-1);
-      }
-    }
-
-    &:hover {
-      .sidebar-section-hover-button {
-        background: var(--d-sidebar-highlight-background);
+        margin: 0;
       }
     }
   }
 
-  &:hover {
-    .sidebar-section-hover-button {
-      display: block;
-    }
+  &.--hovering .sidebar-section-hover-button {
+    opacity: 1;
   }
 }

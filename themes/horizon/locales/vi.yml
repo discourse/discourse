@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 vi:
+  theme_metadata:
+    description: "Một giao diện đơn giản, đẹp mắt giúp cải thiện trải nghiệm mặc định cho các trang web Discourse."
