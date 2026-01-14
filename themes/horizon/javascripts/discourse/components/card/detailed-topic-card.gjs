@@ -201,7 +201,7 @@ export default class DetailedTopicCard extends Component {
             {{on "focus" this.onTitleFocus}}
             {{on "blur" this.onTitleBlur}}
             @topic={{@topic}}
-            class="topic-card__title raw-link raw-topic-link"
+            class="hc-topic-card__title raw-link raw-topic-link"
           />
           {{~#if @topic.featured_link~}}
             &nbsp;{{topicFeaturedLink @topic}}
