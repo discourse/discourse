@@ -33,7 +33,7 @@ describe PrettyText do
       expect(cooked).to include("[x] both brackets escaped")
       expect(cooked).to include("[ ] escaped empty checkbox")
       expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o fa-fw"></span> real checkbox',
+        '<span class="chcklst-box checked fa fa-square-check-o"></span> real checkbox',
       )
     end
 
@@ -47,7 +47,7 @@ describe PrettyText do
       expect(cooked.scan("chcklst-box").count).to eq(1)
       expect(cooked).to include("[x] hello")
       expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o fa-fw"></span> world',
+        '<span class="chcklst-box checked fa fa-square-check-o"></span> world',
       )
     end
   end
