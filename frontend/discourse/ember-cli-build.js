@@ -115,6 +115,11 @@ module.exports = function (defaults) {
     },
   });
 
+  app.registry.add("htmlbars-ast-plugin", {
+    name: "strip-whitespace",
+    plugin: require.resolve("./lib/strip-whitespace-ast-transform"),
+  });
+
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(discourseRoot + "/frontend/polyfills.js");
 
