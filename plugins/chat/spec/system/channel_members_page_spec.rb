@@ -155,14 +155,27 @@ RSpec.describe "Channel - Info - Members page", type: :system do
         ),
       )
 
-      ##
-      # TODO: The add member button is being shown because visiting the channel members page directly
-      # does not populate `this.args.channel.messagesManager.messages` so the add member button will always be
-      # shown.
-      # See https://github.com/discourse/discourse/blob/dce4eb718ba56d44284997def5dc0e674924e3d8/plugins/chat/assets/javascripts/discourse/components/chat/routes/channel-info-members.gjs#L150
-      #
-      # chat_page.visit_channel_members(channel_1)
-      # expect(chat_page).to have_no_add_member_button
+      chat_page.visit_channel_members(channel_1)
+      expect(chat_page).to have_no_add_member_button
+    end
+
+    it "hides add member option when group chats are disabled for members" do
+      SiteSetting.chat_max_direct_message_users = 1
+
+      visit("/")
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_no_add_member_button
+    end
+
+    it "shows add member option when group chats are disabled but user is staff" do
+      SiteSetting.chat_max_direct_message_users = 1
+      current_user.update!(admin: true)
+
+      visit("/")
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_add_member_button
     end
   end
 
