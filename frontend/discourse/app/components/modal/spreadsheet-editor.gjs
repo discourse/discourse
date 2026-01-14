@@ -134,6 +134,7 @@ export default class SpreadsheetEditor extends Component {
     ]);
 
     this.jspreadsheet = jspreadsheetModule.default;
+    this.jspreadsheet.setDictionary(this.localeMapping());
     this.loading = false;
   }
 
@@ -237,15 +238,20 @@ export default class SpreadsheetEditor extends Component {
       ? `post-${postNumber}-table-export`
       : `post-table-export`;
 
-    this.spreadsheet = this.jspreadsheet(this.spreadsheet, {
-      data,
-      columns,
-      defaultColAlign: "left",
-      wordWrap: true,
-      csvFileName: exportFileName,
-      text: this.localeMapping(),
-      ...opts,
+    const worksheets = this.jspreadsheet(this.spreadsheet, {
+      worksheets: [
+        {
+          data,
+          columns,
+          defaultColAlign: "left",
+          wordWrap: true,
+          csvFileName: exportFileName,
+          ...opts,
+        },
+      ],
     });
+
+    this.spreadsheet = worksheets[0];
   }
 
   buildUpdatedPost(tableIndex, raw, newRaw) {
