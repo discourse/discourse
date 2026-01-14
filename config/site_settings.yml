@@ -202,7 +202,7 @@ basic:
     default: false
     area: "localization"
   categories_topics:
-    default: 20
+    default: 0
     validator: "CategoriesTopicsValidator"
     area: "interface"
   suggested_topics:
