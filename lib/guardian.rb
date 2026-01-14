@@ -9,6 +9,7 @@ require "guardian/flag_guardian"
 require "guardian/post_guardian"
 require "guardian/post_revision_guardian"
 require "guardian/sidebar_guardian"
+require "guardian/staff_action_log_guardian"
 require "guardian/tag_guardian"
 require "guardian/topic_guardian"
 require "guardian/user_guardian"
@@ -26,6 +27,7 @@ class Guardian
   include PostRevisionGuardian
   include LocalizationGuardian
   include SidebarGuardian
+  include StaffActionLogGuardian
   include TagGuardian
   include TopicGuardian
   include UserGuardian

@@ -44,9 +44,10 @@ RSpec.describe UserHistory do
         expect(records.size).to eq(3)
       end
 
-      it "doesn't return records to moderators that only admins should see" do
+      it "only returns moderator-visible actions to moderators (allowlist approach)" do
         records = described_class.staff_action_records(Fabricate(:moderator)).to_a
-        expect(records).not_to include([change_site_setting])
+        expect(records).to contain_exactly(change_trust_level)
+        expect(records).not_to include(change_site_setting, custom_history)
       end
 
       it "filters by action" do
@@ -94,6 +95,67 @@ RSpec.describe UserHistory do
 
         expect(records.size).to eq(7 - 2 + 1)
       end
+    end
+  end
+
+  describe ".site_setting_excluded_actions" do
+    it "excludes category actions when moderators_manage_categories_and_groups is disabled" do
+      SiteSetting.moderators_manage_categories_and_groups = false
+      expect(described_class.site_setting_excluded_actions).to include(
+        :create_category,
+        :change_category_settings,
+        :delete_category,
+      )
+    end
+
+    it "includes category actions when moderators_manage_categories_and_groups is enabled" do
+      SiteSetting.moderators_manage_categories_and_groups = true
+      expect(described_class.site_setting_excluded_actions).not_to include(
+        :create_category,
+        :change_category_settings,
+        :delete_category,
+      )
+    end
+
+    it "excludes email actions when moderators_view_emails is disabled" do
+      SiteSetting.moderators_view_emails = false
+      expect(described_class.site_setting_excluded_actions).to include(
+        :check_email,
+        :add_email,
+        :update_email,
+        :destroy_email,
+      )
+    end
+
+    it "includes email actions when moderators_view_emails is enabled" do
+      SiteSetting.moderators_view_emails = true
+      expect(described_class.site_setting_excluded_actions).not_to include(
+        :check_email,
+        :add_email,
+        :update_email,
+        :destroy_email,
+      )
+    end
+  end
+
+  describe ".moderator_visible_action_ids" do
+    it "returns action IDs for moderator-visible actions" do
+      ids = described_class.moderator_visible_action_ids
+      expect(ids).to include(described_class.actions[:suspend_user])
+      expect(ids).to include(described_class.actions[:delete_topic])
+      expect(ids).not_to include(described_class.actions[:change_site_setting])
+    end
+
+    it "responds dynamically to site setting changes" do
+      SiteSetting.moderators_manage_categories_and_groups = true
+      expect(described_class.moderator_visible_action_ids).to include(
+        described_class.actions[:create_category],
+      )
+
+      SiteSetting.moderators_manage_categories_and_groups = false
+      expect(described_class.moderator_visible_action_ids).not_to include(
+        described_class.actions[:create_category],
+      )
     end
   end
 end
