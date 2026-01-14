@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import BlockGroup from "discourse/blocks/block-group";
 import { block, isBlock, renderBlocks } from "discourse/blocks/block-outlet";
+import BlockGroup from "discourse/blocks/builtin/block-group";
 import {
   _registerBlock,
   blockRegistry,

@@ -3,12 +3,12 @@ import { getOwner } from "@ember/owner";
 import { render, setupOnerror } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import BlockGroup from "discourse/blocks/block-group";
 import BlockOutlet, {
   _getOutletLayouts,
   block,
   renderBlocks,
 } from "discourse/blocks/block-outlet";
+import BlockGroup from "discourse/blocks/builtin/block-group";
 import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,
