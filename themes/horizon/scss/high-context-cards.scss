@@ -1,18 +1,11 @@
 @use "lib/viewport";
 
-:root {
-  --topic-card-shadow: rgb(var(--tertiary-rgb), 0.1);
-  --title-color--read: var(--primary-medium);
-  --topic-title-font-weight--visited: 700;
-}
-
 $padding-pills-small: var(--space-half) var(--space-2);
 
-.topic-list-data {
-  display: none;
-}
-
 .topic-list-body:has(.--high-context) {
+  --title-color--read: var(--primary-high);
+  --topic-title-font-weight--visited: 700;
+
   @include viewport.from(sm) {
     gap: var(--space-4);
   }
