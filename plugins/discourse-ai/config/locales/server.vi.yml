@@ -9,6 +9,10 @@ vi:
     overall_sentiment:
       yaxis: "Ngày"
   discourse_ai:
+    ai_helper:
+      prompts:
+        proofread: Hiệu chỉnh văn bản
+        markdown_table: Tạo bảng Markdown
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:

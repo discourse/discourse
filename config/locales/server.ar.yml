@@ -5431,6 +5431,8 @@ ar:
     deprecation_error_label: جعل عمليات إيقاف استخدام Javascript تؤدي إلى ظهور خطأ
     enter: "الدخول إلى الوضع الآمن"
     must_select: "يجب عليك تحديد خيار واحد على الأقل للدخول إلى الوضع الآمن."
+  dev_mode:
+    enter: "مفتاح Enter"
   wizard:
     title: "إعداد Discourse"
     step:

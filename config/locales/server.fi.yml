@@ -4906,6 +4906,8 @@ fi:
     deprecation_error_label: Aseta Javascriptin vanhentumiset aiheuttamaan virhe
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discoursen asennus"
     step:

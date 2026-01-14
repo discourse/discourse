@@ -29,6 +29,8 @@ el:
           title: "Σίγαση Χρήστη"
         disagree:
           title: "Διαφωνώ"
+        ignore:
+          title: "Μην κάνετε τίποτα"
     channel:
       dm_title:
         single_user: "%{username}"

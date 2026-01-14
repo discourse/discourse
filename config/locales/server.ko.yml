@@ -3560,6 +3560,8 @@ ko:
     title: "안전 모드 시작"
     enter: "안전 모드 시작"
     must_select: "안전 모드를 시작하려면 옵션을 하나 이상 선택하세요."
+  dev_mode:
+    enter: "시작하다"
   wizard:
     title: "Discourse Setup"
     step:

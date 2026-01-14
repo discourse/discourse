@@ -4984,6 +4984,8 @@ pt_BR:
     deprecation_error_label: Faça com que conteúdos obsoletos de Javascript causem um erro
     enter: "Entrar no modo de segurança"
     must_select: "Você deve selecionar pelo menos uma opção para entrar no modo de segurança."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Configuração do Discourse"
     step:

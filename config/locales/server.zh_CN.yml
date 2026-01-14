@@ -4885,6 +4885,10 @@ zh_CN:
     deprecation_error_label: 让 Javascript 弃用引发一个错误
     enter: "进入安全模式"
     must_select: "您必须至少选择一个选项才能进入安全模式。"
+  dev_mode:
+    title: "开发者模式"
+    enable_rack_mini_profiler: "启用 Rack Mini Profiler，使其在会话切换后保持 1 小时。"
+    enter: "Enter"
   wizard:
     title: "Discourse 设置"
     step:

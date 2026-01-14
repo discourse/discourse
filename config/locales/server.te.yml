@@ -2472,6 +2472,8 @@ te:
   safe_mode:
     title: "సురక్షిత మోడ్‌ను నమోదు చేయండి"
     enter: "సేఫ్ మోడ్‌ని నమోదు చేయండి"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:

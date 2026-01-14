@@ -5235,6 +5235,10 @@ pl_PL:
     deprecation_error_label: Spraw, aby przestarzały Javascript zgłaszał błąd
     enter: "Włącz Tryb Bezpieczny"
     must_select: "Musisz wybrać przynajmniej jedną opcję, by wejść do trybu bezpiecznego."
+  dev_mode:
+    title: "Tryb programisty"
+    enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
+    enter: "Wejdź"
   wizard:
     title: "Instalacja Discourse"
     step:

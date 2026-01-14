@@ -4869,6 +4869,8 @@ ja:
     deprecation_error_label: JavaScript の非推奨設定でエラーを発生させる
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse のセットアップ"
     step:

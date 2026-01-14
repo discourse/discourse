@@ -2788,6 +2788,8 @@ zh_TW:
     title: "進入安全模式"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse 安裝"
     step:

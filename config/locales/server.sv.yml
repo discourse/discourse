@@ -4125,6 +4125,8 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
+  dev_mode:
+    enter: "Retur"
   wizard:
     title: "Discourse-inställningar"
     step:

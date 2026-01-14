@@ -5001,6 +5001,8 @@ es:
     deprecation_error_label: Hacer que las depreciaciones de Javascript produzcan un error
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."
+  dev_mode:
+    enter: "Intro"
   wizard:
     title: "Instalación de Discourse"
     step:
