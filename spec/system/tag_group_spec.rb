@@ -65,12 +65,57 @@ describe "Tag Groups", type: :system do
 
       expect(tag_groups_page).to have_tag_group_in_sidebar("New Test Group")
 
-      find(".tag-groups-sidebar li", text: "New Test Group").click
+      tag_groups_page.click_tag_group("New Test Group")
 
       expect(tag_groups_page).to have_tag_in_group("cats")
       expect(tag_groups_page).to have_tag_in_group("bats")
       expect(page).to have_css(".parent-tag-section .tag-chooser", text: "parent-tag")
-      expect(find("#visible-permission")).to be_checked
+      expect(tag_groups_page).to have_visible_permission_checked
+    end
+  end
+
+  describe "editing a tag group" do
+    fab!(:tag3) { Fabricate(:tag, name: "rats") }
+    fab!(:tag_group) { Fabricate(:tag_group, name: "Animals", tags: [tag1, tag2]) }
+
+    it "can edit a tag group's tags and permissions" do
+      tag_groups_page.visit
+      tag_groups_page.click_tag_group("Animals")
+
+      expect(tag_groups_page).to have_tag_in_group("cats")
+      expect(tag_groups_page).to have_tag_in_group("bats")
+
+      tag_groups_page.tags_chooser.expand
+      tag_groups_page.tags_chooser.unselect_by_name("bats")
+      tag_groups_page.tags_chooser.search("rats")
+      tag_groups_page.tags_chooser.select_row_by_name("rats")
+      tag_groups_page.tags_chooser.collapse
+
+      tag_groups_page.select_visible_permission
+      tag_groups_page.save
+
+      page.refresh
+      tag_groups_page.click_tag_group("Animals")
+
+      expect(tag_groups_page).to have_tag_in_group("cats")
+      expect(tag_groups_page).to have_tag_in_group("rats")
+      expect(tag_groups_page).to have_no_tag_in_group("bats")
+      expect(tag_groups_page).to have_visible_permission_checked
+    end
+  end
+
+  describe "deleting a tag group" do
+    fab!(:tag_group) { Fabricate(:tag_group, name: "To Delete", tags: [tag1]) }
+
+    it "can delete a tag group" do
+      tag_groups_page.visit
+
+      expect(tag_groups_page).to have_tag_group_in_sidebar("To Delete")
+
+      tag_groups_page.click_tag_group("To Delete")
+      tag_groups_page.click_delete.click_yes
+
+      expect(tag_groups_page).to have_no_tag_group_in_sidebar("To Delete")
     end
   end
 end
