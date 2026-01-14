@@ -1,243 +1,253 @@
 :root {
-  --jexcel_header_color: var(--primary-high);
-  --jexcel_header_color_highlighted: var(--primary-high);
-  --jexcel_header_background: var(--primary-very-low);
-  --jexcel_header_background_highlighted: var(--primary-low);
-  --jexcel_content_color: var(--primary);
-  --jexcel_content_color_highlighted: var(--primary-high);
-  --jexcel_content_background: var(--secondary);
-  --jexcel_content_background_highlighted: var(--tertiary-very-low);
-  --jexcel_menu_background: var(--secondary);
-  --jexcel_menu_background_highlighted: var(--secondary-very-high);
-  --jexcel_menu_color: var(--primary-medium);
-  --jexcel_menu_color_highlighted: var(--primary);
-  --jexcel_border_color: var(--primary-low-mid);
-  --jexcel_border_color_highlighted: var(--tertiary-high);
+  --jss_header_color: var(--primary-high);
+  --jss_header_color_highlighted: var(--primary-high);
+  --jss_header_background: var(--primary-very-low);
+  --jss_header_background_highlighted: var(--primary-low);
+  --jss_content_color: var(--primary);
+  --jss_content_color_highlighted: var(--primary-high);
+  --jss_content_background: var(--secondary);
+  --jss_content_background_highlighted: var(--tertiary-very-low);
+  --jss_menu_background: var(--secondary);
+  --jss_menu_background_highlighted: var(--secondary-very-high);
+  --jss_menu_color: var(--primary-medium);
+  --jss_menu_color_highlighted: var(--primary);
+  --jss_border_color: var(--primary-low-mid);
+  --jss_border_color_highlighted: var(--tertiary-high);
   --active_color: var(--primary-very-low);
   --active-color: var(--active_color);
 }
 
-.jexcel {
-  border-bottom: 1px solid var(--jexcel_border_color);
+.jss_worksheet {
+  border-top: none;
+  border-left: none;
+  border-bottom: 1px solid var(--jss_border_color);
   border-right: transparent;
   background-color: transparent;
 }
 
-table.jexcel > thead > tr > td {
+table.jss_worksheet > thead > tr > td {
   border-left: 1px solid transparent;
   padding: 10px;
   font-weight: bold;
-  border-top: 1px solid var(--jexcel_border_color);
-  border-right: 1px solid var(--jexcel_border_color);
-  border-bottom: 1px solid var(--jexcel_border_color);
-  background-color: var(--jexcel_header_background);
+  border-top: none;
+  border-right: 1px solid var(--jss_border_color);
+  border-bottom: 1px solid var(--jss_border_color);
+  background-color: var(--jss_header_background);
 
   &:first-child {
-    border-left: 1px solid var(--jexcel_border_color);
+    border-left: none;
   }
 }
 
-table.jexcel > tbody > tr > td {
+table.jss_worksheet > tbody > tr > td {
   padding: 8px;
   border-left: 1px solid transparent;
-  border-right: 1px solid var(--jexcel_border_color);
+  border-right: 1px solid var(--jss_border_color);
 
   &:first-child {
-    border-left: 1px solid var(--jexcel_border_color);
-    background-color: var(--jexcel_header_background);
+    border-left: none;
+    background-color: var(--jss_header_background);
   }
 }
 
-table.jexcel {
-  border-bottom: 1px solid var(--jexcel_border_color);
+table.jss_worksheet {
+  border-bottom: 1px solid var(--jss_border_color);
 }
 
-.jcontextmenu.jexcel_contextmenu hr {
-  border-color: var(--jexcel_border_color);
+.jcontextmenu.jss_contextmenu hr {
+  border-color: var(--jss_border_color);
 }
 
-.jexcel_container .jcontextmenu > div a {
-  color: var(--jexcel_menu_color);
+.jss_container .jcontextmenu > div a {
+  color: var(--jss_menu_color);
 }
 
-.jexcel_corner {
+.jss_corner {
   background-color: var(--tertiary);
 }
 
-.jexcel > tbody > tr > td,
-.jexcel > thead > tr > td {
-  border-top: 1px solid var(--jexcel_border_color);
-  border-left: 1px solid var(--jexcel_border_color);
-  background-color: var(--jexcel_content_background);
-  color: var(--jexcel_content_color);
+.jss_worksheet > tbody > tr > td,
+.jss_worksheet > thead > tr > td {
+  border-top: 1px solid var(--jss_border_color);
+  border-left: 1px solid var(--jss_border_color);
+  background-color: var(--jss_content_background);
+  color: var(--jss_content_color);
+
+  &:first-child {
+    border-left: none;
+  }
 }
 
-.jexcel > tbody > tr > td:first-child,
-.jexcel > thead > tr > td {
-  background-color: var(--jexcel_header_background);
-  color: var(--jexcel_header_color);
+.jss_worksheet > thead > tr > td {
+  border-top: none;
 }
 
-.jexcel > thead > tr > td.selected,
-.jexcel > tbody > tr.selected > td:first-child {
-  background-color: var(--jexcel_header_background_highlighted);
-  color: var(--jexcel_header_color_highlighted);
+.jss_worksheet > tbody > tr > td:first-child,
+.jss_worksheet > thead > tr > td {
+  background-color: var(--jss_header_background);
+  color: var(--jss_header_color);
 }
 
-table.jexcel > tbody > tr.selected > td:first-child {
-  background-color: var(--jexcel_header_background_highlighted);
+.jss_worksheet > thead > tr > td.selected,
+.jss_worksheet > tbody > tr.selected > td:first-child {
+  background-color: var(--jss_header_background_highlighted);
+  color: var(--jss_header_color_highlighted);
 }
 
-.jexcel > tbody > tr > td.jexcel_cursor a {
+table.jss_worksheet > tbody > tr.selected > td:first-child {
+  background-color: var(--jss_header_background_highlighted);
+}
+
+.jss_worksheet > tbody > tr > td.jss_cursor a {
   color: var(--active-color);
 }
 
-.jexcel_pagination > div > div {
-  color: var(--jexcel_header_color);
-  background: var(--jexcel_header_background);
-  border: 1px solid var(--jexcel_border_color);
+.jss_pagination > div > div {
+  color: var(--jss_header_color);
+  background: var(--jss_header_background);
+  border: 1px solid var(--jss_border_color);
 }
 
-.jexcel_page,
-.jexcel_container input,
-.jexcel_container select {
-  color: var(--jexcel_header_color);
-  background: var(--jexcel_header_background);
-  border: 1px solid var(--jexcel_border_color);
+.jss_page,
+.jss_container input,
+.jss_container select {
+  color: var(--jss_header_color);
+  background: var(--jss_header_background);
+  border: 1px solid var(--jss_border_color);
 }
 
-.jexcel_contextmenu.jcontextmenu {
-  border: 1px solid var(--jexcel_border_color);
-  background: var(--jexcel_menu_background);
-  color: var(--jexcel_menu_color);
+.jss_contextmenu.jcontextmenu {
+  border: 1px solid var(--jss_border_color);
+  background: var(--jss_menu_background);
+  color: var(--jss_menu_color);
   box-shadow: 0 12px 12px rgb(0, 0, 0, 0.15);
 }
 
 .jcontextmenu > div a {
-  color: var(--jexcel_menu_color);
+  color: var(--jss_menu_color);
 }
 
 .jcontextmenu > div:not(.contextmenu-line):hover a {
-  color: var(--jexcel_menu_color_highlighted);
+  color: var(--jss_menu_color_highlighted);
 }
 
 .jcontextmenu > div:not(.contextmenu-line):hover {
-  background: var(--jexcel_menu_background_highlighted);
+  background: var(--jss_menu_background_highlighted);
 }
 
-.jexcel_dropdown .jdropdown-container,
-.jexcel_dropdown .jdropdown-content {
-  background-color: var(--jexcel_content_background);
-  color: var(--jexcel_content_color);
+.jss_dropdown .jdropdown-container,
+.jss_dropdown .jdropdown-content {
+  background-color: var(--jss_content_background);
+  color: var(--jss_content_color);
 }
 
-.jexcel_dropdown .jdropdown-item {
-  color: var(--jexcel_content_color);
+.jss_dropdown .jdropdown-item {
+  color: var(--jss_content_color);
 }
 
-.jexcel_dropdown .jdropdown-item:hover,
-.jexcel_dropdown .jdropdown-selected,
-.jexcel_dropdown .jdropdown-cursor {
-  background-color: var(--jexcel_content_background_highlighted);
-  color: var(--jexcel_content_color_highlighted);
+.jss_dropdown .jdropdown-item:hover,
+.jss_dropdown .jdropdown-selected,
+.jss_dropdown .jdropdown-cursor {
+  background-color: var(--jss_content_background_highlighted);
+  color: var(--jss_content_color_highlighted);
 }
 
-.jexcel .jcalendar-content {
-  background-color: var(--jexcel_header_background);
-  color: var(--jexcel_header_color);
+.jss_worksheet .jcalendar-content {
+  background-color: var(--jss_header_background);
+  color: var(--jss_header_color);
 }
 
-.jexcel .jcalendar-content > table {
-  background-color: var(--jexcel_content_background);
-  color: var(--jexcel_content_color);
+.jss_worksheet .jcalendar-content > table {
+  background-color: var(--jss_content_background);
+  color: var(--jss_content_color);
 }
 
-.jexcel .jcalendar-weekday {
-  background-color: var(--jexcel_content_background_highlighted);
-  color: var(--jexcel_content_color_highlighted);
+.jss_worksheet .jcalendar-weekday {
+  background-color: var(--jss_content_background_highlighted);
+  color: var(--jss_content_color_highlighted);
 }
 
-.jexcel .jcalendar-sunday {
-  color: var(--jexcel_header_color);
+.jss_worksheet .jcalendar-sunday {
+  color: var(--jss_header_color);
 }
 
-.jexcel .jcalendar-selected {
-  background-color: var(--jexcel_content_background_highlighted);
-  color: var(--jexcel_content_color_highlighted);
+.jss_worksheet .jcalendar-selected {
+  background-color: var(--jss_content_background_highlighted);
+  color: var(--jss_content_color_highlighted);
 }
 
-.jexcel_toolbar i.jexcel_toolbar_item {
-  color: var(--jexcel_content_color);
+.jss_toolbar i.jss_toolbar_item {
+  color: var(--jss_content_color);
 }
 
-.jexcel_toolbar i.jexcel_toolbar_item:hover {
-  background: var(--jexcel_content_background_highlighted);
-  color: var(--jexcel_content_color_highlighted);
+.jss_toolbar i.jss_toolbar_item:hover {
+  background: var(--jss_content_background_highlighted);
+  color: var(--jss_content_color_highlighted);
 }
 
-.jexcel_toolbar {
-  background: var(--jexcel_header_background);
+.jss_toolbar {
+  background: var(--jss_header_background);
 }
 
-.jexcel_content::-webkit-scrollbar-track {
-  background: var(--jexcel_background_head);
+.jss_content::-webkit-scrollbar-track {
+  background: var(--jss_background_head);
 }
 
-.jexcel_content::-webkit-scrollbar-thumb {
-  background: var(--jexcel_background_head_highlighted);
+.jss_content::-webkit-scrollbar-thumb {
+  background: var(--jss_background_head_highlighted);
 }
 
-.jexcel_border_main {
+.jss_border_main {
   border: 1px solid #000;
-  border-color: var(--jexcel_border_color_highlighted);
+  border-color: var(--jss_border_color_highlighted);
 }
 
-.jexcel .highlight {
-  background-color: var(--jexcel_content_background_highlighted);
+.jss_worksheet .highlight {
+  background-color: var(--jss_content_background_highlighted);
 }
 
-.jexcel .highlight-bottom {
-  border-bottom: 1.5px solid var(--jexcel_border_color_highlighted);
+.jss_worksheet .highlight-bottom {
+  border-bottom: 1px solid var(--jss_border_color_highlighted);
 }
 
-.jexcel .highlight-right {
-  border-right: 1.5px solid var(--jexcel_border_color_highlighted);
+.jss_worksheet .highlight-right {
+  border-right: 1px solid var(--jss_border_color_highlighted);
 }
 
-.jexcel .highlight-left {
-  border-left: 1.5px solid var(--jexcel_border_color_highlighted);
+.jss_worksheet .highlight-left {
+  border-left: 1px solid var(--jss_border_color_highlighted);
 }
 
-.jexcel .highlight-top {
-  border-top: 1.5px solid var(--jexcel_border_color_highlighted);
+.jss_worksheet .highlight-top {
+  border-top: 1px solid var(--jss_border_color_highlighted);
 }
 
-.jexcel .copying-top {
-  border-top-color: var(--jexcel_border_color_highlighted);
+.jss_worksheet .copying-top {
+  border-top-color: var(--jss_border_color_highlighted);
 }
 
-.jexcel .copying-right {
-  border-right-color: var(--jexcel_border_color_highlighted);
+.jss_worksheet .copying-right {
+  border-right-color: var(--jss_border_color_highlighted);
 }
 
-.jexcel .copying-left {
-  border-left-color: var(--jexcel_border_color_highlighted);
+.jss_worksheet .copying-left {
+  border-left-color: var(--jss_border_color_highlighted);
 }
 
-.jexcel .copying-bottom {
-  border-bottom-color: var(--jexcel_border_color_highlighted);
+.jss_worksheet .copying-bottom {
+  border-bottom-color: var(--jss_border_color_highlighted);
 }
 
-.jexcel_border_main,
-.jexcel .highlight-top.highlight-left,
-.jexcel .highlight-top,
-.jexcel .highlight-left {
+.jss_border_main,
+.jss_worksheet .highlight-top.highlight-left,
+.jss_worksheet .highlight-top,
+.jss_worksheet .highlight-left {
   box-shadow: unset;
 }
 
-table.jexcel > thead > tr > td.selected {
-  background-color: var(--jexcel_header_background_highlighted);
-  color: var(--jexcel_header_color_highlighted);
+table.jss_worksheet > thead > tr > td.selected {
+  background-color: var(--jss_header_background_highlighted);
+  color: var(--jss_header_color_highlighted);
 }
 
 // Hides about item in context menu
@@ -245,15 +255,15 @@ table.jexcel > thead > tr > td.selected {
   display: none;
 }
 
-.jexcel_container {
+.jss_container {
   min-width: 100%;
   padding: 0;
 
-  .jexcel_content {
+  .jss_content {
     min-width: 100%;
     padding: 0;
 
-    table.jexcel {
+    table.jss_worksheet {
       min-width: 100%;
     }
   }
