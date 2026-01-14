@@ -1,8 +1,13 @@
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
+import {
+  removeValueFromArray,
+  uniqueItemsFromArray,
+} from "discourse/lib/array-tools";
+import { trackedArray } from "discourse/lib/tracked-tools";
 
 export default class ChatMessagesManager {
-  @tracked messages = [];
+  @trackedArray messages = [];
 
   constructor(owner) {
     setOwner(this, owner);
@@ -10,12 +15,12 @@ export default class ChatMessagesManager {
 
   @cached
   get stagedMessages() {
-    return this.messages.filterBy("staged");
+    return this.messages.filter((message) => message.staged);
   }
 
   @cached
   get selectedMessages() {
-    return this.messages.filterBy("selected");
+    return this.messages.filter((message) => message.selected);
   }
 
   clearSelectedMessages() {
@@ -27,10 +32,10 @@ export default class ChatMessagesManager {
   }
 
   addMessages(messages = []) {
-    this.messages = this.messages
-      .concat(messages)
-      .uniqBy("id")
-      .sort((a, b) => a.createdAt - b.createdAt);
+    this.messages = uniqueItemsFromArray(
+      this.messages.concat(messages),
+      "id"
+    ).sort((a, b) => a.createdAt - b.createdAt);
   }
 
   findMessage(messageId) {
@@ -49,7 +54,7 @@ export default class ChatMessagesManager {
   }
 
   removeMessage(message) {
-    return this.messages.removeObject(message);
+    return removeValueFromArray(this.messages, message);
   }
 
   findStagedMessage(stagedMessageId) {

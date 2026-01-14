@@ -372,6 +372,9 @@ class ImportScripts::Base
       end
 
       u.activate if opts[:active] && opts[:password].present?
+    rescue ActiveRecord::RecordInvalid => e
+      puts "Invalid user info, skipped: #{original_opts.inspect}"
+      return
     rescue => e
       # try based on email
       if e.try(:record).try(:errors).try(:messages).try(:[], :primary_email).present?
@@ -494,7 +497,7 @@ class ImportScripts::Base
         position: opts[:position],
         parent_category_id: opts[:parent_category_id],
         color: opts[:color] || category_color(opts[:parent_category_id]),
-        text_color: opts[:text_color] || "FFF",
+        text_color: opts[:text_color] || "FFFFFF",
         read_restricted: opts[:read_restricted] || false,
       )
 

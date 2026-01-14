@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    policy_enabled: "Beleid toestaan?"
+    policy_restrict_to_staff_posts: "Beleid mag alleen worden weergegeven in berichten van medewerkers"
+    policy_easy_revoke: "Knoppen Accepteren en Intrekken tegelijk weergeven"
+  discourse_policy:
+    errors:
+      user_missing: "Gebruiker bestaat niet in groep"
+      group_not_found: "Groep niet gevonden voor beleid"
+      no_policy: "Er is geen beleid voor bericht"
+      staff_only: "Beleid mag alleen van toepassing zijn op berichten van medewerkers"
+    error:
+      no_permission: "Niet geautoriseerd"
+  reports:
+    unaccepted-policies:
+      title: Niet-geaccepteerd beleid
+      labels:
+        topic_id: Topic-ID
+        user_id: Gebruikers-ID
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Een beleid heeft je beoordeling nodig: %{topic_title}"
+      visit_topic: "Naar topic"
+      visit_link_to_respond: "%{visit_topic_link} om te reageren."
+      unsubscribe: "Wijzig je %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
+      your_policy_email_settings: "Voorkeursfrequentie voor beleids-e-mails"
+  unsubscribe:
+    policy_emails:
+      select_title: "Stel de frequentie van e-mails met beleidswaarschuwingen in op:"
+      never: Nooit
+      when_away: Alleen wanneer afwezig
+      always: Altijd

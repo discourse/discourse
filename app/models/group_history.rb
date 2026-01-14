@@ -31,7 +31,7 @@ class GroupHistory < ActiveRecord::Base
         .where(group_id: group.id)
         .order("group_histories.created_at DESC")
 
-    if !params.blank?
+    if params.present?
       params = params.slice(*filters)
       records = records.where(action: self.actions[params[:action].to_sym]) if params[
         :action

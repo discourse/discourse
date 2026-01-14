@@ -45,7 +45,7 @@ end
 
 class Plugin::Instance
   attr_accessor :path, :metadata
-  attr_reader :admin_route
+  attr_reader :admin_route, :admin_login_route
 
   # Memoized array readers
   %i[
@@ -72,7 +72,7 @@ class Plugin::Instance
   end
 
   def seed_data
-    @seed_data ||= HashWithIndifferentAccess.new({})
+    @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
 
   def seed_fu_filter(filter = nil)
@@ -103,6 +103,11 @@ class Plugin::Instance
     @idx = 0
   end
 
+  # Keys can only be lowercase letters
+  # Example usage:
+  #   plugin.register_anonymous_cache_key :onlylowercase do
+  #     @request.cookies["cookie_name"].present? ? "1" : "0"
+  #   end
   def register_anonymous_cache_key(key, &block)
     key_method = "key_#{key}"
     add_to_class(Middleware::AnonymousCache::Helper, key_method, &block)
@@ -147,6 +152,12 @@ class Plugin::Instance
     @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == self.name }
   end
 
+  def deprecate_setting(old_setting, new_setting, override, drom_from)
+    setting = [old_setting, new_setting, override, drom_from]
+    SiteSettings::DeprecatedSettings::SETTINGS << setting
+    SiteSetting.setup_deprecated_method(*setting)
+  end
+
   def configurable?
     true
   end
@@ -163,11 +174,7 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def humanized_name
-    (setting_category_name || name)
-      .delete_prefix("Discourse ")
-      .delete_prefix("discourse-")
-      .gsub("-", " ")
-      .upcase_first
+    (setting_category_name || name).sub(/\Adiscourse[\s-]+/i, "").gsub("-", " ").upcase_first
   end
 
   def add_to_serializer(
@@ -276,8 +283,8 @@ class Plugin::Instance
   # Ensure proper input sanitization before using it in a query.
   #
   # Example usage:
-  #   add_filter_custom_filter("word_count") do |scope, value|
-  #     scope.where(word_count: value)
+  #   add_filter_custom_filter("word_count") do |scope, value, guardian|
+  #     scope.where(word_count: value) if guardian.admin?
   #   end
   def add_filter_custom_filter(name, &block)
     DiscoursePluginRegistry.register_custom_filter_mapping({ name => block }, self)
@@ -288,7 +295,7 @@ class Plugin::Instance
   #     scope.where("word_count = 42")
   #   end
   def register_custom_filter_by_status(status, &block)
-    TopicsFilter.add_filter_by_status(status, &block)
+    TopicsFilter.add_filter_by_status(status, enabled: method(:enabled?), &block)
   end
 
   # Allows to define custom search order. Example usage:
@@ -296,7 +303,7 @@ class Plugin::Instance
   #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
   #   end
   def register_search_advanced_order(trigger, &block)
-    Search.advanced_order(trigger, &block)
+    Search.advanced_order(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to define custom search filters. Example usage:
@@ -304,7 +311,7 @@ class Plugin::Instance
   #     posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
   #   end
   def register_search_advanced_filter(trigger, &block)
-    Search.advanced_filter(trigger, &block)
+    Search.advanced_filter(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to define TopicView posts filters. Example usage:
@@ -312,7 +319,7 @@ class Plugin::Instance
   #     posts.where(wiki: true)
   #   end
   def register_topic_view_posts_filter(trigger, &block)
-    TopicView.add_custom_filter(trigger, &block)
+    TopicView.add_custom_filter(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to add more user IDs to the list of preloaded users. This can be
@@ -322,7 +329,7 @@ class Plugin::Instance
   #     user_ids << Discourse::SYSTEM_USER_ID
   #   end
   def register_topic_list_preload_user_ids(&block)
-    TopicList.on_preload_user_ids(&block)
+    TopicList.on_preload_user_ids(enabled: method(:enabled?), &block)
   end
 
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
@@ -333,7 +340,7 @@ class Plugin::Instance
   # OR
   #   register_search_topic_eager_load(%i(example_table))
   def register_search_topic_eager_load(tables = nil, &block)
-    Search.custom_topic_eager_load(tables, &block)
+    Search.custom_topic_eager_load(tables, enabled: method(:enabled?), &block)
   end
 
   # Request a new size for topic thumbnails
@@ -354,7 +361,28 @@ class Plugin::Instance
   #     end
   #   end
   def register_site_categories_callback(&block)
-    Site.add_categories_callbacks(&block)
+    Site.add_categories_callbacks(enabled: method(:enabled?), &block)
+  end
+
+  # Add a category parameter that includes both controller param permission
+  # and transactional callback. This allows plugins to extend category updates
+  # with custom logic that runs within the same database transaction.
+  #
+  # The callback block receives the category instance and the parameter value.
+  # If the callback raises an exception, the entire category update will be rolled back.
+  #
+  # Example usage:
+  #   register_category_update_param_with_callback(:doc_index_topic_id) do |category, value|
+  #     DocCategories::CategoryIndexManager.new(category).assign!(value)
+  #   end
+  #
+  def register_category_update_param_with_callback(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.category_update_param_with_callback[param_name] = {
+        plugin: plugin,
+        callback: callback,
+      }
+    end
   end
 
   def register_upload_unused(&block)
@@ -369,7 +397,7 @@ class Plugin::Instance
   # Example usage:
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
-    Site.preloaded_category_custom_fields << field
+    reloadable_patch { Site.preloaded_category_custom_fields << field }
   end
 
   def register_problem_check(klass)
@@ -598,7 +626,7 @@ class Plugin::Instance
   def discourse_owned?
     return false if commit_hash.blank?
     parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
-    return false if parsed_commit_url.blank?
+    return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
     github_org = parsed_commit_url.path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
       parsed_commit_url.host == "github.com"
@@ -731,8 +759,7 @@ class Plugin::Instance
   end
 
   def register_email_poller(poller)
-    plugin = self
-    DiscoursePluginRegistry.register_mail_poller(poller) if plugin.enabled?
+    DiscoursePluginRegistry.register_mail_poller(poller) if enabled?
   end
 
   def register_asset(file, opts = nil)
@@ -785,7 +812,7 @@ class Plugin::Instance
     js = "(function(){#{js}})();" if js.present?
 
     result = []
-    result << [css, "css"] if css.present?
+    result << [css, "scss"] if css.present?
     result << [js, "js"] if js.present?
 
     result.map do |asset, extension|
@@ -809,9 +836,6 @@ class Plugin::Instance
 
     seed_data.each { |key, value| DiscoursePluginRegistry.register_seed_data(key, value) }
 
-    # Allow plugins to `register_asset` for images under /assets
-    Rails.configuration.assets.paths << File.dirname(path) + "/assets"
-
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
@@ -834,6 +858,7 @@ class Plugin::Instance
     end
 
     write_extra_js!
+    ensure_images_symlink!
   end
 
   def auth_provider(opts)
@@ -878,6 +903,10 @@ class Plugin::Instance
     DiscoursePluginRegistry.site_setting_areas << area
   end
 
+  def register_admin_config_login_route(location)
+    DiscoursePluginRegistry.admin_config_login_routes << location
+  end
+
   def javascript_includes
     assets
       .map do |asset, opts|
@@ -891,6 +920,9 @@ class Plugin::Instance
   def register_reviewable_type(reviewable_type_class)
     return unless reviewable_type_class < Reviewable
     extend_list_method(Reviewable, :types, reviewable_type_class)
+    if reviewable_type_class.method_defined?(:scrub)
+      extend_list_method(Reviewable, :scrubbable_types, reviewable_type_class)
+    end
   end
 
   def extend_list_method(klass, method, new_attributes)
@@ -1278,6 +1310,64 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
   end
 
+  # Register a search index for a custom content type
+  #
+  # @param model_class [Class] The ActiveRecord model class
+  # @param search_data_class [Class] The search data class (e.g., Chat::MessageSearchData)
+  # @param index_version [Integer] The version number for this search index
+  # @param search_data [Proc] Block that extracts search data from an object, receives (object, indexer_helper)
+  #                          Should return hash with :a_weight, :b_weight, :c_weight, :d_weight keys
+  # @param load_unindexed_record_ids [Proc] Block that loads record IDs needing reindexing, receives (limit:, index_version:)
+  # @param enabled [Proc] Optional block that returns true/false to enable/disable the search index (default: -> { true })
+  #
+  # Example:
+  #   register_search_index(
+  #     enabled: -> { SiteSetting.chat_search_enabled },
+  #     model_class: Chat::Message,
+  #     search_data_class: Chat::MessageSearchData,
+  #     index_version: 1,
+  #     search_data: proc { |message, indexer_helper|
+  #       {
+  #         a_weight: message.message,
+  #         d_weight: indexer_helper.scrub_html(message.cooked)[0..600_000]
+  #       }
+  #     },
+  #     load_unindexed_record_ids: proc { |limit:, index_version:|
+  #       Chat::Message
+  #         .joins("LEFT JOIN chat_message_search_data ON chat_message_id = chat_messages.id")
+  #         .where(
+  #           "chat_message_search_data.locale IS NULL OR chat_message_search_data.locale != ? OR chat_message_search_data.version != ?",
+  #           SiteSetting.default_locale,
+  #           index_version,
+  #         )
+  #         .order("chat_messages.id ASC")
+  #         .limit(limit)
+  #         .pluck(:id)
+  #     }
+  #   )
+  def register_search_index(
+    model_class:,
+    search_data_class:,
+    index_version:,
+    search_data:,
+    load_unindexed_record_ids:,
+    enabled: -> { true }
+  )
+    table_name = model_class.table_name.singularize
+
+    handler = {
+      table_name:,
+      model_class:,
+      search_data_class:,
+      index_version:,
+      search_data:,
+      load_unindexed_record_ids: load_unindexed_record_ids,
+      enabled:,
+    }
+
+    DiscoursePluginRegistry.register_search_handler(handler, self)
+  end
+
   # This is an experimental API and may be changed or removed in the future without deprecation.
   #
   # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
@@ -1344,31 +1434,36 @@ class Plugin::Instance
     end
   end
 
+  # This method allows plugins to preload topic associations when loading topics
+  # that make use of topic_list.
+  #
+  # @param fields [Symbol, Array<Symbol>, Hash] The topic associations to preload.
+  #
+  # @example
+  #   register_topic_preloader_associations(:first_post)
+  #   register_topic_preloader_associations([:first_post, :topic_embeds])
+  #   register_topic_preloader_associations({ first_post: :uploads })
+  #   register_topic_preloader_associations({ first_post: :uploads }) do
+  #     SiteSetting.some_setting_enabled?
+  #   end
+  #
+  # @return [void]
+  def register_topic_preloader_associations(fields, &condition)
+    DiscoursePluginRegistry.register_topic_preloader_association({ fields:, condition: }, self)
+  end
+
   protected
 
   def self.js_path
-    File.expand_path "#{Rails.root}/app/assets/javascripts/plugins"
-  end
-
-  def legacy_asset_paths
-    [
-      "#{Plugin::Instance.js_path}/#{directory_name}.js.erb",
-      "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb",
-    ]
+    File.expand_path "#{Rails.root}/app/assets/generated"
   end
 
   def extra_js_file_path
-    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js"
+    @extra_js_file_path ||=
+      "#{Plugin::Instance.js_path}/#{directory_name}/plugins/#{directory_name}_extra.js"
   end
 
   def write_extra_js!
-    # No longer used, but we want to make sure the files are no longer present
-    # so they don't accidently get compiled by Sprockets.
-    legacy_asset_paths.each do |path|
-      File.delete(path)
-    rescue Errno::ENOENT
-    end
-
     contents = javascript_includes.map { |js| File.read(js) }
 
     if contents.present?
@@ -1377,6 +1472,21 @@ class Plugin::Instance
     else
       begin
         File.delete(extra_js_file_path)
+      rescue Errno::ENOENT
+      end
+    end
+  end
+
+  def ensure_images_symlink!
+    link_from = "#{Rails.root}/app/assets/generated/#{directory_name}/images"
+    link_target = "#{directory}/assets/images"
+
+    if Dir.exist? link_target
+      ensure_directory(link_from)
+      Discourse::Utils.atomic_ln_s(link_target, link_from)
+    else
+      begin
+        File.delete(link_from)
       rescue Errno::ENOENT
       end
     end
@@ -1403,7 +1513,6 @@ class Plugin::Instance
         ""
       opts[:server_locale_file] = Dir["#{root_path}/config/locales/server*.#{locale}.yml"].first ||
         ""
-      opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
 
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
       lib_locale_path = File.join(root_path, "lib/javascripts/locale")
@@ -1421,7 +1530,6 @@ class Plugin::Instance
 
       if valid_locale?(opts)
         DiscoursePluginRegistry.register_locale(locale, opts)
-        Rails.configuration.assets.precompile << "locales/#{locale}.js"
       else
         msg = "Invalid locale! #{opts.inspect}"
         # The logger isn't always present during boot / parsing locales from plugins
@@ -1438,8 +1546,17 @@ class Plugin::Instance
     reloadable_patch { NewPostManager.add_plugin_payload_attribute(attribute_name) }
   end
 
-  def register_topic_preloader_associations(fields)
-    DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
+  ##
+  # Allows plugins to preload topic associations when loading categories with topics.
+  #
+  # @param fields [Array<Symbol>] The topic associations to preload.
+  #
+  # @example Preload custom topic associations
+  #
+  #   register_category_list_topics_preloader_associations(%i[some_topic_association some_other_topic_association])
+  #
+  def register_category_list_topics_preloader_associations(associations)
+    DiscoursePluginRegistry.register_category_list_topics_preloader_association(associations, self)
   end
 
   private
@@ -1487,8 +1604,7 @@ class Plugin::Instance
 
   def valid_locale?(custom_locale)
     File.exist?(custom_locale[:client_locale_file]) &&
-      File.exist?(custom_locale[:server_locale_file]) &&
-      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:moment_js]
+      File.exist?(custom_locale[:server_locale_file]) && custom_locale[:moment_js]
   end
 
   def find_locale_file(locale_chain, path)

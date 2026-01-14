@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .d-header-wrap {
   position: sticky;
   top: 0;
@@ -12,11 +14,17 @@
   background-color: var(--header_background);
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
+  height: 3.66em;
+
+  @include viewport.from(sm) {
+    height: 4em;
+  }
 
   > .wrap {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    padding: 0 var(--d-header-padding-x);
 
     .contents {
       display: flex;
@@ -44,16 +52,20 @@
   }
 
   .title {
-    --d-logo-height: 2.667em;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    animation: fadein 0.5s;
+    --d-logo-height: 2.4em;
 
     // min-width acts as a placeholder if the small logo takes a while to load
     // it prevents topic title from shifting after the small logo loads
     // it's set to match the #site-logo height so square small logos don't resize when titles dock
     min-width: var(--d-logo-height);
+    display: flex;
+    align-items: center;
+    height: 100%;
+    animation: fadein 0.5s;
+
+    @include viewport.from(sm) {
+      --d-logo-height: 2.667em;
+    }
 
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
@@ -85,8 +97,14 @@
 
   #site-text-logo {
     margin: 0;
+    font-size: var(--font-up-1);
+    font-weight: bold;
 
     @include ellipsis;
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-3);
+    }
   }
 
   .d-icon-house {
@@ -110,25 +128,18 @@
   .header-buttons {
     display: flex;
     align-items: center;
-    margin-top: 0.2em;
     white-space: nowrap;
 
     .auth-buttons {
       display: flex;
+      gap: 0.5em;
     }
   }
 
-  .login-button,
-  .sign-up-button {
-    padding: 6px 10px;
-
-    .fa {
-      margin-right: 3px;
+  @include viewport.until(sm) {
+    .sign-up-button {
+      display: none;
     }
-  }
-
-  .login-button {
-    margin-left: 7px;
   }
 }
 
@@ -159,7 +170,6 @@
     padding: 0.2143em;
     text-decoration: none;
     cursor: pointer;
-    border: 1px solid transparent;
     outline: none;
 
     img.avatar {
@@ -169,19 +179,7 @@
 
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
-      background-color: var(--primary-low);
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-right: 1px solid transparent;
-
-      > .d-icon {
-        color: var(--primary-medium);
-      }
-    }
-
-    &:active {
-      color: var(--primary);
-      background-color: var(--primary-low);
+      background-color: var(--d-hover);
     }
   }
 
@@ -191,9 +189,6 @@
       position: relative;
       background-color: var(--secondary);
       cursor: default;
-      border-top: 1px solid var(--primary-low);
-      border-left: 1px solid var(--primary-low);
-      border-right: 1px solid var(--primary-low);
 
       > .d-icon {
         color: var(--primary-medium);
@@ -220,7 +215,6 @@
   .badge-notification {
     border: 2px solid var(--header_background);
     position: absolute;
-    z-index: z("base");
     top: -4px;
     min-width: 0.6em;
     left: auto;
@@ -251,16 +245,51 @@
     left: auto;
     right: 25px;
   }
+
+  .language-switcher {
+    &__locale {
+      color: var(--header_primary-high);
+      font-size: var(--font-down-1);
+    }
+
+    &-trigger {
+      border: 1px solid var(--header_primary-low-mid);
+      margin-right: var(--space-2);
+      gap: var(--space-1);
+
+      html:not(.anon) & {
+        // improves alignment with login/signup buttons
+        align-self: center;
+        padding: var(--space-1) var(--space-2);
+      }
+
+      .d-icon {
+        font-size: var(--font-down-2);
+        width: 1em;
+        color: var(--header_primary-high);
+      }
+
+      .discourse-no-touch & {
+        &:hover {
+          border: 1px solid var(--header_primary-medium);
+
+          .language-switcher__locale {
+            color: var(--header_primary);
+          }
+
+          .d-icon {
+            color: var(--header_primary-high);
+          }
+        }
+      }
+    }
+  }
 }
 
+.language-switcher-content,
 .fk-d-menu.interface-color-selector-content.-expanded {
   margin-top: -0.75em;
   z-index: z("header");
-  box-shadow: var(--shadow-dropdown);
-
-  .fk-d-menu__inner-content {
-    border-color: transparent;
-  }
 }
 
 .header-sidebar-toggle {
@@ -281,7 +310,6 @@
     }
 
     .d-icon {
-      width: 100%;
       font-size: var(--font-up-4);
       line-height: var(--line-height-large);
       display: inline-block;
@@ -292,6 +320,7 @@
 
 // topic info in the header
 .extra-info-wrapper {
+  --tag-text-color: var(--header_primary-high);
   flex: 1 0 0;
   display: flex;
   align-items: center;
@@ -318,7 +347,6 @@
       "title title"
       "categories extra";
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
-    align-items: baseline;
     gap: 0 0.5em;
 
     .header-title {
@@ -339,7 +367,7 @@
   }
 
   .topic-link {
-    color: var(--header_primary);
+    color: var(--title-color--header);
     display: block;
 
     @include ellipsis;
@@ -358,8 +386,12 @@
   .header-title {
     padding: 0;
     margin: 0;
-    font-size: var(--font-up-3);
     width: 100%;
+    font-size: var(--font-0);
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-3);
+    }
   }
 
   .categories-wrapper {
@@ -388,7 +420,6 @@
 
     .discourse-tags {
       display: inline;
-      color: var(--header_primary-high);
 
       @include ellipsis;
 
@@ -449,7 +480,7 @@ $mobile-avatar-height: 1.532em;
 
   .trigger-group-card {
     padding: 0 5px;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-radius: 0.25em;
     min-width: 3em;
 
@@ -509,4 +540,28 @@ $mobile-avatar-height: 1.532em;
   max-height: 80vh;
   border-radius: var(--d-border-radius-large);
   overflow: auto;
+}
+
+.mobile-view {
+  // Hide header avatar + icons while topic title is visible in mobile header
+  .extra-info-wrapper ~ .panel {
+    .before-header-panel-outlet,
+    .header-buttons,
+    .d-header-icons {
+      display: none;
+    }
+  }
+}
+
+.impersonation-notice {
+  background-color: var(--header_background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+
+  button {
+    margin-left: 10px;
+  }
 }

@@ -4,6 +4,7 @@ describe "Creating Invites", type: :system do
   fab!(:group)
   fab!(:user) { Fabricate(:user, groups: [group]) }
   fab!(:topic) { Fabricate(:post).topic }
+  fab!(:invite) { Fabricate(:invite, invited_by: user, email: "test@example.com") } # avoid empty state
   let(:user_invited_pending_page) { PageObjects::Pages::UserInvitedPending.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:cdp) { PageObjects::CDP.new }
@@ -46,7 +47,7 @@ describe "Creating Invites", type: :system do
 
     create_invite_modal.close
 
-    expect(user_invited_pending_page.invites_list.size).to eq(1)
+    expect(user_invited_pending_page.invites_list.size).to eq(2)
 
     expect(user_invited_pending_page.latest_invite).to be_link_type(
       key: invite_key,
@@ -54,7 +55,7 @@ describe "Creating Invites", type: :system do
       max_redemption_count: 7,
     )
     expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
-      Time.zone.now + 3.days,
+      3.days.from_now,
     )
   end
 
@@ -73,7 +74,7 @@ describe "Creating Invites", type: :system do
       create_invite_modal.save_button.click
       create_invite_modal.close
 
-      expect(user_invited_pending_page.invites_list.size).to eq(1)
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
 
       user_invited_pending_page.latest_invite.edit_button.click
     end
@@ -97,6 +98,7 @@ describe "Creating Invites", type: :system do
       open_invite_modal
       display_advanced_options
 
+      create_invite_modal.form.field("description").fill_in("welcome")
       create_invite_modal.form.field("restrictTo").fill_in("discourse.org")
       create_invite_modal.form.field("maxRedemptions").fill_in("53")
       create_invite_modal.form.field("expiresAfterDays").select(90)
@@ -113,8 +115,9 @@ describe "Creating Invites", type: :system do
 
       create_invite_modal.close
 
-      expect(user_invited_pending_page.invites_list.size).to eq(1)
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
 
+      expect(user_invited_pending_page.latest_invite).to have_description("welcome")
       expect(user_invited_pending_page.latest_invite).to be_link_type(
         key: invite_key,
         redemption_count: 0,
@@ -123,7 +126,7 @@ describe "Creating Invites", type: :system do
       expect(user_invited_pending_page.latest_invite).to have_group(group)
       expect(user_invited_pending_page.latest_invite).to have_topic(topic)
       expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
-        Time.zone.now + 90.days,
+        Time.find_zone(user.user_option.timezone).now + 90.days,
       )
     end
 
@@ -157,14 +160,14 @@ describe "Creating Invites", type: :system do
 
       create_invite_modal.close
 
-      expect(user_invited_pending_page.invites_list.size).to eq(1)
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
 
       expect(user_invited_pending_page.latest_invite).to be_email_type("someone@discourse.org")
       expect(user_invited_pending_page.latest_invite).to have_group(group)
       expect(user_invited_pending_page.latest_invite).to have_group(another_group)
       expect(user_invited_pending_page.latest_invite).to have_topic(topic)
       expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
-        Time.zone.now + 1.day,
+        1.day.from_now,
       )
       sent_email = ActionMailer::Base.deliveries.first
       expect(sent_email.to).to contain_exactly("someone@discourse.org")
@@ -185,7 +188,7 @@ describe "Creating Invites", type: :system do
 
       create_invite_modal.close
 
-      expect(user_invited_pending_page.invites_list.size).to eq(1)
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
       expect(user_invited_pending_page.latest_invite).to be_email_type("invitedperson@email.org")
       expect(ActionMailer::Base.deliveries).to eq([])
     end
@@ -224,6 +227,24 @@ describe "Creating Invites", type: :system do
 
       expire_date = Time.parse("#{date} #{time}:#{now.strftime("%S")}").utc
       expect(expire_date).to be_within_one_minute_of(now + 1.day)
+    end
+  end
+
+  context "in empty state" do
+    fab!(:user_without_invites) { Fabricate(:user, groups: [group]) }
+    let(:user_invited_pending_page_empty) { PageObjects::Pages::UserInvitedPending.new }
+    let(:create_invite_modal_empty) { PageObjects::Modals::CreateInvite.new }
+
+    before do
+      SiteSetting.invite_allowed_groups = "#{group.id}"
+      sign_in(user_without_invites)
+      user_invited_pending_page_empty.visit(user_without_invites)
+    end
+
+    it "can open the invite modal from the empty state button" do
+      find(".empty-state .btn-primary").click
+
+      expect(page).to have_css(".create-invite-modal")
     end
   end
 end

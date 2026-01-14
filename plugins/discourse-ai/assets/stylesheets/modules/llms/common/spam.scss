@@ -1,0 +1,162 @@
+.ai-spam {
+  --chart-scanned-color: var(--success);
+  --chart-spam-color: var(--danger);
+  padding-top: 15px;
+
+  &__settings {
+    margin-bottom: 2em;
+  }
+
+  &__enabled {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-bottom: 1em;
+
+    .fk-d-tooltip__trigger {
+      color: var(--primary-high);
+    }
+  }
+
+  &__settings-title {
+    margin-bottom: 1em;
+  }
+
+  &__toggle,
+  &__llm,
+  &__persona,
+  &__instructions {
+    margin-bottom: 1em;
+  }
+
+  &__toggle-label,
+  &__llm-label,
+  &__persona-label,
+  &__instructions-label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+  }
+
+  &__instructions-input {
+    width: 100%;
+    min-height: 100px;
+    margin-bottom: 0.5em;
+  }
+
+  &__stats {
+    margin-top: 2em;
+  }
+
+  &__errors {
+    .alert {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .btn {
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+.spam-test-modal {
+  &__body {
+    min-width: 600px;
+    max-width: 800px;
+  }
+
+  &__results {
+    margin-top: 1.5em;
+  }
+
+  &__verdict {
+    font-size: var(--font-up-2);
+    font-weight: bold;
+    padding: 0.75em;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 1.5em;
+
+    &.is-spam {
+      background: var(--danger-low);
+      color: var(--danger);
+      border: 2px solid var(--danger-medium);
+    }
+
+    &.not-spam {
+      background: var(--success-low);
+      color: var(--success);
+      border: 2px solid var(--success-medium);
+    }
+  }
+
+  &__info-box {
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: 6px;
+    margin-bottom: 1em;
+    overflow: hidden;
+
+    &--reason {
+      background: var(--highlight-bg);
+      border-color: var(--tertiary-low);
+    }
+  }
+
+  &__info-box-title {
+    margin: 0;
+    padding: 0.75em 1em;
+    background: var(--primary-low);
+    font-size: var(--font-0);
+    font-weight: 600;
+    border-bottom: 1px solid var(--primary-low);
+    color: var(--primary-high);
+  }
+
+  &__info-box-content {
+    padding: 1em;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    pre {
+      margin: 0;
+      padding: 0;
+      background: none;
+      font-family: var(--font-family-monospace);
+      font-size: var(--font-down-1);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      line-height: 1.4;
+    }
+  }
+
+  &__info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1em;
+    margin-bottom: 1em;
+  }
+
+  &__info-box--llm &__info-box-content {
+    max-height: 60px;
+    font-weight: 500;
+    color: var(--primary-high);
+  }
+
+  &__info-box--history &__info-box-content {
+    max-height: 150px;
+  }
+
+  &__info-box--message &__info-box-content,
+  &__info-box--prompt &__info-box-content {
+    max-height: 250px;
+  }
+}

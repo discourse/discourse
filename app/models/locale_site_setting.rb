@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
 class LocaleSiteSetting < EnumSiteSetting
+  def self.translate_names?
+    true
+  end
+
   def self.valid_value?(val)
-    supported_locales.include?(val)
+    val.split("|").all? { |v| supported_locales.include?(v) }
   end
 
   def self.values
-    @values ||=
-      supported_locales.map do |locale|
-        lang = language_names[locale] || language_names[locale.split("_")[0]]
-        { name: lang ? lang["nativeName"] : locale, value: locale }
-      end
+    supported_locales.map do |locale|
+      lang = language_names[locale] || language_names[locale.split("_").first]
+      native_name = lang&.dig("nativeName")
+      { native_name:, value: locale, name: "languages.#{locale}.name" }
+    end
   end
 
   @lock = Mutex.new

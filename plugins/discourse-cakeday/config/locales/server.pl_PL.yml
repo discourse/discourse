@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    cakeday_enabled: "Pokazuj emoji urodzin przy nazwie użytkownika w dniu rocznicy dołączenia do społeczności."
+    cakeday_emoji: "Emoji będą pokazane przy nazwie użytkownika w dniu rocznicy dołączenia do społeczności. Definiuj nowe emoji wg wzoru: smile|cake|smile"
+    cakeday_birthday_enabled: "Pokazuj urodzinowe emoji przy nazwie użytkownika w dniu ich urodzin."
+    cakeday_birthday_emoji: "Emoji będą pokazane przy nazwie użytkownika w dniu ich urodzin. Definiuj nowe emoji wg wzoru: smile|cake|smile "

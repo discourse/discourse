@@ -152,7 +152,7 @@ RSpec.describe ScreenedIpAddress do
       end
 
       context "when using exact match" do
-        fab!(:existing) { Fabricate(:screened_ip_address) }
+        fab!(:existing, :screened_ip_address)
         let(:ip_address_arg) { existing.ip_address }
         include_examples "exact match of ip address"
       end

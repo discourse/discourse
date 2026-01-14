@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe "Drawer - index", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
     chat_system_bootstrap
     sign_in(current_user)
+  end
+
+  it "shows a button for chat search" do
+    drawer_page.visit_index
+    drawer_page.open_chat_search
+
+    expect(drawer_page).to have_open_chat_search
   end
 
   it "can leave a direct message" do
@@ -56,6 +63,6 @@ RSpec.describe "Drawer - index", type: :system do
     drawer_page.visit_index
     drawer_page.click_direct_messages
     expect(page).to have_css("#c-footer-direct-messages.--active")
-    expect(page).to have_selector(".channel-list-empty-message")
+    expect(page).to have_selector(".empty-state")
   end
 end

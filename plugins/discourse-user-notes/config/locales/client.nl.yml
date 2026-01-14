@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    user_notes:
+      title: "Gebruikersnotities"
+      attach_note_description: "Voeg een opmerking toe over deze gebruiker. Deze opmerking is alleen zichtbaar voor medewerkers."
+      delete_confirm: "Weet je zeker dat je die gebruikersnotitie wilt verwijderen?"

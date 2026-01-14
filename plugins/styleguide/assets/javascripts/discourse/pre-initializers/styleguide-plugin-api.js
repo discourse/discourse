@@ -27,7 +27,7 @@ export default {
   before: "inject-discourse-objects",
 
   initialize() {
-    withPluginApi("1.2.0", (api) => {
+    withPluginApi((api) => {
       const apiPrototype = Object.getPrototypeOf(api);
 
       if (!apiPrototype.hasOwnProperty("addStyleguideSection")) {

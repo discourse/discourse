@@ -96,6 +96,8 @@ sv:
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:
+        no_action_message:
+          title: "Ingen åtgärd"
         agree:
           title: "Godkänn..."
         agree_and_keep_message:
@@ -117,16 +119,12 @@ sv:
           title: "Radera meddelande"
           description: "Ta bort meddelandet så att användarna inte kan se det."
         delete_and_agree:
-          title: "Ignorera flagga och radera meddelande"
           description: "Ignorera flaggan genom att ta bort den från kön och radera meddelandet."
         disagree_and_restore:
           title: "Håll inte med och återställ meddelande"
           description: "Återställ meddelandet så att alla användare kan se det."
-        disagree:
-          title: "Håll inte med"
         ignore:
-          title: "Gör ingenting"
-          description: "Ignorera flaggan genom att ta bort den från kön utan att vidta någon åtgärd."
+          title: "Ignorera flagga"
       direct_messages:
         transcript_title: "Avskrift av tidigare meddelanden i %{channel_name}"
         transcript_body: "För att ge dig mer sammanhang inkluderade vi en avskrift av de tidigare meddelandena i det här samtalet (upp till tio):\n\n%{transcript}"
@@ -172,8 +170,6 @@ sv:
       errors:
         slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"
         is_already_in_use: "används redan"
-    bookmarkable:
-      notification_title: "meddelande i %{channel_name}"
     personal_chat: "personlig chatt"
     onebox:
       inline_to_message: "Meddelande #%{message_id} av %{username} – #%{chat_channel}"
@@ -230,10 +226,8 @@ sv:
       view_more:
         one: "Visa %{count} mer meddelande"
         other: "Visa %{count} fler meddelanden"
-      your_chat_settings: "preferens för frekvens av chattmeddelanden"
   unsubscribe:
     chat_summary:
-      select_title: "Ställ in e-postfrekvensen för chattsammanfattningar till:"
       never: Aldrig
       when_away: Endast när du är borta
   category:

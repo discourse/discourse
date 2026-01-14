@@ -9,25 +9,23 @@ class UsernameValidator
   #
   # Example: UsernameValidator.perform_validation(user, 'name')
   def self.perform_validation(object, field_name, opts = {})
-    validator = UsernameValidator.new(object.public_send(field_name), **opts)
+    validator = UsernameValidator.new(object.public_send(field_name), object:, **opts)
     unless validator.valid_format?
       validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }
     end
   end
 
-  def initialize(username, skip_length_validation: false)
+  def initialize(username, skip_length_validation: false, object: nil)
     @username = username&.unicode_normalize
     @skip_length_validation = skip_length_validation
+    @object = object
     @errors = []
   end
 
   attr_accessor :errors
   attr_reader :username
+  attr_reader :object
   attr_reader :skip_length_validation
-
-  def user
-    @user ||= User.new(user)
-  end
 
   def valid_format?
     username_present?
@@ -39,6 +37,7 @@ class UsernameValidator
     username_last_char_valid?
     username_no_double_special?
     username_does_not_end_with_confusing_suffix?
+    username_plugin_validation
     errors.empty?
   end
 
@@ -150,6 +149,12 @@ class UsernameValidator
     if CONFUSING_EXTENSIONS.match?(username)
       self.errors << I18n.t(:"user.username.must_not_end_with_confusing_suffix")
     end
+  end
+
+  def username_plugin_validation
+    return unless errors.empty?
+
+    DiscoursePluginRegistry.apply_modifier(:username_validation, self.errors, self)
   end
 
   def username_grapheme_clusters

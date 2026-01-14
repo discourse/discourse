@@ -8,7 +8,7 @@ RSpec.describe(AdminNotices::Dismiss) do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
     fab!(:admin_notice) { Fabricate(:admin_notice, identifier: "problem.test") }
     fab!(:problem_check) { Fabricate(:problem_check_tracker, identifier: "problem.test", blips: 3) }
 
@@ -17,7 +17,7 @@ RSpec.describe(AdminNotices::Dismiss) do
     let(:dependencies) { { guardian: current_user.guardian } }
 
     context "when user is not allowed to perform the action" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:invalid_access) }
     end
@@ -43,6 +43,32 @@ RSpec.describe(AdminNotices::Dismiss) do
 
       it "resets any associated problem check" do
         expect { result }.to change { problem_check.reload.blips }.from(3).to(0)
+      end
+    end
+
+    context "when the admin notice has a specific target" do
+      fab!(:admin_notice) do
+        Fabricate(
+          :admin_notice,
+          identifier: "problem.test",
+          details: {
+            "target" => "specific_target",
+          },
+        )
+      end
+      fab!(:problem_check) do
+        Fabricate(
+          :problem_check_tracker,
+          identifier: "problem.test",
+          target: "specific_target",
+          blips: 5,
+        )
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "resets the problem check with the matching target" do
+        expect { result }.to change { problem_check.reload.blips }.from(5).to(0)
       end
     end
   end

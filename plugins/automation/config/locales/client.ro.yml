@@ -10,6 +10,7 @@ ro:
       logs:
         staff_actions:
           actions:
+            update_automation: actualizează automatizare
             delete_automation: șterge automatizarea
     discourse_automation:
       table_title: Automatizări
@@ -37,6 +38,12 @@ ro:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorii
+            tags:
+              label: Etichete
         user_badge_granted:
           fields:
             badge:
@@ -76,16 +83,38 @@ ro:
             restricted_tags:
               label: Etichete
               description: Opțional, se va declanșa doar dacă articolul are oricare dintre aceste etichete
-            restricted_category:
-              label: Categorie
-            restricted_group:
-              label: Grup
+            restricted_categories:
+              label: Categorii
+              description: Opțional, se va declanșa numai dacă subiectul postării se află în aceste categorii
+            exclude_subcategories:
+              label: Exclude subcategorii
+              description: Opțional, se va declanșa numai dacă subiectul postării este exact în categoriile specificate mai sus
+            restricted_archetype:
+              label: Tip subiect
+              description: Opțional, permite declanșarea numai pe subiecte sau mesaje personale
             restricted_groups:
-              label: Grupuri
+              label: Grupuri restricționate
+              description: Opțional, se va declanșa doar dacă utilizatorul postării se află în oricare dintre aceste grupuri
+            restricted_inbox_groups:
+              label: Grupuri de căsuțe poștale restricționate
+              description: Opțional, se va declanșa doar dacă subiectul postării este un mesaj personal într-una dintre căsuțele de intrare ale grupului
+            excluded_groups:
+              label: Grupuri excluse
+              description: Opțional, ignoră declanșatorul dacă utilizatorul postării aparține unuia dintre aceste grupuri
             skip_via_email:
               label: "Omite prin email"
               description: "Omite declanșatorul dacă articolul a fost creat prin email"
+            post_features:
+              label: Caracteristici postare
+              description: "Opțional, limitează declanșarea numai la postările cu aceste caracteristici"
           created: Creat
+          topics: Toate subiectele
+          personal_messages: Mesaje personale
+          public_topics: Subiecte publice (exclude toate categoriile securizate)
+          with_images: Imagini
+          with_links: Legături
+          with_code: Cod
+          with_uploads: Încărcări
         user_updated:
           fields:
             new_users_only:
@@ -174,12 +203,19 @@ ro:
               label: ID subiect
             user:
               label: Utilizator
+        set_topic_timer:
+          title: Setează cronometrul subiectului
       unnamed_automation: "Automatizare fără nume"
       models:
         trigger:
           name:
             label: Declanșator
         automation:
+          runs_today: "%{count} astăzi"
+          runs_this_week: "%{count} săptămâna aceasta"
+          runs_this_month: "%{count} luna aceasta"
+          runs:
+            label: Rulări
           name:
             label: Nume
           trigger:
@@ -188,7 +224,7 @@ ro:
             label: Versiune
           status:
             label: Stare
-          enabled:
-            label: Activat
           disabled:
             label: Dezactivat
+          last_run:
+            label: Ultima rulare

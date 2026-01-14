@@ -105,7 +105,7 @@ RSpec.describe PrettyText do
             <p>This is a quote with an emoji shortcut :)</p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with a Unicode emoji <img src="/images/emoji/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>
+            <p>This is a quote with a Unicode emoji <img src="/images/emoji/twitter/smiling_face_with_sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":smiling_face_with_sunglasses:" class="emoji" alt=":smiling_face_with_sunglasses:" loading="lazy" width="20" height="20"></p>
             </blockquote>
           HTML
 
@@ -121,7 +121,7 @@ RSpec.describe PrettyText do
             <p>This is a quote with an emoji shortcut <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with a Unicode emoji <img src="/images/emoji/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>
+            <p>This is a quote with a Unicode emoji <img src="/images/emoji/twitter/smiling_face_with_sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":smiling_face_with_sunglasses:" class="emoji" alt=":smiling_face_with_sunglasses:" loading="lazy" width="20" height="20"></p>
             </blockquote>
           HTML
 
@@ -151,20 +151,20 @@ RSpec.describe PrettyText do
 
           html = <<~HTML
             <p><img src="/images/emoji/twitter/frowning.png?v=#{Emoji::EMOJI_VERSION}" title=":frowning:" class="emoji only-emoji" alt=":frowning:" loading="lazy" width="20" height="20"><br>
-            foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:" loading="lazy" width="20" height="20"><br>
-            foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:" loading="lazy" width="20" height="20"> bar<br>
+            foo <img src="/images/emoji/twitter/grinning_face.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning_face:" class="emoji" alt=":grinning_face:" loading="lazy" width="20" height="20"><br>
+            foo <img src="/images/emoji/twitter/grinning_face.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning_face:" class="emoji" alt=":grinning_face:" loading="lazy" width="20" height="20"> bar<br>
             <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:" loading="lazy" width="20" height="20"><br>
             baz? <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji" alt=":smile_cat:" loading="lazy" width="20" height="20"><br>
-            <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji only-emoji" alt=":grinning:" loading="lazy" width="20" height="20"><br>
+            <img src="/images/emoji/twitter/grinning_face.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning_face:" class="emoji only-emoji" alt=":grinning_face:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> foo<br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
-            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d​:wink: <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d​<img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d<br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"></p>
           HTML
@@ -183,7 +183,7 @@ RSpec.describe PrettyText do
             <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/smiling_face_with_sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":smiling_face_with_sunglasses:" class="emoji" alt=":smiling_face_with_sunglasses:" loading="lazy" width="20" height="20"></p>
             </blockquote>
           HTML
 
@@ -204,7 +204,7 @@ RSpec.describe PrettyText do
             <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/smiling_face_with_sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":smiling_face_with_sunglasses:" class="emoji" alt=":smiling_face_with_sunglasses:" loading="lazy" width="20" height="20"></p>
             </blockquote>
           HTML
 
@@ -563,6 +563,23 @@ RSpec.describe PrettyText do
     end
 
     context "with pretty_text_extract_mentions modifier" do
+      let(:modifier_block) do
+        Proc.new do |mentions, cooked_text|
+          custom_mentions =
+            cooked_text
+              .css(".custom-mention")
+              .map do |e|
+                if (name = e.inner_text)
+                  name = name[1..-1]
+                  name = User.normalize_username(name)
+                  name
+                end
+              end
+
+          mentions + custom_mentions
+        end
+      end
+
       it "allows changing the mentions extracted" do
         cooked_html = <<~HTML
         <p>
@@ -577,27 +594,18 @@ RSpec.describe PrettyText do
         extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
         expect(extracted_mentions).to contain_exactly("test", "test-group")
 
-        Plugin::Instance
-          .new
-          .register_modifier(:pretty_text_extract_mentions) do |mentions, cooked_text|
-            custom_mentions =
-              cooked_text
-                .css(".custom-mention")
-                .map do |e|
-                  if (name = e.inner_text)
-                    name = name[1..-1]
-                    name = User.normalize_username(name)
-                    name
-                  end
-                end
+        plugin_instance = Plugin::Instance.new
 
-            mentions + custom_mentions
-          end
+        plugin_instance.register_modifier(:pretty_text_extract_mentions, &modifier_block)
 
         extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
         expect(extracted_mentions).to include("test", "test-group", "test-custom")
       ensure
-        DiscoursePluginRegistry.clear_modifiers!
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :pretty_text_extract_mentions,
+          &modifier_block
+        )
       end
     end
   end
@@ -1677,10 +1685,10 @@ RSpec.describe PrettyText do
       it "prepends the subfolder path to the emoji url" do
         set_subfolder "/forum"
 
-        expected = "src=\"/forum/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}\""
+        expected = "src=\"/forum/images/emoji/twitter/grinning_face.png?v=#{Emoji::EMOJI_VERSION}\""
 
         expect(PrettyText.cook("😀")).to include(expected)
-        expect(PrettyText.cook(":grinning:")).to include(expected)
+        expect(PrettyText.cook(":grinning_face:")).to include(expected)
       end
 
       it "prepends the subfolder path even if it is part of the emoji url" do
@@ -1806,7 +1814,7 @@ RSpec.describe PrettyText do
   it "produces hashtag links" do
     user = Fabricate(:user)
     category = Fabricate(:category, name: "testing", slug: "testing")
-    category2 = Fabricate(:category, name: "known", slug: "known")
+    category2 = Fabricate(:category, name: "known", slug: "known", style_type: "icon", icon: "book")
     group = Fabricate(:group)
     private_category = Fabricate(:private_category, name: "secret", group: group, slug: "secret")
     tag = Fabricate(:tag, name: "known")
@@ -1823,6 +1831,8 @@ RSpec.describe PrettyText do
         "data-type": "category",
         "data-slug": category2.slug,
         "data-id": category2.id,
+        "data-style-type": category2.style_type,
+        "data-icon": category2.icon,
       },
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
@@ -2748,7 +2758,7 @@ HTML
 
     html = <<~HTML
       <h1>
-      <a name="hello-world-1" class="anchor" href="#hello-world-1"></a>
+      <a name="hello-world-1" class="anchor" href="#hello-world-1" aria-label="Heading link"></a>
       Hello world
       </h1>
     HTML
@@ -2805,7 +2815,7 @@ HTML
       .logger
       .expects(:warn)
       .once
-      .with("[PrettyText] Deprecation notice: Some deprecation message")
+      .with("[PrettyText] DEPRECATION NOTICE: Some deprecation message")
 
     PrettyText.v8.eval <<~JS
       require("discourse/lib/deprecated").default("Some deprecation message");

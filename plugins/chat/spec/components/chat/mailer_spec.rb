@@ -2,16 +2,16 @@
 
 describe Chat::Mailer do
   fab!(:user) { Fabricate(:user, last_seen_at: 1.hour.ago) }
-  fab!(:other) { Fabricate(:user) }
+  fab!(:other, :user)
 
   fab!(:group) do
     Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone], users: [user, other])
   end
 
-  fab!(:followed_channel) { Fabricate(:category_channel) }
-  fab!(:non_followed_channel) { Fabricate(:category_channel) }
-  fab!(:muted_channel) { Fabricate(:category_channel) }
-  fab!(:unseen_channel) { Fabricate(:category_channel) }
+  fab!(:followed_channel, :category_channel)
+  fab!(:non_followed_channel, :category_channel)
+  fab!(:muted_channel, :category_channel)
+  fab!(:unseen_channel, :category_channel)
   fab!(:direct_message) { Fabricate(:direct_message_channel, users: [user, other]) }
 
   fab!(:job) { :user_email }
@@ -23,9 +23,7 @@ describe Chat::Mailer do
   end
 
   def expect_enqueued
-    expect {
-      expect_enqueued_with(job:, args:) { described_class.send_unread_mentions_summary }
-    }.to_not output.to_stderr_from_any_process
+    expect_enqueued_with(job:, args:) { described_class.send_unread_mentions_summary }
     expect(Jobs::UserEmail.jobs.size).to eq(1)
   end
 
@@ -80,9 +78,9 @@ describe Chat::Mailer do
         expect_not_enqueued
       end
 
-      it "does not queue a chat summary email when user has chat email frequency = never" do
+      it "queues a chat summary email even when user has chat email frequency = never" do
         user.user_option.update!(chat_email_frequency: UserOption.chat_email_frequencies[:never])
-        expect_not_enqueued
+        expect_enqueued
       end
 
       it "does not queue a chat summary email when user has email level = never" do
@@ -193,6 +191,36 @@ describe Chat::Mailer do
       before { create_message(followed_channel, "hello @all", Chat::AllMention) }
 
       it "queues a chat summary email" do
+        expect_enqueued
+      end
+    end
+
+    describe "with watched threads" do
+      let!(:chat_message) { create_message(followed_channel, "hello guys") }
+      let!(:thread) do
+        Fabricate(:chat_thread, channel: followed_channel, original_message: chat_message)
+      end
+
+      before do
+        Fabricate(
+          :user_chat_thread_membership,
+          user: user,
+          thread:,
+          notification_level: Chat::NotificationLevels.all[:watching],
+        )
+      end
+
+      it "queues a chat summary email" do
+        expect_enqueued
+      end
+
+      it "does not queue a chat summary email when email level = never" do
+        user.user_option.update!(email_level: UserOption.email_level_types[:never])
+        expect_not_enqueued
+      end
+
+      it "queues a chat summary email even when chat email frequency = never" do
+        user.user_option.update!(chat_email_frequency: UserOption.chat_email_frequencies[:never])
         expect_enqueued
       end
     end
@@ -313,6 +341,11 @@ describe Chat::Mailer do
 
     it "queues a chat summary email even when user isn't following the direct message anymore" do
       direct_message.membership_for(user).update!(following: false)
+      expect_enqueued
+    end
+
+    it "queues a chat summary email even when user has core email level = never" do
+      user.user_option.update!(email_level: UserOption.email_level_types[:never])
       expect_enqueued
     end
 

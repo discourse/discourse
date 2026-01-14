@@ -15,7 +15,7 @@
 require "mysql2"
 require "csv"
 require "reverse_markdown"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 require "htmlentities"
 
 # remove table conversion

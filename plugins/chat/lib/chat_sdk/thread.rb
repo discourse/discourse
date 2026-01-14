@@ -83,6 +83,7 @@ module ChatSDK
         },
       ) do
         on_success { |messages:| messages }
+        on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
         on_failed_policy(:can_view_thread) { raise "Guardian can't view thread" }
         on_failed_policy(:target_message_exists) { raise "Target message doesn't exist" }
         on_failure { raise "Unexpected error" }

@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    github:
+      pr_status:
+        draft: "Черновик"
+        open: "Открытые"
+        approved: "Одобренные"
+        closed: "Закрытое"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Плагин GitHub для Discourse"
+  replace_github_link:
+    edit_reason: "Ссылка на Github была заменена на постоянную ссылку"

@@ -9,7 +9,9 @@
   background: transparent;
   cursor: pointer;
   user-select: none;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 
   &.reacted {
     border-color: var(--tertiary-medium);

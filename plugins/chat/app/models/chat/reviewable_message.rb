@@ -2,6 +2,8 @@
 
 module Chat
   class ReviewableMessage < Reviewable
+    include ReviewableActionBuilder
+
     validates :type, length: { maximum: 100 }
     validates :target_type, length: { maximum: 100 }
 
@@ -38,7 +40,8 @@ module Chat
       nil
     end
 
-    def build_actions(actions, guardian, args)
+    # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
+    def build_legacy_combined_actions(actions, guardian, args)
       return unless pending?
 
       return build_action(actions, :ignore, icon: "up-right-from-square") if chat_message.blank?
@@ -53,11 +56,9 @@ module Chat
       if chat_message.deleted_at?
         build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree)
         build_action(actions, :agree_and_keep_deleted, icon: "thumbs-up", bundle: agree)
-        build_action(actions, :disagree_and_restore, icon: "thumbs-down")
       else
-        build_action(actions, :agree_and_delete, icon: "far-eye-slash", bundle: agree)
-        build_action(actions, :agree_and_keep_message, icon: "thumbs-up", bundle: agree)
-        build_action(actions, :disagree, icon: "thumbs-down")
+        build_action(actions, :agree_and_delete, icon: "trash-can", bundle: agree)
+        build_action(actions, :agree_and_keep_message, icon: "far-eye", bundle: agree)
       end
 
       if guardian.can_suspend?(chat_message_creator)
@@ -77,15 +78,44 @@ module Chat
         )
       end
 
-      ignore_bundle = actions.add_bundle("#{id}-ignore", label: "reviewables.actions.ignore.title")
+      disagree_bundle =
+        actions.add_bundle(
+          "#{id}-disagree",
+          icon: "far-eye",
+          label: "reviewables.actions.disagree_bundle.title",
+        )
 
-      build_action(actions, :ignore, icon: "up-right-from-square", bundle: ignore_bundle)
+      if chat_message.deleted_at?
+        build_action(actions, :disagree_and_restore, icon: "far-eye", bundle: disagree_bundle)
+      else
+        build_action(actions, :disagree, icon: "far-eye", bundle: disagree_bundle)
+      end
+
+      build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
 
       unless chat_message.deleted_at?
-        build_action(actions, :delete_and_agree, icon: "trash-can", bundle: ignore_bundle)
+        build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
       end
     end
 
+    # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
+    def build_new_separated_actions
+      bundle_actions = { no_action_message: {} }
+      if chat_message.deleted_at?
+        bundle_actions[:restore_message] = {}
+      else
+        bundle_actions[:delete_message] = {}
+      end
+      build_bundle(
+        "#{id}-message-actions",
+        "chat.reviewables.actions.message_actions.bundle_title",
+        bundle_actions,
+      )
+
+      build_user_actions_bundle
+    end
+
+    # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI
     def perform_agree_and_keep_message(performed_by, args)
       agree
     end
@@ -112,6 +142,29 @@ module Chat
 
     def perform_delete_and_ignore(performed_by, args)
       ignore { chat_message.trash!(performed_by) }
+    end
+
+    def perform_agree_and_keep_deleted(performed_by, args)
+      agree
+    end
+    # TODO (reviewable-refresh): Remove combined actions above when fully migrated to new UI
+
+    def perform_no_action_message(performed_by, args)
+      if chat_message.deleted_at?
+        create_result(:success, :approved, [created_by_id], true)
+      else
+        create_result(:success, :rejected, [created_by_id], true)
+      end
+    end
+
+    def perform_restore_message(_performed_by, args)
+      chat_message.recover!
+      create_result(:success, :rejected, [created_by_id], true)
+    end
+
+    def perform_delete_message(performed_by, args)
+      chat_message.trash!(performed_by)
+      create_result(:success, :approved, [created_by_id], true)
     end
 
     private
@@ -141,25 +194,43 @@ module Chat
         result.update_flag_stats = { status: :ignored, user_ids: flagged_by_user_ids }
       end
     end
-
-    def build_action(
-      actions,
-      id,
-      icon:,
-      button_class: nil,
-      bundle: nil,
-      client_action: nil,
-      confirm: false
-    )
-      actions.add(id, bundle: bundle) do |action|
-        prefix = "reviewables.actions.#{id}"
-        action.icon = icon
-        action.button_class = button_class
-        action.label = "chat.#{prefix}.title"
-        action.description = "chat.#{prefix}.description"
-        action.client_action = client_action
-        action.confirm_message = "#{prefix}.confirm" if confirm
-      end
-    end
   end
 end
+
+# == Schema Information
+#
+# Table name: reviewables
+#
+#  id                      :bigint           not null, primary key
+#  type                    :string           not null
+#  status                  :integer          default("pending"), not null
+#  created_by_id           :integer          not null
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  category_id             :integer
+#  topic_id                :integer
+#  score                   :float            default(0.0), not null
+#  potential_spam          :boolean          default(FALSE), not null
+#  target_id               :integer
+#  target_type             :string
+#  target_created_by_id    :integer
+#  payload                 :json
+#  version                 :integer          default(0), not null
+#  latest_score            :datetime
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  force_review            :boolean          default(FALSE), not null
+#  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
+#  type_source             :string           default("unknown"), not null
+#
+# Indexes
+#
+#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
+#

@@ -1,5 +1,5 @@
-import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {
@@ -22,7 +22,11 @@ export default {
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
+
     const openQuickChannelSelector = (e) => {
+      if (isInputSelection(e.target) && !isChatComposer(e.target)) {
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       modal.show(ChatModalNewMessage);
@@ -98,9 +102,8 @@ export default {
     };
 
     const closeChat = (event) => {
-      // TODO (joffrey): removes this when we move from magnific popup
-      // there's no proper way to prevent propagation in mfp
-      if (event.srcElement?.classList?.value?.includes("mfp-wrap")) {
+      // when escaping from lightbox, do not close chat
+      if (event.srcElement?.classList?.value?.includes("lightbox")) {
         return;
       }
 
@@ -135,7 +138,7 @@ export default {
       }
     };
 
-    withPluginApi("0.12.1", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+k`,
         openQuickChannelSelector,

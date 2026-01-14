@@ -1,0 +1,42 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fa:
+  js:
+    user:
+      date_of_birth:
+        user_title: "امروز تولدته!"
+        title: "امروز تولد کاربر هست!"
+        label: "تاریخ تولد"
+      anniversary:
+        user_title: "امروز سالگرد ثبت نام شماست!"
+        title: "امروز سالگرد ثبت نام کربر است!"
+    cakeday:
+      none: " "
+      title: Cakeday
+    birthdays:
+      title: "تولدها"
+      month:
+        title: "تولدها در ماه"
+        empty: "هیچ کاربری تولدش را در این ماه جشن نمیگیرد."
+      upcoming:
+        title: "تولدهای پیش رو"
+        empty: "هیچ کاربری در ۷ روز آینده تولدش را جشن نمیگیرد."
+      today:
+        title: "تولدهای امروز"
+        empty: "هیچ کاربری تولدش را امروز جشن نمیگیرد."
+    anniversaries:
+      title: "سالگردها"
+      month:
+        title: "سالگردهای ماه"
+        empty: "هیچ کاربری سالگرد ثبت نامش را این ماه جشن نمیگیرد."
+      upcoming:
+        title: "سالگردهای پیش رو"
+        empty: "هیچ کاربری سالگرد ثبت نامش را در ۷ روز آینده جشن نمیگیرد."
+      today:
+        title: "سالگردهای امروز"
+        empty: "هیچ کاربری سالگرد ثبت نامش را امروز جشن نمیگیرد."

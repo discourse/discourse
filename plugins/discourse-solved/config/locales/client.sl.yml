@@ -1,0 +1,72 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "sprejeto"
+    solutions: "Rešitve"
+    solved:
+      title: "Rešeno"
+      allow_accepted_answers: "Lastniku teme in osebju dovolite, da odgovor označijo kot rešitev"
+      solved_topics_auto_close_hours: "Samodejno zapiranje teme (n) ur po zadnjem odgovoru, ko je tema označena kot rešena."
+      accept_answer: "Izberite, če ta odgovor reši problem"
+      accepted_description: "To je sprejeta rešitev te teme"
+      has_no_accepted_answer: "Ta tema nima rešitve"
+      unaccept_answer: "Odstrani izbor, če ta odgovor več ne reši problema"
+      accepted_answer: "Rešitev"
+      solution: "Rešitev"
+      solution_summary:
+        one: "rešitev"
+        two: "rešitev"
+        few: "rešitev"
+        other: "rešitev"
+      accepted_answer_post_number: "prispevek %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "vse"
+        solved: "rešeno"
+        unsolved: "nerešeno"
+      no_solved_topics_title: "Rešili niste še nobene teme"
+      no_solved_topics_title_others: "%{username} še ni rešil nobene teme"
+      no_solved_topics_body: "Ko podate koristen odgovor na temo, lahko lastnik teme ali osebje izbere vaš odgovor kot rešitev."
+      no_answer:
+        title: Ste dobili odgovor na vaše vprašanje?
+        description: "Z izbiro gumba za potrditev pod ustrezno objavo izpostavite odgovor in s tem pomagajte drugim."
+      notification:
+        title: "vaša objava je bila označena kot rešitev"
+    topic_statuses:
+      solved:
+        help: "Ta tema ima rešitev"
+    search:
+      advanced:
+        statuses:
+          solved: "so rešene"
+          unsolved: "so nerešene"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Rešen dogodek"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Sprejmi/prekliči rešitev.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Katerikoli
+          fields:
+            maximum_trust_level:
+              label: Nivo zaupanja
+              description: Uporabniki pod to ravnjo zaupanja bodo sprožili to avtomatizacijo.

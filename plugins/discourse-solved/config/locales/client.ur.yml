@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "منظور"
+    solved:
+      title: "حل شدہ"
+      allow_accepted_answers: "ٹاپک کے مالک اور اسٹاف کو حل کے طور پر ایک جواب کو نشان زد کرنے کی اجازت دیں"
+      solved_topics_auto_close_hours: "ایک بار ٹاپک کو حل شدہ کے طور پر نشان زد کر دیا جائے تو آخری جواب کے (ن) گھنٹوں بعد خود کار انداز سے ٹاپک بند کر دیا جائے."
+      accept_answer: "منتخب کریں اگر یہ جواب مسئلہ کو حل کردیتا ہے"
+      accepted_description: "یہ اِس ٹاپک کا قبول شدہ حل ہے"
+      has_no_accepted_answer: "اِس ٹاپک کا کوئی حل نہیں ہے"
+      unaccept_answer: "غیر منتخب کریں اگر یہ جواب اب مسئلہ کو حل نہیں کرتا"
+      accepted_answer: "حل"
+      solution: "حل"
+      solution_summary:
+        one: "حل"
+        other: "حل"
+      accepted_answer_post_number: "پوسٹ %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "تمام"
+        solved: "حل شدہ"
+        unsolved: "غیر حل شدہ"
+    topic_statuses:
+      solved:
+        help: "اِس ٹاپک کا حل ہے"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: ٹرسٹ لَیول

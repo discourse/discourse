@@ -175,7 +175,7 @@ class UploadCreator
         )
       @upload.original_sha1 = SiteSetting.secure_uploads? ? sha1 : nil
       @upload.url = ""
-      @upload.origin = @opts[:origin][0...1000] if @opts[:origin]
+      @upload.origin = @opts[:origin][0...2000] if @opts[:origin]
       @upload.extension = image_type || File.extname(@filename)[1..10]
 
       if is_image && !external_upload_too_big
@@ -307,6 +307,7 @@ class UploadCreator
         I18n.t(
           "upload.images.larger_than_x_megapixels",
           max_image_megapixels: SiteSetting.max_image_megapixels,
+          original_filename: @upload.original_filename,
         ),
       )
     end
@@ -317,7 +318,7 @@ class UploadCreator
   def convert_png_to_jpeg?
     return false unless @image_info.type == :png
     return true if @opts[:pasted]
-    return false if SiteSetting.png_to_jpg_quality == 100
+    return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
@@ -366,10 +367,12 @@ class UploadCreator
     to = OptimizedImage.prepend_decoder!(to)
 
     opts = {}
+
     desired_quality = [
-      SiteSetting.png_to_jpg_quality,
-      SiteSetting.recompress_original_jpg_quality,
+      SiteSetting.ImageQuality.png_to_jpg_quality,
+      SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
+
     target_quality = @upload.target_image_quality(from, desired_quality)
     opts = { quality: target_quality } if target_quality
 
@@ -437,11 +440,12 @@ class UploadCreator
     desired_quality =
       (
         if @image_info.type == :png
-          SiteSetting.png_to_jpg_quality
+          SiteSetting.ImageQuality.png_to_jpg_quality
         else
-          SiteSetting.recompress_original_jpg_quality
+          SiteSetting.ImageQuality.recompress_original_jpg_quality
         end
       )
+
     @upload.target_image_quality(@file.path, desired_quality).present?
   end
 

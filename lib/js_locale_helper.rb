@@ -14,7 +14,7 @@ module JsLocaleHelper
   end
 
   def self.plugin_translations(locale_str)
-    @plugin_translations ||= HashWithIndifferentAccess.new
+    @plugin_translations ||= ActiveSupport::HashWithIndifferentAccess.new
 
     @plugin_translations[locale_str] ||= begin
       translations = {}
@@ -30,7 +30,7 @@ module JsLocaleHelper
   end
 
   def self.load_translations(locale)
-    @loaded_translations ||= HashWithIndifferentAccess.new
+    @loaded_translations ||= ActiveSupport::HashWithIndifferentAccess.new
     @loaded_translations[locale] ||= begin
       locale_str = locale.to_s
 
@@ -139,7 +139,7 @@ module JsLocaleHelper
 
     message_formats =
       I18n.fallbacks[locale]
-        .each_with_object(HashWithIndifferentAccess.new) do |l, hash|
+        .each_with_object(ActiveSupport::HashWithIndifferentAccess.new) do |l, hash|
           translations = translations_for(l, no_fallback: true)
           hash[l] = remove_message_formats!(translations, l).merge(
             TranslationOverride
@@ -152,7 +152,7 @@ module JsLocaleHelper
         .compact_blank
     js_message_formats = message_formats.transform_keys(&:dasherize)
     compiled = MessageFormat.compile(js_message_formats.keys, js_message_formats, strict: false)
-    transpiled = DiscourseJsProcessor.transpile(<<~JS, "", "discourse-mf")
+    transpiled = AssetProcessor.transpile(<<~JS, "", "discourse-mf")
       import Messages from '@messageformat/runtime/messages';
       #{compiled.sub("export default", "const msgData =")};
       const messages = new Messages(msgData, "#{locale.to_s.dasherize}");
@@ -187,7 +187,10 @@ module JsLocaleHelper
     translations = translations_for(locale_str)
 
     remove_message_formats!(translations, locale)
-    result = +""
+    result = +<<~JS
+      require("discourse/loader-shims");
+      require("discourse-i18n");
+    JS
 
     translations.keys.each do |l|
       translations[l].keys.each { |k| translations[l].delete(k) unless k == "js" }
@@ -200,9 +203,9 @@ module JsLocaleHelper
       result << "I18n.fallbackLocale = '#{fallback_locale_str}';\n"
     end
 
-    # moment
-    result << File.read("#{Rails.root}/vendor/assets/javascripts/moment.js")
-    result << File.read("#{Rails.root}/vendor/assets/javascripts/moment-timezone-with-data.js")
+    result << <<~JS
+      require("discourse/lib/load-moment");
+    JS
     result << moment_locale(locale_str)
     result << moment_locale(locale_str, timezone_names: true)
     result << moment_formats
@@ -260,10 +263,10 @@ module JsLocaleHelper
 
   def self.find_moment_locale(locale_chain, timezone_names: false)
     if timezone_names
-      path = "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale"
+      path = "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales"
       type = :moment_js_timezones
     else
-      path = "#{Rails.root}/vendor/assets/javascripts/moment-locale"
+      path = "#{Rails.root}/frontend/discourse/node_modules/moment/locale"
       type = :moment_js
     end
 
@@ -316,7 +319,15 @@ module JsLocaleHelper
 
   def self.moment_locale(locale, timezone_names: false)
     _, filename = find_moment_locale([locale], timezone_names: timezone_names)
-    filename && File.exist?(filename) ? File.read(filename) << "\n" : ""
+    if filename && File.exist?(filename)
+      <<~JS
+        (function(){
+        #{File.read(filename)}
+        }).apply(globalThis);
+      JS
+    else
+      ""
+    end
   end
 
   def self.remove_message_formats!(translations, locale)

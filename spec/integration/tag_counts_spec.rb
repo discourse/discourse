@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Updating tag counts" do
-  fab!(:tag1) { Fabricate(:tag) }
-  fab!(:tag2) { Fabricate(:tag) }
+  fab!(:tag1, :tag)
+  fab!(:tag2, :tag)
   fab!(:group)
-  fab!(:public_category) { Fabricate(:category) }
-  fab!(:public_category2) { Fabricate(:category) }
+  fab!(:public_category, :category)
+  fab!(:public_category2, :category)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:private_category2) { Fabricate(:private_category, group: group) }
 

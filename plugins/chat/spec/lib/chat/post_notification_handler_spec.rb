@@ -7,7 +7,7 @@ describe Chat::PostNotificationHandler do
   let(:post) { Fabricate(:post) }
   let(:notified_users) { [] }
 
-  fab!(:channel) { Fabricate(:category_channel) }
+  fab!(:channel, :category_channel)
   fab!(:message1) do
     Fabricate(:chat_message, chat_channel: channel, message: "hey this is the first message :)")
   end

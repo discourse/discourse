@@ -42,6 +42,10 @@ module PageObjects
 
       def edit_translation(key)
         find(".site-text[data-site-text-id='#{key}']").find(".site-text-edit").click
+        has_current_path?(
+          "/admin/customize/site_texts/#{key}?locale=#{I18n.locale}",
+          ignore_query: false,
+        )
       end
 
       def override_translation(value)

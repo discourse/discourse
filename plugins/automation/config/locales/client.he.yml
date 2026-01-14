@@ -10,6 +10,8 @@ he:
       logs:
         staff_actions:
           actions:
+            create_automation: יצירת אוטומציה
+            update_automation: עדכון אוטומציה
             delete_automation: מחיקת אוטומציה
     discourse_automation:
       title: אוטומציה
@@ -60,13 +62,17 @@ he:
             label: Body
           delay:
             label: השהיה (דקות)
-          prefers_encrypt:
-            label: מצפין הודעות פרטיות אם זמין
         group:
           label: קבוצה
         text:
           label: טקסט
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: קטגוריות
+            tags:
+              label: תגיות
         not_found: לא ניתן למצוא את גורם ההקפצה `%{trigger}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         user_badge_granted:
           fields:
@@ -167,18 +173,24 @@ he:
             restricted_tags:
               label: תגיות
               description: כרשות, יוזנק רק אם לפוסט יש לפחות את אחת מהתגיות האלו
-            restricted_category:
-              label: קטגוריה
-              description: הגדרת רשות, יוזנק רק אם נושא הפוסט בקטגוריה הזאת
-            restricted_group:
-              label: קבוצה
-              description: כרשות, יוזנק רק אם נושא הפוסט הוא הודעה פרטית בתיבת הדואר הנכנס של הקבוצה הזאת
+            restricted_categories:
+              label: קטגוריות
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט הוא באחת מהקטגוריות האלה
+            exclude_subcategories:
+              label: להחריג תת־קטגוריות
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט הוא בדיוק בקטגוריות שצוינו להלן
+            restricted_archetype:
+              label: סוג נושא
+              description: הגדרת רשות, לאפשר להזניק רק על נושאים או הודעות אישיות
             restricted_groups:
-              label: קבוצות
+              label: קבוצות מוגבלות
+              description: הגדרת רשות, יוזנק רק אם משתמש הפוסט הוא באיזושהי קבוצה מהקבוצות האלו
+            restricted_inbox_groups:
+              label: קבוצת תיבות דואר נכנס מוגבלות
               description: כרשות, יוזנק רק אם נושא הפוסט הוא הודעה פרטית באחת מתיבות הדוא״ל הנכנס הקבוצתיות
-            ignore_group_members:
-              label: התעלמות מחברי הקבוצה
-              description: לדלג על ההזנקה אם המוען הוא חבר בקבוצה שצוינה לעיל
+            excluded_groups:
+              label: קבוצות מוחרגות
+              description: הגדרת רשות, לדלג על ההנקה אם משתמש הפוסט שייך לאיזושהי קבוצה מהקבוצות האלו
             ignore_automated:
               label: התעלמות מאוטומטי
               description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על פוסטים שנוצרו דרך דוא״ל
@@ -191,8 +203,18 @@ he:
             skip_via_email:
               label: "דילוג דרך דוא״ל"
               description: "לדלג על ההזנקה אם הפוסט נוצר דרך דוא״ל"
+            post_features:
+              label: תכונות פוסט
+              description: "הגדרת רשות, להגביל את ההזנקה רק לפוסטים עם התכונות האלו"
           created: נוצר
           edited: נערכו
+          topics: כל הנושאים
+          personal_messages: הודעות פרטיות
+          public_topics: נושאים ציבוריים (להחריג את כל הקטגוריות המאובטחות)
+          with_images: תמונות
+          with_links: קישורים
+          with_code: קוד
+          with_uploads: העלאות
         user_updated:
           fields:
             user_profile:
@@ -261,6 +283,14 @@ he:
               label: תגיות
               description: הגדרת רשות, יוזנק רק אם לפוסט יש את אחת התגיות הבאות
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: תבנית דוא״ל
+              description: תומך בממלאי מקום לאוטומציה
+            recipients:
+              label: נמענים
+              description: משתמשים או כתובת דוא״ל לשליחת התראות
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:
           fields:
@@ -393,6 +423,7 @@ he:
               label: הודעות פרטיות
             sender:
               label: מוען או מוענת הודעה פרטית
+              description: "נא לוודא שלמי ששלח יש את ההרשאות המתאימות לשליחת הודעות פרטיות למוען"
         close_topic:
           fields:
             topic:
@@ -407,6 +438,13 @@ he:
           fields:
             custom_field_name:
               label: "שם שדה מותאם אישית של משתמש"
+        set_topic_timer:
+          title: הגדרת שעון עצר לנושא
+          fields:
+            type:
+              label: סוג מתזמן
+            duration:
+              label: משך מתזמן
       unnamed_automation: "אוטומציה ללא שם"
       models:
         script:
@@ -416,6 +454,11 @@ he:
           name:
             label: הזנקה
         automation:
+          runs_today: "%{count} היום"
+          runs_this_week: "%{count} השבוע"
+          runs_this_month: "%{count} החודש"
+          runs:
+            label: ריצות
           name:
             label: שם
           trigger:
@@ -427,12 +470,15 @@ he:
           status:
             label: מצב
           enabled:
-            label: פעיל
+            label: "הפעלת אוטומציה"
           disabled:
             label: כבוי
           placeholders:
             label: ממלאי מקום
           last_updated_at:
             label: עדכון אחרון
+          last_run:
+            label: ריצה אחרונה
           last_updated_by:
             label: עודכן על ידי
+          enable_toggle_disabled: "אפשר להפעיל את האוטומציה הזאת לאחר שכל השדות הנחוצים מולאו."

@@ -2,7 +2,7 @@
 
 module Chat
   class IncomingWebhooksController < ::ApplicationController
-    requires_plugin Chat::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     WEBHOOK_MESSAGES_PER_MINUTE_LIMIT = 10
 
@@ -64,7 +64,7 @@ module Chat
         incoming_chat_webhook: webhook,
       ) do
         on_success { render json: success_json }
-        on_failure { render(json: failed_json, status: 422) }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_failed_contract do |contract|
           raise Discourse::InvalidParameters.new(contract.errors.full_messages)
         end

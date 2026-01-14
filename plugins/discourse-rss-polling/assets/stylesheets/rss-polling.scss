@@ -1,0 +1,35 @@
+.rss-polling-feed-settings {
+  table {
+    tr {
+      td {
+        position: relative;
+
+        &:first-child input {
+          max-width: 200px;
+        }
+
+        &:nth-child(2) input {
+          max-width: 100px;
+        }
+
+        .user-chooser,
+        .category-chooser {
+          max-width: 150px;
+        }
+
+        input {
+          margin-bottom: 0;
+        }
+
+        .select-kit.multi-select {
+          width: 120px;
+        }
+      }
+    }
+
+    .wide-button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}

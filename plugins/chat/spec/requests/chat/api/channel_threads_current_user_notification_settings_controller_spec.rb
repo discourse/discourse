@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelThreadsCurrentUserNotificationsSettingsController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
   fab!(:last_reply) { Fabricate(:chat_message, thread: thread, chat_channel: channel) }
@@ -15,7 +15,7 @@ RSpec.describe Chat::Api::ChannelThreadsCurrentUserNotificationsSettingsControll
 
   describe "#update" do
     context "when the user cannot access the channel" do
-      fab!(:channel) { Fabricate(:private_category_channel) }
+      fab!(:channel, :private_category_channel)
       fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
       it "raises invalid access" do

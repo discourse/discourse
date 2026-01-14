@@ -2,12 +2,12 @@
 
 RSpec.describe SidebarSectionLinksUpdater do
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user2, :user)
 
   describe ".update_category_section_links" do
-    fab!(:public_category) { Fabricate(:category) }
-    fab!(:public_category2) { Fabricate(:category) }
-    fab!(:public_category3) { Fabricate(:category) }
+    fab!(:public_category, :category)
+    fab!(:public_category2, :category)
+    fab!(:public_category3, :category)
 
     fab!(:user_category_section_link) do
       Fabricate(:category_sidebar_section_link, linkable: public_category, user: user)
@@ -53,7 +53,7 @@ RSpec.describe SidebarSectionLinksUpdater do
 
   describe ".update_tag_section_links" do
     fab!(:tag)
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag2, :tag)
 
     fab!(:user_tag_section_link) { Fabricate(:tag_sidebar_section_link, linkable: tag, user: user) }
 

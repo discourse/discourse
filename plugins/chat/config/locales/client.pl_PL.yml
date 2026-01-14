@@ -60,8 +60,12 @@ pl_PL:
       cancel: "Anuluj"
       cancel_reply: "Anuluj odpowiedź"
       chat_channels: "Kanały"
+      starred: "Wyróżnione"
+      starred_channels: "Wyróżnione kanały"
+      starred_channels_empty: "Nie wyróżniono jeszcze żadnego kanału. Wyróżnij kanały, aby je tu zobaczyć i mieć do nich szybki dostęp."
       browse_all_channels: "Przeglądaj wszystkie kanały"
       see_in: "Zobacz w"
+      open_channel_menu: "Otwórz menu kanału"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
         instructions:
@@ -80,6 +84,8 @@ pl_PL:
         title: "Ustawienia kanału"
         edit: "Edytuj"
         add: "Dodaj"
+        star_channel: "Wyróżnij kanał"
+        unstar_channel: "Usuń wyróżnienie kanału"
         close_channel: "Zamknij kanał"
         open_channel: "Otwórz kanał"
         archive_channel: "Archiwizuj kanał"
@@ -87,6 +93,8 @@ pl_PL:
         join_channel: "Dołącz do kanału"
         leave_channel: "Opuść kanał"
         leave_groupchat_info: "Opuszczając ten czat grupowy, nie będziesz już mieć do niego dostępu i nie będziesz otrzymywać związanych z nim powiadomień. Aby ponownie dołączyć, musisz otrzymać ponowne zaproszenie od członka czatu grupowego."
+        notification_settings: "Ustawienia powiadomień"
+        notification_settings_context: "Powiadomienia"
         join: "Dołącz"
         leave: "Opuść"
         save_label:
@@ -136,7 +144,7 @@ pl_PL:
       email_frequency:
         description: "Wyślemy Ci wiadomość e-mail tylko wtedy, gdy nie widzieliśmy Cię w ciągu ostatnich 15 minut."
         never: "Nigdy"
-        title: "Powiadomienia e-mail"
+        title: "Wyślij mi wiadomość e-mail, gdy otrzymam bezpośrednią wiadomość na czacie lub czacie grupowym."
         when_away: "Tylko gdy jesteś daleko"
       header_indicator_preference:
         title: "Pokaż wskaźnik aktywności w nagłówku"
@@ -146,6 +154,12 @@ pl_PL:
         never: "Nigdy"
       separate_sidebar_mode:
         title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
+      send_shortcut:
+        title: "Wyślij skrót"
+        enter:
+          label: "Wyślij przez Enter"
+        meta_enter:
+          label: "Wyślij przez %{meta_key} + Enter"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
@@ -245,15 +259,15 @@ pl_PL:
         channels_list: "Lista kanałów czatu"
       no_direct_message_channels: "Nie dołączyłeś jeszcze do żadnych bezpośrednich wiadomości!"
       no_direct_message_channels_cta: "Rozpocząć rozmowę"
-      no_public_channels: "Jeszcze nie dołączyłeś(aś) do żadnych kanałów!"
+      no_public_channels: "Nie dołączyłeś jeszcze do żadnego kanału!"
       no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
+      chat_notifications_title: "Powiadomienia czatu"
       only_chat_push_notifications:
         title: "Wysyłaj tylko powiadomienia push czatu"
-        description: "Zablokuj wysyłanie wszystkich powiadomień push niezwiązanych z czatem"
+      personalization_title: "Personalizacja"
       ignore_channel_wide_mention:
         title: "Ignoruj wzmianki dotyczące całego kanału"
-        description: "Nie wysyłaj powiadomień dla wzmianek dotyczących całego kanału (@here i @all)"
       show_thread_title_prompts:
         title: "Pokaż podpowiedzi tytułu wątku"
         description: "Wyświetlaj podpowiedzi o ustawienie tytułu dla nowych wątków."
@@ -282,7 +296,7 @@ pl_PL:
       retry_staged_message:
         title: "Błąd sieci"
         action: "Wyślij ponownie?"
-      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie wersji roboczej może nie działać"
+      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie szkiców może nie działać"
       bookmark_message: "Zakładka"
       bookmark_message_edit: "Edytuj zakładkę"
       restore: "Przywróć usuniętą wiadomość"
@@ -315,7 +329,7 @@ pl_PL:
         many: "%{count} plików"
         other: "%{count} plików"
       you_flagged: "Oflagowałeś tę wiadomość"
-      exit: "poprzednia"
+      exit: "opuść czat"
       channel_status:
         read_only_header: "Kanał jest tylko do odczytu"
         read_only: "Tylko do odczytu"
@@ -339,6 +353,12 @@ pl_PL:
       chat_message_separator:
         today: Dzisiaj
         yesterday: Wczoraj
+      search_view:
+        filter_placeholder: Wyszukiwanie wiadomości
+        message_result_label: "Wiadomość czatu od %{username}: %{preview} %{threadInfo}"
+        in_thread: "w wątku %{title}"
+        sr_instructions: "Naciśnij Enter lub spację, aby otworzyć wiadomość. Użyj Tab, aby poruszać się między wynikami."
+        results_list_label: "Wyniki wyszukiwania wiadomości czatu"
       members_view:
         filter_placeholder: Znajdź członków
         add_member: Dodaj członka
@@ -355,6 +375,7 @@ pl_PL:
         tabs:
           members: Członkowie
           settings: Ustawienia
+          search: Szukaj
         remove_member: "Usuń"
       new_message_modal:
         title: Wyślij wiadomość
@@ -380,6 +401,8 @@ pl_PL:
         slug_description: Slug kanału jest używany w adresie URL zamiast nazwy kanału
         name: Nazwa kanału
         slug: Slug kanału (opcjonalnie)
+        emoji: Emoji kanału (opcjonalnie)
+        reset_emoji: Zresetuj emoji
       channel_edit_description_modal:
         title: Edytuj opis
         input_placeholder: Dodaj opis
@@ -458,8 +481,12 @@ pl_PL:
         types:
           category: "Kategoria"
           topic: "Temat"
+        emoji:
+          label: "Emoji kanału (opcjonalnie)"
+          reset: "Zresetuj emoji"
       reviewable:
         type: "Wiadomość na czacie"
+        message_in_channel: "Kanał"
       reactions:
         only_you: "<span>Zareagowałeś za pomocą </span>:%{emoji}:"
         you_and_single_user: "<span>Ty i %{username} zareagowaliście za pomocą </span>:%{emoji}:"
@@ -503,6 +530,7 @@ pl_PL:
         follow: "Dołącz"
         followed: "Dołączył"
         mute: "Wycisz kanał"
+        unmute: "Wyłącz wyciszenie kanału"
         threading_enabled: "Włączona"
         threading_disabled: "Wyłączone"
         muted_on: "Wł"
@@ -526,6 +554,14 @@ pl_PL:
           create_export: "Utwórz eksport"
           confirm_export: "Eksportuje wszystkie wiadomości ze wszystkich kanałów i wysyła wynik do Ciebie w wiadomości prywatnej. Czy na pewno chcesz eksportować?"
           export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
+      search:
+        short_title: Szukaj
+        title: Wyszukaj czat
+        aria_label: "Przejdź do wyszukiwania czatu"
+        no_results: "Brak wyników wyszukiwania"
+        sort:
+          relevance: "Trafność"
+          latest: "Najnowsza"
       my_threads:
         title: Moje wątki
         aria_label: "Przejdź do mojej listy wątków"
@@ -541,7 +577,7 @@ pl_PL:
         title: "Kanały"
         aria_label: "Przełącz na listę kanałów"
       incoming_webhooks:
-        back: "Poprzednia"
+        back: "Wstecz"
         channel_placeholder: "Wybierz kanał"
         channel: "Kanał"
         confirm_destroy: "Czy na pewno chcesz usunąć tego przychodzącego webhooka? Tego nie można cofnąć."
@@ -562,6 +598,7 @@ pl_PL:
         select_emoji: "Wybierz emoji"
         system: "system"
         title: "Przychodzące webhooki"
+        header_description: "Przychodzące webhooki mogą być używane przez systemy zewnętrzne do publikowania wiadomości na wyznaczonym kanale czatu jako użytkownik bota"
         url: "URL"
         url_instructions: "Ten adres URL zawiera tajną wartość — zachowaj go w bezpiecznym miejscu."
         username: "Nazwa użytkownika"
@@ -586,7 +623,7 @@ pl_PL:
             other: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
           instructions_channel_archive: "Zamierzasz utworzyć nowy temat i zarchiwizować w nim wiadomości z kanału."
         existing_topic:
-          title: "Przenieś do Istniejącego Tematu"
+          title: "Przenieś do istniejącego tematu"
           instructions:
             one: "Wybierz temat, do którego chcesz przenieść tę wiadomość czatu."
             few: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
@@ -682,6 +719,7 @@ pl_PL:
         input_placeholder: "Powiedz innym, o czym jest ta rozmowa..."
         discourse_ai:
           title: "Automatycznie generuj tytuły wątków"
+          description: "Sprawdź %{url}, aby dowiedzieć się więcej o tym i innych ulepszeniach Discourse."
       threads:
         open: "Otwórz wątek"
         list: "Wątki"
@@ -689,10 +727,20 @@ pl_PL:
       draft_channel_screen:
         header: "Nowa wiadomość"
         cancel: "Anuluj"
+      quick_reaction_type:
+        title: "Reakcje czatu jednym kliknięciem"
+        options:
+          frequent: "Najczęściej używane reakcje na czacie"
+          custom: "Niestandardowe reakcje"
     notifications:
       chat_invitation: "zaprosił Cię do dołączenia do kanału czatu"
       chat_invitation_html: "<span>%{username}</span> <span>zaprosił Cię do dołączenia do kanału czatu</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} i %{username2}"
+        few: "%{username} i %{count} inni"
+        many: "%{username} i %{count} inni"
+        other: "%{username} i %{count} inni"
       popup:
         chat_mention:
           direct: 'wspomniał o Tobie w "%{channel}"'
@@ -743,7 +791,7 @@ pl_PL:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           switch__unread_channel_arrows: "%{shortcut} Przełącz nieprzeczytany kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
-          open_insert_link_modal: "%{shortcut} Wstaw hiperłącze (tylko kompozytor)"
+          open_insert_link_modal: "%{shortcut} Wstaw link (tylko kompozytor)"
           composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
           composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
           composer_code: "%{shortcut} Kod (tylko kompozytor)"
@@ -775,6 +823,9 @@ pl_PL:
         chat:
           title: Czat
     sidebar:
+      start_new_dm:
+        text: Rozpocznij nowy DM
+        title: Utwórz osobisty czat
       panels:
         chat:
           label: "Czat"

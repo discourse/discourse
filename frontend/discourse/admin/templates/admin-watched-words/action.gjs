@@ -1,0 +1,97 @@
+import { Input } from "@ember/component";
+import { htmlSafe } from "@ember/template";
+import AdminWatchedWord from "discourse/admin/components/admin-watched-word";
+import WatchedWordForm from "discourse/admin/components/watched-word-form";
+import WatchedWordUploader from "discourse/admin/components/watched-word-uploader";
+import DButton from "discourse/components/d-button";
+import basePath from "discourse/helpers/base-path";
+import { i18n } from "discourse-i18n";
+
+export default <template>
+  {{#if @controller.regexpErrors.length}}
+    <div class="alert alert-error">
+      <strong>{{i18n "admin.watched_words.invalid_regex_multiple"}}</strong>
+      <ul class="watched-word-regex-errors">
+        {{#each @controller.regexpErrors as |error|}}
+          <li>
+            <strong>{{error.word}}</strong>:
+            {{error.error}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+
+  <div class="watched-word-controls">
+    <DButton
+      @href={{@controller.downloadLink}}
+      @icon="download"
+      @label="admin.watched_words.download"
+      class="btn-default download-link"
+    />
+
+    <WatchedWordUploader
+      @uploading={{@controller.uploading}}
+      @actionKey={{@controller.actionNameKey}}
+      @done={{@controller.uploadComplete}}
+    />
+
+    <DButton
+      @label="admin.watched_words.test.button_label"
+      @icon="far-eye"
+      @action={{@controller.test}}
+      class="btn-default watched-word-test"
+    />
+
+    <DButton
+      @label="admin.watched_words.clear_all"
+      @icon="trash-can"
+      @action={{@controller.clearAll}}
+      class="btn-danger clear-all"
+    />
+  </div>
+
+  <p class="about">{{@controller.actionDescription}}</p>
+
+  {{#if @controller.siteSettings.watched_words_regular_expressions}}
+    <p>
+      {{htmlSafe
+        (i18n "admin.watched_words.regex_warning" basePath=(basePath))
+      }}
+    </p>
+  {{/if}}
+
+  <WatchedWordForm
+    @actionKey={{@controller.actionNameKey}}
+    @action={{@controller.recordAdded}}
+    @filteredContent={{@controller.currentActionFiltered.words}}
+  />
+
+  {{#if @controller.currentActionFiltered.words}}
+    <label class="show-words-checkbox">
+      <Input
+        @type="checkbox"
+        @checked={{@controller.adminWatchedWords.showWords}}
+        disabled={{@controller.adminWatchedWords.disableShowWords}}
+      />
+      {{i18n
+        "admin.watched_words.show_words"
+        count=@controller.currentActionFiltered.words.length
+      }}
+    </label>
+  {{/if}}
+
+  {{#if @controller.showWordsList}}
+    <div class="watched-words-list watched-words-{{@controller.actionNameKey}}">
+      {{#each @controller.currentActionFiltered.words as |word|}}
+        <div class="watched-word-box">
+          <AdminWatchedWord
+            @actionKey={{@controller.actionNameKey}}
+            @word={{word}}
+            @action={{@controller.recordRemoved}}
+          />
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</template>

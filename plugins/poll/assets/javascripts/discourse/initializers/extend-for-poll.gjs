@@ -24,6 +24,7 @@ function attachPolls(elem, helper) {
     let pollPost = post;
 
     const quotedId = pollNode.closest(".expanded-quote")?.dataset.postId;
+
     if (quotedId && post.quoted[quotedId]) {
       pollPost = EmberObject.create(post.quoted[quotedId]);
       poll = new TrackedObject(pollPost.polls.find((p) => p.name === pollName));
@@ -31,6 +32,7 @@ function attachPolls(elem, helper) {
 
     if (poll) {
       const titleHTML = pollNode.querySelector(".poll-title")?.outerHTML;
+      const isDynamic = pollNode.dataset.pollDynamic === "true";
 
       const newPollNode = document.createElement("div");
       Object.assign(newPollNode.dataset, {
@@ -43,9 +45,17 @@ function attachPolls(elem, helper) {
       }
 
       pollNode.replaceWith(newPollNode);
-      helper.renderGlimmer(newPollNode, <template>
-        <Poll @poll={{poll}} @post={{post}} @titleHTML={{titleHTML}} />
-      </template>);
+      helper.renderGlimmer(
+        newPollNode,
+        <template>
+          <Poll
+            @poll={{poll}}
+            @post={{post}}
+            @titleHTML={{titleHTML}}
+            @isDynamic={{if isDynamic true poll.dynamic}}
+          />
+        </template>
+      );
     }
   });
 }
@@ -116,6 +126,6 @@ export default {
   name: "extend-for-poll",
 
   initialize() {
-    withPluginApi("0.8.7", initializePolls);
+    withPluginApi(initializePolls);
   },
 };

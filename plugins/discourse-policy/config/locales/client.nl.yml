@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    discourse_policy:
+      title: "Beleid"
+      accepted_tooltip: "Gebruikers die dit beleid hebben geaccepteerd"
+      not_accepted_tooltip: "Gebruikers die dit beleid niet hebben geaccepteerd"
+      accept_policy: "Beleid accepteren"
+      revoke_policy: "Beleid intrekken"
+      edit_reason: "Beleidsinstellingen zijn gewijzigd"
+      no_possible_users: "Dit beleid heeft geen mogelijke gebruikers"
+      accept_policy_template: "Ik ga akkoord met dit beleid"
+      builder:
+        title: Beleid
+        attach: Beleid maken
+        save: Wijzigingen opslaan
+        insert: Invoegen
+        errors:
+          group: Groep is vereist
+          version: Versie is vereist
+        groups:
+          label: Groepen
+          description: De groepen die aan dit beleid zijn gekoppeld
+        version:
+          label: Versie
+          description: De versie van het beleid, door de versie op te hogen, worden mensen gedwongen om het opnieuw te accepteren
+        renew:
+          label: Vernieuwen
+          description: Vernieuw het beleid elke x dagen
+        renew-start:
+          label: Begin vernieuwen
+          description: Wanneer het beleid moet worden vernieuwd
+        reminder:
+          label: Herinnering
+          description: Hoe vaak een herinneringsmelding moet worden gestuurd om het beleid te accepteren
+          no_reminder: (Geen herinnering)
+        accept:
+          label: Accepteren
+          description: Tekst op de accepteerknop
+        revoke:
+          label: Intrekken
+          description: Tekst op de intrekknop
+        private:
+          label: Privé?
+          description: Beleidsstatus privé houden voor beheerders
+        send-email:
+          label: E-mail sturen?
+          description: Gebruikers per e-mail op de hoogte brengen van het nieuwe beleid
+        add-users-to-group:
+          label: Gebruikers toevoegen aan groep
+          description: Voeg gebruikers toe aan de volgende groep wanneer ze akkoord gaan met dit beleid
+      preferences:
+        title: Beleid
+        policy_emails:
+          always_description: We sturen je alleen een e-mail als je je ook hebt aangemeld voor e-mails over nieuwe activiteit.
+          away_description: We sturen je alleen een e-mail als we je de afgelopen 10 minuten niet hebben gezien wanneer de beleidsstatus wijzigt en alleen als je je ook hebt aangemeld voor e-mails over nieuwe activiteit.
+          label: E-mail mij als een beleid mijn beoordeling vereist
+          email_frequency_options:
+            never: Nooit
+            when_away: Alleen wanneer afwezig
+            always: Altijd

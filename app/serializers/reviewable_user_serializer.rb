@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
 class ReviewableUserSerializer < ReviewableSerializer
-  attributes :link_admin, :user_fields, :reject_reason
+  attributes :link_admin, :user_fields, :reject_reason, :target_user
 
-  payload_attributes(:username, :email, :name, :bio, :website)
+  payload_attributes(
+    :username,
+    :email,
+    :name,
+    :bio,
+    :website,
+    :scrubbed_by,
+    :scrubbed_reason,
+    :scrubbed_at,
+  )
 
   def link_admin
     scope.is_staff? && object.target.present?
@@ -25,5 +34,13 @@ class ReviewableUserSerializer < ReviewableSerializer
 
   def include_email?
     scope.can_check_emails?(scope.user)
+  end
+
+  def target_user
+    FlaggedUserSerializer.new(object.target, scope: scope, root: false).as_json
+  end
+
+  def include_target_user?
+    scope.can_see_reviewable_ui_refresh? && object.target
   end
 end

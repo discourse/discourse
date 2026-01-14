@@ -11,17 +11,21 @@ describe "JS Deprecation Handling", type: :system do
       console.warn = (msg) => window.intercepted_warnings.push([msg, (new Error()).stack])
     JS
 
-    # Trigger a deprecation, then return the console.warn calls
-    warn_calls = page.execute_script <<~JS
-      const { deprecate } = require('@ember/debug');
-      deprecate("Some message", false, { id: "some.id", for: "discourse", since: "3.4.0", until: "3.5.0" });
-      return window.intercepted_warnings
-    JS
+    warn_calls = nil
+    page.driver.with_playwright_page do |playwright_page|
+      warn_calls = playwright_page.evaluate <<~JS
+        () => {
+          const { deprecate } = require('@ember/debug');
+          deprecate("Some message", false, { id: "fake.deprecation", for: "discourse", since: "3.4.0", until: "3.5.0" });
+          return window.intercepted_warnings;
+        }
+      JS
+    end
 
     expect(warn_calls.size).to eq(1)
     call, backtrace = warn_calls[0]
 
-    expect(call).to start_with("DEPRECATION: Some message [deprecation id: some.id]")
+    expect(call).to start_with("DEPRECATION: Some message [deprecation id: fake.deprecation]")
   end
 
   it "shows warnings to admins for critical deprecations" do
@@ -35,13 +39,18 @@ describe "JS Deprecation Handling", type: :system do
 
     page.execute_script <<~JS
       const deprecated = require("discourse/lib/deprecated").default;
-      deprecated("Fake deprecation message", { id: "fake-deprecation" })
+      deprecated("Fake deprecation message", { id: "fake.deprecation1" })
+      deprecated("Other fake deprecation message", { id: "fake.deprecation2" })
     JS
 
-    message = find("#global-notice-critical-deprecation")
-    expect(message).to have_text(
-      "One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes",
-    )
+    message = find("#global-notice-critical-deprecation--fake-deprecation1")
+    expect(message).to have_text("One of your themes or plugins contains code which needs updating")
+    expect(message).to have_text("fake.deprecation1")
+    expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
+
+    message = find("#global-notice-critical-deprecation--fake-deprecation2")
+    expect(message).to have_text("One of your themes or plugins contains code which needs updating")
+    expect(message).to have_text("fake.deprecation2")
     expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
   end
 
@@ -56,7 +65,7 @@ describe "JS Deprecation Handling", type: :system do
       value: <<~JS,
         import deprecated from "discourse/lib/deprecated";
         function triggerDeprecation(){
-          deprecated("Fake deprecation message", { id: "fake-deprecation" })
+          deprecated("Fake deprecation message", { id: "fake.deprecation" })
         }
         export default <template>
           {{triggerDeprecation}}
@@ -68,6 +77,6 @@ describe "JS Deprecation Handling", type: :system do
 
     visit "/latest"
 
-    expect(page).to have_css("#global-notice-critical-deprecation")
+    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation")
   end
 end

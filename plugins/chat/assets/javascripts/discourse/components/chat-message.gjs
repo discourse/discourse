@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -9,7 +9,6 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { eq, lt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
@@ -20,6 +19,7 @@ import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
+import { eq, lt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
@@ -50,17 +50,11 @@ export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
   @service site;
-  @service dialog;
   @service currentUser;
-  @service appEvents;
-  @service capabilities;
   @service chat;
   @service chatApi;
   @service chatChannelPane;
   @service chatThreadPane;
-  @service chatChannelsManager;
-  @service router;
-  @service toasts;
   @service modal;
   @service interactedChatMessage;
 
@@ -69,7 +63,7 @@ export default class ChatMessage extends Component {
   toggleCheckIfPossible = modifier((element) => {
     let addedListener = false;
 
-    const handler = () => {
+    const handler = (event) => {
       if (!this.pane.selectingMessages) {
         return;
       }
@@ -96,6 +90,10 @@ export default class ChatMessage extends Component {
 
   get pane() {
     return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
+  }
+
+  get includeSeparator() {
+    return this.args.includeSeparator ?? true;
   }
 
   get messageInteractor() {
@@ -533,10 +531,12 @@ export default class ChatMessage extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     {{#if this.shouldRender}}
-      <ChatMessageSeparator
-        @fetchMessagesByDate={{@fetchMessagesByDate}}
-        @message={{@message}}
-      />
+      {{#if this.includeSeparator}}
+        <ChatMessageSeparator
+          @fetchMessagesByDate={{@fetchMessagesByDate}}
+          @message={{@message}}
+        />
+      {{/if}}
 
       <div
         class={{concatClass
@@ -617,7 +617,10 @@ export default class ChatMessage extends Component {
                   @threadContext={{this.threadContext}}
                 />
               {{else}}
-                <ChatMessageAvatar @message={{@message}} />
+                <ChatMessageAvatar
+                  @message={{@message}}
+                  @interactive={{@interactive}}
+                />
               {{/if}}
 
               <div class="chat-message-content">
@@ -625,6 +628,7 @@ export default class ChatMessage extends Component {
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
                   @threadContext={{this.threadContext}}
+                  @dateMode={{@dateMode}}
                 />
 
                 <ChatMessageText
@@ -641,12 +645,13 @@ export default class ChatMessage extends Component {
                           @onReaction={{this.messageInteractor.react}}
                           @message={{@message}}
                           @showTooltip={{true}}
+                          @interactive={{@interactive}}
                         />
                       {{/each}}
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
                         <EmojiPicker
-                          @context={{concat "channel_" @message.channel.id}}
+                          @context="chat"
                           @didSelectEmoji={{this.messageInteractor.selectReaction}}
                           @btnClass="btn-flat react-btn chat-message-react-btn"
                           @onClose={{this.onEmojiPickerClose}}

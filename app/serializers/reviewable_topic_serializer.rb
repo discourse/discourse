@@ -15,7 +15,7 @@ class ReviewableTopicSerializer < ApplicationSerializer
     :reviewable_score,
   )
 
-  has_one :claimed_by, serializer: BasicUserSerializer, root: "users"
+  has_one :claimed_by, serializer: ReviewableClaimedTopicSerializer
 
   def stats
     @options[:stats][object.id]

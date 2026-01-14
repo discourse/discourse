@@ -2,28 +2,16 @@
 
 describe "Reviewables", type: :system do
   let(:review_page) { PageObjects::Pages::Review.new }
+  let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
   fab!(:admin)
   fab!(:theme)
-  fab!(:long_post) { Fabricate(:post_with_very_long_raw_content) }
+  fab!(:long_post, :post_with_very_long_raw_content)
   fab!(:post)
   let(:composer) { PageObjects::Components::Composer.new }
   let(:moderator) { Fabricate(:moderator) }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before { sign_in(admin) }
-
-  describe "when there is a flagged post reviewable with a long post" do
-    fab!(:long_reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
-
-    it "should show a button to expand/collapse the post content" do
-      visit("/review")
-      expect(review_page).to have_post_body_collapsed
-      expect(review_page).to have_post_body_toggle
-      review_page.click_post_body_toggle
-      expect(review_page).to have_no_post_body_collapsed
-      review_page.click_post_body_toggle
-      expect(review_page).to have_post_body_collapsed
-    end
-  end
 
   describe "when there is a flagged post reviewable with a short post" do
     fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
@@ -54,6 +42,7 @@ describe "Reviewables", type: :system do
 
         expect(composer).to be_opened
         expect(composer.composer_input.value).to eq(post.raw)
+        expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
       end
 
       it "should open a modal when suspending a user" do
@@ -70,36 +59,43 @@ describe "Reviewables", type: :system do
           text: I18n.t("js.flagging.take_action_options.suspend.title"),
         )
       end
+
+      it "should show a toast when disagreeing with a flag flag" do
+        visit("/review")
+
+        select_kit = PageObjects::Components::SelectKit.new(".dropdown-select-box.post-disagree")
+        select_kit.expand
+        select_kit.select_row_by_value("post-disagree")
+
+        expect(toasts).to have_success(I18n.t("reviewables.actions.disagree.complete"))
+      end
     end
   end
 
   describe "when there is a queued post reviewable with a short post" do
-    fab!(:short_queued_reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:short_queued_reviewable, :reviewable_queued_post)
 
     it "should not show a button to expand/collapse the post content" do
       visit("/review")
       expect(review_page).to have_no_post_body_collapsed
       expect(review_page).to have_no_post_body_toggle
     end
-  end
 
-  describe "when there is a queued post reviewable with a long post" do
-    fab!(:long_queued_reviewable) { Fabricate(:reviewable_queued_long_post) }
-
-    it "should show a button to expand/collapse the post content" do
+    it "should apply correct button classes to actions" do
       visit("/review")
-      expect(review_page).to have_post_body_collapsed
-      expect(review_page).to have_post_body_toggle
-      review_page.click_post_body_toggle
-      expect(review_page).to have_no_post_body_collapsed
-      review_page.click_post_body_toggle
-      expect(review_page).to have_post_body_collapsed
+
+      expect(page).to have_css(".approve-post.btn-success")
+      expect(page).to have_css(".reject-post .btn-danger")
+
+      expect(page).to have_no_css(".approve-post.btn-default")
+      expect(page).to have_no_css(".reject-post .btn-default")
     end
   end
 
   describe "when there is a reviewable user" do
     fab!(:user)
     let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
+    let(:scrub_user_modal) { PageObjects::Modals::ScrubRejectedUser.new }
 
     before do
       SiteSetting.must_approve_users = true
@@ -114,25 +110,62 @@ describe "Reviewables", type: :system do
       # cache it for later assertion instead of querying UserHistory
       user_email = user.email
 
-      review_page.visit_reviewable(reviewable)
-      review_page.select_bundled_action(reviewable, "user-delete_user")
+      refreshed_review_page.visit_reviewable(reviewable)
+      refreshed_review_page.select_bundled_action(
+        reviewable,
+        "user-delete_user",
+        "user-delete-user",
+      )
       rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
       rejection_reason_modal.select_send_rejection_email_checkbox
       rejection_reason_modal.delete_user
 
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
-      expect(review_page).to have_reviewable_with_rejection_reason(reviewable, rejection_reason)
+      expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
 
       mail = ActionMailer::Base.deliveries.first
       expect(mail.to).to eq([user_email])
       expect(mail.subject).to match(/You've been rejected on Discourse/)
       expect(mail.body.raw_source).to include rejection_reason
     end
+
+    it "Allows scrubbing user data after rejection" do
+      rejection_reason = "user is spamming"
+      scrubbing_reason = "a spammer who knows how to make GDPR requests"
+      reviewable = ReviewableUser.find_by_target_id(user.id)
+
+      refreshed_review_page.visit_reviewable(reviewable)
+      refreshed_review_page.select_bundled_action(
+        reviewable,
+        "user-delete_user",
+        "user-delete-user",
+      )
+      rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
+      rejection_reason_modal.delete_user
+
+      expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+
+      refreshed_review_page.click_scrub_user_button
+
+      expect(scrub_user_modal.scrub_button).to be_disabled
+      scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
+      expect(scrub_user_modal.scrub_button).not_to be_disabled
+      scrub_user_modal.scrub_button.click
+
+      expect(refreshed_review_page).to have_reviewable_with_scrubbed_by(reviewable, admin.username)
+      expect(refreshed_review_page).to have_reviewable_with_scrubbed_reason(
+        reviewable,
+        scrubbing_reason,
+      )
+      expect(refreshed_review_page).to have_reviewable_with_scrubbed_at(
+        reviewable,
+        reviewable.payload["scrubbed_at"],
+      )
+    end
   end
 
   context "when performing a review action from the show route" do
-    fab!(:contact_group) { Fabricate(:group) }
-    fab!(:contact_user) { Fabricate(:user) }
+    fab!(:contact_group, :group)
+    fab!(:contact_user, :user)
 
     before do
       SiteSetting.site_contact_group_name = contact_group.name
@@ -140,20 +173,25 @@ describe "Reviewables", type: :system do
     end
 
     context "with a ReviewableQueuedPost" do
-      fab!(:queued_post_reviewable) { Fabricate(:reviewable_queued_post) }
+      fab!(:queued_post_reviewable, :reviewable_queued_post)
 
       it "delete_user does not delete reviewable" do
-        review_page.visit_reviewable(queued_post_reviewable)
+        refreshed_review_page.visit_reviewable(queued_post_reviewable)
 
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
-        expect(review_page).to have_reviewable_action_dropdown
-        expect(review_page).to have_reviewable_with_pending_status(queued_post_reviewable)
+        expect(refreshed_review_page).to have_reviewable_with_pending_status(queued_post_reviewable)
 
-        review_page.select_bundled_action(queued_post_reviewable, "delete_user")
+        refreshed_review_page.select_bundled_action(
+          queued_post_reviewable,
+          "delete_user",
+          "reject-post",
+        )
 
         expect(review_page).to have_no_error_dialog_visible
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
+          queued_post_reviewable,
+        )
         expect(review_page).to have_no_reviewable_action_dropdown
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by).to be_nil
@@ -162,12 +200,16 @@ describe "Reviewables", type: :system do
       it "allows revising and rejecting to send a PM to the user" do
         revise_modal = PageObjects::Modals::Base.new
 
-        review_page.visit_reviewable(queued_post_reviewable)
+        refreshed_review_page.visit_reviewable(queued_post_reviewable)
 
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
 
-        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        refreshed_review_page.select_bundled_action(
+          queued_post_reviewable,
+          "revise_and_reject_post",
+          "reject-post",
+        )
 
         expect(revise_modal).to be_open
 
@@ -177,7 +219,9 @@ describe "Reviewables", type: :system do
         find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
         revise_modal.click_primary_button
 
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
+          queued_post_reviewable,
+        )
         expect(queued_post_reviewable.reload).to be_rejected
 
         topic = Topic.where(archetype: Archetype.private_message).last
@@ -194,12 +238,16 @@ describe "Reviewables", type: :system do
       it "allows selecting a custom reason for revise and reject" do
         revise_modal = PageObjects::Modals::Base.new
 
-        review_page.visit_reviewable(queued_post_reviewable)
+        refreshed_review_page.visit_reviewable(queued_post_reviewable)
 
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
 
-        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        refreshed_review_page.select_bundled_action(
+          queued_post_reviewable,
+          "revise_and_reject_post",
+          "reject-post",
+        )
         expect(revise_modal).to be_open
 
         reason_dropdown =
@@ -209,14 +257,34 @@ describe "Reviewables", type: :system do
         find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
         revise_modal.click_primary_button
 
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
+          queued_post_reviewable,
+        )
+      end
+
+      context "with reviewable claiming enabled" do
+        before { SiteSetting.reviewable_claiming = "required" }
+
+        it "properly claims and unclaims the reviewable" do
+          review_page.visit_reviewable(queued_post_reviewable)
+
+          expect(review_page).to have_no_reviewable_action_dropdown
+
+          review_page.click_claim_reviewable
+
+          expect(review_page).to have_reviewable_action_dropdown
+
+          review_page.click_unclaim_reviewable
+
+          expect(review_page).to have_no_reviewable_action_dropdown
+        end
       end
     end
   end
 
   describe "when there is an unknown plugin reviewable" do
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
-    fab!(:reviewable2) { Fabricate(:reviewable) }
+    fab!(:reviewable2, :reviewable)
 
     before do
       reviewable.update_columns(type: "UnknownPlugin", type_source: "some-plugin")
@@ -240,6 +308,39 @@ describe "Reviewables", type: :system do
 
       visit("/review")
       expect(review_page).to have_no_information_about_unknown_reviewables_visible
+    end
+  end
+
+  describe "custom community moderator guide topic" do
+    fab!(:group)
+    fab!(:topic) { Fabricate(:topic, title: "Moderator guide") }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:reviewable, :reviewable_queued_post)
+
+    before do
+      SiteSetting.reviewable_old_moderator_actions = false
+      SiteSetting.reviewable_ui_refresh = group.name
+      group.add(admin)
+    end
+
+    it "displays the custom guide topic link when configured" do
+      SiteSetting.moderator_guide_topic = topic.id
+
+      review_page.visit_reviewable(reviewable)
+      expect(review_page).to have_css(
+        "a.review-resources__link",
+        text: I18n.t("js.review.help.community_moderation_guide"),
+      )
+    end
+
+    it "does not display anything when no custom guide topic configured" do
+      SiteSetting.moderator_guide_topic = ""
+
+      review_page.visit_reviewable(reviewable)
+      expect(review_page).to have_no_css(
+        "a.review-resources__link",
+        text: I18n.t("js.review.help.community_moderation_guide"),
+      )
     end
   end
 end

@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Đăng nhập bằng Apple"
+        sr_title: "Đăng nhập bằng Apple"
+        message: "Đang xác thực với Apple"

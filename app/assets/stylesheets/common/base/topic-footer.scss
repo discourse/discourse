@@ -1,22 +1,54 @@
+@use "lib/viewport";
+
 #topic-footer-buttons {
   display: flex;
+  flex-direction: column;
+  gap: var(--below-topic-margin);
   max-width: calc(
     var(--topic-avatar-width) + var(--topic-body-width) +
       var(--topic-body-width-padding) * 2
   );
 
-  html.anon & {
-    justify-content: end;
+  html.anon &,
+  .styleguide-anon & {
+    align-items: end;
   }
 
   .topic-footer-main-buttons {
     display: flex;
     gap: 0.5rem;
 
+    @include viewport.until(sm) {
+      gap: 0.75rem;
+      justify-content: space-between;
+
+      .btn,
+      .topic-notifications-button .btn,
+      .pinned-button .btn {
+        font-size: var(--font-up-1-rem);
+      }
+
+      html:not(.anon) & {
+        width: 100%;
+
+        .d-button-label {
+          display: none;
+        }
+
+        .d-icon {
+          margin-right: 0;
+        }
+      }
+    }
+
     &__actions {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
+
+      @include viewport.from(sm) {
+        gap: 0.5rem;
+      }
     }
 
     .bookmark.bookmarked {
@@ -36,6 +68,24 @@
     .text {
       color: var(--primary-high);
     }
+
+    @include viewport.until(sm) {
+      .selected-name .name {
+        display: none;
+      }
+    }
+
+    .reason {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+
+      details,
+      button {
+        flex-shrink: 0;
+      }
+    }
   }
 }
 
@@ -47,6 +97,46 @@
 
   > * {
     pointer-events: auto; // this unsets the above rule so the child elements are interactive
+  }
+
+  .composer-open:not(.composer-has-preview) & {
+    position: fixed;
+    max-width: var(--composer-max-width--hide-preview);
+    width: 100%;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: $reply-area-max-width) {
+    .composer-open:not(.composer-has-preview) .has-sidebar-page & {
+      max-width: calc(
+        var(--composer-max-width--hide-preview) + var(--d-sidebar-width)
+      );
+    }
+  }
+}
+
+.container.posts .topic-navigation {
+  @media screen and (width <= 924px) {
+    // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    grid-area: posts;
+    grid-row: 3;
+    width: auto;
+
+    .btn-toggle-localized-content,
+    .topic-admin-menu-trigger {
+      border-radius: 0;
+      background: var(--secondary);
+      border: 1px solid var(--primary-low);
+    }
+
+    .btn-toggle-localized-content {
+      height: 100%;
+    }
   }
 }
 
@@ -61,7 +151,7 @@
     }
   }
 
-  .btn {
+  .btn.progress-back {
     border: 0;
   }
 
@@ -78,8 +168,10 @@
     .nums {
       display: flex;
       gap: 0.3rem;
+      justify-content: center;
       align-items: center;
       height: 100%;
+      min-width: 6ch;
       position: relative;
       z-index: z("base");
       font-size: var(--font-up-1);

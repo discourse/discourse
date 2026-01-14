@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe "Document title", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
   context "when visiting a public channel" do
-    fab!(:channel_1) { Fabricate(:category_channel) }
+    fab!(:channel_1, :category_channel)
 
     before do
       chat_system_bootstrap

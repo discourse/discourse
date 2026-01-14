@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # The server-side implementation of PresenceChannels. See also {PresenceController}
-# and +app/assets/javascripts/discourse/app/services/presence.js+
+# and +frontend/discourse/app/services/presence.js+
 class PresenceChannel
   class NotFound < StandardError
   end
@@ -151,7 +151,7 @@ class PresenceChannel
     mutex_value = SecureRandom.hex
     result =
       retry_on_mutex_error do
-        PresenceChannel.redis_eval(:leave, redis_keys, [name, user_id, client_id, nil, mutex_value])
+        PresenceChannel.redis_eval(:leave, redis_keys, [name, user_id, client_id, "", mutex_value])
       end
 
     if result == 1

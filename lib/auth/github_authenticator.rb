@@ -7,6 +7,14 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
     "github"
   end
 
+  def display_name
+    "GitHub"
+  end
+
+  def provider_url
+    "https://github.com"
+  end
+
   def enabled?
     SiteSetting.enable_github_logins
   end

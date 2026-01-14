@@ -2,12 +2,12 @@
 
 RSpec.describe "Admin EmbeddableHost Management", type: :system do
   fab!(:admin)
-  fab!(:author) { Fabricate(:admin) }
-  fab!(:author_2) { Fabricate(:admin) }
+  fab!(:author, :admin)
+  fab!(:author_2, :admin)
   fab!(:category)
-  fab!(:category_2) { Fabricate(:category) }
+  fab!(:category_2, :category)
   fab!(:tag)
-  fab!(:tag_2) { Fabricate(:tag) }
+  fab!(:tag_2, :tag)
 
   before { sign_in(admin) }
 

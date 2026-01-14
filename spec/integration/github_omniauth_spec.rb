@@ -6,8 +6,8 @@ describe "GitHub Oauth2" do
   let(:client_secret) { "adddcccdddd99922" }
   let(:temp_code) { "github_temp_code_544254" }
 
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
 
   def setup_github_emails_stub(emails)
     stub_request(:get, "https://api.github.com/user/emails").with(

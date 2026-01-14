@@ -412,10 +412,9 @@ sq:
       daily: "çdo ditë"
       weekly: "çdo javë"
   user_api_key:
-    title: "Lejo këtë aplikimi të ketë akses në faqe"
     authorize: "Autorizo"
+    deny: "Anulo"
     read: "lexuar"
-    description: '"%{application_name}" po kërkon këto të drejta në lidhje me llogarinë tuaj:'
     otp_confirmation:
       confirm_title: Vazhdo tek %{site_name}
     scopes:
@@ -662,7 +661,6 @@ sq:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
-    disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
@@ -672,7 +670,6 @@ sq:
     post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
-    email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -743,8 +740,6 @@ sq:
     tl3_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for trust level 3."
     tl3_promotion_min_duration: "The minimum number of days that a promotion to trust level 3 lasts before a user can be demoted back to trust level 2."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
-    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
-    min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
@@ -753,14 +748,12 @@ sq:
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     email_posts_context: "How many prior replies to include as context in notification emails."
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
     dark_mode_none: "Asnjë"
-    max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
     topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
@@ -790,7 +783,6 @@ sq:
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
-    email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
@@ -798,13 +790,11 @@ sq:
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     email_editable: "Allow users to change their e-mail address after registration."
-    allow_uploaded_avatars: "Allow users to upload custom profile pictures."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     enable_user_directory: "Provide a directory of users for browsing"
-    anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
@@ -817,7 +807,6 @@ sq:
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     embed_post_limit: "Maximum number of posts to embed."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
@@ -923,6 +912,7 @@ sq:
     queued_by_staff:
       title: "Postimi ka nevojë për aprovim"
     welcome_user:
+      preview: "Mirë se vini tek %{site_name}!"
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome!
@@ -933,6 +923,7 @@ sq:
 
         Enjoy your stay!
     welcome_invite:
+      preview: "Mirë se vini tek %{site_name}!"
       subject_template: "Mirë se vini tek %{site_name}!"
     backup_succeeded:
       subject_template: "Backup completed successfully"
@@ -1182,10 +1173,7 @@ sq:
         Nëse nuk arrini të klikoni në linkun më siper, provoni ta kopjoni dhe ta ngjisni në shfletuesin tuaj.
   page_not_found:
     page_title: "Faqja nuk u gjet"
-    popular_topics: "Popullore"
-    recent_topics: "Më të fundit"
     see_more: "Më shumë"
-    search_title: "Kërko në këtë faqe"
     search_button: "Kërko"
   upload:
     edit_reason: "downloaded local copies of images"
@@ -1215,7 +1203,6 @@ sq:
     sender_body_blank: "përmbajtja është bosh"
   color_schemes:
     base_theme_name: "Baza"
-    default_theme_name: "Paracaktuar"
   edit_this_page: "Modifiko këtë faqe"
   csv_export:
     boolean_yes: "Po"
@@ -1271,8 +1258,6 @@ sq:
     nice_share:
       name: Shpërndarje e mirë
       description: Ndau një postim me 25 vizitorë unikë
-      long_description: |
-        Kjo stemë jepet kur shpërdan një lidhje që është klikuar nga 25 vizitorë të jashtëm. Faleminderit që keni përhapur fjalën rreth bisedave tona, dhe këtij komuniteti.
     good_share:
       name: Shpërndarje goxha e mirë
       description: Ndau një postim me 300 vizitorë unikë
@@ -1378,7 +1363,6 @@ sq:
       long_description: |
         Kjo stemë jepet herën e parë kur i përgjigjeni një postimi nëpërmjet email-it :e-mail:
   admin_login:
-    success: "Emaili u dërgua"
     email_input: "Admin Email"
     submit_button: "Dërgo Email"
   performance_report:
@@ -1391,16 +1375,24 @@ sq:
       title: "Konfirmoni emailin tuaj"
     resend_email:
       title: "Dërgo përsëri emailin e aktivizimit"
+  dev_mode:
+    enter: "Hyni"
   wizard:
     step:
-      styling:
+      setup:
+        title: "Material Hyrës"
         fields:
-          styling_preview:
-            label: "Parashikimi"
-          homepage_style:
+          login_required:
             choices:
-              latest:
-                label: "Më të fundit"
+              public:
+                label: "Publike"
+              private:
+                label: "Private"
+  onebox:
+    github:
+      status_date:
+        approved: "aprovuar"
+        closed: "mbyllur"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
@@ -1415,17 +1407,56 @@ sq:
     actions:
       agree:
         title: "Po"
-      delete_single:
+      delete:
         title: "Fshij"
-      disagree:
+        complete: "Postimi u fshi."
+      delete_and_ignore:
+        complete: "Postimi u fshi."
+      delete_and_agree:
+        complete: "Postimi u fshi."
+      disagree_bundle:
         title: "Jo"
+      disagree:
+        complete: "Shënimi u injorua."
+      ignore:
+        complete: "Shënimi u injorua."
+      ignore_and_do_nothing:
+        complete: "Shënimi u injorua."
       approve:
-        title: "Aprovo"
+        title: "Po"
+        complete: "Postimi u miratua."
+      approve_post:
+        title: "Po"
+        complete: "Postimi u miratua."
+      approve_post_closed:
+        title: "Po"
+        complete: "Postimi u miratua."
+      reject_post_bundle:
+        title: "Jo"
+      reject_post:
+        complete: "Postimi u refuzua."
+      approve_user:
+        title: "Po"
+        complete: "Përdoruesi u miratua."
       reject_user:
+        title: "Jo"
         delete:
           title: "Fshij Anëtarin"
+          complete: "Përdoruesi u fshi."
+      confirm_spam:
+        title: "Po"
+      not_spam:
+        title: "Jo"
       reject:
         title: "Refuzo"
+      approve_and_restore:
+        title: "Po"
+      approve_and_unhide:
+        title: "Po"
+      delete_post:
+        complete: "Postimi u fshi"
+      delete_user:
+        complete: "Përdoruesi u fshi"
   fallback_username: "përdorues"
   activemodel:
     errors:

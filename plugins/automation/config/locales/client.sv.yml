@@ -45,13 +45,17 @@ sv:
             label: Huvuddel
           delay:
             label: Fördröjning (minuter)
-          prefers_encrypt:
-            label: Krypterar PM om tillgängligt
         group:
           label: Grupp
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Taggar
         not_found: Kunde inte hitta utlösaren `%{trigger}` för automatisering `%{automation}`, se till att det tillhörande insticksprogrammet är installerat.
         user_badge_granted:
           fields:
@@ -143,13 +147,13 @@ sv:
               description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
             restricted_tags:
               label: Taggar
-            restricted_category:
-              label: Kategori
-            restricted_group:
-              label: Grupp
-            restricted_groups:
-              label: Grupper
+            restricted_categories:
+              label: Kategorier
           created: Skapade
+          with_images: Bilder
+          with_links: Länkar
+          with_code: Kod
+          with_uploads: Uppladdningar
         category_created_edited:
           fields:
             restricted_category:
@@ -284,6 +288,8 @@ sv:
           fields:
             custom_field_name:
               label: "Användaranpassat fältnamn"
+        set_topic_timer:
+          title: Ställ in ämnestimer
       models:
         script:
           name:
@@ -302,8 +308,6 @@ sv:
             label: Version
           status:
             label: Status
-          enabled:
-            label: Aktiverad
           disabled:
             label: Inaktiverad
           placeholders:

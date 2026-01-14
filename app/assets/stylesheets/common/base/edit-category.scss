@@ -1,15 +1,20 @@
+@use "lib/viewport";
 @use "sass:string";
 
-$category-settings-width: string.unquote("min(500px, 90%)");
+$category-settings-width: string.unquote("min(600px, 90%)");
 $number-input-width: 75px;
 
 div.edit-category {
   display: grid;
   grid-template-columns: 1fr 5fr;
   grid-template-rows: auto auto auto;
-  grid-row-gap: 1em;
-  grid-column-gap: 1.5em;
+  row-gap: 1em;
+  column-gap: 1.5em;
   grid-template-areas: "header header" "sidebar content" "sidebar warning" "sidebar footer";
+
+  @include viewport.until(sm) {
+    display: block;
+  }
 
   .edit-category-title-bar {
     grid-area: header;
@@ -21,8 +26,19 @@ div.edit-category {
     background-color: var(--primary-very-low);
     padding: 20px;
 
+    @include viewport.until(sm) {
+      justify-content: start;
+      align-items: center;
+      padding-bottom: 1em;
+    }
+
     h2 {
       @include ellipsis;
+
+      @include viewport.until(sm) {
+        order: 2;
+        margin-bottom: 0;
+      }
     }
 
     .category-back {
@@ -40,13 +56,70 @@ div.edit-category {
     grid-area: sidebar;
     grid-row: 2 / span 3;
 
-    .nav-stacked {
+    @include viewport.until(sm) {
+      width: 100%;
       background-color: var(--secondary);
+      position: relative;
+      border-top: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--content-border-color);
+      margin: 0.5em 0;
+      overflow: hidden;
+
+      &::after {
+        background: linear-gradient(
+          to right,
+          rgb(var(--secondary-rgb), 0),
+          rgb(var(--secondary-rgb), 1)
+        );
+        content: "";
+        position: absolute;
+        right: 0;
+        height: 100%;
+        width: 30px;
+      }
+    }
+  }
+
+  .nav-stacked {
+    background-color: var(--secondary);
+
+    @include viewport.until(sm) {
+      white-space: nowrap;
+      flex-wrap: nowrap;
+      overflow-x: scroll;
+      display: inline-flex;
+      width: 100%;
+      margin-bottom: 0;
+
+      li {
+        font-size: var(--font-down-1);
+        border-bottom: none;
+      }
+
+      a.active::after {
+        display: none;
+      }
     }
   }
 
   .edit-category-content {
     grid-area: content;
+
+    @include viewport.until(sm) {
+      padding-top: 1em;
+    }
+
+    .edit-category-tab {
+      display: none;
+    }
+
+    .edit-category-tab.active {
+      display: contents;
+    }
+
+    .form-kit__container-content {
+      flex-wrap: wrap;
+    }
   }
 
   #list-area & h2 {
@@ -214,7 +287,7 @@ div.edit-category {
   margin-bottom: 2em;
 
   .permission-row {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     display: flex;
 
     &.row-header {

@@ -3,6 +3,11 @@
 directory "plugins"
 
 desc "install all official plugins (use GIT_WRITE=1 to pull with write access)"
+
+task "plugin:list_official" do
+  Plugin::Metadata::OFFICIAL_PLUGINS.each { |name| STDOUT.puts name }
+end
+
 task "plugin:install_all_official" do
   skip = Set.new(%w[customer-flair poll])
 
@@ -191,6 +196,9 @@ def spec(plugin, files, parallel: false, argv: nil)
   params << "--seed #{ENV["RSPEC_SEED"]}" if Integer(ENV["RSPEC_SEED"], exception: false)
   params << argv if argv
 
+  # if plugin contains a comma, it's a list. we need to surround it with brackets
+  plugin = "{#{plugin}}" if plugin.include?(",")
+
   # reject system specs as they are slow and need dedicated setup
   if files.empty?
     files =
@@ -228,24 +236,9 @@ desc "run plugin qunit tests"
 task "plugin:qunit", :plugin do |t, args|
   args.with_defaults(plugin: "*")
 
-  rake = "#{Rails.root}/bin/rake"
-
-  cmd = "LOAD_PLUGINS=1 "
-
-  target =
-    if args[:plugin] == "*"
-      puts "Running qunit tests for all plugins"
-      "plugins"
-    else
-      puts "Running qunit tests for #{args[:plugin]}"
-      args[:plugin]
-    end
-
-  cmd += "TARGET='#{target}' "
-  cmd += "#{rake} qunit:test"
-
-  system cmd
-  exit $?.exitstatus
+  target = args[:plugin]
+  target = "plugins" if target == "*"
+  exec Rails.root.join("bin/qunit").to_s, "--standalone", "--target", target
 end
 
 desc "run all migrations of a plugin"
@@ -325,7 +318,6 @@ task "plugin:create", [:name] do |t, args|
 
   abort("Plugin directory, " + plugin_path + ", already exists.") if File.directory?(plugin_path)
 
-  failures = []
   repo = "https://github.com/discourse/discourse-plugin-skeleton"
   begin
     attempts ||= 1
@@ -333,7 +325,7 @@ task "plugin:create", [:name] do |t, args|
     system("git clone --quiet #{repo} #{plugin_path}", exception: true)
   rescue StandardError
     if attempts == 3
-      failures << repo
+      STDOUT.puts "Failed to clone #{repo}"
       abort
     end
 
@@ -341,7 +333,6 @@ task "plugin:create", [:name] do |t, args|
     attempts += 1
     retry
   end
-  failures.each { |repo| STDOUT.puts "Failed to clone #{repo}" } if failures.present?
 
   Dir.chdir(plugin_path) do # rubocop:disable Discourse/NoChdir
     puts "Initializing git repository..."

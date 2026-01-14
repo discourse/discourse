@@ -175,7 +175,7 @@ RSpec.describe UsersEmailController do
       end
 
       context "when the new email address is taken" do
-        fab!(:other_user) { Fabricate(:coding_horror) }
+        fab!(:other_user, :coding_horror)
 
         context "when hide_email_address_taken is disabled" do
           before { SiteSetting.hide_email_address_taken = false }

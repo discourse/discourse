@@ -219,7 +219,7 @@ RSpec.describe Onebox::Helpers do
       it "has the default Discourse user agent" do
         stub_request(:get, "http://example.com/some-resource").with(
           headers: {
-            "user-agent" => /Discourse Forum Onebox/,
+            "user-agent" => Discourse.user_agent,
           },
         ).to_return(status: 200, body: "test")
 
@@ -350,8 +350,8 @@ RSpec.describe Onebox::Helpers do
       )
     end
     it do
-      expect(described_class.uri_encode("http://example.com/<pa'th>(foo)?b+a+r")).to eq(
-        "http://example.com/%3Cpa'th%3E(foo)?b%2Ba%2Br",
+      expect(described_class.uri_encode("http://example.com/<+pa'th>(foo)?b+a+r")).to eq(
+        "http://example.com/%3C+pa'th%3E(foo)?b+a+r",
       )
     end
     it do
@@ -407,6 +407,11 @@ RSpec.describe Onebox::Helpers do
       expect(
         described_class.uri_encode("https://gitpod.io/#https://github.com/eclipse-theia/theia"),
       ).to eq("https://gitpod.io/#https://github.com/eclipse-theia/theia")
+    end
+
+    it "does not encode '+' in query parameters because it is a valid way to represent a space" do
+      url = "https://example.com/search?q=ruby+on+rails"
+      expect(described_class.uri_encode(url)).to eq(url)
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat | Select message | thread", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
   fab!(:original_message) { Fabricate(:chat_message, chat_channel: channel_1) }

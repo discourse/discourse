@@ -28,15 +28,20 @@ class PostValidator < ActiveModel::Validator
   end
 
   def post_body_validator(post)
-    return if options[:skip_post_body] || post.topic&.pm_with_non_human_user?
+    return if options[:skip_post_body]
+
     stripped_length(post)
+    return if post.topic&.pm_with_non_human_user?
+
     raw_quality(post)
     WatchedWordsValidator.new(attributes: [:raw]).validate(post) if !post.acting_user&.staged
   end
 
   def stripped_length(post)
     range =
-      if private_message?(post)
+      if post.topic&.pm_with_non_human_user?
+        (0..SiteSetting.max_post_length)
+      elsif private_message?(post)
         SiteSetting.private_message_post_length
       elsif post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0)
         if post.topic&.featured_link.present?

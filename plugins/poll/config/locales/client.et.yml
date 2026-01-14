@@ -41,7 +41,6 @@ et:
       error_while_casting_votes: "Kahjuks tekkis hääletamise käigus tõrge."
       error_while_fetching_voters: "Kahjuks tekkis hääletajate näitamise käigus tõrge."
       ui_builder:
-        title: Koosta hääletus
         insert: Sisesta hääletus
         help:
           min_step_value: Sammu minimaalne väärtus on 1

@@ -28,6 +28,8 @@ ro:
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "Introducerea datei/orei"
+        multi_select:
+          title: "Selectare multiplă"
         font_scale:
           title: "Sistem corpuri de literă"
         colors:
@@ -51,16 +53,12 @@ ro:
           title: "Navigare suprapusă"
         categories_list:
           title: "Listă de categorii"
-        topic_link:
-          title: "Legătură spre subiect"
         topic_list_item:
           title: "Element din lista subiectelor"
         topic_statuses:
           title: "Statusuri pentru subiecte"
         topic_list:
           title: "Listă de subiecte"
-        footer_message:
-          title: "Mesaj subsol"
         signup_cta:
           title: "Îndemn la înregistrare"
         topic_timer_info:
@@ -73,8 +71,8 @@ ro:
           title: "Postare"
         topic_map:
           title: "Harta subiectului"
-        suggested_topics:
-          title: "Subiecte sugerate"
+        more_topics:
+          title: "Mai multe subiecte"
         post_menu:
           title: "Meniu postare"
         modal:
@@ -87,6 +85,8 @@ ro:
           title: "Pictograme Antet"
         spinners:
           title: "Indicatori încărcare"
+        otp:
+          title: "OTP"
         tooltips:
           description: "Descriere"
           header: "Antet"

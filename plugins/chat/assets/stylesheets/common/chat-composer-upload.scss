@@ -25,7 +25,7 @@
   &:hover {
     .chat-composer-upload__remove-btn {
       visibility: visible;
-      background: rgba(var(--always-black-rgb), 0.9);
+      background: rgb(var(--always-black-rgb), 0.9);
       padding: 5px;
       border-radius: 100%;
       font-size: var(--font-down-2);

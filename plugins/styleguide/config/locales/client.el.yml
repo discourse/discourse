@@ -8,24 +8,57 @@ el:
   js:
     styleguide:
       sections:
+        bem:
+          title: "BEM"
         typography:
+          title: "Τυπογραφία"
           example: "Καλώς ήρθατε στο Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Εισαγωγές ημερομηνίας/ώρας"
+        menus:
+          title: "Μενού"
+        multi_select:
+          title: "Πολλαπλή επιλογή"
+        font_scale:
+          title: "Σύστημα γραμματοσειράς"
         colors:
           title: "Χρώματα"
+        dialog:
+          title: "Διάλογος"
         icons:
           title: "Εικονίδια"
+        forms:
+          title: "Φόρμες"
+        buttons:
+          title: "Κουμπιά"
         categories:
           title: "Κατηγορίες"
         navigation:
           title: "Πλοήγηση"
+        navigation_bar:
+          title: "Γραμμή πλοήγησης"
         categories_list:
           title: "Λίστα Κατηγοριών"
         topic_timer_info:
-          title: "Χρονοδιακόπτες Νημάτων"
+          title: "Χρονοδιακόπτες Θεμάτων"
         post:
           title: "Ανάρτηση"
-        suggested_topics:
-          title: "Προτεινόμενα θέματα"
+        topic_map:
+          title: "Χάρτης θέματος"
+        site_header:
+          title: "Κεφαλίδα ιστότοπου"
+        more_topics:
+          title: "Περισσότερα Θέματα"
+        post_menu:
+          title: "Μενού ανάρτησης"
+        empty_state:
+          title: "Κενή κατάσταση"
         tooltips:
+          title: "Συμβουλές"
           description: "Περιγραφή"
           header: "Header"
+          hover_to_see: "Τοποθετήστε το δείκτη του ποντικιού πάνω για να δείτε μια συμβουλή"
+        char_counter:
+          title: "Μετρητής χαρακτήρων"
+          placeholder: "Εισαγάγετε το κείμενό σας εδώ..."

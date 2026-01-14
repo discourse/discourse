@@ -7,18 +7,18 @@ describe "Table Builder", type: :system do
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:topic2) { Fabricate(:topic, user: user) }
   fab!(:post1) { create_post(user: user, topic: topic, raw: <<~RAW) }
-        |Make   | Model   | Year|
-        |--- | --- | ---|
-        |Toyota | Supra   | 1998|
-        |Nissan | Skyline | 1999|
-        |Honda  | S2000  | 2001|
-        RAW
+    |Make   | Model   | Year|
+    |--- | --- | ---|
+    |Toyota | Supra   | 1998|
+    |Nissan | Skyline | 1999|
+    |Honda  | S2000  | 2001|
+  RAW
   fab!(:post2) { create_post(user: user, topic: topic2, raw: <<~RAW) }
-        | |  | |
-        |--- | --- | ---|
-        |Some | content | here|
-        |1 | 2 | 3|
-        RAW
+    | |  | |
+    |--- | --- | ---|
+    |Some | content | here|
+    |1 | 2 | 3|
+  RAW
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
@@ -32,8 +32,8 @@ describe "Table Builder", type: :system do
     it "should add table items created in spreadsheet to composer input" do
       visit("/latest")
       page.find("#create-topic").click
-      page.find(".toolbar-popup-menu-options").click
-      page.find(".select-kit-row[data-name='toggle-spreadsheet']").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name='toggle-spreadsheet']").click
       insert_table_modal.type_in_cell(0, 0, "Item 1")
       insert_table_modal.type_in_cell(0, 1, "Item 2")
       insert_table_modal.type_in_cell(0, 2, "Item 3")
@@ -41,15 +41,15 @@ describe "Table Builder", type: :system do
       insert_table_modal.click_insert_table
 
       created_table = <<~TABLE
-      |Column 1 | Column 2 | Column 3 | Column 4|
-      |--- | --- | --- | ---|
-      |Item 1 | Item 2 | Item 3 | Item 4|
-      | |  |  | |
-      | |  |  | |
-      | |  |  | |
-      | |  |  | |
-      | |  |  | |
-      TABLE
+            |Column 1 | Column 2 | Column 3 | Column 4|
+            |--- | --- | --- | ---|
+            |Item 1 | Item 2 | Item 3 | Item 4|
+            | |  |  | |
+            | |  |  | |
+            | |  |  | |
+            | |  |  | |
+            | |  |  | |
+          TABLE
 
       expect(normalize_value(composer.composer_input.value)).to eq(normalize_value(created_table))
     end
@@ -58,8 +58,8 @@ describe "Table Builder", type: :system do
       it "should close the modal if there are no changes made" do
         visit("/latest")
         page.find("#create-topic").click
-        page.find(".toolbar-popup-menu-options").click
-        page.find(".select-kit-row[data-name='toggle-spreadsheet']").click
+        find(".toolbar-menu__options-trigger").click
+        page.find("button[data-name='toggle-spreadsheet']").click
         insert_table_modal.cancel
         expect(page).to have_no_css(".insert-table-modal")
       end
@@ -67,8 +67,8 @@ describe "Table Builder", type: :system do
       it "should show a warning popup if there are unsaved changes" do
         visit("/latest")
         page.find("#create-topic").click
-        page.find(".toolbar-popup-menu-options").click
-        page.find(".select-kit-row[data-name='toggle-spreadsheet']").click
+        find(".toolbar-menu__options-trigger").click
+        page.find("button[data-name='toggle-spreadsheet']").click
         insert_table_modal.type_in_cell(0, 0, "Item 1")
         insert_table_modal.cancel
         expect(page).to have_css(".dialog-container .dialog-content")
@@ -103,16 +103,14 @@ describe "Table Builder", type: :system do
       insert_table_modal.click_insert_table
 
       updated_post = <<~RAW
-      |Make | Model | Year|
-      |--- | --- | ---|
-      |Toyota | Supra | 1998|
-      |Nissan | Skyline GTR | 1999|
-      |Honda | S2000 | 2001|
-      RAW
+            |Make | Model | Year|
+            |--- | --- | ---|
+            |Toyota | Supra | 1998|
+            |Nissan | Skyline GTR | 1999|
+            |Honda | S2000 | 2001|
+          RAW
 
-      try_until_success do
-        expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
-      end
+      expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
     end
 
     it "should respect the original empty header" do
@@ -123,15 +121,13 @@ describe "Table Builder", type: :system do
       insert_table_modal.click_insert_table
 
       updated_post = <<~RAW
-      | |  | |
-      |--- | --- | ---|
-      |Some updated | content | here|
-      |1 | 2 | 3|
-      RAW
+            | |  | |
+            |--- | --- | ---|
+            |Some updated | content | here|
+            |1 | 2 | 3|
+          RAW
 
-      try_until_success do
-        expect(normalize_value(post2.reload.raw)).to eq(normalize_value(updated_post))
-      end
+      expect(normalize_value(post2.reload.raw)).to eq(normalize_value(updated_post))
     end
 
     context "when adding an edit reason" do

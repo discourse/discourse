@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    discourse_policy:
+      title: "Informativa"
+      accepted_tooltip: "Utenti che hanno accettato questa informativa"
+      not_accepted_tooltip: "Utenti che non hanno accettato questa informativa"
+      accept_policy: "Accetta informativa"
+      revoke_policy: "Revoca informativa"
+      edit_reason: "Le impostazioni dell'informativa sono state modificate"
+      no_possible_users: "Questa informativa non ha utenti possibili"
+      accept_policy_template: "Accetto questa informativa"
+      builder:
+        title: Informativa
+        attach: Crea informativa
+        save: Salva le modifiche
+        insert: Inserisci
+        errors:
+          group: Il gruppo è obbligatorio
+          version: La versione è obbligatoria
+        groups:
+          label: Gruppi
+          description: I gruppi associati a questa informativa
+        version:
+          label: Versione
+          description: La versione dell'informativa, il cambio della versione costringerà gli utenti a riaccettarla
+        renew:
+          label: Rinnova
+          description: Rinnova l'informativa ogni x giorni
+        renew-start:
+          label: Inizio rinnovo
+          description: Quando l'informativa dovrà essere rinnovata
+        reminder:
+          label: Promemoria
+          description: Frequenza di invio di un promemoria di accettazione dell'informativa
+          no_reminder: (Nessun promemoria)
+        accept:
+          label: Accetta
+          description: Testo utilizzato sul pulsante di accettazione
+        revoke:
+          label: Revoca
+          description: Testo utilizzato sul pulsante di revoca
+        private:
+          label: Privato?
+          description: Mantieni privato lo stato dell'informativa per gli amministratori
+        send-email:
+          label: Inviare e-mail?
+          description: Avvisa gli utenti della nuova informativa via e-mail
+        add-users-to-group:
+          label: Aggiungi utenti al gruppo
+          description: Aggiungi gli utenti al seguente gruppo quando accettano l'informativa.
+      preferences:
+        title: Informative
+        policy_emails:
+          always_description: Ti invieremo un'e-mail solo se hai scelto anche di ricevere le e-mail per le nuove attività.
+          away_description: Ti invieremo un'e-mail solo se non ti sei fatto vedere negli ultimi 10 minuti quando lo stato dell'informativa cambia e solo se hai scelto anche di ricevere le e-mail per le nuove attività.
+          label: Inviami un'e-mail quando un'informativa necessita della mia revisione
+          email_frequency_options:
+            never: Mai
+            when_away: Solo quando si è lontani
+            always: Sempre

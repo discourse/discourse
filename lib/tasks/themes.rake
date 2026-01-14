@@ -105,7 +105,7 @@ def update_themes(version_cache: Concurrent::Map.new)
 end
 
 desc "Update themes & theme components"
-task "themes:update": %w[environment assets:precompile:theme_transpiler] do
+task "themes:update": %w[environment assets:precompile:asset_processor] do
   if ENV["RAILS_DB"].present?
     update_themes
   else
@@ -276,19 +276,34 @@ end
 # the themes QUnit tests requires the themes to be installed in the database.
 desc "Runs qunit tests for all official themes"
 task "themes:qunit_all_official" => :environment do |task, args|
-  theme_ids_with_qunit_tests = []
+  official_theme_ids_with_qunit_tests = []
 
   ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
     path = File.join(Rails.root, "tmp/themes/#{theme_name}")
 
-    if Dir.glob("#{File.join(path, "test")}/**/*.{js,es6}").any?
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs}").any?
       theme = RemoteTheme.import_theme_from_directory(path)
-      theme_ids_with_qunit_tests << theme.id
+      official_theme_ids_with_qunit_tests << theme.id
+    else
+      puts "Skipping #{theme_name} as no QUnit tests have been detected"
+    end
+  end
+
+  core_theme_ids_with_qunit_tests = []
+
+  Theme::CORE_THEMES.each do |(theme_name, theme_id)|
+    path = File.join(Rails.root, "themes/#{theme_name}")
+
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs}").any?
+      core_theme_ids_with_qunit_tests << theme_id
     else
       puts "Skipping #{theme_name} as no QUnit tests have been detected"
     end
   end
 
   Rake::Task["themes:qunit"].reenable
-  Rake::Task["themes:qunit"].invoke("ids", theme_ids_with_qunit_tests.join("|"))
+  Rake::Task["themes:qunit"].invoke("ids", official_theme_ids_with_qunit_tests.join("|"))
+
+  ENV["EMBER_RAISE_ON_DEPRECATION"] = "1"
+  Rake::Task["themes:qunit"].invoke("ids", core_theme_ids_with_qunit_tests.join("|"))
 end

@@ -99,6 +99,8 @@ sq:
     reviewables:
       message_already_handled: "Faleminderit, mesazhi është rishikuar tashmë dhe nuk ka nevojë të raportohet përsëri."
       actions:
+        restore_message:
+          description: "Rikthe mesazhin që të shfaqet për përdoruesit"
         agree:
           title: "Pranuar"
         agree_and_keep_message:
@@ -120,16 +122,10 @@ sq:
           title: "Fshi Mesazhin"
           description: "Fshi mesazhin në mënyrë që përdoruesit të mos e shohin atë."
         delete_and_agree:
-          title: "Injoro shënimin dhe Fshi Mesazhin"
           description: "Injoro shënimin duke e hequr atë nga radha dhe fshi mesazhin."
         disagree_and_restore:
           title: "Ndrysho dhe rikthe mesazhin"
           description: "Rikthe mesazhin që të shfaqet për përdoruesit."
-        disagree:
-          title: "Jo dakord"
-        ignore:
-          title: "Mos bëni asnjë veprim"
-          description: "Injoro shënimin duke e hequr atë nga radha pa ndërmarrë asnjë veprim."
       direct_messages:
         transcript_title: "Kopja e mesazheve të mëparshme në %{channel_name}"
         transcript_body: "Për t'ju dhënë më shumë informacion, kemi përfshirë një kopje të mesazheve të mëparshme në këtë bisedë (deri në dhjetë):\n\n%{transcript}"
@@ -168,7 +164,7 @@ sq:
         slug_contains_non_ascii_chars: "përmban karaktere të veçanta"
         is_already_in_use: "është tashmë në përdorim"
     bookmarkable:
-      notification_title: "mesazh në %{channel_name}"
+      notification_title_channel: "mesazh në %{channel_name}"
     personal_chat: "bisedë private"
     onebox:
       inline_to_message: "Mesazhi #%{message_id} nga %{username} – #%{chat_channel}"
@@ -235,10 +231,8 @@ sq:
       view_messages:
         one: "Shiko mesazhin"
         other: "Shiko mesazhet %{count}"
-      your_chat_settings: "Preferenca e frekuencës së email-it të kanalit"
   unsubscribe:
     chat_summary:
-      select_title: "Cakto frekuencën e emaileve përmbledhëse të kanalit të bisedës në:"
       never: Asnjëherë
   category:
     cannot_delete:

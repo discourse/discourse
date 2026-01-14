@@ -5,8 +5,15 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Ankieta Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Można dodawać i usuwać opcje."
       voters:
         one: "głosujący"
         few: "głosujących"
@@ -36,6 +43,7 @@ pl_PL:
           title: "Wyniki pokazywane są wyłącznie członkom <strong>zespołu</strong>."
         tabs:
           votes: "Głosy"
+          outcome: "Rezultat"
       multiple:
         help:
           at_least_min_options:
@@ -108,9 +116,15 @@ pl_PL:
           few: "Zwycięzcą został %{winner} po %{count} rundach."
           many: "Zwycięzcą został %{winner} po %{count} rundach."
           other: "Zwycięzcą został %{winner} po %{count} rundach."
+        tied:
+          one: "Remis po jednej rundzie pomiędzy następującymi kandydatami:"
+          few: "Remis po %{count} rundach pomiędzy następującymi kandydatami:"
+          many: "Remis po %{count} rundach pomiędzy następującymi kandydatami:"
+          other: "Remis po %{count} rundach pomiędzy następującymi kandydatami:"
       options:
         label: "Opcje"
         ranked_choice:
+          abstain: "Wstrzymaj się"
           highest_priority: "(najwyższy priorytet)"
           lowest_priority: "(najniższy priorytet)"
           login: "Zaloguj się, aby zagłosować!"
@@ -119,7 +133,7 @@ pl_PL:
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
       error_while_exporting_results: "Przepraszamy, wystąpił błąd podczas eksportowania wyników ankiety."
       ui_builder:
-        title: Zbuduj ankietę
+        title: Skonstruuj ankietę
         insert: Wstaw ankietę
         help:
           options_min_count: Wprowadź co najmniej 1 opcję.
@@ -132,6 +146,7 @@ pl_PL:
           label: Typ
           regular: Pojedynczy wybór
           multiple: Wielokrotny wybór
+          ranked_choice: Wybór rankingowy
           number: Liczba ocen
         poll_result:
           label: Pokaż wyniki...
@@ -151,6 +166,8 @@ pl_PL:
           step: Krok
         poll_public:
           label: Pokaż kto głosował
+        poll_dynamic:
+          label: Zezwól na dodawanie lub usuwanie opcji po opublikowaniu
         poll_title:
           label: Tytuł (opcjonalnie)
         poll_options:

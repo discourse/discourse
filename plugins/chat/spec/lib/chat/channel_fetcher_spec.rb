@@ -4,13 +4,13 @@ describe Chat::ChannelFetcher do
   fab!(:category) { Fabricate(:category, name: "support") }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:category_channel) { Fabricate(:category_channel, chatable: category, slug: "support") }
-  fab!(:dm_channel1) { Fabricate(:direct_message) }
-  fab!(:dm_channel2) { Fabricate(:direct_message) }
+  fab!(:dm_channel1, :direct_message)
+  fab!(:dm_channel2, :direct_message)
   fab!(:direct_message_channel1) { Fabricate(:direct_message_channel, chatable: dm_channel1) }
   fab!(:direct_message_channel2) { Fabricate(:direct_message_channel, chatable: dm_channel2) }
-  fab!(:chatters) { Fabricate(:group) }
+  fab!(:chatters, :group)
   fab!(:user1) { Fabricate(:user, group_ids: [chatters.id]) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user2, :user)
 
   def guardian
     Guardian.new(user1)

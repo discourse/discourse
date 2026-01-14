@@ -11,7 +11,7 @@ it:
     models:
       fields:
         required_field: Il campo `%{name}` deve essere compilato su `%{target}:%{target_name}`.
-        invalid_field: Il componente del campo `%{component}` non è utilizzabile su `%{target}:%{target_name}.`
+        invalid_field: Il componente del campo `%{component}` non è utilizzabile su `%{target}:%{target_name}`.
         invalid_metadata: I dati per `%{field}` non sono validi o il componente `%{component}` è sconosciuto.
     triggerables:
       errors:
@@ -152,3 +152,5 @@ it:
       random_assign:
         title: "Assegnazione casuale"
         description: "Assegna casualmente argomenti a un gruppo"
+      set_topic_timer:
+        title: "Imposta il timer per l'argomento"

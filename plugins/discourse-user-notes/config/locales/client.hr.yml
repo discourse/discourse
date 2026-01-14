@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    user_notes:
+      title: "Napomene o korisniku"
+      attach_note_description: "Dodajte napomenu o ovom korisniku. Ova će napomena biti vidljiva samo osoblju."
+      delete_confirm: "Jeste li sigurni da želite izbrisati tu napomenu o korisniku?"

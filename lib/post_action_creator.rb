@@ -14,7 +14,8 @@ class PostActionCreator
       message: nil,
       created_at: nil,
       reason: nil,
-      silent: false
+      silent: false,
+      context: nil
     )
       new(
         created_by,
@@ -24,6 +25,7 @@ class PostActionCreator
         created_at: created_at,
         reason: reason,
         silent: silent,
+        context: context,
       ).perform
     end
 
@@ -50,7 +52,8 @@ class PostActionCreator
     created_at: nil,
     queue_for_review: false,
     reason: nil,
-    silent: false
+    silent: false,
+    context: nil
   )
     @created_by = created_by
     @created_at = created_at || Time.zone.now
@@ -73,6 +76,8 @@ class PostActionCreator
     @reason = "queued_by_staff" if reason.nil? && @queue_for_review
 
     @silent = silent
+
+    @context = context
   end
 
   def post_can_act?
@@ -220,7 +225,11 @@ class PostActionCreator
       true,
       Discourse.system_user,
       message:
-        I18n.t("temporarily_closed_due_to_flags", count: SiteSetting.num_hours_to_close_topic),
+        I18n.t(
+          "temporarily_closed_due_to_flags",
+          count: SiteSetting.num_hours_to_close_topic,
+          locale: SiteSetting.default_locale,
+        ),
     )
 
     topic.set_or_create_timer(
@@ -291,7 +300,7 @@ class PostActionCreator
     }
 
     # First try to revive a trashed record
-    post_action = PostAction.where(where_attrs).with_deleted.where("deleted_at IS NOT NULL").first
+    post_action = PostAction.where(where_attrs).with_deleted.where.not(deleted_at: nil).first
 
     if post_action
       post_action.recover!
@@ -362,16 +371,18 @@ class PostActionCreator
       return if handler_values.any? { |value| value == false }
     else
       create_args[:subtype] = TopicSubtype.notify_moderators
-      create_args[:target_group_names] = [Group[:moderators].name]
+      group_names = Set[Group[:moderators].name]
 
       if SiteSetting.enable_category_group_moderation? && @post.topic&.category
-        create_args[:target_group_names].push(
-          *Group
+        group_names.merge(
+          Group
             .joins(:category_moderation_groups)
             .where("category_moderation_groups.category_id": @post.topic.category.id)
             .pluck(:name),
         )
       end
+
+      create_args[:target_group_names] = group_names.to_a
     end
 
     PostCreator.new(@created_by, create_args)
@@ -379,7 +390,17 @@ class PostActionCreator
 
   def create_reviewable(result)
     return unless flagging_post?
-    return if @post.user_id.to_i < 0
+
+    # Return early if the reviewable is being created for a user with a negative user_id.
+    # Plugin apply_modifier can remove this early return for special cases.
+    is_bot_post = @post.user_id.to_i < 0
+    if DiscoursePluginRegistry.apply_modifier(
+         :post_action_creator_block_reviewable_for_bot,
+         is_bot_post,
+         @post,
+       )
+      return
+    end
 
     result.reviewable =
       ReviewableFlaggedPost.needs_review!(
@@ -403,6 +424,7 @@ class PostActionCreator
         meta_topic_id: @meta_post&.topic_id,
         reason: @reason,
         force_review: trusted_spam_flagger?,
+        context: @context,
       )
   end
 

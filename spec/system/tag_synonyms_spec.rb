@@ -4,7 +4,7 @@ describe "Tag synonyms", type: :system do
   let(:tags_page) { PageObjects::Pages::Tag.new }
   fab!(:tag_1) { Fabricate(:tag, name: "design") }
   fab!(:tag_2) { Fabricate(:tag, name: "art") }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   before { sign_in(current_user) }
 

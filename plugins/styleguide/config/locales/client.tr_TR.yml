@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse Biçim Kılavuzu"
   js:
     styleguide:
       title: "Stil rehberi"
@@ -25,6 +30,8 @@ tr_TR:
           title: "Tarih/Saat girdileri"
         menus:
           title: "Menüler"
+        multi_select:
+          title: "Çoklu seçim"
         toasts:
           title: "Beliren pencereler"
         font_scale:
@@ -52,8 +59,6 @@ tr_TR:
           title: "Gezinti Yığılı"
         categories_list:
           title: "Kategori Listesi"
-        topic_link:
-          title: "Konu Bağlantısı"
         topic_list_item:
           title: "Konu Listesi Ögesi"
         topic_statuses:
@@ -62,8 +67,6 @@ tr_TR:
           title: "Konu Listesi"
         basic_topic_list:
           title: "Temel Konu Listesi"
-        footer_message:
-          title: "Alt Bilgi Mesajı"
         signup_cta:
           title: "CTA'ya kaydolun"
         topic_timer_info:
@@ -82,8 +85,8 @@ tr_TR:
           title: "Konu Haritası"
         site_header:
           title: "Site Başlığı"
-        suggested_topics:
-          title: "Önerilen Konular"
+        more_topics:
+          title: "Daha Fazla Konu"
         post_menu:
           title: "Gönderi Menüsü"
         modal:

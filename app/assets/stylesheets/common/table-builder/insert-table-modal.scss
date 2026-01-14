@@ -30,6 +30,11 @@
     max-height: unset;
     display: grid;
     grid-template-rows: auto 1fr auto;
+    border-radius: 0;
+  }
+
+  .d-modal__body {
+    padding: 0 4px 0 0;
   }
 
   .d-modal__footer {

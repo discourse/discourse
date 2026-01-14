@@ -1,0 +1,217 @@
+import { tracked } from "@glimmer/tracking";
+import Controller from "@ember/controller";
+import { action, getProperties } from "@ember/object";
+import { and } from "@ember/object/computed";
+import { service } from "@ember/service";
+import { underscore } from "@ember/string";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
+import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
+import DiscourseURL from "discourse/lib/url";
+import { defaultHomepage } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
+import { i18n } from "discourse-i18n";
+
+const FIELD_LIST = [
+  "name",
+  "slug",
+  "parent_category_id",
+  "description",
+  "color",
+  "text_color",
+  "style_type",
+  "emoji",
+  "icon",
+  "localizations",
+];
+
+export default class EditCategoryTabsController extends Controller {
+  @service currentUser;
+  @service dialog;
+  @service site;
+  @service router;
+
+  @tracked breadcrumbCategories = this.site.get("categoriesList");
+  @trackedArray panels = [];
+
+  selectedTab = "general";
+  saving = false;
+  deleting = false;
+  showTooltip = false;
+  createdCategory = false;
+  expandedMenu = false;
+  parentParams = null;
+  validators = [];
+  textColors = ["000000", "FFFFFF"];
+
+  @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
+
+  get formData() {
+    const data = getProperties(this.model, ...FIELD_LIST);
+
+    if (!this.model.styleType) {
+      data.style_type = "square";
+    }
+
+    return data;
+  }
+
+  @action
+  canSaveForm(transientData) {
+    if (!transientData.name) {
+      return false;
+    }
+
+    if (this.saving || this.deleting) {
+      return true;
+    }
+
+    return true;
+  }
+
+  @discourseComputed("saving", "deleting")
+  deleteDisabled(saving, deleting) {
+    return deleting || saving || false;
+  }
+
+  @discourseComputed("name")
+  categoryName(name) {
+    name = name || "";
+    return name.trim().length > 0 ? name : i18n("preview");
+  }
+
+  @discourseComputed("saving", "model.id")
+  saveLabel(saving, id) {
+    if (saving) {
+      return "saving";
+    }
+    return id ? "category.save" : "category.create";
+  }
+
+  @discourseComputed("model.id", "model.name")
+  title(id, name) {
+    return id
+      ? i18n("category.edit_dialog_title", {
+          categoryName: name,
+        })
+      : i18n("category.create");
+  }
+
+  @discourseComputed("selectedTab")
+  selectedTabTitle(tab) {
+    return i18n(`category.${underscore(tab)}`);
+  }
+
+  @action
+  registerValidator(validator) {
+    this.validators.push(validator);
+  }
+
+  @action
+  isLeavingForm(transition) {
+    return !transition.targetName.startsWith("editCategory.tabs");
+  }
+
+  _wouldLoseAccess(category = this.model) {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    const permissions = category.permissions;
+    if (!permissions?.length) {
+      return false;
+    }
+
+    const userGroupIds = new Set(this.currentUser.groups.map((g) => g.id));
+
+    return !permissions.some(
+      (p) =>
+        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
+    );
+  }
+
+  @action
+  async saveCategory(data) {
+    if (this.validators.some((validator) => validator())) {
+      return;
+    }
+
+    this.model.setProperties(data);
+
+    const lostAccess = this._wouldLoseAccess();
+
+    if (lostAccess) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("category.errors.self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    this.set("saving", true);
+
+    try {
+      const result = await this.model.save();
+      const updatedModel = this.site.updateCategory(result.category);
+      updatedModel.setupGroupsAndPermissions();
+
+      if (lostAccess) {
+        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
+
+      this.set("saving", false);
+
+      if (!this.model.id) {
+        this.router.transitionTo(
+          "editCategory",
+          Category.slugFor(updatedModel)
+        );
+      }
+
+      // ensure breadcrumbs contain the updated category model
+      this.breadcrumbCategories = this.site.categoriesList.map((c) =>
+        c.id === this.model.id ? updatedModel : c
+      );
+    } catch (error) {
+      this.set("saving", false);
+      popupAjaxError(error);
+      this.model.set("parent_category_id", undefined);
+    }
+  }
+
+  @action
+  deleteCategory() {
+    this.set("deleting", true);
+    this.dialog.deleteConfirm({
+      title: i18n("category.delete_confirm"),
+      didConfirm: () => {
+        this.model
+          .destroy()
+          .then(() => {
+            this.router.transitionTo("discovery.categories");
+          })
+          .catch(() => {
+            this.displayErrors([i18n("category.delete_error")]);
+          })
+          .finally(() => {
+            this.set("deleting", false);
+          });
+      },
+      didCancel: () => this.set("deleting", false),
+    });
+  }
+
+  @action
+  toggleDeleteTooltip() {
+    this.toggleProperty("showTooltip");
+  }
+
+  @action
+  goBack() {
+    DiscourseURL.routeTo(this.model.url);
+  }
+}

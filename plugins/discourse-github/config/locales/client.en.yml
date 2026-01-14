@@ -1,0 +1,16 @@
+en:
+  js:
+    github:
+      pr_status:
+        draft: "Draft"
+        open: "Open"
+        approved: "Approved"
+        merged: "Merged"
+        closed: "Closed"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Discourse GitHub"
+  replace_github_link:
+    edit_reason: "Github link was replaced with a permanent link"

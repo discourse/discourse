@@ -29,6 +29,7 @@ class SiteSerializer < ApplicationSerializer
     :topic_featured_link_allowed_category_ids,
     :user_themes,
     :user_color_schemes,
+    :default_light_color_scheme,
     :default_dark_color_scheme,
     :censored_regexp,
     :shared_drafts_category_id,
@@ -50,6 +51,7 @@ class SiteSerializer < ApplicationSerializer
     :valid_flag_applies_to_types,
     :full_name_required_for_signup,
     :full_name_visible_in_signup,
+    :admin_config_login_routes,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -62,13 +64,14 @@ class SiteSerializer < ApplicationSerializer
       Theme
         .where("id = :default OR user_selectable", default: SiteSetting.default_theme_id)
         .order("lower(name)")
-        .pluck(:id, :name, :color_scheme_id)
-        .map do |id, n, cs|
+        .pluck(:id, :name, :color_scheme_id, :dark_color_scheme_id)
+        .map do |id, name, color_scheme_id, dark_color_scheme_id|
           {
             theme_id: id,
-            name: n,
+            name: name,
             default: id == SiteSetting.default_theme_id,
-            color_scheme_id: cs,
+            color_scheme_id: color_scheme_id,
+            dark_color_scheme_id: dark_color_scheme_id,
           }
         end
         .as_json
@@ -85,9 +88,16 @@ class SiteSerializer < ApplicationSerializer
     end
   end
 
+  def default_light_color_scheme
+    ColorSchemeSerializer.new(
+      ColorScheme.find_by_id(Theme.find_default&.color_scheme_id),
+      root: false,
+    ).as_json
+  end
+
   def default_dark_color_scheme
     ColorSchemeSerializer.new(
-      ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id),
+      ColorScheme.find_by_id(Theme.find_default&.dark_color_scheme_id),
       root: false,
     ).as_json
   end
@@ -128,11 +138,13 @@ class SiteSerializer < ApplicationSerializer
           types = ordered_flags(PostActionType.types.values)
           ActiveModel::ArraySerializer.new(types).as_json
         else
+          flags = Flag.unscoped.order(:position).where(score_type: false).all
+
           ActiveModel::ArraySerializer.new(
-            Flag.unscoped.order(:position).where(score_type: false).all,
+            flags,
             each_serializer: FlagSerializer,
             target: :post_action,
-            used_flag_ids: Flag.used_flag_ids,
+            used_flag_ids: self.used_flag_ids(flags.map(&:id)),
           ).as_json
         end
       end
@@ -146,16 +158,19 @@ class SiteSerializer < ApplicationSerializer
           types = ordered_flags(PostActionType.topic_flag_types.values)
           ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
         else
-          ActiveModel::ArraySerializer.new(
+          flags =
             Flag
               .unscoped
               .where("'Topic' = ANY(applies_to)")
               .where(score_type: false)
               .order(:position)
-              .all,
+              .all
+
+          ActiveModel::ArraySerializer.new(
+            flags,
             each_serializer: FlagSerializer,
             target: :topic_flag,
-            used_flag_ids: Flag.used_flag_ids,
+            used_flag_ids: self.used_flag_ids(flags.map(&:id)),
           ).as_json
         end
       end
@@ -392,6 +407,14 @@ class SiteSerializer < ApplicationSerializer
     scope.is_admin?
   end
 
+  def admin_config_login_routes
+    DiscoursePluginRegistry.admin_config_login_routes
+  end
+
+  def include_admin_config_routes?
+    scope.is_admin?
+  end
+
   def full_name_required_for_signup
     Site.full_name_required_for_signup
   end
@@ -404,5 +427,9 @@ class SiteSerializer < ApplicationSerializer
 
   def ordered_flags(flags)
     flags.map { |id| PostActionType.new(id: id) }
+  end
+
+  def used_flag_ids(flag_ids)
+    @used_flag_ids ||= Flag.used_flag_ids(flag_ids)
   end
 end

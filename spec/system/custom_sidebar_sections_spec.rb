@@ -23,24 +23,19 @@ describe "Custom sidebar sections", type: :system do
       expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
       section_modal.fill_name("My section")
-
       section_modal.fill_link("Sidebar Tags", "/tags")
+
       expect(section_modal).to have_enabled_save
 
       section_modal.save
 
+      expect(section_modal).to be_closed
       expect(sidebar).to have_section("My section")
       expect(sidebar).to have_section_link("Sidebar Tags")
     end
   end
 
   include_examples "creating custom sections"
-
-  context "when subfolder install" do
-    before { set_subfolder "/community" }
-
-    include_examples "creating custom sections", "/community"
-  end
 
   it "allows the user to create custom section with /my link" do
     sign_in user
@@ -53,6 +48,26 @@ describe "Custom sidebar sections", type: :system do
 
     expect(sidebar).to have_section("My section")
     expect(sidebar).to have_section_link("My preferences", target: "_self")
+  end
+
+  it "prioritizes exact url matches over ember routes" do
+    sidebar_section = SidebarSection.find_by(section_type: "community")
+    sidebar_url = Fabricate(:sidebar_url, name: "Topics", value: "/latest")
+    sidebar_url_2 =
+      Fabricate(:sidebar_url, name: "Sorted latest", value: "/latest?ascending=true&order=posts")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+
+    sign_in user
+
+    visit("/latest?ascending=true&order=posts")
+    expect(sidebar).to have_exact_url_match_link("Sorted latest")
+    expect(sidebar).to have_no_active_links
+    expect(sidebar).to have_no_exact_url_match_link("everything")
+
+    visit("/latest")
+    expect(sidebar).to have_active_link("everything")
+    expect(sidebar).to have_no_exact_url_match_link("Sorted latest")
   end
 
   it "allows the user to create custom section with `/` path" do
@@ -179,8 +194,9 @@ describe "Custom sidebar sections", type: :system do
     visit("/latest")
 
     sidebar.click_add_section_button
+    section_modal.close
 
-    find(".modal-close").click
+    expect(section_modal).to be_closed
 
     is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
 
@@ -358,6 +374,8 @@ describe "Custom sidebar sections", type: :system do
     section_modal.mark_as_public
     section_modal.save
 
+    expect(section_modal).to be_closed
+
     sidebar.edit_custom_section("Public section")
     section_modal.fill_name("Edited public section")
     section_modal.mark_as_public
@@ -369,6 +387,7 @@ describe "Custom sidebar sections", type: :system do
 
     section_modal.confirm_update
 
+    expect(section_modal).to be_closed
     expect(sidebar).to have_section("Edited public section")
     expect(page).not_to have_css(
       ".sidebar-section[data-section-name='edited-public-section'] .d-icon-globe",

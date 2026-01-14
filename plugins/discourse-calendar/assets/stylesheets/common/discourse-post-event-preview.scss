@@ -1,0 +1,25 @@
+.discourse-post-event-preview {
+  background: var(--secondary);
+  align-items: center;
+  flex-direction: column;
+  padding: 0.5em;
+  border: 1px solid var(--primary-low);
+  display: flex;
+  flex: 1 0 auto;
+
+  .event-preview-status {
+    margin: 0 0 0.5em 0;
+  }
+
+  .event-preview-dates {
+    font-weight: 700;
+  }
+
+  &.alert-error {
+    border-color: var(--danger-low-mid);
+  }
+}
+
+.discourse-post-event-preview + .discourse-post-event-preview {
+  margin-top: 1em;
+}

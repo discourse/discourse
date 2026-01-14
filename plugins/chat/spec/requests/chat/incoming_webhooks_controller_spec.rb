@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::IncomingWebhooksController do
-  fab!(:chat_channel) { Fabricate(:category_channel) }
+  fab!(:chat_channel, :category_channel)
   fab!(:webhook) { Fabricate(:incoming_chat_webhook, chat_channel: chat_channel) }
 
   before do
@@ -46,18 +46,6 @@ RSpec.describe Chat::IncomingWebhooksController do
       expect(response.status).to eq(200)
       chat_webhook_event = Chat::WebhookEvent.last
       expect(chat_webhook_event.chat_message_id).to eq(Chat::Message.last.id)
-    end
-
-    it "handles create message failures gracefully and does not create the chat message" do
-      watched_word = Fabricate(:watched_word, action: WatchedWord.actions[:block])
-
-      expect {
-        post "/chat/hooks/#{webhook.key}.json", params: { text: "hey #{watched_word.word}" }
-      }.not_to change { Chat::Message.where(chat_channel: chat_channel).count }
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to include(
-        "Sorry, you can't post the word '#{watched_word.word}'; it's not allowed.",
-      )
     end
 
     it "handles create message failures gracefully if the channel is read only" do

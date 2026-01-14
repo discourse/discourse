@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "خاص"
+          public: "عام"
+      reports:
+        reading_time:
+          title: وقت القراءة
+        chat_usage:
+          messages: الرسائل
+          author: أنت
+          author_others: "%{username}"
+          status_online: "● متصل"
+        invites:
+          title: الدعوات
+          invitee_posts: منشور تم إنشاؤه
+          invitee_likes: تسجيلات الإعجاب الممنوحة
+          label_invitations_sent: "تم إرسال الدعوات:"
+        new_user_interactions:
+          likes_given: تسجيلات الإعجاب الممنوحة
+          mentions: الإشارات
+        writing_analysis:
+          menu_other: أخرى

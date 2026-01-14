@@ -27,16 +27,45 @@ class StaticController < ApplicationController
   }
   CUSTOM_PAGES = {} # Add via `#add_topic_static_page` in plugin API
 
+  def extract_redirect_param
+    return "/" if params[:redirect].blank?
+
+    uri = URI(params[:redirect])
+    return "/" unless valid_redirect_uri?(uri)
+
+    uri.query ? "#{uri.path}?#{uri.query}" : uri.path
+  rescue URI::Error, ArgumentError
+    "/"
+  end
+
+  def valid_redirect_uri?(uri)
+    return false if uri.path.blank?
+    return false if uri.path.starts_with?("#{Discourse.base_path}/login")
+    return false if uri.host.present? && uri.host != URI(Discourse.base_url).host
+    return false if !uri.path.match?(%r{\A/[^\.\s]*\z})
+
+    true
+  end
+
   def show
-    if current_user && (params[:id] == "login" || params[:id] == "signup")
-      return redirect_to(path "/")
+    if params[:id] == "login"
+      destination = extract_redirect_param
+
+      if current_user
+        return redirect_to(path(destination), allow_other_host: false)
+      elsif destination != "/"
+        cookies[:destination_url] = path(destination)
+      end
+    elsif params[:id] == "signup" && current_user
+      return redirect_to path("/")
     end
 
     if SiteSetting.login_required? && current_user.nil? && %w[faq guidelines].include?(params[:id])
       return redirect_to path("/login")
     end
 
-    rename_faq = SiteSetting.experimental_rename_faq_to_guidelines
+    rename_faq =
+      UpcomingChanges.enabled_for_user?(:experimental_rename_faq_to_guidelines, current_user)
 
     if rename_faq
       redirect_paths = %w[/rules /conduct]
@@ -81,7 +110,7 @@ class StaticController < ApplicationController
         end
       @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
-      @faq_overridden = !SiteSetting.faq_url.blank?
+      @faq_overridden = SiteSetting.faq_url.present?
       @experimental_rename_faq_to_guidelines = rename_faq
 
       render :show, layout: !request.xhr?, formats: [:html]
@@ -123,27 +152,17 @@ class StaticController < ApplicationController
     params.delete(:username)
     params.delete(:password)
 
-    destination = path("/")
+    destination = extract_redirect_param
 
-    redirect_location = params[:redirect]
-    if redirect_location.present? && !redirect_location.is_a?(String)
-      raise Discourse::InvalidParameters.new(:redirect)
-    elsif redirect_location.present? &&
-          begin
-            forum_uri = URI(Discourse.base_url)
-            uri = URI(redirect_location)
+    allow_other_host = false
 
-            if uri.path.present? && !uri.path.starts_with?(login_path) &&
-                 (uri.host.blank? || uri.host == forum_uri.host) &&
-                 uri.path =~ %r{\A\/{1}[^\.\s]*\z}
-              destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
-            end
-          rescue URI::Error
-            # Do nothing if the URI is invalid
-          end
+    if cookies[:sso_destination_url]
+      destination = cookies.delete(:sso_destination_url)
+      allow_other_host = true
     end
 
-    redirect_to(destination, allow_other_host: false)
+    destination = path(destination) if destination == "/"
+    redirect_to(destination, allow_other_host:)
   end
 
   FAVICON = -"favicon"
@@ -187,7 +206,7 @@ class StaticController < ApplicationController
               file&.unlink
             end
           else
-            File.read(Rails.root.join("public", favicon.url[1..-1]))
+            File.read(Rails.public_path.join(favicon.url[1..-1]))
           end
         end
 
@@ -220,23 +239,7 @@ class StaticController < ApplicationController
         # Maximum cache that the service worker will respect is 24 hours.
         # However, ensure that these may be cached and served for longer on servers.
         immutable_for 1.year
-
-        if Rails.application.assets_manifest.assets["service-worker.js"]
-          path =
-            File.expand_path(
-              Rails.root +
-                "public/assets/#{Rails.application.assets_manifest.assets["service-worker.js"]}",
-            )
-          response.headers["Last-Modified"] = File.ctime(path).httpdate
-        end
-        content = Rails.application.assets_manifest.find_sources("service-worker.js").first
-
-        base_url = File.dirname(helpers.script_asset_path("service-worker"))
-        content =
-          content.sub(%r{^//# sourceMappingURL=(service-worker-.+\.map)$}) do
-            "//# sourceMappingURL=#{base_url}/#{Regexp.last_match(1)}"
-          end
-        render(plain: content, content_type: "application/javascript")
+        render "service-worker"
       end
     end
   end
@@ -265,7 +268,7 @@ class StaticController < ApplicationController
       rescue Errno::ENOENT
         expires_in 1.second, public: true, must_revalidate: false
 
-        render plain: "can not find #{params[:path]}", status: 404
+        render plain: "can not find #{params[:path]}", status: :not_found
         return
       end
     end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat | Select message | channel", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
   fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1) }
   fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel_1) }
@@ -34,7 +34,7 @@ RSpec.describe "Chat | Select message | channel", type: :system do
   end
 
   context "when visiting another channel" do
-    fab!(:channel_2) { Fabricate(:chat_channel) }
+    fab!(:channel_2, :chat_channel)
 
     before { channel_2.add(current_user) }
 

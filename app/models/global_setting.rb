@@ -45,13 +45,13 @@ class GlobalSetting
             end
           end
         end
-        if !secret_key_base.blank? && token != secret_key_base
+        if secret_key_base.present? && token != secret_key_base
           STDERR.puts "WARNING: DISCOURSE_SECRET_KEY_BASE is invalid, it was re-generated"
         end
         token
       end
-  rescue Redis::CommandError => e
-    @safe_secret_key_base = SecureRandom.hex(64) if e.message =~ /READONLY/
+  rescue Redis::ReadOnlyError
+    @safe_secret_key_base = SecureRandom.hex(64)
   end
 
   def self.load_defaults
@@ -126,7 +126,8 @@ class GlobalSetting
     hostnames
   end
 
-  def self.database_config
+  def self.database_config(variables_overrides: {})
+    variables_overrides = variables_overrides.with_indifferent_access
     hash = { "adapter" => "postgresql" }
 
     %w[
@@ -166,6 +167,11 @@ class GlobalSetting
       db_variables.each do |k|
         hash["variables"][k.slice(("db_variables_".length)..)] = self.public_send(k)
       end
+    end
+
+    variables_overrides.each do |key, value|
+      hash["variables"] ||= {}
+      hash["variables"][key.to_s] = value
     end
 
     { "production" => hash }
@@ -209,14 +215,17 @@ class GlobalSetting
         c[:port] = redis_port if redis_port
 
         if get_redis_replica_host && get_redis_replica_port && defined?(RailsFailover)
-          c[:replica_host] = get_redis_replica_host
-          c[:replica_port] = get_redis_replica_port
-          c[:connector] = RailsFailover::Redis::Connector
+          c[:client_implementation] = RailsFailover::Redis::Client
+          c[:custom] = {
+            replica_host: get_redis_replica_host,
+            replica_port: get_redis_replica_port,
+          }
         end
 
+        c[:username] = redis_username if redis_username.present?
         c[:password] = redis_password if redis_password.present?
         c[:db] = redis_db if redis_db != 0
-        c[:db] = 1 if Rails.env == "test"
+        c[:db] = 1 if Rails.env.test?
         c[:id] = nil if redis_skip_client_commands
         c[:ssl] = true if redis_use_ssl
 
@@ -233,14 +242,17 @@ class GlobalSetting
         c[:port] = message_bus_redis_port if message_bus_redis_port
 
         if get_message_bus_redis_replica_host && get_message_bus_redis_replica_port
-          c[:replica_host] = get_message_bus_redis_replica_host
-          c[:replica_port] = get_message_bus_redis_replica_port
-          c[:connector] = RailsFailover::Redis::Connector
+          c[:client_implementation] = RailsFailover::Redis::Client
+          c[:custom] = {
+            replica_host: get_message_bus_redis_replica_host,
+            replica_port: get_message_bus_redis_replica_port,
+          }
         end
 
+        c[:username] = message_bus_redis_username if message_bus_redis_username.present?
         c[:password] = message_bus_redis_password if message_bus_redis_password.present?
         c[:db] = message_bus_redis_db if message_bus_redis_db != 0
-        c[:db] = 1 if Rails.env == "test"
+        c[:db] = 1 if Rails.env.test?
         c[:id] = nil if message_bus_redis_skip_client_commands
         c[:ssl] = true if redis_use_ssl
 
@@ -260,9 +272,9 @@ class GlobalSetting
         domain: GlobalSetting.smtp_domain,
         user_name: GlobalSetting.smtp_user_name,
         password: GlobalSetting.smtp_password,
-        enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
-        open_timeout: GlobalSetting.smtp_open_timeout,
-        read_timeout: GlobalSetting.smtp_read_timeout,
+        enable_starttls_auto: !GlobalSetting.smtp_force_tls && GlobalSetting.smtp_enable_start_tls,
+        open_timeout: GlobalSetting.smtp_open_timeout.to_f,
+        read_timeout: GlobalSetting.smtp_read_timeout.to_f,
       }
 
       if settings[:password] || settings[:user_name]
@@ -282,18 +294,12 @@ class GlobalSetting
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"
-      return $1.to_i if setting.to_s.strip =~ /\A([0-9]+)\z/
+      return $1.to_i if setting.to_s.strip =~ /\A(-?[0-9]+)\z/
       setting
     end
 
     def resolve(current, default)
-      BaseProvider.coerce(
-        if current.present?
-          current
-        else
-          default.present? ? default : nil
-        end,
-      )
+      BaseProvider.coerce(current.presence || default.presence)
     end
   end
 
@@ -366,13 +372,14 @@ class GlobalSetting
     attr_accessor :provider
   end
 
-  def self.configure!
-    if Rails.env == "test"
+  def self.configure!(
+    path: File.expand_path("../../../config/discourse.conf", __FILE__),
+    use_blank_provider: Rails.env.test?
+  )
+    if use_blank_provider
       @provider = BlankProvider.new
     else
-      @provider =
-        FileProvider.from(File.expand_path("../../../config/discourse.conf", __FILE__)) ||
-          EnvProvider.new
+      @provider = FileProvider.from(path) || EnvProvider.new
     end
   end
 

@@ -1,0 +1,225 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sắp xếp theo"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID Chủ đề"
+            title:
+              label: "Tiêu đề"
+            categories:
+              label: "Chuyên mục"
+            tags:
+              label: "Thẻ"
+        llm_triage:
+          fields:
+            category:
+              label: "Chuyên mục"
+            tags:
+              label: "Thẻ"
+            canned_reply:
+              label: "Trả lời"
+    discourse_ai:
+      features:
+        back: "Quay lại"
+        disabled: "(vô hiệu hóa)"
+        groups: "Nhóm:"
+        no_groups: "Không có gì"
+        edit: "Cài đặt"
+        expand_list:
+          other: "(%{count} khác)"
+        collapse_list: "(thu gọn)"
+        filters:
+          all: "Tất cả"
+          reset: "Cài lại"
+        search:
+          name: "Tìm kiếm"
+        embeddings:
+          setting_groups:
+            related_topics: "Các chủ đề liên quan"
+        ai_helper:
+          proofread: Hiệu chỉnh văn bản
+          markdown_tables: "Tạo bảng Markdown"
+        spam:
+          name: "Rác"
+      modals:
+        select_option: "Chọn một tùy Chọn..."
+      translations:
+        title: "Bản dịch"
+        stats:
+          eta_minutes:
+            other: "%{count} phút"
+          eta_hours:
+            other: "%{count} giờ"
+          eta_days:
+            other: "%{count} ngày"
+        progress_chart:
+          bar_done:
+            other: "%{count} bài đăng"
+      spam:
+        short_title: "Rác"
+        last_seven_days: "7 ngày qua"
+        enable: "Bật"
+        test_modal:
+          spam: "Rác"
+      usage:
+        summary: "Tóm tắt"
+        username: "Tên tài khoản"
+        total_requests: "Tổng số yêu cầu"
+        total: "Tổng số"
+        periods:
+          last_day: "24 giờ qua"
+          custom: "Tùy chỉnh..."
+      ai_persona:
+        back: "Quay lại"
+        name: "Tên"
+        edit: "Sửa"
+        export: "Xuất"
+        import: "Nhập"
+        description: "Mô tả"
+        user: Thành viên
+        save: "Lưu lại"
+        enabled: "Kích hoạt"
+        delete: "Xóa"
+        response_format:
+          open_modal: "Sửa"
+          modal:
+            key_title: "Phím"
+        examples:
+          collapsable_title: "Ví dụ #%{number}"
+        filters:
+          reset: "Cài lại"
+      rag:
+        uploads:
+          title: "Tải lên"
+          uploading: "Đang tải lên..."
+      tools:
+        back: "Quay lại"
+        export: "Xuất"
+        import: "Nhập"
+        name: "Tên"
+        description: "Mô tả"
+        summary: "Tóm tắt"
+        save: "Lưu lại"
+        remove_parameter: "Xoá"
+        parameter_required: "Bắt buộc"
+        edit: "Sửa"
+        delete: "Xóa"
+      llms:
+        display_name: "Tên"
+        save: "Lưu lại"
+        edit: "Sửa"
+        back: "Quay lại"
+        delete: Xóa
+        quotas:
+          group: "Nhóm"
+          max_usages: "Sử dụng tối đa"
+          duration: "Thời lượng"
+          durations:
+            hour: "1 tiếng"
+            six_hours: "6 tiếng"
+            day: "24 tiếng"
+            week: "7 ngày"
+            custom: "Tùy chỉnh..."
+          hours: "tiếng"
+        usage:
+          ai_summarization: "Tóm tắt"
+          ai_spam: "Rác"
+        next:
+          title: "Kế tiếp"
+        tests:
+          success: "Thành công!"
+        providers:
+          google: "G"
+          fake: "Tùy biến"
+      related_topics:
+        title: "Các chủ đề liên quan"
+        pill: "Liên quan"
+      ai_helper:
+        context_menu:
+          cancel: "Hủy"
+          confirm: "Xác nhận"
+          discard: "Hủy bỏ"
+          translate_prompt: "Dịch sang %{language}"
+        post_options_menu:
+          close: "Đóng lại"
+          copy: "Sao chép"
+          copied: "Đã sao chép!"
+          cancel: "Hủy"
+        thumbnail_suggestions:
+          select: "Chọn"
+          try_again: "Thử lại"
+        image_caption:
+          save_caption: "Lưu lại"
+        no_content_error: "Thêm nội dung trước để thực hiện các hành động AI trên đó"
+      embeddings:
+        back: "Quay lại"
+        save: "Lưu lại"
+        delete: "Xóa"
+        edit: "Sửa"
+        tests:
+          success: "Thành công!"
+        display_name: "Tên"
+        providers:
+          google: "G"
+          fake: "Tùy biến"
+        semantic_search_results:
+          toggle: "Xem %{count} kết quả tìm thấy bằng AI"
+          toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
+          none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
+          new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
+        semantic_search_tooltips:
+          results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
+      ai_bot:
+        debug_ai_modal:
+          request: "Yêu cầu"
+          response: "Đáp ứng"
+          next_log: "Kế tiếp"
+          previous_log: "Trước"
+        invite_ai_conversation:
+          button: "Mời"
+        share_modal:
+          copy: "Sao chép"
+        conversations:
+          today: "Hôm nay"
+          last_7_days: "7 ngày qua"
+          last_30_days: "30 ngày qua"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Tất cả"
+          group_types:
+            category: "Chuyên mục"
+          table:
+            total_count: "Tổng số"
+      summarization:
+        chat:
+          summarize: "Tóm tắt"
+        topic:
+          title: "Tóm tắt chủ đề"
+        topic_list_layout:
+          button:
+            compact: "Gọn gàng"
+            expanded: "Mở rộng"
+            expanded_description: "Với tóm tắt AI"
+      discobot_discoveries:
+        regular_results: "Các chủ đề"
+        collapse: "Thu gọn"
+        user_setting: "Bật tính năng tìm kiếm bằng AI"
+        tooltip:
+          actions:
+            disable: "Tắt"

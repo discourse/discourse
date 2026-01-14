@@ -7,8 +7,10 @@ require "discourse_tagging"
 
 RSpec.describe DiscourseTagging do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:admin_guardian) { Guardian.new(admin) }
+  let(:moderator_guardian) { Guardian.new(moderator) }
   let(:guardian) { Guardian.new(user) }
 
   fab!(:tag1) { Fabricate(:tag, name: "fun") }
@@ -24,7 +26,7 @@ RSpec.describe DiscourseTagging do
   describe "visible_tags" do
     fab!(:tag4) { Fabricate(:tag, name: "fun4") }
 
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     let(:guardian2) { Guardian.new(user2) }
 
     fab!(:group) { Fabricate(:group, name: "my-group") }
@@ -480,7 +482,7 @@ RSpec.describe DiscourseTagging do
       end
 
       context "with tags visible only to staff" do
-        fab!(:hidden_tag) { Fabricate(:tag) }
+        fab!(:hidden_tag, :tag)
         let!(:staff_tag_group) do
           Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
         end
@@ -497,7 +499,7 @@ RSpec.describe DiscourseTagging do
       end
 
       context "with tags visible only to non-admin group" do
-        fab!(:hidden_tag) { Fabricate(:tag) }
+        fab!(:hidden_tag, :tag)
         fab!(:group) { Fabricate(:group, name: "my-group") }
         let!(:user_tag_group) do
           Fabricate(:tag_group, permissions: { "my-group" => 1 }, tag_names: [hidden_tag.name])
@@ -887,11 +889,67 @@ RSpec.describe DiscourseTagging do
           ).to be_empty
         end
       end
+
+      context "with tags in multiple groups" do
+        fab!(:shared_tag1) { Fabricate(:tag, name: "shared1") }
+        fab!(:shared_tag2) { Fabricate(:tag, name: "shared2") }
+        fab!(:unrestricted_tag_group) { Fabricate(:tag_group, tags: [shared_tag1, shared_tag2]) }
+        fab!(:category_tag_group) { Fabricate(:tag_group, tags: [shared_tag1, shared_tag2]) }
+        fab!(:category) { Fabricate(:category, allowed_tag_groups: [category_tag_group.name]) }
+
+        it "correctly respects enabled one_per_topic option from tag_group that is restricted to a category" do
+          category_tag_group.update!(one_per_topic: true)
+          unrestricted_tag_group.update!(one_per_topic: false)
+
+          allowed =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            )
+
+          expect(allowed.map(&:name)).to contain_exactly("shared1", "shared2")
+
+          allowed_after_selection =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: ["shared1"],
+            )
+
+          expect(allowed_after_selection.map(&:name)).to be_empty
+        end
+
+        it "does not apply enabled one_per_topic option from other tag groups when category restricts to a tag group that disables one_per_topic option" do
+          category_tag_group.update!(one_per_topic: false)
+          unrestricted_tag_group.update!(one_per_topic: true)
+
+          allowed =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            )
+
+          expect(allowed.map(&:name)).to contain_exactly("shared1", "shared2")
+
+          allowed_after_selection =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: ["shared1"],
+            )
+
+          expect(allowed_after_selection.map(&:name)).to contain_exactly("shared2")
+        end
+      end
     end
   end
 
   describe "filter_visible" do
-    fab!(:hidden_tag) { Fabricate(:tag) }
+    fab!(:hidden_tag, :tag)
     let!(:staff_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
@@ -959,6 +1017,36 @@ RSpec.describe DiscourseTagging do
         expect(tag_changed_event[:params].second[:old_tag_names]).to eq(old_tag_names)
         expect(tag_changed_event[:params].second[:new_tag_names]).to eq(["alpha"])
         expect(tag_changed_event[:params].second[:user]).to eq(admin_guardian.user)
+      end
+
+      context "with admin-only tags" do
+        let(:tag_group) do
+          Fabricate(
+            :tag_group,
+            name: "Admin Announcements",
+            permissions: {
+              "admins" => 1,
+            },
+            tag_names: ["announcements"],
+          )
+        end
+
+        before { create_admin_only_tags(["announcements"]) }
+
+        it "admins can use admin-only tags" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, admin_guardian, ["announcements"])
+          expect(valid).to eq(true)
+          expect(topic.errors[:base]).to be_empty
+          expect(topic.tags.pluck(:name)).to contain_exactly("announcements")
+        end
+
+        it "moderators can't use admin-only tags" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, moderator_guardian, ["announcements"])
+          expect(valid).to eq(false)
+          expect(topic.errors[:base]&.first).to eq(
+            I18n.t("tags.restricted_tag_disallowed", tag: "announcements"),
+          )
+        end
       end
 
       context "with non-staff users in tag group groups" do
@@ -1071,7 +1159,7 @@ RSpec.describe DiscourseTagging do
     end
 
     context "with hidden tags" do
-      fab!(:hidden_tag) { Fabricate(:tag) }
+      fab!(:hidden_tag, :tag)
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
@@ -1503,12 +1591,61 @@ RSpec.describe DiscourseTagging do
         expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
       end
     end
+
+    describe "with plugin modifiers" do
+      let!(:plugin) { Plugin::Instance.new }
+      let!(:modifier) { :tags_for_saving }
+
+      let!(:modify_tag_names_block) do
+        Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags.map! { |t| "plugin-#{t}" } }
+      end
+
+      let!(:add_tag_block) do
+        Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags << "added-by-plugin" }
+      end
+
+      let!(:remove_tag_block) do
+        Proc.new do |saving_tags, tag_names, guardian, opts|
+          saving_tags.delete_if { |t| t == "tag2" }
+        end
+      end
+
+      it "allows plugins to modify tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &modify_tag_names_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
+          %w[plugin-tag1 plugin-tag2].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &modify_tag_names_block)
+      end
+
+      it "allows plugins to add tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &add_tag_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
+          %w[tag1 tag2 added-by-plugin].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &add_tag_block)
+      end
+
+      it "allows plugins to remove tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &remove_tag_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2 tag3], guardian).try(:sort)).to eq(
+          %w[tag1 tag3].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &remove_tag_block)
+      end
+    end
   end
 
   describe "Tag in multiple tag groups" do
-    fab!(:parent) { Fabricate(:tag) }
-    fab!(:child) { Fabricate(:tag) }
-    fab!(:no_show_tag) { Fabricate(:tag) }
+    fab!(:parent, :tag)
+    fab!(:child, :tag)
+    fab!(:no_show_tag, :tag)
 
     fab!(:no_show_tag_group) do
       Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [no_show_tag.name])
@@ -1554,8 +1691,8 @@ RSpec.describe DiscourseTagging do
   describe "staff_tag_names" do
     fab!(:tag)
 
-    fab!(:staff_tag) { Fabricate(:tag) }
-    fab!(:other_staff_tag) { Fabricate(:tag) }
+    fab!(:staff_tag, :tag)
+    fab!(:other_staff_tag, :tag)
 
     let!(:staff_tag_group) do
       Fabricate(

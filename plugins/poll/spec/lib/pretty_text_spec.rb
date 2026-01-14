@@ -19,6 +19,17 @@ RSpec.describe PrettyText do
     )
   end
 
+  it "supports dynamic attribute passthrough" do
+    cooked = PrettyText.cook <<~MD
+      [poll dynamic=true]
+      * A
+      * B
+      [/poll]
+    MD
+
+    expect(cooked).to include('data-poll-dynamic="true"')
+  end
+
   it "can dynamically generate a poll" do
     cooked = PrettyText.cook <<~MD
       [poll type=number min=1 max=20 step=1]
@@ -218,10 +229,10 @@ RSpec.describe PrettyText do
     HTML
 
     expect(cooked).to include(
-      '<h1><a name="pre-heading-1" class="anchor" href="#pre-heading-1"></a>Pre-heading</h1>',
+      '<h1><a name="pre-heading-1" class="anchor" href="#pre-heading-1" aria-label="Heading link"></a>Pre-heading</h1>',
     )
     expect(cooked).to include(
-      '<h1><a name="post-heading-2" class="anchor" href="#post-heading-2"></a>Post-heading</h1>',
+      '<h1><a name="post-heading-2" class="anchor" href="#post-heading-2" aria-label="Heading link"></a>Post-heading</h1>',
     )
   end
 
@@ -243,11 +254,11 @@ RSpec.describe PrettyText do
     expect(cooked).to include('<div class="poll" data-poll-name="poll" data-poll-status="open">')
 
     expect(cooked).to include(
-      '<h1><a name="pre-heading-1" class="anchor" href="#pre-heading-1"></a>Pre-heading</h1>',
+      '<h1><a name="pre-heading-1" class="anchor" href="#pre-heading-1" aria-label="Heading link"></a>Pre-heading</h1>',
     )
 
     expect(cooked).to include(
-      '<h1><a name="post-heading-2" class="anchor" href="#post-heading-2"></a>Post-heading</h1>',
+      '<h1><a name="post-heading-2" class="anchor" href="#post-heading-2" aria-label="Heading link"></a>Post-heading</h1>',
     )
   end
 end

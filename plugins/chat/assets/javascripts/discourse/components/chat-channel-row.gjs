@@ -8,12 +8,12 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
-import { and, eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
@@ -23,11 +23,8 @@ import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/comp
 const FADEOUT_CLASS = "-fade-out";
 
 export default class ChatChannelRow extends Component {
-  @service api;
   @service capabilities;
   @service chat;
-  @service currentUser;
-  @service router;
   @service site;
 
   @tracked isAtThreshold = false;
@@ -155,7 +152,7 @@ export default class ChatChannelRow extends Component {
   }
 
   get #firstDirectMessageUser() {
-    return this.args.channel?.chatable?.users?.firstObject;
+    return this.args.channel?.chatable?.users?.[0];
   }
 
   @action
@@ -199,7 +196,9 @@ export default class ChatChannelRow extends Component {
       >
         <ChannelIcon @channel={{@channel}} />
         <div class="chat-channel-row__info">
-          <ChannelName @channel={{@channel}} @unreadIndicator={{true}} />
+          <div class="chat-channel-row__name-container">
+            <ChannelName @channel={{@channel}} @unreadIndicator={{true}} />
+          </div>
           <ChatChannelMetadata @channel={{@channel}} />
           {{#if this.shouldRenderLastMessage}}
             <div class="chat-channel__last-message">

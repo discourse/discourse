@@ -2,10 +2,24 @@
 
 module PageObjects
   module Pages
-    class AdminNewFeatures < PageObjects::Pages::Base
+    class AdminWhatsNew < PageObjects::Pages::Base
       def visit
         page.visit("/admin/whats-new")
         self
+      end
+
+      def within_new_feature_group(month_and_year, &block)
+        within find(".admin-config-area-card[data-new-features-group='#{month_and_year}']") do
+          block.call
+        end
+      end
+
+      def within_new_feature_item(title, &block)
+        within find(
+                 ".admin-new-feature-item[data-new-feature-identifier='#{title.parameterize}']",
+               ) do
+          block.call
+        end
       end
 
       def has_screenshot?
@@ -16,11 +30,8 @@ module PageObjects
         page.has_no_css?(".admin-new-feature-item__screenshot")
       end
 
-      def has_toggle_experiment_button?(enabled)
-        page.has_css?(
-          ".admin-new-feature-item__feature-toggle .d-toggle-switch__checkbox[aria-checked='#{enabled}']",
-          visible: false,
-        )
+      def has_toggle_feature_button?
+        page.has_css?(".admin-new-feature-item__feature-toggle .d-toggle-switch__checkbox")
       end
 
       def has_learn_more_link?
@@ -36,8 +47,7 @@ module PageObjects
       end
 
       def has_date?(date)
-        element = find(".admin-config-area-card__title")
-        element.has_text?(date)
+        find(".admin-config-area-card__title").has_text?(date)
       end
 
       def has_experimental_text?
@@ -49,11 +59,15 @@ module PageObjects
       end
 
       def toggle_experiments_only
-        toggle_switch =
-          PageObjects::Components::DToggleSwitch.new(
-            ".admin-new-features__experiments-filter .d-toggle-switch__checkbox",
-          )
-        toggle_switch.toggle
+        PageObjects::Components::DToggleSwitch.new(
+          ".admin-new-features__experiments-filter .d-toggle-switch__checkbox",
+        ).toggle
+      end
+
+      def enable_item_toggle
+        PageObjects::Components::DToggleSwitch.new(
+          ".admin-new-feature-item__feature-toggle .d-toggle-switch__checkbox",
+        )
       end
     end
   end

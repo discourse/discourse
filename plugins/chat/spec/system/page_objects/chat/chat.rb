@@ -11,6 +11,10 @@ module PageObjects
         @sidebar ||= PageObjects::Components::Chat::Sidebar.new
       end
 
+      def footer
+        @footer ||= PageObjects::Components::Chat::Footer.new
+      end
+
       def prefers_full_page
         page.execute_script(
           "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
@@ -25,10 +29,17 @@ module PageObjects
 
       def open_from_header
         find(".chat-header-icon").click
+        has_css?("html.has-chat")
       end
 
       def close_from_header
         find(".chat-header-icon").click
+        has_no_css?("html.has-chat")
+      end
+
+      def back_to_channels_list
+        find(".d-icon.d-icon-chevron-left").click
+        has_css?("html.has-chat")
       end
 
       def has_header_href?(href)
@@ -53,19 +64,19 @@ module PageObjects
         drawer?(expectation: false, channel_id: channel_id, expanded: expanded)
       end
 
-      def visit_channel(channel, message_id: nil, with_preloaded_channels: true)
+      def visit_channel(channel, message_id: nil, with_preloaded_channels: true, check: true)
         visit(channel.url + (message_id ? "/#{message_id}" : ""))
-        has_finished_loading?(with_preloaded_channels: with_preloaded_channels)
+        has_finished_loading?(with_preloaded_channels: with_preloaded_channels) if check
       end
 
       def visit_user_threads
         visit("/chat/threads")
-        has_finished_loading?
+        has_css?(".c-user-threads.--loaded")
       end
 
       def visit_thread(thread)
         visit(thread.url)
-        has_css?(".chat-thread:not(.loading)[data-id=\"#{thread.id}\"]")
+        has_css?(".chat-thread.--loaded[data-id=\"#{thread.id}\"]")
       end
 
       def visit_threads_list(channel)
@@ -108,7 +119,7 @@ module PageObjects
 
       def has_finished_loading?(with_preloaded_channels: true)
         has_preloaded_channels? if with_preloaded_channels
-        has_no_css?(".chat-channel--not-loaded-once")
+        has_css?(".--loaded")
         has_no_css?(".chat-skeleton")
       end
 
@@ -131,11 +142,19 @@ module PageObjects
       end
 
       def has_no_messages?
-        have_selector(".channel-list-empty-message")
+        have_selector(".empty-state")
       end
 
       def has_direct_message_channels_section?
         has_css?(".direct-message-channels-section")
+      end
+
+      def has_add_member_button?
+        has_css?(".c-channel-members__list-item.-add-member")
+      end
+
+      def has_no_add_member_button?
+        has_no_css?(".c-channel-members__list-item.-add-member")
       end
 
       private

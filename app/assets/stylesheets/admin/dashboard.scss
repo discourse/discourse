@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-reports,
 .dashboard-next {
   &.admin-contents {
@@ -15,7 +17,7 @@
   .nav {
     display: flex;
     margin: 0 0 2em 0;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     font-size: var(--font-up-1);
     white-space: nowrap;
     flex-wrap: nowrap;
@@ -30,8 +32,8 @@
       height: 100%;
       background: linear-gradient(
         to left,
-        rgba(var(--secondary-rgb), 1),
-        rgba(var(--secondary-rgb), 0)
+        rgb(var(--secondary-rgb), 1),
+        rgb(var(--secondary-rgb), 0)
       );
     }
 
@@ -43,14 +45,25 @@
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
+        rgb(var(--secondary-rgb), 0),
+        rgb(var(--secondary-rgb), 1)
       );
     }
 
     .navigation-link {
+      @include viewport.until(sm) {
+        padding: 0.4em;
+        font-size: var(--font-down-1);
+      }
+
       .emoji {
         margin-right: 0.5em;
+
+        @include viewport.until(sm) {
+          width: 1.3em;
+          height: 1.3em;
+          margin-right: 0;
+        }
       }
     }
   }
@@ -64,7 +77,7 @@
     display: flex;
     justify-content: space-between;
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       flex-direction: column;
     }
 
@@ -80,7 +93,7 @@
         margin-right: 0.5em;
       }
 
-      @include breakpoint(medium) {
+      @include viewport.until(lg) {
         min-width: 100%;
 
         &:last-child {
@@ -93,7 +106,7 @@
       }
     }
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       .section-column:last-child,
       .section-column:first-child {
         margin: 0;
@@ -106,10 +119,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
       padding-bottom: 0.5em;
 
-      @media screen and (max-width: 400px) {
+      @media screen and (width <= 400px) {
         flex-wrap: wrap;
       }
 
@@ -153,8 +166,8 @@
   .charts {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 1em;
-    grid-row-gap: 1em;
+    column-gap: 1em;
+    row-gap: 1em;
 
     .admin-report {
       grid-column: span 4;
@@ -186,7 +199,7 @@
       }
     }
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       .admin-report {
         grid-column: span 12;
       }
@@ -205,7 +218,7 @@
 
   .misc {
     display: flex;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     .storage-stats,
     .last-dashboard-update {
@@ -219,7 +232,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      border-right: 1px solid var(--primary-low);
+      border-right: 1px solid var(--content-border-color);
 
       .backups,
       .uploads {
@@ -231,7 +244,7 @@
       }
     }
 
-    @media screen and (max-width: 400px) {
+    @media screen and (width <= 400px) {
       flex-wrap: wrap;
 
       .storage-stats,
@@ -244,7 +257,7 @@
         display: block;
         margin: 0 20px 20px 20px;
         padding: 20px 0 0 0;
-        border-top: 1px solid var(--primary-low);
+        border-top: 1px solid var(--content-border-color);
         border-left: none;
       }
     }
@@ -331,7 +344,7 @@
     display: grid;
     flex: 1 0 auto;
     grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-bottom: 0;
     font-weight: 700;
     text-align: right;
@@ -340,7 +353,7 @@
   }
 
   .admin-report .main {
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     &:hover {
       background-color: var(--primary-very-low);
@@ -363,7 +376,7 @@
     padding: 0.5em 0.25em;
     align-items: flex-start;
     justify-content: flex-start;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     .title {
       font-size: var(--font-0);
@@ -399,6 +412,12 @@
 
 .activity-metrics {
   margin-bottom: 2em;
+
+  @include viewport.until(sm) {
+    .counters-list {
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 .user-metrics {
@@ -524,8 +543,8 @@
   .main-section {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 1em;
-    grid-row-gap: 1em;
+    column-gap: 1em;
+    row-gap: 1em;
 
     > * {
       grid-column: span 12;
@@ -535,8 +554,8 @@
     .admin-dashboard-moderation-bottom-outlet {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      grid-column-gap: 1em;
-      grid-row-gap: 1em;
+      column-gap: 1em;
+      row-gap: 1em;
     }
   }
 
@@ -549,8 +568,8 @@
   .admin-dashboard-moderation-top {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 1em;
-    grid-row-gap: 1em;
+    column-gap: 1em;
+    row-gap: 1em;
   }
 }
 
@@ -560,7 +579,7 @@
 
   .section-title {
     flex: 1 1 100%;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     padding-bottom: 0.5em;
   }
 
@@ -581,7 +600,7 @@
   .update-header {
     flex: 1 1 100%;
 
-    @media screen and (max-width: 650px) {
+    @media screen and (width <= 650px) {
       margin: 0;
     }
 
@@ -635,7 +654,7 @@
     padding-right: 20px;
     min-width: 250px;
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       max-width: unset;
     }
 
@@ -716,6 +735,12 @@
   }
 }
 
+.admin-new-features {
+  &__group {
+    margin-bottom: 1em;
+  }
+}
+
 .admin-new-feature-item__header-experimental {
   color: var(--tertiary);
   background-color: var(--tertiary-very-low);
@@ -758,7 +783,7 @@
 .admin-new-feature-item {
   display: flex;
   align-items: flex-start;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 
   &:not(:first-child) {
     margin-top: var(--space-4);
@@ -788,6 +813,16 @@
   &__new-feature-version {
     margin-left: auto;
     color: var(--primary-low-mid);
+
+    @include viewport.until(sm) {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  @include viewport.until(sm) {
+    h3 {
+      margin-right: 0.5em;
+    }
   }
 }
 

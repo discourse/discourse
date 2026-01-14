@@ -2,9 +2,12 @@
 
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "12"
+  EMOJI_VERSION = "15"
 
   FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
+
+  # matches emoji codes in text, e.g. :smile: or :wave:t2:
+  EMOJI_CODE_REGEXP = /:([\w\-+]+(?::t\d)?):/.freeze
 
   DEFAULT_GROUP = "default"
 
@@ -37,11 +40,11 @@ class Emoji
   end
 
   def self.aliases
-    db["aliases"]
+    aliases_db
   end
 
   def self.search_aliases
-    db["searchAliases"]
+    search_aliases_db
   end
 
   def self.translations
@@ -53,11 +56,17 @@ class Emoji
   end
 
   def self.tonable_emojis
-    db["tonableEmojis"]
+    tonable_emojis_db
   end
 
+  def self.normalize_name(name)
+    match = name.match(/\A:?(.+?)(?::t([1-6]))?:?\z/)
+    [match[1], match[2]&.to_i]
+  end
+  private_class_method :normalize_name
+
   def self.custom?(name)
-    name = name.delete_prefix(":").delete_suffix(":")
+    name, _ = normalize_name(name)
     Emoji.custom.detect { |e| e.name == name }.present?
   end
 
@@ -66,19 +75,21 @@ class Emoji
   end
 
   def self.[](name)
-    name = name.delete_prefix(":").delete_suffix(":")
-    is_toned = name.match?(/\A.+:t[1-6]\z/)
-    normalized_name = name.gsub(/\A(.+):t[1-6]\z/, '\1')
+    name, tone = normalize_name(name)
+    is_toned = tone.present?
+    find_emoji(name, is_toned) || find_emoji(resolve_alias(name), is_toned)
+  end
 
+  def self.find_emoji(name, is_toned)
     found_emoji = nil
 
     [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
       found_emoji =
-        cache.defer_get_set(normalized_name) do
+        cache.defer_get_set(name) do
           [
             Emoji
               .public_send(list_key)
-              .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) },
+              .detect { |e| e.name == name && (!is_toned || (is_toned && e.tonable)) },
           ]
         end[
           0
@@ -89,6 +100,7 @@ class Emoji
 
     found_emoji
   end
+  private_class_method :find_emoji
 
   def self.create_from_db_item(emoji)
     name = emoji["name"]
@@ -105,7 +117,8 @@ class Emoji
   end
 
   def self.url_for(name)
-    name = name.delete_prefix(":").delete_suffix(":").gsub(/(.+):t([1-6])/, '\1/\2')
+    name, tone = normalize_name(name)
+    name = "#{name}/#{tone}" if tone
     if SiteSetting.external_emoji_url.blank?
       "#{Discourse.base_path}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
     else
@@ -130,7 +143,7 @@ class Emoji
   end
 
   def self.groups_file
-    @groups_file ||= "#{Rails.root}/lib/emoji/groups.json"
+    @groups_file ||= DiscourseEmojis.paths[:groups]
   end
 
   def self.groups
@@ -146,16 +159,63 @@ class Emoji
       end
   end
 
-  def self.db_file
-    @db_file ||= "#{Rails.root}/lib/emoji/db.json"
+  def self.emojis_db_file
+    @emojis_db_file ||= DiscourseEmojis.paths[:emojis]
   end
 
-  def self.db
-    @db ||= File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+  def self.emojis_db
+    @emojis_db ||= Emoji.parse_emoji_file(emojis_db_file)
+  end
+
+  def self.translations_db_file
+    @translations_db_file ||= DiscourseEmojis.paths[:translations]
+  end
+
+  def self.translations_db
+    @translations_db ||= Emoji.parse_emoji_file(translations_db_file)
+  end
+
+  def self.tonable_emojis_db_file
+    @tonable_emojis_db_file ||= DiscourseEmojis.paths[:tonable_emojis]
+  end
+
+  def self.tonable_emojis_db
+    @tonable_emojis_db ||= Emoji.parse_emoji_file(tonable_emojis_db_file)
+  end
+
+  def self.aliases_db_file
+    @aliases_db_file ||= DiscourseEmojis.paths[:aliases]
+  end
+
+  def self.aliases_db
+    @aliases_db ||= Emoji.parse_emoji_file(aliases_db_file)
+  end
+
+  def self.aliases_values
+    @aliases_values ||= Set.new(Emoji.aliases_db.values.flatten)
+  end
+
+  def self.reverse_aliases
+    @reverse_aliases ||=
+      aliases_db.each_with_object({}) do |(original, alias_names), map|
+        alias_names.each { |alias_name| map[alias_name] = original }
+      end
+  end
+
+  def self.resolve_alias(name)
+    reverse_aliases[name] || name
+  end
+
+  def self.search_aliases_db_file
+    @search_aliases_db_file ||= DiscourseEmojis.paths[:search_aliases]
+  end
+
+  def self.search_aliases_db
+    @search_aliases_db ||= Emoji.parse_emoji_file(search_aliases_db_file)
   end
 
   def self.load_standard
-    db["emojis"].map { |e| Emoji.create_from_db_item(e) }.compact
+    emojis_db.map { |e| Emoji.create_from_db_item(e) }.compact
   end
 
   def self.load_allowed
@@ -210,7 +270,7 @@ class Emoji
   end
 
   def self.load_translations
-    db["translations"]
+    translations_db
   end
 
   def self.base_directory
@@ -233,13 +293,13 @@ class Emoji
         is_tonable_emojis = Emoji.tonable_emojis
         fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
 
-        db["emojis"].each do |e|
+        emojis_db.each do |e|
           name = e["name"]
 
           # special cased as we prefer to keep these as symbols
           next if name == "registered"
           next if name == "copyright"
-          next if name == "tm"
+          next if name == "trade_mark"
           next if name == "left_right_arrow"
 
           code = replacement_code(e["code"])
@@ -268,7 +328,7 @@ class Emoji
   end
 
   def self.gsub_emoji_to_unicode(str)
-    str.gsub(/:([\w\-+]*(?::t\d)?):/) { |name| Emoji.lookup_unicode($1) || name } if str
+    str.gsub(EMOJI_CODE_REGEXP) { |name| Emoji.lookup_unicode($1) || name } if str
   end
 
   def self.lookup_unicode(name)
@@ -279,7 +339,7 @@ class Emoji
         map = {}
         is_tonable_emojis = Emoji.tonable_emojis
 
-        db["emojis"].each do |e|
+        emojis_db.each do |e|
           next if e["name"] == "tm"
 
           code = replacement_code(e["code"])
@@ -312,7 +372,7 @@ class Emoji
     return if str.blank?
 
     str =
-      str.gsub(/:([\w\-+]*(?::t\d)?):/) do |name|
+      str.gsub(EMOJI_CODE_REGEXP) do |name|
         code = $1
 
         if code && Emoji.custom?(code)
@@ -328,5 +388,9 @@ class Emoji
 
   def self.sanitize_emoji_name(name)
     name.gsub(/[^a-z0-9\+\-]+/i, "_").gsub(/_{2,}/, "_").downcase
+  end
+
+  def self.parse_emoji_file(file)
+    File.open(file, "r:UTF-8") { |f| JSON.parse(f.read) }
   end
 end

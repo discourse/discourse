@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    enable_login_with_amazon: "Activez la connexion avec l'authentification Amazon, nécessite « connexion avec l'identifiant client amazon » et « connexion avec le secret client amazon »."
+    login_with_amazon_client_id: "Connexion avec l'identifiant client Amazon"
+    login_with_amazon_client_secret: "Connexion avec le secret client Amazon"
+    login_with_amazon_scope: "Connexion avec les autorisations OAuth2 d'Amazon (séparées par des espaces)"
+    login_with_amazon_overrides_email: "Remplace l'adresse e-mail du compte utilisateur Discourse."
+    errors:
+      login_with_amazon_client_id_is_blank: "Vous devez définir « Connexion avec l'identifiant client Amazon » avant d'activer ce paramètre."
+      login_with_amazon_client_secret_is_blank: "Vous devez définir « Connexion avec le secret client Amazon » avant d'activer ce paramètre."

@@ -26,7 +26,7 @@ class PushNotificationPusher
         icon: notification_icon,
         tag: payload[:tag] || "#{Discourse.current_hostname}-#{payload[:topic_id]}",
         base_url: Discourse.base_url,
-        url: payload[:post_url],
+        url: payload[:post_url]&.sub(/\A#{Discourse.base_path}/, ""),
       }
 
       subscriptions(user).each { |subscription| send_notification(user, subscription, message) }

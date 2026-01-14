@@ -52,12 +52,13 @@ end
 # Table name: topic_tags
 #
 #  id         :integer          not null, primary key
-#  topic_id   :integer          not null
-#  tag_id     :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  tag_id     :integer          not null
+#  topic_id   :integer          not null
 #
 # Indexes
 #
+#  index_topic_tags_on_tag_id_and_topic_id  (tag_id,topic_id) UNIQUE
 #  index_topic_tags_on_topic_id_and_tag_id  (topic_id,tag_id) UNIQUE
 #

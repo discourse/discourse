@@ -1,3 +1,14 @@
+@use "lib/viewport";
+
+:root {
+  --d-unread-notification-background: light-dark(
+    var(--tertiary-25),
+    var(--tertiary-200)
+  );
+  --active-shadow: 0 0 0 0.5rem var(--d-sidebar-active-background);
+  --hover-shadow: 0 0 0 0.5rem var(--d-sidebar-highlight-background);
+}
+
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
@@ -6,7 +17,7 @@
 
   // ensure there's always space to click outside on tiny devices
   max-width: 90vw;
-  box-shadow: 0 0 30px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 30px -2px rgb(0, 0, 0, 0.5);
   height: 100dvh;
 
   .panel-body {
@@ -18,7 +29,7 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgb(0, 0, 0, 0.3);
   top: 0;
   left: 0;
   display: none;
@@ -30,14 +41,23 @@
 
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
-  right: -10px; // 10px to the right of .panel - adjust as needed
+  right: 5px;
   max-height: calc(100dvh - var(--header-offset) - 1em);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-border-radius);
+
+  .panel-body {
+    // improves usability on high zoom levels
+    max-width: calc(100vw - 2em);
+  }
+
+  @include d-animation(float-down, 250ms, ease);
 }
 
 .menu-panel {
-  border: 1px solid var(--primary-low);
-  box-shadow: var(--shadow-menu-panel);
+  --shadow-dropdown: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+  --list-item-padding: 0.5em 1rem;
+  border: 1px solid var(--content-border-color);
+  box-shadow: var(--shadow-dropdown);
   background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
@@ -46,6 +66,7 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  max-height: 100vh;
 
   // remove once glimmer search menu in place
   .widget-link,
@@ -167,7 +188,8 @@
   }
 
   hr {
-    margin: 3px 0;
+    margin: 0;
+    height: auto;
   }
 
   .panel-header {
@@ -193,13 +215,16 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+
+    // 2em padding very useful for iOS Safari's overlayed bottom nav
+    // padding-bottom: calc(env(safe-area-inset-bottom) + 2em);
   }
 
   .panel-body-bottom {
     display: flex;
-    flex: 1 0 0%; // safari height fix
-    margin-top: 0.5em;
+    flex: 1 0 0;
     flex-wrap: wrap;
+    padding: 0.75em 0.75em max(env(safe-area-inset-bottom), 0.75em);
 
     .show-all {
       display: flex;
@@ -213,17 +238,6 @@
     .notifications-dismiss {
       margin-left: 0.5em;
     }
-
-    .btn {
-      background-color: var(--primary-very-low);
-      color: var(--primary-high);
-
-      &:hover,
-      &:focus-visible {
-        background: var(--primary-low);
-        color: var(--primary);
-      }
-    }
   }
 
   .badge-notification {
@@ -233,6 +247,14 @@
   .sidebar-filter {
     width: 100%;
   }
+
+  .sidebar-search {
+    width: 100%;
+  }
+
+  .empty-state {
+    padding: 0.5em 1em;
+  }
 }
 
 .search-menu .menu-panel {
@@ -240,10 +262,14 @@
 }
 
 .user-menu.revamped {
+  --user-menu-border-width: 1px;
   right: 0;
-  width: 320px;
   padding: 0;
-  border-top-right-radius: 0;
+  width: unset;
+
+  @include viewport.until(sm) {
+    width: 320px;
+  }
 
   .panel-body-bottom {
     flex: 0;
@@ -252,8 +278,6 @@
   .menu-tabs-container {
     display: flex;
     flex-direction: column;
-    border-left: 1px solid var(--primary-low);
-    padding: 0.75em 0 0;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -266,16 +290,22 @@
       display: flex;
       position: relative;
       border-radius: 0;
-      padding: 0.857em;
+      padding: 0.375em; // 6px
 
-      @media screen and (max-height: 400px) {
+      @include viewport.until(sm) {
+        padding: 0.75em 0.875em; // 12px 14px
+      }
+
+      @media screen and (height <= 400px) {
         // helps with 400% zoom level
         font-size: var(--font-down-1);
-        padding: 0.5em 0.875em;
+        padding: 0.125em 0.375em; // 2px 6px
       }
 
       .d-icon {
+        border-radius: var(--d-border-radius);
         color: var(--primary-medium);
+        padding: 0.5em; // 8px
       }
 
       .badge-notification {
@@ -285,44 +315,57 @@
         top: 6px;
         font-size: var(--font-down-3);
 
-        @media screen and (max-height: 400px) {
+        @media screen and (height <= 400px) {
           // helps with 400% zoom level
-          right: 0;
+          right: 3px;
           top: 0;
         }
       }
 
       &.active {
-        background-color: var(--d-selected);
+        .d-icon {
+          color: var(--d-sidebar-active-color);
+          background-color: var(--d-sidebar-active-background);
+        }
       }
 
-      &:hover {
-        background-color: var(--d-hover);
+      &:not(.active):hover,
+      &:not(.active):focus-visible {
+        background: none;
+
+        .d-icon {
+          background-color: var(--d-hover);
+        }
       }
     }
   }
 
   .bottom-tabs {
-    border-top: 1px solid var(--primary-low);
+    border-top: var(--user-menu-border-width) solid var(--content-border-color);
   }
 
   .panel-body-contents {
     display: flex;
     flex-direction: row-reverse;
+
+    @include viewport.until(sm) {
+      .quick-access-panel li {
+        padding-block: 0.15em;
+      }
+    }
   }
 
   .quick-access-panel {
     width: 320px;
-    padding: 0.75em;
-    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
     justify-content: space-between;
     box-sizing: border-box;
+    border-right: var(--user-menu-border-width) solid
+      var(--content-border-color);
     min-width: 0; // makes sure menu tabs don't go off screen
   }
 
   #quick-access-profile {
     display: inline;
-    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
 
     ul {
       flex-wrap: nowrap;
@@ -333,14 +376,16 @@
 
     li {
       flex: 1 1 auto;
-      max-height: 3em; // prevent buttons from getting too tall
+      display: flex;
+      flex-direction: column;
+      max-height: 3.25em;
 
       > * {
         // button, a, and everything else
-        height: 100%;
         align-items: center;
         margin: 0;
-        padding: 0 0.5em;
+        padding: var(--list-item-padding);
+        flex: 1 1 auto;
       }
 
       img.emoji {
@@ -387,7 +432,8 @@
     }
 
     hr {
-      border-top: 1px solid var(--primary-low);
+      border-top: var(--user-menu-border-width) solid
+        var(--content-border-color);
       width: 100%;
     }
   }
@@ -396,6 +442,84 @@
 .hamburger-panel {
   .panel-body {
     overflow-y: auto;
+  }
+
+  @include viewport.until(sm) {
+    .sidebar-section-wrapper {
+      margin-bottom: 1.2em;
+    }
+  }
+
+  @include viewport.from(sm) {
+    // sidebar-hamburger hybrid
+    .revamped {
+      --d-sidebar-row-height: 1.875rem;
+      width: 22.5rem;
+
+      .panel-body-content {
+        width: 100%;
+        min-width: 0; // prevent content blowing out width
+      }
+
+      .sidebar-section-wrapper {
+        .sidebar-section-header-button {
+          opacity: 1;
+        }
+
+        .sidebar-section-link.active {
+          font-weight: normal;
+          background: var(--d-hover);
+        }
+
+        .sidebar-section-header-wrapper .select-kit .btn:hover {
+          background: transparent;
+        }
+
+        &.sidebar-section {
+          padding-top: 0.5em;
+
+          .sidebar-section-header-wrapper {
+            margin: 0 0 0.5em;
+            padding-bottom: 0.25em;
+          }
+
+          .sidebar-section-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            li {
+              min-width: 0;
+            }
+          }
+        }
+      }
+
+      .sidebar-section-link-wrapper
+        .sidebar-section-link-hover:hover
+        .sidebar-section-hover-button {
+        background: transparent;
+      }
+
+      .sidebar-footer-wrapper {
+        padding: 0;
+        margin-top: 1em;
+
+        .sidebar-footer-container {
+          padding: 0;
+          border: none;
+          background: var(--secondary);
+
+          &::before {
+            top: -1.5em;
+            background: linear-gradient(
+              to bottom,
+              transparent,
+              rgb(var(--secondary-rgb), 1)
+            );
+          }
+        }
+      }
+    }
   }
 }
 
@@ -414,9 +538,6 @@
   flex-direction: column;
   min-height: 0;
   max-height: 100%;
-  border-top: 1px solid var(--primary-low);
-  padding-top: 0.75em;
-  margin-top: -1px;
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
@@ -443,21 +564,6 @@
     margin: 0.5em 0;
   }
 
-  .d-icon,
-  &:hover .d-icon {
-    color: var(--primary-medium);
-  }
-
-  .icon {
-    color: var(--primary-high);
-  }
-
-  .btn-primary {
-    .d-icon {
-      color: var(--secondary);
-    }
-  }
-
   ul {
     display: flex;
     flex-flow: column wrap;
@@ -465,14 +571,23 @@
     max-height: 100%;
   }
 
+  .user-menu-button-profile {
+    .item-label {
+      font-weight: normal;
+    }
+
+    .d-icon {
+      color: var(--primary-500);
+    }
+  }
+
   li {
-    background-color: var(--secondary);
     box-sizing: border-box;
     list-style-type: none;
 
     &.unread,
     &.pending {
-      background-color: var(--tertiary-low);
+      background-color: var(--d-unread-notification-background);
     }
 
     &:hover {
@@ -533,25 +648,29 @@
       }
     }
 
-    a,
-    .profile-tab-btn {
+    a {
       display: flex;
-      margin: 0.25em;
-      padding: 0 0.25em;
-    }
+      padding: var(--list-item-padding);
 
-    button {
-      padding: 0.25em 0.5em;
+      .item-label {
+        font-weight: bold;
+      }
+
+      .item-description {
+        color: var(--primary);
+        overflow: hidden; // clears the text from wrapping below icons
+        overflow-wrap: break-word;
+
+        @include line-clamp(2);
+      }
     }
 
     a,
     button {
       > div {
-        overflow: hidden; // clears the text from wrapping below icons
-        overflow-wrap: anywhere;
-
-        // Truncate items with more than 2 lines.
-        @include line-clamp(2);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
     }
 
@@ -578,8 +697,13 @@
     }
   }
 
-  .read {
+  .read,
+  .bookmark {
     background-color: var(--secondary);
+
+    a .d-icon {
+      color: var(--primary-medium);
+    }
   }
 
   .none {
@@ -588,6 +712,7 @@
 
   .spinner-container {
     min-height: 2em;
+    margin: auto;
   }
 
   .spinner {
@@ -623,7 +748,6 @@
     a {
       color: var(--primary);
       align-items: center;
-      padding: 0.15em 0;
 
       .item-label {
         font-weight: bold;
@@ -631,6 +755,8 @@
 
       .item-description {
         color: var(--primary);
+
+        @include line-clamp(2);
       }
 
       .icon-avatar {
@@ -640,7 +766,7 @@
         flex-shrink: 0;
         width: 2em;
         height: 2em;
-        margin: 0.3em 1em 0 0;
+        margin: 0.3em 1em auto 0;
 
         .avatar {
           width: 100%;
@@ -674,11 +800,14 @@
       }
     }
 
-    &.unread .icon-avatar__icon-wrapper {
-      background: var(--tertiary);
+    &.unread,
+    &.pending {
+      .icon-avatar__icon-wrapper {
+        background: var(--tertiary);
 
-      .d-icon {
-        color: var(--secondary);
+        .d-icon {
+          color: var(--secondary);
+        }
       }
     }
   }
@@ -694,5 +823,22 @@
   .panel-body-contents {
     max-height: unset;
     min-height: 100%;
+  }
+}
+
+.sidebar-section-header {
+  .sidebar-section-header-global-indicator {
+    .d-icon {
+      color: var(--d-sidebar-header-icon-color);
+    }
+  }
+}
+
+.sidebar-hamburger-dropdown {
+  .discourse-no-touch & {
+    .sidebar-section-wrapper .sidebar-section-header-wrapper:hover,
+    .sidebar-section-wrapper .sidebar-section-header-wrapper:focus-within {
+      background: transparent;
+    }
   }
 }

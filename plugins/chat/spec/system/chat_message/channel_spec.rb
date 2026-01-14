@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat message - channel", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
 
   let(:cdp) { PageObjects::CDP.new }
@@ -24,6 +24,30 @@ RSpec.describe "Chat message - channel", type: :system do
       expect(page).to have_css(
         ".chat-channel[data-id='#{channel_1.id}'] .chat-message-container[data-id='#{message_1.id}'].-active",
       )
+    end
+
+    it "shows the message actions container with buttons" do
+      chat_page.visit_channel(channel_1)
+
+      channel_page.hover_message(message_1)
+
+      expect(channel_page.messages).to have_actions_container(message_1)
+      expect(channel_page.messages).to have_reply_btn(message_1)
+      expect(channel_page.messages).to have_reaction_buttons(message_1)
+    end
+
+    context "when not following the channel" do
+      before { channel_1.membership_for(current_user).update!(following: false) }
+
+      it "does not show the reply or reaction buttons" do
+        chat_page.visit_channel(channel_1)
+
+        channel_page.hover_message(message_1)
+
+        expect(channel_page.messages).to have_actions_container(message_1)
+        expect(channel_page.messages).to have_no_reply_btn(message_1)
+        expect(channel_page.messages).to have_no_reaction_buttons(message_1)
+      end
     end
   end
 

@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtrai'
+      group: 'Grupė'
+      filter: 'Filtruoti'
+      edit: 'Redaguoti'
+      delete: 'Pašalinti'
+      save: 'Saugoti'
+      field:
+        email: "Epaštas"

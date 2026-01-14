@@ -13,6 +13,7 @@ module PageObjects
 
       def select_preset_reminder(identifier)
         find("#tap_tile_#{identifier}").click
+        closed?
       end
 
       def has_active_preset?(identifier)

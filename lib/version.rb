@@ -7,7 +7,7 @@ module Discourse
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
       # Use the `version_bump:*` rake tasks to update this value
-      STRING = "3.5.0.beta2-dev"
+      STRING = "2026.1.0-latest"
 
       PARTS = STRING.split(".")
       private_constant :PARTS
@@ -15,8 +15,8 @@ module Discourse
       MAJOR = PARTS[0].to_i
       MINOR = PARTS[1].to_i
       TINY = PARTS[2].to_i
-      PRE = PARTS[3]&.split("-", 2)&.[](0)
-      DEV = PARTS[3]&.split("-", 2)&.[](1)
+      PRE = nil
+      DEV = PARTS[2]&.split("-", 2)&.[](1)
     end
   end
 
@@ -25,6 +25,8 @@ module Discourse
 
   def self.has_needed_version?(current, needed)
     Gem::Version.new(current) >= Gem::Version.new(needed)
+  rescue ArgumentError
+    false
   end
 
   # lookup an external resource (theme/plugin)'s best compatible version

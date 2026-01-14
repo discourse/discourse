@@ -9,11 +9,11 @@ RSpec.describe Chat::InviteUsersToChannel do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:admin) }
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
-    fab!(:channel_1) { Fabricate(:chat_channel) }
-    fab!(:group_1) { Fabricate(:group) }
+    fab!(:current_user, :admin)
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
+    fab!(:channel_1, :chat_channel)
+    fab!(:group_1, :group)
 
     let(:guardian) { current_user.guardian }
     let(:user_ids) { [user_1.id, user_2.id] }
@@ -84,8 +84,8 @@ RSpec.describe Chat::InviteUsersToChannel do
     end
 
     context "when current user can't view channel" do
-      fab!(:current_user) { Fabricate(:user) }
-      fab!(:channel_1) { Fabricate(:private_category_channel) }
+      fab!(:current_user, :user)
+      fab!(:channel_1, :private_category_channel)
 
       it { is_expected.to fail_a_policy(:can_view_channel) }
     end

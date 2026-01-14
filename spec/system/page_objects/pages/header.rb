@@ -14,15 +14,11 @@ module PageObjects
       end
 
       def active_element_id
-        page.evaluate_script("document.activeElement.id")
+        current_active_element[:id]
       end
 
       def click_outside
         find(".d-modal").click(x: 0, y: 0)
-      end
-
-      def search_in_topic_keyboard_shortcut
-        page.send_keys([PLATFORM_KEY_MODIFIER, "f"])
       end
     end
   end

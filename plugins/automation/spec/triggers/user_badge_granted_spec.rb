@@ -2,7 +2,7 @@
 
 describe "UserBadgeGranted" do
   fab!(:user)
-  fab!(:tracked_badge) { Fabricate(:badge) }
+  fab!(:tracked_badge, :badge)
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_BADGE_GRANTED)
   end

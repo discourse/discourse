@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "./socialcast_message.rb"
-require_relative "./socialcast_user.rb"
-require File.expand_path(File.dirname(__FILE__) + "/../base.rb")
+require_relative "socialcast_message"
+require_relative "socialcast_user"
+require_relative "../base"
 
 MESSAGES_DIR = "output/messages"
 

@@ -60,7 +60,7 @@ RSpec.describe SuggestedTopicsBuilder do
     end
 
     context "when adding topics" do
-      fab!(:other_topic) { Fabricate(:topic) }
+      fab!(:other_topic, :topic)
 
       before do
         # Add all topics
@@ -89,7 +89,7 @@ RSpec.describe SuggestedTopicsBuilder do
     end
 
     context "when category definition topics" do
-      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:category, :category_with_definition)
 
       it "doesn't add a category definition topic" do
         expect(category.topic_id).to be_present
@@ -100,8 +100,8 @@ RSpec.describe SuggestedTopicsBuilder do
     end
 
     context "with suggested_topics_add_results modifier registered" do
-      fab!(:included_topic) { Fabricate(:topic) }
-      fab!(:excluded_topic) { Fabricate(:topic) }
+      fab!(:included_topic, :topic)
+      fab!(:excluded_topic, :topic)
 
       let(:modifier_block) do
         Proc.new { |results| results.filter { |topic| topic.id != excluded_topic.id } }

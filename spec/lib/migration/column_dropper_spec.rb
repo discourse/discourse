@@ -29,6 +29,33 @@ RSpec.describe Migration::ColumnDropper do
   end
 
   describe ".mark_readonly" do
+    it "only checks the public schema for default values" do
+      DB.exec <<~SQL
+        CREATE TABLE test_public_schema (id INTEGER, col TEXT);
+        CREATE SCHEMA other_schema;
+        CREATE TABLE other_schema.test_public_schema (id INTEGER, col TEXT DEFAULT 'has_default');
+      SQL
+
+      # Stub to reverse query results, simulating a database where non-public
+      # schemas come first (e.g., due to backup/restore OID ordering).
+      # Without the table_schema='public' fix, this causes mark_readonly to
+      # incorrectly see a default value from the other schema.
+      original_method = DB.method(:query_single)
+      allow(DB).to receive(:query_single) do |*args, **kwargs|
+        results = original_method.call(*args, **kwargs)
+        results.reverse
+      end
+
+      expect { described_class.mark_readonly("test_public_schema", "col") }.not_to raise_error
+
+      described_class.drop_readonly("test_public_schema", "col")
+    ensure
+      DB.exec "DROP SCHEMA IF EXISTS other_schema CASCADE"
+      DB.exec "DROP TABLE IF EXISTS test_public_schema CASCADE"
+    end
+  end
+
+  describe ".mark_readonly" do
     let(:table_name) { "table_with_readonly_column" }
 
     before do

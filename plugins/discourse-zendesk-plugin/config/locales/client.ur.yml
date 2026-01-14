@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "ڈسکورس زینڈیسک"
+  js:
+    topic:
+      create_zendesk_issue: "زینڈیسک ٹکٹ بنائیں"
+      view_zendesk_issue: "زینڈیسک پر دیکھیں"
+    zendesk:
+      credentials_not_setup: آپ نے اپنی Zendesk کی اسناد سیٹ اپ نہیں کی ہیں۔
+      url_not_set: آپ کا Zendesk کا URL فی الحال سیٹ نہیں ہے۔
+      general_error: کچھ غلط ہو گیا۔
+  site_settings:
+    zendesk_url: آپ کا Zendesk کا URL۔ مثال کے طور پر https://YOUR_SUBDOMAIN.zendesk.com/api/v2
+    zendesk_enabled: Zendesk پلگ ان کو فعال کریں
+    zendesk_autogenerate_all_categories: تمام زمروں کے لیے خود بخود ٹکٹ بنائیں۔ فعال ہونے پر، `zendesk_autogenerate_categories` کو نظر انداز کر دیا جائیگا۔
+    zendesk_autogenerate_categories: زمرہ جات کی فہرست جو خود بخود Zendesk ٹکٹیں بنائیں گی۔
+    zendesk_jobs_api_token: Zendesk تصدیق کے لیے API ٹوکن
+    zendesk_jobs_email: Zendesk تصدیق کے لیے استعمال کرنے کے لیے ای میل
+    zendesk_job_push_all_posts: Zendesk تبصرے کے طور پر ایک موضوع میں تمام پوسٹس کو آگےکریں؟ غیر فعال ہونے پر صرف پہلی پوسٹ کو Zendesk پر بھیج دیا جائے گا۔
+    zendesk_job_push_only_author_posts: صرف اصل موضوع کے مصنف کی پوسٹس کو زینڈیسک پر دھکیلیں۔ صرف اس صورت میں لاگو ہوتا ہے جب `zendesk_job_push_all_posts` فعال ہو۔
+    sync_comments_from_zendesk: زینڈیسک سے ڈسکورس تک تبصرے آٹو پوسٹ کریں۔ صرف `zendesk_autogenerate_categories` میں موضوعات پر لاگو ہوگا۔
+    zendesk_incoming_webhook_token: Zendesk آؤٹ گوئنگ ویب ہک سے پے لوڈ میں ٹوکن بھیجا گیا۔ صرف اس صورت میں مطلوب ہے جب `sync_comments_from_zendesk` فعال ہو۔
+    zendesk_tags: ہر ٹکٹ میں شامل کرنے کے لیے دھجیوں کی فہرست

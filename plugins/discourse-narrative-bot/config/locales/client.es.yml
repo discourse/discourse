@@ -10,3 +10,8 @@ es:
       welcome_post_type:
         new_user_track: "Inicia el tutorial de usuario nuevo para todos los usuarios nuevos"
         welcome_message: "Envía a todos los usuarios nuevos un mensaje de bienvenida junto a una guía de inicio rápido"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

@@ -151,6 +151,16 @@ TEXT
         plugin.git_repo.stubs(:latest_local_commit).returns(nil)
         expect(plugin.discourse_owned?).to eq(false)
       end
+
+      it "returns false if the commit_url has a nil path" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+        plugin.git_repo.stubs(:url).returns("invalid://url")
+        parsed_url = URI.parse("invalid://url")
+        parsed_url.stubs(:path).returns(nil)
+        UrlHelper.stubs(:relaxed_parse).returns(parsed_url)
+        expect(plugin.discourse_owned?).to eq(false)
+      end
     end
   end
 
@@ -340,7 +350,7 @@ TEXT
       plugin.send :register_assets!
 
       expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq(
-        "vendor/assets/javascripts/moment.js",
+        "frontend/discourse/node_modules/moment/moment.js",
       )
     end
   end
@@ -553,8 +563,6 @@ TEXT
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
-      expect(Rails.configuration.assets.precompile).to include("locales/foo_BAR.js")
-
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq(locale[:moment_js])
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq(
         locale[:moment_js_timezones],
@@ -569,14 +577,15 @@ TEXT
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
       expect(locale[:moment_js]).to eq(
-        ["pt-br", "#{Rails.root}/vendor/assets/javascripts/moment-locale/pt-br.js"],
+        ["pt-br", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/pt-br.js"],
       )
       expect(locale[:moment_js_timezones]).to eq(
-        ["pt", "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale/pt.js"],
+        [
+          "pt",
+          "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales/pt.js",
+        ],
       )
       expect(locale[:plural]).to be_nil
-
-      expect(Rails.configuration.assets.precompile).to include("locales/tup.js")
 
       expect(JsLocaleHelper.find_moment_locale(["tup"])).to eq(locale[:moment_js])
     end
@@ -589,11 +598,9 @@ TEXT
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root}/vendor/assets/javascripts/moment-locale/tlh.js"],
+        ["tlh", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/tlh.js"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
-
-      expect(Rails.configuration.assets.precompile).to include("locales/tlh.js")
 
       expect(JsLocaleHelper.find_moment_locale(["tlh"])).to eq(locale[:moment_js])
     end
@@ -607,7 +614,6 @@ TEXT
       config/locales/client.foo_BAR.yml
       config/locales/server.foo_BAR.yml
       lib/javascripts/locale/moment_js/foo_BAR.js
-      assets/locales/foo_BAR.js.erb
     ].each do |path|
       it "does not register a new locale when #{path} is missing" do
         path = "#{plugin_path}/#{path}"
@@ -631,6 +637,15 @@ TEXT
         MyReviewable
       end
 
+      let(:new_scrubbable_type) do
+        class MyScrubbableReviewable < Reviewable
+          def scrub(reason, guardian)
+            # scrub logic
+          end
+        end
+        MyScrubbableReviewable
+      end
+
       it "adds the provided class to the existing types" do
         expect { register_reviewable_type }.to change { Reviewable.types.size }.by(1)
         expect(Reviewable.types).to include(new_type)
@@ -639,6 +654,16 @@ TEXT
       it "shows the correct source for the new type" do
         register_reviewable_type
         expect(Reviewable.source_for(new_type)).to eq("discourse-sample-plugin")
+      end
+
+      it "isn't listed as a scrubbable type if it doesn't have a scrub method" do
+        register_reviewable_type
+        expect(Reviewable.scrubbable_types).not_to include(new_type)
+      end
+
+      it "is listed as a scrubbable type if it has a scrub method" do
+        plugin_instance.register_reviewable_type(new_scrubbable_type)
+        expect(Reviewable.scrubbable_types).to include(new_scrubbable_type)
       end
 
       context "when the plugin is disabled" do
@@ -835,23 +860,59 @@ TEXT
   describe "#register_site_categories_callback" do
     fab!(:category)
 
-    it "adds a callback to the Site#categories" do
-      instance = Plugin::Instance.new
+    let(:instance) { Plugin::Instance.new }
+    let(:site_guardian) { Guardian.new }
+    let(:site) { Site.new(site_guardian) }
 
-      site_guardian = Guardian.new
-
+    before do
+      allow(instance).to receive(:enabled?).and_call_original
       instance.register_site_categories_callback do |categories, guardian|
         categories.each { |category| category[:test_field] = "test" }
 
         expect(guardian).to eq(site_guardian)
       end
+    end
 
-      site = Site.new(site_guardian)
-
-      expect(site.categories.first[:test_field]).to eq("test")
-    ensure
+    after do
       Site.clear_cache
       Site.categories_callbacks.clear
+    end
+
+    it "adds a callback to the Site#categories" do
+      expect(site.categories.first[:test_field]).to eq("test")
+    end
+
+    context "when the plugin is disabled" do
+      before { allow(instance).to receive(:enabled?).and_return(false) }
+
+      it "does not run the callback" do
+        expect(site.categories.first[:test_field]).to be_blank
+      end
+    end
+  end
+
+  describe "#register_topic_list_preload_user_ids" do
+    subject(:preload_user_ids) { TopicList.preload_user_ids(stub, [], stub) }
+
+    let(:instance) { Plugin::Instance.new }
+
+    before do
+      allow(instance).to receive(:enabled?).and_call_original
+      instance.register_topic_list_preload_user_ids { |topics, user_ids, object| [1] }
+    end
+
+    after { TopicList.instance_variable_set(:@preload_user_ids, nil) }
+
+    it "adds a callback to TopicList.preload_user_ids" do
+      expect(preload_user_ids).to include(1)
+    end
+
+    context "when the plugin is disabled" do
+      before { allow(instance).to receive(:enabled?).and_return(false) }
+
+      it "does not run the callback" do
+        expect(preload_user_ids).to be_empty
+      end
     end
   end
 
@@ -1186,6 +1247,62 @@ TEXT
           )
         end
       end
+    end
+  end
+
+  describe "#register_admin_config_login_route" do
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "registers a new admin config login route" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_admin_config_login_route("plugin_route")
+
+      expect(DiscoursePluginRegistry.admin_config_login_routes).to include("plugin_route")
+    end
+  end
+
+  describe "#register_search_index" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:model_class) { User }
+    let(:search_data_class) { double }
+    let(:search_data) { ->(record, indexer_helper) { { a_weight: "test", d_weight: "content" } } }
+    let(:load_unindexed_record_ids) { -> { [1, 2, 3] } }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "registers a search handler with the correct parameters" do
+      plugin.register_search_index(
+        model_class: model_class,
+        search_data_class: search_data_class,
+        index_version: 1,
+        search_data: search_data,
+        load_unindexed_record_ids: load_unindexed_record_ids,
+      )
+
+      expect(DiscoursePluginRegistry.search_handlers.count).to eq(1)
+
+      handler = DiscoursePluginRegistry.search_handlers.first
+      expect(handler[:table_name]).to eq("user")
+      expect(handler[:model_class]).to eq(model_class)
+      expect(handler[:search_data_class]).to eq(search_data_class)
+      expect(handler[:index_version]).to eq(1)
+      expect(handler[:search_data]).to eq(search_data)
+      expect(handler[:load_unindexed_record_ids]).to eq(load_unindexed_record_ids)
+      expect(handler[:enabled].call).to eq(true)
+    end
+
+    it "allows custom enabled callback" do
+      plugin.register_search_index(
+        model_class: model_class,
+        search_data_class: search_data_class,
+        index_version: 1,
+        search_data: search_data,
+        load_unindexed_record_ids: load_unindexed_record_ids,
+        enabled: -> { false },
+      )
+
+      handler = DiscoursePluginRegistry.search_handlers.first
+      expect(handler[:enabled].call).to eq(false)
     end
   end
 end

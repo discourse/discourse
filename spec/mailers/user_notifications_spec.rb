@@ -60,11 +60,18 @@ RSpec.describe UserNotifications do
   describe ".signup" do
     subject(:email) { UserNotifications.signup(user) }
 
+    let(:email_html) { Email::Renderer.new(email).html }
+
     it "works" do
       expect(email.to).to eq([user.email])
       expect(email.subject).to be_present
       expect(email.from).to eq([SiteSetting.notification_email])
       expect(email.body).to be_present
+    end
+
+    it "shows the correct preview text in html" do
+      preview_text = I18n.t("user_notifications.signup.preview")
+      expect(email_html.scan(/#{preview_text}/).count).to eq(1)
     end
   end
 
@@ -76,6 +83,18 @@ RSpec.describe UserNotifications do
       expect(email.subject).to be_present
       expect(email.from).to eq([SiteSetting.notification_email])
       expect(email.body).to be_present
+    end
+
+    it "shows the correct preview text in forgot password" do
+      preview_text = I18n.t("user_notifications.forgot_password.preview")
+      expect(Email::Renderer.new(email).html.scan(/#{preview_text}/).count).to eq(1)
+    end
+
+    it "shows the correct preview text when setting password" do
+      email = UserNotifications.forgot_password(Fabricate(:user, password: nil))
+      preview_text = I18n.t("user_notifications.set_password.preview")
+
+      expect(Email::Renderer.new(email).html.scan(/#{preview_text}/).count).to eq(1)
     end
   end
 
@@ -125,6 +144,8 @@ RSpec.describe UserNotifications do
       Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]).token
     end
 
+    let(:email_html) { Email::Renderer.new(email).html }
+
     it "generates the right email" do
       expect(email.to).to eq([user.email])
       expect(email.from).to eq([SiteSetting.notification_email])
@@ -133,12 +154,16 @@ RSpec.describe UserNotifications do
         I18n.t("user_notifications.email_login.subject_template", email_prefix: SiteSetting.title),
       )
 
+      preview_text = I18n.t("user_notifications.email_login.preview")
+      expect(email_html.scan(/#{preview_text}/).count).to eq(1)
+
       expect(email.body.to_s).to match(
         I18n.t(
           "user_notifications.email_login.text_body_template",
           site_name: SiteSetting.title,
           base_url: Discourse.base_url,
           email_token: email_token,
+          email_preview: preview_text,
         ),
       )
     end
@@ -520,7 +545,7 @@ RSpec.describe UserNotifications do
         )
 
       # from should include full user name
-      expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
+      expect(mail[:from].display_names).to eql(["John Doe"])
 
       # subject should include category name
       expect(mail.subject).to match(/India/)
@@ -530,6 +555,9 @@ RSpec.describe UserNotifications do
       expect(mail.subject).to match(/Taggie/)
 
       mail_html = mail.html_part.body.to_s
+      preview_text = I18n.t("user_notifications.user_replied.preview")
+
+      expect(mail_html.scan(/#{preview_text}/).count).to eq(1)
 
       expect(mail_html.scan(/My super duper cool topic/).count).to eq(1)
       expect(mail_html.scan(/In Reply To/).count).to eq(1)
@@ -645,6 +673,52 @@ RSpec.describe UserNotifications do
       end
     end
 
+    describe "optional placeholders in email body" do
+      it "should render optional_tags, optional_cat, optional_pm, and optional_re in body templates" do
+        custom_body = <<~BODY
+          You got a reply!
+
+          Category: %{optional_cat}
+          Tags: %{optional_tags}
+          PM marker: %{optional_pm}
+          Re marker: %{optional_re}
+
+          %{message}
+        BODY
+
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "user_notifications.user_replied.text_body_template",
+          custom_body,
+        )
+
+        mail =
+          UserNotifications.user_replied(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash,
+          )
+
+        body = mail.body.to_s
+
+        expect(body).to include(tag2.name)
+        expect(body).to include(tag3.name)
+        expect(body).to include(category.name)
+
+        expect(body).not_to include("translation missing")
+        expect(body).not_to include("%{optional_tags}")
+        expect(body).not_to include("%{optional_cat}")
+        expect(body).not_to include("%{optional_pm}")
+        expect(body).not_to include("%{optional_re}")
+
+        TranslationOverride.revert!(
+          I18n.locale,
+          ["user_notifications.user_replied.text_body_template"],
+        )
+      end
+    end
+
     it "doesn't include details when private_email is enabled" do
       SiteSetting.private_email = true
       mail =
@@ -704,10 +778,13 @@ RSpec.describe UserNotifications do
       expect(mail[:from].display_names).to_not eql(["John Doe"])
 
       # from should include username if "show user full names" is disabled
-      expect(mail[:from].display_names).to eql(["john via Discourse"])
+      expect(mail[:from].display_names).to eql(["john"])
 
       # subject should not include category name
       expect(mail.subject).not_to match(/Uncategorized/)
+
+      preview_text = I18n.t("user_notifications.user_posted.preview")
+      expect(mail.html_part.body.to_s.scan(/#{preview_text}/).count).to eq(1)
 
       # 1 respond to links as no context by default
       expect(mail.html_part.body.to_s.scan(/to respond/).count).to eq(1)
@@ -796,10 +873,14 @@ RSpec.describe UserNotifications do
         )
 
       # from should include username if full user name is not provided
-      expect(mail[:from].display_names).to eql(["john via Discourse"])
+      expect(mail[:from].display_names).to eql(["john"])
 
       # subject should include "[PM]"
       expect(mail.subject).to include("[PM] ")
+
+      # note that translation key differs from method name (ie. user_posted_pm)
+      preview_text = I18n.t("user_notifications.user_posted_pm.preview")
+      expect(mail.html_part.body.to_s.scan(/#{preview_text}/).count).to eq(1)
 
       # 1 "visit message" link
       expect(mail.html_part.body.to_s.scan(/Visit Message/).count).to eq(1)
@@ -1110,13 +1191,13 @@ RSpec.describe UserNotifications do
       it "should have user name as from_alias" do
         SiteSetting.enable_names = true
         SiteSetting.display_name_on_posts = true
-        expects_build_with(has_entry(:from_alias, "#{user.name} via Discourse"))
+        expects_build_with(has_entry(:from_alias, user.name))
       end
 
       it "should not have user name as from_alias if display_name_on_posts is disabled" do
         SiteSetting.enable_names = false
         SiteSetting.display_name_on_posts = false
-        expects_build_with(has_entry(:from_alias, "walterwhite via Discourse"))
+        expects_build_with(has_entry(:from_alias, "walterwhite"))
       end
 
       it "should explain how to respond" do
@@ -1286,13 +1367,13 @@ RSpec.describe UserNotifications do
         SiteSetting.enable_names = false
 
         expect(mailer.message.to_s).to include(
-          "From: #{inviter.username} via #{SiteSetting.title} <#{SiteSetting.notification_email}>",
+          "From: #{inviter.username} <#{SiteSetting.notification_email}>",
         )
       end
 
       it "sends the email as the inviter" do
         expect(mailer.message.to_s).to include(
-          "From: #{inviter.name} via #{SiteSetting.title} <#{SiteSetting.notification_email}>",
+          "From: #{inviter.name} <#{SiteSetting.notification_email}>",
         )
       end
     end
@@ -1304,6 +1385,56 @@ RSpec.describe UserNotifications do
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
+    end
+  end
+
+  describe "#notification_email" do
+    let!(:plugin) { Plugin::Instance.new }
+    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
+    let(:category) { Fabricate(:category, name: "India") }
+
+    let(:topic) { Fabricate(:topic, category: category, title: "Super cool topic") }
+
+    let(:user) { Fabricate(:user) }
+    let(:post) { Fabricate(:post, topic: topic, raw: "This is My super duper cool topic") }
+    let(:response) do
+      Fabricate(
+        :basic_reply,
+        topic: post.topic,
+        user: response_by_user,
+        raw: "@#{user.username} response to post",
+      )
+    end
+    let(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
+    let!(:modify_post) do
+      Proc.new do |email_options|
+        email_options[:post].cooked = "modified post"
+        email_options
+      end
+    end
+
+    it "allows plugins to control #notification_email" do
+      DiscoursePluginRegistry.register_modifier(
+        plugin,
+        :user_notification_email_options,
+        &modify_post
+      )
+
+      mail =
+        UserNotifications.user_mentioned(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+      mail_html = mail.html_part.body.to_s
+      expect(mail_html.scan("modified post").count).to eq(1)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :user_notification_email_options,
+        &modify_post
+      )
     end
   end
 
@@ -1524,6 +1655,63 @@ RSpec.describe UserNotifications do
 
         expect(mail.body).to include(date)
       end
+    end
+  end
+
+  describe ".account_deleted" do
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, reviewable_scores: []) }
+
+    it "includes flag reason for standard flags" do
+      Fabricate(
+        :reviewable_score,
+        reviewable: reviewable,
+        reviewable_score_type: PostActionType.types[:spam],
+      )
+
+      reviewable.reload
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.spam"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.illegal"))
+    end
+
+    it "includes flag reason for automated system flags" do
+      Fabricate(
+        :reviewable_score,
+        reviewable: reviewable,
+        reviewable_score_type: ReviewableScore.types[:needs_approval],
+      )
+      reviewable.reload
+
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.needs_approval"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
+    end
+
+    it "falls back to the default spam reason if no score is present" do
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.spam"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.illegal"))
+    end
+
+    it "falls back to the flag's description for custom flags" do
+      custom_flag =
+        Fabricate(
+          :flag,
+          name_key: "custom_delete_flag",
+          description: "This is a custom deletion reason.",
+          applies_to: %w[Post],
+        )
+
+      Fabricate(:reviewable_score, reviewable: reviewable, reviewable_score_type: custom_flag.id)
+      reviewable.reload
+
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(custom_flag.description)
+      expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
     end
   end
 

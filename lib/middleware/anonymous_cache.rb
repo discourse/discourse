@@ -18,6 +18,7 @@ module Middleware
         t: "key_cache_theme_ids",
         ca: "key_compress_anon",
         l: "key_locale",
+        lso: "key_show_original_content",
         cm: "key_forced_color_mode",
       }
     end
@@ -186,6 +187,10 @@ module Middleware
         GlobalSetting.compress_anon_cache
       end
 
+      def key_show_original_content
+        @request.cookies.key?(ContentLocalization::SHOW_ORIGINAL_COOKIE)
+      end
+
       def theme_ids
         ids, _ = @request.cookies["theme_ids"]&.split("|")
         id = ids&.split(",")&.map(&:to_i)&.first
@@ -255,7 +260,7 @@ module Middleware
       ADP = "action_dispatch.request.parameters"
 
       def should_force_anonymous?
-        if (queue_time = @env["REQUEST_QUEUE_SECONDS"]) && get?
+        if (queue_time = @env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]) && get?
           if queue_time > GlobalSetting.force_anonymous_min_queue_seconds
             return check_logged_in_rate_limit!
           elsif queue_time >= MIN_TIME_TO_CHECK
@@ -317,7 +322,8 @@ module Middleware
 
         if status == 200 && cache_duration
           if GlobalSetting.anon_cache_store_threshold > 1
-            count = REDIS_STORE_SCRIPT.eval(Discourse.redis, [cache_key_count], [cache_duration])
+            count =
+              REDIS_STORE_SCRIPT.eval(Discourse.redis, [cache_key_count], [cache_duration.to_i])
 
             # technically lua will cast for us, but might as well be
             # prudent here, hence the to_i
@@ -384,7 +390,8 @@ module Middleware
         helper.force_anonymous!
       end
 
-      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") && (queue_time = env["REQUEST_QUEUE_SECONDS"])
+      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") &&
+           (queue_time = env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY])
         max_time = GlobalSetting.background_requests_max_queue_length.to_f
         if max_time > 0 && queue_time.to_f > max_time
           return [

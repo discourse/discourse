@@ -13,7 +13,14 @@ module Chat
 
     def can_chat?
       return false if anonymous?
-      @user.bot? || @user.in_any_groups?(Chat.allowed_group_ids)
+      return true if @user.bot?
+
+      if @user.anonymous?
+        SiteSetting.allow_chat_in_anonymous_mode &&
+          AnonymousShadowCreator.get_master(@user)&.guardian&.can_chat?
+      else
+        @user.in_any_groups?(Chat.allowed_group_ids)
+      end
     end
 
     def can_direct_message?
@@ -160,7 +167,12 @@ module Chat
           return true if is_admin?
           post_allowed_category_ids.include?(chatable.id)
         else
-          can_post_in_category?(chatable)
+          if is_anonymous?
+            SiteSetting.allow_chat_in_anonymous_mode &&
+              AnonymousShadowCreator.get_master(@user)&.guardian&.can_post_in_category?(chatable)
+          else
+            can_post_in_category?(chatable)
+          end
         end
       when Chat::DirectMessage
         true

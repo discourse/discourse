@@ -4,14 +4,14 @@ RSpec.describe "Visit channel", type: :system do
   fab!(:category)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:category_channel_1) { Fabricate(:category_channel) }
-  fab!(:private_category_channel_1) { Fabricate(:private_category_channel) }
+  fab!(:current_user, :user)
+  fab!(:category_channel_1, :category_channel)
+  fab!(:private_category_channel_1, :private_category_channel)
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
-  fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
+  fab!(:inaccessible_dm_channel_1, :direct_message_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
@@ -24,7 +24,7 @@ RSpec.describe "Visit channel", type: :system do
     end
 
     it "shows a not found page" do
-      chat.visit_channel(category_channel_1, with_preloaded_channels: false)
+      visit("/chat/c/-/#{category_channel_1.id}")
 
       expect(page).to have_content(I18n.t("page_not_found.title"))
     end
@@ -33,7 +33,7 @@ RSpec.describe "Visit channel", type: :system do
   context "when chat enabled" do
     context "when anonymous" do
       it "redirects to homepage" do
-        chat.visit_channel(category_channel_1, with_preloaded_channels: false)
+        visit("/chat/c/-/#{category_channel_1.id}")
 
         expect(page).to have_current_path("/latest")
       end
@@ -46,7 +46,7 @@ RSpec.describe "Visit channel", type: :system do
         before { current_user.user_option.update!(chat_enabled: false) }
 
         it "redirects to homepage" do
-          chat.visit_channel(category_channel_1, with_preloaded_channels: false)
+          visit("/chat/c/-/#{category_channel_1.id}")
 
           expect(page).to have_current_path("/latest")
         end
@@ -56,7 +56,7 @@ RSpec.describe "Visit channel", type: :system do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }
 
         it "redirects homepage" do
-          chat.visit_channel(category_channel_1, with_preloaded_channels: false)
+          visit("/chat/c/-/#{category_channel_1.id}")
 
           expect(page).to have_current_path("/latest")
         end
@@ -81,7 +81,7 @@ RSpec.describe "Visit channel", type: :system do
       context "when channel is not accessible" do
         context "when category channel" do
           it "shows an error" do
-            chat.visit_channel(private_category_channel_1)
+            visit("/chat/c/-/#{private_category_channel_1.id}")
 
             expect(page).to have_content(I18n.t("invalid_access"))
           end
@@ -89,7 +89,7 @@ RSpec.describe "Visit channel", type: :system do
 
         context "when direct message channel" do
           it "shows an error" do
-            chat.visit_channel(inaccessible_dm_channel_1)
+            visit("/chat/c/-/#{inaccessible_dm_channel_1.id}")
 
             expect(page).to have_content(I18n.t("invalid_access"))
           end
@@ -135,6 +135,28 @@ RSpec.describe "Visit channel", type: :system do
 
             expect(page).to have_content(category_channel_1.name)
             expect(channel_page.messages).to have_message(id: message_1.id)
+          end
+
+          context "with a thread" do
+            fab!(:thread) do
+              Fabricate(
+                :chat_thread,
+                channel: category_channel_1,
+                original_message: message_1,
+                with_replies: 1,
+              )
+            end
+
+            before { category_channel_1.update(threading_enabled: true) }
+
+            it "allows to join it" do
+              chat.visit_thread(thread)
+
+              expect(page).to have_content(
+                I18n.t("js.chat.channel_settings.join_channel"),
+                count: 2,
+              )
+            end
           end
         end
 

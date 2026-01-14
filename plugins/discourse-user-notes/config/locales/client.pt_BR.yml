@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  js:
+    user_notes:
+      title: "Anotações de usuário(a)"
+      attach_note_description: "Adicione uma observação sobre este(a) usuário(a). A observação estará visível apenas para a equipe."
+      delete_confirm: "Tem certeza de que deseja excluir esta anotação de usuário(a)?"

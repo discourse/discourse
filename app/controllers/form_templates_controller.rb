@@ -13,7 +13,10 @@ class FormTemplatesController < ApplicationController
     params.require(:id)
 
     template = FormTemplate.find_by(id: params[:id])
+
     raise Discourse::NotFound if template.nil?
+
+    template.process!(guardian)
 
     render_serialized(template, FormTemplateSerializer, root: "form_template")
   end

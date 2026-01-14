@@ -380,8 +380,8 @@ class UserMerger
       :post_actions,
       conditions: [
         "x.post_id = y.post_id",
-        "x.post_action_type_id = y.post_action_type_id",
         "x.targets_topic = y.targets_topic",
+        "x.post_action_type_id = y.post_action_type_id OR (x.post_action_type_id IN (3,4,7,8) AND y.post_action_type_id IN (3,4,7,8))",
       ],
     )
 
@@ -436,7 +436,7 @@ class UserMerger
       :topic_timers,
       conditions: [
         "x.status_type = y.status_type",
-        "x.topic_id = y.topic_id",
+        "x.timerable_id = y.timerable_id",
         "y.deleted_at IS NULL",
       ],
     )
@@ -483,6 +483,14 @@ class UserMerger
         "x.badge_id = y.badge_id",
         "x.seq = y.seq",
         "x.post_id IS NOT DISTINCT FROM y.post_id",
+      ],
+    )
+
+    update_user_id(
+      :bookmarks,
+      conditions: [
+        "x.bookmarkable_type = y.bookmarkable_type",
+        "x.bookmarkable_id = y.bookmarkable_id",
       ],
     )
 

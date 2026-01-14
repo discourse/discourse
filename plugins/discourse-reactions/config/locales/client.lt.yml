@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    discourse_reactions:
+      state_panel:
+        more_users: "ir %{count} daugiau..."
+      main_reaction:
+        add: "Mėgti šį įrašą"
+    notifications:
+      reaction_2_users: "%{username}, %{username2}"
+      titles:
+        reaction: "nauja reakcija"

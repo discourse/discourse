@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk"
+  js:
+    topic:
+      create_zendesk_issue: "Zendesk チケットを作成"
+      view_zendesk_issue: "Zendesk で表示"
+    zendesk:
+      credentials_not_setup: Zendesk の資格情報がセットアップされていません。
+      url_not_set: あなたの Zendesk URL は現在設定されていません。
+      general_error: エラーが発生しました。
+  site_settings:
+    zendesk_url: 'あなたの Zendesk URL。例: https://YOUR_SUBDOMAIN.zendesk.com/api/v2'
+    zendesk_enabled: Zendesk プラグインを有効にする
+    zendesk_autogenerate_all_categories: すべてのカテゴリのチケットを自動的に作成します。有効にすると、`zendesk_autogenerate_categories` は無視されます。
+    zendesk_autogenerate_categories: Zendesk チケットが自動生成されるカテゴリのリスト。
+    zendesk_jobs_api_token: Zendesk 認証用の API トークン
+    zendesk_jobs_email: Zendesk 認証用のメールアドレス
+    zendesk_job_push_all_posts: トピック内のすべての投稿を Zendesk コメントとしてプッシュしますか？無効にすると、最初の投稿のみが Zendesk にプッシュされます。
+    zendesk_job_push_only_author_posts: 元のトピック作成者による投稿のみを Zendesk にプッシュしますか？`zendesk_job_push_all_posts` が有効である場合にのみ適用されます。
+    sync_comments_from_zendesk: Zendesk から Discourse にコメントを自動投稿します。`zendesk_autogenerate_categories` のトピックのみに適用されます。
+    zendesk_incoming_webhook_token: Zendesk の発信 Webhook からペイロードで送信されるトークン。`sync_comments_from_zendesk` が有効である場合にのみ必要です。
+    zendesk_tags: 各チケットに追加されるタグのリスト

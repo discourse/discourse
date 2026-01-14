@@ -2,7 +2,7 @@
 
 RSpec.describe "Chat | composer | thread", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   fab!(:message_1) do
     Fabricate(:chat_message, chat_channel: channel_1, user: current_user, use_service: true)
   end
@@ -13,6 +13,7 @@ RSpec.describe "Chat | composer | thread", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     chat_system_bootstrap
@@ -30,15 +31,15 @@ RSpec.describe "Chat | composer | thread", type: :system do
 
     it "updates the message instantly" do
       chat_page.visit_thread(message_2.thread)
-      page.driver.browser.network_conditions = { offline: true }
-      thread_page.edit_message(message_2, "instant")
 
-      expect(thread_page.messages).to have_message(
-        text: message_2.message + " instant",
-        persisted: false,
-      )
-    ensure
-      page.driver.browser.network_conditions = { offline: false }
+      cdp.with_network_disconnected do
+        thread_page.edit_message(message_2, "instant")
+
+        expect(thread_page.messages).to have_message(
+          text: message_2.message + " instant",
+          persisted: false,
+        )
+      end
     end
 
     context "when pressing escape" do

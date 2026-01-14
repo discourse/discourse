@@ -20,6 +20,7 @@ th:
       channel_settings:
         edit: "แก้ไข"
         add: "เพิ่ม"
+        notification_settings_context: "การแจ้งเตือน"
         join: "เข้าร่วม"
         leave: "ออก"
       close: "ปิด"
@@ -42,7 +43,6 @@ th:
       save: "บันทึก"
       sounds:
         none: "ไม่มี"
-      exit: "กลับ"
       channel_status:
         closed: "ปิด"
         open: "เปิด"
@@ -54,6 +54,8 @@ th:
       chat_message_separator:
         today: วันนี้
         yesterday: เมื่อวาน
+      search_view:
+        filter_placeholder: ค้นหาข้อความ
       about_view:
         title: ชื่อเรื่อง
         name: ชื่อ
@@ -63,6 +65,7 @@ th:
         tabs:
           members: สมาชิก
           settings: การตั้งค่า
+          search: ค้นหา
         remove_member: "ลบ"
       direct_message_creator:
         title: สร้างข้อความใหม่
@@ -92,6 +95,11 @@ th:
         category_label: "หมวดหมู่"
         history_label: "ประวัติ"
         members_label: "สมาชิก"
+      search:
+        short_title: ค้นหา
+        sort:
+          relevance: "เกี่ยวข้อง"
+          latest: "ล่าสุด"
       incoming_webhooks:
         back: "กลับ"
         description: "รายละเอียด"

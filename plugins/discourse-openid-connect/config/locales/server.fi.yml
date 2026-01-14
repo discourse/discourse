@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    openid_connect_enabled: Ota OpenID Connect -todennus käyttöön. Mukauta käyttöliittymän tekstiä <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>täällä</a>
+    openid_connect_discovery_document: "OpenID Connectin discovery-asiakirjan URL-osoite. Sijaitsee yleensä osoitteessa https://verkkotunnus/.well-known/openid-configuration"
+    openid_connect_client_id: "OpenID Connectin asiakastunnus"
+    openid_connect_client_secret: "OpenID Connectin asiakkaan salatunnus"
+    openid_connect_authorize_scope: "Valtuutuspäätepisteeseen lähetetyt alueet. Tämän täytyy sisältää \"openid\"."
+    openid_connect_rp_initiated_logout: "Ohjaa käyttäjä uudelleen end_session_endpointiin uloskirjautumisen jälkeen. Tämän täytyy olla identiteettipalveluntarjoajasi tukema ja sisältyä discovery-asiakirjaan."
+    openid_connect_rp_initiated_logout_redirect: "(valinnainen) post_logout_redirect_uri, joka välitetään uloskirjautumisen päätepisteeseen. Jos se määritetään, se täytyy rekisteröidä identiteettipalveluntarjoajalla."
+    openid_connect_token_scope: "Tunnuspäätepistettä pyydettäessä lähetetyt alueet. Virallinen määritys ei vaadi tätä."
+    openid_connect_error_redirects: "Jos vastakutsun error_reason sisältää ensimmäisen parametrin, käyttäjä ohjataan toisen parametrin URL-osoitteeseen"
+    openid_connect_allow_association_change: "Salli käyttäjien katkaista Discourse-tilinsä yhteys OpenID Connect -palveluntarjoajaan ja yhdistää se uudelleen"
+    openid_connect_verbose_logging: "Kirjaa yksityiskohtaiset openid-connect-todennustiedot /logs-polkuun. Älä pidä tätä käytössä normaalin käytön aikana."
+    openid_connect_authorize_parameters: "URL-parametrit, jotka sisällytetään uudelleenohjaukseen /auth/oidc:stä IDP:n valtuutuspäätepisteeseen"
+    openid_connect_overrides_email: "Korvaa jokaisen kirjautumisen yhteydessä käyttäjän sähköpostiosoite openid-connect-arvolla. Toimii samalla tavalla kuin \"auth_overrides_email\" -asetus, mutta koskee OpenID Connect -kirjautumisia."
+    openid_connect_claims: "Määritä käytettävät vaatimukset palveluntarjoajilla, jotka eivät lähetä tietoja takaisin alueiden perusteella. (JSON)"
+    openid_connect_match_by_email: "Yhdistä OpenID Connect -todennukset olemassa oleviin Discourse-tileihin sähköpostiosoitteiden perusteella."
+    openid_connect_use_pkce: "Ota käyttöön Proof Key for Code Exchange (PKCE) OpenID Connect -todennuksessa."
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: Määrityksen noutaminen identiteettipalveluntarjoajalta ei onnistunut. Yritä uudelleen.

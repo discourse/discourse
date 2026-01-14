@@ -1,0 +1,130 @@
+llms:
+  gpt-5-nano:
+    display_name: GPT-5-Nano
+    name: gpt-5-nano
+    tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer
+    api_key_env: OPENAI_API_KEY
+    provider: open_ai
+    url: https://api.openai.com/v1/chat/completions
+    max_prompt_tokens: 131072
+    vision_enabled: true
+
+  gpt-5-nano-thinking:
+    display_name: GPT-5-Nano Thinking
+    name: gpt-5-nano
+    tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer
+    api_key_env: OPENAI_API_KEY
+    provider: open_ai
+    url: https://api.openai.com/v1/responses
+    max_prompt_tokens: 131072
+    vision_enabled: true
+    provider_params:
+      reasoning_effort: low
+
+  gpt-5.2:
+    display_name: GPT-5.2
+    name: gpt-5.2
+    tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer
+    api_key_env: OPENAI_API_KEY
+    provider: open_ai
+    url: https://api.openai.com/v1/chat/completions
+    max_prompt_tokens: 131072
+    vision_enabled: true
+
+  claude-4.5-haiku:
+    display_name: Claude 4.5 Haiku
+    name: claude-haiku-4-5
+    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
+    api_key_env: ANTHROPIC_API_KEY
+    provider: anthropic
+    url: https://api.anthropic.com/v1/messages
+    max_prompt_tokens: 200000
+    vision_enabled: false
+
+  claude-4.5-haiku-thinking:
+    display_name: Claude 4.5 Haiku
+    name: claude-haiku-4-5
+    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
+    api_key_env: ANTHROPIC_API_KEY
+    provider: anthropic
+    url: https://api.anthropic.com/v1/messages
+    max_prompt_tokens: 200000
+    vision_enabled: true
+    provider_params:
+      disable_top_p: true
+      disable_temperature: true
+      enable_reasoning: true
+      reasoning_tokens: 1024
+
+  claude-4.5-sonnet:
+    display_name: Claude 4.5 Sonnet
+    name: claude-sonnet-4-5
+    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
+    api_key_env: ANTHROPIC_API_KEY
+    provider: anthropic
+    url: https://api.anthropic.com/v1/messages
+    max_prompt_tokens: 200000
+    vision_enabled: true
+
+  claude-4.5-sonnet-thinking:
+    display_name: Claude 4.5 Sonnet
+    name: claude-sonnet-4-5
+    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
+    api_key_env: ANTHROPIC_API_KEY
+    provider: anthropic
+    url: https://api.anthropic.com/v1/messages
+    max_prompt_tokens: 200000
+    vision_enabled: true
+    provider_params:
+      disable_top_p: true
+      disable_temperature: true
+      enable_reasoning: true
+      reasoning_tokens: 1024
+
+  gemini-2.0-flash:
+    display_name: Gemini 2.0 Flash
+    name: gemini-2-0-flash
+    tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer
+    api_key_env: GEMINI_API_KEY
+    provider: google
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash
+    max_prompt_tokens: 1000000
+    vision_enabled: true
+
+  gemini-2.5-flash:
+    display_name: Gemini 2.5 Flash
+    name: gemini-2-5-flash
+    tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer
+    api_key_env: GEMINI_API_KEY
+    provider: google
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash
+    max_prompt_tokens: 1000000
+    vision_enabled: true
+    provider_params:
+      disable_top_p: true
+      disable_temperature: true
+
+  gemini-3-flash-thinking:
+    display_name: Gemini 3.0 Flash
+    name: gemini-3-0-flash
+    tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer
+    api_key_env: GEMINI_API_KEY
+    provider: google
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview
+    max_prompt_tokens: 1000000
+    vision_enabled: true
+    provider_params:
+      disable_top_p: true
+      disable_temperature: true
+      enable_thinking: true
+      thinking_tokens: 1024
+
+  gemini-3-pro:
+    display_name: Gemini 3.0 pro
+    name: gemini-3-pro-preview
+    tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer
+    api_key_env: GEMINI_API_KEY
+    provider: google
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview
+    max_prompt_tokens: 1000000
+    vision_enabled: true

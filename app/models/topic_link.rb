@@ -17,11 +17,11 @@ class TopicLink < ActiveRecord::Base
   belongs_to :link_topic, class_name: "Topic"
   belongs_to :link_post, class_name: "Post"
 
-  validates_presence_of :url
+  validates :url, presence: true
 
-  validates_length_of :url, maximum: 500
+  validates :url, length: { maximum: 500 }
 
-  validates_uniqueness_of :url, scope: %i[topic_id post_id]
+  validates :url, uniqueness: { scope: %i[topic_id post_id] }
 
   has_many :topic_link_clicks, dependent: :destroy
 
@@ -51,7 +51,7 @@ class TopicLink < ActiveRecord::Base
       /*where*/
       GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
       ORDER BY clicks DESC, count(*) DESC
-      LIMIT 50
+      LIMIT 51
     SQL
 
     builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
@@ -288,7 +288,7 @@ class TopicLink < ActiveRecord::Base
       internal = Discourse.store.internal?
       # Store the same URL that will be used in the cooked version of the post
       url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
-    elsif route = Discourse.route_for(parsed)
+    elsif route = Discourse.route_for(parsed.to_s[...TopicLink.max_url_length])
       # this is a special case for the silent flag
       # in internal links
       return nil if url && (url.split("?")[1] == "silent=true")

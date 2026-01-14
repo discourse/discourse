@@ -81,10 +81,15 @@ RSpec.describe UserDestroyer do
 
       include_examples "successfully destroy a user"
 
-      it "should log proper context" do
+      it "logs context in default locale" do
+        I18n.locale = :ja
+        SiteSetting.default_locale = :de
+
         destroy
         expect(UserHistory.where(action: UserHistory.actions[:delete_user]).last.context).to eq(
-          I18n.t("staff_action_logs.user_delete_self", url: "/u/username/preferences/account"),
+          I18n.with_locale(:de) do
+            I18n.t("staff_action_logs.user_delete_self", url: "/u/username/preferences/account")
+          end,
         )
       end
     end
@@ -411,6 +416,16 @@ RSpec.describe UserDestroyer do
       it "removes the bookmark" do
         UserDestroyer.new(admin).destroy(user)
         expect(Bookmark.where(user_id: user.id).count).to eq(0)
+      end
+    end
+
+    describe "Destroying a user with a reviewable claimed topic" do
+      let!(:topic) { Fabricate(:topic) }
+      let!(:claimed_topic) { Fabricate(:reviewable_claimed_topic, user: user, topic: topic) }
+
+      it "removes the reviewable claimed topic" do
+        UserDestroyer.new(admin).destroy(user)
+        expect(ReviewableClaimedTopic.exists?(user_id: user.id)).to be false
       end
     end
 

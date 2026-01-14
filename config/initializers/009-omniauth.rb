@@ -6,6 +6,10 @@ Rails.application.config.middleware.use Middleware::OmniauthBypassMiddleware
 OmniAuth.config.logger = Rails.logger
 OmniAuth.config.silence_get_warning = true
 
+# uncomment this line to force the redirect to /auth/failure in development mode
+# (by default, omniauth raises an exception in development mode)
+# OmniAuth.config.failure_raise_out_environments = []
+
 OmniAuth.config.request_validation_phase = nil # We handle CSRF checks in before_request_phase
 OmniAuth.config.before_request_phase do |env|
   request = ActionDispatch::Request.new(env)
@@ -16,8 +20,10 @@ OmniAuth.config.before_request_phase do |env|
   # If the user is trying to reconnect to an existing account, store in session
   request.session[:auth_reconnect] = !!request.params["reconnect"]
 
-  # If the client provided an origin, store in session to redirect back
-  request.session[:destination_url] = request.params["origin"]
+  # If the client provided an origin, store in the server session to redirect back
+  request.server_session[:destination_url] = request.params["origin"] if request.params[
+    "origin"
+  ].present?
 end
 
 OmniAuth.config.on_failure do |env|
@@ -48,3 +54,5 @@ OmniAuth.config.on_failure do |env|
 
   OmniAuth::FailureEndpoint.call(env)
 end
+
+OmniAuth.config.full_host = Proc.new { Discourse.base_url_no_prefix }

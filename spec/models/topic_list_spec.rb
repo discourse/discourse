@@ -56,6 +56,16 @@ RSpec.describe TopicList do
 
       expect(topic.category_user_data).to eq(category_user)
     end
+
+    it "preloads first_post association" do
+      first_post = Fabricate(:post, topic: topic, post_number: 1)
+      topic.update!(first_post: first_post)
+
+      loaded_topic = topic_list.load_topics.first
+
+      expect(loaded_topic.association(:first_post).loaded?).to eq(true)
+      expect(loaded_topic.first_post).to eq(first_post)
+    end
   end
 
   describe "#top_tags" do
@@ -69,7 +79,7 @@ RSpec.describe TopicList do
     describe "when there are tags restricted to a category" do
       fab!(:category)
       fab!(:topic) { Fabricate(:topic, category: category) }
-      fab!(:other_topic) { Fabricate(:topic) } # uncategorized
+      fab!(:other_topic, :topic) # uncategorized
       fab!(:tag) { Fabricate(:tag, topics: [topic], categories: [category], name: "category-tag") }
       fab!(:other_tag) { Fabricate(:tag, topics: [topic], name: "use-anywhere") }
       let(:topic_list) do

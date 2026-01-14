@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe "Shortcuts | drawer", type: :system do
-  fab!(:user_1) { Fabricate(:admin) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
+  fab!(:user_1, :admin)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
+  let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
 
   before do
     chat_system_bootstrap(user_1, [channel_1, channel_2])
@@ -57,6 +58,27 @@ RSpec.describe "Shortcuts | drawer", type: :system do
           expect(chat_page).to have_drawer
         end
       end
+
+      context "when lightbox is open" do
+        fab!(:upload)
+        fab!(:message) do
+          Fabricate(:chat_message, chat_channel: channel_1, upload_ids: [upload.id])
+        end
+
+        it "does not close the drawer" do
+          expect(chat_page).to have_drawer
+
+          drawer_page.open_channel(channel_1)
+          find(".chat-img-upload").click
+
+          expect(lightbox).to be_visible
+
+          page.send_keys(:escape)
+
+          expect(lightbox).to be_hidden
+          expect(chat_page).to have_drawer
+        end
+      end
     end
 
     context "when pressing a letter" do
@@ -75,15 +97,15 @@ RSpec.describe "Shortcuts | drawer", type: :system do
 
         expect(chat_page).to have_drawer(channel_id: channel_1.id)
 
-        page.send_keys(%i[alt arrow_down])
+        page.send_keys(%i[alt down])
 
         expect(chat_page).to have_drawer(channel_id: channel_2.id)
 
-        page.send_keys(%i[alt arrow_down])
+        page.send_keys(%i[alt down])
 
         expect(chat_page).to have_drawer(channel_id: channel_1.id)
 
-        page.send_keys(%i[alt arrow_up])
+        page.send_keys(%i[alt up])
 
         expect(chat_page).to have_drawer(channel_id: channel_2.id)
       end

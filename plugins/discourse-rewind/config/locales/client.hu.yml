@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privát"
+          public: "Nyilvános"
+      reports:
+        reading_time:
+          title: Olvasási Idő
+        chat_usage:
+          messages: üzenetek
+          author: Ön
+          author_others: "%{username}"
+          status_online: "● online"
+        invites:
+          title: Meghívók
+          invitee_posts: Létrehozott bejegyzések
+          invitee_likes: Adott tetszésnyilvánítások
+          label_invitations_sent: "Meghívók elküldve:"
+        new_user_interactions:
+          likes_given: Adott tetszésnyilvánítások
+          mentions: Említések
+        writing_analysis:
+          menu_other: Egyéb

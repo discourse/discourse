@@ -294,34 +294,6 @@ nb_NO:
     until_posts:
       one: "%{count} innlegg"
       other: "%{count} innlegg"
-    avatar: |
-      ### Hva med et bilde på kontoen din?
-
-      Du har skrevet et par emner og svar, men profilbildet ditt er ikke like unikt som du er - akkurat nå er det bare en bokstav.
-
-      Har du vurdert å **[besøke brukerprofilen din](%{profile_path})** for å laste opp et bilde som kan representere deg?
-
-      Det er lettere å følge diskusjoner og å finne interessante personer i en samtale om alle har et unikt profilbilde!
-    sequential_replies: |
-      ### Vurder å svare på flere innlegg samtidig
-
-      I stedet for å legge inn flere svar på rad i et emne, anbefaler vi at du skriver et innlegg som kombinerer flere sitater fra tidligere innlegg eller @navn referanser.
-
-      Du kan redigere det forrige svaret ditt om du ønsker å legge til et sitat ved å merke teksten som skal siteres og velge <b>Sitat</b> knappen som spretter opp.
-
-      Det er lettere for alle å lese emner som har færre og mer dyptgående innlegg enn et stort antall små, individuelle svar.
-    too_many_replies: |
-      ### Du har nådd grensen for svar i dette emnet
-
-      Vi beklager, men nye brukere er midlertidig begrenset til å skrive %{newuser_max_replies_per_topic} svar per emne.
-
-      I stedet for å legge til et nytt svar, vurder om du kan redigere et tidligere svar, eller besøk et annet emne i mellomtiden.
-    reviving_old_topic: |
-      ### Gjennopplive dette emnet?
-
-      Det siste svaret i dette emnet ble skrevet for **%{time_ago}**. Svaret ditt vil flytte emnet til toppen av listen og varsle alle som tidligere deltok i samtalen.
-
-      Er du sikker på at du ønsker å fortsette denne gamle samtalen?
   activerecord:
     attributes:
       category:
@@ -631,11 +603,10 @@ nb_NO:
       every_month: "hver måned"
       every_six_months: "hver sjette måned"
   user_api_key:
-    title: "Autoriser tilgang fra applikasjon"
     authorize: "Autoriser"
+    deny: "Avbryt"
     read: "les"
     read_write: "les/skriv"
-    description: '"%{application_name}" ber om følgende tilgang til kontoen din:'
     otp_confirmation:
       confirm_title: Fortsett til %{site_name}
       logging_in_as: Logger inn som %{username}
@@ -964,7 +935,6 @@ nb_NO:
     educate_until_posts: "Når brukeren begynner å skrive sine første (n) innlegg, vis pop-up med opplæringspanelet for nye brukere i redigeringspanelet."
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
-    disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
     editing_grace_period: "(n) sekunder etter publisering vil redigering ikke opprette en ny versjon i redigeringsloggen."
     editing_grace_period_max_diff: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 0 og 1)"
     editing_grace_period_max_diff_high_trust: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 2 og opp)"
@@ -981,7 +951,6 @@ nb_NO:
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
     allowed_inline_onebox_domains: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
-    email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
@@ -1030,7 +999,6 @@ nb_NO:
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
     default_categories_muted: "Liste med kategorier som er dempet som forvalg"
     default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hvert nye emne følges."
-    watched_precedence_over_muted: "Varsle meg om emner i kategorier eller tagger jeg ser på, som også tilhører en jeg har dempet"
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
@@ -1116,8 +1084,10 @@ nb_NO:
     queued_by_staff:
       title: "Innlegg trenger godkjenning"
     welcome_user:
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
     backup_failed:
       subject_template: "Sikkerhetskopiering mislyktes"
@@ -1128,6 +1098,7 @@ nb_NO:
     too_many_tl3_flags:
       subject_template: "Ny konto på vent"
     unsilenced:
+      preview: "Kontoen er ikke lenger på vent."
       subject_template: "Kontoen er ikke lenger på vent"
   unsubscribe_mailing_list: |
     Du mottar dette fordi du har slått på e-postlistemodus.
@@ -1185,10 +1156,7 @@ nb_NO:
   page_not_found:
     page_title: "Side Ikke funnet"
     title: "Oisann! Den siden finnes ikke eller er privat."
-    popular_topics: "Populært"
-    recent_topics: "Nylig"
     see_more: "Mer"
-    search_title: "Søk i denne siden"
     search_button: "Søk"
   upload:
     edit_reason: "Last ned lokal kopi av bilder"
@@ -1209,7 +1177,6 @@ nb_NO:
   color_schemes:
     light: "Lys"
     dark: "Mørk"
-    default_theme_name: "Forvalg"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
   edit_this_page: "Endre denne siden"
@@ -1299,7 +1266,6 @@ nb_NO:
       name: Gir tilbake
     badge_title_metadata: "%{display_name} merke på %{site_title}"
   admin_login:
-    success: "E-post sendt"
     submit_button: "Send e-post"
   tags:
     title: "Stikkord"
@@ -1314,10 +1280,13 @@ nb_NO:
       message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
   safe_mode:
     title: "Start sikkerhetsmodus"
+  dev_mode:
+    enter: "Angi"
   wizard:
     title: "Discourse-oppsett"
     step:
-      privacy:
+      setup:
+        title: "Kom godt i gang"
         fields:
           login_required:
             label: "Synlighet"
@@ -1326,17 +1295,12 @@ nb_NO:
                 label: "Offentlig"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Forhåndsvis"
-          homepage_style:
-            choices:
-              latest:
-                label: "Siste"
   onebox:
     github:
       closed: "lukket"
+      status_date:
+        approved: "godkjent"
+        closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
@@ -1371,23 +1335,53 @@ nb_NO:
         description: "Si deg enig med rapportering og demp bruker. "
       agree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
-      delete_single:
+      delete:
         title: "Slett"
-      disagree_and_restore:
-        description: "Gjenopprett innlegget slik at alle brukere kan se det."
-      disagree:
+        complete: "Post slettet."
+      delete_and_ignore:
+        complete: "Post slettet."
+      delete_and_agree:
+        complete: "Post slettet."
+      disagree_bundle:
         title: "Nei"
       ignore:
         title: "Ignorer"
       ignore_and_do_nothing:
         title: "ikke gjør noe"
       approve:
-        title: "Godkjenn"
+        title: "Ja"
+      approve_post:
+        title: "Ja"
+      approve_post_closed:
+        title: "Ja"
+      reject_post_bundle:
+        title: "Nei"
+      approve_user:
+        title: "Ja"
+        complete: "Brukar godkjent."
       reject_user:
+        title: "Nei"
         delete:
           title: "Slett bruker"
+          complete: "Bruker slettet."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nei"
       reject:
         title: "Avvis"
+      approve_and_restore:
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
+      no_action_post:
+        title: "Ingen handling"
+      delete_post:
+        complete: "Post slettet"
+      no_action_user:
+        title: "Ingen handling"
+      delete_user:
+        complete: "Bruker slettet"
   fallback_username: "bruker"
   activemodel:
     errors:

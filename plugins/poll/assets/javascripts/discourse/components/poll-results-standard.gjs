@@ -3,6 +3,7 @@ import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { i18n } from "discourse-i18n";
 import evenRound from "discourse/plugins/poll/lib/even-round";
+import decoratePollOption from "../modifiers/decorate-poll-option";
 import PollVoters from "./poll-voters";
 
 export default class PollResultsStandardComponent extends Component {
@@ -44,11 +45,11 @@ export default class PollResultsStandardComponent extends Component {
       option.percentage = per;
       option.chosen = chosen;
       let voters = this.args.isPublic
-        ? this.args.voters?.[option.id]?.voters ?? []
+        ? (this.args.voters?.[option.id]?.voters ?? [])
         : [];
       option.voters = [...voters];
       option.loading = this.args.isPublic
-        ? this.args.voters?.[option.id]?.loading ?? false
+        ? (this.args.voters?.[option.id]?.loading ?? false)
         : false;
     });
 
@@ -92,7 +93,10 @@ export default class PollResultsStandardComponent extends Component {
                     }}</span>
                 {{/if}}
               {{/unless}}
-              <span class="option-text">{{htmlSafe option.html}}</span>
+              <span
+                class="option-text"
+                {{decoratePollOption option.html}}
+              ></span>
             </p>
             {{#unless @isRankedChoice}}
               <div class="bar-back">

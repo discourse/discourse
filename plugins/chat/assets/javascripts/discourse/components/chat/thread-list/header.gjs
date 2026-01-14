@@ -6,7 +6,6 @@ import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 
 export default class ChatThreadListHeader extends Component {
-  @service router;
   @service site;
 
   threadListTitle = i18n("chat.threads.list");

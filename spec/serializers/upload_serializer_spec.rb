@@ -17,7 +17,7 @@ RSpec.describe UploadSerializer do
   end
 
   context "when the upload is secure" do
-    fab!(:upload) { Fabricate(:secure_upload) }
+    fab!(:upload, :secure_upload)
 
     context "when secure uploads is disabled" do
       it "just returns the normal URL, otherwise S3 errors are encountered" do

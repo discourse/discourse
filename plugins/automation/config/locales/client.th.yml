@@ -23,6 +23,12 @@ th:
         text:
           label: ข้อความ
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: หมวดหมู่
+            tags:
+              label: ป้าย
         user_badge_granted:
           fields:
             badge:
@@ -44,13 +50,12 @@ th:
           fields:
             restricted_tags:
               label: ป้าย
-            restricted_category:
+            restricted_categories:
               label: หมวดหมู่
-            restricted_group:
-              label: กลุ่ม
-            restricted_groups:
-              label: กลุ่ม
           created: สร้างเมื่อ
+          with_images: รูปภาพ
+          with_links: ลิงก์
+          with_uploads: อัปโหลด
         pm_created:
           fields:
             restricted_user:

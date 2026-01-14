@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe "Shortcuts | mark all read", type: :system do
-  fab!(:user_1) { Fabricate(:admin) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
-  fab!(:channel_3) { Fabricate(:chat_channel) }
+  fab!(:user_1, :admin)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
+  fab!(:channel_3, :chat_channel)
 
-  let(:chat_sidebar) { PageObjects::Pages::Sidebar.new }
+  let(:chat_sidebar) { PageObjects::Pages::ChatSidebar.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer) { PageObjects::Pages::ChatDrawer.new }
 
@@ -32,17 +32,17 @@ RSpec.describe "Shortcuts | mark all read", type: :system do
     context "when pressing shift+esc" do
       it "marks all channels read" do
         expect(page).to have_css(
-          ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-content-badge.unread",
         )
         expect(page).to have_css(
-          ".sidebar-section-link.channel-#{channel_2.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel_2.id} .sidebar-section-link-content-badge.unread",
         )
         find("body").send_keys(%i[shift escape])
         expect(page).not_to have_css(
-          ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-content-badge.unread",
         )
         expect(page).not_to have_css(
-          ".sidebar-section-link.channel-#{channel_2.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel_2.id} .sidebar-section-link-content-badge.unread",
         )
         chat_sidebar.open_channel(channel_2)
         expect(page).to have_content("all read message 9")

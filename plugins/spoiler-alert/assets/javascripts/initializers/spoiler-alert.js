@@ -4,6 +4,7 @@ import {
   addTagDecorateCallback,
 } from "discourse/lib/to-markdown";
 import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler";
+import richEditorExtension from "../lib/rich-editor-extension";
 
 function spoil(element) {
   element.querySelectorAll(".spoiler").forEach((spoiler) => {
@@ -18,12 +19,18 @@ export function initializeSpoiler(api) {
 
   api.addComposerToolbarPopupMenuOption({
     icon: "wand-magic",
+    active: ({ state }) => state.inSpoiler,
+    showActiveIcon: true,
     label: "spoiler.title",
     action: (toolbarEvent) => {
-      toolbarEvent.applySurround("[spoiler]", "[/spoiler]", "spoiler_text", {
-        multiline: false,
-        useBlockMode: true,
-      });
+      if (toolbarEvent.commands) {
+        toolbarEvent.commands.toggleSpoiler();
+      } else {
+        toolbarEvent.applySurround("[spoiler]", "[/spoiler]", "spoiler_text", {
+          multiline: false,
+          useBlockMode: true,
+        });
+      }
     },
   });
 
@@ -45,6 +52,8 @@ export function initializeSpoiler(api) {
       return text.trim();
     }
   });
+
+  api.registerRichEditorExtension(richEditorExtension);
 }
 
 export default {
@@ -54,7 +63,7 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (siteSettings.spoiler_enabled) {
-      withPluginApi("1.15.0", initializeSpoiler);
+      withPluginApi(initializeSpoiler);
     }
   },
 };

@@ -1,6 +1,16 @@
+@use "lib/viewport";
+
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
-  --d-sidebar-row-horizontal-padding: 1rem;
+  --d-sidebar-row-horizontal-padding: var(--space-1);
+
+  @include viewport.until(sm) {
+    --d-sidebar-row-horizontal-padding: var(--space-1);
+  }
+
+  --d-sidebar-vertical-gap: var(--space-half);
+  --sidebar-section-wrapper-padding: var(--space-6) var(--space-2)
+    var(--space-4);
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
@@ -10,10 +20,12 @@
   --d-sidebar-admin-background: var(--primary-very-low);
 
   // must be rgba for gradient
-  --d-sidebar-footer-fade: rgba(var(--secondary-rgb), 1);
+  --d-sidebar-footer-fade: rgb(var(--secondary-rgb), 1);
   --d-sidebar-header-color: var(--primary-medium);
   --d-sidebar-header-icon-color: var(--primary-medium);
-  --d-sidebar-border-color: var(--primary-low);
+  --d-sidebar-header-font-weight: bold;
+  --d-sidebar-section-border-color: var(--content-border-color);
+  --d-sidebar-border-color: var(--content-border-color);
   --d-sidebar-link-color: var(--primary-high);
   --d-sidebar-link-icon-color: var(--primary-500);
   --d-sidebar-link-badge-color: var(--primary-700); // example: new count
@@ -26,7 +38,7 @@
   --d-sidebar-suffix-color: var(--tertiary-med-or-tertiary);
 
   // highlight applies to both hover and focus states
-  --d-sidebar-highlight-background: var(--primary-low);
+  --d-sidebar-highlight-background: var(--d-hover);
   --d-sidebar-highlight-color: var(--primary-high);
   --d-sidebar-highlight-prefix-background: var(--primary-300);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
@@ -44,8 +56,13 @@
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--primary-200);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
+  --d-sidebar-active-font-weight: bold; // example: active section link
 
-  @include breakpoint(large) {
+  @include viewport.until(sm) {
+    --d-sidebar-row-height: 2.4em;
+  }
+
+  @include viewport.until(lg) {
     --d-sidebar-width: #{$d-sidebar-narrow-width};
   }
 }
@@ -55,6 +72,7 @@
   height: var(--d-sidebar-row-height);
   padding: 0 var(--d-sidebar-row-horizontal-padding);
   align-items: center;
+  gap: var(--d-sidebar-section-link-prefix-margin-right);
 }
 
 .sidebar-wrapper {
@@ -78,7 +96,7 @@
     box-sizing: border-box;
     width: 100%;
     padding: 0;
-    border-right: 1px solid var(--primary-low);
+    border-right: 1px solid var(--d-sidebar-border-color);
     overflow-x: hidden;
 
     // allows sidebar to scroll to the bottom when the composer is open
@@ -94,14 +112,14 @@
     flex-direction: column;
     box-sizing: border-box;
     flex: 1;
-    padding: 1.5rem 1rem 1rem;
+    padding: var(--sidebar-section-wrapper-padding);
     overflow-x: hidden;
-    overflow-y: overlay;
+    overflow-y: auto;
 
     // custom scrollbar styling
     --scrollbarBg: transparent;
     --scrollbarThumbBg: var(--primary-low);
-    --scrollbarWidth: 0.5em;
+    --scrollbarWidth: var(--space-2);
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
     transition-delay: 0.5s;
@@ -202,6 +220,10 @@
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 
+    @include viewport.until(sm) {
+      grid-template-columns: 4em auto auto min-content;
+    }
+
     &.header {
       padding-bottom: 0;
 
@@ -220,12 +242,16 @@
 
     .link-icon {
       grid-column: 2;
+
+      @include viewport.until(sm) {
+        grid-column: 1;
+      }
     }
 
     .input-group {
       margin: 0 0.5em;
 
-      @include breakpoint(mobile-large) {
+      @include viewport.until(sm) {
         margin: 0 0.25em;
       }
     }
@@ -260,7 +286,7 @@
     grid-template-columns: auto 1fr auto;
     gap: 0.5em 1em;
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       grid-template-columns: auto 1fr;
       justify-items: left;
 
@@ -364,7 +390,7 @@
   }
 
   &__shortcut-hint {
-    background-color: rgba(var(--tertiary-rgb), 0.1);
+    background-color: rgb(var(--tertiary-rgb) / 10%);
     padding: 0.25em 0.5em;
     margin-right: 0.5em;
     font-size: var(--font-down-3);
@@ -398,6 +424,59 @@
 
   &__title {
     font-weight: bold;
+  }
+}
+
+.sidebar-search {
+  width: 100%;
+
+  &__input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--primary-400);
+    background: var(--d-input-bg-color);
+    box-sizing: border-box;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    border-radius: var(--d-input-border-radius);
+    overflow: hidden;
+  }
+
+  &__icon.btn.btn-transparent {
+    border: 0;
+    background: var(--d-input-bg-color);
+    padding-left: var(--d-sidebar-row-horizontal-padding);
+    padding-right: var(--d-sidebar-row-horizontal-padding);
+
+    &:hover {
+      background: var(--d-input-bg-color) !important;
+    }
+
+    .d-icon:hover {
+      color: var(--primary-high);
+    }
+  }
+
+  &__input[type="text"] {
+    margin-bottom: 0;
+    border: 0;
+    padding: 0;
+    width: 100%;
+    height: var(--d-sidebar-row-height);
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__shortcut-hint {
+    background-color: rgb(var(--tertiary-rgb), 0.1);
+    min-width: 26px;
+    padding: 0.25em 0.5em;
+    margin-right: 0.5em;
+    font-size: var(--font-down-3);
+    color: var(--primary-medium);
   }
 }
 

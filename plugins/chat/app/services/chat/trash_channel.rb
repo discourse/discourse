@@ -57,6 +57,7 @@ module Chat
 
     def soft_delete_channel(guardian:, channel:)
       channel.trash!(guardian.user)
+      DiscourseEvent.trigger(:chat_channel_trashed, channel, guardian.user)
     end
 
     def log_channel_deletion(guardian:, channel:)

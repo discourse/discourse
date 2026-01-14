@@ -2,7 +2,7 @@
 
 RSpec.describe Jobs::PublishTopicToCategory do
   fab!(:category)
-  fab!(:another_category) { Fabricate(:category) }
+  fab!(:another_category, :category)
 
   let(:topic) do
     topic = Fabricate(:topic, category: category)

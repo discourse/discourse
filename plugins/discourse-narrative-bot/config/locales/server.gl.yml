@@ -342,19 +342,6 @@ gl:
 
           Teña en conta que cando responde a un tema ou le un tema durante máis duns minutos, estabelécese automaticamente un nivel de notificación de `seguimento`. Pode cambialo en [preferencias de usuario](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Sabía que pode engadir unha enquisa a calquera publicación? Probe a usar a engrenaxe <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> no editor para **crear unha enquisa**.
-        not_found: |-
-          Vaia! Non había ningunha enquisa na súa resposta.
-
-          Utilice a icona de <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenaxe no editor ou copie e pegue esta enquisa na súa seguinte resposta:
-
-          ```texto
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Ala, boa enquisa! Que tal o fago ensinando?
 
@@ -363,20 +350,6 @@ gl:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Ás veces quizais desexe **agochar detalles** nas súas respostas:
-
-          - Cando está comentando aspectos argumentais dunha película ou dun programa de TV que poderían considerarse un destripamento.
-
-          - Cando a súa publicación precisa moitos detalles opcionais que poden resultar abafadores cando se le dunha vez.
-
-          [detalles = Seleccione isto para ver como funciona!]
-          1. Seleccione a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenaxe no editor.
-          2. Seleccione «Agochar detalles».
-          3. Edite o resumo dos detalles e engada o seu contido.
-          [/details]
-
-          Pode utilizar a engrenaxe <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> no editor para engadir unha sección de detalles á súa próxima resposta?
         not_found: |-
           Ten algún problema para crear un trebello de detalles? Probe a incluír o seguinte na súa seguinte resposta:
 

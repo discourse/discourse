@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Idag är det din födelsedag!"
+        title: "Idag är det min födelsedag!"
+        label: "Födelsedatum"
+      anniversary:
+        user_title: "Idag är det årsdagen för när du gick med i vårt forum!"
+        title: "Idag är det årsdagen för när jag gick med i det här forumet!"
+    cakeday:
+      title: Tårtdag
+      today: "Idag"
+      tomorrow: "Imorgon"
+      upcoming: "Kommande"
+      all: "Alla"
+    birthdays:
+      title: "Födelsedagar"
+      month:
+        title: "Födelsedagar under månaden"
+        empty: "Inga användare har födelsedag den här månaden."
+      upcoming:
+        title: "Födelsedagar %{start_date} - %{end_date}"
+        empty: "Inga användare har födelsedag under de kommande sju dagarna."
+      today:
+        title: "Födelsedagar den %{date}"
+        empty: "Inga användare har födelsedag idag."
+      tomorrow:
+        empty: "Inga användare har födelsedag imorgon."
+    anniversaries:
+      title: "Årsdagar"
+      month:
+        title: "Årsdagar under månaden"
+        empty: "Inga användare har sin årsdag den här månaden."
+      upcoming:
+        title: "Årsdagar %{start_date} - %{end_date}"
+        empty: "Inga användare har sin årsdag under de kommande sju dagarna."
+      today:
+        title: "Årsdagar den %{date}"
+        empty: "Inga användare har sin årsdag idag."
+      tomorrow:
+        empty: "Inga användare har sin årsdag imorgon."

@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Alert o spoilerach w Discourse"
   js:
     spoiler:
-      title: Spoiler rozmycia
+      title: Rozmycie spoilera
       label:
         show: "Pokaż ukrytą zawartość"
     composer:

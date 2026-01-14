@@ -22,6 +22,13 @@ module SiteIconManager
       fallback_to_sketch: false,
       resize_required: false,
     },
+    mobile_logo_dark: {
+      width: nil,
+      height: nil,
+      settings: %i[mobile_logo_dark logo_dark],
+      fallback_to_sketch: false,
+      resize_required: false,
+    },
     large_icon: {
       width: nil,
       height: nil,
@@ -116,7 +123,7 @@ module SiteIconManager
       value = SiteSetting.get(setting_name)
       return value if value
     end
-    return Upload.find(SKETCH_LOGO_ID) if info[:fallback_to_sketch]
+    return Upload.find_by(id: SKETCH_LOGO_ID) if info[:fallback_to_sketch]
     nil
   end
 end

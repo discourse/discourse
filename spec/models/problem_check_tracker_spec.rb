@@ -8,6 +8,22 @@ RSpec.describe ProblemCheckTracker do
     it { expect(record).to validate_uniqueness_of(:identifier).scoped_to(:target) }
 
     it { expect(record).to validate_numericality_of(:blips).is_greater_than_or_equal_to(0) }
+
+    it { expect(record).to validate_presence_of(:target) }
+  end
+
+  describe "callbacks" do
+    describe "before_destroy (silence the alarm)" do
+      let(:tracker) do
+        ProblemCheckTracker.create!(identifier: "twitter_login", target: ProblemCheck::NO_TARGET)
+      end
+
+      before { tracker.problem! }
+
+      it "removes any associated admin notices" do
+        expect { tracker.destroy }.to change { AdminNotice.count }.by(-1)
+      end
+    end
   end
 
   describe ".[]" do
@@ -231,6 +247,8 @@ RSpec.describe ProblemCheckTracker do
   end
 
   describe "#no_problem!" do
+    let(:next_run_at) { 24.hours.from_now.round(6) }
+
     let(:problem_tracker) do
       Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
     end
@@ -245,12 +263,12 @@ RSpec.describe ProblemCheckTracker do
       }
     end
 
-    let(:updated_attributes) { { blips: 0 } }
+    let(:updated_attributes) { { blips: 0, next_run_at: } }
 
     it do
       freeze_time
 
-      expect { problem_tracker.no_problem!(next_run_at: 24.hours.from_now) }.to change {
+      expect { problem_tracker.no_problem!(next_run_at:) }.to change {
         problem_tracker.attributes
       }.to(hash_including(updated_attributes))
     end

@@ -3,15 +3,16 @@
 class ReviewableClaimedTopic < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
-  validates_uniqueness_of :topic
+  validates :topic, uniqueness: true
 
   def self.claimed_hash(topic_ids)
     result = {}
-    if SiteSetting.reviewable_claiming != "disabled"
+    if SiteSetting.reviewable_claiming == "disabled"
       ReviewableClaimedTopic
-        .where(topic_id: topic_ids)
-        .includes(:user)
-        .each { |rct| result[rct.topic_id] = rct.user }
+        .where(topic_id: topic_ids, automatic: true)
+        .each { |rct| result[rct.topic_id] = rct }
+    else
+      ReviewableClaimedTopic.where(topic_id: topic_ids).each { |rct| result[rct.topic_id] = rct }
     end
     result
   end
@@ -26,6 +27,7 @@ end
 #  topic_id   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  automatic  :boolean          default(FALSE), not null
 #
 # Indexes
 #

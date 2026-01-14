@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Σήμερα είναι τα γενέθλια σου!"
+        title: "Σήμερα είναι τα γενέθλιά μου!"
+        label: "Ημερομηνια γεννησης"
+      anniversary:
+        user_title: "Σήμερα είναι η επέτειος της ημέρας που εντάχθηκες στην κοινότητά μας!"
+        title: "Σήμερα είναι η επέτειος της ημέρας που μπήκα σε αυτήν την κοινότητα!"
+    cakeday:
+      title: Cakeday
+      today: "Σήμερα"
+      tomorrow: "Αύριο"
+      upcoming: "Προσεχώς"
+      all: "Όλα"
+    birthdays:
+      title: "Γενέθλια"
+      month:
+        title: "Γενέθλια του Μήνα"
+        empty: "Δεν υπάρχουν χρήστες που να γιορτάζουν τα γενέθλιά τους αυτόν τον μήνα."
+      upcoming:
+        title: "Γενέθλια για %{start_date} - %{end_date}"
+        empty: "Δεν υπάρχουν χρήστες που να γιορτάζουν τα γενέθλιά τους τις επόμενες 7 ημέρες."
+      today:
+        title: "Γενέθλια για %{date}"
+        empty: "Δεν υπάρχουν χρήστες που να γιορτάζουν τα γενέθλιά τους σήμερα."
+      tomorrow:
+        empty: "Δεν υπάρχουν χρήστες που να γιορτάζουν τα γενέθλιά τους αύριο."
+    anniversaries:
+      title: "Επέτειοι"
+      month:
+        title: "Επέτειοι του Μήνα"
+        empty: "Δεν υπάρχουν χρήστες που γιορτάζουν την επέτειο τους αυτόν τον μήνα."
+      upcoming:
+        title: "Επέτειοι για %{start_date} - %{end_date}"
+        empty: "Δεν υπάρχουν χρήστες που γιορτάζουν την επέτειο τους τις επόμενες 7 ημέρες."
+      today:
+        title: "Επέτειοι για %{date}"
+        empty: "Δεν υπάρχουν χρήστες που γιορτάζουν την επέτειο τους σήμερα."
+      tomorrow:
+        empty: "Δεν υπάρχουν χρήστες που γιορτάζουν την επέτειο τους αύριο."

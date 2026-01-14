@@ -10,6 +10,7 @@ module Chat
                :chatable_type,
                :chatable_url,
                :description,
+               :emoji,
                :title,
                :unicode_title,
                :slug,
@@ -22,8 +23,7 @@ module Chat
                :memberships_count,
                :current_user_membership,
                :meta,
-               :threading_enabled,
-               :icon_upload_url
+               :threading_enabled
 
     has_one :last_message, serializer: Chat::LastMessageSerializer, embed: :objects
 
@@ -34,8 +34,8 @@ module Chat
       @current_user_membership = opts[:membership]
     end
 
-    def icon_upload_url
-      object.icon_upload&.url
+    def include_emoji?
+      object.emoji.present?
     end
 
     def include_description?

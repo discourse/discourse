@@ -2,8 +2,8 @@
 
 RSpec.describe GroupsController do
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:user2, :user)
+  fab!(:other_user, :user)
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
   fab!(:admin)
@@ -451,45 +451,49 @@ RSpec.describe GroupsController do
   end
 
   describe "#show" do
-    it "ensures the group can be seen" do
-      sign_in(user)
-      group.update!(visibility_level: Group.visibility_levels[:owners])
+    shared_examples "group show behavior" do |path_prefix, param|
+      it "ensures the group can be seen" do
+        sign_in(user)
+        group.update!(visibility_level: Group.visibility_levels[:owners])
 
-      get "/groups/#{group.name}.json"
+        get "#{path_prefix}/#{group.public_send(param)}.json"
 
-      expect(response.status).to eq(404)
-    end
+        expect(response.status).to eq(404)
+      end
 
-    it "returns the right response" do
-      sign_in(user)
-      mod_group = Group.find(moderator_group_id)
-      get "/groups/#{group.name}.json"
-
-      expect(response.status).to eq(200)
-
-      body = response.parsed_body
-
-      expect(body["group"]["id"]).to eq(group.id)
-      expect(body["extras"]["visible_group_names"]).to eq([mod_group.name, group.name])
-      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
-    end
-
-    context "as an admin" do
       it "returns the right response" do
-        sign_in(admin)
-        get "/groups/#{group.name}.json"
+        sign_in(user)
+        mod_group = Group.find(moderator_group_id)
+
+        get "#{path_prefix}/#{group.public_send(param)}.json"
 
         expect(response.status).to eq(200)
 
         body = response.parsed_body
 
         expect(body["group"]["id"]).to eq(group.id)
+        expect(body["extras"]["visible_group_names"]).to eq([mod_group.name, group.name])
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+      end
 
-        groups = Group::AUTO_GROUPS.keys
-        groups.delete(:everyone)
-        groups.push(group.name)
+      context "as an admin" do
+        it "returns the right response" do
+          sign_in(admin)
 
-        expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
+          get "#{path_prefix}/#{group.public_send(param)}.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body["group"]["id"]).to eq(group.id)
+
+          groups = Group::AUTO_GROUPS.keys
+          groups.delete(:everyone)
+          groups.push(group.name)
+
+          expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
+        end
       end
     end
 
@@ -503,7 +507,6 @@ RSpec.describe GroupsController do
       expect(response.body).to have_tag "title", text: "#{group.name} - #{SiteSetting.title}"
       expect(response.body).to have_tag(:meta, with: { property: "og:title", content: group.name })
 
-      # note this uses an excerpt so it strips html
       expect(response.body).to have_tag(
         :meta,
         with: {
@@ -513,16 +516,24 @@ RSpec.describe GroupsController do
       )
     end
 
-    describe "when viewing activity filters" do
-      it "should return the right response" do
-        get "/groups/#{group.name}/activity/posts.json"
+    describe "when accessing by name" do
+      include_examples "group show behavior", "/groups", :name
 
-        expect(response.status).to eq(200)
+      describe "when viewing activity filters" do
+        it "should return the right response" do
+          get "/groups/#{group.name}/activity/posts.json"
 
-        body = response.parsed_body["group"]
+          expect(response.status).to eq(200)
 
-        expect(body["id"]).to eq(group.id)
+          body = response.parsed_body["group"]
+
+          expect(body["id"]).to eq(group.id)
+        end
       end
+    end
+
+    describe "when accessing by id" do
+      include_examples "group show behavior", "/groups/by-id", :id
     end
   end
 
@@ -1284,12 +1295,12 @@ RSpec.describe GroupsController do
 
     context "when user is a site moderator" do
       before do
-        SiteSetting.moderators_manage_categories_and_groups = true
+        SiteSetting.moderators_manage_groups = true
         sign_in(moderator)
       end
 
       it "should not be able to update the group if the SiteSetting is false" do
-        SiteSetting.moderators_manage_categories_and_groups = false
+        SiteSetting.moderators_manage_groups = false
 
         put "/groups/#{group.id}.json", params: { group: { name: "testing" } }
 
@@ -1395,21 +1406,11 @@ RSpec.describe GroupsController do
 
   describe "#members" do
     let(:user1) do
-      Fabricate(
-        :user,
-        last_seen_at: Time.zone.now,
-        last_posted_at: Time.zone.now - 1.day,
-        email: "b@test.org",
-      )
+      Fabricate(:user, last_seen_at: Time.zone.now, last_posted_at: 1.day.ago, email: "b@test.org")
     end
 
     let(:user2) do
-      Fabricate(
-        :user,
-        last_seen_at: Time.zone.now - 1.day,
-        last_posted_at: Time.zone.now,
-        email: "a@test.org",
-      )
+      Fabricate(:user, last_seen_at: 1.day.ago, last_posted_at: Time.zone.now, email: "a@test.org")
     end
 
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
@@ -1636,7 +1637,7 @@ RSpec.describe GroupsController do
       end
 
       context "when is able to add several members to a group" do
-        fab!(:user1) { Fabricate(:user) }
+        fab!(:user1, :user)
         fab!(:user2) { Fabricate(:user, username: "UsEr2") }
 
         it "adds by username" do
@@ -1949,8 +1950,8 @@ RSpec.describe GroupsController do
       context "when logged in as a moderator" do
         before { sign_in(moderator) }
 
-        context "with moderators_manage_categories_and_groups enabled" do
-          before { SiteSetting.moderators_manage_categories_and_groups = true }
+        context "with moderators_manage_groups enabled" do
+          before { SiteSetting.moderators_manage_groups = true }
 
           it "adds owners" do
             put "/groups/#{group.id}/owners.json",
@@ -1974,8 +1975,8 @@ RSpec.describe GroupsController do
           end
         end
 
-        context "with moderators_manage_categories_and_groups disabled" do
-          before { SiteSetting.moderators_manage_categories_and_groups = false }
+        context "with moderators_manage_groups disabled" do
+          before { SiteSetting.moderators_manage_groups = false }
 
           it "prevents adding of owners with a 403 response" do
             put "/groups/#{group.id}/owners.json",
@@ -2166,7 +2167,7 @@ RSpec.describe GroupsController do
 
       describe "#remove_members" do
         context "when is able to remove several members from a group" do
-          fab!(:user1) { Fabricate(:user) }
+          fab!(:user1, :user)
           fab!(:user2) { Fabricate(:user, username: "UsEr2") }
           let(:group1) { Fabricate(:group, users: [user1, user2]) }
 
@@ -2487,7 +2488,7 @@ RSpec.describe GroupsController do
   end
 
   describe "#request_membership" do
-    fab!(:new_user) { Fabricate(:user) }
+    fab!(:new_user, :user)
 
     it "requires the user to log in" do
       post "/groups/#{group.name}/request_membership.json"
@@ -2529,7 +2530,7 @@ RSpec.describe GroupsController do
 
     it "should create the right PM" do
       owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
-      owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1.day)
+      owner2 = Fabricate(:user, last_seen_at: 1.day.ago)
       [owner1, owner2].each { |owner| group.add_owner(owner) }
 
       sign_in(user)
@@ -2641,6 +2642,19 @@ RSpec.describe GroupsController do
         expect(groups.length).to eq(2)
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
+
+        get "/groups/search.json?include_everyone=true"
+
+        expect(response.status).to eq(200)
+        groups = response.parsed_body
+
+        automatic_ids = Group::AUTO_GROUPS.map { |name, id| id }
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(
+          group.id,
+          hidden_group.id,
+          *automatic_ids,
+        )
       end
     end
 
@@ -2824,39 +2838,6 @@ RSpec.describe GroupsController do
       end
     end
 
-    context "when validating imap" do
-      let(:protocol) { "imap" }
-      let(:username) { "test@gmail.com" }
-      let(:password) { "password" }
-      let(:domain) { nil }
-      let(:ssl) { true }
-      let(:ssl_mode) { nil }
-      let(:host) { "imap.somemailsite.com" }
-      let(:port) { 993 }
-
-      it "validates with the correct TLS settings" do
-        EmailSettingsValidator.expects(:validate_imap).with(has_entries(ssl: true))
-        post "/groups/#{group.id}/test_email_settings.json", params: params
-        expect(response.status).to eq(200)
-      end
-
-      context "when an error is raised" do
-        before do
-          EmailSettingsValidator.expects(:validate_imap).raises(
-            Net::IMAP::NoResponseError,
-            stub(data: stub(text: "Invalid credentials")),
-          )
-        end
-        it "uses the friendly error message functionality to return the message to the user" do
-          post "/groups/#{group.id}/test_email_settings.json", params: params
-          expect(response.status).to eq(422)
-          expect(response.parsed_body["errors"]).to include(
-            I18n.t("email_settings.imap_authentication_error"),
-          )
-        end
-      end
-    end
-
     describe "global param validation and rate limit" do
       let(:protocol) { "smtp" }
       let(:host) { "smtp.gmail.com" }
@@ -2871,9 +2852,7 @@ RSpec.describe GroupsController do
         it "raises an invalid params error" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
           expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"].first).to match(
-            /Valid protocols to test are smtp and imap/,
-          )
+          expect(response.parsed_body["errors"].first).to match(/Valid protocol to test is smtp/)
         end
       end
 

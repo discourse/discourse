@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::SuspiciousLogin do
-  fab!(:user) { Fabricate(:moderator) }
+  fab!(:user, :moderator)
 
   let(:zurich) { { latitude: 47.3686498, longitude: 8.5391825 } } # Zurich, Switzerland
   let(:bern) { { latitude: 46.947922, longitude: 7.444608 } } # Bern, Switzerland

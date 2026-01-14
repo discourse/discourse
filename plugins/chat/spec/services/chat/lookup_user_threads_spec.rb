@@ -3,7 +3,7 @@
 RSpec.describe ::Chat::LookupUserThreads do
   subject(:result) { described_class.call(params:, **dependencies) }
 
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1, with_replies: 1) }
 

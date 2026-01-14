@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    user_notes:
+      title: "ملاحظات المستخدمين"
+      attach_note_description: "أضف ملاحظة حول هذا المستخدم. ستكون هذه الملاحظة مرئية لفريق العمل فقط."
+      delete_confirm: "هل تريد بالتأكيد حذف ملاحظة المستخدم هذه؟"

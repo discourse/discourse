@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    discourse_graphviz_enabled: "הפעלת התוסף Graphviz"
+    graphviz_default_svg: "בררת המחדל היא עיבוד SVG במקום עיבוד תמונות, אפשר להתאים באופן נקודתי לכל תרשים עם הרכיב `svg=true|false`."

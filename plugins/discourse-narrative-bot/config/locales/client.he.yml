@@ -10,3 +10,8 @@ he:
       welcome_post_type:
         new_user_track: "התחילו את המדריך למתחילים לכל המשתמשים החדשים"
         welcome_message: "לשלוח לכל המשתמשים החדשים הודעה עם מדריך להתחלה מהירה"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "בוט העלילות של Discourse"

@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    github:
+      pr_status:
+        draft: "Entwurf"
+        open: "Offen"
+        approved: "Genehmigt"
+        closed: "Geschlossen"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Discourse – GitHub"
+  replace_github_link:
+    edit_reason: "Github-Link wurde durch einen permanenten Link ersetzt"

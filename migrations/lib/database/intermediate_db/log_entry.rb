@@ -10,8 +10,9 @@ module Migrations::Database::IntermediateDB
       INSERT INTO log_entries (created_at, type, message, exception, details)
       VALUES (?, ?, ?, ?, ?)
     SQL
+    private_constant :SQL
 
-    def self.create!(created_at: Time.now, type:, message:, exception: nil, details: nil)
+    def self.create(created_at: Time.now, type:, message:, exception: nil, details: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
         ::Migrations::Database.format_datetime(created_at),

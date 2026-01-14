@@ -15,13 +15,15 @@ el:
         title: Σημείο στο χρόνο
       user_promoted:
         transition_placeholder: "από %{from_level_name} σε %{to_level_name}"
+      pm_created:
+        title: Προσωπικό μήνυμα δημιουργήθηκε
       topic:
         title: Θέμα
     scriptables:
       topic:
         title: Δημιουργήστε ένα θέμα
       flag_post_on_words:
-        flag_message: "Η δημοσίευση περιέχει απαγορευμένες λέξεις: %{words}"
+        flag_message: "Η ανάρτηση περιέχει απαγορευμένες λέξεις: %{words}"
       zapier_webhook:
         title: Zapier webhook
       pin_topic:
@@ -39,3 +41,5 @@ el:
         text: "Τελευταίος έλεγχος από @%{username} %{date_time}"
         summary: Έλεγχος εγγράφου
         button_text: Ολοκληρώθηκε
+      set_topic_timer:
+        title: "Ορισμός Χρονοδιακόπτη Θέματος"

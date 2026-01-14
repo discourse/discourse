@@ -123,6 +123,9 @@ class Auth::Result
       user.update(associated_group_ids: associated_group_ids)
       AssociatedGroup.where(id: associated_group_ids).update_all("last_used = CURRENT_TIMESTAMP")
     end
+
+    # refreshes automatic group membership (despite the name, it doesn't change TLs)
+    Group.user_trust_level_change!(user.id, user.trust_level) if user
   end
 
   def can_edit_name
@@ -200,6 +203,10 @@ class Auth::Result
       end
     end
 
-    UserNameSuggester.suggest(*username_suggester_attributes, current_username: user&.username)
+    UserNameSuggester.suggest(
+      *username_suggester_attributes,
+      current_username: user&.username,
+      allow_generic_fallback: false,
+    )
   end
 end

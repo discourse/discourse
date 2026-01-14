@@ -30,10 +30,13 @@ he:
     chat_editing_grace_period_max_diff_low_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 0 ו־1)."
     chat_editing_grace_period_max_diff_high_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 2 ומעלה)."
     chat_preferred_index: "לשונית מועדפת בעת טעינת ‎/chat."
+    allow_chat_in_anonymous_mode: "יש להפעיל את ההגדרה הזאת כדי לאפשר למשתמשים שגולשים באתר שלך באלמוניות להשתמש בצ׳אט. ההגדרה הזאת דורשת שההגדרה `allow anonymous mode` (לאפשר מצב אלמוני) תהיה פעילה."
+    chat_search_enabled: "הפעלת ההגדרה הזאת תאפשר למשתמשים לחפש הודעות צ׳אט."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
       chat_upload_not_allowed_secure_uploads: "אסור להעלות לצ׳אט כשהגדרת האתר להעלאות מאובטחות מופעלת."
+      allow_chat_in_anonymous_mode_invalid: "ההגדרה הזאת דורשת את הפעלת ההגדרה ‚לאפשר מצב אלמוני’ תחילה."
   system_messages:
     private_channel_title: "ערוץ %{id}"
     chat_channel_archive_complete:
@@ -59,6 +62,7 @@ he:
     deleted_chat_username: נמחק
     errors:
       users_cant_be_added_to_channel: "אי אפשר להוסיף משתמשים לערוץ הזה."
+      user_cant_be_removed_from_channel: "אי אפשר להסיר את המשתמש מהערוץ הזה"
       channel_exists_for_category: "כבר קיים ערוץ לקטגוריה ולשם האלו"
       channel_new_message_disallowed:
         archived: "הערוץ נמצא בארכיון, לא ניתן לשלוח הודעות חדשות"
@@ -109,6 +113,17 @@ he:
     reviewables:
       message_already_handled: "תודה, אבל כבר סקרנו הודעה זו וקבענו שאין צורך לסמן אותה שוב."
       actions:
+        message_actions:
+          bundle_title: "מה לעשות עם ההודעה?"
+        no_action_message:
+          title: "אין פעולה"
+          description: "להשאיר את ההודעה כפי שהיא."
+        delete_message:
+          title: "למחוק את ההודעה"
+          description: "למחוק את ההודעה הזאת לצמיתות."
+        restore_message:
+          title: "לשחזר את ההודעה"
+          description: "לשחזר את ההודעה כדי שמשתמשים יוכלו לצפות בה."
         agree:
           title: "הסכמה…"
         agree_and_keep_message:
@@ -130,16 +145,12 @@ he:
           title: "מחיקת ההודעה"
           description: "למחוק את ההודעה כדי שמשתמשים לא יוכלו לראות אותה."
         delete_and_agree:
-          title: "התעלמות מהדגל ומחיקת ההודעה"
           description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת ההודעה."
         disagree_and_restore:
           title: "חוסר הסכמה ושחזור ההודעה"
           description: "לשחזר את ההודעה כדי שכל המשתמשים יוכלו לראות אותה."
-        disagree:
-          title: "אי קבלה"
         ignore:
-          title: "לא לעשות דבר"
-          description: "התעלמות מהדגל על ידי הסרתו מהתור מבלי לנקוט בשום פעולה."
+          title: "התעלמות מדגל"
       direct_messages:
         transcript_title: "תמלול הודעות קודמות בערוץ %{channel_name}"
         transcript_body: "כדי לתת לך יותר הקשר, הוספנו תמליל של (עד עשר) ההודעות הקודמות בשיחה זו:\n\n%{transcript}"
@@ -167,6 +178,7 @@ he:
     mention_warning:
       dismiss: "התעלמות"
       cannot_see: "ל־%{first_identifier} אין גישה לערוץ הזה ולא נשלחה התראה."
+      cannot_see_group: "חלק מהחברים בקבוצה %{group_name} לא יכולים לגשת לערוץ הזה והם לא קיבלו על כך הודעה."
       cannot_see_multiple:
         one: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
         two: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
@@ -202,7 +214,8 @@ he:
         slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
         is_already_in_use: "כבר בשימוש"
     bookmarkable:
-      notification_title: "הודעה ב־%{channel_name}"
+      notification_title_channel: "הודעה ב־%{channel_name}"
+      notification_title_direct_message: "הודעה עם %{channel_name}"
     personal_chat: "צ׳אט אישי"
     onebox:
       inline_to_message: "הודעה מס׳ %{message_id} מאת ‎%{username}‏ – ‎#%{chat_channel}"
@@ -265,6 +278,16 @@ he:
           two: "[%{site_name}] הודעות חדשות"
           many: "[%{site_name}] הודעות חדשות"
           other: "[%{site_name}] הודעות חדשות"
+        watched_thread:
+          one: "[%{site_name}] הודעת שרשור חדשה תחת %{channel}"
+          two: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+          many: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+          other: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+        watched_threads:
+          one: "[%{site_name}] הודעת שרשור חדשה בערוץ %{channel} ובעוד %{count}"
+          two: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
+          many: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
+          other: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
         chat_dm_1:
           one: "[%{site_name}] הודעה חדשה מאת %{name}"
           two: "[%{site_name}] הודעות חדשות מאת %{name}"
@@ -292,10 +315,10 @@ he:
         two: "הצגת %{count} הודעות נוספות"
         many: "הצגת %{count} הודעות נוספות"
         other: "הצגת %{count} הודעות נוספות"
-      your_chat_settings: "העדפת תדירות דוא״ל צ׳אט"
+      your_chat_settings: "העדפת דוא״ל צ׳אט"
   unsubscribe:
     chat_summary:
-      select_title: "הגדרת תדירות הודעות סיכום בדוא״ל ל־:"
+      select_title: "הגדרת הודעות תקציר צ׳אט אל:"
       never: לעולם לא
       when_away: רק כשלא במערכת
   category:

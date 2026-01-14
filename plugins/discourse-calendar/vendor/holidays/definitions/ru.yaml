@@ -1,0 +1,108 @@
+# Russian holiday definitions for the Ruby Holiday gem. In official Cyrillic.
+#
+# Updated: 2017-06-14
+# Sources:
+# - https://en.wikipedia.org/wiki/Public_holidays_in_Russia
+# - https://de.wikipedia.org/wiki/Feiertage_in_Russland
+# - https://translate.yandex.com/?lang=en-ru
+# - https://ru.wikipedia.org/wiki/День_Государственного_флага_Российской_Федерации
+---
+months:
+  1:
+  - name: Новый год # New Year's Day
+    regions: [ru]
+    mday: 1
+  - name: Новогодний праздник # 1st New Year holiday
+    regions: [ru]
+    mday: 2
+  - name: Новогодний праздник # 2nd New Year holiday
+    regions: [ru]
+    mday: 3
+  - name: Новогодний праздник # 3rd New Year holiday
+    regions: [ru]
+    mday: 4
+  - name: Новогодний праздник # 4th New Year holiday
+    regions: [ru]
+    mday: 5
+  - name: Рождество Христово # Christmas Day
+    regions: [ru]
+    mday: 7
+  2:
+  - name: День защитника Отечества # Defender of the Fatherland Day
+    regions: [ru]
+    mday: 23
+  3:
+  - name: Международный женский день # International Women's Day
+    regions: [ru]
+    mday: 8
+  5:
+  - name: Праздник Весны и Труда # Spring and Labour Day
+    regions: [ru]
+    mday: 1
+  - name: День Победы # Victory Day
+    regions: [ru]
+    mday: 9
+  6:
+  - name: День России # Russia Day
+    regions: [ru]
+    mday: 12
+  8:
+  - name: День Государственного флага Российской Федерации # National Flag Day (official working holiday)
+    regions: [ru]
+    mday: 22
+  11:
+  - name: День народного единства # Unity Day
+    regions: [ru]
+    mday: 4
+
+tests:
+  - given:
+      date: '2017-1-1'
+      regions: ["ru"]
+    expect:
+      name: "Новый год"
+  - given:
+      date: ['2017-1-2', '2017-1-3', '2017-1-4', '2017-1-5']
+      regions: ["ru"]
+    expect:
+      name: "Новогодний праздник"
+  - given:
+      date: '2017-1-7'
+      regions: ["ru"]
+    expect:
+      name: "Рождество Христово"
+  - given:
+      date: '2017-2-23'
+      regions: ["ru"]
+    expect:
+      name: "День защитника Отечества"
+  - given:
+      date: '2017-3-8'
+      regions: ["ru"]
+    expect:
+      name: "Международный женский день"
+  - given:
+      date: '2017-5-1'
+      regions: ["ru"]
+    expect:
+      name: "Праздник Весны и Труда"
+  - given:
+      date: '2017-5-9'
+      regions: ["ru"]
+    expect:
+      name: "День Победы"
+  - given:
+      date: '2017-6-12'
+      regions: ["ru"]
+    expect:
+      name: "День России"
+  - given:
+      date: '2017-8-22'
+      regions: ["ru"]
+    expect:
+      name: "День Государственного флага Российской Федерации"
+  - given:
+      date: '2017-11-4'
+      regions: ["ru"]
+    expect:
+      name: "День народного единства"

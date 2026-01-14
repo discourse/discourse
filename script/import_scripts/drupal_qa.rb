@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "mysql2"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-require File.expand_path(File.dirname(__FILE__) + "/drupal.rb")
+require_relative "base"
+require_relative "drupal"
 
 class ImportScripts::DrupalQA < ImportScripts::Drupal
   def categories_query

@@ -27,9 +27,10 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    if Rails.env.test? || Rails.env.development?
+    if Rails.env.local?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
       get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
+      get "/bootstrap/site-settings-for-tests.js" => "bootstrap#site_settings_for_tests"
     end
 
     # This is not a valid production route and is causing routing errors to be raised in
@@ -71,6 +72,7 @@ Discourse::Application.routes.draw do
     get "finish-installation" => "finish_installation#index"
     get "finish-installation/register" => "finish_installation#register"
     post "finish-installation/register" => "finish_installation#register"
+    get "finish-installation/redirect-discourse-id" => "finish_installation#redirect_discourse_id"
     get "finish-installation/confirm-email" => "finish_installation#confirm_email"
     put "finish-installation/resend-email" => "finish_installation#resend_email"
 
@@ -99,8 +101,13 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
+    delete "admin/impersonate" => "admin/impersonate#destroy",
+           :constraints => ImpersonatorConstraint.new
+
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
+      get "search" => "search#index"
+      get "schema/:setting_name" => "admin#index"
 
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
@@ -139,6 +146,7 @@ Discourse::Application.routes.draw do
         delete "penalty_history", constraints: AdminConstraint.new
         put "suspend"
         put "delete_posts_batch"
+        post "delete_posts_decider"
         put "unsuspend"
         put "revoke_admin", constraints: AdminConstraint.new
         put "grant_admin", constraints: AdminConstraint.new
@@ -174,6 +182,7 @@ Discourse::Application.routes.draw do
           :as => :user_show
       get "users/:id/:username/badges" => "users#show"
       get "users/:id/:username/tl3_requirements" => "users#show"
+      get "users/settings" => "site_settings#index"
 
       post "users/sync_sso" => "users#sync_sso", :constraints => AdminConstraint.new
 
@@ -181,14 +190,8 @@ Discourse::Application.routes.draw do
 
       resources :email, only: [:index], constraints: AdminConstraint.new do
         collection do
+          get "server-settings" => "email#server_settings"
           post "test"
-          get "sent"
-          get "skipped"
-          get "bounced"
-          get "received"
-          get "rejected"
-          get "/incoming/:id" => "email#incoming"
-          get "/incoming_from_bounced/:id" => "email#incoming_from_bounced"
           get "preview-digest" => "email#preview_digest"
           post "send-digest" => "email#send_digest"
           get "smtp_should_reject"
@@ -202,6 +205,18 @@ Discourse::Application.routes.draw do
                    id: /[0-9a-z_.]+/,
                  }
           put "templates/(:id)" => "email_templates#update", :constraints => { id: /[0-9a-z_.]+/ }
+        end
+      end
+
+      resources :email_logs, only: :index, constraints: AdminConstraint.new, path: "/email-logs" do
+        collection do
+          get "sent"
+          get "skipped"
+          get "bounced"
+          get "received"
+          get "rejected"
+          get "incoming/:id" => "email_logs#incoming"
+          get "incoming_from_bounced/:id" => "email_logs#incoming_from_bounced"
         end
       end
 
@@ -240,6 +255,7 @@ Discourse::Application.routes.draw do
           get "preview" => "themes#preview"
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
+          put "site-setting" => "themes#update_theme_site_setting"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
         end
 
@@ -388,29 +404,61 @@ Discourse::Application.routes.draw do
         end
       end
 
+      resources :groups, only: %i[index], constants: AdminConstraint.new do
+        collection { get "settings" => "site_settings#index" }
+      end
+
       get "search/all" => "search#index"
 
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
+        get "analytics-and-seo" => "site_settings#index"
+        get "content" => "site_settings#index"
+        get "content/settings" => "site_settings#index"
+        get "content/sharing" => "site_settings#index"
+        get "content/posts-and-topics" => "site_settings#index"
+        get "content/stats-and-thresholds" => "site_settings#index"
         get "developer" => "site_settings#index"
-        get "fonts" => "site_settings#index"
         get "files" => "site_settings#index"
+        get "interface" => "site_settings#index"
         get "legal" => "site_settings#index"
         get "localization" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
-        get "logo" => "site_settings#index"
+        get "login-and-authentication/authenticators" => "site_settings#index"
+        get "login-and-authentication/discourseconnect" => "site_settings#index"
+        get "login-and-authentication/discourse-id" => "discourse_id#show"
+        post "login-and-authentication/discourse-id/regenerate" =>
+               "discourse_id#regenerate_credentials"
+        put "login-and-authentication/discourse-id/settings" => "discourse_id#update_settings"
+
+        DiscoursePluginRegistry.admin_config_login_routes.each do |location|
+          get "login-and-authentication/#{location}" => "site_settings#index"
+        end
+
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
         get "onebox" => "site_settings#index"
-        get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
+        get "site-admin" => "site_settings#index"
         get "spam" => "site_settings#index"
         get "user-api" => "site_settings#index"
+        get "user-defaults" => "site_settings#index"
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
+        get "/logo" => "logo#index"
+        get "/fonts" => "fonts#index"
+        get "/welcome-banner/themes-with-setting" => "welcome_banner#themes_with_setting"
+        get "/welcome-banner" => "welcome_banner#index"
+        put "/logo" => "logo#update"
+        put "/fonts" => "fonts#update"
+        get "colors/:id" => "color_palettes#show"
+        get "colors" => "color_palettes#index"
+        get "upcoming-changes" => "upcoming_changes#index"
+        put "upcoming-changes/groups" => "upcoming_changes#update_groups"
+        put "upcoming-changes/toggle" => "upcoming_changes#toggle_change"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -422,11 +470,15 @@ Discourse::Application.routes.draw do
           collection { put "/" => "about#update" }
         end
 
-        resources :look_and_feel,
-                  path: "look-and-feel",
+        resources :customize,
+                  path: "customize",
                   constraints: AdminConstraint.new,
                   only: %i[index] do
-          collection { get "/themes" => "look_and_feel#themes" }
+          collection do
+            get "/themes" => "customize#themes"
+            get "/components" => "customize#components"
+            get "/theme-site-settings" => "customize#theme_site_settings"
+          end
         end
       end
 
@@ -465,7 +517,7 @@ Discourse::Application.routes.draw do
           format: :js,
         }
 
-    resources :session, id: RouteFormat.username, only: %i[create destroy become] do
+    resources :session, id: RouteFormat.username, only: %i[create destroy] do
       get "become" if !Rails.env.production?
 
       collection { post "forgot_password" }
@@ -488,9 +540,22 @@ Discourse::Application.routes.draw do
           action_id: /[a-z\_]+/,
         }
     put "review/:reviewable_id" => "reviewables#update", :constraints => { reviewable_id: /\d+/ }
+    put "review/:reviewable_id/scrub" => "reviewables#scrub",
+        :constraints => {
+          reviewable_id: /\d+/,
+        }
+    post "review/:reviewable_id/notes" => "reviewable_notes#create",
+         :constraints => {
+           reviewable_id: /\d+/,
+         }
     delete "review/:reviewable_id" => "reviewables#destroy",
            :constraints => {
              reviewable_id: /\d+/,
+           }
+    delete "review/:reviewable_id/notes/:note_id" => "reviewable_notes#destroy",
+           :constraints => {
+             reviewable_id: /\d+/,
+             note_id: /\d+/,
            }
 
     resources :reviewable_claimed_topics, only: %i[create destroy]
@@ -520,6 +585,7 @@ Discourse::Application.routes.draw do
     post "login" => "static#enter"
 
     get "login" => "static#show", :id => "login"
+    get "login-required" => "static#show", :id => "login"
     get "login-preferences" => "static#show", :id => "login"
     get "signup" => "static#show", :id => "signup"
     get "password-reset" => "static#show", :id => "password_reset"
@@ -662,7 +728,7 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
             group_name: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/tags/:tag_id" => "list#private_messages_tag",
+      get "#{root_path}/:username/messages/tags/:tag_name" => "list#private_messages_tag",
           :constraints => {
             username: RouteFormat.username,
           }
@@ -923,6 +989,11 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
+      put "#{root_path}/:username/remove-password" => "users#remove_password",
+          :format => :json,
+          :constraints => {
+            username: RouteFormat.username,
+          }
     end
 
     get "user-badges/:username.json" => "user_badges#username",
@@ -966,7 +1037,7 @@ Discourse::Application.routes.draw do
         :constraints => {
           hostname: /[\w\.-]+/,
           version: /\h{40}/,
-          theme_id: /([0-9]+)?/,
+          theme_id: /(-?[0-9]+)?/,
           format: :js,
         }
     get "svg-sprite/search/:keyword" => "svg_sprite#search",
@@ -1111,18 +1182,9 @@ Discourse::Application.routes.draw do
 
     %w[groups g].each do |root_path|
       resources :groups,
-                only: %i[index show new edit update],
+                only: %i[index new edit update],
                 id: RouteFormat.username,
                 path: root_path do
-        get "posts.rss" => "groups#posts_feed", :format => :rss
-        get "mentions.rss" => "groups#mentions_feed", :format => :rss
-
-        get "members"
-        get "posts"
-        get "mentions"
-        get "mentionable"
-        get "messageable"
-        get "logs" => "groups#histories"
         post "test_email_settings"
 
         collection do
@@ -1132,34 +1194,50 @@ Discourse::Application.routes.draw do
         end
 
         member do
-          %w[
-            activity
-            activity/:filter
-            requests
-            messages
-            messages/inbox
-            messages/archive
-            manage
-            manage/profile
-            manage/members
-            manage/membership
-            manage/interaction
-            manage/email
-            manage/categories
-            manage/tags
-            manage/logs
-          ].each { |path| get path => "groups#show" }
-
-          get "permissions" => "groups#permissions"
-          put "members" => "groups#add_members"
           put "owners" => "groups#add_owners"
           put "join" => "groups#join"
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"
-          post "request_membership" => "groups#request_membership"
           put "handle_membership_request" => "groups#handle_membership_request"
-          post "notifications" => "groups#set_notifications"
+          put "members" => "groups#add_members"
         end
+      end
+
+      get "#{root_path}/by-id/:id" => "groups#show"
+
+      scope path: "#{root_path}/:name", constraints: { name: RouteFormat.username } do
+        get "/" => "groups#show"
+        get "activity" => "groups#show"
+        get "activity/:filter" => "groups#show"
+        get "requests" => "groups#show"
+        get "messages" => "groups#show"
+        get "messages/inbox" => "groups#show"
+        get "messages/archive" => "groups#show"
+        get "manage" => "groups#show"
+        get "manage/profile" => "groups#show"
+        get "manage/members" => "groups#show"
+        get "manage/membership" => "groups#show"
+        get "manage/interaction" => "groups#show"
+        get "manage/email" => "groups#show"
+        get "manage/categories" => "groups#show"
+        get "manage/tags" => "groups#show"
+        get "manage/logs" => "groups#show"
+        get "permissions" => "groups#permissions"
+
+        post "request_membership" => "groups#request_membership"
+
+        post "notifications" => "groups#set_notifications",
+             :as => :"#{root_path}_group_set_notifications"
+
+        get "posts.rss" => "groups#posts_feed", :format => :rss
+        get "mentions.rss" => "groups#mentions_feed", :format => :rss
+
+        get "members" => "groups#members"
+        get "posts" => "groups#posts"
+        get "mentions" => "groups#mentions"
+        get "mentionable" => "groups#mentionable"
+        get "messageable" => "groups#messageable"
+        get "logs" => "groups#histories"
       end
     end
 
@@ -1195,6 +1273,18 @@ Discourse::Application.routes.draw do
       end
     end
 
+    get "/post_localizations/:id" => "post_localizations#show"
+    post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
+    delete "/post_localizations/destroy", to: "post_localizations#destroy"
+
+    get "topic_localizations/:topic_id/:locale" => "topic_localizations#show"
+    post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
+    delete "topic_localizations/destroy", to: "topic_localizations#destroy"
+
+    get "/tag_localizations/:id" => "tag_localizations#show"
+    post "tag_localizations/create_or_update", to: "tag_localizations#create_or_update"
+    delete "tag_localizations/destroy", to: "tag_localizations#destroy"
+
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"
     end
@@ -1211,6 +1301,7 @@ Discourse::Application.routes.draw do
 
     match "/auth/failure", to: "users/omniauth_callbacks#failure", via: %i[get post]
     get "/auth/:provider", to: "users/omniauth_callbacks#confirm_request"
+    post "/auth/discourse_id/revoke" => "users/discourse_id#revoke"
     match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: %i[get post]
     get "/associate/:token",
         to: "users/associate_accounts#connect_info",
@@ -1364,7 +1455,7 @@ Discourse::Application.routes.draw do
           :defaults => {
             format: :json,
           }
-      get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag",
+      get "private-messages-tags/:username/:tag_name.json" => "list#private_messages_tag",
           :as => "topics_private_messages_tag",
           :defaults => {
             format: :json,
@@ -1541,17 +1632,11 @@ Discourse::Application.routes.draw do
 
     get "message-bus/poll" => "message_bus#poll"
 
-    resources :drafts, only: %i[index create show destroy]
+    resources :drafts, only: %i[index create show destroy] do
+      collection { delete :bulk_destroy }
+    end
 
     get "/service-worker.js" => "static#service_worker_asset", :format => :js
-    if service_worker_asset = Rails.application.assets_manifest.assets["service-worker.js"]
-      # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
-      # Normally the browser will wait until a user closes all tabs that contain the
-      # current site before updating to a new Service Worker.
-      # Support the old Service Worker path to avoid routing error filling up the
-      # logs.
-      get service_worker_asset => "static#service_worker_asset", :format => :js
-    end
 
     get "cdn_asset/:site/*path" => "static#cdn_asset",
         :format => false,
@@ -1567,10 +1652,14 @@ Discourse::Application.routes.draw do
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
+    get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
+    # Apple accepts either of these paths for the apple-app-site-association file
+    # Might as well support both
     get "apple-app-site-association" => "metadata#app_association_ios", :format => false
+    get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
-    scope "/tag/:tag_id" do
+    scope "/tag/:tag_name" do
       constraints format: :json do
         get "/" => "tags#show", :as => "tag_show"
         get "/info" => "tags#info"
@@ -1601,47 +1690,49 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       post "/upload" => "tags#upload"
+      post "/bulk_create" => "tags#bulk_create"
       get "/unused" => "tags#list_unused"
       delete "/unused" => "tags#destroy_unused"
 
-      constraints(tag_id: %r{[^/]+?}, format: /json|rss/) do
+      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
-            get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_none_show_#{filter}",
                 :defaults => {
                   no_subcategories: true,
                 }
-            get "/all/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/all/:tag_name/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_all_show_#{filter}",
                 :defaults => {
                   no_subcategories: false,
                 }
           end
 
-          get "/none/:tag_id" => "tags#show",
+          get "/none/:tag_name" => "tags#show",
               :as => "tag_category_none_show",
               :defaults => {
                 no_subcategories: true,
               }
-          get "/all/:tag_id" => "tags#show",
+          get "/all/:tag_name" => "tags#show",
               :as => "tag_category_all_show",
               :defaults => {
                 no_subcategories: false,
               }
 
           Discourse.filters.each do |filter|
-            get "/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/:tag_name/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_show_#{filter}"
           end
 
-          get "/:tag_id" => "tags#show", :as => "tag_category_show"
+          get "/:tag_name" => "tags#show", :as => "tag_category_show"
         end
 
-        get "/intersection/:tag_id/*additional_tag_ids" => "tags#show", :as => "tag_intersection"
+        get "/intersection/:tag_name/*additional_tag_names" => "tags#show",
+            :as => "tag_intersection"
       end
 
-      get "*tag_id", to: redirect(relative_url_root + "tag/%{tag_id}")
+      get "*tag_name", to: redirect(relative_url_root + "tag/%{tag_name}")
     end
 
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
@@ -1664,11 +1755,13 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
 
-    root to: "custom_homepage#index",
+    root to: "home_page#custom",
          constraints: HomePageConstraint.new("custom"),
-         as: "custom_index"
+         as: "home_page_custom"
 
-    get "/custom" => "custom_homepage#index"
+    root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
+
+    get "/custom" => "home_page#custom"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
@@ -1682,6 +1775,9 @@ Discourse::Application.routes.draw do
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
+
+    get "/dev-mode" => "dev_mode#index"
+    post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 
     get "/theme-qunit" => "qunit#theme"
     get "/theme-tests", to: redirect("/theme-qunit")
@@ -1718,16 +1814,19 @@ Discourse::Application.routes.draw do
 
     post "/pageview" => "pageview#index"
 
-    get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
-
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
 
     get "/emojis" => "emojis#index"
+    get "/emojis/search-aliases" => "emojis#search_aliases", :format => :json
 
     if Rails.env.test?
       # Routes that are only used for testing
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
+      get "/test_net_http_headers" => "test_requests#test_net_http_headers"
     end
+
+    # This catch-all route should always be last
+    get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end
 end

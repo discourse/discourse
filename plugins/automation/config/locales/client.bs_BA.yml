@@ -27,6 +27,12 @@ bs_BA:
         text:
           label: Poruka
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorije
+            tags:
+              label: Oznake
         user_badge_granted:
           fields:
             badge:
@@ -48,13 +54,13 @@ bs_BA:
           fields:
             restricted_tags:
               label: Oznake
-            restricted_category:
-              label: Kategorija
-            restricted_group:
-              label: Grupa
-            restricted_groups:
-              label: Groups
+            restricted_categories:
+              label: Kategorije
           created: Stvoreno
+          with_images: Images
+          with_links: Linkovi
+          with_code: Šifra
+          with_uploads: Uploads
         category_created_edited:
           fields:
             restricted_category:
@@ -115,6 +121,8 @@ bs_BA:
               label: ID teme
             user:
               label: User
+        set_topic_timer:
+          title: Podesi tajmer teme
       models:
         trigger:
           name:
@@ -128,7 +136,5 @@ bs_BA:
             label: Verzija
           status:
             label: Status
-          enabled:
-            label: Omogućen
           disabled:
             label: Neomogućen

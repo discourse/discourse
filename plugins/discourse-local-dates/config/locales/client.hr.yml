@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 hr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Lokalni datumi Discoursa"
   js:
     discourse_local_dates:
       relative_dates:
@@ -23,7 +28,7 @@ hr:
           timezones_title: Vremenske zone za prikazati
           timezones_description: Vremenske zone će se koristiti za prikaz datuma u predprikazu i rezervnom prikazu.
           recurring_title: Ponavljanje
-          recurring_description: "Definirajte ponavljanje događaja. Možete ručno urediti ponavljajuču opciju koju je izgenerirala forma, te koristiti neku od sljedećih ključnih riječi: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_description: "Definirajte ponavljanje događaja. Također možete ručno urediti opciju ponavljanja koju generira obrazac i koristiti jednu od sljedećih ključnih riječi: godine, kvartali, mjeseci, tjedni, dani, sati, minute, sekunde, milisekunde."
           recurring_none: Nema ponavljanja
           invalid_date: Nevažeći datum, provjerite ispravnost datuma i vremena
           date_title: Datum
@@ -41,4 +46,4 @@ hr:
             every_three_months: "Svaka tri mjeseca"
             every_six_months: "Svakih šest mjeseci"
             every_year: "Svake godine"
-      default_title: "%{site_name} Događaj"
+      default_title: "Događaj %{site_name}"

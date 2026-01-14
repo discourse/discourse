@@ -34,14 +34,13 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     fab!(:current_user) { Fabricate(:user, username: "guybrush", refresh_auto_groups: true) }
     fab!(:user_1) { Fabricate(:user, username: "lechuck") }
     fab!(:user_2) { Fabricate(:user, username: "elaine") }
-    fab!(:user_3) { Fabricate(:user) }
+    fab!(:user_3, :user)
     fab!(:group) { Fabricate(:public_group, users: [user_3]) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:target_usernames) { [user_1.username, user_2.username] }
     let(:name) { "" }
-    let(:icon_upload_id) { nil }
-    let(:params) { { target_usernames:, name:, icon_upload_id: } }
+    let(:params) { { target_usernames:, name: } }
     let(:dependencies) { { guardian: } }
 
     context "when all steps pass" do
@@ -58,14 +57,15 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         )
       end
 
-      it "makes all target users a member of the channel and updates all users to following" do
+      it "makes all target users a member of the channel and sets new memberships to following" do
         expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3)
         expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to match_array(
           [current_user.id, user_1.id, user_2.id],
         )
         result.channel.user_chat_channel_memberships.each do |membership|
+          should_follow = membership.user_id == current_user.id
           expect(membership).to have_attributes(
-            following: false,
+            following: should_follow,
             muted: false,
             notification_level: "always",
           )
@@ -141,11 +141,24 @@ RSpec.describe Chat::CreateDirectMessageChannel do
 
         context "when the channel has one user and no name" do
           let(:target_usernames) { [user_1.username] }
+          let(:existing_channel) { described_class.call(params:, **dependencies).channel }
 
           it "reuses the existing channel" do
-            existing_channel = described_class.call(params:, **dependencies).channel
-
             expect(result.channel.id).to eq(existing_channel.id)
+          end
+
+          it "respects membership settings for existing users" do
+            mention_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:mention]
+
+            membership =
+              Chat::UserChatChannelMembership.find_by(
+                user_id: user_1.id,
+                chat_channel_id: existing_channel.id,
+              )
+
+            membership.update!(muted: true, notification_level: mention_level)
+
+            expect { result }.not_to change { membership.reload.attributes }
           end
         end
 
@@ -170,14 +183,6 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           expect(result.channel.name).to eq(name)
         end
       end
-
-      context "when an icon_upload_id is given" do
-        let(:icon_upload_id) { 2 }
-
-        it "sets it as the channel icon_upload_id" do
-          expect(result.channel.icon_upload_id).to eq(icon_upload_id)
-        end
-      end
     end
 
     context "when target_usernames exceeds chat_max_direct_message_users" do
@@ -187,7 +192,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     end
 
     context "when the current user cannot make direct messages" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before { SiteSetting.direct_message_enabled_groups = Fabricate(:group).id }
 

@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    user:
+      date_of_birth:
+        user_title: "I dag er det din geburtsdag!"
+        title: "I dag er det min geburtsdag!"
+        label: "Fødselsdato"
+      anniversary:
+        user_title: "I dag er det jubileum for når du tok del i gemenskapen!"
+        title: "I dag er det jubileum for når du tok del i denne gemenskapen!"
+    cakeday:
+      title: Kakedag
+      today: "I dag"
+      tomorrow: "I morgen"
+      upcoming: "Kommende"
+      all: "Alle"
+    birthdays:
+      title: "Geburtsdager"
+      month:
+        title: "Geburtsdager som skjer i måneden"
+        empty: "Ingen brukere har bursdag denne måneden."
+      upcoming:
+        title: "Geburtsdager for %{start_date} - %{end_date}"
+        empty: "Ingen brukere har bursdag de neste 7 dagene."
+      today:
+        title: "Geburtsdager for %{date}"
+        empty: "Ingen brukere har bursdag i dag."
+      tomorrow:
+        empty: "Ingen brukere har bursdag i morgen."
+    anniversaries:
+      title: "Jubileum"
+      month:
+        title: "Jubileum som skjer i måneden"
+        empty: "Ingen brukere feirer jubileum denne måneden."
+      upcoming:
+        title: "Jubileum for %{start_date} - %{end_date}"
+        empty: "Ingen brukere har jubileum de neste 7 dagene."
+      today:
+        title: "Jubileum for %{date}"
+        empty: "Ingen brukere feirer jubileum i dag."
+      tomorrow:
+        empty: "Ingen brukere feirer jubileum i morgen."

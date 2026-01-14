@@ -3,7 +3,7 @@
 RSpec.describe TagsController do
   fab!(:user)
   fab!(:admin)
-  fab!(:regular_user) { Fabricate(:trust_level_4) }
+  fab!(:regular_user, :trust_level_4)
   fab!(:moderator)
   fab!(:category)
   fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
@@ -39,13 +39,13 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
-        serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == test_tag.name }
 
         expect(serialized_tag["count"]).to eq(0)
         expect(serialized_tag["pm_count"]).to eq(nil)
         expect(serialized_tag["pm_only"]).to eq(false)
 
-        serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == topic_tag.name }
 
         expect(serialized_tag["count"]).to eq(1)
         expect(serialized_tag["pm_count"]).to eq(nil)
@@ -82,17 +82,17 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
-        serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == test_tag.name }
 
         expect(serialized_tag["pm_count"]).to eq(0)
         expect(serialized_tag["pm_only"]).to eq(false)
 
-        serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == topic_tag.name }
 
         expect(serialized_tag["pm_count"]).to eq(5)
         expect(serialized_tag["pm_only"]).to eq(false)
 
-        serialized_tag = tags.find { |t| t["id"] == pm_only_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == pm_only_tag.name }
 
         expect(serialized_tag["pm_count"]).to eq(1)
         expect(serialized_tag["pm_only"]).to eq(true)
@@ -136,11 +136,11 @@ RSpec.describe TagsController do
           get "/tags.json"
           tags = response.parsed_body["tags"]
 
-          serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+          serialized_tag = tags.find { |t| t["name"] == topic_tag.name }
           expect(serialized_tag["count"]).to eq(2)
           expect(serialized_tag["pm_count"]).to eq(5)
 
-          serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+          serialized_tag = tags.find { |t| t["name"] == test_tag.name }
           expect(serialized_tag["count"]).to eq(0)
           expect(serialized_tag["pm_count"]).to eq(1)
         end
@@ -164,9 +164,10 @@ RSpec.describe TagsController do
 
         it "hides pm tags" do
           get "/tags.json"
-          tags = response.parsed_body["tags"]
-          expect(tags.length).to eq(1)
-          expect(tags[0]["id"]).to eq(topic_tag.name)
+
+          expect(response.parsed_body["tags"]).to match(
+            [include(name: topic_tag.name, id: topic_tag.id)],
+          )
         end
       end
     end
@@ -185,8 +186,12 @@ RSpec.describe TagsController do
         expect(tags.length).to eq(0)
         group = response.parsed_body.dig("extras", "tag_groups")&.first
         expect(group).to be_present
-        expect(group["tags"].length).to eq(2)
-        expect(group["tags"].map { |t| t["id"] }).to contain_exactly(test_tag.name, topic_tag.name)
+        expect(group["tags"]).to match(
+          [
+            include(name: test_tag.name, id: test_tag.id),
+            include(name: topic_tag.name, id: topic_tag.id),
+          ],
+        )
       end
 
       it "does not result in N+1 queries with multiple tag_groups" do
@@ -406,7 +411,7 @@ RSpec.describe TagsController do
 
   describe "#show" do
     fab!(:tag) { Fabricate(:tag, name: "test") }
-    fab!(:topic_without_tags) { Fabricate(:topic) }
+    fab!(:topic_without_tags, :topic)
     fab!(:topic_with_tags) { Fabricate(:topic, tags: [tag]) }
 
     it "should return the right response" do
@@ -427,7 +432,15 @@ RSpec.describe TagsController do
 
     it "should handle synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
-      get "/tag/#{synonym.name}"
+      get "/tag/#{synonym.name}/l/top.json?period=daily"
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to match(%r{/tag/#{tag.name}/l/top.json\?period=daily})
+    end
+
+    it "is not creating infinite redirect loop when tag is a synonym of itself" do
+      tag.update!(target_tag_id: tag.id)
+
+      get "/tag/#{tag.name}/l/top.json?period=daily"
       expect(response.status).to eq(200)
     end
 
@@ -462,6 +475,27 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
         topic_with_two_tags.id,
+      )
+    end
+
+    it "puts the tag description in the meta description" do
+      described_tag = Fabricate(:tag, name: "test2", description: "This is a description")
+      get "/tag/#{described_tag.name}"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"#{described_tag.description}\"",
+      )
+    end
+
+    it "has a default description for tags without a description" do
+      get "/tag/test"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"Topics tagged #{tag.name}\"",
       )
     end
 
@@ -660,14 +694,63 @@ RSpec.describe TagsController do
       sign_in(admin)
     end
 
+    it "shows an unsupported error for tag id parameter" do
+      put "/tag/#{tag.name}.json", params: { tag: { id: "new-id" } }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        "Updating a tag name by `id` attribute is unsupported. Use the `name` attribute instead.",
+      )
+    end
+
     it "triggers a extensibility event" do
       event =
         DiscourseEvent
-          .track_events { put "/tag/#{tag.name}.json", params: { tag: { id: "hello" } } }
+          .track_events { put "/tag/#{tag.name}.json", params: { tag: { name: "hello" } } }
           .last
 
       expect(event[:event_name]).to eq(:tag_updated)
       expect(event[:params].first).to eq(tag)
+    end
+
+    it "updates the tag" do
+      put "/tag/#{tag.name}.json", params: { tag: { description: "New description" } }
+
+      expect(response.status).to eq(200)
+      expect(tag.reload.description).to eq("New description")
+    end
+
+    it "returns 403 for non-admins" do
+      sign_in(regular_user)
+      put "/tag/#{tag.name}.json", params: { tag: { description: "New description" } }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 404 for non-existing tags" do
+      put "/tag/nonexistenttag.json", params: { tag: { description: "New description" } }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "logs the update into a UserHistory" do
+      put "/tag/#{tag.name}.json", params: { tag: { name: "new tag" } }
+
+      expect(response.status).to eq(200)
+
+      history = UserHistory.where(action: UserHistory.actions[:custom_staff]).last
+      expect(history).to have_attributes(
+        custom_type: "renamed_tag",
+        acting_user_id: admin.id,
+        previous_value: tag.name,
+        new_value: "new-tag",
+      )
+    end
+
+    it "does not log a UserHistory if the tag name is not changed" do
+      expect {
+        put "/tag/#{tag.name}.json", params: { tag: { description: "Updated description" } }
+      }.to_not change { UserHistory.count }
     end
   end
 
@@ -711,7 +794,7 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         tag = response.parsed_body["tags"]
-        expect(tag[0]["id"]).to eq("test")
+        expect(tag[0]["name"]).to eq("test")
       end
     end
 
@@ -724,7 +807,7 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         tag = response.parsed_body["tags"]
-        expect(tag[0]["id"]).to eq("test")
+        expect(tag[0]["name"]).to eq("test")
       end
 
       it "can see their own pm tags" do
@@ -733,7 +816,7 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         tag = response.parsed_body["tags"]
-        expect(tag[0]["id"]).to eq("test")
+        expect(tag[0]["name"]).to eq("test")
       end
 
       it "works with usernames with a period" do
@@ -748,8 +831,8 @@ RSpec.describe TagsController do
 
   describe "#show_latest" do
     fab!(:tag)
-    fab!(:other_tag) { Fabricate(:tag) }
-    fab!(:third_tag) { Fabricate(:tag) }
+    fab!(:other_tag, :tag)
+    fab!(:third_tag, :tag)
 
     fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
     fab!(:multi_tag_topic) { Fabricate(:topic, tags: [tag, other_tag]) }
@@ -784,7 +867,7 @@ RSpec.describe TagsController do
         multi_tag_topic
         all_tag_topic
 
-        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_ids: other_tag.name }
+        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_names: other_tag.name }
 
         expect(response.status).to eq(200)
 
@@ -801,7 +884,7 @@ RSpec.describe TagsController do
 
         get "/tag/#{tag.name}/l/latest.json",
             params: {
-              additional_tag_ids: "#{other_tag.name}/#{third_tag.name}",
+              additional_tag_names: "#{other_tag.name}/#{third_tag.name}",
             }
 
         expect(response.status).to eq(200)
@@ -815,7 +898,7 @@ RSpec.describe TagsController do
       it "does not find any tags when a tag which doesn't exist is passed" do
         single_tag_topic
 
-        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_ids: "notatag" }
+        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_names: "notatag" }
 
         expect(response.status).to eq(200)
 
@@ -981,21 +1064,27 @@ RSpec.describe TagsController do
 
     context "with tagging enabled" do
       it "can return some tags" do
-        tag_names = %w[stuff stinky stumped]
-        tag_names.each { |name| Fabricate(:tag, name: name) }
+        stuff = Fabricate(:tag, name: "stuff")
+        stumped = Fabricate(:tag, name: "stumped")
+        Fabricate(:tag, name: "stinky")
+
         get "/tags/filter/search.json", params: { q: "stu" }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(%w[stuff stumped])
+        expect(response.parsed_body["results"]).to match(
+          [include(name: "stuff", id: stuff.id), include(name: "stumped", id: stumped.id)],
+        )
       end
 
       it "returns tags ordered by public_topic_count, and prioritises exact matches" do
-        Fabricate(:tag, name: "tag1", public_topic_count: 10, staff_topic_count: 10)
-        Fabricate(:tag, name: "tag2", public_topic_count: 100, staff_topic_count: 100)
-        Fabricate(:tag, name: "tag", public_topic_count: 1, staff_topic_count: 1)
+        tag = Fabricate(:tag, name: "tag", public_topic_count: 1, staff_topic_count: 1)
+        tag1 = Fabricate(:tag, name: "tag1", public_topic_count: 10, staff_topic_count: 10)
+        tag2 = Fabricate(:tag, name: "tag2", public_topic_count: 100, staff_topic_count: 100)
 
         get "/tags/filter/search.json", params: { q: "tag", limit: 2 }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(%w[tag tag2])
+        expect(response.parsed_body["results"]).to match(
+          [include(name: tag.name, id: tag.id), include(name: tag2.name, id: tag2.id)],
+        )
       end
 
       context "with category restriction" do
@@ -1036,7 +1125,8 @@ RSpec.describe TagsController do
           Fabricate(:tag, name: "nope")
           get "/tags/filter/search.json", params: { categoryId: category.id }
           expect(response.status).to eq(200)
-          expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq([yup.name])
+
+          expect(response.parsed_body["results"]).to match([include(name: yup.name, id: yup.id)])
         end
       end
 
@@ -1046,17 +1136,18 @@ RSpec.describe TagsController do
 
         it "can return synonyms" do
           get "/tags/filter/search.json", params: { q: "plant" }
+
           expect(response.status).to eq(200)
-          expect(response.parsed_body["results"].map { |j| j["id"] }).to contain_exactly(
-            "plant",
-            "plants",
+          expect(response.parsed_body["results"]).to match(
+            [include(name: tag.name, id: tag.id), include(name: synonym.name, id: synonym.id)],
           )
         end
 
         it "can omit synonyms" do
           get "/tags/filter/search.json", params: { q: "plant", excludeSynonyms: "true" }
           expect(response.status).to eq(200)
-          expect(response.parsed_body["results"].map { |j| j["id"] }).to contain_exactly("plant")
+
+          expect(response.parsed_body["results"]).to match([include(name: tag.name, id: tag.id)])
         end
 
         it "can return a message about synonyms not being allowed" do
@@ -1072,31 +1163,40 @@ RSpec.describe TagsController do
 
       it "matches tags after sanitizing input" do
         Fabricate(:tag, name: "yup")
-        Fabricate(:tag, name: "nope")
+        nope = Fabricate(:tag, name: "nope")
+
         get "/tags/filter/search.json", params: { q: "N/ope" }
+
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(["nope"])
+        expect(response.parsed_body["results"]).to match([include(name: nope.name, id: nope.id)])
       end
 
       it "can return tags that are in secured categories but are allowed to be used" do
         c = Fabricate(:private_category, group: Fabricate(:group))
-        Fabricate(:topic, category: c, tags: [Fabricate(:tag, name: "cooltag")])
+        tag = Fabricate(:tag, name: "cooltag")
+        Fabricate(:topic, category: c, tags: [tag])
+
         get "/tags/filter/search.json", params: { q: "cool" }
+
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(["cooltag"])
+        expect(response.parsed_body["results"]).to match([include(name: tag.name, id: tag.id)])
       end
 
       it "supports Chinese and Russian" do
-        tag_names = %w[房地产 тема-в-разработке]
-        tag_names.each { |name| Fabricate(:tag, name: name) }
+        chinese_tag = Fabricate(:tag, name: "房屋买卖")
+        russian_tag = Fabricate(:tag, name: "тестовая-тема")
 
         get "/tags/filter/search.json", params: { q: "房" }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(["房地产"])
+        expect(response.parsed_body["results"]).to match(
+          [include(name: chinese_tag.name, id: chinese_tag.id)],
+        )
 
         get "/tags/filter/search.json", params: { q: "тема" }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(["тема-в-разработке"])
+        expect(response.parsed_body["results"]).to match(
+          [include(name: russian_tag.name, id: russian_tag.id)],
+        )
       end
 
       it "can return all the results" do
@@ -1112,9 +1212,13 @@ RSpec.describe TagsController do
             }
 
         expect(response.status).to eq(200)
-        expect_same_tag_names(
-          response.parsed_body["results"].map { |j| j["id"] },
-          %w[common1 common2 group1tag group1tag2],
+        expect(response.parsed_body["results"]).to match(
+          [
+            include(name: "common1"),
+            include(name: "common2"),
+            include(name: "group1tag"),
+            include(name: "group1tag2"),
+          ],
         )
       end
 
@@ -1293,6 +1397,47 @@ RSpec.describe TagsController do
         expect(Tag.find_by_name("tag4").tag_groups.pluck(:name)).to contain_exactly("taggroup1")
       end
 
+      it "does not fail if tags already exist" do
+        Fabricate(:tag, name: "TAG1")
+        Fabricate(:tag_group, name: "TAGGROUP1")
+
+        sign_in(moderator)
+
+        post "/tags/upload.json", params: { file: file, name: filename }
+
+        expect(response.status).to eq(200)
+        expect(Tag.pluck(:name)).to contain_exactly(
+          "TAG1",
+          "capitaltag2",
+          "spaced-tag",
+          "tag3",
+          "tag4",
+        )
+        expect(Tag.find_by_name("tag3").tag_groups.pluck(:name)).to contain_exactly("TAGGROUP1")
+        expect(Tag.find_by_name("tag4").tag_groups.pluck(:name)).to contain_exactly("TAGGROUP1")
+      end
+
+      describe "with `SiteSetting.force_lowercase_tags = false" do
+        before { SiteSetting.force_lowercase_tags = false }
+        it "does not fail if tags already exist" do
+          Fabricate(:tag, name: "tag1")
+          Fabricate(:tag, name: "CAPITALTAG2")
+          Fabricate(:tag, name: "tag3")
+          sign_in(moderator)
+
+          post "/tags/upload.json", params: { file: file, name: filename }
+
+          expect(response.status).to eq(200)
+          expect(Tag.pluck(:name)).to contain_exactly(
+            "tag1",
+            "CAPITALTAG2",
+            "spaced-tag",
+            "tag3",
+            "tag4",
+          )
+        end
+      end
+
       it "fails gracefully with invalid input" do
         sign_in(moderator)
 
@@ -1312,10 +1457,17 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    it "fails if not staff user" do
+    it "fails if user not in allowed group" do
       sign_in(user)
       post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
       expect(response.status).to eq(403)
+    end
+
+    it "succeeds when user in allowed group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
+      expect(response.status).to eq(200)
     end
 
     context "when signed in as admin" do

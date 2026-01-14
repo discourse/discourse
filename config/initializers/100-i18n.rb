@@ -16,7 +16,7 @@ Rails.application.reloader.to_prepare do
   unless Rails.env.test?
     MessageBus.subscribe("/i18n-flush") do
       I18n.reload!
-      ExtraLocalesController.clear_cache!
+      ExtraLocalesController.clear_cache!(all_sites: true)
     end
   end
 end

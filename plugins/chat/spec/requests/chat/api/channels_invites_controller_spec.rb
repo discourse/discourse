@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsInvitesController do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
 
   before do
     SiteSetting.chat_enabled = true
@@ -51,7 +51,7 @@ RSpec.describe Chat::Api::ChannelsInvitesController do
     end
 
     describe "current user can't view channel" do
-      fab!(:channel_1) { Fabricate(:private_category_channel) }
+      fab!(:channel_1, :private_category_channel)
 
       it "returns a 403" do
         post "/chat/api/channels/#{channel_1.id}/invites?user_ids=#{user_1.id},#{user_2.id}"

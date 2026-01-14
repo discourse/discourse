@@ -4,7 +4,7 @@ require "excon"
 
 RSpec.describe Jobs::PushNotification do
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user2, :user)
   fab!(:post)
   let(:data) do
     {

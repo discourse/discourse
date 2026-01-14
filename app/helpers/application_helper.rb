@@ -26,10 +26,7 @@ module ApplicationHelper
       EmberENV: {
         FEATURES: {
         },
-        EXTEND_PROTOTYPES: {
-          Date: false,
-          String: false,
-        },
+        EXTEND_PROTOTYPES: false,
       },
       APP: {
         name: "discourse",
@@ -151,14 +148,14 @@ module ApplicationHelper
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil)
+  def preload_script_url(url, entrypoint: nil, type_module: false)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
     HTML
   end
 
@@ -178,8 +175,10 @@ module ApplicationHelper
 
   def html_classes
     list = []
-    list << (mobile_view? ? "mobile-view" : "desktop-view")
-    list << (mobile_device? ? "mobile-device" : "not-mobile-device")
+    unless SiteSetting.viewport_based_mobile_mode
+      list << (mobile_view? ? "mobile-view" : "desktop-view")
+      list << (mobile_device? ? "mobile-device" : "not-mobile-device")
+    end
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
@@ -270,6 +269,27 @@ module ApplicationHelper
     (request ? I18n.locale.to_s : SiteSetting.default_locale).sub("_", "-")
   end
 
+  def title_content
+    DiscoursePluginRegistry.apply_modifier(
+      :meta_data_content,
+      content_for(:title) || SiteSetting.title,
+      :title,
+      { url: request.fullpath },
+    )
+  end
+
+  def description_content
+    DiscoursePluginRegistry.apply_modifier(
+      :meta_data_content,
+      @description_meta || SiteSetting.site_description,
+      :description,
+      { url: request.fullpath },
+    )
+  end
+
+  def is_crawler_homepage?
+    request.path == "/" && use_crawler_layout?
+  end
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
@@ -283,20 +303,18 @@ module ApplicationHelper
     end
 
     if opts[:image].blank?
-      twitter_summary_large_image_url = SiteSetting.site_twitter_summary_large_image_url
+      x_summary_large_image_url = SiteSetting.site_x_summary_large_image_url
 
-      if twitter_summary_large_image_url.present?
-        opts[:twitter_summary_large_image] = twitter_summary_large_image_url
-      end
+      opts[:x_summary_large_image] = x_summary_large_image_url if x_summary_large_image_url.present?
 
       opts[:image] = SiteSetting.site_opengraph_image_url
     end
 
     # Use the correct scheme for opengraph/twitter image
     opts[:image] = get_absolute_image_url(opts[:image]) if opts[:image].present?
-    opts[:twitter_summary_large_image] = get_absolute_image_url(
-      opts[:twitter_summary_large_image],
-    ) if opts[:twitter_summary_large_image].present?
+    opts[:x_summary_large_image] = get_absolute_image_url(opts[:x_summary_large_image]) if opts[
+      :x_summary_large_image
+    ].present?
 
     result = []
     result << tag(:meta, property: "og:site_name", content: opts[:site_name] || SiteSetting.title)
@@ -309,6 +327,8 @@ module ApplicationHelper
     %i[url title description].each do |property|
       if opts[property].present?
         content = (property == :url ? opts[property] : gsub_emoji_to_unicode(opts[property]))
+        content =
+          DiscoursePluginRegistry.apply_modifier(:meta_data_content, content, property, opts)
         result << tag(:meta, { property: "og:#{property}", content: content }, nil, true)
         result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, true)
       end
@@ -340,21 +360,14 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url =
-      (
-        if opts[:twitter_summary_large_image].present?
-          opts[:twitter_summary_large_image]
-        else
-          opts[:image]
-        end
-      )
+    img_url = (opts[:x_summary_large_image].presence || opts[:image])
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
       img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
     end
 
-    if opts[:twitter_summary_large_image].present? && img_url.present?
+    if opts[:x_summary_large_image].present? && img_url.present?
       result << tag(:meta, name: "twitter:card", content: "summary_large_image")
       result << tag(:meta, name: "twitter:image", content: img_url)
     elsif opts[:image].present? && img_url.present?
@@ -380,6 +393,13 @@ module ApplicationHelper
       }
       content_tag(:script, MultiJson.dump(json).html_safe, type: "application/ld+json")
     end
+  end
+
+  def discourse_track_view_session_tag
+    return if !SiteSetting.trigger_browser_pageview_events
+    <<~HTML.html_safe
+      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
+    HTML
   end
 
   def gsub_emoji_to_unicode(str)
@@ -438,6 +458,8 @@ module ApplicationHelper
     if current_user && !crawler_layout?
       params.key?(:print)
     else
+      return false if !current_user && SiteSetting.login_required?
+
       crawler_layout? || !mobile_view? || !modern_mobile_device?
     end
   end
@@ -501,20 +523,44 @@ module ApplicationHelper
     CategoryBadge.html_for(category, opts).html_safe
   end
 
-  def self.all_connectors
-    @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
+  SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES = [Rails.root.join("plugins/").to_s]
+  private_constant :SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES
+
+  if Rails.env.test?
+    SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES << Rails.root.join("spec/fixtures/plugins/").to_s
   end
+
+  SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES =
+    SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES.each_with_object({}) do |plugins_prefix, connectors|
+      Dir
+        .glob("#{plugins_prefix}*/app/views/connectors/**/*.html.erb")
+        .each do |template_path|
+          template_path =~ Regexp.new("/connectors/(.*)/.*\.html\.erb$")
+          outlet_name = Regexp.last_match(1)
+          connectors[outlet_name] ||= []
+
+          connectors[outlet_name] << begin
+            ActionView::Template.new(
+              File.read(template_path),
+              "discourse_plugin_outlet__#{name}",
+              ActionView::Template.handler_for_extension("erb"),
+              locals: [],
+              format: :html,
+              virtual_path: template_path,
+            )
+          end
+        end
+    end
+  private_constant :SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES
 
   def server_plugin_outlet(name, locals: {})
     return "" if !GlobalSetting.load_plugins?
+    return "" if !SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES.key?(name)
 
-    matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
-    erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
-    return "" if erbs.blank?
-
-    result = +""
-    erbs.each { |erb| result << render(inline: File.read(erb), locals: locals) }
-    result.html_safe
+    SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES[name]
+      .map { |template| render template:, locals: }
+      .join
+      .html_safe
   end
 
   def topic_featured_link_domain(link)
@@ -541,35 +587,39 @@ module ApplicationHelper
     @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
   end
 
+  def user_scheme_id
+    return @user_scheme_id if defined?(@user_scheme_id)
+    scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    @user_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+  end
+
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
 
-    custom_user_scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
-    if custom_user_scheme_id && ColorScheme.find_by_id(custom_user_scheme_id)
-      return custom_user_scheme_id
-    end
-
+    return user_scheme_id if user_scheme_id
     return if theme_id.blank?
 
     @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
+  def user_dark_scheme_id
+    return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
+    scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
+    @user_dark_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+  end
+
   def dark_scheme_id
-    if SiteSetting.use_overhauled_theme_color_palette
-      scheme_id
-    else
-      cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
-        SiteSetting.default_dark_mode_color_scheme_id
-    end
+    user_dark_scheme_id ||
+      (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
   end
 
   def current_homepage
     current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
-  def build_plugin_html(name)
+  def build_plugin_html(name, **kwargs)
     return "" unless allow_plugins?
-    DiscoursePluginRegistry.build_html(name, controller) || ""
+    DiscoursePluginRegistry.build_html(name, controller, **kwargs) || ""
   end
 
   # If there is plugin HTML return that, otherwise yield to the template
@@ -631,7 +681,13 @@ module ApplicationHelper
         stylesheet_manager
       end
 
-    manager.stylesheet_link_tag(name, "all", self.method(:add_resource_preload_list))
+    name = :"#{name}_rtl" if opts[:supports_rtl] && rtl?
+
+    manager.stylesheet_link_tag(
+      name,
+      opts[:media] || "all",
+      self.method(:add_resource_preload_list),
+    )
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -645,7 +701,6 @@ module ApplicationHelper
     if dark_scheme_id != -1
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
-        dark: SiteSetting.use_overhauled_theme_color_palette,
         fallback_to_base: false,
       )
     end
@@ -663,7 +718,6 @@ module ApplicationHelper
       dark_href =
         stylesheet_manager.color_scheme_stylesheet_link_tag_href(
           dark_scheme_id,
-          dark: SiteSetting.use_overhauled_theme_color_palette,
           fallback_to_base: false,
         )
     end
@@ -676,14 +730,16 @@ module ApplicationHelper
         light_href,
         light_elements_media_query,
         "light-scheme",
+        scheme_id,
       )
       result << color_scheme_stylesheet_link_tag(
         dark_href,
         dark_elements_media_query,
         "dark-scheme",
+        dark_scheme_id,
       )
     else
-      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme")
+      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme", scheme_id)
     end
     result.html_safe
   end
@@ -723,13 +779,21 @@ module ApplicationHelper
   end
 
   def forced_light_mode?
-    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "light" &&
-      !dark_color_scheme?
+    return false if dark_color_scheme?
+
+    cookie = cookies[:forced_color_mode]
+    return cookie == "light" if cookie.present?
+
+    !!(current_user&.user_option&.light_mode_forced?)
   end
 
   def forced_dark_mode?
-    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "dark" &&
-      dark_scheme_id != -1
+    return false if dark_scheme_id == -1
+
+    cookie = cookies[:forced_color_mode]
+    return cookie == "dark" if cookie.present?
+
+    !!(current_user&.user_option&.dark_mode_forced?)
   end
 
   def light_color_hex_for_name(name)
@@ -737,11 +801,7 @@ module ApplicationHelper
   end
 
   def dark_color_hex_for_name(name)
-    ColorScheme.hex_for_name(
-      name,
-      dark_scheme_id,
-      dark: SiteSetting.use_overhauled_theme_color_palette,
-    )
+    ColorScheme.hex_for_name(name, dark_scheme_id)
   end
 
   def dark_elements_media_query
@@ -786,10 +846,14 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_id),
+      media_optimization_bundle:
+        script_asset_path(
+          EmberCli.script_chunks["media-optimization-bundle"]&.first || "media-optimization-bundle",
+        ),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
-      user_color_scheme_id: scheme_id,
-      user_dark_scheme_id: dark_scheme_id,
+      user_color_scheme_id: user_scheme_id || -1,
+      user_dark_scheme_id: user_dark_scheme_id || -1,
     }
 
     if Rails.env.development?
@@ -797,6 +861,20 @@ module ApplicationHelper
 
       setup_data[:debug_preloaded_app_data] = true if ENV["DEBUG_PRELOADED_APP_DATA"]
       setup_data[:mb_last_file_change_id] = MessageBus.last_id("/file-change")
+    end
+
+    if Rails.env.test?
+      if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+        setup_data[:capybara_playwright_debug_client_settled] = true
+      end
+
+      # Allow controlling deprecation behavior in tests via environment variable
+      # Used to enforce or disable deprecation throwing for specific test runs
+      if ENV["EMBER_RAISE_ON_DEPRECATION"] == "1"
+        setup_data[:raise_on_deprecation] = true
+      elsif ENV["EMBER_RAISE_ON_DEPRECATION"] == "0"
+        setup_data[:raise_on_deprecation] = false
+      end
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]
@@ -859,7 +937,7 @@ module ApplicationHelper
       end
   end
 
-  def color_scheme_stylesheet_link_tag(href, media, css_class)
-    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>]
+  def color_scheme_stylesheet_link_tag(href, media, css_class, scheme_id)
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"#{scheme_id && scheme_id != -1 ? %[ data-scheme-id="#{scheme_id}"] : ""}/>]
   end
 end

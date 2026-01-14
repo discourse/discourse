@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Create channel", type: :system do
-  fab!(:category_1) { Fabricate(:category) }
+  fab!(:category_1, :category)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_modal) { PageObjects::Modals::ChatChannelCreate.new }
@@ -9,7 +9,7 @@ RSpec.describe "Create channel", type: :system do
   before { chat_system_bootstrap }
 
   context "when user cannot create channel" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     before { sign_in(current_user) }
 
@@ -20,7 +20,7 @@ RSpec.describe "Create channel", type: :system do
   end
 
   context "when can create channel" do
-    fab!(:current_admin_user) { Fabricate(:admin) }
+    fab!(:current_admin_user, :admin)
     before { sign_in(current_admin_user) }
 
     context "when selecting a category" do
@@ -50,7 +50,7 @@ RSpec.describe "Create channel", type: :system do
       end
 
       context "when category is private" do
-        fab!(:group_1) { Fabricate(:group) }
+        fab!(:group_1, :group)
         fab!(:private_category_1) { Fabricate(:private_category, group: group_1) }
 
         it "shows access hint when selecting the category" do
@@ -62,7 +62,7 @@ RSpec.describe "Create channel", type: :system do
         end
 
         context "when category is a child" do
-          fab!(:group_2) { Fabricate(:group) }
+          fab!(:group_2, :group)
           fab!(:child_category) do
             Fabricate(:private_category, parent_category_id: private_category_1.id, group: group_2)
           end
@@ -176,8 +176,8 @@ RSpec.describe "Create channel", type: :system do
         end
 
         context "for a private category" do
-          fab!(:group_1) { Fabricate(:group) }
-          fab!(:user_1) { Fabricate(:user) }
+          fab!(:group_1, :group)
+          fab!(:user_1, :user)
           fab!(:private_category) { Fabricate(:private_category, group: group_1) }
 
           before do
@@ -200,7 +200,7 @@ RSpec.describe "Create channel", type: :system do
           end
 
           context "when 2 groups can access the category" do
-            fab!(:group_2) { Fabricate(:group) }
+            fab!(:group_2, :group)
             fab!(:category_group_2) do
               CategoryGroup.create(group: group_2, category: private_category)
             end
@@ -218,12 +218,12 @@ RSpec.describe "Create channel", type: :system do
           end
 
           context "when > 2 groups can access the category" do
-            fab!(:group_2) { Fabricate(:group) }
+            fab!(:group_2, :group)
             fab!(:category_group_2) do
               CategoryGroup.create(group: group_2, category: private_category)
             end
 
-            fab!(:group_3) { Fabricate(:group) }
+            fab!(:group_3, :group)
             fab!(:category_group_3) do
               CategoryGroup.create(group: group_3, category: private_category)
             end

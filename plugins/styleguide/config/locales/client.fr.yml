@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Guide de style Discourse"
   js:
     styleguide:
       title: "Guide de style"
@@ -25,6 +30,8 @@ fr:
           title: "Date/heure"
         menus:
           title: "Menus"
+        multi_select:
+          title: "Sélection multiple"
         toasts:
           title: "Toasts"
         font_scale:
@@ -52,8 +59,6 @@ fr:
           title: "Navigation empilée"
         categories_list:
           title: "Liste des catégories"
-        topic_link:
-          title: "Lien vers le sujet"
         topic_list_item:
           title: "Élément de liste de sujets"
         topic_statuses:
@@ -62,8 +67,6 @@ fr:
           title: "Liste des sujets"
         basic_topic_list:
           title: "Liste des sujets de base"
-        footer_message:
-          title: "Message de pied de page"
         signup_cta:
           title: "CTA d'inscription"
         topic_timer_info:
@@ -82,8 +85,8 @@ fr:
           title: "Carte des sujets"
         site_header:
           title: "En-tête du site"
-        suggested_topics:
-          title: "Sujets suggérés"
+        more_topics:
+          title: "Plus de sujets"
         post_menu:
           title: "Menu du message"
         modal:

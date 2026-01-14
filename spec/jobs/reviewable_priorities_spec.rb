@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::ReviewablePriorities do
-  fab!(:user_0) { Fabricate(:user) }
-  fab!(:user_1) { Fabricate(:user) }
+  fab!(:user_0, :user)
+  fab!(:user_1, :user)
 
   def create_with_score(score, status: :approved)
     Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[status]).tap do |reviewable|

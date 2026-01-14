@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Astăzi este ziua ta!"
+        title: "Astăzi este ziua mea!"
+        label: "Data nașterii"
+      anniversary:
+        user_title: "Astăzi este aniversarea zilei în care te-ai alăturat comunității noastre!"
+        title: "Astăzi este aniversarea zilei în care m-am alăturat acestei comunități!"
+    cakeday:
+      title: Cakeday - zi de naștere
+      today: "Astăzi"
+      tomorrow: "Mâine"
+      upcoming: "Urmează"
+      all: "Toate"
+    birthdays:
+      title: "Zile de naștere"
+      month:
+        title: "Zile de naștere în luna"
+        empty: "Nu există utilizatori care să îşi sărbătorească zilele de naştere luna aceasta."
+      upcoming:
+        title: "Zile de naștere pentru %{start_date} - %{end_date}"
+        empty: "Nu există utilizatori care să-și sărbătorească zilele de naștere în următoarele 7 zile."
+      today:
+        title: "Zile de naștere pentru %{date}"
+        empty: "Nu există utilizatori care își sărbătoresc ziua de naștere astăzi."
+      tomorrow:
+        empty: "Nu există utilizatori care își sărbătoresc ziua de naștere mâine."
+    anniversaries:
+      title: "Aniversări"
+      month:
+        title: "Aniversări în luna"
+        empty: "Nu există utilizatori care să își sărbătorească aniversările în această lună."
+      upcoming:
+        title: "Aniversări între %{start_date} - %{end_date}"
+        empty: "Nu există utilizatori care să-și sărbătorească aniversările în următoarele 7 zile."
+      today:
+        title: "Aniversări pentru %{date}"
+        empty: "Nu există utilizatori care să își sărbătorească aniversările astăzi."
+      tomorrow:
+        empty: "Nu există utilizatori care să își sărbătorească aniversările mâine."

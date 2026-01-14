@@ -170,19 +170,19 @@ de:
           - Wir glauben an [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu jeder Zeit.
       onebox:
         instructions: |-
-          Kannst du als Nächstes einen dieser Links mit mir teilen? Antworte mit **einem Link in einer eigenen Zeile**, und er wird automatisch erweitert, um eine hübsche Zusammenfassung zu enthalten.
+          Als Nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile** und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.
 
-          Um einen Link zu kopieren, tippe und halte ihn auf dem Handy oder klicke mit der rechten Maustaste auf dein Zeigegerät:
+          Um einen Link zu kopieren, tippe und halte auf mobilen Geräten oder klicke rechts mit deiner Maus:
 
-          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
-          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
-          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
+          [https://de.wikipedia.org/wiki/Antiwitz](https://de.wikipedia.org/wiki/Antiwitz)
+          [https://de.wikipedia.org/wiki/Tetraphobie](https://de.wikipedia.org/wiki/Tetraphobie)
+          [https://de.wikipedia.org/wiki/Buzzword-Bingo](https://de.wikipedia.org/wiki/Buzzword-Bingo)
         reply: |-
           Schick! Das wird für die meisten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-Links funktionieren. Denke daran, dass er auf einer _ganz eigenen_ Zeile stehen muss, ohne etwas davor oder dahinter.
         not_found: |-
-          Sorry, ich konnte den Link in deiner Antwort nicht finden! :cry:
+          Entschuldige bitte, ich konnte den Link in deiner Antwort nicht finden! :cry:
 
-          Kannst du versuchen, den folgenden Link in einer eigenen Zeile in deiner nächsten Antwort einzufügen?
+          Kannst du versuchen, den folgenden Link in einer eigenen Zeile in deine nächste Antwort einzufügen?
 
           [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
@@ -400,11 +400,9 @@ de:
           Beachte, dass die Benachrichtigungsstufe automatisch auf „Verfolgen“ geändert wird, wenn du auf ein Thema antwortest oder ein Thema länger als ein paar Minuten liest. Du kannst dies in [deinen Benutzer-Einstellungen](%{base_uri}/my/preferences) ändern.
       poll:
         instructions: |-
-          Wusstest du, dass du eine Umfrage zu jedem Beitrag hinzufügen kannst? Versuche, das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor zu verwenden, um **eine Umfrage zu erstellen**.
+          Wusstest du, dass du eine Umfrage zu jedem Beitrag hinzufügen kannst? Versuche, das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> Symbol im Editor zu verwenden, um **eine Umfrage zu erstellen**.
         not_found: |-
-          Oops! Es war keine Umfrage in deiner Antwort.
-
-          Verwende das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad-Icon im Editor oder kopiere und füge die folgende Umfrage in deine nächste Antwort ein:
+          Oops! Es war keine Umfrage in deiner Antwort. Verwende das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> Symbol im Editor oder kopiere und füge die folgende Umfrage in deine nächste Antwort ein:
 
           ```text
           [poll]
@@ -428,12 +426,12 @@ de:
           - Wenn dein Beitrag viele optionale Details benötigt, die überwältigend sein könnten, wenn man sie alle auf einmal liest.
 
           [details=Wähle dies aus, um zu sehen, wie es funktioniert!]
-          1. Wähle das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor aus.
+          1. Wähle das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> Symbol im Editor aus.
           2. Wähle „Details ausblenden“ aus.
           3. Bearbeite die Zusammenfassung der Details und füge deinen Inhalt hinzu.
           [/details]
 
-          Kannst du das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor verwenden und einen Details-Abschnitt in deine nächste Antwort einfügen?
+          Kannst du das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> Symbol im Editor verwenden und einen Details-Abschnitt in deine nächste Antwort einfügen?
         not_found: |-
           Hast du Schwierigkeiten, ein Details-Widget zu erstellen? Versuche, Folgendes in deine nächste Antwort aufzunehmen:
 

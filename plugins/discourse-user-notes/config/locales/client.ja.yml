@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    user_notes:
+      title: "ユーザーメモ"
+      attach_note_description: "このユーザーに関するメモを追加します。このメモはスタッフのみに表示されます。"
+      delete_confirm: "このユーザーメモを削除してもよろしいですか？"

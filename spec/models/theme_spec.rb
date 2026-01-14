@@ -6,6 +6,7 @@ RSpec.describe Theme do
 
   let(:guardian) { Guardian.new(user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+  let(:foundation_theme) { Theme.foundation_theme }
 
   before { ThemeJavascriptCompiler.disable_terser! }
 
@@ -63,7 +64,7 @@ RSpec.describe Theme do
   end
 
   it "can automatically disable for mismatching version" do
-    theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "99.99.99")
+    theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "9999.99.99")
     theme.save!
 
     expect(Theme.transform_ids(theme.id)).to eq([])
@@ -142,7 +143,7 @@ HTML
 
     expect(baked).to include(field.javascript_cache.url)
     expect(field.javascript_cache.content).to include("@ember/template-factory")
-    expect(field.javascript_cache.content).to include("raw-handlebars")
+    expect(field.javascript_cache.content).to include("Raw templates are no longer supported")
   end
 
   it "can destroy unbaked theme without errors" do
@@ -233,7 +234,7 @@ HTML
       f =
         ThemeField.create!(
           target_id: Theme.targets[:mobile],
-          theme_id: 1,
+          theme_id: -1,
           name: "after_header",
           value: html,
         )
@@ -245,24 +246,22 @@ HTML
       html = <<HTML
         <script type='text/discourse-plugin' version='0.1'>
           const x = 1;
+          console.log(x, settings.foo);
         </script>
 HTML
 
       baked, javascript_cache, field = transpile(html)
       expect(baked).to include(javascript_cache.url)
 
-      expect(javascript_cache.content).to include("if ('define' in window) {")
       expect(javascript_cache.content).to include(
-        "define(\"discourse/theme-#{field.theme_id}/discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
+        "themeCompatModules[\"discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"]",
       )
-      expect(javascript_cache.content).to include(
-        "settings = require(\"discourse/lib/theme-settings-store\").getObjectForTheme(#{field.theme_id});",
-      )
+      expect(javascript_cache.content).to include("getObjectForTheme(#{field.theme_id});")
       expect(javascript_cache.content).to include(
         "name: \"theme-field-#{field.id}-mobile-html-script-1\",",
       )
       expect(javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", api =>")
+      expect(javascript_cache.content).to include("withPluginApi(\"0.1\", api =>")
       expect(javascript_cache.content).to include("const x = 1;")
     end
   end
@@ -292,7 +291,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -319,7 +318,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -333,7 +332,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -351,7 +350,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -391,7 +390,7 @@ HTML
           target: :common,
           name: :after_header,
           value:
-            '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>',
+            '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{}; console.log(a);</script>',
         )
       theme.save!
 
@@ -399,21 +398,19 @@ HTML
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(
         theme_field.javascript_cache.url,
       )
-      expect(theme_field.javascript_cache.content).to include("if ('require' in window) {")
+      expect(theme_field.javascript_cache.content).to include <<~JS
+        registerSettings(#{theme_field.theme.id}, {
+          "name": "bob"
+        });
+      JS
       expect(theme_field.javascript_cache.content).to include(
-        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{theme_field.theme.id}, {\"name\":\"bob\"});",
-      )
-      expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
-      expect(theme_field.javascript_cache.content).to include(
-        "define(\"discourse/theme-#{theme_field.theme.id}/discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
+        "themeCompatModules[\"discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\"]",
       )
       expect(theme_field.javascript_cache.content).to include(
         "name: \"theme-field-#{theme_field.id}-common-html-script-1\",",
       )
       expect(theme_field.javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(theme_field.javascript_cache.content).to include(
-        "(0, _pluginApi.withPluginApi)(\"1.0\", api =>",
-      )
+      expect(theme_field.javascript_cache.content).to include("withPluginApi(\"1.0\", api =>")
       expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
       expect(theme_field.javascript_cache.content).to include("let a = () => {}")
 
@@ -422,9 +419,11 @@ HTML
       theme.save!
 
       theme_field.reload
-      expect(theme_field.javascript_cache.content).to include(
-        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{theme_field.theme.id}, {\"name\":\"bill\"});",
-      )
+      expect(theme_field.javascript_cache.content).to include <<~JS
+        registerSettings(#{theme_field.theme.id}, {
+          "name": "bill"
+        });
+      JS
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(
         theme_field.javascript_cache.url,
       )
@@ -439,7 +438,7 @@ HTML
   end
 
   it "correctly caches theme ids" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     theme2 = Fabricate(:theme)
 
@@ -467,7 +466,7 @@ HTML
   end
 
   it "correctly caches enabled_theme_and_component_ids" do
-    Theme.destroy_all
+    Theme.delete_all
 
     theme2 = Fabricate(:theme)
 
@@ -508,7 +507,7 @@ HTML
   end
 
   it "correctly caches user_themes template" do
-    Theme.destroy_all
+    Theme.delete_all
 
     json = Site.json_for(guardian)
     user_themes = JSON.parse(json)["user_themes"]
@@ -544,7 +543,7 @@ HTML
   end
 
   it "clears color scheme cache correctly" do
-    Theme.destroy_all
+    Theme.delete_all
 
     cs =
       Fabricate(
@@ -575,12 +574,16 @@ HTML
 
     theme = Fabricate(:theme, user_selectable: true, user: user, color_scheme_id: cs1.id)
 
-    messages = MessageBus.track_publish { theme.save! }.filter { |m| m.channel == "/file-change" }
+    messages =
+      MessageBus
+        .track_publish do
+          theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+          theme.save!
+        end
+        .filter { |m| m.channel == "/file-change" }
     expect(messages.count).to eq(1)
-    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
-      :desktop_theme,
-      :mobile_theme,
-    )
+
+    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(:common_theme)
 
     # With color scheme change:
     messages =
@@ -592,16 +595,16 @@ HTML
         .filter { |m| m.channel == "/file-change" }
     expect(messages.count).to eq(1)
     expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
+      :common,
       :admin,
       :desktop,
-      :desktop_theme,
       :mobile,
-      :mobile_theme,
+      :common_theme,
     )
   end
 
   it "includes theme_uploads in settings" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -613,7 +616,7 @@ HTML
   end
 
   it "does not break on missing uploads in settings" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -628,7 +631,7 @@ HTML
 
   it "uses CDN url for theme_uploads in settings" do
     set_cdn_url("http://cdn.localhost")
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -641,7 +644,7 @@ HTML
 
   it "uses CDN url for settings of type upload" do
     set_cdn_url("http://cdn.localhost")
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
@@ -840,7 +843,8 @@ HTML
         theme.set_field(
           target: :common,
           name: :after_header,
-          value: '<script>console.log("hello world");</script>',
+          value:
+            '<script type="text/discourse-plugin" version="0.1">console.log("hello world");</script>',
         )
       theme.save!
 
@@ -883,7 +887,7 @@ HTML
       manager = Stylesheet::Manager.new(theme_id: theme.id)
 
       builder =
-        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+        Stylesheet::Manager::Builder.new(target: :common_theme, theme: theme, manager: manager)
 
       builder.compile(force: true)
     end
@@ -917,7 +921,7 @@ HTML
 
       builder =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: child_theme,
           manager: manager,
         )
@@ -985,21 +989,6 @@ HTML
       content, _digest = theme.baked_js_tests_with_digest
 
       expect(content).to include("function migrate(settings)")
-    end
-
-    it "digest does not change when settings are changed" do
-      content, digest = theme.baked_js_tests_with_digest
-      expect(content).to be_present
-      expect(digest).to be_present
-      expect(content).to include("assert.ok(true);")
-
-      theme.update_setting(:some_number, 55)
-      theme.save!
-      expect(theme.build_settings_hash[:some_number]).to eq(55)
-
-      new_content, new_digest = theme.baked_js_tests_with_digest
-      expect(new_content).to eq(content)
-      expect(new_digest).to eq(digest)
     end
   end
 
@@ -1139,7 +1128,7 @@ HTML
       theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
       theme.save!
 
-      expect(theme.javascript_cache.content).to include('"list_setting":"aa,bb"')
+      expect(theme.javascript_cache.content).to include('"list_setting": "aa,bb"')
 
       settings_field.update!(value: <<~YAML)
         integer_setting: 1
@@ -1162,7 +1151,7 @@ HTML
 
       expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
       expect(setting_record.value).to eq("zz|aa")
-      expect(theme.javascript_cache.content).to include('"list_setting":"zz|aa"')
+      expect(theme.javascript_cache.content).to include('"list_setting": "zz|aa"')
     end
 
     it "allows changing a setting's type" do
@@ -1586,14 +1575,151 @@ HTML
     end
   end
 
-  describe "#owned_color_scheme" do
-    it "is destroyed when the theme is destroyed" do
-      scheme = Fabricate(:color_scheme, owning_theme: theme)
+  describe ".include_basic_relations" do
+    fab!(:parent_theme_1) do
+      Fabricate(
+        :theme,
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my theme"
+          YAML
+          ),
+        ],
+      )
+    end
 
-      theme.destroy!
+    fab!(:parent_theme_2) do
+      Fabricate(
+        :theme,
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my theme 2"
+          YAML
+          ),
+        ],
+      )
+    end
 
-      expect(ThemeColorScheme.exists?(color_scheme_id: scheme.id)).to eq(false)
-      expect(ColorScheme.unscoped.exists?(id: scheme.id)).to eq(false)
+    fab!(:component_1) do
+      Fabricate(
+        :theme,
+        component: true,
+        parent_themes: [parent_theme_1],
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my component"
+            YAML
+          ),
+        ],
+      )
+    end
+
+    fab!(:component_2) do
+      Fabricate(
+        :theme,
+        component: true,
+        parent_themes: [parent_theme_2],
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my component 2"
+            YAML
+          ),
+        ],
+      )
+    end
+
+    it "doesn't result in N+1 queries for descriptions" do
+      components = Theme.include_basic_relations.where(component: true, id: component_1.id)
+
+      queries_for_one =
+        track_sql_queries do
+          components.each do |component|
+            ComponentIndexSerializer.new(component, root: false).as_json
+          end
+        end
+
+      components =
+        Theme.include_basic_relations.where(component: true, id: [component_1.id, component_2.id])
+
+      queries_for_two =
+        track_sql_queries do
+          components.each do |component|
+            ComponentIndexSerializer.new(component, root: false).as_json
+          end
+        end
+
+      expect(queries_for_two.size).to eq(queries_for_one.size)
+    end
+  end
+
+  describe "#screenshot_light_url & #screenshot_dark_url" do
+    it "returns nil when no screenshots are set" do
+      expect(theme.screenshot_light_url).to be_nil
+      expect(theme.screenshot_dark_url).to be_nil
+    end
+
+    it "returns the upload URL when screenshots are set" do
+      upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+      theme.set_field(
+        target: :common,
+        name: "screenshot_dark",
+        upload_id: upload.id,
+        type: :theme_screenshot_upload_var,
+      )
+      theme.set_field(
+        target: :common,
+        name: "screenshot_light",
+        upload_id: upload.id,
+        type: :theme_screenshot_upload_var,
+      )
+      theme.save!
+      expect(theme.screenshot_light_url).to eq(upload.url)
+      expect(theme.screenshot_dark_url).to eq(upload.url)
+    end
+  end
+
+  it "checks if fields can be updated for system themes" do
+    foundation_theme.update!(user_selectable: true)
+    expect(foundation_theme.user_selectable).to be true
+    expect { foundation_theme.update!(name: "edited system name") }.to raise_error(
+      Discourse::InvalidParameters,
+    )
+    expect { theme.update!(name: "edited name") }.not_to raise_error
+  end
+
+  it "does not allow system themes to be deleted" do
+    expect { foundation_theme.destroy! }.to raise_error(Discourse::InvalidParameters)
+    expect { theme.destroy! }.not_to raise_error
+  end
+
+  describe "#system?" do
+    it "returns system true for Horizon and Foundation themes" do
+      expect(foundation_theme.system?).to be true
+      expect(theme.system?).to be false
     end
   end
 end

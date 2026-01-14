@@ -115,6 +115,64 @@ RSpec.describe WordWatcher do
         }.to raise_error(RegexpError)
       end
     end
+
+    context "when there's a wildcard watched word" do
+      before do
+        SiteSetting.watched_words_regular_expressions = false
+        WatchedWord.where(action: WatchedWord.actions[:block]).delete_all
+        Fabricate(:watched_word, word: "*abc", action: WatchedWord.actions[:block])
+      end
+
+      it "works correctly when regular expressions are disabled" do
+        regexps = described_class.compiled_regexps_for_action(:block)
+        expect(regexps).to be_an(Array)
+        expect(regexps).to contain_exactly(/(?:[^[:word:]]|^)(\S*abc)(?=[^[:word:]]|$)/i)
+      end
+
+      it "skips invalid watched words when regular expression are enabled" do
+        SiteSetting.watched_words_regular_expressions = true
+
+        regexps = described_class.compiled_regexps_for_action(:block)
+        expect(regexps).to be_an(Array)
+        expect(regexps).to be_empty
+      end
+    end
+
+    context "when there's an invalid regex that causes compilation to fail" do
+      before do
+        SiteSetting.watched_words_regular_expressions = true
+        WatchedWord.where(action: WatchedWord.actions[:block]).delete_all
+        Fabricate(:watched_word, word: "test[[", action: WatchedWord.actions[:block])
+        Fabricate(:watched_word, word: "bad", action: WatchedWord.actions[:block])
+        Fabricate(:watched_word, word: "word", action: WatchedWord.actions[:block])
+      end
+
+      it "does not raise an exception and still compiles valid words" do
+        expect { described_class.compiled_regexps_for_action(:block) }.not_to raise_error
+        regexps = described_class.compiled_regexps_for_action(:block)
+        expect(regexps).to be_an(Array)
+        expect(regexps).not_to be_empty
+        expect(regexps.first.inspect).to match(/bad.*word/i)
+      end
+
+      it "still detects matches for valid words even with invalid regex present" do
+        watcher = described_class.new("This is a bad word")
+        expect(watcher.should_block?).to be_truthy
+        expect(watcher.word_matches_for_action?(:block, all_matches: true)).to include(
+          "bad",
+          "word",
+        )
+      end
+
+      it "does not break serialized_regexps_for_action" do
+        expect {
+          described_class.serialized_regexps_for_action(:block, engine: :js)
+        }.not_to raise_error
+        serialized = described_class.serialized_regexps_for_action(:block, engine: :js)
+        expect(serialized).to be_an(Array)
+        expect(serialized).not_to be_empty
+      end
+    end
   end
 
   describe "#word_matches_for_action?" do
@@ -365,6 +423,22 @@ RSpec.describe WordWatcher do
           end
         end
       end
+    end
+  end
+
+  describe "#word_matches_across_all_actions" do
+    it("returns an array of words") do
+      Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "foo")
+      Fabricate(:watched_word, action: WatchedWord.actions[:block], word: "bar")
+      Fabricate(:watched_word, action: WatchedWord.actions[:silence], word: "baz")
+
+      contentful_check = described_class.new("Going to match the baz, the foo, and the bar.")
+
+      expect(contentful_check.word_matches_across_all_actions).to contain_exactly(
+        "foo",
+        "bar",
+        "baz",
+      )
     end
   end
 

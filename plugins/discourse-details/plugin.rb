@@ -7,7 +7,6 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-details
 
 enabled_site_setting :details_enabled
-hide_plugin
 
 register_asset "stylesheets/details.scss"
 

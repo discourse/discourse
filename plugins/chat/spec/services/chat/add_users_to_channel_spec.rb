@@ -2,22 +2,43 @@
 
 RSpec.describe Chat::AddUsersToChannel do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(usernames: [], channel_id: nil) }
+    subject(:contract) { described_class.new(usernames:, groups:) }
+
+    let(:usernames) { "user1" }
+    let(:groups) { "group1" }
 
     it { is_expected.to validate_presence_of :channel_id }
-    it { is_expected.to validate_presence_of :usernames if :groups.blank? }
-    it { is_expected.to validate_presence_of :groups if :usernames.blank? }
+    it do
+      is_expected.to validate_length_of(:usernames)
+        .is_at_most(SiteSetting.chat_max_direct_message_users)
+        .as_array
+        .allow_nil
+    end
+
+    context "when 'usernames' is blank" do
+      let(:usernames) { nil }
+
+      it { is_expected.to validate_presence_of :groups }
+      it { is_expected.not_to validate_presence_of :usernames }
+    end
+
+    context "when 'groups' is blank" do
+      let(:groups) { nil }
+
+      it { is_expected.to validate_presence_of :usernames }
+      it { is_expected.not_to validate_presence_of :groups }
+    end
   end
 
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:users) { Fabricate.times(5, :user) }
     fab!(:direct_message) { Fabricate(:direct_message, users: [current_user], group: true) }
     fab!(:channel) { Fabricate(:direct_message_channel, chatable: direct_message) }
-    fab!(:group_user_1) { Fabricate(:user) }
-    fab!(:group_user_2) { Fabricate(:user) }
+    fab!(:group_user_1, :user)
+    fab!(:group_user_2, :user)
     fab!(:group) { Fabricate(:public_group, users: [group_user_1, group_user_2]) }
 
     let(:guardian) { Guardian.new(current_user) }
@@ -57,8 +78,8 @@ RSpec.describe Chat::AddUsersToChannel do
         end
       end
 
-      it "doesn't include existing direct message users" do
-        Chat::DirectMessageUser.create!(user: users.first, direct_message: direct_message)
+      it "doesn't include users with dms disabled" do
+        users.first.user_option.update!(allow_private_messages: false)
 
         expect(result.target_users.map(&:username)).to contain_exactly(
           *users[1..-1].map(&:username),
@@ -94,12 +115,54 @@ RSpec.describe Chat::AddUsersToChannel do
           expect(message.user).to eq(Discourse.system_user)
         end
       end
+
+      context "when there are already some users in the channel" do
+        before do
+          users
+            .first(3)
+            .map do |user|
+              direct_message.users << user
+              channel.add(user)
+            end
+        end
+
+        it "only notifies the newly added users" do
+          expect(result.added_user_ids).to eq users.last(2).map(&:id)
+        end
+
+        it "respects membership settings for existing users" do
+          membership = channel.user_chat_channel_memberships.find_by(user: users.first)
+          membership.update!(
+            muted: true,
+            notification_level: ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:mention],
+          )
+
+          expect { result }.not_to change { membership.reload.attributes }
+        end
+      end
     end
 
-    context "when users exceed max direct message user limit" do
+    context "when provided users exceed max direct message user limit" do
       before { SiteSetting.chat_max_direct_message_users = 4 }
 
       it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
+    end
+
+    context "when channel is already at maximum capacity" do
+      before do
+        SiteSetting.chat_max_direct_message_users = 3
+        users
+          .first(3)
+          .map do |user|
+            direct_message.users << user
+            channel.add(user)
+          end
+        params[:usernames] = users.last(2).map(&:username)
+      end
+
+      context "when trying to add other users" do
+        it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
+      end
     end
 
     context "when channel is not found" do
@@ -117,17 +180,26 @@ RSpec.describe Chat::AddUsersToChannel do
     context "when channel is not a group" do
       before { direct_message.update!(group: false) }
 
-      it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
+      it "allows adding members when there are no channel messages" do
+        expect { result }.to change { Chat::UserChatChannelMembership.count }.by(users.count + 1) # +1 for system user
+        expect(result).to be_a_success
+      end
+
+      context "when there are messages in the channel" do
+        before { channel.update!(messages_count: 1) }
+
+        it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
+      end
     end
 
     context "when channel is not a direct message channel" do
-      fab!(:channel) { Fabricate(:chat_channel) }
+      fab!(:channel, :chat_channel)
 
       it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
     end
 
     context "when user is not admin and not a member of the channel" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
     end

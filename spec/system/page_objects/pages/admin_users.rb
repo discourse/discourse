@@ -21,6 +21,10 @@ module PageObjects
         def has_no_bulk_select_checkbox?
           element.has_no_css?(".directory-table__cell-bulk-select")
         end
+
+        def username
+          element.find("a[href^='/admin/users']")
+        end
       end
 
       def visit

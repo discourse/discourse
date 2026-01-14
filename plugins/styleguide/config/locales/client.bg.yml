@@ -20,8 +20,8 @@ bg:
           title: "Списък с категории"
         post:
           title: "Публикация"
-        suggested_topics:
-          title: "Подобни теми"
+        more_topics:
+          title: "Още теми"
         tooltips:
           description: "Описание"
           header: "Хедър"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Flag message", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
@@ -12,7 +12,7 @@ RSpec.describe "Flag message", type: :system do
   end
 
   context "when category channel" do
-    fab!(:category_channel_1) { Fabricate(:category_channel) }
+    fab!(:category_channel_1, :category_channel)
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
     before { category_channel_1.add(current_user) }

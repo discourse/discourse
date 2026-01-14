@@ -94,7 +94,13 @@ class PostSerializer < BasicPostSerializer
              :user_suspended,
              :user_status,
              :mentioned_users,
-             :post_url
+             :post_url,
+             :post_localizations_count,
+             :can_localize_post,
+             :locale,
+             :is_localized,
+             :language,
+             :localization_outdated
 
   def initialize(object, opts)
     super(object, opts)
@@ -298,6 +304,7 @@ class PostSerializer < BasicPostSerializer
 
   def reply_to_user
     {
+      id: object.reply_to_user.id,
       username: object.reply_to_user.username,
       name: object.reply_to_user.name,
       avatar_template: object.reply_to_user.avatar_template,
@@ -357,7 +364,7 @@ class PostSerializer < BasicPostSerializer
         summary.delete(:can_act)
       end
 
-      if actions.present? && SiteSetting.allow_anonymous_likes && sym == :like &&
+      if actions.present? && SiteSetting.allow_likes_in_anonymous_mode && sym == :like &&
            !scope.can_delete_post_action?(actions[id])
         summary.delete(:can_act)
       end
@@ -375,8 +382,8 @@ class PostSerializer < BasicPostSerializer
 
       summary.delete(:count) if summary[:count].to_i.zero?
 
-      # Only include it if the user can do it or it has a count
-      result << summary if summary[:can_act] || summary[:count]
+      # Only include it if the user can do it, it has a count, or the user has acted
+      result << summary if summary[:can_act] || summary[:count] || summary[:acted]
     end
 
     result
@@ -624,7 +631,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_user_status?
-    SiteSetting.enable_user_status && object.user&.has_status?
+    SiteSetting.enable_user_status && object.user&.has_status? &&
+      scope&.can_see_user_status?(object.user)
   end
 
   def user_status
@@ -646,6 +654,54 @@ class PostSerializer < BasicPostSerializer
 
   def include_mentioned_users?
     SiteSetting.enable_user_status
+  end
+
+  def post_localizations_count
+    object.localizations.size
+  end
+
+  def include_post_localizations_count?
+    SiteSetting.content_localization_enabled && scope.can_localize_post?(object)
+  end
+
+  def can_localize_post
+    true
+  end
+
+  def include_can_localize_post?
+    SiteSetting.content_localization_enabled && scope.can_localize_post?(object)
+  end
+
+  def raw
+    object.raw
+  end
+
+  def include_locale?
+    SiteSetting.content_localization_enabled
+  end
+
+  def is_localized
+    ContentLocalization.show_translated_post?(object, scope) && object.has_localization?
+  end
+
+  def include_is_localized?
+    SiteSetting.content_localization_enabled
+  end
+
+  def language
+    locale
+  end
+
+  def include_language?
+    SiteSetting.content_localization_enabled && object.locale.present?
+  end
+
+  def localization_outdated
+    object.has_localization? && object.get_localization.post_version != object.version
+  end
+
+  def include_localization_outdated?
+    include_is_localized? && is_localized
   end
 
   private

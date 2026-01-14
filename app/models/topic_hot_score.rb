@@ -4,6 +4,35 @@ class TopicHotScore < ActiveRecord::Base
   belongs_to :topic
 
   DEFAULT_BATCH_SIZE = 1000
+  CACHE_KEY = "hot_topics_ids"
+
+  def self.hottest_topic_ids
+    Discourse.cache.read(CACHE_KEY).presence || Set.new
+  end
+
+  def self.recreate_hottest_topic_ids_cache
+    hot_topics = Topic.where(archetype: Archetype.default).where.not(id: Category.topic_ids)
+
+    # 10% of the topics with activity since the hot topics cutoff.
+    limit =
+      hot_topics
+        .where("last_posted_at > ?", SiteSetting.hot_topics_recent_days.days.ago)
+        .count
+        .to_i * 0.1
+
+    # capped at 100 topics
+    limit = [limit, 100].min
+
+    sql = <<~SQL
+      SELECT topic_id
+      FROM topic_hot_scores
+      WHERE topic_id IN (#{hot_topics.select(:id).to_sql})
+      ORDER BY score DESC
+      LIMIT :limit
+    SQL
+
+    Discourse.cache.write(CACHE_KEY, DB.query_single(sql, limit:).to_set)
+  end
 
   def self.update_scores(max = DEFAULT_BATCH_SIZE)
     # score is
@@ -145,6 +174,8 @@ class TopicHotScore < ActiveRecord::Base
     SQL
 
     DB.exec(sql, args)
+
+    recreate_hottest_topic_ids_cache
 
     DiscourseEvent.trigger(:topic_hot_scores_updated)
   end

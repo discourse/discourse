@@ -25,20 +25,22 @@ end
 # Table name: user_chat_channel_memberships
 #
 #  id                                  :bigint           not null, primary key
-#  user_id                             :integer          not null
-#  chat_channel_id                     :integer          not null
-#  last_read_message_id                :integer
 #  following                           :boolean          default(FALSE), not null
-#  muted                               :boolean          default(FALSE), not null
-#  created_at                          :datetime         not null
-#  updated_at                          :datetime         not null
-#  last_unread_mention_when_emailed_id :integer
 #  join_mode                           :integer          default("manual"), not null
 #  last_viewed_at                      :datetime         not null
+#  muted                               :boolean          default(FALSE), not null
 #  notification_level                  :integer          default("mention"), not null
+#  starred                             :boolean          default(FALSE), not null
+#  created_at                          :datetime         not null
+#  updated_at                          :datetime         not null
+#  chat_channel_id                     :bigint           not null
+#  last_read_message_id                :bigint
+#  last_unread_mention_when_emailed_id :bigint
+#  user_id                             :integer          not null
 #
 # Indexes
 #
-#  user_chat_channel_memberships_index   (user_id,chat_channel_id,notification_level,following)
-#  user_chat_channel_unique_memberships  (user_id,chat_channel_id) UNIQUE
+#  index_user_chat_channel_memberships_on_user_id_and_starred  (user_id,starred)
+#  user_chat_channel_memberships_index                         (user_id,chat_channel_id,notification_level,following)
+#  user_chat_channel_unique_memberships                        (user_id,chat_channel_id) UNIQUE
 #

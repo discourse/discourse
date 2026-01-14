@@ -4,31 +4,33 @@ export default [
   ...DiscourseRecommended,
   {
     rules: {
-      "ember/no-classic-classes": "error",
-      "discourse/i18n-import-location": "error",
-      "discourse/i18n-t": "error",
-      "discourse/discourse-common-imports": "error",
-      "qunit/no-assert-equal-boolean": "error",
       "qunit/no-assert-equal": "error",
       "qunit/no-loose-assertions": "error",
-      "qunit/no-negated-ok": "error",
-      "qunit/no-ok-equality": "error",
+      "ember/no-classic-components": "error",
+      "discourse/no-route-template": "error",
+      "discourse/moved-packages-import-paths": "error",
     },
   },
   {
     ignores: [
-      "app/assets/javascripts/ember-addons/",
-      "lib/javascripts/locale/*",
-      "lib/javascripts/messageformat.js",
-      "lib/javascripts/messageformat-lookup.js",
       "plugins/**/lib/javascripts/locale",
+      "plugins/discourse-math/public",
       "public/",
       "vendor/",
-      "app/assets/javascripts/discourse/tests/fixtures",
+      "frontend/discourse/tests/fixtures",
       "**/node_modules/",
       "spec/",
-      "app/assets/javascripts/discourse/dist/",
+      "frontend/discourse/dist/",
       "tmp/",
     ],
+  },
+  {
+    files: ["themes/**/*.{js,gjs}"],
+    languageOptions: {
+      globals: {
+        settings: "readonly",
+        themePrefix: "readonly",
+      },
+    },
   },
 ];

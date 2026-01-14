@@ -2,25 +2,23 @@
 
 module DiscourseAutomation
   class AutomationSerializer < ApplicationSerializer
-    attributes :id
-    attributes :name
-    attributes :enabled
-    attributes :script
-    attributes :trigger
-    attributes :updated_at
-    attributes :last_updated_by
-    attributes :next_pending_automation_at
-    attributes :placeholders
+    attribute :id
+    attribute :name
+    attribute :enabled
+    attribute :script
+    attribute :trigger
+    attribute :updated_at
+    attribute :last_updated_by
+    attribute :next_pending_automation_at
+    attribute :placeholders
+    attribute :stats
 
     def last_updated_by
-      BasicUserSerializer.new(
-        User.find_by(id: object.last_updated_by_id) || Discourse.system_user,
-        root: false,
-      ).as_json
+      BasicUserSerializer.new(object.last_updated_by || Discourse.system_user, root: false).as_json
     end
 
     def include_next_pending_automation_at?
-      object.pending_automations.exists?
+      object.pending_automations.present?
     end
 
     def next_pending_automation_at
@@ -60,7 +58,7 @@ module DiscourseAutomation
         not_found: scriptable.not_found,
         templates:
           process_templates(filter_fields_with_priority(scriptable.fields, object.trigger&.to_sym)),
-        fields: process_fields(object.fields.where(target: "script")),
+        fields: process_fields(script_fields),
       }
     end
 
@@ -79,8 +77,31 @@ module DiscourseAutomation
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         not_found: triggerable&.not_found,
         templates: process_templates(triggerable&.fields || []),
-        fields: process_fields(object.fields.where(target: "trigger")),
+        fields: process_fields(trigger_fields),
         settings: triggerable&.settings,
+      }
+    end
+
+    def include_stats?
+      scope&.dig(:stats).present?
+    end
+
+    EMPTY_STATS = {
+      total_runs: 0,
+      total_time: 0,
+      average_run_time: 0,
+      min_run_time: 0,
+      max_run_time: 0,
+    }
+
+    def stats
+      automation_stats = scope&.dig(:stats, object.id) || {}
+
+      {
+        last_day: automation_stats[:last_day] || EMPTY_STATS,
+        last_week: automation_stats[:last_week] || EMPTY_STATS,
+        last_month: automation_stats[:last_month] || EMPTY_STATS,
+        last_run_at: automation_stats[:last_run_at],
       }
     end
 
@@ -115,6 +136,14 @@ module DiscourseAutomation
         fields || [],
         each_serializer: DiscourseAutomation::FieldSerializer,
       ).as_json || []
+    end
+
+    def script_fields
+      object.fields.select { |f| f.target == "script" }
+    end
+
+    def trigger_fields
+      object.fields.select { |f| f.target == "trigger" }
     end
 
     def scriptable

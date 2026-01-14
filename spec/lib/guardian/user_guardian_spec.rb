@@ -34,6 +34,61 @@ RSpec.describe UserGuardian do
   fab!(:trust_level_1)
   fab!(:trust_level_2)
 
+  describe "#can_claim_reviewable_topic?" do
+    fab!(:topic)
+    context "with anon user" do
+      let(:guardian) { Guardian.new }
+
+      it "should return the right value for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(topic)).to eq(false)
+      end
+
+      it "should return the right value for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(false)
+      end
+    end
+
+    context "with current user" do
+      let(:guardian) { Guardian.new(user) }
+
+      it "should return the right value for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(topic)).to eq(false)
+      end
+
+      it "should return the right value for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(false)
+      end
+    end
+
+    context "with moderator" do
+      let(:guardian) { Guardian.new(moderator) }
+
+      it "should return the right value for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(topic)).to eq(true)
+      end
+
+      it "should return the right value for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
+      end
+    end
+
+    context "with admin" do
+      let(:guardian) { Guardian.new(admin) }
+
+      it "should return the right value for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(topic)).to eq(true)
+      end
+
+      it "should return the right value for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
+      end
+    end
+  end
+
   describe "#can_pick_avatar?" do
     let :guardian do
       Guardian.new(user)
@@ -101,6 +156,8 @@ RSpec.describe UserGuardian do
     fab!(:tl0_user) { Fabricate(:user, trust_level: 0) }
     fab!(:tl1_user) { Fabricate(:user, trust_level: 1) }
     fab!(:tl2_user) { Fabricate(:user, trust_level: 2) }
+    # Admins can manually upgrade users without them meeting the criteria.
+    fab!(:vip_tl2_user) { Fabricate(:user, trust_level: 2) }
 
     before { tl2_user.user_stat.update!(post_count: 1) }
 
@@ -111,6 +168,13 @@ RSpec.describe UserGuardian do
         it "allows anonymous to see any profile" do
           SiteSetting.hide_new_user_profiles = false
           expect(Guardian.new.can_see_profile?(user)).to eq(true)
+        end
+      end
+
+      context "when hide_new_user_profiles is enabled" do
+        it "allows anonymous to see a no-posts (manually upgraded) TL2 user's profile" do
+          SiteSetting.hide_new_user_profiles = true
+          expect(Guardian.new.can_see_profile?(vip_tl2_user)).to eq(true)
         end
       end
 
@@ -373,7 +437,7 @@ RSpec.describe UserGuardian do
           user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 1.day.ago)
           expect(guardian.can_delete_user?(user)).to eq(true)
 
-          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.day.ago)
+          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.days.ago)
           expect(guardian.can_delete_user?(user)).to eq(false)
         end
       end
@@ -384,7 +448,7 @@ RSpec.describe UserGuardian do
         it "is allowed when even when user created the first post before delete_user_max_post_age days" do
           SiteSetting.delete_user_max_post_age = 2
 
-          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.day.ago)
+          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.days.ago)
           expect(guardian.can_delete_user?(user)).to eq(true)
         end
       end

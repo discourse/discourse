@@ -1,21 +1,25 @@
 # frozen_string_literal: true
 
 class Admin::SiteTextsController < Admin::AdminController
-  def self.preferred_keys
-    %w[
-      system_messages.usage_tips.text_body_template
-      education.new-topic
-      education.new-reply
-      login_required.welcome_message
-    ]
-  end
+  PREFERRED_KEYS = %w[
+    education.new-reply
+    education.new-topic
+    login_required.welcome_message
+    system_messages.usage_tips.text_body_template
+  ]
 
-  def self.restricted_keys
-    %w[
-      user_notifications.confirm_old_email.title
-      user_notifications.confirm_old_email.subject_template
-      user_notifications.confirm_old_email.text_body_template
-    ]
+  RESTRICTED_KEYS =
+    Set[
+      "user_notifications.confirm_old_email.title",
+      "user_notifications.confirm_old_email.subject_template",
+      "user_notifications.confirm_old_email.text_body_template",
+      "user_notifications.confirm_old_email_add.title",
+      "user_notifications.confirm_old_email_add.subject_template",
+      "user_notifications.confirm_old_email_add.text_body_template"
+    ].freeze
+
+  def self.restricted_key?(key)
+    RESTRICTED_KEYS.include?(key)
   end
 
   def index
@@ -31,10 +35,12 @@ class Admin::SiteTextsController < Admin::AdminController
 
     if query.blank? && !overridden && !outdated && !untranslated
       extras[:recommended] = true
-      results = self.class.preferred_keys.map { |k| record_for(key: k, locale: locale) }
+      results = PREFERRED_KEYS.map { |key| record_for(key:, locale:) }
     else
       results =
         find_translations(query, overridden, outdated, locale, untranslated, only_selected_locale)
+
+      results.reject! { |r| RESTRICTED_KEYS.include?(r[:id]) }
 
       if results.any?
         extras[:regex] = I18n::Backend::DiscourseI18n.create_search_regexp(query, as_string: true)
@@ -70,7 +76,7 @@ class Admin::SiteTextsController < Admin::AdminController
       SiteTextSerializer,
       root: "site_texts",
       rest_serializer: true,
-      extras: extras,
+      extras:,
       overridden_keys: overridden,
     )
   end
@@ -106,7 +112,7 @@ class Admin::SiteTextsController < Admin::AdminController
     else
       render json:
                failed_json.merge(message: translation_override.errors.full_messages.join("\n\n")),
-             status: 422
+             status: :unprocessable_entity
     end
   end
 
@@ -140,7 +146,8 @@ class Admin::SiteTextsController < Admin::AdminController
     if override.make_up_to_date!
       render json: success_json
     else
-      render json: failed_json.merge(message: "Can only dismiss outdated translations"), status: 422
+      render json: failed_json.merge(message: "Can only dismiss outdated translations"),
+             status: :unprocessable_entity
     end
   end
 
@@ -185,7 +192,7 @@ class Admin::SiteTextsController < Admin::AdminController
   PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
 
   def find_site_text(locale)
-    if self.class.restricted_keys.include?(params[:id])
+    if RESTRICTED_KEYS.include?(params[:id])
       raise Discourse::InvalidAccess.new(
               nil,
               nil,

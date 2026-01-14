@@ -203,7 +203,13 @@ class PostsController < ApplicationController
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?
 
-    manager = NewPostManager.new(current_user, manager_params)
+    user =
+      DiscoursePluginRegistry.apply_modifier(
+        :posts_controller_create_user,
+        current_user,
+        create_params,
+      )
+    manager = NewPostManager.new(user, manager_params)
 
     json =
       if is_api?
@@ -238,7 +244,11 @@ class PostsController < ApplicationController
 
     guardian.ensure_can_edit!(post)
 
-    changes = { raw: params[:post][:raw], edit_reason: params[:post][:edit_reason] }
+    changes = {
+      raw: params[:post][:raw],
+      edit_reason: params[:post][:edit_reason],
+      locale: params[:post][:locale],
+    }
 
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
@@ -267,6 +277,14 @@ class PostsController < ApplicationController
     opts = {}
     if post.post_type == Post.types[:small_action] && current_user.staff?
       opts[:skip_validations] = true
+    end
+
+    if params.key?(:bypass_bump) || params[:post]&.key?(:bypass_bump)
+      if guardian.can_update_bumped_at?
+        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(
+          params[:bypass_bump].presence || params.dig(:post, :bypass_bump),
+        )
+      end
     end
 
     topic = post.topic
@@ -418,6 +436,7 @@ class PostsController < ApplicationController
         ).destroy
       end
     end
+    DiscourseEvent.trigger(:posts_destroyed, posts, current_user)
 
     render body: nil
   end
@@ -445,6 +464,7 @@ class PostsController < ApplicationController
         .replies
         .secured(guardian)
         .where(post_number: after + 1..)
+        .order(:post_number)
         .limit(MAX_POST_REPLIES)
         .pluck(:id)
 
@@ -560,7 +580,8 @@ class PostsController < ApplicationController
     guardian.ensure_can_see!(post_revision)
     guardian.ensure_can_edit!(post)
     if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? &&
-         post_revision.modifications["category_id"].blank?
+         post_revision.modifications["category_id"].blank? &&
+         post_revision.modifications["tags"].blank?
       return render_json_error(I18n.t("revert_version_same"))
     end
 
@@ -578,6 +599,13 @@ class PostsController < ApplicationController
         0
       ] if post_revision.modifications["category_id"].present? &&
         post_revision.modifications["category_id"][0] != topic.category.id
+      if post_revision.modifications["tags"].present?
+        revision_tags = post_revision.modifications["tags"][0]
+        revision_tags = revision_tags.is_a?(Array) ? revision_tags : revision_tags.split(",")
+        current_tags = topic.tags.pluck(:name)
+
+        changes[:tags] = revision_tags if revision_tags.sort != current_tags.sort
+      end
     end
     return render_json_error(I18n.t("revert_version_same")) if changes.length <= 0
     changes[:edit_reason] = I18n.with_locale(SiteSetting.default_locale) do
@@ -697,6 +725,7 @@ class PostsController < ApplicationController
 
     guardian.ensure_can_unhide!(post)
 
+    post.acting_user = current_user
     post.unhide!
 
     render body: nil
@@ -844,6 +873,8 @@ class PostsController < ApplicationController
       composer_open_duration_msecs
       visible
       draft_key
+      composer_version
+      locale
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
@@ -944,6 +975,7 @@ class PostsController < ApplicationController
     result[:ip_address] = request.remote_ip
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
+    result[:writing_device] = BrowserDetection.device(request.user_agent)
 
     recipients = result[:target_recipients]
 

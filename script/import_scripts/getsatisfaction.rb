@@ -23,7 +23,7 @@
 # You should run `rake posts:reorder_posts` after the import.
 
 require "csv"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 require "reverse_markdown" # gem 'reverse_markdown'
 
 # Call it like this:

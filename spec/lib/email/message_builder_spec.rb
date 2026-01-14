@@ -111,6 +111,147 @@ RSpec.describe Email::MessageBuilder do
     expect(header_args["X-Auto-Response-Suppress"]).to eq("All")
   end
 
+  it "disables Outlook's reaction via email feature" do
+    expect(header_args["x-ms-reactions"]).to eq("disallow")
+  end
+
+  describe "include_respond_instructions" do
+    context "when include_respond_instructions is false" do
+      let(:private_reply) { false }
+      let(:builder) do
+        Email::MessageBuilder.new(
+          "to@to.com",
+          subject: "test",
+          body: "test",
+          include_respond_instructions: false,
+          url: "/t/123",
+          participants: %w[moe joe],
+          private_reply: private_reply,
+        )
+      end
+
+      it "does not include any instructions" do
+        expect(builder.template_args[:respond_instructions]).to eq("")
+      end
+
+      context "for a private_reply" do
+        let(:private_reply) { true }
+
+        it "includes the pm_participants instruction" do
+          expect(builder.template_args[:respond_instructions]).to eq(
+            I18n.t("user_notifications.pm_participants", builder.template_args),
+          )
+        end
+      end
+    end
+
+    context "when include_respond_instructions is true" do
+      let(:other_opts) { {} }
+      let(:builder) do
+        Email::MessageBuilder.new(
+          "to@to.com",
+          {
+            subject: "test",
+            body: "test",
+            include_respond_instructions: true,
+            allow_reply_by_email: true,
+            participants: %w[moe joe],
+            url: "/t/123",
+          }.merge(other_opts),
+        )
+      end
+
+      context "when only_reply_by_email" do
+        let(:other_opts) { { only_reply_by_email: true } }
+
+        it "includes the correct instructions" do
+          expect(builder.template_args[:respond_instructions]).to eq(
+            Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+              I18n.t("user_notifications.only_reply_by_email", builder.template_args),
+          )
+        end
+
+        context "for private_reply to regular users" do
+          let(:other_opts) do
+            { private_reply: true, username: "someguy", only_reply_by_email: true }
+          end
+
+          it "includes the correct instructions" do
+            expect(builder.template_args[:respond_instructions]).to eq(
+              Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+                I18n.t("user_notifications.only_reply_by_email_pm", builder.template_args),
+            )
+          end
+        end
+
+        context "for private_reply to system users" do
+          let(:other_opts) do
+            {
+              private_reply: true,
+              username: Discourse.system_user.username,
+              only_reply_by_email: true,
+            }
+          end
+
+          it "only includes a button for respond_instructions" do
+            expect(builder.template_args[:respond_instructions]).to eq(
+              Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+                I18n.t(
+                  "user_notifications.only_reply_by_email_pm_button_only",
+                  builder.template_args,
+                ),
+            )
+          end
+        end
+      end
+
+      context "when not only_reply_by_email" do
+        it "includes the correct instructions when allowing reply by email" do
+          SiteSetting.manual_polling_enabled = true
+          SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
+          SiteSetting.reply_by_email_enabled = true
+
+          expect(builder.template_args[:respond_instructions]).to eq(
+            Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+              I18n.t("user_notifications.reply_by_email", builder.template_args),
+          )
+        end
+
+        it "includes the correct instructions when not allowing reply by email" do
+          expect(builder.template_args[:respond_instructions]).to eq(
+            Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+              I18n.t("user_notifications.visit_link_to_respond", builder.template_args),
+          )
+        end
+
+        context "for private_reply to regular users" do
+          let(:other_opts) { { private_reply: true, username: "someguy" } }
+
+          it "includes the correct instructions" do
+            expect(builder.template_args[:respond_instructions]).to eq(
+              Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+                I18n.t("user_notifications.visit_link_to_respond_pm", builder.template_args),
+            )
+          end
+        end
+
+        context "for private_reply to system users" do
+          let(:other_opts) { { private_reply: true, username: Discourse.system_user.username } }
+
+          it "only includes a button for respond_instructions" do
+            expect(builder.template_args[:respond_instructions]).to eq(
+              Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+                I18n.t(
+                  "user_notifications.visit_link_to_respond_pm_button_only",
+                  builder.template_args,
+                ),
+            )
+          end
+        end
+      end
+    end
+  end
+
   describe "reply by email" do
     context "without allow_reply_by_email" do
       it "does not have a X-Discourse-Reply-Key" do
@@ -165,7 +306,7 @@ RSpec.describe Email::MessageBuilder do
       end
     end
 
-    context "with allow_reply_by_email" do
+    context "with allow_reply_by_email and private_reply" do
       let(:reply_by_email_builder) do
         Email::MessageBuilder.new(
           to_address,
@@ -243,6 +384,7 @@ RSpec.describe Email::MessageBuilder do
           post_id: 4567,
           show_tags_in_subject: "foo bar baz",
           show_category_in_subject: "random",
+          username: "elbarto",
         }.merge(additional_opts),
       )
     end
@@ -267,6 +409,10 @@ RSpec.describe Email::MessageBuilder do
 
     it "passes through the topic category" do
       expect(message_with_header_args.header_args["X-Discourse-Category"]).to eq("random")
+    end
+
+    it "passes through the username" do
+      expect(message_with_header_args.header_args["X-Discourse-Sender"]).to eq("elbarto")
     end
 
     context "when allow_reply_by_email is enabled " do
@@ -387,14 +533,22 @@ RSpec.describe Email::MessageBuilder do
     end
   end
 
-  describe "subject_template" do
+  describe "template" do
     let(:templated_builder) { Email::MessageBuilder.new(to_address, template: "mystery") }
     let(:rendered_template) { "rendered template" }
 
     it "has the body rendered from a template" do
       I18n
         .expects(:t)
-        .with("mystery.text_body_template", templated_builder.template_args)
+        .with(
+          "mystery.text_body_template",
+          templated_builder.template_args.merge(
+            optional_re: "",
+            optional_pm: "",
+            optional_cat: "",
+            optional_tags: "",
+          ),
+        )
         .returns(rendered_template)
       expect(templated_builder.body).to eq(rendered_template)
     end
@@ -438,6 +592,43 @@ RSpec.describe Email::MessageBuilder do
           ).save!
         expect(templated_builder.subject).to match("some email prefix")
         expect(templated_builder.subject).to match("customized subject")
+      end
+    end
+
+    context "when template arguments include html" do
+      it "escapes arguments for html body" do
+        bad_title = "<a href=\"https://zelda.com\">a bad link</a>"
+        bad_user_name = "<a href=\"https://link.com\">link</a>"
+
+        builder =
+          Email::MessageBuilder.new(
+            to_address,
+            {
+              template: "invite_mailer",
+              topic_title: bad_title,
+              inviter_name: bad_user_name,
+              topic_excerpt: "an excerpt",
+              site_title: "hyrule",
+              site_description: "kingdom",
+              invite_link: "link.com/invite",
+            },
+          )
+
+        expect(builder.body).to eq(<<~EMAIL)
+          &amp;lt;a href=&amp;quot;https://link.com&amp;quot;&amp;gt;link&amp;lt;/a&amp;gt; invited you to a discussion
+
+          > **&amp;lt;a href=&amp;quot;https://zelda.com&amp;quot;&amp;gt;a bad link&amp;lt;/a&amp;gt;**
+          >
+          > an excerpt
+
+          at
+
+          > hyrule -- kingdom
+
+          If you're interested, click the link below:
+
+          link.com/invite
+        EMAIL
       end
     end
   end

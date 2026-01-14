@@ -82,6 +82,12 @@ class HashtagAutocompleteService
     # have the type as a suffix to distinguish between conflicts.
     attr_accessor :slug
 
+    # Display style for the item, e.g. square, icon, emoji
+    attr_accessor :style_type
+
+    # The emoji to display in the UI autocomplete menu (without colons)
+    attr_accessor :emoji
+
     # The icon to display in the UI autocomplete menu for the item.
     attr_accessor :icon
 
@@ -108,7 +114,9 @@ class HashtagAutocompleteService
       @relative_url = params[:relative_url]
       @text = params[:text]
       @description = params[:description]
+      @style_type = params[:style_type]
       @icon = params[:icon]
+      @emoji = params[:emoji]
       @colors = params[:colors]
       @type = params[:type]
       @ref = params[:ref]
@@ -117,7 +125,7 @@ class HashtagAutocompleteService
     end
 
     def to_h
-      {
+      opts = {
         relative_url: self.relative_url,
         text: self.text,
         description: self.description,
@@ -128,6 +136,13 @@ class HashtagAutocompleteService
         slug: self.slug,
         id: self.id,
       }
+
+      if self.style_type.present?
+        opts[:style_type] = self.style_type
+        opts[:emoji] = self.emoji
+      end
+
+      opts
     end
   end
 

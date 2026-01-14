@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    user_notes:
+      title: "صارف نوٹس"
+      attach_note_description: "اس رکن کے بارے میں ایک نوٹ شامل کریں۔ یہ نوٹ صرف عملے کو نظر آئے گا۔"
+      delete_confirm: "کیا آپ واقعی وہ صارف نوٹ حذف کرنا چاہتے ہیں؟"

@@ -27,7 +27,7 @@ RSpec.describe GroupUserSerializer do
     it "doesn't add expired user status" do
       SiteSetting.enable_user_status = true
 
-      user.user_status.ends_at = 1.minutes.ago
+      user.user_status.ends_at = 1.minute.ago
       serializer = described_class.new(user, scope: Guardian.new(user), root: false)
       json = serializer.as_json
 

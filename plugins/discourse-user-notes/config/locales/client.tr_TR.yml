@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  js:
+    user_notes:
+      title: "Kullanıcı notları"
+      attach_note_description: "Bu kullanıcı hakkında bir not ekleyin. Bu not yalnızca personel tarafından görülebilir."
+      delete_confirm: "Bu kullanıcı notunu silmek istediğinizden emin misiniz?"

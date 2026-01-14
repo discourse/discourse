@@ -13,5 +13,11 @@ class TestRequestsController < ApplicationController
                max_retries: net_http.max_retries,
              }
     end
+
+    def test_net_http_headers
+      net_http_get = Net::HTTP::Get.new("example.com")
+
+      render json: net_http_get
+    end
   end
 end

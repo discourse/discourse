@@ -4,8 +4,8 @@ class PostTiming < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
 
-  validates_presence_of :post_number
-  validates_presence_of :msecs
+  validates :post_number, presence: true
+  validates :msecs, presence: true
 
   def self.pretend_read(topic_id, actual_read_post_number, pretend_read_post_number, user_ids = nil)
     # This is done in SQL cause the logic is quite tricky and we want to do this in one db hit
@@ -108,9 +108,15 @@ class PostTiming < ActiveRecord::Base
 
       Post.where(topic_id: topic_ids).update_all("reads = reads - 1")
 
-      date = Topic.listable_topics.where(id: topic_ids).minimum(:updated_at)
+      topics = Topic.where(id: topic_ids)
 
-      set_minimum_first_unread!(user_id: user_id, date: date) if date
+      if (date = topics.listable_topics.minimum(:updated_at))
+        set_minimum_first_unread!(user_id:, date:)
+      end
+
+      topics.private_messages.find_each do |topic|
+        set_minimum_first_unread_pm!(topic:, user_id:, date: topic.updated_at)
+      end
     end
   end
 

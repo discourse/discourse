@@ -25,6 +25,10 @@ module PageObjects
           end
         end
 
+        def has_description?(text)
+          invite_type_col.has_css?(".invite-description", text:)
+        end
+
         def email_type?(email)
           invite_type_col.has_text?(email) && invite_type_col.has_css?(".d-icon-envelope")
         end
@@ -38,7 +42,7 @@ module PageObjects
         end
 
         def edit_button
-          tr_element.find(".invite-actions .btn-default")
+          tr_element.find(".invite-actions .edit-invite")
         end
 
         def expiry_date
@@ -55,18 +59,19 @@ module PageObjects
       def visit(user)
         url = "/u/#{user.username_lower}/invited/pending"
         page.visit(url)
+        has_css?(".user-content.--loaded")
       end
 
       def invite_button
-        find("#user-content .invite-button")
+        find(".user-content .invite-button")
       end
 
       def invites_list
-        all("#user-content .user-invite-list tbody tr").map { |row| Invite.new(row) }
+        all(".user-content .user-invite-list tbody tr").map { |row| Invite.new(row) }
       end
 
       def latest_invite
-        Invite.new(find("#user-content .user-invite-list tbody tr:first-of-type"))
+        Invite.new(find(".user-content .user-invite-list tbody tr:first-of-type"))
       end
     end
   end

@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  site_settings:
+    discourse_reactions_enabled: "Ativar o plugin de reações discourse."
+    discourse_reactions_enabled_reactions: "Define uma lista de reações ativadas, qualquer emoji é permitido aqui."
+  badges:
+    first_reaction:
+      name: Primeira Reação
+      description: Reagiu à publicação
+      long_description: |
+        Este distintivo é concedido da primeira vez que reage a uma publicação. Reagir a publicações é uma excelente maneira de fazer os restantes membros da comunidade saber que o que eles publicaram foi interessante, útil, giro, ou divertido. Partilhe a sua reação!
+  reports:
+    reactions:
+      title: "Reações"
+      labels:
+        day: "Dia"

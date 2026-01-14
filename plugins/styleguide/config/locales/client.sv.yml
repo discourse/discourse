@@ -50,8 +50,6 @@ sv:
           title: "Staplad navigering"
         categories_list:
           title: "Kategorilista"
-        topic_link:
-          title: "Ämneslänk"
         topic_list_item:
           title: "Punkt i ämneslista"
         topic_statuses:
@@ -60,8 +58,6 @@ sv:
           title: "Ämneslista"
         basic_topic_list:
           title: "Grundläggande ämneslista"
-        footer_message:
-          title: "Sidfotsmeddelande"
         signup_cta:
           title: "Registrera CTA"
         topic_timer_info:
@@ -76,8 +72,8 @@ sv:
           title: "Ämneskarta"
         site_header:
           title: "Sajtens sidhuvud"
-        suggested_topics:
-          title: "Föreslagna ämnen"
+        more_topics:
+          title: "Fler ämnen"
         post_menu:
           title: "Inläggsmeny"
         modal:

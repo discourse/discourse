@@ -28,25 +28,28 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
 
-    # automatically redirect to the topic if the user is logged in and can see it
+    if !invite.present? || !invite.redeemable?
+      show_irredeemable_invite(invite)
+      return
+    end
+
+    # automatically redirect to the topic if the user is logged in and can see it,
+    # but only if the invite wouldn't also add the user to a group
     if current_user
-      if topic = invite.topics.first
+      new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
+      if new_group_ids.empty? && topic = invite.topics.first
         return redirect_to(topic.url) if current_user.guardian.can_see?(topic)
       end
     end
 
-    if invite.present? && invite.redeemable?
-      show_invite(invite)
-    else
-      show_irredeemable_invite(invite)
-    end
+    show_invite(invite)
   rescue RateLimiter::LimitExceeded => e
     flash.now[:error] = e.description
     render layout: "no_ember"
   end
 
   def create_multiple
-    guardian.ensure_can_bulk_invite_to_forum!(current_user)
+    guardian.ensure_can_bulk_invite_to_forum!
     emails = params[:email]
     # validate that topics and groups can accept invites.
     if params[:topic_id].present?
@@ -88,6 +91,7 @@ class InvitesController < ApplicationController
           Invite.generate(
             current_user,
             email: email,
+            description: params[:description],
             domain: params[:domain],
             skip_email: params[:skip_email],
             invited_by: current_user,
@@ -143,6 +147,7 @@ class InvitesController < ApplicationController
         Invite.generate(
           current_user,
           email: params[:email],
+          description: params[:description],
           domain: params[:domain],
           skip_email: params[:skip_email],
           invited_by: current_user,
@@ -164,7 +169,7 @@ class InvitesController < ApplicationController
           show_warnings: true,
         )
       else
-        render json: failed_json, status: 422
+        render json: failed_json, status: :unprocessable_entity
       end
     rescue Invite::UserExists => e
       render_json_error(e.message)
@@ -283,7 +288,13 @@ class InvitesController < ApplicationController
 
       begin
         invite.update!(
-          params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at),
+          params.permit(
+            :email,
+            :description,
+            :custom_message,
+            :max_redemptions_allowed,
+            :expires_at,
+          ),
         )
       rescue ActiveRecord::RecordInvalid => e
         return render_json_error(e.record.errors.full_messages.first)
@@ -308,17 +319,21 @@ class InvitesController < ApplicationController
   def destroy
     params.require(:id)
 
-    invite = Invite.find_by(invited_by_id: current_user.id, id: params[:id])
+    invite = Invite.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
+
+    guardian.ensure_can_destroy_invite!(invite)
 
     invite.trash!(current_user)
 
     render json: success_json
   end
 
-  # For DiscourseConnect SSO, all invite acceptance is done
-  # via the SessionController#sso_login route
   def perform_accept_invitation
+    # When DiscourseConnect is enabled, all invite acceptance is done
+    # via the SSO flow (SessionController#sso_login)
+    raise Discourse::NotFound if SiteSetting.enable_discourse_connect
+
     params.require(:id)
     params.permit(
       :email,
@@ -331,14 +346,12 @@ class InvitesController < ApplicationController
       },
     )
 
-    raise Discourse::NotFound if SiteSetting.enable_discourse_connect
-
     invite = Invite.find_by(invite_key: params[:id])
     redeeming_user = current_user
 
     if invite.present?
       begin
-        attrs = { ip_address: request.remote_ip, session: session }
+        attrs = { ip_address: request.remote_ip, session: server_session }
 
         if redeeming_user
           attrs[:redeeming_user] = redeeming_user
@@ -365,11 +378,14 @@ class InvitesController < ApplicationController
              ActiveRecord::RecordNotSaved,
              ActiveRecord::LockWaitTimeout,
              Invite::UserExists => e
-        return render json: failed_json.merge(message: e.message), status: 412
+        return render json: failed_json.merge(message: e.message), status: :precondition_failed
       end
 
       if user.blank?
-        return render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: 404
+        return(
+          render json: failed_json.merge(message: I18n.t("invite.not_found_json")),
+                 status: :not_found
+        )
       end
 
       log_on_user(user) if !redeeming_user && user.active? && user.guardian.can_access_forum?
@@ -403,15 +419,16 @@ class InvitesController < ApplicationController
 
       render json: success_json.merge(response)
     else
-      render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: 404
+      render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: :not_found
     end
   end
 
   def destroy_all_expired
-    guardian.ensure_can_destroy_all_invites!(current_user)
+    guardian.ensure_can_destroy_all_invites!
+    user = fetch_user_from_params
 
     Invite
-      .where(invited_by: current_user)
+      .where(invited_by: user)
       .where("expires_at < ?", Time.zone.now)
       .find_each { |invite| invite.trash!(current_user) }
 
@@ -431,7 +448,7 @@ class InvitesController < ApplicationController
   end
 
   def resend_all_invites
-    guardian.ensure_can_resend_all_invites!(current_user)
+    guardian.ensure_can_resend_all_invites!
 
     begin
       RateLimiter.new(
@@ -445,16 +462,13 @@ class InvitesController < ApplicationController
       return render_json_error(I18n.t("rate_limiter.slow_down"))
     end
 
-    Invite
-      .pending(current_user)
-      .where("invites.email IS NOT NULL")
-      .find_each { |invite| invite.resend_invite }
+    Invite.pending(current_user).where.not(email: nil).find_each { |invite| invite.resend_invite }
 
     render json: success_json
   end
 
   def upload_csv
-    guardian.ensure_can_bulk_invite_to_forum!(current_user)
+    guardian.ensure_can_bulk_invite_to_forum!
 
     hijack do
       begin
@@ -480,6 +494,15 @@ class InvitesController < ApplicationController
         end
 
         if invites.present?
+          custom_error =
+            DiscoursePluginRegistry.apply_modifier(:invite_bulk_csv_custom_error, nil, invites)
+
+          if custom_error.present?
+            return(
+              render json: failed_json.merge(errors: [custom_error]), status: :unprocessable_entity
+            )
+          end
+
           Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
 
           if invites.count >= SiteSetting.max_bulk_invites
@@ -492,12 +515,13 @@ class InvitesController < ApplicationController
                          ),
                        ],
                      ),
-                   status: 422
+                   status: :unprocessable_entity
           else
             render json: success_json
           end
         else
-          render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
+          render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]),
+                 status: :unprocessable_entity
         end
       end
     end
@@ -511,8 +535,8 @@ class InvitesController < ApplicationController
     # Show email if the user already authenticated their email
     different_external_email = false
 
-    if session[:authentication]
-      auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
+    if server_session[:authentication]
+      auth_result = Auth::Result.from_session_data(server_session[:authentication], user: nil)
       if invite.email == auth_result.email
         email = invite.email
       else
@@ -556,7 +580,7 @@ class InvitesController < ApplicationController
       info[:username] = current_user.username
     end
 
-    secure_session["invite-key"] = invite.invite_key
+    server_session["invite-key"] = invite.invite_key
 
     respond_to do |format|
       format.html { store_preloaded("invite_info", MultiJson.dump(info)) }
@@ -589,20 +613,20 @@ class InvitesController < ApplicationController
   end
 
   def ensure_invites_allowed
-    if (
-         !SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0 &&
-           !SiteSetting.enable_discourse_connect
-       )
-      raise Discourse::NotFound
-    end
+    return if SiteSetting.enable_local_logins
+    return if SiteSetting.enable_discourse_connect
+    return if Discourse.enabled_auth_providers.present?
+
+    raise Discourse::NotFound
   end
 
   def ensure_new_registrations_allowed
-    unless SiteSetting.allow_new_registrations
-      flash[:error] = I18n.t("login.new_registrations_disabled")
-      render layout: "no_ember"
-      false
-    end
+    return if SiteSetting.allow_new_registrations
+
+    flash[:error] = I18n.t("login.new_registrations_disabled")
+    render layout: "no_ember"
+
+    false
   end
 
   def groups_can_see_topic?(groups, topic)

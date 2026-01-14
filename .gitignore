@@ -23,14 +23,8 @@
 /public/plugins
 /public/tombstone
 /public/uploads
+/public/images/emoji
 
-# Ignore the default SQLite database and db dumps
-*.sql
-*.sql.gz
-!/spec/fixtures/**/*.sql
-/db/*.sqlite3
-/db/structure.sql
-/db/schema.rb
 /db/schema_cache.yml
 
 # Plugins except for the bundled ones
@@ -48,11 +42,44 @@
 !/plugins/spoiler-alert
 !/plugins/checklist
 !/plugins/footnote
+!/plugins/discourse-reactions
+!/plugins/discourse-apple-auth
+!/plugins/discourse-login-with-amazon
+!/plugins/discourse-lti
+!/plugins/discourse-microsoft-auth
+!/plugins/discourse-oauth2-basic
+!/plugins/discourse-openid-connect
+!/plugins/discourse-zendesk-plugin
+!/plugins/discourse-patreon
+!/plugins/discourse-graphviz
+!/plugins/discourse-rss-polling
+!/plugins/discourse-math
+/plugins/discourse-math/public/*/katex
+/plugins/discourse-math/public/*/mathjax
+!/plugins/discourse-chat-integration
+!/plugins/discourse-data-explorer
+!/plugins/discourse-post-voting
+!/plugins/discourse-user-notes
+!/plugins/discourse-assign
+!/plugins/discourse-subscriptions
+!/plugins/discourse-hcaptcha
+!/plugins/discourse-gamification
+!/plugins/discourse-calendar
+!/plugins/discourse-policy
+!/plugins/discourse-github
+!/plugins/discourse-adplugin
+!/plugins/discourse-affiliate
+!/plugins/discourse-solved
+!/plugins/discourse-topic-voting
+!/plugins/discourse-templates
+!/plugins/discourse-ai
+!/plugins/discourse-cakeday
+!/plugins/discourse-rewind
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
-/vendor/bundle/*
+/vendor/bundle
 /vendor/data/GeoLite2-City.mmdb
 /vendor/data/GeoLite2-ASN.mmdb
 
@@ -66,6 +93,10 @@
 !/.vscode/extensions.json
 !/.vscode/*.sample
 
+# Same for Zed config
+/.zed/*
+!/.zed/*.sample
+
 # Front-end
 dist
 node_modules
@@ -78,6 +109,7 @@ yarn-error.log
 
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*
+/app/assets/generated
 
 # Generated API documentation files
 openapi/*
@@ -90,3 +122,16 @@ openapi/*
 
 # direnv.net
 .direnv
+
+# Types
+frontend/discourse-types/declarations
+*.tsbuildinfo
+
+# discourse-ai evals
+/plugins/discourse-ai/evals/cases
+/plugins/discourse-ai/evals/log
+/plugins/discourse-ai/config/eval-llms.local.yml
+
+# AI customization
+/.claude
+/.cursor

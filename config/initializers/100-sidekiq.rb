@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "sidekiq/pausable"
+require "sidekiq/discourse_event"
+require "sidekiq/suppress_user_email_errors"
 require "sidekiq_logster_reporter"
 require "sidekiq_long_running_job_logger"
 require "mini_scheduler_long_running_job_logger"
@@ -9,8 +11,13 @@ Sidekiq.configure_client { |config| config.redis = Discourse.sidekiq_redis_confi
 
 Sidekiq.configure_server do |config|
   config.redis = Discourse.sidekiq_redis_config
+  config[:skip_default_job_logging] = true
 
-  config.server_middleware { |chain| chain.add Sidekiq::Pausable }
+  config.server_middleware do |chain|
+    chain.add Sidekiq::Pausable
+    chain.add Sidekiq::DiscourseEvent
+    chain.add Sidekiq::SuppressUserEmailErrors
+  end
 
   if stuck_sidekiq_job_minutes = GlobalSetting.sidekiq_report_long_running_jobs_minutes
     config.on(:startup) { SidekiqLongRunningJobLogger.new(stuck_sidekiq_job_minutes:).start }
@@ -66,16 +73,17 @@ else
   #
   # Instead, this patch adds a dedicated logger instance and patches
   # the #add method to forward messages to Rails.logger.
-  Sidekiq.logger = Logger.new(nil)
+  Sidekiq.default_configuration.logger = Logger.new(nil)
   Sidekiq
+    .default_configuration
     .logger
     .define_singleton_method(:add) do |severity, message = nil, progname = nil, &blk|
       Rails.logger.add(severity, message, progname, &blk)
     end
 end
 
-Sidekiq.error_handlers.clear
-Sidekiq.error_handlers << SidekiqLogsterReporter.new
+Sidekiq.default_configuration.error_handlers.clear
+Sidekiq.default_configuration.error_handlers << SidekiqLogsterReporter.new
 
 Sidekiq.strict_args!
 
@@ -84,7 +92,7 @@ Rails.application.config.to_prepare do
   Dir.glob("#{Rails.root}/app/jobs/scheduled/*.rb") { |f| require(f) } if Rails.env.development?
 
   MiniScheduler.configure do |config|
-    config.redis = Discourse.redis
+    config.redis = DiscourseRedis.new(Discourse.sidekiq_redis_config)
 
     config.job_exception_handler { |ex, context| Discourse.handle_job_exception(ex, context) }
 

@@ -5,8 +5,10 @@
 
 .themes-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1em;
+  align-items: stretch;
+  margin-top: var(--space-4);
 }
 
 .theme-card {
@@ -15,9 +17,11 @@
   position: relative;
   box-shadow: 0 0 0 3px transparent;
   transition: box-shadow 0.3s ease-in-out;
+  height: 100%;
 
   &.--updating {
-    animation: updating 3s ease-in-out 1,
+    animation:
+      updating 3s ease-in-out 1,
       updatingInfinite 3s ease-in-out 3s infinite;
 
     @keyframes updating {
@@ -76,18 +80,8 @@
     flex-grow: 1;
   }
 
-  &.-active {
+  &.--default {
     @include theme-card-border(tertiary);
-  }
-
-  &__update-available {
-    position: absolute;
-    right: -9px;
-    top: -9px;
-    color: var(--success);
-    font-size: var(--font-up-1);
-    background: var(--secondary);
-    display: flex;
   }
 
   &__icons {
@@ -97,7 +91,14 @@
   &__image-wrapper {
     width: 100%;
     height: 160px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    align-items: center;
+    scroll-snap-type: x mandatory;
+    border-bottom: 1px solid var(--content-border-color);
+    border-top-left-radius: var(--d-border-radius);
+    border-top-right-radius: var(--d-border-radius);
 
     svg {
       width: 100%;
@@ -108,10 +109,10 @@
 
   &__image {
     width: 100%;
-    height: 100%;
+    flex-shrink: 0;
     object-fit: cover;
     object-position: top left;
-    border-radius: calc(var(--d-border-radius) + 1px);
+    scroll-snap-align: start;
   }
 
   .ember-checkbox {
@@ -124,7 +125,30 @@
   }
 
   &__content {
-    padding: 10px 0;
+    padding-inline: 1rem;
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  &__title {
+    font-size: var(--font-up-0);
+    font-weight: 700;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    overflow-wrap: anywhere;
+    color: var(--primary);
+
+    &:visited {
+      color: currentcolor;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--tertiary);
+    }
   }
 
   &__description {
@@ -144,13 +168,52 @@
     margin-top: auto;
   }
 
+  &__button.--set-default {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+
   &__footer {
-    margin-top: auto;
+    flex-direction: column;
+    padding-inline: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  &__controls {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
   }
 
   &__footer-actions {
     margin-left: auto;
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: flex-start;
+    min-height: 2rem;
+  }
+
+  &__badge {
+    font-size: var(--font-down-2);
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    color: var(--primary-very-high);
+    background: var(--tertiary-low);
+    letter-spacing: 0.25px;
+    align-items: center;
+    display: inline-flex;
+    gap: 0.25rem;
+
+    svg {
+      height: 0.75em;
+      color: var(--primary-high);
+    }
   }
 
   .admin-config-area-card__header-action {
@@ -179,9 +242,27 @@
   }
 }
 
-.theme-card .admin-config-area-card {
-  &__title {
-    display: flex;
-    align-items: center;
+.admin-config-area-card.theme-card {
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .admin-config-area-card__content {
+    margin: 0;
+    padding-right: 0;
+  }
+
+  .admin-config-area-card__header-wrapper {
+    flex: none;
+  }
+}
+
+.admin-config-area-card.theme-install-card {
+  .theme-install-card__external-links {
+    svg {
+      font-size: var(--font-down-3);
+      margin-bottom: 0.1em;
+    }
   }
 }

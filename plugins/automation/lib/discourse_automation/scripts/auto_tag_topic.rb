@@ -16,6 +16,11 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_TAG_TOPIC
 
     tags = fields.dig("tags", "value")
 
-    DiscourseTagging.tag_topic_by_names(topic, Guardian.new(post.user), tags, append: true)
+    DiscourseTagging.tag_topic_by_names(
+      topic,
+      Guardian.new(Discourse.system_user),
+      tags,
+      append: true,
+    )
   end
 end

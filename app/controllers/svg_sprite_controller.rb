@@ -37,7 +37,7 @@ class SvgSpriteController < ApplicationController
     data = SvgSprite.search(keyword)
 
     if data.blank?
-      render body: nil, status: 404
+      render body: nil, status: :not_found
     else
       render plain: data.inspect, disposition: nil, content_type: "text/plain"
     end
@@ -62,14 +62,14 @@ class SvgSpriteController < ApplicationController
       icon = SvgSprite.search(name)
 
       if icon.blank?
-        render body: nil, status: 404
+        render body: nil, status: :not_found
       else
         doc = Nokogiri.XML(icon)
         doc.at_xpath("symbol").name = "svg"
         doc.at_xpath("svg")["xmlns"] = "http://www.w3.org/2000/svg"
         doc.at_xpath("svg")["fill"] = adjust_hex(params[:color]) if params[:color]
 
-        response.headers["Last-Modified"] = 1.years.ago.httpdate
+        response.headers["Last-Modified"] = 1.year.ago.httpdate
         response.headers["Content-Length"] = doc.to_s.bytesize.to_s
         immutable_for 1.day
 

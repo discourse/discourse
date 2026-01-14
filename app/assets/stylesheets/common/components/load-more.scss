@@ -1,0 +1,10 @@
+.load-more-sentinel {
+  height: 1px; // 0px height causes issues with intersection observer in some cases
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  user-select: none;
+  visibility: hidden;
+  position: relative;
+}

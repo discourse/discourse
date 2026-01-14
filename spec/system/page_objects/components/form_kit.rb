@@ -33,7 +33,7 @@ module PageObjects
         case control_type
         when /input-/, "password"
           component.find("input").value
-        when "icon"
+        when "icon", "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
         when "checkbox"
@@ -41,13 +41,15 @@ module PageObjects
         when "menu"
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
-          component.find("select").value
-        when "composer"
+          PageObjects::Components::DSelect.new(component.find("select")).value
+        when "composer", "textarea"
           component.find("textarea").value
         when "image"
           url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
           sha1 = url.match(/(\h{40})/).captures.first
           Upload.find_by(sha1:)
+        when "toggle"
+          component.find("button[role=\"switch\"]", visible: :all)["aria-checked"] == "true"
         end
       end
 
@@ -78,11 +80,21 @@ module PageObjects
       end
 
       def has_no_errors?
-        !has_css?(".form-kit__errors")
+        has_no_css?(".form-kit__errors")
       end
 
       def control_type
-        component["data-control-type"]
+        type = component["data-control-type"]
+
+        return type if type != "custom"
+
+        if component.has_css?(".multi-select")
+          "multi-select"
+        elsif component.has_css?("textarea")
+          "textarea"
+        else
+          raise "Unknown custom control"
+        end
       end
 
       def toggle
@@ -91,6 +103,8 @@ module PageObjects
           component.find("input[type='checkbox']").click
         when "password"
           component.find(".form-kit__control-password-toggle").click
+        when "toggle"
+          component.find("button[role=\"switch\"]", visible: :all).ancestor("label").click
         else
           raise "'toggle' is not supported for control type: #{control_type}"
         end
@@ -117,13 +131,16 @@ module PageObjects
           picker.expand
           picker.search(value)
           picker.select_row_by_value(value)
+        when "multi-select"
+          selector = component.find(".form-kit__control-custom > .multi-select")["id"]
+          picker = PageObjects::Components::SelectKit.new("#" + selector)
+          picker.expand
+          picker.search(value)
+          picker.select_row_by_name(value)
         when "select"
-          selector = component.find(".form-kit__control-select")
-          selector.find(".form-kit__control-option[value='#{value}']").select_option
-          selector.execute_script(<<~JS, selector)
-            var selector = arguments[0];
-            selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
-          JS
+          PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
+            value,
+          )
         when "menu"
           trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu-trigger")
           trigger.click
@@ -187,10 +204,7 @@ module PageObjects
       end
 
       def submit
-        page.execute_script(
-          "var form = arguments[0]; form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));",
-          find(component),
-        )
+        find("#{component} button[type='submit']").click
       end
 
       def reset

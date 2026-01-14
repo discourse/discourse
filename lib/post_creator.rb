@@ -259,7 +259,7 @@ class PostCreator
   end
 
   def self.track_post_stats
-    Rails.env != "test" || @track_post_stats
+    !Rails.env.test? || @track_post_stats
   end
 
   def self.track_post_stats=(val)
@@ -342,6 +342,9 @@ class PostCreator
         drafts_saved: revisions,
         typing_duration_msecs: @opts[:typing_duration_msecs] || 0,
         composer_open_duration_msecs: @opts[:composer_open_duration_msecs] || 0,
+        writing_device: @opts[:writing_device]&.to_s,
+        writing_device_user_agent: @opts[:user_agent]&.truncate(400),
+        composer_version: @opts[:composer_version],
       )
     end
   end
@@ -552,6 +555,7 @@ class PostCreator
       via_email
       raw_email
       action_code
+      locale
     ].each { |a| post.public_send("#{a}=", @opts[a]) if @opts[a].present? }
 
     post.extract_quoted_post_numbers

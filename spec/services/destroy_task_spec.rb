@@ -2,10 +2,10 @@
 
 RSpec.describe DestroyTask do
   describe "destroy topics" do
-    fab!(:c) { Fabricate(:category_with_definition) }
+    fab!(:c, :category_with_definition)
     fab!(:t) { Fabricate(:topic, category: c) }
     let!(:p) { Fabricate(:post, topic: t) }
-    fab!(:c2) { Fabricate(:category_with_definition) }
+    fab!(:c2, :category_with_definition)
     fab!(:t2) { Fabricate(:topic, category: c2) }
     let!(:p2) { Fabricate(:post, topic: t2) }
     fab!(:sc) { Fabricate(:category_with_definition, parent_category: c2) }
@@ -40,10 +40,10 @@ RSpec.describe DestroyTask do
   end
 
   describe "destroy categories" do
-    fab!(:c) { Fabricate(:category_with_definition) }
+    fab!(:c, :category_with_definition)
     fab!(:t) { Fabricate(:topic, category: c) }
     let!(:p) { Fabricate(:post, topic: t) }
-    fab!(:c2) { Fabricate(:category_with_definition) }
+    fab!(:c2, :category_with_definition)
     fab!(:t2) { Fabricate(:topic, category: c) }
     let!(:p2) { Fabricate(:post, topic: t2) }
     fab!(:sc) { Fabricate(:category_with_definition, parent_category: c2) }
@@ -64,6 +64,48 @@ RSpec.describe DestroyTask do
       expect { destroy_task.destroy_category(c2.id) }.to change {
         Category.where(id: sc.id).count
       }.by(-1)
+    end
+  end
+
+  describe "#destroy_posts" do
+    let(:task) { DestroyTask.new(StringIO.new) }
+
+    let!(:t1) { Fabricate(:topic) }
+    let!(:t2) { Fabricate(:topic) }
+
+    let!(:p1) { Fabricate(:post, topic: t1) }
+    let!(:p2) { Fabricate(:post, topic: t1) }
+    let!(:p3) { Fabricate(:post, topic: t2) }
+    let!(:p4) { Fabricate(:post, topic: t2) }
+
+    before { p2.trash! }
+
+    context "when permanent deletion is enabled" do
+      it "destroys posts listed and creates staff action logs" do
+        SiteSetting.can_permanently_delete = true
+
+        expect {
+          task.destroy_posts([p2.id, p3.id, p4.id], require_confirmation: false)
+        }.to change { Post.with_deleted.count }.by(-3).and change {
+                UserHistory.pluck(:post_id, :topic_id, :action)
+              }.from([]).to(
+                contain_exactly(
+                  [p2.id, nil, UserHistory.actions[:delete_post_permanently]],
+                  [nil, t2.id, UserHistory.actions[:delete_topic_permanently]],
+                  [p4.id, nil, UserHistory.actions[:delete_post_permanently]],
+                ),
+              )
+      end
+    end
+
+    context "when permanent deletion is disabled in site settings" do
+      it "does not do anything" do
+        SiteSetting.can_permanently_delete = false
+
+        expect { task.destroy_posts([p2.id, p3.id], require_confirmation: false) }.not_to change {
+          Post.with_deleted.count
+        }
+      end
     end
   end
 

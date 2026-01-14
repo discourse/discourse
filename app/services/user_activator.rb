@@ -29,7 +29,7 @@ class UserActivator
   end
 
   def factory
-    invite = Invite.find_by(email: Email.downcase(@user.email))
+    invite = Invite.find_by(email: Email.downcase(user.email))
 
     if !user.active?
       EmailActivator
@@ -67,7 +67,7 @@ class LoginActivator < UserActivator
   include CurrentUser
 
   def activate
-    log_on_user(user, { authenticated_with_oauth: @session["authenticated_with_oauth"] })
+    log_on_user(user, { authenticated_with_oauth: session["authenticated_with_oauth"] })
     user.enqueue_welcome_message("welcome_user")
     success_message
   end

@@ -4,8 +4,8 @@ RSpec.describe "Edited message", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
 
   before do
     chat_system_bootstrap
@@ -15,7 +15,7 @@ RSpec.describe "Edited message", type: :system do
 
   context "when editing message" do
     context "with multiple users in the channel" do
-      fab!(:editing_user) { Fabricate(:user) }
+      fab!(:editing_user, :user)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: editing_user) }
 
       before { channel_1.add(editing_user) }

@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  discourse_assign:
+    reminders_frequency:
+      never: "ھەرگىز"
+      daily: "كۈندىلىك"
+      weekly: "ھەپتىلىك"
+      monthly: "ئايلىق"
+      quarterly: "پەسىللىك"

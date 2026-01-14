@@ -5,9 +5,12 @@
 # https://translate.discourse.org/
 
 da:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Discourse Detaljer"
   js:
-    details:
-      title: Skjul detaljer
     composer:
       details_title: Resume
       details_text: "Denne tekst vil blive skjult"

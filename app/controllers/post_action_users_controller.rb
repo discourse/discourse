@@ -56,6 +56,6 @@ class PostActionUsersController < ApplicationController
     UserCommScreener.new(
       acting_user: current_user,
       target_user_ids: user_ids,
-    ).actor_preventing_communication
+    ).actor_ignoring_or_muting_users
   end
 end

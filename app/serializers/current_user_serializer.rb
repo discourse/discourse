@@ -28,6 +28,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_delete_account,
              :can_post_anonymously,
              :can_ignore_users,
+             :can_edit_tags,
              :can_delete_all_posts_and_topics,
              :custom_fields,
              :muted_category_ids,
@@ -72,12 +73,15 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :sidebar_sections,
              :new_new_view_enabled?,
-             :use_admin_sidebar,
-             :use_experimental_admin_search,
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
-             :can_see_emails
+             :can_see_emails,
+             :can_localize_content?,
+             :effective_locale,
+             :use_reviewable_ui_refresh,
+             :can_see_ip,
+             :is_impersonating
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -95,6 +99,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def login_method
     @options[:login_method]
+  end
+
+  def is_impersonating
+    !!object.is_impersonating
   end
 
   def groups
@@ -134,18 +142,6 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
-  def use_admin_sidebar
-    object.staff? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
-  end
-
-  def use_experimental_admin_search
-    object.staff? && object.in_any_groups?(SiteSetting.experimental_admin_search_enabled_groups_map)
-  end
-
-  def include_use_admin_sidebar?
-    object.staff?
-  end
-
   def has_unseen_features
     DiscourseUpdates.has_unseen_features?(object.id)
   end
@@ -155,7 +151,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_post_anonymously
-    SiteSetting.allow_anonymous_posting &&
+    SiteSetting.allow_anonymous_mode &&
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
   end
 
@@ -173,6 +169,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_edit
     true
+  end
+
+  def can_edit_tags
+    scope.can_edit_tag?
   end
 
   def can_invite_to_forum
@@ -328,5 +328,37 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_see_emails?
     object.staff?
+  end
+
+  def can_localize_content?
+    scope.can_localize_content?
+  end
+
+  def include_can_localize_content?
+    SiteSetting.content_localization_enabled
+  end
+
+  def effective_locale
+    scope.user.effective_locale
+  end
+
+  def include_effective_locale?
+    SiteSetting.content_localization_enabled
+  end
+
+  def use_reviewable_ui_refresh
+    scope.can_see_reviewable_ui_refresh?
+  end
+
+  def include_use_reviewable_ui_refresh?
+    scope.can_see_review_queue?
+  end
+
+  def can_see_ip
+    scope.can_see_ip?
+  end
+
+  def include_can_see_ip?
+    object.admin? || (object.moderator? && SiteSetting.moderators_view_ips)
   end
 end

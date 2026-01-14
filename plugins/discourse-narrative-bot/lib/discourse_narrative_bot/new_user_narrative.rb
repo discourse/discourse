@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "distributed_mutex"
-
 module DiscourseNarrativeBot
   class NewUserNarrative < Base
-    I18N_KEY = "discourse_narrative_bot.new_user_narrative".freeze
-    BADGE_NAME = "Certified".freeze
+    I18N_KEY = "discourse_narrative_bot.new_user_narrative"
+    BADGE_NAME = "Certified"
 
     TRANSITION_TABLE = {
       begin: {
@@ -210,7 +208,7 @@ module DiscourseNarrativeBot
       MD
 
       title = I18n.t("#{I18N_KEY}.hello.title", title: SiteSetting.title)
-      title = title.gsub(/:([\w\-+]+(?::t\d)?):/, "").strip if SiteSetting.max_emojis_in_title == 0
+      title = title.gsub(Emoji::EMOJI_CODE_REGEXP, "").strip if SiteSetting.max_emojis_in_title == 0
 
       opts = {
         title: title,

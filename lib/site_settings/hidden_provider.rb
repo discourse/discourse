@@ -13,6 +13,10 @@ class SiteSettings::HiddenProvider
     @hidden_settings << site_setting_name
   end
 
+  def remove_hidden(site_setting_name)
+    @hidden_settings.delete(site_setting_name)
+  end
+
   def all
     DiscoursePluginRegistry.apply_modifier(:hidden_site_settings, @hidden_settings)
   end

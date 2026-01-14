@@ -16,6 +16,11 @@ module PageObjects
         self
       end
 
+      def open_with_redirect(redirect_path)
+        visit("/login?redirect=#{redirect_path}")
+        self
+      end
+
       def open_from_header
         find(".login-button").click
       end

@@ -81,7 +81,7 @@ RSpec.describe UploadValidator do
     end
 
     describe "upload for site settings" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
 
       let(:upload) do
         Fabricate.build(:upload, user: user, original_filename: "test.ico", for_site_setting: true)

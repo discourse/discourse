@@ -27,6 +27,52 @@ RSpec.describe TopicStatusUpdater do
     expect(tu.last_read_post_number).to eq(2)
   end
 
+  it "respects topics_unread_when_closed preference for private messages" do
+    user_wants_unread = Fabricate(:user)
+    user_wants_unread.user_option.update!(topics_unread_when_closed: true)
+
+    user_wants_read = Fabricate(:user)
+    user_wants_read.user_option.update!(topics_unread_when_closed: false)
+
+    post =
+      PostCreator.create(
+        user,
+        raw: "this is a private message",
+        title: "private message title",
+        archetype: Archetype.private_message,
+        target_usernames: [user_wants_unread.username, user_wants_read.username],
+      )
+
+    TopicUser.update_last_read(user_wants_unread, post.topic.id, 1, 1, 0)
+    TopicUser.update_last_read(user_wants_read, post.topic.id, 1, 1, 0)
+
+    PostTiming.create!(
+      topic_id: post.topic.id,
+      post_number: 1,
+      user_id: user_wants_unread.id,
+      msecs: 1000,
+    )
+    PostTiming.create!(
+      topic_id: post.topic.id,
+      post_number: 1,
+      user_id: user_wants_read.id,
+      msecs: 1000,
+    )
+
+    TopicStatusUpdater.new(post.topic, admin).update!("closed", true)
+
+    # Should have 2 posts (original + close action)
+    expect(post.topic.posts.count).to eq(2)
+
+    # User with topics_unread_when_closed enabled should NOT have read the close action
+    tu_wants_unread = TopicUser.find_by(user_id: user_wants_unread.id, topic_id: post.topic.id)
+    expect(tu_wants_unread.last_read_post_number).to eq(1)
+
+    # User with topics_unread_when_closed disabled SHOULD have read the close action
+    tu_wants_read = TopicUser.find_by(user_id: user_wants_read.id, topic_id: post.topic.id)
+    expect(tu_wants_read.last_read_post_number).to eq(2)
+  end
+
   it "adds an autoclosed message" do
     topic = create_topic
     topic.set_or_create_timer(TopicTimer.types[:close], "10")
@@ -146,7 +192,7 @@ RSpec.describe TopicStatusUpdater do
           timer = TopicTimer.find_by(topic: topic)
           expect(timer).not_to eq(nil)
           expect(timer.duration_minutes).to eq(72 * 60)
-          expect(timer.execute_at).to be_within_one_second_of(Time.zone.now + 72.hours)
+          expect(timer.execute_at).to be_within_one_second_of(72.hours.from_now)
         end
       end
     end

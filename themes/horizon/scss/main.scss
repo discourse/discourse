@@ -1,0 +1,127 @@
+@use "lib/viewport";
+
+:root {
+  --main-grid-gap: 0.5em;
+}
+
+html:not(:has(.has-full-page-chat)) {
+  background-color: var(--background-color);
+
+  @include viewport.until(lg) {
+    background-color: var(--d-content-background);
+  }
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+
+  @include viewport.until(sm) {
+    background-color: var(--d-content-background);
+  }
+}
+
+#main-outlet-wrapper {
+  gap: var(--main-grid-gap);
+  padding-right: var(--main-grid-gap);
+}
+
+body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
+  column-gap: var(--main-grid-gap);
+  background-color: var(--background-color);
+}
+
+body.has-full-page-chat:not(.has-sidebar-page) {
+  .d-header {
+    background-color: var(--background-color);
+  }
+
+  #main-outlet-wrapper {
+    gap: var(--main-grid-gap);
+
+    @include viewport.until(lg) {
+      gap: 0;
+    }
+  }
+}
+
+body.has-sidebar-page #main-outlet-wrapper {
+  #main-outlet {
+    max-width: unset;
+  }
+}
+
+body:not(.has-sidebar-page) #main-outlet-wrapper {
+  @include viewport.from(lg) {
+    grid-template-columns: 0 minmax(0, 1fr) 0;
+  }
+}
+
+body:not(.has-full-page-chat, .wizard) {
+  @include viewport.from(xl) {
+    background-color: var(--background-color);
+  }
+
+  #main-outlet-wrapper {
+    @include viewport.until(lg) {
+      --main-grid-gap: 0em;
+    }
+
+    @media screen and (width >= 768px) {
+      gap: var(--main-grid-gap);
+    }
+
+    #main-outlet {
+      width: 100%;
+      max-width: unset;
+      padding-bottom: var(--space-6);
+      border-radius: var(--d-border-radius-large);
+      background-color: var(--d-content-background);
+
+      @include viewport.until(lg) {
+        border-radius: 0;
+      }
+
+      html.composer-open & {
+        padding-bottom: var(--composer-height);
+      }
+
+      @include viewport.from(sm) {
+        > *:not(.experimental-screen, .activate-account) {
+          box-sizing: border-box;
+          max-width: 1000px;
+          margin-inline: auto;
+          padding-inline: var(--space-6);
+        }
+      }
+    }
+  }
+}
+
+@include viewport.until(sm) {
+  .welcome-banner {
+    display: none;
+  }
+}
+
+#list-area {
+  .topic-list-body {
+    padding-top: var(--space-4);
+  }
+}
+
+aside.onebox {
+  background-color: var(--d-content-background);
+}
+
+.d-editor-preview-wrapper {
+  border-radius: var(--d-border-radius);
+  padding: 1em;
+  background-color: var(--d-content-background);
+}
+
+.no-ember {
+  #main-outlet {
+    border-radius: var(--d-border-radius-large);
+    max-height: calc(100vh - 50px - 1em - var(--main-grid-gap));
+  }
+}

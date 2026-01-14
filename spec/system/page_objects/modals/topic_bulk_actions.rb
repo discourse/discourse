@@ -16,12 +16,16 @@ module PageObjects
         find("#dismiss-read-confirm").click
       end
 
-      def click_silent
-        find("#topic-bulk-action-options__silent").click
+      def click_notify
+        find("#topic-bulk-action-options__notify").click
       end
 
       def fill_in_close_note(message)
         find("#bulk-close-note").set(message)
+      end
+
+      def select_notification_level(level)
+        find(".bulk-notification-list input[name='notification_level'][value='#{level}']").click
       end
 
       def has_category_badge?(category)

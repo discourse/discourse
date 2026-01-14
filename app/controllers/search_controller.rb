@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  before_action :block_crawler, only: :show
   before_action :cancel_overloaded_search, only: [:query]
   skip_before_action :check_xhr, only: :show
   after_action :add_noindex_header
@@ -19,7 +20,8 @@ class SearchController < ApplicationController
     # eg: ?q[foo]=bar
     raise Discourse::InvalidParameters.new(:q) if params[:q].present? && !@search_term.present?
 
-    if @search_term.present? && @search_term.length < SiteSetting.min_search_term_length
+    if @search_term.present? && @search_term.length < SiteSetting.min_search_term_length &&
+         !Search.valid_search_shortcut?(@search_term)
       raise Discourse::InvalidParameters.new(:q)
     end
 
@@ -74,7 +76,8 @@ class SearchController < ApplicationController
       result.find_user_data(guardian) if result
     end
 
-    serializer = serialize_data(result, GroupedSearchResultSerializer, result: result)
+    serializer =
+      serialize_data(result, GroupedSearchResultSerializer, result: result, scope: guardian)
 
     respond_to do |format|
       format.html { store_preloaded("search", MultiJson.dump(serializer)) }
@@ -162,7 +165,7 @@ class SearchController < ApplicationController
   protected
 
   def site_overloaded?
-    queue_time = request.env["REQUEST_QUEUE_SECONDS"]
+    queue_time = request.env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]
     if queue_time
       threshold = GlobalSetting.disable_search_queue_threshold.to_f
       threshold > 0 && queue_time > threshold
@@ -210,6 +213,26 @@ class SearchController < ApplicationController
       return e
     end
     false
+  end
+
+  def block_crawler
+    if use_crawler_layout?
+      crawler_html = <<~HTML
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta name='robots' content='noindex'>
+            </head>
+            <body>
+              <p><em>*waves hand*</em> This is not the content you are looking for</p>
+            </body>
+          </html>
+        HTML
+
+      response.headers["X-Robots-Tag"] = "noindex"
+
+      render html: crawler_html.html_safe, layout: false, content_type: "text/html"
+    end
   end
 
   def cancel_overloaded_search

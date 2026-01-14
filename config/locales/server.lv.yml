@@ -229,6 +229,7 @@ lv:
       every_month: "katru mēnesi"
       every_six_months: "katrus sešus mēnešus"
   user_api_key:
+    deny: "Atcelt"
     read: "izlasīts"
     otp_confirmation:
       confirm_title: Turpināt %{site_name}
@@ -448,8 +449,10 @@ lv:
     queued_by_staff:
       title: "Ieraksts gaida apstiprinājumu"
     welcome_user:
+      preview: "Laipni lūdzam %{site_name}!"
       subject_template: "Laipni lūdzam %{site_name}!"
     welcome_invite:
+      preview: "Laipni lūdzam %{site_name}!"
       subject_template: "Laipni lūdzam %{site_name}!"
   user_notifications:
     digest:
@@ -460,15 +463,10 @@ lv:
       title: "Iestatīt paroli"
   page_not_found:
     page_title: "Lapa nav atrasta"
-    popular_topics: "Populāri"
-    recent_topics: "Neseni"
     see_more: "Vairāk"
-    search_title: "Meklēt šajā vietnē"
     search_button: "Meklēt"
   upload:
     unauthorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
-  color_schemes:
-    default_theme_name: "Noklusējums"
   csv_export:
     boolean_yes: "Jā"
     boolean_no: "Nē"
@@ -494,9 +492,11 @@ lv:
       button: "Reģistrēties"
     resend_email:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
+  dev_mode:
+    enter: "Ievadīt"
   wizard:
     step:
-      privacy:
+      setup:
         fields:
           login_required:
             choices:
@@ -504,17 +504,12 @@ lv:
                 label: "Publisks"
               private:
                 label: "Privāts"
-      styling:
-        fields:
-          styling_preview:
-            label: "Priekšskatījums"
-          homepage_style:
-            choices:
-              latest:
-                label: "Pēdējais"
   onebox:
     github:
       closed: "slēgts"
+      status_date:
+        approved: "apstiprināt"
+        closed: "slēgts"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
@@ -539,19 +534,46 @@ lv:
     actions:
       agree:
         title: "Jā"
-      delete_single:
+      delete:
         title: "Dzēst"
-      disagree:
+        complete: "Ieraksts dzēsts."
+      delete_and_ignore:
+        complete: "Ieraksts dzēsts."
+      delete_and_agree:
+        complete: "Ieraksts dzēsts."
+      disagree_bundle:
         title: "Nē"
       ignore:
         title: "Ignorēt"
       approve:
-        title: "Apstiprināt"
+        title: "Jā"
+      approve_post:
+        title: "Jā"
+      approve_post_closed:
+        title: "Jā"
+      reject_post_bundle:
+        title: "Nē"
+      approve_user:
+        title: "Jā"
       reject_user:
+        title: "Nē"
         delete:
           title: "Dzēst lietotāju."
+          complete: "Lietotājs dzēsts."
+      confirm_spam:
+        title: "Jā"
+      not_spam:
+        title: "Nē"
       reject:
         title: "Noraidīt"
+      approve_and_restore:
+        title: "Jā"
+      approve_and_unhide:
+        title: "Jā"
+      delete_post:
+        complete: "Ieraksts dzēsts"
+      delete_user:
+        complete: "Lietotājs dzēsts"
   fallback_username: "lietotājs"
   activemodel:
     errors:

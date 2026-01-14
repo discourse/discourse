@@ -2,7 +2,7 @@
 
 RSpec.describe UserProfileView do
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
   let(:user_profile_id) { user.user_profile.id }
 
   def add(user_profile_id, ip, user_id = nil, at = nil)

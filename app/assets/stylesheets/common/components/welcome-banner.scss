@@ -1,0 +1,185 @@
+@use "lib/viewport";
+@import "common/foundation/mixins";
+
+.display-welcome-banner {
+  #main-outlet {
+    padding-top: 0;
+  }
+}
+
+.welcome-banner--visible.header-search--enabled {
+  .floating-search-input-wrapper {
+    display: none;
+  }
+}
+
+.welcome-banner {
+  border-radius: var(--d-border-radius-large);
+
+  @include viewport.until(sm) {
+    display: none;
+  }
+
+  &__wrap {
+    box-sizing: border-box;
+    position: relative;
+    padding: var(--space-6) 0 3em;
+
+    .--with-bg-img & {
+      border-radius: var(--d-border-radius);
+      padding-inline: var(--space-4);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin-bottom: var(--space-2);
+    }
+
+    @include viewport.until(md) {
+      padding: var(--space-4) 8px var(--space-5);
+      margin-top: var(--space-2);
+    }
+
+    @include viewport.until(sm) {
+      display: block;
+      padding: var(--space-2);
+      margin-top: 0;
+    }
+
+    .search-menu {
+      display: flex;
+      position: relative;
+      margin-inline: auto;
+      max-width: 600px;
+
+      .search-menu-container {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    .d-icon-magnifying-glass {
+      margin: 0;
+    }
+
+    .search-input {
+      .search-term__input {
+        min-width: 0;
+        flex: 1 1;
+      }
+    }
+
+    .btn.search-icon {
+      z-index: 2;
+      background: transparent;
+      line-height: 1;
+      color: var(--primary-medium);
+      height: 100%;
+      position: absolute;
+      left: calc(
+        1rem - 0.65em
+      ); // to align with result panel, minus padding of search icon btn
+
+      .rtl & {
+        right: 0;
+        left: unset;
+      }
+
+      .discourse-no-touch & {
+        &:hover {
+          background: transparent;
+          color: var(--primary);
+
+          .d-icon {
+            color: currentcolor;
+          }
+        }
+      }
+
+      + .search-menu-container .search-input {
+        padding-left: var(--space-8);
+
+        .rtl & {
+          padding-left: unset;
+          padding-right: var(--space-8);
+        }
+      }
+
+      + .search-menu-container .search-input .search-context {
+        margin-left: 4px;
+      }
+    }
+
+    .search-menu-container .results {
+      @include d-animation(float-down, 0.25s, ease);
+      box-sizing: border-box;
+      border-radius: var(--d-border-radius);
+      background: var(--secondary);
+      z-index: 9;
+      left: 0;
+      top: 100%;
+      right: 0;
+      padding-top: 0;
+
+      @include viewport.until(sm) {
+        width: 100%;
+      }
+
+      .search-random-quick-tip {
+        padding-top: var(--space-3);
+      }
+
+      ul,
+      ol {
+        list-style-type: none;
+        margin: 0;
+      }
+
+      .search-icon-wrapper {
+        display: none;
+      }
+    }
+
+    .search-link .d-icon {
+      color: var(--primary-medium);
+    }
+
+    span.keyword {
+      color: var(--primary);
+    }
+  }
+
+  .search-menu-panel {
+    // hacky but best guestimate we can do: full height of the viewport minus the header, minus the welcome banner spacing,  minus font-size:6 title
+    max-height: calc(100vh - var(--header-offset) - -3em - 4em);
+  }
+}
+
+.welcome-banner__title {
+  font-size: var(--font-up-6);
+  line-height: $line-height-medium;
+  font-weight: bold;
+  margin-bottom: var(--space-2);
+  margin-inline: auto;
+  max-width: 70ch;
+  text-align: center;
+
+  @include viewport.until(md) {
+    font-size: var(--font-up-4);
+  }
+
+  @include viewport.until(sm) {
+    font-size: var(--font-up-1);
+  }
+}
+
+.welcome-banner__subheader {
+  font-size: var(--font-up-1-rem);
+  font-weight: normal;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
+// hide search icon from default search menu
+.search-menu.glimmer-search-menu .search-icon {
+  display: none;
+}

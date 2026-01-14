@@ -1,25 +1,23 @@
 # frozen_string_literal: true
 
+ruby "~> 3.3"
+
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "~> 7.2.0"
-gem "actionpack", "~> 7.2.0"
-gem "actionview", "~> 7.2.0"
-gem "activemodel", "~> 7.2.0"
-gem "activerecord", "~> 7.2.0"
-gem "activesupport", "~> 7.2.0"
-gem "railties", "~> 7.2.0"
-gem "sprockets-rails"
+gem "actionmailer", "~> 8.0.0"
+gem "actionpack", "~> 8.0.0"
+gem "actionview", "~> 8.0.0"
+gem "activemodel", "~> 8.0.0"
+gem "activerecord", "~> 8.0.0"
+gem "activesupport", "~> 8.0.0"
+gem "railties", "~> 8.0.0"
 
+gem "propshaft"
 gem "json"
-
-# TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
-# We intend to drop sprockets rather than upgrade to 4.x
-gem "sprockets", "~> 3.7.3"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -31,9 +29,11 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
-# config/initializers/006-mini_profiler.rb depends upon the RedisClient#call.
-# Rework this when upgrading to redis client 5.0 and above.
-gem "redis", "< 5.0"
+# NOTE: hiredis-client is recommended for high performance use of Redis
+# however a recent attempt at an upgrade lead to https://meta.discourse.org/t/rebuild-error/375387
+# for now we are sticking with the socked based implementation that is not sensitive to this issue
+# gem "hiredis-client"
+gem "redis"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
 # We tell Sidekiq to use the namespace "sidekiq" which triggers this
@@ -52,6 +52,8 @@ gem "active_model_serializers", "~> 0.8.3"
 gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
+gem "discourse-emojis", require: "discourse_emojis"
+gem "discourse_math_bundle"
 
 gem "message_bus"
 
@@ -61,6 +63,7 @@ gem "fastimage"
 
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false
+gem "aws-sdk-mediaconvert", require: false
 gem "excon", require: false
 gem "unf", require: false
 
@@ -87,7 +90,6 @@ gem "oj"
 gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
-gem "pry-byebug", require: false
 gem "rtlcss", require: false
 gem "messageformat-wrapper", require: false
 gem "rake"
@@ -98,12 +100,12 @@ gem "rinku"
 gem "sidekiq"
 gem "mini_scheduler"
 
-gem "execjs", require: false
-gem "mini_racer", "0.18.pre1"
+gem "mini_racer"
 
 gem "highline", require: false
 
-gem "rack"
+# When unicorn is not used anymore, we can use Rack 3
+gem "rack", "< 3"
 
 gem "rack-protection" # security
 gem "cbor", require: false
@@ -112,26 +114,19 @@ gem "addressable"
 gem "json_schemer"
 
 gem "net-smtp", require: false
-gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
 
-# Gems used only for assets and not required in production environments by default.
-# Allow everywhere for now cause we are allowing asset debugging in production
-group :assets do
-  gem "uglifier"
-end
+gem "goldiloader"
 
 group :test do
   gem "capybara", require: false
   gem "webmock", require: false
-  gem "fakeweb", require: false
   gem "simplecov", require: false
-  gem "selenium-webdriver", "~> 4.14", require: false
-  gem "selenium-devtools", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
+  gem "capybara-playwright-driver"
 end
 
 group :test, :development do
@@ -148,13 +143,13 @@ group :test, :development do
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
   gem "pry-stack_explorer", require: false
-  gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
+  gem "debug", ">= 1.0.0", require: "debug/prelude"
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
 
   gem "rswag-specs"
 
-  gem "annotate"
+  gem "annotaterb"
 
   gem "syntax_tree"
 
@@ -168,6 +163,9 @@ group :development do
   gem "binding_of_caller"
   gem "yaml-lint"
   gem "yard"
+  gem "ruby-lsp", require: false
+  gem "ruby-lsp-rails", require: false
+  gem "ruby-lsp-rspec", require: false
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
@@ -198,6 +196,7 @@ gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
 gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
+gem "pitchfork", require: false
 
 gem "rbtrace", require: false, platform: :mri
 
@@ -291,3 +290,28 @@ end
 gem "dry-initializer", "~> 3.1"
 
 gem "parallel"
+
+# for discourse-zendesk-plugin
+gem "inflection", require: false
+gem "multipart-post", require: false
+gem "faraday-multipart", require: false
+gem "zendesk_api", require: false
+
+# for discourse-subscriptions
+gem "stripe", require: false
+
+# for discourse-github
+gem "sawyer", require: false
+gem "octokit", require: false
+
+# for discourse-ai
+gem "tokenizers", require: false
+gem "tiktoken_ruby", require: false
+gem "discourse_ai-tokenizers", require: false
+gem "ed25519" # TODO: remove this as existing ssl gem should handle this
+gem "Ascii85", require: false
+gem "ruby-rc4", require: false
+gem "hashery", require: false
+gem "ttfunk", require: false
+gem "afm", require: false
+gem "pdf-reader", require: false

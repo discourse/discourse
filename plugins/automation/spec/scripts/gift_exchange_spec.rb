@@ -8,10 +8,10 @@ describe "GiftExchange" do
       trigger: DiscourseAutomation::Triggers::POINT_IN_TIME,
     )
   end
-  fab!(:gift_group) { Fabricate(:group) }
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:user_3) { Fabricate(:user) }
+  fab!(:gift_group, :group)
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:user_3, :user)
 
   before do
     SiteSetting.discourse_automation_enabled = true

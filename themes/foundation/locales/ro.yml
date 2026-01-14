@@ -1,0 +1,9 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  theme_metadata:
+    description: "Tema clasică Discourse care este potrivită pentru personalizare în funcție de nevoile specifice ale comunității tale."

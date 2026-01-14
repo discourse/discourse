@@ -27,6 +27,12 @@ nb_NO:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Stikkord
         user_badge_granted:
           fields:
             badge:
@@ -62,13 +68,13 @@ nb_NO:
           fields:
             restricted_tags:
               label: Stikkord
-            restricted_category:
-              label: Kategori
-            restricted_group:
-              label: Gruppe
-            restricted_groups:
-              label: Grupper
+            restricted_categories:
+              label: Kategorier
           created: Opprettet
+          with_images: Bilder
+          with_links: Lenker
+          with_code: Kode
+          with_uploads: Opplastinger
         category_created_edited:
           fields:
             restricted_category:
@@ -132,6 +138,8 @@ nb_NO:
               label: Emne-ID
             user:
               label: Bruker
+        set_topic_timer:
+          title: Sett opp tidsbestemt handling for emne
       models:
         trigger:
           name:
@@ -145,7 +153,5 @@ nb_NO:
             label: Versjon
           status:
             label: Status
-          enabled:
-            label: Aktivert
           disabled:
             label: Deaktivert

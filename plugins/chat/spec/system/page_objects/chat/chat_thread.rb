@@ -3,6 +3,10 @@
 module PageObjects
   module Pages
     class ChatThread < PageObjects::Pages::Base
+      def open?
+        has_css?(".chat-thread.--loaded")
+      end
+
       def composer
         @composer ||= PageObjects::Components::Chat::Composer.new(".chat-thread")
       end
@@ -98,7 +102,7 @@ module PageObjects
       def send_message(text = nil)
         text ||= fake_chat_message
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        composer.fill_in(with: text)
+        fill_composer(text)
         click_send_message
         expect(page).to have_no_css(".chat-message.-not-processed")
         click_composer

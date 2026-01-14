@@ -30,10 +30,12 @@ pt_BR:
     chat_editing_grace_period_max_diff_low_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 2 e acima)."
     chat_preferred_index: "Aba preferencial ao carregar /chat."
+    allow_chat_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem acessando seu site anominamente usem o chat. Essa configuração requer a definição \"allow anonymous mode\" para ser ativada."
     errors:
       chat_default_channel: "O canal de chat padrão deve ser um canal público."
       direct_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não quiser que ninguém, exceto a equipe, envie mensagens diretas, escolha o grupo da equipe."
       chat_upload_not_allowed_secure_uploads: "Enviar arquivos no chat não é permitido quando a configuração do site de envios seguros estiver ativada."
+      allow_chat_in_anonymous_mode_invalid: "Para usar esta configuração, ative a definição \"allow anonymous mode\" primeiro."
   system_messages:
     private_channel_title: "Canal %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ pt_BR:
     deleted_chat_username: excluído
     errors:
       users_cant_be_added_to_channel: "Não é possível adicionar usuários(as) a este canal."
+      user_cant_be_removed_from_channel: "O usuário não pode ser removido deste canal"
       channel_exists_for_category: "Já existe um canal para este nome e categoria"
       channel_new_message_disallowed:
         archived: "O canal está arquivado, nenhuma mensagem nova pode ser enviada"
@@ -90,6 +93,7 @@ pt_BR:
       actor_muting_target_user: "Você está silenciando %{username}, então você não pode enviar mensagens para ele(a)."
       actor_disallowed_dms: "Você optou por impedir que os(as) usuários(as) enviem mensagens pessoais e diretas. Portanto, você não pode criar novas mensagens diretas."
       actor_preventing_target_user_from_dm: "Você optou por impedir que %{username} envie mensagens pessoais e diretas, portanto, você não pode criar novas mensagens diretas para ele(a)."
+      not_reachable: "Desculpe, %{username} não está usando o chat."
       user_cannot_send_direct_messages: "Desculpe, você não pode enviar mensagens diretas."
       over_chat_max_direct_message_users_allow_self: "Você poderá criar uma mensagem direta apenas consigo mesmo(a)."
       over_chat_max_direct_message_users:
@@ -102,6 +106,10 @@ pt_BR:
     reviewables:
       message_already_handled: "Obrigado, mas já analisamos esta mensagem e determinamos que ela não precisa ser sinalizada novamente."
       actions:
+        no_action_message:
+          title: "Sem ação"
+        restore_message:
+          description: "Restaure a mensagem para que os(as) usuários(as) possam vê-las."
         agree:
           title: "Concordo..."
         agree_and_keep_message:
@@ -115,7 +123,7 @@ pt_BR:
           description: "Concorde com a sinalização e suspenda o usuário(a)."
         agree_and_silence:
           title: "Silenciar usuário(a)"
-          description: "Concorde com a sinalização e silencie o usuário(a)."
+          description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
         agree_and_restore:
           title: "Restaurar mensagem"
           description: "Restaure a mensagem para que os(as) usuários(as) possam vê-las."
@@ -123,19 +131,15 @@ pt_BR:
           title: "Excluir mensagem"
           description: "Exclua a mensagem para que os(as) usuários(as) não possam vê-las."
         delete_and_agree:
-          title: "Ignorar sinalizador e excluir mensagem"
           description: "Ignore o sinalizador ao removê-lo da fila e exclua a mensagem."
         disagree_and_restore:
           title: "Não concordar e restaurar mensagem"
           description: "Restaure a mensagem para que todos(as) os(as) usuários(as) possam vê-las."
-        disagree:
-          title: "Discordar"
         ignore:
-          title: "Não fazer nada"
-          description: "Ignore o sinalizador ao removê-lo da fila sem realizar nenhuma ação."
+          title: "Ignorar sinalizações"
       direct_messages:
         transcript_title: "Transcrição de mensagens anteriores em %{channel_name}"
-        transcript_body: "Para dar mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"
+        transcript_body: "Para fornecer mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"
     channel:
       users_invited_to_channel:
         one: "%{invited_users} foi convidado(a) por %{inviting_user}."
@@ -154,6 +158,7 @@ pt_BR:
     mention_warning:
       dismiss: "descartar"
       cannot_see: "%{first_identifier} não pode acessar este canal e não foi notificado(a)."
+      cannot_see_group: "Alguns membros de %{group_name} não podem acessar este canal e não receberam notificação."
       cannot_see_multiple:
         one: "%{first_identifier} e mais %{count} usuário(a) não podem acessar este canal nem foram notificados(as)."
         other: "%{first_identifier} e %{count} outros usuários não podem acessar este canal e não foram notificados"
@@ -179,7 +184,7 @@ pt_BR:
         slug_contains_non_ascii_chars: "contém caracteres não ascii"
         is_already_in_use: "já está em uso"
     bookmarkable:
-      notification_title: "mensagem em %{channel_name}"
+      notification_title_channel: "mensagem em %{channel_name}"
     personal_chat: "chat pessoal"
     onebox:
       inline_to_message: "Mensagem #%{message_id} por %{username} – #%{chat_channel}"
@@ -234,6 +239,12 @@ pt_BR:
         private_email:
           one: "[%{site_name}] Nova mensagem"
           other: "[%{site_name}] Novas mensagens"
+        watched_thread:
+          one: "[%{site_name}] Nova mensagem de thread em %{channel}"
+          other: "[%{site_name}] Novas mensagens de thread em %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Novas mensagens de thread em %{channel} e mais %{count}"
+          other: "[%{site_name}] Novas mensagens de thread em %{channel} e mais %{count}"
         chat_dm_1:
           one: "[%{site_name}] Nova mensagem de %{name}"
           other: "[%{site_name}] Novas mensagens de %{name}"
@@ -253,10 +264,8 @@ pt_BR:
       view_more:
         one: "Ver mais %{count} mensagem"
         other: "Ver mais %{count} mensagens"
-      your_chat_settings: "preferência de frequência de e-mail do chat"
   unsubscribe:
     chat_summary:
-      select_title: "Defina a frequência de e-mails de resumo do chat para:"
       never: Nunca
       when_away: Só quando estiver ausente
   category:

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "User profile", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:user)
 
   before do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "mysql2"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::HigherLogic < ImportScripts::Base
   HIGHERLOGIC_DB = "higherlogic"

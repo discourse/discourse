@@ -59,14 +59,19 @@ html.rtl {
   min-width: 250px !important; // important to override inline styles
   max-width: calc(100% - var(--composer-right));
   min-height: 300px !important; // important to override inline styles
+  container-type: inline-size;
+
+  .chat-search__filters .filter-input-container {
+    max-width: 250px;
+  }
 
   .chat-drawer-container {
     background: var(--secondary);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-bottom: 0;
     border-top-left-radius: var(--d-border-radius-large);
     border-top-right-radius: var(--d-border-radius-large);
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.125);
+    box-shadow: 0 0 4px rgb(0, 0, 0, 0.125);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

@@ -3,8 +3,8 @@
 RSpec.describe "Channel - Info - Members page", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
 
   before do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
@@ -111,7 +111,8 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       chat_page.find(".add-to-channel").click
 
       expect(chat_page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}")
-      expect(chat_page).to have_content(
+      expect(chat_page).to have_text(
+        :all,
         I18n.t(
           "chat.channel.users_invited_to_channel",
           invited_users: "@#{new_user.username}",
@@ -122,8 +123,64 @@ RSpec.describe "Channel - Info - Members page", type: :system do
     end
   end
 
+  context "when 1:1 DM channel" do
+    fab!(:channel_1) do
+      Fabricate(
+        :direct_message_channel,
+        slug: "test-channel",
+        users: [current_user, Fabricate(:user)],
+        group: false,
+      )
+    end
+
+    it "allows to add members when there are no channel messages" do
+      new_user = Fabricate(:user)
+
+      chat_page.visit_channel_members(channel_1)
+      expect(chat_page).to have_add_member_button
+
+      chat_page.find(".c-channel-members__list-item.-add-member").click
+      chat_page.find(".chat-message-creator__members-input").fill_in(with: new_user.username)
+      chat_page.find(".chat-message-creator__list-item").click
+      chat_page.find(".add-to-channel").click
+
+      expect(chat_page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}")
+      expect(chat_page).to have_text(
+        :all,
+        I18n.t(
+          "chat.channel.users_invited_to_channel",
+          invited_users: "@#{new_user.username}",
+          inviting_user: "@#{current_user.username}",
+          count: 1,
+        ),
+      )
+
+      chat_page.visit_channel_members(channel_1)
+      expect(chat_page).to have_no_add_member_button
+    end
+
+    it "hides add member option when group chats are disabled for members" do
+      SiteSetting.chat_max_direct_message_users = 1
+
+      visit("/")
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_no_add_member_button
+    end
+
+    it "shows add member option when group chats are disabled but user is staff" do
+      SiteSetting.chat_max_direct_message_users = 1
+      current_user.update!(admin: true)
+
+      visit("/")
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_add_member_button
+    end
+  end
+
   describe "removing members" do
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
 
     before { channel_1.add(Fabricate(:user)) }
 

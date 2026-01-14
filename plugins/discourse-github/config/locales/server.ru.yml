@@ -1,0 +1,61 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    enable_discourse_github_plugin: "Включить плагин discourse-github"
+    github_linkback_enabled: "Связать тикеты GitHub с обсуждениями на форуме"
+    github_linkback_projects: "Список проектов, на которые можно ссылаться"
+    github_linkback_access_token: 'Действующий токен доступа для пользователя, который будет размещать обратную ссылку и для подсчёта коммитов/вкладов при присвоении наград. Получение токена описано в <a href="https://meta.discourse.org/t/99895">этой теме</a>.'
+    github_linkback_maximum_links: "Максимальное количество обратных ссылок, создаваемых из одного сообщения. Если сообщение содержит больше ссылок - ни одна не создается."
+    github_permalinks_enabled: "Включить перезапись постоянных ссылок GitHub"
+    github_permalinks_exclude: "Имя файла или каталога, которые следует исключить из перезаписи постоянных ссылок. Укажите только имя файла или полный путь: пользователь/репозиторий/необязательный каталог/имя файла"
+    github_badges_enabled: "Включить награды GitHub"
+    github_badges_repos: "URL-адреса репозиториев GitHub для проверки вкладов и коммитов"
+    github_silver_badge_min_commits: "Минимальное количество коммитов для получения серебряного значка"
+    github_gold_badge_min_commits: "Минимальное количество коммитов для получения золотого значка"
+    errors:
+      invalid_badge_repo: "Вы должны предоставить URL GitHub или имя репозитория в формате 'github_пользователь/название_репозитория'"
+      invalid_github_linkback_access_token: "Необходимо указать действующий токен доступа к GitHub Linkback, который имеет доступ к указанным вами репозиториям с наградами."
+  github_linkback:
+    commit_template: |
+      Этот коммит был упомянут в **%{title}**. Там могут быть соответствующие подробности:
+
+      %{post_url}
+    pr_template: |
+      Этот запрос на слияние был упомянут в **%{title}**. Там могут быть соответствующие подробности:
+
+      %{post_url}
+    issue_template: |
+      Эта проблема была упомянута в **%{title}**. Там могут быть соответствующие подробности:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "Плагин «discourse-github» требует принятия мер"
+      repository_identifier_invalid_pm: |
+        В плагине discourse-github указан недействительный репозиторий:
+        %{repo_name}
+
+        Формат должен быть `user/repo`.
+
+        Награды не будут выдаваться, пока вы не исправите название в
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">настройках плагина discourse-github</a>
+        и снова не включите параметр «github_badges_enabled».
+      repository_not_found_pm_title: "Плагин «discourse-github» требует принятия мер"
+      repository_not_found_pm: |
+        Репозиторий, указанный в плагине discourse-github, вернул ошибку «Не найдено»:
+        %{repo_name}
+
+        Награды не будут выдаваться, пока вы не исправите название в
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">настройках discourse-github</a>
+        и снова не включите параметр «github_badges_enabled».
+      invalid_octokit_credentials_pm_title: "Плагин «discourse-github» требует принятия мер"
+      invalid_octokit_credentials_pm: |
+        Предоставленные плагину discourse-github учетные данные GitHub недействительны. Настройка «github badges enabled» автоматически отключена, и коммиты перестали подтягиваться до устранения проблемы.
+
+        Проверьте параметр «github linkback access token» в
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">настройках discourse-github</a>, чтобы убедиться, что токен корректный и имеет доступ ко всем нужным репозиториям.

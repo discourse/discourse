@@ -1,5 +1,6 @@
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { optionalRequire } from "discourse/lib/utilities";
 
 export default {
   name: "chat-plugin-decorators",
@@ -18,9 +19,10 @@ export default {
     );
 
     if (siteSettings.spoiler_enabled) {
-      const applySpoiler = requirejs(
+      const applySpoiler = optionalRequire(
         "discourse/plugins/spoiler-alert/lib/apply-spoiler"
-      ).default;
+      );
+
       api.decorateChatMessage(
         (element) => {
           element.querySelectorAll(".spoiler").forEach((spoiler) => {
@@ -39,7 +41,7 @@ export default {
   initialize(container) {
     if (container.lookup("service:chat").userCanChat) {
       const siteSettings = container.lookup("service:site-settings");
-      withPluginApi("0.8.42", (api) => {
+      withPluginApi((api) => {
         this.initializeWithPluginApi(api, siteSettings);
       });
     }

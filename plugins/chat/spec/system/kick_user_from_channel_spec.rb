@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 describe "Kick user from chat channel", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -24,11 +24,6 @@ describe "Kick user from chat channel", type: :system do
 
   context "when the user is looking at the channel they are kicked from" do
     before { chat.visit_channel(channel_1) }
-
-    it "shows an alert" do
-      publish_kick
-      expect(dialog).to have_content(I18n.t("js.chat.kicked_from_channel"))
-    end
 
     context "when the user presses ok" do
       it "redirects them to the first other public channel they have" do

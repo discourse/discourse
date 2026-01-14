@@ -50,3 +50,16 @@ task "destroy:categories" => :environment do |t, args|
   puts "Going to delete these categories: #{categories}"
   categories.each { |id| destroy_task.destroy_category(id, true) }
 end
+
+# Hard delete a list of posts by ID. Pass a comma
+# separated list either as a rake argument or through
+# STDIN, e.g. through a pipe.
+#
+#   Example: rake destroy:posts[4,8,15,16,23,42]
+#   Example: cat post_ids.txt | rake destroy:posts
+desc "Destroy a list of posts given by ID"
+task "destroy:posts" => :environment do |_task, args|
+  post_ids = args.extras.empty? ? STDIN.read.strip.split(",") : args.extras
+  puts "Going to delete these posts: #{post_ids}"
+  DestroyTask.new.destroy_posts(post_ids)
+end

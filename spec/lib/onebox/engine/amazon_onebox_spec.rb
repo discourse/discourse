@@ -166,7 +166,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
       end
 
       it "includes title" do
-        expect(html).to include("Watch Christine online - Amazon Video")
+        expect(html).to include("Watch Christine online & foobar - Amazon Video")
       end
     end
   end

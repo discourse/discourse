@@ -1,0 +1,62 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    enable_discourse_github_plugin: "Ativar o plugin discourse-github"
+    github_linkback_enabled: "O link do Github envia de volta para discussões do fórum"
+    github_linkback_projects: "Lista de projetos para fazer linkback"
+    github_linkback_access_token: 'Um token de acesso válido para o(a) usuário(a) que postar o linkback e contar confirmações/contribuições para conceder emblemas. Acesse <a href="https://meta.discourse.org/t/99895">aqui</a> para obter instruções de como receber um token.'
+    github_linkback_maximum_links: "Número máximo de linkbacks para criar a partir de uma única postagem. Quando uma postagem contiver mais links, nenhum será criado."
+    github_permalinks_enabled: "Ativar substituições de permalink do GitHub"
+    github_permalinks_exclude: "Diretório ou nome do arquivo que deve ser excluído das substituições de permalink. Informe apenas o nome do arquivo ou caminho completo: user/repository/optional-directory/filename"
+    github_badges_enabled: "Ativar emblemas do GitHub"
+    github_badges_repos: "URLs do repositório do GitHub para verificar contribuições e confirmações"
+    github_silver_badge_min_commits: "Número mínimo de confirmações para emblema de prata"
+    github_gold_badge_min_commits: "Número mínimo de confirmações para emblema de ouro"
+    errors:
+      invalid_badge_repo: "Você deve informar uma URL do GitHub ou o nome do repositório no formato github_user/repository_name"
+      invalid_github_linkback_access_token: "Você deve informar um token válido de acesso ao linkback do GitHub, com acesso aos repositórios do emblema informados."
+  github_linkback:
+    commit_template: |
+      A confirmação foi mencionada em **%{title}**. Pode haver detalhes importantes:
+
+      %{post_url}
+    pr_template: |
+      O pedido de recebimento foi mencionado em **%{title}**. Pode haver detalhes importantes:
+
+      %{post_url}
+    issue_template: |
+      Este problema foi mencionado em **%{title}**. Pode haver detalhes importantes:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "Ação necessária para o plugin discourse-github"
+      repository_identifier_invalid_pm: |
+        Um repositório especificado no plugin discourse-github não é válido:
+        %{repo_name}
+
+        Deve ser especificado como "user/repo".
+
+        Emblemas não serão concedidos até que o nome seja corrigido
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Configurações do site do discourse-github</a>
+        e "github_badges_enabled" seja reativado.
+      repository_not_found_pm_title: "Ação necessária para o plugin discourse-github"
+      repository_not_found_pm: |
+        Um repositório especificado no plugin discourse-github retornou um erro de "Não encontrado":
+        %{repo_name}
+
+        Emblemas não serão concedidos até que o nome seja corrigido
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">Configurações do site do discourse-github</a>
+        e "github_badges_enabled" seja reativado.
+      invalid_octokit_credentials_pm_title: "Ação necessária para o plugin discourse-github"
+      invalid_octokit_credentials_pm: |
+        As credenciais do GitHub informadas ao plugin discourse-github não são válidas. A configuração "github badges enabled\site"
+        foi desativada, e as confirmações não serão mais preenchidas até que o problema seja solucionado.
+
+        Confira a configuração do site "github linkback access token" para garantir que o token está correto e tem permissão para todos os respositórios via
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Settings</a>.

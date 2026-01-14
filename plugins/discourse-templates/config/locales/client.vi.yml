@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  admin_js:
+    discourse_templates:
+      title: "Templates"
+  js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "Template (trong vùng văn bản)"
+        insert_template: "%{shortcut} Chèn template"
+    templates:
+      source: "Nguồn"

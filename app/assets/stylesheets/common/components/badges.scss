@@ -4,6 +4,10 @@
 
 // Base
 // --------------------------------------------------
+:root {
+  --category-badge-size: 0.75em;
+  --category-badge-border-radius: 0px;
+}
 
 %badge {
   display: inline-block;
@@ -31,16 +35,37 @@
     color: var(--primary-high);
     min-width: 0;
 
-    &::before {
+    &.--style-square::before {
       content: "";
       background: var(--category-badge-color);
       flex: 0 0 auto;
-      width: 0.625rem; // fixed dimensions (10px square)
-      height: 0.625rem;
+      width: var(--category-badge-size);
+      height: var(--category-badge-size);
+      border-radius: var(--category-badge-border-radius);
+    }
+
+    &.--style-emoji,
+    &.--style-icon {
+      display: flex;
+      align-items: center;
+
+      .d-icon,
+      .emoji {
+        width: 0.74em;
+        height: 0.74em;
+      }
+    }
+
+    &.--style-icon .d-icon {
+      color: var(--category-badge-color);
+    }
+
+    &.--style-icon .d-icon + .d-icon {
+      color: var(--primary-medium);
     }
 
     &__name {
-      color: currentcolor;
+      color: var(--category-badge-title-color);
       text-overflow: ellipsis;
       overflow: hidden;
       min-width: 0;

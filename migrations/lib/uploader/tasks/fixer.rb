@@ -71,7 +71,7 @@ module Migrations::Uploader
       end
 
       def update_status_queue(row, upload, status)
-        status_queue << { id: row[:id], upload_id: upload[:id], status: status }
+        status_queue << { id: row[:id], upload_id: upload[:id], status: }
       end
 
       def log_status

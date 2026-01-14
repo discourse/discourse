@@ -1,0 +1,46 @@
+.cakeday {
+  --cakeday-header-spacing: 2rem;
+
+  .cakeday-months {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 0.75em;
+    margin: 0.7rem 0 var(--cakeday-header-spacing);
+
+    .cakeday-header {
+      margin: 0;
+    }
+
+    .select-kit.combo-box .select-kit-header {
+      font-weight: bold;
+      font-size: var(--font-up-1);
+      margin: 0;
+    }
+  }
+
+  .cakeday-header {
+    margin: var(--cakeday-header-spacing) 0 var(--cakeday-header-spacing);
+  }
+
+  ul.user-info-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+    gap: 2em;
+    list-style-type: none;
+    margin: 0;
+
+    .details {
+      color: var(--primary-medium);
+    }
+
+    .user-info-empty-message {
+      color: var(--primary-high);
+      padding-bottom: 2em;
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+}

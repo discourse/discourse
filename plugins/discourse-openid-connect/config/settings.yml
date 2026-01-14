@@ -1,0 +1,55 @@
+discourse_openid_connect:
+  openid_connect_enabled:
+    default: false
+    area: "oidc"
+  openid_connect_discovery_document:
+    default: ""
+    area: "oidc"
+  openid_connect_client_id:
+    default: ""
+    area: "oidc"
+  openid_connect_client_secret:
+    default: ""
+    secret: true
+    area: "oidc"
+  openid_connect_rp_initiated_logout:
+    default: false
+    area: "oidc"
+  openid_connect_rp_initiated_logout_redirect:
+    default: ""
+    area: "oidc"
+  openid_connect_allow_association_change:
+    default: false
+    area: "oidc"
+  openid_connect_overrides_email:
+    default: false
+    area: "oidc"
+  openid_connect_authorize_scope:
+    default: "openid"
+    area: "oidc"
+  openid_connect_verbose_logging:
+    default: false
+    area: "oidc"
+  openid_connect_token_scope:
+    default: ""
+    area: "oidc"
+  openid_connect_error_redirects:
+    default: ""
+    type: list
+    list_type: secret
+    area: "oidc"
+  openid_connect_authorize_parameters:
+    default: ""
+    type: list
+    list_type: compact
+    area: "oidc"
+  openid_connect_claims:
+    default: ""
+    textarea: true
+    area: "oidc"
+  openid_connect_match_by_email:
+    default: true
+    area: "oidc"
+  openid_connect_use_pkce:
+    default: false
+    area: "oidc"

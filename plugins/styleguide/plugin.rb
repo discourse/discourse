@@ -8,11 +8,14 @@
 
 register_asset "stylesheets/styleguide.scss"
 enabled_site_setting :styleguide_enabled
-hide_plugin
+
+module ::Styleguide
+  PLUGIN_NAME = "styleguide"
+end
 
 require_relative "lib/styleguide/engine"
 
-Discourse::Application.routes.append { mount ::Styleguide::Engine, at: "/styleguide" }
+Discourse::Application.routes.append { mount Styleguide::Engine, at: "/styleguide" }
 
 after_initialize do
   register_asset_filter do |type, request, opts|

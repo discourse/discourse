@@ -3,7 +3,7 @@
 # NOTE: This spec covers core functionality, but it is much easier
 # to test plugin related things inside an actual plugin.
 describe "Admin Plugins List", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   let(:admin_plugins_list_page) { PageObjects::Pages::AdminPluginsList.new }
 
   before do

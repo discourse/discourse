@@ -2,13 +2,13 @@
 
 RSpec.describe TagGroup do
   describe "#visible" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
     fab!(:admin)
     fab!(:moderator)
 
     fab!(:group)
-    fab!(:beta_group) { Fabricate(:group) }
+    fab!(:beta_group, :group)
 
     fab!(:everyone_tag_group) do
       Fabricate(:tag_group, name: "Visible & usable by everyone", tag_names: ["foo-bar"])
@@ -115,6 +115,38 @@ RSpec.describe TagGroup do
       end
 
       include_examples "correct visible tag groups"
+    end
+  end
+
+  describe "#find_by_name_insensitive" do
+    fab!(:tag_group) { Fabricate(:tag_group, name: "Test-Tag-Group") }
+
+    it "finds by name case insensitively" do
+      expect(TagGroup.find_by_name_insensitive("test-tag-group")).to eq(tag_group)
+      expect(TagGroup.find_by_name_insensitive("TEST-TAG-GROUP")).to eq(tag_group)
+      expect(TagGroup.find_by_name_insensitive("TeSt-TaG-GrOuP")).to eq(tag_group)
+    end
+  end
+
+  describe ".where_name" do
+    fab!(:tag_group1) { Fabricate(:tag_group, name: "My Group") }
+    fab!(:tag_group2) { Fabricate(:tag_group, name: "Other Group") }
+
+    it "finds tag groups case-insensitively" do
+      expect(TagGroup.where_name("my group")).to contain_exactly(tag_group1)
+      expect(TagGroup.where_name("MY GROUP")).to contain_exactly(tag_group1)
+      expect(TagGroup.where_name("My Group")).to contain_exactly(tag_group1)
+    end
+
+    it "accepts an array of names" do
+      expect(TagGroup.where_name(["my group", "other group"])).to contain_exactly(
+        tag_group1,
+        tag_group2,
+      )
+    end
+
+    it "returns an empty array when no match is found" do
+      expect(TagGroup.where_name("nonexistent")).to be_empty
     end
   end
 

@@ -15,12 +15,12 @@ vi:
         other: "Bạn không thể tạo tin nhắn trực tiếp với hơn %{count} người dùng khác."
     reviewables:
       actions:
+        no_action_message:
+          title: "Không có hành động"
         agree_and_suspend:
           title: "Tạm ngưng người dùng"
         agree_and_silence:
           title: "Người dùng im lặng"
-        disagree:
-          title: "Không đồng ý"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -28,6 +28,9 @@ vi:
           other: "%{comma_separated_usernames} và %{count} khác"
     mention_warning:
       dismiss: "bỏ qua"
+    bookmarkable:
+      notification_title_channel: "tin nhắn trong %{channel_name}"
+      notification_title_direct_message: "tin nhắn với %{channel_name}"
     onebox:
       thread_title_connector: "trong"
   discourse_push_notifications:
@@ -46,3 +49,4 @@ vi:
   unsubscribe:
     chat_summary:
       never: Không bao giờ
+      when_away: Khi vắng mặt

@@ -35,8 +35,7 @@ class Middleware::OmniauthBypassMiddleware
     return @app.call(env) unless env["PATH_INFO"].start_with?("/auth")
 
     # When only one provider is enabled, assume it can be completely trusted, and allow GET requests
-    only_one_provider =
-      !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
+    only_one_provider = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.one?
 
     allow_get = only_one_provider || !SiteSetting.auth_require_interaction
 

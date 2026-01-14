@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Chat::Publisher do
-  fab!(:channel) { Fabricate(:category_channel) }
+  fab!(:channel, :category_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
 
   describe ".publish_delete!" do
@@ -59,7 +59,7 @@ describe Chat::Publisher do
   end
 
   describe ".publish_user_tracking_state!" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
     fab!(:user)
 

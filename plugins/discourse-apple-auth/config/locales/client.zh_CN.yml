@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "使用 Apple 登录"
+        sr_title: "使用 Apple 登录"
+        message: "使用 Apple 进行身份验证"

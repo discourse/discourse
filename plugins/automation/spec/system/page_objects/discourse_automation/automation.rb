@@ -9,7 +9,7 @@ module PageObjects
       end
 
       def set_name(name)
-        form.find('input[name="automation-name"]').set("aaaaa")
+        form.find('input[name="automation-name"]').set(name)
         self
       end
 
@@ -29,8 +29,12 @@ module PageObjects
       end
 
       def update
-        form.find(".update-automation").click
+        form.find(".update-automation:not([disabled])").click
         self
+      end
+
+      def enabled_toggle
+        PageObjects::Components::DToggleSwitch.new(".d-toggle-switch .d-toggle-switch__checkbox")
       end
 
       def form

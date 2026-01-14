@@ -247,32 +247,6 @@ RSpec.describe SiteSettings::Validations do
       end
     end
 
-    describe "#validate_s3_use_acls" do
-      context "when the new value is true" do
-        it "is ok" do
-          expect { validations.validate_s3_use_acls("t") }.not_to raise_error
-        end
-      end
-
-      context "when the new value is false" do
-        it "is ok" do
-          expect { validations.validate_s3_use_acls("f") }.not_to raise_error
-        end
-
-        context "if secure uploads is enabled" do
-          let(:error_message) { I18n.t("errors.site_settings.s3_use_acls_requirements") }
-          before { enable_secure_uploads }
-
-          it "is not ok" do
-            expect { validations.validate_s3_use_acls("f") }.to raise_error(
-              Discourse::InvalidParameters,
-              error_message,
-            )
-          end
-        end
-      end
-    end
-
     describe "#validate_secure_uploads" do
       let(:error_message) { I18n.t("errors.site_settings.secure_uploads_requirements") }
 
@@ -345,7 +319,7 @@ RSpec.describe SiteSettings::Validations do
         context "when the s3_upload_bucket is blank" do
           let(:error_message) { I18n.t("errors.site_settings.s3_upload_bucket_is_required") }
 
-          before { SiteSetting.s3_upload_bucket = nil }
+          before { SiteSetting.s3_upload_bucket = "" }
 
           it "is not ok" do
             expect { validations.validate_enable_s3_uploads("t") }.to raise_error(
@@ -462,16 +436,16 @@ RSpec.describe SiteSettings::Validations do
     end
   end
 
-  describe "#twitter_summary_large_image" do
+  describe "#x_summary_large_image" do
     it "does not allow SVG image files" do
       upload = Fabricate(:upload, url: "/images/logo-dark.svg", extension: "svg")
-      expect { validations.validate_twitter_summary_large_image(upload.id) }.to raise_error(
+      expect { validations.validate_x_summary_large_image(upload.id) }.to raise_error(
         Discourse::InvalidParameters,
-        I18n.t("errors.site_settings.twitter_summary_large_image_no_svg"),
+        I18n.t("errors.site_settings.x_summary_large_image_no_svg"),
       )
       upload.update!(url: "/images/logo-dark.png", extension: "png")
-      expect { validations.validate_twitter_summary_large_image(upload.id) }.not_to raise_error
-      expect { validations.validate_twitter_summary_large_image(nil) }.not_to raise_error
+      expect { validations.validate_x_summary_large_image(upload.id) }.not_to raise_error
+      expect { validations.validate_x_summary_large_image(nil) }.not_to raise_error
     end
   end
 
@@ -485,6 +459,31 @@ RSpec.describe SiteSettings::Validations do
       expect {
         validations.validate_allow_all_users_to_flag_illegal_content("t")
       }.not_to raise_error
+    end
+  end
+
+  describe "#validate_allow_likes_in_anonymous_mode" do
+    it "doesn't allow the setting to be enabled if the allow_anonymous_mode setting is disabled" do
+      SiteSetting.allow_anonymous_mode = false
+
+      expect { SiteSetting.allow_likes_in_anonymous_mode = true }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.allow_likes_in_anonymous_mode_without_anonymous_mode_enabled"),
+      )
+    end
+
+    it "allows the setting to be enabled if the allow_anonymous_mode setting is enabled" do
+      SiteSetting.allow_anonymous_mode = true
+
+      expect { SiteSetting.allow_likes_in_anonymous_mode = true }.not_to raise_error
+    end
+
+    it "allows the setting to be disabled if the allow_anonymous_mode setting is disabled" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.allow_likes_in_anonymous_mode = true
+
+      SiteSetting.allow_anonymous_mode = false
+      expect { SiteSetting.allow_likes_in_anonymous_mode = false }.not_to raise_error
     end
   end
 end

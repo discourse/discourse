@@ -2,19 +2,9 @@
   .full-page-chat {
     .channels-list {
       height: calc(100vh - var(--main-outlet-offset));
-      border-right: 1px solid var(--primary-low);
+      border-right: 1px solid var(--content-border-color);
       background: var(--secondary);
       overflow-y: auto;
-
-      .channel-list-empty-message {
-        padding: 1rem;
-        text-align: center;
-
-        svg,
-        .channel-title {
-          display: none;
-        }
-      }
 
       .chat-channel-divider {
         padding: 2rem 1rem 0.5rem 1rem;

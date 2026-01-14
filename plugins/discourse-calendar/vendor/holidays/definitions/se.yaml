@@ -1,0 +1,238 @@
+# Swedish holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2008-11-28.
+# Sources:
+# - http://en.wikipedia.org/wiki/Holidays_in_Sweden
+# - http://www.worldtravelguide.net/country/269/public_holidays/Europe/Sweden.html
+# - http://hem.passagen.se/farila/midsum.htm
+# - http://www.timeanddate.com/calendar/?country=21
+---
+months:
+  0:
+  - name: Långfredagen
+    regions: [se]
+    function: easter(year)
+    function_modifier: -2
+  - name: Påskafton
+    regions: [se]
+    function: easter(year)
+    function_modifier: -1
+    type: informal
+  - name: Påskdagen
+    regions: [se]
+    function: easter(year)
+  - name: Annandag påsk
+    regions: [se]
+    function: easter(year)
+    function_modifier: 1
+  - name: Kristi himmelsfärdsdag # Ascension Day
+    regions: [se]
+    function: easter(year)
+    function_modifier: 39
+  - name: Pingstdagen # Whitsunday
+    regions: [se]
+    function: easter(year)
+    function_modifier: 49
+  - name: Alla helgons dag # All Saint's Day
+    regions: [se]
+    function: se_alla_helgons_dag(year)
+  1:
+  - name: Nyårsdagen
+    regions: [se]
+    mday: 1
+  - name: Trettondedag jul
+    regions: [se]
+    mday: 6
+  5:
+  - name: Första maj
+    regions: [se]
+    mday: 1
+  6:
+  - name: Nationaldagen
+    regions: [se]
+    mday: 6
+  - name: Midsommardagen
+    regions: [se]
+    function: se_midsommardagen(year)
+  - name: Midsommarafton
+    regions: [se]
+    function: se_midsommardagen(year)
+    function_modifier: -1
+    type: informal
+  12:
+  - name: Julafton
+    regions: [se]
+    mday: 24
+    type: informal
+  - name: Juldagen
+    regions: [se]
+    mday: 25
+  - name: Annandag jul
+    regions: [se]
+    mday: 26
+  - name: Nyårsafton
+    regions: [se]
+    mday: 31
+    type: informal
+
+methods:
+  se_midsommardagen:
+    # Sweden: Mid-summer (Saturday between June 20–26)
+    arguments: year
+    ruby: |
+      date = Date.civil(year,6,20)
+      date += (6 - date.wday)
+      date
+  se_alla_helgons_dag:
+    # Sweden: All Saint's Day (Saturday between Oct 31 and Nov 6)
+    arguments: year
+    ruby: |
+      date = Date.civil(year,10,31)
+      date += (6 - date.wday)
+      date
+
+tests:
+  - given:
+      date: '2008-01-01'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Nyårsdagen"
+  - given:
+      date: '2008-01-06'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Trettondedag jul"
+  - given:
+      date: '2008-03-21'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Långfredagen"
+  - given:
+      date: '2008-03-22'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Påskafton"
+  - given:
+      date: '2008-03-23'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Påskdagen"
+  - given:
+      date: '2008-03-24'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Annandag påsk"
+  - given:
+      date: '2008-05-01'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Kristi himmelsfärdsdag"
+  - given:
+      date: '2008-05-11'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Pingstdagen"
+  - given:
+      date: '2008-06-06'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Nationaldagen"
+  - given:
+      date: '2005-06-25'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Midsommardagen"
+  - given:
+      date: '2006-06-24'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Midsommardagen"
+  - given:
+      date: '2006-06-23'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Midsommarafton"
+  - given:
+      date: '2007-06-23'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Midsommardagen"
+  - given:
+      date: '2007-06-22'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Midsommarafton"
+  - given:
+      date: '2008-06-21'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Midsommardagen"
+  - given:
+      date: '2008-06-20'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Midsommarafton"
+  - given:
+      date: '2005-11-05'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Alla helgons dag"
+  - given:
+      date: '2006-11-04'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Alla helgons dag"
+  - given:
+      date: '2007-11-03'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Alla helgons dag"
+  - given:
+      date: '2008-11-01'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Alla helgons dag"
+  - given:
+      date: '2008-12-24'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Julafton"
+  - given:
+      date: '2008-12-25'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Juldagen"
+  - given:
+      date: '2008-12-26'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Annandag jul"
+  - given:
+      date: '2008-12-31'
+      regions: ["se"]
+      options: ["informal"]
+    expect:
+      name: "Nyårsafton"

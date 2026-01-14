@@ -111,7 +111,7 @@ class GroupsController < ApplicationController
 
   def show
     respond_to do |format|
-      group = find_group(:id)
+      group = find_group_for_show
 
       format.html do
         @title = group.full_name.present? ? group.full_name.capitalize : group.name
@@ -162,7 +162,7 @@ class GroupsController < ApplicationController
         user_count = count_existing_users(group.group_users, notification_level, categories, tags)
         if user_count > 0
           return(
-            render status: 422,
+            render status: :unprocessable_entity,
                    json: {
                      user_count: user_count,
                      errors: [I18n.t("invalid_params", message: :update_existing_users)],
@@ -175,7 +175,6 @@ class GroupsController < ApplicationController
     if group.update(group_attributes)
       GroupActionLogger.new(current_user, group).log_change_group_settings
       group.record_email_setting_changes!(current_user)
-      group.expire_imap_mailbox_cache
       if params[:update_existing_users] == "true"
         update_existing_users(group.group_users, notification_level, categories, tags)
       end
@@ -190,7 +189,7 @@ class GroupsController < ApplicationController
   end
 
   def posts
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_see_group_members!(group)
 
     posts =
@@ -208,7 +207,7 @@ class GroupsController < ApplicationController
   end
 
   def posts_feed
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_see_group_members!(group)
 
     @posts =
@@ -224,7 +223,7 @@ class GroupsController < ApplicationController
   def mentions
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
 
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_see_group_members!(group)
 
     posts =
@@ -247,7 +246,7 @@ class GroupsController < ApplicationController
   def mentions_feed
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
 
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_see_group_members!(group)
 
     @posts =
@@ -267,7 +266,7 @@ class GroupsController < ApplicationController
   MEMBERS_DEFAULT_PAGE_SIZE = 50
 
   def members
-    group = find_group(:group_id)
+    group = find_group(:name)
 
     guardian.ensure_can_see_group_members!(group)
 
@@ -355,12 +354,9 @@ class GroupsController < ApplicationController
     members = users.limit(limit).offset(offset)
     owners = users.where("group_users.owner")
 
-    group_members_serializer =
-      include_custom_fields ? GroupUserWithCustomFieldsSerializer : GroupUserSerializer
-
     render json: {
-             members: serialize_data(members, group_members_serializer),
-             owners: serialize_data(owners, GroupUserSerializer),
+             members: serialize_data(members, GroupUserWithCustomFieldsSerializer),
+             owners: serialize_data(owners, GroupUserWithCustomFieldsSerializer),
              meta: {
                total: total,
                limit: limit,
@@ -527,7 +523,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:group_id, ensure_can_see: false)
+    group = find_group(:name, ensure_can_see: false)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -537,7 +533,7 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:group_id, ensure_can_see: false)
+    group = find_group(:name, ensure_can_see: false)
 
     if group
       render json: { messageable: guardian.can_send_private_message?(group) }
@@ -605,14 +601,14 @@ class GroupsController < ApplicationController
   def request_membership
     params.require(:reason)
 
-    group = find_group(:id)
+    group = find_group(:name)
 
     begin
       GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
     rescue ActiveRecord::RecordNotUnique
       return(
         render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")),
-               status: 409
+               status: :conflict
       )
     end
 
@@ -644,7 +640,7 @@ class GroupsController < ApplicationController
   end
 
   def set_notifications
-    group = find_group(:id)
+    group = find_group(:name)
     notification_level = params.require(:notification_level)
 
     user_id = current_user.id
@@ -659,7 +655,7 @@ class GroupsController < ApplicationController
   end
 
   def histories
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
     page_size = 25
@@ -675,12 +671,12 @@ class GroupsController < ApplicationController
   end
 
   def search
+    include_everyone = params[:include_everyone] == "true"
+    order = ["name"]
     groups =
-      Group
-        .visible_groups(current_user)
-        .where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
-        .includes(:flair_upload)
-        .order(:name)
+      Group.visible_groups(current_user, order, include_everyone: include_everyone).includes(
+        :flair_upload,
+      )
 
     if (term = params[:term]).present?
       groups =
@@ -701,7 +697,7 @@ class GroupsController < ApplicationController
   end
 
   def permissions
-    group = find_group(:id)
+    group = find_group(:name)
     category_groups =
       group.category_groups.select do |category_group|
         guardian.can_see_category?(category_group.category)
@@ -725,54 +721,33 @@ class GroupsController < ApplicationController
 
     RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
 
-    settings = params.except(:group_id, :protocol)
+    settings = params.except(:name, :protocol)
     email_host = params[:host]
 
-    if !%w[smtp imap].include?(params[:protocol])
-      raise Discourse::InvalidParameters.new("Valid protocols to test are smtp and imap")
+    if params[:protocol] != "smtp"
+      raise Discourse::InvalidParameters.new("Valid protocol to test is smtp")
     end
 
     hijack do
       begin
-        case params[:protocol]
-        when "smtp"
-          raise Discourse::InvalidParameters if params[:ssl_mode].blank?
+        raise Discourse::InvalidParameters if params[:ssl_mode].blank?
 
-          settings.delete(:ssl_mode)
+        settings.delete(:ssl_mode)
 
-          if params[:ssl_mode].blank? ||
-               !Group.smtp_ssl_modes.values.include?(params[:ssl_mode].to_i)
-            raise Discourse::InvalidParameters.new("SSL mode must be present and valid")
-          end
-
-          final_settings =
-            settings.merge(
-              enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
-              enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
-            ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
-          EmailSettingsValidator.validate_as_user(
-            current_user,
-            "smtp",
-            **final_settings.to_h.symbolize_keys,
-          )
-        when "imap"
-          raise Discourse::InvalidParameters if params[:ssl].blank?
-
-          final_settings =
-            settings.merge(ssl: settings[:ssl] == "true").permit(
-              :host,
-              :port,
-              :username,
-              :password,
-              :ssl,
-              :debug,
-            )
-          EmailSettingsValidator.validate_as_user(
-            current_user,
-            "imap",
-            **final_settings.to_h.symbolize_keys,
-          )
+        if params[:ssl_mode].blank? || !Group.smtp_ssl_modes.values.include?(params[:ssl_mode].to_i)
+          raise Discourse::InvalidParameters.new("SSL mode must be present and valid")
         end
+
+        final_settings =
+          settings.merge(
+            enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
+            enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
+          ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
+        EmailSettingsValidator.validate_as_user(
+          current_user,
+          "smtp",
+          **final_settings.to_h.symbolize_keys,
+        )
 
         render json: success_json
       rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
@@ -833,13 +808,6 @@ class GroupsController < ApplicationController
         :smtp_enabled,
         :smtp_updated_by,
         :smtp_updated_at,
-        :imap_server,
-        :imap_port,
-        :imap_ssl,
-        :imap_mailbox_name,
-        :imap_enabled,
-        :imap_updated_by,
-        :imap_updated_at,
         :email_username,
         :email_password,
         :email_from_alias,
@@ -868,9 +836,23 @@ class GroupsController < ApplicationController
     params.require(:group).permit(*attributes)
   end
 
+  def find_group_for_show(ensure_can_see: true)
+    group =
+      if params[:id]
+        Group.find_by(id: params[:id])
+      elsif params[:name]
+        Group.find_by("LOWER(name) = ?", params[:name].downcase)
+      end
+
+    raise Discourse::NotFound if ensure_can_see && !guardian.can_see_group?(group)
+    group
+  end
+
   def find_group(param_name, ensure_can_see: true)
     name = params.require(param_name)
+
     group = Group.find_by("LOWER(name) = ?", name.downcase)
+
     raise Discourse::NotFound if ensure_can_see && !guardian.can_see_group?(group)
     group
   end
@@ -895,15 +877,7 @@ class GroupsController < ApplicationController
   end
 
   def reset_group_email_settings_if_disabled!(group, attributes)
-    should_clear_imap = group.imap_enabled && attributes[:imap_enabled] == "false"
     should_clear_smtp = group.smtp_enabled && attributes[:smtp_enabled] == "false"
-
-    if should_clear_imap || should_clear_smtp
-      attributes[:imap_server] = nil
-      attributes[:imap_ssl] = false
-      attributes[:imap_port] = nil
-      attributes[:imap_mailbox_name] = ""
-    end
 
     if should_clear_smtp
       attributes[:smtp_server] = nil
@@ -1049,9 +1023,9 @@ class GroupsController < ApplicationController
             categories.each do |category_id, data|
               category_users = []
               existing_users =
-                CategoryUser.where(category_id: category_id, user_id: user_ids).where(
-                  "notification_level IS NOT NULL",
-                )
+                CategoryUser
+                  .where(category_id:, user_id: user_ids)
+                  .where.not(notification_level: nil)
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|
@@ -1075,9 +1049,7 @@ class GroupsController < ApplicationController
             tags.each do |tag_id, data|
               tag_users = []
               existing_users =
-                TagUser.where(tag_id: tag_id, user_id: user_ids).where(
-                  "notification_level IS NOT NULL",
-                )
+                TagUser.where(tag_id:, user_id: user_ids).where.not(notification_level: nil)
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|

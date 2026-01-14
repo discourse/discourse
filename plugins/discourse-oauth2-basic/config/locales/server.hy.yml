@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  site_settings:
+    oauth2_enabled: "Մասնավոր OAuth2 -ը միացված է"
+    oauth2_client_id: "Հաճախորդի ID մասնավոր OAuth2 -ի համար"
+    oauth2_client_secret: "Հաճախորդի Գաղտնի Արժեք մասնավոր OAuth2 -ի համար"
+    oauth2_authorize_url: "Նույնականացման URL OAuth2 -ի համար"
+    oauth2_token_url: "Տոկենի URL OAuth2 -ի համար"
+    oauth2_token_url_method: "Տոկենի URL -ի բեռնման համար օգտագործվող մեթոդ"
+    oauth2_user_json_url: "OAuth2 -ի համար օգտատիրոջ JSON -ի բեռնման URL (նկատի ունեցեք, որ մենք փոխարինել ենք :id -ն OAuth կանչի կողմից վերադարձված id-ով և :token -ը՝ տոկենի id -ով)"
+    oauth2_user_json_url_method: "Օգտատիրոջ JSON URL -ի բեռնման համար օգտագործվող մեթոդ"
+    oauth2_json_user_id_path: "OAuth2 User JSON -ում ուղի դեպի օգտատիրոջ id. օրինակ՝ user.id"
+    oauth2_json_username_path: "OAuth2 User JSON t-ում ուղի դեպի օգտանուն, օրինակ՝ user.username"
+    oauth2_email_verified: "Ստուգել սա, եթե OAuth2 կայքը հաստատել է էլ. հասցեն"
+    oauth2_debug_auth: "Ներառել կարգաբերման հարուստ տեղեկատվություն Ձեր գրառումներում"
+    oauth2_authorize_options: "Նույնականացման ժամանակ պահանջել այս տարբերակները"
+    oauth2_scope: "Նույնականացման ժամանակ պահանջել այս սահմանը"
+    oauth2_button_title: "OAuth2 կոճակի տեքստ"

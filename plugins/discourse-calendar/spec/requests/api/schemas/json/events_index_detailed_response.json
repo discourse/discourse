@@ -1,0 +1,340 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "category_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recurrence": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recurrence_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "starts_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "rrule": {
+            "type": "string"
+          },
+          "show_local_time": {
+            "type": "boolean"
+          },
+          "timezone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "duration": {
+            "type": "string",
+            "pattern": "^\\d{2}:\\d{2}:\\d{2}$"
+          },
+          "can_act_on_discourse_post_event": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "can_update_attendance": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "creator": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "username": {
+                "type": "string"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "avatar_template": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "username",
+              "avatar_template"
+            ]
+          },
+          "custom_fields": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "is_closed": {
+            "type": "boolean"
+          },
+          "is_expired": {
+            "type": "boolean"
+          },
+          "is_ongoing": {
+            "type": "boolean"
+          },
+          "is_private": {
+            "type": "boolean"
+          },
+          "is_public": {
+            "type": "boolean"
+          },
+          "is_standalone": {
+            "type": "boolean"
+          },
+          "minimal": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "raw_invitees": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "reminders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "integer"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "period": {
+                  "type": "string",
+                  "enum": [
+                    "before",
+                    "after"
+                  ]
+                },
+                "type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value",
+                "unit",
+                "period",
+                "type"
+              ]
+            }
+          },
+          "sample_invitees": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "should_display_invitees": {
+            "type": "boolean"
+          },
+          "stats": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private",
+              "standalone"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "location": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "watching_invitee": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "chat_enabled": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "channel": {
+            "type": "object"
+          },
+          "max_attendees": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "at_capacity": {
+            "type": "boolean"
+          },
+          "post": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "post_number": {
+                "type": "integer"
+              },
+              "url": {
+                "type": "string"
+              },
+              "category_slug": {
+                "type": "string"
+              },
+              "topic": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tags_descriptions": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "tags",
+                  "tags_descriptions"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "post_number",
+              "url",
+              "category_slug",
+              "topic"
+            ]
+          },
+          "occurrences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "starts_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "ends_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "starts_at",
+                "ends_at"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "category_id",
+          "starts_at",
+          "ends_at",
+          "show_local_time",
+          "timezone",
+          "can_act_on_discourse_post_event",
+          "can_update_attendance",
+          "is_closed",
+          "is_expired",
+          "is_ongoing",
+          "is_private",
+          "is_public",
+          "is_standalone",
+          "should_display_invitees",
+          "status",
+          "at_capacity",
+          "post",
+          "occurrences"
+        ]
+      }
+    }
+  },
+  "required": [
+    "events"
+  ]
+}

@@ -1,3 +1,12 @@
+# Install Discourse on a Cloud Server 
+
+> To install and self-host Discourse, follow the steps below. But if you'd rather skip the setup, maintenance, and server management, our official Discourse hosting takes care of everything for you.
+> 
+> 👉 [Learn more about Discourse hosting](https://discourse.org/pricing)
+
+> If you prefer to self-host but need help setting it up we have partners who can help.  
+> [Click here to explore self-hosting set-up options](https://discourse.org/partners).
+
 **Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example
 is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server. This
 walkthrough will go through these in detail:
@@ -19,7 +28,7 @@ walkthrough will go through these in detail:
 10. [Post-install maintenance](#10-post-install-maintenance)
 11. [(Optional) Add more Discourse features](#11-optional-add-more-discourse-features)
 
-> 🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $150, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
+> 🤝 If you've made it this far and don’t think you have the time to set this up yourself, let us take care of it for you.  [Click here to get Discourse hosting](https://discourse.org/pricing).
 
 ## Before you start
 
@@ -68,6 +77,8 @@ Create your new Droplet. You may receive an email with the root password, howeve
 
 > ⚠️ Now you have created your cloud server! Go back to your DNS controls and use the IP address to set up an `A record` for your `discourse.example.com` hostname.
 
+> ⚠️ Note: DigitalOcean now [blocks SMTP ports](https://docs.digitalocean.com/support/why-is-smtp-blocked/) on Droplets by default. You'll need to open a support ticket to get them unblocked before you can install Discourse. (Or try another port, for example, port 2525.) 
+
 ### 4. Access Your Cloud Server
 
 Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
@@ -78,8 +89,7 @@ Either use the root password from the email DigitalOcean sent you when the serve
 
 ### 5. Install Prerequisites for Docker (Debian/Ubuntu based Distro example)
 
-    sudo apt install docker.io
-    sudo apt install git
+`sudo apt install git` and follow the [official instructions](https://docs.docker.com/engine/install/ubuntu/) on installing Docker.
 
 ### 6. Install Discourse
 
@@ -110,6 +120,12 @@ Answer the following questions when prompted:
     Optional Maxmind License key () [xxxxxxxxxxxxxxxx]:
 
 You'll get the SMTP details from your [email](#2-setting-up-email) setup, be sure to complete that section.
+
+> ⚠️ If your email provider uses SMTP port 465 (SMTP over SSL) then you might need to make a small change to your `app.yml` configuration file in order for emails to send properly:
+> - Check out [this section](https://meta.discourse.org/t/troubleshoot-email-on-a-new-discourse-install/16326#p-55742-did-you-enter-email-settings-correctly-2) of the email troubleshooting guide.
+> - Edit app.yml with nano or your favorite editor.
+> - Find the "DISCOURSE_SMTP_" settings
+> - Add `DISCOURSE_SMTP_FORCE_TLS=true` on its own line
 
 Let's Encrypt account setup is to give you a free HTTPS certificate for your site, be sure to set that up if you want your site secure.
 

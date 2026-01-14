@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    discourse_templates_enabled: "Разрешить пользователям с доступом на просмотр указанной ниже категории использовать имеющиеся шаблоны"
+    discourse_templates_categories: "Категории для получения шаблонов"
+    discourse_templates_enable_private_templates: "Позволяет использовать приватные шаблоны"
+    discourse_templates_groups_allowed_private_templates: "Группам разрешается использовать приватные шаблоны. Сотрудники могут использовать их всегда."
+    discourse_templates_private_templates_tags: "Теги, которые определяют личное сообщение как приватный шаблон"
+  default_category_template:
+    name: Шаблоны
+    description: |
+      Это категория для хранения шаблонов.
+
+      Шаблоны позволяют сохранять контент для повторного использования.
+
+      Каждая тема в категории представляет собой отдельный шаблон. **Первая запись** каждой темы используется в качестве модели для шаблона.
+
+      Внимание: использовать шаблоны могут все пользователи с доступом к этой категории.

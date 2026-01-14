@@ -1,0 +1,77 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discoursen ratkaistu"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "hyväksytty"
+    solutions: "Ratkaisut"
+    solved:
+      title: "Ratkaistu"
+      allow_accepted_answers: "Salli ketjun omistajan ja henkilökunnan merkitä viesti ratkaisuksi"
+      solved_topics_auto_close_hours: "Sulje ketju automaattisesti (n) tunnin kuluttua viimeisestä vastauksesta, kun ketjun on ratkaistu."
+      accept_answer: "Valitse, jos tämä vastaus ratkaisee ongelman"
+      accepted_description: "Tämä on ketjun hyväksytty ratkaisu"
+      has_no_accepted_answer: "Tässä ketjussa ei ole ratkaisua"
+      unaccept_answer: "Kumoa valinta, jos tämä vastaus ei enää ratkaise ongelmaa"
+      accepted_answer: "Ratkaisu"
+      solution: "Ratkaisu"
+      solution_summary:
+        one: "ratkaisu"
+        other: "ratkaisua"
+      accepted_answer_post_number: "viesti %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "kaikki"
+        solved: "ratkaistu"
+        unsolved: "ratkaisematon"
+      no_solved_topics_title: "Et ole vielä ratkaissut ketjuja"
+      no_solved_topics_title_others: "%{username} ei ole vielä ratkaissut ketjuja"
+      no_solved_topics_body: "Kun annat hyödyllisen vastauksen ketjuun, aiheen omistaja tai henkilökunta saattaa valita vastauksesi ratkaisuksi."
+      no_answer:
+        title: Onko kysymykseesi vastattu?
+        description: "Korosta vastaus ja auta muita käyttämällä oikean vastauksen alla olevaa ratkaisupainiketta."
+      notification:
+        title: "viestisi merkittiin ratkaisuksi"
+    topic_statuses:
+      solved:
+        help: "Tämä ketju on ratkaistu"
+    search:
+      advanced:
+        statuses:
+          solved: "ovat ratkaistu"
+          unsolved: "ovat ratkaisemattomia"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Ratkaistu-tapahtuma"
+          accepted_solution: "Kun käyttäjä merkitsee viestin hyväksytyksi vastaukseksi"
+          unaccepted_solution: "Kun käyttäjä merkitsee viestin hyväksymättömäksi vastaukseksi"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Hyväksy tai hylkää ratkaisu.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < LT1
+            tl2: < LT2
+            tl3: < LT3
+            tl4: < LT4
+            any: Mikä tahansa
+          fields:
+            maximum_trust_level:
+              label: Luottamustaso
+              description: Tämän luottamustason alittavat käyttäjät laukaisevat tämän automaation

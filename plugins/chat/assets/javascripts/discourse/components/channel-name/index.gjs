@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { get, hash } from "@ember/helper";
+import { get } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStatusMessage from "discourse/components/user-status-message";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
 
@@ -35,7 +36,7 @@ export default class ChatChannelName extends Component {
     }
     return this.prefersName
       ? this.users.map((user) => user.name || user.username).join(", ")
-      : this.users.mapBy("username").join(", ");
+      : this.users.map((user) => user.username).join(", ");
   }
 
   get channelColorStyle() {
@@ -77,14 +78,12 @@ export default class ChatChannelName extends Component {
           />
         {{/if}}
 
-        {{#if this.showPluginOutlet}}
-          <PluginOutlet
-            @name="after-chat-channel-username"
-            @outletArgs={{hash user=@user}}
-            @tagName=""
-            @connectorTagName=""
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="after-chat-channel-username"
+          @outletArgs={{if this.showPluginOutlet (lazyHash user=@user)}}
+          @tagName=""
+          @connectorTagName=""
+        />
 
         {{#if (has-block)}}
           {{yield}}

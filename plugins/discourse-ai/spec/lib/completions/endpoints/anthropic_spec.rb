@@ -1,0 +1,1436 @@
+# frozen_string_literal: true
+require_relative "endpoint_compliance"
+
+RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
+  let(:url) { "https://api.anthropic.com/v1/messages" }
+  fab!(:model) { Fabricate(:anthropic_model, name: "claude-3-opus", vision_enabled: true) }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(model) }
+  let(:image100x100) { plugin_file_from_fixtures("100x100.jpg") }
+  let(:upload100x100) do
+    UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
+  end
+
+  def minimal_pdf_content
+    <<~PDF
+      %PDF-1.4
+      1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+      2 0 obj<< /Type /Pages /Count 1 /Kids [3 0 R] >>endobj
+      3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Contents 4 0 R >>endobj
+      4 0 obj<< /Length 44 >>stream
+      BT /F1 12 Tf 72 720 Td (Hello PDF) Tj ET
+      endstream
+      endobj
+      xref
+      0 5
+      0000000000 65535 f
+      0000000010 00000 n
+      0000000060 00000 n
+      0000000111 00000 n
+      0000000200 00000 n
+      trailer<< /Size 5 /Root 1 0 R >>
+      startxref
+      268
+      %%EOF
+    PDF
+  end
+
+  def build_pdf_upload
+    SiteSetting.authorized_extensions = "*"
+    file = Tempfile.new(%w[test-pdf .pdf])
+    file.binmode
+    file.write(minimal_pdf_content)
+    file.rewind
+    UploadCreator.new(file, "document.pdf").create_for(Discourse.system_user.id)
+  ensure
+    file.close! if file
+  end
+
+  let(:prompt) do
+    DiscourseAi::Completions::Prompt.new(
+      "You are hello bot",
+      messages: [type: :user, id: "user1", content: "hello"],
+    )
+  end
+
+  let(:echo_tool) do
+    {
+      name: "echo",
+      description: "echo something",
+      parameters: [{ name: "text", type: "string", description: "text to echo", required: true }],
+    }
+  end
+
+  let(:google_tool) do
+    {
+      name: "google",
+      description: "google something",
+      parameters: [
+        { name: "query", type: "string", description: "text to google", required: true },
+      ],
+    }
+  end
+
+  let(:prompt_with_echo_tool) do
+    prompt_with_tools = prompt
+    prompt.tools = [echo_tool]
+    prompt_with_tools
+  end
+
+  let(:prompt_with_google_tool) do
+    prompt_with_tools = prompt
+    prompt.tools = [echo_tool]
+    prompt_with_tools
+  end
+
+  before { enable_current_plugin }
+
+  it "does not eat spaces with tool calls" do
+    body = <<~STRING
+    event: message_start
+    data: {"type":"message_start","message":{"id":"msg_01Ju4j2MiGQb9KV9EEQ522Y3","type":"message","role":"assistant","model":"claude-3-haiku-20240307","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":1293,"output_tokens":1}}   }
+
+    event: content_block_start
+    data: {"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_01DjrShFRRHp9SnHYRFRc53F","name":"search","input":{}}      }
+
+    event: ping
+    data: {"type": "ping"}
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":""}            }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\\"searc"}              }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"h_qu"}        }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"er"} }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"y\\": \\"s"}      }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"<a>m"}          }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":" "}          }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"sam\\""}          }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":", \\"cate"}         }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"gory"}   }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"\\": \\"gene"}               }
+
+    event: content_block_delta
+    data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"ral\\"}"}           }
+
+    event: content_block_stop
+    data: {"type":"content_block_stop","index":0     }
+
+    event: message_delta
+    data: {"type":"message_delta","delta":{"stop_reason":"tool_use","stop_sequence":null},"usage":{"output_tokens":70}       }
+
+    event: message_stop
+    data: {"type":"message_stop"}
+    STRING
+
+    result = []
+    body = body.scan(/.*\n/)
+    EndpointMock.with_chunk_array_support do
+      stub_request(:post, url).to_return(status: 200, body: body)
+
+      llm.generate(
+        prompt_with_google_tool,
+        user: Discourse.system_user,
+        partial_tool_calls: true,
+      ) { |partial| result << partial.dup }
+    end
+
+    tool_call =
+      DiscourseAi::Completions::ToolCall.new(
+        name: "search",
+        id: "toolu_01DjrShFRRHp9SnHYRFRc53F",
+        parameters: {
+          search_query: "s<a>m sam",
+          category: "general",
+        },
+      )
+
+    expect(result.last).to eq(tool_call)
+
+    search_queries = result.filter(&:partial).map { |r| r.parameters[:search_query] }
+    categories = result.filter(&:partial).map { |r| r.parameters[:category] }
+
+    expect(categories).to eq([nil, nil, nil, nil, "gene", "general"])
+    expect(search_queries).to eq(["s", "s<a>m", "s<a>m ", "s<a>m sam", "s<a>m sam", "s<a>m sam"])
+  end
+
+  it "can stream a response" do
+    body = (<<~STRING).strip
+      event: message_start
+      data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index":0, "content_block": {"type": "text", "text": ""}}
+
+      event: ping
+      data: {"type": "ping"}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "!"}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 0}
+
+      event: message_delta
+      data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null, "usage":{"output_tokens": 15}}}
+
+      event: message_stop
+      data: {"type": "message_stop"}
+    STRING
+
+    parsed_body = nil
+
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+      },
+    ).to_return(status: 200, body: body)
+
+    result = +""
+    llm.generate(prompt, user: Discourse.system_user, feature_name: "testing") do |partial, cancel|
+      result << partial
+    end
+
+    expect(result).to eq("Hello!")
+
+    expected_body = {
+      model: "claude-3-opus-20240229",
+      max_tokens: 4096,
+      messages: [{ role: "user", content: "user1: hello" }],
+      system: "You are hello bot",
+      stream: true,
+    }
+    expect(parsed_body).to eq(expected_body)
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.provider_id).to eq(AiApiAuditLog::Provider::Anthropic)
+    expect(log.feature_name).to eq("testing")
+    expect(log.response_tokens).to eq(15)
+    expect(log.request_tokens).to eq(25)
+    expect(log.raw_request_payload).to eq(expected_body.to_json)
+    expect(log.raw_response_payload.strip).to eq(body.strip)
+  end
+
+  it "supports non streaming tool calls" do
+    tool = {
+      name: "calculate",
+      description: "calculate something",
+      parameters: [
+        {
+          name: "expression",
+          type: "string",
+          description: "expression to calculate",
+          required: true,
+        },
+      ],
+    }
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You a calculator",
+        messages: [{ type: :user, id: "user1", content: "calculate 2758975 + 21.11" }],
+        tools: [tool],
+      )
+
+    body = {
+      id: "msg_01RdJkxCbsEj9VFyFYAkfy2S",
+      type: "message",
+      role: "assistant",
+      model: "claude-3-haiku-20240307",
+      content: [
+        { type: "text", text: "Here is the calculation:" },
+        {
+          type: "tool_use",
+          id: "toolu_012kBdhG4eHaV68W56p4N94h",
+          name: "calculate",
+          input: {
+            expression: "2758975 + 21.11",
+          },
+        },
+      ],
+      stop_reason: "tool_use",
+      stop_sequence: nil,
+      usage: {
+        input_tokens: 345,
+        output_tokens: 65,
+      },
+    }.to_json
+
+    stub_request(:post, url).to_return(body: body)
+
+    result = llm.generate(prompt, user: Discourse.system_user)
+
+    tool_call =
+      DiscourseAi::Completions::ToolCall.new(
+        name: "calculate",
+        id: "toolu_012kBdhG4eHaV68W56p4N94h",
+        parameters: {
+          expression: "2758975 + 21.11",
+        },
+      )
+
+    expect(result).to eq(["Here is the calculation:", tool_call])
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.request_tokens).to eq(345)
+    expect(log.response_tokens).to eq(65)
+  end
+
+  it "can send images via a completion prompt" do
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are image bot",
+        messages: [type: :user, id: "user1", content: ["hello", { upload_id: upload100x100.id }]],
+      )
+
+    encoded = prompt.encoded_uploads(prompt.messages.last)
+
+    request_body = {
+      model: "claude-3-opus-20240229",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "user1: hello" },
+            {
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: "image/jpeg",
+                data: encoded[0][:base64],
+              },
+            },
+          ],
+        },
+      ],
+      system: "You are image bot",
+    }
+
+    response_body = <<~STRING
+      {
+        "content": [
+          {
+            "text": "What a cool image",
+            "type": "text"
+          }
+        ],
+        "id": "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+        "model": "claude-3-opus-20240229",
+        "role": "assistant",
+        "stop_reason": "end_turn",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "input_tokens": 10,
+          "output_tokens": 25
+        }
+      }
+    STRING
+
+    requested_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          requested_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: response_body)
+
+    result = llm.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("What a cool image")
+    expect(requested_body).to eq(request_body)
+  end
+
+  it "can send pdf documents via a completion prompt" do
+    model.update!(allowed_attachment_types: %w[pdf])
+    pdf_upload = build_pdf_upload
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are pdf bot",
+        messages: [type: :user, id: "user1", content: ["hello", { upload_id: pdf_upload.id }]],
+      )
+
+    encoded = prompt.encoded_uploads(prompt.messages.last, allow_documents: true)
+
+    request_body = {
+      model: "claude-3-opus-20240229",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "user1: hello" },
+            {
+              type: "document",
+              source: {
+                type: "base64",
+                media_type: "application/pdf",
+                data: encoded[0][:base64],
+              },
+            },
+          ],
+        },
+      ],
+      system: "You are pdf bot",
+    }
+
+    response_body = <<~STRING
+      {
+        "content": [
+          {
+            "text": "What a cool pdf",
+            "type": "text"
+          }
+        ],
+        "id": "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+        "model": "claude-3-opus-20240229",
+        "role": "assistant",
+        "stop_reason": "end_turn",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "input_tokens": 10,
+          "output_tokens": 25
+        }
+      }
+    STRING
+
+    requested_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          requested_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: response_body)
+
+    result = llm.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("What a cool pdf")
+    expect(requested_body).to eq(request_body)
+  end
+
+  it "can support reasoning" do
+    body = <<~STRING
+      {
+        "content": [
+          {
+            "text": "Hello!",
+            "type": "text"
+          }
+        ],
+        "id": "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+        "model": "claude-3-opus-20240229",
+        "role": "assistant",
+        "stop_reason": "end_turn",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "input_tokens": 10,
+          "output_tokens": 25
+        }
+      }
+    STRING
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+      },
+    ).to_return(status: 200, body: body)
+
+    model.provider_params["enable_reasoning"] = true
+    model.provider_params["reasoning_tokens"] = 10_000
+    model.save!
+
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+    result = proxy.generate(prompt, user: Discourse.system_user)
+    expect(result).to eq("Hello!")
+
+    expected_body = {
+      model: "claude-3-opus-20240229",
+      max_tokens: 40_000,
+      thinking: {
+        type: "enabled",
+        budget_tokens: 10_000,
+      },
+      messages: [{ role: "user", content: "user1: hello" }],
+      system: "You are hello bot",
+    }
+    expect(parsed_body).to eq(expected_body)
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.provider_id).to eq(AiApiAuditLog::Provider::Anthropic)
+    expect(log.request_tokens).to eq(10)
+    expect(log.response_tokens).to eq(25)
+  end
+
+  it "can operate in regular mode" do
+    body = <<~STRING
+      {
+        "content": [
+          {
+            "text": "Hello!",
+            "type": "text"
+          }
+        ],
+        "id": "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+        "model": "claude-3-opus-20240229",
+        "role": "assistant",
+        "stop_reason": "end_turn",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "input_tokens": 10,
+          "output_tokens": 25
+        }
+      }
+    STRING
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+      },
+    ).to_return(status: 200, body: body)
+
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+    result = proxy.generate(prompt, user: Discourse.system_user)
+    expect(result).to eq("Hello!")
+
+    expected_body = {
+      model: "claude-3-opus-20240229",
+      max_tokens: 4096,
+      messages: [{ role: "user", content: "user1: hello" }],
+      system: "You are hello bot",
+    }
+    expect(parsed_body).to eq(expected_body)
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.provider_id).to eq(AiApiAuditLog::Provider::Anthropic)
+    expect(log.request_tokens).to eq(10)
+    expect(log.response_tokens).to eq(25)
+  end
+
+  it "handles prompt caching with always mode" do
+    body = {
+      id: "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+      type: "message",
+      role: "assistant",
+      content: [{ type: "text", text: "Using cached context!" }],
+      model: "claude-3-opus-20240229",
+      stop_reason: "end_turn",
+      usage: {
+        input_tokens: 6,
+        cache_creation_input_tokens: 2063,
+        cache_read_input_tokens: 5159,
+        output_tokens: 486,
+      },
+    }.to_json
+
+    model.update!(provider_params: { prompt_caching: "always" })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+        "Anthropic-Beta" => "prompt-caching-2024-07-31",
+      },
+    ).to_return(status: 200, body: body)
+
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+    result = proxy.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("Using cached context!")
+
+    expect(parsed_body[:messages].last[:content]).to eq(
+      [type: "text", text: "user1: hello", cache_control: { type: "ephemeral" }],
+    )
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.request_tokens).to eq(6)
+    expect(log.response_tokens).to eq(486)
+    expect(log.cache_write_tokens).to eq(2063)
+    expect(log.cache_read_tokens).to eq(5159)
+  end
+
+  it "does not include caching header when caching mode is never" do
+    body = {
+      id: "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+      type: "message",
+      role: "assistant",
+      content: [{ type: "text", text: "No caching!" }],
+      model: "claude-3-opus-20240229",
+      stop_reason: "end_turn",
+      usage: {
+        input_tokens: 10,
+        output_tokens: 25,
+      },
+    }.to_json
+
+    model.update!(provider_params: { prompt_caching: "never" })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+      },
+    ).to_return(status: 200, body: body)
+
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+    result = proxy.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("No caching!")
+
+    # Verify system prompt does not have cache_control
+    expect(parsed_body[:system]).to eq("You are hello bot")
+  end
+
+  it "handles streaming with cache tokens" do
+    body = (<<~STRING).strip
+      event: message_start
+      data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "cache_creation_input_tokens": 100, "cache_read_input_tokens": 500, "output_tokens": 1}}}
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index":0, "content_block": {"type": "text", "text": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Cached!"}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 0}
+
+      event: message_delta
+      data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null, "usage":{"output_tokens": 15}}}
+
+      event: message_stop
+      data: {"type": "message_stop"}
+    STRING
+
+    model.update!(provider_params: { prompt_caching: "always" })
+
+    stub_request(:post, url).to_return(status: 200, body: body)
+
+    result = +""
+    llm.generate(prompt, user: Discourse.system_user) { |partial| result << partial }
+
+    expect(result).to eq("Cached!")
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.request_tokens).to eq(25)
+    expect(log.response_tokens).to eq(15)
+    expect(log.cache_write_tokens).to eq(100)
+    expect(log.cache_read_tokens).to eq(500)
+  end
+
+  it "defaults to never mode and does not cache when mode is tool_results without tool results" do
+    body = {
+      id: "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+      type: "message",
+      role: "assistant",
+      content: [{ type: "text", text: "Hello!" }],
+      model: "claude-3-opus-20240229",
+      stop_reason: "end_turn",
+      usage: {
+        input_tokens: 10,
+        output_tokens: 5,
+      },
+    }.to_json
+
+    model.update!(provider_params: { prompt_caching: "tool_results" })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+        "Anthropic-Beta" => "prompt-caching-2024-07-31",
+      },
+    ).to_return(status: 200, body: body)
+
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+    result = proxy.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("Hello!")
+
+    # Verify system prompt does not have cache_control when no tool results
+    expect(parsed_body[:system]).to eq("You are hello bot")
+  end
+
+  it "detects tool results correctly in tool_results caching mode" do
+    model.update!(provider_params: { prompt_caching: "tool_results" })
+
+    test_endpoint = described_class.new(model)
+
+    # Create a mock prompt with tool results in messages (simulating what dialect produces)
+    mock_prompt = instance_double(DiscourseAi::Completions::Prompt)
+    allow(mock_prompt).to receive(:messages).and_return(
+      [
+        { role: "user", content: "use the echo tool" },
+        {
+          role: "assistant",
+          content: [{ type: "tool_use", id: "tool_1", name: "echo", input: { text: "hello" } }],
+        },
+        {
+          role: "user",
+          content: [{ type: "tool_result", tool_use_id: "tool_1", content: "hello" }],
+        },
+      ],
+    )
+
+    # Test that should_apply_prompt_caching? returns true when tool results are present
+    expect(test_endpoint.send(:should_apply_prompt_caching?, mock_prompt)).to be(true)
+
+    # Test that it returns false when no tool results
+    mock_prompt_no_tools = instance_double(DiscourseAi::Completions::Prompt)
+    allow(mock_prompt_no_tools).to receive(:messages).and_return(
+      [{ role: "user", content: "hello" }],
+    )
+    expect(test_endpoint.send(:should_apply_prompt_caching?, mock_prompt_no_tools)).to be(false)
+  end
+
+  it "can send through thinking tokens via a completion prompt" do
+    body = {
+      id: "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY",
+      type: "message",
+      role: "assistant",
+      content: [{ type: "text", text: "world" }],
+      model: "claude-3-7-sonnet-20250219",
+      stop_reason: "end_turn",
+      usage: {
+        input_tokens: 25,
+        output_tokens: 40,
+      },
+    }.to_json
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body: ->(req_body) { parsed_body = JSON.parse(req_body) },
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+      },
+    ).to_return(status: 200, body: body)
+
+    prompt = DiscourseAi::Completions::Prompt.new("system prompt")
+    prompt.push(type: :user, content: "hello")
+    prompt.push(
+      type: :model,
+      id: "user1",
+      content: "hello",
+      thinking: "I am thinking",
+      thinking_provider_info: {
+        anthropic: {
+          signature: "signature",
+          redacted_signature: "redacted_signature",
+        },
+      },
+    )
+
+    result = llm.generate(prompt, user: Discourse.system_user)
+    expect(result).to eq("world")
+
+    expected_body = {
+      "model" => "claude-3-opus-20240229",
+      "max_tokens" => 4096,
+      "messages" => [
+        { "role" => "user", "content" => "hello" },
+        {
+          "role" => "assistant",
+          "content" => [
+            { "type" => "thinking", "thinking" => "I am thinking", "signature" => "signature" },
+            { "type" => "redacted_thinking", "data" => "redacted_signature" },
+            { "type" => "text", "text" => "hello" },
+          ],
+        },
+      ],
+      "system" => "system prompt",
+    }
+
+    expect(parsed_body).to eq(expected_body)
+  end
+
+  it "can handle a response with thinking blocks in non-streaming mode" do
+    body = {
+      id: "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY",
+      type: "message",
+      role: "assistant",
+      content: [
+        {
+          type: "thinking",
+          thinking: "This is my thinking process about prime numbers...",
+          signature: "abc123signature",
+        },
+        { type: "redacted_thinking", data: "abd456signature" },
+        { type: "text", text: "Yes, there are infinitely many prime numbers where n mod 4 = 3." },
+      ],
+      model: "claude-3-7-sonnet-20250219",
+      stop_reason: "end_turn",
+      usage: {
+        input_tokens: 25,
+        output_tokens: 40,
+      },
+    }.to_json
+
+    stub_request(:post, url).with(
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+      },
+    ).to_return(status: 200, body: body)
+
+    result =
+      llm.generate(
+        "hello",
+        user: Discourse.system_user,
+        feature_name: "testing",
+        output_thinking: true,
+      )
+
+    # Result should be an array with both thinking and text content
+    expect(result).to be_an(Array)
+    expect(result.length).to eq(3)
+
+    # First item should be a Thinking object
+    expect(result[0]).to be_a(DiscourseAi::Completions::Thinking)
+    expect(result[0].message).to eq("This is my thinking process about prime numbers...")
+    expect(result[0].provider_info[:anthropic][:signature]).to eq("abc123signature")
+
+    expect(result[1]).to be_a(DiscourseAi::Completions::Thinking)
+    expect(result[1].provider_info[:anthropic][:redacted_signature]).to eq("abd456signature")
+
+    # Second item should be the text response
+    expect(result[2]).to eq("Yes, there are infinitely many prime numbers where n mod 4 = 3.")
+
+    # Verify audit log
+    log = AiApiAuditLog.order(:id).last
+    expect(log.provider_id).to eq(AiApiAuditLog::Provider::Anthropic)
+    expect(log.feature_name).to eq("testing")
+    expect(log.response_tokens).to eq(40)
+  end
+
+  it "can stream a response with thinking blocks" do
+    body = (<<~STRING).strip
+      event: message_start
+      data: {"type": "message_start", "message": {"id": "msg_01...", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25}}}
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index": 0, "content_block": {"type": "thinking", "thinking": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "thinking_delta", "thinking": "Let me solve this step by step:\\n\\n1. First break down 27 * 453"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "thinking_delta", "thinking": "\\n2. 453 = 400 + 50 + 3"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "signature_delta", "signature": "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds..."}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 0}
+
+      event: content_block_start
+      data: {"type":"content_block_start","index":0,"content_block":{"type":"redacted_thinking","data":"AAA=="} }
+
+      event: ping
+      data: {"type": "ping"}
+
+      event: content_block_stop
+      data: {"type":"content_block_stop","index":0 }
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index": 1, "content_block": {"type": "text", "text": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 1, "delta": {"type": "text_delta", "text": "27 * 453 = 12,231"}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 1}
+
+      event: message_delta
+      data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence": null, "usage": {"output_tokens": 30}}}
+
+      event: message_stop
+      data: {"type": "message_stop"}
+    STRING
+
+    parsed_body = nil
+
+    stub_request(:post, url).with(
+      headers: {
+        "Content-Type" => "application/json",
+        "X-Api-Key" => "123",
+        "Anthropic-Version" => "2023-06-01",
+      },
+    ).to_return(status: 200, body: body)
+
+    thinking_chunks = []
+    text_chunks = []
+
+    llm.generate(
+      "hello there",
+      user: Discourse.system_user,
+      feature_name: "testing",
+      output_thinking: true,
+    ) do |partial, cancel|
+      if partial.is_a?(DiscourseAi::Completions::Thinking)
+        thinking_chunks << partial
+      else
+        text_chunks << partial
+      end
+    end
+
+    expected_thinking = [
+      DiscourseAi::Completions::Thinking.new(
+        message: "",
+        partial: true,
+        provider_info: {
+          anthropic: {
+            signature: "",
+            redacted: false,
+          },
+        },
+      ),
+      DiscourseAi::Completions::Thinking.new(
+        message: "Let me solve this step by step:\n\n1. First break down 27 * 453",
+        partial: true,
+      ),
+      DiscourseAi::Completions::Thinking.new(message: "\n2. 453 = 400 + 50 + 3", partial: true),
+      DiscourseAi::Completions::Thinking.new(
+        message:
+          "Let me solve this step by step:\n\n1. First break down 27 * 453\n2. 453 = 400 + 50 + 3",
+        partial: false,
+        provider_info: {
+          anthropic: {
+            signature: "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds...",
+            redacted: false,
+          },
+        },
+      ),
+      DiscourseAi::Completions::Thinking.new(
+        message: nil,
+        partial: false,
+        provider_info: {
+          anthropic: {
+            redacted_signature: "AAA==",
+            redacted: true,
+          },
+        },
+      ),
+    ]
+
+    expect(thinking_chunks).to eq(expected_thinking)
+    expect(text_chunks).to eq(["27 * 453 = 12,231"])
+
+    log = AiApiAuditLog.order(:id).last
+    expect(log.provider_id).to eq(AiApiAuditLog::Provider::Anthropic)
+    expect(log.feature_name).to eq("testing")
+    expect(log.response_tokens).to eq(30)
+  end
+
+  describe "max output tokens" do
+    it "it respects max output tokens supplied to model unconditionally, even with thinking" do
+      model.update!(
+        provider_params: {
+          enable_reasoning: true,
+          reasoning_tokens: 1000,
+        },
+        max_output_tokens: 2000,
+      )
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user, max_tokens: 2500)
+      expect(parsed_body[:max_tokens]).to eq(2000)
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body[:max_tokens]).to eq(2000)
+    end
+  end
+
+  describe "parameter disabling" do
+    it "excludes disabled parameters from the request" do
+      model.update!(provider_params: { disable_top_p: true, disable_temperature: true })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      # Request with parameters that should be ignored
+      llm.generate(
+        prompt,
+        user: Discourse.system_user,
+        top_p: 0.9,
+        temperature: 0.8,
+        max_tokens: 500,
+      )
+
+      # Verify disabled parameters aren't included
+      expect(parsed_body).not_to have_key(:top_p)
+      expect(parsed_body).not_to have_key(:temperature)
+
+      # Verify other parameters still work
+      expect(parsed_body).to have_key(:max_tokens)
+      expect(parsed_body[:max_tokens]).to eq(500)
+    end
+  end
+
+  describe "disabled tool use" do
+    it "can properly disable tool use with :none" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [type: :user, id: "user1", content: "don't use any tools please"],
+          tools: [echo_tool],
+          tool_choice: :none,
+        )
+
+      response_body = {
+        id: "msg_01RdJkxCbsEj9VFyFYAkfy2S",
+        type: "message",
+        role: "assistant",
+        model: "claude-3-haiku-20240307",
+        content: [
+          { type: "text", text: "I won't use any tools. Here's a direct response instead." },
+        ],
+        stop_reason: "end_turn",
+        stop_sequence: nil,
+        usage: {
+          input_tokens: 345,
+          output_tokens: 65,
+        },
+      }.to_json
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: response_body)
+
+      result = llm.generate(prompt, user: Discourse.system_user)
+
+      # Verify that tool_choice is set to { type: "none" }
+      expect(parsed_body[:tool_choice]).to eq({ type: "none" })
+
+      # Verify that an assistant message with no_more_tool_calls_text was added
+      messages = parsed_body[:messages]
+      expect(messages.length).to eq(2) # user message + added assistant message
+
+      last_message = messages.last
+      expect(last_message[:role]).to eq("assistant")
+
+      expect(last_message[:content]).to eq(
+        DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text,
+      )
+
+      expect(result).to eq("I won't use any tools. Here's a direct response instead.")
+    end
+  end
+
+  describe "forced tool use" do
+    it "can properly force tool use" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [type: :user, id: "user1", content: "echo hello"],
+          tools: [echo_tool],
+          tool_choice: "echo",
+        )
+
+      response_body = {
+        id: "msg_01RdJkxCbsEj9VFyFYAkfy2S",
+        type: "message",
+        role: "assistant",
+        model: "claude-3-haiku-20240307",
+        content: [
+          {
+            type: "tool_use",
+            id: "toolu_bdrk_014CMjxtGmKUtGoEFPgc7PF7",
+            name: "echo",
+            input: {
+              text: "hello",
+            },
+          },
+        ],
+        stop_reason: "end_turn",
+        stop_sequence: nil,
+        usage: {
+          input_tokens: 345,
+          output_tokens: 65,
+        },
+      }.to_json
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: response_body)
+
+      llm.generate(prompt, user: Discourse.system_user)
+
+      # Verify that tool_choice: "echo" is present
+      expect(parsed_body.dig(:tool_choice, :name)).to eq("echo")
+    end
+  end
+
+  describe "structured output via prefilling" do
+    it "forces the response to be a JSON and using the given JSON schema" do
+      schema = {
+        type: "json_schema",
+        json_schema: {
+          name: "reply",
+          schema: {
+            type: "object",
+            properties: {
+              key: {
+                type: "string",
+              },
+            },
+            required: ["key"],
+            additionalProperties: false,
+          },
+          strict: true,
+        },
+      }
+
+      body = (<<~STRING).strip
+      event: message_start
+      data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index":0, "content_block": {"type": "text", "text": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "key"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\":\\""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello!\\n"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " there\\nis a text"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " and\\n\\nmore text"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\n \\n and\\n\\n more much more"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": " text"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\"}"}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 0}
+
+      event: message_delta
+      data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null, "usage":{"output_tokens": 15}}}
+
+      event: message_stop
+      data: {"type": "message_stop"}
+    STRING
+
+      parsed_body = nil
+
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(status: 200, body: body)
+
+      structured_output = nil
+      llm.generate(
+        prompt,
+        user: Discourse.system_user,
+        feature_name: "testing",
+        response_format: schema,
+      ) { |partial, cancel| structured_output = partial }
+
+      expect(structured_output.read_buffered_property(:key)).to eq(
+        "Hello!\n there\nis a text and\n\nmore text\n \n and\n\n more much more text",
+      )
+
+      expected_body = {
+        model: "claude-3-opus-20240229",
+        max_tokens: 4096,
+        messages: [{ role: "user", content: "user1: hello" }, { role: "assistant", content: "{" }],
+        system: "You are hello bot",
+        stream: true,
+      }
+      expect(parsed_body).to eq(expected_body)
+    end
+  end
+
+  describe "effort parameter" do
+    it "includes effort in output_config and beta header when set to low, medium, or high" do
+      model.update!(provider_params: { effort: "high" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+          "Anthropic-Beta" => "effort-2025-11-24",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body.dig(:output_config, :effort)).to eq("high")
+    end
+
+    it "combines effort and caching beta headers when both are configured" do
+      model.update!(provider_params: { effort: "medium", prompt_caching: "always" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+          "Anthropic-Beta" => "prompt-caching-2024-07-31,effort-2025-11-24",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body.dig(:output_config, :effort)).to eq("medium")
+    end
+
+    it "omits effort and beta header when set to default" do
+      model.update!(provider_params: { effort: "default" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body).not_to have_key(:output_config)
+    end
+
+    it "omits effort and beta header when not configured" do
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body).not_to have_key(:output_config)
+    end
+  end
+end

@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { isSkinTonableEmoji } from "pretty-text/emoji";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
@@ -11,6 +12,7 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
+import { DEFAULT_DIVERSITY } from "discourse/services/emoji-store";
 import { i18n } from "discourse-i18n";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
@@ -31,7 +33,6 @@ export function resetRemovedChatComposerSecondaryActions() {
 
 export default class ChatemojiReactions {
   @service appEvents;
-  @service dialog;
   @service chat;
   @service chatChannelComposer;
   @service chatThreadComposer;
@@ -40,7 +41,6 @@ export default class ChatemojiReactions {
   @service chatApi;
   @service currentUser;
   @service site;
-  @service router;
   @service modal;
   @service capabilities;
   @service siteSettings;
@@ -60,13 +60,38 @@ export default class ChatemojiReactions {
   }
 
   get emojiReactions() {
-    const defaultReactions = this.siteSettings.default_emoji_reactions
+    const userQuickReactionsCustom = (
+      (this.currentUser.user_option.chat_quick_reaction_type === "custom" &&
+        this.currentUser.user_option.chat_quick_reactions_custom) ||
+      ""
+    )
       .split("|")
       .filter(Boolean);
 
-    return this.emojiStore
-      .favoritesForContext(`channel_${this.message.channel.id}`)
-      .concat(defaultReactions)
+    const frequentReactions = this.emojiStore.favoritesForContext("chat");
+
+    const defaultReactions = this.siteSettings.default_emoji_reactions
+      .split("|")
+      .map((emoji) => {
+        if (
+          this.emojiStore.diversity !== DEFAULT_DIVERSITY &&
+          isSkinTonableEmoji(emoji)
+        ) {
+          return `${emoji}:t${this.emojiStore.diversity}`;
+        }
+
+        return emoji;
+      });
+
+    const allReactionsInOrder = userQuickReactionsCustom
+      .concat(frequentReactions)
+      .concat(defaultReactions);
+
+    return allReactionsInOrder
+      .filter((item, index) => {
+        return allReactionsInOrder.indexOf(item) === index;
+      })
+      .filter(Boolean)
       .slice(0, 3)
       .map(
         (emoji) =>
@@ -92,7 +117,8 @@ export default class ChatemojiReactions {
   get canInteractWithMessage() {
     return (
       !this.message?.deletedAt &&
-      this.message?.channel?.canModifyMessages(this.currentUser)
+      this.message?.channel?.canModifyMessages(this.currentUser) &&
+      this.message?.channel?.isFollowing
     );
   }
 
@@ -112,7 +138,9 @@ export default class ChatemojiReactions {
 
   get canReply() {
     return (
-      this.canInteractWithMessage && this.context !== MESSAGE_CONTEXT_THREAD
+      this.canInteractWithMessage &&
+      this.context !== MESSAGE_CONTEXT_THREAD &&
+      this.message?.channel?.isFollowing
     );
   }
 
@@ -222,7 +250,7 @@ export default class ChatemojiReactions {
       });
     }
 
-    return buttons.reject((button) => removedSecondaryActions.has(button.id));
+    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
   }
 
   select(checked = true) {
@@ -248,7 +276,7 @@ export default class ChatemojiReactions {
   copyText() {
     clipboardCopy(this.message.message);
     this.toasts.success({
-      duration: 3000,
+      duration: "short",
       data: { message: i18n("chat.text_copied") },
     });
   }
@@ -268,7 +296,7 @@ export default class ChatemojiReactions {
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
     this.toasts.success({
-      duration: 1500,
+      duration: "short",
       data: { message: i18n("chat.link_copied") },
     });
   }
@@ -307,6 +335,9 @@ export default class ChatemojiReactions {
         emoji,
         reactAction
       )
+      .then(() => {
+        this.emojiStore.trackEmojiForContext(emoji, "chat");
+      })
       .catch((errResult) => {
         popupAjaxError(errResult);
         this.message.react(
@@ -413,7 +444,7 @@ export default class ChatemojiReactions {
         this.interactedChatMessage.emojiPickerOpen = false;
       },
       data: {
-        context: `channel_${this.message.channel.id}`,
+        context: "chat",
         didSelectEmoji: (emoji) => {
           this.selectReaction(emoji);
         },

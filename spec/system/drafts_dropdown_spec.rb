@@ -2,6 +2,7 @@
 
 describe "Drafts dropdown", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:category)
   let(:composer) { PageObjects::Components::Composer.new }
   let(:drafts_dropdown) { PageObjects::Components::DraftsMenu.new }
   let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
@@ -110,11 +111,11 @@ describe "Drafts dropdown", type: :system do
       )
     end
 
-    it "disables the drafts dropdown menu when new topic button is disabled" do
+    it "is still enabled" do
       category_page.visit(category)
 
-      expect(category_page).to have_button("New Topic", disabled: true)
-      expect(drafts_dropdown).to be_disabled
+      expect(category_page).to have_button("New Topic", disabled: false)
+      expect(drafts_dropdown).to be_enabled
     end
   end
 end

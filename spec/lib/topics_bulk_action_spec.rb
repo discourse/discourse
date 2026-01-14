@@ -4,8 +4,8 @@ RSpec.describe TopicsBulkAction do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
 
-  describe "#dismiss_topics" do
-    fab!(:user) { Fabricate(:user, created_at: 1.days.ago, refresh_auto_groups: true) }
+  describe "dismiss_topics" do
+    fab!(:user) { Fabricate(:user, created_at: 1.day.ago, refresh_auto_groups: true) }
     fab!(:category)
     fab!(:topic2) { Fabricate(:topic, category: category, created_at: 60.minutes.ago) }
     fab!(:topic3) { Fabricate(:topic, category: category, created_at: 120.minutes.ago) }
@@ -102,10 +102,15 @@ RSpec.describe TopicsBulkAction do
   describe "dismiss_posts" do
     it "dismisses posts" do
       post1 = create_post
-      p = create_post(topic_id: post1.topic_id)
+      post2 = create_post(topic_id: post1.topic_id)
       create_post(topic_id: post1.topic_id)
 
-      PostDestroyer.new(Fabricate(:admin), p).destroy
+      PostDestroyer.new(Fabricate(:admin), post2).destroy
+
+      TopicTrackingState.expects(:publish_dismiss_new_posts).with(
+        post1.user_id,
+        topic_ids: [post1.topic_id],
+      )
 
       TopicsBulkAction.new(post1.user, [post1.topic_id], type: "dismiss_posts").perform!
 
@@ -115,22 +120,21 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user is staff" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
 
       context "when the highest_staff_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
         it "dismisses posts" do
           SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
           post1 = create_post(user: user)
-          p = create_post(topic_id: post1.topic_id)
+          create_post(topic_id: post1.topic_id)
           create_post(topic_id: post1.topic_id)
 
-          whisper =
-            PostCreator.new(
-              user,
-              topic_id: post1.topic.id,
-              post_type: Post.types[:whisper],
-              raw: "this is a whispered reply",
-            ).create
+          PostCreator.new(
+            user,
+            topic_id: post1.topic.id,
+            post_type: Post.types[:whisper],
+            raw: "this is a whispered reply",
+          ).create
 
           TopicsBulkAction.new(user, [post1.topic_id], type: "dismiss_posts").perform!
 
@@ -153,102 +157,165 @@ RSpec.describe TopicsBulkAction do
 
   describe "change_category" do
     fab!(:category)
-    fab!(:fist_post) { Fabricate(:post, topic: topic) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
 
-    context "when the user can edit the topic" do
-      context "with 'create_revision_on_bulk_topic_moves' setting enabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
+    describe "silent option" do
+      fab!(:topic_watcher, :user)
+      fab!(:category_watcher, :user)
+      fab!(:admin)
 
-        it "changes the category, creates a post revision and returns the topic_id" do
-          old_category_id = topic.category_id
-          tba =
+      before do
+        Jobs.run_immediately!
+        TopicUser.change(
+          topic_watcher,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+        CategoryUser.set_notification_level_for_category(
+          category_watcher,
+          CategoryUser.notification_levels[:watching_first_post],
+          category.id,
+        )
+      end
+
+      shared_examples "silent option suppresses notifications" do
+        it "notifies topic watchers when silent is false" do
+          expect do
             TopicsBulkAction.new(
-              topic.user,
+              admin,
               [topic.id],
               type: "change_category",
               category_id: category.id,
-            )
-          topic_ids = tba.perform!
-          expect(topic_ids).to eq([topic.id])
-          topic.reload
-          expect(topic.category).to eq(category)
-
-          revision = topic.first_post.revisions.last
-          expect(revision).to be_present
-          expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
+            ).perform!
+          end.to change { Notification.where(user: topic_watcher).count }
         end
 
-        it "doesn't do anything when category stays the same" do
-          tba =
+        it "does not notify topic watchers when silent is true" do
+          expect do
             TopicsBulkAction.new(
-              topic.user,
+              admin,
               [topic.id],
               type: "change_category",
-              category_id: topic.category_id,
-            )
-          topic_ids = tba.perform!
-          expect(topic_ids).to be_empty
+              category_id: category.id,
+              silent: true,
+            ).perform!
+          end.to not_change { Notification.where(user: topic_watcher).count }
+        end
 
-          topic.reload
-          revision = topic.first_post.revisions.last
-          expect(revision).to be_nil
+        it "notifies category watchers when silent is false" do
+          expect do
+            TopicsBulkAction.new(
+              admin,
+              [topic.id],
+              type: "change_category",
+              category_id: category.id,
+            ).perform!
+          end.to change { Notification.where(user: category_watcher).count }.by(1)
+
+          expect(Notification.where(user: category_watcher).last.notification_type).to eq(
+            Notification.types[:watching_first_post],
+          )
+        end
+
+        it "does not notify category watchers when silent is true" do
+          expect do
+            TopicsBulkAction.new(
+              admin,
+              [topic.id],
+              type: "change_category",
+              category_id: category.id,
+              silent: true,
+            ).perform!
+          end.to not_change { Notification.where(user: category_watcher).count }
         end
       end
 
-      context "with 'create_revision_on_bulk_topic_moves' setting disabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
+      context "when create_revision_on_bulk_topic_moves is enabled" do
+        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
+        include_examples "silent option suppresses notifications"
+      end
 
-        it "changes the category, doesn't create a post revision and returns the topic_id" do
-          tba =
+      context "when create_revision_on_bulk_topic_moves is disabled" do
+        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
+        include_examples "silent option suppresses notifications"
+      end
+    end
+
+    context "when the user can edit the topic" do
+      context "when create_revision_on_bulk_topic_moves is enabled" do
+        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
+
+        it "changes category and creates revision" do
+          old_category_id = topic.category_id
+
+          topic_ids =
             TopicsBulkAction.new(
               topic.user,
               [topic.id],
               type: "change_category",
               category_id: category.id,
-            )
-          topic_ids = tba.perform!
+            ).perform!
+
           expect(topic_ids).to eq([topic.id])
-          topic.reload
-          expect(topic.category).to eq(category)
+          expect(topic.reload.category).to eq(category)
 
           revision = topic.first_post.revisions.last
-          expect(revision).to be_nil
+          expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
         end
+      end
 
-        it "doesn't do anything when category stays the same" do
-          tba =
+      context "when create_revision_on_bulk_topic_moves is disabled" do
+        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
+
+        it "changes category without revision" do
+          topic_ids =
             TopicsBulkAction.new(
               topic.user,
               [topic.id],
               type: "change_category",
-              category_id: topic.category_id,
-            )
-          topic_ids = tba.perform!
-          expect(topic_ids).to be_empty
+              category_id: category.id,
+            ).perform!
+
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.category).to eq(category)
+          expect(topic.first_post.revisions.last).to be_nil
         end
+      end
+
+      it "does nothing when category stays the same" do
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_category",
+            category_id: topic.category_id,
+          ).perform!
+
+        expect(topic_ids).to be_empty
       end
     end
 
     context "when the user can't edit the topic" do
       it "doesn't change the category" do
         Guardian.any_instance.expects(:can_edit?).returns(false)
-        tba =
+        original_category = topic.category
+
+        topic_ids =
           TopicsBulkAction.new(
             topic.user,
             [topic.id],
             type: "change_category",
             category_id: category.id,
-          )
-        topic_ids = tba.perform!
+          ).perform!
+
         expect(topic_ids).to eq([])
-        topic.reload
-        expect(topic.category).not_to eq(category)
+        expect(topic.reload.category).to eq(original_category)
       end
     end
   end
 
   describe "destroy_post_timing" do
-    fab!(:fist_post) { Fabricate(:post, topic: topic) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
 
     before { PostTiming.process_timings(topic.user, topic.id, 10, [[1, 10]]) }
 
@@ -273,144 +340,114 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "change_notification_level" do
-    context "when the user can see the topic" do
-      it "updates the notification level" do
-        tba =
-          TopicsBulkAction.new(
-            topic.user,
-            [topic.id],
-            type: "change_notification_level",
-            notification_level_id: 2,
-          )
-        topic_ids = tba.perform!
-        expect(topic_ids).to eq([topic.id])
-        expect(TopicUser.get(topic, topic.user).notification_level).to eq(2)
-      end
+    it "updates the notification level when user can see topic" do
+      topic_ids =
+        TopicsBulkAction.new(
+          topic.user,
+          [topic.id],
+          type: "change_notification_level",
+          notification_level_id: 2,
+        ).perform!
+
+      expect(topic_ids).to eq([topic.id])
+      expect(TopicUser.get(topic, topic.user).notification_level).to eq(2)
     end
 
-    context "when the user can't see the topic" do
-      it "doesn't change the level" do
-        Guardian.any_instance.expects(:can_see?).returns(false)
-        tba =
-          TopicsBulkAction.new(
-            topic.user,
-            [topic.id],
-            type: "change_notification_level",
-            notification_level_id: 2,
-          )
-        topic_ids = tba.perform!
-        expect(topic_ids).to eq([])
-        expect(TopicUser.get(topic, topic.user)).to be_blank
-      end
-    end
-  end
+    it "doesn't change level when user can't see topic" do
+      Guardian.any_instance.expects(:can_see?).returns(false)
 
-  describe "close" do
-    context "when the user can moderate the topic" do
-      it "closes the topic and returns the topic_id" do
-        Guardian.any_instance.expects(:can_moderate?).returns(true)
-        Guardian.any_instance.expects(:can_create?).returns(true)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "close")
-        topic_ids = tba.perform!
-        expect(topic_ids).to eq([topic.id])
-        topic.reload
-        expect(topic).to be_closed
-      end
+      topic_ids =
+        TopicsBulkAction.new(
+          topic.user,
+          [topic.id],
+          type: "change_notification_level",
+          notification_level_id: 2,
+        ).perform!
+
+      expect(topic_ids).to eq([])
+      expect(TopicUser.get(topic, topic.user)).to be_blank
     end
 
-    context "when the user can't edit the topic" do
-      it "doesn't close the topic" do
-        Guardian.any_instance.expects(:can_moderate?).returns(false)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "close")
-        topic_ids = tba.perform!
-        expect(topic_ids).to be_blank
-        topic.reload
-        expect(topic).not_to be_closed
+    ["", nil, :missing].each do |invalid_value|
+      it "raises error when notification_level_id is #{invalid_value.inspect}" do
+        options = { type: "change_notification_level" }
+        options[:notification_level_id] = invalid_value unless invalid_value == :missing
+
+        expect do
+          TopicsBulkAction.new(topic.user, [topic.id], **options).perform!
+        end.to raise_error(Discourse::InvalidParameters, /notification_level_id/)
       end
     end
   end
 
-  describe "archive" do
-    context "when the user can moderate the topic" do
-      it "archives the topic and returns the topic_id" do
+  %w[close archive unlist].each do |action|
+    describe action do
+      it "#{action}s topic when user can moderate" do
         Guardian.any_instance.expects(:can_moderate?).returns(true)
         Guardian.any_instance.expects(:can_create?).returns(true)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "archive")
-        topic_ids = tba.perform!
+
+        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+
         expect(topic_ids).to eq([topic.id])
         topic.reload
-        expect(topic).to be_archived
+        case action
+        when "close"
+          expect(topic).to be_closed
+        when "archive"
+          expect(topic).to be_archived
+        when "unlist"
+          expect(topic).not_to be_visible
+        end
       end
-    end
 
-    context "when the user can't edit the topic" do
-      it "doesn't archive the topic" do
+      it "doesn't #{action} topic when user can't moderate" do
         Guardian.any_instance.expects(:can_moderate?).returns(false)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "archive")
-        topic_ids = tba.perform!
+
+        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+
         expect(topic_ids).to be_blank
         topic.reload
-        expect(topic).not_to be_archived
-      end
-    end
-  end
-
-  describe "unlist" do
-    context "when the user can moderate the topic" do
-      it "unlists the topic and returns the topic_id" do
-        Guardian.any_instance.expects(:can_moderate?).returns(true)
-        Guardian.any_instance.expects(:can_create?).returns(true)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "unlist")
-        topic_ids = tba.perform!
-        expect(topic_ids).to eq([topic.id])
-        topic.reload
-        expect(topic).not_to be_visible
-      end
-    end
-
-    context "when the user can't edit the topic" do
-      it "doesn't unlist the topic" do
-        Guardian.any_instance.expects(:can_moderate?).returns(false)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "unlist")
-        topic_ids = tba.perform!
-        expect(topic_ids).to be_blank
-        topic.reload
-        expect(topic).to be_visible
+        case action
+        when "close"
+          expect(topic).not_to be_closed
+        when "archive"
+          expect(topic).not_to be_archived
+        when "unlist"
+          expect(topic).to be_visible
+        end
       end
     end
   end
 
   describe "reset_bump_dates" do
-    context "when the user can update bumped at" do
-      it "does reset the topic bump date" do
-        post_created_at = 1.day.ago
-        create_post(topic_id: topic.id, created_at: post_created_at)
-        topic.update!(bumped_at: 1.hour.ago)
-        Guardian.any_instance.expects(:can_update_bumped_at?).returns(true)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "reset_bump_dates")
-        topic_ids = tba.perform!
-        expect(topic_ids).to eq([topic.id])
-        expect(topic.reload.bumped_at).to eq_time(post_created_at)
-      end
+    it "resets bump date when user can update" do
+      post_created_at = 1.day.ago
+      create_post(topic_id: topic.id, created_at: post_created_at)
+      topic.update!(bumped_at: 1.hour.ago)
+      Guardian.any_instance.expects(:can_update_bumped_at?).returns(true)
+
+      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "reset_bump_dates").perform!
+
+      expect(topic_ids).to eq([topic.id])
+      expect(topic.reload.bumped_at).to eq_time(post_created_at)
     end
 
-    context "when the user can't update bumped at" do
-      it "doesn't reset the topic bump date" do
-        create_post(topic_id: topic.id, created_at: 1.day.ago)
-        bumped_at = 1.hour.ago
-        topic.update!(bumped_at: bumped_at)
-        Guardian.any_instance.expects(:can_update_bumped_at?).returns(false)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "reset_bump_dates")
-        topic_ids = tba.perform!
-        expect(topic_ids).to eq([])
-        expect(topic.reload.bumped_at).to eq_time(bumped_at)
-      end
+    it "doesn't reset bump date when user can't update" do
+      create_post(topic_id: topic.id, created_at: 1.day.ago)
+      bumped_at = 1.hour.ago
+      topic.update!(bumped_at: bumped_at)
+      Guardian.any_instance.expects(:can_update_bumped_at?).returns(false)
+
+      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "reset_bump_dates").perform!
+
+      expect(topic_ids).to eq([])
+      expect(topic.reload.bumped_at).to eq_time(bumped_at)
     end
   end
 
   describe "change_tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
@@ -418,67 +455,72 @@ RSpec.describe TopicsBulkAction do
       topic.tags = [tag1, tag2]
     end
 
-    it "can change the tags, and can create new tags" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      tba =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "change_tags",
-          tags: ["newtag", tag1.name],
-        )
-      topic_ids = tba.perform!
-      expect(topic_ids).to eq([topic.id])
-      topic.reload
-      expect(topic.tags.map(&:name)).to contain_exactly("newtag", tag1.name)
+    context "when the user can edit the topic" do
+      context "when permitted to create new tags" do
+        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
+
+        it "changes tags and creates new ones" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "change_tags",
+              tags: ["newtag", tag1.name],
+            ).perform!
+
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.tags.map(&:name)).to contain_exactly("newtag", tag1.name)
+        end
+      end
+
+      context "when not permitted to create new tags" do
+        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
+        it "changes to existing tags only" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "change_tags",
+              tags: ["newtag", tag1.name],
+            ).perform!
+
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name)
+        end
+      end
+
+      it "removes all tags with empty array" do
+        topic_ids =
+          TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tags: []).perform!
+
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags).to be_empty
+      end
     end
 
-    it "can change the tags but not create new ones" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-      tba =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "change_tags",
-          tags: ["newtag", tag1.name],
-        )
-      topic_ids = tba.perform!
-      expect(topic_ids).to eq([topic.id])
-      topic.reload
-      expect(topic.tags.map(&:name)).to contain_exactly(tag1.name)
-    end
-
-    it "can remove all tags" do
-      tba = TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tags: [])
-      topic_ids = tba.perform!
-      expect(topic_ids).to eq([topic.id])
-      topic.reload
-      expect(topic.tags.size).to eq(0)
-    end
-
-    context "when user can't edit topic" do
-      before { Guardian.any_instance.expects(:can_edit?).returns(false) }
-
+    context "when the user can't edit the topic" do
       it "doesn't change the tags" do
-        tba =
+        Guardian.any_instance.expects(:can_edit?).returns(false)
+
+        topic_ids =
           TopicsBulkAction.new(
             topic.user,
             [topic.id],
             type: "change_tags",
             tags: ["newtag", tag1.name],
-          )
-        topic_ids = tba.perform!
+          ).perform!
+
         expect(topic_ids).to eq([])
-        topic.reload
-        expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
       end
     end
   end
 
-  describe "append tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
+  describe "append_tags" do
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
@@ -486,93 +528,104 @@ RSpec.describe TopicsBulkAction do
       topic.tags = [tag1, tag2]
     end
 
-    it "can append new or existing tags" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      tba =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "append_tags",
-          tags: [tag1.name, tag3.name, "newtag"],
-        )
-      topic_ids = tba.perform!
-      expect(topic_ids).to eq([topic.id])
-      topic.reload
-      expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name, "newtag")
-    end
+    context "when the user can edit the topic" do
+      context "when permitted to create new tags" do
+        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
 
-    it "can append empty tags" do
-      tba = TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tags: [])
-      topic_ids = tba.perform!
-      expect(topic_ids).to eq([topic.id])
-      topic.reload
-      expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
-    end
+        it "appends new and existing tags" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "append_tags",
+              tags: [tag1.name, tag3.name, "newtag"],
+            ).perform!
 
-    context "when the user can't create new topics" do
-      before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
-
-      it "can append existing tags but doesn't append new tags" do
-        tba =
-          TopicsBulkAction.new(
-            topic.user,
-            [topic.id],
-            type: "append_tags",
-            tags: [tag3.name, "newtag"],
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(
+            tag1.name,
+            tag2.name,
+            tag3.name,
+            "newtag",
           )
-        topic_ids = tba.perform!
+        end
+      end
+
+      context "when not permitted to create new tags" do
+        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
+        it "appends only existing tags" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "append_tags",
+              tags: [tag3.name, "newtag"],
+            ).perform!
+
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name)
+        end
+      end
+
+      it "keeps existing tags when appending empty array" do
+        topic_ids =
+          TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tags: []).perform!
+
         expect(topic_ids).to eq([topic.id])
-        topic.reload
-        expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
       end
     end
 
-    context "when user can't edit topic" do
-      before { Guardian.any_instance.expects(:can_edit?).returns(false) }
-
+    context "when the user can't edit the topic" do
       it "doesn't change the tags" do
-        tba =
+        Guardian.any_instance.expects(:can_edit?).returns(false)
+
+        topic_ids =
           TopicsBulkAction.new(
             topic.user,
             [topic.id],
             type: "append_tags",
             tags: ["newtag", tag3.name],
-          )
-        topic_ids = tba.perform!
+          ).perform!
+
         expect(topic_ids).to eq([])
-        topic.reload
-        expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
       end
     end
   end
 
   describe "remove_tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
       SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      topic.tags = [tag1, tag2]
+      TopicTag.create!(topic: topic, tag: tag1)
+      TopicTag.create!(topic: topic, tag: tag2)
     end
 
-    it "can remove all tags" do
-      tba = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags")
-      topic_ids = tba.perform!
-      expect(topic_ids).to eq([topic.id])
-      topic.reload
-      expect(topic.tags.size).to eq(0)
+    context "when the user can edit the topic" do
+      it "removes all tags and updates tag counts" do
+        expect(tag1.reload.staff_topic_count).to eq(1)
+
+        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
+
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags).to be_empty
+        expect(tag1.reload.staff_topic_count).to eq(0)
+      end
     end
 
-    context "when user can't edit topic" do
-      before { Guardian.any_instance.expects(:can_edit?).returns(false) }
-
+    context "when the user can't edit the topic" do
       it "doesn't remove the tags" do
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags")
-        topic_ids = tba.perform!
+        Guardian.any_instance.expects(:can_edit?).returns(false)
+
+        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
+
         expect(topic_ids).to eq([])
-        topic.reload
-        expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
       end
     end
   end

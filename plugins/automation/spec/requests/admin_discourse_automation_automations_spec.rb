@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscourseAutomation::AdminAutomationsController do
-  fab!(:automation)
+  fab!(:automation) { Fabricate(:automation, enabled: true) }
 
   before do
     SiteSetting.discourse_automation_enabled = true
@@ -72,6 +72,17 @@ describe DiscourseAutomation::AdminAutomationsController do
              }
         expect(response.status).to eq(200)
       end
+
+      it "logs a staff action" do
+        expect {
+          post "/admin/plugins/automation/automations.json", params: { automation: { script: } }
+        }.to change { UserHistory.where(custom_type: "create_automation").count }.by(1)
+
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "create_automation",
+          details: a_string_including("script: #{script}"),
+        )
+      end
     end
 
     context "when logged in as a regular user" do
@@ -102,6 +113,81 @@ describe DiscourseAutomation::AdminAutomationsController do
               },
             }
         expect(response.status).to eq(200)
+      end
+
+      it "logs a staff action when changes are made" do
+        automation.update!(enabled: true)
+        original_name = automation.name
+
+        expect {
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  name: "new-name",
+                  enabled: false,
+                },
+              }
+        }.to change { UserHistory.where(custom_type: "update_automation").count }.by(1)
+
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "update_automation",
+          details:
+            a_string_including(
+              "id: #{automation.id}",
+              "name: #{original_name} → new-name",
+              "enabled: true → false",
+            ),
+        )
+      end
+
+      it "logs field changes" do
+        point_in_time_automation =
+          Fabricate(:automation, trigger: DiscourseAutomation::Triggers::POINT_IN_TIME)
+        original_time = 1.hour.from_now.iso8601
+        new_time = 2.hours.from_now.iso8601
+
+        point_in_time_automation.upsert_field!(
+          "execute_at",
+          "date_time",
+          { "value" => original_time },
+          target: "trigger",
+        )
+
+        expect {
+          put "/admin/plugins/automation/automations/#{point_in_time_automation.id}.json",
+              params: {
+                automation: {
+                  script: point_in_time_automation.script,
+                  trigger: point_in_time_automation.trigger,
+                  fields: [
+                    {
+                      name: "execute_at",
+                      component: "date_time",
+                      target: "trigger",
+                      metadata: {
+                        value: new_time,
+                      },
+                    },
+                  ],
+                },
+              }
+        }.to change { UserHistory.where(custom_type: "update_automation").count }.by(1)
+
+        expect(UserHistory.last).to have_attributes(
+          details: a_string_including("execute_at: #{original_time} → #{new_time}"),
+        )
+      end
+
+      it "does not log a staff action when no changes are made" do
+        expect {
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  name: automation.name,
+                  enabled: automation.enabled,
+                },
+              }
+        }.not_to change { UserHistory.where(custom_type: "update_automation").count }
       end
 
       describe "invalid field’s component" do
@@ -140,6 +226,28 @@ describe DiscourseAutomation::AdminAutomationsController do
                 },
               }
           expect(response.status).to eq(422)
+        end
+      end
+
+      context "when only changing enabled state" do
+        it "updates only the enabled state" do
+          original_trigger = automation.trigger
+          original_script = automation.script
+          expect(automation.enabled).to eq(true)
+
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  enabled: false,
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["automation"]["enabled"]).to eq(false)
+          automation.reload
+          expect(automation.enabled).to eq(false)
+          expect(automation.trigger).to eq(original_trigger)
+          expect(automation.script).to eq(original_script)
         end
       end
 
@@ -220,6 +328,152 @@ describe DiscourseAutomation::AdminAutomationsController do
                 trigger: "another-trigger",
               },
             }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when updating a point_in_time automation" do
+      fab!(:automation) do
+        Fabricate(:automation, trigger: DiscourseAutomation::Triggers::POINT_IN_TIME)
+      end
+
+      before do
+        sign_in(Fabricate(:admin))
+
+        automation.upsert_field!(
+          "execute_at",
+          "date_time",
+          { value: 1.hour.from_now },
+          target: "trigger",
+        )
+      end
+
+      it "updates the associated pending automation execute_at" do
+        expect(automation.pending_automations.count).to eq(1)
+        expect(automation.pending_automations.last.execute_at).to be_within_one_minute_of(
+          1.hour.from_now,
+        )
+
+        expect {
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  script: automation.script,
+                  trigger: automation.trigger,
+                  fields: [
+                    {
+                      name: "execute_at",
+                      component: "date_time",
+                      target: "trigger",
+                      metadata: {
+                        value: 2.hours.from_now,
+                      },
+                    },
+                  ],
+                },
+              }
+        }.not_to change { automation.pending_automations.count }
+
+        expect(automation.pending_automations.reload.last.execute_at).to be_within_one_minute_of(
+          2.hours.from_now,
+        )
+      end
+    end
+  end
+
+  describe "#index" do
+    fab!(:automation1) { Fabricate(:automation, name: "First Automation") }
+    fab!(:automation2) { Fabricate(:automation, name: "Second Automation") }
+
+    context "when logged in as an admin" do
+      before { sign_in(Fabricate(:admin)) }
+
+      it "returns a list of automations" do
+        get "/admin/plugins/automation/automations.json"
+
+        expect(response.status).to eq(200)
+
+        parsed_response = response.parsed_body
+        expect(parsed_response["automations"].length).to eq(3) # includes the default automation
+
+        automation_names = parsed_response["automations"].map { |a| a["name"] }
+        expect(automation_names).to include(automation1.name)
+        expect(automation_names).to include(automation2.name)
+      end
+
+      it "doesn't include stats by default" do
+        get "/admin/plugins/automation/automations.json"
+
+        expect(response.status).to eq(200)
+
+        parsed_response = response.parsed_body
+        automation_response = parsed_response["automations"].find { |a| a["id"] == automation1.id }
+
+        expect(automation_response.key?("stats")).to eq(false)
+      end
+
+      context "with stats" do
+        before do
+          # Create some stats for automation1
+          freeze_time DateTime.parse("2023-01-01")
+
+          # Create stats for today (within last day)
+          DiscourseAutomation::Stat.log(automation1.id, 0.5)
+          DiscourseAutomation::Stat.log(automation1.id, 1.5)
+
+          # Create stats for 3 days ago (within last week)
+          freeze_time DateTime.parse("2022-12-29")
+          DiscourseAutomation::Stat.log(automation1.id, 2.0)
+
+          # Create stats for 15 days ago (within last month)
+          freeze_time DateTime.parse("2022-12-17")
+          DiscourseAutomation::Stat.log(automation2.id, 3.0)
+
+          # Return to present
+          freeze_time DateTime.parse("2023-01-01")
+        end
+
+        it "includes stats in the response" do
+          get "/admin/plugins/automation/automations.json"
+
+          expect(response.status).to eq(200)
+
+          parsed_response = response.parsed_body
+          automation1_response =
+            parsed_response["automations"].find { |a| a["id"] == automation1.id }
+          automation2_response =
+            parsed_response["automations"].find { |a| a["id"] == automation2.id }
+
+          # Verify stats exist
+          expect(automation1_response["stats"]).to be_present
+          expect(automation2_response["stats"]).to be_present
+
+          # Verify periods
+          expect(automation1_response["stats"]["last_day"]).to be_present
+          expect(automation1_response["stats"]["last_week"]).to be_present
+          expect(automation1_response["stats"]["last_month"]).to be_present
+
+          # Verify specific values for automation1
+          expect(automation1_response["stats"]["last_day"]["total_runs"]).to eq(2)
+          expect(automation1_response["stats"]["last_day"]["total_time"]).to eq(2.0)
+          expect(automation1_response["stats"]["last_day"]["average_run_time"]).to eq(1.0)
+          expect(automation1_response["stats"]["last_day"]["min_run_time"]).to eq(0.5)
+          expect(automation1_response["stats"]["last_day"]["max_run_time"]).to eq(1.5)
+
+          expect(automation1_response["stats"]["last_week"]["total_runs"]).to eq(3)
+
+          # Verify specific values for automation2
+          expect(automation2_response["stats"]["last_month"]["total_runs"]).to eq(1)
+          expect(automation2_response["stats"]["last_month"]["total_time"]).to eq(3.0)
+        end
+      end
+    end
+
+    context "when logged in as a regular user" do
+      before { sign_in(Fabricate(:user)) }
+
+      it "raises a 404" do
+        get "/admin/plugins/automation/automations.json"
         expect(response.status).to eq(404)
       end
     end

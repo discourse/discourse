@@ -38,18 +38,6 @@ module Compression
       Pathname.new(filename).realpath.to_s
     end
 
-    # https://guides.rubyonrails.org/security.html#file-uploads
-    def sanitize_filename(filename)
-      filename.strip.tap do |name|
-        # NOTE: File.basename doesn't work right with Windows paths on Unix
-        # get only the filename, not the whole path
-        name.sub! %r{\A.*(\\|/)}, ""
-        # Finally, replace all non alphanumeric, underscore
-        # or periods with underscore
-        name.gsub! /[^\w\.\-]/, "_"
-      end
-    end
-
     def calculate_available_size(max_size)
       1024**2 * (max_size / 1.049) # Mb to Mib
     end

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "تاریخ‌های محلی Discourse"
   js:
     discourse_local_dates:
       relative_dates:

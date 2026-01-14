@@ -3,10 +3,11 @@
 # we need to require the rails_helper from core to load the Rails environment
 require_relative "../../spec/rails_helper"
 
-require_relative "../lib/migrations"
+require_relative "../migrations"
 
 ::Migrations.configure_zeitwerk
 ::Migrations.enable_i18n
+::Migrations.apply_global_config
 
 require "rspec-multi-mock"
 

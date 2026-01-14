@@ -37,13 +37,18 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :api_key_count,
              :external_ids,
              :similar_users_count,
-             :latest_export
+             :latest_export,
+             :upcoming_changes_stats
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
   has_one :silenced_by, serializer: BasicUserSerializer, embed: :objects
   has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
+
+  def include_name?
+    scope.user.admin?
+  end
 
   def second_factor_enabled
     object.totp_enabled? || object.security_keys_enabled?
@@ -178,5 +183,13 @@ class AdminDetailedUserSerializer < AdminUserSerializer
         .first
 
     UserExportSerializer.new(export, scope:).as_json if export
+  end
+
+  def upcoming_changes_stats
+    object.upcoming_change_stats(scope)
+  end
+
+  def include_upcoming_changes_stats?
+    SiteSetting.enable_upcoming_changes && scope.is_staff?
   end
 end

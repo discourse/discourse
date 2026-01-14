@@ -11,6 +11,10 @@ module PageObjects
         has_css?(".fk-d-default-toast.-success", text: message)
       end
 
+      def close_button
+        find(".fk-d-default-toast__close-container .btn")
+      end
+
       def has_warning?(message)
         has_css?(".fk-d-default-toast.-warning", text: message)
       end
@@ -21,6 +25,10 @@ module PageObjects
 
       def has_error?(message)
         has_css?(".fk-d-default-toast.-error", text: message)
+      end
+
+      def has_no_message?
+        has_no_css?(".fk-d-default-toast__message")
       end
     end
   end

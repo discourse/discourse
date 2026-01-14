@@ -8,14 +8,11 @@ require "git_utils"
 
 module Discourse
   DB_POST_MIGRATE_PATH = "db/post_migrate"
-  REQUESTED_HOSTNAME = "REQUESTED_HOSTNAME"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
+  LOCALE_PARAM = "tl"
 
   class Utils
     URI_REGEXP = URI.regexp(%w[http https])
-
-    # TODO: Remove this once we drop support for Ruby 2.
-    EMPTY_KEYWORDS = {}
 
     # Usage:
     #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
@@ -117,6 +114,7 @@ module Discourse
 
     class CommandError < RuntimeError
       attr_reader :status, :stdout, :stderr
+
       def initialize(message, status: nil, stdout: nil, stderr: nil)
         super(message)
         @status = status
@@ -210,7 +208,7 @@ module Discourse
     return if ex.class == Jobs::HandledExceptionWrapper
 
     context ||= {}
-    parent_logger ||= Sidekiq
+    parent_logger ||= Sidekiq.default_configuration
 
     job = context[:job]
 
@@ -305,6 +303,9 @@ module Discourse
   class Deprecation < StandardError
   end
 
+  class MissingIconError < StandardError
+  end
+
   class ScssError < StandardError
   end
 
@@ -397,6 +398,7 @@ module Discourse
       next if args[:include_official] == false && plugin.metadata.official?
       next if args[:include_unofficial] == false && !plugin.metadata.official?
       next if !args[:include_disabled] && !plugin.enabled?
+      next if args[:only] && !args[:only].include?(plugin.directory_name)
 
       true
     end
@@ -453,8 +455,9 @@ module Discourse
       assets = []
       assets << "plugins/#{plugin.directory_name}" if plugin.js_asset_exists?
       assets << "plugins/#{plugin.directory_name}_extra" if plugin.extra_js_asset_exists?
-      # TODO: make admin asset only load for admins
-      assets << "plugins/#{plugin.directory_name}_admin" if plugin.admin_js_asset_exists?
+      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
+        assets << "plugins/#{plugin.directory_name}_admin"
+      end
       assets
     end
   end
@@ -462,7 +465,18 @@ module Discourse
   def self.assets_digest
     @assets_digest ||=
       begin
-        digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)
+        digest =
+          Digest::MD5.hexdigest(
+            Rails
+              .application
+              .assets
+              .load_path
+              .assets
+              .map(&:digested_path)
+              .map(&:to_s)
+              .sort
+              .join("|"),
+          )
 
         channel = "/global/asset-version"
         message = MessageBus.last_message(channel)
@@ -473,6 +487,10 @@ module Discourse
   end
 
   BUILTIN_AUTH = [
+    Auth::AuthProvider.new(
+      authenticator: Auth::DiscourseIdAuthenticator.new,
+      icon: "fab-discourse",
+    ),
     Auth::AuthProvider.new(
       authenticator: Auth::FacebookAuthenticator.new,
       frame_width: 580,
@@ -485,7 +503,7 @@ module Discourse
       frame_height: 500,
     ), # Custom icon implemented in client
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
-    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-twitter"),
+    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-x-twitter"),
     Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord"),
     Auth::AuthProvider.new(
       authenticator: Auth::LinkedInOidcAuthenticator.new,
@@ -508,7 +526,7 @@ module Discourse
   end
 
   def self.enabled_authenticators
-    authenticators.select { |authenticator| authenticator.enabled? }
+    authenticators.select(&:enabled?)
   end
 
   def self.cache
@@ -850,6 +868,14 @@ module Discourse
     GitUtils.try_git(git_cmd, default_value)
   end
 
+  def self.user_agent
+    if git_version.present?
+      @user_agent ||= "Discourse/#{VERSION::STRING}-#{git_version}; +https://www.discourse.org/"
+    else
+      @user_agent ||= "Discourse/#{VERSION::STRING}; +https://www.discourse.org/"
+    end
+  end
+
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
     user =
@@ -905,10 +931,27 @@ module Discourse
     ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
 
     # get rid of rubbish so we don't share it
-    # longer term we will use compact! here
-    GC.start
-    GC.start
-    GC.start
+    Process.warmup
+  end
+
+  def self.after_unicorn_worker_fork
+    variables_overrides = {}
+    unicorn_worker_db_variables_prefix = "unicorn_worker_db_variables_"
+
+    GlobalSetting.provider.keys.each do |key|
+      if key.start_with?(unicorn_worker_db_variables_prefix)
+        variables_overrides[
+          key.to_s.sub(unicorn_worker_db_variables_prefix, "").downcase.to_sym
+        ] = GlobalSetting.public_send(key)
+      end
+    end
+
+    if variables_overrides.any?
+      ActiveRecord::Base.configurations =
+        Rails.application.config.database_configuration(variables_overrides:)
+      ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+      ActiveRecord::Base.establish_connection
+    end
   end
 
   # all forking servers must call this
@@ -922,15 +965,12 @@ module Discourse
     Rails.cache.reconnect
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
-    # shuts down all connections in the pool
-    Sidekiq.redis_pool.shutdown { |conn| conn.disconnect! }
-    # re-establish
-    Sidekiq.redis = sidekiq_redis_config
+    Sidekiq.redis_pool.reload(&:close)
 
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
 
-    DiscourseJsProcessor::Transpiler.reset_context if defined?(DiscourseJsProcessor::Transpiler)
+    AssetProcessor.reset_context if defined?(AssetProcessor)
 
     # warm up v8 after fork, that way we do not fork a v8 context
     # it may cause issues if bg threads in a v8 isolate randomly stop
@@ -1010,7 +1050,7 @@ module Discourse
 
   def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
     location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
-    warning = ["Deprecation notice:", warning]
+    warning = ["DEPRECATION NOTICE:", warning]
     warning << "(deprecated since Discourse #{since})" if since
     warning << "(removal in Discourse #{drop_from})" if drop_from
     warning << "\nAt #{location}"
@@ -1030,8 +1070,7 @@ module Discourse
       Rails.logger.warn(warning)
       begin
         Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
-      rescue Redis::CommandError => e
-        raise unless e.message =~ /READONLY/
+      rescue Redis::ReadOnlyError
       end
     end
     warning
@@ -1039,10 +1078,12 @@ module Discourse
 
   SIDEKIQ_NAMESPACE = "sidekiq"
 
-  def self.sidekiq_redis_config
-    conf = GlobalSetting.redis_config.dup
-    conf[:namespace] = SIDEKIQ_NAMESPACE
-    conf
+  def self.sidekiq_redis_config(old: false)
+    GlobalSetting
+      .redis_config
+      .dup
+      .except(:client_implementation, :custom)
+      .tap { |config| config.merge!(db: config[:db].to_i + 1) unless old }
   end
 
   def self.static_doc_topic_ids
@@ -1177,22 +1218,8 @@ module Discourse
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
   end
 
-  CDN_REQUEST_METHODS = %w[GET HEAD OPTIONS]
-
-  def self.is_cdn_request?(env, request_method)
-    return if CDN_REQUEST_METHODS.exclude?(request_method)
-
-    cdn_hostnames = GlobalSetting.cdn_hostnames
-    return if cdn_hostnames.blank?
-
-    requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
-    cdn_hostnames.include?(requested_hostname)
-  end
-
   def self.apply_cdn_headers(headers)
     headers["Access-Control-Allow-Origin"] = "*"
-    headers["Access-Control-Allow-Methods"] = CDN_REQUEST_METHODS.join(", ")
-    headers
   end
 
   def self.allow_dev_populate?
@@ -1210,7 +1237,7 @@ module Discourse
   end
 
   def self.anonymous_locale(request)
-    locale = request.params["lang"] if SiteSetting.set_locale_from_param
+    locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
     locale ||= request.cookies["locale"] if SiteSetting.set_locale_from_cookie
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header

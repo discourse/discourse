@@ -1,0 +1,153 @@
+# Belgium holiday definitions for the Ruby Holiday gem. In Dutch.
+#
+# Updated: 2016-02-17.
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_Belgium
+---
+months:
+  0:
+  - name: Pasen
+    regions: [be_nl]
+    function: easter(year)
+  - name: Paasmaandag
+    regions: [be_nl]
+    function: easter(year)
+    function_modifier: 1
+  - name: O.H. Hemelvaart
+    regions: [be_nl]
+    function: easter(year)
+    function_modifier: 39
+  - name: Pinksteren
+    regions: [be_nl]
+    function: easter(year)
+    function_modifier: 49
+  - name: Pinkstermaandag
+    regions: [be_nl]
+    function: easter(year)
+    function_modifier: 50
+  1:
+  - name: Nieuwjaar
+    regions: [be_nl]
+    mday: 1
+  5:
+  - name: Feest van de Arbeid
+    regions: [be_nl]
+    mday: 1
+  7:
+  - name: Nationale Feestdag
+    regions: [be_nl]
+    mday: 21
+  8:
+  - name: O.L.V. Hemelvaart
+    regions: [be_nl]
+    mday: 15
+  11:
+  - name: Allerheiligen
+    regions: [be_nl]
+    mday: 1
+  - name: Wapenstilstand 1918
+    regions: [be_nl]
+    mday: 11
+  12:
+  - name: Kerstmis
+    regions: [be_nl]
+    mday: 25
+
+tests:
+  - given:
+      date: '2007-01-01'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Nieuwjaar'
+  - given:
+      date: '2007-04-08'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Pasen'
+  - given:
+      date: '2007-04-09'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Paasmaandag'
+  - given:
+      date: '2007-05-01'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Feest van de Arbeid'
+  - given:
+      date: '2007-05-17'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'O.H. Hemelvaart'
+  - given:
+      date: '2007-05-27'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Pinksteren'
+  - given:
+      date: '2007-05-28'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Pinkstermaandag'
+  - given:
+      date: '2007-07-21'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Nationale Feestdag'
+  - given:
+      date: '2007-08-15'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'O.L.V. Hemelvaart'
+  - given:
+      date: '2007-11-01'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Allerheiligen'
+  - given:
+      date: '2007-11-11'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Wapenstilstand 1918'
+  - given:
+      date: '2007-12-25'
+      regions: ["be_nl"]
+      options: ["informal"]
+    expect:
+      name: 'Kerstmis'
+  - given:
+      date: '2017-4-16'
+      regions: ['be_nl']
+    expect:
+      name: 'Pasen'
+  - given:
+      date: '2017-4-17'
+      regions: ['be_nl']
+    expect:
+      name: 'Paasmaandag'
+  - given:
+      date: '2017-5-25'
+      regions: ['be_nl']
+    expect:
+      name: 'O.H. Hemelvaart'
+  - given:
+      date: '2017-6-4'
+      regions: ['be_nl']
+    expect:
+      name: 'Pinksteren'
+  - given:
+      date: '2017-6-5'
+      regions: ['be_nl']
+    expect:
+      name: 'Pinkstermaandag'

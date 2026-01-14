@@ -11,7 +11,7 @@ hu:
     models:
       fields:
         required_field: '"%{name}" mezőt a "%{target}:%{target_name}" oldalon kell kitölteni.'
-        invalid_field: '"%{component}" mező összetevője nem használható a "%{target}:%{target_name}" mezőn.'
+        invalid_field: A mező `%{component}` összetevője nem használható `%{target}:%{target_name}` esetén.
         invalid_metadata: '`%{field}` adatai érvénytelenek, vagy a `%{component}` komponens ismeretlen.'
     triggerables:
       errors:
@@ -105,7 +105,7 @@ hu:
         doc: Lehetővé teszi több pü küldését egy felhasználónak. Minden PÜ elfogad egy késleltetést.
       suspend_user_by_email:
         title: Felhasználó felfüggesztése e-mailben
-        description: Fiók automatikus felfüggesztése e-mail cím alapján
+        description: Fiók automatikus felfüggesztése e-mail-cím alapján
       user_global_notice:
         title: Felhasználói globális értesítés
         description: Lehetővé teszi globális értesítés megjelenítését a felhasználó számára
@@ -130,7 +130,7 @@ hu:
         title: Téma lezárása
         description: Lezárja a témát egy opcionális záró üzenettel
       append_last_edited_by:
-        title: Utoljára szerkesztette hozzáadása
+        title: Utolsó szerkesztő hozzáfűzése
         description: Hozzáadja a bejegyzés „utoljára szerkesztette” részleteit a főzött tartalom aljához.
         text: "Utoljára szerkesztette: @%{username} %{date_time}"
       append_last_checked_by:
@@ -147,8 +147,10 @@ hu:
         title: "Alapértelmezett csoportkategória értesítés"
         description: "Állítsa be egy kategória alapértelmezett értesítési szintjét egy csoport tagjai számára"
       send_chat_message:
-        title: "Chat üzenet küldése"
-        description: "Egyéni chat üzenet küldése egy csatornának"
+        title: "Csevegőüzenet küldése"
+        description: "Egyéni csevegőüzenet küldése egy csatornának"
       random_assign:
         title: "Véletlenszerű hozzárendelés"
         description: "Véletlenszerűen rendeljen témákat egy csoporthoz"
+      set_topic_timer:
+        title: "Téma időzítőjének beállítása"

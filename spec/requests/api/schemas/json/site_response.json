@@ -377,6 +377,9 @@
             },
             "auto_action_type": {
               "type": "boolean"
+            },
+            "system": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -435,6 +438,9 @@
               "type": "integer"
             },
             "auto_action_type": {
+              "type": "boolean"
+            },
+            "system": {
               "type": "boolean"
             }
           },
@@ -504,6 +510,12 @@
                 "integer",
                 "null"
               ]
+            },
+            "dark_color_scheme_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
             }
           },
           "required": [
@@ -529,14 +541,27 @@
             },
             "is_dark": {
               "type": "boolean"
+            },
+            "theme_id": {
+              "type": ["integer", "null"]
+            },
+            "colors": {
+              "type": "array"
             }
           },
           "required": [
             "id",
             "name",
-            "is_dark"
+            "is_dark",
+            "colors"
           ]
         }
+    },
+    "default_light_color_scheme": {
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "default_dark_color_scheme": {
       "type": [
@@ -598,6 +623,21 @@
             },
             "text_color": {
               "type": "string"
+            },
+            "style_type": {
+              "type": "string"
+            },
+            "emoji": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "icon": {
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "slug": {
               "type": "string"
@@ -873,6 +913,9 @@
     },
     "full_name_visible_in_signup": {
       "type": "boolean"
+    },
+    "admin_config_login_routes" : {
+      "type": "array"
     }
   },
   "required": [
@@ -897,6 +940,7 @@
     "topic_featured_link_allowed_category_ids",
     "user_themes",
     "user_color_schemes",
+    "default_light_color_scheme",
     "default_dark_color_scheme",
     "censored_regexp",
     "custom_emoji_translation",

@@ -1,0 +1,161 @@
+# Ukrainian holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2019-02-10.
+# Sources:
+# - https://en.wikipedia.org/wiki/Public_holidays_in_Ukraine
+# - https://uk.wikipedia.org/wiki/%D0%9D%D0%B5%D1%80%D0%BE%D0%B1%D0%BE%D1%87%D1%96_%D0%B4%D0%BD%D1%96_%D0%B2_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%96
+---
+months:
+  0:
+  - name: Великдень # Easter Sunday
+    regions: [ua]
+    function: orthodox_easter(year)
+    observed: to_monday_if_weekend(date)
+  - name: Трійця # (Julian) Pentecost
+    regions: [ua]
+    function: orthodox_easter(year)
+    function_modifier: 49
+    observed: to_monday_if_weekend(date)
+  1:
+  - name: Новий Рік # New Year's Day
+    regions: [ua]
+    mday: 1
+    observed: to_monday_if_weekend(date)
+  - name: Різдво Христове # Orthodox Christmas Day
+    regions: [ua]
+    mday: 7
+    observed: to_monday_if_weekend(date)
+  3:
+  - name: Міжнародний жіночий день # International Women's Day
+    regions: [ua]
+    mday: 8
+    observed: to_monday_if_weekend(date)
+  5:
+  - name: День праці # International Workers' Day
+    regions: [ua]
+    mday: 1
+    observed: to_monday_if_weekend(date)
+  - name: День міжнародної солідарності трудящих # International Workers' Day
+    regions: [ua]
+    mday: 2
+    year_ranges:
+      until: 2017
+  - name: День перемоги над нацизмом у Другій світовій війні # Victory day over Nazism in World War II
+    regions: [ua]
+    mday: 9
+    observed: to_monday_if_weekend(date)
+  6:
+  - name: День Конституції # Constitution Day
+    regions: [ua]
+    mday: 28
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      from: 1997
+  7:
+  - name: День Незалежності України # Independence Day
+    regions: [ua]
+    mday: 16
+    year_ranges:
+      limited: [1991]
+  8:
+  - name: День Незалежності # Independence Day
+    regions: [ua]
+    mday: 24
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      from: 1992
+  10:
+  - name: День захисника України # Defender of Ukraine Day
+    regions: [ua]
+    mday: 14
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      from: 2015
+  12:
+  - name: Різдво Христове # (Gregorian and Revised Julian) Christmas
+    regions: [ua]
+    mday: 25
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      from: 2017
+
+tests:
+- given:
+    date: "2018-01-01"
+    regions: [ua]
+  expect:
+    name: Новий Рік
+- given:
+    date: "2018-01-07"
+    regions: [ua]
+  expect:
+    name: Різдво Христове
+- given:
+    date: "2018-01-08"
+    regions: [ua]
+    options: [observed]
+  expect:
+    name: Різдво Христове
+- given:
+    date: "2018-03-08"
+    regions: [ua]
+  expect:
+    name: Міжнародний жіночий день
+- given:
+    date: "2018-04-08"
+    regions: [ua]
+  expect:
+    name: Великдень
+- given:
+    date: "2018-04-09"
+    regions: [ua]
+    options: [observed]
+  expect:
+    name: Великдень
+- given:
+    date: "2018-05-01"
+    regions: [ua]
+  expect:
+    name: День праці
+- given:
+    date: "2018-05-09"
+    regions: [ua]
+  expect:
+    name: День перемоги над нацизмом у Другій світовій війні
+- given:
+    date: "2018-05-27"
+    regions: [ua]
+  expect:
+    name: Трійця
+- given:
+    date: "2018-05-28"
+    regions: [ua]
+    options: [observed]
+  expect:
+    name: Трійця
+- given:
+    date: "2018-06-28"
+    regions: [ua]
+  expect:
+    name: День Конституції
+- given:
+    date: "2018-08-24"
+    regions: [ua]
+  expect:
+    name: День Незалежності
+- given:
+    date: "2018-10-14"
+    regions: [ua]
+  expect:
+    name: День захисника України
+- given:
+    date: "2018-10-15"
+    regions: [ua]
+    options: [observed]
+  expect:
+    name: День захисника України
+- given:
+    date: "2018-12-25"
+    regions: [ua]
+  expect:
+    name: Різдво Христове

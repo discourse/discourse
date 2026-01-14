@@ -1,0 +1,26 @@
+:root {
+  --d-sidebar-highlight-hover-icon: var(--d-sidebar-link-color);
+  --d-sidebar-highlight-hover-background: var(--d-selected);
+  --d-sidebar-link-icon-color: var(--d-sidebar-link-color);
+  --d-sidebar-header-color: var(--d-sidebar-link-color);
+  --d-sidebar-header-icon-color: var(--d-sidebar-link-color);
+  --d-sidebar-active-suffix-color: var(--d-sidebar-suffix-color);
+  --d-sidebar-background: var(--background-color);
+  --d-sidebar-footer-fade: rgb(var(--tertiary-50-rgb), 1);
+  --d-sidebar-prefix-background: var(--d-selected);
+  --d-sidebar-active-prefix-background: light-dark(
+    oklch(from var(--d-selected) calc(l * 0.85) c h),
+    oklch(from var(--d-selected) calc(l * 0.7) c h)
+  );
+  --d-sidebar-highlight-prefix-background: light-dark(
+    oklch(from var(--d-selected) calc(l * 0.85) c h),
+    oklch(from var(--d-selected) calc(l * 0.7) c h)
+  );
+  --d-sidebar-highlight-suffix-color: var(--d-sidebar-active-suffix-color);
+  --d-sidebar-highlight-color: var(--primary);
+  --d-sidebar-highlight-background: var(--d-selected);
+  --d-sidebar-section-link-icon-size: 1em;
+  --d-hover: oklch(from var(--d-selected) l c h / 0.75);
+  --d-input-bg-color: var(--d-content-background);
+  --d-sidebar-active-color: var(--primary) !important;
+}

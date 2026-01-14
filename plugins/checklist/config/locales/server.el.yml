@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 el:
+  site_settings:
+    checklist_enabled: "Ενεργοποίηση πρόσθετου λίστας ελέγχου;"

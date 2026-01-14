@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // IMPORTANT: This stylesheet needs to work for super old browsers, including those
 // without support for `var()`. Therefore every color definition needs to define a simple
 // value first, as a fallback
@@ -144,7 +146,7 @@ body > noscript {
       width: 20%;
     }
 
-    @media (max-width: 850px) {
+    @media (width <= 850px) {
       table-layout: auto;
       margin: 0;
 
@@ -181,7 +183,7 @@ body > noscript {
     }
 
     .topic-list-item {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
 
       > * {
         padding: 0.75em 0;
@@ -215,7 +217,7 @@ body > noscript {
     margin-top: 1em;
     margin-bottom: 2em;
     padding-top: 1.5em;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   .crawler-post-meta {
@@ -228,7 +230,7 @@ body > noscript {
         font-weight: bold;
       }
 
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         display: inline-block;
         margin-bottom: 0.25em;
       }
@@ -239,7 +241,7 @@ body > noscript {
     color: #666;
     display: inline-block;
 
-    @include breakpoint(tablet, min-width) {
+    @include viewport.from(md) {
       float: right;
     }
 
@@ -255,7 +257,7 @@ body > noscript {
     a {
       display: block;
       padding: 0.5em 0;
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
     }
   }
 
@@ -289,7 +291,7 @@ body > noscript {
 
   .md-table {
     tr {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
     }
 
     th {
@@ -299,7 +301,7 @@ body > noscript {
     td,
     th {
       padding: 0.25em;
-      border-right: 1px solid var(--primary-low);
+      border-right: 1px solid var(--content-border-color);
     }
   }
 

@@ -46,6 +46,7 @@ $tertiary-hover: dark-light-choose(
 ) !default;
 
 // tertiary-numbers
+$tertiary-25: dark-light-diff($tertiary, $secondary, 93%, -80%) !default;
 $tertiary-50: dark-light-diff($tertiary, $secondary, 90%, -75%) !default;
 $tertiary-100: dark-light-diff($tertiary, $secondary, 88%, -72%) !default;
 $tertiary-200: dark-light-diff($tertiary, $secondary, 87%, -69%) !default;
@@ -102,6 +103,9 @@ $love-low: dark-light-diff($love, $secondary, 85%, -60%) !default;
 
 // wiki
 $wiki: green !default;
+
+// selected
+$selected-hover: dark-light-diff($selected, $secondary, 20%, 20%) !default;
 
 // blended variants
 $blend-primary-secondary-5: blend-two-colors($primary, $secondary, 5%) !default;
@@ -160,8 +164,8 @@ $twitter-or-white: dark-light-choose($twitter, string.unquote("#fff")) !default;
 $hljs-attr: dark-light-choose(#015692, #88aece) !default;
 $hljs-attribute: dark-light-choose(#803378, #c59bc1) !default;
 $hljs-addition: dark-light-choose(#2f6f44, #76c490) !default;
-$hljs-bg: dark-light-choose($primary-50, rgba(0, 0, 0, 0.25)) !default;
-$inline-code-bg: dark-light-choose($primary-100, rgba(0, 0, 0, 0.35)) !default;
+$hljs-bg: dark-light-choose($primary-50, rgb(0, 0, 0, 0.25)) !default;
+$inline-code-bg: dark-light-choose($primary-100, rgb(0, 0, 0, 0.35)) !default;
 $hljs-comment: $primary-500 !default;
 $hljs-deletion: dark-light-choose(#c02d2e, #de7176) !default;
 $hljs-keyword: dark-light-choose(#015692, #88aece) !default;
@@ -174,7 +178,7 @@ $hljs-string: dark-light-choose(#54790d, #b5bd68) !default;
 
 // shadow opacity variables
 $shadow-opacity-modal: dark-light-choose(0.6, 1) !default;
-$shadow-opacity-composer: dark-light-choose(0.12, 0.35) !default;
+$shadow-opacity-composer: dark-light-choose(0.22, 0.45) !default;
 $shadow-opacity-menu-panel: dark-light-choose(0.15, 0.35) !default;
 $shadow-opacity-card: dark-light-choose(0.15, 0.5) !default;
 $shadow-opacity-dropdown: dark-light-choose(0.1, 0.25) !default;

@@ -98,6 +98,28 @@ RSpec.describe PostActionUsersController do
     expect(json_users.find { |u| u["id"] == ignored_user.id }["unknown"]).to eq(true)
   end
 
+  it "does not hide users from the like list when they are not in the actor's PM allowlist" do
+    user_not_in_allowlist = Fabricate(:user)
+    user_in_allowlist = Fabricate(:user)
+    PostActionCreator.like(user_not_in_allowlist, post)
+    PostActionCreator.like(user_in_allowlist, post)
+
+    user.user_option.update!(enable_allowed_pm_users: true)
+    AllowedPmUser.create!(user: user, allowed_pm_user: user_in_allowlist)
+
+    get "/post_action_users.json",
+        params: {
+          id: post.id,
+          post_action_type_id: PostActionType.types[:like],
+        }
+    expect(response.status).to eq(200)
+    json_users = response.parsed_body["post_action_users"]
+    expect(json_users.find { |u| u["id"] == user_not_in_allowlist.id }).to be_present
+    expect(json_users.find { |u| u["id"] == user_in_allowlist.id }).to be_present
+    expect(json_users.find { |u| u["id"] == user_not_in_allowlist.id }["unknown"]).to be_blank
+    expect(json_users.find { |u| u["id"] == user_in_allowlist.id }["unknown"]).to be_blank
+  end
+
   it "paginates post actions" do
     user_ids = []
     5.times do
@@ -153,7 +175,7 @@ RSpec.describe PostActionUsersController do
         .new
         .register_modifier(:post_action_users_list) do |query, modifier_post|
           expect(modifier_post.id).to eq(post.id)
-          query.where("post_actions.id NOT IN (?)", excluded_post_action_ids)
+          query.where.not(post_actions: { id: excluded_post_action_ids })
         end
 
       get "/post_action_users.json",

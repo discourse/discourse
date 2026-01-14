@@ -2,6 +2,7 @@
 
 class ThemeSettingsSerializer < ApplicationSerializer
   attributes :setting,
+             :humanized_name,
              :type,
              :default,
              :value,
@@ -14,6 +15,10 @@ class ThemeSettingsSerializer < ApplicationSerializer
 
   def setting
     object.name
+  end
+
+  def humanized_name
+    SiteSetting.humanized_name(object.name)
   end
 
   def type
@@ -34,11 +39,24 @@ class ThemeSettingsSerializer < ApplicationSerializer
     locale_file_description =
       object.theme.internal_translations.find { |t| t.key.match?(description_regexp) }&.value
 
-    locale_file_description || object.description
+    resolved_description = locale_file_description || object.description
+
+    if resolved_description
+      catch(:exception) do
+        return I18n.interpolate(resolved_description, base_path: Discourse.base_path)
+      end
+      resolved_description
+    end
   end
 
   def valid_values
-    object.choices
+    choices = object.choices
+    labels = choice_labels
+
+    choices.map do |choice|
+      label = labels[choice.to_s]
+      label ? { name: label, value: choice } : choice
+    end
   end
 
   def include_valid_values?
@@ -79,5 +97,21 @@ class ThemeSettingsSerializer < ApplicationSerializer
 
   def include_json_schema?
     object.type == ThemeSetting.types[:string] && object.json_schema.present?
+  end
+
+  private
+
+  def choice_labels
+    labels = {}
+    key_prefix = "theme_metadata.settings.#{setting}.choices."
+
+    object.theme.internal_translations.each do |translation|
+      if translation.key.start_with?(key_prefix)
+        choice_key = translation.key.delete_prefix(key_prefix)
+        labels[choice_key] = translation.value
+      end
+    end
+
+    labels
   end
 end

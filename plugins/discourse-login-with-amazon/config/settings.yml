@@ -1,0 +1,29 @@
+plugins:
+  enable_login_with_amazon:
+    default: false
+    validator: "EnableLoginWithAmazonValidator"
+    area: "authenticators"
+  login_with_amazon_client_id:
+    default: ""
+    secret: true
+    area: "authenticators"
+  login_with_amazon_client_secret:
+    default: ""
+    secret: true
+    area: "authenticators"
+  login_with_amazon_scope:
+    default: "profile"
+    area: "authenticators"
+  login_with_amazon_overrides_email:
+    default: false
+    area: "authenticators"
+  login_with_amazon_email_verified:
+    hidden: true
+    default: true
+    area: "authenticators"
+  login_with_amazon_user_can_connect:
+    default: true
+    area: "authenticators"
+  login_with_amazon_user_can_revoke:
+    default: true
+    area: "authenticators"

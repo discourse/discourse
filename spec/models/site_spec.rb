@@ -11,13 +11,14 @@ RSpec.describe Site do
       Theme
         .where("id = :default OR user_selectable", default: SiteSetting.default_theme_id)
         .order(:name)
-        .pluck(:id, :name, :color_scheme_id)
-        .map do |id, n, cs|
+        .pluck(:id, :name, :color_scheme_id, :dark_color_scheme_id)
+        .map do |id, name, color_scheme_id, dark_color_scheme_id|
           {
             "theme_id" => id,
-            "name" => n,
+            "name" => name,
             "default" => id == SiteSetting.default_theme_id,
-            "color_scheme_id" => cs,
+            "color_scheme_id" => color_scheme_id,
+            "dark_color_scheme_id" => dark_color_scheme_id,
           }
         end
 
@@ -151,7 +152,7 @@ RSpec.describe Site do
 
       expect(site.categories.map { |c| c[:can_edit] }).to contain_exactly(false, false)
 
-      SiteSetting.moderators_manage_categories_and_groups = true
+      SiteSetting.moderators_manage_categories = true
 
       site = Site.new(Guardian.new(Fabricate(:moderator)))
 
@@ -169,18 +170,20 @@ RSpec.describe Site do
         # we need to clear the cache to ensure that the categories list will be updated
         Site.clear_cache
 
-        Plugin::Instance
-          .new
-          .register_modifier(:site_all_categories_cache_query) do |query|
-            query.where("categories.name LIKE 'Cool%'")
-          end
+        plugin_instance = Plugin::Instance.new
+        modifier_block = Proc.new { |query| query.where("categories.name LIKE 'Cool%'") }
+        plugin_instance.register_modifier(:site_all_categories_cache_query, &modifier_block)
 
         prefetched_categories = Site.new(Guardian.new(user)).categories.map { |c| c[:id] }
 
         expect(prefetched_categories).to include(cool_category.id)
         expect(prefetched_categories).not_to include(boring_category.id)
       ensure
-        DiscoursePluginRegistry.clear_modifiers!
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :site_all_categories_cache_query,
+          &modifier_block
+        )
       end
     end
 
@@ -249,16 +252,20 @@ RSpec.describe Site do
       # we need to clear the cache to ensure that the groups list will be updated
       Site.clear_cache
 
-      Plugin::Instance
-        .new
-        .register_modifier(:site_groups_query) { |query| query.where("groups.name LIKE 'cool%'") }
+      plugin_instance = Plugin::Instance.new
+      modifier_block = Proc.new { |query| query.where("groups.name LIKE 'cool%'") }
+      plugin_instance.register_modifier(:site_groups_query, &modifier_block)
 
       prefetched_groups = Site.new(Guardian.new(user)).groups.map { |c| c[:id] }
 
       expect(prefetched_groups).to include(cool_group.id)
       expect(prefetched_groups).not_to include(boring_group.id)
     ensure
-      DiscoursePluginRegistry.clear_modifiers!
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :site_groups_query,
+        &modifier_block
+      )
     end
   end
 
@@ -275,5 +282,162 @@ RSpec.describe Site do
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
+  end
+
+  it "includes tos_url and privacy_policy_url when login_required" do
+    SiteSetting.login_required = true
+    SiteSetting.tos_url = "https://discourse.org"
+    SiteSetting.privacy_policy_url = "https://discourse.org/privacy"
+
+    data = JSON.parse(Site.json_for(Guardian.new))
+
+    expect(data["tos_url"]).to eq(SiteSetting.tos_url)
+    expect(data["privacy_policy_url"]).to eq(SiteSetting.privacy_policy_url)
+  end
+
+  describe ".all_categories_cache" do
+    fab!(:category)
+    fab!(:category2, :category)
+
+    it "returns cached categories" do
+      categories_data = Site.all_categories_cache
+      expect(categories_data.map { |c| c[:id] }).to contain_exactly(
+        SiteSetting.uncategorized_category_id,
+        category.id,
+        category2.id,
+      )
+    end
+
+    it "caches the result" do
+      Site.all_categories_cache
+
+      category2.update_columns(name: "derp")
+
+      # The cached result should not contain
+      # the updated name that skipped validations
+      cached_names = Site.all_categories_cache.map { |c| c[:name] }
+      expect(cached_names).not_to include("derp")
+
+      Site.clear_cache
+      refreshed_names = Site.all_categories_cache.map { |c| c[:name] }
+      expect(refreshed_names).to include("derp")
+    end
+
+    it "includes preloaded custom fields" do
+      Site.reset_preloaded_category_custom_fields
+      Site.preloaded_category_custom_fields << "test_field"
+
+      category.custom_fields["test_field"] = "test_value"
+      category.save_custom_fields
+
+      categories_data = Site.all_categories_cache
+      category_data = categories_data.find { |c| c[:id] == category.id }
+
+      expect(category_data[:custom_fields]["test_field"]).to eq("test_value")
+    ensure
+      Site.reset_preloaded_category_custom_fields
+    end
+
+    it "applies plugin modifiers to the query" do
+      plugin_instance = Plugin::Instance.new
+      modifier_block =
+        Proc.new { |query| query.where("categories.name LIKE ?", "#{category.name}%") }
+
+      plugin_instance.register_modifier(:site_all_categories_cache_query, &modifier_block)
+
+      Site.clear_cache
+      categories_data = Site.all_categories_cache
+
+      expect(categories_data.map { |c| c[:id] }).to contain_exactly(category.id)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :site_all_categories_cache_query,
+        &modifier_block
+      )
+    end
+
+    describe "content_localization_enabled" do
+      it "returns localized category names when enabled" do
+        SiteSetting.content_localization_enabled = true
+
+        localization = Fabricate(:category_localization)
+        category = localization.category
+        locale = localization.locale.to_sym
+
+        I18n.locale = locale
+
+        all_categories_cache = Site.all_categories_cache
+        cached_category = all_categories_cache.find { |c| c[:id] == category.id }
+        expect(cached_category[:name]).to eq(localization.name)
+        expect(cached_category[:description]).to eq(localization.description)
+      end
+
+      it "returns original names when enabled" do
+        SiteSetting.content_localization_enabled = true
+
+        category = Fabricate(:category, name: "derp", description: "derp derp")
+
+        all_categories_cache = Site.all_categories_cache
+        cached_category = all_categories_cache.find { |c| c[:id] == category.id }
+        expect(cached_category[:name]).to eq(category.name)
+        expect(cached_category[:description]).to eq(category.description)
+      end
+    end
+  end
+
+  context "when there are anonymous users with different locales" do
+    let(:anon_guardian) { Guardian.new }
+    let(:original_locale) { I18n.locale }
+
+    before do
+      SiteSetting.login_required = false
+      Discourse.redis.flushdb
+      I18n.available_locales = %i[en ja]
+      I18n.locale = :en
+    end
+
+    after do
+      I18n.available_locales = nil
+      I18n.locale = original_locale
+    end
+
+    context "when content_localization_enabled is disabled" do
+      before { SiteSetting.content_localization_enabled = false }
+
+      it "caches anon site json with a global key (not locale scoped)" do
+        expect(Discourse.redis.get("site_json")).to be_nil
+
+        json = Site.json_for(anon_guardian)
+
+        expect(Discourse.redis.get("site_json")).to eq(json)
+
+        I18n.locale = :ja
+        json_ja = Site.json_for(anon_guardian)
+        expect(Discourse.redis.get("site_json")).to eq(json_ja)
+
+        # always overwritten, not per locale
+        I18n.locale = :en
+        expect(Discourse.redis.get("site_json")).to eq(json)
+      end
+    end
+
+    context "when content_localization_enabled is enabled" do
+      before { SiteSetting.content_localization_enabled = true }
+
+      it "caches anon site json separately for each locale" do
+        expect(Discourse.redis.get("site_json_en")).to be_nil
+        expect(Discourse.redis.get("site_json_ja")).to be_nil
+
+        json_en = Site.json_for(anon_guardian)
+        expect(Discourse.redis.get("site_json_en")).to eq(json_en)
+
+        I18n.locale = :ja
+        json_ja = Site.json_for(anon_guardian)
+        expect(Discourse.redis.get("site_json_ja")).to eq(json_ja)
+
+        expect(json_en).not_to eq(json_ja)
+      end
+    end
   end
 end

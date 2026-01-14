@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  accepted_answer: "Kabul Edilen Yanıt"
+  site_settings:
+    solved_enabled: "Çözüldü eklentisini etkinleştirin, kullanıcıların konularda yanıtları çözüldü olarak seçmesine izin verin"
+    allow_solved_on_all_topics: "Kullanıcıların tüm konularda çözüm seçmesine izin verin (işaretli olmadığında, çözümler kategori veya etiket başına etkinleştirilebilir)"
+    accept_all_solutions_trust_level: "Herhangi bir konudaki çözümleri kabul etmek için gereken asgari güven seviyesi (OP olmasa bile)"
+    accept_all_solutions_allowed_groups: "Herhangi bir konudaki çözümleri kabul etmesine izin verilen gruplar (OP olmasa bile). Yöneticilere ve moderatörlere her zaman izin verilir."
+    empty_box_on_unsolved: "Çözülmemiş konuların yanında boş bir kutu görüntüle"
+    solved_quote_length: "İlk gönderinin altındaki çözümü görüntülerken alıntı yapılacak karakter sayısı"
+    solved_topics_auto_close_hours: "Konu, çözüldü olarak işaretlendiğinde son yanıttan (n) saat sonra konuyu otomatik kapat. Otomatik kapatmayı devre dışı bırakmak için 0 olarak ayarlayın."
+    show_filter_by_solved_status: "Bir konu listesini çözülmüş duruma göre filtrelemek için bir açılır menü gösterin."
+    notify_on_staff_accept_solved: "Bir gönderi bir personel tarafından çözüm olarak işaretlendiğinde konuyu oluşturana bildirim gönderin."
+    ignore_solved_topics_in_assigned_reminder: "Ödevlere ilişkin anımsatıcıların çözülmüş konuları içermesini önleyin. Yalnızca discourse-assign eklentisi kullanıldığında geçerlidir."
+    assignment_status_on_solve: "Bir konu çözüldüğünde tüm atamaları bu duruma güncelleyin"
+    assignment_status_on_unsolve: "Bir konu çözülmediğinde tüm atamaları bu duruma güncelleyin"
+    disable_solved_education_message: "Çözülen konular için eğitim mesajını devre dışı bırakın."
+    accept_solutions_topic_author: "Konu yazarının bir çözümü kabul etmesine izin verin."
+    solved_add_schema_markup: "HTML'ye QAPage şema işaretlemesi ekleyin."
+    enable_solved_tags: "Kullanıcıların çözüm seçmesine olanak tanıyacak etiketler."
+    prioritize_solved_topics_in_search: "Arama sonuçlarında çözülmüş konulara öncelik verin."
+    show_who_marked_solved: "Konuyu kimin çözülmüş olarak işaretlediğini gösterin. Bu, konunun ilk gönderisinde ve cevap gönderisinde bir ipucu olarak belirtilir."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Kabul edilen çözümler"
+      xaxis: "Gün"
+      yaxis: "Toplam"
+  solved:
+    no_solutions:
+      self: "Henüz kabul edilmiş bir çözümünüz yok."
+      others: "Kabul edilen çözüm yok."
+    filter:
+      description:
+        solved: "Çözülen konuları filtreleyin"
+        unsolved: "Çözülmemiş konuları filtreleyin"
+  badges:
+    solved_1:
+      name: "Çözüldü!"
+      description: "Çözüm olarak işaretlenmiş bir yanıtı var"
+      long_description: "Bu rozet, bir konuya Çözüm olarak işaretlenmiş bir yanıt için verilir. :white_check_mark: Bravo. :+1:"
+    solved_2:
+      name: "Rehberlik Danışmanı"
+      description: "Çözüm olarak işaretlenmiş 10 yanıtı var"
+      long_description: "Bu rozet, yanıtlarınızdan 10'unun konulara Çözüm olarak işaretlenmesi durumunda verilir. :white_check_mark: Topluluk üyeleriniz için gerçekten çok değerlisiniz."
+    solved_3:
+      name: "Her Şeyi Bilen"
+      description: "Çözüm olarak işaretlenmiş 50 yanıtı var"
+      long_description: "Bu rozet, yanıtlarınızdan 50'sinin konulara Çözüm olarak işaretlenmesi durumunda verilir. :white_check_mark: Gerçekten işinizi biliyorsunuz. :clap:"
+    solved_4:
+      name: "Çözüm Kurumu"
+      description: "Çözüm olarak işaretlenmiş 150 yanıtı var"
+      long_description: "Bu rozet, yanıtlarınızın 150'sinin konulara Çözüm olarak işaretlenmesi durumunda verilir. :white_check_mark: Mükemmel bir iş çıkardınız. :slightly_smiling_face: Artık resmi olarak bir Çözüm Kurumusunuz. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Kabul edilen ilk çözüm
+        doc: Bir kullanıcı bir çözümü ilk kez kabul ettirdiğinde tetiklenir.
+  education:
+    topic_is_solved: |
+      ### Bu konu çözüldü
+
+      Yalnızca şu durumlarda buraya yanıt verin:
+
+      - Ek ayrıntılarınız varsa
+
+      - Çözüm sizin için işe yaramıyorsa
+
+      İlgisiz bir sorununuz varsa lütfen bunun yerine [yeni bir konu başlatın](%{base_url}/new-topic).

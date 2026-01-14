@@ -8,11 +8,11 @@ module PageObjects
       end
 
       def select_image(path)
-        attach_file(path) { @element.find("label.btn-default").click }
+        attach_file(path) { @element.find("label.btn").click }
       end
 
       def select_image_with_keyboard(path)
-        label = @element.find("label.btn-default")
+        label = @element.find("label.btn")
         label.send_keys(:enter)
         attach_file(path) { label.click }
       end
@@ -27,11 +27,24 @@ module PageObjects
 
       def remove_image
         @element.find(".btn-danger").click
+        @element.has_no_css?(".btn-danger")
       end
 
       def remove_image_with_keyboard
         delete_button = @element.find(".btn-danger")
         delete_button.send_keys(:enter)
+      end
+
+      def toggle_lightbox_preview
+        @element.find(".image-uploader-lightbox-btn").click
+      end
+
+      def close_lightbox_preview
+        find(".pswp__button--close").click
+      end
+
+      def has_lightbox_preview?
+        has_css?(".pswp--open")
       end
     end
   end

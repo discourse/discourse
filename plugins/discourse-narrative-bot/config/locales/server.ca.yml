@@ -319,19 +319,6 @@ ca:
 
           Tingueu en compte que quan responeu a un tema o el llegiu durant més d'uns quants minuts s'estableix automàticament un nivell de notificació de "seguiment". Podeu canviar-ho en [les preferències d'usuari](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Sabíeu que podeu incorporar una enquesta a qualsevol publicació? Proveu-ho utilitzant l'eina <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en l'editor per a **crear una enquesta**.
-        not_found: |-
-          Vaja! No hi havia cap enquesta en la vostra resposta.
-
-          Utilitzeu la icona de roda dentada <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> de l'editor, o copieu i enganxeu aquesta enquesta en la vostra pròxima resposta:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ``
         reply: |-
           Ei, bona enquesta! Us he ensenyat bé?
 
@@ -340,20 +327,6 @@ ca:
           *: -1:
           [/poll]
       details:
-        instructions: |-
-          A vegades potser us convindrà **amagar els detalls** en les respostes:
-
-          - Quan discutiu algun element de la trama d'una pel·lícula o d'un programa de televisió que podria considerar-se un espòiler.
-
-          - Quan la publicació necessita molts detalls opcionals que podrien resultar aclaparadors si es llegeixen de cop.
-
-          [details=Seleccioneu això per a veure com funciona!]
-          1. Seleccioneu l'eina <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en l'editor.
-          2. Seleccioneu "Amaga els detalls".
-          3. Editeu el resum de les dades i afegiu el vostre contingut.
-          [/details]
-
-          ¿Podeu fer servir l'eina <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en l'editor per a afegir una secció de detalls en la vostra resposta següent?
         not_found: |-
           Teniu problemes per a crear un giny de detalls? Proveu d'incloure el text següent en la pròxima resposta:
 

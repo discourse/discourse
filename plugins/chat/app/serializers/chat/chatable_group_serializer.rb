@@ -9,7 +9,8 @@ module Chat
     end
 
     def chat_enabled_user_count
-      object.users.count { |user| user.user_option&.chat_enabled }
+      @chat_enabled_user_count ||=
+        object.human_users.joins(:user_option).where(user_options: { chat_enabled: true }).count
     end
 
     def can_chat

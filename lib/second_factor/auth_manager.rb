@@ -120,8 +120,8 @@ class SecondFactor::AuthManager
 
   attr_reader :allowed_methods
 
-  def self.find_second_factor_challenge(nonce:, secure_session:, target_user:)
-    challenge_json = secure_session["current_second_factor_auth_challenge"]
+  def self.find_second_factor_challenge(nonce:, server_session:, target_user:)
+    challenge_json = server_session["current_second_factor_auth_challenge"]
     if challenge_json.blank?
       raise SecondFactor::BadChallenge.new(
               "second_factor_auth.challenge_not_found",
@@ -165,9 +165,9 @@ class SecondFactor::AuthManager
     add_method(UserSecondFactor.methods[:backup_codes])
   end
 
-  def run!(request, params, secure_session)
+  def run!(request, params, server_session)
     if nonce = params[:second_factor_nonce].presence
-      data = verify_second_factor_auth_completed(nonce, secure_session)
+      data = verify_second_factor_auth_completed(nonce, server_session)
       create_result(:second_factor_auth_completed, data)
     elsif @action.skip_second_factor_auth?(params)
       data = @action.second_factor_auth_skipped!(params)
@@ -176,14 +176,14 @@ class SecondFactor::AuthManager
       data = @action.no_second_factors_enabled!(params)
       create_result(:no_second_factor, data)
     else
-      nonce = initiate_second_factor_auth(params, secure_session, request)
+      nonce = initiate_second_factor_auth(params, server_session, request)
       raise SecondFactorRequired.new(nonce: nonce)
     end
   end
 
   private
 
-  def initiate_second_factor_auth(params, secure_session, request)
+  def initiate_second_factor_auth(params, server_session, request)
     config = @action.second_factor_auth_required!(params)
     nonce = SecureRandom.alphanumeric(32)
     callback_params = config[:callback_params] || {}
@@ -198,15 +198,15 @@ class SecondFactor::AuthManager
     }
     challenge[:description] = config[:description] if config[:description]
     challenge[:redirect_url] = config[:redirect_url] if config[:redirect_url].present?
-    secure_session["current_second_factor_auth_challenge"] = challenge.to_json
+    server_session["current_second_factor_auth_challenge"] = challenge.to_json
     nonce
   end
 
-  def verify_second_factor_auth_completed(nonce, secure_session)
+  def verify_second_factor_auth_completed(nonce, server_session)
     challenge =
       self.class.find_second_factor_challenge(
         nonce: nonce,
-        secure_session: secure_session,
+        server_session:,
         target_user: @target_user,
       )
     if !challenge[:successful]
@@ -216,7 +216,7 @@ class SecondFactor::AuthManager
             )
     end
 
-    secure_session["current_second_factor_auth_challenge"] = nil
+    server_session.delete("current_second_factor_auth_challenge")
     callback_params = challenge[:callback_params]
     data = @action.second_factor_auth_completed!(callback_params)
     data

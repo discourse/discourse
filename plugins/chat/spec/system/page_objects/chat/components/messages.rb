@@ -7,6 +7,7 @@ module PageObjects
         attr_reader :context
 
         SELECTOR = ".chat-messages-scroller"
+        ACTIONS_SELECTOR = ".chat-message-actions-container"
 
         def initialize(context)
           @context = context
@@ -20,12 +21,24 @@ module PageObjects
           find(message).secondary_action("copyLink")
         end
 
+        def bookmark(message)
+          find(message).bookmark
+        end
+
         def copy_text(message)
           find(message).secondary_action("copyText")
         end
 
         def flag(message)
           find(message).secondary_action("flag")
+        end
+
+        def reply_to(message)
+          find(message).secondary_action("reply")
+        end
+
+        def emoji(message, code)
+          find(message).emoji(code)
         end
 
         def delete(message)
@@ -51,6 +64,10 @@ module PageObjects
           message = find(args)
           message.open_more_menu
           page.has_no_css?("[data-value='#{action}']")
+        end
+
+        def has_actions_container?(message)
+          page.has_css?("#{ACTIONS_SELECTOR}")
         end
 
         def expand(**args)
@@ -91,6 +108,22 @@ module PageObjects
 
         def has_deleted_message?(message, count: 1)
           has_message?(id: message.id, deleted: count)
+        end
+
+        def has_reply_btn?(message)
+          page.has_css?("#{ACTIONS_SELECTOR} .reply-btn")
+        end
+
+        def has_no_reply_btn?(message)
+          page.has_no_css?("#{ACTIONS_SELECTOR} .reply-btn")
+        end
+
+        def has_reaction_buttons?(message)
+          page.has_css?("#{ACTIONS_SELECTOR} .react-btn")
+        end
+
+        def has_no_reaction_buttons?(message)
+          page.has_no_css?("#{ACTIONS_SELECTOR} .react-btn")
         end
 
         private

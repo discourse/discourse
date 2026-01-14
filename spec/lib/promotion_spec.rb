@@ -96,6 +96,23 @@ RSpec.describe Promotion do
       end
     end
 
+    context "when user was invited" do
+      it "respects default invitee trust level" do
+        SiteSetting.default_trust_level = 0
+        SiteSetting.default_invitee_trust_level = 1
+        Promotion.recalculate(user)
+        expect(user.trust_level).to eq(0)
+
+        invited_user = Fabricate(:invited_user, user: user)
+        Promotion.recalculate(user)
+        expect(user.trust_level).to eq(0)
+
+        invited_user.update!(redeemed_at: Time.now)
+        Promotion.recalculate(user)
+        expect(user.trust_level).to eq(1)
+      end
+    end
+
     context "when may send tl1 promotion messages" do
       before do
         stat = user.user_stat

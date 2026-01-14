@@ -18,7 +18,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :featured_link,
              :featured_link_root_domain,
              :allowed_user_count,
-             :participant_groups
+             :participant_groups,
+             :is_hot
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -118,13 +119,6 @@ class TopicListItemSerializer < ListableTopicSerializer
     object.private_message?
   end
 
-  def include_op_like_count?
-    # PERF: long term we probably want a cheaper way of looking stuff up
-    # this is rather odd code, but we need to have op_likes loaded somehow
-    # simplest optimisation is adding a cache column on topic.
-    object.association(:first_post).loaded?
-  end
-
   def include_featured_link?
     SiteSetting.topic_featured_link_enabled
   end
@@ -140,6 +134,17 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def include_allowed_user_count?
     object.private_message?
+  end
+
+  def is_hot
+    TopicHotScore.hottest_topic_ids.include?(object.id)
+  end
+
+  def include_is_hot?
+    theme_enabled = theme_modifier_helper.serialize_topic_is_hot
+    plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_is_hot, false)
+
+    theme_enabled || plugin_enabled
   end
 
   private

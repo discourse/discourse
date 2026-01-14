@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    discourse_math_enabled: "Discourse Matematik eklentisini etkinleştir ($ ve $$ bloklarına özel işleme ekler)"
+    discourse_math_provider: "Varsayılan matematik işleme sağlayıcısı"

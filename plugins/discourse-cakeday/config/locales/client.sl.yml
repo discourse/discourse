@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Danes je vaš rojstni dan!"
+        title: "Danes je moj rojstni dan!"
+        label: "Datum rojstva"
+      anniversary:
+        user_title: "Danes je obletnica dneva, ko ste se pridružili naši skupnosti!"
+        title: "Danes je obletnica dneva, ko sem se pridružil/a tej skupnosti!"
+    cakeday:
+      title: Praznik
+      today: "Danes"
+      tomorrow: "Jutri"
+      upcoming: "Prihajajoči"
+      all: "Vsi"
+    birthdays:
+      title: "Rojstni dnevi"
+      month:
+        title: "Rojstni dnevi v mesecu"
+        empty: "V tem mesecu ni uporabnikov, ki bi praznovali rojstne dneve."
+      upcoming:
+        title: "Rojstni dnevi za %{start_date} - %{end_date}"
+        empty: "V naslednjih 7 dneh ni uporabnikov, ki bi praznovali rojstni dan."
+      today:
+        title: "Rojstni dnevi za %{date}"
+        empty: "Danes ni nobenega uporabnika, ki bi praznoval rojstni dan."
+      tomorrow:
+        empty: "Jutri ni nobenega uporabnika, ki bi praznoval rojstni dan."
+    anniversaries:
+      title: "Obletnice"
+      month:
+        title: "Obletnice v mesecu"
+        empty: "V tem mesecu ni uporabnikov, ki bi praznovali obletnico."
+      upcoming:
+        title: "Obletnice za %{start_date} - %{end_date}"
+        empty: "V naslednjih 7 dneh ni uporabnikov, ki bi praznovali obletnico."
+      today:
+        title: "Obletnice za %{date}"
+        empty: "Danes ni nobenega uporabnika, ki bi praznoval obletnico."
+      tomorrow:
+        empty: "Jutri ni nobenega uporabnika, ki bi praznoval obletnico."

@@ -1,0 +1,81 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Rozwiązanie Discourse"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "zaakceptowano"
+    solutions: "Rozwiązania"
+    solved:
+      title: "Rozwiązany"
+      allow_accepted_answers: "Pozwól użytkownikom na akceptowanie rozwiązań"
+      solved_topics_auto_close_hours: "Zamknij temat automatycznie po (n) godzinach od ostatniej odpowiedzi, gdy temat został oznaczony jako rozwiązany."
+      accept_answer: "Zaznacz, jeśli ta odpowiedź rozwiązuje Twój problem"
+      accepted_description: "To zaakceptowane rozwiązanie tego tematu."
+      has_no_accepted_answer: "Ten temat nie ma rozwiązania"
+      unaccept_answer: "Odznacz jeśli ta odpowiedź nie rozwiązuje już problemu"
+      accepted_answer: "Zaakceptowana odpowiedź"
+      solution: "Zaakceptowana odpowiedź"
+      solution_summary:
+        one: "zaakceptowana odpowiedź"
+        few: "rozwiązania"
+        many: "rozwiązania"
+        other: "rozwiązania"
+      accepted_answer_solver_info: "Rozwiązane przez %{user} w %{post}"
+      accepted_answer_post_number: "wpis %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "wszystkie"
+        solved: "rozwiązano"
+        unsolved: "nierozwiązano"
+      no_solved_topics_title: "Nie rozwiązałeś jeszcze żadnych tematów"
+      no_solved_topics_title_others: "%{username} nie rozwiązał jeszcze żadnych tematów"
+      no_solved_topics_body: "Gdy udzielisz pomocnej odpowiedzi na dany temat, Twoja odpowiedź może zostać wybrana jako rozwiązanie przez właściciela tematu lub personel."
+      marked_solved_by: "Oznaczono jako rozwiązane przez %{user}"
+      no_answer:
+        title: Czy odpowiedź na twoje pytanie została udzielona?
+        description: "Podświetl odpowiedź i pomóż innym, korzystając z przycisku rozwiązania pod prawidłową odpowiedzią."
+      notification:
+        title: "twój post został oznaczony jako rozwiązanie"
+    topic_statuses:
+      solved:
+        help: "Ten temat ma rozwiązanie"
+    search:
+      advanced:
+        statuses:
+          solved: "są rozwiązane"
+          unsolved: "są nierozwiązane"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Zdarzenie rozwiązania"
+          accepted_solution: "Gdy użytkownik oznaczy post jako zaakceptowaną odpowiedź"
+          unaccepted_solution: "Gdy użytkownik oznaczy post jako odpowiedź niezaakceptowaną"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Zaakceptuj/Odrzuć rozwiązanie.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Dowolny
+          fields:
+            maximum_trust_level:
+              label: Poziom zaufania
+              description: Użytkownicy poniżej tego poziomu zaufania uruchomią tę automatyzację

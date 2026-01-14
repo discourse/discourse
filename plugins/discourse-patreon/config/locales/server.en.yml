@@ -1,0 +1,25 @@
+en:
+  site_settings:
+    patreon_enabled: 'Enable the discourse-patreon plugin'
+    patreon_login_enabled: 'Enable Patreon Social Login'
+    patreon_client_id: 'Generated Patreon Client ID'
+    patreon_client_secret: 'Generated Patreon Client Secret'
+    patreon_webhook_secret: 'Generated Patreon Webhook Secret'
+    patreon_creator_discourse_username: "Username of the Discourse account which is used to login through Patreon creator account using 'Patreon Social Login'"
+    patreon_creator_access_token: "Generated Patreon Creator's Access Token"
+    patreon_creator_refresh_token: "Generated Patreon Creator's Refesh Token"
+    patreon_declined_pledges_grace_period_days: "Grace period (in days) before a pledge is declined completely."
+    max_patreon_api_reqs_per_hr: "Maximum number of Patreon API requests per hour"
+    max_patreon_api_reqs_per_day: "Maximum number of Patreon API requests per day"
+    patreon_verbose_log: 'enable verbose logging of patreon payload'
+    patreon_donation_prompt_enabled: "Enable donation prompt?"
+    patreon_donation_prompt_show_after_topics: "Show donation prompt after n topics"
+    patreon_donation_prompt_campaign_url: "Donation prompt campaign URL"
+    errors:
+      patreon_creator_username_not_set: "You need to set the Patreon Creator Discourse Username setting before enabling Patreon Login."
+  dashboard:
+    problem:
+      access_token_invalid: "Patreon Creator's access and refresh token values are incorrect. You must copy-paste new tokens from <a href='https://www.patreon.com/platform/documentation/clients'>Patreon website</a> to <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>site settings</a>."
+  patreon:
+    error:
+      invalid_response: "Invalid response from Patreon API"

@@ -36,4 +36,28 @@ class SiteCategorySerializer < BasicCategorySerializer
   def include_required_tag_groups?
     SiteSetting.tagging_enabled
   end
+
+  def name
+    return I18n.t("uncategorized_category_name") if object.uncategorized?
+
+    translated_name =
+      if (ContentLocalization.show_translated_category?(object, scope))
+        object.get_localization&.name
+      else
+        object.name
+      end
+
+    translated_name || object.name
+  end
+
+  def description
+    translated_description =
+      if (ContentLocalization.show_translated_category?(object, scope))
+        object.get_localization&.description
+      else
+        object.description
+      end
+
+    translated_description || object.description
+  end
 end

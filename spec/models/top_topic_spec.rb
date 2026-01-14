@@ -16,8 +16,8 @@ RSpec.describe TopTopic do
   it { is_expected.to belong_to :topic }
 
   describe ".refresh!" do
-    fab!(:t1) { Fabricate(:topic) }
-    fab!(:t2) { Fabricate(:topic) }
+    fab!(:t1, :topic)
+    fab!(:t2, :topic)
 
     it "begins blank" do
       expect(TopTopic.all).to be_blank

@@ -1,0 +1,173 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse - Subscrições"
+  site_settings:
+    discourse_subscriptions_enabled: Ativar o plugin Subscrições Discourse.
+    discourse_subscriptions_extra_nav_subscribe: Mostrar o botão de subscrição na navegação principal
+    discourse_subscriptions_public_key: Chave Publicável do Stripe
+    discourse_subscriptions_secret_key: Chave Secreta Stripe
+    discourse_subscriptions_webhook_secret: Webhook Secreto Stripe
+    discourse_subscriptions_currency: Código de Moeda Padrão. Isto pode ser substituído ao criar um plano de subscrição.
+    errors:
+      discourse_patrons_amount_must_be_currency: "Os valores das moedas devem ser moedas sem o símbolo do dólar (por exemplo, 1.50)"
+  js:
+    filters:
+      subscribe:
+        help: Apoie este site através de uma subscrição
+    discourse_subscriptions:
+      title: Discourse - Subscrições
+      admin_navigation: Subscrições
+      optional: Opcional
+      navigation:
+        billing: Faturação
+        payments: Pagamentos
+        subscriptions: Subscrições
+        subscribe: Subscrever
+        user_activity:
+          payments: Pagamentos
+      one_time_payment: Pagamento único
+      plans:
+        purchase: Comprar uma subscrição
+        select: Selecionar plano de subscrição
+        interval:
+          adverb:
+            day: Diariamente
+            week: Semanalmente
+            month: Mensalmente
+            year: Anualmente
+        payment_button: Subscrever
+        success: Obrigado! A sua subscrição foi criada.
+        incomplete: O pagamento está incompleto. A sua subscrição será atualizada quando o pagamento for concluído.
+        validate:
+          payment_options:
+            required: Por favor, selecione um plano de subscrição.
+      user:
+        payments:
+          id: Id. de Pagamento
+          amount: Montante
+          created_at: Criado
+        payments_help: Não existem pagamentos
+        plans:
+          rate: Taxa
+          product: Nome
+        subscriptions_help: Não tem subscrições ativas.
+        subscriptions:
+          id: Id. da Subscrição
+          status: Estado
+          discounted: Descontado
+          renews: Renovações
+          update_card:
+            single: "Atualização"
+          created_at: Criado
+          cancel: cancelar
+          cancelled: cancelada
+          operations:
+            destroy:
+              confirm: Tem a certeza que deseja cancelar esta subscrição?
+      subscribe:
+        title: Subscrever
+        view_past: Ver compras passadas
+        no_products: Não existem produtos disponíveis de momento.
+        unauthenticated: Faça login ou crie uma conta para subscrever.
+        card:
+          title: Pagamento
+        customer:
+          title: Detalhes do Cliente
+        promo_code: Cupão
+        buttons:
+          subscribe: Subscrever
+        purchased: Comprado
+        go_to_billing: Ir para Faturação
+      billing:
+        name: Nome completo
+        email: E-mail
+        phone: Número de Telefone
+      confirmation:
+        amount: Montante
+        last4: Número do cartão
+      buttons:
+        make_payment: Efetuar pagamento
+        confirm_payment: Confirmar pagamento
+        success: Anterior
+      admin:
+        unconfigured: 'O Stripe não está correctamente configurado. Por favor, veja o Discourse Meta para obter informações.'
+        dashboard:
+          title: Painel
+          table:
+            head:
+              user: Utilizador
+              payment_intent: Id. de Pagamento
+              receipt_email: E-mail de Recibo
+              amount: Montante
+        products:
+          title: Produtos
+          operations:
+            create: Criar Novo Produto
+            update: Atualizar Produto
+            new: Novo Produto
+            destroy:
+              confirm: Tem a certeza que deseja eliminar este produto?
+          product:
+            product_id: Id. do Produto
+            name: Nome do Produto
+            statement_descriptor: Descritor do Extrato
+            statement_descriptor_help: Informação extra cerca do produto que irá aparecer no extrato do cartão de crédito do seu cliente.
+            plan_help: Crie um plano de preços para subscrever clientes para este produto.
+            description: Descrição
+            description_help: Isto descreve o seu produto de subscrição.
+            repurchaseable: Recomprável?
+            repurchase_help: Permitir a compra de produtos e planos associados várias vezes
+            active: Ativo
+            active_help: Desative isto até que o seu produto esteja pronto para os consumidores.
+            created_at: Criado
+            updated_at: Atualizado
+        plans:
+          title: Planos de Preço
+          operations:
+            add: Adicionar Novo Plano
+            create: Criar Plano
+            update: Atualizar Plano
+            create_help: Depois de ser criado um plano de preços, a sua alcunha, período de teste e grupo de usuários poderão ser atualizados.
+            new: Novo Plano
+            destroy:
+              confirm: Tem a certeza que deseja eliminar este plano?
+          plan:
+            nickname: Alcunha do plano
+            nickname_help: Isto não será visível para os clientes, mas ajudá-lo-á a encontrar este plano mais tarde
+            plan_id: Id. do Plano
+            product: Produto
+            interval: Intervalo de Facturação
+            amount: Montante
+            trial: Dias do Período de Teste
+            trial_help: As subscrições para este plano começarão automaticamente com um teste gratuito com a seguinte duração
+            group: Grupo de Usuários
+            group_help: Este é o grupo de usuários do discourse no qual o cliente é adicionado quando a subscrição é criada.
+            active: Ativo
+            created_at: Criado
+            recurring: Plano Recorrente?
+        coupons:
+          title: Cupões
+          code: Código Promocional
+          discount: Desconto
+          times_redeemed: Vezes Resgatados
+          active: Ativo?
+          actions: Ações
+        subscriptions:
+          title: Subscrições
+          subscription:
+            user: Utilizador
+            subscription_id: Id. da Subscrição
+            customer: Cliente
+            product: Produto
+            plan: Plano
+            status: Estado
+            created_at: Criado

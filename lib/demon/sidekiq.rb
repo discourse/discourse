@@ -11,6 +11,10 @@ class Demon::Sidekiq < ::Demon::Base
     blk ? (@blk = blk) : @blk
   end
 
+  # Number of seconds Sidekiq waits for jobs to finish before forcefully
+  # terminating them. See the "-t" CLI option.
+  SIDEKIQ_SHUTDOWN_TIMEOUT_SECONDS = 5
+
   # By default Sidekiq does a heartbeat check every 5 seconds. If the processes misses 20 heartbeat checks, we consider it
   # dead and kill the process.
   SIDEKIQ_HEARTBEAT_CHECK_MISS_THRESHOLD_SECONDS = 5.seconds * 20
@@ -64,10 +68,26 @@ class Demon::Sidekiq < ::Demon::Base
     @@last_sidekiq_rss_memory_check = Time.now.to_i
   end
 
-  DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES = 500
+  # Given Discourse AI a steady state during streaming is closer
+  # to 700MB given tokenization overhead. Set the default a bit higher
+  # so only outliers get restarted.
+  DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES = 1000
 
   def self.max_allowed_sidekiq_rss_bytes
     [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES].max.megabytes
+  end
+
+  def stop_signal
+    "TERM"
+  end
+
+  def stop_timeout
+    # Official documentation says that Sidekiq should be given shutdown timeout
+    # plus 5 seconds to shutdown cleanly.
+    #
+    # See https://github.com/sidekiq/sidekiq/wiki/Deployment.
+
+    SIDEKIQ_SHUTDOWN_TIMEOUT_SECONDS + 5
   end
 
   private
@@ -92,15 +112,22 @@ class Demon::Sidekiq < ::Demon::Base
     require "sidekiq/cli"
     cli = Sidekiq::CLI.instance
 
-    # Unicorn uses USR1 to indicate that log files have been rotated
-    Signal.trap("USR1") { reopen_logs }
+    if defined?(Unicorn)
+      # Unicorn uses USR1 to indicate that log files have been rotated
+      Signal.trap("USR1") { reopen_logs }
 
-    Signal.trap("USR2") do
-      sleep 1
-      reopen_logs
+      Signal.trap("USR2") do
+        sleep 1
+        reopen_logs
+      end
     end
 
-    options = ["-c", GlobalSetting.sidekiq_workers.to_s]
+    options = [
+      "-c",
+      GlobalSetting.sidekiq_workers.to_s,
+      "-t",
+      SIDEKIQ_SHUTDOWN_TIMEOUT_SECONDS.to_s,
+    ]
 
     [["critical", 8], ["default", 4], ["low", 2], ["ultra_low", 1]].each do |queue_name, weight|
       custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]

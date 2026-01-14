@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  login:
+    authenticator_error_fetch_user_details: "Det gick inte att hämta dina användaruppgifter. Har du ett aktivt konto?"
+  site_settings:
+    oauth2_enabled: "Anpassad OAuth2 är aktiverad"
+    oauth2_client_id: "Klient-ID för anpassad OAuth2"
+    oauth2_client_secret: "Klienthemlighet för anpassad OAuth2"
+    oauth2_authorize_url: "Autoriserings-URL för OAuth2"
+    oauth2_authorize_signup_url: '(valfritt) Alternativ auktoriserings-URL som används när knappen "Registrera dig" används'
+    oauth2_token_url: "Bevis-URL för OAuth2"
+    oauth2_token_url_method: "Metod som används för att hämta bevis-URL"
+    oauth2_callback_user_id_path: "Sökväg i bevissvaret på användar-ID. t.ex. params.info.uuid"
+    oauth2_callback_user_info_paths: "Sökvägar i bevissvaret på andra användaregenskaper. Egenskaper som stöds är namn, användarnamn, e-postadress, verifierad e-postadress och avatar. Formatet är egenskap:sökväg, t.ex. name:params.info.name"
+    oauth2_fetch_user_details: "Hämta användarens JSON för OAuth2"
+    oauth2_user_json_url: "URL för att hämta användarens JSON för OAuth2 (observera att vi ersätter :id med det ID som returneras av OAuth-anrop och :token med bevisets ID)"
+    oauth2_user_json_url_method: "Metod som används för att hämta användarens JSON-URL"
+    oauth2_json_user_id_path: "Sökväg i OAuth2-användarens JSON till användar-ID:et, t.ex.: user.id"
+    oauth2_json_username_path: "Sökväg i OAuth2-användarens JSON till användarnamnet, t.ex. user.username"
+    oauth2_json_name_path: "Sökväg i OAuth2-användarens JSON till användarens fullständiga namn: user.name.full"
+    oauth2_json_email_path: "Sökväg i OAuth2-användarens JSON till användarens e-postadress: user.email"
+    oauth2_json_email_verified_path: "Sökväg i OAuth2-användarens JSON till verifieringsstatus för användarens e-postadress: user.email.verified. oauth2_email_verified måste ha inaktiverats för att den här inställningen ska ha någon verkan"
+    oauth2_json_avatar_path: "Sökväg i Oauth2-användaren JSON till användarens avatar: user.avatar_url"
+    oauth2_email_verified: "Kontrollera detta om OAuth2-webbplatsen har verifierat e-postadressen"
+    oauth2_overrides_email: "Skriv över Discourse e-postadressen med externa e-postadressen vid varje inloggning. Fungerar precis som inställningen `auth_overrides_email` men är specifik för OAuth2-inloggningar."
+    oauth2_send_auth_header: "Skicka klientbehörighet i rubriken för HTTP-auktorisation"
+    oauth2_send_auth_body: "Skicka klientbehörighet i begärans meddelandetext"
+    oauth2_debug_auth: "Omfatta utförlig felsökningsinformation i dina loggar"
+    oauth2_authorize_options: "Begär dessa alternativ vid auktorisering"
+    oauth2_scope: "Begär detta omfång vid auktorisering"
+    oauth2_button_title: "Texten för OAuth2-knappen"
+    oauth2_allow_association_change: Låt användarna frånkoppla och ansluta sina Discourse-konton igen från OAuth2-leverantören
+    oauth2_disable_csrf: "Inaktivera CSRF-kontroll"
+    errors:
+      oauth2_fetch_user_details: "oauth2_callback_user_id_path måste vara närvarande för att inaktivera oauth2_fetch_user_details"

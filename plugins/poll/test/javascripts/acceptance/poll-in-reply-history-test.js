@@ -2,9 +2,11 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Poll in a post reply history", function (needs) {
+acceptance(`Poll in a post reply history`, function (needs) {
   needs.user();
-  needs.settings({ poll_enabled: true });
+  needs.settings({
+    poll_enabled: true,
+  });
 
   needs.pretender((server, helper) => {
     server.get("/t/topic_with_poll_in_post_reply_history.json", () => {

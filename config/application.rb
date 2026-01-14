@@ -1,23 +1,10 @@
 # frozen_string_literal: true
 
-if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
-  STDERR.puts "Discourse requires Ruby 3.2 or above"
-  exit 1
-end
-
 require File.expand_path("../boot", __FILE__)
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
-require "sprockets/railtie"
-
-if !Rails.env.production?
-  recommended = File.read(".ruby-version.sample").strip
-  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new(recommended)
-    STDERR.puts "[Warning] Discourse recommends developing using Ruby v#{recommended} or above. You are using v#{RUBY_VERSION}."
-  end
-end
 
 # Plugin related stuff
 require_relative "../lib/plugin"
@@ -53,7 +40,6 @@ require "rails_failover/active_record" if !GlobalSetting.skip_db?
 require "rails_failover/redis" if !GlobalSetting.skip_redis?
 
 require "pry-rails" if Rails.env.development?
-require "pry-byebug" if Rails.env.development?
 
 require "discourse_fonts"
 
@@ -73,13 +59,14 @@ require_relative "../lib/require_dependency_backward_compatibility"
 
 module Discourse
   class Application < Rails::Application
-    def config.database_configuration
+    def config.database_configuration(variables_overrides: {})
       if Rails.env.production?
-        GlobalSetting.database_config
+        GlobalSetting.database_config(variables_overrides:)
       else
-        super
+        super()
       end
     end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -90,21 +77,22 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 7.2
+    config.load_defaults 8.0
     config.yjit = GlobalSetting.yjit_enabled
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
     config.active_record.yaml_column_permitted_classes = [
       Hash,
-      HashWithIndifferentAccess,
+      ActiveSupport::HashWithIndifferentAccess,
       Time,
       Symbol,
     ]
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
-    config.action_dispatch.cookies_serializer = :hybrid
+    config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
+    config.active_record.dump_schema_after_migration = false
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the
@@ -127,9 +115,6 @@ module Discourse
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-
-    # Allows us to skip minification on some files
-    config.assets.skip_minification = []
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -169,6 +154,12 @@ module Discourse
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
 
+    require "middleware/default_headers"
+    config.middleware.insert_before ActionDispatch::ShowExceptions, Middleware::DefaultHeaders
+
+    require "middleware/crawler_hooks"
+    config.middleware.use Middleware::CrawlerHooks
+
     require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
@@ -178,34 +169,6 @@ module Discourse
 
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
-
-    require "discourse_js_processor"
-    require "discourse_sourcemapping_url_processor"
-
-    Sprockets.register_mime_type "application/javascript",
-                                 extensions: %w[.js .es6 .js.es6],
-                                 charset: :unicode
-    Sprockets.register_postprocessor "application/javascript", DiscourseJsProcessor
-
-    class SprocketsSassUnsupported
-      def self.call(*args)
-        raise "Discourse does not support compiling scss/sass files via Sprockets"
-      end
-    end
-
-    Sprockets.register_engine(".sass", SprocketsSassUnsupported, silence_deprecation: true)
-    Sprockets.register_engine(".scss", SprocketsSassUnsupported, silence_deprecation: true)
-
-    Discourse::Application.initializer :prepend_ember_assets do |app|
-      # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets
-      app
-        .config
-        .assets
-        .paths.unshift "#{app.config.root}/app/assets/javascripts/discourse/dist/assets"
-      Sprockets.unregister_postprocessor "application/javascript",
-                                         Sprockets::Rails::SourcemappingUrlProcessor
-      Sprockets.register_postprocessor "application/javascript", DiscourseSourcemappingUrlProcessor
-    end
 
     require "discourse_redis"
     require "logster/redis_store"
@@ -236,7 +199,6 @@ module Discourse
     # Use discourse-fonts gem to symlink fonts and generate .scss file
     fonts_path = File.join(config.root, "public/fonts")
     if !File.exist?(fonts_path) || File.realpath(fonts_path) != DiscourseFonts.path_for_fonts
-      STDERR.puts "Symlinking fonts from discourse-fonts gem"
       File.delete(fonts_path) if File.exist?(fonts_path)
       Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
     end
@@ -261,6 +223,14 @@ module Discourse
           controller.action_methods
         end
       end
+
+      puts <<~WARNING if Rails.env.local? && Rails.application.assets.config.manifest_path.exist?
+          \e[1;31m==========================================================================
+          WARNING: an asset manifest file exists. This means the assets won’t be
+          compiled automatically, and will be served statically instead.
+          To re-enable automatic compilation, you can run `bin/rails assets:clobber`
+          ==========================================================================\e[0m
+        WARNING
     end
 
     require "rbtrace" if ENV["RBTRACE"] == "1"

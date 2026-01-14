@@ -10,6 +10,7 @@ ug:
       logs:
         staff_actions:
           actions:
+            update_automation: ئاپتوماتلاشتۇرۇشنى يېڭىلا
             delete_automation: ئاپتوماتلاشتۇرۇشنى ئۆچۈر
     discourse_automation:
       title: ئاپتوماتلاشتۇرۇش
@@ -58,13 +59,17 @@ ug:
             label: مەزمۇن
           delay:
             label: كېچىكىش (مىنۇت)
-          prefers_encrypt:
-            label: ئەگەر ئىشلەتكىلى بولسا شەخسىي ئۇچۇرنى شىفىرلايدۇ
         group:
           label: گۇرۇپپا
         text:
           label: تېكىست
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: سەھىپە
+            tags:
+              label: بەلگە
         not_found: ئاپتوماتلاشتۇرۇشقا ئىشلىتىدىغان «%{automation}» نىڭ قوزغاتقۇچ «%{trigger}» نى تاپالمىدى، مۇناسىۋەتلىك قىستۇرمىنىڭ ئورنىتىلغانلىقىنى جەزملەڭ.
         user_badge_granted:
           fields:
@@ -165,18 +170,24 @@ ug:
             restricted_tags:
               label: بەلگە
               description: تاللاشچان، يازمىدا بۇ خەتكۈچلەر بولغاندىلا ئاندىن قوزغىلىدۇ
-            restricted_category:
+            restricted_categories:
               label: سەھىپە
-              description: تاللاشچان، يازما تېمىسى بۇ سەھىپىدە بولغاندىلا ئاندىن قوزغىلىدۇ
-            restricted_group:
-              label: گۇرۇپپا
-              description: تاللاشچان، يازما تېمىسى بۇ گۇرۇپپىنىڭ قوبۇللاش ساندۇقىدىكى شەخسىي ئۇچۇرىغا تەۋە بولغاندىلا ئاندىن قوزغىلىدۇ
+              description: تاللاشچان، پەقەت يازمىنىڭ تېمىسى تۆۋەندىكى سەھىپىگە تەۋە بولسا ئاندىن قوزغىلىدۇ
+            exclude_subcategories:
+              label: تارماق سەھىپە سىرتىدا
+              description: تاللاشچان، ئەگەر يازمىنىڭ تېمىسى يۇقىرىدا بەلگىلەنگەن سەھىپىگە تولۇق ماس كەلسە ئاندىن قوزغىلىدۇ
+            restricted_archetype:
+              label: تېما تۈرى
+              description: تاللاشچان، تېما ياكى شەخسىي ئۇچۇردا قوزغىلىشىغا يول قويىدۇ
             restricted_groups:
-              label: گۇرۇپپا
+              label: چەكلىمە قويۇلغان گۇرۇپپا
+              description: تاللاشچان، ئەگەر يازما ئىشلەتكۈچى بۇ گۇرۇپپىلارنىڭ بىرىدە بولسا قوزغىلىدۇ.
+            restricted_inbox_groups:
+              label: چەكلىمىلىك قوبۇللاش ساندۇقى گۇرۇپپىسى
               description: تاللاشچان، يازما تېمىسى گۇرۇپپا قوبۇللاش ساندۇقىدىكى بىر شەخسىي ئۇچۇرىغا تەۋە بولغاندىلا ئاندىن قوزغىلىدۇ
-            ignore_group_members:
-              label: گۇرۇپپا ئەزاسىغا پەرۋا قىلما
-              description: ئەگەر يوللىغۇچى يۇقىرىدا كۆرسىتىلگەن گۇرۇپپىنىڭ ئەزاسى بولسا قوزغاتقۇچتىن ئاتلايدۇ
+            excluded_groups:
+              label: مۇستەسنا گۇرۇپپا
+              description: تاللاشچان، ئەگەر يازما ئىشلەتكۈچى بۇ گۇرۇپپىلارنىڭ خالىغان بىرىگە تەۋە بولسا قوزغىلىشتىن ئاتلايدۇ.
             ignore_automated:
               label: ئاپتوماتلاشتۇرۇشقا پەرۋا قىلما
               description: ئەگەر يوللىغۇچى ئېلخەتكە جاۋاب قايتۇرمىسا ياكى ئاپتوماتلاشتۇرۇلغان مەنبەدىن بولسا قوزغاتقۇچتىن ئاتلايدۇ. پەقەت ئېلخەت ئارقىلىق قۇرۇلغان يازمىغىلا قوللىنىلىدۇ
@@ -189,8 +200,18 @@ ug:
             skip_via_email:
               label: "ئېلخەت ئارقىلىق ئاتلايدۇ"
               description: "ئەگەر يازما ئېلخەت ئارقىلىق قۇرۇلغان بولسا قوزغاتقۇچتىن ئاتلايدۇ"
+            post_features:
+              label: يازما ئىقتىدارى
+              description: "تاللاشچان، پەقەت يازما بۇ ئىقتىدارلارغا ئىگە بولغاندىلا چەكلىك قوزغىتىلىدۇ"
           created: قۇرغان ۋاقتى
           edited: تەھرىرلەندى
+          topics: بارلىق تېما
+          personal_messages: شەخسىي ئۇچۇر
+          public_topics: ئاممىۋى تېما (بارلىق بىخەتەر سەھىپىنى ئۆز ئىچىگە ئالمايدۇ)
+          with_images: سۈرەت
+          with_links: ئۇلانما
+          with_code: كود
+          with_uploads: يۈكلەنمە
         user_updated:
           fields:
             user_profile:
@@ -363,10 +384,10 @@ ug:
             topic_id:
               label: تېما كىملىكى
             banner_until:
-              label: لوزۇنكا تېما دەپ تەڭشەيدىغان ۋاقىت
+              label: لەۋھە تېما دەپ تەڭشەيدىغان ۋاقىت
             user:
               label: ئىشلەتكۈچى
-              description: "لوزۇنكا قۇرغان ئىشلەتكۈچى (كۆڭۈلدىكى: سىستېما)"
+              description: "لەۋھە قۇرغان ئىشلەتكۈچى (كۆڭۈلدىكى: سىستېما)"
         flag_post_on_words:
           fields:
             words:
@@ -391,6 +412,7 @@ ug:
               label: شەخسىي ئۇچۇر
             sender:
               label: شەخسىي ئۇچۇر يوللىغۇچى
+              description: "يوللىغۇچىنىڭ تاپشۇرۇۋالغۇچىغا شەخسىي ئۇچۇر يوللاش ئىجازىتىنىڭ بارلىقىغا كاپالەتلىك قىلىڭ"
         close_topic:
           fields:
             topic:
@@ -405,6 +427,8 @@ ug:
           fields:
             custom_field_name:
               label: "ئىشلەتكۈچى ئىختىيارى بۆلەك ئىسمى"
+        set_topic_timer:
+          title: تېما ۋاقىت خاتىرىلىگۈچ تەڭشىكى
       unnamed_automation: "ئاتسىز ئاپتوماتلاشتۇرۇش"
       models:
         script:
@@ -414,6 +438,11 @@ ug:
           name:
             label: قوزغاتقۇچ
         automation:
+          runs_today: "%{count} بۈگۈن"
+          runs_this_week: "%{count} بۇ ھەپتە"
+          runs_this_month: "%{count} بۇ ئاي"
+          runs:
+            label: ئىجرا بولىدۇ
           name:
             label: ئىسمى
           trigger:
@@ -424,13 +453,13 @@ ug:
             label: نەشرى
           status:
             label: ھالەت
-          enabled:
-            label: قوزغىتىلدى
           disabled:
             label: چەكلەندى
           placeholders:
             label: ئورۇن بەلگىسى
           last_updated_at:
             label: ئاخىرقى يېڭىلاش
+          last_run:
+            label: ئاخىرقى ئىجرا
           last_updated_by:
             label: يېڭىلىغۇچى

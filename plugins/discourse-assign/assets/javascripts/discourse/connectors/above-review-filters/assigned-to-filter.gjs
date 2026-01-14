@@ -1,0 +1,50 @@
+/* eslint-disable ember/no-classic-components */
+import Component from "@ember/component";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import { i18n } from "discourse-i18n";
+
+@classNames("assigned-to-filter")
+export default class AssignedToFilter extends Component {
+  static shouldRender(args) {
+    return args.additionalFilters;
+  }
+
+  @service site;
+  @service siteSettings;
+
+  groupIDs = (this.siteSettings.assign_allowed_on_groups || "")
+    .split("|")
+    .filter(Boolean);
+  allowedGroups = this.site.groups
+    .filter((group) => this.groupIDs.includes(group.id.toString()))
+    .map((item) => item.name);
+
+  @action
+  updateAssignedTo(selected) {
+    this.set("outletArgs.additionalFilters.assigned_to", selected[0]);
+  }
+
+  <template>
+    <div class="reviewable-filter discourse-assign-assign-to-filter">
+      <label class="filter-label">
+        {{i18n "review.assigned_to"}}
+      </label>
+
+      <EmailGroupUserChooser
+        @value={{this.outletArgs.additionalFilters.assigned_to}}
+        @onChange={{this.updateAssignedTo}}
+        @options={{hash
+          maximum=1
+          fullWidthWrap=true
+          includeGroups=false
+          groupMembersOf=this.allowedGroups
+        }}
+        autocomplete="off"
+      />
+    </div>
+  </template>
+}

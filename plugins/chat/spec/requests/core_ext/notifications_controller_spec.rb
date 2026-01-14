@@ -2,12 +2,12 @@
 
 RSpec.describe NotificationsController do
   context "when logged in" do
-    fab!(:chatters) { Fabricate(:group) }
+    fab!(:chatters, :group)
     fab!(:user) { Fabricate(:user, group_ids: [chatters.id]) }
     fab!(:user2) { Fabricate(:user, group_ids: [chatters.id]) }
-    fab!(:dm1) { Fabricate(:direct_message) }
+    fab!(:dm1, :direct_message)
     fab!(:direct_message_channel1) { Fabricate(:direct_message_channel, chatable: dm1) }
-    fab!(:dm2) { Fabricate(:direct_message) }
+    fab!(:dm2, :direct_message)
     fab!(:direct_message_channel2) { Fabricate(:direct_message_channel, chatable: dm2) }
 
     before do

@@ -42,6 +42,7 @@ class PostRevisionSerializer < ApplicationSerializer
 
   add_compared_field :wiki
   add_compared_field :post_type
+  add_compared_field :locale
 
   def previous_hidden
     previous["hidden"]
@@ -192,6 +193,12 @@ class PostRevisionSerializer < ApplicationSerializer
     previous["category_id"] != current["category_id"]
   end
 
+  def locale_changes
+    prev = previous["locale"].presence
+    cur = current["locale"].presence
+    { previous: prev, current: cur }
+  end
+
   protected
 
   def post
@@ -220,6 +227,7 @@ class PostRevisionSerializer < ApplicationSerializer
       "wiki" => [post.wiki],
       "post_type" => [post.post_type],
       "user_id" => [post.user_id],
+      "locale" => [post.locale],
     }
 
     # Retrieve any `tracked_topic_fields`
@@ -249,7 +257,7 @@ class PostRevisionSerializer < ApplicationSerializer
 
     # backtrack
     post_revisions.each do |pr|
-      revision = HashWithIndifferentAccess.new
+      revision = ActiveSupport::HashWithIndifferentAccess.new
       revision[:revision] = pr.number
       revision[:hidden] = pr.hidden
 

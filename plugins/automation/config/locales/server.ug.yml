@@ -8,10 +8,15 @@ ug:
   site_settings:
     discourse_automation_enabled: "discourse-automation قىستۇرمىنى قوزغات"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(بوش)"
     models:
+      automations:
+        validations:
+          script_blank: "قوليازما بوش قالمايدۇ"
       fields:
         required_field: '«%{target}:%{target_name}» دىكى «%{name}» بۆلەكنى چوقۇم تولدۇرۇش كېرەك.'
-        invalid_field: '«%{component}» بۆلەك پارچىسىنى «%{target}:%{target_name}» دا ئىشلەتكىلى بولمايدۇ.'
+        invalid_field: '«%{component}» بۆلەك بۆلىكى «%{target}:%{target_name}» دا ئىشلەتكىلى بولمايدۇ.'
         invalid_metadata: '«%{field}» نىڭ سانلىق مەلۇماتى ئىناۋەتسىز ياكى «%{component}» بۆلەك نامەلۇم.'
     triggerables:
       errors:
@@ -62,6 +67,8 @@ ug:
       topic:
         title: تېما
         description: مۇناسىۋەتلىك قوليازما پەقەت بەلگىلەنگەن تېمىدىلا ئىشلىتىلىدۇ، بۇ دەلىللەشنى ئىجرا قىلىدىغان قوليازمىغا ئىنتايىن پايدىلىق
+      topic_closed:
+        title: تېما تاقالدى
       after_post_cook:
         title: يازمىنى تاماملىغاندىن كېيىن
         description: يازما مەزمۇنى تاماملانغاندا ئاپتوماتلاشتۇرۇش قوزغىلىدۇ
@@ -93,7 +100,7 @@ ug:
         title: تېما چوققىلا
         description: بېرىلگەن چېسلادا بەلگىلەنگەن يازمىنى چوققىلايدۇ
       banner_topic:
-        title: لوزۇنكا تېما دەپ تەڭشە
+        title: لەۋھە تېما دەپ تەڭشە
         description: تېمىنى لوزۇنكىغا تەڭشەيدۇ
       gift_exchange:
         title: سوۋغات ئالماشتۇرۇش
@@ -152,3 +159,5 @@ ug:
       random_assign:
         title: "ئىختىيارى بەلگىلەيدۇ"
         description: "گۇرۇپپىغا ئىختىيارى تېما بەلگىلەيدۇ"
+      set_topic_timer:
+        title: "تېما ۋاقىت خاتىرىلىگۈچ تەڭشىكى"

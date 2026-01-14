@@ -40,4 +40,9 @@ class UserHistorySerializer < ApplicationSerializer
       nil
     end
   end
+
+  def ip_address
+    return nil unless scope.can_see_ip?
+    object.ip_address.try(:to_s)
+  end
 end

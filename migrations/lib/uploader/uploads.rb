@@ -62,7 +62,7 @@ module Migrations::Uploader
     end
 
     def configure_logging
-      @original_exifr_logger = EXIFR.logger
+      @original_exifr_logger = ::EXIFR.logger
 
       # disable logging for EXIFR which is used by ImageOptim
       EXIFR.logger = Logger.new(nil)
@@ -74,7 +74,7 @@ module Migrations::Uploader
 
     def cleanup_resources
       databases.values.each(&:close)
-      EXIFR.logger = @original_exifr_logger
+      ::EXIFR.logger = @original_exifr_logger
     end
   end
 end

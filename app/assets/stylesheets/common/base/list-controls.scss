@@ -1,0 +1,142 @@
+@use "lib/viewport";
+
+// Topic list navigation & controls
+.list-controls {
+  background: var(--d-content-background);
+
+  @include viewport.until(sm) {
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+
+  .combo-box .combo-box-header {
+    background: var(--secondary);
+    color: var(--primary);
+    border: 1px solid var(--input-border-color);
+    font-size: var(--font-0);
+    height: 100%;
+
+    &:focus {
+      border-color: var(--tertiary);
+    }
+  }
+
+  .select-kit {
+    .select-kit-collection {
+      max-height: 40vh;
+    }
+  }
+}
+
+.navigation-container {
+  width: calc(100% - var(--nav-horizontal-padding) * 2);
+  font-size: var(--d-nav-font-size);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nav-space);
+  padding: 0 var(--nav-horizontal-padding);
+  margin-bottom: var(--nav-space);
+}
+
+#navigation-bar {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  margin-right: auto;
+}
+
+.navigation-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--nav-space) 0.5em;
+
+  > * {
+    white-space: nowrap;
+  }
+
+  .select-kit-header {
+    height: 100%;
+  }
+
+  @include viewport.until(sm) {
+    .edit-category {
+      .d-button-label {
+        display: none;
+      }
+
+      .d-icon {
+        margin: 0;
+      }
+    }
+  }
+
+  .dismiss-container-top:empty {
+    display: none;
+  }
+}
+
+.category-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  > li {
+    // only target the top-level li, not dropdowns
+    display: flex;
+    margin-right: 0.5em;
+    margin-bottom: 0;
+  }
+}
+
+.mobile-view {
+  .list-controls {
+    #create-topic {
+      box-sizing: border-box;
+      display: flex;
+      align-self: stretch;
+      align-items: center;
+    }
+  }
+
+  .list-control-toggle-link-trigger {
+    font-size: var(--font-up-1-rem);
+    font-weight: bold;
+    color: var(--primary-high);
+    padding: 0;
+
+    &:hover,
+    &:focus {
+      background: none;
+    }
+
+    .d-icon {
+      color: inherit;
+      font-size: var(--font-down-2);
+      margin-left: 0.5em;
+    }
+  }
+
+  .fk-d-menu-modal.list-control-toggle-link-content {
+    .dropdown-menu {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        display: block;
+        color: var(--primary);
+
+        &.active {
+          background: var(--d-selected);
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

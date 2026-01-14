@@ -178,10 +178,10 @@ RSpec.describe "DiscoursePoll endpoints" do
   end
 
   describe "#grouped_poll_results" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:user3, :user)
+    fab!(:user4, :user)
 
     fab!(:post) { Fabricate(:post, raw: <<~SQL) }
       [poll type=multiple public=true min=1 max=2]

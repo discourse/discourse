@@ -27,6 +27,12 @@ hy:
         text:
           label: Տեքստ
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Կատեգորիաներ
+            tags:
+              label: Պիտակներ
         user_badge_granted:
           fields:
             badge:
@@ -62,13 +68,13 @@ hy:
           fields:
             restricted_tags:
               label: Թեգեր
-            restricted_category:
-              label: Կատեգորիա
-            restricted_group:
-              label: Խմբավորել
-            restricted_groups:
-              label: Խմբեր
+            restricted_categories:
+              label: Կատեգորիաներ
           created: Ստեղծված
+          with_images: Նկարներ
+          with_links: Հղումներ
+          with_code: Կոդ
+          with_uploads: Վերբեռնումներ
         category_created_edited:
           fields:
             restricted_category:

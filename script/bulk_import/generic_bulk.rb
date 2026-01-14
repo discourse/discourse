@@ -77,6 +77,8 @@ class BulkImport::Generic < BulkImport::Base
     import_category_tag_groups
     import_category_permissions
     import_category_users
+    import_category_moderation_groups
+    update_category_read_restricted
 
     import_topics
     import_posts
@@ -100,6 +102,8 @@ class BulkImport::Generic < BulkImport::Base
     import_badge_groupings
     import_badges
     import_user_badges
+    import_anniversary_user_badges
+    update_badge_grant_counts
 
     import_optimized_images
 
@@ -194,6 +198,19 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     rows.close
+
+    return if ENV["SKIP_MIGRATED_SITE_FLAG_UPDATE"]
+
+    # Bypassing SiteSetting.set_and_log if migrated_site is present and not enabled, enable it
+    # We don't need to have the plugin enabled
+    migrated_site_flag_enabled = DB.exec(<<~SQL) > 0
+      UPDATE site_settings
+         SET value = 't'
+       WHERE name = 'migrated_site'
+         AND value <> 't'
+    SQL
+
+    SiteSetting.refresh! if migrated_site_flag_enabled
   end
 
   def import_categories
@@ -203,18 +220,19 @@ class BulkImport::Generic < BulkImport::Base
         WITH
           RECURSIVE
           tree AS (
-                    SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted,
-                           c.slug, c.existing_id, c.position, c.logo_upload_id, 0 AS level
+                    SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color,
+                           c.slug, c.existing_id, c.position, c.logo_upload_id, 0 AS level, c.show_subcategory_list, c.subcategory_list_style, c.minimum_required_tags
                       FROM categories c
                      WHERE c.parent_category_id IS NULL
                      UNION ALL
-                    SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted,
-                           c.slug, c.existing_id, c.position, c.logo_upload_id, tree.level + 1 AS level
+                    SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color,
+                           c.slug, c.existing_id, c.position, c.logo_upload_id, tree.level + 1 AS level,
+                           c.show_subcategory_list, c.subcategory_list_style, c.minimum_required_tags
                       FROM categories c,
                            tree
                      WHERE c.parent_category_id = tree.id
                   )
-      SELECT id, parent_category_id, name, description, color, text_color, read_restricted, slug, existing_id, logo_upload_id,
+      SELECT id, parent_category_id, name, description, color, text_color, slug, existing_id, logo_upload_id, show_subcategory_list, subcategory_list_style, minimum_required_tags,
              COALESCE(position,
                       ROW_NUMBER() OVER (PARTITION BY parent_category_id ORDER BY parent_category_id NULLS FIRST, name)) AS position
         FROM tree
@@ -232,9 +250,13 @@ class BulkImport::Generic < BulkImport::Base
         parent_category_id:
           row["parent_category_id"] ? category_id_from_imported_id(row["parent_category_id"]) : nil,
         slug: row["slug"],
-        read_restricted: row["read_restricted"],
         uploaded_logo_id:
           row["logo_upload_id"] ? upload_id_from_original_id(row["logo_upload_id"]) : nil,
+        show_subcategory_list: row["show_subcategory_list"],
+        subcategory_list_style: row["subcategory_list_style"],
+        minimum_required_tags: row["minimum_required_tags"],
+        color: row["color"],
+        text_color: row["text_color"],
       }
     end
 
@@ -324,7 +346,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing category permissions..."
 
     permissions = query(<<~SQL)
-      SELECT c.id AS category_id, 
+      SELECT c.id AS category_id,
             p.value -> 'group_id' AS group_id,
             p.value -> 'existing_group_id' AS existing_group_id,
             p.value -> 'permission_type' AS permission_type
@@ -343,6 +365,32 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     permissions.close
+  end
+
+  def import_category_moderation_groups
+    puts "", "Importing category moderation groups..."
+
+    moderation_groups = query(<<~SQL)
+      SELECT c.id AS category_id,
+            m.value AS group_id
+      FROM categories c,
+           JSON_EACH(c.moderation_group_ids) m
+      ORDER BY c.id, m.value
+    SQL
+
+    existing_moderation_groups = CategoryModerationGroup.pluck(:category_id, :group_id).to_set
+
+    create_category_moderation_groups(moderation_groups) do |row|
+      category_id = category_id_from_imported_id(row["category_id"])
+      group_id = group_id_from_imported_id(row["group_id"])
+
+      next unless category_id && group_id
+      next unless existing_moderation_groups.add?([category_id, group_id])
+
+      { category_id: category_id, group_id: group_id }
+    end
+
+    moderation_groups.close
   end
 
   def import_category_users
@@ -372,6 +420,44 @@ class BulkImport::Generic < BulkImport::Base
     category_users.close
   end
 
+  def update_category_read_restricted
+    puts "", "Updating category read_restricted flags..."
+    start_time = Time.now
+    processed_count = 0
+    updated_count = 0
+    skipped_count = 0
+
+    Category
+      .includes(category_groups: :group)
+      .find_each do |category|
+        processed_count += 1
+
+        permissions = {}
+        category.category_groups.each do |category_group|
+          group = category_group.group
+          permissions[category_group.group_name] = category_group.permission_type if group.present?
+        end
+
+        expected_read_restricted =
+          if permissions.empty?
+            false
+          else
+            Category.resolve_permissions(permissions).first
+          end
+
+        current_read_restricted = category.read_restricted
+
+        if current_read_restricted != expected_read_restricted
+          category.update_column(:read_restricted, expected_read_restricted)
+          updated_count += 1
+        else
+          skipped_count += 1
+        end
+      end
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds. Processed: #{processed_count}, Updated: #{updated_count}, Skipped: #{skipped_count}."
+  end
+
   def import_groups
     puts "", "Importing groups..."
 
@@ -386,12 +472,17 @@ class BulkImport::Generic < BulkImport::Base
 
       {
         imported_id: row["id"],
+        existing_id: row["existing_id"],
         name: row["name"],
         full_name: row["full_name"],
+        public_admission: row["public_admission"] || false,
+        public_exit: row["public_exit"] || false,
+        allow_membership_requests: row["allow_membership_requests"] || false,
         visibility_level: row["visibility_level"],
         members_visibility_level: row["members_visibility_level"],
         mentionable_level: row["mentionable_level"],
         messageable_level: row["messageable_level"],
+        assignable_level: row["assignable_level"],
       }
     end
 
@@ -412,9 +503,11 @@ class BulkImport::Generic < BulkImport::Base
     create_group_users(group_members) do |row|
       group_id = group_id_from_imported_id(row["group_id"])
       user_id = user_id_from_imported_id(row["user_id"])
+
+      next if user_id.nil?
       next if existing_group_user_ids.include?([group_id, user_id])
 
-      { group_id: group_id, user_id: user_id }
+      { group_id: group_id, user_id: user_id, owner: row["owner"] }
     end
 
     group_members.close
@@ -446,6 +539,7 @@ class BulkImport::Generic < BulkImport::Base
         row["name"] = nil
         row["registration_ip_address"] = nil
         row["date_of_birth"] = nil
+        row["title"] = nil
       end
 
       {
@@ -461,8 +555,11 @@ class BulkImport::Generic < BulkImport::Base
         moderator: row["moderator"],
         suspended_at: suspended_at,
         suspended_till: suspended_till,
+        trust_level: row["trust_level"],
         registration_ip_address: row["registration_ip_address"],
         date_of_birth: to_date(row["date_of_birth"]),
+        primary_group_id: group_id_from_imported_id(row["primary_group_id"]),
+        title: row["title"],
       }
     end
 
@@ -547,6 +644,7 @@ class BulkImport::Generic < BulkImport::Base
         email_level: row["email_level"],
         email_messages_level: row["email_messages_level"],
         email_digests: row["email_digests"],
+        hide_profile_and_presence: row["hide_profile_and_presence"],
       }
     end
 
@@ -882,7 +980,7 @@ class BulkImport::Generic < BulkImport::Base
             "[quote]"
           else
             bbcode_parts = []
-            bbcode_parts << name.presence || username
+            bbcode_parts << (name.presence || username)
             bbcode_parts << "post:#{post_number}" if post_number.present?
             bbcode_parts << "topic:#{topic_id}" if topic_id.present?
             bbcode_parts << "username:#{username}" if username.present? && name.present?
@@ -1028,15 +1126,15 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def event_bbcode(event)
-    return unless defined?(::DiscoursePostEvent)
+    return unless defined?(DiscoursePostEvent)
 
     starts_at = to_datetime(event["starts_at"])
     ends_at = to_datetime(event["ends_at"])
-    status = ::DiscoursePostEvent::Event.statuses[event["status"]].to_s
+    status = DiscoursePostEvent::Event.statuses[event["status"]].to_s
     name =
       if (name = event["name"].presence)
-        name.ljust(::DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
-          ::DiscoursePostEvent::Event::MAX_NAME_LENGTH,
+        name.ljust(DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
+          DiscoursePostEvent::Event::MAX_NAME_LENGTH,
         )
       end
     url = event["url"]
@@ -1376,6 +1474,27 @@ class BulkImport::Generic < BulkImport::Base
                                                         liked = excluded.liked
     SQL
 
+    DB.exec(<<~SQL, notification_level: NotificationLevels.topic_levels[:watching])
+      WITH
+        latest_posts AS (
+                          SELECT p.topic_id, MAX(p.post_number) AS number
+                            FROM posts p
+                          WHERE p.deleted_at IS NULL
+                            AND NOT p.hidden
+                            AND p.user_id > 0
+                          GROUP BY p.topic_id
+                        )
+      UPDATE topic_users tu
+        SET last_read_post_number = latest_posts.number
+      FROM latest_posts
+           JOIN topics t ON t.id = latest_posts.topic_id
+      WHERE tu.topic_id = latest_posts.topic_id
+        AND tu.notification_level = :notification_level
+        AND tu.last_read_post_number IS NULL
+        AND t.deleted_at IS NULL
+        AND t.visible
+    SQL
+
     puts "  Updated topic users in #{(Time.now - start_time).to_i} seconds."
   end
 
@@ -1530,7 +1649,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_notes
     puts "", "Importing user notes..."
 
-    unless defined?(::DiscourseUserNotes)
+    unless defined?(DiscourseUserNotes)
       puts "  Skipping import of user notes because the plugin is not installed."
       return
     end
@@ -1583,7 +1702,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_note_counts
     puts "", "Importing user note counts..."
 
-    unless defined?(::DiscourseUserNotes)
+    unless defined?(DiscourseUserNotes)
       puts "  Skipping import of user notes because the plugin is not installed."
       return
     end
@@ -1917,11 +2036,28 @@ class BulkImport::Generic < BulkImport::Base
         )
       @tag_mapping[row["id"]] = tag.id
 
-      if row["tag_group_id"]
-        TagGroupMembership.find_or_create_by!(
-          tag_id: tag.id,
-          tag_group_id: @tag_group_mapping[row["tag_group_id"]],
-        )
+      intermediate_group_ids = []
+      if row["tag_group_ids"] && !row["tag_group_ids"].empty?
+        intermediate_group_ids = JSON.parse(row["tag_group_ids"])
+      elsif row["tag_group_id"] && !row["tag_group_id"].empty?
+        # Support old single tag_group_id
+        intermediate_group_ids = [row["tag_group_id"]]
+      end
+
+      if intermediate_group_ids.any?
+        intermediate_group_ids.each do |intermediate_group_id|
+          intermediate_group_id = intermediate_group_id.to_i
+          discourse_tag_group_id = @tag_group_mapping[intermediate_group_id]
+
+          if discourse_tag_group_id
+            TagGroupMembership.find_or_create_by!(
+              tag_id: tag.id,
+              tag_group_id: discourse_tag_group_id,
+            )
+          else
+            puts "Warning: Intermediate tag group ID #{intermediate_group_id} from row not found in @tag_group_mapping for tag '#{tag.name}'"
+          end
+        end
       end
     end
 
@@ -1960,7 +2096,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_post_voting_votes
     puts "", "Importing votes for posts..."
 
-    unless defined?(::PostVoting)
+    unless defined?(PostVoting)
       puts "  Skipping import of votes for posts because the plugin is not installed."
       return
     end
@@ -2015,7 +2151,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topic_voting_votes
-    unless defined?(::DiscourseTopicVoting)
+    unless defined?(DiscourseTopicVoting)
       puts "", "Skipping topic voting votes, because the topic voting plugin is not installed."
       return
     end
@@ -2087,7 +2223,12 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_answers
-    puts "", "Importing solutions into post custom fields..."
+    unless defined?(DiscourseSolved)
+      puts "  Skipping import of solved topics"
+      return
+    end
+
+    puts "", "Importing solutions into discourse_solved_solved_topics..."
 
     solutions = query(<<~SQL)
       SELECT *
@@ -2095,47 +2236,26 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY topic_id
     SQL
 
-    field_name = "is_accepted_answer"
-    value = "true"
-    existing_fields = PostCustomField.where(name: field_name).pluck(:post_id).to_set
+    existing_solved_topics = DiscourseSolved::SolvedTopic.pluck(:topic_id).to_set
 
-    create_post_custom_fields(solutions) do |row|
-      next unless (post_id = post_id_from_imported_id(row["post_id"]))
-      next unless existing_fields.add?(post_id)
-
-      {
-        post_id: post_id,
-        name: field_name,
-        value: value,
-        created_at: to_datetime(row["created_at"]),
-      }
-    end
-
-    puts "", "Importing solutions into topic custom fields..."
-
-    solutions.reset
-
-    field_name = "accepted_answer_post_id"
-    existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
-
-    create_topic_custom_fields(solutions) do |row|
+    create_solved_topic(solutions) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
+      accepter_user_id = user_id_from_imported_id(row["acting_user_id"])
 
       next unless post_id && topic_id
-      next unless existing_fields.add?(topic_id)
+      next unless existing_solved_topics.add?(topic_id)
 
       {
         topic_id: topic_id,
-        name: field_name,
-        value: post_id.to_s,
+        answer_post_id: post_id,
+        accepter_user_id: accepter_user_id,
         created_at: to_datetime(row["created_at"]),
       }
     end
 
     puts "", "Importing solutions into user actions..."
 
-    existing_fields = nil
     solutions.reset
 
     action_type = UserAction::SOLVED
@@ -2166,7 +2286,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_gamification_scores
     puts "", "Importing gamification scores..."
 
-    unless defined?(::DiscourseGamification)
+    unless defined?(DiscourseGamification)
       puts "  Skipping import of gamification scores because the plugin is not installed."
       return
     end
@@ -2208,7 +2328,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_post_events
     puts "", "Importing events..."
 
-    unless defined?(::DiscoursePostEvent)
+    unless defined?(DiscoursePostEvent)
       puts "  Skipping import of events because the plugin is not installed."
       return
     end
@@ -2221,7 +2341,7 @@ class BulkImport::Generic < BulkImport::Base
 
     default_custom_fields = "{}"
     timezone = "UTC"
-    public_group_invitees = "{#{::DiscoursePostEvent::Event::PUBLIC_GROUP}}"
+    public_group_invitees = "{#{DiscoursePostEvent::Event::PUBLIC_GROUP}}"
     standalone_invitees = "{}"
 
     existing_events = DiscoursePostEvent::Event.pluck(:id).to_set
@@ -2241,7 +2361,7 @@ class BulkImport::Generic < BulkImport::Base
         timezone: timezone,
         raw_invitees:
           (
-            if row["status"] == ::DiscoursePostEvent::Event.statuses[:public]
+            if row["status"] == DiscoursePostEvent::Event.statuses[:public]
               public_group_invitees
             else
               standalone_invitees
@@ -2376,6 +2496,15 @@ class BulkImport::Generic < BulkImport::Base
         image_upload_id:
           row["image_upload_id"] ? upload_id_from_original_id(row["image_upload_id"]) : nil,
         query: row["query"],
+        multiple_grant: to_boolean(row["multiple_grant"]),
+        allow_title: to_boolean(row["allow_title"]),
+        icon: row["icon"],
+        listable: to_boolean(row["listable"]),
+        target_posts: to_boolean(row["target_posts"]),
+        enabled: to_boolean(row["enabled"]),
+        auto_revoke: to_boolean(row["auto_revoke"]),
+        trigger: row["trigger"],
+        show_posts: to_boolean(row["show_posts"]),
       }
     end
 
@@ -2407,6 +2536,98 @@ class BulkImport::Generic < BulkImport::Base
 
     user_badges.close
 
+    puts "", "Updating badge grant counts..."
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+        WITH
+          grants AS (
+                      SELECT badge_id, COUNT(*) AS grant_count FROM user_badges GROUP BY badge_id
+                    )
+
+      UPDATE badges
+         SET grant_count = grants.grant_count
+        FROM grants
+       WHERE badges.id = grants.badge_id
+         AND badges.grant_count <> grants.grant_count
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def import_anniversary_user_badges
+    unless SiteSetting.enable_badges?
+      puts "", "Skipping anniversary user badges because badges are not enabled."
+      return
+    end
+
+    puts "", "Importing anniversary user badges..."
+
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+      WITH
+        eligible_users AS (
+                            SELECT u.id, u.created_at
+                            FROM users u
+                            WHERE u.active
+                              AND NOT u.staged
+                              AND u.id > 0
+                              AND (u.silenced_till IS NULL OR u.silenced_till < CURRENT_TIMESTAMP)
+                              AND (u.suspended_till IS NULL OR u.suspended_till < CURRENT_TIMESTAMP)
+                              AND NOT EXISTS (SELECT 1 FROM anonymous_users AS au WHERE au.user_id = u.id)
+                          ),
+        anniversary_dates AS ( -- Series of anniversary dates starting from the user's created_at + 1 year up to the current year
+                               SELECT
+                                 eu.id AS user_id,
+                                 (
+                                   eu.created_at +
+                                   ((year_num - EXTRACT(YEAR FROM eu.created_at)) || ' years')::interval
+                                 )::timestamp AS anniversary_date
+                               FROM eligible_users eu,
+                                    generate_series(
+                                      EXTRACT(YEAR FROM eu.created_at)::int + 1,
+                                      EXTRACT(YEAR FROM CURRENT_TIMESTAMP)::int
+                                    ) AS year_num
+                                WHERE
+                                  (
+                                    eu.created_at +
+                                    ((year_num - EXTRACT(YEAR FROM eu.created_at)) || ' years')::interval
+                                  ) < CURRENT_TIMESTAMP
+                             )
+      INSERT INTO user_badges (granted_at, created_at, granted_by_id, user_id, badge_id, seq)
+      SELECT a.anniversary_date,
+             CURRENT_TIMESTAMP,
+             #{Discourse.system_user.id},
+             a.user_id,
+             #{Badge::Anniversary},
+             (ROW_NUMBER() OVER (PARTITION BY a.user_id ORDER BY a.anniversary_date) - 1) AS seq
+      FROM anniversary_dates a
+           JOIN eligible_users u ON a.user_id = u.id
+           JOIN posts AS p ON p.user_id = u.id
+           JOIN topics AS t ON p.topic_id = t.id
+      WHERE p.deleted_at IS NULL
+        AND NOT p.hidden
+        AND p.created_at BETWEEN a.anniversary_date - '1 year'::interval AND a.anniversary_date
+        AND t.visible
+        AND t.archetype <> 'private_message'
+        AND t.deleted_at IS NULL
+        AND NOT EXISTS (
+            SELECT 1
+            FROM user_badges AS ub
+            WHERE ub.user_id = u.id
+            AND ub.badge_id = #{Badge::Anniversary}
+            AND ub.granted_at BETWEEN a.anniversary_date - '1 year'::interval AND a.anniversary_date
+        )
+      GROUP BY a.user_id, a.anniversary_date
+    SQL
+
+    UserBadge.update_featured_ranks!
+
+    puts "  Anniversary user badges imported in #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def update_badge_grant_counts
     puts "", "Updating badge grant counts..."
     start_time = Time.now
 
@@ -2951,7 +3172,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_reaction_users
-    unless defined?(::DiscourseReactions)
+    unless defined?(DiscourseReactions)
       puts "",
            "Skipping reaction users import, because the Discourse Reactions plugin is not installed."
       return
@@ -2991,7 +3212,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_reactions
-    unless defined?(::DiscourseReactions)
+    unless defined?(DiscourseReactions)
       puts "", "Skipping reactions import, because the Discourse Reactions plugin is not installed."
       return
     end
@@ -2999,9 +3220,9 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing reactions..."
 
     reactions = query(<<~SQL)
-      SELECT r.*, 
-            COALESCE((SELECT COUNT(*) 
-                      FROM discourse_reactions_reaction_users ru 
+      SELECT r.*,
+            COALESCE((SELECT COUNT(*)
+                      FROM discourse_reactions_reaction_users ru
                       WHERE ru.reaction_id = r.id), 0) as count
       FROM discourse_reactions_reactions r
       ORDER BY r.post_id, r.reaction_value
@@ -3033,7 +3254,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_reaction_shadow_likes
-    unless defined?(::DiscourseReactions)
+    unless defined?(DiscourseReactions)
       puts "",
            "Skipping reaction shadow likes import, because the Discourse Reactions plugin is not installed."
       return

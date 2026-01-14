@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "התראת קלקלן של Discourse"
   js:
     spoiler:
-      title: טשטוש קלקלן
+      title: טשטוש קדימון
       label:
         show: "הצגת תוכן מוסתר"
     composer:

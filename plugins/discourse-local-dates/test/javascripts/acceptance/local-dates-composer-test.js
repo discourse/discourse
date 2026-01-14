@@ -78,7 +78,8 @@ acceptance("Local Dates - composer", function (needs) {
     const categoryChooser = selectKit(".category-chooser");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
-    await click(".d-editor-button-bar .local-dates");
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='local-dates']");
 
     const timezoneChooser = selectKit(".timezone-input");
     await timezoneChooser.expand();
@@ -95,7 +96,8 @@ acceptance("Local Dates - composer", function (needs) {
     const categoryChooser = selectKit(".category-chooser");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
-    await click(".d-editor-button-bar .local-dates");
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='local-dates']");
 
     await click('.pika-table td[data-day="5"] > .pika-button');
 
@@ -150,5 +152,29 @@ acceptance("Local Dates - composer", function (needs) {
         new RegExp(`and the time now is: \\[date=${date}`),
         "it adds the current date"
       );
+  });
+
+  test("date modal - selecting format preserves it in output", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='local-dates']");
+
+    await click(".advanced-mode-btn");
+
+    // Select LTS format (time-only format) - second item in the list
+    await click("ul.formats li.format:nth-child(2) a.moment-format");
+    assert.dom("input.format-input").hasValue("LTS");
+
+    // Insert the date
+    await click(".btn-primary");
+
+    // Verify the format is preserved in the output (not changed to LL)
+    assert
+      .dom(".d-editor-input")
+      .hasValue(/format=LTS/, "preserves LTS format in output");
   });
 });

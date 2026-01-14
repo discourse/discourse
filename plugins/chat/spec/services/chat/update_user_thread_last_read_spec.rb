@@ -9,7 +9,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:chatters) { Fabricate(:group) }
+    fab!(:chatters, :group)
     fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
     fab!(:thread) { Fabricate(:chat_thread, old_om: true) }
     fab!(:reply_1) { Fabricate(:chat_message, thread: thread, chat_channel_id: thread.channel.id) }
@@ -42,7 +42,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
     end
 
     context "when user can’t access the channel" do
-      fab!(:channel) { Fabricate(:private_category_channel) }
+      fab!(:channel, :private_category_channel)
       fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
       it { is_expected.to fail_a_policy(:invalid_access) }

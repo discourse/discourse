@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    admin:
+      rss_polling:
+        feed: مەنبە تەڭشىكى
+        discourse: Discourse تەڭشەك
+        author: يازغۇچى
+        feed_url: تور ئادرېسى
+        discourse_category: سەھىپە
+        discourse_tags: بەلگە
+        feed_category_filter: سەھىپە سۈزگۈچ

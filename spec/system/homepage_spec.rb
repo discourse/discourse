@@ -6,12 +6,13 @@ describe "Homepage", type: :system do
   fab!(:topics) { Fabricate.times(5, :post).map(&:topic) }
   let(:discovery) { PageObjects::Pages::Discovery.new }
   fab!(:theme)
+  let(:user_preferences_interface_page) { PageObjects::Pages::UserPreferencesInterface.new }
 
   before do
     # A workaround to avoid the global notice from interfering with the tests
     # It is coming from the ensure_login_hint.rb initializer and it gets
     # evaluated before the tests run (and it wrongly counts 0 admins defined)
-    SiteSetting.global_notice = nil
+    SiteSetting.global_notice = ""
   end
 
   it "shows a list of topics by default" do
@@ -25,15 +26,13 @@ describe "Homepage", type: :system do
 
     expect(page).to have_css(".navigation-container .latest.active", text: "Latest")
 
-    visit "u/#{user.username}/preferences/interface"
+    user_preferences_interface_page.visit(user)
 
     homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
     homepage_picker.expand
     homepage_picker.select_row_by_name("Hot")
-    page.find(".btn-primary.save-changes").click
 
-    # Wait for the save to complete
-    find(".btn-primary.save-changes:not([disabled])", wait: 5)
+    user_preferences_interface_page.save_changes
 
     visit "/"
 
@@ -80,32 +79,27 @@ describe "Homepage", type: :system do
       visit ""
       expect(page).to have_css(".new-home", text: "Hi friends!")
 
-      visit "/u/#{user.username}/preferences/interface"
+      user_preferences_interface_page.visit(user)
 
       homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
       homepage_picker.expand
       # user overrides theme custom homepage
       homepage_picker.select_row_by_name("Hot")
-      page.find(".btn-primary.save-changes").click
+      user_preferences_interface_page.save_changes
 
-      # Wait for the save to complete
-      find(".btn-primary.save-changes:not([disabled])", wait: 5)
       expect(user.user_option.homepage_id).to eq(UserOption::HOMEPAGES.key("hot"))
 
       click_logo
+
       expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
 
-      visit "/u/#{user.username}/preferences/interface"
+      user_preferences_interface_page.visit(user)
 
       homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
       homepage_picker.expand
       # user selects theme custom homepage again
       homepage_picker.select_row_by_name("(default)")
-      page.find(".btn-primary.save-changes").click
-
-      # Wait for the save to complete
-      find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("hot"))
+      user_preferences_interface_page.save_changes
 
       click_logo
 
@@ -142,14 +136,21 @@ describe "Homepage", type: :system do
         Fabricate(
           :theme_field,
           theme: theme,
-          type_id: ThemeField.types[:html],
-          target_id: Theme.targets[:common],
-          name: "head_tag",
-          value: <<~HTML,
-            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
-              <div class="new-home">Hi friends!</div>
-            </script>
-          HTML
+          type_id: ThemeField.types[:js],
+          target_id: Theme.targets[:extra_js],
+          name: "discourse/api-initializers/theme-initializer.gjs",
+          value: <<~GJS,
+            import { apiInitializer } from "discourse/lib/api";
+
+            export default apiInitializer((api) => {
+              api.renderInOutlet(
+                "custom-homepage",
+                <template>
+                  <div class="new-home">Hi friends!</div>
+                </template>
+              );
+            });
+          GJS
         )
       end
 
@@ -162,14 +163,21 @@ describe "Homepage", type: :system do
         Fabricate(
           :theme_field,
           theme: component,
-          type_id: ThemeField.types[:html],
-          target_id: Theme.targets[:common],
-          name: "head_tag",
-          value: <<~HTML,
-            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
-              <div class="new-home">Hi friends!</div>
-            </script>
-          HTML
+          type_id: ThemeField.types[:js],
+          target_id: Theme.targets[:extra_js],
+          name: "discourse/api-initializers/theme-initializer.gjs",
+          value: <<~GJS,
+            import { apiInitializer } from "discourse/lib/api";
+
+            export default apiInitializer((api) => {
+              api.renderInOutlet(
+                "custom-homepage",
+                <template>
+                  <div class="new-home">Hi friends!</div>
+                </template>
+              );
+            });
+          GJS
         )
       end
 
@@ -185,14 +193,21 @@ describe "Homepage", type: :system do
       Fabricate(
         :theme_field,
         theme: component,
-        type_id: ThemeField.types[:html],
-        target_id: Theme.targets[:common],
-        name: "head_tag",
-        value: <<~HTML,
-            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
-              <div class="new-home">Hi friends!</div>
-            </script>
-          HTML
+        type_id: ThemeField.types[:js],
+        target_id: Theme.targets[:extra_js],
+        name: "discourse/api-initializers/theme-initializer.gjs",
+        value: <<~GJS,
+          import { apiInitializer } from "discourse/lib/api";
+
+          export default apiInitializer((api) => {
+            api.renderInOutlet(
+              "custom-homepage",
+              <template>
+                <div class="new-home">Hi friends!</div>
+              </template>
+            );
+          });
+        GJS
       )
     end
 

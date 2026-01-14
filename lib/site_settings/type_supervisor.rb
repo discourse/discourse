@@ -20,9 +20,11 @@ class SiteSettings::TypeSupervisor
     list_type
     textarea
     json_schema
+    schema
     requires_confirmation
+    depends_on
   ].freeze
-  VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema].freeze
+  VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema schema].freeze
 
   # For plugins, so they can tell if a feature is supported
   SUPPORTED_TYPES = %i[email username list enum].freeze
@@ -59,6 +61,10 @@ class SiteSettings::TypeSupervisor
         html_deprecated: 25,
         tag_group_list: 26,
         file_size_restriction: 27,
+        objects: 28,
+        locale_enum: 29,
+        topic: 30,
+        datetime: 31,
       )
   end
 
@@ -94,7 +100,11 @@ class SiteSettings::TypeSupervisor
     @list_type = {}
     @textareas = {}
     @json_schemas = {}
+    @schemas = {}
+    @dependencies = SiteSettings::DependencyGraph.new
   end
+
+  attr_reader :dependencies
 
   def load_setting(name_arg, opts = {})
     name = name_arg.to_sym
@@ -102,6 +112,7 @@ class SiteSettings::TypeSupervisor
     @textareas[name] = opts[:textarea] if opts[:textarea]
 
     @json_schemas[name] = opts[:json_schema].constantize if opts[:json_schema]
+    @schemas[name] = opts[:schema] if opts[:schema]
 
     if (enum = opts[:enum])
       @enums[name] = enum.is_a?(String) ? enum.constantize : enum
@@ -125,6 +136,11 @@ class SiteSettings::TypeSupervisor
         @allow_any[name] = opts[:allow_any] == false ? false : true
         @list_type[name] = opts[:list_type] if opts[:list_type]
       end
+
+      # add validator for objects
+      if type.to_sym == :objects
+        @validators[name] = { class: ObjectsSettingValidator, opts: { schema: opts[:schema] } }
+      end
     end
     @types[name] = get_data_type(name, @defaults_provider[name])
 
@@ -134,13 +150,14 @@ class SiteSettings::TypeSupervisor
       validator_opts[:name] = name
       @validators[name] = { class: validator_type, opts: validator_opts }
     end
+
+    @dependencies[name] = opts[:depends_on] || []
   end
 
   def to_rb_value(name, value, override_type = nil)
     name = name.to_sym
     @types[name] = (@types[name] || get_data_type(name, value))
     type = (override_type || @types[name])
-
     case type
     when self.class.types[:float]
       value.to_f
@@ -154,7 +171,7 @@ class SiteSettings::TypeSupervisor
       nil
     when self.class.types[:enum]
       @defaults_provider[name].is_a?(Integer) ? value.to_i : value.to_s
-    when self.class.types[:string]
+    when self.class.types[:string], self.class.types[:datetime]
       value.to_s
     else
       return value if self.class.types[type]
@@ -172,10 +189,10 @@ class SiteSettings::TypeSupervisor
   def type_hash(name)
     name = name.to_sym
     type = get_type(name)
-
+    list_type = get_list_type(name)
     result = { type: type.to_s }
 
-    if type == :enum
+    if type == :enum || (type == :list && get_enum_class(name))
       if (klass = get_enum_class(name))
         result.merge!(valid_values: klass.values, translate_names: klass.translate_names?)
       else
@@ -202,6 +219,8 @@ class SiteSettings::TypeSupervisor
     result[:choices] = @choices[name] if @choices.has_key? name
     result[:list_type] = @list_type[name] if @list_type.has_key? name
     result[:textarea] = @textareas[name] if @textareas.has_key? name
+    result[:schema] = @schemas[name] if @schemas.has_key? name
+
     if @json_schemas.has_key?(name) && json_klass = json_schema_class(name)
       result[:json_schema] = json_klass.schema
     end
@@ -222,7 +241,7 @@ class SiteSettings::TypeSupervisor
   end
 
   def validate_value(name, type, val)
-    if type == self.class.types[:enum]
+    if type == self.class.types[:enum] || (type == self.class.types[:list] && get_enum_class(name))
       if get_enum_class(name)
         unless get_enum_class(name).valid_value?(val)
           raise Discourse::InvalidParameters.new("Invalid value `#{val}` for `#{name}`")
@@ -234,9 +253,7 @@ class SiteSettings::TypeSupervisor
 
         raise Discourse::InvalidParameters.new(:value) if choice.exclude?(val)
       end
-    end
-
-    if type == self.class.types[:list] || type == self.class.types[:string]
+    elsif type == self.class.types[:list] || type == self.class.types[:string]
       if @allow_any.key?(name) && !@allow_any[name]
         split = val.to_s.split("|")
         resolved_choices = @choices[name]
@@ -272,6 +289,14 @@ class SiteSettings::TypeSupervisor
   def normalize_input(name, val)
     name = name.to_sym
     type = @types[name] || self.class.parse_value_type(val)
+
+    if val.nil?
+      Discourse.deprecate(
+        "Site setting #{name} expects a #{self.class.types[type]} value. Implicit casts from `nil` are a source of bugs and will not be supported in future releases.",
+        drop_from: "3.7.0",
+        output_in_test: true,
+      )
+    end
 
     if type == self.class.types[:bool]
       val = (val == true || val == "t" || val == "true") ? "t" : "f"
@@ -329,6 +354,10 @@ class SiteSettings::TypeSupervisor
       StringSettingValidator
     when self.class.types[:host_list]
       HostListSettingValidator
+    when self.class.types[:topic]
+      TopicSettingValidator
+    when self.class.types[:datetime]
+      DatetimeSettingValidator
     else
       nil
     end

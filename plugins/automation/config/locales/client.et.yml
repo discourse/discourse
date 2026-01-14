@@ -27,6 +27,12 @@ et:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Liigid
+            tags:
+              label: Sildid
         user_badge_granted:
           fields:
             badge:
@@ -47,13 +53,13 @@ et:
           fields:
             restricted_tags:
               label: Sildid
-            restricted_category:
-              label: Foorum
-            restricted_group:
-              label: Grupp
-            restricted_groups:
-              label: Grupid
+            restricted_categories:
+              label: Liigid
           created: Loodud
+          with_images: Pildid
+          with_links: Viited
+          with_code: Kood
+          with_uploads: Üleslaadimised
         category_created_edited:
           fields:
             restricted_category:
@@ -116,6 +122,8 @@ et:
               label: Teema ID
             user:
               label: Kasutaja
+        set_topic_timer:
+          title: Määra teema taimer
       models:
         trigger:
           name:
@@ -129,7 +137,5 @@ et:
             label: Versioon
           status:
             label: Staatus
-          enabled:
-            label: Sisse lülitatud
           disabled:
             label: Välja lülitatud

@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk"
+  js:
+    topic:
+      create_zendesk_issue: "创建 Zendesk 工单"
+      view_zendesk_issue: "在 Zendesk 上查看"
+    zendesk:
+      credentials_not_setup: 您尚未设置 Zendesk 凭据。
+      url_not_set: 您的 Zendesk URL 当前未设置。
+      general_error: 出了点问题。
+  site_settings:
+    zendesk_url: 您的 Zendesk URL，例如 https://YOUR_SUBDOMAIN.zendesk.com/api/v2
+    zendesk_enabled: 启用 Zendesk 插件
+    zendesk_autogenerate_all_categories: 自动为所有类别创建工单。如果启用，则忽略 `zendesk_autogenerate_categories`。
+    zendesk_autogenerate_categories: 将自动创建 Zendesk 工单的类别列表。
+    zendesk_jobs_api_token: Zendesk 身份验证的 API 令牌
+    zendesk_jobs_email: Zendesk 身份验证的电子邮件
+    zendesk_job_push_all_posts: 将话题中的所有帖子作为 Zendesk 评论推送？如果禁用，则只有第一个帖子将被推送到 Zendesk。
+    zendesk_job_push_only_author_posts: 仅将原始话题作者的帖子推送到 Zendesk。仅在启用 `zendesk_job_push_all_posts` 时适用
+    sync_comments_from_zendesk: 将 Zendesk 的评论自动发布到 Discourse。仅适用于 `zendesk_autogenerate_categories` 中的话题。
+    zendesk_incoming_webhook_token: Zendesk 传出网络钩子在有效负载中发送的令牌。仅在启用 `sync_comments_from_zendesk` 时才需要。
+    zendesk_tags: 添加到每张工单的标签列表

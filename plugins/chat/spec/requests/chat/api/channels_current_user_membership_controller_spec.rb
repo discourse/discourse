@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe Chat::Api::ChannelsCurrentUserMembershipController do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
 
   before do
     SiteSetting.chat_enabled = true
@@ -37,7 +37,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
     context "when channel is a category channel" do
       context "when current user can't write in channel" do
         fab!(:private_category_1) { Fabricate(:private_category, group: Fabricate(:group)) }
-        fab!(:readonly_group_1) { Fabricate(:group) }
+        fab!(:readonly_group_1, :group)
         fab!(:channel_2) { Fabricate(:category_channel, chatable: private_category_1) }
 
         before do
@@ -60,7 +60,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
       context "when current user can write in channel" do
         fab!(:private_category_1) { Fabricate(:private_category, group: Fabricate(:group)) }
-        fab!(:readonly_group_1) { Fabricate(:group) }
+        fab!(:readonly_group_1, :group)
         fab!(:channel_2) { Fabricate(:category_channel, chatable: private_category_1) }
 
         before do
@@ -98,6 +98,57 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
         expect(response.parsed_body["membership"]["following"]).to eq(true)
         expect(response.parsed_body["membership"]["chat_channel_id"]).to eq(channel_1.id)
         expect(response.parsed_body["membership"]["user"]["id"]).to eq(current_user.id)
+      end
+    end
+  end
+
+  describe "#update" do
+    let!(:membership) do
+      Chat::UserChatChannelMembership.create!(
+        chat_channel_id: channel_1.id,
+        user_id: current_user.id,
+        following: true,
+      )
+    end
+
+    context "when starring a channel" do
+      it "updates the starred status" do
+        put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { starred: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["membership"]["starred"]).to eq(true)
+        expect(response.parsed_body["membership"]["chat_channel_id"]).to eq(channel_1.id)
+      end
+    end
+
+    context "when unstarring a channel" do
+      before { membership.update!(starred: true) }
+
+      it "updates the starred status" do
+        expect {
+          put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { starred: false }
+        }.to change { membership.reload.starred }.from(true).to(false)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["membership"]["starred"]).to eq(false)
+      end
+    end
+
+    context "when the user is not a member" do
+      before { membership.destroy! }
+
+      it "returns a 404" do
+        put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { starred: true }
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when channel is not found" do
+      it "returns a 404" do
+        put "/chat/api/channels/-999/memberships/me", params: { starred: true }
+
+        expect(response.status).to eq(404)
       end
     end
   end

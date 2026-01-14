@@ -100,8 +100,8 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      context "with moderators_manage_categories_and_groups enabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = true }
+      context "with moderators_manage_groups enabled" do
+        before { SiteSetting.moderators_manage_groups = true }
 
         it "creates group" do
           expect do post "/admin/groups.json", params: group_params end.to change {
@@ -120,8 +120,8 @@ RSpec.describe Admin::GroupsController do
         end
       end
 
-      context "with moderators_manage_categories_and_groups disabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = false }
+      context "with moderators_manage_groups disabled" do
+        before { SiteSetting.moderators_manage_groups = false }
 
         it "prevents creation with a 403 response" do
           expect do post "/admin/groups.json", params: group_params end.to_not change {
@@ -198,8 +198,8 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      context "with moderators_manage_categories_and_groups enabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = true }
+      context "with moderators_manage_groups enabled" do
+        before { SiteSetting.moderators_manage_groups = true }
 
         it "removes owner" do
           group.add_owner(user)
@@ -211,8 +211,8 @@ RSpec.describe Admin::GroupsController do
         end
       end
 
-      context "with moderators_manage_categories_and_groups disabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = false }
+      context "with moderators_manage_groups disabled" do
+        before { SiteSetting.moderators_manage_groups = false }
 
         it "prevents owner removal with a 403 response" do
           group.add_owner(user)
@@ -283,8 +283,8 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      context "with moderators_manage_categories_and_groups enabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = true }
+      context "with moderators_manage_groups enabled" do
+        before { SiteSetting.moderators_manage_groups = true }
 
         it "sets multiple primary users" do
           user2.update!(primary_group_id: group.id)
@@ -302,8 +302,8 @@ RSpec.describe Admin::GroupsController do
         end
       end
 
-      context "with moderators_manage_categories_and_groups disabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = false }
+      context "with moderators_manage_groups disabled" do
+        before { SiteSetting.moderators_manage_groups = false }
 
         it "prevents setting of primary group with a 403 response" do
           user2.update!(primary_group_id: group.id)
@@ -409,14 +409,14 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      context "with moderators_manage_categories_and_groups enabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = true }
+      context "with moderators_manage_groups enabled" do
+        before { SiteSetting.moderators_manage_groups = true }
 
         include_examples "group deletion not allowed"
       end
 
-      context "with moderators_manage_categories_and_groups disabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = false }
+      context "with moderators_manage_groups disabled" do
+        before { SiteSetting.moderators_manage_groups = false }
 
         include_examples "group deletion not allowed"
       end
@@ -448,6 +448,18 @@ RSpec.describe Admin::GroupsController do
         expect(response.parsed_body["user_count"]).to eq(2)
       end
 
+      it "responds with a 400 for a long list of domains" do
+        put "/admin/groups/automatic_membership_count.json",
+            params: {
+              automatic_membership_email_domains: 1.upto(11).map { |n| "domain#{n}.com" }.join("|"),
+              id: group.id,
+            }
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          "You supplied invalid parameters to the request: Maximum 10 email domains can be counted at once",
+        )
+      end
+
       it "doesn't respond with 500 if domain is invalid" do
         group = Fabricate(:group)
 
@@ -477,14 +489,14 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      context "with moderators_manage_categories_and_groups enabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = true }
+      context "with moderators_manage_groups enabled" do
+        before { SiteSetting.moderators_manage_groups = true }
 
         include_examples "automatic membership count inaccessible"
       end
 
-      context "with moderators_manage_categories_and_groups disabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = false }
+      context "with moderators_manage_groups disabled" do
+        before { SiteSetting.moderators_manage_groups = false }
 
         include_examples "automatic membership count inaccessible"
       end

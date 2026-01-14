@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .more-topics__container {
   position: relative;
   padding-bottom: max(env(safe-area-inset-bottom), 1em);
@@ -5,22 +7,16 @@
 
   .nav {
     margin-block: 0;
-    top: 2px;
 
     li {
       .btn {
         color: var(--primary);
         background-color: transparent;
-        padding: 0.5em 5px;
+        padding: var(--d-topic-list-header-data-padding-y) 0.8em;
+        border: none;
         border-radius: 0;
-
-        &:hover {
-          box-shadow: inset 0 -3px 0 0 rgba(var(--tertiary-rgb), 0.5);
-        }
-
-        &.active {
-          box-shadow: inset 0 -3px 0 0 var(--tertiary);
-        }
+        font-size: var(--d-topic-list-data-font-size);
+        line-height: var(--line-height-medium);
 
         .d-icon,
         &:hover .d-icon,

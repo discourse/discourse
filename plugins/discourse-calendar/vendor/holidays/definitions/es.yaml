@@ -1,0 +1,495 @@
+# Spanish holiday definitions for the Ruby Holiday gem.
+#
+# Including the Balearic Islands and the Canary Islands.
+#
+# Updated: 2008-11-29.
+#
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_Spain
+# - http://www.timeanddate.com/calendar/index.html?country=16
+#
+# Notes:
+# - Valencia is encoded as both es_v and es_vc
+months:
+  0:
+  - name: Jueves Santo
+    regions: [es_pv, es_na, es_an, es_ib, es_cm, es_mu, es_m, es_ar, es_cl, es_cn, es_lo, es_ga, es_ce, es_o, es_ex]
+    function: easter(year)
+    function_modifier: -3
+  - name: Viernes Santo
+    regions: [es]
+    function: easter(year)
+    function_modifier: -2
+  - name: Lunes de Pascua
+    regions: [es_pv, es_ct, es_na, es_v, es_vc]
+    function: easter(year)
+    function_modifier: 1
+  - name: Lunes de Pascua Granada
+    regions: [es_ct]
+    function: easter(year)
+    function_modifier: 50
+  1:
+  - name: Año Nuevo
+    regions: [es]
+    mday: 1
+    observed: to_monday_if_sunday(date)
+  - name: Día de Reyes
+    regions: [es]
+    mday: 6
+    observed: to_monday_if_sunday(date)
+  2:
+  - name: Día de Andalucía
+    regions: [es_an]
+    mday: 28
+    observed: to_monday_if_sunday(date)
+  3:
+  - name: Día de las Islas Baleares
+    regions: [es_ib]
+    mday: 1
+    observed: to_monday_if_sunday(date)
+  - name: San José
+    regions: [es_v, es_vc, es_cm, es_mu, es_m]
+    mday: 19
+    observed: to_monday_if_sunday(date)
+  4:
+  - name: Día de Castilla y León
+    regions: [es_cl]
+    mday: 23
+    observed: to_monday_if_sunday(date)
+  - name: San Jorge, Día de Aragón
+    regions: [es_ar]
+    mday: 23
+    observed: to_monday_if_sunday(date)
+  5:
+  - name: Día del Trabajador
+    regions: [es]
+    mday: 1
+    observed: to_monday_if_sunday(date)
+  - name: Fiesta de la Comunidad
+    regions: [es_m]
+    mday: 2
+    observed: to_monday_if_sunday(date)
+  - name: Día de las Canarias
+    regions: [es_cn]
+    mday: 30
+    observed: to_monday_if_sunday(date)
+  - name: Día de la Región Castilla-La Mancha
+    regions: [es_cm]
+    mday: 31
+    observed: to_monday_if_sunday(date)
+  6:
+  - name: Día de la Región de Murcia
+    regions: [es_mu]
+    mday: 9
+    observed: to_monday_if_sunday(date)
+  - name: Día de La Rioja
+    regions: [es_lo]
+    mday: 9
+    observed: to_monday_if_sunday(date)
+  - name: San Juan
+    regions: [es_ct, es_vc]
+    mday: 24
+  7:
+  - name: Santiago Apostol
+    regions: [es_ga]
+    mday: 23
+    observed: to_monday_if_sunday(date)
+  8:
+  - name: Asunción
+    regions: [es]
+    mday: 15
+    observed: to_monday_if_sunday(date)
+  9:
+  - name: Día de Ceuta
+    regions: [es_ce]
+    mday: 2
+    observed: to_monday_if_sunday(date)
+  - name: Día de Asturias
+    regions: [es_o]
+    mday: 8
+    observed: to_monday_if_sunday(date)
+  - name: Día de Extremadura
+    regions: [es_ex]
+    mday: 8
+  - name: Fiesta Nacional de Cataluña
+    regions: [es_ct]
+    mday: 11
+    observed: to_monday_if_sunday(date)
+  - name: La Mercè
+    regions: [es_ct]
+    mday: 24
+  10:
+  - name: Día de Valencia
+    regions: [es_vc, es_v]
+    mday: 9
+    observed: to_monday_if_sunday(date)
+  - name: Día de la Hispanidad
+    regions: [es]
+    mday: 12
+    observed: to_monday_if_sunday(date)
+  11:
+  - name: Todos los Santos
+    regions: [es]
+    mday: 1
+    observed: to_monday_if_sunday(date)
+  12:
+  - name: Día de la Constitución
+    regions: [es]
+    mday: 6
+    observed: to_monday_if_sunday(date)
+  - name: Inmaculada Concepción
+    regions: [es]
+    mday: 8
+    observed: to_monday_if_sunday(date)
+  - name: Navidad del Señor
+    regions: [es]
+    mday: 25
+    observed: to_monday_if_sunday(date)
+  - name: San Esteban
+    regions: [es_ib, es_ct]
+    mday: 26
+    observed: to_monday_if_sunday(date)
+
+tests:
+  - given:
+      date: '2009-01-01'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Año Nuevo"
+  - given:
+      date: '2009-01-06'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Día de Reyes"
+  - given:
+      date: '2009-04-10'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Viernes Santo"
+  - given:
+      date: '2009-05-01'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Día del Trabajador"
+  - given:
+      date: '2009-08-15'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Asunción"
+  - given:
+      date: '2009-10-12'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Día de la Hispanidad"
+  - given:
+      date: '2009-11-01'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Todos los Santos"
+  - given:
+      date: '2009-12-06'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Día de la Constitución"
+  - given:
+      date: '2009-12-08'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Inmaculada Concepción"
+  - given:
+      date: '2009-12-25'
+      regions: ["es"]
+      options: ["informal"]
+    expect:
+      name: "Navidad del Señor"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_pv"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_na"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_an"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_ib"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_cm"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_mu"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_m"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_ar"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_cl"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_cn"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_lo"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_ga"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_ce"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_o"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_ex"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_"]
+      options: ["informal"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-04-13'
+      regions: ["es_pv"]
+    expect:
+      name: "Lunes de Pascua"
+  - given:
+      date: '2009-04-13'
+      regions: ["es_ct"]
+    expect:
+      name: "Lunes de Pascua"
+  - given:
+      date: '2009-04-13'
+      regions: ["es_na"]
+    expect:
+      name: "Lunes de Pascua"
+  - given:
+      date: '2009-04-13'
+      regions: ["es_v"]
+    expect:
+      name: "Lunes de Pascua"
+  - given:
+      date: '2009-04-13'
+      regions: ["es_vc"]
+    expect:
+      name: "Lunes de Pascua"
+  - given:
+      date: '2009-04-13'
+      regions: ["es_"]
+    expect:
+      name: "Lunes de Pascua"
+  - given:
+      date: '2009-04-09'
+      regions: ["es_an"]
+    expect:
+      name: "Jueves Santo"
+  - given:
+      date: '2009-03-19'
+      regions: ["es_v"]
+    expect:
+      name: "San José"
+  - given:
+      date: '2009-03-19'
+      regions: ["es_vc"]
+    expect:
+      name: "San José"
+  - given:
+      date: '2009-03-19'
+      regions: ["es_cm"]
+    expect:
+      name: "San José"
+  - given:
+      date: '2009-03-19'
+      regions: ["es_mu"]
+    expect:
+      name: "San José"
+  - given:
+      date: '2009-03-19'
+      regions: ["es_m"]
+    expect:
+      name: "San José"
+  - given:
+      date: '2009-03-19'
+      regions: ["es_"]
+    expect:
+      name: "San José"
+  - given:
+      date: '2009-04-23'
+      regions: ["es_cl"]
+    expect:
+      name: "Día de Castilla y León"
+  - given:
+      date: '2009-04-23'
+      regions: ["es_ar"]
+    expect:
+      name: "San Jorge, Día de Aragón"
+  - given:
+      date: '2009-04-23'
+      regions: ["es_"]
+    expect:
+      name: "Día de Castilla y León"
+  - given:
+      date: '2009-10-09'
+      regions: ["es_vc"]
+    expect:
+      name: "Día de Valencia"
+  - given:
+      date: '2009-10-09'
+      regions: ["es_v"]
+    expect:
+      name: "Día de Valencia"
+  - given:
+      date: '2009-10-09'
+      regions: ["es_"]
+    expect:
+      name: "Día de Valencia"
+  - given:
+      date: '2009-12-26'
+      regions: ["es_ib"]
+    expect:
+      name: "San Esteban"
+  - given:
+      date: '2009-12-26'
+      regions: ["es_ct"]
+    expect:
+      name: "San Esteban"
+  - given:
+      date: '2009-12-26'
+      regions: ["es_"]
+    expect:
+      name: "San Esteban"
+  - given:
+      date: '2012-01-01'
+      regions: ["es"]
+    expect:
+      name: "Año Nuevo"
+  - given:
+      date: '2012-01-02'
+      regions: ["es"]
+      options: ["observed"]
+    expect:
+      name: "Año Nuevo"
+  - given:
+      date: '2009-02-28'
+      regions: ["es_an"]
+    expect:
+      name: "Día de Andalucía"
+  - given:
+      date: '2009-03-01'
+      regions: ["es_ib"]
+    expect:
+      name: "Día de las Islas Baleares"
+  - given:
+      date: '2006-05-02'
+      regions: ["es_m"]
+    expect:
+      name: "Fiesta de la Comunidad"
+  - given:
+      date: '2006-05-30'
+      regions: ["es_cn"]
+    expect:
+      name: "Día de las Canarias"
+  - given:
+      date: '2009-05-31'
+      regions: ["es_cm"]
+    expect:
+      name: "Día de la Región Castilla-La Mancha"
+  - given:
+      date: '2009-06-09'
+      regions: ["es_mu"]
+    expect:
+      name: "Día de la Región de Murcia"
+  - given:
+      date: '2009-06-09'
+      regions: ["es_lo"]
+    expect:
+      name: "Día de La Rioja"
+  - given:
+      date: '2009-07-23'
+      regions: ["es_ga"]
+    expect:
+      name: "Santiago Apostol"
+  - given:
+      date: '2009-09-02'
+      regions: ["es_ce"]
+    expect:
+      name: "Día de Ceuta"
+  - given:
+      date: '2009-09-08'
+      regions: ["es_o"]
+    expect:
+      name: "Día de Asturias"
+  - given:
+      date: '2009-09-08'
+      regions: ["es_ex"]
+    expect:
+      name: "Día de Extremadura"
+  - given:
+      date: '2009-09-11'
+      regions: ["es_ct"]
+    expect:
+      name: "Fiesta Nacional de Cataluña"
+  - given:
+      date: '2020-06-01'
+      regions: ["es_ct"]
+    expect:
+      name: "Lunes de Pascua Granada"

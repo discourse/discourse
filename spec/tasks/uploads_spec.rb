@@ -45,6 +45,12 @@ RSpec.describe "tasks/uploads" do
       context "when secure upload is enabled" do
         before { SiteSetting.secure_uploads = true }
 
+        after do
+          if File.exist?("secure_upload_analyse_and_update_posts_for_rebake.json")
+            File.delete("secure_upload_analyse_and_update_posts_for_rebake.json")
+          end
+        end
+
         it "sets an access_control_post for each post upload, using the first linked post in the case of multiple links" do
           invoke_task
           expect(multi_post_upload_1.reload.access_control_post).to eq(post_1)
@@ -55,12 +61,6 @@ RSpec.describe "tasks/uploads" do
 
         context "when login_required" do
           before { SiteSetting.login_required = true }
-
-          after do
-            if File.exist?("secure_upload_analyse_and_update_posts_for_rebake.json")
-              File.delete("secure_upload_analyse_and_update_posts_for_rebake.json")
-            end
-          end
 
           it "sets everything attached to a post as secure" do
             invoke_task
@@ -161,7 +161,11 @@ RSpec.describe "tasks/uploads" do
           end
 
           it "does not attempt to update the acl" do
-            FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload_2).never
+            FileStore::S3Store
+              .any_instance
+              .expects(:update_upload_access_control)
+              .with(upload_2)
+              .never
             invoke_task
           end
         end
@@ -246,9 +250,9 @@ RSpec.describe "tasks/uploads" do
       )
     end
 
-    it "updates the affected ACLs via the SyncAclsForUploads job" do
+    it "updates the affected ACLs via the SyncAccessControlForUploads job" do
       invoke_task
-      expect(Jobs::SyncAclsForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
+      expect(Jobs::SyncAccessControlForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
         [upload_1.id, upload_2.id, upload_3.id, upload_4.id, upload_6.id],
       )
     end

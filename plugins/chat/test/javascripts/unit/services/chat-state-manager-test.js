@@ -2,7 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import Site from "discourse/models/site";
+import { forceMobile } from "discourse/lib/mobile";
 import {
   addChatDrawerStateCallback,
   resetChatDrawerStateCallbacks,
@@ -33,7 +33,7 @@ module(
       assert.false(this.subject.isFullPagePreferred);
 
       this.subject.prefersDrawer();
-      Site.currentProp("mobileView", true);
+      forceMobile();
 
       assert.true(this.subject.isFullPagePreferred);
     });
@@ -50,12 +50,43 @@ module(
       assert.true(this.subject.isDrawerPreferred);
     });
 
+    test("hasNoPreferredMode", async function (assert) {
+      assert.true(this.subject.hasNoPreferredMode);
+
+      this.subject.prefersFullPage();
+
+      assert.false(this.subject.hasNoPreferredMode);
+
+      this.subject.prefersDrawer();
+
+      assert.false(this.subject.hasNoPreferredMode);
+    });
+
     test("lastKnownChatURL", function (assert) {
       assert.strictEqual(this.subject.lastKnownChatURL, "/chat");
 
       this.subject.storeChatURL("/bar");
-
       assert.strictEqual(this.subject.lastKnownChatURL, "/bar");
+    });
+
+    test("lastKnownChatURL defaults to starred channels only in drawer mode", function (assert) {
+      const chatChannelsManager = getOwner(this).lookup(
+        "service:chat-channels-manager"
+      );
+      sinon.stub(chatChannelsManager, "hasStarredChannels").get(() => true);
+
+      assert.strictEqual(
+        this.subject.lastKnownChatURL,
+        "/chat/starred-channels",
+        "defaults to starred-channels in drawer mode"
+      );
+
+      this.subject.prefersFullPage();
+      assert.strictEqual(
+        this.subject.lastKnownChatURL,
+        "/chat",
+        "defaults to /chat in fullscreen mode (starred channels in sidebar)"
+      );
     });
 
     test("lastKnownAppURL", function (assert) {

@@ -9,7 +9,7 @@ module Compression
     end
 
     def compress(path, target_name)
-      tar_filename = sanitize_filename("#{target_name}.tar")
+      tar_filename = FileHelper.sanitize_filename("#{target_name}.tar")
       Discourse::Utils.execute_command(
         "tar",
         "--create",

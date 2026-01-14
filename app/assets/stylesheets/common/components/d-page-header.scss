@@ -40,7 +40,7 @@ $mobile-breakpoint: 700px;
 
   .d-nav-submenu {
     background: transparent;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .horizontal-overflow-nav {
       background: transparent;
@@ -88,5 +88,11 @@ $mobile-breakpoint: 700px;
 .d-page-action-list-item {
   .btn-primary {
     color: var(--primary);
+  }
+}
+
+.d-page-header__learn-more {
+  &::before {
+    content: "• ";
   }
 }

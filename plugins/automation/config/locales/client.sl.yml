@@ -23,6 +23,12 @@ sl:
         text:
           label: Besedilo
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorije
+            tags:
+              label: Oznake
         user_badge_granted:
           fields:
             badge:
@@ -58,13 +64,13 @@ sl:
           fields:
             restricted_tags:
               label: Oznake
-            restricted_category:
-              label: Kategorija
-            restricted_group:
-              label: Skupina
-            restricted_groups:
-              label: Skupine
+            restricted_categories:
+              label: Kategorije
           created: Ustvarjeno
+          with_images: Slike
+          with_links: Povezave
+          with_code: Koda
+          with_uploads: Prenosi
         category_created_edited:
           fields:
             restricted_category:
@@ -124,6 +130,8 @@ sl:
               label: ID teme
             user:
               label: Uporabnik
+        set_topic_timer:
+          title: Nastavi opomnik teme
       models:
         trigger:
           name:
@@ -137,7 +145,5 @@ sl:
             label: Verzija
           status:
             label: Stanje
-          enabled:
-            label: Vključeno
           disabled:
             label: Onemogočeno

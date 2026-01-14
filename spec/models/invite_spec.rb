@@ -13,6 +13,7 @@ RSpec.describe Invite do
     it { is_expected.to validate_presence_of :invited_by_id }
     it { is_expected.to rate_limit }
     it { is_expected.to validate_length_of(:custom_message).is_at_most(1000) }
+    it { is_expected.to validate_length_of(:description).is_at_most(100) }
 
     it "allows invites with valid emails" do
       invite = Fabricate.build(:invite, email: "test@example.com", invited_by: user)
@@ -348,8 +349,8 @@ RSpec.describe Invite do
     end
 
     context "when inviting to a topic" do
-      fab!(:topic) { Fabricate(:private_message_topic) }
-      fab!(:another_topic) { Fabricate(:private_message_topic) }
+      fab!(:topic, :private_message_topic)
+      fab!(:another_topic, :private_message_topic)
 
       before { invite.topic_invites.create!(topic: topic) }
 
@@ -397,13 +398,13 @@ RSpec.describe Invite do
   end
 
   describe "scopes" do
-    fab!(:inviter) { Fabricate(:user) }
+    fab!(:inviter, :user)
 
     fab!(:pending_invite) { Fabricate(:invite, invited_by: inviter, email: "pending@example.com") }
     fab!(:pending_link_invite) do
       Fabricate(:invite, invited_by: inviter, email: nil, max_redemptions_allowed: 5)
     end
-    fab!(:pending_invite_from_another_user) { Fabricate(:invite) }
+    fab!(:pending_invite_from_another_user, :invite)
 
     fab!(:expired_invite) do
       Fabricate(:invite, invited_by: inviter, email: "expired@example.com", expires_at: 1.day.ago)
@@ -634,6 +635,26 @@ RSpec.describe Invite do
         expect(invite).to be_invalid
         expect { invalidate }.to change { invite.invalidated_at }.to Time.current
       end
+    end
+  end
+
+  describe "redemption_count decrement when user is deleted" do
+    fab!(:invite) { Fabricate(:invite, email: nil, invited_by: user, max_redemptions_allowed: 5) }
+
+    it "decrements redemption_count when invited_user is destroyed" do
+      expect(invite.redemption_count).to eq(0)
+
+      user1 = invite.redeem(email: "user1@example.com")
+      expect(invite.reload.redemption_count).to eq(1)
+
+      user2 = invite.redeem(email: "user2@example.com")
+      expect(invite.reload.redemption_count).to eq(2)
+
+      user1.destroy
+      expect(invite.reload.redemption_count).to eq(1)
+
+      user2.destroy
+      expect(invite.reload.redemption_count).to eq(0)
     end
   end
 end

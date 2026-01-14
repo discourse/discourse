@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk"
+  js:
+    topic:
+      create_zendesk_issue: "Criar tíquete da Zendesk"
+      view_zendesk_issue: "Ver na Zendesk"
+    zendesk:
+      credentials_not_setup: Você não configurou suas credenciais da Zendesk.
+      url_not_set: Sua URL da Zendesk ainda não foi configurada.
+      general_error: Algo deu errado.
+  site_settings:
+    zendesk_url: 'Sua URL da Zendesk, por exemplo: https://YOUR_SUBDOMAIN.zendesk.com/api/v2'
+    zendesk_enabled: Ativar plugin da Zendesk
+    zendesk_autogenerate_all_categories: Crie tíquetes automaticamente para todas as categorias. Se estiver ativado, "zendesk_autogenerate_categories" será ignorado.
+    zendesk_autogenerate_categories: Lista de categorias que criarão automaticamente tíquetes da Zendesk.
+    zendesk_jobs_api_token: Token de API para autenticação da Zendesk
+    zendesk_jobs_email: E-mail para usar na autenticação da Zendesk
+    zendesk_job_push_all_posts: Enviar todas as publicações em um tópico como comentários da Zendesk. Senão só a primeira postagem será enviada para a Zendesk.
+    zendesk_job_push_only_author_posts: Enviar apenas postagens do(a) autor(a) do tópico original para a Zendesk. Aplicado apenas se "zendesk_job_push_all_posts" estiver ativado
+    sync_comments_from_zendesk: Poste automaticamente comentários da Zendesk no Discourse. Aplicado apenas para tópicos em "zendesk_autogenerate_categories".
+    zendesk_incoming_webhook_token: Token enviado no conteúdo do wekhook de saúda da Zendesk. Necessário apenas se "sync_comments_from_zendesk" estiver ativado.
+    zendesk_tags: Lista de etiquetas para adicionar a cada tíquete

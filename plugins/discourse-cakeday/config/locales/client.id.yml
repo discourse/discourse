@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Hari ini adalah ulang tahunmu!"
+        title: "Hari ini hari ulang tahunku!"
+        label: "Tanggal Lahir"
+    cakeday:
+      title: Cakeday
+      today: "Hari ini"
+      tomorrow: "Besok"
+      upcoming: "Akan datang"
+      all: "Semua"
+    birthdays:
+      title: "Ulang tahun"
+      month:
+        title: "Ulang tahun di Bulan"
+      upcoming:
+        title: "Ulang tahun untuk %{start_date} - %{end_date}"
+      today:
+        title: "Ulang tahun untuk %{date}"
+        empty: "Tidak ada yang merayakan ulang tahun mereka hari ini."

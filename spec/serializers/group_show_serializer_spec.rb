@@ -5,7 +5,7 @@ RSpec.describe GroupShowSerializer do
   fab!(:group)
 
   context "with an admin user" do
-    fab!(:user) { Fabricate(:admin) }
+    fab!(:user, :admin)
     fab!(:group) { Fabricate(:group, users: [user]) }
 
     it "should return the right attributes" do

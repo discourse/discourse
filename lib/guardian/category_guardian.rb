@@ -4,22 +4,19 @@
 module CategoryGuardian
   # Creating Method
   def can_create_category?(parent = nil)
-    is_admin? || (SiteSetting.moderators_manage_categories_and_groups && is_moderator?)
+    is_admin? || (SiteSetting.moderators_manage_categories && is_moderator?)
   end
 
   # Editing Method
   def can_edit_category?(category)
     is_admin? ||
-      (
-        SiteSetting.moderators_manage_categories_and_groups && is_moderator? &&
-          can_see_category?(category)
-      )
+      (SiteSetting.moderators_manage_categories && is_moderator? && can_see_category?(category))
   end
 
   def can_edit_serialized_category?(category_id:, read_restricted:)
     is_admin? ||
       (
-        SiteSetting.moderators_manage_categories_and_groups && is_moderator? &&
+        SiteSetting.moderators_manage_categories && is_moderator? &&
           can_see_serialized_category?(category_id: category_id, read_restricted: read_restricted)
       )
   end

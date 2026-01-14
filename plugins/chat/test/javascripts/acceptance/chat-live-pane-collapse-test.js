@@ -12,6 +12,7 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
 
   needs.settings({
     chat_enabled: true,
+    enable_emoji: true,
   });
 
   needs.pretender((server, helper) => {
@@ -140,14 +141,14 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
 
     await click(image);
 
-    assert.dom(".mfp-img").exists("can see lightbox");
-    await click(".mfp-container");
+    assert.dom(".pswp--open").exists("can see lightbox");
+    await click(".pswp__bg");
 
     await click(collapseImage);
     await click(expandImage);
 
     await click(image);
-    assert.dom(".mfp-img").exists("can see lightbox after collapse expand");
-    await click(".mfp-container");
+    assert.dom(".pswp--open").exists("can see lightbox after collapse expand");
+    await click(".pswp__bg");
   });
 });

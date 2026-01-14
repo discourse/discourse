@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Reviewables", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :admin)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   before do
@@ -31,13 +31,13 @@ describe "Reviewables", type: :system do
     it "does not throw an error" do
       visit("/review?type=Chat%3A%3AReviewableMessage")
 
-      expect(page).to have_selector(".reviewable-item.reviewable-chat-message")
+      expect(page).to have_selector(".review-item__post-content")
     end
 
     it "adds the option to ignore the flag" do
       visit("/review?type=Chat%3A%3AReviewableMessage")
 
-      expect(page).to have_selector(".reviewable-actions .chat-message-ignore")
+      expect(page).to have_text(I18n.t("chat.reviewables.actions.ignore.title"))
     end
   end
 end

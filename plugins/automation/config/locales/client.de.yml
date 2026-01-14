@@ -10,6 +10,7 @@ de:
       logs:
         staff_actions:
           actions:
+            update_automation: automatisierung aktualisieren
             delete_automation: Automatisierung löschen
     discourse_automation:
       title: Automatisierung
@@ -58,13 +59,17 @@ de:
             label: Hauptteil
           delay:
             label: Verzögerung (Minuten)
-          prefers_encrypt:
-            label: Verschlüsselt PN, falls verfügbar
         group:
           label: Gruppe
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorien
+            tags:
+              label: Schlagwörter
         not_found: Konnte den Auslöser `%{trigger}` für die Automatisierung `%{automation}` nicht finden. Stelle sicher, dass das zugehörige Plug-in installiert ist
         user_badge_granted:
           fields:
@@ -165,18 +170,24 @@ de:
             restricted_tags:
               label: Schlagwörter
               description: Optional. Wird nur bei Beiträgen mit einem dieser Schlagwörter ausgelöst
-            restricted_category:
-              label: Kategorie
-              description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist
-            restricted_group:
-              label: Gruppe
-              description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang dieser Gruppe ist
+            restricted_categories:
+              label: Kategorien
+              description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags in diese Kategorien fällt
+            exclude_subcategories:
+              label: Unterkategorien ausschließen
+              description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags genau in die oben angegebenen Kategorien fällt
+            restricted_archetype:
+              label: Thementyp
+              description: Optional, erlaube das Auslösen nur bei Themen oder persönlichen Nachrichten
             restricted_groups:
-              label: Gruppen
+              label: Eingeschränkte Gruppen
+              description: Optional, wird nur ausgelöst, wenn der Beitragsbenutzer in einer dieser Gruppen ist
+            restricted_inbox_groups:
+              label: Gruppen mit eingeschränktem Posteingang
               description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang einer der Gruppen ist
-            ignore_group_members:
-              label: Gruppenmitglieder ignorieren
-              description: Den Auslöser überspringen, falls der Absender ein Mitglied der oben angegebenen Gruppe ist
+            excluded_groups:
+              label: Ausgeschlossene Gruppen
+              description: Optional, überspringe die Auslösung, wenn der Beitragsbenutzer in einer dieser Gruppen ist
             ignore_automated:
               label: Automatisierte Nachrichten ignorieren
               description: Überspringe den Auslöser, wenn der Absender eine Noreply-E-Mail-Adresse nutzt oder die Nachricht von einer automatischen Quelle stammt. Gilt nur für Beiträge, die per E-Mail erstellt wurden
@@ -189,8 +200,18 @@ de:
             skip_via_email:
               label: "„Per E-Mail“ überspringen"
               description: "Den Auslöser überspringen, wenn der Beitrag per E-Mail erstellt wurde"
+            post_features:
+              label: Merkmale des Beitrags
+              description: "Optional, beschränke die Auslösung auf Beiträge mit diesen Merkmalen"
           created: Erstellt
           edited: Bearbeitet
+          topics: Alle Themen
+          personal_messages: Persönliche Nachrichten
+          public_topics: Öffentliche Themen (alle sicheren Kategorien ausschließen)
+          with_images: Bilder
+          with_links: Links
+          with_code: Code
+          with_uploads: Uploads
         user_updated:
           fields:
             user_profile:
@@ -391,7 +412,7 @@ de:
               label: PN
             sender:
               label: PN-Absender
-              description: "Stelle sicher, dass der Absender über die erforderlichen Berechtigungen verfügt, um PNs an den Empfänger zu senden."
+              description: "Stelle sicher, dass der Absender über die erforderlichen Berechtigungen verfügt, um PN an den Empfänger zu senden."
         close_topic:
           fields:
             topic:
@@ -406,6 +427,8 @@ de:
           fields:
             custom_field_name:
               label: "Name des benutzerdefinierten Benutzerfelds"
+        set_topic_timer:
+          title: Themen-Timer einstellen
       unnamed_automation: "Automatisierung ohne Titel"
       models:
         script:
@@ -415,6 +438,11 @@ de:
           name:
             label: Auslöser
         automation:
+          runs_today: "%{count} heute"
+          runs_this_week: "%{count} diese Woche"
+          runs_this_month: "%{count} diesen Monat"
+          runs:
+            label: Ausführungen
           name:
             label: Name
           trigger:
@@ -426,12 +454,15 @@ de:
           status:
             label: Status
           enabled:
-            label: Aktiviert
+            label: "Automatisierung aktivieren"
           disabled:
             label: Deaktiviert
           placeholders:
             label: Platzhalter
           last_updated_at:
             label: Letzte Aktualisierung
+          last_run:
+            label: Letzte Ausführung
           last_updated_by:
             label: Aktualisiert von
+          enable_toggle_disabled: "Du kannst diese Automatisierung aktivieren, sobald alle erforderlichen Felder ausgefüllt sind."

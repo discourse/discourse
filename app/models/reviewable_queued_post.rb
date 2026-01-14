@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class ReviewableQueuedPost < Reviewable
+  include ReviewableActionBuilder
+
+  def self.action_aliases
+    { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
+  end
+
   after_create do
     # Backwards compatibility, new code should listen for `reviewable_created`
     DiscourseEvent.trigger(:queued_post_created, self)
@@ -32,61 +38,63 @@ class ReviewableQueuedPost < Reviewable
     reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
-  def build_actions(actions, guardian, args)
+  # TODO (reviewable-refresh): Remove this method once new UI is fully deployed
+  def build_legacy_combined_actions(actions, guardian, args)
     unless approved?
       if topic&.closed?
-        actions.add(:approve_post_closed) do |a|
-          a.icon = "check"
-          a.label = "reviewables.actions.approve_post.title"
-          a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
-        end
+        build_action(actions, :approve_post_closed, icon: "check", confirm: true)
       else
-        if target_created_by.present?
-          actions.add(:approve_post) do |a|
-            a.icon = "check"
-            a.label = "reviewables.actions.approve_post.title"
-          end
-        end
+        build_action(actions, :approve_post, icon: "check") if target_created_by.present?
       end
     end
 
     if pending?
-      if guardian.can_delete_user?(target_created_by)
-        reject_bundle =
-          actions.add_bundle("#{id}-reject", label: "reviewables.actions.reject_post.title")
+      reject_bundle =
+        actions.add_bundle(
+          "#{id}-reject-post",
+          label: "reviewables.actions.reject_post_bundle.title",
+        )
 
-        actions.add(:reject_post, bundle: reject_bundle) do |a|
-          a.icon = "xmark"
-          a.label = "reviewables.actions.discard_post.title"
-          a.button_class = "reject-post"
-        end
-        delete_user_actions(actions, reject_bundle)
-      else
-        actions.add(:reject_post) do |a|
-          a.icon = "xmark"
-          a.label = "reviewables.actions.reject_post.title"
-        end
-      end
+      build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
+      build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
 
-      actions.add(:revise_and_reject_post) do |a|
-        a.label = "reviewables.actions.revise_and_reject_post.title"
+      delete_user_actions(actions, reject_bundle) if guardian.can_delete_user?(target_created_by)
+    end
+
+    build_action(actions, :delete) if guardian.can_delete?(self)
+  end
+
+  def build_new_separated_actions
+    # Because a queued post isn't a real post, we need to create our own post actions bundle
+    post_actions_bundle = build_post_actions_bundle
+
+    unless approved?
+      if topic&.closed?
+        build_action(actions, :approve_post, bundle: post_actions_bundle, confirm: true)
+      elsif target_created_by.present?
+        build_action(actions, :approve_post, bundle: post_actions_bundle)
       end
     end
 
-    actions.add(:delete) do |a|
-      a.label = "reviewables.actions.delete_single.title"
-    end if guardian.can_delete?(self)
+    if pending?
+      build_action(actions, :reject_post, bundle: post_actions_bundle)
+      build_action(actions, :revise_and_reject_post, bundle: post_actions_bundle)
+    end
+
+    # User actions bundle
+    build_user_actions_bundle if pending?
   end
 
   def build_editable_fields(fields, guardian, args)
     if pending?
       # We can edit category / title if it's a new topic
       if topic_id.blank?
+        fields.add("payload.title", :text)
+
         # Only staff can edit category for now, since in theory a category group reviewer could
         # post in a category they don't have access to.
         fields.add("category_id", :category) if guardian.is_staff?
 
-        fields.add("payload.title", :text)
         fields.add("payload.tags", :tags)
       end
 
@@ -193,27 +201,20 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    delete_user(performed_by, delete_opts)
+    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
+    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    update_column(:target_created_by_id, nil)
+    result
   end
 
-  def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts
-
-    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
-
-    delete_user(performed_by, delete_options)
+  def perform_delete_and_block_user(performed_by, args)
+    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
+    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    update_column(:target_created_by_id, nil)
+    result
   end
 
   private
-
-  def delete_user(performed_by, delete_options)
-    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-
-    UserDestroyer.new(performed_by).destroy(target_created_by, delete_options)
-    update_column(:target_created_by_id, nil)
-
-    create_result(:success, :rejected) { |r| r.remove_reviewable_ids += reviewable_ids }
-  end
 
   def delete_opts
     {

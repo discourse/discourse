@@ -5,9 +5,9 @@ RSpec.describe UserSearch do
   before { SearchIndexer.enable } # Enable for each test
 
   fab!(:topic)
-  fab!(:topic2) { Fabricate :topic }
-  fab!(:topic3) { Fabricate :topic }
-  fab!(:topic4) { Fabricate :topic }
+  fab!(:topic2, :topic)
+  fab!(:topic3, :topic)
+  fab!(:topic4, :topic)
   fab!(:mr_b) do
     Fabricate :user, username: "mrb", name: "Michael Madsen", last_seen_at: 10.days.ago
   end
@@ -38,7 +38,7 @@ RSpec.describe UserSearch do
 
   context "with a secure category" do
     fab!(:user)
-    fab!(:searching_user) { Fabricate(:user) }
+    fab!(:searching_user, :user)
     fab!(:group)
     fab!(:category) { Fabricate(:category, read_restricted: true, user: user) }
 
@@ -177,6 +177,35 @@ RSpec.describe UserSearch do
 
       results = search_for(mr_b.username, topic_id: topic3.id)
       expect(results).to eq [mr_b, mr_brown, mr_blue].map(&:username)
+    end
+
+    it "prioritises the replying to user within a topic" do
+      results = search_for("mr", topic_id: topic.id, prioritized_user_id: mr_b.id)
+      expect(results).to eq [mr_b, mr_pink, mr_orange, mr_brown, mr_blue].map(&:username)
+
+      results = search_for("mr", topic_id: topic.id, prioritized_user_id: mr_orange.id)
+      expect(results).to eq [mr_orange, mr_pink, mr_b, mr_brown, mr_blue].map(&:username)
+
+      results = search_for("mr", topic_id: topic.id, prioritized_user_id: mr_pink.id)
+      expect(results).to eq [mr_pink, mr_orange, mr_b, mr_brown, mr_blue].map(&:username)
+    end
+
+    it "returns the replying to user if the term includes the username" do
+      results = search_for(mr_blue.username, topic_id: topic.id, prioritized_user_id: post1.user_id)
+      expect(results).to eq [mr_blue].map(&:username)
+      results = search_for(mr_blue.username, topic_id: topic.id, prioritized_user_id: post3.user_id)
+      expect(results).to eq [mr_blue].map(&:username)
+    end
+
+    it "returns firstly the replying to user if the term is blank" do
+      results = search_for("", topic_id: topic.id, prioritized_user_id: post1.user_id)
+      expect(results).to eq [mr_b, mr_pink, mr_orange].map(&:username)
+
+      results = search_for("", topic_id: topic.id, prioritized_user_id: post3.user_id)
+      expect(results).to eq [mr_orange, mr_pink, mr_b].map(&:username)
+
+      results = search_for("", topic_id: topic.id, prioritized_user_id: post4.user_id)
+      expect(results).to eq [mr_pink, mr_orange, mr_b].map(&:username)
     end
 
     it "does not reveal whisper users" do

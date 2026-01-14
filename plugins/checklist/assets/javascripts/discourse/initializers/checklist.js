@@ -2,13 +2,14 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { i18n } from "discourse-i18n";
+import richEditorExtension from "../../lib/rich-editor-extension";
 
 function initializePlugin(api) {
   const siteSettings = api.container.lookup("service:site-settings");
 
   if (siteSettings.checklist_enabled) {
     api.decorateCookedElement(checklistSyntax);
+    api.registerRichEditorExtension(richEditorExtension);
   }
 }
 
@@ -55,7 +56,6 @@ export function checklistSyntax(elem, postDecorator) {
   const boxes = [...elem.getElementsByClassName("chcklst-box")];
   addUlClasses(boxes);
 
-  const postWidget = postDecorator?.widget;
   const postModel = postDecorator?.getModel();
 
   if (!postModel?.can_edit) {
@@ -131,6 +131,11 @@ export function checklistSyntax(elem, postDecorator) {
               return match;
             }
 
+            // skip escaped opening bracket - "\[x]"
+            if (off > 0 && post.raw[off - 1] === "\\") {
+              return match;
+            }
+
             nth += blocks.every(
               (b) => b[0] >= off + match.length || off > b[1]
             );
@@ -144,13 +149,7 @@ export function checklistSyntax(elem, postDecorator) {
           }
         );
 
-        await postModel.save({
-          raw: newRaw,
-          edit_reason: i18n("checklist.edit_reason"),
-        });
-
-        postWidget.attrs.isSaving = false;
-        postWidget.scheduleRerender();
+        await postModel.save({ raw: newRaw });
       } catch (e) {
         popupAjaxError(e);
       } finally {
@@ -166,6 +165,6 @@ export default {
   name: "checklist",
 
   initialize() {
-    withPluginApi("0.1", (api) => initializePlugin(api));
+    withPluginApi((api) => initializePlugin(api));
   },
 };

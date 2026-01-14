@@ -72,19 +72,28 @@ RSpec.describe TopicView do
     fab!(:p0) { Fabricate(:post, topic: topic) }
     fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
 
-    after { TopicView.custom_filters.clear }
+    let(:tv) { described_class.new(topic.id, evil_trout, { filter: }) }
+    let(:enabled?) { true }
+    let(:filter) { "wiki" }
 
-    it "allows to register custom filters" do
-      tv = TopicView.new(topic.id, evil_trout, { filter: "wiki" })
-      expect(tv.filter_posts({ filter: "wiki" })).to eq([p0, p1])
+    before do
+      described_class.add_custom_filter("wiki", enabled: method(:enabled?)) do |posts, topic_view|
+        posts.where(wiki: true)
+      end
+    end
 
-      TopicView.add_custom_filter("wiki") { |posts, topic_view| posts.where(wiki: true) }
+    after { described_class.custom_filters.clear }
 
-      tv = TopicView.new(topic.id, evil_trout, { filter: "wiki" })
-      expect(tv.filter_posts).to eq([p1])
+    it "applies custom filters" do
+      expect(tv.filter_posts).to contain_exactly(p1)
+    end
 
-      tv = TopicView.new(topic.id, evil_trout, { filter: "whatever" })
-      expect(tv.filter_posts).to eq([p0, p1])
+    context "when the custom filter is disabled" do
+      let(:enabled?) { false }
+
+      it "does not apply the custom filter" do
+        expect(tv.filter_posts).to contain_exactly(p0, p1)
+      end
     end
   end
 
@@ -538,7 +547,7 @@ RSpec.describe TopicView do
       p3 = Fabricate(:post, topic: topic, user: evil_trout)
 
       ch_posts = TopicView.new(topic.id, evil_trout).posts
-      expect(ch_posts.map(&:id)).to eq([p1.id, p2.id, p3.id])
+      expect(ch_posts.map(&:id)).to eq([p1.id, p3.id])
 
       anon_posts = TopicView.new(topic.id).posts
       expect(anon_posts.map(&:id)).to eq([p1.id, p3.id])
@@ -647,13 +656,8 @@ RSpec.describe TopicView do
     end
 
     describe "filter_posts_near" do
-      def topic_view_near(post, show_deleted = false)
-        TopicView.new(
-          topic.id,
-          evil_trout,
-          post_number: post.post_number,
-          show_deleted: show_deleted,
-        )
+      def topic_view_near(post, user = evil_trout, show_deleted: false)
+        TopicView.new(topic.id, user, post_number: post.post_number, show_deleted: show_deleted)
       end
 
       it "snaps to the lower boundary" do
@@ -688,8 +692,7 @@ RSpec.describe TopicView do
       end
 
       it "gaps deleted posts to an admin" do
-        evil_trout.admin = true
-        near_view = topic_view_near(p3)
+        near_view = topic_view_near(p3, admin)
         expect(near_view.desired_post).to eq(p3)
         expect(near_view.posts).to eq([p2, p3, p5])
         expect(near_view.gaps.before).to eq(p5.id => [p4.id])
@@ -697,16 +700,14 @@ RSpec.describe TopicView do
       end
 
       it "returns deleted posts to an admin with show_deleted" do
-        evil_trout.admin = true
-        near_view = topic_view_near(p3, true)
+        near_view = topic_view_near(p3, admin, show_deleted: true)
         expect(near_view.desired_post).to eq(p3)
         expect(near_view.posts).to eq([p2, p3, p4])
         expect(near_view.contains_gaps?).to eq(false)
       end
 
       it "gaps deleted posts by nuked users to an admin" do
-        evil_trout.admin = true
-        near_view = topic_view_near(p5)
+        near_view = topic_view_near(p5, admin)
         expect(near_view.desired_post).to eq(p5)
         # note: both p4 and p6 get skipped
         expect(near_view.posts).to eq([p2, p3, p5])
@@ -715,8 +716,7 @@ RSpec.describe TopicView do
       end
 
       it "returns deleted posts by nuked users to an admin with show_deleted" do
-        evil_trout.admin = true
-        near_view = topic_view_near(p5, true)
+        near_view = topic_view_near(p5, admin, show_deleted: true)
         expect(near_view.desired_post).to eq(p5)
         expect(near_view.posts).to eq([p4, p5, p6])
         expect(near_view.contains_gaps?).to eq(false)
@@ -732,16 +732,14 @@ RSpec.describe TopicView do
         end
 
         it "gaps deleted posts to admins" do
-          evil_trout.admin = true
-          near_view = topic_view_near(p5)
+          near_view = topic_view_near(p5, admin)
           expect(near_view.posts).to eq([p1, p2, p3, p5])
           expect(near_view.gaps.before).to eq(p5.id => [p4.id])
           expect(near_view.gaps.after).to eq(p5.id => [p6.id, p7.id])
         end
 
         it "returns deleted posts to admins" do
-          evil_trout.admin = true
-          near_view = topic_view_near(p5, true)
+          near_view = topic_view_near(p5, admin, show_deleted: true)
           expect(near_view.posts).to eq([p1, p2, p3, p4, p5, p6, p7])
           expect(near_view.contains_gaps?).to eq(false)
         end
@@ -962,8 +960,8 @@ RSpec.describe TopicView do
   end
 
   describe "#image_url" do
-    fab!(:op_upload) { Fabricate(:image_upload) }
-    fab!(:post3_upload) { Fabricate(:image_upload) }
+    fab!(:op_upload, :image_upload)
+    fab!(:post3_upload, :image_upload)
 
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:post2) { Fabricate(:post, topic: topic) }

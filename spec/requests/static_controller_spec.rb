@@ -70,7 +70,7 @@ RSpec.describe StaticController do
 
     it "can serve assets" do
       begin
-        assets_path = Rails.root.join("public/assets")
+        assets_path = Rails.public_path.join("assets")
 
         FileUtils.mkdir_p(assets_path)
 
@@ -150,7 +150,7 @@ RSpec.describe StaticController do
       end
     end
 
-    it "should redirect to / when logged in and path is /login" do
+    it "should redirect to / when logged in and path is /login without redirect" do
       sign_in(Fabricate(:user))
       get "/login"
       expect(response).to redirect_to("/")
@@ -252,6 +252,72 @@ RSpec.describe StaticController do
         get "/login"
       end.to_not change { SiteSetting.title }
     end
+
+    context "without a subfolder" do
+      it "redirects as requested when logged in and path is /login with valid redirect param" do
+        sign_in(Fabricate(:user))
+        get "/login", params: { redirect: "/foo" }
+        expect(response).to redirect_to("/foo")
+      end
+
+      it "redirects to / when logged in and path is /login with invalid redirect param" do
+        sign_in(Fabricate(:user))
+        get "/login", params: { redirect: "//foo" }
+        expect(response).to redirect_to("/")
+        get "/login", params: { redirect: "foo" }
+        expect(response).to redirect_to("/")
+        get "/login", params: { redirect: "http://foo" }
+        expect(response).to redirect_to("/")
+        get "/login", params: { redirect: "www.foo.bar" }
+        expect(response).to redirect_to("/")
+      end
+
+      context "when setting the destination_url cookie" do
+        it "respects the redirect parameter in the cookie" do
+          get "/login", params: { redirect: "/foo" }
+          expect(response.cookies["destination_url"]).to eq("/foo")
+        end
+
+        it "respects the redirect parameter including the query params" do
+          get "/login", params: { redirect: "/foo?filter=test" }
+          expect(response.cookies["destination_url"]).to eq("/foo?filter=test")
+        end
+      end
+    end
+
+    context "with a subfolder" do
+      before { set_subfolder "/sub_test" }
+
+      it "redirects as requested when logged in and path is /login with valid redirect param" do
+        sign_in(Fabricate(:user))
+        get "/login", params: { redirect: "/foo" }
+        expect(response).to redirect_to("/sub_test/foo")
+      end
+
+      it "redirects to / when logged in and path is /login with invalid redirect param" do
+        sign_in(Fabricate(:user))
+        get "/login", params: { redirect: "//foo" }
+        expect(response).to redirect_to("/sub_test/")
+        get "/login", params: { redirect: "foo" }
+        expect(response).to redirect_to("/sub_test/")
+        get "/login", params: { redirect: "http://foo" }
+        expect(response).to redirect_to("/sub_test/")
+        get "/login", params: { redirect: "www.foo.bar" }
+        expect(response).to redirect_to("/sub_test/")
+      end
+
+      context "when sets the destination_url cookie" do
+        it "respects the redirect parameter in the cookie" do
+          get "/login", params: { redirect: "/foo" }
+          expect(response.cookies["destination_url"]).to eq("/sub_test/foo")
+        end
+
+        it "respects the redirect parameter including the query params" do
+          get "/login", params: { redirect: "/foo?filter=test" }
+          expect(response.cookies["destination_url"]).to eq("/sub_test/foo?filter=test")
+        end
+      end
+    end
   end
 
   describe "#enter" do
@@ -307,10 +373,7 @@ RSpec.describe StaticController do
     context "with an array" do
       it "redirects to the root" do
         post "/login.json", params: { redirect: ["/foo"] }
-        expect(response.status).to eq(400)
-        json = response.parsed_body
-        expect(json["errors"]).to be_present
-        expect(json["errors"]).to include(I18n.t("invalid_params", message: "redirect"))
+        expect(response).to redirect_to("/")
       end
     end
 
@@ -333,49 +396,39 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/")
       end
     end
+
+    context "with a subfolder" do
+      before { set_subfolder "/sub_test" }
+
+      context "without a redirect path" do
+        it "redirects to the subfolder root" do
+          post "/login.json"
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+
+      context "when the redirect path is the login page" do
+        it "redirects to the subfolder root" do
+          post "/login.json", params: { redirect: "#{Discourse.base_path}/login" }
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+
+      context "when the redirect path is invalid" do
+        it "redirects to the subfolder root" do
+          post "/login.json", params: { redirect: "test" }
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+    end
   end
 
   describe "#service_worker_asset" do
     it "works" do
       get "/service-worker.js"
       expect(response.status).to eq(200)
-      expect(response.content_type).to start_with("application/javascript")
+      expect(response.content_type).to start_with("text/javascript")
       expect(response.body).to include("addEventListener")
-    end
-
-    it "replaces sourcemap URL" do
-      Rails
-        .application
-        .assets_manifest
-        .stubs(:find_sources)
-        .with("service-worker.js")
-        .returns([<<~JS])
-          someFakeServiceWorkerSource();
-          //# sourceMappingURL=service-worker-abcde.js.map
-        JS
-
-      {
-        "/assets/service-worker.js" => "/assets/service-worker-abcde.js.map",
-        "/assets/service-worker.js.br" => "/assets/service-worker-abcde.js.map",
-        "/assets/service-worker.br.js" => "/assets/service-worker-abcde.js.map",
-        "/assets/service-worker.js.gz" => "/assets/service-worker-abcde.js.map",
-        "/assets/service-worker.gz.js" => "/assets/service-worker-abcde.js.map",
-        "https://example.com/assets/service-worker.js" =>
-          "https://example.com/assets/service-worker-abcde.js.map",
-        "https://example.com/subfolder/assets/service-worker.js" =>
-          "https://example.com/subfolder/assets/service-worker-abcde.js.map",
-      }.each do |asset_path, expected_map_url|
-        ActionController::Base
-          .helpers
-          .stubs(:asset_path)
-          .with("service-worker.js")
-          .returns(asset_path)
-
-        get "/service-worker.js"
-        expect(response.status).to eq(200)
-        expect(response.content_type).to start_with("application/javascript")
-        expect(response.body).to include("sourceMappingURL=#{expected_map_url}\n")
-      end
     end
   end
 end

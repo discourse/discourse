@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Leo ni siku yako ya kuzaliwa!"
+        title: "Leo ni siku yangu ya kuzaliwa!"
+        label: "Tarehe ya kuzaliwa"
+      anniversary:
+        user_title: "Leo ni siku uliyojiunga na jamii yetu!"
+        title: "Leo ni kumbukumbu ya siku niliyojiunga na hii jumuia!"
+    cakeday:
+      title: Siku ya keki
+      today: "Leo"
+      tomorrow: "Kesho"
+      upcoming: "Inayokuja"
+      all: "Yote"
+    birthdays:
+      title: "Siku za kuzaliwa"
+      month:
+        title: "Siku za kuzaliwa ndani ya Mwezi wa"
+        empty: "Hakuna watumiaji walio na siku za kuzaliwa kwenye huu mwezi."
+      upcoming:
+        title: "Siku za kuzaliwa za %{start_date} - %{end_date}"
+        empty: "Hakuna watumiaji wenye siku za kuzaliwa ndani ya siku 7 zijazo."
+      today:
+        title: "Siku za kuzaliwa za %{date}"
+        empty: "Hakuna watumiaji wanaosherekea siku zao za kuzaliwa leo."
+      tomorrow:
+        empty: "Hakuna watumiaji wanaosherekea siku za kuzaliwa kesho."
+    anniversaries:
+      title: "Siku za kumbukumbu"
+      month:
+        title: "Siku za kumbukumbu ndani ya mwezi wa"
+        empty: "Hakuna watumiaji wanaosherekea siku zao za kumbukumbu mwezi huu."
+      upcoming:
+        title: "Siku za kumbukumbu za %{start_date} - %{end_date}"
+        empty: "Hakuna watumiaji wanaosherehekea siku za kumbukumbu ndani ya siku 7 zijazo."
+      today:
+        title: "Siku za Kumbukumbu kwa %{date}"
+        empty: "Hakuna watumiaji wanaosherehekea siku za kumbukumbu leo."
+      tomorrow:
+        empty: "Hakuna watumiaji wanaosherehekea siku za kumbukumbu kesho."

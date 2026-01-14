@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    discourse_gamification_enabled: "Schakel de Discourse-gamificatie-plug-in"
+    like_received_score_value: "De waarde van de aanmoediging die wordt toegekend wanneer een gebruiker een like ontvangt"
+    like_given_score_value: "De waarde van de aanmoediging die wordt toegekend voor elke like die een gebruiker geeft"
+    solution_score_value: "De waarde van de aanmoediging die wordt toegekend wanneer een bericht van een gebruiker wordt gemarkeerd als oplossing"
+    user_invited_score_value: "De waarde van de aanmoediging die wordt toegekend wanneer een uitnodiging van een gebruiker wordt verzilverd"
+    time_read_score_value: "De waarde van de aanmoediging die wordt toegekend voor elk uur besteed aan lezen"
+    post_read_score_value: "De waarde van de aanmoediging die wordt toegekend voor elke honderd berichten die een gebruiker leest"
+    topic_created_score_value: "De waarde van de aanmoediging die wordt toegekend wanneer een gebruiker een topic maakt"
+    post_created_score_value: "De waarde van de aanmoediging die wordt toegekend wanneer een gebruiker een bericht maakt"
+    flag_created_score_value: "De waarde van de aanmoediging die wordt toegekend wanneer een gebruiker een bericht markeert en de markering wordt geaccepteerd door een medewerker"
+    day_visited_score_value: "De waarde van de aanmoediging die wordt toegekend voor elke dag dat een gebruiker de site bezoekt"
+    scorable_categories: "Lijst van categorieën waar acties aanmoedigingen opleveren. Laat dit leeg om aanmoedigingen in te schakelen voor alle categorieën"
+    reaction_received_score_value: "De waarde van de aanmoediging die wordt toegekend wanneer een gebruiker een reactie ontvangt"
+    reaction_given_score_value: "De waarde van de aanmoediging die wordt toegekend voor elke reactie die een gebruiker geeft"
+    chat_reaction_received_score_value: "De waarde van de aanmoediging die wordt toegekend wanneer een gebruiker een reactie ontvangt op een chatbericht"
+    chat_reaction_given_score_value: "De waarde van de aanmoediging die wordt toegekend voor elke reactie die een gebruiker geeft op een chatbericht"
+    chat_message_created_score_value: "De waarde van de aanmoediging die wordt toegekend voor elk bericht dat een gebruik stuurt in een chat"
+    score_ranking_strategy: "Strategie voor bepaling van klassementspositie"
+  score: "Aanmoedigingen"
+  default_leaderboard_name: "Algemeen klassement"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "U hebt het maximale aantal scoreherberekeningen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
+  errors:
+    leaderboard_positions_not_ready: "We genereren je klassement. Probeer het over enkele minuten opnieuw."

@@ -63,16 +63,17 @@ end
 # Table name: post_revisions
 #
 #  id            :integer          not null, primary key
-#  user_id       :integer
-#  post_id       :integer
+#  hidden        :boolean          default(FALSE), not null
 #  modifications :text
 #  number        :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  hidden        :boolean          default(FALSE), not null
+#  post_id       :integer
+#  user_id       :integer
 #
 # Indexes
 #
 #  index_post_revisions_on_post_id             (post_id)
 #  index_post_revisions_on_post_id_and_number  (post_id,number)
 #  index_post_revisions_on_user_id             (user_id)
+#

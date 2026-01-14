@@ -10,3 +10,8 @@ hu:
       welcome_post_type:
         new_user_track: "Az új felhasználói oktatás elindítása minden új felhasználónak"
         welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrációs Bot"

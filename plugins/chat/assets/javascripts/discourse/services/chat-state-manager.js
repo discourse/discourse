@@ -24,7 +24,7 @@ export function resetChatDrawerStateCallbacks() {
 
 export default class ChatStateManager extends Service {
   @service chat;
-  @service chatHistory;
+  @service chatChannelsManager;
   @service router;
   @service site;
   @service chatDrawerRouter;
@@ -62,7 +62,7 @@ export default class ChatStateManager extends Service {
   }
 
   didOpenDrawer(url = null) {
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       if (
         api.getSidebarPanel()?.key === MAIN_PANEL ||
         api.getSidebarPanel()?.key === CHAT_PANEL
@@ -88,7 +88,7 @@ export default class ChatStateManager extends Service {
   }
 
   didCloseDrawer() {
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       if (
         api.getSidebarPanel()?.key === MAIN_PANEL ||
         api.getSidebarPanel()?.key === CHAT_PANEL
@@ -148,9 +148,13 @@ export default class ChatStateManager extends Service {
     return !!(
       !this.isFullPagePreferred ||
       (this.site.desktopView &&
-        (!this._store.getObject(PREFERRED_MODE_KEY) ||
+        (this.hasNoPreferredMode ||
           this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
     );
+  }
+
+  get hasNoPreferredMode() {
+    return !this._store.getObject(PREFERRED_MODE_KEY);
   }
 
   get isFullPageActive() {
@@ -186,7 +190,20 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownChatURL() {
-    return this._chatURL || "/chat";
+    if (this._chatURL) {
+      return this._chatURL;
+    }
+
+    // On mobile or drawer mode, default to starred channels if user has any
+    // On desktop fullscreen, starred channels are shown in the sidebar
+    if (
+      (this.site.mobileView || this.isDrawerPreferred) &&
+      this.chatChannelsManager.hasStarredChannels
+    ) {
+      return "/chat/starred-channels";
+    }
+
+    return "/chat";
   }
 
   #publishStateChange() {

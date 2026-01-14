@@ -6,6 +6,7 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 import { userPath } from "discourse/lib/url";
 
 export default class ChatUserAvatar extends Component {
+  @service chatStateManager;
   @service chat;
 
   get avatar() {
@@ -42,6 +43,10 @@ export default class ChatUserAvatar extends Component {
     return userPath(this.args.user.username);
   }
 
+  get isFullPageActive() {
+    return this.chatStateManager.isFullPageActive ? "true" : "false";
+  }
+
   <template>
     <div
       class={{concatClass "chat-user-avatar" (if this.isOnline "is-online")}}
@@ -52,6 +57,7 @@ export default class ChatUserAvatar extends Component {
           class="chat-user-avatar__container"
           href={{this.userPath}}
           data-user-card={{@user.username}}
+          data-auto-update-card={{this.isFullPageActive}}
         >
           {{this.avatar}}
         </a>

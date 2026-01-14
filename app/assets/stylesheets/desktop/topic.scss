@@ -16,42 +16,11 @@
 }
 
 #topic-title {
-  z-index: z("base");
-  margin-bottom: 1em;
-
-  h1 {
-    font-size: var(--font-up-4);
-    line-height: var(--line-height-medium);
-    overflow-wrap: break-word;
-    width: 100%;
-
-    a {
-      color: var(--primary);
-    }
-  }
-
   .remove-featured-link {
     float: right;
     text-transform: lowercase;
     color: var(--primary-med-or-secondary-med);
     font-size: 0.857rem;
-  }
-}
-
-.topic-error {
-  padding: 18px;
-  width: 60%;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: var(--font-up-4);
-  text-align: center;
-  line-height: var(--line-height-medium);
-
-  .topic-retry {
-    display: block;
-    margin-top: 28px;
-    margin-left: auto;
-    margin-right: auto;
   }
 }
 

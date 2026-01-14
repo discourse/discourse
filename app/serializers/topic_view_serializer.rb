@@ -5,6 +5,7 @@ class TopicViewSerializer < ApplicationSerializer
   include SuggestedTopicsMixin
   include TopicTagsMixin
   include ApplicationHelper
+  include LocalizedFancyTopicTitleMixin
 
   def self.attributes_from_topic(*list)
     [list].flatten.each do |attribute|
@@ -18,7 +19,6 @@ class TopicViewSerializer < ApplicationSerializer
   attributes_from_topic(
     :id,
     :title,
-    :fancy_title,
     :posts_count,
     :created_at,
     :views,
@@ -78,6 +78,8 @@ class TopicViewSerializer < ApplicationSerializer
     :user_last_posted_at,
     :is_shared_draft,
     :slow_mode_enabled_until,
+    :has_localized_content,
+    :can_localize_topic,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -318,9 +320,22 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic.visibility_reason_id.present?
   end
 
-  def fancy_title
-    f = object.topic.fancy_title
-    modified = DiscoursePluginRegistry.apply_modifier(:topic_view_serializer_fancy_title, f, self)
-    modified || f
+  def has_localized_content
+    topic_has_localization = !object.topic.in_user_locale? && object.topic.has_localization?
+    return true if topic_has_localization
+
+    object.posts.any? { |post| !post.in_user_locale? && post.has_localization? }
+  end
+
+  def include_has_localized_content?
+    SiteSetting.content_localization_enabled
+  end
+
+  def can_localize_topic
+    true
+  end
+
+  def include_can_localize_topic?
+    SiteSetting.content_localization_enabled && scope.can_localize_topic?(object.topic)
   end
 end

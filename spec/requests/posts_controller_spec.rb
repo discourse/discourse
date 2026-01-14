@@ -84,8 +84,8 @@ RSpec.describe PostsController do
   fab!(:admin)
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_trust_level_0) { Fabricate(:trust_level_0) }
-  fab!(:user_trust_level_1) { Fabricate(:trust_level_1) }
+  fab!(:user_trust_level_0, :trust_level_0)
+  fab!(:user_trust_level_1, :trust_level_1)
   fab!(:category)
   fab!(:topic)
   fab!(:post_by_user) { Fabricate(:post, user: user) }
@@ -211,25 +211,32 @@ RSpec.describe PostsController do
 
     it "supports pagination" do
       parent = Fabricate(:post)
+
+      child_posts = []
+
       30.times do
         reply = Fabricate(:post, topic: parent.topic, reply_to_post_number: parent.post_number)
         PostReply.create!(post: parent, reply:)
+        child_posts << reply
       end
 
       get "/posts/#{parent.id}/replies.json", params: { after: parent.post_number }
       expect(response.status).to eq(200)
       replies = response.parsed_body
-      expect(replies.size).to eq(20)
+
+      expect(replies.map { |reply| reply["id"] }).to eq(child_posts[0..19].map(&:id))
 
       after = replies.last["post_number"]
 
       get "/posts/#{parent.id}/replies.json", params: { after: }
       expect(response.status).to eq(200)
       replies = response.parsed_body
-      expect(replies.size).to eq(10)
+
+      expect(replies.map { |reply| reply["id"] }).to eq(child_posts[20..-1].map(&:id))
       expect(replies[0][:post_number]).to eq(after + 1)
 
       get "/posts/#{parent.id}/replies.json", params: { after: 999_999 }
+
       expect(response.status).to eq(200)
       expect(response.parsed_body.size).to eq(0)
     end
@@ -361,7 +368,7 @@ RSpec.describe PostsController do
                      }
 
     describe "when logged in" do
-      fab!(:poster) { Fabricate(:moderator) }
+      fab!(:poster, :moderator)
       fab!(:post1) { Fabricate(:post, user: poster, post_number: 2) }
       fab!(:post2) do
         Fabricate(
@@ -397,6 +404,18 @@ RSpec.describe PostsController do
         PostDestroyer.any_instance.expects(:destroy).twice
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
         expect(response.status).to eq(200)
+      end
+      # bookmark
+      it "triggers DiscourseEvent with :posts_destroyed and correct params" do
+        sign_in(poster)
+        events =
+          DiscourseEvent.track_events do
+            delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+          end
+        event = events.find { |e| e[:event_name] == :posts_destroyed }
+        expect(event).to be_present
+        expect(event[:params][0].length).to eq(2)
+        expect(event[:params][1]).to eq(poster)
       end
 
       it "updates the highest read data for the forum" do
@@ -623,6 +642,87 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(200)
         expect(post.topic.reload.bumped_at).to eq_time(created_at)
+      end
+
+      describe "bypass_bump parameter" do
+        fab!(:wiki_post) { Fabricate(:post, user:, wiki: true) }
+
+        before { wiki_post.topic.update!(bumped_at: 1.day.ago) }
+
+        it "prevents bumping when bypass_bump=true" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  bypass_bump: true,
+                  post: {
+                    raw: "updated content",
+                  },
+                }
+          }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "accepts bypass_bump nested under post param" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  post: {
+                    raw: "updated content",
+                    bypass_bump: true,
+                  },
+                }
+          }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "bumps the topic when bypass_bump is not provided" do
+          expect {
+            put "/posts/#{wiki_post.id}.json", params: { post: { raw: "updated content" } }
+          }.to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        context "as TL4 user" do
+          fab!(:tl4_user, :trust_level_4)
+          before { sign_in(tl4_user) }
+
+          it "prevents bumping when bypass_bump=true" do
+            expect {
+              put "/posts/#{wiki_post.id}.json",
+                  params: {
+                    bypass_bump: true,
+                    post: {
+                      raw: "updated content",
+                    },
+                  }
+            }.not_to change { wiki_post.topic.reload.bumped_at }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        context "as regular user" do
+          fab!(:old_wiki_post) do
+            Fabricate(:post, user:, wiki: true, last_version_at: 10.minutes.ago)
+          end
+
+          before do
+            sign_in(user)
+            old_wiki_post.topic.update!(bumped_at: 1.day.ago)
+          end
+
+          it "ignores bypass_bump (topic still bumps)" do
+            expect {
+              put "/posts/#{old_wiki_post.id}.json",
+                  params: {
+                    bypass_bump: true,
+                    post: {
+                      raw: "updated content",
+                    },
+                  }
+            }.to change { old_wiki_post.topic.reload.bumped_at }
+            expect(response.status).to eq(200)
+          end
+        end
       end
     end
 
@@ -1494,6 +1594,29 @@ RSpec.describe PostsController do
         expect(topic.visible).to eq(true)
       end
 
+      describe "posts_controller_create_user modifier" do
+        fab!(:different_user, :admin)
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :posts_controller_create_user }
+        let!(:block) { Proc.new { different_user } }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+        it "can alter the user used to create the post" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.user).to eq(different_user)
+        end
+      end
+
       context "when adding custom fields to topic via the `topic_custom_fields` param" do
         it "should return a 400 response code when no custom fields has been permitted" do
           sign_in(user)
@@ -1755,7 +1878,7 @@ RSpec.describe PostsController do
       end
 
       context "when `enable_user_status` site setting is enabled" do
-        fab!(:user_to_mention) { Fabricate(:user) }
+        fab!(:user_to_mention, :user)
 
         before { SiteSetting.enable_user_status = true }
 
@@ -1852,11 +1975,24 @@ RSpec.describe PostsController do
             I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_unlist"),
           )
         end
+
+        context "with apply_modifier" do
+          it "can modify groups" do
+            plugin = Plugin::Instance.new
+            modifier = :mentionable_groups
+            proc = Proc.new { Group.all }
+            DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+
+            expect(Group.mentionable(user)).to eq(Group.all)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+          end
+        end
       end
     end
 
     describe "shared draft" do
-      fab!(:destination_category) { Fabricate(:category) }
+      fab!(:destination_category, :category)
 
       it "will raise an error for regular users" do
         post "/posts.json",
@@ -1884,7 +2020,7 @@ RSpec.describe PostsController do
         end
 
         context "with a shared category" do
-          fab!(:shared_category) { Fabricate(:category) }
+          fab!(:shared_category, :category)
           before { SiteSetting.shared_drafts_category = shared_category.id }
 
           it "will work if the shared draft category is present" do
@@ -2356,6 +2492,33 @@ RSpec.describe PostsController do
         },
       )
     end
+    let(:tag_only_revision) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[tag1 tag2], %w[tag2 tag3]],
+        },
+      )
+    end
+    let(:text_number_tags) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[123 tag1 tag2], %w[456 tag3 tag4]],
+        },
+      )
+    end
+    let(:legacy_string_tag_revision) do
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => ["tag1, tag2", "tag2, tag3"],
+        },
+      )
+    end
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
@@ -2409,6 +2572,36 @@ RSpec.describe PostsController do
 
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
         expect(response.status).to eq(200)
+      end
+
+      it "supports reverting tag-only revisions" do
+        post.topic.tags = Tag.where(name: %w[tag2 tag3])
+
+        put "/posts/#{post_id}/revisions/#{tag_only_revision.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
+      end
+
+      it "supports reverting text and number tags" do
+        post.topic.tags = Tag.where(name: %w[456 tag3 tag4])
+
+        put "/posts/#{post_id}/revisions/#{text_number_tags.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[123 tag1 tag2])
+      end
+
+      it "supports reverting legacy string-format tags" do
+        post.topic.tags = Tag.where(name: ["tag2, tag3"])
+
+        put "/posts/#{post_id}/revisions/#{legacy_string_tag_revision.number}/revert.json"
+        expect(response.status).to eq(200)
+
+        post.topic.reload
+        expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
       end
     end
   end

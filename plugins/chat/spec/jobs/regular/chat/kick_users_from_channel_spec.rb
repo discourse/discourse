@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::Chat::KickUsersFromChannel do
-  fab!(:channel) { Fabricate(:chat_channel) }
+  fab!(:channel, :chat_channel)
 
   it "publishes the correct MessageBus message" do
     message =

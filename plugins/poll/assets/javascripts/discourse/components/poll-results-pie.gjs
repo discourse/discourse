@@ -3,7 +3,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
-import loadScript from "discourse/lib/load-script";
+import {
+  applyHtmlDecorators,
+  NON_STREAM_HTML_DECORATOR,
+  NULL_HELPER,
+} from "discourse/components/decorated-html";
+import loadChartJS from "discourse/lib/load-chart-js";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
@@ -115,16 +120,21 @@ export default class PollResultsPieComponent extends Component {
 
   @action
   async drawPie() {
-    await loadScript("/javascripts/Chart.min.js");
+    const Chart = await loadChartJS();
 
-    const data = this.args.options.mapBy("votes");
-    const labels = this.args.options.mapBy("html");
+    const data = this.args.options.map((option) => option.votes);
+    const labels = this.args.options.map((option) => option.html);
     const config = this.pieChartConfig(data, labels, {
       legendContainerId: this.legendElement.id,
     });
     const el = this.canvasElement;
-    // eslint-disable-next-line no-undef
+
     this._chart = new Chart(el.getContext("2d"), config);
+    applyHtmlDecorators(
+      this.legendElement,
+      NULL_HELPER,
+      NON_STREAM_HTML_DECORATOR
+    );
   }
 
   <template>

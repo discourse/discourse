@@ -19,7 +19,7 @@ RSpec.describe Stylesheet::Manager::ScssChecker do
 
       theme_ids = [scss_theme.id, embedded_scss_theme.id]
 
-      desktop_theme_checker = described_class.new(:desktop_theme, theme_ids)
+      desktop_theme_checker = described_class.new(:common_theme, theme_ids)
 
       expect(desktop_theme_checker.has_scss(scss_theme.id)).to eq(true)
       expect(desktop_theme_checker.has_scss(embedded_scss_theme.id)).to eq(false)

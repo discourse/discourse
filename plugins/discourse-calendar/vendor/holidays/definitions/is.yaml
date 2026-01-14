@@ -1,0 +1,247 @@
+# Icelandic holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2008-11-29.
+# Sources:
+# - http://www.simnet.is/gardarj/folk/days.htm#days
+# - http://www.iceland.is/history-and-culture/Traditions/IcelandicHolidays/
+# - http://en.wikipedia.org/wiki/Public_holidays_in_Iceland
+# - http://www.qppstudio.net/publicholidays2007/iceland.htm
+---
+months:
+  0:
+  - name: Bolludagur
+    regions: [is]
+    function: easter(year)
+    function_modifier: -48
+  - name: Sprengidagur
+    regions: [is]
+    function: easter(year)
+    function_modifier: -47
+  - name: Öskudagur
+    regions: [is]
+    function: easter(year)
+    function_modifier: -46
+  - name: Pálmasunnudagur
+    regions: [is]
+    function: easter(year)
+    function_modifier: -7
+  - name: Skírdagur
+    regions: [is]
+    function: easter(year)
+    function_modifier: -3
+  - name: Föstudaginn langi
+    regions: [is]
+    function: easter(year)
+    function_modifier: -2
+  - name: Páskadagur
+    regions: [is]
+    function: easter(year)
+  - name: Annar í páskum
+    regions: [is]
+    function: easter(year)
+    function_modifier: 1
+  - name: Uppstigningardagur
+    regions: [is]
+    function: easter(year)
+    function_modifier: 39
+  - name: Hvítasunnudagur
+    regions: [is]
+    function: easter(year)
+    function_modifier: 49
+  - name: Annar í hvítasunnu
+    regions: [is]
+    function: easter(year)
+    function_modifier: 50
+  1:
+  - name: Nýársdagur
+    regions: [is]
+    mday: 1
+  - name: Þrettándinn
+    regions: [is]
+    mday: 6
+  - name: Bóndadagur
+    regions: [is]
+    mday: 19
+    type: informal
+  2:
+  - name: Konudagur
+    regions: [is]
+    mday: 18
+    type: informal
+  4:
+  - name: Sumardagurinn fyrsti
+    regions: [is]
+    function: is_sumardagurinn_fyrsti(year)
+  5:
+  - name: Verkalýðsdagurinn
+    regions: [is]
+    mday: 1
+  - name: Mæðradagurinn
+    regions: [is]
+    mday: 13
+  6:
+  - name: Sjómannadagurinn
+    regions: [is]
+    mday: 3
+    type: informal
+  - name: Lýðveldisdagurinn
+    regions: [is]
+    mday: 17
+  8:
+  - name: Frídagur verslunarmanna
+    regions: [is]
+    week: 1
+    wday: 1
+  11:
+  - name: Dagur íslenskrar tungu
+    regions: [is]
+    mday: 16
+  12:
+  - name: Jól
+    regions: [is]
+    mday: 24
+  - name: Jól
+    regions: [is]
+    mday: 25
+  - name: Jól
+    regions: [is]
+    mday: 26
+  - name: Gamlárskvöld
+    regions: [is]
+    mday: 31
+
+methods:
+  is_sumardagurinn_fyrsti:
+    # Iceland: first day of summer (Thursday after 18 April)
+    arguments: year
+    ruby: |
+      date = Date.civil(year,4,18)
+      if date.wday < 4
+        date += (4 - date.wday)
+      else
+        date += (11 - date.wday)
+      end
+      date
+
+tests:
+  - given:
+      date: '2007-01-01'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Nýársdagur"
+  - given:
+      date: '2007-01-06'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Þrettándinn"
+  - given:
+      date: '2007-01-19'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Bóndadagur"
+  - given:
+      date: '2007-02-18'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Konudagur"
+  - given:
+      date: '2007-04-05'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Skírdagur"
+  - given:
+      date: '2007-04-06'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Föstudaginn langi"
+  - given:
+      date: '2007-04-08'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Páskadagur"
+  - given:
+      date: '2007-04-09'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Annar í páskum"
+  - given:
+      date: '2007-04-19'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Sumardagurinn fyrsti"
+  - given:
+      date: '2007-05-01'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Verkalýðsdagurinn"
+  - given:
+      date: '2007-05-17'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Uppstigningardagur"
+  - given:
+      date: '2007-05-27'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Hvítasunnudagur"
+  - given:
+      date: '2007-05-28'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Annar í hvítasunnu"
+  - given:
+      date: '2007-06-03'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Sjómannadagurinn"
+  - given:
+      date: '2007-06-17'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Lýðveldisdagurinn"
+  - given:
+      date: '2007-08-06'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Frídagur verslunarmanna"
+  - given:
+      date: '2007-12-24'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Jól"
+  - given:
+      date: '2007-12-25'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Jól"
+  - given:
+      date: '2007-12-26'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Jól"
+  - given:
+      date: '2007-12-31'
+      regions: ["is"]
+      options: ["informal"]
+    expect:
+      name: "Gamlárskvöld"
+

@@ -13,7 +13,16 @@ RSpec.describe PostCreator do
   describe "new topic" do
     fab!(:category) { Fabricate(:category, user: user) }
     let(:basic_topic_params) do
-      { title: "hello world topic", raw: "my name is fred", archetype_id: 1, advance_draft: true }
+      {
+        title: "hello world topic",
+        raw: "my name is fred",
+        archetype_id: 1,
+        advance_draft: true,
+        writing_device: "linux",
+        user_agent:
+          "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+        composer_version: 2,
+      }
     end
     let(:image_sizes) do
       { "http://an.image.host/image.jpg" => { "width" => 111, "height" => 222 } }
@@ -365,6 +374,11 @@ RSpec.describe PostCreator do
           post = creator.create
           expect(post.post_stat.typing_duration_msecs).to eq(0)
           expect(post.post_stat.drafts_saved).to eq(2)
+          expect(post.post_stat.writing_device).to eq("linux")
+          expect(post.post_stat.writing_device_user_agent).to eq(
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+          )
+          expect(post.post_stat.composer_version).to eq(2)
           expect(user.reload.user_stat.draft_count).to eq(0)
         ensure
           PostCreator.track_post_stats = false
@@ -447,8 +461,8 @@ RSpec.describe PostCreator do
             Fabricate(
               :topic_timer,
               based_on_last_post: true,
-              execute_at: Time.zone.now - 12.hours,
-              created_at: Time.zone.now - 24.hours,
+              execute_at: 12.hours.ago,
+              created_at: 24.hours.ago,
               duration_minutes: 12 * 60,
             )
           end
@@ -465,7 +479,7 @@ RSpec.describe PostCreator do
 
             topic_timer.reload
 
-            expect(topic_timer.execute_at).to eq_time(Time.zone.now + 12.hours)
+            expect(topic_timer.execute_at).to eq_time(12.hours.from_now)
             expect(topic_timer.created_at).to eq_time(Time.zone.now)
           end
 
@@ -938,7 +952,7 @@ RSpec.describe PostCreator do
           coding_horror,
           raw: "first post in topic",
           topic_id: topic.id,
-          created_at: Time.zone.now - 24.hours,
+          created_at: 24.hours.ago,
         ).create
       end
 
@@ -1078,8 +1092,8 @@ RSpec.describe PostCreator do
   # integration test ... minimise db work
   describe "private message" do
     let(:target_user1) { coding_horror }
-    fab!(:target_user2) { Fabricate(:moderator) }
-    fab!(:unrelated_user) { Fabricate(:user) }
+    fab!(:target_user2, :moderator)
+    fab!(:unrelated_user, :user)
     let(:post) do
       PostCreator.create!(
         user,
@@ -1226,7 +1240,7 @@ RSpec.describe PostCreator do
 
   describe "warnings" do
     let(:target_user1) { coding_horror }
-    fab!(:target_user2) { Fabricate(:moderator) }
+    fab!(:target_user2, :moderator)
     let(:base_args) do
       {
         title: "you need a warning buddy!",
@@ -1316,7 +1330,7 @@ RSpec.describe PostCreator do
 
   describe "private message to group" do
     fab!(:target_user1) { coding_horror }
-    fab!(:target_user2) { Fabricate(:moderator) }
+    fab!(:target_user2, :moderator)
     let!(:group) do
       g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
@@ -1324,7 +1338,7 @@ RSpec.describe PostCreator do
       g.save
       g
     end
-    fab!(:unrelated) { Fabricate(:user) }
+    fab!(:unrelated, :user)
     let(:post) do
       PostCreator.create!(
         user,
@@ -1795,7 +1809,7 @@ RSpec.describe PostCreator do
 
   describe "private message to a muted user" do
     fab!(:muted_me) { evil_trout }
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:another_user, :user)
 
     it "should fail" do
       updater = UserUpdater.new(muted_me, muted_me)
@@ -1817,7 +1831,7 @@ RSpec.describe PostCreator do
       )
     end
 
-    fab!(:staff_user) { Fabricate(:admin) }
+    fab!(:staff_user, :admin)
 
     it "succeeds if the user is staff" do
       updater = UserUpdater.new(muted_me, muted_me)
@@ -1838,7 +1852,7 @@ RSpec.describe PostCreator do
 
   describe "private message to an ignored user" do
     fab!(:ignorer) { evil_trout }
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:another_user, :user)
 
     context "when post author is ignored" do
       let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: user) }
@@ -1861,7 +1875,7 @@ RSpec.describe PostCreator do
     end
 
     context "when post author is admin who is ignored" do
-      fab!(:staff_user) { Fabricate(:admin) }
+      fab!(:staff_user, :admin)
       fab!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: staff_user) }
 
       it "succeeds if the user is staff" do
@@ -1881,7 +1895,7 @@ RSpec.describe PostCreator do
 
   describe "private message to user in allow list" do
     fab!(:sender) { evil_trout }
-    fab!(:allowed_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
 
     context "when post author is allowed" do
       let!(:allowed_pm_user) do
@@ -1933,8 +1947,8 @@ RSpec.describe PostCreator do
 
   describe "private message to user not in allow list" do
     fab!(:sender) { evil_trout }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
+    fab!(:not_allowed_user, :user)
 
     context "when post author is not allowed" do
       let!(:allowed_pm_user) do
@@ -1978,9 +1992,9 @@ RSpec.describe PostCreator do
   end
 
   describe "private message when post author is admin who is not in allow list" do
-    fab!(:staff_user) { Fabricate(:admin) }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:staff_user, :admin)
+    fab!(:allowed_user, :user)
+    fab!(:not_allowed_user, :user)
     fab!(:allowed_pm_user) do
       Fabricate(:allowed_pm_user, user: staff_user, allowed_pm_user: allowed_user)
     end
@@ -2001,8 +2015,8 @@ RSpec.describe PostCreator do
 
   describe "private message to multiple users and one is not allowed" do
     fab!(:sender) { evil_trout }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
+    fab!(:not_allowed_user, :user)
 
     context "when post author is not allowed" do
       let!(:allowed_pm_user) do
@@ -2033,7 +2047,7 @@ RSpec.describe PostCreator do
   describe "private message recipients limit (max_allowed_message_recipients) reached" do
     fab!(:target_user1) { coding_horror }
     fab!(:target_user2) { evil_trout }
-    fab!(:target_user3) { Fabricate(:walter_white) }
+    fab!(:target_user3, :walter_white)
 
     before { SiteSetting.max_allowed_message_recipients = 2 }
 
@@ -2075,7 +2089,7 @@ RSpec.describe PostCreator do
     end
 
     context "if the user is staff" do
-      fab!(:staff_user) { Fabricate(:admin) }
+      fab!(:staff_user, :admin)
 
       it "succeeds when sending message to multiple recipients" do
         pc =
@@ -2131,7 +2145,7 @@ RSpec.describe PostCreator do
     end
 
     it "does not generate for non-human, staged or anonymous users" do
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
 
       [anonymous, Discourse.system_user, staged].each do |user|
         expect(user.posts.size).to eq(0)
@@ -2148,8 +2162,8 @@ RSpec.describe PostCreator do
 
   describe "secure uploads" do
     fab!(:image_upload) { Fabricate(:upload, secure: true) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:public_topic) { Fabricate(:topic) }
+    fab!(:user2, :user)
+    fab!(:public_topic, :topic)
 
     before do
       setup_s3

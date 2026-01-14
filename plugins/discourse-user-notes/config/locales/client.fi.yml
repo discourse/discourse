@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    user_notes:
+      title: "Käyttäjähuomiot"
+      attach_note_description: "Lisää huomautus tästä käyttäjästä. Tämä huomautus näkyy vain henkilökunnalle."
+      delete_confirm: "Oletko varma, että haluat poistaa kyseisen käyttäjähuomion?"

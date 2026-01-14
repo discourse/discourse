@@ -166,6 +166,21 @@ RSpec.describe PostActionCreator do
       expect(score.reviewed_at).to be_blank
     end
 
+    it "uses the system locale for the message when auto close" do
+      Topic.any_instance.stubs(:auto_close_threshold_reached?).returns(true)
+      I18n.with_locale(:fr) { PostActionCreator.create(user, post, :inappropriate) }
+
+      post.topic.reload
+
+      expect(post.topic.posts.last.raw).to eq(
+        I18n.t(
+          "temporarily_closed_due_to_flags",
+          count: SiteSetting.num_hours_to_close_topic,
+          locale: :en,
+        ),
+      )
+    end
+
     describe "Auto hide spam flagged posts" do
       before do
         user.trust_level = TrustLevel[3]
@@ -193,6 +208,31 @@ RSpec.describe PostActionCreator do
         reviewable = result.reviewable
 
         expect(reviewable.force_review).to eq(true)
+      end
+    end
+
+    describe "non-human user being flagged" do
+      fab!(:system_post) { Fabricate(:post, user: Discourse.system_user) }
+
+      it "doesn't create reviewable" do
+        result = PostActionCreator.create(user, system_post, :inappropriate)
+        expect(result.success?).to eq(true)
+
+        expect(result.reviewable).to be_blank
+      end
+
+      it "applies modifier and can allow reviewable creation for non-human users" do
+        plugin = Plugin::Instance.new
+        modifier = :post_action_creator_block_reviewable_for_bot
+        proc = Proc.new { false }
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+
+        result = PostActionCreator.create(user, system_post, :inappropriate)
+        expect(result.success?).to eq(true)
+
+        expect(result.reviewable).to be_present
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
       end
     end
 

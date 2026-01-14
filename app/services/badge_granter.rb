@@ -155,6 +155,8 @@ class BadgeGranter
             self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
           user_badge.update!(notification_id: notification.id)
         end
+        is_favorite = @user.user_badges.where(badge: @badge, is_favorite: true).exists?
+        user_badge.update!(is_favorite: true) if is_favorite
       end
     end
 
@@ -414,7 +416,9 @@ class BadgeGranter
             #{badge.query}
           ) q ON q.user_id = ub.user_id
           #{post_clause}
-          WHERE ub.badge_id = :id AND q.user_id IS NULL
+          WHERE ub.badge_id = :id
+            AND q.user_id IS NULL
+            AND ub.granted_by_id = #{Discourse::SYSTEM_USER_ID}
         )
         RETURNING user_badges.user_id
       SQL

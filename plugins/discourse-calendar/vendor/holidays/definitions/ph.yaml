@@ -1,0 +1,130 @@
+# Philippines holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2015-03-25 by itsmechlark
+# Sources:
+# - http://www.gov.ph/2014/07/23/list-of-nationwide-holidays-for-2015/
+# - http://www.timeanddate.com/holidays/philippines/
+---
+months:
+  0:
+  - name: Maundy Thursday
+    regions: [ph]
+    function: easter(year)
+    function_modifier: -3
+  - name: Good Friday
+    regions: [ph]
+    function: easter(year)
+    function_modifier: -2
+  - name: Holy Saturday
+    regions: [ph]
+    function: easter(year)
+    function_modifier: -1
+  - name: Easter Sunday
+    regions: [ph]
+    function: easter(year)
+  1:
+  - name: New Year’s Day
+    regions: [ph]
+    mday: 1
+  2:
+  - name: People Power Anniversary
+    regions: [ph]
+    mday: 25
+    type: informal
+  4:
+  - name: The Day of Valor
+    regions: [ph]
+    mday: 9
+  5:
+  - name: Labor Day
+    regions: [ph]
+    mday: 1
+  6:
+  - name: Independence Day
+    regions: [ph]
+    mday: 12
+  8:
+  - name: Ninoy Aquino Day
+    regions: [ph]
+    mday: 21
+  - name: National Heroes Day
+    regions: [ph]
+    function: ph_heroes_day(year)
+  11:
+  - name: All Saints Day
+    regions: [ph]
+    mday: 1
+    type: informal
+  - name: Bonifacio Day
+    regions: [ph]
+    mday: 30
+  12:
+  - name: Christmas Day
+    regions: [ph]
+    mday: 25
+  - name: Rizal Day
+    regions: [ph]
+    mday: 30
+  - name: New Year's Eve
+    regions: [ph]
+    mday: 31
+
+methods:
+  ph_heroes_day:
+    # last Monday of August
+    arguments: year
+    ruby: |
+      date = Date.new(year, 8, -1)
+
+      if date.wday != 1
+        date -= date.wday - 1
+      end
+
+      date
+
+tests:
+  - given:
+      date: '2015-04-03'
+      regions: ["ph"]
+    expect:
+      name: "Good Friday"
+  - given:
+      date: '2015-04-09'
+      regions: ["ph"]
+    expect:
+      name: "The Day of Valor"
+  - given:
+      date: '2015-05-01'
+      regions: ["ph"]
+    expect:
+      name: "Labor Day"
+  - given:
+      date: '2015-06-12'
+      regions: ["ph"]
+    expect:
+      name: "Independence Day"
+  - given:
+      date: '2015-08-21'
+      regions: ["ph"]
+    expect:
+      name: "Ninoy Aquino Day"
+  - given:
+      date: '2015-08-31'
+      regions: ["ph"]
+    expect:
+      name: "National Heroes Day"
+  - given:
+      date: '2015-11-30'
+      regions: ["ph"]
+    expect:
+      name: "Bonifacio Day"
+  - given:
+      date: '2015-12-25'
+      regions: ["ph"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2015-12-30'
+      regions: ["ph"]
+    expect:
+      name: "Rizal Day"

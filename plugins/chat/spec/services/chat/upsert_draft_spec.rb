@@ -8,8 +8,8 @@ RSpec.describe Chat::UpsertDraft do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:current_user, :user)
+    fab!(:channel_1, :chat_channel)
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
 
     let(:guardian) { Guardian.new(current_user) }
@@ -74,7 +74,7 @@ RSpec.describe Chat::UpsertDraft do
     end
 
     context "when user can’t access the channel" do
-      fab!(:channel_1) { Fabricate(:private_category_channel) }
+      fab!(:channel_1, :private_category_channel)
 
       it { is_expected.to fail_a_policy(:can_upsert_draft) }
     end

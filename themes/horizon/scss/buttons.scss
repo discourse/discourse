@@ -1,0 +1,103 @@
+:root {
+  --d-button-border-radius: 6.25rem;
+}
+
+.discourse-no-touch .topic-body .actions .fade-out {
+  transition: none;
+}
+
+.sidebar-new-topic-button__wrapper {
+  &:has(.fk-d-tooltip__trigger) {
+    #create-topic.btn {
+      border-radius: var(--d-button-border-radius) 0 0
+        var(--d-button-border-radius);
+    }
+  }
+}
+
+.discourse-no-touch .btn-default.sidebar-new-topic-button,
+.discourse-no-touch .btn-default,
+.discourse-no-touch .select-kit .select-kit-header.btn-default {
+  background: var(--primary-100);
+
+  .d-icon {
+    color: var(--accent-color);
+  }
+
+  &:focus-visible,
+  &:hover {
+    background: var(--primary-100);
+    color: var(--primary);
+    box-shadow: 0 0 0 4px var(--button-box-shadow);
+
+    .d-icon {
+      color: var(--accent-color);
+    }
+  }
+
+  &:active:not(:hover, :focus) {
+    color: var(--primary);
+    background: var(--tertiary-300);
+    background-image: none;
+
+    .d-icon {
+      color: var(--tertiary-high);
+    }
+  }
+}
+
+.btn-primary,
+.discourse-no-touch .btn-default.ai-new-question-button {
+  background-color: var(--accent-color);
+  color: var(--accent-text-color);
+
+  .d-icon {
+    color: var(--accent-text-color);
+  }
+
+  &:not([disabled]):focus-visible,
+  &:not([disabled]):hover {
+    .discourse-no-touch & {
+      background-color: var(--accent-color);
+      box-shadow: 0 0 0 4px var(--button-box-shadow);
+      color: var(--accent-text-color);
+
+      .d-icon {
+        color: var(--accent-text-color);
+      }
+    }
+  }
+
+  &:active {
+    background: light-dark(
+      oklch(from var(--accent-color) 40% c h),
+      oklch(from var(--accent-color) 50% c h)
+    );
+  }
+
+  &:visited {
+    color: var(--accent-text-color);
+  }
+}
+
+.btn-danger {
+  .discourse-no-touch & {
+    &:not([disabled]):focus-visible,
+    &:not([disabled]):hover {
+      background-color: var(--danger);
+      box-shadow: 0 0 0 4px var(--d-button-danger-bg-color--hover);
+    }
+  }
+}
+
+// DiscoToc plugin
+.d-toc-main,
+.timeline-footer-controls {
+  .btn.timeline-toggle {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    bottom: var(--main-grid-gap);
+  }
+}

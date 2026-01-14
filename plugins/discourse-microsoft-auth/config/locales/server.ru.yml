@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    microsoft_auth_enabled: "Разрешать пользователям аутентифицироваться через Microsoft?"
+    microsoft_auth_client_id: 'Microsoft App ID/Client ID (обратите внимание: не Secret ID) — для настройки посетите <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
+    microsoft_auth_client_secret: "Секретный пароль Microsoft (используйте Value, а НЕ Secret ID)"
+    microsoft_auth_email_verified: "Считает все адреса эл. почты Microsoft проверенными по умолчанию. ВНИМАНИЕ: включайте этот параметр только в том случае, если вы уверены, что все ваши пользователи подтвердили адреса эл. почты."

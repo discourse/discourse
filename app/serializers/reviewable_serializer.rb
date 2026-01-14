@@ -9,7 +9,10 @@ class ReviewableSerializer < ApplicationSerializer
     :type_source,
     :topic_id,
     :topic_url,
+    :target_type,
+    :target_id,
     :target_url,
+    :target_created_at,
     :topic_tags,
     :category_id,
     :created_at,
@@ -23,12 +26,14 @@ class ReviewableSerializer < ApplicationSerializer
   attribute :status_for_database, key: :status
 
   has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
-  has_one :target_created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
+  has_one :target_created_by, root: "users"
   has_one :topic, serializer: ListableTopicSerializer
   has_many :editable_fields, serializer: ReviewableEditableFieldSerializer, embed: :objects
   has_many :reviewable_scores, serializer: ReviewableScoreSerializer
   has_many :bundled_actions, serializer: ReviewableBundledActionSerializer
-  has_one :claimed_by, serializer: UserWithCustomFieldsSerializer, root: "users"
+  has_many :reviewable_notes, serializer: ReviewableNoteSerializer
+  has_many :reviewable_histories, serializer: ReviewableHistorySerializer
+  has_one :claimed_by, serializer: ReviewableClaimedTopicSerializer
 
   # Used to keep track of our payload attributes
   class_attribute :_payload_for_serialization
@@ -110,6 +115,14 @@ class ReviewableSerializer < ApplicationSerializer
     object.topic.present? && SiteSetting.tagging_enabled?
   end
 
+  def target_created_at
+    object.target&.created_at
+  end
+
+  def include_target_created_at?
+    object.target_type == "Post"
+  end
+
   def target_url
     if object.target.is_a?(Post) && object.target.present?
       return Discourse.base_url + object.target.url
@@ -139,5 +152,18 @@ class ReviewableSerializer < ApplicationSerializer
 
   def target_created_by_trust_level
     object&.target_created_by&.trust_level
+  end
+
+  def target_created_by
+    if object.target_type == "User"
+      user = object.target
+    else
+      user = object.target_created_by
+    end
+    return nil unless user
+
+    serializer_class =
+      scope.can_see_reviewable_ui_refresh? ? FlaggedUserSerializer : UserWithCustomFieldsSerializer
+    serializer_class.new(user, scope: scope, root: false)
   end
 end

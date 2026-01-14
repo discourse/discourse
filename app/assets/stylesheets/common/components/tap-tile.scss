@@ -8,19 +8,19 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     cursor: pointer;
 
     &:first-child {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
     }
 
     &:hover {
-      background-color: var(--tertiary-low);
+      background-color: var(--d-hover);
     }
 
     &.active {
-      background-color: var(--highlight-bg);
+      background-color: var(--d-selected);
     }
 
     .d-icon {

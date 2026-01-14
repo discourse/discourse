@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  accepted_answer: "受け入れられた回答"
+  site_settings:
+    solved_enabled: "解決済みプラグインを有効にし、ユーザーがトピックの解決策を選択できるようにする"
+    allow_solved_on_all_topics: "すべてのトピックでユーザーが解決策を選択することを許可する（オフの場合、解決策はカテゴリごとまたはタグごとに有効にできます）"
+    accept_all_solutions_trust_level: "すべてのトピックで解決策を受け入れるために必要な最低信頼レベル（OP でない場合でも）"
+    accept_all_solutions_allowed_groups: "(OP でない場合でも) すべてのトピックで解決策を受け入れることが許可されているグループ。管理者とモデレーターは常に許可されます。"
+    empty_box_on_unsolved: "未解決のトピックの横に空のボックスを表示する"
+    solved_quote_length: "最初の投稿の下に解決策を表示する場合に引用する文字数"
+    solved_topics_auto_close_hours: "トピックが解決済みとマークされたら、最後の返信から（n）時間後にトピックを自動クローズします。自動クローズを無効にする場合は 0 に設定します。"
+    show_filter_by_solved_status: "ドロップダウンを表示し、解決済みのステータスでトピックリストをフィルターします。"
+    notify_on_staff_accept_solved: "スタッフによって投稿が解決策としてマークされたら、トピック作成者に通知を送信します。"
+    ignore_solved_topics_in_assigned_reminder: "割り当てのリマインダーに解決済みのトピックが含まれないようにします。discourse-assign プラグインを使用している場合にのみ関連します。"
+    assignment_status_on_solve: "トピックが解決したら、すべての割り当てをこのステータスに更新する"
+    assignment_status_on_unsolve: "トピックが未解決の場合、すべての割り当てを子のステータスに更新する"
+    disable_solved_education_message: "解決済みトピックの教育メッセージを無効にします。"
+    accept_solutions_topic_author: "トピック作成者が解決策を受け入れることを許可します。"
+    solved_add_schema_markup: "QAPage スキーママークアップを HTML に追加します。"
+    enable_solved_tags: "ユーザーが解決策を選択できるようにするタグ。"
+    prioritize_solved_topics_in_search: "検索結果では解決済みのトピックが優先されます。"
+    show_who_marked_solved: "トピックを解決済みとしてマークしたユーザーを表示する。これは、トピックの最初の投稿と、回答投稿のツールチップに表示されます。"
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "受け入れられた解決策"
+      xaxis: "日"
+      yaxis: "合計"
+  solved:
+    no_solutions:
+      self: "受け入れられた解決策はありません。"
+      others: "受け入れられた解決策はありません。"
+    filter:
+      description:
+        solved: "解決済みのトピックを絞り込む"
+        unsolved: "解決されていないトピックを絞り込む"
+  badges:
+    solved_1:
+      name: "解決済み!"
+      description: "1 件の返信が解決策としてマークされた"
+      long_description: "このバッジは返信がトピックの解決策としてマークされた場合に付与されます。:white_check_mark: よくできました。:+1:"
+    solved_2:
+      name: "ガイダンスカウンセラー"
+      description: "10 件の返信が解決策としてマークされた"
+      long_description: "このバッジは、10 件の返信がトピックの解決策としてマークされた場合に付与されます。:white_check_mark: あなたは他のコミュニティーメンバーにとって貴重なアセットです。"
+    solved_3:
+      name: "なんでも知ってる"
+      description: "50 件の返信が解決策としてマークされた"
+      long_description: "このバッジは、50 件の返信がトピックの解決策としてマークされた場合に付与されます。:white_check_mark: あなたは本当に物知りです。:clap:"
+    solved_4:
+      name: "解決策の宝庫"
+      description: "150 件の返信が解決策としてマークされた"
+      long_description: "このバッジは、150 件の返信がトピックの解決策としてマークされた場合に付与されます。:white_check_mark: 優秀です。:slightly_smiling_face: あなたは誰もが認める解決策の宝庫です。:brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: 最初に受け入れられた解決策
+        doc: ユーザーの解決策が初めて受け入れられたときにトリガーされます。
+  education:
+    topic_is_solved: |
+      ### このトピックは解決しました
+
+      以下に該当する場合にのみここに返信してください:
+
+      - 追加の詳細情報がある場合
+
+      - 解決策が機能しなかった場合
+
+      無関係の問題については、[新しいトピックを開始]（%{base_url}/new-topic）してください。

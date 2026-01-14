@@ -6,12 +6,11 @@
 .user-badge {
   padding: 3px 8px;
   color: var(--primary);
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   line-height: var(--line-height-large);
   display: inline-flex;
   align-items: center;
   background-color: var(--secondary);
-  margin: 4px 0 0;
 
   img {
     height: 16px;
@@ -44,7 +43,7 @@
   }
 }
 
-@media all and (max-width: 750px) {
+@media all and (width <= 750px) {
   .show-badge .user-badge-with-posts .badge-user a.post-link {
     width: auto;
   }
@@ -132,9 +131,10 @@
 }
 
 .badge-card {
-  background-color: var(--primary-very-low);
-  border: 1px solid var(--primary-low);
+  background-color: var(--d-badge-card-background-color);
+  border: 1px solid var(--content-border-color);
   position: relative;
+  border-radius: var(--d-border-radius);
 
   .check-display {
     position: absolute;
@@ -232,7 +232,7 @@
         margin-bottom: 0.25em;
         font-size: var(--font-up-1);
 
-        @media screen and (min-width: 900px) {
+        @media screen and (width >= 900px) {
           font-size: var(--font-up-2);
         }
       }
@@ -243,7 +243,7 @@
     width: 100%;
     align-self: flex-start;
 
-    @media screen and (min-width: 767px) {
+    @media screen and (width >= 767px) {
       max-width: calc(var(--d-max-width) / 2);
     }
 
@@ -283,7 +283,7 @@
 .badge-group-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
-  grid-gap: 1em;
+  gap: 1em;
   width: 100%;
   margin-bottom: 1.5em;
 
@@ -318,7 +318,7 @@
   .badge-set-title {
     flex: 0 1 auto;
     padding: 1.5em;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     .badge-title {
       height: 100%;

@@ -1,0 +1,46 @@
+import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { service } from "@ember/service";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { i18n } from "discourse-i18n";
+
+export default class NotificationLevelWhenAssigned extends Component {
+  @service siteSettings;
+
+  get notificationLevelsWhenAssigned() {
+    // The order matches the "notification level when replying" user preference
+    return [
+      {
+        name: i18n("user.notification_level_when_assigned.watch_topic"),
+        value: "watch_topic",
+      },
+      {
+        name: i18n("user.notification_level_when_assigned.track_topic"),
+        value: "track_topic",
+      },
+      {
+        name: i18n("user.notification_level_when_assigned.do_nothing"),
+        value: "do_nothing",
+      },
+    ];
+  }
+
+  <template>
+    {{#if this.siteSettings.assign_enabled}}
+      <div
+        class="controls controls-dropdown"
+        data-setting-name="user-notification-level-when-assigned"
+      >
+        <label>{{i18n "user.notification_level_when_assigned.label"}}</label>
+        <ComboBox
+          @content={{this.notificationLevelsWhenAssigned}}
+          @value={{@outletArgs.model.user_option.notification_level_when_assigned}}
+          @valueProperty="value"
+          @onChange={{fn
+            (mut @outletArgs.model.user_option.notification_level_when_assigned)
+          }}
+        />
+      </div>
+    {{/if}}
+  </template>
+}

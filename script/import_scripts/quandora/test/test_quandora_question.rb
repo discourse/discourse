@@ -3,8 +3,8 @@
 require "minitest/autorun"
 require "cgi"
 require "time"
-require_relative "../quandora_question.rb"
-require_relative "./test_data.rb"
+require_relative "../quandora_question"
+require_relative "test_data"
 
 class TestQuandoraQuestion < Minitest::Test
   def setup

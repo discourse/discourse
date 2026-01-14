@@ -1,9 +1,9 @@
 .admin-config-area-card {
-  padding: 20px 5px 20px 20px;
-  border: 1px solid var(--primary-low);
-  border-radius: 2px;
+  padding: var(--space-4);
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
   background-color: var(--secondary);
-  margin-bottom: 1em;
+  min-width: 0;
 
   &__label-optional {
     color: var(--primary-medium);
@@ -45,7 +45,6 @@
 
   &__content {
     margin-top: 0.5rem;
-    padding-right: 15px;
   }
 }
 
@@ -75,16 +74,16 @@
   }
 
   &__primary-content {
-    flex: 0 1 70%;
-
-    @media (max-width: $mobile-breakpoint) {
-      flex: 0 1 auto;
-    }
+    flex: 0 1 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: var(--admin-content-max-width);
   }
 
   &__aside {
     /* use for help inset */
-    flex: 0 1 30%;
+    flex: 0 1 20%;
     padding: var(--space-2);
 
     @media (max-width: $mobile-breakpoint) {
@@ -113,12 +112,182 @@
   }
 }
 
-.admin-config-area-empty-list {
+.admin-config-area-empty-list,
+.admin-empty-list {
   padding: 1em;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
 
   &__cta-button {
     display: flex;
     margin-top: 1em;
+  }
+}
+
+.admin-config-area-card-section {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-4);
+  flex-direction: column;
+  width: calc(100% - 1em);
+  border: 1px solid var(--content-border-color);
+  padding: 0.5em;
+
+  @media (max-width: $mobile-breakpoint) {
+    flex-direction: column;
+  }
+
+  &__header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &.collapsable {
+      cursor: pointer;
+    }
+  }
+
+  &__title {
+    margin-bottom: 0;
+  }
+
+  &__content {
+    margin-top: 0.5rem;
+    padding-right: 1em;
+    padding-bottom: 1em;
+    gap: 1.5em;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.admin-logo-form {
+  .form-kit__section {
+    .form-kit__container {
+      padding: 1em;
+      width: calc(100% - 2em) !important;
+      border: 1px solid var(--content-border-color);
+    }
+  }
+
+  #control-logo_dark .image-uploader.has-image .uploaded-image-preview {
+    background-color: #333;
+    background-clip: border-box;
+  }
+
+  .form-kit__field-toggle .form-kit__container-content.--full {
+    // avoid label wrapping
+    width: var(--form-kit-small-input) !important;
+  }
+}
+
+.admin-fonts-form {
+  &__more {
+    font-size: var(--font-down-1-rem);
+  }
+
+  .form-kit__field-custom {
+    width: 100% !important;
+
+    .form-kit__control-custom {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .admin-fonts-form__button-option {
+        border: 1px solid var(--content-border-color);
+        font-size: var(--font-down-1-rem);
+        max-height: 4em;
+        height: 50px;
+        margin-bottom: 1em;
+        padding: 0 0.65em;
+
+        &:hover {
+          border-color: var(--primary-low-mid);
+        }
+
+        &.active {
+          position: relative;
+          border: 2px solid var(--tertiary);
+
+          &::after {
+            position: absolute;
+            top: 35%;
+            left: 0.5rem;
+            font-family: "Segoe UI", Arial, sans-serif;
+            content: "\2714"; // ✔
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1rem;
+            height: 1rem;
+            background-color: var(--tertiary);
+            color: var(--secondary);
+            border-radius: 9999px;
+            font-size: 0.5rem;
+            margin-left: 0.25rem;
+          }
+
+          &:hover {
+            border-color: var(--tertiary);
+          }
+        }
+
+        &.font {
+          flex: 0 0 32%;
+          max-width: 32%;
+
+          @media (max-width: $mobile-breakpoint) {
+            flex: 0 0 100%;
+            max-width: 100%;
+          }
+        }
+
+        &.text-size {
+          flex: 0 0 19%;
+          max-width: 19%;
+
+          // px must be used because there is different font size inside each button
+          height: 45px;
+
+          @media (max-width: $mobile-breakpoint) {
+            flex: 0 0 100%;
+            max-width: 100%;
+          }
+
+          &.smallest {
+            font-size: var(--base-font-size-smallest);
+          }
+
+          &.smaller {
+            font-size: var(--base-font-size-smaller);
+          }
+
+          &.normal {
+            font-size: var(--base-font-size-normal);
+          }
+
+          &.larger {
+            font-size: var(--base-font-size-larger);
+          }
+
+          &.largest {
+            font-size: var(--base-font-size-largest);
+          }
+        }
+      }
+    }
+  }
+}
+
+.admin-welcome-banner-form {
+  #control-enabledThemes {
+    .form-kit__container-content.--large {
+      .d-multi-select-trigger__selection-label {
+        // show selection full names (overrides unnecessary truncation)
+        max-width: unset;
+      }
+    }
   }
 }

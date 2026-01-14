@@ -1,0 +1,35 @@
+html.scrollable-modal {
+  overflow: auto; // overrides core .modal-open class scroll lock
+}
+
+.ai-summary-modal {
+  .d-modal__container {
+    position: fixed;
+    top: var(--header-offset);
+    margin-top: 1em;
+    right: 1em;
+    width: 100vw;
+    max-width: 30em;
+    max-height: calc(
+      100vh - var(--header-offset) - 3rem - var(--composer-height, 0px)
+    );
+    box-shadow: var(--shadow-menu-panel);
+  }
+
+  // Override default modal animations to float in from left
+  .d-modal__container.is-entering {
+    @include d-animation(float-left, 250ms, cubic-bezier(0.4, 0, 0.2, 1));
+  }
+
+  .d-modal__container.is-exiting {
+    @include d-animation(float-out-right, 250ms, cubic-bezier(0.4, 0, 0.2, 1));
+  }
+
+  .fullscreen-composer & {
+    display: none;
+  }
+}
+
+.ai-summary-modal + .d-modal__backdrop {
+  background: transparent; // allows for reading, but still triggers clickoutside event
+}

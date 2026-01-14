@@ -2,6 +2,8 @@
 
 class HomepageHelper
   def self.resolve(request = nil, current_user = nil)
+    return "blank" if !current_user && SiteSetting.login_required?
+
     return "custom" if ThemeModifierHelper.new(request: request).custom_homepage
 
     enabled = false

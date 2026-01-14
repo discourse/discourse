@@ -140,6 +140,12 @@ RSpec.describe Email::Processor do
   end
 
   describe "from reply to email address" do
+    before do
+      SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
+      SiteSetting.manual_polling_enabled = true
+      SiteSetting.reply_by_email_enabled = true
+    end
+
     let(:mail) do
       "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?"
     end
@@ -156,6 +162,9 @@ RSpec.describe Email::Processor do
 
   describe "mailinglist mirror" do
     before do
+      SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
+      SiteSetting.manual_polling_enabled = true
+      SiteSetting.reply_by_email_enabled = true
       SiteSetting.email_in = true
       Fabricate(:mailinglist_mirror_category)
     end

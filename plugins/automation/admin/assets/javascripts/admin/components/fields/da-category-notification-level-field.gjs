@@ -3,7 +3,7 @@ import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";
 
-export default class CategoryNotficationLevelField extends BaseField {
+export default class CategoryNotificationLevelField extends BaseField {
   <template>
     <section class="field category-notification-level-field">
       <div class="control-group">

@@ -1,0 +1,6 @@
+en:
+  js:
+    login:
+      lti:
+        name: "LTI"
+        title: "with LTI"

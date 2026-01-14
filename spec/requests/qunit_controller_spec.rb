@@ -10,6 +10,11 @@ RSpec.describe QunitController do
     Rails.env.stubs(:production?).returns(true)
   end
 
+  # rubocop:disable RSpec/BeforeAfterAll
+  before(:all) { AssetProcessor.build_production_asset_processor }
+
+  after(:all) { File.delete(AssetProcessor::PROCESSOR_PATH) }
+
   it "hides page for regular users in production" do
     production_sign_in(Fabricate(:user))
     get "/theme-qunit"

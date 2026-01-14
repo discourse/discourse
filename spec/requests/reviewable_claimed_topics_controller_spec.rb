@@ -4,7 +4,9 @@ RSpec.describe ReviewableClaimedTopicsController do
   fab!(:moderator)
 
   fab!(:topic)
+  fab!(:automatic_topic, :topic)
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post, topic: topic) }
+  fab!(:automatic_reviewable) { Fabricate(:reviewable_flagged_post, topic: automatic_topic) }
 
   describe "#create" do
     let(:params) { { reviewable_claimed_topic: { topic_id: topic.id } } }
@@ -45,6 +47,7 @@ RSpec.describe ReviewableClaimedTopicsController do
 
         expect(message.data[:topic_id]).to eq(topic.id)
         expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.data[:claimed]).to be true
         expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
       end
 
@@ -72,7 +75,7 @@ RSpec.describe ReviewableClaimedTopicsController do
 
       it "works with deleted topics" do
         first_post = topic.first_post || Fabricate(:post, topic: topic)
-        PostDestroyer.new(Discourse.system_user, first_post).destroy
+        PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
 
         post "/reviewable_claimed_topics.json", params: params
 
@@ -87,6 +90,19 @@ RSpec.describe ReviewableClaimedTopicsController do
         post "/reviewable_claimed_topics.json", params: params
 
         expect(response.status).to eq(403)
+      end
+
+      it "allows claiming when automatic param is present" do
+        SiteSetting.reviewable_claiming = "disabled"
+        params[:reviewable_claimed_topic][:topic_id] = automatic_topic.id
+        params[:reviewable_claimed_topic][:automatic] = "true"
+
+        post "/reviewable_claimed_topics.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(
+          ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: automatic_topic.id).exists?,
+        ).to eq(true)
       end
 
       it "raises an error if topic is already claimed" do
@@ -126,6 +142,9 @@ RSpec.describe ReviewableClaimedTopicsController do
 
   describe "#destroy" do
     fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: topic) }
+    fab!(:automatic_claimed) do
+      Fabricate(:reviewable_claimed_topic, topic: automatic_topic, automatic: true)
+    end
 
     before { sign_in(moderator) }
 
@@ -152,14 +171,15 @@ RSpec.describe ReviewableClaimedTopicsController do
       message = messages[0]
 
       expect(message.data[:topic_id]).to eq(topic.id)
-      expect(message.data[:user]).to eq(nil)
+      expect(message.data[:user][:id]).to eq(moderator.id)
+      expect(message.data[:claimed]).to be false
       expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
     end
 
     it "works with deleted topics" do
       SiteSetting.reviewable_claiming = "optional"
       first_post = topic.first_post || Fabricate(:post, topic: topic)
-      PostDestroyer.new(Discourse.system_user, first_post).destroy
+      PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
 
       delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
 
@@ -179,6 +199,16 @@ RSpec.describe ReviewableClaimedTopicsController do
       delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
 
       expect(response.status).to eq(403)
+    end
+
+    it "allows unclaiming when automatic param is present" do
+      SiteSetting.reviewable_claiming = "disabled"
+
+      delete "/reviewable_claimed_topics/#{automatic_claimed.topic_id}.json?automatic=true"
+      expect(response.status).to eq(200)
+      expect(
+        ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: automatic_topic.id).exists?,
+      ).to eq(false)
     end
 
     it "queues a sidekiq job to refresh reviewable counts for users who can see the reviewable" do
@@ -203,6 +233,22 @@ RSpec.describe ReviewableClaimedTopicsController do
         delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
         expect(response.status).to eq(200)
       end
+    end
+
+    it "does not log unclaimed history when topic was not claimed" do
+      SiteSetting.reviewable_claiming = "optional"
+      claimed.destroy!
+
+      delete "/reviewable_claimed_topics/#{topic.id}.json"
+      expect(response.status).to eq(200)
+      expect(
+        topic
+          .reviewables
+          .first
+          .history
+          .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
+          .size,
+      ).to eq(0)
     end
   end
 end

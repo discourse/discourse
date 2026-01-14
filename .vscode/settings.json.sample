@@ -1,7 +1,11 @@
 {
   // Enable gjs support for eslint
   "eslint.validate": [
+    "javascript",
+    "typescript",
+    "html",
     "glimmer-js",
+    "glimmer-ts"
   ],
 
   // Formatter configuration:

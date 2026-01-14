@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    user_notes:
+      title: "Notes d'utilisateur"
+      attach_note_description: "Ajoutez une note concernant cet utilisateur. Cette note ne sera visible que par le personnel."
+      delete_confirm: "Voulez-vous vraiment supprimer cette note d'utilisateur ?"

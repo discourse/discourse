@@ -8,4 +8,3 @@ sv:
   site_settings:
     discourse_local_dates_default_formats: "Datumformat som används ofta, se: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>strängformatet momentjs</a>"
     discourse_local_dates_default_timezones: "Standardlista för tidszoner, måste vara en giltig <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
-    discourse_local_dates_email_format: "Format som används för att visa ett datum i e-post"

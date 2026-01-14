@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsThreadsReadController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.chat_enabled = true
@@ -11,7 +11,7 @@ RSpec.describe Chat::Api::ChannelsThreadsReadController do
 
   describe "#update" do
     context "with valid params" do
-      fab!(:thread_1) { Fabricate(:chat_thread) }
+      fab!(:thread_1, :chat_thread)
 
       before { thread_1.add(current_user) }
 
@@ -39,7 +39,7 @@ RSpec.describe Chat::Api::ChannelsThreadsReadController do
     end
 
     context "when the thread doesn't exist" do
-      fab!(:channel_1) { Fabricate(:chat_channel) }
+      fab!(:channel_1, :chat_channel)
 
       it "raises a not found" do
         put "/chat/api/channels/#{channel_1.id}/threads/-999/read.json"
@@ -49,7 +49,7 @@ RSpec.describe Chat::Api::ChannelsThreadsReadController do
     end
 
     context "when the user can't join associated channel" do
-      fab!(:channel_1) { Fabricate(:private_category_channel) }
+      fab!(:channel_1, :private_category_channel)
       fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
 
       before { thread_1.add(current_user) }

@@ -1365,6 +1365,18 @@ RSpec.describe Post do
       post.rebake!
     end
 
+    it "does not publish to clients when invalidating oneboxes" do
+      post = create_post
+      post.expects(:publish_change_to_clients!).never
+      post.rebake!(invalidate_oneboxes: true)
+    end
+
+    it "does not publish to clients when skip_publish_rebaked_changes is true" do
+      post = create_post
+      post.expects(:publish_change_to_clients!).never
+      post.rebake!(skip_publish_rebaked_changes: true)
+    end
+
     it "uses inline onebox cache by default" do
       Jobs.run_immediately!
       stub_request(:get, "http://testonebox.com/vvf").to_return(status: 200, body: <<~HTML)
@@ -1414,6 +1426,8 @@ RSpec.describe Post do
 
   describe "#set_owner" do
     fab!(:post)
+    fab!(:admin)
+    fab!(:new_user, :user)
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1441,6 +1455,35 @@ RSpec.describe Post do
         I18n.with_locale(SiteSetting.default_locale) { I18n.t("change_owner.post_revision_text") }
 
       expect(post.edit_reason).to eq(expected_reason)
+    end
+
+    it "triggers a post_owner_changed event" do
+      original_user = post.user
+
+      events = DiscourseEvent.track_events { post.set_owner(new_user, admin) }
+
+      change_event = events.find { |e| e[:event_name] == :post_owner_changed }
+
+      expect(change_event).to be_present
+      expect(change_event[:params][0]).to eq(post)
+      expect(change_event[:params][1]).to eq(original_user)
+      expect(change_event[:params][2]).to eq(new_user)
+      expect(post.reload.user).to eq(new_user)
+    end
+
+    it "doesn't trigger an event when user remains the same" do
+      same_user = post.user
+
+      events = DiscourseEvent.track_events { post.set_owner(same_user, admin) }
+
+      change_event = events.find { |e| e[:event_name] == :post_owner_changed }
+
+      expect(change_event).to be_nil
+    end
+
+    it "returns true when ownership changes successfully" do
+      result = post.set_owner(new_user, admin)
+      expect(result).to eq(true)
     end
   end
 
@@ -1518,6 +1561,52 @@ RSpec.describe Post do
         post_2.user.user_stat.reload.post_count
       }.from(1).to(0)
     end
+
+    it "changes topic visible status to false if it is the first post" do
+      t = post.topic
+      expect(t.visible).to eq(true)
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      t.reload
+      expect(t.visible).to eq(false)
+    end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper])
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "does not reset the topic's bumped_at when hiding a whisper" do
+        whisper_post.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "resets the topic's bumped_at when hiding the last visible reply" do
+        last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+
+      it "does not reset the topic's bumped_at when hiding a reply that is not the last" do
+        second_last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+    end
   end
 
   describe "#unhide!" do
@@ -1578,6 +1667,88 @@ RSpec.describe Post do
         1,
       )
     end
+
+    it "allows staff to unhide posts containing media added by staff even if the author cannot embed" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
+
+      post =
+        create_post(
+          user: low_trust_user,
+          topic: Fabricate(:topic, user: low_trust_user),
+          raw: "original content",
+        )
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      post.revise(moderator, raw: "updated with media ![img](http://example.com/image.png)")
+
+      post.reload
+
+      post.acting_user = moderator
+      expect { post.unhide! }.not_to raise_error
+      expect(post.reload.hidden).to eq(false)
+    end
+
+    it "prevents unhiding posts with embedded media when author lacks permission" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
+
+      post =
+        create_post(
+          user: low_trust_user,
+          topic: Fabricate(:topic, user: low_trust_user),
+          raw: "original content",
+        )
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      post.revise(moderator, raw: "updated with media ![img](http://example.com/image.png)")
+
+      post = Post.find(post.id)
+
+      expect { post.unhide! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror, hidden: true)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:, hidden: true)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper], hidden: true)
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "does not reset the topic's bumped_at when unhiding a whisper" do
+        whisper_post.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "resets the topic's bumped_at when unhiding the last visible reply" do
+        last_reply.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      it "does not reset the topic's bumped_at when unhiding a reply that is not the last" do
+        second_last_reply.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+    end
   end
 
   it "will unhide the post but will keep the topic invisible/unlisted" do
@@ -1606,8 +1777,8 @@ RSpec.describe Post do
 
   describe "video_thumbnails" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
-    fab!(:image_upload) { Fabricate(:upload) }
-    fab!(:image_upload_2) { Fabricate(:upload) }
+    fab!(:image_upload, :upload)
+    fab!(:image_upload_2, :upload)
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
 
@@ -1679,10 +1850,10 @@ RSpec.describe Post do
   describe "uploads" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:video_upload_2) { Fabricate(:upload, extension: "mp4") }
-    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:image_upload, :upload)
     fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
     fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
-    fab!(:attachment_upload_2) { Fabricate(:upload) }
+    fab!(:attachment_upload_2, :upload)
     fab!(:attachment_upload_3) { Fabricate(:upload, extension: nil) }
 
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
@@ -1723,10 +1894,10 @@ RSpec.describe Post do
       post.link_post_uploads
 
       post.trash!
-      expect(UploadReference.count).to eq(7)
+      expect(UploadReference.where(target_type: "Post").count).to eq(7)
 
       post.destroy!
-      expect(UploadReference.count).to eq(0)
+      expect(UploadReference.where(target_type: "Post").count).to eq(0)
     end
 
     describe "#link_post_uploads" do
@@ -1902,9 +2073,13 @@ RSpec.describe Post do
           create_post(topic_id: topic.id, post_type: Post.types[:whisper])
         end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).destroy }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+      end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).recover }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").recover
+      end
     end
   end
 
@@ -2125,8 +2300,8 @@ RSpec.describe Post do
   end
 
   describe "#publish_changes_to_client!" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user3, :user)
     fab!(:topic) { Fabricate(:private_message_topic, user: user1) }
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:group_user) { Fabricate(:group_user, user: user3) }
@@ -2323,6 +2498,75 @@ RSpec.describe Post do
       expect(
         Post.public_posts_count_per_day(10.days.ago, 5.days.ago, nil, false, [group.id]),
       ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
+    end
+  end
+
+  describe "#has_localization?" do
+    it "returns true if the post has localization" do
+      post = Fabricate(:post)
+      Fabricate(:post_localization, post: post, locale: "zh_CN")
+
+      expect(post.has_localization?(:zh_CN)).to eq(true)
+      expect(post.has_localization?(:"zh_CN")).to eq(true)
+      expect(post.has_localization?("zh-CN")).to eq(true)
+
+      expect(post.has_localization?("z")).to eq(false)
+    end
+  end
+
+  describe "#get_localization" do
+    it "returns the localization with the specified locale" do
+      I18n.locale = "ja"
+      post = Fabricate(:post)
+      zh_localization = Fabricate(:post_localization, post: post, locale: "zh_CN")
+      Fabricate(:post_localization, post: post, locale: "ja_JP")
+      ja_localization = Fabricate(:post_localization, post: post, locale: "ja")
+
+      expect(post.get_localization(:zh_CN)).to eq(zh_localization)
+      expect(post.get_localization("zh-CN")).to eq(zh_localization)
+      expect(post.get_localization("xx")).to eq(nil)
+      expect(post.get_localization).to eq(ja_localization)
+    end
+
+    it "returns a regional localization (ja_JP) when the user's locale (ja) is not available" do
+      I18n.locale = "ja"
+      post = Fabricate(:post)
+      ja_jp_localization = Fabricate(:post_localization, post: post, locale: "ja_JP")
+
+      expect(post.get_localization).to eq(ja_jp_localization)
+    end
+
+    it "returns a normalized localization (pt) if the user's locale (pt_BR) is not available" do
+      I18n.locale = "pt_BR"
+      post = Fabricate(:post)
+      pt_localization = Fabricate(:post_localization, post: post, locale: "pt")
+
+      expect(post.get_localization).to eq(pt_localization)
+    end
+  end
+
+  describe "#in_user_locale?" do
+    it "returns true if the post has localization in the user's locale" do
+      I18n.locale = "ja"
+      post = Fabricate(:post, locale: "ja")
+
+      expect(post.in_user_locale?).to eq(true)
+      post.update!(locale: "ja_JP")
+      expect(post.in_user_locale?).to eq(true)
+
+      post.update!(locale: "es")
+      expect(post.in_user_locale?).to eq(false)
+    end
+  end
+
+  describe "#before_save" do
+    it "replaces empty locales with nil" do
+      post = Fabricate(:post, locale: "en")
+
+      post.locale = ""
+      post.save!
+
+      expect(post.reload.locale).to eq(nil)
     end
   end
 end

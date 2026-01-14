@@ -380,11 +380,11 @@ RSpec.describe PostSerializer do
     end
   end
 
-  context "with allow_anonymous_likes enabled" do
+  context "with allow_likes_in_anonymous_mode enabled" do
     fab!(:user)
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
-    fab!(:anonymous_user) { Fabricate(:anonymous) }
+    fab!(:anonymous_user, :anonymous)
 
     let(:serializer) { PostSerializer.new(post, scope: Guardian.new(anonymous_user), root: false) }
     let(:post_action) do
@@ -402,8 +402,8 @@ RSpec.describe PostSerializer do
     end
 
     before do
-      SiteSetting.allow_anonymous_posting = true
-      SiteSetting.allow_anonymous_likes = true
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.allow_likes_in_anonymous_mode = true
       SiteSetting.post_undo_action_window_mins = 10
       PostSerializer.any_instance.stubs(:post_actions).returns({ 2 => post_action })
     end
@@ -424,11 +424,51 @@ RSpec.describe PostSerializer do
       before { post_action.created_at = 20.minutes.ago }
 
       it "disallows anonymous users from unliking posts" do
-        # There are no other post actions available to anonymous users so the action_summary will be an empty array
-        expect(serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }).to eq(
-          nil,
-        )
+        like_actions_summary =
+          serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+        expect(like_actions_summary[:acted]).to eq(true)
+        expect(like_actions_summary[:can_act]).to be_nil
       end
+    end
+  end
+
+  context "when user has liked a post but like count is 0 and undo window passed" do
+    fab!(:user)
+    fab!(:poster, :user)
+    fab!(:topic) { Fabricate(:topic, user: poster) }
+    fab!(:post) { Fabricate(:post, topic:, user: poster, like_count: 0) }
+    fab!(:like_action) do
+      Fabricate(
+        :post_action,
+        user:,
+        post:,
+        post_action_type_id: PostActionType.types[:like],
+        created_at: 1.day.ago,
+      )
+    end
+
+    before { SiteSetting.post_undo_action_window_mins = 10 }
+
+    let(:serializer) do
+      PostSerializer.new(
+        post,
+        scope: Guardian.new(user),
+        root: false,
+        post_actions: {
+          PostActionType.types[:like] => like_action,
+        },
+      )
+    end
+
+    it "includes the like action in actions_summary with acted flag" do
+      like_actions_summary =
+        serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+      expect(like_actions_summary).to be_present
+      expect(like_actions_summary[:acted]).to eq(true)
+      expect(like_actions_summary[:can_act]).to be_nil
+      expect(like_actions_summary[:can_undo]).to be_nil
     end
   end
 
@@ -437,7 +477,7 @@ RSpec.describe PostSerializer do
     fab!(:user)
 
     let(:username) { "joffrey" }
-    let(:user1) { Fabricate(:user, user_status: user_status, username: username) }
+    let(:user1) { Fabricate(:user, user_status:, username:) }
     let(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
     let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
 
@@ -476,41 +516,45 @@ RSpec.describe PostSerializer do
 
   describe "#user_status" do
     fab!(:user_status)
-    fab!(:user) { Fabricate(:user, user_status: user_status) }
-    fab!(:post) { Fabricate(:post, user: user) }
-    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+    fab!(:user) { Fabricate(:user, user_status:) }
+    fab!(:post) { Fabricate(:post, user:) }
 
-    it "adds user status when enabled" do
-      SiteSetting.enable_user_status = true
+    def serialize_user_status(scope: Guardian.new(user))
+      described_class.new(post, scope:, root: false).as_json[:user_status]
+    end
 
-      json = serializer.as_json
+    context "when user status is disabled" do
+      before { SiteSetting.enable_user_status = false }
 
-      expect(json[:user_status]).to_not be_nil do |status|
-        expect(status.description).to eq(user_status.description)
-        expect(status.emoji).to eq(user_status.emoji)
+      it "doesn't include status" do
+        expect(serialize_user_status).to be_nil
       end
     end
 
-    it "doesn't add user status when disabled" do
-      SiteSetting.enable_user_status = false
-      json = serializer.as_json
-      expect(json.keys).not_to include :user_status
-    end
+    context "when user status is enabled" do
+      before { SiteSetting.enable_user_status = true }
 
-    it "doesn't add status if user doesn't have it" do
-      SiteSetting.enable_user_status = true
+      it "includes status" do
+        expect(serialize_user_status).to be_present
+      end
 
-      user.clear_status!
-      user.reload
-      json = serializer.as_json
+      it "doesn't include status if user doesn't have it set" do
+        user.clear_status!
+        user.reload
+        expect(serialize_user_status).to be_nil
+      end
 
-      expect(json.keys).not_to include :user_status
+      it "respects guardian's can_see_user_status?" do
+        user.update!(silenced_till: 1.year.from_now)
+        scope = Guardian.new(Fabricate(:user))
+        expect(serialize_user_status(scope:)).to be_nil
+      end
     end
   end
 
   describe "#badges_granted" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     fab!(:post) { Fabricate(:post, user: user) }
     fab!(:post2) { Fabricate(:post, user: user) }
 
@@ -703,7 +747,129 @@ RSpec.describe PostSerializer do
     end
   end
 
-  def serialized_post(u)
+  describe "#raw" do
+    fab!(:user)
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "returns the post's raw" do
+      expect(json[:raw]).to eq(post.raw)
+    end
+  end
+
+  describe "#locale" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is included when content_localization_enabled is enabled" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "ja")
+
+      expect(json[:locale]).to eq("ja")
+    end
+
+    it "is excluded when content_localization_enabled is disabled" do
+      SiteSetting.content_localization_enabled = false
+      post.update!(locale: "ja")
+
+      expect(json[:locale]).to eq(nil)
+    end
+  end
+
+  describe "#is_localized?" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is excluded when content_localization_enabled is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      expect(json[:is_localized]).to eq(nil)
+    end
+
+    describe "content localization enabled" do
+      before do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "en"
+      end
+
+      it "returns true when the post is localized" do
+        post.update!(locale: "ja")
+        Fabricate(:post_localization, post:, locale: "en")
+
+        expect(json[:is_localized]).to eq(true)
+      end
+
+      it "returns false when the post is same language as user" do
+        post.update!(locale: "ja")
+        I18n.locale = "ja"
+
+        expect(json[:is_localized]).to eq(false)
+      end
+
+      it "returns false when no localization" do
+        post.update!(locale: "ja")
+
+        expect(json[:is_localized]).to eq(false)
+      end
+    end
+  end
+
+  describe "#language" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is excluded when content_localization_enabled is disabled or no locale" do
+      SiteSetting.content_localization_enabled = false
+      post.update!(locale: "ja")
+      expect(serializer.as_json[:language]).to eq(nil)
+
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: nil)
+      expect(serializer.as_json[:language]).to eq(nil)
+    end
+
+    it "shows the language of the post based on locale" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "ja")
+
+      expect(json[:language]).to eq("ja")
+    end
+
+    it "defaults to locale if language does not exist" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "aa")
+
+      expect(json[:language]).to eq("aa")
+    end
+  end
+
+  describe "#localization_outdated?" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is excluded when content_localization_enabled is disabled" do
+      SiteSetting.content_localization_enabled = false
+      expect(json[:localization_outdated]).to eq(nil)
+    end
+
+    it "is true when the post is localized and the localization is outdated" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "ja", version: 3)
+      Fabricate(:post_localization, post:, locale: "en", post_version: 2)
+
+      expect(json[:localization_outdated]).to eq(true)
+    end
+
+    it "is false when the post is localized and the localization is not outdated" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "ja", version: 10)
+      Fabricate(:post_localization, post:, locale: "en", post_version: 10)
+
+      expect(json[:localization_outdated]).to eq(false)
+    end
+  end
+
+  def serialized_post(u = nil)
     s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
     s.add_raw = true
     s
@@ -712,5 +878,70 @@ RSpec.describe PostSerializer do
   def serialized_post_for_user(u)
     s = serialized_post(u)
     s.as_json
+  end
+
+  describe "#can_localize_post" do
+    fab!(:author, :user)
+    fab!(:author_post) { Fabricate(:post, user: author) }
+    fab!(:admin)
+    fab!(:group)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = group.id.to_s
+    end
+
+    it "is included when user can localize content" do
+      group.add(admin)
+      json = PostSerializer.new(author_post, scope: Guardian.new(admin), root: false).as_json
+      expect(json[:can_localize_post]).to eq(true)
+    end
+
+    it "is included when author localization is enabled and user is post author" do
+      SiteSetting.content_localization_allow_author_localization = true
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:can_localize_post]).to eq(true)
+
+      SiteSetting.content_localization_allow_author_localization = false
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:can_localize_post]).to eq(nil)
+    end
+
+    it "is not included when user cannot localize post" do
+      other_user = Fabricate(:user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(other_user), root: false).as_json
+      expect(json.key?(:can_localize_post)).to eq(false)
+    end
+  end
+
+  describe "post_localizations_count" do
+    fab!(:author, :user)
+    fab!(:author_post) { Fabricate(:post, user: author) }
+    fab!(:group)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = group.id.to_s
+      Fabricate(:post_localization, post: author_post, locale: "ja")
+    end
+
+    it "is included for users in allowed groups" do
+      user = Fabricate(:user)
+      group.add(user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(user), root: false).as_json
+      expect(json[:post_localizations_count]).to eq(1)
+    end
+
+    it "is included for post authors when author localization is enabled" do
+      SiteSetting.content_localization_allow_author_localization = true
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:post_localizations_count]).to eq(1)
+    end
+
+    it "is not included for users who cannot localize" do
+      other_user = Fabricate(:user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(other_user), root: false).as_json
+      expect(json.key?(:post_localizations_count)).to eq(false)
+    end
   end
 end

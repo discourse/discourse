@@ -9,9 +9,15 @@ nl:
     discourse_automation_enabled: "Discourse-automatiseringsplug-in inschakelen"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "Script mag niet leeg zijn"
+          trigger_blank: "Trigger mag niet leeg zijn"
+          script_missing_required_fields: "Script mist vereiste velden: %{fields}"
+          trigger_missing_required_fields: "Trigger mist vereiste velden: %{fields}"
       fields:
         required_field: Veld '%{name}' moet worden ingevuld op '%{target}:%{target_name}'.
-        invalid_field: Veldcomponent '%{component}' is niet bruikbaar op '%{target}:%{target_name}'.
+        invalid_field: Veldonderdeel '%{component}' kan niet worden gebruikt op '%{target}:%{target_name}'.
         invalid_metadata: Gegevens voor '%{field}' zijn ongeldig of component '%{component}' is onbekend.
     triggerables:
       errors:
@@ -152,3 +158,5 @@ nl:
       random_assign:
         title: "Willekeurig toewijzen"
         description: "Wijs topics willekeurig toe aan een groep"
+      set_topic_timer:
+        title: "Topictimer instellen"

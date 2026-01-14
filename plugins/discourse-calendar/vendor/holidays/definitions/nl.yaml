@@ -1,0 +1,127 @@
+# Dutch holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2014-04-17.
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_the_Netherlands
+---
+months:
+  0:
+  - name: Goede Vrijdag
+    regions: [nl]
+    function: easter(year)
+    function_modifier: -2
+    type: informal
+  - name: Eerste Paasdag
+    regions: [nl]
+    function: easter(year)
+  - name: Tweede Paasdag
+    regions: [nl]
+    function: easter(year)
+    function_modifier: 1
+  - name: Hemelvaartsdag
+    regions: [nl]
+    function: easter(year)
+    function_modifier: 39
+  - name: Eerste Pinksterdag
+    regions: [nl]
+    function: easter(year)
+    function_modifier: 49
+  - name: Tweede Pinksterdag
+    regions: [nl]
+    function: easter(year)
+    function_modifier: 50
+  1:
+  - name: Nieuwjaarsdag
+    regions: [nl]
+    mday: 1
+  4:
+  - name: Koningsdag
+    regions: [nl]
+    mday: 27
+  5:
+  - name: Dodenherdenking
+    regions: [nl]
+    mday: 4
+    type: informal
+  - name: Bevrijdingsdag
+    regions: [nl]
+    mday: 5
+  12:
+  - name: Sinterklaas
+    regions: [nl]
+    mday: 5
+    type: informal
+  - name: Eerste Kerstdag
+    regions: [nl]
+    mday: 25
+  - name: Tweede Kerstdag
+    regions: [nl]
+    mday: 26
+
+tests:
+  - given:
+      date: '2008-01-01'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Nieuwjaarsdag"
+  - given:
+      date: '2008-03-21'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Goede Vrijdag"
+  - given:
+      date: '2008-03-23'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Eerste Paasdag"
+  - given:
+      date: '2008-03-24'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Tweede Paasdag"
+  - given:
+      date: '2008-04-27'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Koningsdag"
+  - given:
+      date: '2008-05-01'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Hemelvaartsdag"
+  - given:
+      date: '2008-05-05'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Bevrijdingsdag"
+  - given:
+      date: '2008-05-11'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Eerste Pinksterdag"
+  - given:
+      date: '2008-05-12'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Tweede Pinksterdag"
+  - given:
+      date: '2008-12-25'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Eerste Kerstdag"
+  - given:
+      date: '2008-12-26'
+      regions: ["nl"]
+      options: ["informal"]
+    expect:
+      name: "Tweede Kerstdag"

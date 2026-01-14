@@ -1,5 +1,11 @@
+@use "lib/viewport";
+
 .reviewable {
   background: var(--d-content-background);
+
+  .reviewable-top-nav {
+    margin-bottom: 1em;
+  }
 
   .flagged-post-header {
     width: 100%;
@@ -37,25 +43,127 @@
 
   .reviewable-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin-top: 1em;
+    gap: var(--space-4);
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+    }
 
     .reviewable-list {
       flex: 1;
       box-sizing: border-box;
-      max-width: 760px; // Match topic post width
       min-width: 0;
-      margin-right: auto;
+      width: 100%;
+
+      @include viewport.until(sm) {
+        order: 2;
+        width: 100%;
+        padding-bottom: 4em;
+      }
     }
 
     .reviewable-filters {
-      width: 250px;
+      width: 100%;
       height: 100%;
       box-sizing: border-box;
+
+      &.--expanded {
+        --column-gap: 5em;
+        gap: 0 var(--column-gap);
+
+        @include viewport.from(sm) {
+          display: grid;
+          grid-template-columns: repeat(2, calc(50% - (var(--column-gap) / 2)));
+        }
+
+        @include viewport.until(lg) {
+          --column-gap: 2em;
+        }
+
+        .reviewable-filters-actions {
+          grid-column: 1 / -1;
+          margin-top: var(--space-4);
+        }
+
+        .reviewable-filter {
+          margin: 0 0 1em 0;
+        }
+      }
+
+      &.--collapsed {
+        display: flex;
+        gap: var(--space-2);
+        align-items: end;
+
+        @include viewport.until(sm) {
+          flex-wrap: wrap;
+        }
+
+        .reviewable-filter {
+          flex: 1 1 50%;
+          min-width: 5em;
+
+          @include viewport.until(sm) {
+            &:nth-child(2) {
+              display: none;
+            }
+          }
+
+          .name {
+            min-width: 0;
+            display: block;
+
+            @include ellipsis;
+          }
+        }
+      }
+
+      .reviewable-filters-actions {
+        display: flex;
+        gap: var(--space-2);
+        justify-content: space-between;
+
+        @include viewport.until(sm) {
+          width: 100%;
+        }
+      }
+
+      @include viewport.until(sm) {
+        order: 1;
+        padding: 0.5em 1em 1em 1em;
+        width: 100%;
+        background-color: var(--primary-very-low);
+
+        .reviewable-filter {
+          .filter-label {
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    .d-date-time-input-range {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+
+      .from {
+        margin: 0;
+      }
+    }
+
+    .d-date-time-input {
+      flex: 1 1 auto;
     }
 
     .reviewable-list + .reviewable-filters {
       margin-left: 1em;
+
+      @include viewport.until(sm) {
+        margin: 0 0 0.5em 0;
+      }
     }
   }
 }
@@ -93,10 +201,13 @@
   }
 
   .reviewable-user-details {
-    border-bottom: 1px solid var(--primary-low);
     padding-bottom: 0.25em;
     display: flex;
     margin-bottom: 0.5em;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--content-border-color);
+    }
 
     .name {
       width: 8em;
@@ -108,9 +219,13 @@
       max-width: calc(
         100% - 8em - 1em
       ); // subtracting width of name and margin-right
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
   }
+}
+
+.scrub-rejected-user {
+  width: 100%;
 }
 
 .no-review {
@@ -119,8 +234,8 @@
 
 .reviewable-filters {
   background-color: var(--primary-very-low);
-  padding: 1em;
-  margin-bottom: 1em;
+  padding: var(--space-4) var(--space-6);
+  margin-bottom: var(--space-4);
 
   .topic-filter .btn {
     display: flex;
@@ -134,7 +249,7 @@
   .reviewable-filter {
     display: flex;
     flex-direction: column;
-    margin: 0 0 1em 0;
+    break-inside: avoid;
 
     .filter-label {
       margin: 0 0 0.5em 0;
@@ -166,15 +281,6 @@
   margin-right: 0;
   align-items: center;
   margin-bottom: 0.5em;
-}
-
-.claimed-by {
-  display: flex;
-  align-items: center;
-
-  .claimed-username {
-    margin-left: 0.5em;
-  }
 }
 
 .reviewable-topics {
@@ -238,6 +344,10 @@
   margin-block: 3rem;
   padding-bottom: 1em;
 
+  &:first-of-type {
+    margin-top: var(--space-4);
+  }
+
   .show-raw-email {
     color: var(--primary-medium);
     font-size: var(--font-down-2);
@@ -251,14 +361,10 @@
     margin-right: 1em;
     padding-top: 0.35em;
 
-    @include breakpoint("mobile-large") {
+    @include viewport.until(sm) {
       float: left;
       margin-bottom: 1em;
     }
-  }
-
-  .names {
-    font-weight: bold;
   }
 
   .post-contents-wrapper {
@@ -267,7 +373,7 @@
     min-width: 275px;
     word-break: break-word;
 
-    @include breakpoint("mobile-large", min-width) {
+    @include viewport.from(sm) {
       display: flex;
     }
   }
@@ -275,7 +381,6 @@
   .reviewable-post-header {
     display: flex;
     justify-content: space-between;
-    width: var(--topic-body-width);
     align-items: center;
     max-width: 100%;
 
@@ -298,7 +403,6 @@
 
   .post-body {
     position: relative;
-    max-width: var(--topic-body-width);
     margin-top: 0.5em;
 
     &.is-collapsed {
@@ -440,12 +544,27 @@
     }
   }
 
+  &__meta-label {
+    font-weight: bold;
+  }
+
   .reviewable-contents {
     display: flex;
     flex-wrap: wrap;
     margin: 1.5rem 0 1rem;
     background: var(--secondary);
     padding: 1rem;
+
+    @include viewport.until(sm) {
+      .reviewable-post-header,
+      .post-body {
+        max-width: 100%;
+
+        p {
+          overflow-x: scroll;
+        }
+      }
+    }
   }
 
   .reviewable-actions {
@@ -456,23 +575,6 @@
 
     button {
       white-space: nowrap;
-    }
-
-    .approve-post,
-    .approve-post > summary {
-      background-color: var(--success);
-      color: var(--secondary);
-    }
-
-    .reject-post,
-    .reject-post > summary {
-      background-color: var(--danger);
-      color: var(--secondary);
-    }
-
-    .reviewable-action,
-    .reviewable-action-dropdown {
-      margin-right: 0.5em;
     }
   }
 }
@@ -509,8 +611,15 @@
   min-width: 50%;
   color: var(--primary-high);
 
+  @include viewport.until(sm) {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    border-top: 1px solid var(--content-border-color);
+  }
+
   &__table-wrapper {
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 
   th {
@@ -553,8 +662,32 @@
     color: var(--danger);
   }
 
+  @include viewport.until(sm) {
+    thead {
+      tr {
+        display: flex;
+        flex-direction: column;
+        border: 0;
+      }
+    }
+  }
+
   tbody {
     border-width: 1px;
+
+    @include viewport.until(sm) {
+      display: flex;
+      border: 0;
+
+      tr {
+        border: 0;
+      }
+
+      .reviewable-score {
+        display: flex;
+        flex-direction: column;
+      }
+    }
 
     td {
       white-space: nowrap;
@@ -578,7 +711,7 @@
         padding: 0.5em;
       }
 
-      @include breakpoint("mobile-large") {
+      @include viewport.until(sm) {
         @include ellipsis;
         padding-right: 0.5em;
       }
@@ -588,7 +721,6 @@
 
 .reviewable-score-reason {
   margin: 0.5em 0;
-  max-width: var(--topic-body-width);
   margin-bottom: 0.5em;
 }
 
@@ -596,7 +728,6 @@
   margin: 0.5em 0;
 
   .reviewable-conversation-post {
-    max-width: var(--topic-body-width);
     margin-bottom: 0.5em;
 
     .username {
@@ -611,7 +742,10 @@
 }
 
 .editable-fields {
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
+  gap: var(--space-2) var(--space-4);
 
   .editable-created-by {
     display: flex;
@@ -623,8 +757,6 @@
   }
 
   .editable-field {
-    margin-bottom: 0.5em;
-
     .mini-tag-chooser {
       margin: 0;
     }
@@ -639,8 +771,40 @@
       height: 10em;
     }
   }
+
+  .created-by,
+  .payload-title,
+  .payload-raw {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .category-id {
+    .category-chooser {
+      height: 100%;
+    }
+  }
+
+  .category-id,
+  .payload-tags {
+    flex: 1 1 calc(50% - var(--space-4) / 2);
+
+    .select-kit {
+      width: 100%;
+    }
+  }
+
+  .composer-toggle-switch {
+    display: none;
+  }
 }
 
 .unknown-reviewables__options {
   margin-top: 1em;
+}
+
+@include viewport.until(sm) {
+  .reviewable-scores-and-history table {
+    width: 100%;
+  }
 }

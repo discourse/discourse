@@ -55,12 +55,17 @@ module PageObjects
           section_link_present?(name, href: href, active: active, present: false)
         end
 
+        def sidebar_section_selector(name)
+          name = name.parameterize if name.include?(" ") || name.match?(/[A-Z]/)
+          ".sidebar-sections [data-section-name='#{name}']"
+        end
+
         def has_section?(name)
-          has_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
+          has_css?(sidebar_section_selector(name))
         end
 
         def has_no_section?(name)
-          has_no_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
+          has_no_css?(sidebar_section_selector(name))
         end
 
         def has_section_expanded?(name)
@@ -73,6 +78,7 @@ module PageObjects
 
         def switch_to_chat
           find(".sidebar__panel-switch-button[data-key='chat']").click
+          has_no_css?(".sidebar__panel-switch-button[data-key='chat']")
         end
 
         def switch_to_main
@@ -196,18 +202,16 @@ module PageObjects
               visible: false,
             ).click
           else
-            find(".sidebar-section[data-section-name='#{name}']").hover
-            find(
-              ".sidebar-section[data-section-name='#{name}'] button.sidebar-section-header-button",
-            ).click
+            section_selector =
+              ".sidebar-section[data-section-name='#{name}'] .sidebar-section-header-wrapper"
+
+            page.driver.with_playwright_page { |pw_page| pw_page.locator(section_selector).hover }
+            expect(page).to have_css("button.sidebar-section-header-button", visible: true)
+            find("#{section_selector} button.sidebar-section-header-button").click
           end
         end
 
         private
-
-        def sidebar_section_selector(name)
-          ".sidebar-section[data-section-name='#{name}']"
-        end
 
         def section_link_present?(name, href: nil, active: false, target: nil, count: 1, present:)
           attributes = { exact_text: name }

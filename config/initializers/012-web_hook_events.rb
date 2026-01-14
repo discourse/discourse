@@ -47,6 +47,10 @@ end
   DiscourseEvent.on(event) { |args| WebHook.enqueue_object_hooks(:user, args[:user], event) }
 end
 
+DiscourseEvent.on(:user_anonymized) do |args|
+  WebHook.enqueue_object_hooks(:user, args[:user], :user_anonymized)
+end
+
 %i[group_created group_updated].each do |event|
   DiscourseEvent.on(event) { |group| WebHook.enqueue_object_hooks(:group, group, event) }
 end
@@ -75,16 +79,31 @@ end
 
 %i[reviewable_created reviewable_score_updated].each do |event|
   DiscourseEvent.on(event) do |reviewable|
-    WebHook.enqueue_object_hooks(:reviewable, reviewable, event, reviewable.serializer)
+    category_id = reviewable.category_id
+    tag_ids = reviewable.topic&.tag_ids
+
+    WebHook.enqueue_object_hooks(
+      :reviewable,
+      reviewable,
+      event,
+      reviewable.serializer,
+      category_id:,
+      tag_ids:,
+    )
   end
 end
 
 DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable|
+  category_id = reviewable.category_id
+  tag_ids = reviewable.topic&.tag_ids
+
   WebHook.enqueue_object_hooks(
     :reviewable,
     reviewable,
     :reviewable_transitioned_to,
     reviewable.serializer,
+    category_id:,
+    tag_ids:,
   )
 end
 

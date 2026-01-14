@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    github:
+      pr_status:
+        draft: "下書き"
+        open: "オープン"
+        approved: "承認済み"
+        closed: "終了"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Discourse GitHub"
+  replace_github_link:
+    edit_reason: "GitHub リンクはパーマリンクに置き換えられました"

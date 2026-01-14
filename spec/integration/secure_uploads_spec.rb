@@ -12,6 +12,7 @@ describe "Secure uploads" do
     # UploadReference records works
     @original_provider = SiteSetting.provider
     SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+    @original_provider.all.each { |setting| SiteSetting.set(setting.name, setting.value) }
     setup_s3
     stub_s3_store
     SiteSetting.secure_uploads = true

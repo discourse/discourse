@@ -8,6 +8,7 @@ class SafeModeController < ApplicationController
   skip_before_action :preload_json, :check_xhr
 
   def index
+    response.headers["X-Robots-Tag"] = "noindex, nofollow"
   end
 
   def enter

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 #main-outlet {
   --below-topic-margin: 0.75em;
 }
@@ -26,16 +28,29 @@
 
   .topic-navigation {
     overflow-anchor: none;
+
+    .btn-toggle-localized-content.--active {
+      background-image: linear-gradient(
+        to bottom,
+        rgb(var(--primary-rgb), 0.6) 100%,
+        rgb(var(--primary-rgb), 0.6) 100%
+      );
+      color: var(--d-button-default-text-color--hover);
+
+      .d-icon {
+        color: var(--d-button-default-text-color--hover);
+      }
+    }
   }
 
   // timeline
-  @media screen and (min-width: 925px) {
+  @media screen and (width >= 925px) {
     // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     .topic-navigation {
       grid-area: timeline;
       align-self: start;
       position: sticky;
-      top: calc(var(--header-offset, 60px) + 2em);
+      top: calc(var(--header-offset, 60px) + 1.5em);
       margin-left: 1em;
       z-index: z("timeline");
 
@@ -46,6 +61,10 @@
       &.topic-progress-expanded {
         z-index: z("fullscreen");
       }
+
+      > * {
+        margin-bottom: 0.5em;
+      }
     }
 
     .topic-navigation-popup {
@@ -54,36 +73,33 @@
       top: 0;
       overflow-y: auto;
       z-index: z("timeline");
-      padding: 10px 10px 35px 10px;
+      padding: var(--space-4);
       box-shadow: var(--shadow-dropdown);
       background: var(--tertiary-low);
+
+      h2 {
+        font-size: var(--font-0);
+        padding-right: calc(
+          1em + 0.65em - var(--space-2)
+        ); // more or less reserved space for floating close button
+      }
 
       .close {
         display: flex;
         align-items: center;
         position: absolute;
         right: 0;
-        top: 8px;
+        top: 0;
         color: var(--primary);
         opacity: 0.5;
-        font-size: var(--font-up-1);
       }
     }
   }
 
   // progress bar
-  @media screen and (max-width: 924px) {
+  @media screen and (width <= 924px) {
     grid-template-areas: "posts";
     grid-template-columns: auto;
-
-    .topic-navigation {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      grid-area: posts;
-      grid-row: 3;
-      width: auto;
-    }
 
     .timeline-container:not(.timeline-fullscreen) {
       display: none; // hiding this because sometimes the JS switch lags and causes layout issues
@@ -111,7 +127,7 @@
 
 .topic-status-info,
 .topic-timer-info {
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   margin: 0;
   max-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
@@ -166,18 +182,68 @@
 }
 
 #topic-title {
+  z-index: z("base");
+  margin-bottom: 1em;
+
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
 
-    @media screen and (min-width: 925px) {
+    @media screen and (width >= 925px) {
       width: 90%; // topic title isn't full-width on wide screens
+    }
+
+    input#edit-title {
+      width: 100%;
+    }
+
+    .edit-topic__wrapper {
+      // managing whitespace to prevent the edit icon from wrapping to a new line
+      white-space: nowrap;
+      font-size: var(--font-down-3);
+      vertical-align: 0.125em;
+      margin-left: var(--space-1);
+    }
+
+    html.discourse-no-touch & {
+      .fancy-title {
+        .edit-topic {
+          opacity: 0;
+          transition: opacity 0.15s linear;
+          background: none;
+        }
+
+        &:hover,
+        &:focus {
+          .edit-topic {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    @include viewport.until(sm) {
+      .topic-category {
+        margin-top: 0.25em;
+      }
     }
   }
 
   h1 {
     margin-bottom: 0;
+    font-size: var(--font-up-4);
+    line-height: var(--line-height-medium);
+    overflow-wrap: break-word;
     width: 100%;
+    z-index: z("base");
+
+    @include viewport.until(sm) {
+      font-size: var(--font-up-3);
+    }
+
+    a {
+      color: var(--primary);
+    }
   }
 
   a.edit-topic .d-icon {
@@ -207,24 +273,34 @@
       width: 100%;
       margin: 0;
     }
+
+    .editing-localization-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      margin: var(--space-1);
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
   }
 
   .edit-category__wrapper {
     flex: 1 1 5%;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       min-width: 0; // allows category name to shrink to fit narrow screens
     }
 
     .select-kit.combo-box.category-chooser {
       width: 100%;
+      height: 100%;
     }
   }
 
   .edit-tags__wrapper {
     flex: 1 1 33%;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       flex: 1 1 100%; // force full row on narrow screens
     }
 
@@ -236,7 +312,7 @@
       flex-wrap: nowrap; // forces the whole input to wrap if needed, rather than individual tags
       min-width: 0;
 
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         flex-wrap: wrap; // individual tags will need to wrap on narrow screens
       }
 
@@ -289,7 +365,7 @@
       .mini-tag-chooser {
         margin-left: 0;
 
-        @include breakpoint(mobile-large, min-width) {
+        @include viewport.from(sm) {
           .selected-name {
             max-width: 500px;
           }
@@ -319,7 +395,7 @@
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
 
     li:last-of-type {
       margin-bottom: 1em;
@@ -333,6 +409,8 @@
   .track-link {
     display: flex;
     align-items: center;
+    gap: var(--space-2);
+    color: var(--primary-med-or-secondary-med);
 
     span:not(.badge) {
       @include ellipsis;
@@ -346,13 +424,13 @@
     li {
       margin-bottom: 0.5em;
 
-      a[href] {
-        color: var(--primary-med-or-secondary-med);
-      }
-
       .d-icon {
         font-size: var(--font-down-2);
-        margin: 0 0.5em 0 0;
+      }
+
+      .emoji {
+        width: 1em;
+        height: 1em;
       }
     }
   }
@@ -424,4 +502,37 @@ a.topic-featured-link {
 
 a[data-clicks]::after {
   @include click-counter-badge;
+}
+
+.post-info a,
+.post-info svg {
+  color: var(--primary-medium);
+}
+
+.topic-error {
+  padding: 18px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: var(--font-up-4);
+  line-height: var(--line-height-medium);
+  width: 60%;
+
+  @include viewport.until(sm) {
+    width: 90%;
+  }
+
+  @include viewport.from(sm) {
+    text-align: center;
+  }
+
+  .topic-retry {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 28px;
+
+    @include viewport.until(sm) {
+      margin-top: 20px;
+    }
+  }
 }

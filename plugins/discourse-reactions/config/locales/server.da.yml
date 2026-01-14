@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  site_settings:
+    discourse_reactions_enabled: "Aktiver discourse-reactions plugin."
+    discourse_reactions_enabled_reactions: "Definerer en liste over aktiverede reaktioner, enhver emoji er tilladt her."
+    discourse_reactions_desaturated_reaction_panel: "Reducerer visuel støj fra reaktioner ved at vise dem desaturerede, indtil du holder musen over dem."
+  badges:
+    first_reaction:
+      name: Første reaktion
+      description: Reagerede på indlægget
+      long_description: |
+        Dette emblem tildeles første gang du reagerer på et indlæg. Det at reagere på indlæg er en fantastisk måde at fortælle andre medlemmer, at det, de skrev om, var interessant, nyttigt, sejt eller sjovt. Del din reaktion!
+  reports:
+    reactions:
+      title: "Reaktioner"
+      description: "Liste over de seneste reaktioner."
+      labels:
+        day: "Dag"

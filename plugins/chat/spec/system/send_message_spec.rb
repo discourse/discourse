@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Send message", type: :system do
-  fab!(:user_1) { Fabricate(:admin) }
-  fab!(:user_2) { Fabricate(:admin) }
+  fab!(:user_1, :admin)
+  fab!(:user_2, :admin)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -24,12 +24,10 @@ RSpec.describe "Send message", type: :system do
       end
 
       it "shows correct state" do
-        using_session(:user_1) do
-          sign_in(user_1)
-          visit("/")
+        sign_in(user_1)
+        visit("/")
 
-          expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           sign_in(user_2)
@@ -38,23 +36,19 @@ RSpec.describe "Send message", type: :system do
           expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do
-          chat_page.open_new_message
-          chat_page.message_creator.filter(user_2.username)
-          chat_page.message_creator.click_row(user_2)
+        chat_page.open_new_message
+        chat_page.message_creator.filter(user_2.username)
+        chat_page.message_creator.click_row(user_2)
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do
-          channel_page.send_message
+        channel_page.send_message
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1, mention: true)
@@ -66,12 +60,10 @@ RSpec.describe "Send message", type: :system do
       fab!(:channel_1) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
 
       it "shows correct state" do
-        using_session(:user_1) do
-          sign_in(user_1)
-          visit("/")
+        sign_in(user_1)
+        visit("/")
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           sign_in(user_2)
@@ -80,23 +72,19 @@ RSpec.describe "Send message", type: :system do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do
-          chat_page.open_new_message
-          chat_page.message_creator.filter(user_2.username)
-          chat_page.message_creator.click_row(user_2)
+        chat_page.open_new_message
+        chat_page.message_creator.filter(user_2.username)
+        chat_page.message_creator.click_row(user_2)
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do
-          channel_page.send_message
+        channel_page.send_message
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1, mention: true)
@@ -109,9 +97,9 @@ RSpec.describe "Send message", type: :system do
     let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
     let(:topic_page) { PageObjects::Pages::Topic.new }
 
-    fab!(:post_1) { Fabricate(:post) }
+    fab!(:post_1, :post)
     fab!(:post_2) { Fabricate(:post, topic: post_1.topic) }
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:channel_1, :chat_channel)
 
     before do
       sign_in(user_1)
@@ -130,10 +118,8 @@ RSpec.describe "Send message", type: :system do
         drawer_page.open_channel(channel_1)
         channel_page.send_message
 
-        try_until_success do
-          expect(tested_context.dig(:context, :post_ids)).to eq([post_1.id, post_2.id])
-          expect(tested_context.dig(:context, :topic_id)).to eq(post_1.topic_id)
-        end
+        expect(tested_context.dig(:context, :post_ids)).to eq([post_1.id, post_2.id])
+        expect(tested_context.dig(:context, :topic_id)).to eq(post_1.topic_id)
       ensure
         DiscourseEvent.off(:chat_message_created, &blk)
       end

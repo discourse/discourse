@@ -592,7 +592,7 @@ RSpec.describe Email::Sender do
       reply.rebake!
       Email::Sender.new(message, :valid_type).send
       expected = <<~HTML
-      <a href=\"#{Discourse.base_url}#{category.url}\" data-type=\"category\" data-slug=\"dev\" data-id=\"#{category.id}\" style=\"text-decoration:none;font-weight:bold;color:#006699\"><span>#dev</span>
+      <a class="hashtag-cooked" href=\"#{Discourse.base_url}#{category.url}\" data-type=\"category\" data-slug=\"dev\" data-id=\"#{category.id}\" data-style-type=\"square\" style=\"text-decoration:none;font-weight:bold;color:#006699\"><span>#dev</span>
       HTML
       expect(message.html_part.body.to_s).to include(expected.chomp)
     end
@@ -1005,6 +1005,88 @@ RSpec.describe Email::Sender do
       email_log = EmailLog.last
       expect(email_log.cc_addresses).to eq("someguy@test.com;otherguy@xyz.com")
       expect(email_log.cc_users).to match_array([user1, user2])
+    end
+  end
+
+  context "with Net::SMTPError" do
+    let(:message) { Mail::Message.new(to: "eviltrout@test.domain", body: "test body") }
+
+    let(:email_sender) { Email::Sender.new(message, :valid_type) }
+
+    it "logs the error and re-raises" do
+      error = Net::SMTPUnknownError.new("550 Unknown SMTP response")
+      message.expects(:deliver!).raises(error)
+      Rails
+        .logger
+        .expects(:error)
+        .with("SMTP Error Net::SMTPUnknownError with message: 550 Unknown SMTP response")
+
+      expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
+    end
+
+    it "logs the server response if available" do
+      error = Net::SMTPUnknownError.new("550 Unknown SMTP response")
+      smtp_response = Net::SMTP::Response.new("550", "5.7.1 Relaying denied")
+      error.define_singleton_method(:response) { smtp_response }
+      message.expects(:deliver!).raises(error)
+
+      Rails
+        .logger
+        .expects(:error) do |log_message|
+          expect(log_message).to include("SMTP Error Net::SMTPUnknownError")
+          expect(log_message).to include("550 Unknown SMTP response")
+          expect(log_message).to include("response:")
+          expect(log_message).to include("5.7.1 Relaying denied")
+        end
+
+      expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
+    end
+
+    it "does not log unreadable object representation" do
+      error = Net::SMTPUnknownError.new("550 Unknown SMTP response")
+      smtp_response = Net::SMTP::Response.new("550", "5.7.1 Relaying denied")
+      def error.response
+        Net::SMTP::Response.new("550", "5.7.1 Relaying denied")
+      end
+      message.expects(:deliver!).raises(error)
+
+      Rails
+        .logger
+        .expects(:error) do |log_message|
+          expect(log_message).not_to include("#<Net::SMTP::Response:")
+          expect(log_message).to include("550 5.7.1 Relaying denied")
+        end
+
+      expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
+    end
+
+    it "handles error without server response gracefully" do
+      error = Net::SMTPUnknownError.new("550 Unknown SMTP response")
+      message.expects(:deliver!).raises(error)
+
+      Rails
+        .logger
+        .expects(:error)
+        .with("SMTP Error Net::SMTPUnknownError with message: 550 Unknown SMTP response")
+
+      expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
+    end
+
+    it "handles truthy response that does not respond to .string" do
+      error = Net::SMTPUnknownError.new("some error")
+      def error.response
+        "not a response object"
+      end
+      message.expects(:deliver!).raises(error)
+
+      Rails
+        .logger
+        .expects(:error)
+        .with(
+          "SMTP Error Net::SMTPUnknownError with message: some error response: not a response object",
+        )
+
+      expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
     end
   end
 end

@@ -1,0 +1,256 @@
+@keyframes flashing {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@mixin progress-dot {
+  content: "\25CF";
+  font-family:
+    "Söhne Circle",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Ubuntu,
+    Cantarell,
+    "Noto Sans",
+    sans-serif;
+  line-height: normal;
+  margin-left: 0.25rem;
+  vertical-align: baseline;
+  animation: flashing 1.5s 3s infinite;
+  display: inline-block;
+  font-size: 1rem;
+  color: var(--tertiary-medium);
+}
+
+.streamable-content.streaming .cooked p:last-child::after {
+  @include progress-dot;
+}
+
+details.ai-thinking.in-progress:not([open]) > summary::after {
+  content: "";
+  display: inline-block;
+  inline-size: 1.45em;
+  block-size: 0.35em;
+  margin-inline-start: 0.35em;
+  vertical-align: baseline;
+  position: relative;
+  top: 0.08em;
+  opacity: 0.85;
+  background:
+    radial-gradient(circle, currentcolor 60%, transparent 61%) 0% 100% / 0.25em
+      0.25em no-repeat,
+    radial-gradient(circle, currentcolor 60%, transparent 61%) 50% 100% / 0.25em
+      0.25em no-repeat,
+    radial-gradient(circle, currentcolor 60%, transparent 61%) 100% 100% /
+      0.25em 0.25em no-repeat;
+  animation: ai-thinking-dot-flash 2.8s infinite ease-in-out;
+}
+
+@keyframes ai-thinking-dot-flash {
+  0%,
+  12%,
+  100% {
+    background:
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        0% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        50% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        100% 100% / 0.25em 0.25em no-repeat;
+  }
+
+  20%,
+  32% {
+    background:
+      radial-gradient(circle, currentcolor 60%, transparent 61%) 0% 100% /
+        0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        50% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        100% 100% / 0.25em 0.25em no-repeat;
+  }
+
+  40%,
+  52% {
+    background:
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        0% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(circle, currentcolor 60%, transparent 61%) 50% 100% /
+        0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        100% 100% / 0.25em 0.25em no-repeat;
+  }
+
+  60%,
+  72% {
+    background:
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        0% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        50% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(circle, currentcolor 60%, transparent 61%) 100% 100% /
+        0.25em 0.25em no-repeat;
+  }
+
+  80%,
+  92% {
+    background:
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        0% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        50% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        100% 100% / 0.25em 0.25em no-repeat;
+  }
+}
+
+article.streaming .cooked {
+  .progress-dot::after {
+    @include progress-dot;
+  }
+
+  > .progress-dot:only-child::after {
+    // if the progress dot is the only content
+    // we are likely waiting longer for a response
+    // so it can start animating instantly
+    animation: flashing 1.5s infinite;
+  }
+}
+
+@keyframes ai-indicator-wave {
+  0%,
+  60%,
+  100% {
+    transform: initial;
+  }
+
+  30% {
+    transform: translateY(-0.2em);
+  }
+}
+
+.ai-indicator-wave {
+  flex: 0 0 auto;
+  display: inline-flex;
+
+  &__dot {
+    display: inline-block;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: ai-indicator-wave 1.8s linear infinite;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -1.6s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: -1.4s;
+    }
+  }
+}
+
+@keyframes mark-blink {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: var(--highlight-high);
+  }
+}
+
+@keyframes fade-in-highlight {
+  from {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+mark.highlight {
+  background-color: var(--highlight-high);
+  animation: fade-in-highlight 0.5s ease-in-out forwards;
+}
+
+.composer-ai-helper-modal__suggestion.thinking mark.highlight {
+  animation: mark-blink 1s step-start 0s infinite;
+  animation-name: mark-blink;
+}
+
+.composer-ai-helper-modal__loading.inline-diff {
+  white-space: pre-wrap;
+}
+
+.composer-ai-helper-modal__suggestion.inline-diff {
+  white-space: pre-wrap;
+
+  del:last-child {
+    text-decoration: none;
+    background-color: transparent;
+    color: var(--primary-low-mid);
+  }
+
+  .diff-inner {
+    display: inline;
+  }
+}

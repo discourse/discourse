@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_reactions: "Discourse Reactions"
+  js:
+    discourse_reactions:
+      reactions_title: "Reaktiot"
+      state_panel:
+        more_users: "ja %{count} muuta..."
+      reaction:
+        forbidden: "Tämä reaktio luotiin liian kauan sitten. Sitä ei voi enää muokata tai poistaa."
+      picker:
+        react_with: "Reagoi tähän viestiin reaktiolla: %{reaction}"
+        cant_remove_reaction: "Et voi enää poistaa reaktiotasi"
+        remove_reaction: "Poista tämä reaktio: %{reaction}"
+      main_reaction:
+        add: "Tykkää viestistä"
+        remove: "Poista tämä tykkäys"
+        cant_remove: "Et voi enää poistaa tykkäystäsi"
+        unauthenticated: "Tykkää julkaisusta rekisteröitymällä tai kirjautumalla sisään"
+    notifications:
+      reaction_1_user_multiple_posts:
+        one: "reagoi %{count} viestiisi"
+        other: "reagoi %{count} viestiisi"
+      reaction_2_users: "%{username}, %{username2}"
+      reaction_multiple_users:
+        one: "%{username} ja %{count} muu"
+        other: "%{username} ja %{count} muuta"
+      titles:
+        reaction: "uusi reaktio"

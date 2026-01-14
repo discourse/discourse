@@ -17,7 +17,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
-    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12-8core') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: 30
 
@@ -25,7 +25,7 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -44,15 +44,26 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
+          bundle config --local lockfile_checksums true
           bundle install --jobs 4
           bundle clean
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
+      - name: Bundler checksums
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          bundle lock --add-checksums
+          bundle lock --normalize-platforms
+          if [[ $(git status -s Gemfile.lock) ]]; then
+            echo "Gemfile.lock is not up to date. Please run 'bundle lock --add-checksums' and 'bundle lock --normalize-platforms'." && false
+          fi
+
       - name: Rubocop
         if: ${{ !cancelled() }}
-        run: bundle exec rubocop --parallel .
+        run: bundle exec rubocop
 
       - name: syntax_tree
         if: ${{ !cancelled() }}
@@ -88,4 +99,4 @@ jobs:
 
       - name: Glint
         if: ${{ !cancelled() }}
-        run: pnpm glint -p jsconfig.json --noEmit
+        run: pnpm lint:glint

@@ -25,8 +25,8 @@ RSpec.describe TagUser do
     let!(:tag2) { Fabricate(:tag) }
     let!(:tag3) { Fabricate(:tag) }
     let!(:tag4) { Fabricate(:tag) }
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
     let!(:tag_user1) do
       TagUser.create(
         user: user1,
@@ -187,9 +187,9 @@ RSpec.describe TagUser do
 
   describe "integration" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-    fab!(:watched_tag) { Fabricate(:tag) }
+    fab!(:watched_tag, :tag)
     let(:muted_tag) { Fabricate(:tag) }
-    fab!(:tracked_tag) { Fabricate(:tag) }
+    fab!(:tracked_tag, :tag)
 
     context "with some tag notification settings" do
       before { Jobs.run_immediately! }
@@ -230,7 +230,7 @@ RSpec.describe TagUser do
       end
 
       it "sets notification level to the highest one if there are multiple tags" do
-        SiteSetting.watched_precedence_over_muted = true
+        user.user_option.update!(watched_precedence_over_muted: true)
 
         TagUser.create!(
           user: user,

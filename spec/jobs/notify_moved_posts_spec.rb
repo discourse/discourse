@@ -14,7 +14,7 @@ RSpec.describe Jobs::NotifyMovedPosts do
   end
 
   context "with post ids" do
-    fab!(:p1) { Fabricate(:post) }
+    fab!(:p1, :post)
     fab!(:p2) { Fabricate(:post, user: Fabricate(:evil_trout), topic: p1.topic) }
     fab!(:p3) { Fabricate(:post, user: p1.user, topic: p1.topic) }
     fab!(:admin)

@@ -28,19 +28,18 @@ class SidekiqLongRunningJobLogger
               Sidekiq::Workers.new.each do |process_id, thread_id, work|
                 next unless process_id.start_with?(hostname)
 
-                if Time.at(work["run_at"]).to_i >=
-                     (Time.now - (60 * @stuck_sidekiq_job_minutes)).to_i
+                if Time.at(work.run_at).to_i >= (Time.now - (60 * @stuck_sidekiq_job_minutes)).to_i
                   next
                 end
 
-                jid = work.dig("payload", "jid")
+                jid = work.job.jid
                 current_long_running_jobs << jid
 
                 next if @seen_long_running_jobs&.include?(jid)
 
                 if thread = Thread.list.find { |t| t["sidekiq_tid"] == thread_id }
                   Rails.logger.warn(<<~MSG)
-                Sidekiq job `#{work.dig("payload", "class")}` has been running for more than #{@stuck_sidekiq_job_minutes} minutes
+                Sidekiq job `#{work.job.klass}` has been running for more than #{@stuck_sidekiq_job_minutes} minutes
                 #{thread.backtrace.join("\n")}
                 MSG
                 end

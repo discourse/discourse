@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 require "mongo"
 
 # Import YahooGroups data as exported into MongoDB by:

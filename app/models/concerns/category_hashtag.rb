@@ -18,9 +18,7 @@ module CategoryHashtag
           slug_path = split_slug_path(slug)
           next if slug_path.blank?
 
-          if SiteSetting.slug_generation_method == "encoded"
-            slug_path.map! { |slug| CGI.escape(slug) }
-          end
+          slug_path.map! { CGI.escape(_1) } if SiteSetting.slug_generation_method == "encoded"
           parent_slug, child_slug = slug_path.last(2)
 
           # Category slugs can be in the parent:child format, if there

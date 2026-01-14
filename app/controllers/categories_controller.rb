@@ -18,6 +18,7 @@ class CategoriesController < ApplicationController
 
   before_action :fetch_category, only: %i[show update destroy visible_groups]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
+
   skip_before_action :check_xhr,
                      only: %i[
                        index
@@ -27,6 +28,9 @@ class CategoriesController < ApplicationController
                        redirect
                      ]
   skip_before_action :verify_authenticity_token, only: %i[search]
+
+  # The front-end is POSTing data to this endpoint, but we're not modifying anything
+  allow_in_readonly_mode :search
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
@@ -96,7 +100,7 @@ class CategoriesController < ApplicationController
       category.move_to(params["position"].to_i)
       render json: success_json
     else
-      render status: 500, json: failed_json
+      render status: :internal_server_error, json: failed_json
     end
   end
 
@@ -131,15 +135,30 @@ class CategoriesController < ApplicationController
     render_serialized(@category, CategorySerializer)
   end
 
+  MAX_DESCRIPTION_PARAM_LENGTH = 1000
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
+
+    if category_params[:description].present? &&
+         category_params[:description].size > MAX_DESCRIPTION_PARAM_LENGTH
+      render json: {
+               errors: [
+                 I18n.t(
+                   "category.errors.description_too_long",
+                   count: MAX_DESCRIPTION_PARAM_LENGTH,
+                 ),
+               ],
+             },
+             status: :unprocessable_entity
+      return
+    end
 
     @category =
       begin
         Category.new(required_create_params.merge(user: current_user))
       rescue ArgumentError => e
-        return render json: { errors: [e.message] }, status: 422
+        return render json: { errors: [e.message] }, status: :unprocessable_entity
       end
 
     if @category.save
@@ -177,13 +196,15 @@ class CategoriesController < ApplicationController
       category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in].blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags].blank?
+      category_params[:email_in] = nil if category_params[:email_in]&.blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
-      old_permissions = { "everyone" => 1 } if old_permissions.empty?
+      old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
       if result = cat.update(category_params)
+        Category.preload_user_fields!(guardian, [cat])
+
         Scheduler::Defer.later "Log staff action change category settings" do
           @staff_action_logger.log_category_settings_change(
             @category,
@@ -268,6 +289,8 @@ class CategoriesController < ApplicationController
       .topic_create_allowed(guardian)
       .where(id: @category.id)
       .exists?
+    Category.preload_user_fields!(guardian, [@category])
+
     render_serialized(@category, CategorySerializer)
   end
 
@@ -314,62 +337,20 @@ class CategoriesController < ApplicationController
   def hierarchical_search
     term = params[:term].to_s.strip
     page = [1, params[:page].to_i].max
-    offset = params[:offset].to_i
-    parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
-    only =
-      if params[:only].present?
-        Category.secured(guardian).where(id: params[:only].to_a.map(&:to_i))
-      else
-        Category.secured(guardian)
-      end
-    except_ids = params[:except].to_a.map(&:to_i)
-    include_uncategorized =
-      (
-        if params[:include_uncategorized].present?
-          ActiveModel::Type::Boolean.new.cast(params[:include_uncategorized])
-        else
-          true
-        end
-      )
-
-    except_ids << SiteSetting.uncategorized_category_id unless include_uncategorized
-
-    except = Category.where(id: except_ids) if except_ids.present?
-
-    limit =
-      (
-        if params[:limit].present?
-          params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
-        else
-          MAX_CATEGORIES_LIMIT
-        end
-      )
+    only_ids = params[:only].map(&:to_i) if params[:only].present?
+    except_ids = params[:except].map(&:to_i) if params[:except].present?
 
     categories =
-      Category
-        .secured(guardian)
-        .limited_categories_matching(only, except, parent_category_id, term)
-        .preload(
-          :uploaded_logo,
-          :uploaded_logo_dark,
-          :uploaded_background,
-          :uploaded_background_dark,
-          :tags,
-          :tag_groups,
-          :form_templates,
-          category_required_tag_groups: :tag_group,
-        )
-        .joins("LEFT JOIN topics t on t.id = categories.topic_id")
-        .select("categories.*, t.slug topic_slug")
-        .limit(limit)
-        .offset((page - 1) * limit + offset)
-        .to_a
-
-    if Site.preloaded_category_custom_fields.present?
-      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
-    end
-
-    Category.preload_user_fields!(guardian, categories)
+      CategoryHierarchicalSearch.call(
+        guardian: guardian,
+        params: {
+          term:,
+          only_ids:,
+          except_ids:,
+          limit: MAX_CATEGORIES_LIMIT,
+          offset: (page - 1) * MAX_CATEGORIES_LIMIT,
+        },
+      ).categories
 
     response = { categories: serialize_data(categories, SiteCategorySerializer, scope: guardian) }
 
@@ -539,51 +520,68 @@ class CategoriesController < ApplicationController
           conditional_param_keys << { moderating_group_ids: [] }
         end
 
+        if SiteSetting.content_localization_enabled?
+          conditional_param_keys << { category_localizations: %i[id locale name description] }
+        end
+
+        permitted_params = [
+          *required_param_keys,
+          :position,
+          :name,
+          :color,
+          :text_color,
+          :style_type,
+          :emoji,
+          :icon,
+          :email_in,
+          :email_in_allow_strangers,
+          :mailinglist_mirror,
+          :all_topics_wiki,
+          :allow_unlimited_owner_edits_on_first_post,
+          :default_slow_mode_seconds,
+          :parent_category_id,
+          :auto_close_hours,
+          :auto_close_based_on_last_post,
+          :uploaded_logo_id,
+          :uploaded_logo_dark_id,
+          :uploaded_background_id,
+          :uploaded_background_dark_id,
+          :slug,
+          :allow_badges,
+          :topic_template,
+          :description,
+          :sort_order,
+          :sort_ascending,
+          :topic_featured_link_allowed,
+          :show_subcategory_list,
+          :num_featured_topics,
+          :default_view,
+          :subcategory_list_style,
+          :default_top_period,
+          :minimum_required_tags,
+          :navigate_to_first_post_after_read,
+          :search_priority,
+          :allow_global_tags,
+          :read_only_banner,
+          :default_list_filter,
+          *conditional_param_keys,
+        ]
+
+        DiscoursePluginRegistry.category_update_param_with_callback.each do |param_name, config|
+          permitted_params << param_name if config[:plugin].enabled?
+        end
+
         result =
           params.permit(
-            *required_param_keys,
-            :position,
-            :name,
-            :color,
-            :text_color,
-            :email_in,
-            :email_in_allow_strangers,
-            :mailinglist_mirror,
-            :all_topics_wiki,
-            :allow_unlimited_owner_edits_on_first_post,
-            :default_slow_mode_seconds,
-            :parent_category_id,
-            :auto_close_hours,
-            :auto_close_based_on_last_post,
-            :uploaded_logo_id,
-            :uploaded_logo_dark_id,
-            :uploaded_background_id,
-            :uploaded_background_dark_id,
-            :slug,
-            :allow_badges,
-            :topic_template,
-            :sort_order,
-            :sort_ascending,
-            :topic_featured_link_allowed,
-            :show_subcategory_list,
-            :num_featured_topics,
-            :default_view,
-            :subcategory_list_style,
-            :default_top_period,
-            :minimum_required_tags,
-            :navigate_to_first_post_after_read,
-            :search_priority,
-            :allow_global_tags,
-            :read_only_banner,
-            :default_list_filter,
-            *conditional_param_keys,
+            *permitted_params,
             category_setting_attributes: %i[
               auto_bump_cooldown_days
               num_auto_bump_daily
               require_reply_approval
               require_topic_approval
             ],
-            custom_fields: [custom_field_params],
+            custom_fields: {
+            },
             permissions: [*p.try(:keys)],
             allowed_tags: [],
             allowed_tag_groups: [],
@@ -595,15 +593,19 @@ class CategoriesController < ApplicationController
           raise Discourse::InvalidParameters.new(:required_tag_groups)
         end
 
+        if @category
+          DiscoursePluginRegistry.category_update_param_with_callback.each do |param_name, config|
+            next if !config[:plugin].enabled?
+            next if !result.key?(param_name)
+
+            @category.instance_variable_set(:"@#{param_name}_callback_value", result[param_name])
+            # remove from params so that AR doesn't try to set it as an attribute
+            result.delete(param_name)
+          end
+        end
+
         result
       end
-  end
-
-  def custom_field_params
-    keys = params[:custom_fields].try(:keys)
-    return if keys.blank?
-
-    keys.map { |key| params[:custom_fields][key].is_a?(Array) ? { key => [] } : key }
   end
 
   def fetch_category

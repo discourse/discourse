@@ -1,0 +1,277 @@
+# Swiss holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2018-10-10.
+# Sources:
+#  http://www.bj.admin.ch/content/dam/data/staat_buerger/zivilprozessrecht/kant-feiertage.pdf
+#
+# Word of warning:
+# ================
+# As the holidays are defined on a state level and sometimes even on a district / village level,
+# this holiday definition is an approximation of the reality. It should be accurate for most of the cases but
+# no guarantee is given that it is correct for all the special cases :-).
+# Considers both official holidays and holidays that are handled as if they were official holidays.
+#
+# Holiday names are in German in case they are celebrated in the German speaking area and in French / Italian otherwise.
+#
+# Known Issues:
+# * ch_ur: 26th of December is not celebrated in case the 25th is a Monday or a Friday.
+# * ch_fr: Fronleichnam, Maria Himmelfahrt, Allerheiligen, Maria Empfaengnis is celebrated in all villages except
+#         some villages of the district of See.
+# * ch_so:  - There are a lot of village holidays not included here.
+#           - 1st of May is holiday only starting at noon; not included here.
+#           - 19th of March is celebrated only in a couple of villages
+# * ch_ar: 26th of December is not celebrated in case the 25th is a Monday or a Friday.
+# * ch_ai: - 22nd of September is celebrated only in part of the state.
+#          - 26th of December is not celebrated in case the 25th is a Monday or a Friday.
+# * ch_ne: 26th of December and 2nd of January are only celebrated in case 25th of December and 1st of January are Sundays
+---
+months:
+  0:
+  - name: Karfreitag
+    regions: [ch_zh, ch_be, ch_lu, ch_ur, ch_sz, ch_ow, ch_nw, ch_gl, ch_zg, ch_fr, ch_so, ch_bs, ch_bl, ch_sh, ch_ar, ch_ai, ch_sg, ch_gr, ch_ag, ch_tg, ch_ti, ch_vd, ch_ne, ch_ge, ch_ju]
+    function: easter(year)
+    function_modifier: -2
+  - name: Ostermontag
+    regions: [ch_zh, ch_be, ch_lu, ch_ur, ch_sz, ch_ow, ch_nw, ch_gl, ch_zg, ch_fr, ch_so, ch_bs, ch_bl, ch_sh, ch_ar, ch_ai, ch_sg, ch_gr, ch_ag, ch_tg, ch_ti, ch_vd, ch_vs, ch_ge, ch_ju]
+    function: easter(year)
+    function_modifier: 1
+    # State holiday but observed in all the states
+  - name: Auffahrt
+    regions: [ch]
+    function: easter(year)
+    function_modifier: 39
+  - name: Pfingstmontag
+    regions: [ch_zh, ch_be, ch_lu, ch_ur, ch_sz, ch_ow, ch_nw, ch_gl, ch_zg, ch_fr, ch_so, ch_bs, ch_bl, ch_sh, ch_ar, ch_ai, ch_sg, ch_gr, ch_ag, ch_tg, ch_ti, ch_vd, ch_vs, ch_ge, ch_ju]
+    function: easter(year)
+    function_modifier: 50
+  - name: Fronleichnam
+    regions: [ch_lu, ch_ur, ch_sz, ch_ow, ch_nw, ch_zg, ch_fr, ch_so, ch_ai, ch_ag, ch_ti, ch_vs, ch_ne, ch_ju]
+    function: easter(year)
+    function_modifier: 60
+  - name: Lundi du Jeûne fédéral
+    regions: [ch_vd]
+    function: ch_vd_lundi_du_jeune_federal(year)
+  - name: Jeûne genevois
+    regions: [ch_ge]
+    function: ch_ge_jeune_genevois(year)
+  1:
+  - name: Neujahrstag
+    regions: [ch]
+    mday: 1
+  - name: Berchtoldstag
+    regions: [ch_zh, ch_be, ch_lu, ch_ow, ch_nw, ch_gl, ch_zg, ch_fr, ch_so, ch_sh, ch_sg, ch_ag, ch_tg, ch_vd, ch_vs, ch_ne, ch_ju]
+    mday: 2
+  - name: Dreikönigstag
+    regions: [ch_ur, ch_sz, ch_ti]
+    mday: 6
+  3:
+  - name: Instauration de la République
+    regions: [ch_ne]
+    mday: 1
+  - name: Josephstag
+    regions: [ch_ur, ch_sz, ch_nw, ch_ti, ch_vs]
+    mday: 19
+  4:
+  - name: Näfelser Fahrt
+    regions: [ch_gl]
+    function: ch_gl_naefelser_fahrt(year)
+  5:
+  - name: Tag der Arbeit
+    regions: [ch_zh, ch_bs, ch_bl, ch_sh, ch_ag, ch_tg, ch_ti, ch_ne, ch_ju]
+    mday: 1
+  6:
+  - name: Commémoration du plébiscite jurassien
+    regions: [ch_ju]
+    mday: 23
+  - name: San Pietro e Paolo
+    regions: [ch_ti]
+    mday: 29
+  8:
+    # Federal holiday
+  - name: Bundesfeiertag
+    regions: [ch]
+    mday: 1
+  - name: Mariä Himmelfahrt
+    regions: [ch_lu, ch_ur, ch_sz, ch_ow, ch_nw, ch_zg, ch_fr, ch_so, ch_ai, ch_ag, ch_ti, ch_vs, ch_ju]
+    mday: 15
+  9:
+  - name: Mauritiustag
+    regions: [ch_ai]
+    mday: 22
+  - name: Bruderklausenfest
+    regions: [ch_ow]
+    mday: 25
+  11:
+  - name: Zibelemärit
+    regions: [ch_be]
+    function: ch_be_zibelemaerit(year)
+  - name: Allerheiligen
+    regions: [ch_lu, ch_ur, ch_sz, ch_ow, ch_nw, ch_gl, ch_zg, ch_fr, ch_so, ch_ai, ch_sg, ch_ag, ch_ti, ch_vs, ch_ju]
+    mday: 1
+  12:
+  - name: Maria Empfängnis
+    regions: [ch_lu, ch_ur, ch_sz, ch_ow, ch_nw, ch_zg, ch_fr, ch_ai, ch_ag, ch_ti, ch_vs]
+    mday: 8
+    # State holiday but observed in all the states
+  - name: Weihnachten
+    regions: [ch]
+    mday: 25
+  - name: Stefanstag
+    regions: [ch_zh, ch_be, ch_lu, ch_ur, ch_sz, ch_ow, ch_nw, ch_gl, ch_zg, ch_fr, ch_so, ch_bs, ch_bl, ch_sh, ch_ar, ch_ai, ch_sg, ch_gr, ch_ag, ch_tg, ch_ti, ch_vs, ch_ne]
+    mday: 26
+  - name: Restauration de la République
+    regions: [ch_ge]
+    mday: 31
+
+methods:
+  ch_vd_lundi_du_jeune_federal:
+    # Monday after the third Sunday of September
+    arguments: year
+    ruby: |
+      date = Date.civil(year,9,1)
+      # Find the first Sunday of September
+      until date.wday.eql? 0 do
+        date += 1
+      end
+      # There are 15 days between the first Sunday
+      # and the Monday after the third Sunday
+      date + 15
+  ch_ge_jeune_genevois:
+    # Thursday after the first Sunday of September
+    arguments: year
+    ruby: |
+      date = Date.civil(year,9,1)
+      # Find the first Sunday of September
+      until date.wday.eql? 0 do
+        date += 1
+      end
+      # Thursday is four days after Sunday
+      date + 4
+  ch_gl_naefelser_fahrt:
+    # First Thursday of April. If the first Thursday of April is in the week before easter, then a week later.
+    arguments: year
+    ruby: |
+      date = Date.civil(year,4,1)
+      # Find the first Thursday of April
+      until date.wday.eql? 4 do
+        date += 1
+      end
+
+      if date.eql?(Holidays::Factory::DateCalculator::Easter::Gregorian.easter_calculator.calculate_easter_for(year)-3)
+        date += 7
+      end
+      date
+  ch_be_zibelemaerit:
+    # fourth Monday in november
+    arguments: year
+    ruby: |
+      date = Date.civil(year,11,1)
+      # Find the first Monday of November
+      until date.wday.eql? 1 do
+        date += 1
+      end
+      # There are 21 days between the first monday
+      # and the 4rth Monday after
+      date + 21
+
+tests:
+  - given:
+      date: '2018-01-01'
+      regions: ["ch"]
+    expect:
+      name: "Neujahrstag"
+  - given:
+      date: '2012-08-01'
+      regions: ["ch"]
+    expect:
+      name: "Bundesfeiertag"
+  - given:
+      date: '2012-12-25'
+      regions: ["ch"]
+    expect:
+      name: "Weihnachten"
+  - given:
+      date: '2012-05-17'
+      regions: ["ch"]
+    expect:
+      name: "Auffahrt"
+  - given:
+      date: '2012-08-01'
+      regions: ["ch_zh"]
+    expect:
+      name: "Bundesfeiertag"
+  - given:
+      date: '2012-12-25'
+      regions: ["ch_zh"]
+    expect:
+      name: "Weihnachten"
+  - given:
+      date: '2012-05-17'
+      regions: ["ch_zh"]
+    expect:
+      name: "Auffahrt"
+  - given:
+      date: '2012-05-01'
+      regions: ["ch_zh"]
+    expect:
+      name: "Tag der Arbeit"
+  - given:
+      date: '2012-12-26'
+      regions: ["ch_zh"]
+    expect:
+      name: "Stefanstag"
+  - given:
+      date: '2012-09-17'
+      regions: ["ch_vd"]
+    expect:
+      name: "Lundi du Jeûne fédéral"
+  - given:
+      date: '2013-09-16'
+      regions: ["ch_vd"]
+    expect:
+      name: "Lundi du Jeûne fédéral"
+  - given:
+      date: '2014-09-22'
+      regions: ["ch_vd"]
+    expect:
+      name: "Lundi du Jeûne fédéral"
+  - given:
+      date: '2012-09-06'
+      regions: ["ch_ge"]
+    expect:
+      name: "Jeûne genevois"
+  - given:
+      date: '2013-09-05'
+      regions: ["ch_ge"]
+    expect:
+      name: "Jeûne genevois"
+  - given:
+      date: '2014-09-11'
+      regions: ["ch_ge"]
+    expect:
+      name: "Jeûne genevois"
+  - given:
+      date: '2012-04-12'
+      regions: ["ch_gl"]
+    expect:
+      name: "Näfelser Fahrt"
+  - given:
+      date: '2013-04-04'
+      regions: ["ch_gl"]
+    expect:
+      name: "Näfelser Fahrt"
+  - given:
+      date: '2014-04-03'
+      regions: ["ch_gl"]
+    expect:
+      name: "Näfelser Fahrt"
+  - given:
+      date: '2014-11-24'
+      regions: ["ch_be"]
+    expect:
+      name: "Zibelemärit"
+  - given:
+      date: '2020-11-23'
+      regions: ["ch_be"]
+    expect:
+      name: "Zibelemärit"

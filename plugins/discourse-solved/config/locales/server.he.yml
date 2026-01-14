@@ -1,0 +1,74 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  accepted_answer: "תשובה שקיבלה אישור"
+  site_settings:
+    solved_enabled: "הפעלת תוסף הפתרונות, מאפשר למשתמשים לבחור פתרונות לנושאים"
+    allow_solved_on_all_topics: "לאפשר למשתמשים לבחור פתרונות בכל הנושאים (כשלא מסומן, ניתן להפעיל פתרונות לפי קטגוריה או תגית)"
+    accept_all_solutions_trust_level: "רמת האמון המזערית שנדרשת לקבלת פתרונות בכל נושא שהוא (אפילו לא בתור המפרסם המקורי)"
+    accept_all_solutions_allowed_groups: "קבוצות שמורשות לקבל פתרונות בכל נושא (גם כשלא משתתפיה פרסמו אותו). מנהלים ומפקחים מורשים תמיד."
+    empty_box_on_unsolved: "להציג תיבה ריקה ליד הנושאים שלא נפתרו"
+    solved_quote_length: "מספר התווים לציטוט בעת הצגת הפתרון תחת הפוסט הראשון"
+    solved_topics_auto_close_hours: "לסגור נושא אוטומטית (n) שעות לאחר התגובה האחרונה כאשר הנושא סומן כפתור. יש להגדיר כ־0 להשבתת הסגירה האוטומטית."
+    show_filter_by_solved_status: "הצגת רשימה נגללת כדי לסנן רשימת נושאים לפי מצב פתרון."
+    notify_on_staff_accept_solved: "לשלוח הודעה ליוצר הנושא כאשר פוסט מסומן כפתרון על ידי הסגל."
+    ignore_solved_topics_in_assigned_reminder: "למנוע מתזכורות למשימות לכלול נושאים פתורים. תקף רק בעת שימוש בתוסף discourse-assign."
+    assignment_status_on_solve: "כאשר נושא נפתר לעדכן את כל ההקצאות למצב הזה"
+    assignment_status_on_unsolve: "כאשר נושא סומן כלא פתור לעדכן את כל ההקצאות למצב הזה"
+    disable_solved_education_message: "השבתת הודעת חינוך לנושאים שנפתרו."
+    accept_solutions_topic_author: "לאפשר ליוצר הנושא לאשר פתרון."
+    solved_add_schema_markup: "להוסיף סימון סכמת QAPage ל־HTML."
+    enable_solved_tags: "תגיות שיאפשרו למשתמשים לבחור פתרונות."
+    prioritize_solved_topics_in_search: "תעדוף נושאים שנפתרו בתוצאות החיפוש."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level (דרגת אמון לקבלת כל הפתרונות)"
+  reports:
+    accepted_solutions:
+      title: "פתרונות מקובלים"
+      xaxis: "יום"
+      yaxis: "סך הכל"
+  solved:
+    no_solutions:
+      self: "אין לך פתרונות מקובלים עדיין."
+      others: "אין פתרונות מקובלים."
+    filter:
+      description:
+        solved: "סינון נושאים שנפתרו"
+        unsolved: "סינון נושאים שלא נפתרו"
+  badges:
+    solved_1:
+      name: "נפתר!"
+      description: "סימון תגובה כפתרון"
+      long_description: "עיטור זה מוענק על תגובה שסומנה כפתרון לנושא. :white_check_mark: כל הכבוד. :+1:"
+    solved_2:
+      name: "יעוץ הדרכה"
+      description: "10 תגובות שלך סומנו כפתרונות"
+      long_description: "עיטור זה מוענק על כך ש־10 מהתגובות שלך סומנו כפתרונות לנושאים. :white_check_mark: המעורבות שלך היא נכס שלא יסולא בפז לחברי הקהילה."
+    solved_3:
+      name: "חכמולוג"
+      description: "50 תגובות שלך סומנו כפתרונות"
+      long_description: "עיטור זה מוענק על כך ש־50 מהתגובות שלך סומנו כפתרונות לנושאים. :white_check_mark: נראה שיש לך מושג בדבר או שניים. :clap:"
+    solved_4:
+      name: "מכון הפתרונות"
+      description: "150 תגובות שלך סומנו כפתרונות"
+      long_description: "עיטור זה מוענק על כך ש־150 מהתגובות שלך סומנו כפתרונות לנושאים. :white_check_mark: עבודה מצוינת. :slightly_smiling_face: אפשר להכתיר אותך בתור מכון פתרונות. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: הפתרון הראשון שהתקבל
+        doc: מקפיץ כאשר אושר פתרון של משתמש לראשונה.
+  education:
+    topic_is_solved: |
+      ### נושא זה נפתר
+
+      יש להגיב כאן רק אם:
+
+      - יש לך פרטים נוספים
+
+      - הפתרון לא עובד עבורך
+
+      אם יש לך בעיה שלא קשורה, נא [לפתוח נושא חדש] (%{base_url}/new-topic) במקום.

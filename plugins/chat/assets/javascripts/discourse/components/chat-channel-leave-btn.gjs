@@ -4,7 +4,6 @@ import { isPresent } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 
 export default class ChatChannelLeaveBtn extends Component {
-  @service chat;
   @service site;
 
   get shouldRender() {

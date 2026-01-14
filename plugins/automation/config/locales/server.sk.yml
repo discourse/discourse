@@ -11,7 +11,7 @@ sk:
     models:
       fields:
         required_field: Pole `%{name}` musí byť vyplnené na `%{target}:%{target_name}`.
-        invalid_field: Komponent poľa `%{component}` nie je použiteľný na `%{target}:%{target_name}.`
+        invalid_field: Komponent poľa `%{component}` nie je použiteľný na `%{target}:%{target_name}`.
         invalid_metadata: Údaje pre `%{field}` sú neplatné alebo komponent `%{component}` nie je známy.
     triggerables:
       errors:
@@ -152,3 +152,5 @@ sk:
       random_assign:
         title: "Náhodné priradenie"
         description: "Náhodné priradenie tém do skupiny"
+      set_topic_timer:
+        title: "Nastavenie časovača témy"

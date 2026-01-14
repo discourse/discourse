@@ -1,0 +1,71 @@
+.ai-llm-quotas {
+  margin: 1em 0;
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+  }
+
+  &__table-head {
+    background-color: var(--primary-very-low);
+  }
+
+  .duration-selector {
+    .select-kit {
+      width: 150px;
+    }
+  }
+
+  .duration-selector__custom {
+    margin-top: 8px;
+  }
+
+  &__header {
+    text-align: left;
+    padding: 0.5em;
+    font-weight: bold;
+    border-bottom: 2px solid var(--primary-low);
+
+    &--actions {
+      width: 50px;
+    }
+  }
+
+  &__row {
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__cell {
+    vertical-align: middle;
+    align-items: center;
+
+    &--actions {
+      text-align: center;
+    }
+  }
+
+  &__input[type="number"] {
+    width: 200px;
+    padding: 0.5em;
+    margin-bottom: 0;
+  }
+
+  &__group-select {
+    width: 200px;
+  }
+
+  &__delete-btn {
+    padding: 0.3em 0.5em;
+  }
+
+  &__add-btn {
+    padding: 0.3em 0.5em;
+  }
+}
+
+.ai-llm-quota-modal {
+  .fk-d-tooltip__icon {
+    color: var(--primary-medium);
+  }
+}

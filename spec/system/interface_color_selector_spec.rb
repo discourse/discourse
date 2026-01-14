@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 describe "Interface color selector", type: :system do
-  let!(:light_scheme) { ColorScheme.find_by(base_scheme_id: "Solarized Light") }
-  let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+  let!(:light_scheme) do
+    ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+  end
+  let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
 
   let(:selector_in_sidebar) do
     PageObjects::Components::InterfaceColorSelector.new(".sidebar-footer-actions")
@@ -39,14 +41,14 @@ describe "Interface color selector", type: :system do
 
   before do
     SiteSetting.interface_color_selector = "sidebar_footer"
-    SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+    Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
 
     SiteSetting.logo = light_mode_image
     SiteSetting.logo_dark = dark_mode_image
   end
 
   it "is not available when there's no default dark scheme" do
-    SiteSetting.default_dark_mode_color_scheme_id = -1
+    Theme.find_default.update!(dark_color_scheme_id: nil)
 
     visit("/")
 
@@ -54,7 +56,7 @@ describe "Interface color selector", type: :system do
   end
 
   it "is not available when the default theme's scheme is the same as the site's default dark scheme" do
-    Theme.find(SiteSetting.default_theme_id).update!(color_scheme_id: dark_scheme.id)
+    Theme.find_default.update!(color_scheme_id: dark_scheme.id)
 
     visit("/")
 
@@ -62,7 +64,7 @@ describe "Interface color selector", type: :system do
   end
 
   it "is not available if the user uses the same scheme for dark mode as the light mode" do
-    user.user_option.update!(color_scheme_id: light_scheme.id, dark_scheme_id: -1)
+    user.user_option.update!(color_scheme_id: light_scheme.id, dark_scheme_id: light_scheme.id)
     sign_in(user)
 
     visit("/")

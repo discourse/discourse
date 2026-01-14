@@ -11,7 +11,7 @@ vi:
       edit: Sửa
       fields:
         user:
-          label: Người dùng
+          label: Thành viên
         pm:
           title:
             label: Tiêu đề
@@ -27,6 +27,12 @@ vi:
         text:
           label: Văn bản
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Chuyên mục
+            tags:
+              label: Thẻ
         user_badge_granted:
           fields:
             badge:
@@ -60,13 +66,13 @@ vi:
           fields:
             restricted_tags:
               label: Thẻ
-            restricted_category:
-              label: Danh mục
-            restricted_group:
-              label: Nhóm
-            restricted_groups:
-              label: Nhóm
+            restricted_categories:
+              label: Chuyên mục
           created: Tạo bởi
+          with_images: Hình ảnh
+          with_links: Liên kết
+          with_code: Mã
+          with_uploads: Tải lên
         category_created_edited:
           fields:
             restricted_category:
@@ -77,10 +83,18 @@ vi:
               label: Thành viên
             restricted_group:
               label: Nhóm
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Các thư mục giám sát
+              description: Chỉ kích hoạt nếu chủ đề thuộc một trong các chuyên mục này
+            watching_tags:
+              label: Các thẻ giám sát
+              description: Chỉ kích hoạt nếu chủ đề thuộc một trong các thẻ này
         after_post_cook:
           fields:
             restricted_category:
-              label: Danh mục
+              label: Chuyên mục
             restricted_tags:
               label: Thẻ
       scriptables:
@@ -110,7 +124,7 @@ vi:
         suspend_user_by_email:
           fields:
             actor:
-              label: Người dùng
+              label: Thành viên
         pin_topic:
           fields:
             pinnable_topic:
@@ -120,13 +134,13 @@ vi:
             topic_id:
               label: ID Chủ đề
             user:
-              label: Người dùng
+              label: Thành viên
         close_topic:
           fields:
             topic:
               label: ID Chủ đề
             user:
-              label: Người dùng
+              label: Thành viên
       models:
         trigger:
           name:

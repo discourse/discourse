@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
   fab!(:welcome_topic) { Fabricate(:topic, title: "Welcome to Discourse") }
-  fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  fab!(:narrative_bot) { DiscourseNarrativeBot::Base.new }
   fab!(:discobot_user) { narrative_bot.discobot_user }
   fab!(:discobot_username) { narrative_bot.discobot_username }
   fab!(:first_post) { Fabricate(:post, user: discobot_user) }
@@ -21,7 +21,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
 
   fab!(:post) { Fabricate(:post, topic: topic, user: user) }
   fab!(:narrative) { described_class.new }
-  fab!(:other_topic) { Fabricate(:topic) }
+  fab!(:other_topic, :topic)
   fab!(:other_post) { Fabricate(:post, topic: other_topic) }
   fab!(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
   fab!(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }

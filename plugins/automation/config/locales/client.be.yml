@@ -25,6 +25,12 @@ be:
         group:
           label: група
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: катэгорыі
+            tags:
+              label: Цэтлікі
         user_badge_granted:
           fields:
             badge:
@@ -43,13 +49,12 @@ be:
           fields:
             restricted_tags:
               label: тэгі
-            restricted_category:
-              label: катэгорыя
-            restricted_group:
-              label: група
-            restricted_groups:
-              label: групы
+            restricted_categories:
+              label: катэгорыі
           created: створаны
+          with_images: Выява
+          with_links: Спасылкі
+          with_uploads: Загрузкі
         category_created_edited:
           fields:
             restricted_category:

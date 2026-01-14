@@ -39,7 +39,7 @@ RSpec.describe "spam rules for users" do
         end
 
         context "when one spam post is flagged enough times by enough users" do
-          fab!(:another_topic) { Fabricate(:topic) }
+          fab!(:another_topic, :topic)
           let!(:private_messages_count) { spammer.private_topics_count }
           let!(:mod_pm_count) { moderator.private_topics_count }
           let!(:reviewable) { PostActionCreator.spam(user2, spam_post).reviewable }

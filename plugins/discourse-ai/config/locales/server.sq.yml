@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Grupet e krijuara"
+    ai_bot:
+      tool_summary:
+        search: "Kërko"
+        time: "Koha"
+        summarize: "Përmblidhni"
+    ai_staff_action_logger:
+      removed: "u hoq"

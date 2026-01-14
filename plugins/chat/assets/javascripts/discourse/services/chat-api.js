@@ -275,7 +275,7 @@ export default class ChatApi extends Service {
    * Creates a message interaction.
    * @param {number} channelId - The ID of the channel.
    * @param {number} messageId - The ID of the message.
-   * @param {object} data - Params of the intereaction.
+   * @param {object} data - Params of the interaction.
    * @param {string} data.action_id - The ID of the action.
    * @returns {Promise}
    */
@@ -341,6 +341,17 @@ export default class ChatApi extends Service {
     return this.#deleteRequest(
       `/channels/${channelId}/memberships/me/follows`
     ).then((result) => UserChatChannelMembership.create(result.membership));
+  }
+
+  /**
+   * Update membership settings of current user for a channel.
+   * @param {number} channelId - The ID of the channel.
+   * @param {object} data - The settings to modify.
+   * @param {boolean} [data.starred] - Stars the channel.
+   * @returns {Promise}
+   */
+  updateCurrentUserChannelMembership(channelId, data = {}) {
+    return this.#putRequest(`/channels/${channelId}/memberships/me`, data);
   }
 
   /**

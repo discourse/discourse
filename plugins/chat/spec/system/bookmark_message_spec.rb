@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Bookmark message", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -9,7 +9,7 @@ RSpec.describe "Bookmark message", type: :system do
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
-  fab!(:category_channel_1) { Fabricate(:category_channel) }
+  fab!(:category_channel_1, :category_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
   before do
@@ -28,29 +28,30 @@ RSpec.describe "Bookmark message", type: :system do
 
       expect(channel_page).to have_bookmarked_message(message_1)
     end
+    context "when in a long thread" do
+      it "supports linking to a bookmark in a long thread" do
+        category_channel_1.update!(threading_enabled: true)
+        category_channel_1.add(current_user)
 
-    it "supports linking to a bookmark in a long thread" do
-      category_channel_1.update!(threading_enabled: true)
-      category_channel_1.add(current_user)
+        thread =
+          chat_thread_chain_bootstrap(
+            channel: category_channel_1,
+            users: [current_user, Fabricate(:user)],
+            messages_count: 51,
+          )
 
-      thread =
-        chat_thread_chain_bootstrap(
-          channel: category_channel_1,
-          users: [current_user, Fabricate(:user)],
-          messages_count: Chat::MessagesQuery::MAX_PAGE_SIZE + 1,
-        )
+        first_message = thread.replies.first
 
-      first_message = thread.replies.first
+        bookmark = Bookmark.create!(bookmarkable: first_message, user: current_user)
 
-      bookmark = Bookmark.create!(bookmarkable: first_message, user: current_user)
+        visit bookmark.bookmarkable.url
 
-      visit bookmark.bookmarkable.url
-
-      expect(thread_page).to have_bookmarked_message(first_message)
+        expect(thread_page).to have_bookmarked_message(first_message)
+      end
     end
 
     context "in drawer mode" do
-      fab!(:category_channel_2) { Fabricate(:category_channel) }
+      fab!(:category_channel_2, :category_channel)
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: category_channel_2) }
 
       fab!(:bookmark_1) { Bookmark.create!(bookmarkable: message_1, user: current_user) }
@@ -100,6 +101,37 @@ RSpec.describe "Bookmark message", type: :system do
         expect(bookmark.auto_delete_preference).to eq(
           Bookmark.auto_delete_preferences[:on_owner_reply],
         )
+      end
+    end
+
+    context "with reminder notification cleanup" do
+      it "removes bookmark reminder notification when bookmark is deleted" do
+        chat_page.visit_channel(category_channel_1)
+        channel_page.bookmark_message(message_1)
+        bookmark_modal.fill_name("Check this out later")
+        bookmark_modal.select_preset_reminder(:tomorrow)
+
+        expect(channel_page).to have_bookmarked_message(message_1)
+
+        bookmark = Bookmark.find_by(bookmarkable: message_1, user: current_user)
+        Chat::MessageBookmarkable.send_reminder_notification(
+          bookmark,
+          data: {
+            title: bookmark.bookmarkable.chat_channel.title(current_user),
+            bookmarkable_url: bookmark.bookmarkable.url,
+          },
+        )
+
+        user_menu.open
+
+        expect(page).to have_css("#quick-access-all-notifications .bookmark-reminder")
+
+        channel_page.bookmark_message(message_1)
+        bookmark_modal.delete
+        bookmark_modal.confirm_delete
+        user_menu.open
+
+        expect(page).to have_no_css("#quick-access-all-notifications .bookmark-reminder")
       end
     end
   end

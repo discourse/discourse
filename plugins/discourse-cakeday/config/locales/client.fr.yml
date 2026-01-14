@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    user:
+      date_of_birth:
+        user_title: "C'est votre anniversaire aujourd'hui !"
+        title: "C'est mon anniversaire aujourd'hui !"
+        label: "Date de naissance"
+      anniversary:
+        user_title: "Aujourd'hui est l'anniversaire de votre arrivée dans notre communauté !"
+        title: "Aujourd'hui est l'anniversaire de mon arrivée dans cette communauté !"
+    cakeday:
+      title: Célébration
+      today: "Aujourd'hui"
+      tomorrow: "Demain"
+      upcoming: "Prochainement"
+      all: "Tout"
+    birthdays:
+      title: "Anniversaires"
+      month:
+        title: "Anniversaires du mois de"
+        empty: "Aucun utilisateur ne fête son anniversaire ce mois-ci."
+      upcoming:
+        title: "Anniversaires du %{start_date} au %{end_date}"
+        empty: "Aucun utilisateur ne fêtera son anniversaire dans les 7 prochains jours."
+      today:
+        title: "Anniversaires le %{date}"
+        empty: "Aucun utilisateur ne fête son anniversaire aujourd'hui."
+      tomorrow:
+        empty: "Aucun utilisateur ne fête son anniversaire demain."
+    anniversaries:
+      title: "Anniversaires d'adhésion"
+      month:
+        title: "Anniversaires d'adhésion du mois de"
+        empty: "Aucun utilisateur ne fête son anniversaire d'adhésion ce mois-ci."
+      upcoming:
+        title: "Anniversaires d'adhésion du %{start_date} au %{end_date}"
+        empty: "Aucun utilisateur ne fêtera son anniversaire d'adhésion dans les 7 prochains jours."
+      today:
+        title: "Anniversaires d'adhésion le %{date}"
+        empty: "Aucun utilisateur ne fête son anniversaire d'adhésion aujourd'hui."
+      tomorrow:
+        empty: "Aucun utilisateur ne fête son anniversaire d'adhésion demain."

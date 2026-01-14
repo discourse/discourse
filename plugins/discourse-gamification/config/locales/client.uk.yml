@@ -1,0 +1,85 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Гейміфікація дискурсу"
+  js:
+    gamification_score: "Ура"
+    gamification:
+      score: "Ура"
+      you: "Ви"
+      leaderboard:
+        title: "Таблиця лідерів"
+        info: "Як це працює?"
+        link_to_settings: "Налаштування"
+        refresh: "Оновити"
+        modal:
+          title: "Як працює таблиця лідерів?"
+          text: "Бали нараховуються за взаємодію зі спільнотою, таку як відвідування, лайки та публікації. Ваш рахунок оновлюється кожні кілька хвилин. Тож будьте корисними, активними та підтримуючими, і просуньтесь по службі!"
+        name: "Імʼя"
+        name_placeholder: "Назва..."
+        new: "Нова таблиця лідерів"
+        create_success: "Таблиця лідерів створена"
+        delete_success: "Таблиця лідерів видалена"
+        save_success: "Таблицю лідерів збережено"
+        cta: "Зробіть вашу першу таблицю лідерів"
+        none: "Жодної таблиці лідерів ще не створено."
+        confirm_destroy: "Ви впевнені, що хочете видалити цю таблицю лідерів?"
+        date:
+          range: "Діапазон дат від / до"
+          from: "Від дати"
+          to: "На сьогоднішній день"
+          helper: "Якщо дати залишити порожніми, у таблиці лідерів відображатимуться отримані бали без будь-яких обмежень за часом."
+        visible_to_groups: "Видимий для груп"
+        visible_to_groups_help: "Тільки користувачі з цих груп зможуть переглядати таблицю лідерів. Залиште поле порожнім, щоб дозволити всім."
+        included_groups: "Включені групи"
+        included_groups_help: "У таблицю лідерів будуть включені лише користувачі з цих груп. Залиште поле порожнім, щоб відобразити всіх."
+        excluded_groups: "Виключені групи"
+        excluded_groups_help: "Видаліть користувачів із цих груп із таблиці лідерів. Залиште поле порожнім, щоб відобразити всіх."
+        default_period: "Типовий період"
+        default_period_help: "Встановіть проміжок часу за замовчуванням для відображення цієї таблиці лідерів."
+        period_filter_disabled: "Вимкнути фільтр періоду часу"
+        period:
+          all_time: "Весь час"
+          yearly: "Щорічно"
+          quarterly: "Щоквартала"
+          monthly: "Щомісяця"
+          weekly: "Щотижня"
+          daily: "За день"
+        rank: "Рейтинг"
+      create: "Створити"
+      cancel: "Скасувати"
+      close: "Закрити"
+      delete: "Видалити"
+      edit: "Редагувати"
+      back: "Назад"
+      save: "Зберегти"
+      apply: "Застосувати"
+      recalculate: "Перерахувати бали"
+      recalculating: "Перерахунок балів..."
+      completed: "Готово! Бали успішно перераховано."
+      update_scores_help: "Оновити всі результати для всіх таблиць лідерів від"
+      update_range:
+        last_10_days: "Останні 10 днів"
+        last_30_days: "Останні 30 днів"
+        last_90_days: "Останні 90 днів"
+        last_year: "Минулого року"
+        all_time: "Весь час"
+        custom_date_range: "Користувацький діапазон"
+      custom_range_from: "Від"
+      daily_update_scores_availability:
+        one: "Залишився %{count} щоденний перерахунок"
+        few: "Залишилося %{count} щоденних перерахунки"
+        many: "Залишилося %{count} щоденних перерахунків"
+        other: "Залишилося %{count} щоденних перерахунків"
+      admin:
+        title: "Гейміфікація"
+        name: "Імʼя"
+        period: "Період"

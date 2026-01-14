@@ -17,6 +17,11 @@ $mobile-breakpoint: 700px;
     }
   }
 
+  .author-avatar img.avatar {
+    height: 24px;
+    width: 24px;
+  }
+
   .main-link.topic-list-data {
     .bookmark-status-with-link {
       a.title {

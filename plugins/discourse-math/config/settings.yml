@@ -1,0 +1,33 @@
+plugins:
+  discourse_math_enabled:
+    default: false
+    client: true
+  discourse_math_provider:
+    default: "mathjax"
+    client: true
+    type: enum
+    choices:
+      - mathjax
+      - katex
+  discourse_math_enable_latex_delimiters:
+    default: true
+    client: true
+  discourse_math_mathjax_output:
+    default: "html"
+    client: true
+    type: enum
+    choices:
+      - html
+      - svg
+  discourse_math_enable_menu:
+    default: true
+    client: true
+  discourse_math_zoom_on_click:
+    default: false
+    client: true
+  discourse_math_enable_accessibility:
+    default: false
+    client: true
+  discourse_math_enable_asciimath:
+    default: false
+    client: true

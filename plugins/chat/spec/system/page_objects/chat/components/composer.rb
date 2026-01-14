@@ -55,12 +55,12 @@ module PageObjects
 
         def reply_to_last_message_shortcut
           input.click
-          input.send_keys(%i[shift arrow_up])
+          input.send_keys(%i[shift up])
         end
 
         def edit_last_message_shortcut
           input.click
-          input.send_keys(%i[arrow_up])
+          input.send_keys(%i[up])
         end
 
         def emphasized_text_shortcut

@@ -27,7 +27,7 @@ RSpec.describe Tag do
 
       expect { tag_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(12).to(10)
+      }.by(-2)
       expect(
         SidebarSectionLink.where(
           id: [tag_sidebar_section_link.id, tag_sidebar_section_link_2.id],
@@ -211,7 +211,7 @@ RSpec.describe Tag do
       SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       tags = Tag.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
-      expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")
+      expect(tags.map { |t| t[:name] }).to contain_exactly("tag-0", "tag-1")
     end
   end
 
@@ -397,6 +397,84 @@ RSpec.describe Tag do
     end
   end
 
+  describe "slug" do
+    it "generates slug from name on create" do
+      tag = Fabricate(:tag, name: "Hello World")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "uses empty slug for numeric-only names" do
+      tag = Fabricate(:tag, name: "123")
+      expect(tag.slug).to eq("")
+    end
+
+    it "removes apostrophes from names" do
+      tag = Fabricate(:tag, name: "Ruby's Best")
+      expect(tag.slug).to eq("rubys-best")
+    end
+
+    it "converts special characters to dashes" do
+      tag = Fabricate(:tag, name: "hello@world!")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "handles unicode by converting to dashes" do
+      tag = Fabricate(:tag, name: "hello字world")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "uses empty slug for unicode-only names" do
+      tag = Fabricate(:tag, name: "字")
+      expect(tag.slug).to eq("")
+    end
+
+    it "resolves conflicts by setting slug to empty" do
+      tag1 = Fabricate(:tag, name: "test")
+      tag2 = Fabricate(:tag, name: "Test!")
+
+      expect(tag1.slug).to eq("test")
+      expect(tag2.slug).to eq("")
+    end
+
+    it "preserves existing slug when name unchanged" do
+      tag = Fabricate(:tag, name: "original")
+      original_slug = tag.slug
+      tag.update!(description: "new description")
+      expect(tag.slug).to eq(original_slug)
+    end
+
+    it "regenerates slug when name changes" do
+      tag = Fabricate(:tag, name: "original")
+      tag.update!(name: "new-name")
+      expect(tag.slug).to eq("new-name")
+    end
+
+    it "squeezes consecutive dashes and spaces" do
+      tag = Fabricate(:tag, name: "hello   world--test")
+      expect(tag.slug).to eq("hello-world-test")
+    end
+
+    it "trims leading and trailing dashes" do
+      tag = Fabricate(:tag, name: "--hello--")
+      expect(tag.slug).to eq("hello")
+    end
+  end
+
+  describe "#slug_for_url" do
+    it "returns slug when present" do
+      tag = Fabricate(:tag, name: "test")
+      expect(tag.slug_for_url).to eq("test")
+    end
+
+    it "returns id-tag when slug is empty" do
+      Fabricate(:tag, name: "test")
+      tag = Fabricate(:tag, name: "Test!")
+
+      expect(tag.slug).to eq("")
+      expect(tag.slug_for_url).to eq("#{tag.id}-tag")
+    end
+  end
+
   describe "description" do
     it "uses the HTMLSanitizer to remove unsafe tags and attributes" do
       tag.description =
@@ -405,6 +483,37 @@ RSpec.describe Tag do
       expect(tag.description.strip).to eq(
         "<div>hi</div>a=0; <a href=\"https://www.discourse.org\">discourse</a>",
       )
+    end
+  end
+
+  describe "localizations" do
+    fab!(:tag)
+
+    it "can have many localizations" do
+      localization1 = Fabricate(:tag_localization, tag:, locale: "ja")
+      localization2 = Fabricate(:tag_localization, tag:, locale: "es")
+
+      expect(tag.localizations).to contain_exactly(localization1, localization2)
+    end
+
+    describe ".get_localization" do
+      it "returns localization for exact locale match" do
+        localization = Fabricate(:tag_localization, tag:, locale: "ja", name: "テスト")
+
+        expect(tag.get_localization("ja")).to eq(localization)
+      end
+
+      it "returns localization for regionless locale fallback" do
+        localization = Fabricate(:tag_localization, tag:, locale: "en")
+
+        expect(tag.get_localization("en_US")).to eq(localization)
+      end
+
+      it "returns nil when no localization exists" do
+        Fabricate(:tag_localization, tag:, locale: "el")
+
+        expect(tag.get_localization("es")).to be_nil
+      end
     end
   end
 end

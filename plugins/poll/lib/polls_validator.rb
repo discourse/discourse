@@ -62,7 +62,7 @@ module DiscoursePoll
 
     def unique_poll_name?(polls, poll)
       if polls.has_key?(poll["name"])
-        if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+        if poll["name"] == DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.multiple_polls_without_name"))
         else
           @post.errors.add(:base, I18n.t("poll.multiple_polls_with_same_name", name: poll["name"]))
@@ -76,7 +76,7 @@ module DiscoursePoll
 
     def unique_options?(poll)
       if poll["options"].map { |o| o["id"] }.uniq.size != poll["options"].size
-        if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+        if poll["name"] == DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.default_poll_must_have_different_options"))
         else
           @post.errors.add(
@@ -93,7 +93,7 @@ module DiscoursePoll
 
     def any_blank_options?(poll)
       if poll["options"].any? { |o| o["html"].blank? }
-        if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+        if poll["name"] == DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.default_poll_must_not_have_any_empty_options"))
         else
           @post.errors.add(
@@ -110,7 +110,7 @@ module DiscoursePoll
 
     def at_least_one_option?(poll)
       if poll["options"].size < 1
-        if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+        if poll["name"] == DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_1_option"))
         else
           @post.errors.add(
@@ -127,7 +127,7 @@ module DiscoursePoll
 
     def valid_number_of_options?(poll)
       if poll["options"].size > SiteSetting.poll_maximum_options
-        if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+        if poll["name"] == DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(
             :base,
             I18n.t(
@@ -159,7 +159,7 @@ module DiscoursePoll
         max = (poll["max"].presence || options).to_i
 
         if min > max || min <= 0 || max <= 0 || max > options || min >= options
-          if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+          if poll["name"] == DiscoursePoll::DEFAULT_POLL_NAME
             @post.errors.add(
               :base,
               I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"),
@@ -210,7 +210,7 @@ module DiscoursePoll
         @post.errors.add(:base, "Step #{I18n.t("errors.messages.greater_than", count: 0)}")
         valid = false
       elsif ((max - min + 1) / step) < 2
-        if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
+        if poll["name"] == DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_1_option"))
         else
           @post.errors.add(

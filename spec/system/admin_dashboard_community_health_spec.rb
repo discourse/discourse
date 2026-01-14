@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Dashboard Community Health", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   before { sign_in(current_user) }
 

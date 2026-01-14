@@ -276,6 +276,7 @@ sr:
       every_month: "svaki mesec"
       every_six_months: "svakih šest meseci"
   user_api_key:
+    deny: "Odustani"
     read: "pročitano"
   reports:
     default:
@@ -401,18 +402,14 @@ sr:
     delete_user_max_post_age: "Ne dozvoli brisanje korisnika čije prve poruke su starije od (x) dana."
     delete_all_posts_max: "Maksimalan broj poruke koje mogu biti obrisane odjednom korišćenjem dugmeta Obriši sve poruke. Ako korisnik ima više poruka, poruke ne mogu biti obrisane odjednom i korisnik ne može biti obrisan."
     email_editable: "Dozvoli korisnicima da promene svoju email adresu nakon registracije"
-    allow_uploaded_avatars: "Dozvoli korisnicima da postave svoju sliku za profil"
     default_avatars: "URL avatara koji će biti korišćeni kao podrazumevani za nove korisnike dok ih ne promene. "
     digest_other_topics: "Maksimalan broj tema za prikazivanje u sekciji \"Novo u temama i kategorijama koje pratite\" rezimea email poruke."
     digest_min_excerpt_length: "Minimalna dužina isečka poruke u email rezimeu, u karakterima."
     email_link_color: "Boja linkova u HTML email porukama. Unesite ime boje ('blue') ili heksadecimalnu vrednost ('#0000FF'). "
     hide_user_profiles_from_public: "Onemogući korisničke kartice, profile i direktorijume za anonimne korisnike."
-    sequential_replies_threshold: "Broj poruka koje korisnik može zaredom da pošalje pre upozoravanja o prevelikom broju uzastopnih odgovora."
-    disable_avatar_education_message: "Onemogući edukativne poruke za izmenu avatara."
     read_time_word_count: "Broj reči po minutu za računanje procenjenog vremena čitanja"
     display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
-    warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
     bootstrap_mode_min_users: 'Minimalni broj korisnika potreban za onemogućavanje režima pokretanja i uklanjanje dugmeta Početak rada (podesite na 0 da biste onemogućili, može potrajati do 24 sata). Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/322876">temu o režimu pokretanja na Meta-u</a> za detalje.'
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"
@@ -446,8 +443,10 @@ sr:
 
         Dok budete učestvovali ovde, mi ćemo vas upoznati, a privremena nova korisnička ograničenja će biti ukinuta. Vremenom ćete steći [nivoe poverenja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) koji uključuju posebne sposobnosti koje nam pomažu da zajedno upravljamo zajednicom.
     welcome_user:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošao na %{site_name}!"
     welcome_invite:
+      preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošao na %{site_name}!"
   user_notifications:
     user_posted_pm_staged:
@@ -462,8 +461,6 @@ sr:
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"
-  color_schemes:
-    default_theme_name: "zadato"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
@@ -527,20 +524,17 @@ sr:
       name: Čitač
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Prvi koraci"
         fields:
-          title:
-            placeholder: "Milenino mesto za bleju"
-          site_description:
-            placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
-      styling:
-        fields:
-          homepage_style:
+          login_required:
             choices:
-              latest:
-                label: "Poslednje"
-      finished:
-        title: "Vaš Discource je spreman!"
+              private:
+                label: "Privatna"
+  onebox:
+    github:
+      status_date:
+        approved: "potvrđenji"
   staff_action_logs:
     unknown: "nepoznato"
   reviewables:
@@ -553,17 +547,56 @@ sr:
     actions:
       agree:
         title: "Da"
-      delete_single:
+      delete:
         title: "Obriši"
-      disagree:
+        complete: "Post izbrisan."
+      delete_and_ignore:
+        complete: "Post izbrisan."
+      delete_and_agree:
+        complete: "Post izbrisan."
+      disagree_bundle:
         title: "Ne"
+      disagree:
+        complete: "Markiranje ignorisano."
+      ignore:
+        complete: "Markiranje ignorisano."
+      ignore_and_do_nothing:
+        complete: "Markiranje ignorisano."
       approve:
-        title: "Odobri"
+        title: "Da"
+        complete: "Post odobren."
+      approve_post:
+        title: "Da"
+        complete: "Post odobren."
+      approve_post_closed:
+        title: "Da"
+        complete: "Post odobren."
+      reject_post_bundle:
+        title: "Ne"
+      reject_post:
+        complete: "Post odbijen."
+      approve_user:
+        title: "Da"
+        complete: "Korisnik odobrio."
       reject_user:
+        title: "Ne"
         delete:
           title: "Obriši Korisnika"
+          complete: "Korisnik izbrisan."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Odbij"
+      approve_and_restore:
+        title: "Da"
+      approve_and_unhide:
+        title: "Da"
+      delete_post:
+        complete: "Post izbrisan"
+      delete_user:
+        complete: "Korisnik izbrisan"
   fallback_username: "korisnik"
   time:
     <<: *datetime_formats

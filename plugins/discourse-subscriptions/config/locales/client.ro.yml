@@ -1,0 +1,59 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    discourse_subscriptions:
+      optional: Opțional
+      campaign:
+        success_title: Succes!
+      plans:
+        interval:
+          adverb:
+            day: Zilnic
+            week: Săptămânal
+            month: Lunar
+            year: Anual
+      user:
+        payments:
+          created_at: Creat
+        plans:
+          product: Nume
+        subscriptions:
+          status: Stare
+          update_card:
+            single: "Actualizează"
+          created_at: Creat
+          cancel: anulează
+      subscribe:
+        cardholder_address:
+          city: Oraș
+      billing:
+        email: Email
+      admin:
+        dashboard:
+          title: Panou de control
+          table:
+            head:
+              user: Utilizator
+        products:
+          product:
+            description: Descriere
+            active: Activă
+            created_at: Creat
+            updated_at: Actualizat
+        plans:
+          plan:
+            active: Activă
+            created_at: Creat
+        coupons:
+          active: Activ?
+          actions: Acțiuni
+        subscriptions:
+          subscription:
+            user: Utilizator
+            status: Stare
+            created_at: Creat

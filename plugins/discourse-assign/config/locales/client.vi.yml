@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    discourse_assign:
+      cant_act: "Bạn không thể hành động trên các cờ đã được gán cho Thành viên khác"
+      assigned: "Được chỉ định"
+      group_everyone: "Mọi người"
+      assign:
+        help: "Gán chủ đề cho Thành viên"
+      reassign:
+        title: "Sửa"
+      assign_modal:
+        optional_label: "(tùy chọn)"
+        status_label: Trạng thái
+      assign_mailer:
+        never: "Không bao giờ"
+        always: "Luôn luôn"
+      reminders_frequency:
+        never: "Không bao giờ"
+        daily: "hằng ngày"
+        weekly: "Hàng tuần"
+        monthly: "Hàng tháng"
+        quarterly: "Hàng quý"
+    user:
+      notification_level_when_assigned:
+        label: "Khi được chỉ định"
+        watch_topic: "Giám sát chủ đề"
+        track_topic: "Quan tâm chủ đề"
+        do_nothing: "Không làm gì"
+      messages:
+        assigned: "Được chỉ định"
+      assignment_description:
+        topic: "%{topic_title}"
+    topics:
+      bulk:
+        unassign: "Hủy chỉ định chủ đề"
+        assign: "Chỉ định chủ đề"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Được chỉ định"
+    user_menu:
+      tabs:
+        assign_list: "Danh sách chỉ định"
+        assign_list_with_unread:
+          other: "Danh sách chỉ định - %{count} chưa đọc"
+    edit_assignments_modal:
+      topic: "Chủ đề"
+      post: "Bài đăng"

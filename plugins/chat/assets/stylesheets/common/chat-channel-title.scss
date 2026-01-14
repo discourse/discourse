@@ -21,10 +21,6 @@
     overflow: hidden;
   }
 
-  .d-icon-lock {
-    margin-right: 0.25em;
-  }
-
   .topic-chat-icon {
     color: var(--primary-medium);
     display: flex;
@@ -49,7 +45,7 @@
 .chat-channel-title__users-count {
   display: flex;
   border-radius: 50%;
-  background: rgba(var(--primary-rgb), 0.1);
+  background: rgb(var(--primary-rgb), 0.1);
   width: 22px;
   height: 22px;
   box-sizing: border-box;

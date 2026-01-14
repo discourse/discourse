@@ -128,11 +128,7 @@ class Sidekiq::Pausable
     if sidekiq_paused?(msg)
       worker.class.perform_in(@delay, *msg["args"])
     else
-      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      result = yield
-      duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
-      DiscourseEvent.trigger(:sidekiq_job_ran, worker, msg, queue, duration)
-      result
+      yield
     end
   end
 

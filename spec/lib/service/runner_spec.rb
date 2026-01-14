@@ -83,7 +83,7 @@ RSpec.describe Service::Runner do
     private
 
     def fetch_fake_model
-      OpenStruct.new(invalid?: true)
+      OpenStruct.new(has_changes_to_save?: true, invalid?: true)
     end
   end
 
@@ -444,7 +444,7 @@ RSpec.describe Service::Runner do
         context "when using the block argument" do
           let(:actions) { <<-BLOCK }
               proc do
-                on_model_errors(:fake_model) { |model| model == OpenStruct.new(invalid?: true) }
+                on_model_errors(:fake_model) { |model| model.invalid? }
               end
             BLOCK
 

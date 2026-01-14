@@ -1,0 +1,83 @@
+# Tunisian holiday definitions for the Ruby Holiday gem.
+#
+# by achr3f  https://github.com/achr3f
+#
+# Updated 12/23/2016
+# Sources:
+# - https://fr.wikipedia.org/wiki/Fêtes_et_jours_fériés_en_Tunisie#F.C3.AAtes_officielles
+#
+---
+months:
+  1:
+  - name: Jour de l'an
+    regions: [tn]
+    mday: 1
+  - name: Fête de la Révolution et de la Jeunesse
+    regions: [tn]
+    mday: 14
+  3:
+  - name: Fête de l'Indépendance
+    regions: [tn]
+    mday: 20
+  4:
+  - name: Journée des Martyrs
+    regions: [tn]
+    mday: 9
+  5:
+  - name: Fête du travail
+    regions: [tn]
+    mday: 1
+  7:
+  - name: Fête de la République
+    regions: [tn]
+    mday: 25
+  8:
+  - name: Fête de la Femme et de la Famille
+    regions: [tn]
+    mday: 13
+  10:
+  - name: Fête de l'Évacuation
+    regions: [tn]
+    mday: 15
+
+tests:
+  - given:
+      date: '2016-01-01'
+      regions: ["tn"]
+    expect:
+      name: "Jour de l'an"
+  - given:
+      date: '2016-01-14'
+      regions: ["tn"]
+    expect:
+      name: "Fête de la Révolution et de la Jeunesse"
+  - given:
+      date: '2016-03-20'
+      regions: ["tn"]
+    expect:
+      name: "Fête de l'Indépendance"
+  - given:
+      date: '2016-04-09'
+      regions: ["tn"]
+    expect:
+      name: "Journée des Martyrs"
+  - given:
+      date: '2016-05-01'
+      regions: ["tn"]
+    expect:
+      name: "Fête du travail"
+  - given:
+      date: '2016-07-25'
+      regions: ["tn"]
+    expect:
+      name: "Fête de la République"
+  - given:
+      date: '2016-08-13'
+      regions: ["tn"]
+    expect:
+      name: "Fête de la Femme et de la Famille"
+  - given:
+      date: '2016-10-15'
+      regions: ["tn"]
+    expect:
+      name: "Fête de l'Évacuation"

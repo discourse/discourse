@@ -51,7 +51,7 @@ def setup_test_env(
   success &&= run_or_fail("bundle exec rake plugin:install_all_official") if install_all_official
   success &&= run_or_fail("bundle exec rake plugin:update_all") if update_all_plugins
 
-  if !plugins_to_remove.blank?
+  if plugins_to_remove.present?
     plugins_to_remove
       .split(",")
       .map(&:strip)
@@ -157,6 +157,7 @@ task "docker:test" do
   begin
     @good = true
     @good &&= run_or_fail("pnpm install")
+    @good &&= run_or_fail("pnpm playwright-install")
 
     unless ENV["SKIP_LINT"]
       puts "Running linters/prettyfiers"
@@ -164,7 +165,7 @@ task "docker:test" do
       puts "prettier #{`pnpm prettier -v`}"
 
       if ENV["SINGLE_PLUGIN"]
-        @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
+        @good &&= run_or_fail("bundle exec rubocop plugins/#{ENV["SINGLE_PLUGIN"]}")
         @good &&=
           run_or_fail(
             "bundle exec ruby script/i18n_lint.rb plugins/#{ENV["SINGLE_PLUGIN"]}/config/locales/{client,server}.en.yml",
@@ -182,8 +183,8 @@ task "docker:test" do
           )
       else
         @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
-        @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("pnpm eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("bundle exec rubocop") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("pnpm eslint frontend") unless ENV["SKIP_CORE"]
         @good &&=
           run_or_fail(
             "pnpm eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins",
@@ -202,7 +203,7 @@ task "docker:test" do
           puts "Listing prettier offenses in core:"
           @good &&=
             run_or_fail(
-              'pnpm pprettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"',
+              'pnpm pprettier --list-different "app/assets/stylesheets/**/*.scss" "frontend/**/*.js"',
             )
         end
 
@@ -300,7 +301,7 @@ task "docker:test" do
 
       unless ENV["RUBY_ONLY"]
         unless ENV["SKIP_CORE"]
-          @good &&= run_or_fail("CI=1 QUNIT_PARALLEL=#{qunit_concurrency} bin/rake qunit:test")
+          @good &&= run_or_fail("CI=1 QUNIT_PARALLEL=#{qunit_concurrency} bin/qunit --standalone")
         end
 
         unless ENV["SKIP_PLUGINS"]

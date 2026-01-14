@@ -1,0 +1,82 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discourse Gamification"
+  js:
+    gamification_score: "点数"
+    gamification:
+      score: "点数"
+      you: "您"
+      leaderboard:
+        title: "排行榜"
+        info: "排行榜是如何运作的？"
+        link_to_settings: "设置"
+        refresh: "刷新"
+        modal:
+          title: "排行榜是如何运作的？"
+          text: "参与社区活动，如访问、点赞和发帖，都会获得积分。您的积分每几分钟就会更新一次。保持活跃，积极帮助并支持其他人来提高自己的排名！"
+        name: "名称"
+        name_placeholder: "名称…"
+        new: "新排行榜"
+        create_success: "排行榜已创建"
+        delete_success: "排行榜已删除"
+        save_success: "排行榜已保存"
+        cta: "制作您的第一个排行榜"
+        none: "尚未创建排行榜。"
+        confirm_destroy: "确定要删除此排行榜吗？"
+        date:
+          range: "开始/结束日期范围"
+          from: "起始日期"
+          to: "截止日期"
+          helper: "如果日期留空，排行榜将显示全部时间内获得的分数。"
+        visible_to_groups: "对以下群组可见"
+        visible_to_groups_help: "只有这些群组中的用户才能查看排行榜。留空以允许所有用户查看。"
+        included_groups: "包含的群组"
+        included_groups_help: "只有这些群组中的用户才会被包含到排行榜中。留空以让所有人都参与排行榜。"
+        excluded_groups: "排除的群组"
+        excluded_groups_help: "将这些群组中的用户从排行榜中移除。留空以让所有人都参与排行榜。"
+        default_period: "默认时间段"
+        default_period_help: "设置要为此排行榜显示的默认时间段。"
+        period_filter_disabled: "禁用时间段筛选器"
+        period:
+          all_time: "所有时间"
+          yearly: "每年"
+          quarterly: "每季度"
+          monthly: "每月"
+          weekly: "每周"
+          daily: "每天"
+        rank: "排名"
+      create: "创建"
+      cancel: "取消"
+      close: "关闭"
+      delete: "删除"
+      edit: "编辑"
+      back: "返回"
+      save: "保存"
+      apply: "应用"
+      recalculate: "重新计算分数"
+      recalculating: "正在重新计算分数…"
+      completed: "完成！分数已成功重新计算。"
+      update_scores_help: "更新以下时间范围内所有排行榜的所有分数："
+      update_range:
+        last_10_days: "过去 10 天"
+        last_30_days: "过去 30 天"
+        last_90_days: "过去 90 天"
+        last_year: "去年"
+        all_time: "所有时间"
+        custom_date_range: "自定义范围"
+      custom_range_from: "从"
+      daily_update_scores_availability:
+        other: "剩余 %{count} 次每日重新计算"
+      admin:
+        title: "游戏化"
+        name: "名称"
+        period: "时间段"

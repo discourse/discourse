@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Chat::Api::CurrentUserThreadsController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.chat_enabled = true

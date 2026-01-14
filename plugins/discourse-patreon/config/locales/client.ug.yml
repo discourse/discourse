@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    patreon:
+      group: 'گۇرۇپپا'
+      filter: 'سۈزگۈچ'
+      edit: 'تەھرىر'
+      delete: 'ئۆچۈر'
+      save: 'ساقلا'
+      field:
+        id: "كىملىك"
+        email: "ئېلخەت"
+        amount_cents: "سومما (سېنت)"
+        rewards: "مۇكاپات"

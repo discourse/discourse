@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .ProseMirror-container {
   margin: 0;
   overscroll-behavior: contain;
@@ -15,7 +17,7 @@
 
   > div:first-child,
   > details:first-child {
-    margin-top: 0.5rem;
+    margin-top: var(--space-4);
 
     // This is hacky, but helps having the leading gapcursor at the right position
     &.ProseMirror-gapcursor {
@@ -49,26 +51,20 @@
     font-size: var(--font-up-1-rem);
   }
 
-  img {
-    display: inline-block;
-    height: auto;
-    max-width: 100%;
+  img[data-placeholder="true"] {
+    animation: placeholder 1.5s infinite;
 
-    &[data-placeholder="true"] {
-      animation: placeholder 1.5s infinite;
+    @keyframes placeholder {
+      0% {
+        opacity: 0.6;
+      }
 
-      @keyframes placeholder {
-        0% {
-          opacity: 0.6;
-        }
+      50% {
+        opacity: 0.4;
+      }
 
-        50% {
-          opacity: 0.4;
-        }
-
-        100% {
-          opacity: 0.6;
-        }
+      100% {
+        opacity: 0.6;
       }
     }
   }
@@ -91,14 +87,18 @@
     }
   }
 
-  p[data-placeholder]::before {
-    pointer-events: none;
-    position: absolute;
-    padding-top: 2px;
-    padding-right: 0.5rem;
-    content: attr(data-placeholder);
-    color: var(--primary-400);
-    line-height: 1.1;
+  p[data-placeholder] {
+    overflow: hidden;
+
+    &::before {
+      pointer-events: none;
+      position: absolute;
+      padding-top: 2px;
+      padding-right: 0.5rem;
+      content: attr(data-placeholder);
+      color: var(--primary-400);
+      line-height: 1.1;
+    }
   }
 
   del {
@@ -123,6 +123,10 @@
     color: var(--primary);
   }
 
+  a:not([contenteditable="false"] a) {
+    cursor: inherit;
+  }
+
   kbd {
     // I believe this shouldn't be `inline-flex` in posts either (test with emojis before/after text to see why),
     // but overriding just for the editor for now
@@ -134,24 +138,29 @@
     white-space: normal;
   }
 
-  .code-block {
-    position: relative;
-  }
-
   .code-language-select {
     position: absolute;
     right: 0.25rem;
     top: -0.6rem;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius);
     background-color: var(--primary-very-low);
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
   }
 
-  .html-block {
+  pre {
     position: relative;
-    border: 1px dashed var(--primary-low-mid);
+  }
+
+  .html-block {
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
 
     &::after {
       position: absolute;
@@ -159,9 +168,308 @@
       top: 0;
       content: "HTML";
       font-size: var(--font-down-2-rem);
-      color: var(--primary-low-mid);
+      color: var(--primary-medium);
       z-index: 1;
+      background: var(--secondary-very-high);
+      padding: 0 var(--space-1);
+      border-bottom-left-radius: var(--d-border-radius);
+      border-top-right-radius: var(--d-border-radius);
     }
+  }
+
+  .composer-image-grid {
+    position: relative;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-half) var(--space-2) 0 var(--space-2);
+    margin-block: var(--space-4);
+
+    &__remove-btn {
+      position: absolute;
+      bottom: var(--space-2);
+      right: var(--space-2);
+      color: var(--primary-medium);
+      padding: var(--space-1) var(--space-2);
+      background: var(--secondary);
+      border: 1px solid var(--primary-low);
+      font-size: var(--font-down-1-rem);
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+
+      @include viewport.until(sm) {
+        padding: var(--space-2) var(--space-4);
+      }
+
+      &:hover {
+        color: var(--primary);
+        background: var(--primary-low);
+      }
+    }
+
+    img:not(.ProseMirror-separator) {
+      @include viewport.until(md) {
+        width: 150px !important;
+        height: 150px !important;
+      }
+
+      @include viewport.from(md) {
+        width: 200px !important;
+        height: 200px !important;
+      }
+      object-fit: cover;
+    }
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
+  }
+
+  .composer-wrap-node {
+    position: relative;
+    white-space: normal;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding-inline: var(--space-2);
+    margin-block: var(--space-4);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
+
+    .d-wrap-indicator {
+      color: var(--primary-medium);
+      background-color: var(--secondary);
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary);
+      }
+
+      &.--inline {
+        font-size: var(--font-down-2);
+        padding: var(--space-half) 0;
+        margin-left: calc(-1 * var(--space-1));
+        margin-right: var(--space-2);
+        vertical-align: text-top;
+        display: inline-block;
+      }
+
+      &.--block {
+        position: absolute;
+        z-index: 1;
+        font-size: var(--font-down-1);
+        left: var(--space-2);
+        top: calc(-1 * var(--space-3) + 1px);
+        padding: 0 var(--space-1);
+      }
+    }
+  }
+
+  .onebox-loading {
+    border-radius: var(--d-border-radius);
+    padding: 0 0.125rem;
+    background: linear-gradient(
+      90deg,
+      var(--primary-very-low) 0%,
+      var(--primary-low) 50%,
+      var(--primary-very-low) 100%
+    );
+    background-size: 200% 100%;
+    animation: loading-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes loading-pulse {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
+}
+
+.fk-d-menu[data-identifier="composer-link-toolbar"],
+.fk-d-menu[data-identifier="composer-image-toolbar"],
+.fk-d-menu[data-identifier="composer-image-alt-text"] {
+  user-select: none;
+  z-index: z("composer", "dropdown");
+
+  .fk-d-menu__inner-content {
+    overflow: visible;
+  }
+
+  .toolbar__button {
+    background-color: var(--secondary);
+    color: var(--primary-medium);
+    border-radius: var(--d-border-radius);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &:hover:not(:disabled) {
+      color: var(--primary);
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+
+    &:active {
+      background: var(--secondary);
+    }
+
+    &:focus-visible {
+      @include default-focus;
+    }
+
+    &.--active {
+      background: var(--d-selected);
+    }
+  }
+
+  .composer-link-toolbar__visit {
+    .d-button-label {
+      max-width: 12rem;
+    }
+  }
+}
+
+.composer-link-toolbar__visit {
+  min-width: 0;
+  align-items: center;
+
+  // visit link has a right-side icon
+  flex-direction: row-reverse;
+
+  .d-icon {
+    // overrides the default from d-button.scss
+    margin-right: 0;
+  }
+
+  .d-button-label {
+    font-size: var(--font-down-1-rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:not(:disabled) .d-button-label {
+    margin-right: 0.5rem;
+  }
+}
+
+.fk-d-menu[data-identifier="composer-image-alt-text"] {
+  width: calc(100% - 1rem);
+  min-width: calc(max(100% - 1rem, 7.25rem));
+  background-color: rgb(var(--secondary-rgb), 0.65);
+  backdrop-filter: blur(4px);
+  color: var(--primary);
+  isolation: auto;
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-1);
+  box-shadow: var(--shadow-dropdown);
+
+  .fk-d-menu__inner-content {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    min-width: 100%;
+    padding: 0.25rem 0.5rem;
+  }
+
+  &:focus-within {
+    box-shadow: 0 0 0 2px var(--tertiary-high);
+  }
+
+  &:has(.image-alt-text-input.--expanded) {
+    min-width: calc(max(100% - 1rem, 15rem));
+  }
+  transition: min-width 0.15s ease;
+}
+
+.composer-image-node {
+  display: inline-block;
+  white-space: normal;
+  position: relative;
+
+  // This makes the editor less pixel perfect with cooked, but it helps with some
+  // hard positions (like between images), and makes the blinking cursor more visible
+  // The vertical offset increases the drop area between image paragraphs
+  margin: -2px 1px;
+  padding: 2px 1px;
+
+  img {
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    border-radius: var(--d-border-radius);
+    transition:
+      width 0.2s ease,
+      height 0.2s ease;
+
+    &:not(.ProseMirror-selectednode):hover {
+      cursor: pointer;
+    }
+
+    &.ProseMirror-selectednode {
+      user-select: none;
+      cursor: zoom-in;
+    }
+  }
+}
+
+.image-alt-text-input {
+  min-width: 100%;
+  display: flex;
+  position: relative;
+  transition: height 0.15s ease;
+  height: 1.5em;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &.--expanded {
+    height: 4.25em;
+  }
+
+  &__field {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0;
+    background: transparent;
+    resize: none;
+    margin: 0;
+    scrollbar-color: rgb(var(--primary-rgb), 0.3) transparent;
+    scrollbar-width: thin;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    line-height: var(--line-height-large);
+
+    &::placeholder {
+      color: var(--primary);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__display {
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
   }
 }
 
@@ -169,13 +477,13 @@
  Section below from prosemirror-view/style/prosemirror.css
  ********************************************************/
 
-/* stylelint-disable-next-line no-duplicate-selectors */
+// stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
-  position: relative;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: break-spaces;
 }
 
+// stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror pre {
   white-space: pre-wrap;
 }
@@ -198,7 +506,8 @@
 }
 
 .ProseMirror-selectednode {
-  outline: 2px solid #8cf;
+  outline: 2px solid var(--tertiary-high);
+  border-radius: var(--d-border-radius);
 }
 
 /* Make sure li selections wrap around markers */
@@ -213,7 +522,8 @@ li.ProseMirror-selectednode::after {
   right: -2px;
   top: -2px;
   bottom: -2px;
-  border: 2px solid #8cf;
+  border: 2px solid var(--tertiary-high);
+  border-radius: var(--d-border-radius);
   pointer-events: none;
 }
 
@@ -231,7 +541,7 @@ li.ProseMirror-selectednode::after {
 .ProseMirror-gapcursor {
   display: none;
   pointer-events: none;
-  position: absolute;
+  position: sticky;
 }
 
 .ProseMirror-gapcursor::after {
@@ -252,4 +562,36 @@ li.ProseMirror-selectednode::after {
 
 .ProseMirror-focused .ProseMirror-gapcursor {
   display: block;
+}
+
+/************************************************************
+ Section below from prosemirror-codemark/src/codemark.css
+ ***********************************************************/
+@keyframes fake-cursor-blink {
+  49% {
+    border-color: unset;
+  }
+
+  50% {
+    border-color: transparent;
+  }
+
+  99% {
+    border-color: transparent;
+  }
+}
+
+.no-cursor {
+  caret-color: transparent;
+}
+
+div:focus .fake-cursor,
+span:focus .fake-cursor {
+  margin-right: -1px;
+  border-left-width: 1px;
+  border-left-style: solid;
+  animation: fake-cursor-blink 1s;
+  animation-iteration-count: infinite;
+  position: relative;
+  z-index: 1;
 }

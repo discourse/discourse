@@ -3,9 +3,9 @@
 describe Chat::ReviewQueue do
   subject(:queue) { described_class.new }
 
-  fab!(:message_poster) { Fabricate(:user) }
+  fab!(:message_poster, :user)
   fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:chat_channel) { Fabricate(:category_channel) }
+  fab!(:chat_channel, :category_channel)
   fab!(:message) { Fabricate(:chat_message, user: message_poster, chat_channel: chat_channel) }
   fab!(:admin)
 

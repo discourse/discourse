@@ -2,7 +2,7 @@
 
 module Chat
   class BaseController < ::ApplicationController
-    requires_plugin Chat::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     before_action :ensure_logged_in
     before_action :ensure_can_chat

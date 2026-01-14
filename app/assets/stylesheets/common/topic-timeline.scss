@@ -21,7 +21,7 @@
       transition: max-height 0.4s ease-out;
     }
 
-    @media screen and (max-height: 425px) {
+    @media screen and (height <= 425px) {
       max-height: 75vh;
     }
 
@@ -47,7 +47,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     box-shadow: var(--shadow-composer);
     padding: 20px 0;
     z-index: z("fullscreen");
@@ -56,7 +56,7 @@
       transition: max-height 0.3s ease-in;
     }
 
-    @media screen and (max-height: 425px) {
+    @media screen and (height <= 425px) {
       padding-top: 10px;
     }
 
@@ -72,8 +72,14 @@
       display: table;
       touch-action: none;
 
+      .topic-category {
+        margin-bottom: var(--space-2);
+      }
+
       .timeline-date-wrapper {
         text-align: right;
+
+        @include ellipsis;
       }
 
       .post-excerpt {
@@ -83,14 +89,14 @@
 
         @include line-clamp(8);
 
-        @media screen and (max-height: 425px) {
+        @media screen and (height <= 425px) {
           @include line-clamp(5);
         }
       }
 
       .username {
         color: var(--primary-high-or-secondary-low);
-        word-wrap: break-word;
+        overflow-wrap: break-word;
         font-weight: bold;
       }
 
@@ -181,6 +187,11 @@
       display: table;
       clear: both;
     }
+
+    .start-date,
+    .now-date {
+      padding: 0.5em 0;
+    }
   }
 
   .topic-timeline {
@@ -193,7 +204,7 @@
     }
 
     .timeline-controls {
-      margin-bottom: 1em;
+      margin-bottom: var(--space-4);
     }
 
     .timeline-date-wrapper {
@@ -208,7 +219,7 @@
       position: absolute;
       margin-top: 1em;
       display: flex;
-      gap: 0.5em;
+      gap: var(--space-2);
       flex-wrap: wrap;
 
       @media (prefers-reduced-motion: no-preference) {
@@ -227,8 +238,9 @@
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
-      border-left: 1px solid var(--tertiary-low-or-tertiary-high);
+      border-left: 1px solid var(--topic-timeline-border-color);
       position: relative;
+      max-width: 100%;
       transform: translateZ(0);
     }
 
@@ -254,9 +266,10 @@
     .timeline-handle {
       border-radius: 0.8em;
       width: 0.35em;
-      background-color: var(--tertiary-low-or-tertiary-high);
+      background-color: var(--topic-timeline-handle-color);
       height: 100%;
       float: left;
+      flex-shrink: 0;
       z-index: z("base") + 1;
       outline: 1px solid transparent;
       margin-left: 0.5px;
@@ -266,14 +279,15 @@
       box-sizing: border-box;
       max-width: 100%;
       overflow: hidden;
-      padding-left: 1em;
+      padding-left: var(--space-4);
       position: absolute; // prevents text length from impacting width
       max-height: 3em; // this hides the date when the count + date would wrap to more than 2 lines
     }
 
     .timeline-ago {
       color: var(--primary-med-or-secondary-med);
-      max-width: 4.6em;
+      max-width: 100%;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -286,7 +300,7 @@
       align-items: center;
 
       .back-button {
-        margin-top: 1em;
+        margin-top: var(--space-4);
       }
     }
 
@@ -304,7 +318,7 @@
       .progress {
         font-size: 0.8em;
         color: var(--tertiary);
-        margin-right: 1em;
+        margin-right: var(--space-4);
       }
     }
 
@@ -316,7 +330,7 @@
     .now-date {
       display: inline-block;
       color: var(--primary-med-or-secondary-med);
-      margin-top: 0.5em;
+      margin-top: var(--space-2);
     }
   }
 }

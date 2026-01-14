@@ -5,10 +5,10 @@ RSpec.describe TrustLevel3Requirements do
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:moderator)
-  fab!(:topic1) { Fabricate(:topic) }
-  fab!(:topic2) { Fabricate(:topic) }
-  fab!(:topic3) { Fabricate(:topic) }
-  fab!(:topic4) { Fabricate(:topic) }
+  fab!(:topic1, :topic)
+  fab!(:topic2, :topic)
+  fab!(:topic3, :topic)
+  fab!(:topic4, :topic)
 
   before { described_class.clear_cache }
 
@@ -101,7 +101,7 @@ RSpec.describe TrustLevel3Requirements do
 
       it "does not return if the user been silenced or suspended over 6 months ago" do
         freeze_time 1.year.ago do
-          UserSilencer.new(user, moderator, silenced_till: 1.months.from_now).silence
+          UserSilencer.new(user, moderator, silenced_till: 1.month.from_now).silence
           UserHistory.create!(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
         end
 
@@ -111,7 +111,7 @@ RSpec.describe TrustLevel3Requirements do
 
         freeze_time 3.months.ago do
           UserSilencer.new(user).unsilence
-          UserSilencer.new(user, moderator, silenced_till: 1.months.from_now).silence
+          UserSilencer.new(user, moderator, silenced_till: 1.month.from_now).silence
           UserHistory.create!(target_user_id: user.id, action: UserHistory.actions[:suspend_user])
         end
 

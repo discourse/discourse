@@ -75,7 +75,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.suspicious_login",
       locale: user_locale(user),
       client_ip: opts[:client_ip],
-      location: location.present? ? location : I18n.t("staff_action_logs.unknown"),
+      location: (location.presence || I18n.t("staff_action_logs.unknown")),
       browser: I18n.t("user_auth_tokens.browser.#{browser}"),
       device: I18n.t("user_auth_tokens.device.#{device}"),
       os: I18n.t("user_auth_tokens.os.#{os}"),
@@ -176,6 +176,23 @@ class UserNotifications < ActionMailer::Base
         silenced_till: I18n.l(silenced_till, format: :long),
       )
     end
+  end
+
+  def account_deleted(email, reviewable)
+    post_action_type_view = PostActionTypeView.new
+    post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
+
+    flag_reason =
+      if post_action_type_id
+        reason_key = post_action_type_view.flag_and_score_types[post_action_type_id]
+
+        reason = I18n.t("flag_reasons.#{reason_key}", default: nil).presence if reason_key
+        reason || post_action_type_view.descriptions[post_action_type_id].presence
+      end
+
+    flag_reason ||= I18n.t("flag_reasons.spam")
+
+    build_email(email, template: "user_notifications.account_deleted", flag_reason: flag_reason)
   end
 
   def account_suspended(user, opts = nil)
@@ -382,6 +399,7 @@ class UserNotifications < ActionMailer::Base
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
     opts[:show_tags_in_subject] = true
+
     notification_email(user, opts)
   end
 
@@ -537,7 +555,7 @@ class UserNotifications < ActionMailer::Base
       title: topic_title,
       post: post,
       username: original_username,
-      from_alias: I18n.t("email_from", user_name: user_name, site_name: Email.site_title),
+      from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: opts[:use_site_subject],
       add_re_to_subject: opts[:add_re_to_subject],
@@ -549,6 +567,9 @@ class UserNotifications < ActionMailer::Base
       use_topic_title_subject: use_topic_title_subject,
       user: user,
     }
+
+    email_options =
+      DiscoursePluginRegistry.apply_modifier(:user_notification_email_options, email_options)
 
     if group_id = notification_data[:group_id]
       email_options[:group_name] = Group.find_by(id: group_id)&.name
@@ -695,6 +716,7 @@ class UserNotifications < ActionMailer::Base
           (SiteSetting.max_emails_per_day_per_user - 1)
 
       in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
+
       if SiteSetting.private_email?
         message = I18n.t("system_messages.contents_hidden")
       else

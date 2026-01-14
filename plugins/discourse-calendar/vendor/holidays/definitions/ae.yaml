@@ -1,0 +1,73 @@
+# UAE holiday definitions for the Holidays gem!
+
+# Dates not added yet (based on Islamic Calendar and determined by moon sightings):
+# Eid al-Fitr
+# Arafat Day
+# Eid al-Adha
+# Islamic New Year
+# Prophet Muhammad's Birthday
+
+# Source:
+# http://publicholidays.ae/
+
+months:
+  1:
+  - name: New Year's Day
+    regions: [ae]
+    mday: 1
+    observed: to_weekday_if_weekend(date)
+  6:
+  - name: Eid al-Adha
+    regions: [ae]
+    mday: 17
+    year_ranges:
+      limited: [2024]
+  - name: Eid al-Adha (Day 2)
+    regions: [ae]
+    mday: 18
+    year_ranges:
+      limited: [2024]
+  - name: Eid al-Adha (Day 3)
+    regions: [ae]
+    mday: 19
+    year_ranges:
+      limited: [2024]
+  12:
+  - name: Commemoration Day
+    regions: [ae]
+    mday: 1
+    observed: to_weekday_if_weekend(date)
+  - name: National Day
+    regions: [ae]
+    mday: 2
+    observed: to_weekday_if_weekend(date)
+  - name: National Day (Day 2)
+    regions: [ae]
+    mday: 3
+    observed: to_weekday_if_weekend(date)
+
+tests:
+  - given:
+      date: '2024-01-01'
+      regions: ["ae"]
+      options: ["informal"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2024-12-01'
+      regions: ["ae"]
+      options: ["informal"]
+    expect:
+      name: "Commemoration Day"
+  - given:
+      date: '2024-12-02'
+      regions: ["ae"]
+      options: ["informal"]
+    expect:
+      name: "National Day"
+  - given:
+      date: '2024-12-03'
+      regions: ["ae"]
+      options: ["informal"]
+    expect:
+      name: "National Day (Day 2)"

@@ -27,6 +27,12 @@ sq:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categories
+            tags:
+              label: Etiketat
         user_badge_granted:
           fields:
             badge:
@@ -45,13 +51,12 @@ sq:
           fields:
             restricted_tags:
               label: Etiketat
-            restricted_category:
-              label: Kategori
-            restricted_group:
-              label: Grupi
-            restricted_groups:
-              label: Grupet
+            restricted_categories:
+              label: Categories
           created: Krijuar
+          with_images: Imazhet
+          with_links: Lidhjet
+          with_code: Kodi
         category_created_edited:
           fields:
             restricted_category:
@@ -110,6 +115,8 @@ sq:
               label: ID e temës
             user:
               label: User
+        set_topic_timer:
+          title: Cakto kohëmatësin e temës
       models:
         trigger:
           name:
@@ -121,5 +128,3 @@ sq:
             label: Trigger
           version:
             label: Versioni
-          enabled:
-            label: Aktivizuar

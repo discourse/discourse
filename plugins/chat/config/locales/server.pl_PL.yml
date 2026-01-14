@@ -30,10 +30,13 @@ pl_PL:
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
     chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
+    allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają twoją stronę anonimowo, korzystanie z czatu. To ustawienie wymaga włączenia ustawienia `allow anonymous mode`."
+    chat_search_enabled: "Włącz to ustawienie, aby umożliwić użytkownikom przeszukiwanie wiadomości na czacie."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."
       chat_upload_not_allowed_secure_uploads: "Przesyłanie plików na czacie nie jest dozwolone, gdy włączone jest ustawienie bezpiecznego przesyłania."
+      allow_chat_in_anonymous_mode_invalid: "To ustawienie wymaga wcześniejszego włączenia opcji 'allow anonymous mode'."
   system_messages:
     private_channel_title: "Kanał %{id}"
     chat_channel_archive_complete:
@@ -59,6 +62,7 @@ pl_PL:
     deleted_chat_username: usunięte
     errors:
       users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
+      user_cant_be_removed_from_channel: "Użytkownik nie może zostać usunięty z tego kanału"
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
       channel_new_message_disallowed:
         archived: "Kanał jest zarchiwizowany, nie można wysyłać nowych wiadomości"
@@ -84,7 +88,7 @@ pl_PL:
         few: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
         many: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
         other: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
-      draft_too_long: "Wersja robocza jest za długa."
+      draft_too_long: "Szkic jest zbyt długi."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
       message_move_invalid_channel: "Kanał źródłowy i docelowy muszą być kanałami publicznymi."
       message_move_no_messages_found: "Nie znaleziono wiadomości z podanymi identyfikatorami wiadomości."
@@ -94,6 +98,7 @@ pl_PL:
       actor_muting_target_user: "Wyciszasz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_disallowed_dms: "Zdecydowałeś się uniemożliwić użytkownikom wysyłanie Ci prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości."
       actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie do Ciebie osobistych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do nich."
+      not_reachable: "Przepraszamy, %{username} nie używa czatu."
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       over_chat_max_direct_message_users_allow_self: "Możesz utworzyć bezpośrednią wiadomość tylko z samym sobą."
       over_chat_max_direct_message_users:
@@ -108,6 +113,17 @@ pl_PL:
     reviewables:
       message_already_handled: "Dziękujemy, ale sprawdziliśmy już tę wiadomość i ustaliliśmy, że nie trzeba jej ponownie oznaczać."
       actions:
+        message_actions:
+          bundle_title: "Co chcesz zrobić z tą wiadomością?"
+        no_action_message:
+          title: "Brak akcji"
+          description: "Pozostaw wiadomość bez zmian."
+        delete_message:
+          title: "Usuń wiadomość"
+          description: "Trwale usuń wiadomość."
+        restore_message:
+          title: "Przywróć wiadomość"
+          description: "Przywróć wiadomość, aby użytkownicy mogli ją zobaczyć."
         agree:
           title: "Zgadzam się..."
         agree_and_keep_message:
@@ -135,10 +151,11 @@ pl_PL:
           title: "Nie zgadzam się i przywracam wiadomość"
           description: "Przywróć wiadomość, aby wszyscy użytkownicy mogli ją zobaczyć."
         disagree:
-          title: "Wycofaj"
+          title: "Zachowaj wiadomość"
+          description: "Nie zgódź się z flagą i pozostaw wiadomość bez zmian."
         ignore:
-          title: "Nic nie rób"
-          description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+          title: "Ignoruj flagę"
+          description: "Usuń z kolejki bez podejmowania żadnych działań."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"
@@ -166,6 +183,7 @@ pl_PL:
     mention_warning:
       dismiss: "odrzuć"
       cannot_see: "%{first_identifier} nie ma dostępu do tego kanału i nie został powiadomiony."
+      cannot_see_group: "Niektórzy członkowie %{group_name} nie mają dostępu do tego kanału i nie zostali o tym powiadomieni."
       cannot_see_multiple:
         one: "%{first_identifier} i %{count} inny użytkownik nie ma dostępu do tego kanału i nie został powiadomiony."
         few: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
@@ -201,12 +219,15 @@ pl_PL:
         slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
         is_already_in_use: "jest już w użyciu"
     bookmarkable:
-      notification_title: "wiadomość w %{channel_name}"
+      notification_title_channel: "wiadomość w %{channel_name}"
+      notification_title_direct_message: "wiadomość z %{channel_name}"
     personal_chat: "czat osobisty"
     onebox:
       inline_to_message: "Wiadomość #%{message_id} od %{username} - #%{chat_channel}"
       inline_to_channel: "Czat #%{chat_channel}"
       inline_to_topic_channel: "Czat dla tematu %{topic_title}"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Wątek w #%{chat_channel}"
       thread_title_connector: "w"
       x_members:
         one: "%{count} członek"
@@ -262,6 +283,16 @@ pl_PL:
           few: "[%{site_name}] Nowe wiadomości"
           many: "[%{site_name}] Nowe wiadomości"
           other: "[%{site_name}] Nowe wiadomości"
+        watched_thread:
+          one: "[%{site_name}] Nowa wiadomość wątku w %{channel}"
+          few: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
+          many: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
+          other: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nowe wiadomości wątku w %{channel} i %{count} innym"
+          few: "[%{site_name}] Nowe wiadomości wątku w %{channel} i %{count} innych"
+          many: "[%{site_name}] Nowe wiadomości wątku w %{channel} i %{count} innych"
+          other: "[%{site_name}] Nowe wiadomości wątku w %{channel} i %{count} innych"
         chat_dm_1:
           one: "[%{site_name}] Nowa wiadomość od %{name}"
           few: "[%{site_name}] Nowe wiadomości od %{name}"
@@ -275,6 +306,8 @@ pl_PL:
           many: "[%{site_name}] Nowe wiadomości w %{channel}"
           other: "[%{site_name}] Nowe wiadomości w %{channel}"
         chat_channel_2: "[%{site_name}] Nowe wiadomości w %{channel_1} i %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Nowe wiadomości w %{channel} i %{count} inne"
+        chat_channel_and_dm: "[%{site_name}] Nowe wiadomości w %{channel} i od %{name}"
       unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
       unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:
@@ -287,10 +320,10 @@ pl_PL:
         few: "Zobacz %{count} wiadomości"
         many: "Zobacz %{count} wiadomości"
         other: "Zobacz %{count} wiadomości"
-      your_chat_settings: "preferencje częstotliwości wysyłania e-maili o czacie"
+      your_chat_settings: "preferencje wiadomości e-mail czatu"
   unsubscribe:
     chat_summary:
-      select_title: "Ustaw częstotliwość e-maili z podsumowaniem czatu na:"
+      select_title: "Ustaw wiadomości e-mail z podsumowaniem czatu na:"
       never: Nigdy
       when_away: Tylko gdy jesteś daleko
   category:

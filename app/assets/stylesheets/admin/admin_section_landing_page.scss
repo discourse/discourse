@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-section-landing-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16em, 1fr));
@@ -12,13 +14,16 @@
     grid-row: span 2;
     gap: 0;
     margin-bottom: 2em;
+    padding: var(--space-4);
+    color: var(--primary);
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       margin-bottom: 2em;
     }
 
-    &.-has-icon {
+    &.--has-icon {
       grid-template-columns: 1fr 8fr;
+      gap: 0 var(--space-4);
 
       .admin-section-landing-item__buttons {
         grid-column: 2;
@@ -48,7 +53,7 @@
       line-height: var(--line-height-large);
       align-self: start;
 
-      @include breakpoint("mobile-extra-large", min-width) {
+      @include viewport.from(sm) {
         max-width: 17em;
       }
     }

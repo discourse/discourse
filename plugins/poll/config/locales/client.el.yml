@@ -5,8 +5,15 @@
 # https://translate.discourse.org/
 
 el:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Ψηφοφορία Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Οι επιλογές μπορούν να προστεθούν ή να αφαιρεθούν."
       voters:
         one: "ψηφοφόρος"
         other: "ψηφοφόροι"
@@ -70,11 +77,11 @@ el:
       open:
         title: "Να ξεκινήσει η ψηφοφορία"
         label: "Ξεκίνημα"
-        confirm: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την ψηφοφορία;"
+        confirm: "Σίγουρα θέλετε να διαγράψετε αυτήν την ψηφοφορία;"
       close:
         title: "Να κλείσει η ψηφοφορία"
         label: "Κλείσιμο"
-        confirm: "Είστε βέβαιοι ότι θέλετε να κλείσετε αυτήν την ψηφοφορία;"
+        confirm: "Σίγουρα θέλετε να κλείσετε αυτήν την ψηφοφορία;"
       automatic_close:
         closes_in: "Κλείνει σε <strong>%{timeLeft}</strong>."
         age: "Κλειστό <strong>%{age}</strong>"
@@ -83,7 +90,7 @@ el:
         votes: "%{count} ψήφοι"
         breakdown: "Ανάλυση"
         percentage: "Ποσοστό"
-        count: "Άθροισμα"
+        count: "Πλήθος"
       ranked_choice:
         title:
           rounds: "Γύροι"
@@ -143,6 +150,8 @@ el:
           step: Βήμα
         poll_public:
           label: Προβολή ψηφοφόρων.
+        poll_dynamic:
+          label: Να επιτρέπεται η προσθήκη ή η αφαίρεση επιλογών μετά την δημοσίευση
         poll_title:
           label: Τίτλος (προαιρετικό)
         poll_options:

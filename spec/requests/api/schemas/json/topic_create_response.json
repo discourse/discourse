@@ -219,6 +219,10 @@
     "post_url": {
       "type": "string"
     },
+    "post_localizations": {
+      "type": "array",
+      "items": {}
+    },
     "mentioned_users": {
       "type": "array",
       "items": {}

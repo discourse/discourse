@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Common styles for "user-info" component
 .user-info {
   display: flex;
@@ -12,27 +14,59 @@
   .user-detail {
     min-width: 0;
 
-    @include breakpoint(mobile-medium) {
+    @include viewport.until(sm) {
       font-size: var(--font-down-1);
     }
 
     .name-line {
-      > a {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0 0.5em;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 0.5em;
+
+      a {
         color: var(--primary-high);
       }
 
-      .name,
-      .username {
-        width: 100%;
+      .username-wrapper {
+        display: flex;
+        align-items: baseline;
+        gap: 0.35em;
 
+        .username {
+          font-weight: bold;
+
+          @include ellipsis;
+        }
+      }
+
+      .name-wrapper .name {
         @include ellipsis;
       }
 
-      span:first-child {
-        font-weight: bold;
+      // When name should appear first (site setting)
+      &--name-first:not(&--show-status) {
+        .username-wrapper {
+          order: 1;
+        }
+
+        .name-wrapper .name {
+          font-weight: bold;
+        }
+
+        .username-wrapper .username {
+          font-weight: normal;
+        }
+      }
+
+      // When showing status: username+status on first line, name on second
+      &--show-status {
+        .username-wrapper {
+          width: 100%;
+        }
+
+        .name-wrapper {
+          width: 100%;
+        }
       }
     }
 

@@ -10,8 +10,8 @@ import categoryBadge from "discourse/helpers/category-badge";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
 import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
 import ChatModalDeleteChannel from "discourse/plugins/chat/discourse/components/chat/modal/delete-channel";
@@ -31,7 +31,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
   @service chatApi;
   @service chatGuardian;
   @service chatChannelsManager;
-  @service currentUser;
   @service siteSettings;
   @service dialog;
   @service modal;

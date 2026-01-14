@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::RestoreMessage do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   let!(:guardian) { Guardian.new(current_user) }
   fab!(:message) { Fabricate(:chat_message, user: current_user) }
 

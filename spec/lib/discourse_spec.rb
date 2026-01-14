@@ -67,6 +67,66 @@ RSpec.describe Discourse do
     end
   end
 
+  describe ".after_unicorn_worker_fork" do
+    around do |example|
+      original_env = ENV.to_hash
+      original_config = ActiveRecord::Base.configurations
+      original_show_statement_timeout =
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"]
+
+      begin
+        example.run
+      ensure
+        ENV.replace(original_env)
+        ActiveRecord::Base.configurations = original_config
+        ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+        ActiveRecord::Base.establish_connection
+        GlobalSetting.configure!
+        GlobalSetting.load_defaults
+
+        expect(
+          ActiveRecord::Base.connection.execute("SHOW statement_timeout").first[
+            "statement_timeout"
+          ],
+        ).to eq(original_show_statement_timeout)
+      end
+    end
+
+    it "applies worker-specific database variable overrides in a production environment" do
+      test_database_config = Rails.application.config.database_configuration["test"]
+
+      # In the production environment, `DISCOURSE_` ENV variables are written to the `discourse.conf` file so we need
+      # to simulate that here in the test environment.
+      temp_discourse_conf = Tempfile.new("discourse.conf")
+      temp_discourse_conf.write <<~TEXT
+      db_name = #{test_database_config["database"]}
+      db_username = ""
+      db_variables_statement_timeout = 10s
+      unicorn_worker_db_variables_statement_timeout = 100s
+      TEXT
+      temp_discourse_conf.rewind
+
+      Rails.stubs(:env).returns(ActiveSupport::StringInquirer.new("production"))
+      GlobalSetting.configure!(path: temp_discourse_conf.path, use_blank_provider: false)
+      GlobalSetting.load_defaults
+
+      Discourse.after_unicorn_worker_fork
+
+      expect(
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
+      ).to eq("100s")
+    ensure
+      %i[
+        db_variables_statement_timeout
+        unicorn_worker_db_variables_statement_timeout
+      ].each { |method| GlobalSetting.singleton_class.remove_method(method) }
+
+      allow(Rails).to receive(:env).and_call_original
+      temp_discourse_conf&.close
+      temp_discourse_conf&.unlink
+    end
+  end
+
   describe ".plugins_sorted_by_name" do
     before do
       Discourse.stubs(:visible_plugins).returns(
@@ -194,9 +254,17 @@ RSpec.describe Discourse do
     end
   end
 
+  describe "#user_agent" do
+    it "returns a user agent string" do
+      expect(Discourse.user_agent).to eq(
+        "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/",
+      )
+    end
+  end
+
   describe "#site_contact_user" do
     fab!(:admin)
-    fab!(:another_admin) { Fabricate(:admin) }
+    fab!(:another_admin, :admin)
 
     it "returns the user specified by the site setting site_contact_username" do
       SiteSetting.site_contact_username = another_admin.username
@@ -204,7 +272,7 @@ RSpec.describe Discourse do
     end
 
     it "returns the system user otherwise" do
-      SiteSetting.site_contact_username = nil
+      SiteSetting.site_contact_username = ""
       expect(Discourse.site_contact_user.username).to eq("system")
     end
   end
@@ -354,7 +422,7 @@ RSpec.describe Discourse do
     class TempSidekiqLogger
       attr_accessor :exception, :context
 
-      def call(ex, ctx)
+      def call(ex, ctx, _config)
         self.exception = ex
         self.context = ctx
       end
@@ -362,9 +430,9 @@ RSpec.describe Discourse do
 
     let!(:logger) { TempSidekiqLogger.new }
 
-    before { Sidekiq.error_handlers << logger }
+    before { Sidekiq.default_configuration.error_handlers << logger }
 
-    after { Sidekiq.error_handlers.delete(logger) }
+    after { Sidekiq.default_configuration.error_handlers.delete(logger) }
 
     describe "#job_exception_stats" do
       class FakeTestError < StandardError
@@ -625,20 +693,23 @@ RSpec.describe Discourse do
       head_tag_script =
         Nokogiri::HTML5
           .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("script")
+          .css("link[rel=modulepreload]")
           .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
       expect(head_tag_js).to include(old_upload_url)
 
       js_file_script =
-        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
+          .css("link[rel=modulepreload]")
+          .first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
       expect(file_js).to include(old_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first
@@ -651,20 +722,23 @@ RSpec.describe Discourse do
       head_tag_script =
         Nokogiri::HTML5
           .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("script")
+          .css("link[rel=modulepreload]")
           .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
       expect(head_tag_js).to include(old_upload_url)
 
       js_file_script =
-        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
+          .css("link[rel=modulepreload]")
+          .first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
       expect(file_js).to include(old_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first
@@ -676,20 +750,23 @@ RSpec.describe Discourse do
       head_tag_script =
         Nokogiri::HTML5
           .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("script")
+          .css("link[rel=modulepreload]")
           .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
       expect(head_tag_js).to include(new_upload_url)
 
       js_file_script =
-        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
+          .css("link[rel=modulepreload]")
+          .first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
       expect(file_js).to include(new_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first

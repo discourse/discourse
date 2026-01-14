@@ -504,7 +504,7 @@ RSpec.describe Notification do
     end
 
     fab!(:unread_high_priority_2) do
-      create(high_priority: true, read: false, created_at: 1.minutes.ago)
+      create(high_priority: true, read: false, created_at: 1.minute.ago)
     end
     fab!(:read_high_priority_2) do
       create(high_priority: true, read: true, created_at: 2.minutes.ago)
@@ -811,12 +811,12 @@ RSpec.describe Notification do
   describe ".populate_acting_user" do
     SiteSetting.enable_names = true
 
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
-    fab!(:user5) { Fabricate(:user) }
-    fab!(:user6) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:user3, :user)
+    fab!(:user4, :user)
+    fab!(:user5, :user)
+    fab!(:user6, :user)
     fab!(:notification1) do
       Fabricate(:notification, user: user, data: { username: user1.username }.to_json)
     end
@@ -856,6 +856,49 @@ RSpec.describe Notification do
         expect(notification6.data_hash[:original_name]).to be_nil
         SiteSetting.enable_names = true
       end
+    end
+  end
+
+  describe ".filter_disabled_badge_notifications" do
+    fab!(:enabled_badge) { Fabricate(:badge, enabled: true) }
+    fab!(:disabled_badge) { Fabricate(:badge, enabled: false) }
+
+    fab!(:enabled_badge_notification) do
+      BadgeGranter.send_notification(user.id, user.username, user.locale, enabled_badge)
+    end
+
+    fab!(:disabled_badge_notification) do
+      BadgeGranter.send_notification(user.id, user.username, user.locale, disabled_badge)
+    end
+
+    fab!(:regular_notification) { Fabricate(:notification, user: user) }
+
+    it "filters all badge notifications when enable_badges is false" do
+      SiteSetting.enable_badges = false
+
+      result =
+        Notification.filter_disabled_badge_notifications(
+          [enabled_badge_notification, disabled_badge_notification, regular_notification],
+        )
+
+      expect(result).to contain_exactly(regular_notification)
+    end
+
+    it "filters badge notifications for badges that are disabled" do
+      result =
+        Notification.filter_disabled_badge_notifications(
+          [enabled_badge_notification, disabled_badge_notification, regular_notification],
+        )
+
+      expect(result).to contain_exactly(enabled_badge_notification, regular_notification)
+    end
+
+    it "filters badge notifications for badges that do not exist" do
+      enabled_badge.destroy!
+
+      result = Notification.filter_disabled_badge_notifications([enabled_badge_notification])
+
+      expect(result).to eq([])
     end
   end
 end

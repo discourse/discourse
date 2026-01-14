@@ -1,3 +1,9 @@
+@use "lib/viewport";
+
+:root {
+  --tag-text-color: var(--primary-high);
+}
+
 .container.tags-index {
   background: var(--d-content-background);
 }
@@ -10,7 +16,7 @@
 .tags-list {
   margin-top: 2em;
   padding-bottom: 1em;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 }
 
 #list-area .tags-list h3 {
@@ -59,19 +65,20 @@
 .discourse-tag {
   max-width: 14em;
   display: inline-block;
-
-  @include ellipsis;
   vertical-align: middle;
   margin: 0;
-  color: var(--primary-medium);
+  color: var(--tag-text-color);
+  font-size: var(--d-tag-font-size);
+  font-weight: var(--d-tag-font-weight);
+  padding: 0 var(--d-tag-horizontal-padding);
+  border-radius: var(--d-tag-border-radius);
+  background-color: var(--d-tag-background-color);
+
+  @include ellipsis;
 
   &:visited,
   &:hover {
-    color: var(--primary-medium);
-  }
-
-  .extra-info-wrapper & {
-    color: var(--header_primary-high) !important;
+    color: var(--tag-text-color);
   }
 
   &.large {
@@ -80,19 +87,11 @@
 
   &.box {
     background-color: var(--primary-low);
-    color: var(--primary-high);
     padding: 2px 8px;
 
     .extra-info-wrapper & {
       background-color: var(--header_primary-low);
-      color: var(--header_primary-medium);
     }
-  }
-
-  &.simple,
-  &.simple:visited,
-  &.simple:hover {
-    color: var(--primary-high);
   }
 
   &.bullet {
@@ -118,15 +117,6 @@
   }
 }
 
-.discourse-tags,
-.list-tags,
-.search-category {
-  .discourse-tag.simple:not(:last-child)::after {
-    content: ",\00a0";
-    margin-left: 1px;
-  }
-}
-
 .d-header .topic-header-extra {
   .discourse-tags {
     font-size: var(--font-down-1);
@@ -136,6 +126,22 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
+
+  &:has(.box) {
+    gap: var(--space-1);
+  }
+
+  &__tag-separator {
+    margin-right: 0.25em;
+    color: var(--tag-text-color);
+  }
+
+  .box,
+  .bullet {
+    + .discourse-tags__tag-separator {
+      display: none;
+    }
+  }
 }
 
 .fps-result .add-full-page-tags {
@@ -147,10 +153,6 @@
     font-weight: normal;
     font-size: var(--font-down-1);
   }
-}
-
-header .discourse-tag {
-  color: var(--primary-medium);
 }
 
 .list-tags {
@@ -261,7 +263,7 @@ header .discourse-tag {
     }
 
     .group-visibility-option {
-      grid-gap: 0.5rem;
+      gap: 0.5rem;
       display: grid;
       grid-template-columns: 20px 1fr;
       grid-template-areas:
@@ -296,7 +298,7 @@ header .discourse-tag {
     }
   }
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     .select-kit.multi-select {
       width: 100%;
     }
@@ -340,7 +342,7 @@ section.tag-info {
   gap: 1em;
   margin: 1em 0;
   padding: 2em;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
 
   .edit-tag-wrapper {
     display: flex;
@@ -445,10 +447,58 @@ body.tags-intersection {
 
 .tags-controls {
   display: flex;
+  flex-wrap: wrap;
   margin: 0;
 
+  .bulk-create-tags-form {
+    width: 100%;
+    display: flex;
+    align-items: end;
+    gap: 0.5em;
+    margin-block: 0.5em 1em;
+
+    textarea {
+      box-sizing: border-box;
+      min-height: 2.25em;
+      padding: 0.35em;
+      margin: 0;
+      width: min(20em, 100%);
+      border-radius: var(--d-input-border-radius);
+    }
+  }
+
   h2 {
-    order: -1;
-    margin-right: auto;
+    margin: 0 auto 0 0;
+  }
+}
+
+.bulk-create-results {
+  .result-section {
+    display: flex;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+
+    h4 {
+      margin: 0;
+    }
+
+    &.--failed {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: var(--space-1);
+    }
+
+    ul {
+      margin: 0;
+      list-style-type: none;
+    }
+
+    li {
+      overflow-wrap: anywhere;
+    }
   }
 }

@@ -2,8 +2,8 @@
 
 RSpec.describe PostOwnerChanger do
   describe "#change_owner!" do
-    fab!(:editor) { Fabricate(:admin) }
-    fab!(:user_a) { Fabricate(:user) }
+    fab!(:editor, :admin)
+    fab!(:user_a, :user)
     let(:p1) { create_post(post_number: 1) }
     let(:topic) { p1.topic }
     let(:p2) { create_post(topic: topic, post_number: 2) }

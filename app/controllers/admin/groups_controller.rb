@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Admin::GroupsController < Admin::StaffController
+  MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10
+
+  def index
+  end
+
   def create
     guardian.ensure_can_create_group!
 
@@ -92,6 +97,15 @@ class Admin::GroupsController < Admin::StaffController
 
         existing_domains = group.automatic_membership_email_domains&.split("|") || []
         domains -= existing_domains
+      end
+
+      if domains.size > MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP
+        raise Discourse::InvalidParameters.new(
+                I18n.t(
+                  "groups.errors.counting_too_many_email_domains",
+                  count: MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP,
+                ),
+              )
       end
 
       user_count = Group.automatic_membership_users(domains.join("|")).count

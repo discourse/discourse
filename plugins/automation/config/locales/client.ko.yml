@@ -34,6 +34,12 @@ ko:
         text:
           label: 텍스트
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: 카테고리
+            tags:
+              label: 태그
         user_badge_granted:
           fields:
             badge:
@@ -70,13 +76,13 @@ ko:
           fields:
             restricted_tags:
               label: 태그
-            restricted_category:
+            restricted_categories:
               label: 카테고리
-            restricted_group:
-              label: 그룹
-            restricted_groups:
-              label: 그룹
           created: 생성됨
+          with_images: 이미지
+          with_links: 링크
+          with_code: 코드
+          with_uploads: 업로드된 파일
         category_created_edited:
           fields:
             restricted_category:
@@ -140,6 +146,8 @@ ko:
               label: 토픽 ID
             user:
               label: 사용자
+        set_topic_timer:
+          title: 글 타이머 설정
       models:
         trigger:
           name:
@@ -153,7 +161,5 @@ ko:
             label: 버전
           status:
             label: 상태
-          enabled:
-            label: 활성화
           disabled:
             label: 비활성

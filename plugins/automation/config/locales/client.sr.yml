@@ -21,6 +21,12 @@ sr:
         group:
           label: Grupa
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorije
+            tags:
+              label: Tagovi
         user_badge_granted:
           fields:
             badge:
@@ -37,13 +43,11 @@ sr:
               label: ID Teme
         post_created_edited:
           fields:
-            restricted_category:
-              label: Kategorija
-            restricted_group:
-              label: Grupa
-            restricted_groups:
-              label: Grupe
+            restricted_categories:
+              label: Kategorije
           created: Napravljeno
+          with_images: Slike
+          with_links: Linkovi
         category_created_edited:
           fields:
             restricted_category:

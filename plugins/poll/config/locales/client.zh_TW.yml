@@ -68,7 +68,6 @@ zh_TW:
       error_while_fetching_voters: "對不起，顯示投票者時出錯了。"
       error_while_exporting_results: "抱歉，匯出投票結果時發生錯誤。"
       ui_builder:
-        title: 創建投票
         insert: 插入投票
         help:
           options_min_count: 至少輸入 1 個選項。

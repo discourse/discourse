@@ -61,8 +61,8 @@
 .category-boxes,
 .category-boxes-with-topics {
   display: grid;
-  gap: 1.5em;
-  margin-top: 1em;
+  gap: var(--d-category-boxes-gap);
+  margin-top: var(--d-category-boxes-margin-top);
   margin-bottom: 1em;
   width: 100%;
 
@@ -73,7 +73,9 @@
     align-content: flex-start;
     box-sizing: border-box;
     border-width: 0;
-    border-left-width: 6px;
+    border-radius: var(--d-border-radius);
+    background-color: var(--d-category-box-background-color);
+    border-left-width: var(--d-category-border-accent-width);
     border-style: solid;
     border-color: var(--category-badge-color, var(--primary-low));
 
@@ -99,19 +101,12 @@
     }
 
     .category-logo.aspect-image img {
+      --height: 40px;
       display: block;
-      width: auto;
-      height: 40px;
       margin: 0 auto 1em auto;
-    }
-
-    @supports (--custom: property) {
-      .category-logo.aspect-image img {
-        --height: 40px;
-        height: var(--height);
-        width: calc(var(--height) * var(--aspect-ratio));
-        max-width: 100%;
-      }
+      height: var(--height);
+      width: calc(var(--height) * var(--aspect-ratio));
+      max-width: 100%;
     }
   }
 
@@ -121,16 +116,22 @@
     padding: 1em;
     display: flex;
     flex-direction: column;
-    border-width: 2px;
+    border-width: var(--d-category-border-box-width);
     border-left-width: 0;
     border-style: solid;
     border-color: var(--primary-low);
+    border-top-right-radius: var(--d-border-radius);
+    border-bottom-right-radius: var(--d-border-radius);
   }
 
   &.no-logos {
     .category-logo {
       display: none;
     }
+  }
+
+  .badge-category__wrapper {
+    max-width: 100%;
   }
 }
 
@@ -144,7 +145,7 @@
     }
 
     .category-box-inner {
-      padding: 1em;
+      padding: var(--space-4);
 
       .category-logo {
         float: none;
@@ -155,15 +156,15 @@
 
   &.no-logos {
     .category-box .category-box-inner > a {
-      padding: 3em 1em;
+      padding: var(--space-12) var(--space-4);
     }
   }
 
   .description {
-    margin-bottom: 1em;
-    text-align: center;
+    margin-bottom: var(--space-4);
+    text-align: var(--category-boxes-text-alignment);
     font-size: var(--font-0);
-    color: var(--primary-med-or-secondary-high);
+    color: var(--category-boxes-description-text-color);
     position: relative;
 
     @include line-clamp(4);
@@ -182,11 +183,9 @@
   }
 
   h3 {
-    font-size: var(--font-up-2);
-    margin-bottom: 0.5em;
-    margin-top: 0.25em;
+    font-size: var(--category-boxes-title-font-size);
     line-height: var(--line-height-medium);
-    text-align: center;
+    text-align: var(--category-boxes-text-alignment);
     color: var(--primary);
     overflow: hidden;
   }
@@ -217,7 +216,7 @@
         line-height: var(--line-height-medium);
         overflow: hidden;
         margin-bottom: 0.25em;
-        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
 
       &::before {
@@ -233,7 +232,7 @@
     }
 
     .subcategory-box-inner {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       border-left: none;
       padding: 0.5em 0.5em 0.4em 0.5em;
     }
@@ -250,13 +249,13 @@
   .subcategories {
     display: flex;
     flex-flow: wrap;
+    gap: var(--space-2);
 
     .subcategory {
       display: flex;
       align-items: center;
 
       @include ellipsis;
-      margin-bottom: 0.6em;
 
       .badge-category__wrapper {
         overflow: hidden;
@@ -264,8 +263,12 @@
 
       .subcategory-image-placeholder {
         display: inline-block;
-        margin-right: 0.6em;
         flex: 1 0 auto;
+
+        .category-logo.aspect-image {
+          margin-top: 0;
+          margin-right: var(--space-1);
+        }
       }
 
       .subcategory-link {
@@ -343,15 +346,7 @@
 .categories-list .category {
   h3,
   h4 {
-    margin-bottom: 0;
-
-    .d-icon {
-      color: var(--primary-high);
-      height: 0.76em;
-      width: 0.76em;
-      vertical-align: baseline;
-      margin-right: 0.1em;
-    }
+    margin-bottom: var(--d-categories-list-title-margin-bottom);
   }
 
   .category-description {
@@ -368,7 +363,7 @@
 .category-list.subcategories-with-subcategories {
   margin-top: 1em;
   margin-bottom: 0;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
 
   .category-description {
     font-size: var(--font-down-1);
@@ -397,7 +392,7 @@
 }
 
 .muted-categories-link {
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   display: flex;
   justify-content: space-between;
   padding: 0.75em;

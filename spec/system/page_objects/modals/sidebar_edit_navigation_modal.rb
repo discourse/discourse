@@ -12,8 +12,7 @@ module PageObjects
       end
 
       def has_focus_on_filter_input?
-        evaluate_script("document.activeElement").native ==
-          find(".sidebar__edit-navigation-menu__filter-input-field").native
+        has_css?(".sidebar__edit-navigation-menu__filter-input-field:focus")
       end
 
       def filter(text)

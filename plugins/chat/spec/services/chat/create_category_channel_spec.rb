@@ -9,18 +9,17 @@ RSpec.describe Chat::CreateCategoryChannel do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
     fab!(:category)
     let(:category_id) { category.id }
 
     let(:name) { "cool channel" }
-    let(:icon_upload_id) { 2 }
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { category_id:, name: name, icon_upload_id: icon_upload_id } }
+    let(:params) { { category_id:, name: name } }
     let(:dependencies) { { guardian: } }
 
     context "when public channels are disabled" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before { SiteSetting.enable_public_channels = false }
 
@@ -28,7 +27,7 @@ RSpec.describe Chat::CreateCategoryChannel do
     end
 
     context "when the current user cannot make a channel" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:can_create_channel) }
     end
@@ -56,7 +55,6 @@ RSpec.describe Chat::CreateCategoryChannel do
             chatable: category,
             name: name,
             slug: "cool-channel",
-            icon_upload_id: icon_upload_id,
           )
         end
 
@@ -118,6 +116,22 @@ RSpec.describe Chat::CreateCategoryChannel do
             it "sets threading_enabled to false" do
               params[:threading_enabled] = false
               expect(result.channel.threading_enabled).to eq(false)
+            end
+          end
+        end
+
+        describe "emoji" do
+          context "when selected" do
+            it "sets emoji" do
+              params[:emoji] = ":smile:"
+              expect(result.channel.emoji).to eq(":smile:")
+            end
+          end
+
+          context "when blank" do
+            it "sets emoji to nil" do
+              params[:emoji] = nil
+              expect(result.channel.emoji).to eq(nil)
             end
           end
         end

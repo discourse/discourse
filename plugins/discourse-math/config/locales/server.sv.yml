@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    discourse_math_enabled: "Aktivera Discourse Math-tillägget (lägger till specialbehandling av $- och $$-block)"
+    discourse_math_provider: "Standardleverantör för matematisk rendering"

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Channel thread message echoing", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
+  fab!(:other_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -16,7 +16,7 @@ describe "Channel thread message echoing", type: :system do
   end
 
   context "when threading_enabled is false for the channel" do
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel, :chat_channel)
     before { channel.update!(threading_enabled: false) }
 
     it "echoes the thread messages into the main channel stream" do
@@ -29,7 +29,7 @@ describe "Channel thread message echoing", type: :system do
   end
 
   context "when threading is enabled for the channel" do
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel, :chat_channel)
     fab!(:thread) do
       chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
     end

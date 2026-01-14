@@ -13,6 +13,9 @@ ug:
       editing:
         one: "تەھرىرلەۋاتىدۇ"
         other: "تەھرىرلەۋاتىدۇ"
+      translating:
+        one: "تەرجىمە"
+        other: "تەرجىمە"
       replying_to_topic:
         one: "جاۋاب بېرىۋاتىدۇ"
         other: "جاۋاب بېرىۋاتىدۇ"

@@ -6,11 +6,11 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
-import DButton from "discourse/components/d-button";
+import EmptyState from "discourse/components/empty-state";
 import FilterInput from "discourse/components/filter-input";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -45,7 +45,7 @@ export default class BrowseChannels extends Component {
     if (this.siteSettings.chat_allow_archiving_channels) {
       return TABS;
     } else {
-      return [...TABS].removeObject(ARCHIVED);
+      return TABS.filter((item) => item !== ARCHIVED);
     }
   }
 
@@ -109,17 +109,12 @@ export default class BrowseChannels extends Component {
             </list.Item>
 
             <list.EmptyState>
-              <span class="empty-state-title">
-                {{i18n "chat.empty_state.title"}}
-              </span>
-              <div class="empty-state-body">
-                <p>{{i18n "chat.empty_state.direct_message"}}</p>
-                <DButton
-                  @action={{this.showChatNewMessageModal}}
-                  @label="chat.empty_state.direct_message_cta"
-                  class="btn-default"
-                />
-              </div>
+              <EmptyState
+                @title={{i18n "chat.empty_state.title"}}
+                @body={{i18n "chat.empty_state.direct_message"}}
+                @ctaLabel={{i18n "chat.empty_state.direct_message_cta"}}
+                @ctaAction={{this.showChatNewMessageModal}}
+              />
             </list.EmptyState>
           </List>
         </div>

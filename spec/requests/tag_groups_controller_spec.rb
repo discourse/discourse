@@ -51,7 +51,18 @@ RSpec.describe TagGroupsController do
     describe "when limit params is invalid" do
       include_examples "invalid limit params",
                        "/tag_groups/filter/search.json",
-                       SiteSetting.max_tag_search_results
+                       described_class::MAX_TAG_GROUPS_SEARCH_RESULTS
+    end
+
+    it "doesn't error when the max_tag_search_results setting is lowered from its default" do
+      tag_group = tag_group_with_permission(everyone, readonly)
+
+      SiteSetting.max_tag_search_results = 4
+
+      get "/tag_groups/filter/search.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["results"].size).to eq(1)
+      expect(response.parsed_body["results"].first["name"]).to eq(tag_group.name)
     end
 
     context "for anons" do
@@ -151,8 +162,9 @@ RSpec.describe TagGroupsController do
   describe "#create" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:parent_tag, :tag)
 
     before { sign_in(admin) }
 
@@ -176,13 +188,28 @@ RSpec.describe TagGroupsController do
         new_value: response.parsed_body["tag_group"].to_json,
       )
     end
+
+    it "should create a tag group with a parent tag" do
+      post "/tag_groups.json",
+           params: {
+             tag_group: {
+               name: "test_tag_group_with_parent",
+               tag_names: [tag1.name],
+               parent_tag_name: [parent_tag.name],
+             },
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tag_group"]["parent_tag_name"]).to eq([parent_tag.name])
+      expect(TagGroup.last.parent_tag).to eq(parent_tag)
+    end
   end
 
   describe "#delete" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
 
     before { sign_in(admin) }
@@ -208,9 +235,10 @@ RSpec.describe TagGroupsController do
   describe "#update" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
+    fab!(:parent_tag, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
 
     before { sign_in(admin) }
@@ -221,22 +249,34 @@ RSpec.describe TagGroupsController do
       put "/tag_groups/#{tag_group.id}.json",
           params: {
             tag_group: {
-              tag_group: {
-                name: "test_tag_group_new_name",
-                tag_names: [tag2.name, tag3.name],
-              },
+              name: "test_tag_group_new_name",
+              tag_names: [tag2.name, tag3.name],
             },
           }
 
       expect(response.status).to eq(200)
+      expect(tag_group.tags.map(&:id)).to contain_exactly(tag2.id, tag3.id)
 
       expect(UserHistory.last).to have_attributes(
         acting_user_id: admin.id,
         action: UserHistory.actions[:tag_group_change],
-        subject: tag_group.name,
+        subject: "test_tag_group_new_name",
         previous_value:,
         new_value: response.parsed_body["tag_group"].to_json,
       )
+    end
+
+    it "should update the tag group's parent tag" do
+      put "/tag_groups/#{tag_group.id}.json",
+          params: {
+            tag_group: {
+              parent_tag_name: [parent_tag.name],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tag_group"]["parent_tag_name"]).to eq([parent_tag.name])
+      expect(tag_group.reload.parent_tag).to eq(parent_tag)
     end
   end
 end

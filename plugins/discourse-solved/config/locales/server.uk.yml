@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  accepted_answer: "Прийнята відповідь"
+  site_settings:
+    solved_enabled: "Увімкнути плагін рішення, дозволити користувачам обирати рішення для тем"
+    allow_solved_on_all_topics: "Дозволити користувачам вибирати рішення з усіх тем (якщо прапорець знято, рішення можна вмикати для кожної категорії або тегу)"
+    accept_all_solutions_trust_level: "Мінімальний рівень довіри, необхідний для прийняття рішень в будь-якій темі (навіть коли це не ОП)"
+    accept_all_solutions_allowed_groups: "Групи, яким дозволено приймати рішення на будь-які теми (навіть якщо вони не є ОП). Адміни та модератори завжди мають доступ."
+    empty_box_on_unsolved: "Показуйте порожнє поле поруч із невирішеними темами"
+    solved_quote_length: "Кількість символів, які потрібно цитувати під час відображення рішення під першим дописом"
+    solved_topics_auto_close_hours: "Автоматичне закриття теми (n) годин після останньої відповіді, якщо тему позначено як вирішену. Встановіть значення 0, щоб вимкнути автоматичне закриття."
+    show_filter_by_solved_status: "Показати випадаюче меню для фільтрації списку тем зі статусом вирішених."
+    notify_on_staff_accept_solved: "Надсилати сповіщення автору теми, коли публікація позначена командою як рішення."
+    ignore_solved_topics_in_assigned_reminder: "Виключити з нагадування про призначення вирішені теми. Актуально лише при використанні плагіна дискурс-призначення."
+    assignment_status_on_solve: "Коли тему вирішено, оновити всі завдання до цього статусу"
+    assignment_status_on_unsolve: "Коли тему не вирішено, оновіть усі завдання до цього статусу"
+    disable_solved_education_message: "Вимкнути навчальні повідомлення для вирішених тем."
+    accept_solutions_topic_author: "Дозвольте автору теми прийняти рішення."
+    solved_add_schema_markup: "Додайте розмітку схеми QAPage до HTML."
+    enable_solved_tags: "Теги, які дозволять користувачам обирати рішення."
+    prioritize_solved_topics_in_search: "Пріоритет вирішених тем в результатах пошуку."
+    show_who_marked_solved: "Покажіть, хто позначив тему як вирішену. Це зазначено в першому повідомленні теми і відповідь в підказці."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Прийняті рішення"
+      xaxis: "День"
+      yaxis: "Всього"
+  solved:
+    no_solutions:
+      self: "У вас ще немає прийнятих рішень."
+      others: "Немає прийнятих рішень."
+    filter:
+      description:
+        solved: "Фільтрувати теми, які вже вирішено"
+        unsolved: "Фільтрувати теми, які не були вирішені"
+  badges:
+    solved_1:
+      name: "Вирішено!"
+      description: "Позначте відповідь як Рішення"
+      long_description: "Цей значок надається за відповідь, позначену як рішення теми. :white_check_mark: Чудова робота. :+1:"
+    solved_2:
+      name: "Радник супроводу"
+      description: "Позначте 10 відповідей як Рішення"
+      long_description: "Цей значок надається за те, що 10 ваших відповідей позначено як «Рішення тем». :white_check_mark: Ви є справжнім надбанням для інших учасників спільноти."
+    solved_3:
+      name: "Знаю все"
+      description: "Маю 50 відповідей, позначених як Рішення"
+      long_description: "Цей значок надається за те, що 50 ваших відповідей позначено як «Рішення тем». :white_check_mark: Ви справді знаєте свою справу. :clap:"
+    solved_4:
+      name: "Інститут пошуку рішення"
+      description: "150 відповідей, позначених як рішення"
+      long_description: "Цей значок ви отримуєте за те, що 150 ваших відповідей були позначені як Відповіді на теми. :white_check_mark: Чудова робота. :slightly_smiling_face: Ви офіційно ввійшли до складу Інституту рішень. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Перше прийняте рішення
+        doc: Запускає, коли користувач отримав рішення, прийняте вперше.
+  education:
+    topic_is_solved: |
+      ### Цю тему вирішено
+
+      Відповідайте тут лише якщо:
+
+      - У вас є додаткові відомості
+
+      - Рішення вам не підходить
+
+      Якщо у вас є не пов'язана з цим проблема, будь ласка, [створіть нову тему](%{base_url}/нова-тема).

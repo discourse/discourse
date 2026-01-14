@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    discourse_hCaptcha:
+      missing_token: "请完成 hCaptcha 验证。"
+      placeholder: 占位符
+      contact_system_administrator: "hCaptcha 出错了，如果问题一直存在，请联系系统管理员"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_hcaptcha: "Discourse hCaptcha"

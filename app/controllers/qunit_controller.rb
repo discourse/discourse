@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class QunitController < ApplicationController
+  # Same list maintained in discourse-test-load-dynamic-js.js
+  ALWAYS_LOADED_PLUGINS = %w[discourse-local-dates]
+
   skip_before_action *%i[
                        check_xhr
                        preload_json
@@ -44,6 +47,13 @@ class QunitController < ApplicationController
           .pluck(:id, :name)
       return
     end
+
+    about_json =
+      JSON.parse(theme.theme_fields.find_by(target_id: Theme.targets[:about])&.value || "{}")
+    @required_plugins =
+      about_json
+        .dig("tests", "requiredPlugins")
+        &.map { |p| p.split("/").last.delete_suffix(".git") } || []
 
     request.env[:resolved_theme_id] = theme.id
     request.env[:skip_theme_ids_transformation] = true

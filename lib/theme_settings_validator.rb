@@ -53,7 +53,7 @@ class ThemeSettingsValidator
         )
       when types[:objects]
         errors.concat(
-          ThemeSettingsObjectValidator.validate_objects(schema: opts[:schema], objects: value),
+          SchemaSettingsObjectValidator.validate_objects(schema: opts[:schema], objects: value),
         )
       end
 

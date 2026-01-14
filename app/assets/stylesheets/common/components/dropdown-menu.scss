@@ -10,6 +10,27 @@
       width: 100%;
       justify-content: flex-start;
       text-align: left;
+
+      &.--danger {
+        &:hover,
+        :focus-visible {
+          background: var(--danger-low);
+        }
+        color: var(--danger);
+
+        .d-icon {
+          color: var(--danger);
+        }
+      }
+    }
+
+    &.--selected .btn {
+      background: var(--d-selected);
+
+      &:hover,
+      :focus-visible {
+        background: var(--d-selected-hover);
+      }
     }
   }
 

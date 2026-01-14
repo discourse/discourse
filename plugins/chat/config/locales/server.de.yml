@@ -30,10 +30,13 @@ de:
     chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
     chat_preferred_index: "Bevorzugte Registerkarte beim Laden von /chat."
+    allow_chat_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus die Nutzung des Chats zu ermöglichen. Für diese Einstellung muss die Einstellung „allow anonymous mode“ aktiviert sein."
+    chat_search_enabled: "Aktiviere diese Einstellung, um Benutzern die Suche nach Chatnachrichten zu ermöglichen."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
       chat_upload_not_allowed_secure_uploads: "Chat-Uploads sind nicht erlaubt, wenn die Website-Einstellung für sichere Uploads aktiviert ist."
+      allow_chat_in_anonymous_mode_invalid: "Für diese Einstellung muss zuerst die Einstellung „allow anonymous mode“ aktiviert werden."
   system_messages:
     private_channel_title: "Kanal %{id}"
     chat_channel_archive_complete:
@@ -91,7 +94,7 @@ de:
       actor_muting_target_user: "Du hast %{username} stummgeschaltet, daher kannst du keine Nachrichten an die Person senden."
       actor_disallowed_dms: "Du hast dich dafür entschieden, dass Benutzer dir keine persönlichen und Direktnachrichten schicken können, daher kannst du keine neuen Direktnachrichten erstellen."
       actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine persönlichen und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
-      not_reachable: "Entschuldigung, %{username} verwendet den Chat nicht."
+      not_reachable: "Entschuldige, %{username} verwendet den Chat nicht."
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
       over_chat_max_direct_message_users_allow_self: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
       over_chat_max_direct_message_users:
@@ -104,6 +107,10 @@ de:
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
+        no_action_message:
+          title: "Keine Aktion"
+        restore_message:
+          description: "Nachricht wiederherstellen, damit Benutzer sie sehen können."
         agree:
           title: "Zustimmen …"
         agree_and_keep_message:
@@ -125,16 +132,12 @@ de:
           title: "Nachricht löschen"
           description: "Nachricht löschen, damit Benutzer sie nicht sehen können."
         delete_and_agree:
-          title: "Meldung ignorieren und Nachricht löschen"
           description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und die Nachricht löschst."
         disagree_and_restore:
           title: "Ablehnen und Nachricht wiederherstellen"
           description: "Nachricht wiederherstellen, damit alle Benutzer sie sehen können."
-        disagree:
-          title: "Ablehnen"
         ignore:
-          title: "Nichts tun"
-          description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen."
+          title: "Meldung ignorieren"
       direct_messages:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
@@ -156,6 +159,7 @@ de:
     mention_warning:
       dismiss: "verwerfen"
       cannot_see: "%{first_identifier} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
+      cannot_see_group: "Einige Mitglieder von %{group_name} können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
       cannot_see_multiple:
         one: "%{first_identifier} und %{count} anderer Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         other: "%{first_identifier} und %{count} andere Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
@@ -181,7 +185,7 @@ de:
         slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
         is_already_in_use: "wird bereits verwendet"
     bookmarkable:
-      notification_title: "Nachricht in %{channel_name}"
+      notification_title_channel: "Nachricht in %{channel_name}"
     personal_chat: "persönlicher Chat"
     onebox:
       inline_to_message: "Nachricht #%{message_id} von %{username} – #%{chat_channel}"
@@ -261,10 +265,8 @@ de:
       view_more:
         one: "%{count} weitere Nachricht anzeigen"
         other: "%{count} weitere Nachrichten anzeigen"
-      your_chat_settings: "Chat-E-Mail-Häufigkeitspräferenz"
   unsubscribe:
     chat_summary:
-      select_title: "Häufigkeit von Chat-Zusammenfassungs-E-Mails festlegen auf:"
       never: Niemals
       when_away: Nur bei Abwesenheit
   category:

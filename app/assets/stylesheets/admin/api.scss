@@ -1,24 +1,24 @@
-// Styles for admin/api
-.d-admin-table.web-hooks {
-  .d-admin-row__overview.payload-url {
-    word-wrap: break-word;
-    max-width: 20vw;
+@use "lib/viewport";
 
-    @include breakpoint(medium) {
-      max-width: 70vw;
+// For /admin/api/webhooks
+.d-table.admin-web_hooks__items {
+  .d-table__cell {
+    &.key-url {
+      word-break: break-all;
+      white-space: normal;
+    }
+
+    &.key-description {
+      white-space: pre-wrap;
+      word-break: break-word;
     }
   }
+}
 
-  .d-admin-row__detail.description {
-    @include breakpoint(medium) {
-      display: block;
-    }
-
-    .d-admin-row__mobile-label {
-      @include breakpoint(medium) {
-        display: block;
-      }
-    }
+// For /admin/api/keys
+.d-table.admin-api_keys__items {
+  .d-table__cell.key {
+    display: flex;
   }
 }
 
@@ -28,13 +28,21 @@
     display: none;
   }
 
+  .scopes-table__object {
+    display: contents;
+  }
+
+  .form-kit__collection {
+    display: contents;
+  }
+
   .api-key-show {
     .form-element,
     .form-element-desc {
       &.input-area {
         width: 75%;
 
-        @include breakpoint(mobile-medium) {
+        @include viewport.until(sm) {
           width: 100%;
         }
 
@@ -108,12 +116,12 @@
         margin-bottom: 2px;
       }
 
-      @include breakpoint(mobile-large) {
+      @include viewport.until(sm) {
         grid-template-columns: repeat(2, 1fr);
-        grid-row-gap: 0.5em;
+        row-gap: 0.5em;
 
         &.scope-resource-name {
-          grid-row-gap: 0;
+          row-gap: 0;
         }
       }
     }
@@ -154,7 +162,7 @@
     .hook-event {
       margin-bottom: 0.5em;
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         width: 100%;
       }
     }

@@ -1,8 +1,11 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
@@ -31,7 +34,6 @@ export default class ChatMessage {
   @tracked createdAt;
   @tracked uploads;
   @tracked excerpt;
-  @tracked reactions;
   @tracked reviewableId;
   @tracked user;
   @tracked inReplyTo;
@@ -51,6 +53,7 @@ export default class ChatMessage {
   @tracked manager;
   @tracked deletedById;
   @tracked streaming;
+  @trackedArray reactions;
 
   @tracked _deletedAt;
   @tracked _cooked;
@@ -76,7 +79,7 @@ export default class ChatMessage {
     this.deletedById = args.deletedById || args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
-      this.hidden || this._deletedAt ? false : args.expanded ?? true;
+      this.hidden || this._deletedAt ? false : (args.expanded ?? true);
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId ?? args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus ?? args.user_flag_status;
@@ -85,7 +88,7 @@ export default class ChatMessage {
     this._cooked = args.cooked ?? "";
     this.inReplyTo =
       args.inReplyTo ??
-      (args.in_reply_to ?? args.replyToMsg
+      ((args.in_reply_to ?? args.replyToMsg)
         ? ChatMessage.create(channel, args.in_reply_to ?? args.replyToMsg)
         : null);
     this.reactions = this.#initChatMessageReactionModel(args.reactions);
@@ -94,10 +97,22 @@ export default class ChatMessage {
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
     this.blocks = args.blocks;
+    this.threadTitle = args.thread_title;
+    this.threadId = args.thread_id;
 
     if (args.thread) {
       this.thread = args.thread;
     }
+  }
+
+  get url() {
+    if (this.threadId) {
+      return getURL(
+        `/chat/c/-/${this.channel.id}/t/${this.threadId}/${this.id}`
+      );
+    }
+
+    return getURL(`/chat/c/-/${this.channel.id}/${this.id}`);
   }
 
   get persisted() {
@@ -172,12 +187,12 @@ export default class ChatMessage {
 
   @cached
   get previousMessage() {
-    return this.manager?.messages?.objectAt?.(this.index - 1);
+    return this.manager?.messages?.[this.index - 1];
   }
 
   @cached
   get nextMessage() {
-    return this.manager?.messages?.objectAt?.(this.index + 1);
+    return this.manager?.messages?.[this.index + 1];
   }
 
   highlight() {
@@ -263,7 +278,7 @@ export default class ChatMessage {
         if (selfReaction) {
           existingReaction.reacted = true;
         }
-        existingReaction.users.pushObject(actor);
+        existingReaction.users.push(actor);
       } else {
         const existingUserReaction = existingReaction.users.find(
           (user) => user.id === actor.id
@@ -278,15 +293,15 @@ export default class ChatMessage {
         }
 
         if (existingReaction.count === 1) {
-          this.reactions.removeObject(existingReaction);
+          removeValueFromArray(this.reactions, existingReaction);
         } else {
           existingReaction.count = existingReaction.count - 1;
-          existingReaction.users.removeObject(existingUserReaction);
+          removeValueFromArray(existingReaction.users, existingUserReaction);
         }
       }
     } else {
       if (action === "add") {
-        this.reactions.pushObject(
+        this.reactions.push(
           ChatMessageReaction.create({
             count: 1,
             emoji,

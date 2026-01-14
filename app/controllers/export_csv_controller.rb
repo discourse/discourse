@@ -22,7 +22,7 @@ class ExportCsvController < ApplicationController
       unless current_user.admin ||
                UserExport.where(
                  user_id: entity_id || current_user.id,
-                 created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day),
+                 created_at: (Time.zone.now.all_day),
                ).count == 0
         render_json_error I18n.t("csv_export.rate_limit_error")
         return
@@ -67,7 +67,7 @@ class ExportCsvController < ApplicationController
     @_export_params ||=
       begin
         params.require(:entity)
-        params.permit(:entity, args: Report::FILTERS).to_h
+        params.permit(:entity, args: [*Report::FILTERS, *UserHistory.staff_filters]).to_h
       end
   end
 end

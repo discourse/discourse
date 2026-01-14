@@ -1,0 +1,378 @@
+# frozen_string_literal: true
+
+module DiscourseAi
+  module Personas
+    class Bot
+      BOT_NOT_FOUND = Class.new(StandardError)
+
+      # the future is agentic, allow for more turns
+      MAX_COMPLETIONS = 8
+
+      # limit is arbitrary, but 5 which was used in the past was too low
+      MAX_TOOLS = 20
+
+      def self.as(bot_user, persona: DiscourseAi::Personas::General.new, model: nil)
+        new(bot_user, persona, model)
+      end
+
+      def initialize(bot_user, persona, model = nil)
+        @bot_user = bot_user
+        @persona = persona
+        @model =
+          model || self.class.guess_model(bot_user) ||
+            LlmModel.find(@persona.class.default_llm_id || SiteSetting.ai_default_llm_model)
+      end
+
+      attr_reader :bot_user, :model
+      attr_accessor :persona
+
+      def llm
+        DiscourseAi::Completions::Llm.proxy(model)
+      end
+
+      def force_tool_if_needed(prompt, context)
+        return if prompt.tool_choice == :none
+
+        context.chosen_tools ||= []
+        forced_tools = persona.force_tool_use.map { |tool| tool.name }
+        force_tool = forced_tools.find { |name| !context.chosen_tools.include?(name) }
+
+        if force_tool && persona.forced_tool_count > 0
+          user_turns = prompt.messages.select { |m| m[:type] == :user }.length
+          force_tool = false if user_turns > persona.forced_tool_count
+        end
+
+        if force_tool
+          context.chosen_tools << force_tool
+          prompt.tool_choice = force_tool
+        else
+          prompt.tool_choice = nil
+        end
+      end
+
+      def reply(context, llm_args: {}, &update_blk)
+        unless context.is_a?(BotContext)
+          raise ArgumentError, "context must be an instance of BotContext"
+        end
+        update_blk ||= proc {}
+
+        context.cancel_manager ||= DiscourseAi::Completions::CancelManager.new
+        current_llm = llm
+        prompt = persona.craft_prompt(context, llm: current_llm)
+
+        total_completions = 0
+        ongoing_chain = true
+        raw_context = []
+
+        user = context.user
+
+        llm_kwargs = llm_args.dup
+        llm_kwargs[:user] = user
+        llm_kwargs[:temperature] = persona.temperature if persona.temperature
+        llm_kwargs[:top_p] = persona.top_p if persona.top_p
+
+        if !context.bypass_response_format && persona.response_format.present?
+          llm_kwargs[:response_format] = build_json_schema(persona.response_format)
+        end
+
+        needs_newlines = false
+        tools_ran = 0
+
+        while total_completions < MAX_COMPLETIONS && ongoing_chain
+          tool_found = false
+          force_tool_if_needed(prompt, context)
+
+          tool_halted = false
+
+          allow_partial_tool_calls = persona.allow_partial_tool_calls?
+          existing_tools = Set.new
+          current_thinking = []
+          thinking_placeholder = nil
+
+          result =
+            current_llm.generate(
+              prompt,
+              feature_name: context.feature_name,
+              partial_tool_calls: allow_partial_tool_calls,
+              output_thinking: true,
+              cancel_manager: context.cancel_manager,
+              **llm_kwargs,
+            ) do |partial|
+              tool =
+                persona.find_tool(
+                  partial,
+                  bot_user: user,
+                  llm: current_llm,
+                  context: context,
+                  existing_tools: existing_tools,
+                )
+              tool = nil if tools_ran >= MAX_TOOLS
+
+              if tool.present?
+                existing_tools << tool
+                tool_call = partial
+                if tool_call.partial?
+                  if tool.class.allow_partial_tool_calls?
+                    tool.partial_invoke
+                    update_blk.call("", tool.custom_raw, :partial_tool)
+                  end
+                  next
+                end
+
+                tool_found = true
+                # a bit hacky, but extra newlines do no harm
+                if needs_newlines
+                  update_blk.call("\n\n")
+                  needs_newlines = false
+                end
+
+                process_tool(
+                  tool: tool,
+                  raw_context: raw_context,
+                  current_llm: current_llm,
+                  update_blk: update_blk,
+                  prompt: prompt,
+                  context: context,
+                  current_thinking: current_thinking,
+                )
+
+                tools_ran += 1
+                ongoing_chain &&= tool.chain_next_response?
+
+                tool_halted = true if !tool.chain_next_response?
+              else
+                next if tool_halted
+                needs_newlines = true
+                if partial.is_a?(DiscourseAi::Completions::ToolCall)
+                  Rails.logger.warn("DiscourseAi: Tool not found: #{partial.name}")
+                else
+                  if partial.is_a?(DiscourseAi::Completions::Thinking)
+                    thinking = partial
+
+                    if thinking.partial? && thinking.message.present? && !context.skip_show_thinking
+                      thinking_placeholder ||= +""
+                      thinking_placeholder << thinking.message
+                      update_blk.call("", thinking_placeholder, :thinking)
+                    end
+
+                    if !thinking.partial?
+                      raw_context << thinking
+                      current_thinking << thinking
+                      thinking_placeholder = nil
+                      update_blk.call(thinking.message, nil, :thinking) if thinking.message.present?
+                    end
+                  else
+                    if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
+                      update_blk.call(partial, nil, :structured_output)
+                    else
+                      update_blk.call(partial)
+                    end
+                  end
+                end
+              end
+            end
+
+          if !tool_found
+            ongoing_chain = false
+            text = result
+
+            # we must strip out thinking and other types of blocks
+            if result.is_a?(Array)
+              text = +""
+              result.each { |item| text << item if item.is_a?(String) }
+            end
+            raw_context << [text, bot_user&.username]
+          end
+
+          total_completions += 1
+
+          # do not allow tools when we are at the end of a chain (total_completions == MAX_COMPLETIONS - 1)
+          prompt.tool_choice = :none if total_completions == MAX_COMPLETIONS - 1 ||
+            tools_ran >= MAX_TOOLS
+        end
+
+        embed_thinking(raw_context)
+      end
+
+      def returns_json?
+        persona.response_format.present?
+      end
+
+      private
+
+      def embed_thinking(raw_context)
+        embedded_thinking = []
+        thinking_bundle = nil
+
+        raw_context.each do |context|
+          if context.is_a?(DiscourseAi::Completions::Thinking)
+            thinking_bundle ||= { message: nil, provider_info: {} }
+            thinking_bundle[:message] = context.message if context.message.present?
+            thinking_bundle[
+              :provider_info
+            ] = DiscourseAi::Completions::Thinking.merge_provider_info(
+              thinking_bundle[:provider_info],
+              context.provider_info,
+            )
+            next
+          end
+
+          if thinking_bundle
+            context = context.dup
+            context[4] = {
+              "message" => thinking_bundle[:message],
+              "provider_info" =>
+                DiscourseAi::Completions::Thinking.deep_stringify_keys(
+                  thinking_bundle[:provider_info],
+                ),
+            }.compact
+            thinking_bundle = nil
+          end
+
+          embedded_thinking << context
+        end
+
+        embedded_thinking
+      end
+
+      def process_tool(
+        tool:,
+        raw_context:,
+        current_llm:,
+        update_blk:,
+        prompt:,
+        context:,
+        current_thinking:
+      )
+        tool_call_id = tool.tool_call_id
+        invocation_result_json = invoke_tool(tool, context, &update_blk).to_json
+
+        tool_call_message = {
+          type: :tool_call,
+          id: tool_call_id,
+          content: { arguments: tool.parameters }.to_json,
+          name: tool.name,
+        }
+        tool_call_message[:provider_data] = tool.provider_data if tool.provider_data.present?
+
+        if current_thinking.present?
+          thinking_message = nil
+          provider_payload = {}
+
+          current_thinking.each do |thinking|
+            thinking_message = thinking.message if thinking.message.present?
+            provider_payload =
+              DiscourseAi::Completions::Thinking.merge_provider_info(
+                provider_payload,
+                thinking.provider_info,
+              )
+          end
+
+          tool_call_message[:thinking] = thinking_message if thinking_message
+          tool_call_message[:thinking_provider_info] = provider_payload if provider_payload.present?
+          current_thinking.clear
+        end
+
+        tool_message = {
+          type: :tool,
+          id: tool_call_id,
+          content: invocation_result_json,
+          name: tool.name,
+        }
+        tool_message[:provider_data] = tool.provider_data if tool.provider_data.present?
+
+        prompt.push(**tool_call_message)
+        prompt.push(**tool_message)
+
+        raw_context << [
+          tool_call_message[:content],
+          tool_call_id,
+          "tool_call",
+          tool.name,
+          nil,
+          tool.provider_data.presence,
+        ]
+        raw_context << [invocation_result_json, tool_call_id, "tool", tool.name]
+      end
+
+      def invoke_tool(tool, context, &update_blk)
+        show_placeholder = !context.skip_show_thinking && !tool.class.allow_partial_tool_calls?
+
+        update_blk.call("", build_placeholder(tool.summary, ""), :thinking) if show_placeholder
+
+        result =
+          tool.invoke do |progress, render_raw|
+            if render_raw
+              update_blk.call("", tool.custom_raw, :partial_invoke)
+              show_placeholder = false
+            elsif show_placeholder
+              placeholder = build_placeholder(tool.summary, progress)
+              update_blk.call("", placeholder, :thinking)
+            end
+          end
+
+        if show_placeholder
+          tool_details = build_placeholder(tool.summary, tool.details, custom_raw: tool.custom_raw)
+          update_blk.call(tool_details, nil, :thinking)
+        elsif tool.custom_raw.present?
+          # we also rendered a placeholder for custom raw. Place something generic there
+          tool_details = build_placeholder(tool.summary, tool.details, custom_raw: "")
+          update_blk.call(tool_details, nil, :thinking)
+          update_blk.call(tool.custom_raw, nil, :custom_raw)
+        end
+
+        result
+      end
+
+      def self.guess_model(bot_user)
+        associated_llm = LlmModel.find_by(user_id: bot_user.id)
+
+        return if associated_llm.nil? # Might be a persona user. Handled by constructor.
+
+        associated_llm
+      end
+
+      def build_placeholder(summary, details, custom_raw: nil)
+        # No nested details blocks - just output as plain text within thinking block
+        placeholder = +"**#{summary}**\n#{details}\n\n"
+
+        if custom_raw
+          placeholder << custom_raw
+          placeholder << "\n\n"
+        end
+
+        placeholder
+      end
+
+      def build_json_schema(response_format)
+        properties =
+          response_format
+            .to_a
+            .reduce({}) do |memo, format|
+              type_desc = { type: format["type"] }
+
+              if format["type"] == "array"
+                type_desc[:items] = { type: format["array_type"] || "string" }
+              end
+
+              memo[format["key"].to_sym] = type_desc
+              memo
+            end
+
+        {
+          type: "json_schema",
+          json_schema: {
+            name: "reply",
+            schema: {
+              type: "object",
+              properties: properties,
+              required: properties.keys.map(&:to_s),
+              additionalProperties: false,
+            },
+            strict: true,
+          },
+        }
+      end
+    end
+  end
+end

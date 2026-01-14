@@ -7,12 +7,33 @@ module PageObjects
         @post_number = post_number
       end
 
+      def post
+        find(post_id)
+      end
+
+      def reply
+        post.find(".reply.create").click
+      end
+
+      def edit
+        post.find(".show-more-actions").click
+        post.find("button.edit").click
+      end
+
       def show_replies
-        find("#post_#{@post_number} .show-replies").click
+        post.find(".show-replies").click
       end
 
       def load_more_replies
         find("#embedded-posts__bottom--#{@post_number} .load-more-replies").click
+      end
+
+      def cooked_content
+        post.find(".contents > .cooked")
+      end
+
+      def has_cooked_content?(value)
+        cooked_content.has_content?(value)
       end
 
       def has_replies?(count: nil)
@@ -27,8 +48,12 @@ module PageObjects
         find("#embedded-posts__bottom--#{@post_number}").has_no_css?(".load-more-replies")
       end
 
+      def visible?
+        has_css?(post_id)
+      end
+
       def show_parent_posts
-        find("#post_#{@post_number} .reply-to-tab").click
+        post.find(".reply-to-tab").click
       end
 
       def has_parent_posts?(count: nil)
@@ -37,6 +62,25 @@ module PageObjects
 
       def has_no_parent_post_content?(content)
         find("#embedded-posts__top--#{@post_number}").has_no_content?(content)
+      end
+
+      def post_language
+        post.find(".post-info.post-language").hover
+        find(".post-language-content")
+      end
+
+      def open_post_history
+        post.find(".post-info.edits").click
+      end
+
+      def mentions_of(user)
+        post.all("a.mention[href='/u/#{user.username}']")
+      end
+
+      private
+
+      def post_id
+        "#post_#{@post_number}"
       end
     end
   end

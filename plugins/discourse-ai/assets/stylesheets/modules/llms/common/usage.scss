@@ -1,0 +1,258 @@
+@use "lib/viewport";
+
+.ai-usage {
+  --chart-response-color: rgb(75, 192, 192, 0.8);
+  --chart-request-color: rgb(153, 102, 255, 0.8);
+  --chart-cache-read-color: rgb(255, 159, 64, 0.5);
+  --chart-cache-write-color: rgb(255, 159, 64, 0.9);
+  padding: 1em;
+
+  &__filters-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-bottom: 1em;
+  }
+
+  &__period-buttons {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+
+    .btn {
+      padding: 0.5em 1em;
+
+      &.btn-primary {
+        background: var(--tertiary);
+        color: var(--secondary);
+      }
+    }
+  }
+
+  &__custom-date-pickers {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    margin-top: 0.5em;
+  }
+
+  &__filters {
+    margin-bottom: 2em;
+  }
+
+  &__filters-period {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+
+  .d-date-time-input-range {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+  }
+
+  .d-date-time-input-range .from {
+    margin: 0;
+  }
+
+  &__period-label {
+    font-weight: bold;
+  }
+
+  &__summary {
+    margin: 2em 0;
+  }
+
+  &__summary-title {
+    margin-bottom: 1em;
+    color: var(--primary);
+    font-size: 1.2em;
+  }
+
+  &__charts {
+    margin-top: 2em;
+  }
+
+  &__chart {
+    position: relative;
+  }
+
+  &__chart-container {
+    margin-bottom: 2em;
+  }
+
+  &__chart-title {
+    margin-bottom: 1em;
+  }
+
+  &__breakdowns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    margin-top: 2em;
+
+    @include viewport.until(lg) {
+      grid-template-columns: none;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &__users {
+    grid-column: span 2;
+  }
+
+  &__users-table-wrapper {
+    &.-multi-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2em;
+      align-items: start;
+
+      .ai-usage__users-table {
+        .ai-usage__users-username {
+          width: 50px;
+        }
+      }
+
+      @include viewport.until(md) {
+        grid-template-columns: 1fr;
+      }
+
+      .has-sidebar-page & {
+        @include viewport.until(lg) {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+
+    &:not(.-multi-column) {
+      .ai-usage__users-table .ai-usage__users-username {
+        width: auto;
+      }
+    }
+  }
+
+  &__features-table,
+  &__users-table,
+  &__models-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      text-align: left;
+      padding: 0.5em;
+      border-bottom: 2px solid var(--primary-low);
+    }
+  }
+
+  &__features-row,
+  &__users-row,
+  &__models-row {
+    &:hover {
+      background: var(--primary-low);
+    }
+  }
+
+  &__users-cell {
+    .user-info {
+      margin-bottom: 0;
+
+      a {
+        display: flex;
+        gap: var(--space-2);
+        width: 100%;
+      }
+    }
+  }
+
+  &__features-cell,
+  &__users-cell,
+  &__models-cell {
+    padding: 0.5em;
+    border-bottom: 1px solid var(--primary-low);
+    overflow-wrap: anywhere;
+    width: 100%;
+  }
+
+  &__total-row {
+    background: var(--primary-very-low);
+
+    td {
+      font-weight: 700;
+      padding: var(--space-2);
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+  }
+
+  &__models-credit-bar {
+    padding: var(--space-2);
+    border-bottom: 1px solid var(--primary-low);
+    min-width: 120px;
+    max-width: 200px;
+  }
+
+  &__models-table + &__models-table {
+    margin-top: var(--space-6);
+  }
+
+  &__included-label {
+    color: var(--primary);
+  }
+
+  &__mixed-cost {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &__info-icon {
+    color: var(--tertiary);
+    cursor: help;
+    margin-left: var(--space-2);
+    font-size: var(--font-down-1);
+  }
+
+  &__cost-breakdown {
+    padding: var(--space-2);
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  &__breakdown-section {
+    margin-bottom: var(--space-4);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h4 {
+      margin: 0 0 var(--space-2) 0;
+      font-size: var(--font-down-1);
+      font-weight: bold;
+    }
+  }
+
+  &__breakdown-table {
+    width: 100%;
+    font-size: var(--font-down-1);
+
+    th,
+    td {
+      padding: var(--space-1) var(--space-2);
+      text-align: left;
+    }
+
+    th {
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    td {
+      border-bottom: 1px solid var(--primary-very-low);
+    }
+  }
+}

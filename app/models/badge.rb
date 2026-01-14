@@ -121,8 +121,8 @@ class Badge < ActiveRecord::Base
 
   scope :enabled, -> { where(enabled: true) }
 
-  before_create :ensure_not_system
   before_save :sanitize_description
+  before_create :ensure_not_system
 
   after_save do
     if saved_change_to_image_upload_id?
@@ -314,7 +314,7 @@ class Badge < ActiveRecord::Base
   end
 
   def manually_grantable?
-    query.blank? && !system?
+    !system?
   end
 
   def i18n_name

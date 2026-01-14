@@ -18,12 +18,16 @@ module Chat
     #   @return [Service::Base::Context]
     params do
       attribute :channel_id, :integer
-      validates :channel_id, presence: true
-
       attribute :client_id, :string
+      attribute :thread_id, :integer
+
+      validates :channel_id, presence: true
       validates :client_id, presence: true
 
-      attribute :thread_id, :integer
+      def channel_name
+        return "/chat-reply/#{channel_id}/thread/#{thread_id}" if thread_id
+        "/chat-reply/#{channel_id}"
+      end
     end
 
     model :presence_channel
@@ -32,11 +36,7 @@ module Chat
     private
 
     def fetch_presence_channel(params:)
-      name = "/chat-reply/#{params.channel_id}"
-      name += "/thread/#{params.thread_id}" if params.thread_id
-      PresenceChannel.new(name)
-    rescue PresenceChannel::NotFound
-      nil
+      PresenceChannel.new(params.channel_name)
     end
 
     def leave_chat_reply_presence_channel(presence_channel:, params:, guardian:)

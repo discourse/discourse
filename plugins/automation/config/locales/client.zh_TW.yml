@@ -27,6 +27,12 @@ zh_TW:
         text:
           label: 文字
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: 分類
+            tags:
+              label: 標記
         user_badge_granted:
           fields:
             badge:
@@ -60,13 +66,13 @@ zh_TW:
           fields:
             restricted_tags:
               label: 標記
-            restricted_category:
+            restricted_categories:
               label: 分類
-            restricted_group:
-              label: 群組
-            restricted_groups:
-              label: 群組
           created: 建立時間
+          with_images: 圖片
+          with_links: 連結
+          with_code: 代碼
+          with_uploads: 上傳檔案
         category_created_edited:
           fields:
             restricted_category:
@@ -143,7 +149,5 @@ zh_TW:
             label: 版本
           status:
             label: 狀態
-          enabled:
-            label: 啟用
           disabled:
             label: 停用

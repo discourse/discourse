@@ -4,8 +4,8 @@ describe "Topic" do
   let!(:raw) { "this is me testing a new topic by automation" }
   let!(:title) { "This is a new topic created by automation" }
   fab!(:category)
-  fab!(:tag1) { Fabricate(:tag) }
-  fab!(:tag2) { Fabricate(:tag) }
+  fab!(:tag1, :tag)
+  fab!(:tag2, :tag)
 
   before { SiteSetting.discourse_automation_enabled = true }
 

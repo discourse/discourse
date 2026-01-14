@@ -1,6 +1,5 @@
 {
   "type": "array",
-  "minItems": 1,
   "uniqueItems": true,
   "items": {
     "type": "object",
@@ -138,6 +137,9 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "type": "integer"
+          },
           "username": {
             "type": "string"
           },

@@ -53,13 +53,7 @@ module ChatSDK
     end
 
     def start_reply(channel_id:, thread_id: nil, guardian:)
-      Chat::StartReply.call(
-        guardian: guardian,
-        params: {
-          channel_id: channel_id,
-          thread_id: thread_id,
-        },
-      ) do
+      Chat::StartReply.call(guardian:, params: { channel_id:, thread_id: }) do
         on_success { |client_id:| client_id }
         on_model_not_found(:presence_channel) { raise "Chat::Channel or Chat::Thread not found." }
       end
@@ -84,14 +78,7 @@ module ChatSDK
     end
 
     def stop_reply(channel_id:, thread_id: nil, client_id:, guardian:)
-      Chat::StopReply.call(
-        guardian: guardian,
-        params: {
-          client_id: client_id,
-          channel_id: channel_id,
-          thread_id: thread_id,
-        },
-      ) do
+      Chat::StopReply.call(guardian:, params: { client_id:, channel_id:, thread_id: }) do
         on_model_not_found(:presence_channel) { raise "Chat::Channel or Chat::Thread not found." }
       end
     end

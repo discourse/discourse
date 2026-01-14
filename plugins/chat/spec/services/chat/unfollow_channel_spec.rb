@@ -10,8 +10,8 @@ RSpec.describe Chat::UnfollowChannel do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:channel_1) { Fabricate(:chat_channel) }
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:channel_1, :chat_channel)
+    fab!(:current_user, :user)
 
     let(:params) { { channel_id: } }
     let(:dependencies) { { guardian: } }
@@ -30,6 +30,14 @@ RSpec.describe Chat::UnfollowChannel do
 
         it "unfollows the channel" do
           expect { result }.to change { membership.reload.following }.from(true).to(false)
+        end
+
+        context "when channel is starred" do
+          before { membership.update!(starred: true) }
+
+          it "unstars the channel" do
+            expect { result }.to change { membership.reload.starred }.from(true).to(false)
+          end
         end
       end
 

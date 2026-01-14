@@ -4,7 +4,7 @@ RSpec.describe Admin::SiteTextsController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  let(:default_locale) { I18n.locale }
+  let(:locale) { I18n.locale }
 
   after do
     TranslationOverride.delete_all
@@ -16,13 +16,13 @@ RSpec.describe Admin::SiteTextsController do
       before { sign_in(admin) }
 
       it "returns json" do
-        get "/admin/customize/site_texts.json", params: { q: "title", locale: default_locale }
+        get "/admin/customize/site_texts.json", params: { q: "title", locale: }
         expect(response.status).to eq(200)
         expect(response.parsed_body["site_texts"]).to include(include("id" => "title"))
       end
 
       it "sets has_more to true if more than 50 results were found" do
-        get "/admin/customize/site_texts.json", params: { q: "e", locale: default_locale }
+        get "/admin/customize/site_texts.json", params: { q: "e", locale: }
         expect(response.status).to eq(200)
         expect(response.parsed_body["site_texts"].size).to eq(50)
         expect(response.parsed_body["extras"]["has_more"]).to be_truthy
@@ -31,42 +31,25 @@ RSpec.describe Admin::SiteTextsController do
       it "works with pages" do
         texts = Set.new
 
-        get "/admin/customize/site_texts.json", params: { q: "e", locale: default_locale }
+        get "/admin/customize/site_texts.json", params: { q: "e", locale: }
         response.parsed_body["site_texts"].each { |text| texts << text["id"] }
         expect(texts.size).to eq(50)
 
-        get "/admin/customize/site_texts.json", params: { q: "e", page: 1, locale: default_locale }
+        get "/admin/customize/site_texts.json", params: { q: "e", page: 1, locale: }
         response.parsed_body["site_texts"].each { |text| texts << text["id"] }
         expect(texts.size).to eq(100)
       end
 
       it "works with locales" do
-        get "/admin/customize/site_texts.json", params: { q: "yes_value", locale: default_locale }
+        get "/admin/customize/site_texts.json", params: { q: "yes_value", locale: }
         value =
           response.parsed_body["site_texts"].find { |text| text["id"] == "js.yes_value" }["value"]
-        expect(value).to eq(I18n.t("js.yes_value", locale: default_locale))
+        expect(value).to eq(I18n.t("js.yes_value", locale:))
 
         get "/admin/customize/site_texts.json", params: { q: "yes_value", locale: "de" }
         value =
           response.parsed_body["site_texts"].find { |text| text["id"] == "js.yes_value" }["value"]
         expect(value).to eq(I18n.t("js.yes_value", locale: :de))
-      end
-
-      it "can return the value of the translation in the selected locale rather than English if specified" do
-        SiteSetting.default_locale = "it"
-        get "/admin/customize/site_texts.json",
-            params: {
-              q: "all tags",
-              locale: "it",
-              only_selected_locale: true,
-            }
-        value =
-          response.parsed_body["site_texts"].find do |text|
-            text["id"] == "js.topic.browse_all_tags_or_latest"
-          end[
-            "value"
-          ]
-        expect(value).to eq(I18n.t("js.topic.browse_all_tags_or_latest", locale: "it"))
       end
 
       it "returns an error on invalid locale" do
@@ -81,13 +64,7 @@ RSpec.describe Admin::SiteTextsController do
 
       it "normalizes quotes during search" do
         value = "“That’s a ‘magic’ sock.”"
-        put "/admin/customize/site_texts/title.json",
-            params: {
-              site_text: {
-                value: value,
-                locale: default_locale,
-              },
-            }
+        put "/admin/customize/site_texts/title.json", params: { site_text: { value:, locale: } }
 
         [
           "That's a 'magic' sock.",
@@ -97,7 +74,7 @@ RSpec.describe Admin::SiteTextsController do
           "«That's a 'magic' sock.»",
           "„That’s a ‚magic‘ sock.“",
         ].each do |search_term|
-          get "/admin/customize/site_texts.json", params: { q: search_term, locale: default_locale }
+          get "/admin/customize/site_texts.json", params: { q: search_term, locale: }
           expect(response.status).to eq(200)
           expect(response.parsed_body["site_texts"]).to include(
             include("id" => "title", "value" => value),
@@ -110,13 +87,13 @@ RSpec.describe Admin::SiteTextsController do
         put "/admin/customize/site_texts/embed.loading.json",
             params: {
               site_text: {
-                value: value,
-                locale: default_locale,
+                value:,
+                locale:,
               },
             }
 
         ["Loading Discussion", "Loading Discussion...", "Loading Discussion…"].each do |search_term|
-          get "/admin/customize/site_texts.json", params: { q: search_term, locale: default_locale }
+          get "/admin/customize/site_texts.json", params: { q: search_term, locale: }
           expect(response.status).to eq(200)
           expect(response.parsed_body["site_texts"]).to include(
             include("id" => "embed.loading", "value" => value),
@@ -138,19 +115,11 @@ RSpec.describe Admin::SiteTextsController do
             value: "foo",
           )
 
-          get "/admin/customize/site_texts.json",
-              params: {
-                q: "missing_plural_key",
-                locale: default_locale,
-              }
+          get "/admin/customize/site_texts.json", params: { q: "missing_plural_key", locale: }
           expect(response.status).to eq(200)
           expect(response.parsed_body["site_texts"]).to be_empty
 
-          get "/admin/customize/site_texts.json",
-              params: {
-                q: "another_missing_key",
-                locale: default_locale,
-              }
+          get "/admin/customize/site_texts.json", params: { q: "another_missing_key", locale: }
           expect(response.status).to eq(200)
           expect(response.parsed_body["site_texts"]).to be_empty
         end
@@ -270,13 +239,13 @@ RSpec.describe Admin::SiteTextsController do
                   )
                 {
                   id: "colour.#{key}",
-                  value: value,
+                  value:,
                   status: "up_to_date",
                   old_default: nil,
                   new_default: nil,
                   can_revert: overridden,
-                  overridden: overridden,
-                  interpolation_keys: interpolation_keys,
+                  overridden:,
+                  interpolation_keys:,
                   has_interpolation_keys: interpolation_keys.present?,
                 }
               end
@@ -362,11 +331,18 @@ RSpec.describe Admin::SiteTextsController do
           include_examples "finds correct plural keys"
         end
       end
+
+      it "does not return restricted keys in search results" do
+        get "/admin/customize/site_texts.json", params: { q: "confirm_old_email", locale: }
+        expect(response.status).to eq(200)
+        returned_ids = response.parsed_body["site_texts"].map { |t| t["id"] }
+        expect((returned_ids & Admin::SiteTextsController::RESTRICTED_KEYS.to_a)).to be_empty
+      end
     end
 
     shared_examples "site texts inaccessible" do
       it "denies access with a 404 response" do
-        get "/admin/customize/site_texts.json", params: { q: "title", locale: default_locale }
+        get "/admin/customize/site_texts.json", params: { q: "title", locale: }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -391,7 +367,7 @@ RSpec.describe Admin::SiteTextsController do
       before { sign_in(admin) }
 
       it "returns a site text for a key that exists" do
-        get "/admin/customize/site_texts/js.topic.list.json", params: { locale: default_locale }
+        get "/admin/customize/site_texts/js.topic.list.json", params: { locale: }
         expect(response.status).to eq(200)
 
         json = response.parsed_body
@@ -403,10 +379,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "returns a site text for a key with ampersand" do
-        get "/admin/customize/site_texts/js.emoji_picker.food_&_drink.json",
-            params: {
-              locale: default_locale,
-            }
+        get "/admin/customize/site_texts/js.emoji_picker.food_&_drink.json", params: { locale: }
         expect(response.status).to eq(200)
 
         json = response.parsed_body
@@ -418,10 +391,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "returns not found for missing keys" do
-        get "/admin/customize/site_texts/made_up_no_key_exists.json",
-            params: {
-              locale: default_locale,
-            }
+        get "/admin/customize/site_texts/made_up_no_key_exists.json", params: { locale: }
         expect(response.status).to eq(404)
       end
 
@@ -430,20 +400,20 @@ RSpec.describe Admin::SiteTextsController do
         put "/admin/customize/site_texts/#{key}.json",
             params: {
               site_text: {
-                value: I18n.t(key, locale: default_locale),
-                locale: default_locale,
+                value: I18n.t(key, locale:),
+                locale:,
               },
             }
         expect(response.status).to eq(200)
 
-        get "/admin/customize/site_texts/#{key}.json", params: { locale: default_locale }
+        get "/admin/customize/site_texts/#{key}.json", params: { locale: }
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["site_text"]["overridden"]).to eq(true)
 
         TranslationOverride.destroy_all
 
-        get "/admin/customize/site_texts/#{key}.json", params: { locale: default_locale }
+        get "/admin/customize/site_texts/#{key}.json", params: { locale: }
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["site_text"]["overridden"]).to eq(false)
@@ -574,11 +544,19 @@ RSpec.describe Admin::SiteTextsController do
           include_examples "has correct plural keys"
         end
       end
+
+      it "returns 403 for restricted keys" do
+        Admin::SiteTextsController::RESTRICTED_KEYS.each do |key|
+          get "/admin/customize/site_texts/#{key}.json", params: { locale: }
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        end
+      end
     end
 
     shared_examples "site text inaccessible" do
       it "denies access with a 404 response" do
-        get "/admin/customize/site_texts/js.topic.list.json", params: { locale: default_locale }
+        get "/admin/customize/site_texts/js.topic.list.json", params: { locale: }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -607,7 +585,7 @@ RSpec.describe Admin::SiteTextsController do
             params: {
               site_text: {
                 value: "foo",
-                locale: default_locale,
+                locale:,
               },
             }
 
@@ -622,7 +600,7 @@ RSpec.describe Admin::SiteTextsController do
             params: {
               site_text: {
                 value: "foo",
-                locale: default_locale,
+                locale:,
               },
             }
 
@@ -636,20 +614,25 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "does not update restricted keys" do
-        put "/admin/customize/site_texts/user_notifications.confirm_old_email.title.json",
-            params: {
-              site_text: {
-                value: "foo",
-                locale: default_locale,
-              },
-            }
+        Admin::SiteTextsController::RESTRICTED_KEYS.each do |key|
+          put "/admin/customize/site_texts/#{key}.json",
+              params: {
+                site_text: {
+                  value: "foo",
+                  locale:,
+                },
+              }
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        end
+      end
 
-        expect(response.status).to eq(403)
-
-        json = response.parsed_body
-        expect(json["error_type"]).to eq("invalid_access")
-        expect(json["errors"].size).to eq(1)
-        expect(json["errors"].first).to eq(I18n.t("email_template_cant_be_modified"))
+      it "does not revert restricted keys" do
+        Admin::SiteTextsController::RESTRICTED_KEYS.each do |key|
+          delete "/admin/customize/site_texts/#{key}.json", params: { locale: }
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        end
       end
 
       it "returns the right error message" do
@@ -659,7 +642,7 @@ RSpec.describe Admin::SiteTextsController do
             params: {
               site_text: {
                 value: "hello %{key} %{omg}",
-                locale: default_locale,
+                locale:,
               },
             }
 
@@ -683,7 +666,7 @@ RSpec.describe Admin::SiteTextsController do
             params: {
               site_text: {
                 value: "yay",
-                locale: default_locale,
+                locale:,
               },
             }
         expect(response.status).to eq(200)
@@ -694,7 +677,7 @@ RSpec.describe Admin::SiteTextsController do
         expect(log.new_value).to eq("yay")
         expect(log.action).to eq(UserHistory.actions[:change_site_text])
 
-        delete "/admin/customize/site_texts/title.json", params: { locale: default_locale }
+        delete "/admin/customize/site_texts/title.json", params: { locale: }
         expect(response.status).to eq(200)
 
         log = UserHistory.last
@@ -711,7 +694,7 @@ RSpec.describe Admin::SiteTextsController do
             params: {
               site_text: {
                 value: "hello",
-                locale: default_locale,
+                locale:,
               },
             }
         expect(response.status).to eq(200)
@@ -724,7 +707,7 @@ RSpec.describe Admin::SiteTextsController do
         expect(site_text["value"]).to eq("hello")
 
         # Revert
-        delete "/admin/customize/site_texts/title.json", params: { locale: default_locale }
+        delete "/admin/customize/site_texts/title.json", params: { locale: }
         expect(response.status).to eq(200)
 
         json = response.parsed_body
@@ -745,7 +728,7 @@ RSpec.describe Admin::SiteTextsController do
             params: {
               site_text: {
                 value: ru_title,
-                locale: locale,
+                locale:,
               },
             }
         expect(response.status).to eq(200)
@@ -753,7 +736,7 @@ RSpec.describe Admin::SiteTextsController do
             params: {
               site_text: {
                 value: ru_mf_text,
-                locale: locale,
+                locale:,
               },
             }
         expect(response.status).to eq(200)
@@ -782,7 +765,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       context "when updating a translation override for a system badge" do
-        fab!(:user_with_badge_title) { Fabricate(:active_user) }
+        fab!(:user_with_badge_title, :active_user)
         let(:badge) { Badge.find(Badge::Regular) }
 
         before do
@@ -803,7 +786,7 @@ RSpec.describe Admin::SiteTextsController do
                 params: {
                   site_text: {
                     value: "Terminator",
-                    locale: default_locale,
+                    locale:,
                   },
                 }
           end
@@ -815,12 +798,7 @@ RSpec.describe Admin::SiteTextsController do
               granted_badge_id: badge.id,
               action: Jobs::BulkUserTitleUpdate::RESET_ACTION,
             },
-          ) do
-            delete "/admin/customize/site_texts/badges.regular.name.json",
-                   params: {
-                     locale: default_locale,
-                   }
-          end
+          ) { delete "/admin/customize/site_texts/badges.regular.name.json", params: { locale: } }
         end
 
         it "does not update matching user titles when overriding non-title badge text" do
@@ -829,7 +807,7 @@ RSpec.describe Admin::SiteTextsController do
                 params: {
                   site_text: {
                     value: "Terminator",
-                    locale: default_locale,
+                    locale:,
                   },
                 }
           end
@@ -843,7 +821,7 @@ RSpec.describe Admin::SiteTextsController do
             params: {
               site_text: {
                 value: "foo",
-                locale: default_locale,
+                locale:,
               },
             }
 
@@ -870,10 +848,7 @@ RSpec.describe Admin::SiteTextsController do
 
     context "when using a key which isn't overridden" do
       it "returns a not found error" do
-        put "/admin/customize/site_texts/title/dismiss_outdated.json",
-            params: {
-              locale: default_locale,
-            }
+        put "/admin/customize/site_texts/title/dismiss_outdated.json", params: { locale: }
 
         expect(response.status).to eq(404)
 
@@ -884,19 +859,11 @@ RSpec.describe Admin::SiteTextsController do
 
     context "when the override isn't outdated" do
       before do
-        Fabricate(
-          :translation_override,
-          locale: default_locale,
-          translation_key: "title",
-          value: "My Forum",
-        )
+        Fabricate(:translation_override, locale:, translation_key: "title", value: "My Forum")
       end
 
       it "returns an unprocessable entity error" do
-        put "/admin/customize/site_texts/title/dismiss_outdated.json",
-            params: {
-              locale: default_locale,
-            }
+        put "/admin/customize/site_texts/title/dismiss_outdated.json", params: { locale: }
 
         expect(response.status).to eq(422)
 
@@ -910,7 +877,7 @@ RSpec.describe Admin::SiteTextsController do
       before do
         Fabricate(
           :translation_override,
-          locale: default_locale,
+          locale:,
           translation_key: "title",
           value: "My Forum",
           status: "outdated",
@@ -918,10 +885,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "returns success" do
-        put "/admin/customize/site_texts/title/dismiss_outdated.json",
-            params: {
-              locale: default_locale,
-            }
+        put "/admin/customize/site_texts/title/dismiss_outdated.json", params: { locale: }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["success"]).to eq("OK")

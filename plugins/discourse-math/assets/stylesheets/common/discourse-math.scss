@@ -1,0 +1,140 @@
+// Hidden state controlled via hidden attribute set by JavaScript
+[hidden].math-hidden {
+  display: none;
+}
+
+.math-container {
+  &.block-math {
+    display: block;
+
+    // MathJax container styling - inline styles are stripped by JavaScript
+    // after rendering to allow these CSS rules to take effect
+    > {
+      div,
+      span {
+        display: block;
+        max-width: 100%;
+        margin-bottom: 1em;
+
+        .katex-html {
+          display: block;
+          overflow-x: auto;
+          overflow-y: hidden;
+          max-width: 100%;
+          padding: 0.25em 0.5em;
+          box-sizing: border-box;
+        }
+      }
+
+      mjx-container {
+        display: block;
+        max-width: 100%;
+        margin-bottom: 1em;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0.25em 0.5em;
+        box-sizing: border-box;
+      }
+    }
+
+    // On mobile we add a slight fade on either side to indicate that the user can
+    // scroll. However, this should not be added to the composer since mathjax does
+    // not render in the mobile composer
+    .cooked & {
+      .mobile-view & {
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          width: 1em;
+          height: 100%;
+          background: linear-gradient(
+            to right,
+            rgb(var(--secondary-rgb), 1) 0%,
+            rgb(var(--secondary-rgb), 0) 100%
+          );
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          z-index: 1;
+          right: 0;
+          top: 0;
+          width: 1em;
+          height: 100%;
+          background: linear-gradient(
+            to right,
+            rgb(var(--secondary-rgb), 0) 0%,
+            rgb(var(--secondary-rgb), 1) 100%
+          );
+        }
+      }
+    }
+  }
+}
+
+.ProseMirror {
+  .composer-math-node {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-half);
+    padding: 0 var(--space-1);
+    border: 1px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    font-family: var(--d-font-family--monospace);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-color: var(--tertiary);
+    }
+
+    .math-node-edit-button {
+      color: var(--primary-medium);
+      padding: 0;
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+
+    .math-node-content {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  div.composer-math-node {
+    display: block;
+    padding: var(--space-2);
+    margin: var(--space-2) 0;
+
+    .math-node-content {
+      display: block;
+      white-space: pre-wrap;
+    }
+  }
+}
+
+.math-insert-modal,
+.math-edit-modal {
+  &__toggle {
+    margin-bottom: var(--space-3);
+  }
+
+  &__textarea {
+    min-height: 100px;
+    font-family: var(--d-font-family--monospace);
+  }
+}
+
+// Fix zoom problem with MathJax.
+// See https://github.com/mathjax/MathJax/issues/3489
+.mjx-dialog {
+  position: fixed !important;
+}

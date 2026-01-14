@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "מדריך סגנון של Discourse"
   js:
     styleguide:
       title: "מדריך סגנון"
@@ -25,12 +30,16 @@ he:
           title: "קלטי תאריך/שעה"
         menus:
           title: "תפריטים"
+        multi_select:
+          title: "בחירה במרוכז"
         toasts:
           title: "חלוניות מידע"
         font_scale:
           title: "מערכת גופנים"
         colors:
           title: "צבעים"
+        dialog:
+          title: "חלונית"
         icons:
           title: "סמלים"
           full_list: "הצגת רשימת הסמלים המלאה של Font Awesome"
@@ -52,8 +61,6 @@ he:
           title: "ניווט מוערם"
         categories_list:
           title: "רשימת קטגוריות"
-        topic_link:
-          title: "קישור נושא"
         topic_list_item:
           title: "פריט ברשימת נושאים"
         topic_statuses:
@@ -62,8 +69,6 @@ he:
           title: "רשימת נושאים"
         basic_topic_list:
           title: "רשימת נושאים בסיסית"
-        footer_message:
-          title: "הודעת כותרת תחתונה"
         signup_cta:
           title: "קריאה להרשמה"
         topic_timer_info:
@@ -82,8 +87,8 @@ he:
           title: "מפת נושאים"
         site_header:
           title: "כותרת האתר"
-        suggested_topics:
-          title: "נושאים מוצעים"
+        more_topics:
+          title: "נושאים נוספים"
         post_menu:
           title: "תפריט פוסט"
         modal:

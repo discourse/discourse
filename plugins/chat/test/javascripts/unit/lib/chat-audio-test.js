@@ -23,7 +23,7 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
     this.currentUser.user_option.has_chat_enabled = true;
     this.currentUser.user_option.chat_header_indicator_preference = "all_new";
 
-    withPluginApi("0.12.1", async (api) => {
+    withPluginApi(async (api) => {
       this.stub = sinon.spy(api, "registerDesktopNotificationHandler");
       chatAudioInitializer.initialize(getOwner(this));
 

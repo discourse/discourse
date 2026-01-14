@@ -1,0 +1,131 @@
+# Maltese holiday definitions for the Ruby Holiday gem. In Maltese.
+#
+# Updated: 2017-06-08
+# Sources:
+# - https://en.wikipedia.org/wiki/Public_holidays_in_Malta
+---
+months:
+  0:
+  - name: Il-Ġimgħa l-Kbira # Good Friday
+    regions: [mt_mt]
+    function: easter(year)
+    function_modifier: -2
+  1:
+  - name: L-Ewwel tas-Sena # New Year's Day
+    regions: [mt_mt]
+    mday: 1
+  2:
+  - name: Nawfraġju ta' San Pawl # Feast of Saint Paul's Shipwreck in Malta
+    regions: [mt_mt]
+    mday: 10
+  3:
+  - name: San Ġużepp # Feast of Saint Joseph
+    regions: [mt_mt]
+    mday: 19
+  - name: Jum il-Ħelsien # Freedom Day
+    regions: [mt_mt]
+    mday: 31
+  5:
+  - name: Jum il-Ħaddiem #  Worker's Day
+    regions: [mt_mt]
+    mday: 1
+  6:
+  - name: Sette Giugno
+    regions: [mt_mt]
+    mday: 7
+  - name: L-Imnarja # Feast of Saint Peter & Saint Paul
+    regions: [mt_mt]
+    mday: 29
+  8:
+  - name: Santa Marija # Feast of the Assumption of Our Lady
+    regions: [mt_mt]
+    mday: 15
+  9:
+  - name: Jum il-Vitorja # Victory Day
+    regions: [mt_mt]
+    mday: 8
+  - name: Jum l-Indipendenza #  Independence Day
+    regions: [mt_mt]
+    mday: 21
+  12:
+  - name: Il-Kunċizzjoni # Feast of the Immaculate Conception
+    regions: [mt_mt]
+    mday: 8
+  - name: Jum ir-Repubblika # Republic Day
+    regions: [mt_mt]
+    mday: 13
+  - name: Il-Milied # Christmas Day
+    regions: [mt_mt]
+    mday: 25
+
+tests:
+  - given:
+      date: '2017-1-1'
+      regions: ["mt_mt"]
+    expect:
+      name: "L-Ewwel tas-Sena"
+  - given:
+      date: '2017-2-10'
+      regions: ["mt_mt"]
+    expect:
+      name: "Nawfraġju ta' San Pawl"
+  - given:
+      date: '2017-3-19'
+      regions: ["mt_mt"]
+    expect:
+      name: "San Ġużepp"
+  - given:
+      date: '2017-3-31'
+      regions: ["mt_mt"]
+    expect:
+      name: "Jum il-Ħelsien"
+  - given:
+      date: '2017-5-1'
+      regions: ["mt_mt"]
+    expect:
+      name: "Jum il-Ħaddiem"
+  - given:
+      date: '2017-6-7'
+      regions: ["mt_mt"]
+    expect:
+      name: "Sette Giugno"
+  - given:
+      date: '2017-6-29'
+      regions: ["mt_mt"]
+    expect:
+      name: "L-Imnarja"
+  - given:
+      date: '2017-8-15'
+      regions: ["mt_mt"]
+    expect:
+      name: "Santa Marija"
+  - given:
+      date: '2017-9-8'
+      regions: ["mt_mt"]
+    expect:
+      name: "Jum il-Vitorja"
+  - given:
+      date: '2017-9-21'
+      regions: ["mt_mt"]
+    expect:
+      name: "Jum l-Indipendenza"
+  - given:
+      date: '2017-12-8'
+      regions: ["mt_mt"]
+    expect:
+      name: "Il-Kunċizzjoni"
+  - given:
+      date: '2017-12-13'
+      regions: ["mt_mt"]
+    expect:
+      name: "Jum ir-Repubblika"
+  - given:
+      date: '2017-12-25'
+      regions: ["mt_mt"]
+    expect:
+      name: "Il-Milied"
+  - given:
+      date: ['2017-4-14', '2018-3-30', '2019-4-19']
+      regions: ["mt_mt"]
+    expect:
+      name: "Il-Ġimgħa l-Kbira"

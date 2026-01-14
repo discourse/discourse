@@ -4,6 +4,7 @@
 # we need to handle certain exceptions here
 module Middleware
   class DiscoursePublicExceptions < ::ActionDispatch::PublicExceptions
+    require "middleware/default_headers"
     # These middlewares will be re-run when the exception response is generated
     EXCEPTION_RESPONSE_MIDDLEWARES = [
       ContentSecurityPolicy::Middleware,
@@ -64,10 +65,12 @@ module Middleware
           end
 
           if ApplicationController.rescue_with_handler(exception, object: fake_controller)
+            # Calling `ActionDispatch::Response#to_a` here to ensure that cache control headers are set.
+            response.to_a
             body = response.body
             body = [body] if String === body
             rack_response = [response.status, response.headers, body]
-            app = lambda { |env| rack_response }
+            app = lambda { |_| rack_response }
             EXCEPTION_RESPONSE_MIDDLEWARES.each { |middleware| app = middleware.new(app) }
             return app.call(env)
           end

@@ -2,19 +2,15 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { or } from "truth-helpers";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ReviewableChatMessage extends Component {
-  @service store;
-  @service chatChannelsManager;
-
   @cached
   get channel() {
     if (!this.args.reviewable.chat_channel) {

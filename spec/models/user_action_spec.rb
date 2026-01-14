@@ -9,11 +9,11 @@ RSpec.describe UserAction do
   it { is_expected.to validate_presence_of :user_id }
 
   describe "#stream" do
-    fab!(:public_post) { Fabricate(:post) }
+    fab!(:public_post, :post)
     let(:public_topic) { public_post.topic }
     fab!(:user)
 
-    fab!(:private_post) { Fabricate(:post) }
+    fab!(:private_post, :post)
     let(:private_topic) do
       topic = private_post.topic
       topic.update_columns(category_id: nil, archetype: Archetype.private_message)
@@ -221,7 +221,7 @@ RSpec.describe UserAction do
       end
 
       context "with private message" do
-        fab!(:post) { Fabricate(:private_message_post) }
+        fab!(:post, :private_message_post)
         let(:likee) { post.topic.topic_allowed_users.first.user }
         let(:liker) { post.topic.topic_allowed_users.last.user }
 
@@ -267,7 +267,7 @@ RSpec.describe UserAction do
     end
 
     describe "when another user posts on the topic" do
-      fab!(:mentioned) { Fabricate(:admin) }
+      fab!(:mentioned, :admin)
 
       let(:other_user) { coding_horror }
       let(:response) do

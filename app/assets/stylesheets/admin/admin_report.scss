@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-report {
   .conditional-loading-section {
     &.is-loading {
@@ -8,7 +10,7 @@
   .header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     margin-bottom: 0.5em;
     padding-bottom: 0.5em;
   }
@@ -84,6 +86,7 @@
 
   .main {
     flex: 1;
+    min-width: 0; // allow chart.js to shrink below intrinsic width
   }
 
   .main .report-alert {
@@ -154,7 +157,7 @@
     .chart-groupings {
       display: grid;
       grid-template-columns: repeat(auto-fill, 1fr);
-      grid-gap: 0.5em;
+      gap: 0.5em;
       margin-bottom: 1em;
 
       .chart-grouping.active {
@@ -205,7 +208,7 @@
 
 .admin-report.storage-stats {
   .main {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
   }
 }
 
@@ -213,10 +216,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
   padding-bottom: 0.5em;
 
-  @media screen and (max-width: 400px) {
+  @media screen and (width <= 400px) {
     flex-wrap: wrap;
   }
 
@@ -230,7 +233,6 @@
 }
 
 .admin-reports-list {
-  --d-border-radius: var(--space-0);
   display: flex;
   flex-wrap: wrap;
   list-style-type: none;
@@ -240,19 +242,16 @@
     padding-top: 0;
 
     .admin-section-landing-item {
-      padding: var(--space-4);
       border-radius: var(--d-border-radius);
-      outline: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       margin-bottom: 0;
 
-      @include breakpoint("mobile-extra-large", min-width) {
+      @include viewport.from(sm) {
         margin-bottom: 0;
       }
 
       &:hover {
-        border: 0;
-        box-shadow: 0 0 0 1px var(--primary-300), 0 0 0 4px var(--primary-100);
-        transition: all 0.2s ease-in-out;
+        border: 1px solid var(--primary-low-mid);
       }
     }
   }

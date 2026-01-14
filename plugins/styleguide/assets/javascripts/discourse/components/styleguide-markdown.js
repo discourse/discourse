@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import $ from "jquery";
 import { cook } from "discourse/lib/text";

@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "automation";
+
 export default {
   name: "automation-admin-plugin-configuration-nav",
 
@@ -9,8 +11,9 @@ export default {
       return;
     }
 
-    withPluginApi("1.1.0", (api) => {
-      api.addAdminPluginConfigurationNav("automation", [
+    withPluginApi((api) => {
+      api.setAdminPluginIcon(PLUGIN_ID, "wand-magic-sparkles");
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
         {
           label: "discourse_automation.title",
           route: "adminPlugins.show.automation",

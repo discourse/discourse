@@ -29,11 +29,9 @@
 }
 
 .form-kit__control-code {
-  height: 250px !important;
+  min-height: 250px !important;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid var(--primary-400);
-  border-radius: var(--d-input-border-radius);
 
   .form-kit__field.has-error & {
     border-color: var(--danger);

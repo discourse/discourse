@@ -25,6 +25,18 @@ RSpec.describe SidebarSectionsController do
         ["Community", "public section", "private section"],
       )
     end
+
+    it "returns Community section first even when public sections are alphabetically before it" do
+      sign_in(user)
+      Fabricate(:sidebar_section, title: "Apple", public: true)
+
+      get "/sidebar_sections.json"
+      expect(response.status).to eq(200)
+
+      titles = response.parsed_body["sidebar_sections"].map { |section| section["title"] }
+
+      expect(titles).to eq(["Community", "Apple", "public section", "private section"])
+    end
   end
 
   describe "#create" do
@@ -344,7 +356,7 @@ RSpec.describe SidebarSectionsController do
       sign_in(admin)
 
       topics_link = community_section.sidebar_urls.find_by(name: "Topics")
-      my_posts_link = community_section.sidebar_urls.find_by(name: "My Posts")
+      my_posts_link = community_section.sidebar_urls.find_by(name: "My posts")
 
       community_section
         .sidebar_section_links

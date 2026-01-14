@@ -105,11 +105,7 @@ RSpec.describe BackupRestore::SystemInterface do
     end
 
     context "with Sidekiq workers" do
-      after { flush_sidekiq_redis_namespace }
-
-      def flush_sidekiq_redis_namespace
-        Sidekiq.redis { |redis| redis.scan_each { |key| redis.del(key) } }
-      end
+      after { Sidekiq.redis(&:flushdb) }
 
       def create_workers(site_id: nil, all_sites: false)
         payload =
@@ -132,8 +128,8 @@ RSpec.describe BackupRestore::SystemInterface do
           key = "#{hostname}:#{pid}"
           process = { pid: pid, hostname: hostname }
 
-          conn.sadd?("processes", key)
-          conn.hmset(key, "info", Sidekiq.dump_json(process))
+          conn.sadd("processes", key)
+          conn.hset(key, "info", Sidekiq.dump_json(process))
 
           data =
             Sidekiq.dump_json(
@@ -141,7 +137,7 @@ RSpec.describe BackupRestore::SystemInterface do
               run_at: Time.now.to_i,
               payload: Sidekiq.dump_json(payload),
             )
-          conn.hmset("#{key}:work", "444", data)
+          conn.hset("#{key}:work", "444", data)
         end
       end
 

@@ -6,10 +6,7 @@ describe "glimmer topic list", type: :system do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before do
-    SiteSetting.glimmer_topic_list_mode = "enabled"
-    sign_in(user)
-  end
+  before { sign_in(user) }
 
   describe "/latest" do
     it "shows the list" do
@@ -73,7 +70,7 @@ describe "glimmer topic list", type: :system do
   describe "topic highlighting" do
     # TODO: Those require `Capybara.disable_animation = false`
 
-    skip "highlights newly received topics" do
+    it "highlights newly received topics" do
       Fabricate(:read_topic, current_user: user)
 
       visit("/latest")
@@ -84,23 +81,25 @@ describe "glimmer topic list", type: :system do
       topic_list.had_new_topics_alert?
       topic_list.click_new_topics_alert
 
-      topic_list.has_highlighted_topic?(new_topic)
+      expect(topic_list).to have_highlighted_topic(new_topic)
     end
 
-    skip "highlights the previous topic after navigation" do
+    it "highlights the previous topic after navigation" do
       topic = Fabricate(:read_topic, current_user: user)
 
       visit("/latest")
       topic_list.visit_topic(topic)
+
       expect(topic_page).to have_topic_title(topic.title)
+
       page.go_back
 
-      topic_list.has_highlighted_topic?(topic)
+      expect(topic_list).to have_highlighted_topic(topic)
     end
   end
 
   describe "bulk topic selection" do
-    fab!(:user) { Fabricate(:moderator) }
+    fab!(:user, :moderator)
 
     it "shows the buttons and checkboxes" do
       topics = Fabricate.times(2, :topic)
@@ -140,5 +139,24 @@ describe "glimmer topic list", type: :system do
 
     wait_for { TopicUser.exists?(topic:, user:) }
     expect(TopicUser.find_by(topic:, user:).cleared_pinned_at).to_not be_nil
+  end
+
+  it "ensures visited topics have a different color" do
+    not_visited_topic = Fabricate(:topic)
+    Fabricate(:post, topic: not_visited_topic)
+
+    visited_topic = Fabricate(:topic)
+    Fabricate(:post, topic: visited_topic)
+
+    visit(visited_topic.url)
+
+    # Clicking the logo is "safer" than visiting /latest so the client-side
+    # app can update the visited status of the topic
+    find("#site-logo").click
+
+    visited_color = find(".topic-list .topic-list-item.visited a.title").style("color")
+    not_visited_color = find(".topic-list .topic-list-item:not(.visited) a.title").style("color")
+
+    expect(visited_color).to_not eq(not_visited_color)
   end
 end

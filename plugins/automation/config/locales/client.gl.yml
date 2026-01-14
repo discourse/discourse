@@ -27,6 +27,12 @@ gl:
         text:
           label: Texto
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorías
+            tags:
+              label: Etiquetas
         user_badge_granted:
           fields:
             badge:
@@ -62,13 +68,13 @@ gl:
           fields:
             restricted_tags:
               label: Etiquetas
-            restricted_category:
-              label: Categoría
-            restricted_group:
-              label: Grupo
-            restricted_groups:
-              label: Grupos
+            restricted_categories:
+              label: Categorías
           created: Creado
+          with_images: Imaxes
+          with_links: Ligazóns
+          with_code: Código
+          with_uploads: Cargas
         category_created_edited:
           fields:
             restricted_category:
@@ -132,6 +138,8 @@ gl:
               label: ID do tema
             user:
               label: Usuario
+        set_topic_timer:
+          title: Estabelecer temporizador do tema
       models:
         trigger:
           name:
@@ -145,7 +153,5 @@ gl:
             label: Versión
           status:
             label: Estado
-          enabled:
-            label: Activado
           disabled:
             label: Desactivado

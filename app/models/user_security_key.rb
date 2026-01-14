@@ -15,6 +15,10 @@ class UserSecurityKey < ActiveRecord::Base
     @factor_types ||= Enum.new(second_factor: 0, first_factor: 1, multi_factor: 2)
   end
 
+  def first_factor?
+    factor_type == self.class.factor_types[:first_factor]
+  end
+
   private
 
   def count_per_user_does_not_exceed_limit

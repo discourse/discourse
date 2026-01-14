@@ -14,7 +14,6 @@ import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 */
 
 export default class ChatThreadsManager {
-  @service chatTrackingStateManager;
   @service chatChannelsManager;
   @service chatApi;
 
@@ -61,7 +60,7 @@ export default class ChatThreadsManager {
     if (existingThread) {
       return Promise.resolve(existingThread);
     } else if (options.fetchIfNotFound) {
-      return this.#fetchFromServer(channelId, threadId);
+      return await this.#fetchFromServer(channelId, threadId);
     } else {
       return Promise.resolve();
     }
@@ -88,7 +87,10 @@ export default class ChatThreadsManager {
       this.#cache(model);
     }
 
-    if (threadObject?.meta?.message_bus_last_ids?.thread_message_bus_last_id) {
+    if (
+      threadObject?.meta?.message_bus_last_ids?.thread_message_bus_last_id !==
+      undefined
+    ) {
       model.threadMessageBusLastId =
         threadObject.meta.message_bus_last_ids.thread_message_bus_last_id;
     }

@@ -42,7 +42,6 @@ sw:
       error_while_casting_votes: "Samahani kulikuwa na hitilafu kwenye kupiga kura."
       error_while_fetching_voters: "Samahani kulikuwa na hitilafu kwenye kuonyesha wapiga kura."
       ui_builder:
-        title: Jenga uchaguzi
         insert: Ingiza uchaguzi
         help:
           invalid_values: Kiwango cha chini lazima kiwe kidogo kuliko kiwango cha juu.

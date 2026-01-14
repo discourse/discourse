@@ -1,7 +1,7 @@
 .chat-composer-upload {
   &__remove-btn {
     visibility: visible;
-    background: rgba(var(--always-black-rgb), 0.9);
+    background: rgb(var(--always-black-rgb), 0.9);
     border-radius: 100%;
 
     // overwrite ios style

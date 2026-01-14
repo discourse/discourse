@@ -2,17 +2,17 @@
 
 describe UserNotifications do
   fab!(:user) { Fabricate(:user, last_seen_at: 1.hour.ago) }
-  fab!(:other) { Fabricate(:user) }
-  fab!(:another) { Fabricate(:user) }
-  fab!(:someone) { Fabricate(:user) }
+  fab!(:other, :user)
+  fab!(:another, :user)
+  fab!(:someone, :user)
   fab!(:group) { Fabricate(:group, users: [user, other]) }
 
-  fab!(:followed_channel) { Fabricate(:category_channel) }
-  fab!(:followed_channel_2) { Fabricate(:category_channel) }
-  fab!(:followed_channel_3) { Fabricate(:category_channel) }
-  fab!(:non_followed_channel) { Fabricate(:category_channel) }
-  fab!(:muted_channel) { Fabricate(:category_channel) }
-  fab!(:unseen_channel) { Fabricate(:category_channel) }
+  fab!(:followed_channel, :category_channel)
+  fab!(:followed_channel_2, :category_channel)
+  fab!(:followed_channel_3, :category_channel)
+  fab!(:non_followed_channel, :category_channel)
+  fab!(:muted_channel, :category_channel)
+  fab!(:unseen_channel, :category_channel)
   fab!(:private_channel) { Fabricate(:private_category_channel, group:) }
   fab!(:direct_message) { Fabricate(:direct_message_channel, users: [user, other]) }
   fab!(:direct_message_2) { Fabricate(:direct_message_channel, users: [user, another]) }
@@ -123,6 +123,11 @@ describe UserNotifications do
         end
       end
 
+      it "sends an email even if the user has disabled chat emails" do
+        user.user_option.update!(chat_email_frequency: UserOption.chat_email_frequencies[:never])
+        chat_summary_email
+      end
+
       it "does not send an email if user can't chat" do
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admins]
         no_chat_summary_email
@@ -130,11 +135,6 @@ describe UserNotifications do
 
       it "does not send an email if the user has been seen recently" do
         user.update!(last_seen_at: 5.minutes.ago)
-        no_chat_summary_email
-      end
-
-      it "does not send an email if the user has disabled chat emails" do
-        user.user_option.update!(chat_email_frequency: UserOption.chat_email_frequencies[:never])
         no_chat_summary_email
       end
 
@@ -422,6 +422,11 @@ describe UserNotifications do
     it "pluralizes the subject" do
       create_message(direct_message, "How are you?")
       chat_summary_with_subject(:chat_dm_1, name: direct_message.title(user), count: 2)
+    end
+
+    it "sends an email even if the user has disabled core emails" do
+      user.user_option.update!(email_level: UserOption.email_level_types[:never])
+      chat_summary_with_subject(:chat_dm_1, name: direct_message.title(user), count: 1)
     end
 
     it "does not send an email if the user has disabled private messages" do

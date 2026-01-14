@@ -7,6 +7,7 @@ class Admin::ThemesController < Admin::AdminController
 
   skip_before_action :check_xhr, only: %i[show preview export]
   before_action :ensure_admin
+  before_action :ensure_theme_creation_is_allowed, only: %i[create import]
 
   def preview
     theme = Theme.find_by(id: params[:id])
@@ -169,8 +170,22 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def index
-    @themes = Theme.include_relations.order(:name)
-    @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
+    @themes = Theme.strict_loading.include_relations.order(:name)
+
+    @color_schemes =
+      ColorScheme
+        .strict_loading
+        .all
+        .includes(
+          :theme,
+          :base_scheme,
+          color_scheme_colors: {
+            color_scheme: {
+              base_scheme: :color_scheme_colors,
+            },
+          },
+        )
+        .to_a
 
     payload = {
       themes: serialize_data(@themes, ThemeSerializer),
@@ -184,25 +199,19 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def create
-    ban_in_allowlist_mode!
-
-    @theme =
-      Theme.new(
-        name: theme_params[:name],
-        user_id: theme_user.id,
-        user_selectable: theme_params[:user_selectable] || false,
-        color_scheme_id: theme_params[:color_scheme_id],
-        component: [true, "true"].include?(theme_params[:component]),
-      )
-    set_fields
-
-    respond_to do |format|
-      if @theme.save
-        update_default_theme
-        log_theme_change(nil, @theme)
-        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :created }
-      else
-        format.json { render json: @theme.errors, status: :unprocessable_entity }
+    Themes::Create.call(
+      params: theme_params.to_unsafe_h.merge(user_id: theme_user.id),
+      guardian:,
+    ) do
+      on_success { |theme:| render json: serialize_data(theme, ThemeSerializer), status: :created }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failed_policy(:ensure_remote_themes_are_not_allowlisted) { raise Discourse::InvalidAccess }
+      on_model_errors { |theme:| render json: theme.errors, status: :unprocessable_entity }
+      on_model_not_found(:theme) do |result|
+        raise Discourse::NotFound if !result.exception
+        render json: failed_json.merge(errors: result.exception.message), status: :bad_request
       end
     end
   end
@@ -215,7 +224,18 @@ class Admin::ThemesController < Admin::AdminController
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 
-    %i[name color_scheme_id user_selectable enabled auto_update].each do |field|
+    if @theme.system? && (theme_params.keys - Theme::EDITABLE_SYSTEM_ATTRIBUTES).present?
+      raise Discourse::InvalidAccess.new
+    end
+
+    %i[
+      name
+      color_scheme_id
+      dark_color_scheme_id
+      user_selectable
+      enabled
+      auto_update
+    ].each do |field|
       @theme.public_send("#{field}=", theme_params[field]) if theme_params.key?(field)
     end
 
@@ -268,25 +288,23 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def destroy
-    @theme = Theme.find_by(id: params[:id])
-    raise Discourse::InvalidParameters.new(:id) unless @theme
-
-    StaffActionLogger.new(current_user).log_theme_destroy(@theme)
-    @theme.destroy
-
-    respond_to { |format| format.json { head :no_content } }
+    Themes::Destroy.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+    end
   end
 
   def bulk_destroy
-    themes = Theme.where(id: params[:theme_ids])
-    raise Discourse::InvalidParameters.new(:id) if themes.blank?
-
-    ActiveRecord::Base.transaction do
-      themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
-      themes.destroy_all
+    Themes::BulkDestroy.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_model_not_found(:themes) { raise Discourse::NotFound }
     end
-
-    respond_to { |format| format.json { head :no_content } }
   end
 
   def show
@@ -312,22 +330,14 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def get_translations
-    params.require(:locale)
-    if I18n.available_locales.exclude?(params[:locale].to_sym)
-      raise Discourse::InvalidParameters.new(:locale)
-    end
-
-    I18n.locale = params[:locale]
-
-    @theme = Theme.find_by(id: params[:id])
-    raise Discourse::InvalidParameters.new(:id) unless @theme
-
-    translations =
-      @theme.translations.map do |translation|
-        { key: translation.key, value: translation.value, default: translation.default }
+    Themes::GetTranslations.call(service_params) do
+      on_success { |translations:| render(json: success_json.merge(translations:)) }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
-
-    render json: { translations: translations }, status: :ok
+      on_failed_policy(:validate_locale) { raise Discourse::InvalidParameters.new(:locale) }
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+    end
   end
 
   def update_single_setting
@@ -352,6 +362,30 @@ class Admin::ThemesController < Admin::AdminController
 
     updated_setting = @theme.cached_settings.select { |key, val| key == setting_name }
     render json: updated_setting, status: :ok
+  end
+
+  def update_theme_site_setting
+    Themes::ThemeSiteSettingManager.call(
+      params: {
+        theme_id: params[:id],
+        name: params[:name],
+        value: params[:value],
+      },
+      guardian:,
+    ) do
+      on_success do |theme_site_setting:|
+        if theme_site_setting.present?
+          render json: success_json.merge(theme_site_setting.as_json(only: %i[name value theme_id]))
+        else
+          render json: success_json
+        end
+      end
+      on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+      on_failed_policy(:ensure_setting_is_themeable) do
+        render_json_error(I18n.t("themes.setting_not_themeable", name: params[:name]), status: 400)
+      end
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+    end
   end
 
   def schema
@@ -380,7 +414,7 @@ class Admin::ThemesController < Admin::AdminController
   def update_default_theme
     if theme_params.key?(:default)
       is_default = theme_params[:default].to_s == "true"
-      if @theme.id == SiteSetting.default_theme_id && !is_default
+      if @theme.default? && !is_default
         Theme.clear_default!
       elsif is_default
         @theme.set_default!
@@ -398,6 +432,7 @@ class Admin::ThemesController < Admin::AdminController
         params.require(:theme).permit(
           :name,
           :color_scheme_id,
+          :dark_color_scheme_id,
           :default,
           :user_selectable,
           :component,
@@ -495,5 +530,9 @@ class Admin::ThemesController < Admin::AdminController
   # Overridden by theme-creator plugin
   def theme_user
     current_user
+  end
+
+  def ensure_theme_creation_is_allowed
+    guardian.ensure_can_create_theme!
   end
 end

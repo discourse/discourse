@@ -163,4 +163,59 @@ RSpec.describe Admin::FormTemplatesController do
       end
     end
   end
+
+  describe "#preview" do
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
+    fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag3]) }
+    let!(:form_template_valid) { <<~YAML }
+        - type: tag-chooser
+          id: tag-chooser
+          tag_group: "#{tag_group.name}"
+          attributes:
+            none_label: "Select an item"
+            label: "Enter label here"
+            multiple: true
+      YAML
+    let!(:form_template_invalid) { <<~YAML }
+        - type: input
+          id: dumplicated
+          attributes:
+            label: "label"
+            placeholder: "placeholder"
+        - type: input
+          id: dumplicated
+          attributes:
+            label: "label"
+            placeholder: "placeholder"
+      YAML
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "processes a valid template" do
+        get "/admin/customize/form-templates/preview.json",
+            params: {
+              name: "test",
+              template: form_template_valid,
+            }
+
+        expect(response.status).to eq(200)
+        processed_tag_group =
+          YAML.safe_load(response.parsed_body["form_template"]["template"]).first
+        expect(processed_tag_group["choices"]).to eq([tag1.name, tag2.name, tag3.name].sort)
+      end
+
+      it "rejects invalid templates" do
+        get "/admin/customize/form-templates/preview.json",
+            params: {
+              name: "test",
+              template: form_template_invalid,
+            }
+
+        expect(response.status).to eq(422)
+      end
+    end
+  end
 end

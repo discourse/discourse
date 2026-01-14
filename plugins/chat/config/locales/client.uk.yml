@@ -60,8 +60,12 @@ uk:
       cancel: "Скасувати"
       cancel_reply: "Скасувати відповідь"
       chat_channels: "Канали"
+      starred: "Позначено зірочкою"
+      starred_channels: "Позначені канали"
+      starred_channels_empty: "Ви ще не позначили жодного каналу зірочкою. Позначте канали зірочкою, щоб побачити їх тут для швидкого доступу."
       browse_all_channels: "Переглянути всі канали"
       see_in: "Дивіться в"
+      open_channel_menu: "Відкрити меню каналу"
       move_to_channel:
         title: "Перенести повідомлення в канал"
         instructions:
@@ -80,6 +84,8 @@ uk:
         title: "Налаштування каналу"
         edit: "Редагувати"
         add: "Додати"
+        star_channel: "Обраний канал"
+        unstar_channel: "Зняти зірочку з каналу"
         close_channel: "Закрити канал"
         open_channel: "Відкрити канал"
         archive_channel: "Архівувати канал"
@@ -87,6 +93,8 @@ uk:
         join_channel: "Приєднатися до каналу"
         leave_channel: "Вийти з каналу"
         leave_groupchat_info: "Залишивши цей груповий чат, ви більше не матимете доступу до нього та не отримуватимете сповіщень, пов'язаних з ним. Щоб знову приєднатися, вас потрібно буде повторно запросити учасником групового чату."
+        notification_settings: "Налаштування сповіщень"
+        notification_settings_context: "Сповіщення"
         join: "Приєднатися"
         leave: "Покинути"
         save_label:
@@ -136,7 +144,7 @@ uk:
       email_frequency:
         description: "Ми надішлемо вам листа, якщо не бачили вас протягом останніх 15 хвилин."
         never: "Ніколи"
-        title: "Сповіщення електронною поштою"
+        title: "Напишіть мені, коли мені надішлють пряме повідомлення в чаті або груповий чат"
         when_away: "Тільки коли офлайн"
       header_indicator_preference:
         title: "Показувати індикатор активності в заголовку"
@@ -147,12 +155,11 @@ uk:
       separate_sidebar_mode:
         title: "Показувати окремі режими бічної панелі для форуму і чату"
       send_shortcut:
+        title: "Надіслати ярлик"
         enter:
           label: "Надіслати за допомогою Enter"
-          description: "Новий рядок за допомогою Shift + Enter"
         meta_enter:
           label: "Надіслати %{meta_key} + Enter"
-          description: "Новий рядок за допомогою Enter"
       enable: "Увімкнути чат"
       flag: "Поскаржитися"
       emoji: "Вставити емодзі"
@@ -188,18 +195,18 @@ uk:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> користувача.}
-                              few {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                              many {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                              other {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                              one {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> користувача.}
+                              few {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                              many {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                              other {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {Згадування @{group1} перевищує ліміт повідомлень # користувача.}
-                              few {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
-                              many {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
-                              other {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
+                              one {Згадування @{group1} перевищує ліміт сповіщень (# користувача).}
+                              few {Згадування @{group1} перевищує ліміт сповіщень (# користувачів).}
+                              many {Згадування @{group1} перевищує ліміт сповіщень (# користувачів).}
+                              other {Згадування @{group1} перевищує ліміт сповіщень (# користувачів).}
                           }
                         }
                         other {}
@@ -209,18 +216,18 @@ uk:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувача.}
-                              few {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                              many {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                              other {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                              one {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувача).}
+                              few {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                              many {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                              other {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувача.}
-                              few {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
-                              many {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
-                              other {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
+                              one {Згадування @{group1} та @{group2} перевищує ліміт сповіщень (# користувача).}
+                              few {Згадування @{group1} та @{group2} перевищує ліміт сповіщень (# користувачів).}
+                              many {Згадування @{group1} та @{group2} перевищує ліміт сповіщень (# користувачів).}
+                              other {Згадування @{group1} та @{group2} перевищує ліміт сповіщень (# користувачів).}
                           }
                         }
                         other {}
@@ -230,18 +237,18 @@ uk:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                             one {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувача.}
-                             few {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                             many {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                             other {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                             one {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувача).}
+                             few {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                             many {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                             other {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                            one {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувача.}
-                            few {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
-                            many {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
-                            other {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
+                            one {Згадування цих {groupCount} груп перевищує ліміт сповіщень (# користувача).}
+                            few {Згадування цих {groupCount} груп перевищує ліміт сповіщень (# користувачів).}
+                            many {Згадування цих {groupCount} груп перевищує ліміт сповіщень (# користувачів).}
+                            other {Згадування цих {groupCount} груп перевищує ліміт сповіщень (# користувачів).}
                           }
                         }
                         other {}
@@ -262,17 +269,17 @@ uk:
         header: "Заголовок чату"
         composer: "Редактор чату"
         channels_list: "Список каналів чату"
-      no_direct_message_channels: "Ви ще не приєдналися до будь-яких особистих повідомлень!"
+      no_direct_message_channels: "Ви ще не приєдналися до жодної особистої переписки!"
       no_direct_message_channels_cta: "Розпочати розмову"
       no_public_channels: "Ви ще не приєдналися до жодного каналу!"
       no_public_channels_cta: "Перегляд каналів"
       kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
+      chat_notifications_title: "Сповіщення чату"
       only_chat_push_notifications:
         title: "Надсилати лише push-сповіщення в чаті"
-        description: "Заблокувати всі push-сповіщення, не пов’язані з чатом"
+      personalization_title: "Персоналізація"
       ignore_channel_wide_mention:
         title: "Ігнорувати на каналі масові згадки"
-        description: "Не надсилати масові сповіщення про згадки на весь канал (@here та @all)"
       show_thread_title_prompts:
         title: "Показувати заголовок списку тем"
         description: "Показати підказки для встановлення заголовка для нових тем"
@@ -334,7 +341,7 @@ uk:
         many: "%{count} файлів"
         other: "%{count} файлів"
       you_flagged: "Ви поскаржилися на це повідомлення"
-      exit: "назад"
+      exit: "вийти з чату"
       channel_status:
         read_only_header: "Канал тільки для читання"
         read_only: "Тільки для читання"
@@ -358,6 +365,12 @@ uk:
       chat_message_separator:
         today: Сьогодні
         yesterday: Вчора
+      search_view:
+        filter_placeholder: Шукати приватні повідомлення
+        message_result_label: "Повідомлення в чаті від %{username}: %{preview} %{threadInfo}"
+        in_thread: "у темі %{title}"
+        sr_instructions: "Натисніть Enter або пробіл, щоб відкрити повідомлення. Використовуйте Tab для навігації між результатами."
+        results_list_label: "Результати пошуку повідомлень чату"
       members_view:
         filter_placeholder: Знайти учасників
         add_member: Додати учасника
@@ -374,6 +387,7 @@ uk:
         tabs:
           members: Учасники
           settings: Налаштування
+          search: Пошук
         remove_member: "Вилучити"
       new_message_modal:
         title: Надіслати повідомлення
@@ -399,6 +413,8 @@ uk:
         slug_description: Замість назви каналу в URL-адресі використовується slug каналу
         name: Назва каналу
         slug: Slug каналу (опціонально)
+        emoji: Емодзі каналу (необов'язково)
+        reset_emoji: Скинути емодзі
       channel_edit_description_modal:
         title: Редагувати опис
         input_placeholder: Додати опис
@@ -493,8 +509,12 @@ uk:
         types:
           category: "Розділ"
           topic: "Тема"
+        emoji:
+          label: "Емодзі каналу (необов'язково)"
+          reset: "Скинути емодзі"
       reviewable:
         type: "Повідомлення чату"
+        message_in_channel: "Канал"
       reactions:
         only_you: "<span>Ви відреагували </span>:%{emoji}:"
         you_and_single_user: "<span>Ви та %{username} відреагували </span>:%{emoji}:"
@@ -538,6 +558,7 @@ uk:
         follow: "Приєднатися"
         followed: "Приєднався(лась)"
         mute: "Вимкнути канал"
+        unmute: "Увімкнути канал"
         threading_enabled: "Включено"
         threading_disabled: "Вимкнено"
         muted_on: "Увімк"
@@ -561,6 +582,14 @@ uk:
           create_export: "Створити експорт"
           confirm_export: "Це експортує всі повідомлення з усіх каналів і надсилає результат вам в особистому повідомленні. Ви впевнені, що хочете експортувати?"
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
+      search:
+        short_title: Пошук
+        title: Пошук у чаті
+        aria_label: "Перейти до пошуку в чаті"
+        no_results: "Не знайдено результатів"
+        sort:
+          relevance: "За змістом"
+          latest: "Остання"
       my_threads:
         title: Мої теми
         aria_label: "Перейти до списку моїх тем"
@@ -597,6 +626,7 @@ uk:
         select_emoji: "Вибрати емодзі"
         system: "системні"
         title: "Вхідні вебхуки"
+        header_description: "Вхідні веб-хуки можуть бути використані зовнішніми системами для надсилання повідомлень у визначений канал чату від імені користувача бота"
         url: "Посилання"
         url_instructions: "Ця URL-адреса містить секретне значення – зберігайте його в безпеці."
         username: "Ім’я користувача"
@@ -636,7 +666,7 @@ uk:
             many: "Ви збираєтеся створити нове повідомлення і заповнити його <b>%{count}</b> вибраними повідомленнями чату."
             other: "Ви збираєтеся створити нове повідомлення і заповнити його <b>%{count}</b> вибраними повідомленнями чату."
       replying_indicator:
-        single_user: "%{username} набирає"
+        single_user: "%{username} набирає текст"
         multiple_users: "%{commaSeparatedUsernames} і %{lastUsername} набирають"
         many_users:
           one: "%{commaSeparatedUsernames} та %{count} інший набирають текст"
@@ -725,6 +755,11 @@ uk:
       draft_channel_screen:
         header: "Нове повідомлення"
         cancel: "Скасувати"
+      quick_reaction_type:
+        title: "Реакції чату в один клік"
+        options:
+          frequent: "Найпоширеніші реакції в чаті"
+          custom: "Користувацькі реакції"
     notifications:
       chat_invitation: "запросив вас приєднатися до каналу чату"
       chat_invitation_html: "<span>%{username}</span> <span>запросив вас приєднатися до каналу чату</span>"
@@ -784,7 +819,7 @@ uk:
           switch_channel_arrows: "%{shortcut} Переключити канал"
           switch__unread_channel_arrows: "%{shortcut} Переключити непрочитаний канал"
           open_quick_channel_selector: "%{shortcut} Відкрити швидкий селектор каналів"
-          open_insert_link_modal: "%{shortcut} Вставити гіперпосилання (лише редактор)"
+          open_insert_link_modal: "%{shortcut} Вставити посилання (лише в редакторі)"
           composer_bold: "%{shortcut} Жирний (лише в редакторі)"
           composer_italic: "%{shortcut} Курсив (лише в редакторі)"
           composer_code: "%{shortcut} Код (тільки в редакторі)"
@@ -816,6 +851,9 @@ uk:
         chat:
           title: Чат
     sidebar:
+      start_new_dm:
+        text: Почати нове особисте повідомлення
+        title: Створити особистий чат
       panels:
         chat:
           label: "Чат"

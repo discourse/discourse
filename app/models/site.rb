@@ -25,8 +25,8 @@ class Site
   cattr_accessor :markdown_additional_options
   self.markdown_additional_options = {}
 
-  def self.add_categories_callbacks(&block)
-    categories_callbacks << block
+  def self.add_categories_callbacks(enabled: -> { true }, &block)
+    categories_callbacks << { block:, enabled: }
   end
 
   def self.categories_callbacks
@@ -54,7 +54,7 @@ class Site
   end
 
   def self.categories_cache_key
-    "site_categories_#{Discourse.git_version}"
+    "site_categories_#{I18n.locale}_#{Discourse.git_version}"
   end
 
   def self.clear_cache
@@ -87,10 +87,8 @@ class Site
                 .joins("LEFT JOIN topics t on t.id = categories.topic_id")
                 .select("categories.*, t.slug topic_slug")
                 .order(:position)
-
             query =
               DiscoursePluginRegistry.apply_modifier(:site_all_categories_cache_query, query, self)
-
             query.to_a
           end
 
@@ -167,7 +165,10 @@ class Site
 
         categories.reject! { |c| c[:parent_category_id] && !by_id[c[:parent_category_id]] }
 
-        self.class.categories_callbacks.each { |callback| callback.call(categories, @guardian) }
+        self.class.categories_callbacks.each do |callback|
+          next unless callback[:enabled].call
+          callback[:block].call(categories, @guardian)
+        end
 
         categories
       end
@@ -216,17 +217,30 @@ class Site
             end,
           full_name_required_for_signup:,
           full_name_visible_in_signup:,
+          tos_url: Discourse.tos_url,
+          privacy_policy_url: Discourse.privacy_policy_url,
         }.to_json
       )
     end
 
     seq = nil
+    use_localized_anon_cache = SiteSetting.content_localization_enabled && guardian.anonymous?
+
+    locale = I18n.locale
+    cache_key = "site_json"
+    seq_key = "site_json_seq"
+    version_key = "site_json_version"
+
+    if use_localized_anon_cache
+      cache_key += "_#{locale}"
+      seq_key += "_#{locale}"
+      version_key += "_#{locale}"
+    end
 
     if guardian.anonymous?
       seq = MessageBus.last_id("/site_json")
-
       cached_json, cached_seq, cached_version =
-        Discourse.redis.mget("site_json", "site_json_seq", "site_json_version")
+        Discourse.redis.mget(cache_key, seq_key, version_key)
 
       if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
         return cached_json
@@ -238,9 +252,9 @@ class Site
 
     if guardian.anonymous?
       Discourse.redis.multi do |transaction|
-        transaction.setex "site_json", 1800, json
-        transaction.set "site_json_seq", seq
-        transaction.set "site_json_version", Discourse.git_version
+        transaction.setex cache_key, 1800, json
+        transaction.set seq_key, seq
+        transaction.set version_key, Discourse.git_version
       end
     end
 
@@ -256,10 +270,10 @@ class Site
   end
 
   def self.full_name_required_for_signup
-    SiteSetting.enable_names && SiteSetting.full_name_requirement == "required_at_signup"
+    SiteSetting.full_name_requirement == "required_at_signup"
   end
 
   def self.full_name_visible_in_signup
-    SiteSetting.enable_names && SiteSetting.full_name_requirement != "hidden_at_signup"
+    SiteSetting.full_name_requirement != "hidden_at_signup"
   end
 end

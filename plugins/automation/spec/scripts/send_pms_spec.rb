@@ -7,129 +7,96 @@ describe "SendPms" do
 
   before do
     SiteSetting.discourse_automation_enabled = true
-
     automation.upsert_field!("sender", "user", { value: Discourse.system_user.username })
     automation.upsert_field!(
       "sendable_pms",
       "pms",
       {
         value: [
-          {
-            title: "A message from {{sender_username}}",
-            raw: "This is a message sent to @{{receiver_username}}",
-          },
+          { title: "Hello {{receiver_username}}", raw: "Message for @{{receiver_username}}" },
         ],
       },
     )
   end
 
-  context "when run from stalled_wiki trigger" do
-    fab!(:post_creator_1) { Fabricate(:user, admin: true) }
-    fab!(:post_1) { Fabricate(:post, user: post_creator_1) }
+  context "with stalled_wiki trigger" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:post) { Fabricate(:post, user: user) }
 
     before do
       automation.upsert_field!("stalled_after", "choices", { value: "PT1H" }, target: "trigger")
       automation.upsert_field!("retriggered_after", "choices", { value: "PT1H" }, target: "trigger")
-
-      post_1.revise(
-        post_creator_1,
-        { wiki: true },
-        { force_new_version: true, revised_at: 2.hours.ago },
-      )
+      post.revise(user, { wiki: true }, { force_new_version: true, revised_at: 2.hours.ago })
     end
 
-    it "creates expected PM" do
-      expect {
-        Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil)
+    it "sends PM with placeholders replaced" do
+      expect { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }.to change {
+        Topic.where(archetype: Archetype.private_message).count
+      }.by(1)
 
-        post = Post.last
-        expect(post.topic.title).to eq("A message from #{Discourse.system_user.username}")
-        expect(post.raw).to eq("This is a message sent to @#{post_creator_1.username}")
-        expect(post.topic.topic_allowed_users.exists?(user_id: post_creator_1.id)).to eq(true)
-        expect(post.topic.topic_allowed_users.exists?(user_id: Discourse.system_user.id)).to eq(
-          true,
-        )
-      }.to change { Post.count }.by(1)
+      pm = Topic.last
+      expect(pm.title).to eq("Hello #{user.username}")
+      expect(pm.first_post.raw).to eq("Message for @#{user.username}")
     end
   end
 
-  context "when run from user_added_to_group trigger" do
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:tracked_group_1) { Fabricate(:group) }
+  context "with user_added_to_group trigger" do
+    fab!(:user)
+    fab!(:group)
 
     before do
       automation.update!(trigger: "user_added_to_group")
-      automation.upsert_field!(
-        "joined_group",
-        "group",
-        { value: tracked_group_1.id },
-        target: "trigger",
-      )
+      automation.upsert_field!("joined_group", "group", { value: group.id }, target: "trigger")
     end
 
-    it "creates expected PM" do
-      expect {
-        tracked_group_1.add(user_1)
+    it "sends PM when user joins group" do
+      expect { group.add(user) }.to change {
+        Topic.where(archetype: Archetype.private_message).count
+      }.by(1)
 
-        post = Post.last
-        expect(post.topic.title).to eq("A message from #{Discourse.system_user.username}")
-        expect(post.raw).to eq("This is a message sent to @#{user_1.username}")
-        expect(post.topic.topic_allowed_users.exists?(user_id: user_1.id)).to eq(true)
-        expect(post.topic.topic_allowed_users.exists?(user_id: Discourse.system_user.id)).to eq(
-          true,
-        )
-      }.to change { Post.count }.by(1)
+      pm = Topic.last
+      expect(pm.title).to eq("Hello #{user.username}")
+      expect(pm.allowed_users).to include(user, Discourse.system_user)
+    end
+
+    context "with custom sender" do
+      fab!(:sender) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before do
+        SiteSetting.unique_posts_mins = 1
+        automation.upsert_field!("sender", "user", { value: sender.username })
+      end
+
+      it "bypasses similarity validation for multiple recipients" do
+        expect { group.add(user) }.to change { Topic.count }.by(1)
+        expect { group.add(user_2) }.to change { Topic.count }.by(1)
+      end
     end
   end
 
-  context "when delayed" do
-    fab!(:user_1) { Fabricate(:user) }
+  context "with delay" do
+    fab!(:user)
 
-    before { automation.update!(trigger: DiscourseAutomation::Triggers::RECURRING) }
-
-    it "correctly sets encrypt preference to false even when option is not specified" do
+    before do
+      automation.update!(trigger: DiscourseAutomation::Triggers::RECURRING)
+      automation.upsert_field!("receiver", "user", { value: user.username })
       automation.upsert_field!(
         "sendable_pms",
         "pms",
-        {
-          value: [
-            {
-              title: "A message from {{sender_username}}",
-              raw: "This is a message sent to @{{receiver_username}}",
-              delay: 1,
-            },
-          ],
-        },
-        target: "script",
+        { value: [{ title: "Delayed", raw: "Content", delay: 5 }] },
       )
-      automation.upsert_field!("receiver", "user", { value: Discourse.system_user.username })
-
-      automation.trigger!
-
-      expect(DiscourseAutomation::PendingPm.last.prefers_encrypt).to eq(false)
     end
 
-    it "correctly stores encrypt preference to false" do
-      automation.upsert_field!(
-        "sendable_pms",
-        "pms",
-        {
-          value: [
-            {
-              title: "A message from {{sender_username}}",
-              raw: "This is a message sent to @{{receiver_username}}",
-              delay: 1,
-              prefers_encrypt: false,
-            },
-          ],
-        },
-        target: "script",
-      )
-      automation.upsert_field!("receiver", "user", { value: Discourse.system_user.username })
+    it "creates a pending PM instead of sending immediately" do
+      expect { automation.trigger! }.to change { DiscourseAutomation::PendingPm.count }.by(
+        1,
+      ).and not_change { Topic.count }
 
-      automation.trigger!
-
-      expect(DiscourseAutomation::PendingPm.last.prefers_encrypt).to eq(false)
+      pending_pm = DiscourseAutomation::PendingPm.last
+      expect(pending_pm.title).to eq("Delayed")
+      expect(pending_pm.target_usernames).to eq([user.username])
+      expect(pending_pm.execute_at).to be_within(1.minute).of(5.minutes.from_now)
     end
   end
 end

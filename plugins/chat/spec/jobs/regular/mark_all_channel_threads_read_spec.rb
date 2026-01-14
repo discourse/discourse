@@ -4,8 +4,8 @@ RSpec.describe Jobs::Chat::MarkAllChannelThreadsRead do
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
   fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
   fab!(:thread_1_message_1) { Fabricate(:chat_message, thread: thread_1, chat_channel: channel) }
   fab!(:thread_1_message_2) { Fabricate(:chat_message, thread: thread_1, chat_channel: channel) }
   fab!(:thread_1_message_3) { Fabricate(:chat_message, thread: thread_1, chat_channel: channel) }

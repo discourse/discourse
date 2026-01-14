@@ -30,7 +30,9 @@ RSpec.describe TopicViewDetailsSerializer do
 
   describe "#can_permanently_delete" do
     let(:post) do
-      Fabricate(:post).tap { |post| PostDestroyer.new(Discourse.system_user, post).destroy }
+      Fabricate(:post).tap do |post|
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+      end
     end
 
     before { SiteSetting.can_permanently_delete = true }
@@ -48,6 +50,29 @@ RSpec.describe TopicViewDetailsSerializer do
       serializer =
         described_class.new(TopicView.new(post.topic, moderator), scope: Guardian.new(moderator))
       expect(serializer.as_json.dig(:topic_view_details, :can_permanently_delete)).to eq(nil)
+    end
+  end
+
+  describe "#can_delete" do
+    before { SiteSetting.enable_category_group_moderation = true }
+
+    it "is true for category moderators in their category" do
+      user = Fabricate(:user, trust_level: TrustLevel[4])
+      Group.user_trust_level_change!(user.id, user.trust_level)
+      category = Fabricate(:category)
+      topic = Fabricate(:topic, category:)
+      Fabricate(:category_moderation_group, category:, group: user.groups.first)
+
+      serializer = described_class.new(TopicView.new(topic, user), scope: Guardian.new(user))
+      expect(serializer.as_json.dig(:topic_view_details, :can_delete)).to eq(true)
+    end
+
+    it "is false for regular users" do
+      user = Fabricate(:user)
+      topic = Fabricate(:topic)
+
+      serializer = described_class.new(TopicView.new(topic, user), scope: Guardian.new(user))
+      expect(serializer.as_json.dig(:topic_view_details, :can_delete)).to eq(nil)
     end
   end
 end

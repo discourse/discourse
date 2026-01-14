@@ -8,7 +8,7 @@ RSpec.describe TopicTimestampChanger do
     let!(:p2) { Fabricate(:post, topic: topic, created_at: old_timestamp + 1.day) }
 
     context "when new timestamp is in the future" do
-      let(:new_timestamp) { old_timestamp + 2.day }
+      let(:new_timestamp) { old_timestamp + 2.days }
 
       it "should raise the right error" do
         expect {
@@ -18,7 +18,7 @@ RSpec.describe TopicTimestampChanger do
     end
 
     context "when new timestamp is in the past" do
-      let(:new_timestamp) { old_timestamp - 2.day }
+      let(:new_timestamp) { old_timestamp - 2.days }
 
       it "changes the timestamp of the topic and opening post" do
         freeze_time

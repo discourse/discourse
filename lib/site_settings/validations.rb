@@ -173,10 +173,6 @@ module SiteSettings::Validations
     end
   end
 
-  def validate_s3_use_acls(new_val)
-    validate_error :s3_use_acls_requirements if new_val == "f" && SiteSetting.secure_uploads
-  end
-
   def validate_enable_page_publishing(new_val)
     validate_error :page_publishing_requirements if new_val == "t" && SiteSetting.secure_uploads?
   end
@@ -261,10 +257,10 @@ module SiteSettings::Validations
     validate_error :strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled
   end
 
-  def validate_twitter_summary_large_image(new_val)
+  def validate_x_summary_large_image(new_val)
     return if new_val.blank?
     return if !Upload.exists?(id: new_val, extension: "svg")
-    validate_error :twitter_summary_large_image_no_svg
+    validate_error :x_summary_large_image_no_svg
   end
 
   def validate_allow_all_users_to_flag_illegal_content(new_val)
@@ -275,6 +271,13 @@ module SiteSettings::Validations
     end
 
     validate_error :tl0_and_anonymous_flag
+  end
+
+  def validate_allow_likes_in_anonymous_mode(new_val)
+    return if new_val == "f"
+    return if SiteSetting.allow_anonymous_mode
+
+    validate_error :allow_likes_in_anonymous_mode_without_anonymous_mode_enabled
   end
 
   private

@@ -19,8 +19,12 @@ code {
   color: var(--primary-very-high);
   background: var(--hljs-bg);
   border-radius: var(--d-border-radius);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: calc((13 + 4) / 13);
+
+  small & {
+    font-size: 0.875em;
+  }
 }
 
 pre > code {
@@ -61,6 +65,12 @@ h6 code {
   color: var(--hljs-number);
 }
 
+.hljs-tag,
+.hljs-tag .hljs-title {
+  color: var(--hljs-tag);
+  font-weight: normal;
+}
+
 .hljs-string,
 .hljs-tag .hljs-string,
 .hljs-template-tag,
@@ -71,10 +81,6 @@ h6 code {
 
 .hljs-title {
   color: var(--hljs-title);
-}
-
-.hljs-name {
-  color: var(--hljs-name);
 }
 
 .hljs-quote,
@@ -94,10 +100,8 @@ h6 code {
   color: var(--hljs-title);
 }
 
-.hljs-tag,
-.hljs-tag .hljs-title {
-  color: var(--hljs-tag);
-  font-weight: normal;
+.hljs-name {
+  color: var(--hljs-name);
 }
 
 .hljs-punctuation {

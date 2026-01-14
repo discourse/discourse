@@ -1,8 +1,4 @@
-.notifications-tracking-trigger-btn {
-  display: flex;
-  gap: 0.25em;
-}
-
+.pinned-options-btn,
 .notifications-tracking-btn {
   display: flex;
   flex: 1 0 auto;
@@ -41,4 +37,8 @@
     white-space: normal;
     text-align: left;
   }
+}
+
+.topic-timeline-notifications-tracking-content {
+  z-index: z("fullscreen") + 1;
 }

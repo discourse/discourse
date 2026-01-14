@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    discourse_policy:
+      title: "Політика"
+      accepted_tooltip: "Користувачі, які прийняли цю політику"
+      not_accepted_tooltip: "Користувачі, які не прийняли цю політику"
+      accept_policy: "Прийняти політику"
+      revoke_policy: "Відкликати політику"
+      edit_reason: "Налаштування політик змінено"
+      no_possible_users: "Ця політика не має можливих користувачів"
+      accept_policy_template: "Я приймаю цю політику"
+      builder:
+        title: Політика
+        attach: Створити політику
+        save: Зберегти зміни
+        insert: Вставити
+        errors:
+          group: Необхідна група
+          version: Потрібна версія
+        groups:
+          label: Групи
+          description: Групи, пов'язані з цією політикою
+        version:
+          label: Версія
+          description: Версія політики, зміна версії, змусить людей прийняти її повторно
+        renew:
+          label: Поновити
+          description: Поновлювати політику кожні x днів
+        renew-start:
+          label: Оновити
+          description: Коли політику слід оновлювати
+        reminder:
+          label: Нагадування
+          description: Як часто слід надсилати нагадування про прийняття політики
+          no_reminder: (Без нагадування)
+        accept:
+          label: Схвалити
+          description: Текст, що використовується на кнопці «Прийняти»
+        revoke:
+          label: Відкликати
+          description: Текст, що використовується на кнопці відкликання
+        private:
+          label: Приватні?
+          description: Зберігати статус політики конфіденційним для адміністраторів
+        send-email:
+          label: Надіслати ел. листа?
+          description: Повідомляти користувачів про нову політику електронною поштою
+        add-users-to-group:
+          label: Додати користувачів до групи
+          description: Додати користувачів до наступної групи, якщо вони приймуть цю політику
+      preferences:
+        title: Політики
+        policy_emails:
+          always_description: Ми надішлемо вам листа, тільки якщо ви також підписалися на розсилку нових повідомлень про активність.
+          away_description: Ми надішлемо вам електронного листа, лише якщо ви не були присутні протягом останніх 10 хвилин після зміни статусу політики, і лише якщо ви також підписалися на отримання електронних листів про нову активність.
+          label: Надішліть мені електронний лист, коли політика потребує перегляду
+          email_frequency_options:
+            never: Ніколи
+            when_away: Тільки коли офлайн
+            always: Завжди

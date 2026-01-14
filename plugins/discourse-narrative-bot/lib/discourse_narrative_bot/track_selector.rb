@@ -4,8 +4,8 @@ module DiscourseNarrativeBot
   class TrackSelector
     include Actions
 
-    GENERIC_REPLIES_COUNT_PREFIX = "discourse-narrative-bot:track-selector-count:".freeze
-    PUBLIC_DISPLAY_BOT_HELP_KEY = "discourse-narrative-bot:track-selector:display-bot-help".freeze
+    GENERIC_REPLIES_COUNT_PREFIX = "discourse-narrative-bot:track-selector-count:"
+    PUBLIC_DISPLAY_BOT_HELP_KEY = "discourse-narrative-bot:track-selector:display-bot-help"
 
     TRACKS = [AdvancedUserNarrative, NewUserNarrative]
 

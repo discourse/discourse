@@ -3,7 +3,7 @@
 module Chat
   module Admin
     class IncomingWebhooksController < ::Admin::AdminController
-      requires_plugin Chat::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def index
         render_serialized(

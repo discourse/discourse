@@ -10,6 +10,7 @@ hu:
       logs:
         staff_actions:
           actions:
+            update_automation: automatizálás frissítése
             delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás
@@ -58,13 +59,17 @@ hu:
             label: Törzs
           delay:
             label: Késleltetés (perc)
-          prefers_encrypt:
-            label: PÜ titkosítása, ha elérhető
         group:
           label: Csoport
         text:
           label: Szöveg
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategóriák
+            tags:
+              label: Címkék
         not_found: Nem találta a(z) `%{trigger}` kiváltóját a(z) `%{automation}` automatizáláshoz, győződjön meg róla, hogy a kapcsolódó bővítmény telepítve van-e.
         user_badge_granted:
           fields:
@@ -161,22 +166,28 @@ hu:
               description: "Opcionális, korlátozza az aktiválást csak a létrehozott vagy szerkesztett eseményekre"
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
             restricted_tags:
               label: Címkék
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
-            restricted_category:
-              label: Kategória
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
-            restricted_group:
-              label: Csoport
-              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoport postafiókjában
+            restricted_categories:
+              label: Kategóriák
+              description: Választható, csak akkor aktiválódik, ha a bejegyzés témája ezekbe a kategóriákba tartozik
+            exclude_subcategories:
+              label: Alkategóriák kizárása
+              description: Választható, csak akkor aktiválódik, ha a bejegyzés témája pontosan a fent megadott kategóriákba tartozik
+            restricted_archetype:
+              label: Téma típusa
+              description: Választható, csak témák vagy személyes üzenetek esetén engedélyezheti a kiváltást.
             restricted_groups:
-              label: Csoportok
+              label: Korlátozott csoportok
+              description: Választható, csak akkor lép működésbe, ha a bejegyzés felhasználója tagja a következő csoportok valamelyikének
+            restricted_inbox_groups:
+              label: Korlátozott postafiók csoportok
               description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
-            ignore_group_members:
-              label: Csoporttagok figyelmen kívül hagyása
-              description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
+            excluded_groups:
+              label: Kizárt csoportok
+              description: Választható, kihagyja a kiváltást, ha a bejegyző felhasználó az alábbi csoportok valamelyikéhez tartozik
             ignore_automated:
               label: Automatizált figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott bejegyzésekre vonatkozik
@@ -189,8 +200,18 @@ hu:
             skip_via_email:
               label: "Kihagyás e-mailben"
               description: "Hagyja ki az eseményindítót, ha a bejegyzés e-mailben jött létre"
+            post_features:
+              label: Bejegyzés funkciók
+              description: "Választható, korlátozza a kiváltást csak a következő jellemzőkkel rendelkező bejegyzésekre"
           created: Létrehozott
           edited: Szerkesztve
+          topics: Minden téma
+          personal_messages: Személyes üzenetek
+          public_topics: Nyilvános témák (kivéve az összes biztonságos kategóriát)
+          with_images: Képek
+          with_links: Hivatkozások
+          with_code: Kód
+          with_uploads: Feltöltések
         user_updated:
           fields:
             user_profile:
@@ -229,7 +250,7 @@ hu:
               description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott PÜ-re vonatkozik
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
         topic_tags_changed:
           trigger_on_modes:
             tags_added_or_removed: Címkék hozzáadva vagy eltávolítva
@@ -240,18 +261,18 @@ hu:
               label: Figyelt kategóriák
               description: Csak akkor aktiválódik, ha a téma e kategóriák egyikébe tartozik
             watching_tags:
-              label: Figyelt címkék
+              label: Címkék figyelése
               description: Csak akkor aktiválódik, ha a témakör rendelkezik ezen címkék bármelyikével
             trigger_on:
               label: Trigger bekapcsolva
             trigger_with_pms:
-              label: Aktiválás PÜ-el
+              label: Aktiválás PÜ-vel
               description: Akkor is aktiválódik, ha a címkéket PÜ-ben módosították
         after_post_cook:
           fields:
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
             restricted_category:
               label: Kategória
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
@@ -323,7 +344,7 @@ hu:
           levels:
             warning: Figyelmeztetés
             info: Információ
-            success: Siker
+            success: Sikeres
             error: Hiba
         user_group_membership_through_badge:
           fields:
@@ -336,7 +357,7 @@ hu:
               label: Felhasználó címének és hangulatának frissítése
               description: Opcionális, Felhasználó címének és hangulatának frissítése
             remove_members_without_badge:
-              label: Távolítsa el a meglévő tagokat jelvény nélkül
+              label: Jelvény nélküli meglévő tagok eltávolítása
               description: 'Opcionális: Távolítsa el a meglévő csoporttagokat a megadott jelvény nélkül'
             badge:
               label: Jelvény
@@ -388,9 +409,10 @@ hu:
             receiver:
               label: PÜ fogadó
             sendable_pms:
-              label: PÜ-ek
+              label: PÜ-k
             sender:
-              label: PÜ feladó
+              label: PÜ feladója
+              description: "Győződjön meg arról, hogy a feladó megfelelő jogosultságokkal rendelkezik ahhoz, hogy PM-eket küldjön a címzettnek"
         close_topic:
           fields:
             topic:
@@ -404,33 +426,40 @@ hu:
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
-              label: "Felhasználó egyéni mező neve"
+              label: "Felhasználó egyéni mezőneve"
+        set_topic_timer:
+          title: Téma időzítőjének beállítása
       unnamed_automation: "Névtelen automatizálás"
       models:
         script:
           name:
-            label: Szkript
+            label: Parancsfájl
         trigger:
           name:
-            label: Trigger
+            label: Aktiváló
         automation:
+          runs_today: "%{count} ma"
+          runs_this_week: "%{count} ezen a héten"
+          runs_this_month: "%{count} ebben a hónapban"
+          runs:
+            label: Futások
           name:
             label: Név
           trigger:
-            label: Trigger
+            label: Aktiváló
           script:
-            label: Szkript
+            label: Parancsfájl
           version:
             label: Verzió
           status:
             label: Állapot
-          enabled:
-            label: Engedélyezed
           disabled:
-            label: Kikapcsolt
+            label: Letiltva
           placeholders:
             label: Helyőrzők
           last_updated_at:
             label: Utolsó frissítés
+          last_run:
+            label: Utolsó futás
           last_updated_by:
-            label: Frissítette
+            label: 'Frissítette:'

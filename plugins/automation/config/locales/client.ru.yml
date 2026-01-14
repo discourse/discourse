@@ -10,15 +10,21 @@ ru:
       logs:
         staff_actions:
           actions:
+            create_automation: создать автоматизацию
+            update_automation: обновить автоматизацию
             delete_automation: удалить автоматизацию
     discourse_automation:
       title: Автоматизация
+      table_title: Автоматизация
+      create: Добавить автоматизацию
+      update: Обновить автоматизацию
       back: Назад
-      edit: Отредактировать
+      edit: Изменить
       select_script: Выберите скрипт
       select_trigger: Выберите триггер
       confirm_automation_reset: Параметры скрипта и триггера будут сброшены. Новое состояние будет сохранено. Продолжить?
       confirm_automation_trigger: Будет запущена автоматизация. Продолжить?
+      no_automation_yet: В настоящее время автоматизация не настроена.
       filter_placeholder: Фильтровать по имени или описанию...
       edit_automation:
         trigger_section:
@@ -56,13 +62,19 @@ ru:
             label: Текст сообщения
           delay:
             label: Задержка (в минутах)
-          prefers_encrypt:
-            label: Шифрует ЛС, если это возможно
         group:
           label: Группа
         text:
           label: Текст
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Категории
+              description: Запуск происходит только в том случае, если отмеченная тема относится к указанным категориям.
+            tags:
+              label: Теги
+              description: Срабатывает только в том случае, если отмеченная тема имеет хотя бы один из этих тегов.
         not_found: Не удалось найти триггер `%{trigger}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
         user_badge_granted:
           fields:
@@ -163,18 +175,24 @@ ru:
             restricted_tags:
               label: Теги
               description: Необязательно, срабатывает только в том случае, если публикация содержит любой из этих тегов
-            restricted_category:
-              label: Категория
-              description: Необязательно, срабатывает только в том случае, если тема публикации находится в этой категории
-            restricted_group:
-              label: Группа
-              description: Необязательно, срабатывает только в случае, если тема публикации является личным сообщением в папке «Входящие» этой группы
+            restricted_categories:
+              label: Категории
+              description: Необязательный параметр, сработает только если тема публикации относится к этим категориям
+            exclude_subcategories:
+              label: Исключить подкатегории
+              description: Необязательный параметр, сработает только если тема публикации точно соответствует указанным выше категориям
+            restricted_archetype:
+              label: Тип темы
+              description: Необязательный параметр, будет срабатывать только для тем и личных сообщений
             restricted_groups:
-              label: Группы
+              label: Ограничено по группе
+              description: Необязательный параметр, сработает только если автор публикации состоит в одной из этих групп
+            restricted_inbox_groups:
+              label: Входящие ограничены по группам
               description: Необязательно, срабатывает только в том случае, если темой публикации является личное сообщение в одном из почтовых ящиков группы
-            ignore_group_members:
-              label: Игнорировать участников группы
-              description: Пропустить триггер, если отправитель является участником указанной выше группы
+            excluded_groups:
+              label: Исключенные группы
+              description: Необязательный параметр, пропускает триггер, если автор публикации состоит в одной из этих групп
             ignore_automated:
               label: Игнорировать автоматические
               description: Пропустить триггер, если отправитель использует адрес эл. почты без возможности ответа (noreply) или письмо получено из источника автоматической рассылки. Применяется только к публикациям, созданным по электронной почте
@@ -187,8 +205,18 @@ ru:
             skip_via_email:
               label: "Пропустить по электронной почте"
               description: "Пропустить триггер, если публикация была создана по электронной почте"
+            post_features:
+              label: Характеристики публикации
+              description: "Необязательный параметр, ограничивает срабатывание только для публикаций с этими характеристиками"
           created: Создано
           edited: Изменено
+          topics: Все темы
+          personal_messages: Личные сообщения
+          public_topics: Публичные темы (исключая все защищенные категории)
+          with_images: Изображения
+          with_links: Ссылки
+          with_code: Код
+          with_uploads: Загрузки
         user_updated:
           fields:
             user_profile:
@@ -257,6 +285,13 @@ ru:
               label: Теги
               description: Необязательно, срабатывает только в том случае, если публикация содержит любой из этих тегов
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Шаблон электронного письма
+            recipients:
+              label: Получатели
+              description: Пользователи или адреса электронной почты для уведомления
         not_found: Не удалось найти скрипт `%{script}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
         zapier_webhook:
           fields:
@@ -389,6 +424,7 @@ ru:
               label: ЛС
             sender:
               label: Отправитель ЛС
+              description: "Проверить, что отправитель имеет необходимые разрешения для отправки ЛС этому пользователю"
         close_topic:
           fields:
             topic:
@@ -403,6 +439,8 @@ ru:
           fields:
             custom_field_name:
               label: "Название настраиваемого поля пользователя"
+        set_topic_timer:
+          title: Установить таймер темы
       unnamed_automation: "Автоматизация без названия"
       models:
         script:
@@ -412,6 +450,11 @@ ru:
           name:
             label: Запуск
         automation:
+          runs_today: "%{count} сегодня"
+          runs_this_week: "%{count} на этой неделе"
+          runs_this_month: "%{count} в этом месяце"
+          runs:
+            label: Число запусков
           name:
             label: Название
           trigger:
@@ -423,12 +466,15 @@ ru:
           status:
             label: Статус
           enabled:
-            label: Включено
+            label: "Обновить автоматизацию"
           disabled:
             label: Отключено
           placeholders:
             label: Заполнители
           last_updated_at:
             label: Последнее обновление
+          last_run:
+            label: Последний запуск
           last_updated_by:
             label: Кем обновлено
+          enable_toggle_disabled: "Вы сможете включить эту автоматизацию после заполнения всех обязательных полей."

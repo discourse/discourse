@@ -1,0 +1,59 @@
+.leaderboard.-minimal {
+  .page {
+    &__header {
+      display: block;
+      margin: 0;
+      border-bottom: 0;
+    }
+  }
+
+  .ranking-col-names {
+    position: relative;
+    padding: 0.5em;
+    top: unset;
+  }
+
+  .ranking-col-names__sticky-border {
+    display: none;
+  }
+
+  .user {
+    padding: 0.75em 0.5em;
+    margin-bottom: 0;
+    background-color: transparent;
+    border-bottom: 1px solid var(--primary-low);
+    border-radius: 0;
+
+    &.-self {
+      display: none;
+    }
+
+    &__rank {
+      font-size: var(--font-up-3);
+
+      &.-winner {
+        color: $gold;
+      }
+    }
+
+    &__name {
+      font-size: var(--font-0);
+      vertical-align: middle;
+    }
+
+    &__avatar {
+      img {
+        margin-right: 0.25em;
+      }
+    }
+
+    &__score {
+      font-size: var(--font-up-1);
+    }
+
+    &-highlight {
+      background-color: var(--tertiary-50);
+      color: var(--primary);
+    }
+  }
+}

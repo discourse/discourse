@@ -49,7 +49,7 @@ RSpec.describe UserBadge do
 
   describe "featured rank" do
     fab!(:user)
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2, :user)
     fab!(:user_badge_tl1) do
       UserBadge.create!(
         badge_id: Badge::BasicUser,

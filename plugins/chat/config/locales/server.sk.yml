@@ -30,10 +30,12 @@ sk:
     chat_editing_grace_period_max_diff_low_trust: "Maximálny počet zmien znakov povolených v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe sa zobrazí značka (upravená) (úroveň dôveryhodnosti 0 a 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximálny počet zmien znakov povolený v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe (úroveň dôveryhodnosti 2 a vyššie) sa zobrazí značka (upravená)."
     chat_preferred_index: "Preferovaná karta pri načítaní /chat."
+    allow_chat_in_anonymous_mode: "Toto nastavenie povoľte, ak chcete používateľom, ktorí si anonymne prezerajú vašu stránku, umožniť používať chat. Toto nastavenie vyžaduje, aby bolo povolené nastavenie `povoliť anonymný režim`."
     errors:
       chat_default_channel: "Predvolený chatovací kanál musí byť verejný kanál."
       direct_message_enabled_groups_invalid: "Pre toto nastavenie musíte zadať aspoň jednu skupinu. Ak nechcete, aby niekto okrem personálu posielal priame správy, vyberte skupinu zamestnancov."
       chat_upload_not_allowed_secure_uploads: "Nahrávanie četu nie je povolené, keď je povolené nastavenie lokality zabezpečeného nahrávania."
+      allow_chat_in_anonymous_mode_invalid: "Toto nastavenie vyžaduje, aby bolo najprv povolené nastavenie \"povoliť anonymný režim\"."
   system_messages:
     private_channel_title: "Kanál %{id}"
     chat_channel_archive_complete:
@@ -110,6 +112,10 @@ sk:
     reviewables:
       message_already_handled: "Ďakujeme, ale túto správu sme už skontrolovali a rozhodli sme sa, že ju netreba znova nahlásiť."
       actions:
+        no_action_message:
+          title: "Žiadna akcia"
+        restore_message:
+          description: "Obnovte správu, aby ju používatelia mohli vidieť."
         agree:
           title: "Súhlasím..."
         agree_and_keep_message:
@@ -131,16 +137,10 @@ sk:
           title: "Odstrániť správu"
           description: "Odstráňte správu, aby ju používatelia nemohli vidieť."
         delete_and_agree:
-          title: "Ignorovať nahlásenie a odstrániť správu"
           description: "Ignorovať príznak odstránením z frontu a vymazaním správy."
         disagree_and_restore:
           title: "Nesúhlasiť a obnoviť správu"
           description: "Obnovte správu, aby ju mohli vidieť všetci používatelia."
-        disagree:
-          title: "Nesúhlasiť"
-        ignore:
-          title: "Nerobte nič"
-          description: "Ignorujte príznak jeho odstránením z frontu bez vykonania akejkoľvek akcie."
       direct_messages:
         transcript_title: "Prepis predchádzajúcich správ v %{channel_name}"
         transcript_body: "Aby sme vám poskytli viac kontextu, vložili sme do tejto konverzácie prepis predchádzajúcich správ (až desať):\n\n%{transcript}"
@@ -203,7 +203,7 @@ sk:
         slug_contains_non_ascii_chars: "obsahuje znaky, ktoré nie sú ascii"
         is_already_in_use: "je už v prevádzke"
     bookmarkable:
-      notification_title: "správa v %{channel_name}"
+      notification_title_channel: "správa v %{channel_name}"
     personal_chat: "osobný chat"
     onebox:
       inline_to_message: "Správa #%{message_id} od %{username} – #%{chat_channel}"
@@ -266,6 +266,16 @@ sk:
           few: "[%{site_name}] Nových správ"
           many: "[%{site_name}] Nových správ"
           other: "[%{site_name}] Nové správy"
+        watched_thread:
+          one: "[%{site_name}] Nová správa na %{channel}"
+          few: "[%{site_name}] Nové správy na %{channel}"
+          many: "[%{site_name}] Nových správ na %{channel}"
+          other: "[%{site_name}] Nové správy na %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nová správa vlákna v %{channel} a %{count} iné"
+          few: "[%{site_name}] Nových správ vlákna v %{channel} a %{count} iné"
+          many: "[%{site_name}] Nových správ vlákna v %{channel} a %{count} iné"
+          other: "[%{site_name}] Nové správy vlákna v %{channel} a %{count} iné"
         chat_dm_1:
           one: "[%{site_name}] Nová správa od %{name}"
           few: "[%{site_name}] Nových správ od %{name}"
@@ -293,10 +303,8 @@ sk:
         few: "Zobraziť %{count} ďalšie správy"
         many: "Zobraziť %{count} ďalších správ"
         other: "Zobraziť %{count} ďalších správ"
-      your_chat_settings: "preferencia frekvencie e-mailových správ v chate"
   unsubscribe:
     chat_summary:
-      select_title: "Nastavenie frekvencie e-mailov so súhrnom chatu na:"
       never: Nikdy
       when_away: Len keď je preč
   category:

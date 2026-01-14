@@ -4,12 +4,12 @@ RSpec.describe "Last visit", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: false) }
   fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: false) }
 
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:user_1, :user)
+  fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap

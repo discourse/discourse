@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  site_settings:
+    microsoft_auth_enabled: "Povolit uživatelům ověřování pomocí služby Microsoft?"
+    microsoft_auth_client_id: 'Microsoft App ID/Client ID (NE Secret ID) – pro nastavení navštivte <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
+    microsoft_auth_client_secret: "Tajné heslo společnosti Microsoft (použijte Value, nikoliv Secret ID)"
+    microsoft_auth_email_verified: "Ve výchozím nastavení zacházet se všemi e-maily společnosti Microsoft jako s ověřenými. VAROVÁNÍ: Tuto možnost povolte pouze v případě, že jste si jisti, že všichni vaši uživatelé mají ověřené e-maily."
+    microsoft_auth_tenant_id: 'Microsoft Tenant ID (běžné je standardní, je POVINNÉ pro všechny případy kromě jednoho tenanta) – ID najdete na <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

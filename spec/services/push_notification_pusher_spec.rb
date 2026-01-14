@@ -2,7 +2,9 @@
 
 RSpec.describe PushNotificationPusher do
   it "returns badges url by default" do
-    expect(PushNotificationPusher.get_badge).to eq("/assets/push-notifications/discourse.png")
+    expect(PushNotificationPusher.get_badge).to match(
+      %r{\A/assets/push-notifications/discourse-\w{8}.png\z},
+    )
   end
 
   it "returns custom badges url" do
@@ -15,8 +17,11 @@ RSpec.describe PushNotificationPusher do
   context "with user" do
     fab!(:user)
     let(:topic_title) { "Topic" }
-    let(:post_url) { "https://example.com/t/1/2" }
+    let(:base_url) { Discourse.base_url }
+    let(:post_url) { "/base/t/1/2" }
     let(:username) { "system" }
+
+    before { Discourse.stubs(base_path: "/base") }
 
     def create_subscription
       data = <<~JSON
@@ -39,6 +44,7 @@ RSpec.describe PushNotificationPusher do
           username: username,
           excerpt: "description",
           topic_id: 1,
+          base_url: base_url,
           post_url: post_url,
           notification_type: notification_type,
           post_number: post_number,
@@ -48,12 +54,12 @@ RSpec.describe PushNotificationPusher do
 
     it "correctly guesses an image if missing" do
       message = execute_push(notification_type: -1)
-      expect(message[:icon]).to eq("/assets/push-notifications/discourse.png")
+      expect(message[:icon]).to match(%r{\A/assets/push-notifications/discourse-\w{8}.png\z})
     end
 
     it "correctly finds image if exists" do
       message = execute_push(notification_type: 1)
-      expect(message[:icon]).to eq("/assets/push-notifications/mentioned.png")
+      expect(message[:icon]).to match(%r{\A/assets/push-notifications/mentioned-\w{8}.png\z})
     end
 
     it "sends notification in user's locale" do
@@ -82,7 +88,18 @@ RSpec.describe PushNotificationPusher do
 
       expect(pn_sent_event[:event_name]).to eq(:push_notification_sent)
       expect(pn_sent_event[:params].first).to eq(user)
-      expect(pn_sent_event[:params].second[:url]).to eq(post_url)
+      expect(pn_sent_event[:params].second[:url]).to eq("/t/1/2")
+    end
+
+    it "triggers a DiscourseEvent with base_path stripped from the url when present" do
+      WebPush.expects(:payload_send)
+      create_subscription
+      pn_sent_event = DiscourseEvent.track_events { message = execute_push }.first
+
+      expect(pn_sent_event[:event_name]).to eq(:push_notification_sent)
+      expect(pn_sent_event[:params].first).to eq(user)
+      expect(pn_sent_event[:params].second[:url]).to eq("/t/1/2")
+      expect(pn_sent_event[:params].second[:base_url]).to eq(base_url)
     end
 
     it "deletes subscriptions which are erroring regularly" do

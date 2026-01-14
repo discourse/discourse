@@ -5,6 +5,10 @@
 
 .chat-message-actions-container {
   @include unselectable;
+  position: fixed;
+  width: max-content;
+  top: 0;
+  left: 0;
   z-index: z("composer", "content");
 }
 
@@ -105,12 +109,6 @@
           }
         }
       }
-    }
-
-    .select-kit-body {
-      padding: 0.5rem;
-      box-shadow: var(--shadow-card);
-      border: 1px solid var(--primary-300);
     }
 
     .select-kit-row {

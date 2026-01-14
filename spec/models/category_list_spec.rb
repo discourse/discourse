@@ -305,7 +305,7 @@ RSpec.describe CategoryList do
         cat4 = Fabricate(:category_with_definition, position: 3)
         cat5 = Fabricate(:category_with_definition, parent_category_id: cat2.id)
 
-        Fabricate(:topic, category_id: cat3.id, bumped_at: 1.minutes.ago)
+        Fabricate(:topic, category_id: cat3.id, bumped_at: 1.minute.ago)
         Fabricate(:topic, category_id: cat5.id, bumped_at: 2.minutes.ago)
         Fabricate(:topic, category_id: cat1.id, bumped_at: 3.minutes.ago)
         Fabricate(:topic, category_id: cat2.id, bumped_at: 5.minutes.ago)
@@ -329,7 +329,7 @@ RSpec.describe CategoryList do
         sub_cat_private.set_permissions(admins: :full)
         sub_cat_private.save
 
-        Fabricate(:topic, category: sub_cat_private, bumped_at: 1.minutes.ago)
+        Fabricate(:topic, category: sub_cat_private, bumped_at: 1.minute.ago)
         Fabricate(:topic, category: public_cat, bumped_at: 3.minutes.ago)
         Fabricate(:topic, category: public_cat2, bumped_at: 4.minutes.ago)
 
@@ -442,6 +442,93 @@ RSpec.describe CategoryList do
 
         expect(category_list.categories.size).to eq(1)
       end
+    end
+  end
+
+  describe "with many categories (more than MAX_UNOPTIMIZED_CATEGORIES)" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    it "returns at most CATEGORIES_PER_PAGE categories" do
+      stub_const(CategoryList, "MAX_UNOPTIMIZED_CATEGORIES", 1) do
+        category_list = CategoryList.new(Guardian.new(user))
+
+        expect(category_list.categories).to eq(
+          [Category.find(SiteSetting.uncategorized_category_id), category, subcategory],
+        )
+      end
+    end
+
+    context "with parent_category_id" do
+      it "returns at most CATEGORIES_PER_PAGE subcategories" do
+        subcategory_2 = Fabricate(:category, parent_category: category)
+
+        stub_const(CategoryList, "MAX_UNOPTIMIZED_CATEGORIES", 1) do
+          category_list = CategoryList.new(Guardian.new(user), parent_category_id: category.id)
+
+          expect(category_list.categories).to eq([subcategory, subcategory_2])
+        end
+      end
+    end
+  end
+
+  describe "with displayable topics" do
+    fab!(:category) { Fabricate(:category, num_featured_topics: 2) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+
+    it "preloads topic associations" do
+      DiscoursePluginRegistry.register_category_list_topics_preloader_association(
+        :first_post,
+        Plugin::Instance.new,
+      )
+
+      category = Fabricate(:category_with_definition)
+      Fabricate(:topic, category: category)
+
+      CategoryFeaturedTopic.feature_topics
+
+      displayable_topics =
+        CategoryList
+          .new(Guardian.new(admin), include_topics: true)
+          .categories
+          .find { |x| x.id == category.id }
+          .displayable_topics
+      expect(displayable_topics.first.association(:first_post).loaded?).to eq(true)
+
+      DiscoursePluginRegistry.reset_register!(:category_list_topics_preloader_associations)
+    end
+  end
+
+  context "with content_localization_enabled enabled" do
+    fab!(:category) { Fabricate(:category, name: "Original Name", description: "Original Desc") }
+    fab!(:category_localization) { Fabricate(:category_localization, category:, locale: "ja") }
+
+    let(:locale) { "ja" }
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      I18n.locale = locale
+    end
+
+    it "returns the localized name and description for the category" do
+      cl = CategoryList.new(Guardian.new)
+      cat = cl.categories.find { |c| c.id == category.id }
+      expect(cat.name).to eq(category_localization.name)
+      expect(cat.description).to eq(category_localization.description)
+    end
+
+    it "falls back to the original name and description if no localization exists" do
+      other_category = Fabricate(:category, name: "Other Name", description: "Other Desc")
+      cl = CategoryList.new(Guardian.new)
+      cat = cl.categories.find { |c| c.id == other_category.id }
+      expect(cat.name).to eq("Other Name")
+      expect(cat.description).to eq("Other Desc")
+    end
+
+    it "safely returns categories when SiteSetting.fixed_category_positions is enabled" do
+      SiteSetting.fixed_category_positions = true
+      category_list = CategoryList.new(Guardian.new)
+      expect(category_list.categories).to include(category)
     end
   end
 end

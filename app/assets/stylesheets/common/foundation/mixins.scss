@@ -8,18 +8,21 @@
 @use "sass:color";
 @use "sass:math";
 @use "sass:string";
+@use "sass:map";
+@use "lib/viewport";
 
 $breakpoints: (
-  mobile-small: 320px,
-  mobile-medium: 350px,
-  mobile-large: 450px,
-  mobile-extra-large: 550px,
-  tablet: 768px,
-  medium: 850px,
-  large: 1000px,
-  extra-large: 1140px,
+  mobile-small: map.get(viewport.$breakpoints, sm),
+  mobile-medium: map.get(viewport.$breakpoints, sm),
+  mobile-large: map.get(viewport.$breakpoints, sm),
+  mobile-extra-large: map.get(viewport.$breakpoints, sm),
+  tablet: map.get(viewport.$breakpoints, md),
+  medium: map.get(viewport.$breakpoints, lg),
+  large: map.get(viewport.$breakpoints, lg),
+  extra-large: map.get(viewport.$breakpoints, xl),
 );
 
+/* breakpoint is a legacy mixin. Use `@use "lib/viewport"` instead. */
 @mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: false) {
   /* stylelint-disable-next-line scss/no-global-function-names */
   $bp-value: map-get($breakpoints, $bp);
@@ -70,8 +73,8 @@ $breakpoints: (
 
 @mixin darken-background($background-color, $amt) {
   $overlay: dark-light-choose(
-    rgba(var(--primary-rgb), $amt),
-    rgba(var(--secondary-rgb), $amt)
+    rgb(var(--primary-rgb), $amt),
+    rgb(var(--secondary-rgb), $amt)
   );
   background-image: linear-gradient(to bottom, $overlay 100%, $overlay 100%);
 }
@@ -81,7 +84,8 @@ $breakpoints: (
 
 // Only shows hover on non-touch devices
 @mixin hover {
-  .discourse-no-touch & {
+  .discourse-no-touch &,
+  .no-ember & {
     &:hover,
     &.btn-hover {
       @content;
@@ -99,9 +103,8 @@ $breakpoints: (
   display: -webkit-box;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   -webkit-line-clamp: $lines;
-  -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
 }
 
@@ -139,9 +142,18 @@ $hpad: 0.65em;
   background-color: var(--blend-primary-secondary-5);
 }
 
+@mixin d-animation($name, $duration, $easing: ease) {
+  animation: $name $duration $easing forwards;
+
+  @media (prefers-reduced-motion) {
+    /* stylelint-disable-next-line no-invalid-position-declaration */
+    animation-duration: 0s;
+  }
+}
+
 @mixin default-focus() {
-  border-color: var(--tertiary);
-  outline: 2px solid var(--tertiary);
+  border-color: var(--d-input-focused-color);
+  outline: 2px solid var(--d-input-focused-color);
   outline-offset: -2px;
 }
 
@@ -234,15 +246,22 @@ $hpad: 0.65em;
 }
 
 @mixin mention() {
-  display: inline;
+  // memo to self: do not make this inline-flex because it breaks text alignments and causes a whole avalance of unpleasant consequences
+  display: inline-block;
   font-size: 0.93em;
   font-weight: normal;
   color: var(--primary);
-  padding: 0.14em 0.34em 0.19em;
-  background: var(--primary-low);
+  padding: 0.2em 0.34em;
+  background: var(--mention-background-color);
   border-radius: 0.6em;
   text-decoration: none;
   text-wrap: nowrap;
+  line-height: 1;
+
+  &[data-valid="false"] {
+    background: unset;
+    padding: 0;
+  }
 
   &.--bot {
     background: var(--success-low);
@@ -273,6 +292,15 @@ $hpad: 0.65em;
     right: 0;
     height: var(--d-nav-underline-height);
     background: var(--d-nav-color--active);
+  }
+}
+
+@mixin nav-hover() {
+  color: var(--d-nav-color--hover);
+  background: var(--d-nav-bg-color--hover);
+
+  .d-icon {
+    color: var(--d-nav-color--active);
   }
 }
 

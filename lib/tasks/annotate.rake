@@ -2,14 +2,14 @@
 
 desc "ensure the asynchronously-created post_search_data index is present"
 task "annotate" => :environment do |task, args|
-  system("bin/annotate --models", exception: true)
+  system("bin/annotaterb models", exception: true)
   STDERR.puts "Annotate executed successfully"
 
   non_core_plugins =
     Dir["plugins/*"].filter { |plugin_path| `git check-ignore #{plugin_path}`.present? }
   if non_core_plugins.length > 0
     STDERR.puts "Warning: you have non-core plugins installed which may affect the annotations"
-    STDERR.puts "For core annotations, consider running `bin/rake annotate:clean`"
+    STDERR.puts "For core annotations, consider running `bin/rails annotate:clean`"
   end
 end
 
@@ -27,10 +27,10 @@ task "annotate:clean" => :environment do |task, args|
   db = TemporaryDb.new
   db.start
   db.with_env do
-    system("RAILS_ENV=test LOAD_PLUGINS=0 bin/rake db:migrate", exception: true)
-    system("RAILS_ENV=test LOAD_PLUGINS=0 bin/rake annotate:ensure_all_indexes", exception: true)
+    system("RAILS_ENV=test LOAD_PLUGINS=0 bin/rails db:migrate", exception: true)
+    system("RAILS_ENV=test LOAD_PLUGINS=0 bin/rails annotate:ensure_all_indexes", exception: true)
     system(
-      "RAILS_ENV=test LOAD_PLUGINS=0 bin/annotate --models --model-dir app/models",
+      "RAILS_ENV=test LOAD_PLUGINS=0 bin/annotaterb models --model-dir app/models",
       exception: true,
     )
   end
@@ -47,10 +47,10 @@ task "annotate:clean:plugins", [:plugin] => :environment do |task, args|
   db = TemporaryDb.new
   db.start
   db.with_env do
-    system("RAILS_ENV=test LOAD_PLUGINS=1 bin/rake db:migrate", exception: true)
-    system("RAILS_ENV=test LOAD_PLUGINS=1 bin/rake annotate:ensure_all_indexes", exception: true)
+    system("RAILS_ENV=test LOAD_PLUGINS=1 bin/rails db:migrate", exception: true)
+    system("RAILS_ENV=test LOAD_PLUGINS=1 bin/rails annotate:ensure_all_indexes", exception: true)
     system(
-      "RAILS_ENV=test LOAD_PLUGINS=1 bin/annotate --models #{specific_plugin}",
+      "RAILS_ENV=test LOAD_PLUGINS=1 bin/annotaterb models #{specific_plugin}",
       exception: true,
     )
   end

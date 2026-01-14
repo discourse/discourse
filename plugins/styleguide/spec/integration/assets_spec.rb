@@ -7,16 +7,16 @@ RSpec.describe "Styleguide assets" do
   end
 
   context "when visiting homepage" do
-    it "doesn’t load styleguide assets" do
+    it "doesn't load styleguide assets" do
       get "/"
-      expect(response.body).to_not include("styleguide")
+      expect(response.body).to_not include('data-target="styleguide"')
     end
   end
 
   context "when visiting styleguide" do
     it "loads styleguide assets" do
       get "/styleguide"
-      expect(response.body).to include("styleguide")
+      expect(response.body).to include('data-target="styleguide"')
     end
   end
 end

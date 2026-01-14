@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
-import { i18n } from "discourse-i18n";
+import decoratePollOption from "../modifiers/decorate-poll-option";
 import PollOptionRankedChoiceDropdown from "./poll-option-ranked-choice-dropdown";
 
 export default class PollOptionsComponent extends Component {
@@ -30,11 +29,13 @@ export default class PollOptionsComponent extends Component {
           @sendRank={{this.sendRank}}
         />
       {{else}}
-        <DButton class="btn-default" onclick={{routeAction "showLogin"}}>{{i18n
-            "poll.options.ranked_choice.login"
-          }}</DButton>
+        <DButton
+          @action={{routeAction "showLogin"}}
+          @label="poll.options.ranked_choice.login"
+          class="btn-default"
+        />
       {{/if}}
-      <span class="option-text">{{htmlSafe @option.html}}</span>
+      <span class="option-text" {{decoratePollOption @option.html}}></span>
     </div>
   </template>
 }

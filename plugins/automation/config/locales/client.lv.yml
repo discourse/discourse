@@ -27,6 +27,12 @@ lv:
         text:
           label: Teksts
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Sadaļas
+            tags:
+              label: Birkas
         user_badge_granted:
           fields:
             badge:
@@ -56,13 +62,13 @@ lv:
           fields:
             restricted_tags:
               label: Birkas
-            restricted_category:
-              label: Sadaļa
-            restricted_group:
-              label: Grupa
-            restricted_groups:
-              label: Grupas
+            restricted_categories:
+              label: Sadaļas
           created: Radīts
+          with_images: Attēli
+          with_links: Saites
+          with_code: Kods
+          with_uploads: Augšupielādes
         category_created_edited:
           fields:
             restricted_category:
@@ -135,7 +141,5 @@ lv:
             label: Versij
           status:
             label: Statuss
-          enabled:
-            label: Ieslēgts
           disabled:
             label: Atslēgt

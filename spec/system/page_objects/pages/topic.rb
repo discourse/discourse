@@ -11,9 +11,7 @@ module PageObjects
       end
 
       def visit_topic(topic, post_number: nil)
-        url = "/t/#{topic.id}"
-        url += "/#{post_number}" if post_number
-        page.visit(url)
+        page.visit(topic.url(post_number))
         self
       end
 
@@ -41,12 +39,24 @@ module PageObjects
         ::Topic.find(current_topic_id)
       end
 
+      def topic_title
+        find("#topic-title .fancy-title")
+      end
+
       def has_topic_title?(text)
         has_css?("h1 .fancy-title", text: text)
       end
 
-      def has_post_content?(post)
-        post_by_number(post).has_content? post.raw
+      def has_topic_title_editor?
+        has_css?("#topic-title input#edit-title")
+      end
+
+      def has_no_topic_title_editor?
+        has_no_css?("#topic-title input#edit-title")
+      end
+
+      def has_post_content?(post_number:, content:)
+        find(post_by_number_selector(post_number)).has_content?(content)
       end
 
       def has_deleted_post?(post)
@@ -98,6 +108,10 @@ module PageObjects
         post_by_number(post).find(".show-more-actions").click
       end
 
+      def click_post_author_avatar(post)
+        within_post(post) { find(".main-avatar[data-user-card='#{post.user.username}']").click }
+      end
+
       def click_post_action_button(post, button)
         find_post_action_button(post, button).click
       end
@@ -123,26 +137,33 @@ module PageObjects
 
       def has_who_liked_on_post?(post, count: nil)
         if count
-          return within_post(post) { has_css?(".who-liked a.trigger-user-card", count: count) }
+          return(
+            has_css?(
+              ".liked-users-list__container .liked-users-list__item a.trigger-user-card",
+              count: count,
+            )
+          )
         end
 
-        within_post(post) { has_css?(".who-liked") }
+        within_post(post) { has_css?(".who-liked.--expanded") }
       end
 
       def has_no_who_liked_on_post?(post)
-        within_post(post) { has_no_css?(".who-liked") }
+        within_post(post) { has_no_css?(".who-liked.--expanded") }
       end
 
       def has_who_read_on_post?(post, count: nil)
         if count
-          return within_post(post) { has_css?(".who-read a.trigger-user-card", count: count) }
+          return(
+            within_post(post) { has_css?(".who-read.--expanded a.trigger-user-card", count: count) }
+          )
         end
 
-        within_post(post) { has_css?(".who-read") }
+        within_post(post) { has_css?(".who-read.--expanded") }
       end
 
       def has_no_who_read_on_post?(post)
-        within_post(post) { has_no_css?(".who-read") }
+        within_post(post) { has_no_css?(".who-read.--expanded") }
       end
 
       def expand_post_admin_actions(post)
@@ -173,6 +194,26 @@ module PageObjects
         within_topic_footer_buttons { find(".bookmark-menu-trigger").click }
       end
 
+      def click_topic_edit_title
+        find("#topic-title .fancy-title").click
+      end
+
+      def click_topic_title_submit_edit
+        find("#topic-title .submit-edit").click
+      end
+
+      def click_topic_title_cancel_edit
+        find("#topic-title .cancel-edit").click
+      end
+
+      def has_editing_localization_indicator?
+        has_css?("#topic-title .editing-localization-indicator")
+      end
+
+      def has_no_editing_localization_indicator?
+        has_no_css?("#topic-title .editing-localization-indicator")
+      end
+
       def has_topic_bookmarked?(topic)
         within_topic_footer_buttons do
           has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit Bookmark")
@@ -190,6 +231,10 @@ module PageObjects
 
       def has_expanded_composer?
         has_css?("#reply-control.open")
+      end
+
+      def composer
+        @composer_component
       end
 
       def type_in_composer(input)
@@ -246,7 +291,9 @@ module PageObjects
       end
 
       def click_footer_reply
-        find("#topic-footer-buttons .btn-primary", text: "Reply").click
+        button = find("#topic-footer-buttons .btn-primary", text: "Reply")
+        page.execute_script("arguments[0].scrollIntoView();", button)
+        button.click
         self
       end
 
@@ -272,6 +319,7 @@ module PageObjects
 
       def click_admin_menu_button
         within_topic_footer_buttons { find(".toggle-admin-menu").click }
+        PageObjects::Components::TopicAdminMenu.new
       end
 
       def watch_topic
@@ -313,47 +361,57 @@ module PageObjects
         find(".flag-topic").click
       end
 
-      private
-
       def within_post(post)
         within(post_by_number(post)) { yield }
       end
+
+      def has_filtered_notice_text?(text)
+        find(".posts-filtered-notice").has_text?(text, exact: false)
+      end
+
+      def topic_tags
+        tags_selector = ".title-wrapper .topic-category .list-tags .discourse-tags .discourse-tag"
+        all(tags_selector).map(&:text)
+      end
+
+      private
 
       def within_topic_footer_buttons
         within("#topic-footer-buttons") { yield }
       end
 
       def selector_for_post_action_button(button)
-        # TODO (glimmer-post-menu): Replace the selector with the BEM format ones once the glimmer-post-menu replaces the widget post menu
         case button
+        when :add_translation
+          ".post-controls .post-action-menu-edit-translations-trigger"
         when :admin
-          ".post-controls .show-post-admin-menu"
+          ".post-controls .post-action-menu__admin"
         when :bookmark
-          ".post-controls .bookmark"
+          ".post-controls .post-action-menu__bookmark"
         when :copy_link, :copyLink
           ".post-controls .post-action-menu__copy-link"
         when :delete
-          ".post-controls .delete"
+          ".post-controls .post-action-menu__delete"
         when :edit
-          ".post-controls .edit"
+          ".post-controls .post-action-menu__edit"
         when :flag
-          ".post-controls .create-flag"
+          ".post-controls .post-action-menu__flag"
         when :like
-          ".post-controls .toggle-like"
+          ".post-controls .post-action-menu__like"
         when :like_count
-          ".post-controls .like-count"
+          ".post-controls .post-action-menu__like-count"
         when :read
-          ".post-controls .read-indicator"
+          ".post-controls .post-action-menu__read"
         when :recover
-          ".post-controls .recover"
+          ".post-controls .post-action-menu__recover"
         when :replies
-          ".post-controls .show-replies"
+          ".post-controls .post-action-menu__show-replies"
         when :reply
-          ".post-controls .reply"
+          ".post-controls .post-action-menu__reply"
         when :share
-          ".post-controls .share"
+          ".post-controls .post-action-menu__share"
         when :show_more
-          ".post-controls .show-more-actions"
+          ".post-controls .post-action-menu__show-more"
         else
           raise "Unknown post menu button type: #{button}"
         end
