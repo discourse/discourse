@@ -42,6 +42,11 @@ RSpec.describe "Track upcoming changes initializer" do
         )
       end
 
+      it "synchronizes execution using DistributedMutex" do
+        DistributedMutex.expects(:synchronize).with("track_upcoming_changes_default").yields
+        UpcomingChanges::TrackingInitializer.call
+      end
+
       context "when changes are newly added" do
         before do
           UpcomingChangeEvent.where(

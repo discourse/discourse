@@ -42,6 +42,11 @@ RSpec.describe "Promote upcoming changes initializer" do
       )
     end
 
+    it "synchronizes execution using DistributedMutex" do
+      DistributedMutex.expects(:synchronize).with("promote_upcoming_changes_default").yields
+      UpcomingChanges::AutoPromotionInitializer.call
+    end
+
     context "when the change does not meet the promotion criteria" do
       before { SiteSetting.promote_upcoming_changes_on_status = :never }
 
