@@ -72,11 +72,11 @@ for (const packageName of packageNames) {
     const modulePrefix = exportedDtsPaths.get(relativePath);
 
     if (modulePrefix) {
-      if (modulePrefix.from && modulePath.startsWith(modulePrefix.from)) {
-        modulePath = modulePath.replace(modulePrefix.from, "");
+      if (modulePrefix.remove && modulePath.startsWith(modulePrefix.remove)) {
+        modulePath = modulePath.replace(modulePrefix.remove, "");
       }
-      if (modulePrefix.to) {
-        modulePath = [modulePrefix.to, modulePath].filter(Boolean).join("/");
+      if (modulePrefix.add) {
+        modulePath = [modulePrefix.add, modulePath].filter(Boolean).join("/");
       }
 
       modulePath = modulePath

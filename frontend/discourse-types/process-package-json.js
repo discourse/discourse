@@ -82,8 +82,8 @@ export default function processPackageJson(packageJson, packagePath) {
       for (const entry of entries) {
         if (!expandedPaths.has(entry)) {
           expandedPaths.set(entry, {
-            from: modulePrefix,
-            to: importPathPrefixes.get(entry),
+            remove: modulePrefix,
+            add: importPathPrefixes.get(entry),
           });
         }
       }
@@ -92,8 +92,8 @@ export default function processPackageJson(packageJson, packagePath) {
 
       if (!expandedPaths.has(entry)) {
         expandedPaths.set(entry, {
-          from: modulePrefix,
-          to: prefix,
+          remove: modulePrefix,
+          add: prefix,
         });
       }
     }
