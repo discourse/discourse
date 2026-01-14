@@ -16,27 +16,28 @@ export default class TagChooserField extends Component {
   @service dialog;
 
   get formattedChoices() {
-    return this.args.choices.map((choice) => ({
-      name: choice,
-      display: this.args.attributes.tag_choices[choice]
-        ? this.args.attributes.tag_choices[choice]
-        : choice.replace(/-/g, " ").toUpperCase(),
+    return this.args.choices.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+      display: this.args.attributes.tag_choices[tag.name]
+        ? this.args.attributes.tag_choices[tag.name]
+        : tag.name.replace(/-/g, " ").toUpperCase(),
     }));
   }
 
-  _tagName(tag) {
-    return typeof tag === "object" ? tag.name : tag;
+  _tagId(tag) {
+    return typeof tag === "object" ? tag.id : null;
   }
 
   get filteredSelectedValues() {
     return this.tags.filter((tag) =>
-      this.formattedChoices.some((choice) => choice.name === this._tagName(tag))
+      this.formattedChoices.some((choice) => choice.id === this._tagId(tag))
     );
   }
 
   get selectedTags() {
     return this.tags.filter((tag) =>
-      this.args.choices.includes(this._tagName(tag))
+      this.args.choices.some((choice) => choice.id === this._tagId(tag))
     );
   }
 
@@ -56,10 +57,10 @@ export default class TagChooserField extends Component {
         })
       );
 
-      const selectedTagNames = this.selectedTags.map((t) => this._tagName(t));
+      const selectedTagIds = this.selectedTags.map((t) => this._tagId(t));
       const filteredTags = [
         ...this.tags.filter(
-          (tag) => !selectedTagNames.includes(this._tagName(tag))
+          (tag) => !selectedTagIds.includes(this._tagId(tag))
         ),
       ];
 
@@ -88,59 +89,41 @@ export default class TagChooserField extends Component {
   }
 
   @action
-  handleSelectedValues(event) {
-    const getFallbackValue = (optionValue) =>
-      optionValue.toLowerCase().replace(/\s+/g, "-");
-    let choiceMap = null;
-    const tagChoices = this.args.attributes.tag_choices;
-
-    if (tagChoices) {
-      choiceMap = new Map(
-        Object.entries(tagChoices).map(([key, value]) => [value, key])
-      );
-    }
-
-    const selectedValues = Array.from(event.target.selectedOptions).map(
-      (option) => {
-        const mappedValue = choiceMap?.get(option.textContent.trim());
-        return mappedValue ?? getFallbackValue(option.value);
-      }
-    );
-
-    return selectedValues;
+  handleSelectedTagIds(event) {
+    return Array.from(event.target.selectedOptions)
+      .map((option) => parseInt(option.value, 10))
+      .filter((id) => !isNaN(id));
   }
 
   @action
   handleInput(event) {
-    const selectedValues = this.handleSelectedValues(event);
-    const validChoices = this.formattedChoices.map((choice) => choice.name);
-    const selectedTagNames = selectedValues.filter((tag) =>
-      validChoices.includes(tag)
+    const selectedTagIds = this.handleSelectedTagIds(event);
+    const validTagIds = this.formattedChoices.map((choice) => choice.id);
+    const filteredTagIds = selectedTagIds.filter((tagId) =>
+      validTagIds.includes(tagId)
     );
-    const existingSelectedTagNames = this.selectedTags.map((t) =>
-      this._tagName(t)
-    );
+    const existingSelectedTagIds = this.selectedTags.map((t) => this._tagId(t));
 
-    // convert selected tag names to objects for consistency
-    const selectedTagObjects = selectedTagNames.map((name) => ({ name }));
+    const selectedTags = filteredTagIds.map((tagId) =>
+      this.formattedChoices.find((choice) => choice.id === tagId)
+    );
 
     set(
       this.composer.model,
       "tags",
       uniqueItemsFromArray([
         ...this.tags.filter(
-          (tag) => !existingSelectedTagNames.includes(this._tagName(tag))
+          (tag) => !existingSelectedTagIds.includes(this._tagId(tag))
         ),
-        ...selectedTagObjects,
+        ...selectedTags,
       ])
     );
   }
 
   @action
-  isSelected(option) {
-    option = option.toLowerCase().replace(/\s+/g, "-");
+  isSelected(tagId) {
     return this.filteredSelectedValues.some(
-      (tag) => this._tagName(tag) === option
+      (tag) => this._tagId(tag) === tagId
     );
   }
 
@@ -184,8 +167,8 @@ export default class TagChooserField extends Component {
         {{/if}}
         {{#each this.formattedChoices as |choice|}}
           <option
-            value={{choice.display}}
-            selected={{this.isSelected choice.name}}
+            value={{choice.id}}
+            selected={{this.isSelected choice.id}}
           >{{choice.display}}</option>
         {{/each}}
       </select>
