@@ -50,8 +50,15 @@ export default class Blocks extends Service {
   #conditionInstances = new Map();
 
   /**
-   * Tracks which condition types have been instantiated.
-   * Used to detect new registrations and create instances for them.
+   * Tracks the registry size at last initialization to detect new registrations.
+   *
+   * We use size-based detection (rather than tracking individual type names) because:
+   * 1. Condition types are only ever added, never removed
+   * 2. Size comparison is O(1) vs O(n) for set difference
+   * 3. Avoids allocating a Set<string> for tracking
+   *
+   * When registry.size > #lastKnownRegistrySize, we know new types were registered
+   * and need to create instances for them.
    *
    * @type {number}
    */
@@ -192,16 +199,16 @@ export default class Blocks extends Service {
    */
 
   /**
-   * Ensures all registered condition types have instances.
-   * Called lazily when conditions are needed, allowing condition types
-   * to be registered after the service is instantiated.
+   * Lazily initializes condition instances from the registry.
    *
-   * This handles the case where:
+   * This deferred initialization pattern handles the timing issue where:
    * 1. Service is instantiated early (e.g., during plugin API usage)
    * 2. Core conditions are registered later by the pre-initializer
    * 3. Service needs to pick up the newly registered conditions
+   *
+   * Called at the start of validate(), evaluate(), and other condition methods.
    */
-  #ensureConditionInstances() {
+  #lazilyInitializeConditionInstances() {
     const registry = getConditionTypeRegistry();
 
     // Only rebuild if registry has grown since last check
@@ -245,7 +252,7 @@ export default class Blocks extends Service {
    * @throws {BlockError} If validation fails.
    */
   validate(conditionSpec) {
-    this.#ensureConditionInstances();
+    this.#lazilyInitializeConditionInstances();
     validateConditions(conditionSpec, this.#conditionInstances);
   }
 
@@ -261,7 +268,7 @@ export default class Blocks extends Service {
    * @returns {boolean} True if conditions pass, false otherwise.
    */
   evaluate(conditionSpec, context = {}) {
-    this.#ensureConditionInstances();
+    this.#lazilyInitializeConditionInstances();
     return evaluateConditions(conditionSpec, this.#conditionInstances, context);
   }
 
@@ -272,7 +279,7 @@ export default class Blocks extends Service {
    * @returns {boolean}
    */
   hasConditionType(type) {
-    this.#ensureConditionInstances();
+    this.#lazilyInitializeConditionInstances();
     return this.#conditionInstances.has(type);
   }
 
@@ -283,7 +290,7 @@ export default class Blocks extends Service {
    * @returns {string[]}
    */
   getRegisteredConditionTypes() {
-    this.#ensureConditionInstances();
+    this.#lazilyInitializeConditionInstances();
     return [...this.#conditionInstances.keys()];
   }
 }
