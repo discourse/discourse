@@ -1,7 +1,17 @@
+import Component from "@glimmer/component";
 import EmberObject, { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { block } from "discourse/blocks/block-outlet";
+import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
+import {
+  blockRegistry,
+  getConditionTypeRegistry,
+  hasBlock,
+  isValidOutlet,
+  resetBlockRegistryForTesting,
+} from "discourse/lib/blocks/registration";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import discourseComputed from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -234,5 +244,125 @@ module("Unit | Utility | plugin-api", function (hooks) {
       "original reopened, reopened2, prepended",
       "it works when rolled back and re-applied multiple times"
     );
+  });
+
+  module("Block APIs", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      resetBlockRegistryForTesting();
+    });
+
+    module("registerBlock", function () {
+      test("registers a block class directly", function (assert) {
+        @block("api-direct-block")
+        class ApiDirectBlock extends Component {}
+
+        withPluginApi((api) => {
+          api.registerBlock(ApiDirectBlock);
+        });
+
+        assert.true(hasBlock("api-direct-block"));
+        assert.strictEqual(
+          blockRegistry.get("api-direct-block"),
+          ApiDirectBlock
+        );
+      });
+
+      test("registers a block factory with string name", function (assert) {
+        @block("api-factory-block")
+        class ApiFactoryBlock extends Component {}
+
+        withPluginApi((api) => {
+          api.registerBlock("api-factory-block", async () => ApiFactoryBlock);
+        });
+
+        assert.true(hasBlock("api-factory-block"));
+      });
+
+      test("throws when factory is missing for string name", function (assert) {
+        withPluginApi((api) => {
+          assert.throws(
+            () => api.registerBlock("missing-factory"),
+            /requires a factory function/
+          );
+        });
+      });
+
+      test("throws when factory is not a function", function (assert) {
+        withPluginApi((api) => {
+          assert.throws(
+            () => api.registerBlock("invalid-factory", "not a function"),
+            /requires a factory function/
+          );
+        });
+      });
+    });
+
+    module("registerBlockOutlet", function () {
+      test("registers a custom outlet", function (assert) {
+        withPluginApi((api) => {
+          api.registerBlockOutlet("api-custom-outlet");
+        });
+
+        assert.true(isValidOutlet("api-custom-outlet"));
+      });
+
+      test("registers outlet with options", function (assert) {
+        withPluginApi((api) => {
+          api.registerBlockOutlet("api-described-outlet", {
+            description: "A test outlet",
+          });
+        });
+
+        assert.true(isValidOutlet("api-described-outlet"));
+      });
+
+      test("works without options parameter", function (assert) {
+        withPluginApi((api) => {
+          api.registerBlockOutlet("api-no-options-outlet");
+        });
+
+        assert.true(isValidOutlet("api-no-options-outlet"));
+      });
+    });
+
+    module("registerBlockConditionType", function () {
+      test("registers a custom condition type", function (assert) {
+        @blockCondition({
+          type: "api-test-condition",
+          validArgKeys: ["enabled"],
+        })
+        class ApiTestCondition extends BlockCondition {
+          evaluate(args) {
+            return args.enabled === true;
+          }
+        }
+
+        withPluginApi((api) => {
+          api.registerBlockConditionType(ApiTestCondition);
+        });
+
+        const registry = getConditionTypeRegistry();
+        assert.true(registry.has("api-test-condition"));
+      });
+    });
+
+    module("renderBlocks", function () {
+      test("throws for unknown outlet", function (assert) {
+        @block("render-test-block")
+        class RenderTestBlock extends Component {}
+
+        withPluginApi((api) => {
+          api.registerBlock(RenderTestBlock);
+
+          assert.throws(
+            () =>
+              api.renderBlocks("nonexistent-outlet", [
+                { block: RenderTestBlock },
+              ]),
+            /Unknown block outlet/
+          );
+        });
+      });
+    });
   });
 });
