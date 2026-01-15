@@ -12,6 +12,9 @@ import ResultSet from "discourse/models/result-set";
 
 let _identityMap;
 
+// Maximum number of items to keep per type before cleanup
+const MAX_ITEMS_PER_TYPE = 500;
+
 // You should only call this if you're a test scaffold
 function flushMap() {
   _identityMap = {};
@@ -24,6 +27,8 @@ function storeMap(type, id, obj) {
 
   _identityMap[type] = _identityMap[type] || {};
   _identityMap[type][id] = obj;
+
+  pruneMap(type);
 }
 
 function fromMap(type, id) {
@@ -46,6 +51,23 @@ function findAndRemoveMap(type, id) {
     const result = byType[id];
     delete byType[id];
     return result;
+  }
+}
+
+function pruneMap(type) {
+  const byType = _identityMap[type];
+  if (!byType) {
+    return;
+  }
+
+  const keys = Object.keys(byType);
+
+  // Only cleanup if we exceed the threshold
+  if (keys.length > MAX_ITEMS_PER_TYPE) {
+    const toRemove = Math.floor(keys.length / 2);
+    for (let i = 0; i < toRemove; i++) {
+      delete byType[keys[i]];
+    }
   }
 }
 
