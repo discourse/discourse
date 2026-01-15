@@ -52,7 +52,10 @@ module DiscourseAi
              category_id_or_name.to_i.to_s == category_id_or_name.to_s
           Category.find_by(id: category_id_or_name.to_i)
         else
-          Category.find_by(name: category_id_or_name) || Category.find_by(slug: category_id_or_name)
+          Category
+            .where(name: category_id_or_name)
+            .or(Category.where(slug: category_id_or_name))
+            .first
         end
       end
 
@@ -659,12 +662,7 @@ module DiscourseAi
               user = resolve_user(username)
               return { error: "User not found: #{username}" } if user.nil?
 
-              category =
-                if category_id.present?
-                  Category.find_by(id: category_id)
-                else
-                  Category.find_by(name: category_name) || Category.find_by(slug: category_name)
-                end
+              category = resolve_category(category_id.presence || category_name)
 
               return { error: "Category not found" } if category.nil?
 
@@ -893,6 +891,8 @@ module DiscourseAi
               user = resolve_user(options["username"])
               return { error: "User not found: #{options["username"]}" } if user.nil?
 
+              guardian = Guardian.new(user)
+
               # Handle category change
               if updates.key?("category")
                 if topic.private_message?
@@ -902,7 +902,6 @@ module DiscourseAi
                 category = resolve_category(updates["category"])
                 return { error: "Category not found" } if category.nil?
 
-                guardian = Guardian.new(user)
                 unless guardian.can_move_topic_to_category?(category.id)
                   return { error: "Permission denied" }
                 end
@@ -914,7 +913,6 @@ module DiscourseAi
 
               # Handle visibility change
               if updates.key?("visible")
-                guardian = Guardian.new(user)
                 unless guardian.can_toggle_topic_visibility?(topic)
                   return { error: "Permission denied" }
                 end
@@ -938,7 +936,7 @@ module DiscourseAi
               if updates.key?("tags")
                 unless DiscourseTagging.tag_topic_by_names(
                          topic,
-                         Guardian.new(user),
+                         guardian,
                          updates["tags"],
                          append: !!options["append"],
                        )

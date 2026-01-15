@@ -370,6 +370,82 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       expect(topic.visible).to eq(false)
     end
 
+    it "can set category on a topic by name" do
+      new_category = Fabricate(:category, name: "New Category Name", slug: "different-slug")
+      tool.update!(script: <<~JS)
+          function invoke(params) {
+            return discourse.editTopic(params.topic_id, { category: "New Category Name" });
+          }
+        JS
+      runner =
+        described_class.new(
+          parameters: {
+            topic_id: topic.id,
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+      expect(result["success"]).to eq(true)
+      expect(result["topic"]["category_id"]).to eq(new_category.id)
+      expect(topic.reload.category_id).to eq(new_category.id)
+    end
+
+    it "returns error when user cannot move topic to category" do
+      regular_user = Fabricate(:user)
+      new_category = Fabricate(:category)
+      new_category.set_permissions(staff: :full)
+      new_category.save!
+      tool.update!(script: <<~JS)
+          function invoke(params) {
+            try {
+              return discourse.editTopic(params.topic_id, { category: params.category_id }, { username: params.username });
+            } catch(e) {
+              return { error: e.message };
+            }
+          }
+        JS
+      runner =
+        described_class.new(
+          parameters: {
+            topic_id: topic.id,
+            category_id: new_category.id,
+            username: regular_user.username,
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+      expect(result["error"]).to include("Permission denied")
+    end
+
+    it "returns error when user cannot toggle topic visibility" do
+      regular_user = Fabricate(:user)
+      tool.update!(script: <<~JS)
+          function invoke(params) {
+            try {
+              return discourse.editTopic(params.topic_id, { visible: false }, { username: params.username });
+            } catch(e) {
+              return { error: e.message };
+            }
+          }
+        JS
+      runner =
+        described_class.new(
+          parameters: {
+            topic_id: topic.id,
+            username: regular_user.username,
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+      expect(result["error"]).to include("Permission denied")
+    end
+
     it "setTags alias works for backwards compatibility" do
       tool.update!(
         script:
