@@ -3,8 +3,7 @@ class AddIndexCategoryOnTopics < ActiveRecord::Migration[8.0]
   disable_ddl_transaction!
 
   def up
-    execute "DROP INDEX IF EXISTS index_topics_on_category_id;"
-    execute "CREATE INDEX CONCURRENTLY index_topics_on_category_id ON topics (category_id) WHERE deleted_at IS NULL AND (archetype <> 'private_message');"
+    execute "CREATE INDEX CONCURRENTLY IF NOT EXISTS index_topics_on_category_id ON topics (category_id) WHERE deleted_at IS NULL AND (archetype <> 'private_message');"
   end
 
   def down
