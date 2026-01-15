@@ -5,5 +5,16 @@
 # https://translate.discourse.org/
 
 ur:
+  solved: "حل شدہ"
+  posted: "پوسٹ کیا"
+  vote_count:
+    one: "%{count} ووٹ"
+    other: "%{count} ووٹ"
+  like_count:
+    one: "%{count} پسند"
+    other: "%{count} پسندیدگیاں"
+  reply_count:
+    one: "%{count} جواب"
+    other: "%{count} جوابات"
   theme_metadata:
     description: "ایک سادہ، خوبصورت تھیم جو ڈسکورس سائٹس کے آؤٹ آف دی باکس تجربے کو بہتر بناتی ہے۔"
