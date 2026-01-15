@@ -49,6 +49,7 @@ const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 
 const fixturesByUrl = {};
+const fixturesByUrlForHandlers = {};
 
 for (const module of Object.values(
   import.meta.glob("../fixtures/**/*", { eager: true })
@@ -60,7 +61,8 @@ for (const module of Object.values(
       if (fixtureUrl[0] !== "/") {
         fixtureUrl = "/" + fixtureUrl;
       }
-      fixturesByUrl[fixtureUrl] = obj[url];
+      fixturesByUrl[url] = obj[url];
+      fixturesByUrlForHandlers[fixtureUrl] = obj[url];
     });
   }
 }
@@ -90,7 +92,7 @@ export function applyDefaultHandlers(pretender) {
     module.default.call(pretender, helpers);
   }
 
-  for (const [url, data] of Object.entries(fixturesByUrl)) {
+  for (const [url, data] of Object.entries(fixturesByUrlForHandlers)) {
     pretender.get(url, () => response(data));
   }
 
