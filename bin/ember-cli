@@ -117,6 +117,7 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
   end
 
   Thread.new do
+    system("pnpm", "--dir=frontend/discourse-types", "generate", exception: true)
     Open3.popen2e(
       pnpm_env,
       "pnpm",
