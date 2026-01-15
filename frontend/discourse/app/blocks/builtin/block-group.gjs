@@ -13,8 +13,10 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
  * Additional class from containerClassNames:
  * - `block__group-{name}` - Dynamic class based on name arg
  *
- * @param {string} @outletName - The outlet identifier this group belongs to (passed from parent)
- * @param {Object} [@outletArgs] - Outlet args to forward to children (for condition evaluation and access)
+ * System args (curried at creation time, not passed from parent):
+ * - `@outletName` - The outlet identifier this group belongs to
+ * - `@outletArgs` - Outlet args available for condition evaluation and access
+ *
  * @param {string} [@name] - Group identifier for BEM class naming (block__group-{name})
  */
 @block("group", {
@@ -27,10 +29,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
 export default class GroupedBlocks extends Component {
   <template>
     {{#each this.children key="key" as |child|}}
-      <child.Component
-        @outletName={{@outletName}}
-        @outletArgs={{@outletArgs}}
-      />
+      <child.Component />
     {{/each}}
   </template>
 }

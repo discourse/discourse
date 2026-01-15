@@ -6,6 +6,7 @@ import BlockOutlet, {
   renderBlocks,
 } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
+import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,
   withTestBlockRegistration,
@@ -14,6 +15,10 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockGroup", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.afterEach(function () {
+    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
+  });
 
   test("renders with BEM classes", async function (assert) {
     @block("group-child-1")
@@ -154,6 +159,213 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     assert.dom(".block__group-outer").exists();
     assert.dom(".block__group-inner").exists();
     assert.dom(".nested-leaf").exists();
+  });
+
+  test("children blocks have outlet-prefixed wrapper classes", async function (assert) {
+    @block("wrapper-test-child")
+    class WrapperTestChild extends Component {
+      <template>
+        <span class="child-content">Child</span>
+      </template>
+    }
+
+    withTestBlockRegistration(() => _registerBlock(WrapperTestChild));
+    renderBlocks("sidebar-blocks", [
+      {
+        block: BlockGroup,
+        args: { name: "wrapper-test" },
+        children: [{ block: WrapperTestChild }],
+      },
+    ]);
+
+    await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+    // Container block wrapper should have outlet-prefixed class
+    assert
+      .dom(".sidebar-blocks__group")
+      .exists("container has outlet-prefixed class");
+    assert.dom(".block__group").exists("container has block__group class");
+
+    // Child block wrapper should have outlet-prefixed class
+    assert
+      .dom(".sidebar-blocks__block")
+      .exists("child has outlet-prefixed __block class");
+    assert
+      .dom(".block-wrapper-test-child")
+      .exists("child has block-{name} class");
+  });
+
+  test("deeply nested blocks have correct outlet-prefixed wrapper classes", async function (assert) {
+    @block("deep-leaf")
+    class DeepLeaf extends Component {
+      <template>
+        <span class="deep-leaf-content">Leaf</span>
+      </template>
+    }
+
+    withTestBlockRegistration(() => _registerBlock(DeepLeaf));
+    renderBlocks("header-blocks", [
+      {
+        block: BlockGroup,
+        args: { name: "level-1" },
+        children: [
+          {
+            block: BlockGroup,
+            args: { name: "level-2" },
+            children: [
+              {
+                block: BlockGroup,
+                args: { name: "level-3" },
+                children: [{ block: DeepLeaf }],
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+
+    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+
+    // All nested containers should have the same outlet prefix
+    assert.dom(".header-blocks__group").exists({ count: 3 });
+
+    // The leaf block should also have the outlet prefix
+    assert
+      .dom(".header-blocks__block")
+      .exists("deeply nested leaf has outlet-prefixed class");
+    assert
+      .dom(".block-deep-leaf")
+      .exists("deeply nested leaf has block-{name} class");
+  });
+
+  test("@outletName is curried and accessible in blocks", async function (assert) {
+    @block("outlet-name-test")
+    class OutletNameTest extends Component {
+      <template>
+        <div class="outlet-name-display" data-outlet={{@outletName}}>
+          {{@outletName}}
+        </div>
+      </template>
+    }
+
+    withTestBlockRegistration(() => _registerBlock(OutletNameTest));
+    renderBlocks("homepage-blocks", [
+      {
+        block: BlockGroup,
+        args: { name: "parent" },
+        children: [{ block: OutletNameTest }],
+      },
+    ]);
+
+    await render(<template><BlockOutlet @name="homepage-blocks" /></template>);
+
+    const display = document.querySelector(".outlet-name-display");
+    assert.strictEqual(
+      display.getAttribute("data-outlet"),
+      "homepage-blocks",
+      "@outletName is curried into nested blocks"
+    );
+    assert.strictEqual(
+      display.textContent.trim(),
+      "homepage-blocks",
+      "@outletName value is accessible in template"
+    );
+  });
+
+  test("wrapper classes are correct when debug overlay is enabled", async function (assert) {
+    @block("overlay-test-child")
+    class OverlayTestChild extends Component {
+      <template>
+        <span class="overlay-child-content" data-outlet={{@outletName}}>
+          Child
+        </span>
+      </template>
+    }
+
+    // Enable debug overlay - this wraps blocks with BlockInfo component
+    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+      return { Component: blockData.Component };
+    });
+
+    withTestBlockRegistration(() => _registerBlock(OverlayTestChild));
+    renderBlocks("sidebar-blocks", [
+      {
+        block: BlockGroup,
+        args: { name: "overlay-test" },
+        children: [{ block: OverlayTestChild }],
+      },
+    ]);
+
+    await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+    // Verify container has correct outlet-prefixed class even with overlay
+    assert
+      .dom(".sidebar-blocks__group")
+      .exists("container has outlet-prefixed class with overlay enabled");
+
+    // Verify child has correct outlet-prefixed class even with overlay
+    assert
+      .dom(".sidebar-blocks__block")
+      .exists("child has outlet-prefixed class with overlay enabled");
+
+    // Verify @outletName is still accessible to the block component
+    const childContent = document.querySelector(".overlay-child-content");
+    assert.strictEqual(
+      childContent.getAttribute("data-outlet"),
+      "sidebar-blocks",
+      "@outletName is accessible even when overlay wraps the component"
+    );
+  });
+
+  test("deeply nested wrapper classes are correct with debug overlay enabled", async function (assert) {
+    @block("deep-overlay-leaf")
+    class DeepOverlayLeaf extends Component {
+      <template>
+        <span class="deep-overlay-content" data-outlet={{@outletName}}>
+          Leaf
+        </span>
+      </template>
+    }
+
+    // Enable debug overlay
+    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+      return { Component: blockData.Component };
+    });
+
+    withTestBlockRegistration(() => _registerBlock(DeepOverlayLeaf));
+    renderBlocks("header-blocks", [
+      {
+        block: BlockGroup,
+        args: { name: "level-1" },
+        children: [
+          {
+            block: BlockGroup,
+            args: { name: "level-2" },
+            children: [{ block: DeepOverlayLeaf }],
+          },
+        ],
+      },
+    ]);
+
+    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+
+    // All nested containers should have outlet prefix with overlay enabled
+    assert
+      .dom(".header-blocks__group")
+      .exists({ count: 2 }, "nested containers have outlet-prefixed class");
+
+    // The deeply nested leaf should have outlet prefix
+    assert
+      .dom(".header-blocks__block")
+      .exists("deeply nested leaf has outlet-prefixed class with overlay");
+
+    // @outletName should be accessible in deeply nested blocks
+    const leafContent = document.querySelector(".deep-overlay-content");
+    assert.strictEqual(
+      leafContent.getAttribute("data-outlet"),
+      "header-blocks",
+      "@outletName is accessible in deeply nested blocks with overlay"
+    );
   });
 
   test("containerArgs are accessible to parent container", async function (assert) {

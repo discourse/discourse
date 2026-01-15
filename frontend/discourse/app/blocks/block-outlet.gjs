@@ -589,6 +589,7 @@ export function block(name, options = {}) {
           cache: this.#childComponentCache,
           owner: getOwner(this),
           baseHierarchy: this.args._hierarchy,
+          outletName: this.args.outletName,
           outletArgs: this.args.outletArgs,
           showGhosts,
           isLoggingEnabled: false,
@@ -695,6 +696,7 @@ function getOrCreateLeafBlockComponent(
  * @param {Map<string, {ComponentClass: typeof Component, args: Object, result: ChildBlockResult}>} options.cache - Component cache keyed by stable block keys.
  * @param {import("@ember/owner").default} options.owner - Application owner for service lookup.
  * @param {string} options.baseHierarchy - Current hierarchy path (e.g., "homepage-blocks/section-1").
+ * @param {string} options.outletName - The outlet name for CSS class generation.
  * @param {Object} options.outletArgs - Arguments passed from the outlet to blocks.
  * @param {boolean} options.showGhosts - Whether to render ghost blocks for invisible entries.
  * @param {boolean} options.isLoggingEnabled - Whether debug logging is active.
@@ -705,6 +707,7 @@ function processBlockEntries({
   cache,
   owner,
   baseHierarchy,
+  outletName,
   outletArgs,
   showGhosts,
   isLoggingEnabled,
@@ -761,6 +764,7 @@ function processBlockEntries({
           resolvedBlock,
           {
             displayHierarchy: baseHierarchy,
+            outletName,
             containerPath,
             conditions: entry.conditions,
             outletArgs,
@@ -795,15 +799,16 @@ function processBlockEntries({
 /**
  * Creates the args object for a child block with reactive getters.
  *
- * System args (`children`, `_hierarchy`, `outletArgs`) are defined as getters
- * rather than direct properties. This enables `curryComponent` to maintain a
- * stable component reference while these values can update reactively when
- * accessed during rendering.
+ * System args (`children`, `_hierarchy`, `outletArgs`, `outletName`) are defined
+ * as getters rather than direct properties. This enables `curryComponent` to
+ * maintain a stable component reference while these values can update reactively
+ * when accessed during rendering.
  *
  * @param {Object} args - User-provided args from the layout entry.
  * @param {Array<Object>|undefined} children - Nested children configs.
  * @param {string} hierarchy - The hierarchy path for this child block.
  * @param {Object} outletArgs - Outlet args to pass through to the block.
+ * @param {string} outletName - The outlet name for this block.
  * @param {Object} [extra] - Additional properties to include (e.g., { classNames }).
  * @returns {Object} The complete args object with reactive getters for system args.
  */
@@ -812,6 +817,7 @@ function createBlockArgsWithReactiveGetters(
   children,
   hierarchy,
   outletArgs,
+  outletName,
   extra = {}
 ) {
   const blockArgs = {
@@ -839,6 +845,12 @@ function createBlockArgsWithReactiveGetters(
     outletArgs: {
       get() {
         return outletArgs;
+      },
+      enumerable: true,
+    },
+    outletName: {
+      get() {
+        return outletName;
       },
       enumerable: true,
     },
@@ -911,7 +923,8 @@ function createChildBlock(entry, owner, debugContext = {}) {
     argsWithDefaults,
     nestedChildren,
     isContainer ? debugContext.containerPath : debugContext.displayHierarchy,
-    debugContext.outletArgs
+    debugContext.outletArgs,
+    debugContext.outletName
   );
 
   // Curry the component with pre-bound args so it can be rendered
@@ -922,6 +935,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
   let wrappedComponent = wrapBlockLayout(
     {
       name: ComponentClass.blockName,
+      outletName: debugContext.outletName,
       isContainer,
       containerClassNames: isContainer
         ? resolveContainerClassNames(
@@ -1465,6 +1479,7 @@ class BlockOutletRootContainer extends Component {
       cache: this.#componentCache,
       owner,
       baseHierarchy,
+      outletName,
       outletArgs,
       showGhosts,
       isLoggingEnabled,
@@ -1581,10 +1596,7 @@ class BlockOutletRootContainer extends Component {
       <div class="{{@outletName}}__container">
         <div class="{{@outletName}}__layout">
           {{#each this.processedChildren key="key" as |child|}}
-            <child.Component
-              @outletName={{@outletName}}
-              @outletArgs={{@outletArgs}}
-            />
+            <child.Component />
           {{/each}}
         </div>
       </div>
