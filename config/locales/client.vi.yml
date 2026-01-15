@@ -33,9 +33,9 @@ vi:
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
-      long_with_year: "D MMM YYYY HH:mm"
-      long_with_year_no_time: "D MMM YYYY"
-      full_with_year_no_time: "D MMMM YYYY"
+      long_with_year: "D/M/YYYY · HH:mm"
+      long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "DD/MM/YYYY LT"
       long_date_without_year: "D MMM LT"
       long_date_with_year_without_time: "DD/MM/YYYY"
@@ -66,7 +66,7 @@ vi:
         almost_x_years:
           other: "%{count}năm"
         date_month: "D MMM"
-        date_year: "M.YYYY"
+        date_year: "D MMM"
       medium:
         less_than_x_minutes:
           other: "dưới %{count} phút"
@@ -221,40 +221,40 @@ vi:
       comma: ", "
       last_item: "và"
     action_codes:
-      public_topic: "Hiển thị chủ đề công khai lúc %{when}"
-      open_topic: "Đã chuyển đổi chủ đề này thành một chủ đề %{when}"
-      private_topic: "Tạo một tin nhắn từ chủ đề này %{when}"
-      split_topic: "Tách chủ đề này lúc %{when}"
-      invited_user: "Đã mời %{who} lúc %{when}"
-      invited_group: "Đã mời %{who} lúc %{when}"
-      user_left: "%{who}đã tự xóa mình khỏi tin nhắn này lúc %{when}"
-      removed_user: "Đã xoá %{who} lúc %{when}"
-      removed_group: "Đã xoá %{who} lúc %{when}"
-      autobumped: "Đẩy chủ đề tự động lúc %{when}"
-      tags_changed: "Thẻ được cập nhật %{when}"
-      category_changed: "Chuyên mục được cập nhật %{when}"
+      public_topic: "Đã công khai chủ đề này %{when}"
+      open_topic: "Đã chuyển đổi thành chủ đề %{when}"
+      private_topic: "Đã tạo một tin nhắn từ chủ đề này %{when}"
+      split_topic: "Đã tách chủ đề này %{when}"
+      invited_user: "Đã mời %{who} %{when}"
+      invited_group: "Đã mời %{who} %{when}"
+      user_left: "%{who} đã tự xóa mình khỏi tin nhắn này %{when}"
+      removed_user: "Đã xóa %{who} %{when}"
+      removed_group: "Đã xóa %{who} %{when}"
+      autobumped: "Đã đẩy chủ đề tự động %{when}"
+      tags_changed: "Thẻ đã cập nhật %{when}"
+      category_changed: "Chuyên mục đã cập nhật %{when}"
       autoclosed:
         enabled: "Đã đóng %{when}"
-        disabled: "Được mở lúc %{when}"
+        disabled: "Đã mở %{when}"
       closed:
         enabled: "Đã đóng %{when}"
-        disabled: "Được mở lúc %{when}"
+        disabled: "Đã mở %{when}"
       archived:
-        enabled: "Được lưu trữ lúc %{when}"
-        disabled: "Hủy lưu trữ lúc %{when}"
+        enabled: "Đã lưu trữ %{when}"
+        disabled: "Đã bỏ lưu trữ %{when}"
       pinned:
-        enabled: "Được ghim lúc %{when}"
-        disabled: "Được bỏ ghim lúc %{when}"
+        enabled: "Đã ghim %{when}"
+        disabled: "Đã bỏ ghim %{when}"
       pinned_globally:
-        enabled: "Được ghim lên toàn trang lúc %{when}"
-        disabled: "Được bỏ ghim lúc %{when}"
+        enabled: "Đã ghim lên toàn trang %{when}"
+        disabled: "Đã bỏ ghim %{when}"
       visible:
-        enabled: "Được liệt kê lúc %{when}"
-        disabled: "Đã đổi thành không công khai vào %{when}"
+        enabled: "Đã liệt kê %{when}"
+        disabled: "Đã đổi thành không công khai %{when}"
       banner:
-        enabled: "Chọn đây làm banner lúc %{when}. Nó sẽ xuất hiện ở đầu mỗi trang cho đến khi bị ẩn đi bởi người dùng."
-        disabled: "Xoá banner này lúc %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang."
-      forwarded: "Đã chuyển tiếp thư điện tử bên trên"
+        enabled: "Đã chọn làm banner %{when}. Nó sẽ xuất hiện ở đầu mỗi trang cho đến khi bị ẩn đi bởi thành viên."
+        disabled: "Đã xóa banner này %{when}. Nó sẽ không còn xuất hiện ở đầu mỗi trang."
+      forwarded: "Đã chuyển tiếp email trên"
     topic_admin_menu: "hành động cho chủ đề"
     skip_to_main_content: "Chuyển đến nội dung chính"
     skip_user_nav: "Chuyển đến nội dung hồ sơ"
@@ -931,7 +931,7 @@ vi:
       actions:
         change_group_setting: "Đổi cài đặt nhóm"
         add_user_to_group: "Thêm người dùng"
-        remove_user_from_group: "Xoá người dùng"
+        remove_user_from_group: "Xóa người dùng"
         make_user_group_owner: "Đặt làm người sở hữu"
         remove_user_as_group_owner: "Gỡ quyền sở hữu"
     groups:
@@ -1051,7 +1051,7 @@ vi:
       permissions:
         title: "Quyền"
         none: "Không có danh mục nào được liên kết với nhóm này."
-        description: "Các thành viên của nhóm này có thể truy cập các danh mục này"
+        description: "Thành viên của nhóm này có quyền truy cập các chuyên mục sau"
       public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
       public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
       empty:
@@ -1148,17 +1148,17 @@ vi:
         everyone: "Mọi người"
       notifications:
         watching:
-          title: "Đang giám sát"
+          title: "Giám sát"
           description: "Bạn sẽ được thông báo khi có tút mới trong mỗi tin nhắn, và số lượng trả lời mới sẽ được hiển thị."
         watching_first_post:
           title: "Xem chủ đề đầu tiên"
           description: "Bạn sẽ được thông báo về tin nhắn mới trong nhóm này nhưng không trả lời tin nhắn."
         tracking:
-          title: "Đang theo dõi"
-          description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn, và số lượng trả lời mới sẽ được hiển thị."
+          title: "Theo dõi"
+          description: "Bạn sẽ được thông báo nếu ai đó nhắc đến @bạn hoặc trả lời bạn, và số lượng trả lời mới cũng sẽ được hiển thị."
         regular:
           title: "Bình thường"
-          description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn"
+          description: "Bạn sẽ được thông báo nếu ai đó nhắc đến @bạn hoặc trả lời bạn."
         muted:
           title: "Im lặng"
           description: "Bạn sẽ không được thông báo về bất kì tin nhắn nào trong nhóm này nữa."
@@ -1197,8 +1197,8 @@ vi:
     categories:
       categories_label: "chuyên mục"
       subcategories_label: "chuyên mục phụ"
-      no_subcategories: "không chuyên mục phụ"
-      remove_filter: "bỏ đièu kiện lọc"
+      no_subcategories: "không có chuyên mục phụ"
+      remove_filter: "bỏ điều kiện lọc"
       plus_more_count:
         other: "+%{count} khác"
       view_all: "xem tất cả"
@@ -1291,7 +1291,7 @@ vi:
         mute_option: "Phớt lờ"
         mute_option_title: "Không nhận bất kỳ thông báo, tin nhắn hoặc chat từ người này."
         normal_option: "Bình thường"
-        normal_option_title: "Bạn sẽ được thông báo nếu người dùng này trả lời bạn, trích dẫn bạn hoặc đề cập đến bạn."
+        normal_option_title: "Bạn sẽ được thông báo khi người này trả lời, trích dẫn hoặc nhắc đến bạn."
       notification_schedule:
         title: "Lịch thông báo"
         label: "Bật lịch thông báo tùy chỉnh"
@@ -1426,7 +1426,7 @@ vi:
         enabled: "Bật chế độ mailing list"
         instructions: |
           Cài đặt này ghi đè tóm tắt hoạt động<br />
-          Những chủ đề và chuyên mục bị phớt lờ sẽ không bị gửi
+          Những chủ đề và chuyên mục bị phớt lờ sẽ không gửi
         individual: "Gửi email khi có tút mới"
         individual_no_echo: "Gửi email khi có tút mới trừ tút của tôi"
         many_per_day: "Gửi email cho tôi khi có tút mới (khoảng %{dailyEmailEstimate} email mỗi ngày)"
@@ -1434,22 +1434,22 @@ vi:
         warning: "Chế độ danh sách gửi thư được bật. Cài đặt thông báo qua email bị ghi đè."
       tag_settings: "Thẻ"
       watched_tags: "Theo dõi"
-      watched_tags_instructions: "Bạn sẽ tự động theo dõi tất cả các tút có gắn thẻ này. Bạn sẽ nhận được thông báo về tất cả các tút và chủ đề mới, và số lượng tút mới cũng sẽ hiển thị bên cạnh chủ đề."
+      watched_tags_instructions: "Bạn sẽ tự động giám sát tất cả tút có chứa thẻ này. Bạn sẽ nhận được thông báo về tất cả các tút và chủ đề mới, và số lượng tút mới cũng sẽ hiển thị kế bên chủ đề."
       tracked_tags: "Theo dõi"
-      tracked_tags_instructions: "Hệ thống sẽ tự động theo dõi tất cả các chủ đề có gắn thẻ này. Số lượng tút mới sẽ hiển thị bên cạnh chủ đề."
+      tracked_tags_instructions: "Bạn sẽ tự động theo dõi tất cả chủ đề có chứa các thẻ này. Số lượng tút mới cũng sẽ hiển thị kế bên chủ đề."
       muted_tags: "Phớt lờ"
-      muted_tags_instructions: "Bạn sẽ không được thông báo về bất kì hoạt động nào ở những chủ đề có thẻ này, chúng cũng sẽ không xuất hiện như là những chủ đề mới nhất."
-      watched_categories: "Đã theo dõi"
-      watched_categories_instructions: "Bạn sẽ tự động theo dõi tất cả các chủ đề trong các danh mục này. Bạn sẽ nhận được thông báo về tất cả các tút và chủ đề mới, và số lượng tút mới cũng sẽ hiển thị bên cạnh chủ đề."
+      muted_tags_instructions: "Bạn sẽ không nhận được thông báo về bất kỳ chủ đề mới nào có chứa các thẻ này, và chúng sẽ không xuất hiện trên trang chủ đề mới nhất."
+      watched_categories: "Giám sát"
+      watched_categories_instructions: "Bạn sẽ tự động giám sát tất cả chủ đề trong các chuyên mục này. Bạn sẽ nhận được thông báo về tất cả tút và chủ đề mới, và số lượng tút mới cũng sẽ hiển thị kế bên chủ đề."
       tracked_categories: "Theo dõi"
-      tracked_categories_instructions: "Bạn sẽ tự động theo dõi tất cả các chủ đề trong các chuyên mục này. Số lượng tút mới sẽ hiển thị bên cạnh chủ đề."
+      tracked_categories_instructions: "Bạn sẽ tự động theo dõi tất cả chủ đề trong các chuyên mục này. Số lượng tút mới cũng sẽ hiển thị kế bên chủ đề."
       watched_first_post_categories: "Xem tút đầu tiên"
-      watched_first_post_categories_instructions: "Bạn sẽ nhận được thông báo khi có ai đó đăng chủ đề mới trong thư mục này."
+      watched_first_post_categories_instructions: "Bạn sẽ nhận được thông báo về tút đầu tiên của mỗi chủ đề mới trong các chuyên mục này."
       watched_first_post_tags: "Xem tút đầu tiên"
-      watched_first_post_tags_instructions: "Bạn sẽ nhận được thông báo khi có ai đó đăng chủ đề mới có chứa thẻ này."
-      watched_precedence_over_muted: "Thông báo cho tôi về các chủ đề trong những chuyên mục hoặc thẻ tôi giám sát cũng thuộc về chủ đề mà tôi đã phớt lờ"
+      watched_first_post_tags_instructions: "Bạn sẽ nhận được thông báo về tút đầu tiên của mỗi chủ đề mới có chứa các thẻ này."
+      watched_precedence_over_muted: "Thông báo cho tôi về các chủ đề trong những chuyên mục hoặc thẻ tôi giám sát, đồng thời cũng thuộc về chủ đề mà tôi đã phớt lờ"
       muted_categories: "Phớt lờ"
-      muted_categories_instructions: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới trong các danh mục này và chúng sẽ không xuất hiện trên các danh mục hoặc các trang mới nhất."
+      muted_categories_instructions: "Bạn sẽ không nhận được thông báo về bất kỳ chủ đề mới nào trong các chuyên mục này, và chúng sẽ không xuất hiện trên các trang chuyên mục hoặc trang chủ đề mới nhất."
       muted_categories_instructions_dont_hide: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới trong các danh mục này."
       regular_categories: "Bình thường"
       regular_categories_instructions: "Bạn sẽ thấy các danh mục này trong danh sách chủ đề \"Mới nhất\" và \"Hàng đầu\"."
@@ -1459,16 +1459,16 @@ vi:
       deleted_yourself: "Tài khoản của bạn đã được xóa thành công."
       delete_yourself_not_allowed: "Vui lòng liên hệ với nhân viên nếu bạn muốn tài khoản của mình được xóa."
       unread_message_count: "Tin nhắn"
-      admin_delete: "Xoá"
+      admin_delete: "Xóa"
       users: "Thành viên"
-      muted_users: "Đã phớt lờ"
-      muted_users_instructions: "Chặn tất cả thông báo và tin nhắn từ những thành viên này"
+      muted_users: "Phớt lờ"
+      muted_users_instructions: "Chặn thông báo và tin nhắn từ những thành viên này"
       allowed_pm_users: "Được phép"
       allowed_pm_users_instructions: "Chỉ cho phép tin nhắn riêng từ những thành viên này"
       allow_private_messages_from_specific_users: "Chỉ cho phép những thành viên cụ thể nhắn tin cho tôi"
       ignored_users: "Đã bỏ qua"
       ignored_users_instructions: "Chặn tất cả tút, thông báo và tin nhắn từ những thành viên này."
-      tracked_topics_link: "Hiển thị"
+      tracked_topics_link: "Xem"
       automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang"
       apps: "Ứng dụng"
       revoke_access: "Lấy lại quyền"
@@ -1630,7 +1630,7 @@ vi:
         enforced_notice: "Bạn được yêu cầu bật xác thực hai yếu tố trước khi truy cập trang web này."
         disable: "Vô hiệu hóa"
         disable_confirm: "Bạn có chắc muốn tắt xác thực 2 bước?"
-        delete: "Xoá"
+        delete: "Xóa"
         delete_confirm_header: "Các thiết bị xác thực dựa trên toekn và khóa bảo mật vật lý này sẽ bị xóa:"
         delete_confirm_instruction: "Để xác nhận, hãy nhập <strong>%{confirm}</strong> vào ô bên dưới."
         delete_single_confirm_title: "Xóa trình xác thực"
@@ -2064,7 +2064,7 @@ vi:
         more_badges: "Thêm huy hiệu"
         top_links: "Top link"
         no_links: "Chưa có link."
-        most_liked_by: "Thích bạn nhiều nhất"
+        most_liked_by: "Được thích nhiều nhất bởi"
         most_liked_users: "Thích nhiều nhất"
         most_replied_to_users: "Trả lời nhiều nhất"
         no_likes: "Chưa có lượt thích."
@@ -2263,11 +2263,11 @@ vi:
       disable: "HIển thị tất cả tút"
       short_label: "Trả lời hay nhất"
       show_all_label: "Hiển thị tất cả"
-      short_title: "Hiển thị những câu trả lời hàng đầu của chủ đề này: các tút thú vị nhất do cộng đồng xác định"
+      short_title: "Hiển thị những câu trả lời hàng đầu của chủ đề này: do cộng đồng xác định"
     deleted_filter:
-      enabled_description: "Chủ để này có chứa các tút bị xoá, chúng đã bị ẩn đi"
+      enabled_description: "Chủ để này có chứa các tút bị xóa, chúng đã bị ẩn đi"
       disabled_description: "Xóa các tút trong các chủ để được hiển thị"
-      enable: "Ẩn các tút bị xoá"
+      enable: "Ẩn các tút bị xóa"
       disable: "Xem các tút bị xóa"
     private_message_info:
       title: "Tin nhắn"
@@ -2280,7 +2280,7 @@ vi:
       remove_allowed_group: "Bạn thực sự muốn xóa %{name} từ tin nhắn này?"
       leave: "Rời nhóm"
       remove_group: "Xóa nhóm"
-      remove_user: "Xoá người dùng"
+      remove_user: "Xóa người dùng"
     email: "Email"
     username: "Tên người dùng"
     last_seen: "Đã xem"
@@ -2493,7 +2493,7 @@ vi:
     timezone_input:
       ambiguous_ist: "IST không rõ ràng, vui lòng chọn múi giờ cụ thể (ví dụ: Asia/Kolkata)"
     select_kit:
-      delete_item: "Xoá %{name}"
+      delete_item: "Xóa %{name}"
       filter_by: "Lọc theo: %{name}"
       select_to_filter: "Chọn một giá trị để lọc"
       default_header_text: Chọn…
@@ -2737,7 +2737,7 @@ vi:
         zoom_in: "Tăng kích thước hình ảnh"
         remove: "Xóa hình ảnh"
       image_scale_button: "Thu nhỏ hình ảnh xuống %{percent}%"
-      delete_image_button: Xoá ảnh
+      delete_image_button: Xóa ảnh
       toggle_image_grid: Bật/tắt lưới hình ảnh
       link_toolbar:
         edit: "Sửa link"
@@ -3029,7 +3029,7 @@ vi:
         review_queue: "Hàng đợi xem lại"
         review_queue_with_unread:
           other: "Hàng đợi xem lại - %{count} mục cần xem xét"
-        other_notifications: "Các thông báo khác"
+        other_notifications: "Thông báo khác"
         other_notifications_with_unread:
           other: "Các thông báo khác - %{count} thông báo chưa đọc"
         profile: "Hồ sơ"
@@ -3292,7 +3292,7 @@ vi:
         save: "Đặt hẹn giờ"
         num_of_hours: "Số giờ:"
         num_of_days: "Số ngày:"
-        remove: "Xoá bộ đếm"
+        remove: "Xóa bộ đếm"
         publish_to: "Xuất bản tới:"
         when: "Khi:"
         time_frame_required: "Vui lòng chọn một khung thời gian"
@@ -3342,11 +3342,11 @@ vi:
         replies_short: "%{current} / %{total}"
       progress:
         title: tiến trình của chủ đề
-        jump_prompt: "nhảy đến…"
+        jump_prompt: "Nhảy đến…"
         jump_prompt_of:
-          other: "của %{count} tút"
+          other: "trong %{count} tút"
         jump_prompt_long: "Nhảy đến…"
-        jump_prompt_to_date: "đến nay"
+        jump_prompt_to_date: "Ngày"
         jump_prompt_or: "hoặc"
       notifications:
         title: Thay đổi tần suất nhận thông báo về chủ đề này
@@ -3377,10 +3377,10 @@ vi:
           title: "Giám sát"
           description: "Thông báo về từng trả lời mới trong chủ đề này và hiện số lượng trả lời mới."
         tracking_pm:
-          title: "Đang theo dõi"
+          title: "Theo dõi"
           description: "Hiện số lượng trả lời mới trong tin nhắn này và nhận thông báo."
         tracking:
-          title: "Đang theo dõi"
+          title: "Theo dõi"
           description: "Hiện số lượng trả lời mới trong chủ đề này và nhận thông báo."
         regular:
           title: "Bình thường"
@@ -3389,11 +3389,11 @@ vi:
           title: "Bình thường"
           description: "Thông báo nếu ai đó nhắc đến @bạn hoặc trả lời bạn."
         muted_pm:
-          title: "Đã phớt lờ"
-          description: "Không nhận thông báo về tin nhắn này."
+          title: "Phớt lờ"
+          description: "Bạn sẽ không nhận thông báo về chủ đề này."
         muted:
           title: "Phớt lờ"
-          description: "Không nhận thông báo về chủ đề này và ẩn nó trong những tút mới nhất"
+          description: "Không nhận thông báo về chủ đề này và ẩn nó trong những mục gần đây nhất."
       actions:
         title: "Hành động"
         recover: "Không-Xóa Chủ Đề Này"
@@ -3758,7 +3758,7 @@ vi:
         delete_topic_confirm_modal_yes: "Có, xóa chủ đề này"
         delete_topic_confirm_modal_no: "Không, giữ chủ đề này"
         delete_topic_error: "Đã xảy ra lỗi khi xóa chủ đề này"
-        delete_topic: "xóa chủ đề"
+        delete_topic: "Xóa chủ đề này"
         add_post_notice: "Thêm thông báo chính thức…"
         change_post_notice: "Thay đổi thông báo chính thức…"
         delete_post_notice: "Xóa thông báo chính thức"
@@ -3843,13 +3843,13 @@ vi:
             description: "Xóa đánh dấu khỏi hồ sơ của bạn và dừng tất cả lời nhắc"
           edit_bookmark:
             name: "Chỉnh sửa đánh dấu"
-            description: "Chỉnh sửa tên đánh dấu hoặc thay đổi ngày giờ nhắc nhở"
+            description: "Đổi tên hoặc cập nhật ngày giờ nhắc nhở"
           clear_bookmark_reminder:
             name: "Xóa lời nhắc"
             description: "Xóa ngày giờ nhắc nhở"
           pin_bookmark:
             name: "Ghim đánh dấu"
-            description: "Ghim đánh dấu Điều này sẽ làm cho nó xuất hiện ở đầu danh sách đánh dấu của bạn."
+            description: "Nó sẽ xuất hiện ở đầu danh sách đánh dấu của bạn."
           unpin_bookmark:
             name: "Bỏ ghim đánh dấu"
             description: "Bỏ ghim đánh dấu. Nó sẽ không còn xuất hiện ở đầu danh sách đánh dấu của bạn nữa."
@@ -3883,7 +3883,7 @@ vi:
         name: "Tên"
         description: "Mô tả"
         add: "Thêm bản dịch mới"
-        remove: "Xoá"
+        remove: "Xóa"
         hint: "Hiện tại chưa có bản dịch cho tên chuyên mục này. Nhấn vào 'Thêm bản dịch mới' bên dưới để bắt đầu thêm."
       tags_allowed_tags: "Hạn chế các thẻ này trong chuyên mục '%{categoryName}':"
       tags_allowed_tags_new_category: "Hạn chế các thẻ này trong danh mục này:"
@@ -3989,20 +3989,20 @@ vi:
       notifications:
         title: "thay đổi mức thông báo cho danh mục này"
         watching:
-          title: "Đang giám sát"
-          description: "Bạn sẽ tự động xem tất cả các chủ đề trong danh mục này. Bạn sẽ được thông báo về mọi tút mới trong mọi chủ đề và số lượng các câu trả lời mới sẽ được hiển thị."
+          title: "Giám sát"
+          description: "Bạn sẽ tự động giám sát tất cả chủ đề trong các chuyên mục này. Bạn sẽ nhận được thông báo về tất cả tút và chủ đề mới, và số lượng tút mới cũng sẽ hiển thị kế bên chủ đề."
         watching_first_post:
           title: "Xem tút đầu tiên"
-          description: "Bạn sẽ được thông báo về các chủ đề mới trong danh mục này nhưng không phải trả lời các chủ đề."
+          description: "Bạn sẽ được thông báo về các chủ đề mới trong chuyên mục này, nhưng không phải các câu trả lời của chúng."
         tracking:
-          title: "Đang theo dõi"
-          description: "Bạn sẽ tự động theo dõi tất cả các chủ đề trong danh mục này. Bạn sẽ được thông báo nếu ai đó đề cập đến @name của bạn hoặc trả lời cho bạn và một số câu trả lời mới sẽ được hiển thị."
+          title: "Theo dõi"
+          description: "Bạn sẽ tự động theo dõi tất cả chủ đề trong chuyên mục này. Bạn sẽ được thông báo nếu ai đó @bạn hoặc trả lời bạn, và số lượng tút mới cũng sẽ hiển thị kế bên chủ đề."
         regular:
           title: "Bình thường"
-          description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn"
+          description: "Bạn sẽ được thông báo nếu ai đó nhắc đến @bạn hoặc trả lời bạn."
         muted:
-          title: "Đã phớt lờ"
-          description: "Bạn sẽ không bao giờ được thông báo về bất cứ điều gì về các chủ đề mới trong danh mục này và chúng sẽ không xuất hiện trong mới nhất."
+          title: "Phớt lờ"
+          description: "Bạn sẽ không nhận thông báo về bất kỳ chủ đề mới nào trong chuyên mục này, và chúng sẽ không xuất hiện trong mục mới nhất."
       search_priority:
         label: "Ưu tiên tìm kiếm"
         options:
@@ -4036,7 +4036,7 @@ vi:
         email: "Email"
       list_filters:
         all: "tất cả các chủ đề"
-        none: "không chuyên mục phụ"
+        none: "không có chuyên mục phụ"
       colors_disabled: "Bạn không thể chọn màu vì bạn không có kiểu danh mục nào."
     anonymous_flagging:
       title: "Báo cáo nội dung bất hợp pháp"
@@ -4138,7 +4138,7 @@ vi:
         title: "Đã ghim"
         help: "Chủ đề này sẽ được hiển thị ở trên đầu chuyên mục của nó"
       hot:
-        title: "Nổi bật"
+        title: "Hot"
       unlisted:
         help: "Chủ đề này không công khai; nó sẽ không hiển thị trong danh sách chủ đề và chỉ có thể được truy cập thông qua link trực tiếp. %{unlistedReason}"
       personal_message:
@@ -4196,7 +4196,7 @@ vi:
         button:
           label: "Lọc"
       latest:
-        title: "Vừa trả lời"
+        title: "Gần đây"
         title_with_count:
           other: "Mới nhất (%{count})"
         help: "Những chủ đề có trả lời gần đây"
@@ -4219,8 +4219,8 @@ vi:
         lower_title: "không nhìn thấy"
         help: "chủ đề mới và chủ đề bạn hiện đang xem hoặc theo dõi với các tút chưa đọc"
       hot:
-        title: "Nổi bật"
-        lower_title: "Nổi bật"
+        title: "Hot"
+        lower_title: "Hot"
         help: "Top các chủ đề gần đây"
       new:
         lower_title_with_count:
@@ -4253,7 +4253,7 @@ vi:
           other: "%{categoryName} (%{count})"
         help: "Những chủ đề mới nhất trong chuyên mục%{categoryName} "
       top:
-        title: "Hàng đầu"
+        title: "Top"
         help: "Các chủ đề tích cực nhất trong năm, tháng, tuần, hoặc ngày trước"
         all:
           title: "Từ trước tới nay"
@@ -4310,13 +4310,13 @@ vi:
         new: "%{shortcut} Mới"
         unread: "%{shortcut} Chưa đọc"
         categories: "%{shortcut} Chuyên mục"
-        top: "%{shortcut} Trên"
+        top: "%{shortcut} Top"
         bookmarks: "%{shortcut} Đánh dấu"
         profile: "%{shortcut} Hồ sơ"
         messages: "%{shortcut} Tin nhắn"
         drafts: "%{shortcut} Bản nháp"
         next: "%{shortcut} Chủ đề Tiếp theo"
-        previous: "%{shortcut} Chủ đề trước"
+        previous: "%{shortcut} Chủ đề Trước đó"
       navigation:
         title: "Điều hướng"
         jump: "%{shortcut} Đến tút #"
@@ -4330,11 +4330,11 @@ vi:
         create: "%{shortcut} Tạo mới chủ đề"
         notifications: "%{shortcut} Mở thông báo"
         hamburger_menu: "%{shortcut} Mở menu điều hướng"
-        user_profile_menu: "%{shortcut} Mở trình đơn thành viên"
-        show_incoming_updated_topics: "%{shortcut} Show updated topics"
+        user_profile_menu: "%{shortcut} Mở menu thành viên"
+        show_incoming_updated_topics: "%{shortcut} Hiển thị các chủ đề đã cập nhật"
         search: "%{shortcut} Tìm kiếm"
         filter_sidebar: "%{shortcut} Lọc thanh bên"
-        help: "%{shortcut} Mở trợ giúp bàn phím"
+        help: "%{shortcut} Mở trợ giúp phím tắt"
         toggle_bulk_select: "%{shortcut} Bật/tắt chọn nhiều mục"
         dismiss: "%{shortcut} Bỏ qua các chủ đề đã chọn"
         x: "%{shortcut} Bật/tắt chọn (trong chế độ chọn hàng loạt)"
@@ -4355,12 +4355,12 @@ vi:
         heading_2: "%{shortcut} Tiêu đề 2"
         heading_3: "%{shortcut} Tiêu đề 3"
         heading_4: "%{shortcut} Tiêu đề 4"
-        toggle_direction: "%{shortcut} Chuyển lề"
+        toggle_direction: "%{shortcut} Đổi lề"
         ordered_list: "%{shortcut} Danh sách có thứ tự"
         unordered_list: "%{shortcut} Danh sách không có thứ tự"
         blockquote: "%{shortcut} Trích dẫn"
       bookmarks:
-        title: "Đang đánh dấu"
+        title: "Đánh dấu"
         enter: "%{shortcut} Lưu và đóng"
         later_today: "%{shortcut} Cuối ngày hôm nay"
         later_this_week: "%{shortcut} Cuối tuần này"
@@ -4378,7 +4378,7 @@ vi:
         pin_unpin_topic: "%{shortcut} Ghim/Bỏ ghim"
         share_topic: "%{shortcut} Chia sẻ chủ đề"
         share_post: "%{shortcut} Chia sẻ tút"
-        reply_as_new_topic: "%{shortcut} Trả lời như là một liên kết đến bài viết"
+        reply_as_new_topic: "%{shortcut} Trả lời như là một liên kết đến tút"
         reply_topic: "%{shortcut} Trả lời chủ đề"
         reply_post: "%{shortcut} Trả lời tút"
         quote_post: "%{shortcut} Trích dẫn tút"
@@ -4404,7 +4404,7 @@ vi:
         title: "Quản trị"
         search_prev_next: "%{shortcut} Di chuyển lựa chọn lên/xuống"
         search_open: "%{shortcut} Mở tìm kiếm giao diện quản trị"
-        search_full_page: "%{shortcut} Mở trang quản trị toàn màn hình tìm kiếm"
+        search_full_page: "%{shortcut} Mở trang quản trị tìm kiếm toàn màn hình"
     badges:
       earned_n_times:
         other: "Đã giành được huy hiệu này %{count} lần"
@@ -4453,8 +4453,8 @@ vi:
       all_tags: "Tất cả thẻ"
       other_tags: "Các thẻ khác"
       selector_tags: "thẻ"
-      selector_no_tags: "Không thẻ"
-      selector_remove_filter: "bỏ đièu kiện lọc"
+      selector_no_tags: "không có thẻ"
+      selector_remove_filter: "bỏ điều kiện lọc"
       tags: "Thẻ"
       choose_for_topic: "Thẻ tùy chọn"
       choose_for_topic_required:
@@ -4480,7 +4480,7 @@ vi:
       add_synonyms_failed: "Không thể thêm các thẻ sau dưới dạng từ đồng nghĩa: <b>%{tag_names}</b>. Đảm bảo chúng không có từ đồng nghĩa và không phải từ đồng nghĩa của thẻ khác."
       remove_synonym: "Xóa từ đồng nghĩa"
       delete_synonym_confirm: 'Bạn có chắc chắn muốn xóa từ đồng nghĩa "%{tag_name}" không?'
-      delete_tag: "Xoá thẻ"
+      delete_tag: "Xóa thẻ"
       delete_confirm:
         other: "Bạn có chắc chắn muốn xóa thẻ này và xóa thẻ khỏi %{count} chủ đề mà thẻ được chỉ định không?"
       delete_confirm_no_topics: "Bạn có chắc chắn muốn xóa thẻ này không?"
@@ -4512,19 +4512,19 @@ vi:
         untagged_with_category: "%{filter} chủ đề chưa được gắn thẻ trong %{category}"
       notifications:
         watching:
-          title: "Đang giám sát"
-          description: "Bạn sẽ tự động xem tất cả các chủ đề có thẻ này. Bạn sẽ được thông báo về tất cả tút và chủ đề mới, với tút chưa đọc và các tút mới cũng sẽ xuất hiện bên cạnh chủ đề."
+          title: "Giám sát"
+          description: "Bạn sẽ tự động giám sát tất cả tút có chứa thẻ này. Bạn sẽ nhận được thông báo về tất cả các tút và chủ đề mới, và số lượng tút mới cũng sẽ hiển thị kế bên chủ đề."
         watching_first_post:
           title: "Xem tút đầu tiên"
           description: "Bạn sẽ được thông báo về các chủ đề mới trong thẻ này nhưng không có câu trả lời cho các chủ đề."
         tracking:
-          title: "Đang theo dõi"
-          description: "Bạn sẽ tự động theo dõi tất cả các chủ đề với thẻ này. Một số tút chưa đọc và tút mới sẽ xuất hiện bên cạnh chủ đề."
+          title: "Theo dõi"
+          description: "Bạn sẽ tự động theo dõi tất cả chủ đề có chứa thẻ này. Số lượng tút mới cũng sẽ hiển thị kế bên chủ đề."
         regular:
           title: "Bình thường"
-          description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @name của bạn hoặc trả lời tút của bạn."
+          description: "Bạn sẽ được thông báo nếu ai đó nhắc đến @bạn hoặc trả lời tút của bạn."
         muted:
-          title: "Đã phớt lờ"
+          title: "Phớt lờ"
           description: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới với thẻ này và chúng sẽ không xuất hiện trên tab chưa đọc của bạn."
       groups:
         back_btn: "Quay lại tất cả các thẻ"
@@ -4542,7 +4542,7 @@ vi:
         new_name: "Nhóm thẻ mới"
         name_placeholder: "Tên"
         save: "Lưu"
-        delete: "Xoá"
+        delete: "Xóa"
         confirm_delete: "Bạn có chắc chắn muốn xóa nhóm thẻ này không?"
         everyone_can_use: "Mọi người đều có thể sử dụng thẻ"
         usable_only_by_groups: "Tất cả mọi người đều có thể nhìn thấy thẻ, nhưng chỉ những nhóm sau mới có thể sử dụng chúng"
@@ -6644,7 +6644,7 @@ vi:
         topic_id: "ID Chủ đề"
         post_id: "ID Tút"
         category_id: "ID Chuyên mục"
-        delete: "Xoá"
+        delete: "Xóa"
         edit: "Sửa"
         save: "Lưu"
         screened_actions:
@@ -7311,7 +7311,7 @@ vi:
         preferences: "Thiết lập"
         save: "Lưu"
         edit: "Sửa"
-        delete: "Xoá"
+        delete: "Xóa"
         cancel: "Hủy"
         delete_confirm: "Bạn muốn xóa trường thành viên?"
         options: "Lựa chọn"
@@ -7718,7 +7718,7 @@ vi:
         unread: "Chưa đọc"
         top: "Top"
         latest: "Mới nhất"
-        hot: "Nổi bật"
+        hot: "Hot"
         categories: "Chuyên mục"
         unseen: "Không nhìn thấy"
         read: "Đọc"
