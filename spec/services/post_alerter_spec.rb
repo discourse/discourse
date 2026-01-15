@@ -577,6 +577,19 @@ RSpec.describe PostAlerter do
       expect { PostAlerter.post_edited(post) }.to change(evil_trout.notifications, :count).by(1)
     end
 
+    it "does not notify for users with existing mentioned notification on edit" do
+      post = Fabricate(:post, raw: '[quote="eviltRout, post:1"]whatup[/quote]', topic: topic)
+      Notification.create!(
+        topic: post.topic,
+        post_number: post.post_number,
+        read: false,
+        notification_type: Notification.types[:mentioned],
+        user: evil_trout,
+        data: { topic_title: "test topic" }.to_json,
+      )
+      expect { PostAlerter.post_edited(post) }.not_to change(evil_trout.notifications, :count)
+    end
+
     it "does not collapse quote notifications" do
       expect {
         2.times do
@@ -750,6 +763,21 @@ RSpec.describe PostAlerter do
       expect(user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(
         1,
       )
+    end
+
+    it "does not notify for users with existing mentioned notification on edit" do
+      linking_post
+      user.notifications.destroy_all
+
+      Notification.create!(
+        topic: linking_post.topic,
+        post_number: linking_post.post_number,
+        read: false,
+        notification_type: Notification.types[:mentioned],
+        user: user,
+        data: { topic_title: "test topic" }.to_json,
+      )
+      expect { PostAlerter.post_edited(linking_post) }.not_to change(user.notifications, :count)
     end
   end
 
