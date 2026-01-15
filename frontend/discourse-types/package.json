@@ -9,7 +9,6 @@
     "declarations",
     "external-types",
     "external-types.d.ts",
-    "package.json",
     "tsconfig-plugin.json"
   ],
   "scripts": {
