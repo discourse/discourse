@@ -5,7 +5,6 @@ import { defineConfig } from "vite";
 import mkcert from "vite-plugin-mkcert";
 import customProxy from "../custom-proxy";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options";
-import discourseTestSiteSettings from "./lib/site-settings-plugin";
 import maybeBabel from "./lib/vite-maybe-babel";
 
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
@@ -71,8 +70,6 @@ export default defineConfig(({ mode, command }) => {
       ember(),
 
       // classicEmberSupport(),
-
-      discourseTestSiteSettings(),
 
       maybeBabel({
         babelHelpers: "runtime",
