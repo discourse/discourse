@@ -50,6 +50,12 @@ export BASE="forum"
 # Useful for historical migrations or when email delivery should be suppressed until first login.
 # Set to "true" (case-insensitive) to enable.
 # export STAGE_IMPORTED_USERS="true"
+#
+# Optional: control when per-post subjects are written into imported replies.
+# When enabled (default), a reply subject is only added when it differs from the topic title,
+# to avoid repeating the same title in many posts.
+# When set to "false", the reply subject is always written above the post body.
+# export ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT="true"
 =end
 
 class ImportScripts::MylittleforumSQL < ImportScripts::Base
@@ -72,6 +78,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   QUIET = nil || ENV["VERBOSE"] == "TRUE"
   FORCE_HOSTNAME = nil || ENV["FORCE_HOSTNAME"]
   STAGE_IMPORTED_USERS = (ENV["STAGE_IMPORTED_USERS"] || "").strip.upcase == "TRUE"
+  ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT = (ENV["ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT"] || "true").strip.casecmp?("true")
 
   QUIET = true
 
@@ -396,22 +403,46 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     optional_youtube_column = youtube_available ? ", youtube_link as youtube" : ""
 
     batches(BATCH_SIZE) do |offset|
-      comments =
-        mysql_query(
-          "SELECT id as CommentID,
+
+		sql =
+        if ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT
+          "
+          SELECT p.id      as CommentID,
+                 p.tid     as DiscussionID,
+                 CASE
+                     WHEN p.subject <> t.subject THEN p.subject
+                 END       as Subject,
+                 p.text    as Body,
+                 p.time    as DateInserted
+                 #{optional_youtube_column},
+                 p.user_id as InsertUserID
+          FROM #{TABLE_PREFIX}entries p
+               JOIN #{TABLE_PREFIX}entries t ON p.tid = t.id
+          WHERE p.pid > 0
+            AND p.time > '#{IMPORT_AFTER}'
+          ORDER BY p.time ASC
+          LIMIT #{BATCH_SIZE}
+          OFFSET #{offset};
+          "
+        else
+          "
+          SELECT id as CommentID,
                 tid as DiscussionID,
-				subject as Subject,
+                subject as Subject,
                 text as Body,
-                time as DateInserted,
-				#{optional_youtube_column}
+                time as DateInserted
+                #{optional_youtube_column},
                 user_id as InsertUserID
-         FROM #{TABLE_PREFIX}entries
-         WHERE pid > 0
-	 AND time > '#{IMPORT_AFTER}'
-         ORDER BY time ASC
-         LIMIT #{BATCH_SIZE}
-         OFFSET #{offset};",
-        )
+          FROM #{TABLE_PREFIX}entries
+          WHERE pid > 0
+            AND time > '#{IMPORT_AFTER}'
+          ORDER BY time ASC
+          LIMIT #{BATCH_SIZE}
+          OFFSET #{offset};
+          "
+        end
+	
+    comments = mysql_query(sql)
 
       break if comments.size < 1
       if all_records_exist? :posts,
