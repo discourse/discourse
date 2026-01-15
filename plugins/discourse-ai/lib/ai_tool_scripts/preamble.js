@@ -128,7 +128,8 @@
  *    discourse.getTopic(topic_id): Retrieves details for a specific topic.
  *    Parameters:
  *      topic_id (number): The ID of the topic.
- *    Returns: Object (Topic details using ListableTopicSerializer structure) or null if not found/accessible.
+ *    Returns: Object (Topic details using ListableTopicSerializer structure, plus `tags`, `first_post_id`,
+ *             `category_id`, `category_name`, `category_slug`) or null if not found/accessible.
  *
  *    discourse.getUser(user_id_or_username): Retrieves details for a specific user.
  *    Parameters:
@@ -152,14 +153,20 @@
  *                       The sending user must have permission to post in the channel.
  *    Returns: { success: boolean, message_id?: number, message?: string, created_at?: string } or { error: string }
  *
- *    discourse.setTags(topic_id, tags, options?): Sets tags for a topic.
+ *    discourse.editTopic(topic_id, updates, options?): Edits topic properties (tags, category, visibility).
  *    Parameters:
  *      topic_id (number): The ID of the topic.
- *      tags (Array<string>): The list of tags to apply.
+ *      updates (Object): Properties to update (all optional):
+ *        tags (Array<string>): Tags to apply to the topic.
+ *        category (number | string): Category ID, name, or slug.
+ *        visible (boolean): true to list, false to unlist.
  *      options (Object, optional):
- *        append (boolean): If true, tags are added to existing ones.
  *        username (string): The username of the user performing the action.
- *    Returns: { success: boolean, tags: Array<string> }
+ *        silent (boolean): Skip notifications for category changes (default: false).
+ *        append (boolean): Append tags instead of replacing (default: false).
+ *    Returns: { success: boolean, topic: { id, category_id, category_name, category_slug, tags, visible, visibility_reason_id } }
+ *    Throws: Error if topic not found, permission denied, or operation fails.
+ *    Note: `discourse.setTags(topic_id, tags, options)` is available as a backwards-compatible alias.
  *
  *    discourse.editPost(post_id, raw, options?): Edits a post's content.
  *    Parameters:
