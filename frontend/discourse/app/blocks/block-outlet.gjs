@@ -797,64 +797,47 @@ function processBlockEntries({
 }
 
 /**
- * Creates the args object for a child block with reactive getters.
+ * Creates the args object for a child block with reactive getters for context args.
  *
- * System args (`children`, `_hierarchy`, `outletArgs`, `outletName`) are defined
- * as getters rather than direct properties. This enables `curryComponent` to
- * maintain a stable component reference while these values can update reactively
- * when accessed during rendering.
+ * Block args come from two sources:
+ * 1. **Entry args** (`entryArgs`) - Defined in layout entries by theme/plugin authors.
+ *    These are spread directly onto the block args object.
+ * 2. **Context args** (`contextArgs`) - Framework-provided values that describe the
+ *    rendering context: where the block is rendered (`outletName`), what data is
+ *    available (`outletArgs`), and structural info (`children`, `_hierarchy`).
  *
- * @param {Object} args - User-provided args from the layout entry.
- * @param {Array<Object>|undefined} children - Nested children configs.
- * @param {string} hierarchy - The hierarchy path for this child block.
- * @param {Object} outletArgs - Outlet args to pass through to the block.
- * @param {string} outletName - The outlet name for this block.
- * @param {Object} [extra] - Additional properties to include (e.g., { classNames }).
- * @returns {Object} The complete args object with reactive getters for system args.
+ * Context args are defined as getters rather than direct properties. This allows
+ * `curryComponent` to maintain a stable component identity while enabling reactive
+ * updates when the getter values change. Without getters, changing any arg would
+ * require creating a new curried component, breaking Ember's identity-based rendering.
+ *
+ * @param {Object} entryArgs - User-provided args from the layout entry.
+ * @param {Object} contextArgs - Rendering context to define as reactive getters. Each
+ *   key becomes an enumerable getter property on the returned args object. Common
+ *   context args include:
+ *   - `children` - Nested children block configs (for container blocks)
+ *   - `_hierarchy` - Debug hierarchy path for developer tools
+ *   - `outletArgs` - Args passed from the parent outlet
+ *   - `outletName` - The outlet identifier where this block is rendered
+ * @returns {Object} The merged args object ready for `curryComponent`.
  */
-function createBlockArgsWithReactiveGetters(
-  args,
-  children,
-  hierarchy,
-  outletArgs,
-  outletName,
-  extra = {}
-) {
+function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
   const blockArgs = {
-    ...args,
-    $block$: __BLOCK_CONTAINER_FLAG, // Pass the secret symbol to authorize child block instantiation
-    ...extra,
+    ...entryArgs,
+    $block$: __BLOCK_CONTAINER_FLAG,
   };
 
-  // Define reactive getters for system args. Using getters instead of direct
-  // property assignment allows curryComponent to maintain a stable component
-  // reference while these values can update reactively when accessed.
-  Object.defineProperties(blockArgs, {
-    children: {
+  // Dynamically define reactive getters for each context arg
+  const propertyDescriptors = {};
+  for (const [key, value] of Object.entries(contextArgs)) {
+    propertyDescriptors[key] = {
       get() {
-        return children;
+        return value;
       },
       enumerable: true,
-    },
-    _hierarchy: {
-      get() {
-        return hierarchy;
-      },
-      enumerable: true,
-    },
-    outletArgs: {
-      get() {
-        return outletArgs;
-      },
-      enumerable: true,
-    },
-    outletName: {
-      get() {
-        return outletName;
-      },
-      enumerable: true,
-    },
-  });
+    };
+  }
+  Object.defineProperties(blockArgs, propertyDescriptors);
 
   return blockArgs;
 }
@@ -919,13 +902,14 @@ function createChildBlock(entry, owner, debugContext = {}) {
 
   // All blocks use the same arg structure - classNames are handled by wrappers.
   // Pass containerPath so nested containers know their full path for debug logging.
-  const blockArgs = createBlockArgsWithReactiveGetters(
-    argsWithDefaults,
-    nestedChildren,
-    isContainer ? debugContext.containerPath : debugContext.displayHierarchy,
-    debugContext.outletArgs,
-    debugContext.outletName
-  );
+  const blockArgs = createBlockArgsWithReactiveGetters(argsWithDefaults, {
+    children: nestedChildren,
+    _hierarchy: isContainer
+      ? debugContext.containerPath
+      : debugContext.displayHierarchy,
+    outletArgs: debugContext.outletArgs,
+    outletName: debugContext.outletName,
+  });
 
   // Curry the component with pre-bound args so it can be rendered
   // without knowing its configuration details
