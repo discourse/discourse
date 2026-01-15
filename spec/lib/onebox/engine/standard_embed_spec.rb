@@ -101,6 +101,16 @@ RSpec.describe Onebox::Engine::StandardEmbed do
       expect(instance.raw).to eq({ description: "description" })
     end
 
+    it "skips oembed dimensions for rich embeds" do
+      Onebox::Helpers.stubs(fetch_html_doc: nil)
+      Onebox::Oembed
+        .any_instance
+        .stubs(:data)
+        .returns({ type: "rich", width: 600, height: 338, title: "Title" })
+
+      expect(instance.raw).to eq({ type: "rich", title: "Title" })
+    end
+
     it "does not override data with json_ld data" do
       Onebox::Helpers.stubs(fetch_html_doc: nil)
       Onebox::JsonLd.any_instance.stubs(:data).returns({ title: "i do not want to override" })
