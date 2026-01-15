@@ -378,8 +378,7 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
-      delete data.remove_reviewable_ids;
+    if (data.remove_reviewable_ids?.includes(this.reviewable.id)) {
       this._performResult(data, {}, this.reviewable);
     }
   }

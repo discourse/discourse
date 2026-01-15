@@ -227,19 +227,42 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
 
       context "with delete_user" do
-        it "deletes the user and rejects the post" do
+        it "deletes the user and rejects all related reviewables" do
           other_reviewable =
-            Fabricate(:reviewable_queued_post, created_by: reviewable.target_created_by)
+            Fabricate(:reviewable_queued_post, target_created_by: reviewable.target_created_by)
+          user_id = reviewable.target_created_by_id
 
           result = reviewable.perform(moderator, :delete_user)
+
           expect(result.success?).to eq(true)
-          expect(User.find_by(id: reviewable.target_created_by)).to be_blank
+          expect(User.find_by(id: user_id)).to be_nil
+          expect(result.remove_reviewable_ids).to contain_exactly(reviewable.id, other_reviewable.id)
 
-          expect(result.remove_reviewable_ids).to include(reviewable.id)
-          expect(result.remove_reviewable_ids).to include(other_reviewable.id)
+          expect(reviewable.reload.status).to eq("rejected")
+          expect(reviewable.target_created_by_id).to be_nil
 
-          expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_present
-          expect(ReviewableQueuedPost.where(id: other_reviewable.id)).to be_blank
+          expect(other_reviewable.reload.status).to eq("rejected")
+          expect(other_reviewable.target_created_by_id).to be_nil
+        end
+      end
+
+      context "with delete_and_block_user" do
+        it "deletes the user and rejects all related reviewables" do
+          other_reviewable =
+            Fabricate(:reviewable_queued_post, target_created_by: reviewable.target_created_by)
+          user_id = reviewable.target_created_by_id
+
+          result = reviewable.perform(moderator, :delete_and_block_user)
+
+          expect(result.success?).to eq(true)
+          expect(User.find_by(id: user_id)).to be_nil
+          expect(result.remove_reviewable_ids).to contain_exactly(reviewable.id, other_reviewable.id)
+
+          expect(reviewable.reload.status).to eq("rejected")
+          expect(reviewable.target_created_by_id).to be_nil
+
+          expect(other_reviewable.reload.status).to eq("rejected")
+          expect(other_reviewable.target_created_by_id).to be_nil
         end
       end
     end

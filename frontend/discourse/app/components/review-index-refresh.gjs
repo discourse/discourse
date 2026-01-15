@@ -43,6 +43,7 @@ export default class ReviewIndexRefresh extends Component {
                   <ReviewableItemRefresh
                     @reviewable={{r}}
                     @showHelp={{false}}
+                    @remove={{@controller.remove}}
                   />
                 {{else}}
                   <ReviewableItem
