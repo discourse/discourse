@@ -269,8 +269,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
       '@jsquash/resize':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       '@messageformat/core':
         specifier: ^3.4.0
         version: 3.4.0
@@ -2487,8 +2487,8 @@ packages:
   '@jsquash/jpeg@1.6.0':
     resolution: {integrity: sha512-zwN46Awh1VM6gXlIcALwb5WzqK5H2e6+Awcs1QP8AvS8ohsK/sbE4esvmH4jhlhW7+CgiUUww66vg0aTnlSIMA==}
 
-  '@jsquash/resize@2.1.0':
-    resolution: {integrity: sha512-UxF45pe5a84GrleHichsnGHyFAJhOu4Ms9L1UQYXhhmDifRm4U3pMEzgly+m3xDe+h4XZyDlpr9f8FBB1LZ+LA==}
+  '@jsquash/resize@2.1.1':
+    resolution: {integrity: sha512-0R5UL1ZLHUT+carjVikcE1QfA+kfNQ2YamYyGVRmhfh4zttU5EY3bQBGxPIPtY2xIAw1P4Kgyxm2xrceRw1r2w==}
 
   '@keyv/bigmap@1.3.0':
     resolution: {integrity: sha512-KT01GjzV6AQD5+IYrcpoYLkCu1Jod3nau1Z7EsEuViO3TZGRacSbO9MfHmbJ1WaOXFtWLxPVj169cn2WNKPkIg==}
@@ -11204,7 +11204,7 @@ snapshots:
 
   '@jsquash/jpeg@1.6.0': {}
 
-  '@jsquash/resize@2.1.0': {}
+  '@jsquash/resize@2.1.1': {}
 
   '@keyv/bigmap@1.3.0(keyv@5.5.5)':
     dependencies:
