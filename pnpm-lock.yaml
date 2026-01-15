@@ -680,52 +680,6 @@ importers:
         version: 5.99.9(@swc/core@1.15.7)(esbuild@0.25.12)
 
   frontend/discourse-types:
-    dependencies:
-      '@ember-compat/tracked-built-ins':
-        specifier: ^0.9.1
-        version: 0.9.1(patch_hash=febdd1f1d24565f6f3be7747fd89cbc86a4476e2836e383610c6bc430436a842)
-      '@ember/render-modifiers':
-        specifier: ^3.0.0
-        version: 3.0.0(@glint/template@1.7.3)(ember-source@6.6.0(patch_hash=fce06f88d4efb23d95b8bcd197505f279346ed295e4daea129961c9f263cdeed)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      '@ember/string':
-        specifier: ^4.0.1
-        version: 4.0.1
-      '@ember/test-helpers':
-        specifier: ^5.4.1
-        version: 5.4.1(@babel/core@7.28.5)(@glint/template@1.7.3)
-      '@floating-ui/dom':
-        specifier: ^1.7.4
-        version: 1.7.4
-      '@glimmer/component':
-        specifier: ^2.0.0
-        version: 2.0.0
-      '@glimmer/syntax':
-        specifier: 0.93.1
-        version: 0.93.1
-      '@glint/ember-tsc':
-        specifier: ^1.0.8
-        version: 1.0.8(typescript@5.9.3)
-      '@glint/template':
-        specifier: ^1.7.3
-        version: 1.7.3
-      '@types/qunit':
-        specifier: ^2.19.13
-        version: 2.19.13
-      '@types/rsvp':
-        specifier: ^4.0.9
-        version: 4.0.9
-      ember-modifier:
-        specifier: ^4.2.2
-        version: 4.2.2(@babel/core@7.28.5)
-      ember-qunit:
-        specifier: ^9.0.4
-        version: 9.0.4(@ember/test-helpers@5.4.1(@babel/core@7.28.5)(@glint/template@1.7.3))(@glint/template@1.7.3)(qunit@2.25.0)
-      ember-source:
-        specifier: ~6.6.0
-        version: 6.6.0(patch_hash=fce06f88d4efb23d95b8bcd197505f279346ed295e4daea129961c9f263cdeed)(@glimmer/component@2.0.0)(rsvp@4.8.5)
-      qunit:
-        specifier: ^2.25.0
-        version: 2.25.0
     devDependencies:
       compare-versions:
         specifier: ^6.1.1
