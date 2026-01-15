@@ -38,6 +38,29 @@ module.exports = {
         regenerator: false,
       },
     ],
+    [
+      require.resolve("babel-plugin-debug-macros"),
+      {
+        flags: [
+          {
+            source: "@glimmer/env",
+            flags: {
+              DEBUG: process.env.NODE_ENV === "development",
+              CI: !!process.env.CI,
+            },
+          },
+        ],
+        debugTools: {
+          isDebug: process.env.NODE_ENV === "development",
+          source: "@ember/debug",
+          assertPredicateIndex: 1,
+        },
+        externalizeHelpers: {
+          module: "@ember/debug",
+        },
+      },
+      "@ember/debug stripping",
+    ],
     ...macros.babelMacros,
   ],
 
