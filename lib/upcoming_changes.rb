@@ -16,6 +16,10 @@ module UpcomingChanges
       ::Enum.new(experimental: 0, alpha: 100, beta: 200, stable: 300, permanent: 500, never: 9999)
   end
 
+  def self.impact_roles
+    @impact_roles ||= %i[admins moderators staff all_members developers]
+  end
+
   def self.image_exists?(change_setting_name)
     File.exist?(File.join(Rails.public_path, self.image_path(change_setting_name)))
   end
