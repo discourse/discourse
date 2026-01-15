@@ -263,26 +263,12 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           username: user["username"],
           name: user["Name"],
           staged: STAGE_IMPORTED_USERS,
-          created_at:
-            (
-              if user["DateInserted"] == nil
-                0
-              else
-                Time.zone.at(user["DateInserted"])
-              end
-            ),
+          created_at: user["DateInserted"] == nil ? 0 : Time.zone.at(user["DateInserted"]),
           bio_raw: user["bio_raw"],
           registration_ip_address: user["InsertIPAddress"],
           website: user["user_hp"],
           password: user["password"],
-          last_seen_at:
-            (
-              if user["DateLastActive"] == nil
-                0
-              else
-                Time.zone.at(user["DateLastActive"])
-              end
-            ),
+          last_seen_at: user["DateLastActive"] == nil ? 0 : Time.zone.at(user["DateLastActive"]),
           location: user["Location"],
           admin: user["user_type"] == "admin",
           moderator: user["user_type"] == "mod",
@@ -823,7 +809,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   end
 
   def load_upload_map(path)
-    File.exist?(path) ? JSON.parse(File.read(path)) : {}
+    if File.exist?(path)
+      JSON.parse(File.read(path))
+    else
+      {}
+    end
   rescue => e
     print_warning("Could not read upload map at #{path}: #{e.message}")
     {}
