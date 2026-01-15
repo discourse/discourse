@@ -70,6 +70,7 @@
   --topic-list-item-background-color--visited: var(--secondary);
   --list-container-padding-x: 0em;
   --d-topic-list-header-font-size: initial;
+  --skip-links-offset: -75px;
 }
 
 // Animation Keyframes
@@ -1094,7 +1095,6 @@ form {
 }
 
 #skip-links__container {
-  --skip-links-offset: -75px;
   position: fixed;
   top: var(--skip-links-offset);
   z-index: z("header") + 1;
