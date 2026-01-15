@@ -480,6 +480,10 @@ export class I18n {
     if (localeData.extra?.wizard_js) {
       this.#loadExtra(localeData.extra.wizard_js);
     }
+
+    if (localeData.theme) {
+      this.#loadTheme(localeData.theme);
+    }
   }
 
   #loadMessageFormatData(callback) {
@@ -498,6 +502,17 @@ export class I18n {
     for (const [locale, data] of Object.entries(extras)) {
       this.extras[locale] ??= {};
       Object.assign(this.extras[locale], data);
+    }
+  }
+
+  #loadTheme(themeTranslations) {
+    for (const [themeId, data] of Object.entries(themeTranslations)) {
+      for (const [lang, langData] of Object.entries(data)) {
+        this.translations[lang] ??= {};
+        this.translations[lang].js ??= {};
+        this.translations[lang].js.theme_translations ??= {};
+        this.translations[lang].js.theme_translations[themeId] = langData;
+      }
     }
   }
 }
