@@ -112,16 +112,10 @@ id:
           title: "Hapus Pesan"
           description: "Hapus pesan sehingga pengguna tidak dapat melihatnya."
         delete_and_agree:
-          title: "Abaikan Penanda dan Hapus Pesan"
           description: "Abaikan penanda tersebut dengan menghapusnya dari antrean dan menghapus pesannya."
         disagree_and_restore:
           title: "Tidak Setuju dan Pulihkan Pesan"
           description: "Pulihkan pesan agar semua pengguna dapat melihatnya."
-        disagree:
-          title: "Tidak setuju"
-        ignore:
-          title: "Tidak Melakukan Apapun"
-          description: "Abaikan penanda tersebut dengan menghapusnya dari antrean tanpa mengambil tindakan apa pun."
       direct_messages:
         transcript_title: "Transkrip pesan sebelumnya di %{channel_name}"
         transcript_body: "Untuk memberi Anda lebih banyak konteks, kami menyertakan transkrip pesan sebelumnya dalam percakapan ini (hingga sepuluh):\n\n%{transcript}"
@@ -209,10 +203,8 @@ id:
         other: "Lihat %{count} pesan"
       view_more:
         other: "Lihat %{count} pesan lagi"
-      your_chat_settings: "preferensi frekuensi obrolan email"
   unsubscribe:
     chat_summary:
-      select_title: "Setel frekuensi email ringkasan obrolan ke:"
       never: Tidak pernah
       when_away: Hanya saat pergi
   category:

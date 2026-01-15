@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
@@ -5,6 +6,7 @@ import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import VersionCheck from "discourse/admin/models/version-check";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 
 const PROBLEMS_CHECK_MINUTES = 1;
 
@@ -12,6 +14,10 @@ export default class AdminDashboardController extends Controller {
   @service router;
   @service siteSettings;
   @controller("exception") exceptionController;
+
+  @tracked loadingProblems = false;
+  @tracked problemsFetchedAt;
+  @trackedArray problems;
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -89,15 +95,18 @@ export default class AdminDashboardController extends Controller {
     }
   }
 
-  _loadProblems() {
+  async _loadProblems() {
     this.setProperties({
       loadingProblems: true,
       problemsFetchedAt: new Date(),
     });
 
-    AdminDashboard.fetchProblems()
-      .then((model) => this.set("problems", model.problems))
-      .finally(() => this.set("loadingProblems", false));
+    try {
+      const model = await AdminDashboard.fetchProblems();
+      this.problems = model.problems;
+    } finally {
+      this.loadingProblems = false;
+    }
   }
 
   @discourseComputed("problemsFetchedAt")

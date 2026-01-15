@@ -81,8 +81,7 @@ export default class AiPersonaResponseFormatEditor extends Component {
       <div class="ai-persona-editor__response-format">
         {{#if (gt @data.response_format.length 0)}}
           <pre class="ai-persona-editor__response-format-pre">
-            <code
-            >{{this.displayJSON}}</code>
+            <code>{{this.displayJSON}}</code>
           </pre>
         {{else}}
           <div class="ai-persona-editor__response-format-none">

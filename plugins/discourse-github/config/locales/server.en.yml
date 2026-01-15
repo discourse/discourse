@@ -6,6 +6,8 @@ en:
     github_linkback_access_token: 'A valid access token for the user who will post the linkback and for counting commits/contributions to grant badges. See <a href="https://meta.discourse.org/t/99895">here</a> for instructions on how to get a token.'
     github_linkback_maximum_links: "Maximum number of linkbacks to create from one single post. When a post contains more links, none is created."
     github_permalinks_enabled: "Enable GitHub permalink overwrites"
+    github_pr_status_enabled: "Show GitHub pull request status on oneboxes (draft, open, approved, merged, closed)"
+    github_webhook_secret: "Secret token for GitHub webhook signature verification. Configure this value in your GitHub webhook settings."
     github_permalinks_exclude: "Filename or directory that should be excluded from permalink overwrites. Provide only filename or full path: user/repository/optional-directory/filename"
     github_badges_enabled: "Enable GitHub badges"
     github_badges_repos: "URLs of the GitHub repos to scan for contributions and commits"

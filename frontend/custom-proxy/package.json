@@ -18,8 +18,8 @@
   },
   "devDependencies": {
     "clean-base-url": "^1.0.0",
-    "express": "^5.1.0",
-    "glob": "^11.0.3",
+    "express": "^5.2.1",
+    "glob": "^13.0.0",
     "html-entities": "^2.6.0",
     "html-rewriter-wasm": "^0.4.1",
     "node-fetch": "^3.3.2"
@@ -28,6 +28,6 @@
     "node": ">= 18",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^9"
+    "pnpm": "^10"
   }
 }

@@ -51,6 +51,7 @@ id:
         add: "Menambahkan"
         close_channel: "Tutup kanal"
         open_channel: "Buka kanal"
+        notification_settings_context: "Pemberitahuan"
         join: "Gabung"
         leave: "Keluar"
       channels_list_popup:
@@ -167,6 +168,7 @@ id:
           create_export: "Buat ekspor"
           export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       search:
+        short_title: Cari
         sort:
           latest: "Terbaru"
       direct_messages:

@@ -380,8 +380,8 @@ class UserMerger
       :post_actions,
       conditions: [
         "x.post_id = y.post_id",
-        "x.post_action_type_id = y.post_action_type_id",
         "x.targets_topic = y.targets_topic",
+        "x.post_action_type_id = y.post_action_type_id OR (x.post_action_type_id IN (3,4,7,8) AND y.post_action_type_id IN (3,4,7,8))",
       ],
     )
 

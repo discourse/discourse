@@ -11,11 +11,19 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import { createPopper } from "@popperjs/core";
+import {
+  autoUpdate,
+  computePosition,
+  flip,
+  hide,
+  limitShift,
+  offset,
+  shift,
+  size,
+} from "@floating-ui/dom";
 import { Promise } from "rsvp";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
-import { bind as bindDecorator } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
@@ -36,6 +44,7 @@ import SelectedName from "./selected-name";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
+export const FILTER_VISIBILITY_THRESHOLD = 10;
 
 function isDocumentRTL() {
   return document.documentElement.classList.contains("rtl");
@@ -50,6 +59,11 @@ function concatProtoProperty(target, key, value) {
     ...makeArray(target.prototype[key]),
     ...makeArray(value),
   ];
+}
+
+function roundByDPR(value) {
+  const dpr = window.devicePixelRatio || 1;
+  return Math.round(value * dpr) / dpr;
 }
 
 /**
@@ -306,7 +320,11 @@ export default class SelectKit extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    this.appEvents.on("keyboard-visibility-change", this, this._updatePopper);
+    this.appEvents.on(
+      "keyboard-visibility-change",
+      this,
+      this.updateFloatingUiPosition
+    );
 
     if (this.selectKit.options.expandedOnInsert) {
       next(() => {
@@ -325,12 +343,13 @@ export default class SelectKit extends Component {
 
     this._cancelSearch();
 
-    this.appEvents.off("keyboard-visibility-change", this, this._updatePopper);
+    this.appEvents.off(
+      "keyboard-visibility-change",
+      this,
+      this.updateFloatingUiPosition
+    );
 
-    if (this.popper) {
-      this.popper.destroy();
-      this.popper = null;
-    }
+    this.cleanupFloatingUi?.();
   }
 
   didReceiveAttrs() {
@@ -400,7 +419,7 @@ export default class SelectKit extends Component {
     return (
       this.selectKit.filter &&
       this.options.autoFilterable &&
-      this.content.length > 15
+      this.content.length >= FILTER_VISIBILITY_THRESHOLD
     );
   }
 
@@ -449,8 +468,6 @@ export default class SelectKit extends Component {
     if (!this.errorsCollection.includes(error)) {
       this.errorsCollection.push(error);
     }
-
-    this._safeAfterRender(() => this._updatePopper());
   }
 
   clearErrors() {
@@ -484,8 +501,6 @@ export default class SelectKit extends Component {
   }
 
   _onInput(event) {
-    this._updatePopper();
-
     if (this._searchPromise) {
       cancel(this._searchPromise);
     }
@@ -553,7 +568,6 @@ export default class SelectKit extends Component {
         if (this.selectKit.options.focusAfterOnChange) {
           this._safeAfterRender(() => {
             this._focusFilter();
-            this._updatePopper();
           });
         }
       }
@@ -711,7 +725,6 @@ export default class SelectKit extends Component {
       "selectKit.isLoading": true,
       "selectKit.enterDisabled": true,
     });
-    this._safeAfterRender(() => this._updatePopper());
 
     let content = [];
 
@@ -777,7 +790,6 @@ export default class SelectKit extends Component {
 
         this._safeAfterRender(() => {
           if (this.selectKit.isExpanded) {
-            this._updatePopper();
             this._focusFilter();
           }
         });
@@ -934,6 +946,8 @@ export default class SelectKit extends Component {
       return;
     }
 
+    this.cleanupFloatingUi?.();
+
     this.selectKit.mainElement().open = false;
 
     this.clearErrors();
@@ -955,107 +969,15 @@ export default class SelectKit extends Component {
     this.clearErrors();
     this.selectKit.onOpen(event);
 
-    if (!this.popper) {
-      const anchor = document.querySelector(
-        `#${this.selectKit.uniqueID}-header`
+    if (this.site.desktopView) {
+      this.cleanupFloatingUi?.();
+      this.cleanupFloatingUi = autoUpdate(
+        this.getHeader(),
+        this._mainElement(),
+        () => this.updateFloatingUiPosition()
       );
-      const popper = document.querySelector(`#${this.selectKit.uniqueID}-body`);
-      const strategy = this._computePlacementStrategy();
-
-      let bottomOffset = 0;
-      if (this.capabilities.isIOS) {
-        bottomOffset +=
-          parseInt(
-            getComputedStyle(document.documentElement)
-              .getPropertyValue("--safe-area-inset-bottom")
-              .trim(),
-            10
-          ) || 0;
-      }
-      if (this.site.mobileView) {
-        bottomOffset +=
-          parseInt(
-            getComputedStyle(document.documentElement)
-              .getPropertyValue("--footer-nav-height")
-              .trim(),
-            10
-          ) || 0;
-      }
-
-      this.popper = createPopper(anchor, popper, {
-        eventsEnabled: false,
-        strategy,
-        placement: this.selectKit.options.placement,
-        modifiers: [
-          {
-            name: "eventListeners",
-            options: {
-              resize: this.site.desktopView,
-              scroll: this.site.desktopView,
-            },
-          },
-          {
-            name: "flip",
-            options: {
-              padding: {
-                top:
-                  parseInt(
-                    document.documentElement.style.getPropertyValue(
-                      "--header-offset"
-                    ),
-                    10
-                  ) || 0,
-                bottom: bottomOffset,
-              },
-            },
-          },
-          {
-            name: "offset",
-            options: {
-              offset: [0, this.selectKit.options.verticalOffset],
-            },
-          },
-          {
-            name: "applySmallScreenOffset",
-            enabled: window.innerWidth <= 450,
-            phase: "main",
-            fn({ state }) {
-              let { x } = state.elements.reference.getBoundingClientRect();
-              if (strategy === "fixed") {
-                state.modifiersData.popperOffsets.x = 0 + 10;
-              } else {
-                state.modifiersData.popperOffsets.x = -x + 10;
-              }
-            },
-          },
-          {
-            name: "applySmallScreenMaxWidth",
-            enabled: window.innerWidth <= 450,
-            phase: "beforeWrite",
-            fn: ({ state }) => {
-              state.styles.popper.width = `${window.innerWidth - 20}px`;
-            },
-          },
-          {
-            name: "minWidth",
-            enabled: window.innerWidth > 450,
-            phase: "beforeWrite",
-            requires: ["computeStyles"],
-            fn: ({ state }) => {
-              state.styles.popper.minWidth = `${Math.max(
-                state.rects.reference.width,
-                220
-              )}px`;
-            },
-            effect: ({ state }) => {
-              state.elements.popper.style.minWidth = `${Math.max(
-                state.elements.reference.offsetWidth,
-                220
-              )}px`;
-            },
-          },
-        ],
-      });
+    } else {
+      this.updateFloatingUiPosition();
     }
 
     this.selectKit.setProperties({
@@ -1073,7 +995,126 @@ export default class SelectKit extends Component {
     this._safeAfterRender(() => {
       this._focusFilter();
       this._scrollToCurrent();
-      this._updatePopper();
+    });
+  }
+
+  updateFloatingUiPosition() {
+    const referenceElement = this.getHeader();
+    const floatingElement = this._bodyElement();
+
+    const strategy = this._computePlacementStrategy();
+    floatingElement.style.position = strategy;
+
+    let width;
+    let minWidth;
+
+    const middleware = [
+      {
+        name: "minWidth",
+        fn: (state) => {
+          if (window.innerWidth <= 450) {
+            return state;
+          }
+
+          return size({
+            apply({ rects }) {
+              minWidth = `${Math.max(Math.round(rects.reference.width), 220)}px`;
+            },
+          }).fn(state);
+        },
+      },
+      {
+        name: "flip",
+        fn: (state) => {
+          const top =
+            this.selectKit.options.verticalOffset +
+            (parseInt(
+              document.documentElement.style.getPropertyValue(
+                "--header-offset"
+              ),
+              10
+            ) || 0);
+
+          let bottom = this.selectKit.options.verticalOffset;
+          if (this.capabilities.isIOS) {
+            bottom +=
+              parseInt(
+                getComputedStyle(document.documentElement)
+                  .getPropertyValue("--safe-area-inset-bottom")
+                  .trim(),
+                10
+              ) || 0;
+          }
+          if (this.site.mobileView) {
+            bottom +=
+              parseInt(
+                getComputedStyle(document.documentElement)
+                  .getPropertyValue("--footer-nav-height")
+                  .trim(),
+                10
+              ) || 0;
+          }
+
+          return flip({
+            padding: { top, bottom },
+            fallbackStrategy: "initialPlacement",
+          }).fn(state);
+        },
+      },
+      shift({ limiter: limitShift() }),
+      offset(this.selectKit.options.verticalOffset),
+      {
+        name: "applySmallScreenOffset",
+        fn: (state) => {
+          if (window.innerWidth > 450) {
+            return state;
+          }
+
+          let { x } = state.elements.reference.getBoundingClientRect();
+          if (strategy === "fixed") {
+            return { x: 10, y: state.y };
+          } else {
+            return { x: -x + 10, y: state.y };
+          }
+        },
+      },
+      {
+        name: "applySmallScreenMaxWidth",
+        fn: (state) => {
+          if (window.innerWidth <= 450) {
+            width = `${window.innerWidth - 20}px`;
+          }
+
+          return state;
+        },
+      },
+      hide(),
+    ];
+
+    computePosition(referenceElement, floatingElement, {
+      placement: this.selectKit.options.placement,
+      strategy,
+      middleware,
+    }).then(({ x, y, middlewareData }) => {
+      const style = {
+        width,
+        minWidth,
+        top: "0",
+        left: "0",
+        transform: `translate(${roundByDPR(x)}px,${roundByDPR(y)}px)`,
+      };
+
+      if (middlewareData.hide && !this.capabilities.isIOS) {
+        if (middlewareData.hide.referenceHidden) {
+          style.visibility = "hidden";
+          style.pointerEvents = "none";
+        } else {
+          style.visibility = "visible";
+          style.pointerEvents = "auto";
+        }
+      }
+
+      Object.assign(floatingElement.style, style);
     });
   }
 
@@ -1148,11 +1189,6 @@ export default class SelectKit extends Component {
     this._deprecateValueAttribute();
     this._deprecateMutations();
     this._handleDeprecatedArgs();
-  }
-
-  @bindDecorator
-  _updatePopper() {
-    this.popper?.update?.();
   }
 
   _computePlacementStrategy() {

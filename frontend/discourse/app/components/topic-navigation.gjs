@@ -30,6 +30,8 @@ export default class TopicNavigation extends Component {
   canRender = true;
   _lastTopicId = null;
   _swipeEvents = null;
+  _desktopListenersActive = false;
+  _mobileListenersActive = false;
 
   didUpdateAttrs() {
     super.didUpdateAttrs(...arguments);
@@ -232,6 +234,7 @@ export default class TopicNavigation extends Component {
       .on("topic:keyboard-trigger", this, this.keyboardTrigger);
 
     if (this.site.desktopView) {
+      this._desktopListenersActive = true;
       this.mediaQuery = matchMedia(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
       this.mediaQuery.addEventListener("change", this._checkSize);
       this.appEvents.on("composer:opened", this, this.composerOpened);
@@ -244,6 +247,7 @@ export default class TopicNavigation extends Component {
     this._checkSize();
     this._swipeEvents = new SwipeEvents(this.element);
     if (this.site.mobileView) {
+      this._mobileListenersActive = true;
       this._swipeEvents.addTouchListeners();
       this.element.addEventListener("swipestart", this.onSwipeStart);
       this.element.addEventListener("swipeend", this.onSwipeEnd);
@@ -262,7 +266,7 @@ export default class TopicNavigation extends Component {
 
     $(window).off("click.hide-fullscreen");
 
-    if (this.site.desktopView) {
+    if (this._desktopListenersActive) {
       this.mediaQuery.removeEventListener("change", this._checkSize);
       this.appEvents.off("composer:opened", this, this.composerOpened);
       this.appEvents.off("composer:resize-ended", this, this.composerOpened);
@@ -270,7 +274,8 @@ export default class TopicNavigation extends Component {
       this.appEvents.off("composer:preview-toggled", this._checkSize);
       $("#reply-control").off("div-resized", this._checkSize);
     }
-    if (this.site.mobileView) {
+
+    if (this._mobileListenersActive) {
       this.element.removeEventListener("swipestart", this.onSwipeStart);
       this.element.removeEventListener("swipeend", this.onSwipeEnd);
       this.element.removeEventListener("swipecancel", this.onSwipeCancel);

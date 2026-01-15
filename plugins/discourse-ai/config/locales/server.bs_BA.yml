@@ -9,6 +9,10 @@ bs_BA:
     overall_sentiment:
       yaxis: "Datum"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Custom"
     ai_bot:
       tool_summary:
         search: "Pretraži"

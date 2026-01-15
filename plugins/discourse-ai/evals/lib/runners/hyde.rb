@@ -10,10 +10,6 @@ module DiscourseAi
           feature_name&.start_with?("embeddings:hyde")
         end
 
-        def initialize(operation)
-          @operation = operation
-        end
-
         def run(eval_case, llm)
           args = normalize_args(eval_case.args)
           case_defs = Array(args.delete(:cases)).presence
@@ -27,8 +23,6 @@ module DiscourseAi
 
         private
 
-        attr_reader :operation
-
         def run_case(case_args, llm)
           query = case_args[:query].presence || case_args[:input].presence
           raise ArgumentError, "HyDE evals require :query or :input" if query.blank?
@@ -39,7 +33,7 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: user,
-              skip_tool_details: true,
+              skip_show_thinking: true,
               feature_name: "semantic_search_hyde",
               messages: [{ type: :user, content: query }],
             )

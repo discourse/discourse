@@ -91,10 +91,12 @@ module Chat
     end
 
     def search_groups(params, guardian)
+      # NOTE: Do NOT eager load users here (e.g. `.includes(users: ...)`).
+      # Groups can have 100k+ members and loading them causes request timeouts.
+      # The serializer uses SQL COUNT queries instead.
       Group
         .visible_groups(guardian.user)
         .members_visible_groups(guardian.user)
-        .includes(users: :user_option)
         .where(
           "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
           term_like: "%#{params.term}%",

@@ -18,13 +18,13 @@ import {
 import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
 import DTextarea from "discourse/components/d-textarea";
+import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
-import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
@@ -37,11 +37,13 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import { optionalRequire } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import DAutocompleteModifier, {
   SKIP,
 } from "discourse/modifiers/d-autocomplete";
+import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -59,6 +61,7 @@ const CHAT_PRESENCE_KEEP_ALIVE = 5 * 1000; // 5 seconds
 export default class ChatComposer extends Component {
   @service site;
   @service siteSettings;
+  @service capabilities;
   @service store;
   @service chat;
   @service chatComposerWarningsTracker;
@@ -199,9 +202,9 @@ export default class ChatComposer extends Component {
 
   @action
   insertDiscourseLocalDate() {
-    // JIT import because local-dates isn't necessarily enabled
-    const LocalDatesCreateModal =
-      require("discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create").default;
+    const LocalDatesCreateModal = optionalRequire(
+      "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create"
+    );
 
     this.modal.show(LocalDatesCreateModal, {
       model: {
@@ -347,13 +350,28 @@ export default class ChatComposer extends Component {
     }
   }
 
+  forceScrollPosition() {
+    if (!this.capabilities.isIOS || this.capabilities.isIpadOS) {
+      return;
+    }
+
+    // attempts to reposition body
+    if (window.pageYOffset <= 100) {
+      // on iOS scrolling to 0 doesn’t work correctly
+      // scrolling to -1 is more consistent
+      window.scrollTo(0, -1);
+    }
+  }
+
   @action
   onTextareaFocusOut() {
+    this.forceScrollPosition();
     this.isFocused = false;
   }
 
   @action
   onTextareaFocusIn() {
+    this.forceScrollPosition();
     this.isFocused = true;
   }
 
@@ -533,8 +551,8 @@ export default class ChatComposer extends Component {
     }
 
     this.applyAutocomplete(textarea, {
-      template: renderEmojiAutocomplete,
-      key: ":",
+      component: EmojiAutocompleteResults,
+      key: EmojiAutocompleteResults.TRIGGER_KEY,
       afterComplete: (text, event) => {
         event.preventDefault();
         this.composer.textarea.value = text;
@@ -544,7 +562,7 @@ export default class ChatComposer extends Component {
       fixedTextareaPosition: true,
       onKeyUp: (text, cp) => {
         const matches =
-          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?)$/gi.exec(
             text.substring(0, cp)
           );
 
@@ -592,7 +610,7 @@ export default class ChatComposer extends Component {
 
           // Close the keyboard before showing the emoji picker
           // it avoids a whole range of bugs on iOS
-          await waitForClosedKeyboard(this);
+          await waitForClosedKeyboard(this.site, this.capabilities);
 
           const virtualElement = virtualElementFromTextRange();
           this.menuInstance = await this.menu.show(virtualElement, menuOptions);
@@ -756,6 +774,8 @@ export default class ChatComposer extends Component {
               {{on "click" this.composer.focus}}
             >
               <DTextarea
+                {{preventScrollOnFocus}}
+                {{forceScrollingElementPosition}}
                 id={{this.composerId}}
                 value={{readonly this.draft.message}}
                 type="text"
@@ -768,7 +788,6 @@ export default class ChatComposer extends Component {
                 {{didInsert this.setupTextareaInteractor}}
                 {{on "input" this.onInput}}
                 {{on "keydown" this.onKeyDown}}
-                {{preventScrollOnFocus}}
                 {{on "focusin" this.onTextareaFocusIn}}
                 {{on "focusout" this.onTextareaFocusOut}}
                 {{didInsert this.setupAutocomplete}}
@@ -776,23 +795,17 @@ export default class ChatComposer extends Component {
               />
             </div>
 
-            {{#if this.inlineButtons.length}}
-              {{#each this.inlineButtons as |button|}}
-                <DButton
-                  @icon={{button.icon}}
-                  class="-{{button.id}}"
-                  disabled={{or this.disabled button.disabled}}
-                  tabindex={{if button.disabled -1 0}}
-                  {{on
-                    "click"
-                    (fn this.handleInlineButtonAction button.action)
-                  }}
-                  {{on "focus" (fn this.computeIsFocused true)}}
-                  {{on "blur" (fn this.computeIsFocused false)}}
-                />
-              {{/each}}
-
-            {{/if}}
+            {{#each this.inlineButtons as |button|}}
+              <DButton
+                @icon={{button.icon}}
+                class="-{{button.id}}"
+                disabled={{or this.disabled button.disabled}}
+                tabindex={{if button.disabled -1 0}}
+                {{on "click" (fn this.handleInlineButtonAction button.action)}}
+                {{on "focus" (fn this.computeIsFocused true)}}
+                {{on "blur" (fn this.computeIsFocused false)}}
+              />
+            {{/each}}
 
             <PluginOutlet
               @name="chat-composer-inline-buttons"

@@ -32,16 +32,16 @@ he:
     post_voting_enable_likes_on_answers: "הפעלת כפתור לייק על נושאים של הצבעה על פוסטים"
     post_voting_undo_vote_action_window: "מספר הדקות שמשתמשים רשאים לבטל הצבעות בנושאי הצבעות על פוסטים (0 להסרת ההגבלה)"
     post_voting_comment_limit_per_post: "מספר התגובות המותר על כל פוסט"
-    min_trust_to_flag_posts_voting_comments: "דרגת האמון המזערית לסימון הערת הצבעה על פוסט"
     flag_posts_voting_comments_allowed_groups: "קבוצות שמורשות לסמן הערת הצבעה לפוסט"
     post_voting_comment_enabled: "הפעלת הערות בפוסט בנושאים עם הצבעות על פוסטים"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments (דרגת אמון מזערית לסימון הערות הצבעה על פוסטים)"
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "מה לעשות עם ההערה?"
         no_action_comment:
           title: "אין פעולה"
+          description: "להשאיר את ההערה כפי שהיא."
         agree_and_keep_comment:
           title: "להשאיר את התגובה"
           description: "הבעת הסכמה עם הדגל והשארת התגובה ללא שינוי."
@@ -54,9 +54,21 @@ he:
         agree_and_delete:
           title: "מחיקת תגובה"
           description: "למחוק את התגובה כדי שמשתמשים לא יוכלו לראות אותה."
+        agree_and_suspend:
+          title: "השעיית משתמש"
+          description: "הבעת הסכמה עם הדגל והשעיית המשתמש."
+        agree_and_silence:
+          title: "השתקת משתמש"
+          description: "הבעת הסכמה עם הדגל והשתקת המשתמש."
         disagree_and_restore:
           title: "לסרב ולשחזר תגובה"
           description: "לשחזר את התגובה כדי שכל המשתמשים יוכלו לראות אותה."
+        disagree:
+          title: "להשאיר את התגובה"
+        ignore:
+          title: "התעלמות מדגל"
+        delete_and_agree:
+          description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת התגובה."
   post_action_types:
     vote:
       title: "הצבעה"
@@ -106,16 +118,14 @@ he:
             title: "מחיקת תגובה"
             description: "למחוק את התגובה כדי שמשתמשים לא יוכלו לראות אותה."
           delete_and_agree:
-            title: "התעלמות מהדגל ומחיקת התגובה"
             description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת התגובה."
           disagree_and_restore:
             title: "לסרב ולשחזר תגובה"
             description: "לשחזר את התגובה כדי שכל המשתמשים יוכלו לראות אותה."
           disagree:
-            title: "אי קבלה"
+            title: "להשאיר את התגובה"
           ignore:
-            title: "לא לעשות דבר"
-            description: "התעלמות מהדגל על ידי הסרתו מהתור מבלי לנקוט בשום פעולה."
+            title: "התעלמות מדגל"
         transcript:
           view: "הצגת תמליל התגובות הקודמות"
       reviewable_score_types:

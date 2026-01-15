@@ -6,17 +6,11 @@
       border: none;
       white-space: nowrap;
 
-      &.is-expanded {
-        .select-kit-collection,
-        .select-kit-body {
-          border-radius: 0;
-        }
-      }
-
       .select-kit-body {
         border: 1px solid var(--content-border-color);
         background-clip: padding-box;
         box-shadow: var(--shadow-dropdown);
+        border-radius: var(--d-button-border-radius);
       }
 
       .select-kit-row {
@@ -74,6 +68,7 @@
         align-items: center;
         justify-content: space-between;
         flex-direction: row;
+        border-radius: var(--d-border-radius);
 
         .d-icon + .d-icon {
           margin-left: 0.25em;

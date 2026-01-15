@@ -49,7 +49,7 @@ module("Discourse AI | Unit | Model | ai-persona", function () {
       rag_llm_model_id: 1,
       question_consolidator_llm_id: 2,
       allow_chat: false,
-      tool_details: true,
+      show_thinking: true,
       forced_tool_count: -1,
       allow_personal_messages: true,
       allow_topic_mentions: true,

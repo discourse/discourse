@@ -375,8 +375,9 @@ RSpec.describe TopicViewSerializer do
 
   context "with details" do
     it "returns the details object" do
-      PostCreator.create!(user, topic_id: topic.id, raw: "this is my post content")
+      post = PostCreator.create!(user, topic_id: topic.id, raw: "this is my post content")
       topic.topic_links.create!(
+        post: post,
         user: user,
         url: "https://discourse.org",
         domain: "discourse.org",
@@ -647,21 +648,57 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "#fancy_title" do
+    before { topic.update!(title: "Hur dur this is a title") }
+
     it "returns the fancy title" do
-      topic.update!(title: "Hur dur this is a title")
       json = serialize_topic(topic, user)
 
       expect(json[:fancy_title]).to eq("Hur dur this is a title")
     end
 
-    it "returns the localized fancy_title" do
-      SiteSetting.content_localization_enabled = true
-      Fabricate(:topic_localization, topic:, fancy_title: "X", locale: "ja")
-      I18n.locale = "ja"
-      topic.update!(locale: "en")
+    describe "with localizations" do
+      before do
+        Fabricate(:topic_localization, topic:, fancy_title: "X", locale: "ja")
+        I18n.locale = "ja"
+      end
 
-      json = serialize_topic(topic, user)
-      expect(json[:fancy_title]).to eq("X")
+      it "returns the localized fancy_title" do
+        SiteSetting.content_localization_enabled = false
+        json = serialize_topic(topic, user)
+        expect(json[:fancy_title]).to eq("Hur dur this is a title")
+
+        SiteSetting.content_localization_enabled = true
+        topic.update!(locale: "en")
+
+        json = serialize_topic(topic, user)
+        expect(json[:fancy_title]).to eq("X")
+      end
+
+      it "returns the fancy_title_localized if localized title returned" do
+        SiteSetting.content_localization_enabled = false
+        json = serialize_topic(topic, user)
+        expect(json[:fancy_title_localized]).to eq(nil)
+
+        SiteSetting.content_localization_enabled = true
+        json = serialize_topic(topic, user)
+        expect(json[:fancy_title_localized]).to eq(false)
+
+        topic.update!(locale: "en")
+        json = serialize_topic(topic, user)
+        expect(json[:fancy_title_localized]).to eq(true)
+      end
+
+      it "returns the locale" do
+        topic.update(locale: "ja")
+
+        SiteSetting.content_localization_enabled = false
+        json = serialize_topic(topic, user)
+        expect(json[:locale]).to eq(nil)
+
+        SiteSetting.content_localization_enabled = true
+        json = serialize_topic(topic, user)
+        expect(json[:locale]).to eq("ja")
+      end
     end
   end
 

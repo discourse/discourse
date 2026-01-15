@@ -82,11 +82,13 @@ export default class AdminUser extends User {
     );
   }
 
-  groupAdded(added) {
-    return ajax(`/admin/users/${this.id}/groups`, {
+  async groupAdded(added) {
+    await ajax(`/admin/users/${this.id}/groups`, {
       type: "POST",
       data: { group_id: added.id },
-    }).then(() => this.groups.pushObject(added));
+    });
+
+    this.groups.push(added);
   }
 
   groupRemoved(groupId) {
@@ -103,6 +105,12 @@ export default class AdminUser extends User {
   deleteAllPosts() {
     return ajax(`/admin/users/${this.get("id")}/delete_posts_batch`, {
       type: "PUT",
+    });
+  }
+
+  deleteAllPostsDecider() {
+    return ajax(`/admin/users/${this.get("id")}/delete_posts_decider`, {
+      type: "POST",
     });
   }
 

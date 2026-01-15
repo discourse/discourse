@@ -100,10 +100,12 @@ export default class DashboardNewFeatures extends Component {
         </div>
         {{#each this.groupedNewFeatures as |groupedFeatures|}}
           <AdminConfigAreaCard
-            @translatedHeading={{groupedFeatures.date}}
             class="admin-new-features__group"
             data-new-features-group={{groupedFeatures.date}}
           >
+            <:header>
+              <h2>{{groupedFeatures.date}}</h2>
+            </:header>
             <:content>
               {{#each groupedFeatures.features as |feature|}}
                 <DashboardNewFeatureItem @item={{feature}} />

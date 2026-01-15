@@ -6,6 +6,7 @@ import SidebarSectionForm from "discourse/components/modal/sidebar-section-form"
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import SectionLink from "discourse/lib/sidebar/section-link";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { unicodeSlugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -15,7 +16,7 @@ export default class Section {
   @service router;
 
   @tracked dragCss;
-  @tracked links;
+  @trackedArray links;
 
   constructor({ section, owner }) {
     setOwner(this, owner);
@@ -69,16 +70,16 @@ export default class Section {
 
   @bind
   moveLinkDown(link) {
-    const position = this.links.indexOf(link) + 1;
-    this.links = this.links.removeObject(link);
-    this.links.splice(position, 0, link);
+    const position = this.links.indexOf(link);
+    this.links.splice(position, 1);
+    this.links.splice(position + 1, 0, link);
   }
 
   @bind
   moveLinkUp(link) {
-    const position = this.links.indexOf(link) - 1;
-    this.links = this.links.removeObject(link);
-    this.links.splice(position, 0, link);
+    const position = this.links.indexOf(link);
+    this.links.splice(position, 1);
+    this.links.splice(position - 1, 0, link);
   }
 
   @bind

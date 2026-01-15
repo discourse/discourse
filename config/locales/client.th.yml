@@ -353,7 +353,6 @@ th:
         other: "กระทู้นี้มี<b>%{count}</b>โพสต์ที่กำลังรอการอนุมัติ"
       title: "รีวิว"
       topic: "กระทู้:"
-      filtered_user: "ผู้ใช้"
       show_all_topics: "แสดงกระทู้ทั้งหมด"
       deleted_post: "(โพสต์ถูกลบ)"
       deleted_user: "(ผู้ใช้ถูกลบ)"
@@ -436,6 +435,8 @@ th:
           noun: "ผู้ใช้"
         reviewable_post:
           title: "โพสต์"
+          noun: "โพส"
+        reviewable_ai_post:
           noun: "โพส"
       user_label: "ผู้ใช้"
       notes:
@@ -549,8 +550,6 @@ th:
             password: "รหัสผ่าน"
           settings:
             title: "การตั้งค่า"
-          mailboxes:
-            disabled: "ปิดใช้งานแล้ว"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -698,7 +697,6 @@ th:
       topic_stat_sentence_month:
         other: "%{count}กระทู้ใหม่ในเดือนที่ผ่านมา"
     ip_lookup:
-      title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
       location: สถานที่
       location_not_found: (ไม่ทราบ)
@@ -725,6 +723,9 @@ th:
       new_private_message: "สร้างข้อความส่วนตัวใหม่"
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
+      upcoming_changes:
+        for_user:
+          enabled: "เปิดใช้"
       user_notifications:
         filters:
           filter_by: "กรองโดย"
@@ -1423,6 +1424,8 @@ th:
       upload_title: "อัปโหลด"
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
       list_item: "รายการ"
+      wrap_modal:
+        apply: "นำไปใช้"
       help: "ช่วยเหลือการจัดรูปแบบ"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
@@ -1446,6 +1449,7 @@ th:
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
       ignore: "ไม่สนใจ"
+      image: "รูปภาพ"
     notifications:
       tooltip:
         regular:
@@ -1609,6 +1613,8 @@ th:
         clear_all: "ล้างทั้งหมด"
         unlist_topics: "กระทู้ที่ไม่ได้แสดง"
         delete: "ลบกระทู้"
+        delete_topics_count:
+          other: "ลบกระทู้"
         dismiss: "ซ่อน"
         dismiss_read: "ซ่อนทั้งหมดที่ไม่ได้อ่าน"
         dismiss_button: "ซ่อน..."
@@ -1634,16 +1640,6 @@ th:
         bookmarks: "คุณยังไม่ได้บุ๊กมาร์กกระทู้ใดๆเลย"
         category: "ไม่มีกระทู้ในหมวด %{category}"
         top: "ไม่มีกระทู้ยอดนิยม"
-      bottom:
-        latest: "ไม่มีกระทู้ล่าสุดอีกแล้ว"
-        posted: "ไม่มีกระทู้ที่โพสต์อีกแล้ว"
-        read: "ไม่มีกระทู้ที่อ่านแล้วอีก"
-        new: "ไม่มีกระทู้ใหม่อีกแล้ว"
-        unread: "ไม่มีกระทู้ที่ยังไม่อ่านอีกแล้ว"
-        category: "ไม่มีกระทู้อื่นอีกใน %{category}"
-        tag: "ไม่มีกระทู้อื่นอีกใน %{tag}"
-        top: "ไม่มีกระทู้ยอดนิยมอีกแล้ว"
-        bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
       dismiss:
         name: "ซ่อน"
@@ -2073,16 +2069,10 @@ th:
       allow_global_tags_label: "อนุญาตแท็กอื่นด้วย"
       required_tag_group:
         delete: "ลบ"
-      delete: "ลบหมวดหมู่"
-      create: "หมวดหมู่ใหม่"
       create_long: "สร้างหมวดหมู่ใหม่"
-      save: "บันทึกหมวดหมู่"
       creation_error: มีข้อผิดพลาดขณะสร้างหมวดหมู่
       save_error: มีข้อผิดพลาดในการบันทึกหมวดหมู่
-      name: "ชื่อหมวดหมู่"
       description: "รายละเอียด"
-      logo: "รูปโลโก้หมวดหมู่"
-      background_image: "รูปพื้นหลังหมวดหมู่"
       background_color: "สี"
       styles:
         icon: "ไอคอน"
@@ -2094,7 +2084,6 @@ th:
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก"
       delete_error: "มีข้อผิดพลาดในการลบหมวดหมู่"
       no_description: "กรุณาเพิ่มรายละเอียดสำหรับหมวดหมู่นี้"
-      change_in_category_topic: "แก้ไขรายละเอียด"
       already_used: "สีนี้ถูกใช้สำหรับหมวดหมู่อื่นแล้ว"
       security: "ความปลอดภัย"
       permissions:
@@ -2106,7 +2095,6 @@ th:
       images: "รูปภาพ"
       email_in: "ตั้งที่อยู่สำหรับอีเมลขาเข้า:"
       email_in_allow_strangers: "ยอมรับอีเมลจากผู้ใช้ที่ไม่ระบุชื่อและไม่มีบัญชี"
-      edit_permissions: "แก้ไขการอนุญาต"
       review_group_name: "ชื่อกลุ่ม"
       require_topic_approval: "กระทู้ใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
       require_reply_approval: "คำตอบใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
@@ -2128,10 +2116,8 @@ th:
         options:
           normal: "ปกติ"
           ignore: "ไม่สนใจ"
-          very_low: "ต่ำมาก"
           low: "ต่ำ"
           high: "สูง"
-          very_high: "สูงมาก"
       sort_options:
         default: "ค่าเริ่มต้น"
         likes: "ถูกใจ"
@@ -2144,9 +2130,6 @@ th:
       settings_sections:
         general: "ทั่วไป"
         email: "อีเมล"
-      list_filters:
-        all: "กระทู้ทั้งหมด"
-        none: "ไม่มีหมวดหมู่ย่อย"
     flagging:
       notify_action: "ข้อความส่วนตัว"
       official_warning: "คำเตือนอย่างเป็นทางการ"
@@ -2266,8 +2249,6 @@ th:
       top:
         title: "บน"
         help: "กระทู้ที่มีการเคลื่อนไหวมากที่สุดในปี เดือน สัปดาห์ หรือวันที่ผ่านมา"
-        all:
-          title: "ตลอดเวลา"
         yearly:
           title: "รายปี"
         quarterly:
@@ -2278,7 +2259,6 @@ th:
           title: "รายสัปดาห์"
         daily:
           title: "รายวัน"
-        all_time: "ตลอดเวลา"
         this_year: "ปี"
         this_quarter: "ไตรมาส"
         this_month: "เดือน"
@@ -2403,6 +2383,7 @@ th:
       sort_by_name: "ชื่อ"
       upload: "อัปโหลดแท็ก"
       upload_successful: "แท็กถูกอัปโหลดสำเร็จแล้ว"
+      bulk_create_button: "สร้าง"
       delete_unused_confirmation:
         other: "%{count}แท็กจะถูกลบ: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -2424,7 +2405,6 @@ th:
         muted:
           title: "ปิด"
       groups:
-        new: "กลุ่มใหม่"
         one_per_topic_label: "จำกัดหนึ่งแท็กต่อหนึ่งกระทู้จากกลุ่มนี้"
         name_placeholder: "ชื่อ"
         save: "บันทึก"
@@ -2566,6 +2546,8 @@ th:
       upcoming_changes:
         name: "ชื่อ"
         preview: "แสดงตัวอย่าง"
+        enabled_for_options:
+          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
@@ -2587,6 +2569,8 @@ th:
           sub_pages:
             common_settings:
               title: "การตั้งค่า"
+        discourse_id:
+          learn_more: "เรียนรู้เพิ่มเติม"
         logo:
           form:
             mobile: "โทรศัพท์"
@@ -2594,6 +2578,12 @@ th:
         fonts:
           backfill_modal:
             modal_yes: "ใช่"
+        welcome_banner:
+          form:
+            location:
+              label: "ที่อยู่"
+            header_anonymous:
+              placeholder: "ยินดีต้อนรับสู่ %{site_name}!"
         navigation:
           title: "การนำทาง"
         notifications:
@@ -3122,7 +3112,6 @@ th:
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"
           upload: "เพิ่มจากไฟล์"
-          upload_successful: "อัปโหลดสำเร็จแล้ว เพิ่มคำเรียบร้อย"
           html_label: "HTML"
         test:
           no_matches: "ไม่พบผลลัพธ์ที่ตรงกัน"
@@ -3377,6 +3366,8 @@ th:
         revoke: เอาออก
         reason: เหตุผล
         edit_badges: แก้ไขเหรียญ
+        sections:
+          settings: การตั้งค่า
         disabled: ปิดใช้งานแล้ว
         icon: ไอคอน
         image: ภาพ
@@ -3440,40 +3431,3 @@ th:
         modal:
           categories: "หมวดหมู่"
           topics: "กระทู้"
-  wizard_js:
-    wizard:
-      back: "กลับ"
-      next: "ต่อไป"
-      upload_error: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ กรุณาลองใหม่อีกครั้ง"
-      staff_count:
-        other: "ชุมชนของคุณมีทีมงาน %{count}คน รวมถึงคุณด้วย"
-      invites:
-        add_user: "เพิ่ม"
-        none_added: "คุณยังไม่ได้เชิญทีมงาน คุณแน่ใจหรือว่าต้องการดำเนินการต่อ"
-        roles:
-          admin: "แอดมิน"
-          moderator: "ผู้ดูแล"
-          regular: "ผู้ใช้ทั่วไป"
-      homepage_choices:
-        style_type:
-          categories: "หมวดหมู่"
-          topics: "หัวข้อ"
-      top_menu_items:
-        new: "ใหม่"
-        unread: "ยังไม่อ่าน"
-        top: "บน"
-        latest: "ล่าสุด"
-        categories: "หมวดหมู่"
-        read: "อ่าน"
-        bookmarks: "บุ๊คมาร์ค"
-      previews:
-        share_button: "แบ่งปัน"
-        reply_button: "ตอบ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "ทุกหมวดหมู่"
-        table_headers:
-          topic: "หัวข้อ"
-          replies: "ตอบ"
-          views: "ดู"
-          activity: "กิจกรรม"

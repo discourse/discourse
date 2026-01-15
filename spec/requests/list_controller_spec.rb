@@ -1359,6 +1359,7 @@ RSpec.describe ListController do
     fab!(:private_category) { Fabricate(:private_category, group:, slug: "private-category-slug") }
     fab!(:private_message_topic)
     fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
+    fab!(:user2, :user)
 
     it "should not return topics that the user is not allowed to view" do
       sign_in(user)
@@ -1440,6 +1441,30 @@ RSpec.describe ListController do
 
         expect(parsed["topic_list"]["topics"].length).to eq(1)
         expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic_with_tag.id)
+      end
+    end
+
+    it "keeps query params encoded in more_topics_url when unicode usernames are enabled" do
+      SiteSetting.unicode_usernames = true
+
+      topic_1 = Fabricate(:topic)
+      Fabricate(:post, topic: topic_1, user: user)
+      Fabricate(:post, topic: topic_1, user: user2)
+
+      topic_2 = Fabricate(:topic)
+      Fabricate(:post, topic: topic_2, user: user)
+      Fabricate(:post, topic: topic_2, user: user2)
+
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+        sign_in(user)
+
+        get "/filter.json", params: { q: "users:#{user.username}+#{user2.username}" }
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["topic_list"]["more_topics_url"]).to eq(
+          "/filter?no_definitions=true&page=1&q=users%3A#{user.username}%2B#{user2.username}",
+        )
       end
     end
 

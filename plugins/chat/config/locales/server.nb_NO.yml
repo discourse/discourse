@@ -19,8 +19,8 @@ nb_NO:
         agree_and_silence:
           title: "Demp bruker"
           description: "Si deg enig med rapportering og demp bruker. "
-        disagree:
-          title: "Si deg uenig"
+        ignore:
+          title: "Ignorer flagg"
     channel:
       dm_title:
         single_user: "%{username}"

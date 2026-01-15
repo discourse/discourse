@@ -20,3 +20,9 @@ zh_CN:
       other: "%{count} 个投票已被移动。"
     duplicated_votes:
       other: "%{count} 个投票无法移动，因为用户已在另一个话题中投票。"
+    filter:
+      description:
+        topic_votes_min: "最低话题投票数"
+        topic_votes_max: "最高话题投票数"
+        order_topic_votes: "按得票最多的话题排序"
+        order_topic_votes_asc: "按票数少的话题排序"

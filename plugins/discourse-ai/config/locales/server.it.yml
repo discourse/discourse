@@ -232,8 +232,10 @@ it:
           name: "Tasso di cambio"
         stock_quote:
           name: "Quotazione azionaria (AlphaVantage)"
-        image_generation:
-          name: "Generatore di immagini di flusso (Together.ai)"
+        image_generation_custom:
+          name: "Personalizzato"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Inizia da zero..."
       name:
@@ -250,10 +252,6 @@ it:
         explain: "Spiega"
         illustrate_post: "Illustra messaggio"
         replace_dates: "Date smart"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Immagine di Stable Diffusion XL"
-          dall_e_3: "Immagine di DALL-E 3"
       image_caption:
         attribution: "Didascalia da IA"
     share_ai:
@@ -278,7 +276,6 @@ it:
     ai_bot:
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
       default_pm_prefix: "[MP di bot IA senza titolo]"
-      thinking: "Sto pensando..."
       personas:
         default_llm_required: "Il modello LLM predefinito è obbligatorio prima di abilitare la chat"
         cannot_delete_system_persona: "I personaggi di sistema non possono essere eliminati, vanno invece disattivati"
@@ -346,7 +343,6 @@ it:
           description: "Personaggio predefinito, gestisce la funzionalità di tabelle in markdown dell'assistente"
         post_illustrator:
           name: "Assistente messaggi illustrati"
-          description: "Genera prompt di StableDiffusion per destire la funzionalità di illustrazione messaggi dell'assistente"
         proofreader:
           name: "Assistente correzione di bozze"
           description: "Personaggio predefinito, gestisce la funzionalità di correzione ortografica dell'assistente"
@@ -443,9 +439,9 @@ it:
         github_search_files: "File di ricerca GitHub"
         github_search_code: "Ricerca codice GitHub"
         github_file_content: "Contenuto del file GitHub"
-        github_pull_request_diff: "Diff richiesta pull GitHub"
         random_picker: "Selettore casuale"
         categories: "Elenca le categorie"
+        flag_post: "Segnala messaggio"
         search: "Cerca"
         tags: "Elenca le etichette"
         time: "Ora"
@@ -471,7 +467,6 @@ it:
         github_search_code: "Cerca il codice in un repository GitHub"
         github_search_files: "Cerca file in un repository GitHub"
         github_file_content: "Recupera il contenuto dei file da un repository GitHub"
-        github_pull_request_diff: "Recupera un diff della richiesta pull GitHub"
         random_picker: "Scegli un numero casuale o un elemento casuale di una lista"
         categories: "Elenca tutte le categorie visibili pubblicamente sul forum"
         search: "Cerca tutti gli argomenti pubblici sul forum"
@@ -497,7 +492,7 @@ it:
         web_browser: "Lettura <a href='%{url}'>%{url}</a>"
         github_search_files: "Hai cercato \"%{keywords}\" in %{repo}/%{branch}"
         github_search_code: "Hai cercato \"%{query}\" in %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Contenuto recuperato di %{file_paths} da %{repo_name}@%{branch}"
         random_picker: "Scelta da %{options}, scelto: %{result}"
         read: "Lettura: <a href='%{url}'>%{title}</a>"
@@ -607,6 +602,3 @@ it:
       custom_tool_exists:
         one: "Esiste già uno strumento personalizzato dal nome %{names}."
         other: "Esistono già strumenti personalizzati dai nomi %{names}."
-  dashboard:
-    problem:
-      ai_llm_status: "Il modello LLM %{model_name} sta riscontrando problemi. Controlla la <a href='%{url}'>pagina di configurazione del modello </a>."

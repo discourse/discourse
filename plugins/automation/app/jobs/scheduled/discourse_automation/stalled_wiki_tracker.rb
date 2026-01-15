@@ -26,6 +26,9 @@ module Jobs
               last_trigger_date = post.custom_fields["stalled_wiki_triggered_at"]
               if last_trigger_date
                 retriggered_after = automation.trigger_field("retriggered_after")
+
+                next if !retriggered_after["value"]
+
                 retrigger_duration = ISO8601::Duration.new(retriggered_after["value"]).to_seconds
 
                 next if Time.parse(last_trigger_date) + retrigger_duration >= Time.zone.now

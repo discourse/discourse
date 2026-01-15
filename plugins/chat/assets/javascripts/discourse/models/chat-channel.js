@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { getURLWithCDN } from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
@@ -88,6 +87,7 @@ export default class ChatChannel {
     this.membershipsCount = args.memberships_count;
     this.slug = args.slug;
     this.title = args.title;
+    this.emoji = args.emoji;
     this.unicodeTitle = args.unicode_title;
     this.status = args.status;
     this.description = args.description;
@@ -97,9 +97,6 @@ export default class ChatChannel {
     this.currentUserMembership = args.current_user_membership;
     this.lastMessage = args.last_message;
     this.meta = args.meta;
-    this.iconUploadUrl = args.icon_upload_url
-      ? getURLWithCDN(args.icon_upload_url)
-      : null;
 
     this.chatable = this.#initChatable(args.chatable ?? []);
     this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
@@ -117,7 +114,7 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCount() {
-    return this.threadsManager.unreadThreadCount;
+    return this.threadingEnabled ? this.threadsManager.unreadThreadCount : 0;
   }
 
   get lastUnreadThreadDate() {
@@ -169,7 +166,7 @@ export default class ChatChannel {
   }
 
   get escapedDescription() {
-    return escapeExpression(this.description);
+    return escapeExpression(this.description?.trim());
   }
 
   get slugifiedTitle() {

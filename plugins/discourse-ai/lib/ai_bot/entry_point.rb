@@ -2,10 +2,6 @@
 
 module DiscourseAi
   module AiBot
-    USER_AGENT = "Discourse AI Bot 1.0 (https://www.discourse.org)"
-    TOPIC_AI_BOT_PM_FIELD = "is_ai_bot_pm"
-    POST_AI_LLM_NAME_FIELD = "ai_llm_name"
-
     class EntryPoint
       Bot = Struct.new(:id, :name, :llm)
 
@@ -13,7 +9,7 @@ module DiscourseAi
         AiPersona
           .persona_users
           .map { |persona| persona[:user_id] }
-          .concat(LlmModel.where(enabled_chat_bot: true).pluck(:user_id))
+          .concat(LlmModel.where(id: LlmModel.enabled_chat_bot_ids).pluck(:user_id).compact)
       end
 
       def self.find_participant_in(participant_ids)
@@ -27,7 +23,7 @@ module DiscourseAi
 
       def self.find_user_from_model(model_name)
         # Hack(Roman): Added this because Command R Plus had a different in the bot settings.
-        # Will eventually ammend it with a data migration.
+        # Will eventually amend it with a data migration.
         name = model_name
         name = "command-r-plus" if name == "cohere-command-r-plus"
 
@@ -35,11 +31,14 @@ module DiscourseAi
       end
 
       def self.enabled_user_ids_and_models_map
-        DB.query_hash(<<~SQL)
-          SELECT users.username AS username, users.id AS id, llms.name AS model_name, llms.display_name AS display_name
+        enabled_ids = LlmModel.enabled_chat_bot_ids
+        return [] if enabled_ids.empty?
+
+        DB.query_hash(<<~SQL, ids: enabled_ids)
+          SELECT users.username AS username, users.id AS id, llms.id AS llm_model_id, llms.name AS model_name, llms.display_name AS display_name
           FROM llm_models llms
           INNER JOIN users ON llms.user_id = users.id
-          WHERE llms.enabled_chat_bot
+          WHERE llms.id IN (:ids)
         SQL
       end
 
@@ -113,7 +112,8 @@ module DiscourseAi
         end
 
         plugin.on(:site_setting_changed) do |name, _old_value, _new_value|
-          if name == :ai_bot_enabled || name == :discourse_ai_enabled
+          if name == :ai_bot_enabled || name == :discourse_ai_enabled ||
+               name == :ai_bot_enabled_llms
             DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
           end
         end
@@ -232,9 +232,7 @@ module DiscourseAi
           DiscourseAi::AiBot::Playground.schedule_chat_reply(chat_message, channel, user, context)
         end
 
-        if plugin.respond_to?(:register_editable_topic_custom_field)
-          plugin.register_editable_topic_custom_field(:ai_persona_id)
-        end
+        plugin.register_editable_topic_custom_field(:ai_persona_id)
 
         plugin.add_api_key_scope(
           :discourse_ai,

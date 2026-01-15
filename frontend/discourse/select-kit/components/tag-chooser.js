@@ -20,10 +20,14 @@ import TagChooserRow from "./tag-chooser-row";
   limit: null,
   allowAny: "canCreateTag",
   maximum: "maximumTagCount",
+  valueProperty: "name",
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent {
   @service tagUtils;
+
+  valueProperty = "name";
+  nameProperty = "name";
 
   blockedTags = null;
   excludeSynonyms = false;
@@ -150,14 +154,14 @@ export default class TagChooser extends MultiSelectComponent {
 
     if (this.blockedTags) {
       results = results.filter((result) => {
-        return !this.blockedTags.includes(result.id);
+        return !this.blockedTags.includes(result.name);
       });
     }
 
     if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.id > b.id);
+      results = results.sort((a, b) => a.name > b.name);
     }
 
-    return uniqueItemsFromArray(results, "id");
+    return uniqueItemsFromArray(results, "name");
   }
 }

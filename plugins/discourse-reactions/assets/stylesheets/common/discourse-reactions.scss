@@ -61,6 +61,9 @@ html.discourse-reactions-no-select {
       padding: 0.5em 0;
       min-width: 120px;
       min-height: 80px;
+      width: max-content;
+      top: 0;
+      left: 0;
 
       .spinner {
         animation-play-state: paused;
@@ -120,10 +123,13 @@ html.discourse-reactions-no-select {
 }
 
 .discourse-reactions-picker {
-  z-index: z("usercard") - 2;
+  z-index: calc(z("composer", "content") - 1);
   position: absolute;
   visibility: hidden;
   padding: 15px 0;
+  width: max-content;
+  top: 0;
+  left: 0;
 
   &.is-expanded {
     visibility: visible;
@@ -136,7 +142,7 @@ html.discourse-reactions-no-select {
     z-index: 1;
     border-radius: 8px;
     display: grid;
-    grid-gap: 0.25em;
+    gap: 0.25em;
 
     @for $i from 1 through 8 {
       &.col-#{$i} {
@@ -187,6 +193,9 @@ html.discourse-reactions-no-select {
   position: absolute;
   visibility: hidden;
   padding: 15px 0;
+  width: max-content;
+  top: 0;
+  left: 0;
 
   &.is-expanded {
     min-width: 80px;
@@ -240,8 +249,8 @@ html.discourse-reactions-no-select {
 
   .list {
     display: grid;
-    grid-column-gap: 0.25em;
-    grid-row-gap: 0.25em;
+    column-gap: 0.25em;
+    row-gap: 0.25em;
     padding-top: 0.25em;
     grid-template-rows: 22.5px;
   }

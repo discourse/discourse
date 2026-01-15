@@ -18,6 +18,8 @@ export default class EmptyTopicFilter extends Component {
       } else {
         return i18n("topics.none.education.new");
       }
+    } else {
+      return i18n("topics.none.education.generic");
     }
   }
 
@@ -50,11 +52,23 @@ export default class EmptyTopicFilter extends Component {
   }
 
   get ctaRoute() {
-    if (this.currentUser.new_new_view_enabled && this.args.newListSubset) {
+    if (
+      this.currentUser.new_new_view_enabled &&
+      this.ctaLabelWithAction.action
+    ) {
       return;
     }
 
     return "discovery.latest";
+  }
+
+  get tipText() {
+    if (this.args.unreadFilter || this.args.newFilter) {
+      return i18n("topics.none.education.topic_tracking_preferences", {
+        basePath: basePath(),
+      });
+    }
+    return "";
   }
 
   <template>
@@ -65,11 +79,7 @@ export default class EmptyTopicFilter extends Component {
       @ctaRoute={{this.ctaRoute}}
       @ctaAction={{this.ctaLabelWithAction.action}}
       @tipIcon="circle-info"
-      @tipText={{htmlSafe
-        (i18n
-          "topics.none.education.topic_tracking_preferences" basePath=(basePath)
-        )
-      }}
+      @tipText={{htmlSafe this.tipText}}
       @svgContent={{SvgDocumentsCheckmark}}
     />
   </template>

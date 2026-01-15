@@ -18,7 +18,7 @@ uk:
         title: "Шаблони (у текстовому полі)"
         insert_template: "%{shortcut} Вставити шаблон"
     templates:
-      filter_hint: "Фільтрувати за назвою..."
+      filter_hint: "Фільтр за ключовим словом..."
       insert_template: "Вставити шаблон"
       close_templates: "Закрити перемикач шаблонів"
       copy: "Копіювати шаблон"

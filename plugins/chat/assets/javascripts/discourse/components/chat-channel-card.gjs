@@ -1,6 +1,6 @@
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import borderColor from "discourse/helpers/border-color";
+import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -8,7 +8,7 @@ import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
-const ChatChannelCard = <template>
+<template>
   {{#if @channel}}
     <div
       class={{concatClass
@@ -16,7 +16,9 @@ const ChatChannelCard = <template>
         (if @channel.isClosed "--closed")
         (if @channel.isArchived "--archived")
       }}
-      style={{borderColor @channel.chatable.color}}
+      style={{htmlSafe
+        (concat "--chat-channel-card-border: #" @channel.chatable.color)
+      }}
       data-channel-id={{@channel.id}}
     >
       <div class="chat-channel-card__header">
@@ -46,7 +48,7 @@ const ChatChannelCard = <template>
           <ToggleChannelMembershipButton
             @channel={{@channel}}
             @options={{hash
-              leaveClass="btn-transparent btn-danger chat-channel-card__leave-btn"
+              leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
               labelType="short"
             }}
           />
@@ -82,6 +84,4 @@ const ChatChannelCard = <template>
       {{/if}}
     </div>
   {{/if}}
-</template>;
-
-export default ChatChannelCard;
+</template>

@@ -193,6 +193,7 @@ th:
       every_month: "ทุกเดือน"
       every_six_months: "ทุกหกเดือน"
   user_api_key:
+    deny: "ยกเลิก"
     read: "อ่าน"
     otp_confirmation:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
@@ -320,8 +321,10 @@ th:
     queued_by_staff:
       title: "โพสต์นี้ต้องได้รับการอนุมัติ"
     welcome_user:
+      preview: "ยินดีต้อนรับสู่ %{site_name}!"
       subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
     welcome_invite:
+      preview: "ยินดีต้อนรับสู่ %{site_name}!"
       subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
   subject_re: "ตอบ: "
   subject_pm: "[PM] "
@@ -488,9 +491,11 @@ th:
       button: "ลงทะเบียน"
     resend_email:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
+  dev_mode:
+    enter: "เอ็นเทอร์"
   wizard:
     step:
-      privacy:
+      setup:
         fields:
           login_required:
             choices:
@@ -498,17 +503,12 @@ th:
                 label: "สาธารณะ"
               private:
                 label: "ส่วนตัว"
-      styling:
-        fields:
-          styling_preview:
-            label: "แสดงตัวอย่าง"
-          homepage_style:
-            choices:
-              latest:
-                label: "ล่าสุด"
   onebox:
     github:
       closed: "ปิด"
+      status_date:
+        approved: "อนุมัติแล้ว"
+        closed: "ปิด"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} พูดถึงคุณใน "%{topic}" - %{site_title}'
@@ -544,18 +544,35 @@ th:
         complete: "โพสต์ถูกลบ."
       delete_and_agree:
         complete: "โพสต์ถูกลบ."
-      disagree:
+      disagree_bundle:
         title: "ไม่ใช่"
       ignore:
         title: "ไม่สนใจ"
       approve:
-        title: "อนุมัติ"
+        title: "ใช่"
+      approve_post:
+        title: "ใช่"
+      approve_post_closed:
+        title: "ใช่"
+      reject_post_bundle:
+        title: "ไม่ใช่"
+      approve_user:
+        title: "ใช่"
       reject_user:
+        title: "ไม่ใช่"
         delete:
           title: "ลบผู้ใช้"
           complete: "ผู้ใช้ถูกลบ."
+      confirm_spam:
+        title: "ใช่"
+      not_spam:
+        title: "ไม่ใช่"
       reject:
         title: "ละทิ้ง"
+      approve_and_restore:
+        title: "ใช่"
+      approve_and_unhide:
+        title: "ใช่"
       delete_post:
         complete: "โพสต์ถูกลบ"
       delete_user:

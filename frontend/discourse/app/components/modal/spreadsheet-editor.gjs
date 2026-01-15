@@ -11,7 +11,6 @@ import TextField from "discourse/components/text-field";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import {
   arrayToTable,
   findTableRegex,
@@ -21,6 +20,7 @@ import { i18n } from "discourse-i18n";
 
 export default class SpreadsheetEditor extends Component {
   @service dialog;
+  @service keyboardShortcuts;
 
   @tracked showEditReason = false;
   @tracked loading = true;
@@ -32,12 +32,12 @@ export default class SpreadsheetEditor extends Component {
   constructor() {
     super(...arguments);
     this.loadJspreadsheet();
-    KeyboardShortcuts.pause();
+    this.keyboardShortcuts.pause();
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    KeyboardShortcuts.unpause();
+    this.keyboardShortcuts.unpause();
   }
 
   get modalAttributes() {
@@ -134,6 +134,7 @@ export default class SpreadsheetEditor extends Component {
     ]);
 
     this.jspreadsheet = jspreadsheetModule.default;
+    this.jspreadsheet.setDictionary(this.localeMapping());
     this.loading = false;
   }
 
@@ -237,15 +238,20 @@ export default class SpreadsheetEditor extends Component {
       ? `post-${postNumber}-table-export`
       : `post-table-export`;
 
-    this.spreadsheet = this.jspreadsheet(this.spreadsheet, {
-      data,
-      columns,
-      defaultColAlign: "left",
-      wordWrap: true,
-      csvFileName: exportFileName,
-      text: this.localeMapping(),
-      ...opts,
+    const worksheets = this.jspreadsheet(this.spreadsheet, {
+      worksheets: [
+        {
+          data,
+          columns,
+          defaultColAlign: "left",
+          wordWrap: true,
+          csvFileName: exportFileName,
+          ...opts,
+        },
+      ],
     });
+
+    this.spreadsheet = worksheets[0];
   }
 
   buildUpdatedPost(tableIndex, raw, newRaw) {

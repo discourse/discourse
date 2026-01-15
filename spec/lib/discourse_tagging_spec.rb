@@ -889,6 +889,62 @@ RSpec.describe DiscourseTagging do
           ).to be_empty
         end
       end
+
+      context "with tags in multiple groups" do
+        fab!(:shared_tag1) { Fabricate(:tag, name: "shared1") }
+        fab!(:shared_tag2) { Fabricate(:tag, name: "shared2") }
+        fab!(:unrestricted_tag_group) { Fabricate(:tag_group, tags: [shared_tag1, shared_tag2]) }
+        fab!(:category_tag_group) { Fabricate(:tag_group, tags: [shared_tag1, shared_tag2]) }
+        fab!(:category) { Fabricate(:category, allowed_tag_groups: [category_tag_group.name]) }
+
+        it "correctly respects enabled one_per_topic option from tag_group that is restricted to a category" do
+          category_tag_group.update!(one_per_topic: true)
+          unrestricted_tag_group.update!(one_per_topic: false)
+
+          allowed =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            )
+
+          expect(allowed.map(&:name)).to contain_exactly("shared1", "shared2")
+
+          allowed_after_selection =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: ["shared1"],
+            )
+
+          expect(allowed_after_selection.map(&:name)).to be_empty
+        end
+
+        it "does not apply enabled one_per_topic option from other tag groups when category restricts to a tag group that disables one_per_topic option" do
+          category_tag_group.update!(one_per_topic: false)
+          unrestricted_tag_group.update!(one_per_topic: true)
+
+          allowed =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            )
+
+          expect(allowed.map(&:name)).to contain_exactly("shared1", "shared2")
+
+          allowed_after_selection =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: ["shared1"],
+            )
+
+          expect(allowed_after_selection.map(&:name)).to contain_exactly("shared2")
+        end
+      end
     end
   end
 
@@ -1533,6 +1589,55 @@ RSpec.describe DiscourseTagging do
       it "removes multiple consecutive dashes" do
         expect(DiscourseTagging.clean_tag("hello---world")).to eq("hello-world")
         expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
+      end
+    end
+
+    describe "with plugin modifiers" do
+      let!(:plugin) { Plugin::Instance.new }
+      let!(:modifier) { :tags_for_saving }
+
+      let!(:modify_tag_names_block) do
+        Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags.map! { |t| "plugin-#{t}" } }
+      end
+
+      let!(:add_tag_block) do
+        Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags << "added-by-plugin" }
+      end
+
+      let!(:remove_tag_block) do
+        Proc.new do |saving_tags, tag_names, guardian, opts|
+          saving_tags.delete_if { |t| t == "tag2" }
+        end
+      end
+
+      it "allows plugins to modify tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &modify_tag_names_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
+          %w[plugin-tag1 plugin-tag2].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &modify_tag_names_block)
+      end
+
+      it "allows plugins to add tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &add_tag_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
+          %w[tag1 tag2 added-by-plugin].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &add_tag_block)
+      end
+
+      it "allows plugins to remove tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &remove_tag_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2 tag3], guardian).try(:sort)).to eq(
+          %w[tag1 tag3].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &remove_tag_block)
       end
     end
   end

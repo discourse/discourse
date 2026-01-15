@@ -59,7 +59,7 @@ module Chat
     def set_replies_count_redis_cache(value)
       Discourse.redis.setex(
         Chat::Thread.replies_count_cache_redis_key(self.id),
-        5.minutes.from_now.to_i,
+        5.minutes.to_i,
         value,
       )
     end

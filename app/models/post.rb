@@ -12,11 +12,6 @@ class Post < ActiveRecord::Base
   include Localizable
   include HasPostUploadReferences
 
-  self.ignored_columns = [
-    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  ]
-
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}
   self.plugin_permitted_update_params = {}
@@ -832,8 +827,13 @@ class Post < ActiveRecord::Base
     problems
   end
 
-  def rebake!(invalidate_broken_images: false, invalidate_oneboxes: false, priority: nil)
-    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: invalidate_oneboxes)
+  def rebake!(
+    invalidate_broken_images: false,
+    invalidate_oneboxes: false,
+    priority: nil,
+    skip_publish_rebaked_changes: false
+  )
+    new_cooked = cook(raw, topic_id:, invalidate_oneboxes:)
     old_cooked = cooked
 
     update_columns(cooked: new_cooked, baked_at: Time.zone.now, baked_version: BAKED_VERSION)
@@ -845,14 +845,16 @@ class Post < ActiveRecord::Base
       post_hotlinked_media.upload_create_failed.destroy_all
     end
 
-    # Extracts urls from the body
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
 
-    # make sure we trigger the post process
-    trigger_post_process(bypass_bump: true, priority: priority)
+    trigger_post_process(bypass_bump: true, priority:)
 
-    publish_change_to_clients!(:rebaked)
+    # Skip publishing if invalidating oneboxes - the ProcessPost job will
+    # publish :revised after fetching fresh oneboxes, avoiding an intermediate
+    # state where raw links are shown before oneboxes are loaded.
+    should_publish = !skip_publish_rebaked_changes && !invalidate_oneboxes
+    publish_change_to_clients!(:rebaked) if should_publish
 
     new_cooked != old_cooked
   end

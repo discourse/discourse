@@ -80,7 +80,7 @@ pt:
         no_llm: "Nenhum LLM selecionado"
         no_persona: "Não definido"
         no_groups: "Nenhuma"
-        edit: "Editar"
+        edit: "Configurações"
         expand_list:
           one: "(%{count} mais)"
           other: "(%{count} mais)"
@@ -152,6 +152,7 @@ pt:
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:
+          llm: "LLM"
           spam: "Spam"
       usage:
         summary: "Resumo"
@@ -159,6 +160,7 @@ pt:
         all_features: "Todas as funcionalidades"
         username: "Nome de Utilizador"
         total_requests: "Total de pedidos"
+        total: "Total"
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."
@@ -221,6 +223,8 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
+        model_description:
+          anthropic-claude-opus-4-5: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -228,6 +232,8 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
+        provider_fields:
+          effort: "Nível de esforço (apenas Claude Opus 4.5)"
       ai_helper:
         context_menu:
           cancel: "Cancelar"
@@ -240,6 +246,7 @@ pt:
           cancel: "Cancelar"
         thumbnail_suggestions:
           select: "Selecionar"
+          try_again: "Tentar Novamente"
         image_caption:
           save_caption: "Guardar"
       embeddings:

@@ -12,6 +12,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance(
@@ -637,7 +638,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       );
   });
 
-  test("category section link have the right title", async function (assert) {
+  test("category section link has the right title", async function (assert) {
     const categories = Site.current().categories;
 
     // Category with link HTML tag in description
@@ -977,7 +978,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       );
   });
 
-  test("clean up topic tracking state state changed callbacks when Sidebar is collapsed", async function (assert) {
+  test("cleans up topic tracking state changed callbacks when sidebar is collapsed", async function (assert) {
     setupUserSidebarCategories();
 
     await visit("/");
@@ -1020,6 +1021,39 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       "/admin/site_settings/category/all_results?filter=default_navigation_menu_categories",
       "it links to the admin site settings page correctly"
     );
+  });
+
+  test("categories section header shows dropdown with new and edit actions for admin user", async function (assert) {
+    updateCurrentUser({ admin: true });
+
+    await visit("/");
+
+    const headerDropdown = selectKit(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+    );
+
+    assert.true(headerDropdown.exists());
+
+    await headerDropdown.expand();
+
+    assert.true(headerDropdown.rowByValue("new-category").exists());
+    assert.true(headerDropdown.rowByValue("edit-categories").exists());
+
+    await headerDropdown.selectRowByValue("new-category");
+
+    assert.strictEqual(currentURL(), "/new-category");
+  });
+
+  test("categories section header shows single edit button for non-admin user", async function (assert) {
+    await visit("/");
+
+    const categoriesSection =
+      ".sidebar-section[data-section-name='categories']";
+
+    assert.dom(`${categoriesSection} .sidebar-section-header-button`).exists();
+    assert
+      .dom(`${categoriesSection} .sidebar-section-header-dropdown`)
+      .doesNotExist();
   });
 });
 
@@ -1325,6 +1359,32 @@ acceptance(
           "/c/feature/spec/26",
           "category3 links to the latest topics list for the category"
         );
+    });
+  }
+);
+
+acceptance(
+  "Sidebar - Admin - Categories Section - Header Dropdown Mode",
+  function (needs) {
+    needs.user({ admin: true });
+    needs.settings({ navigation_menu: "header dropdown" });
+
+    test("edit action shows 'Edit nav categories' text", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      const headerDropdown = selectKit(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+      );
+
+      await headerDropdown.expand();
+
+      assert.true(
+        headerDropdown
+          .rowByValue("edit-categories")
+          .label()
+          .includes("Edit nav categories")
+      );
     });
   }
 );

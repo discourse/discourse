@@ -431,7 +431,6 @@ bs_BA:
       title: "Pregled"
       topic: "Tema:"
       filtered_topic: "Filtrirali ste sadržaj koji se može pregledati u jednoj temi."
-      filtered_user: "User"
       show_all_topics: "(pokaži sve teme)"
       deleted_post: "(post izbrisan)"
       deleted_user: "(korisnik izbrisan)"
@@ -537,6 +536,8 @@ bs_BA:
           noun: "user"
         reviewable_post:
           title: "Objava"
+          noun: "objava"
+        reviewable_ai_post:
           noun: "objava"
       user_label: "User"
       notes:
@@ -657,7 +658,6 @@ bs_BA:
           notification: Obavijest
         email:
           title: "Email"
-          status: "Sinkronizirano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           last_updated_by: "by"
           ssl_modes:
             none: "Ništa"
@@ -665,17 +665,10 @@ bs_BA:
             title: "Identifikacija"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Koristi SSL za IMAP"
             username: "Ime"
             password: "Lozinka"
           settings:
             title: "Postavke"
-          mailboxes:
-            synchronized: "Sinkronizirani poštanski sandučić"
-            none_found: "Na ovom računu e-pošte nisu pronađeni poštanski sandučići."
-            disabled: "Neomogućen"
         membership:
           title: Članstvo
           access: Pristup
@@ -870,7 +863,6 @@ bs_BA:
         few: "%{count} nove teme u posljednjih mjesec dana."
         other: "%{count} novih tema u zadnjih mjesec dana."
     ip_lookup:
-      title: forenzika IP adrese
       hostname: Hostname
       location: Lokacija
       location_not_found: (unknown)
@@ -901,6 +893,9 @@ bs_BA:
       new_private_message: "Nova poruka"
       private_message: "Poruka"
       private_messages: "Poruke"
+      upcoming_changes:
+        for_user:
+          enabled: "Omogućen?"
       user_notifications:
         filters:
           filter_by: "Filtriraj po"
@@ -1730,6 +1725,8 @@ bs_BA:
       upload_title: "Učitavanje"
       upload_description: "unesi opis učitanog"
       list_item: "Listaj predmet"
+      wrap_modal:
+        apply: "Snimi"
       help: "Pomoć za Markdown"
       modal_ok: "OK"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
@@ -1761,6 +1758,7 @@ bs_BA:
           label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
       ignore: "Zanemari"
+      image: "slika"
     notifications:
       tooltip:
         regular:
@@ -1948,6 +1946,10 @@ bs_BA:
         unlist_topics: "Skini teme sa liste"
         relist_topics: "Listaj teme"
         delete: "Obriši teme"
+        delete_topics_count:
+          one: "Obriši temu"
+          few: "Obriši teme"
+          other: "Obriši teme"
         dismiss: "Odbaci"
         dismiss_read: "Odbaci sve nepročitane"
         dismiss_button: "Odbaci..."
@@ -1977,16 +1979,6 @@ bs_BA:
         bookmarks: "Još nemate zabilježenih tema."
         category: "Nema tema u %{category}."
         top: "Nema top tema."
-      bottom:
-        latest: "Nema više aktuelnih tema."
-        posted: "There are no more posted topics."
-        read: "Nema više pročitanih tema."
-        new: "Nema više novih tema."
-        unread: "Nema više nepročitanih tema."
-        category: "Nema više %{category} tema."
-        tag: "Nema više %{tag} tema."
-        top: "Nema više top tema."
-        bookmarks: "U zabilješkama više nema spremljenih tema."
     topic_bulk_actions:
       dismiss:
         name: "Odbaci"
@@ -2521,18 +2513,11 @@ bs_BA:
       required_tag_group:
         delete: "Delete"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
-      delete: "Delete Category"
-      create: "Nova kategorija"
       create_long: "Napravite novu kategoriju"
-      save: "Save Category"
-      slug: "Kategorija Slug"
       slug_placeholder: "(Opcionalno) isprekidane riječi za url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
-      name: "Category Name"
       description: "Description"
-      logo: "Category Logo Image"
-      background_image: "Category Background Image"
       background_color: "Color"
       styles:
         icon: "Icon"
@@ -2544,9 +2529,7 @@ bs_BA:
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
-      list: "List Categories"
       no_description: "Please add a description for this category."
-      change_in_category_topic: "Edit Description"
       already_used: "This color has been used by another category"
       security: "Security"
       permissions:
@@ -2563,19 +2546,13 @@ bs_BA:
       subcategory_num_featured_topics: "Broj istaknutih tema na stranici roditeljske kategorije:"
       all_topics_wiki: "Neka nove teme budu wikiji kao zadano"
       subcategory_list_style: "Stil podkategorije:"
-      sort_order: "Lista tema Sortiraj po:"
-      default_view: "Podrazumevana lista tema:"
-      default_top_period: "Obićni Top Period:"
       allow_badges_label: "Allow badges to be awarded in this category"
-      edit_permissions: "Edit Permissions"
       review_group_name: "group name"
       require_topic_approval: "Potrebno je odobrenje moderatora za sve nove teme"
       require_reply_approval: "Potrebno je odobrenje moderatora za sve nove odgovore"
       this_year: "this year"
       position: "Pozicija na stranici kategorije:"
-      default_position: "Default Position"
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
-      parent: "Parent Category"
       num_auto_bump_daily: "Broj otvorenih tema koje se svakodnevno automatski izbijaju:"
       navigate_to_first_post_after_read: "Idite na prvi post nakon što se teme pročitaju"
       notifications:
@@ -2592,18 +2569,14 @@ bs_BA:
         muted:
           title: "Utišano"
       search_priority:
-        label: "Prioritet pretraživanja"
         options:
           normal: "Normalno"
           ignore: "Zanemari"
-          very_low: "Jako nisko"
           low: "Nisko"
           high: "Visoko"
-          very_high: "Jako Visoko"
       sort_options:
         default: "obićno"
         likes: "Sviđanja"
-        op_likes: "Likovi Orginalnog Posta"
         views: "Pogledano"
         posts: "Objava"
         activity: "Aktivnosti"
@@ -2789,8 +2762,6 @@ bs_BA:
       top:
         title: "Top teme"
         help: "najaktivnije teme u zadnjih godinu, mjesec, sedmicu i dan"
-        all:
-          title: "Oduvijek"
         yearly:
           title: "Godišnje"
         quarterly:
@@ -2801,12 +2772,12 @@ bs_BA:
           title: "Sedmično"
         daily:
           title: "Dnevno"
-        all_time: "Oduvijek"
         this_year: "Godina"
         this_quarter: "Kvartal"
         this_month: "Mjesec"
         this_week: "Sedmica"
         today: "Danas"
+        custom: "Custom"
     permission_types:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
@@ -2979,6 +2950,7 @@ bs_BA:
       upload_description: "Otpremite csv datoteku da biste grupisali oznake"
       upload_instructions: "Jedan po liniji, opciono sa oznakom grupe u formatu 'tag_name, tag_group'."
       upload_successful: "Oznake koje su uspješno prenesene"
+      bulk_create_button: "napravi"
       delete_unused_confirmation:
         one: "%{count} tag će biti izbrisan: %{tags}"
         few: "Oznake %{count} će biti izbrisane: %{tags}"
@@ -3012,12 +2984,9 @@ bs_BA:
           title: "Utišan"
           description: "Nećete bit obavješteni bilo čime o ovoj temi sa ovom oznakom, i neće se pojavljivati na tabularu nepročitanih tema."
       groups:
-        title: "Označite grupe"
-        new: "Nova grupa "
         tags_label: "Oznake u ovoj grupi"
         parent_tag_label: "Roditeljska oznaka"
         one_per_topic_label: "Ograničite jednu oznaku po temi iz ove grupe"
-        new_name: "Nova Grupa Oznaka"
         name_placeholder: "Ime"
         save: "Sačuvaj"
         delete: "Delete"
@@ -3182,6 +3151,9 @@ bs_BA:
         name: "Ime"
         enabled: "Omogućen"
         preview: "Pregled"
+        enabled_for_options:
+          everyone: "Svatko"
+          staff: "Samo za urednike i admine"
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -3206,6 +3178,8 @@ bs_BA:
           sub_pages:
             common_settings:
               title: "Postavke"
+        discourse_id:
+          learn_more: "Saznaj više"
         logo:
           form:
             mobile: "Mobilno"
@@ -3213,6 +3187,12 @@ bs_BA:
         fonts:
           backfill_modal:
             modal_yes: "Da"
+        welcome_banner:
+          form:
+            location:
+              label: "Lokacija"
+            header_anonymous:
+              placeholder: "Dobrodošli na %{site_name}!"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4102,7 +4082,6 @@ bs_BA:
           success: "Uspjeh"
           exists: "Već postoji"
           upload: "Dodaj iz datoteke"
-          upload_successful: "Otpremanje je uspješno. Riječi su dodane."
           html_label: "HTML"
         test:
           no_matches: "Nije pronađen traženi pojam"
@@ -4462,6 +4441,8 @@ bs_BA:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Izaberite značku za početak"
+        sections:
+          settings: Postavke
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
         visibility_heading: Vidljivost
@@ -4554,42 +4535,3 @@ bs_BA:
           categories: "Kategorije"
           topics: "Teme"
           replace: "Zamijeni"
-  wizard_js:
-    wizard:
-      back: "Prethodno"
-      next: "Iduće"
-      step-text: "Korak"
-      step: "%{current} od %{total}"
-      upload_error: "Izvinite, doslo je greske prilikom uploada ovog fajla. Molimo pokusajte ponovo."
-      invites:
-        add_user: "Dodaj"
-        none_added: "Niste pozvali ni jednog admina/moderatora. Jeste li sigurni da želite nastaviti?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Regularan korisnik"
-      homepage_choices:
-        custom:
-          label: "Custom"
-        style_type:
-          categories: "kategorija"
-          topics: "topic"
-      top_menu_items:
-        new: "Novi"
-        unread: "Nepročitano"
-        top: "Top teme"
-        latest: "Zadnje"
-        categories: "Kategorije"
-        read: "Čitao"
-        bookmarks: "Zabilješke"
-      previews:
-        share_button: "Podijeli"
-        reply_button: "Odgovori"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "Sve kategorije"
-        table_headers:
-          topic: "Topic"
-          replies: "Odgovori"
-          views: "Pregledi"
-          activity: "Activity"

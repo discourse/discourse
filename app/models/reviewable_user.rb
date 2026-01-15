@@ -12,10 +12,37 @@ class ReviewableUser < Reviewable
   end
 
   def build_legacy_combined_actions(actions, guardian, args)
-    return if status != "pending"
-    build_action(actions, :approve_user, icon: "user-plus") if guardian.can_approve?(target)
+    if status == "rejected" && !payload["scrubbed_by"]
+      build_action(actions, :scrub, client_action: "scrub")
+    end
+    if status == "pending"
+      if is_a_suspect_user?
+        confirm_spam_bundle =
+          actions.add_bundle(
+            "#{id}-confirm-spam",
+            icon: "user-xmark",
+            label: "reviewables.actions.confirm_spam.title",
+          )
+        delete_user_actions(actions, confirm_spam_bundle, require_reject_reason: false)
 
-    delete_user_actions(actions, require_reject_reason: !is_a_suspect_user?)
+        if guardian.can_approve?(target)
+          actions.add(:approve_user, bundle: nil) do |a|
+            a.icon = "user-plus"
+            a.label = "reviewables.actions.not_spam.title"
+            a.description = "reviewables.actions.not_spam.description"
+            a.completed_message = "reviewables.actions.approve_user.complete"
+          end
+        end
+      else
+        if guardian.can_approve?(target)
+          actions.add(:approve_user, bundle: nil) do |a|
+            a.icon = "user-plus"
+            a.label = "reviewables.actions.approve_user.title"
+          end
+        end
+        delete_user_actions(actions, require_reject_reason: true)
+      end
+    end
   end
 
   def build_actions(actions, guardian, args)

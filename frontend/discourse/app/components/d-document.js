@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { setLogoffCallback } from "discourse/lib/ajax";
-import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
+import { clearBodyLocks } from "discourse/lib/body-scroll-lock";
 import { bind } from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
 import { i18n } from "discourse-i18n";
@@ -11,6 +11,10 @@ import { i18n } from "discourse-i18n";
 let pluginCounterFunctions = [];
 export function addPluginDocumentTitleCounter(counterFunction) {
   pluginCounterFunctions.push(counterFunction);
+}
+
+export function clearPluginDocumentTitleCounters() {
+  pluginCounterFunctions.length = 0;
 }
 
 @tagName("")
@@ -64,7 +68,7 @@ export default class DDocument extends Component {
   @bind
   _focusChanged() {
     // changing app while keyboard is up could cause the keyboard to not collapse and not release lock
-    clearAllBodyScrollLocks();
+    clearBodyLocks();
 
     if (document.visibilityState === "hidden") {
       if (this.session.hasFocus) {

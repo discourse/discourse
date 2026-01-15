@@ -10,6 +10,7 @@ hu:
       logs:
         staff_actions:
           actions:
+            update_automation: automatizálás frissítése
             delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás
@@ -58,13 +59,17 @@ hu:
             label: Törzs
           delay:
             label: Késleltetés (perc)
-          prefers_encrypt:
-            label: PÜ titkosítása, ha elérhető
         group:
           label: Csoport
         text:
           label: Szöveg
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategóriák
+            tags:
+              label: Címkék
         not_found: Nem találta a(z) `%{trigger}` kiváltóját a(z) `%{automation}` automatizáláshoz, győződjön meg róla, hogy a kapcsolódó bővítmény telepítve van-e.
         user_badge_granted:
           fields:
@@ -422,6 +427,8 @@ hu:
           fields:
             custom_field_name:
               label: "Felhasználó egyéni mezőneve"
+        set_topic_timer:
+          title: Téma időzítőjének beállítása
       unnamed_automation: "Névtelen automatizálás"
       models:
         script:

@@ -5,3 +5,13 @@
 # https://translate.discourse.org/
 
 vi:
+  solved: "Đã xử lý"
+  posted: "ngày đăng"
+  vote_count:
+    other: "%{count} lượt bình chọn"
+  like_count:
+    other: "%{count} lượt thích"
+  reply_count:
+    other: "%{count} trả lời"
+  theme_metadata:
+    description: "Một giao diện đơn giản, đẹp mắt giúp cải thiện trải nghiệm mặc định cho các trang web Discourse."

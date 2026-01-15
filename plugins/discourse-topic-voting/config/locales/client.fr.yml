@@ -10,7 +10,6 @@ fr:
       sort_options:
         votes: "Votes"
     topic_voting:
-      title: "Vote par sujet"
       reached_limit: "Vous n'avez plus de votes disponibles, enlevez-en un !"
       list_votes: "Lister vos votes"
       votes_nav_help: "sujets ayant reçu le plus de votes"
@@ -21,12 +20,6 @@ fr:
       voted_title: "Voté"
       voting_closed_title: "Fermé"
       voting_limit: "Limite"
-      votes_left:
-        one: "Il vous reste %{count} vote, consultez <a href='%{path}'>vos votes</a>."
-        other: "Il vous reste %{count} votes, consultez <a href='%{path}'>vos votes</a>."
-      votes_left_button_title:
-        one: "Il vous reste %{count} vote."
-        other: "Il vous reste %{count} votes."
       votes:
         one: "%{count} vote"
         other: "%{count} votes"

@@ -78,7 +78,7 @@ module DiscourseAi
             notification_level can be: {muted: 0, regular: 1, tracking: 2, watching: 3, watching_first_post: 4}.
             bookmarkable_type can be: Post,Topic,ChatMessage and more
 
-            Current time is: {time}
+            Current date is: {date}
             Participants here are: {participants}
 
             Here is a partial list of tables in the database (you can retrieve schema from these tables as needed)

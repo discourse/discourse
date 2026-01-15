@@ -18,6 +18,40 @@ RSpec.describe Upload do
 
   it { is_expected.to have_many(:badges).dependent(:nullify) }
 
+  describe ".fetch_from" do
+    subject(:record) { described_class.fetch_from(sha1:, url:) }
+
+    fab!(:upload)
+
+    let(:url) { upload.url }
+
+    context "when sha1 is present" do
+      context "when there is a matching upload for this SHA1" do
+        let(:sha1) { upload.sha1 }
+
+        it "returns the record" do
+          expect(record).to eq(upload)
+        end
+      end
+
+      context "when there is no matching upload for this SHA1" do
+        let(:sha1) { "non-existent" }
+
+        it "fetches the record using the provided URL" do
+          expect(record).to eq(upload)
+        end
+      end
+    end
+
+    context "when sha1 is blank" do
+      let(:sha1) { "" }
+
+      it "fetches the record using the provided URL" do
+        expect(record).to eq(upload)
+      end
+    end
+  end
+
   describe ".with_no_non_post_relations" do
     it "does not find non-post related uploads" do
       post_upload = Fabricate(:upload)
@@ -701,6 +735,101 @@ RSpec.describe Upload do
           upload.update_secure_status
           expect(upload.secure).to eq(true)
         end
+      end
+    end
+
+    context "with optimized videos" do
+      before do
+        extensions = SiteSetting.authorized_extensions.split("|")
+        SiteSetting.authorized_extensions = (extensions | %w[mp4 mov avi mkv]).join("|")
+        enable_secure_uploads
+      end
+
+      it "syncs optimized video secure status when original upload secure status changes from false to true" do
+        original_upload = Fabricate(:upload, secure: false)
+        optimized_video = Fabricate(:optimized_video, upload: original_upload)
+        optimized_upload = optimized_video.optimized_upload
+        optimized_upload.update!(secure: false)
+
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(original_upload)
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(optimized_upload)
+
+        original_upload.update!(access_control_post: Fabricate(:private_message_post))
+        original_upload.update_secure_status
+
+        expect(original_upload.reload.secure).to eq(true)
+        expect(optimized_upload.reload.secure).to eq(true)
+      end
+
+      it "syncs optimized video secure status when original upload secure status changes from true to false" do
+        original_upload =
+          Fabricate(:upload, secure: true, access_control_post: Fabricate(:private_message_post))
+        optimized_video = Fabricate(:optimized_video, upload: original_upload)
+        optimized_upload = optimized_video.optimized_upload
+        optimized_upload.update!(secure: true)
+
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(original_upload)
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(optimized_upload)
+
+        original_upload.update!(access_control_post: Fabricate(:post))
+        original_upload.update_secure_status
+
+        expect(original_upload.reload.secure).to eq(false)
+        expect(optimized_upload.reload.secure).to eq(false)
+      end
+
+      it "does not update optimized video secure status if it already matches" do
+        original_upload =
+          Fabricate(:upload, secure: true, access_control_post: Fabricate(:private_message_post))
+        optimized_video = Fabricate(:optimized_video, upload: original_upload)
+        optimized_upload = optimized_video.optimized_upload
+        optimized_upload.update!(secure: true)
+
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(original_upload)
+          .never
+
+        original_upload.update_secure_status
+
+        expect(original_upload.reload.secure).to eq(true)
+        expect(optimized_upload.reload.secure).to eq(true)
+      end
+
+      it "syncs multiple optimized videos when original upload secure status changes" do
+        original_upload = Fabricate(:upload, secure: false)
+        optimized_video1 =
+          Fabricate(:optimized_video, upload: original_upload, adapter: "aws_mediaconvert")
+        optimized_video2 =
+          Fabricate(:optimized_video, upload: original_upload, adapter: "other_adapter")
+        optimized_upload1 = optimized_video1.optimized_upload
+        optimized_upload2 = optimized_video2.optimized_upload
+        optimized_upload1.update!(secure: false)
+        optimized_upload2.update!(secure: false)
+
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(original_upload)
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(optimized_upload1)
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(optimized_upload2)
+
+        original_upload.update!(access_control_post: Fabricate(:private_message_post))
+        original_upload.update_secure_status
+
+        expect(original_upload.reload.secure).to eq(true)
+        expect(optimized_upload1.reload.secure).to eq(true)
+        expect(optimized_upload2.reload.secure).to eq(true)
       end
     end
   end

@@ -374,15 +374,6 @@ RSpec.describe PostDestroyer do
       expect(post.like_count).to eq(2)
       expect(post.custom_fields["deleted_public_actions"]).to be_nil
     end
-
-    it "unmarks the matching incoming email for imap sync" do
-      SiteSetting.enable_imap = true
-      incoming =
-        Fabricate(:incoming_email, imap_sync: true, post: post, topic: post.topic, imap_uid: 99)
-      PostDestroyer.new(moderator, post).recover
-      incoming.reload
-      expect(incoming.imap_sync).to eq(false)
-    end
   end
 
   describe "basic destroying" do
@@ -442,6 +433,65 @@ RSpec.describe PostDestroyer do
       post.hide!(PostActionType.types[:inappropriate])
       PostDestroyer.new(post.user, post).destroy
       expect(post.revisions[0].modifications["raw"]).to be_present
+    end
+
+    it "resolves reviewable when author deletes their flagged post and undeletes" do
+      reply = create_post(topic: post.topic)
+      result = PostActionCreator.spam(coding_horror, reply)
+      reviewable = result.reviewable
+
+      expect(reviewable).to be_pending
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_ignored
+
+      note = reviewable.reviewable_notes.last
+      expect(note.user).to eq(Discourse.system_user)
+      expect(note.content).to eq(I18n.t("reviewables.post_deleted_by_author"))
+
+      expect(reviewable.reviewable_scores.first.reviewed_by_id).to eq(Discourse.system_user.id)
+      expect(reviewable.reviewable_scores.first.reviewed_at).to be_present
+
+      history = reviewable.reviewable_histories.last
+      expect(history.reviewable_history_type).to eq("transitioned")
+      expect(history.created_by).to eq(Discourse.system_user)
+
+      PostDestroyer.new(reply.user, reply).recover
+      expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_pending
+
+      recovery_note = reviewable.reviewable_notes.last
+      expect(recovery_note.user).to eq(Discourse.system_user)
+      expect(recovery_note.content).to eq(I18n.t("reviewables.post_restored_by_author"))
+
+      history = reviewable.reviewable_histories.last
+      expect(history.reviewable_history_type).to eq("transitioned")
+      expect(history.created_by).to eq(Discourse.system_user)
+    end
+
+    it "does not restore reviewable when manually ignored by moderator" do
+      reply = create_post(topic: post.topic)
+      result = PostActionCreator.spam(coding_horror, reply)
+      reviewable = result.reviewable
+
+      expect(reviewable).to be_present
+      expect(reviewable).to be_pending
+
+      reviewable.perform(moderator, :ignore_and_do_nothing)
+
+      expect(reviewable.reload).to be_ignored
+      expect(reviewable.reviewable_scores.first.reviewed_by_id).to eq(moderator.id)
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_ignored
     end
 
     it "when topic is destroyed, it updates user_stats correctly" do
@@ -822,28 +872,6 @@ RSpec.describe PostDestroyer do
       end
     end
 
-    describe "incoming email and imap sync" do
-      fab!(:incoming) { Fabricate(:incoming_email, post: post, topic: post.topic) }
-
-      it "does nothing if imap not enabled" do
-        IncomingEmail.expects(:find_by).never
-        PostDestroyer.new(moderator, post).destroy
-      end
-
-      it "does nothing if the incoming email has no imap_uid" do
-        SiteSetting.enable_imap = true
-        PostDestroyer.new(moderator, post).destroy
-        expect(incoming.reload.imap_sync).to eq(false)
-      end
-
-      it "sets imap_sync to true for the matching incoming" do
-        SiteSetting.enable_imap = true
-        incoming.update(imap_uid: 999)
-        PostDestroyer.new(moderator, post).destroy
-        expect(incoming.reload.imap_sync).to eq(true)
-      end
-    end
-
     context "with a reply" do
       fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
       let!(:post_reply) { PostReply.create(post_id: post.id, reply_post_id: reply.id) }
@@ -953,6 +981,17 @@ RSpec.describe PostDestroyer do
       PostDestroyer.new(moderator, second_post, defer_flags: true).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
+    end
+
+    context "when the flagged post is potentially illegal" do
+      before { ReviewableFlaggedPost.pending.update_all(potentially_illegal: true) }
+
+      it "does not automatically mark it as ignored or approved" do
+        expect { PostDestroyer.new(moderator, second_post).destroy }.not_to change {
+          ReviewableFlaggedPost.pending.count
+        }
+        expect(Jobs::SendSystemMessage.jobs).to be_empty
+      end
     end
 
     context "when custom flags" do
@@ -1317,6 +1356,39 @@ RSpec.describe PostDestroyer do
         topic.reload
 
         expect(topic.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+    end
+
+    context "when recovering a deleted reply" do
+      it "restores bumped_at when the last reply is recovered" do
+        PostDestroyer.new(moderator, last_reply).destroy
+        PostDestroyer.new(moderator, last_reply.reload).recover
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      it "restores bumped_at when a user-deleted reply is recovered" do
+        PostDestroyer.new(user, last_reply).destroy
+        PostDestroyer.new(user, last_reply.reload).recover
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      context "when the recovered post is not the last reply" do
+        let!(:newer_reply) do
+          freeze_time 3.days.from_now
+          create_post(topic:, user: coding_horror)
+        end
+
+        it "does not change bumped_at" do
+          PostDestroyer.new(moderator, second_last_reply).destroy
+          PostDestroyer.new(moderator, second_last_reply.reload).recover
+          topic.reload
+
+          expect(topic.bumped_at).to eq_time(newer_reply.created_at)
+        end
       end
     end
   end

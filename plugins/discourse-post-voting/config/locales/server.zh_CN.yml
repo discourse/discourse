@@ -29,16 +29,16 @@ zh_CN:
     post_voting_enable_likes_on_answers: "在“帖子投票”话题中回复时启用“点赞”按钮"
     post_voting_undo_vote_action_window: "允许用户在“帖子投票”话题中撤消投票的分钟数（0 为不限制）"
     post_voting_comment_limit_per_post: "每个帖子允许的评论数"
-    min_trust_to_flag_posts_voting_comments: "举报帖子投票评论的最低信任级别"
     flag_posts_voting_comments_allowed_groups: "能够举报帖子投票评论的群组"
     post_voting_comment_enabled: "启用对“帖子投票”话题中的帖子发表评论"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "你想如何处理这条评论？"
         no_action_comment:
           title: "无行动"
+          description: "请保留原评论。"
         agree_and_keep_comment:
           title: "保留评论"
           description: "同意举报并保持评论不变。"
@@ -51,9 +51,19 @@ zh_CN:
         agree_and_delete:
           title: "删除评论"
           description: "删除评论，使用户看不到。"
+        agree_and_suspend:
+          title: "封禁用户"
+          description: "同意举报并封禁用户。"
+        agree_and_silence:
+          title: "禁言用户"
+          description: "同意举报并将用户禁言。"
         disagree_and_restore:
           title: "不同意并恢复评论"
           description: "恢复评论，以便所有用户都可以看到。"
+        disagree:
+          title: "保留评论"
+        delete_and_agree:
+          description: "通过从队列中移除来忽略举报并删除评论。"
   post_action_types:
     vote:
       title: "投票"
@@ -100,16 +110,12 @@ zh_CN:
             title: "删除评论"
             description: "删除评论，使用户看不到。"
           delete_and_agree:
-            title: "忽略举报并删除评论"
             description: "通过从队列中移除来忽略举报并删除评论。"
           disagree_and_restore:
             title: "不同意并恢复评论"
             description: "恢复评论，以便所有用户都可以看到。"
           disagree:
-            title: "不同意"
-          ignore:
-            title: "不进行操作"
-            description: "通过从队列中移除来忽略举报，不采取任何措施。"
+            title: "保留评论"
         transcript:
           view: "查看以前的评论转录文本"
       reviewable_score_types:

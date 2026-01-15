@@ -16,6 +16,7 @@ require_relative "lib/calendar_upcoming_events_default_view"
 
 enabled_site_setting :calendar_enabled
 
+register_svg_icon "calendar-days"
 register_asset "stylesheets/common/full-calendar-ext.scss"
 register_asset "stylesheets/common/discourse-calendar.scss"
 register_asset "stylesheets/common/discourse-calendar-holidays.scss"
@@ -23,6 +24,7 @@ register_asset "stylesheets/common/discourse-post-event.scss"
 register_asset "stylesheets/common/discourse-post-event-preview.scss"
 register_asset "stylesheets/common/post-event-builder.scss"
 register_asset "stylesheets/common/discourse-post-event-invitees.scss"
+register_asset "stylesheets/common/composer-event-node-view.scss"
 register_asset "stylesheets/common/discourse-post-event-core-ext.scss"
 register_asset "stylesheets/mobile/discourse-post-event-core-ext.scss", :mobile
 register_asset "stylesheets/common/discourse-post-event-bulk-invite-modal.scss"
@@ -83,14 +85,8 @@ after_initialize do
   reloadable_patch do
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
     Category.register_custom_field_type("disable_topic_resorting", :boolean)
-    if respond_to?(:register_preloaded_category_custom_fields)
-      register_preloaded_category_custom_fields("sort_topics_by_event_start_date")
-      register_preloaded_category_custom_fields("disable_topic_resorting")
-    else
-      # TODO: Drop the if-statement and this if-branch in Discourse v3.2
-      Site.preloaded_category_custom_fields << "sort_topics_by_event_start_date"
-      Site.preloaded_category_custom_fields << "disable_topic_resorting"
-    end
+    register_preloaded_category_custom_fields("sort_topics_by_event_start_date")
+    register_preloaded_category_custom_fields("disable_topic_resorting")
   end
 
   add_to_serializer :basic_category, :sort_topics_by_event_start_date do
@@ -505,23 +501,21 @@ after_initialize do
 
   on(:user_destroyed) { |user| DiscoursePostEvent::Invitee.where(user_id: user.id).destroy_all }
 
-  if respond_to?(:add_post_revision_notifier_recipients)
-    add_post_revision_notifier_recipients do |post_revision|
-      # next if no modifications
-      next if !post_revision.modifications.present?
+  add_post_revision_notifier_recipients do |post_revision|
+    # next if no modifications
+    next if !post_revision.modifications.present?
 
-      # do no notify recipients when only updating tags
-      next if post_revision.modifications.keys == ["tags"]
+    # do no notify recipients when only updating tags
+    next if post_revision.modifications.keys == ["tags"]
 
-      ids = []
-      post = post_revision.post
+    ids = []
+    post = post_revision.post
 
-      if post && post.is_first_post? && post.event
-        ids.concat(post.event.on_going_event_invitees.pluck(:user_id))
-      end
-
-      ids
+    if post && post.is_first_post? && post.event
+      ids.concat(post.event.on_going_event_invitees.pluck(:user_id))
     end
+
+    ids
   end
 
   on(:site_setting_changed) do |name, old_val, new_val|

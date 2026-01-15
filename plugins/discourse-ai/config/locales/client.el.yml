@@ -85,7 +85,7 @@ el:
         groups: "Ομάδες:"
         no_persona: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
-        edit: "Επεξεργασία"
+        edit: "Ρυθμίσεις"
         expand_list:
           one: "(%{count} περισσότερο)"
           other: "(%{count} περισσότερα)"
@@ -95,6 +95,9 @@ el:
           reset: "Επαναφορά"
         search:
           name: "Αναζήτηση"
+        ai_helper:
+          setting_groups:
+            automation: "Αυτοματισμός"
         spam:
           name: "Ανεπιθύμητα"
       modals:
@@ -128,6 +131,7 @@ el:
         model: "Μοντέλο"
         username: "Όνομα Χρήστη"
         total_requests: "Σύνολο αιτήσεων"
+        total: "Σύνολο"
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
@@ -138,7 +142,10 @@ el:
         export: "Εξαγωγή"
         import: "Εισαγωγή"
         description: "Περιγραφή"
+        mentionable: Να επιτρέπονται επισημάνσεις
         user: Χρήστης
+        allow_chat_channel_mentions: "Να επιτρέπονται επισημάνσεις καναλιών συνομιλίας"
+        allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
         enabled: "Ενεργοποιημένο;"
         allowed_groups: "Επιτρεπόμενες ομάδες"
@@ -185,6 +192,8 @@ el:
         usage:
           ai_summarization: "Συνοψίστε"
           ai_spam: "Ανεπιθύμητα"
+        model_description:
+          open_router-x-ai-grok-4: "Τελευταίο μοντέλο της xAI"
         next:
           title: "Επόμενο"
         tests:
@@ -205,6 +214,7 @@ el:
         thumbnail_suggestions:
           select: "Επιλογή"
           selected: "Επιλεγμένα"
+          try_again: "Δοκίμασε ξανά"
         image_caption:
           save_caption: "Αποθήκευση"
       embeddings:
@@ -220,6 +230,9 @@ el:
           fake: "Προσαρμοσμένο"
       ai_bot:
         llm: "Μοντέλο"
+        try_again: "Δοκιμάστε ξανά"
+        shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
+        shortcut_link: "AI bot"
         debug_ai_modal:
           request: "Αίτημα"
           response: "Απάντηση"
@@ -230,6 +243,7 @@ el:
         share_modal:
           copy: "Αντιγραφή"
         conversations:
+          messages_sidebar_title: "Συζητήσεις"
           today: "Σήμερα"
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"

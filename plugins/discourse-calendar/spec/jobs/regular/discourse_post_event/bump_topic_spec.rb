@@ -23,6 +23,13 @@ describe Jobs::DiscoursePostEventBumpTopic do
         expect(timer.status_type).to eq(TopicTimer.types[:bump])
         expect(timer.execute_at).to eq_time(Time.zone.local(2019, 12, 10, 5, 0))
       end
+
+      it "does not create a timer if the date is in the past" do
+        freeze_time
+        Jobs::DiscoursePostEventBumpTopic.new.execute(topic_id: topic_1.id, date: "2019-10-10 5:00")
+
+        expect(TopicTimer.find_by(topic: topic_1)).to be_nil
+      end
     end
 
     context "when the topic_id param is missing" do

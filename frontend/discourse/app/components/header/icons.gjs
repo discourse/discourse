@@ -19,7 +19,10 @@ function resetHeaderIcons() {
   headerIcons.add("search");
   headerIcons.add("hamburger", undefined, { after: "search" });
   headerIcons.add("user-menu", undefined, { after: "hamburger" });
-  headerIcons.add("interface-color-selector", undefined, { before: "search" });
+  headerIcons.add("interface-color-selector", undefined, {
+    before: "search",
+    after: "language-switcher",
+  });
   headerIcons.add("language-switcher", undefined, { before: "search" });
 }
 
@@ -78,6 +81,10 @@ export default class Icons extends Component {
   }
 
   get showLanguageSwitcher() {
+    if (!this.siteSettings.content_localization_enabled) {
+      return false;
+    }
+
     const has_locales =
       !!this.siteSettings.content_localization_supported_locales;
     switch (this.siteSettings.content_localization_language_switcher) {

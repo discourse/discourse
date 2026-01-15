@@ -1,10 +1,14 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
+
+export const PAGE_SIZE = 20;
 
 export default class CustomReaction extends RestModel {
   static toggle(post, reactionId, appEvents) {
@@ -17,6 +21,33 @@ export default class CustomReaction extends RestModel {
         reaction: result.current_user_reaction,
       });
     });
+  }
+
+  static flattenForPostList(reaction) {
+    const title = reaction.topic.title;
+    return {
+      // Original reaction data
+      ...reaction,
+      // Preserve reaction_user.id for pagination
+      reaction_user_id: reaction.id,
+      // Flatten post fields to top level for PostListItem
+      id: reaction.post.id,
+      user_id: reaction.post.user_id,
+      username: reaction.post.username,
+      name: reaction.post.name,
+      avatar_template: reaction.post.avatar_template,
+      user_title: reaction.post.user_title,
+      primary_group_name: reaction.post.primary_group_name,
+      excerpt: reaction.post.excerpt,
+      expandedExcerpt: reaction.post.expandedExcerpt,
+      topic_id: reaction.post.topic_id,
+      post_type: reaction.post.post_type,
+      url: reaction.post.url,
+      title,
+      titleHtml: title && emojiUnescape(escapeExpression(title)),
+      category: reaction.category,
+      created_at: reaction.created_at,
+    };
   }
 
   static findReactions(url, username, opts) {

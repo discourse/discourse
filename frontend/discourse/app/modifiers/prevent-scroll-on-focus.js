@@ -3,6 +3,16 @@ import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 
+export function focusOffScreen(target) {
+  target.style.transform = "translateY(-99999px)";
+  target.focus({ preventScroll: true });
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      target.style.transform = "";
+    });
+  });
+}
+
 /**
  * Modifier that prevents body scroll when focusing an input on iOS.
  *
@@ -55,14 +65,7 @@ export default class PreventScrollOnFocus extends Modifier {
       return;
     }
 
-    const target = event.target;
-    target.style.transform = "translateY(-99999px)";
-    target.focus({ preventScroll: true });
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        target.style.transform = "";
-      });
-    });
+    focusOffScreen(event.target);
   }
 
   cleanup() {

@@ -10,7 +10,6 @@ pt_BR:
       sort_options:
         votes: "Votos"
     topic_voting:
-      title: "Votação do tópico"
       reached_limit: "Você está sem votos, remova um voto existente!"
       list_votes: "Mostrar seus votos"
       votes_nav_help: "tópicos com a maioria dos votos"
@@ -21,12 +20,6 @@ pt_BR:
       voted_title: "Votou"
       voting_closed_title: "Fechados"
       voting_limit: "Limite"
-      votes_left:
-        one: "Você tem %{count} voto restante, veja <a href='%{path}'>seus votos</a>."
-        other: "Você tem %{count} votos restantes, veja <a href='%{path}'>seus votos</a>."
-      votes_left_button_title:
-        one: "Você tem %{count} voto restante."
-        other: "Você tem %{count} votos restantes."
       votes:
         one: "%{count} voto"
         other: "%{count} votos"

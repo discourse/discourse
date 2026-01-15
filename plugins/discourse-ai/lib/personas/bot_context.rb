@@ -9,7 +9,8 @@ module DiscourseAi
                     :private_message,
                     :custom_instructions,
                     :user,
-                    :skip_tool_details,
+                    :feature_context,
+                    :skip_show_thinking,
                     :participants,
                     :chosen_tools,
                     :message_id,
@@ -29,9 +30,10 @@ module DiscourseAi
         topic: nil,
         participants: nil,
         user: nil,
-        skip_tool_details: nil,
+        skip_show_thinking: nil,
         messages: [],
         custom_instructions: nil,
+        feature_context: nil,
         site_url: nil,
         site_title: nil,
         site_description: nil,
@@ -48,9 +50,10 @@ module DiscourseAi
       )
         @participants = participants
         @user = user
-        @skip_tool_details = skip_tool_details
+        @skip_show_thinking = skip_show_thinking
         @messages = messages
         @custom_instructions = custom_instructions
+        @feature_context = feature_context || {}
         @format_dates = format_dates
 
         @message_id = message_id
@@ -88,6 +91,7 @@ module DiscourseAi
 
       # these are strings that can be safely interpolated into templates
       TEMPLATE_PARAMS = %w[
+        date
         time
         site_url
         site_title
@@ -106,6 +110,10 @@ module DiscourseAi
 
       def time
         @time ||= Time.zone.now
+      end
+
+      def date
+        @date ||= time.strftime("%B %d, %Y")
       end
 
       def site_url
@@ -151,8 +159,9 @@ module DiscourseAi
           site_url: @site_url,
           site_title: @site_title,
           site_description: @site_description,
-          skip_tool_details: @skip_tool_details,
+          skip_show_thinking: @skip_show_thinking,
           feature_name: @feature_name,
+          feature_context: @feature_context,
           resource_url: @resource_url,
           inferred_concepts: @inferred_concepts,
           user_language: @user_language,

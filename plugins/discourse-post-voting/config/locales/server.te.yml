@@ -10,6 +10,12 @@ te:
       actions:
         no_action_comment:
           title: "చర్య తీసుకోలేదు"
+        agree_and_suspend:
+          title: "సభ్యుడిని సస్పెండు చేయండి"
+          description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని సస్పెండ్ చేయండి."
+        agree_and_silence:
+          title: "సభ్యుని నిశ్శబ్దం చేయండి"
+          description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని నిశబ్దం చేయండి."
   post_action_types:
     vote:
       title: "వోటు"
@@ -23,8 +29,6 @@ te:
           agree_and_silence:
             title: "సభ్యుని నిశ్శబ్దం చేయండి"
             description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని నిశబ్దం చేయండి."
-          disagree:
-            title: "ఒప్పుకోకు"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

@@ -24,6 +24,7 @@ RSpec.describe WebHookEventType do
           user_destroyed
           user_suspended
           user_unsuspended
+          user_anonymized
           group_created
           group_updated
           group_destroyed

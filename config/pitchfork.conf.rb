@@ -20,7 +20,7 @@ end
 worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 
 # stree-ignore
-listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}"
+listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}", reuseport: true
 
 if ENV["RAILS_ENV"] == "production"
   # nuke workers after 30 seconds instead of 20 seconds (the default)
@@ -135,5 +135,5 @@ after_worker_timeout do |server, worker, timeout_info|
   #{timeout_info.thread.backtrace&.join("\n")}
   MSG
 
-  Rails.logger.warn(message)
+  Rails.logger.error(message)
 end

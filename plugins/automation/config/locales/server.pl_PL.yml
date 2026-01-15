@@ -8,6 +8,8 @@ pl_PL:
   site_settings:
     discourse_automation_enabled: "Włącz wtyczkę discourse-automation"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(puste)"
     models:
       automations:
         validations:
@@ -20,6 +22,9 @@ pl_PL:
         invalid_field: Składnik pola `%{component}` nie może być użyty na `%{target}:%{target_name}`.
         invalid_metadata: Dane dla `%{field}` są nieprawidłowe lub komponent `%{component}` jest nieznany.
     triggerables:
+      post_flag_created:
+        title: Flaga wpisu została utworzona
+        description: Uruchamia automatyzację, gdy wpis zostanie oznaczony flagą
       errors:
         custom_fields_or_user_profile_required: "Co najmniej jeden z 'custom_fields' lub 'user_profile' musi być podany."
       user_badge_granted:
@@ -78,6 +83,24 @@ pl_PL:
         title: Po aktualizacji użytkownika
         description: Gdy użytkownik zaktualizuje jakiekolwiek informacje, zostanie uruchomiona automatyzacja
     scriptables:
+      email_on_flagged_post:
+        title: Wiadomość e-mail o oflagowanym wpisie
+        description: Wysyłaj niestandardowy e-mail za każdym razem, gdy we wpisie zostanie utworzona flaga
+        subject: "Oflagowany wpis: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Wpis został oflagowany.
+
+          Temat: {{topic_title}} ({{topic_url}})
+          Wpis: {{post_url}} (#{{post_number}})
+          Typ flagi: {{flag_type}}
+          Użytkownik oflagowany: {{flagged_username}}
+          Użytkownik flagujący: {{flagger_username}}
+          Kategoria: {{category}}
+          Tagi: {{tags}}
+
+          --------
+          Fragment wpisu:
+          {{post_excerpt}}
       post:
         title: Utwórz post
         description: Utwórz post na określony temat
@@ -108,6 +131,10 @@ pl_PL:
         title: Wymiana prezentów
         description: Umożliwia anonimowe parowanie użytkowników grupy w celu wysyłania sobie prezentów.
         doc: Wymiana prezentów wymaga istniejącej grupy z co najmniej 3 użytkownikami. W wybranym terminie każdy użytkownik grupy zostanie sparowany z jednym obdarowującym i jednym obdarowywanym.
+      remove_upload_markup_from_deleted_posts:
+        title: Usuń znaczniki przesyłania w usuniętych wpisach
+        description: Działa jako użytkownik systemu i dodaje rewizję do usuniętych wpisów, usuwając znaczniki przesyłania. W połączeniu z zadaniem „oczyszczania przesłanych wpisów” powoduje to trwałe usunięcie przesłanych wpisów. Zachowaj ostrożność!
+        edit_reason: Automatyzacja usunęła znaczniki przesyłania z usuniętego wpisu
       send_pms:
         title: Wyślij prywatną wiadomość
         description: Umożliwia wysyłanie wiadomości prywatnych (możliwe opóźnienie).
@@ -161,3 +188,6 @@ pl_PL:
       random_assign:
         title: "Przypisanie losowe"
         description: "Losowo przypisuje tematy do grupy"
+      set_topic_timer:
+        title: "Ustaw minutnik tematu"
+        description: "Ustaw minutnik dla tematu"

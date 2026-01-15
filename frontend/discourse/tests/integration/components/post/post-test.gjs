@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render, triggerEvent } from "@ember/test-helpers";
+import { click, render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
 import DMenus from "discourse/float-kit/components/d-menus";
@@ -23,24 +23,21 @@ function renderComponent(
     unhidePost,
   } = {}
 ) {
-  // TODO (glimmer-post-stream) remove the outer div when the post-stream widget is converted to a Glimmer component
   return render(
     <template>
-      <div class="topic-post glimmer-post-stream">
-        <Post
-          @post={{post}}
-          @prevPost={{prevPost}}
-          @changePostOwner={{changePostOwner}}
-          @editPost={{editPost}}
-          @expandHidden={{expandHidden}}
-          @permanentlyDeletePost={{permanentlyDeletePost}}
-          @rebakePost={{rebakePost}}
-          @showHistory={{showHistory}}
-          @showRawEmail={{showRawEmail}}
-          @togglePostType={{togglePostType}}
-          @unhidePost={{unhidePost}}
-        />
-      </div>
+      <Post
+        @post={{post}}
+        @prevPost={{prevPost}}
+        @changePostOwner={{changePostOwner}}
+        @editPost={{editPost}}
+        @expandHidden={{expandHidden}}
+        @permanentlyDeletePost={{permanentlyDeletePost}}
+        @rebakePost={{rebakePost}}
+        @showHistory={{showHistory}}
+        @showRawEmail={{showRawEmail}}
+        @togglePostType={{togglePostType}}
+        @unhidePost={{unhidePost}}
+      />
       <DMenus />
     </template>
   );
@@ -50,7 +47,6 @@ module("Integration | Component | Post", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.glimmer_post_stream_mode = "enabled";
     this.siteSettings.post_menu_hidden_items = "";
 
     this.store = getOwner(this).lookup("service:store");
@@ -341,6 +337,24 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     assert.dom(".read-state").exists();
+  });
+
+  test("language indicator appears after localization properties are updated", async function (assert) {
+    this.siteSettings.available_locales = [{ value: "ja", name: "Japanese" }];
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".post-language")
+      .doesNotExist("language indicator not shown initially");
+
+    this.post.is_localized = true;
+    this.post.language = "ja";
+    await settled();
+
+    assert
+      .dom(".post-language")
+      .exists("language indicator appears after update");
   });
 
   test("reply directly above (suppressed)", async function (assert) {
@@ -811,12 +825,9 @@ module("Integration | Component | Post", function (hooks) {
   });
 
   test("a11y heading is rendered when post is cloaked", async function (assert) {
-    // TODO (glimmer-post-stream) remove the outer div when the post-stream widget is converted to a Glimmer component
     await render(
       <template>
-        <div class="topic-post glimmer-post-stream">
-          <Post @post={{this.post}} @cloaked={{true}} />
-        </div>
+        <Post @post={{this.post}} @cloaked={{true}} />
         <DMenus />
       </template>
     );
@@ -865,13 +876,10 @@ module("Integration | Component | Post", function (hooks) {
     });
 
     // Render both posts
-    // TODO (glimmer-post-stream) remove the outer div when the post-stream widget is converted to a Glimmer component
     await render(
       <template>
-        <div class="topic-post glimmer-post-stream">
-          <Post @post={{post1}} />
-          <Post @post={{post2}} />
-        </div>
+        <Post @post={{post1}} />
+        <Post @post={{post2}} />
         <DMenus />
       </template>
     );

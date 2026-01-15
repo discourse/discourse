@@ -26,7 +26,7 @@ RSpec.describe DiscourseAi::Evals::Runners::AiHelper do
 
       lines = result[:raw].split("\n")
       expect(lines).to contain_exactly("Title One", "Title Two ignored")
-      expect(result[:metadata]).to include(helper_mode: "title_suggestions")
+      expect(result[:metadata]).to include(feature_name: "title_suggestions")
     end
   end
 end

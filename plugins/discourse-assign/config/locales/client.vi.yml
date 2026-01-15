@@ -6,6 +6,20 @@
 
 vi:
   js:
+    action_codes:
+      assigned: "Đã chỉ định %{who} %{when}"
+      assigned_group: "Đã chỉ định %{who} %{when}"
+      assigned_to_post: "Đã chỉ định %{who} cho <a href='%{path}'>tút</a> %{when}"
+      assigned_group_to_post: "Đã chỉ định %{who} cho <a href='%{path}'>tút</a> %{when}"
+      unassigned: "Đã bỏ chỉ định %{who} %{when}"
+      unassigned_group: "Đã bỏ chỉ định %{who} %{when}"
+      unassigned_from_post: "Đã bỏ chỉ định %{who} khỏi <a href='%{path}'>tút</a> %{when}"
+      unassigned_group_from_post: "Đã bỏ chỉ định %{who} khỏi <a href='%{path}'>tút</a> %{when}"
+      reassigned: "Đã chỉ định lại %{who} %{when}"
+      reassigned_group: "Đã chỉ định lại %{who} %{when}"
+      details_change: "Đã thay đổi chi tiết chỉ định cho %{who} %{when}"
+      note_change: "Đã thay đổi ghi chú chỉ định cho %{who} %{when}"
+      status_change: "Đã thay đổi trạng thái chỉ định cho %{who} %{when}"
     discourse_assign:
       cant_act: "Bạn không thể hành động trên các cờ đã được gán cho Thành viên khác"
       assigned: "Được chỉ định"
@@ -28,17 +42,27 @@ vi:
         quarterly: "Hàng quý"
     user:
       notification_level_when_assigned:
-        watch_topic: "Quan sát chủ đề"
-        track_topic: "Theo dõi chủ đề"
-        do_nothing: "Không làm gì cả"
+        label: "Khi được chỉ định"
+        watch_topic: "Giám sát chủ đề"
+        track_topic: "Quan tâm chủ đề"
+        do_nothing: "Không làm gì"
       messages:
         assigned: "Được chỉ định"
       assignment_description:
         topic: "%{topic_title}"
+    topics:
+      bulk:
+        unassign: "Hủy chỉ định chủ đề"
+        assign: "Chỉ định chủ đề"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Được chỉ định"
+    user_menu:
+      tabs:
+        assign_list: "Danh sách chỉ định"
+        assign_list_with_unread:
+          other: "Danh sách chỉ định - %{count} chưa đọc"
     edit_assignments_modal:
       topic: "Chủ đề"
       post: "Bài đăng"

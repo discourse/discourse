@@ -35,8 +35,9 @@ module Jobs
 
       context =
         DiscourseAi::Personas::BotContext.new(
+          user: user,
           messages: [{ type: :user, content: query }],
-          skip_tool_details: true,
+          skip_show_thinking: true,
           feature_name: "discover",
         )
 

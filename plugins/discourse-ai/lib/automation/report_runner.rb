@@ -139,7 +139,7 @@ module DiscourseAi
         report_ctx =
           DiscourseAi::Personas::BotContext.new(
             user: Discourse.system_user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             feature_name: "ai_report",
             messages: [{ type: :user, content: input }],
           )

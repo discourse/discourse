@@ -1,7 +1,6 @@
-@use "lib/viewport";
-
 // Policy in post styles
 .cooked .policy {
+  container-type: inline-size;
   position: relative;
   border: 1px solid var(--primary-low);
 
@@ -17,10 +16,6 @@
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-
-    @include viewport.until(md) {
-      flex-direction: column;
-    }
   }
 
   .toggle {
@@ -96,17 +91,8 @@
     gap: 0.5rem;
     flex-wrap: wrap;
 
-    @include viewport.until(lg) {
-      width: 100%;
-    }
-
     .btn {
       white-space: nowrap;
-
-      @include viewport.until(lg) {
-        width: 100%;
-        white-space: inherit;
-      }
     }
   }
 
@@ -144,15 +130,33 @@
       margin-bottom: 0;
     }
   }
+
+  @container (max-width: 25rem) {
+    .policy-footer {
+      flex-direction: column;
+    }
+
+    .user-lists,
+    .policy-actions,
+    .policy-actions .btn {
+      width: 100%;
+    }
+  }
 }
 
 // Policy in editor styles
-.d-editor-preview .policy {
+.d-editor-preview .policy,
+.ProseMirror .policy {
   padding: 0.5em;
   border: 1px solid var(--primary-low);
+  margin-block: var(--space-4);
 
   .policy-preview {
     font-size: var(--font-up-1);
     font-weight: 700;
+  }
+
+  .policy-body {
+    padding: var(--space-2) 0;
   }
 }

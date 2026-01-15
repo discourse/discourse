@@ -4,7 +4,7 @@ class ThemeScreenshotsHandler
   MAX_THEME_SCREENSHOT_FILE_SIZE = 1.megabyte
   MAX_THEME_SCREENSHOT_DIMENSIONS = [3840, 2160] # 4K resolution
   MAX_THEME_SCREENSHOT_COUNT = 2
-  THEME_SCREENSHOT_ALLOWED_FILE_TYPES = %w[.jpg .jpeg .gif .png].freeze
+  THEME_SCREENSHOT_ALLOWED_FILE_TYPES = %w[.jpeg .jpg .png .webp].freeze
 
   class ThemeScreenshotError < StandardError
   end

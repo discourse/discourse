@@ -27,11 +27,14 @@ module EmailHelper
     raw "<a href='#{Discourse.base_url_no_prefix}#{url}' style='color: ##{@anchor_color}'>#{title}</a>"
   end
 
-  def email_html_template
+  def email_html_template(preview: nil)
+    email_preview = preview.present? ? PrettyText.cook(preview, sanitize: false).html_safe : ""
+
     EmailStyle
       .new
       .html
       .sub("%{email_content}") { capture { yield } }
+      .gsub("%{email_preview}", email_preview)
       .gsub("%{html_lang}", html_lang)
       .gsub("%{dark_mode_meta_tags}", dark_mode_meta_tags)
       .gsub("%{dark_mode_styles}", dark_mode_styles)

@@ -2,25 +2,14 @@ import { schedule } from "@ember/runloop";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-let _codeblockButtons = [];
-
 export default {
   initialize(owner) {
     const site = owner.lookup("service:site");
     const siteSettings = owner.lookup("service:site-settings");
 
     withPluginApi((api) => {
-      function _cleanUp() {
-        _codeblockButtons.forEach((cb) => cb.cleanup());
-        _codeblockButtons.length = 0;
-      }
-
       function _attachCommands(postElement, helper) {
         if (!helper) {
-          return;
-        }
-
-        if (!siteSettings.show_copy_button_on_codeblocks) {
           return;
         }
 
@@ -30,25 +19,21 @@ export default {
           showFullscreen: true,
           showCopy: true,
         });
-        cb.attachToPost(post, postElement);
 
-        _codeblockButtons.push(cb);
+        // must be done after render so we can check the scroll width
+        // of the code blocks
+        schedule("afterRender", () => {
+          cb.attachToPost(post, postElement);
+        });
+
+        return cb.cleanup;
       }
 
-      api.decorateCookedElement(
-        (postElement, helper) => {
-          // must be done after render so we can check the scroll width
-          // of the code blocks
-          schedule("afterRender", () => {
-            _attachCommands(postElement, helper);
-          });
-        },
-        {
+      if (siteSettings.show_copy_button_on_codeblocks) {
+        api.decorateCookedElement(_attachCommands, {
           onlyStream: true,
-        }
-      );
-
-      api.cleanupStream(_cleanUp);
+        });
+      }
     });
   },
 };

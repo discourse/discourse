@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
@@ -19,6 +20,10 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import {
   applyBehaviorTransformer,
@@ -115,33 +120,62 @@ export default class Item extends Component {
 
   @action
   onBulkSelectToggle(e) {
+    e.stopImmediatePropagation();
+
+    const topicNode = e.target.closest(".topic-list-item");
+
     if (e.target.checked) {
-      this.args.selected.addObject(this.args.topic);
-
-      if (this.args.bulkSelectHelper.lastCheckedElementId && e.shiftKey) {
-        const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
-        const from = bulkSelects.indexOf(e.target);
-        const to = bulkSelects.findIndex(
-          (el) => el.id === this.args.bulkSelectHelper.lastCheckedElementId
-        );
-        const start = Math.min(from, to);
-        const end = Math.max(from, to);
-
-        bulkSelects
-          .slice(start, end)
-          .filter((el) => !el.checked)
-          .forEach((checkbox) => checkbox.click());
-      }
-
-      this.args.bulkSelectHelper.lastCheckedElementId = e.target.id;
+      this.selectTopic(topicNode, e.shiftKey);
     } else {
-      this.args.selected.removeObject(this.args.topic);
-      this.args.bulkSelectHelper.lastCheckedElementId = null;
+      this.unselectTopic(topicNode);
     }
+  }
+
+  unselectTopic(topicNode) {
+    removeValueFromArray(this.args.selected, this.args.topic);
+    this.args.bulkSelectHelper.lastCheckedElementId = null;
+    topicNode.classList.remove("bulk-selected");
+  }
+
+  selectTopic(topicNode, shiftKey) {
+    addUniqueValueToArray(this.args.selected, this.args.topic);
+
+    if (this.args.bulkSelectHelper.lastCheckedElementId && shiftKey) {
+      const topics = Array.from(topicNode.parentNode.children);
+      const from = topics.indexOf(topicNode);
+      const to = topics.findIndex(
+        (el) =>
+          el.dataset.topicId === this.args.bulkSelectHelper.lastCheckedElementId
+      );
+      const start = Math.min(from, to);
+      const end = Math.max(from, to);
+      const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
+      bulkSelects
+        .slice(start, end)
+        .filter((el) => !el.checked)
+        .forEach((checkbox) => checkbox.click());
+    }
+
+    this.args.bulkSelectHelper.lastCheckedElementId = topicNode.dataset.topicId;
+    topicNode.classList.add("bulk-selected");
   }
 
   @action
   click(event) {
+    if (this.args.bulkSelectEnabled) {
+      event.preventDefault();
+
+      const topicNode = event.target.closest(".topic-list-item");
+      const selected = this.args.selected.includes(this.args.topic);
+      if (selected) {
+        this.unselectTopic(topicNode);
+      } else {
+        this.selectTopic(topicNode, event.shiftKey);
+      }
+
+      return;
+    }
+
     applyBehaviorTransformer(
       "topic-list-item-click",
       () => {
@@ -256,6 +290,7 @@ export default class Item extends Component {
         (if @topic.bookmarked "bookmarked")
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
+        (if @bulkSelectEnabled "bulk-selecting")
         this.tagClassNames
         this.additionalClasses
       }}
@@ -289,15 +324,11 @@ export default class Item extends Component {
           >
             <div class="pull-left">
               {{#if @bulkSelectEnabled}}
-                <label for="bulk-select-{{@topic.id}}">
-                  <input
-                    {{on "click" this.onBulkSelectToggle}}
-                    checked={{this.isSelected}}
-                    type="checkbox"
-                    id="bulk-select-{{@topic.id}}"
-                    class="bulk-select"
-                  />
-                </label>
+                <BulkSelectCheckbox
+                  @topic={{@topic}}
+                  @isSelected={{this.isSelected}}
+                  @onToggle={{this.onBulkSelectToggle}}
+                />
               {{else}}
                 <PluginOutlet
                   @name="topic-list-item-mobile-avatar"

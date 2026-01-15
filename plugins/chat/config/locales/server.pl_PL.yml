@@ -151,10 +151,11 @@ pl_PL:
           title: "Nie zgadzam się i przywracam wiadomość"
           description: "Przywróć wiadomość, aby wszyscy użytkownicy mogli ją zobaczyć."
         disagree:
-          title: "Wycofaj"
+          title: "Zachowaj wiadomość"
+          description: "Nie zgódź się z flagą i pozostaw wiadomość bez zmian."
         ignore:
-          title: "Nic nie rób"
-          description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+          title: "Ignoruj flagę"
+          description: "Usuń z kolejki bez podejmowania żadnych działań."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"
@@ -319,10 +320,10 @@ pl_PL:
         few: "Zobacz %{count} wiadomości"
         many: "Zobacz %{count} wiadomości"
         other: "Zobacz %{count} wiadomości"
-      your_chat_settings: "preferencje częstotliwości wysyłania e-maili o czacie"
+      your_chat_settings: "preferencje wiadomości e-mail czatu"
   unsubscribe:
     chat_summary:
-      select_title: "Ustaw częstotliwość e-maili z podsumowaniem czatu na:"
+      select_title: "Ustaw wiadomości e-mail z podsumowaniem czatu na:"
       never: Nigdy
       when_away: Tylko gdy jesteś daleko
   category:

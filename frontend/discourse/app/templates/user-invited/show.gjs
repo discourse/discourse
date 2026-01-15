@@ -222,12 +222,16 @@ export default <template>
                           {{invite.email}}
                         {{else}}
                           {{icon "link"}}
-                          {{i18n
-                            "user.invited.invited_via_link"
-                            key=invite.shortKey
-                            count=invite.redemption_count
-                            max=invite.max_redemptions_allowed
-                          }}
+                          {{#if invite.invite_key}}
+                            {{i18n
+                              "user.invited.invited_via_link"
+                              key=invite.shortKey
+                              count=invite.redemption_count
+                              max=invite.max_redemptions_allowed
+                            }}
+                          {{else}}
+                            <em>{{i18n "user.invited.generating_link"}}</em>
+                          {{/if}}
                         {{/if}}
                       </div>
 
@@ -310,7 +314,7 @@ export default <template>
                                       invite
                                     }}
                                     @icon="trash-can"
-                                    class="btn-transparent btn-danger"
+                                    class="btn-transparent --danger"
                                     @label={{if
                                       invite.destroyed
                                       "user.invited.removed"

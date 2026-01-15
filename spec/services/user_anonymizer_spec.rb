@@ -247,6 +247,42 @@ RSpec.describe UserAnonymizer do
       expect(user.user_api_keys).to be_empty
     end
 
+    it "removes user auth tokens" do
+      UserAuthToken.generate!(user_id: user.id)
+
+      expect { make_anonymous }.to change { UserAuthToken.count }.by(-1)
+      expect(user.reload.user_auth_tokens).to be_empty
+    end
+
+    it "removes second factor credentials" do
+      Fabricate(:user_second_factor_totp, user: user)
+
+      expect { make_anonymous }.to change { UserSecondFactor.count }.by(-1)
+      expect(user.reload.user_second_factors).to be_empty
+    end
+
+    it "removes security keys" do
+      Fabricate(:user_security_key_with_random_credential, user: user)
+
+      expect { make_anonymous }.to change { UserSecurityKey.count }.by(-1)
+      expect(UserSecurityKey.where(user_id: user.id).count).to eq(0)
+    end
+
+    it "removes push subscriptions" do
+      Fabricate(:push_subscription, user: user)
+
+      expect { make_anonymous }.to change { PushSubscription.count }.by(-1)
+      expect(user.reload.push_subscriptions).to be_empty
+    end
+
+    it "removes post reply keys" do
+      post = Fabricate(:post)
+      PostReplyKey.create!(user_id: user.id, post_id: post.id)
+
+      expect { make_anonymous }.to change { PostReplyKey.count }.by(-1)
+      expect(PostReplyKey.where(user_id: user.id).count).to eq(0)
+    end
+
     context "when executing jobs" do
       before { Jobs.run_immediately! }
 
@@ -322,6 +358,38 @@ RSpec.describe UserAnonymizer do
         expect { make_anonymous }.to change { user.custom_fields }
         expect(user.reload.custom_fields).to eq("some_field" => "123", "another_field" => "456")
       end
+
+      context "when log_anonymizer_details is disabled" do
+        before { SiteSetting.log_anonymizer_details = false }
+
+        it "anonymizes username in historical UserHistory records" do
+          StaffActionLogger.new(admin).log_check_email(
+            user,
+            context: "/admin/users/#{user.id}/#{user.username}",
+          )
+          StaffActionLogger.new(admin).log_username_change(user, user.username, "newname")
+
+          make_anonymous
+
+          reason = I18n.t("user.anonymized")
+          check_email =
+            UserHistory.find_by(action: UserHistory.actions[:check_email], target_user_id: user.id)
+          username_change =
+            UserHistory.find_by(
+              action: UserHistory.actions[:change_username],
+              target_user_id: user.id,
+            )
+
+          expect(check_email.context).to eq(reason)
+          expect(username_change.previous_value).to eq(reason)
+        end
+
+        it "does not affect records without the username" do
+          StaffActionLogger.new(admin).log_check_email(user, context: "/some/other/path")
+          make_anonymous
+          expect(UserHistory.find_by(target_user_id: user.id).context).to eq("/some/other/path")
+        end
+      end
     end
   end
 
@@ -385,6 +453,8 @@ RSpec.describe UserAnonymizer do
       delete_history = StaffActionLogger.new(admin).log_user_deletion(user)
       user_history = StaffActionLogger.new(user).log_backup_create
 
+      ip_address_history = UserIpAddressHistory.create!(user_id: user.id, ip_address: old_ip)
+
       UserAnonymizer.make_anonymous(user, admin, anonymize_ip: anon_ip)
       expect(user.registration_ip_address).to eq(anon_ip)
       expect(link.reload.ip_address).to eq(anon_ip)
@@ -396,6 +466,7 @@ RSpec.describe UserAnonymizer do
       expect(delete_history.reload.ip_address).to eq(anon_ip)
       expect(user_history.reload.ip_address).to eq(anon_ip)
       expect(user_profile_view.reload.ip_address).to eq(anon_ip)
+      expect(UserIpAddressHistory.exists?(id: ip_address_history.id)).to eq(false)
     end
   end
 

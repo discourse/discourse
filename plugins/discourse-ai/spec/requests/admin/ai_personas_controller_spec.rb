@@ -931,7 +931,7 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
       # this simplifies function calls
       fake_endpoint.chunk_count = 1
 
-      ai_persona.update!(tools: ["Categories"])
+      ai_persona.update!(tools: ["Categories"], show_thinking: true)
 
       # lets also unstage the user and add the user to tl0
       # this will ensure there are no feedback loops
@@ -968,7 +968,8 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
 
       expect(last_post.raw).to end_with("this is the response after the tool")
       # function call is visible in the post
-      expect(last_post.raw[0..8]).to eq("<details>")
+      expect(last_post.raw[0..8]).to eq("<details ")
+      expect(last_post.raw).to include("ai-thinking")
 
       user_post = topic.posts.find_by(post_number: 3)
       expect(user_post.raw).to eq("how are you now?")

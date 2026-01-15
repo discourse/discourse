@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "非公開"
+          public: "公開"
+      reports:
+        reading_time:
+          title: 閲覧時間
+        assignments:
+          total_assigned_others: "が %{username} に割り当てました"
+        chat_usage:
+          messages: メッセージ
+          author: あなた
+          author_others: "%{username}"
+          status_online: "● オンライン"
+        invites:
+          title: 招待
+          invitee_posts: 作成した投稿数
+          invitee_likes: '「いいね！」した数'
+          label_invitations_sent: "招待状を送信しました:"
+        new_user_interactions:
+          likes_given: '「いいね！」した数'
+          mentions: メンション
+        writing_analysis:
+          menu_other: その他

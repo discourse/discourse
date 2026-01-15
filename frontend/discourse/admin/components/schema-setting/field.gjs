@@ -3,18 +3,20 @@ import { cached } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
 import BooleanField from "discourse/admin/components/schema-setting/types/boolean";
 import CategoriesField from "discourse/admin/components/schema-setting/types/categories";
+import DatetimeField from "discourse/admin/components/schema-setting/types/datetime";
 import EnumField from "discourse/admin/components/schema-setting/types/enum";
 import FloatField from "discourse/admin/components/schema-setting/types/float";
 import GroupsField from "discourse/admin/components/schema-setting/types/groups";
 import IntegerField from "discourse/admin/components/schema-setting/types/integer";
 import StringField from "discourse/admin/components/schema-setting/types/string";
 import TagsField from "discourse/admin/components/schema-setting/types/tags";
+import UploadField from "discourse/admin/components/schema-setting/types/upload";
 
 export default class SchemaSettingField extends Component {
   get component() {
     const type = this.args.spec.type;
 
-    switch (this.args.spec.type) {
+    switch (type) {
       case "string":
         return StringField;
       case "integer":
@@ -31,6 +33,10 @@ export default class SchemaSettingField extends Component {
         return TagsField;
       case "groups":
         return GroupsField;
+      case "upload":
+        return UploadField;
+      case "datetime":
+        return DatetimeField;
       default:
         throw new Error(`unknown type ${type}`);
     }
@@ -56,6 +62,7 @@ export default class SchemaSettingField extends Component {
         <this.component
           @value={{@value}}
           @spec={{@spec}}
+          @name={{@name}}
           @onChange={{@onValueChange}}
           @description={{this.description}}
           @setting={{@setting}}

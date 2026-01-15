@@ -33,7 +33,11 @@ export default class ChannelsListPublic extends Component {
   }
 
   get channelList() {
-    return this.chatChannelsManager.publicMessageChannelsByActivity;
+    if (this.inSidebar) {
+      return this.chatChannelsManager.unstarredPublicMessageChannelsByActivity;
+    }
+    // In mobile/drawer, show all channels including starred, sorted by activity
+    return this.chatChannelsManager.allPublicChannelsByActivity;
   }
 
   @action

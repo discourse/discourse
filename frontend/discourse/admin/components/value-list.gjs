@@ -4,22 +4,27 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, reads } from "@ember/object/computed";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+  uniqueItemsFromArray,
+} from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 
 @classNames("value-list")
 export default class ValueList extends Component {
+  @trackedArray collection = null;
+
   @empty("newValue") inputInvalid;
 
   inputDelimiter = null;
   inputType = null;
   newValue = "";
-  collection = null;
   values = null;
   onChange = null;
 
@@ -29,10 +34,7 @@ export default class ValueList extends Component {
     super.didReceiveAttrs(...arguments);
 
     if (this.inputType === "array") {
-      this.set(
-        "collection",
-        new TrackedArray(this.values ? [...this.values] : [])
-      );
+      this.set("collection", this.values ? [...this.values] : []);
       return;
     }
 
@@ -89,14 +91,14 @@ export default class ValueList extends Component {
     }
 
     const shiftedValue = this.collection[index];
-    this.collection.removeAt(index);
-    this.collection.insertAt(futureIndex, shiftedValue);
+    this.collection.splice(index, 1);
+    this.collection.splice(futureIndex, 0, shiftedValue);
 
     this._saveValues();
   }
 
   _addValue(value) {
-    this.collection.addObject(value);
+    addUniqueValueToArray(this.collection, value);
 
     if (this.choices) {
       this.set(
@@ -111,7 +113,7 @@ export default class ValueList extends Component {
   }
 
   _removeValue(value) {
-    this.collection.removeObject(value);
+    removeValueFromArray(this.collection, value);
 
     if (this.choices) {
       this.set("choices", uniqueItemsFromArray(this.choices.concat([value])));

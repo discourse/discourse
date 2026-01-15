@@ -7,6 +7,7 @@ require "fileutils"
 require "socket"
 require "uri"
 require "net/http"
+require "securerandom"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
@@ -260,6 +261,7 @@ class QunitRunner
       args += ["--filter", filter] if filter
       args += ["--file-path", file_path_filter] if file_path_filter
       args += ["--load-balance", "--parallel", parallel.to_s] if parallel
+      args += ["--random", resolved_seed]
       args += %w[--path dist] if reuse_build
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
@@ -337,8 +339,8 @@ class QunitRunner
   def check_server(port, name)
     uri = URI("http://localhost:#{port}")
     http = Net::HTTP.new(uri.host, uri.port)
-    http.open_timeout = 2
-    http.read_timeout = 2
+    http.open_timeout = 5
+    http.read_timeout = 5
 
     begin
       response = http.get("/")
@@ -417,7 +419,7 @@ class QunitRunner
 
   def build_unicorn_environment(unicorn_port)
     pid_path = File.join(rails_root, "tmp/pids", "unicorn_test_#{unicorn_port}.pid")
-    {
+    env = {
       "RAILS_ENV" => @rails_env || "test",
       "SKIP_ENFORCE_HOSTNAME" => "1",
       "UNICORN_PID_PATH" => pid_path,
@@ -428,8 +430,11 @@ class QunitRunner
       "LOGSTASH_UNICORN_URI" => nil,
       "UNICORN_WORKERS" => "1",
       "UNICORN_TIMEOUT" => "90",
-      "LOAD_PLUGINS" => should_load_plugins? ? "1" : "0",
     }
+
+    env["LOAD_PLUGINS"] = "1" if should_load_plugins?
+
+    env
   end
 
   def wait_for_rails_server(port)
@@ -493,7 +498,10 @@ class QunitRunner
 
   def build_query
     params = {}
-    params["seed"] = resolved_seed
+    if @qunit_path
+      # Only include seed manually if we're running without ember exam
+      params["seed"] = resolved_seed
+    end
     params["module"] = @module if @module
     params["theme_name"] = @theme_name if @theme_name
     params["theme_url"] = @theme_url if @theme_url
@@ -538,7 +546,7 @@ class QunitRunner
   end
 
   def resolved_seed
-    @resolved_seed ||= present_string(@seed) || Random.new.seed
+    @resolved_seed ||= present_string(@seed) || SecureRandom.alphanumeric(8)
   end
 
   def should_load_plugins?

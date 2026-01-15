@@ -26,7 +26,7 @@ export default {
       // we use two different strategies.
       if (caps.isiOSPWA || caps.isAppWebview) {
         // For PWA/Hub, we lock the viewport zoom temporarily during `focusin` events.
-        // Unfortunately this doesn't catch the case when an input is already autofocussed, but the
+        // Unfortunately this doesn't catch the case when an input is already autofocused, but the
         // keyboard isn't open yet. But it's better than nothing.
         this.lockViewportDuringFocus(viewport, value);
       } else {

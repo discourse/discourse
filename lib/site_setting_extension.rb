@@ -242,7 +242,7 @@ module SiteSettingExtension
     ""
   end
 
-  def client_settings_json_uncached
+  def client_settings_json_uncached(return_defaults: false)
     uncached_json =
       @client_settings.filter_map do |name|
         # Themeable site settings require a theme ID, which we do not always
@@ -251,7 +251,9 @@ module SiteSettingExtension
         next if themeable[name]
 
         value =
-          if deprecated_settings.include?(name.to_s)
+          if return_defaults
+            SiteSetting.defaults[name]
+          elsif deprecated_settings.include?(name.to_s)
             public_send(name, warn: false)
           else
             public_send(name)
@@ -260,7 +262,7 @@ module SiteSettingExtension
         type = type_supervisor.get_type(name)
         if type == :upload
           value = value.to_s
-        elsif type == :uploaded_image_list
+        elsif type == :uploaded_image_list && value.present?
           value = value.map(&:to_s).join("|")
         end
 
@@ -390,6 +392,12 @@ module SiteSettingExtension
           default = default_uploads[default.to_i]
         end
 
+        # For uploads nested in objects type, hydrate upload IDs to URLs
+        if type_hash[:type].to_s == "objects" && type_hash[:schema]
+          parsed_value = JSON.parse(value)
+          value = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
+        end
+
         opts = {
           setting: s,
           humanized_name: humanized_names(s),
@@ -400,9 +408,17 @@ module SiteSettingExtension
         }
 
         if !basic_attributes
+          # For objects type, serialize as JSON
+          serialized_value =
+            if type_hash[:type].to_s == "objects"
+              value.to_json
+            else
+              value.to_s
+            end
+
           opts.merge!(
             default: default,
-            value: value.to_s,
+            value: serialized_value,
             preview: previews[s],
             secret: secret_settings.include?(s),
             placeholder: placeholder(s),
@@ -949,10 +965,10 @@ module SiteSettingExtension
       end
     end
 
-    # Any group_list setting, e.g. personal_message_enabled_groups, will have
-    # a getter defined with _map on the end, e.g. personal_message_enabled_groups_map,
-    # to avoid having to manually split and convert to integer for these settings.
-    if type_supervisor.get_type(name) == :group_list
+    # Any group_list or category_list setting will have a getter defined with _map
+    # on the end, e.g. personal_message_enabled_groups_map, to avoid having to
+    # manually split and convert to integer for these settings.
+    if %i[group_list category_list].include?(type_supervisor.get_type(name))
       define_singleton_method("#{clean_name}_map") do
         self.public_send(clean_name).to_s.split("|").map(&:to_i)
       end
@@ -1124,5 +1140,42 @@ module SiteSettingExtension
 
   def logger
     Rails.logger
+  end
+
+  private
+
+  def hydrate_uploads_in_objects(objects, schema)
+    return objects if objects.blank?
+
+    upload_ids =
+      SchemaSettingsObjectValidator.property_values_of_type(
+        schema: schema,
+        objects: objects,
+        type: "upload",
+      )
+
+    uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
+    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties], uploads_by_id) }
+  end
+
+  def hydrate_uploads_in_object(object, properties, uploads_by_id)
+    properties.each do |prop_key, prop_value|
+      case prop_value[:type]
+      when "upload"
+        key = prop_key.to_s
+        upload_id = object[key]
+        upload = uploads_by_id[upload_id]
+        object[key] = upload.url if upload
+      when "objects"
+        nested_objects = object[prop_key.to_s]
+        if nested_objects.is_a?(Array)
+          nested_objects.each do |nested_obj|
+            hydrate_uploads_in_object(nested_obj, prop_value[:schema][:properties], uploads_by_id)
+          end
+        end
+      end
+    end
+
+    object
   end
 end

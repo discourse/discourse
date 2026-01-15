@@ -95,11 +95,17 @@ RSpec.describe PostAction do
     context "with category group moderators" do
       fab!(:group_user)
       let(:group) { group_user.group }
+      let(:moderators_group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
 
       before do
         SiteSetting.enable_category_group_moderation = true
         group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
         Fabricate(:category_moderation_group, category: post.topic.category, group:)
+        Fabricate(
+          :category_moderation_group,
+          category: post.topic.category,
+          group: moderators_group,
+        )
       end
 
       it "notifies via pm" do

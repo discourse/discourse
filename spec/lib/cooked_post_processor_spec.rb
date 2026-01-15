@@ -886,6 +886,30 @@ RSpec.describe CookedPostProcessor do
           reply.reload
           expect(reply.image_upload_id).to be_present
         end
+
+        context "when upload filename doesn't match SHA1" do
+          let(:upload_with_secure_url) do
+            Fabricate(
+              :upload,
+              sha1: "a" * 40,
+              url: "/uploads/default/original/3X/b/c/#{"d" * 40}.png",
+            )
+          end
+          let(:post_with_secure_upload) do
+            Fabricate(
+              :post,
+              user: user_with_auto_groups,
+              raw: "<img src='#{upload_with_secure_url.url}'>",
+            )
+          end
+          let(:cpp) { CookedPostProcessor.new(post_with_secure_upload) }
+
+          it "sets image_upload via URL fallback" do
+            expect { cpp.post_process }.to change {
+              post_with_secure_upload.reload.image_upload
+            }.to eq(upload_with_secure_url)
+          end
+        end
       end
     end
   end
@@ -1473,9 +1497,9 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "#post_process_oneboxes with square image" do
-    it "generates a onebox-avatar class" do
-      url = "https://square-image.com/onebox"
+    fab!(:post) { Fabricate(:post, raw: "https://square-image.com/onebox") }
 
+    it "generates a onebox-avatar class" do
       body = <<~HTML
       <html>
       <head>
@@ -1486,16 +1510,14 @@ RSpec.describe CookedPostProcessor do
       </html>
       HTML
 
-      stub_request(:head, url)
-      stub_request(:get, url).to_return(body: body)
+      stub_request(:head, post.raw)
+      stub_request(:get, post.raw).to_return(body: body)
 
       # not an ideal stub but shipping the whole image to fast image can add
       # a lot of cost to this test
       stub_image_size(width: 200, height: 200)
 
-      post = Fabricate.build(:post, raw: url)
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-
       cpp.post_process_oneboxes
 
       expect(cpp.doc.to_s).not_to include("aspect-image")

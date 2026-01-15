@@ -55,6 +55,42 @@ module PageObjects
       def has_summary_data?
         page.has_css?(".ai-usage__summary .d-stat-tiles")
       end
+
+      def has_features_total_row?
+        page.has_css?(".ai-usage__features-table .ai-usage__total-row")
+      end
+
+      def has_models_total_row?
+        page.has_css?(".ai-usage__models-table .ai-usage__total-row")
+      end
+
+      def has_users_total_row?
+        page.has_css?(".ai-usage__users-table .ai-usage__total-row")
+      end
+
+      def model_selector
+        PageObjects::Components::SelectKit.new(".ai-usage__model-selector")
+      end
+
+      def feature_selector
+        PageObjects::Components::SelectKit.new(".ai-usage__feature-selector")
+      end
+
+      def select_period(period)
+        label =
+          case period
+          when :day
+            I18n.t("js.discourse_ai.usage.periods.last_day")
+          when :week
+            I18n.t("js.discourse_ai.usage.periods.last_week")
+          when :month
+            I18n.t("js.discourse_ai.usage.periods.last_month")
+          end
+
+        find(".ai-usage__period-buttons .btn", text: label).click
+
+        self
+      end
     end
   end
 end

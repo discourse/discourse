@@ -48,33 +48,19 @@ describe DiscourseAi::Translation::LanguageDetector do
       end
     end
 
-    it "returns nil when the llm's response is not a valid language tag" do
-      DiscourseAi::Completions::Llm.with_prepared_responses(["not a language code"]) do
-        expect(locale_detector.detect).to eq(nil)
-      end
-
-      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
-        expect(locale_detector.detect).to eq(nil)
-      end
-
-      DiscourseAi::Completions::Llm.with_prepared_responses(["1234"]) do
-        expect(locale_detector.detect).to eq(nil)
-      end
-
-      DiscourseAi::Completions::Llm.with_prepared_responses(["en-US-INCORRECT"]) do
-        expect(locale_detector.detect).to eq(nil)
-      end
-
-      DiscourseAi::Completions::Llm.with_prepared_responses(["en-US"]) do
-        expect(locale_detector.detect).to eq("en-US")
-      end
-
-      DiscourseAi::Completions::Llm.with_prepared_responses(["en"]) do
-        expect(locale_detector.detect).to eq("en")
-      end
-
-      DiscourseAi::Completions::Llm.with_prepared_responses(["sr-Latn"]) do
-        expect(locale_detector.detect).to eq("sr-Latn")
+    [
+      ["not a language code", nil],
+      ["", nil],
+      ["1234", nil],
+      ["en-US-INCORRECT", nil],
+      %w[en-US en-US],
+      %w[en en],
+      %w[sr-Latn sr-Latn],
+    ].each do |llm_response, expected_locale|
+      it "returns #{expected_locale.inspect} when the llm responds with #{llm_response.inspect}" do
+        DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
+          expect(locale_detector.detect).to eq(expected_locale)
+        end
       end
     end
 

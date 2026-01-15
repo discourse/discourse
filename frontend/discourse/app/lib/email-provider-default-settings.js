@@ -1,11 +1,6 @@
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 
 const GMAIL = {
-  imap: {
-    imap_server: "imap.gmail.com",
-    imap_port: "993",
-    imap_ssl: true,
-  },
   smtp: {
     smtp_server: "smtp.gmail.com",
     smtp_port: "587",

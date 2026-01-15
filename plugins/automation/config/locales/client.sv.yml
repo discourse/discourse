@@ -45,13 +45,17 @@ sv:
             label: Huvuddel
           delay:
             label: Fördröjning (minuter)
-          prefers_encrypt:
-            label: Krypterar PM om tillgängligt
         group:
           label: Grupp
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Taggar
         not_found: Kunde inte hitta utlösaren `%{trigger}` för automatisering `%{automation}`, se till att det tillhörande insticksprogrammet är installerat.
         user_badge_granted:
           fields:
@@ -284,6 +288,8 @@ sv:
           fields:
             custom_field_name:
               label: "Användaranpassat fältnamn"
+        set_topic_timer:
+          title: Ställ in ämnestimer
       models:
         script:
           name:

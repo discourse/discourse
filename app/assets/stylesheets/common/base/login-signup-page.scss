@@ -160,6 +160,10 @@ body.signup-page {
     }
   }
 
+  .second-factor .login-page-cta {
+    margin-top: 1em;
+  }
+
   .login-left-side {
     box-sizing: border-box;
     width: 100%;
@@ -199,6 +203,13 @@ body.signup-page {
     flex-direction: column;
     margin-bottom: 1em;
 
+    details.select-kit,
+    details.single-select,
+    details.combobox,
+    details.combo-box {
+      width: 100%;
+    }
+
     input,
     .select-kit-header,
     textarea {
@@ -233,15 +244,21 @@ body.signup-page {
     .user-field.text label.control-label,
     .user-field.dropdown label.control-label,
     .user-field.multiselect label.control-label {
+      display: block;
       color: var(--primary-medium);
       font-size: 16px;
       font-weight: normal;
       position: absolute;
       pointer-events: none;
       left: 1em;
+      width: max-content;
+      max-width: calc(100% - 2em);
       top: 13px;
       box-shadow: 0 0 0 0 rgb(var(--tertiary-rgb), 0);
       transition: 0.2s ease all;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .user-field.text label.control-label,
@@ -322,7 +339,7 @@ body.signup-page {
   .login-form,
   #login-form,
   .invite-form {
-    margin-block: 2em 1.2em;
+    margin-top: 2em;
     display: flex;
     flex-direction: column;
 

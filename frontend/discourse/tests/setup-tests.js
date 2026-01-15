@@ -44,7 +44,6 @@ import {
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { disableCloaking as disableWidgetCloaking } from "discourse/widgets/post-stream";
 import deprecated from "discourse/lib/deprecated";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
@@ -216,10 +215,11 @@ function writeSummaryLine(message) {
 }
 
 export default function setupTests(config) {
-  disableCloaking();
-  disableWidgetCloaking();
+  const target = getUrlParameter("target") || "core";
 
-  setupDeprecationCounter(QUnit);
+  disableCloaking();
+
+  setupDeprecationCounter({ QUnit, origin: target });
 
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
@@ -380,7 +380,6 @@ export default function setupTests(config) {
 
   handleLegacyParameters();
 
-  const target = getUrlParameter("target") || "core";
   if (target === "theme-qunit") {
     window.location.href = window.location.origin + "/theme-qunit";
   }
@@ -405,7 +404,16 @@ export default function setupTests(config) {
 
   setLoadedFaker(FakerModule);
 
-  if (!hasPluginJs && !hasThemeJs) {
+  // core tests run without loading plugins or themes
+  const isCoreTest = !hasPluginJs && !hasThemeJs;
+  const isPreinstalledPluginTest = !!document.querySelector(
+    `script[data-discourse-plugin="${CSS.escape(target)}"][data-preinstalled="true"]`
+  );
+
+  if (
+    window.EmberENV.RAISE_ON_DEPRECATION ??
+    (isCoreTest || isPreinstalledPluginTest)
+  ) {
     configureRaiseOnDeprecation();
   }
 }

@@ -106,7 +106,7 @@ export default <template>
                           @disabled={{@controller.status.isOperationRunning}}
                           @title={{@controller.deleteTitle}}
                           @label="admin.backups.operations.destroy.title"
-                          class="btn-transparent btn-danger backup-item-row__delete"
+                          class="btn-transparent --danger backup-item-row__delete"
                         />
                       </dropdown.item>
                     </DropdownMenu>

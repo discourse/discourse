@@ -18,13 +18,13 @@
   ],
   "dependencies": {
     "@embroider/addon-shim": "^1.9.0",
-    "make-plural": "^7.4.0"
+    "make-plural": "^8.1.0"
   },
   "engines": {
     "node": ">= 18",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^9"
+    "pnpm": "^10"
   },
   "ember": {
     "edition": "octane"

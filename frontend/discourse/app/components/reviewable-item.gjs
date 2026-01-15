@@ -14,11 +14,14 @@ import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
-import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";
+import {
+  actionModalClassMap,
+  pluginReviewableParams,
+} from "discourse/components/reviewable-refresh/item";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
@@ -39,30 +42,6 @@ import { i18n } from "discourse-i18n";
 import ReviewableScores from "./reviewable-scores";
 
 let _components = {};
-
-const pluginReviewableParams = {};
-
-// The mappings defined here are default core mappings, and cannot be overridden
-// by plugins.
-const defaultActionModalClassMap = {
-  revise_and_reject_post: ReviseAndRejectPostReviewable,
-};
-const actionModalClassMap = { ...defaultActionModalClassMap };
-
-export function addPluginReviewableParam(reviewableType, param) {
-  pluginReviewableParams[reviewableType]
-    ? pluginReviewableParams[reviewableType].push(param)
-    : (pluginReviewableParams[reviewableType] = [param]);
-}
-
-export function registerReviewableActionModal(actionName, modalClass) {
-  if (Object.keys(defaultActionModalClassMap).includes(actionName)) {
-    throw new Error(
-      `Cannot override default action modal class for ${actionName} (mapped to ${defaultActionModalClassMap[actionName].name})!`
-    );
-  }
-  actionModalClassMap[actionName] = modalClass;
-}
 
 function lookupComponent(context, name) {
   return getOwner(context).resolveRegistration(`component:${name}`);
@@ -629,6 +608,10 @@ export default class ReviewableItem extends Component {
       {{#if this.displayContextQuestion}}
         <h3 class="reviewable-item__context-question">
           {{this.reviewable.flaggedReviewableContextQuestion}}
+        </h3>
+      {{else if this.reviewable.userReviewableContextQuestion}}
+        <h3 class="reviewable-item__context-question">
+          {{this.reviewable.userReviewableContextQuestion}}
         </h3>
       {{/if}}
 

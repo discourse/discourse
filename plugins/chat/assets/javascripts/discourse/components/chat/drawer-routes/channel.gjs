@@ -22,6 +22,10 @@ export default class ChatDrawerRoutesChannel extends Component {
   get backBtnRoute() {
     if (this.chatHistory.previousRoute?.name === "chat.browse") {
       return "chat.browse";
+    } else if (
+      this.chatHistory.previousRoute?.name === "chat.starred-channels"
+    ) {
+      return "chat.starred-channels";
     } else if (this.args.model?.channel?.isDirectMessageChannel) {
       return "chat.direct-messages";
     } else {

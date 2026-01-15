@@ -34,11 +34,8 @@ ar:
     post_voting_enable_likes_on_answers: "تفعيل زر الإعجاب على الردود في موضوعات \"التصويت على المنشورات\""
     post_voting_undo_vote_action_window: "عدد الدقائق المسموح للمستخدمين خلالها بالتراجع عن التصويت في موضوعات \"التصويت على المنشورات\" (أدخل 0 لعدم تعيين حد)"
     post_voting_comment_limit_per_post: "عدد التعليقات المسموح بها على كل منشور"
-    min_trust_to_flag_posts_voting_comments: "الحد الأدنى لمستوى الثقة للإبلاغ عن تعليق للتصويت على منشور"
     flag_posts_voting_comments_allowed_groups: "مسموح للمجموعات بالإبلاغ عن تعليق للتصويت على منشور"
     post_voting_comment_enabled: "تفعيل التعليقات على المنشورات في موضوعات التصويت على المنشورات"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:
@@ -56,9 +53,19 @@ ar:
         agree_and_delete:
           title: "حذف التعليق"
           description: "حذف التعليق حتى لا يتمكن المستخدمون من رؤيته."
+        agree_and_suspend:
+          title: "تعليق المستخدم"
+          description: "الموافقة على البلاغ وتعليق المستخدم"
+        agree_and_silence:
+          title: "كتم المستخدم"
+          description: "الموافقة على البلاغ وكتم المستخدم"
         disagree_and_restore:
           title: "عدم الموافقة واستعادة التعليق"
           description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
+        disagree:
+          title: "إبقاء التعليق"
+        delete_and_agree:
+          description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف التعليق."
   post_action_types:
     vote:
       title: "تصويت"
@@ -110,16 +117,12 @@ ar:
             title: "حذف التعليق"
             description: "حذف التعليق حتى لا يتمكن المستخدمون من رؤيته."
           delete_and_agree:
-            title: "تجاهل البلاغ وحذف التعليق"
             description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف التعليق."
           disagree_and_restore:
             title: "عدم الموافقة واستعادة التعليق"
             description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
           disagree:
-            title: "عدم الموافقة"
-          ignore:
-            title: "عدم اتخاذ أي إجراء"
-            description: "تجاهل البلاغ بإزالته من قائمة الانتظار دون اتخاذ أي إجراء."
+            title: "إبقاء التعليق"
         transcript:
           view: "عرض نص التعليقات السابقة"
       reviewable_score_types:

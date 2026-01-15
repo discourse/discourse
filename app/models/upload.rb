@@ -80,6 +80,10 @@ class Upload < ActiveRecord::Base
       )
   end
 
+  def self.fetch_from(sha1:, url:)
+    sha1.presence.try { |_| find_by(sha1:) } || get_from_url(url)
+  end
+
   def self.mark_invalid_s3_uploads_as_missing
     Upload.with_invalid_etag_verification_status.update_all(
       verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
@@ -499,9 +503,24 @@ class Upload < ActiveRecord::Base
 
     if secure_status_did_change && Discourse.store.external?
       Discourse.store.update_upload_access_control(self)
+      sync_optimized_videos_secure_status(mark_secure)
     end
 
     secure_status_did_change
+  end
+
+  def sync_optimized_videos_secure_status(mark_secure)
+    optimized_videos
+      .includes(:optimized_upload)
+      .each do |optimized_video|
+        optimized_upload = optimized_video.optimized_upload
+        if optimized_upload.secure? != mark_secure
+          optimized_upload.update_secure_status(
+            source: "sync_with_original_upload",
+            override: mark_secure,
+          )
+        end
+      end
   end
 
   def secure_params(secure, reason, source = "unknown")

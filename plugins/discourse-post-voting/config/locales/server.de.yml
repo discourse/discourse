@@ -30,11 +30,8 @@ de:
     post_voting_enable_likes_on_answers: "„Gefällt mir“-Schaltfläche für Antworten in Beitragsabstimmungsthemen aktivieren"
     post_voting_undo_vote_action_window: "Anzahl an Minuten, in denen Benutzer Stimmen in Beitragsabstimmungsthemen zurücknehmen können (0 bedeutet kein Limit)"
     post_voting_comment_limit_per_post: "Anzahl der zulässigen Kommentare zu jedem Beitrag"
-    min_trust_to_flag_posts_voting_comments: "Mindestvertrauensstufe zum Melden eines Beitragsabstimmungskommentars"
     flag_posts_voting_comments_allowed_groups: "Gruppen, die einen Beitragsabstimmungskommentar melden dürfen"
     post_voting_comment_enabled: "Kommentare zu Beiträgen in Beitragsabstimmungsthemen aktivieren"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:
@@ -52,9 +49,21 @@ de:
         agree_and_delete:
           title: "Kommentar löschen"
           description: "Kommentar löschen, damit Benutzer ihn nicht sehen können."
+        agree_and_suspend:
+          title: "Benutzer sperren"
+          description: "Meldung zustimmen und den Benutzer sperren."
+        agree_and_silence:
+          title: "Benutzer stummschalten"
+          description: "Meldung zustimmen und den Benutzer stummschalten."
         disagree_and_restore:
           title: "Ablehnen und Kommentar wiederherstellen"
           description: "Kommentar wiederherstellen, damit alle Benutzer ihn sehen können."
+        disagree:
+          title: "Kommentar behalten"
+        ignore:
+          title: "Meldung ignorieren"
+        delete_and_agree:
+          description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Kommentar löschst."
   post_action_types:
     vote:
       title: "Abstimmen"
@@ -102,16 +111,14 @@ de:
             title: "Kommentar löschen"
             description: "Kommentar löschen, damit Benutzer ihn nicht sehen können."
           delete_and_agree:
-            title: "Meldung ignorieren und Kommentar löschen"
             description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Kommentar löschst."
           disagree_and_restore:
             title: "Ablehnen und Kommentar wiederherstellen"
             description: "Kommentar wiederherstellen, damit alle Benutzer ihn sehen können."
           disagree:
-            title: "Ablehnen"
+            title: "Kommentar behalten"
           ignore:
-            title: "Nichts tun"
-            description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen."
+            title: "Meldung ignorieren"
         transcript:
           view: "Transkript früherer Kommentare anzeigen"
       reviewable_score_types:

@@ -9,6 +9,9 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   subject(:workbench) { described_class.new(output: output) }
 
   let(:output) { StringIO.new }
+  let(:formatter) do
+    instance_double(DiscourseAi::Evals::ConsoleFormatter, announce_start: nil, finalize: nil)
+  end
   let(:recorder) do
     instance_double(
       DiscourseAi::Evals::Recorder,
@@ -43,26 +46,39 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   let(:llm_supports_vision) { true }
 
   before do
+    allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter)
     allow(DiscourseAi::Evals::Recorder).to receive(:with_cassette).and_return(recorder)
     freeze_time
   end
 
   describe "#run" do
     it "records results for each llm" do
-      allow(workbench).to receive(:execute_eval).and_return([{ result: :pass }]) # rubocop:disable RSpec/SubjectStub
+      # rubocop:disable RSpec/SubjectStub
+      allow(workbench).to receive(:execute_eval).and_return(
+        { raw: "output", raw_entries: ["output"], classified: [{ result: :pass }] },
+      )
 
-      workbench.run(eval_case: eval_case, llms: [llm])
+      workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
       expect(DiscourseAi::Evals::Recorder).to have_received(:with_cassette).with(
         eval_case,
         output: output,
+        total_targets: 1,
+        persona_key: :default,
+        formatter: formatter,
+        announce_formatter: false,
+        finalize_formatter: false,
       )
       expect(recorder).to have_received(:record_llm_results).with(
         "gpt-4",
         [{ result: :pass }],
         Time.now.utc,
+        raw_entries: ["output"],
+        display_label: "gpt-4",
+        row_prefix: "example-eval",
       )
       expect(recorder).to have_received(:finish)
+      expect(formatter).to have_received(:finalize)
     end
 
     context "when the eval requires vision but the llm does not support it" do
@@ -70,11 +86,13 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       let(:llm_supports_vision) { false }
 
       it "skips the llm and records the reason" do
-        workbench.run(eval_case: eval_case, llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_skip).with(
           "gpt-4",
           "LLM does not support vision",
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
         expect(recorder).to have_received(:finish)
       end
@@ -85,12 +103,14 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         error = DiscourseAi::Evals::Eval::EvalError.new("boom", { foo: "bar" })
         allow(workbench).to receive(:execute_eval).and_raise(error) # rubocop:disable RSpec/SubjectStub
 
-        workbench.run(eval_case: eval_case, llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_results).with(
           "gpt-4",
           [{ result: :fail, message: "boom", context: { foo: "bar" } }],
           Time.now.utc,
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
         expect(recorder).to have_received(:finish)
       end
@@ -100,12 +120,14 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       it "records the failure with the exception message" do
         allow(workbench).to receive(:execute_eval).and_raise(StandardError.new("kaboom")) # rubocop:disable RSpec/SubjectStub
 
-        workbench.run(eval_case: eval_case, llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_results).with(
           "gpt-4",
           [{ message: "kaboom", result: :fail }],
           Time.now.utc,
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
       end
     end
@@ -143,7 +165,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
           workbench.execute_eval(eval_case, llm)
         end
 
-      expect(results.first[:result]).to eq(:pass)
+      expect(results[:classified].first[:result]).to eq(:pass)
     end
 
     it "flags spam posts via the spam inspection eval feature" do
@@ -166,7 +188,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
           workbench.execute_eval(eval_case, llm)
         end
 
-      expect(results.first[:result]).to eq(:pass)
+      expect(results[:classified].first[:result]).to eq(:pass)
     end
   end
 
@@ -188,9 +210,60 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         persona.examples = base.examples
         persona.temperature = base.respond_to?(:temperature) ? base.temperature : nil
         persona.top_p = base.respond_to?(:top_p) ? base.top_p : nil
-        persona.tool_details = true
+        persona.show_thinking = true
         persona.tools ||= []
         persona.save!(validate: false)
       end
+  end
+
+  describe "#judge_result" do
+    let(:judge_eval_case) do
+      OpenStruct.new(
+        id: "judge-eval",
+        args: {
+          input: "Source content",
+        },
+        judge: {
+          criteria: "Score the output against the provided input, rewarding accuracy and clarity.",
+          pass_rating: 7,
+        },
+      )
+    end
+
+    it "raises a helpful error when no judge llm is configured" do
+      expect { workbench.send(:judge_result, judge_eval_case, "answer") }.to raise_error(
+        DiscourseAi::Evals::Eval::EvalError,
+        /requires the --judge option/,
+      )
+    end
+
+    it "returns a passing result when the rating meets the threshold" do
+      judge_llm = Fabricate(:fake_model)
+      workbench_with_judge = described_class.new(output: output, judge_llm: judge_llm)
+
+      response = { "rating" => 8, "explanation" => "good" }.to_json
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([response], llm: judge_llm) do
+          workbench_with_judge.send(:judge_result, judge_eval_case, "answer")
+        end
+
+      expect(result[:result]).to eq(:pass)
+    end
+
+    it "returns a failure when the rating is below the threshold" do
+      judge_llm = Fabricate(:fake_model)
+      workbench_with_judge = described_class.new(output: output, judge_llm: judge_llm)
+
+      response = { "rating" => 5, "explanation" => "needs work" }.to_json
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([response], llm: judge_llm) do
+          workbench_with_judge.send(:judge_result, judge_eval_case, "answer")
+        end
+
+      expect(result[:result]).to eq(:fail)
+      expect(result[:message]).to include("LLM Rating below threshold")
+    end
   end
 end

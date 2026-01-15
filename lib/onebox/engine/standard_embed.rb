@@ -50,6 +50,8 @@ module Onebox
         set_json_ld_data_on_raw
         set_favicon_data_on_raw
         set_description_on_raw
+        enhance_title_with_anchor
+        enhance_description_with_anchor
 
         @raw
       end
@@ -161,8 +163,9 @@ module Onebox
         @json_ld ||= Onebox::JsonLd.new(html_doc)
       end
 
-      def set_from_normalizer_data(normalizer)
+      def set_from_normalizer_data(normalizer, skip_dimensions: false)
         normalizer.data.each do |k, _|
+          next if skip_dimensions && k.in?(%i[width height])
           v = normalizer.public_send(k)
           @raw[k] ||= v unless v.nil?
         end
@@ -181,7 +184,8 @@ module Onebox
 
       def set_oembed_data_on_raw
         oembed = get_oembed
-        set_from_normalizer_data(oembed)
+        skip_dimensions = oembed.data[:type] == "rich"
+        set_from_normalizer_data(oembed, skip_dimensions:)
       end
 
       def set_json_ld_data_on_raw
@@ -199,6 +203,116 @@ module Onebox
           description = get_description
           @raw[:description] = description if description.present?
         end
+      end
+
+      def enhance_description_with_anchor
+        return unless html_doc
+
+        fragment = extract_url_fragment
+        return if fragment.blank?
+
+        section_description = find_section_description(fragment)
+        return if section_description.blank?
+
+        cleaned_description = clean_section_description(section_description)
+        return if cleaned_description.blank?
+        return if @raw[:description].present? && @raw[:description].include?(cleaned_description)
+
+        if @raw[:description].present?
+          @raw[:description] = "#{cleaned_description} | #{@raw[:description]}"
+        else
+          @raw[:description] = cleaned_description
+        end
+      end
+
+      def find_section_description(fragment)
+        target = find_anchor_target(fragment)
+        return nil unless target
+
+        extract_description_from_target(target)
+      end
+
+      def find_anchor_target(fragment)
+        html_doc.at_xpath("//*[@id='#{fragment.gsub("'", "\\'")}']") ||
+          html_doc.at_xpath("//a[@name='#{fragment.gsub("'", "\\'")}']") ||
+          html_doc.at_css("##{CSS.escape(fragment)}")
+      end
+
+      def extract_description_from_target(target)
+        parent_article = target.ancestors("article, section, details, .docstring").first
+        search_context = parent_article || target.parent || target
+
+        paragraph = search_context.at_css("p:not(.admonition-header)")
+        return paragraph.text.strip if paragraph&.text&.strip.present?
+
+        next_p = target.at_xpath("following-sibling::p[1]") || target.at_xpath("following::p[1]")
+        return next_p.text.strip if next_p&.text&.strip.present?
+
+        nil
+      end
+
+      def clean_section_description(text)
+        cleaned = text.gsub(/\s+/, " ").strip
+        cleaned.truncate(300, separator: " ", omission: "…")
+      end
+
+      def enhance_title_with_anchor
+        return unless html_doc
+        return if @raw[:title].blank?
+
+        fragment = extract_url_fragment
+        return if fragment.blank?
+
+        section_title = find_section_title(fragment)
+        return if section_title.blank?
+
+        cleaned_title = clean_section_title(section_title)
+        return if cleaned_title.blank?
+        return if @raw[:title].include?(cleaned_title)
+
+        @raw[:title] = "#{cleaned_title} - #{@raw[:title]}"
+      end
+
+      def extract_url_fragment
+        uri = URI.parse(url)
+        fragment = uri.fragment
+        return nil if fragment.blank?
+
+        CGI.unescape(fragment)
+      rescue URI::InvalidURIError
+        nil
+      end
+
+      def find_section_title(fragment)
+        target = find_anchor_target(fragment)
+        return nil unless target
+
+        return target.text.strip if target.name =~ /^h[1-6]$/i
+
+        code_content = target.at_css("code, .docstring-binding")&.text&.strip
+        return code_content if code_content.present?
+
+        heading = target.at_css("h1, h2, h3, h4, h5, h6")
+        return heading.text.strip if heading
+
+        find_nearest_heading(target)
+      end
+
+      def find_nearest_heading(element)
+        current = element
+        while current&.element?
+          current.previous_element&.tap do |prev|
+            return prev.text.strip if prev.name =~ /^h[1-6]$/i
+          end
+          current = current.parent
+          return current.text.strip if current&.element? && current.name =~ /^h[1-6]$/i
+        end
+        nil
+      end
+
+      def clean_section_title(text)
+        cleaned = text.gsub(/[\u00B6\u00A7#]/, "").gsub(/\s+/, " ").strip
+        cleaned.truncate(80, separator: " ")
       end
     end
   end

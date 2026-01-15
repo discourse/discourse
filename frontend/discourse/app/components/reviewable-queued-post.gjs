@@ -94,7 +94,7 @@ export default class ReviewableQueuedPost extends Component {
           @rawText={{highlightWatchedWords @reviewable.payload.raw @reviewable}}
           @categoryId={{@reviewable.category_id}}
           @topicId={{@reviewable.topic_id}}
-          @paintOneboxes={{true}}
+          @paintOneboxes={{false}}
           @opts={{hash removeMissing=true}}
           @onOffsetHeightCalculated={{this.setPostBodyHeight}}
         />

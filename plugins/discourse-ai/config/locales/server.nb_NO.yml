@@ -9,6 +9,10 @@ nb_NO:
     overall_sentiment:
       yaxis: "Dato"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Egendefinert"
     ai_bot:
       tool_summary:
         search: "Søk"

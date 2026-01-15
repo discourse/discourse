@@ -16,6 +16,16 @@ class SchemaSettingsObjectValidator
       error_messages
     end
 
+    def property_values_of_type(schema:, objects:, type:)
+      values = Set.new
+
+      objects.each do |object|
+        values.merge(self.new(schema: schema, object: object).property_values_of_type(type))
+      end
+
+      values.to_a
+    end
+
     private
 
     def humanize_error_messages(errors, index:, error_messages:)
@@ -122,10 +132,23 @@ class SchemaSettingsObjectValidator
 
     is_value_valid =
       case type
-      when "string"
+      when "string", "datetime"
         value.is_a?(String)
-      when "integer", "topic", "post", "upload"
+      when "integer", "topic", "post"
         value.is_a?(Integer)
+      when "upload"
+        if value.is_a?(String)
+          if upload = Upload.get_from_url(value)
+            @object[property_name] = upload.id
+            # upload already verified via get_from_url, so we can add it to valid ids
+            (@valid_ids_lookup["upload"] ||= Set.new) << upload.id
+            true
+          else
+            false
+          end
+        else
+          value.is_a?(Integer)
+        end
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
       when "boolean"
@@ -175,6 +198,21 @@ class SchemaSettingsObjectValidator
 
       if (max = validations&.dig(:max)) && value.length > max
         add_error(property_name, :"#{type}_value_not_valid_max", count: max)
+        return false
+      end
+    when "datetime"
+      return true if value.blank?
+      begin
+        # DateTime.iso8601 checks the format but does not enforce timezone presence
+        # so we need to do an additional check for the presence of timezone info.
+        DateTime.iso8601(value)
+        if value.include?("T") && (value.end_with?("Z") || value.match?(/[+-]\d{2}:\d{2}$/))
+          return true
+        end
+        add_error(property_name, :not_valid_datetime_value)
+        return false
+      rescue ArgumentError, TypeError
+        add_error(property_name, :not_valid_datetime_value)
         return false
       end
     when "string"

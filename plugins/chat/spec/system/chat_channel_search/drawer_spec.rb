@@ -64,6 +64,15 @@ RSpec.describe "Chat channel search - drawer", type: :system do
       expect(channel_page.filter).to be_visible
       expect(channel_page.filter).to have_no_state
     end
+
+    it "closes the filter on Escape" do
+      drawer_page.visit_channel(channel_1)
+      channel_page.filter.toggle
+      expect(channel_page.filter).to be_visible
+
+      page.send_keys(:escape)
+      expect(channel_page.filter).to be_not_visible
+    end
   end
 
   context "when filter is not toggled" do

@@ -1,8 +1,7 @@
-import { h } from "virtual-dom";
-import attributeHook from "discourse/lib/attribute-hook";
 import deprecated from "discourse/lib/deprecated";
 import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
+import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
 export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
@@ -94,8 +93,17 @@ export function iconHTML(id, params) {
   return renderIcon("string", id, params);
 }
 
-export function iconNode(id, params) {
-  return renderIcon("node", id, params);
+/**
+ * @deprecated The widget rendering system has been decommissioned.
+ * - If you need to create DOM nodes directly, use `iconElement` instead.
+ * - If you need to render icons in a template, use the `{{icon}}` helper.
+ */
+export function iconNode() {
+  warnWidgetsDecommissioned();
+}
+
+export function iconElement(id, params) {
+  return renderIcon("element", id, params);
 }
 
 export function convertIconClass(icon) {
@@ -118,7 +126,7 @@ function iconClasses(icon, params) {
       ? icon.replacementId
       : icon.id;
 
-  let classNames = `fa d-icon d-icon-${dClass} svg-icon`;
+  let classNames = `fa d-icon d-icon-${dClass} svg-icon fa-width-auto`;
 
   if (params && params["class"]) {
     classNames += " " + params["class"];
@@ -157,7 +165,7 @@ registerIconRenderer({
 
   string(icon, params) {
     const id = escape(handleIconId(icon));
-    let html = `<svg class='${escape(iconClasses(icon, params))} svg-string'`;
+    let html = `<svg class='${escape(iconClasses(icon, params))} svg-string' width='1em' height='1em'`;
 
     if (params["aria-label"]) {
       html += ` aria-hidden='false' aria-label='${escape(params["aria-label"])}'`;
@@ -191,35 +199,30 @@ registerIconRenderer({
     return html;
   },
 
-  node(icon, params) {
-    const id = handleIconId(icon);
+  element(icon, params) {
+    const id = escape(handleIconId(icon));
     const classes = iconClasses(icon, params) + " svg-node";
 
-    const svg = h(
-      "svg",
-      {
-        attributes: { class: classes, "aria-hidden": true },
-        namespace: SVG_NAMESPACE,
-      },
-      [
-        h("use", {
-          href: attributeHook("http://www.w3.org/1999/xlink", `#${escape(id)}`),
-          namespace: SVG_NAMESPACE,
-        }),
-      ]
-    );
+    const svgElement = document.createElementNS(SVG_NAMESPACE, "svg");
+    svgElement.setAttribute("class", classes);
+    svgElement.setAttribute("width", "1em");
+    svgElement.setAttribute("height", "1em");
+    svgElement.setAttribute("aria-hidden", true);
+
+    const useElement = document.createElementNS(SVG_NAMESPACE, "use");
+    useElement.setAttribute("href", `#${id}`);
+
+    svgElement.appendChild(useElement);
 
     if (params.title) {
-      return h(
-        "span",
-        {
-          title: params.title,
-          attributes: { class: "svg-icon-title" },
-        },
-        [svg]
-      );
+      const spanElement = document.createElement("span");
+      spanElement.setAttribute("class", "svg-icon-title");
+      spanElement.setAttribute("title", params.title);
+      spanElement.appendChild(svgElement);
+
+      return spanElement;
     } else {
-      return svg;
+      return svgElement;
     }
   },
 });
