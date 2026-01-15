@@ -1,6 +1,6 @@
 {
   "name": "discourse-plugins",
-  "version": "1.0.0",
+  "version": "2026.1.0-1676659",
   "description": "An addon providing a broccoli tree for each Discourse plugin",
   "author": "Discourse",
   "license": "GPL-2.0-only",
