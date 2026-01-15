@@ -5,5 +5,14 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  solved: "已解决"
+  posted: "已发布"
+  by_username: "作者 @%{username}"
+  vote_count:
+    other: "%{count} 票"
+  like_count:
+    other: "%{count} 个赞"
+  reply_count:
+    other: "%{count} 个回复"
   theme_metadata:
     description: "一个简单、美观的主题，可以改善 Discourse 站点的开箱即用体验。"

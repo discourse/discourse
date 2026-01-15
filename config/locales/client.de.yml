@@ -3522,8 +3522,6 @@ de:
           12_hours: "12 Stunden"
           24_hours: "24 Stunden"
           custom: "Benutzerdefinierte Dauer"
-      slow_mode_notice:
-        duration: "Bitte warte zwischen dem Verfassen von Beiträgen in diesem Thema %{duration}."
       topic_status_update:
         title: "Zeitschaltuhr"
         save: "Zeitschaltuhr aktivieren"
@@ -5067,6 +5065,7 @@ de:
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
+          header_action_new: "Neue Kategorie"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           edit_section:

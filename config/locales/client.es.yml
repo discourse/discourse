@@ -3469,8 +3469,6 @@ es:
           12_hours: "12 Horas"
           24_hours: "24 Horas"
           custom: "Otra duración"
-      slow_mode_notice:
-        duration: "Espera %{duration} entre respuesta y respuesta a este tema."
       topic_status_update:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
@@ -4993,6 +4991,7 @@ es:
           click_to_get_started: "Haz clic aquí para empezar."
           header_link_text: "Categorías"
           header_action_title: "Editar las categorías de tu barra lateral"
+          header_action_new: "Crear categoría"
           configure_defaults: "Configurar valores predeterminados"
         community:
           edit_section:

@@ -2068,7 +2068,6 @@ sk:
     invite_link_max_redemptions_limit_users: "Maximálny povolený počet uplatnení pre odkazy s pozvánkou vygenerované bežnými používateľmi nemôže presiahnuť túto hodnotu."
     alert_admins_if_errors_per_minute: "Počet chýb za minútu na spustenie upozornenia správcu. Hodnota 0 túto funkciu vypína. POZNÁMKA: vyžaduje reštart."
     alert_admins_if_errors_per_hour: "Počet chýb za hodinu, aby sa spustilo upozornenie administrátora. Hodnota 0 túto funkciu vypína. POZNÁMKA: vyžaduje reštart."
-    categories_topics: "Počet tém, ktoré sa majú zobraziť na stránke /kategórie. Ak je nastavená na 0, automaticky sa pokúsi nájsť hodnotu, aby boli oba stĺpce (kategórie a témy) symetrické."
     suggested_topics: "Zobrazovaný počet navrhovaných tém na konci témy."
     limit_suggested_to_category: "V navrhovaných témach zobraziť iba témy z aktuálnej kategórie."
     suggested_topics_max_days_old: "Navrhované témy by nemali byť staršie ako n dní."

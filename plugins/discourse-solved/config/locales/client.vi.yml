@@ -17,7 +17,7 @@ vi:
           accepted_notification: "đã chấp nhận"
     solutions: "Giải pháp"
     solved:
-      title: "Đã xử lý"
+      title: "Giải pháp"
       allow_accepted_answers: "Cho phép người tạo chủ đề và BQT đánh dấu câu trả lời là giải pháp"
       solved_topics_auto_close_hours: "Tự động đóng chủ đề (n) giờ sau trả lời cuối cùng khi chủ đề đã được đánh dấu là đã giải quyết."
       accept_answer: "Chọn nếu câu trả lời này giải quyết được vấn đề."
@@ -29,7 +29,7 @@ vi:
       solution_summary:
         other: "giải pháp"
       accepted_answer_solver_info: "Giải quyết bởi %{user} ở %{post}"
-      accepted_answer_post_number: "tút #%{post_number}"
+      accepted_answer_post_number: "tút %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "Tất cả"

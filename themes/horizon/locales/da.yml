@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 da:
+  solved: "Løst"
+  posted: "sidste indlæg"
+  vote_count:
+    one: "%{count} stemme"
+    other: "%{count} stemmer"
+  like_count:
+    one: "%{count} Synes om"
+    other: "%{count} Synes om"
+  reply_count:
+    one: "%{count} svar"
+    other: "%{count} svar"

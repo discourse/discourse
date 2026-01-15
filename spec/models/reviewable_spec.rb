@@ -498,8 +498,6 @@ RSpec.describe Reviewable, type: :model do
       expect(messages.first.data).to eq(
         {
           success: true,
-          transition_to: :approved,
-          transition_to_id: 1,
           created_post_id: perform_result.created_post.id,
           created_post_topic_id: perform_result.created_post_topic.id,
           remove_reviewable_ids: [reviewable.id],
@@ -529,8 +527,6 @@ RSpec.describe Reviewable, type: :model do
       expect(messages.first.data).to eq(
         {
           success: true,
-          transition_to: :rejected,
-          transition_to_id: 2,
           remove_reviewable_ids: [reviewable.id],
           version: 1,
           reviewable_count: 0,
