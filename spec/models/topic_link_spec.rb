@@ -453,6 +453,80 @@ RSpec.describe TopicLink do
       expect(TopicLink.counts_for(Guardian.new, nil, nil)).to be_blank
     end
 
+    describe ".topic_map" do
+      fab!(:source_post, :post)
+      fab!(:target_topic, :topic)
+      fab!(:topic_link) { Fabricate(:topic_link, post: source_post, link_topic: target_topic) }
+      fab!(:topic_link_click) { Fabricate(:topic_link_click, topic_link: topic_link) }
+
+      it "returns topic links with clicks" do
+        result = TopicLink.topic_map(Guardian.new, source_post.topic_id).first
+        expect(result.url).to eq(topic_link.url)
+        expect(result.title).to eq(target_topic.title)
+        expect(result.link_topic_id).to eq(target_topic.id)
+        expect(result.internal).to eq(true)
+        expect(result.reflection).to eq(false)
+        expect(result.clicks).to eq(1)
+      end
+
+      it "excludes deleted target topics" do
+        target_topic.trash!
+        expect(TopicLink.topic_map(Guardian.new, source_post.topic_id)).to be_empty
+      end
+
+      it "excludes hard-deleted target topics" do
+        target_topic.destroy!
+        expect(TopicLink.topic_map(Guardian.new, source_post.topic_id)).to be_empty
+      end
+
+      it "excludes deleted target posts" do
+        target_post = Fabricate(:post)
+        topic_link.update!(link_post: target_post)
+        target_post.trash!
+        expect(TopicLink.topic_map(Guardian.new, source_post.topic_id)).to be_empty
+      end
+    end
+
+    describe ".counts_for" do
+      fab!(:source_post, :post)
+      fab!(:target_topic, :topic)
+      fab!(:topic_link) { Fabricate(:topic_link, post: source_post, link_topic: target_topic) }
+      fab!(:topic_link_click) { Fabricate(:topic_link_click, topic_link: topic_link) }
+
+      it "returns topic link data for posts" do
+        result =
+          TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id].first
+        expect(result[:url]).to eq(topic_link.url)
+        expect(result[:title]).to eq(target_topic.title)
+        expect(result[:internal]).to eq(true)
+        expect(result[:reflection]).to eq(false)
+        expect(result[:clicks]).to eq(1)
+      end
+
+      it "excludes deleted target topics" do
+        target_topic.trash!
+        expect(
+          TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id],
+        ).to be_blank
+      end
+
+      it "excludes hard-deleted target topics" do
+        target_topic.destroy!
+        expect(
+          TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id],
+        ).to be_blank
+      end
+
+      it "excludes deleted target posts" do
+        target_post = Fabricate(:post)
+        topic_link.update!(link_post: target_post)
+        target_post.trash!
+        expect(
+          TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id],
+        ).to be_blank
+      end
+    end
+
     context "with data" do
       let(:post) do
         topic = Fabricate(:topic, user: Fabricate(:user, refresh_auto_groups: true))

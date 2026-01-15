@@ -375,8 +375,9 @@ RSpec.describe TopicViewSerializer do
 
   context "with details" do
     it "returns the details object" do
-      PostCreator.create!(user, topic_id: topic.id, raw: "this is my post content")
+      post = PostCreator.create!(user, topic_id: topic.id, raw: "this is my post content")
       topic.topic_links.create!(
+        post: post,
         user: user,
         url: "https://discourse.org",
         domain: "discourse.org",
