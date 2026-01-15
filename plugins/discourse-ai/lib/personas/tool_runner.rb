@@ -16,6 +16,9 @@ module DiscourseAi
       MAX_SLEEP_CALLS = 30
       MAX_SLEEP_DURATION_MS = 60_000
 
+      MAX_CUSTOM_FIELD_KEY_LENGTH = 256
+      MAX_CUSTOM_FIELD_VALUE_LENGTH = 1024
+
       def initialize(parameters:, llm:, bot_user:, context: nil, tool:, timeout: nil)
         if context && !context.is_a?(DiscourseAi::Personas::BotContext)
           raise ArgumentError, "context must be a BotContext object"
@@ -206,6 +209,16 @@ module DiscourseAi
           // Backwards compatibility alias (undocumented)
           setTags: function(topic_id, tags, options) {
             return this.editTopic(topic_id, { tags: tags }, options);
+          },
+          getCustomField: function(type, id, key) {
+            return _discourse_get_custom_field(type, id, key);
+          },
+          setCustomField: function(type, id, key, value) {
+            const result = _discourse_set_custom_field(type, id, key, value);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
           },
         };
 
@@ -959,6 +972,41 @@ module DiscourseAi
             end
           end,
         )
+
+        mini_racer_context.attach(
+          "_discourse_get_custom_field",
+          ->(type, id, key) do
+            in_attached_function do
+              model = find_model_by_type(type, id)
+              return nil if model.nil?
+              model.custom_fields[key]
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_set_custom_field",
+          ->(type, id, key, value) do
+            in_attached_function do
+              return { error: "Invalid type: #{type}" } if %w[post topic user].exclude?(type)
+              return { error: "Key is required" } if key.blank?
+              if key.to_s.length > MAX_CUSTOM_FIELD_KEY_LENGTH
+                return { error: "Key too long (max #{MAX_CUSTOM_FIELD_KEY_LENGTH} characters)" }
+              end
+              if value.to_s.length > MAX_CUSTOM_FIELD_VALUE_LENGTH
+                return { error: "Value too long (max #{MAX_CUSTOM_FIELD_VALUE_LENGTH} characters)" }
+              end
+
+              model = find_model_by_type(type, id)
+              return { error: "#{type.capitalize} not found: #{id}" } if model.nil?
+
+              model.custom_fields[key] = value
+              model.save_custom_fields
+
+              { success: true, key: key, value: model.custom_fields[key] }
+            end
+          end,
+        )
       end
 
       def attach_upload(mini_racer_context)
@@ -1128,6 +1176,17 @@ module DiscourseAi
               end
             end,
           )
+        end
+      end
+
+      def find_model_by_type(type, id)
+        case type
+        when "post"
+          Post.find_by(id: id)
+        when "topic"
+          Topic.find_by(id: id)
+        when "user"
+          User.find_by(id: id)
         end
       end
 

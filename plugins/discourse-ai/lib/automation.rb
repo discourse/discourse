@@ -37,6 +37,13 @@ module DiscourseAi
         .map { |id, name, description| { id: id, translated_name: name, description: description } }
     end
 
+    def self.available_tools_all
+      AiTool
+        .where(enabled: true)
+        .pluck(:id, :name, :summary)
+        .map { |id, name, summary| { id: id, translated_name: name, description: summary } }
+    end
+
     def self.available_models
       DB.query_hash(<<~SQL).each { |value_h| value_h["id"] = "#{value_h["id"]}" }
         SELECT display_name AS translated_name, id AS id
