@@ -40,7 +40,7 @@ module Jobs
             post.update_column(:cooked, cp.html)
             post.sync_first_post_caches
             extract_links(post)
-            post.publish_change_to_clients! :revised
+            post.publish_change_to_clients!(:revised)
           end
         end
 
