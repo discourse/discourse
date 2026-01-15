@@ -499,10 +499,10 @@ vi:
       disallowed_tags_generic: "Chủ đề này có thẻ không được phép."
     cannot_delete:
       uncategorized: "Danh mục này là đặc biệt. Nó được thiết kế như một khu vực lưu trữ cho các chủ đề không có danh mục; nó không thể bị xóa."
-      has_subcategories: "Không thể xoá chuyên mục này được vì nó có chuyên mục con."
+      has_subcategories: "Không thể xóa chuyên mục này vì nó có chuyên mục con."
       topic_exists:
         other: "Không thể xóa danh mục này vì nó có %{count} chủ đề. Chủ đề cũ nhất là %{topic_link}."
-      topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count} chủ để."
+      topic_exists_no_oldest: "Không thể xóa chuyên mục này vì nó có %{count} chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."
   trust_levels:
     admin: "Quản trị viên"
@@ -609,18 +609,22 @@ vi:
   post_action_types:
     off_topic:
       title: "Không-đúng-chủ-đề"
-      description: "Tút này không liên quan đến cuộc thảo luận hiện tại như đã được xác định trong tiêu đề và tút gốc, và có lẽ nên được chuyển sang nơi khác."
+      description: "Tút này không liên quan đến thảo luận hiện tại như đã được xác định trong tiêu đề và tút gốc, và nên được chuyển sang nơi khác."
+      short_description: "Không liên quan đến cuộc thảo luận"
     spam:
       title: "Spam"
       description: "Tút này là quảng cáo hoặc phá hoại. Nó không hữu ích hoặc không liên quan đến chủ đề hiện tại."
+      short_description: "Đây là quảng cáo hoặc hành vi phá hoại"
       email_title: '"%{title}" đã bị gắn cờ spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Không thích hợp"
       description: 'Tút này chứa nội dung mà một người bình thường sẽ coi là xúc phạm, lăng mạ, có hành vi hận thù hoặc vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng</a>.'
+      short_description: 'Vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng của chúng ta</a>'
     illegal:
       title: "Bất hợp pháp"
       description: "Tút này cần được BQT xem xét vì tôi cho rằng nó chứa nội dung bất hợp pháp."
+      short_description: "Điều này là vi phạm pháp luật"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
     notify_user:
@@ -656,9 +660,11 @@ vi:
       title: "Rác"
       description: "Chủ đề này mang bản chất quảng cáo, không có ích và không thích hợp với nơi này."
       long_form: "Đã báo cáo tút"
+      short_description: "Đây là quảng cáo"
     inappropriate:
       title: "Không phù hợp"
       long_form: "đã đánh dấu bài này không phù hợp"
+      short_description: 'Vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng của chúng ta</a>'
     notify_moderators:
       title: "Một điều gì đó khác"
       description: 'Chủ đề này yêu cầu sự chú ý của nhân viên nói chung dựa trên <a href="%{base_path}/guidelines">nguyên tắc</a>, <a href="%{tos_url}">TOS</a>hoặc vì lý do khác không được liệt kê ở trên.'
@@ -668,6 +674,7 @@ vi:
       email_body: "%{link}\n\n%{message}"
     illegal:
       title: "Bất hợp pháp"
+      short_description: "Điều này là vi phạm pháp luật"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -1324,7 +1331,7 @@ vi:
     default_tags_tracking: "Danh sách các thẻ được theo dõi theo mặc định."
     default_tags_watching_first_post: "Danh sách các thẻ mà tút đầu tiên trong mỗi chủ đề mới sẽ được giám sát theo mặc định."
     allowed_user_api_auth_redirects: "URL được phép để chuyển hướng xác thực cho các khóa API của người dùng. Ký hiệu đại diện * có thể được sử dụng để khớp với bất kỳ phần nào của nó (ví dụ: www.example.com/*)."
-    watched_precedence_over_muted: "Thông báo cho tôi về các chủ đề trong những chuyên mục hoặc thẻ tôi giám sát cũng thuộc về chủ đề mà tôi đã phớt lờ"
+    watched_precedence_over_muted: "Thông báo cho tôi về các chủ đề trong những chuyên mục hoặc thẻ tôi giám sát, đồng thời cũng thuộc về chủ đề mà tôi đã phớt lờ"
     shared_drafts_min_trust_level: "Cho phép người dùng xem và chỉnh sửa Thư nháp được chia sẻ."
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
@@ -2400,7 +2407,7 @@ vi:
               latest:
                 label: "Mới nhất"
               hot:
-                label: "Nổi bật"
+                label: "Hot"
       corporate:
         fields:
           governing_law:
