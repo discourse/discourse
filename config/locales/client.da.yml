@@ -2895,8 +2895,6 @@ da:
           12_hours: "12 Timer"
           24_hours: "24 Timer"
           custom: "Brugerdefineret Varighed"
-      slow_mode_notice:
-        duration: "Vent venligst %{duration} mellem indlæg i dette emne"
       topic_status_update:
         title: "Emne Timer"
         save: "Indstil timerfunktion"

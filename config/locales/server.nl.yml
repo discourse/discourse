@@ -1919,7 +1919,6 @@ nl:
     invite_link_max_redemptions_limit_users: "Het maximaal toegestane aantal verzilveringen van uitnodigingslinks gegenereerd door reguliere gebruikers mag niet hoger zijn dan deze waarde."
     alert_admins_if_errors_per_minute: "Aantal foutmeldingen per minuut waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
     alert_admins_if_errors_per_hour: "Aantal foutmeldingen per uur waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
-    categories_topics: "Aantal topics dat op de pagina /categories wordt weergegeven. Als dit op 0 is ingesteld, wordt automatisch naar een waarde gezocht die de twee kolommen symmetrisch houdt (categorieën en topics)."
     suggested_topics: "Aantal uitgelichte topics onderaan een topic."
     limit_suggested_to_category: "Alleen topics van de huidige categorie weergeven in uitgelichte topics."
     suggested_topics_max_days_old: "Voorgestelde topics mogen niet meer dan n dagen oud zijn."

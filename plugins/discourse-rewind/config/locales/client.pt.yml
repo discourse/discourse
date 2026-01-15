@@ -14,6 +14,8 @@ pt:
       reports:
         reading_time:
           title: Tempo de leitura
+        assignments:
+          total_assigned_others: "Atribuiu a %{username}"
         chat_usage:
           messages: mensagens
           author: Você

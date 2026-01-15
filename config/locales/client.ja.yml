@@ -3238,8 +3238,6 @@ ja:
           12_hours: "12 時間"
           24_hours: "24 時間"
           custom: "カスタム期間"
-      slow_mode_notice:
-        duration: "このトピックでは次の投稿まで %{duration}お待ちください"
       topic_status_update:
         title: "トピックタイマー"
         save: "タイマーをセット"

@@ -3285,8 +3285,6 @@ pt:
           12_hours: "12 Horas"
           24_hours: "24 Horas"
           custom: "Duração Personalizada"
-      slow_mode_notice:
-        duration: "Por favor, aguarde %{duration} entre as publicações neste tópico"
       topic_status_update:
         title: "Temporizador do Tópico"
         save: "Definir Temporizador"

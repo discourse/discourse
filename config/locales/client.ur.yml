@@ -3465,8 +3465,6 @@ ur:
           12_hours: "12 گھنٹے"
           24_hours: "24 گھنٹے"
           custom: "اپنی مرضی کے مطابق مدت"
-      slow_mode_notice:
-        duration: "براہ کرم اس عنوان میں پوسٹ کے درمیان %{duration}"
       topic_status_update:
         title: "موضوع ٹائمر"
         save: "ٹائمر مقرر کریں"

@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 et:
+  solved: "Lahendatud"
+  posted: "postitatud"
+  reply_count:
+    one: "%{count} vastus"
+    other: "%{count} vastust"

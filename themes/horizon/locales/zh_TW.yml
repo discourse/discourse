@@ -5,3 +5,11 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  solved: "已解決"
+  posted: "發表於"
+  vote_count:
+    other: "%{count} 票"
+  like_count:
+    other: "%{count}個讚"
+  reply_count:
+    other: "%{count}個回覆"

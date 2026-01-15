@@ -5,5 +5,15 @@
 # https://translate.discourse.org/
 
 ug:
+  posted: "يوللانغان ۋاقىت"
+  vote_count:
+    one: "%{count} بېلەت"
+    other: "%{count} بېلەت"
+  like_count:
+    one: "%{count} ياقتۇرۇش"
+    other: "%{count} ياقتۇرۇش"
+  reply_count:
+    one: "%{count} جاۋاب"
+    other: "%{count} جاۋاب"
   theme_metadata:
     description: "ئاددىي، چىرايلىق ئۆرنەك، Discourse تور بېكىتىنىڭ قولغا ئېلىپلا ئىشلىتىش تەسىراتىنى ياخشىلايدۇ."

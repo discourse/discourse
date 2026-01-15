@@ -3426,8 +3426,6 @@ fi:
           12_hours: "12 tuntia"
           24_hours: "24 tuntia"
           custom: "Valitse kesto"
-      slow_mode_notice:
-        duration: "Tässä ketjussa on odotettava %{duration} viestien välillä."
       topic_status_update:
         title: "Ketjun ajastin"
         save: "Aseta ajastin"

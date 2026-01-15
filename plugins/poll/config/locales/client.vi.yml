@@ -106,7 +106,7 @@ vi:
           login: "Đăng nhập để bình chọn!"
       error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái bình chọn."
       error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến lượt bình chọn của bạn."
-      error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia bình chọn."
+      error_while_fetching_voters: "Đã có lỗi xảy ra khi hiện những người tham gia bình chọn."
       error_while_exporting_results: "Đã có lỗi xảy ra khi xuất kết quả bình chọn."
       ui_builder:
         title: Tạo bình chọn
@@ -125,13 +125,13 @@ vi:
           ranked_choice: Lựa chọn thứ hạng
           number: Xếp hạng
         poll_result:
-          label: Hiển thị kết quả...
+          label: Hiện kết quả
           always: Luôn hiển thị
           vote: Chỉ sau khi bình chọn
           closed: Khi cuộc bình chọn kết thúc
           staff: Chỉ BQT
         poll_groups:
-          label: Hạn chế vốt với các nhóm này
+          label: Hạn chế bình chọn với các nhóm sau
         poll_chart_type:
           label: Biểu đồ kết quả
           bar: Cột
@@ -139,9 +139,9 @@ vi:
         poll_config:
           max: Lựa chọn tối đa
           min: Lựa chọn tối thiểu
-          step: Bước
+          step: Vòng
         poll_public:
-          label: Hiển thị người đã bình chọn
+          label: Hiện người đã bình chọn
         poll_dynamic:
           label: Cho phép thêm hoặc xóa các lựa chọn sau khi đăng
         poll_title:

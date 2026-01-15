@@ -5,5 +5,17 @@
 # https://translate.discourse.org/
 
 fi:
+  solved: "Ratkaistu"
+  posted: "lähetti viestin"
+  by_username: "käyttäjältä @%{username}"
+  vote_count:
+    one: "%{count} ääni"
+    other: "%{count} ääntä"
+  like_count:
+    one: "%{count} tykkäys"
+    other: "%{count} tykkäystä"
+  reply_count:
+    one: "%{count} vastaus"
+    other: "%{count} vastausta"
   theme_metadata:
     description: "Yksinkertainen ja upea teema, joka parantaa Discourse-sivustojen alustavaa käyttökokemusta."

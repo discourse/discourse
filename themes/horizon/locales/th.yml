@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 th:
+  solved: "แก้ไขแล้ว"
+  posted: "โพสต์แล้ว"
+  reply_count:
+    other: "%{count} ตอบ"
