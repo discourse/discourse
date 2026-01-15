@@ -1094,7 +1094,10 @@ form {
 }
 
 #skip-links__container {
+  --skip-links-offset: -75px;
   position: fixed;
+  top: var(--skip-links-offset);
+  z-index: z("header") + 1;
 }
 
 #skip-links__container a,
@@ -1103,7 +1106,7 @@ a#skip-link,
 .skip-link {
   padding: var(--space-1) var(--space-2);
   position: fixed;
-  top: -75px;
+  top: var(--skip-links-offset);
   left: var(--space-4);
   color: var(--secondary);
   background: var(--tertiary);
