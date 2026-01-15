@@ -1,3 +1,4 @@
+// @ts-check
 import { DEBUG } from "@glimmer/env";
 import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
 import { raiseBlockError } from "discourse/lib/blocks/error";
@@ -256,7 +257,7 @@ export const isBlockRegistryLocked = isBlockRegistryFrozen;
  * - `blockName` static property (set by the decorator)
  * - `blockMetadata` static property (set by the decorator)
  *
- * @param {typeof import("@glimmer/component").default} BlockClass - The block component class
+ * @param {BlockClass} BlockClass - The block component class
  * @throws {Error} If called after registry is locked, or if block is invalid
  *
  * @example
@@ -322,9 +323,10 @@ export function _registerBlock(BlockClass) {
  * BlockClasses have `blockName` set by the `@block` decorator.
  *
  * @param {BlockRegistryEntry} entry - The registry entry to check.
- * @returns {boolean} True if the entry is a factory function.
+ * @returns {entry is BlockFactory} True if the entry is a factory function.
  */
 export function isBlockFactory(entry) {
+  // @ts-ignore - blockName exists on BlockClass but not BlockFactory (intentional type narrowing)
   return typeof entry === "function" && !entry.blockName;
 }
 
@@ -518,6 +520,7 @@ async function resolveFactory(name, factory) {
   try {
     const result = await factory();
     // Handle both direct class and module with default export
+    // @ts-ignore - result may be a module with .default or direct BlockClass
     const BlockClass = result?.default ?? result;
 
     if (!BlockClass?.blockName) {

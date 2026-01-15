@@ -1,3 +1,4 @@
+// @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 import { evaluateConditions } from "discourse/lib/blocks/condition-evaluator";
@@ -77,7 +78,7 @@ export default class Blocks extends Service {
    * Gets a registered block by name.
    *
    * @param {string} name - The block name (e.g., "hero-banner")
-   * @returns {typeof import("@glimmer/component").default|undefined} The block class, or undefined if not found
+   * @returns {import("discourse/lib/blocks/registration").BlockRegistryEntry|undefined} The block entry, or undefined if not found
    *
    * @example
    * ```javascript
@@ -106,9 +107,9 @@ export default class Blocks extends Service {
   }
 
   /**
-   * Returns all registered block classes.
+   * Returns all registered block entries.
    *
-   * @returns {Array<typeof import("@glimmer/component").default>}
+   * @returns {Array<import("discourse/lib/blocks/registration").BlockRegistryEntry>}
    *
    * @example
    * ```javascript
@@ -123,7 +124,7 @@ export default class Blocks extends Service {
    * Returns all registered blocks with their metadata.
    * Useful for admin UIs and documentation generation.
    *
-   * @returns {Array<{name: string, component: typeof import("@glimmer/component").default, metadata: Object}>}
+   * @returns {Array<{name: string, component: import("discourse/lib/blocks/registration").BlockRegistryEntry, metadata: Object}>}
    *
    * @example
    * ```javascript
@@ -137,6 +138,7 @@ export default class Blocks extends Service {
     return getAllBlockEntries().map(([name, component]) => ({
       name,
       component,
+      // @ts-expect-error blockMetadata exists on resolved BlockClass, not BlockFactory
       metadata: component.blockMetadata,
     }));
   }
@@ -148,7 +150,7 @@ export default class Blocks extends Service {
    * this method ensures the returned value is always a resolved BlockClass.
    *
    * @param {string} name - The block name (e.g., "hero-banner").
-   * @returns {Promise<typeof import("@glimmer/component").default|undefined>}
+   * @returns {Promise<import("discourse/lib/blocks/registration").BlockClass|undefined>}
    *   The resolved block class, or undefined if not found.
    *
    * @example

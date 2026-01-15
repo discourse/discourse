@@ -1,3 +1,4 @@
+// @ts-check
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Pattern constants for block name validation.
  *

@@ -37,7 +37,9 @@ export default class BlockDebugButton extends Component {
    */
   @action
   toggleConsoleLogging(event) {
-    devToolsState.blockDebug = event.target.checked;
+    devToolsState.blockDebug = /** @type {HTMLInputElement} */ (
+      event.target
+    ).checked;
   }
 
   /**
@@ -48,7 +50,9 @@ export default class BlockDebugButton extends Component {
    */
   @action
   toggleVisualOverlay(event) {
-    devToolsState.blockVisualOverlay = event.target.checked;
+    devToolsState.blockVisualOverlay = /** @type {HTMLInputElement} */ (
+      event.target
+    ).checked;
   }
 
   /**
@@ -59,7 +63,9 @@ export default class BlockDebugButton extends Component {
    */
   @action
   toggleOutletBoundaries(event) {
-    devToolsState.blockOutletBoundaries = event.target.checked;
+    devToolsState.blockOutletBoundaries = /** @type {HTMLInputElement} */ (
+      event.target
+    ).checked;
   }
 
   <template>

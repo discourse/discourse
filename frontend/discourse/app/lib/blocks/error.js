@@ -1,3 +1,4 @@
+// @ts-check
 import { DEBUG } from "@glimmer/env";
 import {
   formatEntryWithErrorPath,
@@ -23,7 +24,9 @@ export function captureCallSite(callerFn) {
 
   // V8-specific: exclude callerFn and everything above from the stack trace.
   // In non-V8 browsers, this is a no-op and the full stack is preserved.
+  // @ts-ignore - V8-specific API
   if (Error.captureStackTrace) {
+    // @ts-ignore - V8-specific API
     Error.captureStackTrace(error, callerFn);
   }
 
@@ -280,6 +283,7 @@ export function raiseBlockError(message, context = null) {
     error = context.callSiteError;
     error.name = "BlockError";
     error.message = fullMessage;
+    // @ts-ignore - Adding path property to Error for BlockError compatibility
     error.path = context.path;
   } else {
     error = new BlockError(fullMessage, { path: context?.path });

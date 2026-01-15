@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Utility functions for the block system.
  *
@@ -12,6 +13,9 @@
  * @property {Object|null} [entry=null] - The block entry object being validated.
  * @property {Error|null} [callSiteError=null] - Error captured at the call site for stack traces.
  * @property {Array|null} [rootLayout=null] - The root layout array for error display.
+ * @property {string} [errorPath] - Full path to the error (e.g., "layout[0].conditions.params.categoryId").
+ * @property {string} [conditionsPath] - Path within conditions (e.g., "params.categoryId").
+ * @property {Object} [conditions] - The conditions object for error display.
  */
 
 /**
@@ -71,7 +75,7 @@ export function buildErrorPath(basePath, segment) {
  * args with default values from the block's metadata schema. Default values
  * are only applied when the arg is undefined in the provided args.
  *
- * @param {typeof import("@glimmer/component").default} ComponentClass - The block component class.
+ * @param {import("discourse/lib/blocks/registration").BlockClass} ComponentClass - The block component class.
  * @param {Object} providedArgs - The args provided in the layout entry.
  * @returns {Object} A new object with defaults applied for missing args.
  *

@@ -1,3 +1,4 @@
+// @ts-check
 import { service } from "@ember/service";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";

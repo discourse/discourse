@@ -1,3 +1,4 @@
+// @ts-check
 import { BlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
@@ -12,13 +13,14 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
  * @throws {BlockError} If an unrecognized arg key is found.
  */
 export function validateConditionArgKeys(instance, type, args, path) {
+  // @ts-ignore - Static property defined on condition classes
   const validKeys = instance.constructor.validArgKeys;
 
   // source is always valid if sourceType allows it
+  // @ts-ignore - Static property defined on condition classes
+  const sourceType = instance.constructor.sourceType;
   const allValidKeys =
-    instance.constructor.sourceType !== "none"
-      ? [...validKeys, "source"]
-      : validKeys;
+    sourceType !== "none" ? [...validKeys, "source"] : validKeys;
 
   for (const key of Object.keys(args)) {
     if (!allValidKeys.includes(key)) {

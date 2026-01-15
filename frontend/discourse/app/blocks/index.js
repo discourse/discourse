@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Public API block exports.
  *
@@ -8,5 +9,7 @@
  */
 
 // Public API for plugin developers
+
+/** @return {import("discourse/blocks/block-outlet.gjs")} - prevents ember-tsc error importing .gjs files */
 export { block } from "discourse/blocks/block-outlet";
 export { BlockCondition } from "discourse/blocks/conditions";

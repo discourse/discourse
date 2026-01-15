@@ -17,7 +17,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
  * - `@outletName` - The outlet identifier this group belongs to
  * - `@outletArgs` - Outlet args available for condition evaluation and access
  *
- * @param {string} [@name] - Group identifier for BEM class naming (block__group-{name})
+ * @param {string} [name] - Group identifier for BEM class naming (block__group-{name})
  */
 @block("group", {
   container: true,

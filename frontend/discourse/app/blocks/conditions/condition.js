@@ -1,3 +1,4 @@
+// @ts-check
 import { getByPath } from "discourse/lib/blocks/utils";
 
 /**
@@ -123,6 +124,7 @@ export class BlockCondition {
    */
   validateSource(args) {
     const { source } = args;
+    // @ts-ignore - Static property defined on subclasses
     const sourceType = this.constructor.sourceType;
 
     if (source === undefined) {
@@ -182,6 +184,7 @@ export class BlockCondition {
       return undefined;
     }
 
+    // @ts-ignore - Static property defined on subclasses
     const sourceType = this.constructor.sourceType;
 
     if (sourceType === "object") {

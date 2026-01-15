@@ -164,7 +164,7 @@ export function jaroWinklerSimilarity(a, b) {
  * typos like "DISCOVERY" instead of "DISCOVERY_PAGES".
  *
  * @param {string} input - The string to find a match for.
- * @param {Array<string>} candidates - List of valid strings to match against.
+ * @param {readonly string[]} candidates - List of valid strings to match against.
  * @param {Object} [options] - Options.
  * @param {number} [options.minSimilarity=0.8] - Minimum similarity (0-1) to consider a match.
  * @param {boolean} [options.caseSensitive=false] - Whether to compare case-sensitively.
@@ -204,7 +204,7 @@ export function findClosestMatch(input, candidates, options = {}) {
  * Formats an unknown value with a "did you mean?" suggestion if a close match exists.
  *
  * @param {string} value - The unknown/invalid value.
- * @param {Array<string>} validValues - List of valid values to match against.
+ * @param {readonly string[]} validValues - List of valid values to match against.
  * @param {Object} [options] - Options passed to findClosestMatch.
  * @returns {string} Formatted string like '"foo" (did you mean "bar"?)' or just '"foo"'.
  *

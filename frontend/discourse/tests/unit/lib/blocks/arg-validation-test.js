@@ -1021,12 +1021,12 @@ module("Unit | Lib | blocks/arg-validation", function () {
   module("validateArrayItemType", function () {
     test("validates string items", function (assert) {
       assert.strictEqual(
-        validateArrayItemType("hello", "string", "tags", "test-block", 0),
+        validateArrayItemType("hello", "string", "tags", 0, "test-block"),
         null
       );
 
       assert.true(
-        validateArrayItemType(123, "string", "tags", "test-block", 0)?.includes(
+        validateArrayItemType(123, "string", "tags", 0, "test-block")?.includes(
           'tags[0]" must be a string'
         )
       );
@@ -1034,12 +1034,12 @@ module("Unit | Lib | blocks/arg-validation", function () {
 
     test("validates number items", function (assert) {
       assert.strictEqual(
-        validateArrayItemType(42, "number", "ids", "test-block", 0),
+        validateArrayItemType(42, "number", "ids", 0, "test-block"),
         null
       );
 
       assert.true(
-        validateArrayItemType("42", "number", "ids", "test-block", 1)?.includes(
+        validateArrayItemType("42", "number", "ids", 1, "test-block")?.includes(
           'ids[1]" must be a number'
         )
       );
@@ -1047,12 +1047,12 @@ module("Unit | Lib | blocks/arg-validation", function () {
 
     test("validates boolean items", function (assert) {
       assert.strictEqual(
-        validateArrayItemType(true, "boolean", "flags", "test-block", 0),
+        validateArrayItemType(true, "boolean", "flags", 0, "test-block"),
         null
       );
 
       assert.true(
-        validateArrayItemType(1, "boolean", "flags", "test-block", 2)?.includes(
+        validateArrayItemType(1, "boolean", "flags", 2, "test-block")?.includes(
           'flags[2]" must be a boolean'
         )
       );

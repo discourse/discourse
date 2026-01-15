@@ -1,3 +1,4 @@
+// @ts-check
 import { findClosestMatch } from "discourse/lib/string-similarity";
 
 /**

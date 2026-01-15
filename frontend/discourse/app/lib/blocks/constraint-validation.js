@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Cross-arg constraint validation for blocks.
  *
@@ -264,16 +265,17 @@ export function validateConstraints(constraints, args, blockName) {
  *
  * @param {string[]} argNames - The arg names to check.
  * @param {Object} args - The resolved args.
+ * @param {string} blockName - The block name for error messages.
  * @returns {string|null} Error message if validation fails, null otherwise.
  */
-function validateAtLeastOne(argNames, args) {
+function validateAtLeastOne(argNames, args, blockName) {
   const providedCount = argNames.filter(
     (name) => args[name] !== undefined
   ).length;
 
   if (providedCount === 0) {
     const argList = formatArgList(argNames);
-    return `at least one of ${argList} must be provided.`;
+    return `Block "${blockName}": at least one of ${argList} must be provided.`;
   }
 
   return null;
@@ -284,19 +286,20 @@ function validateAtLeastOne(argNames, args) {
  *
  * @param {string[]} argNames - The arg names to check.
  * @param {Object} args - The resolved args.
+ * @param {string} blockName - The block name for error messages.
  * @returns {string|null} Error message if validation fails, null otherwise.
  */
-function validateExactlyOne(argNames, args) {
+function validateExactlyOne(argNames, args, blockName) {
   const providedArgs = argNames.filter((name) => args[name] !== undefined);
   const argList = formatArgList(argNames);
 
   if (providedArgs.length === 0) {
-    return `exactly one of ${argList} must be provided, but got none.`;
+    return `Block "${blockName}": exactly one of ${argList} must be provided, but got none.`;
   }
 
   if (providedArgs.length > 1) {
     const providedList = formatArgList(providedArgs);
-    return `exactly one of ${argList} must be provided, but got ${providedArgs.length}: ${providedList}.`;
+    return `Block "${blockName}": exactly one of ${argList} must be provided, but got ${providedArgs.length}: ${providedList}.`;
   }
 
   return null;
@@ -307,9 +310,10 @@ function validateExactlyOne(argNames, args) {
  *
  * @param {string[]} argNames - The arg names to check.
  * @param {Object} args - The resolved args.
+ * @param {string} blockName - The block name for error messages.
  * @returns {string|null} Error message if validation fails, null otherwise.
  */
-function validateAllOrNone(argNames, args) {
+function validateAllOrNone(argNames, args, blockName) {
   const providedCount = argNames.filter(
     (name) => args[name] !== undefined
   ).length;
@@ -325,7 +329,7 @@ function validateAllOrNone(argNames, args) {
   const argList = formatArgList(argNames);
 
   return (
-    `args ${argList} must be provided together or not at all. ` +
+    `Block "${blockName}": args ${argList} must be provided together or not at all. ` +
     `Got ${formatArgList(providedArgs)} but missing ${formatArgList(missingArgs)}.`
   );
 }

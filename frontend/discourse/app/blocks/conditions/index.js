@@ -1,3 +1,4 @@
+// @ts-check
 // BlockCondition class and decorator
 export { BlockCondition } from "./condition";
 export { blockCondition } from "./decorator";

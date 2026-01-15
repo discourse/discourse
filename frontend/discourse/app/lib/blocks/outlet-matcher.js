@@ -1,3 +1,4 @@
+// @ts-check
 import picomatch from "picomatch";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import { getAllOutlets } from "discourse/lib/blocks/registration";

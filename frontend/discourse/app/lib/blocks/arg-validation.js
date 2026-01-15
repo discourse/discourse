@@ -1,3 +1,4 @@
+// @ts-check
 import { BlockError, raiseBlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
@@ -465,8 +466,8 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
             item,
             itemType,
             argName,
-            blockName,
-            i
+            i,
+            blockName
           );
           if (itemError) {
             return itemError;
@@ -485,16 +486,16 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
  * @param {*} item - The array item.
  * @param {string} itemType - The expected type ("string", "number", "boolean").
  * @param {string} argName - The argument name for error messages.
- * @param {string|null} [blockName=null] - Optional block name for context.
  * @param {number} index - The array index for error messages.
+ * @param {string|null} [blockName=null] - Optional block name for context.
  * @returns {string|null} Error message if validation fails, null otherwise.
  */
 export function validateArrayItemType(
   item,
   itemType,
   argName,
-  blockName = null,
-  index
+  index,
+  blockName = null
 ) {
   const indexedArgName = `${argName}[${index}]`;
 

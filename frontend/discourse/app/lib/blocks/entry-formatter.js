@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Block entry formatting utilities for error display and debugging.
  *

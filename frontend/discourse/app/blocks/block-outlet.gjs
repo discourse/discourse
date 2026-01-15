@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * BlockOutlet System
  *
@@ -22,6 +23,8 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
+/** @return {import("discourse/blocks/block-layout-wrapper.gjs")} - prevents ember-tsc error importing .gjs files */
+import { wrapBlockLayout } from "discourse/blocks/block-layout-wrapper";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import {
@@ -56,7 +59,18 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
-import { wrapBlockLayout } from "./block-layout-wrapper";
+
+/**
+ * A block entry in a layout configuration.
+ *
+ * @typedef {Object} LayoutEntry
+ * @property {typeof Component} block - The block component class (must use @block decorator).
+ * @property {Object} [args] - Args to pass to the block component.
+ * @property {string} [classNames] - Additional CSS classes for the block wrapper.
+ * @property {Array<LayoutEntry>} [children] - Nested block entries (only for container blocks).
+ * @property {Array<Object>|Object} [conditions] - Conditions that must pass for block to render.
+ * @property {Object} [containerArgs] - Args passed from parent container's childArgs.
+ */
 
 /**
  * Maps outlet names to their registered outlet layouts.
@@ -284,6 +298,17 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  *
  * @param {Object.<string, ArgSchema>} [options.args] - Schema for block arguments.
  *
+ * @param {Object.<string, ArgSchema>} [options.childArgs] - Schema for args passed to children
+ *   of this container block. Only valid when container: true.
+ *
+ * @param {Object} [options.constraints] - Cross-arg validation constraints (atLeastOne, exactlyOne, allOrNone).
+ *
+ * @param {Function} [options.validate] - Custom validation function called after schema validation.
+ *
+ * @param {string|string[]|((args: Object) => string)} [options.containerClassNames] - Additional CSS
+ *   classes for container block wrapper. Can be a string, array of strings, or function that receives
+ *   args and returns a string. Only valid when container: true.
+ *
  * @param {string[]} [options.allowedOutlets] - Glob patterns specifying which outlets
  *   this block CAN be rendered in. If specified, the block can ONLY render in outlets
  *   matching at least one pattern. Uses picomatch syntax:
@@ -311,6 +336,13 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * @property {boolean} [required=false] - Whether the argument is required
  * @property {*} [default] - Default value for the argument
  * @property {"string"|"number"|"boolean"} [itemType] - Item type for array arguments (no nested arrays)
+ * @property {RegExp} [pattern] - Regex pattern for string validation
+ * @property {number} [minLength] - Minimum length for string or array
+ * @property {number} [maxLength] - Maximum length for string or array
+ * @property {number} [min] - Minimum value for number
+ * @property {number} [max] - Maximum value for number
+ * @property {boolean} [integer] - Whether number must be an integer
+ * @property {Array} [enum] - Allowed values for the argument
  *
  * @example
  * // Simple block with no restrictions
@@ -448,6 +480,7 @@ export function block(name, options = {}) {
     deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
   });
 
+  // @ts-ignore - TS2322: Decorator return type mismatch (returns extended class)
   return function (target) {
     if (!(target.prototype instanceof Component)) {
       raiseBlockError("@block target must be a Glimmer component class");
@@ -509,6 +542,7 @@ export function block(name, options = {}) {
       static [__BLOCK_CONTAINER_FLAG] = isContainer;
 
       constructor() {
+        // @ts-ignore - TS2556: Spread argument for parent class constructor
         super(...arguments);
 
         // Authorization check: blocks can only be instantiated in two scenarios:
@@ -531,6 +565,7 @@ export function block(name, options = {}) {
        * @returns {boolean}
        */
       get isRoot() {
+        // @ts-ignore - TS2339: __ROOT_BLOCK is dynamically added to constructor
         return this.constructor.__ROOT_BLOCK === __BLOCK_CONTAINER_FLAG;
       }
 
@@ -542,6 +577,7 @@ export function block(name, options = {}) {
        * @returns {Array<Object>} The block entries, or an empty array for non-root blocks.
        */
       get layout() {
+        // @ts-ignore - TS2339: layout getter added to root blocks (BlockOutlet)
         return this.isRoot ? super.layout : [];
       }
 
@@ -562,6 +598,7 @@ export function block(name, options = {}) {
        *
        * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>|undefined}
        */
+      // @ts-ignore - TS1206: Decorators not valid in anonymous class expressions
       @cached
       get children() {
         // set the tracking before any guard clause to ensure updating the options in the dev tools will track state
@@ -575,6 +612,7 @@ export function block(name, options = {}) {
         // Root blocks (BlockOutlet) override this getter to do full preprocessing.
         // Defer to the component's own implementation.
         if (this.isRoot) {
+          // @ts-ignore - TS2339: children getter added to root blocks (BlockOutlet)
           return super.children;
         }
 
@@ -584,6 +622,7 @@ export function block(name, options = {}) {
           return;
         }
 
+        // @ts-ignore - TS2322: ChildBlockResult type compatible with return type
         return processBlockEntries({
           entries: rawChildren,
           cache: this.#childComponentCache,
@@ -716,6 +755,7 @@ function processBlockEntries({
   const containerCounts = new Map();
 
   for (const entry of entries) {
+    // @ts-ignore - entry.block can be string or BlockClass
     const resolvedBlock = resolveBlockSync(entry.block);
 
     // Handle optional missing block (block ref ended with `?` but not registered)
@@ -742,7 +782,9 @@ function processBlockEntries({
       continue;
     }
 
+    // @ts-ignore - resolvedBlock is BlockClass after previous checks
     const blockName = resolvedBlock.blockName || "unknown";
+    // @ts-ignore - resolvedBlock is BlockClass after previous checks
     const isContainer = isContainerBlock(resolvedBlock);
 
     // Use the stable key assigned at registration time. This key survives
@@ -757,11 +799,16 @@ function processBlockEntries({
 
     // Render visible blocks
     if (entry.__visible) {
+      // @ts-ignore - resolvedBlock is BlockClass after __visible check
+      const blockClass =
+        /** @type {import("discourse/lib/blocks/registration").BlockClass} */ (
+          resolvedBlock
+        );
       result.push(
         getOrCreateLeafBlockComponent(
           cache,
           entry,
-          resolvedBlock,
+          blockClass,
           {
             displayHierarchy: baseHierarchy,
             outletName,
@@ -837,6 +884,7 @@ function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
       enumerable: true,
     };
   }
+  // @ts-ignore - propertyDescriptors is populated dynamically
   Object.defineProperties(blockArgs, propertyDescriptors);
 
   return blockArgs;
@@ -870,8 +918,9 @@ function resolveContainerClassNames(metadata, args) {
  * in a layout wrapper for consistent styling.
  *
  * @param {Object} entry - The block entry
- * @param {typeof Component} entry.block - The block component class
+ * @param {import("discourse/lib/blocks/registration").BlockClass} entry.block - The block component class
  * @param {Object} [entry.args] - Args to pass to the block
+ * @param {Object} [entry.containerArgs] - Container args for parent's childArgs schema
  * @param {string} [entry.classNames] - Additional CSS classes
  * @param {Array<Object>} [entry.children] - Nested block entries
  * @param {import("@ember/owner").default} owner - The application owner
@@ -881,6 +930,7 @@ function resolveContainerClassNames(metadata, args) {
  * @param {Object} [debugContext.conditions] - The block's conditions
  * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
  * @param {string} [debugContext.key] - Stable unique key for this block
+ * @param {string} [debugContext.outletName] - The outlet name for wrapper class generation
  * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
  *   An object containing the curried block component, any containerArgs
  *   provided in the block entry, and a stable unique key for list rendering.
@@ -998,12 +1048,7 @@ export function isContainerBlock(component) {
  * in future releases without prior notice. Use with caution in production environments.
  *
  * @param {string} outletName - The outlet identifier (must be in BLOCK_OUTLETS).
- * @param {Array<Object>} layout - Array of block entries.
- * @param {typeof Component} layout[].block - The block component class (must use @block decorator).
- * @param {Object} [layout[].args] - Args to pass to the block component.
- * @param {string} [layout[].classNames] - Additional CSS classes for the block wrapper.
- * @param {Array<Object>} [layout[].children] - Nested block entries (only for container blocks).
- * @param {Array<Object>|Object} [layout[].conditions] - Conditions that must pass for block to render.
+ * @param {Array<LayoutEntry>} layout - Array of block entries.
  * @param {Object} [owner] - The application owner for service lookup (passed from plugin API).
  * @param {Error|null} [callSiteError] - Pre-captured error for source-mapped stack traces.
  *   When called via api.renderBlocks(), this is captured there to exclude the PluginApi wrapper.
@@ -1117,20 +1162,14 @@ function hasLayout(outletName) {
  * BlockOutlet serves as the entry point for the block rendering system. It:
  * - Looks up registered layouts by outlet name
  * - Renders blocks in a consistent wrapper structure
- * - Provides named blocks (`:before`, `:after`) for conditional content
+ * - Provides named blocks (`<:before>`, `<:after>`) for conditional content
  *
  * Named blocks:
- * - `:before` - Yields `hasLayout` boolean before block content.
- * - `:after` - Yields `hasLayout` boolean after block content.
+ * - `<:before>` - Yields `hasLayout` boolean before block content.
+ * - `<:after>` - Yields `hasLayout` boolean after block content.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
- *
- * @param {string} @name - The outlet identifier (must be registered in BLOCK_OUTLETS).
- * @param {Object} [@outletArgs] - Values passed to blocks rendered in this outlet.
- *   Blocks access these via `@outletArgs` in their templates.
- * @param {Object} [@deprecatedArgs] - Deprecated args that trigger warnings when accessed.
- *   Used for migrating consumers away from renamed outlet args.
  *
  * @example
  * ```hbs
@@ -1143,6 +1182,7 @@ function hasLayout(outletName) {
  * </BlockOutlet>
  * ```
  */
+// @ts-ignore - TS1238/TS1270: Decorator return type issues with @block
 @block("block-outlet", { container: true })
 export default class BlockOutlet extends Component {
   /**
@@ -1162,6 +1202,7 @@ export default class BlockOutlet extends Component {
   static __ROOT_BLOCK = __BLOCK_CONTAINER_FLAG;
 
   constructor() {
+    // @ts-ignore - TS2556: Spread argument for parent class constructor
     super(...arguments);
 
     // Lock the name at construction to prevent dynamic changes
@@ -1196,7 +1237,9 @@ export default class BlockOutlet extends Component {
    * - `containerArgs`: Values provided by the child entry for the parent's
    *   `childArgs` schema (accessible to parent, not the child block itself)
    *
-   * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>|undefined}
+   * @returns {TrackedAsyncData<{rawChildren: Array<Object>, showGhosts: boolean, isLoggingEnabled: boolean}|undefined>|undefined}
+   *   TrackedAsyncData wrapper containing the raw children and debug state once the
+   *   layout is validated. Use .isResolved, .value, .isRejected, .error to access state.
    */
   @cached
   get children() {
@@ -1280,6 +1323,7 @@ export default class BlockOutlet extends Component {
    * @returns {typeof Component|null}
    */
   get OutletInfoComponent() {
+    // @ts-ignore - callback is typed as Function but is actually a Component
     return debugHooks.getCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);
   }
 
@@ -1303,9 +1347,11 @@ export default class BlockOutlet extends Component {
    * @returns {Error|null}
    */
   get validationError() {
+    // @ts-ignore - children is TrackedAsyncData with isRejected/error properties
     if (!this.children?.isRejected) {
       return null;
     }
+    // @ts-ignore - children.error exists when isRejected is true
     return this.children.error;
   }
 
@@ -1337,6 +1383,7 @@ export default class BlockOutlet extends Component {
     {{! yield to :before block with hasLayout boolean for conditional rendering
         This allows block outlets to wrap other elements and conditionally render them based on
         the presence of a registered layout if necessary }}
+    {{! @glint-expect-error - yield signature not typed }}
     {{yield (hasLayout this.outletName) to="before"}}
 
     {{#if this.showOutletBoundary}}
@@ -1348,6 +1395,7 @@ export default class BlockOutlet extends Component {
         data-outlet-name={{this.outletName}}
       >
         {{#if this.OutletInfoComponent}}
+          {{! @glint-expect-error - dynamic component invocation }}
           <this.OutletInfoComponent
             @outletName={{this.outletName}}
             @hasBlocks={{this.blockCount}}
@@ -1387,6 +1435,7 @@ export default class BlockOutlet extends Component {
     {{! yield to :after block with hasLayout boolean for conditional rendering
         This allows block outlets to wrap other elements and conditionally render them based on
         the presence of a registered layout if necessary }}
+    {{! @glint-expect-error - yield signature not typed }}
     {{yield (hasLayout this.outletName) to="after"}}
   </template>
 }
@@ -1458,6 +1507,7 @@ class BlockOutletRootContainer extends Component {
     );
 
     // Step 2: Create components from processed entries
+    // @ts-ignore - TS2322: ChildBlockResult type compatible with return type
     return processBlockEntries({
       entries: processedEntries,
       cache: this.#componentCache,
@@ -1517,7 +1567,9 @@ class BlockOutletRootContainer extends Component {
         continue;
       }
 
+      // @ts-ignore - resolvedBlock is BlockClass after previous checks
       const blockName = resolvedBlock.blockName || "unknown";
+      // @ts-ignore - resolvedBlock is BlockClass after previous checks
       const isContainer = isContainerBlock(resolvedBlock);
 
       // Evaluate this block's own conditions.

@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
@@ -39,92 +40,96 @@ function getHintMessage(optionalMissing, failureReason) {
  * @param {Object} [blockArgs] - Arguments that would have been passed to the block.
  * @param {Object} [containerArgs] - Container arguments from parent container's childArgs.
  * @param {Object} [conditions] - Conditions that failed evaluation (not present for optional missing).
- * @param {boolean} [optionalMissing] - True if block is optional and not registered.
- * @param {string} [failureReason] - Why the block is hidden ("condition-failed" or "no-visible-children").
- * @param {Array<{Component: CurriedComponent}>} [children] - Nested ghost children for container blocks.
+ * @extends {Component<GhostBlockSignature>}
  */
-const GhostBlock = <template>
-  <div class="block-debug-ghost" data-block-name={{@blockName}}>
-    <DTooltip
-      @identifier="block-debug-ghost"
-      @interactive={{true}}
-      @placement="bottom-start"
-      @maxWidth={{500}}
-      @triggers={{hash mobile=(array "click") desktop=(array "hover" "click")}}
-      @untriggers={{hash mobile=(array "click") desktop=(array "mouseleave")}}
-    >
-      <:trigger>
-        <span class="block-debug-ghost__badge">
-          {{icon "cube"}}
-          <span class="block-debug-ghost__name">{{@blockName}}</span>
-          <span class="block-debug-ghost__status">(hidden)</span>
-        </span>
-      </:trigger>
-      <:content>
-        <div class="block-debug-tooltip --ghost">
-          <div class="block-debug-tooltip__header --failed">
+// eslint-disable-next-line ember/no-empty-glimmer-component-classes -- Class required for TypeScript signature
+class GhostBlock extends Component {
+  <template>
+    <div class="block-debug-ghost" data-block-name={{@blockName}}>
+      <DTooltip
+        @identifier="block-debug-ghost"
+        @interactive={{true}}
+        @placement="bottom-start"
+        @maxWidth={{500}}
+        @triggers={{hash
+          mobile=(array "click")
+          desktop=(array "hover" "click")
+        }}
+        @untriggers={{hash mobile=(array "click") desktop=(array "mouseleave")}}
+      >
+        <:trigger>
+          <span class="block-debug-ghost__badge">
             {{icon "cube"}}
-            <span class="block-debug-tooltip__title">{{@blockName}}</span>
-            <span class="block-debug-tooltip__outlet">in
-              {{@debugLocation}}</span>
-            <span class="block-debug-tooltip__status">HIDDEN</span>
+            <span class="block-debug-ghost__name">{{@blockName}}</span>
+            <span class="block-debug-ghost__status">(hidden)</span>
+          </span>
+        </:trigger>
+        <:content>
+          <div class="block-debug-tooltip --ghost">
+            <div class="block-debug-tooltip__header --failed">
+              {{icon "cube"}}
+              <span class="block-debug-tooltip__title">{{@blockName}}</span>
+              <span class="block-debug-tooltip__outlet">in
+                {{@debugLocation}}</span>
+              <span class="block-debug-tooltip__status">HIDDEN</span>
+            </div>
+
+            {{#if @optionalMissing}}
+              <div class="block-debug-tooltip__section">
+                <div class="block-debug-tooltip__section-title">
+                  Status
+                  <span class="--failed">(not registered)</span>
+                </div>
+              </div>
+            {{else if (isNoVisibleChildren @failureReason)}}
+              <div class="block-debug-tooltip__section">
+                <div class="block-debug-tooltip__section-title">
+                  Status
+                  <span class="--failed">(no visible children)</span>
+                </div>
+              </div>
+            {{else}}
+              <div class="block-debug-tooltip__section">
+                <div class="block-debug-tooltip__section-title">
+                  Conditions
+                  <span class="--failed">(failed)</span>
+                </div>
+                <ConditionsTree @conditions={{@conditions}} @passed={{false}} />
+              </div>
+            {{/if}}
+
+            {{#if (hasArgs @blockArgs)}}
+              <div class="block-debug-tooltip__section">
+                <div class="block-debug-tooltip__section-title">Arguments</div>
+                <ArgsTable @args={{@blockArgs}} />
+              </div>
+            {{/if}}
+
+            {{#if (hasArgs @containerArgs)}}
+              <div class="block-debug-tooltip__section">
+                <div class="block-debug-tooltip__section-title">Container Args</div>
+                <ArgsTable @args={{@containerArgs}} />
+              </div>
+            {{/if}}
+
+            <div class="block-debug-tooltip__hint">
+              {{getHintMessage @optionalMissing @failureReason}}
+            </div>
           </div>
+        </:content>
+      </DTooltip>
 
-          {{#if @optionalMissing}}
-            <div class="block-debug-tooltip__section">
-              <div class="block-debug-tooltip__section-title">
-                Status
-                <span class="--failed">(not registered)</span>
-              </div>
-            </div>
-          {{else if (isNoVisibleChildren @failureReason)}}
-            <div class="block-debug-tooltip__section">
-              <div class="block-debug-tooltip__section-title">
-                Status
-                <span class="--failed">(no visible children)</span>
-              </div>
-            </div>
-          {{else}}
-            <div class="block-debug-tooltip__section">
-              <div class="block-debug-tooltip__section-title">
-                Conditions
-                <span class="--failed">(failed)</span>
-              </div>
-              <ConditionsTree @conditions={{@conditions}} @passed={{false}} />
-            </div>
-          {{/if}}
-
-          {{#if (hasArgs @blockArgs)}}
-            <div class="block-debug-tooltip__section">
-              <div class="block-debug-tooltip__section-title">Arguments</div>
-              <ArgsTable @args={{@blockArgs}} />
-            </div>
-          {{/if}}
-
-          {{#if (hasArgs @containerArgs)}}
-            <div class="block-debug-tooltip__section">
-              <div class="block-debug-tooltip__section-title">Container Args</div>
-              <ArgsTable @args={{@containerArgs}} />
-            </div>
-          {{/if}}
-
-          <div class="block-debug-tooltip__hint">
-            {{getHintMessage @optionalMissing @failureReason}}
-          </div>
+      {{! Render nested ghost children for container blocks with no visible children }}
+      {{#if @children.length}}
+        <div class="block-debug-ghost__children">
+          {{#each @children as |child|}}
+            <child.Component />
+          {{/each}}
         </div>
-      </:content>
-    </DTooltip>
-
-    {{! Render nested ghost children for container blocks with no visible children }}
-    {{#if @children.length}}
-      <div class="block-debug-ghost__children">
-        {{#each @children as |child|}}
-          <child.Component />
-        {{/each}}
-      </div>
-    {{/if}}
-  </div>
-</template>;
+      {{/if}}
+    </div>
+  </template>
+}
 
 /**
  * Helper to check if failure reason is "no-visible-children".

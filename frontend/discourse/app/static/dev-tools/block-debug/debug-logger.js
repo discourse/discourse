@@ -296,7 +296,13 @@ class BlockDebugLogger {
    * @param {number} log.depth - Indentation depth.
    * @param {string} [log.label] - Label for param groups.
    * @param {Array} [log.matches] - Match results for param groups.
-   * @param {{ value: *, hasValue: true }|undefined} [log.resolvedValue] - Resolved value object.
+   * @param {{ value: *, hasValue: true, formatted?: Object }|undefined} [log.resolvedValue] - Resolved value object.
+   * @param {string} [log.currentPath] - Current URL path (for route-state type).
+   * @param {Array<string>} [log.expectedUrls] - Expected URL patterns (for route-state type).
+   * @param {Array<string>} [log.excludeUrls] - Excluded URL patterns (for route-state type).
+   * @param {Object} [log.pages] - Page configuration (for route-state type).
+   * @param {string} [log.actualPageType] - Actual page type (for route-state type).
+   * @param {Object} [log.actualPageContext] - Actual page context (for route-state type).
    * @param {boolean} [hasChildren=false] - Whether this node has nested children.
    */
   #logTreeNode(log, hasChildren = false) {

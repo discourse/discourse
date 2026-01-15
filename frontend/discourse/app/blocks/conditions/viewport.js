@@ -1,3 +1,4 @@
+// @ts-check
 import { service } from "@ember/service";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import { BlockCondition } from "./condition";

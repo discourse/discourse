@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Outlet layout validation utilities.
  *
@@ -383,6 +384,7 @@ function validateBlockConditions(
  * @param {string} [context.path] - Path to this entry in the block tree.
  * @param {Object} [context.entry] - The block entry object.
  * @param {Error} [context.callSiteError] - Error capturing call site location.
+ * @param {Array} [context.rootLayout] - Root layout array for error display.
  * @returns {Promise<Object | string | { [OPTIONAL_MISSING]: true, name: string }>}
  *   Resolved BlockClass, string name if deferred, or optional missing marker object.
  * @throws {Error} If required block is not registered.
@@ -609,7 +611,7 @@ export function validateReservedArgs(entry) {
  *
  * @param {Array<Object>} layout - The outlet layout (array of block entries) to validate.
  * @param {string} outletName - The outlet these blocks belong to.
- * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions.
+ * @param {import("discourse/services/blocks").default} blocksService - Service for validating conditions.
  * @param {Function} isBlockFn - Function to check if component is a block.
  * @param {Function} isContainerBlockFn - Function to check if component is a container block.
  * @param {string} [parentPath=""] - JSON-path style parent location for error context.
@@ -737,7 +739,7 @@ export async function validateLayout(
  * @param {Array<Object>} [entry.children] - Nested block entries.
  * @param {Array<Object>|Object} [entry.conditions] - Conditions for rendering.
  * @param {string} outletName - The outlet this block belongs to.
- * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions.
+ * @param {import("discourse/services/blocks").default} blocksService - Service for validating conditions.
  * @param {Function} isBlockFn - Function to check if component is a block.
  * @param {Function} isContainerBlockFn - Function to check if component is a container block.
  * @param {string} [path] - JSON-path style location in layout (e.g., "[3].children[0]").

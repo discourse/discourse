@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Debug hooks for the block rendering system.
  *

@@ -1,3 +1,4 @@
+// @ts-check
 import { service } from "@ember/service";
 import {
   getCurrentPageType,

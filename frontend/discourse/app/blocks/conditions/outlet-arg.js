@@ -1,3 +1,4 @@
+// @ts-check
 import { getByPath } from "discourse/lib/blocks/utils";
 import { matchValue } from "discourse/lib/blocks/value-matcher";
 import { BlockCondition } from "./condition";
@@ -135,6 +136,7 @@ export default class BlockOutletArgCondition extends BlockCondition {
    *   }
    * }} Object with formatted log data showing path, actual value, and configured expectation.
    */
+  // @ts-ignore - TS2416: Override returns formatted object instead of base class value structure
   getResolvedValueForLogging(args, context) {
     const { path, value, exists } = args;
     return {

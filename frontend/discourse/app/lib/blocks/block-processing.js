@@ -1,3 +1,4 @@
+// @ts-check
 import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 

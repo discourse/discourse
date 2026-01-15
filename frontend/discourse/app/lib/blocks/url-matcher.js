@@ -1,3 +1,4 @@
+// @ts-check
 import picomatch from "picomatch";
 import { withoutPrefix } from "discourse/lib/get-url";
 
