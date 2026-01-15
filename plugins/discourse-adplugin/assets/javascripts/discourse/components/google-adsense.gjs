@@ -42,7 +42,7 @@ function parseAdHeight(value) {
   }
 }
 
-function loadAdsense() {
+function loadAdsense(publisherId) {
   if (_loaded) {
     return RSVP.resolve();
   }
@@ -53,7 +53,7 @@ function loadAdsense() {
 
   const adsenseSrc =
     ("https:" === document.location.protocol ? "https:" : "http:") +
-    "//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+    "//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-" + publisherId;
 
   _promise = loadScript(adsenseSrc, { scriptTag: true }).then(function () {
     _loaded = true;
@@ -148,7 +148,7 @@ export default class GoogleAdsense extends AdComponent {
 
     this.set("adRequested", true);
 
-    await loadAdsense();
+    await loadAdsense(this.publisher_id);
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
