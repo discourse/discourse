@@ -41,6 +41,9 @@
     <%- if admin? %>
       <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
     <%- end %>
+    <%- unless customization_disabled? %>
+      <%= theme_translations_lookup %>
+    <%- end %>
 
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
@@ -55,7 +58,6 @@
     <%- end %>
 
     <%- unless customization_disabled? %>
-      <%= theme_translations_lookup %>
       <%= theme_js_lookup %>
       <%= theme_lookup("head_tag") %>
     <%- end %>
