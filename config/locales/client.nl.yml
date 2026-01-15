@@ -3426,8 +3426,6 @@ nl:
           12_hours: "12 uur"
           24_hours: "24 uur"
           custom: "Aangepaste duur"
-      slow_mode_notice:
-        duration: "Wacht %{duration} tussen berichten in dit topic"
       topic_status_update:
         title: "Topictimer"
         save: "Timer instellen"

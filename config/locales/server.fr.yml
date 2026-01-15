@@ -1925,7 +1925,6 @@ fr:
     invite_link_max_redemptions_limit_users: "Le nombre maximal d'utilisations d'un lien d'invitation généré par un utilisateur normal ne peut excéder cette valeur."
     alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. REMARQUE : nécessite un redémarrage."
     alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. REMARQUE : nécessite un redémarrage."
-    categories_topics: "Nombre de sujets à afficher dans la page /categories. Si ce paramètres est configuré à 0, une valeur automatique sera appliquée pour que les colonnes des catégories et des sujets soient symétriques."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie actuelle dans les sujets similaires."
     suggested_topics_max_days_old: "Les sujets suggérés ne devraient pas remonter à plus de n jours."

@@ -15,4 +15,4 @@ pl_PL:
       delete_confirm: "Czy na pewno chcesz usunąć tę uwagę o użytkowniku?"
       show_post: "Pokaż wpis"
       show_flag: "Pokaż flagę"
-      copy_reviewable_note: "Skopiować uwagę do profilu %{username}?"
+      copy_reviewable_note: "Skopiować notatkę do „Notatki użytkownika” w profilu %{username}?"

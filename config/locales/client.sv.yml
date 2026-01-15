@@ -2844,8 +2844,6 @@ sv:
           12_hours: "12 timmar"
           24_hours: "24 timmar"
           custom: "Anpassad varaktighet"
-      slow_mode_notice:
-        duration: "Vi ber dig vänta %{duration} mellan inläggen i det här ämnet"
       topic_status_update:
         title: "Ämnestidtagning"
         save: "Ställ in timer"

@@ -16,6 +16,7 @@ he:
           title: זמן קריאה
         assignments:
           title: הקצאות
+          total_assigned_others: "מוקצה לטובת %{username}"
         chat_usage:
           messages: הודעות
           author: אני

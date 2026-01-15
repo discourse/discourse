@@ -9,4 +9,3 @@ ro:
     user_notes:
       title: "Note utilizator"
       delete_confirm: "Sigur vrei să ștergi acea notă de utilizator?"
-      copy_reviewable_note: "Copiezi nota în profilul utilizatorului %{username}?"

@@ -3426,8 +3426,6 @@ tr_TR:
           12_hours: "12 Saat"
           24_hours: "24 saat"
           custom: "Özel Süre"
-      slow_mode_notice:
-        duration: "Lütfen bu konudaki gönderiler arasında %{duration} bekleyin"
       topic_status_update:
         title: "Konu Zamanlayıcısı"
         save: "Zamanlayıcıyı Ayarla"

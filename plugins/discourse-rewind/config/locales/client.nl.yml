@@ -16,6 +16,7 @@ nl:
           title: Leestijd
         assignments:
           title: Toewijzingen
+          total_assigned_others: "Toegewezen aan %{username}"
         chat_usage:
           messages: berichten
           author: Jij

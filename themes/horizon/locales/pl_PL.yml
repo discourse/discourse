@@ -5,5 +5,31 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  solved: "Rozwiązany"
+  unsolved: "Nierozwiązano"
+  posted: "wysłano"
+  by_username: "przez @%{username}"
+  replied: "odpowiedziano"
+  vote_count:
+    one: "%{count} głos"
+    few: "%{count} głosy"
+    many: "%{count} głosy"
+    other: "%{count} głosy"
+  like_count:
+    one: "%{count} polubienie"
+    few: "%{count} polubienia"
+    many: "%{count} polubień"
+    other: "%{count} polubień"
+  reply_count:
+    one: "%{count} odpowiedź"
+    few: "%{count} odpowiedzi"
+    many: "%{count} odpowiedzi"
+    other: "%{count} odpowiedzi"
   theme_metadata:
     description: "Prosty, piękny motyw, który od razu po zainstalowaniu poprawia komfort korzystania ze stron Discourse."
+    settings:
+      topic_card_context:
+        description: "Ilość informacji wyświetlanych na kartach tematycznych. „Prosty” wyświetla minimalną ilość informacji. „Wysoki kontekst” obejmuje tagi, status rozwiązania, przypisanych użytkowników i liczbę głosów."
+        choices:
+          simple: "Prosty"
+          high_context: "Wysoki kontekst (eksperymentalny)"

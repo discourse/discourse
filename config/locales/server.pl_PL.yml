@@ -2110,7 +2110,7 @@ pl_PL:
     invite_link_max_redemptions_limit_users: "Maksymalna dozwolona liczba przypadków wykorzystania linków z zaproszeniami generowanych przez zwykłych użytkowników nie może przekraczać tej wartości."
     alert_admins_if_errors_per_minute: "Liczba błędów na minutę do zaalarmowania admina. Wartość 0 wyłącza tę funkcjonalność. UWAGA: wymaga restartu."
     alert_admins_if_errors_per_hour: "Liczba błędów na godzinę do zaalarmowania admina. Wartość 0 wyłącza tę funkcjonalność. UWAGA: wymaga restartu."
-    categories_topics: "Liczba tematów do wyświetlenia na stronie / kategorie. Jeśli ustawione na 0, automatycznie spróbuje znaleźć wartość, aby utrzymać dwie kolumny symetryczne (kategorie i tematy)."
+    categories_topics: 'Liczba tematów wyświetlanych na stronie kategorii. Ustawienie wartości 0 spowoduje automatyczne ustawienie wartości, aby zachować symetrię obu kolumn. Dotyczy tylko stylów stron kategorii „kategorie i najnowsze/najważniejsze tematy” <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style"></a>.'
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
     suggested_topics_max_days_old: "Sugerowane tematy nie powinny być starsze niż n dni."
@@ -3038,6 +3038,7 @@ pl_PL:
         updating_user_ids: "Aktualizowanie identyfikatorów użytkownika…"
         deleting_source_user: "Usuwanie użytkownika źródłowego…"
   user:
+    anonymized: "[usunięto ze względu na anonimizację użytkownika]"
     deactivated: "Został dezaktywowany w związku ze zbyt dużą liczbą odrzuconych emaili na '%{email}'."
     deactivated_by_staff: "Wyłączone przez personel"
     deactivated_by_inactivity:

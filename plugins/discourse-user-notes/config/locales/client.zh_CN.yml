@@ -15,4 +15,3 @@ zh_CN:
       delete_confirm: "确定要删除该用户备注吗？"
       show_post: "显示帖子"
       show_flag: "显示举报"
-      copy_reviewable_note: "将备注复制到 %{username}的个人资料？"

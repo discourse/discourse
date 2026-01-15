@@ -5,5 +5,22 @@
 # https://translate.discourse.org/
 
 cs:
+  solved: "Vyřešeno"
+  posted: "poslední příspěvek"
+  vote_count:
+    one: "%{count} hlas"
+    few: "%{count} hlasy"
+    many: "%{count} hlasy"
+    other: "%{count} hlasy"
+  like_count:
+    one: "%{count} líbí se"
+    few: "%{count} líbí se"
+    many: "%{count} líbí se"
+    other: "%{count} líbí se"
+  reply_count:
+    one: "%{count} odpověď"
+    few: "%{count} odpovědí"
+    many: "%{count} odpovědí"
+    other: "%{count} odpovědí"
   theme_metadata:
     description: "Jednoduché a krásné téma, které vylepšuje zážitek z prostředí Discourse ihned po instalaci."

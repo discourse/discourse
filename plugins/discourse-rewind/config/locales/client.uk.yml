@@ -127,7 +127,7 @@ uk:
         assignments:
           title: Призначення
           total_assigned: Призначено мені
-          total_assigned_others: Призначено їм
+          total_assigned_others: "Призначено %{username}"
           completed: Призначення виконані
           pending: Завдання очікують на розгляд
           assigned_by_user: Вручено призначень
@@ -147,18 +147,13 @@ uk:
           channel_title: "#chat-activity"
           status_online: "● онлайн"
           message_1: "Ви надіслали <strong>%{count}</strong> повідомлень цього року!"
-          message_1_others: "%{username} надіслано <strong>%{count}</strong> повідомлень цього року!"
           reply_1: "лол, круто B-)"
           message_2: "Ви мали <strong>%{dm_count}</strong> DM розмови з <strong>%{channel_count}</strong> різними людьми або групами"
-          message_2_others: "%{username} мав <strong>%{dm_count}</strong> чат з <strong>%{channel_count}</strong> різними людьми або групами"
           reply_2: "круто :D"
           message_3: "Людям сподобалися ваші повідомлення! Ви отримали <strong>%{count}</strong> реакцій ❤️"
-          message_3_others: "Людям сподобалися їхні повідомлення! Вони отримали <strong>%{count}</strong> реакції ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "Середня довжина вашого повідомлення становила <strong>%{length}</strong> символів"
-          message_4_others: "Середня довжина їхнього повідомлення становила <strong>%{length}</strong> символів"
           message_5: "Ваші улюблені канали:"
-          message_5_others: "Їхні улюблені канали:"
           dancing_baby_alt: "Танцююча дитина"
         favorite_gifs:
           title:
@@ -183,7 +178,7 @@ uk:
           redemption_rate: Коефіцієнт прийняття
           avg_trust_level: Середній рівень довіри
           invitee_impact: Вплив ваших запрошених
-          invitee_impact_others: Вплив запрошених ними осіб
+          invitee_impact_others: "Вплив запрошених на %{username}"
           invitee_posts: Дописів створено
           invitee_topics: Розпочаті теми
           invitee_likes: Вподобані
@@ -223,11 +218,11 @@ uk:
           mentions: Згадки
           topics_with_new_users: Теми з новими користувачами
           contributions_helped: ваші внески допомогли
-          contributions_helped_others: їхній внесок допоміг
+          contributions_helped_others: "Внесок користувача %{username} допоміг"
         time_of_day_activity:
           title: Ритм щоденної активності
           play_button: Відтворіть свою діяльність як звук
-          play_button_others: Відтворіть їхню діяльність як звук
+          play_button_others: "Відтворити активність %{username} як звук"
           stop_button: Зупинити відтворення аудіо
         writing_analysis:
           title: Аналіз письма

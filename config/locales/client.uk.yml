@@ -761,6 +761,7 @@ uk:
       show_more: "Показати більше"
       show_less: "Показати менше"
       back_to_queue: "Повернутися до черги"
+      editing_post: "Редагування допису…"
       order_by: "Сортувати за"
       date_filter: "Опубліковано між"
       in_reply_to: "у відповідь на"
@@ -973,6 +974,10 @@ uk:
         is_this_post: "Це %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "або"
         something_else_wrong: "Щось не так з цим %{reviewable_type}?"
+        approve_user: "Схвалити цього користувача?"
+        suspect_user: "Чи цей користувач спамер?"
+        approve_post: "Схвалити цю публікацію?"
+        approve_topic: "Схвалити цю тему?"
       types:
         reviewable_flagged_post:
           title: "Позначений допис"
@@ -991,9 +996,14 @@ uk:
           title: "Допис"
           noun: "допис"
         reviewable_ai_chat_message:
+          title: "Повідомлення чату, позначене ШІ"
           noun: "повідомлення чату"
         reviewable_ai_post:
+          title: "Публікація, позначена ШІ"
           noun: "допис"
+        reviewable_post_voting_comment:
+          title: "Позначений коментар"
+          noun: "коментар"
       flagged_as: "Позначено як"
       post_flagged_as: "Публікацію позначено як"
       chat_flagged_as: "Чат позначено як"
@@ -2273,6 +2283,7 @@ uk:
         redeemed_tab_with_count: "Прийняті (%{count})"
         invited_via: "Запрошення"
         invited_via_link: "посилання %{key} (прийнято %{count} з %{max})"
+        generating_link: "Створюємо посилання..."
         groups: "Групи"
         topic: "Тема"
         sent: "Створено/Востаннє надіслано"
@@ -3757,6 +3768,7 @@ uk:
           unread: "Не залишилося нічого непрочитаного... вражаюче!"
           new_new: "Наразі нічого нового... заходьте пізніше!"
           new: "Наразі нічого нового... заходьте пізніше!"
+          generic: "Тут нічого немає... заходьте пізніше!"
     topic_bulk_actions:
       dismiss:
         name: "Відкласти"
@@ -3936,7 +3948,7 @@ uk:
           24_hours: "24 години"
           custom: "Встановити тривалість"
       slow_mode_notice:
-        duration: "Будь ласка, зачекайте %{duration} між дописами в цій темі"
+        duration: "Будь ласка, зачекайте %{duration} між вашими публікаціями в цій темі"
       topic_status_update:
         title: "Таймер Теми"
         save: "Встановити Таймер"
@@ -5637,6 +5649,9 @@ uk:
           click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Розділи"
           header_action_title: "Редагувати розділи бічної панелі"
+          header_action_new: "Нова категорія"
+          header_action_edit_sidebar: "Редагувати категорії бічної панелі"
+          header_action_edit_header_dropdown: "Редагувати категорії навігації"
           configure_defaults: "Налаштувати типові значення"
         community:
           edit_section:

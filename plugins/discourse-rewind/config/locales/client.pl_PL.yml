@@ -127,7 +127,7 @@ pl_PL:
         assignments:
           title: Przypisania
           total_assigned: Przypisane do mnie
-          total_assigned_others: Przypisane do nich
+          total_assigned_others: "Przypisany do %{username}"
           completed: Przypisania zakończone
           pending: Przypisania oczekujące
           assigned_by_user: Przypisania przydzielone
@@ -147,18 +147,13 @@ pl_PL:
           channel_title: "#chat-activity"
           status_online: "● dostępny"
           message_1: "W tym roku wysłałeś <strong>%{count}</strong> wiadomości!"
-          message_1_others: "%{username} wysłał(a) <strong>%{count}</strong> wiadomości w tym roku!"
           reply_1: "lol super B-)"
           message_2: "Prowadziłeś <strong>%{dm_count}</strong> rozmowy na PW z <strong>%{channel_count}</strong> różnymi osobami lub grupami"
-          message_2_others: "%{username} miał(a) <strong>%{dm_count}</strong> rozmowy na DM z <strong>%{channel_count}</strong> różnymi osobami lub grupami"
           reply_2: "super :D"
           message_3: "Ludzie uwielbiali Twoje wiadomości! Otrzymałeś <strong>%{count}</strong> reakcji ❤️"
-          message_3_others: "Ludzie pokochali ich wiadomości! Otrzymali <strong>%{count}</strong> reakcji ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "Twoja średnia długość wiadomości wynosiła <strong>%{length}</strong> znaków"
-          message_4_others: "Ich średnia długość wiadomości wynosiła <strong>%{length}</strong> znaków"
           message_5: "Twoje ulubione kanały:"
-          message_5_others: "Ich ulubione kanały:"
           dancing_baby_alt: "Tańczące dziecko"
         favorite_gifs:
           title:
@@ -183,7 +178,7 @@ pl_PL:
           redemption_rate: Współczynnik akceptacji
           avg_trust_level: Średni poziom zaufania
           invitee_impact: Wpływ zaproszonych osób
-          invitee_impact_others: Wpływ zaproszonych osób
+          invitee_impact_others: "Wpływ zaproszonych gości %{username}"
           invitee_posts: Napisane wpisy
           invitee_topics: Rozpoczęte tematy
           invitee_likes: Polubienia
@@ -223,11 +218,11 @@ pl_PL:
           mentions: Wzmianki
           topics_with_new_users: Tematy z nowymi użytkownikami
           contributions_helped: twój wkład pomógł
-          contributions_helped_others: ich wkład pomógł
+          contributions_helped_others: "Wkład użytkownika %{username} pomógł"
         time_of_day_activity:
           title: Codzienny rytm aktywności
           play_button: Odtwórz swoją aktywność jako dźwięk
-          play_button_others: Odtwórz ich aktywność jako dźwięk
+          play_button_others: "Odtwórz aktywność %{username} jako dźwięk"
           stop_button: Zatrzymaj odtwarzanie dźwięku
         writing_analysis:
           title: Analiza pisemna

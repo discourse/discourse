@@ -53,6 +53,8 @@ pt_BR:
           system_title: "USO DE IA DETECTADO"
           section_features: "TOP RECURSOS"
           section_models: "TOP MODELOS"
+        assignments:
+          total_assigned_others: "Atribuiu a %{username}"
         chat_usage:
           unique_dm_channels: Conversas por DM
           avg_message_length: Tamanho Médio de Mensagem

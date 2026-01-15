@@ -16,6 +16,7 @@ sv:
           title: Lästid
         assignments:
           title: Tilldelningar
+          total_assigned_others: "Tilldelad till %{username}"
         chat_usage:
           messages: meddelanden
           author: Du

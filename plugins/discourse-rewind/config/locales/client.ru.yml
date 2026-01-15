@@ -65,6 +65,7 @@ ru:
         assignments:
           title: Назначения
           total_assigned: Назначен мне
+          total_assigned_others: "Назначен(а) группе %{username}"
           completed: Задания выполнены
           pending: Задания в процессе выполнения
           assigned_by_user: Выданные задания

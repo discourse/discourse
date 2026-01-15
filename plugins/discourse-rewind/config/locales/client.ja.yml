@@ -14,6 +14,8 @@ ja:
       reports:
         reading_time:
           title: 閲覧時間
+        assignments:
+          total_assigned_others: "が %{username} に割り当てました"
         chat_usage:
           messages: メッセージ
           author: あなた

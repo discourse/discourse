@@ -1919,7 +1919,6 @@ it:
     invite_link_max_redemptions_limit_users: "Il numero massimo di riscatti consentiti per i link di invito generati da utenti regolari non può superare questo valore."
     alert_admins_if_errors_per_minute: "Soglia di errori al minuto che attiva un allarme agli amministratori. Un valore pari a 0 disabilita questa funzione. NOTA: richiede un riavvio."
     alert_admins_if_errors_per_hour: "Soglia di errori all'ora che attiva un allarme agli amministratori. Un valore pari a 0 disabilita questa funzione. NOTA: richiede un riavvio."
-    categories_topics: "Numero di argomenti da mostrare in /categories page. Se impostato su 0, il sistema proverà automaticamente a trovare un valore per mantenere simmetriche le due colonne (categorie e argomenti)."
     suggested_topics: "Numero di argomenti suggeriti mostrati in fondo ad un argomento."
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
     suggested_topics_max_days_old: "Gli argomenti suggeriti non dovrebbero essere più vecchi di n giorni."

@@ -3043,8 +3043,6 @@ nb_NO:
           12_hours: "12 timer"
           24_hours: "24 timer"
           custom: "Egendefinert varighet"
-      slow_mode_notice:
-        duration: "Vennligst vent %{duration} mellom innlegg i dette emnet"
       topic_status_update:
         title: "Tidsbestemt handling for emne"
         save: "Sett opp tidsbestemt handling"

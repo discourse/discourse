@@ -3681,8 +3681,6 @@ sk:
           12_hours: "12 Hodín"
           24_hours: "24 Hodín"
           custom: "Vlastné trvanie"
-      slow_mode_notice:
-        duration: "Prosím, počkajte %{duration} medzi príspevkami v tejto téme"
       topic_status_update:
         title: "Časovač tém"
         save: "Nastaviť časovač"

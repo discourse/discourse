@@ -86,6 +86,7 @@ es:
         assignments:
           title: Tareas
           total_assigned: Asignado a mí
+          total_assigned_others: "Asignada a %{username}"
           completed: Tareas completadas
           pending: Tareas pendientes
           assigned_by_user: Tareas asignadas

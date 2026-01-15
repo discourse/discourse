@@ -16,6 +16,7 @@ fr:
           title: Temps de lecture
         assignments:
           title: Affectations
+          total_assigned_others: "Attribué à %{username}"
         chat_usage:
           messages: messages directs
           author: Vous

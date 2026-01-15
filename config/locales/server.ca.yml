@@ -1265,7 +1265,6 @@ ca:
     max_logins_per_ip_per_minute: "Nombre màxim de connexions permeses per adreça IP per minut"
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
-    categories_topics: "Nombre de temes en la pàgina /categories. Si es posa a 0, s'intentarà automàticament trobar un valor per a mantenir les dues columnes simètriques (categories i temes)."
     suggested_topics: "Nombre de temes recomanats que es mostren a baix d'un tema."
     limit_suggested_to_category: "Mostra solament temes de la categoria actual en els temes recomanats."
     suggested_topics_max_days_old: "Els temes recomanats no haurien de tenir més de n dies."

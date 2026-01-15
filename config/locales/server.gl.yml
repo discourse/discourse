@@ -1414,7 +1414,6 @@ gl:
     invite_link_max_redemptions_limit_users: "O máximo de ofrecementos permitidos para enviar ligazóns de convite xerados por usuarios regulares non poden superar este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre rearrancar."
     alert_admins_if_errors_per_hour: "Número de erros por hora para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre rearrancar."
-    categories_topics: "Número de temas que se mostran na páxina de /categorías. Se se estabelece en 0, automaticamente tentará atopar un valor para manter as dúas columnas simétricas (categorías e temas)."
     suggested_topics: "Número de temas suxeridos que se mostran na parte inferior do tema."
     limit_suggested_to_category: "Mostrar só temas da categoría actual nos temas suxeridos."
     suggested_topics_max_days_old: "Os temas suxeridos non deben ter máis de n días de antigüidade."

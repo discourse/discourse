@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    discourse_math:
+      edit_math: "Редагувати математику"
+      edit_modal:
+        title: "Редагувати математику"
+        label: "Математика"
+        apply: "Застосувати"
+      composer:
+        insert_math: "Вставити математику"
+      insert_modal:
+        title_inline: "Вставити вбудовану математику"
+        title_block: "Вставити математику блоку"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "Вставити"
+        block_mode: "Блочний режим (відображається рівняння)"

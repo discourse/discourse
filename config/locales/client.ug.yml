@@ -3531,8 +3531,6 @@ ug:
           12_hours: "12 سائەت"
           24_hours: "24 سائەت"
           custom: "ئىختىيارى داۋاملىشىش ۋاقتى"
-      slow_mode_notice:
-        duration: "بۇ تېمىدا ئىككى يازما ئارىسىدا %{duration} كۈتۈڭ"
       topic_status_update:
         title: "تېما ۋاقىت خاتىرىلىگۈچ"
         save: "ۋاقىت خاتىرىلىگۈچ تەڭشەك"
@@ -5073,6 +5071,7 @@ ug:
           click_to_get_started: "باشلاش ئۈچۈن بۇ جاي چېكىلىدۇ."
           header_link_text: "سەھىپە"
           header_action_title: "يان بالداق سەھىپىڭىزنى تەھرىرلەيدۇ"
+          header_action_new: "يېڭى سەھىپە"
           configure_defaults: "كۆڭۈلدىكىنى سەپلە"
         community:
           edit_section:

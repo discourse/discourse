@@ -2098,7 +2098,6 @@ cs:
     max_post_deletions_per_day: "Maximální počet příspěvků, které může uživatel smazat za den. Nastavením na 0 mazání příspěvků zakážete."
     alert_admins_if_errors_per_minute: "Počet chyb za minutu potřebný pro spuštění upozornění administrátora. Hodnota 0 tuto funkci deaktivuje. POZNÁMKA: Vyžaduje restart."
     alert_admins_if_errors_per_hour: "Počet chyb za hodinu potřebný pro spuštění upozornění administrátora. Hodnota 0 tuto funkci deaktivuje. POZNÁMKA: Vyžaduje restart."
-    categories_topics: "Počet témat, která se mají zobrazit na stránce /categories. Pokud je nastaveno na 0, automaticky se pokusí najít hodnotu, která zachová symetrii obou sloupců (kategorie a témata)."
     suggested_topics: "Počet navrhovaných témat zobrazených ve spodní části tématu."
     limit_suggested_to_category: "V navrhovaných tématech zobrazit pouze témata z aktuální kategorie."
     suggested_topics_max_days_old: "Navrhovaná témata by neměla být starší než n dní."

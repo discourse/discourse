@@ -14,6 +14,8 @@ tr_TR:
       reports:
         reading_time:
           title: Okuma süresi
+        assignments:
+          total_assigned_others: "%{username} Adlı gruba atandı"
         chat_usage:
           messages: i̇letiler
           author: Siz

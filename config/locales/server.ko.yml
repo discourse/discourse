@@ -1446,7 +1446,6 @@ ko:
     invite_link_max_redemptions_limit_users: "일반 사용자가 생성한 초대 링크에 허용되는 최대 사용 횟수는 이 값을 초과할 수 없습니다."
     alert_admins_if_errors_per_minute: "관리자 경고를 트리거하기 위한 분당 오류 수입니다. 이 기능을 비활성화하려면 0으로 설정하세요. 참고: 재시작해야 합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 트리거하기 위한 시간당 오류 수입니다. 이 기능을 비활성화하려면 0으로 설정하세요. 참고: 재시작해야 합니다."
-    categories_topics: "/categories 페이지에 표시할 주제 수입니다. 0으로 설정하면 두 열을 대칭으로 유지하기 위해 값을 자동으로 찾습니다(카테고리 및 주제)."
     suggested_topics: "주제 하단에 표시할 제안된 주제 수입니다."
     limit_suggested_to_category: "제안된 주제는 현재의 카테고리에 있는 주제만 표시합니다."
     suggested_topics_max_days_old: "제안된 주제는 n일을 넘지 않아야 합니다."

@@ -5,5 +5,31 @@
 # https://translate.discourse.org/
 
 uk:
+  solved: "Вирішено"
+  unsolved: "Невирішено"
+  posted: "розміщено"
+  by_username: "від @%{username}"
+  replied: "відповів"
+  vote_count:
+    one: "%{count} голос"
+    few: "%{count} голосів"
+    many: "%{count} голосів"
+    other: "%{count} голосів"
+  like_count:
+    one: "%{count} вподобання"
+    few: "%{count} вподобання"
+    many: "%{count} вподобання"
+    other: "%{count} вподобання"
+  reply_count:
+    one: "%{count} відповідь"
+    few: "%{count} відповіді"
+    many: "%{count} відповідей"
+    other: "%{count} відповідь"
   theme_metadata:
     description: "Проста прекрасна тема, яка покращує роботу з коробки для веб-сайтів Discourse."
+    settings:
+      topic_card_context:
+        description: "Обсяг інформації, що відображається на картках тем. \"Проста\" показує мінімальну інформацію. \"Високий контекст\" включає мітки, статус вирішення, призначених користувачів і підрахунок голосів."
+        choices:
+          simple: "Простий"
+          high_context: "Високий контекст (експериментальний)"

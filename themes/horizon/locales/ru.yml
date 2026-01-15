@@ -5,5 +5,23 @@
 # https://translate.discourse.org/
 
 ru:
+  solved: "Решённые"
+  posted: "отправлено"
+  by_username: "от @%{username}"
+  vote_count:
+    one: "%{count} голос"
+    few: "%{count} голоса"
+    many: "%{count} голоса"
+    other: "%{count} голоса"
+  like_count:
+    one: "%{count} лайк"
+    few: "%{count} лайка"
+    many: "%{count} лайков"
+    other: "%{count} лайков"
+  reply_count:
+    one: "%{count} ответ"
+    few: "%{count} ответа"
+    many: "%{count} ответов"
+    other: "%{count} ответ"
   theme_metadata:
     description: "Простая и красивая тема, которая улучшает работу сайтов с Discourse сразу после установки."

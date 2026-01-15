@@ -3493,8 +3493,6 @@ hu:
           12_hours: "12 óráig"
           24_hours: "24 óráig"
           custom: "Egyéni időtartam"
-      slow_mode_notice:
-        duration: "Várjon ennyit a bejegyzések között ennél a témánál: %{duration}"
       topic_status_update:
         title: "Téma időzítése"
         save: "Időzítő beállítása"

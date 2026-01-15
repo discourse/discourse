@@ -1935,7 +1935,6 @@ de:
     invite_link_max_redemptions_limit_users: "Die maximal zulässigen Einlösungen für Einladungslinks, die von regulären Benutzern erstellt wurden, dürfen diesen Wert nicht überschreiten."
     alert_admins_if_errors_per_minute: "Anzahl der Fehler pro Minute, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. HINWEIS: Erfordert einen Neustart."
     alert_admins_if_errors_per_hour: "Anzahl der Fehler pro Stunde, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. HINWEIS: Erfordert einen Neustart."
-    categories_topics: "Anzahl der Themen, die auf der Seite /categories angezeigt werden. Bei 0 wird automatisch versucht, einen Wert zu finden, um die beiden Spalten (Kategorien und Themen) symmetrisch zu halten."
     suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
     limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
     suggested_topics_max_days_old: "Vorgeschlagene Themen sollten nicht älter als n Tage sein."

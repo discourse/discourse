@@ -5,5 +5,17 @@
 # https://translate.discourse.org/
 
 de:
+  solved: "Gelöst"
+  posted: "hat geschrieben"
+  by_username: "von @%{username}"
+  vote_count:
+    one: "%{count} Stimme"
+    other: "%{count} Stimmen"
+  like_count:
+    one: "%{count} „Gefällt mir“"
+    other: "%{count} „Gefällt mir“"
+  reply_count:
+    one: "%{count} Antwort"
+    other: "%{count} Antworten"
   theme_metadata:
     description: "Ein einfaches, schönes Theme, das die standardmäßige Benutzererfahrung für Discourse-Seiten verbessert."

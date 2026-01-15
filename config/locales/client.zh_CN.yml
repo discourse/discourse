@@ -3342,8 +3342,6 @@ zh_CN:
           12_hours: "12 小时"
           24_hours: "24 小时"
           custom: "自定义持续时间"
-      slow_mode_notice:
-        duration: "在此话题下，请在两次发帖之间等待%{duration}"
       topic_status_update:
         title: "话题计时器"
         save: "设置计时器"
@@ -4819,6 +4817,7 @@ zh_CN:
           click_to_get_started: "点击此处开始。"
           header_link_text: "类别"
           header_action_title: "编辑边栏类别"
+          header_action_new: "新建类别"
           configure_defaults: "配置默认值"
         community:
           edit_section:

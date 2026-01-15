@@ -1879,7 +1879,6 @@ zh_CN:
     invite_link_max_redemptions_limit_users: "普通用户生成的邀请链接允许的最大确认次数不能超过此值。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误数量。值为 0 会禁用此功能。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误数量。值为 0 会禁用此功能。注意：需要重启。"
-    categories_topics: "要在 /categories 页面中显示的话题数量。如果设置为 0，它将自动尝试寻找一个值来保持两列对称（类别和话题）。"
     suggested_topics: "在话题底部显示的推荐话题的数量。"
     limit_suggested_to_category: "仅在推荐话题中显示当前类别中的话题"
     suggested_topics_max_days_old: "推荐话题的存在时间不应超过 n 天。"
