@@ -3,8 +3,6 @@
 class ReviewablePerformResultSerializer < ApplicationSerializer
   attributes(
     :success,
-    :transition_to,
-    :transition_to_id,
     :created_post_id,
     :created_post_topic_id,
     :remove_reviewable_ids,
@@ -15,10 +13,6 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
 
   def success
     object.success?
-  end
-
-  def transition_to_id
-    Reviewable.statuses[transition_to]
   end
 
   def version
