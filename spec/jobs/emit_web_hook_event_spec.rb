@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "excon"
-
 RSpec.describe Jobs::EmitWebHookEvent do
   subject(:job) { described_class.new }
 
